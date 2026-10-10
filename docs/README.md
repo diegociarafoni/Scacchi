@@ -11,6 +11,7 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | [interfaccia.md](interfaccia.md) | Schermata di gioco, layout su telefono e tablet, comandi |
 | [gamification.md](gamification.md) | XP, livelli, obiettivo giornaliero, serie, traguardi |
 | [archivio.md](archivio.md) | Salvataggio delle partite, storico, import ed export PGN |
+| [percorso.md](percorso.md) | Percorso a tappe con stelle e bot guardiani |
 | [sviluppo.md](sviluppo.md) | Ambiente, comandi, test, CI e convenzioni |
 | [licenza.md](licenza.md) | Licenza del progetto e componenti di terze parti |
 
@@ -25,6 +26,7 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | Partita contro il computer (Stockfish) | In sviluppo |
 | Gamification: XP, livelli, obiettivo giornaliero, serie, traguardi | Logica e Profilo disponibili, collegamento alla partita in sviluppo |
 | Archivio partite, import ed export PGN | Logica e schermata disponibili, collegamento alla partita in sviluppo |
+| Percorso a tappe con stelle | Mappa ed esercizi disponibili, guardiani in attesa della partita contro il computer |
 | Orologio | Pianificato |
 
 I requisiti completi sono nel documento dei requisiti del progetto.
