@@ -88,16 +88,16 @@ class _GamePageState extends State<GamePage> {
 
   @override
   Widget build(BuildContext context) {
+    final actions = _GameActions(
+      onNewGame: _newGame,
+      onUndo: _game.canUndo ? _undo : null,
+      onFlip: () => setState(() => _orientation = _orientation.opposite),
+      onResign: _game.isOver ? null : _resign,
+    );
     return Scaffold(
       appBar: AppBar(
         title: const Text('Scacchi'),
         actions: [
-          IconButton(
-            tooltip: 'Gira la scacchiera',
-            icon: const Icon(Icons.swap_vert),
-            onPressed: () =>
-                setState(() => _orientation = _orientation.opposite),
-          ),
           PopupMenuButton<String>(
             onSelected: (value) {
               if (value == 'autoflip') {
@@ -118,10 +118,15 @@ class _GamePageState extends State<GamePage> {
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
-            final landscape = constraints.maxWidth > constraints.maxHeight;
+            // Tablet o telefono in orizzontale: pannello laterale.
+            final landscape =
+                constraints.maxWidth > constraints.maxHeight * 1.2;
             final boardSize = landscape
                 ? math.min(constraints.maxHeight, constraints.maxWidth * 0.6)
-                : math.min(constraints.maxWidth, constraints.maxHeight * 0.7);
+                : math.min(
+                    constraints.maxWidth,
+                    constraints.maxHeight - _portraitChromeHeight,
+                  );
             final board = Chessboard(
               size: boardSize,
               controller: _board,
@@ -131,32 +136,57 @@ class _GamePageState extends State<GamePage> {
                 colorScheme: ChessboardColorScheme.green,
               ),
             );
-            final panel = _SidePanel(
-              game: _game,
-              onNewGame: _newGame,
-              onUndo: _game.canUndo ? _undo : null,
-              onResign: _game.isOver ? null : _resign,
+            final status = _StatusLine(game: _game);
+            final moves = _MoveList(game: _game, horizontal: !landscape);
+            if (landscape) {
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  board,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        status,
+                        Expanded(child: moves),
+                        actions,
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            }
+            // Telefono in verticale: mosse in alto, scacchiera a tutta
+            // larghezza e comandi in basso, alla portata del pollice.
+            return Column(
+              children: [
+                Expanded(
+                  child: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(height: _moveStripHeight, child: moves),
+                        status,
+                        board,
+                      ],
+                    ),
+                  ),
+                ),
+                actions,
+              ],
             );
-            return landscape
-                ? Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      board,
-                      Expanded(child: panel),
-                    ],
-                  )
-                : Column(
-                    children: [
-                      board,
-                      Expanded(child: panel),
-                    ],
-                  );
           },
         ),
       ),
     );
   }
 }
+
+const double _moveStripHeight = 40;
+const double _statusHeight = 48;
+const double _actionsHeight = 72;
+const double _portraitChromeHeight =
+    _moveStripHeight + _statusHeight + _actionsHeight;
 
 String _sideName(Side side) => side == Side.white ? 'Bianco' : 'Nero';
 
@@ -178,66 +208,119 @@ String statusText(ChessGame game) {
   };
 }
 
-class _SidePanel extends StatelessWidget {
-  const _SidePanel({
-    required this.game,
+class _StatusLine extends StatelessWidget {
+  const _StatusLine({required this.game});
+
+  final ChessGame game;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: _statusHeight,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            statusText(game),
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _MoveList extends StatelessWidget {
+  const _MoveList({required this.game, required this.horizontal});
+
+  final ChessGame game;
+  final bool horizontal;
+
+  @override
+  Widget build(BuildContext context) {
+    final moves = game.moves;
+    final items = [
+      for (var i = 0; i < moves.length; i++)
+        i.isEven ? '${i ~/ 2 + 1}. ${moves[i].san}' : moves[i].san,
+    ];
+    final style = Theme.of(context).textTheme.bodyLarge;
+    if (horizontal) {
+      return ListView.separated(
+        scrollDirection: Axis.horizontal,
+        reverse: true,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        itemCount: items.length,
+        separatorBuilder: (_, _) => const SizedBox(width: 12),
+        // In ordine inverso, così l'ultima mossa resta sempre visibile.
+        itemBuilder: (context, i) =>
+            Center(child: Text(items[items.length - 1 - i], style: style)),
+      );
+    }
+    return SingleChildScrollView(
+      reverse: true,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Text(items.join('  '), style: style),
+    );
+  }
+}
+
+class _GameActions extends StatelessWidget {
+  const _GameActions({
     required this.onNewGame,
     required this.onUndo,
+    required this.onFlip,
     required this.onResign,
   });
 
-  final ChessGame game;
   final VoidCallback onNewGame;
   final VoidCallback? onUndo;
+  final VoidCallback onFlip;
   final VoidCallback? onResign;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final moves = game.moves;
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+    return SizedBox(
+      height: _actionsHeight,
+      child: Row(
         children: [
-          Text(statusText(game), style: theme.textTheme.titleMedium),
-          const SizedBox(height: 12),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              FilledButton.icon(
-                onPressed: onNewGame,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Nuova partita'),
-              ),
-              OutlinedButton.icon(
-                onPressed: onUndo,
-                icon: const Icon(Icons.undo),
-                label: const Text('Annulla mossa'),
-              ),
-              OutlinedButton.icon(
-                onPressed: onResign,
-                icon: const Icon(Icons.flag_outlined),
-                label: const Text('Abbandona'),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Expanded(
-            child: SingleChildScrollView(
-              reverse: true,
-              child: Text(
-                [
-                  for (var i = 0; i < moves.length; i += 2)
-                    '${i ~/ 2 + 1}. ${moves[i].san}'
-                        '${i + 1 < moves.length ? ' ${moves[i + 1].san}' : ''}',
-                ].join('   '),
-                style: theme.textTheme.bodyLarge,
-              ),
-            ),
-          ),
+          _ActionButton(Icons.add, 'Nuova', onNewGame),
+          _ActionButton(Icons.undo, 'Annulla', onUndo),
+          _ActionButton(Icons.swap_vert, 'Gira', onFlip),
+          _ActionButton(Icons.flag_outlined, 'Abbandona', onResign),
         ],
+      ),
+    );
+  }
+}
+
+class _ActionButton extends StatelessWidget {
+  const _ActionButton(this.icon, this.label, this.onPressed);
+
+  final IconData icon;
+  final String label;
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = onPressed == null
+        ? Theme.of(context).disabledColor
+        : Theme.of(context).colorScheme.onSurface;
+    return Expanded(
+      child: InkWell(
+        onTap: onPressed,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: color),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: Theme.of(context).textTheme.labelMedium
+                  ?.copyWith(color: color),
+            ),
+          ],
+        ),
       ),
     );
   }
