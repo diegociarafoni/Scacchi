@@ -63,11 +63,10 @@ I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisic
 | RF-04 chiusura del selettore di promozione con Annulla | | ✓ |
 | RG-01 XP e livelli | ✓ | |
 | RG-02 obiettivo giornaliero, serie, riposo, protezioni | ✓ | |
+| RG-03 percorso a tappe, stelle, sblocco, contenuti verificati | ✓ | |
 | RG-05 33 traguardi e notifica in-app | ✓ | |
 | RG-07 sfide giornaliere e settimanali | ✓ | |
 | RG-08 record personali | ✓ | |
-| RG-05 traguardi e notifica in-app | ✓ | |
-| RG-03 percorso a tappe, stelle, sblocco, contenuti verificati | ✓ | |
 | RG-12 gamification disattivabile | ✓ | |
 
 ## Integrazione continua
