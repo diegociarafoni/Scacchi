@@ -35,8 +35,18 @@ void main() {
 
   test('miniatura: vittoria in meno di 20 mosse', () {
     expect(
-      unlockedBy(const GamePlayed(result: GameResult.win, moveCount: 15)),
+      unlockedBy(
+        const GamePlayed(
+          result: GameResult.win,
+          moveCount: 15,
+          checkmate: true,
+        ),
+      ),
       contains('miniature'),
+    );
+    expect(
+      unlockedBy(const GamePlayed(result: GameResult.win, moveCount: 15)),
+      isNot(contains('miniature')),
     );
     expect(
       unlockedBy(const GamePlayed(result: GameResult.win, moveCount: 25)),

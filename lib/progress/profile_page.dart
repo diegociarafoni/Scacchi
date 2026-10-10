@@ -4,6 +4,7 @@ import 'achievements.dart';
 import 'challenges.dart';
 import 'daily_goal.dart';
 import 'progress_controller.dart';
+import 'records.dart';
 import 'xp.dart';
 
 String goalLabel(DailyGoal goal) => switch (goal.kind) {
@@ -262,6 +263,7 @@ class _Challenges extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final title = Theme.of(context).textTheme.titleLarge;
+    final (weekly, weeklyProgress) = controller.weeklyChallenge;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -269,10 +271,7 @@ class _Challenges extends StatelessWidget {
         for (final (c, p) in controller.challenges) _ChallengeTile(c, p),
         const SizedBox(height: 12),
         Text('Sfida della settimana', style: title),
-        _ChallengeTile(
-          controller.weeklyChallenge.$1,
-          controller.weeklyChallenge.$2,
-        ),
+        _ChallengeTile(weekly, weeklyProgress),
       ],
     );
   }
@@ -319,14 +318,18 @@ class _Records extends StatelessWidget {
     final rows = [
       ('Serie più lunga', '${controller.state.bestStreak} giorni'),
       if (r.strongestBot != null)
-        ('Bot più forte battuto', '${r.strongestBot} Elo'),
+        (RecordKind.strongestBot.label, '${r.strongestBot} Elo'),
       if (r.fastestWin != null)
-        ('Vittoria più rapida', '${r.fastestWin} mosse'),
+        (RecordKind.fastestWin.label, '${r.fastestWin} mosse'),
       if (r.bestAccuracy != null)
-        ('Precisione migliore', '${r.bestAccuracy!.toStringAsFixed(1)}%'),
-      if (r.puzzleRating != null) ('Punteggio puzzle', '${r.puzzleRating}'),
+        (
+          RecordKind.bestAccuracy.label,
+          '${r.bestAccuracy!.toStringAsFixed(1)}%',
+        ),
+      if (r.puzzleRating != null)
+        (RecordKind.puzzleRating.label, '${r.puzzleRating}'),
       for (final e in r.puzzleRuns.entries)
-        ('Puzzle a tempo (${e.key})', '${e.value}'),
+        ('${RecordKind.puzzleRun.label} (${e.key})', '${e.value}'),
     ];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,

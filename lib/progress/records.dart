@@ -3,11 +3,15 @@ import 'package:flutter/foundation.dart';
 import 'activity.dart';
 
 enum RecordKind {
-  strongestBot,
-  fastestWin,
-  bestAccuracy,
-  puzzleRating,
-  puzzleRun,
+  strongestBot('Bot più forte battuto'),
+  fastestWin('Matto più rapido'),
+  bestAccuracy('Precisione migliore'),
+  puzzleRating('Punteggio puzzle'),
+  puzzleRun('Punteggio a tempo');
+
+  const RecordKind(this.label);
+
+  final String label;
 }
 
 /// Record personali (RG-08). La serie più lunga è in `ProgressState.bestStreak`.
@@ -23,7 +27,7 @@ class PersonalRecords {
   /// Elo del bot più forte battuto.
   final int? strongestBot;
 
-  /// Meno mosse del giocatore in una vittoria.
+  /// Meno mosse del giocatore in una vittoria per scacco matto.
   final int? fastestWin;
   final double? bestAccuracy;
   final int? puzzleRating;
@@ -31,38 +35,48 @@ class PersonalRecords {
   /// Miglior punteggio per modalità a tempo o a serie.
   final Map<String, int> puzzleRuns;
 
-  /// Record aggiornati con [activity] e record battuti.
+  /// Record aggiornati con [activity] e record battuti da annunciare. Il primo
+  /// valore di un record si salva senza annuncio; il punteggio puzzle si
+  /// annuncia solo quando supera un nuovo centinaio.
   (PersonalRecords, List<RecordKind>) apply(Activity activity) {
     var r = this;
     final beaten = <RecordKind>[];
+    void beat(RecordKind kind, Object? previous) {
+      if (previous != null) beaten.add(kind);
+    }
+
     switch (activity) {
       case GamePlayed(
         result: GameResult.win,
         :final opponentElo,
         :final moveCount,
+        :final checkmate,
       ):
         if (opponentElo != null &&
             (strongestBot == null || opponentElo > strongestBot!)) {
           r = r._copy(strongestBot: opponentElo);
-          beaten.add(RecordKind.strongestBot);
+          beat(RecordKind.strongestBot, strongestBot);
         }
-        if (moveCount != null &&
+        if (checkmate &&
+            moveCount != null &&
             (fastestWin == null || moveCount < fastestWin!)) {
           r = r._copy(fastestWin: moveCount);
-          beaten.add(RecordKind.fastestWin);
+          beat(RecordKind.fastestWin, fastestWin);
         }
       case ReviewCompleted(:final accuracy?)
           when bestAccuracy == null || accuracy > bestAccuracy!:
         r = r._copy(bestAccuracy: accuracy);
-        beaten.add(RecordKind.bestAccuracy);
+        beat(RecordKind.bestAccuracy, bestAccuracy);
       case PuzzleSolved(:final rating?)
           when puzzleRating == null || rating > puzzleRating!:
         r = r._copy(puzzleRating: rating);
-        beaten.add(RecordKind.puzzleRating);
+        if (puzzleRating != null && rating ~/ 100 > puzzleRating! ~/ 100) {
+          beaten.add(RecordKind.puzzleRating);
+        }
       case PuzzleRunFinished(:final mode, :final score)
           when score > (puzzleRuns[mode] ?? 0):
         r = r._copy(puzzleRuns: {...puzzleRuns, mode: score});
-        beaten.add(RecordKind.puzzleRun);
+        beat(RecordKind.puzzleRun, puzzleRuns[mode]);
       default:
     }
     return (r, beaten);

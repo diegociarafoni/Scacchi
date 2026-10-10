@@ -116,9 +116,9 @@ class ProgressTracker {
       dailyProgress[i] += _advance(c.kind, activity, goalReached);
       if (before < c.target && dailyProgress[i] >= c.target) completed.add(c);
     }
-    final allDone = [
-      for (final (i, c) in daily.indexed) dailyProgress[i] >= c.target,
-    ].every((done) => done);
+    final allDone = daily.indexed.every(
+      (e) => dailyProgress[e.$1] >= e.$2.target,
+    );
     xp += completed.length * dailyChallengeBonusXp;
 
     final week = weekNumber(today);
@@ -167,12 +167,10 @@ class ProgressTracker {
     );
   }
 
-  int _advance(ChallengeKind kind, Activity? activity, bool goalReached) =>
-      kind == ChallengeKind.goalDays
-      ? (goalReached ? 1 : 0)
-      : activity == null
-      ? 0
-      : kind.advance(activity);
+  int _advance(ChallengeKind kind, Activity? activity, bool goalReached) {
+    if (kind == ChallengeKind.goalDays) return goalReached ? 1 : 0;
+    return activity == null ? 0 : kind.advance(activity);
+  }
 
   /// Sfide di oggi con il relativo avanzamento.
   List<(Challenge, int)> challengeProgress(ProgressState state, DateTime now) {

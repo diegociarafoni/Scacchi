@@ -15,6 +15,10 @@ void main() {
   test('RG-08 bot più forte battuto', () {
     var u = rec(
       ProgressState.initial,
+      const GamePlayed(result: GameResult.win, opponentElo: 1100),
+    );
+    u = rec(
+      u.state,
       const GamePlayed(result: GameResult.win, opponentElo: 1200),
     );
     expect(u.newRecords, [RecordKind.strongestBot]);
@@ -31,20 +35,48 @@ void main() {
     expect(u.state.records.strongestBot, 1200);
   });
 
-  test('RG-08 vittoria più rapida', () {
+  test('RG-08 vittoria più rapida, solo con scacco matto', () {
     var u = rec(
       ProgressState.initial,
-      const GamePlayed(result: GameResult.win, moveCount: 30),
+      const GamePlayed(result: GameResult.win, moveCount: 30, checkmate: true),
     );
-    expect(u.newRecords, contains(RecordKind.fastestWin));
-    u = rec(u.state, const GamePlayed(result: GameResult.win, moveCount: 40));
+    expect(u.state.records.fastestWin, 30);
+    u = rec(
+      u.state,
+      const GamePlayed(result: GameResult.win, moveCount: 40, checkmate: true),
+    );
     expect(u.newRecords, isEmpty);
-    u = rec(u.state, const GamePlayed(result: GameResult.win, moveCount: 12));
+    u = rec(u.state, const GamePlayed(result: GameResult.win, moveCount: 5));
+    expect(u.state.records.fastestWin, 30);
+    u = rec(
+      u.state,
+      const GamePlayed(result: GameResult.win, moveCount: 12, checkmate: true),
+    );
+    expect(u.newRecords, [RecordKind.fastestWin]);
     expect(u.state.records.fastestWin, 12);
   });
 
+  test('il primo valore non si annuncia come record', () {
+    final u = rec(
+      ProgressState.initial,
+      const GamePlayed(result: GameResult.win, opponentElo: 800),
+    );
+    expect(u.state.records.strongestBot, 800);
+    expect(u.newRecords, isEmpty);
+  });
+
+  test('il punteggio puzzle si annuncia a ogni centinaio superato', () {
+    var u = rec(ProgressState.initial, const PuzzleSolved(rating: 1450));
+    u = rec(u.state, const PuzzleSolved(rating: 1480));
+    expect(u.newRecords, isEmpty);
+    expect(u.state.records.puzzleRating, 1480);
+    u = rec(u.state, const PuzzleSolved(rating: 1510));
+    expect(u.newRecords, [RecordKind.puzzleRating]);
+  });
+
   test('RG-08 precisione migliore in revisione', () {
-    var u = rec(ProgressState.initial, const ReviewCompleted(accuracy: 72.5));
+    var u = rec(ProgressState.initial, const ReviewCompleted(accuracy: 60));
+    u = rec(u.state, const ReviewCompleted(accuracy: 72.5));
     expect(u.newRecords, [RecordKind.bestAccuracy]);
     u = rec(u.state, const ReviewCompleted(accuracy: 70));
     expect(u.state.records.bestAccuracy, 72.5);
@@ -53,11 +85,12 @@ void main() {
   test('RG-08 punteggio migliore per modalità a tempo', () {
     var u = rec(
       ProgressState.initial,
-      const PuzzleRunFinished(mode: 'rush5', score: 14),
+      const PuzzleRunFinished(mode: 'rush5', score: 10),
     );
+    u = rec(u.state, const PuzzleRunFinished(mode: 'rush5', score: 14));
     expect(u.newRecords, [RecordKind.puzzleRun]);
     u = rec(u.state, const PuzzleRunFinished(mode: 'storm3', score: 9));
-    expect(u.newRecords, [RecordKind.puzzleRun]);
+    expect(u.newRecords, isEmpty);
     u = rec(u.state, const PuzzleRunFinished(mode: 'rush5', score: 10));
     expect(u.newRecords, isEmpty);
     expect(u.state.records.puzzleRuns, {'rush5': 14, 'storm3': 9});
@@ -65,9 +98,18 @@ void main() {
 
   test('RG-08 punteggio puzzle massimo', () {
     var u = rec(ProgressState.initial, const PuzzleSolved(rating: 1400));
-    expect(u.newRecords, [RecordKind.puzzleRating]);
     u = rec(u.state, const PuzzleSolved(rating: 1300));
     expect(u.state.records.puzzleRating, 1400);
+  });
+
+  test('un avanzamento delle sfide salvato incompleto non rompe nulla', () {
+    final s = ProgressState.fromJson({
+      'challengeDay': dayNumber(now),
+      'dailyProgress': [1],
+    });
+    expect(s.dailyProgress, hasLength(3));
+    expect(tracker.challengeProgress(s, now), hasLength(3));
+    expect(() => rec(s, const PuzzleSolved()), returnsNormally);
   });
 
   test('i record sopravvivono al salvataggio', () {

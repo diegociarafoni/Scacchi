@@ -42,17 +42,17 @@ Il livello *L* richiede `50 × L × (L − 1)` XP totali: livello 2 a 100 XP, 3 
 
 ## Sfide giornaliere e settimanali (RG-07)
 
-- Ogni giorno tre sfide generate in locale dalla data: una di gioco (gioca 2 partite, vinci, vinci con il bianco o con il nero, vinci in al massimo 30 mosse) e due tra puzzle (5 puzzle, 2 di forchetta, 2 di matto), revisione di una partita e lezione. La stessa data dà sempre le stesse sfide; il generatore è un mescolamento intero proprio, stabile tra versioni di Dart.
+- Ogni giorno tre sfide generate in locale dalla data: una di gioco (gioca 2 partite, vinci, vinci con il bianco o con il nero, dai matto in al massimo 30 mosse) e due tra puzzle (5 puzzle, 2 di forchetta, 2 di matto), revisione di una partita e lezione. La stessa data dà sempre le stesse sfide; il generatore è il finalizzatore a 32 bit di MurmurHash3 (`mix32`), con prodotti sotto 2^53: dà lo stesso risultato su Android, iOS, desktop e in JavaScript, e non dipende da `Random`.
 - Una sfida settimanale (da lunedì a domenica): 10 partite, 5 vittorie, 25 puzzle, obiettivo raggiunto 5 giorni o 3 revisioni.
 - Le sfide si completano una sola volta e danno XP bonus; nessuna penalità se restano incomplete.
 
 ## Record personali (RG-08)
 
-Serie più lunga, bot più forte battuto (Elo), vittoria con meno mosse, precisione migliore in revisione, punteggio puzzle massimo e miglior punteggio per ciascuna modalità a tempo o a serie. Ogni record battuto è annunciato nella notifica in-app ed elencato nel Profilo.
+Serie più lunga, bot più forte battuto (Elo), matto con meno mosse (solo vittorie per scacco matto, non per abbandono), precisione migliore in revisione, punteggio puzzle massimo e miglior punteggio per ciascuna modalità a tempo o a serie. Tutti i record sono elencati nel Profilo. La notifica in-app annuncia un record solo quando ne batte uno precedente (il primo valore si salva in silenzio) e, per il punteggio puzzle, solo quando supera un nuovo centinaio, per non ripetersi a ogni puzzle.
 
 ## Traguardi (RG-05)
 
-33 traguardi in quattro categorie (gioco, tattica, costanza, curiosità), sbloccabili una sola volta e annunciati con una notifica in-app (`showProgressFeedback`). Alcuni esempi: prima vittoria, vittoria con il nero, miniatura (meno di 20 mosse), bot da 1500 e 2000 Elo battuti, matto con il cavallo o con un pedone, vittoria con arrocco lungo, brillante trovata, 10 puzzle di forchetta o di matto, 20 punti in una modalità a tempo, giornata perfetta (tre sfide), 3, 7 e 30 giorni di fila, precisione del 90%, livello 5 e 10. L'elenco completo è in `lib/progress/achievements.dart`.
+33 traguardi in quattro categorie (gioco, tattica, costanza, curiosità), sbloccabili una sola volta e annunciati con una notifica in-app (`showProgressFeedback`). Alcuni esempi: prima vittoria, vittoria con il nero, miniatura (matto in meno di 20 mosse), bot da 1500 e 2000 Elo battuti, matto con il cavallo o con un pedone, vittoria con arrocco lungo, brillante trovata, 10 puzzle di forchetta o di matto, 20 punti in una modalità a tempo, giornata perfetta (tre sfide), 3, 7 e 30 giorni di fila, precisione del 90%, livello 5 e 10. L'elenco completo è in `lib/progress/achievements.dart`.
 
 ## Componenti
 

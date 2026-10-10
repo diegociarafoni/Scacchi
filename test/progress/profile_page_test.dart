@@ -111,6 +111,7 @@ void main() {
           result: GameResult.win,
           opponentElo: 1400,
           moveCount: 22,
+          checkmate: true,
         ),
       ),
     );
@@ -159,6 +160,9 @@ void main() {
   });
 
   test('RG-07 RG-08 il messaggio cita sfide e record', () async {
+    await controller.record(
+      const GamePlayed(result: GameResult.win, opponentElo: 900),
+    );
     final update = await controller.record(
       const GamePlayed(result: GameResult.win, opponentElo: 1000),
     );

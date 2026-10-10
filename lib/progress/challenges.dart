@@ -22,7 +22,7 @@ enum ChallengeKind {
 
   final bool isGame;
 
-  /// Vittoria "rapida": al massimo queste mosse del giocatore.
+  /// Vittoria "rapida": matto in al massimo queste mosse del giocatore.
   static const shortWinMoves = 30;
 
   /// Quanto [activity] fa avanzare una sfida di questo tipo.
@@ -34,7 +34,9 @@ enum ChallengeKind {
       winWithWhite => won && activity.playerSide == Side.white,
       winWithBlack => won && activity.playerSide == Side.black,
       winShort =>
-        won && (activity.moveCount ?? shortWinMoves + 1) <= shortWinMoves,
+        won &&
+            activity.checkmate &&
+            (activity.moveCount ?? shortWinMoves + 1) <= shortWinMoves,
       solvePuzzles => activity is PuzzleSolved,
       forkPuzzles =>
         activity is PuzzleSolved && activity.themes.contains('fork'),
@@ -65,7 +67,7 @@ class Challenge {
     ChallengeKind.winWithWhite => 'Vinci con il bianco',
     ChallengeKind.winWithBlack => 'Vinci con il nero',
     ChallengeKind.winShort =>
-      'Vinci in al massimo ${ChallengeKind.shortWinMoves} mosse',
+      'Dai matto in al massimo ${ChallengeKind.shortWinMoves} mosse',
     ChallengeKind.solvePuzzles =>
       target == 1 ? 'Risolvi un puzzle' : 'Risolvi $target puzzle',
     ChallengeKind.forkPuzzles => 'Risolvi $target puzzle di forchetta',
@@ -112,21 +114,26 @@ const _weekly = [
   Challenge(ChallengeKind.reviewGame, 3),
 ];
 
-/// Mescolamento intero stabile tra versioni di Dart, a differenza di Random.
-int _mix(int x) {
-  var h = (x * 0x9E3779B1) & 0xFFFFFFFF;
+int _mul32(int a, int b) =>
+    ((((a >> 16) * b & 0xFFFF) << 16) + (a & 0xFFFF) * b) & 0xFFFFFFFF;
+
+/// Mescolamento a 32 bit (finalizzatore di MurmurHash3). I prodotti restano
+/// sotto 2^53, così il risultato è identico anche compilato in JavaScript.
+int mix32(int x) {
+  var h = x & 0xFFFFFFFF;
   h ^= h >> 16;
-  h = (h * 0x85EBCA6B) & 0xFFFFFFFF;
+  h = _mul32(h, 0x85EBCA6B);
   h ^= h >> 13;
-  return h;
+  h = _mul32(h, 0xC2B2AE35);
+  return h ^ (h >> 16);
 }
 
 /// Tre sfide del giorno [day]: una di gioco e due di altro tipo, sempre le
 /// stesse per la stessa data.
 List<Challenge> dailyChallenges(int day) {
-  final game = _dailyGame[_mix(day) % _dailyGame.length];
-  final first = _mix(day + 7919) % _dailyOther.length;
-  final step = 1 + _mix(day + 104729) % (_dailyOther.length - 1);
+  final game = _dailyGame[mix32(day) % _dailyGame.length];
+  final first = mix32(day + 7919) % _dailyOther.length;
+  final step = 1 + mix32(day + 104729) % (_dailyOther.length - 1);
   return [
     game,
     _dailyOther[first],
@@ -137,4 +144,4 @@ List<Challenge> dailyChallenges(int day) {
 /// Numero della settimana che inizia di lunedì; il giorno 0 è un giovedì.
 int weekNumber(int day) => (day + 3) ~/ 7;
 
-Challenge weeklyChallenge(int week) => _weekly[_mix(week) % _weekly.length];
+Challenge weeklyChallenge(int week) => _weekly[mix32(week) % _weekly.length];

@@ -25,6 +25,7 @@ extension on ChallengeKind {
     ChallengeKind.winShort => const GamePlayed(
       result: GameResult.win,
       moveCount: 20,
+      checkmate: true,
     ),
     ChallengeKind.solvePuzzles ||
     ChallengeKind.forkPuzzles ||
@@ -53,6 +54,14 @@ void main() {
       for (var d = 0; d < 60; d++) {
         expect(dailyChallenges(20000 + d).any((c) => c.kind.isGame), isTrue);
       }
+    });
+
+    test('valori fissati: stessa scelta su ogni piattaforma', () {
+      // Valori calcolati a parte con aritmetica a 32 bit.
+      expect(mix32(1), 1364076727);
+      expect(mix32(20000), 3557571671);
+      expect(mix32(0xFFFFFFFF), 2180083513);
+      expect(mix32(123456789), 3126909082);
     });
 
     test('cambiano da un giorno all\'altro', () {
@@ -84,9 +93,19 @@ void main() {
       expect(ChallengeKind.winShort.advance(winBlack), 0);
       expect(
         ChallengeKind.winShort.advance(
-          const GamePlayed(result: GameResult.win, moveCount: 25),
+          const GamePlayed(
+            result: GameResult.win,
+            moveCount: 25,
+            checkmate: true,
+          ),
         ),
         1,
+      );
+      expect(
+        ChallengeKind.winShort.advance(
+          const GamePlayed(result: GameResult.win, moveCount: 25),
+        ),
+        0,
       );
       expect(
         ChallengeKind.forkPuzzles.advance(

@@ -247,9 +247,7 @@ class ProgressState {
       challengesCompleted: n('challengesCompleted'),
       perfectDays: n('perfectDays'),
       challengeDay: json['challengeDay'] as int?,
-      dailyProgress: [
-        ...(json['dailyProgress'] as List? ?? const [0, 0, 0]).cast<int>(),
-      ],
+      dailyProgress: _threeCounters(json['dailyProgress'] as List?),
       challengeWeek: json['challengeWeek'] as int?,
       weeklyProgress: n('weeklyProgress'),
       records: json['records'] == null
@@ -305,6 +303,7 @@ class ProgressState {
     todayPuzzles,
     todaySeconds,
     Object.hashAll(unlocked),
+    Object.hashAllUnordered(puzzleThemes.entries.map((e) => (e.key, e.value))),
     brilliantFound,
     challengesCompleted,
     perfectDays,
@@ -315,3 +314,9 @@ class ProgressState {
     records,
   ]);
 }
+
+/// Avanzamento delle tre sfide giornaliere, sempre di lunghezza 3.
+List<int> _threeCounters(List<Object?>? saved) => [
+  for (var i = 0; i < 3; i++)
+    saved != null && i < saved.length ? saved[i] as int? ?? 0 : 0,
+];

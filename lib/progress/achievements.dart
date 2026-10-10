@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dartchess/dartchess.dart';
 
 import 'activity.dart';
@@ -157,8 +159,7 @@ int _mateThemes(ProgressState s) => s.puzzleThemes.entries
     .where((e) => isMateTheme(e.key))
     .fold(0, (sum, e) => sum + e.value);
 
-int _bestRun(ProgressState s) =>
-    s.records.puzzleRuns.values.fold(0, (a, b) => a > b ? a : b);
+int _bestRun(ProgressState s) => s.records.puzzleRuns.values.fold(0, max);
 
 final List<Achievement> _more = [
   Achievement(
@@ -185,9 +186,9 @@ final List<Achievement> _more = [
   Achievement(
     id: 'miniature',
     title: 'Miniatura',
-    description: 'Vinci in meno di 20 mosse.',
+    description: 'Dai scacco matto in meno di 20 mosse.',
     category: AchievementCategory.game,
-    test: (_, a) => _wonWith(a, (g) => (g.moveCount ?? 99) < 20),
+    test: (_, a) => _wonWith(a, (g) => g.checkmate && (g.moveCount ?? 99) < 20),
   ),
   Achievement(
     id: 'beat_1500',

@@ -105,6 +105,7 @@ void main() {
     expect(a.playerSide, Side.white);
     expect(a.moveCount, 4);
     expect(a.opponentElo, 1200);
+    expect(a.checkmate, isTrue);
     expect(gameActivity(play(scholarsMate)).moveCount, 4);
   });
 

@@ -19,10 +19,14 @@ class GamePlayed extends Activity {
     this.playerSide,
     this.moveCount,
     this.opponentElo,
+    this.checkmate = false,
     this.matedWith,
     this.castledLong = false,
     super.duration,
   });
+
+  /// La partita è finita con uno scacco matto (di chiunque).
+  final bool checkmate;
 
   final GameResult result;
 

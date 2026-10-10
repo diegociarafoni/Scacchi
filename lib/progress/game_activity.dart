@@ -45,6 +45,7 @@ GamePlayed gameActivity(
     playerSide: player,
     moveCount: player == null ? (game.moves.length + 1) ~/ 2 : playerMoves,
     opponentElo: opponentElo,
+    checkmate: game.endReason == GameEndReason.checkmate,
     matedWith: matedWith,
     castledLong: castledLong,
     duration: duration,
