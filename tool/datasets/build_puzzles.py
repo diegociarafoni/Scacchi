@@ -23,6 +23,12 @@ MAX_DEVIATION = 85
 MIN_POPULARITY = 85
 MIN_PLAYS = 800
 
+# Rare themes are topped up from a looser filter to reach MIN_PER_THEME.
+RARE_THEMES = ["castling", "underPromotion", "enPassant", "interference"]
+MIN_PER_THEME = 30
+RELAXED_POPULARITY = 60
+RELAXED_PLAYS = 200
+
 # Themes the app offers as filters; each band tries to cover all of them.
 KEY_THEMES = [
     "mateIn1", "mateIn2", "mateIn3", "mateIn4", "mateIn5",
@@ -44,6 +50,7 @@ def order_key(puzzle_id):
 
 def main():
     bands = {}
+    relaxed = []
     reader = csv.reader(sys.stdin)
     header = next(reader)
     col = {name: i for i, name in enumerate(header)}
@@ -57,23 +64,24 @@ def main():
             continue
         if not MIN_RATING <= rating < MAX_RATING:
             continue
-        if deviation > MAX_DEVIATION or popularity < MIN_POPULARITY:
+        if deviation > MAX_DEVIATION:
             continue
-        if plays < MIN_PLAYS:
-            continue
-        band = (rating - MIN_RATING) // BAND
-        bands.setdefault(band, []).append((
+        entry = (
             order_key(row[col["PuzzleId"]]),
             row[col["PuzzleId"]],
             row[col["FEN"]],
             row[col["Moves"]],
             rating,
             row[col["Themes"]],
-        ))
+        )
+        if popularity >= MIN_POPULARITY and plays >= MIN_PLAYS:
+            band = (rating - MIN_RATING) // BAND
+            bands.setdefault(band, []).append(entry)
+        elif popularity >= RELAXED_POPULARITY and plays >= RELAXED_PLAYS:
+            if set(RARE_THEMES) & set(entry[5].split()):
+                relaxed.append(entry)
 
-    out = csv.writer(sys.stdout, lineterminator="\n")
-    out.writerow(["id", "fen", "moves", "rating", "themes"])
-    total = 0
+    selected = []
     for band in sorted(bands):
         candidates = sorted(bands[band])
         chosen = {}
@@ -89,10 +97,24 @@ def main():
             if len(chosen) >= PER_BAND:
                 break
             chosen.setdefault(c[1], c)
-        for c in sorted(chosen.values(), key=lambda c: (c[4], c[1])):
-            out.writerow(c[1:])
-            total += 1
-    print(f"puzzles: {total}", file=sys.stderr)
+        selected.extend(chosen.values())
+
+    ids = {c[1] for c in selected}
+    for theme in RARE_THEMES:
+        have = sum(1 for c in selected if theme in c[5].split())
+        for c in sorted(relaxed):
+            if have >= MIN_PER_THEME:
+                break
+            if theme in c[5].split() and c[1] not in ids:
+                selected.append(c)
+                ids.add(c[1])
+                have += 1
+
+    out = csv.writer(sys.stdout, lineterminator="\n")
+    out.writerow(["id", "fen", "moves", "rating", "themes"])
+    for c in sorted(selected, key=lambda c: (c[4], c[1])):
+        out.writerow(c[1:])
+    print(f"puzzles: {len(selected)}", file=sys.stderr)
 
 
 if __name__ == "__main__":

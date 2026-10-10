@@ -31,7 +31,11 @@ jobs:
           channel: stable
           flutter-version: 3.47.7
           cache: true
-      - run: xvfb-run -a flutter test integration_test -d linux
+      # One app launch per file: back-to-back launches of the Linux app fail.
+      - run: |
+          for f in integration_test/*_test.dart; do
+            xvfb-run -a flutter test "$f" -d linux
+          done
 
   android:
     runs-on: ubuntu-latest

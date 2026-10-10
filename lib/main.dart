@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'game/game_page.dart';
+import 'home/home_shell.dart';
 
 void main() {
   runApp(const ScacchiApp());
@@ -17,7 +17,7 @@ class ScacchiApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(colorSchemeSeed: seed, brightness: Brightness.light),
       darkTheme: ThemeData(colorSchemeSeed: seed, brightness: Brightness.dark),
-      home: const GamePage(),
+      home: const HomeShell(),
     );
   }
 }
