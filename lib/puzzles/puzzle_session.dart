@@ -26,6 +26,9 @@ class PuzzleSession {
   PuzzleState get state => _state;
   bool get usedHint => _usedHint;
 
+  /// Vero se almeno una mossa è stata mostrata con "Soluzione".
+  bool get revealed => _revealed;
+
   /// Vero se il puzzle è stato risolto senza errori e senza vedere la soluzione.
   bool get firstTry => !_mistake && !_revealed;
 

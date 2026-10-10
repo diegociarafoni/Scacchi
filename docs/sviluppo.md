@@ -70,6 +70,7 @@ I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisic
 | RF-81 risoluzione e punteggio Glicko-2 | ✓ | ✓ |
 | RF-83 suggerimento, soluzione, filtro per tema | ✓ | ✓ |
 | RF-84 puzzle del giorno | ✓ | ✓ |
+| RG-01 XP per i puzzle risolti | ✓ | |
 
 ## Integrazione continua
 

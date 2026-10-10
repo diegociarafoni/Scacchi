@@ -1,6 +1,9 @@
 import 'package:chessground/chessground.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scacchi/progress/activity.dart';
+import 'package:scacchi/progress/progress_state.dart';
+import 'package:scacchi/progress/progress_tracker.dart';
 import 'package:scacchi/puzzles/puzzle_library.dart';
 import 'package:scacchi/puzzles/puzzle_page.dart';
 import 'package:scacchi/puzzles/puzzle_trainer.dart';
@@ -30,7 +33,10 @@ Future<void> tapMove(WidgetTester tester, String uci) async {
 String message(WidgetTester tester) =>
     tester.widget<Text>(find.byKey(const Key('puzzle-message'))).data!;
 
-Future<PuzzleTrainer> pump(WidgetTester tester) async {
+Future<PuzzleTrainer> pump(
+  WidgetTester tester, {
+  List<Activity>? activities,
+}) async {
   tester.view.physicalSize = const Size(1170, 2532);
   tester.view.devicePixelRatio = 3;
   addTearDown(tester.view.reset);
@@ -40,7 +46,19 @@ Future<PuzzleTrainer> pump(WidgetTester tester) async {
   );
   await tester.pumpWidget(
     MaterialApp(
-      home: PuzzlePage(trainer: trainer, puzzle: backRank),
+      home: PuzzlePage(
+        trainer: trainer,
+        puzzle: backRank,
+        onActivity: activities == null
+            ? null
+            : (a) async {
+                activities.add(a);
+                return const ProgressUpdate(
+                  state: ProgressState.initial,
+                  xpGained: 5,
+                );
+              },
+      ),
     ),
   );
   return trainer;
@@ -77,5 +95,26 @@ void main() {
     await tester.pumpAndSettle();
     expect(message(tester), startsWith('Puzzle concluso.'));
     expect(trainer.failedCount, 1);
+  });
+
+  testWidgets('RG-01 un puzzle risolto vale XP, con la notifica', (
+    tester,
+  ) async {
+    final activities = <Activity>[];
+    await pump(tester, activities: activities);
+    await tapMove(tester, 'a1a8');
+    await tester.pump();
+    expect(activities.single, isA<PuzzleSolved>());
+    expect(find.text('+5 XP'), findsOneWidget);
+  });
+
+  testWidgets('RG-01 un puzzle visto con la soluzione non vale XP', (
+    tester,
+  ) async {
+    final activities = <Activity>[];
+    await pump(tester, activities: activities);
+    await tester.tap(find.text('Soluzione'));
+    await tester.pumpAndSettle();
+    expect(activities, isEmpty);
   });
 }

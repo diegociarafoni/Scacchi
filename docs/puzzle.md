@@ -75,7 +75,9 @@ Punteggio, puzzle visti e contatori sono salvati nel file `training.json` della 
 
 ## Integrazione con la gamification
 
-`PuzzleTrainer.onCompleted` riceve un `PuzzleCompleted` (puzzle, esito, variazione di punteggio) per ogni puzzle concluso: è il punto in cui assegnare XP, aggiornare l'obiettivo giornaliero e le medaglie.
+Ogni puzzle portato a termine dal giocatore, anche dopo un tentativo sbagliato, registra un `PuzzleSolved` con la durata nel `ProgressController` (XP, obiettivo giornaliero "5 puzzle", traguardi) e mostra la notifica `showProgressFeedback`. Un puzzle concluso con "Soluzione" non vale XP. Il collegamento passa da `HomeShell`, che apre i progressi alla prima attività, alle schermate tramite il parametro `onActivity` (`lib/puzzles/activity_recorder.dart`).
+
+`PuzzleTrainer.onCompleted` riceve inoltre un `PuzzleCompleted` (puzzle, esito, variazione di punteggio) per statistiche future.
 
 ## Navigazione
 

@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 
 import '../game/game_page.dart';
+import '../progress/activity.dart';
+import '../progress/progress_controller.dart';
+import '../progress/progress_tracker.dart';
 import '../puzzles/puzzle_assets.dart';
 import '../puzzles/puzzle_hub_page.dart';
 import '../puzzles/puzzle_trainer.dart';
 
 /// Navigazione principale con la barra in basso, nella zona del pollice.
 class HomeShell extends StatefulWidget {
-  const HomeShell({super.key, this.puzzleTrainer});
+  const HomeShell({super.key, this.puzzleTrainer, this.progress});
 
   /// Sostituibile nei test; di default carica i puzzle inclusi nell'app.
   final Future<PuzzleTrainer> Function()? puzzleTrainer;
+
+  /// Sostituibile nei test; di default apre i progressi salvati.
+  final Future<ProgressController> Function()? progress;
 
   @override
   State<HomeShell> createState() => _HomeShellState();
@@ -19,6 +25,12 @@ class HomeShell extends StatefulWidget {
 class _HomeShellState extends State<HomeShell> {
   int _tab = 0;
   Future<PuzzleTrainer>? _trainer;
+  Future<ProgressController>? _progress;
+
+  Future<ProgressUpdate?> _record(Activity activity) async {
+    _progress ??= (widget.progress ?? ProgressController.open)();
+    return (await _progress!).record(activity);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +43,7 @@ class _HomeShellState extends State<HomeShell> {
         children: [
           const GamePage(),
           if (_trainer != null)
-            PuzzleHubPage(trainer: _trainer!)
+            PuzzleHubPage(trainer: _trainer!, onActivity: _record)
           else
             const SizedBox.shrink(),
         ],

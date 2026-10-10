@@ -5,7 +5,10 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
+import '../progress/activity.dart';
+import '../progress/progress_feedback.dart';
 import '../training/training_board.dart';
+import 'activity_recorder.dart';
 import 'puzzle.dart';
 import 'puzzle_session.dart';
 import 'puzzle_trainer.dart';
@@ -21,6 +24,7 @@ class PuzzlePage extends StatefulWidget {
     this.theme,
     this.puzzle,
     this.title = 'Puzzle',
+    this.onActivity,
     this.replyDelay = const Duration(milliseconds: 400),
   });
 
@@ -30,6 +34,9 @@ class PuzzlePage extends StatefulWidget {
   /// Puzzle fisso (per esempio quello del giorno); altrimenti si sceglie per punteggio.
   final Puzzle? puzzle;
   final String title;
+
+  /// Riceve un `PuzzleSolved` per ogni puzzle risolto, per XP e obiettivi.
+  final ActivityRecorder? onActivity;
   final Duration replyDelay;
 
   @override
@@ -44,6 +51,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
   int _revision = 0;
   bool _recorded = false;
   Timer? _replyTimer;
+  final _stopwatch = Stopwatch();
 
   @override
   void initState() {
@@ -63,6 +71,9 @@ class _PuzzlePageState extends State<PuzzlePage> {
     _delta = null;
     _hint = null;
     _recorded = false;
+    _stopwatch
+      ..reset()
+      ..start();
   }
 
   void _onMove(Move move) {
@@ -95,9 +106,16 @@ class _PuzzlePageState extends State<PuzzlePage> {
     if (_recorded) return;
     _recorded = true;
     final solved = _session.firstTry;
+    _stopwatch.stop();
     widget.trainer.record(_session.puzzle, solved: solved).then((delta) {
       if (mounted) setState(() => _delta = delta);
     });
+    final record = widget.onActivity;
+    if (record != null && !_session.revealed) {
+      record(PuzzleSolved(duration: _stopwatch.elapsed)).then((update) {
+        if (mounted && update != null) showProgressFeedback(context, update);
+      });
+    }
   }
 
   void _showHint() => setState(() => _hint = _session.hint());
