@@ -6,3 +6,5 @@
 | [chessground](https://github.com/lichess-org/flutter-chessground) (Lichess) | Scacchiera interattiva | GPL-3.0 |
 | Set di pezzi "cburnett" di Colin M.L. Burnett, incluso in chessground | Grafica dei pezzi | GPL-2.0+ / CC BY-SA 3.0 |
 | [Flutter](https://flutter.dev) | Framework dell'interfaccia | BSD-3-Clause |
+| [path_provider](https://pub.dev/packages/path_provider) (Flutter) | Cartella dati dell'app per i salvataggi | BSD-3-Clause |
+| [share_plus](https://pub.dev/packages/share_plus) (Flutter Community) | Condivisione PGN con il menu del sistema | BSD-3-Clause |

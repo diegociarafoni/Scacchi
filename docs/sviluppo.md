@@ -38,6 +38,7 @@ Ogni funzione nasce dai requisiti del progetto, nel documento dei requisiti, con
 | Unitari | `test/chess_game_test.dart` | Regole e fine partita su `ChessGame`, senza interfaccia | `flutter test` |
 | Widget | `test/widget_test.dart` | Avvio dell'app e stato iniziale | `flutter test` |
 | Gamification | `test/progress/` | Regole di XP, serie e traguardi; salvataggio; schermata Profilo | `flutter test test/progress` |
+| Archivio | `test/archive/` | PGN, salvataggio su file, schermata Partite | `flutter test test/archive` |
 | End-to-end | `integration_test/app_test.dart` | L'app reale avviata su un dispositivo o desktop, con tocchi e trascinamenti sulla scacchiera | `flutter test integration_test -d <dispositivo>` |
 
 I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisici, rapporto 3) e muovono i pezzi calcolando la posizione delle case sulla scacchiera.
@@ -53,6 +54,9 @@ I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisic
 | RF-25 matto, stallo, materiale insufficiente, ripetizione, 50 mosse, abbandono | ✓ | matto, abbandono |
 | RF-31 rotazione automatica a ogni turno | | ✓ |
 | RF-32 patta concordata e annullamento | ✓ | ✓ |
+| RF-100 salvataggio e partita da riprendere | ✓ | |
+| RF-101 storico con ricerca | ✓ | |
+| RF-102 import ed export PGN, condivisione, copia | ✓ | |
 | Annullamento di abbandono e patta senza perdita di mosse | ✓ | |
 | RF-04 chiusura del selettore di promozione con Annulla | | ✓ |
 | RG-01 XP e livelli | ✓ | |

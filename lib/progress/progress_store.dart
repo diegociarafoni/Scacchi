@@ -1,6 +1,6 @@
-import 'dart:convert';
 import 'dart:io';
 
+import '../storage/json_file.dart';
 import 'progress_state.dart';
 
 /// Stato e impostazioni della gamification salvati insieme.
@@ -11,60 +11,28 @@ class ProgressData {
   final ProgressSettings settings;
 }
 
-/// Salvataggio locale in un file JSON con versione dello schema.
+/// Salvataggio locale dei progressi in un file JSON (vedi [JsonFile]).
 class ProgressStore {
-  ProgressStore(this.file);
+  ProgressStore(File file) : _file = JsonFile(file, version: schemaVersion);
 
   static const schemaVersion = 1;
 
-  final File file;
+  final JsonFile _file;
 
-  Future<void> _pending = Future.value();
-
-  Future<ProgressData> load() async {
-    await _pending;
-    if (!await file.exists()) return _empty;
-    try {
-      final json =
-          jsonDecode(await file.readAsString()) as Map<String, Object?>;
-      final version = json['version'] as int? ?? 0;
-      if (version < 1 || version > schemaVersion) {
-        throw FormatException('versione dello schema $version');
-      }
-      return ProgressData(
-        ProgressState.fromJson((json['state']! as Map).cast()),
-        ProgressSettings.fromJson((json['settings']! as Map).cast()),
-      );
-    } on Object {
-      // Il file non si legge: lo si mette da parte invece di sovrascriverlo.
-      await file.rename(
-        '${file.path}.bad-${DateTime.now().millisecondsSinceEpoch}',
-      );
-      return _empty;
-    }
-  }
+  /// Progressi salvati, o quelli iniziali se il file manca o non è valido.
+  /// Gli errori di lettura del disco si propagano.
+  Future<ProgressData> load() async =>
+      await _file.read(
+        (json) => ProgressData(
+          ProgressState.fromJson((json['state']! as Map).cast()),
+          ProgressSettings.fromJson((json['settings']! as Map).cast()),
+        ),
+      ) ??
+      const ProgressData(ProgressState.initial, ProgressSettings());
 
   /// Salva [data]; i salvataggi si accodano, quindi vince sempre l'ultimo.
-  Future<void> save(ProgressData data) {
-    final next = _pending.then((_) => _write(data));
-    _pending = next.catchError((Object _) {});
-    return next;
-  }
-
-  Future<void> _write(ProgressData data) async {
-    await file.parent.create(recursive: true);
-    final tmp = File('${file.path}.tmp');
-    await tmp.writeAsString(
-      jsonEncode({
-        'version': schemaVersion,
-        'settings': data.settings.toJson(),
-        'state': data.state.toJson(),
-      }),
-      flush: true,
-    );
-    // Rinomina atomica: un'interruzione non lascia il file a metà.
-    await tmp.rename(file.path);
-  }
-
-  static const _empty = ProgressData(ProgressState.initial, ProgressSettings());
+  Future<void> save(ProgressData data) => _file.write({
+    'settings': data.settings.toJson(),
+    'state': data.state.toJson(),
+  });
 }

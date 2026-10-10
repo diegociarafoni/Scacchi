@@ -37,10 +37,21 @@ class ProgressController extends ChangeNotifier {
   int get freezes => _tracker.currentFreezes(_state, _clock(), _settings);
   int get todayProgress => _tracker.todayProgress(_state, _clock(), _settings);
 
+  /// Vero se il file non si è potuto leggere: per non sovrascrivere i
+  /// progressi salvati, si gioca senza salvare.
+  bool get readOnly => _readOnly;
+  bool _readOnly = false;
+
   Future<void> load() async {
-    final data = await _store.load();
-    _state = data.state;
-    _settings = data.settings;
+    try {
+      final data = await _store.load();
+      _state = data.state;
+      _settings = data.settings;
+      _readOnly = false;
+    } on FileSystemException catch (e) {
+      debugPrint('Lettura dei progressi non riuscita: $e');
+      _readOnly = true;
+    }
     notifyListeners();
   }
 
@@ -62,6 +73,7 @@ class ProgressController extends ChangeNotifier {
   }
 
   Future<void> _save() async {
+    if (_readOnly) return;
     try {
       await _store.save(ProgressData(_state, _settings));
     } on FileSystemException catch (e) {
