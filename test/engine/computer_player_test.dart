@@ -239,6 +239,53 @@ void main() {
       await player.dispose();
     });
 
+    test('dopo dispose le richieste in coda non avviano il motore', () async {
+      var connects = 0;
+      final player = ComputerPlayer(
+        connect: () async {
+          connects++;
+          return FakeEngine((_) => ['bestmove e2e4']);
+        },
+      );
+      final pending = player.bestMove(Chess.initial.fen, const [], fast(8));
+      await player.dispose();
+      await expectLater(pending, throwsStateError);
+      expect(connects, 0);
+    });
+
+    test('se il motore si chiude, la ricerca fallisce subito', () async {
+      final fake = FakeEngine((_) => null);
+      final player = ComputerPlayer(connect: () async => fake);
+      final pending = player.bestMove(Chess.initial.fen, const [], fast(8));
+      await Future<void>.delayed(const Duration(milliseconds: 20));
+      final stopwatch = Stopwatch()..start();
+      await fake.dispose();
+      await expectLater(pending, throwsA(anything));
+      expect(stopwatch.elapsed, lessThan(const Duration(seconds: 1)));
+      await player.dispose();
+    });
+
+    test('RF-20 confronta solo candidate della stessa profondità', () async {
+      final fake = FakeEngine(
+        (_) => [
+          'info depth 4 multipv 1 score cp 40 pv d2d4',
+          'info depth 4 multipv 2 score cp 45 pv c2c4',
+          'info depth 5 multipv 1 score cp 50 pv e2e4',
+          'bestmove e2e4',
+        ],
+      );
+      final player = ComputerPlayer(connect: () async => fake);
+      for (var i = 0; i < 20; i++) {
+        final move = await player.bestMove(
+          Chess.initial.fen,
+          const [],
+          fast(1),
+        );
+        expect(move!.move.uci, 'e2e4');
+      }
+      await player.dispose();
+    });
+
     test('restituisce null se non ci sono mosse legali', () async {
       final fake = FakeEngine((_) => ['bestmove (none)']);
       final player = ComputerPlayer(connect: () async => fake);

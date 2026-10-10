@@ -68,17 +68,22 @@ class ComputerPlayer {
   Future<void> init() => _ready ??= _start();
 
   Future<void> _start() async {
+    if (_disposed) throw StateError('Motore chiuso');
     final transport = await _connect();
     if (_disposed) {
       await transport.dispose();
       throw StateError('Motore chiuso');
     }
     _transport = transport;
-    _subscription = transport.lines.listen((line) {
-      for (final l in [..._listeners]) {
-        l(line);
-      }
-    });
+    _subscription = transport.lines.listen(
+      (line) {
+        for (final l in [..._listeners]) {
+          l(line);
+        }
+      },
+      onError: (Object e) => _failPending(e),
+      onDone: () => _failPending(StateError('Il motore si è chiuso')),
+    );
     await _command('uci', (l) => l == 'uciok', const Duration(seconds: 30));
     await _sync();
   }
@@ -142,9 +147,10 @@ class ComputerPlayer {
     _transport = null;
     _applied.clear();
     _listeners.clear();
-    await _subscription?.cancel();
+    final subscription = _subscription;
     _subscription = null;
     await transport?.dispose();
+    await subscription?.cancel();
   }
 
   Future<EngineMove?> _search(
@@ -197,7 +203,9 @@ class ComputerPlayer {
             ? chooseCandidate(
                 [
                   for (final i in infos.values)
-                    if (i.multipv <= level.multiPv) i,
+                    if (i.multipv <= level.multiPv &&
+                        i.depth == infos[1]?.depth)
+                      i,
                 ],
                 level.temperatureCp,
                 _random,

@@ -69,8 +69,13 @@ class FirstLegalMoveEngine implements UciTransport {
     return '(none)';
   }
 
+  bool disposed = false;
+
   @override
-  Future<void> dispose() => _out.close();
+  Future<void> dispose() async {
+    disposed = true;
+    await _out.close();
+  }
 }
 
 Future<void> startComputerGame(
@@ -228,6 +233,43 @@ void main() {
     await startComputerGame(tester, side: 'Bianco');
     await tester.pumpAndSettle(const Duration(seconds: 1));
     expect(find.text('Riprova'), findsNothing);
+  });
+
+  testWidgets('RF-25 la risposta alla patta è visibile anche dopo un errore', (
+    tester,
+  ) async {
+    var attempts = 0;
+    await tester.pumpWidget(
+      app(
+        connect: () async {
+          if (attempts++ < 2) throw StateError('motore occupato');
+          return FirstLegalMoveEngine();
+        },
+      ),
+    );
+    await startComputerGame(tester, side: 'Nero');
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    expect(find.text('Riprova'), findsOneWidget);
+    await tester.tap(find.text('Patta'));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    expect(find.text('Il computer rifiuta la patta.'), findsOneWidget);
+  });
+
+  testWidgets('passando a due giocatori il motore viene chiuso', (
+    tester,
+  ) async {
+    final engine = FirstLegalMoveEngine();
+    await tester.pumpWidget(app(connect: () async => engine));
+    await startComputerGame(tester, side: 'Bianco');
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    expect(engine.disposed, isFalse);
+    await tester.tap(find.text('Nuova'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Due giocatori'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Gioca'));
+    await tester.pumpAndSettle();
+    expect(engine.disposed, isTrue);
   });
 
   testWidgets('senza motore disponibile la scelta Computer è disattivata', (

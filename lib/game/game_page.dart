@@ -35,8 +35,8 @@ class _GamePageState extends State<GamePage> {
   /// Lato giocato dal computer; `null` nella partita tra due persone.
   Side? _computerSide;
   ComputerPlayer? _computer;
-  bool _thinking = false;
-  String _thinkingText = 'Il computer sta pensando…';
+  _ComputerTask _task = _ComputerTask.none;
+  bool get _thinking => _task != _ComputerTask.none;
 
   /// Invalida le risposte del computer per posizioni non più attuali.
   int _generation = 0;
@@ -94,8 +94,7 @@ class _GamePageState extends State<GamePage> {
     if (_game.position.turn != side) return;
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     final generation = _generation;
-    _thinking = true;
-    _thinkingText = 'Il computer sta pensando…';
+    _task = _ComputerTask.move;
     _refresh(animate: false);
     EngineMove? reply;
     Object? error;
@@ -109,7 +108,7 @@ class _GamePageState extends State<GamePage> {
       error = e;
     }
     if (!mounted || generation != _generation) return;
-    _thinking = false;
+    _task = _ComputerTask.none;
     if (reply != null && !_game.play(reply.move)) error = reply;
     _refresh();
     if (error != null) {
@@ -127,7 +126,7 @@ class _GamePageState extends State<GamePage> {
     _generation++;
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     if (_thinking) _computer?.stop();
-    _thinking = false;
+    _task = _ComputerTask.none;
   }
 
   /// Chiude selezione e selettore di promozione rimasti aperti sulla scacchiera.
@@ -177,6 +176,8 @@ class _GamePageState extends State<GamePage> {
       _computerPlayer.newGame().ignore();
     } else {
       _computerSide = null;
+      _computer?.dispose();
+      _computer = null;
     }
     _refresh(animate: false);
     _computerMove();
@@ -237,8 +238,8 @@ class _GamePageState extends State<GamePage> {
     if (_thinking) return;
     final generation = _generation;
     final turn = _game.position.turn;
-    _thinking = true;
-    _thinkingText = 'Il computer valuta la patta…';
+    _task = _ComputerTask.draw;
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     _refresh(animate: false);
     int? computerScore;
     try {
@@ -253,7 +254,7 @@ class _GamePageState extends State<GamePage> {
       }
     } catch (_) {}
     if (!mounted || generation != _generation) return;
-    _thinking = false;
+    _task = _ComputerTask.none;
     _refresh(animate: false);
     if (_game.isOver) return;
     if (computerScore != null && computerScore <= -_drawAcceptanceCp) {
@@ -358,7 +359,11 @@ class _GamePageState extends State<GamePage> {
               ),
             );
             final status = _StatusLine(
-              text: _thinking ? _thinkingText : statusText(_game),
+              text: switch (_task) {
+                _ComputerTask.none => statusText(_game),
+                _ComputerTask.move => 'Il computer sta pensando…',
+                _ComputerTask.draw => 'Il computer valuta la patta…',
+              },
             );
             final moves = _MoveList(game: _game, horizontal: !landscape);
             if (landscape) {
@@ -402,6 +407,9 @@ class _GamePageState extends State<GamePage> {
     );
   }
 }
+
+/// Operazione in corso del computer.
+enum _ComputerTask { none, move, draw }
 
 const int _drawAcceptanceCp = 50;
 const double _moveStripHeight = 40;

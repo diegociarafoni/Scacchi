@@ -100,6 +100,9 @@ lib/game/
   `ComputerPlayer` converte in entrambe le direzioni.
 - Su Android e iOS `Stockfish.create()` ammette un solo motore alla volta: se il precedente non ha
   ancora liberato il posto, l'avvio riprova fino a cinque volte.
+- Se il motore si chiude o va in errore, le richieste in corso falliscono subito invece di attendere il timeout.
+- Per la scelta "umana" si confrontano solo le candidate valutate alla stessa profondità della migliore.
+- Passando a una partita tra due persone il motore viene chiuso, liberando memoria.
 - `UciTransport` separa la logica dal motore concreto: in produzione `StockfishTransport`,
   nei test un motore finto o un processo Stockfish.
 
