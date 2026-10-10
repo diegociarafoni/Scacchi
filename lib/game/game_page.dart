@@ -142,7 +142,7 @@ class _GamePageState extends State<GamePage> {
     return Scaffold(
       appBar: AppBar(
         title: OpeningName(
-          moves: [for (final m in _game.moves) m.move],
+          positions: [_game.initial, for (final m in _game.moves) m.after],
           fallback: 'Scacchi',
         ),
         actions: [

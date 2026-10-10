@@ -21,17 +21,36 @@ class ExplorerPage extends StatefulWidget {
 
 class _ExplorerPageState extends State<ExplorerPage> {
   late final Future<OpeningBook> _book = widget.book ?? openingBook();
-  late final List<Move> _moves = [...widget.initialMoves];
+  final List<Move> _moves = [];
+  late List<Position> _positions;
   Side _orientation = Side.white;
 
-  List<Position> get _positions => OpeningBook.replay(_moves);
-
-  void _play(Move move) {
-    if (!_positions.last.isLegal(move)) return;
-    setState(() => _moves.add(move));
+  @override
+  void initState() {
+    super.initState();
+    // Solo la parte legale delle mosse iniziali.
+    _positions = OpeningBook.replay(widget.initialMoves);
+    _moves.addAll(widget.initialMoves.take(_positions.length - 1));
   }
 
-  void _back() => setState(() => _moves.removeLast());
+  void _play(Move move) {
+    final pos = _positions.last;
+    if (!pos.isLegal(move)) return;
+    setState(() {
+      _moves.add(move);
+      _positions = [..._positions, pos.play(move)];
+    });
+  }
+
+  void _back() => setState(() {
+    _moves.removeLast();
+    _positions = _positions.sublist(0, _positions.length - 1);
+  });
+
+  void _reset() => setState(() {
+    _moves.clear();
+    _positions = [_positions.first];
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -53,12 +72,17 @@ class _ExplorerPageState extends State<ExplorerPage> {
         child: FutureBuilder<OpeningBook>(
           future: _book,
           builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return const Center(
+                child: Text('Impossibile caricare le aperture.'),
+              );
+            }
             final book = snapshot.data;
             if (book == null) {
               return const Center(child: CircularProgressIndicator());
             }
-            final opening = book.classify(_moves);
-            final next = book.continuations(_moves);
+            final opening = book.classifyPositions(positions);
+            final next = book.continuationsAt(positions.last);
             return LayoutBuilder(
               builder: (context, c) {
                 final size = math.min(c.maxWidth, c.maxHeight * 0.55);
@@ -66,9 +90,11 @@ class _ExplorerPageState extends State<ExplorerPage> {
                   children: [
                     ListTile(
                       title: Text(
-                        opening == null
+                        opening != null
+                            ? '${opening.eco} ${opening.name}'
+                            : _moves.isEmpty
                             ? 'Posizione iniziale'
-                            : '${opening.eco} ${opening.name}',
+                            : 'Apertura senza nome',
                         key: const Key('explorer-opening'),
                         style: text.titleMedium,
                       ),
@@ -122,9 +148,7 @@ class _ExplorerPageState extends State<ExplorerPage> {
                         ),
                         Expanded(
                           child: TextButton.icon(
-                            onPressed: _moves.isEmpty
-                                ? null
-                                : () => setState(_moves.clear),
+                            onPressed: _moves.isEmpty ? null : _reset,
                             icon: const Icon(Icons.first_page),
                             label: const Text('Inizio'),
                           ),

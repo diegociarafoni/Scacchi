@@ -76,6 +76,17 @@ void main() {
     });
   });
 
+  test('accetta file con fine riga Windows', () {
+    final crlf = OpeningBook.parseTsv(tsv.replaceAll('\n', '\r\n'));
+    expect(crlf.classify(uci('e2e4 c7c5'))?.name, 'Sicilian Defense');
+  });
+
+  test('riconosce le aperture anche da posizioni già calcolate', () {
+    final positions = OpeningBook.replay(uci('e2e4 c7c5'));
+    expect(book.classifyPositions(positions)?.eco, 'B20');
+    expect(book.continuationsAt(positions.first).first.san, 'e4');
+  });
+
   test('il dataset incluso è completo e valido', () {
     final real = OpeningBook.parseTsv(
       io.File('assets/openings/openings.tsv').readAsStringSync(),

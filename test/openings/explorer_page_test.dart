@@ -44,6 +44,30 @@ void main() {
     expect(find.text('1. e4 e5'), findsOneWidget);
   });
 
+  testWidgets('RF-92 le mosse iniziali illegali vengono scartate', (
+    tester,
+  ) async {
+    await phone(
+      tester,
+      ExplorerPage(
+        book: Future.value(book),
+        initialMoves: [Move.parse('e2e4')!, Move.parse('e2e5')!],
+      ),
+    );
+    expect(find.text('1. e4'), findsOneWidget);
+    await tester.tap(find.text('c5'));
+    await tester.pumpAndSettle();
+    expect(opening(tester), 'B20 Sicilian Defense');
+  });
+
+  testWidgets('RF-92 un errore di caricamento non lascia la rotella', (
+    tester,
+  ) async {
+    final failing = Future<OpeningBook>.error(StateError('x'))..ignore();
+    await phone(tester, ExplorerPage(book: failing));
+    expect(find.text('Impossibile caricare le aperture.'), findsOneWidget);
+  });
+
   testWidgets('RF-92 fuori dal libro lo dice', (tester) async {
     await phone(
       tester,
@@ -53,6 +77,7 @@ void main() {
       ),
     );
     expect(find.text('Fuori dal libro delle aperture'), findsOneWidget);
+    expect(opening(tester), 'Apertura senza nome');
     expect(find.byType(Chessboard), findsOneWidget);
   });
 
@@ -62,7 +87,10 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(
         home: OpeningName(
-          moves: [Move.parse('e2e4')!, Move.parse('c7c5')!],
+          positions: OpeningBook.replay([
+            Move.parse('e2e4')!,
+            Move.parse('c7c5')!,
+          ]),
           fallback: 'Scacchi',
           book: Future.value(book),
         ),

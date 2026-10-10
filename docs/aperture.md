@@ -16,11 +16,11 @@ I nomi restano in inglese, come nel dataset e nell'app di Lichess: sono i nomi c
 - ogni posizione con nome conserva codice ECO e nome; se più righe arrivano alla stessa posizione vale la prima;
 - ogni mossa tra due posizioni del libro conta quante righe del dataset passano di lì.
 
-Il libro si carica una volta sola (`openingBook()` in `opening_assets.dart`), in anticipo all'apertura dell'app.
+Il libro si carica una volta sola (`openingBook()` in `opening_assets.dart`), in anticipo all'apertura dell'app; se il caricamento fallisce si riprova alla richiesta successiva. Il file è letto ignorando i fine riga Windows (`\r\n`).
 
 ### Riconoscimento in partita (RF-90)
 
-`OpeningBook.classify(mosse)` ripercorre la partita all'indietro e restituisce l'ultima posizione con nome, come suggerisce il dataset. Nella schermata di gioco il titolo "Scacchi" diventa il codice ECO e il nome dell'apertura appena la partita entra nel libro (widget `OpeningName`), con un'etichetta per i lettori di schermo.
+`OpeningBook.classify(mosse)`, o `classifyPositions(posizioni)` quando le posizioni sono già calcolate come nella schermata di gioco, ripercorre la partita all'indietro e restituisce l'ultima posizione con nome, come suggerisce il dataset. Nella schermata di gioco il titolo "Scacchi" diventa il codice ECO e il nome dell'apertura appena la partita entra nel libro (widget `OpeningName`), con un'etichetta per i lettori di schermo ("Apertura: ..."). Il widget riceve le posizioni della partita a partire da quella iniziale, quindi una partita da posizione personalizzata non viene confusa con una dalla posizione standard.
 
 ### Mosse di libro (RF-91)
 

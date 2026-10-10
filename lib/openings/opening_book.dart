@@ -62,7 +62,7 @@ class OpeningBook {
   factory OpeningBook.parseTsv(String tsv) {
     final book = OpeningBook._();
     for (final line in tsv.split('\n').skip(1)) {
-      final f = line.split('\t');
+      final f = line.trimRight().split('\t');
       if (f.length < 3) continue;
       book._addLine(Opening(f[0], f[1]), f[2].split(' '));
     }
@@ -105,8 +105,10 @@ class OpeningBook {
   Opening? nameOf(Position pos) => _names[key(pos)];
 
   /// Ultima apertura con nome attraversata dalla partita.
-  Opening? classify(List<Move> moves) {
-    final positions = replay(moves);
+  Opening? classify(List<Move> moves) => classifyPositions(replay(moves));
+
+  /// Come [classify], a partire dalle posizioni già calcolate della partita.
+  Opening? classifyPositions(List<Position> positions) {
     for (final pos in positions.reversed) {
       final o = _names[key(pos)];
       if (o != null) return o;
@@ -134,7 +136,12 @@ class OpeningBook {
   List<BookMove> continuations(List<Move> moves) {
     final positions = replay(moves);
     if (positions.length != moves.length + 1) return const [];
-    final edges = _edges[key(positions.last)];
+    return continuationsAt(positions.last);
+  }
+
+  /// Mosse del libro da [pos], dalla più ricca.
+  List<BookMove> continuationsAt(Position pos) {
+    final edges = _edges[key(pos)];
     if (edges == null) return const [];
     final total = edges.values.fold(0, (sum, e) => sum + e.lines);
     final list =
