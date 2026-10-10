@@ -4,7 +4,7 @@ Problemi tattici offline, sul modello dei puzzle di chess.com e Lichess (requisi
 
 ## Dati
 
-La raccolta è un sottoinsieme del [database dei puzzle di Lichess](https://database.lichess.org/#puzzles), rilasciato in pubblico dominio (CC0). Il file `assets/puzzles/puzzles.csv` è incluso nell'app e contiene circa 4.600 problemi (circa 650 KB, compressi ulteriormente nel pacchetto).
+La raccolta è un sottoinsieme del [database dei puzzle di Lichess](https://database.lichess.org/#puzzles), rilasciato in pubblico dominio (CC0). Il file `assets/puzzles/puzzles.csv` è incluso nell'app e contiene 4.691 problemi (circa 650 KB, compressi ulteriormente nel pacchetto).
 
 Formato, una riga per puzzle:
 
