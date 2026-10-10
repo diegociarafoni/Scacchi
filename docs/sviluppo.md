@@ -71,6 +71,9 @@ I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisic
 | RF-83 suggerimento, soluzione, filtro per tema | ✓ | ✓ |
 | RF-84 puzzle del giorno | ✓ | ✓ |
 | RG-01 XP per i puzzle risolti | ✓ | |
+| RF-82 Storm, Rush, sopravvivenza, Serie | ✓ | ✓ |
+| RF-85 ripasso dei puzzle sbagliati | ✓ | |
+| RG-08 record personali delle serie | ✓ | ✓ |
 
 ## Integrazione continua
 

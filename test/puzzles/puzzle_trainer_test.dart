@@ -77,6 +77,19 @@ void main() {
       expect(t.seen, isEmpty);
     });
 
+    test('RF-85 un puzzle sbagliato entra nel ripasso', () async {
+      var today = DateTime(2026, 10, 10);
+      final t = await PuzzleTrainer.load(
+        library,
+        MemoryStore(),
+        now: () => today,
+      );
+      await t.record(library.byId('b')!, solved: false);
+      await t.record(library.byId('c')!, solved: true);
+      today = today.add(const Duration(days: 1));
+      expect(t.reviews.due(today), ['b']);
+    });
+
     test('ignora dati salvati illeggibili', () async {
       final store = MemoryStore();
       await store.write(PuzzleTrainer.storageKey, '{rotto');

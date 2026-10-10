@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'activity_recorder.dart';
+import 'puzzle_feed.dart';
 import 'puzzle_page.dart';
+import 'puzzle_run.dart';
+import 'puzzle_run_page.dart';
 import 'puzzle_trainer.dart';
 import 'themes.dart';
 
@@ -45,6 +48,7 @@ class _PuzzleHubPageState extends State<PuzzleHubPage> {
             return const Center(child: CircularProgressIndicator());
           }
           final daily = trainer.library.daily(widget.today ?? DateTime.now());
+          final due = trainer.reviews.due(trainer.now()).length;
           return ListView(
             children: [
               ListTile(
@@ -91,6 +95,39 @@ class _PuzzleHubPageState extends State<PuzzleHubPage> {
                   ),
                 ),
               ),
+              ListTile(
+                leading: const Icon(Icons.replay_outlined),
+                title: const Text('Ripasso degli errori'),
+                subtitle: Text(
+                  due == 0
+                      ? 'Nessun puzzle da ripassare oggi'
+                      : '$due da ripassare oggi',
+                ),
+                enabled: due > 0,
+                onTap: () => _open(
+                  PuzzlePage(
+                    trainer: trainer,
+                    feed: ReviewFeed(trainer),
+                    title: 'Ripasso',
+                    onActivity: widget.onActivity,
+                  ),
+                ),
+              ),
+              const Divider(),
+              for (final mode in PuzzleRunMode.values)
+                ListTile(
+                  leading: const Icon(Icons.bolt_outlined),
+                  title: Text(runModeLabels[mode]!),
+                  subtitle: Text(runModeDescriptions[mode]!),
+                  trailing: Text('Record ${trainer.records.best(mode)}'),
+                  onTap: () => _open(
+                    PuzzleRunPage(
+                      trainer: trainer,
+                      mode: mode,
+                      onActivity: widget.onActivity,
+                    ),
+                  ),
+                ),
             ],
           );
         },
