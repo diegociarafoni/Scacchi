@@ -10,10 +10,12 @@ String formatScore(EngineScore score) {
     return mate > 0 ? 'M$mate' : '${_minus}M${-mate}';
   }
   final cp = score.cp!;
-  if (cp == 0) return '0.0';
-  final pawns = (cp.abs() / 100).toStringAsFixed(1);
+  final pawns = _pawns(cp);
+  if (pawns == '0.0') return pawns;
   return cp > 0 ? '+$pawns' : '$_minus$pawns';
 }
+
+String _pawns(int cp) => (cp.abs() / 100).toStringAsFixed(1);
 
 /// Valutazione dal punto di vista del Bianco per i lettori di schermo.
 String describeScore(EngineScore score) {
@@ -23,7 +25,7 @@ String describeScore(EngineScore score) {
     return 'Matto in ${mate.abs()} per il ${mate > 0 ? 'Bianco' : 'Nero'}';
   }
   final cp = score.cp!;
-  if (cp.abs() < 10) return 'Parità';
-  final pawns = (cp.abs() / 100).toStringAsFixed(1);
+  final pawns = _pawns(cp);
+  if (pawns == '0.0') return 'Parità';
   return '${cp > 0 ? 'Bianco' : 'Nero'} avanti di $pawns';
 }

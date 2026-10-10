@@ -35,6 +35,60 @@ Future<void> pumpReview(
 void main() {
   setUp(ReviewCache.clear);
 
+  testWidgets('numeri di mossa da una posizione con il Nero al tratto', (
+    tester,
+  ) async {
+    final initial = Chess.fromSetup(
+      Setup.parseFen(
+        'rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq - 0 1',
+      ),
+    );
+    await tester.pumpWidget(
+      MaterialApp(
+        home: ReviewPage(
+          initial: initial,
+          moves: moves(['e7e5', 'g1f3']),
+          evaluate: (_) async => [
+            const InfoLine(multipv: 1, pv: ['a2a3'], score: EngineScore.cp(0)),
+          ],
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('1…'), findsOneWidget);
+    expect(find.text('2.'), findsOneWidget);
+    expect(find.textContaining('2. Nf3 è'), findsOneWidget);
+  });
+
+  testWidgets('RF-54 la freccia dell\'arrocco punta alla casa del re', (
+    tester,
+  ) async {
+    // Il Bianco può arroccare corto; il motore lo indica come mossa migliore.
+    final initial = Chess.fromSetup(
+      Setup.parseFen('4k3/8/8/8/8/8/5PPP/4K2R w K - 0 1'),
+    );
+    await tester.pumpWidget(
+      MaterialApp(
+        home: ReviewPage(
+          initial: initial,
+          moves: moves(['h2h3']),
+          evaluate: (fen) async => [
+            InfoLine(
+              multipv: 1,
+              pv: [fen.contains(' w ') ? 'e1g1' : 'e8d8'],
+              score: const EngineScore.cp(0),
+            ),
+          ],
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    final board = tester.widget<Chessboard>(find.byType(Chessboard));
+    final arrow = board.shapes.whereType<Arrow>().single;
+    expect(arrow.orig, Square.e1);
+    expect(arrow.dest, Square.g1);
+  });
+
   group('RF-60 schermata di revisione', () {
     testWidgets('mostra l\'avanzamento e permette di interrompere', (
       tester,
@@ -89,7 +143,11 @@ void main() {
       expect(find.byKey(const ValueKey('eval-text')), findsOneWidget);
       expect(
         tester.widget<Text>(find.byKey(const ValueKey('eval-text'))).data,
-        '#',
+        '1-0',
+      );
+      expect(
+        find.bySemanticsLabel('Scacco matto: vince il Bianco'),
+        findsOneWidget,
       );
       await tester.tap(find.byTooltip('Mossa precedente'));
       await tester.pumpAndSettle();
@@ -144,6 +202,27 @@ void main() {
       board().onMove!(NormalMove.fromUci('g7g6'));
       await tester.pumpAndSettle();
       expect(find.text('Esatto: g6 è la mossa migliore.'), findsOneWidget);
+      // La mossa giusta resta sulla scacchiera, che non accetta altre mosse.
+      final solved = board().controller.game;
+      expect(solved.playerSide, PlayerSide.none);
+      expect(solved.fen, startsWith('r1bqkbnr/pppp1p1p/2n3p1/4p2Q/'));
+    });
+
+    testWidgets('RF-65 durante Riprova la barra valuta la posizione critica', (
+      tester,
+    ) async {
+      await pumpReview(tester);
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text('Nf6 ??'));
+      await tester.tap(find.text('Nf6 ??'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Riprova'));
+      await tester.pumpAndSettle();
+      // Prima di Cf6 il motore vede +0.3 per il Bianco, non il matto.
+      expect(
+        tester.widget<Text>(find.byKey(const ValueKey('eval-text'))).data,
+        '+0.3',
+      );
     });
 
     testWidgets('RF-65 Riprova: si può vedere la soluzione', (tester) async {

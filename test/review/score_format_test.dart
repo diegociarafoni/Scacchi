@@ -8,6 +8,9 @@ void main() {
       expect(formatScore(const EngineScore.cp(34)), '+0.3');
       expect(formatScore(const EngineScore.cp(-250)), '−2.5');
       expect(formatScore(const EngineScore.cp(0)), '0.0');
+      // Arrotondato a zero: niente segno.
+      expect(formatScore(const EngineScore.cp(4)), '0.0');
+      expect(formatScore(const EngineScore.cp(-3)), '0.0');
     });
 
     test('matto in N', () {
@@ -22,7 +25,9 @@ void main() {
     test('descrizione per i lettori di schermo', () {
       expect(describeScore(const EngineScore.cp(150)), 'Bianco avanti di 1.5');
       expect(describeScore(const EngineScore.cp(-40)), 'Nero avanti di 0.4');
-      expect(describeScore(const EngineScore.cp(5)), 'Parità');
+      expect(describeScore(const EngineScore.cp(4)), 'Parità');
+      // Lettore di schermo e testo visibile dicono la stessa cosa.
+      expect(describeScore(const EngineScore.cp(8)), 'Bianco avanti di 0.1');
       expect(
         describeScore(const EngineScore.mate(2)),
         'Matto in 2 per il Bianco',

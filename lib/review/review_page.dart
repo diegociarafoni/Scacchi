@@ -10,14 +10,21 @@ import 'move_classification.dart';
 import 'score_format.dart';
 
 /// Revisioni già calcolate in questa sessione, per riaprirle all'istante.
+/// Tiene solo le più recenti per limitare la memoria.
 class ReviewCache {
+  static const capacity = 20;
   static final _reviews = <String, GameReview>{};
 
   static String key(Position initial, List<Move> moves) =>
       '${initial.fen}|${moves.map((m) => m.uci).join(' ')}';
 
   static GameReview? get(String key) => _reviews[key];
-  static void put(String key, GameReview review) => _reviews[key] = review;
+  static void put(String key, GameReview review) {
+    _reviews.remove(key);
+    _reviews[key] = review;
+    if (_reviews.length > capacity) _reviews.remove(_reviews.keys.first);
+  }
+
   static void clear() => _reviews.clear();
 }
 
@@ -48,8 +55,25 @@ String moveClassPhrase(MoveClass c) => switch (c) {
   MoveClass.blunder => 'un errore grave',
 };
 
-String _moveNumber(int ply) =>
-    ply.isEven ? '${ply ~/ 2 + 1}.' : '${ply ~/ 2 + 1}…';
+String _moveNumber(Position before) =>
+    before.turn == Side.white ? '${before.fullmoves}.' : '${before.fullmoves}…';
+
+/// Mossa come la vede il giocatore: l'arrocco va sulla casa del re (g/c),
+/// non su quella della torre come lo rappresenta dartchess.
+NormalMove _displayed(Position before, NormalMove move) {
+  final piece = before.board.pieceAt(move.from);
+  final target = before.board.pieceAt(move.to);
+  final castles =
+      piece?.role == Role.king &&
+      target?.role == Role.rook &&
+      target?.color == piece?.color;
+  if (!castles) return move;
+  final file = move.to.file > move.from.file ? File.g : File.c;
+  return NormalMove(
+    from: move.from,
+    to: Square.fromCoords(file, move.from.rank),
+  );
+}
 
 /// Revisione della partita (RF-60…RF-66): analisi con avanzamento, riepilogo,
 /// grafico, barra di valutazione, freccia della mossa migliore e "Riprova".
@@ -98,6 +122,7 @@ class _ReviewPageState extends State<ReviewPage> {
   int? _retryPly;
   String? _retryMessage;
   bool _showSolution = false;
+  Move? _retrySolved;
 
   @override
   void initState() {
@@ -139,9 +164,10 @@ class _ReviewPageState extends State<ReviewPage> {
           });
         },
       );
-      if (review == null || !mounted) return;
+      if (review == null) return;
       ReviewCache.put(_cacheKey, review);
       widget.onReviewed?.call(review);
+      if (!mounted) return;
       setState(() {
         _review = review;
         _phase = _Phase.done;
@@ -157,12 +183,25 @@ class _ReviewPageState extends State<ReviewPage> {
     if (notify) setState(() => _phase = _Phase.cancelled);
   }
 
-  Position get _shown =>
-      _retryPly != null ? _positions[_retryPly!] : _positions[_index];
+  /// Indice della posizione valutata dalla barra.
+  int get _evalIndex => _retryPly ?? _index;
 
   GameData _gameData() {
-    final pos = _shown;
-    final retry = _retryPly != null;
+    final retryPly = _retryPly;
+    final solved = _retrySolved;
+    if (retryPly != null && solved != null) {
+      final pos = _positions[retryPly].play(solved);
+      return GameData(
+        fen: pos.fen,
+        lastMove: solved,
+        playerSide: PlayerSide.none,
+        sideToMove: pos.turn,
+        kingSquareInCheck: pos.isCheck ? pos.board.kingOf(pos.turn) : null,
+        validMoves: const {},
+      );
+    }
+    final retry = retryPly != null;
+    final pos = retry ? _positions[retryPly] : _positions[_index];
     return GameData(
       fen: pos.fen,
       lastMove: retry || _index == 0 ? null : widget.moves[_index - 1],
@@ -183,6 +222,7 @@ class _ReviewPageState extends State<ReviewPage> {
       _retryPly = null;
       _retryMessage = null;
       _showSolution = false;
+      _retrySolved = null;
     });
     _refreshBoard();
   }
@@ -192,6 +232,7 @@ class _ReviewPageState extends State<ReviewPage> {
       _retryPly = ply;
       _retryMessage = null;
       _showSolution = false;
+      _retrySolved = null;
     });
     _refreshBoard();
   }
@@ -199,19 +240,21 @@ class _ReviewPageState extends State<ReviewPage> {
   void _onRetryMove(Move move, {bool? viaDragAndDrop}) {
     final ply = _retryPly;
     final review = _review;
-    if (ply == null || review == null) return;
+    if (ply == null || review == null || _retrySolved != null) return;
     final before = _positions[ply];
     if (!before.isLegal(move)) return;
     final san = before.makeSan(move).$2;
     final best = review.moves[ply].bestSan;
     setState(() {
-      _retryMessage = san == best
-          ? 'Esatto: $san è la mossa migliore.'
-          : '$san non è la mossa migliore. Riprova.';
-      if (san == best) _showSolution = true;
+      if (san == best) {
+        _retryMessage = 'Esatto: $san è la mossa migliore.';
+        _retrySolved = move;
+      } else {
+        _retryMessage = '$san non è la mossa migliore. Riprova.';
+      }
     });
-    // Rimette la posizione di partenza dopo un tentativo sbagliato.
-    if (san != best) _refreshBoard();
+    // Dopo un tentativo sbagliato rimette la posizione di partenza.
+    _refreshBoard();
   }
 
   Set<Shape> _shapes() {
@@ -221,10 +264,13 @@ class _ReviewPageState extends State<ReviewPage> {
     if (ply == null) return const {};
     final m = review.moves[ply];
     final best = m.bestMove;
-    final showArrow = _retryPly == null ? !m.playedBest : _showSolution;
+    final showArrow = _retryPly == null
+        ? !m.playedBest
+        : _showSolution && _retrySolved == null;
     if (!showArrow || best is! NormalMove) return const {};
+    final shown = _displayed(_positions[ply], best);
     return {
-      Arrow(color: const Color(0xCC3E8E2F), orig: best.from, dest: best.to),
+      Arrow(color: const Color(0xCC3E8E2F), orig: shown.from, dest: shown.to),
     };
   }
 
@@ -235,7 +281,8 @@ class _ReviewPageState extends State<ReviewPage> {
     final move = m.move;
     if (move is! NormalMove) return const {};
     final c = m.classification;
-    return {move.to: Annotation(symbol: c.symbol, color: moveClassColor(c))};
+    final square = _displayed(_positions[_index - 1], move).to;
+    return {square: Annotation(symbol: c.symbol, color: moveClassColor(c))};
   }
 
   @override
@@ -267,8 +314,8 @@ class _ReviewPageState extends State<ReviewPage> {
                             children: [
                               _EvalBar(
                                 height: boardSize,
-                                score: _review?.whiteScores[_index],
-                                whiteWin: _review?.whiteWinCurve[_index],
+                                score: _review?.whiteScores[_evalIndex],
+                                whiteWin: _review?.whiteWinCurve[_evalIndex],
                               ),
                               const SizedBox(width: 8),
                               Chessboard(
@@ -375,8 +422,7 @@ class _ReviewPageState extends State<ReviewPage> {
                   padding: const EdgeInsets.only(top: 8),
                   child: Text(_retryMessage!, style: text.bodyLarge),
                 ),
-              if (_showSolution &&
-                  !(_retryMessage?.startsWith('Esatto') ?? false))
+              if (_showSolution && _retrySolved == null)
                 Padding(
                   padding: const EdgeInsets.only(top: 8),
                   child: Text(
@@ -412,7 +458,7 @@ class _ReviewPageState extends State<ReviewPage> {
       final c = m.classification;
       info = [
         Text(
-          '${_moveNumber(m.ply)} ${m.san} è ${moveClassPhrase(c)}',
+          '${_moveNumber(_positions[m.ply])} ${m.san} è ${moveClassPhrase(c)}',
           style: text.titleMedium,
         ),
         if (!m.playedBest && m.bestSan != null)
@@ -438,7 +484,12 @@ class _ReviewPageState extends State<ReviewPage> {
       ),
       Padding(
         padding: const EdgeInsets.all(16),
-        child: _MoveList(review: review, selected: _index, onSelect: _select),
+        child: _MoveList(
+          review: review,
+          positions: _positions,
+          selected: _index,
+          onSelect: _select,
+        ),
       ),
     ];
   }
@@ -493,9 +544,21 @@ class _EvalBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final win = whiteWin ?? 50;
     final s = score;
-    final label = s == null ? '' : formatScore(s);
+    // Il matto avvenuto non ha segno: il vincitore si ricava dalla probabilità.
+    final mated = s?.mate == 0;
+    final winner = win >= 50 ? 'Bianco' : 'Nero';
+    final label = s == null
+        ? ''
+        : mated
+        ? (win >= 50 ? '1-0' : '0-1')
+        : formatScore(s);
+    final description = s == null
+        ? 'Valutazione non disponibile'
+        : mated
+        ? 'Scacco matto: vince il $winner'
+        : describeScore(s);
     return Semantics(
-      label: s == null ? 'Valutazione non disponibile' : describeScore(s),
+      label: description,
       excludeSemantics: true,
       child: SizedBox(
         width: _evalBarWidth,
@@ -620,11 +683,13 @@ class _Badge extends StatelessWidget {
 class _MoveList extends StatelessWidget {
   const _MoveList({
     required this.review,
+    required this.positions,
     required this.selected,
     required this.onSelect,
   });
 
   final GameReview review;
+  final List<Position> positions;
   final int selected;
   final ValueChanged<int> onSelect;
 
@@ -637,11 +702,14 @@ class _MoveList extends StatelessWidget {
       crossAxisAlignment: WrapCrossAlignment.center,
       children: [
         for (final m in review.moves) ...[
-          if (m.side == Side.white) Text(_moveNumber(m.ply)),
+          if (m.side == Side.white || m.ply == 0)
+            Text(_moveNumber(positions[m.ply])),
           Semantics(
             button: true,
             selected: selected == m.ply + 1,
-            label: '${_moveNumber(m.ply)} ${m.san}, ${m.classification.label}',
+            label:
+                '${_moveNumber(positions[m.ply])} ${m.san}, '
+                '${m.classification.label}',
             excludeSemantics: true,
             child: InkWell(
               onTap: () => onSelect(m.ply + 1),
