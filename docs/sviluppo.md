@@ -40,6 +40,7 @@ Ogni funzione nasce dai requisiti del progetto, nel documento dei requisiti, con
 | Widget | `test/widget_test.dart` | Avvio dell'app e stato iniziale | `flutter test` |
 | Widget | `test/computer_game_test.dart` | Partita contro il computer con un motore finto | `flutter test` |
 | End-to-end | `integration_test/app_test.dart` | L'app reale avviata su un dispositivo o desktop, con tocchi e trascinamenti sulla scacchiera | `flutter test integration_test -d <dispositivo>` |
+| End-to-end | `integration_test/computer_test.dart` | Partite contro un vero Stockfish (processo esterno, richiede `stockfish` installato) | `flutter test integration_test -d linux` |
 
 I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisici, rapporto 3) e muovono i pezzi calcolando la posizione delle case sulla scacchiera.
 
@@ -51,10 +52,11 @@ I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisic
 | RF-04 promozione | ✓ | |
 | RF-06 capovolgimento della scacchiera | | ✓ |
 | RF-10 lista delle mosse in SAN | ✓ | ✓ |
-| RF-20 colore e livello contro il computer | ✓ | |
-| RF-21 motore in isolate, ritardo artificiale ai livelli bassi | ✓ | |
+| RF-20 colore e livello contro il computer | ✓ | ✓ |
+| RF-21 motore separato, scacchiera bloccata mentre pensa, ritardo artificiale | ✓ | ✓ |
+| Annullamento contro il computer (mossa e risposta) | | ✓ |
 | RF-25 matto, stallo, materiale insufficiente, ripetizione, 50 mosse, abbandono | ✓ | matto, abbandono |
-| RF-25 patta accettata dal computer in base alla valutazione | ✓ | |
+| RF-25 patta accettata dal computer in base alla valutazione | ✓ | ✓ |
 | RF-31 rotazione automatica a ogni turno | | ✓ |
 | RF-32 patta concordata e annullamento | ✓ | ✓ |
 
@@ -63,7 +65,7 @@ I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisic
 Il workflow `.github/workflows/ci.yml` gira su ogni pull request e su ogni push su `main`:
 
 1. **test**: installa Stockfish (per i test d'integrazione del motore), verifica della formattazione, `flutter analyze`, `flutter test`.
-2. **e2e**: se i test passano, esegue i test end-to-end sull'app Linux desktop con uno schermo virtuale (`xvfb`).
+2. **e2e**: se i test passano, installa Stockfish ed esegue i test end-to-end sull'app Linux desktop con uno schermo virtuale (`xvfb`).
 3. **android**: se i test passano, compila un APK di debug e lo pubblica come artefatto `scacchi-debug-apk`, scaricabile dalla pagina dell'esecuzione.
 
 ## Convenzioni

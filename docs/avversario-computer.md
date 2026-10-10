@@ -106,7 +106,13 @@ flutter test
 - `test/engine/computer_player_test.dart`: con un motore finto e, se installato, con Stockfish
   vero (`apt install stockfish`, oppure la variabile `STOCKFISH_PATH`). Senza Stockfish i test
   d'integrazione vengono saltati; in CI Stockfish è installato, quindi girano sempre.
-- `test/computer_game_test.dart`: la partita contro il computer nell'interfaccia.
+- `test/computer_game_test.dart`: la partita contro il computer nell'interfaccia, con un motore finto.
+- `integration_test/computer_test.dart`: test end-to-end sull'app desktop contro un vero Stockfish
+  (colore, livello, scacchiera bloccata, annullamento, patta). Su desktop l'app non usa il motore,
+  quindi il test gli collega un processo Stockfish esterno.
+
+Nuove funzioni del computer si sviluppano partendo dai test, con nel nome il requisito
+(vedi [sviluppo.md](sviluppo.md)).
 
 ## Requisiti coperti
 
