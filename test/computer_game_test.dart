@@ -47,7 +47,7 @@ Future<void> startComputerGame(
   WidgetTester tester, {
   required String side,
 }) async {
-  await tester.tap(find.text('Nuova partita'));
+  await tester.tap(find.text('Nuova'));
   await tester.pumpAndSettle();
   await tester.tap(find.text('Computer'));
   await tester.pumpAndSettle();
@@ -65,7 +65,9 @@ void main() {
     ),
   );
 
-  testWidgets('giocando col Nero, il computer muove per primo', (tester) async {
+  testWidgets('RF-20 giocando col Nero, il computer muove per primo', (
+    tester,
+  ) async {
     await tester.pumpWidget(app());
     await startComputerGame(tester, side: 'Nero');
     await tester.pump();
@@ -73,18 +75,27 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
     expect(find.text('Muove il Nero.'), findsOneWidget);
     expect(find.textContaining('1. '), findsOneWidget);
-    expect(
-      find.textContaining('Contro il computer, livello 3'),
-      findsOneWidget,
-    );
+    expect(find.textContaining('Computer, livello 3'), findsOneWidget);
   });
 
-  testWidgets('giocando col Bianco, si attende la mossa del giocatore', (
+  testWidgets('RF-20 giocando col Bianco, si attende la mossa del giocatore', (
     tester,
   ) async {
     await tester.pumpWidget(app());
     await startComputerGame(tester, side: 'Bianco');
     await tester.pumpAndSettle(const Duration(seconds: 1));
+    expect(find.text('Muove il Bianco.'), findsOneWidget);
+  });
+
+  testWidgets('RF-25 il computer rifiuta la patta se non è in svantaggio', (
+    tester,
+  ) async {
+    await tester.pumpWidget(app());
+    await startComputerGame(tester, side: 'Bianco');
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.tap(find.text('Patta'));
+    await tester.pump();
+    expect(find.text('Il computer rifiuta la patta.'), findsOneWidget);
     expect(find.text('Muove il Bianco.'), findsOneWidget);
   });
 
@@ -94,7 +105,7 @@ void main() {
     await tester.pumpWidget(
       MaterialApp(home: GamePage(computerAvailable: false)),
     );
-    await tester.tap(find.text('Nuova partita'));
+    await tester.tap(find.text('Nuova'));
     await tester.pumpAndSettle();
     expect(
       find.text('Il computer è disponibile su Android e iOS.'),

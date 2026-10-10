@@ -8,6 +8,7 @@ enum GameEndReason {
   threefoldRepetition,
   fiftyMoveRule,
   resignation,
+  agreement,
 }
 
 /// Una mossa giocata, con la notazione algebrica (SAN) e la posizione risultante.
@@ -23,17 +24,14 @@ class PlayedMove {
   final Position after;
 }
 
-/// Stato di una partita di scacchi standard, indipendente dall'interfaccia.
-///
-/// Le regole di movimento vengono da `dartchess`; qui si aggiungono la
-/// cronologia, l'annullamento delle mosse e le patte per ripetizione e per
-/// la regola delle 50 mosse, che `dartchess` non rileva da sola.
+/// Stato della partita: cronologia, annullamento e condizioni di fine partita.
 class ChessGame {
   ChessGame({Position? initial}) : initial = initial ?? Chess.initial;
 
   final Position initial;
   final List<PlayedMove> _moves = [];
   Side? _resigned;
+  bool _drawAgreed = false;
 
   List<PlayedMove> get moves => List.unmodifiable(_moves);
 
@@ -53,6 +51,7 @@ class ChessGame {
 
   void undo() {
     _resigned = null;
+    _drawAgreed = false;
     if (_moves.isNotEmpty) _moves.removeLast();
   }
 
@@ -60,8 +59,13 @@ class ChessGame {
     if (!isOver) _resigned = side;
   }
 
+  void agreeDraw() {
+    if (!isOver) _drawAgreed = true;
+  }
+
   GameEndReason? get endReason {
     if (_resigned != null) return GameEndReason.resignation;
+    if (_drawAgreed) return GameEndReason.agreement;
     final pos = position;
     if (pos.isCheckmate) return GameEndReason.checkmate;
     if (pos.isStalemate) return GameEndReason.stalemate;
@@ -89,7 +93,7 @@ class ChessGame {
     return count >= 3;
   }
 
-  /// Pezzi, tratto, arrocco ed en passant: i campi che contano per la ripetizione.
+  /// Chiave di confronto per la ripetizione: pezzi, tratto, arrocco, en passant.
   static String _repetitionKey(Position pos) =>
       pos.fen.split(' ').take(4).join(' ');
 }

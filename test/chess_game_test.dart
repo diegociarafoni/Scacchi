@@ -69,4 +69,31 @@ void main() {
     game.undo();
     expect(game.isOver, isFalse);
   });
+
+  test('RF-04 promozione in notazione algebrica', () {
+    final game = ChessGame(
+      initial: Chess.fromSetup(Setup.parseFen('8/P6k/8/8/8/8/8/4K3 w - - 0 1')),
+    );
+    expect(game.play(Move.parse('a7a8q')!), isTrue);
+    expect(game.moves.last.san, 'a8=Q');
+  });
+
+  test('arrocco ed en passant', () {
+    final game = ChessGame();
+    playAll(game, ['e2e4', 'a7a6', 'e4e5', 'd7d5', 'e5d6', 'a6a5']);
+    playAll(game, ['g1f3', 'a5a4', 'f1e2', 'a4a3', 'e1g1']);
+    expect(game.moves[4].san, 'exd6');
+    expect(game.moves.last.san, 'O-O');
+  });
+
+  test('RF-32 patta concordata', () {
+    final game = ChessGame();
+    playAll(game, ['e2e4']);
+    game.agreeDraw();
+    expect(game.endReason, GameEndReason.agreement);
+    expect(game.outcome, Outcome.draw);
+    expect(game.play(Move.parse('e7e5')!), isFalse);
+    game.undo();
+    expect(game.isOver, isFalse);
+  });
 }

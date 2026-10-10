@@ -1,0 +1,71 @@
+# Architettura
+
+## Stack
+
+| Livello | Tecnologia | Ruolo |
+|---|---|---|
+| Linguaggio e framework | Dart, Flutter (canale stable, 3.47 o successivo) | Un solo codice per Android, iOS, Windows, macOS e Linux |
+| Regole degli scacchi | [dartchess](https://pub.dev/packages/dartchess) | Generazione delle mosse legali, notazione SAN, scacco, matto, stallo, materiale insufficiente |
+| Scacchiera | [chessground](https://pub.dev/packages/chessground) | Disegno della scacchiera, trascinamento e tocco, animazioni, evidenziazioni, scelta della promozione |
+| Motore | [multistockfish](https://pub.dev/packages/multistockfish) (Stockfish 19 nativo) | Avversario computer su Android e iOS, in isolate separati |
+
+Entrambe le librerie sono sviluppate da Lichess e sono usate dalla sua app mobile.
+
+La piattaforma web non è supportata: `dartchess` usa interi a 64 bit (bitboard) che il compilatore JavaScript di Flutter non può rappresentare.
+
+## Struttura delle cartelle
+
+```
+lib/
+  main.dart               Avvio dell'app, tema chiaro e scuro
+  game/
+    chess_game.dart       Stato della partita, senza dipendenze dall'interfaccia
+    game_page.dart        Schermata di gioco
+    new_game_dialog.dart  Scelta di avversario, colore e livello
+  engine/                 Avversario computer (vedi avversario-computer.md)
+test/
+  chess_game_test.dart    Test delle regole e della fine partita
+  widget_test.dart        Test di avvio dell'interfaccia
+  computer_game_test.dart Partita contro il computer nell'interfaccia
+  engine/                 Test del protocollo UCI, dei livelli e di Stockfish
+integration_test/
+  app_test.dart           Test end-to-end sull'app reale
+docs/                     Questa documentazione
+android/ ios/ linux/ macos/ windows/
+                          Progetti nativi generati da Flutter
+.github/workflows/ci.yml  Integrazione continua
+```
+
+## Componenti
+
+### `ChessGame` (`lib/game/chess_game.dart`)
+
+Modello della partita, in Dart puro e quindi testabile senza interfaccia.
+
+- Conserva la posizione iniziale e la lista delle mosse giocate (`PlayedMove`: mossa, notazione SAN, posizione risultante).
+- `play(move)` accetta solo mosse legali e rifiuta qualsiasi mossa a partita conclusa.
+- `undo()` annulla l'ultima mossa; annulla anche un eventuale abbandono o una patta concordata.
+- `agreeDraw()` chiude la partita con una patta concordata.
+- `resign(side)` registra l'abbandono del lato indicato.
+- `endReason` e `outcome` descrivono come e con quale risultato è finita la partita.
+
+`dartchess` non rileva da sola la triplice ripetizione né la regola delle 50 mosse, perché richiedono la cronologia della partita: `ChessGame` le calcola a partire dalla lista delle posizioni. I dettagli sono in [regole-di-gioco.md](regole-di-gioco.md).
+
+### `GamePage` (`lib/game/game_page.dart`)
+
+Schermata di gioco. Possiede un `ChessGame` e un `ChessboardController` di chessground.
+
+Flusso di una mossa:
+
+1. Il giocatore muove un pezzo sulla scacchiera; chessground consente solo le mosse legali che riceve in `GameData.validMoves` e gestisce da sé la scelta del pezzo di promozione.
+2. chessground chiama `onMove` con la mossa completa.
+3. `GamePage` passa la mossa a `ChessGame.play`.
+4. Se la mossa è accettata, `GamePage` costruisce un nuovo `GameData` (posizione, ultima mossa, re sotto scacco, mosse legali) e aggiorna il controller; poi ridisegna lista mosse, stato e comandi.
+
+A partita conclusa `GameData.playerSide` vale `PlayerSide.none`, quindi la scacchiera non accetta altre mosse.
+
+Contro il computer, dopo la mossa del giocatore `GamePage` chiede a `ComputerPlayer` la risposta per la posizione FEN corrente e la passa a `ChessGame.play`; mentre il computer pensa la scacchiera è bloccata. I dettagli sono in [avversario-computer.md](avversario-computer.md).
+
+## Evoluzioni previste
+
+- Salvataggio e PGN si baseranno sulla lista `ChessGame.moves`.

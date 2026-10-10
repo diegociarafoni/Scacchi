@@ -7,6 +7,6 @@ void main() {
   ) async {
     await tester.pumpWidget(const ScacchiApp());
     expect(find.text('Muove il Bianco.'), findsOneWidget);
-    expect(find.text('Nuova partita'), findsOneWidget);
+    expect(find.text('Nuova'), findsOneWidget);
   });
 }

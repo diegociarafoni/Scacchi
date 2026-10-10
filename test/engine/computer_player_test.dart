@@ -47,7 +47,7 @@ class FakeEngine implements UciTransport {
 
 void main() {
   group('con un motore finto', () {
-    test('imposta le opzioni del livello solo quando cambiano', () async {
+    test('RF-20 imposta le opzioni del livello solo quando cambiano', () async {
       final fake = FakeEngine((_) => ['bestmove e2e4']);
       final player = ComputerPlayer(connect: () async => fake);
       await player.bestMove(Chess.initial.fen, fast(5));
@@ -62,7 +62,7 @@ void main() {
       await player.dispose();
     });
 
-    test('nei livelli bassi sceglie tra le varianti candidate', () async {
+    test('RF-20 nei livelli bassi sceglie tra le varianti candidate', () async {
       final fake = FakeEngine(
         (_) => [
           'info depth 1 multipv 1 score cp 50 pv e2e4',
@@ -119,7 +119,7 @@ void main() {
         expect(result.score, const EngineScore.mate(1));
       });
 
-      test('a ogni livello gioca una mossa legale', () async {
+      test('RF-20 a ogni livello gioca una mossa legale', () async {
         for (final level in engineLevels) {
           final game = ChessGame();
           for (var ply = 0; ply < 6; ply++) {

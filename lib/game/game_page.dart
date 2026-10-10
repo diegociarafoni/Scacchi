@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../engine/computer_player.dart';
 import '../engine/levels.dart';
+import '../engine/uci.dart';
 import '../engine/uci_transport.dart';
 import 'chess_game.dart';
 import 'new_game_dialog.dart';
@@ -37,6 +38,9 @@ class _GamePageState extends State<GamePage> {
   ComputerPlayer? _computer;
   bool _thinking = false;
 
+  /// Valutazione dell'ultima mossa del computer, dal suo punto di vista.
+  EngineScore? _computerScore;
+
   /// Invalida le risposte del computer per posizioni non più attuali.
   int _generation = 0;
 
@@ -56,6 +60,9 @@ class _GamePageState extends State<GamePage> {
       Side.black => PlayerSide.white,
     };
   }
+
+  ComputerPlayer get _computerPlayer =>
+      _computer ??= widget.createComputer?.call() ?? ComputerPlayer();
 
   GameData _gameData() {
     final pos = _game.position;
@@ -88,14 +95,12 @@ class _GamePageState extends State<GamePage> {
     final side = _computerSide;
     if (side == null || _game.isOver || _game.position.turn != side) return;
     final generation = _generation;
-    final computer = _computer ??=
-        widget.createComputer?.call() ?? ComputerPlayer();
-    setState(() => _thinking = true);
+    _thinking = true;
     _refresh(animate: false);
     EngineMove? reply;
     Object? error;
     try {
-      reply = await computer.bestMove(
+      reply = await _computerPlayer.bestMove(
         _game.position.fen,
         engineLevel(_setup.level),
       );
@@ -104,13 +109,12 @@ class _GamePageState extends State<GamePage> {
     }
     if (!mounted || generation != _generation) return;
     _thinking = false;
-    if (reply != null) _game.play(reply.move);
-    _refresh();
-    if (error != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Il computer non risponde. Riprova.')),
-      );
+    if (reply != null) {
+      _computerScore = reply.score;
+      _game.play(reply.move);
     }
+    _refresh();
+    if (error != null) _showMessage('Il computer non risponde. Riprova.');
   }
 
   void _cancelComputerMove() {
@@ -118,6 +122,9 @@ class _GamePageState extends State<GamePage> {
     if (_thinking) _computer?.stop();
     _thinking = false;
   }
+
+  void _showMessage(String text) =>
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
 
   Future<void> _newGame() async {
     final setup = await showNewGameDialog(
@@ -129,12 +136,12 @@ class _GamePageState extends State<GamePage> {
     _cancelComputerMove();
     _setup = setup;
     _game = ChessGame();
+    _computerScore = null;
     if (setup.opponent == Opponent.computer) {
       final human = setup.resolveHumanSide(_random);
       _computerSide = human.opposite;
       _orientation = human;
-      _computer ??= widget.createComputer?.call() ?? ComputerPlayer();
-      _computer!.newGame().ignore();
+      _computerPlayer.newGame().ignore();
     } else {
       _computerSide = null;
     }
@@ -148,6 +155,12 @@ class _GamePageState extends State<GamePage> {
     if (_computerSide == _game.position.turn && _game.canUndo) _game.undo();
     _refresh(animate: false);
     _computerMove();
+  }
+
+  bool get _canUndo {
+    if (!_game.canUndo) return false;
+    if (_computerSide != Side.white) return true;
+    return _game.moves.length > 1;
   }
 
   Future<void> _resign() async {
@@ -176,24 +189,69 @@ class _GamePageState extends State<GamePage> {
     }
   }
 
-  bool get _canUndo {
-    if (!_game.canUndo) return false;
-    if (_computerSide != Side.white) return true;
-    return _game.moves.length > 1;
+  /// Il computer accetta la patta solo se si valuta in svantaggio.
+  void _offerDrawToComputer() {
+    final score = _computerScore?.comparable ?? 0;
+    if (score <= -_drawAcceptanceCp) {
+      _cancelComputerMove();
+      _game.agreeDraw();
+      _refresh(animate: false);
+      _showMessage('Il computer accetta la patta.');
+    } else {
+      _showMessage('Il computer rifiuta la patta.');
+    }
+  }
+
+  Future<void> _offerDraw() async {
+    if (_computerSide != null) return _offerDrawToComputer();
+    final opponent = _game.position.turn.opposite;
+    final accepted = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Il ${_sideName(opponent)} accetta la patta?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Rifiuta'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Accetta'),
+          ),
+        ],
+      ),
+    );
+    if (accepted == true) {
+      _game.agreeDraw();
+      _refresh(animate: false);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final actions = _GameActions(
+      onNewGame: _newGame,
+      onUndo: _canUndo ? _undo : null,
+      onFlip: () => setState(() => _orientation = _orientation.opposite),
+      onDraw: _game.isOver || _thinking ? null : _offerDraw,
+      onResign: _game.isOver ? null : _resign,
+    );
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Scacchi'),
+        title: _computerSide == null
+            ? const Text('Scacchi')
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text('Scacchi'),
+                  Text(
+                    'Computer, livello ${_setup.level}: '
+                    '${engineLevel(_setup.level).name}',
+                    style: Theme.of(context).textTheme.labelMedium,
+                  ),
+                ],
+              ),
         actions: [
-          IconButton(
-            tooltip: 'Gira la scacchiera',
-            icon: const Icon(Icons.swap_vert),
-            onPressed: () =>
-                setState(() => _orientation = _orientation.opposite),
-          ),
           PopupMenuButton<String>(
             onSelected: (value) {
               if (value == 'autoflip') {
@@ -214,10 +272,14 @@ class _GamePageState extends State<GamePage> {
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
-            final landscape = constraints.maxWidth > constraints.maxHeight;
+            final landscape =
+                constraints.maxWidth > constraints.maxHeight * 1.2;
             final boardSize = landscape
                 ? math.min(constraints.maxHeight, constraints.maxWidth * 0.6)
-                : math.min(constraints.maxWidth, constraints.maxHeight * 0.7);
+                : math.min(
+                    constraints.maxWidth,
+                    constraints.maxHeight - _portraitChromeHeight,
+                  );
             final board = Chessboard(
               size: boardSize,
               controller: _board,
@@ -227,39 +289,58 @@ class _GamePageState extends State<GamePage> {
                 colorScheme: ChessboardColorScheme.green,
               ),
             );
-            final panel = _SidePanel(
-              game: _game,
-              status: _thinking
-                  ? 'Il computer sta pensando…'
-                  : statusText(_game),
-              opponent: _computerSide == null
-                  ? null
-                  : 'Contro il computer, livello ${_setup.level}: '
-                        '${engineLevel(_setup.level).name}',
-              onNewGame: _newGame,
-              onUndo: _canUndo ? _undo : null,
-              onResign: _game.isOver ? null : _resign,
+            final status = _StatusLine(
+              text: _thinking ? 'Il computer sta pensando…' : statusText(_game),
             );
-            return landscape
-                ? Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      board,
-                      Expanded(child: panel),
-                    ],
-                  )
-                : Column(
-                    children: [
-                      board,
-                      Expanded(child: panel),
-                    ],
-                  );
+            final moves = _MoveList(game: _game, horizontal: !landscape);
+            if (landscape) {
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  board,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        status,
+                        Expanded(child: moves),
+                        actions,
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            }
+            return Column(
+              children: [
+                Expanded(
+                  child: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(height: _moveStripHeight, child: moves),
+                        status,
+                        board,
+                      ],
+                    ),
+                  ),
+                ),
+                actions,
+              ],
+            );
           },
         ),
       ),
     );
   }
 }
+
+const int _drawAcceptanceCp = 50;
+const double _moveStripHeight = 40;
+const double _statusHeight = 48;
+const double _actionsHeight = 72;
+const double _portraitChromeHeight =
+    _moveStripHeight + _statusHeight + _actionsHeight;
 
 String _sideName(Side side) => side == Side.white ? 'Bianco' : 'Nero';
 
@@ -278,75 +359,123 @@ String statusText(ChessGame game) {
     GameEndReason.insufficientMaterial => 'Materiale insufficiente. Patta.',
     GameEndReason.threefoldRepetition => 'Triplice ripetizione. Patta.',
     GameEndReason.fiftyMoveRule => 'Regola delle 50 mosse. Patta.',
+    GameEndReason.agreement => 'Patta concordata.',
   };
 }
 
-class _SidePanel extends StatelessWidget {
-  const _SidePanel({
-    required this.game,
-    required this.status,
-    required this.opponent,
+class _StatusLine extends StatelessWidget {
+  const _StatusLine({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: _statusHeight,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: Text(text, style: Theme.of(context).textTheme.titleMedium),
+        ),
+      ),
+    );
+  }
+}
+
+class _MoveList extends StatelessWidget {
+  const _MoveList({required this.game, required this.horizontal});
+
+  final ChessGame game;
+  final bool horizontal;
+
+  @override
+  Widget build(BuildContext context) {
+    final moves = game.moves;
+    final items = [
+      for (var i = 0; i < moves.length; i++)
+        i.isEven ? '${i ~/ 2 + 1}. ${moves[i].san}' : moves[i].san,
+    ];
+    final style = Theme.of(context).textTheme.bodyLarge;
+    if (horizontal) {
+      return ListView.separated(
+        scrollDirection: Axis.horizontal,
+        reverse: true,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        itemCount: items.length,
+        separatorBuilder: (_, _) => const SizedBox(width: 12),
+        // Ordine inverso: l'ultima mossa resta visibile.
+        itemBuilder: (context, i) =>
+            Center(child: Text(items[items.length - 1 - i], style: style)),
+      );
+    }
+    return SingleChildScrollView(
+      reverse: true,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Text(items.join('  '), style: style),
+    );
+  }
+}
+
+class _GameActions extends StatelessWidget {
+  const _GameActions({
     required this.onNewGame,
     required this.onUndo,
+    required this.onFlip,
+    required this.onDraw,
     required this.onResign,
   });
 
-  final ChessGame game;
-  final String status;
-  final String? opponent;
   final VoidCallback onNewGame;
   final VoidCallback? onUndo;
+  final VoidCallback onFlip;
+  final VoidCallback? onDraw;
   final VoidCallback? onResign;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final moves = game.moves;
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+    return SizedBox(
+      height: _actionsHeight,
+      child: Row(
         children: [
-          if (opponent != null)
-            Text(opponent!, style: theme.textTheme.labelMedium),
-          Text(status, style: theme.textTheme.titleMedium),
-          const SizedBox(height: 12),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              FilledButton.icon(
-                onPressed: onNewGame,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Nuova partita'),
-              ),
-              OutlinedButton.icon(
-                onPressed: onUndo,
-                icon: const Icon(Icons.undo),
-                label: const Text('Annulla mossa'),
-              ),
-              OutlinedButton.icon(
-                onPressed: onResign,
-                icon: const Icon(Icons.flag_outlined),
-                label: const Text('Abbandona'),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Expanded(
-            child: SingleChildScrollView(
-              reverse: true,
-              child: Text(
-                [
-                  for (var i = 0; i < moves.length; i += 2)
-                    '${i ~/ 2 + 1}. ${moves[i].san}'
-                        '${i + 1 < moves.length ? ' ${moves[i + 1].san}' : ''}',
-                ].join('   '),
-                style: theme.textTheme.bodyLarge,
-              ),
-            ),
-          ),
+          _ActionButton(Icons.add, 'Nuova', onNewGame),
+          _ActionButton(Icons.undo, 'Annulla', onUndo),
+          _ActionButton(Icons.swap_vert, 'Gira', onFlip),
+          _ActionButton(Icons.handshake_outlined, 'Patta', onDraw),
+          _ActionButton(Icons.flag_outlined, 'Abbandona', onResign),
         ],
+      ),
+    );
+  }
+}
+
+class _ActionButton extends StatelessWidget {
+  const _ActionButton(this.icon, this.label, this.onPressed);
+
+  final IconData icon;
+  final String label;
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = onPressed == null
+        ? Theme.of(context).disabledColor
+        : Theme.of(context).colorScheme.onSurface;
+    return Expanded(
+      child: InkWell(
+        onTap: onPressed,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: color),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: Theme.of(context).textTheme.labelMedium
+                  ?.copyWith(color: color),
+            ),
+          ],
+        ),
       ),
     );
   }

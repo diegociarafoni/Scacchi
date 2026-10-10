@@ -5,7 +5,7 @@ nessuna connessione, nessun server, nessun dato che esce dal telefono.
 
 ## Come si gioca
 
-1. Toccare **Nuova partita**.
+1. Toccare **Nuova**.
 2. Scegliere **Computer**.
 3. Scegliere il colore: Bianco, Nero o a caso. La scacchiera si orienta dal lato del giocatore.
 4. Scegliere il livello con il cursore (da 1 a 8).
@@ -14,9 +14,10 @@ nessuna connessione, nessun server, nessun dato che esce dal telefono.
 Durante la riflessione del computer la scacchiera è bloccata e compare la scritta
 "Il computer sta pensando…".
 
-- **Annulla mossa** ritira la mossa del giocatore e la risposta del computer, così il turno
+- **Annulla** ritira la mossa del giocatore e la risposta del computer, così il turno
   torna al giocatore. Se il computer sta ancora pensando, la ricerca viene interrotta.
 - **Abbandona** fa abbandonare il giocatore, non il computer.
+- **Patta**: il computer accetta solo se si valuta in svantaggio di almeno mezzo pedone (50 centipedoni) nella sua ultima ricerca; altrimenti rifiuta (requisito RF-25).
 - La rotazione automatica della scacchiera non si applica contro il computer.
 
 ## Piattaforme
@@ -106,6 +107,18 @@ flutter test
   vero (`apt install stockfish`, oppure la variabile `STOCKFISH_PATH`). Senza Stockfish i test
   d'integrazione vengono saltati; in CI Stockfish è installato, quindi girano sempre.
 - `test/computer_game_test.dart`: la partita contro il computer nell'interfaccia.
+
+## Requisiti coperti
+
+| Requisito | Stato |
+|---|---|
+| RF-20 scelta di colore e livello | ✓ (8 livelli, Elo indicativo 600–3000) |
+| RF-21 motore in isolate separato, ritardo artificiale ai livelli bassi | ✓ |
+| RF-25 patta accettata dal bot in base alla valutazione | ✓ |
+| RNF-03 Stockfish nativo via FFI in isolate, 1 thread | ✓ (Android, iOS) |
+| RF-22 modalità Allenamento (suggerimento, barra di valutazione) | Da fare: `EngineMove` espone già variante e valutazione |
+| RF-23 bot con personalità | Da fare: lo stile si può ottenere con `chooseCandidate` e un libro d'apertura |
+| RF-26 avversario adattivo | Da fare |
 
 ## Licenza
 
