@@ -1,6 +1,7 @@
 import 'package:dartchess/dartchess.dart';
 
 import 'activity.dart';
+import 'challenges.dart';
 import 'progress_state.dart';
 import 'xp.dart';
 
@@ -28,7 +29,9 @@ class Achievement {
 bool _wonWith(Activity? a, bool Function(GamePlayed g) check) =>
     a is GamePlayed && a.result == GameResult.win && check(a);
 
-final List<Achievement> achievements = [
+final List<Achievement> achievements = [..._base, ..._more];
+
+final List<Achievement> _base = [
   Achievement(
     id: 'first_game',
     title: 'Prima partita',
@@ -147,6 +150,128 @@ final List<Achievement> achievements = [
     description: 'Raggiungi il livello 10.',
     category: AchievementCategory.consistency,
     test: (s, _) => levelForXp(s.xp) >= 10,
+  ),
+];
+
+int _mateThemes(ProgressState s) => s.puzzleThemes.entries
+    .where((e) => isMateTheme(e.key))
+    .fold(0, (sum, e) => sum + e.value);
+
+int _bestRun(ProgressState s) =>
+    s.records.puzzleRuns.values.fold(0, (a, b) => a > b ? a : b);
+
+final List<Achievement> _more = [
+  Achievement(
+    id: 'wins_10',
+    title: 'Dieci vittorie',
+    description: 'Vinci 10 partite.',
+    category: AchievementCategory.game,
+    test: (s, _) => s.wins >= 10,
+  ),
+  Achievement(
+    id: 'wins_50',
+    title: 'Cinquanta vittorie',
+    description: 'Vinci 50 partite.',
+    category: AchievementCategory.game,
+    test: (s, _) => s.wins >= 50,
+  ),
+  Achievement(
+    id: 'win_black',
+    title: 'Dal lato oscuro',
+    description: 'Vinci una partita con il nero.',
+    category: AchievementCategory.game,
+    test: (_, a) => _wonWith(a, (g) => g.playerSide == Side.black),
+  ),
+  Achievement(
+    id: 'miniature',
+    title: 'Miniatura',
+    description: 'Vinci in meno di 20 mosse.',
+    category: AchievementCategory.game,
+    test: (_, a) => _wonWith(a, (g) => (g.moveCount ?? 99) < 20),
+  ),
+  Achievement(
+    id: 'beat_1500',
+    title: 'Sfida seria',
+    description: 'Batti un bot da 1500 Elo o più.',
+    category: AchievementCategory.game,
+    test: (s, _) => (s.records.strongestBot ?? 0) >= 1500,
+  ),
+  Achievement(
+    id: 'beat_2000',
+    title: 'Ammazzagiganti',
+    description: 'Batti un bot da 2000 Elo o più.',
+    category: AchievementCategory.game,
+    test: (s, _) => (s.records.strongestBot ?? 0) >= 2000,
+  ),
+  Achievement(
+    id: 'brilliant',
+    title: 'Brillante!',
+    description: 'Trova una mossa brillante in una tua partita.',
+    category: AchievementCategory.tactics,
+    test: (s, _) => s.brilliantFound >= 1,
+  ),
+  Achievement(
+    id: 'puzzle_fork_10',
+    title: 'Forchettone',
+    description: 'Risolvi 10 puzzle di forchetta.',
+    category: AchievementCategory.tactics,
+    test: (s, _) => (s.puzzleThemes['fork'] ?? 0) >= 10,
+  ),
+  Achievement(
+    id: 'puzzle_mate_10',
+    title: 'Scacco matto!',
+    description: 'Risolvi 10 puzzle di matto.',
+    category: AchievementCategory.tactics,
+    test: (s, _) => _mateThemes(s) >= 10,
+  ),
+  Achievement(
+    id: 'puzzle_rating_1500',
+    title: 'Tattico',
+    description: 'Raggiungi 1500 di punteggio puzzle.',
+    category: AchievementCategory.tactics,
+    test: (s, _) => (s.records.puzzleRating ?? 0) >= 1500,
+  ),
+  Achievement(
+    id: 'puzzle_run_20',
+    title: 'In corsa',
+    description: 'Fai 20 punti in una modalità a tempo o a serie.',
+    category: AchievementCategory.tactics,
+    test: (s, _) => _bestRun(s) >= 20,
+  ),
+  Achievement(
+    id: 'challenges_all',
+    title: 'Giornata perfetta',
+    description: 'Completa tutte e tre le sfide del giorno.',
+    category: AchievementCategory.consistency,
+    test: (s, _) => s.perfectDays >= 1,
+  ),
+  Achievement(
+    id: 'challenges_10',
+    title: 'Sfidante',
+    description: 'Completa 10 sfide giornaliere.',
+    category: AchievementCategory.consistency,
+    test: (s, _) => s.challengesCompleted >= 10,
+  ),
+  Achievement(
+    id: 'reviews_10',
+    title: 'Autocritica',
+    description: 'Rivedi 10 partite.',
+    category: AchievementCategory.curiosity,
+    test: (s, _) => s.reviewsCompleted >= 10,
+  ),
+  Achievement(
+    id: 'accuracy_90',
+    title: 'Chirurgico',
+    description: 'Gioca una partita con precisione del 90% o più.',
+    category: AchievementCategory.curiosity,
+    test: (s, _) => (s.records.bestAccuracy ?? 0) >= 90,
+  ),
+  Achievement(
+    id: 'lessons_10',
+    title: 'Studente',
+    description: 'Completa 10 lezioni.',
+    category: AchievementCategory.curiosity,
+    test: (s, _) => s.lessonsCompleted >= 10,
   ),
 ];
 

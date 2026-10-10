@@ -5,6 +5,7 @@ import 'package:scacchi/progress/activity.dart';
 import 'package:scacchi/progress/daily_goal.dart';
 import 'package:scacchi/progress/progress_state.dart';
 import 'package:scacchi/progress/progress_tracker.dart';
+import 'package:scacchi/progress/xp.dart';
 
 // 2026-10-05 è un lunedì.
 DateTime day(int d, [int hour = 12]) => DateTime(2026, 10, d, hour);
@@ -141,8 +142,13 @@ void main() {
         day(5),
         settings,
       );
-      final second = tracker.record(first.state, loss, day(5), settings);
-      expect(first.xpGained, greaterThan(second.xpGained));
+      expect(first.goalReached, isTrue);
+      expect(
+        first.xpGained,
+        xpFor(loss) +
+            dailyGoalBonusXp +
+            first.challengesCompleted.length * dailyChallengeBonusXp,
+      );
     });
   });
 

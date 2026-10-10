@@ -92,6 +92,35 @@ void main() {
     );
   });
 
+  testWidgets('RG-07 mostra le sfide di oggi e della settimana', (
+    tester,
+  ) async {
+    await show(tester);
+    await tester.scrollUntilVisible(find.text('Sfide di oggi'), 200);
+    for (final (c, _) in controller.challenges) {
+      expect(find.text(c.title), findsOneWidget);
+    }
+    await tester.scrollUntilVisible(find.text('Sfida della settimana'), 200);
+    expect(find.text(controller.weeklyChallenge.$1.title), findsOneWidget);
+  });
+
+  testWidgets('RG-08 mostra i record personali', (tester) async {
+    await tester.runAsync(
+      () => controller.record(
+        const GamePlayed(
+          result: GameResult.win,
+          opponentElo: 1400,
+          moveCount: 22,
+        ),
+      ),
+    );
+    await show(tester);
+    await tester.scrollUntilVisible(find.text('Record personali'), 200);
+    await tester.scrollUntilVisible(find.text('Bot più forte battuto'), 200);
+    expect(find.text('1400 Elo'), findsOneWidget);
+    expect(find.text('22 mosse'), findsOneWidget);
+  });
+
   testWidgets('RG-12 con la gamification spenta il profilo è nascosto', (
     tester,
   ) async {
@@ -127,6 +156,17 @@ void main() {
     await tester.pump();
     expect(find.textContaining('Prima vittoria'), findsOneWidget);
     expect(find.textContaining('+${update.xpGained} XP'), findsOneWidget);
+  });
+
+  test('RG-07 RG-08 il messaggio cita sfide e record', () async {
+    final update = await controller.record(
+      const GamePlayed(result: GameResult.win, opponentElo: 1000),
+    );
+    final message = progressMessage(update)!;
+    for (final c in update.challengesCompleted) {
+      expect(message, contains('Sfida completata: ${c.title}'));
+    }
+    expect(message, contains('Nuovo record: bot più forte battuto'));
   });
 
   test('le impostazioni sopravvivono al riavvio', () async {
