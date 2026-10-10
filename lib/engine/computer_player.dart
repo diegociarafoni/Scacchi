@@ -86,6 +86,7 @@ class ComputerPlayer {
     String fen, {
     required int depth,
     int multiPv = 1,
+    Duration timeout = const Duration(minutes: 2),
   }) => _enqueue(() async {
     await _applyOptions({
       'Skill Level': '20',
@@ -93,22 +94,7 @@ class ComputerPlayer {
       'UCI_LimitStrength': 'false',
     });
     _send('position fen ${fen.trim()}');
-    final infos = <int, InfoLine>{};
-    void onInfo(String line) {
-      final info = parseInfo(line);
-      if (info != null) infos[info.multipv] = info;
-    }
-
-    _listeners.add(onInfo);
-    try {
-      await _command(
-        'go depth $depth',
-        (l) => l.startsWith('bestmove'),
-        const Duration(minutes: 2),
-      );
-    } finally {
-      _listeners.remove(onInfo);
-    }
+    final (_, infos) = await _go('go depth $depth', timeout);
     return [
       for (final k in infos.keys.toList()..sort())
         if (k <= multiPv) infos[k]!,
@@ -139,25 +125,11 @@ class ComputerPlayer {
     final started = DateTime.now();
     await _applyLevel(level);
     _send('position fen ${fen.trim()}');
-
-    final infos = <int, InfoLine>{};
-    void onInfo(String line) {
-      final info = parseInfo(line);
-      if (info != null) infos[info.multipv] = info;
-    }
-
-    _listeners.add(onInfo);
-    final String bestLine;
-    try {
-      final depth = level.depth != null ? ' depth ${level.depth}' : '';
-      bestLine = await _command(
-        'go$depth movetime ${level.movetime.inMilliseconds}',
-        (l) => l.startsWith('bestmove'),
-        level.movetime + timeoutMargin,
-      );
-    } finally {
-      _listeners.remove(onInfo);
-    }
+    final depth = level.depth != null ? ' depth ${level.depth}' : '';
+    final (bestLine, infos) = await _go(
+      'go$depth movetime ${level.movetime.inMilliseconds}',
+      level.movetime + timeoutMargin,
+    );
 
     final engineMove = parseBestMove(bestLine);
     if (engineMove == null) return null;
@@ -200,6 +172,39 @@ class ComputerPlayer {
       changed = true;
     });
     if (changed) await _sync();
+  }
+
+  /// Avvia una ricerca e raccoglie le varianti fino a `bestmove`. Allo
+  /// scadere ferma il motore, così il suo `bestmove` tardivo non viene
+  /// scambiato per la risposta al comando successivo.
+  Future<(String, Map<int, InfoLine>)> _go(
+    String command,
+    Duration timeout,
+  ) async {
+    final infos = <int, InfoLine>{};
+    void onInfo(String line) {
+      final info = parseInfo(line);
+      if (info != null) infos[info.multipv] = info;
+    }
+
+    _listeners.add(onInfo);
+    try {
+      final best = await _command(
+        command,
+        (l) => l.startsWith('bestmove'),
+        timeout,
+      );
+      return (best, infos);
+    } on TimeoutException {
+      await _command(
+        'stop',
+        (l) => l.startsWith('bestmove'),
+        const Duration(seconds: 5),
+      ).catchError((_) => '');
+      rethrow;
+    } finally {
+      _listeners.remove(onInfo);
+    }
   }
 
   Future<String> _sync() =>

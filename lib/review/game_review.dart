@@ -22,6 +22,7 @@ class MoveReview {
     required this.winBefore,
     required this.winAfter,
     required this.accuracy,
+    required this.playedBest,
     this.bestMove,
     this.bestSan,
     this.bestLine = const [],
@@ -46,7 +47,8 @@ class MoveReview {
   final String? bestSan;
   final List<String> bestLine;
 
-  bool get playedBest => bestSan == san;
+  /// La mossa giocata è la prima scelta del motore.
+  final bool playedBest;
 }
 
 class GameReview {
@@ -65,7 +67,11 @@ class GameReview {
   int count(Side side, MoveClass c) =>
       _of(side).where((m) => m.classification == c).length;
 
-  int estimatedElo(Side side) => acc.estimatedElo(accuracy(side) ?? 0);
+  /// `null` se il lato non ha mosse.
+  int? estimatedElo(Side side) {
+    final a = accuracy(side);
+    return a == null ? null : acc.estimatedElo(a);
+  }
 
   /// Indici delle mosse da evidenziare nel grafico.
   List<int> get keyMoments => [
@@ -83,7 +89,9 @@ class GameReview {
 }
 
 /// Analizza tutte le posizioni della partita e classifica ogni mossa.
-/// Restituisce `null` se [isCancelled] diventa vero.
+/// Restituisce `null` se [isCancelled] diventa vero; per fermare subito il
+/// motore chi interrompe chiama anche `ComputerPlayer.stop`.
+/// Lancia [StateError] se il motore non dà una valutazione.
 Future<GameReview?> reviewGame({
   required Position initial,
   required List<Move> moves,
@@ -101,15 +109,19 @@ Future<GameReview?> reviewGame({
 
   final lines = <List<InfoLine>>[];
   final wins = <double>[];
+  bool cancelled() => isCancelled?.call() ?? false;
   for (var i = 0; i < total; i++) {
-    if (isCancelled?.call() ?? false) return null;
+    if (cancelled()) return null;
     final pos = positions[i];
-    final terminal = _terminalScore(pos);
+    final terminal = _terminalScore(positions, i);
     final l = terminal == null ? await evaluate(pos.fen) : const <InfoLine>[];
+    if (cancelled()) return null;
+    final score = terminal ?? l.firstOrNull?.score;
+    if (score == null) {
+      throw StateError('Nessuna valutazione del motore per ${pos.fen}');
+    }
     lines.add(l);
-    wins.add(
-      winPercent(terminal ?? l.firstOrNull?.score ?? const EngineScore.cp(0)),
-    );
+    wins.add(winPercent(score));
     onProgress?.call(i + 1, total);
   }
 
@@ -127,10 +139,11 @@ Future<GameReview?> reviewGame({
     final bestSan = bestMove == null ? null : before.makeSan(bestMove).$2;
     final second = lines[i].elementAtOrNull(1)?.score;
 
+    final isBest = bestSan == san;
     final facts = MoveFacts(
       winBefore: winBefore,
       winAfter: winAfter,
-      isBestMove: bestSan == san,
+      isBestMove: isBest,
       secondBestWin: second == null ? null : winPercent(second),
       isSacrifice: isSacrifice(
         before,
@@ -151,6 +164,7 @@ Future<GameReview?> reviewGame({
         winBefore: winBefore,
         winAfter: winAfter,
         accuracy: acc.moveAccuracy(winBefore, winAfter),
+        playedBest: isBest,
         bestMove: bestMove,
         bestSan: bestSan,
         bestLine: best?.pv ?? const [],
@@ -168,13 +182,20 @@ Future<GameReview?> reviewGame({
   );
 }
 
-EngineScore? _terminalScore(Position pos) {
+/// Valutazione delle posizioni che chiudono la partita. Ripetizione e regola
+/// delle 50 mosse dipendono dalla cronologia, che il motore non vede.
+EngineScore? _terminalScore(List<Position> positions, int i) {
+  final pos = positions[i];
   if (pos.isCheckmate) return const EngineScore.mate(0);
-  if (pos.isStalemate || pos.isInsufficientMaterial) {
+  if (pos.isStalemate || pos.isInsufficientMaterial || pos.halfmoves >= 100) {
     return const EngineScore.cp(0);
   }
-  return null;
+  final key = _repetitionKey(pos);
+  final seen = positions.take(i + 1).where((p) => _repetitionKey(p) == key);
+  return seen.length >= 3 ? const EngineScore.cp(0) : null;
 }
+
+String _repetitionKey(Position pos) => pos.fen.split(' ').take(4).join(' ');
 
 Move? _parse(Position pos, String? uci) {
   final m = uci == null ? null : Move.parse(uci);

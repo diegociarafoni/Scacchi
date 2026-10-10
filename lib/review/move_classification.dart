@@ -58,6 +58,8 @@ const mistakeMaxLoss = 20.0;
 /// "Ottima" solo se l'alternativa cambia l'esito: la seconda scelta non
 /// vince più e la differenza supera la soglia dell'errore. Punire un errore
 /// grave dell'avversario è di solito evidente e resta "Migliore".
+/// "Occasione mancata" solo se dopo la mossa si resta almeno in parità: si è
+/// restituito il regalo dell'avversario, non si è anche peggiorato.
 MoveClass classifyMove(MoveFacts f) {
   final loss = f.loss;
   final nearBest = f.isBestMove || loss <= excellentMaxLoss;
@@ -80,7 +82,7 @@ MoveClass classifyMove(MoveFacts f) {
   if (loss <= goodMaxLoss) return MoveClass.good;
   if (loss <= inaccuracyMaxLoss) return MoveClass.inaccuracy;
   final opponentErred = (f.opponentPreviousLoss ?? 0) >= inaccuracyMaxLoss;
-  if (opponentErred && f.winAfter >= 30) return MoveClass.miss;
+  if (opponentErred && f.winAfter >= 50) return MoveClass.miss;
   if (loss <= mistakeMaxLoss) return MoveClass.mistake;
   return MoveClass.blunder;
 }

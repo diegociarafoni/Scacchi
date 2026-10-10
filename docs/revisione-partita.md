@@ -23,7 +23,7 @@ La classificazione usa la perdita di probabilità di vittoria e non i centipedon
 win% = 50 + 50 × (2 / (1 + e^(−0.00368208 × cp)) − 1)      cp limitato a ±1000
 ```
 
-Il matto a favore vale 100%, il matto subito 0%, stallo e materiale insufficiente 50%. Così passare da +12 a +8 in una posizione vinta non è un errore, mentre passare da +1 a −1 lo è.
+Il matto a favore vale 100%, il matto subito 0%; stallo, materiale insufficiente, triplice ripetizione e regola delle 50 mosse valgono 50%. Ripetizione e 50 mosse dipendono dalla cronologia, che il motore non vede, perciò la revisione le riconosce da sé. Così passare da +12 a +8 in una posizione vinta non è un errore, mentre passare da +1 a −1 lo è.
 
 ## Classificazione
 
@@ -38,23 +38,32 @@ Per ogni mossa `perdita = win% con la mossa migliore − win% con la mossa gioca
 | Eccellente | 👍 | Perdita ≤ 2 |
 | Buona | ✓ | Perdita ≤ 5 |
 | Imprecisione | ?! | Perdita ≤ 10 |
-| Occasione mancata | ✗ | Perdita > 10 dopo un errore dell'avversario (perdita ≥ 10), senza finire sotto il 30% |
+| Occasione mancata | ✗ | Perdita > 10 dopo un errore dell'avversario (perdita ≥ 10), restando almeno in parità (win% ≥ 50) |
 | Errore | ? | Perdita ≤ 20 |
 | Errore grave | ?? | Perdita > 20 |
 
 ### Sacrificio
 
-Si gioca la mossa e poi le prime risposte della variante principale del motore (fino a quattro semimosse, in numero pari per contare la ripresa). Se il bilancio del materiale (P=1, C=A=3, T=5, D=9) è sceso di almeno due pedoni, la mossa è un sacrificio. Un pedone offerto non basta, come su chess.com.
+Una mossa è un sacrificio se cede almeno due pedoni di materiale (P=1, C=A=3, T=5, D=9), in uno dei due modi:
+
+- **Pezzo offerto**: il pezzo mosso (almeno un cavallo) resta in presa e l'avversario ci guadagnerebbe prendendolo, anche se il motore preferisce non farlo (il caso classico della donna offerta che non si può prendere per via del matto).
+- **Materiale perso nella variante**: si giocano le prime risposte della variante principale del motore (fino a quattro semimosse); se la variante si ferma su una presa avversaria si conta la nostra ripresa immediata.
+
+Un pedone offerto non basta, come su chess.com.
 
 ## Precisione e stima della forza
 
 - Precisione della mossa (formula di Lichess): `103.17 × e^(−0.04354 × perdita) − 3.17`, limitata a 0–100.
 - Precisione della partita: media tra media aritmetica e media armonica delle mosse del giocatore, così un errore grave isolato pesa più che nella media semplice.
-- Stima della forza: interpolazione lineare indicativa (50% ≈ 400, 70% ≈ 1200, 80% ≈ 1700, 90% ≈ 2300, 95% ≈ 2700). È mostrata come stima, non come rating.
+- Stima della forza (assente se il giocatore non ha mosse): interpolazione lineare indicativa (50% ≈ 400, 70% ≈ 1200, 80% ≈ 1700, 90% ≈ 2300, 95% ≈ 2700). È mostrata come stima, non come rating.
 
 ## Analisi con il motore
 
-`ComputerPlayer.analyse(fen, depth:, multiPv:)` usa la stessa istanza di Stockfish dell'avversario (su telefono il motore nativo è uno solo) e imposta la forza piena (`Skill Level 20`, `UCI_LimitStrength false`); le opzioni del livello vengono ripristinate alla mossa successiva del computer. La revisione chiede due varianti per posizione a profondità 14 (RNF-05), salta le posizioni finali e si può interrompere tra una posizione e l'altra.
+`ComputerPlayer.analyse(fen, depth:, multiPv:)` usa la stessa istanza di Stockfish dell'avversario (su telefono il motore nativo è uno solo) e imposta la forza piena (`Skill Level 20`, `UCI_LimitStrength false`); le opzioni del livello vengono ripristinate alla mossa successiva del computer. La revisione chiede due varianti per posizione a profondità 14 (RNF-05) e salta le posizioni finali.
+
+- **Interruzione**: `reviewGame` controlla `isCancelled` prima e dopo ogni posizione e restituisce `null`; chi interrompe chiama anche `ComputerPlayer.stop` per fermare subito la ricerca in corso.
+- **Tempo massimo**: se una ricerca supera il limite, il motore riceve `stop` e la sua risposta tardiva viene consumata, così non viene scambiata per la risposta alla richiesta successiva.
+- **Valutazione mancante**: se il motore non restituisce un punteggio, la revisione fallisce con un errore invece di supporre una patta.
 
 ## Momenti chiave
 

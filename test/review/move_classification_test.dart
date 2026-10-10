@@ -124,6 +124,13 @@ void main() {
       },
     );
 
+    test('restituire tutto il vantaggio e oltre è un errore grave', () {
+      expect(
+        classify(before: 95, after: 35, opponentLoss: 12),
+        MoveClass.blunder,
+      );
+    });
+
     test('se la mossa porta a posizione persa è un errore grave', () {
       expect(
         classify(before: 85, after: 10, opponentLoss: 30),

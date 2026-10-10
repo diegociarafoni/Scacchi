@@ -91,7 +91,7 @@ void main() {
       expect(r.count(Side.white, MoveClass.blunder), 0);
       expect(
         r.estimatedElo(Side.white),
-        greaterThan(r.estimatedElo(Side.black)),
+        greaterThan(r.estimatedElo(Side.black)!),
       );
     });
 
@@ -152,6 +152,88 @@ void main() {
       expect(r.moves[1].classification, MoveClass.book);
       expect(r.moves[2].classification, MoveClass.best);
     });
+
+    test('senza mosse di un lato non c\'è stima della forza', () async {
+      final r = (await reviewGame(
+        initial: Chess.initial,
+        moves: moves(['e2e4']),
+        evaluate: fakeEngine(['e2e4', 'e7e5']),
+      ))!;
+      expect(r.estimatedElo(Side.black), isNull);
+      expect(r.estimatedElo(Side.white), isNotNull);
+      expect(r.moves.single.playedBest, isTrue);
+    });
+
+    test(
+      'l\'interruzione durante l\'ultima analisi annulla la revisione',
+      () async {
+        var cancelled = false;
+        final review = await reviewGame(
+          initial: Chess.initial,
+          moves: moves(['e2e4']),
+          evaluate: (fen) async {
+            if (fen != Chess.initial.fen) cancelled = true;
+            return [
+              const InfoLine(
+                multipv: 1,
+                pv: ['e7e5'],
+                score: EngineScore.cp(-20),
+              ),
+            ];
+          },
+          isCancelled: () => cancelled,
+        );
+        expect(review, isNull);
+      },
+    );
+
+    test('un\'analisi senza valutazione è un errore, non una patta', () {
+      expect(
+        reviewGame(
+          initial: Chess.initial,
+          moves: moves(['e2e4']),
+          evaluate: (_) async => const [
+            InfoLine(multipv: 1, pv: ['e2e4']),
+          ],
+        ),
+        throwsStateError,
+      );
+    });
+
+    test(
+      'la triplice ripetizione chiude a patta l\'ultima posizione',
+      () async {
+        // Il Bianco con una torre in più ripete le mosse fino alla patta.
+        const game = [
+          'e1e2', 'e8e7', 'e2e1', 'e7e8', //
+          'e1e2', 'e8e7', 'e2e1', 'e7e8',
+        ];
+        final initial = Chess.fromSetup(
+          Setup.parseFen('4k3/8/8/8/8/8/8/R3K3 w - - 0 1'),
+        );
+        final calls = <String>[];
+        final r = (await reviewGame(
+          initial: initial,
+          moves: moves(game),
+          evaluate: (fen) async {
+            calls.add(fen);
+            final white = fen.split(' ')[1] == 'w';
+            return [
+              InfoLine(
+                multipv: 1,
+                pv: const ['a1a2'],
+                score: EngineScore.cp(white ? 500 : -500),
+              ),
+            ];
+          },
+        ))!;
+        expect(r.whiteWinCurve.last, 50);
+        expect(calls, hasLength(game.length));
+        // Il Nero, in svantaggio, si salva con la ripetizione.
+        expect(r.moves.last.winAfter, 50);
+        expect(r.moves.last.classification, MoveClass.best);
+      },
+    );
 
     test('lo stallo vale patta senza chiedere al motore', () async {
       // Il Bianco gioca Dg6?? e il Nero è in stallo.

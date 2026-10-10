@@ -45,6 +45,29 @@ void main() {
       );
     });
 
+    test('con la variante troncata conta la ripresa immediata', () {
+      final before = fen('4k3/8/5n2/8/4P3/2N5/8/4K3 w - - 0 1');
+      expect(
+        isSacrifice(before, NormalMove.fromUci('c3d5'), ['f6d5']),
+        isFalse,
+      );
+    });
+
+    test('un pezzo offerto e rifiutato dal motore è un sacrificio', () {
+      // Dh5: il pedone g6 può prendere la donna, il motore preferisce altro.
+      final before = fen('4k3/8/6p1/8/8/8/8/3QK3 w - - 0 1');
+      expect(isSacrifice(before, NormalMove.fromUci('d1h5'), ['e8f8']), isTrue);
+    });
+
+    test('un pezzo difeso attaccato da un pezzo uguale non è offerto', () {
+      // Ad4 è attaccato dall'alfiere c5 ma difeso dalla donna.
+      final before = fen('4k3/8/8/2b5/8/8/5B2/3QK3 w - - 0 1');
+      expect(
+        isSacrifice(before, NormalMove.fromUci('f2d4'), ['e8d8']),
+        isFalse,
+      );
+    });
+
     test('il pedone offerto non conta come sacrificio', () {
       final before = fen('4k3/8/8/3p4/8/8/4P3/4K3 w - - 0 1');
       expect(
