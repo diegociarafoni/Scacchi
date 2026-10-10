@@ -36,6 +36,7 @@ class _GamePageState extends State<GamePage> {
   Side? _computerSide;
   ComputerPlayer? _computer;
   bool _thinking = false;
+  String _thinkingText = 'Il computer sta pensando…';
 
   /// Invalida le risposte del computer per posizioni non più attuali.
   int _generation = 0;
@@ -89,9 +90,12 @@ class _GamePageState extends State<GamePage> {
 
   Future<void> _computerMove() async {
     final side = _computerSide;
-    if (side == null || _game.isOver || _game.position.turn != side) return;
+    if (_thinking || side == null || _game.isOver) return;
+    if (_game.position.turn != side) return;
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     final generation = _generation;
     _thinking = true;
+    _thinkingText = 'Il computer sta pensando…';
     _refresh(animate: false);
     EngineMove? reply;
     Object? error;
@@ -106,15 +110,13 @@ class _GamePageState extends State<GamePage> {
     }
     if (!mounted || generation != _generation) return;
     _thinking = false;
-    if (reply != null) _game.play(reply.move);
+    if (reply != null && !_game.play(reply.move)) error = reply;
     _refresh();
     if (error != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Il computer non risponde.'),
-          duration: const Duration(days: 1),
-          action: SnackBarAction(label: 'Riprova', onPressed: _computerMove),
-        ),
+      _showMessage(
+        'Il computer non risponde.',
+        duration: const Duration(days: 1),
+        action: SnackBarAction(label: 'Riprova', onPressed: _computerMove),
       );
     }
   }
@@ -123,12 +125,39 @@ class _GamePageState extends State<GamePage> {
 
   void _cancelComputerMove() {
     _generation++;
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     if (_thinking) _computer?.stop();
     _thinking = false;
   }
 
-  void _showMessage(String text) =>
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
+  /// Chiude selezione e selettore di promozione rimasti aperti sulla scacchiera.
+  void _clearBoardInteraction() {
+    final pos = _game.position;
+    _board.updatePosition(
+      GameData(
+        fen: pos.fen,
+        playerSide: PlayerSide.none,
+        sideToMove: pos.turn,
+        validMoves: const {},
+      ),
+      animate: false,
+    );
+  }
+
+  /// Messaggio sopra la barra dei comandi, per non coprirla.
+  void _showMessage(
+    String text, {
+    Duration duration = const Duration(seconds: 4),
+    SnackBarAction? action,
+  }) => ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(text),
+      duration: duration,
+      action: action,
+      behavior: SnackBarBehavior.floating,
+      margin: const EdgeInsets.fromLTRB(16, 0, 16, _actionsHeight + 8),
+    ),
+  );
 
   Future<void> _newGame() async {
     final setup = await showNewGameDialog(
@@ -140,6 +169,7 @@ class _GamePageState extends State<GamePage> {
     _cancelComputerMove();
     _setup = setup;
     _game = ChessGame();
+    _clearBoardInteraction();
     if (setup.opponent == Opponent.computer) {
       final human = setup.resolveHumanSide(_random);
       _computerSide = human.opposite;
@@ -159,12 +189,12 @@ class _GamePageState extends State<GamePage> {
 
   void _undo() {
     _cancelComputerMove();
-    if (_computerSide != null && _endedByChoice) {
-      _game.resume();
-    } else {
+    final revokeOnly = _endedByChoice;
+    _game.undo();
+    if (!revokeOnly && _computerSide == _game.position.turn && _game.canUndo) {
       _game.undo();
-      if (_computerSide == _game.position.turn && _game.canUndo) _game.undo();
     }
+    _clearBoardInteraction();
     _refresh(animate: false);
     _computerMove();
   }
@@ -194,6 +224,7 @@ class _GamePageState extends State<GamePage> {
         ],
       ),
     );
+    if (!mounted) return;
     if (confirmed == true) {
       _cancelComputerMove();
       _game.resign(side);
@@ -203,8 +234,12 @@ class _GamePageState extends State<GamePage> {
 
   /// Il computer accetta la patta solo se si valuta in svantaggio.
   Future<void> _offerDrawToComputer() async {
+    if (_thinking) return;
     final generation = _generation;
     final turn = _game.position.turn;
+    _thinking = true;
+    _thinkingText = 'Il computer valuta la patta…';
+    _refresh(animate: false);
     int? computerScore;
     try {
       final score = await _computerPlayer.evaluate(
@@ -217,7 +252,10 @@ class _GamePageState extends State<GamePage> {
             : -score.comparable;
       }
     } catch (_) {}
-    if (!mounted || generation != _generation || _game.isOver) return;
+    if (!mounted || generation != _generation) return;
+    _thinking = false;
+    _refresh(animate: false);
+    if (_game.isOver) return;
     if (computerScore != null && computerScore <= -_drawAcceptanceCp) {
       _cancelComputerMove();
       _game.agreeDraw();
@@ -247,6 +285,7 @@ class _GamePageState extends State<GamePage> {
         ],
       ),
     );
+    if (!mounted) return;
     if (accepted == true) {
       _game.agreeDraw();
       _refresh(animate: false);
@@ -302,9 +341,12 @@ class _GamePageState extends State<GamePage> {
                 constraints.maxWidth > constraints.maxHeight * 1.2;
             final boardSize = landscape
                 ? math.min(constraints.maxHeight, constraints.maxWidth * 0.6)
-                : math.min(
-                    constraints.maxWidth,
-                    constraints.maxHeight - _portraitChromeHeight,
+                : math.max(
+                    0.0,
+                    math.min(
+                      constraints.maxWidth,
+                      constraints.maxHeight - _portraitChromeHeight,
+                    ),
                   );
             final board = Chessboard(
               size: boardSize,
@@ -316,7 +358,7 @@ class _GamePageState extends State<GamePage> {
               ),
             );
             final status = _StatusLine(
-              text: _thinking ? 'Il computer sta pensando…' : statusText(_game),
+              text: _thinking ? _thinkingText : statusText(_game),
             );
             final moves = _MoveList(game: _game, horizontal: !landscape);
             if (landscape) {

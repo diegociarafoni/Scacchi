@@ -9,7 +9,17 @@ import 'package:scacchi/game/game_page.dart';
 
 /// Motore finto che gioca sempre la prima mossa legale.
 class FirstLegalMoveEngine implements UciTransport {
-  FirstLegalMoveEngine({this.scoreCp = 0});
+  FirstLegalMoveEngine({
+    this.scoreCp = 0,
+    this.forcedMove,
+    this.delay = Duration.zero,
+  });
+
+  /// Ritardo della risposta a `go`.
+  final Duration delay;
+
+  /// Se presente, il motore risponde sempre con questa mossa.
+  final String? forcedMove;
 
   /// Valutazione riportata, dal punto di vista di chi muove.
   final int scoreCp;
@@ -26,12 +36,16 @@ class FirstLegalMoveEngine implements UciTransport {
       'uci' => ['uciok'],
       'isready' => ['readyok'],
       _ when command.startsWith('go') => [
-        'info depth 1 score cp $scoreCp pv ${_firstMove()}',
-        'bestmove ${_firstMove()}',
+        'info depth 1 score cp $scoreCp pv ${forcedMove ?? _firstMove()}',
+        'bestmove ${forcedMove ?? _firstMove()}',
       ],
       _ => const <String>[],
     };
-    scheduleMicrotask(() => replies.forEach(_out.add));
+    if (command.startsWith('go') && delay > Duration.zero) {
+      Future<void>.delayed(delay, () => replies.forEach(_out.add));
+    } else {
+      scheduleMicrotask(() => replies.forEach(_out.add));
+    }
   }
 
   String _currentFen(String command) {
@@ -166,6 +180,55 @@ void main() {
       expect(find.textContaining('1. '), findsOneWidget);
     },
   );
+
+  testWidgets('RF-25 mentre valuta la patta la scacchiera è bloccata', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      app(
+        connect: () async =>
+            FirstLegalMoveEngine(delay: const Duration(milliseconds: 200)),
+      ),
+    );
+    await startComputerGame(tester, side: 'Bianco');
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.tap(find.text('Patta'));
+    await tester.pump();
+    expect(find.text('Il computer valuta la patta…'), findsOneWidget);
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    expect(find.text('Muove il Bianco.'), findsOneWidget);
+  });
+
+  testWidgets('una mossa del motore non valida viene segnalata', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      app(connect: () async => FirstLegalMoveEngine(forcedMove: 'e2e5')),
+    );
+    await startComputerGame(tester, side: 'Nero');
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    expect(find.text('Il computer non risponde.'), findsOneWidget);
+  });
+
+  testWidgets('Riprova sparisce quando inizia una nuova partita', (
+    tester,
+  ) async {
+    var attempts = 0;
+    await tester.pumpWidget(
+      app(
+        connect: () async {
+          if (attempts++ < 2) throw StateError('motore occupato');
+          return FirstLegalMoveEngine();
+        },
+      ),
+    );
+    await startComputerGame(tester, side: 'Nero');
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    expect(find.text('Riprova'), findsOneWidget);
+    await startComputerGame(tester, side: 'Bianco');
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    expect(find.text('Riprova'), findsNothing);
+  });
 
   testWidgets('senza motore disponibile la scelta Computer è disattivata', (
     tester,

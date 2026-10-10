@@ -18,8 +18,8 @@ Durante la riflessione del computer la scacchiera è bloccata e compare la scrit
   torna al giocatore. Se il computer sta ancora pensando, la ricerca viene interrotta.
 - **Abbandona** fa abbandonare il giocatore, non il computer.
 - **Annulla** dopo un abbandono o una patta concordata riapre la partita senza togliere mosse.
-- **Patta**: il computer valuta la posizione attuale a piena forza e accetta solo se si giudica in svantaggio di almeno mezzo pedone (50 centipedoni); altrimenti rifiuta (requisito RF-25).
-- Se il motore non risponde compare il messaggio "Il computer non risponde." con il pulsante **Riprova**; il motore viene riavviato alla richiesta successiva.
+- **Patta**: il computer valuta la posizione attuale a piena forza e accetta solo se si giudica in svantaggio di almeno mezzo pedone (50 centipedoni); altrimenti rifiuta (requisito RF-25). Durante la valutazione compare "Il computer valuta la patta…" e la scacchiera è bloccata.
+- Se il motore non risponde, o propone una mossa che le regole rifiutano, compare il messaggio "Il computer non risponde." con il pulsante **Riprova**, sopra la barra dei comandi; il motore viene riavviato alla richiesta successiva. Il messaggio sparisce con una nuova partita o un annullamento.
 - La rotazione automatica della scacchiera non si applica contro il computer.
 
 ## Piattaforme
@@ -94,7 +94,7 @@ lib/game/
 - Le richieste vanno in coda: il motore esegue una ricerca alla volta.
 - Dopo un errore (timeout, avvio fallito) il motore viene chiuso e la richiesta successiva ne avvia uno nuovo, così una risposta tardiva non viene scambiata per quella di una nuova ricerca. `dispose()` fa fallire subito le richieste in corso.
 - Le opzioni UCI del livello vengono inviate solo quando cambiano.
-- `stop()` chiede al motore di rispondere subito, senza il ritardo artificiale dei livelli bassi. La schermata di gioco scarta le risposte
+- `stop()` fa terminare subito la ricerca in corso e quelle già in coda (che diventano ricerche a profondità 1), senza il ritardo artificiale dei livelli bassi. La schermata di gioco scarta le risposte
   arrivate per una posizione non più attuale (dopo un annullamento o una nuova partita).
 - L'arrocco viaggia come `e1g1` verso e da Stockfish e come re su torre (`e1h1`) in dartchess;
   `ComputerPlayer` converte in entrambe le direzioni.

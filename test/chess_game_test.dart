@@ -66,8 +66,6 @@ void main() {
     expect(game.moves.length, 1);
     game.resign(Side.black);
     expect(game.outcome, Outcome.whiteWins);
-    game.undo();
-    expect(game.isOver, isFalse);
   });
 
   test('RF-04 promozione in notazione algebrica', () {
@@ -93,23 +91,41 @@ void main() {
     expect(game.endReason, GameEndReason.agreement);
     expect(game.outcome, Outcome.draw);
     expect(game.play(Move.parse('e7e5')!), isFalse);
+  });
+
+  test('RF-25 materiale insufficiente', () {
+    final game = ChessGame(
+      initial: Chess.fromSetup(
+        Setup.parseFen('8/8/4k3/8/8/3NK3/8/8 w - - 0 1'),
+      ),
+    );
+    expect(game.endReason, GameEndReason.insufficientMaterial);
+    expect(game.outcome, Outcome.draw);
+  });
+
+  test('annullare un abbandono non toglie mosse', () {
+    final game = ChessGame();
+    playAll(game, ['e2e4', 'e7e5', 'g1f3']);
+    game.resign(Side.black);
+    game.undo();
+    expect(game.isOver, isFalse);
+    expect(game.moves.length, 3);
+  });
+
+  test('annullare una patta concordata non toglie mosse', () {
+    final game = ChessGame();
+    playAll(game, ['e2e4']);
+    game.agreeDraw();
+    game.undo();
+    expect(game.isOver, isFalse);
+    expect(game.moves.length, 1);
+  });
+
+  test('abbandono prima della prima mossa annullabile', () {
+    final game = ChessGame();
+    game.resign(Side.white);
+    expect(game.canUndo, isTrue);
     game.undo();
     expect(game.isOver, isFalse);
   });
-
-  test(
-    'resume riapre la partita dopo abbandono o patta senza togliere mosse',
-    () {
-      final game = ChessGame();
-      playAll(game, ['e2e4', 'e7e5']);
-      game.resign(Side.white);
-      game.resume();
-      expect(game.isOver, isFalse);
-      expect(game.moves.length, 2);
-      game.agreeDraw();
-      game.resume();
-      expect(game.isOver, isFalse);
-      expect(game.moves.length, 2);
-    },
-  );
 }

@@ -58,7 +58,10 @@ class ComputerPlayer {
   final _listeners = <void Function(String line)>{};
   final _pending = <Completer<String>>{};
   final _applied = <String, String>{};
-  bool _stopped = false;
+
+  /// Incrementato da [stop]: le ricerche richieste prima terminano subito.
+  int _stopEpoch = 0;
+  bool _searching = false;
   bool _disposed = false;
 
   /// Avvia il motore; altrimenti avviene alla prima richiesta.
@@ -92,24 +95,24 @@ class ComputerPlayer {
     String initialFen,
     List<Move> moves,
     EngineLevel level,
-  ) => _enqueue(() => _search(initialFen, moves, level));
+  ) {
+    final epoch = _stopEpoch;
+    return _enqueue(() => _search(initialFen, moves, level, epoch));
+  }
 
   /// Valutazione a piena forza dal punto di vista di chi muove.
-  Future<EngineScore?> evaluate(String initialFen, List<Move> moves) =>
-      _enqueue(
-        () async => (await _search(
-          initialFen,
-          moves,
-          analysisLevel,
-          delay: false,
-        ))?.score,
-      );
+  Future<EngineScore?> evaluate(String initialFen, List<Move> moves) {
+    final epoch = _stopEpoch;
+    return _enqueue(
+      () async =>
+          (await _search(initialFen, moves, analysisLevel, epoch))?.score,
+    );
+  }
 
-  /// Chiede al motore di rispondere subito con la mossa trovata finora.
+  /// Fa terminare subito la ricerca in corso e quelle già in coda.
   void stop() {
-    if (_transport == null || _disposed) return;
-    _stopped = true;
-    _send('stop');
+    _stopEpoch++;
+    if (_searching && !_disposed) _send('stop');
   }
 
   Future<void> dispose() async {
@@ -147,11 +150,11 @@ class ComputerPlayer {
   Future<EngineMove?> _search(
     String initialFen,
     List<Move> moves,
-    EngineLevel level, {
-    bool delay = true,
-  }) async {
+    EngineLevel level,
+    int epoch,
+  ) async {
     final started = DateTime.now();
-    _stopped = false;
+    bool cancelled() => epoch != _stopEpoch;
     await _applyLevel(level);
     Position position = Chess.fromSetup(Setup.parseFen(initialFen));
     final history = <String>[];
@@ -174,12 +177,16 @@ class ComputerPlayer {
     final String bestLine;
     try {
       final depth = level.depth != null ? ' depth ${level.depth}' : '';
+      _searching = true;
       bestLine = await _command(
-        'go$depth movetime ${level.movetime.inMilliseconds}',
+        cancelled()
+            ? 'go depth 1'
+            : 'go$depth movetime ${level.movetime.inMilliseconds}',
         (l) => l.startsWith('bestmove'),
         level.movetime + timeoutMargin,
       );
     } finally {
+      _searching = false;
       _listeners.remove(onInfo);
     }
 
@@ -200,7 +207,7 @@ class ComputerPlayer {
         InfoLine(multipv: 1, pv: [engineMove]);
 
     final wait = level.minReply - DateTime.now().difference(started);
-    if (delay && !_stopped && wait > Duration.zero) {
+    if (!cancelled() && wait > Duration.zero) {
       await Future<void>.delayed(wait);
     }
 

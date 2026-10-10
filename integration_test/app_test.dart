@@ -117,4 +117,28 @@ void main() {
     await _tapMove(tester, 'e2e4');
     expect(board().orientation.name, 'black');
   });
+
+  testWidgets('Annulla chiude il selettore di promozione', (tester) async {
+    await _start(tester);
+    for (final m in [
+      'b2b4',
+      'a7a5',
+      'b4a5',
+      'b7b6',
+      'a5b6',
+      'c7c6',
+      'b6b7',
+      'h7h6',
+    ]) {
+      await _tapMove(tester, m);
+    }
+    final selector = find.byWidgetPredicate(
+      (w) => w.runtimeType.toString() == 'PromotionSelector',
+    );
+    await _tapMove(tester, 'b7a8');
+    expect(selector, findsOneWidget);
+    await tester.tap(find.text('Annulla'));
+    await tester.pumpAndSettle();
+    expect(selector, findsNothing);
+  });
 }

@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:dartchess/dartchess.dart';
 
 /// Motivo per cui la partita è terminata.
@@ -39,7 +41,7 @@ class ChessGame {
 
   Move? get lastMove => _moves.isEmpty ? null : _moves.last.move;
 
-  bool get canUndo => _moves.isNotEmpty;
+  bool get canUndo => _moves.isNotEmpty || _resigned != null || _drawAgreed;
 
   /// Gioca [move] se è legale. Restituisce `false` se la mossa viene rifiutata.
   bool play(Move move) {
@@ -49,16 +51,14 @@ class ChessGame {
     return true;
   }
 
+  /// Revoca abbandono o patta concordata se presenti, altrimenti toglie l'ultima mossa.
   void undo() {
-    _resigned = null;
-    _drawAgreed = false;
-    if (_moves.isNotEmpty) _moves.removeLast();
-  }
-
-  /// Annulla abbandono o patta concordata, lasciando le mosse.
-  void resume() {
-    _resigned = null;
-    _drawAgreed = false;
+    if (_resigned != null || _drawAgreed) {
+      _resigned = null;
+      _drawAgreed = false;
+    } else if (_moves.isNotEmpty) {
+      _moves.removeLast();
+    }
   }
 
   void resign(Side side) {
@@ -90,11 +90,16 @@ class ChessGame {
     _ => Outcome.draw,
   };
 
+  /// Confronta solo le posizioni successive all'ultima cattura o mossa di pedone.
   bool get _isThreefoldRepetition {
+    final positions = [initial, for (final m in _moves) m.after];
+    final last = positions.length - 1;
+    final first = math.max(0, last - position.halfmoves);
+    if (last - first < 8) return false;
     final current = _repetitionKey(position);
-    var count = _repetitionKey(initial) == current ? 1 : 0;
-    for (final m in _moves) {
-      if (_repetitionKey(m.after) == current) count++;
+    var count = 0;
+    for (var i = first; i <= last; i++) {
+      if (_repetitionKey(positions[i]) == current) count++;
     }
     return count >= 3;
   }

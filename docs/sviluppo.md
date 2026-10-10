@@ -61,6 +61,8 @@ I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisic
 | RF-25 patta accettata dal computer in base alla valutazione | ✓ | ✓ |
 | RF-31 rotazione automatica a ogni turno | | ✓ |
 | RF-32 patta concordata e annullamento | ✓ | ✓ |
+| Annullamento di abbandono e patta senza perdita di mosse | ✓ | |
+| RF-04 chiusura del selettore di promozione con Annulla | | ✓ |
 
 ## Integrazione continua
 

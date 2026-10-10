@@ -227,6 +227,18 @@ void main() {
       await player.dispose();
     });
 
+    test('RF-21 stop interrompe anche una ricerca ancora in coda', () async {
+      final fake = FakeEngine(
+        (go) => go == 'go depth 1' ? ['bestmove e2e4'] : null,
+      );
+      final player = ComputerPlayer(connect: () async => fake);
+      final pending = player.bestMove(Chess.initial.fen, const [], fast(8));
+      player.stop();
+      expect((await pending)!.move.uci, 'e2e4');
+      expect(fake.sent.where((c) => c.startsWith('go')), ['go depth 1']);
+      await player.dispose();
+    });
+
     test('restituisce null se non ci sono mosse legali', () async {
       final fake = FakeEngine((_) => ['bestmove (none)']);
       final player = ComputerPlayer(connect: () async => fake);
