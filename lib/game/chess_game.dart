@@ -23,11 +23,7 @@ class PlayedMove {
   final Position after;
 }
 
-/// Stato di una partita di scacchi standard, indipendente dall'interfaccia.
-///
-/// Le regole di movimento vengono da `dartchess`; qui si aggiungono la
-/// cronologia, l'annullamento delle mosse e le patte per ripetizione e per
-/// la regola delle 50 mosse, che `dartchess` non rileva da sola.
+/// Stato della partita: cronologia, annullamento e condizioni di fine partita.
 class ChessGame {
   ChessGame({Position? initial}) : initial = initial ?? Chess.initial;
 
@@ -89,7 +85,7 @@ class ChessGame {
     return count >= 3;
   }
 
-  /// Pezzi, tratto, arrocco ed en passant: i campi che contano per la ripetizione.
+  /// Chiave di confronto per la ripetizione: pezzi, tratto, arrocco, en passant.
   static String _repetitionKey(Position pos) =>
       pos.fen.split(' ').take(4).join(' ');
 }

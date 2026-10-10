@@ -15,24 +15,9 @@ Prima versione giocabile:
 
 In arrivo: partita contro il computer (Stockfish sul dispositivo), orologio, salvataggio delle partite e PGN.
 
-## Sviluppo
+## Documentazione
 
-Serve [Flutter](https://docs.flutter.dev/get-started/install) (canale stable, 3.47 o successivo).
-
-```sh
-flutter pub get
-flutter run          # sul dispositivo o emulatore collegato
-flutter analyze
-flutter test
-```
-
-Struttura:
-
-- `lib/game/chess_game.dart`: stato della partita e regole di fine partita, senza dipendenze dall'interfaccia.
-- `lib/game/game_page.dart`: schermata di gioco.
-- `test/`: test delle regole e dell'interfaccia.
-
-Le regole di movimento vengono da [dartchess](https://pub.dev/packages/dartchess) e la scacchiera da [chessground](https://pub.dev/packages/chessground), entrambe librerie di Lichess.
+La documentazione completa è in [docs/](docs/README.md): architettura, regole di gioco, interfaccia, sviluppo e licenza.
 
 ## Licenza
 

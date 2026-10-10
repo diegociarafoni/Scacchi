@@ -118,7 +118,6 @@ class _GamePageState extends State<GamePage> {
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
-            // Tablet o telefono in orizzontale: pannello laterale.
             final landscape =
                 constraints.maxWidth > constraints.maxHeight * 1.2;
             final boardSize = landscape
@@ -156,8 +155,6 @@ class _GamePageState extends State<GamePage> {
                 ],
               );
             }
-            // Telefono in verticale: mosse in alto, scacchiera a tutta
-            // larghezza e comandi in basso, alla portata del pollice.
             return Column(
               children: [
                 Expanded(
@@ -252,7 +249,7 @@ class _MoveList extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         itemCount: items.length,
         separatorBuilder: (_, _) => const SizedBox(width: 12),
-        // In ordine inverso, così l'ultima mossa resta sempre visibile.
+        // Ordine inverso: l'ultima mossa resta visibile.
         itemBuilder: (context, i) =>
             Center(child: Text(items[items.length - 1 - i], style: style)),
       );
