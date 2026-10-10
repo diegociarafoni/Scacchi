@@ -12,11 +12,11 @@ Requisito RG-03: una mappa di capitoli e tappe sul modello di Duolingo e del mod
 | Finali | Matto di donna, matto di torre, guardiano (1000) |
 | Aperture | Il centro, lo sviluppo (con la Partita Italiana), l'arrocco, guardiano (1200) |
 
-Ogni tappa è breve (2-5 minuti). Una tappa si apre quando tutte le precedenti sono completate; un capitolo si apre finito il precedente. Il pulsante "Continua" porta alla prima tappa non completata.
+Ogni tappa è breve (2-5 minuti). Una tappa si apre quando tutte le lezioni precedenti sono completate; i guardiani sono sfide facoltative e non bloccano il percorso. Il pulsante "Continua" porta alla prima lezione non completata e, finite le lezioni, al primo guardiano non battuto. Un doppio tocco non apre due tappe.
 
 ## Esercizi
 
-**A stelle** (`StarsExercise`): un pezzo bianco da solo su scacchiera vuota raccoglie le stelle, in qualunque ordine. Il minimo di mosse si calcola da solo con una ricerca in ampiezza sugli stati (casa, pezzo, stelle raccolte), quindi i contenuti non contengono numeri da tenere aggiornati. Stelle: 3 al minimo, 2 con al massimo due mosse in più, 1 altrimenti. Il pedone avanza di uno o di due dalla seconda traversa e in ottava diventa donna.
+**A stelle** (`StarsExercise`): un pezzo bianco da solo su scacchiera vuota raccoglie le stelle, in qualunque ordine. Il minimo di mosse si calcola da solo con una ricerca in ampiezza sugli stati (casa, pezzo, stelle raccolte), quindi i contenuti non contengono numeri da tenere aggiornati. Stelle: 3 al minimo, 2 con al massimo due mosse in più, 1 altrimenti. Il pedone avanza di uno o di due dalla seconda traversa e in ottava diventa donna (la scacchiera promuove a donna senza chiedere).
 
 **A linea** (`LineExercise`): una posizione FEN e una sequenza di passi. I passi pari sono del giocatore, con alternative separate da `|`; i dispari sono le risposte automatiche dell'avversario. Le mosse si confrontano in SAN, così l'arrocco è riconosciuto sia come re su g1 sia come re sulla torre. Con l'obiettivo "matto" all'ultimo passo vale qualunque mossa che dà matto. Una mossa sbagliata non viene giocata e conta come errore. Stelle: 3 senza errori, 2 con uno, 1 con più errori.
 
@@ -32,7 +32,7 @@ L'ultima tappa dei capitoli 2-5 è una partita contro un bot dell'Elo indicato. 
 
 ## Salvataggio e XP
 
-`PathController` salva le stelle migliori per tappa in `path.json` (tramite `JsonFile`, vedi [archivio.md](archivio.md)) e a ogni tappa completata registra `LessonCompleted` nella gamification con la durata, se riceve `recordActivity`:
+`PathController` salva le stelle migliori per tappa in `path.json` (tramite `JsonFile`, vedi [archivio.md](archivio.md)) e registra `LessonCompleted` nella gamification, con la durata, la prima volta che una lezione è completata (rigiocarla migliora le stelle ma non dà altro XP; le partite dei guardiani registrano l'XP da sé), se riceve `recordActivity`:
 
 ```dart
 final progress = await ProgressController.open();
@@ -49,3 +49,7 @@ final path = await PathController.open(recordActivity: progress.record);
 | `path_controller.dart` | Caricamento, salvataggio, registrazione dell'XP |
 | `path_page.dart` | Mappa del percorso |
 | `stage_page.dart` | Svolgimento di una tappa sulla scacchiera |
+
+Le stelle di tappe rimosse in un aggiornamento dei contenuti restano nel file ma non contano nel totale.
+
+La schermata della tappa usa la scacchiera a tutta larghezza in verticale e affianca testo e comandi in orizzontale; il pannello sotto la scacchiera scorre se lo spazio non basta.

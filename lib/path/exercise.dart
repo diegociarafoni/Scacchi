@@ -94,9 +94,11 @@ class StarsRun extends ExerciseRun {
   StarsRun(this.exercise)
     : square = exercise.start,
       role = exercise.role,
-      remaining = [...exercise.stars];
+      remaining = [...exercise.stars],
+      optimalMoves = exercise.optimalMoves;
 
   final StarsExercise exercise;
+  final int optimalMoves;
   Square square;
   Role role;
   final List<Square> remaining;
@@ -118,7 +120,7 @@ class StarsRun extends ExerciseRun {
   }
 
   @override
-  int get stars => starsForMoves(moves, exercise.optimalMoves);
+  int get stars => starsForMoves(moves, optimalMoves);
 }
 
 enum LineGoal {

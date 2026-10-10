@@ -26,6 +26,32 @@ void main() {
     expect(p.starsFor(first.id), 3);
   });
 
+  test('i guardiani non bloccano il percorso', () {
+    var p = const PathProgress();
+    for (final c in curriculum.take(2)) {
+      for (final s in c.stages.where((s) => !s.isGuardian)) {
+        p = p.complete(s.id, 1);
+      }
+    }
+    expect(p.isUnlocked(curriculum[2].stages.first.id), isTrue);
+    expect(p.nextStage?.id, curriculum[2].stages.first.id);
+  });
+
+  test('alla fine delle lezioni "Continua" propone i guardiani', () {
+    var p = const PathProgress();
+    for (final c in curriculum) {
+      for (final s in c.stages.where((s) => !s.isGuardian)) {
+        p = p.complete(s.id, 1);
+      }
+    }
+    expect(p.nextStage?.isGuardian, isTrue);
+  });
+
+  test('le stelle di tappe rimosse non contano', () {
+    final p = PathProgress({'tappa.rimossa': 3, first.id: 2});
+    expect(p.totalStars, 2);
+  });
+
   test('il capitolo successivo si apre finito il precedente', () {
     var p = const PathProgress();
     for (final s in curriculum.first.stages) {

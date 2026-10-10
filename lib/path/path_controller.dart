@@ -47,9 +47,14 @@ class PathController extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Salva le stelle; la prima volta che una lezione è completata registra
+  /// anche l'XP. Le partite dei guardiani registrano l'XP da sé.
   Future<void> complete(Stage stage, int stars, Duration duration) async {
+    final first = !_progress.isCompleted(stage.id);
     await replace(_progress.complete(stage.id, stars));
-    await recordActivity?.call(LessonCompleted(duration: duration));
+    if (first && !stage.isGuardian) {
+      await recordActivity?.call(LessonCompleted(duration: duration));
+    }
   }
 
   Future<void> replace(PathProgress progress) async {

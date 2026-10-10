@@ -130,46 +130,64 @@ class _StagePageState extends State<StagePage> {
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
-            final size = math.min(
-              constraints.maxWidth,
-              constraints.maxHeight - 200,
-            );
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Text(_exercise.instructions, style: text.titleMedium),
-                ),
-                Center(
-                  child: Chessboard(
-                    size: size,
-                    controller: _board,
-                    orientation: Side.white,
-                    onMove: _onMove,
-                    annotations: _annotations,
-                    settings: const ChessboardSettings(
-                      colorScheme: ChessboardColorScheme.green,
+            final landscape = constraints.maxWidth > constraints.maxHeight;
+            final size = math.max(
+              0.0,
+              landscape
+                  ? constraints.maxHeight
+                  : math.min(
+                      constraints.maxWidth,
+                      constraints.maxHeight - _portraitReserve,
                     ),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                if (_feedback != null)
-                  Text(
-                    _feedback!,
-                    textAlign: TextAlign.center,
-                    style: text.titleMedium,
-                  ),
-                const Spacer(),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: _finished
-                      ? _Result(stars: _stageStars)
-                      : FilledButton(
-                          onPressed: solved ? _next : null,
-                          child: const Text('Avanti'),
-                        ),
-                ),
+            );
+            final board = Chessboard(
+              size: size,
+              controller: _board,
+              orientation: Side.white,
+              onMove: _onMove,
+              annotations: _annotations,
+              settings: const ChessboardSettings(
+                colorScheme: ChessboardColorScheme.green,
+                autoQueenPromotion: true,
+              ),
+            );
+            final panel = SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(_exercise.instructions, style: text.titleMedium),
+                  const SizedBox(height: 12),
+                  if (_feedback != null)
+                    Text(
+                      _feedback!,
+                      textAlign: TextAlign.center,
+                      style: text.titleMedium,
+                    ),
+                  const SizedBox(height: 12),
+                  if (_finished)
+                    _Result(stars: _stageStars)
+                  else
+                    FilledButton(
+                      onPressed: solved ? _next : null,
+                      child: const Text('Avanti'),
+                    ),
+                ],
+              ),
+            );
+            if (landscape) {
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  board,
+                  Expanded(child: panel),
+                ],
+              );
+            }
+            return Column(
+              children: [
+                Center(child: board),
+                Expanded(child: panel),
               ],
             );
           },
@@ -178,6 +196,9 @@ class _StagePageState extends State<StagePage> {
     );
   }
 }
+
+/// Spazio minimo sotto la scacchiera in verticale per testo e comandi.
+const double _portraitReserve = 240;
 
 class _Result extends StatelessWidget {
   const _Result({required this.stars});

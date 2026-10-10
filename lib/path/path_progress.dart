@@ -13,30 +13,35 @@ class PathProgress {
 
   bool isCompleted(String stageId) => starsFor(stageId) > 0;
 
-  int get totalStars => stars.values.fold(0, (a, b) => a + b);
+  int get totalStars => curriculum.fold(0, (n, c) => n + chapterStars(c));
 
   int chapterStars(Chapter chapter) =>
       chapter.stages.fold(0, (n, s) => n + starsFor(s.id));
 
-  /// Una tappa è aperta se tutte le precedenti del percorso sono completate.
+  /// Una tappa è aperta se tutte le lezioni precedenti sono completate; i
+  /// guardiani sono sfide facoltative e non bloccano il percorso.
   bool isUnlocked(String stageId) {
     for (final c in curriculum) {
       for (final s in c.stages) {
         if (s.id == stageId) return true;
-        if (!isCompleted(s.id)) return false;
+        if (!s.isGuardian && !isCompleted(s.id)) return false;
       }
     }
     return false;
   }
 
-  /// Prima tappa non completata, da proporre con "Continua".
+  /// Prima lezione non completata da proporre con "Continua"; finite le
+  /// lezioni, il primo guardiano non battuto.
   Stage? get nextStage {
+    Stage? guardian;
     for (final c in curriculum) {
       for (final s in c.stages) {
-        if (!isCompleted(s.id)) return s;
+        if (isCompleted(s.id)) continue;
+        if (!s.isGuardian) return s;
+        guardian ??= s;
       }
     }
-    return null;
+    return guardian;
   }
 
   PathProgress complete(String stageId, int earned) {

@@ -10,17 +10,37 @@ import 'stage_page.dart';
 typedef PlayGuardian = Future<int?> Function(BuildContext context, Stage stage);
 
 /// Mappa del percorso a tappe (RG-03).
-class PathPage extends StatelessWidget {
+class PathPage extends StatefulWidget {
   const PathPage({super.key, required this.controller, this.playGuardian});
 
   final PathController controller;
   final PlayGuardian? playGuardian;
 
+  @override
+  State<PathPage> createState() => _PathPageState();
+}
+
+class _PathPageState extends State<PathPage> {
+  PathController get controller => widget.controller;
+
+  /// Evita di aprire due tappe con un doppio tocco.
+  bool _opening = false;
+
   Future<void> _open(BuildContext context, Stage stage) async {
+    if (_opening) return;
+    _opening = true;
+    try {
+      await _play(context, stage);
+    } finally {
+      _opening = false;
+    }
+  }
+
+  Future<void> _play(BuildContext context, Stage stage) async {
     final started = DateTime.now();
     int? stars;
     if (stage.isGuardian) {
-      final play = playGuardian;
+      final play = widget.playGuardian;
       if (play == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -167,27 +187,28 @@ class _StageNode extends StatelessWidget {
         : scheme.onPrimaryContainer;
     // Le tappe si alternano a sinistra e a destra come su una mappa.
     const offsets = [0.0, 0.5, 0.0, -0.5];
-    return Semantics(
-      button: unlocked,
-      label: '${stage.title}, $state',
-      excludeSemantics: true,
-      child: Align(
-        alignment: Alignment(offsets[index % offsets.length], 0),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Material(
-                shape: CircleBorder(
-                  side: current
-                      ? BorderSide(color: scheme.tertiary, width: 4)
-                      : BorderSide.none,
-                ),
-                color: background,
-                child: InkWell(
-                  customBorder: const CircleBorder(),
-                  onTap: unlocked ? onTap : null,
+    return Align(
+      alignment: Alignment(offsets[index % offsets.length], 0),
+      child: Semantics(
+        button: unlocked,
+        label: '${stage.title}, $state',
+        excludeSemantics: true,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: unlocked ? onTap : null,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                DecoratedBox(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: background,
+                    border: current
+                        ? Border.all(color: scheme.tertiary, width: 4)
+                        : null,
+                  ),
                   child: SizedBox.square(
                     dimension: 72,
                     child: Icon(
@@ -201,14 +222,14 @@ class _StageNode extends StatelessWidget {
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 4),
-              Text(stage.title),
-              Text(
-                '${'★' * stars}${'☆' * (3 - stars)}',
-                style: TextStyle(color: scheme.tertiary),
-              ),
-            ],
+                const SizedBox(height: 4),
+                Text(stage.title),
+                Text(
+                  '${'★' * stars}${'☆' * (3 - stars)}',
+                  style: TextStyle(color: scheme.tertiary),
+                ),
+              ],
+            ),
           ),
         ),
       ),

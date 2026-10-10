@@ -129,9 +129,40 @@ void main() {
     await controller.complete(stage, 2, const Duration(minutes: 2));
     expect(controller.progress.starsFor(stage.id), 2);
     expect(recorded.single, isA<LessonCompleted>());
+    await controller.complete(stage, 3, const Duration(minutes: 2));
+    expect(controller.progress.starsFor(stage.id), 3);
+    expect(recorded, hasLength(1));
+    await controller.complete(
+      stageById('mates.guardian')!,
+      3,
+      const Duration(minutes: 5),
+    );
+    expect(recorded, hasLength(1));
     final again = PathController(File('${dir.path}/path.json'));
     await again.load();
-    expect(again.progress.starsFor(stage.id), 2);
+    expect(again.progress.starsFor(stage.id), 3);
+  });
+
+  testWidgets('la tappa sta in uno schermo orizzontale basso', (tester) async {
+    tester.view.physicalSize = const Size(2532, 1170);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      MaterialApp(home: StagePage(stage: stageById('pieces.king')!)),
+    );
+    await tester.pumpAndSettle();
+    for (final (from, to) in [
+      ('e1', 'e2'),
+      ('e2', 'e3'),
+      ('e3', 'f2'),
+      ('f2', 'g3'),
+      ('g3', 'g2'),
+      ('g2', 'g1'),
+    ]) {
+      await _tapMove(tester, from, to);
+    }
+    expect(find.text('Tappa completata'), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('il guardiano senza motore mostra un avviso', (tester) async {
@@ -150,7 +181,9 @@ void main() {
     await tester.pumpAndSettle();
     final guardian = find.bySemanticsLabel(RegExp('^Il guardiano, da fare'));
     await tester.scrollUntilVisible(guardian, 200);
-    await tester.tap(guardian);
+    await tester.ensureVisible(guardian.first);
+    await tester.pumpAndSettle();
+    await tester.tap(guardian.first);
     await tester.pumpAndSettle();
     expect(
       find.text('Il guardiano arriva con la partita contro il computer.'),
