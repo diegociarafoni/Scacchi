@@ -35,7 +35,7 @@ Ogni funzione nasce dai requisiti del progetto, nel documento dei requisiti, con
 
 | Livello | Cartella | Cosa verifica | Comando |
 |---|---|---|---|
-| Unitari | `test/chess_game_test.dart` | Regole e fine partita su `ChessGame`, senza interfaccia | `flutter test` |
+| Unitari | `test/chess_game_test.dart`, `test/material_test.dart` | Regole e fine partita su `ChessGame`; pezzi catturati e vantaggio su `MaterialBalance`; senza interfaccia | `flutter test` |
 | Widget | `test/widget_test.dart` | Avvio dell'app e stato iniziale | `flutter test` |
 | End-to-end | `integration_test/app_test.dart` | L'app reale avviata su un dispositivo o desktop, con tocchi e trascinamenti sulla scacchiera | `flutter test integration_test -d <dispositivo>` |
 
@@ -49,6 +49,7 @@ I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisic
 | RF-04 promozione | ✓ | |
 | RF-06 capovolgimento della scacchiera | | ✓ |
 | RF-10 lista delle mosse in SAN | ✓ | ✓ |
+| RF-11 pezzi catturati e vantaggio di materiale | ✓ | ✓ |
 | RF-25 matto, stallo, materiale insufficiente, ripetizione, 50 mosse, abbandono | ✓ | matto, abbandono |
 | RF-31 rotazione automatica a ogni turno | | ✓ |
 | RF-32 patta concordata e annullamento | ✓ | ✓ |

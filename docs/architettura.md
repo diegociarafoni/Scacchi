@@ -19,9 +19,11 @@ lib/
   main.dart               Avvio dell'app, tema chiaro e scuro
   game/
     chess_game.dart       Stato della partita, senza dipendenze dall'interfaccia
+    material.dart         Pezzi catturati e vantaggio di materiale
     game_page.dart        Schermata di gioco
 test/
   chess_game_test.dart    Test delle regole e della fine partita
+  material_test.dart      Test del materiale catturato
   widget_test.dart        Test di avvio dell'interfaccia
 integration_test/
   app_test.dart           Test end-to-end sull'app reale
@@ -45,6 +47,10 @@ Modello della partita, in Dart puro e quindi testabile senza interfaccia.
 - `endReason` e `outcome` descrivono come e con quale risultato è finita la partita.
 
 `dartchess` non rileva da sola la triplice ripetizione né la regola delle 50 mosse, perché richiedono la cronologia della partita: `ChessGame` le calcola a partire dalla lista delle posizioni. I dettagli sono in [regole-di-gioco.md](regole-di-gioco.md).
+
+### `MaterialBalance` (`lib/game/material.dart`)
+
+Calcola da una partita i pezzi catturati da ciascun lato, ripercorrendo le mosse (comprese le prese en passant), e la differenza di materiale presente sulla scacchiera. È Dart puro e si testa senza interfaccia.
 
 ### `GamePage` (`lib/game/game_page.dart`)
 

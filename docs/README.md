@@ -19,6 +19,7 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | Partita tra due persone sullo stesso dispositivo | Disponibile |
 | Regole complete e fine partita | Disponibile |
 | Layout per telefono e tablet | Disponibile |
+| Pezzi catturati e vantaggio di materiale | Disponibile |
 | Partita contro il computer (Stockfish) | In sviluppo |
 | Orologio, salvataggio partite, PGN | Pianificato |
 | Gamification | In definizione nei requisiti |
