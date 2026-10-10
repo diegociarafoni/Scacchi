@@ -4,6 +4,7 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
+import '../openings/opening_name.dart';
 import 'chess_game.dart';
 import 'material.dart';
 
@@ -140,7 +141,10 @@ class _GamePageState extends State<GamePage> {
     );
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Scacchi'),
+        title: OpeningName(
+          moves: [for (final m in _game.moves) m.move],
+          fallback: 'Scacchi',
+        ),
         actions: [
           PopupMenuButton<String>(
             onSelected: (value) {

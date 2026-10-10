@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../game/game_page.dart';
+import '../openings/opening_assets.dart';
+import '../openings/openings_hub_page.dart';
 import '../progress/activity.dart';
 import '../progress/progress_controller.dart';
 import '../progress/progress_tracker.dart';
@@ -26,6 +28,13 @@ class _HomeShellState extends State<HomeShell> {
   int _tab = 0;
   Future<PuzzleTrainer>? _trainer;
   Future<ProgressController>? _progress;
+
+  @override
+  void initState() {
+    super.initState();
+    // Caricamento anticipato in background, per il nome dell'apertura in partita.
+    openingBook().ignore();
+  }
 
   Future<ProgressUpdate?> _record(Activity activity) async {
     try {
@@ -62,6 +71,7 @@ class _HomeShellState extends State<HomeShell> {
             PuzzleHubPage(trainer: _trainer!, onActivity: _record)
           else
             const SizedBox.shrink(),
+          const OpeningsHubPage(),
         ],
       ),
       bottomNavigationBar: NavigationBar(
@@ -75,6 +85,10 @@ class _HomeShellState extends State<HomeShell> {
           NavigationDestination(
             icon: Icon(Icons.extension_outlined),
             label: 'Puzzle',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.menu_book_outlined),
+            label: 'Aperture',
           ),
         ],
       ),

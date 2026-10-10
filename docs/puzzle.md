@@ -111,4 +111,4 @@ Ogni puzzle nuovo portato a termine dal giocatore, anche dopo un tentativo sbagl
 
 ## Navigazione
 
-L'app ha una barra di navigazione in basso (`lib/home/home_shell.dart`) con le schede **Gioca** e **Puzzle**. I puzzle vengono caricati solo alla prima apertura della scheda, così l'avvio dell'app non rallenta.
+L'app ha una barra di navigazione in basso (`lib/home/home_shell.dart`) con le schede **Gioca**, **Puzzle** e **Aperture**. I puzzle vengono caricati solo alla prima apertura della scheda, così l'avvio dell'app non rallenta.
