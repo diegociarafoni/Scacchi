@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
@@ -32,6 +34,7 @@ class ArchivePage extends StatefulWidget {
 class _ArchivePageState extends State<ArchivePage> {
   List<SavedGame>? _games;
   String _query = '';
+  bool _failed = false;
 
   @override
   void initState() {
@@ -40,8 +43,12 @@ class _ArchivePageState extends State<ArchivePage> {
   }
 
   Future<void> _reload() async {
-    final games = await widget.archive.list();
-    if (mounted) setState(() => _games = games);
+    try {
+      final games = await widget.archive.list();
+      if (mounted) setState(() => _games = games);
+    } on FileSystemException {
+      if (mounted) setState(() => _failed = true);
+    }
   }
 
   Iterable<SavedGame> get _visible {
@@ -138,7 +145,9 @@ class _ArchivePageState extends State<ArchivePage> {
           ),
         ],
       ),
-      body: games == null
+      body: _failed
+          ? const Center(child: Text('Impossibile leggere l\'archivio.'))
+          : games == null
           ? const Center(child: CircularProgressIndicator())
           : Column(
               children: [

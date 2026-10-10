@@ -47,6 +47,7 @@ Modello della partita, in Dart puro e quindi testabile senza interfaccia.
 - `undo()` revoca l'abbandono o la patta concordata, se presenti; altrimenti annulla l'ultima mossa.
 - `agreeDraw()` chiude la partita con una patta concordata.
 - `resign(side)` registra l'abbandono del lato indicato.
+- `ChessGame.replay(initial, moves)` ricostruisce una partita già giocata (import PGN) senza fermarsi a ripetizioni o 50 mosse non reclamate.
 - `endReason` e `outcome` descrivono come e con quale risultato è finita la partita.
 
 `dartchess` non rileva da sola la triplice ripetizione né la regola delle 50 mosse, perché richiedono la cronologia della partita: `ChessGame` le calcola a partire dalla lista delle posizioni. I dettagli sono in [regole-di-gioco.md](regole-di-gioco.md).

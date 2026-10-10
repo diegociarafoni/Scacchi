@@ -6,29 +6,41 @@ import '../storage/json_file.dart';
 import 'pgn.dart' as pgn;
 import 'saved_game.dart';
 
+/// Intestazioni ricalcolate dalla partita al salvataggio.
+const _computedHeaders = {'Result', 'FEN', 'SetUp'};
+
 /// Archivio locale delle partite in un file JSON.
 class GameArchive {
   GameArchive(File file) : _file = JsonFile(file, version: 1);
 
-  /// Archivio sul file predefinito nella cartella dati dell'app.
-  static Future<GameArchive> open() async {
+  /// Archivio condiviso sul file predefinito nella cartella dati dell'app:
+  /// tutte le schermate usano la stessa istanza e la stessa cache.
+  static Future<GameArchive> open() => _shared ??= _openDefault();
+
+  static Future<GameArchive>? _shared;
+
+  static Future<GameArchive> _openDefault() async {
     final dir = await getApplicationSupportDirectory();
     return GameArchive(File('${dir.path}/games.json'));
   }
 
   final JsonFile _file;
-  List<SavedGame>? _games;
+  Future<List<SavedGame>>? _games;
 
-  /// Partite dalla più recente.
+  /// Partite dalla più recente; a parità di data, dall'ultima inserita.
   Future<List<SavedGame>> list() async {
-    final games = await _load();
-    return [...games]..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+    final games = (await _load()).indexed.toList()
+      ..sort((a, b) {
+        final byDate = b.$2.updatedAt.compareTo(a.$2.updatedAt);
+        return byDate != 0 ? byDate : b.$1.compareTo(a.$1);
+      });
+    return [for (final (_, g) in games) g];
   }
 
-  /// Partita non conclusa aggiornata più di recente, da riprendere.
+  /// Partita propria non conclusa aggiornata più di recente, da riprendere.
   Future<SavedGame?> unfinished() async {
     for (final g in await list()) {
-      if (!g.finished) return g;
+      if (!g.finished && g.mode != SavedGame.imported) return g;
     }
     return null;
   }
@@ -63,9 +75,13 @@ class GameArchive {
           id: 'import-${time.microsecondsSinceEpoch}-$i',
           white: r.headers['White'] ?? '?',
           black: r.headers['Black'] ?? '?',
-          mode: 'importata',
+          mode: SavedGame.imported,
           createdAt: time,
           updatedAt: time,
+          headers: {
+            for (final h in r.headers.entries)
+              if (!_computedHeaders.contains(h.key)) h.key: h.value,
+          },
         ),
       );
     }
@@ -73,16 +89,22 @@ class GameArchive {
     return result;
   }
 
-  Future<List<SavedGame>> _load() async {
-    final cached = _games;
-    if (cached != null) return cached;
-    final json = await _file.read();
-    final games = [
-      for (final g in (json?['games'] as List? ?? const []))
-        SavedGame.fromJson((g as Map).cast()),
-    ];
-    return _games = games;
-  }
+  /// Una sola lettura condivisa anche da chiamate contemporanee; dopo un
+  /// errore di lettura la prossima chiamata riprova.
+  Future<List<SavedGame>> _load() => _games ??= _read()
+    ..catchError((Object _) {
+      _games = null;
+      return <SavedGame>[];
+    });
+
+  Future<List<SavedGame>> _read() async =>
+      await _file.read(
+        (json) => [
+          for (final g in json['games']! as List)
+            SavedGame.fromJson((g as Map).cast()),
+        ],
+      ) ??
+      [];
 
   Future<void> _write(List<SavedGame> games) => _file.write({
     'games': [for (final g in games) g.toJson()],

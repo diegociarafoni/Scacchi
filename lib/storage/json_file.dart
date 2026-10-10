@@ -10,22 +10,21 @@ class JsonFile {
   final int version;
   Future<void> _pending = Future.value();
 
-  /// Contenuto salvato, o `null` se il file manca. Un file illeggibile o di
-  /// una versione futura viene rinominato in `.bad-<ms>` invece di essere
-  /// sovrascritto, e il risultato è `null`.
-  Future<Map<String, Object?>?> read({
-    Map<String, Object?> Function(Map<String, Object?> json)? decode,
-  }) async {
+  /// Contenuto decodificato con [decode], o `null` se il file manca. Un file
+  /// non valido (JSON, versione futura, o [decode] che fallisce) viene
+  /// rinominato in `.bad-<ms>` invece di essere sovrascritto, e il risultato è
+  /// `null`. Gli errori di lettura del disco si propagano senza toccare il file.
+  Future<T?> read<T>(T Function(Map<String, Object?> json) decode) async {
     await _pending;
     if (!await file.exists()) return null;
+    final text = await file.readAsString();
     try {
-      final json =
-          jsonDecode(await file.readAsString()) as Map<String, Object?>;
+      final json = jsonDecode(text) as Map<String, Object?>;
       final found = json['version'] as int? ?? 0;
       if (found < 1 || found > version) {
         throw FormatException('versione dello schema $found');
       }
-      return decode == null ? json : decode(json);
+      return decode(json);
     } on Object {
       await file.rename(
         '${file.path}.bad-${DateTime.now().millisecondsSinceEpoch}',

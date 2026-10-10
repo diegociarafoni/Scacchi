@@ -22,6 +22,7 @@ class SavedGame {
     required String mode,
     required DateTime createdAt,
     required DateTime updatedAt,
+    Map<String, String> headers = const {},
   }) => SavedGame(
     id: id,
     createdAt: createdAt,
@@ -36,6 +37,7 @@ class SavedGame {
         'Event': 'Scacchi',
         'Site': 'Offline',
         'Date': _pgnDate(createdAt),
+        ...headers,
         'White': white,
         'Black': black,
       },
@@ -48,8 +50,10 @@ class SavedGame {
   final String white;
   final String black;
 
-  /// Tipo di partita, per esempio `locale`, `computer` o `importata`.
+  /// Tipo di partita, per esempio `locale`, `computer` o [imported].
   final String mode;
+
+  static const imported = 'importata';
 
   /// Risultato PGN: `1-0`, `0-1`, `1/2-1/2` o `*` se in corso.
   final String result;

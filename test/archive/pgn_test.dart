@@ -101,6 +101,31 @@ void main() {
       expect(imported.skipped, 1);
     });
 
+    test('FEN malformato: scartata solo quella partita', () {
+      final imported = importPgn(
+        '[FEN "rnbqkbnr/pppp/8 w"]\n\n1. e4 *\n\n[White "x"]\n\n1. d4 *',
+      );
+      expect(imported.games, hasLength(1));
+      expect(imported.skipped, 1);
+    });
+
+    test('varianti diverse dagli scacchi classici vengono scartate', () {
+      final imported = importPgn(
+        '[Variant "Chess960"]\n'
+        '[FEN "bqnb1rkr/pp3ppp/3ppn2/2p5/5P2/P2P4/NPP1P1PP/BQ1BNRKR w HFhf - 2 9"]'
+        '\n\n9. g3 *',
+      );
+      expect(imported.games, isEmpty);
+      expect(imported.skipped, 1);
+    });
+
+    test('il gioco continua dopo una triplice ripetizione non reclamata', () {
+      const pgn = '1. Nf3 Nf6 2. Ng1 Ng8 3. Nf3 Nf6 4. Ng1 Ng8 5. e4 e5 *';
+      final game = importPgn(pgn).games.single.game;
+      expect(game.moves, hasLength(10));
+      expect(game.moves.last.san, 'e5');
+    });
+
     test('testo senza mosse né intestazioni', () {
       final imported = importPgn('   ');
       expect(imported.games, isEmpty);

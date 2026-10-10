@@ -68,20 +68,29 @@ PgnImport importPgn(String text) {
   return PgnImport(games, skipped);
 }
 
+const _classicalVariants = {'standard', 'chess', 'from position'};
+
 ChessGame? _replay(PgnGame<PgnNodeData> pgn) {
+  final variant = pgn.headers['Variant']?.toLowerCase();
+  if (variant != null && !_classicalVariants.contains(variant)) return null;
   final Position initial;
   try {
     initial = PgnGame.startingPosition(pgn.headers);
-  } on PositionSetupException {
+  } on Exception {
+    // FEN malformato o posizione non valida.
     return null;
   }
   if (initial is! Chess) return null;
-  final game = ChessGame(initial: initial);
+  final moves = <Move>[];
+  Position pos = initial;
   for (final data in pgn.moves.mainline()) {
-    final move = game.position.parseSan(data.san);
-    if (move == null || !game.play(move)) return null;
+    final move = pos.parseSan(data.san);
+    if (move == null) return null;
+    moves.add(move);
+    pos = pos.play(move);
   }
-  if (!game.isOver) {
+  final game = ChessGame.replay(initial, moves);
+  if (game != null && !game.isOver) {
     // Il risultato senza matto o patta sulla scacchiera è un abbandono o
     // una patta concordata.
     switch (pgn.headers['Result']) {
