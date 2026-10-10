@@ -39,7 +39,7 @@ Modello della partita, in Dart puro e quindi testabile senza interfaccia.
 
 - Conserva la posizione iniziale e la lista delle mosse giocate (`PlayedMove`: mossa, notazione SAN, posizione risultante).
 - `play(move)` accetta solo mosse legali e rifiuta qualsiasi mossa a partita conclusa.
-- `undo()` annulla l'ultima mossa; annulla anche un eventuale abbandono o una patta concordata.
+- `undo()` revoca l'abbandono o la patta concordata, se presenti; altrimenti annulla l'ultima mossa.
 - `agreeDraw()` chiude la partita con una patta concordata.
 - `resign(side)` registra l'abbandono del lato indicato.
 - `endReason` e `outcome` descrivono come e con quale risultato è finita la partita.

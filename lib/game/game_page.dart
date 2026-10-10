@@ -51,13 +51,29 @@ class _GamePageState extends State<GamePage> {
     if (_game.play(move)) _refresh(animate: viaDragAndDrop != true);
   }
 
+  /// Chiude selezione e selettore di promozione rimasti aperti sulla scacchiera.
+  void _clearBoardInteraction() {
+    final pos = _game.position;
+    _board.updatePosition(
+      GameData(
+        fen: pos.fen,
+        playerSide: PlayerSide.none,
+        sideToMove: pos.turn,
+        validMoves: const {},
+      ),
+      animate: false,
+    );
+  }
+
   void _newGame() {
     _game = ChessGame();
+    _clearBoardInteraction();
     _refresh(animate: false);
   }
 
   void _undo() {
     _game.undo();
+    _clearBoardInteraction();
     _refresh(animate: false);
   }
 
@@ -80,6 +96,7 @@ class _GamePageState extends State<GamePage> {
         ],
       ),
     );
+    if (!mounted) return;
     if (confirmed == true) {
       _game.resign(side);
       _refresh(animate: false);
@@ -104,6 +121,7 @@ class _GamePageState extends State<GamePage> {
         ],
       ),
     );
+    if (!mounted) return;
     if (accepted == true) {
       _game.agreeDraw();
       _refresh(animate: false);
@@ -147,9 +165,12 @@ class _GamePageState extends State<GamePage> {
                 constraints.maxWidth > constraints.maxHeight * 1.2;
             final boardSize = landscape
                 ? math.min(constraints.maxHeight, constraints.maxWidth * 0.6)
-                : math.min(
-                    constraints.maxWidth,
-                    constraints.maxHeight - _portraitChromeHeight,
+                : math.max(
+                    0.0,
+                    math.min(
+                      constraints.maxWidth,
+                      constraints.maxHeight - _portraitChromeHeight,
+                    ),
                   );
             final board = Chessboard(
               size: boardSize,
