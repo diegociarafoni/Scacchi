@@ -1,0 +1,57 @@
+import 'dart:io';
+
+import 'package:flutter_test/flutter_test.dart';
+import 'package:scacchi/progress/activity.dart';
+import 'package:scacchi/progress/daily_goal.dart';
+import 'package:scacchi/progress/progress_state.dart';
+import 'package:scacchi/progress/progress_store.dart';
+import 'package:scacchi/progress/progress_tracker.dart';
+
+void main() {
+  late Directory dir;
+  late File file;
+
+  setUp(() {
+    dir = Directory.systemTemp.createTempSync('progress');
+    file = File('${dir.path}/progress.json');
+  });
+  tearDown(() => dir.deleteSync(recursive: true));
+
+  test('senza file restituisce lo stato iniziale', () async {
+    final data = await ProgressStore(file).load();
+    expect(data.state, ProgressState.initial);
+    expect(data.settings, const ProgressSettings());
+  });
+
+  test('salva e ricarica stato e impostazioni', () async {
+    const settings = ProgressSettings(
+      enabled: false,
+      goal: DailyGoal(GoalKind.minutes, 10),
+      restDay: DateTime.sunday,
+    );
+    final state = ProgressTracker()
+        .record(
+          ProgressState.initial,
+          const GamePlayed(result: GameResult.win),
+          DateTime(2026, 10, 5),
+          const ProgressSettings(),
+        )
+        .state;
+    await ProgressStore(file).save(ProgressData(state, settings));
+    final loaded = await ProgressStore(file).load();
+    expect(loaded.state, state);
+    expect(loaded.settings, settings);
+  });
+
+  test('un file illeggibile non blocca l\'app', () async {
+    file.writeAsStringSync('{non json');
+    final data = await ProgressStore(file).load();
+    expect(data.state, ProgressState.initial);
+  });
+
+  test('il file porta la versione dello schema', () async {
+    await ProgressStore(file)
+        .save(const ProgressData(ProgressState.initial, ProgressSettings()));
+    expect(file.readAsStringSync(), contains('"version":1'));
+  });
+}
