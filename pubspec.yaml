@@ -36,6 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   dartchess: ^0.14.0
   chessground: ^10.3.0
+  multistockfish: ^0.6.1
 
 dev_dependencies:
   flutter_test:
