@@ -57,9 +57,6 @@ String moveClassPhrase(MoveClass c) => switch (c) {
   MoveClass.blunder => 'un errore grave',
 };
 
-String _moveNumber(Position before) =>
-    before.turn == Side.white ? '${before.fullmoves}.' : '${before.fullmoves}…';
-
 /// Revisione della partita (RF-60…RF-66): analisi con avanzamento, riepilogo,
 /// grafico, barra di valutazione, freccia della mossa migliore e "Riprova".
 class ReviewPage extends StatefulWidget {
@@ -175,31 +172,28 @@ class _ReviewPageState extends State<ReviewPage> {
   /// Indice della posizione valutata dalla barra.
   int get _evalIndex => _retryPly ?? _index;
 
+  /// Posizione sulla scacchiera, anche durante Riprova.
+  Position get _boardPosition {
+    final retryPly = _retryPly;
+    if (retryPly == null) return _positions[_index];
+    final solved = _retrySolved;
+    final before = _positions[retryPly];
+    return solved == null ? before : before.play(solved);
+  }
+
   GameData _gameData() {
     final retryPly = _retryPly;
-    final solved = _retrySolved;
-    if (retryPly != null && solved != null) {
-      final pos = _positions[retryPly].play(solved);
-      return GameData(
-        fen: pos.fen,
+    if (retryPly != null) {
+      final solved = _retrySolved;
+      return gameDataFor(
+        _boardPosition,
         lastMove: solved,
-        playerSide: PlayerSide.none,
-        sideToMove: pos.turn,
-        kingSquareInCheck: pos.isCheck ? pos.board.kingOf(pos.turn) : null,
-        validMoves: const {},
+        interactive: solved == null,
       );
     }
-    final retry = retryPly != null;
-    final pos = retry ? _positions[retryPly] : _positions[_index];
-    return GameData(
-      fen: pos.fen,
-      lastMove: retry || _index == 0 ? null : widget.moves[_index - 1],
-      playerSide: retry
-          ? (pos.turn == Side.white ? PlayerSide.white : PlayerSide.black)
-          : PlayerSide.none,
-      sideToMove: pos.turn,
-      kingSquareInCheck: pos.isCheck ? pos.board.kingOf(pos.turn) : null,
-      validMoves: retry ? makeLegalMoves(pos) : const {},
+    return gameDataFor(
+      _boardPosition,
+      lastMove: _index == 0 ? null : widget.moves[_index - 1],
     );
   }
 
@@ -293,16 +287,14 @@ class _ReviewPageState extends State<ReviewPage> {
       appBar: AppBar(
         title: const Text('Revisione della partita'),
         actions: [
-          if (widget.analyseLive case final analyse?)
+          if (widget.analyseLive case final analyse? when _phase == _Phase.done)
             IconButton(
               tooltip: 'Analizza la posizione',
               icon: const Icon(Icons.biotech_outlined),
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute<void>(
-                  builder: (_) => AnalysisPage(
-                    initial: _positions[_index],
-                    analyse: analyse,
-                  ),
+                  builder: (_) =>
+                      AnalysisPage(initial: _boardPosition, analyse: analyse),
                 ),
               ),
             ),
@@ -477,7 +469,7 @@ class _ReviewPageState extends State<ReviewPage> {
       final c = m.classification;
       info = [
         Text(
-          '${_moveNumber(_positions[m.ply])} ${m.san} è ${moveClassPhrase(c)}',
+          '${moveNumber(_positions[m.ply])} ${m.san} è ${moveClassPhrase(c)}',
           style: text.titleMedium,
         ),
         if (!m.playedBest && m.bestSan != null)
@@ -659,12 +651,12 @@ class _MoveList extends StatelessWidget {
       children: [
         for (final m in review.moves) ...[
           if (m.side == Side.white || m.ply == 0)
-            Text(_moveNumber(positions[m.ply])),
+            Text(moveNumber(positions[m.ply])),
           Semantics(
             button: true,
             selected: selected == m.ply + 1,
             label:
-                '${_moveNumber(positions[m.ply])} ${m.san}, '
+                '${moveNumber(positions[m.ply])} ${m.san}, '
                 '${m.classification.label}',
             excludeSemantics: true,
             child: InkWell(

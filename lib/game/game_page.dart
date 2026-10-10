@@ -241,6 +241,7 @@ class _GamePageState extends State<GamePage> {
             builder: (_) => AnalysisPage(
               initial: _game.position,
               analyse: _liveAnalysis(_computerPlayer),
+              orientation: _orientation,
             ),
           ),
         )

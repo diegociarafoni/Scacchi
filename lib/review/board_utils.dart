@@ -1,3 +1,4 @@
+import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 
 /// Mossa UCI del motore resa legale per dartchess (arrocco come re su torre);
@@ -36,3 +37,25 @@ NormalMove kingDestination(Position pos, NormalMove move) {
     to: Square.fromCoords(file, move.from.rank),
   );
 }
+
+/// Numero della mossa che parte da [before]: `3.` per il Bianco, `3…` per il
+/// Nero.
+String moveNumber(Position before) =>
+    before.turn == Side.white ? '${before.fullmoves}.' : '${before.fullmoves}…';
+
+/// Stato per la scacchiera di chessground: [interactive] lascia muovere il
+/// lato al tratto.
+GameData gameDataFor(
+  Position pos, {
+  Move? lastMove,
+  bool interactive = false,
+}) => GameData(
+  fen: pos.fen,
+  lastMove: lastMove,
+  playerSide: !interactive
+      ? PlayerSide.none
+      : (pos.turn == Side.white ? PlayerSide.white : PlayerSide.black),
+  sideToMove: pos.turn,
+  kingSquareInCheck: pos.isCheck ? pos.board.kingOf(pos.turn) : null,
+  validMoves: interactive ? makeLegalMoves(pos) : const {},
+);

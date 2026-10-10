@@ -18,10 +18,18 @@ typedef LiveAnalysis = Stream<List<InfoLine>> Function(String fen, int multiPv);
 /// Analisi libera di una posizione (RF-50…RF-52, RF-54): barra di
 /// valutazione, linee del motore, esplorazione delle mosse.
 class AnalysisPage extends StatefulWidget {
-  const AnalysisPage({super.key, required this.initial, required this.analyse});
+  const AnalysisPage({
+    super.key,
+    required this.initial,
+    required this.analyse,
+    this.orientation = Side.white,
+  });
 
   final Position initial;
   final LiveAnalysis analyse;
+
+  /// Lato del giocatore, in basso sulla scacchiera.
+  final Side orientation;
 
   @override
   State<AnalysisPage> createState() => _AnalysisPageState();
@@ -30,7 +38,9 @@ class AnalysisPage extends StatefulWidget {
 class _AnalysisPageState extends State<AnalysisPage> {
   late final List<Position> _positions = [widget.initial];
   final _moves = <Move>[];
+  final _sans = <String>[];
   int _index = 0;
+  bool _failed = false;
   int _multiPv = 1;
   bool _paused = false;
   bool _arrow = true;
@@ -61,8 +71,16 @@ class _AnalysisPageState extends State<AnalysisPage> {
   void _start() {
     _stop();
     _lines = const [];
+    _failed = false;
     if (_paused || _pos.isGameOver) return;
-    _analysis = widget.analyse(_pos.fen, _multiPv).listen(_onLines);
+    _analysis = widget
+        .analyse(_pos.fen, _multiPv)
+        .listen(
+          _onLines,
+          onError: (Object _) {
+            if (mounted) setState(() => _failed = true);
+          },
+        );
   }
 
   void _stop() {
@@ -84,17 +102,11 @@ class _AnalysisPageState extends State<AnalysisPage> {
     });
   }
 
-  GameData _gameData() {
-    final pos = _pos;
-    return GameData(
-      fen: pos.fen,
-      lastMove: _index == 0 ? null : _moves[_index - 1],
-      playerSide: pos.turn == Side.white ? PlayerSide.white : PlayerSide.black,
-      sideToMove: pos.turn,
-      kingSquareInCheck: pos.isCheck ? pos.board.kingOf(pos.turn) : null,
-      validMoves: makeLegalMoves(pos),
-    );
-  }
+  GameData _gameData() => gameDataFor(
+    _pos,
+    lastMove: _index == 0 ? null : _moves[_index - 1],
+    interactive: true,
+  );
 
   void _go(int index) {
     setState(() => _index = index);
@@ -111,6 +123,9 @@ class _AnalysisPageState extends State<AnalysisPage> {
     _moves
       ..removeRange(_index, _moves.length)
       ..add(move);
+    _sans
+      ..removeRange(_index, _sans.length)
+      ..add(_pos.makeSan(move).$2);
     _go(_index + 1);
   }
 
@@ -186,7 +201,7 @@ class _AnalysisPageState extends State<AnalysisPage> {
                               Chessboard(
                                 size: boardSize,
                                 controller: _board,
-                                orientation: widget.initial.turn,
+                                orientation: widget.orientation,
                                 onMove: _play,
                                 shapes: _shapes(),
                                 settings: const ChessboardSettings(
@@ -247,6 +262,7 @@ class _AnalysisPageState extends State<AnalysisPage> {
   }
 
   String _status() {
+    if (_failed) return 'Motore non disponibile';
     if (_paused) return 'Analisi in pausa';
     if (_pos.isGameOver) return 'Partita finita';
     final depth = _lines.firstOrNull?.depth;
@@ -290,19 +306,13 @@ class _AnalysisPageState extends State<AnalysisPage> {
     return out.join(' ');
   }
 
-  String _history() {
-    final parts = <String>[];
-    for (var i = 0; i < _moves.length; i++) {
-      final before = _positions[i];
-      final san = before.makeSan(_moves[i]).$2;
-      if (before.turn == Side.white) {
-        parts.add('${before.fullmoves}. $san');
-      } else {
-        parts.add(i == 0 ? '${before.fullmoves}… $san' : san);
-      }
-    }
-    return parts.join(' ');
-  }
+  String _history() => [
+    for (var i = 0; i < _sans.length; i++)
+      if (_positions[i].turn == Side.white || i == 0)
+        '${moveNumber(_positions[i])} ${_sans[i]}'
+      else
+        _sans[i],
+  ].join(' ');
 
   Widget _navigation() => SizedBox(
     height: 56,

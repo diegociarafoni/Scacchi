@@ -36,14 +36,22 @@ const d4 = InfoLine(
   score: EngineScore.cp(28),
 );
 
-Future<FakeLive> pumpAnalysis(WidgetTester tester, {Position? initial}) async {
+Future<FakeLive> pumpAnalysis(
+  WidgetTester tester, {
+  Position? initial,
+  Side orientation = Side.white,
+}) async {
   tester.view.physicalSize = const Size(1170, 2532);
   tester.view.devicePixelRatio = 3;
   addTearDown(tester.view.reset);
   final live = FakeLive();
   await tester.pumpWidget(
     MaterialApp(
-      home: AnalysisPage(initial: initial ?? Chess.initial, analyse: live.call),
+      home: AnalysisPage(
+        initial: initial ?? Chess.initial,
+        analyse: live.call,
+        orientation: orientation,
+      ),
     ),
   );
   await tester.pump();
@@ -156,6 +164,20 @@ void main() {
       await tester.tap(find.byTooltip('Freccia della mossa migliore'));
       await settle(tester);
       expect(board(tester).shapes, isEmpty);
+    });
+
+    testWidgets('un errore del motore viene mostrato', (tester) async {
+      final live = await pumpAnalysis(tester);
+      live.controllers.last.addError(StateError('Motore chiuso'));
+      await settle(tester);
+      expect(find.text('Motore non disponibile'), findsOneWidget);
+    });
+
+    testWidgets('la scacchiera è orientata dal lato del giocatore', (
+      tester,
+    ) async {
+      await pumpAnalysis(tester, orientation: Side.black);
+      expect(board(tester).orientation, Side.black);
     });
 
     testWidgets('chiudere la pagina ferma il motore', (tester) async {

@@ -127,27 +127,23 @@ class ComputerPlayer {
       });
       if (cancelled) return;
       _send('position fen ${fen.trim()}');
-      final infos = <int, InfoLine>{};
-      void onInfo(String line) {
-        final info = parseInfo(line);
-        if (info == null || info.multipv > multiPv || out.isClosed) return;
-        infos[info.multipv] = info;
-        out.add([for (final k in infos.keys.toList()..sort()) infos[k]!]);
-      }
-
-      _listeners.add(onInfo);
+      searching = true;
+      final search = _go(
+        'go depth $maxDepth',
+        const Duration(minutes: 30),
+        onUpdate: (infos) {
+          if (out.isClosed) return;
+          out.add([
+            for (final k in infos.keys.toList()..sort())
+              if (k <= multiPv) infos[k]!,
+          ]);
+        },
+      );
+      if (cancelled) stop();
       try {
-        searching = true;
-        final done = _command(
-          'go depth $maxDepth',
-          (l) => l.startsWith('bestmove'),
-          const Duration(minutes: 30),
-        );
-        if (cancelled) stop();
-        await done;
+        await search;
       } finally {
         searching = false;
-        _listeners.remove(onInfo);
       }
     }).then(
       (_) => out.close(),
@@ -237,12 +233,15 @@ class ComputerPlayer {
   /// scambiato per la risposta al comando successivo.
   Future<(String, Map<int, InfoLine>)> _go(
     String command,
-    Duration timeout,
-  ) async {
+    Duration timeout, {
+    void Function(Map<int, InfoLine> infos)? onUpdate,
+  }) async {
     final infos = <int, InfoLine>{};
     void onInfo(String line) {
       final info = parseInfo(line);
-      if (info != null) infos[info.multipv] = info;
+      if (info == null) return;
+      infos[info.multipv] = info;
+      onUpdate?.call(infos);
     }
 
     _listeners.add(onInfo);

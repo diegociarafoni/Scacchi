@@ -65,6 +65,57 @@ void main() {
     expect(fens.single, startsWith('r1bqkb1r/pppp1ppp/2n2n2/4p2Q/'));
   });
 
+  testWidgets('l\'analisi della posizione aspetta la fine della revisione', (
+    tester,
+  ) async {
+    final pending = Completer<List<InfoLine>>();
+    await tester.pumpWidget(
+      MaterialApp(
+        home: ReviewPage(
+          initial: Chess.initial,
+          moves: moves(scholar),
+          evaluate: (_) => pending.future,
+          analyseLive: (_, _) => const Stream.empty(),
+        ),
+      ),
+    );
+    await tester.pump();
+    expect(find.byTooltip('Analizza la posizione'), findsNothing);
+    pending.complete(const []);
+  });
+
+  testWidgets('durante Riprova si analizza la posizione sulla scacchiera', (
+    tester,
+  ) async {
+    final fens = <String>[];
+    tester.view.physicalSize = const Size(1170, 2532);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: ReviewPage(
+          initial: Chess.initial,
+          moves: moves(scholar),
+          evaluate: fakeEngine(scholar, overrides: scholarOverrides),
+          analyseLive: (fen, _) {
+            fens.add(fen);
+            return const Stream.empty();
+          },
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Nf6 ??'));
+    await tester.tap(find.text('Nf6 ??'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Riprova'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Analizza la posizione'));
+    await tester.pumpAndSettle();
+    // Posizione prima di Cf6, non dopo.
+    expect(fens.single, startsWith('r1bqkbnr/pppp1ppp/2n5/4p2Q/'));
+  });
+
   testWidgets('numeri di mossa da una posizione con il Nero al tratto', (
     tester,
   ) async {
