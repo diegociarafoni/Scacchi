@@ -23,11 +23,13 @@ lib/
     game_page.dart        Schermata di gioco
     new_game_dialog.dart  Scelta di avversario, colore e livello
   engine/                 Avversario computer (vedi avversario-computer.md)
+  review/                 Revisione della partita (vedi revisione-partita.md)
 test/
   chess_game_test.dart    Test delle regole e della fine partita
   widget_test.dart        Test di avvio dell'interfaccia
   computer_game_test.dart Partita contro il computer nell'interfaccia
   engine/                 Test del protocollo UCI, dei livelli e di Stockfish
+  review/                 Test della revisione della partita
 integration_test/
   app_test.dart           Test end-to-end sull'app reale
 docs/                     Questa documentazione

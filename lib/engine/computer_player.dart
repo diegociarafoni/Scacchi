@@ -80,6 +80,41 @@ class ComputerPlayer {
   Future<EngineMove?> bestMove(String fen, EngineLevel level) =>
       _enqueue(() => _search(fen, level));
 
+  /// Analisi a forza piena di [fen] fino a [depth], con [multiPv] varianti
+  /// ordinate dalla migliore. Vuota se non esistono mosse legali.
+  Future<List<InfoLine>> analyse(
+    String fen, {
+    required int depth,
+    int multiPv = 1,
+  }) => _enqueue(() async {
+    await _applyOptions({
+      'Skill Level': '20',
+      'MultiPV': '$multiPv',
+      'UCI_LimitStrength': 'false',
+    });
+    _send('position fen ${fen.trim()}');
+    final infos = <int, InfoLine>{};
+    void onInfo(String line) {
+      final info = parseInfo(line);
+      if (info != null) infos[info.multipv] = info;
+    }
+
+    _listeners.add(onInfo);
+    try {
+      await _command(
+        'go depth $depth',
+        (l) => l.startsWith('bestmove'),
+        const Duration(minutes: 2),
+      );
+    } finally {
+      _listeners.remove(onInfo);
+    }
+    return [
+      for (final k in infos.keys.toList()..sort())
+        if (k <= multiPv) infos[k]!,
+    ];
+  });
+
   /// Chiede al motore di rispondere subito con la mossa trovata finora.
   void stop() {
     if (_transport != null && !_disposed) _send('stop');
@@ -149,13 +184,14 @@ class ComputerPlayer {
     );
   }
 
-  Future<void> _applyLevel(EngineLevel level) async {
-    final wanted = {
-      'Skill Level': '${level.skill}',
-      'MultiPV': '${level.multiPv}',
-      'UCI_LimitStrength': '${level.uciElo != null}',
-      if (level.uciElo != null) 'UCI_Elo': '${level.uciElo}',
-    };
+  Future<void> _applyLevel(EngineLevel level) => _applyOptions({
+    'Skill Level': '${level.skill}',
+    'MultiPV': '${level.multiPv}',
+    'UCI_LimitStrength': '${level.uciElo != null}',
+    if (level.uciElo != null) 'UCI_Elo': '${level.uciElo}',
+  });
+
+  Future<void> _applyOptions(Map<String, String> wanted) async {
     var changed = false;
     wanted.forEach((name, value) {
       if (_applied[name] == value) return;
