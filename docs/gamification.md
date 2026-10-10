@@ -52,14 +52,14 @@ Il livello *L* richiede `50 × L × (L − 1)` XP totali: livello 2 a 100 XP, 3 
 | `progress_state.dart` | Stato dei progressi e impostazioni, serializzabili in JSON |
 | `progress_tracker.dart` | Regole: XP, obiettivo, serie, protezioni, traguardi. Funzioni pure, con l'ora passata come parametro |
 | `achievements.dart` | Elenco dei traguardi e condizioni di sblocco |
-| `progress_store.dart` | Salvataggio su file JSON con versione dello schema e scrittura atomica |
+| `progress_store.dart` | Salvataggio su file JSON tramite `JsonFile` |
 | `progress_controller.dart` | `ChangeNotifier` per l'interfaccia: carica, registra, salva |
 | `progress_feedback.dart` | Notifica in-app di XP, livello, obiettivo e traguardi |
 | `profile_page.dart` | Schermata Profilo con livello, serie, obiettivo, traguardi e impostazioni |
 
 ## Salvataggio
 
-Il file `progress.json` sta nella cartella dati dell'app (`getApplicationSupportDirectory`). Contiene `version` (oggi 1), `settings` e `state`. Un file mancante o illeggibile non blocca l'app: si riparte dallo stato iniziale e il file illeggibile, o scritto da una versione futura dello schema, viene rinominato in `progress.json.bad-<data>` invece di essere sovrascritto. I salvataggi si accodano, così l'ultimo vince sempre, e la scrittura passa da un file temporaneo rinominato alla fine. Quando arriverà il database locale (RNF-08), questo file sarà importato alla prima migrazione.
+Il file `progress.json` sta nella cartella dati dell'app (`getApplicationSupportDirectory`). Contiene `version` (oggi 1), `settings` e `state`. Il file passa da `JsonFile` (`lib/storage/json_file.dart`), condiviso con l'archivio delle partite: scrittura atomica, salvataggi accodati, file non valido (JSON rotto o versione futura) rinominato in `progress.json.bad-<ms>` invece di essere sovrascritto. Se invece il disco non si lascia leggere, il controller passa in sola lettura (`readOnly`): si gioca senza salvare, così i progressi sul disco non vengono sovrascritti. Quando arriverà il database locale (RNF-08), questo file sarà importato alla prima migrazione.
 
 ## Uso dall'interfaccia
 
