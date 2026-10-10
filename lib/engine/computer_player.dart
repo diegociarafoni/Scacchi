@@ -62,6 +62,7 @@ class ComputerPlayer {
   /// Incrementato da [stop]: le ricerche richieste prima terminano subito.
   int _stopEpoch = 0;
   bool _searching = false;
+  Completer<void>? _replyDelay;
   bool _disposed = false;
 
   /// Avvia il motore; altrimenti avviene alla prima richiesta.
@@ -118,6 +119,8 @@ class ComputerPlayer {
   void stop() {
     _stopEpoch++;
     if (_searching && !_disposed) _send('stop');
+    _replyDelay?.complete();
+    _replyDelay = null;
   }
 
   Future<void> dispose() async {
@@ -174,9 +177,12 @@ class ComputerPlayer {
     );
 
     final infos = <int, InfoLine>{};
+    final byDepth = <int, Map<int, InfoLine>>{};
     void onInfo(String line) {
       final info = parseInfo(line);
-      if (info != null) infos[info.multipv] = info;
+      if (info == null) return;
+      infos[info.multipv] = info;
+      (byDepth[info.depth ?? 0] ??= {})[info.multipv] = info;
     }
 
     _listeners.add(onInfo);
@@ -201,12 +207,7 @@ class ComputerPlayer {
     final chosen =
         (level.multiPv > 1
             ? chooseCandidate(
-                [
-                  for (final i in infos.values)
-                    if (i.multipv <= level.multiPv &&
-                        i.depth == infos[1]?.depth)
-                      i,
-                ],
+                _lastCompleteIteration(byDepth, level.multiPv),
                 level.temperatureCp,
                 _random,
               )
@@ -216,7 +217,13 @@ class ComputerPlayer {
 
     final wait = level.minReply - DateTime.now().difference(started);
     if (!cancelled() && wait > Duration.zero) {
-      await Future<void>.delayed(wait);
+      final delay = _replyDelay = Completer<void>();
+      final timer = Timer(wait, () {
+        if (!delay.isCompleted) delay.complete();
+      });
+      await delay.future;
+      timer.cancel();
+      _replyDelay = null;
     }
 
     return EngineMove(
@@ -225,6 +232,30 @@ class ComputerPlayer {
       score: chosen.score,
       depth: chosen.depth,
     );
+  }
+
+  /// Linee dell'iterazione più profonda in cui il motore ha valutato tutte
+  /// le varianti richieste (o il massimo che ha prodotto).
+  static List<InfoLine> _lastCompleteIteration(
+    Map<int, Map<int, InfoLine>> byDepth,
+    int multiPv,
+  ) {
+    if (byDepth.isEmpty) return const [];
+    final wanted = byDepth.values
+        .map((lines) => lines.length)
+        .reduce(math.max)
+        .clamp(1, multiPv);
+    final depths = byDepth.keys.toList()..sort();
+    for (final depth in depths.reversed) {
+      final lines = byDepth[depth]!;
+      if (lines.length >= wanted) {
+        return [
+          for (final l in lines.values)
+            if (l.multipv <= multiPv) l,
+        ];
+      }
+    }
+    return const [];
   }
 
   /// UCI standard: l'arrocco di dartchess (re su torre) diventa e1g1/e1c1.

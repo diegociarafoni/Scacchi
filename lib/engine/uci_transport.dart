@@ -24,8 +24,9 @@ class StockfishTransport implements UciTransport {
       try {
         return StockfishTransport._(await Stockfish.create());
       } on StateError {
-        if (attempt == 5) rethrow;
-        await Future<void>.delayed(Duration(milliseconds: 200 * attempt));
+        // Il rilascio del motore precedente può richiedere alcuni secondi.
+        if (attempt == 20) rethrow;
+        await Future<void>.delayed(const Duration(milliseconds: 500));
       }
     }
   }

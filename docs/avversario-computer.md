@@ -20,7 +20,8 @@ Durante la riflessione del computer la scacchiera è bloccata e compare la scrit
 - **Annulla** dopo un abbandono o una patta concordata riapre la partita senza togliere mosse.
 - **Patta**: il computer valuta la posizione attuale a piena forza e accetta solo se si giudica in svantaggio di almeno mezzo pedone (50 centipedoni); altrimenti rifiuta (requisito RF-25). Durante la valutazione compare "Il computer valuta la patta…" e la scacchiera è bloccata.
 - Se il motore non risponde, o propone una mossa che le regole rifiutano, compare il messaggio "Il computer non risponde." con il pulsante **Riprova**, sopra la barra dei comandi; il motore viene riavviato alla richiesta successiva. Il messaggio sparisce con una nuova partita o un annullamento.
-- La rotazione automatica della scacchiera non si applica contro il computer.
+- La patta si può offrire solo nel proprio turno.
+- La rotazione automatica della scacchiera è disattivata contro il computer.
 
 ## Piattaforme
 
@@ -99,9 +100,9 @@ lib/game/
 - L'arrocco viaggia come `e1g1` verso e da Stockfish e come re su torre (`e1h1`) in dartchess;
   `ComputerPlayer` converte in entrambe le direzioni.
 - Su Android e iOS `Stockfish.create()` ammette un solo motore alla volta: se il precedente non ha
-  ancora liberato il posto, l'avvio riprova fino a cinque volte.
+  ancora liberato il posto, l'avvio riprova ogni mezzo secondo per circa dieci secondi.
 - Se il motore si chiude o va in errore, le richieste in corso falliscono subito invece di attendere il timeout.
-- Per la scelta "umana" si confrontano solo le candidate valutate alla stessa profondità della migliore.
+- Per la scelta "umana" si usano le candidate dell'ultima iterazione completa (la profondità più alta in cui il motore ha valutato tutte le varianti), così non si confrontano valutazioni di profondità diverse.
 - Passando a una partita tra due persone il motore viene chiuso, liberando memoria.
 - `UciTransport` separa la logica dal motore concreto: in produzione `StockfishTransport`,
   nei test un motore finto o un processo Stockfish.

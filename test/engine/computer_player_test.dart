@@ -265,26 +265,49 @@ void main() {
       await player.dispose();
     });
 
-    test('RF-20 confronta solo candidate della stessa profondità', () async {
-      final fake = FakeEngine(
-        (_) => [
-          'info depth 4 multipv 1 score cp 40 pv d2d4',
-          'info depth 4 multipv 2 score cp 45 pv c2c4',
-          'info depth 5 multipv 1 score cp 50 pv e2e4',
-          'bestmove e2e4',
-        ],
-      );
-      final player = ComputerPlayer(connect: () async => fake);
-      for (var i = 0; i < 20; i++) {
-        final move = await player.bestMove(
-          Chess.initial.fen,
-          const [],
-          fast(1),
+    test(
+      'RF-20 sceglie tra le candidate dell\'ultima iterazione completa',
+      () async {
+        final fake = FakeEngine(
+          (_) => [
+            'info depth 4 multipv 1 score cp 40 pv d2d4',
+            'info depth 4 multipv 2 score cp 45 pv c2c4',
+            'info depth 5 multipv 1 score cp 50 pv e2e4',
+            'bestmove e2e4',
+          ],
         );
-        expect(move!.move.uci, 'e2e4');
-      }
-      await player.dispose();
-    });
+        final player = ComputerPlayer(connect: () async => fake);
+        final seen = <String>{};
+        for (var i = 0; i < 30; i++) {
+          final move = await player.bestMove(
+            Chess.initial.fen,
+            const [],
+            fast(1),
+          );
+          seen.add(move!.move.uci);
+        }
+        expect(seen, {'d2d4', 'c2c4'});
+        await player.dispose();
+      },
+    );
+
+    test(
+      'RF-21 stop interrompe anche il ritardo minimo già iniziato',
+      () async {
+        final player = ComputerPlayer(
+          connect: () async => FakeEngine((_) => ['bestmove e2e4']),
+        );
+        final level = engineLevel(5)
+            .copyWith(minReply: const Duration(seconds: 2));
+        final stopwatch = Stopwatch()..start();
+        final pending = player.bestMove(Chess.initial.fen, const [], level);
+        await Future<void>.delayed(const Duration(milliseconds: 100));
+        player.stop();
+        expect((await pending)!.move.uci, 'e2e4');
+        expect(stopwatch.elapsed, lessThan(const Duration(seconds: 1)));
+        await player.dispose();
+      },
+    );
 
     test('restituisce null se non ci sono mosse legali', () async {
       final fake = FakeEngine((_) => ['bestmove (none)']);

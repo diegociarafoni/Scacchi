@@ -235,26 +235,6 @@ void main() {
     expect(find.text('Riprova'), findsNothing);
   });
 
-  testWidgets('RF-25 la risposta alla patta è visibile anche dopo un errore', (
-    tester,
-  ) async {
-    var attempts = 0;
-    await tester.pumpWidget(
-      app(
-        connect: () async {
-          if (attempts++ < 2) throw StateError('motore occupato');
-          return FirstLegalMoveEngine();
-        },
-      ),
-    );
-    await startComputerGame(tester, side: 'Nero');
-    await tester.pumpAndSettle(const Duration(seconds: 1));
-    expect(find.text('Riprova'), findsOneWidget);
-    await tester.tap(find.text('Patta'));
-    await tester.pumpAndSettle(const Duration(seconds: 1));
-    expect(find.text('Il computer rifiuta la patta.'), findsOneWidget);
-  });
-
   testWidgets('passando a due giocatori il motore viene chiuso', (
     tester,
   ) async {
@@ -270,6 +250,65 @@ void main() {
     await tester.tap(find.text('Gioca'));
     await tester.pumpAndSettle();
     expect(engine.disposed, isTrue);
+  });
+
+  testWidgets('RF-25 non si offre la patta mentre tocca al computer', (
+    tester,
+  ) async {
+    var attempts = 0;
+    await tester.pumpWidget(
+      app(
+        connect: () async {
+          if (attempts++ < 2) throw StateError('motore occupato');
+          return FirstLegalMoveEngine();
+        },
+      ),
+    );
+    await startComputerGame(tester, side: 'Nero');
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.tap(find.text('Patta'));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    expect(find.text('Il computer rifiuta la patta.'), findsNothing);
+    expect(find.text('Riprova'), findsOneWidget);
+  });
+
+  testWidgets('RF-25 un errore nella valutazione della patta viene segnalato', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      app(connect: () async => throw StateError('motore occupato')),
+    );
+    await startComputerGame(tester, side: 'Bianco');
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.tap(find.text('Patta'));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    expect(find.text('Il computer rifiuta la patta.'), findsNothing);
+    expect(find.text('Il computer non risponde.'), findsOneWidget);
+  });
+
+  testWidgets('una risposta senza mossa a partita in corso viene segnalata', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      app(connect: () async => FirstLegalMoveEngine(forcedMove: '0000')),
+    );
+    await startComputerGame(tester, side: 'Nero');
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    expect(find.text('Il computer non risponde.'), findsOneWidget);
+  });
+
+  testWidgets('contro il computer la rotazione automatica è disattivata', (
+    tester,
+  ) async {
+    await tester.pumpWidget(app());
+    await startComputerGame(tester, side: 'Bianco');
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.tap(find.byType(PopupMenuButton<String>));
+    await tester.pumpAndSettle();
+    final item = tester.widget<CheckedPopupMenuItem<String>>(
+      find.byType(CheckedPopupMenuItem<String>),
+    );
+    expect(item.enabled, isFalse);
   });
 
   testWidgets('senza motore disponibile la scelta Computer è disattivata', (

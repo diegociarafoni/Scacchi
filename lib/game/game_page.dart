@@ -44,7 +44,7 @@ class _GamePageState extends State<GamePage> {
   @override
   void dispose() {
     _generation++;
-    _computer?.dispose();
+    _computer?.dispose().ignore();
     _board.dispose();
     super.dispose();
   }
@@ -109,7 +109,9 @@ class _GamePageState extends State<GamePage> {
     }
     if (!mounted || generation != _generation) return;
     _task = _ComputerTask.none;
-    if (reply != null && !_game.play(reply.move)) error = reply;
+    if (reply == null ? !_game.isOver : !_game.play(reply.move)) {
+      error ??= reply ?? 'nessuna mossa';
+    }
     _refresh();
     if (error != null) {
       _showMessage(
@@ -176,7 +178,7 @@ class _GamePageState extends State<GamePage> {
       _computerPlayer.newGame().ignore();
     } else {
       _computerSide = null;
-      _computer?.dispose();
+      _computer?.dispose().ignore();
       _computer = null;
     }
     _refresh(animate: false);
@@ -199,6 +201,8 @@ class _GamePageState extends State<GamePage> {
     _refresh(animate: false);
     _computerMove();
   }
+
+  bool get _computerToMove => _computerSide == _game.position.turn;
 
   bool get _canUndo {
     if (!_game.canUndo) return false;
@@ -242,6 +246,7 @@ class _GamePageState extends State<GamePage> {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     _refresh(animate: false);
     int? computerScore;
+    Object? error;
     try {
       final score = await _computerPlayer.evaluate(
         _game.initial.fen,
@@ -252,11 +257,14 @@ class _GamePageState extends State<GamePage> {
             ? score.comparable
             : -score.comparable;
       }
-    } catch (_) {}
+    } catch (e) {
+      error = e;
+    }
     if (!mounted || generation != _generation) return;
     _task = _ComputerTask.none;
     _refresh(animate: false);
     if (_game.isOver) return;
+    if (error != null) return _showMessage('Il computer non risponde.');
     if (computerScore != null && computerScore <= -_drawAcceptanceCp) {
       _cancelComputerMove();
       _game.agreeDraw();
@@ -299,7 +307,7 @@ class _GamePageState extends State<GamePage> {
       onNewGame: _newGame,
       onUndo: _canUndo ? _undo : null,
       onFlip: () => setState(() => _orientation = _orientation.opposite),
-      onDraw: _game.isOver || _thinking ? null : _offerDraw,
+      onDraw: _game.isOver || _thinking || _computerToMove ? null : _offerDraw,
       onResign: _game.isOver ? null : _resign,
     );
     return Scaffold(
@@ -329,6 +337,7 @@ class _GamePageState extends State<GamePage> {
               CheckedPopupMenuItem(
                 value: 'autoflip',
                 checked: _autoFlip,
+                enabled: _computerSide == null,
                 child: const Text('Ruota a ogni turno'),
               ),
             ],
