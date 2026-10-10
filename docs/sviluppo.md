@@ -37,6 +37,7 @@ Ogni funzione nasce dai requisiti del progetto, nel documento dei requisiti, con
 |---|---|---|---|
 | Unitari | `test/chess_game_test.dart` | Regole e fine partita su `ChessGame`, senza interfaccia | `flutter test` |
 | Widget | `test/widget_test.dart` | Avvio dell'app e stato iniziale | `flutter test` |
+| Gamification | `test/progress/` | Regole di XP, serie e traguardi; salvataggio; schermata Profilo | `flutter test test/progress` |
 | End-to-end | `integration_test/app_test.dart` | L'app reale avviata su un dispositivo o desktop, con tocchi e trascinamenti sulla scacchiera | `flutter test integration_test -d <dispositivo>` |
 
 I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisici, rapporto 3) e muovono i pezzi calcolando la posizione delle case sulla scacchiera.
@@ -54,6 +55,10 @@ I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisic
 | RF-32 patta concordata e annullamento | ✓ | ✓ |
 | Annullamento di abbandono e patta senza perdita di mosse | ✓ | |
 | RF-04 chiusura del selettore di promozione con Annulla | | ✓ |
+| RG-01 XP e livelli | ✓ | |
+| RG-02 obiettivo giornaliero, serie, riposo, protezioni | ✓ | |
+| RG-05 traguardi e notifica in-app | ✓ | |
+| RG-12 gamification disattivabile | ✓ | |
 
 ## Integrazione continua
 
