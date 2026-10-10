@@ -9,7 +9,7 @@ Prima versione giocabile:
 - partita tra due persone sullo stesso dispositivo;
 - mosse per trascinamento o con due tocchi, evidenziazione delle mosse legali, dell'ultima mossa e dello scacco;
 - promozione con scelta del pezzo;
-- fine partita: scacco matto, stallo, materiale insufficiente, triplice ripetizione, regola delle 50 mosse, abbandono;
+- fine partita: scacco matto, stallo, materiale insufficiente, triplice ripetizione, regola delle 50 mosse, patta concordata, abbandono;
 - annullamento delle mosse, nuova partita, lista delle mosse in notazione algebrica;
 - capovolgimento della scacchiera, anche automatico a ogni turno.
 

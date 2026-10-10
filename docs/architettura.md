@@ -23,6 +23,8 @@ lib/
 test/
   chess_game_test.dart    Test delle regole e della fine partita
   widget_test.dart        Test di avvio dell'interfaccia
+integration_test/
+  app_test.dart           Test end-to-end sull'app reale
 docs/                     Questa documentazione
 android/ ios/ linux/ macos/ windows/
                           Progetti nativi generati da Flutter
@@ -37,7 +39,8 @@ Modello della partita, in Dart puro e quindi testabile senza interfaccia.
 
 - Conserva la posizione iniziale e la lista delle mosse giocate (`PlayedMove`: mossa, notazione SAN, posizione risultante).
 - `play(move)` accetta solo mosse legali e rifiuta qualsiasi mossa a partita conclusa.
-- `undo()` annulla l'ultima mossa; annulla anche un eventuale abbandono.
+- `undo()` annulla l'ultima mossa; annulla anche un eventuale abbandono o una patta concordata.
+- `agreeDraw()` chiude la partita con una patta concordata.
 - `resign(side)` registra l'abbandono del lato indicato.
 - `endReason` e `outcome` descrivono come e con quale risultato è finita la partita.
 

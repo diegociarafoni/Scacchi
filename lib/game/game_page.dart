@@ -86,12 +86,37 @@ class _GamePageState extends State<GamePage> {
     }
   }
 
+  Future<void> _offerDraw() async {
+    final opponent = _game.position.turn.opposite;
+    final accepted = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Il ${_sideName(opponent)} accetta la patta?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Rifiuta'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Accetta'),
+          ),
+        ],
+      ),
+    );
+    if (accepted == true) {
+      _game.agreeDraw();
+      _refresh(animate: false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final actions = _GameActions(
       onNewGame: _newGame,
       onUndo: _game.canUndo ? _undo : null,
       onFlip: () => setState(() => _orientation = _orientation.opposite),
+      onDraw: _game.isOver ? null : _offerDraw,
       onResign: _game.isOver ? null : _resign,
     );
     return Scaffold(
@@ -202,6 +227,7 @@ String statusText(ChessGame game) {
     GameEndReason.insufficientMaterial => 'Materiale insufficiente. Patta.',
     GameEndReason.threefoldRepetition => 'Triplice ripetizione. Patta.',
     GameEndReason.fiftyMoveRule => 'Regola delle 50 mosse. Patta.',
+    GameEndReason.agreement => 'Patta concordata.',
   };
 }
 
@@ -267,12 +293,14 @@ class _GameActions extends StatelessWidget {
     required this.onNewGame,
     required this.onUndo,
     required this.onFlip,
+    required this.onDraw,
     required this.onResign,
   });
 
   final VoidCallback onNewGame;
   final VoidCallback? onUndo;
   final VoidCallback onFlip;
+  final VoidCallback? onDraw;
   final VoidCallback? onResign;
 
   @override
@@ -284,6 +312,7 @@ class _GameActions extends StatelessWidget {
           _ActionButton(Icons.add, 'Nuova', onNewGame),
           _ActionButton(Icons.undo, 'Annulla', onUndo),
           _ActionButton(Icons.swap_vert, 'Gira', onFlip),
+          _ActionButton(Icons.handshake_outlined, 'Patta', onDraw),
           _ActionButton(Icons.flag_outlined, 'Abbandona', onResign),
         ],
       ),

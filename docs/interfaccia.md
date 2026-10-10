@@ -10,7 +10,7 @@ Dall'alto verso il basso:
 2. **Striscia delle mosse**: scorre in orizzontale e mostra sempre l'ultima mossa a destra.
 3. **Riga di stato**: chi muove, scacco, oppure risultato e motivo della fine partita.
 4. **Scacchiera** a tutta larghezza.
-5. **Barra dei comandi** in basso, alla portata del pollice: Nuova, Annulla, Gira, Abbandona.
+5. **Barra dei comandi** in basso, alla portata del pollice: Nuova, Annulla, Gira, Patta, Abbandona.
 
 Striscia, stato e scacchiera sono centrati insieme nello spazio disponibile. La scacchiera ha come lato il minimo tra la larghezza dello schermo e l'altezza rimasta dopo striscia, stato e comandi.
 
@@ -33,6 +33,7 @@ Quando la larghezza supera di oltre il 20% l'altezza, la scacchiera sta a sinist
 | Nuova | Inizia una nuova partita dalla posizione iniziale |
 | Annulla | Annulla l'ultima mossa; disattivato se non ci sono mosse |
 | Gira | Capovolge la scacchiera |
+| Patta | Chiede all'avversario se accetta la patta; disattivato a partita conclusa |
 | Abbandona | Chiede conferma e fa abbandonare il lato al tratto; disattivato a partita conclusa |
 | Menu, "Ruota a ogni turno" | Orienta automaticamente la scacchiera dal lato di chi deve muovere |
 

@@ -8,6 +8,7 @@ enum GameEndReason {
   threefoldRepetition,
   fiftyMoveRule,
   resignation,
+  agreement,
 }
 
 /// Una mossa giocata, con la notazione algebrica (SAN) e la posizione risultante.
@@ -30,6 +31,7 @@ class ChessGame {
   final Position initial;
   final List<PlayedMove> _moves = [];
   Side? _resigned;
+  bool _drawAgreed = false;
 
   List<PlayedMove> get moves => List.unmodifiable(_moves);
 
@@ -49,6 +51,7 @@ class ChessGame {
 
   void undo() {
     _resigned = null;
+    _drawAgreed = false;
     if (_moves.isNotEmpty) _moves.removeLast();
   }
 
@@ -56,8 +59,13 @@ class ChessGame {
     if (!isOver) _resigned = side;
   }
 
+  void agreeDraw() {
+    if (!isOver) _drawAgreed = true;
+  }
+
   GameEndReason? get endReason {
     if (_resigned != null) return GameEndReason.resignation;
+    if (_drawAgreed) return GameEndReason.agreement;
     final pos = position;
     if (pos.isCheckmate) return GameEndReason.checkmate;
     if (pos.isStalemate) return GameEndReason.stalemate;

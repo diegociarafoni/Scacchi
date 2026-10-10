@@ -12,7 +12,8 @@
 ```sh
 flutter pub get                       # dipendenze
 flutter run                           # avvio sul dispositivo o emulatore collegato
-flutter test                          # test
+flutter test                          # test unitari e di widget
+flutter test integration_test -d linux  # test e2e (su Linux senza schermo: xvfb-run -a ...)
 flutter analyze                       # analisi statica
 dart format lib test                  # formattazione
 flutter build apk                     # APK Android
@@ -21,17 +22,44 @@ flutter build ios                     # app iOS (su Mac)
 
 ## Test
 
-- `test/chess_game_test.dart`: notazione SAN, rifiuto delle mosse illegali, scacco matto, stallo, triplice ripetizione, regola delle 50 mosse, annullamento e abbandono.
-- `test/widget_test.dart`: avvio dell'app e stato iniziale.
+### Metodo: prima i test
 
-Ogni nuova regola o condizione di fine partita va accompagnata da un test in `chess_game_test.dart`.
+Ogni funzione nasce dai requisiti del progetto, nel documento dei requisiti, con questo ordine:
+
+1. Si scrivono i test che descrivono il comportamento richiesto, citando nel nome l'identificativo del requisito (per esempio `RF-32 patta concordata`).
+2. Si eseguono e si verifica che falliscano per la ragione attesa.
+3. Si implementa il minimo necessario per farli passare.
+4. Si aggiorna la documentazione in `docs/`.
+
+### Livelli
+
+| Livello | Cartella | Cosa verifica | Comando |
+|---|---|---|---|
+| Unitari | `test/chess_game_test.dart` | Regole e fine partita su `ChessGame`, senza interfaccia | `flutter test` |
+| Widget | `test/widget_test.dart` | Avvio dell'app e stato iniziale | `flutter test` |
+| End-to-end | `integration_test/app_test.dart` | L'app reale avviata su un dispositivo o desktop, con tocchi e trascinamenti sulla scacchiera | `flutter test integration_test -d <dispositivo>` |
+
+I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisici, rapporto 3) e muovono i pezzi calcolando la posizione delle case sulla scacchiera.
+
+### Copertura attuale dei requisiti
+
+| Requisito | Unitari | E2E |
+|---|---|---|
+| RF-01 mossa con due tocchi e trascinamento, mosse illegali ignorate | ✓ | ✓ |
+| RF-04 promozione | ✓ | |
+| RF-06 capovolgimento della scacchiera | | ✓ |
+| RF-10 lista delle mosse in SAN | ✓ | ✓ |
+| RF-25 matto, stallo, materiale insufficiente, ripetizione, 50 mosse, abbandono | ✓ | matto, abbandono |
+| RF-31 rotazione automatica a ogni turno | | ✓ |
+| RF-32 patta concordata e annullamento | ✓ | ✓ |
 
 ## Integrazione continua
 
 Il workflow `.github/workflows/ci.yml` gira su ogni pull request e su ogni push su `main`:
 
 1. **test**: verifica della formattazione, `flutter analyze`, `flutter test`.
-2. **android**: se i test passano, compila un APK di debug e lo pubblica come artefatto `scacchi-debug-apk`, scaricabile dalla pagina dell'esecuzione.
+2. **e2e**: se i test passano, esegue i test end-to-end sull'app Linux desktop con uno schermo virtuale (`xvfb`).
+3. **android**: se i test passano, compila un APK di debug e lo pubblica come artefatto `scacchi-debug-apk`, scaricabile dalla pagina dell'esecuzione.
 
 ## Convenzioni
 

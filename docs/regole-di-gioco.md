@@ -16,6 +16,7 @@ Ogni mossa giocata viene registrata in notazione algebrica standard (SAN), per e
 | `threefoldRepetition` | La stessa posizione si è presentata tre volte | Patta |
 | `fiftyMoveRule` | 50 mosse per lato senza catture né mosse di pedone | Patta |
 | `resignation` | Un giocatore abbandona | Vince l'altro lato |
+| `agreement` | Un giocatore propone la patta e l'avversario accetta | Patta |
 
 L'ordine di valutazione è quello della tabella: per esempio una mossa che dà matto e contemporaneamente completa le 50 mosse conta come matto.
 
@@ -29,7 +30,8 @@ La patta viene dichiarata automaticamente alla terza occorrenza, senza richiesta
 
 Si usa il contatore di semimosse della posizione (`halfmoves`), che si azzera a ogni cattura o mossa di pedone. La patta scatta automaticamente quando il contatore raggiunge 100 semimosse.
 
-## Annullamento e abbandono
+## Annullamento, patta e abbandono
 
 - "Annulla" toglie l'ultima mossa, anche a partita conclusa, e riporta la partita in corso.
+- "Patta" chiede all'avversario del lato al tratto se accetta; se accetta, la partita finisce patta. Annullare una mossa riprende la partita.
 - "Abbandona" chiede conferma e assegna la vittoria al lato che non è al tratto. Annullare dopo un abbandono riprende la partita.
