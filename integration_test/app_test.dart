@@ -141,4 +141,18 @@ void main() {
     await tester.pumpAndSettle();
     expect(selector, findsNothing);
   });
+
+  testWidgets('RF-11 mostra i pezzi catturati e il vantaggio', (tester) async {
+    await _start(tester);
+    expect(find.byKey(const ValueKey('advantage-white')), findsNothing);
+    for (final m in ['e2e4', 'd7d5', 'e4d5']) {
+      await _tapMove(tester, m);
+    }
+    expect(find.byKey(const ValueKey('advantage-black')), findsNothing);
+    expect(
+      tester.widget<Text>(find.byKey(const ValueKey('advantage-white'))).data,
+      '+1',
+    );
+    expect(find.byKey(const ValueKey('captured-black-pawn-0')), findsOneWidget);
+  });
 }
