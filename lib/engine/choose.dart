@@ -2,9 +2,9 @@ import 'dart:math' as math;
 
 import 'uci.dart';
 
-/// Sceglie una mossa tra le varianti candidate con una softmax sulla
-/// valutazione: con temperatura 0, o una sola candidata, restituisce sempre
-/// la migliore. Un matto a favore non viene mai scartato.
+/// Sceglie una candidata con probabilità proporzionale a
+/// exp((score - migliore) / temperatureCp). Con temperatura 0, una sola
+/// candidata o un matto a favore restituisce la migliore.
 InfoLine? chooseCandidate(
   List<InfoLine> candidates,
   int temperatureCp,

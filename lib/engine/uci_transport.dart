@@ -9,14 +9,13 @@ abstract interface class UciTransport {
   Future<void> dispose();
 }
 
-/// Stockfish 19 nativo (rete NNUE leggera inclusa), tramite il plugin di
-/// Lichess. Gira sul dispositivo, senza rete.
+/// Stockfish 19 nativo tramite il plugin multistockfish.
 class StockfishTransport implements UciTransport {
   StockfishTransport._(this._engine);
 
   final Stockfish _engine;
 
-  /// Il plugin supporta per ora solo Android e iOS.
+  /// multistockfish supporta solo Android e iOS.
   static bool get isSupported => Platform.isAndroid || Platform.isIOS;
 
   static Future<UciTransport> start() async =>

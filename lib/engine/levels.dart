@@ -1,11 +1,4 @@
-/// Livelli di difficoltà del computer.
-///
-/// Stockfish non scende sotto i 1320 Elo nemmeno con `Skill Level 0`: troppo
-/// per un principiante. Nei livelli 1–4 chiediamo quindi più varianti
-/// (`MultiPV`) e scegliamo tra le candidate con una softmax sulla valutazione
-/// (vedi `chooseCandidate`): il computer sbaglia in modo plausibile, come una
-/// persona, invece di regalare pezzi a caso. Dal livello 5 usiamo il
-/// limitatore di forza nativo (`UCI_LimitStrength` / `UCI_Elo`).
+/// Livello di difficoltà. Vedi docs/avversario-computer.md.
 class EngineLevel {
   const EngineLevel({
     required this.id,
@@ -23,7 +16,7 @@ class EngineLevel {
   final int id;
   final String name;
 
-  /// Elo indicativo, solo per l'interfaccia. Nei livelli 1–4 è una stima.
+  /// Elo indicativo mostrato all'utente.
   final int approxElo;
 
   /// Opzione UCI `Skill Level` (0–20).
@@ -36,13 +29,13 @@ class EngineLevel {
   final int? depth;
   final Duration movetime;
 
-  /// Varianti richieste; più di una attiva la scelta "umana".
+  /// Varianti richieste; con più di una si sceglie con `chooseCandidate`.
   final int multiPv;
 
   /// Temperatura della softmax in centipedoni (0 = sempre la migliore).
   final int temperatureCp;
 
-  /// Attesa minima prima di rispondere: le mosse istantanee sembrano finte.
+  /// Attesa minima prima di restituire la mossa.
   final Duration minReply;
 
   EngineLevel copyWith({Duration? minReply}) => EngineLevel(

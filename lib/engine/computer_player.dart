@@ -17,8 +17,7 @@ class EngineMove {
     this.depth,
   });
 
-  /// Mossa già normalizzata per `dartchess` (l'arrocco è re su torre),
-  /// pronta per `ChessGame.play`.
+  /// Normalizzata per dartchess (arrocco come re su torre).
   final Move move;
 
   /// Variante prevista, in notazione UCI, a partire da [move].
@@ -29,10 +28,8 @@ class EngineMove {
   final int? depth;
 }
 
-/// Avversario basato su un motore UCI (Stockfish sul dispositivo).
-///
-/// Le richieste sono messe in coda: il motore esegue una ricerca alla volta.
-/// Il modulo parla solo FEN e mosse UCI; la validazione resta a `ChessGame`.
+/// Avversario basato su un motore UCI. Le richieste vengono eseguite in
+/// coda, una ricerca alla volta.
 class ComputerPlayer {
   ComputerPlayer({
     Future<UciTransport> Function()? connect,
@@ -53,7 +50,7 @@ class ComputerPlayer {
   final _applied = <String, String>{};
   bool _disposed = false;
 
-  /// Avvia il motore. Facoltativo: avviene da sé alla prima richiesta.
+  /// Avvia il motore; altrimenti avviene alla prima richiesta.
   Future<void> init() => _ready ??= _start();
 
   Future<void> _start() async {
@@ -72,7 +69,7 @@ class ComputerPlayer {
     await _sync();
   }
 
-  /// Da chiamare all'inizio di ogni partita: azzera la memoria del motore.
+  /// Da chiamare a inizio partita: azzera la tabella hash.
   Future<void> newGame() => _enqueue(() async {
     _send('ucinewgame');
     await _sync();

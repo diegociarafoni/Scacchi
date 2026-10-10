@@ -3,8 +3,7 @@ import 'dart:io';
 
 import 'package:scacchi/engine/uci_transport.dart';
 
-/// Stockfish nativo come processo esterno, per i test d'integrazione su
-/// desktop e in CI. Cerca `STOCKFISH_PATH`, poi i percorsi abituali.
+/// Stockfish come processo esterno: `STOCKFISH_PATH` o percorsi abituali.
 class ProcessTransport implements UciTransport {
   ProcessTransport._(this._process)
     : lines = _process.stdout

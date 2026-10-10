@@ -17,7 +17,7 @@ class ScacchiApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(colorSchemeSeed: seed, brightness: Brightness.light),
       darkTheme: ThemeData(colorSchemeSeed: seed, brightness: Brightness.dark),
-      home: const GamePage(),
+      home: GamePage(),
     );
   }
 }

@@ -10,8 +10,7 @@ class EngineScore {
   final int? cp;
   final int? mate;
 
-  /// Valore confrontabile: un matto vale più di qualsiasi vantaggio
-  /// materiale, e un matto più vicino vale di più.
+  /// Valore ordinabile: matto ≈ ±100000, più vicino vale di più.
   int get comparable {
     final m = mate;
     if (m == null) return cp!;

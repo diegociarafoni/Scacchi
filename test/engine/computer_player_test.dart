@@ -19,10 +19,8 @@ const checkmated =
 // Posizione in cui il Bianco può arroccare corto.
 const canCastle = '4k3/8/8/8/8/8/5PPP/4K2R w K - 0 1';
 
-/// Livelli senza attesa artificiale, per non rallentare i test.
 EngineLevel fast(int id) => engineLevel(id).copyWith(minReply: Duration.zero);
 
-/// Motore finto che risponde secondo uno script, per i test senza Stockfish.
 class FakeEngine implements UciTransport {
   FakeEngine(this.onGo);
 

@@ -4,11 +4,19 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
+import '../engine/computer_player.dart';
+import '../engine/levels.dart';
+import '../engine/uci_transport.dart';
 import 'chess_game.dart';
+import 'new_game_dialog.dart';
 
-/// Partita tra due persone sullo stesso dispositivo.
+/// Partita tra due persone sullo stesso dispositivo o contro il computer.
 class GamePage extends StatefulWidget {
-  const GamePage({super.key});
+  GamePage({super.key, bool? computerAvailable, this.createComputer})
+    : computerAvailable = computerAvailable ?? StockfishTransport.isSupported;
+
+  final bool computerAvailable;
+  final ComputerPlayer Function()? createComputer;
 
   @override
   State<GamePage> createState() => _GamePageState();
@@ -21,11 +29,32 @@ class _GamePageState extends State<GamePage> {
   );
   Side _orientation = Side.white;
   bool _autoFlip = false;
+  GameSetup _setup = const GameSetup();
+  final _random = math.Random();
+
+  /// Lato giocato dal computer; `null` nella partita tra due persone.
+  Side? _computerSide;
+  ComputerPlayer? _computer;
+  bool _thinking = false;
+
+  /// Invalida le risposte del computer per posizioni non più attuali.
+  int _generation = 0;
 
   @override
   void dispose() {
+    _generation++;
+    _computer?.dispose();
     _board.dispose();
     super.dispose();
+  }
+
+  PlayerSide get _playerSide {
+    if (_game.isOver || _thinking) return PlayerSide.none;
+    return switch (_computerSide) {
+      null => PlayerSide.both,
+      Side.white => PlayerSide.black,
+      Side.black => PlayerSide.white,
+    };
   }
 
   GameData _gameData() {
@@ -33,7 +62,7 @@ class _GamePageState extends State<GamePage> {
     return GameData(
       fen: pos.fen,
       lastMove: _game.lastMove,
-      playerSide: _game.isOver ? PlayerSide.none : PlayerSide.both,
+      playerSide: _playerSide,
       sideToMove: pos.turn,
       kingSquareInCheck: pos.isCheck ? pos.board.kingOf(pos.turn) : null,
       validMoves: makeLegalMoves(pos),
@@ -43,26 +72,86 @@ class _GamePageState extends State<GamePage> {
   void _refresh({bool animate = true}) {
     _board.updatePosition(_gameData(), animate: animate, resetPremove: true);
     setState(() {
-      if (_autoFlip) _orientation = _game.position.turn;
+      if (_autoFlip && _computerSide == null) {
+        _orientation = _game.position.turn;
+      }
     });
   }
 
   void _onMove(Move move, {bool? viaDragAndDrop}) {
-    if (_game.play(move)) _refresh(animate: viaDragAndDrop != true);
+    if (!_game.play(move)) return;
+    _refresh(animate: viaDragAndDrop != true);
+    _computerMove();
   }
 
-  void _newGame() {
-    _game = ChessGame();
+  Future<void> _computerMove() async {
+    final side = _computerSide;
+    if (side == null || _game.isOver || _game.position.turn != side) return;
+    final generation = _generation;
+    final computer = _computer ??=
+        widget.createComputer?.call() ?? ComputerPlayer();
+    setState(() => _thinking = true);
     _refresh(animate: false);
+    EngineMove? reply;
+    Object? error;
+    try {
+      reply = await computer.bestMove(
+        _game.position.fen,
+        engineLevel(_setup.level),
+      );
+    } catch (e) {
+      error = e;
+    }
+    if (!mounted || generation != _generation) return;
+    _thinking = false;
+    if (reply != null) _game.play(reply.move);
+    _refresh();
+    if (error != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Il computer non risponde. Riprova.')),
+      );
+    }
+  }
+
+  void _cancelComputerMove() {
+    _generation++;
+    if (_thinking) _computer?.stop();
+    _thinking = false;
+  }
+
+  Future<void> _newGame() async {
+    final setup = await showNewGameDialog(
+      context,
+      initial: _setup,
+      computerAvailable: widget.computerAvailable,
+    );
+    if (setup == null || !mounted) return;
+    _cancelComputerMove();
+    _setup = setup;
+    _game = ChessGame();
+    if (setup.opponent == Opponent.computer) {
+      final human = setup.resolveHumanSide(_random);
+      _computerSide = human.opposite;
+      _orientation = human;
+      _computer ??= widget.createComputer?.call() ?? ComputerPlayer();
+      _computer!.newGame().ignore();
+    } else {
+      _computerSide = null;
+    }
+    _refresh(animate: false);
+    _computerMove();
   }
 
   void _undo() {
+    _cancelComputerMove();
     _game.undo();
+    if (_computerSide == _game.position.turn && _game.canUndo) _game.undo();
     _refresh(animate: false);
+    _computerMove();
   }
 
   Future<void> _resign() async {
-    final side = _game.position.turn;
+    final side = _computerSide?.opposite ?? _game.position.turn;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -81,9 +170,16 @@ class _GamePageState extends State<GamePage> {
       ),
     );
     if (confirmed == true) {
+      _cancelComputerMove();
       _game.resign(side);
       _refresh(animate: false);
     }
+  }
+
+  bool get _canUndo {
+    if (!_game.canUndo) return false;
+    if (_computerSide != Side.white) return true;
+    return _game.moves.length > 1;
   }
 
   @override
@@ -133,8 +229,15 @@ class _GamePageState extends State<GamePage> {
             );
             final panel = _SidePanel(
               game: _game,
+              status: _thinking
+                  ? 'Il computer sta pensando…'
+                  : statusText(_game),
+              opponent: _computerSide == null
+                  ? null
+                  : 'Contro il computer, livello ${_setup.level}: '
+                        '${engineLevel(_setup.level).name}',
               onNewGame: _newGame,
-              onUndo: _game.canUndo ? _undo : null,
+              onUndo: _canUndo ? _undo : null,
               onResign: _game.isOver ? null : _resign,
             );
             return landscape
@@ -181,12 +284,16 @@ String statusText(ChessGame game) {
 class _SidePanel extends StatelessWidget {
   const _SidePanel({
     required this.game,
+    required this.status,
+    required this.opponent,
     required this.onNewGame,
     required this.onUndo,
     required this.onResign,
   });
 
   final ChessGame game;
+  final String status;
+  final String? opponent;
   final VoidCallback onNewGame;
   final VoidCallback? onUndo;
   final VoidCallback? onResign;
@@ -200,7 +307,9 @@ class _SidePanel extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(statusText(game), style: theme.textTheme.titleMedium),
+          if (opponent != null)
+            Text(opponent!, style: theme.textTheme.labelMedium),
+          Text(status, style: theme.textTheme.titleMedium),
           const SizedBox(height: 12),
           Wrap(
             spacing: 8,
