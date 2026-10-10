@@ -1,8 +1,9 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
+
+import 'json_file.dart';
 
 /// Archivio locale chiave-valore per piccoli stati in JSON.
 abstract interface class KeyValueStore {
@@ -20,9 +21,10 @@ class MemoryStore implements KeyValueStore {
   Future<void> write(String key, String value) async => _data[key] = value;
 }
 
-/// Tutte le chiavi in un unico file JSON, scritto in modo atomico.
+/// Tutte le chiavi in un unico file JSON (`JsonFile`: scrittura atomica,
+/// salvataggi accodati, file non valido messo da parte).
 class JsonFileStore implements KeyValueStore {
-  JsonFileStore(this.file);
+  JsonFileStore(File file) : _file = JsonFile(file, version: 1);
 
   /// File `training.json` nella cartella dati dell'app.
   static Future<JsonFileStore> open() async {
@@ -30,43 +32,32 @@ class JsonFileStore implements KeyValueStore {
     return JsonFileStore(File('${dir.path}/training.json'));
   }
 
-  final File file;
+  final JsonFile _file;
   Map<String, String>? _data;
-  Future<void> _pending = Future.value();
 
-  Future<Map<String, String>> _load() async {
-    if (_data != null) return _data!;
-    if (!await file.exists()) return _data = {};
-    try {
-      final json =
-          jsonDecode(await file.readAsString()) as Map<String, dynamic>;
-      return _data = {for (final e in json.entries) e.key: e.value as String};
-    } on Object {
-      // File illeggibile: lo si mette da parte invece di sovrascriverlo.
-      await file.rename(
-        '${file.path}.bad-${DateTime.now().millisecondsSinceEpoch}',
-      );
-      return _data = {};
-    }
-  }
+  Future<Map<String, String>> _load() async => _data ??=
+      await _file.read(
+        (json) => {
+          for (final e in (json['values']! as Map).entries)
+            e.key as String: e.value as String,
+        },
+      ) ??
+      {};
 
   @override
   Future<String?> read(String key) async => (await _load())[key];
 
   @override
   Future<void> write(String key, String value) async {
-    (await _load())[key] = value;
-    final snapshot = jsonEncode(_data);
-    // Scritture in coda: l'ultima vince sempre.
-    final next = _pending.then((_) async {
-      await file.parent.create(recursive: true);
-      final tmp = File('${file.path}.tmp');
-      await tmp.writeAsString(snapshot, flush: true);
-      await tmp.rename(file.path);
-    });
-    _pending = next.catchError((Object e) {
+    final data = await _load();
+    data[key] = value;
+    try {
+      await _file.write({
+        'values': {...data},
+      });
+    } on FileSystemException catch (e) {
+      // Senza spazio o permessi si continua con i dati in memoria.
       debugPrint('Salvataggio non riuscito: $e');
-    });
-    return _pending;
+    }
   }
 }

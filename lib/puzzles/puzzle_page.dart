@@ -121,7 +121,13 @@ class _PuzzlePageState extends State<PuzzlePage> {
     final record = widget.onActivity;
     // Le ripetizioni e le soluzioni mostrate non valgono XP.
     if (record == null || delta == null || _session.revealed) return;
-    final update = await record(PuzzleSolved(duration: _stopwatch.elapsed));
+    final update = await record(
+      PuzzleSolved(
+        themes: puzzle.themes,
+        rating: widget.trainer.rating.rating.round(),
+        duration: _stopwatch.elapsed,
+      ),
+    );
     if (mounted && update != null) showProgressFeedback(context, update);
   }
 

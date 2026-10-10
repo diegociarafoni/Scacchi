@@ -71,11 +71,11 @@ Sostituisce il puzzle del giorno di chess.com senza server: l'indice è `(giorni
 
 ## Salvataggio
 
-Punteggio, puzzle visti e contatori sono salvati nel file `training.json` della cartella dati dell'app (chiave `puzzles.trainer.v1`) tramite l'interfaccia `KeyValueStore` (`lib/storage/key_value_store.dart`). Il file è scritto in modo atomico (file temporaneo rinominato) e, se illeggibile, viene messo da parte come `training.json.bad-<data>` invece di essere sovrascritto, come `progress.json` della gamification, e sarà importato nel database locale quando arriverà (RNF-08). Dati illeggibili vengono ignorati e si riparte da 1500.
+Punteggio, puzzle visti e contatori sono salvati nel file `training.json` della cartella dati dell'app (chiave `puzzles.trainer.v1`) tramite l'interfaccia `KeyValueStore` (`lib/storage/key_value_store.dart`). Il file passa da `JsonFile` (`lib/storage/json_file.dart`), lo stesso di progressi e archivio: scrittura atomica, salvataggi accodati, file non valido messo da parte come `training.json.bad-<ms>` invece di essere sovrascritto. Sarà importato nel database locale quando arriverà (RNF-08). Dati del punteggio illeggibili vengono ignorati e si riparte da 1500.
 
 ## Integrazione con la gamification
 
-Ogni puzzle nuovo portato a termine dal giocatore, anche dopo un tentativo sbagliato, registra un `PuzzleSolved` con la durata nel `ProgressController` (XP, obiettivo giornaliero "5 puzzle", traguardi) e mostra la notifica `showProgressFeedback`. Un puzzle concluso con "Soluzione" non vale XP. Gli XP premiano l'impegno, come le partite perse (RG-01): per questo un puzzle risolto dopo un errore vale XP anche se per il punteggio conta come fallito. Il collegamento passa da `HomeShell`, che apre i progressi alla prima attività, alle schermate tramite il parametro `onActivity` (`lib/puzzles/activity_recorder.dart`).
+Ogni puzzle nuovo portato a termine dal giocatore, anche dopo un tentativo sbagliato, registra un `PuzzleSolved` con temi, punteggio aggiornato e durata nel `ProgressController` (XP, obiettivo giornaliero "5 puzzle", traguardi) e mostra la notifica `showProgressFeedback`. Un puzzle concluso con "Soluzione" non vale XP. Gli XP premiano l'impegno, come le partite perse (RG-01): per questo un puzzle risolto dopo un errore vale XP anche se per il punteggio conta come fallito. Il collegamento passa da `HomeShell`, che apre i progressi alla prima attività, alle schermate tramite il parametro `onActivity` (`lib/puzzles/activity_recorder.dart`).
 
 ## Navigazione
 
