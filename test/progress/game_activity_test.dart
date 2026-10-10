@@ -96,6 +96,19 @@ void main() {
     expect(gameActivity(game, player: Side.black).castledLong, isFalse);
   });
 
+  test('colore, mosse del giocatore ed Elo dell\'avversario', () {
+    final a = gameActivity(
+      play(scholarsMate),
+      player: Side.white,
+      opponentElo: 1200,
+    );
+    expect(a.playerSide, Side.white);
+    expect(a.moveCount, 4);
+    expect(a.opponentElo, 1200);
+    expect(a.checkmate, isTrue);
+    expect(gameActivity(play(scholarsMate)).moveCount, 4);
+  });
+
   test('durata passata all\'attività', () {
     final a = gameActivity(
       play(scholarsMate),

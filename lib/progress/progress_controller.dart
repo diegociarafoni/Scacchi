@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'activity.dart';
+import 'challenges.dart';
 import 'progress_state.dart';
 import 'progress_store.dart';
 import 'progress_tracker.dart';
@@ -36,6 +37,10 @@ class ProgressController extends ChangeNotifier {
   int get streak => _tracker.currentStreak(_state, _clock(), _settings);
   int get freezes => _tracker.currentFreezes(_state, _clock(), _settings);
   int get todayProgress => _tracker.todayProgress(_state, _clock(), _settings);
+  List<(Challenge, int)> get challenges =>
+      _tracker.challengeProgress(_state, _clock());
+  (Challenge, int) get weeklyChallenge =>
+      _tracker.weeklyProgress(_state, _clock());
 
   /// Vero se il file non si è potuto leggere: per non sovrascrivere i
   /// progressi salvati, si gioca senza salvare.

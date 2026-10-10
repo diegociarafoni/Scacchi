@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import 'daily_goal.dart';
+import 'records.dart';
 
 /// Preferenze della gamification.
 class ProgressSettings {
@@ -74,6 +75,15 @@ class ProgressState {
     this.todayPuzzles = 0,
     this.todaySeconds = 0,
     this.unlocked = const [],
+    this.puzzleThemes = const {},
+    this.brilliantFound = 0,
+    this.challengesCompleted = 0,
+    this.perfectDays = 0,
+    this.challengeDay,
+    this.dailyProgress = const [0, 0, 0],
+    this.challengeWeek,
+    this.weeklyProgress = 0,
+    this.records = const PersonalRecords(),
   });
 
   static const initial = ProgressState();
@@ -105,6 +115,28 @@ class ProgressState {
   /// Identificativi dei traguardi ottenuti, in ordine di sblocco.
   final List<String> unlocked;
 
+  /// Puzzle risolti per tema.
+  final Map<String, int> puzzleThemes;
+
+  /// Mosse brillanti trovate nelle proprie partite riviste.
+  final int brilliantFound;
+
+  /// Sfide giornaliere completate in totale.
+  final int challengesCompleted;
+
+  /// Giorni con tutte e tre le sfide completate.
+  final int perfectDays;
+
+  /// Giorno e avanzamento delle tre sfide giornaliere.
+  final int? challengeDay;
+  final List<int> dailyProgress;
+
+  /// Settimana e avanzamento della sfida settimanale.
+  final int? challengeWeek;
+  final int weeklyProgress;
+
+  final PersonalRecords records;
+
   ProgressState copyWith({
     int? xp,
     int? gamesPlayed,
@@ -122,6 +154,15 @@ class ProgressState {
     int? todayPuzzles,
     int? todaySeconds,
     List<String>? unlocked,
+    Map<String, int>? puzzleThemes,
+    int? brilliantFound,
+    int? challengesCompleted,
+    int? perfectDays,
+    int? challengeDay,
+    List<int>? dailyProgress,
+    int? challengeWeek,
+    int? weeklyProgress,
+    PersonalRecords? records,
   }) => ProgressState(
     xp: xp ?? this.xp,
     gamesPlayed: gamesPlayed ?? this.gamesPlayed,
@@ -141,6 +182,15 @@ class ProgressState {
     todayPuzzles: todayPuzzles ?? this.todayPuzzles,
     todaySeconds: todaySeconds ?? this.todaySeconds,
     unlocked: unlocked ?? this.unlocked,
+    puzzleThemes: puzzleThemes ?? this.puzzleThemes,
+    brilliantFound: brilliantFound ?? this.brilliantFound,
+    challengesCompleted: challengesCompleted ?? this.challengesCompleted,
+    perfectDays: perfectDays ?? this.perfectDays,
+    challengeDay: challengeDay ?? this.challengeDay,
+    dailyProgress: dailyProgress ?? this.dailyProgress,
+    challengeWeek: challengeWeek ?? this.challengeWeek,
+    weeklyProgress: weeklyProgress ?? this.weeklyProgress,
+    records: records ?? this.records,
   );
 
   Map<String, Object?> toJson() => {
@@ -160,6 +210,15 @@ class ProgressState {
     'todayPuzzles': todayPuzzles,
     'todaySeconds': todaySeconds,
     'unlocked': unlocked,
+    'puzzleThemes': puzzleThemes,
+    'brilliantFound': brilliantFound,
+    'challengesCompleted': challengesCompleted,
+    'perfectDays': perfectDays,
+    'challengeDay': challengeDay,
+    'dailyProgress': dailyProgress,
+    'challengeWeek': challengeWeek,
+    'weeklyProgress': weeklyProgress,
+    'records': records.toJson(),
   };
 
   static ProgressState fromJson(Map<String, Object?> json) {
@@ -181,6 +240,19 @@ class ProgressState {
       todayPuzzles: n('todayPuzzles'),
       todaySeconds: n('todaySeconds'),
       unlocked: [...(json['unlocked'] as List? ?? const []).cast<String>()],
+      puzzleThemes: {
+        ...(json['puzzleThemes'] as Map? ?? const {}).cast<String, int>(),
+      },
+      brilliantFound: n('brilliantFound'),
+      challengesCompleted: n('challengesCompleted'),
+      perfectDays: n('perfectDays'),
+      challengeDay: json['challengeDay'] as int?,
+      dailyProgress: _threeCounters(json['dailyProgress'] as List?),
+      challengeWeek: json['challengeWeek'] as int?,
+      weeklyProgress: n('weeklyProgress'),
+      records: json['records'] == null
+          ? const PersonalRecords()
+          : PersonalRecords.fromJson((json['records']! as Map).cast()),
     );
   }
 
@@ -202,10 +274,19 @@ class ProgressState {
       other.todayGames == todayGames &&
       other.todayPuzzles == todayPuzzles &&
       other.todaySeconds == todaySeconds &&
-      listEquals(other.unlocked, unlocked);
+      listEquals(other.unlocked, unlocked) &&
+      mapEquals(other.puzzleThemes, puzzleThemes) &&
+      other.brilliantFound == brilliantFound &&
+      other.challengesCompleted == challengesCompleted &&
+      other.perfectDays == perfectDays &&
+      other.challengeDay == challengeDay &&
+      listEquals(other.dailyProgress, dailyProgress) &&
+      other.challengeWeek == challengeWeek &&
+      other.weeklyProgress == weeklyProgress &&
+      other.records == records;
 
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     xp,
     gamesPlayed,
     wins,
@@ -222,5 +303,20 @@ class ProgressState {
     todayPuzzles,
     todaySeconds,
     Object.hashAll(unlocked),
-  );
+    Object.hashAllUnordered(puzzleThemes.entries.map((e) => (e.key, e.value))),
+    brilliantFound,
+    challengesCompleted,
+    perfectDays,
+    challengeDay,
+    Object.hashAll(dailyProgress),
+    challengeWeek,
+    weeklyProgress,
+    records,
+  ]);
 }
+
+/// Avanzamento delle tre sfide giornaliere, sempre di lunghezza 3.
+List<int> _threeCounters(List<Object?>? saved) => [
+  for (var i = 0; i < 3; i++)
+    saved != null && i < saved.length ? saved[i] as int? ?? 0 : 0,
+];

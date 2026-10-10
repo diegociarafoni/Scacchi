@@ -1,6 +1,6 @@
 # Gamification
 
-Nucleo P0 dei requisiti RG-01, RG-02 e RG-12, con i primi traguardi di RG-05. Il codice è in `lib/progress/`, in Dart puro tranne la schermata e il controller.
+Requisiti RG-01, RG-02, RG-05, RG-07, RG-08 e RG-12. Il codice è in `lib/progress/`, in Dart puro tranne la schermata e il controller.
 
 ## Principi
 
@@ -16,9 +16,12 @@ Nucleo P0 dei requisiti RG-01, RG-02 e RG-12, con i primi traguardi di RG-05. Il
 | Partita patta | 12 |
 | Partita vinta | 15 |
 | Puzzle risolto | 5 |
+| Sessione di puzzle a tempo o a serie conclusa | 10 |
 | Lezione completata | 20 |
 | Revisione completata | 20 |
 | Obiettivo giornaliero raggiunto | +10 |
+| Sfida giornaliera completata | +20 |
+| Sfida settimanale completata | +50 |
 
 Le attività formative (lezioni, revisioni) valgono più della sola vittoria, come chiede il requisito.
 
@@ -37,15 +40,27 @@ Il livello *L* richiede `50 × L × (L − 1)` XP totali: livello 2 a 100 XP, 3 
 - **Protezione (congelamento)**: se ne guadagna una ogni 7 giorni di serie, al massimo 2. Copre automaticamente un giorno saltato. Non è acquistabile.
 - Se i giorni saltati sono più delle protezioni disponibili, la serie torna a zero; il record personale resta.
 
+## Sfide giornaliere e settimanali (RG-07)
+
+- Ogni giorno tre sfide generate in locale dalla data: una di gioco (gioca 2 partite, vinci, vinci con il bianco o con il nero, dai matto in al massimo 30 mosse) e due tra puzzle (5 puzzle, 2 di forchetta, 2 di matto), revisione di una partita e lezione. La stessa data dà sempre le stesse sfide; il generatore è il finalizzatore a 32 bit di MurmurHash3 (`mix32`), con prodotti sotto 2^53: dà lo stesso risultato su Android, iOS, desktop e in JavaScript, e non dipende da `Random`.
+- Una sfida settimanale (da lunedì a domenica): 10 partite, 5 vittorie, 25 puzzle, obiettivo raggiunto 5 giorni o 3 revisioni.
+- Le sfide si completano una sola volta e danno XP bonus; nessuna penalità se restano incomplete.
+
+## Record personali (RG-08)
+
+Serie più lunga, bot più forte battuto (Elo), matto con meno mosse (solo vittorie per scacco matto, non per abbandono), precisione migliore in revisione, punteggio puzzle massimo e miglior punteggio per ciascuna modalità a tempo o a serie. Tutti i record sono elencati nel Profilo. La notifica in-app annuncia un record solo quando ne batte uno precedente (il primo valore si salva in silenzio) e, per il punteggio puzzle, solo quando supera un nuovo centinaio, per non ripetersi a ogni puzzle.
+
 ## Traguardi (RG-05)
 
-17 traguardi in quattro categorie (gioco, tattica, costanza, curiosità), sbloccabili una sola volta e annunciati con una notifica in-app (`showProgressFeedback`). Alcuni esempi: prima partita, prima vittoria, matto con il cavallo, matto con un pedone, vittoria con arrocco lungo, 3, 7 e 30 giorni di fila, livello 5 e 10. L'elenco completo è in `lib/progress/achievements.dart`. Il requisito RG-05 (P1) chiede almeno 30 traguardi: gli altri arriveranno con puzzle, revisione e bot.
+33 traguardi in quattro categorie (gioco, tattica, costanza, curiosità), sbloccabili una sola volta e annunciati con una notifica in-app (`showProgressFeedback`). Alcuni esempi: prima vittoria, vittoria con il nero, miniatura (matto in meno di 20 mosse), bot da 1500 e 2000 Elo battuti, matto con il cavallo o con un pedone, vittoria con arrocco lungo, brillante trovata, 10 puzzle di forchetta o di matto, 20 punti in una modalità a tempo, giornata perfetta (tre sfide), 3, 7 e 30 giorni di fila, precisione del 90%, livello 5 e 10. L'elenco completo è in `lib/progress/achievements.dart`.
 
 ## Componenti
 
 | File | Ruolo |
 |---|---|
-| `activity.dart` | Attività registrabili: partita, puzzle, lezione, revisione |
+| `activity.dart` | Attività registrabili: partita, puzzle, sessione a tempo, lezione, revisione |
+| `challenges.dart` | Tipi di sfida, generazione delle sfide del giorno e della settimana |
+| `records.dart` | Record personali e loro aggiornamento |
 | `game_activity.dart` | Converte una `ChessGame` conclusa in attività: risultato, pezzo che dà il matto (anche di scoperta o con l'arrocco), arrocco lungo |
 | `xp.dart` | Tabella degli XP e curva dei livelli |
 | `daily_goal.dart` | Obiettivo giornaliero e scelte proposte |
@@ -66,12 +81,20 @@ Il file `progress.json` sta nella cartella dati dell'app (`getApplicationSupport
 ```dart
 final progress = await ProgressController.open();
 final update = await progress.record(
-  gameActivity(game, player: Side.white, duration: elapsed),
+  gameActivity(game, player: Side.white, opponentElo: 1200, duration: elapsed),
 );
 if (context.mounted) showProgressFeedback(context, update);
 ```
 
-Per le partite tra due persone si omette `player`: la partita vale XP e conta per l'obiettivo, senza vittoria o sconfitta.
+Per le partite tra due persone si omettono `player` e `opponentElo`: la partita vale XP e conta per l'obiettivo, senza vittoria o sconfitta.
+
+Le altre schermate registrano:
+
+| Schermata | Attività |
+|---|---|
+| Puzzle | `PuzzleSolved(themes: {...}, rating: r)` a ogni puzzle risolto; `PuzzleRunFinished(mode: 'rush5', score: n)` a fine sessione a tempo |
+| Revisione | `ReviewCompleted(accuracy: 87.5, brilliantMoves: 1)` a fine analisi |
+| Lezioni e percorso | `LessonCompleted()` |
 
 ## Integrazione prevista
 
