@@ -7,6 +7,7 @@
 | Linguaggio e framework | Dart, Flutter (canale stable, 3.47 o successivo) | Un solo codice per Android, iOS, Windows, macOS e Linux |
 | Regole degli scacchi | [dartchess](https://pub.dev/packages/dartchess) | Generazione delle mosse legali, notazione SAN, scacco, matto, stallo, materiale insufficiente |
 | Scacchiera | [chessground](https://pub.dev/packages/chessground) | Disegno della scacchiera, trascinamento e tocco, animazioni, evidenziazioni, scelta della promozione |
+| File locali | [path_provider](https://pub.dev/packages/path_provider) | Cartella dati dell'app per i salvataggi |
 
 Entrambe le librerie sono sviluppate da Lichess e sono usate dalla sua app mobile.
 
@@ -21,6 +22,7 @@ lib/
     chess_game.dart       Stato della partita, senza dipendenze dall'interfaccia
     material.dart         Pezzi catturati e vantaggio di materiale
     game_page.dart        Schermata di gioco
+  progress/               Gamification: XP, livelli, serie, traguardi (vedi gamification.md)
 test/
   chess_game_test.dart    Test delle regole e della fine partita
   material_test.dart      Test del materiale catturato
