@@ -12,3 +12,5 @@
 | [Flutter](https://flutter.dev) | Framework dell'interfaccia | BSD-3-Clause |
 | [path_provider](https://pub.dev/packages/path_provider) (Flutter) | Cartella dati dell'app per i salvataggi | BSD-3-Clause |
 | [share_plus](https://pub.dev/packages/share_plus) (Flutter Community) | Condivisione PGN con il menu del sistema | BSD-3-Clause |
+| Suoni in `assets/sounds/`, generati da `tool/generate_sounds.py` | Effetti sonori | Opera originale del progetto, CC0 |
+| [audioplayers](https://pub.dev/packages/audioplayers) | Riproduzione dei suoni | MIT |

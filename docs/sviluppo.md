@@ -5,7 +5,7 @@
 - [Flutter](https://docs.flutter.dev/get-started/install), canale stable, versione 3.47 o successiva (la CI usa 3.47.7).
 - Per Android: Android Studio o Android SDK, Java 17.
 - Per iOS e macOS: un Mac con Xcode, oppure un servizio di build in cloud.
-- Per Linux desktop: le librerie di sviluppo GTK 3 (`libgtk-3-dev`).
+- Per Linux desktop: le librerie di sviluppo GTK 3 e GStreamer (`libgtk-3-dev`, `libgstreamer1.0-dev`, `libgstreamer-plugins-base1.0-dev`) e, per riprodurre i suoni, i plugin `gstreamer1.0-plugins-base` e `gstreamer1.0-plugins-good`: senza questi ultimi l'app si chiude al primo suono.
 
 ## Comandi
 
@@ -19,6 +19,10 @@ dart format lib test                  # formattazione
 flutter build apk                     # APK Android
 flutter build ios                     # app iOS (su Mac)
 ```
+
+## Suoni
+
+I file in `assets/sounds/` si rigenerano con `python3 tool/generate_sounds.py`.
 
 ## Test
 
@@ -35,7 +39,7 @@ Ogni funzione nasce dai requisiti del progetto, nel documento dei requisiti, con
 
 | Livello | Cartella | Cosa verifica | Comando |
 |---|---|---|---|
-| Unitari | `test/chess_game_test.dart`, `test/material_test.dart`, `test/settings_test.dart`, `test/clock_test.dart` | Regole e fine partita su `ChessGame`; pezzi catturati e vantaggio su `MaterialBalance`; impostazioni e salvataggio; orologio; senza interfaccia | `flutter test` |
+| Unitari | `test/chess_game_test.dart`, `test/material_test.dart`, `test/settings_test.dart`, `test/clock_test.dart`, `test/sound_test.dart` | Regole e fine partita su `ChessGame`; pezzi catturati e vantaggio su `MaterialBalance`; impostazioni e salvataggio; orologio; scelta dei suoni; senza interfaccia | `flutter test` |
 | Widget | `test/widget_test.dart` | Avvio dell'app e stato iniziale | `flutter test` |
 | Gamification | `test/progress/` | Regole di XP, serie e traguardi; salvataggio; schermata Profilo | `flutter test test/progress` |
 | Percorso | `test/path/` | Esercizi, contenuti, sblocco, mappa e tappe sulla scacchiera | `flutter test test/path` |
@@ -56,6 +60,7 @@ I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisic
 | RF-11 pezzi catturati e vantaggio di materiale | ✓ | ✓ |
 | RF-02, RF-04, RF-07, RF-12, RP-01, RP-04 impostazioni salvate | ✓ | ✓ |
 | RF-40, RF-41 cadenze, incremento, avvisi, tempo scaduto | ✓ | ✓ |
+| RP-03 suoni e vibrazione, RF-31 modalità tavolo | ✓ | ✓ |
 | RF-25 matto, stallo, materiale insufficiente, ripetizione, 50 mosse, abbandono | ✓ | matto, abbandono |
 | RF-31 rotazione automatica a ogni turno | | ✓ |
 | RF-32 patta concordata e annullamento | ✓ | ✓ |

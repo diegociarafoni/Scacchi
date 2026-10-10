@@ -10,6 +10,7 @@ import '../settings/settings_page.dart';
 import 'chess_game.dart';
 import 'clock.dart';
 import 'material.dart';
+import 'sounds.dart';
 
 /// Partita tra due persone sullo stesso dispositivo.
 class GamePage extends StatefulWidget {
@@ -32,6 +33,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   Side? _pausedInBackground;
   final List<Map<Side, Duration>> _clockHistory = [];
   final ValueNotifier<int> _tick = ValueNotifier(0);
+  final SoundPlayer _sounds = SoundPlayer();
+  final LowTimeAlarm _lowTime = LowTimeAlarm();
 
   AppSettings get _settings => widget.settings.value;
 
@@ -78,6 +81,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
     _ticker?.cancel();
     _tick.dispose();
+    _sounds.dispose();
     _board.dispose();
     super.dispose();
   }
@@ -115,11 +119,15 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final flagged = clock?.flagged;
     if (flagged != null) {
       _game.flag(flagged);
+      _play(GameSound.gameEnd);
       _refresh(animate: false);
       return;
     }
     final before = clock?.snapshot();
+    final position = _game.position;
     if (!_game.play(move)) return;
+    final sound = soundForLastMove(_game, position);
+    if (sound != null) _play(sound);
     if (clock != null) {
       _clockHistory.add(before!);
       if (clock.isRunning) {
@@ -144,13 +152,24 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   }
 
   void _onTick(Timer _) {
-    final flagged = _clock?.flagged;
+    final clock = _clock;
+    final flagged = clock?.flagged;
     if (flagged != null && !_game.isOver) {
       _game.flag(flagged);
+      _play(GameSound.gameEnd);
       _refresh(animate: false);
-    } else {
-      _tick.value++;
+      return;
     }
+    final active = clock?.active;
+    if (active != null && _lowTime.check(active, clock!.remaining(active))) {
+      _play(GameSound.lowTime);
+    }
+    _tick.value++;
+  }
+
+  void _play(GameSound sound) {
+    final s = _settings;
+    _sounds.play(sound, enabled: s.sound, volume: s.volume, haptics: s.haptics);
   }
 
   /// Esegue [action] con l'orologio fermo, poi lo riavvia se la partita continua.
@@ -196,6 +215,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _game = ChessGame();
     _clock = choice.control == null ? null : ChessClock(choice.control!);
     _clockHistory.clear();
+    _lowTime.reset();
     _clearBoardInteraction();
     _refresh(animate: false);
   }
@@ -245,6 +265,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     if (!mounted) return;
     if (confirmed == true) {
       _game.resign(side);
+      _play(GameSound.gameEnd);
       _refresh(animate: false);
     }
   }
@@ -272,6 +293,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     if (!mounted) return;
     if (accepted == true) {
       _game.agreeDraw();
+      _play(GameSound.gameEnd);
       _refresh(animate: false);
     }
   }

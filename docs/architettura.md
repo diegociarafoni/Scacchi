@@ -7,6 +7,7 @@
 | Linguaggio e framework | Dart, Flutter (canale stable, 3.47 o successivo) | Un solo codice per Android, iOS, Windows, macOS e Linux |
 | Regole degli scacchi | [dartchess](https://pub.dev/packages/dartchess) | Generazione delle mosse legali, notazione SAN, scacco, matto, stallo, materiale insufficiente |
 | Salvataggio impostazioni | [shared_preferences](https://pub.dev/packages/shared_preferences) | Memorizzazione locale delle impostazioni |
+| Audio | [audioplayers](https://pub.dev/packages/audioplayers) | Riproduzione dei suoni |
 | Scacchiera | [chessground](https://pub.dev/packages/chessground) | Disegno della scacchiera, trascinamento e tocco, animazioni, evidenziazioni, scelta della promozione |
 | File locali | [path_provider](https://pub.dev/packages/path_provider) | Cartella dati dell'app per i salvataggi |
 | Condivisione | [share_plus](https://pub.dev/packages/share_plus) | Menu di condivisione del sistema per il PGN |
@@ -24,6 +25,7 @@ lib/
     chess_game.dart       Stato della partita, senza dipendenze dall'interfaccia
     material.dart         Pezzi catturati e vantaggio di materiale
     clock.dart            Cadenze e orologio a due lati
+    sounds.dart           Scelta e riproduzione di suoni e vibrazione
     game_page.dart        Schermata di gioco
   progress/               Gamification: XP, livelli, serie, traguardi (vedi gamification.md)
   archive/                Archivio delle partite e PGN (vedi archivio.md)
@@ -37,6 +39,9 @@ test/
   chess_game_test.dart    Test delle regole e della fine partita
   material_test.dart      Test del materiale catturato
   clock_test.dart         Test di cadenze, orologio e tempo scaduto
+  sound_test.dart         Test della scelta del suono per ogni mossa
+assets/sounds/            Suoni dell'app (WAV)
+tool/generate_sounds.py   Generatore dei suoni
   settings_test.dart      Test delle impostazioni e del salvataggio
   widget_test.dart        Test di avvio dell'interfaccia
 integration_test/
@@ -70,6 +75,10 @@ Calcola da una partita i pezzi catturati da ciascun lato, ripercorrendo le mosse
 ### Orologio (`lib/game/clock.dart`)
 
 `TimeControl` descrive una cadenza (minuti e incremento). `ChessClock` tiene il tempo residuo dei due lati e fa scorrere solo quello del lato attivo; l'ora corrente è iniettabile per i test. Offre istantanee e ripristino, usate da `GamePage` per annullare le mosse. `GamePage` aggiorna la visualizzazione ogni 100 ms ridisegnando solo gli orologi, registra il tempo scaduto con `ChessGame.flag` e ferma l'orologio a fine partita.
+
+### Suoni (`lib/game/sounds.dart`)
+
+`soundForLastMove` sceglie l'effetto dell'ultima mossa a partire dalla posizione precedente, in Dart puro. `SoundPlayer` riproduce l'effetto con un lettore a bassa latenza per suono e, se attiva, la vibrazione tramite `HapticFeedback`; un errore di riproduzione non interrompe la partita.
 
 ### Impostazioni (`lib/settings/`)
 
