@@ -54,6 +54,7 @@ class AppSettings {
     this.volume = 1.0,
     this.haptics = true,
     this.tableMode = false,
+    this.confirmMove = false,
   });
 
   final bool showLegalMoves;
@@ -68,6 +69,7 @@ class AppSettings {
   final double volume;
   final bool haptics;
   final bool tableMode;
+  final bool confirmMove;
 
   AppSettings copyWith({
     bool? showLegalMoves,
@@ -82,6 +84,7 @@ class AppSettings {
     double? volume,
     bool? haptics,
     bool? tableMode,
+    bool? confirmMove,
   }) => AppSettings(
     showLegalMoves: showLegalMoves ?? this.showLegalMoves,
     showCoordinates: showCoordinates ?? this.showCoordinates,
@@ -95,6 +98,7 @@ class AppSettings {
     volume: volume ?? this.volume,
     haptics: haptics ?? this.haptics,
     tableMode: tableMode ?? this.tableMode,
+    confirmMove: confirmMove ?? this.confirmMove,
   );
 
   late final ChessboardSettings board = ChessboardSettings(
@@ -124,7 +128,8 @@ class AppSettings {
       other.sound == sound &&
       other.volume == volume &&
       other.haptics == haptics &&
-      other.tableMode == tableMode;
+      other.tableMode == tableMode &&
+      other.confirmMove == confirmMove;
 
   @override
   int get hashCode => Object.hash(
@@ -140,6 +145,7 @@ class AppSettings {
     volume,
     haptics,
     tableMode,
+    confirmMove,
   );
 }
 
@@ -177,6 +183,7 @@ class SettingsController extends ValueNotifier<AppSettings> {
         volume: read<double>('volume', d.volume).clamp(0.0, 1.0),
         haptics: read('haptics', d.haptics),
         tableMode: read('tableMode', d.tableMode),
+        confirmMove: read('confirmMove', d.confirmMove),
       ),
     );
   }
@@ -211,6 +218,8 @@ class SettingsController extends ValueNotifier<AppSettings> {
         prefs.setBool('haptics', settings.haptics),
       if (old.tableMode != settings.tableMode)
         prefs.setBool('tableMode', settings.tableMode),
+      if (old.confirmMove != settings.confirmMove)
+        prefs.setBool('confirmMove', settings.confirmMove),
     ];
     try {
       await Future.wait(writes);
