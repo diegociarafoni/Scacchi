@@ -113,3 +113,16 @@ Le regole si applicano in quest'ordine, e vale la prima che riconosce qualcosa:
 Le mosse non sbagliate ricevono una frase di lode per categoria ("È la mossa migliore.").
 
 Non ancora coperti: inchiodatura e re esposto (RF-70) e il commento in tempo reale durante la partita (RF-72).
+
+## Puzzle dagli errori
+
+Proposta "Allenamento dagli errori" del capitolo 7 dei requisiti: `puzzlesFromReview` (`lib/review/personal_puzzles.dart`) trasforma gli errori, gli errori gravi e le occasioni mancate del giocatore in puzzle personali (`MistakePuzzle`) nello stesso formato dei puzzle Lichess usati dal modulo puzzle.
+
+- **Posizione**: quella prima della mossa precedente dell'avversario; la prima mossa del puzzle è quella dell'avversario, come nel database Lichess.
+- **Soluzione**: la variante del motore, fino a tre mosse del giocatore, oppure l'intero matto se il giocatore aveva il matto in 3 o meno. Si ferma alla prima mossa illegale e finisce sempre con una mossa del giocatore.
+- **Temi**: dal tema del coach (`defensiveMove` per ciò che si è concesso, `hangingPiece`, `fork`, `discoveredAttack`, `mateInN` per ciò che si è mancato) più la fase (`opening` fino alla decima mossa, `endgame` con al massimo quattro pezzi oltre a re e pedoni, altrimenti `middlegame`).
+- **Punteggio**: indicativo, 900 + 200 per mossa del giocatore, oppure 800 + 300 × N per il matto in N.
+- **Identificativo**: `mio-<partita>-<semimossa>`, così lo stesso errore non viene aggiunto due volte.
+- **Spiegazione**: la frase del coach sull'errore originale, da mostrare dopo la soluzione.
+
+`toCsv()` produce la riga `id,fen,mosse,punteggio,temi` con l'arrocco nella forma standard (`e1g1`), leggibile da `Puzzle.parseCsv`. Il salvataggio e la ripetizione dilazionata useranno il ripasso del modulo puzzle (sistema di Leitner) quando sarà su `main`.

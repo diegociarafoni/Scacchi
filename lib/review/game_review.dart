@@ -61,6 +61,25 @@ class MoveReview {
 
   /// La mossa giocata è la prima scelta del motore.
   final bool playedBest;
+
+  MoveReview copyWithBestLine(List<String> line) => MoveReview(
+    ply: ply,
+    side: side,
+    move: move,
+    san: san,
+    fenBefore: fenBefore,
+    classification: classification,
+    winBefore: winBefore,
+    winAfter: winAfter,
+    accuracy: accuracy,
+    playedBest: playedBest,
+    bestMove: bestMove,
+    bestSan: bestSan,
+    bestLine: line,
+    bestScore: bestScore,
+    replyLine: replyLine,
+    replyScore: replyScore,
+  );
 }
 
 class GameReview {
