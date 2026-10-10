@@ -90,6 +90,43 @@ void main() {
       expect(t.reviews.due(today), ['b']);
     });
 
+    test(
+      'RF-85 anche un puzzle già visto sbagliato entra nel ripasso',
+      () async {
+        var today = DateTime(2026, 10, 10);
+        final t = await PuzzleTrainer.load(
+          library,
+          MemoryStore(),
+          now: () => today,
+        );
+        await t.record(library.byId('b')!, solved: true);
+        await t.record(library.byId('b')!, solved: false);
+        today = today.add(const Duration(days: 1));
+        expect(t.dueReviews().map((p) => p.id), ['b']);
+      },
+    );
+
+    test(
+      'il ripasso ignora i puzzle non più presenti nella raccolta',
+      () async {
+        final store = MemoryStore();
+        final today = DateTime(2026, 10, 10);
+        final old = await PuzzleTrainer.load(
+          PuzzleLibrary([p('x', 1500)]),
+          store,
+          now: () => today,
+        );
+        await old.record(old.library.byId('x')!, solved: false);
+        final t = await PuzzleTrainer.load(
+          library,
+          store,
+          now: () => today.add(const Duration(days: 2)),
+        );
+        expect(t.reviews.size, 1);
+        expect(t.dueReviews(), isEmpty);
+      },
+    );
+
     test('ignora dati salvati illeggibili', () async {
       final store = MemoryStore();
       await store.write(PuzzleTrainer.storageKey, '{rotto');

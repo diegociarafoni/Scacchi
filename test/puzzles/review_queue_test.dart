@@ -51,6 +51,18 @@ void main() {
       expect(q.due(day(5)), ['a', 'b']);
     });
 
+    test(
+      'le scadenze cadono a mezzanotte anche con il cambio d\'ora',
+      () async {
+        final q = await ReviewQueue.load(MemoryStore());
+        await q.failed('a', DateTime(2026, 10, 20, 9));
+        await q.reviewed('a', solved: true, now: DateTime(2026, 10, 21, 9));
+        await q.reviewed('a', solved: true, now: DateTime(2026, 10, 24, 9));
+        expect(q.due(DateTime(2026, 10, 30, 23, 59)), isEmpty);
+        expect(q.due(DateTime(2026, 10, 31)), ['a']);
+      },
+    );
+
     test('sopravvive al riavvio', () async {
       final store = MemoryStore();
       await (await ReviewQueue.load(store)).failed('a', day0);

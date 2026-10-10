@@ -60,6 +60,11 @@ class PuzzleTrainer {
     return t;
   }
 
+  /// Puzzle da ripassare oggi che esistono ancora nella raccolta.
+  List<Puzzle> dueReviews() => [
+    for (final id in reviews.due(now())) ?library.byId(id),
+  ];
+
   Puzzle next({String? theme}) =>
       library.next(rating: _rating.rating, theme: theme, seen: _seen);
 
@@ -67,6 +72,7 @@ class PuzzleTrainer {
   /// se il puzzle era già stato visto: le ripetizioni non cambiano il punteggio.
   Future<double?> record(Puzzle puzzle, {required bool solved}) async {
     if (!_seen.add(puzzle.id)) {
+      if (!solved) await reviews.failed(puzzle.id, now());
       // In fondo all'ordine dei visti, così si ricomincia dal meno recente.
       _seen
         ..remove(puzzle.id)

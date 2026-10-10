@@ -64,8 +64,9 @@ class ReviewQueue {
   }
 
   Future<void> _schedule(String id, int box, DateTime now) {
-    final day = DateTime(now.year, now.month, now.day);
-    _items[id] = (box: box, due: day.add(Duration(days: intervals[box])));
+    // Costruttore per componenti: resta a mezzanotte anche con l'ora legale.
+    final due = DateTime(now.year, now.month, now.day + intervals[box]);
+    _items[id] = (box: box, due: due);
     return _save();
   }
 

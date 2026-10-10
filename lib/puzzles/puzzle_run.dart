@@ -8,14 +8,46 @@ import 'puzzle_session.dart';
 
 /// Modalità a serie: Storm e Rush a tempo, sopravvivenza e Streak senza tempo.
 enum PuzzleRunMode {
-  storm(limit: Duration(minutes: 3), maxMistakes: null),
-  rush3(limit: Duration(minutes: 3), maxMistakes: 3),
-  rush5(limit: Duration(minutes: 5), maxMistakes: 3),
-  survival(limit: null, maxMistakes: 3),
-  streak(limit: null, maxMistakes: 1);
+  storm(
+    'Puzzle Storm',
+    '3 minuti, secondi bonus con le combo',
+    limit: Duration(minutes: 3),
+    maxMistakes: null,
+  ),
+  rush3(
+    'Rush 3 minuti',
+    '3 minuti, tre errori',
+    limit: Duration(minutes: 3),
+    maxMistakes: 3,
+  ),
+  rush5(
+    'Rush 5 minuti',
+    '5 minuti, tre errori',
+    limit: Duration(minutes: 5),
+    maxMistakes: 3,
+  ),
+  survival(
+    'Sopravvivenza',
+    'Senza tempo, tre errori',
+    limit: null,
+    maxMistakes: 3,
+  ),
+  streak(
+    'Serie',
+    'Senza tempo, finisce al primo errore',
+    limit: null,
+    maxMistakes: 1,
+  );
 
-  const PuzzleRunMode({required this.limit, required this.maxMistakes});
+  const PuzzleRunMode(
+    this.label,
+    this.description, {
+    required this.limit,
+    required this.maxMistakes,
+  });
 
+  final String label;
+  final String description;
   final Duration? limit;
   final int? maxMistakes;
 }
@@ -32,7 +64,7 @@ class PuzzleRun {
   static const startRating = 600;
 
   /// Aumento della difficoltà a ogni puzzle; maggiore della finestra di scelta,
-  /// così la sequenza è sempre crescente.
+  /// così la sequenza cresce finché la raccolta ha puzzle più difficili.
   static const ratingStep = 60;
   static const _window = 40;
   static const wrongPenalty = Duration(seconds: 10);
@@ -128,22 +160,36 @@ class PuzzleRun {
     }
   }
 
+  /// Puzzle non usato nella finestra di difficoltà del passo corrente; senza
+  /// candidati nella finestra, il primo più difficile o, in cima, il più
+  /// difficile rimasto. La raccolta è ordinata per punteggio.
   Puzzle? _pick() {
     final target = startRating + _index * ratingStep;
-    final fresh = library.puzzles.where((p) => !_used.contains(p.id));
-    if (fresh.isEmpty) return null;
-    final inWindow = fresh
-        .where((p) => p.rating >= target && p.rating < target + _window)
-        .toList();
-    final Puzzle chosen;
-    if (inWindow.isNotEmpty) {
-      chosen = inWindow[_random.nextInt(inWindow.length)];
-    } else {
-      chosen = fresh.reduce(
-        (a, b) => (b.rating - target).abs() < (a.rating - target).abs() ? b : a,
-      );
+    final list = library.puzzles;
+    var lo = 0;
+    var hi = list.length;
+    while (lo < hi) {
+      final mid = (lo + hi) >> 1;
+      list[mid].rating < target ? lo = mid + 1 : hi = mid;
     }
-    _used.add(chosen.id);
+    final inWindow = <Puzzle>[];
+    Puzzle? above;
+    for (var i = lo; i < list.length; i++) {
+      final p = list[i];
+      if (_used.contains(p.id)) continue;
+      if (p.rating >= target + _window) {
+        above ??= p;
+        break;
+      }
+      inWindow.add(p);
+    }
+    Puzzle? chosen = inWindow.isNotEmpty
+        ? inWindow[_random.nextInt(inWindow.length)]
+        : above;
+    for (var i = lo - 1; chosen == null && i >= 0; i--) {
+      if (!_used.contains(list[i].id)) chosen = list[i];
+    }
+    if (chosen != null) _used.add(chosen.id);
     return chosen;
   }
 }

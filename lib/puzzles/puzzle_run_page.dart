@@ -12,22 +12,6 @@ import 'activity_recorder.dart';
 import 'puzzle_run.dart';
 import 'puzzle_trainer.dart';
 
-const runModeLabels = <PuzzleRunMode, String>{
-  PuzzleRunMode.storm: 'Puzzle Storm',
-  PuzzleRunMode.rush3: 'Rush 3 minuti',
-  PuzzleRunMode.rush5: 'Rush 5 minuti',
-  PuzzleRunMode.survival: 'Sopravvivenza',
-  PuzzleRunMode.streak: 'Serie',
-};
-
-const runModeDescriptions = <PuzzleRunMode, String>{
-  PuzzleRunMode.storm: '3 minuti, secondi bonus con le combo',
-  PuzzleRunMode.rush3: '3 minuti, tre errori',
-  PuzzleRunMode.rush5: '5 minuti, tre errori',
-  PuzzleRunMode.survival: 'Senza tempo, tre errori',
-  PuzzleRunMode.streak: 'Senza tempo, finisce al primo errore',
-};
-
 /// Serie di puzzle a tempo o a errori (RF-82).
 class PuzzleRunPage extends StatefulWidget {
   const PuzzleRunPage({
@@ -69,6 +53,8 @@ class _PuzzleRunPageState extends State<PuzzleRunPage> {
   @override
   void dispose() {
     _ticker?.cancel();
+    // Uscendo a metà serie, record e XP valgono comunque.
+    if (!_ended) _finalize();
     super.dispose();
   }
 
@@ -111,6 +97,11 @@ class _PuzzleRunPageState extends State<PuzzleRunPage> {
 
   void _checkEnd() {
     if (_ended || !_run.isOver) return;
+    _finalize();
+    setState(() {});
+  }
+
+  void _finalize() {
     _ended = true;
     _stopwatch.stop();
     _ticker?.cancel();
@@ -118,7 +109,6 @@ class _PuzzleRunPageState extends State<PuzzleRunPage> {
       if (mounted) setState(() => _newRecord = record);
     });
     _recordActivities(_run.score, _stopwatch.elapsed);
-    setState(() {});
   }
 
   /// Registra i puzzle risolti e mostra un'unica notifica riassuntiva.
@@ -146,7 +136,7 @@ class _PuzzleRunPageState extends State<PuzzleRunPage> {
     final remaining = _run.remaining;
     final max = widget.mode.maxMistakes;
     return Scaffold(
-      appBar: AppBar(title: Text(runModeLabels[widget.mode]!)),
+      appBar: AppBar(title: Text(widget.mode.label)),
       body: SafeArea(
         child: _ended
             ? _Result(

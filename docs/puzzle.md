@@ -79,15 +79,15 @@ Sostituisce il puzzle del giorno di chess.com senza server: l'indice è `(giorni
 | Sopravvivenza | Nessuno | Tre errori | |
 | Serie (Streak) | Nessuno | Primo errore | Un solo salto consentito |
 
-In tutte le modalità la difficoltà cresce: il puzzle numero *n* è scelto a caso tra quelli con punteggio in `[600 + 60·n, 600 + 60·n + 40)`, mai ripetuto nella stessa serie. Il passo (60) è più ampio della finestra (40), così ogni puzzle è più difficile del precedente. Un errore fa passare subito al puzzle successivo. Le serie non modificano il punteggio puzzle.
+In tutte le modalità la difficoltà cresce: il puzzle numero *n* è scelto a caso tra quelli con punteggio in `[600 + 60·n, 600 + 60·n + 40)`, mai ripetuto nella stessa serie. Il passo (60) è più ampio della finestra (40), così ogni puzzle è più difficile del precedente; se la finestra è vuota si prende il primo puzzle più difficile e, in cima alla raccolta, il più difficile rimasto. La ricerca usa l'ordinamento per punteggio (ricerca binaria), senza scorrere tutta la raccolta a ogni mossa. Un errore fa passare subito al puzzle successivo. Le serie non modificano il punteggio puzzle.
 
-Il miglior risultato di ogni modalità è salvato come record personale (RG-08, chiave `puzzles.records.v1`) e un nuovo record viene festeggiato nella schermata finale.
+Il miglior risultato di ogni modalità è salvato come record personale (RG-08, chiave `puzzles.records.v1`) e un nuovo record viene festeggiato nella schermata finale. Record e XP dei puzzle risolti valgono anche se si esce a metà serie.
 
 Il modello è `lib/puzzles/puzzle_run.dart`, la schermata `lib/puzzles/puzzle_run_page.dart`; il tempo arriva da una funzione iniettabile, così i test non aspettano minuti veri.
 
 ## Ripasso degli errori (RF-85)
 
-Ogni puzzle sbagliato nell'allenamento entra in una coda di ripasso a intervalli crescenti, sul modello di Chess Tempo (sistema di Leitner, `lib/puzzles/review_queue.dart`):
+Ogni puzzle sbagliato nell'allenamento, anche se già visto, entra in una coda di ripasso a intervalli crescenti, sul modello di Chess Tempo (sistema di Leitner, `lib/puzzles/review_queue.dart`):
 
 | Livello | Torna dopo |
 |---|---|
@@ -97,7 +97,7 @@ Ogni puzzle sbagliato nell'allenamento entra in una coda di ripasso a intervalli
 | 3 | 14 giorni |
 | 4 | 30 giorni |
 
-Un ripasso riuscito fa salire di livello; superato l'ultimo, il puzzle è considerato imparato ed esce dalla coda. Un nuovo errore lo riporta al livello 0. Le scadenze sono calcolate a giorni di calendario (dalla mezzanotte), così un errore della sera torna disponibile dal mattino dopo. La voce "Ripasso degli errori" mostra quanti puzzle sono in scadenza oggi, dal più in ritardo; il ripasso non modifica il punteggio.
+Un ripasso riuscito fa salire di livello; superato l'ultimo, il puzzle è considerato imparato ed esce dalla coda. Un nuovo errore lo riporta al livello 0. Le scadenze sono calcolate a giorni di calendario (dalla mezzanotte), così un errore della sera torna disponibile dal mattino dopo. La voce "Ripasso degli errori" mostra quanti puzzle sono in scadenza oggi, dal più in ritardo, ignorando quelli non più presenti nella raccolta dopo un aggiornamento; il ripasso non modifica il punteggio e, finiti i puzzle in scadenza, lo segnala.
 
 Le schermate di risoluzione ricevono i puzzle da un `PuzzleFeed` (`lib/puzzles/puzzle_feed.dart`): `RatedFeed` per l'allenamento e i temi, `SingleFeed` per il puzzle del giorno, `ReviewFeed` per il ripasso.
 

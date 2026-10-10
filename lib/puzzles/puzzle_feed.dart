@@ -8,6 +8,9 @@ typedef FeedOutcome = ({double? ratingDelta, bool awardXp});
 abstract interface class PuzzleFeed {
   Puzzle? next();
 
+  /// Vero se [next] ha ancora puzzle da proporre.
+  bool get hasNext;
+
   Future<FeedOutcome> finished(Puzzle puzzle, {required bool solved});
 }
 
@@ -31,6 +34,9 @@ class RatedFeed implements PuzzleFeed {
   Puzzle? next() => trainer.next(theme: theme);
 
   @override
+  bool get hasNext => true;
+
+  @override
   Future<FeedOutcome> finished(Puzzle puzzle, {required bool solved}) =>
       _rated(trainer, puzzle, solved);
 }
@@ -51,6 +57,9 @@ class SingleFeed implements PuzzleFeed {
   }
 
   @override
+  bool get hasNext => !_served;
+
+  @override
   Future<FeedOutcome> finished(Puzzle puzzle, {required bool solved}) =>
       _rated(trainer, puzzle, solved);
 }
@@ -60,20 +69,27 @@ class ReviewFeed implements PuzzleFeed {
   ReviewFeed(this.trainer);
 
   final PuzzleTrainer trainer;
-  final Set<String> _done = {};
+  final Set<String> _served = {};
 
-  @override
-  Puzzle? next() {
-    for (final id in trainer.reviews.due(trainer.now())) {
-      final p = trainer.library.byId(id);
-      if (p != null && !_done.contains(id)) return p;
+  Puzzle? _peek() {
+    for (final p in trainer.dueReviews()) {
+      if (!_served.contains(p.id)) return p;
     }
     return null;
   }
 
   @override
+  Puzzle? next() {
+    final p = _peek();
+    if (p != null) _served.add(p.id);
+    return p;
+  }
+
+  @override
+  bool get hasNext => _peek() != null;
+
+  @override
   Future<FeedOutcome> finished(Puzzle puzzle, {required bool solved}) async {
-    _done.add(puzzle.id);
     await trainer.reviews.reviewed(
       puzzle.id,
       solved: solved,

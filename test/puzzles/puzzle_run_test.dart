@@ -136,6 +136,24 @@ void main() {
     });
   });
 
+  test('in cima alla raccolta prosegue con i più difficili rimasti', () {
+    final small = PuzzleLibrary([p('x', 600), p('y', 700), p('z', 2000)]);
+    final run = PuzzleRun(
+      PuzzleRunMode.survival,
+      small,
+      clock: FakeClock().call,
+    );
+    final ratings = [run.current.puzzle.rating];
+    run.tryMove(good);
+    ratings.add(run.current.puzzle.rating);
+    run.tryMove(good);
+    ratings.add(run.current.puzzle.rating);
+    expect(ratings, [600, 700, 2000]);
+    run.tryMove(good);
+    expect(run.isOver, isTrue);
+    expect(run.score, 3);
+  });
+
   test('a serie finita le mosse vengono ignorate', () {
     final run = PuzzleRun(
       PuzzleRunMode.streak,

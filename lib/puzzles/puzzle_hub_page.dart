@@ -48,7 +48,7 @@ class _PuzzleHubPageState extends State<PuzzleHubPage> {
             return const Center(child: CircularProgressIndicator());
           }
           final daily = trainer.library.daily(widget.today ?? DateTime.now());
-          final due = trainer.reviews.due(trainer.now()).length;
+          final due = trainer.dueReviews().length;
           return ListView(
             children: [
               ListTile(
@@ -117,8 +117,8 @@ class _PuzzleHubPageState extends State<PuzzleHubPage> {
               for (final mode in PuzzleRunMode.values)
                 ListTile(
                   leading: const Icon(Icons.bolt_outlined),
-                  title: Text(runModeLabels[mode]!),
-                  subtitle: Text(runModeDescriptions[mode]!),
+                  title: Text(mode.label),
+                  subtitle: Text(mode.description),
                   trailing: Text('Record ${trainer.records.best(mode)}'),
                   onTap: () => _open(
                     PuzzleRunPage(

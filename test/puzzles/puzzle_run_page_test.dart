@@ -93,6 +93,21 @@ void main() {
     expect(find.text('Serie conclusa'), findsOneWidget);
   });
 
+  testWidgets('RG-08 uscendo a metà serie il record viene salvato', (
+    tester,
+  ) async {
+    final trainer = await phone(tester);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: PuzzleRunPage(trainer: trainer, mode: PuzzleRunMode.survival),
+      ),
+    );
+    await tapMove(tester, 'a1a8');
+    await tester.pumpWidget(const MaterialApp(home: SizedBox()));
+    await tester.pumpAndSettle();
+    expect(trainer.records.best(PuzzleRunMode.survival), 1);
+  });
+
   testWidgets('RF-85 il ripasso è disponibile solo con errori in scadenza', (
     tester,
   ) async {

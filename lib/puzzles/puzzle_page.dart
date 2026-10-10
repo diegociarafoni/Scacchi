@@ -55,7 +55,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
           ? SingleFeed(widget.trainer, widget.puzzle!)
           : RatedFeed(widget.trainer, theme: widget.theme));
   late PuzzleSession _session;
-  bool _hasNext = true;
+  bool _empty = false;
   _Feedback _feedback = _Feedback.find;
   double? _delta;
   Square? _hint;
@@ -68,8 +68,12 @@ class _PuzzlePageState extends State<PuzzlePage> {
   @override
   void initState() {
     super.initState();
-    _start(_feed.next()!);
-    _hasNext = _feed is! SingleFeed;
+    final first = _feed.next();
+    if (first == null) {
+      _empty = true;
+    } else {
+      _start(first);
+    }
   }
 
   @override
@@ -164,40 +168,40 @@ class _PuzzlePageState extends State<PuzzlePage> {
   void _next() {
     _replyTimer?.cancel();
     final next = _feed.next();
-    setState(() {
-      if (next == null) {
-        _hasNext = false;
-      } else {
-        _start(next);
-      }
-    });
+    if (next != null) setState(() => _start(next));
   }
 
   String get _message {
     final side = _session.puzzle.playerSide == Side.white ? 'Bianco' : 'Nero';
     final rating = widget.trainer.rating.rating.round();
-    final delta = _delta == null
+    final delta = _delta;
+    final outcome = _repeat
+        ? ' Già visto: punteggio invariato.'
+        : delta == null
         ? ''
-        : ' (${_delta! >= 0 ? '+' : ''}${_delta!.round()})';
+        : ' Punteggio $rating (${delta >= 0 ? '+' : ''}${delta.round()}).';
     return switch (_feedback) {
       _Feedback.find => 'Trova la mossa migliore per il $side.',
       _Feedback.correct => 'Giusto! Continua.',
       _Feedback.wrong => 'Non è la mossa giusta. Riprova.',
-      _Feedback.solved when _repeat =>
-        'Risolto! Già visto: punteggio invariato.',
-      _Feedback.solved => 'Risolto! Punteggio $rating$delta.',
-      _Feedback.revealed when _repeat && _session.state == PuzzleState.solved =>
-        'Puzzle concluso. Già visto: punteggio invariato.',
+      _Feedback.solved => 'Risolto!$outcome',
       _Feedback.revealed =>
         _session.state == PuzzleState.solved
-            ? 'Puzzle concluso. Punteggio $rating$delta.'
+            ? 'Puzzle concluso.$outcome'
             : 'Ecco la mossa giusta.',
     };
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_empty) {
+      return Scaffold(
+        appBar: AppBar(title: Text(widget.title)),
+        body: const Center(child: Text('Nessun puzzle da proporre.')),
+      );
+    }
     final done = _session.state == PuzzleState.solved;
+    final last = done && !_feed.hasNext;
     final puzzle = _session.puzzle;
     final themes = puzzle.themes
         .map((t) => puzzleThemeLabels[t])
@@ -244,7 +248,9 @@ class _PuzzlePageState extends State<PuzzlePage> {
                         Padding(
                           padding: const EdgeInsets.all(8),
                           child: Text(
-                            done
+                            last
+                                ? 'Non ci sono altri puzzle per ora.'
+                                : done
                                 ? 'Puzzle ${puzzle.rating}'
                                       '${themes.isEmpty ? '' : ' · $themes'}'
                                 : 'Il tuo punteggio: '
@@ -259,7 +265,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
                 _PuzzleActions(
                   onHint: done ? null : _showHint,
                   onSolution: done ? null : _showSolution,
-                  onNext: _hasNext && done ? _next : null,
+                  onNext: done && !last ? _next : null,
                 ),
               ],
             );
