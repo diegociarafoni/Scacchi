@@ -8,6 +8,7 @@
 | Regole degli scacchi | [dartchess](https://pub.dev/packages/dartchess) | Generazione delle mosse legali, notazione SAN, scacco, matto, stallo, materiale insufficiente |
 | Scacchiera | [chessground](https://pub.dev/packages/chessground) | Disegno della scacchiera, trascinamento e tocco, animazioni, evidenziazioni, scelta della promozione |
 | File locali | [path_provider](https://pub.dev/packages/path_provider) | Cartella dati dell'app per i salvataggi |
+| Condivisione | [share_plus](https://pub.dev/packages/share_plus) | Menu di condivisione del sistema per il PGN |
 
 Entrambe le librerie sono sviluppate da Lichess e sono usate dalla sua app mobile.
 
@@ -22,6 +23,8 @@ lib/
     chess_game.dart       Stato della partita, senza dipendenze dall'interfaccia
     game_page.dart        Schermata di gioco
   progress/               Gamification: XP, livelli, serie, traguardi (vedi gamification.md)
+  archive/                Archivio delle partite e PGN (vedi archivio.md)
+  storage/                File JSON locali con versione e scrittura atomica
 test/
   chess_game_test.dart    Test delle regole e della fine partita
   widget_test.dart        Test di avvio dell'interfaccia
@@ -64,4 +67,3 @@ A partita conclusa `GameData.playerSide` vale `PlayerSide.none`, quindi la scacc
 ## Evoluzioni previste
 
 - Il motore Stockfish per la partita contro il computer si aggancerà a `GamePage` come secondo giocatore, ricevendo la posizione FEN e restituendo una mossa da passare a `ChessGame.play`.
-- Salvataggio e PGN si baseranno sulla lista `ChessGame.moves`.
