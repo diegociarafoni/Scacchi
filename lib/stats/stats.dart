@@ -60,11 +60,12 @@ class GameStats {
     var local = 0;
     for (final g in games) {
       if (g.mode == SavedGame.imported || !g.finished) continue;
-      final points = g.playerScore;
-      if (points == null) {
+      if (g.mode == SavedGame.local) {
         local++;
         continue;
       }
+      final points = g.playerScore;
+      if (points == null) continue;
       all = all.add(points);
       byColor[g.playerSide!] = (byColor[g.playerSide!] ?? const Score()).add(
         points,
@@ -75,12 +76,16 @@ class GameStats {
       if (g.accuracy case final a?) trend.add((g.createdAt, a));
     }
     trend.sort((a, b) => a.$1.compareTo(b.$1));
-    final sortedOpenings = openings.entries.toList()
-      ..sort((a, b) => b.value.compareTo(a.value));
+    final sortedOpenings = openings.entries.toList()..sort(_byCountThenName);
+    final sortedTc = byTc.entries.toList()
+      ..sort((a, b) {
+        final byGames = b.value.games.compareTo(a.value.games);
+        return byGames != 0 ? byGames : a.key.compareTo(b.key);
+      });
     return GameStats(
       all: all,
       byColor: byColor,
-      byTimeControl: byTc,
+      byTimeControl: Map.fromEntries(sortedTc),
       localGames: local,
       openings: [for (final e in sortedOpenings) (name: e.key, games: e.value)],
       accuracyTrend: trend,
@@ -89,6 +94,8 @@ class GameStats {
 
   final Score all;
   final Map<Side, Score> byColor;
+
+  /// Bilancio per cadenza, dalla più giocata.
   final Map<String, Score> byTimeControl;
 
   /// Partite tra due persone sullo stesso dispositivo.
@@ -103,4 +110,9 @@ class GameStats {
   double? get averageAccuracy => accuracyTrend.isEmpty
       ? null
       : accuracyTrend.fold(0.0, (s, p) => s + p.$2) / accuracyTrend.length;
+}
+
+int _byCountThenName(MapEntry<String, int> a, MapEntry<String, int> b) {
+  final byCount = b.value.compareTo(a.value);
+  return byCount != 0 ? byCount : a.key.compareTo(b.key);
 }

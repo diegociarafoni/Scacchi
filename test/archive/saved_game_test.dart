@@ -20,7 +20,7 @@ void main() {
         playerSide: Side.white,
         timeControl: '5+0',
         opponentElo: 1200,
-      ).copyWith(accuracy: 81.5, opening: 'Partita Italiana');
+      ).copyWith(accuracy: () => 81.5, opening: () => 'Partita Italiana');
       final back = SavedGame.fromJson(game.toJson());
       expect(back.playerSide, Side.white);
       expect(back.timeControl, '5+0');
@@ -64,5 +64,38 @@ void main() {
     expect(g('1/2-1/2', Side.black).playerScore, 0.5);
     expect(g('*', Side.black).playerScore, isNull);
     expect(g('1-0', null).playerScore, isNull);
+  });
+
+  test('copyWith può azzerare precisione e apertura', () {
+    final g = SavedGame(
+      id: '1',
+      createdAt: DateTime(2026),
+      updatedAt: DateTime(2026),
+      white: 'A',
+      black: 'B',
+      mode: SavedGame.computer,
+      result: '1-0',
+      pgn: '',
+      accuracy: 80,
+      opening: 'Siciliana',
+    );
+    final cleared = g.copyWith(accuracy: () => null, opening: () => null);
+    expect(cleared.accuracy, isNull);
+    expect(cleared.opening, isNull);
+    expect(g.copyWith().opening, 'Siciliana');
+  });
+
+  test('cadenza PGN anche con frazioni di minuto', () {
+    final pgn = SavedGame.fromGame(
+      ChessGame(),
+      id: '1',
+      white: 'A',
+      black: 'B',
+      mode: SavedGame.computer,
+      createdAt: DateTime(2026),
+      updatedAt: DateTime(2026),
+      timeControl: '0.5+0',
+    ).pgn;
+    expect(pgn, contains('[TimeControl "30+0"]'));
   });
 }

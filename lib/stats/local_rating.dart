@@ -13,13 +13,18 @@ class LocalRating {
   static const provisionalGames = 10;
 
   factory LocalRating.from(Iterable<SavedGame> games) {
-    final rated = [
-      for (final g in games)
-        if (g.mode != SavedGame.imported &&
-            g.opponentElo != null &&
-            g.playerScore != null)
-          g,
-    ]..sort((a, b) => a.createdAt.compareTo(b.createdAt));
+    final rated =
+        [
+          for (final g in games)
+            if (g.mode != SavedGame.imported &&
+                g.opponentElo != null &&
+                g.playerScore != null)
+              g,
+        ]..sort((a, b) {
+          // A parità di data l'identificativo rende l'ordine ripetibile.
+          final byDate = a.createdAt.compareTo(b.createdAt);
+          return byDate != 0 ? byDate : a.id.compareTo(b.id);
+        });
     var rating = initial.toDouble();
     final history = <(DateTime, int)>[];
     for (final (i, g) in rated.indexed) {

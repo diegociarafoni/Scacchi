@@ -72,4 +72,43 @@ void main() {
     await tester.scrollUntilVisible(find.textContaining('71.0%'), 200);
     expect(find.textContaining('71.0%'), findsOneWidget);
   });
+
+  testWidgets('solo partite tra due persone: mostra il conteggio', (
+    tester,
+  ) async {
+    await tester.runAsync(
+      () => archive.save(
+        SavedGame(
+          id: 'l',
+          createdAt: DateTime(2026, 10, 1),
+          updatedAt: DateTime(2026, 10, 1),
+          white: 'A',
+          black: 'B',
+          mode: SavedGame.local,
+          result: '1-0',
+          pgn: '',
+        ),
+      ),
+    );
+    await show(tester);
+    expect(find.text('Partite tra due persone'), findsOneWidget);
+    expect(find.text('1'), findsOneWidget);
+  });
+
+  testWidgets('archivio illeggibile: messaggio invece dell\'attesa', (
+    tester,
+  ) async {
+    archive = _UnreadableArchive(File('${dir.path}/games.json'));
+    await show(tester);
+    expect(find.byType(CircularProgressIndicator), findsNothing);
+    expect(find.textContaining('non si è potuto leggere'), findsOneWidget);
+  });
+}
+
+class _UnreadableArchive extends GameArchive {
+  _UnreadableArchive(super.file);
+
+  @override
+  Future<List<SavedGame>> list() =>
+      Future.error(const FileSystemException('lettura non riuscita'));
 }

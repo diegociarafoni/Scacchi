@@ -1,7 +1,11 @@
-import 'package:dartchess/dartchess.dart';
+import 'dart:io';
+
+import 'package:dartchess/dartchess.dart' hide File;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../archive/game_archive.dart';
+import '../archive/saved_game.dart';
 import 'local_rating.dart';
 import 'stats.dart';
 
@@ -18,6 +22,7 @@ class StatsPage extends StatefulWidget {
 class _StatsPageState extends State<StatsPage> {
   GameStats? _stats;
   LocalRating? _rating;
+  bool _failed = false;
 
   @override
   void initState() {
@@ -26,7 +31,14 @@ class _StatsPageState extends State<StatsPage> {
   }
 
   Future<void> _load() async {
-    final games = await widget.archive.list();
+    final List<SavedGame> games;
+    try {
+      games = await widget.archive.list();
+    } on FileSystemException catch (e) {
+      debugPrint('Lettura dell\'archivio non riuscita: $e');
+      if (mounted) setState(() => _failed = true);
+      return;
+    }
     if (!mounted) return;
     setState(() {
       _stats = GameStats.from(games);
@@ -40,18 +52,19 @@ class _StatsPageState extends State<StatsPage> {
     final rating = _rating;
     return Scaffold(
       appBar: AppBar(title: const Text('Statistiche')),
-      body: stats == null || rating == null
+      body: _failed
+          ? const _Message(
+              'L\'archivio delle partite non si è potuto leggere: riprova più '
+              'tardi.',
+            )
+          : stats == null || rating == null
           ? const Center(child: CircularProgressIndicator())
-          : stats.all.games == 0 && rating.history.isEmpty
-          ? const Center(
-              child: Padding(
-                padding: EdgeInsets.all(24),
-                child: Text(
-                  'Gioca qualche partita contro il computer per vedere le '
-                  'statistiche.',
-                  textAlign: TextAlign.center,
-                ),
-              ),
+          : stats.all.games == 0 &&
+                rating.history.isEmpty &&
+                stats.localGames == 0
+          ? const _Message(
+              'Gioca qualche partita contro il computer per vedere le '
+              'statistiche.',
             )
           : ListView(
               padding: const EdgeInsets.all(16),
@@ -73,10 +86,11 @@ class _StatsPageState extends State<StatsPage> {
                       trailing: Text('${stats.localGames}'),
                     ),
                 ]),
-                _Section('Per cadenza', [
-                  for (final e in stats.byTimeControl.entries)
-                    _ScoreRow(e.key, e.value),
-                ]),
+                if (stats.byTimeControl.isNotEmpty)
+                  _Section('Per cadenza', [
+                    for (final e in stats.byTimeControl.entries)
+                      _ScoreRow(e.key, e.value),
+                  ]),
                 if (stats.openings.isNotEmpty)
                   _Section('Aperture più giocate', [
                     for (final o in stats.openings.take(5))
@@ -102,6 +116,22 @@ class _StatsPageState extends State<StatsPage> {
                   ]),
               ],
             ),
+    );
+  }
+}
+
+class _Message extends StatelessWidget {
+  const _Message(this.text);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Text(text, textAlign: TextAlign.center),
+      ),
     );
   }
 }
@@ -212,6 +242,8 @@ class _Sparkline extends StatelessWidget {
         child: CustomPaint(
           painter: _SparklinePainter(
             values,
+            min,
+            max,
             Theme.of(context).colorScheme.primary,
           ),
         ),
@@ -221,16 +253,16 @@ class _Sparkline extends StatelessWidget {
 }
 
 class _SparklinePainter extends CustomPainter {
-  _SparklinePainter(this.values, this.color);
+  _SparklinePainter(this.values, this.min, this.max, this.color);
 
   final List<double> values;
+  final double min;
+  final double max;
   final Color color;
 
   @override
   void paint(Canvas canvas, Size size) {
     if (values.length < 2) return;
-    final min = values.reduce((a, b) => a < b ? a : b);
-    final max = values.reduce((a, b) => a > b ? a : b);
     final span = max - min == 0 ? 1 : max - min;
     final path = Path();
     for (final (i, v) in values.indexed) {
@@ -249,5 +281,5 @@ class _SparklinePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_SparklinePainter old) =>
-      old.values != values || old.color != color;
+      !listEquals(old.values, values) || old.color != color;
 }

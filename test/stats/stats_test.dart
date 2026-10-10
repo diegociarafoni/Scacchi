@@ -59,6 +59,29 @@ void main() {
       expect(stats.localGames, 1);
     });
 
+    test('una partita al computer senza colore non è locale', () {
+      final s = GameStats.from([game('1-0', side: null)]);
+      expect(s.localGames, 0);
+      expect(s.all.games, 0);
+    });
+
+    test('cadenze dalla più giocata', () {
+      final s = GameStats.from([
+        game('1-0', tc: '3+2'),
+        game('1-0', tc: '10+0'),
+        game('0-1', tc: '10+0'),
+      ]);
+      expect(s.byTimeControl.keys, ['10+0', '3+2']);
+    });
+
+    test('aperture a pari merito in ordine alfabetico', () {
+      final s = GameStats.from([
+        game('1-0', opening: 'Siciliana'),
+        game('1-0', opening: 'Francese'),
+      ]);
+      expect(s.openings.map((o) => o.name), ['Francese', 'Siciliana']);
+    });
+
     test('percentuale di punti', () {
       expect(stats.all.percent, closeTo(62.5, 1e-9));
       expect(const Score().percent, isNull);
@@ -121,6 +144,15 @@ void main() {
       ]);
       expect(r.history, hasLength(2));
       expect(r.history.first.$1, DateTime(2026, 10, 1));
+    });
+
+    test('partite alla stessa ora: ordine stabile per identificativo', () {
+      final a = game('1-0', elo: 800);
+      final b = game('0-1', elo: 800);
+      expect(
+        LocalRating.from([a, b]).history,
+        LocalRating.from([b, a]).history,
+      );
     });
 
     test('dopo 10 partite non è più provvisorio', () {

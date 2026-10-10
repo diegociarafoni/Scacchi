@@ -69,6 +69,12 @@ class SavedGame {
 
   static const imported = 'importata';
 
+  /// Partita tra due persone sullo stesso dispositivo.
+  static const local = 'locale';
+
+  /// Partita contro il computer.
+  static const computer = 'computer';
+
   /// Risultato PGN: `1-0`, `0-1`, `1/2-1/2` o `*` se in corso.
   final String result;
   final String pgn;
@@ -102,7 +108,11 @@ class SavedGame {
     };
   }
 
-  SavedGame copyWith({double? accuracy, String? opening}) => SavedGame(
+  /// Copia con i dati della revisione; `() => null` li azzera.
+  SavedGame copyWith({
+    double? Function()? accuracy,
+    String? Function()? opening,
+  }) => SavedGame(
     id: id,
     createdAt: createdAt,
     updatedAt: updatedAt,
@@ -114,8 +124,8 @@ class SavedGame {
     playerSide: playerSide,
     timeControl: timeControl,
     opponentElo: opponentElo,
-    accuracy: accuracy ?? this.accuracy,
-    opening: opening ?? this.opening,
+    accuracy: accuracy == null ? this.accuracy : accuracy(),
+    opening: opening == null ? this.opening : opening(),
   );
 
   /// Ricostruisce la partita dalle mosse salvate.
@@ -165,9 +175,9 @@ String _pgnDate(DateTime d) => '${d.year}.${_two(d.month)}.${_two(d.day)}';
 
 String _two(int n) => n.toString().padLeft(2, '0');
 
-/// Cadenza PGN in secondi: `5+3` diventa `300+3`.
+/// Cadenza PGN in secondi: `5+3` diventa `300+3`, `0.5+0` diventa `30+0`.
 String? _pgnTimeControl(String? tc) {
-  final m = RegExp(r'^(\d+)\+(\d+)$').firstMatch(tc ?? '');
+  final m = RegExp(r'^(\d+(?:\.\d+)?)\+(\d+)$').firstMatch(tc ?? '');
   if (m == null) return null;
-  return '${int.parse(m[1]!) * 60}+${m[2]}';
+  return '${(double.parse(m[1]!) * 60).round()}+${m[2]}';
 }
