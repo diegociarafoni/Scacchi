@@ -28,7 +28,7 @@ Lo script `tool/datasets/build_puzzles.py` sceglie i puzzle in modo deterministi
 
 L'ordine all'interno di una fascia è dato dall'hash SHA-1 dell'id, quindi è casuale ma riproducibile.
 
-Il workflow `.github/workflows/datasets.yml` scarica il database, esegue lo script e fa il commit del risultato sul branch della pull request quando gli script in `tool/datasets/` cambiano; si può avviare anche a mano. In locale:
+Il workflow `.github/workflows/datasets.yml` scarica il database, esegue lo script, valida il risultato con `test/puzzles/puzzle_dataset_test.dart` (il commit del workflow non avvia la CI) e fa il commit del risultato sul branch della pull request quando gli script in `tool/datasets/` cambiano; si può avviare anche a mano. In locale:
 
 ```sh
 curl -sS https://database.lichess.org/lichess_db_puzzle.csv.zst \
@@ -61,9 +61,9 @@ Il test `test/puzzles/puzzle_dataset_test.dart` verifica che ogni soluzione sia 
 
 ## Punteggio (RF-81)
 
-Il punteggio del giocatore è un Glicko-2 locale che parte da 1500 con deviazione 350. Ogni puzzle concluso è una partita contro un avversario con il punteggio del puzzle e deviazione fissa 75: vinta se risolto al primo tentativo senza vedere la soluzione, persa altrimenti. Il punteggio viene aggiornato una sola volta per puzzle.
+Il punteggio del giocatore è un Glicko-2 locale che parte da 1500 con deviazione 350. Ogni puzzle concluso è una partita contro un avversario con il punteggio del puzzle e deviazione fissa 75: vinta se risolto al primo tentativo senza vedere la soluzione, persa altrimenti. Il punteggio cambia solo alla prima volta che si incontra un puzzle: rigiocare il puzzle del giorno o un puzzle già visto non modifica punteggio, contatori e XP, così non si possono accumulare punti ripetendo lo stesso problema.
 
-Il puzzle successivo è quello non ancora visto con difficoltà più vicina al punteggio attuale; finiti i puzzle di un tema si ricomincia dai già visti.
+Il puzzle successivo è quello non ancora visto con difficoltà più vicina al punteggio attuale; finiti i puzzle di un tema si ripropone quello visto meno di recente, così si ripassano tutti a rotazione.
 
 ## Puzzle del giorno (RF-84)
 
@@ -71,13 +71,11 @@ Sostituisce il puzzle del giorno di chess.com senza server: l'indice è `(giorni
 
 ## Salvataggio
 
-Punteggio, puzzle visti e contatori sono salvati nel file `training.json` della cartella dati dell'app (chiave `puzzles.trainer.v1`) tramite l'interfaccia `KeyValueStore` (`lib/storage/key_value_store.dart`). Il file è scritto in modo atomico (file temporaneo rinominato), come `progress.json` della gamification, e sarà importato nel database locale quando arriverà (RNF-08). Dati illeggibili vengono ignorati e si riparte da 1500.
+Punteggio, puzzle visti e contatori sono salvati nel file `training.json` della cartella dati dell'app (chiave `puzzles.trainer.v1`) tramite l'interfaccia `KeyValueStore` (`lib/storage/key_value_store.dart`). Il file è scritto in modo atomico (file temporaneo rinominato) e, se illeggibile, viene messo da parte come `training.json.bad-<data>` invece di essere sovrascritto, come `progress.json` della gamification, e sarà importato nel database locale quando arriverà (RNF-08). Dati illeggibili vengono ignorati e si riparte da 1500.
 
 ## Integrazione con la gamification
 
-Ogni puzzle portato a termine dal giocatore, anche dopo un tentativo sbagliato, registra un `PuzzleSolved` con la durata nel `ProgressController` (XP, obiettivo giornaliero "5 puzzle", traguardi) e mostra la notifica `showProgressFeedback`. Un puzzle concluso con "Soluzione" non vale XP. Il collegamento passa da `HomeShell`, che apre i progressi alla prima attività, alle schermate tramite il parametro `onActivity` (`lib/puzzles/activity_recorder.dart`).
-
-`PuzzleTrainer.onCompleted` riceve inoltre un `PuzzleCompleted` (puzzle, esito, variazione di punteggio) per statistiche future.
+Ogni puzzle nuovo portato a termine dal giocatore, anche dopo un tentativo sbagliato, registra un `PuzzleSolved` con la durata nel `ProgressController` (XP, obiettivo giornaliero "5 puzzle", traguardi) e mostra la notifica `showProgressFeedback`. Un puzzle concluso con "Soluzione" non vale XP. Gli XP premiano l'impegno, come le partite perse (RG-01): per questo un puzzle risolto dopo un errore vale XP anche se per il punteggio conta come fallito. Il collegamento passa da `HomeShell`, che apre i progressi alla prima attività, alle schermate tramite il parametro `onActivity` (`lib/puzzles/activity_recorder.dart`).
 
 ## Navigazione
 

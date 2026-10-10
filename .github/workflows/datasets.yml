@@ -30,6 +30,14 @@ jobs:
             | zstd -dc | python3 tool/datasets/build_puzzles.py > assets/puzzles/puzzles.csv
       - name: Openings
         run: python3 tool/datasets/build_openings.py > assets/openings/openings.tsv
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.47.7
+          cache: true
+      # This commit does not trigger CI: validate the datasets here.
+      - name: Validate
+        run: flutter test test/puzzles/puzzle_dataset_test.dart
       - name: Commit
         run: |
           git add assets/puzzles assets/openings

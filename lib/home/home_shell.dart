@@ -28,14 +28,30 @@ class _HomeShellState extends State<HomeShell> {
   Future<ProgressController>? _progress;
 
   Future<ProgressUpdate?> _record(Activity activity) async {
-    _progress ??= (widget.progress ?? ProgressController.open)();
-    return (await _progress!).record(activity);
+    try {
+      _progress ??= (widget.progress ?? ProgressController.open)();
+      return await (await _progress!).record(activity);
+    } on Object catch (e) {
+      // Si riprova alla prossima attività invece di restare bloccati.
+      _progress = null;
+      debugPrint('Progressi non disponibili: $e');
+      return null;
+    }
   }
+
+  Future<PuzzleTrainer>
+  _loadTrainer() => (widget.puzzleTrainer ?? loadPuzzleTrainer)().catchError((
+    Object e,
+  ) {
+    // Un errore di caricamento si riprova alla prossima apertura della scheda.
+    _trainer = null;
+    throw e;
+  });
 
   @override
   Widget build(BuildContext context) {
     if (_tab == 1) {
-      _trainer ??= (widget.puzzleTrainer ?? loadPuzzleTrainer)();
+      _trainer ??= _loadTrainer();
     }
     return Scaffold(
       body: IndexedStack(

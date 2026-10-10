@@ -24,9 +24,11 @@ void main() {
       expect(library.next(rating: 1490, seen: {'c'}).id, 'd');
     });
 
-    test('quando sono stati visti tutti ricomincia', () {
-      final all = {'a', 'b', 'c', 'd', 'e'};
-      expect(library.next(rating: 2000, seen: all).id, 'e');
+    test('quando sono stati visti tutti ripropone il meno recente', () {
+      expect(
+        library.next(rating: 2000, seen: {'c', 'a', 'b', 'd', 'e'}).id,
+        'c',
+      );
     });
   });
 

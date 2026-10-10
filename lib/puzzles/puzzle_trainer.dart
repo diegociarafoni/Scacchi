@@ -5,19 +5,6 @@ import 'puzzle.dart';
 import 'puzzle_library.dart';
 import '../storage/key_value_store.dart';
 
-/// Evento emesso a ogni puzzle concluso, per XP, obiettivi e statistiche.
-class PuzzleCompleted {
-  const PuzzleCompleted({
-    required this.puzzle,
-    required this.solved,
-    required this.ratingDelta,
-  });
-
-  final Puzzle puzzle;
-  final bool solved;
-  final double ratingDelta;
-}
-
 /// Punteggio puzzle del giocatore e scelta del puzzle successivo.
 class PuzzleTrainer {
   PuzzleTrainer._(this.library, this._store);
@@ -34,8 +21,6 @@ class PuzzleTrainer {
   int _solved = 0;
   int _failed = 0;
 
-  void Function(PuzzleCompleted)? onCompleted;
-
   Glicko2Rating get rating => _rating;
   int get solvedCount => _solved;
   int get failedCount => _failed;
@@ -50,12 +35,16 @@ class PuzzleTrainer {
     if (raw != null) {
       try {
         final json = jsonDecode(raw) as Map<String, dynamic>;
-        t._rating = Glicko2Rating.fromJson(
+        final rating = Glicko2Rating.fromJson(
           json['rating'] as Map<String, dynamic>,
         );
-        t._seen.addAll((json['seen'] as List).cast<String>());
-        t._solved = json['solved'] as int;
-        t._failed = json['failed'] as int;
+        final seen = [for (final id in json['seen'] as List) id as String];
+        final solved = json['solved'] as int;
+        final failed = json['failed'] as int;
+        t._rating = rating;
+        t._seen.addAll(seen);
+        t._solved = solved;
+        t._failed = failed;
       } on Object {
         // Dati corrotti: si riparte da zero invece di bloccare i puzzle.
       }
@@ -66,8 +55,17 @@ class PuzzleTrainer {
   Puzzle next({String? theme}) =>
       library.next(rating: _rating.rating, theme: theme, seen: _seen);
 
-  /// Registra l'esito e restituisce la variazione di punteggio.
-  Future<double> record(Puzzle puzzle, {required bool solved}) async {
+  /// Registra l'esito e restituisce la variazione di punteggio, oppure `null`
+  /// se il puzzle era già stato visto: le ripetizioni non cambiano il punteggio.
+  Future<double?> record(Puzzle puzzle, {required bool solved}) async {
+    if (!_seen.add(puzzle.id)) {
+      // In fondo all'ordine dei visti, così si ricomincia dal meno recente.
+      _seen
+        ..remove(puzzle.id)
+        ..add(puzzle.id);
+      await _save();
+      return null;
+    }
     final before = _rating.rating;
     _rating = _rating.update([
       GameResult(
@@ -76,14 +74,9 @@ class PuzzleTrainer {
         score: solved ? 1 : 0,
       ),
     ]);
-    _seen.add(puzzle.id);
     solved ? _solved++ : _failed++;
     await _save();
-    final delta = _rating.rating - before;
-    onCompleted?.call(
-      PuzzleCompleted(puzzle: puzzle, solved: solved, ratingDelta: delta),
-    );
-    return delta;
+    return _rating.rating - before;
   }
 
   Future<void> _save() => _store.write(

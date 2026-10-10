@@ -17,12 +17,22 @@ class PuzzleLibrary {
 
   Puzzle? byId(String id) => _byId[id];
 
-  int countFor(String theme) =>
-      puzzles.where((p) => p.themes.contains(theme)).length;
+  late final Map<String, int> _themeCounts = () {
+    final counts = <String, int>{};
+    for (final p in puzzles) {
+      for (final t in p.themes) {
+        counts[t] = (counts[t] ?? 0) + 1;
+      }
+    }
+    return counts;
+  }();
+
+  int countFor(String theme) => _themeCounts[theme] ?? 0;
 
   /// Il puzzle non ancora visto con punteggio più vicino a [rating].
   ///
-  /// Se nel tema scelto sono stati visti tutti, ricomincia dai già visti.
+  /// Se nel tema scelto sono stati visti tutti, ripropone quello visto meno
+  /// di recente; [seen] è in ordine dal meno al più recente.
   Puzzle next({
     required double rating,
     String? theme,
@@ -33,8 +43,11 @@ class PuzzleLibrary {
         : puzzles.where((p) => p.themes.contains(theme)).toList();
     if (pool.isEmpty) throw StateError('Nessun puzzle per il tema $theme');
     final fresh = pool.where((p) => !seen.contains(p.id));
-    final candidates = fresh.isEmpty ? pool : fresh;
-    return candidates.reduce(
+    if (fresh.isEmpty) {
+      final order = {for (final (i, id) in seen.indexed) id: i};
+      return pool.reduce((a, b) => order[b.id]! < order[a.id]! ? b : a);
+    }
+    return fresh.reduce(
       (best, p) =>
           (p.rating - rating).abs() < (best.rating - rating).abs() ? p : best,
     );

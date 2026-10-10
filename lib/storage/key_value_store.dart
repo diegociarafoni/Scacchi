@@ -36,15 +36,18 @@ class JsonFileStore implements KeyValueStore {
 
   Future<Map<String, String>> _load() async {
     if (_data != null) return _data!;
+    if (!await file.exists()) return _data = {};
     try {
       final json =
           jsonDecode(await file.readAsString()) as Map<String, dynamic>;
-      _data = json.cast<String, String>();
+      return _data = {for (final e in json.entries) e.key: e.value as String};
     } on Object {
-      // File mancante o illeggibile: si riparte vuoti.
-      _data = {};
+      // File illeggibile: lo si mette da parte invece di sovrascriverlo.
+      await file.rename(
+        '${file.path}.bad-${DateTime.now().millisecondsSinceEpoch}',
+      );
+      return _data = {};
     }
-    return _data!;
   }
 
   @override
@@ -55,15 +58,14 @@ class JsonFileStore implements KeyValueStore {
     (await _load())[key] = value;
     final snapshot = jsonEncode(_data);
     // Scritture in coda: l'ultima vince sempre.
-    _pending = _pending.then((_) async {
-      try {
-        final tmp = File('${file.path}.tmp');
-        await tmp.parent.create(recursive: true);
-        await tmp.writeAsString(snapshot, flush: true);
-        await tmp.rename(file.path);
-      } on FileSystemException catch (e) {
-        debugPrint('Salvataggio non riuscito: $e');
-      }
+    final next = _pending.then((_) async {
+      await file.parent.create(recursive: true);
+      final tmp = File('${file.path}.tmp');
+      await tmp.writeAsString(snapshot, flush: true);
+      await tmp.rename(file.path);
+    });
+    _pending = next.catchError((Object e) {
+      debugPrint('Salvataggio non riuscito: $e');
     });
     return _pending;
   }

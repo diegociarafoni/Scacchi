@@ -17,14 +17,12 @@ class PuzzleSession {
   Move? _lastMove;
   int _ply = 0;
   bool _mistake = false;
-  bool _usedHint = false;
   bool _revealed = false;
   PuzzleState _state = PuzzleState.playing;
 
   Position get position => _position;
   Move? get lastMove => _lastMove;
   PuzzleState get state => _state;
-  bool get usedHint => _usedHint;
 
   /// Vero se almeno una mossa è stata mostrata con "Soluzione".
   bool get revealed => _revealed;
@@ -69,7 +67,6 @@ class PuzzleSession {
   Square? hint() {
     final expected = _expected;
     if (expected is! NormalMove) return null;
-    _usedHint = true;
     return expected.from;
   }
 

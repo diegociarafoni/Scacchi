@@ -20,11 +20,19 @@ void main() {
     expect(await again.read('c'), isNull);
   });
 
-  test('JsonFileStore ignora un file illeggibile', () async {
-    final file = File('${dir.path}/training.json')..writeAsStringSync('{x');
-    final store = JsonFileStore(file);
-    expect(await store.read('a'), isNull);
-    await store.write('a', '1');
-    expect(await JsonFileStore(file).read('a'), '1');
-  });
+  for (final content in ['{x', '{"a": 1}']) {
+    test(
+      'JsonFileStore mette da parte un file illeggibile: $content',
+      () async {
+        final file = File('${dir.path}/training.json')
+          ..writeAsStringSync(content);
+        final store = JsonFileStore(file);
+        expect(await store.read('a'), isNull);
+        final backups = dir.listSync().where((f) => f.path.contains('.bad-'));
+        expect((backups.single as File).readAsStringSync(), content);
+        await store.write('a', '1');
+        expect(await JsonFileStore(file).read('a'), '1');
+      },
+    );
+  }
 }

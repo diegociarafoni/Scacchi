@@ -67,7 +67,6 @@ void main() {
     test('il suggerimento indica la casa del pezzo da muovere', () {
       final s = PuzzleSession(hangingQueen);
       expect(s.hint(), Square.e6);
-      expect(s.usedHint, isTrue);
     });
 
     test('mostrare la soluzione gioca la mossa e fa fallire il puzzle', () {

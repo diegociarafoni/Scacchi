@@ -45,13 +45,36 @@ void main() {
       expect(again.next().id, isNot('b'));
     });
 
-    test('notifica ogni puzzle completato (per XP e obiettivi)', () async {
+    test('ripetere un puzzle già visto non cambia il punteggio', () async {
       final t = await PuzzleTrainer.load(library, MemoryStore());
-      final events = <PuzzleCompleted>[];
-      t.onCompleted = events.add;
-      await t.record(library.byId('a')!, solved: true);
-      expect(events.single.puzzle.id, 'a');
-      expect(events.single.solved, isTrue);
+      await t.record(library.byId('b')!, solved: true);
+      final rating = t.rating;
+      expect(await t.record(library.byId('b')!, solved: true), isNull);
+      expect(t.rating, rating);
+      expect(t.solvedCount, 1);
+    });
+
+    test('visti tutti, ripropone il meno recente', () async {
+      final t = await PuzzleTrainer.load(library, MemoryStore());
+      for (final id in ['a', 'b', 'c']) {
+        await t.record(library.byId(id)!, solved: true);
+      }
+      final first = t.next();
+      expect(first.id, 'a');
+      await t.record(first, solved: true);
+      expect(t.next().id, 'b');
+    });
+
+    test('dati salvati parziali non vengono caricati a metà', () async {
+      final store = MemoryStore();
+      await store.write(
+        PuzzleTrainer.storageKey,
+        '{"rating": {"r": 1800, "d": 60, "v": 0.06}, "seen": ["a"], '
+        '"solved": "x", "failed": 0}',
+      );
+      final t = await PuzzleTrainer.load(library, store);
+      expect(t.rating.rating, 1500);
+      expect(t.seen, isEmpty);
     });
 
     test('ignora dati salvati illeggibili', () async {

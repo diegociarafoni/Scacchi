@@ -50,6 +50,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
   Square? _hint;
   int _revision = 0;
   bool _recorded = false;
+  bool _repeat = false;
   Timer? _replyTimer;
   final _stopwatch = Stopwatch();
 
@@ -71,6 +72,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
     _delta = null;
     _hint = null;
     _recorded = false;
+    _repeat = false;
     _stopwatch
       ..reset()
       ..start();
@@ -105,17 +107,22 @@ class _PuzzlePageState extends State<PuzzlePage> {
     _feedback = _session.firstTry ? _Feedback.solved : _Feedback.revealed;
     if (_recorded) return;
     _recorded = true;
-    final solved = _session.firstTry;
     _stopwatch.stop();
-    widget.trainer.record(_session.puzzle, solved: solved).then((delta) {
-      if (mounted) setState(() => _delta = delta);
+    _record(_session.puzzle, solved: _session.firstTry);
+  }
+
+  Future<void> _record(Puzzle puzzle, {required bool solved}) async {
+    final delta = await widget.trainer.record(puzzle, solved: solved);
+    if (!mounted) return;
+    setState(() {
+      _delta = delta;
+      _repeat = delta == null;
     });
     final record = widget.onActivity;
-    if (record != null && !_session.revealed) {
-      record(PuzzleSolved(duration: _stopwatch.elapsed)).then((update) {
-        if (mounted && update != null) showProgressFeedback(context, update);
-      });
-    }
+    // Le ripetizioni e le soluzioni mostrate non valgono XP.
+    if (record == null || delta == null || _session.revealed) return;
+    final update = await record(PuzzleSolved(duration: _stopwatch.elapsed));
+    if (mounted && update != null) showProgressFeedback(context, update);
   }
 
   void _showHint() => setState(() => _hint = _session.hint());
@@ -150,7 +157,11 @@ class _PuzzlePageState extends State<PuzzlePage> {
       _Feedback.find => 'Trova la mossa migliore per il $side.',
       _Feedback.correct => 'Giusto! Continua.',
       _Feedback.wrong => 'Non è la mossa giusta. Riprova.',
+      _Feedback.solved when _repeat =>
+        'Risolto! Già visto: punteggio invariato.',
       _Feedback.solved => 'Risolto! Punteggio $rating$delta.',
+      _Feedback.revealed when _repeat && _session.state == PuzzleState.solved =>
+        'Puzzle concluso. Già visto: punteggio invariato.',
       _Feedback.revealed =>
         _session.state == PuzzleState.solved
             ? 'Puzzle concluso. Punteggio $rating$delta.'

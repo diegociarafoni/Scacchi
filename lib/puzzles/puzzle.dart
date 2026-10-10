@@ -50,7 +50,7 @@ class Puzzle {
   Position get initial => Chess.fromSetup(Setup.parseFen(fen));
 
   /// Posizione in cui il giocatore deve trovare la mossa.
-  Position get start => initial.play(opponentMove);
+  late final Position start = initial.play(opponentMove);
 
-  Side get playerSide => start.turn;
+  late final Side playerSide = start.turn;
 }
