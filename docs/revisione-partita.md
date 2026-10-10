@@ -68,3 +68,25 @@ Un pedone offerto non basta, come su chess.com.
 ## Momenti chiave
 
 `GameReview.keyMoments` elenca le mosse Brillanti, Ottime, Occasioni mancate, Errori ed Errori gravi, da evidenziare nel grafico della valutazione (`whiteWinCurve`, una probabilità per posizione dal punto di vista del Bianco).
+
+## Schermata di revisione
+
+Si apre dal menu della partita (⋮ → **Revisione della partita**), disponibile quando il motore è presente e c'è almeno una mossa. Il codice è in `lib/review/review_page.dart`.
+
+| Elemento | Requisito | Comportamento |
+|---|---|---|
+| Avanzamento | RF-60 | "Analisi in corso: n di N" con barra; **Interrompi** ferma il motore e mostra "Revisione interrotta." |
+| Riepilogo | RF-63 | Precisione ed Elo stimato per Bianco e Nero; "Mosse per categoria" apre il conteggio per categoria |
+| Grafico | RF-64 | Probabilità di vittoria del Bianco per posizione, momenti chiave colorati per categoria; un tocco porta alla posizione |
+| Barra di valutazione | RF-50 | Verticale accanto alla scacchiera, parte bianca proporzionale alla probabilità del Bianco, valore numerico (`+0.3`, `M3`, `#`) |
+| Scacchiera | RF-54, RF-61 | Posizione dopo la mossa scelta, simbolo della categoria sulla casa d'arrivo, freccia verde della mossa migliore quando non è stata giocata |
+| Mossa scelta | RF-61 | "3… Cf6 è un errore grave" e "Migliore: g6" |
+| Riprova | RF-65 | Sugli errori (imprecisione, errore, occasione mancata, errore grave) si rigioca la posizione critica finché si trova la mossa del motore; **Soluzione** mostra la freccia |
+| Lista mosse | RF-61 | Ogni mossa con il simbolo della categoria, bordo del colore della categoria |
+| Navigazione | RM-01 | Barra in basso: inizio, precedente, successiva, fine |
+
+**Cache** (RF-66): la revisione calcolata resta in memoria per la sessione (`ReviewCache`), quindi riaprirla è immediato. Il salvataggio nel database locale arriverà con l'archivio delle partite.
+
+**Progressi**: `ReviewPage.onReviewed` viene chiamata solo per un'analisi nuova, per registrare `ReviewCompleted` nei progressi una volta per partita.
+
+**Accessibilità**: la barra di valutazione ha un'etichetta descrittiva ("Bianco avanti di 1.5", "Matto in 2 per il Nero"), le mosse della lista sono pulsanti con mossa e categoria, la precisione è letta come percentuale.

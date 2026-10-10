@@ -4,40 +4,7 @@ import 'package:scacchi/engine/uci.dart';
 import 'package:scacchi/review/game_review.dart';
 import 'package:scacchi/review/move_classification.dart';
 
-// 1.e4 e5 2.Ac4 Cc6 3.Dh5 Cf6?? 4.Dxf7#
-const scholar = ['e2e4', 'e7e5', 'f1c4', 'b8c6', 'd1h5', 'g8f6', 'h5f7'];
-
-List<Move> moves(List<String> uci) => [for (final m in uci) Move.parse(m)!];
-
-/// Motore finto: ogni mossa giocata è la migliore a +0.2, tranne dove indicato.
-PositionEvaluator fakeEngine(
-  List<String> game, {
-  Map<int, List<InfoLine>> overrides = const {},
-  List<String>? calls,
-}) {
-  final fens = <String, int>{};
-  Position p = Chess.initial;
-  for (var i = 0; i < game.length; i++) {
-    fens[p.fen] = i;
-    p = p.play(Move.parse(game[i])!);
-  }
-  return (fen) async {
-    calls?.add(fen);
-    final ply = fens[fen];
-    if (ply == null) {
-      return [const InfoLine(multipv: 1, pv: [], score: EngineScore.cp(0))];
-    }
-    return overrides[ply] ??
-        [
-          InfoLine(
-            multipv: 1,
-            depth: 12,
-            pv: [game[ply]],
-            score: EngineScore.cp(ply.isEven ? 20 : -20),
-          ),
-        ];
-  };
-}
+import 'fake_engine.dart';
 
 void main() {
   group('RF-60 revisione completa della partita', () {
@@ -106,6 +73,12 @@ void main() {
       expect(r.whiteWinCurve.last, 100);
       expect(r.whiteWinCurve[6], 100);
       expect(r.keyMoments, contains(5));
+      // Valutazione numerica per la barra, dal punto di vista del Bianco.
+      expect(r.whiteScores, hasLength(8));
+      expect(r.whiteScores[0], const EngineScore.cp(20));
+      expect(r.whiteScores[5], const EngineScore.cp(30));
+      expect(r.whiteScores[6], const EngineScore.mate(1));
+      expect(r.whiteScores[7], const EngineScore.mate(0));
     });
 
     test('non interroga il motore sulle posizioni finali', () async {

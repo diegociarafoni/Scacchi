@@ -52,12 +52,19 @@ class MoveReview {
 }
 
 class GameReview {
-  const GameReview({required this.moves, required this.whiteWinCurve});
+  const GameReview({
+    required this.moves,
+    required this.whiteWinCurve,
+    required this.whiteScores,
+  });
 
   final List<MoveReview> moves;
 
   /// Probabilità di vittoria del Bianco per ogni posizione, iniziale compresa.
   final List<double> whiteWinCurve;
+
+  /// Valutazione del motore per ogni posizione, dal punto di vista del Bianco.
+  final List<EngineScore> whiteScores;
 
   Iterable<MoveReview> _of(Side side) => moves.where((m) => m.side == side);
 
@@ -108,6 +115,7 @@ Future<GameReview?> reviewGame({
   onProgress?.call(0, total);
 
   final lines = <List<InfoLine>>[];
+  final scores = <EngineScore>[];
   final wins = <double>[];
   bool cancelled() => isCancelled?.call() ?? false;
   for (var i = 0; i < total; i++) {
@@ -121,6 +129,7 @@ Future<GameReview?> reviewGame({
       throw StateError('Nessuna valutazione del motore per ${pos.fen}');
     }
     lines.add(l);
+    scores.add(score);
     wins.add(winPercent(score));
     onProgress?.call(i + 1, total);
   }
@@ -178,6 +187,10 @@ Future<GameReview?> reviewGame({
     whiteWinCurve: [
       for (var i = 0; i < total; i++)
         positions[i].turn == Side.white ? wins[i] : 100 - wins[i],
+    ],
+    whiteScores: [
+      for (var i = 0; i < total; i++)
+        positions[i].turn == Side.white ? scores[i] : scores[i].negated,
     ],
   );
 }

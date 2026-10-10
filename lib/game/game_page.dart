@@ -8,6 +8,8 @@ import '../engine/computer_player.dart';
 import '../engine/levels.dart';
 import '../engine/uci.dart';
 import '../engine/uci_transport.dart';
+import '../review/engine_evaluator.dart';
+import '../review/review_page.dart';
 import 'chess_game.dart';
 import 'new_game_dialog.dart';
 
@@ -227,6 +229,20 @@ class _GamePageState extends State<GamePage> {
     }
   }
 
+  void _openReview() {
+    final player = _computerPlayer;
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => ReviewPage(
+          initial: _game.initial,
+          moves: [for (final m in _game.moves) m.move],
+          evaluate: engineEvaluator(player),
+          onCancel: player.stop,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final actions = _GameActions(
@@ -258,8 +274,15 @@ class _GamePageState extends State<GamePage> {
                 setState(() => _autoFlip = !_autoFlip);
                 if (_autoFlip) _refresh(animate: false);
               }
+              if (value == 'review') _openReview();
             },
             itemBuilder: (context) => [
+              if (widget.computerAvailable)
+                PopupMenuItem(
+                  value: 'review',
+                  enabled: _game.moves.isNotEmpty && !_thinking,
+                  child: const Text('Revisione della partita'),
+                ),
               CheckedPopupMenuItem(
                 value: 'autoflip',
                 checked: _autoFlip,
