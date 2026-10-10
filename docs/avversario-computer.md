@@ -17,7 +17,9 @@ Durante la riflessione del computer la scacchiera è bloccata e compare la scrit
 - **Annulla** ritira la mossa del giocatore e la risposta del computer, così il turno
   torna al giocatore. Se il computer sta ancora pensando, la ricerca viene interrotta.
 - **Abbandona** fa abbandonare il giocatore, non il computer.
-- **Patta**: il computer accetta solo se si valuta in svantaggio di almeno mezzo pedone (50 centipedoni) nella sua ultima ricerca; altrimenti rifiuta (requisito RF-25).
+- **Annulla** dopo un abbandono o una patta concordata riapre la partita senza togliere mosse.
+- **Patta**: il computer valuta la posizione attuale a piena forza e accetta solo se si giudica in svantaggio di almeno mezzo pedone (50 centipedoni); altrimenti rifiuta (requisito RF-25).
+- Se il motore non risponde compare il messaggio "Il computer non risponde." con il pulsante **Riprova**; il motore viene riavviato alla richiesta successiva.
 - La rotazione automatica della scacchiera non si applica contro il computer.
 
 ## Piattaforme
@@ -84,15 +86,20 @@ lib/game/
   game_page.dart       integrazione nella schermata di gioco
 ```
 
-- `ComputerPlayer` riceve una posizione FEN e un `EngineLevel` e restituisce un `EngineMove`
+- `ComputerPlayer.bestMove` riceve la posizione iniziale (FEN), la cronologia delle mosse e un `EngineLevel` e restituisce un `EngineMove`
   (mossa già nel formato di dartchess, variante prevista, valutazione), oppure `null` se non
   ci sono mosse legali. Non applica la mossa: lo fa `ChessGame`, che resta l'unica fonte delle regole.
+- Al motore si invia `position fen <iniziale> moves ...`: con la cronologia Stockfish riconosce le ripetizioni, come fa `ChessGame`.
+- `ComputerPlayer.evaluate` valuta una posizione a piena forza (300 ms), usata per decidere sulla patta.
 - Le richieste vanno in coda: il motore esegue una ricerca alla volta.
+- Dopo un errore (timeout, avvio fallito) il motore viene chiuso e la richiesta successiva ne avvia uno nuovo, così una risposta tardiva non viene scambiata per quella di una nuova ricerca. `dispose()` fa fallire subito le richieste in corso.
 - Le opzioni UCI del livello vengono inviate solo quando cambiano.
-- `stop()` chiede al motore di rispondere subito. La schermata di gioco scarta le risposte
+- `stop()` chiede al motore di rispondere subito, senza il ritardo artificiale dei livelli bassi. La schermata di gioco scarta le risposte
   arrivate per una posizione non più attuale (dopo un annullamento o una nuova partita).
-- Le mosse di arrocco arrivano da Stockfish come `e1g1` e vengono convertite nel formato di
-  dartchess (re su torre, `e1h1`).
+- L'arrocco viaggia come `e1g1` verso e da Stockfish e come re su torre (`e1h1`) in dartchess;
+  `ComputerPlayer` converte in entrambe le direzioni.
+- Su Android e iOS `Stockfish.create()` ammette un solo motore alla volta: se il precedente non ha
+  ancora liberato il posto, l'avvio riprova fino a cinque volte.
 - `UciTransport` separa la logica dal motore concreto: in produzione `StockfishTransport`,
   nei test un motore finto o un processo Stockfish.
 

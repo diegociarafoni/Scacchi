@@ -96,4 +96,20 @@ void main() {
     game.undo();
     expect(game.isOver, isFalse);
   });
+
+  test(
+    'resume riapre la partita dopo abbandono o patta senza togliere mosse',
+    () {
+      final game = ChessGame();
+      playAll(game, ['e2e4', 'e7e5']);
+      game.resign(Side.white);
+      game.resume();
+      expect(game.isOver, isFalse);
+      expect(game.moves.length, 2);
+      game.agreeDraw();
+      game.resume();
+      expect(game.isOver, isFalse);
+      expect(game.moves.length, 2);
+    },
+  );
 }

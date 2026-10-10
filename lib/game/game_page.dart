@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 
 import '../engine/computer_player.dart';
 import '../engine/levels.dart';
-import '../engine/uci.dart';
 import '../engine/uci_transport.dart';
 import 'chess_game.dart';
 import 'new_game_dialog.dart';
@@ -37,9 +36,6 @@ class _GamePageState extends State<GamePage> {
   Side? _computerSide;
   ComputerPlayer? _computer;
   bool _thinking = false;
-
-  /// Valutazione dell'ultima mossa del computer, dal suo punto di vista.
-  EngineScore? _computerScore;
 
   /// Invalida le risposte del computer per posizioni non più attuali.
   int _generation = 0;
@@ -101,7 +97,8 @@ class _GamePageState extends State<GamePage> {
     Object? error;
     try {
       reply = await _computerPlayer.bestMove(
-        _game.position.fen,
+        _game.initial.fen,
+        _moveHistory,
         engineLevel(_setup.level),
       );
     } catch (e) {
@@ -109,13 +106,20 @@ class _GamePageState extends State<GamePage> {
     }
     if (!mounted || generation != _generation) return;
     _thinking = false;
-    if (reply != null) {
-      _computerScore = reply.score;
-      _game.play(reply.move);
-    }
+    if (reply != null) _game.play(reply.move);
     _refresh();
-    if (error != null) _showMessage('Il computer non risponde. Riprova.');
+    if (error != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Il computer non risponde.'),
+          duration: const Duration(days: 1),
+          action: SnackBarAction(label: 'Riprova', onPressed: _computerMove),
+        ),
+      );
+    }
   }
+
+  List<Move> get _moveHistory => [for (final m in _game.moves) m.move];
 
   void _cancelComputerMove() {
     _generation++;
@@ -136,7 +140,6 @@ class _GamePageState extends State<GamePage> {
     _cancelComputerMove();
     _setup = setup;
     _game = ChessGame();
-    _computerScore = null;
     if (setup.opponent == Opponent.computer) {
       final human = setup.resolveHumanSide(_random);
       _computerSide = human.opposite;
@@ -149,17 +152,26 @@ class _GamePageState extends State<GamePage> {
     _computerMove();
   }
 
+  bool get _endedByChoice => switch (_game.endReason) {
+    GameEndReason.resignation || GameEndReason.agreement => true,
+    _ => false,
+  };
+
   void _undo() {
     _cancelComputerMove();
-    _game.undo();
-    if (_computerSide == _game.position.turn && _game.canUndo) _game.undo();
+    if (_computerSide != null && _endedByChoice) {
+      _game.resume();
+    } else {
+      _game.undo();
+      if (_computerSide == _game.position.turn && _game.canUndo) _game.undo();
+    }
     _refresh(animate: false);
     _computerMove();
   }
 
   bool get _canUndo {
     if (!_game.canUndo) return false;
-    if (_computerSide != Side.white) return true;
+    if (_computerSide != Side.white || _endedByChoice) return true;
     return _game.moves.length > 1;
   }
 
@@ -190,9 +202,23 @@ class _GamePageState extends State<GamePage> {
   }
 
   /// Il computer accetta la patta solo se si valuta in svantaggio.
-  void _offerDrawToComputer() {
-    final score = _computerScore?.comparable ?? 0;
-    if (score <= -_drawAcceptanceCp) {
+  Future<void> _offerDrawToComputer() async {
+    final generation = _generation;
+    final turn = _game.position.turn;
+    int? computerScore;
+    try {
+      final score = await _computerPlayer.evaluate(
+        _game.initial.fen,
+        _moveHistory,
+      );
+      if (score != null) {
+        computerScore = turn == _computerSide
+            ? score.comparable
+            : -score.comparable;
+      }
+    } catch (_) {}
+    if (!mounted || generation != _generation || _game.isOver) return;
+    if (computerScore != null && computerScore <= -_drawAcceptanceCp) {
       _cancelComputerMove();
       _game.agreeDraw();
       _refresh(animate: false);

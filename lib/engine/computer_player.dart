@@ -28,8 +28,17 @@ class EngineMove {
   final int? depth;
 }
 
+/// Livello usato per valutare una posizione a piena forza.
+const analysisLevel = EngineLevel(
+  id: 0,
+  name: 'Analisi',
+  approxElo: 3000,
+  skill: 20,
+  movetime: Duration(milliseconds: 300),
+);
+
 /// Avversario basato su un motore UCI. Le richieste vengono eseguite in
-/// coda, una ricerca alla volta.
+/// coda, una ricerca alla volta; dopo un errore il motore viene riavviato.
 class ComputerPlayer {
   ComputerPlayer({
     Future<UciTransport> Function()? connect,
@@ -47,7 +56,9 @@ class ComputerPlayer {
   Future<void>? _ready;
   Future<void> _queue = Future.value();
   final _listeners = <void Function(String line)>{};
+  final _pending = <Completer<String>>{};
   final _applied = <String, String>{};
+  bool _stopped = false;
   bool _disposed = false;
 
   /// Avvia il motore; altrimenti avviene alla prima richiesta.
@@ -75,35 +86,83 @@ class ComputerPlayer {
     await _sync();
   });
 
-  /// Calcola la mossa del computer nella posizione [fen] al livello [level].
+  /// Calcola la mossa del computer dopo [moves] a partire da [initialFen].
   /// Restituisce `null` se non esistono mosse legali.
-  Future<EngineMove?> bestMove(String fen, EngineLevel level) =>
-      _enqueue(() => _search(fen, level));
+  Future<EngineMove?> bestMove(
+    String initialFen,
+    List<Move> moves,
+    EngineLevel level,
+  ) => _enqueue(() => _search(initialFen, moves, level));
+
+  /// Valutazione a piena forza dal punto di vista di chi muove.
+  Future<EngineScore?> evaluate(String initialFen, List<Move> moves) =>
+      _enqueue(
+        () async => (await _search(
+          initialFen,
+          moves,
+          analysisLevel,
+          delay: false,
+        ))?.score,
+      );
 
   /// Chiede al motore di rispondere subito con la mossa trovata finora.
   void stop() {
-    if (_transport != null && !_disposed) _send('stop');
+    if (_transport == null || _disposed) return;
+    _stopped = true;
+    _send('stop');
   }
 
   Future<void> dispose() async {
     _disposed = true;
-    await _subscription?.cancel();
-    await _transport?.dispose();
+    _failPending(StateError('Motore chiuso'));
+    await _shutdown();
   }
 
   Future<T> _enqueue<T>(Future<T> Function() task) {
     final run = _queue.then((_) async {
-      await init();
-      return task();
+      try {
+        await init();
+        return await task();
+      } catch (_) {
+        await _shutdown();
+        rethrow;
+      }
     });
     _queue = run.then((_) {}, onError: (_) {});
     return run;
   }
 
-  Future<EngineMove?> _search(String fen, EngineLevel level) async {
+  /// Chiude il motore attuale; la richiesta successiva ne avvia uno nuovo.
+  Future<void> _shutdown() async {
+    final transport = _transport;
+    _ready = null;
+    _transport = null;
+    _applied.clear();
+    _listeners.clear();
+    await _subscription?.cancel();
+    _subscription = null;
+    await transport?.dispose();
+  }
+
+  Future<EngineMove?> _search(
+    String initialFen,
+    List<Move> moves,
+    EngineLevel level, {
+    bool delay = true,
+  }) async {
     final started = DateTime.now();
+    _stopped = false;
     await _applyLevel(level);
-    _send('position fen ${fen.trim()}');
+    Position position = Chess.fromSetup(Setup.parseFen(initialFen));
+    final history = <String>[];
+    for (final move in moves) {
+      history.add(_standardUci(position, move));
+      position = position.play(move);
+    }
+    _send(
+      'position fen ${initialFen.trim()}'
+      '${history.isEmpty ? '' : ' moves ${history.join(' ')}'}',
+    );
 
     final infos = <int, InfoLine>{};
     void onInfo(String line) {
@@ -126,27 +185,43 @@ class ComputerPlayer {
 
     final engineMove = parseBestMove(bestLine);
     if (engineMove == null) return null;
-    final candidates = [
-      for (final i in infos.values)
-        if (i.multipv <= level.multiPv) i,
-    ];
     final chosen =
         (level.multiPv > 1
-            ? chooseCandidate(candidates, level.temperatureCp, _random)
+            ? chooseCandidate(
+                [
+                  for (final i in infos.values)
+                    if (i.multipv <= level.multiPv) i,
+                ],
+                level.temperatureCp,
+                _random,
+              )
             : null) ??
-        candidates.where((i) => i.pv.first == engineMove).firstOrNull ??
+        infos.values.where((i) => i.pv.first == engineMove).firstOrNull ??
         InfoLine(multipv: 1, pv: [engineMove]);
 
     final wait = level.minReply - DateTime.now().difference(started);
-    if (wait > Duration.zero) await Future<void>.delayed(wait);
+    if (delay && !_stopped && wait > Duration.zero) {
+      await Future<void>.delayed(wait);
+    }
 
     return EngineMove(
-      move: Chess.fromSetup(Setup.parseFen(fen))
-          .normalizeMove(NormalMove.fromUci(chosen.pv.first)),
+      move: position.normalizeMove(NormalMove.fromUci(chosen.pv.first)),
       pv: chosen.pv,
       score: chosen.score,
       depth: chosen.depth,
     );
+  }
+
+  /// UCI standard: l'arrocco di dartchess (re su torre) diventa e1g1/e1c1.
+  static String _standardUci(Position position, Move move) {
+    final uci = move.uci;
+    if (move is! NormalMove ||
+        position.board.roleAt(move.from) != Role.king ||
+        position.board.pieceAt(move.to)?.color != position.turn) {
+      return uci;
+    }
+    final file = uci.codeUnitAt(2) > uci.codeUnitAt(0) ? 'g' : 'c';
+    return '${uci.substring(0, 2)}$file${uci[3]}';
   }
 
   Future<void> _applyLevel(EngineLevel level) async {
@@ -174,6 +249,13 @@ class ComputerPlayer {
     _transport!.send(command);
   }
 
+  void _failPending(Object error) {
+    for (final c in [..._pending]) {
+      if (!c.isCompleted) c.completeError(error);
+    }
+    _pending.clear();
+  }
+
   /// Invia [command] e attende la prima riga che soddisfa [done].
   Future<String> _command(
     String command,
@@ -186,7 +268,12 @@ class ComputerPlayer {
     }
 
     _listeners.add(listener);
-    _send(command);
+    _pending.add(completer);
+    try {
+      _send(command);
+    } catch (e) {
+      completer.completeError(e);
+    }
     return completer.future
         .timeout(
           timeout,
@@ -195,6 +282,9 @@ class ComputerPlayer {
             timeout,
           ),
         )
-        .whenComplete(() => _listeners.remove(listener));
+        .whenComplete(() {
+          _listeners.remove(listener);
+          _pending.remove(completer);
+        });
   }
 }

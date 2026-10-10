@@ -55,6 +55,12 @@ class ChessGame {
     if (_moves.isNotEmpty) _moves.removeLast();
   }
 
+  /// Annulla abbandono o patta concordata, lasciando le mosse.
+  void resume() {
+    _resigned = null;
+    _drawAgreed = false;
+  }
+
   void resign(Side side) {
     if (!isOver) _resigned = side;
   }

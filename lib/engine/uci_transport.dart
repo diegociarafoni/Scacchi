@@ -18,8 +18,17 @@ class StockfishTransport implements UciTransport {
   /// multistockfish supporta solo Android e iOS.
   static bool get isSupported => Platform.isAndroid || Platform.isIOS;
 
-  static Future<UciTransport> start() async =>
-      StockfishTransport._(await Stockfish.create());
+  /// Riprova se il motore precedente non ha ancora liberato il posto.
+  static Future<UciTransport> start() async {
+    for (var attempt = 1; ; attempt++) {
+      try {
+        return StockfishTransport._(await Stockfish.create());
+      } on StateError {
+        if (attempt == 5) rethrow;
+        await Future<void>.delayed(Duration(milliseconds: 200 * attempt));
+      }
+    }
+  }
 
   @override
   Stream<String> get lines => _engine.stdout;

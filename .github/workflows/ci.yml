@@ -32,7 +32,11 @@ jobs:
           channel: stable
           flutter-version: 3.47.7
           cache: true
-      - run: xvfb-run -a flutter test integration_test -d linux
+      # Su desktop un file alla volta: con più file l'avvio del secondo fallisce.
+      - run: |
+          for f in integration_test/*_test.dart; do
+            xvfb-run -a flutter test "$f" -d linux
+          done
 
   android:
     runs-on: ubuntu-latest

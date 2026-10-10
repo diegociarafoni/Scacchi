@@ -125,8 +125,7 @@ void main() {
         await _tapMove(tester, 'e2e4');
         await _waitFor(tester, find.text('Muove il Bianco.'));
         await tester.tap(find.text('Patta'));
-        await tester.pump();
-        expect(find.text('Il computer rifiuta la patta.'), findsOneWidget);
+        await _waitFor(tester, find.text('Il computer rifiuta la patta.'));
       });
     },
   );
