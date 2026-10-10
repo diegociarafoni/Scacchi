@@ -1,0 +1,40 @@
+name: Dataset
+
+# Regenerates the curated Lichess datasets and commits them to the PR branch
+# when the builder scripts change.
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - tool/datasets/**
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install chess==1.10.0
+      - name: Puzzles
+        run: |
+          mkdir -p assets/puzzles
+          curl -sSfL https://database.lichess.org/lichess_db_puzzle.csv.zst \
+            | zstd -dc | python3 tool/datasets/build_puzzles.py > assets/puzzles/puzzles.csv
+      - name: Openings
+        run: python3 tool/datasets/build_openings.py > assets/openings/openings.tsv
+      - name: Commit
+        run: |
+          git add assets/puzzles assets/openings
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore(datasets): regenerate curated Lichess datasets"
+          git push
