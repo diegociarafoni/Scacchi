@@ -27,6 +27,7 @@ lib/
   progress/               Gamification: XP, livelli, serie, traguardi (vedi gamification.md)
   archive/                Archivio delle partite e PGN (vedi archivio.md)
   path/                   Percorso a tappe con stelle (vedi percorso.md)
+  stats/                  Statistiche e rating locale (vedi statistiche.md)
   storage/                File JSON locali con versione e scrittura atomica
   settings/
     settings.dart         Impostazioni, valori predefiniti e salvataggio locale
