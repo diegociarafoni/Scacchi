@@ -90,3 +90,25 @@ Si apre dal menu della partita (⋮ → **Revisione della partita**), disponibil
 **Progressi**: `ReviewPage.onReviewed` viene chiamata solo per un'analisi nuova, per registrare `ReviewCompleted` nei progressi una volta per partita.
 
 **Accessibilità**: la barra di valutazione ha un'etichetta descrittiva ("Bianco avanti di 1.5", "Matto in 2 per il Nero"), le mosse della lista sono pulsanti con mossa e categoria, la precisione è letta come percentuale.
+
+## Coach testuale
+
+`explainMove` (`lib/review/coach.dart`) produce una frase breve per ogni mossa, con regole a modello e senza modelli linguistici (RF-70, RF-71). Sulla schermata di revisione compare sotto la mossa scelta quando è un errore. Ogni frase ha un tema (`CoachTheme`) che servirà a raggruppare gli errori ricorrenti.
+
+Le regole si applicano in quest'ordine, e vale la prima che riconosce qualcosa:
+
+| Tema | Quando | Esempio |
+|---|---|---|
+| Matto concesso | Dopo la mossa l'avversario ha il matto | "Dopo Nf6 il Bianco dà matto in 1 con Qxf7#." |
+| Matto mancato | La mossa migliore dava matto e quella giocata no | "Avevi il matto in 1 con Qxf7#." |
+| Pezzo in presa | La risposta prevista cattura un pezzo (non un pedone) e la ripresa non compensa di almeno due pedoni | "Hai lasciato l'alfiere in presa in e5: la donna nera lo cattura." |
+| Forchetta concessa | Il pezzo che risponde attacca insieme due pezzi di valore (re compreso) | "Dopo Nc2+ il cavallo nero attacca insieme il re e la torre: è una forchetta." |
+| Cattura netta mancata | La mossa migliore cattura con un guadagno di almeno due pedoni | "Potevi vincere materiale: Qxd5 cattura la torre." |
+| Doppio attacco mancato | La mossa migliore attacca due pezzi di valore | "Potevi fare un doppio attacco con Nc7+: il cavallo attacca il re e la torre." |
+| Scoperta mancata | Dopo la mossa migliore un altro pezzo attacca un pezzo che prima non attaccava | "Potevi fare un attacco di scoperta con Nc6+: l'alfiere attacca la donna." |
+| Perdita di materiale | Nella variante prevista (quattro semimosse) si perdono almeno due pedoni | "Questa mossa perde materiale: circa 3 pedoni nella variante prevista." |
+| Generica | Nessuna delle precedenti | "Meglio e4: la tua posizione peggiora." |
+
+Le mosse non sbagliate ricevono una frase di lode per categoria ("È la mossa migliore.").
+
+Non ancora coperti: inchiodatura e re esposto (RF-70) e il commento in tempo reale durante la partita (RF-72).

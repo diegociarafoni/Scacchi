@@ -11,6 +11,9 @@ const _values = {
   Role.king: 0,
 };
 
+/// Valore convenzionale del pezzo in pedoni (il re vale 0).
+int pieceValue(Role role) => _values[role]!;
+
 int _value(Piece? p) => p == null ? 0 : _values[p.role]!;
 
 /// Materiale di [side] meno quello dell'avversario, in pedoni.

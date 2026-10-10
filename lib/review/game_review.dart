@@ -26,6 +26,9 @@ class MoveReview {
     this.bestMove,
     this.bestSan,
     this.bestLine = const [],
+    this.bestScore,
+    this.replyLine = const [],
+    this.replyScore,
   });
 
   /// Indice della mossa a partire da 0.
@@ -46,6 +49,14 @@ class MoveReview {
   final Move? bestMove;
   final String? bestSan;
   final List<String> bestLine;
+
+  /// Valutazione della mossa migliore, dal punto di vista di chi muove.
+  final EngineScore? bestScore;
+
+  /// Risposta prevista dell'avversario dopo la mossa giocata e sua
+  /// valutazione dal punto di vista dell'avversario.
+  final List<String> replyLine;
+  final EngineScore? replyScore;
 
   /// La mossa giocata è la prima scelta del motore.
   final bool playedBest;
@@ -177,6 +188,9 @@ Future<GameReview?> reviewGame({
         bestMove: bestMove,
         bestSan: bestSan,
         bestLine: best?.pv ?? const [],
+        bestScore: scores[i],
+        replyLine: lines[i + 1].firstOrNull?.pv ?? const [],
+        replyScore: scores[i + 1],
       ),
     );
     previousLoss = facts.loss;

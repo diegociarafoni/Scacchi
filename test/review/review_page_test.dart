@@ -134,6 +134,18 @@ void main() {
       expect(find.text('Migliore: g6'), findsOneWidget);
     });
 
+    testWidgets('RF-70 il coach spiega l\'errore', (tester) async {
+      await pumpReview(tester);
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text('Nf6 ??'));
+      await tester.tap(find.text('Nf6 ??'));
+      await tester.pumpAndSettle();
+      expect(
+        find.text('Dopo Nf6 il Bianco dà matto in 1 con Qxf7#.'),
+        findsOneWidget,
+      );
+    });
+
     testWidgets('RF-50 barra di valutazione con valore numerico', (
       tester,
     ) async {

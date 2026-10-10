@@ -5,6 +5,7 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
 import '../engine/uci.dart';
+import 'coach.dart';
 import 'game_review.dart';
 import 'move_classification.dart';
 import 'score_format.dart';
@@ -463,6 +464,15 @@ class _ReviewPageState extends State<ReviewPage> {
         ),
         if (!m.playedBest && m.bestSan != null)
           Text('Migliore: ${m.bestSan}', style: text.bodyLarge),
+        if (explainMove(m) case final comment? when c.isError)
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 8,
+            children: [
+              const Icon(Icons.school_outlined, size: 20),
+              Expanded(child: Text(comment.text, style: text.bodyMedium)),
+            ],
+          ),
         if (c.isError && m.bestSan != null)
           Align(
             alignment: Alignment.centerLeft,

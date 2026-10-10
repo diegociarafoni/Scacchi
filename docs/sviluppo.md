@@ -65,6 +65,8 @@ I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisic
 | RF-64 grafico della valutazione cliccabile con momenti chiave | ✓ | |
 | RF-65 Riprova sugli errori | ✓ | |
 | RF-66 cache della revisione (in memoria) | ✓ | |
+| RF-70 spiegazioni: matto concesso o mancato, pezzo in presa, forchetta, perdita di materiale | ✓ | |
+| RF-71 cattura netta, doppio attacco, scoperta dalla variante del motore | ✓ | |
 | RF-31 rotazione automatica a ogni turno | | ✓ |
 | RF-32 patta concordata e annullamento | ✓ | ✓ |
 
