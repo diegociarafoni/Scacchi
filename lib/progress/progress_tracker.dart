@@ -51,23 +51,38 @@ class ProgressTracker {
     ProgressSettings settings,
   ) {
     if (!settings.enabled) return ProgressUpdate(state: state);
-    final today = dayNumber(now);
-    var s = _settle(state, today, settings);
-    if (s.today != today) {
-      s = s.copyWith(
-        today: today,
-        todayGames: 0,
-        todayPuzzles: 0,
-        todaySeconds: 0,
-      );
-    }
-    final before = _progress(s, settings.goal);
-    s = _count(s, activity);
-    final goalReached =
-        before < settings.goal.target &&
-        _progress(s, settings.goal) >= settings.goal.target;
+    final s = _count(_startDay(state, now, settings), activity);
+    return _finish(s, state.xp, xpFor(activity), activity, settings);
+  }
 
-    var xp = xpFor(activity);
+  /// Riconosce l'obiettivo di oggi già raggiunto, per esempio dopo averlo
+  /// abbassato sotto il progresso del giorno.
+  ProgressUpdate refreshGoal(
+    ProgressState state,
+    DateTime now,
+    ProgressSettings settings,
+  ) {
+    if (!settings.enabled) return ProgressUpdate(state: state);
+    return _finish(
+      _startDay(state, now, settings),
+      state.xp,
+      0,
+      null,
+      settings,
+    );
+  }
+
+  ProgressUpdate _finish(
+    ProgressState s,
+    int oldXp,
+    int xp,
+    Activity? activity,
+    ProgressSettings settings,
+  ) {
+    final today = s.today!;
+    final goalReached =
+        s.coveredThrough != today &&
+        _progress(s, settings.goal) >= settings.goal.target;
     var freezeEarned = false;
     if (goalReached) {
       xp += dailyGoalBonusXp;
@@ -80,8 +95,8 @@ class ProgressTracker {
         coveredThrough: () => today,
       );
     }
-    final oldLevel = levelForXp(s.xp);
     s = s.copyWith(xp: s.xp + xp);
+    final oldLevel = levelForXp(oldXp);
     final level = levelForXp(s.xp);
 
     final unlocked = [
@@ -101,26 +116,49 @@ class ProgressTracker {
     );
   }
 
+  /// Giorno di [now]; se l'orologio torna indietro resta il giorno già visto.
+  int _day(ProgressState state, DateTime now) {
+    final day = dayNumber(now);
+    final seen = state.today;
+    return seen != null && seen > day ? seen : day;
+  }
+
+  ProgressState _startDay(
+    ProgressState state,
+    DateTime now,
+    ProgressSettings settings,
+  ) {
+    final today = _day(state, now);
+    final s = _settle(state, today, settings);
+    if (s.today == today) return s;
+    return s.copyWith(
+      today: today,
+      todayGames: 0,
+      todayPuzzles: 0,
+      todaySeconds: 0,
+    );
+  }
+
   /// Serie valida a [now], tenendo conto di riposi e congelamenti.
   int currentStreak(
     ProgressState state,
     DateTime now, [
     ProgressSettings settings = const ProgressSettings(),
-  ]) => _settle(state, dayNumber(now), settings).streak;
+  ]) => _settle(state, _day(state, now), settings).streak;
 
   /// Congelamenti rimasti a [now] dopo aver coperto i giorni saltati.
   int currentFreezes(
     ProgressState state,
     DateTime now, [
     ProgressSettings settings = const ProgressSettings(),
-  ]) => _settle(state, dayNumber(now), settings).freezes;
+  ]) => _settle(state, _day(state, now), settings).freezes;
 
   /// Avanzamento verso l'obiettivo di oggi, nell'unità dell'obiettivo.
   int todayProgress(
     ProgressState state,
     DateTime now,
     ProgressSettings settings,
-  ) => state.today == dayNumber(now) ? _progress(state, settings.goal) : 0;
+  ) => state.today == _day(state, now) ? _progress(state, settings.goal) : 0;
 
   /// Copre i giorni tra l'ultimo coperto e ieri con riposi o congelamenti;
   /// se non basta, la serie si azzera.

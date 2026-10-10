@@ -19,22 +19,39 @@ class ProgressStore {
 
   final File file;
 
+  Future<void> _pending = Future.value();
+
   Future<ProgressData> load() async {
+    await _pending;
+    if (!await file.exists()) return _empty;
     try {
-      if (!await file.exists()) return _empty;
       final json =
           jsonDecode(await file.readAsString()) as Map<String, Object?>;
+      final version = json['version'] as int? ?? 0;
+      if (version < 1 || version > schemaVersion) {
+        throw FormatException('versione dello schema $version');
+      }
       return ProgressData(
         ProgressState.fromJson((json['state']! as Map).cast()),
         ProgressSettings.fromJson((json['settings']! as Map).cast()),
       );
     } on Object {
-      // Un file corrotto non deve impedire di giocare.
+      // Il file non si legge: lo si mette da parte invece di sovrascriverlo.
+      await file.rename(
+        '${file.path}.bad-${DateTime.now().millisecondsSinceEpoch}',
+      );
       return _empty;
     }
   }
 
-  Future<void> save(ProgressData data) async {
+  /// Salva [data]; i salvataggi si accodano, quindi vince sempre l'ultimo.
+  Future<void> save(ProgressData data) {
+    final next = _pending.then((_) => _write(data));
+    _pending = next.catchError((Object _) {});
+    return next;
+  }
+
+  Future<void> _write(ProgressData data) async {
     await file.parent.create(recursive: true);
     final tmp = File('${file.path}.tmp');
     await tmp.writeAsString(

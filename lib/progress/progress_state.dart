@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'package:flutter/foundation.dart';
 
 import 'daily_goal.dart';
 
@@ -187,8 +187,40 @@ class ProgressState {
   @override
   bool operator ==(Object other) =>
       other is ProgressState &&
-      jsonEncode(other.toJson()) == jsonEncode(toJson());
+      other.xp == xp &&
+      other.gamesPlayed == gamesPlayed &&
+      other.wins == wins &&
+      other.draws == draws &&
+      other.puzzlesSolved == puzzlesSolved &&
+      other.lessonsCompleted == lessonsCompleted &&
+      other.reviewsCompleted == reviewsCompleted &&
+      other.streak == streak &&
+      other.bestStreak == bestStreak &&
+      other.freezes == freezes &&
+      other.coveredThrough == coveredThrough &&
+      other.today == today &&
+      other.todayGames == todayGames &&
+      other.todayPuzzles == todayPuzzles &&
+      other.todaySeconds == todaySeconds &&
+      listEquals(other.unlocked, unlocked);
 
   @override
-  int get hashCode => jsonEncode(toJson()).hashCode;
+  int get hashCode => Object.hash(
+    xp,
+    gamesPlayed,
+    wins,
+    draws,
+    puzzlesSolved,
+    lessonsCompleted,
+    reviewsCompleted,
+    streak,
+    bestStreak,
+    freezes,
+    coveredThrough,
+    today,
+    todayGames,
+    todayPuzzles,
+    todaySeconds,
+    Object.hashAll(unlocked),
+  );
 }

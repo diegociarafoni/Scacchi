@@ -30,7 +30,8 @@ Il livello *L* richiede `50 × L × (L − 1)` XP totali: livello 2 a 100 XP, 3 
 
 - L'utente sceglie l'obiettivo tra 1 o 3 partite, 5 puzzle, 10 o 20 minuti. Il predefinito è una partita.
 - I minuti sommano la durata di tutte le attività del giorno.
-- Il giorno è quello di calendario locale: conta la data, non le 24 ore.
+- Il giorno è quello di calendario locale: conta la data, non le 24 ore. Se l'orologio torna indietro (fuso orario, correzione dell'ora) resta valido il giorno più recente già visto, così la serie non conta due volte lo stesso giorno.
+- L'obiettivo vale una volta al giorno: alzarlo dopo averlo raggiunto non allunga di nuovo la serie; abbassarlo sotto il progresso del giorno lo fa raggiungere subito.
 - Ogni giorno con l'obiettivo raggiunto allunga la serie di uno. La serie resta valida per tutto il giorno successivo, finché il giorno non finisce.
 - **Giorno di riposo**: un giorno della settimana a scelta che non interrompe la serie e non la allunga (se si gioca anche quel giorno, conta normalmente).
 - **Protezione (congelamento)**: se ne guadagna una ogni 7 giorni di serie, al massimo 2. Copre automaticamente un giorno saltato. Non è acquistabile.
@@ -45,7 +46,7 @@ Il livello *L* richiede `50 × L × (L − 1)` XP totali: livello 2 a 100 XP, 3 
 | File | Ruolo |
 |---|---|
 | `activity.dart` | Attività registrabili: partita, puzzle, lezione, revisione |
-| `game_activity.dart` | Converte una `ChessGame` conclusa in attività: risultato, pezzo del matto, arrocco lungo |
+| `game_activity.dart` | Converte una `ChessGame` conclusa in attività: risultato, pezzo che dà il matto (anche di scoperta o con l'arrocco), arrocco lungo |
 | `xp.dart` | Tabella degli XP e curva dei livelli |
 | `daily_goal.dart` | Obiettivo giornaliero e scelte proposte |
 | `progress_state.dart` | Stato dei progressi e impostazioni, serializzabili in JSON |
@@ -58,7 +59,7 @@ Il livello *L* richiede `50 × L × (L − 1)` XP totali: livello 2 a 100 XP, 3 
 
 ## Salvataggio
 
-Il file `progress.json` sta nella cartella dati dell'app (`getApplicationSupportDirectory`). Contiene `version` (oggi 1), `settings` e `state`. Un file mancante o illeggibile non blocca l'app: si riparte dallo stato iniziale. Quando arriverà il database locale (RNF-08), questo file sarà importato alla prima migrazione.
+Il file `progress.json` sta nella cartella dati dell'app (`getApplicationSupportDirectory`). Contiene `version` (oggi 1), `settings` e `state`. Un file mancante o illeggibile non blocca l'app: si riparte dallo stato iniziale e il file illeggibile, o scritto da una versione futura dello schema, viene rinominato in `progress.json.bad-<data>` invece di essere sovrascritto. I salvataggi si accodano, così l'ultimo vince sempre, e la scrittura passa da un file temporaneo rinominato alla fine. Quando arriverà il database locale (RNF-08), questo file sarà importato alla prima migrazione.
 
 ## Uso dall'interfaccia
 

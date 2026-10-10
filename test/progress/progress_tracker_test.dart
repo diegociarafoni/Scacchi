@@ -94,6 +94,46 @@ void main() {
       expect(tracker.todayProgress(state, day(6, 0), settings), 0);
     });
 
+    test('alzare l\'obiettivo dopo averlo raggiunto non conta due volte', () {
+      final first = tracker.record(
+        ProgressState.initial,
+        loss,
+        day(5),
+        settings,
+      );
+      const three = ProgressSettings(goal: DailyGoal(GoalKind.games, 3));
+      var state = first.state;
+      for (var i = 0; i < 2; i++) {
+        final u = tracker.record(state, loss, day(5), three);
+        expect(u.goalReached, isFalse);
+        state = u.state;
+      }
+      expect(state.streak, 1);
+    });
+
+    test('abbassare l\'obiettivo sotto il progresso lo fa raggiungere', () {
+      const three = ProgressSettings(goal: DailyGoal(GoalKind.games, 3));
+      var state = tracker
+          .record(ProgressState.initial, loss, day(5), three)
+          .state;
+      state = tracker.record(state, loss, day(5), three).state;
+      final u = tracker.refreshGoal(state, day(5), settings);
+      expect(u.goalReached, isTrue);
+      expect(u.state.streak, 1);
+      expect(
+        tracker.refreshGoal(u.state, day(5), settings).goalReached,
+        isFalse,
+      );
+    });
+
+    test('l\'orologio che torna indietro non raddoppia il giorno', () {
+      final state = playDays([6]);
+      final u = tracker.record(state, loss, day(5), settings);
+      expect(u.goalReached, isFalse);
+      expect(u.state.streak, 1);
+      expect(u.state.coveredThrough, state.coveredThrough);
+    });
+
     test('raggiungere l\'obiettivo dà un bonus di XP', () {
       final first = tracker.record(
         ProgressState.initial,

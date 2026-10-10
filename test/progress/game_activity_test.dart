@@ -45,13 +45,53 @@ void main() {
     expect(gameActivity(game, player: Side.white).matedWith, Role.knight);
   });
 
+  test('matto di scoperta: conta il pezzo che dà scacco', () {
+    // Il cavallo si sposta e scopre la torre in a8.
+    final game = play(
+      ['b8d7'],
+      initial: Chess.fromSetup(
+        Setup.parseFen('RN5k/6pp/8/8/8/8/8/6K1 w - - 0 1'),
+      ),
+    );
+    expect(game.position.isCheckmate, isTrue);
+    expect(gameActivity(game, player: Side.white).matedWith, Role.rook);
+  });
+
+  test('matto con arrocco lungo', () {
+    final game = play(
+      ['e1c1'],
+      initial: Chess.fromSetup(
+        Setup.parseFen('2rkr3/2p1p3/8/8/8/8/8/R3K3 w Q - 0 1'),
+      ),
+    );
+    expect(game.position.isCheckmate, isTrue);
+    expect(gameActivity(game, player: Side.white).matedWith, Role.rook);
+  });
+
+  test('partita che parte già finita, senza mosse', () {
+    final game = ChessGame(
+      initial: Chess.fromSetup(
+        Setup.parseFen('R5k1/5ppp/8/8/8/8/8/6K1 b - - 0 1'),
+      ),
+    );
+    expect(game.isOver, isTrue);
+    expect(gameActivity(game, player: Side.white).matedWith, Role.rook);
+  });
+
+  test('una partita non conclusa non si registra', () {
+    expect(
+      () => gameActivity(play(['e2e4']), player: Side.white),
+      throwsArgumentError,
+    );
+  });
+
   test('arrocco lungo del giocatore', () {
     final game = play(
       ['e1c1', 'e8g8'],
       initial: Chess.fromSetup(
         Setup.parseFen('r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1'),
       ),
-    );
+    )..resign(Side.white);
     expect(gameActivity(game, player: Side.white).castledLong, isTrue);
     expect(gameActivity(game, player: Side.black).castledLong, isFalse);
   });

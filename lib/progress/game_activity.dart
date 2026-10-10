@@ -5,24 +5,29 @@ import 'activity.dart';
 
 /// Converte una partita conclusa in un'attività, dal punto di vista di
 /// [player]; senza [player] è una partita locale tra due persone.
+/// La partita deve essere conclusa.
 GamePlayed gameActivity(
   ChessGame game, {
   Side? player,
   Duration duration = Duration.zero,
 }) {
-  final winner = game.outcome?.winner;
+  final outcome = game.outcome;
+  if (outcome == null) {
+    throw ArgumentError.value(game, 'game', 'partita non conclusa');
+  }
   final result = player == null
       ? GameResult.local
-      : game.outcome == null || winner == null
+      : outcome.winner == null
       ? GameResult.draw
-      : winner == player
+      : outcome.winner == player
       ? GameResult.win
       : GameResult.loss;
   Role? matedWith;
   if (result == GameResult.win && game.endReason == GameEndReason.checkmate) {
-    final last = game.moves.last;
-    final to = (last.move as NormalMove).to;
-    matedWith = last.after.board.roleAt(to);
+    // Conta il pezzo che dà scacco, non quello mosso: vale per scoperte e arrocchi.
+    final pos = game.position;
+    final checkers = pos.checkers;
+    if (checkers.size == 1) matedWith = pos.board.roleAt(checkers.first!);
   }
   var castledLong = false;
   var side = game.initial.turn;

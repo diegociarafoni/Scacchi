@@ -56,9 +56,17 @@ class ProgressController extends ChangeNotifier {
 
   Future<void> updateSettings(ProgressSettings settings) async {
     _settings = settings;
+    _state = _tracker.refreshGoal(_state, _clock(), settings).state;
     notifyListeners();
     await _save();
   }
 
-  Future<void> _save() => _store.save(ProgressData(_state, _settings));
+  Future<void> _save() async {
+    try {
+      await _store.save(ProgressData(_state, _settings));
+    } on FileSystemException catch (e) {
+      // Senza spazio o permessi si continua a giocare con i dati in memoria.
+      debugPrint('Salvataggio dei progressi non riuscito: $e');
+    }
+  }
 }

@@ -49,6 +49,32 @@ void main() {
     expect(data.state, ProgressState.initial);
   });
 
+  test('un file illeggibile viene conservato a parte', () async {
+    file.writeAsStringSync('{non json');
+    await ProgressStore(file).load();
+    final backups = dir.listSync().where((f) => f.path.contains('.bad'));
+    expect(backups, hasLength(1));
+    expect(File(backups.single.path).readAsStringSync(), '{non json');
+  });
+
+  test('una versione futura dello schema non viene sovrascritta', () async {
+    file.writeAsStringSync('{"version":99,"state":{},"settings":{}}');
+    final data = await ProgressStore(file).load();
+    expect(data.state, ProgressState.initial);
+    expect(dir.listSync().where((f) => f.path.contains('.bad')), hasLength(1));
+  });
+
+  test('salvataggi ravvicinati non si sovrappongono', () async {
+    final store = ProgressStore(file);
+    await Future.wait([
+      for (var i = 1; i <= 5; i++)
+        store.save(
+          ProgressData(ProgressState(xp: i), const ProgressSettings()),
+        ),
+    ]);
+    expect((await store.load()).state.xp, 5);
+  });
+
   test('il file porta la versione dello schema', () async {
     await ProgressStore(file)
         .save(const ProgressData(ProgressState.initial, ProgressSettings()));

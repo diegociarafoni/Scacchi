@@ -22,10 +22,10 @@ class Achievement {
   final AchievementCategory category;
 
   /// Vero se lo stato aggiornato dopo [activity] merita il traguardo.
-  final bool Function(ProgressState state, Activity activity) test;
+  final bool Function(ProgressState state, Activity? activity) test;
 }
 
-bool _wonWith(Activity a, bool Function(GamePlayed g) check) =>
+bool _wonWith(Activity? a, bool Function(GamePlayed g) check) =>
     a is GamePlayed && a.result == GameResult.win && check(a);
 
 final List<Achievement> achievements = [
