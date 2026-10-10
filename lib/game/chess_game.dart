@@ -30,6 +30,20 @@ class PlayedMove {
 class ChessGame {
   ChessGame({Position? initial}) : initial = initial ?? Chess.initial;
 
+  /// Partita ricostruita da mosse già giocate, per esempio da un PGN. Ignora
+  /// ripetizioni e regola delle 50 mosse non reclamate; `null` se una mossa è
+  /// illegale o segue un matto o uno stallo.
+  static ChessGame? replay(Position initial, Iterable<Move> moves) {
+    final game = ChessGame(initial: initial);
+    for (final move in moves) {
+      final pos = game.position;
+      if (pos.isGameOver || !pos.isLegal(move)) return null;
+      final (after, san) = pos.makeSan(move);
+      game._moves.add(PlayedMove(move: move, san: san, after: after));
+    }
+    return game;
+  }
+
   final Position initial;
   final List<PlayedMove> _moves = [];
   Side? _resigned;

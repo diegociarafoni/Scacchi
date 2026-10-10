@@ -9,6 +9,8 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | [architettura.md](architettura.md) | Stack, struttura delle cartelle, componenti e flusso di una mossa |
 | [regole-di-gioco.md](regole-di-gioco.md) | Regole implementate e condizioni di fine partita |
 | [interfaccia.md](interfaccia.md) | Schermata di gioco, layout su telefono e tablet, comandi |
+| [gamification.md](gamification.md) | XP, livelli, obiettivo giornaliero, serie, traguardi |
+| [archivio.md](archivio.md) | Salvataggio delle partite, storico, import ed export PGN |
 | [sviluppo.md](sviluppo.md) | Ambiente, comandi, test, CI e convenzioni |
 | [avversario-computer.md](avversario-computer.md) | Partita contro il computer: livelli, motore Stockfish, piattaforme |
 | [licenza.md](licenza.md) | Licenza del progetto e componenti di terze parti |
@@ -20,8 +22,10 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | Partita tra due persone sullo stesso dispositivo | Disponibile |
 | Regole complete e fine partita | Disponibile |
 | Layout per telefono e tablet | Disponibile |
+| Pezzi catturati e vantaggio di materiale | Disponibile |
 | Partita contro il computer (Stockfish) | Disponibile su Android e iOS |
-| Orologio, salvataggio partite, PGN | Pianificato |
-| Gamification | In definizione nei requisiti |
+| Gamification: XP, livelli, obiettivo giornaliero, serie, traguardi | Logica e Profilo disponibili, collegamento alla partita in sviluppo |
+| Archivio partite, import ed export PGN | Logica e schermata disponibili, collegamento alla partita in sviluppo |
+| Orologio | Pianificato |
 
 I requisiti completi sono nel documento dei requisiti del progetto.

@@ -35,10 +35,12 @@ Ogni funzione nasce dai requisiti del progetto, nel documento dei requisiti, con
 
 | Livello | Cartella | Cosa verifica | Comando |
 |---|---|---|---|
-| Unitari | `test/chess_game_test.dart` | Regole e fine partita su `ChessGame`, senza interfaccia | `flutter test` |
+| Unitari | `test/chess_game_test.dart`, `test/material_test.dart` | Regole e fine partita su `ChessGame`; pezzi catturati e vantaggio su `MaterialBalance`; senza interfaccia | `flutter test` |
 | Unitari | `test/engine/` | Protocollo UCI, scelta delle mosse, `ComputerPlayer` con motore finto e con Stockfish reale (se installato) | `flutter test` |
 | Widget | `test/widget_test.dart` | Avvio dell'app e stato iniziale | `flutter test` |
 | Widget | `test/computer_game_test.dart` | Partita contro il computer con un motore finto | `flutter test` |
+| Gamification | `test/progress/` | Regole di XP, serie e traguardi; salvataggio; schermata Profilo | `flutter test test/progress` |
+| Archivio | `test/archive/` | PGN, salvataggio su file, schermata Partite | `flutter test test/archive` |
 | End-to-end | `integration_test/app_test.dart` | L'app reale avviata su un dispositivo o desktop, con tocchi e trascinamenti sulla scacchiera | `flutter test integration_test -d <dispositivo>` |
 | End-to-end | `integration_test/computer_test.dart` | Partite contro un vero Stockfish (processo esterno, richiede `stockfish` installato) | `flutter test integration_test/computer_test.dart -d linux` |
 
@@ -54,6 +56,7 @@ I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisic
 | RF-04 promozione | ✓ | |
 | RF-06 capovolgimento della scacchiera | | ✓ |
 | RF-10 lista delle mosse in SAN | ✓ | ✓ |
+| RF-11 pezzi catturati e vantaggio di materiale | ✓ | ✓ |
 | RF-20 colore e livello contro il computer | ✓ | ✓ |
 | RF-21 motore separato, scacchiera bloccata mentre pensa, ritardo artificiale | ✓ | ✓ |
 | Annullamento contro il computer (mossa e risposta) | | ✓ |
@@ -61,8 +64,15 @@ I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisic
 | RF-25 patta accettata dal computer in base alla valutazione | ✓ | ✓ |
 | RF-31 rotazione automatica a ogni turno | | ✓ |
 | RF-32 patta concordata e annullamento | ✓ | ✓ |
+| RF-100 salvataggio e partita da riprendere | ✓ | |
+| RF-101 storico con ricerca | ✓ | |
+| RF-102 import ed export PGN, condivisione, copia | ✓ | |
 | Annullamento di abbandono e patta senza perdita di mosse | ✓ | |
 | RF-04 chiusura del selettore di promozione con Annulla | | ✓ |
+| RG-01 XP e livelli | ✓ | |
+| RG-02 obiettivo giornaliero, serie, riposo, protezioni | ✓ | |
+| RG-05 traguardi e notifica in-app | ✓ | |
+| RG-12 gamification disattivabile | ✓ | |
 
 ## Integrazione continua
 

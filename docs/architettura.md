@@ -8,6 +8,8 @@
 | Regole degli scacchi | [dartchess](https://pub.dev/packages/dartchess) | Generazione delle mosse legali, notazione SAN, scacco, matto, stallo, materiale insufficiente |
 | Scacchiera | [chessground](https://pub.dev/packages/chessground) | Disegno della scacchiera, trascinamento e tocco, animazioni, evidenziazioni, scelta della promozione |
 | Motore | [multistockfish](https://pub.dev/packages/multistockfish) (Stockfish 19 nativo) | Avversario computer su Android e iOS, in isolate separati |
+| File locali | [path_provider](https://pub.dev/packages/path_provider) | Cartella dati dell'app per i salvataggi |
+| Condivisione | [share_plus](https://pub.dev/packages/share_plus) | Menu di condivisione del sistema per il PGN |
 
 Entrambe le librerie sono sviluppate da Lichess e sono usate dalla sua app mobile.
 
@@ -20,11 +22,16 @@ lib/
   main.dart               Avvio dell'app, tema chiaro e scuro
   game/
     chess_game.dart       Stato della partita, senza dipendenze dall'interfaccia
+    material.dart         Pezzi catturati e vantaggio di materiale
     game_page.dart        Schermata di gioco
     new_game_dialog.dart  Scelta di avversario, colore e livello
   engine/                 Avversario computer (vedi avversario-computer.md)
+  progress/               Gamification: XP, livelli, serie, traguardi (vedi gamification.md)
+  archive/                Archivio delle partite e PGN (vedi archivio.md)
+  storage/                File JSON locali con versione e scrittura atomica
 test/
   chess_game_test.dart    Test delle regole e della fine partita
+  material_test.dart      Test del materiale catturato
   widget_test.dart        Test di avvio dell'interfaccia
   computer_game_test.dart Partita contro il computer nell'interfaccia
   engine/                 Test del protocollo UCI, dei livelli e di Stockfish
@@ -47,9 +54,14 @@ Modello della partita, in Dart puro e quindi testabile senza interfaccia.
 - `undo()` revoca l'abbandono o la patta concordata, se presenti; altrimenti annulla l'ultima mossa.
 - `agreeDraw()` chiude la partita con una patta concordata.
 - `resign(side)` registra l'abbandono del lato indicato.
+- `ChessGame.replay(initial, moves)` ricostruisce una partita già giocata (import PGN) senza fermarsi a ripetizioni o 50 mosse non reclamate.
 - `endReason` e `outcome` descrivono come e con quale risultato è finita la partita.
 
 `dartchess` non rileva da sola la triplice ripetizione né la regola delle 50 mosse, perché richiedono la cronologia della partita: `ChessGame` le calcola a partire dalla lista delle posizioni. I dettagli sono in [regole-di-gioco.md](regole-di-gioco.md).
+
+### `MaterialBalance` (`lib/game/material.dart`)
+
+Calcola da una partita i pezzi catturati da ciascun lato, ripercorrendo le mosse (comprese le prese en passant), e la differenza di materiale presente sulla scacchiera. È Dart puro e si testa senza interfaccia.
 
 ### `GamePage` (`lib/game/game_page.dart`)
 
@@ -68,4 +80,3 @@ Contro il computer, dopo la mossa del giocatore `GamePage` chiede a `ComputerPla
 
 ## Evoluzioni previste
 
-- Salvataggio e PGN si baseranno sulla lista `ChessGame.moves`.

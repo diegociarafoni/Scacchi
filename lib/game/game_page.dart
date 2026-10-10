@@ -8,6 +8,7 @@ import '../engine/computer_player.dart';
 import '../engine/levels.dart';
 import '../engine/uci_transport.dart';
 import 'chess_game.dart';
+import 'material.dart';
 import 'new_game_dialog.dart';
 
 /// Partita tra due persone sullo stesso dispositivo o contro il computer.
@@ -358,14 +359,15 @@ class _GamePageState extends State<GamePage> {
                       constraints.maxHeight - _portraitChromeHeight,
                     ),
                   );
+            const boardSettings = ChessboardSettings(
+              colorScheme: ChessboardColorScheme.green,
+            );
             final board = Chessboard(
               size: boardSize,
               controller: _board,
               orientation: _orientation,
               onMove: _onMove,
-              settings: const ChessboardSettings(
-                colorScheme: ChessboardColorScheme.green,
-              ),
+              settings: boardSettings,
             );
             final status = _StatusLine(
               text: switch (_task) {
@@ -375,6 +377,17 @@ class _GamePageState extends State<GamePage> {
               },
             );
             final moves = _MoveList(game: _game, horizontal: !landscape);
+            final balance = MaterialBalance.of(_game);
+            final topMaterial = _MaterialRow(
+              balance: balance,
+              side: _orientation.opposite,
+              pieceAssets: boardSettings.pieceAssets,
+            );
+            final bottomMaterial = _MaterialRow(
+              balance: balance,
+              side: _orientation,
+              pieceAssets: boardSettings.pieceAssets,
+            );
             if (landscape) {
               return Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -384,8 +397,10 @@ class _GamePageState extends State<GamePage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
+                        topMaterial,
                         status,
                         Expanded(child: moves),
+                        bottomMaterial,
                         actions,
                       ],
                     ),
@@ -402,7 +417,9 @@ class _GamePageState extends State<GamePage> {
                       children: [
                         SizedBox(height: _moveStripHeight, child: moves),
                         status,
+                        topMaterial,
                         board,
+                        bottomMaterial,
                       ],
                     ),
                   ),
@@ -424,8 +441,9 @@ const int _drawAcceptanceCp = 50;
 const double _moveStripHeight = 40;
 const double _statusHeight = 48;
 const double _actionsHeight = 72;
+const double _materialHeight = 28;
 const double _portraitChromeHeight =
-    _moveStripHeight + _statusHeight + _actionsHeight;
+    _moveStripHeight + _statusHeight + _actionsHeight + 2 * _materialHeight;
 
 String _sideName(Side side) => side == Side.white ? 'Bianco' : 'Nero';
 
@@ -560,6 +578,79 @@ class _ActionButton extends StatelessWidget {
                   ?.copyWith(color: color),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+const _roleNames = {
+  Role.pawn: 'pedone',
+  Role.knight: 'cavallo',
+  Role.bishop: 'alfiere',
+  Role.rook: 'torre',
+  Role.queen: 'donna',
+  Role.king: 're',
+};
+
+class _MaterialRow extends StatelessWidget {
+  const _MaterialRow({
+    required this.balance,
+    required this.side,
+    required this.pieceAssets,
+  });
+
+  final MaterialBalance balance;
+  final Side side;
+  final PieceAssets pieceAssets;
+
+  @override
+  Widget build(BuildContext context) {
+    final advantage = balance.advantage(side);
+    final opponent = side.opposite;
+    final captured = balance.capturedBy(side);
+    final description = [
+      '${_sideName(side)}: ',
+      captured.isEmpty
+          ? 'nessun pezzo catturato'
+          : 'ha catturato ${captured.map((r) => _roleNames[r]).join(', ')}',
+      if (advantage > 0) ', vantaggio di $advantage',
+    ].join();
+    return Semantics(
+      label: description,
+      excludeSemantics: true,
+      child: SizedBox(
+        height: _materialHeight,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Row(
+                children: [
+                  for (final (i, role) in captured.indexed)
+                    Image(
+                      key: ValueKey(
+                        'captured-${opponent.name}-${role.name}-$i',
+                      ),
+                      image:
+                          pieceAssets[Piece(color: opponent, role: role).kind]!,
+                      width: 20,
+                      height: 20,
+                    ),
+                  if (advantage > 0) ...[
+                    const SizedBox(width: 6),
+                    Text(
+                      '+$advantage',
+                      key: ValueKey('advantage-${side.name}'),
+                      style: Theme.of(context).textTheme.labelLarge,
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );
