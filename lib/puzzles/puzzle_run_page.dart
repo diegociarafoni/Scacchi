@@ -8,6 +8,7 @@ import '../progress/activity.dart';
 import '../progress/progress_feedback.dart';
 import '../progress/progress_tracker.dart';
 import '../training/training_board.dart';
+import 'puzzle.dart';
 import 'activity_recorder.dart';
 import 'puzzle_run.dart';
 import 'puzzle_trainer.dart';
@@ -108,17 +109,26 @@ class _PuzzleRunPageState extends State<PuzzleRunPage> {
     widget.trainer.records.submit(widget.mode, _run.score).then((record) {
       if (mounted) setState(() => _newRecord = record);
     });
-    _recordActivities(_run.score, _stopwatch.elapsed);
+    _recordActivities(_run.solved, _stopwatch.elapsed);
   }
 
   /// Registra i puzzle risolti e mostra un'unica notifica riassuntiva.
-  Future<void> _recordActivities(int solved, Duration elapsed) async {
+  Future<void> _recordActivities(List<Puzzle> solved, Duration elapsed) async {
     final record = widget.onActivity;
-    if (record == null || solved == 0) return;
-    final each = elapsed ~/ solved;
+    if (record == null) return;
+    // Il tempo è diviso tra i puzzle risolti; il resto va alla sessione.
+    final each = solved.isEmpty ? Duration.zero : elapsed ~/ solved.length;
+    final activities = <Activity>[
+      for (final p in solved) PuzzleSolved(themes: p.themes, duration: each),
+      PuzzleRunFinished(
+        mode: widget.mode.name,
+        score: solved.length,
+        duration: elapsed - each * solved.length,
+      ),
+    ];
     final updates = <ProgressUpdate>[];
-    for (var i = 0; i < solved; i++) {
-      final update = await record(PuzzleSolved(duration: each));
+    for (final a in activities) {
+      final update = await record(a);
       if (update != null) updates.add(update);
     }
     if (!mounted || updates.isEmpty) return;
@@ -277,4 +287,7 @@ ProgressUpdate mergeUpdates(List<ProgressUpdate> updates) => ProgressUpdate(
   goalReached: updates.any((u) => u.goalReached),
   freezeEarned: updates.any((u) => u.freezeEarned),
   unlocked: [for (final u in updates) ...u.unlocked],
+  challengesCompleted: [for (final u in updates) ...u.challengesCompleted],
+  weeklyCompleted: updates.any((u) => u.weeklyCompleted),
+  newRecords: {for (final u in updates) ...u.newRecords}.toList(),
 );

@@ -78,7 +78,7 @@ class PuzzleRun {
   final Set<String> _used = {};
   late PuzzleSession _current;
   int _index = 0;
-  int _score = 0;
+  final List<Puzzle> _solved = [];
   int _mistakes = 0;
   int _combo = 0;
   int _bestCombo = 0;
@@ -87,7 +87,10 @@ class PuzzleRun {
   Duration _bonus = Duration.zero;
 
   PuzzleSession get current => _current;
-  int get score => _score;
+  int get score => _solved.length;
+
+  /// Puzzle risolti nella serie, in ordine.
+  List<Puzzle> get solved => List.unmodifiable(_solved);
   int get mistakes => _mistakes;
   int get combo => _combo;
   int get bestCombo => _bestCombo;
@@ -117,7 +120,7 @@ class PuzzleRun {
         _current.playReply();
         return RunMoveResult.correct;
       case PuzzleMoveResult.solved:
-        _score++;
+        _solved.add(_current.puzzle);
         _combo++;
         _bestCombo = math.max(_bestCombo, _combo);
         if (mode == PuzzleRunMode.storm) _bonus += comboBonus(_combo);

@@ -81,7 +81,7 @@ Sostituisce il puzzle del giorno di chess.com senza server: l'indice è `(giorni
 
 In tutte le modalità la difficoltà cresce: il puzzle numero *n* è scelto a caso tra quelli con punteggio in `[600 + 60·n, 600 + 60·n + 40)`, mai ripetuto nella stessa serie. Il passo (60) è più ampio della finestra (40), così ogni puzzle è più difficile del precedente; se la finestra è vuota si prende il primo puzzle più difficile e, in cima alla raccolta, il più difficile rimasto. La ricerca usa l'ordinamento per punteggio (ricerca binaria), senza scorrere tutta la raccolta a ogni mossa. Un errore fa passare subito al puzzle successivo. Le serie non modificano il punteggio puzzle.
 
-Il miglior risultato di ogni modalità è salvato come record personale (RG-08, chiave `puzzles.records.v1`) e un nuovo record viene festeggiato nella schermata finale. Record e XP dei puzzle risolti valgono anche se si esce a metà serie.
+Il miglior risultato di ogni modalità è salvato come record personale (RG-08, chiave `puzzles.records.v1`) e un nuovo record viene festeggiato nella schermata finale. Record e XP dei puzzle risolti valgono anche se si esce a metà serie. Il record mostrato nella scheda Puzzle resta disponibile anche con la gamification spenta; il Profilo riceve lo stesso punteggio tramite `PuzzleRunFinished` per i suoi record personali.
 
 Il modello è `lib/puzzles/puzzle_run.dart`, la schermata `lib/puzzles/puzzle_run_page.dart`; il tempo arriva da una funzione iniettabile, così i test non aspettano minuti veri.
 

@@ -70,8 +70,11 @@ void main() {
     expect(find.text('Serie conclusa'), findsOneWidget);
     expect(find.text('Nuovo record personale!'), findsOneWidget);
     expect(trainer.records.best(PuzzleRunMode.streak), 2);
-    expect(activities, hasLength(2));
-    expect(find.text('+10 XP'), findsOneWidget);
+    expect(activities.whereType<PuzzleSolved>(), hasLength(2));
+    final run = activities.whereType<PuzzleRunFinished>().single;
+    expect(run.mode, 'streak');
+    expect(run.score, 2);
+    expect(find.text('+15 XP'), findsOneWidget);
   });
 
   testWidgets('RF-82 Storm finisce allo scadere del tempo', (tester) async {
