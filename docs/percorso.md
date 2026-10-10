@@ -1,0 +1,55 @@
+# Percorso a tappe
+
+Requisito RG-03: una mappa di capitoli e tappe sul modello di Duolingo e del modulo "Impara" di Lichess, con valutazione da 1 a 3 stelle. Il codice è in `lib/path/`.
+
+## Capitoli
+
+| Capitolo | Tappe |
+|---|---|
+| Il movimento dei pezzi | Torre, alfiere, donna, re, cavallo, pedone (con promozione) |
+| Matti elementari | Matto in una (corridoio, scala di torri, affogato), matto in due, guardiano (400 Elo) |
+| Tattiche | Forchetta di cavallo e di pedone, infilata, guardiano (800) |
+| Finali | Matto di donna, matto di torre, guardiano (1000) |
+| Aperture | Il centro, lo sviluppo (con la Partita Italiana), l'arrocco, guardiano (1200) |
+
+Ogni tappa è breve (2-5 minuti). Una tappa si apre quando tutte le lezioni precedenti sono completate; i guardiani sono sfide facoltative e non bloccano il percorso. Il pulsante "Continua" porta alla prima lezione non completata e, finite le lezioni, al primo guardiano non battuto. Un doppio tocco non apre due tappe.
+
+## Esercizi
+
+**A stelle** (`StarsExercise`): un pezzo bianco da solo su scacchiera vuota raccoglie le stelle, in qualunque ordine. Il minimo di mosse si calcola da solo con una ricerca in ampiezza sugli stati (casa, pezzo, stelle raccolte), quindi i contenuti non contengono numeri da tenere aggiornati. Stelle: 3 al minimo, 2 con al massimo due mosse in più, 1 altrimenti. Il pedone avanza di uno o di due dalla seconda traversa e in ottava diventa donna (la scacchiera promuove a donna senza chiedere).
+
+**A linea** (`LineExercise`): una posizione FEN e una sequenza di passi. I passi pari sono del giocatore, con alternative separate da `|`; i dispari sono le risposte automatiche dell'avversario. Le mosse si confrontano in SAN, così l'arrocco è riconosciuto sia come re su g1 sia come re sulla torre. Con l'obiettivo "matto" all'ultimo passo vale qualunque mossa che dà matto. Una mossa sbagliata non viene giocata e conta come errore. Stelle: 3 senza errori, 2 con uno, 1 con più errori.
+
+La tappa vale la media delle stelle dei suoi esercizi, arrotondata per difetto.
+
+## Bot guardiano
+
+L'ultima tappa dei capitoli 2-5 è una partita contro un bot dell'Elo indicato. `PathPage` riceve `playGuardian`, che gioca la partita e restituisce le stelle (o `null` se non vinta). Finché la partita contro il computer non è collegata, toccare il guardiano mostra un avviso.
+
+## Verifica dei contenuti
+
+`test/path/curriculum_test.dart` controlla ogni esercizio: mosse della soluzione e risposte legali, risposte forzate (unica mossa legale) negli esercizi di matto, ultima mossa che dà matto, stelle raggiungibili e mai sulla casa di partenza. Un errore in un FEN o in una soluzione fa fallire la CI.
+
+## Salvataggio e XP
+
+`PathController` salva le stelle migliori per tappa in `path.json` (tramite `JsonFile`, vedi [archivio.md](archivio.md)) e registra `LessonCompleted` nella gamification, con la durata, la prima volta che una lezione è completata (rigiocarla migliora le stelle ma non dà altro XP; le partite dei guardiani registrano l'XP da sé), se riceve `recordActivity`:
+
+```dart
+final progress = await ProgressController.open();
+final path = await PathController.open(recordActivity: progress.record);
+```
+
+## Componenti
+
+| File | Ruolo |
+|---|---|
+| `exercise.dart` | Esercizi a stelle e a linea, loro svolgimento e stelle |
+| `curriculum.dart` | Capitoli, tappe e contenuti |
+| `path_progress.dart` | Stelle per tappa, sblocco, tappa successiva |
+| `path_controller.dart` | Caricamento, salvataggio, registrazione dell'XP |
+| `path_page.dart` | Mappa del percorso |
+| `stage_page.dart` | Svolgimento di una tappa sulla scacchiera |
+
+Le stelle di tappe rimosse in un aggiornamento dei contenuti restano nel file ma non contano nel totale.
+
+La schermata della tappa usa la scacchiera a tutta larghezza in verticale e affianca testo e comandi in orizzontale; il pannello sotto la scacchiera scorre se lo spazio non basta.

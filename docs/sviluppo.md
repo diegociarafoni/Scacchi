@@ -38,6 +38,7 @@ Ogni funzione nasce dai requisiti del progetto, nel documento dei requisiti, con
 | Unitari | `test/chess_game_test.dart`, `test/material_test.dart`, `test/settings_test.dart` | Regole e fine partita su `ChessGame`; pezzi catturati e vantaggio su `MaterialBalance`; impostazioni e salvataggio; senza interfaccia | `flutter test` |
 | Widget | `test/widget_test.dart` | Avvio dell'app e stato iniziale | `flutter test` |
 | Gamification | `test/progress/` | Regole di XP, serie e traguardi; salvataggio; schermata Profilo | `flutter test test/progress` |
+| Percorso | `test/path/` | Esercizi, contenuti, sblocco, mappa e tappe sulla scacchiera | `flutter test test/path` |
 | Archivio | `test/archive/` | PGN, salvataggio su file, schermata Partite | `flutter test test/archive` |
 | End-to-end | `integration_test/app_test.dart` | L'app reale avviata su un dispositivo o desktop, con tocchi e trascinamenti sulla scacchiera | `flutter test integration_test -d <dispositivo>` |
 
@@ -63,6 +64,7 @@ I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisic
 | RF-04 chiusura del selettore di promozione con Annulla | | ✓ |
 | RG-01 XP e livelli | ✓ | |
 | RG-02 obiettivo giornaliero, serie, riposo, protezioni | ✓ | |
+| RG-03 percorso a tappe, stelle, sblocco, contenuti verificati | ✓ | |
 | RG-05 33 traguardi e notifica in-app | ✓ | |
 | RG-07 sfide giornaliere e settimanali | ✓ | |
 | RG-08 record personali | ✓ | |
