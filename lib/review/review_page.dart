@@ -5,6 +5,7 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
 import '../engine/uci.dart';
+import 'board_utils.dart';
 import 'coach.dart';
 import 'game_review.dart';
 import 'move_classification.dart';
@@ -62,13 +63,7 @@ String _moveNumber(Position before) =>
 /// Mossa come la vede il giocatore: l'arrocco va sulla casa del re (g/c),
 /// non su quella della torre come lo rappresenta dartchess.
 NormalMove _displayed(Position before, NormalMove move) {
-  final piece = before.board.pieceAt(move.from);
-  final target = before.board.pieceAt(move.to);
-  final castles =
-      piece?.role == Role.king &&
-      target?.role == Role.rook &&
-      target?.color == piece?.color;
-  if (!castles) return move;
+  if (!isCastling(before, move)) return move;
   final file = move.to.file > move.from.file ? File.g : File.c;
   return NormalMove(
     from: move.from,
@@ -256,6 +251,19 @@ class _ReviewPageState extends State<ReviewPage> {
     });
     // Dopo un tentativo sbagliato rimette la posizione di partenza.
     _refreshBoard();
+  }
+
+  /// Spiegazioni del coach, calcolate una volta per mossa e solo per gli
+  /// errori.
+  final _comments = <int, CoachComment?>{};
+
+  CoachComment? _comment(GameReview review, MoveReview m) {
+    if (!m.classification.isError) return null;
+    return _comments.putIfAbsent(
+      m.ply,
+      () =>
+          explainMove(m, previous: m.ply > 0 ? review.moves[m.ply - 1] : null),
+    );
   }
 
   Set<Shape> _shapes() {
@@ -464,7 +472,7 @@ class _ReviewPageState extends State<ReviewPage> {
         ),
         if (!m.playedBest && m.bestSan != null)
           Text('Migliore: ${m.bestSan}', style: text.bodyLarge),
-        if (explainMove(m) case final comment? when c.isError)
+        if (_comment(review, m) case final comment?)
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 8,

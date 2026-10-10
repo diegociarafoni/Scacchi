@@ -2,6 +2,7 @@ import 'package:dartchess/dartchess.dart';
 
 import '../engine/uci.dart';
 import 'accuracy.dart' as acc;
+import 'board_utils.dart';
 import 'move_classification.dart';
 import 'sacrifice.dart';
 import 'win_probability.dart';
@@ -155,7 +156,7 @@ Future<GameReview?> reviewGame({
     final winAfter = 100 - wins[i + 1];
 
     final best = lines[i].firstOrNull;
-    final bestMove = _parse(before, best?.pv.firstOrNull);
+    final bestMove = parseEngineMove(before, best?.pv.firstOrNull);
     final bestSan = bestMove == null ? null : before.makeSan(bestMove).$2;
     final second = lines[i].elementAtOrNull(1)?.score;
 
@@ -223,10 +224,3 @@ EngineScore? _terminalScore(List<Position> positions, int i) {
 }
 
 String _repetitionKey(Position pos) => pos.fen.split(' ').take(4).join(' ');
-
-Move? _parse(Position pos, String? uci) {
-  final m = uci == null ? null : Move.parse(uci);
-  if (m == null) return null;
-  final move = m is NormalMove ? pos.normalizeMove(m) : m;
-  return pos.isLegal(move) ? move : null;
-}

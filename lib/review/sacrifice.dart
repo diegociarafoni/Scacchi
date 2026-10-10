@@ -2,6 +2,8 @@ import 'dart:math' as math;
 
 import 'package:dartchess/dartchess.dart';
 
+import 'board_utils.dart';
+
 const _values = {
   Role.pawn: 1,
   Role.knight: 3,
@@ -39,10 +41,8 @@ bool isSacrifice(Position before, Move played, List<String> pv) {
   Square? lastTo;
   var applied = 0;
   for (final uci in pv.take(4)) {
-    final m = Move.parse(uci);
-    if (m == null) break;
-    final move = m is NormalMove ? pos.normalizeMove(m) : m;
-    if (!pos.isLegal(move)) break;
+    final move = parseEngineMove(pos, uci);
+    if (move == null) break;
     lastTo = move is NormalMove ? move.to : null;
     pos = pos.play(move);
     applied++;
@@ -50,12 +50,8 @@ bool isSacrifice(Position before, Move played, List<String> pv) {
   var balance = materialBalance(pos, side);
   // Variante finita su una presa avversaria: contiamo la nostra ripresa.
   final target = lastTo;
-  if (applied.isOdd && target != null) {
-    final canRetake = pos.board
-        .attacksTo(target, side)
-        .squares
-        .any((from) => pos.isLegal(NormalMove(from: from, to: target)));
-    if (canRetake) balance += _value(pos.board.pieceAt(target));
+  if (applied.isOdd && target != null && canCapture(pos, target, side)) {
+    balance += _value(pos.board.pieceAt(target));
   }
   return start - balance >= 2;
 }

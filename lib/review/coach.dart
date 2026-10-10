@@ -1,5 +1,6 @@
 import 'package:dartchess/dartchess.dart';
 
+import 'board_utils.dart';
 import 'game_review.dart';
 import 'move_classification.dart';
 import 'sacrifice.dart';
@@ -26,21 +27,21 @@ class CoachComment {
 }
 
 /// Spiegazione breve della mossa, generata localmente con regole a modello
-/// (RF-70, RF-71). `null` se mancano i dati per spiegarla.
-CoachComment? explainMove(MoveReview m) {
+/// (RF-70, RF-71). [previous] è la mossa precedente dell'avversario, per
+/// riconoscere una ripresa mancata. `null` se mancano i dati per spiegarla.
+CoachComment? explainMove(MoveReview m, {MoveReview? previous}) {
   final c = m.classification;
   if (!c.isError) return CoachComment(CoachTheme.praise, _praise[c]!);
 
   final before = Chess.fromSetup(Setup.parseFen(m.fenBefore));
-  final me = before.turn;
   final after = before.play(m.move);
 
   return _allowedMate(m, after) ??
       _missedMate(m) ??
-      _hanging(after, m.replyLine, me) ??
-      _allowedFork(after, m.replyLine, me) ??
-      _missedTactic(before, m) ??
-      _materialLoss(after, m.replyLine, me) ??
+      _hanging(before, after, m.replyLine) ??
+      _allowedFork(after, m.replyLine) ??
+      _missedTactic(before, m, previous) ??
+      _materialLoss(before, after, m.replyLine) ??
       (m.bestSan == null
           ? null
           : CoachComment(
@@ -61,7 +62,7 @@ const _praise = {
 
 CoachComment? _allowedMate(MoveReview m, Position after) {
   final mate = m.replyScore?.mate;
-  final reply = _move(after, m.replyLine.firstOrNull);
+  final reply = parseEngineMove(after, m.replyLine.firstOrNull);
   if (mate == null || mate <= 0 || reply == null) return null;
   return CoachComment(
     CoachTheme.allowedMate,
@@ -82,18 +83,24 @@ CoachComment? _missedMate(MoveReview m) {
   );
 }
 
-/// L'avversario cattura un pezzo e non lo si riprende con un guadagno pari.
-CoachComment? _hanging(Position after, List<String> reply, Side me) {
-  final first = _move(after, reply.firstOrNull);
+/// L'avversario cattura un pezzo e, contando la nostra ripresa, si resta
+/// sotto di almeno due pedoni rispetto a prima della mossa: gli scambi alla
+/// pari non sono pezzi in presa.
+CoachComment? _hanging(Position before, Position after, List<String> reply) {
+  final me = before.turn;
+  final first = parseEngineMove(after, reply.firstOrNull);
   if (first is! NormalMove) return null;
   final victim = after.board.pieceAt(first.to);
   final attacker = after.board.pieceAt(first.from);
   if (victim == null || attacker == null || victim.color != me) return null;
   if (victim.role == Role.pawn) return null;
-  final start = materialBalance(after, me);
   final taken = after.play(first);
-  final retake = _bestRecapture(taken, first.to, me);
-  if (start - materialBalance(taken, me) - retake < 2) return null;
+  final retake = canCapture(taken, first.to, me)
+      ? pieceValue(attacker.role)
+      : 0;
+  final lost =
+      materialBalance(before, me) - materialBalance(taken, me) - retake;
+  if (lost < 2) return null;
   return CoachComment(
     CoachTheme.hangingPiece,
     'Hai lasciato ${_the(victim.role)} in presa in ${first.to.name}: '
@@ -102,13 +109,13 @@ CoachComment? _hanging(Position after, List<String> reply, Side me) {
   );
 }
 
-CoachComment? _allowedFork(Position after, List<String> reply, Side me) {
-  final first = _move(after, reply.firstOrNull);
+CoachComment? _allowedFork(Position after, List<String> reply) {
+  final first = parseEngineMove(after, reply.firstOrNull);
   if (first is! NormalMove) return null;
   final mover = after.board.pieceAt(first.from);
   if (mover == null) return null;
   final next = after.play(first);
-  final targets = _valuableTargets(next, first.to, me);
+  final targets = _forkTargets(next, first.to);
   if (targets.length < 2) return null;
   return CoachComment(
     CoachTheme.allowedFork,
@@ -117,18 +124,29 @@ CoachComment? _allowedFork(Position after, List<String> reply, Side me) {
   );
 }
 
-/// Tattica nella prima mossa della variante migliore: cattura netta, doppio
-/// attacco o attacco di scoperta.
-CoachComment? _missedTactic(Position before, MoveReview m) {
+/// Tattica nella prima mossa della variante migliore: ripresa o cattura
+/// netta, doppio attacco o attacco di scoperta.
+CoachComment? _missedTactic(
+  Position before,
+  MoveReview m,
+  MoveReview? previous,
+) {
   final best = m.bestMove;
   final san = m.bestSan;
   if (best is! NormalMove || san == null || m.playedBest) return null;
+  if (isCastling(before, best)) return null;
   final me = before.turn;
   final mover = before.board.pieceAt(best.from)!;
   final captured = before.board.pieceAt(best.to);
   final next = before.play(best);
 
   if (captured != null && captured.color != me) {
+    if (_recaptures(previous, best.to)) {
+      return CoachComment(
+        CoachTheme.missedCapture,
+        'Potevi riprendere il pezzo: $san cattura ${_the(captured.role)}.',
+      );
+    }
     final defended = next.board.attacksTo(best.to, me.opposite).isNotEmpty;
     final gain =
         pieceValue(captured.role) - (defended ? pieceValue(mover.role) : 0);
@@ -140,7 +158,7 @@ CoachComment? _missedTactic(Position before, MoveReview m) {
     }
   }
 
-  final targets = _valuableTargets(next, best.to, me.opposite);
+  final targets = _forkTargets(next, best.to);
   if (targets.length >= 2) {
     return CoachComment(
       CoachTheme.missedFork,
@@ -149,78 +167,98 @@ CoachComment? _missedTactic(Position before, MoveReview m) {
     );
   }
 
+  // Scoperta: un altro pezzo, rimasto fermo, attacca una casa nuova.
   for (final from in next.board.bySide(me).squares) {
     if (from == best.to) continue;
     final piece = next.board.pieceAt(from)!;
-    final now = _valuableTargets(next, from, me.opposite);
-    final was = _valuableTargets(before, from, me.opposite);
-    final revealed = now.where((r) => !was.contains(r) && r != Role.king);
-    if (revealed.isNotEmpty) {
+    if (before.board.pieceAt(from) != piece) continue;
+    final was = _attackedSquares(before, from).toSet();
+    final revealed = _attackedSquares(
+      next,
+      from,
+    ).where((sq) => !was.contains(sq));
+    for (final sq in revealed) {
+      final role = next.board.pieceAt(sq)!.role;
+      if (role == Role.king) continue;
       return CoachComment(
         CoachTheme.missedDiscovery,
         'Potevi fare un attacco di scoperta con $san: ${_the(piece.role)} '
-        'attacca ${_the(revealed.first)}.',
+        'attacca ${_the(role)}.',
       );
     }
   }
   return null;
 }
 
-CoachComment? _materialLoss(Position after, List<String> reply, Side me) {
-  final start = materialBalance(after, me);
+/// La mossa precedente dell'avversario ha catturato su [square].
+bool _recaptures(MoveReview? previous, Square square) {
+  final move = previous?.move;
+  if (previous == null || move is! NormalMove || move.to != square) {
+    return false;
+  }
+  final pos = Chess.fromSetup(Setup.parseFen(previous.fenBefore));
+  return pos.board.pieceAt(square) != null;
+}
+
+CoachComment? _materialLoss(
+  Position before,
+  Position after,
+  List<String> reply,
+) {
+  final me = before.turn;
   var pos = after;
   for (final uci in reply.take(4)) {
-    final move = _move(pos, uci);
+    final move = parseEngineMove(pos, uci);
     if (move == null) break;
     pos = pos.play(move);
   }
-  final lost = start - materialBalance(pos, me);
+  final lost = materialBalance(before, me) - materialBalance(pos, me);
   if (lost < 2) return null;
   return CoachComment(
     CoachTheme.materialLoss,
-    'Questa mossa perde materiale: circa $lost '
-    '${lost == 1 ? 'pedone' : 'pedoni'} nella variante prevista.',
+    'Questa mossa perde materiale: circa $lost pedoni nella variante '
+    'prevista.',
   );
 }
 
-/// Valore della miglior ripresa di [side] su [square], 0 se non può.
-int _bestRecapture(Position pos, Square square, Side side) {
-  if (pos.turn != side) return 0;
-  final piece = pos.board.pieceAt(square);
-  if (piece == null) return 0;
-  final canRetake = pos.board
-      .attacksTo(square, side)
-      .squares
-      .any((from) => pos.isLegal(NormalMove(from: from, to: square)));
-  return canRetake ? pieceValue(piece.role) : 0;
+/// Case dei pezzi avversari (re o almeno un cavallo) attaccati dal pezzo
+/// in [from].
+List<Square> _attackedSquares(Position pos, Square from) {
+  final piece = pos.board.pieceAt(from);
+  if (piece == null) return const [];
+  final victim = piece.color.opposite;
+  return [
+    for (final sq in pos.board.bySide(victim).squares)
+      if ((pos.board.pieceAt(sq)!.role == Role.king ||
+              pieceValue(pos.board.pieceAt(sq)!.role) >= 3) &&
+          pos.board.attacksTo(sq, piece.color).has(from))
+        sq,
+  ];
 }
 
-/// Pezzi di [victim] (re o almeno un cavallo) attaccati dal pezzo in [from].
-List<Role> _valuableTargets(Position pos, Square from, Side victim) {
-  final piece = pos.board.pieceAt(from);
-  if (piece == null || piece.color == victim) return const [];
-  final attacked = <Role>[];
-  for (final sq in pos.board.bySide(victim).squares) {
-    final target = pos.board.pieceAt(sq)!;
-    if (target.role != Role.king && pieceValue(target.role) < 3) continue;
-    if (pos.board.attacksTo(sq, piece.color).has(from)) {
-      attacked.add(target.role);
-    }
-  }
-  // Il re per primo, poi dal più prezioso.
-  attacked.sort((a, b) {
+/// Pezzi colpiti da una forchetta del pezzo in [from]: il pezzo non si può
+/// prendere senza perdita e ogni bersaglio è il re, vale di più o è
+/// indifeso. Il re per primo, poi dal più prezioso.
+List<Role> _forkTargets(Position pos, Square from) {
+  final forker = pos.board.pieceAt(from);
+  if (forker == null) return const [];
+  final victim = forker.color.opposite;
+  final value = pieceValue(forker.role);
+  final defenders = pos.board.attacksTo(from, victim);
+  if (defenders.isNotEmpty) return const [];
+  final roles = [
+    for (final sq in _attackedSquares(pos, from))
+      if (pos.board.pieceAt(sq)!.role == Role.king ||
+          pieceValue(pos.board.pieceAt(sq)!.role) > value ||
+          pos.board.attacksTo(sq, victim).isEmpty)
+        pos.board.pieceAt(sq)!.role,
+  ];
+  roles.sort((a, b) {
     if (a == Role.king) return -1;
     if (b == Role.king) return 1;
     return pieceValue(b).compareTo(pieceValue(a));
   });
-  return attacked;
-}
-
-Move? _move(Position pos, String? uci) {
-  final m = uci == null ? null : Move.parse(uci);
-  if (m == null) return null;
-  final move = m is NormalMove ? pos.normalizeMove(m) : m;
-  return pos.isLegal(move) ? move : null;
+  return roles;
 }
 
 String _sideName(Side side) => side == Side.white ? 'Bianco' : 'Nero';
