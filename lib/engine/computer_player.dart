@@ -101,6 +101,64 @@ class ComputerPlayer {
     ];
   });
 
+  /// Analisi continua a forza piena: emette le varianti ordinate a ogni
+  /// aggiornamento del motore, fino a [maxDepth] o finché chi ascolta non
+  /// annulla l'iscrizione (che ferma la ricerca e libera la coda).
+  Stream<List<InfoLine>> analyseLive(
+    String fen, {
+    int multiPv = 1,
+    int maxDepth = 40,
+  }) {
+    var cancelled = false;
+    var searching = false;
+    late final StreamController<List<InfoLine>> out;
+    out = StreamController<List<InfoLine>>(
+      onCancel: () {
+        cancelled = true;
+        if (searching) stop();
+      },
+    );
+    _enqueue(() async {
+      if (cancelled) return;
+      await _applyOptions({
+        'Skill Level': '20',
+        'MultiPV': '$multiPv',
+        'UCI_LimitStrength': 'false',
+      });
+      if (cancelled) return;
+      _send('position fen ${fen.trim()}');
+      final infos = <int, InfoLine>{};
+      void onInfo(String line) {
+        final info = parseInfo(line);
+        if (info == null || info.multipv > multiPv || out.isClosed) return;
+        infos[info.multipv] = info;
+        out.add([for (final k in infos.keys.toList()..sort()) infos[k]!]);
+      }
+
+      _listeners.add(onInfo);
+      try {
+        searching = true;
+        final done = _command(
+          'go depth $maxDepth',
+          (l) => l.startsWith('bestmove'),
+          const Duration(minutes: 30),
+        );
+        if (cancelled) stop();
+        await done;
+      } finally {
+        searching = false;
+        _listeners.remove(onInfo);
+      }
+    }).then(
+      (_) => out.close(),
+      onError: (Object e) {
+        if (!out.isClosed) out.addError(e);
+        out.close();
+      },
+    );
+    return out.stream;
+  }
+
   /// Chiede al motore di rispondere subito con la mossa trovata finora.
   void stop() {
     if (_transport != null && !_disposed) _send('stop');

@@ -4,12 +4,12 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
-import '../engine/uci.dart';
+import '../analysis/analysis_page.dart';
 import 'board_utils.dart';
 import 'coach.dart';
+import 'eval_bar.dart';
 import 'game_review.dart';
 import 'move_classification.dart';
-import 'score_format.dart';
 
 /// Revisioni già calcolate in questa sessione, per riaprirle all'istante.
 /// Tiene solo le più recenti per limitare la memoria.
@@ -70,6 +70,7 @@ class ReviewPage extends StatefulWidget {
     required this.evaluate,
     this.onCancel,
     this.onReviewed,
+    this.analyseLive,
   });
 
   final Position initial;
@@ -82,6 +83,9 @@ class ReviewPage extends StatefulWidget {
   /// Chiamata quando un'analisi nuova termina (non dalla cache), ad esempio
   /// per registrare l'attività nei progressi.
   final ValueChanged<GameReview>? onReviewed;
+
+  /// Analisi continua per aprire la posizione mostrata nell'analisi libera.
+  final LiveAnalysis? analyseLive;
 
   @override
   State<ReviewPage> createState() => _ReviewPageState();
@@ -286,12 +290,29 @@ class _ReviewPageState extends State<ReviewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Revisione della partita')),
+      appBar: AppBar(
+        title: const Text('Revisione della partita'),
+        actions: [
+          if (widget.analyseLive case final analyse?)
+            IconButton(
+              tooltip: 'Analizza la posizione',
+              icon: const Icon(Icons.biotech_outlined),
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => AnalysisPage(
+                    initial: _positions[_index],
+                    analyse: analyse,
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
             final boardSize = math.min(
-              constraints.maxWidth - _evalBarWidth - 24,
+              constraints.maxWidth - evalBarWidth - 24,
               constraints.maxHeight * 0.6,
             );
             return Column(
@@ -310,7 +331,7 @@ class _ReviewPageState extends State<ReviewPage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              _EvalBar(
+                              EvalBar(
                                 height: boardSize,
                                 score: _review?.whiteScores[_evalIndex],
                                 whiteWin: _review?.whiteWinCurve[_evalIndex],
@@ -532,78 +553,6 @@ class _ReviewPageState extends State<ReviewPage> {
             icon: const Icon(Icons.last_page),
           ),
         ],
-      ),
-    );
-  }
-}
-
-const double _evalBarWidth = 20;
-
-/// Barra verticale: la parte bianca è la probabilità di vittoria del Bianco.
-class _EvalBar extends StatelessWidget {
-  const _EvalBar({required this.height, this.score, this.whiteWin});
-
-  final double height;
-  final EngineScore? score;
-  final double? whiteWin;
-
-  @override
-  Widget build(BuildContext context) {
-    final win = whiteWin ?? 50;
-    final s = score;
-    // Il matto avvenuto non ha segno: il vincitore si ricava dalla probabilità.
-    final mated = s?.mate == 0;
-    final winner = win >= 50 ? 'Bianco' : 'Nero';
-    final label = s == null
-        ? ''
-        : mated
-        ? (win >= 50 ? '1-0' : '0-1')
-        : formatScore(s);
-    final description = s == null
-        ? 'Valutazione non disponibile'
-        : mated
-        ? 'Scacco matto: vince il $winner'
-        : describeScore(s);
-    return Semantics(
-      label: description,
-      excludeSemantics: true,
-      child: SizedBox(
-        width: _evalBarWidth,
-        height: height,
-        child: Stack(
-          children: [
-            Container(color: const Color(0xFF404040)),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 250),
-                height: height * win / 100,
-                color: const Color(0xFFF2F2F2),
-              ),
-            ),
-            Align(
-              alignment: win >= 50
-                  ? Alignment.bottomCenter
-                  : Alignment.topCenter,
-              child: FittedBox(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 2),
-                  child: Text(
-                    label,
-                    key: const ValueKey('eval-text'),
-                    style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
-                      color: win >= 50
-                          ? const Color(0xFF202020)
-                          : const Color(0xFFF2F2F2),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

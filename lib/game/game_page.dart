@@ -8,6 +8,7 @@ import '../engine/computer_player.dart';
 import '../engine/levels.dart';
 import '../engine/uci.dart';
 import '../engine/uci_transport.dart';
+import '../analysis/analysis_page.dart';
 import '../review/engine_evaluator.dart';
 import '../review/review_page.dart';
 import 'chess_game.dart';
@@ -229,6 +230,25 @@ class _GamePageState extends State<GamePage> {
     }
   }
 
+  LiveAnalysis _liveAnalysis(ComputerPlayer player) =>
+      (fen, multiPv) => player.analyseLive(fen, multiPv: multiPv);
+
+  void _openAnalysis() {
+    _cancelComputerMove();
+    Navigator.of(context)
+        .push(
+          MaterialPageRoute<void>(
+            builder: (_) => AnalysisPage(
+              initial: _game.position,
+              analyse: _liveAnalysis(_computerPlayer),
+            ),
+          ),
+        )
+        .then((_) {
+          if (mounted) _computerMove();
+        });
+  }
+
   void _openReview() {
     final player = _computerPlayer;
     Navigator.of(context).push(
@@ -238,6 +258,7 @@ class _GamePageState extends State<GamePage> {
           moves: [for (final m in _game.moves) m.move],
           evaluate: engineEvaluator(player),
           onCancel: player.stop,
+          analyseLive: _liveAnalysis(player),
         ),
       ),
     );
@@ -275,8 +296,14 @@ class _GamePageState extends State<GamePage> {
                 if (_autoFlip) _refresh(animate: false);
               }
               if (value == 'review') _openReview();
+              if (value == 'analysis') _openAnalysis();
             },
             itemBuilder: (context) => [
+              if (widget.computerAvailable)
+                PopupMenuItem(
+                  value: 'analysis',
+                  child: Text('Analisi della posizione'),
+                ),
               if (widget.computerAvailable)
                 PopupMenuItem(
                   value: 'review',

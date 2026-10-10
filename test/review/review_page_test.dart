@@ -4,6 +4,7 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scacchi/analysis/analysis_page.dart';
 import 'package:scacchi/engine/uci.dart';
 import 'package:scacchi/review/game_review.dart';
 import 'package:scacchi/review/review_page.dart';
@@ -34,6 +35,35 @@ Future<void> pumpReview(
 
 void main() {
   setUp(ReviewCache.clear);
+
+  testWidgets('RF-50 dalla revisione si analizza la posizione mostrata', (
+    tester,
+  ) async {
+    final fens = <String>[];
+    tester.view.physicalSize = const Size(1170, 2532);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: ReviewPage(
+          initial: Chess.initial,
+          moves: moves(scholar),
+          evaluate: fakeEngine(scholar, overrides: scholarOverrides),
+          analyseLive: (fen, _) {
+            fens.add(fen);
+            return const Stream.empty();
+          },
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Mossa precedente'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Analizza la posizione'));
+    await tester.pumpAndSettle();
+    expect(find.byType(AnalysisPage), findsOneWidget);
+    expect(fens.single, startsWith('r1bqkb1r/pppp1ppp/2n2n2/4p2Q/'));
+  });
 
   testWidgets('numeri di mossa da una posizione con il Nero al tratto', (
     tester,

@@ -36,6 +36,7 @@ Quando la larghezza supera di oltre il 20% l'altezza, la scacchiera sta a sinist
 | Patta | Chiede all'avversario se accetta la patta; disattivato a partita conclusa |
 | Abbandona | Chiede conferma e fa abbandonare il lato al tratto; disattivato a partita conclusa |
 | Menu, "Ruota a ogni turno" | Orienta automaticamente la scacchiera dal lato di chi deve muovere |
+| Menu, "Analisi della posizione" | Apre l'analisi libera della posizione corrente (vedi [analisi.md](analisi.md)); presente solo dove c'è il motore |
 | Menu, "Revisione della partita" | Apre la revisione con classificazione delle mosse e precisione (vedi [revisione-partita.md](revisione-partita.md)); presente solo dove c'è il motore |
 
 ## Tema

@@ -37,6 +37,7 @@ Ogni funzione nasce dai requisiti del progetto, nel documento dei requisiti, con
 |---|---|---|---|
 | Unitari | `test/chess_game_test.dart` | Regole e fine partita su `ChessGame`, senza interfaccia | `flutter test` |
 | Unitari | `test/engine/` | Protocollo UCI, scelta delle mosse, `ComputerPlayer` con motore finto e con Stockfish reale (se installato) | `flutter test` |
+| Widget | `test/analysis/` | Schermata di analisi con motore finto: linee, MultiPV, esplorazione, pausa, freccia | `flutter test` |
 | Unitari e widget | `test/review/` | Probabilità di vittoria, classificazione, sacrifici, precisione, revisione con motore finto, schermata di revisione e accesso dal menu | `flutter test` |
 | Widget | `test/widget_test.dart` | Avvio dell'app e stato iniziale | `flutter test` |
 | Widget | `test/computer_game_test.dart` | Partita contro il computer con un motore finto | `flutter test` |
@@ -56,7 +57,8 @@ I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisic
 | RF-21 motore in isolate, ritardo artificiale ai livelli bassi | ✓ | |
 | RF-25 matto, stallo, materiale insufficiente, ripetizione, 50 mosse, abbandono | ✓ | matto, abbandono |
 | RF-25 patta accettata dal computer in base alla valutazione | ✓ | |
-| RF-51 analisi a forza piena con più varianti | ✓ | |
+| RF-51 analisi a forza piena con più varianti, analisi continua interrompibile | ✓ | |
+| RF-52 esplorazione lineare con avanti e indietro | ✓ | |
 | RF-60 revisione completa con avanzamento e interruzione | ✓ | |
 | RF-61, RF-62 classificazione delle mosse, Brillante e Ottima | ✓ | |
 | RF-63 precisione, conteggi e stima della forza | ✓ | |

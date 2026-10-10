@@ -4,6 +4,7 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scacchi/analysis/analysis_page.dart';
 import 'package:scacchi/engine/computer_player.dart';
 import 'package:scacchi/engine/uci_transport.dart';
 import 'package:scacchi/game/game_page.dart';
@@ -77,9 +78,25 @@ void main() {
     expect(find.text('1. e4 è la mossa migliore'), findsOneWidget);
   });
 
-  testWidgets('senza motore la revisione non è disponibile', (tester) async {
+  testWidgets('RF-50 l\'analisi della posizione si apre dal menu', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1170, 2532);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(app());
+    await openMenu(tester);
+    await tester.tap(find.text('Analisi della posizione'));
+    await tester.pumpAndSettle();
+    expect(find.byType(AnalysisPage), findsOneWidget);
+  });
+
+  testWidgets('senza motore revisione e analisi non sono disponibili', (
+    tester,
+  ) async {
     await tester.pumpWidget(app(computer: false));
     await openMenu(tester);
     expect(find.text('Revisione della partita'), findsNothing);
+    expect(find.text('Analisi della posizione'), findsNothing);
   });
 }
