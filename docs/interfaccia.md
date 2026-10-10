@@ -6,7 +6,7 @@ L'app è progettata prima di tutto per il telefono in verticale.
 
 Dall'alto verso il basso:
 
-1. **Barra del titolo** con il menu delle opzioni.
+1. **Barra del titolo** con il pulsante delle impostazioni.
 2. **Striscia delle mosse**: scorre in orizzontale e mostra sempre l'ultima mossa a destra.
 3. **Riga di stato**: chi muove, scacco, oppure risultato e motivo della fine partita.
 4. **Materiale del giocatore in alto**: pezzi che ha catturato e vantaggio.
@@ -41,7 +41,23 @@ Per ciascun giocatore una riga mostra le icone dei pezzi avversari catturati, da
 | Gira | Capovolge la scacchiera |
 | Patta | Chiede all'avversario se accetta la patta; disattivato a partita conclusa |
 | Abbandona | Chiede conferma e fa abbandonare il lato al tratto; disattivato a partita conclusa |
-| Menu, "Ruota a ogni turno" | Orienta automaticamente la scacchiera dal lato di chi deve muovere |
+
+## Impostazioni
+
+Si aprono dall'icona a forma di ingranaggio nella barra del titolo. Ogni modifica si applica subito e viene salvata sul dispositivo.
+
+| Impostazione | Effetto | Predefinito |
+|---|---|---|
+| Mostra le mosse legali | Puntini sulle case raggiungibili dal pezzo selezionato | Attiva |
+| Coordinate | Lettere e numeri sui bordi della scacchiera | Attiva |
+| Promuovi sempre a donna | Salta il selettore di promozione | Disattiva |
+| Frecce e cerchi | Disegno di frecce e cerchi con due dita sulla scacchiera | Attiva |
+| Ruota a ogni turno | Orienta la scacchiera dal lato di chi deve muovere | Disattiva |
+| Tema della scacchiera | Verde, Legno, Blu, Grigio | Verde |
+| Pezzi | Classico, Merida, California, Cardinal, Maestro | Classico |
+| Animazioni | Nessuna, Veloce, Normale, Lenta | Normale |
+
+I set di pezzi disponibili sono solo quelli con licenza compatibile con la GPL, elencati in `CREDITS.md`. Anche le icone dei pezzi catturati usano il set scelto.
 
 ## Tema
 
