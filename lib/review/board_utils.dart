@@ -25,3 +25,14 @@ bool isCastling(Position pos, NormalMove move) {
       target?.role == Role.rook &&
       target?.color == piece?.color;
 }
+
+/// Mossa come la vede il giocatore: l'arrocco va sulla casa del re (g/c),
+/// non su quella della torre come lo rappresenta dartchess.
+NormalMove kingDestination(Position pos, NormalMove move) {
+  if (!isCastling(pos, move)) return move;
+  final file = move.to.file > move.from.file ? File.g : File.c;
+  return NormalMove(
+    from: move.from,
+    to: Square.fromCoords(file, move.from.rank),
+  );
+}

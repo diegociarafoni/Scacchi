@@ -60,17 +60,6 @@ String moveClassPhrase(MoveClass c) => switch (c) {
 String _moveNumber(Position before) =>
     before.turn == Side.white ? '${before.fullmoves}.' : '${before.fullmoves}…';
 
-/// Mossa come la vede il giocatore: l'arrocco va sulla casa del re (g/c),
-/// non su quella della torre come lo rappresenta dartchess.
-NormalMove _displayed(Position before, NormalMove move) {
-  if (!isCastling(before, move)) return move;
-  final file = move.to.file > move.from.file ? File.g : File.c;
-  return NormalMove(
-    from: move.from,
-    to: Square.fromCoords(file, move.from.rank),
-  );
-}
-
 /// Revisione della partita (RF-60…RF-66): analisi con avanzamento, riepilogo,
 /// grafico, barra di valutazione, freccia della mossa migliore e "Riprova".
 class ReviewPage extends StatefulWidget {
@@ -277,7 +266,7 @@ class _ReviewPageState extends State<ReviewPage> {
         ? !m.playedBest
         : _showSolution && _retrySolved == null;
     if (!showArrow || best is! NormalMove) return const {};
-    final shown = _displayed(_positions[ply], best);
+    final shown = kingDestination(_positions[ply], best);
     return {
       Arrow(color: const Color(0xCC3E8E2F), orig: shown.from, dest: shown.to),
     };
@@ -290,7 +279,7 @@ class _ReviewPageState extends State<ReviewPage> {
     final move = m.move;
     if (move is! NormalMove) return const {};
     final c = m.classification;
-    final square = _displayed(_positions[_index - 1], move).to;
+    final square = kingDestination(_positions[_index - 1], move).to;
     return {square: Annotation(symbol: c.symbol, color: moveClassColor(c))};
   }
 

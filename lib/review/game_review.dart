@@ -28,6 +28,7 @@ class MoveReview {
     this.bestSan,
     this.bestLine = const [],
     this.bestScore,
+    this.secondBestScore,
     this.replyLine = const [],
     this.replyScore,
   });
@@ -54,6 +55,9 @@ class MoveReview {
   /// Valutazione della mossa migliore, dal punto di vista di chi muove.
   final EngineScore? bestScore;
 
+  /// Valutazione della seconda scelta del motore, se analizzata.
+  final EngineScore? secondBestScore;
+
   /// Risposta prevista dell'avversario dopo la mossa giocata e sua
   /// valutazione dal punto di vista dell'avversario.
   final List<String> replyLine;
@@ -61,25 +65,6 @@ class MoveReview {
 
   /// La mossa giocata è la prima scelta del motore.
   final bool playedBest;
-
-  MoveReview copyWithBestLine(List<String> line) => MoveReview(
-    ply: ply,
-    side: side,
-    move: move,
-    san: san,
-    fenBefore: fenBefore,
-    classification: classification,
-    winBefore: winBefore,
-    winAfter: winAfter,
-    accuracy: accuracy,
-    playedBest: playedBest,
-    bestMove: bestMove,
-    bestSan: bestSan,
-    bestLine: line,
-    bestScore: bestScore,
-    replyLine: replyLine,
-    replyScore: replyScore,
-  );
 }
 
 class GameReview {
@@ -209,6 +194,7 @@ Future<GameReview?> reviewGame({
         bestSan: bestSan,
         bestLine: best?.pv ?? const [],
         bestScore: scores[i],
+        secondBestScore: second,
         replyLine: lines[i + 1].firstOrNull?.pv ?? const [],
         replyScore: scores[i + 1],
       ),
