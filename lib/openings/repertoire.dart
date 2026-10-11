@@ -122,8 +122,7 @@ class RepertoireDrill {
   }
 }
 
-/// Repertori del Bianco e del Nero con la ripetizione dilazionata (RF-93),
-/// sul modello del MoveTrainer di Chessable.
+/// Repertori del Bianco e del Nero con la ripetizione dilazionata (RF-93).
 class RepertoireTrainer {
   RepertoireTrainer._(this.store, this.now);
 

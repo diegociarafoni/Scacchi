@@ -1,6 +1,6 @@
 # Partita con l'allenatore
 
-Equivalente locale di "Gioca con l'allenatore" di chess.com (requisiti RF-73…RF-75): si gioca contro il computer e, dopo ogni mossa, l'allenatore la valuta con Stockfish sul telefono, senza server.
+Partita con l'allenatore (requisiti RF-73…RF-75): si gioca contro il computer e, dopo ogni mossa, l'allenatore la valuta con Stockfish sul telefono, senza server.
 
 ## In partita
 

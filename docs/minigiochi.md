@@ -1,6 +1,6 @@
 # Minigiochi
 
-Requisito RG-10, sul modello di Magnus Trainer e Lichess. Il codice è in `lib/minigames/`: la logica è in file senza interfaccia, testati a parte, e le schermate la usano.
+Requisito RG-10. Il codice è in `lib/minigames/`: la logica è in file senza interfaccia, testati a parte, e le schermate la usano.
 
 ## I quattro minigiochi
 

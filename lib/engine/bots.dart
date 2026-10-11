@@ -9,7 +9,7 @@ import 'uci_moves.dart';
 /// Momenti della partita in cui un bot può commentare (RF-23).
 enum BotEvent { start, check, capture, mistake, win, loss, draw }
 
-/// Bot con personalità, sul modello dei bot di chess.com (RF-23): una forza
+/// Bot con personalità (RF-23): una forza
 /// di base (un livello del motore), uno stile, un'apertura preferita e frasi
 /// di reazione. Vedi docs/bot.md.
 class Bot {

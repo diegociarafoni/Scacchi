@@ -6,7 +6,7 @@ Riconoscimento delle aperture, mosse di libro, explorer ridotto e repertorio con
 
 `assets/openings/openings.tsv` deriva dal dataset [chess-openings](https://github.com/lichess-org/chess-openings) di Lichess (CC0): 3.865 righe `eco\tname\tuci`, circa 380 KB. Lo script `tool/datasets/build_openings.py` scarica i cinque file del dataset e converte le mosse da SAN a UCI, così l'app non deve interpretare la notazione algebrica all'avvio. Viene rigenerato dallo stesso workflow dei puzzle (`docs/puzzle.md`).
 
-I nomi restano in inglese, come nel dataset e nell'app di Lichess: sono i nomi con cui le aperture si cercano nei libri e online.
+I nomi restano in inglese, come nel dataset: sono i nomi con cui le aperture si cercano nei libri e online.
 
 ## Libro delle aperture
 
@@ -30,7 +30,7 @@ Il libro si carica una volta sola (`openingBook()` in `opening_assets.dart`), in
 
 Dalla scheda **Aperture**, l'Explorer mostra la posizione corrente con il nome dell'apertura, la sequenza delle mosse e le continuazioni del libro. Per ogni continuazione indica la mossa in SAN, il nome dell'apertura raggiunta e la quota delle varianti del libro che proseguono così.
 
-Le statistiche di vittoria del database di Lichess o di chess.com non sono disponibili offline (sono escluse dai requisiti): la percentuale misura quanto è ricca di varianti con nome una continuazione, non quanto è giocata. Si può muovere anche fuori dal libro; l'Explorer lo segnala.
+Le statistiche di vittoria dei database online non sono disponibili offline (sono escluse dai requisiti): la percentuale misura quanto è ricca di varianti con nome una continuazione, non quanto è giocata. Si può muovere anche fuori dal libro; l'Explorer lo segnala.
 
 ### Repertorio (RF-93)
 

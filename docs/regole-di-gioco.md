@@ -27,7 +27,7 @@ L'ordine di valutazione è quello della tabella: per esempio una mossa che dà m
 
 Due posizioni sono considerate uguali quando coincidono disposizione dei pezzi, lato al tratto, diritti di arrocco e casa di presa en passant. Quest'ultima conta solo se la presa en passant è effettivamente legale, come previsto dal regolamento FIDE. Nel conteggio rientra anche la posizione iniziale. Si confrontano solo le posizioni successive all'ultima cattura o mossa di pedone, perché quelle precedenti non possono ripetersi.
 
-La patta viene dichiarata automaticamente alla terza occorrenza, senza richiesta del giocatore, come su chess.com. Il regolamento FIDE prevede invece che la patta per triplice ripetizione e per 50 mosse vada reclamata dal giocatore, e diventi automatica solo alla quinta ripetizione e a 75 mosse; si è scelto il comportamento di chess.com indicato nei requisiti.
+La patta viene dichiarata automaticamente alla terza occorrenza, senza richiesta del giocatore. Il regolamento FIDE prevede invece che la patta per triplice ripetizione e per 50 mosse vada reclamata dal giocatore, e diventi automatica solo alla quinta ripetizione e a 75 mosse; si è scelto il comportamento automatico indicato nei requisiti, più semplice su telefono.
 
 ### Regola delle 50 mosse
 
@@ -42,7 +42,7 @@ Si usa il contatore di semimosse della posizione (`halfmoves`), che si azzera a 
 
 ## Varianti
 
-"Nuova" chiede la variante (RF-120, RF-121). Le regole sono quelle di `dartchess`, le stesse di Lichess; `lib/game/variant.dart` sceglie la posizione iniziale e `ChessGame` conosce la variante della partita.
+"Nuova" chiede la variante (RF-120, RF-121). Le regole sono quelle di `dartchess`; `lib/game/variant.dart` sceglie la posizione iniziale e `ChessGame` conosce la variante della partita.
 
 | Variante | Differenze |
 |---|---|

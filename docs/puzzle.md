@@ -1,6 +1,6 @@
 # Puzzle
 
-Problemi tattici offline, sul modello dei puzzle di chess.com e Lichess (requisiti RF-80 – RF-85).
+Problemi tattici offline (requisiti RF-80 – RF-85).
 
 ## Dati
 
@@ -54,7 +54,7 @@ Il test `test/puzzles/puzzle_dataset_test.dart` verifica che ogni soluzione sia 
 
 - Il puzzle parte con la mossa dell'avversario già giocata; la scacchiera è orientata dal lato del giocatore.
 - Una mossa diversa dalla soluzione viene annullata con il messaggio "Non è la mossa giusta. Premi «Riprova» per ricominciare." e il puzzle conta come fallito, ma si può continuare a cercare.
-- All'ultima mossa è accettato anche un matto diverso da quello previsto, come su Lichess.
+- All'ultima mossa è accettato anche un matto diverso da quello previsto.
 - L'arrocco è riconosciuto sia come mossa del re di due case sia come re sulla torre.
 - **Suggerimento**: cerchia il pezzo da muovere; non fa fallire il puzzle.
 - **Soluzione**: gioca la mossa giusta al posto del giocatore e fa fallire il puzzle.
@@ -71,7 +71,7 @@ Il puzzle successivo è quello non ancora visto con difficoltà più vicina al p
 
 ## Puzzle del giorno (RF-84)
 
-Sostituisce il puzzle del giorno di chess.com senza server: l'indice è `(giorni dal 1970 × 7919) mod numero di puzzle`, uguale per tutti i dispositivi con la stessa versione della raccolta.
+Il puzzle del giorno non richiede un server: l'indice è `(giorni dal 1970 × 7919) mod numero di puzzle`, uguale per tutti i dispositivi con la stessa versione della raccolta.
 
 ## Modalità a serie (RF-82)
 
@@ -91,7 +91,7 @@ Il modello è `lib/puzzles/puzzle_run.dart`, la schermata `lib/puzzles/puzzle_ru
 
 ## Ripasso degli errori (RF-85)
 
-Ogni puzzle sbagliato nell'allenamento, anche se già visto, entra in una coda di ripasso a intervalli crescenti, sul modello di Chess Tempo (sistema di Leitner, `lib/puzzles/review_queue.dart`):
+Ogni puzzle sbagliato nell'allenamento, anche se già visto, entra in una coda di ripasso a intervalli crescenti (sistema di Leitner, `lib/puzzles/review_queue.dart`):
 
 | Livello | Torna dopo |
 |---|---|
