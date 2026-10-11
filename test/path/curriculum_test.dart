@@ -25,6 +25,19 @@ void main() {
     }
   });
 
+  test('RG-03 i matti elementari coprono gli schemi principali', () {
+    final mates = curriculum.firstWhere((c) => c.id == 'mates');
+    expect(mates.stages.map((s) => s.id), [
+      'mates.one',
+      'mates.back-rank',
+      'mates.queen',
+      'mates.rooks',
+      'mates.patterns',
+      'mates.two',
+      'mates.guardian',
+    ]);
+  });
+
   test('identificativi unici e tappe non vuote', () {
     final ids = [
       for (final c in curriculum)

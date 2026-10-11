@@ -8,7 +8,7 @@ Requisito RG-03: una mappa di capitoli e tappe sul modello di Duolingo e del mod
 |---|---|
 | Il movimento dei pezzi | Torre, alfiere, donna, re, cavallo, pedone (con promozione), catturare (con il valore dei pezzi) |
 | Le regole | Lo scacco, via dallo scacco (spostare il re, catturare, mettere in mezzo), l'arrocco, la presa al varco, la promozione, lo stallo |
-| Matti elementari | Matto in una (corridoio, scala di torri, affogato), matto in due, guardiano (400 Elo) |
+| Matti elementari | Matto in una (corridoio, scala di torri, affogato), il matto del corridoio, donna e re, le torri a scala, matti famosi (Anastasia, arabo, Boden, Damiano), matto in due (anche il matto affogato con sacrificio di donna), guardiano (400 Elo) |
 | Tattiche | Forchetta di cavallo e di pedone, infilata, guardiano (800) |
 | Finali | Matto di donna, matto di torre, guardiano (1000) |
 | Aperture | Il centro, lo sviluppo (con la Partita Italiana), l'arrocco, guardiano (1200) |
