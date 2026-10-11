@@ -38,6 +38,18 @@ NormalMove kingDestination(Position pos, NormalMove move) {
   );
 }
 
+/// FEN di [pos] con il turno passato all'avversario (mossa nulla), per
+/// chiedere al motore cosa giocherebbe lui (RF-56). `null` sotto scacco o a
+/// partita finita, dove la mossa nulla non ha senso. La presa en passant
+/// cade, perché riguarderebbe l'altro lato.
+String? threatFen(Position pos) {
+  if (pos.isCheck || pos.isGameOver) return null;
+  final parts = pos.fen.split(' ');
+  parts[1] = pos.turn == Side.white ? 'b' : 'w';
+  parts[3] = '-';
+  return parts.join(' ');
+}
+
 /// Numero della mossa che parte da [before]: `3.` per il Bianco, `3…` per il
 /// Nero.
 String moveNumber(Position before) =>

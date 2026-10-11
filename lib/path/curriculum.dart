@@ -419,6 +419,117 @@ const List<Chapter> curriculum = [
         ],
       ),
       Stage(
+        id: 'mates.back-rank',
+        title: 'Il matto del corridoio',
+        intro:
+            'Quando il re è in fondo alla scacchiera chiuso dai suoi pedoni, '
+            'una torre o la donna sull\'ultima traversa gli dà matto. Per '
+            'questo conviene lasciare al re una casa di fuga.',
+        exercises: [
+          LineExercise(
+            instructions: '$_mateIn1 Usa la donna.',
+            fen: '6k1/5ppp/8/8/8/8/5PPP/4Q1K1 w - - 0 1',
+            steps: ['e1e8'],
+            goal: LineGoal.mate,
+          ),
+          LineExercise(
+            instructions:
+                '$_mateIn2 La torre nera difende l\'ultima traversa: '
+                'attirala via.',
+            fen: 'r5k1/5ppp/8/8/8/8/3R1PPP/3Q2K1 w - - 0 1',
+            steps: ['d2d8', 'a8d8', 'd1d8'],
+            goal: LineGoal.mate,
+          ),
+        ],
+      ),
+      Stage(
+        id: 'mates.queen',
+        title: 'Donna e re',
+        intro:
+            'La donna da sola non basta per dare matto: le serve l\'aiuto del '
+            're, che protegge la donna o toglie le case di fuga al re '
+            'avversario.',
+        exercises: [
+          LineExercise(
+            instructions: '$_mateIn1 Il tuo re ti aiuta.',
+            fen: 'k7/8/1K6/8/8/8/8/2Q5 w - - 0 1',
+            steps: ['c1c8'],
+            goal: LineGoal.mate,
+          ),
+          LineExercise(
+            instructions: '$_mateIn1 Il re nero è sul bordo.',
+            fen: '4k3/8/4K3/8/8/8/8/7Q w - - 0 1',
+            steps: ['h1h8'],
+            goal: LineGoal.mate,
+          ),
+          LineExercise(
+            instructions: '$_mateIn1 La donna lavora insieme al re.',
+            fen: 'k7/2K5/8/8/8/8/8/1Q6 w - - 0 1',
+            steps: ['b1b7'],
+            goal: LineGoal.mate,
+          ),
+        ],
+      ),
+      Stage(
+        id: 'mates.rooks',
+        title: 'Le torri a scala',
+        intro:
+            'Due torri danno matto da sole: una chiude una traversa, l\'altra '
+            'dà scacco su quella dopo. Salgono a scala finché il re arriva sul '
+            'bordo.',
+        exercises: [
+          LineExercise(
+            instructions:
+                '$_mateIn2 Prima chiudi la settima traversa con una torre, '
+                'poi dai scacco sull\'ottava con l\'altra.',
+            fen: '7k/8/8/8/8/8/R7/1R4K1 w - - 0 1',
+            steps: ['a2a7|b1b7', 'h8g8', 'b1b8'],
+            goal: LineGoal.mate,
+          ),
+        ],
+      ),
+      Stage(
+        id: 'mates.patterns',
+        title: 'Matti famosi',
+        intro:
+            'Alcuni matti tornano così spesso che hanno un nome. Imparare a '
+            'riconoscerli ti aiuta a trovarli in partita.',
+        exercises: [
+          LineExercise(
+            instructions:
+                '$_mateIn1 Matto di Anastasia: il cavallo chiude il re, la '
+                'torre lo colpisce sulla colonna.',
+            fen: '6r1/4N1pk/8/8/8/3R4/8/6K1 w - - 0 1',
+            steps: ['d3h3'],
+            goal: LineGoal.mate,
+          ),
+          LineExercise(
+            instructions:
+                '$_mateIn1 Matto arabo: torre e cavallo lavorano '
+                'insieme nell\'angolo.',
+            fen: '7k/1R6/5N2/8/8/8/8/6K1 w - - 0 1',
+            steps: ['b7h7'],
+            goal: LineGoal.mate,
+          ),
+          LineExercise(
+            instructions:
+                '$_mateIn1 Matto di Boden: due alfieri incrociano le '
+                'diagonali.',
+            fen: '2kr4/p2n4/8/8/5B2/8/4B3/6K1 w - - 0 1',
+            steps: ['e2a6'],
+            goal: LineGoal.mate,
+          ),
+          LineExercise(
+            instructions:
+                '$_mateIn1 Matto di Damiano: il pedone protegge la '
+                'donna.',
+            fen: '5rk1/8/6P1/8/8/8/8/6KQ w - - 0 1',
+            steps: ['h1h7'],
+            goal: LineGoal.mate,
+          ),
+        ],
+      ),
+      Stage(
         id: 'mates.two',
         title: 'Matto in due',
         intro: 'A volte il matto arriva in due mosse: la prima costringe l\'avversario a una risposta obbligata, la seconda chiude il re.',
@@ -427,6 +538,14 @@ const List<Chapter> curriculum = [
             instructions: '$_mateIn2 Sacrifica una torre sull\'ottava.',
             fen: 'r5k1/5ppp/8/8/8/8/4RPPP/4R1K1 w - - 0 1',
             steps: ['e2e8', 'a8e8', 'e1e8'],
+            goal: LineGoal.mate,
+          ),
+          LineExercise(
+            instructions:
+                '$_mateIn2 Sacrifica la donna: il re nero resterà '
+                'soffocato dai suoi pezzi.',
+            fen: '5r1k/6pp/7N/8/2Q5/8/8/6K1 w - - 0 1',
+            steps: ['c4g8', 'f8g8', 'h6f7'],
             goal: LineGoal.mate,
           ),
         ],

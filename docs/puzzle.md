@@ -48,6 +48,14 @@ Il test `test/puzzles/puzzle_dataset_test.dart` verifica che ogni soluzione sia 
 | `lib/puzzles/puzzle_trainer.dart` | Punteggio del giocatore, puzzle già visti, salvataggio, evento di puzzle concluso |
 | `lib/puzzles/puzzle_page.dart` | Schermata di risoluzione |
 | `lib/puzzles/puzzle_hub_page.dart` | Punteggio e modalità |
+| `lib/puzzles/puzzle_assets.dart` | Caricamento della raccolta inclusa nell'app (`assets/puzzles/puzzles.csv`) |
+| `lib/puzzles/puzzle_feed.dart` | Sequenze di puzzle per le schermate di risoluzione |
+| `lib/puzzles/puzzle_run.dart`, `lib/puzzles/puzzle_run_page.dart` | Modalità a serie: modello e schermata |
+| `lib/puzzles/run_records.dart` | Record personali delle serie |
+| `lib/puzzles/review_queue.dart` | Coda di ripasso a intervalli (Leitner) |
+| `lib/puzzles/personal_puzzles.dart` | Puzzle ricavati dagli errori delle proprie partite |
+| `lib/puzzles/themes.dart` | Nomi italiani dei temi offerti come filtro |
+| `lib/puzzles/activity_recorder.dart` | Collegamento con i progressi (`PuzzleSolved`, `PuzzleRunFinished`) |
 | `lib/puzzles/mode_guide.dart` | Obiettivo e regole di ogni modalità, in italiano |
 | `lib/puzzles/guide_view.dart` | Schermata e pannello con la spiegazione |
 | `lib/training/training_board.dart` | Scacchiera per esercizi, riusabile da puzzle e aperture; segue le impostazioni della scacchiera tramite `SettingsScope` |
