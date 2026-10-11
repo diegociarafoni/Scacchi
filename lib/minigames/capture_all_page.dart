@@ -4,6 +4,7 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
+import '../settings/settings.dart';
 import 'board_layout.dart';
 import 'capture_all.dart';
 import 'minigame.dart';
@@ -117,8 +118,8 @@ class _CaptureAllPageState extends State<CaptureAllPage> {
           controller: _board,
           orientation: Side.white,
           onMove: _onMove,
-          settings: const ChessboardSettings(
-            colorScheme: ChessboardColorScheme.green,
+          settings: ChessboardSettings(
+            colorScheme: AppSettings.of(context).exerciseScheme,
           ),
         ),
         panel: _session.done

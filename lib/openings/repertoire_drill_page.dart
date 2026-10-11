@@ -4,6 +4,7 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
+import '../settings/settings.dart';
 import '../training/training_board.dart';
 import 'repertoire.dart';
 
@@ -76,7 +77,11 @@ class _RepertoireDrillPageState extends State<RepertoireDrillPage> {
     final drill = _drill;
     final expected = drill?.expected;
     final arrow = expected is NormalMove && (_showAnswer || drill!.isNew)
-        ? Arrow(color: Colors.green, orig: expected.from, dest: expected.to)
+        ? Arrow(
+            color: AppSettings.of(context).hintColor,
+            orig: expected.from,
+            dest: expected.to,
+          )
         : null;
     return Scaffold(
       appBar: AppBar(title: const Text('Ripasso del repertorio')),
