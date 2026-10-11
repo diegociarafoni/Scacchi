@@ -10,6 +10,8 @@ import 'package:flutter/services.dart';
 import '../analysis/analysis_page.dart';
 import '../editor/position_editor_page.dart';
 import '../engine/adaptive.dart';
+import '../engine/bot_collection.dart';
+import '../engine/bots.dart';
 import '../engine/computer_player.dart';
 import '../engine/levels.dart';
 import '../engine/uci_transport.dart';
@@ -75,6 +77,12 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   int _gameLevel = defaultEngineLevel;
   bool _resultRecorded = false;
 
+  /// Bot della partita in corso, `null` contro il computer o tra due persone.
+  Bot? _bot;
+  BotCollection _collection = const BotCollection();
+  BotCollection _collectionBefore = const BotCollection();
+  bool _botResultRecorded = false;
+
   /// Ultima variante scelta per la partita tra due persone.
   Variant _twoPlayerVariant = Variant.standard;
   final _random = math.Random();
@@ -120,7 +128,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _autoFlip = _settings.autoFlip;
     widget.settings.addListener(_onSettingsChanged);
     WidgetsBinding.instance.addObserver(this);
-    unawaited(_loadAdaptive());
+    unawaited(_loadProfile());
   }
 
   Future<KeyValueStore> _openStore() => _store ??= () async {
@@ -132,11 +140,19 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     }
   }();
 
-  Future<void> _loadAdaptive() async {
-    final loaded = await AdaptiveOpponent.load(await _openStore());
-    if (mounted && !_resultRecorded && _adaptive.games == 0) {
-      setState(() => _adaptive = loaded);
-    }
+  Future<void> _loadProfile() async {
+    final store = await _openStore();
+    final adaptive = await AdaptiveOpponent.load(store)
+        .catchError((_) => const AdaptiveOpponent());
+    final collection = await BotCollection.load(store)
+        .catchError((_) => const BotCollection());
+    if (!mounted) return;
+    setState(() {
+      if (!_resultRecorded && _adaptive.games == 0) _adaptive = adaptive;
+      if (!_botResultRecorded && _collection.beaten.isEmpty) {
+        _collection = collection;
+      }
+    });
   }
 
   /// Aggiorna la stima a fine partita adattiva, una sola volta; se la partita
@@ -144,7 +160,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// senza mosse non contano.
   void _recordAdaptiveResult() {
     final side = _computerSide;
-    if (side == null || !_setup.adaptive) return;
+    if (side == null || _bot != null || !_setup.adaptive) return;
     if (_resultRecorded && !_game.isOver) {
       _resultRecorded = false;
       _adaptive = _adaptiveBefore;
@@ -158,6 +174,55 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final score = winner == null ? 0.5 : (winner == side ? 0.0 : 1.0);
     _adaptive = _adaptive.record(score, level: _gameLevel);
     _saveAdaptive();
+  }
+
+  /// A fine partita contro un bot lo aggiunge alla collezione se ha vinto il
+  /// giocatore e fa commentare il bot; una partita riaperta (annulla) si può
+  /// registrare di nuovo.
+  void _recordBotResult() {
+    final bot = _bot;
+    final side = _computerSide;
+    if (bot == null || side == null) return;
+    if (_botResultRecorded && !_game.isOver) {
+      _botResultRecorded = false;
+      if (!identical(_collection, _collectionBefore)) {
+        _collection = _collectionBefore;
+        final restored = _collection;
+        unawaited(_openStore().then(restored.save).catchError((_) {}));
+      }
+      return;
+    }
+    if (_botResultRecorded || !_game.isOver || _game.moves.isEmpty) return;
+    _botResultRecorded = true;
+    final winner = _game.outcome?.winner;
+    _collectionBefore = _collection;
+    if (winner != null && winner != side) {
+      final updated = _collection.beat(bot.id, DateTime.now());
+      if (!identical(updated, _collection)) {
+        _collection = updated;
+        unawaited(_openStore().then(updated.save).catchError((_) {}));
+      }
+    }
+    _botSay(
+      winner == null
+          ? BotEvent.draw
+          : (winner == side ? BotEvent.win : BotEvent.loss),
+    );
+  }
+
+  /// Il bot commenta il proprio scacco e, ogni tanto, le proprie catture.
+  void _botReact() {
+    if (_game.position.isCheck) {
+      _botSay(BotEvent.check);
+    } else if (_game.moves.last.san.contains('x') && _random.nextInt(3) == 0) {
+      _botSay(BotEvent.capture);
+    }
+  }
+
+  void _botSay(BotEvent event) {
+    final bot = _bot;
+    if (bot == null || !mounted) return;
+    _showMessage('${bot.avatar} ${bot.name}: ${bot.phrase(event, _random)}');
   }
 
   void _saveAdaptive() {
@@ -303,6 +368,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _syncClock();
     _board.updatePosition(_gameData(), animate: animate, resetPremove: true);
     _recordAdaptiveResult();
+    _recordBotResult();
     setState(() {
       if (_settings.autoFlip && _computerSide == null) {
         _orientation = _game.position.turn;
@@ -390,7 +456,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       clock.start(side);
     }
     _searchClock = clock?.snapshot();
-    var level = engineLevel(_gameLevel);
+    var level = _bot?.level ?? engineLevel(_gameLevel);
     if (clock != null) {
       level = level.withinClock(
         clock.remaining(side),
@@ -401,11 +467,17 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     EngineMove? reply;
     Object? error;
     try {
-      reply = await _computerPlayer.bestMove(
-        _game.initial.fen,
-        _moveHistory,
-        level,
-      );
+      final book = _bookMove();
+      if (book != null) {
+        await Future<void>.delayed(level.minReply);
+        reply = EngineMove(move: book, pv: const []);
+      } else {
+        reply = await _computerPlayer.bestMove(
+          _game.initial.fen,
+          _moveHistory,
+          level,
+        );
+      }
     } on Object catch (e) {
       error = e;
     }
@@ -413,13 +485,15 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _task = _ComputerTask.none;
     final searchStart = _searchClock;
     _searchClock = null;
-    if (reply == null ? !_game.isOver : !_apply(reply.move) && !_game.isOver) {
+    final played = reply != null && _apply(reply.move);
+    if (reply == null ? !_game.isOver : !played && !_game.isOver) {
       error ??= reply ?? 'nessuna mossa';
       if (searchStart != null) clock?.restore(searchStart, null);
     }
     final viewing = _viewPly;
     _refresh();
     if (viewing != null) _showPly(viewing);
+    if (played && !_game.isOver) _botReact();
     if (error != null) {
       _showMessage(
         'Il computer non risponde.',
@@ -427,6 +501,13 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         action: SnackBarAction(label: 'Riprova', onPressed: _computerMove),
       );
     }
+  }
+
+  /// Mossa del libro d'apertura del bot, solo negli scacchi classici.
+  Move? _bookMove() {
+    final bot = _bot;
+    if (bot == null || _game.variant != Variant.standard) return null;
+    return bot.bookMoveFor(_game.initial, _moveHistory, _random);
   }
 
   List<Move> get _moveHistory => [for (final m in _game.moves) m.move];
@@ -575,6 +656,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           blackName: _settings.blackName,
           setup: _setup,
           adaptiveLevel: _adaptive.level,
+          collection: _collection,
           computerAvailable: widget.computerAvailable,
         ),
       ),
@@ -583,11 +665,18 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     if (!mounted || choice == null) return;
     _cancelComputerMove();
     _clockBeforeSuspension = false;
-    final setup = choice.setup;
+    var setup = choice.setup;
+    var bot = setup.opponent == Opponent.bot ? botById(setup.botId) : null;
+    if (bot != null && !_collection.isUnlocked(bot)) {
+      bot = bots.first;
+      setup = setup.copyWith(botId: bot.id);
+    }
     _setup = setup;
+    _bot = bot;
     _gameLevel = setup.adaptive ? _adaptive.level : setup.level;
     _resultRecorded = false;
-    final vsComputer = setup.opponent == Opponent.computer;
+    _botResultRecorded = false;
+    final vsComputer = setup.opponent != Opponent.human;
     if (!vsComputer) _twoPlayerVariant = choice.variant;
     final variant = vsComputer ? Variant.standard : choice.variant;
     _game = ChessGame(
@@ -615,6 +704,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     }
     _refresh(animate: false);
     unawaited(_computerMove());
+    if (bot != null) _botSay(BotEvent.start);
     if (vsComputer) return;
     unawaited(
       widget.settings.update(
@@ -643,6 +733,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _clockBeforeSuspension = false;
     if (_computerSide != null) _orientation = Side.white;
     _computerSide = null;
+    _bot = null;
     _computer?.dispose().ignore();
     _computer = null;
     _game = ChessGame(initial: position);
@@ -934,8 +1025,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                 children: [
                   title,
                   Text(
-                    'Computer, livello $_gameLevel: '
-                    '${engineLevel(_gameLevel).name}',
+                    _bot != null
+                        ? '${_bot!.avatar} ${_bot!.name} (${_bot!.elo} Elo)'
+                        : 'Computer, livello $_gameLevel: '
+                              '${engineLevel(_gameLevel).name}',
                     style: Theme.of(context).textTheme.labelMedium,
                   ),
                 ],
@@ -1506,6 +1599,7 @@ class _TimeControlSheet extends StatefulWidget {
     required this.blackName,
     required this.setup,
     required this.adaptiveLevel,
+    required this.collection,
     required this.computerAvailable,
   });
 
@@ -1514,6 +1608,7 @@ class _TimeControlSheet extends StatefulWidget {
   final String blackName;
   final GameSetup setup;
   final int adaptiveLevel;
+  final BotCollection collection;
   final bool computerAvailable;
 
   @override
@@ -1576,6 +1671,7 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
             OpponentPicker(
               setup: _setup,
               adaptiveLevel: widget.adaptiveLevel,
+              collection: widget.collection,
               computerAvailable: widget.computerAvailable,
               onChanged: (setup) => setState(() => _setup = setup),
             ),
