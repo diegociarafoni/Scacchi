@@ -156,6 +156,9 @@ void main() {
         await tester.tap(find.byTooltip('Editor di posizione'));
         await tester.pumpAndSettle();
         Future<void> tapVisible(Finder finder) async {
+          if (finder.evaluate().isEmpty) {
+            await tester.scrollUntilVisible(finder, 100);
+          }
           await tester.ensureVisible(finder);
           await tester.pumpAndSettle();
           await tester.tap(finder);
