@@ -4,6 +4,8 @@
 
 Le mosse legali sono generate da `dartchess` e comprendono tutte le regole degli scacchi standard: arrocco corto e lungo, presa en passant, promozione a donna, torre, alfiere o cavallo, divieto di lasciare il proprio re sotto scacco.
 
+`ChessGame.play` e `ChessGame.replay` rifiutano una mossa di pedone che raggiunge l'ultima traversa senza indicare il pezzo di promozione: la scacchiera (`chessground`) chiede sempre il pezzo prima di inviare la mossa.
+
 Ogni mossa giocata viene registrata in notazione algebrica standard (SAN), per esempio `e4`, `Nf3`, `O-O`, `exd5`, `e8=Q`, `Qxf7#`.
 
 ## Fine partita
@@ -53,3 +55,9 @@ Si usa il contatore di semimosse della posizione (`halfmoves`), che si azzera a 
 
 **Fine della partita.** Matto, stallo, ripetizione e 50 mosse valgono come negli scacchi classici. La vittoria propria della variante ha il motivo "Re al centro" o "Terzo scacco". A Tre scacchi la ripetizione confronta anche gli scacchi rimasti. Il materiale insufficiente non vale a Re della collina, dove un re solo può ancora vincere.
 
+## Verifica delle regole
+
+La conformità alle regole è verificata dai test in `test/regole/`:
+
+- `perft_test.dart`: conta le sequenze di mosse legali (perft) generate da `dartchess` e le confronta con i valori di riferimento di [chessprogramming.org](https://www.chessprogramming.org/Perft_Results) e con la suite di casi speciali di Martin Sedlak (en passant illegali, arrocchi che danno scacco, promozioni e sottopromozioni, autostallo).
+- `partita_test.dart`: verifica su `ChessGame` scacco, pezzi inchiodati, scaccomatto, stallo, arrocco (diritti, case attaccate, pezzi in mezzo), en passant, promozione, regola delle 50 mosse, triplice ripetizione (tratto, diritti di arrocco, presa en passant legale o no) e materiale insufficiente.

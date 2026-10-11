@@ -54,7 +54,7 @@ class ChessGame {
     final game = ChessGame(initial: initial, variant: variant);
     for (final move in moves) {
       final pos = game.position;
-      if (pos.isGameOver || !pos.isLegal(move)) return null;
+      if (pos.isGameOver || !_isPlayable(pos, move)) return null;
       final (after, san) = pos.makeSan(move);
       game._moves.add(PlayedMove(move: move, san: san, after: after));
     }
@@ -79,7 +79,7 @@ class ChessGame {
 
   /// Gioca [move] se è legale. Restituisce `false` se la mossa viene rifiutata.
   bool play(Move move) {
-    if (isOver || !position.isLegal(move)) return false;
+    if (isOver || !_isPlayable(position, move)) return false;
     final (after, san) = position.makeSan(move);
     _moves.add(PlayedMove(move: move, san: san, after: after));
     return true;
@@ -136,6 +136,14 @@ class ChessGame {
     GameEndReason.variantEnd => position.variantOutcome,
     _ => Outcome.draw,
   };
+
+  /// Mossa legale e, se porta un pedone in ultima traversa, con il pezzo di promozione.
+  static bool _isPlayable(Position pos, Move move) =>
+      pos.isLegal(move) &&
+      !(move is NormalMove &&
+          move.promotion == null &&
+          pos.board.pawns.has(move.from) &&
+          SquareSet.backranks.has(move.to));
 
   /// Confronta solo le posizioni successive all'ultima cattura o mossa di pedone.
   bool get _isThreefoldRepetition {

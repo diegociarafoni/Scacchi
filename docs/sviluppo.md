@@ -40,6 +40,7 @@ Ogni funzione nasce dai requisiti del progetto, nel documento dei requisiti, con
 | Livello | Cartella | Cosa verifica | Comando |
 |---|---|---|---|
 | Unitari | `test/chess_game_test.dart`, `test/material_test.dart`, `test/settings_test.dart`, `test/clock_test.dart`, `test/sound_test.dart` | Regole e fine partita su `ChessGame`; pezzi catturati e vantaggio su `MaterialBalance`; impostazioni e salvataggio; orologio; scelta dei suoni; senza interfaccia | `flutter test` |
+| Conformità regole | `test/regole/` | Perft di `dartchess` sulle posizioni di riferimento e casi limite di arrocco, en passant, promozione e patte su `ChessGame` (vedi [Regole di gioco](regole-di-gioco.md#verifica-delle-regole)) | `flutter test test/regole` |
 | Widget | `test/widget_test.dart` | Avvio dell'app e stato iniziale | `flutter test` |
 | Gamification | `test/progress/` | Regole di XP, serie e traguardi; salvataggio; schermata Profilo | `flutter test test/progress` |
 | Percorso | `test/path/` | Esercizi, contenuti, sblocco, mappa e tappe sulla scacchiera | `flutter test test/path` |
