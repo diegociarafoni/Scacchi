@@ -21,6 +21,8 @@ void main() {
       const EngineScore.mate(2),
     );
     expect(parseInfo('info string NNUE evaluation'), isNull);
+    expect(parseInfo('info string usa pv per la variante'), isNull);
+    expect(parseInfo('info depth 2 score cp 10 pv e2e4 xyz')!.pv, ['e2e4']);
   });
 
   test('ordina i matti sopra qualsiasi vantaggio materiale', () {

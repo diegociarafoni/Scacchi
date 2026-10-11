@@ -6,17 +6,23 @@ L'app è progettata prima di tutto per il telefono in verticale.
 
 Dall'alto verso il basso:
 
-1. **Barra del titolo** con il menu delle opzioni.
+1. **Barra del titolo** con il pulsante delle impostazioni.
 2. **Striscia delle mosse**: scorre in orizzontale e mostra sempre l'ultima mossa a destra.
 3. **Riga di stato**: chi muove, scacco, oppure risultato e motivo della fine partita.
-4. **Scacchiera** a tutta larghezza.
-5. **Barra dei comandi** in basso, alla portata del pollice: Nuova, Annulla, Gira, Patta, Abbandona.
+4. **Materiale del giocatore in alto**: pezzi che ha catturato e vantaggio.
+5. **Scacchiera** a tutta larghezza.
+6. **Materiale del giocatore in basso**.
+7. **Barra dei comandi** in basso, alla portata del pollice: Nuova, Annulla, Gira, Patta, Abbandona.
 
-Striscia, stato e scacchiera sono centrati insieme nello spazio disponibile. La scacchiera ha come lato il minimo tra la larghezza dello schermo e l'altezza rimasta dopo striscia, stato e comandi.
+Striscia, stato, righe del materiale e scacchiera sono centrati insieme nello spazio disponibile. La scacchiera ha come lato il minimo tra la larghezza dello schermo e l'altezza rimasta dopo striscia, stato, righe del materiale e comandi.
 
 ## Tablet e orizzontale
 
-Quando la larghezza supera di oltre il 20% l'altezza, la scacchiera sta a sinistra e un pannello a destra contiene stato, lista delle mosse e comandi.
+Quando la larghezza supera di oltre il 20% l'altezza, la scacchiera sta a sinistra e un pannello a destra contiene, dall'alto: materiale del giocatore in alto, stato, lista delle mosse, materiale del giocatore in basso e comandi.
+
+## Materiale catturato
+
+Per ciascun giocatore una riga mostra le icone dei pezzi avversari catturati, dal più prezioso al pedone, seguite dal vantaggio di materiale (per esempio "+3") solo per chi è in vantaggio. Valori: pedone 1, cavallo 3, alfiere 3, torre 5, donna 9. I pezzi catturati si ricavano dalle mosse della partita: un pezzo promosso e poi catturato compare come pezzo promosso, e una promozione senza cattura non compare. Il vantaggio è invece calcolato sul materiale presente sulla scacchiera, quindi include le promozioni. Le righe seguono l'orientamento della scacchiera; se i pezzi catturati non entrano nella larghezza disponibile, la riga si riduce in scala. Per i lettori di schermo ogni riga è annunciata come frase, per esempio «Bianco: ha catturato pedone, vantaggio di 1».
 
 ## Interazione con la scacchiera
 
@@ -30,13 +36,48 @@ Quando la larghezza supera di oltre il 20% l'altezza, la scacchiera sta a sinist
 
 | Comando | Effetto |
 |---|---|
-| Nuova | Inizia una nuova partita dalla posizione iniziale |
+| Nuova | Apre la finestra della nuova partita (avversario, colore, livello, cadenza) e inizia dalla posizione iniziale |
 | Annulla | Annulla l'ultima mossa; disattivato se non ci sono mosse |
 | Gira | Capovolge la scacchiera |
 | Patta | Chiede all'avversario se accetta la patta; disattivato a partita conclusa |
 | Abbandona | Chiede conferma e fa abbandonare il lato al tratto; disattivato a partita conclusa |
-| Menu, "Ruota a ogni turno" | Orienta automaticamente la scacchiera dal lato di chi deve muovere |
-| Menu, "Revisione della partita" | Apre la revisione con classificazione delle mosse e precisione (vedi [revisione-partita.md](revisione-partita.md)); presente solo dove c'è il motore |
+| Menu ⋮, "Revisione della partita" | Apre la revisione con classificazione delle mosse e precisione (vedi [revisione-partita.md](revisione-partita.md)); il menu c'è solo dove c'è il motore |
+
+## Orologio
+
+"Nuova" apre una finestra in cui si sceglie l'avversario (vedi [avversario-computer.md](avversario-computer.md)) e la cadenza: "Senza tempo" oppure le cadenze di chess.com, cioè Bullet (1+0, 1+1, 2+1), Blitz (3+0, 3+2, 5+0) e Rapid (10+0, 15+10, 30+0), dove il primo numero sono i minuti per giocatore e il secondo i secondi aggiunti dopo ogni mossa.
+
+- Ogni orologio sta a destra della riga del materiale del rispettivo giocatore.
+- Il tempo inizia a scorrere dopo la prima mossa del Bianco, per il Nero.
+- L'orologio di chi ha il tratto è evidenziato; sotto i 10 secondi diventa rosso.
+- Sotto i 20 secondi mostra anche i decimi.
+- Si ferma mentre è aperto un dialogo (abbandono, patta, nuova partita) e quando l'app va in secondo piano, e riparte al ritorno.
+- Una mossa fatta a tempo già scaduto non viene accettata.
+
+## Impostazioni
+
+Si aprono dall'icona a forma di ingranaggio nella barra del titolo. Ogni modifica si applica subito e viene salvata sul dispositivo.
+
+| Impostazione | Effetto | Predefinito |
+|---|---|---|
+| Mostra le mosse legali | Puntini sulle case raggiungibili dal pezzo selezionato | Attiva |
+| Coordinate | Lettere e numeri sui bordi della scacchiera | Attiva |
+| Promuovi sempre a donna | Salta il selettore di promozione | Disattiva |
+| Frecce e cerchi | Disegno di frecce e cerchi con due dita sulla scacchiera | Attiva |
+| Ruota a ogni turno | Orienta la scacchiera dal lato di chi deve muovere | Disattiva |
+| Modalità tavolo | Capovolge i pezzi del giocatore in alto, per giocare uno di fronte all'altro con il telefono sul tavolo | Disattiva |
+| Suoni | Suoni per mossa, cattura, arrocco, scacco, promozione, fine partita e tempo sotto i 10 secondi | Attivi |
+| Volume | Volume dei suoni, da 0 a 100% | 100% |
+| Vibrazione | Vibrazione breve a ogni mossa, più marcata per catture e fine partita | Attiva |
+| Tema della scacchiera | Verde, Legno, Blu, Grigio | Verde |
+| Pezzi | Classico, Merida, California, Cardinal, Maestro | Classico |
+| Animazioni | Nessuna, Veloce, Normale, Lenta | Normale |
+
+I set di pezzi disponibili sono solo quelli con licenza compatibile con la GPL, elencati in `CREDITS.md`. Anche le icone dei pezzi catturati usano il set scelto.
+
+## Suoni
+
+A ogni mossa suona un solo effetto, scelto in quest'ordine di priorità: fine partita, scacco, promozione, arrocco, cattura (anche en passant), mossa semplice. Con l'orologio, un breve segnale avvisa quando il tempo di un giocatore scende sotto i 10 secondi, una volta per partita. I suoni sono generati dallo script `tool/generate_sounds.py`.
 
 ## Tema
 

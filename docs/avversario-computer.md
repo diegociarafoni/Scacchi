@@ -9,7 +9,8 @@ nessuna connessione, nessun server, nessun dato che esce dal telefono.
 2. Scegliere **Computer**.
 3. Scegliere il colore: Bianco, Nero o a caso. La scacchiera si orienta dal lato del giocatore.
 4. Scegliere il livello con il cursore (da 1 a 8).
-5. Toccare **Gioca**. Se il giocatore ha il Nero, il computer muove per primo.
+5. Scegliere il tempo: "Senza tempo" o una cadenza (vedi [interfaccia.md](interfaccia.md)).
+6. Toccare **Gioca**. Se il giocatore ha il Nero, il computer muove per primo.
 
 Durante la riflessione del computer la scacchiera è bloccata e compare la scritta
 "Il computer sta pensando…".
@@ -17,8 +18,15 @@ Durante la riflessione del computer la scacchiera è bloccata e compare la scrit
 - **Annulla** ritira la mossa del giocatore e la risposta del computer, così il turno
   torna al giocatore. Se il computer sta ancora pensando, la ricerca viene interrotta.
 - **Abbandona** fa abbandonare il giocatore, non il computer.
-- **Patta**: il computer accetta solo se si valuta in svantaggio di almeno mezzo pedone (50 centipedoni) nella sua ultima ricerca; altrimenti rifiuta (requisito RF-25).
-- La rotazione automatica della scacchiera non si applica contro il computer.
+- **Annulla** dopo un abbandono o una patta concordata riapre la partita senza togliere mosse.
+- **Patta**: il computer valuta la posizione attuale a piena forza e accetta solo se si giudica in svantaggio di almeno mezzo pedone (50 centipedoni); altrimenti rifiuta (requisito RF-25). Durante la valutazione compare "Il computer valuta la patta…" e la scacchiera è bloccata.
+- Se il motore non risponde, o propone una mossa che le regole rifiutano, compare il messaggio "Il computer non risponde." con il pulsante **Riprova**, sopra la barra dei comandi; il motore viene riavviato alla richiesta successiva. Il messaggio sparisce con una nuova partita o un annullamento.
+- La patta si può offrire solo nel proprio turno.
+- La rotazione automatica della scacchiera è disattivata contro il computer.
+- Con l'orologio, il tempo del computer scorre mentre pensa e riceve l'incremento come il giocatore; se il tempo scade durante la riflessione la ricerca viene interrotta. **Annulla** ripristina gli orologi di entrambe le mosse ritirate, anche dopo un tempo scaduto alla prima mossa.
+- Con l'orologio il computer non pensa più di un trentesimo del tempo residuo più tre quarti dell'incremento (minimo 50 ms): riflessione e ritardo artificiale del livello vengono ridotti di conseguenza (`EngineLevel.withinClock`), così anche il livello 8 non perde per tempo nelle cadenze brevi.
+- Mentre è aperta una finestra (nuova partita, abbandono, patta) o l'app è in background, orologio e computer sono fermi: la ricerca in corso viene interrotta, il suo tempo restituito al computer, e riparte alla chiusura o al ritorno nell'app.
+- Mentre il computer valuta una patta l'orologio è fermo, perché il giocatore non può muovere. Se il motore non risponde, l'orologio del computer resta fermo, senza il tempo della ricerca fallita, fino a **Riprova**.
 
 ## Piattaforme
 
@@ -84,15 +92,23 @@ lib/game/
   game_page.dart       integrazione nella schermata di gioco
 ```
 
-- `ComputerPlayer` riceve una posizione FEN e un `EngineLevel` e restituisce un `EngineMove`
+- `ComputerPlayer.bestMove` riceve la posizione iniziale (FEN), la cronologia delle mosse e un `EngineLevel` e restituisce un `EngineMove`
   (mossa già nel formato di dartchess, variante prevista, valutazione), oppure `null` se non
   ci sono mosse legali. Non applica la mossa: lo fa `ChessGame`, che resta l'unica fonte delle regole.
+- Al motore si invia `position fen <iniziale> moves ...`: con la cronologia Stockfish riconosce le ripetizioni, come fa `ChessGame`.
+- `ComputerPlayer.evaluate` valuta una posizione a piena forza (300 ms), usata per decidere sulla patta.
 - Le richieste vanno in coda: il motore esegue una ricerca alla volta.
+- Dopo un errore (timeout, avvio fallito) il motore viene chiuso e la richiesta successiva ne avvia uno nuovo, così una risposta tardiva non viene scambiata per quella di una nuova ricerca. `dispose()` fa fallire subito le richieste in corso.
 - Le opzioni UCI del livello vengono inviate solo quando cambiano.
-- `stop()` chiede al motore di rispondere subito. La schermata di gioco scarta le risposte
+- `stop()` fa terminare subito la ricerca in corso e quelle già in coda (che diventano ricerche a profondità 1), senza il ritardo artificiale dei livelli bassi. La schermata di gioco scarta le risposte
   arrivate per una posizione non più attuale (dopo un annullamento o una nuova partita).
-- Le mosse di arrocco arrivano da Stockfish come `e1g1` e vengono convertite nel formato di
-  dartchess (re su torre, `e1h1`).
+- L'arrocco viaggia come `e1g1` verso e da Stockfish e come re su torre (`e1h1`) in dartchess;
+  `ComputerPlayer` converte in entrambe le direzioni.
+- Su Android e iOS `Stockfish.create()` ammette un solo motore alla volta: se il precedente non ha
+  ancora liberato il posto, l'avvio riprova ogni mezzo secondo per circa dieci secondi.
+- Se il motore si chiude o va in errore, le richieste in corso falliscono subito invece di attendere il timeout.
+- Per la scelta "umana" si usano le candidate dell'ultima iterazione completa (la profondità più alta in cui il motore ha valutato tutte le varianti), così non si confrontano valutazioni di profondità diverse.
+- Passando a una partita tra due persone il motore viene chiuso, liberando memoria.
 - `UciTransport` separa la logica dal motore concreto: in produzione `StockfishTransport`,
   nei test un motore finto o un processo Stockfish.
 
@@ -106,7 +122,13 @@ flutter test
 - `test/engine/computer_player_test.dart`: con un motore finto e, se installato, con Stockfish
   vero (`apt install stockfish`, oppure la variabile `STOCKFISH_PATH`). Senza Stockfish i test
   d'integrazione vengono saltati; in CI Stockfish è installato, quindi girano sempre.
-- `test/computer_game_test.dart`: la partita contro il computer nell'interfaccia.
+- `test/computer_game_test.dart`: la partita contro il computer nell'interfaccia, con un motore finto.
+- `integration_test/computer_test.dart`: test end-to-end sull'app desktop contro un vero Stockfish
+  (colore, livello, scacchiera bloccata, annullamento, patta). Su desktop l'app non usa il motore,
+  quindi il test gli collega un processo Stockfish esterno.
+
+Nuove funzioni del computer si sviluppano partendo dai test, con nel nome il requisito
+(vedi [sviluppo.md](sviluppo.md)).
 
 ## Requisiti coperti
 
