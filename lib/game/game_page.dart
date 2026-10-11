@@ -55,6 +55,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   );
   Side _orientation = Side.white;
   GameSetup _setup = const GameSetup();
+
+  /// Ultima variante scelta per la partita tra due persone.
+  Variant _twoPlayerVariant = Variant.standard;
   final _random = math.Random();
 
   /// Lato giocato dal computer; `null` nella partita tra due persone.
@@ -135,7 +138,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     if (_suspensions == 0 || --_suspensions > 0 || !restart) return;
     if (!mounted || _game.isOver) return;
     if (_clockBeforeSuspension) _clock?.start(_game.position.turn);
-    _refresh(animate: false);
+    _syncClock();
+    _tick.value++;
     _computerMove();
   }
 
@@ -204,6 +208,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     };
   }
 
+  bool get _humanToMove => _playerSide != PlayerSide.none && !_computerToMove;
+
   ComputerPlayer get _computerPlayer =>
       _computer ??= widget.createComputer?.call() ?? ComputerPlayer();
 
@@ -242,7 +248,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   }
 
   void _onMove(Move move, {bool? viaDragAndDrop}) {
-    if (_playerSide == PlayerSide.none) return;
+    if (!_humanToMove) return;
     if (!_settings.confirmMove) {
       _commitMove(move, animate: viaDragAndDrop != true);
       return;
@@ -348,7 +354,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       error ??= reply ?? 'nessuna mossa';
       if (searchStart != null) clock?.restore(searchStart, null);
     }
+    final viewing = _viewPly;
     _refresh();
+    if (viewing != null) _showPly(viewing);
     if (error != null) {
       _showMessage(
         'Il computer non risponde.',
@@ -483,7 +491,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         context: context,
         isScrollControlled: true,
         builder: (context) => _TimeControlSheet(
-          variant: _game.variant,
+          variant: _twoPlayerVariant,
           whiteName: _settings.whiteName,
           blackName: _settings.blackName,
           setup: _setup,
@@ -498,6 +506,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final setup = choice.setup;
     _setup = setup;
     final vsComputer = setup.opponent == Opponent.computer;
+    if (!vsComputer) _twoPlayerVariant = choice.variant;
     final variant = vsComputer ? Variant.standard : choice.variant;
     _game = ChessGame(
       initial: initialPosition(
@@ -517,6 +526,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       _orientation = human;
       _computerPlayer.newGame().ignore();
     } else {
+      if (_computerSide != null) _orientation = Side.white;
       _computerSide = null;
       _computer?.dispose().ignore();
       _computer = null;
@@ -561,7 +571,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       builder: (_) => _MoveInputDialog(position: position),
     );
     if (move == null || !mounted || _viewPly != null || _game.isOver) return;
-    if (_playerSide == PlayerSide.none) return;
+    if (!_humanToMove) return;
     if (_pendingMove != null || !identical(position, _game.position)) return;
     _onMove(move);
   }
@@ -669,7 +679,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         error = e;
       }
       current = mounted && generation == _generation;
-      if (current) _task = _ComputerTask.none;
+      if (current) {
+        _task = _ComputerTask.none;
+        _refresh(animate: false);
+      }
     }, restart: (_) => !(current && _accepts(computerScore)));
     if (!mounted || !current || _game.isOver) return;
     if (error != null) return _showMessage('Il computer non risponde.');
@@ -731,9 +744,12 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    // La valutazione della patta è breve: nel frattempo la partita resta com'è.
+    final evaluating = _task == _ComputerTask.draw;
     final actions = _GameActions(
-      onNewGame: _newGame,
-      onUndo: _canUndo || _pendingMove != null || _viewPly != null
+      onNewGame: evaluating ? null : _newGame,
+      onUndo:
+          !evaluating && (_canUndo || _pendingMove != null || _viewPly != null)
           ? _undo
           : null,
       onFlip: () => setState(() => _orientation = _orientation.opposite),
@@ -741,7 +757,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           _game.isOver || _pendingMove != null || _thinking || _computerToMove
           ? null
           : _offerDraw,
-      onResign: _game.isOver || _pendingMove != null ? null : _resign,
+      onResign: _game.isOver || _pendingMove != null || evaluating
+          ? null
+          : _resign,
     );
     // Il libro delle aperture vale solo per gli scacchi classici.
     final title = _game.variant == Variant.standard
@@ -769,10 +787,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           IconButton(
             tooltip: 'Mossa da tastiera',
             icon: const Icon(Icons.keyboard_outlined),
-            onPressed:
-                _playerSide == PlayerSide.none ||
-                    _pendingMove != null ||
-                    _viewPly != null
+            onPressed: !_humanToMove || _pendingMove != null || _viewPly != null
                 ? null
                 : _typeMove,
           ),
@@ -1079,7 +1094,7 @@ class _GameActions extends StatelessWidget {
     required this.onResign,
   });
 
-  final VoidCallback onNewGame;
+  final VoidCallback? onNewGame;
   final VoidCallback? onUndo;
   final VoidCallback onFlip;
   final VoidCallback? onDraw;

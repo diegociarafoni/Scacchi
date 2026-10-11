@@ -4,6 +4,7 @@ import 'package:chessground/chessground.dart';
 
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/engine/computer_player.dart';
 import 'package:scacchi/engine/uci_transport.dart';
@@ -535,6 +536,89 @@ void main() {
     await tester.pump(const Duration(seconds: 10));
     expect(clockText(tester, Side.black), '3:00');
     expect(find.byKey(const ValueKey('clock-active')), findsNothing);
+  });
+
+  IconButton keyboardButton(WidgetTester tester) => tester.widget<IconButton>(
+    find.widgetWithIcon(IconButton, Icons.keyboard_outlined),
+  );
+
+  testWidgets('dopo un errore del motore non si muove per il computer', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      app(connect: () async => FirstLegalMoveEngine(forcedMove: 'e2e5')),
+    );
+    await startComputerGame(tester, side: 'Nero');
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    expect(find.text('Il computer non risponde.'), findsOneWidget);
+    expect(keyboardButton(tester).onPressed, isNull);
+  });
+
+  testWidgets('la risposta del computer non interrompe la consultazione', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1170, 2532);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      app(
+        connect: () async =>
+            FirstLegalMoveEngine(delay: const Duration(milliseconds: 500)),
+      ),
+    );
+    await startComputerGame(tester, side: 'Bianco');
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tapMove(tester, 'e2e4');
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tapMove(tester, 'd2d4');
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(find.text('Il computer sta pensando…'), findsOneWidget);
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+    await tester.pump();
+    expect(find.textContaining('Posizione dopo'), findsOneWidget);
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    expect(find.textContaining('Posizione dopo'), findsOneWidget);
+    await tester.sendKeyEvent(LogicalKeyboardKey.end);
+    await tester.pump();
+    expect(find.text('Muove il Bianco.'), findsOneWidget);
+  });
+
+  testWidgets('tornando a due giocatori la scacchiera riparte dal Bianco', (
+    tester,
+  ) async {
+    await tester.pumpWidget(app());
+    await startComputerGame(tester, side: 'Nero');
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    Side orientation() =>
+        tester.widget<Chessboard>(find.byType(Chessboard)).orientation;
+    expect(orientation(), Side.black);
+    await tester.tap(find.text('Nuova'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Due giocatori'));
+    await tester.pumpAndSettle();
+    await chooseTime(tester, 'Senza tempo');
+    await tester.pumpAndSettle();
+    expect(orientation(), Side.white);
+  });
+
+  testWidgets('la mossa da confermare resta dopo il ritorno nell\'app', (
+    tester,
+  ) async {
+    final settings = SettingsController.defaults();
+    await settings.update(settings.value.copyWith(confirmMove: true));
+    await tester.pumpWidget(app(settings: settings));
+    await startComputerGame(tester, side: 'Bianco');
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tapMove(tester, 'e2e4');
+    await tester.pumpAndSettle();
+    expect(find.text('Conferma'), findsOneWidget);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+    await tester.pump();
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    await tester.pumpAndSettle();
+    expect(find.text('Conferma'), findsOneWidget);
   });
 
   testWidgets('senza motore disponibile la scelta Computer è disattivata', (
