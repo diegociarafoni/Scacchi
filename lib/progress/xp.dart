@@ -14,6 +14,7 @@ int xpFor(Activity activity) => switch (activity) {
   GamePlayed() => 10,
   PuzzleSolved() => 5,
   PuzzleRunFinished() => 10,
+  MinigameFinished() => 5,
   LessonCompleted() => 20,
   ReviewCompleted() => 20,
 };

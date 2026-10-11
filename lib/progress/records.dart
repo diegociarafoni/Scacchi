@@ -7,7 +7,8 @@ enum RecordKind {
   fastestWin('Matto più rapido'),
   bestAccuracy('Precisione migliore'),
   puzzleRating('Punteggio puzzle'),
-  puzzleRun('Punteggio a tempo');
+  puzzleRun('Punteggio a tempo'),
+  minigame('Punteggio nei minigiochi');
 
   const RecordKind(this.label);
 
@@ -22,6 +23,7 @@ class PersonalRecords {
     this.bestAccuracy,
     this.puzzleRating,
     this.puzzleRuns = const {},
+    this.minigames = const {},
   });
 
   /// Elo del bot più forte battuto.
@@ -34,6 +36,9 @@ class PersonalRecords {
 
   /// Miglior punteggio per modalità a tempo o a serie.
   final Map<String, int> puzzleRuns;
+
+  /// Miglior punteggio per minigioco; c'è una voce per ogni minigioco giocato.
+  final Map<String, int> minigames;
 
   /// Record aggiornati con [activity] e record battuti da annunciare. Il primo
   /// valore di un record si salva senza annuncio; il punteggio puzzle si
@@ -77,6 +82,10 @@ class PersonalRecords {
           when score > (puzzleRuns[mode] ?? 0):
         r = r._copy(puzzleRuns: {...puzzleRuns, mode: score});
         beat(RecordKind.puzzleRun, puzzleRuns[mode]);
+      case MinigameFinished(:final game, :final score)
+          when score > (minigames[game] ?? -1):
+        r = r._copy(minigames: {...minigames, game: score});
+        beat(RecordKind.minigame, minigames[game]);
       default:
     }
     return (r, beaten);
@@ -88,12 +97,14 @@ class PersonalRecords {
     double? bestAccuracy,
     int? puzzleRating,
     Map<String, int>? puzzleRuns,
+    Map<String, int>? minigames,
   }) => PersonalRecords(
     strongestBot: strongestBot ?? this.strongestBot,
     fastestWin: fastestWin ?? this.fastestWin,
     bestAccuracy: bestAccuracy ?? this.bestAccuracy,
     puzzleRating: puzzleRating ?? this.puzzleRating,
     puzzleRuns: puzzleRuns ?? this.puzzleRuns,
+    minigames: minigames ?? this.minigames,
   );
 
   Map<String, Object?> toJson() => {
@@ -102,6 +113,7 @@ class PersonalRecords {
     'bestAccuracy': bestAccuracy,
     'puzzleRating': puzzleRating,
     'puzzleRuns': puzzleRuns,
+    'minigames': minigames,
   };
 
   static PersonalRecords fromJson(Map<String, Object?> json) => PersonalRecords(
@@ -112,6 +124,7 @@ class PersonalRecords {
     puzzleRuns: {
       ...(json['puzzleRuns'] as Map? ?? const {}).cast<String, int>(),
     },
+    minigames: {...(json['minigames'] as Map? ?? const {}).cast<String, int>()},
   );
 
   @override
@@ -121,7 +134,8 @@ class PersonalRecords {
       other.fastestWin == fastestWin &&
       other.bestAccuracy == bestAccuracy &&
       other.puzzleRating == puzzleRating &&
-      mapEquals(other.puzzleRuns, puzzleRuns);
+      mapEquals(other.puzzleRuns, puzzleRuns) &&
+      mapEquals(other.minigames, minigames);
 
   @override
   int get hashCode => Object.hash(
@@ -130,5 +144,6 @@ class PersonalRecords {
     bestAccuracy,
     puzzleRating,
     Object.hashAllUnordered(puzzleRuns.entries.map((e) => (e.key, e.value))),
+    Object.hashAllUnordered(minigames.entries.map((e) => (e.key, e.value))),
   );
 }

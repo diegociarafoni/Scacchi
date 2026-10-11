@@ -21,6 +21,13 @@ void main() {
       expect(xpFor(const ReviewCompleted()), greaterThan(win));
     });
 
+    test('un minigioco concluso vale XP come un puzzle', () {
+      expect(
+        xpFor(const MinigameFinished(game: 'coordinate', score: 3)),
+        xpFor(const PuzzleSolved()),
+      );
+    });
+
     test('un puzzle risolto vale XP', () {
       expect(xpFor(const PuzzleSolved()), greaterThan(0));
     });

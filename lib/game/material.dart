@@ -2,7 +2,8 @@ import 'package:dartchess/dartchess.dart';
 
 import 'chess_game.dart';
 
-const _values = {
+/// Valore convenzionale dei pezzi, in pedoni.
+const pieceValues = {
   Role.pawn: 1,
   Role.knight: 3,
   Role.bishop: 3,
@@ -24,7 +25,7 @@ class MaterialBalance {
       before = played.after;
     }
     for (final list in captured.values) {
-      list.sort((a, b) => _values[b]!.compareTo(_values[a]!));
+      list.sort((a, b) => pieceValues[b]!.compareTo(pieceValues[a]!));
     }
     final board = game.position.board;
     final score = {
@@ -32,7 +33,7 @@ class MaterialBalance {
         side: board
             .materialCount(side)
             .entries
-            .fold(0, (sum, e) => sum + e.value * _values[e.key]!),
+            .fold(0, (sum, e) => sum + e.value * pieceValues[e.key]!),
     };
     return MaterialBalance._(captured, score);
   }
