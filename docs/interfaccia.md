@@ -53,6 +53,7 @@ Per ciascun giocatore una riga mostra le icone dei pezzi avversari catturati, da
 - Si ferma mentre è aperto un dialogo (abbandono, patta, nuova partita) e quando l'app va in secondo piano, e riparte al ritorno.
 - Una mossa fatta a tempo già scaduto non viene accettata.
 
+## Impostazioni
 
 Si aprono dall'icona a forma di ingranaggio nella barra del titolo. Ogni modifica si applica subito e viene salvata sul dispositivo.
 
