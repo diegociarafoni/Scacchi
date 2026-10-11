@@ -1,3 +1,4 @@
+import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -81,5 +82,55 @@ void main() {
     await tester.tap(find.text('Aiuto'));
     await tester.pumpAndSettle();
     expect(find.textContaining('Prova'), findsOneWidget);
+  });
+
+  Map<Square, Annotation> badges(WidgetTester tester) =>
+      tester.widget<Chessboard>(find.byType(Chessboard)).annotations;
+
+  testWidgets('RF-72 il giudizio compare sulla casa della mossa', (
+    tester,
+  ) async {
+    await startWithCoach(tester);
+    expect(badges(tester), isEmpty);
+    await tapMove(tester, 'e2e4');
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.tap(find.text('Continua'));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    expect(badges(tester).keys, [Square.e4]);
+    expect(badges(tester)[Square.e4]!.symbol, '??');
+  });
+
+  testWidgets('RF-72 Riprova toglie il giudizio con la mossa', (tester) async {
+    await startWithCoach(tester);
+    await tapMove(tester, 'e2e4');
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.tap(find.text('Riprova'));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    expect(badges(tester), isEmpty);
+  });
+
+  testWidgets('RF-72 senza allenatore nessun giudizio sulla scacchiera', (
+    tester,
+  ) async {
+    await tester.pumpWidget(app());
+    await startComputerGame(tester, side: 'Bianco');
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tapMove(tester, 'e2e4');
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    expect(badges(tester), isEmpty);
+  });
+
+  testWidgets('RF-72 spegnendo l\'allenatore il giudizio sparisce', (
+    tester,
+  ) async {
+    await startWithCoach(tester);
+    await tapMove(tester, 'e2e4');
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.tap(find.text('Continua'));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    expect(badges(tester), isNotEmpty);
+    await tester.tap(find.text('Allenatore'));
+    await tester.pumpAndSettle();
+    expect(badges(tester), isEmpty);
   });
 }
