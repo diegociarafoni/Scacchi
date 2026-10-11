@@ -139,7 +139,8 @@ class YouPage extends StatelessWidget {
                   (c) => PathPage(controller: c, playGuardian: playGuardian),
                 ),
               ),
-              if (tournamentPage != null)
+              // Classifica ed Elo dei bot: nel profilo bambino niente numeri.
+              if (tournamentPage != null && !simple)
                 _Entry(
                   icon: Icons.emoji_events_outlined,
                   title: 'Tornei',

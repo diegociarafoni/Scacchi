@@ -823,6 +823,30 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'QR non valido: ignorato.'**
   String get qrMalformed;
+
+  /// Titolo sopra la stringa FEN nell'editor di posizione
+  ///
+  /// In it, this message translates to:
+  /// **'Posizione (FEN)'**
+  String get editorFenTitle;
+
+  /// Etichetta e suggerimento dell'icona di aiuto accanto al titolo FEN
+  ///
+  /// In it, this message translates to:
+  /// **'Che cos\'è il FEN?'**
+  String get editorFenHelpTooltip;
+
+  /// Spiegazione del FEN nella finestra di aiuto dell'editor
+  ///
+  /// In it, this message translates to:
+  /// **'Il FEN è una riga di testo che descrive una posizione: i pezzi sulla scacchiera, di chi è il turno, l\'arrocco e le mosse. Serve per copiare la posizione in altre app e per incollarne una ricevuta da altrove: usa «Copia FEN» e «Incolla FEN».'**
+  String get editorFenHelpBody;
+
+  /// Pulsante per chiudere la finestra di aiuto sul FEN
+  ///
+  /// In it, this message translates to:
+  /// **'Ho capito'**
+  String get editorFenHelpClose;
 }
 
 class _AppLocalizationsDelegate

@@ -5,6 +5,7 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../l10n/app_localizations.dart';
 import '../minigames/blind.dart' show pieceLabel;
 import '../minigames/board_layout.dart';
 import 'position_draft.dart';
@@ -205,6 +206,40 @@ class _PositionEditorPageState extends State<PositionEditorPage> {
               ],
             ),
             const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  child: Semantics(
+                    header: true,
+                    child: Text(
+                      AppLocalizations.of(context).editorFenTitle,
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  key: const Key('editor-fen-help'),
+                  icon: const Icon(Icons.help_outline),
+                  tooltip: AppLocalizations.of(context).editorFenHelpTooltip,
+                  onPressed: () => showDialog<void>(
+                    context: context,
+                    builder: (context) {
+                      final l10n = AppLocalizations.of(context);
+                      return AlertDialog(
+                        title: Text(l10n.editorFenTitle),
+                        content: Text(l10n.editorFenHelpBody),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: Text(l10n.editorFenHelpClose),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
             SelectionArea(
               child: Text(
                 _draft.fen,

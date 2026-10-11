@@ -25,7 +25,7 @@ Durante la riflessione del computer la scacchiera è bloccata e compare la scrit
 - Se il motore non risponde, o propone una mossa che le regole rifiutano, compare il messaggio "Il computer non risponde." con il pulsante **Riprova**, sopra la barra dei comandi; il motore viene riavviato alla richiesta successiva. Il messaggio sparisce con una nuova partita o un annullamento.
 - La patta si può offrire solo nel proprio turno.
 - La rotazione automatica della scacchiera è disattivata contro il computer.
-- Il pulsante **Allenatore** giudica ogni mossa e dà suggerimenti (vedi [allenatore.md](allenatore.md)); dal menu ⋮ si aprono **Analisi della posizione** e **Revisione della partita** (vedi [analisi.md](analisi.md) e [revisione-partita.md](revisione-partita.md)).
+- Il pulsante **Allenatore** giudica ogni mossa e avvisa degli errori; il pulsante **Suggerisci** (lampadina) indica il pezzo da muovere e poi la mossa, anche con l'allenatore spento (vedi [allenatore.md](allenatore.md)). Dal menu ⋮ si aprono **Analisi della posizione** e **Revisione della partita** (vedi [analisi.md](analisi.md) e [revisione-partita.md](revisione-partita.md)) e lo scambio della partita con **Passa con QR** e **Ricevi con QR** (vedi [scambio-qr.md](scambio-qr.md)).
 - Con l'orologio, il tempo del computer scorre mentre pensa e riceve l'incremento come il giocatore; se il tempo scade durante la riflessione la ricerca viene interrotta. **Annulla** ripristina gli orologi di entrambe le mosse ritirate, anche dopo un tempo scaduto alla prima mossa.
 - Con l'orologio il computer non pensa più di un trentesimo del tempo residuo più tre quarti dell'incremento (minimo 50 ms): riflessione e ritardo artificiale del livello vengono ridotti di conseguenza (`EngineLevel.withinClock`), così anche il livello 8 non perde per tempo nelle cadenze brevi.
 - Mentre è aperta una finestra (nuova partita, abbandono, patta) o l'app è in background, orologio e computer sono fermi: la ricerca in corso viene interrotta, il suo tempo restituito al computer, e riparte alla chiusura o al ritorno nell'app.
@@ -164,7 +164,7 @@ Nuove funzioni del computer si sviluppano partendo dai test, con nel nome il req
 | RF-21 motore in isolate separato, ritardo artificiale ai livelli bassi | ✓ |
 | RF-25 patta accettata dal bot in base alla valutazione | ✓ |
 | RNF-03 Stockfish nativo via FFI in isolate, 1 thread | ✓ (Android, iOS) |
-| RF-22 modalità Allenamento (suggerimento, barra di valutazione) | In parte: suggerimento con **Aiuto** dell'allenatore (vedi [allenatore.md](allenatore.md)); barra di valutazione in analisi e revisione, non ancora in partita |
+| RF-22 modalità Allenamento (suggerimento, barra di valutazione) | In parte: suggerimento con il pulsante **Suggerisci** (vedi [allenatore.md](allenatore.md)); barra di valutazione in analisi e revisione, non ancora in partita |
 | RF-23 bot con personalità | ✓ (vedi [bot.md](bot.md)) |
 | RF-24 partenza da una posizione personalizzata | ✓ dall'editor (vedi [editor-posizione.md](editor-posizione.md)) |
 | RF-26 avversario adattivo | ✓ |

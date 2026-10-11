@@ -33,7 +33,8 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | [dipendenze-e-licenze.md](dipendenze-e-licenze.md) | Aggiornamenti automatici e licenze ammesse |
 | [avversario-computer.md](avversario-computer.md) | Partita contro il computer: livelli, motore Stockfish, piattaforme |
 | [bot.md](bot.md) | Bot con personalità: scala degli 8 bot, stile di gioco, libro d'apertura, frasi |
-| [revisione-partita.md](revisione-partita.md) | Revisione della partita: probabilità di vittoria, classificazione delle mosse, precisione |
+| [revisione-partita.md](revisione-partita.md) | Revisione della partita: probabilità di vittoria, classificazione, precisione (anche per fase), coach testuale, puzzle dagli errori |
+| [notazione.md](notazione.md) | Notazione delle mosse: figurativa, italiana, inglese |
 | [allenatore.md](allenatore.md) | Partita con l'allenatore: avvisi in tempo reale, ripresa della mossa, suggerimenti a livelli |
 | [analisi.md](analisi.md) | Analisi libera della posizione: linee del motore, barra, esplorazione |
 | [rilascio-android.md](rilascio-android.md) | Rilascio dell'APK, installazione sul telefono, chiave di firma |
@@ -50,7 +51,7 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | Impostazioni salvate: mosse legali, coordinate, promozione, frecce, temi, pezzi, animazioni | Disponibile |
 | Partita contro il computer (Stockfish) | Disponibile su Android e iOS; su Windows e Linux con Stockfish installato |
 | Puzzle con punteggio, temi e puzzle del giorno | Disponibile |
-| Puzzle Storm, Rush, sopravvivenza, Serie, ripasso degli errori | Disponibile |
+| Puzzle Storm, Rush, sopravvivenza, Serie, ripasso degli errori, con la spiegazione di ogni modalità | Disponibile |
 | Nome dell'apertura in partita (in italiano), Esplora aperture | Disponibile |
 | Repertorio di aperture con ripasso dilazionato | Disponibile |
 | Gamification: XP, livelli, obiettivo giornaliero, serie, traguardi, ricompense estetiche, promemoria | Disponibile: XP a fine partita, Profilo e promemoria dalla scheda Tu |
@@ -59,7 +60,7 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | Scambio di partite tra telefoni con il QR, senza rete | Disponibile dal menu della partita e dall'archivio; lettura con la fotocamera su Android e iOS |
 | Backup e ripristino dei dati in un file | Disponibile dalle Impostazioni |
 | Archivio partite, import ed export PGN | Disponibile dalla scheda Tu; le partite finite si salvano da sole, riprendere una partita è in arrivo |
-| Percorso a tappe con stelle | Disponibile dalla scheda Tu, con i guardiani dove c'è il motore |
+| Percorso a tappe con stelle, capitolo sulle regole e spiegazione delle tappe | Disponibile dalla scheda Tu, con i guardiani dove c'è il motore |
 | Statistiche e rating locale | Disponibile dalla scheda Tu |
 | Editor di posizione con FEN e validazione | Disponibile |
 | Varianti: Chess960, Re della collina, Tre scacchi | Disponibile nella partita a due |
@@ -67,11 +68,12 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | Tornei contro bot | Formule, classifica, tabellone e bacheca; si giocano dalla scheda Tu contro il motore (Android e iOS; Windows e Linux con Stockfish installato) |
 | Orologio con cadenze e incremento | Disponibile |
 | Suoni, vibrazione, modalità tavolo | Disponibile |
-| Revisione della partita: classificazione, precisione, grafico, Riprova | Disponibile dove c'è il motore (Android e iOS; Windows e Linux con Stockfish installato), anche dall'archivio |
-| Analisi libera della posizione con linee del motore | Disponibile dove c'è il motore (Android e iOS; Windows e Linux con Stockfish installato) |
+| Revisione della partita: classificazione, precisione anche per fase, grafico, Riprova | Disponibile dove c'è il motore (Android e iOS; Windows e Linux con Stockfish installato), anche dall'archivio |
+| Analisi libera della posizione con linee del motore e freccia della minaccia | Disponibile dove c'è il motore (Android e iOS; Windows e Linux con Stockfish installato) |
 | Bot con personalità, collezione e avversario adattivo | Disponibile dove c'è il motore |
-| Partita con l'allenatore: avvisi, ripresa della mossa, suggerimenti | Disponibile dove c'è il motore |
+| Partita con l'allenatore: avvisi, ripresa della mossa, suggerimenti in parole con cerchio e freccia | Disponibile dove c'è il motore |
 | Profilo bambino: schede semplificate, bot amichevoli, niente numeri | Disponibile dalle Impostazioni |
 | Tema dell'app chiaro, scuro o di sistema, colori per daltonici | Disponibile dalle Impostazioni |
+| Nome Rokko, icona e schermata di avvio chiara e scura | Disponibile (vedi [identita-visiva.md](identita-visiva.md)) |
 
 I requisiti completi sono nel documento dei requisiti del progetto.

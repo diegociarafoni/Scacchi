@@ -48,6 +48,14 @@ Il test `test/puzzles/puzzle_dataset_test.dart` verifica che ogni soluzione sia 
 | `lib/puzzles/puzzle_trainer.dart` | Punteggio del giocatore, puzzle già visti, salvataggio, evento di puzzle concluso |
 | `lib/puzzles/puzzle_page.dart` | Schermata di risoluzione |
 | `lib/puzzles/puzzle_hub_page.dart` | Punteggio e modalità |
+| `lib/puzzles/puzzle_assets.dart` | Caricamento della raccolta inclusa nell'app (`assets/puzzles/puzzles.csv`) |
+| `lib/puzzles/puzzle_feed.dart` | Sequenze di puzzle per le schermate di risoluzione |
+| `lib/puzzles/puzzle_run.dart`, `lib/puzzles/puzzle_run_page.dart` | Modalità a serie: modello e schermata |
+| `lib/puzzles/run_records.dart` | Record personali delle serie |
+| `lib/puzzles/review_queue.dart` | Coda di ripasso a intervalli (Leitner) |
+| `lib/puzzles/personal_puzzles.dart` | Puzzle ricavati dagli errori delle proprie partite |
+| `lib/puzzles/themes.dart` | Nomi italiani dei temi offerti come filtro |
+| `lib/puzzles/activity_recorder.dart` | Collegamento con i progressi (`PuzzleSolved`, `PuzzleRunFinished`) |
 | `lib/puzzles/mode_guide.dart` | Obiettivo e regole di ogni modalità, in italiano |
 | `lib/puzzles/guide_view.dart` | Schermata e pannello con la spiegazione |
 | `lib/training/training_board.dart` | Scacchiera per esercizi, riusabile da puzzle e aperture; segue le impostazioni della scacchiera tramite `SettingsScope` |
@@ -124,7 +132,7 @@ Le schermate di risoluzione ricevono i puzzle da un `PuzzleFeed` (`lib/puzzles/p
 
 ## Salvataggio
 
-Punteggio, puzzle visti, contatori, coda di ripasso (`puzzles.review.v1`) e record delle serie (`puzzles.records.v1`) sono salvati nel file `training.json` della cartella dati dell'app (chiave `puzzles.trainer.v1` per il punteggio) tramite l'interfaccia `KeyValueStore` (`lib/storage/key_value_store.dart`). Il file passa da `JsonFile` (`lib/storage/json_file.dart`), lo stesso di progressi e archivio: scrittura atomica, salvataggi accodati, file non valido messo da parte come `training.json.bad-<ms>` invece di essere sovrascritto. Sarà importato nel database locale quando arriverà (RNF-08). Dati del punteggio illeggibili vengono ignorati e si riparte da 1500.
+Punteggio, puzzle visti, contatori, spiegazioni delle modalità già lette (`puzzles.guides.v1`), coda di ripasso (`puzzles.review.v1`) e record delle serie (`puzzles.records.v1`) sono salvati nel file `training.json` della cartella dati dell'app (chiave `puzzles.trainer.v1` per il punteggio) tramite l'interfaccia `KeyValueStore` (`lib/storage/key_value_store.dart`). Il file passa da `JsonFile` (`lib/storage/json_file.dart`), lo stesso di progressi e archivio: scrittura atomica, salvataggi accodati, file non valido messo da parte come `training.json.bad-<ms>` invece di essere sovrascritto. Sarà importato nel database locale quando arriverà (RNF-08). Dati del punteggio illeggibili vengono ignorati e si riparte da 1500.
 
 ## Integrazione con la gamification
 
@@ -134,4 +142,4 @@ Nel profilo bambino (RP-06) l'hub e la pagina del puzzle non mostrano punteggio,
 
 ## Navigazione
 
-L'app ha una barra di navigazione in basso (`lib/home/home_shell.dart`) con le schede **Gioca**, **Puzzle** e **Aperture**. I puzzle vengono caricati solo alla prima apertura della scheda, così l'avvio dell'app non rallenta.
+L'app ha una barra di navigazione in basso (`lib/home/home_shell.dart`) con le schede **Gioca**, **Puzzle**, **Aperture** e **Tu**. I puzzle vengono caricati solo alla prima apertura della scheda, così l'avvio dell'app non rallenta.

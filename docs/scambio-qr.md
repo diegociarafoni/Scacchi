@@ -65,7 +65,7 @@ Perché flutter_zxing e non `mobile_scanner`, il pacchetto più diffuso: su Andr
 - **Android** (`android/app/src/main/AndroidManifest.xml`): solo `CAMERA`, richiesto a runtime dal plugin alla prima apertura del lettore, non all'avvio dell'app. `android.hardware.camera.any` è `required="false"`, così l'app resta installabile su dispositivi senza fotocamera. Il plugin `camera` dichiara anche `RECORD_AUDIO` e `WRITE_EXTERNAL_STORAGE`, che il lettore non usa: il manifest dell'app li rimuove con `tools:node="remove"` (minimo privilegio). La scelta di un'immagine usa il selettore di foto del sistema, che non richiede permessi.
 - **iOS** (`ios/Runner/Info.plist`): `NSCameraUsageDescription` e `NSPhotoLibraryUsageDescription` spiegano in italiano che fotocamera e immagini servono solo a leggere il QR. Il microfono non viene mai attivato (`enableAudio: false` nel lettore), quindi non serve la sua descrizione.
 - Le immagini della fotocamera restano in memoria, non vengono salvate né inviate; il lettore spegne la fotocamera quando l'app va in secondo piano e quando si esce dalla schermata.
-- Se il permesso viene negato o la fotocamera manca (anche su desktop), la schermata lo spiega con "Consenti l'accesso alla fotocamera per Scacchi nelle impostazioni del telefono" e un pulsante Riprova, senza bloccare il resto dell'app.
+- Se il permesso viene negato o la fotocamera manca (anche su desktop), la schermata lo spiega con "Non riesco a usare la fotocamera. Consenti l'accesso alla fotocamera per Rokko nelle impostazioni del telefono e riprova." e un pulsante Riprova, senza bloccare il resto dell'app.
 
 ## Test
 
@@ -81,6 +81,6 @@ Nei test di widget il lettore è sostituito da uno finto tramite il parametro `s
 
 ## Limiti noti
 
-- Il tempo residuo dell'orologio non passa all'altro telefono: la partita continua senza orologio.
+- L'orologio non passa all'altro telefono: la partita continua senza orologio. I tempi residui già registrati a ogni mossa (`[%clk]`) viaggiano invece nel PGN.
 - Su desktop il lettore non ha una fotocamera (il pacchetto `camera` non la supporta); si può comunque mostrare il QR.
 - Una partita contro il computer ricevuta prosegue tra due persone.

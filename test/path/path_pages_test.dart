@@ -206,7 +206,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(
       find.text(
-        'Il guardiano si sfida su Android e iOS, dove gioca il computer.',
+        'Il guardiano si sfida dove gioca il computer: Android e iOS, o Windows e Linux con Stockfish installato.',
       ),
       findsOneWidget,
     );
