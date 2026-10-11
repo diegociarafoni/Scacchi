@@ -14,12 +14,20 @@ import 'clock.dart';
 import 'material.dart';
 import 'move_label.dart';
 import 'sounds.dart';
+import 'variant.dart';
 
 /// Partita tra due persone sullo stesso dispositivo.
 class GamePage extends StatefulWidget {
-  const GamePage({super.key, required this.settings});
+  const GamePage({
+    super.key,
+    required this.settings,
+    this.chess960Id = randomChess960Id,
+  });
 
   final SettingsController settings;
+
+  /// Sceglie la posizione Chess960; sostituibile nei test.
+  final int Function() chess960Id;
 
   @override
   State<GamePage> createState() => _GamePageState();
@@ -288,16 +296,44 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final choice = await _withClockPaused(
       () => showModalBottomSheet<_TimeChoice>(
         context: context,
-        builder: (context) => const _TimeControlSheet(),
+        isScrollControlled: true,
+        builder: (context) => _TimeControlSheet(variant: _game.variant),
       ),
     );
     if (!mounted || choice == null) return;
-    _game = ChessGame();
+    final variant = choice.variant;
+    _game = ChessGame(
+      initial: initialPosition(
+        variant,
+        chess960Id: variant == Variant.chess960 ? widget.chess960Id() : null,
+      ),
+      variant: variant,
+    );
     _clock = choice.control == null ? null : ChessClock(choice.control!);
     _clockHistory.clear();
     _lowTime.reset();
     _clearBoardInteraction();
     _refresh(animate: false);
+  }
+
+  String get _title => switch (_game.variant) {
+    Variant.standard => 'Scacchi',
+    Variant.chess960 => switch (chess960IdOf(_game.initial)) {
+      null => 'Chess960',
+      final id => 'Chess960 n. $id',
+    },
+    Variant.kingOfTheHill => Variant.kingOfTheHill.label,
+    // Non "1-0": si confonderebbe con un risultato.
+    Variant.threeCheck =>
+      'Scacchi dati: Bianco ${_checksGiven(Side.white)}, '
+          'Nero ${_checksGiven(Side.black)}',
+  };
+
+  int _checksGiven(Side side) {
+    final pos = _game.position;
+    if (pos is! ThreeCheck) return 0;
+    final (white, black) = pos.remainingChecks;
+    return 3 - (side == Side.white ? white : black);
   }
 
   void _undo() {
@@ -412,10 +448,16 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     );
     return Scaffold(
       appBar: AppBar(
-        title: OpeningName(
-          positions: [_game.initial, for (final m in _game.moves) m.after],
-          fallback: 'Scacchi',
-        ),
+        // Il libro delle aperture vale solo per gli scacchi classici.
+        title: _game.variant == Variant.standard
+            ? OpeningName(
+                positions: [
+                  _game.initial,
+                  for (final m in _game.moves) m.after,
+                ],
+                fallback: 'Scacchi',
+              )
+            : Text(_title),
         actions: [
           IconButton(
             tooltip: 'Impostazioni',
@@ -570,6 +612,14 @@ String statusText(ChessGame game) {
     GameEndReason.threefoldRepetition => 'Triplice ripetizione. Patta.',
     GameEndReason.fiftyMoveRule => 'Regola delle 50 mosse. Patta.',
     GameEndReason.agreement => 'Patta concordata.',
+    GameEndReason.variantEnd => switch (game.variant) {
+      Variant.kingOfTheHill =>
+        'Re al centro. Vince il ${_sideName(game.outcome!.winner!)}.',
+      Variant.threeCheck =>
+        'Terzo scacco. Vince il ${_sideName(game.outcome!.winner!)}.',
+      // Senza una vittoria propria della variante non si arriva qui.
+      Variant.standard || Variant.chess960 => 'Partita finita.',
+    },
     GameEndReason.timeout =>
       game.outcome!.winner == null
           ? 'Tempo scaduto. Patta per materiale insufficiente.'
@@ -858,13 +908,24 @@ class _ClockView extends StatelessWidget {
 }
 
 class _TimeChoice {
-  const _TimeChoice(this.control);
+  const _TimeChoice(this.control, this.variant);
 
   final TimeControl? control;
+  final Variant variant;
 }
 
-class _TimeControlSheet extends StatelessWidget {
-  const _TimeControlSheet();
+/// Scelta di variante e cadenza: toccare una cadenza avvia la partita.
+class _TimeControlSheet extends StatefulWidget {
+  const _TimeControlSheet({required this.variant});
+
+  final Variant variant;
+
+  @override
+  State<_TimeControlSheet> createState() => _TimeControlSheetState();
+}
+
+class _TimeControlSheetState extends State<_TimeControlSheet> {
+  late Variant _variant = widget.variant;
 
   @override
   Widget build(BuildContext context) {
@@ -874,7 +935,7 @@ class _TimeControlSheet extends StatelessWidget {
     }
     Widget chip(String label, TimeControl? control) => ActionChip(
       label: Text(label),
-      onPressed: () => Navigator.pop(context, _TimeChoice(control)),
+      onPressed: () => Navigator.pop(context, _TimeChoice(control, _variant)),
     );
     return SafeArea(
       child: ListView(
@@ -883,6 +944,27 @@ class _TimeControlSheet extends StatelessWidget {
         children: [
           Text('Nuova partita', style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 12),
+          Text('Variante', style: Theme.of(context).textTheme.titleSmall),
+          const SizedBox(height: 4),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              for (final v in Variant.values)
+                ChoiceChip(
+                  label: Text(v.label),
+                  selected: v == _variant,
+                  onSelected: (_) => setState(() => _variant = v),
+                ),
+            ],
+          ),
+          if (_variant.description.isNotEmpty) ...[
+            const SizedBox(height: 4),
+            Text(_variant.description),
+          ],
+          const SizedBox(height: 12),
+          Text('Cadenza', style: Theme.of(context).textTheme.titleSmall),
+          const SizedBox(height: 4),
           chip('Senza tempo', null),
           for (final entry in groups.entries) ...[
             const SizedBox(height: 12),

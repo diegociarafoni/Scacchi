@@ -2,6 +2,7 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/archive/pgn.dart';
 import 'package:scacchi/game/chess_game.dart';
+import 'package:scacchi/game/variant.dart';
 
 ChessGame play(List<String> uci, {Position? initial}) {
   final game = ChessGame(initial: initial);
@@ -109,12 +110,38 @@ void main() {
       expect(imported.skipped, 1);
     });
 
-    test('varianti diverse dagli scacchi classici vengono scartate', () {
+    test('RF-120 una partita Chess960 si importa con la sua FEN', () {
       final imported = importPgn(
         '[Variant "Chess960"]\n'
         '[FEN "bqnb1rkr/pp3ppp/3ppn2/2p5/5P2/P2P4/NPP1P1PP/BQ1BNRKR w HFhf - 2 9"]'
         '\n\n9. g3 *',
       );
+      final game = imported.games.single.game;
+      expect(game.variant, Variant.chess960);
+      expect(game.moves.single.san, 'g3');
+    });
+
+    test('RF-121 le varianti supportate tornano uguali dopo l\'export', () {
+      for (final variant in Variant.values) {
+        final game = ChessGame(
+          initial: initialPosition(variant, chess960Id: 3),
+          variant: variant,
+        )..play(Move.parse('b2b3')!);
+        final back = importPgn(exportPgn(game)).games.single.game;
+        expect(back.variant, variant);
+        expect(back.initial.fen, game.initial.fen);
+        expect(back.moves.single.san, 'b3');
+      }
+    });
+
+    test('una partita classica non conserva un Variant importato', () {
+      final game = ChessGame()..play(Move.parse('e2e4')!);
+      final pgn = exportPgn(game, headers: {'Variant': 'wild/0'});
+      expect(pgn, isNot(contains('Variant')));
+    });
+
+    test('le varianti non supportate vengono scartate', () {
+      final imported = importPgn('[Variant "Atomic"]\n\n1. e4 *');
       expect(imported.games, isEmpty);
       expect(imported.skipped, 1);
     });
