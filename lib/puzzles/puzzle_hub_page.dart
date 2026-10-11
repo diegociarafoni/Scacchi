@@ -4,6 +4,7 @@ import '../kids/kid_display.dart';
 import '../l10n/app_localizations.dart';
 import '../settings/settings.dart';
 import 'activity_recorder.dart';
+import 'mode_guide.dart';
 import 'puzzle_feed.dart';
 import 'puzzle_page.dart';
 import 'puzzle_run.dart';
@@ -84,7 +85,11 @@ class _PuzzleHubPageState extends State<PuzzleHubPage> {
                       : 'Puzzle adatti al tuo punteggio',
                 ),
                 onTap: () => _open(
-                  PuzzlePage(trainer: trainer, onActivity: widget.onActivity),
+                  PuzzlePage(
+                    trainer: trainer,
+                    guide: PuzzleGuide.training,
+                    onActivity: widget.onActivity,
+                  ),
                 ),
               ),
               ListTile(
@@ -97,6 +102,7 @@ class _PuzzleHubPageState extends State<PuzzleHubPage> {
                   PuzzlePage(
                     trainer: trainer,
                     puzzle: daily,
+                    guide: PuzzleGuide.daily,
                     title: 'Puzzle del giorno',
                     onActivity: widget.onActivity,
                   ),
@@ -130,6 +136,7 @@ class _PuzzleHubPageState extends State<PuzzleHubPage> {
                   PuzzlePage(
                     trainer: trainer,
                     feed: ReviewFeed(trainer),
+                    guide: PuzzleGuide.review,
                     title: 'Ripasso',
                     onActivity: widget.onActivity,
                   ),
@@ -212,6 +219,7 @@ class _ThemeListPage extends StatelessWidget {
                 builder: (_) => PuzzlePage(
                   trainer: trainer,
                   theme: t.key,
+                  guide: PuzzleGuide.theme,
                   title: t.value,
                   onActivity: onActivity,
                 ),
