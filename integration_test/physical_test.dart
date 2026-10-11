@@ -1,0 +1,45 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
+import 'package:scacchi/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+Future<void> _type(WidgetTester tester, String move) async {
+  await tester.enterText(find.byKey(const Key('physical-input')), move);
+  await tester.testTextInput.receiveAction(TextInputAction.done);
+  await tester.pumpAndSettle();
+}
+
+void main() {
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
+  testWidgets('la partita su scacchiera fisica si registra fino al matto', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({});
+    tester.view.physicalSize = const Size(1170, 2532);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(const ScacchiApp());
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Tu'));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Scacchiera fisica'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Scacchiera fisica'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Senza tempo'));
+    await tester.tap(find.text('Inizia la partita'));
+    await tester.pumpAndSettle();
+
+    for (final move in ['f3', 'e5', 'g4', 'Dh4']) {
+      await _type(tester, move);
+    }
+    expect(find.textContaining('Scacco matto'), findsOneWidget);
+    expect(
+      tester.widget<Text>(find.byKey(const Key('physical-moves'))).data,
+      '1. f3 e5 2. g4 Qh4#',
+    );
+  });
+}

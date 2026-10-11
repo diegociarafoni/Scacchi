@@ -75,6 +75,9 @@ class SavedGame {
   /// Partita contro il computer.
   static const computer = 'computer';
 
+  /// Partita su una scacchiera reale, registrata dall'app.
+  static const physical = 'fisica';
+
   /// Risultato PGN: `1-0`, `0-1`, `1/2-1/2` o `*` se in corso.
   final String result;
   final String pgn;
