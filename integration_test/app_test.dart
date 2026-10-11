@@ -305,8 +305,14 @@ void main() {
     await _openSettings(tester);
     await tester.tap(find.text('Modalità tavolo'));
     await tester.pumpAndSettle();
-    await tester.scrollUntilVisible(find.text('Vibrazione'), 100);
+    await tester.scrollUntilVisible(find.text('Suoni'), 100);
+    await tester.ensureVisible(find.text('Suoni'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Suoni'));
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(find.text('Vibrazione'), 100);
+    await tester.ensureVisible(find.text('Vibrazione'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Vibrazione'));
     await tester.pumpAndSettle();
     await _back(tester);
