@@ -1,6 +1,7 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/coach/coach_session.dart';
+import 'package:scacchi/engine/uci.dart';
 import 'package:scacchi/review/coach.dart';
 import 'package:scacchi/review/move_classification.dart';
 
@@ -41,15 +42,14 @@ void main() {
       expect(v.shouldWarn, isFalse);
     });
 
-    test('una soglia più alta non avverte per l\'errore grave', () async {
-      final s = CoachSession(
-        evaluate: fakeEngine(scholar, overrides: scholarOverrides),
-        warnFrom: MoveClass.blunder,
-      );
-      final v = await s.judge(scholarBeforeBlack(), Move.parse('g8f6')!);
-      expect(v.shouldWarn, isTrue);
-      final w = await s.judge(scholarBeforeBlack(), Move.parse('g7g6')!);
-      expect(w.shouldWarn, isFalse);
+    test('warnsFor rispetta la soglia e ignora le occasioni mancate', () {
+      expect(warnsFor(MoveClass.blunder, MoveClass.blunder), isTrue);
+      expect(warnsFor(MoveClass.mistake, MoveClass.blunder), isFalse);
+      expect(warnsFor(MoveClass.mistake, MoveClass.mistake), isTrue);
+      expect(warnsFor(MoveClass.inaccuracy, MoveClass.mistake), isFalse);
+      expect(warnsFor(MoveClass.inaccuracy, MoveClass.inaccuracy), isTrue);
+      expect(warnsFor(MoveClass.miss, MoveClass.inaccuracy), isFalse);
+      expect(warnsFor(MoveClass.best, MoveClass.inaccuracy), isFalse);
     });
   });
 
@@ -70,11 +70,54 @@ void main() {
       expect(await s.hint(scholarBeforeBlack(), HintLevel.move), isNull);
     });
 
-    test('conta i suggerimenti usati', () async {
+    test('l\'arrocco mostra la casa del re, non quella della torre', () async {
+      final pos = Chess.fromSetup(
+        Setup.parseFen('r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1'),
+      );
+      final s = CoachSession(
+        evaluate: (_) async => [
+          const InfoLine(multipv: 1, pv: ['e1g1'], score: EngineScore.cp(0)),
+        ],
+      );
+      final h = await s.hint(pos, HintLevel.move);
+      expect(h?.to, Square.g1);
+      expect(h?.san, 'O-O');
+    });
+
+    test('la promozione indica il pezzo', () async {
+      final pos = Chess.fromSetup(
+        Setup.parseFen('8/P7/8/8/8/8/8/k6K w - - 0 1'),
+      );
+      final s = CoachSession(
+        evaluate: (_) async => [
+          const InfoLine(multipv: 1, pv: ['a7a8q'], score: EngineScore.cp(0)),
+        ],
+      );
+      expect((await s.hint(pos, HintLevel.move))?.promotion, Role.queen);
+    });
+
+    test('un\'analisi fallita non resta in cache', () async {
+      var n = 0;
+      final s = CoachSession(
+        evaluate: (_) async {
+          if (n++ == 0) throw StateError('timeout');
+          return [
+            const InfoLine(multipv: 1, pv: ['e2e4'], score: EngineScore.cp(0)),
+          ];
+        },
+      );
+      await expectLater(
+        s.hint(Chess.initial, HintLevel.move),
+        throwsStateError,
+      );
+      expect((await s.hint(Chess.initial, HintLevel.move))?.san, 'e4');
+    });
+
+    test('conta una volta per posizione i suggerimenti usati', () async {
       final s = session();
       await s.hint(scholarBeforeBlack(), HintLevel.piece);
       await s.hint(scholarBeforeBlack(), HintLevel.move);
-      expect(s.hintsUsed, 2);
+      expect(s.hintsUsed, 1);
     });
   });
 

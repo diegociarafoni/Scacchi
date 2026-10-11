@@ -22,10 +22,11 @@ enum HintLevel { piece, move }
 
 /// Suggerimento a livelli: prima solo il pezzo da muovere, poi la mossa.
 class CoachHint {
-  const CoachHint({required this.from, this.to, this.san});
+  const CoachHint({required this.from, this.to, this.promotion, this.san});
 
   final Square from;
   final Square? to;
+  final Role? promotion;
   final String? san;
 }
 
@@ -42,7 +43,11 @@ class CoachSession {
   /// Categoria minima che fa scattare l'avviso.
   final MoveClass warnFrom;
 
-  int hintsUsed = 0;
+  final _hinted = <String>{};
+
+  /// Posizioni per cui è stato chiesto almeno un suggerimento: i due livelli
+  /// sulla stessa posizione contano come uno.
+  int get hintsUsed => _hinted.length;
 
   Future<MoveVerdict> judge(Position before, Move move) async {
     final review = await reviewGame(
@@ -51,29 +56,50 @@ class CoachSession {
       evaluate: _evaluate,
     );
     final m = review!.moves.single;
-    return MoveVerdict(m, explainMove(m), shouldWarn: _warns(m.classification));
+    return MoveVerdict(
+      m,
+      explainMove(m),
+      shouldWarn: warnsFor(m.classification, warnFrom),
+    );
   }
-
-  // L'occasione mancata non peggiora la posizione: si segnala nel commento,
-  // senza fermare la partita.
-  bool _warns(MoveClass c) =>
-      (c == MoveClass.mistake || c == MoveClass.blunder) &&
-      c.index >= warnFrom.index;
 
   /// `null` se il motore non indica una mossa.
   Future<CoachHint?> hint(Position pos, HintLevel level) async {
     final lines = await _evaluate(pos.fen);
-    final best = parseEngineMove(pos, lines.firstOrNull?.pv.firstOrNull);
+    final uci = lines.firstOrNull?.pv.firstOrNull;
+    final best = parseEngineMove(pos, uci);
     if (best is! NormalMove) return null;
-    hintsUsed++;
+    _hinted.add(pos.fen);
     if (level == HintLevel.piece) return CoachHint(from: best.from);
-    return CoachHint(from: best.from, to: best.to, san: pos.makeSan(best).$2);
+    // In dartchess l'arrocco è "re sulla torre": la destinazione da mostrare
+    // è quella dell'UCI.
+    final shown = Move.parse(uci!) as NormalMove;
+    return CoachHint(
+      from: shown.from,
+      to: shown.to,
+      promotion: shown.promotion,
+      san: pos.makeSan(best).$2,
+    );
   }
 }
 
+/// L'occasione mancata non peggiora la posizione: si segnala nel commento,
+/// senza fermare la partita. [from] è la categoria minima che avverte.
+bool warnsFor(MoveClass c, MoveClass from) =>
+    c.isError && c != MoveClass.miss && c.index >= from.index;
+
 /// Evita di analizzare due volte la stessa posizione, per esempio il
-/// suggerimento seguito dal giudizio sulla mossa.
+/// suggerimento seguito dal giudizio sulla mossa. Le analisi fallite non
+/// restano in cache.
 PositionEvaluator _memoize(PositionEvaluator inner) {
   final cache = <String, Future<List<InfoLine>>>{};
-  return (fen) => cache.putIfAbsent(fen, () => inner(fen));
+  return (fen) async {
+    final f = cache.putIfAbsent(fen, () => inner(fen));
+    try {
+      return await f;
+    } catch (_) {
+      cache.remove(fen);
+      rethrow;
+    }
+  };
 }

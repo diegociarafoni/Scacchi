@@ -16,8 +16,10 @@ Questa prima parte contiene la logica pura (`lib/coach/coach_session.dart`). Il 
 
 ## Quando avvisa
 
-`shouldWarn` è vero per errore ed errore grave (soglia `warnFrom`, per default `MoveClass.mistake`). Imprecisioni e occasioni mancate non fermano la partita: il commento resta disponibile. Le soglie di classificazione sono quelle della [revisione](revisione-partita.md).
+`shouldWarn` è vero per errore ed errore grave (soglia `warnFrom`, per default `MoveClass.mistake`; si può abbassare a imprecisione). Le occasioni mancate non fermano la partita: il commento resta disponibile. Le soglie di classificazione sono quelle della [revisione](revisione-partita.md).
+
+Limite noto: la mossa è giudicata sulla sola posizione, senza cronologia, quindi ripetizione e regola delle 50 mosse non sono riconosciute e le mosse di libro non sono marcate.
 
 ## Costo
 
-Le valutazioni sono memorizzate per posizione dentro la sessione: chiedere un suggerimento e poi giocare la mossa non analizza due volte la stessa posizione (RF-75).
+Le valutazioni sono memorizzate per posizione dentro la sessione (quelle fallite no): chiedere un suggerimento e poi giocare la mossa non analizza due volte la stessa posizione (RF-75). I suggerimenti si contano una volta per posizione.
