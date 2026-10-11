@@ -12,6 +12,7 @@ class FirstLegalMoveEngine implements UciTransport {
     this.forcedMove,
     this.delay = Duration.zero,
     this.script,
+    this.scoreByFen,
   });
 
   /// Ritardo della risposta a `go`.
@@ -25,6 +26,9 @@ class FirstLegalMoveEngine implements UciTransport {
 
   /// Valutazione riportata, dal punto di vista di chi muove.
   final int scoreCp;
+
+  /// Se presente, valutazione in funzione della posizione analizzata.
+  final int Function(String fen)? scoreByFen;
   final _out = StreamController<String>.broadcast();
   String _fen = Chess.initial.fen;
 
@@ -52,7 +56,8 @@ class FirstLegalMoveEngine implements UciTransport {
         ? script!.removeAt(0)
         : null;
     final move = scripted ?? forcedMove ?? _firstMove();
-    return ['info depth 1 score cp $scoreCp pv $move', 'bestmove $move'];
+    final cp = scoreByFen?.call(_fen) ?? scoreCp;
+    return ['info depth 1 score cp $cp pv $move', 'bestmove $move'];
   }
 
   String _currentFen(String command) {

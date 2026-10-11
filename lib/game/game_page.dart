@@ -8,6 +8,7 @@ import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 
 import '../analysis/analysis_page.dart';
+import '../coach/coach_session.dart';
 import '../editor/position_editor_page.dart';
 import '../engine/adaptive.dart';
 import '../engine/bot_collection.dart';
@@ -90,6 +91,13 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// Lato giocato dal computer; `null` nella partita tra due persone.
   Side? _computerSide;
   ComputerPlayer? _computer;
+
+  /// Allenatore in partita (RF-73): giudica le mosse dell'utente.
+  bool _coachOn = false;
+  int _hintLevel = 0;
+  late final CoachSession _coach = CoachSession(
+    evaluate: (fen) => _computerPlayer.analyse(fen, depth: 12, multiPv: 2),
+  );
   _ComputerTask _task = _ComputerTask.none;
   bool get _thinking => _task != _ComputerTask.none;
 
@@ -406,10 +414,76 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   }
 
   void _commitMove(Move move, {required bool animate}) {
+    final before = _game.position;
     final played = _apply(move);
     if (!played && !_game.isOver) return;
     _refresh(animate: played && animate);
-    if (played) unawaited(_computerMove());
+    _hintLevel = 0;
+    if (played) unawaited(_afterHumanMove(before, move));
+  }
+
+  /// Con l'allenatore acceso, giudica la mossa prima della risposta del
+  /// computer; un errore offre di riprenderla.
+  Future<void> _afterHumanMove(Position before, Move move) async {
+    if (!_coachOn || _computerSide == null || _game.isOver) {
+      return _computerMove();
+    }
+    final plies = _game.moves.length;
+    final retry = await _whileSuspended<bool>(() async {
+      final MoveVerdict verdict;
+      try {
+        verdict = await _coach.judge(before, move);
+      } on Object {
+        return false;
+      }
+      if (!mounted || _game.moves.length != plies) return false;
+      final text = verdict.comment?.text;
+      if (!verdict.shouldWarn) {
+        if (text != null) _announce(text);
+        return false;
+      }
+      return showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Allenatore'),
+          content: Text(text ?? 'Questa mossa peggiora la tua posizione.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Continua'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('Riprova'),
+            ),
+          ],
+        ),
+      );
+    }, restart: (retry) => retry != true);
+    if (retry == true && mounted && _game.moves.length == plies) _undo();
+  }
+
+  /// Suggerimento a livelli: prima il pezzo, poi la mossa.
+  Future<void> _giveHint() async {
+    final level = _hintLevel == 0 ? HintLevel.piece : HintLevel.move;
+    final position = _game.position;
+    CoachHint? hint;
+    try {
+      hint = await _coach.hint(position, level);
+    } on Object {
+      hint = null;
+    }
+    if (!mounted || !identical(position, _game.position)) return;
+    if (hint == null) {
+      _showMessage('Nessun suggerimento disponibile.');
+      return;
+    }
+    _hintLevel = 1;
+    _showMessage(
+      level == HintLevel.piece
+          ? 'Prova a muovere il pezzo in ${hint.from.name}.'
+          : 'Prova ${hint.san}.',
+    );
   }
 
   /// Gioca [move] con orologio, suono e annuncio; con il tempo scaduto chiude la partita.
@@ -1008,6 +1082,11 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       onResign: _game.isOver || _pendingMove != null || evaluating
           ? null
           : _resign,
+      coachOn: _computerSide == null ? null : _coachOn,
+      onCoach: () => setState(() => _coachOn = !_coachOn),
+      onHint: _coachOn && _humanToMove && _pendingMove == null
+          ? _giveHint
+          : null,
     );
     // Il libro delle aperture vale solo per gli scacchi classici.
     final title = _game.variant == Variant.standard
@@ -1368,6 +1447,9 @@ class _GameActions extends StatelessWidget {
     required this.onFlip,
     required this.onDraw,
     required this.onResign,
+    required this.coachOn,
+    required this.onCoach,
+    required this.onHint,
   });
 
   final VoidCallback? onNewGame;
@@ -1375,6 +1457,11 @@ class _GameActions extends StatelessWidget {
   final VoidCallback onFlip;
   final VoidCallback? onDraw;
   final VoidCallback? onResign;
+
+  /// `null` nella partita tra due persone, dove l'allenatore non c'è.
+  final bool? coachOn;
+  final VoidCallback onCoach;
+  final VoidCallback? onHint;
 
   @override
   Widget build(BuildContext context) {
@@ -1387,6 +1474,14 @@ class _GameActions extends StatelessWidget {
           _ActionButton(Icons.swap_vert, 'Gira', onFlip),
           _ActionButton(Icons.handshake_outlined, 'Patta', onDraw),
           _ActionButton(Icons.flag_outlined, 'Abbandona', onResign),
+          if (coachOn != null)
+            _ActionButton(
+              coachOn! ? Icons.school : Icons.school_outlined,
+              'Allenatore',
+              onCoach,
+            ),
+          if (coachOn ?? false)
+            _ActionButton(Icons.lightbulb_outline, 'Aiuto', onHint),
         ],
       ),
     );
@@ -1413,10 +1508,14 @@ class _ActionButton extends StatelessWidget {
           children: [
             Icon(icon, color: color),
             const SizedBox(height: 4),
-            Text(
-              label,
-              style: Theme.of(context).textTheme.labelMedium
-                  ?.copyWith(color: color),
+            // Con sei pulsanti le etichette lunghe si rimpiccioliscono.
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                label,
+                style: Theme.of(context).textTheme.labelMedium
+                    ?.copyWith(color: color),
+              ),
             ),
           ],
         ),

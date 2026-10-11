@@ -2,9 +2,16 @@
 
 Equivalente locale di "Gioca con l'allenatore" di chess.com (requisiti RF-73…RF-75): si gioca contro il computer e, dopo ogni mossa, l'allenatore la valuta con Stockfish sul telefono, senza server.
 
-## Stato
+## In partita
 
-Questa prima parte contiene la logica pura (`lib/coach/coach_session.dart`). Il collegamento alla schermata di gioco, con avviso, ripresa della mossa e suggerimento, arriva in una PR successiva.
+Nelle partite contro il computer o un bot la barra dei comandi ha il pulsante **Allenatore** (acceso/spento, spento di default). Da acceso:
+
+- dopo ogni mossa dell'utente, e prima della risposta del computer, l'allenatore la giudica; con orologio e computer fermi durante il giudizio;
+- se è un errore o un errore grave compare un riquadro con la spiegazione e due scelte: **Riprova** (la mossa viene annullata, anche per l'orologio) o **Continua** (la partita prosegue);
+- nelle altre mosse il commento viene solo annunciato ai lettori di schermo;
+- il pulsante **Aiuto** dà un suggerimento a livelli: al primo tocco il pezzo da muovere, al secondo la mossa.
+
+Se il motore non risponde l'allenatore tace e la partita prosegue. Nella partita tra due persone il pulsante non c'è.
 
 ## `CoachSession`
 
