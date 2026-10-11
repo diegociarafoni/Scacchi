@@ -5,11 +5,12 @@ enum DrillGoal {
   /// Dare scacco matto.
   mate,
 
-  /// Promuovere un pedone senza perdere la donna nuova, o restare con la
-  /// torre contro il re solo.
+  /// Promuovere e restare con una donna, o con la torre contro il re solo,
+  /// che l'avversario non riesce a vincere nelle due mosse seguenti.
   promote,
 
-  /// Non perdere: arrivare alla patta o resistere per [EndgameDrill.par] mosse.
+  /// Non perdere: arrivare alla patta o resistere per [EndgameDrill.par]
+  /// mosse senza restare con il re solo o lasciare una donna all'avversario.
   hold,
 }
 
@@ -90,18 +91,24 @@ class DrillRun {
     if (_ended()) return true;
     switch (drill.goal) {
       case DrillGoal.hold:
-        if (_moves >= drill.par) _state = DrillState.success;
-      case DrillGoal.promote:
-        final queens = _position.board.piecesOf(side, Role.queen);
-        if (queens.isNotEmpty && !queens.squares.any(_canCapture) ||
-            _rookAgainstKing()) {
-          _state = DrillState.success;
-        } else if (queens.isEmpty && _outOfMaterial(rookCounts: false)) {
+        if (_material(side.opposite, Role.queen) &&
+                !_material(side, Role.queen) ||
+            _bareKing(side) && !_bareKing(side.opposite)) {
           _state = DrillState.failure;
         }
-        _checkLimit();
+      case DrillGoal.promote:
+        if (_winIsSafe(_position)) {
+          _state = DrillState.success;
+        } else if (_outOfMaterial()) {
+          _state = DrillState.failure;
+        }
       case DrillGoal.mate:
-        _checkLimit();
+        break;
+    }
+    if (_state == DrillState.playing &&
+        drill.goal != DrillGoal.hold &&
+        _moves >= drill.par * 3) {
+      _state = DrillState.failure;
     }
     return true;
   }
@@ -117,15 +124,13 @@ class DrillRun {
     if (_ended()) return;
     switch (drill.goal) {
       case DrillGoal.hold:
-        if (move case NormalMove(promotion: Role _)) {
+        if (_bareKing(side) && !_bareKing(side.opposite)) {
           _state = DrillState.failure;
+        } else if (_moves >= drill.par) {
+          _state = DrillState.success;
         }
       case DrillGoal.promote:
-        if (_position.board.piecesOf(side, Role.queen).isNotEmpty) {
-          _state = DrillState.success;
-        } else if (_outOfMaterial(rookCounts: true)) {
-          _state = DrillState.failure;
-        }
+        if (_outOfMaterial()) _state = DrillState.failure;
       case DrillGoal.mate:
         break;
     }
@@ -156,31 +161,73 @@ class DrillRun {
     return false;
   }
 
-  void _checkLimit() {
-    if (_state == DrillState.playing && _moves >= drill.par * 3) {
-      _state = DrillState.failure;
+  bool _material(Side owner, Role role) =>
+      _position.board.piecesOf(owner, role).isNotEmpty;
+
+  bool _bareKing(Side owner) => _position.board.bySide(owner).size == 1;
+
+  /// L'utente non ha più pedoni, donne né torri: la promozione è sfumata.
+  bool _outOfMaterial() =>
+      !_material(side, Role.pawn) &&
+      !_material(side, Role.queen) &&
+      !_material(side, Role.rook);
+
+  /// Con l'avversario al tratto: qualunque cosa risponda, l'utente ha una
+  /// mossa che lo lascia vincente in [_winning]. Guardare due mosse avanti
+  /// scopre la donna che si fa catturare, infilare o prendere con una
+  /// forchetta di scacco, e la torre lasciata indifesa vicino al re nemico.
+  bool _winIsSafe(Position position) {
+    if (!_winning(position, safe: false)) return false;
+    for (final reply in _legalMoves(position)) {
+      final after = position.play(reply);
+      if (after.isGameOver) return false;
+      if (!_legalMoves(after).any((m) => _winning(after.play(m), safe: true))) {
+        return false;
+      }
     }
+    return true;
   }
 
-  bool _canCapture(Square square) =>
-      _position.legalMoves.entries.any((e) => e.value.has(square));
-
-  /// L'utente non ha più pedoni da promuovere né donne; con [rookCounts] una
-  /// torre gli lascia ancora una mossa per riprendere il pezzo che ha
-  /// catturato la donna.
-  bool _outOfMaterial({required bool rookCounts}) {
-    final board = _position.board;
-    return board.piecesOf(side, Role.pawn).isEmpty &&
-        board.piecesOf(side, Role.queen).isEmpty &&
-        !(rookCounts && board.piecesOf(side, Role.rook).isNotEmpty);
+  /// L'utente ha la donna, o la torre contro il re solo; con [safe] nessuna
+  /// mossa dell'avversario può catturarle.
+  bool _winning(Position position, {required bool safe}) {
+    if (position.isCheckmate) return true;
+    if (position.isGameOver) return false;
+    final board = position.board;
+    final strong = board.piecesOf(side, Role.queen).isNotEmpty
+        ? board.piecesOf(side, Role.queen)
+        : board.bySide(side.opposite).size == 1
+        ? board.piecesOf(side, Role.rook)
+        : SquareSet.empty;
+    if (strong.isEmpty) return false;
+    if (!safe) return true;
+    return !position.legalMoves.values.any(
+      (targets) => targets.isIntersected(strong),
+    );
   }
 
-  /// L'utente ha una torre e l'avversario è rimasto con il re solo, come
-  /// dopo lo scambio della donna appena promossa nella Lucena.
-  bool _rookAgainstKing() {
-    final board = _position.board;
-    return board.piecesOf(side, Role.rook).isNotEmpty &&
-        board.bySide(side.opposite).size == 1;
+  static Iterable<Move> _legalMoves(Position position) sync* {
+    for (final MapEntry(key: from, value: targets)
+        in position.legalMoves.entries) {
+      for (final to in targets.squares) {
+        final move = NormalMove(from: from, to: to);
+        final isPromotion =
+            position.board.roleAt(from) == Role.pawn &&
+            (to.rank == Rank.first || to.rank == Rank.eighth);
+        if (isPromotion) {
+          for (final role in [
+            Role.queen,
+            Role.rook,
+            Role.bishop,
+            Role.knight,
+          ]) {
+            yield NormalMove(from: from, to: to, promotion: role);
+          }
+        } else {
+          yield move;
+        }
+      }
+    }
   }
 
   static String _key(Position p) => p.fen.split(' ').take(4).join(' ');

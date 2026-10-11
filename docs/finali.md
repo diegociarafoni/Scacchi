@@ -19,9 +19,9 @@ Le posizioni sono costruite per il progetto e sono di dominio pubblico come sche
 
 `DrillRun` conta le mosse dell'utente e decide l'esito dopo ogni mossa:
 
-- **Matto**: riesce con lo scacco matto. Fallisce con lo stallo, la patta per materiale insufficiente, la regola delle 50 mosse o la triplice ripetizione, oppure oltre il triplo del par.
-- **Promozione**: riesce quando l'utente ha una donna che l'avversario non può catturare subito, quando la donna resta in piedi dopo la risposta del motore, o quando resta con la torre contro il re solo (nella Lucena il motore può dare la torre per la donna: basta riprenderla). Fallisce se l'utente resta senza pedoni né donna (con una torre ha ancora una mossa per riprendere il pezzo), con una patta o oltre il triplo del par.
-- **Resistere**: riesce raggiungendo il par senza perdere, oppure con una patta. Fallisce con il matto subito o se l'avversario promuove.
+- **Matto**: riesce con lo scacco matto. Fallisce con lo stallo, la patta per materiale insufficiente, la regola delle 50 mosse o la triplice ripetizione, oppure oltre il triplo del par (nei matti lunghi, come alfiere e cavallo, arriva prima la regola delle 50 mosse).
+- **Promozione**: riesce quando l'utente ha una donna, o una torre contro il re solo, che l'avversario non può vincere nelle due mosse seguenti: qualunque risposta del motore lascia all'utente una mossa dopo cui la donna o la torre non sono catturabili. Così una donna che si fa catturare, infilare con uno scacco o una torre indifesa vicino al re nemico non bastano, mentre nella Lucena va bene promuovere anche se il motore può dare la torre per la donna, perché dopo la ripresa resta torre contro re. Fallisce se l'utente resta senza pedoni, donne e torri, con una patta o oltre il triplo del par.
+- **Resistere**: riesce quando, dopo la risposta del motore alla mossa numero par, l'utente non ha perso; anche una patta lo fa riuscire. Fallisce con il matto subito, se l'utente resta con il re solo mentre l'avversario ha ancora pezzi, o se dopo la sua mossa l'avversario ha una donna e lui no (una donna appena promossa si può ancora catturare).
 
 Stelle (`drillStars`): 3 entro il par, 2 fino a metà del par in più (arrotondata per eccesso), 1 oltre. Per «Resistere» il par è il numero di mosse da tenere, quindi riuscire vale sempre 3 stelle.
 

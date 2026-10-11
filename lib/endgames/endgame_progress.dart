@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'drill.dart';
 
 /// Stelle migliori e posizioni da ripetere dell'allenatore dei finali.
@@ -22,12 +24,14 @@ class EndgameProgress {
   int starsFor(String id) => stars[id] ?? 0;
 
   EndgameProgress complete(String id, int stars) => EndgameProgress(
-    stars: {...this.stars, id: stars > starsFor(id) ? stars : starsFor(id)},
+    stars: {...this.stars, id: max(starsFor(id), stars.clamp(1, 3))},
     toRepeat: {...toRepeat}..remove(id),
   );
 
-  EndgameProgress fail(String id) =>
-      EndgameProgress(stars: stars, toRepeat: {...toRepeat, id});
+  /// Una posizione già riuscita non torna da ripetere.
+  EndgameProgress fail(String id) => starsFor(id) > 0
+      ? this
+      : EndgameProgress(stars: stars, toRepeat: {...toRepeat, id});
 
   /// Le posizioni da ripetere prima, poi le altre nell'ordine del catalogo.
   List<EndgameDrill> ordered(List<EndgameDrill> drills) => [

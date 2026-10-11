@@ -92,25 +92,62 @@ void main() {
     });
   });
 
+  group('promozione al sicuro', () {
+    test('una torre lasciata vicino al re nemico non basta', () {
+      const drill = EndgameDrill(
+        id: 'prova.indifesa',
+        title: 'Prova',
+        intro: 'Promuovi.',
+        fen: '7r/1kP5/8/8/8/8/8/2R1K3 w - - 0 1',
+        goal: DrillGoal.promote,
+        par: 5,
+      );
+      final run = DrillRun(drill);
+      run.play(_m('c7c8q'));
+      expect(run.state, DrillState.playing);
+      run.reply(_m('h8c8'));
+      run.play(_m('c1c8'));
+      expect(run.state, DrillState.playing);
+      run.reply(_m('b7c8'));
+      expect(run.state, DrillState.failure);
+    });
+
+    test('una donna infilata da uno scacco non basta', () {
+      const drill = EndgameDrill(
+        id: 'prova.infilata',
+        title: 'Prova',
+        intro: 'Promuovi.',
+        fen: '8/3P4/8/8/4k3/r7/8/3K4 w - - 0 1',
+        goal: DrillGoal.promote,
+        par: 5,
+      );
+      final run = DrillRun(drill);
+      // Dopo Td3+ difesa dal re, la donna in d8 va persa.
+      run.play(
+        const NormalMove(from: Square.d7, to: Square.d8, promotion: Role.queen),
+      );
+      expect(run.state, DrillState.playing);
+    });
+  });
+
   group('Lucena', () {
     final lucena = endgameDrills.firstWhere((d) => d.id == 'lucena');
 
-    test('RF-86 se il motore dà la torre per la donna basta riprenderla', () {
-      final run = DrillRun(lucena);
-      for (final (user, engine) in [
-        ('b8c7', 'a2b2'),
-        ('c1c6', 'b2b1'),
-        ('b7b8q', 'b1b8'),
-      ]) {
-        expect(run.play(_m(user)), isTrue);
-        expect(run.state, DrillState.playing);
-        run.reply(_m(engine));
-      }
-      expect(run.state, DrillState.playing);
-      run.play(_m('c7b8'));
-      expect(run.state, DrillState.success);
-      expect(run.stars, 3);
-    });
+    test(
+      'RF-86 promuovere vale anche se il motore può dare la torre per la donna',
+      () {
+        final run = DrillRun(lucena);
+        for (final (user, engine) in [('b8c7', 'a2b2'), ('c1c6', 'b2b1')]) {
+          expect(run.play(_m(user)), isTrue);
+          expect(run.state, DrillState.playing);
+          run.reply(_m(engine));
+        }
+        // Txb8 Rxb8 lascia torre contro re solo: la promozione basta.
+        run.play(_m('b7b8q'));
+        expect(run.state, DrillState.success);
+        expect(run.stars, 3);
+      },
+    );
   });
 
   group('patta', () {
@@ -175,7 +212,7 @@ void main() {
       id: 'prova.patta',
       title: 'Prova',
       intro: 'Resisti.',
-      fen: '4k3/8/8/8/8/8/3PK3/8 b - - 0 1',
+      fen: '4k3/8/8/8/8/r7/3PK3/8 b - - 0 1',
       goal: DrillGoal.hold,
       par: 2,
     );
@@ -184,11 +221,47 @@ void main() {
       final run = DrillRun(drill);
       expect(run.side, Side.black);
       run.play(_m('e8e7'));
-      run.reply(_m('e2e3'));
+      run.reply(_m('e2f2'));
       expect(run.state, DrillState.playing);
       run.play(_m('e7e6'));
+      expect(run.state, DrillState.playing);
+      run.reply(_m('f2e2'));
       expect(run.state, DrillState.success);
       expect(run.stars, 3);
+    });
+
+    test('restare con il re solo fa fallire', () {
+      const rook = EndgameDrill(
+        id: 'prova.torre',
+        title: 'Prova',
+        intro: 'Resisti.',
+        fen: '7k/8/8/8/8/8/1r6/R3K3 b - - 0 1',
+        goal: DrillGoal.hold,
+        par: 5,
+      );
+      final run = DrillRun(rook);
+      run.play(_m('b2b1'));
+      run.reply(_m('a1b1'));
+      expect(run.state, DrillState.failure);
+    });
+
+    test('una donna nuova catturata subito non fa perdere', () {
+      const pawn = EndgameDrill(
+        id: 'prova.ripresa',
+        title: 'Prova',
+        intro: 'Resisti.',
+        fen: 'k7/8/8/8/8/8/7p/1R2K3 w - - 0 1',
+        goal: DrillGoal.hold,
+        par: 5,
+      );
+      final run = DrillRun(pawn);
+      run.play(_m('e1e2'));
+      run.reply(
+        const NormalMove(from: Square.h2, to: Square.h1, promotion: Role.queen),
+      );
+      expect(run.state, DrillState.playing);
+      run.play(_m('b1h1'));
+      expect(run.state, DrillState.playing);
     });
 
     test('se l\'avversario promuove la patta è persa', () {
@@ -196,7 +269,7 @@ void main() {
         id: 'prova.persa',
         title: 'Prova',
         intro: 'Resisti.',
-        fen: 'k7/8/8/8/8/8/3P3p/4K3 w - - 0 1',
+        fen: 'k7/8/8/8/8/8/3PK2p/8 w - - 0 1',
         goal: DrillGoal.hold,
         par: 5,
       );
@@ -206,6 +279,7 @@ void main() {
       run.reply(
         const NormalMove(from: Square.h2, to: Square.h1, promotion: Role.queen),
       );
+      run.play(_m('d3d4'));
       expect(run.state, DrillState.failure);
     });
   });

@@ -26,6 +26,12 @@ void main() {
     expect(done.ordered(endgameDrills).first.id, first.id);
   });
 
+  test('una posizione già riuscita non torna da ripetere', () {
+    final p = const EndgameProgress().complete(first.id, 3).fail(first.id);
+    expect(p.toRepeat, isEmpty);
+    expect(p.starsFor(first.id), 3);
+  });
+
   test('JSON andata e ritorno', () {
     final p = const EndgameProgress().complete(first.id, 2).fail(second.id);
     final back = EndgameProgress.fromJson(p.toJson());
