@@ -616,7 +616,7 @@ const List<Chapter> curriculum = [
                 'Anche la donna fa forchette: dai scacco e attacca la torre '
                 'nello stesso momento.',
             fen: 'r5k1/6pp/8/8/8/8/5PPP/3Q2K1 w - - 0 1',
-            steps: ['d1d5', 'g8h8', 'd5a8'],
+            steps: ['d1d5', 'g8f8', 'd5a8'],
             goal: LineGoal.line,
           ),
         ],
@@ -639,8 +639,8 @@ const List<Chapter> curriculum = [
           ),
           LineExercise(
             instructions:
-                'Inchioda la donna al re con la torre: la donna non può '
-                'scappare.',
+                'Inchioda la donna al re con la torre: non può più '
+                'lasciare la colonna e vinci la donna per la torre.',
             fen: '4k3/8/8/4q3/8/8/5KPP/R7 w - - 0 1',
             steps: ['a1e1'],
             goal: LineGoal.line,
@@ -664,8 +664,8 @@ const List<Chapter> curriculum = [
             instructions:
                 'Infilata con l\'alfiere: scacco al re e poi cattura la '
                 'torre.',
-            fen: 'r7/1k6/8/8/8/8/B5P1/6K1 w - - 0 1',
-            steps: ['a2d5', 'b7c7', 'd5a8'],
+            fen: '8/8/B7/3k4/8/K7/P7/7r w - - 0 1',
+            steps: ['a6b7', 'd5c5', 'b7h1'],
             goal: LineGoal.line,
           ),
         ],
@@ -686,6 +686,14 @@ const List<Chapter> curriculum = [
             steps: ['e4c3', 'e8d7', 'c3a2'],
             goal: LineGoal.line,
           ),
+          LineExercise(
+            instructions:
+                'Sposta il cavallo dando scacco: l\'alfiere scoperto '
+                'attacca la torre. Poi catturala.',
+            fen: '7r/4k3/8/8/3N4/8/1B4P1/6K1 w - - 0 1',
+            steps: ['d4f5|d4c6', 'e7e8', 'b2h8'],
+            goal: LineGoal.line,
+          ),
         ],
       ),
       Stage(
@@ -701,6 +709,14 @@ const List<Chapter> curriculum = [
                 'scacco doppio!',
             fen: '3qkb2/3p1p2/8/8/4N3/8/8/4R1K1 w - - 0 1',
             steps: ['e4f6'],
+            goal: LineGoal.mate,
+          ),
+          LineExercise(
+            instructions:
+                '$_mateIn1 Muovi l\'alfiere: dà scacco lui e lo dà anche '
+                'la torre.',
+            fen: '3qkb2/5p2/8/8/8/8/4B3/4R1K1 w - - 0 1',
+            steps: ['e2b5'],
             goal: LineGoal.mate,
           ),
         ],
