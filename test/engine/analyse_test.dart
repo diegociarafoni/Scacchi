@@ -11,10 +11,9 @@ import 'package:scacchi/review/move_classification.dart';
 import 'process_transport.dart';
 
 class _Engine implements UciTransport {
-  _Engine(this.onGo, {this.onStop = const []});
+  _Engine(this.onGo);
 
   final List<String> Function(String go) onGo;
-  final List<String> onStop;
   final sent = <String>[];
   final _out = StreamController<String>.broadcast();
 
@@ -28,7 +27,6 @@ class _Engine implements UciTransport {
       if (command == 'uci') _out.add('uciok');
       if (command == 'isready') _out.add('readyok');
       if (command.startsWith('go')) onGo(command).forEach(_out.add);
-      if (command == 'stop') onStop.forEach(_out.add);
     });
   }
 
@@ -66,29 +64,37 @@ void main() {
       await player.dispose();
     });
 
-    test('allo scadere ferma il motore e scarta la risposta tardiva', () async {
-      var first = true;
-      final fake = _Engine((_) {
-        if (first) {
-          first = false;
-          return [];
-        }
-        return ['info depth 5 score cp 10 pv d2d4', 'bestmove d2d4'];
-      }, onStop: ['info depth 3 score cp 99 pv e2e4', 'bestmove e2e4']);
-      final player = ComputerPlayer(connect: () async => fake);
-      await expectLater(
-        player.analyse(
-          Chess.initial.fen,
-          depth: 30,
-          timeout: const Duration(milliseconds: 50),
-        ),
-        throwsA(isA<TimeoutException>()),
-      );
-      expect(fake.sent, contains('stop'));
-      final lines = await player.analyse(Chess.initial.fen, depth: 5);
-      expect(lines.single.pv.first, 'd2d4');
-      await player.dispose();
-    });
+    test(
+      'allo scadere riavvia il motore e scarta la risposta tardiva',
+      () async {
+        final engines = <_Engine>[];
+        final player = ComputerPlayer(
+          connect: () async {
+            // Il primo motore non risponde mai alla ricerca.
+            final hung = engines.isEmpty;
+            final e = _Engine(
+              (_) => hung
+                  ? []
+                  : ['info depth 5 score cp 10 pv d2d4', 'bestmove d2d4'],
+            );
+            engines.add(e);
+            return e;
+          },
+        );
+        await expectLater(
+          player.analyse(
+            Chess.initial.fen,
+            depth: 30,
+            timeout: const Duration(milliseconds: 50),
+          ),
+          throwsA(isA<TimeoutException>()),
+        );
+        final lines = await player.analyse(Chess.initial.fen, depth: 5);
+        expect(engines, hasLength(2));
+        expect(lines.single.pv.first, 'd2d4');
+        await player.dispose();
+      },
+    );
 
     test('ripristina le opzioni del livello alla mossa successiva', () async {
       final fake = _Engine((_) => ['bestmove e2e4']);
