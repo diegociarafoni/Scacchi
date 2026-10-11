@@ -38,6 +38,20 @@ void main() {
     ]);
   });
 
+  test('RG-03 le tattiche coprono i temi principali', () {
+    final tactics = curriculum.firstWhere((c) => c.id == 'tactics');
+    expect(tactics.stages.map((s) => s.id), [
+      'tactics.hanging',
+      'tactics.fork',
+      'tactics.pin',
+      'tactics.skewer',
+      'tactics.discovered',
+      'tactics.double-check',
+      'tactics.defender',
+      'tactics.guardian',
+    ]);
+  });
+
   test('identificativi unici e tappe non vuote', () {
     final ids = [
       for (final c in curriculum)
