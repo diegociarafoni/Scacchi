@@ -39,3 +39,5 @@ La casa en passant viene letta dal FEN, scartata se non è sulla traversa giusta
 Dopo **Gioca da qui**, se il computer è disponibile (vedi [avversario-computer.md](avversario-computer.md)), compare il pannello **Gioca questa posizione**, con la stessa scelta della nuova partita: **Due giocatori** (predefinito), **Computer** (colore, livello o Adattivo) o **Bot**. **Gioca** avvia la partita dalla posizione; il computer muove subito se tocca a lui. Il bot non usa il suo libro d'apertura, perché la posizione non è quella iniziale. Chiudere il pannello senza scegliere lascia la partita com'era. Se il computer non è disponibile, la posizione si gioca direttamente in due.
 
 La partita dalla posizione non ha orologio e resta di scacchi classici.
+
+Le partite da una posizione creata non aggiornano la stima dell'avversario adattivo né la collezione dei bot: contano solo quelle dalla posizione iniziale degli scacchi classici.
