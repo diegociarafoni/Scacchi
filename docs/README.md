@@ -20,6 +20,7 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | [tornei.md](tornei.md) | Tornei offline contro bot: girone, eliminazione diretta, bacheca |
 | [localizzazione.md](localizzazione.md) | Lingua predefinita e come aggiungere testi e lingue |
 | [sviluppo.md](sviluppo.md) | Ambiente, comandi, test, CI e convenzioni |
+| [avversario-computer.md](avversario-computer.md) | Partita contro il computer: livelli, motore Stockfish, piattaforme |
 | [rilascio-android.md](rilascio-android.md) | Rilascio dell'APK, installazione sul telefono, chiave di firma |
 | [licenza.md](licenza.md) | Licenza del progetto e componenti di terze parti |
 
@@ -32,7 +33,7 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | Layout per telefono e tablet | Disponibile |
 | Pezzi catturati e vantaggio di materiale | Disponibile |
 | Impostazioni salvate: mosse legali, coordinate, promozione, frecce, temi, pezzi, animazioni | Disponibile |
-| Partita contro il computer (Stockfish) | In sviluppo |
+| Partita contro il computer (Stockfish) | Disponibile su Android e iOS |
 | Puzzle con punteggio, temi e puzzle del giorno | Disponibile |
 | Puzzle Storm, Rush, sopravvivenza, Serie, ripasso degli errori | Disponibile |
 | Nome dell'apertura in partita, explorer ridotto | Disponibile |

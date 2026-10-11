@@ -40,7 +40,7 @@ Per ciascun giocatore una riga mostra le icone dei pezzi avversari catturati, da
 
 | Comando | Effetto |
 |---|---|
-| Nuova | Apre la scelta della variante (Classica, Chess960, Re della collina, Tre scacchi) e della cadenza; toccando la cadenza inizia la nuova partita |
+| Nuova | Apre la scelta dell'avversario (due giocatori o computer, con colore e livello), della variante (Classica, Chess960, Re della collina, Tre scacchi; contro il computer solo Classica) e della cadenza; toccando la cadenza inizia la nuova partita |
 | Annulla | Annulla l'ultima mossa; disattivato se non ci sono mosse |
 | Gira | Capovolge la scacchiera |
 | Patta | Chiede all'avversario se accetta la patta; disattivato a partita conclusa |
@@ -48,7 +48,7 @@ Per ciascun giocatore una riga mostra le icone dei pezzi avversari catturati, da
 
 ## Orologio
 
-"Nuova" apre un pannello con la cadenza: "Senza tempo" oppure le cadenze di chess.com raggruppate in Bullet (1+0, 1+1, 2+1), Blitz (3+0, 3+2, 5+0) e Rapid (10+0, 15+10, 30+0), dove il primo numero sono i minuti per giocatore e il secondo i secondi aggiunti dopo ogni mossa.
+"Nuova" apre un pannello in cui si sceglie l'avversario (vedi [avversario-computer.md](avversario-computer.md)) e, toccandola, la cadenza: "Senza tempo" oppure le cadenze di chess.com, cioè Bullet (1+0, 1+1, 2+1), Blitz (3+0, 3+2, 5+0) e Rapid (10+0, 15+10, 30+0), dove il primo numero sono i minuti per giocatore e il secondo i secondi aggiunti dopo ogni mossa.
 
 - Ogni orologio sta a destra della riga del materiale del rispettivo giocatore.
 - Il tempo inizia a scorrere dopo la prima mossa del Bianco, per il Nero.
@@ -59,7 +59,7 @@ Per ciascun giocatore una riga mostra le icone dei pezzi avversari catturati, da
 
 ## Nomi dei giocatori
 
-Il pannello "Nuova" ha due campi facoltativi, "Nome del Bianco" e "Nome del Nero" (al massimo 24 caratteri, spazi iniziali e finali ignorati), per il gioco a due sullo stesso telefono (RF-30). I nomi vengono ricordati per le partite successive. Se indicati:
+Nella partita tra due persone il pannello "Nuova" ha due campi facoltativi, "Nome del Bianco" e "Nome del Nero" (al massimo 24 caratteri, spazi iniziali e finali ignorati), per il gioco a due sullo stesso telefono (RF-30). I nomi vengono ricordati per le partite successive. Se indicati:
 
 - compaiono a sinistra della riga del materiale di ciascun giocatore;
 - riga di stato e dialoghi di abbandono e patta li affiancano al colore, per esempio «Muove Anna (Bianco).», «Scacco. Muove Bruno (Nero).», «Scacco matto. Vince Anna (Bianco).» o «Bruno (Nero) accetta la patta?»;

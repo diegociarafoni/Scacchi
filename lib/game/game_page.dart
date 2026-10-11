@@ -7,6 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 
+import '../engine/computer_player.dart';
+import '../engine/levels.dart';
+import '../engine/uci_transport.dart';
 import '../editor/position_editor_page.dart';
 import '../openings/opening_name.dart';
 import '../settings/settings.dart';
@@ -17,18 +20,27 @@ import 'material.dart';
 import 'move_input.dart';
 import 'move_label.dart';
 import 'move_speech.dart';
+import 'opponent_picker.dart';
 import 'sounds.dart';
 import 'variant.dart';
 
-/// Partita tra due persone sullo stesso dispositivo.
+/// Partita tra due persone sullo stesso dispositivo o contro il computer.
 class GamePage extends StatefulWidget {
-  const GamePage({
+  GamePage({
     super.key,
     required this.settings,
     this.chess960Id = randomChess960Id,
-  });
+    bool? computerAvailable,
+    this.createComputer,
+    this.now,
+  }) : computerAvailable = computerAvailable ?? StockfishTransport.isSupported;
 
   final SettingsController settings;
+  final bool computerAvailable;
+  final ComputerPlayer Function()? createComputer;
+
+  /// Ora corrente per l'orologio; quella di sistema se assente.
+  final DateTime Function()? now;
 
   /// Sceglie la posizione Chess960; sostituibile nei test.
   final int Function() chess960Id;
@@ -43,9 +55,30 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     game: _gameData(),
   );
   Side _orientation = Side.white;
+  GameSetup _setup = const GameSetup();
+
+  /// Ultima variante scelta per la partita tra due persone.
+  Variant _twoPlayerVariant = Variant.standard;
+  final _random = math.Random();
+
+  /// Lato giocato dal computer; `null` nella partita tra due persone.
+  Side? _computerSide;
+  ComputerPlayer? _computer;
+  _ComputerTask _task = _ComputerTask.none;
+  bool get _thinking => _task != _ComputerTask.none;
+
+  /// Invalida le risposte del computer per posizioni non più attuali.
+  int _generation = 0;
+
+  /// Orologio all'inizio della riflessione del computer in corso.
+  Map<Side, Duration>? _searchClock;
+
+  /// Sospensioni attive (finestre aperte, app in background).
+  int _suspensions = 0;
+  bool _clockBeforeSuspension = false;
+  bool _inBackground = false;
   ChessClock? _clock;
   Timer? _ticker;
-  Side? _pausedInBackground;
   final List<Map<Side, Duration>> _clockHistory = [];
   final ValueNotifier<int> _tick = ValueNotifier(0);
   final SoundPlayer _sounds = SoundPlayer();
@@ -57,32 +90,82 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   AppSettings get _settings => widget.settings.value;
 
-  late bool _autoFlip = _settings.autoFlip;
+  late bool _autoFlip;
+
+  /// Nomi dei giocatori: solo nella partita tra due persone.
+  String? _nameOf(Side side) =>
+      _computerSide == null ? _settings.nameOf(side) : null;
 
   @override
   void initState() {
     super.initState();
+    _autoFlip = _settings.autoFlip;
     widget.settings.addListener(_onSettingsChanged);
     WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    final clock = _clock;
-    if (clock == null) return;
     if (state == AppLifecycleState.resumed) {
-      final side = _pausedInBackground;
-      _pausedInBackground = null;
-      if (side != null && !_game.isOver) clock.start(side);
-      _syncClock();
+      if (!_inBackground) return;
+      _inBackground = false;
+      _resume();
     } else if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.hidden) {
-      if (clock.isRunning) {
-        _pausedInBackground = clock.active;
-        clock.pause();
-      }
+      if (_inBackground) return;
+      _inBackground = true;
+      _suspend();
     }
   }
+
+  /// Ferma orologio e computer; la ricerca interrotta non costa tempo al computer.
+  void _suspend() {
+    if (_suspensions++ > 0) return;
+    final clock = _clock;
+    _clockBeforeSuspension = clock?.isRunning ?? false;
+    final searchStart = _searchClock;
+    _cancelComputerMove();
+    if (clock != null && searchStart != null) {
+      clock.restore(searchStart, null);
+    } else {
+      clock?.pause();
+    }
+    _syncClock();
+    _tick.value++;
+  }
+
+  /// Chiude una sospensione; all'ultima, se [restart], riparte da dove era.
+  void _resume({bool restart = true}) {
+    if (_suspensions == 0 || --_suspensions > 0 || !restart) return;
+    if (!mounted || _game.isOver) return;
+    if (_clockBeforeSuspension) _clock?.start(_game.position.turn);
+    _syncClock();
+    _tick.value++;
+    _computerMove();
+  }
+
+  /// Esegue [action] con orologio e computer fermi; riparte se [restart] lo consente.
+  Future<T?> _whileSuspended<T>(
+    Future<T?> Function() action, {
+    bool Function(T? result)? restart,
+  }) async {
+    _suspend();
+    T? result;
+    try {
+      result = await action();
+    } finally {
+      if (mounted) _resume(restart: restart?.call(result) ?? true);
+    }
+    return result;
+  }
+
+  Future<T?> _suspendedDialog<T>(
+    WidgetBuilder builder, {
+    bool Function(T? result)? restart,
+  }) => _whileSuspended(
+    () => showDialog<T>(context: context, builder: builder),
+    restart: restart,
+  );
 
   @override
   void didUpdateWidget(GamePage oldWidget) {
@@ -97,6 +180,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   @override
   void dispose() {
     widget.settings.removeListener(_onSettingsChanged);
+    _generation++;
+    _computer?.dispose().ignore();
     WidgetsBinding.instance.removeObserver(this);
     _ticker?.cancel();
     _tick.dispose();
@@ -109,16 +194,32 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     setState(() {
       final turnedOn = _settings.autoFlip && !_autoFlip;
       _autoFlip = _settings.autoFlip;
-      if (turnedOn) _orientation = _game.position.turn;
+      if (turnedOn && _computerSide == null) {
+        _orientation = _game.position.turn;
+      }
     });
   }
+
+  PlayerSide get _playerSide {
+    if (_game.isOver || _thinking) return PlayerSide.none;
+    return switch (_computerSide) {
+      null => PlayerSide.both,
+      Side.white => PlayerSide.black,
+      Side.black => PlayerSide.white,
+    };
+  }
+
+  bool get _humanToMove => _playerSide != PlayerSide.none && !_computerToMove;
+
+  ComputerPlayer get _computerPlayer =>
+      _computer ??= widget.createComputer?.call() ?? ComputerPlayer();
 
   GameData _gameData() {
     final pos = _game.position;
     return GameData(
       fen: pos.fen,
       lastMove: _game.lastMove,
-      playerSide: _game.isOver ? PlayerSide.none : PlayerSide.both,
+      playerSide: _playerSide,
       sideToMove: pos.turn,
       kingSquareInCheck: pos.isCheck ? pos.board.kingOf(pos.turn) : null,
       validMoves: makeLegalMoves(pos),
@@ -141,11 +242,14 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _syncClock();
     _board.updatePosition(_gameData(), animate: animate, resetPremove: true);
     setState(() {
-      if (_settings.autoFlip) _orientation = _game.position.turn;
+      if (_settings.autoFlip && _computerSide == null) {
+        _orientation = _game.position.turn;
+      }
     });
   }
 
   void _onMove(Move move, {bool? viaDragAndDrop}) {
+    if (!_humanToMove) return;
     if (!_settings.confirmMove) {
       _commitMove(move, animate: viaDragAndDrop != true);
       return;
@@ -153,9 +257,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     if (!_game.position.isLegal(move)) return;
     final (preview, san) = _game.position.makeSan(move);
     final turn = _game.position.turn;
-    _announce(
-      'Da confermare. ${describeSan(san, turn, name: _settings.nameOf(turn))}',
-    );
+    _announce('Da confermare. ${describeSan(san, turn, name: _nameOf(turn))}');
     _board.updatePosition(
       _staticData(preview, move),
       animate: viaDragAndDrop != true,
@@ -176,28 +278,33 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   }
 
   void _commitMove(Move move, {required bool animate}) {
+    final played = _apply(move);
+    if (!played && !_game.isOver) return;
+    _refresh(animate: played && animate);
+    if (played) _computerMove();
+  }
+
+  /// Gioca [move] con orologio, suono e annuncio; con il tempo scaduto chiude la partita.
+  bool _apply(Move move) {
     final clock = _clock;
     final flagged = clock?.flagged;
     if (flagged != null) {
       _game.flag(flagged);
-      _play(GameSound.gameEnd);
-      _announce(statusText(_game, _settings.nameOf));
-      _refresh(animate: false);
-      return;
+      _playSound(GameSound.gameEnd);
+      _announce(statusText(_game, _nameOf));
+      return false;
     }
     final before = clock?.snapshot();
     final position = _game.position;
-    if (!_game.play(move)) return;
+    if (!_game.play(move)) return false;
     final spoken = describeSan(
       _game.moves.last.san,
       position.turn,
-      name: _settings.nameOf(position.turn),
+      name: _nameOf(position.turn),
     );
-    _announce(
-      _game.isOver ? '$spoken. ${statusText(_game, _settings.nameOf)}' : spoken,
-    );
+    _announce(_game.isOver ? '$spoken. ${statusText(_game, _nameOf)}' : spoken);
     final sound = soundForLastMove(_game, position);
-    if (sound != null) _play(sound);
+    if (sound != null) _playSound(sound);
     if (clock != null) {
       _clockHistory.add(before!);
       if (clock.isRunning) {
@@ -206,7 +313,68 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         clock.start(_game.position.turn);
       }
     }
-    _refresh(animate: animate);
+    return true;
+  }
+
+  Future<void> _computerMove() async {
+    final side = _computerSide;
+    if (_thinking || side == null || _game.isOver || _suspensions > 0) return;
+    if (_game.position.turn != side) return;
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    final generation = _generation;
+    _task = _ComputerTask.move;
+    final clock = _clock;
+    if (clock != null && !clock.isRunning && _game.moves.isNotEmpty) {
+      clock.start(side);
+    }
+    _searchClock = clock?.snapshot();
+    var level = engineLevel(_setup.level);
+    if (clock != null) {
+      level = level.withinClock(
+        clock.remaining(side),
+        Duration(seconds: clock.control.increment),
+      );
+    }
+    _refresh(animate: false);
+    EngineMove? reply;
+    Object? error;
+    try {
+      reply = await _computerPlayer.bestMove(
+        _game.initial.fen,
+        _moveHistory,
+        level,
+      );
+    } catch (e) {
+      error = e;
+    }
+    if (!mounted || generation != _generation) return;
+    _task = _ComputerTask.none;
+    final searchStart = _searchClock;
+    _searchClock = null;
+    if (reply == null ? !_game.isOver : !_apply(reply.move) && !_game.isOver) {
+      error ??= reply ?? 'nessuna mossa';
+      if (searchStart != null) clock?.restore(searchStart, null);
+    }
+    final viewing = _viewPly;
+    _refresh();
+    if (viewing != null) _showPly(viewing);
+    if (error != null) {
+      _showMessage(
+        'Il computer non risponde.',
+        duration: const Duration(days: 1),
+        action: SnackBarAction(label: 'Riprova', onPressed: _computerMove),
+      );
+    }
+  }
+
+  List<Move> get _moveHistory => [for (final m in _game.moves) m.move];
+
+  void _cancelComputerMove() {
+    _generation++;
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    if (_thinking) _computer?.stop();
+    _task = _ComputerTask.none;
+    _searchClock = null;
   }
 
   /// Mostra la posizione dopo la semimossa [ply] (-1 = iniziale); `null` o
@@ -266,15 +434,18 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final clock = _clock;
     final flagged = clock?.flagged;
     if (flagged != null && !_game.isOver) {
+      _cancelComputerMove();
       _game.flag(flagged);
-      _play(GameSound.gameEnd);
-      _announce(statusText(_game, _settings.nameOf));
+      _playSound(GameSound.gameEnd);
+      _announce(statusText(_game, _nameOf));
       _refresh(animate: false);
       return;
     }
     final active = clock?.active;
-    if (active != null && _lowTime.check(active, clock!.remaining(active))) {
-      _play(GameSound.lowTime);
+    if (active != null &&
+        active != _computerSide &&
+        _lowTime.check(active, clock!.remaining(active))) {
+      _playSound(GameSound.lowTime);
     }
     _tick.value++;
   }
@@ -287,27 +458,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     );
   }
 
-  void _play(GameSound sound) {
+  void _playSound(GameSound sound) {
     final s = _settings;
     _sounds.play(sound, enabled: s.sound, volume: s.volume, haptics: s.haptics);
-  }
-
-  /// Esegue [action] con l'orologio fermo, poi lo riavvia se la partita continua.
-  Future<T> _withClockPaused<T>(Future<T> Function() action) async {
-    final clock = _clock;
-    final side = clock?.active;
-    clock?.pause();
-    try {
-      return await action();
-    } finally {
-      if (mounted &&
-          side != null &&
-          identical(clock, _clock) &&
-          !_game.isOver) {
-        clock!.start(side);
-        _syncClock();
-      }
-    }
   }
 
   /// Chiude selezione e selettore di promozione rimasti aperti sulla scacchiera.
@@ -318,20 +471,44 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     );
   }
 
+  /// Messaggio sopra la barra dei comandi, per non coprirla.
+  void _showMessage(
+    String text, {
+    Duration duration = const Duration(seconds: 4),
+    SnackBarAction? action,
+  }) => ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(text),
+      duration: duration,
+      action: action,
+      behavior: SnackBarBehavior.floating,
+      margin: const EdgeInsets.fromLTRB(16, 0, 16, _actionsHeight + 8),
+    ),
+  );
+
   Future<void> _newGame() async {
-    final choice = await _withClockPaused(
+    final choice = await _whileSuspended(
       () => showModalBottomSheet<_TimeChoice>(
         context: context,
         isScrollControlled: true,
         builder: (context) => _TimeControlSheet(
-          variant: _game.variant,
+          variant: _twoPlayerVariant,
           whiteName: _settings.whiteName,
           blackName: _settings.blackName,
+          setup: _setup,
+          computerAvailable: widget.computerAvailable,
         ),
       ),
+      restart: (choice) => choice == null,
     );
     if (!mounted || choice == null) return;
-    final variant = choice.variant;
+    _cancelComputerMove();
+    _clockBeforeSuspension = false;
+    final setup = choice.setup;
+    _setup = setup;
+    final vsComputer = setup.opponent == Opponent.computer;
+    if (!vsComputer) _twoPlayerVariant = choice.variant;
+    final variant = vsComputer ? Variant.standard : choice.variant;
     _game = ChessGame(
       initial: initialPosition(
         variant,
@@ -339,11 +516,25 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       ),
       variant: variant,
     );
-    _clock = choice.control == null ? null : ChessClock(choice.control!);
+    final control = choice.control;
+    _clock = control == null ? null : ChessClock(control, now: widget.now);
     _clockHistory.clear();
     _lowTime.reset();
     _clearBoardInteraction();
+    if (vsComputer) {
+      final human = setup.resolveHumanSide(_random);
+      _computerSide = human.opposite;
+      _orientation = human;
+      _computerPlayer.newGame().ignore();
+    } else {
+      if (_computerSide != null) _orientation = Side.white;
+      _computerSide = null;
+      _computer?.dispose().ignore();
+      _computer = null;
+    }
     _refresh(animate: false);
+    _computerMove();
+    if (vsComputer) return;
     unawaited(
       widget.settings.update(
         _settings.copyWith(
@@ -362,15 +553,22 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         : ply == -1
         ? _game.initial
         : _game.moves[ply].after;
-    final position = await _withClockPaused(
+    final position = await _whileSuspended(
       () => Navigator.of(context).push<Position>(
         MaterialPageRoute(
           builder: (_) =>
               PositionEditorPage(initialFen: shown.fen, board: _settings.board),
         ),
       ),
+      restart: (position) => position == null,
     );
     if (!mounted || position == null) return;
+    _cancelComputerMove();
+    _clockBeforeSuspension = false;
+    if (_computerSide != null) _orientation = Side.white;
+    _computerSide = null;
+    _computer?.dispose().ignore();
+    _computer = null;
     _game = ChessGame(initial: position);
     _clock = null;
     _clockHistory.clear();
@@ -406,6 +604,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       builder: (_) => _MoveInputDialog(position: position),
     );
     if (move == null || !mounted || _viewPly != null || _game.isOver) return;
+    if (!_humanToMove) return;
     if (_pendingMove != null || !identical(position, _game.position)) return;
     _onMove(move);
   }
@@ -419,81 +618,145 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       _discardPending();
       return;
     }
-    final clock = _clock;
+    _cancelComputerMove();
+    final revokeOnly = _endedByChoice;
     final timedOut = _game.endReason == GameEndReason.timeout;
-    final revokesOnly = const {
-      GameEndReason.resignation,
-      GameEndReason.agreement,
-    }.contains(_game.endReason);
     _game.undo();
     if (timedOut) _game.undo();
-    if (clock != null && !revokesOnly) {
-      final before = _clockHistory.isEmpty ? null : _clockHistory.removeLast();
-      if (before != null) {
-        clock.restore(before, _game.moves.isEmpty ? null : _game.position.turn);
+    if (revokeOnly) {
+      if (_game.moves.isNotEmpty) _clock?.start(_game.position.turn);
+    } else {
+      _restoreClock();
+      if (_computerToMove && _game.canUndo) {
+        _game.undo();
+        _restoreClock();
       }
-    } else if (clock != null && revokesOnly && _game.moves.isNotEmpty) {
-      clock.start(_game.position.turn);
     }
     _clearBoardInteraction();
     _refresh(animate: false);
+    _computerMove();
+  }
+
+  bool get _endedByChoice => switch (_game.endReason) {
+    GameEndReason.resignation || GameEndReason.agreement => true,
+    _ => false,
+  };
+
+  void _restoreClock() {
+    final clock = _clock;
+    if (clock == null || _clockHistory.isEmpty) return;
+    clock.restore(
+      _clockHistory.removeLast(),
+      _game.moves.isEmpty ? null : _game.position.turn,
+    );
+  }
+
+  bool get _computerToMove => _computerSide == _game.position.turn;
+
+  bool get _canUndo {
+    if (!_game.canUndo) return false;
+    if (_computerSide != Side.white || _endedByChoice) return true;
+    if (_game.endReason == GameEndReason.timeout) return true;
+    return _game.moves.length > 1;
   }
 
   Future<void> _resign() async {
-    final side = _game.position.turn;
-    final confirmed = await _withClockPaused(
-      () => showDialog<bool>(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Abbandonare la partita?'),
-          content: Text('Abbandona ${_player(side, _settings.nameOf)}.'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('Annulla'),
-            ),
-            FilledButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: const Text('Abbandona'),
-            ),
-          ],
-        ),
+    final side = _computerSide?.opposite ?? _game.position.turn;
+    final confirmed = await _suspendedDialog<bool>(
+      (context) => AlertDialog(
+        title: const Text('Abbandonare la partita?'),
+        content: Text('Abbandona ${_player(side, _nameOf)}.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Annulla'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Abbandona'),
+          ),
+        ],
       ),
+      restart: (confirmed) => confirmed != true,
     );
     if (!mounted) return;
     if (confirmed == true) {
       _game.resign(side);
-      _play(GameSound.gameEnd);
+      _playSound(GameSound.gameEnd);
       _refresh(animate: false);
     }
   }
 
+  /// Il computer accetta la patta solo se si valuta in svantaggio.
+  Future<void> _offerDrawToComputer() async {
+    if (_thinking) return;
+    final turn = _game.position.turn;
+    int? computerScore;
+    Object? error;
+    var current = false;
+    await _whileSuspended<void>(() async {
+      final generation = _generation;
+      _task = _ComputerTask.draw;
+      _refresh(animate: false);
+      try {
+        final score = await _computerPlayer.evaluate(
+          _game.initial.fen,
+          _moveHistory,
+        );
+        if (score != null) {
+          computerScore = turn == _computerSide
+              ? score.comparable
+              : -score.comparable;
+        }
+      } catch (e) {
+        error = e;
+      }
+      current = mounted && generation == _generation;
+      if (current) {
+        _task = _ComputerTask.none;
+        _refresh(animate: false);
+      }
+    }, restart: (_) => !(current && _accepts(computerScore)));
+    if (!mounted || !current || _game.isOver) return;
+    if (error != null) return _showMessage('Il computer non risponde.');
+    if (_accepts(computerScore)) {
+      _game.agreeDraw();
+      _playSound(GameSound.gameEnd);
+      _refresh(animate: false);
+      _showMessage('Il computer accetta la patta.');
+    } else {
+      _showMessage('Il computer rifiuta la patta.');
+    }
+  }
+
+  bool _accepts(int? computerScore) =>
+      computerScore != null && computerScore <= -_drawAcceptanceCp;
+
   Future<void> _offerDraw() async {
+    if (_computerSide != null) return _offerDrawToComputer();
     final opponent = _game.position.turn.opposite;
-    final accepted = await _withClockPaused(
-      () => showDialog<bool>(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text(
-            '${_capitalized(_player(opponent, _settings.nameOf))} accetta la patta?',
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('Rifiuta'),
-            ),
-            FilledButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: const Text('Accetta'),
-            ),
-          ],
+    final accepted = await _suspendedDialog<bool>(
+      (context) => AlertDialog(
+        title: Text(
+          '${_capitalized(_player(opponent, _nameOf))} accetta la patta?',
         ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Rifiuta'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Accetta'),
+          ),
+        ],
       ),
+      restart: (accepted) => accepted != true,
     );
     if (!mounted) return;
     if (accepted == true) {
       _game.agreeDraw();
-      _play(GameSound.gameEnd);
+      _playSound(GameSound.gameEnd);
       _refresh(animate: false);
     }
   }
@@ -505,7 +768,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       listenable: _tick,
       builder: (context, _) => _ClockView(
         side: side,
-        name: _settings.nameOf(side),
+        name: _nameOf(side),
         remaining: clock.remaining(side),
         active: clock.active == side,
       ),
@@ -514,27 +777,45 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    // La valutazione della patta è breve: nel frattempo la partita resta com'è.
+    final evaluating = _task == _ComputerTask.draw;
     final actions = _GameActions(
-      onNewGame: _newGame,
-      onUndo: _game.canUndo || _pendingMove != null || _viewPly != null
+      onNewGame: evaluating ? null : _newGame,
+      onUndo:
+          !evaluating && (_canUndo || _pendingMove != null || _viewPly != null)
           ? _undo
           : null,
       onFlip: () => setState(() => _orientation = _orientation.opposite),
-      onDraw: _game.isOver || _pendingMove != null ? null : _offerDraw,
-      onResign: _game.isOver || _pendingMove != null ? null : _resign,
+      onDraw:
+          _game.isOver || _pendingMove != null || _thinking || _computerToMove
+          ? null
+          : _offerDraw,
+      onResign: _game.isOver || _pendingMove != null || evaluating
+          ? null
+          : _resign,
     );
+    // Il libro delle aperture vale solo per gli scacchi classici.
+    final title = _game.variant == Variant.standard
+        ? OpeningName(
+            positions: [_game.initial, for (final m in _game.moves) m.after],
+            fallback: 'Scacchi',
+          )
+        : Text(_title);
     return Scaffold(
       appBar: AppBar(
-        // Il libro delle aperture vale solo per gli scacchi classici.
-        title: _game.variant == Variant.standard
-            ? OpeningName(
-                positions: [
-                  _game.initial,
-                  for (final m in _game.moves) m.after,
+        title: _computerSide == null
+            ? title
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  title,
+                  Text(
+                    'Computer, livello ${_setup.level}: '
+                    '${engineLevel(_setup.level).name}',
+                    style: Theme.of(context).textTheme.labelMedium,
+                  ),
                 ],
-                fallback: 'Scacchi',
-              )
-            : Text(_title),
+              ),
         actions: [
           IconButton(
             tooltip: 'Editor di posizione',
@@ -544,7 +825,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           IconButton(
             tooltip: 'Mossa da tastiera',
             icon: const Icon(Icons.keyboard_outlined),
-            onPressed: _game.isOver || _pendingMove != null || _viewPly != null
+            onPressed: !_humanToMove || _pendingMove != null || _viewPly != null
                 ? null
                 : _typeMove,
           ),
@@ -597,7 +878,15 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                       onBack: () => _showPly(null),
                     )
                   : _pendingMove == null
-                  ? _StatusLine(game: _game, nameOf: _settings.nameOf)
+                  ? _StatusLine(
+                      game: _game,
+                      nameOf: _nameOf,
+                      replacement: switch (_task) {
+                        _ComputerTask.none => null,
+                        _ComputerTask.move => 'Il computer sta pensando…',
+                        _ComputerTask.draw => 'Il computer valuta la patta…',
+                      },
+                    )
                   : _ConfirmBar(
                       onConfirm: _confirmPending,
                       onDiscard: _discardPending,
@@ -620,14 +909,14 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
               final topMaterial = _MaterialRow(
                 balance: balance,
                 side: _orientation.opposite,
-                name: _settings.nameOf(_orientation.opposite),
+                name: _nameOf(_orientation.opposite),
                 pieceAssets: boardSettings.pieceAssets,
                 clock: _clockView(_orientation.opposite),
               );
               final bottomMaterial = _MaterialRow(
                 balance: balance,
                 side: _orientation,
-                name: _settings.nameOf(_orientation),
+                name: _nameOf(_orientation),
                 pieceAssets: boardSettings.pieceAssets,
                 clock: _clockView(_orientation),
               );
@@ -678,6 +967,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   }
 }
 
+/// Operazione in corso del computer.
+enum _ComputerTask { none, move, draw }
+
+const int _drawAcceptanceCp = 50;
 const double _moveStripHeight = 40;
 const double _statusHeight = 48;
 const double _actionsHeight = 72;
@@ -733,10 +1026,17 @@ String statusText(ChessGame game, [String? Function(Side)? nameOf]) {
 }
 
 class _StatusLine extends StatelessWidget {
-  const _StatusLine({required this.game, required this.nameOf});
+  const _StatusLine({
+    required this.game,
+    required this.nameOf,
+    this.replacement,
+  });
 
   final ChessGame game;
   final String? Function(Side) nameOf;
+
+  /// Testo al posto dello stato della partita.
+  final String? replacement;
 
   @override
   Widget build(BuildContext context) {
@@ -747,7 +1047,7 @@ class _StatusLine extends StatelessWidget {
         child: Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            statusText(game, nameOf),
+            replacement ?? statusText(game, nameOf),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.titleMedium,
@@ -832,7 +1132,7 @@ class _GameActions extends StatelessWidget {
     required this.onResign,
   });
 
-  final VoidCallback onNewGame;
+  final VoidCallback? onNewGame;
   final VoidCallback? onUndo;
   final VoidCallback onFlip;
   final VoidCallback? onDraw;
@@ -1037,25 +1337,37 @@ class _ClockView extends StatelessWidget {
 }
 
 class _TimeChoice {
-  const _TimeChoice(this.control, this.variant, this.whiteName, this.blackName);
+  const _TimeChoice(
+    this.control,
+    this.variant,
+    this.whiteName,
+    this.blackName,
+    this.setup,
+  );
 
   final TimeControl? control;
   final Variant variant;
   final String whiteName;
   final String blackName;
+  final GameSetup setup;
 }
 
-/// Scelta di variante, nomi e cadenza: toccare una cadenza avvia la partita.
+/// Scelta di avversario, variante, nomi e cadenza: toccare una cadenza avvia
+/// la partita.
 class _TimeControlSheet extends StatefulWidget {
   const _TimeControlSheet({
     required this.variant,
     required this.whiteName,
     required this.blackName,
+    required this.setup,
+    required this.computerAvailable,
   });
 
   final Variant variant;
   final String whiteName;
   final String blackName;
+  final GameSetup setup;
+  final bool computerAvailable;
 
   @override
   State<_TimeControlSheet> createState() => _TimeControlSheetState();
@@ -1063,6 +1375,9 @@ class _TimeControlSheet extends StatefulWidget {
 
 class _TimeControlSheetState extends State<_TimeControlSheet> {
   late Variant _variant = widget.variant;
+  late GameSetup _setup = widget.computerAvailable
+      ? widget.setup
+      : widget.setup.copyWith(opponent: Opponent.human);
   late final _white = TextEditingController(text: widget.whiteName);
   late final _black = TextEditingController(text: widget.blackName);
 
@@ -1084,7 +1399,7 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
       label: Text(label),
       onPressed: () => Navigator.pop(
         context,
-        _TimeChoice(control, _variant, _white.text, _black.text),
+        _TimeChoice(control, _variant, _white.text, _black.text, _setup),
       ),
     );
     Widget nameField(TextEditingController controller, String label) =>
@@ -1111,31 +1426,39 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
           children: [
             Text('Nuova partita', style: theme.textTheme.titleLarge),
             const SizedBox(height: 8),
-            Row(
-              children: [
-                nameField(_white, 'Nome del Bianco'),
-                const SizedBox(width: 12),
-                nameField(_black, 'Nome del Nero'),
-              ],
+            OpponentPicker(
+              setup: _setup,
+              computerAvailable: widget.computerAvailable,
+              onChanged: (setup) => setState(() => _setup = setup),
             ),
-            const SizedBox(height: 16),
-            Text('Variante', style: theme.textTheme.titleSmall),
-            const SizedBox(height: 4),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                for (final v in Variant.values)
-                  ChoiceChip(
-                    label: Text(v.label),
-                    selected: v == _variant,
-                    onSelected: (_) => setState(() => _variant = v),
-                  ),
-              ],
-            ),
-            if (_variant.description.isNotEmpty) ...[
+            if (_setup.opponent == Opponent.human) ...[
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  nameField(_white, 'Nome del Bianco'),
+                  const SizedBox(width: 12),
+                  nameField(_black, 'Nome del Nero'),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Text('Variante', style: theme.textTheme.titleSmall),
               const SizedBox(height: 4),
-              Text(_variant.description),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  for (final v in Variant.values)
+                    ChoiceChip(
+                      label: Text(v.label),
+                      selected: v == _variant,
+                      onSelected: (_) => setState(() => _variant = v),
+                    ),
+                ],
+              ),
+              if (_variant.description.isNotEmpty) ...[
+                const SizedBox(height: 4),
+                Text(_variant.description),
+              ],
             ],
             const SizedBox(height: 12),
             Text('Cadenza', style: theme.textTheme.titleSmall),
