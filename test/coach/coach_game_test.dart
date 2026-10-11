@@ -84,6 +84,32 @@ void main() {
     expect(find.textContaining('Sposta'), findsOneWidget);
   });
 
+  testWidgets('RF-56 Minaccia c\'è solo con l\'allenatore acceso', (
+    tester,
+  ) async {
+    await tester.pumpWidget(app());
+    await startComputerGame(tester, side: 'Bianco');
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    expect(find.text('Minaccia'), findsNothing);
+    await tester.tap(find.text('Allenatore'));
+    await tester.pumpAndSettle();
+    expect(find.text('Minaccia'), findsOneWidget);
+  });
+
+  testWidgets('RF-56 Minaccia disegna la freccia rossa e sparisce alla mossa', (
+    tester,
+  ) async {
+    await startWithCoach(tester);
+    await tester.tap(find.text('Minaccia'));
+    await tester.pumpAndSettle();
+    final shapes = tester.widget<Chessboard>(find.byType(Chessboard)).shapes;
+    expect(shapes.whereType<Arrow>(), hasLength(1));
+    expect(find.textContaining('giocherebbe'), findsOneWidget);
+    await tapMove(tester, 'e2e4');
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    expect(tester.widget<Chessboard>(find.byType(Chessboard)).shapes, isEmpty);
+  });
+
   Map<Square, Annotation> badges(WidgetTester tester) =>
       tester.widget<Chessboard>(find.byType(Chessboard)).annotations;
 
