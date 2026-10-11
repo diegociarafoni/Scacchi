@@ -29,15 +29,15 @@ I set del progetto non richiamano personaggi, nomi o simboli di opere esistenti,
 | Giardino | Prato con fili d'erba | |
 | Terracotta | Piastrelle con decoro a stella | |
 
-Le texture sono in `assets/boards/`, in WebP da 1024 px. Le immagini delle scacchiere di chessground hanno licenza AGPL e non si usano. I colori delle case chiare e scure di ogni tema restano in `lib/settings/settings.dart`: servono alle coordinate, ai colori per daltonici e ai chip delle Impostazioni.
+Le texture sono in `assets/boards/`, in WebP da 1024 px. Per ogni tema con texture l'ultima mossa e la casa selezionata prendono, tra alcuni colori candidati, il più discreto che abbia contrasto almeno 1,25 sia sulle case chiare sia sulle scure (per esempio sul tema Retrò il verde lime si perderebbe); i temi a tinta unita tengono i colori di sempre. Le immagini delle scacchiere di chessground hanno licenza AGPL e non si usano. I colori delle case chiare e scure di ogni tema restano in `lib/settings/settings.dart`: servono alle coordinate, ai colori per daltonici e ai chip delle Impostazioni.
 
 ## Alone sui temi scuri
 
-Sui temi segnati come scuri i pezzi neri hanno un contorno crema, altrimenti si confonderebbero con le case. L'alone vale per tutti i set, anche quelli di chessground: le versioni con alone dei soli pezzi neri sono in `assets/pieces/halo/<set>/`. `PieceStyle.assetsOn` sceglie quali usare in base al tema.
+Sui temi scuri (Notte, Crepuscolo, Castello, Spazio) i pezzi neri hanno un contorno crema, altrimenti si confonderebbero con le case. L'alone vale per tutti i set, anche quelli di chessground: le versioni con alone dei soli pezzi neri sono in `assets/pieces/halo/<set>/`. `PieceStyle.assetsOn` sceglie quali usare in base al tema. Fuori dalla scacchiera, nei pezzi catturati e nella tavolozza dell'editor, l'alone non si usa.
 
 ## Coordinate fuori dalla scacchiera
 
-Con «Coordinate fuori dalla scacchiera» le lettere stanno sotto e i numeri a sinistra, su una cornice del colore delle case scure, come nei libri. La scacchiera si rimpicciolisce del 10% per farle posto e le coordinate non coprono mai i pezzi. La cornice è `BoardFrame` in `lib/settings/board_frame.dart` e vale per partita, esercizi e anteprima delle Impostazioni. Le coordinate si girano con la scacchiera e non vengono lette dai lettori di schermo, che annunciano già le case.
+Con «Coordinate fuori dalla scacchiera» le lettere stanno sotto e i numeri a sinistra, su una cornice del colore delle case scure, come nei libri. La scacchiera si rimpicciolisce del 10% per farle posto e le coordinate non coprono mai i pezzi. La cornice è `BoardFrame` in `lib/settings/board_frame.dart` e vale per partita, esercizi e anteprima delle Impostazioni; l'editor di posizione non ha cornice e mostra le coordinate sulle case. Le coordinate si girano con la scacchiera e non vengono lette dai lettori di schermo, che annunciano già le case.
 
 ## Rigenerare le immagini
 
