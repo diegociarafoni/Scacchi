@@ -12,7 +12,9 @@ void main() {
       'refactor/motore.v2',
       'dependabot/pub/dartchess-0.15.0',
       'release-please--branches--main',
-      'claude/project-thread-3b4wlf',
+      // Prefissi standard di git flow, solo per i rami.
+      'hotfix/crash-avvio',
+      'chore/pulizia-cartelle',
     ]) {
       test('accetta "$ok"', () => expect(validateBranchName(ok), isNull));
     }
@@ -25,8 +27,9 @@ void main() {
       'feat/',
       'feat/Orologio',
       'fix/spazi non ammessi',
-      // chore non è un tipo Angular: anche i commit lo rifiutano.
-      'chore/aggiorna-dipendenze',
+      // Il nome proposto dalle sessioni di Claude Code non è standard.
+      'claude/project-thread-3b4wlf',
+      'hotfix/',
     ]) {
       test('rifiuta "$ko"', () => expect(validateBranchName(ko), isNotNull));
     }
