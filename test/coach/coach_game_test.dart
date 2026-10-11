@@ -72,20 +72,50 @@ void main() {
     expect(find.textContaining('1. '), findsOneWidget);
   });
 
-  testWidgets('RF-74 Aiuto indica prima il pezzo, poi la mossa', (
+  testWidgets('RF-74 Suggerisci indica prima il pezzo, poi la mossa', (
     tester,
   ) async {
     await startWithCoach(tester);
-    await tester.tap(find.text('Aiuto'));
+    await tester.tap(find.text('Suggerisci'));
     await tester.pumpAndSettle();
-    expect(find.textContaining('pezzo in'), findsOneWidget);
-    await tester.tap(find.text('Aiuto'));
+    expect(find.textContaining('Muovi'), findsOneWidget);
+    await tester.tap(find.text('Suggerisci'));
     await tester.pumpAndSettle();
-    expect(find.textContaining('Prova'), findsOneWidget);
+    expect(find.textContaining('Sposta'), findsOneWidget);
   });
 
   Map<Square, Annotation> badges(WidgetTester tester) =>
       tester.widget<Chessboard>(find.byType(Chessboard)).annotations;
+
+  testWidgets('RF-74 Suggerisci c\'è anche con l\'allenatore spento', (
+    tester,
+  ) async {
+    await tester.pumpWidget(app());
+    await startComputerGame(tester, side: 'Bianco');
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.tap(find.text('Suggerisci'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Muovi'), findsOneWidget);
+    expect(find.byIcon(Icons.school_outlined), findsOneWidget);
+  });
+
+  testWidgets('RF-74 il suggerimento si vede sulla scacchiera', (tester) async {
+    await startWithCoach(tester);
+    Set<Shape> shapes() =>
+        tester.widget<Chessboard>(find.byType(Chessboard)).shapes;
+    expect(shapes(), isEmpty);
+    await tester.tap(find.text('Suggerisci'));
+    await tester.pumpAndSettle();
+    expect(shapes().whereType<Circle>(), hasLength(1));
+    expect(shapes().whereType<Arrow>(), isEmpty);
+    await tester.tap(find.text('Suggerisci'));
+    await tester.pumpAndSettle();
+    expect(shapes().whereType<Arrow>(), hasLength(1));
+    expect(shapes().whereType<Circle>(), hasLength(2));
+    await tapMove(tester, 'e2e4');
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    expect(shapes(), isEmpty);
+  });
 
   testWidgets('RF-72 il giudizio compare sulla casa della mossa', (
     tester,
@@ -133,4 +163,53 @@ void main() {
     await tester.pumpAndSettle();
     expect(badges(tester), isEmpty);
   });
+
+  testWidgets('RF-73 il primo tocco spiega a cosa serve l\'allenatore', (
+    tester,
+  ) async {
+    await tester.pumpWidget(app());
+    await startComputerGame(tester, side: 'Bianco');
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.tap(find.text('Allenatore'));
+    await tester.pump();
+    expect(
+      find.textContaining('Allenatore attivo: ti avviso se sbagli una mossa'),
+      findsOneWidget,
+    );
+    expect(find.byIcon(Icons.school), findsOneWidget);
+    await tester.tap(find.text('Allenatore'));
+    await tester.pump();
+    expect(find.text('Allenatore disattivato.'), findsOneWidget);
+    expect(find.byIcon(Icons.school_outlined), findsOneWidget);
+  });
+
+  for (final width in [320.0, 360.0]) {
+    testWidgets('le etichette dei comandi non si toccano a $width dp', (
+      tester,
+    ) async {
+      tester.view.physicalSize = Size(width * 3, 800 * 3);
+      tester.view.devicePixelRatio = 3;
+      addTearDown(tester.view.reset);
+      await startWithCoach(tester);
+      final labels = [
+        for (final t in [
+          'Nuova',
+          'Annulla',
+          'Gira',
+          'Patta',
+          'Abbandona',
+          'Allenatore',
+          'Suggerisci',
+        ])
+          tester.getRect(find.text(t)),
+      ];
+      for (var i = 0; i + 1 < labels.length; i++) {
+        expect(
+          labels[i + 1].left - labels[i].right,
+          greaterThanOrEqualTo(4),
+          reason: 'etichette ${i + 1} e ${i + 2}',
+        );
+      }
+    });
+  }
 }

@@ -3,6 +3,7 @@ import 'package:dartchess/dartchess.dart';
 import '../engine/uci.dart';
 import 'accuracy.dart' as acc;
 import 'board_utils.dart';
+import 'game_phase.dart';
 import 'move_classification.dart';
 import 'sacrifice.dart';
 import 'win_probability.dart';
@@ -86,6 +87,16 @@ class GameReview {
 
   double? accuracy(Side side) =>
       acc.gameAccuracy([for (final m in _of(side)) m.accuracy]);
+
+  /// Precisione di [side] in ciascuna fase; `null` se in quella fase non ha
+  /// mosse.
+  Map<GamePhase, double?> accuracyByPhase(Side side) {
+    final byPhase = {for (final p in GamePhase.values) p: <double>[]};
+    for (final m in _of(side)) {
+      byPhase[phaseOfFen(m.fenBefore)]!.add(m.accuracy);
+    }
+    return {for (final e in byPhase.entries) e.key: acc.gameAccuracy(e.value)};
+  }
 
   int count(Side side, MoveClass c) =>
       _of(side).where((m) => m.classification == c).length;

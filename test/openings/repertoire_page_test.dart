@@ -93,7 +93,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(
       tester.widget<TextField>(find.byType(TextField)).controller!.text,
-      'King\'s Knight Opening',
+      'Apertura del cavallo di re',
     );
     await tester.tap(find.text('Aggiungi'));
     await tester.pumpAndSettle();
@@ -101,13 +101,15 @@ void main() {
       find.text('Linea aggiunta al repertorio del Bianco.'),
       findsOneWidget,
     );
-    expect(t.lines(Side.white).single.name, 'King\'s Knight Opening');
+    expect(t.lines(Side.white).single.name, 'Apertura del cavallo di re');
   });
 
   testWidgets('RF-93 l\'hub mostra linee e mosse da ripassare', (tester) async {
     final t = await trainer();
     await t.addLine(Side.black, 'Siciliana', uci('e2e4 c7c5'));
     await phone(tester, OpeningsHubPage(repertoire: Future.value(t)));
+    expect(find.text('Esplora aperture'), findsOneWidget);
+    expect(find.text('Explorer'), findsNothing);
     expect(find.text('1 linee · 1 mosse da ripassare'), findsOneWidget);
     expect(find.text('0 linee · 0 mosse da ripassare'), findsOneWidget);
   });

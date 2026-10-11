@@ -3,6 +3,7 @@ import 'package:dartchess/dartchess.dart';
 import '../puzzles/puzzle.dart';
 import 'board_utils.dart';
 import 'coach.dart';
+import 'game_phase.dart';
 import 'game_review.dart';
 import 'move_classification.dart';
 import 'win_probability.dart';
@@ -92,7 +93,7 @@ List<MistakePuzzle> puzzlesFromReview(
         rating: mateIn != null ? 800 + 300 * mateIn : 900 + 200 * playerMoves,
         themes: {
           if (mateIn != null) 'mateIn$mateIn' else ...?_themes[comment?.theme],
-          _phase(start),
+          _phaseTheme(start),
         },
         explanation: comment?.text,
       ),
@@ -139,12 +140,7 @@ const _themes = {
 };
 
 /// Fase della partita con i nomi dei temi Lichess.
-String _phase(Position pos) {
-  if (pos.fullmoves <= 10) return 'opening';
-  final pieces =
-      pos.board.occupied.size - pos.board.pawns.size - pos.board.kings.size;
-  return pieces <= 4 ? 'endgame' : 'middlegame';
-}
+String _phaseTheme(Position pos) => phaseOf(pos).name;
 
 /// Identificativo stabile di una partita per i puzzle: lo stesso valore a ogni
 /// avvio e su ogni piattaforma, a differenza di `hashCode`. È FNV-1a a 32 bit;

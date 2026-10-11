@@ -12,6 +12,7 @@ import '../settings/settings.dart';
 import 'board_utils.dart';
 import 'coach.dart';
 import 'eval_bar.dart';
+import 'game_phase.dart';
 import 'game_review.dart';
 import 'move_classification.dart';
 import 'personal_puzzles.dart';
@@ -692,6 +693,7 @@ class _Summary extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
           child: Row(children: [column(Side.white), column(Side.black)]),
         ),
+        if (!kid) _PhaseAccuracy(review: review),
         if (!kid)
           ExpansionTile(
             title: const Text('Mosse per categoria'),
@@ -710,6 +712,40 @@ class _Summary extends StatelessWidget {
                   ),
                 ),
             ],
+          ),
+      ],
+    );
+  }
+}
+
+/// Precisione di ciascun giocatore in apertura, mediogioco e finale: indica
+/// quale fase allenare.
+class _PhaseAccuracy extends StatelessWidget {
+  const _PhaseAccuracy({required this.review});
+
+  final GameReview review;
+
+  @override
+  Widget build(BuildContext context) {
+    final white = review.accuracyByPhase(Side.white);
+    final black = review.accuracyByPhase(Side.black);
+    String value(double? a) => a == null ? '—' : a.round().toString();
+    return ExpansionTile(
+      title: const Text('Precisione per fase'),
+      children: [
+        for (final phase in GamePhase.values)
+          Semantics(
+            label:
+                '${phase.label}: Bianco ${value(white[phase])}, '
+                'Nero ${value(black[phase])}',
+            excludeSemantics: true,
+            child: ListTile(
+              dense: true,
+              title: Text(phase.label),
+              trailing: Text(
+                'Bianco ${value(white[phase])} · Nero ${value(black[phase])}',
+              ),
+            ),
           ),
       ],
     );
