@@ -116,8 +116,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// Partita i cui XP sono già stati assegnati, per farlo una volta sola.
   ChessGame? _recordedGame;
 
-  /// Partita il cui esito è già stato comunicato a [GamePage.onFinished].
-  ChessGame? _reportedGame;
+  /// Esito già comunicato a [GamePage.onFinished]; dopo un annulla la partita
+  /// riprende e l'esito nuovo sostituisce il precedente.
+  String? _reportedEnding;
 
   /// Ultimo stato salvato nell'archivio (partita, esito, mosse).
   String? _archivedKey;
@@ -140,6 +141,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   BotCollection _collection = const BotCollection();
   BotCollection _collectionBefore = const BotCollection();
   bool _botResultRecorded = false;
+
+  /// Profilo bambino all'inizio della partita: bot, titolo e frasi restano
+  /// coerenti anche se l'impostazione cambia a partita in corso.
+  bool _kidGame = false;
 
   /// Ultima variante scelta per la partita tra due persone.
   Variant _twoPlayerVariant = Variant.standard;
@@ -393,7 +398,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   void _botSay(BotEvent event) {
     final bot = _bot;
     if (bot == null || !mounted) return;
-    _showMessage('${bot.avatar} ${bot.name}: ${bot.phrase(event, _random)}');
+    final text = bot.phrase(event, _random, friendly: _kidGame);
+    _showMessage('${bot.avatar} ${bot.name}: $text');
   }
 
   void _saveAdaptive() {
@@ -579,8 +585,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final game = _game;
     if (!game.isOver) return;
     final side = _computerSide?.opposite;
-    if (side != null && !identical(game, _reportedGame)) {
-      _reportedGame = game;
+    final ending =
+        '${identityHashCode(game)}:${game.endReason}:${game.moves.length}';
+    if (side != null && ending != _reportedEnding) {
+      _reportedEnding = ending;
       final winner = game.outcome?.winner;
       widget.onFinished?.call(
         winner == null
@@ -1022,12 +1030,14 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     ),
   );
 
-  /// Memorizza la scelta dell'avversario; un bot bloccato diventa il primo.
+  /// Memorizza la scelta dell'avversario; un bot bloccato diventa il primo
+  /// della scala, quello amichevole nel profilo bambino.
   GameSetup _applySetup(GameSetup chosen) {
-    var setup = chosen;
+    _kidGame = _settings.kidMode;
+    var setup = _kidGame ? chosen.forKids() : chosen;
     var bot = setup.opponent == Opponent.bot ? botById(setup.botId) : null;
     if (bot != null && !_collection.isUnlocked(bot)) {
-      bot = bots.first;
+      bot = _kidGame ? friendlyBots.first : bots.first;
       setup = setup.copyWith(botId: bot.id);
     }
     _setup = setup;
@@ -1052,6 +1062,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           adaptiveLevel: _adaptive.level,
           collection: _collection,
           computerAvailable: widget.computerAvailable,
+          kidMode: _settings.kidMode,
         ),
       ),
       restart: (choice) => choice == null,
@@ -1144,6 +1155,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
             setup: chosen,
             adaptiveLevel: _adaptive.level,
             collection: _collection,
+            kidMode: _settings.kidMode,
           ),
         );
         if (picked == null) return null;
@@ -1521,7 +1533,15 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       ),
       restart: (leave) => leave != true,
     );
-    if (leave == true && mounted) Navigator.of(context).pop();
+    if (leave != true || !mounted) return;
+    // L'uscita vale una resa: l'esito arriva a chi ha lanciato la sfida.
+    final side = _computerSide?.opposite;
+    if (side != null && !_game.isOver) {
+      _cancelComputerMove();
+      _game.resign(side);
+      _refresh(animate: false);
+    }
+    Navigator.of(context).pop();
   }
 
   @override
@@ -1597,13 +1617,14 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                 children: [
                   title,
                   Text(
-                    // Niente Elo né livelli nel profilo bambino.
-                    l != null
-                        ? (_bot != null
+                    // Niente Elo né livelli finché il profilo bambino è attivo
+                    // o la partita è iniziata con il profilo.
+                    _bot != null
+                        ? _kid || _kidGame
                               ? '${_bot!.avatar} ${_bot!.name}'
-                              : l.kidGameComputer)
-                        : _bot != null
-                        ? '${_bot!.avatar} ${_bot!.name} (${_bot!.elo} Elo)'
+                              : '${_bot!.avatar} ${_bot!.name} (${_bot!.elo} Elo)'
+                        : l != null
+                        ? l.kidGameComputer
                         : 'Computer, livello $_gameLevel: '
                               '${engineLevel(_gameLevel).name}',
                     style: Theme.of(context).textTheme.labelMedium,
@@ -2223,11 +2244,13 @@ class _PositionSheet extends StatefulWidget {
     required this.setup,
     required this.adaptiveLevel,
     required this.collection,
+    required this.kidMode,
   });
 
   final GameSetup setup;
   final int adaptiveLevel;
   final BotCollection collection;
+  final bool kidMode;
 
   @override
   State<_PositionSheet> createState() => _PositionSheetState();
@@ -2252,6 +2275,7 @@ class _PositionSheetState extends State<_PositionSheet> {
           adaptiveLevel: widget.adaptiveLevel,
           collection: widget.collection,
           computerAvailable: true,
+          kidMode: widget.kidMode,
           onChanged: (setup) => setState(() => _setup = setup),
         ),
         const SizedBox(height: 16),
@@ -2276,6 +2300,7 @@ class _TimeControlSheet extends StatefulWidget {
     required this.adaptiveLevel,
     required this.collection,
     required this.computerAvailable,
+    required this.kidMode,
   });
 
   /// Profilo bambino: solo classica, senza tempo o con una cadenza lenta.
@@ -2287,6 +2312,7 @@ class _TimeControlSheet extends StatefulWidget {
   final int adaptiveLevel;
   final BotCollection collection;
   final bool computerAvailable;
+  final bool kidMode;
 
   @override
   State<_TimeControlSheet> createState() => _TimeControlSheetState();
@@ -2357,6 +2383,7 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
               adaptiveLevel: widget.adaptiveLevel,
               collection: widget.collection,
               computerAvailable: widget.computerAvailable,
+              kidMode: widget.kidMode,
               onChanged: (setup) => setState(() => _setup = setup),
             ),
             if (_setup.opponent == Opponent.human) ...[

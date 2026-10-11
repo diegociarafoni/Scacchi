@@ -121,11 +121,13 @@ void main() {
       await tester.tap(find.text('Continua'));
       await tester.pumpAndSettle();
       expect(find.byType(Chessboard), findsOneWidget);
+      expect(results, isEmpty);
       await tester.pageBack();
       await tester.pumpAndSettle();
       await tester.tap(find.text('Esci'));
       await tester.pumpAndSettle();
       expect(find.text('apri'), findsOneWidget);
+      expect(results, [GameResult.loss]);
     });
 
     testWidgets('niente aiuti durante la sfida', (tester) async {

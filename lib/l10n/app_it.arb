@@ -40,6 +40,22 @@
   "@kidAdultGateConfirm": {
     "description": "Pulsante che controlla la risposta"
   },
+  "kidBotPinoDescription": "Un pulcino allegro che ama attaccare",
+  "@kidBotPinoDescription": {
+    "description": "Descrizione amichevole del bot Pino nel profilo bambino (RP-06), al posto di Elo, stile e apertura"
+  },
+  "kidBotChiaraDescription": "Gioca con calma e aspetta le tue mosse",
+  "@kidBotChiaraDescription": {
+    "description": "Descrizione amichevole del bot Chiara nel profilo bambino (RP-06), al posto di Elo, stile e apertura"
+  },
+  "kidBotRoccoDescription": "Una volpe furba piena di sorprese",
+  "@kidBotRoccoDescription": {
+    "description": "Descrizione amichevole del bot Rocco nel profilo bambino (RP-06), al posto di Elo, stile e apertura"
+  },
+  "kidBotUnavailable": "Su questo dispositivo i bot non sono disponibili.",
+  "@kidBotUnavailable": {
+    "description": "Nel profilo bambino, al posto dell'avviso su Stockfish quando il motore non è disponibile"
+  },
   "kidGameYourTurn": "Tocca a te!",
   "@kidGameYourTurn": {
     "description": "Riga di stato nel profilo bambino: tocca al giocatore contro il computer"

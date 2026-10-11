@@ -146,6 +146,30 @@ abstract class AppLocalizations {
   /// **'Conferma'**
   String get kidAdultGateConfirm;
 
+  /// Descrizione amichevole del bot Pino nel profilo bambino (RP-06), al posto di Elo, stile e apertura
+  ///
+  /// In it, this message translates to:
+  /// **'Un pulcino allegro che ama attaccare'**
+  String get kidBotPinoDescription;
+
+  /// Descrizione amichevole del bot Chiara nel profilo bambino (RP-06), al posto di Elo, stile e apertura
+  ///
+  /// In it, this message translates to:
+  /// **'Gioca con calma e aspetta le tue mosse'**
+  String get kidBotChiaraDescription;
+
+  /// Descrizione amichevole del bot Rocco nel profilo bambino (RP-06), al posto di Elo, stile e apertura
+  ///
+  /// In it, this message translates to:
+  /// **'Una volpe furba piena di sorprese'**
+  String get kidBotRoccoDescription;
+
+  /// Nel profilo bambino, al posto dell'avviso su Stockfish quando il motore non è disponibile
+  ///
+  /// In it, this message translates to:
+  /// **'Su questo dispositivo i bot non sono disponibili.'**
+  String get kidBotUnavailable;
+
   /// Riga di stato nel profilo bambino: tocca al giocatore contro il computer
   ///
   /// In it, this message translates to:
