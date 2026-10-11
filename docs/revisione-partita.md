@@ -92,7 +92,7 @@ Si apre dal menu della partita (⋮ → **Revisione della partita**), disponibil
 
 **Accessibilità**: la barra di valutazione ha un'etichetta descrittiva ("Bianco avanti di 1.5", "Matto in 2 per il Nero"), le mosse della lista sono pulsanti con mossa e categoria, la precisione è letta come percentuale.
 
-Nel profilo bambino (RP-06) la precisione diventa da una a cinque stelle con un giudizio a parole, spariscono Elo stimato, conteggi per categoria e cifre della barra di valutazione: vedi [profilo-bambino.md](profilo-bambino.md#niente-numeri).
+Nel profilo bambino (RP-06) la precisione diventa da una a cinque stelle con un giudizio a parole, spariscono Elo stimato, conteggi per categoria e cifre della barra di valutazione, e il coach (`explainMove(..., kid:)`) spiega matti e perdite di materiale senza «matto in N» né «circa N pedoni»: vedi [profilo-bambino.md](profilo-bambino.md#niente-numeri).
 
 ## Coach testuale
 

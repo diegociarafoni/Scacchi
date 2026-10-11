@@ -6,6 +6,7 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
 import '../analysis/analysis_page.dart';
+import '../kids/kid_display.dart';
 import '../l10n/app_localizations.dart';
 import '../settings/settings.dart';
 import 'board_utils.dart';
@@ -327,8 +328,14 @@ class _ReviewPageState extends State<ReviewPage> {
     if (!m.classification.isError) return null;
     return _comments.putIfAbsent(
       m.ply,
-      () =>
-          explainMove(m, previous: m.ply > 0 ? review.moves[m.ply - 1] : null),
+      () => explainMove(
+        m,
+        previous: m.ply > 0 ? review.moves[m.ply - 1] : null,
+        // Profilo bambino (RP-06): spiegazioni senza «matto in N» e pedoni.
+        kid: AppSettings.of(context).kidMode
+            ? AppLocalizations.of(context)
+            : null,
+      ),
     );
   }
 
@@ -715,22 +722,13 @@ class _KidAccuracy extends StatelessWidget {
 
   final double? accuracy;
 
-  /// Una stella ogni venti punti percentuali, almeno una.
-  static int stars(double accuracy) => (accuracy / 20).ceil().clamp(1, 5);
-
   @override
   Widget build(BuildContext context) {
     final accuracy = this.accuracy;
     if (accuracy == null) return const Text('—');
     final l = AppLocalizations.of(context);
-    final n = stars(accuracy);
-    final words = switch (n) {
-      5 => l.kidAccuracy5,
-      4 => l.kidAccuracy4,
-      3 => l.kidAccuracy3,
-      2 => l.kidAccuracy2,
-      _ => l.kidAccuracy1,
-    };
+    final n = kidAccuracyStars(accuracy);
+    final words = kidAccuracyWords(l, n);
     final color = Theme.of(context).colorScheme.primary;
     return Column(
       children: [

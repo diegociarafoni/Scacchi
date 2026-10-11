@@ -52,10 +52,6 @@
   "@kidProgressLevelUp": {
     "description": "Nuovo livello, senza il numero, nel profilo bambino"
   },
-  "kidProgressFreeze": "Hai guadagnato uno scudo per la tua fiamma!",
-  "@kidProgressFreeze": {
-    "description": "Protezione della serie guadagnata, nel profilo bambino"
-  },
   "kidProgressChallenge": "Sfida completata!",
   "@kidProgressChallenge": {
     "description": "Sfida completata, nel profilo bambino (il titolo può contenere numeri)"
@@ -64,14 +60,9 @@
   "@kidProgressAchievement": {
     "description": "Traguardo sbloccato, nel profilo bambino (il titolo può contenere numeri)"
   },
-  "kidProgressReward": "Hai sbloccato: {name}",
+  "kidProgressReward": "Hai sbloccato una ricompensa!",
   "@kidProgressReward": {
-    "description": "Ricompensa sbloccata nel profilo bambino; name è il nome dell'avatar o della cornice",
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
+    "description": "Ricompensa sbloccata nel profilo bambino, senza il nome (che è solo in italiano)"
   },
   "kidLevelTitle": "Le tue stelle",
   "@kidLevelTitle": {
@@ -172,5 +163,34 @@
   "kidEvalEven": "Partita in equilibrio",
   "@kidEvalEven": {
     "description": "Barra di valutazione senza cifre, posizione pari"
+  },
+  "kidUnlockByPlaying": "Si sblocca giocando",
+  "@kidUnlockByPlaying": {
+    "description": "Requisito di avatar, cornici, temi e pezzi bloccati nel profilo bambino, al posto di «Livello N»"
+  },
+  "kidCoachMaterialLoss": "Attento: con questa mossa perdi dei pezzi.",
+  "@kidCoachMaterialLoss": {
+    "description": "Coach nel profilo bambino: perdita di materiale senza il conto dei pedoni"
+  },
+  "kidCoachAllowedMate": "Dopo {move} l'avversario può dare scacco matto con {reply}.",
+  "@kidCoachAllowedMate": {
+    "description": "Coach nel profilo bambino: matto concesso, senza «matto in N»; move e reply in notazione SAN",
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "reply": {
+        "type": "String"
+      }
+    }
+  },
+  "kidCoachMissedMate": "Con {move} potevi dare scacco matto!",
+  "@kidCoachMissedMate": {
+    "description": "Coach nel profilo bambino: matto mancato, senza «matto in N»; move in notazione SAN",
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
   }
 }

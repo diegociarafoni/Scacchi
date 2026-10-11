@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../kids/kid_display.dart';
 import '../l10n/app_localizations.dart';
 import '../minigames/minigame.dart';
 import '../reminders/reminder_controller.dart';
@@ -75,7 +76,9 @@ class ProfilePage extends StatelessWidget {
                 _Achievements(unlocked: controller.state.unlocked),
                 const SizedBox(height: 24),
               ],
-              _Settings(controller: controller, reminders: reminders),
+              // Interruttore degli XP, obiettivo e promemoria sono scelte
+              // per gli adulti, piene di numeri: nel profilo bambino no.
+              if (!kid) _Settings(controller: controller, reminders: reminders),
             ],
           );
         },
@@ -153,7 +156,8 @@ class _LevelCard extends StatelessWidget {
   }
 }
 
-/// Livello del profilo bambino: una stella per livello, senza il numero.
+/// Livello del profilo bambino: una stella per livello (fino a
+/// [kidMaxStars]), senza il numero.
 class _KidStars extends StatelessWidget {
   const _KidStars({required this.level});
 
@@ -162,20 +166,14 @@ class _KidStars extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final color = Theme.of(context).colorScheme.primary;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(l.kidLevelTitle, style: Theme.of(context).textTheme.titleLarge),
-        Semantics(
+        KidStars(
+          key: const Key('kid-level-stars'),
+          count: level,
           label: l.kidLevelStarsLabel,
-          excludeSemantics: true,
-          child: Wrap(
-            key: const Key('kid-level-stars'),
-            children: [
-              for (var i = 0; i < level; i++) Icon(Icons.star, color: color),
-            ],
-          ),
         ),
       ],
     );
@@ -240,6 +238,7 @@ class _AvatarPicker extends StatelessWidget {
       listenable: controller,
       builder: (context, _) {
         final s = controller.settings;
+        final kid = AppSettings.of(context).kidMode;
         Widget option<T extends Enum>(
           T item,
           String label,
@@ -248,12 +247,18 @@ class _AvatarPicker extends StatelessWidget {
           ProgressSettings Function() change,
         ) {
           final unlocked = isUnlocked(item, controller.state, s);
-          final requirement = unlocked ? null : requirementOf(item)!.label;
+          final requirement = unlocked
+              ? null
+              : kid
+              ? kidRequirement(AppLocalizations.of(context))
+              : requirementOf(item)!.label;
           return Semantics(
             button: true,
             selected: selected,
             label: requirement == null
                 ? label
+                : kid
+                ? '$label, ${requirement.toLowerCase()}'
                 : '$label, si sblocca con: $requirement',
             excludeSemantics: true,
             child: InkWell(
@@ -404,29 +409,16 @@ class _StreakCard extends StatelessWidget {
     final l = AppLocalizations.of(context);
     final goal = controller.settings.goal;
     final progress = controller.todayProgress;
-    final lit = controller.streak > 0;
-    final scheme = Theme.of(context).colorScheme;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
+            KidFlame(
               key: const Key('kid-streak'),
-              children: [
-                Icon(
-                  Icons.local_fire_department,
-                  color: lit ? scheme.primary : scheme.outline,
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    lit ? l.kidStreakOn : l.kidStreakOff,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                ),
-              ],
+              lit: controller.streak > 0,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 12),
             LinearProgressIndicator(

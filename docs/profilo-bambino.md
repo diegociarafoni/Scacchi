@@ -22,18 +22,24 @@ Se il profilo si attiva mentre è aperta la scheda Aperture, si torna alla sched
 
 ## Niente numeri
 
-Il criterio: spariscono i numeri che **misurano** il bambino (punteggi, XP, percentuali, valutazioni del motore, conteggi e record); restano quelli che **descrivono un compito** (titoli di sfide e traguardi come «Risolvi 3 puzzle», nomi dei temi come «Matto in 1», obiettivo giornaliero nelle impostazioni del profilo, numeri delle mosse e coordinate della scacchiera).
+Il criterio: spariscono i numeri che **misurano** il bambino (punteggi, XP, percentuali, valutazioni del motore, conteggi e record); restano quelli che **descrivono un compito** (titoli di sfide e traguardi come «Risolvi 3 puzzle», nomi dei temi come «Matto in 1», numeri delle mosse e coordinate della scacchiera).
+
+Le stelle si fermano a dieci (`kidMaxStars`): una fila più lunga si conterebbe e tornerebbe a essere un numero.
 
 | Schermata | Al posto dei numeri |
 |---|---|
-| Notifica dei progressi | «Bravo, continua così!» invece di «+N XP»; nuovo livello, obiettivo, sfide, traguardi e ricompense diventano frasi senza cifre; i record non si annunciano |
-| Profilo | Livello come una stella per livello («Le tue stelle»); barra del livello senza «XP / XP»; serie come fiamma accesa o spenta, senza giorni, record e protezioni; barra dell'obiettivo senza conteggio; sfide con la barra ma senza «n/m»; sezione Record personali nascosta |
+| Notifica dei progressi | «Bravo, continua così!» invece di «+N XP»; nuovo livello, obiettivo, sfide, traguardi e ricompense diventano frasi senza cifre; la ricompensa non ha il nome (solo italiano), così in inglese le lingue non si mescolano; record e scudo della serie (che nel profilo bambino non si vede) non si annunciano |
+| Scheda Tu | Intestazione con stelle del livello e fiamma della serie, senza «Livello N» e «N giorni di fila» |
+| Profilo | Livello come una stella per livello («Le tue stelle»); barra del livello senza «XP / XP»; serie come fiamma accesa o spenta, senza giorni, record e protezioni; barra dell'obiettivo senza conteggio; sfide con la barra ma senza «n/m»; sezione Record personali nascosta; nascosta anche la sezione Impostazioni (interruttore degli XP, obiettivo, giorno di riposo, promemoria), scelte da adulti |
+| Sblocchi | Avatar, cornici, temi e pezzi bloccati dicono «Si sblocca giocando» invece di «Livello N» o del traguardo, anche nel testo per i lettori di schermo e nell'avviso delle Impostazioni |
 | Hub dei puzzle | Niente punteggio né contatori: una stella per puzzle risolto (fino a dieci); niente difficoltà del puzzle del giorno né numero di puzzle da ripassare; nascoste le modalità a tempo (Storm, Sopravvivenza, Serie), costruite su punti, errori e record; nei temi spariscono i conteggi |
 | Puzzle | Nessun punteggio né variazione dopo il puzzle; sotto la scacchiera «Forza, ce la puoi fare!» e, a puzzle concluso, solo i temi |
-| Revisione | Precisione da una a cinque stelle (una ogni 20 punti) con un giudizio a parole («Perfetto!», «Molto bene», «Bene», «Così così», «Da migliorare»); niente Elo stimato né conteggi per categoria; le classificazioni delle mosse restano a simboli e parole; «Sto guardando la partita…» durante l'analisi |
+| Revisione | Precisione da una a cinque stelle (una ogni 20 punti interi: sotto 40 una, da 80 a 99,9 quattro, 100 cinque) con un giudizio a parole («Perfetto!», «Molto bene», «Bene», «Così così», «Da migliorare»); niente Elo stimato né conteggi per categoria; le classificazioni delle mosse restano a simboli e parole; «Sto guardando la partita…» durante l'analisi; il coach dice «potevi dare scacco matto con…» e «perdi dei pezzi» invece di «matto in N» e «circa N pedoni» |
 | Analisi e barra di valutazione | La barra resta, senza cifre; il lettore di schermo dice solo chi è avanti (fascia di parità tra 40 e 60% di probabilità); niente punteggi delle linee né profondità |
 
-Le pagine leggono `AppSettings.of(context).kidMode` e prendono i testi `kid…` da `AppLocalizations` solo nel profilo bambino. Test: `test/kids/no_numbers_test.dart`.
+Stelle, fiamma, giudizi della precisione e requisito di sblocco sono in `lib/kids/kid_display.dart`. Le pagine leggono `AppSettings.of(context).kidMode` e prendono i testi `kid…` da `AppLocalizations` solo nel profilo bambino. Test: `test/kids/no_numbers_test.dart`.
+
+Limite noto: l'allenatore durante la partita (`CoachSession`, aperto da `GamePage`) usa ancora le frasi con i numeri; `explainMove` accetta già `kid`, manca il collegamento in `GamePage`.
 
 ## Codice
 

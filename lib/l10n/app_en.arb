@@ -11,10 +11,9 @@
   "kidProgressGreat": "Well done, keep going!",
   "kidProgressGoal": "Today's goal reached!",
   "kidProgressLevelUp": "You levelled up: one more star!",
-  "kidProgressFreeze": "You earned a shield for your flame!",
   "kidProgressChallenge": "Challenge complete!",
   "kidProgressAchievement": "New achievement!",
-  "kidProgressReward": "Unlocked: {name}",
+  "kidProgressReward": "You unlocked a reward!",
   "kidLevelTitle": "Your stars",
   "kidLevelStarsLabel": "One star for each level reached",
   "kidLevelProgress": "Keep playing to earn another star!",
@@ -39,5 +38,9 @@
   "kidAnalysisThinking": "The computer is thinking…",
   "kidEvalWhite": "White is ahead",
   "kidEvalBlack": "Black is ahead",
-  "kidEvalEven": "The game is even"
+  "kidEvalEven": "The game is even",
+  "kidUnlockByPlaying": "Unlocks as you play",
+  "kidCoachMaterialLoss": "Careful: this move loses pieces.",
+  "kidCoachAllowedMate": "After {move} your opponent can checkmate with {reply}.",
+  "kidCoachMissedMate": "You could checkmate with {move}!"
 }

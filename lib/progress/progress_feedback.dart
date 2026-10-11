@@ -24,18 +24,19 @@ String? progressMessage(ProgressUpdate update) {
 
 /// Versione del profilo bambino: solo incoraggiamenti, senza XP né numeri.
 /// I titoli di sfide e traguardi possono contenere cifre e non si ripetono;
-/// i record sono tutti numerici e restano fuori.
+/// i record sono tutti numerici e restano fuori. Lo scudo della serie non si
+/// vede nel profilo bambino, quindi non si annuncia; il nome della ricompensa
+/// è solo in italiano e resta fuori, per non mescolare le lingue.
 String? kidProgressMessage(ProgressUpdate update, AppLocalizations l) {
   if (update.xpGained == 0) return null;
   return [
     l.kidProgressGreat,
     if (update.goalReached) l.kidProgressGoal,
     if (update.newLevel != null) l.kidProgressLevelUp,
-    if (update.freezeEarned) l.kidProgressFreeze,
     if (update.challengesCompleted.isNotEmpty || update.weeklyCompleted)
       l.kidProgressChallenge,
     if (update.unlocked.isNotEmpty) l.kidProgressAchievement,
-    for (final r in update.rewards) l.kidProgressReward(rewardName(r)),
+    if (update.rewards.isNotEmpty) l.kidProgressReward,
   ].join(' · ');
 }
 

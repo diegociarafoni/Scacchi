@@ -46,18 +46,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get kidProgressLevelUp => 'You levelled up: one more star!';
 
   @override
-  String get kidProgressFreeze => 'You earned a shield for your flame!';
-
-  @override
   String get kidProgressChallenge => 'Challenge complete!';
 
   @override
   String get kidProgressAchievement => 'New achievement!';
 
   @override
-  String kidProgressReward(String name) {
-    return 'Unlocked: $name';
-  }
+  String get kidProgressReward => 'You unlocked a reward!';
 
   @override
   String get kidLevelTitle => 'Your stars';
@@ -133,4 +128,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get kidEvalEven => 'The game is even';
+
+  @override
+  String get kidUnlockByPlaying => 'Unlocks as you play';
+
+  @override
+  String get kidCoachMaterialLoss => 'Careful: this move loses pieces.';
+
+  @override
+  String kidCoachAllowedMate(String move, String reply) {
+    return 'After $move your opponent can checkmate with $reply.';
+  }
+
+  @override
+  String kidCoachMissedMate(String move) {
+    return 'You could checkmate with $move!';
+  }
 }

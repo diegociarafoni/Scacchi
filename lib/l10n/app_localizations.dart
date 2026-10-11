@@ -164,12 +164,6 @@ abstract class AppLocalizations {
   /// **'Sei salito di livello: una stella in più!'**
   String get kidProgressLevelUp;
 
-  /// Protezione della serie guadagnata, nel profilo bambino
-  ///
-  /// In it, this message translates to:
-  /// **'Hai guadagnato uno scudo per la tua fiamma!'**
-  String get kidProgressFreeze;
-
   /// Sfida completata, nel profilo bambino (il titolo può contenere numeri)
   ///
   /// In it, this message translates to:
@@ -182,11 +176,11 @@ abstract class AppLocalizations {
   /// **'Nuovo traguardo!'**
   String get kidProgressAchievement;
 
-  /// Ricompensa sbloccata nel profilo bambino; name è il nome dell'avatar o della cornice
+  /// Ricompensa sbloccata nel profilo bambino, senza il nome (che è solo in italiano)
   ///
   /// In it, this message translates to:
-  /// **'Hai sbloccato: {name}'**
-  String kidProgressReward(String name);
+  /// **'Hai sbloccato una ricompensa!'**
+  String get kidProgressReward;
 
   /// Titolo della scheda del livello nel profilo bambino: una stella per livello
   ///
@@ -337,6 +331,30 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Partita in equilibrio'**
   String get kidEvalEven;
+
+  /// Requisito di avatar, cornici, temi e pezzi bloccati nel profilo bambino, al posto di «Livello N»
+  ///
+  /// In it, this message translates to:
+  /// **'Si sblocca giocando'**
+  String get kidUnlockByPlaying;
+
+  /// Coach nel profilo bambino: perdita di materiale senza il conto dei pedoni
+  ///
+  /// In it, this message translates to:
+  /// **'Attento: con questa mossa perdi dei pezzi.'**
+  String get kidCoachMaterialLoss;
+
+  /// Coach nel profilo bambino: matto concesso, senza «matto in N»; move e reply in notazione SAN
+  ///
+  /// In it, this message translates to:
+  /// **'Dopo {move} l\'avversario può dare scacco matto con {reply}.'**
+  String kidCoachAllowedMate(String move, String reply);
+
+  /// Coach nel profilo bambino: matto mancato, senza «matto in N»; move in notazione SAN
+  ///
+  /// In it, this message translates to:
+  /// **'Con {move} potevi dare scacco matto!'**
+  String kidCoachMissedMate(String move);
 }
 
 class _AppLocalizationsDelegate

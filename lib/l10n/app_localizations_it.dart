@@ -46,18 +46,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get kidProgressLevelUp => 'Sei salito di livello: una stella in più!';
 
   @override
-  String get kidProgressFreeze => 'Hai guadagnato uno scudo per la tua fiamma!';
-
-  @override
   String get kidProgressChallenge => 'Sfida completata!';
 
   @override
   String get kidProgressAchievement => 'Nuovo traguardo!';
 
   @override
-  String kidProgressReward(String name) {
-    return 'Hai sbloccato: $name';
-  }
+  String get kidProgressReward => 'Hai sbloccato una ricompensa!';
 
   @override
   String get kidLevelTitle => 'Le tue stelle';
@@ -134,4 +129,21 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get kidEvalEven => 'Partita in equilibrio';
+
+  @override
+  String get kidUnlockByPlaying => 'Si sblocca giocando';
+
+  @override
+  String get kidCoachMaterialLoss =>
+      'Attento: con questa mossa perdi dei pezzi.';
+
+  @override
+  String kidCoachAllowedMate(String move, String reply) {
+    return 'Dopo $move l\'avversario può dare scacco matto con $reply.';
+  }
+
+  @override
+  String kidCoachMissedMate(String move) {
+    return 'Con $move potevi dare scacco matto!';
+  }
 }
