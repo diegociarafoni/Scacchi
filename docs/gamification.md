@@ -20,6 +20,7 @@ Requisiti RG-01, RG-02, RG-05, RG-07, RG-08 e RG-12. Il codice è in `lib/progre
 | Sessione di puzzle a tempo o a serie conclusa | 10 |
 | Lezione completata | 20 |
 | Revisione completata | 20 |
+| Torneo concluso | 30 |
 | Obiettivo giornaliero raggiunto | +10 |
 | Sfida giornaliera completata | +20 |
 | Sfida settimanale completata | +50 |
@@ -53,7 +54,7 @@ Serie più lunga, bot più forte battuto (Elo), matto con meno mosse (solo vitto
 
 ## Traguardi (RG-05)
 
-35 traguardi in quattro categorie (gioco, tattica, costanza, curiosità), sbloccabili una sola volta e annunciati con una notifica in-app (`showProgressFeedback`). Alcuni esempi: prima vittoria, vittoria con il nero, miniatura (matto in meno di 20 mosse), bot da 1500 e 2000 Elo battuti, matto con il cavallo o con un pedone, vittoria con arrocco lungo, brillante trovata, 10 puzzle di forchetta o di matto, 20 punti in una modalità a tempo, giornata perfetta (tre sfide), 3, 7 e 30 giorni di fila, precisione del 90%, livello 5 e 10, 20 coordinate in una sessione, tutti i minigiochi provati. L'elenco completo è in `lib/progress/achievements.dart`.
+37 traguardi in quattro categorie (gioco, tattica, costanza, curiosità), sbloccabili una sola volta e annunciati con una notifica in-app (`showProgressFeedback`). Alcuni esempi: prima vittoria, vittoria con il nero, miniatura (matto in meno di 20 mosse), bot da 1500 e 2000 Elo battuti, matto con il cavallo o con un pedone, vittoria con arrocco lungo, brillante trovata, 10 puzzle di forchetta o di matto, 20 punti in una modalità a tempo, giornata perfetta (tre sfide), 3, 7 e 30 giorni di fila, precisione del 90%, livello 5 e 10, 20 coordinate in una sessione, tutti i minigiochi provati, primo torneo concluso e primo torneo vinto. L'elenco completo è in `lib/progress/achievements.dart`.
 
 ## Componenti
 
@@ -97,6 +98,7 @@ Le altre schermate registrano:
 | Revisione | `ReviewCompleted(accuracy: 87.5, brilliantMoves: 1)` a fine analisi |
 | Lezioni e percorso | `LessonCompleted()` |
 | Minigiochi | `MinigameFinished(game: 'coordinate', score: n)` a fine sessione (vedi [minigiochi.md](minigiochi.md)) |
+| Tornei | `TournamentFinished(rank: 1, players: 8)` a fine torneo (vedi [tornei.md](tornei.md)) |
 
 ## Integrazione prevista
 

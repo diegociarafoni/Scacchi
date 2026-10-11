@@ -124,4 +124,15 @@ void main() {
     }
     expect(ids.where((id) => id == 'minigames_all'), hasLength(1));
   });
+
+  test('RG-09 torneo concluso e torneo vinto', () {
+    expect(
+      unlockedBy(const TournamentFinished(rank: 3, players: 6)),
+      allOf(contains('tournament_done'), isNot(contains('tournament_won'))),
+    );
+    expect(
+      unlockedBy(const TournamentFinished(rank: 1, players: 8)),
+      containsAll(['tournament_done', 'tournament_won']),
+    );
+  });
 }
