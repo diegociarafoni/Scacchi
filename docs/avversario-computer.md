@@ -6,7 +6,7 @@ nessuna connessione, nessun server, nessun dato che esce dal telefono.
 ## Come si gioca
 
 1. Toccare **Nuova**.
-2. Scegliere **Computer**.
+2. Scegliere **Computer** (oppure **Bot**, vedi [bot.md](bot.md)).
 3. Scegliere il colore: Bianco, Nero o a caso. La scacchiera si orienta dal lato del giocatore.
 4. Scegliere il livello con il cursore (da 1 a 8).
 5. In alternativa al cursore, attivare **Adattivo**: il livello lo sceglie l'app (vedi [Avversario adattivo](#avversario-adattivo)).
@@ -164,7 +164,7 @@ Nuove funzioni del computer si sviluppano partendo dai test, con nel nome il req
 | RF-25 patta accettata dal bot in base alla valutazione | ✓ |
 | RNF-03 Stockfish nativo via FFI in isolate, 1 thread | ✓ (Android, iOS) |
 | RF-22 modalità Allenamento (suggerimento, barra di valutazione) | Da fare: `EngineMove` espone già variante e valutazione |
-| RF-23 bot con personalità | Dati, stile, libro e frasi pronti (vedi [bot.md](bot.md)); manca la scelta nella partita |
+| RF-23 bot con personalità | ✓ (vedi [bot.md](bot.md)) |
 | RF-26 avversario adattivo | ✓ |
 
 ## Licenza

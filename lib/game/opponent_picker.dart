@@ -3,9 +3,12 @@ import 'dart:math' as math;
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
+import '../engine/bot_collection.dart';
+import '../engine/bots.dart';
 import '../engine/levels.dart';
+import '../engine/style.dart';
 
-enum Opponent { human, computer }
+enum Opponent { human, computer, bot }
 
 enum SideChoice { white, black, random }
 
@@ -15,6 +18,7 @@ class GameSetup {
     this.sideChoice = SideChoice.white,
     this.level = defaultEngineLevel,
     this.adaptive = false,
+    this.botId = 'pino',
   });
 
   final Opponent opponent;
@@ -23,6 +27,9 @@ class GameSetup {
 
   /// Il livello segue i risultati del giocatore (RF-26).
   final bool adaptive;
+
+  /// Bot scelto contro cui giocare (RF-23).
+  final String botId;
 
   Side resolveHumanSide(math.Random random) => switch (sideChoice) {
     SideChoice.white => Side.white,
@@ -35,11 +42,13 @@ class GameSetup {
     SideChoice? sideChoice,
     int? level,
     bool? adaptive,
+    String? botId,
   }) => GameSetup(
     opponent: opponent ?? this.opponent,
     sideChoice: sideChoice ?? this.sideChoice,
     level: level ?? this.level,
     adaptive: adaptive ?? this.adaptive,
+    botId: botId ?? this.botId,
   );
 }
 
@@ -50,18 +59,21 @@ class OpponentPicker extends StatelessWidget {
     required this.setup,
     required this.computerAvailable,
     required this.adaptiveLevel,
+    required this.collection,
     required this.onChanged,
   });
 
   final GameSetup setup;
   final bool computerAvailable;
   final int adaptiveLevel;
+  final BotCollection collection;
   final ValueChanged<GameSetup> onChanged;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final level = engineLevel(setup.adaptive ? adaptiveLevel : setup.level);
+    final vsBot = setup.opponent == Opponent.bot;
     final vsComputer = setup.opponent == Opponent.computer;
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -80,6 +92,12 @@ class OpponentPicker extends StatelessWidget {
               label: const Text('Computer'),
               enabled: computerAvailable,
             ),
+            ButtonSegment(
+              value: Opponent.bot,
+              icon: const Icon(Icons.emoji_people_outlined),
+              label: const Text('Bot'),
+              enabled: computerAvailable,
+            ),
           ],
           selected: {setup.opponent},
           onSelectionChanged: (s) =>
@@ -92,7 +110,7 @@ class OpponentPicker extends StatelessWidget {
             style: theme.textTheme.bodySmall,
           ),
         ],
-        if (vsComputer) ...[
+        if (vsComputer || vsBot) ...[
           const SizedBox(height: 16),
           Text('Giochi con', style: theme.textTheme.titleSmall),
           const SizedBox(height: 4),
@@ -106,6 +124,18 @@ class OpponentPicker extends StatelessWidget {
             onSelectionChanged: (s) =>
                 onChanged(setup.copyWith(sideChoice: s.first)),
           ),
+          if (vsBot) ...[
+            const SizedBox(height: 8),
+            for (final bot in bots)
+              _BotTile(
+                bot: bot,
+                collection: collection,
+                selected: bot.id == setup.botId,
+                onTap: () => onChanged(setup.copyWith(botId: bot.id)),
+              ),
+          ],
+        ],
+        if (vsComputer) ...[
           const SizedBox(height: 16),
           Text(
             'Livello ${level.id}: ${level.name}',
@@ -137,4 +167,53 @@ class OpponentPicker extends StatelessWidget {
       ],
     );
   }
+}
+
+String styleLabel(BotStyle style) => switch (style) {
+  BotStyle.aggressive => 'aggressivo',
+  BotStyle.positional => 'posizionale',
+  BotStyle.gambitist => 'gambettista',
+};
+
+class _BotTile extends StatelessWidget {
+  const _BotTile({
+    required this.bot,
+    required this.collection,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final Bot bot;
+  final BotCollection collection;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final unlocked = collection.isUnlocked(bot);
+    final beatenOn = collection.beatenOn(bot);
+    final details = [
+      '${bot.elo} Elo',
+      styleLabel(bot.style),
+      bot.openingName,
+      if (beatenOn != null) 'Battuto il ${_date(beatenOn)}',
+    ].join(' · ');
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      enabled: unlocked,
+      selected: selected && unlocked,
+      leading: Text(bot.avatar, style: const TextStyle(fontSize: 28)),
+      title: Text(bot.name),
+      subtitle: Text(details),
+      trailing: !unlocked
+          ? const Icon(Icons.lock_outline)
+          : beatenOn != null
+          ? const Icon(Icons.check_circle_outline)
+          : null,
+      onTap: unlocked ? onTap : null,
+    );
+  }
+
+  static String _date(DateTime d) =>
+      '${d.day.toString().padLeft(2, '0')}/${d.month.toString().padLeft(2, '0')}/${d.year}';
 }
