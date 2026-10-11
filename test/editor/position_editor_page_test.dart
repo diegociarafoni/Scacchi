@@ -84,7 +84,7 @@ void main() {
     expect(find.byTooltip('Che cos\'è il FEN?'), findsOneWidget);
     await tester.tap(help);
     await tester.pumpAndSettle();
-    expect(find.textContaining('Incolla FEN'), findsWidgets);
+    expect(find.textContaining('una riga di testo'), findsOneWidget);
     expect(find.textContaining('altre app'), findsOneWidget);
     await tester.tap(find.text('Ho capito'));
     await tester.pumpAndSettle();

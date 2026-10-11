@@ -459,7 +459,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get editorFenHelpBody =>
-      'FEN is a line of text that describes a position: the pieces on the board, whose turn it is, castling rights and move counters. Use it to copy the position to other apps or to paste one you received: tap “Copy FEN” and “Paste FEN”.';
+      'FEN is a line of text that describes a position: the pieces on the board, whose turn it is, castling rights and move counters. Use it to copy the position to other apps or to paste one you received: use the copy and paste buttons above.';
 
   @override
   String get editorFenHelpClose => 'Got it';
