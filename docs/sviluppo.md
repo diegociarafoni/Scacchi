@@ -28,6 +28,10 @@ flutter build ios                     # app iOS (su Mac)
 
 I file in `assets/sounds/` si rigenerano con `python3 tool/generate_sounds.py`.
 
+## Icone e schermata di avvio
+
+Si rigenerano con `tool/generate_icons.py` e i due generatori Flutter, come descritto in [identita-visiva.md](identita-visiva.md).
+
 ## Test
 
 ### Metodo: prima i test
@@ -48,6 +52,7 @@ Ogni funzione nasce dai requisiti del progetto, nel documento dei requisiti, con
 | Widget | `test/analysis/` | Schermata di analisi con motore finto: linee, MultiPV, esplorazione, pausa, freccia | `flutter test` |
 | Unitari e widget | `test/review/` | Probabilità di vittoria, classificazione, sacrifici, precisione, revisione con motore finto, schermata di revisione e accesso dal menu | `flutter test` |
 | Widget | `test/widget_test.dart`, `test/l10n_test.dart` | Avvio dell'app e stato iniziale; lingua italiana predefinita | `flutter test` |
+| Unitari | `test/branding_test.dart` | Nome Rokko su Android e iOS, identificativo invariato, icona monocromatica | `flutter test` |
 | Widget | `test/computer_game_test.dart` | Partita contro il computer con un motore finto | `flutter test` |
 | Gamification | `test/progress/` | Regole di XP, serie e traguardi; salvataggio; schermata Profilo | `flutter test test/progress` |
 | Percorso | `test/path/` | Esercizi, contenuti, sblocco, mappa e tappe sulla scacchiera | `flutter test test/path` |

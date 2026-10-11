@@ -101,7 +101,7 @@ abstract class AppLocalizations {
   /// Titolo dell'app nel selettore delle attività; il nome sotto l'icona è in AndroidManifest.xml e Info.plist
   ///
   /// In it, this message translates to:
-  /// **'Scacchi'**
+  /// **'Rokko'**
   String get appTitle;
 
   /// Intestazione della sezione del profilo nelle Impostazioni
@@ -797,7 +797,7 @@ abstract class AppLocalizations {
   /// Permesso negato o fotocamera assente
   ///
   /// In it, this message translates to:
-  /// **'Non riesco a usare la fotocamera. Consenti l\'accesso alla fotocamera per Scacchi nelle impostazioni del telefono e riprova.'**
+  /// **'Non riesco a usare la fotocamera. Consenti l\'accesso alla fotocamera per Rokko nelle impostazioni del telefono e riprova.'**
   String get qrCameraError;
 
   /// Riapre la fotocamera

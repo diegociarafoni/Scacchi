@@ -106,6 +106,6 @@ void main() {
     expect(png, isNotNull);
     // Firma dei file PNG.
     expect(png!.sublist(0, 4), [0x89, 0x50, 0x4e, 0x47]);
-    expect(name, 'scacchi-settimana-2026-10-11.png');
+    expect(name, 'rokko-settimana-2026-10-11.png');
   });
 }
