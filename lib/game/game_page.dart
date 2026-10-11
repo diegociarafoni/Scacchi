@@ -8,6 +8,7 @@ import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 
 import '../analysis/analysis_page.dart';
+import '../archive/saved_game.dart';
 import '../coach/coach_session.dart';
 import '../editor/position_editor_page.dart';
 import '../engine/adaptive.dart';
@@ -18,6 +19,8 @@ import '../engine/levels.dart';
 import '../engine/uci_transport.dart';
 import '../openings/opening_name.dart';
 import '../progress/activity.dart';
+import '../progress/game_activity.dart';
+import '../progress/progress_controller.dart';
 import '../progress/progress_feedback.dart';
 import '../puzzles/activity_recorder.dart';
 import '../review/engine_evaluator.dart';
@@ -38,6 +41,14 @@ import 'opponent_picker.dart';
 import 'sounds.dart';
 import 'variant.dart';
 
+/// Semimosse minime perché una partita valga XP: abbandonare subito non deve
+/// far guadagnare nulla.
+const _minPliesForProgress = 4;
+
+/// Tempo massimo di una partita che conta per l'obiettivo a minuti, per non
+/// gonfiarlo con le pause (app in background, finestre aperte).
+const _maxCountedPlay = Duration(hours: 1);
+
 /// Partita tra due persone sullo stesso dispositivo o contro il computer.
 class GamePage extends StatefulWidget {
   GamePage({
@@ -47,8 +58,10 @@ class GamePage extends StatefulWidget {
     bool? computerAvailable,
     this.createComputer,
     this.now,
-    this.store,
     this.onActivity,
+    this.onSave,
+    this.progress,
+    this.store,
     this.onSavePuzzles,
   }) : computerAvailable = computerAvailable ?? StockfishTransport.isSupported;
 
@@ -62,8 +75,14 @@ class GamePage extends StatefulWidget {
   /// Ora corrente per l'orologio; quella di sistema se assente.
   final DateTime Function()? now;
 
-  /// Registra le attività della partita nei progressi.
+  /// Registra la partita finita nei progressi; senza, nessun XP.
   final ActivityRecorder? onActivity;
+
+  /// Salva la partita finita nell'archivio; senza, nessun salvataggio.
+  final Future<void> Function(SavedGame game)? onSave;
+
+  /// Progressi da mostrare nelle impostazioni (temi e ricompense da sbloccare).
+  final Future<ProgressController> Function()? progress;
 
   /// Salva i puzzle ricavati dagli errori della revisione.
   final Future<int> Function(List<MistakePuzzle> puzzles)? onSavePuzzles;
@@ -81,6 +100,15 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     game: _gameData(),
   );
   Side _orientation = Side.white;
+
+  /// Partita i cui XP sono già stati assegnati, per farlo una volta sola.
+  ChessGame? _recordedGame;
+
+  /// Ultimo stato salvato nell'archivio (partita, esito, mosse).
+  String? _archivedKey;
+  late DateTime _startedAt = _clockNow();
+  late String _gameId = 'game-${_startedAt.microsecondsSinceEpoch}';
+  var _fromEditor = false;
   GameSetup _setup = const GameSetup();
   AdaptiveOpponent _adaptive = const AdaptiveOpponent();
 
@@ -388,10 +416,126 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     validMoves: const {},
   );
 
+  var _openingSettings = false;
+
+  Future<void> _openSettings() async {
+    if (_openingSettings) return;
+    _openingSettings = true;
+    try {
+      ProgressController? progress;
+      try {
+        progress = await widget.progress?.call();
+      } on Object catch (e) {
+        // Senza progressi le impostazioni restano utilizzabili, senza i blocchi.
+        debugPrint('Progressi non disponibili: $e');
+      }
+      if (!mounted) return;
+      await Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) =>
+              SettingsPage(controller: widget.settings, progress: progress),
+        ),
+      );
+    } finally {
+      _openingSettings = false;
+    }
+  }
+
+  DateTime _clockNow() => (widget.now ?? DateTime.now)();
+
+  /// Inizia una nuova partita per progressi e archivio. Una posizione
+  /// preparata con l'editor si archivia ma non vale XP.
+  void _startRecording({bool fromEditor = false}) {
+    _startedAt = _clockNow();
+    _gameId = 'game-${_startedAt.microsecondsSinceEpoch}';
+    _fromEditor = fromEditor;
+  }
+
+  /// A fine partita la salva nell'archivio e la registra nei progressi.
+  ///
+  /// Dopo un annulla dell'abbandono o del tempo scaduto la partita riprende e
+  /// può finire in altro modo: l'archivio si aggiorna (stesso `id`), gli XP si
+  /// assegnano una volta sola per partita.
+  void _finishGame() {
+    final game = _game;
+    if (!game.isOver || game.moves.isEmpty) return;
+    final side = _computerSide?.opposite;
+    final now = _clockNow();
+    final elo = side == null
+        ? null
+        : (_bot?.elo ?? engineLevel(_gameLevel).approxElo);
+    final key =
+        '${identityHashCode(game)}:${game.endReason}:${game.moves.length}';
+    if (key != _archivedKey) {
+      _archivedKey = key;
+      _archive(game, side, now, elo);
+    }
+    if (identical(game, _recordedGame) ||
+        _fromEditor ||
+        game.moves.length < _minPliesForProgress) {
+      return;
+    }
+    _recordedGame = game;
+    final elapsed = now.difference(_startedAt);
+    unawaited(
+      _record(
+        gameActivity(
+          game,
+          player: side,
+          opponentElo: elo,
+          duration: elapsed.isNegative
+              ? Duration.zero
+              : elapsed > _maxCountedPlay
+              ? _maxCountedPlay
+              : elapsed,
+        ),
+      ),
+    );
+  }
+
+  /// Salvataggio e progressi vanno avanti da soli: uno lento o fallito non
+  /// ferma l'altro.
+  void _archive(ChessGame game, Side? side, DateTime now, int? elo) {
+    final save = widget.onSave;
+    if (save == null) return;
+    String name(Side s) => side == null
+        ? (_settings.nameOf(s) ?? (s == Side.white ? 'Bianco' : 'Nero'))
+        : (s == side ? 'Tu' : (_bot?.name ?? 'Computer'));
+    final saved = SavedGame.fromGame(
+      game,
+      id: _gameId,
+      white: name(Side.white),
+      black: name(Side.black),
+      mode: side == null ? SavedGame.local : SavedGame.computer,
+      createdAt: _startedAt,
+      updatedAt: now,
+      playerSide: side,
+      timeControl: _clock?.control.label,
+      opponentElo: elo,
+    );
+    unawaited(
+      save(saved)
+          .onError((Object e, _) => debugPrint('Partita non salvata: $e')),
+    );
+  }
+
+  Future<void> _record(GamePlayed activity) async {
+    try {
+      final update = await widget.onActivity?.call(activity);
+      if (update != null && mounted) {
+        final message = progressMessage(update);
+        if (message != null) _showMessage(message);
+      }
+    } on Object catch (e) {
+      debugPrint('Progressi non registrati: $e');
+    }
+  }
+
   void _refresh({bool animate = true}) {
     _pendingMove = null;
     _viewPly = null;
     _syncClock();
+    _finishGame();
     _board.updatePosition(_gameData(), animate: animate, resetPremove: true);
     _recordAdaptiveResult();
     _recordBotResult();
@@ -811,7 +955,12 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   /// Avvia [game] contro l'avversario di [setup]: azzera orologio e cronologia,
   /// dispone i lati e fa muovere subito chi tocca.
-  void _beginGame(ChessGame game, GameSetup setup, ChessClock? clock) {
+  void _beginGame(
+    ChessGame game,
+    GameSetup setup,
+    ChessClock? clock, {
+    bool fromEditor = false,
+  }) {
     _cancelComputerMove();
     _clockBeforeSuspension = false;
     _coachOn = false;
@@ -823,6 +972,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _clockHistory.clear();
     _lowTime.reset();
     _clearBoardInteraction();
+    _startRecording(fromEditor: fromEditor);
     if (setup.opponent != Opponent.human) {
       final human = setup.resolveHumanSide(_random);
       _computerSide = human.opposite;
@@ -879,7 +1029,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final setup = chosen.opponent == Opponent.human
         ? chosen
         : _applySetup(chosen);
-    _beginGame(ChessGame(initial: position), setup, null);
+    _beginGame(ChessGame(initial: position), setup, null, fromEditor: true);
   }
 
   String get _title => switch (_game.variant) {
@@ -1238,11 +1388,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           IconButton(
             tooltip: 'Impostazioni',
             icon: const Icon(Icons.settings_outlined),
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute<void>(
-                builder: (_) => SettingsPage(controller: widget.settings),
-              ),
-            ),
+            onPressed: _openSettings,
           ),
         ],
       ),
