@@ -92,6 +92,30 @@ void main() {
     }
   });
 
+  test('ogni lezione ha da 4 a 5 esercizi', () {
+    for (final c in curriculum) {
+      for (final s in c.stages.where((s) => !s.isGuardian)) {
+        expect(s.exercises.length, inInclusiveRange(4, 5), reason: s.id);
+      }
+    }
+  });
+
+  test('nessun esercizio ripete la partenza di un altro', () {
+    final seen = <String, String>{};
+    for (final c in curriculum) {
+      for (final s in c.stages) {
+        for (final (i, e) in s.exercises.indexed) {
+          final start = switch (e) {
+            StarsExercise() => '${e.role.name} ${e.start.name}',
+            LineExercise() => e.fen,
+          };
+          final where = '${s.id} #${i + 1}';
+          expect(seen.putIfAbsent(start, () => where), where, reason: start);
+        }
+      }
+    }
+  });
+
   test('dai Matti in poi ogni capitolo ha un bot guardiano finale', () {
     final mates = curriculum.indexWhere((c) => c.id == 'mates');
     for (final c in curriculum.skip(mates)) {
