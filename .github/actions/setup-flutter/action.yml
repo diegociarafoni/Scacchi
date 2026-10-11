@@ -1,0 +1,12 @@
+name: Setup Flutter
+description: Flutter alla versione del progetto, con cache e dipendenze scaricate.
+runs:
+  using: composite
+  steps:
+    - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+      with:
+        channel: stable
+        flutter-version: 3.47.7
+        cache: true
+    - shell: bash
+      run: flutter pub get

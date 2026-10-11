@@ -25,6 +25,8 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | [localizzazione.md](localizzazione.md) | Lingua predefinita e come aggiungere testi e lingue |
 | [sviluppo.md](sviluppo.md) | Ambiente, comandi, test, CI e convenzioni |
 | [convenzioni-git.md](convenzioni-git.md) | Rami, commit Angular, hook locali, merge e protezione di `main` |
+| [sicurezza.md](sicurezza.md) | Scanner di sicurezza, SBOM e catena di fornitura |
+| [dipendenze-e-licenze.md](dipendenze-e-licenze.md) | Aggiornamenti automatici e licenze ammesse |
 | [avversario-computer.md](avversario-computer.md) | Partita contro il computer: livelli, motore Stockfish, piattaforme |
 | [bot.md](bot.md) | Bot con personalità: scala degli 8 bot, stile di gioco, libro d'apertura, frasi |
 | [revisione-partita.md](revisione-partita.md) | Revisione della partita: probabilità di vittoria, classificazione delle mosse, precisione |

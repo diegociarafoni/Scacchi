@@ -1,0 +1,19 @@
+# Dipendenze e licenze
+
+## Aggiornamenti
+
+[Dependabot](../.github/dependabot.yml) apre ogni settimana PR per pacchetti pub, azioni GitHub e Gradle. Gli aggiornamenti minori e di correzione dei pacchetti pub sono raggruppati in una sola PR. I messaggi rispettano la convenzione Angular (`build(deps): …`, `ci(deps): …`) e passano gli stessi controlli di ogni altra PR.
+
+Dependabot propone solo versioni pubblicate da almeno 7 giorni (`cooldown`): un pacchetto compromesso viene di solito scoperto e ritirato prima di allora. Gli aggiornamenti di sicurezza non hanno questa attesa.
+
+## Licenze
+
+L'app è GPL-3.0 (vedi [licenza.md](licenza.md)), quindi ogni dipendenza distribuita con l'app deve avere una licenza compatibile. `tool/check_licenses.dart` controlla in CI tutte le dipendenze non di sviluppo, dirette e indirette, riconoscendo la licenza dal testo del file `LICENSE` di ciascun pacchetto.
+
+Licenze ammesse, in `tool/policy.json`: MIT, BSD-2-Clause, BSD-3-Clause, Apache-2.0, ISC, Zlib, Unlicense, MPL-2.0, LGPL-2.1, LGPL-3.0, GPL-3.0.
+
+Una licenza non riconosciuta o non ammessa blocca la CI. Se il riconoscimento automatico sbaglia, si aggiunge il pacchetto in `licenses.overrides` di `tool/policy.json` con l'identificativo SPDX corretto, dopo averne letto la licenza.
+
+```sh
+dart run tool/check_licenses.dart
+```

@@ -140,7 +140,7 @@ I golden si rigenerano con `flutter test test/settings --update-goldens` dopo un
 
 Il workflow `.github/workflows/ci.yml` gira su ogni pull request e su ogni push su `main`, tranne quando cambiano solo `docs/`, file Markdown o `LICENSE`:
 
-1. **test**, sempre: installa Stockfish (per i test d'integrazione del motore), verifica di localizzazione e formattazione, `flutter analyze`, `flutter test`. È il controllo bloccante di ogni PR.
+1. **test**, sempre: installa Stockfish (per i test d'integrazione del motore), verifica di localizzazione e formattazione, `flutter analyze`, `flutter test`, licenze delle dipendenze. È il controllo bloccante di ogni PR.
 2. **e2e**, se i test passano: installa Stockfish ed esegue i test end-to-end sull'app Linux desktop con uno schermo virtuale (`xvfb`), un file alla volta perché avvii ravvicinati dell'app Linux nello stesso comando falliscono.
 3. **android**, se i test passano: libera spazio sul runner (la compilazione nativa di Stockfish con l'NDK lo esaurisce), compila un APK di debug solo arm64 e lo pubblica come artefatto `scacchi-debug-apk` per 7 giorni.
 
@@ -171,6 +171,11 @@ Durate misurate sulle esecuzioni dell'11 ottobre 2026, in minuti fatturati:
 Con 2000 minuti al mese si passa da circa 17 a circa 55 PR tipiche. Per controllare il consumo: **Settings → Billing and plans → Usage** del proprio account GitHub.
 
 Con le regole di protezione di `main` attive (vedi [convenzioni-git.md](convenzioni-git.md)) un job saltato conta come superato, ma una PR di sola documentazione non avvia la CI e resterebbe in attesa dei controlli obbligatori: in quel caso va tolto `paths-ignore` dall'evento `pull_request`.
+
+Altri workflow:
+
+- **Convenzioni** (`conventions.yml`, su ogni PR, meno di un minuto): nome del ramo, titolo della PR, messaggi dei commit e Gitleaks sui commit della PR, vedi [convenzioni-git.md](convenzioni-git.md).
+- **Sicurezza** (`security.yml`): Trivy, OSV-Scanner, Gitleaks su tutta la cronologia, zizmor e SBOM, su `main`, ogni lunedì e sulle PR che cambiano dipendenze o workflow, vedi [sicurezza.md](sicurezza.md).
 
 Il workflow `.github/workflows/apk-release.yml` produce l'APK release installabile sul telefono e lo pubblica come GitHub Release: vedi [rilascio-android.md](rilascio-android.md).
 
