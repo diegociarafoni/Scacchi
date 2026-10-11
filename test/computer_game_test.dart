@@ -125,6 +125,7 @@ void main() {
     home: GamePage(
       settings: settings ?? SettingsController.defaults(),
       computerAvailable: true,
+      now: () => TestWidgetsFlutterBinding.instance.clock.now(),
       createComputer: () => ComputerPlayer(
         connect: connect ?? () async => FirstLegalMoveEngine(scoreCp: scoreCp),
       ),
@@ -409,6 +410,97 @@ void main() {
     await tester.tap(find.text('Gioca'));
     await tester.pump(const Duration(milliseconds: 500));
     expect(find.byKey(const ValueKey('clock-white')), findsNothing);
+  });
+
+  testWidgets('RF-40 in background il computer si ferma e riparte al ritorno', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      app(
+        connect: () async =>
+            FirstLegalMoveEngine(delay: const Duration(milliseconds: 400)),
+      ),
+    );
+    await startComputerGame(tester, side: 'Bianco', time: '3+2');
+    await tester.pump(const Duration(seconds: 1));
+    await tapMove(tester, 'e2e4');
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(find.text('Il computer sta pensando…'), findsOneWidget);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+    await tester.pump(const Duration(seconds: 1));
+    expect(find.textContaining('1. e4 '), findsNothing);
+    expect(find.byKey(const ValueKey('clock-active')), findsNothing);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(find.text('Il computer sta pensando…'), findsOneWidget);
+    expect(activeClock(Side.black), findsOneWidget);
+    await tester.pump(const Duration(milliseconds: 1000));
+    expect(find.text('Muove il Bianco.'), findsOneWidget);
+    expect(activeClock(Side.white), findsOneWidget);
+    expect(clockText(tester, Side.black), isIn(['3:00', '3:01', '3:02']));
+  });
+
+  testWidgets('RF-40 una finestra aperta restituisce al computer il tempo', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      app(
+        connect: () async =>
+            FirstLegalMoveEngine(delay: const Duration(seconds: 2)),
+      ),
+    );
+    await startComputerGame(tester, side: 'Bianco', time: '3+0');
+    await tester.pump(const Duration(seconds: 1));
+    await tapMove(tester, 'e2e4');
+    for (var i = 0; i < 3; i++) {
+      await tester.pump(const Duration(milliseconds: 1100));
+      await tester.tap(find.text('Nuova'));
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.tap(find.widgetWithText(TextButton, 'Annulla'));
+      await tester.pump(const Duration(milliseconds: 500));
+    }
+    expect(clockText(tester, Side.black), isIn(['3:00', '2:59']));
+    await tester.pump(const Duration(seconds: 3));
+  });
+
+  testWidgets('RF-40 la valutazione della patta non consuma il tempo', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      app(
+        connect: () async =>
+            FirstLegalMoveEngine(delay: const Duration(seconds: 1)),
+      ),
+    );
+    await startComputerGame(tester, side: 'Bianco', time: '3+0');
+    await tester.pump(const Duration(seconds: 1));
+    await tapMove(tester, 'e2e4');
+    await tester.pump(const Duration(milliseconds: 1500));
+    expect(activeClock(Side.white), findsOneWidget);
+    final before = clockText(tester, Side.white);
+    await tester.tap(find.text('Patta'));
+    await tester.pump(const Duration(milliseconds: 1100));
+    expect(find.text('Il computer rifiuta la patta.'), findsOneWidget);
+    expect(clockText(tester, Side.white), before);
+  });
+
+  testWidgets('RF-40 si annulla il tempo scaduto anche alla prima mossa', (
+    tester,
+  ) async {
+    await tester.pumpWidget(app());
+    await startComputerGame(tester, side: 'Nero', time: '1+0');
+    await tester.pump(const Duration(milliseconds: 500));
+    expect(find.textContaining('1. '), findsOneWidget);
+    await tester.pump(const Duration(seconds: 61));
+    expect(find.textContaining('Tempo scaduto'), findsOneWidget);
+    await tester.tap(find.text('Annulla'));
+    await tester.pump(const Duration(milliseconds: 500));
+    expect(find.text('Muove il Nero.'), findsOneWidget);
+    expect(clockText(tester, Side.black), isIn(['1:00', '0:59']));
   });
 
   testWidgets('senza motore disponibile la scelta Computer è disattivata', (

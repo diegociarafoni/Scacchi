@@ -22,11 +22,15 @@ class GamePage extends StatefulWidget {
     required this.settings,
     bool? computerAvailable,
     this.createComputer,
+    this.now,
   }) : computerAvailable = computerAvailable ?? StockfishTransport.isSupported;
 
   final SettingsController settings;
   final bool computerAvailable;
   final ComputerPlayer Function()? createComputer;
+
+  /// Ora corrente per l'orologio; quella di sistema se assente.
+  final DateTime Function()? now;
 
   @override
   State<GamePage> createState() => _GamePageState();
@@ -51,7 +55,14 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   int _generation = 0;
   ChessClock? _clock;
   Timer? _ticker;
-  Side? _pausedInBackground;
+
+  /// Snapshot dell'orologio all'inizio della riflessione del computer.
+  Map<Side, Duration>? _searchClock;
+
+  /// Sospensioni attive (finestre aperte, app in background).
+  int _suspensions = 0;
+  bool _clockBeforeSuspension = false;
+  bool _inBackground = false;
   final List<Map<Side, Duration>> _clockHistory = [];
   final ValueNotifier<int> _tick = ValueNotifier(0);
 
@@ -69,20 +80,47 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    final clock = _clock;
-    if (clock == null) return;
     if (state == AppLifecycleState.resumed) {
-      final side = _pausedInBackground;
-      _pausedInBackground = null;
-      if (side != null && !_game.isOver) clock.start(side);
-      _syncClock();
+      if (!_inBackground) return;
+      _inBackground = false;
+      _resume();
     } else if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.hidden) {
-      if (clock.isRunning) {
-        _pausedInBackground = clock.active;
-        clock.pause();
-      }
+      if (_inBackground) return;
+      _inBackground = true;
+      _suspend();
     }
+  }
+
+  /// Ferma orologio e computer; la ricerca interrotta non costa tempo al computer.
+  void _suspend() {
+    if (_suspensions++ > 0) return;
+    final clock = _clock;
+    _clockBeforeSuspension = clock?.isRunning ?? false;
+    final searchStart = _task == _ComputerTask.move ? _searchClock : null;
+    _cancelComputerMove();
+    if (clock != null && searchStart != null) {
+      clock.restore(searchStart, null);
+    } else {
+      clock?.pause();
+    }
+    _syncClock();
+    _tick.value++;
+  }
+
+  /// Chiude una sospensione; all'ultima, se [restart], riparte da dove era.
+  void _resume({bool restart = true}) {
+    if (_suspensions == 0 || --_suspensions > 0 || !restart) return;
+    if (!mounted || _game.isOver) return;
+    if (_clockBeforeSuspension) _clock?.start(_game.position.turn);
+    _refresh(animate: false);
+    _computerMove();
+  }
+
+  /// Mostra una finestra con orologio e computer fermi; il chiamante chiama [_resume].
+  Future<T?> _suspendedDialog<T>(WidgetBuilder builder) {
+    _suspend();
+    return showDialog<T>(context: context, builder: builder);
   }
 
   @override
@@ -181,11 +219,20 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   Future<void> _computerMove() async {
     final side = _computerSide;
-    if (_thinking || side == null || _game.isOver) return;
+    if (_thinking || side == null || _game.isOver || _suspensions > 0) return;
     if (_game.position.turn != side) return;
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     final generation = _generation;
     _task = _ComputerTask.move;
+    final clock = _clock;
+    _searchClock = clock?.snapshot();
+    var level = engineLevel(_setup.level);
+    if (clock != null) {
+      level = level.withinClock(
+        clock.remaining(side),
+        Duration(seconds: clock.control.increment),
+      );
+    }
     _refresh(animate: false);
     EngineMove? reply;
     Object? error;
@@ -193,7 +240,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       reply = await _computerPlayer.bestMove(
         _game.initial.fen,
         _moveHistory,
-        engineLevel(_setup.level),
+        level,
       );
     } catch (e) {
       error = e;
@@ -245,23 +292,6 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     }
   }
 
-  /// Esegue [action] con orologio e computer fermi, poi li riavvia se la partita continua.
-  Future<T> _withClockPaused<T>(Future<T> Function() action) async {
-    _cancelComputerMove();
-    final clock = _clock;
-    final running = clock?.isRunning ?? false;
-    clock?.pause();
-    try {
-      return await action();
-    } finally {
-      if (mounted && identical(clock, _clock) && !_game.isOver) {
-        if (running) clock!.start(_game.position.turn);
-        _refresh(animate: false);
-        _computerMove();
-      }
-    }
-  }
-
   /// Chiude selezione e selettore di promozione rimasti aperti sulla scacchiera.
   void _clearBoardInteraction() {
     final pos = _game.position;
@@ -292,19 +322,21 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   );
 
   Future<void> _newGame() async {
-    final setup = await _withClockPaused(
-      () => showNewGameDialog(
-        context,
-        initial: _setup,
-        computerAvailable: widget.computerAvailable,
-      ),
+    _suspend();
+    final setup = await showNewGameDialog(
+      context,
+      initial: _setup,
+      computerAvailable: widget.computerAvailable,
     );
-    if (setup == null || !mounted) return;
+    if (!mounted) return;
+    _resume(restart: setup == null);
+    if (setup == null) return;
     _cancelComputerMove();
+    _clockBeforeSuspension = false;
     _setup = setup;
     _game = ChessGame();
     final control = setup.timeControl;
-    _clock = control == null ? null : ChessClock(control);
+    _clock = control == null ? null : ChessClock(control, now: widget.now);
     _clockHistory.clear();
     _clearBoardInteraction();
     if (setup.opponent == Opponent.computer) {
@@ -336,7 +368,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       if (_game.moves.isNotEmpty) _clock?.start(_game.position.turn);
     } else {
       _restoreClock();
-      if (_computerSide == _game.position.turn && _game.canUndo) {
+      if (_computerToMove && _game.canUndo) {
         _game.undo();
         _restoreClock();
       }
@@ -360,33 +392,31 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   bool get _canUndo {
     if (!_game.canUndo) return false;
     if (_computerSide != Side.white || _endedByChoice) return true;
+    if (_game.endReason == GameEndReason.timeout) return true;
     return _game.moves.length > 1;
   }
 
   Future<void> _resign() async {
     final side = _computerSide?.opposite ?? _game.position.turn;
-    final confirmed = await _withClockPaused(
-      () => showDialog<bool>(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Abbandonare la partita?'),
-          content: Text('Abbandona il ${_sideName(side)}.'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('Annulla'),
-            ),
-            FilledButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: const Text('Abbandona'),
-            ),
-          ],
-        ),
+    final confirmed = await _suspendedDialog<bool>(
+      (context) => AlertDialog(
+        title: const Text('Abbandonare la partita?'),
+        content: Text('Abbandona il ${_sideName(side)}.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Annulla'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Abbandona'),
+          ),
+        ],
       ),
     );
     if (!mounted) return;
+    _resume(restart: confirmed != true);
     if (confirmed == true) {
-      _cancelComputerMove();
       _game.resign(side);
       _refresh(animate: false);
     }
@@ -397,6 +427,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     if (_thinking) return;
     final generation = _generation;
     final turn = _game.position.turn;
+    final clock = _clock;
+    final clockStart = clock?.snapshot();
     _task = _ComputerTask.draw;
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     _refresh(animate: false);
@@ -417,6 +449,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     }
     if (!mounted || generation != _generation) return;
     _task = _ComputerTask.none;
+    if (clock != null && clock.isRunning && !_game.isOver) {
+      clock.restore(clockStart!, clock.active);
+    }
     _refresh(animate: false);
     if (_game.isOver) return;
     if (error != null) return _showMessage('Il computer non risponde.');
@@ -433,25 +468,23 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   Future<void> _offerDraw() async {
     if (_computerSide != null) return _offerDrawToComputer();
     final opponent = _game.position.turn.opposite;
-    final accepted = await _withClockPaused(
-      () => showDialog<bool>(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Il ${_sideName(opponent)} accetta la patta?'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('Rifiuta'),
-            ),
-            FilledButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: const Text('Accetta'),
-            ),
-          ],
-        ),
+    final accepted = await _suspendedDialog<bool>(
+      (context) => AlertDialog(
+        title: Text('Il ${_sideName(opponent)} accetta la patta?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Rifiuta'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Accetta'),
+          ),
+        ],
       ),
     );
     if (!mounted) return;
+    _resume(restart: accepted != true);
     if (accepted == true) {
       _game.agreeDraw();
       _refresh(animate: false);
