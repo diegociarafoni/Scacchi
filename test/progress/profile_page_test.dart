@@ -74,6 +74,34 @@ void main() {
     expect(find.text('Obiettivo raggiunto: 1 / 1 partite'), findsOneWidget);
   });
 
+  testWidgets('la serie spiega cosa serve, oggi, traguardo e rischi', (
+    tester,
+  ) async {
+    await show(tester);
+    expect(
+      find.text('Per tenere accesa la serie, ogni giorno: gioca 1 partita.'),
+      findsOneWidget,
+    );
+    expect(find.text('Oggi: da fare. Manca 1 partita.'), findsOneWidget);
+    expect(
+      find.text('Prossimo traguardo: 3 giorni di fila (ne mancano 3).'),
+      findsOneWidget,
+    );
+    expect(
+      find.text('Raggiungi l\'obiettivo oggi per iniziare una serie.'),
+      findsOneWidget,
+    );
+    await tester.runAsync(
+      () => controller.record(const GamePlayed(result: GameResult.loss)),
+    );
+    await tester.pumpAndSettle();
+    expect(
+      find.text('Oggi: fatto. La serie è al sicuro fino a domani.'),
+      findsOneWidget,
+    );
+    expect(find.textContaining('Se salti un giorno'), findsOneWidget);
+  });
+
   testWidgets('RG-02 cambia obiettivo e giorno di riposo', (tester) async {
     await show(tester);
     await tester.scrollUntilVisible(find.byKey(const Key('goal')), 200);

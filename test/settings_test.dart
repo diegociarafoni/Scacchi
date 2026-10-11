@@ -1,5 +1,6 @@
 import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
+import 'package:flutter/material.dart' show ThemeMode;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/settings/settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -24,6 +25,7 @@ void main() {
     expect(settings.value.confirmMove, isFalse);
     expect(settings.value.colorBlind, isFalse);
     expect(settings.value.kidMode, isFalse);
+    expect(settings.value.themeMode, ThemeMode.system);
   });
 
   test('RP-04 le impostazioni sono salvate in locale', () async {
@@ -45,10 +47,12 @@ void main() {
         confirmMove: true,
         colorBlind: true,
         kidMode: true,
+        themeMode: ThemeMode.dark,
       ),
     );
     final reloaded = await SettingsController.load();
     expect(reloaded.value, settings.value);
+    expect(reloaded.value.themeMode, ThemeMode.dark);
     expect(reloaded.value.boardTheme, BoardTheme.blue);
     expect(reloaded.value.animation, AnimationSpeed.none);
   });
@@ -57,6 +61,20 @@ void main() {
     SharedPreferences.setMockInitialValues({'boardTheme': 'inesistente'});
     final settings = await SettingsController.load();
     expect(settings.value.boardTheme, BoardTheme.green);
+  });
+
+  test('RP-02 aspetto dell\'app salvato per nome', () async {
+    final settings = await SettingsController.load();
+    await settings.update(settings.value.copyWith(themeMode: ThemeMode.light));
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getString('themeMode'), 'light');
+    expect((await SettingsController.load()).value.themeMode, ThemeMode.light);
+  });
+
+  test('RP-02 aspetto sconosciuto torna a quello di sistema', () async {
+    SharedPreferences.setMockInitialValues({'themeMode': 'seppia'});
+    final settings = await SettingsController.load();
+    expect(settings.value.themeMode, ThemeMode.system);
   });
 
   test('RF-12 durata delle animazioni', () {

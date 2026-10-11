@@ -53,8 +53,25 @@ class _ScacchiAppState extends State<ScacchiApp> {
 
   @override
   Widget build(BuildContext context) {
-    const seed = Color(0xFF769656);
     final settings = _settings;
+    if (settings == null) return _app(null, ThemeMode.system);
+    return ValueListenableBuilder(
+      valueListenable: settings,
+      builder: (context, s, _) => _app(settings, s.themeMode),
+    );
+  }
+
+  static const _seed = Color(0xFF769656);
+  static final _light = ThemeData(
+    colorSchemeSeed: _seed,
+    brightness: Brightness.light,
+  );
+  static final _dark = ThemeData(
+    colorSchemeSeed: _seed,
+    brightness: Brightness.dark,
+  );
+
+  Widget _app(SettingsController? settings, ThemeMode themeMode) {
     return MaterialApp(
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
       debugShowCheckedModeBanner: false,
@@ -62,8 +79,9 @@ class _ScacchiAppState extends State<ScacchiApp> {
       locale: const Locale('it'),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      theme: ThemeData(colorSchemeSeed: seed, brightness: Brightness.light),
-      darkTheme: ThemeData(colorSchemeSeed: seed, brightness: Brightness.dark),
+      theme: _light,
+      darkTheme: _dark,
+      themeMode: themeMode,
       // Sopra il Navigator, così anche le pagine aperte con push lo vedono.
       builder: (context, child) => settings == null
           ? child!

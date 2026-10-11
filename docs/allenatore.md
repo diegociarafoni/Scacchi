@@ -4,12 +4,13 @@ Equivalente locale di "Gioca con l'allenatore" di chess.com (requisiti RF-73…R
 
 ## In partita
 
-Nelle partite contro il computer o un bot la barra dei comandi ha il pulsante **Allenatore** (acceso/spento, spento di default). Da acceso:
+Nelle partite contro il computer o un bot la barra dei comandi ha il pulsante **Allenatore** (spento di default; da acceso l'icona si riempie e si colora, e un messaggio spiega a cosa serve; tenendolo premuto compare una descrizione). Da acceso:
 
 - dopo ogni mossa dell'utente, e prima della risposta del computer, l'allenatore la giudica; con orologio e computer fermi durante il giudizio;
 - se è un errore o un errore grave compare un riquadro con la spiegazione e due scelte: **Riprova** (la mossa viene annullata, anche per l'orologio) o **Continua** (la partita prosegue);
 - nelle altre mosse il commento viene solo annunciato ai lettori di schermo;
-- il pulsante **Aiuto** dà un suggerimento a livelli: al primo tocco il pezzo da muovere, al secondo la mossa.
+- il giudizio della mossa compare anche sulla scacchiera come nella revisione e su chess.com: il simbolo (`!!`, `!`, `★`, `?!`, `?`, `??`…) con il suo colore sulla casa d'arrivo. Resta finché non muove di nuovo l'utente, sparisce se la risposta del computer occupa quella casa, se si annulla la mossa, si sfoglia la cronologia o si spegne l'allenatore;
+- (anche con l'allenatore spento) il pulsante **Suggerisci** (lampadina) dà un suggerimento a livelli: al primo tocco evidenzia con un cerchio il pezzo da muovere, al secondo mostra sulla scacchiera la freccia della mossa migliore. Il suggerimento sparisce appena la posizione cambia. Tenendo premuto il pulsante compare la spiegazione dei due livelli.
 
 Se il motore non risponde l'allenatore tace e la partita prosegue. Nella partita tra due persone il pulsante non c'è.
 
@@ -30,3 +31,7 @@ Limite noto: la mossa è giudicata sulla sola posizione, senza cronologia, quind
 ## Costo
 
 Le valutazioni sono memorizzate per posizione dentro la sessione (quelle fallite no): chiedere un suggerimento e poi giocare la mossa non analizza due volte la stessa posizione (RF-75). I suggerimenti si contano una volta per posizione.
+
+## Suggerisci è indipendente dall'allenatore
+
+Il pulsante **Suggerisci** c'è sempre nelle partite contro il computer o un bot, con l'allenatore acceso o spento. L'allenatore resta solo l'opzione che giudica le mosse e avvisa degli errori. Nelle sfide, dove conta il punteggio, né l'allenatore né il suggerimento sono disponibili.
