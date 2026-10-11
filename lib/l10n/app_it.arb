@@ -1,0 +1,7 @@
+{
+  "@@locale": "it",
+  "appTitle": "Scacchi",
+  "@appTitle": {
+    "description": "Titolo dell'app nel selettore delle attività; il nome sotto l'icona è in AndroidManifest.xml e Info.plist"
+  }
+}
