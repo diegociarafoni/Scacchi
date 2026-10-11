@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:scacchi/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 Offset _square(WidgetTester tester, String name) {
   final rect = tester.getRect(find.byType(Chessboard));
@@ -32,7 +33,13 @@ Future<void> _dragMove(WidgetTester tester, String uci) async {
   await tester.pumpAndSettle();
 }
 
+Future<void> _openSettings(WidgetTester tester) async {
+  await tester.tap(find.byTooltip('Impostazioni'));
+  await tester.pumpAndSettle();
+}
+
 Future<void> _start(WidgetTester tester) async {
+  SharedPreferences.setMockInitialValues({});
   tester.view.physicalSize = const Size(1170, 2532);
   tester.view.devicePixelRatio = 3;
   addTearDown(tester.view.reset);
@@ -110,9 +117,10 @@ void main() {
   testWidgets('RF-31 rotazione automatica a ogni turno', (tester) async {
     await _start(tester);
     Chessboard board() => tester.widget<Chessboard>(find.byType(Chessboard));
-    await tester.tap(find.byType(PopupMenuButton<String>));
-    await tester.pumpAndSettle();
+    await _openSettings(tester);
     await tester.tap(find.text('Ruota a ogni turno'));
+    await tester.pumpAndSettle();
+    await tester.pageBack();
     await tester.pumpAndSettle();
     await _tapMove(tester, 'e2e4');
     expect(board().orientation.name, 'black');
@@ -154,5 +162,58 @@ void main() {
       '+1',
     );
     expect(find.byKey(const ValueKey('captured-black-pawn-0')), findsOneWidget);
+  });
+
+  testWidgets('RP-04 impostazioni della scacchiera', (tester) async {
+    await _start(tester);
+    ChessboardSettings board() =>
+        tester.widget<Chessboard>(find.byType(Chessboard)).settings;
+    expect(board().enableCoordinates, isTrue);
+    expect(board().showValidMoves, isTrue);
+
+    await _openSettings(tester);
+    await tester.tap(find.text('Coordinate'));
+    await tester.tap(find.text('Mostra le mosse legali'));
+    await tester.tap(find.text('Promuovi sempre a donna'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Blu'));
+    await tester.tap(find.text('Merida'));
+    await tester.scrollUntilVisible(find.text('Nessuna'), 100);
+    await tester.tap(find.text('Nessuna'));
+    await tester.pumpAndSettle();
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+
+    expect(board().enableCoordinates, isFalse);
+    expect(board().showValidMoves, isFalse);
+    expect(board().autoQueenPromotion, isTrue);
+    expect(board().colorScheme, ChessboardColorScheme.blue);
+    expect(board().pieceAssets, PieceSet.meridaAssets);
+    expect(board().animationDuration, Duration.zero);
+
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getBool('showCoordinates'), isFalse);
+    expect(prefs.getString('boardTheme'), 'blue');
+  });
+
+  testWidgets('RF-06 cambiare il tema non annulla il capovolgimento', (
+    tester,
+  ) async {
+    await _start(tester);
+    Chessboard board() => tester.widget<Chessboard>(find.byType(Chessboard));
+    await _openSettings(tester);
+    await tester.tap(find.text('Ruota a ogni turno'));
+    await tester.pumpAndSettle();
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Gira'));
+    await tester.pumpAndSettle();
+    expect(board().orientation.name, 'black');
+    await _openSettings(tester);
+    await tester.tap(find.text('Blu'));
+    await tester.pumpAndSettle();
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+    expect(board().orientation.name, 'black');
   });
 }
