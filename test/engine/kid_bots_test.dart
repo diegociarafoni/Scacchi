@@ -1,14 +1,27 @@
 import 'dart:math' as math;
 
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/engine/bots.dart';
 import 'package:scacchi/game/opponent_picker.dart';
+import 'package:scacchi/l10n/app_localizations.dart';
 
 void main() {
   group('RP-06 bot amichevoli', () {
     test('sono i primi tre della scala', () {
       expect(friendlyBots.map((b) => b.id), ['pino', 'chiara', 'rocco']);
       expect(friendlyBots, bots.take(3).toList());
+    });
+
+    test('ogni bot amichevole ha una descrizione', () {
+      final it = lookupAppLocalizations(const Locale('it'));
+      expect(
+        friendlyBotDescriptions.keys.toSet(),
+        friendlyBots.map((b) => b.id).toSet(),
+      );
+      for (final bot in friendlyBots) {
+        expect(friendlyBotDescriptions[bot.id]!(it), isNotEmpty);
+      }
     });
 
     test('ogni evento ha frasi brevi e gentili', () {

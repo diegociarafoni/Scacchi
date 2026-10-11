@@ -88,10 +88,10 @@ class OpponentPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final setup = kidMode ? this.setup.forKids() : this.setup;
-    final level = engineLevel(setup.adaptive ? adaptiveLevel : setup.level);
-    final vsBot = setup.opponent == Opponent.bot;
-    final vsComputer = setup.opponent == Opponent.computer;
+    final shown = kidMode ? setup.forKids() : setup;
+    final level = engineLevel(shown.adaptive ? adaptiveLevel : shown.level);
+    final vsBot = shown.opponent == Opponent.bot;
+    final vsComputer = shown.opponent == Opponent.computer;
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -117,14 +117,14 @@ class OpponentPicker extends StatelessWidget {
               enabled: computerAvailable,
             ),
           ],
-          selected: {setup.opponent},
+          selected: {shown.opponent},
           onSelectionChanged: (s) =>
-              onChanged(setup.copyWith(opponent: s.first)),
+              onChanged(shown.copyWith(opponent: s.first)),
         ),
         if (!computerAvailable) ...[
           const SizedBox(height: 8),
           Text(
-            'Per giocare contro il computer qui serve Stockfish installato.',
+            kidMode ? AppLocalizations.of(context).kidBotUnavailable : 'Per giocare contro il computer qui serve Stockfish installato.',
             style: theme.textTheme.bodySmall,
           ),
         ],
@@ -138,9 +138,9 @@ class OpponentPicker extends StatelessWidget {
               ButtonSegment(value: SideChoice.random, label: Text('Caso')),
               ButtonSegment(value: SideChoice.black, label: Text('Nero')),
             ],
-            selected: {setup.sideChoice},
+            selected: {shown.sideChoice},
             onSelectionChanged: (s) =>
-                onChanged(setup.copyWith(sideChoice: s.first)),
+                onChanged(shown.copyWith(sideChoice: s.first)),
           ),
           if (vsBot) ...[
             const SizedBox(height: 8),
@@ -149,8 +149,8 @@ class OpponentPicker extends StatelessWidget {
                 bot: bot,
                 collection: collection,
                 kidMode: kidMode,
-                selected: bot.id == setup.botId,
-                onTap: () => onChanged(setup.copyWith(botId: bot.id)),
+                selected: bot.id == shown.botId,
+                onTap: () => onChanged(shown.copyWith(botId: bot.id)),
               ),
           ],
         ],
@@ -208,7 +208,8 @@ class _BotTile extends StatelessWidget {
     final unlocked = collection.isUnlocked(bot);
     final beatenOn = collection.beatenOn(bot);
     final details = kidMode
-        ? _kidDescription(AppLocalizations.of(context))
+        ? friendlyBotDescriptions[bot.id]?.call(AppLocalizations.of(context)) ??
+              ''
         : [
             '${bot.elo} Elo',
             styleLabel(bot.style),
@@ -233,13 +234,6 @@ class _BotTile extends StatelessWidget {
       onTap: unlocked ? onTap : null,
     );
   }
-
-  String _kidDescription(AppLocalizations l10n) => switch (bot.id) {
-    'pino' => l10n.kidBotPinoDescription,
-    'chiara' => l10n.kidBotChiaraDescription,
-    'rocco' => l10n.kidBotRoccoDescription,
-    _ => '',
-  };
 
   static String _date(DateTime d) =>
       '${d.day.toString().padLeft(2, '0')}/${d.month.toString().padLeft(2, '0')}/${d.year}';

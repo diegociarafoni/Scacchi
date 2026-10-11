@@ -84,7 +84,8 @@ i bot amichevoli, `friendlyBots`: i primi tre della scala (Pino, Chiara, Rocco).
 nome e una breve descrizione (chiavi `kidBot...Description` nei file `.arb`) al posto di Elo, stile e
 apertura; la scala con i lucchetti resta, la spunta del bot battuto non riporta la data. Il titolo della
 partita non mostra l'Elo. `GameSetup.forKids()` trasforma una scelta del computer o di un bot più forte in
-una partita contro Pino.
+una partita contro Pino. Una partita già iniziata non cambia se il profilo si attiva o si disattiva a metà:
+titolo e frasi seguono il profilo attivo all'inizio. Le descrizioni sono in `friendlyBotDescriptions`.
 
 Le frasi sono quelle di `Bot.phrases(evento, friendly: true)`: brevi, uguali per tutti gli stili e senza
 prese in giro (niente «Grazie del regalo» o «hai sbagliato»); il saluto riporta il nome del bot ma non

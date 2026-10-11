@@ -163,6 +163,12 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Una volpe furba piena di sorprese'**
   String get kidBotRoccoDescription;
+
+  /// Nel profilo bambino, al posto dell'avviso su Stockfish quando il motore non è disponibile
+  ///
+  /// In it, this message translates to:
+  /// **'Su questo dispositivo i bot non sono disponibili.'**
+  String get kidBotUnavailable;
 }
 
 class _AppLocalizationsDelegate

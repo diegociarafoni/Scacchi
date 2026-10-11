@@ -44,4 +44,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get kidBotRoccoDescription => 'A clever fox full of surprises';
+
+  @override
+  String get kidBotUnavailable => 'Bots are not available on this device.';
 }

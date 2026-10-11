@@ -1,3 +1,4 @@
+import 'package:chessground/chessground.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/engine/bots.dart';
@@ -62,6 +63,52 @@ void main() {
     expect(find.textContaining('Elo'), findsNothing);
     expect(saidAny(bot.phrases(BotEvent.start, friendly: true)), isTrue);
     expect(saidAny(bot.phrases(BotEvent.start)), isFalse);
+  });
+
+  testWidgets('RP-06 la partita segue la modalità con cui è iniziata', (
+    tester,
+  ) async {
+    final settings = await kidSettings();
+    await tester.pumpWidget(app(settings));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Nuova'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Bot'));
+    await tester.pumpAndSettle();
+    await chooseTime(tester, 'Senza tempo');
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await settings.update(settings.value.copyWith(kidMode: false));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Elo'), findsNothing);
+    final rect = tester.getRect(find.byType(Chessboard));
+    final size = rect.width / 8;
+    // a2-a3: senza mosse la partita non conta e il bot non commenta.
+    await tester.tapAt(rect.topLeft + Offset(size / 2, size * 6.5));
+    await tester.pump();
+    await tester.tapAt(rect.topLeft + Offset(size / 2, size * 5.5));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+    await tester.tap(find.text('Abbandona'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilledButton, 'Abbandona'));
+    await tester.pumpAndSettle();
+    final bot = friendlyBots.first;
+    expect(saidAny(bot.phrases(BotEvent.win, friendly: true)), isTrue);
+    expect(saidAny(bot.phrases(BotEvent.win)), isFalse);
+  });
+
+  testWidgets('RP-06 una partita normale resta normale', (tester) async {
+    final settings = await kidSettings(kidMode: false);
+    await tester.pumpWidget(app(settings));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Nuova'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Bot'));
+    await tester.pumpAndSettle();
+    await chooseTime(tester, 'Senza tempo');
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await settings.update(settings.value.copyWith(kidMode: true));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('${bots.first.elo} Elo'), findsOneWidget);
   });
 
   testWidgets('RP-06 la scelta del computer diventa un bot amichevole', (

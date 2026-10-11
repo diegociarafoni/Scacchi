@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:dartchess/dartchess.dart';
 
+import '../l10n/app_localizations.dart';
 import 'levels.dart';
 import 'style.dart';
 import 'uci_moves.dart';
@@ -199,6 +200,13 @@ Bot? botById(String id) => bots.where((b) => b.id == id).firstOrNull;
 
 /// Bot del profilo bambino (RP-06): i più facili della scala.
 final friendlyBots = bots.take(3).toList(growable: false);
+
+/// Descrizione mostrata al posto di Elo, stile e apertura, per id del bot.
+final friendlyBotDescriptions = <String, String Function(AppLocalizations)>{
+  'pino': (l10n) => l10n.kidBotPinoDescription,
+  'chiara': (l10n) => l10n.kidBotChiaraDescription,
+  'rocco': (l10n) => l10n.kidBotRoccoDescription,
+};
 
 /// Niente prese in giro: il bambino deve sentirsi incoraggiato.
 const _friendlyPhrases = <BotEvent, List<String>>{

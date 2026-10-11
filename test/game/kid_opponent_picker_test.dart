@@ -13,6 +13,7 @@ void main() {
     GameSetup setup, {
     BotCollection collection = const BotCollection(),
     ValueChanged<GameSetup>? onChanged,
+    bool computerAvailable = true,
   }) => MaterialApp(
     localizationsDelegates: AppLocalizations.localizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
@@ -21,7 +22,7 @@ void main() {
       body: SingleChildScrollView(
         child: OpponentPicker(
           setup: setup,
-          computerAvailable: true,
+          computerAvailable: computerAvailable,
           adaptiveLevel: 1,
           collection: collection,
           kidMode: true,
@@ -60,6 +61,16 @@ void main() {
     expect(find.text(it.kidBotChiaraDescription), findsOneWidget);
     expect(find.text(it.kidBotRoccoDescription), findsOneWidget);
     expect(find.byIcon(Icons.lock_outline), findsNWidgets(2));
+  });
+
+  testWidgets('RP-06 senza motore un testo semplice, senza Stockfish', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      picker(const GameSetup(), computerAvailable: false),
+    );
+    expect(find.textContaining('Stockfish'), findsNothing);
+    expect(find.text(it.kidBotUnavailable), findsOneWidget);
   });
 
   testWidgets('RP-06 il bot battuto ha la spunta ma non la data', (

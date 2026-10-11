@@ -45,4 +45,8 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get kidBotRoccoDescription => 'Una volpe furba piena di sorprese';
+
+  @override
+  String get kidBotUnavailable =>
+      'Su questo dispositivo i bot non sono disponibili.';
 }

@@ -10,5 +10,6 @@
   "kidAdultGateConfirm": "Confirm",
   "kidBotPinoDescription": "A cheerful chick who loves to attack",
   "kidBotChiaraDescription": "Plays calmly and waits for your moves",
-  "kidBotRoccoDescription": "A clever fox full of surprises"
+  "kidBotRoccoDescription": "A clever fox full of surprises",
+  "kidBotUnavailable": "Bots are not available on this device."
 }

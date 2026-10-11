@@ -140,6 +140,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   BotCollection _collectionBefore = const BotCollection();
   bool _botResultRecorded = false;
 
+  /// Profilo bambino all'inizio della partita: bot, titolo e frasi restano
+  /// coerenti anche se l'impostazione cambia a partita in corso.
+  bool _kidGame = false;
+
   /// Ultima variante scelta per la partita tra due persone.
   Variant _twoPlayerVariant = Variant.standard;
   final _random = math.Random();
@@ -315,7 +319,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   void _botSay(BotEvent event) {
     final bot = _bot;
     if (bot == null || !mounted) return;
-    final text = bot.phrase(event, _random, friendly: _settings.kidMode);
+    final text = bot.phrase(event, _random, friendly: _kidGame);
     _showMessage('${bot.avatar} ${bot.name}: $text');
   }
 
@@ -945,12 +949,14 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     ),
   );
 
-  /// Memorizza la scelta dell'avversario; un bot bloccato diventa il primo.
+  /// Memorizza la scelta dell'avversario; un bot bloccato diventa il primo
+  /// della scala, quello amichevole nel profilo bambino.
   GameSetup _applySetup(GameSetup chosen) {
-    var setup = _settings.kidMode ? chosen.forKids() : chosen;
+    _kidGame = _settings.kidMode;
+    var setup = _kidGame ? chosen.forKids() : chosen;
     var bot = setup.opponent == Opponent.bot ? botById(setup.botId) : null;
     if (bot != null && !_collection.isUnlocked(bot)) {
-      bot = bots.first;
+      bot = _kidGame ? friendlyBots.first : bots.first;
       setup = setup.copyWith(botId: bot.id);
     }
     _setup = setup;
@@ -1437,7 +1443,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                   title,
                   Text(
                     _bot != null
-                        ? _settings.kidMode
+                        ? _kidGame
                               ? '${_bot!.avatar} ${_bot!.name}'
                               : '${_bot!.avatar} ${_bot!.name} (${_bot!.elo} Elo)'
                         : 'Computer, livello $_gameLevel: '
@@ -2041,9 +2047,7 @@ class _PositionSheet extends StatefulWidget {
 }
 
 class _PositionSheetState extends State<_PositionSheet> {
-  late GameSetup _setup = widget.kidMode
-      ? widget.setup.forKids()
-      : widget.setup;
+  late GameSetup _setup = widget.setup;
 
   @override
   Widget build(BuildContext context) => SafeArea(
@@ -2103,11 +2107,9 @@ class _TimeControlSheet extends StatefulWidget {
 
 class _TimeControlSheetState extends State<_TimeControlSheet> {
   late Variant _variant = widget.variant;
-  late GameSetup _setup = !widget.computerAvailable
-      ? widget.setup.copyWith(opponent: Opponent.human)
-      : widget.kidMode
-      ? widget.setup.forKids()
-      : widget.setup;
+  late GameSetup _setup = widget.computerAvailable
+      ? widget.setup
+      : widget.setup.copyWith(opponent: Opponent.human);
   late final _white = TextEditingController(text: widget.whiteName);
   late final _black = TextEditingController(text: widget.blackName);
 
