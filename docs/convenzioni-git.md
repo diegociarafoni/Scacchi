@@ -43,7 +43,7 @@ BREAKING CHANGE: cosa cambia per chi usa l'app o il codice.
 | `ci` | integrazione continua | no |
 | `style` | formattazione, senza cambi di codice | no |
 
-L'ambito è facoltativo, in minuscolo (`board`, `game`, `l10n`, `deps`). Un `!` dopo tipo o ambito (`feat!:`) segnala una modifica incompatibile e fa salire la versione principale.
+La descrizione inizia con la minuscola, tranne quando comincia con una sigla (`feat(game): XP e salvataggio`, `fix: PGN con commenti`). L'ambito è facoltativo, in minuscolo (`board`, `game`, `l10n`, `deps`). Un `!` dopo tipo o ambito (`feat!:`) segnala una modifica incompatibile e fa salire la versione principale.
 
 L'unico `chore` ammesso nei commit è quello generato da release-please (`chore(main): release x.y.z`).
 
@@ -59,7 +59,7 @@ Il controllo è in `tool/check_commit_msg.dart` e gira in locale (hook `commit-m
 |---|---|
 | `pre-commit` | formattazione dei file in commit, `flutter analyze`, Gitleaks sui file in commit |
 | `commit-msg` | messaggio secondo la convenzione Angular |
-| `pre-push` | nome dei rami di destinazione, che blocca anche `git push origin main` da qualsiasi ramo; test senza golden (i golden dipendono dal sistema operativo e girano in CI su Linux) |
+| `pre-push` | nome dei rami di destinazione, che blocca anche `git push origin main` da qualsiasi ramo; messaggi di tutti i commit del ramo (gli stessi della CI); nessun sottomodulo nell'indice; test senza golden (i golden dipendono dal sistema operativo e girano in CI su Linux) |
 
 Installazione, una volta per clone:
 
@@ -69,6 +69,16 @@ brew install lefthook gitleaks        # macOS
 # Gitleaks su Linux e Windows: https://github.com/gitleaks/gitleaks/releases
 lefthook install
 ```
+
+### Senza hook: `tool/verifica.sh`
+
+Dove gli hook non sono installati (per esempio le sessioni di Claude Code) si lancia a mano, prima del push, lo script con gli stessi controlli veloci della CI:
+
+```sh
+tool/verifica.sh --titolo "feat(game): titolo della PR" --test
+```
+
+Controlla nome del ramo, messaggi dei commit dal punto in cui il ramo si stacca da `main`, titolo della PR (facoltativo), formattazione e analisi; con `--test` anche i test senza golden (circa 2 minuti). Segnala inoltre un sottomodulo nell'indice, di solito una copia di lavoro di Claude Code (`.claude/worktrees/…`) aggiunta per errore, che in CI fa fallire il checkout con "No url found for submodule path": la cartella è ora in `.gitignore`, e un errore già commesso si toglie con `git rm --cached <percorso>`.
 
 Per un'emergenza `git commit --no-verify` salta gli hook, ma la CI esegue comunque gli stessi controlli.
 
