@@ -17,7 +17,7 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | [scambio-qr.md](scambio-qr.md) | Passare una partita, anche in corso, a un altro telefono con il QR, senza rete |
 | [backup.md](backup.md) | Backup e ripristino di tutti i dati locali in un file |
 | [puzzle.md](puzzle.md) | Puzzle: dati, punteggio, modalità, puzzle del giorno |
-| [aperture.md](aperture.md) | Nomi delle aperture, mosse di libro, explorer, repertorio |
+| [aperture.md](aperture.md) | Nomi delle aperture, mosse di libro, Esplora aperture, repertorio |
 | [percorso.md](percorso.md) | Percorso a tappe con stelle e bot guardiani |
 | [statistiche.md](statistiche.md) | Statistiche delle partite e rating locale stimato |
 | [minigiochi.md](minigiochi.md) | Coordinate a tempo, cattura tutto, visualizzazione alla cieca, conta del materiale |
@@ -48,7 +48,7 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | Partita contro il computer (Stockfish) | Disponibile su Android e iOS |
 | Puzzle con punteggio, temi e puzzle del giorno | Disponibile |
 | Puzzle Storm, Rush, sopravvivenza, Serie, ripasso degli errori | Disponibile |
-| Nome dell'apertura in partita, explorer ridotto | Disponibile |
+| Nome dell'apertura in partita (in italiano), Esplora aperture | Disponibile |
 | Repertorio di aperture con ripasso dilazionato | Disponibile |
 | Gamification: XP, livelli, obiettivo giornaliero, serie, traguardi, ricompense estetiche, promemoria | Disponibile: XP a fine partita, Profilo e promemoria dalla scheda Tu |
 | La tua settimana: scheda condivisibile degli ultimi sette giorni | Disponibile dalla scheda Tu |

@@ -139,7 +139,7 @@ I golden si rigenerano con `flutter test test/settings --update-goldens` dopo un
 | RG-08 record personali delle serie | ✓ | ✓ |
 | RF-90 nome dell'apertura in partita | ✓ | ✓ |
 | RF-91 mosse di libro | ✓ | |
-| RF-92 explorer ridotto | ✓ | ✓ |
+| RF-92 Esplora aperture | ✓ | ✓ |
 
 ## Integrazione continua
 
