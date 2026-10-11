@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/engine/computer_player.dart';
 import 'package:scacchi/game/game_page.dart';
+import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/progress/activity.dart';
 import 'package:scacchi/progress/progress_state.dart';
 import 'package:scacchi/progress/progress_tracker.dart';
@@ -20,6 +21,9 @@ void main() {
   final saved = <MistakePuzzle>[];
 
   Widget app() => MaterialApp(
+    locale: const Locale('it'),
+    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    supportedLocales: AppLocalizations.supportedLocales,
     home: GamePage(
       settings: SettingsController.defaults(),
       computerAvailable: true,
@@ -72,7 +76,7 @@ void main() {
 
     testWidgets('riaprire la stessa revisione non dà altri XP', (tester) async {
       await reviewAfterOneMove(tester);
-      await tester.pageBack();
+      await tester.tap(find.byType(BackButton));
       await tester.pumpAndSettle(const Duration(seconds: 1));
       await tester.tap(find.byType(PopupMenuButton<String>));
       await tester.pumpAndSettle();

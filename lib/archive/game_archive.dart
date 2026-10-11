@@ -70,8 +70,14 @@ class GameArchive {
       (await list()).reversed.map((g) => g.pgn.trim()).join('\n\n');
 
   /// Aggiunge all'archivio le partite valide di [text].
-  Future<pgn.PgnImport> importPgn(String text, {DateTime? now}) async {
-    final result = pgn.importPgn(text);
+  Future<pgn.PgnImport> importPgn(String text, {DateTime? now}) =>
+      importRecords(pgn.importPgn(text), now: now);
+
+  /// Aggiunge partite già lette, per esempio filtrate dopo uno scambio QR.
+  Future<pgn.PgnImport> importRecords(
+    pgn.PgnImport result, {
+    DateTime? now,
+  }) async {
     final time = now ?? DateTime.now();
     final games = await _load();
     for (final (i, r) in result.games.indexed) {

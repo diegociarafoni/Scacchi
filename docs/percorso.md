@@ -6,31 +6,34 @@ Requisito RG-03: una mappa di capitoli e tappe sul modello di Duolingo e del mod
 
 | Capitolo | Tappe |
 |---|---|
-| Il movimento dei pezzi | Torre, alfiere, donna, re, cavallo, pedone (con promozione) |
+| Il movimento dei pezzi | Torre, alfiere, donna, re, cavallo, pedone (con promozione), catturare (con il valore dei pezzi) |
+| Le regole | Lo scacco, via dallo scacco (spostare il re, catturare, mettere in mezzo), l'arrocco, la presa al varco, la promozione, lo stallo |
 | Matti elementari | Matto in una (corridoio, scala di torri, affogato), matto in due, guardiano (400 Elo) |
 | Tattiche | Forchetta di cavallo e di pedone, infilata, guardiano (800) |
 | Finali | Matto di donna, matto di torre, guardiano (1000) |
 | Aperture | Il centro, lo sviluppo (con la Partita Italiana), l'arrocco, guardiano (1200) |
 
-Ogni tappa è breve (2-5 minuti). Una tappa si apre quando tutte le lezioni precedenti sono completate; i guardiani sono sfide facoltative e non bloccano il percorso. Il pulsante "Continua" porta alla prima lezione non completata e, finite le lezioni, al primo guardiano non battuto. Un doppio tocco non apre due tappe.
+Ogni tappa è breve (2-5 minuti) e si apre con una spiegazione di due o tre frasi, scritta in modo semplice perché valga anche per il profilo bambino; la scacchiera accetta mosse solo dopo «Inizia». I contenuti sono originali (posizioni costruite per il progetto) e in italiano.
+
+Una tappa si apre quando la lezione precedente è completata, oppure quando è già completata una lezione che viene dopo: così le lezioni aggiunte con un aggiornamento restano aperte per chi era già più avanti e non richiudono le tappe successive. Senza tappe saltate equivale a «tutte le lezioni precedenti completate». I guardiani sono sfide facoltative e non bloccano il percorso. Il pulsante "Continua" porta alla prima lezione non completata (anche una appena aggiunta) e, finite le lezioni, al primo guardiano non battuto. Un doppio tocco non apre due tappe.
 
 ## Esercizi
 
 **A stelle** (`StarsExercise`): un pezzo bianco da solo su scacchiera vuota raccoglie le stelle, in qualunque ordine. Il minimo di mosse si calcola da solo con una ricerca in ampiezza sugli stati (casa, pezzo, stelle raccolte), quindi i contenuti non contengono numeri da tenere aggiornati. Stelle: 3 al minimo, 2 con al massimo due mosse in più, 1 altrimenti. Il pedone avanza di uno o di due dalla seconda traversa e in ottava diventa donna (la scacchiera promuove a donna senza chiedere).
 
-**A linea** (`LineExercise`): una posizione FEN e una sequenza di passi. I passi pari sono del giocatore, con alternative separate da `|`; i dispari sono le risposte automatiche dell'avversario. Le mosse si confrontano in SAN, così l'arrocco è riconosciuto sia come re su g1 sia come re sulla torre. Con l'obiettivo "matto" all'ultimo passo vale qualunque mossa che dà matto. Una mossa sbagliata non viene giocata e conta come errore. Stelle: 3 senza errori, 2 con uno, 1 con più errori.
+**A linea** (`LineExercise`): una posizione FEN e una sequenza di passi. I passi pari sono del giocatore, con alternative separate da `|`; i dispari sono le risposte automatiche dell'avversario. Le mosse si confrontano in SAN, così l'arrocco è riconosciuto sia come re su g1 sia come re sulla torre. Con l'obiettivo "matto" all'ultimo passo vale qualunque mossa che dà matto, con l'obiettivo "scacco" qualunque scacco dato con lo stesso pezzo della soluzione. Una mossa sbagliata non viene giocata e conta come errore. Stelle: 3 senza errori, 2 con uno, 1 con più errori.
 
 La tappa vale la media delle stelle dei suoi esercizi, arrotondata per difetto.
 
 ## Bot guardiano
 
-L'ultima tappa dei capitoli 2-5 è una partita contro un bot dell'Elo indicato. `PathPage` riceve `playGuardian`, che gioca la partita e restituisce le stelle (o `null` se non vinta). Il percorso si apre dalla scheda Tu e, dove gira Stockfish (Android e iOS), toccare il guardiano apre una partita già impostata: l'utente ha il Bianco, il livello è quello del motore con l'Elo più vicino a quello del guardiano (`engineLevelForElo`), senza orologio, e non si possono ricominciare, usare l'editor, il coach o l'analisi; **Annulla** funziona (`GameChallenge.allowUndo`), perché il guardiano è allenamento, mentre nelle partite dei tornei resta disattivato. Uscire a partita in corso chiede conferma e conta come persa; dopo una sconfitta si riprova riaprendo la tappa. I livelli del motore partono da 600 Elo, quindi il guardiano da 400 gioca al livello 1 (600) e quello da 1000 al livello 2 (900): il livello effettivo è scritto sotto il titolo. Altrove la tappa mostra un avviso.
+L'ultima tappa dei capitoli dai Matti elementari in poi è una partita contro un bot dell'Elo indicato. `PathPage` riceve `playGuardian`, che gioca la partita e restituisce le stelle (o `null` se non vinta). Il percorso si apre dalla scheda Tu e, dove gira Stockfish (Android e iOS), toccare il guardiano apre una partita già impostata: l'utente ha il Bianco, il livello è quello del motore con l'Elo più vicino a quello del guardiano (`engineLevelForElo`), senza orologio, e non si possono ricominciare, usare l'editor, il coach o l'analisi; **Annulla** funziona (`GameChallenge.allowUndo`), perché il guardiano è allenamento, mentre nelle partite dei tornei resta disattivato. Uscire a partita in corso chiede conferma e conta come persa; dopo una sconfitta si riprova riaprendo la tappa. I livelli del motore partono da 600 Elo, quindi il guardiano da 400 gioca al livello 1 (600) e quello da 1000 al livello 2 (900): il livello effettivo è scritto sotto il titolo. Altrove la tappa mostra un avviso.
 
 Stelle (`challengeStars`): vittoria in al massimo 40 mosse 3 stelle, fino a 60 mosse 2, oltre 1; patta e sconfitta non ne danno e si può riprovare. La partita registra XP e archivio come le altre (vedi [gamification.md](gamification.md)). Il percorso non si completa col guardiano: le stelle restano le migliori ottenute.
 
 ## Verifica dei contenuti
 
-`test/path/curriculum_test.dart` controlla ogni esercizio: mosse della soluzione e risposte legali, risposte forzate (unica mossa legale) negli esercizi di matto, ultima mossa che dà matto, stelle raggiungibili e mai sulla casa di partenza. Un errore in un FEN o in una soluzione fa fallire la CI.
+`test/path/curriculum_test.dart` controlla ogni esercizio: mosse della soluzione e risposte legali, risposte forzate (unica mossa legale) negli esercizi di matto, ultima mossa che dà matto (o scacco, per l'obiettivo scacco), una spiegazione per ogni lezione, stelle raggiungibili e mai sulla casa di partenza. Un errore in un FEN o in una soluzione fa fallire la CI.
 
 ## Salvataggio e XP
 

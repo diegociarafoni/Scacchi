@@ -1,3 +1,3 @@
+# Etichette dei test: `golden` si esclude in locale (lefthook, tool/verifica.sh).
 tags:
-  # Immagini di riferimento generate su Linux: confrontarle solo su Linux (CI o Docker).
   golden:

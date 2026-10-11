@@ -9,6 +9,8 @@ import '../progress/progress_feedback.dart';
 import '../progress/progress_tracker.dart';
 import '../training/training_board.dart';
 import 'activity_recorder.dart';
+import 'guide_view.dart';
+import 'mode_guide.dart';
 import 'puzzle.dart';
 import 'puzzle_run.dart';
 import 'puzzle_trainer.dart';
@@ -39,8 +41,10 @@ class PuzzleRunPage extends StatefulWidget {
 class _PuzzleRunPageState extends State<PuzzleRunPage> {
   final _stopwatch = Stopwatch();
   late PuzzleRun _run;
+  late final PuzzleGuide _guide = PuzzleGuide.forRun(widget.mode);
   Timer? _ticker;
   int _revision = 0;
+  bool _intro = true;
   bool _ended = false;
   bool _newRecord = false;
   String? _flash;
@@ -48,21 +52,20 @@ class _PuzzleRunPageState extends State<PuzzleRunPage> {
   @override
   void initState() {
     super.initState();
-    _restart();
+    _prepare();
   }
 
   @override
   void dispose() {
     _ticker?.cancel();
-    // Uscendo a metà serie, record e XP valgono comunque.
-    if (!_ended) _finalize();
+    // Uscendo a metà serie, record e XP valgono comunque; durante la
+    // spiegazione non è ancora cominciato nulla.
+    if (!_ended && !_intro) _finalize();
     super.dispose();
   }
 
-  void _restart() {
-    _stopwatch
-      ..reset()
-      ..start();
+  /// Prepara la serie senza avviare il tempo: parte con "Inizia".
+  void _prepare() {
     _run = PuzzleRun(
       widget.mode,
       widget.trainer.library,
@@ -71,6 +74,22 @@ class _PuzzleRunPageState extends State<PuzzleRunPage> {
     _ended = false;
     _newRecord = false;
     _flash = null;
+  }
+
+  void _begin() {
+    setState(() => _intro = false);
+    _startClock();
+  }
+
+  void _restart() {
+    _prepare();
+    _startClock();
+  }
+
+  void _startClock() {
+    _stopwatch
+      ..reset()
+      ..start();
     _ticker?.cancel();
     if (widget.mode.limit != null) {
       _ticker = Timer.periodic(const Duration(milliseconds: 200), (_) {
@@ -80,6 +99,9 @@ class _PuzzleRunPageState extends State<PuzzleRunPage> {
       });
     }
   }
+
+  /// Rilegge le regole a metà serie; il tempo continua a scorrere.
+  Future<void> _showGuide() => showPuzzleGuide(context, _guide);
 
   void _onMove(Move move) {
     final result = _run.tryMove(move);
@@ -144,90 +166,177 @@ class _PuzzleRunPageState extends State<PuzzleRunPage> {
 
   @override
   Widget build(BuildContext context) {
-    final text = Theme.of(context).textTheme;
-    final remaining = _run.remaining;
-    final max = widget.mode.maxMistakes;
+    final guide = _guide;
+    final best = widget.trainer.records.best(widget.mode);
     return Scaffold(
-      appBar: AppBar(title: Text(widget.mode.label)),
+      appBar: AppBar(
+        title: Text(widget.mode.label),
+        actions: [
+          if (!_intro && !_ended)
+            IconButton(
+              tooltip: 'Come funziona',
+              icon: const Icon(Icons.help_outline),
+              onPressed: _showGuide,
+            ),
+        ],
+      ),
       body: SafeArea(
-        child: _ended
+        child: _intro
+            ? Center(
+                child: GuideBody(
+                  guide: guide,
+                  actionLabel: 'Inizia',
+                  onAction: _begin,
+                  footer: best > 0 ? 'Il tuo record: $best puzzle.' : null,
+                ),
+              )
+            : _ended
             ? _Result(
                 score: _run.score,
-                best: widget.trainer.records.best(widget.mode),
+                best: best,
                 bestCombo: _run.bestCombo,
                 newRecord: _newRecord,
+                reason: _endText(),
                 onAgain: () => setState(_restart),
               )
-            : LayoutBuilder(
-                builder: (context, c) {
-                  final size = math.min(c.maxWidth, c.maxHeight - 160);
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+            : _playing(context, guide),
+      ),
+    );
+  }
+
+  /// Frase che dice perché la serie è finita.
+  String? _endText() {
+    final max = widget.mode.maxMistakes;
+    return switch (_run.endReason) {
+      RunEnd.mistakes when max == 1 =>
+        'Hai sbagliato un puzzle: la serie è finita.',
+      RunEnd.mistakes => 'Hai perso tutte e tre le vite.',
+      RunEnd.time => 'Il tempo è scaduto.',
+      RunEnd.exhausted => 'Hai risolto tutti i puzzle disponibili.',
+      null => null,
+    };
+  }
+
+  Widget _playing(BuildContext context, PuzzleGuide guide) {
+    final text = Theme.of(context).textTheme;
+    final remaining = _run.remaining;
+    final total = _run.totalTime;
+    final max = widget.mode.maxMistakes;
+    return LayoutBuilder(
+      builder: (context, c) {
+        final size = math.max(0.0, math.min(c.maxWidth, c.maxHeight - 230));
+        // Scorrevole come ultima difesa su schermi bassi o con testo grande.
+        return Center(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                  child: Text(
+                    guide.goal,
+                    key: const Key('run-goal'),
+                    textAlign: TextAlign.center,
+                    style: text.bodyMedium,
+                  ),
+                ),
+                if (remaining != null && total != null)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                    // La barra è solo grafica: il tempo lo legge il testo sotto.
+                    child: ExcludeSemantics(
+                      child: LinearProgressIndicator(
+                        value: total.inMilliseconds == 0
+                            ? 0
+                            : remaining.inMilliseconds / total.inMilliseconds,
+                      ),
+                    ),
+                  ),
+                Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Text(
-                              'Punti ${_run.score}',
-                              key: const Key('run-score'),
-                              style: text.titleLarge,
-                            ),
-                            if (remaining != null)
-                              Text(
-                                _format(remaining),
-                                key: const Key('run-clock'),
-                                style: text.titleLarge,
-                              ),
-                            if (max != null)
-                              Text(
-                                'Errori ${_run.mistakes}/$max',
-                                style: text.titleMedium,
-                              ),
-                            if (widget.mode == PuzzleRunMode.storm)
-                              Text(
-                                'Combo ${_run.combo}',
-                                style: text.titleMedium,
-                              ),
-                          ],
+                      Text(
+                        'Punti ${_run.score}',
+                        key: const Key('run-score'),
+                        style: text.titleLarge,
+                      ),
+                      if (remaining != null)
+                        Semantics(
+                          label: 'Tempo rimasto: ${_format(remaining)}',
+                          excludeSemantics: true,
+                          child: Text(
+                            _format(remaining),
+                            key: const Key('run-clock'),
+                            style: text.titleLarge,
+                          ),
                         ),
-                      ),
-                      TrainingBoard(
-                        size: size,
-                        position: _run.current.position,
-                        lastMove: _run.current.lastMove,
-                        player: _run.current.puzzle.playerSide,
-                        revision: _revision,
-                        onMove: _onMove,
-                      ),
-                      SizedBox(
-                        height: 56,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Semantics(
-                              liveRegion: true,
-                              child: Text(
-                                _flash ?? '',
-                                style: text.titleMedium,
-                              ),
-                            ),
-                            if (widget.mode == PuzzleRunMode.streak)
-                              TextButton.icon(
-                                onPressed: _run.canSkip
-                                    ? () => setState(() => _run.skip())
-                                    : null,
-                                icon: const Icon(Icons.skip_next),
-                                label: const Text('Salta'),
-                              ),
-                          ],
-                        ),
-                      ),
+                      if (max != null) _Lives(total: max, lost: _run.mistakes),
+                      if (widget.mode == PuzzleRunMode.storm)
+                        Text('Combo ${_run.combo}', style: text.titleMedium),
                     ],
-                  );
-                },
-              ),
+                  ),
+                ),
+                TrainingBoard(
+                  size: size,
+                  position: _run.current.position,
+                  lastMove: _run.current.lastMove,
+                  player: _run.current.puzzle.playerSide,
+                  revision: _revision,
+                  onMove: _onMove,
+                ),
+                SizedBox(
+                  height: 56,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Semantics(
+                        liveRegion: true,
+                        child: Text(_flash ?? '', style: text.titleMedium),
+                      ),
+                      if (widget.mode == PuzzleRunMode.streak)
+                        TextButton.icon(
+                          onPressed: _run.canSkip
+                              ? () => setState(() => _run.skip())
+                              : null,
+                          icon: const Icon(Icons.skip_next),
+                          label: const Text('Salta'),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+/// Vite rimaste come cuori, con un'etichetta per i lettori di schermo.
+class _Lives extends StatelessWidget {
+  const _Lives({required this.total, required this.lost});
+
+  final int total;
+  final int lost;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = Theme.of(context).colorScheme.error;
+    return Semantics(
+      label: 'Vite: ${total - lost} su $total',
+      excludeSemantics: true,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (var i = 0; i < total; i++)
+            Icon(
+              i < total - lost ? Icons.favorite : Icons.favorite_border,
+              color: color,
+            ),
+        ],
       ),
     );
   }
@@ -239,6 +348,7 @@ class _Result extends StatelessWidget {
     required this.best,
     required this.bestCombo,
     required this.newRecord,
+    required this.reason,
     required this.onAgain,
   });
 
@@ -246,6 +356,7 @@ class _Result extends StatelessWidget {
   final int best;
   final int bestCombo;
   final bool newRecord;
+  final String? reason;
   final VoidCallback onAgain;
 
   @override
@@ -256,6 +367,10 @@ class _Result extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text('Serie conclusa', style: text.headlineSmall),
+          if (reason != null) ...[
+            const SizedBox(height: 8),
+            Text(reason!, style: text.bodyLarge),
+          ],
           const SizedBox(height: 16),
           Text(
             '$score',

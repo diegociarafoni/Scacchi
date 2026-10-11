@@ -14,12 +14,12 @@ void main() {
     final context = tester.element(find.byType(Scaffold).first);
     expect(Localizations.localeOf(context).languageCode, 'it');
     expect(MaterialLocalizations.of(context).backButtonTooltip, 'Indietro');
-    expect(AppLocalizations.of(context).appTitle, 'Scacchi');
+    expect(AppLocalizations.of(context).appTitle, 'Rokko');
   });
 
   test('RP-05 struttura pronta per altre lingue', () {
     final codes = AppLocalizations.supportedLocales.map((l) => l.languageCode);
     expect(codes, containsAll(['it', 'en']));
-    expect(lookupAppLocalizations(const Locale('en')).appTitle, 'Chess');
+    expect(lookupAppLocalizations(const Locale('en')).appTitle, 'Rokko');
   });
 }

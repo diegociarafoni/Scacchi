@@ -1,6 +1,6 @@
 # Tornei offline contro bot
 
-Requisito RG-09: tornei contro 4-8 bot al posto delle leghe online, con partite vere. Il codice è in `lib/tournament/`.
+Requisito RG-09: tornei da 4 a 8 giocatori (l'utente e da 3 a 7 bot) al posto delle leghe online, con partite vere. Il codice è in `lib/tournament/`.
 
 ## Formule
 
@@ -43,6 +43,6 @@ Senza `play` la partita non parte e la schermata lo dice.
 
 ## Collegamento
 
-La voce **Tornei** della scheda Tu compare dove gira il motore (Android e iOS). `HomeShell` tiene un solo `TournamentController` in memoria, usa come bot gli otto livelli del motore (nome e Elo del livello) e come forza dell'utente il rating locale calcolato sull'archivio.
+La voce **Tornei** della scheda Tu compare dove gira il motore: Android e iOS, e Windows e Linux con Stockfish installato (vedi [avversario-computer.md](avversario-computer.md)). `HomeShell` tiene un solo `TournamentController` in memoria, usa come bot gli otto livelli del motore (nome e Elo del livello) e come forza dell'utente il rating locale calcolato sull'archivio.
 
 Ogni partita è una sfida preimpostata (`GameChallenge`, titolo «Torneo · avversario», colore assegnato dal sorteggio) con il livello del bot. I punti sono 1, ½ o 0 (`tournamentPoints`); nello spareggio Armageddon la patta vale una vittoria per il nero e una sconfitta per il bianco. Uscire dalla partita, anche prima della prima mossa (a partita in corso dopo conferma), equivale a una resa: lo 0 si registra e la partita non si può rigiocare. La partita vale XP e viene archiviata come tutte le altre contro il computer.

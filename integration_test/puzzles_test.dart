@@ -14,6 +14,16 @@ Future<void> _start(WidgetTester tester) async {
 String _message(WidgetTester tester) =>
     tester.widget<Text>(find.byKey(const Key('puzzle-message'))).data!;
 
+/// La spiegazione si apre da sola solo la prima volta: se c'è, la chiude.
+Future<void> _dismissGuide(WidgetTester tester) async {
+  await tester.pumpAndSettle();
+  if (find.text('Ho capito').evaluate().isNotEmpty) {
+    expect(find.text('Obiettivo'), findsOneWidget);
+    await tester.tap(find.text('Ho capito'));
+    await tester.pumpAndSettle();
+  }
+}
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
@@ -27,6 +37,7 @@ void main() {
 
     await tester.tap(find.text('Allenamento'));
     await tester.pumpAndSettle();
+    await _dismissGuide(tester);
     expect(_message(tester), startsWith('Trova la mossa migliore'));
 
     for (var i = 0; i < 10 && !_message(tester).startsWith('Puzzle'); i++) {
@@ -50,6 +61,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Matto in 1'));
     await tester.pumpAndSettle();
+    await _dismissGuide(tester);
     expect(find.text('Matto in 1'), findsOneWidget);
     await tester.tap(find.text('Soluzione'));
     await tester.pumpAndSettle(const Duration(seconds: 1));
@@ -65,6 +77,9 @@ void main() {
     await tester.pumpAndSettle();
     await tester.scrollUntilVisible(find.text('Serie'), 200);
     await tester.tap(find.text('Serie'));
+    await tester.pumpAndSettle();
+    expect(find.text('Obiettivo'), findsOneWidget);
+    await tester.tap(find.text('Inizia'));
     await tester.pumpAndSettle();
     expect(find.text('Punti 0'), findsOneWidget);
     await tester.tap(find.text('Salta'));

@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:dartchess/dartchess.dart';
 
 import 'puzzle.dart';
@@ -26,6 +28,12 @@ class PuzzleSession {
 
   /// Vero se almeno una mossa è stata mostrata con "Soluzione".
   bool get revealed => _revealed;
+
+  /// Mosse che il giocatore deve trovare in tutto il puzzle.
+  int get playerMoves => (_solution.length + 1) ~/ 2;
+
+  /// Mosse del giocatore già giocate, anche mostrate con "Soluzione".
+  int get playerMovesDone => math.min(playerMoves, (_ply + 1) ~/ 2);
 
   /// Vero se è stata giocata almeno una mossa sbagliata.
   bool get mistake => _mistake;

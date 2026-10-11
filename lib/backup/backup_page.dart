@@ -15,7 +15,7 @@ Future<void> _shareWithSystem(String text, String fileName) async {
   await file.writeAsString(text, flush: true);
   try {
     await SharePlus.instance.share(
-      ShareParams(files: [XFile(file.path)], subject: 'Backup di Scacchi'),
+      ShareParams(files: [XFile(file.path)], subject: 'Backup di Rokko'),
     );
   } finally {
     // Copia completa dei dati: non lasciarla nella cartella temporanea.
@@ -79,7 +79,7 @@ class _BackupPageState extends State<BackupPage> {
         widget.preferences(),
       );
       final stamp = DateTime.now().toIso8601String().substring(0, 10);
-      await widget.share(backup.encode(), 'scacchi-backup-$stamp.json');
+      await widget.share(backup.encode(), 'rokko-backup-$stamp.json');
       _say('Backup pronto da salvare');
     } on Object catch (e) {
       _say('Backup non riuscito: $e');
