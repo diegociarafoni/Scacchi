@@ -902,7 +902,6 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       _showMessage('Nessun suggerimento disponibile.');
       return;
     }
-    _hintedFen = position.fen;
     const color = Color(0xCC15781B);
     final to = hint.to;
     final text = to == null
@@ -910,7 +909,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         : describeHintMove(
             position,
             NormalMove(from: hint.from, to: to, promotion: hint.promotion),
+            showSquare: !_kid,
           );
+    _hintedFen = position.fen;
     setState(
       () => _hintShapes = to == null
           ? {Circle(color: color, orig: hint!.from)}
@@ -921,7 +922,6 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
             },
     );
     _showMessage(text);
-    _announce(text);
   }
 
   /// Gioca [move] con orologio, suono e annuncio; con il tempo scaduto chiude la partita.

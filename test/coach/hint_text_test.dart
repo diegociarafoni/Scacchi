@@ -74,5 +74,32 @@ void main() {
         'Promuovi il pedone in a8: diventa una donna.',
       );
     });
+
+    test('negli scacchi960 il re sulla torre è un arrocco', () {
+      final pos = fen('4k3/8/8/8/8/8/8/1K5R w H - 0 1');
+      expect(describeHintMove(pos, Move.parse('b1h1')!), 'Arrocca corto.');
+    });
+
+    test('con il re sotto scacco si dice anche lo scacco matto dato', () {
+      expect(
+        move('4r1k1/5ppp/8/8/Q7/8/8/4K3 w - - 0 1', 'a4e8'),
+        'Sposta la donna in e8: pari lo scacco, dando scacco matto.',
+      );
+    });
+
+    test('la promozione con cattura lo dice', () {
+      expect(
+        move('3r3k/4P3/8/8/8/8/8/K7 w - - 0 1', 'e7d8q'),
+        'Promuovi il pedone in d8 e cattura la torre: diventa una donna.',
+      );
+    });
+
+    test('senza numeri rimanda al cerchio sulla scacchiera', () {
+      final pos = fen('4k3/8/8/3p4/8/8/8/3RK3 w - - 0 1');
+      expect(
+        describeHintMove(pos, Move.parse('d1d5')!, showSquare: false),
+        'Sposta la torre sul cerchio e cattura il pedone.',
+      );
+    });
   });
 }
