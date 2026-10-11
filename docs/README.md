@@ -46,11 +46,11 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | Puzzle Storm, Rush, sopravvivenza, Serie, ripasso degli errori | Disponibile |
 | Nome dell'apertura in partita, explorer ridotto | Disponibile |
 | Repertorio di aperture con ripasso dilazionato | Disponibile |
-| Gamification: XP, livelli, obiettivo giornaliero, serie, traguardi, ricompense estetiche, promemoria | Profilo e promemoria disponibili dalla scheda Tu; XP delle partite in arrivo con il collegamento alla partita |
+| Gamification: XP, livelli, obiettivo giornaliero, serie, traguardi, ricompense estetiche, promemoria | Disponibile: XP a fine partita, Profilo e promemoria dalla scheda Tu |
 | La tua settimana: scheda condivisibile degli ultimi sette giorni | Disponibile dalla scheda Tu |
 | Scacchiera fisica: orologio e registro della partita dal vivo | Disponibile dalla scheda Tu |
 | Backup e ripristino dei dati in un file | Disponibile dalle Impostazioni |
-| Archivio partite, import ed export PGN | Disponibile dalla scheda Tu; salvataggio automatico delle partite in arrivo con il collegamento alla partita |
+| Archivio partite, import ed export PGN | Disponibile dalla scheda Tu; le partite finite si salvano da sole, riprendere una partita è in arrivo |
 | Percorso a tappe con stelle | Disponibile dalla scheda Tu; guardiani in arrivo con la partita contro il computer |
 | Statistiche e rating locale | Disponibile dalla scheda Tu |
 | Editor di posizione con FEN e validazione | Disponibile |
