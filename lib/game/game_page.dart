@@ -31,6 +31,7 @@ import '../review/review_page.dart';
 import '../settings/settings.dart';
 import '../settings/settings_page.dart';
 import '../storage/key_value_store.dart';
+import 'board_swipe.dart';
 import 'challenge.dart';
 import 'chess_game.dart';
 import 'clock.dart';
@@ -855,6 +856,17 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     setState(() => _viewPly = target);
   }
 
+  /// Vero se da [square] parte un trascinamento di pezzo, non uno scorrimento.
+  bool _canDragFrom(Square square) {
+    if (_viewPly != null || _game.isOver || !_humanToMove) return false;
+    final position = _game.position;
+    return position.board.sideAt(square) == position.turn;
+  }
+
+  /// Scorrimento sulla scacchiera: a sinistra avanti, a destra indietro.
+  void _swipe(int direction) =>
+      _showPly((_viewPly ?? _game.moves.length - 1) + direction);
+
   KeyEventResult _onKey(FocusNode _, KeyEvent event) {
     if (event is! KeyDownEvent && event is! KeyRepeatEvent) {
       return KeyEventResult.ignored;
@@ -1525,12 +1537,18 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                       ),
                     );
               final boardSettings = _settings.board;
-              final board = Chessboard(
+              final board = BoardSwipe(
                 size: boardSize,
-                controller: _board,
                 orientation: _orientation,
-                onMove: _onMove,
-                settings: boardSettings,
+                canStartAt: _canDragFrom,
+                onSwipe: _swipe,
+                child: Chessboard(
+                  size: boardSize,
+                  controller: _board,
+                  orientation: _orientation,
+                  onMove: _onMove,
+                  settings: boardSettings,
+                ),
               );
               final viewPly = _viewPly;
               final Widget status = viewPly != null

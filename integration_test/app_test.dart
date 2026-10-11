@@ -377,6 +377,34 @@ void main() {
     expect(prefs.getBool('colorBlind'), isTrue);
   });
 
+  testWidgets('RF-10 scorrimento orizzontale sulla scacchiera', (tester) async {
+    await _start(tester);
+    await _tapMove(tester, 'e2e4');
+    await _tapMove(tester, 'e7e5');
+    await _tapMove(tester, 'g1f3');
+
+    Future<void> swipe(double dx) async {
+      await tester.dragFrom(_square(tester, 'd5'), Offset(dx, 0));
+      await tester.pumpAndSettle();
+    }
+
+    await swipe(150);
+    expect(find.text('Posizione dopo 1... e5'), findsOneWidget);
+    await swipe(150);
+    expect(find.text('Posizione dopo 1. e4'), findsOneWidget);
+    await swipe(-150);
+    await swipe(-150);
+    expect(find.text('Posizione dopo 2. Nf3'), findsOneWidget);
+    await swipe(-150);
+    expect(find.textContaining('Posizione dopo'), findsNothing);
+    expect(find.text('Muove il Nero.'), findsOneWidget);
+
+    // Partendo dal pezzo da muovere si trascina il pezzo, senza scorrere.
+    await _dragMove(tester, 'b8c6');
+    expect(find.textContaining('Posizione dopo'), findsNothing);
+    expect(find.text('Muove il Bianco.'), findsOneWidget);
+  });
+
   testWidgets('RF-10 navigazione nella lista delle mosse', (tester) async {
     await _start(tester);
     for (final m in ['e2e4', 'e7e5', 'g1f3']) {
