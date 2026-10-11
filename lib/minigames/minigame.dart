@@ -1,7 +1,7 @@
 /// Punteggio e durata di una sessione di minigioco.
 typedef MinigameResult = ({int score, Duration duration});
 
-/// Minigiochi di allenamento (RG-10), sul modello di Magnus Trainer e Lichess.
+/// Minigiochi di allenamento (RG-10).
 enum Minigame {
   coordinates(
     'coordinate',

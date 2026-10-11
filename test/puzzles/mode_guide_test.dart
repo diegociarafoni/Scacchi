@@ -15,7 +15,7 @@ void main() {
       }
     });
 
-    test('Storm spiega tempo, penalità, combo e punteggio', () {
+    test('Combo a tempo spiega tempo, penalità, combo e punteggio', () {
       final g = PuzzleGuide.forRun(PuzzleRunMode.storm);
       final all = '${g.goal} ${g.rules.join(' ')}';
       expect(all, contains('3 minuti'));
@@ -24,7 +24,7 @@ void main() {
       expect(all, contains('1 punto'));
     });
 
-    test('Rush e Sopravvivenza spiegano le vite', () {
+    test('Corsa e Sopravvivenza spiegano le vite', () {
       for (final mode in [
         PuzzleRunMode.rush3,
         PuzzleRunMode.rush5,

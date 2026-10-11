@@ -1,6 +1,6 @@
 # Partita con l'allenatore
 
-Equivalente locale di "Gioca con l'allenatore" di chess.com (requisiti RF-72…RF-75): si gioca contro il computer e, dopo ogni mossa, l'allenatore la valuta con Stockfish sul telefono, senza server.
+Partita con l'allenatore (requisiti RF-72…RF-75): si gioca contro il computer e, dopo ogni mossa, l'allenatore la valuta con Stockfish sul telefono, senza server.
 
 ## In partita
 
@@ -9,7 +9,7 @@ Nelle partite contro il computer o un bot la barra dei comandi ha il pulsante **
 - dopo ogni mossa dell'utente, e prima della risposta del computer, l'allenatore la giudica; con orologio e computer fermi durante il giudizio;
 - se è un errore o un errore grave compare un riquadro con la spiegazione e due scelte: **Riprova** (la mossa viene annullata, anche per l'orologio) o **Continua** (la partita prosegue);
 - nelle altre mosse il commento viene solo annunciato ai lettori di schermo;
-- il giudizio della mossa compare anche sulla scacchiera come nella revisione e su chess.com: il simbolo (`!!`, `!`, `★`, `?!`, `?`, `??`…) con il suo colore sulla casa d'arrivo. Resta finché non muove di nuovo l'utente, sparisce se la risposta del computer occupa quella casa, se si annulla la mossa, si sfoglia la cronologia o si spegne l'allenatore;
+- il giudizio della mossa compare anche sulla scacchiera come nella revisione: il simbolo (`!!`, `!`, `★`, `?!`, `?`, `??`…) con il suo colore sulla casa d'arrivo. Resta finché non muove di nuovo l'utente, sparisce se la risposta del computer occupa quella casa, se si annulla la mossa, si sfoglia la cronologia o si spegne l'allenatore;
 - (anche con l'allenatore spento) il pulsante **Suggerisci** (lampadina) dà un suggerimento a livelli: al primo tocco evidenzia con un cerchio il pezzo da muovere («Muovi il cavallo.»), al secondo cerchia anche la casa di arrivo e mostra la freccia della mossa migliore, con una frase in italiano semplice e il motivo quando si riconosce («Sposta il re in f1: lo togli dallo scacco.», «Sposta la torre in d5 e cattura il pedone.»). Le frasi sono generate da `lib/coach/hint_text.dart`, senza notazione algebrica. Il suggerimento sparisce appena la posizione cambia. Tenendo premuto il pulsante compare la spiegazione dei due livelli. Nel profilo bambino il pulsante si chiama **Aiuto** e la frase non nomina la casa ma rimanda al cerchio («Sposta il cavallo sul cerchio.»).
 
 Se il motore non risponde l'allenatore tace e la partita prosegue. Nella partita tra due persone il pulsante non c'è.

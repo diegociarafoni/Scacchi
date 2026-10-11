@@ -1,12 +1,12 @@
 # Profilo bambino
 
-Requisito RP-06, sul modello di ChessKid: interfaccia semplificata, testi più semplici, bot amichevoli, nessuna statistica numerica.
+Requisito RP-06: interfaccia semplificata, testi più semplici, bot amichevoli, nessuna statistica numerica.
 
 ## Attivazione
 
 Impostazioni, sezione «Profilo», interruttore «Profilo bambino». La scelta è salvata in locale (chiave `kidMode`) e rientra nel backup come le altre impostazioni. Si applica subito, senza riavviare l'app.
 
-Per disattivarlo serve un adulto, come nel controllo genitori di ChessKid: compare la domanda «Chiedi a un adulto» con una moltiplicazione tra 6 e 9 (per esempio 7 × 8). Con una risposta sbagliata o con Annulla il profilo resta attivo.
+Per disattivarlo serve un adulto: compare la domanda «Chiedi a un adulto» con una moltiplicazione tra 6 e 9 (per esempio 7 × 8). Con una risposta sbagliata o con Annulla il profilo resta attivo.
 
 ## Cosa cambia
 

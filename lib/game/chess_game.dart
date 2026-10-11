@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:dartchess/dartchess.dart';
 
+import 'move_note.dart';
 import 'variant.dart';
 
 /// Motivo per cui la partita è terminata.
@@ -26,6 +27,7 @@ class PlayedMove {
     required this.san,
     required this.after,
     this.clock,
+    this.note,
   });
 
   final Move move;
@@ -35,6 +37,17 @@ class PlayedMove {
   /// Tempo residuo di chi ha mosso, dopo la mossa; `null` senza orologio
   /// (RF-67).
   final Duration? clock;
+
+  /// Simbolo e commento personali sulla mossa (RF-55).
+  final MoveNote? note;
+
+  PlayedMove withNote(MoveNote? note) => PlayedMove(
+    move: move,
+    san: san,
+    after: after,
+    clock: clock,
+    note: note == null || note.isEmpty ? null : note,
+  );
 }
 
 /// Stato della partita: cronologia, annullamento e condizioni di fine partita.
@@ -64,12 +77,17 @@ class ChessGame {
     Iterable<Move> moves, {
     Variant variant = Variant.standard,
     List<Duration?> clocks = const [],
+    List<MoveNote?> notes = const [],
   }) {
     final game = ChessGame(initial: initial, variant: variant);
     final list = moves.toList();
     assert(
       clocks.isEmpty || clocks.length == list.length,
       'un tempo per ogni mossa, o nessuno',
+    );
+    assert(
+      notes.isEmpty || notes.length == list.length,
+      'una nota per ogni mossa, o nessuna',
     );
     var i = 0;
     for (final move in list) {
@@ -82,6 +100,7 @@ class ChessGame {
           san: san,
           after: after,
           clock: i < clocks.length ? clocks[i] : null,
+          note: i < notes.length ? notes[i] : null,
         ),
       );
       i++;
@@ -111,6 +130,12 @@ class ChessGame {
     final (after, san) = position.makeSan(move);
     _moves.add(PlayedMove(move: move, san: san, after: after, clock: clock));
     return true;
+  }
+
+  /// Sostituisce la nota della mossa [ply]; `null` o una nota vuota la tolgono.
+  void annotate(int ply, MoveNote? note) {
+    RangeError.checkValidIndex(ply, _moves);
+    _moves[ply] = _moves[ply].withNote(note);
   }
 
   /// Revoca abbandono, patta concordata o tempo scaduto se presenti, altrimenti toglie l'ultima mossa.

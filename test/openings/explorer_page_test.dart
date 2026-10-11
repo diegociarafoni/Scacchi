@@ -5,6 +5,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/openings/explorer_page.dart';
 import 'package:scacchi/openings/opening_book.dart';
 import 'package:scacchi/openings/opening_name.dart';
+import 'package:scacchi/settings/notation.dart';
+import 'package:scacchi/settings/settings.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final book = OpeningBook.parseTsv(
   'eco\tname\tuci\n'
@@ -35,13 +38,37 @@ void main() {
     expect(find.text('Difesa siciliana'), findsOneWidget);
     await tester.tap(find.text('e5'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Nf3'));
+    await tester.tap(find.text('♞f3'));
     await tester.pumpAndSettle();
     expect(opening(tester), 'C40 Apertura del cavallo di re');
-    expect(find.text('1. e4 e5 2. Nf3'), findsOneWidget);
+    expect(find.text('1. e4 e5 2. ♞f3'), findsOneWidget);
     await tester.tap(find.text('Indietro'));
     await tester.pumpAndSettle();
     expect(find.text('1. e4 e5'), findsOneWidget);
+  });
+
+  testWidgets('RF-76 le continuazioni seguono la notazione scelta', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({});
+    final settings = await SettingsController.load();
+    await settings.update(
+      settings.value.copyWith(notation: MoveNotation.italian),
+    );
+    await phone(
+      tester,
+      SettingsScope(
+        controller: settings,
+        child: ExplorerPage(book: Future.value(book)),
+      ),
+    );
+    await tester.tap(find.text('e4'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('e5'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Cf3'));
+    await tester.pumpAndSettle();
+    expect(find.text('1. e4 e5 2. Cf3'), findsOneWidget);
   });
 
   testWidgets('la schermata è in italiano', (tester) async {

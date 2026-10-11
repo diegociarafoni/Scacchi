@@ -847,6 +847,444 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Ho capito'**
   String get editorFenHelpClose;
+
+  /// Titolo della pagina di backup
+  ///
+  /// In it, this message translates to:
+  /// **'Backup e ripristino'**
+  String get backupTitle;
+
+  /// No description provided for @backupIntro.
+  ///
+  /// In it, this message translates to:
+  /// **'Il backup contiene partite, progressi, percorso, tornei, allenamento e impostazioni. Salvalo in un posto sicuro: senza rete non esiste una copia online.'**
+  String get backupIntro;
+
+  /// Pulsante che esporta il backup con la condivisione di sistema
+  ///
+  /// In it, this message translates to:
+  /// **'Condividi il backup'**
+  String get backupShare;
+
+  /// Oggetto proposto dalla condivisione di sistema, per esempio nelle email
+  ///
+  /// In it, this message translates to:
+  /// **'Backup di Rokko'**
+  String get backupShareSubject;
+
+  /// Pulsante che apre la finestra per incollare un backup
+  ///
+  /// In it, this message translates to:
+  /// **'Ripristina da testo'**
+  String get backupRestoreFromText;
+
+  /// No description provided for @backupExported.
+  ///
+  /// In it, this message translates to:
+  /// **'Backup pronto da salvare'**
+  String get backupExported;
+
+  /// Errore tecnico durante l'esportazione
+  ///
+  /// In it, this message translates to:
+  /// **'Backup non riuscito: {error}'**
+  String backupExportFailed(String error);
+
+  /// No description provided for @backupRestoreStaged.
+  ///
+  /// In it, this message translates to:
+  /// **'Backup pronto. Chiudi e riapri l\'app per ripristinare i dati.'**
+  String get backupRestoreStaged;
+
+  /// Errore tecnico durante il ripristino
+  ///
+  /// In it, this message translates to:
+  /// **'Ripristino non riuscito: {error}'**
+  String backupRestoreFailed(String error);
+
+  /// No description provided for @backupErrorNotApp.
+  ///
+  /// In it, this message translates to:
+  /// **'Non è un backup di Rokko'**
+  String get backupErrorNotApp;
+
+  /// No description provided for @backupErrorNewerVersion.
+  ///
+  /// In it, this message translates to:
+  /// **'Backup creato da una versione più recente'**
+  String get backupErrorNewerVersion;
+
+  /// No description provided for @backupErrorUnexpectedFile.
+  ///
+  /// In it, this message translates to:
+  /// **'File inatteso nel backup: {file}'**
+  String backupErrorUnexpectedFile(String file);
+
+  /// No description provided for @backupErrorInvalidFile.
+  ///
+  /// In it, this message translates to:
+  /// **'File non valido nel backup: {file}'**
+  String backupErrorInvalidFile(String file);
+
+  /// No description provided for @backupErrorInvalidPreference.
+  ///
+  /// In it, this message translates to:
+  /// **'Preferenza non valida: {name}'**
+  String backupErrorInvalidPreference(String name);
+
+  /// No description provided for @backupErrorUnreadable.
+  ///
+  /// In it, this message translates to:
+  /// **'Backup non leggibile'**
+  String get backupErrorUnreadable;
+
+  /// No description provided for @backupRestoreDialogTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Ripristina il backup'**
+  String get backupRestoreDialogTitle;
+
+  /// No description provided for @backupRestoreDialogBody.
+  ///
+  /// In it, this message translates to:
+  /// **'Incolla il contenuto del file di backup. I dati attuali vengono sostituiti.'**
+  String get backupRestoreDialogBody;
+
+  /// No description provided for @backupCancel.
+  ///
+  /// In it, this message translates to:
+  /// **'Annulla'**
+  String get backupCancel;
+
+  /// Conferma del ripristino
+  ///
+  /// In it, this message translates to:
+  /// **'Ripristina'**
+  String get backupRestore;
+
+  /// No description provided for @minigamesTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Minigiochi'**
+  String get minigamesTitle;
+
+  /// Miglior punteggio del minigioco
+  ///
+  /// In it, this message translates to:
+  /// **'Record {score}'**
+  String minigamesRecord(int score);
+
+  /// No description provided for @minigamesCoordinatesTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Coordinate a tempo'**
+  String get minigamesCoordinatesTitle;
+
+  /// No description provided for @minigamesCoordinatesDescription.
+  ///
+  /// In it, this message translates to:
+  /// **'Tocca la casa indicata: quante ne trovi in 30 secondi?'**
+  String get minigamesCoordinatesDescription;
+
+  /// No description provided for @minigamesCaptureAllTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Cattura tutto'**
+  String get minigamesCaptureAllTitle;
+
+  /// No description provided for @minigamesCaptureAllDescription.
+  ///
+  /// In it, this message translates to:
+  /// **'Un solo pezzo cattura tutti i pedoni con meno mosse possibile.'**
+  String get minigamesCaptureAllDescription;
+
+  /// No description provided for @minigamesBlindTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Alla cieca'**
+  String get minigamesBlindTitle;
+
+  /// No description provided for @minigamesBlindDescription.
+  ///
+  /// In it, this message translates to:
+  /// **'Leggi le mosse senza scacchiera e indica cosa c\'è su una casa.'**
+  String get minigamesBlindDescription;
+
+  /// No description provided for @minigamesMaterialTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Conta del materiale'**
+  String get minigamesMaterialTitle;
+
+  /// No description provided for @minigamesMaterialDescription.
+  ///
+  /// In it, this message translates to:
+  /// **'Chi è in vantaggio, e di quanto?'**
+  String get minigamesMaterialDescription;
+
+  /// Pulsante per giocare un'altra sessione
+  ///
+  /// In it, this message translates to:
+  /// **'Ancora'**
+  String get minigamesAgain;
+
+  /// Pulsante per tornare all'elenco dei minigiochi
+  ///
+  /// In it, this message translates to:
+  /// **'Fine'**
+  String get minigamesDone;
+
+  /// No description provided for @minigamesNext.
+  ///
+  /// In it, this message translates to:
+  /// **'Avanti'**
+  String get minigamesNext;
+
+  /// Etichetta per la lettura dello schermo della barra di avanzamento
+  ///
+  /// In it, this message translates to:
+  /// **'Scacchiera {board} di {total}'**
+  String minigamesCaptureAllProgress(int board, int total);
+
+  /// No description provided for @minigamesCaptureAllSessionOver.
+  ///
+  /// In it, this message translates to:
+  /// **'Sessione finita'**
+  String get minigamesCaptureAllSessionOver;
+
+  /// Stelle totali a fine sessione
+  ///
+  /// In it, this message translates to:
+  /// **'{score, plural, one{{score} stella su {max}} other{{score} stelle su {max}}}'**
+  String minigamesCaptureAllScore(int score, int max);
+
+  /// No description provided for @minigamesCaptureAllMoves.
+  ///
+  /// In it, this message translates to:
+  /// **'Mosse {moves}, minimo {optimal}'**
+  String minigamesCaptureAllMoves(int moves, int optimal);
+
+  /// Etichetta per la lettura dello schermo delle stelle di una scacchiera
+  ///
+  /// In it, this message translates to:
+  /// **'{stars, plural, one{{stars} stella su 3} other{{stars} stelle su 3}}'**
+  String minigamesCaptureAllStars(int stars);
+
+  /// No description provided for @minigamesCaptureAllRetry.
+  ///
+  /// In it, this message translates to:
+  /// **'Ricomincia'**
+  String get minigamesCaptureAllRetry;
+
+  /// Etichetta per la lettura dello schermo della casa da trovare
+  ///
+  /// In it, this message translates to:
+  /// **'Tocca la casa {square}'**
+  String minigamesCoordinatesTarget(String square);
+
+  /// No description provided for @minigamesCoordinatesScore.
+  ///
+  /// In it, this message translates to:
+  /// **'Punteggio {score}'**
+  String minigamesCoordinatesScore(int score);
+
+  /// Tempo rimasto
+  ///
+  /// In it, this message translates to:
+  /// **'{seconds, plural, one{{seconds} secondo} other{{seconds} secondi}}'**
+  String minigamesCoordinatesSecondsLeft(int seconds);
+
+  /// No description provided for @minigamesCoordinatesTimeUp.
+  ///
+  /// In it, this message translates to:
+  /// **'Tempo scaduto'**
+  String get minigamesCoordinatesTimeUp;
+
+  /// Risultato a fine sessione
+  ///
+  /// In it, this message translates to:
+  /// **'Punteggio {score}: {score, plural, one{{score} giusta} other{{score} giuste}}, {mistakes, plural, one{{mistakes} sbagliata} other{{mistakes} sbagliate}}'**
+  String minigamesCoordinatesSummary(int score, int mistakes);
+
+  /// No description provided for @minigamesCoordinatesIntro.
+  ///
+  /// In it, this message translates to:
+  /// **'Tocca la casa indicata, senza coordinate sulla scacchiera. Hai 30 secondi.'**
+  String get minigamesCoordinatesIntro;
+
+  /// Scacchiera vista dal bianco
+  ///
+  /// In it, this message translates to:
+  /// **'Bianco'**
+  String get minigamesCoordinatesWhite;
+
+  /// Scacchiera vista dal nero
+  ///
+  /// In it, this message translates to:
+  /// **'Nero'**
+  String get minigamesCoordinatesBlack;
+
+  /// No description provided for @minigamesCoordinatesStart.
+  ///
+  /// In it, this message translates to:
+  /// **'Inizia'**
+  String get minigamesCoordinatesStart;
+
+  /// No description provided for @minigamesQuizResult.
+  ///
+  /// In it, this message translates to:
+  /// **'{score, plural, one{{score} risposta giusta su {total}} other{{score} risposte giuste su {total}}}'**
+  String minigamesQuizResult(int score, int total);
+
+  /// No description provided for @minigamesQuizQuestion.
+  ///
+  /// In it, this message translates to:
+  /// **'Domanda {number} di {total}'**
+  String minigamesQuizQuestion(int number, int total);
+
+  /// No description provided for @minigamesQuizCorrect.
+  ///
+  /// In it, this message translates to:
+  /// **'Esatto!'**
+  String get minigamesQuizCorrect;
+
+  /// Risposta giusta dopo una scelta sbagliata
+  ///
+  /// In it, this message translates to:
+  /// **'Era: {answer}'**
+  String minigamesQuizAnswer(String answer);
+
+  /// No description provided for @statsTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Statistiche'**
+  String get statsTitle;
+
+  /// No description provided for @statsLoadFailed.
+  ///
+  /// In it, this message translates to:
+  /// **'L\'archivio delle partite non si è potuto leggere: riprova più tardi.'**
+  String get statsLoadFailed;
+
+  /// No description provided for @statsEmpty.
+  ///
+  /// In it, this message translates to:
+  /// **'Gioca qualche partita contro il computer per vedere le statistiche.'**
+  String get statsEmpty;
+
+  /// Sezione con vittorie, patte e sconfitte
+  ///
+  /// In it, this message translates to:
+  /// **'Bilancio'**
+  String get statsRecord;
+
+  /// Tutte le partite
+  ///
+  /// In it, this message translates to:
+  /// **'Tutte'**
+  String get statsAllGames;
+
+  /// No description provided for @statsWithWhite.
+  ///
+  /// In it, this message translates to:
+  /// **'Con il bianco'**
+  String get statsWithWhite;
+
+  /// No description provided for @statsWithBlack.
+  ///
+  /// In it, this message translates to:
+  /// **'Con il nero'**
+  String get statsWithBlack;
+
+  /// No description provided for @statsLocalGames.
+  ///
+  /// In it, this message translates to:
+  /// **'Partite tra due persone'**
+  String get statsLocalGames;
+
+  /// No description provided for @statsByTimeControl.
+  ///
+  /// In it, this message translates to:
+  /// **'Per cadenza'**
+  String get statsByTimeControl;
+
+  /// No description provided for @statsTopOpenings.
+  ///
+  /// In it, this message translates to:
+  /// **'Aperture più giocate'**
+  String get statsTopOpenings;
+
+  /// No description provided for @statsGames.
+  ///
+  /// In it, this message translates to:
+  /// **'{count, plural, one{{count} partita} other{{count} partite}}'**
+  String statsGames(int count);
+
+  /// No description provided for @statsAccuracy.
+  ///
+  /// In it, this message translates to:
+  /// **'Precisione'**
+  String get statsAccuracy;
+
+  /// No description provided for @statsAverage.
+  ///
+  /// In it, this message translates to:
+  /// **'Media'**
+  String get statsAverage;
+
+  /// No description provided for @statsAccuracyTrend.
+  ///
+  /// In it, this message translates to:
+  /// **'Andamento della precisione'**
+  String get statsAccuracyTrend;
+
+  /// No description provided for @statsRating.
+  ///
+  /// In it, this message translates to:
+  /// **'Rating stimato {rating}'**
+  String statsRating(int rating);
+
+  /// No description provided for @statsRatingProvisional.
+  ///
+  /// In it, this message translates to:
+  /// **'provvisorio: servono {count} partite contro il computer'**
+  String statsRatingProvisional(int count);
+
+  /// No description provided for @statsRatingGames.
+  ///
+  /// In it, this message translates to:
+  /// **'{count, plural, one{su {count} partita contro il computer} other{su {count} partite contro il computer}}'**
+  String statsRatingGames(int count);
+
+  /// No description provided for @statsRatingTrend.
+  ///
+  /// In it, this message translates to:
+  /// **'Andamento del rating'**
+  String get statsRatingTrend;
+
+  /// Etichetta per la lettura dello schermo di un bilancio vuoto
+  ///
+  /// In it, this message translates to:
+  /// **'nessuna partita'**
+  String get statsNoGames;
+
+  /// Etichetta per la lettura dello schermo della percentuale
+  ///
+  /// In it, this message translates to:
+  /// **'{wins, plural, one{{wins} vittoria} other{{wins} vittorie}}, {draws, plural, one{{draws} patta} other{{draws} patte}}, {losses, plural, one{{losses} sconfitta} other{{losses} sconfitte}}'**
+  String statsScoreDetail(int wins, int draws, int losses);
+
+  /// Etichetta per la lettura dello schermo di un grafico
+  ///
+  /// In it, this message translates to:
+  /// **'{label}: da {first} a {last}, minimo {min}, massimo {max}'**
+  String statsTrend(
+    String label,
+    String first,
+    String last,
+    String min,
+    String max,
+  );
 }
 
 class _AppLocalizationsDelegate

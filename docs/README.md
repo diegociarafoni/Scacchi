@@ -19,6 +19,7 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | [puzzle.md](puzzle.md) | Puzzle: dati, punteggio, modalità, puzzle del giorno |
 | [aperture.md](aperture.md) | Nomi delle aperture, mosse di libro, Esplora aperture, repertorio |
 | [percorso.md](percorso.md) | Percorso a tappe con stelle e bot guardiani |
+| [finali.md](finali.md) | Allenatore dei finali contro il motore: Lucena, Philidor, matti elementari |
 | [statistiche.md](statistiche.md) | Statistiche delle partite e rating locale stimato |
 | [minigiochi.md](minigiochi.md) | Coordinate a tempo, cattura tutto, visualizzazione alla cieca, conta del materiale |
 | [tornei.md](tornei.md) | Tornei offline contro bot: girone, eliminazione diretta, bacheca |
@@ -51,7 +52,7 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | Impostazioni salvate: mosse legali, coordinate, promozione, frecce, temi, pezzi, animazioni | Disponibile |
 | Partita contro il computer (Stockfish) | Disponibile su Android e iOS; su Windows e Linux con Stockfish installato |
 | Puzzle con punteggio, temi e puzzle del giorno | Disponibile |
-| Puzzle Storm, Rush, sopravvivenza, Serie, ripasso degli errori, con la spiegazione di ogni modalità | Disponibile |
+| Puzzle: combo a tempo, corsa, sopravvivenza, serie, ripasso degli errori, con la spiegazione di ogni modalità | Disponibile |
 | Nome dell'apertura in partita (in italiano), Esplora aperture | Disponibile |
 | Repertorio di aperture con ripasso dilazionato | Disponibile |
 | Gamification: XP, livelli, obiettivo giornaliero, serie, traguardi, ricompense estetiche, promemoria | Disponibile: XP a fine partita, Profilo e promemoria dalla scheda Tu |
@@ -60,7 +61,7 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | Scambio di partite tra telefoni con il QR, senza rete | Disponibile dal menu della partita e dall'archivio; lettura con la fotocamera su Android e iOS |
 | Backup e ripristino dei dati in un file | Disponibile dalle Impostazioni |
 | Archivio partite, import ed export PGN | Disponibile dalla scheda Tu; le partite finite si salvano da sole, riprendere una partita è in arrivo |
-| Percorso a tappe con stelle, capitolo sulle regole e spiegazione delle tappe | Disponibile dalla scheda Tu, con i guardiani dove c'è il motore |
+| Percorso a tappe con stelle e spiegazione di ogni tappa: pezzi, regole, matti elementari e famosi, tattiche, finali di pedoni, aperture | Disponibile dalla scheda Tu, con i guardiani dove c'è il motore |
 | Statistiche e rating locale | Disponibile dalla scheda Tu |
 | Editor di posizione con FEN e validazione | Disponibile |
 | Varianti: Chess960, Re della collina, Tre scacchi | Disponibile nella partita a due |

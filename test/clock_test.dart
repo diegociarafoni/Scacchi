@@ -9,7 +9,7 @@ class FakeTime {
 }
 
 void main() {
-  test('RF-40 cadenze predefinite come su chess.com', () {
+  test('RF-40 cadenze predefinite', () {
     final names = TimeControl.presets.map((t) => t.label).toList();
     expect(
       names,

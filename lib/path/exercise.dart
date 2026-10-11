@@ -9,8 +9,7 @@ sealed class Exercise {
   final String instructions;
 }
 
-/// Un pezzo bianco da solo raccoglie le stelle sulla scacchiera, come nel
-/// modulo "Impara" di Lichess.
+/// Un pezzo bianco da solo raccoglie le stelle sulla scacchiera.
 class StarsExercise extends Exercise {
   const StarsExercise({
     required super.instructions,

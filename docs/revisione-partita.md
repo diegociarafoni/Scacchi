@@ -1,17 +1,18 @@
 # Revisione della partita
 
-Equivalente locale di Game Review di chess.com (requisiti RF-60…RF-66): ogni mossa viene analizzata da Stockfish sul telefono e classificata, senza server e senza limiti.
+Revisione completa della partita (requisiti RF-60…RF-66): ogni mossa viene analizzata da Stockfish sul telefono e classificata, senza server e senza limiti.
 
 ## Componenti
 
 | File | Ruolo |
 |---|---|
 | `lib/review/win_probability.dart` | Conversione della valutazione del motore in probabilità di vittoria |
-| `lib/review/move_classification.dart` | Categorie di chess.com e regole di classificazione |
+| `lib/review/move_classification.dart` | Categorie delle mosse e regole di classificazione |
 | `lib/review/sacrifice.dart` | Bilancio del materiale e riconoscimento dei sacrifici |
 | `lib/review/accuracy.dart` | Precisione per mossa e per partita, stima indicativa dell'Elo |
 | `lib/review/game_review.dart` | `reviewGame`: analisi di tutte le posizioni, avanzamento, interruzione |
 | `lib/review/engine_evaluator.dart` | Collegamento a `ComputerPlayer.analyse` (lo stesso motore dell'avversario) |
+| `lib/review/move_time.dart` | Tempo speso su ogni mossa (`timeSpent`) e errori giocati in fretta (`hastyPlies`) |
 | `lib/review/game_phase.dart` | Fase della partita (apertura, mediogioco, finale) per la precisione per fase e i temi dei puzzle |
 | `lib/review/coach.dart` | Coach testuale: `explainMove` e temi degli errori |
 | `lib/review/personal_puzzles.dart` | Puzzle personali dagli errori (`puzzlesFromReview`) |
@@ -23,7 +24,7 @@ Il nucleo è Dart puro: riceve un `PositionEvaluator` (FEN → varianti del moto
 
 ## Probabilità di vittoria
 
-La classificazione usa la perdita di probabilità di vittoria e non i centipedoni grezzi (RF-61), con la curva logistica di Lichess:
+La classificazione usa la perdita di probabilità di vittoria e non i centipedoni grezzi (RF-61), con questa curva logistica:
 
 ```
 win% = 50 + 50 × (2 / (1 + e^(−0.00368208 × cp)) − 1)      cp limitato a ±1000
@@ -33,7 +34,7 @@ Il matto a favore vale 100%, il matto subito 0%; stallo, materiale insufficiente
 
 ## Classificazione
 
-Per ogni mossa `perdita = win% con la mossa migliore − win% con la mossa giocata`, in punti percentuali dal punto di vista di chi muove. Le soglie riprendono gli "expected points" di chess.com.
+Per ogni mossa `perdita = win% con la mossa migliore − win% con la mossa giocata`, in punti percentuali dal punto di vista di chi muove. Le soglie sono espresse in punti attesi.
 
 | Categoria | Simbolo | Regola |
 |---|---|---|
@@ -55,17 +56,21 @@ Una mossa è un sacrificio se cede almeno due pedoni di materiale (P=1, C=A=3, T
 - **Pezzo offerto**: il pezzo mosso (almeno un cavallo) resta in presa e l'avversario ci guadagnerebbe prendendolo, anche se il motore preferisce non farlo (il caso classico della donna offerta che non si può prendere per via del matto).
 - **Materiale perso nella variante**: si giocano le prime risposte della variante principale del motore (fino a quattro semimosse); se la variante si ferma su una presa avversaria si conta la nostra ripresa immediata.
 
-Un pedone offerto non basta, come su chess.com.
+Un pedone offerto non basta.
 
 ## Precisione e stima della forza
 
-- Precisione della mossa (formula di Lichess): `103.17 × e^(−0.04354 × perdita) − 3.17`, limitata a 0–100.
+- Precisione della mossa: `103.17 × e^(−0.04354 × perdita) − 3.17`, limitata a 0–100.
 - Precisione della partita: media tra media aritmetica e media armonica delle mosse del giocatore, così un errore grave isolato pesa più che nella media semplice.
 - Stima della forza (assente se il giocatore non ha mosse): interpolazione lineare indicativa (50% ≈ 400, 70% ≈ 1200, 80% ≈ 1700, 90% ≈ 2300, 95% ≈ 2700). È mostrata come stima, non come rating.
 
 ## Precisione per fase
 
 Sotto il riepilogo, il riquadro **Precisione per fase** (RF-68) mostra la precisione di Bianco e Nero in apertura, mediogioco e finale, per capire cosa allenare. `GameReview.accuracyByPhase(side)` raggruppa le mosse del giocatore per la fase della posizione di partenza e applica la stessa media della precisione complessiva; una fase senza mosse mostra «—». La regola di fase (`phaseOf`, `lib/review/game_phase.dart`) è la stessa dei temi dei puzzle personali: apertura fino alla decima mossa, finale con al massimo quattro pezzi oltre a re e pedoni, altrimenti mediogioco. Nel profilo bambino il riquadro non compare.
+
+## Tempo per mossa
+
+Se la partita aveva l'orologio, sotto il riepilogo compare il riquadro **Tempo per mossa** (RF-67): un istogramma con il tempo speso su ogni mossa (un tocco porta alla mossa) e l'elenco degli errori giocati in fretta. `timeSpent` ricava il tempo dai residui registrati a ogni mossa: residuo precedente dello stesso lato, più l'incremento, meno il residuo attuale; la prima mossa di ogni lato parte dal tempo iniziale della cadenza e non prende incremento. Un errore (imprecisione, errore, occasione mancata, errore grave) è «in fretta» se è durato meno del 40% del tempo medio di quel lato (`hastyPlies`); servono almeno quattro mosse cronometrate e una media di 3 secondi, altrimenti non si giudica. Il riquadro non compare senza tempi registrati (partite senza orologio, PGN importati senza `[%clk]`) né nel profilo bambino. Dall'archivio la cadenza viene da quella salvata con la partita; se manca, la prima mossa di ogni lato non ha durata.
 
 ## Analisi con il motore
 
@@ -133,7 +138,7 @@ Il commento in tempo reale durante la partita (RF-72) è dell'allenatore: vedi [
 
 Proposta "Allenamento dagli errori" del capitolo 7 dei requisiti: `puzzlesFromReview` (`lib/review/personal_puzzles.dart`) trasforma gli errori, gli errori gravi e le occasioni mancate del giocatore in puzzle personali (`MistakePuzzle`) nello stesso formato dei puzzle Lichess usati dal modulo puzzle.
 
-- **Posizione**: quella prima della mossa precedente dell'avversario; la prima mossa del puzzle è quella dell'avversario, come nel database Lichess.
+- **Posizione**: quella prima della mossa precedente dell'avversario; la prima mossa del puzzle è quella dell'avversario, come nella raccolta di puzzle inclusa.
 - **Soluzione**: la variante del motore, fino a tre mosse del giocatore, oppure l'intero matto se il giocatore aveva il matto in 5 o meno. Si ferma alla prima mossa illegale e finisce sempre con una mossa del giocatore.
 - **Soluzione unica**: se la seconda scelta del motore vale meno di 10 punti di probabilità in meno della prima, l'errore non diventa un puzzle, perché ci sarebbero più risposte giuste.
 - **Esclusi**: gli errori alla prima semimossa (partite da posizione personalizzata), perché manca la mossa dell'avversario richiesta dal formato.

@@ -21,7 +21,7 @@ class FakeClock {
 }
 
 void main() {
-  group('RF-82 Puzzle Storm', () {
+  group('RF-82 Combo a tempo', () {
     test('dura 3 minuti e finisce allo scadere del tempo', () {
       final clock = FakeClock();
       final run = PuzzleRun(PuzzleRunMode.storm, library, clock: clock.call);
@@ -81,8 +81,8 @@ void main() {
     });
   });
 
-  group('RF-82 Puzzle Rush e sopravvivenza', () {
-    test('Rush 5 minuti finisce al terzo errore', () {
+  group('RF-82 Corsa e sopravvivenza', () {
+    test('Corsa 5 minuti finisce al terzo errore', () {
       final run = PuzzleRun(
         PuzzleRunMode.rush5,
         library,
@@ -109,7 +109,7 @@ void main() {
     });
   });
 
-  group('RF-82 Puzzle Streak', () {
+  group('RF-82 Serie', () {
     test('finisce al primo errore', () {
       final run = PuzzleRun(
         PuzzleRunMode.streak,

@@ -6,8 +6,10 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
 import '../analysis/analysis_page.dart';
+import '../game/clock.dart';
 import '../kids/kid_display.dart';
 import '../l10n/app_localizations.dart';
+import '../settings/notation.dart';
 import '../settings/settings.dart';
 import 'board_utils.dart';
 import 'coach.dart';
@@ -15,6 +17,7 @@ import 'eval_bar.dart';
 import 'game_phase.dart';
 import 'game_review.dart';
 import 'move_classification.dart';
+import 'move_time.dart';
 import 'personal_puzzles.dart';
 
 /// Revisioni già calcolate in questa sessione, per riaprirle all'istante.
@@ -76,6 +79,8 @@ class ReviewPage extends StatefulWidget {
     this.analyseLive,
     this.onSavePuzzles,
     this.puzzlePlayers = const {Side.white, Side.black},
+    this.clocks = const [],
+    this.timeControl,
   });
 
   final Position initial;
@@ -98,6 +103,11 @@ class ReviewPage extends StatefulWidget {
 
   /// Lati le cui mosse sbagliate diventano puzzle.
   final Set<Side> puzzlePlayers;
+
+  /// Tempo residuo dopo ogni mossa (RF-67), se la partita aveva l'orologio;
+  /// con [timeControl] permette di mostrare il tempo speso su ogni mossa.
+  final List<Duration?> clocks;
+  final TimeControl? timeControl;
 
   @override
   State<ReviewPage> createState() => _ReviewPageState();
@@ -311,10 +321,10 @@ class _ReviewPageState extends State<ReviewPage> {
     final best = review.moves[ply].bestSan;
     setState(() {
       if (san == best) {
-        _retryMessage = 'Esatto: $san è la mossa migliore.';
+        _retryMessage = 'Esatto: ${_n(san)} è la mossa migliore.';
         _retrySolved = move;
       } else {
-        _retryMessage = '$san non è la mossa migliore. Riprova.';
+        _retryMessage = '${_n(san)} non è la mossa migliore. Riprova.';
       }
     });
     // Dopo un tentativo sbagliato rimette la posizione di partenza.
@@ -323,15 +333,22 @@ class _ReviewPageState extends State<ReviewPage> {
 
   /// Spiegazioni del coach, calcolate una volta per mossa e solo per gli
   /// errori.
-  final _comments = <int, CoachComment?>{};
+  final _comments = <(int, MoveNotation, bool), CoachComment?>{};
+
+  String _n(String san) => formatSan(san, AppSettings.of(context).notation);
 
   CoachComment? _comment(GameReview review, MoveReview m) {
     if (!m.classification.isError) return null;
     return _comments.putIfAbsent(
-      m.ply,
+      (
+        m.ply,
+        AppSettings.of(context).notation,
+        AppSettings.of(context).kidMode,
+      ),
       () => explainMove(
         m,
         previous: m.ply > 0 ? review.moves[m.ply - 1] : null,
+        notation: AppSettings.of(context).notation,
         // Profilo bambino (RP-06): spiegazioni senza «matto in N» e pedoni.
         kid: AppSettings.of(context).kidMode
             ? AppLocalizations.of(context)
@@ -482,6 +499,15 @@ class _ReviewPageState extends State<ReviewPage> {
         return [
           _Summary(review: review),
           ?_savePuzzlesTile(review),
+          if (!AppSettings.of(context).kidMode)
+            _TimePerMove(
+              review: review,
+              clocks: widget.clocks,
+              first: widget.initial.turn,
+              control: widget.timeControl,
+              players: widget.puzzlePlayers,
+              onSelect: (ply) => _select(ply + 1),
+            ),
           SizedBox(
             height: 72,
             child: Padding(
@@ -515,7 +541,7 @@ class _ReviewPageState extends State<ReviewPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Trova una mossa migliore di ${m.san}',
+                'Trova una mossa migliore di ${_n(m.san)}',
                 style: text.titleMedium,
               ),
               if (_retryMessage != null)
@@ -527,7 +553,7 @@ class _ReviewPageState extends State<ReviewPage> {
                 Padding(
                   padding: const EdgeInsets.only(top: 8),
                   child: Text(
-                    'La mossa migliore era ${m.bestSan}.',
+                    'La mossa migliore era ${_n(m.bestSan!)}.',
                     style: text.bodyLarge,
                   ),
                 ),
@@ -559,11 +585,11 @@ class _ReviewPageState extends State<ReviewPage> {
       final c = m.classification;
       info = [
         Text(
-          '${moveNumber(_positions[m.ply])} ${m.san} è ${moveClassPhrase(c)}',
+          '${moveNumber(_positions[m.ply])} ${_n(m.san)} è ${moveClassPhrase(c)}',
           style: text.titleMedium,
         ),
         if (!m.playedBest && m.bestSan != null)
-          Text('Migliore: ${m.bestSan}', style: text.bodyLarge),
+          Text('Migliore: ${_n(m.bestSan!)}', style: text.bodyLarge),
         if (_comment(review, m) case final comment?)
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -718,6 +744,113 @@ class _Summary extends StatelessWidget {
   }
 }
 
+/// Tempo speso su ogni mossa e errori giocati in fretta (RF-67). Non compare
+/// se la partita non aveva l'orologio.
+class _TimePerMove extends StatelessWidget {
+  const _TimePerMove({
+    required this.review,
+    required this.clocks,
+    required this.first,
+    required this.control,
+    required this.players,
+    required this.onSelect,
+  });
+
+  final GameReview review;
+
+  /// Lati di cui si giudica la fretta: contro il computer solo chi ha giocato.
+  final Set<Side> players;
+  final List<Duration?> clocks;
+  final Side first;
+  final TimeControl? control;
+  final ValueChanged<int> onSelect;
+
+  static const _errors = {
+    MoveClass.inaccuracy,
+    MoveClass.mistake,
+    MoveClass.miss,
+    MoveClass.blunder,
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    if (clocks.length != review.moves.length) return const SizedBox.shrink();
+    final spent = timeSpent(clocks, first: first, control: control);
+    if (spent.every((d) => d == null)) return const SizedBox.shrink();
+    final hasty = hastyPlies(
+      spent,
+      sides: [for (final m in review.moves) m.side],
+      isError: (ply) =>
+          players.contains(review.moves[ply].side) &&
+          _errors.contains(review.moves[ply].classification),
+    ).toSet();
+    final longest = spent.fold<int>(
+      1000,
+      (a, d) => math.max(a, d?.inMilliseconds ?? 0),
+    );
+    final colors = Theme.of(context).colorScheme;
+    final label =
+        'Tempo per mossa. ${hasty.isEmpty ? 'Nessun errore giocato in fretta.' : 'Errori giocati in fretta: ${hasty.map((p) => review.moves[p].san).join(', ')}.'}';
+    return ExpansionTile(
+      title: const Text('Tempo per mossa'),
+      children: [
+        Semantics(
+          label: label,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: SizedBox(
+              height: 72,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  for (var i = 0; i < spent.length; i++)
+                    Expanded(
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () => onSelect(i),
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: FractionallySizedBox(
+                            widthFactor: 0.7,
+                            heightFactor: math.max(
+                              0.03,
+                              (spent[i]?.inMilliseconds ?? 0) / longest,
+                            ),
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(
+                                color: hasty.contains(i)
+                                    ? colors.error
+                                    : review.moves[i].side == Side.white
+                                    ? colors.outline
+                                    : colors.primary,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        if (hasty.isNotEmpty)
+          ListTile(
+            dense: true,
+            title: Text(
+              'Errori giocati in fretta: '
+              '${hasty.map((p) => '${moveNumber(Chess.fromSetup(Setup.parseFen(review.moves[p].fenBefore)))} ${review.moves[p].san}').join(', ')}',
+            ),
+            subtitle: const Text(
+              'Meno del 40% del tuo tempo medio per mossa: prima di muovere, '
+              'controlla le minacce.',
+            ),
+          ),
+      ],
+    );
+  }
+}
+
 /// Precisione di ciascun giocatore in apertura, mediogioco e finale: indica
 /// quale fase allenare.
 class _PhaseAccuracy extends StatelessWidget {
@@ -817,6 +950,7 @@ class _MoveList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final notation = AppSettings.of(context).notation;
     return Wrap(
       spacing: 6,
       runSpacing: 6,
@@ -829,7 +963,7 @@ class _MoveList extends StatelessWidget {
             button: true,
             selected: selected == m.ply + 1,
             label:
-                '${moveNumber(positions[m.ply])} ${m.san}, '
+                '${moveNumber(positions[m.ply])} ${formatSan(m.san, notation)}, '
                 '${m.classification.label}',
             excludeSemantics: true,
             child: InkWell(
@@ -844,7 +978,9 @@ class _MoveList extends StatelessWidget {
                   border: Border.all(color: moveClassColor(m.classification)),
                   borderRadius: BorderRadius.circular(6),
                 ),
-                child: Text('${m.san} ${m.classification.symbol}'),
+                child: Text(
+                  '${formatSan(m.san, notation)} ${m.classification.symbol}',
+                ),
               ),
             ),
           ),

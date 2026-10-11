@@ -90,7 +90,9 @@ void main() {
   });
 
   group('serie: avanzamento verso l\'obiettivo', () {
-    testWidgets('Rush mostra le vite e le consuma agli errori', (tester) async {
+    testWidgets('Corsa mostra le vite e le consuma agli errori', (
+      tester,
+    ) async {
       final trainer = await phone(tester);
       await tester.pumpWidget(
         MaterialApp(
