@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../backup/backup_page.dart';
 import '../progress/progress_controller.dart';
 import '../progress/rewards.dart';
 import 'settings.dart';
@@ -131,6 +132,21 @@ class SettingsPage extends StatelessWidget {
                 selected: s.animation,
                 label: (a) => a.label,
                 onSelected: (a) => set((c) => c.copyWith(animation: a)),
+              ),
+              const _Header('Dati'),
+              ListTile(
+                leading: const Icon(Icons.backup_outlined),
+                title: const Text('Backup e ripristino'),
+                subtitle: const Text('Salva o recupera tutti i dati locali'),
+                onTap: () async {
+                  final page = await BackupPage.system();
+                  if (context.mounted) {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute<void>(builder: (_) => page),
+                    );
+                  }
+                },
               ),
               const SizedBox(height: 24),
             ],
