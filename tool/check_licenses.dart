@@ -6,6 +6,16 @@ import 'src/licenses.dart';
 /// Verifica le licenze delle dipendenze distribuite con l'app.
 /// Richiede `flutter pub get`; considera solo le dipendenze non di sviluppo.
 void main() {
+  try {
+    _run();
+  } on FormatException catch (e) {
+    _fail('Formato inatteso: $e');
+  } on TypeError catch (e) {
+    _fail('Struttura inattesa dell\'elenco delle dipendenze: $e');
+  }
+}
+
+void _run() {
   final policy =
       (jsonDecode(File('tool/policy.json').readAsStringSync())
               as Map<String, dynamic>)['licenses']
@@ -57,16 +67,20 @@ void main() {
   var failed = false;
   for (final name in shipped) {
     final p = byName[name]!;
-    String? spdx;
+    final List<String> found;
     if (p['source'] == 'sdk') {
-      spdx = 'BSD-3-Clause';
+      found = ['BSD-3-Clause'];
+    } else if (overrides[name] != null) {
+      found = [overrides[name]!];
     } else {
-      spdx = overrides[name] ?? _detect(roots[name]);
+      found = _detect(roots[name]);
     }
-    final ok = isAllowed(spdx, allowed);
+    // Con più file di licenza devono essere tutte ammesse: una ammessa non ne copre un'altra.
+    final ok = found.isNotEmpty && found.every((l) => isAllowed(l, allowed));
     if (!ok) failed = true;
     rows.add(
-      '${ok ? '✓' : '✗'} $name ${p['version']}: ${spdx ?? 'sconosciuta'}',
+      '${ok ? '✓' : '✗'} $name ${p['version']}: '
+      '${found.isEmpty ? 'sconosciuta' : found.join(' + ')}',
     );
   }
   rows.sort();
@@ -80,19 +94,24 @@ void main() {
   stdout.writeln('\n✓ ${rows.length} dipendenze con licenza compatibile');
 }
 
-String? _detect(String? dir) {
-  if (dir == null) return null;
+/// Licenze riconosciute in tutti i file LICENSE/COPYING/UNLICENSE del pacchetto.
+List<String> _detect(String? dir) {
+  if (dir == null) return const [];
   final d = Directory(dir);
-  if (!d.existsSync()) return null;
+  if (!d.existsSync()) return const [];
+  final found = <String>{};
   for (final e in d.listSync()) {
     final base = e.uri.pathSegments.where((s) => s.isNotEmpty).last;
     if (e is File &&
-        RegExp('^(LICEN[SC]E|COPYING)', caseSensitive: false).hasMatch(base)) {
+        RegExp(
+          '^(LICEN[SC]E|COPYING|UNLICENSE)',
+          caseSensitive: false,
+        ).hasMatch(base)) {
       final spdx = detectLicense(e.readAsStringSync());
-      if (spdx != null) return spdx;
+      if (spdx != null) found.add(spdx);
     }
   }
-  return null;
+  return found.toList()..sort();
 }
 
 Never _fail(String message) {

@@ -71,6 +71,16 @@ void main() {
       );
     });
 
+    test('GPL-3.0 preceduta da un avviso di copyright lungo', () {
+      expect(
+        detectLicense(
+          '${'Copyright (C) 2020 Esempio. ' * 20}\n'
+          'GNU GENERAL PUBLIC LICENSE\nVersion 3, 29 June 2007',
+        ),
+        'GPL-3.0',
+      );
+    });
+
     test('testo sconosciuto', () {
       expect(detectLicense('All rights reserved.'), isNull);
     });

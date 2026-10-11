@@ -13,6 +13,7 @@ on:
       - '.github/**'
       - 'android/**'
       - 'Gemfile*'
+      - 'tool/policy.json'
       - '.gitleaks.toml'
   schedule:
     # Ogni lunedì: nuove vulnerabilità note anche senza modifiche al codice.
@@ -45,28 +46,28 @@ jobs:
       - name: Trivy (vulnerabilità, segreti, configurazioni)
         run: |
           trivy fs --quiet --scanners vuln,secret,misconfig \
+            --severity HIGH,CRITICAL --exit-code 1 \
             --format sarif --output build/security/trivy.sarif .
-          trivy fs --quiet --scanners vuln,secret,misconfig \
-            --severity HIGH,CRITICAL --exit-code 1 .
 
       - name: OSV-Scanner (dipendenze pub, Gradle, Ruby)
+        if: '!cancelled()'
         run: |
           osv-scanner scan source --recursive --format sarif \
-            --output-file build/security/osv.sarif . || true
-          osv-scanner scan source --recursive .
+            --output-file build/security/osv.sarif .
 
       - name: Gitleaks (segreti in tutta la cronologia)
+        if: '!cancelled()'
         run: |
-          gitleaks git --redact --no-banner --exit-code 0 \
+          gitleaks git --redact --no-banner \
             --report-format sarif --report-path build/security/gitleaks.sarif .
-          gitleaks git --redact --no-banner .
 
       - name: zizmor (sicurezza dei workflow GitHub Actions)
+        if: '!cancelled()'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          pipx run zizmor==1.30.1 --format sarif . > build/security/zizmor.sarif || true
-          pipx run zizmor==1.30.1 --min-severity medium .
+          pipx run zizmor==1.30.1 --min-severity medium --format sarif . \
+            > build/security/zizmor.sarif
 
       - name: SBOM CycloneDX
         if: always()

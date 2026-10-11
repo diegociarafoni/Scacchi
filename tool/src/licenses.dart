@@ -46,9 +46,16 @@ const _gnuHeaderLength = 400;
 /// Identificativo SPDX dedotto dal testo della licenza, oppure `null`.
 String? detectLicense(String text) {
   final normalized = text.replaceAll(RegExp(r'\s+'), ' ').trim();
-  final header = normalized.length > _gnuHeaderLength
-      ? normalized.substring(0, _gnuHeaderLength)
-      : normalized;
+  // Il titolo (in maiuscolo, a inizio riga) può seguire un avviso di copyright;
+  // nelle altre licenze, come la MPL, le GNU compaiono solo citate nel testo.
+  final title = RegExp(r'^[ \t]*GNU [A-Z ]*LICENSE', multiLine: true);
+  final start = title.firstMatch(text)?.start;
+  final fromTitle = start == null
+      ? ''
+      : text.substring(start).replaceAll(RegExp(r'\s+'), ' ').trim();
+  final header = fromTitle.length > _gnuHeaderLength
+      ? fromTitle.substring(0, _gnuHeaderLength)
+      : fromTitle;
   for (final entry in _patterns.entries) {
     final source = entry.key.contains('GPL') ? header : normalized;
     if (entry.value.every((p) => p.hasMatch(source))) return entry.key;
