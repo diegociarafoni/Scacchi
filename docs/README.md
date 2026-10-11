@@ -15,6 +15,7 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | [aperture.md](aperture.md) | Nomi delle aperture, mosse di libro, explorer, repertorio |
 | [percorso.md](percorso.md) | Percorso a tappe con stelle e bot guardiani |
 | [statistiche.md](statistiche.md) | Statistiche delle partite e rating locale stimato |
+| [minigiochi.md](minigiochi.md) | Coordinate a tempo, cattura tutto, visualizzazione alla cieca, conta del materiale |
 | [sviluppo.md](sviluppo.md) | Ambiente, comandi, test, CI e convenzioni |
 | [licenza.md](licenza.md) | Licenza del progetto e componenti di terze parti |
 
@@ -36,6 +37,7 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | Archivio partite, import ed export PGN | Logica e schermata disponibili, collegamento alla partita in sviluppo |
 | Percorso a tappe con stelle | Mappa ed esercizi pronti; accesso dalla schermata principale e guardiani in arrivo con il collegamento alla partita |
 | Statistiche e rating locale | Calcolo e schermata pronti; accesso dalla schermata principale in arrivo |
+| Minigiochi | Quattro minigiochi pronti con record e XP; accesso dalla schermata principale in arrivo |
 | Orologio con cadenze e incremento | Disponibile |
 
 I requisiti completi sono nel documento dei requisiti del progetto.

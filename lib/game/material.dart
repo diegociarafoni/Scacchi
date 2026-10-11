@@ -2,7 +2,8 @@ import 'package:dartchess/dartchess.dart';
 
 import 'chess_game.dart';
 
-const _values = {
+/// Valore convenzionale dei pezzi, in pedoni.
+const pieceValues = {
   Role.pawn: 1,
   Role.knight: 3,
   Role.bishop: 3,
@@ -24,15 +25,11 @@ class MaterialBalance {
       before = played.after;
     }
     for (final list in captured.values) {
-      list.sort((a, b) => _values[b]!.compareTo(_values[a]!));
+      list.sort((a, b) => pieceValues[b]!.compareTo(pieceValues[a]!));
     }
     final board = game.position.board;
     final score = {
-      for (final side in Side.values)
-        side: board
-            .materialCount(side)
-            .entries
-            .fold(0, (sum, e) => sum + e.value * _values[e.key]!),
+      for (final side in Side.values) side: materialScore(board, side),
     };
     return MaterialBalance._(captured, score);
   }
@@ -57,3 +54,9 @@ class MaterialBalance {
   /// Materiale di [side] meno quello dell'avversario.
   int advantage(Side side) => _score[side]! - _score[side.opposite]!;
 }
+
+/// Somma dei valori dei pezzi di [side] sulla scacchiera.
+int materialScore(Board board, Side side) => board
+    .materialCount(side)
+    .entries
+    .fold(0, (sum, e) => sum + e.value * pieceValues[e.key]!);
