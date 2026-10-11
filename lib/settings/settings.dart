@@ -1,5 +1,6 @@
 import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart' show Side;
+import 'package:flutter/material.dart' show ThemeMode;
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -114,6 +115,7 @@ class AppSettings {
     this.confirmMove = false,
     this.colorBlind = false,
     this.kidMode = false,
+    this.themeMode = ThemeMode.system,
     String whiteName = '',
     String blackName = '',
   }) : whiteName = _cleanName(whiteName),
@@ -152,6 +154,9 @@ class AppSettings {
   /// Profilo bambino (RP-06): interfaccia e testi semplici, bot amichevoli,
   /// nessuna statistica numerica.
   final bool kidMode;
+
+  /// Aspetto dell'app: chiaro, scuro o come il sistema.
+  final ThemeMode themeMode;
   final String whiteName;
   final String blackName;
 
@@ -191,6 +196,7 @@ class AppSettings {
     bool? confirmMove,
     bool? colorBlind,
     bool? kidMode,
+    ThemeMode? themeMode,
     String? whiteName,
     String? blackName,
   }) => AppSettings(
@@ -209,6 +215,7 @@ class AppSettings {
     confirmMove: confirmMove ?? this.confirmMove,
     colorBlind: colorBlind ?? this.colorBlind,
     kidMode: kidMode ?? this.kidMode,
+    themeMode: themeMode ?? this.themeMode,
     whiteName: whiteName ?? this.whiteName,
     blackName: blackName ?? this.blackName,
   );
@@ -246,6 +253,7 @@ class AppSettings {
       other.confirmMove == confirmMove &&
       other.colorBlind == colorBlind &&
       other.kidMode == kidMode &&
+      other.themeMode == themeMode &&
       other.whiteName == whiteName &&
       other.blackName == blackName;
 
@@ -266,6 +274,7 @@ class AppSettings {
     confirmMove,
     colorBlind,
     kidMode,
+    themeMode,
     whiteName,
     blackName,
   );
@@ -308,6 +317,7 @@ class SettingsController extends ValueNotifier<AppSettings> {
         confirmMove: read('confirmMove', d.confirmMove),
         colorBlind: read('colorBlind', d.colorBlind),
         kidMode: read('kidMode', d.kidMode),
+        themeMode: byName(ThemeMode.values, 'themeMode', d.themeMode),
         whiteName: read('whiteName', d.whiteName),
         blackName: read('blackName', d.blackName),
       ),
@@ -350,6 +360,8 @@ class SettingsController extends ValueNotifier<AppSettings> {
         prefs.setBool('colorBlind', settings.colorBlind),
       if (old.kidMode != settings.kidMode)
         prefs.setBool('kidMode', settings.kidMode),
+      if (old.themeMode != settings.themeMode)
+        prefs.setString('themeMode', settings.themeMode.name),
       if (old.whiteName != settings.whiteName)
         prefs.setString('whiteName', settings.whiteName),
       if (old.blackName != settings.blackName)

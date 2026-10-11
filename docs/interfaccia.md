@@ -103,6 +103,7 @@ Si aprono dall'icona a forma di ingranaggio nella barra del titolo. Ogni modific
 
 | Impostazione | Effetto | Predefinito |
 |---|---|---|
+| Aspetto dell'app | Sistema, Chiaro o Scuro: tema chiaro o scuro di tutta l'app, oppure lo stesso del telefono (requisito RP-02) | Sistema |
 | Mostra le mosse legali | Puntini sulle case raggiungibili dal pezzo selezionato | Attiva |
 | Coordinate | Lettere e numeri sui bordi della scacchiera | Attiva |
 | Promuovi sempre a donna | Salta il selettore di promozione | Disattiva |
@@ -129,7 +130,7 @@ A ogni mossa suona un solo effetto, scelto in quest'ordine di priorità: fine pa
 
 ## Tema
 
-L'app segue il tema chiaro o scuro del sistema. Tutti i testi sono in italiano.
+L'app segue il tema chiaro o scuro del sistema, a meno che in Impostazioni, alla voce «Aspetto dell'app», si scelga Chiaro o Scuro; la scelta vale subito per tutte le schermate. Tutti i testi sono in italiano.
 
 ### Colori per daltonici
 
