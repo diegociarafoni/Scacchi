@@ -8,13 +8,11 @@ import 'package:scacchi/backup/backup_page.dart';
 void main() {
   late Directory dir;
   String? shared;
-  Map<String, Object>? applied;
 
   setUp(() {
     dir = Directory.systemTemp.createTempSync('backup-page');
     File('${dir.path}/games.json').writeAsStringSync('{"version":1}');
     shared = null;
-    applied = null;
   });
   tearDown(() => dir.deleteSync(recursive: true));
 
@@ -34,7 +32,6 @@ void main() {
       home: BackupPage(
         directory: () async => dir,
         preferences: () => {'sound': true},
-        applyPreferences: (p) async => applied = p,
         share: (text, name) async => shared = text,
       ),
     ),
@@ -49,7 +46,9 @@ void main() {
     expect(backup.preferences, {'sound': true});
   });
 
-  testWidgets('ripristina da un backup incollato', (tester) async {
+  testWidgets('il backup incollato resta in attesa del riavvio', (
+    tester,
+  ) async {
     final text = (await tester.runAsync(
       () => Backup.collect(dir, {'volume': 0.5}),
     ))!.encode();
@@ -60,9 +59,9 @@ void main() {
     await tester.enterText(find.byType(TextField), text);
     await tester.tap(find.text('Ripristina'));
     await settle(tester);
-    expect(File('${dir.path}/games.json').readAsStringSync(), '{"version":1}');
-    expect(applied, {'volume': 0.5});
-    expect(find.textContaining('Riavvia'), findsOneWidget);
+    expect(File('${dir.path}/${Backup.pendingName}').existsSync(), isTrue);
+    expect(File('${dir.path}/games.json').readAsStringSync(), contains('"x"'));
+    expect(find.textContaining('riapri'), findsOneWidget);
   });
 
   testWidgets('un backup non valido non cambia nulla', (tester) async {
@@ -73,7 +72,7 @@ void main() {
     await tester.tap(find.text('Ripristina'));
     await settle(tester);
     expect(find.text('Backup non leggibile'), findsOneWidget);
-    expect(applied, isNull);
+    expect(File('${dir.path}/${Backup.pendingName}').existsSync(), isFalse);
     expect(File('${dir.path}/games.json').readAsStringSync(), '{"version":1}');
   });
 }

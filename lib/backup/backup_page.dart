@@ -13,9 +13,14 @@ Future<void> _shareWithSystem(String text, String fileName) async {
   final tmp = await getTemporaryDirectory();
   final file = File('${tmp.path}/$fileName');
   await file.writeAsString(text, flush: true);
-  await SharePlus.instance.share(
-    ShareParams(files: [XFile(file.path)], subject: 'Backup di Scacchi'),
-  );
+  try {
+    await SharePlus.instance.share(
+      ShareParams(files: [XFile(file.path)], subject: 'Backup di Scacchi'),
+    );
+  } finally {
+    // Copia completa dei dati: non lasciarla nella cartella temporanea.
+    if (file.existsSync()) await file.delete();
+  }
 }
 
 /// Esporta e ripristina tutti i dati locali in un unico file (RF-103).
@@ -24,13 +29,11 @@ class BackupPage extends StatefulWidget {
     super.key,
     this.directory = getApplicationSupportDirectory,
     required this.preferences,
-    this.applyPreferences = _applyToSystem,
     this.share = _shareWithSystem,
   });
 
   final Future<Directory> Function() directory;
   final Map<String, Object> Function() preferences;
-  final Future<void> Function(Map<String, Object> preferences) applyPreferences;
   final ShareBackup share;
 
   /// Pagina collegata alle preferenze di sistema, già caricate.
@@ -45,8 +48,10 @@ class BackupPage extends StatefulWidget {
   State<BackupPage> createState() => _BackupPageState();
 }
 
-Future<void> _applyToSystem(Map<String, Object> preferences) async {
+/// Sostituisce tutte le preferenze con [preferences].
+Future<void> applyPreferencesToSystem(Map<String, Object> preferences) async {
   final prefs = await SharedPreferences.getInstance();
+  await prefs.clear();
   for (final e in preferences.entries) {
     final v = e.value;
     switch (v) {
@@ -89,9 +94,8 @@ class _BackupPageState extends State<BackupPage> {
     if (text == null) return;
     try {
       final backup = Backup.decode(text);
-      await backup.restore(await widget.directory());
-      await widget.applyPreferences(backup.preferences);
-      _say('Dati ripristinati. Riavvia l\'app per applicarli.');
+      await backup.stage(await widget.directory());
+      _say('Backup pronto. Chiudi e riapri l\'app per ripristinare i dati.');
     } on BackupException catch (e) {
       _say(e.message);
     } on Object catch (e) {

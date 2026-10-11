@@ -41,22 +41,59 @@ void main() {
     expect(copy.preferences, original.preferences);
   });
 
-  test(
-    'il ripristino sostituisce i dati e conserva quelli precedenti',
-    () async {
+  group('ripristino all\'avvio', () {
+    test('sostituisce i dati e conserva quelli precedenti', () async {
       data('games.json', '{"version":1,"games":[1]}');
-      final backup = await Backup.collect(dir, {});
+      final backup = await Backup.collect(dir, {'volume': 0.5});
       data('games.json', '{"version":1,"games":[2]}');
       data('path.json', '{"version":1}');
-      await backup.restore(dir);
+      await backup.stage(dir);
+      // Prima dell'avvio nulla cambia.
+      expect(file('games.json'), '{"version":1,"games":[2]}');
+
+      Map<String, Object>? prefs;
+      final applied = await Backup.applyPending(dir, (p) async => prefs = p);
+
+      expect(applied, isTrue);
       expect(file('games.json'), '{"version":1,"games":[1]}');
+      expect(prefs, {'volume': 0.5});
+      // Il file assente dal backup viene tolto ma resta una copia.
+      expect(File('${dir.path}/path.json').existsSync(), isFalse);
+      final kept = dir.listSync().map((e) => e.path.split('/').last);
       expect(
-        file('games.json.prima-del-ripristino'),
-        '{"version":1,"games":[2]}',
+        kept.where((n) => n.contains(Backup.previousSuffix)),
+        hasLength(2),
       );
-      expect(File('${dir.path}/path.json').existsSync(), isTrue);
-    },
-  );
+      expect(File('${dir.path}/${Backup.pendingName}').existsSync(), isFalse);
+    });
+
+    test('due ripristini conservano entrambe le copie', () async {
+      data('games.json', '{"version":1,"games":[1]}');
+      final backup = await Backup.collect(dir, {});
+      for (var i = 0; i < 2; i++) {
+        await backup.stage(dir);
+        await Backup.applyPending(dir, (_) async {});
+        await Future<void>.delayed(const Duration(milliseconds: 2));
+      }
+      final copies = dir.listSync().where(
+        (e) => e.path.contains(Backup.previousSuffix),
+      );
+      expect(copies, hasLength(2));
+    });
+
+    test('senza backup in attesa non fa nulla', () async {
+      expect(await Backup.applyPending(dir, (_) async {}), isFalse);
+    });
+
+    test('un backup in attesa illeggibile viene scartato', () async {
+      data(Backup.pendingName, 'rotto');
+      await expectLater(
+        Backup.applyPending(dir, (_) async {}),
+        throwsA(isA<BackupException>()),
+      );
+      expect(File('${dir.path}/${Backup.pendingName}').existsSync(), isFalse);
+    });
+  });
 
   group('rifiuta un file non valido', () {
     Map<String, Object?> valid() => {
@@ -82,6 +119,10 @@ void main() {
     rejects('nome di file fuori dall\'elenco', {
       ...valid(),
       'files': {'../evil.json': '{"version":1}'},
+    });
+    rejects('file senza versione dello schema', {
+      ...valid(),
+      'files': {'games.json': '{}'},
     });
     rejects('contenuto del file non JSON', {
       ...valid(),

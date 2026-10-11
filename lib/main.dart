@@ -2,11 +2,24 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import 'package:path_provider/path_provider.dart';
+
+import 'backup/backup.dart';
+import 'backup/backup_page.dart';
 import 'home/home_shell.dart';
 import 'l10n/app_localizations.dart';
 import 'settings/settings.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  try {
+    await Backup.applyPending(
+      await getApplicationSupportDirectory(),
+      applyPreferencesToSystem,
+    );
+  } on Object catch (e) {
+    debugPrint('Ripristino del backup non riuscito: $e');
+  }
   runApp(const ScacchiApp());
 }
 
