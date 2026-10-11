@@ -8,7 +8,7 @@ Requisito RP-05: italiano come lingua predefinita, con la struttura pronta per a
 - La lingua è fissata all'italiano (`locale: Locale('it')` in `lib/main.dart`), quindi anche i testi di Material (pulsante Indietro, selettori, campi di testo) sono in italiano su qualunque dispositivo. `l10n.yaml` indica l'italiano come lingua preferita, così resterà la lingua di ripiego anche quando il `locale` fisso verrà tolto.
 - Su iOS e macOS la regione di sviluppo è l'italiano; le finestre native del sistema (condivisione, permessi) seguono la lingua del dispositivo se è italiano o inglese, altrimenti usano l'italiano.
 - Il nome sotto l'icona non viene da `appTitle`: è `android:label` in `android/app/src/main/AndroidManifest.xml` e `CFBundleDisplayName` in `ios/Runner/Info.plist`.
-- Sono dichiarate italiano e inglese (`supportedLocales`, e `CFBundleLocalizations` su iOS). Nei file `.arb` ci sono, tradotti, il nome dell'app e i testi del profilo bambino (prefissi `kid`, `kidGame`, `kidBot`); gli altri testi sono ancora scritti in italiano nel codice.
+- Sono dichiarate italiano e inglese (`supportedLocales`, e `CFBundleLocalizations` su iOS). Nei file `.arb` ci sono, tradotti, il nome dell'app e i testi del profilo bambino (prefissi `kid`, `kidGame`, `kidBot`) e quelli dello scambio QR (prefisso `qr`); gli altri testi sono ancora scritti in italiano nel codice.
 
 ## File
 
@@ -37,4 +37,4 @@ Nei test e2e non si usa `tester.pageBack()`, che cerca il tooltip inglese "Back"
 I test dei widget che montano una singola schermata devono usare `AppLocalizations.localizationsDelegates` e `locale: Locale('it')` nel `MaterialApp`, come l'app reale, prima che quella schermata passi ai file `.arb`.
 
 
-La migrazione dei testi esistenti verso i file `.arb` si fa una schermata alla volta, per non entrare in conflitto con il lavoro in corso sulle singole funzioni. Restano esclusi i nomi delle aperture e i temi dei puzzle, che provengono dai dataset di Lichess.
+La migrazione dei testi esistenti verso i file `.arb` si fa una schermata alla volta, per non entrare in conflitto con il lavoro in corso sulle singole funzioni. Restano esclusi i nomi delle aperture e i temi dei puzzle: arrivano in inglese dai dataset di Lichess e sono tradotti in italiano nel codice (`lib/openings/opening_names_it.dart`, `lib/puzzles/themes.dart`).
