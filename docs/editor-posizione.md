@@ -1,6 +1,6 @@
 # Editor di posizione
 
-Requisito RF-53. Si apre dalla partita con l'icona **Editor di posizione** nella barra in alto e parte dalla posizione mostrata in quel momento, con il set di pezzi e i colori scelti nelle impostazioni. La partita che si avvia è sempre di scacchi classici, anche se si parte da una variante.
+Requisito RF-53. Si apre dalla partita con l'icona **Editor di posizione** nella barra in alto (non c'è nelle sfide contro guardiani e tornei né nel profilo bambino) e parte dalla posizione mostrata in quel momento, con il set di pezzi e i colori scelti nelle impostazioni. La partita che si avvia è sempre di scacchi classici, anche se si parte da una variante.
 
 ## Comandi
 
@@ -11,7 +11,8 @@ Requisito RF-53. Si apre dalla partita con l'icona **Editor di posizione** nella
 | Bianco / Nero | Giocatore con il tratto |
 | O-O / O-O-O per colore | Diritti di arrocco; attivabili solo con re e torre sulle case iniziali, e tolti da soli quando uno dei due si sposta |
 | Iniziale, Svuota | Posizione iniziale o scacchiera vuota |
-| Inverti colori | Scambia i colori dei pezzi e capovolge la scacchiera, per studiare la stessa posizione dall'altro lato |
+| Inverti colori | Scambia i colori dei pezzi e li specchia tra le due metà della scacchiera, inverte il tratto e i diritti di arrocco: la stessa posizione vista dall'altro colore |
+| Capovolgi la scacchiera (icona in alto) | Cambia solo il lato da cui si guarda la scacchiera |
 | Incolla FEN, Copia FEN | Import ed export della posizione; il FEN corrente è sempre visibile e selezionabile |
 | Gioca da qui | Avvia una partita a due senza orologio dalla posizione; attivo solo se la posizione è legale |
 
