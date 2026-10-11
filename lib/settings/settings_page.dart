@@ -1,21 +1,32 @@
 import 'package:flutter/material.dart';
 
+import '../progress/progress_controller.dart';
+import '../progress/rewards.dart';
 import 'settings.dart';
 
 class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key, required this.controller});
+  const SettingsPage({super.key, required this.controller, this.progress});
 
   final SettingsController controller;
+
+  /// Progressi che sbloccano temi e pezzi; senza, tutto è disponibile.
+  final ProgressController? progress;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Impostazioni')),
-      body: ValueListenableBuilder(
-        valueListenable: controller,
-        builder: (context, s, _) {
+      body: ListenableBuilder(
+        listenable: Listenable.merge([controller, progress]),
+        builder: (context, _) {
+          final s = controller.value;
           void set(AppSettings Function(AppSettings) change) =>
               controller.update(change(controller.value));
+          final p = progress;
+          Requirement? locked(Enum item) =>
+              p == null || isUnlocked(item, p.state, p.settings)
+              ? null
+              : requirementOf(item);
           return ListView(
             children: [
               const _Header('Scacchiera'),
@@ -86,6 +97,7 @@ class SettingsPage extends StatelessWidget {
                 values: BoardTheme.values,
                 selected: s.boardTheme,
                 label: (t) => t.label,
+                locked: locked,
                 onSelected: (t) => set((c) => c.copyWith(boardTheme: t)),
               ),
               const _Header('Pezzi'),
@@ -93,8 +105,18 @@ class SettingsPage extends StatelessWidget {
                 values: PieceStyle.values,
                 selected: s.pieceSet,
                 label: (p) => p.label,
+                locked: locked,
                 onSelected: (p) => set((c) => c.copyWith(pieceSet: p)),
               ),
+              if (p != null && p.settings.enabled)
+                SwitchListTile(
+                  key: const Key('unlockAll'),
+                  title: const Text(unlockAllTitle),
+                  subtitle: const Text(unlockAllSubtitle),
+                  value: p.settings.unlockAll,
+                  onChanged: (v) =>
+                      p.updateSettings(p.settings.copyWith(unlockAll: v)),
+                ),
               const _Header('Animazioni'),
               _Choices(
                 values: AnimationSpeed.values,
@@ -135,12 +157,16 @@ class _Choices<T> extends StatelessWidget {
     required this.selected,
     required this.label,
     required this.onSelected,
+    this.locked,
   });
 
   final List<T> values;
   final T selected;
   final String Function(T) label;
   final ValueChanged<T> onSelected;
+
+  /// Condizione ancora da soddisfare per poter scegliere il valore.
+  final Requirement? Function(T)? locked;
 
   @override
   Widget build(BuildContext context) {
@@ -151,11 +177,30 @@ class _Choices<T> extends StatelessWidget {
         runSpacing: 8,
         children: [
           for (final v in values)
-            ChoiceChip(
-              label: Text(label(v)),
-              selected: v == selected,
-              onSelected: (_) => onSelected(v),
-            ),
+            if (locked?.call(v) case final requirement?)
+              ChoiceChip(
+                avatar: const Icon(Icons.lock_outline, size: 18),
+                label: Text(label(v)),
+                tooltip: 'Si sblocca con: ${requirement.label}',
+                selected: v == selected,
+                onSelected: (_) {
+                  final messenger = ScaffoldMessenger.of(context);
+                  messenger.hideCurrentSnackBar();
+                  messenger.showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        '${label(v)} si sblocca con: ${requirement.label}',
+                      ),
+                    ),
+                  );
+                },
+              )
+            else
+              ChoiceChip(
+                label: Text(label(v)),
+                selected: v == selected,
+                onSelected: (_) => onSelected(v),
+              ),
         ],
       ),
     );

@@ -1,6 +1,6 @@
 # Gamification
 
-Requisiti RG-01, RG-02, RG-05, RG-07, RG-08 e RG-12. Il codice è in `lib/progress/`, in Dart puro tranne la schermata e il controller.
+Requisiti RG-01, RG-02, RG-05, RG-06, RG-07, RG-08 e RG-12. Il codice è in `lib/progress/`, in Dart puro tranne la schermata e il controller.
 
 ## Principi
 
@@ -56,6 +56,33 @@ Serie più lunga, bot più forte battuto (Elo), matto con meno mosse (solo vitto
 
 37 traguardi in quattro categorie (gioco, tattica, costanza, curiosità), sbloccabili una sola volta e annunciati con una notifica in-app (`showProgressFeedback`). Alcuni esempi: prima vittoria, vittoria con il nero, miniatura (matto in meno di 20 mosse), bot da 1500 e 2000 Elo battuti, matto con il cavallo o con un pedone, vittoria con arrocco lungo, brillante trovata, 10 puzzle di forchetta o di matto, 20 punti in una modalità a tempo, giornata perfetta (tre sfide), 3, 7 e 30 giorni di fila, precisione del 90%, livello 5 e 10, 20 coordinate in una sessione, tutti i minigiochi provati, primo torneo concluso e primo torneo vinto. L'elenco completo è in `lib/progress/achievements.dart`.
 
+## Ricompense estetiche (RG-06)
+
+Livelli e traguardi sbloccano temi della scacchiera, set di pezzi, avatar e cornici. Le scelte di sempre (temi Verde, Legno, Blu e Grigio; pezzi Classico, Merida, Chessnut, Fantasy e Spatial; avatar Pedone e Cavallo) restano disponibili da subito: le ricompense aggiungono, non tolgono.
+
+| Ricompensa | Si sblocca con |
+|---|---|
+| Tema Sabbia, avatar Alfiere | Livello 2 |
+| Pezzi Celtic, cornice Bronzo | Livello 3 |
+| Tema Oceano, avatar Torre | Livello 4 |
+| Pezzi Firi | Livello 5 |
+| Tema Corallo, cornice Argento | Livello 6 |
+| Avatar Donna | Livello 7 |
+| Pezzi RhosGFX | Livello 8 |
+| Cornice Oro | Livello 10 |
+| Tema Notte | 7 giorni di fila |
+| Pezzi Shapes | 10 puzzle risolti |
+| Pezzi Mpchess | Prima revisione |
+| Pezzi Kiwen-suwi | Tutti i minigiochi provati |
+| Pezzi Totoy | 10 vittorie |
+| Cornice Fiamma | 30 giorni di fila |
+| Cornice Alloro | Puzzle rating 1500 |
+| Tema Oro, avatar Re | Primo torneo vinto |
+
+La tabella completa è in `lib/progress/rewards.dart`. Una ricompensa appena meritata compare nella notifica dei progressi ("Sbloccato: tema Sabbia"). Nelle impostazioni i temi e i pezzi bloccati hanno un lucchetto e, toccati, dicono come si sbloccano; avatar e cornice si scelgono toccando l'avatar nel Profilo.
+
+Per rispetto di RV-01, l'interruttore "Sblocca tutto" (nelle impostazioni dell'app e del Profilo) rende tutto disponibile. Con la gamification spenta non c'è nulla da sbloccare. Il tema o il set già scelto resta applicato anche se torna bloccato, per esempio spegnendo "Sblocca tutto".
+
 ## Componenti
 
 | File | Ruolo |
@@ -69,10 +96,12 @@ Serie più lunga, bot più forte battuto (Elo), matto con meno mosse (solo vitto
 | `progress_state.dart` | Stato dei progressi e impostazioni, serializzabili in JSON |
 | `progress_tracker.dart` | Regole: XP, obiettivo, serie, protezioni, traguardi. Funzioni pure, con l'ora passata come parametro |
 | `achievements.dart` | Elenco dei traguardi e condizioni di sblocco |
+| `rewards.dart` | Ricompense estetiche e condizioni di sblocco (livello o traguardo) |
+| `avatar.dart` | Avatar e cornici del profilo |
 | `progress_store.dart` | Salvataggio su file JSON tramite `JsonFile` |
 | `progress_controller.dart` | `ChangeNotifier` per l'interfaccia: carica, registra, salva |
 | `progress_feedback.dart` | Notifica in-app di XP, livello, obiettivo e traguardi |
-| `profile_page.dart` | Schermata Profilo con livello, serie, obiettivo, traguardi e impostazioni |
+| `profile_page.dart` | Schermata Profilo con avatar, livello, serie, obiettivo, traguardi e impostazioni |
 
 ## Salvataggio
 
@@ -102,4 +131,4 @@ Le altre schermate registrano:
 
 ## Integrazione prevista
 
-Il collegamento alla schermata di gioco (registrazione a fine partita e accesso al Profilo) arriva in una modifica separata, per non sovrapporsi al lavoro in corso sulla partita contro il computer.
+Il collegamento alla schermata di gioco (registrazione a fine partita, accesso al Profilo e passaggio dei progressi a `SettingsPage(progress: ...)`, senza il quale temi e pezzi restano tutti disponibili) arriva in una modifica separata, per non sovrapporsi al lavoro in corso sulla partita contro il computer.
