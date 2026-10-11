@@ -21,7 +21,8 @@ La piattaforma web non è supportata: `dartchess` usa interi a 64 bit (bitboard)
 ```
 lib/
   main.dart               Avvio dell'app, tema chiaro e scuro
-  home/home_shell.dart    Barra di navigazione in basso (Gioca, Puzzle, Aperture)
+  home/home_shell.dart    Barra di navigazione in basso (Gioca, Puzzle, Aperture, Tu)
+  home/you_page.dart      Scheda Tu: profilo, percorso, minigiochi, statistiche, archivio
   game/
     chess_game.dart       Stato della partita, senza dipendenze dall'interfaccia
     variant.dart          Varianti e posizioni iniziali Chess960 (vedi regole-di-gioco.md)

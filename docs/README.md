@@ -35,12 +35,12 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | Puzzle Storm, Rush, sopravvivenza, Serie, ripasso degli errori | Disponibile |
 | Nome dell'apertura in partita, explorer ridotto | Disponibile |
 | Repertorio di aperture con ripasso dilazionato | Disponibile |
-| Gamification: XP, livelli, obiettivo giornaliero, serie, traguardi, ricompense estetiche, promemoria | Logica e Profilo disponibili, collegamento alla partita in sviluppo |
-| Archivio partite, import ed export PGN | Logica e schermata disponibili, collegamento alla partita in sviluppo |
-| Percorso a tappe con stelle | Mappa ed esercizi pronti; accesso dalla schermata principale e guardiani in arrivo con il collegamento alla partita |
-| Statistiche e rating locale | Calcolo e schermata pronti; accesso dalla schermata principale in arrivo |
+| Gamification: XP, livelli, obiettivo giornaliero, serie, traguardi, ricompense estetiche, promemoria | Profilo e promemoria disponibili dalla scheda Tu; XP delle partite in arrivo con il collegamento alla partita |
+| Archivio partite, import ed export PGN | Disponibile dalla scheda Tu; salvataggio automatico delle partite in arrivo con il collegamento alla partita |
+| Percorso a tappe con stelle | Disponibile dalla scheda Tu; guardiani in arrivo con la partita contro il computer |
+| Statistiche e rating locale | Disponibile dalla scheda Tu |
 | Varianti: Chess960, Re della collina, Tre scacchi | Disponibile nella partita a due |
-| Minigiochi | Quattro minigiochi pronti con record e XP; accesso dalla schermata principale in arrivo |
+| Minigiochi | Disponibile dalla scheda Tu, con record e XP |
 | Tornei contro bot | Formule, classifica, tabellone e bacheca pronti; partite e accesso in arrivo con la partita contro il computer |
 | Orologio con cadenze e incremento | Disponibile |
 | Suoni, vibrazione, modalità tavolo | Disponibile |
