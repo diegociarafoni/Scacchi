@@ -1,8 +1,12 @@
+import 'dart:math' as math;
+
+import 'package:dartchess/dartchess.dart' show PieceKind;
 import 'package:flutter/material.dart';
 
 import '../backup/backup_page.dart';
 import '../progress/progress_controller.dart';
 import '../progress/rewards.dart';
+import 'board_preview.dart';
 import 'settings.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -28,130 +32,197 @@ class SettingsPage extends StatelessWidget {
               p == null || isUnlocked(item, p.state, p.settings)
               ? null
               : requirementOf(item);
-          return ListView(
+          return Column(
             children: [
-              const _Header('Scacchiera'),
-              SwitchListTile(
-                title: const Text('Mostra le mosse legali'),
-                value: s.showLegalMoves,
-                onChanged: (v) => set((c) => c.copyWith(showLegalMoves: v)),
-              ),
-              SwitchListTile(
-                title: const Text('Coordinate'),
-                value: s.showCoordinates,
-                onChanged: (v) => set((c) => c.copyWith(showCoordinates: v)),
-              ),
-              SwitchListTile(
-                title: const Text('Promuovi sempre a donna'),
-                value: s.autoQueen,
-                onChanged: (v) => set((c) => c.copyWith(autoQueen: v)),
-              ),
-              SwitchListTile(
-                title: const Text('Frecce e cerchi'),
-                subtitle: const Text('Disegna con due dita sulla scacchiera'),
-                value: s.drawShapes,
-                onChanged: (v) => set((c) => c.copyWith(drawShapes: v)),
-              ),
-              SwitchListTile(
-                title: const Text('Conferma la mossa'),
-                subtitle: const Text(
-                  'Chiede conferma prima di giocare ogni mossa',
+              _PreviewBar(settings: s),
+              const Divider(height: 1),
+              Expanded(
+                child: ListView(
+                  children: [
+                    const _Header('Scacchiera'),
+                    SwitchListTile(
+                      title: const Text('Mostra le mosse legali'),
+                      value: s.showLegalMoves,
+                      onChanged: (v) =>
+                          set((c) => c.copyWith(showLegalMoves: v)),
+                    ),
+                    SwitchListTile(
+                      title: const Text('Coordinate'),
+                      value: s.showCoordinates,
+                      onChanged: (v) =>
+                          set((c) => c.copyWith(showCoordinates: v)),
+                    ),
+                    SwitchListTile(
+                      title: const Text('Promuovi sempre a donna'),
+                      value: s.autoQueen,
+                      onChanged: (v) => set((c) => c.copyWith(autoQueen: v)),
+                    ),
+                    SwitchListTile(
+                      title: const Text('Frecce e cerchi'),
+                      subtitle: const Text(
+                        'Disegna con due dita sulla scacchiera',
+                      ),
+                      value: s.drawShapes,
+                      onChanged: (v) => set((c) => c.copyWith(drawShapes: v)),
+                    ),
+                    SwitchListTile(
+                      title: const Text('Conferma la mossa'),
+                      subtitle: const Text(
+                        'Chiede conferma prima di giocare ogni mossa',
+                      ),
+                      value: s.confirmMove,
+                      onChanged: (v) => set((c) => c.copyWith(confirmMove: v)),
+                    ),
+                    SwitchListTile(
+                      title: const Text('Ruota a ogni turno'),
+                      subtitle: const Text('Nelle partite tra due persone'),
+                      value: s.autoFlip,
+                      onChanged: (v) => set((c) => c.copyWith(autoFlip: v)),
+                    ),
+                    SwitchListTile(
+                      title: const Text('Modalità tavolo'),
+                      subtitle: const Text(
+                        'Pezzi in alto capovolti, per giocare uno di fronte all\'altro',
+                      ),
+                      value: s.tableMode,
+                      onChanged: (v) => set((c) => c.copyWith(tableMode: v)),
+                    ),
+                    const _Header('Suoni e vibrazione'),
+                    SwitchListTile(
+                      title: const Text('Suoni'),
+                      value: s.sound,
+                      onChanged: (v) => set((c) => c.copyWith(sound: v)),
+                    ),
+                    ListTile(
+                      title: const Text('Volume'),
+                      subtitle: _VolumeSlider(
+                        value: s.volume,
+                        enabled: s.sound,
+                        onChangeEnd: (v) => set((c) => c.copyWith(volume: v)),
+                      ),
+                    ),
+                    SwitchListTile(
+                      title: const Text('Vibrazione'),
+                      value: s.haptics,
+                      onChanged: (v) => set((c) => c.copyWith(haptics: v)),
+                    ),
+                    const _Header('Tema della scacchiera'),
+                    _Choices(
+                      values: BoardTheme.values,
+                      selected: s.boardTheme,
+                      label: (t) => t.label,
+                      avatar: _ThemeSwatch.new,
+                      locked: locked,
+                      onSelected: (t) => set((c) => c.copyWith(boardTheme: t)),
+                    ),
+                    SwitchListTile(
+                      title: const Text('Colori per daltonici'),
+                      subtitle: const Text(
+                        'Evidenziazioni senza rosso né verde, ben contrastate su ogni tema',
+                      ),
+                      value: s.colorBlind,
+                      onChanged: (v) => set((c) => c.copyWith(colorBlind: v)),
+                    ),
+                    const _Header('Pezzi'),
+                    _Choices(
+                      values: PieceStyle.values,
+                      selected: s.pieceSet,
+                      label: (p) => p.label,
+                      avatar: (p) => Image(
+                        key: Key('piece-icon-${p.name}'),
+                        image: p.pieceSet.assets[PieceKind.whiteKnight]!,
+                        width: 24,
+                        height: 24,
+                      ),
+                      locked: locked,
+                      onSelected: (p) => set((c) => c.copyWith(pieceSet: p)),
+                    ),
+                    if (p != null && p.settings.enabled)
+                      SwitchListTile(
+                        key: const Key('unlockAll'),
+                        title: const Text(unlockAllTitle),
+                        subtitle: const Text(unlockAllSubtitle),
+                        value: p.settings.unlockAll,
+                        onChanged: (v) =>
+                            p.updateSettings(p.settings.copyWith(unlockAll: v)),
+                      ),
+                    const _Header('Animazioni'),
+                    _Choices(
+                      values: AnimationSpeed.values,
+                      selected: s.animation,
+                      label: (a) => a.label,
+                      onSelected: (a) => set((c) => c.copyWith(animation: a)),
+                    ),
+                    const _Header('Dati'),
+                    ListTile(
+                      leading: const Icon(Icons.backup_outlined),
+                      title: const Text('Backup e ripristino'),
+                      subtitle: const Text(
+                        'Salva o recupera tutti i dati locali',
+                      ),
+                      onTap: () async {
+                        final page = await BackupPage.system();
+                        if (context.mounted) {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute<void>(builder: (_) => page),
+                          );
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 24),
+                  ],
                 ),
-                value: s.confirmMove,
-                onChanged: (v) => set((c) => c.copyWith(confirmMove: v)),
               ),
-              SwitchListTile(
-                title: const Text('Ruota a ogni turno'),
-                subtitle: const Text('Nelle partite tra due persone'),
-                value: s.autoFlip,
-                onChanged: (v) => set((c) => c.copyWith(autoFlip: v)),
-              ),
-              SwitchListTile(
-                title: const Text('Modalità tavolo'),
-                subtitle: const Text(
-                  'Pezzi in alto capovolti, per giocare uno di fronte all\'altro',
-                ),
-                value: s.tableMode,
-                onChanged: (v) => set((c) => c.copyWith(tableMode: v)),
-              ),
-              const _Header('Suoni e vibrazione'),
-              SwitchListTile(
-                title: const Text('Suoni'),
-                value: s.sound,
-                onChanged: (v) => set((c) => c.copyWith(sound: v)),
-              ),
-              ListTile(
-                title: const Text('Volume'),
-                subtitle: _VolumeSlider(
-                  value: s.volume,
-                  enabled: s.sound,
-                  onChangeEnd: (v) => set((c) => c.copyWith(volume: v)),
-                ),
-              ),
-              SwitchListTile(
-                title: const Text('Vibrazione'),
-                value: s.haptics,
-                onChanged: (v) => set((c) => c.copyWith(haptics: v)),
-              ),
-              const _Header('Tema della scacchiera'),
-              _Choices(
-                values: BoardTheme.values,
-                selected: s.boardTheme,
-                label: (t) => t.label,
-                locked: locked,
-                onSelected: (t) => set((c) => c.copyWith(boardTheme: t)),
-              ),
-              SwitchListTile(
-                title: const Text('Colori per daltonici'),
-                subtitle: const Text(
-                  'Evidenziazioni senza rosso né verde, ben contrastate su ogni tema',
-                ),
-                value: s.colorBlind,
-                onChanged: (v) => set((c) => c.copyWith(colorBlind: v)),
-              ),
-              const _Header('Pezzi'),
-              _Choices(
-                values: PieceStyle.values,
-                selected: s.pieceSet,
-                label: (p) => p.label,
-                locked: locked,
-                onSelected: (p) => set((c) => c.copyWith(pieceSet: p)),
-              ),
-              if (p != null && p.settings.enabled)
-                SwitchListTile(
-                  key: const Key('unlockAll'),
-                  title: const Text(unlockAllTitle),
-                  subtitle: const Text(unlockAllSubtitle),
-                  value: p.settings.unlockAll,
-                  onChanged: (v) =>
-                      p.updateSettings(p.settings.copyWith(unlockAll: v)),
-                ),
-              const _Header('Animazioni'),
-              _Choices(
-                values: AnimationSpeed.values,
-                selected: s.animation,
-                label: (a) => a.label,
-                onSelected: (a) => set((c) => c.copyWith(animation: a)),
-              ),
-              const _Header('Dati'),
-              ListTile(
-                leading: const Icon(Icons.backup_outlined),
-                title: const Text('Backup e ripristino'),
-                subtitle: const Text('Salva o recupera tutti i dati locali'),
-                onTap: () async {
-                  final page = await BackupPage.system();
-                  if (context.mounted) {
-                    await Navigator.push(
-                      context,
-                      MaterialPageRoute<void>(builder: (_) => page),
-                    );
-                  }
-                },
-              ),
-              const SizedBox(height: 24),
             ],
           );
         },
+      ),
+    );
+  }
+}
+
+/// Anteprima fissa in cima alla pagina, per vedere ogni scelta senza scorrere.
+class _PreviewBar extends StatelessWidget {
+  const _PreviewBar({required this.settings});
+
+  final AppSettings settings;
+
+  @override
+  Widget build(BuildContext context) {
+    final text = Theme.of(context).textTheme;
+    final media = MediaQuery.of(context);
+    final size = math
+        .min(media.size.width * 0.34, media.size.height * 0.2)
+        .clamp(56.0, 128.0);
+    return MediaQuery(
+      data: media.copyWith(
+        textScaler: media.textScaler.clamp(maxScaleFactor: 1.3),
+      ),
+      child: Padding(
+        key: const Key('preview-bar'),
+        padding: const EdgeInsets.all(12),
+        child: Row(
+          children: [
+            BoardPreview(settings: settings, size: size),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Anteprima', style: text.titleMedium),
+                  const SizedBox(height: 4),
+                  Text(
+                    '${settings.boardTheme.label} · ${settings.pieceSet.label}',
+                    style: text.bodyMedium,
+                  ),
+                  const SizedBox(height: 4),
+                  Text('Tocca per provare la mossa.', style: text.bodySmall),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -175,6 +246,34 @@ class _Header extends StatelessWidget {
   }
 }
 
+/// Due quadratini con i colori delle case chiare e scure del tema.
+class _ThemeSwatch extends StatelessWidget {
+  const _ThemeSwatch(this.theme);
+
+  final BoardTheme theme;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = theme.colorScheme;
+    return ExcludeSemantics(
+      child: ClipRRect(
+        key: Key('theme-swatch-${theme.name}'),
+        borderRadius: BorderRadius.circular(4),
+        child: SizedBox(
+          width: 24,
+          height: 24,
+          child: Row(
+            children: [
+              Expanded(child: ColoredBox(color: scheme.lightSquare)),
+              Expanded(child: ColoredBox(color: scheme.darkSquare)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _Choices<T> extends StatelessWidget {
   const _Choices({
     required this.values,
@@ -182,12 +281,16 @@ class _Choices<T> extends StatelessWidget {
     required this.label,
     required this.onSelected,
     this.locked,
+    this.avatar,
   });
 
   final List<T> values;
   final T selected;
   final String Function(T) label;
   final ValueChanged<T> onSelected;
+
+  /// Segno distintivo mostrato nel chip, per riconoscere il valore a colpo d'occhio.
+  final Widget Function(T)? avatar;
 
   /// Condizione ancora da soddisfare per poter scegliere il valore.
   final Requirement? Function(T)? locked;
@@ -221,6 +324,7 @@ class _Choices<T> extends StatelessWidget {
               )
             else
               ChoiceChip(
+                avatar: avatar?.call(v),
                 label: Text(label(v)),
                 selected: v == selected,
                 onSelected: (_) => onSelected(v),
