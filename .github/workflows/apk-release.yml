@@ -156,13 +156,13 @@ jobs:
           flutter build apk --release --target-platform android-arm64 \
             --build-name="$BUILD_NAME" --build-number="$BUILD_NUMBER"
           mkdir -p dist
-          cp build/app/outputs/flutter-apk/app-release.apk dist/scacchi.apk
-          (cd dist && sha256sum scacchi.apk > scacchi.apk.sha256)
+          cp build/app/outputs/flutter-apk/app-release.apk dist/rokko.apk
+          (cd dist && sha256sum rokko.apk > rokko.apk.sha256)
 
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: steps.version.outputs.tag == ''
         with:
-          name: scacchi-apk
+          name: rokko-apk
           path: dist/
           retention-days: 7
 
@@ -181,7 +181,7 @@ jobs:
             signing="Firmato con una chiave di debug generata dalla build: per installare una versione successiva bisogna prima disinstallare questa."
           fi
           cat > notes.md <<NOTES
-          Installazione su Android (telefoni a 64 bit): aprire dal telefono il file **scacchi.apk** qui sotto, consentire l'installazione da questa origine e confermare.
+          Installazione su Android (telefoni a 64 bit): aprire dal telefono il file **rokko.apk** qui sotto, consentire l'installazione da questa origine e confermare.
 
           $signing
 
