@@ -99,6 +99,7 @@ Si aprono dall'icona a forma di ingranaggio nella barra del titolo. Ogni modific
 | Conferma la mossa | Dopo ogni mossa mostra la posizione risultante con i pulsanti Conferma e Scarta al posto della riga di stato; la mossa conta solo dopo Conferma, e l'orologio continua a scorrere. Durante l'attesa "Annulla" equivale a Scarta, mentre Patta e Abbandona sono disattivati | Disattiva |
 | Ruota a ogni turno | Orienta la scacchiera dal lato di chi deve muovere | Disattiva |
 | Modalità tavolo | Capovolge i pezzi del giocatore in alto, per giocare uno di fronte all'altro con il telefono sul tavolo | Disattiva |
+| Colori per daltonici | Sostituisce le evidenziazioni (ultima mossa, casa selezionata, mosse legali, premosse) con colori della palette Okabe-Ito, leggibili con deuteranopia, protanopia e tritanopia; i colori delle case restano quelli del tema. Indizi dei problemi e frecce del ripasso passano dal verde al blu, gli esiti delle coordinate da verde e rosso a blu e arancio (requisito RNF-07) | Disattiva |
 | Suoni | Suoni per mossa, cattura, arrocco, scacco, promozione, fine partita e tempo sotto i 10 secondi | Attivi |
 | Volume | Volume dei suoni, da 0 a 100% | 100% |
 | Vibrazione | Vibrazione breve a ogni mossa, più marcata per catture e fine partita | Attiva |
@@ -118,3 +119,15 @@ A ogni mossa suona un solo effetto, scelto in quest'ordine di priorità: fine pa
 ## Tema
 
 L'app segue il tema chiaro o scuro del sistema. Tutti i testi sono in italiano.
+
+### Colori per daltonici
+
+Per ogni tema `lib/settings/color_blind.dart` sceglie, tra blu, azzurro, giallo, arancio, vermiglio e viola della palette Okabe-Ito, la coppia di colori distinti per ultima mossa e casa selezionata. Le regole, in ordine:
+
+1. sono esclusi i colori con tinta e saturazione troppo vicine a quelle delle case (differenza di tinta sotto 15° e di saturazione sotto 0,3), per esempio l'azzurro sul tema Oceano;
+2. ogni evidenziazione deve avere, sia sulle case chiare sia sulle scure, un rapporto di contrasto WCAG almeno pari a quello dell'evidenziazione originale del tema e mai sotto 1,25, con trasparenza massima del 90%;
+3. tra le coppie valide vince quella con la trasparenza più bassa, così i pezzi restano ben visibili.
+
+I puntini delle mosse legali sono neri o bianchi, con contrasto almeno 1,6; le premosse usano il primo colore della palette non preso dalle altre evidenziazioni. Lo schema è calcolato una volta per tema e riusato, così la scacchiera non ridisegna lo sfondo.
+
+L'opzione vale per partita, problemi, aperture, repertorio, percorso e minigiochi. Restano invariati il bagliore rosso del re sotto scacco, disegnato da chessground con un colore fisso e riconoscibile anche dalla posizione sul re, e la casa gialla del quiz sul materiale, che non usa la coppia rosso-verde.

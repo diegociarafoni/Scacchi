@@ -100,6 +100,14 @@ class SettingsPage extends StatelessWidget {
                 locked: locked,
                 onSelected: (t) => set((c) => c.copyWith(boardTheme: t)),
               ),
+              SwitchListTile(
+                title: const Text('Colori per daltonici'),
+                subtitle: const Text(
+                  'Evidenziazioni senza rosso né verde, ben contrastate su ogni tema',
+                ),
+                value: s.colorBlind,
+                onChanged: (v) => set((c) => c.copyWith(colorBlind: v)),
+              ),
               const _Header('Pezzi'),
               _Choices(
                 values: PieceStyle.values,

@@ -4,6 +4,7 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
+import '../settings/settings.dart';
 import 'curriculum.dart';
 import 'exercise.dart';
 
@@ -146,8 +147,8 @@ class _StagePageState extends State<StagePage> {
               orientation: Side.white,
               onMove: _onMove,
               annotations: _annotations,
-              settings: const ChessboardSettings(
-                colorScheme: ChessboardColorScheme.green,
+              settings: ChessboardSettings(
+                colorScheme: AppSettings.of(context).exerciseScheme,
                 autoQueenPromotion: true,
               ),
             );
