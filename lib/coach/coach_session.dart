@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dartchess/dartchess.dart';
 
 import '../engine/uci.dart';
@@ -98,7 +100,7 @@ PositionEvaluator _memoize(PositionEvaluator inner) {
     try {
       return await f;
     } catch (_) {
-      cache.remove(fen);
+      unawaited(cache.remove(fen));
       rethrow;
     }
   };
