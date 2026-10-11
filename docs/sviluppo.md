@@ -173,4 +173,5 @@ Il workflow `.github/workflows/apk-release.yml` produce l'APK release installabi
 - Testi dell'interfaccia in italiano.
 - Logica di gioco separata dall'interfaccia (`ChessGame` non importa Flutter), così da poterla testare in isolamento.
 - Analisi statica rigorosa (`analysis_options.yaml`): tipi stretti, `Future` sempre attesi o marcati con `unawaited`, nessun avviso ammesso.
+- Prima del push: `tool/verifica.sh --test` (rami, commit, formattazione, analisi, test), vedi [convenzioni-git.md](convenzioni-git.md#senza-hook-toolverificash).
 - Rami, commit Angular, hook e merge: [convenzioni-git.md](convenzioni-git.md).
