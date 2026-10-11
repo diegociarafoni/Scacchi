@@ -31,6 +31,7 @@ import '../review/review_page.dart';
 import '../settings/settings.dart';
 import '../settings/settings_page.dart';
 import '../storage/key_value_store.dart';
+import 'challenge.dart';
 import 'chess_game.dart';
 import 'clock.dart';
 import 'material.dart';
@@ -61,6 +62,8 @@ class GamePage extends StatefulWidget {
     this.onActivity,
     this.onSave,
     this.progress,
+    this.challenge,
+    this.onFinished,
     this.store,
     this.onSavePuzzles,
   }) : computerAvailable = computerAvailable ?? StockfishTransport.isSupported;
@@ -80,6 +83,14 @@ class GamePage extends StatefulWidget {
 
   /// Salva la partita finita nell'archivio; senza, nessun salvataggio.
   final Future<void> Function(SavedGame game)? onSave;
+
+  /// Partita già impostata da un'altra schermata: parte subito e non si può
+  /// ricominciare né annullare.
+  final GameChallenge? challenge;
+
+  /// Esito per l'utente e mosse complete giocate, a fine partita contro il
+  /// computer, una volta per partita (sfide).
+  final void Function(GameResult result, int moves)? onFinished;
 
   /// Progressi da mostrare nelle impostazioni (temi e ricompense da sbloccare).
   final Future<ProgressController> Function()? progress;
@@ -103,6 +114,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   /// Partita i cui XP sono già stati assegnati, per farlo una volta sola.
   ChessGame? _recordedGame;
+
+  /// Partita il cui esito è già stato comunicato a [GamePage.onFinished].
+  ChessGame? _reportedGame;
 
   /// Ultimo stato salvato nell'archivio (partita, esito, mosse).
   String? _archivedKey;
@@ -181,6 +195,31 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     widget.settings.addListener(_onSettingsChanged);
     WidgetsBinding.instance.addObserver(this);
     unawaited(_loadProfile());
+    if (_isChallenge) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _startChallenge());
+    }
+  }
+
+  bool get _isChallenge => widget.challenge != null;
+
+  /// Una sfida non ha ancora iniziato la partita: fino ad allora la scacchiera
+  /// non accetta mosse.
+  late bool _awaitingChallenge = _isChallenge;
+
+  void _startChallenge() {
+    final challenge = widget.challenge;
+    if (!mounted || challenge == null) return;
+    _awaitingChallenge = false;
+    final setup = _applySetup(
+      GameSetup(
+        opponent: Opponent.computer,
+        sideChoice: challenge.side == Side.white
+            ? SideChoice.white
+            : SideChoice.black,
+        level: challenge.levelId,
+      ),
+    );
+    _beginGame(ChessGame(), setup, null);
   }
 
   Future<KeyValueStore> _openStore() => _store ??= () async {
@@ -381,7 +420,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   }
 
   PlayerSide get _playerSide {
-    if (_game.isOver || _thinking) return PlayerSide.none;
+    if (_game.isOver || _thinking || _awaitingChallenge) {
+      return PlayerSide.none;
+    }
     return switch (_computerSide) {
       null => PlayerSide.both,
       Side.white => PlayerSide.black,
@@ -458,8 +499,19 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// assegnano una volta sola per partita.
   void _finishGame() {
     final game = _game;
-    if (!game.isOver || game.moves.isEmpty) return;
+    if (!game.isOver) return;
     final side = _computerSide?.opposite;
+    if (side != null && !identical(game, _reportedGame)) {
+      _reportedGame = game;
+      final winner = game.outcome?.winner;
+      widget.onFinished?.call(
+        winner == null
+            ? GameResult.draw
+            : (winner == side ? GameResult.win : GameResult.loss),
+        (game.moves.length + 1) ~/ 2,
+      );
+    }
+    if (game.moves.isEmpty) return;
     final now = _clockNow();
     final elo = side == null
         ? null
@@ -1303,14 +1355,49 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     );
   }
 
+  /// Uscire da una sfida in corso la fa perdere: prima si chiede conferma.
+  Future<void> _confirmLeaveChallenge() async {
+    final leave = await _suspendedDialog<bool>(
+      (context) => AlertDialog(
+        title: const Text('Lasciare la sfida?'),
+        content: const Text('La partita in corso conta come persa.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Continua'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Esci'),
+          ),
+        ],
+      ),
+      restart: (leave) => leave != true,
+    );
+    if (leave == true && mounted) Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final inProgress = _isChallenge && !_game.isOver && _game.moves.isNotEmpty;
+    return PopScope(
+      canPop: !inProgress,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) unawaited(_confirmLeaveChallenge());
+      },
+      child: _buildScaffold(context),
+    );
+  }
+
+  Widget _buildScaffold(BuildContext context) {
     // La valutazione della patta è breve: nel frattempo la partita resta com'è.
     final evaluating = _task == _ComputerTask.draw;
     final actions = _GameActions(
-      onNewGame: evaluating ? null : _newGame,
+      onNewGame: evaluating || _isChallenge ? null : _newGame,
       onUndo:
-          !evaluating && (_canUndo || _pendingMove != null || _viewPly != null)
+          !evaluating &&
+              !_isChallenge &&
+              (_canUndo || _pendingMove != null || _viewPly != null)
           ? _undo
           : null,
       onFlip: () => setState(() => _orientation = _orientation.opposite),
@@ -1321,14 +1408,17 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       onResign: _game.isOver || _pendingMove != null || evaluating
           ? null
           : _resign,
-      coachOn: _computerSide == null ? null : _coachOn,
+      // Nelle sfide niente aiuti: né suggerimenti né ripetizione della mossa.
+      coachOn: _computerSide == null || _isChallenge ? null : _coachOn,
       onCoach: () => setState(() => _coachOn = !_coachOn),
       onHint: _coachOn && _humanToMove && _pendingMove == null
           ? _giveHint
           : null,
     );
     // Il libro delle aperture vale solo per gli scacchi classici.
-    final title = _game.variant == Variant.standard
+    final title = _isChallenge
+        ? Text(widget.challenge!.title)
+        : _game.variant == Variant.standard
         ? OpeningName(
             positions: [_game.initial, for (final m in _game.moves) m.after],
             fallback: 'Scacchi',
@@ -1353,7 +1443,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
               ),
         actions: [
           // Stockfish analizza solo gli scacchi classici.
-          if (widget.computerAvailable && _game.variant == Variant.standard)
+          if (widget.computerAvailable &&
+              !_isChallenge &&
+              _game.variant == Variant.standard)
             PopupMenuButton<String>(
               tooltip: 'Altre azioni',
               onSelected: (value) {
@@ -1373,11 +1465,12 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                 ),
               ],
             ),
-          IconButton(
-            tooltip: 'Editor di posizione',
-            icon: const Icon(Icons.edit_note),
-            onPressed: _editPosition,
-          ),
+          if (!_isChallenge)
+            IconButton(
+              tooltip: 'Editor di posizione',
+              icon: const Icon(Icons.edit_note),
+              onPressed: _editPosition,
+            ),
           IconButton(
             tooltip: 'Mossa da tastiera',
             icon: const Icon(Icons.keyboard_outlined),
