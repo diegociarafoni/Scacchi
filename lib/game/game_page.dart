@@ -35,6 +35,7 @@ import '../review/review_page.dart';
 import '../settings/settings.dart';
 import '../settings/settings_page.dart';
 import '../storage/key_value_store.dart';
+import 'board_swipe.dart';
 import 'challenge.dart';
 import 'chess_game.dart';
 import 'clock.dart';
@@ -196,6 +197,83 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   AppSettings get _settings => widget.settings.value;
 
   late bool _autoFlip;
+
+  /// Profilo bambino (RP-06): testi semplici e comandi essenziali.
+  bool get _kid => _settings.kidMode;
+
+  /// Avversario a inizio frase nei testi del profilo bambino.
+  String _kidOpponent(AppLocalizations l) => _bot?.name ?? l.kidGameComputer;
+
+  /// Stato della partita da annunciare, semplice nel profilo bambino.
+  String _statusMessage() =>
+      _kid ? _kidStatus(_kidL10n(context)).text : statusText(_game, _nameOf);
+
+  /// Frase breve sullo stato; [celebrate] quando vince il giocatore (o
+  /// chiunque, tra due persone), per la festa solo a schermo.
+  ({String text, bool celebrate}) _kidStatus(AppLocalizations l) {
+    final game = _game;
+    final player = _computerSide?.opposite;
+    final opponent = _kidOpponent(l);
+    final turn = game.position.turn;
+    final reason = game.endReason;
+    if (reason == null) {
+      final check = game.position.isCheck;
+      final text = player != null
+          ? (check
+                ? (turn == player ? l.kidGameCheckYou : l.kidGameCheckOpponent)
+                : (turn == player
+                      ? l.kidGameYourTurn
+                      : l.kidGameOpponentTurn(opponent)))
+          : switch (_nameOf(turn)) {
+              null when check => l.kidGameCheckSide(turn.name),
+              null => l.kidGameTurnSide(turn.name),
+              final name when check => l.kidGameCheckName(name),
+              final name => l.kidGameTurnName(name),
+            };
+      return (text: text, celebrate: false);
+    }
+    final winner = game.outcome?.winner;
+    if (winner == null) {
+      final text = switch (reason) {
+        GameEndReason.stalemate => l.kidGameStalemate,
+        GameEndReason.insufficientMaterial => l.kidGameInsufficientMaterial,
+        GameEndReason.threefoldRepetition => l.kidGameRepetition,
+        GameEndReason.fiftyMoveRule => l.kidGameFiftyMoves,
+        GameEndReason.agreement => l.kidGameAgreedDraw,
+        GameEndReason.timeout => l.kidGameTimeUpDraw,
+        _ => l.kidGameOver,
+      };
+      return (text: text, celebrate: false);
+    }
+    final loser = winner.opposite;
+    final cause = switch (reason) {
+      GameEndReason.checkmate => l.kidGameCheckmate,
+      GameEndReason.timeout => l.kidGameTimeUp,
+      GameEndReason.resignation =>
+        player != null
+            ? (loser == player ? l.kidGameYouResigned : l.kidGameOver)
+            : switch (_nameOf(loser)) {
+                null => l.kidGameResignedSide(loser.name),
+                final name => l.kidGameResignedName(name),
+              },
+      GameEndReason.variantEnd => switch (game.variant) {
+        Variant.kingOfTheHill => l.kidGameKingOfTheHill,
+        Variant.threeCheck => l.kidGameThirdCheck,
+        Variant.standard || Variant.chess960 => l.kidGameOver,
+      },
+      _ => l.kidGameOver,
+    };
+    final result = player != null
+        ? (winner == player ? l.kidGameYouWon : l.kidGameOpponentWon(opponent))
+        : switch (_nameOf(winner)) {
+            null => l.kidGameWinnerSide(winner.name),
+            final name => l.kidGameWinnerName(name),
+          };
+    return (
+      text: '$cause $result',
+      celebrate: player == null || winner == player,
+    );
+  }
 
   /// Nomi dei giocatori: solo nella partita tra due persone.
   String? _nameOf(Side side) =>
@@ -789,7 +867,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     if (flagged != null) {
       _game.flag(flagged);
       _playSound(GameSound.gameEnd);
-      _announce(statusText(_game, _nameOf));
+      _announce(_statusMessage());
       return false;
     }
     final before = clock?.snapshot();
@@ -800,7 +878,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       position.turn,
       name: _nameOf(position.turn),
     );
-    _announce(_game.isOver ? '$spoken. ${statusText(_game, _nameOf)}' : spoken);
+    _announce(_game.isOver ? '$spoken. ${_statusMessage()}' : spoken);
     final sound = soundForLastMove(_game, position);
     if (sound != null) _playSound(sound);
     if (clock != null) {
@@ -924,6 +1002,17 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     setState(() => _viewPly = target);
   }
 
+  /// Vero se da [square] parte un trascinamento di pezzo, non uno scorrimento.
+  bool _canDragFrom(Square square) {
+    if (_viewPly != null || _game.isOver || !_humanToMove) return false;
+    final position = _game.position;
+    return position.board.sideAt(square) == position.turn;
+  }
+
+  /// Scorrimento sulla scacchiera: a sinistra avanti, a destra indietro.
+  void _swipe(int direction) =>
+      _showPly((_viewPly ?? _game.moves.length - 1) + direction);
+
   KeyEventResult _onKey(FocusNode _, KeyEvent event) {
     if (event is! KeyDownEvent && event is! KeyRepeatEvent) {
       return KeyEventResult.ignored;
@@ -963,7 +1052,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       _cancelComputerMove();
       _game.flag(flagged);
       _playSound(GameSound.gameEnd);
-      _announce(statusText(_game, _nameOf));
+      _announce(_statusMessage());
       _refresh(animate: false);
       return;
     }
@@ -1045,7 +1134,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         context: context,
         isScrollControlled: true,
         builder: (context) => _TimeControlSheet(
-          variant: _twoPlayerVariant,
+          kid: _kid,
+          variant: _kid ? Variant.standard : _twoPlayerVariant,
           whiteName: _settings.whiteName,
           blackName: _settings.blackName,
           setup: _setup,
@@ -1060,7 +1150,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     if (!mounted || choice == null) return;
     final setup = _applySetup(choice.setup);
     final vsComputer = setup.opponent != Opponent.human;
-    if (!vsComputer) _twoPlayerVariant = choice.variant;
+    // Il profilo bambino gioca solo la classica: la variante scelta prima
+    // resta per quando il profilo si spegne.
+    if (!vsComputer && !_kid) _twoPlayerVariant = choice.variant;
     final variant = vsComputer ? Variant.standard : choice.variant;
     final control = choice.control;
     _beginGame(
@@ -1250,30 +1342,66 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   Future<void> _resign() async {
     final side = _computerSide?.opposite ?? _game.position.turn;
-    final confirmed = await _suspendedDialog<bool>(
-      (context) => AlertDialog(
-        title: const Text('Abbandonare la partita?'),
-        content: Text('Abbandona ${_player(side, _nameOf)}.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Annulla'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Abbandona'),
-          ),
-        ],
-      ),
-      restart: (confirmed) => confirmed != true,
-    );
+    final confirmed = await _suspendedDialog<bool>((context) {
+      if (!_kid) {
+        return _yesNoDialog(
+          context,
+          title: 'Abbandonare la partita?',
+          content: 'Abbandona ${_player(side, _nameOf)}.',
+          no: 'Annulla',
+          yes: 'Abbandona',
+        );
+      }
+      final l = _kidL10n(context);
+      return _yesNoDialog(
+        context,
+        title: _computerSide != null
+            ? l.kidGameResignTitle
+            : switch (_nameOf(side)) {
+                null => l.kidGameResignTitleSide(side.name),
+                final name => l.kidGameResignTitleName(name),
+              },
+        content: l.kidGameResignBody,
+        no: l.kidGameResignNo,
+        yes: l.kidGameResignYes,
+      );
+    }, restart: (confirmed) => confirmed != true);
     if (!mounted) return;
     if (confirmed == true) {
       _game.resign(side);
-      _playSound(GameSound.gameEnd);
-      _refresh(animate: false);
+      _endByChoice();
     }
   }
+
+  /// Chiude la partita dopo resa o patta concordata: il cambio di stato non
+  /// arriva da una mossa, quindi l'esito va annunciato qui.
+  void _endByChoice() {
+    _playSound(GameSound.gameEnd);
+    _refresh(animate: false);
+    _announce(_statusMessage());
+  }
+
+  /// Domanda sì/no di resa e patta; il "sì" chiude il dialogo con `true`.
+  AlertDialog _yesNoDialog(
+    BuildContext context, {
+    required String title,
+    String? content,
+    required String no,
+    required String yes,
+  }) => AlertDialog(
+    title: Text(title),
+    content: content == null ? null : Text(content),
+    actions: [
+      TextButton(
+        onPressed: () => Navigator.pop(context, false),
+        child: Text(no),
+      ),
+      FilledButton(
+        onPressed: () => Navigator.pop(context, true),
+        child: Text(yes),
+      ),
+    ],
+  );
 
   /// Il computer accetta la patta solo se si valuta in svantaggio.
   Future<void> _offerDrawToComputer() async {
@@ -1307,13 +1435,19 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     }, restart: (_) => !(current && _accepts(computerScore)));
     if (!mounted || !current || _game.isOver) return;
     if (error != null) return _showMessage('Il computer non risponde.');
+    final l = _kid ? _kidL10n(context) : null;
     if (_accepts(computerScore)) {
       _game.agreeDraw();
-      _playSound(GameSound.gameEnd);
-      _refresh(animate: false);
-      _showMessage('Il computer accetta la patta.');
+      _endByChoice();
+      _showMessage(
+        l?.kidGameDrawAccepted(_kidOpponent(l)) ??
+            'Il computer accetta la patta.',
+      );
     } else {
-      _showMessage('Il computer rifiuta la patta.');
+      _showMessage(
+        l?.kidGameDrawRefused(_kidOpponent(l)) ??
+            'Il computer rifiuta la patta.',
+      );
     }
   }
 
@@ -1323,29 +1457,31 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   Future<void> _offerDraw() async {
     if (_computerSide != null) return _offerDrawToComputer();
     final opponent = _game.position.turn.opposite;
-    final accepted = await _suspendedDialog<bool>(
-      (context) => AlertDialog(
-        title: Text(
-          '${_capitalized(_player(opponent, _nameOf))} accetta la patta?',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Rifiuta'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Accetta'),
-          ),
-        ],
-      ),
-      restart: (accepted) => accepted != true,
-    );
+    final accepted = await _suspendedDialog<bool>((context) {
+      if (!_kid) {
+        return _yesNoDialog(
+          context,
+          title:
+              '${_capitalized(_player(opponent, _nameOf))} accetta la patta?',
+          no: 'Rifiuta',
+          yes: 'Accetta',
+        );
+      }
+      final l = _kidL10n(context);
+      return _yesNoDialog(
+        context,
+        title: switch (_nameOf(opponent)) {
+          null => l.kidGameDrawOfferSide(opponent.name),
+          final name => l.kidGameDrawOfferName(name),
+        },
+        no: l.kidGameDrawNo,
+        yes: l.kidGameDrawYes,
+      );
+    }, restart: (accepted) => accepted != true);
     if (!mounted) return;
     if (accepted == true) {
       _game.agreeDraw();
-      _playSound(GameSound.gameEnd);
-      _refresh(animate: false);
+      _endByChoice();
     }
   }
 
@@ -1422,6 +1558,28 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     }
   }
 
+  Widget _statusLine(AppLocalizations? l) {
+    final (:text, :celebrate) = switch (_task) {
+      _ComputerTask.none =>
+        l == null
+            ? (text: statusText(_game, _nameOf), celebrate: false)
+            : _kidStatus(l),
+      _ComputerTask.move => (
+        text: l == null
+            ? 'Il computer sta pensando…'
+            : l.kidGameThinking(_kidOpponent(l)),
+        celebrate: false,
+      ),
+      _ComputerTask.draw => (
+        text: l == null
+            ? 'Il computer valuta la patta…'
+            : l.kidGameDrawThinking(_kidOpponent(l)),
+        celebrate: false,
+      ),
+    };
+    return _StatusLine(text: text, celebrate: celebrate);
+  }
+
   Widget? _clockView(Side side) {
     final clock = _clock;
     if (clock == null) return null;
@@ -1481,7 +1639,20 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   Widget _buildScaffold(BuildContext context) {
     // La valutazione della patta è breve: nel frattempo la partita resta com'è.
     final evaluating = _task == _ComputerTask.draw;
+    // Solo nel profilo bambino: fuori servono i delegati di localizzazione.
+    final l = _kid ? _kidL10n(context) : null;
     final actions = _GameActions(
+      labels: l == null
+          ? const _ActionLabels()
+          : _ActionLabels(
+              newGame: l.kidGameNew,
+              undo: l.kidGameUndo,
+              flip: l.kidGameFlip,
+              draw: l.kidGameDraw,
+              resign: l.kidGameResign,
+              coach: l.kidGameCoach,
+              hint: l.kidGameHint,
+            ),
       onNewGame: evaluating || _isChallenge ? null : _newGame,
       onUndo:
           !evaluating &&
@@ -1504,15 +1675,19 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           ? _giveHint
           : null,
     );
-    // Il libro delle aperture vale solo per gli scacchi classici.
+    // Il libro delle aperture vale solo per gli scacchi classici; ai bambini
+    // i nomi delle aperture non dicono nulla, quelli delle varianti sì (una
+    // variante iniziata prima del profilo mostra ancora il conteggio).
     final title = _isChallenge
         ? Text(widget.challenge!.title)
-        : _game.variant == Variant.standard
-        ? OpeningName(
+        : _game.variant != Variant.standard
+        ? Text(_title)
+        : l != null
+        ? Text(l.appTitle)
+        : OpeningName(
             positions: [_game.initial, for (final m in _game.moves) m.after],
             fallback: 'Scacchi',
-          )
-        : Text(_title);
+          );
     return Scaffold(
       appBar: AppBar(
         title: _computerSide == null
@@ -1522,10 +1697,14 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                 children: [
                   title,
                   Text(
+                    // Niente Elo né livelli finché il profilo bambino è attivo
+                    // o la partita è iniziata con il profilo.
                     _bot != null
-                        ? _kidGame
+                        ? _kid || _kidGame
                               ? '${_bot!.avatar} ${_bot!.name}'
                               : '${_bot!.avatar} ${_bot!.name} (${_bot!.elo} Elo)'
+                        : l != null
+                        ? l.kidGameComputer
                         : 'Computer, livello $_gameLevel: '
                               '${engineLevel(_gameLevel).name}',
                     style: Theme.of(context).textTheme.labelMedium,
@@ -1533,8 +1712,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                 ],
               ),
         actions: [
-          // Una sfida (guardiano, torneo) non si sostituisce con un'altra partita.
-          if (!_isChallenge)
+          // Una sfida (guardiano, torneo) non si sostituisce con un'altra
+          // partita; nel profilo bambino restano nascosti gli strumenti adulti.
+          if (!_isChallenge && l == null)
             PopupMenuButton<String>(
               tooltip: 'Altre azioni',
               onSelected: (value) {
@@ -1575,7 +1755,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                 ];
               },
             ),
-          if (!_isChallenge)
+          if (!_isChallenge && l == null)
             IconButton(
               tooltip: 'Editor di posizione',
               icon: const Icon(Icons.edit_note),
@@ -1613,12 +1793,19 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                       ),
                     );
               final boardSettings = _settings.board;
-              final board = Chessboard(
+              final board = BoardSwipe(
+                enabled: _pendingMove == null && _game.moves.isNotEmpty,
                 size: boardSize,
-                controller: _board,
                 orientation: _orientation,
-                onMove: _onMove,
-                settings: boardSettings,
+                canStartAt: _canDragFrom,
+                onSwipe: _swipe,
+                child: Chessboard(
+                  size: boardSize,
+                  controller: _board,
+                  orientation: _orientation,
+                  onMove: _onMove,
+                  settings: boardSettings,
+                ),
               );
               final viewPly = _viewPly;
               final Widget status = viewPly != null
@@ -1633,15 +1820,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                       onBack: () => _showPly(null),
                     )
                   : _pendingMove == null
-                  ? _StatusLine(
-                      game: _game,
-                      nameOf: _nameOf,
-                      replacement: switch (_task) {
-                        _ComputerTask.none => null,
-                        _ComputerTask.move => 'Il computer sta pensando…',
-                        _ComputerTask.draw => 'Il computer valuta la patta…',
-                      },
-                    )
+                  ? _statusLine(l)
                   : _ConfirmBar(
                       onConfirm: _confirmPending,
                       onDiscard: _discardPending,
@@ -1781,32 +1960,34 @@ String statusText(ChessGame game, [String? Function(Side)? nameOf]) {
 }
 
 class _StatusLine extends StatelessWidget {
-  const _StatusLine({
-    required this.game,
-    required this.nameOf,
-    this.replacement,
-  });
+  const _StatusLine({required this.text, this.celebrate = false});
 
-  final ChessGame game;
-  final String? Function(Side) nameOf;
+  final String text;
 
-  /// Testo al posto dello stato della partita.
-  final String? replacement;
+  /// Aggiunge una festa visiva che il lettore di schermo non legge.
+  final bool celebrate;
 
   @override
   Widget build(BuildContext context) {
+    Widget line(String s) => Text(
+      s,
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
+      style: Theme.of(context).textTheme.titleMedium,
+    );
     return SizedBox(
       height: _statusHeight,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Align(
           alignment: Alignment.centerLeft,
-          child: Text(
-            replacement ?? statusText(game, nameOf),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
+          child: celebrate
+              ? Semantics(
+                  label: text,
+                  excludeSemantics: true,
+                  child: line('$text 🎉'),
+                )
+              : line(text),
         ),
       ),
     );
@@ -1878,8 +2059,30 @@ class _MoveList extends StatelessWidget {
   }
 }
 
+/// Etichette dei comandi che cambiano nel profilo bambino.
+class _ActionLabels {
+  const _ActionLabels({
+    this.newGame = 'Nuova',
+    this.undo = 'Annulla',
+    this.flip = 'Gira',
+    this.draw = 'Patta',
+    this.resign = 'Abbandona',
+    this.coach = 'Allenatore',
+    this.hint = 'Aiuto',
+  });
+
+  final String newGame;
+  final String undo;
+  final String flip;
+  final String draw;
+  final String resign;
+  final String coach;
+  final String hint;
+}
+
 class _GameActions extends StatelessWidget {
   const _GameActions({
+    required this.labels,
     required this.onNewGame,
     required this.onUndo,
     required this.onFlip,
@@ -1890,6 +2093,7 @@ class _GameActions extends StatelessWidget {
     required this.onHint,
   });
 
+  final _ActionLabels labels;
   final VoidCallback? onNewGame;
   final VoidCallback? onUndo;
   final VoidCallback onFlip;
@@ -1907,19 +2111,19 @@ class _GameActions extends StatelessWidget {
       height: _actionsHeight,
       child: Row(
         children: [
-          _ActionButton(Icons.add, 'Nuova', onNewGame),
-          _ActionButton(Icons.undo, 'Annulla', onUndo),
-          _ActionButton(Icons.swap_vert, 'Gira', onFlip),
-          _ActionButton(Icons.handshake_outlined, 'Patta', onDraw),
-          _ActionButton(Icons.flag_outlined, 'Abbandona', onResign),
+          _ActionButton(Icons.add, labels.newGame, onNewGame),
+          _ActionButton(Icons.undo, labels.undo, onUndo),
+          _ActionButton(Icons.swap_vert, labels.flip, onFlip),
+          _ActionButton(Icons.handshake_outlined, labels.draw, onDraw),
+          _ActionButton(Icons.flag_outlined, labels.resign, onResign),
           if (coachOn != null)
             _ActionButton(
               coachOn! ? Icons.school : Icons.school_outlined,
-              'Allenatore',
+              labels.coach,
               onCoach,
             ),
           if (coachOn ?? false)
-            _ActionButton(Icons.lightbulb_outline, 'Aiuto', onHint),
+            _ActionButton(Icons.lightbulb_outline, labels.hint, onHint),
         ],
       ),
     );
@@ -2127,6 +2331,18 @@ class _TimeChoice {
   final GameSetup setup;
 }
 
+/// Testi del profilo bambino; in italiano se la pagina è montata senza i
+/// delegati di localizzazione (per esempio nei test della home).
+AppLocalizations _kidL10n(BuildContext context) =>
+    Localizations.of<AppLocalizations>(context, AppLocalizations) ??
+    lookupAppLocalizations(const Locale('it'));
+
+/// Cadenza lenta del profilo bambino: 15+10, l'unica Rapid con incremento,
+/// così una mossa pensata a lungo restituisce un po' di tempo.
+final _kidClock = TimeControl.presets.firstWhere(
+  (t) => t.minutes == 15 && t.increment == 10,
+);
+
 /// Scelta dell'avversario per una posizione creata con l'editor (RF-24).
 class _PositionSheet extends StatefulWidget {
   const _PositionSheet({
@@ -2181,6 +2397,7 @@ class _PositionSheetState extends State<_PositionSheet> {
 /// la partita.
 class _TimeControlSheet extends StatefulWidget {
   const _TimeControlSheet({
+    required this.kid,
     required this.variant,
     required this.whiteName,
     required this.blackName,
@@ -2191,6 +2408,8 @@ class _TimeControlSheet extends StatefulWidget {
     required this.kidMode,
   });
 
+  /// Profilo bambino: solo classica, senza tempo o con una cadenza lenta.
+  final bool kid;
   final Variant variant;
   final String whiteName;
   final String blackName;
@@ -2222,6 +2441,10 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    // Fuori dal profilo bambino i testi restano fissi: i test montano la
+    // pagina anche senza delegati di localizzazione.
+    final l = widget.kid ? _kidL10n(context) : null;
+    final noClock = l?.kidGameNoClock ?? 'Senza tempo';
     final groups = <String, List<TimeControl>>{};
     for (final t in TimeControl.presets) {
       groups.putIfAbsent(t.category, () => []).add(t);
@@ -2241,7 +2464,7 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
             textCapitalization: TextCapitalization.words,
             decoration: InputDecoration(
               labelText: label,
-              hintText: 'Facoltativo',
+              hintText: l?.kidGameNameHint ?? 'Facoltativo',
               counterText: '',
             ),
           ),
@@ -2255,7 +2478,10 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
           shrinkWrap: true,
           padding: const EdgeInsets.all(16),
           children: [
-            Text('Nuova partita', style: theme.textTheme.titleLarge),
+            Text(
+              l?.kidGameNew ?? 'Nuova partita',
+              style: theme.textTheme.titleLarge,
+            ),
             const SizedBox(height: 8),
             OpponentPicker(
               setup: _setup,
@@ -2269,11 +2495,13 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
               const SizedBox(height: 8),
               Row(
                 children: [
-                  nameField(_white, 'Nome del Bianco'),
+                  nameField(_white, l?.kidGameWhiteName ?? 'Nome del Bianco'),
                   const SizedBox(width: 12),
-                  nameField(_black, 'Nome del Nero'),
+                  nameField(_black, l?.kidGameBlackName ?? 'Nome del Nero'),
                 ],
               ),
+            ],
+            if (_setup.opponent == Opponent.human && l == null) ...[
               const SizedBox(height: 16),
               Text('Variante', style: theme.textTheme.titleSmall),
               const SizedBox(height: 4),
@@ -2295,19 +2523,34 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
               ],
             ],
             const SizedBox(height: 12),
-            Text('Cadenza', style: theme.textTheme.titleSmall),
-            const SizedBox(height: 4),
-            chip('Senza tempo', null),
-            for (final entry in groups.entries) ...[
-              const SizedBox(height: 12),
-              Text(entry.key, style: theme.textTheme.titleSmall),
+            if (l != null) ...[
+              Text(l.kidGameTimeTitle, style: theme.textTheme.titleSmall),
               const SizedBox(height: 4),
+              // Bullet e Blitz mettono fretta: ai bambini solo tempi lunghi.
               Wrap(
                 spacing: 8,
                 runSpacing: 8,
-                children: [for (final t in entry.value) chip(t.label, t)],
+                children: [
+                  chip(noClock, null),
+                  chip(l.kidGameSlowClock, _kidClock),
+                ],
               ),
+            ] else ...[
+              Text('Cadenza', style: theme.textTheme.titleSmall),
+              const SizedBox(height: 4),
+              chip(noClock, null),
             ],
+            if (l == null)
+              for (final entry in groups.entries) ...[
+                const SizedBox(height: 12),
+                Text(entry.key, style: theme.textTheme.titleSmall),
+                const SizedBox(height: 4),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [for (final t in entry.value) chip(t.label, t)],
+                ),
+              ],
           ],
         ),
       ),

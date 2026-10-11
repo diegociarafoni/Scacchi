@@ -16,7 +16,7 @@ Dall'alto verso il basso:
 4. **Materiale del giocatore in alto**: pezzi che ha catturato e vantaggio.
 5. **Scacchiera** a tutta larghezza.
 6. **Materiale del giocatore in basso**.
-7. **Barra dei comandi** in basso, alla portata del pollice: Nuova, Annulla, Gira, Patta, Abbandona.
+7. **Barra dei comandi** in basso, alla portata del pollice: Nuova, Annulla, Gira, Patta, Abbandona (nel profilo bambino «Nuova partita», «Pareggio?» e «Mi arrendo», vedi [profilo-bambino.md](profilo-bambino.md)).
 
 Striscia, stato, righe del materiale e scacchiera sono centrati insieme nello spazio disponibile. La scacchiera ha come lato il minimo tra la larghezza dello schermo e l'altezza rimasta dopo striscia, stato, righe del materiale e comandi.
 
@@ -45,9 +45,11 @@ Per ciascun giocatore una riga mostra le icone dei pezzi avversari catturati, da
 | Gira | Capovolge la scacchiera |
 | Patta | Chiede all'avversario se accetta la patta; disattivato a partita conclusa |
 | Abbandona | Chiede conferma e fa abbandonare il lato al tratto; disattivato a partita conclusa |
-| Menu ⋮, "Passa con QR" e "Ricevi con QR" | Passa la partita, anche in corso, a un altro telefono o la continua da un QR letto con la fotocamera; il menu c'è anche senza motore e nelle varianti, non nelle sfide contro guardiani e tornei (vedi [scambio-qr.md](scambio-qr.md)) |
+| Menu ⋮, "Passa con QR" e "Ricevi con QR" | Passa la partita, anche in corso, a un altro telefono o la continua da un QR letto con la fotocamera; il menu c'è anche senza motore e nelle varianti, non nelle sfide contro guardiani e tornei né nel profilo bambino (vedi [scambio-qr.md](scambio-qr.md)) |
 | Menu ⋮, "Analisi della posizione" | Apre l'analisi libera della posizione corrente con orologio e computer fermi (vedi [analisi.md](analisi.md)) |
-| Menu ⋮, "Revisione della partita" | Apre la revisione con classificazione delle mosse e precisione (vedi [revisione-partita.md](revisione-partita.md)); il menu c'è solo dove c'è il motore e negli scacchi classici, non nelle varianti |
+| Menu ⋮, "Revisione della partita" | Apre la revisione con classificazione delle mosse e precisione (vedi [revisione-partita.md](revisione-partita.md)); il menu c'è solo dove c'è il motore e negli scacchi classici, non nelle varianti né nel profilo bambino |
+
+Nel profilo bambino riga di stato, comandi e dialoghi usano frasi brevi, e mancano il menu ⋮ e l'editor di posizione; le nuove partite non offrono varianti né cadenze Bullet e Blitz, mentre una partita già in corso continua com'è (vedi [profilo-bambino.md](profilo-bambino.md)).
 
 ## Orologio
 
@@ -76,6 +78,7 @@ Toccando una mossa nella striscia (o nella lista, in orizzontale) la scacchiera 
 
 - Durante la revisione la scacchiera non accetta mosse, le righe del materiale seguono la posizione mostrata e l'orologio continua a scorrere.
 - Con una mossa in attesa di conferma la navigazione è disattivata finché non viene confermata o scartata.
+- Sulla scacchiera, scorrendo il dito in orizzontale (almeno una casa e mezza, in direzione prevalentemente orizzontale) si cambia posizione: a sinistra si va avanti, a destra indietro, e oltre l'ultima mossa si torna alla partita. Il gesto vale se parte da una casa vuota o da un pezzo dell'avversario; se parte da un pezzo che si può muovere resta il trascinamento del pezzo, e con più dita insieme non scorre.
 - Con una tastiera: frecce sinistra e destra per scorrere, Home per la posizione iniziale, Fine per tornare alla partita.
 - Andare oltre l'ultima mossa, una nuova partita o "Annulla" riportano alla posizione corrente; durante la revisione "Annulla" non toglie mosse.
 - I numeri delle mosse partono dalla posizione iniziale della partita, anche quando è importata da un FEN.
@@ -91,7 +94,7 @@ L'icona della tastiera nella barra del titolo apre un campo in cui scrivere la m
 
 Spazi, segni di scacco e annotazioni vengono ignorati. Se `R` indica sia una mossa di re (italiano) sia una di torre (inglese), il campo chiede di usare K o T. Una mossa non valida mostra un errore e lascia la tastiera aperta. La mossa passa per lo stesso percorso di quelle sulla scacchiera, quindi rispetta orologio e conferma della mossa. Il comando è disattivato a partita conclusa, durante la revisione e con una mossa in attesa di conferma.
 
-Dopo ogni mossa il lettore di schermo annuncia una frase in italiano, per esempio «Bianco: cavallo prende f7, scacco», «Nero: pedone della colonna e prende d5» o «Nero: arrocco corto». Una mossa in attesa di conferma è annunciata come «Da confermare», e la fine della partita, anche per tempo scaduto, è annunciata con il risultato.
+Dopo ogni mossa il lettore di schermo annuncia una frase in italiano, per esempio «Bianco: cavallo prende f7, scacco», «Nero: pedone della colonna e prende d5» o «Nero: arrocco corto». Una mossa in attesa di conferma è annunciata come «Da confermare», e la fine della partita, anche per tempo scaduto, abbandono o patta concordata, è annunciata con il risultato.
 
 ## Impostazioni
 
