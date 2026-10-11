@@ -628,5 +628,21 @@
   "qrMalformed": "QR non valido: ignorato.",
   "@qrMalformed": {
     "description": "Un fotogramma rovinato o in conflitto, scartato senza perdere le parti lette"
+  },
+  "editorFenTitle": "Posizione (FEN)",
+  "@editorFenTitle": {
+    "description": "Titolo sopra la stringa FEN nell'editor di posizione"
+  },
+  "editorFenHelpTooltip": "Che cos'è il FEN?",
+  "@editorFenHelpTooltip": {
+    "description": "Etichetta e suggerimento dell'icona di aiuto accanto al titolo FEN"
+  },
+  "editorFenHelpBody": "Il FEN è una riga di testo che descrive una posizione: i pezzi sulla scacchiera, di chi è il turno, l'arrocco e le mosse. Serve per copiare la posizione in altre app e per incollarne una ricevuta da altrove: usa «Copia FEN» e «Incolla FEN».",
+  "@editorFenHelpBody": {
+    "description": "Spiegazione del FEN nella finestra di aiuto dell'editor"
+  },
+  "editorFenHelpClose": "Ho capito",
+  "@editorFenHelpClose": {
+    "description": "Pulsante per chiudere la finestra di aiuto sul FEN"
   }
 }

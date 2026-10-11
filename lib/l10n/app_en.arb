@@ -120,5 +120,9 @@
   "qrRetry": "Try again",
   "qrInvalidGame": "The QR code does not contain a valid game.",
   "qrFinishedGame": "The game is already over: receive it from You › Archive › Receive via QR.",
-  "qrMalformed": "Invalid QR code: ignored."
+  "qrMalformed": "Invalid QR code: ignored.",
+  "editorFenTitle": "Position (FEN)",
+  "editorFenHelpTooltip": "What is FEN?",
+  "editorFenHelpBody": "FEN is a line of text that describes a position: the pieces on the board, whose turn it is, castling rights and move counters. Use it to copy the position to other apps or to paste one you received: tap “Copy FEN” and “Paste FEN”.",
+  "editorFenHelpClose": "Got it"
 }

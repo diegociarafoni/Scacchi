@@ -450,4 +450,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get qrMalformed => 'Invalid QR code: ignored.';
+
+  @override
+  String get editorFenTitle => 'Position (FEN)';
+
+  @override
+  String get editorFenHelpTooltip => 'What is FEN?';
+
+  @override
+  String get editorFenHelpBody =>
+      'FEN is a line of text that describes a position: the pieces on the board, whose turn it is, castling rights and move counters. Use it to copy the position to other apps or to paste one you received: tap “Copy FEN” and “Paste FEN”.';
+
+  @override
+  String get editorFenHelpClose => 'Got it';
 }

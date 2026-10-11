@@ -8,6 +8,7 @@ import 'package:scacchi/engine/bot_collection.dart';
 import 'package:scacchi/engine/bots.dart';
 import 'package:scacchi/engine/computer_player.dart';
 import 'package:scacchi/game/game_page.dart';
+import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/settings/settings.dart';
 import 'package:scacchi/storage/key_value_store.dart';
 
@@ -35,6 +36,9 @@ Future<Position?> openEditor(WidgetTester tester, {String? initialFen}) async {
   Position? result;
   await tester.pumpWidget(
     MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: const Locale('it'),
       home: Builder(
         builder: (context) => TextButton(
           onPressed: () async {
@@ -69,6 +73,24 @@ Future<void> pasteFen(WidgetTester tester, String text) async {
 }
 
 void main() {
+  testWidgets('RF-53 la stringa FEN ha un titolo e una spiegazione', (
+    tester,
+  ) async {
+    await openEditor(tester);
+    final help = find.byKey(const Key('editor-fen-help'));
+    await tester.ensureVisible(help);
+    await tester.pumpAndSettle();
+    expect(find.text('Posizione (FEN)'), findsOneWidget);
+    expect(find.byTooltip('Che cos\'è il FEN?'), findsOneWidget);
+    await tester.tap(help);
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Incolla FEN'), findsWidgets);
+    expect(find.textContaining('altre app'), findsOneWidget);
+    await tester.tap(find.text('Ho capito'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('altre app'), findsNothing);
+  });
+
   testWidgets('RF-53 parte dalla posizione iniziale', (tester) async {
     await openEditor(tester);
     expect(
@@ -125,6 +147,9 @@ void main() {
     Position? result;
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: const Locale('it'),
         home: Builder(
           builder: (context) => TextButton(
             onPressed: () async {
@@ -153,6 +178,9 @@ void main() {
     phone(tester);
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: const Locale('it'),
         home: GamePage(
           settings: SettingsController.defaults(),
           computerAvailable: false,
@@ -172,6 +200,9 @@ void main() {
     phone(tester);
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: const Locale('it'),
         home: GamePage(
           settings: SettingsController.defaults(),
           computerAvailable: true,
@@ -208,6 +239,9 @@ void main() {
       phone(tester);
       await tester.pumpWidget(
         MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('it'),
           home: GamePage(
             settings: SettingsController.defaults(),
             computerAvailable: true,
@@ -329,6 +363,9 @@ void main() {
       phone(tester);
       await tester.pumpWidget(
         MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('it'),
           home: GamePage(
             settings: SettingsController.defaults(),
             computerAvailable: true,
