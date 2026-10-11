@@ -41,6 +41,14 @@ class SettingsPage extends StatelessWidget {
                 onChanged: (v) => set((c) => c.copyWith(drawShapes: v)),
               ),
               SwitchListTile(
+                title: const Text('Conferma la mossa'),
+                subtitle: const Text(
+                  'Chiede conferma prima di giocare ogni mossa',
+                ),
+                value: s.confirmMove,
+                onChanged: (v) => set((c) => c.copyWith(confirmMove: v)),
+              ),
+              SwitchListTile(
                 title: const Text('Ruota a ogni turno'),
                 subtitle: const Text('Nelle partite tra due persone'),
                 value: s.autoFlip,

@@ -177,6 +177,7 @@ void main() {
     await tester.tap(find.text('Mostra le mosse legali'));
     await tester.tap(find.text('Promuovi sempre a donna'));
     await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(find.text('Merida'), 100);
     await tester.tap(find.text('Blu'));
     await tester.tap(find.text('Merida'));
     await tester.scrollUntilVisible(find.text('Nessuna'), 100);
@@ -278,5 +279,41 @@ void main() {
     expect(prefs.getBool('haptics'), isFalse);
     await _tapMove(tester, 'e2e4');
     expect(find.text('Muove il Nero.'), findsOneWidget);
+  });
+
+  testWidgets('RF-09 conferma della mossa', (tester) async {
+    await _start(tester);
+    await _openSettings(tester);
+    await tester.scrollUntilVisible(find.text('Conferma la mossa'), 100);
+    await tester.tap(find.text('Conferma la mossa'));
+    await tester.pumpAndSettle();
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+
+    await _tapMove(tester, 'e2e4');
+    expect(find.text('Conferma'), findsOneWidget);
+    expect(find.text('1. e4'), findsNothing);
+    await tester.tap(find.text('Scarta'));
+    await tester.pumpAndSettle();
+    expect(find.text('Conferma'), findsNothing);
+    expect(find.text('Muove il Bianco.'), findsOneWidget);
+
+    await _tapMove(tester, 'd2d4');
+    await tester.tap(find.text('Conferma'));
+    await tester.pumpAndSettle();
+    expect(find.text('Muove il Nero.'), findsOneWidget);
+    expect(find.text('1. d4'), findsOneWidget);
+
+    await _tapMove(tester, 'd7d5');
+    await tester.tap(find.text('Annulla'));
+    await tester.pumpAndSettle();
+    expect(find.text('Conferma'), findsNothing);
+    expect(find.text('1. d4'), findsOneWidget);
+    expect(find.text('Muove il Nero.'), findsOneWidget);
+
+    await _tapMove(tester, 'd7d5');
+    await tester.tap(find.text('Abbandona'));
+    await tester.pumpAndSettle();
+    expect(find.text('Abbandonare la partita?'), findsNothing);
   });
 }

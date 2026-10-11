@@ -36,6 +36,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   final ValueNotifier<int> _tick = ValueNotifier(0);
   final SoundPlayer _sounds = SoundPlayer();
   final LowTimeAlarm _lowTime = LowTimeAlarm();
+  Move? _pendingMove;
 
   AppSettings get _settings => widget.settings.value;
 
@@ -108,6 +109,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   }
 
   void _refresh({bool animate = true}) {
+    _pendingMove = null;
     _syncClock();
     _board.updatePosition(_gameData(), animate: animate, resetPremove: true);
     setState(() {
@@ -116,6 +118,41 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   }
 
   void _onMove(Move move, {bool? viaDragAndDrop}) {
+    if (!_settings.confirmMove) {
+      _commitMove(move, animate: viaDragAndDrop != true);
+      return;
+    }
+    if (!_game.position.isLegal(move)) return;
+    final preview = _game.position.play(move);
+    _board.updatePosition(
+      GameData(
+        fen: preview.fen,
+        lastMove: move,
+        playerSide: PlayerSide.none,
+        sideToMove: preview.turn,
+        kingSquareInCheck: preview.isCheck
+            ? preview.board.kingOf(preview.turn)
+            : null,
+        validMoves: const {},
+      ),
+      animate: viaDragAndDrop != true,
+    );
+    setState(() => _pendingMove = move);
+  }
+
+  void _confirmPending() {
+    final move = _pendingMove;
+    if (move == null) return;
+    setState(() => _pendingMove = null);
+    _commitMove(move, animate: false);
+  }
+
+  void _discardPending() {
+    _clearBoardInteraction();
+    _refresh(animate: false);
+  }
+
+  void _commitMove(Move move, {required bool animate}) {
     final clock = _clock;
     final flagged = clock?.flagged;
     if (flagged != null) {
@@ -137,7 +174,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         clock.start(_game.position.turn);
       }
     }
-    _refresh(animate: viaDragAndDrop != true);
+    _refresh(animate: animate);
   }
 
   /// Ferma l'orologio a fine partita e aggiorna il timer di visualizzazione.
@@ -222,6 +259,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   }
 
   void _undo() {
+    if (_pendingMove != null) {
+      _discardPending();
+      return;
+    }
     final clock = _clock;
     final timedOut = _game.endReason == GameEndReason.timeout;
     final revokesOnly = const {
@@ -316,10 +357,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     final actions = _GameActions(
       onNewGame: _newGame,
-      onUndo: _game.canUndo ? _undo : null,
+      onUndo: _game.canUndo || _pendingMove != null ? _undo : null,
       onFlip: () => setState(() => _orientation = _orientation.opposite),
-      onDraw: _game.isOver ? null : _offerDraw,
-      onResign: _game.isOver ? null : _resign,
+      onDraw: _game.isOver || _pendingMove != null ? null : _offerDraw,
+      onResign: _game.isOver || _pendingMove != null ? null : _resign,
     );
     return Scaffold(
       appBar: AppBar(
@@ -361,7 +402,12 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
               onMove: _onMove,
               settings: boardSettings,
             );
-            final status = _StatusLine(game: _game);
+            final Widget status = _pendingMove == null
+                ? _StatusLine(game: _game)
+                : _ConfirmBar(
+                    onConfirm: _confirmPending,
+                    onDiscard: _discardPending,
+                  );
             final moves = _MoveList(game: _game, horizontal: !landscape);
             final balance = MaterialBalance.of(_game);
             final topMaterial = _MaterialRow(
@@ -741,6 +787,42 @@ class _TimeControlSheet extends StatelessWidget {
             ),
           ],
         ],
+      ),
+    );
+  }
+}
+
+class _ConfirmBar extends StatelessWidget {
+  const _ConfirmBar({required this.onConfirm, required this.onDiscard});
+
+  final VoidCallback onConfirm;
+  final VoidCallback onDiscard;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: _statusHeight,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Row(
+          children: [
+            Expanded(
+              child: OutlinedButton.icon(
+                onPressed: onDiscard,
+                icon: const Icon(Icons.close),
+                label: const Text('Scarta'),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: FilledButton.icon(
+                onPressed: onConfirm,
+                icon: const Icon(Icons.check),
+                label: const Text('Conferma'),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
