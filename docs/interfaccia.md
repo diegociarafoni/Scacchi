@@ -45,6 +45,8 @@ Per ciascun giocatore una riga mostra le icone dei pezzi avversari catturati, da
 | Gira | Capovolge la scacchiera |
 | Patta | Chiede all'avversario se accetta la patta; disattivato a partita conclusa |
 | Abbandona | Chiede conferma e fa abbandonare il lato al tratto; disattivato a partita conclusa |
+| Menu ⋮, "Analisi della posizione" | Apre l'analisi libera della posizione corrente con orologio e computer fermi (vedi [analisi.md](analisi.md)) |
+| Menu ⋮, "Revisione della partita" | Apre la revisione con classificazione delle mosse e precisione (vedi [revisione-partita.md](revisione-partita.md)); il menu c'è solo dove c'è il motore e negli scacchi classici, non nelle varianti |
 
 ## Orologio
 

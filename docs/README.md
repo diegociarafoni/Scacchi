@@ -21,6 +21,8 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | [localizzazione.md](localizzazione.md) | Lingua predefinita e come aggiungere testi e lingue |
 | [sviluppo.md](sviluppo.md) | Ambiente, comandi, test, CI e convenzioni |
 | [avversario-computer.md](avversario-computer.md) | Partita contro il computer: livelli, motore Stockfish, piattaforme |
+| [revisione-partita.md](revisione-partita.md) | Revisione della partita: probabilità di vittoria, classificazione delle mosse, precisione |
+| [analisi.md](analisi.md) | Analisi libera della posizione: linee del motore, barra, esplorazione |
 | [rilascio-android.md](rilascio-android.md) | Rilascio dell'APK, installazione sul telefono, chiave di firma |
 | [licenza.md](licenza.md) | Licenza del progetto e componenti di terze parti |
 
@@ -48,5 +50,7 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | Tornei contro bot | Formule, classifica, tabellone e bacheca pronti; partite e accesso in arrivo con la partita contro il computer |
 | Orologio con cadenze e incremento | Disponibile |
 | Suoni, vibrazione, modalità tavolo | Disponibile |
+| Revisione della partita: classificazione, precisione, grafico, Riprova | Disponibile dove c'è il motore (Android e iOS) |
+| Analisi libera della posizione con linee del motore | Disponibile dove c'è il motore (Android e iOS) |
 
 I requisiti completi sono nel documento dei requisiti del progetto.
