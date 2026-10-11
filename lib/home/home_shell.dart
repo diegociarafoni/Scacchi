@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../game/game_page.dart';
 import '../openings/opening_assets.dart';
 import '../openings/openings_hub_page.dart';
+import '../openings/repertoire.dart';
 import '../progress/activity.dart';
 import '../progress/progress_controller.dart';
 import '../progress/progress_tracker.dart';
@@ -10,6 +11,7 @@ import '../puzzles/puzzle_assets.dart';
 import '../puzzles/puzzle_hub_page.dart';
 import '../puzzles/puzzle_trainer.dart';
 import '../settings/settings.dart';
+import '../storage/key_value_store.dart';
 
 /// Navigazione principale con la barra in basso, nella zona del pollice.
 class HomeShell extends StatefulWidget {
@@ -18,6 +20,7 @@ class HomeShell extends StatefulWidget {
     required this.settings,
     this.puzzleTrainer,
     this.progress,
+    this.repertoire,
   });
 
   final SettingsController settings;
@@ -28,6 +31,9 @@ class HomeShell extends StatefulWidget {
   /// Sostituibile nei test; di default apre i progressi salvati.
   final Future<ProgressController> Function()? progress;
 
+  /// Sostituibile nei test; di default il repertorio salvato.
+  final Future<RepertoireTrainer> Function()? repertoire;
+
   @override
   State<HomeShell> createState() => _HomeShellState();
 }
@@ -36,6 +42,15 @@ class _HomeShellState extends State<HomeShell> {
   int _tab = 0;
   Future<PuzzleTrainer>? _trainer;
   Future<ProgressController>? _progress;
+  Future<RepertoireTrainer>? _repertoire;
+
+  Future<RepertoireTrainer> _loadRepertoire() =>
+      (widget.repertoire ??
+              () async => RepertoireTrainer.load(await JsonFileStore.open()))()
+          .catchError((Object e) {
+            _repertoire = null;
+            throw e;
+          });
 
   @override
   void initState() {
@@ -70,6 +85,7 @@ class _HomeShellState extends State<HomeShell> {
     if (_tab == 1) {
       _trainer ??= _loadTrainer();
     }
+    if (_tab == 2) _repertoire ??= _loadRepertoire();
     return Scaffold(
       body: IndexedStack(
         index: _tab,
@@ -79,7 +95,10 @@ class _HomeShellState extends State<HomeShell> {
             PuzzleHubPage(trainer: _trainer!, onActivity: _record)
           else
             const SizedBox.shrink(),
-          const OpeningsHubPage(),
+          if (_repertoire != null)
+            OpeningsHubPage(repertoire: _repertoire!)
+          else
+            const SizedBox.shrink(),
         ],
       ),
       bottomNavigationBar: NavigationBar(

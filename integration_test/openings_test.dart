@@ -59,4 +59,27 @@ void main() {
     await _tapMove(tester, 'a2a3');
     expect(find.textContaining('Sicilian Defense'), findsWidgets);
   });
+
+  testWidgets('RF-93 una linea dell\'explorer si ripassa dal repertorio', (
+    tester,
+  ) async {
+    await _start(tester);
+    await tester.tap(find.text('Aperture').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Explorer'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('e4'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('c5'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Aggiungi al repertorio'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Aggiungi'));
+    await tester.pumpAndSettle();
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Repertorio con il Nero'));
+    await tester.pumpAndSettle();
+    expect(find.text('1. e4 c5'), findsWidgets);
+  });
 }
