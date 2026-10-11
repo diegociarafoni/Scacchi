@@ -122,6 +122,17 @@ void main() {
     expect(find.text('22 mosse'), findsOneWidget);
   });
 
+  testWidgets('RG-10 record dei minigiochi con il loro nome', (tester) async {
+    await tester.runAsync(
+      () => controller.record(
+        const MinigameFinished(game: 'coordinate', score: 17),
+      ),
+    );
+    await show(tester);
+    await tester.scrollUntilVisible(find.text('Coordinate a tempo'), 200);
+    expect(find.text('17'), findsOneWidget);
+  });
+
   testWidgets('RG-12 con la gamification spenta il profilo è nascosto', (
     tester,
   ) async {

@@ -127,4 +127,28 @@ void main() {
     expect(s.xp, 120);
     expect(s.records, const PersonalRecords());
   });
+
+  test('RG-10 miglior punteggio per minigioco, anche se zero', () {
+    var u = rec(
+      ProgressState.initial,
+      const MinigameFinished(game: 'coordinate', score: 0),
+    );
+    expect(u.state.records.minigames, {'coordinate': 0});
+    expect(u.newRecords, isEmpty);
+    u = rec(u.state, const MinigameFinished(game: 'coordinate', score: 12));
+    expect(u.newRecords, [RecordKind.minigame]);
+    u = rec(u.state, const MinigameFinished(game: 'materiale', score: 5));
+    expect(u.newRecords, isEmpty);
+    expect(u.state.records.minigames, {'coordinate': 12, 'materiale': 5});
+    expect(ProgressState.fromJson(u.state.toJson()), u.state);
+  });
+
+  test('i minigiochi non contano come serie di puzzle', () {
+    final u = rec(
+      ProgressState.initial,
+      const MinigameFinished(game: 'coordinate', score: 40),
+    );
+    expect(u.state.records.puzzleRuns, isEmpty);
+    expect(u.state.puzzlesSolved, 0);
+  });
 }
