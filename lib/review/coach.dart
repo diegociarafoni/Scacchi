@@ -13,6 +13,7 @@ enum CoachTheme {
   hangingPiece,
   allowedFork,
   allowedPin,
+  exposedKing,
   missedCapture,
   missedFork,
   missedDiscovery,
@@ -52,6 +53,7 @@ CoachComment? explainMove(
       _materialLoss(before, after, m.replyLine, kid) ??
       // Una inchiodatura è un danno più lieve: non copre perdite concrete.
       _allowedPin(after, m.replyLine) ??
+      _exposedKing(before, after, m) ??
       (m.bestSan == null
           ? null
           : CoachComment(
@@ -161,6 +163,32 @@ CoachComment? _allowedPin(Position after, List<String> reply) {
     'Dopo ${after.makeSan(first).$2} ${_the(slider.role)} '
     '${_colorAdj(slider)} inchioda ${_the(role)} in ${pinned.name} contro '
     'il re.',
+  );
+}
+
+/// Una mossa del re (senza arrocco) o del pedone davanti al re, ancora sulla
+/// sua traversa di partenza, a cui l'avversario risponde con scacco.
+CoachComment? _exposedKing(Position before, Position after, MoveReview m) {
+  final move = m.move;
+  if (move is! NormalMove) return null;
+  final me = before.turn;
+  final king = before.board.kingOf(me);
+  final piece = before.board.pieceAt(move.from);
+  if (king == null || piece == null) return null;
+  final shield = switch (piece.role) {
+    Role.king => before.board.pieceAt(move.to)?.color != me,
+    Role.pawn =>
+      (move.from.file - king.file).abs() <= 1 &&
+          king.rank == (me == Side.white ? Rank.first : Rank.eighth),
+    _ => false,
+  };
+  if (!shield) return null;
+  final reply = parseEngineMove(after, m.replyLine.firstOrNull);
+  if (reply == null || !after.play(reply).isCheck) return null;
+  return CoachComment(
+    CoachTheme.exposedKing,
+    'Dopo ${m.san} il tuo re resta scoperto: '
+    '${after.makeSan(reply).$2} è scacco.',
   );
 }
 
