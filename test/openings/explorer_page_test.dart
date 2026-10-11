@@ -104,9 +104,6 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.text('B20 Difesa siciliana'), findsOneWidget);
-    expect(
-      tester.widget<Semantics>(find.byType(Semantics).last).properties.label,
-      'Apertura: Difesa siciliana',
-    );
+    expect(find.bySemanticsLabel('Apertura: Difesa siciliana'), findsOneWidget);
   });
 }

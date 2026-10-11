@@ -215,6 +215,7 @@ const _adjectives = <String, (String, String)>{
   'Argentine': ('argentino', 'argentina'),
   'Baltic': ('baltico', 'baltica'),
   'Sicilian': ('siciliano', 'siciliana'),
+  'Slav': ('slavo', 'slava'),
   'Indian': ('indiano', 'indiana'),
   'Wing': ("d'ala", "d'ala"),
   'Center': ('del centro', 'del centro'),
@@ -242,6 +243,12 @@ const _phrases = <String, String>{
   "Queen's Knight": 'del cavallo di donna',
   "King's Knight": 'del cavallo di re',
   'Early Deviations': 'deviazioni anticipate',
+  'Move Order': 'ordine delle mosse',
+  'Kingside Move Order': "ordine delle mosse dell'ala di re",
+  'Queenside Move Order': "ordine delle mosse dell'ala di donna",
+  'Pawn Push': 'spinta di pedone',
+  'Double-Dutch': 'doppio olandese',
+  "King's English": 'inglese di re',
 };
 
 /// Nome italiano di [name], o [name] stesso dove manca la traduzione.
@@ -274,14 +281,17 @@ String _family(String text) {
 
 /// Vero se il nome italiano dell'apertura è femminile: gli aggettivi senza
 /// sostantivo ("Open", "Closed") si accordano con lui.
-bool _isFeminine(String it) =>
-    RegExp(r'^(Difesa|Apertura|Partita|Formazione|Pseudo difesa|Indiana|Slava)')
-        .hasMatch(it);
+bool _isFeminine(String it) => _feminineStart.hasMatch(it);
+
+final _feminineStart = RegExp(
+  r'^(Difesa|Apertura|Partita|Formazione|Pseudo difesa|Indiana|Slava)',
+);
+final _acceptedDeclined = RegExp(r'^(.*) (Accepted|Declined)$');
 
 String _familyHead(String text) {
   final known = _families[text];
   if (known != null) return known;
-  final m = RegExp(r'^(.*) (Accepted|Declined)$').firstMatch(text);
+  final m = _acceptedDeclined.firstMatch(text);
   if (m != null) {
     final base = _families[m[1]];
     if (base != null) {
@@ -331,6 +341,12 @@ String _word(String w, {required bool feminine}) {
   final prefix = dash < 0 ? null : _prefixes[w.substring(0, dash)];
   if (prefix != null) {
     return '$prefix-${_word(w.substring(dash + 1), feminine: feminine)}';
+  }
+  // "Benoni-Indian", "Nimzo-Dutch": l'ultimo pezzo è un aggettivo.
+  final last = w.lastIndexOf('-');
+  if (last > 0 && _adjectives.containsKey(w.substring(last + 1))) {
+    return '${w.substring(0, last)}-'
+        '${_word(w.substring(last + 1), feminine: feminine)}';
   }
   return w;
 }

@@ -104,10 +104,14 @@ void main() {
           .where((f) => f.length >= 3)
           .map((f) => f[1])
           .toSet();
+      // Sostantivi e aggettivi del glossario: se ne resta uno, manca una regola.
       final english = RegExp(
-        r'\b(Defense|Gambit|Opening|Attack|Game|Variation|Variations|System|'
-        r'Line|Countergambit|Classical|Accepted|Declined|Main|Closed|Open|'
-        r'Modern|Exchange|with)\b',
+        r'\b(Defense|Gambit|Opening|Attack|Game|Variations?|System|Line|'
+        r'Countergambit|Counterattack|Formation|Trap|Sacrifice|Endgame|'
+        r'Retreat|Classical|Accepted|Declined|Main|Closed|Open|Modern|'
+        r'Exchange|Advance|Normal|Orthodox|Symmetrical|Reversed|Accelerated|'
+        r'Delayed|Deferred|Quiet|Traditional|Positional|Double|Central|'
+        r'Slav|Move Order|Counter|with)\b',
       );
       final bad = [
         for (final n in names)

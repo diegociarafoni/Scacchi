@@ -1,6 +1,6 @@
 # Aperture
 
-Riconoscimento delle aperture, mosse di libro, explorer ridotto e repertorio con ripetizione dilazionata (requisiti RF-90, RF-91, RF-92, RF-93).
+Riconoscimento delle aperture, mosse di libro, Esplora aperture e repertorio con ripetizione dilazionata (requisiti RF-90, RF-91, RF-92, RF-93).
 
 ## Dati
 
@@ -28,7 +28,7 @@ Il libro si carica una volta sola (`openingBook()` in `opening_assets.dart`), in
 
 ### Nomi in italiano
 
-Il dataset Lichess è in inglese, quindi i nomi si traducono al momento di mostrarli, senza toccare il file: `openingNameIt` (`lib/openings/opening_names_it.dart`) usa una tabella con le oltre 150 famiglie ("Sicilian Defense" diventa "Difesa siciliana", "Queen's Gambit Declined" diventa "Gambetto di donna rifiutato") e un piccolo glossario per le varianti. Il sostantivo (variante, attacco, gambetto, difesa, sistema, linea) viene messo davanti e gli aggettivi si accordano ("Open Variation" diventa "variante aperta"). I nomi propri restano invariati ("variante Najdorf") e ciò che non si sa tradurre resta in inglese, così l'informazione non si perde mai. Un test controlla che nessun nome del libro lasci parole comuni in inglese. La traduzione vale per il titolo della partita, Esplora aperture, il nome proposto per il repertorio e le aperture delle statistiche; le partite salvate conservano il nome inglese.
+Il dataset Lichess è in inglese, quindi i nomi si traducono al momento di mostrarli, senza toccare il file: `openingNameIt` (`lib/openings/opening_names_it.dart`) usa una tabella con le famiglie del libro ("Sicilian Defense" diventa "Difesa siciliana", "Queen's Gambit Declined" diventa "Gambetto di donna rifiutato") e un piccolo glossario per le varianti. Il sostantivo (variante, attacco, gambetto, difesa, sistema, linea) viene messo davanti e gli aggettivi si accordano ("Open Variation" diventa "variante aperta"). I nomi propri restano invariati ("variante Najdorf") e ciò che non si sa tradurre resta in inglese, così l'informazione non si perde mai. Un test passa tutti i nomi del libro e controlla che non restino in inglese le parole del glossario e i sostantivi che reggono il nome. La traduzione vale per il titolo della partita, Esplora aperture, il nome proposto per il repertorio e le aperture delle statistiche; le partite salvate conservano il nome inglese.
 
 La notazione delle mosse resta quella inglese (Nf3, Bb5) come nel resto dell'app.
 

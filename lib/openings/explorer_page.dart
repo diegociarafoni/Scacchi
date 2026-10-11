@@ -9,7 +9,7 @@ import 'opening_assets.dart';
 import 'opening_book.dart';
 import 'repertoire.dart';
 
-/// Esplora aperture, versione ridotta: continuazioni del libro dalla posizione corrente (RF-92).
+/// Esplora aperture: continuazioni del libro dalla posizione corrente (RF-92).
 class ExplorerPage extends StatefulWidget {
   const ExplorerPage({
     super.key,
