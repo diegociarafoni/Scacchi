@@ -33,6 +33,14 @@ class PlayedMove {
 }
 
 /// Stato della partita: cronologia, annullamento e condizioni di fine partita.
+/// Mossa legale e, se porta un pedone in ultima traversa, con il pezzo di promozione.
+bool isPlayableMove(Position pos, Move move) =>
+    pos.isLegal(move) &&
+    !(move is NormalMove &&
+        move.promotion == null &&
+        pos.board.pawns.has(move.from) &&
+        SquareSet.backranks.has(move.to));
+
 class ChessGame {
   ChessGame({Position? initial, this.variant = Variant.standard})
     : initial =
@@ -54,7 +62,7 @@ class ChessGame {
     final game = ChessGame(initial: initial, variant: variant);
     for (final move in moves) {
       final pos = game.position;
-      if (pos.isGameOver || !_isPlayable(pos, move)) return null;
+      if (pos.isGameOver || !isPlayableMove(pos, move)) return null;
       final (after, san) = pos.makeSan(move);
       game._moves.add(PlayedMove(move: move, san: san, after: after));
     }
@@ -79,7 +87,7 @@ class ChessGame {
 
   /// Gioca [move] se è legale. Restituisce `false` se la mossa viene rifiutata.
   bool play(Move move) {
-    if (isOver || !_isPlayable(position, move)) return false;
+    if (isOver || !isPlayableMove(position, move)) return false;
     final (after, san) = position.makeSan(move);
     _moves.add(PlayedMove(move: move, san: san, after: after));
     return true;
@@ -136,14 +144,6 @@ class ChessGame {
     GameEndReason.variantEnd => position.variantOutcome,
     _ => Outcome.draw,
   };
-
-  /// Mossa legale e, se porta un pedone in ultima traversa, con il pezzo di promozione.
-  static bool _isPlayable(Position pos, Move move) =>
-      pos.isLegal(move) &&
-      !(move is NormalMove &&
-          move.promotion == null &&
-          pos.board.pawns.has(move.from) &&
-          SquareSet.backranks.has(move.to));
 
   /// Confronta solo le posizioni successive all'ultima cattura o mossa di pedone.
   bool get _isThreefoldRepetition {

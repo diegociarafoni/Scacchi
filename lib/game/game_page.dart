@@ -149,7 +149,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       _commitMove(move, animate: viaDragAndDrop != true);
       return;
     }
-    if (!_game.position.isLegal(move)) return;
+    if (!isPlayableMove(_game.position, move)) return;
     final (preview, san) = _game.position.makeSan(move);
     final turn = _game.position.turn;
     _announce(

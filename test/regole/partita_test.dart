@@ -58,6 +58,13 @@ void main() {
     });
 
     test('il re non può catturare un pezzo protetto', () {
+      final game = _game('4k3/8/8/8/8/4q3/4r3/4K3 w - - 0 1');
+      expect(game.isOver, isFalse);
+      expect(_accepts(game, 'e1e2'), isFalse);
+      expect(_accepts(game, 'e1f1'), isTrue);
+    });
+
+    test('matto se il pezzo che dà scacco è protetto', () {
       final game = _game('4k3/8/8/8/8/4r3/4q3/4K3 w - - 0 1');
       expect(game.endReason, GameEndReason.checkmate);
     });
@@ -120,11 +127,12 @@ void main() {
   });
 
   group('stallo', () {
+    test('una mossa che lascia una via di fuga non è stallo', () {
+      final game = _play(_game('k7/8/1Q6/8/8/8/8/7K w - - 0 1'), 'Qb5');
+      expect(game.isOver, isFalse);
+    });
+
     test('stallo dopo una mossa', () {
-      expect(
-        _play(_game('k7/8/1Q6/8/8/8/8/7K w - - 0 1'), 'Qb5').isOver,
-        isFalse,
-      );
       final game = _play(_game('k7/8/8/2Q5/8/8/8/7K w - - 0 1'), 'Qb6');
       expect(game.endReason, GameEndReason.stalemate);
       expect(game.outcome, Outcome.draw);
