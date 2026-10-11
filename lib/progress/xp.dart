@@ -14,6 +14,8 @@ int xpFor(Activity activity) => switch (activity) {
   GamePlayed() => 10,
   PuzzleSolved() => 5,
   PuzzleRunFinished() => 10,
+  // Una sessione senza punti non vale XP, per non premiare i tocchi a caso.
+  MinigameFinished(:final score) => score > 0 ? 5 : 0,
   LessonCompleted() => 20,
   ReviewCompleted() => 20,
 };

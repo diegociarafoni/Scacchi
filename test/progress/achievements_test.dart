@@ -97,4 +97,31 @@ void main() {
       contains('puzzle_run_20'),
     );
   });
+
+  test('RG-10 venti coordinate in una sessione', () {
+    expect(
+      unlockedBy(const MinigameFinished(game: 'coordinate', score: 19)),
+      isNot(contains('coordinates_20')),
+    );
+    expect(
+      unlockedBy(const MinigameFinished(game: 'coordinate', score: 20)),
+      contains('coordinates_20'),
+    );
+  });
+
+  test('RG-10 tutti i minigiochi provati', () {
+    var s = ProgressState.initial;
+    final ids = <String>[];
+    for (final game in ['coordinate', 'cattura', 'cieca', 'materiale']) {
+      final u = tracker.record(
+        s,
+        MinigameFinished(game: game, score: 1),
+        now,
+        settings,
+      );
+      ids.addAll(u.unlocked.map((a) => a.id));
+      s = u.state;
+    }
+    expect(ids.where((id) => id == 'minigames_all'), hasLength(1));
+  });
 }

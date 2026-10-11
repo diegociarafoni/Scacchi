@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../minigames/minigame.dart';
 import 'achievements.dart';
 import 'challenges.dart';
 import 'daily_goal.dart';
@@ -330,6 +331,8 @@ class _Records extends StatelessWidget {
         (RecordKind.puzzleRating.label, '${r.puzzleRating}'),
       for (final e in r.puzzleRuns.entries)
         ('${RecordKind.puzzleRun.label} (${e.key})', '${e.value}'),
+      for (final e in r.minigames.entries)
+        (Minigame.byId(e.key)?.title ?? e.key, '${e.value}'),
     ];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,

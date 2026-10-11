@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'glicko2.dart';
 import 'puzzle.dart';
 import 'puzzle_library.dart';
+import 'review_queue.dart';
+import 'run_records.dart';
 import '../storage/key_value_store.dart';
 
 /// Punteggio puzzle del giocatore e scelta del puzzle successivo.
 class PuzzleTrainer {
-  PuzzleTrainer._(this.library, this._store);
+  PuzzleTrainer._(this.library, this._store, this.now);
 
   static const storageKey = 'puzzles.trainer.v1';
 
@@ -16,6 +18,9 @@ class PuzzleTrainer {
 
   final PuzzleLibrary library;
   final KeyValueStore _store;
+  final DateTime Function() now;
+  late final ReviewQueue reviews;
+  late final RunRecords records;
   Glicko2Rating _rating = const Glicko2Rating();
   final Set<String> _seen = {};
   int _solved = 0;
@@ -28,9 +33,12 @@ class PuzzleTrainer {
 
   static Future<PuzzleTrainer> load(
     PuzzleLibrary library,
-    KeyValueStore store,
-  ) async {
-    final t = PuzzleTrainer._(library, store);
+    KeyValueStore store, {
+    DateTime Function() now = DateTime.now,
+  }) async {
+    final t = PuzzleTrainer._(library, store, now);
+    t.reviews = await ReviewQueue.load(store);
+    t.records = await RunRecords.load(store);
     final raw = await store.read(storageKey);
     if (raw != null) {
       try {
@@ -52,6 +60,11 @@ class PuzzleTrainer {
     return t;
   }
 
+  /// Puzzle da ripassare oggi che esistono ancora nella raccolta.
+  List<Puzzle> dueReviews() => [
+    for (final id in reviews.due(now())) ?library.byId(id),
+  ];
+
   Puzzle next({String? theme}) =>
       library.next(rating: _rating.rating, theme: theme, seen: _seen);
 
@@ -59,6 +72,7 @@ class PuzzleTrainer {
   /// se il puzzle era già stato visto: le ripetizioni non cambiano il punteggio.
   Future<double?> record(Puzzle puzzle, {required bool solved}) async {
     if (!_seen.add(puzzle.id)) {
+      if (!solved) await reviews.failed(puzzle.id, now());
       // In fondo all'ordine dei visti, così si ricomincia dal meno recente.
       _seen
         ..remove(puzzle.id)
@@ -76,6 +90,7 @@ class PuzzleTrainer {
     ]);
     solved ? _solved++ : _failed++;
     await _save();
+    if (!solved) await reviews.failed(puzzle.id, now());
     return _rating.rating - before;
   }
 

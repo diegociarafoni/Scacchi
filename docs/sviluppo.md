@@ -40,6 +40,7 @@ Ogni funzione nasce dai requisiti del progetto, nel documento dei requisiti, con
 | Gamification | `test/progress/` | Regole di XP, serie e traguardi; salvataggio; schermata Profilo | `flutter test test/progress` |
 | Percorso | `test/path/` | Esercizi, contenuti, sblocco, mappa e tappe sulla scacchiera | `flutter test test/path` |
 | Statistiche | `test/stats/` | Bilancio, rating locale, schermata | `flutter test test/stats` |
+| Minigiochi | `test/minigames/` | Generazione risolvibile, risposte, schermate, registrazione dei punteggi | `flutter test test/minigames` |
 | Archivio | `test/archive/` | PGN, salvataggio su file, schermata Partite | `flutter test test/archive` |
 | End-to-end | `integration_test/*_test.dart` | L'app reale avviata su un dispositivo o desktop, con tocchi e trascinamenti sulla scacchiera | `flutter test integration_test -d <dispositivo>` |
 
@@ -69,15 +70,19 @@ I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisic
 | RG-01 XP e livelli | ✓ | |
 | RG-02 obiettivo giornaliero, serie, riposo, protezioni | ✓ | |
 | RG-03 percorso a tappe, stelle, sblocco, contenuti verificati | ✓ | |
-| RG-05 33 traguardi e notifica in-app | ✓ | |
+| RG-05 35 traguardi e notifica in-app | ✓ | |
 | RG-07 sfide giornaliere e settimanali | ✓ | |
 | RG-08 record personali | ✓ | |
+| RG-10 minigiochi | ✓ | |
 | RG-12 gamification disattivabile | ✓ | |
 | RF-80 raccolta di puzzle inclusa e valida | ✓ | ✓ |
 | RF-81 risoluzione e punteggio Glicko-2 | ✓ | ✓ |
 | RF-83 suggerimento, soluzione, filtro per tema | ✓ | ✓ |
 | RF-84 puzzle del giorno | ✓ | ✓ |
 | RG-01 XP per i puzzle risolti | ✓ | |
+| RF-82 Storm, Rush, sopravvivenza, Serie | ✓ | ✓ |
+| RF-85 ripasso dei puzzle sbagliati | ✓ | |
+| RG-08 record personali delle serie | ✓ | ✓ |
 
 ## Integrazione continua
 

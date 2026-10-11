@@ -10,6 +10,7 @@ import '../progress/progress_feedback.dart';
 import '../training/training_board.dart';
 import 'activity_recorder.dart';
 import 'puzzle.dart';
+import 'puzzle_feed.dart';
 import 'puzzle_session.dart';
 import 'puzzle_trainer.dart';
 import 'themes.dart';
@@ -23,6 +24,7 @@ class PuzzlePage extends StatefulWidget {
     required this.trainer,
     this.theme,
     this.puzzle,
+    this.feed,
     this.title = 'Puzzle',
     this.onActivity,
     this.replyDelay = const Duration(milliseconds: 400),
@@ -33,6 +35,9 @@ class PuzzlePage extends StatefulWidget {
 
   /// Puzzle fisso (per esempio quello del giorno); altrimenti si sceglie per punteggio.
   final Puzzle? puzzle;
+
+  /// Sorgente alternativa, per esempio il ripasso degli errori.
+  final PuzzleFeed? feed;
   final String title;
 
   /// Riceve un `PuzzleSolved` per ogni puzzle risolto, per XP e obiettivi.
@@ -44,7 +49,13 @@ class PuzzlePage extends StatefulWidget {
 }
 
 class _PuzzlePageState extends State<PuzzlePage> {
+  late final PuzzleFeed _feed =
+      widget.feed ??
+      (widget.puzzle != null
+          ? SingleFeed(widget.trainer, widget.puzzle!)
+          : RatedFeed(widget.trainer, theme: widget.theme));
   late PuzzleSession _session;
+  bool _empty = false;
   _Feedback _feedback = _Feedback.find;
   double? _delta;
   Square? _hint;
@@ -57,7 +68,12 @@ class _PuzzlePageState extends State<PuzzlePage> {
   @override
   void initState() {
     super.initState();
-    _start(widget.puzzle ?? widget.trainer.next(theme: widget.theme));
+    final first = _feed.next();
+    if (first == null) {
+      _empty = true;
+    } else {
+      _start(first);
+    }
   }
 
   @override
@@ -112,15 +128,16 @@ class _PuzzlePageState extends State<PuzzlePage> {
   }
 
   Future<void> _record(Puzzle puzzle, {required bool solved}) async {
-    final delta = await widget.trainer.record(puzzle, solved: solved);
+    final outcome = await _feed.finished(puzzle, solved: solved);
+    final delta = outcome.ratingDelta;
     if (!mounted) return;
     setState(() {
       _delta = delta;
-      _repeat = delta == null;
+      _repeat = delta == null && !outcome.awardXp;
     });
     final record = widget.onActivity;
     // Le ripetizioni e le soluzioni mostrate non valgono XP.
-    if (record == null || delta == null || _session.revealed) return;
+    if (record == null || !outcome.awardXp || _session.revealed) return;
     final update = await record(
       PuzzleSolved(
         themes: puzzle.themes,
@@ -150,34 +167,41 @@ class _PuzzlePageState extends State<PuzzlePage> {
 
   void _next() {
     _replyTimer?.cancel();
-    setState(() => _start(widget.trainer.next(theme: widget.theme)));
+    final next = _feed.next();
+    if (next != null) setState(() => _start(next));
   }
 
   String get _message {
     final side = _session.puzzle.playerSide == Side.white ? 'Bianco' : 'Nero';
     final rating = widget.trainer.rating.rating.round();
-    final delta = _delta == null
+    final delta = _delta;
+    final outcome = _repeat
+        ? ' Già visto: punteggio invariato.'
+        : delta == null
         ? ''
-        : ' (${_delta! >= 0 ? '+' : ''}${_delta!.round()})';
+        : ' Punteggio $rating (${delta >= 0 ? '+' : ''}${delta.round()}).';
     return switch (_feedback) {
       _Feedback.find => 'Trova la mossa migliore per il $side.',
       _Feedback.correct => 'Giusto! Continua.',
       _Feedback.wrong => 'Non è la mossa giusta. Riprova.',
-      _Feedback.solved when _repeat =>
-        'Risolto! Già visto: punteggio invariato.',
-      _Feedback.solved => 'Risolto! Punteggio $rating$delta.',
-      _Feedback.revealed when _repeat && _session.state == PuzzleState.solved =>
-        'Puzzle concluso. Già visto: punteggio invariato.',
+      _Feedback.solved => 'Risolto!$outcome',
       _Feedback.revealed =>
         _session.state == PuzzleState.solved
-            ? 'Puzzle concluso. Punteggio $rating$delta.'
+            ? 'Puzzle concluso.$outcome'
             : 'Ecco la mossa giusta.',
     };
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_empty) {
+      return Scaffold(
+        appBar: AppBar(title: Text(widget.title)),
+        body: const Center(child: Text('Nessun puzzle da proporre.')),
+      );
+    }
     final done = _session.state == PuzzleState.solved;
+    final last = done && !_feed.hasNext;
     final puzzle = _session.puzzle;
     final themes = puzzle.themes
         .map((t) => puzzleThemeLabels[t])
@@ -224,7 +248,9 @@ class _PuzzlePageState extends State<PuzzlePage> {
                         Padding(
                           padding: const EdgeInsets.all(8),
                           child: Text(
-                            done
+                            last
+                                ? 'Non ci sono altri puzzle per ora.'
+                                : done
                                 ? 'Puzzle ${puzzle.rating}'
                                       '${themes.isEmpty ? '' : ' · $themes'}'
                                 : 'Il tuo punteggio: '
@@ -239,7 +265,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
                 _PuzzleActions(
                   onHint: done ? null : _showHint,
                   onSolution: done ? null : _showSolution,
-                  onNext: widget.puzzle == null && done ? _next : null,
+                  onNext: done && !last ? _next : null,
                 ),
               ],
             );

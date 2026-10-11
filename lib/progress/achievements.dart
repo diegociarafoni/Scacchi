@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:dartchess/dartchess.dart';
 
+import '../minigames/minigame.dart';
 import 'activity.dart';
 import 'challenges.dart';
 import 'progress_state.dart';
@@ -273,6 +274,21 @@ final List<Achievement> _more = [
     description: 'Completa 10 lezioni.',
     category: AchievementCategory.curiosity,
     test: (s, _) => s.lessonsCompleted >= 10,
+  ),
+  Achievement(
+    id: 'coordinates_20',
+    title: 'Occhio di lince',
+    description: 'Trova 20 coordinate in una sessione a tempo.',
+    category: AchievementCategory.curiosity,
+    test: (s, _) => (s.records.minigames[Minigame.coordinates.id] ?? 0) >= 20,
+  ),
+  Achievement(
+    id: 'minigames_all',
+    title: 'Giocoliere',
+    description: 'Prova tutti i minigiochi.',
+    category: AchievementCategory.curiosity,
+    test: (s, _) =>
+        Minigame.values.every((m) => s.records.minigames.containsKey(m.id)),
   ),
 ];
 
