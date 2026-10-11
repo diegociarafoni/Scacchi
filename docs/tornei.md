@@ -9,7 +9,7 @@ Requisito RG-09: tornei contro 4-8 bot al posto delle leghe online, con partite 
 | Girone all'italiana | 4, 5, 6 o 8 | Tutti contro tutti una volta (con giocatori dispari ognuno riposa un turno, senza punti) | Classifica per punti, poi Sonneborn-Berger, poi vittorie |
 | Eliminazione diretta | 4 o 8 | 2 o 3 (quarti, semifinali, finale) | Dopo una patta, Armageddon a colori invertiti: al nero basta la patta |
 
-- **Abbinamenti del girone**: metodo del cerchio (tabelle di Berger). Ognuno incontra tutti una volta e i colori sono bilanciati entro un bianco di scarto.
+- **Abbinamenti del girone**: metodo del cerchio (tabelle di Berger). Ognuno incontra tutti una volta. Con giocatori dispari il riposo è il giocatore fisso del cerchio e tutti hanno tanti bianchi quanti neri; con giocatori pari lo scarto è di un bianco.
 - **Tabellone**: teste di serie per Elo, abbinate 1-8, 4-5, 2-7, 3-6 (con 4 giocatori 1-4, 2-3). Chi vince prosegue.
 - **Avversari**: i bot più vicini alla forza stimata dell'utente, dal rating locale (vedi [statistiche.md](statistiche.md)). La schermata li mostra prima di iniziare.
 
@@ -25,7 +25,7 @@ Se l'utente esce nell'eliminazione diretta, i turni rimanenti si simulano subito
 
 ## Salvataggio e bacheca
 
-`TournamentController` salva in `tornei.json` (`JsonFile`, scrittura atomica) il torneo in corso dopo ogni partita e la bacheca dei tornei conclusi: data, formula, giocatori, posizione e vincitore. Abbandonare un torneo lo chiude senza trofeo.
+`TournamentController` salva in `tornei.json` (`JsonFile`, scrittura atomica) il torneo in corso dopo ogni partita e la bacheca dei tornei conclusi: data, formula, giocatori, posizione e vincitore. Abbandonare un torneo lo chiude senza trofeo. Un file non valido va in quarantena (`.bad-<ms>`) e si riparte da zero; un risultato che arriva quando il torneo è stato chiuso o è cambiato si ignora.
 
 ## Progressi
 

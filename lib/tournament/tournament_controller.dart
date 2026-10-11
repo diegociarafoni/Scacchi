@@ -84,14 +84,21 @@ class TournamentController extends ChangeNotifier {
 
   Future<void> load() async {
     try {
-      final data = await _file.read((json) => json);
-      _current = data?['current'] == null
-          ? null
-          : Tournament.fromJson((data!['current']! as Map).cast());
-      _trophies = [
-        for (final t in data?['trophies'] as List? ?? const [])
-          Trophy.fromJson((t as Map).cast()),
-      ];
+      // Decodifica dentro `read`: un contenuto non valido finisce in
+      // quarantena invece di bloccare la schermata.
+      final data = await _file.read(
+        (json) => (
+          current: json['current'] == null
+              ? null
+              : Tournament.fromJson((json['current']! as Map).cast()),
+          trophies: [
+            for (final t in json['trophies'] as List? ?? const [])
+              Trophy.fromJson((t as Map).cast()),
+          ],
+        ),
+      );
+      _current = data?.current;
+      _trophies = data?.trophies ?? const [];
     } on FileSystemException catch (e) {
       debugPrint('Lettura dei tornei non riuscita: $e');
       _readOnly = true;
@@ -117,8 +124,11 @@ class TournamentController extends ChangeNotifier {
   }
 
   /// Registra la partita dell'utente; a fine torneo aggiunge il trofeo.
+  /// Senza una partita in attesa non fa nulla.
   Future<void> recordUserGame(double points) async {
-    final t = _current!.recordUserGame(points);
+    final current = _current;
+    if (current == null || current.userGame == null) return;
+    final t = current.recordUserGame(points);
     _current = t;
     if (t.finished) {
       _trophies = [

@@ -71,6 +71,10 @@ void main() {
           }
         }
         expect(met, hasLength(size * (size - 1) ~/ 2));
+        if (size.isOdd) {
+          // Con il riposo fisso nel cerchio i colori sono pari per tutti.
+          expect(whites, everyElement((size - 1) ~/ 2));
+        }
         for (final w in whites) {
           expect(w, inInclusiveRange((n - 1) ~/ 2 - 1, (n - 1) ~/ 2 + 1));
         }
@@ -179,6 +183,17 @@ void main() {
       final mine = t.rounds.first.firstWhere((p) => p.includes(0));
       expect(mine.winner == 0, again.color == Side.black);
     });
+
+    for (final (points, advances) in [(1.0, true), (0.0, false)]) {
+      test('Armageddon: ${points == 1 ? 'vinto' : 'perso'} dall\'utente', () {
+        for (var seed = 0; seed < 6; seed++) {
+          var t = create(TournamentFormat.knockout, 4, seed: seed);
+          t = t.recordUserGame(0.5).recordUserGame(points);
+          final mine = t.rounds.first.firstWhere((p) => p.includes(0));
+          expect(mine.winner == 0, advances, reason: 'seme $seed');
+        }
+      });
+    }
 
     test('solo 4 o 8 giocatori', () {
       expect(() => create(TournamentFormat.knockout, 6), throwsArgumentError);

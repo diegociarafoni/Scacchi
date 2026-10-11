@@ -83,4 +83,23 @@ void main() {
     expect(c.trophies, isEmpty);
     expect(recorded, isEmpty);
   });
+
+  test('un contenuto non valido va in quarantena e non blocca', () async {
+    final file = File('${dir.path}/tornei.json');
+    await file.writeAsString(
+      '{"version":1,"current":{"format":"sconosciuto"},"trophies":[]}',
+    );
+    final c = controller();
+    await c.load();
+    expect(c.current, isNull);
+    expect(dir.listSync().where((f) => f.path.contains('.bad')), hasLength(1));
+  });
+
+  test('registrare senza torneo non fa nulla', () async {
+    final c = controller();
+    await c.load();
+    await c.recordUserGame(1);
+    expect(c.current, isNull);
+    expect(recorded, isEmpty);
+  });
 }

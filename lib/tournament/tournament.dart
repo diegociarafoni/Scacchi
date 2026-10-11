@@ -220,7 +220,8 @@ class Tournament {
         return byElo != 0 ? byElo : a.compareTo(b);
       });
 
-  int get _totalRounds => format == TournamentFormat.roundRobin
+  /// Turni complessivi, anche quelli del tabellone non ancora abbinati.
+  int get totalRounds => format == TournamentFormat.roundRobin
       ? rounds.length
       : (math.log(players.length) / math.ln2).round();
 
@@ -233,7 +234,7 @@ class Tournament {
   }
 
   bool get finished =>
-      rounds.length == _totalRounds && currentRound == rounds.length;
+      rounds.length == totalRounds && currentRound == rounds.length;
 
   UserGame? get userGame {
     if (finished) return null;
@@ -268,7 +269,7 @@ class Tournament {
         if (!p.includes(0) || p.isBye)
           p
         else if (game.armageddon)
-          p.copyWith(tiebreak: p.white == 0 ? 1 - points : points)
+          p.copyWith(tiebreak: p.white == 0 ? points : 1 - points)
         else
           p.copyWith(result: p.white == 0 ? points : 1 - points),
     ];
@@ -288,28 +289,17 @@ class Tournament {
     final r = currentRound;
     final round = [
       for (final (board, p) in rounds[r].indexed)
-        p.decided(format) || (p.includes(0) && !_userOut)
-            ? p
-            : _simulate(p, r, board),
+        p.decided(format) || p.includes(0) ? p : _simulate(p, r, board),
     ];
     var next = [...rounds]..[r] = round;
     final done = round.every((p) => p.decided(format));
     if (format == TournamentFormat.knockout &&
         done &&
-        next.length < _totalRounds) {
+        next.length < totalRounds) {
       next = [...next, _nextKnockoutRound(round)];
     }
     return _with(next);
   }
-
-  /// Vero quando l'utente è eliminato e non gioca più.
-  bool get _userOut =>
-      format == TournamentFormat.knockout &&
-      rounds.any(
-        (round) => round.any(
-          (p) => p.includes(0) && p.winner != null && p.winner != 0,
-        ),
-      );
 
   Pairing _simulate(Pairing p, int round, int board) {
     final base = mix32(seed ^ mix32(round * 16 + board));
@@ -406,7 +396,7 @@ class Tournament {
     for (final (r, round) in rounds.indexed) {
       for (final p in round) {
         if (p.includes(0) && p.winner != 0) {
-          return (1 << (_totalRounds - 1 - r)) + 1;
+          return (1 << (totalRounds - 1 - r)) + 1;
         }
       }
     }
@@ -450,7 +440,9 @@ class Tournament {
 /// Berger). Con giocatori dispari si aggiunge un riposo.
 List<List<Pairing>> _bergerRounds(int count) {
   final n = count.isEven ? count : count + 1;
-  final ring = [for (var i = 0; i < n; i++) i];
+  // Con giocatori dispari il riposo è il giocatore fisso del cerchio: così
+  // tutti hanno tanti bianchi quanti neri.
+  final ring = [if (count.isOdd) count, for (var i = 0; i < count; i++) i];
   final rounds = <List<Pairing>>[];
   for (var r = 0; r < n - 1; r++) {
     final round = <Pairing>[];

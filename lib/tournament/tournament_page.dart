@@ -94,7 +94,12 @@ class _Setup extends StatefulWidget {
 
 class _SetupState extends State<_Setup> {
   TournamentFormat _format = TournamentFormat.roundRobin;
-  int _size = 6;
+
+  /// Numero di giocatori scelto per ciascuna formula.
+  final _sizeByFormat = {
+    TournamentFormat.roundRobin: 6,
+    TournamentFormat.knockout: 8,
+  };
 
   List<int> get _sizes =>
       _format == TournamentFormat.knockout ? const [4, 8] : const [4, 5, 6, 8];
@@ -107,13 +112,17 @@ class _SetupState extends State<_Setup> {
       for (final s in _sizes)
         if (s - 1 <= page.bots.length) s,
     ];
-    if (!available.contains(_size) && available.isNotEmpty) {
-      _size = available.last;
-    }
+    // Con pochi bot la scelta ricade sul torneo più grande possibile.
+    final chosen = _sizeByFormat[_format]!;
+    final size = available.contains(chosen)
+        ? chosen
+        : available.isEmpty
+        ? 0
+        : available.last;
     final opponents = chooseBots(
       page.bots,
       userElo: page.userElo,
-      count: _size - 1,
+      count: size - 1,
     );
     final trophies = page.controller.trophies;
     return ListView(
@@ -140,8 +149,8 @@ class _SetupState extends State<_Setup> {
             for (final s in available)
               ChoiceChip(
                 label: Text('$s giocatori'),
-                selected: s == _size,
-                onSelected: (_) => setState(() => _size = s),
+                selected: s == size,
+                onSelected: (_) => setState(() => _sizeByFormat[_format] = s),
               ),
           ],
         ),
@@ -160,7 +169,7 @@ class _SetupState extends State<_Setup> {
               ? null
               : () => page.controller.start(
                   format: _format,
-                  size: _size,
+                  size: size,
                   userName: page.userName,
                   userElo: page.userElo,
                   bots: page.bots,
@@ -193,11 +202,20 @@ String _date(DateTime d) =>
     '${d.day.toString().padLeft(2, '0')}/'
     '${d.month.toString().padLeft(2, '0')}/${d.year}';
 
-class _Running extends StatelessWidget {
+class _Running extends StatefulWidget {
   const _Running({required this.page, required this.tournament});
 
   final TournamentPage page;
   final Tournament tournament;
+
+  @override
+  State<_Running> createState() => _RunningState();
+}
+
+class _RunningState extends State<_Running> {
+  bool _playing = false;
+
+  TournamentPage get page => widget.page;
 
   Future<void> _play(BuildContext context, UserGame game) async {
     final play = page.play;
@@ -212,17 +230,26 @@ class _Running extends StatelessWidget {
       );
       return;
     }
-    final points = await play(context, game);
-    if (points != null) await page.controller.recordUserGame(points);
+    final before = page.controller.current;
+    setState(() => _playing = true);
+    try {
+      final points = await play(context, game);
+      // Il risultato vale solo se nel frattempo il torneo non è cambiato.
+      if (points != null && identical(page.controller.current, before)) {
+        await page.controller.recordUserGame(points);
+      }
+    } finally {
+      if (mounted) setState(() => _playing = false);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final t = tournament;
+    final t = widget.tournament;
     final text = Theme.of(context).textTheme;
     final game = t.userGame;
     final totalRounds = t.format == TournamentFormat.roundRobin
-        ? t.rounds.length
+        ? t.totalRounds
         : null;
     return ListView(
       padding: const EdgeInsets.all(16),
@@ -271,7 +298,7 @@ class _Running extends StatelessWidget {
                 '${game.armageddon ? (game.color == Side.black ? ' · ti basta la patta' : ' · devi vincere') : ''}',
               ),
               trailing: FilledButton(
-                onPressed: () => _play(context, game),
+                onPressed: _playing ? null : () => _play(context, game),
                 child: const Text('Gioca'),
               ),
             ),
@@ -349,7 +376,7 @@ class _Bracket extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = tournament;
     final text = Theme.of(context).textTheme;
-    final total = t.players.length == 8 ? 3 : 2;
+    final total = t.totalRounds;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
