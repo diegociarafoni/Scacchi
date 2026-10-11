@@ -24,6 +24,7 @@ import '../progress/game_activity.dart';
 import '../progress/progress_controller.dart';
 import '../progress/progress_feedback.dart';
 import '../puzzles/activity_recorder.dart';
+import '../review/board_utils.dart';
 import '../review/engine_evaluator.dart';
 import '../review/game_review.dart';
 import '../review/move_classification.dart';
@@ -157,6 +158,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   /// Allenatore in partita (RF-73): giudica le mosse dell'utente.
   bool _coachOn = false;
+
+  /// Giudizio dell'allenatore sull'ultima mossa dell'utente (RF-72): il
+  /// simbolo sulla casa d'arrivo, come nella revisione.
+  ({int ply, Square square, MoveClass verdict})? _badge;
   String? _hintedFen;
   late CoachSession _coach = _newCoach();
 
@@ -722,6 +727,30 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     if (played) unawaited(_afterHumanMove(before, move));
   }
 
+  /// Il giudizio resta sulla casa finché è la mossa dell'utente o la risposta
+  /// del computer non la occupa; non si mostra sfogliando la cronologia.
+  Map<Square, Annotation> _badgeAnnotations() {
+    final badge = _badge;
+    if (badge == null || _viewPly != null || !_coachOn) return const {};
+    final length = _game.moves.length;
+    if (length != badge.ply + 1 && length != badge.ply + 2) return const {};
+    if (length == badge.ply + 2 && _lastMoveTo() == badge.square) {
+      return const {};
+    }
+    return {
+      badge.square: Annotation(
+        symbol: badge.verdict.symbol,
+        color: moveClassColor(badge.verdict),
+      ),
+    };
+  }
+
+  /// Casa d'arrivo dell'ultima mossa giocata.
+  Square? _lastMoveTo() {
+    final move = _game.lastMove;
+    return move is NormalMove ? move.to : null;
+  }
+
   /// Con l'allenatore acceso, giudica la mossa prima della risposta del
   /// computer; un errore offre di riprenderla.
   Future<void> _afterHumanMove(Position before, Move move) async {
@@ -745,6 +774,16 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         return false;
       }
       final text = verdict.comment?.text;
+      final played = verdict.review.move;
+      if (played is NormalMove) {
+        setState(
+          () => _badge = (
+            ply: plies - 1,
+            square: kingDestination(before, played).to,
+            verdict: verdict.review.classification,
+          ),
+        );
+      }
       if (!verdict.shouldWarn) {
         if (text != null) _announce(text);
         return false;
@@ -1121,6 +1160,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _cancelComputerMove();
     _clockBeforeSuspension = false;
     _coachOn = false;
+    _badge = null;
     _hintedFen = null;
     _coach = _newCoach();
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -1232,6 +1272,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       return;
     }
     _cancelComputerMove();
+    _badge = null;
     final revokeOnly = _endedByChoice;
     final timedOut = _game.endReason == GameEndReason.timeout;
     _game.undo();
@@ -1603,7 +1644,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           : _resign,
       // Nelle sfide niente aiuti: né suggerimenti né ripetizione della mossa.
       coachOn: _computerSide == null || _isChallenge ? null : _coachOn,
-      onCoach: () => setState(() => _coachOn = !_coachOn),
+      onCoach: () => setState(() {
+        _coachOn = !_coachOn;
+        if (!_coachOn) _badge = null;
+      }),
       onHint: _coachOn && _humanToMove && _pendingMove == null
           ? _giveHint
           : null,
@@ -1720,6 +1764,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                   orientation: _orientation,
                   onMove: _onMove,
                   settings: boardSettings,
+                  annotations: _badgeAnnotations(),
                 ),
               );
               final viewPly = _viewPly;
