@@ -30,3 +30,10 @@ class DailyGoal {
   @override
   int get hashCode => Object.hash(kind, target);
 }
+
+/// Obiettivo in parole, per esempio "3 partite".
+String goalLabel(DailyGoal goal) => switch (goal.kind) {
+  GoalKind.games => goal.target == 1 ? '1 partita' : '${goal.target} partite',
+  GoalKind.puzzles => '${goal.target} puzzle',
+  GoalKind.minutes => '${goal.target} minuti',
+};
