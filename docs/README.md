@@ -40,5 +40,6 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | Minigiochi | Quattro minigiochi pronti con record e XP; accesso dalla schermata principale in arrivo |
 | Tornei contro bot | Formule, classifica, tabellone e bacheca pronti; partite e accesso in arrivo con la partita contro il computer |
 | Orologio con cadenze e incremento | Disponibile |
+| Suoni, vibrazione, modalità tavolo | Disponibile |
 
 I requisiti completi sono nel documento dei requisiti del progetto.
