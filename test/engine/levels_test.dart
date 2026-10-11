@@ -47,4 +47,27 @@ void main() {
       expect(remaining, greaterThan(Duration.zero));
     });
   });
+
+  group('engineLevelForElo', () {
+    test('sceglie il livello con l\'Elo più vicino', () {
+      expect(engineLevelForElo(400).id, 1);
+      expect(engineLevelForElo(600).id, 1);
+      expect(engineLevelForElo(1350).id, 4);
+      expect(engineLevelForElo(1400).id, 4);
+      expect(engineLevelForElo(5000).id, 8);
+    });
+
+    test('a pari distanza sceglie il più debole', () {
+      var ties = 0;
+      for (var i = 0; i + 1 < engineLevels.length; i++) {
+        final low = engineLevels[i];
+        final high = engineLevels[i + 1];
+        final sum = low.approxElo + high.approxElo;
+        if (sum.isOdd) continue;
+        ties++;
+        expect(engineLevelForElo(sum ~/ 2).id, low.id);
+      }
+      expect(ties, greaterThan(0));
+    });
+  });
 }

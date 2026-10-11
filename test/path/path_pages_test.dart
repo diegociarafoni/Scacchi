@@ -177,7 +177,9 @@ void main() {
     await tester.tap(guardian.first);
     await tester.pumpAndSettle();
     expect(
-      find.text('Il guardiano arriva con la partita contro il computer.'),
+      find.text(
+        'Il guardiano si sfida su Android e iOS, dove gioca il computer.',
+      ),
       findsOneWidget,
     );
   });
