@@ -53,6 +53,16 @@ Per ciascun giocatore una riga mostra le icone dei pezzi avversari catturati, da
 - Si ferma mentre è aperto un dialogo (abbandono, patta, nuova partita) e quando l'app va in secondo piano, e riparte al ritorno.
 - Una mossa fatta a tempo già scaduto non viene accettata.
 
+## Rivedere le mosse
+
+Toccando una mossa nella striscia (o nella lista, in orizzontale) la scacchiera mostra la posizione dopo quella mossa, con la mossa evidenziata. La riga di stato diventa una barra con mossa precedente, mossa successiva, il testo "Posizione dopo 12... Nf6" (o "Posizione iniziale") e il pulsante "Torna alla partita".
+
+- Durante la revisione la scacchiera non accetta mosse, le righe del materiale seguono la posizione mostrata e l'orologio continua a scorrere.
+- Con una mossa in attesa di conferma la navigazione è disattivata finché non viene confermata o scartata.
+- Con una tastiera: frecce sinistra e destra per scorrere, Home per la posizione iniziale, Fine per tornare alla partita.
+- Andare oltre l'ultima mossa, una nuova partita o "Annulla" riportano alla posizione corrente; durante la revisione "Annulla" non toglie mosse.
+- I numeri delle mosse partono dalla posizione iniziale della partita, anche quando è importata da un FEN.
+
 ## Impostazioni
 
 Si aprono dall'icona a forma di ingranaggio nella barra del titolo. Ogni modifica si applica subito e viene salvata sul dispositivo.
