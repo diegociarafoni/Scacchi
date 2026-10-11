@@ -1,5 +1,5 @@
 import 'package:chessground/chessground.dart';
-import 'package:dartchess/dartchess.dart' show Side;
+import 'package:dartchess/dartchess.dart' show PieceKind, Side;
 import 'package:flutter/material.dart' show ThemeMode;
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,8 +19,10 @@ enum AnimationSpeed {
   final Duration duration;
 }
 
-/// Temi a tinta unita: le immagini delle scacchiere di chessground hanno
-/// licenza AGPL. Alcuni si sbloccano con i progressi (`progress/rewards.dart`).
+/// Temi della scacchiera. Le immagini di chessground hanno licenza AGPL, quindi
+/// i temi con texture usano solo le nostre in `assets/boards/`, generate da
+/// `tool/board_art/`. Alcuni si sbloccano con i progressi
+/// (`progress/rewards.dart`).
 enum BoardTheme {
   green('Verde', scheme: ChessboardColorScheme.green),
   brown('Legno', scheme: ChessboardColorScheme.brown),
@@ -30,12 +32,91 @@ enum BoardTheme {
   ocean('Oceano', light: Color(0xffd6ecf0), dark: Color(0xff3f7f93)),
   coral('Corallo', light: Color(0xfffbe3d6), dark: Color(0xffd9776a)),
   night('Notte', light: Color(0xff9aa5b8), dark: Color(0xff3b4459)),
-  gold('Oro', light: Color(0xfffaf0c8), dark: Color(0xffc9a227));
+  gold('Oro', light: Color(0xfffaf0c8), dark: Color(0xffc9a227)),
+  arancia(
+    'Arancia',
+    light: Color(0xfffcebd5),
+    dark: Color(0xffee9b55),
+    textured: true,
+  ),
+  crepuscolo(
+    'Crepuscolo',
+    light: Color(0xffd5c7e3),
+    dark: Color(0xff6e5b8f),
+    textured: true,
+    dim: true,
+  ),
+  pergamena(
+    'Pergamena',
+    light: Color(0xfff1e2bc),
+    dark: Color(0xffb48a55),
+    textured: true,
+  ),
+  castello(
+    'Castello',
+    light: Color(0xffa49c90),
+    dark: Color(0xff5a544d),
+    textured: true,
+    dim: true,
+  ),
+  bosco(
+    'Bosco elfico',
+    light: Color(0xffece6d0),
+    dark: Color(0xff5e7f5a),
+    textured: true,
+  ),
+  noce(
+    'Noce',
+    light: Color(0xffe6c597),
+    dark: Color(0xff93603a),
+    textured: true,
+  ),
+  spazio(
+    'Spazio',
+    light: Color(0xff4a4f86),
+    dark: Color(0xff1d1f45),
+    textured: true,
+    dim: true,
+  ),
+  retro(
+    'Retrò',
+    light: Color(0xff9bbc0f),
+    dark: Color(0xff306230),
+    textured: true,
+  ),
+  giardino(
+    'Giardino',
+    light: Color(0xffdcebb4),
+    dark: Color(0xff6e9a4c),
+    textured: true,
+  ),
+  terracotta(
+    'Terracotta',
+    light: Color(0xfff3dfc6),
+    dark: Color(0xffc4643c),
+    textured: true,
+  );
 
-  const BoardTheme(this.label, {this.scheme, this.light, this.dark})
-    : assert(scheme != null || (light != null && dark != null));
+  const BoardTheme(
+    this.label, {
+    this.scheme,
+    this.light,
+    this.dark,
+    this.textured = false,
+    this.dim = false,
+  }) : assert(scheme != null || (light != null && dark != null));
 
   final String label;
+
+  /// Con texture in `assets/boards/` invece della tinta unita.
+  final bool textured;
+
+  /// Tema scuro: i pezzi neri prendono un alone chiaro per restare leggibili.
+  final bool dim;
+
+  /// Immagine della texture, `null` per i temi a tinta unita.
+  AssetImage? get image =>
+      textured ? AssetImage('assets/boards/$name.webp') : null;
 
   /// Schema di chessground, se il tema non è definito dai soli [light] e [dark].
   final ChessboardColorScheme? scheme;
@@ -47,21 +128,33 @@ enum BoardTheme {
 
   /// Sempre la stessa istanza per tema, per non ridisegnare lo sfondo.
   ChessboardColorScheme get colorScheme =>
-      scheme ?? _solid.putIfAbsent(this, () => _solidScheme(light!, dark!));
+      scheme ??
+      _solid.putIfAbsent(this, () => _solidScheme(light!, dark!, image));
 
   /// Stesse case di [colorScheme], evidenziazioni senza rosso e verde.
   ChessboardColorScheme get colorBlindScheme =>
       _colorBlind.putIfAbsent(this, () => colorBlindHighlights(colorScheme));
 }
 
-ChessboardColorScheme _solidScheme(Color light, Color dark) {
-  ChessboardBackground background({Side? coordinates}) =>
-      SolidColorChessboardBackground(
-        lightSquare: light,
-        darkSquare: dark,
-        coordinates: coordinates != null,
-        orientation: coordinates ?? Side.white,
-      );
+ChessboardColorScheme _solidScheme(
+  Color light,
+  Color dark, [
+  AssetImage? image,
+]) {
+  ChessboardBackground background({Side? coordinates}) => image == null
+      ? SolidColorChessboardBackground(
+          lightSquare: light,
+          darkSquare: dark,
+          coordinates: coordinates != null,
+          orientation: coordinates ?? Side.white,
+        )
+      : ImageChessboardBackground(
+          lightSquare: light,
+          darkSquare: dark,
+          coordinates: coordinates != null,
+          orientation: coordinates ?? Side.white,
+          image: image,
+        );
   return ChessboardColorScheme(
     lightSquare: light,
     darkSquare: dark,
@@ -76,33 +169,73 @@ ChessboardColorScheme _solidScheme(Color light, Color dark) {
 }
 
 /// Set di pezzi la cui licenza permette la distribuzione negli store insieme
-/// a codice GPL-3.0 (vedi CREDITS.md). Esclusi i set CC BY-NC-SA.
+/// a codice GPL-3.0 (vedi CREDITS.md). Esclusi i set CC BY-NC-SA. Quelli
+/// senza [pieceSet] sono in `assets/pieces/`, generati da `tool/board_art/`.
 enum PieceStyle {
-  cburnett('Classico', PieceSet.cburnett, 'Colin M.L. Burnett', 'GPL-2.0+'),
-  merida('Merida', PieceSet.merida, 'Armando Hernández Marroquín', 'GPL-2.0+'),
-  chessnut('Chessnut', PieceSet.chessnut, 'Alexis Luengas', 'Apache-2.0'),
-  fantasy('Fantasy', PieceSet.fantasy, 'Maurizio Monge', 'MIT'),
-  spatial('Spatial', PieceSet.spatial, 'Maurizio Monge', 'MIT'),
-  celtic('Celtic', PieceSet.celtic, 'Maurizio Monge', 'MIT'),
-  shapes('Shapes', PieceSet.shapes, 'flugsio', 'CC BY-SA 4.0'),
-  firi('Firi', PieceSet.firi, 'James Faure', 'CC BY 4.0'),
-  mpchess('Mpchess', PieceSet.mpchess, 'Maxime Chupin', 'GPL-3.0+'),
-  kiwenSuwi('Kiwen-suwi', PieceSet.kiwenSuwi, 'neverRare', 'CC BY 4.0'),
-  totoy('Totoy', PieceSet.totoy, 'Kosal Sen', 'CC BY 4.0'),
-  rhosgfx('RhosGFX', PieceSet.rhosgfx, 'RhosGFX', 'CC0');
+  cburnett('Classico', 'Colin M.L. Burnett', 'GPL-2.0+', PieceSet.cburnett),
+  merida('Merida', 'Armando Hernández Marroquín', 'GPL-2.0+', PieceSet.merida),
+  chessnut('Chessnut', 'Alexis Luengas', 'Apache-2.0', PieceSet.chessnut),
+  fantasy('Fantasy', 'Maurizio Monge', 'MIT', PieceSet.fantasy),
+  spatial('Spatial', 'Maurizio Monge', 'MIT', PieceSet.spatial),
+  celtic('Celtic', 'Maurizio Monge', 'MIT', PieceSet.celtic),
+  shapes('Shapes', 'flugsio', 'CC BY-SA 4.0', PieceSet.shapes),
+  firi('Firi', 'James Faure', 'CC BY 4.0', PieceSet.firi),
+  mpchess('Mpchess', 'Maxime Chupin', 'GPL-3.0+', PieceSet.mpchess),
+  kiwenSuwi('Kiwen-suwi', 'neverRare', 'CC BY 4.0', PieceSet.kiwenSuwi),
+  totoy('Totoy', 'Kosal Sen', 'CC BY 4.0', PieceSet.totoy),
+  rhosgfx('RhosGFX', 'RhosGFX', 'CC0', PieceSet.rhosgfx),
+  rokko('Rokko', 'Progetto Rokko', 'GPL-3.0+'),
+  pixel('Pixel', 'Progetto Rokko', 'GPL-3.0+'),
+  arcano('Arcano', 'Progetto Rokko', 'GPL-3.0+'),
+  papercut('Papercut', 'Nikolay Anzarov', 'CC BY 4.0'),
+  noto('Noto', 'Google (Noto Sans Symbols 2)', 'OFL-1.1');
 
-  const PieceStyle(this.label, this.pieceSet, this.author, this.license);
+  const PieceStyle(this.label, this.author, this.license, [this.pieceSet]);
 
   final String label;
-  final PieceSet pieceSet;
   final String author;
   final String license;
+
+  /// Set incluso in chessground, `null` per quelli in `assets/pieces/`.
+  final PieceSet? pieceSet;
+
+  static final _assets = <PieceStyle, PieceAssets>{};
+  static final _halo = <PieceStyle, PieceAssets>{};
+
+  PieceAssets get assets =>
+      pieceSet?.assets ??
+      _assets.putIfAbsent(
+        this,
+        () => _local('assets/pieces/$name', PieceKind.values),
+      );
+
+  /// Pezzi da usare su [theme]: sui temi scuri i neri hanno un alone chiaro.
+  PieceAssets assetsOn(BoardTheme theme) => theme.dim
+      ? _halo.putIfAbsent(
+          this,
+          () => {
+            ...assets,
+            ..._local(
+              'assets/pieces/halo/$name',
+              PieceKind.values.where((k) => k.side == Side.black),
+            ),
+          },
+        )
+      : assets;
+
+  static PieceAssets _local(String dir, Iterable<PieceKind> kinds) => {
+    for (final k in kinds)
+      k: AssetImage(
+        '$dir/${k.side == Side.white ? 'w' : 'b'}${k.role.letter.toUpperCase()}.webp',
+      ),
+  };
 }
 
 class AppSettings {
   AppSettings({
     this.showLegalMoves = true,
     this.showCoordinates = true,
+    this.coordinatesOutside = false,
     this.autoQueen = false,
     this.drawShapes = true,
     this.autoFlip = false,
@@ -140,6 +273,9 @@ class AppSettings {
 
   final bool showLegalMoves;
   final bool showCoordinates;
+
+  /// Coordinate attorno alla scacchiera invece che sulle case.
+  final bool coordinatesOutside;
   final bool autoQueen;
   final bool drawShapes;
   final bool autoFlip;
@@ -165,6 +301,9 @@ class AppSettings {
   final String whiteName;
   final String blackName;
 
+  /// Vero se le coordinate vanno disegnate fuori, da [BoardFrame].
+  bool get outsideCoordinates => showCoordinates && coordinatesOutside;
+
   /// Schema verde fisso degli esercizi guidati, con le evidenziazioni per
   /// daltonici se attive.
   ChessboardColorScheme get exerciseScheme => colorBlind
@@ -188,6 +327,7 @@ class AppSettings {
   AppSettings copyWith({
     bool? showLegalMoves,
     bool? showCoordinates,
+    bool? coordinatesOutside,
     bool? autoQueen,
     bool? drawShapes,
     bool? autoFlip,
@@ -208,6 +348,7 @@ class AppSettings {
   }) => AppSettings(
     showLegalMoves: showLegalMoves ?? this.showLegalMoves,
     showCoordinates: showCoordinates ?? this.showCoordinates,
+    coordinatesOutside: coordinatesOutside ?? this.coordinatesOutside,
     autoQueen: autoQueen ?? this.autoQueen,
     drawShapes: drawShapes ?? this.drawShapes,
     autoFlip: autoFlip ?? this.autoFlip,
@@ -231,8 +372,8 @@ class AppSettings {
     colorScheme: colorBlind
         ? boardTheme.colorBlindScheme
         : boardTheme.colorScheme,
-    pieceAssets: pieceSet.pieceSet.assets,
-    enableCoordinates: showCoordinates,
+    pieceAssets: pieceSet.assetsOn(boardTheme),
+    enableCoordinates: showCoordinates && !coordinatesOutside,
     showValidMoves: showLegalMoves,
     animationDuration: animation.duration,
     autoQueenPromotion: autoQueen,
@@ -247,6 +388,7 @@ class AppSettings {
       other is AppSettings &&
       other.showLegalMoves == showLegalMoves &&
       other.showCoordinates == showCoordinates &&
+      other.coordinatesOutside == coordinatesOutside &&
       other.autoQueen == autoQueen &&
       other.drawShapes == drawShapes &&
       other.autoFlip == autoFlip &&
@@ -269,6 +411,7 @@ class AppSettings {
   int get hashCode => Object.hash(
     showLegalMoves,
     showCoordinates,
+    coordinatesOutside,
     autoQueen,
     drawShapes,
     autoFlip,
@@ -313,6 +456,7 @@ class SettingsController extends ValueNotifier<AppSettings> {
       AppSettings(
         showLegalMoves: read('showLegalMoves', d.showLegalMoves),
         showCoordinates: read('showCoordinates', d.showCoordinates),
+        coordinatesOutside: read('coordinatesOutside', d.coordinatesOutside),
         autoQueen: read('autoQueen', d.autoQueen),
         drawShapes: read('drawShapes', d.drawShapes),
         autoFlip: read('autoFlip', d.autoFlip),
@@ -345,6 +489,8 @@ class SettingsController extends ValueNotifier<AppSettings> {
         prefs.setBool('showLegalMoves', settings.showLegalMoves),
       if (old.showCoordinates != settings.showCoordinates)
         prefs.setBool('showCoordinates', settings.showCoordinates),
+      if (old.coordinatesOutside != settings.coordinatesOutside)
+        prefs.setBool('coordinatesOutside', settings.coordinatesOutside),
       if (old.autoQueen != settings.autoQueen)
         prefs.setBool('autoQueen', settings.autoQueen),
       if (old.drawShapes != settings.drawShapes)

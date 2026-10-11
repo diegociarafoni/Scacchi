@@ -109,6 +109,7 @@ Si aprono dall'icona a forma di ingranaggio nella barra del titolo. Ogni modific
 | Aspetto dell'app | Sistema, Chiaro o Scuro: tema chiaro o scuro di tutta l'app, oppure lo stesso del telefono (requisito RP-02) | Sistema |
 | Mostra le mosse legali | Puntini sulle case raggiungibili dal pezzo selezionato | Attiva |
 | Coordinate | Lettere e numeri sui bordi della scacchiera | Attiva |
+| Coordinate fuori dalla scacchiera | Sposta le coordinate su una cornice attorno alla scacchiera, così non coprono i pezzi; si sceglie solo con le coordinate attive (vedi [pezzi-e-scacchiere.md](pezzi-e-scacchiere.md)) | Disattiva |
 | Promuovi sempre a donna | Salta il selettore di promozione | Disattiva |
 | Frecce e cerchi | Disegno di frecce e cerchi con due dita sulla scacchiera | Attiva |
 | Conferma la mossa | Dopo ogni mossa mostra la posizione risultante con i pulsanti Conferma e Scarta al posto della riga di stato; la mossa conta solo dopo Conferma, e l'orologio continua a scorrere. Durante l'attesa "Annulla" equivale a Scarta, mentre Patta e Abbandona sono disattivati | Disattiva |
@@ -118,14 +119,14 @@ Si aprono dall'icona a forma di ingranaggio nella barra del titolo. Ogni modific
 | Suoni | Suoni per mossa, cattura, arrocco, scacco, promozione, fine partita e tempo sotto i 10 secondi | Attivi |
 | Volume | Volume dei suoni, da 0 a 100% | 100% |
 | Vibrazione | Vibrazione breve a ogni mossa, più marcata per catture e fine partita | Attiva |
-| Tema della scacchiera | Verde, Legno, Blu, Grigio; sbloccabili Sabbia, Oceano, Corallo, Notte, Oro | Verde |
-| Pezzi | Classico, Merida, Chessnut, Fantasy, Spatial; sbloccabili Celtic, Shapes, Firi, Mpchess, Kiwen-suwi, Totoy, RhosGFX | Classico |
+| Tema della scacchiera | Verde, Legno, Blu, Grigio, Arancia, Crepuscolo, Pergamena, Castello, Bosco elfico, Noce, Spazio, Retrò, Giardino, Terracotta; sbloccabili Sabbia, Oceano, Corallo, Notte, Oro | Verde |
+| Pezzi | Classico, Merida, Chessnut, Fantasy, Spatial, Rokko, Pixel, Arcano, Papercut, Noto; sbloccabili Celtic, Shapes, Firi, Mpchess, Kiwen-suwi, Totoy, RhosGFX | Classico |
 | Sblocca tutto | Rende disponibili le ricompense estetiche senza sbloccarle (vedi [gamification.md](gamification.md)) | Disattiva |
 | Animazioni | Nessuna, Veloce, Normale, Lenta | Normale |
 
 Tema, pezzi, coordinate, mosse legali, frecce e animazioni valgono anche per le scacchiere dei problemi, delle aperture e del repertorio, che si aggiornano subito quando cambiano. La modalità tavolo vale solo per la partita, perché negli esercizi si gioca sempre da un solo lato; anche la promozione automatica a donna vale solo per la partita, perché alcuni puzzle si risolvono promuovendo a un altro pezzo.
 
-I set di pezzi disponibili sono solo quelli con licenza compatibile con la GPL e con la distribuzione commerciale, elencati in `CREDITS.md`: i set CC BY-NC-SA di chessground (California, Cardinal, Maestro e altri) sono esclusi, e chi li aveva scelti torna al set Classico. I temi usano solo colori, senza le immagini di chessground (licenza AGPL). Anche le icone dei pezzi catturati usano il set scelto.
+I set di pezzi disponibili sono solo quelli con licenza compatibile con la GPL e con la distribuzione commerciale, elencati in `CREDITS.md`: i set CC BY-NC-SA di chessground (California, Cardinal, Maestro e altri) sono esclusi, e chi li aveva scelti torna al set Classico. I temi con texture usano solo immagini nostre, mai quelle di chessground (licenza AGPL); sui temi scuri i pezzi neri hanno un alone chiaro (vedi [pezzi-e-scacchiere.md](pezzi-e-scacchiere.md)). Anche le icone dei pezzi catturati usano il set scelto.
 
 ## Suoni
 
