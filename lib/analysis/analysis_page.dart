@@ -6,10 +6,12 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
 import '../engine/uci.dart';
+import '../l10n/app_localizations.dart';
 import '../review/board_utils.dart';
 import '../review/eval_bar.dart';
 import '../review/score_format.dart';
 import '../review/win_probability.dart';
+import '../settings/settings.dart';
 
 /// Analisi continua di [fen] con [multiPv] varianti, interrotta annullando
 /// l'iscrizione al flusso.
@@ -48,6 +50,13 @@ class _AnalysisPageState extends State<AnalysisPage>
   /// App in secondo piano: il motore si ferma per non consumare batteria.
   bool _background = false;
   bool _arrow = true;
+
+  /// Freccia della minaccia dell'avversario (RF-56), da una seconda analisi
+  /// a mossa nulla.
+  bool _threat = false;
+  InfoLine? _threatLine;
+  Position? _threatPos;
+  bool _mainStarted = false;
 
   List<InfoLine> _lines = const [];
   List<InfoLine>? _pending;
@@ -88,11 +97,44 @@ class _AnalysisPageState extends State<AnalysisPage>
     super.dispose();
   }
 
+  /// Profondità a cui la ricerca della minaccia basta per la freccia.
+  static const _threatDepth = 14;
+
   void _start() {
     _stop();
     _lines = const [];
     _failed = false;
+    _threatLine = null;
+    _threatPos = null;
+    _mainStarted = false;
     if (_paused || _background || _pos.isGameOver) return;
+    final fen = _threat ? threatFen(_pos) : null;
+    if (fen == null) return _startMain();
+    // Il motore ha una sola coda: prima la ricerca breve della minaccia, poi
+    // quella principale.
+    _threatPos = Chess.fromSetup(Setup.parseFen(fen));
+    _analysis = widget
+        .analyse(fen, 1)
+        .listen(
+          (lines) {
+            final line = lines.firstOrNull;
+            if (line == null || !mounted) return;
+            setState(() => _threatLine = line);
+            if ((line.depth ?? 0) >= _threatDepth) _startMain();
+          },
+          // Senza la minaccia resta l'analisi principale.
+          onError: (Object _) => _startMain(),
+          // Matto o fine della ricerca prima della profondità voluta.
+          onDone: () {
+            if (mounted && !_mainStarted) _startMain();
+          },
+        );
+  }
+
+  /// Analisi principale della posizione, dopo l'eventuale minaccia.
+  void _startMain() {
+    _mainStarted = true;
+    unawaited(_analysis?.cancel());
     _analysis = widget
         .analyse(_pos.fen, _multiPv)
         .listen(
@@ -149,6 +191,11 @@ class _AnalysisPageState extends State<AnalysisPage>
     _go(_index + 1);
   }
 
+  void _toggleThreat() {
+    setState(() => _threat = !_threat);
+    _start();
+  }
+
   void _setMultiPv(int value) {
     setState(() => _multiPv = value);
     _start();
@@ -165,14 +212,20 @@ class _AnalysisPageState extends State<AnalysisPage>
     return _pos.turn == Side.white ? s : s.negated;
   }
 
-  Set<Shape> _shapes() {
-    if (!_arrow) return const {};
-    final best = parseEngineMove(_pos, _lines.firstOrNull?.pv.firstOrNull);
-    if (best is! NormalMove) return const {};
-    final shown = kingDestination(_pos, best);
-    return {
-      Arrow(color: const Color(0xCC3E8E2F), orig: shown.from, dest: shown.to),
-    };
+  Set<Shape> _shapes() => {
+    ..._arrowFor(_pos, _arrow ? _lines.firstOrNull : null, _bestColor),
+    ..._arrowFor(_threatPos, _threatLine, _threatColor),
+  };
+
+  static const _bestColor = Color(0xCC3E8E2F);
+  static const _threatColor = Color(0xCCC0392B);
+
+  Set<Shape> _arrowFor(Position? pos, InfoLine? line, Color color) {
+    if (pos == null) return const {};
+    final move = parseEngineMove(pos, line?.pv.firstOrNull);
+    if (move is! NormalMove) return const {};
+    final shown = kingDestination(pos, move);
+    return {Arrow(color: color, orig: shown.from, dest: shown.to)};
   }
 
   @override
@@ -188,6 +241,13 @@ class _AnalysisPageState extends State<AnalysisPage>
             isSelected: _arrow,
             onPressed: () => setState(() => _arrow = !_arrow),
             icon: const Icon(Icons.north_east),
+          ),
+          IconButton(
+            tooltip: 'Minaccia dell\'avversario',
+            isSelected: _threat,
+            // Sotto scacco o a partita finita la mossa nulla non esiste.
+            onPressed: threatFen(_pos) == null ? null : _toggleThreat,
+            icon: const Icon(Icons.warning_amber),
           ),
         ],
       ),
@@ -285,6 +345,10 @@ class _AnalysisPageState extends State<AnalysisPage>
     if (_failed) return 'Motore non disponibile';
     if (_paused) return 'Analisi in pausa';
     if (_pos.isGameOver) return 'Partita finita';
+    // Profilo bambino (RP-06): niente profondità del motore.
+    if (AppSettings.of(context).kidMode) {
+      return AppLocalizations.of(context).kidAnalysisThinking;
+    }
     final depth = _lines.firstOrNull?.depth;
     return depth == null ? 'Analisi…' : 'Profondità $depth';
   }
@@ -300,7 +364,9 @@ class _AnalysisPageState extends State<AnalysisPage>
       leading: SizedBox(
         width: 56,
         child: Text(
-          white == null ? '' : formatScore(white),
+          white == null || AppSettings.of(context).kidMode
+              ? ''
+              : formatScore(white),
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
       ),

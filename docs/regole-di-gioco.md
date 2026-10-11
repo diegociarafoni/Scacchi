@@ -19,9 +19,10 @@ Ogni mossa giocata viene registrata in notazione algebrica standard (SAN), per e
 | `fiftyMoveRule` | 50 mosse per lato senza catture né mosse di pedone | Patta |
 | `resignation` | Un giocatore abbandona | Vince l'altro lato |
 | `agreement` | Un giocatore propone la patta e l'avversario accetta | Patta |
+| `variantEnd` | Vittoria propria della variante (re al centro, terzo scacco) | Vince chi l'ha ottenuta |
 | `timeout` | Il tempo di un giocatore è esaurito | Vince l'avversario; patta se l'avversario non ha materiale sufficiente per dare matto |
 
-L'ordine di valutazione è quello della tabella: per esempio una mossa che dà matto e contemporaneamente completa le 50 mosse conta come matto.
+Abbandono, patta concordata e tempo scaduto valgono per primi; poi la vittoria di variante, matto, stallo, materiale insufficiente, ripetizione e 50 mosse: una mossa che dà matto e completa le 50 mosse conta come matto.
 
 ### Triplice ripetizione
 
@@ -42,7 +43,7 @@ Si usa il contatore di semimosse della posizione (`halfmoves`), che si azzera a 
 
 ## Varianti
 
-"Nuova" chiede la variante (RF-120, RF-121). Le regole sono quelle di `dartchess`; `lib/game/variant.dart` sceglie la posizione iniziale e `ChessGame` conosce la variante della partita.
+Nel pannello "Nuova", scegliendo **Due giocatori**, si sceglie anche la variante (RF-120, RF-121); contro computer e bot e nel profilo bambino si gioca solo a scacchi classici. Le regole sono quelle di `dartchess`; `lib/game/variant.dart` sceglie la posizione iniziale e `ChessGame` conosce la variante della partita.
 
 | Variante | Differenze |
 |---|---|

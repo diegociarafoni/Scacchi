@@ -7,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/archive/saved_game.dart';
 import 'package:scacchi/engine/computer_player.dart';
 import 'package:scacchi/game/game_page.dart';
+import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/progress/activity.dart';
 import 'package:scacchi/progress/progress_controller.dart';
 import 'package:scacchi/progress/progress_state.dart';
@@ -45,6 +46,9 @@ void main() {
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: const Locale('it'),
         home: GamePage(
           settings: SettingsController.defaults(),
           computerAvailable: computer,
@@ -228,6 +232,9 @@ void main() {
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: const Locale('it'),
         home: GamePage(
           settings: SettingsController.defaults(),
           progress: () async => progress,

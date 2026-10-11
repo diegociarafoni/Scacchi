@@ -49,7 +49,15 @@ String exportPgn(ChessGame game, {Map<String, String> headers = const {}}) {
   final root = PgnNode<PgnNodeData>();
   PgnNode<PgnNodeData> node = root;
   for (final m in game.moves) {
-    final child = PgnChildNode(PgnNodeData(san: m.san));
+    final clock = m.clock;
+    final child = PgnChildNode(
+      PgnNodeData(
+        san: m.san,
+        comments: clock == null
+            ? null
+            : [PgnComment(clock: clock).makeComment()],
+      ),
+    );
     node.children.add(child);
     node = child;
   }
@@ -60,7 +68,8 @@ String exportPgn(ChessGame game, {Map<String, String> headers = const {}}) {
   ).makePgn();
 }
 
-/// Legge una o più partite; commenti e varianti si ignorano, una partita con
+/// Legge una o più partite; i commenti di testo e le varianti si ignorano,
+/// il tempo `[%clk]` di ogni mossa si conserva, una partita con
 /// mosse illegali, posizione non valida o variante non supportata viene
 /// scartata.
 PgnImport importPgn(String text) {
@@ -89,14 +98,21 @@ ChessGame? _replay(PgnGame<PgnNodeData> pgn) {
     return null;
   }
   final moves = <Move>[];
+  final clocks = <Duration?>[];
   Position pos = initial;
   for (final data in pgn.moves.mainline()) {
     final move = pos.parseSan(data.san);
     if (move == null) return null;
     moves.add(move);
+    clocks.add(_clockOf(data.comments));
     pos = pos.play(move);
   }
-  final game = ChessGame.replay(initial, moves, variant: variant);
+  final game = ChessGame.replay(
+    initial,
+    moves,
+    variant: variant,
+    clocks: clocks,
+  );
   if (game != null && !game.isOver) {
     // Il risultato senza matto o patta sulla scacchiera è un abbandono o
     // una patta concordata.
@@ -110,4 +126,13 @@ ChessGame? _replay(PgnGame<PgnNodeData> pgn) {
     }
   }
   return game;
+}
+
+/// Tempo `[%clk]` nei commenti della mossa, se c'è.
+Duration? _clockOf(List<String>? comments) {
+  for (final c in comments ?? const <String>[]) {
+    final clock = PgnComment.fromPgn(c).clock;
+    if (clock != null) return clock;
+  }
+  return null;
 }

@@ -1,6 +1,8 @@
 import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
+import 'package:flutter/material.dart' show ThemeMode;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scacchi/settings/notation.dart';
 import 'package:scacchi/settings/settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,7 +25,29 @@ void main() {
     expect(settings.value.tableMode, isFalse);
     expect(settings.value.confirmMove, isFalse);
     expect(settings.value.colorBlind, isFalse);
+    expect(settings.value.kidMode, isFalse);
+    expect(settings.value.themeMode, ThemeMode.system);
+    expect(settings.value.notation, MoveNotation.figurine);
   });
+
+  test(
+    'RF-76 la notazione scelta è salvata e un valore ignoto vale figurativa',
+    () async {
+      final settings = await SettingsController.load();
+      await settings.update(
+        settings.value.copyWith(notation: MoveNotation.italian),
+      );
+      expect(
+        (await SettingsController.load()).value.notation,
+        MoveNotation.italian,
+      );
+      SharedPreferences.setMockInitialValues({'notation': 'inesistente'});
+      expect(
+        (await SettingsController.load()).value.notation,
+        MoveNotation.figurine,
+      );
+    },
+  );
 
   test('RP-04 le impostazioni sono salvate in locale', () async {
     final settings = await SettingsController.load();
@@ -43,10 +67,13 @@ void main() {
         tableMode: true,
         confirmMove: true,
         colorBlind: true,
+        kidMode: true,
+        themeMode: ThemeMode.dark,
       ),
     );
     final reloaded = await SettingsController.load();
     expect(reloaded.value, settings.value);
+    expect(reloaded.value.themeMode, ThemeMode.dark);
     expect(reloaded.value.boardTheme, BoardTheme.blue);
     expect(reloaded.value.animation, AnimationSpeed.none);
   });
@@ -55,6 +82,20 @@ void main() {
     SharedPreferences.setMockInitialValues({'boardTheme': 'inesistente'});
     final settings = await SettingsController.load();
     expect(settings.value.boardTheme, BoardTheme.green);
+  });
+
+  test('RP-02 aspetto dell\'app salvato per nome', () async {
+    final settings = await SettingsController.load();
+    await settings.update(settings.value.copyWith(themeMode: ThemeMode.light));
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getString('themeMode'), 'light');
+    expect((await SettingsController.load()).value.themeMode, ThemeMode.light);
+  });
+
+  test('RP-02 aspetto sconosciuto torna a quello di sistema', () async {
+    SharedPreferences.setMockInitialValues({'themeMode': 'seppia'});
+    final settings = await SettingsController.load();
+    expect(settings.value.themeMode, ThemeMode.system);
   });
 
   test('RF-12 durata delle animazioni', () {

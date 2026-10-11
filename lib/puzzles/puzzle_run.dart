@@ -55,6 +55,9 @@ enum PuzzleRunMode {
 
 enum RunMoveResult { correct, solved, wrong, illegal, over }
 
+/// Perché una serie è finita.
+enum RunEnd { mistakes, time, exhausted }
+
 /// Una serie di puzzle di difficoltà crescente.
 class PuzzleRun {
   PuzzleRun(this.mode, this.library, {required this.clock, math.Random? random})
@@ -103,6 +106,20 @@ class PuzzleRun {
     if (limit == null) return null;
     final left = limit + _bonus - clock();
     return left.isNegative ? Duration.zero : left;
+  }
+
+  /// Tempo totale a disposizione finora, bonus compresi, o `null` senza tempo.
+  Duration? get totalTime {
+    final limit = mode.limit;
+    return limit == null ? null : limit + _bonus;
+  }
+
+  /// Motivo della fine, o `null` se la serie è ancora in corso.
+  RunEnd? get endReason {
+    final max = mode.maxMistakes;
+    if (max != null && _mistakes >= max) return RunEnd.mistakes;
+    if (remaining != null && remaining == Duration.zero) return RunEnd.time;
+    return _exhausted ? RunEnd.exhausted : null;
   }
 
   bool get isOver {

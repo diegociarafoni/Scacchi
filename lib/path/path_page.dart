@@ -45,7 +45,7 @@ class _PathPageState extends State<PathPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
-              'Il guardiano arriva con la partita contro il computer.',
+              'Il guardiano si sfida su Android e iOS, dove gioca il computer.',
             ),
           ),
         );

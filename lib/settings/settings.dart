@@ -1,9 +1,11 @@
 import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart' show Side;
+import 'package:flutter/material.dart' show ThemeMode;
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'color_blind.dart';
+import 'notation.dart';
 
 enum AnimationSpeed {
   none('Nessuna', Duration.zero),
@@ -113,6 +115,9 @@ class AppSettings {
     this.tableMode = false,
     this.confirmMove = false,
     this.colorBlind = false,
+    this.kidMode = false,
+    this.themeMode = ThemeMode.system,
+    this.notation = MoveNotation.figurine,
     String whiteName = '',
     String blackName = '',
   }) : whiteName = _cleanName(whiteName),
@@ -147,6 +152,16 @@ class AppSettings {
   final bool tableMode;
   final bool confirmMove;
   final bool colorBlind;
+
+  /// Profilo bambino (RP-06): interfaccia e testi semplici, bot amichevoli,
+  /// nessuna statistica numerica.
+  final bool kidMode;
+
+  /// Aspetto dell'app: chiaro, scuro o come il sistema.
+  final ThemeMode themeMode;
+
+  /// Come si scrivono i pezzi nelle mosse.
+  final MoveNotation notation;
   final String whiteName;
   final String blackName;
 
@@ -185,6 +200,9 @@ class AppSettings {
     bool? tableMode,
     bool? confirmMove,
     bool? colorBlind,
+    bool? kidMode,
+    ThemeMode? themeMode,
+    MoveNotation? notation,
     String? whiteName,
     String? blackName,
   }) => AppSettings(
@@ -202,6 +220,9 @@ class AppSettings {
     tableMode: tableMode ?? this.tableMode,
     confirmMove: confirmMove ?? this.confirmMove,
     colorBlind: colorBlind ?? this.colorBlind,
+    kidMode: kidMode ?? this.kidMode,
+    themeMode: themeMode ?? this.themeMode,
+    notation: notation ?? this.notation,
     whiteName: whiteName ?? this.whiteName,
     blackName: blackName ?? this.blackName,
   );
@@ -238,6 +259,9 @@ class AppSettings {
       other.tableMode == tableMode &&
       other.confirmMove == confirmMove &&
       other.colorBlind == colorBlind &&
+      other.kidMode == kidMode &&
+      other.themeMode == themeMode &&
+      other.notation == notation &&
       other.whiteName == whiteName &&
       other.blackName == blackName;
 
@@ -257,6 +281,9 @@ class AppSettings {
     tableMode,
     confirmMove,
     colorBlind,
+    kidMode,
+    themeMode,
+    notation,
     whiteName,
     blackName,
   );
@@ -298,6 +325,9 @@ class SettingsController extends ValueNotifier<AppSettings> {
         tableMode: read('tableMode', d.tableMode),
         confirmMove: read('confirmMove', d.confirmMove),
         colorBlind: read('colorBlind', d.colorBlind),
+        kidMode: read('kidMode', d.kidMode),
+        themeMode: byName(ThemeMode.values, 'themeMode', d.themeMode),
+        notation: byName(MoveNotation.values, 'notation', d.notation),
         whiteName: read('whiteName', d.whiteName),
         blackName: read('blackName', d.blackName),
       ),
@@ -338,6 +368,12 @@ class SettingsController extends ValueNotifier<AppSettings> {
         prefs.setBool('confirmMove', settings.confirmMove),
       if (old.colorBlind != settings.colorBlind)
         prefs.setBool('colorBlind', settings.colorBlind),
+      if (old.kidMode != settings.kidMode)
+        prefs.setBool('kidMode', settings.kidMode),
+      if (old.themeMode != settings.themeMode)
+        prefs.setString('themeMode', settings.themeMode.name),
+      if (old.notation != settings.notation)
+        prefs.setString('notation', settings.notation.name),
       if (old.whiteName != settings.whiteName)
         prefs.setString('whiteName', settings.whiteName),
       if (old.blackName != settings.blackName)

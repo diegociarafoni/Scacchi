@@ -93,7 +93,7 @@ class _RepertoirePageState extends State<RepertoirePage> {
               child: Padding(
                 padding: EdgeInsets.all(24),
                 child: Text(
-                  'Nessuna linea. Aggiungile dall\'Explorer con il pulsante '
+                  'Nessuna linea. Aggiungile da Esplora aperture con il pulsante '
                   '"Aggiungi al repertorio" o importa un PGN.',
                   textAlign: TextAlign.center,
                 ),

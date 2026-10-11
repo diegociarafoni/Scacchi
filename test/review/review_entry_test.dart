@@ -9,6 +9,7 @@ import 'package:scacchi/analysis/analysis_page.dart';
 import 'package:scacchi/engine/computer_player.dart';
 import 'package:scacchi/engine/uci_transport.dart';
 import 'package:scacchi/game/game_page.dart';
+import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/review/review_page.dart';
 import 'package:scacchi/settings/settings.dart';
 
@@ -50,6 +51,9 @@ void main() {
   setUp(ReviewCache.clear);
 
   Widget app({bool computer = true}) => MaterialApp(
+    locale: const Locale('it'),
+    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    supportedLocales: AppLocalizations.supportedLocales,
     home: GamePage(
       settings: SettingsController.defaults(),
       computerAvailable: computer,
@@ -102,7 +106,9 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(app(computer: false));
-    expect(find.byType(PopupMenuButton<String>), findsNothing);
+    await openMenu(tester);
+    expect(find.text('Revisione della partita'), findsNothing);
+    expect(find.text('Analisi della posizione'), findsNothing);
   });
 
   testWidgets('nelle varianti revisione e analisi non sono disponibili', (
@@ -112,7 +118,6 @@ void main() {
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
     await tester.pumpWidget(app());
-    expect(find.byType(PopupMenuButton<String>), findsOneWidget);
     await tester.tap(find.text('Nuova'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Due giocatori'));
@@ -122,7 +127,10 @@ void main() {
     await tester.tap(find.text('Senza tempo'));
     await tester.pumpAndSettle();
     expect(find.textContaining('Chess960'), findsOneWidget);
-    expect(find.byType(PopupMenuButton<String>), findsNothing);
+    await openMenu(tester);
+    expect(find.text('Revisione della partita'), findsNothing);
+    expect(find.text('Analisi della posizione'), findsNothing);
+    expect(find.text('Passa con QR'), findsOneWidget);
   });
 
   testWidgets(
@@ -135,6 +143,9 @@ void main() {
       final engines = <_EvenEngine>[];
       await tester.pumpWidget(
         MaterialApp(
+          locale: const Locale('it'),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           home: GamePage(
             settings: SettingsController.defaults(),
             computerAvailable: true,
@@ -163,7 +174,7 @@ void main() {
         Chess.initial.play(NormalMove.fromUci('e2e4')).fen,
       );
 
-      await tester.pageBack();
+      await tester.tap(find.byType(BackButton));
       await tester.pumpAndSettle();
       expect(engines.single.disposed, isTrue);
     },

@@ -2,11 +2,15 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scacchi/l10n/app_localizations.dart';
+import 'package:scacchi/main.dart';
 import 'package:scacchi/progress/progress_controller.dart';
 import 'package:scacchi/progress/progress_state.dart';
 import 'package:scacchi/progress/progress_store.dart';
+import 'package:scacchi/settings/notation.dart';
 import 'package:scacchi/settings/settings.dart';
 import 'package:scacchi/settings/settings_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   late Directory dir;
@@ -30,6 +34,9 @@ void main() {
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: const Locale('it'),
         home: SettingsPage(
           controller: settings,
           progress: withProgress ? progress : null,
@@ -47,6 +54,17 @@ void main() {
     await tester.tap(chip);
     await tester.pumpAndSettle();
   }
+
+  testWidgets('RF-76 la notazione delle mosse si sceglie dalle Impostazioni', (
+    tester,
+  ) async {
+    await show(tester);
+    expect(settings.value.notation, MoveNotation.figurine);
+    await tapChip(tester, 'Italiana (Cf3)');
+    expect(settings.value.notation, MoveNotation.italian);
+    await tapChip(tester, 'Inglese (Nf3)');
+    expect(settings.value.notation, MoveNotation.english);
+  });
 
   testWidgets('RG-06 un tema bloccato dice come sbloccarlo', (tester) async {
     await show(tester);
@@ -87,5 +105,104 @@ void main() {
     expect(find.byKey(const Key('unlockAll')), findsNothing);
     await tapChip(tester, 'Notte');
     expect(settings.value.boardTheme, BoardTheme.night);
+  });
+
+  testWidgets('RP-06 il profilo bambino si attiva dalle Impostazioni', (
+    tester,
+  ) async {
+    await show(tester);
+    final toggle = find.byKey(const Key('kidMode'));
+    expect(find.text('Profilo bambino'), findsOneWidget);
+    await tester.tap(toggle);
+    await tester.pumpAndSettle();
+    expect(settings.value.kidMode, isTrue);
+  });
+
+  testWidgets('RP-06 per uscire dal profilo bambino serve un adulto', (
+    tester,
+  ) async {
+    await settings.update(settings.value.copyWith(kidMode: true));
+    await show(tester);
+    await tester.tap(find.byKey(const Key('kidMode')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('adultGate')), findsOneWidget);
+
+    await tester.enterText(find.byKey(const Key('adultAnswer')), '1');
+    await tester.tap(find.text('Conferma'));
+    await tester.pumpAndSettle();
+    expect(settings.value.kidMode, isTrue);
+    expect(find.text('Risposta sbagliata.'), findsOneWidget);
+
+    final question = tester
+        .widget<Text>(find.byKey(const Key('adultQuestion')))
+        .data!;
+    final factors = RegExp(r'(\d+) × (\d+)').firstMatch(question)!;
+    final answer = int.parse(factors.group(1)!) * int.parse(factors.group(2)!);
+    await tester.enterText(find.byKey(const Key('adultAnswer')), '$answer');
+    await tester.tap(find.text('Conferma'));
+    await tester.pumpAndSettle();
+    expect(settings.value.kidMode, isFalse);
+  });
+
+  testWidgets('RP-06 annullando la domanda il profilo resta attivo', (
+    tester,
+  ) async {
+    await settings.update(settings.value.copyWith(kidMode: true));
+    await show(tester);
+    await tester.tap(find.byKey(const Key('kidMode')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Annulla'));
+    await tester.pumpAndSettle();
+    expect(settings.value.kidMode, isTrue);
+  });
+
+  testWidgets('RP-02 aspetto dell\'app: Sistema predefinito, poi Chiaro', (
+    tester,
+  ) async {
+    await show(tester);
+    ChoiceChip chip(String label) =>
+        tester.widget(find.widgetWithText(ChoiceChip, label));
+    expect(chip('Sistema').selected, isTrue);
+    expect(chip('Scuro').selected, isFalse);
+    await tapChip(tester, 'Chiaro');
+    expect(settings.value.themeMode, ThemeMode.light);
+    expect(chip('Chiaro').selected, isTrue);
+  });
+
+  testWidgets('RP-02 la scelta in Impostazioni cambia il tema dell\'app', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({});
+    tester.view.physicalSize = const Size(1170, 2532);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(const ScacchiApp());
+    await tester.pumpAndSettle();
+    ThemeMode? mode() =>
+        tester.widget<MaterialApp>(find.byType(MaterialApp)).themeMode;
+    expect(mode(), ThemeMode.system);
+
+    // L'apertura legge i progressi dal disco: serve l'I/O reale.
+    await tester.runAsync(() async {
+      await tester.tap(find.byTooltip('Impostazioni'));
+      for (
+        var i = 0;
+        i < 50 && find.byType(SettingsPage).evaluate().isEmpty;
+        i++
+      ) {
+        await Future<void>.delayed(const Duration(milliseconds: 20));
+        await tester.pump();
+      }
+    });
+    await tester.pumpAndSettle();
+    await tapChip(tester, 'Scuro');
+    expect(mode(), ThemeMode.dark);
+    expect(
+      SettingsScope.maybeOf(tester.element(find.byType(SettingsPage)))
+          ?.themeMode,
+      ThemeMode.dark,
+    );
+    await tapChip(tester, 'Sistema');
+    expect(mode(), ThemeMode.system);
   });
 }

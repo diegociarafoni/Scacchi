@@ -128,6 +128,9 @@ enum LineGoal {
 
   /// Vanno giocate le mosse indicate.
   line,
+
+  /// Basta dare scacco: qualunque mossa che dà scacco all'ultimo passo vale.
+  check,
 }
 
 /// Posizione da cui trovare una sequenza di mosse. I passi pari sono del
@@ -169,12 +172,17 @@ class LineRun extends ExerciseRun {
     final san = position.makeSan(move).$2;
     final last = step == exercise.steps.length - 1;
     final after = position.play(move);
-    final expected = exercise.steps[step]
-        .split('|')
-        .map((uci) => position.makeSan(Move.parse(uci)!).$2);
+    final expected = exercise.steps[step].split('|').map(Move.parse).nonNulls;
     final ok =
-        expected.contains(san) ||
-        (last && exercise.goal == LineGoal.mate && after.isCheckmate);
+        expected.any((m) => position.makeSan(m).$2 == san) ||
+        (last &&
+            switch (exercise.goal) {
+              LineGoal.mate => after.isCheckmate,
+              // Lo scacco va dato con il pezzo che l'esercizio chiede.
+              LineGoal.check =>
+                after.isCheck && expected.any((m) => _role(m) == _role(move)),
+              LineGoal.line => false,
+            });
     if (!ok) {
       mistakes++;
       return MoveVerdict.wrong;
@@ -189,6 +197,11 @@ class LineRun extends ExerciseRun {
     }
     return done ? MoveVerdict.solved : MoveVerdict.correct;
   }
+
+  Role? _role(Move move) => switch (move) {
+    NormalMove(:final from) => position.board.roleAt(from),
+    DropMove(:final role) => role,
+  };
 
   @override
   int get stars => mistakes == 0

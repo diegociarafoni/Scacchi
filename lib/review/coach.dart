@@ -1,5 +1,6 @@
 import 'package:dartchess/dartchess.dart';
 
+import '../l10n/app_localizations.dart';
 import 'board_utils.dart';
 import 'game_review.dart';
 import 'move_classification.dart';
@@ -11,6 +12,8 @@ enum CoachTheme {
   missedMate,
   hangingPiece,
   allowedFork,
+  allowedPin,
+  exposedKing,
   missedCapture,
   missedFork,
   missedDiscovery,
@@ -29,19 +32,28 @@ class CoachComment {
 /// Spiegazione breve della mossa, generata localmente con regole a modello
 /// (RF-70, RF-71). [previous] è la mossa precedente dell'avversario, per
 /// riconoscere una ripresa mancata. `null` se mancano i dati per spiegarla.
-CoachComment? explainMove(MoveReview m, {MoveReview? previous}) {
+/// Con [kid] (profilo bambino, RP-06) le frasi che citano numeri del motore
+/// («matto in N», «circa N pedoni») diventano versioni senza cifre.
+CoachComment? explainMove(
+  MoveReview m, {
+  MoveReview? previous,
+  AppLocalizations? kid,
+}) {
   final c = m.classification;
   if (!c.isError) return CoachComment(CoachTheme.praise, _praise[c]!);
 
   final before = Chess.fromSetup(Setup.parseFen(m.fenBefore));
   final after = before.play(m.move);
 
-  return _allowedMate(m, after) ??
-      _missedMate(m) ??
+  return _allowedMate(m, after, kid) ??
+      _missedMate(m, kid) ??
       _hanging(before, after, m.replyLine) ??
       _allowedFork(after, m.replyLine) ??
       _missedTactic(before, m, previous) ??
-      _materialLoss(before, after, m.replyLine) ??
+      _materialLoss(before, after, m.replyLine, kid) ??
+      // Una inchiodatura è un danno più lieve: non copre perdite concrete.
+      _allowedPin(after, m.replyLine) ??
+      _exposedKing(before, after, m) ??
       (m.bestSan == null
           ? null
           : CoachComment(
@@ -60,18 +72,24 @@ const _praise = {
   MoveClass.book: 'Mossa della teoria delle aperture.',
 };
 
-CoachComment? _allowedMate(MoveReview m, Position after) {
+CoachComment? _allowedMate(
+  MoveReview m,
+  Position after,
+  AppLocalizations? kid,
+) {
   final mate = m.replyScore?.mate;
   final reply = parseEngineMove(after, m.replyLine.firstOrNull);
   if (mate == null || mate <= 0 || reply == null) return null;
+  final replySan = after.makeSan(reply).$2;
   return CoachComment(
     CoachTheme.allowedMate,
-    'Dopo ${m.san} il ${_sideName(after.turn)} dà matto in $mate con '
-    '${after.makeSan(reply).$2}.',
+    kid?.kidCoachAllowedMate(m.san, replySan) ??
+        'Dopo ${m.san} il ${_sideName(after.turn)} dà matto in $mate con '
+            '$replySan.',
   );
 }
 
-CoachComment? _missedMate(MoveReview m) {
+CoachComment? _missedMate(MoveReview m, AppLocalizations? kid) {
   final mate = m.bestScore?.mate;
   if (mate == null || mate <= 0 || m.bestSan == null) return null;
   // Ha ancora il matto, solo più lungo: non è un matto mancato.
@@ -79,7 +97,8 @@ CoachComment? _missedMate(MoveReview m) {
   if (replyMate != null && replyMate < 0) return null;
   return CoachComment(
     CoachTheme.missedMate,
-    'Avevi il matto in $mate con ${m.bestSan}.',
+    kid?.kidCoachMissedMate(m.bestSan!) ??
+        'Avevi il matto in $mate con ${m.bestSan}.',
   );
 }
 
@@ -122,6 +141,93 @@ CoachComment? _allowedFork(Position after, List<String> reply) {
     'Dopo ${after.makeSan(first).$2} ${_the(mover.role)} ${_colorAdj(mover)} '
     'attacca insieme ${_list(targets)}: è una forchetta.',
   );
+}
+
+/// La risposta dell'avversario inchioda al re un nostro pezzo con un alfiere,
+/// una torre o la donna che non possiamo prendere. Se il pezzo era già
+/// inchiodato dallo stesso attaccante, non è una novità della mossa.
+CoachComment? _allowedPin(Position after, List<String> reply) {
+  final first = parseEngineMove(after, reply.firstOrNull);
+  if (first is! NormalMove) return null;
+  final slider = after.board.pieceAt(first.from);
+  if (slider == null || !_isSlider(slider.role)) return null;
+  final next = after.play(first);
+  final me = slider.color.opposite;
+  final pinned = _pinnedPiece(next, first.to, slider, me);
+  if (pinned == null) return null;
+  if (_pinnedPiece(after, first.from, slider, me) == pinned) return null;
+  if (next.board.attacksTo(first.to, me).isNotEmpty) return null;
+  final role = next.board.pieceAt(pinned)!.role;
+  return CoachComment(
+    CoachTheme.allowedPin,
+    'Dopo ${after.makeSan(first).$2} ${_the(slider.role)} '
+    '${_colorAdj(slider)} inchioda ${_the(role)} in ${pinned.name} contro '
+    'il re.',
+  );
+}
+
+/// Una mossa del re (un passo, senza arrocco) o del pedone davanti al re,
+/// con il re ancora sulla traversa di partenza, a cui l'avversario risponde
+/// con uno scacco che prima della mossa non aveva.
+CoachComment? _exposedKing(Position before, Position after, MoveReview m) {
+  final move = m.move;
+  if (move is! NormalMove || before.isCheck) return null;
+  final me = before.turn;
+  final king = before.board.kingOf(me);
+  final piece = before.board.pieceAt(move.from);
+  if (king == null || piece == null) return null;
+  final home = me == Side.white ? Rank.first : Rank.eighth;
+  final ahead = me == Side.white ? 1 : -1;
+  final shield = switch (piece.role) {
+    Role.king =>
+      (move.to.file - move.from.file).abs() <= 1 &&
+          before.board.pieceAt(move.to) == null,
+    Role.pawn =>
+      (move.from.file - king.file).abs() <= 1 &&
+          king.rank == home &&
+          (move.from.rank - king.rank) * ahead <= 2,
+    _ => false,
+  };
+  if (!shield) return null;
+  final reply = parseEngineMove(after, m.replyLine.firstOrNull);
+  if (reply == null || !after.play(reply).isCheck) return null;
+  if (_couldCheckBefore(before, reply)) return null;
+  return CoachComment(
+    CoachTheme.exposedKing,
+    'Dopo ${m.san} il tuo re resta scoperto: '
+    '${after.makeSan(reply).$2} è scacco.',
+  );
+}
+
+/// Lo stesso scacco era già possibile prima della mossa, a parti invertite:
+/// allora la colpa non è della mossa.
+bool _couldCheckBefore(Position before, Move reply) {
+  try {
+    final parts = before.fen.split(' ');
+    parts[1] = before.turn == Side.white ? 'b' : 'w';
+    parts[3] = '-';
+    final flipped = Chess.fromSetup(Setup.parseFen(parts.join(' ')));
+    return flipped.isLegal(reply) && flipped.play(reply).isCheck;
+  } on Object {
+    return false;
+  }
+}
+
+bool _isSlider(Role role) =>
+    role == Role.bishop || role == Role.rook || role == Role.queen;
+
+/// Il solo pezzo (non pedone) di [victim] tra il pezzo in [from] e il suo
+/// re, se sono sulla stessa linea di attacco del pezzo.
+Square? _pinnedPiece(Position pos, Square from, Piece slider, Side victim) {
+  final king = pos.board.kingOf(victim);
+  if (king == null) return null;
+  if (!attacks(slider, from, SquareSet.empty).has(king)) return null;
+  final blockers = pos.board.occupied.intersect(between(from, king));
+  if (blockers.size != 1) return null;
+  final square = blockers.first!;
+  final piece = pos.board.pieceAt(square)!;
+  if (piece.color != victim || piece.role == Role.pawn) return null;
+  return square;
 }
 
 /// Tattica nella prima mossa della variante migliore: ripresa o cattura
@@ -204,6 +310,7 @@ CoachComment? _materialLoss(
   Position before,
   Position after,
   List<String> reply,
+  AppLocalizations? kid,
 ) {
   final me = before.turn;
   var pos = after;
@@ -216,8 +323,9 @@ CoachComment? _materialLoss(
   if (lost < 2) return null;
   return CoachComment(
     CoachTheme.materialLoss,
-    'Questa mossa perde materiale: circa $lost pedoni nella variante '
-    'prevista.',
+    kid?.kidCoachMaterialLoss ??
+        'Questa mossa perde materiale: circa $lost pedoni nella variante '
+            'prevista.',
   );
 }
 

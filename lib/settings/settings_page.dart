@@ -4,9 +4,13 @@ import 'package:dartchess/dartchess.dart' show PieceKind;
 import 'package:flutter/material.dart';
 
 import '../backup/backup_page.dart';
+import '../kids/kid_display.dart';
+import '../l10n/app_localizations.dart';
 import '../progress/progress_controller.dart';
 import '../progress/rewards.dart';
+import 'adult_gate.dart';
 import 'board_preview.dart';
+import 'notation.dart';
 import 'settings.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -25,6 +29,7 @@ class SettingsPage extends StatelessWidget {
         listenable: Listenable.merge([controller, progress]),
         builder: (context, _) {
           final s = controller.value;
+          final l10n = AppLocalizations.of(context);
           void set(AppSettings Function(AppSettings) change) =>
               controller.update(change(controller.value));
           final p = progress;
@@ -39,6 +44,29 @@ class SettingsPage extends StatelessWidget {
               Expanded(
                 child: ListView(
                   children: [
+                    _Header(l10n.kidProfileSection),
+                    SwitchListTile(
+                      key: const Key('kidMode'),
+                      secondary: const Icon(Icons.child_care),
+                      title: Text(l10n.kidProfile),
+                      subtitle: Text(l10n.kidProfileDescription),
+                      value: s.kidMode,
+                      onChanged: (v) async {
+                        if (!v && !await askAdult(context)) return;
+                        set((c) => c.copyWith(kidMode: v));
+                      },
+                    ),
+                    const _Header('Aspetto dell\'app'),
+                    _Choices(
+                      values: ThemeMode.values,
+                      selected: s.themeMode,
+                      label: (m) => switch (m) {
+                        ThemeMode.system => 'Sistema',
+                        ThemeMode.light => 'Chiaro',
+                        ThemeMode.dark => 'Scuro',
+                      },
+                      onSelected: (m) => set((c) => c.copyWith(themeMode: m)),
+                    ),
                     const _Header('Scacchiera'),
                     SwitchListTile(
                       title: const Text('Mostra le mosse legali'),
@@ -122,6 +150,13 @@ class SettingsPage extends StatelessWidget {
                       ),
                       value: s.colorBlind,
                       onChanged: (v) => set((c) => c.copyWith(colorBlind: v)),
+                    ),
+                    const _Header('Notazione delle mosse'),
+                    _Choices(
+                      values: MoveNotation.values,
+                      selected: s.notation,
+                      label: (n) => n.choice,
+                      onSelected: (n) => set((c) => c.copyWith(notation: n)),
                     ),
                     const _Header('Pezzi'),
                     _Choices(
@@ -297,6 +332,11 @@ class _Choices<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Profilo bambino (RP-06): il requisito non cita il livello.
+    final kid = AppSettings.of(context).kidMode;
+    String why(Requirement r) => kid
+        ? kidRequirement(AppLocalizations.of(context))
+        : 'Si sblocca con: ${r.label}';
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Wrap(
@@ -308,7 +348,7 @@ class _Choices<T> extends StatelessWidget {
               ChoiceChip(
                 avatar: const Icon(Icons.lock_outline, size: 18),
                 label: Text(label(v)),
-                tooltip: 'Si sblocca con: ${requirement.label}',
+                tooltip: why(requirement),
                 selected: v == selected,
                 onSelected: (_) {
                   final messenger = ScaffoldMessenger.of(context);
@@ -316,7 +356,9 @@ class _Choices<T> extends StatelessWidget {
                   messenger.showSnackBar(
                     SnackBar(
                       content: Text(
-                        '${label(v)} si sblocca con: ${requirement.label}',
+                        kid
+                            ? '${label(v)}: ${why(requirement).toLowerCase()}'
+                            : '${label(v)} si sblocca con: ${requirement.label}',
                       ),
                     ),
                   );

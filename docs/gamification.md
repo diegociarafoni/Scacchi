@@ -41,6 +41,7 @@ Il livello *L* richiede `50 × L × (L − 1)` XP totali: livello 2 a 100 XP, 3 
 - **Giorno di riposo**: un giorno della settimana a scelta che non interrompe la serie e non la allunga (se si gioca anche quel giorno, conta normalmente).
 - **Protezione (congelamento)**: se ne guadagna una ogni 7 giorni di serie, al massimo 2. Copre automaticamente un giorno saltato. Non è acquistabile.
 - Se i giorni saltati sono più delle protezioni disponibili, la serie torna a zero; il record personale resta.
+- **Spiegazione in chiaro** (`streak_info.dart`): la scheda Serie del Profilo dice cosa serve ogni giorno («gioca 1 partita», «risolvi 5 puzzle», «allenati per 10 minuti»), lo stato di oggi (fatto, da fare con quanto manca, riposo), il prossimo traguardo (3, 7 e 30 giorni) e cosa succede saltando un giorno (protezione disponibile o ripartenza da zero col record che resta). La scheda Tu mostra accanto alla serie «Oggi: fatto/da fare/riposo». Nel profilo bambino restano la fiamma e le frasi senza numeri.
 
 ## Sfide giornaliere e settimanali (RG-07)
 
@@ -98,9 +99,10 @@ Spento di default. Nel Profilo, "Promemoria giornaliero" chiede il permesso per 
 
 | File | Ruolo |
 |---|---|
-| `activity.dart` | Attività registrabili: partita, puzzle, sessione a tempo, lezione, revisione |
+| `activity.dart` | Attività registrabili: partita, puzzle, sessione a tempo o a serie, minigioco, torneo, lezione, revisione |
 | `challenges.dart` | Tipi di sfida, generazione delle sfide del giorno e della settimana |
 | `records.dart` | Record personali e loro aggiornamento |
+| `streak_info.dart` | Spiegazione della serie in parole: cosa serve ogni giorno, stato di oggi, prossimo traguardo, cosa succede saltando un giorno |
 | `game_activity.dart` | Converte una `ChessGame` conclusa in attività: risultato, pezzo che dà il matto (anche di scoperta o con l'arrocco), arrocco lungo |
 | `xp.dart` | Tabella degli XP e curva dei livelli |
 | `daily_goal.dart` | Obiettivo giornaliero e scelte proposte |
@@ -140,8 +142,10 @@ Le altre schermate registrano:
 | Minigiochi | `MinigameFinished(game: 'coordinate', score: n)` a fine sessione (vedi [minigiochi.md](minigiochi.md)) |
 | Tornei | `TournamentFinished(rank: 1, players: 8)` a fine torneo (vedi [tornei.md](tornei.md)) |
 
-## Integrazione prevista
+Nel profilo bambino (RP-06) la notifica e il Profilo non mostrano numeri: stelle per il livello, fiamma per la serie, frasi incoraggianti al posto di «+N XP», niente record personali. Vedi [profilo-bambino.md](profilo-bambino.md#niente-numeri).
+
+## Integrazione nell'app
 
 Il Profilo si apre dalla scheda Tu e `HomeShell` crea il `ReminderController` all'avvio su Android e iOS. `GamePage` riceve da `HomeShell` il registratore delle attività e i progressi: a fine partita registra `GamePlayed` (con `gameActivity`) una sola volta per partita e mostra "+N XP" sopra la barra dei comandi; le impostazioni ricevono i progressi per bloccare temi e pezzi non ancora sbloccati.
 
-Valgono solo le partite iniziate da **Nuova** e di almeno 4 semimosse: abbandonare subito o giocare una posizione preparata con l'editor non fa guadagnare XP. La durata che conta per l'obiettivo a minuti è al massimo un'ora per partita, per non gonfiarla con le pause. Dopo un annulla dell'abbandono la stessa partita non assegna XP una seconda volta. Mancano i guardiani del percorso e i tornei, che usano i livelli del computer.
+Valgono solo le partite iniziate da **Nuova** e di almeno 4 semimosse: abbandonare subito, giocare una posizione preparata con l'editor o continuare una partita ricevuta con il QR non fa guadagnare XP. La durata che conta per l'obiettivo a minuti è al massimo un'ora per partita, per non gonfiarla con le pause. Dopo un annulla dell'abbandono la stessa partita non assegna XP una seconda volta. Le partite dei guardiani del percorso (vedi [percorso.md](percorso.md)) valgono XP come le altre, e così le partite dei tornei (vedi [tornei.md](tornei.md)).

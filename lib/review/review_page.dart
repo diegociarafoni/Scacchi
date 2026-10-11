@@ -6,11 +6,16 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
 import '../analysis/analysis_page.dart';
+import '../kids/kid_display.dart';
+import '../l10n/app_localizations.dart';
+import '../settings/settings.dart';
 import 'board_utils.dart';
 import 'coach.dart';
 import 'eval_bar.dart';
+import 'game_phase.dart';
 import 'game_review.dart';
 import 'move_classification.dart';
+import 'personal_puzzles.dart';
 
 /// Revisioni già calcolate in questa sessione, per riaprirle all'istante.
 /// Tiene solo le più recenti per limitare la memoria.
@@ -69,6 +74,8 @@ class ReviewPage extends StatefulWidget {
     this.onCancel,
     this.onReviewed,
     this.analyseLive,
+    this.onSavePuzzles,
+    this.puzzlePlayers = const {Side.white, Side.black},
   });
 
   final Position initial;
@@ -85,11 +92,20 @@ class ReviewPage extends StatefulWidget {
   /// Analisi continua per aprire la posizione mostrata nell'analisi libera.
   final LiveAnalysis? analyseLive;
 
+  /// Salva i puzzle ricavati dagli errori e restituisce quanti sono nuovi; se
+  /// assente il pulsante non compare.
+  final Future<int> Function(List<MistakePuzzle> puzzles)? onSavePuzzles;
+
+  /// Lati le cui mosse sbagliate diventano puzzle.
+  final Set<Side> puzzlePlayers;
+
   @override
   State<ReviewPage> createState() => _ReviewPageState();
 }
 
 enum _Phase { analysing, cancelled, failed, done }
+
+enum _SaveState { idle, saving, saved, already, failed }
 
 class _ReviewPageState extends State<ReviewPage> {
   late final List<Position> _positions = [widget.initial];
@@ -110,6 +126,10 @@ class _ReviewPageState extends State<ReviewPage> {
   String? _retryMessage;
   bool _showSolution = false;
   Move? _retrySolved;
+
+  List<MistakePuzzle>? _puzzles;
+  _SaveState _save = _SaveState.idle;
+  int _savedCount = 0;
 
   @override
   void initState() {
@@ -162,6 +182,66 @@ class _ReviewPageState extends State<ReviewPage> {
     } on Object {
       if (mounted && !_cancelled) setState(() => _phase = _Phase.failed);
     }
+  }
+
+  /// Puzzle dagli errori dei giocatori scelti; id stabili per la stessa
+  /// partita, così salvare due volte non duplica.
+  List<MistakePuzzle> _puzzlesOf(GameReview review) =>
+      _puzzles ??= puzzlesFromReview(
+        review,
+        players: widget.puzzlePlayers,
+        gameId: gameIdOf(_cacheKey),
+      );
+
+  Future<void> _savePuzzles(GameReview review) async {
+    final save = widget.onSavePuzzles;
+    if (save == null || _save == _SaveState.saving) return;
+    setState(() => _save = _SaveState.saving);
+    try {
+      final added = await save(_puzzlesOf(review));
+      if (!mounted) return;
+      setState(() {
+        _savedCount = added;
+        _save = added == 0 ? _SaveState.already : _SaveState.saved;
+      });
+    } on Object {
+      if (mounted) setState(() => _save = _SaveState.failed);
+    }
+  }
+
+  Widget? _savePuzzlesTile(GameReview review) {
+    if (widget.onSavePuzzles == null) return null;
+    final count = _puzzlesOf(review).length;
+    if (count == 0) return null;
+    final text = Theme.of(context).textTheme.bodyMedium;
+    final message = switch (_save) {
+      _SaveState.saved =>
+        'Puzzle salvati: $_savedCount. Li trovi in Puzzle › Ripasso degli errori.',
+      _SaveState.already => 'Questi puzzle sono già salvati.',
+      _SaveState.failed => 'Salvataggio non riuscito. Riprova.',
+      _ => null,
+    };
+    final done = _save == _SaveState.saved || _save == _SaveState.already;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Wrap(
+        spacing: 12,
+        runSpacing: 4,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          if (!done)
+            OutlinedButton.icon(
+              icon: const Icon(Icons.extension_outlined),
+              onPressed: _save == _SaveState.saving
+                  ? null
+                  : () => _savePuzzles(review),
+              label: Text('Salva gli errori come puzzle ($count)'),
+            ),
+          if (message != null)
+            Text(message, style: text, semanticsLabel: message),
+        ],
+      ),
+    );
   }
 
   void _cancel({bool notify = true}) {
@@ -249,8 +329,14 @@ class _ReviewPageState extends State<ReviewPage> {
     if (!m.classification.isError) return null;
     return _comments.putIfAbsent(
       m.ply,
-      () =>
-          explainMove(m, previous: m.ply > 0 ? review.moves[m.ply - 1] : null),
+      () => explainMove(
+        m,
+        previous: m.ply > 0 ? review.moves[m.ply - 1] : null,
+        // Profilo bambino (RP-06): spiegazioni senza «matto in N» e pedoni.
+        kid: AppSettings.of(context).kidMode
+            ? AppLocalizations.of(context)
+            : null,
+      ),
     );
   }
 
@@ -369,7 +455,9 @@ class _ReviewPageState extends State<ReviewPage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  'Analisi in corso: $_done di $_total',
+                  AppSettings.of(context).kidMode
+                      ? AppLocalizations.of(context).kidReviewAnalysing
+                      : 'Analisi in corso: $_done di $_total',
                   style: text.titleMedium,
                 ),
                 const SizedBox(height: 8),
@@ -393,6 +481,7 @@ class _ReviewPageState extends State<ReviewPage> {
         final review = _review!;
         return [
           _Summary(review: review),
+          ?_savePuzzlesTile(review),
           SizedBox(
             height: 72,
             child: Padding(
@@ -559,9 +648,25 @@ class _Summary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
+    // Profilo bambino (RP-06): precisione a stelle e parole, niente Elo
+    // stimato né conteggi per categoria.
+    final kid = AppSettings.of(context).kidMode;
     Widget column(Side side) {
       final name = side == Side.white ? 'Bianco' : 'Nero';
       final accuracy = review.accuracy(side);
+      if (kid) {
+        return Expanded(
+          child: Column(
+            children: [
+              Text(name, style: text.titleSmall),
+              _KidAccuracy(
+                key: ValueKey('accuracy-${side.name}'),
+                accuracy: accuracy,
+              ),
+            ],
+          ),
+        );
+      }
       final elo = review.estimatedElo(side);
       return Expanded(
         child: Column(
@@ -588,24 +693,91 @@ class _Summary extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
           child: Row(children: [column(Side.white), column(Side.black)]),
         ),
-        ExpansionTile(
-          title: const Text('Mosse per categoria'),
-          children: [
-            for (final c in MoveClass.values)
-              ListTile(
-                dense: true,
-                leading: _Badge(c),
-                title: Text(c.label),
-                trailing: Text(
-                  '${review.count(Side.white, c)}   '
-                  '${review.count(Side.black, c)}',
-                  semanticsLabel:
-                      'Bianco ${review.count(Side.white, c)}, '
-                      'Nero ${review.count(Side.black, c)}',
+        if (!kid) _PhaseAccuracy(review: review),
+        if (!kid)
+          ExpansionTile(
+            title: const Text('Mosse per categoria'),
+            children: [
+              for (final c in MoveClass.values)
+                ListTile(
+                  dense: true,
+                  leading: _Badge(c),
+                  title: Text(c.label),
+                  trailing: Text(
+                    '${review.count(Side.white, c)}   '
+                    '${review.count(Side.black, c)}',
+                    semanticsLabel:
+                        'Bianco ${review.count(Side.white, c)}, '
+                        'Nero ${review.count(Side.black, c)}',
+                  ),
                 ),
+            ],
+          ),
+      ],
+    );
+  }
+}
+
+/// Precisione di ciascun giocatore in apertura, mediogioco e finale: indica
+/// quale fase allenare.
+class _PhaseAccuracy extends StatelessWidget {
+  const _PhaseAccuracy({required this.review});
+
+  final GameReview review;
+
+  @override
+  Widget build(BuildContext context) {
+    final white = review.accuracyByPhase(Side.white);
+    final black = review.accuracyByPhase(Side.black);
+    String value(double? a) => a == null ? '—' : a.round().toString();
+    return ExpansionTile(
+      title: const Text('Precisione per fase'),
+      children: [
+        for (final phase in GamePhase.values)
+          Semantics(
+            label:
+                '${phase.label}: Bianco ${value(white[phase])}, '
+                'Nero ${value(black[phase])}',
+            excludeSemantics: true,
+            child: ListTile(
+              dense: true,
+              title: Text(phase.label),
+              trailing: Text(
+                'Bianco ${value(white[phase])} · Nero ${value(black[phase])}',
               ),
-          ],
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+/// Precisione da una a cinque stelle con un giudizio a parole.
+class _KidAccuracy extends StatelessWidget {
+  const _KidAccuracy({super.key, required this.accuracy});
+
+  final double? accuracy;
+
+  @override
+  Widget build(BuildContext context) {
+    final accuracy = this.accuracy;
+    if (accuracy == null) return const Text('—');
+    final l = AppLocalizations.of(context);
+    final n = kidAccuracyStars(accuracy);
+    final words = kidAccuracyWords(l, n);
+    final color = Theme.of(context).colorScheme.primary;
+    return Column(
+      children: [
+        ExcludeSemantics(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              for (var i = 0; i < 5; i++)
+                Icon(i < n ? Icons.star : Icons.star_border, color: color),
+            ],
+          ),
         ),
+        Text(words, style: Theme.of(context).textTheme.titleMedium),
       ],
     );
   }

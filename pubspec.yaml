@@ -24,6 +24,8 @@ dependencies:
   intl: any
   flutter_local_notifications: ^22.3.1
   timezone: ^0.11.1
+  flutter_zxing: ^3.1.0
+  qr: ^4.0.0
 
 dev_dependencies:
   flutter_test:
@@ -32,6 +34,8 @@ dev_dependencies:
   flutter_lints: ^6.0.0
   integration_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.14.4
+  flutter_native_splash: ^2.4.8
 
 flutter:
   generate: true

@@ -223,8 +223,8 @@ class _RunningState extends State<_Running> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
-            'Le partite del torneo arrivano con la partita contro il '
-            'computer.',
+            'Le partite del torneo non sono disponibili su '
+            'questo dispositivo.',
           ),
         ),
       );

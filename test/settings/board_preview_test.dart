@@ -5,6 +5,7 @@ import 'package:dartchess/dartchess.dart' show PieceKind;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/progress/progress_controller.dart';
 import 'package:scacchi/progress/progress_store.dart';
 import 'package:scacchi/settings/settings.dart';
@@ -44,6 +45,9 @@ void main() {
     });
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: const Locale('it'),
         builder: (context, child) => MediaQuery(
           data: MediaQuery.of(context)
               .copyWith(textScaler: TextScaler.linear(textScale)),
@@ -74,7 +78,13 @@ void main() {
 
   Future<void> tapText(WidgetTester tester, String text) async {
     final finder = find.text(text);
-    await tester.scrollUntilVisible(finder, -200);
+    if (finder.evaluate().isEmpty) {
+      try {
+        await tester.scrollUntilVisible(finder, 200);
+      } on StateError {
+        await tester.scrollUntilVisible(finder, -200);
+      }
+    }
     await tester.ensureVisible(finder);
     await tester.pumpAndSettle();
     await tester.tap(finder);
@@ -190,6 +200,19 @@ void main() {
     },
   );
 
+  testWidgets('RP-04 le impostazioni che non cambiano la scacchiera non '
+      'riportano alla posizione di prova', (tester) async {
+    await show(tester);
+    final start = board(tester).fen;
+    await tester.tap(find.byKey(const Key('board-preview')));
+    await tester.pumpAndSettle();
+    final played = board(tester).fen;
+    expect(played, isNot(start));
+    await tapText(tester, 'Suoni');
+    await tapText(tester, 'Vibrazione');
+    expect(board(tester).fen, played);
+  });
+
   testWidgets('RNF-07 l\'anteprima si può raggiungere con la tastiera', (
     tester,
   ) async {
@@ -263,6 +286,8 @@ void main() {
     }
   });
 
+  // I golden dipendono dal sistema operativo: in locale si escludono con
+  // --exclude-tags golden, in CI girano su Linux.
   group('golden', () {
     const phones = {
       'small': Size(320, 568),
@@ -276,7 +301,7 @@ void main() {
           find.byType(MaterialApp),
           matchesGoldenFile('goldens/settings_$name.png'),
         );
-      });
+      }, tags: 'golden');
     }
 
     testWidgets('RNF-07 chip di temi e pezzi con colori e cavallo', (
@@ -289,7 +314,7 @@ void main() {
         find.byType(MaterialApp),
         matchesGoldenFile('goldens/settings_chips.png'),
       );
-    });
+    }, tags: 'golden');
 
     testWidgets('RNF-07 impostazioni con colori per daltonici', (tester) async {
       settings = SettingsController.defaults();
@@ -305,6 +330,6 @@ void main() {
         find.byType(MaterialApp),
         matchesGoldenFile('goldens/settings_color_blind.png'),
       );
-    });
+    }, tags: 'golden');
   });
 }

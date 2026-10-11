@@ -8,7 +8,7 @@ Ogni `SavedGame` può indicare, oltre a giocatori e risultato:
 
 | Campo | Significato |
 |---|---|
-| `playerSide` | Colore dell'utente; assente nelle partite tra due persone e in quelle importate |
+| `playerSide` | Colore dell'utente; assente nelle partite tra due persone, in quelle su scacchiera fisica e in quelle importate |
 | `timeControl` | Cadenza in minuti più incremento (`5+0`, `15+10`); salvata anche nel PGN come `TimeControl` in secondi (`0.5+0` diventa `30+0`) |
 | `opponentElo` | Elo indicativo del bot avversario |
 | `accuracy` | Precisione dell'utente dalla revisione, aggiornabile con `copyWith(accuracy: () => 82.5)`; `() => null` la azzera |
@@ -23,7 +23,7 @@ Le partite salvate prima di questi campi si leggono ancora: i campi mancanti val
 - bilancio complessivo, con il bianco e con il nero (vittorie, patte, sconfitte e percentuale di punti);
 - bilancio per cadenza, dalla più giocata, con "Senza tempo" per le partite senza orologio;
 - numero di partite tra due persone (tipo `SavedGame.local`), mostrato a parte anche quando sono le sole giocate;
-- aperture più giocate, a pari merito in ordine alfabetico;
+- aperture più giocate, con il nome italiano (`openingNameIt`), a pari merito in ordine alfabetico;
 - precisione media e andamento nel tempo.
 
 ## Rating locale (RF-110)

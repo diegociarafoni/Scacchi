@@ -5,9 +5,9 @@ Analisi libera con Stockfish locale (requisiti RF-50, RF-51, RF-52 in parte, RF-
 ## Come si apre
 
 - Dal menu della partita (⋮): **Analisi della posizione** apre la posizione mostrata sulla scacchiera, anche se si stanno scorrendo le mosse precedenti. Mentre è aperta, orologio e mossa del computer sono sospesi e riprendono alla chiusura, perché il motore è uno solo. Nella partita tra due persone il motore viene avviato solo per l'analisi e chiuso al ritorno.
-- Dalla revisione della partita: il pulsante **Analizza la posizione** nella barra del titolo apre la posizione mostrata.
+- Dalla revisione della partita, ad analisi conclusa: il pulsante **Analizza la posizione** nella barra del titolo apre la posizione mostrata.
 
-Entrambe le voci compaiono solo dove c'è il motore (Android e iOS) e negli scacchi classici: Stockfish non analizza Chess960, Re della collina e Tre scacchi. La voce del menu è disattivata mentre il computer valuta una proposta di patta.
+Entrambe le voci compaiono solo dove c'è il motore (Android, iOS e, con Stockfish installato, Windows e Linux), negli scacchi classici e fuori dalle partite di tornei e percorso; nel profilo bambino sono nascoste. Le varianti restano escluse perché Stockfish non analizza Chess960, Re della collina e Tre scacchi. La voce del menu è disattivata mentre il computer valuta una proposta di patta.
 
 ## Schermata
 
@@ -19,6 +19,7 @@ Entrambe le voci compaiono solo dove c'è il motore (Android e iOS) e negli scac
 | Pausa | RF-51 | Il pulsante centrale ferma e riprende l'analisi; chiudendo la pagina il motore si ferma |
 | Esplorazione | RF-52 | Si muovono i pezzi di entrambi i colori; **Indietro** e **Avanti** scorrono le mosse; una mossa nuova da una posizione precedente sostituisce il seguito |
 | Freccia | RF-54 | Freccia verde della mossa migliore, attivabile dalla barra del titolo; l'arrocco punta alla casa del re |
+| Minaccia | RF-56 | Il pulsante con il triangolo di avviso nella barra del titolo mostra con una freccia rossa la mossa migliore che l'avversario giocherebbe se toccasse a lui. Sulla posizione con il turno passato (`threatFen`, mossa nulla, senza presa en passant) il motore fa prima una ricerca a una linea fino a profondità 14, perché ha una coda sola, poi riprende l'analisi principale; la freccia resta finché non si cambia posizione. Con l'analisi in pausa o l'app in secondo piano non parte nulla. Non è disponibile quando chi muove è sotto scacco o la partita è finita |
 
 ## Motore
 
@@ -27,6 +28,8 @@ Entrambe le voci compaiono solo dove c'è il motore (Android e iOS) e negli scac
 Il flusso emette un aggiornamento alla fine di ogni iterazione, quando tutte le varianti hanno la stessa profondità, così le linee mostrate sono confrontabili tra loro. I punteggi parziali del motore (`lowerbound`, `upperbound`) vengono scartati.
 
 Per la batteria (RNF-05) la schermata ridisegna le linee al massimo ogni 250 ms, anche se il motore ne invia molte di più, e ferma il motore quando l'app va in secondo piano; al ritorno l'analisi riparte, a meno che non fosse in pausa.
+
+Nel profilo bambino (RP-06) la barra di valutazione non ha cifre e le linee non mostrano punteggio né profondità: vedi [profilo-bambino.md](profilo-bambino.md#niente-numeri).
 
 ## Limiti attuali
 

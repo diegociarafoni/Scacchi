@@ -13,7 +13,7 @@ Il pannello del Nero è ruotato di 180° per chi gli siede di fronte. **Pausa**,
 
 ## Fine e archivio
 
-La partita finisce con matto, stallo, materiale insufficiente, ripetizione, 50 mosse, abbandono, patta concordata o tempo scaduto. Appena finisce, e a ogni modifica successiva (per esempio un annullamento), viene salvata nell'archivio con modo `fisica`, quindi si può aprire, esportare in PGN e rivedere come le altre. Non entra nelle statistiche né nel rating, perché non ha un lato dell'utente.
+La partita finisce con matto, stallo, materiale insufficiente, ripetizione, 50 mosse, abbandono, patta concordata o tempo scaduto. Quando finisce viene salvata nell'archivio con modo `fisica`; se dopo un annullamento finisce di nuovo, la nuova versione sostituisce la precedente, mentre un annullamento da solo non cambia l'archivio. La partita si può aprire, esportare in PGN e rivedere come le altre. Non entra nelle statistiche né nel rating, perché non ha un lato dell'utente.
 
 ## Codice
 

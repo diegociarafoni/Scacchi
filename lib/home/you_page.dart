@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../archive/archive_page.dart';
 import '../archive/game_archive.dart';
+import '../archive/saved_game.dart';
+import '../kids/kid_display.dart';
+import '../l10n/app_localizations.dart';
 import '../minigames/minigames_page.dart';
 import '../path/path_controller.dart';
 import '../path/path_page.dart';
@@ -21,6 +24,10 @@ class YouPage extends StatelessWidget {
     required this.path,
     required this.archive,
     this.reminders,
+    this.simple = false,
+    this.playGuardian,
+    this.tournamentPage,
+    this.openGame,
   });
 
   /// Fonti dei dati: chiamate a ogni apertura, così un errore si riprova.
@@ -31,6 +38,20 @@ class YouPage extends StatelessWidget {
   /// Promemoria giornaliero, se il dispositivo ha le notifiche programmate;
   /// letto all'apertura del Profilo perché nasce dopo i progressi.
   final ReminderController? Function()? reminders;
+
+  /// Profilo bambino (RP-06): niente statistiche, archivio e strumenti per
+  /// adulti, solo profilo, percorso e minigiochi.
+  final bool simple;
+
+  /// Partita contro il guardiano; senza, le tappe guardiano mostrano un avviso.
+  final PlayGuardian? playGuardian;
+
+  /// Schermata dei tornei; senza, la voce non compare (servono le partite
+  /// contro il computer).
+  final Future<Widget> Function()? tournamentPage;
+
+  /// Apre una partita dell'archivio; senza, le righe non sono toccabili.
+  final void Function(BuildContext context, SavedGame game)? openGame;
 
   void _push(BuildContext context, Widget page) =>
       Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => page));
@@ -76,15 +97,24 @@ class YouPage extends StatelessWidget {
                             frame: controller.settings.frame,
                             size: 48,
                           ),
-                          title: Text(
-                            'Livello ${levelForXp(controller.state.xp)}',
-                            style: Theme.of(context).textTheme.titleLarge,
-                          ),
-                          subtitle: Text(
-                            controller.streak == 1
-                                ? '1 giorno di fila'
-                                : '${controller.streak} giorni di fila',
-                          ),
+                          // Profilo bambino (RP-06): stelle e fiamma come nel
+                          // Profilo, senza livello né giorni in cifre.
+                          title: simple
+                              ? KidStars(
+                                  count: levelForXp(controller.state.xp),
+                                  label: AppLocalizations.of(context)
+                                      .kidLevelStarsLabel,
+                                )
+                              : Text(
+                                  'Livello ${levelForXp(controller.state.xp)}',
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                ),
+                          subtitle: simple
+                              ? KidFlame(lit: controller.streak > 0)
+                              : Text(
+                                  '${controller.streak == 1 ? '1 giorno di fila' : '${controller.streak} giorni di fila'}'
+                                  ' · ${controller.streakInfo.summary}',
+                                ),
                         )
                       : const SizedBox.shrink(),
                 ),
@@ -103,9 +133,20 @@ class YouPage extends StatelessWidget {
                 icon: Icons.route_outlined,
                 title: 'Percorso',
                 subtitle: 'Tappe con stelle, dalle basi al finale',
-                onTap: () =>
-                    _open(context, path(), (c) => PathPage(controller: c)),
+                onTap: () => _open(
+                  context,
+                  path(),
+                  (c) => PathPage(controller: c, playGuardian: playGuardian),
+                ),
               ),
+              // Classifica ed Elo dei bot: nel profilo bambino niente numeri.
+              if (tournamentPage != null && !simple)
+                _Entry(
+                  icon: Icons.emoji_events_outlined,
+                  title: 'Tornei',
+                  subtitle: 'Gironi ed eliminazione diretta contro i bot',
+                  onTap: () => _open(context, tournamentPage!(), (w) => w),
+                ),
               _Entry(
                 icon: Icons.videogame_asset_outlined,
                 title: 'Minigiochi',
@@ -116,33 +157,48 @@ class YouPage extends StatelessWidget {
                   (p) => MinigamesPage(progress: p),
                 ),
               ),
-              _Entry(
-                icon: Icons.insights_outlined,
-                title: 'Statistiche',
-                subtitle: 'Risultati, aperture, cadenze e rating locale',
-                onTap: () =>
-                    _open(context, archive(), (a) => StatsPage(archive: a)),
-              ),
-              _Entry(
-                icon: Icons.auto_awesome_outlined,
-                title: 'La tua settimana',
-                subtitle: 'Riepilogo degli ultimi sette giorni, da condividere',
-                onTap: () =>
-                    _open(context, archive(), (a) => PortraitPage(archive: a)),
-              ),
-              _Entry(
-                icon: Icons.timer_outlined,
-                title: 'Scacchiera fisica',
-                subtitle: 'Orologio e registro per una partita dal vivo',
-                onTap: () => _push(context, PhysicalGamePage(archive: archive)),
-              ),
-              _Entry(
-                icon: Icons.inventory_2_outlined,
-                title: 'Archivio',
-                subtitle: 'Partite salvate, import ed export PGN',
-                onTap: () =>
-                    _open(context, archive(), (a) => ArchivePage(archive: a)),
-              ),
+              if (!simple) ...[
+                _Entry(
+                  icon: Icons.insights_outlined,
+                  title: 'Statistiche',
+                  subtitle: 'Risultati, aperture, cadenze e rating locale',
+                  onTap: () =>
+                      _open(context, archive(), (a) => StatsPage(archive: a)),
+                ),
+                _Entry(
+                  icon: Icons.auto_awesome_outlined,
+                  title: 'La tua settimana',
+                  subtitle:
+                      'Riepilogo degli ultimi sette giorni, da condividere',
+                  onTap: () => _open(
+                    context,
+                    archive(),
+                    (a) => PortraitPage(archive: a),
+                  ),
+                ),
+                _Entry(
+                  icon: Icons.timer_outlined,
+                  title: 'Scacchiera fisica',
+                  subtitle: 'Orologio e registro per una partita dal vivo',
+                  onTap: () =>
+                      _push(context, PhysicalGamePage(archive: archive)),
+                ),
+                _Entry(
+                  icon: Icons.inventory_2_outlined,
+                  title: 'Archivio',
+                  subtitle: 'Partite salvate, import ed export PGN',
+                  onTap: () => _open(
+                    context,
+                    archive(),
+                    (a) => ArchivePage(
+                      archive: a,
+                      onOpen: openGame == null
+                          ? null
+                          : (g) => openGame!(context, g),
+                    ),
+                  ),
+                ),
+              ],
             ],
           );
         },

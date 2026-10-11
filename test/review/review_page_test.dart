@@ -7,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/analysis/analysis_page.dart';
 import 'package:scacchi/engine/uci.dart';
 import 'package:scacchi/review/game_review.dart';
+import 'package:scacchi/review/personal_puzzles.dart';
 import 'package:scacchi/review/review_page.dart';
 
 import 'fake_engine.dart';
@@ -203,6 +204,30 @@ void main() {
       expect(find.textContaining('Elo stimato'), findsWidgets);
     });
 
+    testWidgets('la precisione si divide per fase della partita', (
+      tester,
+    ) async {
+      await pumpReview(tester);
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text('Precisione per fase'));
+      await tester.tap(find.text('Precisione per fase'));
+      await tester.pumpAndSettle();
+      // La partita del barbiere finisce in apertura: le altre fasi sono vuote.
+      expect(find.text('Apertura'), findsOneWidget);
+      expect(find.text('Mediogioco'), findsOneWidget);
+      expect(find.text('Finale'), findsOneWidget);
+      // I valori dicono di chi sono.
+      expect(find.text('Bianco — · Nero —'), findsNWidgets(2));
+      expect(
+        find.bySemanticsLabel(RegExp(r'Apertura: Bianco \d+, Nero \d+')),
+        findsOneWidget,
+      );
+      expect(
+        find.bySemanticsLabel('Mediogioco: Bianco —, Nero —'),
+        findsOneWidget,
+      );
+    });
+
     testWidgets('RF-61 la lista mostra la categoria di ogni mossa', (
       tester,
     ) async {
@@ -351,6 +376,95 @@ void main() {
       expect(calls, hasLength(7));
       expect(find.byType(LinearProgressIndicator), findsNothing);
       expect(reviewed, 1);
+    });
+  });
+
+  group('RF-80 salvataggio degli errori come puzzle', () {
+    Future<void> pumpWith(
+      WidgetTester tester, {
+      Future<int> Function(List<MistakePuzzle>)? save,
+      Set<Side> players = const {Side.white, Side.black},
+    }) async {
+      tester.view.physicalSize = const Size(1170, 2532);
+      tester.view.devicePixelRatio = 3;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(
+        MaterialApp(
+          home: ReviewPage(
+            initial: Chess.initial,
+            moves: moves(scholar),
+            evaluate: fakeEngine(scholar, overrides: scholarOverrides),
+            onSavePuzzles: save,
+            puzzlePlayers: players,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('il pulsante salva i puzzle e conferma', (tester) async {
+      final saved = <MistakePuzzle>[];
+      await pumpWith(
+        tester,
+        save: (puzzles) async {
+          saved.addAll(puzzles);
+          return puzzles.length;
+        },
+      );
+      expect(find.text('Salva gli errori come puzzle (1)'), findsOneWidget);
+      await tester.tap(find.text('Salva gli errori come puzzle (1)'));
+      await tester.pumpAndSettle();
+      expect(saved.single.id, startsWith('mio-'));
+      expect(saved.single.id, endsWith('-5'));
+      expect(
+        find.text(
+          'Puzzle salvati: 1. Li trovi in Puzzle › Ripasso degli errori.',
+        ),
+        findsOneWidget,
+      );
+      expect(find.textContaining('Salva gli errori'), findsNothing);
+    });
+
+    testWidgets('senza errori dei giocatori scelti non c\'è il pulsante', (
+      tester,
+    ) async {
+      await pumpWith(
+        tester,
+        save: (p) async => p.length,
+        players: {Side.white},
+      );
+      expect(find.textContaining('Salva gli errori'), findsNothing);
+    });
+
+    testWidgets('senza salvataggio disponibile non c\'è il pulsante', (
+      tester,
+    ) async {
+      await pumpWith(tester);
+      expect(find.textContaining('Salva gli errori'), findsNothing);
+    });
+
+    testWidgets('già salvati: lo dice invece di duplicare', (tester) async {
+      await pumpWith(tester, save: (_) async => 0);
+      await tester.tap(find.text('Salva gli errori come puzzle (1)'));
+      await tester.pumpAndSettle();
+      expect(find.text('Questi puzzle sono già salvati.'), findsOneWidget);
+    });
+
+    testWidgets('un errore di salvataggio si può riprovare', (tester) async {
+      var attempts = 0;
+      await pumpWith(
+        tester,
+        save: (p) async {
+          if (attempts++ == 0) throw StateError('disco pieno');
+          return p.length;
+        },
+      );
+      await tester.tap(find.text('Salva gli errori come puzzle (1)'));
+      await tester.pumpAndSettle();
+      expect(find.text('Salvataggio non riuscito. Riprova.'), findsOneWidget);
+      await tester.tap(find.text('Salva gli errori come puzzle (1)'));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('Puzzle salvati: 1'), findsOneWidget);
     });
   });
 }

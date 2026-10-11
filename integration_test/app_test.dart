@@ -305,8 +305,14 @@ void main() {
     await _openSettings(tester);
     await tester.tap(find.text('Modalità tavolo'));
     await tester.pumpAndSettle();
-    await tester.scrollUntilVisible(find.text('Vibrazione'), 100);
+    await tester.scrollUntilVisible(find.text('Suoni'), 100);
+    await tester.ensureVisible(find.text('Suoni'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Suoni'));
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(find.text('Vibrazione'), 100);
+    await tester.ensureVisible(find.text('Vibrazione'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Vibrazione'));
     await tester.pumpAndSettle();
     await _back(tester);
@@ -375,6 +381,34 @@ void main() {
     expect(scheme(), same(safe));
     final prefs = await SharedPreferences.getInstance();
     expect(prefs.getBool('colorBlind'), isTrue);
+  });
+
+  testWidgets('RF-10 scorrimento orizzontale sulla scacchiera', (tester) async {
+    await _start(tester);
+    await _tapMove(tester, 'e2e4');
+    await _tapMove(tester, 'e7e5');
+    await _tapMove(tester, 'g1f3');
+
+    Future<void> swipe(double dx) async {
+      await tester.dragFrom(_square(tester, 'd5'), Offset(dx, 0));
+      await tester.pumpAndSettle();
+    }
+
+    await swipe(150);
+    expect(find.text('Posizione dopo 1... e5'), findsOneWidget);
+    await swipe(150);
+    expect(find.text('Posizione dopo 1. e4'), findsOneWidget);
+    await swipe(-150);
+    await swipe(-150);
+    expect(find.text('Posizione dopo 2. Nf3'), findsOneWidget);
+    await swipe(-150);
+    expect(find.textContaining('Posizione dopo'), findsNothing);
+    expect(find.text('Muove il Nero.'), findsOneWidget);
+
+    // Partendo dal pezzo da muovere si trascina il pezzo, senza scorrere.
+    await _dragMove(tester, 'b8c6');
+    expect(find.textContaining('Posizione dopo'), findsNothing);
+    expect(find.text('Muove il Bianco.'), findsOneWidget);
   });
 
   testWidgets('RF-10 navigazione nella lista delle mosse', (tester) async {
@@ -508,5 +542,25 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Muove il Bianco.'), findsOneWidget);
     expect(find.byKey(const ValueKey('player-white')), findsNothing);
+  });
+
+  testWidgets('RP-02 tema scuro scelto nelle impostazioni', (tester) async {
+    await _start(tester);
+    Brightness brightness() =>
+        Theme.of(tester.element(find.byType(Chessboard))).brightness;
+    expect(brightness(), Brightness.light);
+
+    await _openSettings(tester);
+    await tester.tap(find.text('Scuro'));
+    await tester.pumpAndSettle();
+    expect(
+      Theme.of(tester.element(find.text('Impostazioni').last)).brightness,
+      Brightness.dark,
+    );
+    await _back(tester);
+    await tester.pumpAndSettle();
+    expect(brightness(), Brightness.dark);
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getString('themeMode'), 'dark');
   });
 }

@@ -9,7 +9,7 @@ import 'opening_assets.dart';
 import 'opening_book.dart';
 import 'repertoire.dart';
 
-/// Explorer ridotto: continuazioni del libro dalla posizione corrente (RF-92).
+/// Esplora aperture: continuazioni del libro dalla posizione corrente (RF-92).
 class ExplorerPage extends StatefulWidget {
   const ExplorerPage({
     super.key,
@@ -68,7 +68,7 @@ class _ExplorerPageState extends State<ExplorerPage> {
     final text = Theme.of(context).textTheme;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Explorer'),
+        title: const Text('Esplora aperture'),
         actions: [
           if (widget.repertoire != null)
             IconButton(
@@ -107,7 +107,7 @@ class _ExplorerPageState extends State<ExplorerPage> {
                     ListTile(
                       title: Text(
                         opening != null
-                            ? '${opening.eco} ${opening.name}'
+                            ? '${opening.eco} ${opening.localName}'
                             : _moves.isEmpty
                             ? 'Posizione iniziale'
                             : 'Apertura senza nome',
@@ -144,7 +144,7 @@ class _ExplorerPageState extends State<ExplorerPage> {
                                         style: text.titleMedium,
                                       ),
                                     ),
-                                    title: Text(m.opening?.name ?? ''),
+                                    title: Text(m.opening?.localName ?? ''),
                                     trailing: Text(
                                       '${(m.share * 100).round()}%',
                                     ),
@@ -191,7 +191,7 @@ class _ExplorerPageState extends State<ExplorerPage> {
     if (!mounted) return;
     // Niente dispose: il dialogo lo usa ancora durante l'animazione di uscita.
     final name = TextEditingController(
-      text: book?.classifyPositions(_positions)?.name ?? 'Linea',
+      text: book?.classifyPositions(_positions)?.localName ?? 'Linea',
     );
     // Di norma la linea finisce con la mossa del proprio colore.
     var side = _moves.length.isOdd ? Side.white : Side.black;

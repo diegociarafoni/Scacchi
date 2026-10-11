@@ -8,11 +8,13 @@ import 'package:scacchi/backup/backup_page.dart';
 void main() {
   late Directory dir;
   String? shared;
+  String? sharedName;
 
   setUp(() {
     dir = Directory.systemTemp.createTempSync('backup-page');
     File('${dir.path}/games.json').writeAsStringSync('{"version":1}');
     shared = null;
+    sharedName = null;
   });
   tearDown(() => dir.deleteSync(recursive: true));
 
@@ -32,7 +34,10 @@ void main() {
       home: BackupPage(
         directory: () async => dir,
         preferences: () => {'sound': true},
-        share: (text, name) async => shared = text,
+        share: (text, name) async {
+          shared = text;
+          sharedName = name;
+        },
       ),
     ),
   );
@@ -44,6 +49,7 @@ void main() {
     final backup = Backup.decode(shared!);
     expect(backup.files.keys, ['games.json']);
     expect(backup.preferences, {'sound': true});
+    expect(sharedName, startsWith('rokko-backup-'));
   });
 
   testWidgets('il backup incollato resta in attesa del riavvio', (

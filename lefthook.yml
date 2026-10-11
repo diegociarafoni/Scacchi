@@ -25,6 +25,14 @@ pre-push:
       # git passa su stdin i rami di destinazione: si controllano quelli.
       use_stdin: true
       run: dart tool/check_branch_name.dart --pre-push
+    - name: messaggi dei commit del ramo
+      run: |
+        git fetch -q origin main || true
+        dart tool/check_commit_msg.dart --range "$(git merge-base origin/main HEAD)..HEAD"
+    - name: documentazione
+      run: dart tool/check_docs.dart
+    - name: nessun sottomodulo nell'indice
+      run: "! git ls-files -s | grep -q '^160000'"
     - name: test
       # I golden dipendono dal sistema operativo: girano solo in CI su Linux.
       run: flutter test --exclude-tags golden

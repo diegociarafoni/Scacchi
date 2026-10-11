@@ -48,6 +48,16 @@ Il test `test/puzzles/puzzle_dataset_test.dart` verifica che ogni soluzione sia 
 | `lib/puzzles/puzzle_trainer.dart` | Punteggio del giocatore, puzzle già visti, salvataggio, evento di puzzle concluso |
 | `lib/puzzles/puzzle_page.dart` | Schermata di risoluzione |
 | `lib/puzzles/puzzle_hub_page.dart` | Punteggio e modalità |
+| `lib/puzzles/puzzle_assets.dart` | Caricamento della raccolta inclusa nell'app (`assets/puzzles/puzzles.csv`) |
+| `lib/puzzles/puzzle_feed.dart` | Sequenze di puzzle per le schermate di risoluzione |
+| `lib/puzzles/puzzle_run.dart`, `lib/puzzles/puzzle_run_page.dart` | Modalità a serie: modello e schermata |
+| `lib/puzzles/run_records.dart` | Record personali delle serie |
+| `lib/puzzles/review_queue.dart` | Coda di ripasso a intervalli (Leitner) |
+| `lib/puzzles/personal_puzzles.dart` | Puzzle ricavati dagli errori delle proprie partite |
+| `lib/puzzles/themes.dart` | Nomi italiani dei temi offerti come filtro |
+| `lib/puzzles/activity_recorder.dart` | Collegamento con i progressi (`PuzzleSolved`, `PuzzleRunFinished`) |
+| `lib/puzzles/mode_guide.dart` | Obiettivo e regole di ogni modalità, in italiano |
+| `lib/puzzles/guide_view.dart` | Schermata e pannello con la spiegazione |
 | `lib/training/training_board.dart` | Scacchiera per esercizi, riusabile da puzzle e aperture; segue le impostazioni della scacchiera tramite `SettingsScope` |
 
 ## Regole di risoluzione
@@ -72,6 +82,21 @@ Il puzzle successivo è quello non ancora visto con difficoltà più vicina al p
 ## Puzzle del giorno (RF-84)
 
 Il puzzle del giorno non richiede un server: l'indice è `(giorni dal 1970 × 7919) mod numero di puzzle`, uguale per tutti i dispositivi con la stessa versione della raccolta.
+
+## Obiettivo e regole di ogni modalità
+
+Ogni modalità spiega cosa fare, come si vince o si perde, tempo o vite e come si calcola il punteggio (`PuzzleGuide`, `lib/puzzles/mode_guide.dart`).
+
+- **Serie, Combo a tempo, Corsa e Sopravvivenza**: prima di partire compare una schermata con l'**Obiettivo** e **Come si gioca**; il tempo parte solo con **Inizia** (e "Gioca ancora" a fine serie riparte senza ripetere la spiegazione). Il testo dell'obiettivo resta in cima durante il gioco.
+- **Allenamento, Per tema, Puzzle del giorno e Ripasso**: la spiegazione si apre da sola, in un pannello, la prima volta che si entra nella modalità (`puzzles.guides.v1` ricorda quelle già lette) e si riapre sempre dall'icona **Come funziona** nella barra del titolo. Nel profilo bambino non compare, perché è fatta di regole e numeri (le modalità a serie non sono disponibili in quel profilo).
+
+Durante il gioco l'avanzamento è sempre visibile:
+
+- nelle serie, i punti, il tempo rimasto (con una barra, che sale quando arrivano i secondi bonus della combo) e le vite come cuori con etichetta per i lettori di schermo ("Vite: 2 su 3"); l'icona **Come funziona** riapre le regole, ma il tempo continua a scorrere;
+- a fine serie, la schermata dice perché è finita (tempo scaduto, vite finite, primo errore o puzzle esauriti);
+- nei puzzle singoli, la barra delle **mosse trovate** ("Mosse trovate: 1 di 3"); nel profilo bambino resta solo la barra, senza cifre.
+
+I numeri citati nei testi (10 secondi, 3/5/7/10 secondi di bonus, intervalli del ripasso) hanno un test che li confronta con le regole del codice.
 
 ## Modalità a serie (RF-82)
 
@@ -101,18 +126,20 @@ Ogni puzzle sbagliato nell'allenamento, anche se già visto, entra in una coda d
 | 3 | 14 giorni |
 | 4 | 30 giorni |
 
-Un ripasso riuscito fa salire di livello; superato l'ultimo, il puzzle è considerato imparato ed esce dalla coda. Un nuovo errore lo riporta al livello 0. Le scadenze sono calcolate a giorni di calendario (dalla mezzanotte), così un errore della sera torna disponibile dal mattino dopo. La voce "Ripasso degli errori" mostra quanti puzzle sono in scadenza oggi, dal più in ritardo, ignorando quelli non più presenti nella raccolta dopo un aggiornamento; il ripasso non modifica il punteggio e, finiti i puzzle in scadenza, lo segnala.
+Un ripasso riuscito fa salire di livello; superato l'ultimo, il puzzle è considerato imparato ed esce dalla coda. Un nuovo errore lo riporta al livello 0. Le scadenze sono calcolate a giorni di calendario (dalla mezzanotte), così un errore della sera torna disponibile dal mattino dopo. La voce "Ripasso degli errori" mostra quanti puzzle sono in scadenza oggi, dal più in ritardo, ignorando quelli non più presenti nella raccolta dopo un aggiornamento; vi entrano anche i puzzle personali ricavati dagli errori delle proprie partite (vedi [revisione-partita.md](revisione-partita.md)); il ripasso non modifica il punteggio e, finiti i puzzle in scadenza, lo segnala.
 
 Le schermate di risoluzione ricevono i puzzle da un `PuzzleFeed` (`lib/puzzles/puzzle_feed.dart`): `RatedFeed` per l'allenamento e i temi, `SingleFeed` per il puzzle del giorno, `ReviewFeed` per il ripasso.
 
 ## Salvataggio
 
-Punteggio, puzzle visti, contatori, coda di ripasso (`puzzles.review.v1`) e record delle serie (`puzzles.records.v1`) sono salvati nel file `training.json` della cartella dati dell'app (chiave `puzzles.trainer.v1` per il punteggio) tramite l'interfaccia `KeyValueStore` (`lib/storage/key_value_store.dart`). Il file passa da `JsonFile` (`lib/storage/json_file.dart`), lo stesso di progressi e archivio: scrittura atomica, salvataggi accodati, file non valido messo da parte come `training.json.bad-<ms>` invece di essere sovrascritto. Sarà importato nel database locale quando arriverà (RNF-08). Dati del punteggio illeggibili vengono ignorati e si riparte da 1500.
+Punteggio, puzzle visti, contatori, spiegazioni delle modalità già lette (`puzzles.guides.v1`), coda di ripasso (`puzzles.review.v1`) e record delle serie (`puzzles.records.v1`) sono salvati nel file `training.json` della cartella dati dell'app (chiave `puzzles.trainer.v1` per il punteggio) tramite l'interfaccia `KeyValueStore` (`lib/storage/key_value_store.dart`). Il file passa da `JsonFile` (`lib/storage/json_file.dart`), lo stesso di progressi e archivio: scrittura atomica, salvataggi accodati, file non valido messo da parte come `training.json.bad-<ms>` invece di essere sovrascritto. Sarà importato nel database locale quando arriverà (RNF-08). Dati del punteggio illeggibili vengono ignorati e si riparte da 1500.
 
 ## Integrazione con la gamification
 
 Ogni puzzle nuovo portato a termine dal giocatore, anche dopo un tentativo sbagliato, registra un `PuzzleSolved` con temi, punteggio aggiornato e durata nel `ProgressController` (XP, obiettivo giornaliero "5 puzzle", traguardi) e mostra la notifica `showProgressFeedback`. Un puzzle concluso con "Soluzione" non vale XP. Nelle modalità a serie i puzzle risolti e un `PuzzleRunFinished` (modalità e punteggio) vengono registrati a fine serie, con un'unica notifica riassuntiva; anche i puzzle del ripasso valgono XP, perché arrivano solo alla scadenza e non si possono ripetere a piacere. Gli XP premiano l'impegno, come le partite perse (RG-01): per questo un puzzle risolto dopo un errore vale XP anche se per il punteggio conta come fallito. Il collegamento passa da `HomeShell`, che apre i progressi alla prima attività, alle schermate tramite il parametro `onActivity` (`lib/puzzles/activity_recorder.dart`).
 
+Nel profilo bambino (RP-06) l'hub e la pagina del puzzle non mostrano punteggio, difficoltà e contatori e le modalità a tempo sono nascoste: vedi [profilo-bambino.md](profilo-bambino.md#niente-numeri).
+
 ## Navigazione
 
-L'app ha una barra di navigazione in basso (`lib/home/home_shell.dart`) con le schede **Gioca**, **Puzzle** e **Aperture**. I puzzle vengono caricati solo alla prima apertura della scheda, così l'avvio dell'app non rallenta.
+L'app ha una barra di navigazione in basso (`lib/home/home_shell.dart`) con le schede **Gioca**, **Puzzle**, **Aperture** e **Tu**. I puzzle vengono caricati solo alla prima apertura della scheda, così l'avvio dell'app non rallenta.

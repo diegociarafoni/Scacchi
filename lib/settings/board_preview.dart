@@ -32,8 +32,19 @@ class _BoardPreviewState extends State<BoardPreview> {
   @override
   void didUpdateWidget(BoardPreview old) {
     super.didUpdateWidget(old);
-    if (old.settings != widget.settings) _played = false;
+    if (_look(old.settings) != _look(widget.settings)) _played = false;
   }
+
+  /// Le sole impostazioni che cambiano ciò che si vede nell'anteprima.
+  static Object _look(AppSettings s) => (
+    s.boardTheme,
+    s.pieceSet,
+    s.showCoordinates,
+    s.showLegalMoves,
+    s.colorBlind,
+    s.animation,
+    s.tableMode,
+  );
 
   void _toggle() => setState(() => _played = !_played);
 

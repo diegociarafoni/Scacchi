@@ -58,7 +58,7 @@ void main() {
             timeControl: '5+0',
             opponentElo: 1000,
             accuracy: 70.0 + i,
-            opening: 'Partita Italiana',
+            opening: 'Italian Game: Evans Gambit',
           ),
         );
       }
@@ -67,8 +67,12 @@ void main() {
     expect(find.textContaining('Rating stimato'), findsOneWidget);
     expect(find.textContaining('provvisorio'), findsOneWidget);
     expect(find.text('+1 =1 -1'), findsWidgets);
-    await tester.scrollUntilVisible(find.text('Partita Italiana'), 200);
-    expect(find.text('Partita Italiana'), findsOneWidget);
+    // Le partite salvano il nome inglese del libro; si mostra in italiano.
+    await tester.scrollUntilVisible(
+      find.text('Partita italiana: gambetto Evans'),
+      200,
+    );
+    expect(find.text('Partita italiana: gambetto Evans'), findsOneWidget);
     await tester.scrollUntilVisible(find.textContaining('71.0%'), 200);
     expect(find.textContaining('71.0%'), findsOneWidget);
   });

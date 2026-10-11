@@ -12,6 +12,12 @@ Revisione completa della partita (requisiti RF-60…RF-66): ogni mossa viene ana
 | `lib/review/accuracy.dart` | Precisione per mossa e per partita, stima indicativa dell'Elo |
 | `lib/review/game_review.dart` | `reviewGame`: analisi di tutte le posizioni, avanzamento, interruzione |
 | `lib/review/engine_evaluator.dart` | Collegamento a `ComputerPlayer.analyse` (lo stesso motore dell'avversario) |
+| `lib/review/game_phase.dart` | Fase della partita (apertura, mediogioco, finale) per la precisione per fase e i temi dei puzzle |
+| `lib/review/coach.dart` | Coach testuale: `explainMove` e temi degli errori |
+| `lib/review/personal_puzzles.dart` | Puzzle personali dagli errori (`puzzlesFromReview`) |
+| `lib/review/board_utils.dart` | Utilità sulla scacchiera: mosse del motore, arrocco, `threatFen` per la minaccia |
+| `lib/review/eval_bar.dart`, `score_format.dart` | Barra di valutazione e formato dei punteggi |
+| `lib/review/review_page.dart` | Schermata di revisione |
 
 Il nucleo è Dart puro: riceve un `PositionEvaluator` (FEN → varianti del motore), quindi si testa con un motore finto e, se installato, con Stockfish reale.
 
@@ -32,8 +38,8 @@ Per ogni mossa `perdita = win% con la mossa migliore − win% con la mossa gioca
 | Categoria | Simbolo | Regola |
 |---|---|---|
 | Brillante | !! | Sacrificio (vedi sotto), mossa migliore o con perdita ≤ 2, dopo la mossa win% ≥ 50, prima < 97 |
-| Ottima | ! | Mossa migliore; la seconda scelta del motore vale almeno 20 punti in meno e sotto il 60%; non è la semplice punizione di un errore grave dell'avversario |
-| Libro | 📖 | Mossa di apertura nota con perdita ≤ 10 (il riconoscimento delle aperture è fornito dal modulo aperture) |
+| Ottima | ! | Mossa migliore; la seconda scelta del motore vale almeno 20 punti in meno e sotto il 60%; non è la semplice punizione di un errore grave dell'avversario; dopo la mossa win% ≥ 30 |
+| Libro | 📖 | Mossa di apertura nota con perdita ≤ 10. Non ancora collegato: `reviewGame` accetta `isBook`, ma la schermata non lo passa, quindi oggi nessuna mossa risulta di libro |
 | Migliore | ★ | Prima scelta del motore |
 | Eccellente | 👍 | Perdita ≤ 2 |
 | Buona | ✓ | Perdita ≤ 5 |
@@ -57,6 +63,10 @@ Un pedone offerto non basta.
 - Precisione della partita: media tra media aritmetica e media armonica delle mosse del giocatore, così un errore grave isolato pesa più che nella media semplice.
 - Stima della forza (assente se il giocatore non ha mosse): interpolazione lineare indicativa (50% ≈ 400, 70% ≈ 1200, 80% ≈ 1700, 90% ≈ 2300, 95% ≈ 2700). È mostrata come stima, non come rating.
 
+## Precisione per fase
+
+Sotto il riepilogo, il riquadro **Precisione per fase** (RF-68) mostra la precisione di Bianco e Nero in apertura, mediogioco e finale, per capire cosa allenare. `GameReview.accuracyByPhase(side)` raggruppa le mosse del giocatore per la fase della posizione di partenza e applica la stessa media della precisione complessiva; una fase senza mosse mostra «—». La regola di fase (`phaseOf`, `lib/review/game_phase.dart`) è la stessa dei temi dei puzzle personali: apertura fino alla decima mossa, finale con al massimo quattro pezzi oltre a re e pedoni, altrimenti mediogioco. Nel profilo bambino il riquadro non compare.
+
 ## Analisi con il motore
 
 `ComputerPlayer.analyse(fen, depth:, multiPv:)` usa la stessa istanza di Stockfish dell'avversario (su telefono il motore nativo è uno solo) e imposta la forza piena (`Skill Level 20`, `UCI_LimitStrength false`); le opzioni del livello vengono ripristinate alla mossa successiva del computer. La revisione chiede due varianti per posizione a profondità 14 (RNF-05) e salta le posizioni finali.
@@ -72,7 +82,7 @@ Un pedone offerto non basta.
 
 ## Schermata di revisione
 
-Si apre dal menu della partita (⋮ → **Revisione della partita**), disponibile quando il motore è presente e c'è almeno una mossa. Il codice è in `lib/review/review_page.dart`.
+Si apre dal menu della partita (⋮ → **Revisione della partita**: c'è il motore, c'è almeno una mossa e il computer non sta pensando; la voce manca nelle partite di tornei e percorso e nel profilo bambino) oppure toccando una partita nell'**Archivio** della scheda Tu. Il codice è in `lib/review/review_page.dart`.
 
 | Elemento | Requisito | Comportamento |
 |---|---|---|
@@ -86,11 +96,13 @@ Si apre dal menu della partita (⋮ → **Revisione della partita**), disponibil
 | Lista mosse | RF-61 | Ogni mossa con il simbolo della categoria, bordo del colore della categoria |
 | Navigazione | RM-01 | Barra in basso: inizio, precedente, successiva, fine |
 
-**Cache** (RF-66): la revisione calcolata resta in memoria per la sessione (`ReviewCache`), quindi riaprirla è immediato. Il salvataggio nel database locale arriverà con l'archivio delle partite.
+**Cache** (RF-66): le ultime 20 revisioni restano in memoria per la sessione (`ReviewCache`), quindi riaprirle è immediato. Non vengono salvate su disco.
 
-**Progressi**: `ReviewPage.onReviewed` viene chiamata solo per un'analisi nuova, per registrare `ReviewCompleted` nei progressi una volta per partita.
+**Progressi**: `ReviewPage.onReviewed` viene chiamata solo per un'analisi nuova, quindi una revisione vale XP una volta per sessione della schermata di partita (riaprirla dalla cache non ne dà altri; una nuova sessione sulla stessa partita è già coperta dall'anti-abuso delle attività). `GamePage` registra `ReviewCompleted` tramite `ActivityRecorder`, con la precisione di chi ha giocato contro il computer e il numero di mosse brillanti, e mostra il riepilogo con `showProgressFeedback`. Nella partita tra due persone la precisione non è di nessuno in particolare e non viene registrata. Dall'archivio la revisione vale XP allo stesso modo, con la precisione del lato del giocatore salvato, senza il riepilogo a schermo.
 
 **Accessibilità**: la barra di valutazione ha un'etichetta descrittiva ("Bianco avanti di 1.5", "Matto in 2 per il Nero"), le mosse della lista sono pulsanti con mossa e categoria, la precisione è letta come percentuale.
+
+Nel profilo bambino (RP-06) la precisione diventa da una a cinque stelle con un giudizio a parole, spariscono Elo stimato, conteggi per categoria e cifre della barra di valutazione, e il coach (`explainMove(..., kid:)`) spiega matti e perdite di materiale senza «matto in N» né «circa N pedoni»: vedi [profilo-bambino.md](profilo-bambino.md#niente-numeri).
 
 ## Coach testuale
 
@@ -109,11 +121,13 @@ Le regole si applicano in quest'ordine, e vale la prima che riconosce qualcosa:
 | Doppio attacco mancato | La mossa migliore attacca due pezzi con le stesse condizioni della forchetta | "Potevi fare un doppio attacco con Nc7+: il cavallo attacca il re e la torre." |
 | Scoperta mancata | Dopo la mossa migliore un pezzo rimasto fermo attacca una casa occupata che prima non attaccava (l'arrocco è escluso) | "Potevi fare un attacco di scoperta con Nc6+: l'alfiere attacca la donna." |
 | Perdita di materiale | Rispetto a prima della mossa, dopo la variante prevista (quattro semimosse) si hanno almeno due pedoni in meno | "Questa mossa perde materiale: circa 3 pedoni nella variante prevista." |
+| Inchiodatura concessa | Il pezzo che risponde (alfiere, torre o donna) inchioda al re un tuo pezzo non pedone, non si può catturare e non inchiodava già lo stesso pezzo (si controlla dopo la perdita di materiale: è un danno più lieve) | "Dopo Bb4 l'alfiere nero inchioda il cavallo in d2 contro il re." |
+| Re scoperto | Mossa del re (un passo, senza arrocco) o di un pedone entro la terza traversa davanti al re ancora sulla traversa di partenza, a cui l'avversario risponde con uno scacco che prima della mossa non era possibile (dopo l'inchiodatura) | "Dopo f3 il tuo re resta scoperto: Qd4+ è scacco." |
 | Generica | Nessuna delle precedenti | "Meglio e4: la tua posizione peggiora." |
 
 Le mosse non sbagliate ricevono una frase di lode per categoria ("È la mossa migliore.").
 
-Non ancora coperti: inchiodatura e re esposto (RF-70) e il commento in tempo reale durante la partita (RF-72).
+Il commento in tempo reale durante la partita (RF-72) è dell'allenatore: vedi [allenatore.md](allenatore.md).
 
 ## Puzzle dagli errori
 
@@ -126,6 +140,17 @@ Proposta "Allenamento dagli errori" del capitolo 7 dei requisiti: `puzzlesFromRe
 - **Temi**: `mateInN` solo se la soluzione arriva davvero al matto, altrimenti dal tema del coach (`defensiveMove` per ciò che si è concesso, `hangingPiece`, `fork`, `discoveredAttack` per ciò che si è mancato) più la fase (`opening` fino alla decima mossa, `endgame` con al massimo quattro pezzi oltre a re e pedoni, altrimenti `middlegame`).
 - **Punteggio**: indicativo, 900 + 200 per mossa del giocatore, oppure 800 + 300 × N per il matto in N.
 - **Identificativo**: `mio-<partita>-<semimossa>`, con i caratteri diversi da lettere, cifre, `_` e `-` sostituiti da `_`; così lo stesso errore non viene aggiunto due volte e la riga CSV resta valida.
-- **Spiegazione**: la frase del coach sull'errore originale, da mostrare dopo la soluzione.
+- **Spiegazione**: la frase del coach sull'errore originale (non salvata con il puzzle, vedi sotto).
 
-`toCsv()` produce la riga `id,fen,mosse,punteggio,temi` con l'arrocco nella forma standard (`e1g1`), leggibile da `Puzzle.parseCsv`. Il salvataggio e la ripetizione dilazionata useranno il ripasso del modulo puzzle (sistema di Leitner) quando sarà su `main`.
+`toCsv()` produce la riga `id,fen,mosse,punteggio,temi` con l'arrocco nella forma standard (`e1g1`), leggibile da `Puzzle.parseCsv`. 
+
+### Salvataggio e ripasso
+
+Nel riepilogo della revisione il pulsante **Salva gli errori come puzzle (N)** compare se c'è almeno un puzzle da salvare. Contro il computer contano solo gli errori di chi ha giocato, non quelli del motore; tra due persone contano entrambi i lati.
+
+- `PuzzleTrainer.addPersonal` salva i puzzle in `PersonalPuzzles` (`lib/puzzles/personal_puzzles.dart`, chiave `puzzles.personal.v1`, al massimo 200: i più vecchi vengono scartati) e li aggiunge alla coda di ripasso come carte nuove. Salvare di nuovo la stessa partita non duplica nulla e lo dice ("Questi puzzle sono già salvati.").
+- Si trovano in **Puzzle › Ripasso degli errori**, con gli intervalli del sistema di Leitner degli altri puzzle. Il punteggio dei puzzle non cambia: vale solo per quelli del database, quindi un puzzle personale (id `mio-…`) sbagliato o risolto agisce solo sul ripasso.
+- Se il salvataggio fallisce compare "Salvataggio non riuscito. Riprova." e il pulsante resta disponibile.
+- La spiegazione del coach non viene conservata: il puzzle è salvato come riga CSV Lichess. Mostrarla dopo la soluzione richiederebbe un campo dedicato.
+- Se la scrittura su disco fallisce nulla viene aggiunto in memoria, così il salvataggio si può riprovare. Oltre 200 puzzle si scartano i più vecchi, anche dal ripasso.
+- L'identificativo della partita nell'id (`mio-<partita>-<semimossa>`) è un FNV-1a della chiave della revisione, uguale su tutte le piattaforme.

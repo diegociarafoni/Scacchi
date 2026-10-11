@@ -28,6 +28,9 @@ class _StagePageState extends State<StagePage> {
   );
   String? _feedback;
 
+  /// La spiegazione della tappa precede il primo esercizio.
+  late bool _started = widget.stage.intro == null;
+
   @override
   void dispose() {
     _board.dispose();
@@ -39,6 +42,7 @@ class _StagePageState extends State<StagePage> {
   bool get _finished => _stars.length == widget.stage.exercises.length;
 
   GameData _gameData({Move? lastMove}) {
+    final side = _run.done || !_started ? PlayerSide.none : PlayerSide.white;
     switch (_run) {
       case final StarsRun run:
         final board = Board.empty.setPieceAt(
@@ -48,7 +52,7 @@ class _StagePageState extends State<StagePage> {
         return GameData(
           fen: '${board.fen} w - - 0 1',
           lastMove: lastMove,
-          playerSide: run.done ? PlayerSide.none : PlayerSide.white,
+          playerSide: side,
           sideToMove: Side.white,
           validMoves: {run.square: run.validMoves},
         );
@@ -57,7 +61,7 @@ class _StagePageState extends State<StagePage> {
         return GameData(
           fen: pos.fen,
           lastMove: lastMove,
-          playerSide: run.done ? PlayerSide.none : PlayerSide.white,
+          playerSide: side,
           sideToMove: pos.turn,
           kingSquareInCheck: pos.isCheck ? pos.board.kingOf(pos.turn) : null,
           validMoves: makeLegalMoves(pos),
@@ -99,6 +103,11 @@ class _StagePageState extends State<StagePage> {
   }
 
   void _solved(int stars) => _stars.add(stars);
+
+  void _start() {
+    setState(() => _started = true);
+    _board.updatePosition(_gameData(), animate: false);
+  }
 
   void _next() {
     setState(() {
@@ -156,24 +165,33 @@ class _StagePageState extends State<StagePage> {
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(_exercise.instructions, style: text.titleMedium),
-                  const SizedBox(height: 12),
-                  if (_feedback != null)
-                    Text(
-                      _feedback!,
-                      textAlign: TextAlign.center,
-                      style: text.titleMedium,
-                    ),
-                  const SizedBox(height: 12),
-                  if (_finished)
-                    _Result(stars: _stageStars)
-                  else
-                    FilledButton(
-                      onPressed: solved ? _next : null,
-                      child: const Text('Avanti'),
-                    ),
-                ],
+                children: !_started
+                    ? [
+                        Text(widget.stage.intro!, style: text.titleMedium),
+                        const SizedBox(height: 24),
+                        FilledButton(
+                          onPressed: _start,
+                          child: const Text('Inizia'),
+                        ),
+                      ]
+                    : [
+                        Text(_exercise.instructions, style: text.titleMedium),
+                        const SizedBox(height: 12),
+                        if (_feedback != null)
+                          Text(
+                            _feedback!,
+                            textAlign: TextAlign.center,
+                            style: text.titleMedium,
+                          ),
+                        const SizedBox(height: 12),
+                        if (_finished)
+                          _Result(stars: _stageStars)
+                        else
+                          FilledButton(
+                            onPressed: solved ? _next : null,
+                            child: const Text('Avanti'),
+                          ),
+                      ],
               ),
             );
             if (landscape) {

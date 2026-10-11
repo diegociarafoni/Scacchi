@@ -1,6 +1,17 @@
 # Rilascio Android (APK)
 
-Il workflow `.github/workflows/apk-release.yml` compila un APK release per telefoni a 64 bit (arm64, cioè tutti i telefoni Android degli ultimi anni) e lo pubblica come allegato di una GitHub Release, scaricabile direttamente dal telefono.
+Il workflow `.github/workflows/apk-release.yml` compila un APK release per telefoni a 64 bit (arm64, cioè tutti i telefoni Android degli ultimi anni) e lo pubblica come allegato di una GitHub Release, scaricabile direttamente dal telefono. L'app installata si chiama **Rokko**; il file e l'identificativo del pacchetto (`io.github.diegociarafoni.scacchi`) restano `scacchi`, perché cambiarli impedirebbe l'aggiornamento sopra le versioni già installate.
+
+## Versioni pubblicate
+
+| Versione | Novità principali |
+|---|---|
+| v0.1.x | Prime versioni, firmate con la chiave di debug: richiedono la disinstallazione prima dell'aggiornamento |
+| v0.2.0 | Prima versione con firma stabile: gli aggiornamenti si installano sopra |
+| v0.3.0 | Backup e ripristino, scacchiera fisica, La tua settimana |
+| v0.4.0 | Profilo bambino, tornei dalla scheda Tu, guardiano nel percorso, XP e archivio a fine partita, puzzle dagli errori, anteprima della scacchiera |
+
+L'elenco completo con le note è nella pagina delle Release; lo stato delle funzioni già in `main` è in `docs/README.md`. La tabella riassume solo le versioni principali e va aggiornata a ogni rilascio.
 
 ## Quando parte
 
@@ -25,18 +36,27 @@ Il rilascio è pensato per consumare pochi minuti:
 - un solo job, perché ogni job viene conteggiato arrotondato al minuto;
 - nessuna esecuzione sulle pull request: la loro build Android è già nella CI;
 - `flutter analyze`, `flutter test` e i test di `tool/derive_keystore.py` girano solo se la CI non è già passata sullo stesso commit (il caso normale quando si rilascia da `main`);
-- cache di Flutter e di Gradle;
+- cache di Flutter e di Gradle (`ccache` è usato solo dalla build di debug della CI, non dal rilascio);
 - build della sola architettura arm64, che dimezza circa il tempo di compilazione e riduce molto l'APK;
 - `timeout-minutes: 30` contro le esecuzioni bloccate.
 
 Per un telefono a 32 bit si può compilare a mano un APK universale togliendo `--target-platform android-arm64` dal workflow.
 
+## Frequenza dei rilasci
+
+Per risparmiare minuti di Actions si pubblica a blocchi, non a ogni funzione:
+
+- **Regola predefinita**: una nuova versione solo quando `main` ha accumulato almeno circa 5 PR di funzionalità dall'ultima, oppure quando il responsabile del progetto la chiede.
+- Le correzioni urgenti (un difetto che impedisce di usare l'app) possono uscire prima, come versione di correzione (`0.3.1`).
+- Prima di pubblicare si aspetta la CI verde sul commit di `main`: così il rilascio salta analisi e test già passati e costa circa 11 minuti invece di 16.
+- Le funzioni uscite tra due rilasci restano in `main`, installabili compilando o dal prossimo APK; `docs/README.md` indica lo stato di ciascuna.
+
 ## Pubblicare una versione
 
 ```bash
 git checkout main && git pull
-git tag v0.2.0
-git push origin v0.2.0
+git tag vX.Y.Z   # per esempio v0.5.0
+git push origin vX.Y.Z
 ```
 
 In alternativa, dall'interfaccia di GitHub con l'avvio manuale descritto sopra.
@@ -68,7 +88,7 @@ La build sceglie la chiave in quest'ordine:
 2. Aprire https://github.com/diegociarafoni/Scacchi/settings/secrets/actions, toccare **New repository secret**, nome `ANDROID_SIGNING_SEED`, valore la frase, **Add secret**. Funziona anche dal browser del telefono.
 3. Pubblicare una nuova versione. Chi aveva installato una versione firmata con la chiave di debug deve disinstallarla una volta; da lì in poi gli aggiornamenti si installano sopra.
 
-L'impronta SHA-256 del certificato compare nel log del passo "Chiave di firma dalla frase segreta". Cambiare la frase, o il sale `SALT` nello script, cambia la chiave e richiede di nuovo una disinstallazione. Per una build locale firmata:
+L'impronta SHA-256 del certificato compare nel log del passo "Build APK release firmato", nella riga `Certificato SHA-256: …` stampata da `tool/derive_keystore.py`. Cambiare la frase, o il sale `SALT` nello script, cambia la chiave e richiede di nuovo una disinstallazione. Per una build locale firmata:
 
 ```bash
 export ANDROID_SIGNING_SEED='...'

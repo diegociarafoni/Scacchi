@@ -2,8 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../kids/kid_display.dart';
+import '../l10n/app_localizations.dart';
 import '../minigames/minigame.dart';
 import '../reminders/reminder_controller.dart';
+import '../settings/settings.dart';
 import 'achievements.dart';
 import 'avatar.dart';
 import 'challenges.dart';
@@ -48,18 +51,23 @@ class ProfilePage extends StatelessWidget {
         listenable: controller,
         builder: (context, _) {
           final enabled = controller.settings.enabled;
+          // Profilo bambino (RP-06): stelle e fiamme al posto di XP e giorni,
+          // niente record personali, che sono tutti numeri.
+          final kid = AppSettings.of(context).kidMode;
           return ListView(
             padding: const EdgeInsets.all(16),
             children: [
               if (enabled) ...[
-                _LevelCard(controller: controller),
+                _LevelCard(controller: controller, kid: kid),
                 const SizedBox(height: 12),
-                _StreakCard(controller: controller),
+                _StreakCard(controller: controller, kid: kid),
                 const SizedBox(height: 24),
-                _Challenges(controller: controller),
+                _Challenges(controller: controller, kid: kid),
                 const SizedBox(height: 24),
-                _Records(controller: controller),
-                const SizedBox(height: 24),
+                if (!kid) ...[
+                  _Records(controller: controller),
+                  const SizedBox(height: 24),
+                ],
                 Text(
                   'Traguardi',
                   style: Theme.of(context).textTheme.titleLarge,
@@ -68,7 +76,9 @@ class ProfilePage extends StatelessWidget {
                 _Achievements(unlocked: controller.state.unlocked),
                 const SizedBox(height: 24),
               ],
-              _Settings(controller: controller, reminders: reminders),
+              // Interruttore degli XP, obiettivo e promemoria sono scelte
+              // per gli adulti, piene di numeri: nel profilo bambino no.
+              if (!kid) _Settings(controller: controller, reminders: reminders),
             ],
           );
         },
@@ -78,9 +88,10 @@ class ProfilePage extends StatelessWidget {
 }
 
 class _LevelCard extends StatelessWidget {
-  const _LevelCard({required this.controller});
+  const _LevelCard({required this.controller, required this.kid});
 
   final ProgressController controller;
+  final bool kid;
 
   @override
   Widget build(BuildContext context) {
@@ -114,9 +125,13 @@ class _LevelCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 16),
-                Text(
-                  'Livello $level',
-                  style: Theme.of(context).textTheme.headlineSmall,
+                Expanded(
+                  child: kid
+                      ? _KidStars(level: level)
+                      : Text(
+                          'Livello $level',
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
                 ),
               ],
             ),
@@ -124,13 +139,43 @@ class _LevelCard extends StatelessWidget {
             LinearProgressIndicator(
               value: levelProgress(xp),
               minHeight: 8,
-              semanticsLabel: 'Avanzamento del livello: $xp su $next XP',
+              semanticsLabel: kid
+                  ? AppLocalizations.of(context).kidLevelProgressLabel
+                  : 'Avanzamento del livello: $xp su $next XP',
             ),
             const SizedBox(height: 4),
-            Text('$xp / $next XP'),
+            Text(
+              kid
+                  ? AppLocalizations.of(context).kidLevelProgress
+                  : '$xp / $next XP',
+            ),
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Livello del profilo bambino: una stella per livello (fino a
+/// [kidMaxStars]), senza il numero.
+class _KidStars extends StatelessWidget {
+  const _KidStars({required this.level});
+
+  final int level;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(l.kidLevelTitle, style: Theme.of(context).textTheme.titleLarge),
+        KidStars(
+          key: const Key('kid-level-stars'),
+          count: level,
+          label: l.kidLevelStarsLabel,
+        ),
+      ],
     );
   }
 }
@@ -193,6 +238,7 @@ class _AvatarPicker extends StatelessWidget {
       listenable: controller,
       builder: (context, _) {
         final s = controller.settings;
+        final kid = AppSettings.of(context).kidMode;
         Widget option<T extends Enum>(
           T item,
           String label,
@@ -201,12 +247,18 @@ class _AvatarPicker extends StatelessWidget {
           ProgressSettings Function() change,
         ) {
           final unlocked = isUnlocked(item, controller.state, s);
-          final requirement = unlocked ? null : requirementOf(item)!.label;
+          final requirement = unlocked
+              ? null
+              : kid
+              ? kidRequirement(AppLocalizations.of(context))
+              : requirementOf(item)!.label;
           return Semantics(
             button: true,
             selected: selected,
             label: requirement == null
                 ? label
+                : kid
+                ? '$label, ${requirement.toLowerCase()}'
                 : '$label, si sblocca con: $requirement',
             excludeSemantics: true,
             child: InkWell(
@@ -296,12 +348,14 @@ class _AvatarPicker extends StatelessWidget {
 }
 
 class _StreakCard extends StatelessWidget {
-  const _StreakCard({required this.controller});
+  const _StreakCard({required this.controller, required this.kid});
 
   final ProgressController controller;
+  final bool kid;
 
   @override
   Widget build(BuildContext context) {
+    if (kid) return _kid(context);
     final streak = controller.streak;
     final goal = controller.settings.goal;
     final progress = controller.todayProgress;
@@ -344,6 +398,42 @@ class _StreakCard extends StatelessWidget {
               '${progress.clamp(0, goal.target)} / ${goal.target} '
               '${_unit(goal.kind)}',
             ),
+            const SizedBox(height: 12),
+            for (final line in controller.streakInfo.lines)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: Text(line),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Serie e obiettivo senza cifre: fiamma accesa o spenta, barra senza conteggi.
+  Widget _kid(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final goal = controller.settings.goal;
+    final progress = controller.todayProgress;
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            KidFlame(
+              key: const Key('kid-streak'),
+              lit: controller.streak > 0,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 12),
+            LinearProgressIndicator(
+              value: (progress / goal.target).clamp(0, 1).toDouble(),
+              minHeight: 8,
+              semanticsLabel: l.kidGoalToday,
+            ),
+            const SizedBox(height: 4),
+            Text(progress >= goal.target ? l.kidProgressGoal : l.kidGoalToday),
           ],
         ),
       ),
@@ -503,9 +593,10 @@ class _Settings extends StatelessWidget {
 }
 
 class _Challenges extends StatelessWidget {
-  const _Challenges({required this.controller});
+  const _Challenges({required this.controller, required this.kid});
 
   final ProgressController controller;
+  final bool kid;
 
   @override
   Widget build(BuildContext context) {
@@ -515,20 +606,23 @@ class _Challenges extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text('Sfide di oggi', style: title),
-        for (final (c, p) in controller.challenges) _ChallengeTile(c, p),
+        for (final (c, p) in controller.challenges) _ChallengeTile(c, p, kid),
         const SizedBox(height: 12),
         Text('Sfida della settimana', style: title),
-        _ChallengeTile(weekly, weeklyProgress),
+        _ChallengeTile(weekly, weeklyProgress, kid),
       ],
     );
   }
 }
 
 class _ChallengeTile extends StatelessWidget {
-  const _ChallengeTile(this.challenge, this.progress);
+  const _ChallengeTile(this.challenge, this.progress, this.kid);
 
   final Challenge challenge;
   final int progress;
+
+  /// Nel profilo bambino il titolo resta (è il compito), il conteggio no.
+  final bool kid;
 
   @override
   Widget build(BuildContext context) {
@@ -546,9 +640,11 @@ class _ChallengeTile extends StatelessWidget {
         title: Text(challenge.title),
         subtitle: LinearProgressIndicator(
           value: shown / challenge.target,
-          semanticsLabel: '$shown su ${challenge.target}',
+          semanticsLabel: kid
+              ? AppLocalizations.of(context).kidChallengeProgress
+              : '$shown su ${challenge.target}',
         ),
-        trailing: Text('$shown/${challenge.target}'),
+        trailing: kid ? null : Text('$shown/${challenge.target}'),
       ),
     );
   }

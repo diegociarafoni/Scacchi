@@ -12,8 +12,10 @@
 | Motore | [multistockfish](https://pub.dev/packages/multistockfish) (Stockfish 19 nativo) | Avversario computer su Android e iOS, in isolate separati |
 | File locali | [path_provider](https://pub.dev/packages/path_provider) | Cartella dati dell'app per i salvataggi |
 | Condivisione | [share_plus](https://pub.dev/packages/share_plus) | Menu di condivisione del sistema per il PGN |
+| Promemoria | [flutter_local_notifications](https://pub.dev/packages/flutter_local_notifications) e [timezone](https://pub.dev/packages/timezone) | Notifiche locali programmate del promemoria giornaliero |
+| Codici QR | [qr](https://pub.dev/packages/qr) e [flutter_zxing](https://pub.dev/packages/flutter_zxing) (zxing-cpp) | Generazione dei QR in Dart e lettura con la fotocamera, tutto sul dispositivo (vedi scambio-qr.md) |
 
-Entrambe le librerie sono sviluppate da Lichess e sono usate dalla sua app mobile.
+dartchess, chessground e multistockfish sono sviluppate da Lichess e sono usate dalla sua app mobile.
 
 La piattaforma web non è supportata: `dartchess` usa interi a 64 bit (bitboard) che il compilatore JavaScript di Flutter non può rappresentare.
 
@@ -24,7 +26,7 @@ lib/
   main.dart               Avvio dell'app, tema chiaro e scuro
   l10n/                   Testi tradotti (.arb) e codice generato (vedi localizzazione.md)
   home/home_shell.dart    Barra di navigazione in basso (Gioca, Puzzle, Aperture, Tu)
-  home/you_page.dart      Scheda Tu: profilo, percorso, minigiochi, statistiche, archivio
+  home/you_page.dart      Scheda Tu: profilo, percorso, tornei, minigiochi, statistiche, settimana, scacchiera fisica, archivio
   game/
     chess_game.dart       Stato della partita, senza dipendenze dall'interfaccia
     variant.dart          Varianti e posizioni iniziali Chess960 (vedi regole-di-gioco.md)
@@ -34,50 +36,51 @@ lib/
     move_label.dart       Numerazione delle mosse nella lista
     move_input.dart       Lettura di una mossa scritta (SAN inglese o italiana, UCI)
     move_speech.dart      Frase da annunciare al lettore di schermo per ogni mossa
+    board_swipe.dart      Scorrimento orizzontale sulla scacchiera per rivedere le mosse
     game_page.dart        Schermata di gioco
+    challenge.dart        Partita già impostata da un'altra schermata (guardiani, tornei)
     opponent_picker.dart  Scelta di avversario, colore e livello
-  engine/                 Avversario computer (vedi avversario-computer.md)
+  engine/                 Avversario computer e bot (vedi avversario-computer.md, bot.md)
+  coach/                  Allenatore in partita e suggerimenti in parole (vedi allenatore.md)
   review/                 Revisione della partita (vedi revisione-partita.md)
+  analysis/               Analisi libera della posizione, freccia della minaccia (vedi analisi.md)
+  editor/                 Editor di posizione e FEN (vedi editor-posizione.md)
   progress/               Gamification: XP, livelli, serie, traguardi (vedi gamification.md)
   archive/                Archivio delle partite e PGN (vedi archivio.md)
+  exchange/               Scambio di partite tra telefoni con il QR (vedi scambio-qr.md)
+  backup/                 Backup e ripristino dei dati (vedi backup.md)
   path/                   Percorso a tappe con stelle (vedi percorso.md)
-  stats/                  Statistiche e rating locale (vedi statistiche.md)
+  stats/                  Statistiche, rating locale e La tua settimana (vedi statistiche.md, ritratto-settimana.md)
   minigames/              Minigiochi di allenamento (vedi minigiochi.md)
   tournament/             Tornei offline contro bot (vedi tornei.md)
+  physical/               Orologio e registro per la scacchiera fisica (vedi scacchiera-fisica.md)
+  kids/                   Stelle, fiamma e giudizi senza numeri del profilo bambino (vedi profilo-bambino.md)
   reminders/              Promemoria giornaliero con notifiche locali (vedi gamification.md)
   storage/                File JSON locali con versione e scrittura atomica
   settings/
     settings.dart         Impostazioni, valori predefiniti e salvataggio locale
     settings_page.dart    Schermata delle impostazioni
+    board_preview.dart    Anteprima della scacchiera nelle Impostazioni
+    color_blind.dart      Colori per daltonici (Okabe-Ito)
+    adult_gate.dart       Domanda per l'adulto del profilo bambino
   puzzles/                Puzzle: modello, punteggio, schermate (vedi puzzle.md)
-  openings/               Aperture: libro, nome in partita, explorer, repertorio (vedi aperture.md)
+  openings/               Aperture: libro, nome in partita, Esplora aperture, repertorio (vedi aperture.md)
   training/               Scacchiera per esercizi condivisa
 assets/
   puzzles/puzzles.csv     Puzzle Lichess inclusi (CC0)
   openings/openings.tsv   Nomi delle aperture Lichess (CC0)
-tool/datasets/            Script che generano i dataset in assets/
-test/
-  chess_game_test.dart    Test delle regole e della fine partita
-  material_test.dart      Test del materiale catturato
-  clock_test.dart         Test di cadenze, orologio e tempo scaduto
-  sound_test.dart         Test della scelta del suono per ogni mossa
-  move_label_test.dart    Test della numerazione delle mosse
-  move_input_test.dart    Test della lettura delle mosse scritte
-  move_speech_test.dart   Test delle frasi per il lettore di schermo
-assets/sounds/            Suoni dell'app (WAV)
-tool/generate_sounds.py   Generatore dei suoni
-  settings_test.dart      Test delle impostazioni e del salvataggio
-  training/               Test della scacchiera per esercizi
-  widget_test.dart        Test di avvio dell'interfaccia
-  computer_game_test.dart Partita contro il computer nell'interfaccia
-  engine/                 Test del protocollo UCI, dei livelli e di Stockfish
-  review/                 Test della revisione della partita
-integration_test/
-  app_test.dart           Test end-to-end sull'app reale
-docs/                     Questa documentazione
+  sounds/                 Suoni dell'app (WAV), generati da tool/generate_sounds.py
+  icon/                   Icona e schermata di avvio, generate da tool/generate_icons.py (vedi identita-visiva.md)
+tool/
+  datasets/               Script che generano i dataset in assets/
+  verifica.sh             Controlli veloci prima del push (vedi convenzioni-git.md)
+  check_*.dart            Controlli di rami, commit, documentazione e licenze
+test/                     Test unitari e di widget, una cartella per area di lib/ (vedi sviluppo.md)
+integration_test/         Test end-to-end sull'app reale, un file per area
+docs/                     Questa documentazione (mappa del codice in mappa-del-codice.md)
 android/ ios/ linux/ macos/ windows/
                           Progetti nativi generati da Flutter
-.github/workflows/ci.yml  Integrazione continua
+.github/workflows/        CI, convenzioni, sicurezza, dataset e rilascio dell'APK (vedi sviluppo.md)
 ```
 
 ## Componenti
@@ -133,5 +136,4 @@ Contro il computer, dopo la mossa del giocatore `GamePage` chiede a `ComputerPla
 
 A fine partita (per qualunque causa: matto, abbandono, patta, tempo) `GamePage` passa il `SavedGame` a `onSave` (archivio) e, se la partita vale, l'attività di `progress/game_activity.dart` a `onActivity` (progressi); i due procedono in modo indipendente e un errore dell'uno non ferma l'altro. `HomeShell` fornisce entrambi.
 
-## Evoluzioni previste
-
+Con `GamePage.challenge` (`GameChallenge`: titolo, livello del motore, colore, `allowUndo`) la partita contro il computer parte da sola alla prima apertura, senza Nuova né editor; Annulla c'è solo se `allowUndo` è vero (guardiano sì, torneo no). A fine partita `onFinished` comunica esito e mosse a chi l'ha lanciata (guardiani del percorso e tornei, vedi [percorso.md](percorso.md) e [tornei.md](tornei.md)).
