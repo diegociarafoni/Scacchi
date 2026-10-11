@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:scacchi/engine/computer_player.dart';
 import 'package:scacchi/game/game_page.dart';
+import 'package:scacchi/settings/settings.dart';
 
 import '../test/engine/process_transport.dart';
 
@@ -45,6 +46,7 @@ Future<void> _startComputerGame(
   await tester.pumpWidget(
     MaterialApp(
       home: GamePage(
+        settings: SettingsController.defaults(),
         computerAvailable: true,
         createComputer: () => ComputerPlayer(connect: ProcessTransport.start),
       ),

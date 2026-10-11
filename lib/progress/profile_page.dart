@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'achievements.dart';
+import 'challenges.dart';
 import 'daily_goal.dart';
 import 'progress_controller.dart';
+import 'records.dart';
 import 'xp.dart';
 
 String goalLabel(DailyGoal goal) => switch (goal.kind) {
@@ -48,6 +50,10 @@ class ProfilePage extends StatelessWidget {
                 _LevelCard(xp: controller.state.xp),
                 const SizedBox(height: 12),
                 _StreakCard(controller: controller),
+                const SizedBox(height: 24),
+                _Challenges(controller: controller),
+                const SizedBox(height: 24),
+                _Records(controller: controller),
                 const SizedBox(height: 24),
                 Text(
                   'Traguardi',
@@ -244,6 +250,97 @@ class _Settings extends StatelessWidget {
             ),
           ),
         ],
+      ],
+    );
+  }
+}
+
+class _Challenges extends StatelessWidget {
+  const _Challenges({required this.controller});
+
+  final ProgressController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    final title = Theme.of(context).textTheme.titleLarge;
+    final (weekly, weeklyProgress) = controller.weeklyChallenge;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text('Sfide di oggi', style: title),
+        for (final (c, p) in controller.challenges) _ChallengeTile(c, p),
+        const SizedBox(height: 12),
+        Text('Sfida della settimana', style: title),
+        _ChallengeTile(weekly, weeklyProgress),
+      ],
+    );
+  }
+}
+
+class _ChallengeTile extends StatelessWidget {
+  const _ChallengeTile(this.challenge, this.progress);
+
+  final Challenge challenge;
+  final int progress;
+
+  @override
+  Widget build(BuildContext context) {
+    final done = progress >= challenge.target;
+    final shown = progress.clamp(0, challenge.target);
+    final scheme = Theme.of(context).colorScheme;
+    return MergeSemantics(
+      child: ListTile(
+        contentPadding: EdgeInsets.zero,
+        leading: Icon(
+          done ? Icons.check_circle : Icons.radio_button_unchecked,
+          color: done ? scheme.primary : scheme.outline,
+          semanticLabel: done ? 'Completata' : 'Da completare',
+        ),
+        title: Text(challenge.title),
+        subtitle: LinearProgressIndicator(
+          value: shown / challenge.target,
+          semanticsLabel: '$shown su ${challenge.target}',
+        ),
+        trailing: Text('$shown/${challenge.target}'),
+      ),
+    );
+  }
+}
+
+class _Records extends StatelessWidget {
+  const _Records({required this.controller});
+
+  final ProgressController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    final r = controller.state.records;
+    final rows = [
+      ('Serie più lunga', '${controller.state.bestStreak} giorni'),
+      if (r.strongestBot != null)
+        (RecordKind.strongestBot.label, '${r.strongestBot} Elo'),
+      if (r.fastestWin != null)
+        (RecordKind.fastestWin.label, '${r.fastestWin} mosse'),
+      if (r.bestAccuracy != null)
+        (
+          RecordKind.bestAccuracy.label,
+          '${r.bestAccuracy!.toStringAsFixed(1)}%',
+        ),
+      if (r.puzzleRating != null)
+        (RecordKind.puzzleRating.label, '${r.puzzleRating}'),
+      for (final e in r.puzzleRuns.entries)
+        ('${RecordKind.puzzleRun.label} (${e.key})', '${e.value}'),
+    ];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text('Record personali', style: Theme.of(context).textTheme.titleLarge),
+        for (final (label, value) in rows)
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(label),
+            trailing: Text(value),
+          ),
       ],
     );
   }

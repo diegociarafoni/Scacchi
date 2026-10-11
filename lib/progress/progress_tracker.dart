@@ -1,7 +1,9 @@
 import 'achievements.dart';
 import 'activity.dart';
+import 'challenges.dart';
 import 'daily_goal.dart';
 import 'progress_state.dart';
+import 'records.dart';
 import 'xp.dart';
 
 /// Numero del giorno di calendario locale di [time], indipendente dall'ora.
@@ -23,6 +25,9 @@ class ProgressUpdate {
     this.goalReached = false,
     this.freezeEarned = false,
     this.unlocked = const [],
+    this.challengesCompleted = const [],
+    this.weeklyCompleted = false,
+    this.newRecords = const [],
   });
 
   final ProgressState state;
@@ -35,6 +40,11 @@ class ProgressUpdate {
   final bool goalReached;
   final bool freezeEarned;
   final List<Achievement> unlocked;
+
+  /// Sfide giornaliere completate con questa attività.
+  final List<Challenge> challengesCompleted;
+  final bool weeklyCompleted;
+  final List<RecordKind> newRecords;
 }
 
 /// Regole di XP, obiettivo giornaliero, serie e traguardi, senza stato proprio.
@@ -95,7 +105,45 @@ class ProgressTracker {
         coveredThrough: () => today,
       );
     }
-    s = s.copyWith(xp: s.xp + xp);
+
+    final daily = dailyChallenges(today);
+    final dailyProgress = s.challengeDay == today
+        ? [...s.dailyProgress]
+        : List.filled(daily.length, 0);
+    final completed = <Challenge>[];
+    for (final (i, c) in daily.indexed) {
+      final before = dailyProgress[i];
+      dailyProgress[i] += _advance(c.kind, activity, goalReached);
+      if (before < c.target && dailyProgress[i] >= c.target) completed.add(c);
+    }
+    final allDone = daily.indexed.every(
+      (e) => dailyProgress[e.$1] >= e.$2.target,
+    );
+    xp += completed.length * dailyChallengeBonusXp;
+
+    final week = weekNumber(today);
+    final weekly = weeklyChallenge(week);
+    final weeklyBefore = s.challengeWeek == week ? s.weeklyProgress : 0;
+    final weeklyAfter =
+        weeklyBefore + _advance(weekly.kind, activity, goalReached);
+    final weeklyCompleted =
+        weeklyBefore < weekly.target && weeklyAfter >= weekly.target;
+    if (weeklyCompleted) xp += weeklyChallengeBonusXp;
+
+    var records = s.records;
+    var newRecords = const <RecordKind>[];
+    if (activity != null) (records, newRecords) = records.apply(activity);
+
+    s = s.copyWith(
+      xp: s.xp + xp,
+      challengeDay: today,
+      dailyProgress: dailyProgress,
+      challengesCompleted: s.challengesCompleted + completed.length,
+      perfectDays: s.perfectDays + (allDone && completed.isNotEmpty ? 1 : 0),
+      challengeWeek: week,
+      weeklyProgress: weeklyAfter,
+      records: records,
+    );
     final oldLevel = levelForXp(oldXp);
     final level = levelForXp(s.xp);
 
@@ -113,6 +161,33 @@ class ProgressTracker {
       goalReached: goalReached,
       freezeEarned: freezeEarned,
       unlocked: unlocked,
+      challengesCompleted: completed,
+      weeklyCompleted: weeklyCompleted,
+      newRecords: newRecords,
+    );
+  }
+
+  int _advance(ChallengeKind kind, Activity? activity, bool goalReached) {
+    if (kind == ChallengeKind.goalDays) return goalReached ? 1 : 0;
+    return activity == null ? 0 : kind.advance(activity);
+  }
+
+  /// Sfide di oggi con il relativo avanzamento.
+  List<(Challenge, int)> challengeProgress(ProgressState state, DateTime now) {
+    final today = _day(state, now);
+    final daily = dailyChallenges(today);
+    return [
+      for (final (i, c) in daily.indexed)
+        (c, state.challengeDay == today ? state.dailyProgress[i] : 0),
+    ];
+  }
+
+  /// Sfida della settimana con il relativo avanzamento.
+  (Challenge, int) weeklyProgress(ProgressState state, DateTime now) {
+    final week = weekNumber(_day(state, now));
+    return (
+      weeklyChallenge(week),
+      state.challengeWeek == week ? state.weeklyProgress : 0,
     );
   }
 
@@ -191,12 +266,20 @@ class ProgressTracker {
         wins: s.wins + (result == GameResult.win ? 1 : 0),
         draws: s.draws + (result == GameResult.draw ? 1 : 0),
       ),
-      PuzzleSolved() => s.copyWith(
+      PuzzleSolved(:final themes) => s.copyWith(
         puzzlesSolved: s.puzzlesSolved + 1,
         todayPuzzles: s.todayPuzzles + 1,
+        puzzleThemes: {
+          ...s.puzzleThemes,
+          for (final t in themes) t: (s.puzzleThemes[t] ?? 0) + 1,
+        },
       ),
+      PuzzleRunFinished() => s,
       LessonCompleted() => s.copyWith(lessonsCompleted: s.lessonsCompleted + 1),
-      ReviewCompleted() => s.copyWith(reviewsCompleted: s.reviewsCompleted + 1),
+      ReviewCompleted(:final brilliantMoves) => s.copyWith(
+        reviewsCompleted: s.reviewsCompleted + 1,
+        brilliantFound: s.brilliantFound + brilliantMoves,
+      ),
     };
   }
 }

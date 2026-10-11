@@ -1,11 +1,14 @@
 import 'dart:async';
 
+import 'package:chessground/chessground.dart';
+
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/engine/computer_player.dart';
 import 'package:scacchi/engine/uci_transport.dart';
 import 'package:scacchi/game/game_page.dart';
+import 'package:scacchi/settings/settings.dart';
 
 /// Motore finto che gioca sempre la prima mossa legale.
 class FirstLegalMoveEngine implements UciTransport {
@@ -92,16 +95,19 @@ Future<void> startComputerGame(
 }
 
 void main() {
-  Widget app({int scoreCp = 0, Future<UciTransport> Function()? connect}) =>
-      MaterialApp(
-        home: GamePage(
-          computerAvailable: true,
-          createComputer: () => ComputerPlayer(
-            connect:
-                connect ?? () async => FirstLegalMoveEngine(scoreCp: scoreCp),
-          ),
-        ),
-      );
+  Widget app({
+    int scoreCp = 0,
+    Future<UciTransport> Function()? connect,
+    SettingsController? settings,
+  }) => MaterialApp(
+    home: GamePage(
+      settings: settings ?? SettingsController.defaults(),
+      computerAvailable: true,
+      createComputer: () => ComputerPlayer(
+        connect: connect ?? () async => FirstLegalMoveEngine(scoreCp: scoreCp),
+      ),
+    ),
+  );
 
   testWidgets('RF-20 giocando col Nero, il computer muove per primo', (
     tester,
@@ -297,25 +303,39 @@ void main() {
     expect(find.text('Il computer non risponde.'), findsOneWidget);
   });
 
-  testWidgets('contro il computer la rotazione automatica è disattivata', (
+  testWidgets('contro il computer la rotazione automatica non si applica', (
     tester,
   ) async {
-    await tester.pumpWidget(app());
-    await startComputerGame(tester, side: 'Bianco');
-    await tester.pumpAndSettle(const Duration(seconds: 1));
-    await tester.tap(find.byType(PopupMenuButton<String>));
-    await tester.pumpAndSettle();
-    final item = tester.widget<CheckedPopupMenuItem<String>>(
-      find.byType(CheckedPopupMenuItem<String>),
+    final settings = SettingsController.defaults();
+    await tester.pumpWidget(
+      app(
+        settings: settings,
+        connect: () async =>
+            FirstLegalMoveEngine(delay: const Duration(milliseconds: 500)),
+      ),
     );
-    expect(item.enabled, isFalse);
+    await startComputerGame(tester, side: 'Nero');
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(find.text('Il computer sta pensando…'), findsOneWidget);
+    await settings.update(settings.value.copyWith(autoFlip: true));
+    await tester.pump();
+    Side orientation() =>
+        tester.widget<Chessboard>(find.byType(Chessboard)).orientation;
+    expect(orientation(), Side.black);
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    expect(orientation(), Side.black);
   });
 
   testWidgets('senza motore disponibile la scelta Computer è disattivata', (
     tester,
   ) async {
     await tester.pumpWidget(
-      MaterialApp(home: GamePage(computerAvailable: false)),
+      MaterialApp(
+        home: GamePage(
+          settings: SettingsController.defaults(),
+          computerAvailable: false,
+        ),
+      ),
     );
     await tester.tap(find.text('Nuova'));
     await tester.pumpAndSettle();

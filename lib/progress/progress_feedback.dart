@@ -11,6 +11,9 @@ String? progressMessage(ProgressUpdate update) {
     if (update.goalReached) 'Obiettivo di oggi raggiunto',
     if (update.newLevel != null) 'Livello ${update.newLevel}!',
     if (update.freezeEarned) 'Hai guadagnato una protezione della serie',
+    for (final c in update.challengesCompleted) 'Sfida completata: ${c.title}',
+    if (update.weeklyCompleted) 'Sfida della settimana completata',
+    for (final r in update.newRecords) 'Nuovo record: ${r.label.toLowerCase()}',
     for (final a in update.unlocked) 'Traguardo: ${a.title}',
   ].join(' · ');
 }

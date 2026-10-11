@@ -7,15 +7,22 @@ import 'package:flutter/material.dart';
 import '../engine/computer_player.dart';
 import '../engine/levels.dart';
 import '../engine/uci_transport.dart';
+import '../settings/settings.dart';
+import '../settings/settings_page.dart';
 import 'chess_game.dart';
 import 'material.dart';
 import 'new_game_dialog.dart';
 
 /// Partita tra due persone sullo stesso dispositivo o contro il computer.
 class GamePage extends StatefulWidget {
-  GamePage({super.key, bool? computerAvailable, this.createComputer})
-    : computerAvailable = computerAvailable ?? StockfishTransport.isSupported;
+  GamePage({
+    super.key,
+    required this.settings,
+    bool? computerAvailable,
+    this.createComputer,
+  }) : computerAvailable = computerAvailable ?? StockfishTransport.isSupported;
 
+  final SettingsController settings;
   final bool computerAvailable;
   final ComputerPlayer Function()? createComputer;
 
@@ -29,7 +36,6 @@ class _GamePageState extends State<GamePage> {
     game: _gameData(),
   );
   Side _orientation = Side.white;
-  bool _autoFlip = false;
   GameSetup _setup = const GameSetup();
   final _random = math.Random();
 
@@ -42,12 +48,44 @@ class _GamePageState extends State<GamePage> {
   /// Invalida le risposte del computer per posizioni non più attuali.
   int _generation = 0;
 
+  AppSettings get _settings => widget.settings.value;
+
+  late bool _autoFlip;
+
+  @override
+  void initState() {
+    super.initState();
+    _autoFlip = _settings.autoFlip;
+    widget.settings.addListener(_onSettingsChanged);
+  }
+
+  @override
+  void didUpdateWidget(GamePage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.settings != widget.settings) {
+      oldWidget.settings.removeListener(_onSettingsChanged);
+      widget.settings.addListener(_onSettingsChanged);
+      _onSettingsChanged();
+    }
+  }
+
   @override
   void dispose() {
+    widget.settings.removeListener(_onSettingsChanged);
     _generation++;
     _computer?.dispose().ignore();
     _board.dispose();
     super.dispose();
+  }
+
+  void _onSettingsChanged() {
+    setState(() {
+      final turnedOn = _settings.autoFlip && !_autoFlip;
+      _autoFlip = _settings.autoFlip;
+      if (turnedOn && _computerSide == null) {
+        _orientation = _game.position.turn;
+      }
+    });
   }
 
   PlayerSide get _playerSide {
@@ -77,7 +115,7 @@ class _GamePageState extends State<GamePage> {
   void _refresh({bool animate = true}) {
     _board.updatePosition(_gameData(), animate: animate, resetPremove: true);
     setState(() {
-      if (_autoFlip && _computerSide == null) {
+      if (_settings.autoFlip && _computerSide == null) {
         _orientation = _game.position.turn;
       }
     });
@@ -327,21 +365,14 @@ class _GamePageState extends State<GamePage> {
                 ],
               ),
         actions: [
-          PopupMenuButton<String>(
-            onSelected: (value) {
-              if (value == 'autoflip') {
-                setState(() => _autoFlip = !_autoFlip);
-                if (_autoFlip) _refresh(animate: false);
-              }
-            },
-            itemBuilder: (context) => [
-              CheckedPopupMenuItem(
-                value: 'autoflip',
-                checked: _autoFlip,
-                enabled: _computerSide == null,
-                child: const Text('Ruota a ogni turno'),
+          IconButton(
+            tooltip: 'Impostazioni',
+            icon: const Icon(Icons.settings_outlined),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => SettingsPage(controller: widget.settings),
               ),
-            ],
+            ),
           ),
         ],
       ),
@@ -359,9 +390,7 @@ class _GamePageState extends State<GamePage> {
                       constraints.maxHeight - _portraitChromeHeight,
                     ),
                   );
-            const boardSettings = ChessboardSettings(
-              colorScheme: ChessboardColorScheme.green,
-            );
+            final boardSettings = _settings.board;
             final board = Chessboard(
               size: boardSize,
               controller: _board,

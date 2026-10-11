@@ -3,12 +3,17 @@ import 'activity.dart';
 /// XP extra il giorno in cui si raggiunge l'obiettivo giornaliero.
 const int dailyGoalBonusXp = 10;
 
+/// XP extra per una sfida giornaliera e per la sfida settimanale completate.
+const int dailyChallengeBonusXp = 20;
+const int weeklyChallengeBonusXp = 50;
+
 /// XP per attività: le attività formative valgono più della sola vittoria.
 int xpFor(Activity activity) => switch (activity) {
   GamePlayed(result: GameResult.win) => 15,
   GamePlayed(result: GameResult.draw) => 12,
   GamePlayed() => 10,
   PuzzleSolved() => 5,
+  PuzzleRunFinished() => 10,
   LessonCompleted() => 20,
   ReviewCompleted() => 20,
 };

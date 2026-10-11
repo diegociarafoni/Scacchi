@@ -9,6 +9,7 @@ import 'activity.dart';
 GamePlayed gameActivity(
   ChessGame game, {
   Side? player,
+  int? opponentElo,
   Duration duration = Duration.zero,
 }) {
   final outcome = game.outcome;
@@ -30,13 +31,21 @@ GamePlayed gameActivity(
     if (checkers.size == 1) matedWith = pos.board.roleAt(checkers.first!);
   }
   var castledLong = false;
+  var playerMoves = 0;
   var side = game.initial.turn;
   for (final m in game.moves) {
-    if (side == player && m.san.startsWith('O-O-O')) castledLong = true;
+    if (side == player) {
+      playerMoves++;
+      if (m.san.startsWith('O-O-O')) castledLong = true;
+    }
     side = side.opposite;
   }
   return GamePlayed(
     result: result,
+    playerSide: player,
+    moveCount: player == null ? (game.moves.length + 1) ~/ 2 : playerMoves,
+    opponentElo: opponentElo,
+    checkmate: game.endReason == GameEndReason.checkmate,
     matedWith: matedWith,
     castledLong: castledLong,
     duration: duration,
