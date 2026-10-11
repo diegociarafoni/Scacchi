@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'game/game_page.dart';
+import 'home/home_shell.dart';
 import 'settings/settings.dart';
 
 void main() {
@@ -42,7 +42,7 @@ class _ScacchiAppState extends State<ScacchiApp> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(colorSchemeSeed: seed, brightness: Brightness.light),
       darkTheme: ThemeData(colorSchemeSeed: seed, brightness: Brightness.dark),
-      home: settings == null ? const Scaffold() : GamePage(settings: settings),
+      home: settings == null ? const Scaffold() : HomeShell(settings: settings),
     );
   }
 }
