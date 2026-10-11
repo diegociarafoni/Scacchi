@@ -51,6 +51,12 @@ class _AnalysisPageState extends State<AnalysisPage>
   bool _background = false;
   bool _arrow = true;
 
+  /// Freccia della minaccia dell'avversario (RF-56), da una seconda analisi
+  /// a mossa nulla.
+  bool _threat = false;
+  InfoLine? _threatLine;
+  StreamSubscription<List<InfoLine>>? _threatAnalysis;
+
   List<InfoLine> _lines = const [];
   List<InfoLine>? _pending;
   Timer? _throttle;
@@ -103,9 +109,25 @@ class _AnalysisPageState extends State<AnalysisPage>
             if (mounted) setState(() => _failed = true);
           },
         );
+    _startThreat();
+  }
+
+  void _startThreat() {
+    _threatLine = null;
+    final fen = threatFen(_pos);
+    if (!_threat || fen == null) return;
+    _threatAnalysis = widget.analyse(fen, 1).listen(
+      (lines) {
+        if (mounted) setState(() => _threatLine = lines.firstOrNull);
+      },
+      // Senza la seconda analisi resta l'analisi principale.
+      onError: (Object _) {},
+    );
   }
 
   void _stop() {
+    unawaited(_threatAnalysis?.cancel());
+    _threatAnalysis = null;
     _throttle?.cancel();
     _throttle = null;
     _pending = null;
@@ -151,6 +173,15 @@ class _AnalysisPageState extends State<AnalysisPage>
     _go(_index + 1);
   }
 
+  void _toggleThreat() {
+    setState(() {
+      _threat = !_threat;
+      unawaited(_threatAnalysis?.cancel());
+      _threatAnalysis = null;
+      _startThreat();
+    });
+  }
+
   void _setMultiPv(int value) {
     setState(() => _multiPv = value);
     _start();
@@ -167,14 +198,28 @@ class _AnalysisPageState extends State<AnalysisPage>
     return _pos.turn == Side.white ? s : s.negated;
   }
 
-  Set<Shape> _shapes() {
-    if (!_arrow) return const {};
-    final best = parseEngineMove(_pos, _lines.firstOrNull?.pv.firstOrNull);
-    if (best is! NormalMove) return const {};
-    final shown = kingDestination(_pos, best);
-    return {
-      Arrow(color: const Color(0xCC3E8E2F), orig: shown.from, dest: shown.to),
-    };
+  Set<Shape> _shapes() => {
+    ..._arrowFor(_pos, _arrow ? _lines.firstOrNull : null, _bestColor),
+    ..._arrowFor(_threatPosition, _threatLine, _threatColor),
+  };
+
+  static const _bestColor = Color(0xCC3E8E2F);
+  static const _threatColor = Color(0xCCC0392B);
+
+  /// Posizione a mossa nulla, se la minaccia è attiva e possibile.
+  Position? get _threatPosition {
+    final fen = threatFen(_pos);
+    return !_threat || fen == null
+        ? null
+        : Chess.fromSetup(Setup.parseFen(fen));
+  }
+
+  Set<Shape> _arrowFor(Position? pos, InfoLine? line, Color color) {
+    if (pos == null) return const {};
+    final move = parseEngineMove(pos, line?.pv.firstOrNull);
+    if (move is! NormalMove) return const {};
+    final shown = kingDestination(pos, move);
+    return {Arrow(color: color, orig: shown.from, dest: shown.to)};
   }
 
   @override
@@ -190,6 +235,13 @@ class _AnalysisPageState extends State<AnalysisPage>
             isSelected: _arrow,
             onPressed: () => setState(() => _arrow = !_arrow),
             icon: const Icon(Icons.north_east),
+          ),
+          IconButton(
+            tooltip: 'Minaccia dell\'avversario',
+            isSelected: _threat,
+            // Sotto scacco o a partita finita la mossa nulla non esiste.
+            onPressed: threatFen(_pos) == null ? null : _toggleThreat,
+            icon: const Icon(Icons.warning_amber),
           ),
         ],
       ),

@@ -129,6 +129,56 @@ void main() {
       expect(live.requests.last.fen, afterE4.fen);
     });
 
+    testWidgets('RF-56 la minaccia analizza la posizione a mossa nulla', (
+      tester,
+    ) async {
+      final live = await pumpAnalysis(tester);
+      expect(live.requests, hasLength(1));
+      await tester.tap(find.byTooltip('Minaccia dell\'avversario'));
+      await settle(tester);
+      // Seconda analisi, con il turno passato al Nero.
+      expect(live.requests, hasLength(2));
+      expect(live.requests.last.fen.split(' ')[1], 'b');
+      expect(live.requests.last.multiPv, 1);
+      live.emit(const [
+        InfoLine(
+          multipv: 1,
+          depth: 12,
+          pv: ['e7e5'],
+          score: EngineScore.cp(20),
+        ),
+      ]);
+      await settle(tester);
+      final arrows = board(tester).shapes.whereType<Arrow>().toList();
+      expect(arrows, hasLength(1));
+      expect(arrows.single.orig, Square.e7);
+      expect(arrows.single.dest, Square.e5);
+      // Diversa dalla freccia verde della mossa migliore.
+      expect(arrows.single.color, const Color(0xCCC0392B));
+    });
+
+    testWidgets('RF-56 si spegne e ferma la seconda analisi', (tester) async {
+      final live = await pumpAnalysis(tester);
+      await tester.tap(find.byTooltip('Minaccia dell\'avversario'));
+      await settle(tester);
+      final cancelledBefore = live.cancelled;
+      await tester.tap(find.byTooltip('Minaccia dell\'avversario'));
+      await settle(tester);
+      expect(live.cancelled, greaterThan(cancelledBefore));
+      expect(board(tester).shapes.whereType<Arrow>(), isEmpty);
+    });
+
+    testWidgets('RF-56 non è disponibile sotto scacco', (tester) async {
+      final check = Chess.fromSetup(
+        Setup.parseFen('4k3/8/8/8/8/8/4r3/4K3 w - - 0 1'),
+      );
+      await pumpAnalysis(tester, initial: check);
+      final button = tester.widget<IconButton>(
+        find.widgetWithIcon(IconButton, Icons.warning_amber),
+      );
+      expect(button.onPressed, isNull);
+    });
+
     testWidgets('toccare una linea ne gioca la prima mossa', (tester) async {
       final live = await pumpAnalysis(tester);
       live.emit([e4, d4]);

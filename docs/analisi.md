@@ -19,6 +19,7 @@ Entrambe le voci compaiono solo dove c'è il motore (Android e iOS) e negli scac
 | Pausa | RF-51 | Il pulsante centrale ferma e riprende l'analisi; chiudendo la pagina il motore si ferma |
 | Esplorazione | RF-52 | Si muovono i pezzi di entrambi i colori; **Indietro** e **Avanti** scorrono le mosse; una mossa nuova da una posizione precedente sostituisce il seguito |
 | Freccia | RF-54 | Freccia verde della mossa migliore, attivabile dalla barra del titolo; l'arrocco punta alla casa del re |
+| Minaccia | RF-56 | Il pulsante con il triangolo di avviso nella barra del titolo mostra con una freccia rossa la mossa migliore che l'avversario giocherebbe se toccasse a lui. Parte una seconda analisi a una linea sulla posizione con il turno passato (`threatFen`, mossa nulla, senza presa en passant); si ferma con il pulsante, cambiando posizione o mettendo l'app in secondo piano. Non è disponibile quando chi muove è sotto scacco o la partita è finita |
 
 ## Motore
 
