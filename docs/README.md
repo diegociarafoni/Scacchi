@@ -22,6 +22,8 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | [sviluppo.md](sviluppo.md) | Ambiente, comandi, test, CI e convenzioni |
 | [convenzioni-git.md](convenzioni-git.md) | Rami, commit Angular, hook locali, merge e protezione di `main` |
 | [avversario-computer.md](avversario-computer.md) | Partita contro il computer: livelli, motore Stockfish, piattaforme |
+| [revisione-partita.md](revisione-partita.md) | Revisione della partita: probabilità di vittoria, classificazione delle mosse, precisione |
+| [analisi.md](analisi.md) | Analisi libera della posizione: linee del motore, barra, esplorazione |
 | [rilascio-android.md](rilascio-android.md) | Rilascio dell'APK, installazione sul telefono, chiave di firma |
 | [licenza.md](licenza.md) | Licenza del progetto e componenti di terze parti |
 
@@ -39,15 +41,17 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | Puzzle Storm, Rush, sopravvivenza, Serie, ripasso degli errori | Disponibile |
 | Nome dell'apertura in partita, explorer ridotto | Disponibile |
 | Repertorio di aperture con ripasso dilazionato | Disponibile |
-| Gamification: XP, livelli, obiettivo giornaliero, serie, traguardi, ricompense estetiche, promemoria | Logica e Profilo disponibili, collegamento alla partita in sviluppo |
-| Archivio partite, import ed export PGN | Logica e schermata disponibili, collegamento alla partita in sviluppo |
-| Percorso a tappe con stelle | Mappa ed esercizi pronti; accesso dalla schermata principale e guardiani in arrivo con il collegamento alla partita |
-| Statistiche e rating locale | Calcolo e schermata pronti; accesso dalla schermata principale in arrivo |
+| Gamification: XP, livelli, obiettivo giornaliero, serie, traguardi, ricompense estetiche, promemoria | Profilo e promemoria disponibili dalla scheda Tu; XP delle partite in arrivo con il collegamento alla partita |
+| Archivio partite, import ed export PGN | Disponibile dalla scheda Tu; salvataggio automatico delle partite in arrivo con il collegamento alla partita |
+| Percorso a tappe con stelle | Disponibile dalla scheda Tu; guardiani in arrivo con la partita contro il computer |
+| Statistiche e rating locale | Disponibile dalla scheda Tu |
 | Editor di posizione con FEN e validazione | Disponibile |
 | Varianti: Chess960, Re della collina, Tre scacchi | Disponibile nella partita a due |
-| Minigiochi | Quattro minigiochi pronti con record e XP; accesso dalla schermata principale in arrivo |
+| Minigiochi | Disponibile dalla scheda Tu, con record e XP |
 | Tornei contro bot | Formule, classifica, tabellone e bacheca pronti; partite e accesso in arrivo con la partita contro il computer |
 | Orologio con cadenze e incremento | Disponibile |
 | Suoni, vibrazione, modalità tavolo | Disponibile |
+| Revisione della partita: classificazione, precisione, grafico, Riprova | Disponibile dove c'è il motore (Android e iOS) |
+| Analisi libera della posizione con linee del motore | Disponibile dove c'è il motore (Android e iOS) |
 
 I requisiti completi sono nel documento dei requisiti del progetto.

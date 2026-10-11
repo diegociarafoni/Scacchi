@@ -44,6 +44,8 @@ Ogni funzione nasce dai requisiti del progetto, nel documento dei requisiti, con
 |---|---|---|---|
 | Unitari | `test/chess_game_test.dart`, `test/material_test.dart`, `test/settings_test.dart`, `test/clock_test.dart`, `test/sound_test.dart`, `test/move_label_test.dart`, `test/move_input_test.dart`, `test/move_speech_test.dart` | Regole e fine partita su `ChessGame`; pezzi catturati e vantaggio su `MaterialBalance`; impostazioni e salvataggio; orologio; scelta dei suoni; numerazione, lettura e annuncio delle mosse; senza interfaccia | `flutter test` |
 | Unitari | `test/engine/` | Protocollo UCI, scelta delle mosse, `ComputerPlayer` con motore finto e con Stockfish reale (se installato) | `flutter test` |
+| Widget | `test/analysis/` | Schermata di analisi con motore finto: linee, MultiPV, esplorazione, pausa, freccia | `flutter test` |
+| Unitari e widget | `test/review/` | Probabilità di vittoria, classificazione, sacrifici, precisione, revisione con motore finto, schermata di revisione e accesso dal menu | `flutter test` |
 | Widget | `test/widget_test.dart`, `test/l10n_test.dart` | Avvio dell'app e stato iniziale; lingua italiana predefinita | `flutter test` |
 | Widget | `test/computer_game_test.dart` | Partita contro il computer con un motore finto | `flutter test` |
 | Gamification | `test/progress/` | Regole di XP, serie e traguardi; salvataggio; schermata Profilo | `flutter test test/progress` |
@@ -78,10 +80,24 @@ I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisic
 | RF-40 orologio contro il computer, annullamento con orologio | | ✓ |
 | RP-03 suoni e vibrazione, RF-31 modalità tavolo | ✓ | ✓ |
 | RNF-07 mossa da tastiera, annuncio delle mosse | ✓ | ✓ |
+| RNF-07 colori per daltonici | ✓ | ✓ |
 | RF-30 nomi dei giocatori | ✓ | ✓ |
 | RF-09 conferma della mossa | ✓ | ✓ |
 | RF-25 matto, stallo, materiale insufficiente, ripetizione, 50 mosse, abbandono | ✓ | matto, abbandono |
 | RF-25 patta accettata dal computer in base alla valutazione | ✓ | ✓ |
+| RF-51 analisi a forza piena con più varianti, analisi continua interrompibile | ✓ | |
+| RF-52 esplorazione lineare con avanti e indietro | ✓ | |
+| RF-60 revisione completa con avanzamento e interruzione | ✓ | |
+| RF-61, RF-62 classificazione delle mosse, Brillante e Ottima | ✓ | |
+| RF-63 precisione, conteggi e stima della forza | ✓ | |
+| RF-50 barra di valutazione con valore numerico | ✓ | |
+| RF-54 freccia della mossa migliore | ✓ | |
+| RF-64 grafico della valutazione cliccabile con momenti chiave | ✓ | |
+| RF-65 Riprova sugli errori | ✓ | |
+| RF-66 cache della revisione (in memoria) | ✓ | |
+| RF-70 spiegazioni: matto concesso o mancato, pezzo in presa, forchetta, perdita di materiale | ✓ | |
+| RF-71 cattura netta, doppio attacco, scoperta dalla variante del motore | ✓ | |
+| Cap. 7, errori trasformati in puzzle personali | ✓ | |
 | RF-31 rotazione automatica a ogni turno | | ✓ |
 | RF-32 patta concordata e annullamento | ✓ | ✓ |
 | RF-100 salvataggio e partita da riprendere | ✓ | |

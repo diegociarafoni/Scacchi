@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 import '../progress/activity.dart';
 import '../progress/progress_feedback.dart';
+import '../settings/settings.dart';
 import '../training/training_board.dart';
 import 'activity_recorder.dart';
 import 'puzzle.dart';
@@ -241,7 +242,10 @@ class _PuzzlePageState extends State<PuzzlePage> {
                           revision: _revision,
                           shapes: {
                             if (_hint != null)
-                              Circle(color: Colors.green, orig: _hint!),
+                              Circle(
+                                color: AppSettings.of(context).hintColor,
+                                orig: _hint!,
+                              ),
                           },
                           onMove: _onMove,
                         ),

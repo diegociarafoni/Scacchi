@@ -3,6 +3,8 @@ import 'package:dartchess/dartchess.dart' show Side;
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'color_blind.dart';
+
 enum AnimationSpeed {
   none('Nessuna', Duration.zero),
   fast('Veloce', Duration(milliseconds: 120)),
@@ -39,10 +41,15 @@ enum BoardTheme {
   final Color? dark;
 
   static final _solid = <BoardTheme, ChessboardColorScheme>{};
+  static final _colorBlind = <BoardTheme, ChessboardColorScheme>{};
 
   /// Sempre la stessa istanza per tema, per non ridisegnare lo sfondo.
   ChessboardColorScheme get colorScheme =>
       scheme ?? _solid.putIfAbsent(this, () => _solidScheme(light!, dark!));
+
+  /// Stesse case di [colorScheme], evidenziazioni senza rosso e verde.
+  ChessboardColorScheme get colorBlindScheme =>
+      _colorBlind.putIfAbsent(this, () => colorBlindHighlights(colorScheme));
 }
 
 ChessboardColorScheme _solidScheme(Color light, Color dark) {
@@ -105,12 +112,19 @@ class AppSettings {
     this.haptics = true,
     this.tableMode = false,
     this.confirmMove = false,
+    this.colorBlind = false,
     String whiteName = '',
     String blackName = '',
   }) : whiteName = _cleanName(whiteName),
        blackName = _cleanName(blackName);
 
   static const maxNameLength = 24;
+
+  static final _defaults = AppSettings();
+
+  /// Impostazioni di [SettingsScope], o i valori predefiniti fuori dall'app.
+  static AppSettings of(BuildContext context) =>
+      SettingsScope.maybeOf(context) ?? _defaults;
 
   static String _cleanName(String name) {
     final trimmed = name.trim();
@@ -132,8 +146,23 @@ class AppSettings {
   final bool haptics;
   final bool tableMode;
   final bool confirmMove;
+  final bool colorBlind;
   final String whiteName;
   final String blackName;
+
+  /// Schema verde fisso degli esercizi guidati, con le evidenziazioni per
+  /// daltonici se attive.
+  ChessboardColorScheme get exerciseScheme => colorBlind
+      ? BoardTheme.green.colorBlindScheme
+      : ChessboardColorScheme.green;
+
+  /// Colore di indizi e frecce di suggerimento.
+  Color get hintColor => colorBlind ? okabeBlue : const Color(0xff4caf50);
+
+  /// Colore della casa toccata negli esercizi, secondo l'esito.
+  Color answerColor(bool correct) => colorBlind
+      ? (correct ? okabeBlue : okabeOrange).withValues(alpha: 0.5)
+      : Color(correct ? 0x8040a040 : 0x80d04040);
 
   /// Nome scelto per [side], `null` se non indicato.
   String? nameOf(Side side) {
@@ -155,6 +184,7 @@ class AppSettings {
     bool? haptics,
     bool? tableMode,
     bool? confirmMove,
+    bool? colorBlind,
     String? whiteName,
     String? blackName,
   }) => AppSettings(
@@ -171,12 +201,15 @@ class AppSettings {
     haptics: haptics ?? this.haptics,
     tableMode: tableMode ?? this.tableMode,
     confirmMove: confirmMove ?? this.confirmMove,
+    colorBlind: colorBlind ?? this.colorBlind,
     whiteName: whiteName ?? this.whiteName,
     blackName: blackName ?? this.blackName,
   );
 
   late final ChessboardSettings board = ChessboardSettings(
-    colorScheme: boardTheme.colorScheme,
+    colorScheme: colorBlind
+        ? boardTheme.colorBlindScheme
+        : boardTheme.colorScheme,
     pieceAssets: pieceSet.pieceSet.assets,
     enableCoordinates: showCoordinates,
     showValidMoves: showLegalMoves,
@@ -204,6 +237,7 @@ class AppSettings {
       other.haptics == haptics &&
       other.tableMode == tableMode &&
       other.confirmMove == confirmMove &&
+      other.colorBlind == colorBlind &&
       other.whiteName == whiteName &&
       other.blackName == blackName;
 
@@ -222,6 +256,7 @@ class AppSettings {
     haptics,
     tableMode,
     confirmMove,
+    colorBlind,
     whiteName,
     blackName,
   );
@@ -262,6 +297,7 @@ class SettingsController extends ValueNotifier<AppSettings> {
         haptics: read('haptics', d.haptics),
         tableMode: read('tableMode', d.tableMode),
         confirmMove: read('confirmMove', d.confirmMove),
+        colorBlind: read('colorBlind', d.colorBlind),
         whiteName: read('whiteName', d.whiteName),
         blackName: read('blackName', d.blackName),
       ),
@@ -300,6 +336,8 @@ class SettingsController extends ValueNotifier<AppSettings> {
         prefs.setBool('tableMode', settings.tableMode),
       if (old.confirmMove != settings.confirmMove)
         prefs.setBool('confirmMove', settings.confirmMove),
+      if (old.colorBlind != settings.colorBlind)
+        prefs.setBool('colorBlind', settings.colorBlind),
       if (old.whiteName != settings.whiteName)
         prefs.setString('whiteName', settings.whiteName),
       if (old.blackName != settings.blackName)

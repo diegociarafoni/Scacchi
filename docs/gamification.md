@@ -142,4 +142,4 @@ Le altre schermate registrano:
 
 ## Integrazione prevista
 
-Il collegamento alla schermata di gioco (registrazione a fine partita, accesso al Profilo e passaggio dei progressi a `SettingsPage(progress: ...)`, creazione di `ReminderController` con `LocalNotificationScheduler` all'avvio su Android e iOS, senza il quale temi e pezzi restano tutti disponibili) arriva in una modifica separata, per non sovrapporsi al lavoro in corso sulla partita contro il computer.
+Il Profilo si apre dalla scheda Tu e `HomeShell` crea il `ReminderController` all'avvio su Android e iOS. Il collegamento alla schermata di gioco (registrazione a fine partita e passaggio dei progressi a `SettingsPage(progress: ...)`, senza il quale temi e pezzi restano tutti disponibili) arriva in una modifica separata, per non sovrapporsi al lavoro in corso sulla partita contro il computer.

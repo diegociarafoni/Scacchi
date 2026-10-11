@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:scacchi/main.dart';
+import 'package:scacchi/settings/settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Offset _square(WidgetTester tester, String name) {
@@ -222,6 +223,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(board().orientation.name, 'black');
     await _openSettings(tester);
+    await tester.scrollUntilVisible(find.text('Blu'), 100);
     await tester.tap(find.text('Blu'));
     await tester.pumpAndSettle();
     await _back(tester);
@@ -325,6 +327,25 @@ void main() {
     await tester.tap(find.text('Abbandona'));
     await tester.pumpAndSettle();
     expect(find.text('Abbandonare la partita?'), findsNothing);
+  });
+
+  testWidgets('RNF-07 evidenziazioni per daltonici', (tester) async {
+    await _start(tester);
+    ChessboardColorScheme scheme() =>
+        tester.widget<Chessboard>(find.byType(Chessboard)).settings.colorScheme;
+    final safe = BoardTheme.green.colorBlindScheme;
+    expect(scheme().lastMove, isNot(safe.lastMove));
+    await _openSettings(tester);
+    await tester.scrollUntilVisible(find.text('Colori per daltonici'), 100);
+    await tester.ensureVisible(find.text('Colori per daltonici'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Colori per daltonici'));
+    await tester.pumpAndSettle();
+    await _back(tester);
+    await _tapMove(tester, 'e2e4');
+    expect(scheme(), same(safe));
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getBool('colorBlind'), isTrue);
   });
 
   testWidgets('RF-10 navigazione nella lista delle mosse', (tester) async {

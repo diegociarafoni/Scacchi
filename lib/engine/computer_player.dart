@@ -64,6 +64,10 @@ class ComputerPlayer {
   /// Incrementato da [stop]: le ricerche richieste prima terminano subito.
   int _stopEpoch = 0;
   bool _searching = false;
+
+  /// Incrementato da [stopAnalysis].
+  int _analysisEpoch = 0;
+  bool _analysing = false;
   Completer<void>? _replyDelay;
   bool _disposed = false;
 
@@ -115,6 +119,86 @@ class ComputerPlayer {
       () async =>
           (await _search(initialFen, moves, analysisLevel, epoch))?.score,
     );
+  }
+
+  /// Analisi a forza piena di [fen] fino a [depth], con [multiPv] varianti
+  /// ordinate dalla migliore. Vuota se non esistono mosse legali o se è
+  /// stata fermata con [stopAnalysis] o [stop] prima di partire.
+  Future<List<InfoLine>> analyse(
+    String fen, {
+    required int depth,
+    int multiPv = 1,
+    Duration timeout = const Duration(minutes: 2),
+  }) {
+    final epoch = (_stopEpoch, _analysisEpoch);
+    return _enqueue(() async {
+      bool stopped() => epoch != (_stopEpoch, _analysisEpoch);
+      if (stopped()) return const [];
+      await _applyOptions(_fullStrength(multiPv));
+      if (stopped()) return const [];
+      _send('position fen ${fen.trim()}');
+      _analysing = true;
+      try {
+        return _sorted(await _go('go depth $depth', timeout), multiPv);
+      } finally {
+        _analysing = false;
+      }
+    });
+  }
+
+  /// Analisi continua a forza piena: emette le varianti ordinate a ogni
+  /// iterazione completa del motore, fino a [maxDepth] o finché chi ascolta
+  /// non annulla l'iscrizione (che ferma la ricerca e libera la coda).
+  Stream<List<InfoLine>> analyseLive(
+    String fen, {
+    int multiPv = 1,
+    int maxDepth = 40,
+  }) {
+    var cancelled = false;
+    var running = false;
+    late final StreamController<List<InfoLine>> out;
+    out = StreamController<List<InfoLine>>(
+      onCancel: () {
+        cancelled = true;
+        // Solo la propria ricerca: le altre richieste restano valide.
+        if (running && !_disposed) _send('stop');
+      },
+    );
+    unawaited(
+      _enqueue(() async {
+        if (cancelled) return;
+        await _applyOptions(_fullStrength(multiPv));
+        if (cancelled) return;
+        _send('position fen ${fen.trim()}');
+        running = true;
+        try {
+          // Nessun limite pratico: l'analisi resta aperta finché serve.
+          await _go(
+            'go depth $maxDepth',
+            const Duration(hours: 24),
+            onUpdate: (infos) {
+              if (!out.isClosed) out.add(_sorted(infos, multiPv));
+            },
+          );
+        } finally {
+          running = false;
+        }
+      }).then(
+        (_) => out.close(),
+        onError: (Object e) {
+          if (!out.isClosed) out.addError(e);
+          unawaited(out.close());
+        },
+      ),
+    );
+    return out.stream;
+  }
+
+  /// Ferma l'analisi in corso o in coda di [analyse], senza toccare le
+  /// mosse del computer.
+  void stopAnalysis() {
+    _analysisEpoch++;
+    if (_analysing && !_disposed) _send('stop');
   }
 
   /// Fa terminare subito la ricerca in corso e quelle già in coda.
@@ -272,13 +356,25 @@ class ComputerPlayer {
     return '${uci.substring(0, 2)}$file${uci[3]}';
   }
 
-  Future<void> _applyLevel(EngineLevel level) async {
-    final wanted = {
-      'Skill Level': '${level.skill}',
-      'MultiPV': '${level.multiPv}',
-      'UCI_LimitStrength': '${level.uciElo != null}',
-      if (level.uciElo != null) 'UCI_Elo': '${level.uciElo}',
-    };
+  Future<void> _applyLevel(EngineLevel level) => _applyOptions({
+    'Skill Level': '${level.skill}',
+    'MultiPV': '${level.multiPv}',
+    'UCI_LimitStrength': '${level.uciElo != null}',
+    if (level.uciElo != null) 'UCI_Elo': '${level.uciElo}',
+  });
+
+  static Map<String, String> _fullStrength(int multiPv) => {
+    'Skill Level': '20',
+    'MultiPV': '$multiPv',
+    'UCI_LimitStrength': 'false',
+  };
+
+  static List<InfoLine> _sorted(Map<int, InfoLine> infos, int multiPv) => [
+    for (final k in infos.keys.toList()..sort())
+      if (k <= multiPv) infos[k]!,
+  ];
+
+  Future<void> _applyOptions(Map<String, String> wanted) async {
     var changed = false;
     wanted.forEach((name, value) {
       if (_applied[name] == value) return;
@@ -287,6 +383,37 @@ class ComputerPlayer {
       changed = true;
     });
     if (changed) await _sync();
+  }
+
+  /// Avvia una ricerca e raccoglie le varianti per numero fino a
+  /// `bestmove`, scartando i punteggi parziali (`lowerbound`/`upperbound`).
+  /// [onUpdate] arriva alla fine di ogni iterazione, quando tutte le
+  /// varianti hanno la stessa profondità. Interrompibile con [stop].
+  Future<Map<int, InfoLine>> _go(
+    String command,
+    Duration timeout, {
+    void Function(Map<int, InfoLine> infos)? onUpdate,
+  }) async {
+    final infos = <int, InfoLine>{};
+    var lines = 0;
+    void onInfo(String line) {
+      if (line.contains(' lowerbound') || line.contains(' upperbound')) return;
+      final info = parseInfo(line);
+      if (info == null) return;
+      infos[info.multipv] = info;
+      if (info.multipv > lines) lines = info.multipv;
+      if (info.multipv == lines) onUpdate?.call(infos);
+    }
+
+    _listeners.add(onInfo);
+    _searching = true;
+    try {
+      await _command(command, (l) => l.startsWith('bestmove'), timeout);
+      return infos;
+    } finally {
+      _searching = false;
+      _listeners.remove(onInfo);
+    }
   }
 
   Future<String> _sync() =>

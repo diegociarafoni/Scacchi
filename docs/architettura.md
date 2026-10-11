@@ -23,7 +23,8 @@ La piattaforma web non è supportata: `dartchess` usa interi a 64 bit (bitboard)
 lib/
   main.dart               Avvio dell'app, tema chiaro e scuro
   l10n/                   Testi tradotti (.arb) e codice generato (vedi localizzazione.md)
-  home/home_shell.dart    Barra di navigazione in basso (Gioca, Puzzle, Aperture)
+  home/home_shell.dart    Barra di navigazione in basso (Gioca, Puzzle, Aperture, Tu)
+  home/you_page.dart      Scheda Tu: profilo, percorso, minigiochi, statistiche, archivio
   game/
     chess_game.dart       Stato della partita, senza dipendenze dall'interfaccia
     variant.dart          Varianti e posizioni iniziali Chess960 (vedi regole-di-gioco.md)
@@ -36,6 +37,7 @@ lib/
     game_page.dart        Schermata di gioco
     opponent_picker.dart  Scelta di avversario, colore e livello
   engine/                 Avversario computer (vedi avversario-computer.md)
+  review/                 Revisione della partita (vedi revisione-partita.md)
   progress/               Gamification: XP, livelli, serie, traguardi (vedi gamification.md)
   archive/                Archivio delle partite e PGN (vedi archivio.md)
   path/                   Percorso a tappe con stelle (vedi percorso.md)
@@ -69,6 +71,7 @@ tool/generate_sounds.py   Generatore dei suoni
   widget_test.dart        Test di avvio dell'interfaccia
   computer_game_test.dart Partita contro il computer nell'interfaccia
   engine/                 Test del protocollo UCI, dei livelli e di Stockfish
+  review/                 Test della revisione della partita
 integration_test/
   app_test.dart           Test end-to-end sull'app reale
 docs/                     Questa documentazione
