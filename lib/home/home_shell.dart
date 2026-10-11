@@ -2,6 +2,7 @@ import 'package:dartchess/dartchess.dart' show Side;
 import 'package:flutter/material.dart';
 
 import '../archive/game_archive.dart';
+import '../archive/pgn.dart';
 import '../archive/saved_game.dart';
 import '../engine/computer_player.dart';
 import '../engine/levels.dart';
@@ -22,7 +23,10 @@ import '../puzzles/puzzle_trainer.dart';
 import '../reminders/local_notification_scheduler.dart';
 import '../reminders/reminder.dart';
 import '../reminders/reminder_controller.dart';
+import '../review/engine_evaluator.dart';
+import '../review/move_classification.dart';
 import '../review/personal_puzzles.dart';
+import '../review/review_page.dart';
 import '../settings/settings.dart';
 import '../stats/local_rating.dart';
 import '../storage/key_value_store.dart';
@@ -243,6 +247,61 @@ class _HomeShellState extends State<HomeShell> {
     return r == null ? null : challengeStars(r, moves: moves);
   }
 
+  /// Apre nella revisione una partita dell'archivio.
+  Future<void> _openSavedGame(BuildContext context, SavedGame saved) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
+    final imported = importPgn(saved.pgn).games;
+    if (imported.isEmpty) {
+      messenger.showSnackBar(
+        const SnackBar(content: Text('La partita non si può aprire.')),
+      );
+      return;
+    }
+    if (!_computerAvailable) {
+      messenger.showSnackBar(
+        const SnackBar(
+          content: Text(
+            'La revisione richiede il motore, disponibile su Android e iOS.',
+          ),
+        ),
+      );
+      return;
+    }
+    final game = imported.first.game;
+    final player = widget.createComputer?.call() ?? ComputerPlayer();
+    final side = saved.playerSide;
+    final players = side == null ? {Side.white, Side.black} : {side};
+    try {
+      await navigator.push(
+        MaterialPageRoute<void>(
+          builder: (_) => ReviewPage(
+            initial: game.initial,
+            moves: [for (final m in game.moves) m.move],
+            evaluate: engineEvaluator(player),
+            onCancel: player.stopAnalysis,
+            analyseLive: (fen, multiPv) =>
+                player.analyseLive(fen, multiPv: multiPv),
+            onReviewed: (review) => _record(
+              ReviewCompleted(
+                accuracy: players.length == 1
+                    ? review.accuracy(players.single)
+                    : null,
+                brilliantMoves: [
+                  for (final s in players) review.count(s, MoveClass.brilliant),
+                ].fold(0, (a, b) => a + b),
+              ),
+            ),
+            onSavePuzzles: _savePersonalPuzzles,
+            puzzlePlayers: players,
+          ),
+        ),
+      );
+    } finally {
+      player.dispose().ignore();
+    }
+  }
+
   Future<void> _saveGame(SavedGame game) async => (await _archive()).save(game);
 
   Future<GameArchive> _archive() => (widget.archive ?? GameArchive.open)();
@@ -337,6 +396,7 @@ class _HomeShellState extends State<HomeShell> {
               reminders: () => _reminders,
               simple: _kidMode,
               playGuardian: _computerAvailable ? _playGuardian : null,
+              openGame: _openSavedGame,
               tournamentPage: _computerAvailable ? _tournamentPage : null,
             )
           else
