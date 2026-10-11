@@ -30,6 +30,15 @@ void main() {
       expect(game().suggestions('Cf').map((s) => s.san), ['Nf3']);
     });
 
+    test('la promozione si scrive anche in italiano', () {
+      final g = game();
+      for (final m in ['h4', 'g5', 'hxg5', 'h6', 'gxh6', 'Nf6', 'h7', 'Ng8']) {
+        expect(g.playText(m), PhysicalInput.played, reason: m);
+      }
+      expect(g.suggestions('hxg8=D').map((s) => s.san), ['hxg8=Q']);
+      expect(g.suggestions('hxg8=').map((s) => s.san), hasLength(4));
+    });
+
     test('testo senza mosse dà un elenco vuoto', () {
       expect(game().suggestions('zz'), isEmpty);
     });
@@ -48,6 +57,14 @@ void main() {
       expect(g.playText('e5'), PhysicalInput.invalid);
       expect(g.playText('R'), PhysicalInput.invalid);
       expect(g.moves, isEmpty);
+    });
+
+    test('con lo scacco matto l\'orologio si ferma', () {
+      final g = game(control: const TimeControl(minutes: 3))..start();
+      for (final m in ['f3', 'e5', 'g4', 'Qh4#']) {
+        g.playText(m);
+      }
+      expect(g.clock!.isRunning, isFalse);
     });
 
     test('dopo lo scacco matto la partita è finita e non accetta mosse', () {
@@ -117,6 +134,23 @@ void main() {
       g.undo();
       expect(g.isOver, isFalse);
       expect(g.clock!.active, Side.white);
+    });
+
+    test('lascia in pausa l\'orologio che lo era', () {
+      final g = game(control: const TimeControl(minutes: 3))..start();
+      g.playText('e4');
+      g.pause();
+      g.undo();
+      expect(g.clock!.isRunning, isFalse);
+    });
+
+    test('dopo un tempo scaduto l\'orologio resta fermo', () {
+      final g = game(control: const TimeControl(minutes: 1))..start();
+      now = now.add(const Duration(seconds: 61));
+      g.checkFlag();
+      g.undo();
+      expect(g.isOver, isFalse);
+      expect(g.clock!.isRunning, isFalse);
     });
 
     test('senza mosse non fa nulla', () {

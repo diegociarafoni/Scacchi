@@ -59,10 +59,10 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
   void _tick() {
     final game = _game;
     if (game == null || !mounted) return;
-    final before = game.isOver;
+    if (!(game.clock?.isRunning ?? false) || game.isOver) return;
     game.checkFlag();
     setState(() {});
-    if (!before && game.isOver) unawaited(_save());
+    if (game.isOver) unawaited(_save());
   }
 
   void _afterChange() {
@@ -94,30 +94,48 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
     final game = _game;
     if (game == null || game.moves.isEmpty) return;
     final started = _startedAt ?? _now;
+    final white = _white.text.trim();
+    final black = _black.text.trim();
+    final saved = SavedGame(
+      id: 'fisica-${started.microsecondsSinceEpoch}',
+      createdAt: started,
+      updatedAt: _now,
+      white: white,
+      black: black,
+      mode: SavedGame.physical,
+      result: game.result,
+      pgn: game.pgnText(white: white, black: black, date: started),
+      timeControl: game.control?.label,
+    );
     try {
-      final archive = await widget.archive();
-      await archive.save(
-        SavedGame(
-          id: 'fisica-${started.microsecondsSinceEpoch}',
-          createdAt: started,
-          updatedAt: _now,
-          white: _white.text.trim(),
-          black: _black.text.trim(),
-          mode: SavedGame.physical,
-          result: game.result,
-          pgn: game.pgnText(
-            white: _white.text.trim(),
-            black: _black.text.trim(),
-            date: started,
-          ),
-          timeControl: game.control?.label,
-        ),
-      );
+      await (await widget.archive()).save(saved);
       if (mounted) setState(() => _saved = true);
     } on Object catch (e) {
       debugPrint('Salvataggio non riuscito: $e');
       if (mounted) setState(() => _message = 'Salvataggio non riuscito');
     }
+  }
+
+  Future<void> _draw() async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Patta concordata?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('No'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Sì'),
+          ),
+        ],
+      ),
+    );
+    if (ok != true) return;
+    _game!.agreeDraw();
+    _afterChange();
   }
 
   Future<void> _resign() async {
@@ -287,6 +305,7 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
           onPressed: game.canUndo
               ? () {
                   game.undo();
+                  _saved = false;
                   _afterChange();
                 }
               : null,
@@ -294,13 +313,7 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
           label: const Text('Annulla'),
         ),
         if (!game.isOver) ...[
-          TextButton(
-            onPressed: () {
-              game.agreeDraw();
-              _afterChange();
-            },
-            child: const Text('Patta'),
-          ),
+          TextButton(onPressed: _draw, child: const Text('Patta')),
           TextButton(onPressed: _resign, child: const Text('Abbandona')),
         ],
       ],

@@ -61,11 +61,12 @@ class PhysicalGame {
       for (final to in entry.value.squares) {
         final move = NormalMove(from: entry.key, to: to);
         for (final promoted in _promotions(pos, move)) {
-          final san = pos.makeSan(promoted).$2.replaceAll(RegExp(r'[+#]'), '');
+          final full = pos.makeSan(promoted).$2;
+          final san = full.replaceAll(RegExp(r'[+#]'), '');
           final italian = _italian(san).toLowerCase();
           if (san.toLowerCase().startsWith(prefix) ||
               italian.startsWith(prefix)) {
-            found.add((san: pos.makeSan(promoted).$2, move: promoted));
+            found.add((san: full, move: promoted));
           }
         }
       }
@@ -88,24 +89,35 @@ class PhysicalGame {
     if (!_game.play(move)) return PhysicalInput.invalid;
     if (c != null && before != null) {
       _history.add((before, active));
-      c.switchAfterMove();
+      if (_game.isOver) {
+        c.pause();
+      } else {
+        c.switchAfterMove();
+      }
     }
     return PhysicalInput.played;
   }
 
   /// Toglie l'ultima mossa o revoca la chiusura dichiarata della partita.
+  /// L'orologio resta in pausa se lo era; dopo un tempo scaduto resta fermo,
+  /// perché il lato a zero verrebbe fermato di nuovo subito.
   void undo() {
+    final reason = endReason;
     final declared = const {
       GameEndReason.resignation,
       GameEndReason.agreement,
       GameEndReason.timeout,
-    }.contains(endReason);
+    }.contains(reason);
+    final wasOver = isOver;
     _game.undo();
+    final c = clock;
+    if (c == null) return;
     if (declared) {
-      resume();
-    } else if (_history.isNotEmpty && clock != null) {
+      if (reason != GameEndReason.timeout) resume();
+    } else if (_history.isNotEmpty) {
+      final paused = !c.isRunning && !wasOver;
       final (snapshot, active) = _history.removeLast();
-      clock!.restore(snapshot, active);
+      c.restore(snapshot, paused ? null : active);
     }
   }
 
@@ -154,8 +166,14 @@ class PhysicalGame {
       '${d.day.toString().padLeft(2, '0')}';
 
   static String _italian(String san) {
-    if (san.isEmpty || !_italianPieces.containsKey(san[0])) return san;
-    return _italianPieces[san[0]]! + san.substring(1);
+    final head = san.isNotEmpty && _italianPieces.containsKey(san[0])
+        ? _italianPieces[san[0]]! + san.substring(1)
+        : san;
+    // Promozione: `e8=Q` si scrive `e8=D`.
+    return head.replaceAllMapped(
+      RegExp(r'=([QRBN])'),
+      (m) => '=${_italianPieces[m[1]]}',
+    );
   }
 
   /// Un pedone all'ottava ha quattro promozioni da proporre.
