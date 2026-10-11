@@ -20,17 +20,23 @@ class LocalNotificationScheduler implements ReminderScheduler {
   final FlutterLocalNotificationsPlugin _plugin;
   Future<void>? _initialized;
 
-  Future<void> _init() => _initialized ??= _plugin.initialize(
-    settings: const InitializationSettings(
-      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
-      // Il permesso si chiede solo quando l'utente attiva il promemoria.
-      iOS: DarwinInitializationSettings(
-        requestAlertPermission: false,
-        requestSoundPermission: false,
-        requestBadgePermission: false,
-      ),
-    ),
-  );
+  Future<void> _init() => _initialized ??= _plugin
+      .initialize(
+        settings: const InitializationSettings(
+          android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+          // Il permesso si chiede solo quando l'utente attiva il promemoria.
+          iOS: DarwinInitializationSettings(
+            requestAlertPermission: false,
+            requestSoundPermission: false,
+            requestBadgePermission: false,
+          ),
+        ),
+      )
+      .catchError((Object e) {
+        // Un errore di avvio si riprova alla chiamata successiva.
+        _initialized = null;
+        throw e;
+      });
 
   @override
   Future<bool> requestPermission() async {

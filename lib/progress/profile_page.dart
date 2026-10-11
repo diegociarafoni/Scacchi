@@ -12,12 +12,6 @@ import 'records.dart';
 import 'rewards.dart';
 import 'xp.dart';
 
-String goalLabel(DailyGoal goal) => switch (goal.kind) {
-  GoalKind.games => goal.target == 1 ? '1 partita' : '${goal.target} partite',
-  GoalKind.puzzles => '${goal.target} puzzle',
-  GoalKind.minutes => '${goal.target} minuti',
-};
-
 String _unit(GoalKind kind) => switch (kind) {
   GoalKind.games => 'partite',
   GoalKind.puzzles => 'puzzle',
@@ -414,8 +408,8 @@ class _Settings extends StatelessWidget {
       ),
     );
     if (time == null) return;
-    final granted = await reminders.enable(time.hour * 60 + time.minute);
-    if (!granted && context.mounted) {
+    if (await reminders.enable(time.hour * 60 + time.minute)) return;
+    if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
@@ -424,6 +418,8 @@ class _Settings extends StatelessWidget {
         ),
       );
     }
+    // Permesso revocato dopo l'attivazione: il promemoria si spegne davvero.
+    await reminders.disable();
   }
 
   @override

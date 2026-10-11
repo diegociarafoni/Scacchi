@@ -92,7 +92,7 @@ Spento di default. Nel Profilo, "Promemoria giornaliero" chiede il permesso per 
 - mai nel giorno di riposo;
 - il testo ricorda la serie in corso ("Serie di 4 giorni: basta 1 partita per continuarla.") o l'obiettivo, senza toni colpevolizzanti.
 
-`ReminderController` ascolta i progressi e riprogramma quando cambiano obiettivo, orario o attività del giorno; con la gamification spenta cancella il promemoria. Chi non apre l'app per giorni riceve un solo promemoria, non uno al giorno: nessuna insistenza. `LocalNotificationScheduler` usa `flutter_local_notifications` con orario approssimato (`inexactAllowWhileIdle`), quindi non serve il permesso per le sveglie esatte; su Android il promemoria sopravvive al riavvio. Le notifiche programmate esistono solo su Android e iOS: altrove l'opzione non compare.
+`ReminderController` si allinea all'avvio, al ritorno nell'app e quando cambiano obiettivo, orario o attività del giorno; con la gamification spenta cancella il promemoria. Chi non apre l'app per giorni riceve un solo promemoria, non uno al giorno: nessuna insistenza. `LocalNotificationScheduler` usa `flutter_local_notifications` con orario approssimato (`inexactAllowWhileIdle`), quindi non serve il permesso per le sveglie esatte; su Android il promemoria sopravvive al riavvio. Le notifiche programmate esistono solo su Android e iOS: altrove l'opzione non compare.
 
 ## Componenti
 

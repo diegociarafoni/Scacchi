@@ -25,6 +25,7 @@ class FakeScheduler implements ReminderScheduler {
 }
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
   const goal = DailyGoal(GoalKind.games, 1);
   // 2026-10-05 è un lunedì; promemoria alle 19:00.
   const seven = 19 * 60;
@@ -65,6 +66,11 @@ void main() {
       expect(r.at, DateTime(2026, 10, 6, 19));
     });
 
+    test('un orario a meno di un minuto passa a domani', () {
+      final r = next(now: DateTime(2026, 10, 5, 18, 59, 30))!;
+      expect(r.at, DateTime(2026, 10, 6, 19));
+    });
+
     test('salta il giorno di riposo', () {
       final r = next(
         now: DateTime(2026, 10, 5, 20),
@@ -81,6 +87,17 @@ void main() {
       expect(
         next(now: DateTime(2026, 10, 5, 9))!.body,
         'Obiettivo di oggi: 1 partita.',
+      );
+    });
+
+    test('non promette una serie che domani sarà interrotta', () {
+      expect(
+        next(now: DateTime(2026, 10, 5, 20), streak: 4)!.body,
+        'Obiettivo di oggi: 1 partita.',
+      );
+      expect(
+        next(now: DateTime(2026, 10, 5, 20), streak: 4, reached: true)!.body,
+        'Serie di 4 giorni: basta 1 partita per continuarla.',
       );
     });
 
@@ -115,6 +132,16 @@ void main() {
     tearDown(() {
       controller.dispose();
       dir.deleteSync(recursive: true);
+    });
+
+    test('all\'avvio programma il promemoria salvato', () async {
+      controller.dispose();
+      await progress.updateSettings(
+        progress.settings.copyWith(reminder: () => seven),
+      );
+      controller = ReminderController(progress, scheduler, clock: () => now);
+      await controller.sync();
+      expect(scheduler.scheduled.last.at, DateTime(2026, 10, 5, 19));
     });
 
     test('spento non programma nulla', () async {

@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 
 import '../progress/daily_goal.dart';
-import '../progress/profile_page.dart' show goalLabel;
 
 /// Notifica locale programmata per ricordare l'obiettivo giornaliero.
 @immutable
@@ -49,14 +48,20 @@ Reminder? nextReminder({
   DateTime on(int dayOffset) =>
       DateTime(now.year, now.month, now.day + dayOffset, 0, minutes);
   var offset = 0;
-  if (goalReachedToday || !on(0).isAfter(now)) offset = 1;
+  // Un minuto di margine: il permesso o la coda possono ritardare la
+  // programmazione, e le notifiche nel passato vengono rifiutate.
+  if (goalReachedToday || !on(0).isAfter(now.add(const Duration(minutes: 1)))) {
+    offset = 1;
+  }
   while (on(offset).weekday == restDay) {
     offset++;
   }
   return Reminder(
     at: on(offset),
     title: 'Scacchi',
-    body: streak > 0
+    // Un promemoria per un giorno futuro con l'obiettivo di oggi mancato
+    // troverebbe la serie già interrotta.
+    body: streak > 0 && (offset == 0 || goalReachedToday)
         ? 'Serie di ${streak == 1 ? '1 giorno' : '$streak giorni'}: '
               'basta ${goalLabel(goal)} per continuarla.'
         : 'Obiettivo di oggi: ${goalLabel(goal)}.',

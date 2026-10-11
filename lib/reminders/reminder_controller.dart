@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 
 import '../progress/progress_controller.dart';
 import 'reminder.dart';
@@ -14,11 +14,15 @@ class ReminderController {
     DateTime Function()? clock,
   }) : _clock = clock ?? DateTime.now {
     _progress.addListener(_onProgress);
+    // Al ritorno nell'app il giorno può essere cambiato.
+    _lifecycle = AppLifecycleListener(onResume: _onProgress);
+    unawaited(sync());
   }
 
   final ProgressController _progress;
   final ReminderScheduler _scheduler;
   final DateTime Function() _clock;
+  late final AppLifecycleListener _lifecycle;
 
   Reminder? _scheduled;
 
@@ -35,7 +39,8 @@ class ReminderController {
     await _progress.updateSettings(
       _progress.settings.copyWith(reminder: () => minutes),
     );
-    await sync();
+    // updateSettings avvisa gli ascoltatori, che hanno già accodato sync().
+    await _pending;
     return true;
   }
 
@@ -43,26 +48,26 @@ class ReminderController {
     await _progress.updateSettings(
       _progress.settings.copyWith(reminder: () => null),
     );
-    await sync();
+    await _pending;
   }
 
   /// Calcola il prossimo promemoria e lo programma se è cambiato.
   Future<void> sync() => _pending = _pending.then((_) => _sync());
 
   Future<void> _sync() async {
-    final s = _progress.settings;
-    final next = s.enabled
-        ? nextReminder(
-            now: _clock(),
-            minutes: s.reminder,
-            goal: s.goal,
-            goalReachedToday: _progress.todayProgress >= s.goal.target,
-            streak: _progress.streak,
-            restDay: s.restDay,
-          )
-        : null;
-    if (_synced && next == _scheduled) return;
     try {
+      final s = _progress.settings;
+      final next = s.enabled
+          ? nextReminder(
+              now: _clock(),
+              minutes: s.reminder,
+              goal: s.goal,
+              goalReachedToday: _progress.todayProgress >= s.goal.target,
+              streak: _progress.streak,
+              restDay: s.restDay,
+            )
+          : null;
+      if (_synced && next == _scheduled) return;
       if (next == null) {
         await _scheduler.cancel();
       } else {
@@ -76,5 +81,8 @@ class ReminderController {
     }
   }
 
-  void dispose() => _progress.removeListener(_onProgress);
+  void dispose() {
+    _progress.removeListener(_onProgress);
+    _lifecycle.dispose();
+  }
 }
