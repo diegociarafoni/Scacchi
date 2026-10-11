@@ -7,11 +7,11 @@ Il workflow `.github/workflows/apk-release.yml` compila un APK release universal
 | Evento | Risultato |
 |---|---|
 | Push di un tag `vX.Y.Z` | Build e Release `vX.Y.Z` con `scacchi.apk` e `scacchi.apk.sha256` |
-| Avvio manuale (Actions → Rilascio APK → Run workflow) con **version** = `X.Y.Z` | Crea il tag `vX.Y.Z` sul commit del branch scelto e pubblica la Release |
+| Avvio manuale (Actions → Rilascio APK → Run workflow) con **version** = `X.Y.Z` | Crea il tag `vX.Y.Z` sul commit del branch scelto e pubblica la Release; se il tag esiste già su un altro commit si ferma |
 | Avvio manuale con **version** vuoto | Solo build: l'APK resta come artefatto dell'esecuzione |
 | Pull request che tocca `android/` o il workflow | Solo build, per verificare la configurazione |
 
-La versione mostrata dall'app (`versionName`) è quella del tag senza la `v`; il `versionCode` è il numero progressivo dell'esecuzione del workflow, quindi cresce sempre.
+La versione mostrata dall'app (`versionName`) è quella del tag senza la `v`; il `versionCode` è il numero di commit nella cronologia del tag, quindi cresce a ogni versione successiva su `main`. Il rilascio parte solo se `flutter analyze` e `flutter test` passano, e un tag già esistente deve puntare al commit compilato.
 
 I tag con suffisso (`v1.2.0-beta.1`) diventano pre-release. Gli altri sono la "latest release", per cui questo link porta sempre all'ultima versione stabile:
 

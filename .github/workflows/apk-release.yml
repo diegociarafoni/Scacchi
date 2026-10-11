@@ -17,18 +17,21 @@ permissions:
   contents: read
 
 concurrency:
-  group: apk-release-${{ github.ref }}
+  group: apk-release
   cancel-in-progress: false
 
 jobs:
-  apk:
+  build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
+    outputs:
+      tag: ${{ steps.version.outputs.tag }}
     env:
-      HAS_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+      SIGN: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' && github.event_name != 'pull_request' }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          # La cronologia completa serve per il versionCode.
+          fetch-depth: 0
 
       - name: Versione
         id: version
@@ -42,16 +45,25 @@ jobs:
           else
             tag=""
           fi
-          if [ -n "$tag" ] && ! [[ "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([-+][0-9A-Za-z.-]+)?$ ]]; then
-            echo "::error::Tag non valido: $tag (atteso vX.Y.Z)"; exit 1
+          if [ -n "$tag" ] && ! [[ "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
+            echo "::error::Tag non valido: $tag (atteso vX.Y.Z o vX.Y.Z-suffisso)"; exit 1
+          fi
+          # Un tag esistente deve puntare al commit che si compila.
+          if [ -n "$tag" ] && git rev-parse -q --verify "refs/tags/$tag" > /dev/null; then
+            tagged="$(git rev-list -n1 "$tag")"
+            if [ "$tagged" != "$GITHUB_SHA" ]; then
+              echo "::error::$tag punta già a $tagged, non a $GITHUB_SHA"; exit 1
+            fi
           fi
           name="${tag#v}"
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
           echo "name=${name:-0.0.0-dev}" >> "$GITHUB_OUTPUT"
+          # Cresce con la cronologia, indipendente dal nome del workflow.
+          echo "code=$(git rev-list --count HEAD)" >> "$GITHUB_OUTPUT"
 
       # Il runner standard non ha spazio sufficiente per la build release con il motore nativo.
       - name: Spazio su disco
-        run: sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/.ghcup /usr/local/share/boost /usr/local/lib/node_modules
+        run: sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/.ghcup /usr/local/share/boost
 
       - uses: actions/setup-java@v4
         with:
@@ -63,9 +75,11 @@ jobs:
           flutter-version: 3.47.7
           cache: true
       - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test
 
       - name: Chiave di firma
-        if: env.HAS_KEYSTORE == 'true'
+        if: env.SIGN == 'true'
         env:
           KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
         run: |
@@ -75,32 +89,44 @@ jobs:
       - name: Build APK release
         env:
           BUILD_NAME: ${{ steps.version.outputs.name }}
-          BUILD_NUMBER: ${{ github.run_number }}
-          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
-          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          BUILD_NUMBER: ${{ steps.version.outputs.code }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ env.SIGN == 'true' && secrets.ANDROID_KEYSTORE_PASSWORD || '' }}
+          ANDROID_KEY_ALIAS: ${{ env.SIGN == 'true' && secrets.ANDROID_KEY_ALIAS || '' }}
+          ANDROID_KEY_PASSWORD: ${{ env.SIGN == 'true' && secrets.ANDROID_KEY_PASSWORD || '' }}
         run: |
-          flutter build apk --release \
-            --build-name="$BUILD_NAME" --build-number="$BUILD_NUMBER"
+          flutter build apk --release --build-name="$BUILD_NAME" --build-number="$BUILD_NUMBER"
           mkdir -p dist
           cp build/app/outputs/flutter-apk/app-release.apk dist/scacchi.apk
           (cd dist && sha256sum scacchi.apk > scacchi.apk.sha256)
+          rm -f "$RUNNER_TEMP/release.jks"
 
       - uses: actions/upload-artifact@v4
         with:
-          name: scacchi-apk-${{ steps.version.outputs.name }}
+          name: scacchi-apk
           path: dist/
 
+  publish:
+    needs: build
+    if: needs.build.outputs.tag != ''
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      TAG: ${{ needs.build.outputs.tag }}
+      SIGNED: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: scacchi-apk
+          path: dist
       - name: Rilascio GitHub
-        if: steps.version.outputs.tag != ''
-        env:
-          GH_TOKEN: ${{ github.token }}
-          TAG: ${{ steps.version.outputs.tag }}
         run: |
-          if [ "$HAS_KEYSTORE" = "true" ]; then
+          if [ "$SIGNED" = "true" ]; then
             signing="Firmato con la chiave di rilascio del progetto."
           else
-            signing="Firmato con una chiave di debug generata dalla build: per aggiornare da un'altra versione può servire disinstallare prima l'app."
+            signing="Firmato con una chiave di debug generata dalla build: per installare una versione successiva bisogna prima disinstallare questa."
           fi
           cat > notes.md <<NOTES
           Installazione su Android: aprire dal telefono il file **scacchi.apk** qui sotto, consentire l'installazione da questa origine e confermare.
@@ -110,6 +136,7 @@ jobs:
           Istruzioni complete: docs/rilascio-android.md
           NOTES
           if gh release view "$TAG" > /dev/null 2>&1; then
+            # Il job di build ha già verificato che il tag punti a questo commit.
             gh release upload "$TAG" dist/* --clobber
           else
             prerelease=""

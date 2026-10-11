@@ -4,6 +4,10 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+fun requiredEnv(name: String): String =
+    System.getenv(name)?.takeIf { it.isNotBlank() }
+        ?: throw GradleException("$name is required when ANDROID_KEYSTORE_PATH is set")
+
 android {
     namespace = "io.github.diegociarafoni.scacchi"
     compileSdk = flutter.compileSdkVersion
@@ -35,9 +39,9 @@ android {
         if (releaseKeystore != null) {
             create("release") {
                 storeFile = file(releaseKeystore)
-                storePassword = System.getenv("ANDROID_KEYSTORE_PASSWORD")
-                keyAlias = System.getenv("ANDROID_KEY_ALIAS")
-                keyPassword = System.getenv("ANDROID_KEY_PASSWORD")
+                storePassword = requiredEnv("ANDROID_KEYSTORE_PASSWORD")
+                keyAlias = requiredEnv("ANDROID_KEY_ALIAS")
+                keyPassword = requiredEnv("ANDROID_KEY_PASSWORD")
             }
         }
     }
