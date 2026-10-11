@@ -15,6 +15,8 @@ import 'package:scacchi/progress/activity.dart';
 import 'package:scacchi/progress/progress_controller.dart';
 import 'package:scacchi/progress/progress_store.dart';
 
+import '../localized_app.dart';
+
 void phone(WidgetTester tester) {
   tester.view.physicalSize = const Size(1170, 2532);
   tester.view.devicePixelRatio = 3;
@@ -44,7 +46,7 @@ void main() {
     phone(tester);
     final scores = <int>[];
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: CoordinatesPage(
           random: Random(1),
           onFinished: (r) => scores.add(r.score),
@@ -76,7 +78,7 @@ void main() {
   testWidgets('RG-10 coordinate dal lato del nero', (tester) async {
     phone(tester);
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: CoordinatesPage(random: Random(2), onFinished: (_) {}),
       ),
     );
@@ -102,7 +104,7 @@ void main() {
     phone(tester);
     final scores = <int>[];
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: CaptureAllPage(
           random: Random(5),
           onFinished: (r) => scores.add(r.score),
@@ -133,7 +135,7 @@ void main() {
     phone(tester);
     final scores = <int>[];
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: QuizPage(
           title: 'Conta del materiale',
           next: materialItem,
@@ -167,7 +169,7 @@ void main() {
   ) async {
     phone(tester);
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: QuizPage(
           title: 'Alla cieca',
           next: blindItem,
@@ -206,7 +208,7 @@ void main() {
         ),
       );
       await tester.pumpWidget(
-        MaterialApp(home: MinigamesPage(progress: progress)),
+        localizedApp(home: MinigamesPage(progress: progress)),
       );
       await tester.pumpAndSettle();
       for (final title in [
@@ -225,7 +227,7 @@ void main() {
     ) async {
       phone(tester);
       await tester.pumpWidget(
-        MaterialApp(home: MinigamesPage(progress: progress)),
+        localizedApp(home: MinigamesPage(progress: progress)),
       );
       await tester.tap(find.text('Coordinate a tempo'));
       await tester.pumpAndSettle();

@@ -4,6 +4,7 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import 'minigame.dart';
 import 'quiz.dart';
 
@@ -76,6 +77,7 @@ class _QuizPageState extends State<QuizPage> {
     final item = _item;
     final chosen = _chosen;
     final fen = chosen == null ? item.fen : item.revealFen;
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(title: Text(widget.title)),
       body: SafeArea(
@@ -85,17 +87,17 @@ class _QuizPageState extends State<QuizPage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      '$_score risposte giuste su ${QuizPage.questions}',
+                      l10n.minigamesQuizResult(_score, QuizPage.questions),
                       style: text.titleLarge,
                     ),
                     const SizedBox(height: 12),
                     FilledButton(
                       onPressed: _again,
-                      child: const Text('Ancora'),
+                      child: Text(l10n.minigamesAgain),
                     ),
                     TextButton(
                       onPressed: () => Navigator.pop(context),
-                      child: const Text('Fine'),
+                      child: Text(l10n.minigamesDone),
                     ),
                   ],
                 ),
@@ -105,7 +107,10 @@ class _QuizPageState extends State<QuizPage> {
                   padding: const EdgeInsets.all(16),
                   children: [
                     Text(
-                      'Domanda ${_index + 1} di ${QuizPage.questions}',
+                      l10n.minigamesQuizQuestion(
+                        _index + 1,
+                        QuizPage.questions,
+                      ),
                       style: text.labelLarge,
                     ),
                     if (item.intro case final intro?) ...[
@@ -154,15 +159,17 @@ class _QuizPageState extends State<QuizPage> {
                     if (chosen != null) ...[
                       Text(
                         chosen == item.answer
-                            ? 'Esatto!'
-                            : 'Era: ${item.choices[item.answer]}',
+                            ? l10n.minigamesQuizCorrect
+                            : l10n.minigamesQuizAnswer(
+                                item.choices[item.answer],
+                              ),
                         textAlign: TextAlign.center,
                         style: text.titleMedium,
                       ),
                       const SizedBox(height: 8),
                       FilledButton(
                         onPressed: _advance,
-                        child: const Text('Avanti'),
+                        child: Text(l10n.minigamesNext),
                       ),
                     ],
                   ],

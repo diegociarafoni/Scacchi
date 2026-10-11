@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../progress/activity.dart';
 import '../progress/progress_controller.dart';
 import '../progress/progress_feedback.dart';
@@ -10,6 +11,20 @@ import 'coordinates_page.dart';
 import 'minigame.dart';
 import 'quiz.dart';
 import 'quiz_page.dart';
+
+String _title(AppLocalizations l10n, Minigame game) => switch (game) {
+  Minigame.coordinates => l10n.minigamesCoordinatesTitle,
+  Minigame.captureAll => l10n.minigamesCaptureAllTitle,
+  Minigame.blind => l10n.minigamesBlindTitle,
+  Minigame.material => l10n.minigamesMaterialTitle,
+};
+
+String _description(AppLocalizations l10n, Minigame game) => switch (game) {
+  Minigame.coordinates => l10n.minigamesCoordinatesDescription,
+  Minigame.captureAll => l10n.minigamesCaptureAllDescription,
+  Minigame.blind => l10n.minigamesBlindDescription,
+  Minigame.material => l10n.minigamesMaterialDescription,
+};
 
 /// Elenco dei minigiochi (RG-10) con il record di ciascuno.
 class MinigamesPage extends StatelessWidget {
@@ -20,6 +35,7 @@ class MinigamesPage extends StatelessWidget {
 
   void _open(BuildContext context, Minigame game) {
     final random = Random();
+    final l10n = AppLocalizations.of(context);
     Future<void> finished(MinigameResult result) async {
       final update = await progress?.record(
         MinigameFinished(
@@ -43,13 +59,13 @@ class MinigamesPage extends StatelessWidget {
         onFinished: finished,
       ),
       Minigame.blind => QuizPage(
-        title: game.title,
+        title: _title(l10n, game),
         next: blindItem,
         random: random,
         onFinished: finished,
       ),
       Minigame.material => QuizPage(
-        title: game.title,
+        title: _title(l10n, game),
         next: materialItem,
         random: random,
         onFinished: finished,
@@ -61,8 +77,9 @@ class MinigamesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final progress = this.progress;
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Minigiochi')),
+      appBar: AppBar(title: Text(l10n.minigamesTitle)),
       body: ListenableBuilder(
         listenable: progress ?? const AlwaysStoppedAnimation(0),
         builder: (context, _) {
@@ -72,11 +89,14 @@ class MinigamesPage extends StatelessWidget {
             children: [
               for (final game in Minigame.values)
                 ListTile(
-                  title: Text(game.title),
-                  subtitle: Text(game.description),
-                  trailing: showRecords && records[game.id] != null
-                      ? Text('Record ${records[game.id]}')
-                      : null,
+                  title: Text(_title(l10n, game)),
+                  subtitle: Text(_description(l10n, game)),
+                  trailing: switch (records[game.id]) {
+                    final record? when showRecords => Text(
+                      l10n.minigamesRecord(record),
+                    ),
+                    _ => null,
+                  },
                   onTap: () => _open(context, game),
                 ),
             ],
