@@ -5,7 +5,6 @@ import '../archive/game_archive.dart';
 import '../minigames/minigames_page.dart';
 import '../path/path_controller.dart';
 import '../path/path_page.dart';
-import '../progress/activity.dart';
 import '../progress/profile_page.dart';
 import '../progress/progress_controller.dart';
 import '../progress/xp.dart';
@@ -17,17 +16,19 @@ class YouPage extends StatelessWidget {
   const YouPage({
     super.key,
     required this.progress,
+    required this.path,
     required this.archive,
-    required this.recordActivity,
     this.reminders,
   });
 
-  final Future<ProgressController> progress;
+  /// Fonti dei dati: chiamate a ogni apertura, così un errore si riprova.
+  final Future<ProgressController> Function() progress;
+  final Future<PathController> Function() path;
   final Future<GameArchive> Function() archive;
-  final RecordActivity recordActivity;
 
-  /// Promemoria giornaliero, se il dispositivo ha le notifiche programmate.
-  final ReminderController? reminders;
+  /// Promemoria giornaliero, se il dispositivo ha le notifiche programmate;
+  /// letto all'apertura del Profilo perché nasce dopo i progressi.
+  final ReminderController? Function()? reminders;
 
   void _push(BuildContext context, Widget page) =>
       Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => page));
@@ -57,7 +58,7 @@ class YouPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Tu')),
       body: FutureBuilder(
-        future: progress,
+        future: progress(),
         builder: (context, snapshot) {
           final controller = snapshot.data;
           return ListView(
@@ -91,26 +92,27 @@ class YouPage extends StatelessWidget {
                 subtitle: 'Livello, serie, sfide, traguardi e preferenze',
                 onTap: () => _open(
                   context,
-                  progress,
-                  (p) => ProfilePage(controller: p, reminders: reminders),
+                  progress(),
+                  (p) =>
+                      ProfilePage(controller: p, reminders: reminders?.call()),
                 ),
               ),
               _Entry(
                 icon: Icons.route_outlined,
                 title: 'Percorso',
                 subtitle: 'Tappe con stelle, dalle basi al finale',
-                onTap: () => _open(
-                  context,
-                  PathController.open(recordActivity: recordActivity),
-                  (c) => PathPage(controller: c),
-                ),
+                onTap: () =>
+                    _open(context, path(), (c) => PathPage(controller: c)),
               ),
               _Entry(
                 icon: Icons.videogame_asset_outlined,
                 title: 'Minigiochi',
                 subtitle: 'Coordinate, cattura tutto, cieca, materiale',
-                onTap: () =>
-                    _open(context, progress, (p) => MinigamesPage(progress: p)),
+                onTap: () => _open(
+                  context,
+                  progress(),
+                  (p) => MinigamesPage(progress: p),
+                ),
               ),
               _Entry(
                 icon: Icons.insights_outlined,

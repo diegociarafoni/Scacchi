@@ -4,6 +4,7 @@ import '../archive/game_archive.dart';
 import '../game/game_page.dart';
 import '../openings/opening_assets.dart';
 import '../openings/openings_hub_page.dart';
+import '../path/path_controller.dart';
 import '../openings/repertoire.dart';
 import '../progress/activity.dart';
 import '../progress/progress_controller.dart';
@@ -58,6 +59,8 @@ class _HomeShellState extends State<HomeShell> {
   Future<ProgressController>? _progress;
   Future<RepertoireTrainer>? _repertoire;
   ReminderController? _reminders;
+  ReminderScheduler? _scheduler;
+  Future<PathController>? _path;
 
   /// La scheda Tu si costruisce alla prima apertura, poi resta in memoria.
   var _youVisited = false;
@@ -75,17 +78,14 @@ class _HomeShellState extends State<HomeShell> {
     super.initState();
     // Caricamento anticipato in background, per il nome dell'apertura in partita.
     openingBook().ignore();
-    final scheduler =
+    _scheduler =
         (widget.reminderScheduler ??
         () => LocalNotificationScheduler.supported
             ? LocalNotificationScheduler()
             : null)();
-    if (scheduler != null) {
+    if (_scheduler != null) {
       // Il promemoria si allinea ai progressi fin dall'avvio.
-      _progressController().then((p) {
-        if (!mounted) return;
-        setState(() => _reminders = ReminderController(p, scheduler));
-      }, onError: (Object e) => debugPrint('Promemoria non disponibile: $e'));
+      _progressController().ignore();
     }
   }
 
@@ -95,12 +95,31 @@ class _HomeShellState extends State<HomeShell> {
     super.dispose();
   }
 
-  Future<ProgressController> _progressController() => _progress ??=
-      (widget.progress ?? ProgressController.open)().catchError((Object e) {
-        // Si riprova alla prossima richiesta invece di restare bloccati.
-        _progress = null;
-        throw e;
-      });
+  Future<ProgressController> _progressController() =>
+      _progress ??= (widget.progress ?? ProgressController.open)().then(
+        (p) {
+          final scheduler = _scheduler;
+          if (scheduler != null && _reminders == null && mounted) {
+            setState(() => _reminders = ReminderController(p, scheduler));
+          }
+          return p;
+        },
+        onError: (Object e) {
+          // Si riprova alla prossima richiesta invece di restare bloccati.
+          _progress = null;
+          debugPrint('Progressi non disponibili: $e');
+          throw e;
+        },
+      );
+
+  /// Un solo percorso in memoria, per non sovrascrivere le stelle tra due
+  /// schermate aperte insieme.
+  Future<PathController> _pathController() =>
+      _path ??= PathController.open(recordActivity: _record)
+          .catchError((Object e) {
+            _path = null;
+            throw e;
+          });
 
   Future<ProgressUpdate?> _record(Activity activity) async {
     try {
@@ -142,10 +161,10 @@ class _HomeShellState extends State<HomeShell> {
             const SizedBox.shrink(),
           if (_tab == 3 || _youVisited)
             YouPage(
-              progress: _progressController(),
+              progress: _progressController,
+              path: _pathController,
               archive: widget.archive ?? GameArchive.open,
-              recordActivity: _record,
-              reminders: _reminders,
+              reminders: () => _reminders,
             )
           else
             const SizedBox.shrink(),
