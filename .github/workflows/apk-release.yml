@@ -1,11 +1,10 @@
 name: Rilascio APK
 
+# Un solo job (ogni job si paga arrotondato al minuto) e nessuna esecuzione sulle PR:
+# la build Android delle PR è già nella CI.
 on:
   push:
     tags: ['v*']
-  # Verifica la build release quando cambia la sua configurazione, senza pubblicare.
-  pull_request:
-    paths: ['.github/workflows/apk-release.yml', 'android/**', 'tool/*keystore*.py']
   workflow_dispatch:
     inputs:
       version:
@@ -21,10 +20,13 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
-    outputs:
-      tag: ${{ steps.version.outputs.tag }}
+    timeout-minutes: 30
+    permissions:
+      contents: write
+      # Per leggere l'esito della CI sullo stesso commit.
+      actions: read
     steps:
       - uses: actions/checkout@v4
         with:
@@ -59,6 +61,16 @@ jobs:
           # Cresce con la cronologia, indipendente dal nome del workflow.
           echo "code=$(git rev-list --count HEAD)" >> "$GITHUB_OUTPUT"
 
+      # I test girano qui solo se la CI non li ha già superati su questo commit.
+      - name: Esito della CI sul commit
+        id: ci
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          passed="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ci.yml --commit "$GITHUB_SHA" \
+            --status success --json databaseId --jq 'length' || echo 0)"
+          echo "passed=$([ "${passed:-0}" -gt 0 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+
       # Il runner standard non ha spazio sufficiente per la build release con il motore nativo.
       - name: Spazio su disco
         run: sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/.ghcup /usr/local/share/boost
@@ -67,41 +79,41 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
+          cache: gradle
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
           flutter-version: 3.47.7
           cache: true
       - run: flutter pub get
-      - run: flutter analyze
-      - run: flutter test
+      - if: steps.ci.outputs.passed != 'true'
+        run: flutter analyze && flutter test
 
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Test della chiave derivata
-        run: |
-          python -m pip install --quiet 'cryptography==44.0.2'
-          python -m unittest discover -s tool -p 'test_*keystore*.py'
+      - run: python -m pip install --quiet 'cryptography==44.0.2'
+      - if: steps.ci.outputs.passed != 'true'
+        name: Test della chiave derivata
+        run: python -m unittest discover -s tool -p 'test_*keystore*.py'
 
       # Firma e build nello stesso passo: password e chiave non restano
-      # nell'ambiente dei passi successivi. Sulle PR una frase pubblica verifica
-      # il percorso di firma senza esporre segreti, e l'APK non viene caricato.
+      # nell'ambiente dei passi successivi. Solo arm64: tutti i telefoni Android
+      # recenti, metà del tempo di build e un APK molto più piccolo.
       - name: Build APK release firmato
         env:
           BUILD_NAME: ${{ steps.version.outputs.name }}
           BUILD_NUMBER: ${{ steps.version.outputs.code }}
-          IS_PR: ${{ github.event_name == 'pull_request' }}
-          SEED: ${{ github.event_name == 'pull_request' && 'frase pubblica, serve solo a verificare le pull request' || secrets.ANDROID_SIGNING_SEED }}
-          KEYSTORE_BASE64: ${{ github.event_name != 'pull_request' && secrets.ANDROID_KEYSTORE_BASE64 || '' }}
-          KEYSTORE_PASSWORD: ${{ github.event_name != 'pull_request' && secrets.ANDROID_KEYSTORE_PASSWORD || '' }}
-          KEY_ALIAS: ${{ github.event_name != 'pull_request' && secrets.ANDROID_KEY_ALIAS || '' }}
-          KEY_PASSWORD: ${{ github.event_name != 'pull_request' && secrets.ANDROID_KEY_PASSWORD || '' }}
+          SEED: ${{ secrets.ANDROID_SIGNING_SEED }}
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
           keystore="$RUNNER_TEMP/release.p12"
           trap 'rm -f "$keystore"' EXIT
           if [ -n "$KEYSTORE_BASE64" ]; then
-            if [ -n "$SEED" ] && [ "$IS_PR" != "true" ]; then
+            if [ -n "$SEED" ]; then
               echo "::warning::Ci sono sia ANDROID_KEYSTORE_BASE64 sia ANDROID_SIGNING_SEED: si usa il keystore. Togliere il keystore cambia la firma degli APK."
             fi
             echo "$KEYSTORE_BASE64" | base64 -d > "$keystore"
@@ -116,49 +128,41 @@ jobs:
             echo "::warning::Nessun segreto di firma: APK firmato con la chiave di debug del runner."
           fi
           if [ -s "$keystore" ]; then export ANDROID_KEYSTORE_PATH="$keystore"; fi
-          flutter build apk --release --build-name="$BUILD_NAME" --build-number="$BUILD_NUMBER"
+          flutter build apk --release --target-platform android-arm64 \
+            --build-name="$BUILD_NAME" --build-number="$BUILD_NUMBER"
           mkdir -p dist
           cp build/app/outputs/flutter-apk/app-release.apk dist/scacchi.apk
           (cd dist && sha256sum scacchi.apk > scacchi.apk.sha256)
 
       - uses: actions/upload-artifact@v4
-        if: github.event_name != 'pull_request'
+        if: steps.version.outputs.tag == ''
         with:
           name: scacchi-apk
           path: dist/
+          retention-days: 7
 
-  publish:
-    needs: build
-    if: needs.build.outputs.tag != ''
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    env:
-      GH_TOKEN: ${{ github.token }}
-      GH_REPO: ${{ github.repository }}
-      TAG: ${{ needs.build.outputs.tag }}
-      SIGNED: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' || secrets.ANDROID_SIGNING_SEED != '' }}
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: scacchi-apk
-          path: dist
       - name: Rilascio GitHub
+        if: steps.version.outputs.tag != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ steps.version.outputs.tag }}
+          SIGNED: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' || secrets.ANDROID_SIGNING_SEED != '' }}
         run: |
           if [ "$SIGNED" = "true" ]; then
-            signing="Firmato con la chiave di rilascio del progetto."
+            signing="Firmato con la chiave stabile del progetto: si installa sopra le versioni precedenti firmate con la stessa chiave."
           else
             signing="Firmato con una chiave di debug generata dalla build: per installare una versione successiva bisogna prima disinstallare questa."
           fi
           cat > notes.md <<NOTES
-          Installazione su Android: aprire dal telefono il file **scacchi.apk** qui sotto, consentire l'installazione da questa origine e confermare.
+          Installazione su Android (telefoni a 64 bit): aprire dal telefono il file **scacchi.apk** qui sotto, consentire l'installazione da questa origine e confermare.
 
           $signing
 
           Istruzioni complete: docs/rilascio-android.md
           NOTES
           if gh release view "$TAG" > /dev/null 2>&1; then
-            # Il job di build ha già verificato che il tag punti a questo commit.
+            # Il passo Versione ha già verificato che il tag punti a questo commit.
             gh release upload "$TAG" dist/* --clobber
           else
             prerelease=""
