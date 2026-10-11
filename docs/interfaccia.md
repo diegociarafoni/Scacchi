@@ -77,6 +77,7 @@ Toccando una mossa nella striscia (o nella lista, in orizzontale) la scacchiera 
 
 - Durante la revisione la scacchiera non accetta mosse, le righe del materiale seguono la posizione mostrata e l'orologio continua a scorrere.
 - Con una mossa in attesa di conferma la navigazione è disattivata finché non viene confermata o scartata.
+- Sulla scacchiera, scorrendo il dito in orizzontale (almeno una casa e mezza, in direzione prevalentemente orizzontale) si cambia posizione: a sinistra si va avanti, a destra indietro, e oltre l'ultima mossa si torna alla partita. Il gesto vale se parte da una casa vuota o da un pezzo dell'avversario; se parte da un pezzo che si può muovere resta il trascinamento del pezzo, e con più dita insieme non scorre.
 - Con una tastiera: frecce sinistra e destra per scorrere, Home per la posizione iniziale, Fine per tornare alla partita.
 - Andare oltre l'ultima mossa, una nuova partita o "Annulla" riportano alla posizione corrente; durante la revisione "Annulla" non toglie mosse.
 - I numeri delle mosse partono dalla posizione iniziale della partita, anche quando è importata da un FEN.

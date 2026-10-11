@@ -78,7 +78,13 @@ void main() {
 
   Future<void> tapText(WidgetTester tester, String text) async {
     final finder = find.text(text);
-    await tester.scrollUntilVisible(finder, -200);
+    if (finder.evaluate().isEmpty) {
+      try {
+        await tester.scrollUntilVisible(finder, 200);
+      } on StateError {
+        await tester.scrollUntilVisible(finder, -200);
+      }
+    }
     await tester.ensureVisible(finder);
     await tester.pumpAndSettle();
     await tester.tap(finder);
@@ -193,6 +199,19 @@ void main() {
       expect(find.byKey(const Key('preview-dots')), findsOneWidget);
     },
   );
+
+  testWidgets('RP-04 le impostazioni che non cambiano la scacchiera non '
+      'riportano alla posizione di prova', (tester) async {
+    await show(tester);
+    final start = board(tester).fen;
+    await tester.tap(find.byKey(const Key('board-preview')));
+    await tester.pumpAndSettle();
+    final played = board(tester).fen;
+    expect(played, isNot(start));
+    await tapText(tester, 'Suoni');
+    await tapText(tester, 'Vibrazione');
+    expect(board(tester).fen, played);
+  });
 
   testWidgets('RNF-07 l\'anteprima si può raggiungere con la tastiera', (
     tester,
