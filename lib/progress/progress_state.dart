@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import 'avatar.dart';
 import 'daily_goal.dart';
 import 'records.dart';
 
@@ -9,6 +10,10 @@ class ProgressSettings {
     this.enabled = true,
     this.goal = const DailyGoal(GoalKind.games, 1),
     this.restDay,
+    this.unlockAll = false,
+    this.avatar = Avatar.pawn,
+    this.frame = AvatarFrame.none,
+    this.reminder,
   });
 
   /// Interruttore generale: spento, non si registra nulla e il profilo è nascosto.
@@ -19,20 +24,41 @@ class ProgressSettings {
   /// non interrompe la serie; `null` se non previsto.
   final int? restDay;
 
+  /// Rende disponibili tutte le ricompense estetiche senza doverle sbloccare.
+  final bool unlockAll;
+  final Avatar avatar;
+  final AvatarFrame frame;
+
+  /// Orario del promemoria giornaliero in minuti dalla mezzanotte; `null`
+  /// se spento, come di default (RG-11).
+  final int? reminder;
+
   ProgressSettings copyWith({
     bool? enabled,
     DailyGoal? goal,
     int? Function()? restDay,
+    bool? unlockAll,
+    Avatar? avatar,
+    AvatarFrame? frame,
+    int? Function()? reminder,
   }) => ProgressSettings(
     enabled: enabled ?? this.enabled,
     goal: goal ?? this.goal,
     restDay: restDay == null ? this.restDay : restDay(),
+    unlockAll: unlockAll ?? this.unlockAll,
+    avatar: avatar ?? this.avatar,
+    frame: frame ?? this.frame,
+    reminder: reminder == null ? this.reminder : reminder(),
   );
 
   Map<String, Object?> toJson() => {
     'enabled': enabled,
     'goal': goal.toJson(),
     'restDay': restDay,
+    'unlockAll': unlockAll,
+    'avatar': avatar.name,
+    'frame': frame.name,
+    'reminder': reminder,
   };
 
   static ProgressSettings fromJson(Map<String, Object?> json) =>
@@ -42,6 +68,11 @@ class ProgressSettings {
             ? const DailyGoal(GoalKind.games, 1)
             : DailyGoal.fromJson((json['goal']! as Map).cast()),
         restDay: json['restDay'] as int?,
+        unlockAll: json['unlockAll'] as bool? ?? false,
+        avatar: Avatar.values.asNameMap()[json['avatar']] ?? Avatar.pawn,
+        frame:
+            AvatarFrame.values.asNameMap()[json['frame']] ?? AvatarFrame.none,
+        reminder: json['reminder'] as int?,
       );
 
   @override
@@ -49,10 +80,15 @@ class ProgressSettings {
       other is ProgressSettings &&
       other.enabled == enabled &&
       other.goal == goal &&
-      other.restDay == restDay;
+      other.restDay == restDay &&
+      other.unlockAll == unlockAll &&
+      other.avatar == avatar &&
+      other.frame == frame &&
+      other.reminder == reminder;
 
   @override
-  int get hashCode => Object.hash(enabled, goal, restDay);
+  int get hashCode =>
+      Object.hash(enabled, goal, restDay, unlockAll, avatar, frame, reminder);
 }
 
 /// Progressi del giocatore. I giorni sono numeri di giorno di calendario

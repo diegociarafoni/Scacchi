@@ -1,6 +1,6 @@
 # Aperture
 
-Riconoscimento delle aperture, mosse di libro ed explorer ridotto (requisiti RF-90, RF-91, RF-92).
+Riconoscimento delle aperture, mosse di libro, explorer ridotto e repertorio con ripetizione dilazionata (requisiti RF-90, RF-91, RF-92, RF-93).
 
 ## Dati
 
@@ -32,6 +32,21 @@ Dalla scheda **Aperture**, l'Explorer mostra la posizione corrente con il nome d
 
 Le statistiche di vittoria del database di Lichess o di chess.com non sono disponibili offline (sono escluse dai requisiti): la percentuale misura quanto è ricca di varianti con nome una continuazione, non quanto è giocata. Si può muovere anche fuori dal libro; l'Explorer lo segnala.
 
+### Repertorio (RF-93)
+
+Ogni colore ha il suo repertorio: un elenco di linee con nome (es. "Italiana: 1. e4 e5 2. Nf3 Nc6 3. Bc4"). Le linee si aggiungono:
+
+- dall'Explorer, con il pulsante **Aggiungi al repertorio**: nome proposto dall'apertura raggiunta, colore proposto in base a chi ha giocato l'ultima mossa;
+- incollando un PGN nella schermata del repertorio: ogni variante diventa una linea, i rami illegali si scartano dal punto dell'errore.
+
+Una linea è rifiutata se in una posizione già presente il repertorio prevede un'altra mossa per il proprio colore: il ripasso deve avere una sola risposta giusta. Le linee possono condividere l'inizio; le trasposizioni sono riconosciute tramite l'EPD.
+
+**Carte.** Ogni mossa del proprio colore è una carta, identificata da colore ed EPD della posizione in cui va giocata, quindi due linee che passano dalla stessa posizione condividono la carta. Le carte usano la stessa coda di Leitner degli errori dei puzzle (`ReviewQueue`, intervalli di 1, 3, 7, 14 e 30 giorni) con due differenze: le carte nuove sono subito da ripassare e una carta arrivata all'ultimo intervallo resta nella coda ogni 30 giorni invece di uscirne.
+
+**Ripasso.** "Ripassa N mosse" sceglie la prima linea con carte in scadenza e la gioca dall'inizio: le mosse dell'avversario e quelle del giocatore non in scadenza si giocano da sole. Per una carta nuova una freccia mostra la mossa da giocare; una mossa diversa da quella del repertorio rimanda la carta al primo intervallo e mostra la freccia, poi si deve giocare la mossa giusta per proseguire. Una carta nuova giocata correttamente passa al primo intervallo.
+
+Linee e carte sono salvate in `training.json`, lo stesso file dei puzzle (`JsonFileStore`, istanza unica per evitare scritture concorrenti), con le chiavi `openings.repertoire.v1` e `openings.repertoire.review.v1`.
+
 ## Componenti
 
 | File | Ruolo |
@@ -41,3 +56,6 @@ Le statistiche di vittoria del database di Lichess o di chess.com non sono dispo
 | `lib/openings/opening_name.dart` | Nome dell'apertura per la schermata di gioco |
 | `lib/openings/explorer_page.dart` | Explorer |
 | `lib/openings/openings_hub_page.dart` | Scheda Aperture |
+| `lib/openings/repertoire.dart` | Linee, carte, ripasso, import PGN |
+| `lib/openings/repertoire_page.dart` | Linee di un colore, import PGN |
+| `lib/openings/repertoire_drill_page.dart` | Ripasso sulla scacchiera |
