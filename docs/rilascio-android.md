@@ -1,6 +1,16 @@
 # Rilascio Android (APK)
 
-Il workflow `.github/workflows/apk-release.yml` compila un APK release per telefoni a 64 bit (arm64, cioè tutti i telefoni Android degli ultimi anni) e lo pubblica come allegato di una GitHub Release, scaricabile direttamente dal telefono.
+Il workflow `.github/workflows/apk-release.yml` compila un APK release per telefoni a 64 bit (arm64, cioè tutti i telefoni Android degli ultimi anni) e lo pubblica come allegato di una GitHub Release, scaricabile direttamente dal telefono. L'app installata si chiama **Rokko**; il file e l'identificativo del pacchetto (`io.github.diegociarafoni.scacchi`) restano `scacchi`, perché cambiarli impedirebbe l'aggiornamento sopra le versioni già installate.
+
+## Versioni pubblicate
+
+| Versione | Novità principali |
+|---|---|
+| v0.2.0 | Prima versione con firma stabile: gli aggiornamenti si installano sopra |
+| v0.3.0 | Backup e ripristino, scacchiera fisica, La tua settimana |
+| v0.4.0 | Profilo bambino, tornei dalla scheda Tu, guardiano nel percorso, XP e archivio a fine partita, puzzle dagli errori, anteprima della scacchiera |
+
+L'elenco completo con le note è nella pagina delle Release; le funzioni già in `main` ma non ancora in un APK sono indicate nel paragrafo sulla frequenza dei rilasci.
 
 ## Quando parte
 
@@ -25,7 +35,7 @@ Il rilascio è pensato per consumare pochi minuti:
 - un solo job, perché ogni job viene conteggiato arrotondato al minuto;
 - nessuna esecuzione sulle pull request: la loro build Android è già nella CI;
 - `flutter analyze`, `flutter test` e i test di `tool/derive_keystore.py` girano solo se la CI non è già passata sullo stesso commit (il caso normale quando si rilascia da `main`);
-- cache di Flutter e di Gradle;
+- cache di Flutter e di Gradle (la build Android di debug della CI usa in più `ccache` per non ricompilare il motore C++ invariato);
 - build della sola architettura arm64, che dimezza circa il tempo di compilazione e riduce molto l'APK;
 - `timeout-minutes: 30` contro le esecuzioni bloccate.
 
@@ -44,8 +54,8 @@ Per risparmiare minuti di Actions si pubblica a blocchi, non a ogni funzione:
 
 ```bash
 git checkout main && git pull
-git tag v0.2.0
-git push origin v0.2.0
+git tag v0.5.0
+git push origin v0.5.0
 ```
 
 In alternativa, dall'interfaccia di GitHub con l'avvio manuale descritto sopra.
