@@ -11,7 +11,7 @@ nessuna connessione, nessun server, nessun dato che esce dal telefono.
 4. Scegliere il livello con il cursore (da 1 a 8).
 5. Toccare la cadenza, "Senza tempo" o una cadenza (vedi [interfaccia.md](interfaccia.md)): la partita inizia. Se il giocatore ha il Nero, il computer muove per primo.
 
-Contro il computer si gioca solo la variante classica e senza nomi dei giocatori: varianti e nomi compaiono nel pannello solo scegliendo **Due giocatori**.
+Contro il computer si gioca solo la variante classica e senza nomi dei giocatori: varianti e nomi compaiono nel pannello solo scegliendo **Due giocatori**. Anche una posizione creata con l'editor (vedi [editor-posizione.md](editor-posizione.md)) si gioca in due: aprire l'editor durante una partita contro il computer la chiude.
 
 Durante la riflessione del computer la scacchiera è bloccata e compare la scritta
 "Il computer sta pensando…".

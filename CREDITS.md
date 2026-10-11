@@ -17,6 +17,7 @@
 | [shared_preferences](https://pub.dev/packages/shared_preferences) | Salvataggio delle impostazioni | BSD-3-Clause |
 | [Stockfish](https://stockfishchess.org) 19, tramite [multistockfish](https://github.com/lichess-org/dart-multistockfish) (Lichess) | Avversario computer | GPL-3.0 |
 | [Flutter](https://flutter.dev) | Framework dell'interfaccia | BSD-3-Clause |
+| [intl](https://pub.dev/packages/intl) (Dart) | Testi tradotti e formati locali | BSD-3-Clause |
 | [path_provider](https://pub.dev/packages/path_provider) (Flutter) | Cartella dati dell'app per i salvataggi | BSD-3-Clause |
 | [flutter_local_notifications](https://pub.dev/packages/flutter_local_notifications) (Michael Bui) | Promemoria giornaliero con notifiche locali | BSD-3-Clause |
 | [timezone](https://pub.dev/packages/timezone) | Orario del promemoria per le notifiche programmate | BSD-2-Clause |

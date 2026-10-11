@@ -40,6 +40,14 @@ Future<void> _openSettings(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
+Future<void> _back(WidgetTester tester) async {
+  final context = tester.element(find.byType(Scaffold).last);
+  await tester.tap(
+    find.byTooltip(MaterialLocalizations.of(context).backButtonTooltip),
+  );
+  await tester.pumpAndSettle();
+}
+
 Future<void> _start(WidgetTester tester) async {
   SharedPreferences.setMockInitialValues({});
   tester.view.physicalSize = const Size(1170, 2532);
@@ -122,7 +130,7 @@ void main() {
     await _openSettings(tester);
     await tester.tap(find.text('Ruota a ogni turno'));
     await tester.pumpAndSettle();
-    await tester.pageBack();
+    await _back(tester);
     await tester.pumpAndSettle();
     await _tapMove(tester, 'e2e4');
     expect(board().orientation.name, 'black');
@@ -185,7 +193,7 @@ void main() {
     await tester.scrollUntilVisible(find.text('Nessuna'), 100);
     await tester.tap(find.text('Nessuna'));
     await tester.pumpAndSettle();
-    await tester.pageBack();
+    await _back(tester);
     await tester.pumpAndSettle();
 
     expect(board().enableCoordinates, isFalse);
@@ -208,7 +216,7 @@ void main() {
     await _openSettings(tester);
     await tester.tap(find.text('Ruota a ogni turno'));
     await tester.pumpAndSettle();
-    await tester.pageBack();
+    await _back(tester);
     await tester.pumpAndSettle();
     await tester.tap(find.text('Gira'));
     await tester.pumpAndSettle();
@@ -216,7 +224,7 @@ void main() {
     await _openSettings(tester);
     await tester.tap(find.text('Blu'));
     await tester.pumpAndSettle();
-    await tester.pageBack();
+    await _back(tester);
     await tester.pumpAndSettle();
     expect(board().orientation.name, 'black');
   });
@@ -270,7 +278,7 @@ void main() {
     await tester.tap(find.text('Suoni'));
     await tester.tap(find.text('Vibrazione'));
     await tester.pumpAndSettle();
-    await tester.pageBack();
+    await _back(tester);
     await tester.pumpAndSettle();
     expect(
       board().pieceOrientationBehavior,
@@ -289,7 +297,7 @@ void main() {
     await tester.scrollUntilVisible(find.text('Conferma la mossa'), 100);
     await tester.tap(find.text('Conferma la mossa'));
     await tester.pumpAndSettle();
-    await tester.pageBack();
+    await _back(tester);
     await tester.pumpAndSettle();
 
     await _tapMove(tester, 'e2e4');

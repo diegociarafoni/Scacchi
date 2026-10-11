@@ -5,7 +5,7 @@ on:
     tags: ['v*']
   # Verifica la build release quando cambia la sua configurazione, senza pubblicare.
   pull_request:
-    paths: ['.github/workflows/apk-release.yml', 'android/**']
+    paths: ['.github/workflows/apk-release.yml', 'android/**', 'tool/*keystore*.py']
   workflow_dispatch:
     inputs:
       version:
@@ -25,8 +25,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       tag: ${{ steps.version.outputs.tag }}
-    env:
-      SIGN: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' && github.event_name != 'pull_request' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -78,29 +76,53 @@ jobs:
       - run: flutter analyze
       - run: flutter test
 
-      - name: Chiave di firma
-        if: env.SIGN == 'true'
-        env:
-          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test della chiave derivata
         run: |
-          echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/release.jks"
-          echo "ANDROID_KEYSTORE_PATH=$RUNNER_TEMP/release.jks" >> "$GITHUB_ENV"
+          python -m pip install --quiet 'cryptography==44.0.2'
+          python -m unittest discover -s tool -p 'test_*keystore*.py'
 
-      - name: Build APK release
+      # Firma e build nello stesso passo: password e chiave non restano
+      # nell'ambiente dei passi successivi. Sulle PR una frase pubblica verifica
+      # il percorso di firma senza esporre segreti, e l'APK non viene caricato.
+      - name: Build APK release firmato
         env:
           BUILD_NAME: ${{ steps.version.outputs.name }}
           BUILD_NUMBER: ${{ steps.version.outputs.code }}
-          ANDROID_KEYSTORE_PASSWORD: ${{ env.SIGN == 'true' && secrets.ANDROID_KEYSTORE_PASSWORD || '' }}
-          ANDROID_KEY_ALIAS: ${{ env.SIGN == 'true' && secrets.ANDROID_KEY_ALIAS || '' }}
-          ANDROID_KEY_PASSWORD: ${{ env.SIGN == 'true' && secrets.ANDROID_KEY_PASSWORD || '' }}
+          IS_PR: ${{ github.event_name == 'pull_request' }}
+          SEED: ${{ github.event_name == 'pull_request' && 'frase pubblica, serve solo a verificare le pull request' || secrets.ANDROID_SIGNING_SEED }}
+          KEYSTORE_BASE64: ${{ github.event_name != 'pull_request' && secrets.ANDROID_KEYSTORE_BASE64 || '' }}
+          KEYSTORE_PASSWORD: ${{ github.event_name != 'pull_request' && secrets.ANDROID_KEYSTORE_PASSWORD || '' }}
+          KEY_ALIAS: ${{ github.event_name != 'pull_request' && secrets.ANDROID_KEY_ALIAS || '' }}
+          KEY_PASSWORD: ${{ github.event_name != 'pull_request' && secrets.ANDROID_KEY_PASSWORD || '' }}
         run: |
+          keystore="$RUNNER_TEMP/release.p12"
+          trap 'rm -f "$keystore"' EXIT
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            if [ -n "$SEED" ] && [ "$IS_PR" != "true" ]; then
+              echo "::warning::Ci sono sia ANDROID_KEYSTORE_BASE64 sia ANDROID_SIGNING_SEED: si usa il keystore. Togliere il keystore cambia la firma degli APK."
+            fi
+            echo "$KEYSTORE_BASE64" | base64 -d > "$keystore"
+            export ANDROID_KEYSTORE_PASSWORD="$KEYSTORE_PASSWORD"
+            export ANDROID_KEY_ALIAS="$KEY_ALIAS" ANDROID_KEY_PASSWORD="$KEY_PASSWORD"
+          elif [ -n "$SEED" ]; then
+            password="$(ANDROID_SIGNING_SEED="$SEED" python tool/derive_keystore.py "$keystore")"
+            echo "::add-mask::$password"
+            export ANDROID_KEYSTORE_PASSWORD="$password"
+            export ANDROID_KEY_ALIAS=scacchi ANDROID_KEY_PASSWORD="$password"
+          else
+            echo "::warning::Nessun segreto di firma: APK firmato con la chiave di debug del runner."
+          fi
+          if [ -s "$keystore" ]; then export ANDROID_KEYSTORE_PATH="$keystore"; fi
           flutter build apk --release --build-name="$BUILD_NAME" --build-number="$BUILD_NUMBER"
           mkdir -p dist
           cp build/app/outputs/flutter-apk/app-release.apk dist/scacchi.apk
           (cd dist && sha256sum scacchi.apk > scacchi.apk.sha256)
-          rm -f "$RUNNER_TEMP/release.jks"
 
       - uses: actions/upload-artifact@v4
+        if: github.event_name != 'pull_request'
         with:
           name: scacchi-apk
           path: dist/
@@ -115,7 +137,7 @@ jobs:
       GH_TOKEN: ${{ github.token }}
       GH_REPO: ${{ github.repository }}
       TAG: ${{ needs.build.outputs.tag }}
-      SIGNED: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+      SIGNED: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' || secrets.ANDROID_SIGNING_SEED != '' }}
     steps:
       - uses: actions/download-artifact@v4
         with:

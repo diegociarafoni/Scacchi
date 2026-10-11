@@ -17,6 +17,7 @@ jobs:
           cache: true
       - run: sudo apt-get update && sudo apt-get install -y stockfish
       - run: flutter pub get
+      - run: flutter gen-l10n && git diff --exit-code lib/l10n
       - run: dart format --output=none --set-exit-if-changed lib test integration_test
       - run: flutter analyze
       - run: flutter test
