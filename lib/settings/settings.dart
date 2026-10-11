@@ -16,42 +16,60 @@ enum AnimationSpeed {
   final Duration duration;
 }
 
+/// Temi a tinta unita: le immagini delle scacchiere di chessground hanno
+/// licenza AGPL. Alcuni si sbloccano con i progressi (`progress/rewards.dart`).
 enum BoardTheme {
-  green('Verde', ChessboardColorScheme.green),
-  brown('Legno', ChessboardColorScheme.brown),
-  blue('Blu', ChessboardColorScheme.blue),
-  grey('Grigio', _grey);
+  green('Verde', scheme: ChessboardColorScheme.green),
+  brown('Legno', scheme: ChessboardColorScheme.brown),
+  blue('Blu', scheme: ChessboardColorScheme.blue),
+  grey('Grigio', light: Color(0xffb8b8b8), dark: Color(0xff7d7d7d)),
+  sand('Sabbia', light: Color(0xfff3e5c0), dark: Color(0xffc8a26b)),
+  ocean('Oceano', light: Color(0xffd6ecf0), dark: Color(0xff3f7f93)),
+  coral('Corallo', light: Color(0xfffbe3d6), dark: Color(0xffd9776a)),
+  night('Notte', light: Color(0xff9aa5b8), dark: Color(0xff3b4459)),
+  gold('Oro', light: Color(0xfffaf0c8), dark: Color(0xffc9a227));
 
-  const BoardTheme(this.label, this.colorScheme);
+  const BoardTheme(
+    this.label, {
+    this.scheme,
+    this.light = const Color(0x00000000),
+    this.dark = const Color(0x00000000),
+  });
 
   final String label;
-  final ChessboardColorScheme colorScheme;
+
+  /// Schema di chessground, se il tema non è definito dai soli [light] e [dark].
+  final ChessboardColorScheme? scheme;
+  final Color light;
+  final Color dark;
+
+  static final _solid = <BoardTheme, ChessboardColorScheme>{};
+
+  /// Sempre la stessa istanza per tema, per non ridisegnare lo sfondo.
+  ChessboardColorScheme get colorScheme =>
+      scheme ?? _solid.putIfAbsent(this, () => _solidScheme(light, dark));
 }
 
-/// Il tema grigio di chessground usa un'immagine con licenza AGPL: qui solo colori.
-const _grey = ChessboardColorScheme(
-  lightSquare: Color(0xffb8b8b8),
-  darkSquare: Color(0xff7d7d7d),
-  background: SolidColorChessboardBackground(
-    lightSquare: Color(0xffb8b8b8),
-    darkSquare: Color(0xff7d7d7d),
-  ),
-  whiteCoordBackground: SolidColorChessboardBackground(
-    lightSquare: Color(0xffb8b8b8),
-    darkSquare: Color(0xff7d7d7d),
-    coordinates: true,
-  ),
-  blackCoordBackground: SolidColorChessboardBackground(
-    lightSquare: Color(0xffb8b8b8),
-    darkSquare: Color(0xff7d7d7d),
-    coordinates: true,
-    orientation: Side.black,
-  ),
-  lastMove: HighlightDetails(solidColor: Color(0x809cc700)),
-  selected: HighlightDetails(solidColor: Color(0x6014551e)),
-  validMoves: Color(0x4014551e),
-  validPremoves: Color(0x40203085),
-);
+ChessboardColorScheme _solidScheme(Color light, Color dark) {
+  ChessboardBackground background({Side? coordinates}) =>
+      SolidColorChessboardBackground(
+        lightSquare: light,
+        darkSquare: dark,
+        coordinates: coordinates != null,
+        orientation: coordinates ?? Side.white,
+      );
+  return ChessboardColorScheme(
+    lightSquare: light,
+    darkSquare: dark,
+    background: background(),
+    whiteCoordBackground: background(coordinates: Side.white),
+    blackCoordBackground: background(coordinates: Side.black),
+    lastMove: const HighlightDetails(solidColor: Color(0x809cc700)),
+    selected: const HighlightDetails(solidColor: Color(0x6014551e)),
+    validMoves: const Color(0x4014551e),
+    validPremoves: const Color(0x40203085),
+  );
+}
 
 /// Set di pezzi la cui licenza permette la distribuzione negli store insieme
 /// a codice GPL-3.0 (vedi CREDITS.md). Esclusi i set CC BY-NC-SA.
@@ -60,7 +78,14 @@ enum PieceStyle {
   merida('Merida', PieceSet.merida, 'Armando Hernández Marroquín', 'GPL-2.0+'),
   chessnut('Chessnut', PieceSet.chessnut, 'Alexis Luengas', 'Apache-2.0'),
   fantasy('Fantasy', PieceSet.fantasy, 'Maurizio Monge', 'MIT'),
-  spatial('Spatial', PieceSet.spatial, 'Maurizio Monge', 'MIT');
+  spatial('Spatial', PieceSet.spatial, 'Maurizio Monge', 'MIT'),
+  celtic('Celtic', PieceSet.celtic, 'Maurizio Monge', 'MIT'),
+  shapes('Shapes', PieceSet.shapes, 'flugsio', 'CC BY-SA 4.0'),
+  firi('Firi', PieceSet.firi, 'James Faure', 'CC BY 4.0'),
+  mpchess('Mpchess', PieceSet.mpchess, 'Maxime Chupin', 'GPL-3.0+'),
+  kiwenSuwi('Kiwen-suwi', PieceSet.kiwenSuwi, 'neverRare', 'CC BY 4.0'),
+  totoy('Totoy', PieceSet.totoy, 'Kosal Sen', 'CC BY 4.0'),
+  rhosgfx('RhosGFX', PieceSet.rhosgfx, 'RhosGFX', 'CC0');
 
   const PieceStyle(this.label, this.pieceSet, this.author, this.license);
 

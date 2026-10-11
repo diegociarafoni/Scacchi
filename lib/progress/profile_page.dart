@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 
 import '../minigames/minigame.dart';
 import 'achievements.dart';
+import 'avatar.dart';
 import 'challenges.dart';
 import 'daily_goal.dart';
 import 'progress_controller.dart';
+import 'progress_state.dart';
 import 'records.dart';
+import 'rewards.dart';
 import 'xp.dart';
 
 String goalLabel(DailyGoal goal) => switch (goal.kind) {
@@ -48,7 +51,7 @@ class ProfilePage extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             children: [
               if (enabled) ...[
-                _LevelCard(xp: controller.state.xp),
+                _LevelCard(controller: controller),
                 const SizedBox(height: 12),
                 _StreakCard(controller: controller),
                 const SizedBox(height: 24),
@@ -74,23 +77,47 @@ class ProfilePage extends StatelessWidget {
 }
 
 class _LevelCard extends StatelessWidget {
-  const _LevelCard({required this.xp});
+  const _LevelCard({required this.controller});
 
-  final int xp;
+  final ProgressController controller;
 
   @override
   Widget build(BuildContext context) {
+    final xp = controller.state.xp;
     final level = levelForXp(xp);
     final next = xpForLevel(level + 1);
+    final settings = controller.settings;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Livello $level',
-              style: Theme.of(context).textTheme.headlineSmall,
+            Row(
+              children: [
+                Tooltip(
+                  message: 'Cambia avatar e cornice',
+                  child: InkWell(
+                    key: const Key('avatar'),
+                    customBorder: const CircleBorder(),
+                    onTap: () => showModalBottomSheet<void>(
+                      context: context,
+                      showDragHandle: true,
+                      isScrollControlled: true,
+                      builder: (_) => _AvatarPicker(controller: controller),
+                    ),
+                    child: ProfileAvatar(
+                      avatar: settings.avatar,
+                      frame: settings.frame,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Text(
+                  'Livello $level',
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+              ],
             ),
             const SizedBox(height: 8),
             LinearProgressIndicator(
@@ -103,6 +130,164 @@ class _LevelCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Avatar del profilo con la sua cornice.
+class ProfileAvatar extends StatelessWidget {
+  const ProfileAvatar({
+    super.key,
+    required this.avatar,
+    required this.frame,
+    this.size = 56,
+  });
+
+  final Avatar avatar;
+  final AvatarFrame frame;
+  final double size;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Semantics(
+      label: 'Avatar: ${avatar.label}',
+      excludeSemantics: true,
+      child: Container(
+        width: size,
+        height: size,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: scheme.secondaryContainer,
+          border: Border.all(
+            color: frame.color ?? scheme.outlineVariant,
+            width: frame.color == null ? 1 : size / 12,
+          ),
+        ),
+        child: Text(
+          avatar.glyph,
+          style: TextStyle(
+            fontSize: size * 0.5,
+            height: 1,
+            color: scheme.onSecondaryContainer,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Scelta di avatar e cornice; quelli ancora bloccati dicono come sbloccarli.
+class _AvatarPicker extends StatelessWidget {
+  const _AvatarPicker({required this.controller});
+
+  final ProgressController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListenableBuilder(
+      listenable: controller,
+      builder: (context, _) {
+        final s = controller.settings;
+        Widget option<T extends Enum>(
+          T item,
+          String label,
+          bool selected,
+          Widget preview,
+          ProgressSettings Function() change,
+        ) {
+          final unlocked = isUnlocked(item, controller.state, s);
+          final requirement = unlocked ? null : requirementOf(item)!.label;
+          return Semantics(
+            button: true,
+            selected: selected,
+            label: requirement == null
+                ? label
+                : '$label, si sblocca con: $requirement',
+            excludeSemantics: true,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(12),
+              onTap: unlocked
+                  ? () => controller.updateSettings(change())
+                  : null,
+              child: Container(
+                width: 88,
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: selected
+                        ? Theme.of(context).colorScheme.primary
+                        : Colors.transparent,
+                    width: 2,
+                  ),
+                ),
+                child: Opacity(
+                  opacity: unlocked ? 1 : 0.45,
+                  child: Column(
+                    children: [
+                      preview,
+                      const SizedBox(height: 4),
+                      Text(label, textAlign: TextAlign.center),
+                      if (requirement != null)
+                        Text(
+                          requirement,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        }
+
+        return SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Avatar', style: Theme.of(context).textTheme.titleMedium),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    for (final a in Avatar.values)
+                      option(
+                        a,
+                        a.label,
+                        a == s.avatar,
+                        ProfileAvatar(avatar: a, frame: s.frame, size: 48),
+                        () => s.copyWith(avatar: a),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Text('Cornice', style: Theme.of(context).textTheme.titleMedium),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    for (final f in AvatarFrame.values)
+                      option(
+                        f,
+                        f.label,
+                        f == s.frame,
+                        ProfileAvatar(avatar: s.avatar, frame: f, size: 48),
+                        () => s.copyWith(frame: f),
+                      ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -221,6 +406,15 @@ class _Settings extends StatelessWidget {
           onChanged: (v) => controller.updateSettings(s.copyWith(enabled: v)),
         ),
         if (s.enabled) ...[
+          SwitchListTile(
+            title: const Text('Sblocca tutto'),
+            subtitle: const Text(
+              'Temi, pezzi e avatar senza doverli sbloccare.',
+            ),
+            value: s.unlockAll,
+            onChanged: (v) =>
+                controller.updateSettings(s.copyWith(unlockAll: v)),
+          ),
           ListTile(
             title: const Text('Obiettivo giornaliero'),
             trailing: DropdownButton<DailyGoal>(

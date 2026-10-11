@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'progress_tracker.dart';
+import 'rewards.dart';
 
 /// Testo che riassume un aggiornamento dei progressi, o `null` se non c'è nulla
 /// da dire.
@@ -15,6 +16,7 @@ String? progressMessage(ProgressUpdate update) {
     if (update.weeklyCompleted) 'Sfida della settimana completata',
     for (final r in update.newRecords) 'Nuovo record: ${r.label.toLowerCase()}',
     for (final a in update.unlocked) 'Traguardo: ${a.title}',
+    for (final r in update.rewards) 'Sbloccato: ${rewardName(r)}',
   ].join(' · ');
 }
 

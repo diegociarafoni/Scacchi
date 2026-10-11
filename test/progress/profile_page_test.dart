@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/progress/activity.dart';
+import 'package:scacchi/progress/avatar.dart';
 import 'package:scacchi/progress/daily_goal.dart';
 import 'package:scacchi/progress/profile_page.dart';
 import 'package:scacchi/progress/progress_controller.dart';
@@ -131,6 +132,41 @@ void main() {
     await show(tester);
     await tester.scrollUntilVisible(find.text('Coordinate a tempo'), 200);
     expect(find.text('17'), findsOneWidget);
+  });
+
+  testWidgets('RG-06 sceglie avatar e cornice tra quelli sbloccati', (
+    tester,
+  ) async {
+    await show(tester);
+    expect(find.bySemanticsLabel(RegExp('Avatar: Pedone')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('avatar')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Livello 4'), findsOneWidget);
+    await tester.tap(find.bySemanticsLabel(RegExp('^Torre, ')));
+    await tester.pumpAndSettle();
+    expect(controller.settings.avatar, Avatar.pawn);
+
+    await tester.tap(find.bySemanticsLabel(RegExp('^Cavallo')));
+    await tester.pumpAndSettle();
+    expect(controller.settings.avatar, Avatar.knight);
+  });
+
+  testWidgets('RG-06 con "Sblocca tutto" ogni cornice è disponibile', (
+    tester,
+  ) async {
+    await tester.runAsync(
+      () => controller.updateSettings(
+        controller.settings.copyWith(unlockAll: true),
+      ),
+    );
+    await show(tester);
+    await tester.tap(find.byKey(const Key('avatar')));
+    await tester.pumpAndSettle();
+    expect(find.text('Livello 4'), findsNothing);
+    await tester.tap(find.bySemanticsLabel(RegExp('^Oro')));
+    await tester.pumpAndSettle();
+    expect(controller.settings.frame, AvatarFrame.gold);
   });
 
   testWidgets('RG-12 con la gamification spenta il profilo è nascosto', (

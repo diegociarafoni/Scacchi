@@ -4,6 +4,7 @@ import 'challenges.dart';
 import 'daily_goal.dart';
 import 'progress_state.dart';
 import 'records.dart';
+import 'rewards.dart';
 import 'xp.dart';
 
 /// Numero del giorno di calendario locale di [time], indipendente dall'ora.
@@ -28,6 +29,7 @@ class ProgressUpdate {
     this.challengesCompleted = const [],
     this.weeklyCompleted = false,
     this.newRecords = const [],
+    this.rewards = const [],
   });
 
   final ProgressState state;
@@ -45,6 +47,9 @@ class ProgressUpdate {
   final List<Challenge> challengesCompleted;
   final bool weeklyCompleted;
   final List<RecordKind> newRecords;
+
+  /// Ricompense estetiche sbloccate con questa attività (vedi `rewards.dart`).
+  final List<Enum> rewards;
 }
 
 /// Regole di XP, obiettivo giornaliero, serie e traguardi, senza stato proprio.
@@ -89,6 +94,7 @@ class ProgressTracker {
     Activity? activity,
     ProgressSettings settings,
   ) {
+    final before = s;
     final today = s.today!;
     final goalReached =
         s.coveredThrough != today &&
@@ -164,6 +170,7 @@ class ProgressTracker {
       challengesCompleted: completed,
       weeklyCompleted: weeklyCompleted,
       newRecords: newRecords,
+      rewards: newRewards(before, s),
     );
   }
 
