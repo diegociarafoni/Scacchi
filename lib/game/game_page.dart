@@ -80,6 +80,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// Bot della partita in corso, `null` contro il computer o tra due persone.
   Bot? _bot;
   BotCollection _collection = const BotCollection();
+  BotCollection _collectionBefore = const BotCollection();
   bool _botResultRecorded = false;
 
   /// Ultima variante scelta per la partita tra due persone.
@@ -141,8 +142,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   Future<void> _loadProfile() async {
     final store = await _openStore();
-    final adaptive = await AdaptiveOpponent.load(store);
-    final collection = await BotCollection.load(store);
+    final adaptive = await AdaptiveOpponent.load(store)
+        .catchError((_) => const AdaptiveOpponent());
+    final collection = await BotCollection.load(store)
+        .catchError((_) => const BotCollection());
     if (!mounted) return;
     setState(() {
       if (!_resultRecorded && _adaptive.games == 0) _adaptive = adaptive;
@@ -157,7 +160,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// senza mosse non contano.
   void _recordAdaptiveResult() {
     final side = _computerSide;
-    if (side == null || !_setup.adaptive) return;
+    if (side == null || _bot != null || !_setup.adaptive) return;
     if (_resultRecorded && !_game.isOver) {
       _resultRecorded = false;
       _adaptive = _adaptiveBefore;
@@ -182,11 +185,17 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     if (bot == null || side == null) return;
     if (_botResultRecorded && !_game.isOver) {
       _botResultRecorded = false;
+      if (!identical(_collection, _collectionBefore)) {
+        _collection = _collectionBefore;
+        final restored = _collection;
+        unawaited(_openStore().then(restored.save).catchError((_) {}));
+      }
       return;
     }
     if (_botResultRecorded || !_game.isOver || _game.moves.isEmpty) return;
     _botResultRecorded = true;
     final winner = _game.outcome?.winner;
+    _collectionBefore = _collection;
     if (winner != null && winner != side) {
       final updated = _collection.beat(bot.id, DateTime.now());
       if (!identical(updated, _collection)) {

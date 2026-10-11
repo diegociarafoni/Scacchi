@@ -60,4 +60,15 @@ void main() {
     await store.write(BotCollection.storeKey, '{"beaten":{"pino":"ieri"}}');
     expect((await BotCollection.load(store)).beaten, isEmpty);
   });
+
+  test('RG-04 una voce rovinata non fa perdere le altre', () async {
+    final store = MemoryStore();
+    await store.write(
+      BotCollection.storeKey,
+      '{"beaten":{"pino":"ieri","chiara":"2026-10-11T00:00:00.000Z"}}',
+    );
+    final loaded = await BotCollection.load(store);
+    expect(loaded.isBeaten(bots[0]), isFalse);
+    expect(loaded.isBeaten(bots[1]), isTrue);
+  });
 }

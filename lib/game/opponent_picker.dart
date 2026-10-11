@@ -169,12 +169,6 @@ class OpponentPicker extends StatelessWidget {
   }
 }
 
-String styleLabel(BotStyle style) => switch (style) {
-  BotStyle.aggressive => 'aggressivo',
-  BotStyle.positional => 'posizionale',
-  BotStyle.gambitist => 'gambettista',
-};
-
 class _BotTile extends StatelessWidget {
   const _BotTile({
     required this.bot,
@@ -206,9 +200,12 @@ class _BotTile extends StatelessWidget {
       title: Text(bot.name),
       subtitle: Text(details),
       trailing: !unlocked
-          ? const Icon(Icons.lock_outline)
+          ? const Icon(
+              Icons.lock_outline,
+              semanticLabel: 'Bloccato: batti il bot precedente',
+            )
           : beatenOn != null
-          ? const Icon(Icons.check_circle_outline)
+          ? const Icon(Icons.check_circle_outline, semanticLabel: 'Battuto')
           : null,
       onTap: unlocked ? onTap : null,
     );

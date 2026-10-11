@@ -34,8 +34,9 @@ class BotCollection {
       final json = jsonDecode(raw) as Map<String, dynamic>;
       final beaten = <String, DateTime>{};
       for (final entry in (json['beaten'] as Map<String, dynamic>).entries) {
-        if (botById(entry.key) != null) {
-          beaten[entry.key] = DateTime.parse(entry.value as String);
+        final date = DateTime.tryParse('${entry.value}');
+        if (botById(entry.key) != null && date != null) {
+          beaten[entry.key] = date;
         }
       }
       return BotCollection(beaten);

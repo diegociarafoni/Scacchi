@@ -1,6 +1,7 @@
 import 'package:chessground/chessground.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scacchi/engine/adaptive.dart';
 import 'package:scacchi/engine/bot_collection.dart';
 import 'package:scacchi/engine/bots.dart';
 import 'package:scacchi/engine/computer_player.dart';
@@ -158,5 +159,52 @@ void main() {
     await tester.pumpAndSettle();
     expect((await BotCollection.load(store)).beaten, isEmpty);
     expect(said(bots[0], BotEvent.win), isTrue);
+  });
+
+  testWidgets(
+    'RG-04 annullare dopo la vittoria toglie il bot dalla collezione',
+    (tester) async {
+      final store = MemoryStore();
+      await tester.pumpWidget(app(store, script: ['f7f6', 'g7g5']));
+      await tester.pumpAndSettle();
+      await openBotSheet(tester);
+      await chooseTime(tester, 'Senza tempo');
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+      await tapMove(tester, 'd2d4');
+      await tapMove(tester, 'e2e4');
+      await tapMove(tester, 'd1h5');
+      expect((await BotCollection.load(store)).isBeaten(bots[0]), isTrue);
+      await tester.tap(find.text('Annulla'));
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+      expect((await BotCollection.load(store)).beaten, isEmpty);
+    },
+  );
+
+  testWidgets('RF-26 le partite contro i bot non toccano la stima adattiva', (
+    tester,
+  ) async {
+    final store = MemoryStore();
+    await tester.pumpWidget(app(store));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Nuova'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Computer'));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Adattivo'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Adattivo'));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Bot'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Bot'));
+    await tester.pumpAndSettle();
+    await chooseTime(tester, 'Senza tempo');
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tapMove(tester, 'a2a3');
+    await tester.tap(find.text('Abbandona'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilledButton, 'Abbandona'));
+    await tester.pumpAndSettle();
+    expect((await AdaptiveOpponent.load(store)).games, 0);
   });
 }
