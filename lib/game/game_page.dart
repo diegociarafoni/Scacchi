@@ -10,8 +10,11 @@ import 'package:flutter/services.dart';
 import '../engine/computer_player.dart';
 import '../engine/levels.dart';
 import '../engine/uci_transport.dart';
+import '../analysis/analysis_page.dart';
 import '../editor/position_editor_page.dart';
 import '../openings/opening_name.dart';
+import '../review/engine_evaluator.dart';
+import '../review/review_page.dart';
 import '../settings/settings.dart';
 import '../settings/settings_page.dart';
 import 'chess_game.dart';
@@ -369,6 +372,13 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   List<Move> get _moveHistory => [for (final m in _game.moves) m.move];
 
+  /// Posizione sulla scacchiera, anche mentre si scorrono le mosse.
+  Position get _shownPosition {
+    final ply = _viewPly;
+    if (ply == null) return _game.position;
+    return ply == -1 ? _game.initial : _game.moves[ply].after;
+  }
+
   void _cancelComputerMove() {
     _generation++;
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -547,12 +557,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   /// Apre l'editor sulla posizione mostrata e gioca senza orologio quella scelta.
   Future<void> _editPosition() async {
-    final ply = _viewPly;
-    final shown = ply == null
-        ? _game.position
-        : ply == -1
-        ? _game.initial
-        : _game.moves[ply].after;
+    final shown = _shownPosition;
     final position = await _whileSuspended(
       () => Navigator.of(context).push<Position>(
         MaterialPageRoute(
@@ -761,6 +766,50 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     }
   }
 
+  LiveAnalysis _liveAnalysis(ComputerPlayer player) =>
+      (fen, multiPv) => player.analyseLive(fen, multiPv: multiPv);
+
+  /// Analisi della posizione mostrata con orologio e computer fermi.
+  void _openAnalysis() {
+    final position = _shownPosition;
+    _withEngine(
+      (player) => AnalysisPage(
+        initial: position,
+        analyse: _liveAnalysis(player),
+        orientation: _orientation,
+      ),
+    );
+  }
+
+  /// Revisione della partita con orologio e computer fermi.
+  void _openReview() {
+    final moves = _moveHistory;
+    _withEngine(
+      (player) => ReviewPage(
+        initial: _game.initial,
+        moves: moves,
+        evaluate: engineEvaluator(player),
+        onCancel: player.stopAnalysis,
+        analyseLive: _liveAnalysis(player),
+      ),
+    );
+  }
+
+  /// Apre una pagina che usa il motore. Nella partita tra due persone il
+  /// motore serve solo a quella pagina e si chiude al ritorno.
+  Future<void> _withEngine(Widget Function(ComputerPlayer player) page) async {
+    final player = _computerPlayer;
+    await _whileSuspended(
+      () =>
+          Navigator.of(context)
+              .push(MaterialPageRoute<void>(builder: (_) => page(player))),
+    );
+    if (_computerSide == null && identical(_computer, player)) {
+      _computer = null;
+      player.dispose().ignore();
+    }
+  }
+
   Widget? _clockView(Side side) {
     final clock = _clock;
     if (clock == null) return null;
@@ -817,6 +866,27 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                 ],
               ),
         actions: [
+          // Stockfish analizza solo gli scacchi classici.
+          if (widget.computerAvailable && _game.variant == Variant.standard)
+            PopupMenuButton<String>(
+              tooltip: 'Altre azioni',
+              onSelected: (value) {
+                if (value == 'review') _openReview();
+                if (value == 'analysis') _openAnalysis();
+              },
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  value: 'analysis',
+                  enabled: _task != _ComputerTask.draw,
+                  child: const Text('Analisi della posizione'),
+                ),
+                PopupMenuItem(
+                  value: 'review',
+                  enabled: _game.moves.isNotEmpty && !_thinking,
+                  child: const Text('Revisione della partita'),
+                ),
+              ],
+            ),
           IconButton(
             tooltip: 'Editor di posizione',
             icon: const Icon(Icons.edit_note),
