@@ -55,12 +55,15 @@ Ogni funzione nasce dai requisiti del progetto, nel documento dei requisiti, con
 | Tornei | `test/tournament/` | Abbinamenti, simulazione, spareggi, salvataggio, schermata | `flutter test test/tournament` |
 | Scacchiera per esercizi | `test/training/` | Tema, pezzi e coordinate presi dalle impostazioni, senza capovolgere i pezzi | `flutter test test/training` |
 | Archivio | `test/archive/` | PGN, salvataggio su file, schermata Partite | `flutter test test/archive` |
+| Golden | `test/settings/goldens/` | Schermata Impostazioni su telefono piccolo, medio e grande, con e senza colori per daltonici, e chip di temi e pezzi | `flutter test test/settings/board_preview_test.dart` |
 | End-to-end | `integration_test/*_test.dart` | L'app reale avviata su un dispositivo o desktop, con tocchi e trascinamenti sulla scacchiera | `flutter test integration_test -d <dispositivo>` |
 | End-to-end | `integration_test/computer_test.dart` | Partite contro un vero Stockfish (processo esterno, richiede `stockfish` installato) | `flutter test integration_test/computer_test.dart -d linux` |
 
 Su desktop i file e2e vanno eseguiti uno alla volta: avviandone più di uno nello stesso comando, l'app del secondo file non parte. La CI li esegue in sequenza.
 
 I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisici, rapporto 3) e muovono i pezzi calcolando la posizione delle case sulla scacchiera.
+
+I golden si rigenerano con `flutter test test/settings --update-goldens` dopo una modifica voluta dell'aspetto; il testo dei test è disegnato con il font Ahem, quindi le immagini non dipendono dai font del sistema. Vanno generati con la stessa versione di Flutter della CI (3.47.7) e riletti prima del commit.
 
 ### Copertura attuale dei requisiti
 
@@ -81,6 +84,7 @@ I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisic
 | RP-03 suoni e vibrazione, RF-31 modalità tavolo | ✓ | ✓ |
 | RNF-07 mossa da tastiera, annuncio delle mosse | ✓ | ✓ |
 | RNF-07 colori per daltonici | ✓ | ✓ |
+| RP-04 anteprima delle impostazioni (widget test e golden su tre telefoni) | ✓ | |
 | RF-30 nomi dei giocatori | ✓ | ✓ |
 | RF-09 conferma della mossa | ✓ | ✓ |
 | RF-25 matto, stallo, materiale insufficiente, ripetizione, 50 mosse, abbandono | ✓ | matto, abbandono |
