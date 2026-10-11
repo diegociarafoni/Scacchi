@@ -7,3 +7,5 @@ La GPL è richiesta dai componenti di Lichess (`dartchess`, `chessground`) e dal
 ## Componenti di terze parti
 
 L'elenco aggiornato, con le rispettive licenze, è in [CREDITS.md](../CREDITS.md). Ogni nuova risorsa (pezzi, suoni, dataset) deve avere una licenza compatibile con la GPL ed essere aggiunta a quel file.
+
+I set di pezzi selezionabili escludono quelli CC BY-NC-SA, che vietano l'uso commerciale e non sono compatibili con la GPL; il test `test/settings/settings_test.dart` controlla la licenza di ogni set. Punto aperto: `chessground` dichiara come asset tutti i suoi set di pezzi e le immagini delle scacchiere, quindi i file restano nel pacchetto dell'app anche se non sono selezionabili. Prima della pubblicazione sugli store vanno rimossi dal pacchetto (ad esempio con un fork di `chessground` che dichiari solo i set usati).

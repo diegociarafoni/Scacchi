@@ -63,16 +63,17 @@ Si aprono dall'icona a forma di ingranaggio nella barra del titolo. Ogni modific
 | Coordinate | Lettere e numeri sui bordi della scacchiera | Attiva |
 | Promuovi sempre a donna | Salta il selettore di promozione | Disattiva |
 | Frecce e cerchi | Disegno di frecce e cerchi con due dita sulla scacchiera | Attiva |
+| Conferma la mossa | Dopo ogni mossa mostra la posizione risultante con i pulsanti Conferma e Scarta al posto della riga di stato; la mossa conta solo dopo Conferma, e l'orologio continua a scorrere. Durante l'attesa "Annulla" equivale a Scarta, mentre Patta e Abbandona sono disattivati | Disattiva |
 | Ruota a ogni turno | Orienta la scacchiera dal lato di chi deve muovere | Disattiva |
 | Modalità tavolo | Capovolge i pezzi del giocatore in alto, per giocare uno di fronte all'altro con il telefono sul tavolo | Disattiva |
 | Suoni | Suoni per mossa, cattura, arrocco, scacco, promozione, fine partita e tempo sotto i 10 secondi | Attivi |
 | Volume | Volume dei suoni, da 0 a 100% | 100% |
 | Vibrazione | Vibrazione breve a ogni mossa, più marcata per catture e fine partita | Attiva |
 | Tema della scacchiera | Verde, Legno, Blu, Grigio | Verde |
-| Pezzi | Classico, Merida, California, Cardinal, Maestro | Classico |
+| Pezzi | Classico, Merida, Chessnut, Fantasy, Spatial | Classico |
 | Animazioni | Nessuna, Veloce, Normale, Lenta | Normale |
 
-I set di pezzi disponibili sono solo quelli con licenza compatibile con la GPL, elencati in `CREDITS.md`. Anche le icone dei pezzi catturati usano il set scelto.
+I set di pezzi disponibili sono solo quelli con licenza compatibile con la GPL e con la distribuzione commerciale, elencati in `CREDITS.md`: i set CC BY-NC-SA di chessground (California, Cardinal, Maestro e altri) sono esclusi, e chi li aveva scelti torna al set Classico. I temi usano solo colori, senza le immagini di chessground (licenza AGPL). Anche le icone dei pezzi catturati usano il set scelto.
 
 ## Suoni
 
