@@ -57,7 +57,12 @@ Future<void> _startComputerGame(
   await tester.pumpAndSettle();
   await tester.tap(find.text('Computer'));
   await tester.pumpAndSettle();
+  await tester.ensureVisible(find.text(side));
+  await tester.pumpAndSettle();
   await tester.tap(find.text(side));
+  await tester.pumpAndSettle();
+  await tester.ensureVisible(find.byType(Slider));
+  await tester.pumpAndSettle();
   final slider = tester.getRect(find.byType(Slider));
   final step = (slider.width - 48) / 7;
   await tester.tapAt(
@@ -65,7 +70,9 @@ Future<void> _startComputerGame(
   );
   await tester.pumpAndSettle();
   expect(find.textContaining('Livello $level:'), findsOneWidget);
-  await tester.tap(find.text('Gioca'));
+  await tester.ensureVisible(find.text('Senza tempo'));
+  await tester.pumpAndSettle();
+  await tester.tap(find.text('Senza tempo'));
   await tester.pump();
 }
 

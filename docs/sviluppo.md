@@ -48,6 +48,7 @@ Ogni funzione nasce dai requisiti del progetto, nel documento dei requisiti, con
 | Statistiche | `test/stats/` | Bilancio, rating locale, schermata | `flutter test test/stats` |
 | Minigiochi | `test/minigames/` | Generazione risolvibile, risposte, schermate, registrazione dei punteggi | `flutter test test/minigames` |
 | Tornei | `test/tournament/` | Abbinamenti, simulazione, spareggi, salvataggio, schermata | `flutter test test/tournament` |
+| Scacchiera per esercizi | `test/training/` | Tema, pezzi e coordinate presi dalle impostazioni, senza capovolgere i pezzi | `flutter test test/training` |
 | Archivio | `test/archive/` | PGN, salvataggio su file, schermata Partite | `flutter test test/archive` |
 | End-to-end | `integration_test/*_test.dart` | L'app reale avviata su un dispositivo o desktop, con tocchi e trascinamenti sulla scacchiera | `flutter test integration_test -d <dispositivo>` |
 | End-to-end | `integration_test/computer_test.dart` | Partite contro un vero Stockfish (processo esterno, richiede `stockfish` installato) | `flutter test integration_test/computer_test.dart -d linux` |
@@ -63,7 +64,7 @@ I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisic
 | RF-01 mossa con due tocchi e trascinamento, mosse illegali ignorate | ✓ | ✓ |
 | RF-04 promozione | ✓ | |
 | RF-06 capovolgimento della scacchiera | | ✓ |
-| RF-10 lista delle mosse in SAN | ✓ | ✓ |
+| RF-10 lista delle mosse in SAN, navigazione tra le posizioni | ✓ | ✓ |
 | RF-11 pezzi catturati e vantaggio di materiale | ✓ | ✓ |
 | RF-02, RF-04, RF-07, RF-12, RP-01, RP-04 impostazioni salvate | ✓ | ✓ |
 | RF-20 colore e livello contro il computer | ✓ | ✓ |
@@ -72,6 +73,9 @@ I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisic
 | RF-40, RF-41 cadenze, incremento, avvisi, tempo scaduto | ✓ | ✓ |
 | RF-40 orologio contro il computer, annullamento con orologio | | ✓ |
 | RP-03 suoni e vibrazione, RF-31 modalità tavolo | ✓ | ✓ |
+| RNF-07 mossa da tastiera, annuncio delle mosse | ✓ | ✓ |
+| RF-30 nomi dei giocatori | ✓ | ✓ |
+| RF-09 conferma della mossa | ✓ | ✓ |
 | RF-25 matto, stallo, materiale insufficiente, ripetizione, 50 mosse, abbandono | ✓ | matto, abbandono |
 | RF-25 patta accettata dal computer in base alla valutazione | ✓ | ✓ |
 | RF-31 rotazione automatica a ogni turno | | ✓ |
@@ -111,6 +115,8 @@ Il workflow `.github/workflows/ci.yml` gira su ogni pull request e su ogni push 
 1. **test**: installa Stockfish (per i test d'integrazione del motore), verifica della formattazione, `flutter analyze`, `flutter test`.
 2. **e2e**: se i test passano, installa Stockfish ed esegue i test end-to-end sull'app Linux desktop con uno schermo virtuale (`xvfb`), un file alla volta perché avvii ravvicinati dell'app Linux nello stesso comando falliscono.
 3. **android**: se i test passano, libera spazio sul runner (la compilazione nativa di Stockfish con l'NDK lo esaurisce), compila un APK di debug e lo pubblica come artefatto `scacchi-debug-apk`, scaricabile dalla pagina dell'esecuzione.
+
+Il workflow `.github/workflows/apk-release.yml` produce l'APK release installabile sul telefono e lo pubblica come GitHub Release: vedi [rilascio-android.md](rilascio-android.md).
 
 ## Convenzioni
 

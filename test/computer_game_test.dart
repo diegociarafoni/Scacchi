@@ -90,15 +90,18 @@ Future<void> startComputerGame(
   await tester.pumpAndSettle();
   await tester.tap(find.text('Computer'));
   await tester.pumpAndSettle();
+  await tester.ensureVisible(find.text(side));
+  await tester.pumpAndSettle();
   await tester.tap(find.text(side));
   await tester.pumpAndSettle();
-  if (time != null) {
-    await tester.ensureVisible(find.text(time));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text(time));
-    await tester.pumpAndSettle();
-  }
-  await tester.tap(find.text('Gioca'));
+  await chooseTime(tester, time ?? 'Senza tempo');
+}
+
+/// Tocca la cadenza nel pannello della nuova partita, che avvia la partita.
+Future<void> chooseTime(WidgetTester tester, String time) async {
+  await tester.ensureVisible(find.text(time));
+  await tester.pump(const Duration(milliseconds: 500));
+  await tester.tap(find.text(time));
 }
 
 Offset square(WidgetTester tester, String name) {
@@ -276,7 +279,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Due giocatori'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Gioca'));
+    await chooseTime(tester, 'Senza tempo');
     await tester.pumpAndSettle();
     expect(engine.disposed, isTrue);
   });
@@ -394,20 +397,12 @@ void main() {
     await tester.tap(find.text('Nuova'));
     await tester.pumpAndSettle();
     expect(find.text('Senza tempo'), findsOneWidget);
-    await tester.ensureVisible(find.text('5+0'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('5+0'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Gioca'));
+    await chooseTime(tester, '5+0');
     await tester.pump(const Duration(milliseconds: 500));
     expect(clockText(tester, Side.white), '5:00');
     await tester.tap(find.text('Nuova'));
     await tester.pump(const Duration(milliseconds: 500));
-    await tester.ensureVisible(find.text('Senza tempo'));
-    await tester.pump(const Duration(milliseconds: 500));
-    await tester.tap(find.text('Senza tempo'));
-    await tester.pump(const Duration(milliseconds: 500));
-    await tester.tap(find.text('Gioca'));
+    await chooseTime(tester, 'Senza tempo');
     await tester.pump(const Duration(milliseconds: 500));
     expect(find.byKey(const ValueKey('clock-white')), findsNothing);
   });
@@ -460,7 +455,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 1100));
       await tester.tap(find.text('Nuova'));
       await tester.pump(const Duration(milliseconds: 500));
-      await tester.tap(find.widgetWithText(TextButton, 'Annulla'));
+      await tester.tapAt(const Offset(10, 10));
       await tester.pump(const Duration(milliseconds: 500));
     }
     expect(clockText(tester, Side.black), isIn(['3:00', '2:59']));

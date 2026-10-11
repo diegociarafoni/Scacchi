@@ -26,11 +26,14 @@ class MemoryStore implements KeyValueStore {
 class JsonFileStore implements KeyValueStore {
   JsonFileStore(File file) : _file = JsonFile(file, version: 1);
 
-  /// File `training.json` nella cartella dati dell'app.
-  static Future<JsonFileStore> open() async {
-    final dir = await getApplicationSupportDirectory();
-    return JsonFileStore(File('${dir.path}/training.json'));
-  }
+  static Future<JsonFileStore>? _shared;
+
+  /// File `training.json` nella cartella dati dell'app, condiviso da puzzle e
+  /// repertorio: una sola istanza, così le scritture non si sovrascrivono.
+  static Future<JsonFileStore> open() =>
+      _shared ??= getApplicationSupportDirectory().then(
+        (dir) => JsonFileStore(File('${dir.path}/training.json')),
+      );
 
   final JsonFile _file;
   Map<String, String>? _data;

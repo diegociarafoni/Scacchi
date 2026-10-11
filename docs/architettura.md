@@ -25,11 +25,15 @@ lib/
   home/home_shell.dart    Barra di navigazione in basso (Gioca, Puzzle, Aperture)
   game/
     chess_game.dart       Stato della partita, senza dipendenze dall'interfaccia
+    variant.dart          Varianti e posizioni iniziali Chess960 (vedi regole-di-gioco.md)
     material.dart         Pezzi catturati e vantaggio di materiale
     clock.dart            Cadenze e orologio a due lati
     sounds.dart           Scelta e riproduzione di suoni e vibrazione
+    move_label.dart       Numerazione delle mosse nella lista
+    move_input.dart       Lettura di una mossa scritta (SAN inglese o italiana, UCI)
+    move_speech.dart      Frase da annunciare al lettore di schermo per ogni mossa
     game_page.dart        Schermata di gioco
-    new_game_dialog.dart  Scelta di avversario, colore e livello
+    opponent_picker.dart  Scelta di avversario, colore e livello
   engine/                 Avversario computer (vedi avversario-computer.md)
   progress/               Gamification: XP, livelli, serie, traguardi (vedi gamification.md)
   archive/                Archivio delle partite e PGN (vedi archivio.md)
@@ -37,12 +41,13 @@ lib/
   stats/                  Statistiche e rating locale (vedi statistiche.md)
   minigames/              Minigiochi di allenamento (vedi minigiochi.md)
   tournament/             Tornei offline contro bot (vedi tornei.md)
+  reminders/              Promemoria giornaliero con notifiche locali (vedi gamification.md)
   storage/                File JSON locali con versione e scrittura atomica
   settings/
     settings.dart         Impostazioni, valori predefiniti e salvataggio locale
     settings_page.dart    Schermata delle impostazioni
   puzzles/                Puzzle: modello, punteggio, schermate (vedi puzzle.md)
-  openings/               Aperture: libro, nome in partita, explorer (vedi aperture.md)
+  openings/               Aperture: libro, nome in partita, explorer, repertorio (vedi aperture.md)
   training/               Scacchiera per esercizi condivisa
 assets/
   puzzles/puzzles.csv     Puzzle Lichess inclusi (CC0)
@@ -53,9 +58,13 @@ test/
   material_test.dart      Test del materiale catturato
   clock_test.dart         Test di cadenze, orologio e tempo scaduto
   sound_test.dart         Test della scelta del suono per ogni mossa
+  move_label_test.dart    Test della numerazione delle mosse
+  move_input_test.dart    Test della lettura delle mosse scritte
+  move_speech_test.dart   Test delle frasi per il lettore di schermo
 assets/sounds/            Suoni dell'app (WAV)
 tool/generate_sounds.py   Generatore dei suoni
   settings_test.dart      Test delle impostazioni e del salvataggio
+  training/               Test della scacchiera per esercizi
   widget_test.dart        Test di avvio dell'interfaccia
   computer_game_test.dart Partita contro il computer nell'interfaccia
   engine/                 Test del protocollo UCI, dei livelli e di Stockfish
@@ -95,9 +104,13 @@ Calcola da una partita i pezzi catturati da ciascun lato, ripercorrendo le mosse
 
 `soundForLastMove` sceglie l'effetto dell'ultima mossa a partire dalla posizione precedente, in Dart puro. `SoundPlayer` riproduce l'effetto con un lettore a bassa latenza per suono e, se attiva, la vibrazione tramite `HapticFeedback`; un errore di riproduzione non interrompe la partita.
 
+### Mossa scritta e annunci (`lib/game/move_input.dart`, `move_speech.dart`)
+
+`parseMoveInput` prova il testo come UCI, poi come SAN inglese e come SAN con le iniziali italiane (R re, D donna, T torre, A alfiere, C cavallo) tramite `Position.parseSan` di dartchess. Se le due letture danno mosse legali diverse restituisce `MoveInputAmbiguous`. `describeSan` trasforma la SAN in una frase italiana che `GamePage` invia con `SemanticsService.sendAnnouncement` dopo ogni mossa.
+
 ### Impostazioni (`lib/settings/`)
 
-`AppSettings` è un valore immutabile con tutte le opzioni e la loro traduzione in `ChessboardSettings` di chessground. `SettingsController` lo carica all'avvio da `shared_preferences`, lo espone come `ValueNotifier` e lo salva a ogni modifica; valori salvati sconosciuti o di tipo errato tornano al predefinito, e se la memoria locale non è disponibile l'app parte con i valori predefiniti. Vengono scritti solo i valori modificati. L'app carica le impostazioni prima di mostrare la partita, e `GamePage` si ridisegna quando cambiano.
+`AppSettings` è un valore immutabile con tutte le opzioni e la loro traduzione in `ChessboardSettings` di chessground. `SettingsController` lo carica all'avvio da `shared_preferences`, lo espone come `ValueNotifier` e lo salva a ogni modifica; valori salvati sconosciuti o di tipo errato tornano al predefinito, e se la memoria locale non è disponibile l'app parte con i valori predefiniti. Vengono scritti solo i valori modificati. L'app carica le impostazioni prima di mostrare la partita, e `GamePage` si ridisegna quando cambiano. `SettingsScope` (un `InheritedNotifier` messo nel `builder` di `MaterialApp`, sopra il Navigator) espone le stesse impostazioni a tutte le pagine: `TrainingBoard` lo legge, così puzzle, esploratore e repertorio seguono le scelte dell'utente senza ricevere il controller come parametro. Fuori dall'app, per esempio nei test, usa i valori predefiniti.
 
 ### `GamePage` (`lib/game/game_page.dart`)
 
