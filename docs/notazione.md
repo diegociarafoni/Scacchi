@@ -21,7 +21,10 @@ Pedoni e arrocchi (O-O, O-O-O) non cambiano. La partita, l'archivio e i PGN rest
 ## Dove si applica
 
 - Elenco delle mosse e barra «Posizione dopo…» nella schermata di gioco.
+- Revisione: lista delle mosse, titolo della mossa, «Migliore», Riprova e spiegazioni del coach (`explainMove` riceve la notazione).
+- Analisi: storico e varianti del motore.
+- Aperture: continuazioni e mosse dell'esploratore, linee del repertorio.
 
-Le altre schermate (revisione, analisi, aperture, spiegazioni del coach) passano per `formatSan` e si aggiungono a parte, schermata per schermata.
+`formatSan` converte una mossa; `formatMoveText` un testo di mosse separate da spazi. I confronti interni (per esempio «è la mossa migliore?») restano sulla SAN inglese: la notazione è solo di visualizzazione.
 
 I suggerimenti dell'allenatore non usano la notazione: dicono «Sposta il re in f1» (vedi [allenatore.md](allenatore.md)).

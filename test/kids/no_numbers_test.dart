@@ -452,7 +452,7 @@ void main() {
         ),
       ]);
       await tester.pump(const Duration(milliseconds: 300));
-      expect(find.text('e4 e5 Nf3'), findsOneWidget);
+      expect(find.text('e4 e5 ♞f3'), findsOneWidget);
       expect(find.text('+0.3'), findsNothing);
       expect(find.textContaining('Profondità'), findsNothing);
       final eval = tester.widget<Text>(find.byKey(const ValueKey('eval-text')));

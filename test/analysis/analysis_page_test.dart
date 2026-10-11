@@ -73,7 +73,7 @@ void main() {
         expect(live.requests.single.fen, Chess.initial.fen);
         live.emit([e4, d4]);
         await settle(tester);
-        expect(find.text('e4 e5 Nf3'), findsOneWidget);
+        expect(find.text('e4 e5 ♞f3'), findsOneWidget);
         expect(find.text('d4 d5'), findsOneWidget);
         expect(find.text('+0.3'), findsWidgets);
         expect(find.text('Profondità 18'), findsOneWidget);
