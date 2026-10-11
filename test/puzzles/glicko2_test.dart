@@ -4,7 +4,7 @@ import 'package:scacchi/puzzles/glicko2.dart';
 void main() {
   group('RF-81 punteggio Glicko-2', () {
     test('riproduce l\'esempio dell\'articolo di Glickman', () {
-      const player = Glicko2Rating(rating: 1500, deviation: 200);
+      const player = Glicko2Rating(deviation: 200);
       final updated = player.update(const [
         GameResult(opponent: 1400, opponentDeviation: 30, score: 1),
         GameResult(opponent: 1550, opponentDeviation: 100, score: 0),
@@ -16,7 +16,7 @@ void main() {
     });
 
     test('vincere contro un puzzle difficile fa salire il punteggio', () {
-      const player = Glicko2Rating(rating: 1500, deviation: 150);
+      const player = Glicko2Rating(deviation: 150);
       final up = player.update(const [
         GameResult(opponent: 1900, opponentDeviation: 75, score: 1),
       ]);
@@ -28,7 +28,7 @@ void main() {
     });
 
     test('la deviazione non scende sotto il minimo', () {
-      var r = const Glicko2Rating(rating: 1500, deviation: 60);
+      var r = const Glicko2Rating(deviation: 60);
       for (var i = 0; i < 50; i++) {
         r = r.update(const [
           GameResult(opponent: 1500, opponentDeviation: 75, score: 0.5),

@@ -1,0 +1,42 @@
+name: Convenzioni
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  conventions:
+    name: Ramo, titolo della PR e commit
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: dart-lang/setup-dart@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1.8.1
+      - name: Nome del ramo
+        env:
+          BRANCH: ${{ github.head_ref }}
+        run: dart tool/check_branch_name.dart "$BRANCH"
+      # Con lo squash merge il titolo della PR diventa il commit su main.
+      - name: Titolo della PR
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+        run: dart tool/check_commit_msg.dart --text "$TITLE"
+      - name: Messaggi dei commit
+        # Dal punto in cui il ramo si stacca da main: i commit arrivati
+        # unendo main non sono di questa PR.
+        env:
+          BASE_REF: ${{ github.base_ref }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          base="$(git merge-base "origin/$BASE_REF" "$HEAD")"
+          dart tool/check_commit_msg.dart --range "$base..$HEAD"

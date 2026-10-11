@@ -29,7 +29,8 @@ class PuzzleHubPage extends StatefulWidget {
 
 class _PuzzleHubPageState extends State<PuzzleHubPage> {
   Future<void> _open(Widget page) async {
-    await Navigator.of(context).push(MaterialPageRoute(builder: (_) => page));
+    await Navigator.of(context)
+        .push(MaterialPageRoute<void>(builder: (_) => page));
     if (mounted) setState(() {});
   }
 
@@ -158,7 +159,7 @@ class _ThemeListPage extends StatelessWidget {
             title: Text(t.value),
             trailing: Text('${trainer.library.countFor(t.key)}'),
             onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(
+              MaterialPageRoute<void>(
                 builder: (_) => PuzzlePage(
                   trainer: trainer,
                   theme: t.key,

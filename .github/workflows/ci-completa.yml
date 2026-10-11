@@ -1,0 +1,21 @@
+name: CI completa
+
+# Aggiungere l'etichetta ci-completa a una PR esegue tutta la CI, e2e e build
+# Android compresi, senza un nuovo push. Da lì in poi ci.yml li esegue a ogni push.
+on:
+  pull_request:
+    types: [labeled]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+# Stesso gruppo di ci.yml: un push successivo sulla PR annulla questo giro.
+concurrency:
+  group: CI-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    if: github.event.label.name == 'ci-completa'
+    uses: ./.github/workflows/ci.yml

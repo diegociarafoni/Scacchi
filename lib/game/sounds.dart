@@ -71,14 +71,14 @@ class SoundPlayer {
         volume: volume,
         mode: PlayerMode.lowLatency,
       );
-    } catch (e) {
+    } on Object catch (e) {
       debugPrint('Suono non riprodotto: $e');
     }
   }
 
   void dispose() {
     for (final p in _players.values) {
-      p.dispose();
+      unawaited(p.dispose());
     }
     _players.clear();
   }

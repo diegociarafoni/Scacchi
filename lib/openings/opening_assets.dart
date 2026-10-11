@@ -12,7 +12,7 @@ Future<OpeningBook>? _book;
 Future<OpeningBook> openingBook() => _book ??= rootBundle
     .loadString(openingAsset)
     .then((tsv) => compute(OpeningBook.parseTsv, tsv))
-    .catchError((Object e) {
+    .catchError((Object e, StackTrace st) {
       _book = null;
-      throw e;
+      Error.throwWithStackTrace(e, st);
     });

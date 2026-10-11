@@ -4,7 +4,7 @@ import 'puzzle.dart';
 class PuzzleLibrary {
   PuzzleLibrary(List<Puzzle> puzzles)
     : puzzles = List.unmodifiable(
-        [...puzzles]..sort((a, b) => a.rating.compareTo(b.rating)),
+        <Puzzle>[...puzzles]..sort((a, b) => a.rating.compareTo(b.rating)),
       );
 
   final List<Puzzle> puzzles;

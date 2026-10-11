@@ -125,7 +125,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
     if (_recorded) return;
     _recorded = true;
     _stopwatch.stop();
-    _record(_session.puzzle, solved: _session.firstTry);
+    unawaited(_record(_session.puzzle, solved: _session.firstTry));
   }
 
   Future<void> _record(Puzzle puzzle, {required bool solved}) async {

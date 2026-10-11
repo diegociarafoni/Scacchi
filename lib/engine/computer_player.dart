@@ -52,6 +52,8 @@ class ComputerPlayer {
   final Duration timeoutMargin;
 
   UciTransport? _transport;
+  // Cancellata in _shutdown, che la chiude insieme al motore.
+  // ignore: cancel_subscriptions
   StreamSubscription<String>? _subscription;
   Future<void>? _ready;
   Future<void> _queue = Future.value();
@@ -86,7 +88,7 @@ class ComputerPlayer {
           l(line);
         }
       },
-      onError: (Object e) => _failPending(e),
+      onError: _failPending,
       onDone: () => _failPending(StateError('Il motore si è chiuso')),
     );
     await _command('uci', (l) => l == 'uciok', const Duration(seconds: 30));
@@ -162,30 +164,32 @@ class ComputerPlayer {
         if (running && !_disposed) _send('stop');
       },
     );
-    _enqueue(() async {
-      if (cancelled) return;
-      await _applyOptions(_fullStrength(multiPv));
-      if (cancelled) return;
-      _send('position fen ${fen.trim()}');
-      running = true;
-      try {
-        // Nessun limite pratico: l'analisi resta aperta finché serve.
-        await _go(
-          'go depth $maxDepth',
-          const Duration(hours: 24),
-          onUpdate: (infos) {
-            if (!out.isClosed) out.add(_sorted(infos, multiPv));
-          },
-        );
-      } finally {
-        running = false;
-      }
-    }).then(
-      (_) => out.close(),
-      onError: (Object e) {
-        if (!out.isClosed) out.addError(e);
-        out.close();
-      },
+    unawaited(
+      _enqueue(() async {
+        if (cancelled) return;
+        await _applyOptions(_fullStrength(multiPv));
+        if (cancelled) return;
+        _send('position fen ${fen.trim()}');
+        running = true;
+        try {
+          // Nessun limite pratico: l'analisi resta aperta finché serve.
+          await _go(
+            'go depth $maxDepth',
+            const Duration(hours: 24),
+            onUpdate: (infos) {
+              if (!out.isClosed) out.add(_sorted(infos, multiPv));
+            },
+          );
+        } finally {
+          running = false;
+        }
+      }).then(
+        (_) => out.close(),
+        onError: (Object e) {
+          if (!out.isClosed) out.addError(e);
+          unawaited(out.close());
+        },
+      ),
     );
     return out.stream;
   }

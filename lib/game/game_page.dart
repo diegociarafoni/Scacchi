@@ -7,11 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 
+import '../analysis/analysis_page.dart';
+import '../editor/position_editor_page.dart';
 import '../engine/computer_player.dart';
 import '../engine/levels.dart';
 import '../engine/uci_transport.dart';
-import '../analysis/analysis_page.dart';
-import '../editor/position_editor_page.dart';
 import '../openings/opening_name.dart';
 import '../review/engine_evaluator.dart';
 import '../review/review_page.dart';
@@ -144,7 +144,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     if (_clockBeforeSuspension) _clock?.start(_game.position.turn);
     _syncClock();
     _tick.value++;
-    _computerMove();
+    unawaited(_computerMove());
   }
 
   /// Esegue [action] con orologio e computer fermi; riparte se [restart] lo consente.
@@ -284,7 +284,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final played = _apply(move);
     if (!played && !_game.isOver) return;
     _refresh(animate: played && animate);
-    if (played) _computerMove();
+    if (played) unawaited(_computerMove());
   }
 
   /// Gioca [move] con orologio, suono e annuncio; con il tempo scaduto chiude la partita.
@@ -347,7 +347,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         _moveHistory,
         level,
       );
-    } catch (e) {
+    } on Object catch (e) {
       error = e;
     }
     if (!mounted || generation != _generation) return;
@@ -461,16 +461,25 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   }
 
   void _announce(String message) {
-    SemanticsService.sendAnnouncement(
-      View.of(context),
-      message,
-      Directionality.of(context),
+    unawaited(
+      SemanticsService.sendAnnouncement(
+        View.of(context),
+        message,
+        Directionality.of(context),
+      ),
     );
   }
 
   void _playSound(GameSound sound) {
     final s = _settings;
-    _sounds.play(sound, enabled: s.sound, volume: s.volume, haptics: s.haptics);
+    unawaited(
+      _sounds.play(
+        sound,
+        enabled: s.sound,
+        volume: s.volume,
+        haptics: s.haptics,
+      ),
+    );
   }
 
   /// Chiude selezione e selettore di promozione rimasti aperti sulla scacchiera.
@@ -543,7 +552,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       _computer = null;
     }
     _refresh(animate: false);
-    _computerMove();
+    unawaited(_computerMove());
     if (vsComputer) return;
     unawaited(
       widget.settings.update(
@@ -639,7 +648,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     }
     _clearBoardInteraction();
     _refresh(animate: false);
-    _computerMove();
+    unawaited(_computerMove());
   }
 
   bool get _endedByChoice => switch (_game.endReason) {
@@ -713,7 +722,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
               ? score.comparable
               : -score.comparable;
         }
-      } catch (e) {
+      } on Object catch (e) {
         error = e;
       }
       current = mounted && generation == _generation;
@@ -772,11 +781,13 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// Analisi della posizione mostrata con orologio e computer fermi.
   void _openAnalysis() {
     final position = _shownPosition;
-    _withEngine(
-      (player) => AnalysisPage(
-        initial: position,
-        analyse: _liveAnalysis(player),
-        orientation: _orientation,
+    unawaited(
+      _withEngine(
+        (player) => AnalysisPage(
+          initial: position,
+          analyse: _liveAnalysis(player),
+          orientation: _orientation,
+        ),
       ),
     );
   }
@@ -784,13 +795,15 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// Revisione della partita con orologio e computer fermi.
   void _openReview() {
     final moves = _moveHistory;
-    _withEngine(
-      (player) => ReviewPage(
-        initial: _game.initial,
-        moves: moves,
-        evaluate: engineEvaluator(player),
-        onCancel: player.stopAnalysis,
-        analyseLive: _liveAnalysis(player),
+    unawaited(
+      _withEngine(
+        (player) => ReviewPage(
+          initial: _game.initial,
+          moves: moves,
+          evaluate: engineEvaluator(player),
+          onCancel: player.stopAnalysis,
+          analyseLive: _liveAnalysis(player),
+        ),
       ),
     );
   }
