@@ -103,6 +103,114 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Scacchi'**
   String get appTitle;
+
+  /// Titolo della schermata che mostra il QR della partita e voce di menu
+  ///
+  /// In it, this message translates to:
+  /// **'Passa con QR'**
+  String get qrSendTitle;
+
+  /// Istruzioni sotto il QR
+  ///
+  /// In it, this message translates to:
+  /// **'Sull\'altro telefono apri Tu › Archivio › Ricevi con QR e inquadra il codice.'**
+  String get qrSendHint;
+
+  /// Fotogramma mostrato di una partita lunga
+  ///
+  /// In it, this message translates to:
+  /// **'Parte {current} di {total}'**
+  String qrPart(int current, int total);
+
+  /// Ferma lo scorrimento dei fotogrammi
+  ///
+  /// In it, this message translates to:
+  /// **'Pausa'**
+  String get qrPause;
+
+  /// Riprende lo scorrimento dei fotogrammi
+  ///
+  /// In it, this message translates to:
+  /// **'Riprendi'**
+  String get qrResume;
+
+  /// Fotogramma successivo
+  ///
+  /// In it, this message translates to:
+  /// **'Parte successiva'**
+  String get qrNext;
+
+  /// Fotogramma precedente
+  ///
+  /// In it, this message translates to:
+  /// **'Parte precedente'**
+  String get qrPrevious;
+
+  /// Etichetta del QR per il lettore di schermo
+  ///
+  /// In it, this message translates to:
+  /// **'Codice QR della partita'**
+  String get qrCodeLabel;
+
+  /// Titolo della schermata con la fotocamera e azione dell'archivio
+  ///
+  /// In it, this message translates to:
+  /// **'Ricevi con QR'**
+  String get qrReceiveTitle;
+
+  /// Istruzioni sotto la fotocamera
+  ///
+  /// In it, this message translates to:
+  /// **'Inquadra il codice QR mostrato dall\'altro telefono.'**
+  String get qrReceiveHint;
+
+  /// Avanzamento della lettura, annunciato anche al lettore di schermo
+  ///
+  /// In it, this message translates to:
+  /// **'{received} di {total} parti lette'**
+  String qrReceived(int received, int total);
+
+  /// QR di altro tipo, per esempio un indirizzo web
+  ///
+  /// In it, this message translates to:
+  /// **'Questo QR non contiene una partita.'**
+  String get qrForeign;
+
+  /// Dati non validi
+  ///
+  /// In it, this message translates to:
+  /// **'Il QR è danneggiato: ricomincia la lettura.'**
+  String get qrCorrupted;
+
+  /// Oltre i limiti di sicurezza
+  ///
+  /// In it, this message translates to:
+  /// **'La partita è troppo grande per essere ricevuta.'**
+  String get qrTooLarge;
+
+  /// Si è inquadrato il QR di un'altra partita
+  ///
+  /// In it, this message translates to:
+  /// **'Nuova partita inquadrata: lettura ricominciata.'**
+  String get qrRestarted;
+
+  /// Permesso negato o fotocamera assente
+  ///
+  /// In it, this message translates to:
+  /// **'Non riesco a usare la fotocamera. Consenti l\'accesso alla fotocamera per Scacchi nelle impostazioni del telefono e riprova.'**
+  String get qrCameraError;
+
+  /// Riapre la fotocamera
+  ///
+  /// In it, this message translates to:
+  /// **'Riprova'**
+  String get qrRetry;
+
+  /// PGN ricevuto ma non importabile
+  ///
+  /// In it, this message translates to:
+  /// **'Il QR non contiene una partita valida.'**
+  String get qrInvalidGame;
 }
 
 class _AppLocalizationsDelegate

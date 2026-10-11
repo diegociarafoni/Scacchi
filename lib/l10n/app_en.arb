@@ -1,4 +1,22 @@
 {
   "@@locale": "en",
-  "appTitle": "Chess"
+  "appTitle": "Chess",
+  "qrSendTitle": "Pass via QR",
+  "qrSendHint": "On the other phone open You › Archive › Receive via QR and frame the code.",
+  "qrPart": "Part {current} of {total}",
+  "qrPause": "Pause",
+  "qrResume": "Resume",
+  "qrNext": "Next part",
+  "qrPrevious": "Previous part",
+  "qrCodeLabel": "Game QR code",
+  "qrReceiveTitle": "Receive via QR",
+  "qrReceiveHint": "Frame the QR code shown on the other phone.",
+  "qrReceived": "{received} of {total} parts read",
+  "qrForeign": "This QR code does not contain a game.",
+  "qrCorrupted": "The QR code is damaged: start reading again.",
+  "qrTooLarge": "The game is too large to receive.",
+  "qrRestarted": "New game framed: reading restarted.",
+  "qrCameraError": "The camera is not available. Allow Scacchi to use the camera in the phone settings and try again.",
+  "qrRetry": "Try again",
+  "qrInvalidGame": "The QR code does not contain a valid game."
 }

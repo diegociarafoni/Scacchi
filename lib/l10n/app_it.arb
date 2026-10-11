@@ -3,5 +3,93 @@
   "appTitle": "Scacchi",
   "@appTitle": {
     "description": "Titolo dell'app nel selettore delle attività; il nome sotto l'icona è in AndroidManifest.xml e Info.plist"
+  },
+  "qrSendTitle": "Passa con QR",
+  "@qrSendTitle": {
+    "description": "Titolo della schermata che mostra il QR della partita e voce di menu"
+  },
+  "qrSendHint": "Sull'altro telefono apri Tu › Archivio › Ricevi con QR e inquadra il codice.",
+  "@qrSendHint": {
+    "description": "Istruzioni sotto il QR"
+  },
+  "qrPart": "Parte {current} di {total}",
+  "@qrPart": {
+    "description": "Fotogramma mostrato di una partita lunga",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "qrPause": "Pausa",
+  "@qrPause": {
+    "description": "Ferma lo scorrimento dei fotogrammi"
+  },
+  "qrResume": "Riprendi",
+  "@qrResume": {
+    "description": "Riprende lo scorrimento dei fotogrammi"
+  },
+  "qrNext": "Parte successiva",
+  "@qrNext": {
+    "description": "Fotogramma successivo"
+  },
+  "qrPrevious": "Parte precedente",
+  "@qrPrevious": {
+    "description": "Fotogramma precedente"
+  },
+  "qrCodeLabel": "Codice QR della partita",
+  "@qrCodeLabel": {
+    "description": "Etichetta del QR per il lettore di schermo"
+  },
+  "qrReceiveTitle": "Ricevi con QR",
+  "@qrReceiveTitle": {
+    "description": "Titolo della schermata con la fotocamera e azione dell'archivio"
+  },
+  "qrReceiveHint": "Inquadra il codice QR mostrato dall'altro telefono.",
+  "@qrReceiveHint": {
+    "description": "Istruzioni sotto la fotocamera"
+  },
+  "qrReceived": "{received} di {total} parti lette",
+  "@qrReceived": {
+    "description": "Avanzamento della lettura, annunciato anche al lettore di schermo",
+    "placeholders": {
+      "received": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "qrForeign": "Questo QR non contiene una partita.",
+  "@qrForeign": {
+    "description": "QR di altro tipo, per esempio un indirizzo web"
+  },
+  "qrCorrupted": "Il QR è danneggiato: ricomincia la lettura.",
+  "@qrCorrupted": {
+    "description": "Dati non validi"
+  },
+  "qrTooLarge": "La partita è troppo grande per essere ricevuta.",
+  "@qrTooLarge": {
+    "description": "Oltre i limiti di sicurezza"
+  },
+  "qrRestarted": "Nuova partita inquadrata: lettura ricominciata.",
+  "@qrRestarted": {
+    "description": "Si è inquadrato il QR di un'altra partita"
+  },
+  "qrCameraError": "Non riesco a usare la fotocamera. Consenti l'accesso alla fotocamera per Scacchi nelle impostazioni del telefono e riprova.",
+  "@qrCameraError": {
+    "description": "Permesso negato o fotocamera assente"
+  },
+  "qrRetry": "Riprova",
+  "@qrRetry": {
+    "description": "Riapre la fotocamera"
+  },
+  "qrInvalidGame": "Il QR non contiene una partita valida.",
+  "@qrInvalidGame": {
+    "description": "PGN ricevuto ma non importabile"
   }
 }

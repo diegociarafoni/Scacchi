@@ -5,6 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../exchange/qr_receive_page.dart';
+import '../exchange/qr_send_page.dart';
+import '../exchange/qr_transfer.dart';
+import '../l10n/app_localizations.dart';
 import 'game_archive.dart';
 import 'saved_game.dart';
 
@@ -20,6 +24,7 @@ class ArchivePage extends StatefulWidget {
     required this.archive,
     this.onOpen,
     this.share = _shareWithSystem,
+    this.scanner = zxingScanner,
   });
 
   final GameArchive archive;
@@ -27,6 +32,9 @@ class ArchivePage extends StatefulWidget {
   /// Chiamata quando si tocca una partita per aprirla.
   final ValueChanged<SavedGame>? onOpen;
   final ShareText share;
+
+  /// Lettore QR per ricevere una partita da un altro telefono.
+  final QrScannerBuilder scanner;
 
   @override
   State<ArchivePage> createState() => _ArchivePageState();
@@ -72,6 +80,10 @@ class _ArchivePageState extends State<ArchivePage> {
       builder: (context) => const _ImportDialog(),
     );
     if (text == null || !mounted) return;
+    await _importText(text);
+  }
+
+  Future<void> _importText(String text) async {
     final result = await widget.archive.importPgn(text);
     await _reload();
     if (!mounted) return;
@@ -87,6 +99,27 @@ class _ArchivePageState extends State<ArchivePage> {
       ),
     );
   }
+
+  Future<void> _receive() async {
+    final text = await Navigator.of(context).push<String>(
+      MaterialPageRoute(builder: (_) => QrReceivePage(scanner: widget.scanner)),
+    );
+    if (text == null || !mounted) return;
+    if (receivedGames(text).isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context).qrInvalidGame)),
+      );
+      return;
+    }
+    await _importText(text);
+  }
+
+  Future<void> _sendQr(SavedGame game) => Navigator.of(context).push<void>(
+    MaterialPageRoute(
+      builder: (_) =>
+          QrSendPage(title: _title(game), frames: encodeTransfer(game.pgn)),
+    ),
+  );
 
   Future<void> _delete(SavedGame game) async {
     final confirmed = await showDialog<bool>(
@@ -121,6 +154,8 @@ class _ArchivePageState extends State<ArchivePage> {
           ScaffoldMessenger.of(context)
               .showSnackBar(const SnackBar(content: Text('PGN copiato')));
         }
+      case _Action.qr:
+        await _sendQr(game);
       case _Action.delete:
         await _delete(game);
     }
@@ -134,6 +169,11 @@ class _ArchivePageState extends State<ArchivePage> {
       appBar: AppBar(
         title: const Text('Partite'),
         actions: [
+          IconButton(
+            tooltip: AppLocalizations.of(context).qrReceiveTitle,
+            icon: const Icon(Icons.qr_code_scanner),
+            onPressed: _receive,
+          ),
           IconButton(
             tooltip: 'Importa PGN',
             icon: const Icon(Icons.file_download_outlined),
@@ -189,7 +229,7 @@ class _ArchivePageState extends State<ArchivePage> {
   }
 }
 
-enum _Action { share, copy, delete }
+enum _Action { share, copy, qr, delete }
 
 String _title(SavedGame g) => '${g.white} – ${g.black}';
 
@@ -218,10 +258,17 @@ class _GameTile extends StatelessWidget {
       trailing: PopupMenuButton<_Action>(
         tooltip: 'Azioni per ${_title(game)}',
         onSelected: onAction,
-        itemBuilder: (context) => const [
-          PopupMenuItem(value: _Action.share, child: Text('Condividi PGN')),
-          PopupMenuItem(value: _Action.copy, child: Text('Copia PGN')),
-          PopupMenuItem(value: _Action.delete, child: Text('Elimina')),
+        itemBuilder: (context) => [
+          const PopupMenuItem(
+            value: _Action.share,
+            child: Text('Condividi PGN'),
+          ),
+          const PopupMenuItem(value: _Action.copy, child: Text('Copia PGN')),
+          PopupMenuItem(
+            value: _Action.qr,
+            child: Text(AppLocalizations.of(context).qrSendTitle),
+          ),
+          const PopupMenuItem(value: _Action.delete, child: Text('Elimina')),
         ],
       ),
     );

@@ -14,6 +14,7 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | [archivio.md](archivio.md) | Salvataggio delle partite, storico, import ed export PGN |
 | [ritratto-settimana.md](ritratto-settimana.md) | Scheda degli ultimi sette giorni, condivisibile come immagine |
 | [scacchiera-fisica.md](scacchiera-fisica.md) | Orologio e registro di una partita su scacchiera reale |
+| [scambio-qr.md](scambio-qr.md) | Passare una partita, anche in corso, a un altro telefono con il QR, senza rete |
 | [backup.md](backup.md) | Backup e ripristino di tutti i dati locali in un file |
 | [puzzle.md](puzzle.md) | Puzzle: dati, punteggio, modalità, puzzle del giorno |
 | [aperture.md](aperture.md) | Nomi delle aperture, mosse di libro, explorer, repertorio |
@@ -49,6 +50,7 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | Gamification: XP, livelli, obiettivo giornaliero, serie, traguardi, ricompense estetiche, promemoria | Disponibile: XP a fine partita, Profilo e promemoria dalla scheda Tu |
 | La tua settimana: scheda condivisibile degli ultimi sette giorni | Disponibile dalla scheda Tu |
 | Scacchiera fisica: orologio e registro della partita dal vivo | Disponibile dalla scheda Tu |
+| Scambio di partite tra telefoni con il QR, senza rete | Disponibile dal menu della partita e dall'archivio; lettura con la fotocamera su Android e iOS |
 | Backup e ripristino dei dati in un file | Disponibile dalle Impostazioni |
 | Archivio partite, import ed export PGN | Disponibile dalla scheda Tu; le partite finite si salvano da sole, riprendere una partita è in arrivo |
 | Percorso a tappe con stelle | Disponibile dalla scheda Tu; guardiani in arrivo con la partita contro il computer |

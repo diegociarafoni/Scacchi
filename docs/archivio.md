@@ -34,7 +34,8 @@ Quando arriverà il database locale (RNF-08), il file sarà importato alla prima
 - ricerca per nome dei giocatori o tipo di partita;
 - per ogni partita: condividi il PGN con il menu di condivisione del sistema, copia negli appunti, elimina con conferma;
 - in alto: importa (incollando il testo, con pulsante "Incolla") ed esporta tutto l'archivio in un unico PGN;
-- tocco su una partita: callback `onOpen`, per aprirla nella schermata di gioco.
+- tocco su una partita: callback `onOpen`, per aprirla nella schermata di gioco;
+- per ogni partita, **Passa con QR**, e in alto **Ricevi con QR** per importare una partita letta con la fotocamera da un altro telefono (vedi [scambio-qr.md](scambio-qr.md)).
 
 ## Integrazione prevista
 
