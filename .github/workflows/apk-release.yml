@@ -172,5 +172,5 @@ jobs:
             # Le pre-release non compaiono in releases/latest: solo i tag con suffisso lo sono.
             case "$TAG" in *-*) prerelease="--prerelease" ;; esac
             gh release create "$TAG" dist/* --target "$GITHUB_SHA" \
-              --title "Scacchi ${TAG#v}" --notes-file notes.md $prerelease
+              --title "Rokko ${TAG#v}" --notes-file notes.md $prerelease
           fi
