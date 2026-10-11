@@ -63,6 +63,13 @@ Ogni funzione nasce dai requisiti del progetto, nel documento dei requisiti, con
 | Scacchiera per esercizi | `test/training/` | Tema, pezzi e coordinate presi dalle impostazioni, senza capovolgere i pezzi | `flutter test test/training` |
 | Archivio | `test/archive/` | PGN, salvataggio su file, schermata Partite | `flutter test test/archive` |
 | Scambio QR | `test/exchange/`, `test/game/game_qr_test.dart` | Fotogrammi QR, validazione dei dati letti, schermate Passa e Ricevi, partita continuata (vedi scambio-qr.md) | `flutter test test/exchange` |
+| Allenatore | `test/coach/` | Avvisi, Riprova e Continua, suggerimento a livelli, frasi in parole semplici | `flutter test test/coach` |
+| Puzzle | `test/puzzles/` | Dataset, Glicko-2, sessioni, Storm, Rush e Serie, ripasso, spiegazione delle modalità | `flutter test test/puzzles` |
+| Aperture | `test/openings/` | Libro, nomi italiani, Esplora aperture, repertorio | `flutter test test/openings` |
+| Regole | `test/regole/` | Partite di riferimento e perft | `flutter test test/regole` |
+| Editor, backup, scacchiera fisica, promemoria | `test/editor/`, `test/backup/`, `test/physical/`, `test/reminders/` | FEN e validazione, backup e ripristino, orologio e registro, promemoria | `flutter test test/editor test/backup test/physical test/reminders` |
+| Profilo bambino | `test/kids/` | Niente numeri, scheda Tu semplificata | `flutter test test/kids` |
+| Strumenti | `test/tool/` | Controlli di rami, commit, documentazione e licenze | `flutter test test/tool` |
 | End-to-end | `integration_test/qr_exchange_test.dart` | QR disegnato dall'app letto da zxing-cpp, fotocamera assente | `flutter test integration_test/qr_exchange_test.dart -d linux` |
 | Golden | `test/settings/goldens/` | Schermata Impostazioni su telefono piccolo, medio e grande, con e senza colori per daltonici, e chip di temi e pezzi | `flutter test test/settings/board_preview_test.dart` |
 | End-to-end | `integration_test/*_test.dart` | L'app reale avviata su un dispositivo o desktop, con tocchi e trascinamenti sulla scacchiera | `flutter test integration_test -d <dispositivo>` |
@@ -115,6 +122,8 @@ I golden si rigenerano con `flutter test test/settings --update-goldens` dopo un
 | RF-66 cache della revisione (in memoria) | ✓ | |
 | RF-70 spiegazioni: matto concesso o mancato, pezzo in presa, forchetta, inchiodatura, re scoperto, perdita di materiale | ✓ | |
 | RF-72 giudizio con simbolo sulla casa della mossa (con l'allenatore acceso) | ✓ | ✓ |
+| RF-73 allenatore: avviso in tempo reale, Riprova e Continua | ✓ | |
+| RF-74 suggerimento a livelli, in parole semplici, con cerchio e freccia | ✓ | |
 | RF-71 cattura netta, doppio attacco, scoperta dalla variante del motore | ✓ | |
 | Cap. 7, errori trasformati in puzzle personali | ✓ | |
 | Cap. 7, puzzle personali salvati e nel ripasso | ✓ | ✓ |
@@ -149,6 +158,7 @@ I golden si rigenerano con `flutter test test/settings --update-goldens` dopo un
 | RF-90 nome dell'apertura in partita | ✓ | ✓ |
 | RF-91 mosse di libro | ✓ | |
 | RF-92 Esplora aperture | ✓ | ✓ |
+| RF-93 repertorio e ripasso dilazionato | ✓ | ✓ |
 
 ## Integrazione continua
 

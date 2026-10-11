@@ -20,7 +20,7 @@ Il libro si carica una volta sola (`openingBook()` in `opening_assets.dart`), in
 
 ### Riconoscimento in partita (RF-90)
 
-`OpeningBook.classify(mosse)`, o `classifyPositions(posizioni)` quando le posizioni sono già calcolate come nella schermata di gioco, ripercorre la partita all'indietro e restituisce l'ultima posizione con nome, come suggerisce il dataset. Nella schermata di gioco il titolo "Scacchi" diventa il nome italiano dell'apertura (senza codice ECO, che resta solo nell'etichetta per i lettori di schermo, e su due righe se lungo) appena la partita entra nel libro (widget `OpeningName`), con un'etichetta per i lettori di schermo ("Apertura: ..."). Il widget riceve le posizioni della partita a partire da quella iniziale, quindi una partita da posizione personalizzata non viene confusa con una dalla posizione standard.
+`OpeningBook.classify(mosse)`, o `classifyPositions(posizioni)` quando le posizioni sono già calcolate come nella schermata di gioco, ripercorre la partita all'indietro e restituisce l'ultima posizione con nome, come suggerisce il dataset. Nella schermata di gioco il titolo "Rokko" diventa il nome italiano dell'apertura (senza codice ECO, che resta solo nell'etichetta per i lettori di schermo, e su due righe se lungo) appena la partita entra nel libro (widget `OpeningName`), con un'etichetta per i lettori di schermo ("Apertura: ..."). Il widget riceve le posizioni della partita a partire da quella iniziale, quindi una partita da posizione personalizzata non viene confusa con una dalla posizione standard.
 
 ### Mosse di libro (RF-91)
 
@@ -28,7 +28,7 @@ Il libro si carica una volta sola (`openingBook()` in `opening_assets.dart`), in
 
 ### Nomi in italiano
 
-Il dataset Lichess è in inglese, quindi i nomi si traducono al momento di mostrarli, senza toccare il file: `openingNameIt` (`lib/openings/opening_names_it.dart`) usa una tabella con le famiglie del libro ("Sicilian Defense" diventa "Difesa siciliana", "Queen's Gambit Declined" diventa "Gambetto di donna rifiutato") e un piccolo glossario per le varianti. Il sostantivo (variante, attacco, gambetto, difesa, sistema, linea) viene messo davanti e gli aggettivi si accordano ("Open Variation" diventa "variante aperta"). I nomi propri restano invariati ("variante Najdorf") e ciò che non si sa tradurre resta in inglese, così l'informazione non si perde mai. Un test passa tutti i nomi del libro e controlla che non restino in inglese le parole del glossario e i sostantivi che reggono il nome. La traduzione vale per il titolo della partita, Esplora aperture, il nome proposto per il repertorio e le aperture delle statistiche; le partite salvate conservano il nome inglese.
+Il dataset Lichess è in inglese, quindi i nomi si traducono al momento di mostrarli, senza toccare il file: `openingNameIt` (`lib/openings/opening_names_it.dart`) usa una tabella con le famiglie del libro ("Sicilian Defense" diventa "Difesa siciliana", "Queen's Gambit Declined" diventa "Gambetto di donna rifiutato") e un piccolo glossario per le varianti. Il sostantivo (variante, attacco, gambetto, difesa, sistema, linea) viene messo davanti e gli aggettivi si accordano ("Open Variation" diventa "variante aperta"). I nomi propri restano invariati ("variante Najdorf") e ciò che non si sa tradurre resta in inglese, così l'informazione non si perde mai. Un test passa tutti i nomi del libro e controlla che non restino in inglese le parole del glossario e i sostantivi che reggono il nome. La traduzione vale per il titolo della partita, Esplora aperture, il nome proposto per il repertorio e le aperture delle statistiche e della scheda «La tua settimana»; le partite salvate conservano il nome inglese.
 
 La notazione delle mosse resta quella inglese (Nf3, Bb5) come nel resto dell'app.
 
@@ -36,7 +36,7 @@ La notazione delle mosse resta quella inglese (Nf3, Bb5) come nel resto dell'app
 
 Dalla scheda **Aperture**, **Esplora aperture** mostra la posizione corrente con il nome dell'apertura, la sequenza delle mosse e le continuazioni del libro. Per ogni continuazione indica la mossa in SAN, il nome dell'apertura raggiunta e la quota delle varianti del libro che proseguono così.
 
-Le statistiche di vittoria del database di Lichess o di chess.com non sono disponibili offline (sono escluse dai requisiti): la percentuale misura quanto è ricca di varianti con nome una continuazione, non quanto è giocata. Si può muovere anche fuori dal libro; la schermata lo segnala.
+Le statistiche di vittoria del database di Lichess o di chess.com non sono disponibili offline (sono escluse dai requisiti): la percentuale misura quanto è ricca di varianti con nome una continuazione, non quanto è giocata. Si può muovere anche fuori dal libro; la schermata lo segnala. In alto compaiono codice ECO e nome dell'apertura; **Indietro** toglie l'ultima mossa, **Inizio** torna alla posizione iniziale e l'icona **Gira la scacchiera** cambia il lato.
 
 ### Repertorio (RF-93)
 
@@ -44,6 +44,8 @@ Ogni colore ha il suo repertorio: un elenco di linee con nome (es. "Italiana: 1.
 
 - da Esplora aperture, con il pulsante **Aggiungi al repertorio**: nome proposto dall'apertura raggiunta, colore proposto in base a chi ha giocato l'ultima mossa;
 - incollando un PGN nella schermata del repertorio: ogni variante diventa una linea, i rami illegali si scartano dal punto dell'errore.
+
+Ogni linea si cancella con l'icona **Elimina la linea**.
 
 Una linea è rifiutata se in una posizione già presente il repertorio prevede un'altra mossa per il proprio colore: il ripasso deve avere una sola risposta giusta. Le linee possono condividere l'inizio; le trasposizioni sono riconosciute tramite l'EPD.
 

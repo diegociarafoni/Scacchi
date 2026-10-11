@@ -5,7 +5,7 @@ Analisi libera con Stockfish locale (requisiti RF-50, RF-51, RF-52 in parte, RF-
 ## Come si apre
 
 - Dal menu della partita (⋮): **Analisi della posizione** apre la posizione mostrata sulla scacchiera, anche se si stanno scorrendo le mosse precedenti. Mentre è aperta, orologio e mossa del computer sono sospesi e riprendono alla chiusura, perché il motore è uno solo. Nella partita tra due persone il motore viene avviato solo per l'analisi e chiuso al ritorno.
-- Dalla revisione della partita: il pulsante **Analizza la posizione** nella barra del titolo apre la posizione mostrata.
+- Dalla revisione della partita, ad analisi conclusa: il pulsante **Analizza la posizione** nella barra del titolo apre la posizione mostrata.
 
 Entrambe le voci compaiono solo dove c'è il motore (Android, iOS e, con Stockfish installato, Windows e Linux), negli scacchi classici e fuori dalle partite di tornei e percorso; nel profilo bambino sono nascoste. Le varianti restano escluse perché Stockfish non analizza Chess960, Re della collina e Tre scacchi. La voce del menu è disattivata mentre il computer valuta una proposta di patta.
 
