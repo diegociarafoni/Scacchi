@@ -3,11 +3,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/l10n/app_localizations.dart';
+import 'package:scacchi/main.dart';
 import 'package:scacchi/progress/progress_controller.dart';
 import 'package:scacchi/progress/progress_state.dart';
 import 'package:scacchi/progress/progress_store.dart';
 import 'package:scacchi/settings/settings.dart';
 import 'package:scacchi/settings/settings_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   late Directory dir;
@@ -140,5 +142,55 @@ void main() {
     await tester.tap(find.text('Annulla'));
     await tester.pumpAndSettle();
     expect(settings.value.kidMode, isTrue);
+  });
+
+  testWidgets('RP-02 aspetto dell\'app: Sistema predefinito, poi Chiaro', (
+    tester,
+  ) async {
+    await show(tester);
+    ChoiceChip chip(String label) =>
+        tester.widget(find.widgetWithText(ChoiceChip, label));
+    expect(chip('Sistema').selected, isTrue);
+    expect(chip('Scuro').selected, isFalse);
+    await tapChip(tester, 'Chiaro');
+    expect(settings.value.themeMode, ThemeMode.light);
+    expect(chip('Chiaro').selected, isTrue);
+  });
+
+  testWidgets('RP-02 la scelta in Impostazioni cambia il tema dell\'app', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({});
+    tester.view.physicalSize = const Size(1170, 2532);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(const ScacchiApp());
+    await tester.pumpAndSettle();
+    ThemeMode? mode() =>
+        tester.widget<MaterialApp>(find.byType(MaterialApp)).themeMode;
+    expect(mode(), ThemeMode.system);
+
+    // L'apertura legge i progressi dal disco: serve l'I/O reale.
+    await tester.runAsync(() async {
+      await tester.tap(find.byTooltip('Impostazioni'));
+      for (
+        var i = 0;
+        i < 50 && find.byType(SettingsPage).evaluate().isEmpty;
+        i++
+      ) {
+        await Future<void>.delayed(const Duration(milliseconds: 20));
+        await tester.pump();
+      }
+    });
+    await tester.pumpAndSettle();
+    await tapChip(tester, 'Scuro');
+    expect(mode(), ThemeMode.dark);
+    expect(
+      SettingsScope.maybeOf(tester.element(find.byType(SettingsPage)))
+          ?.themeMode,
+      ThemeMode.dark,
+    );
+    await tapChip(tester, 'Sistema');
+    expect(mode(), ThemeMode.system);
   });
 }
