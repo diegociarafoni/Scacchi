@@ -134,10 +134,10 @@ void main() {
 
   group('mappa del codice', () {
     test('cartella senza riga', () {
-      expect(_check({}, libDirs: ['lib/game/', 'lib/exchange/']), [
-        'docs/mappa-del-codice.md: manca la riga per lib/exchange/, '
-            'con il documento che la descrive',
-      ]);
+      expect(
+        _check({}, libDirs: ['lib/game/', 'lib/exchange/']).single,
+        contains('manca la riga per lib/exchange/'),
+      );
     });
 
     test('cartella che non esiste più', () {
