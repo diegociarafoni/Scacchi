@@ -7,6 +7,7 @@ import 'choose.dart';
 import 'levels.dart';
 import 'style.dart';
 import 'uci.dart';
+import 'uci_moves.dart';
 import 'uci_transport.dart';
 
 /// Mossa scelta dal computer.
@@ -255,7 +256,7 @@ class ComputerPlayer {
     Position position = Chess.fromSetup(Setup.parseFen(initialFen));
     final history = <String>[];
     for (final move in moves) {
-      history.add(_standardUci(position, move));
+      history.add(standardUci(position, move));
       position = position.play(move);
     }
     _send(
@@ -297,10 +298,10 @@ class ComputerPlayer {
                 _lastCompleteIteration(byDepth, level.multiPv),
                 level.temperatureCp,
                 _random,
-                bonus: switch (level.style) {
-                  null => null,
-                  final style => (c) => _styleBonus(position, c, style),
-                },
+                bonus: level.style == null
+                    ? null
+                    : (c) => _styleBonus(position, c, level.style!),
+                windowCp: level.styleWindowCp,
               )
             : null) ??
         infos.values.where((i) => i.pv.first == engineMove).firstOrNull ??
@@ -318,7 +319,7 @@ class ComputerPlayer {
     }
 
     return EngineMove(
-      move: position.normalizeMove(NormalMove.fromUci(chosen.pv.first)),
+      move: moveFromStandardUci(position, chosen.pv.first),
       pv: chosen.pv,
       score: chosen.score,
       depth: chosen.depth,
@@ -326,11 +327,7 @@ class ComputerPlayer {
   }
 
   static int _styleBonus(Position position, InfoLine line, BotStyle style) =>
-      styleBonus(
-        position,
-        position.normalizeMove(NormalMove.fromUci(line.pv.first)),
-        style,
-      );
+      styleBonus(position, moveFromStandardUci(position, line.pv.first), style);
 
   /// Linee dell'iterazione più profonda in cui il motore ha valutato tutte
   /// le varianti richieste (o il massimo che ha prodotto).
@@ -354,18 +351,6 @@ class ComputerPlayer {
       }
     }
     return const [];
-  }
-
-  /// UCI standard: l'arrocco di dartchess (re su torre) diventa e1g1/e1c1.
-  static String _standardUci(Position position, Move move) {
-    final uci = move.uci;
-    if (move is! NormalMove ||
-        position.board.roleAt(move.from) != Role.king ||
-        position.board.pieceAt(move.to)?.color != position.turn) {
-      return uci;
-    }
-    final file = uci.codeUnitAt(2) > uci.codeUnitAt(0) ? 'g' : 'c';
-    return '${uci.substring(0, 2)}$file${uci[3]}';
   }
 
   Future<void> _applyLevel(EngineLevel level) => _applyOptions({

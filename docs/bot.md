@@ -24,23 +24,30 @@ Gli 8 bot sono in ordine di forza e formano la scala da superare uno dopo l'altr
 
 Lo stile non cambia la forza del motore: sposta la scelta tra le prime candidate. Il bot chiede a
 Stockfish almeno tre varianti (`MultiPV`) e somma alla valutazione di ciascuna un bonus in
-centipedoni, poi sceglie con una piccola variabilità (temperatura 25). Un matto a favore non viene
-mai scartato (`lib/engine/style.dart`).
+centipedoni. Un matto a favore non viene mai scartato e si gioca il più breve
+(`lib/engine/style.dart`, `lib/engine/choose.dart`).
 
 | Stile | Premia |
 |---|---|
 | Aggressivo | catture (+40) e scacchi (+40) |
 | Posizionale | arrocco (+60) e mosse tranquille, senza catture (+20) |
-| Gambettista | mosse che mettono il pezzo su una casa attaccata, senza catturare (+60), cioè offrono materiale |
+| Gambettista | mosse che mettono il pezzo su una casa dove perderebbe materiale (+60): attaccato e indifeso, o attaccato da un pezzo di valore minore |
 
-I bonus sono volutamente piccoli: un bot posiziona i pezzi a modo suo ma non regala la partita.
-Nei livelli alti la differenza si vede poco, perché le candidate sono molto vicine tra loro.
+Come lo stile si combina con la forza dipende dal livello su cui è costruito il bot:
+
+| Livelli | Come si ottiene la forza | Effetto dello stile |
+|---|---|---|
+| 1-4 (Pino, Chiara, Rocco, Marta) | scelta a caso tra le candidate con la temperatura del livello (35-300) | il bonus pesa sulla scelta; con temperature alte resta una tendenza più che una regola |
+| 5-7 (Duilio, Elena, Massimo) | limitatore Elo di Stockfish | nessuno sulla mossa, che resta quella del motore alla forza dichiarata; lo stile si vede nel libro e nelle frasi |
+| 8 (Stella) | piena forza | il bonus agisce solo tra candidate entro 30 cp dalla migliore, quindi la forza non cala |
 
 ## Libro d'apertura
 
 Ogni bot ha due linee d'apertura in UCI dalla posizione iniziale, valide per entrambi i colori:
-`Bot.bookMove(storia, random)` restituisce la mossa successiva di una linea compatibile con la
-partita finora, scegliendo a caso tra più linee. Se l'avversario devia o la linea finisce,
+`Bot.bookMoveFor(posizione iniziale, mosse, random)` restituisce la mossa successiva di una linea
+compatibile con la partita finora nel formato di dartchess, scegliendo a caso tra più linee. Le linee
+sono in UCI standard (l'arrocco è `e1g1`): la conversione da e verso l'arrocco di dartchess
+(re su torre) è in `lib/engine/uci_moves.dart`, la stessa usata per il motore. Se l'avversario devia o la linea finisce,
 restituisce `null` e si torna al motore.
 
 ## Frasi

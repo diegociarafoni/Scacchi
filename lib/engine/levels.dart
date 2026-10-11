@@ -16,6 +16,7 @@ class EngineLevel {
     this.temperatureCp = 0,
     this.minReply = Duration.zero,
     this.style,
+    this.styleWindowCp,
   });
 
   final int id;
@@ -46,7 +47,20 @@ class EngineLevel {
   /// Stile di un bot: sposta la scelta tra le candidate (RF-23).
   final BotStyle? style;
 
-  EngineLevel copyWith({Duration? movetime, Duration? minReply}) => EngineLevel(
+  /// Con lo stile, scarto massimo dalla migliore candidata (livello a piena forza).
+  final int? styleWindowCp;
+
+  EngineLevel copyWith({Duration? movetime, Duration? minReply}) =>
+      _copy(movetime: movetime, minReply: minReply);
+
+  EngineLevel _copy({
+    Duration? movetime,
+    Duration? minReply,
+    int? multiPv,
+    int? temperatureCp,
+    BotStyle? style,
+    int? styleWindowCp,
+  }) => EngineLevel(
     id: id,
     name: name,
     approxElo: approxElo,
@@ -54,31 +68,33 @@ class EngineLevel {
     movetime: movetime ?? this.movetime,
     uciElo: uciElo,
     depth: depth,
-    multiPv: multiPv,
-    temperatureCp: temperatureCp,
+    multiPv: multiPv ?? this.multiPv,
+    temperatureCp: temperatureCp ?? this.temperatureCp,
     minReply: minReply ?? this.minReply,
-    style: style,
+    style: style ?? this.style,
+    styleWindowCp: styleWindowCp ?? this.styleWindowCp,
   );
 
-  /// Stessa forza di base, ma sceglie tra almeno [multiPv] candidate con il
-  /// bonus di [style] e la [temperatureCp] data (RF-23).
+  /// Livello di un bot con lo stile [style] (RF-23). Dove la forza viene dalla
+  /// scelta tra più candidate (livelli 1-4) lo stile pesa su quella scelta;
+  /// a piena forza (livello 8) entra solo tra candidate entro
+  /// [fullStrengthWindowCp] dalla migliore, quindi la forza non cala; dove la
+  /// forza viene dal limitatore Elo di Stockfish (livelli 5-7) la mossa resta
+  /// quella del motore e lo stile si esprime con libro e frasi.
   EngineLevel withStyle(
     BotStyle style, {
-    int multiPv = 3,
     int temperatureCp = 0,
-  }) => EngineLevel(
-    id: id,
-    name: name,
-    approxElo: approxElo,
-    skill: skill,
-    movetime: movetime,
-    uciElo: uciElo,
-    depth: depth,
-    multiPv: math.max(this.multiPv, multiPv),
-    temperatureCp: math.max(this.temperatureCp, temperatureCp),
-    minReply: minReply,
-    style: style,
-  );
+    int fullStrengthWindowCp = 30,
+  }) {
+    if (uciElo != null) return _copy(style: style);
+    final fullStrength = this.temperatureCp == 0 && multiPv == 1;
+    return _copy(
+      multiPv: math.max(multiPv, 3),
+      temperatureCp: math.max(this.temperatureCp, temperatureCp),
+      style: style,
+      styleWindowCp: fullStrength ? fullStrengthWindowCp : null,
+    );
+  }
 
   /// Riflessione e attesa ridotte a una quota del tempo residuo più l'incremento.
   EngineLevel withinClock(Duration remaining, Duration increment) {

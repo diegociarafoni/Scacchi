@@ -58,13 +58,28 @@ void main() {
       },
     );
 
-    test('RF-23 il livello del bot porta lo stile e più candidate', () {
+    test('RF-23 il livello del bot porta lo stile senza cambiare la forza', () {
       for (final bot in bots) {
         final level = bot.level;
+        final base = engineLevel(bot.levelId);
         expect(level.style, bot.style);
-        expect(level.multiPv, greaterThanOrEqualTo(3));
         expect(level.id, bot.levelId);
+        expect(level.uciElo, base.uciElo);
+        if (base.uciElo != null) {
+          expect(
+            level.multiPv,
+            1,
+            reason: '${bot.id}: resta il limitatore Elo',
+          );
+        } else {
+          expect(level.multiPv, greaterThanOrEqualTo(3));
+        }
       }
+    });
+
+    test('RF-23 a piena forza lo stile sceglie solo tra candidate vicine', () {
+      expect(bots.last.level.styleWindowCp, isNotNull);
+      expect(bots.first.level.styleWindowCp, isNull);
     });
   });
 
@@ -79,6 +94,39 @@ void main() {
       );
       expect(_test.bookMove(const ['e2e4', 'e7e5', 'g1f3'], random), 'b8c6');
     });
+
+    test(
+      'RF-23 l\'arrocco del libro e della partita usa il formato dartchess',
+      () {
+        const castler = Bot(
+          id: 'arroccatore',
+          name: 'Arroccatore',
+          avatar: '🏰',
+          levelId: 3,
+          style: BotStyle.positional,
+          openingName: 'Italiana',
+          book: [
+            ['e2e4', 'e7e5', 'g1f3', 'b8c6', 'f1c4', 'f8c5', 'e1g1', 'g8f6'],
+          ],
+        );
+        final random = math.Random(1);
+        final opening = ['e2e4', 'e7e5', 'g1f3', 'b8c6', 'f1c4', 'f8c5'];
+        Position position = Chess.initial;
+        final moves = <Move>[];
+        for (final uci in opening) {
+          final move = NormalMove.fromUci(uci);
+          moves.add(move);
+          position = position.play(move);
+        }
+        final castle = castler.bookMoveFor(Chess.initial, moves, random);
+        expect(castle, NormalMove.fromUci('e1h1'));
+        moves.add(castle!);
+        expect(
+          castler.bookMoveFor(Chess.initial, moves, random),
+          NormalMove.fromUci('g8f6'),
+        );
+      },
+    );
 
     test('RF-23 esce dal libro se l\'avversario devia o la linea finisce', () {
       final random = math.Random(1);

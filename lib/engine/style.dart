@@ -11,15 +11,12 @@ int styleBonus(Position position, Move move, BotStyle style) {
   if (piece == null) return 0;
   final target = position.board.pieceAt(move.to);
   final castling =
-      piece.role == Role.king &&
-      ((target != null && target.color == piece.color) ||
-          (move.to.file - move.from.file).abs() == 2);
-  final capture =
-      !castling &&
-      (target != null ||
-          (piece.role == Role.pawn &&
-              move.to.file != move.from.file &&
-              position.board.pieceAt(move.to) == null));
+      piece.role == Role.king && target != null && target.color == piece.color;
+  final enPassant =
+      piece.role == Role.pawn &&
+      target == null &&
+      move.to.file != move.from.file;
+  final capture = !castling && (target != null || enPassant);
   final after = position.playUnchecked(move);
   switch (style) {
     case BotStyle.aggressive:
@@ -30,11 +27,30 @@ int styleBonus(Position position, Move move, BotStyle style) {
       return capture ? 0 : _positionalQuiet;
     case BotStyle.gambitist:
       if (capture || castling || piece.role == Role.king) return 0;
-      return after.board.attacksTo(move.to, after.turn).isNotEmpty
-          ? _gambitOffer
-          : 0;
+      return _offersMaterial(after, move.to, piece.role) ? _gambitOffer : 0;
   }
 }
+
+/// Il pezzo mosso in [square] è attaccato e perderebbe materiale in uno
+/// scambio: nessun difensore, o un attaccante di valore minore.
+bool _offersMaterial(Position after, Square square, Role role) {
+  final attackers = after.board.attacksTo(square, after.turn);
+  if (attackers.isEmpty) return false;
+  final defenders = after.board.attacksTo(square, after.turn.opposite);
+  if (defenders.isEmpty) return true;
+  final cheapest = attackers.squares
+      .map((s) => _value(after.board.roleAt(s)!))
+      .reduce((a, b) => a < b ? a : b);
+  return cheapest < _value(role);
+}
+
+int _value(Role role) => switch (role) {
+  Role.pawn => 1,
+  Role.knight || Role.bishop => 3,
+  Role.rook => 5,
+  Role.queen => 9,
+  Role.king => 100,
+};
 
 const _aggressiveCapture = 40;
 const _aggressiveCheck = 40;

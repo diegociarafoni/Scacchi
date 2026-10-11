@@ -66,4 +66,39 @@ void main() {
     );
     expect(chosen!.pv.first, 'd1h5');
   });
+
+  test(
+    'RF-23 tra due matti gioca il più breve anche con un bonus di stile',
+    () {
+      final mates = [
+        const InfoLine(multipv: 1, pv: ['d1h5'], score: EngineScore.mate(1)),
+        const InfoLine(multipv: 2, pv: ['f1c4'], score: EngineScore.mate(3)),
+      ];
+      final chosen = chooseCandidate(
+        mates,
+        0,
+        math.Random(1),
+        bonus: (c) => c.pv.first == 'f1c4' ? 40 : 0,
+      );
+      expect(chosen!.pv.first, 'd1h5');
+    },
+  );
+
+  test('RF-23 con la finestra il bonus non porta fuori dalle migliori', () {
+    final chosen = chooseCandidate(
+      candidates,
+      0,
+      math.Random(1),
+      bonus: (c) => c.pv.first == 'a2a3' ? 100 : 0,
+      windowCp: 20,
+    );
+    expect(chosen!.pv.first, 'e2e4');
+    final loose = chooseCandidate(
+      candidates,
+      0,
+      math.Random(1),
+      bonus: (c) => c.pv.first == 'a2a3' ? 100 : 0,
+    );
+    expect(loose!.pv.first, 'a2a3');
+  });
 }

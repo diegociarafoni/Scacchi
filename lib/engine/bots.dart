@@ -1,7 +1,10 @@
 import 'dart:math' as math;
 
+import 'package:dartchess/dartchess.dart';
+
 import 'levels.dart';
 import 'style.dart';
+import 'uci_moves.dart';
 
 /// Momenti della partita in cui un bot può commentare (RF-23).
 enum BotEvent { start, check, capture, mistake, win, loss, draw }
@@ -38,8 +41,22 @@ class Bot {
   EngineLevel get level =>
       engineLevel(levelId).withStyle(style, temperatureCp: _styleTemperature);
 
-  /// Prossima mossa del libro dopo [history] (mosse UCI già giocate), o `null`
-  /// se la partita ne è uscita o la linea è finita.
+  /// Prossima mossa del libro dopo [moves] giocate da [initial], nel formato
+  /// di dartchess, o `null` se la partita ne è uscita o la linea è finita.
+  Move? bookMoveFor(Position initial, List<Move> moves, math.Random random) {
+    var position = initial;
+    final history = <String>[];
+    for (final move in moves) {
+      history.add(standardUci(position, move));
+      position = position.play(move);
+    }
+    final uci = bookMove(history, random);
+    if (uci == null) return null;
+    final move = moveFromStandardUci(position, uci);
+    return position.isLegal(move) ? move : null;
+  }
+
+  /// Come [bookMoveFor], con mosse in UCI standard (l'arrocco è e1g1).
   String? bookMove(List<String> history, math.Random random) {
     final next = <String>[
       for (final line in book)

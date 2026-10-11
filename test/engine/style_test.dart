@@ -32,6 +32,16 @@ void main() {
     expect(styleBonus(tactical, mv('e4d5'), BotStyle.gambitist), 0);
   });
 
+  test('RF-23 il gambettista non premia una casa difesa da pari valore', () {
+    // Il cavallo in e5 è attaccato dal pedone d6 ma difeso dal pedone d4:
+    // il pedone vale meno del cavallo, quindi è davvero un'offerta.
+    final knight = pos('4k3/8/3p4/8/3P4/5N2/8/4K3 w - - 0 1');
+    expect(styleBonus(knight, mv('f3e5'), BotStyle.gambitist), 60);
+    // Il pedone in e5 è attaccato da d6 ma difeso da d4: scambio alla pari.
+    final pawn = pos('4k3/8/3p4/8/3PP3/8/8/4K3 w - - 0 1');
+    expect(styleBonus(pawn, mv('e4e5'), BotStyle.gambitist), 0);
+  });
+
   test('RF-23 l\'en passant conta come cattura', () {
     final ep = pos('4k3/8/8/3pP3/8/8/8/4K3 w - d6 0 1');
     expect(styleBonus(ep, mv('e5d6'), BotStyle.aggressive), 40);

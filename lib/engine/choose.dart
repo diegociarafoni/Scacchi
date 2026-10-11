@@ -4,21 +4,34 @@ import 'uci.dart';
 
 /// Sceglie una candidata con probabilità proporzionale a
 /// exp((score - migliore) / temperatureCp). Con temperatura 0, una sola
-/// candidata o un matto a favore restituisce la migliore. Il [bonus]
-/// (stile di un bot) si somma alla valutazione, ma non scavalca un matto.
+/// candidata restituisce la migliore; un matto a favore vince sempre, il più
+/// breve. Il [bonus] (stile di un bot) si somma alla valutazione; con
+/// [windowCp] restano in gara solo le candidate entro quei centipedoni dalla
+/// migliore.
 InfoLine? chooseCandidate(
   List<InfoLine> candidates,
   int temperatureCp,
   math.Random random, {
   int Function(InfoLine)? bonus,
+  int? windowCp,
 }) {
   if (candidates.isEmpty) return null;
-  int value(InfoLine c) => (c.score?.comparable ?? 0) + (bonus?.call(c) ?? 0);
-  final sorted = [...candidates]..sort((a, b) => value(b) - value(a));
+  int raw(InfoLine c) => c.score?.comparable ?? 0;
+  var pool = candidates;
+  if (windowCp != null) {
+    final top = candidates.map(raw).reduce(math.max);
+    pool = [
+      for (final c in candidates)
+        if (raw(c) >= top - windowCp) c,
+    ];
+  }
+  int value(InfoLine c) => raw(c) + (bonus?.call(c) ?? 0);
+  final sorted = [...pool]..sort((a, b) => value(b) - value(a));
   final best = sorted.first;
+  final mating = sorted.where((c) => (c.score?.mate ?? 0) > 0).toList()
+    ..sort((a, b) => raw(b) - raw(a));
+  if (mating.isNotEmpty) return mating.first;
   if (temperatureCp <= 0 || sorted.length == 1) return best;
-  final mating = sorted.where((c) => (c.score?.mate ?? 0) > 0).firstOrNull;
-  if (mating != null) return mating;
 
   final top = value(best);
   final weights = [
