@@ -4,7 +4,7 @@
 
 Le mosse legali sono generate da `dartchess` e comprendono tutte le regole degli scacchi standard: arrocco corto e lungo, presa en passant, promozione a donna, torre, alfiere o cavallo, divieto di lasciare il proprio re sotto scacco.
 
-Una mossa di pedone che raggiunge l'ultima traversa senza indicare il pezzo di promozione è rifiutata. Il controllo è in `isPlayableMove` (`lib/game/chess_game.dart`), usato da `ChessGame.play`, `ChessGame.replay`, dall'inserimento testuale delle mosse, dalla conferma della mossa e dall'esploratore delle aperture. La scacchiera (`chessground`) chiede sempre il pezzo prima di inviare la mossa.
+Una mossa di pedone che raggiunge l'ultima traversa senza indicare il pezzo di promozione è rifiutata. Il controllo è in `isPlayableMove` (`lib/game/chess_game.dart`), usato da `ChessGame.play`, `ChessGame.replay`, dall'inserimento testuale delle mosse e dall'esploratore delle aperture. La scacchiera (`chessground`) chiede sempre il pezzo prima di inviare la mossa.
 
 Ogni mossa giocata viene registrata in notazione algebrica standard (SAN), per esempio `e4`, `Nf3`, `O-O`, `exd5`, `e8=Q`, `Qxf7#`.
 
