@@ -38,12 +38,12 @@ const _weekdays = {
 };
 
 const _roles = {
-  Role.king: 're',
-  Role.queen: 'donna',
-  Role.rook: 'torre',
-  Role.bishop: 'alfiere',
-  Role.knight: 'cavallo',
-  Role.pawn: 'pedone',
+  Role.king: 'con il re',
+  Role.queen: 'con la donna',
+  Role.rook: 'con la torre',
+  Role.bishop: 'con l\'alfiere',
+  Role.knight: 'con il cavallo',
+  Role.pawn: 'con il pedone',
 };
 
 /// Scheda degli ultimi sette giorni, condivisibile come immagine.
@@ -67,6 +67,7 @@ class _PortraitPageState extends State<PortraitPage> {
   final _card = GlobalKey();
   PlayerPortrait? _portrait;
   bool _failed = false;
+  bool _sharing = false;
   String? _message;
 
   @override
@@ -82,7 +83,7 @@ class _PortraitPageState extends State<PortraitPage> {
       if (mounted) {
         setState(() => _portrait = PlayerPortrait.from(games, now: now));
       }
-    } on FileSystemException catch (e) {
+    } on Object catch (e) {
       debugPrint('Lettura dell\'archivio non riuscita: $e');
       if (mounted) setState(() => _failed = true);
     }
@@ -91,19 +92,25 @@ class _PortraitPageState extends State<PortraitPage> {
   Future<void> _share() async {
     final boundary =
         _card.currentContext?.findRenderObject() as RenderRepaintBoundary?;
-    if (boundary == null) return;
+    if (boundary == null || _sharing) return;
+    _sharing = true;
     try {
       final image = await boundary.toImage(pixelRatio: 3);
       final data = await image.toByteData(format: ui.ImageByteFormat.png);
+      image.dispose();
       if (data == null) return;
       final to = _portrait!.to;
+      String two(int n) => n.toString().padLeft(2, '0');
       await widget.share(
         data.buffer.asUint8List(),
-        'scacchi-settimana-${to.year}-${to.month}-${to.day}.png',
+        'scacchi-settimana-${to.year}-${two(to.month)}-${two(to.day)}.png',
       );
+      if (mounted) setState(() => _message = null);
     } on Object catch (e) {
       debugPrint('Condivisione non riuscita: $e');
       if (mounted) setState(() => _message = 'Condivisione non riuscita');
+    } finally {
+      _sharing = false;
     }
   }
 
@@ -168,7 +175,7 @@ class _Card extends StatelessWidget {
       if (p.matingPiece case final r?)
         (
           'Matto preferito',
-          'con la ${_roles[r]}, ${p.matingGames} '
+          '${_roles[r]}, ${p.matingGames} '
               '${p.matingGames == 1 ? 'volta' : 'volte'}',
         ),
       if (p.strongestBeaten case final e?)

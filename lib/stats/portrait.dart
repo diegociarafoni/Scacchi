@@ -28,8 +28,7 @@ class PlayerPortrait {
     final mine = [
       for (final g in games)
         if (g.mode != SavedGame.imported &&
-            g.finished &&
-            g.playerSide != null &&
+            g.playerScore != null &&
             !g.createdAt.isBefore(since) &&
             !g.createdAt.isAfter(now))
           g,
@@ -128,6 +127,8 @@ Role? _matingRole(SavedGame g) {
   }
   return switch (game.moves.last.san[0]) {
     'K' => Role.king,
+    // L'arrocco dà matto con la torre.
+    'O' => Role.rook,
     'Q' => Role.queen,
     'R' => Role.rook,
     'B' => Role.bishop,

@@ -89,6 +89,10 @@ void main() {
     expect(p.matingGames, 3);
   });
 
+  test('un risultato non riconosciuto non rompe il ritratto', () {
+    expect(portrait([game('0-0'), game('1-0')]).score.games, 1);
+  });
+
   test('il matto subito non conta', () {
     final p = portrait([game('0-1', movetext: _fools)]);
     expect(p.matingPiece, isNull);
