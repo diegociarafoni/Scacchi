@@ -171,6 +171,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// simbolo sulla casa d'arrivo, come nella revisione.
   ({int ply, Square square, MoveClass verdict})? _badge;
   String? _hintedFen;
+  Shape? _hintShape;
   late CoachSession _coach = _newCoach();
 
   CoachSession _newCoach() => CoachSession(
@@ -798,6 +799,15 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   /// Il giudizio resta sulla casa finché è la mossa dell'utente o la risposta
   /// del computer non la occupa; non si mostra sfogliando la cronologia.
+  /// Il suggerimento resta finché la posizione è quella per cui è stato dato.
+  Set<Shape> _hintShapes() {
+    final shape = _hintShape;
+    if (shape == null || _hintedFen != _game.position.fen || _viewPly != null) {
+      return const {};
+    }
+    return {shape};
+  }
+
   Map<Square, Annotation> _badgeAnnotations() {
     final badge = _badge;
     if (badge == null || _viewPly != null || !_coachOn) return const {};
@@ -895,6 +905,12 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       return;
     }
     _hintedFen = position.fen;
+    const color = Color(0xCC15781B);
+    setState(
+      () => _hintShape = level == HintLevel.piece
+          ? Circle(color: color, orig: hint!.from)
+          : Arrow(color: color, orig: hint!.from, dest: hint.to!),
+    );
     _showMessage(
       level == HintLevel.piece
           ? 'Prova a muovere il pezzo in ${hint.from.name}.'
@@ -1714,13 +1730,20 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           : _resign,
       // Nelle sfide niente aiuti: né suggerimenti né ripetizione della mossa.
       coachOn: _computerSide == null || _isChallenge ? null : _coachOn,
-      onCoach: () => setState(() {
-        _coachOn = !_coachOn;
-        if (!_coachOn) _badge = null;
-      }),
-      onHint: _coachOn && _humanToMove && _pendingMove == null
-          ? _giveHint
-          : null,
+      onCoach: () {
+        setState(() {
+          _coachOn = !_coachOn;
+          if (!_coachOn) _badge = null;
+        });
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        _showMessage(
+          _coachOn
+              ? 'Allenatore attivo: ti avviso se sbagli una mossa.'
+              : 'Allenatore disattivato.',
+        );
+      },
+      hintAvailable: _computerSide != null && !_isChallenge,
+      onHint: _humanToMove && _pendingMove == null ? _giveHint : null,
     );
     // Il libro delle aperture vale solo per gli scacchi classici; ai bambini
     // i nomi delle aperture non dicono nulla, quelli delle varianti sì (una
@@ -1853,6 +1876,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                   onMove: _onMove,
                   settings: boardSettings,
                   annotations: _badgeAnnotations(),
+                  shapes: _hintShapes(),
                 ),
               );
               final viewPly = _viewPly;
@@ -2116,7 +2140,7 @@ class _ActionLabels {
     this.draw = 'Patta',
     this.resign = 'Abbandona',
     this.coach = 'Allenatore',
-    this.hint = 'Aiuto',
+    this.hint = 'Suggerisci',
   });
 
   final String newGame;
@@ -2138,6 +2162,7 @@ class _GameActions extends StatelessWidget {
     required this.onResign,
     required this.coachOn,
     required this.onCoach,
+    required this.hintAvailable,
     required this.onHint,
   });
 
@@ -2151,6 +2176,9 @@ class _GameActions extends StatelessWidget {
   /// `null` nella partita tra due persone, dove l'allenatore non c'è.
   final bool? coachOn;
   final VoidCallback onCoach;
+
+  /// Il suggerimento non dipende dall'allenatore, ma non c'è nelle sfide.
+  final bool hintAvailable;
   final VoidCallback? onHint;
 
   @override
@@ -2169,9 +2197,18 @@ class _GameActions extends StatelessWidget {
               coachOn! ? Icons.school : Icons.school_outlined,
               labels.coach,
               onCoach,
+              highlighted: coachOn!,
+              tooltip: 'Ti avvisa quando sbagli una mossa e ti fa riprenderla',
             ),
-          if (coachOn ?? false)
-            _ActionButton(Icons.lightbulb_outline, labels.hint, onHint),
+          if (hintAvailable)
+            _ActionButton(
+              Icons.lightbulb_outline,
+              labels.hint,
+              onHint,
+              tooltip:
+                  'Primo tocco: evidenzia il pezzo da muovere. '
+                  'Secondo tocco: mostra la freccia della mossa migliore',
+            ),
         ],
       ),
     );
@@ -2179,27 +2216,42 @@ class _GameActions extends StatelessWidget {
 }
 
 class _ActionButton extends StatelessWidget {
-  const _ActionButton(this.icon, this.label, this.onPressed);
+  const _ActionButton(
+    this.icon,
+    this.label,
+    this.onPressed, {
+    this.highlighted = false,
+    this.tooltip,
+  });
 
   final IconData icon;
   final String label;
   final VoidCallback? onPressed;
 
+  /// Comando acceso, come l'allenatore.
+  final bool highlighted;
+  final String? tooltip;
+
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     final color = onPressed == null
         ? Theme.of(context).disabledColor
-        : Theme.of(context).colorScheme.onSurface;
-    return Expanded(
-      child: InkWell(
-        onTap: onPressed,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: color),
-            const SizedBox(height: 4),
-            // Con sei pulsanti le etichette lunghe si rimpiccioliscono.
-            FittedBox(
+        : highlighted
+        ? scheme.primary
+        : scheme.onSurface;
+    Widget button = InkWell(
+      onTap: onPressed,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, color: color),
+          const SizedBox(height: 4),
+          // Con sette pulsanti le etichette lunghe si rimpiccioliscono, con
+          // un margine per non toccare quelle vicine.
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 2),
+            child: FittedBox(
               fit: BoxFit.scaleDown,
               child: Text(
                 label,
@@ -2207,10 +2259,14 @@ class _ActionButton extends StatelessWidget {
                     ?.copyWith(color: color),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
+    if (tooltip != null && onPressed != null) {
+      button = Tooltip(message: tooltip, child: button);
+    }
+    return Expanded(child: button);
   }
 }
 
