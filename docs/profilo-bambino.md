@@ -6,6 +6,8 @@ Requisito RP-06, sul modello di ChessKid: interfaccia semplificata, testi più s
 
 Impostazioni, sezione «Profilo», interruttore «Profilo bambino». La scelta è salvata in locale (chiave `kidMode`) e rientra nel backup come le altre impostazioni. Si applica subito, senza riavviare l'app.
 
+Per disattivarlo serve un adulto, come nel controllo genitori di ChessKid: compare la domanda «Chiedi a un adulto» con una moltiplicazione tra 6 e 9 (per esempio 7 × 8). Con una risposta sbagliata o con Annulla il profilo resta attivo.
+
 ## Cosa cambia
 
 | Area | Profilo bambino | Stato |
@@ -21,7 +23,8 @@ Se il profilo si attiva mentre è aperta la scheda Aperture, si torna alla sched
 ## Codice
 
 - `AppSettings.kidMode` in `lib/settings/settings.dart`.
-- `HomeShell` ascolta le impostazioni e passa `simple` a `YouPage`.
+- `askAdult` in `lib/settings/adult_gate.dart`: domanda per l'adulto.
+- `HomeShell` ascolta solo i cambi di `kidMode` e passa `simple` a `YouPage`.
 - I testi del profilo sono nei file `.arb` con prefisso `kid`; le descrizioni dei bot hanno prefisso `kidBot`.
 - Bot amichevoli: `friendlyBots` e `Bot.phrases(evento, friendly: true)` in `lib/engine/bots.dart`, `GameSetup.forKids()` e `OpponentPicker(kidMode: ...)` in `lib/game/opponent_picker.dart`; `GamePage` passa `kidMode` ai pannelli e alle frasi.
 - Test: `test/engine/kid_bots_test.dart`, `test/game/kid_opponent_picker_test.dart`, `test/kid_bot_game_test.dart`.

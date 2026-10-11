@@ -7,6 +7,7 @@ import '../backup/backup_page.dart';
 import '../l10n/app_localizations.dart';
 import '../progress/progress_controller.dart';
 import '../progress/rewards.dart';
+import 'adult_gate.dart';
 import 'board_preview.dart';
 import 'settings.dart';
 
@@ -48,7 +49,10 @@ class SettingsPage extends StatelessWidget {
                       title: Text(l10n.kidProfile),
                       subtitle: Text(l10n.kidProfileDescription),
                       value: s.kidMode,
-                      onChanged: (v) => set((c) => c.copyWith(kidMode: v)),
+                      onChanged: (v) async {
+                        if (!v && !await askAdult(context)) return;
+                        set((c) => c.copyWith(kidMode: v));
+                      },
                     ),
                     const _Header('Scacchiera'),
                     SwitchListTile(

@@ -102,8 +102,43 @@ void main() {
     await tester.tap(toggle);
     await tester.pumpAndSettle();
     expect(settings.value.kidMode, isTrue);
-    await tester.tap(toggle);
+  });
+
+  testWidgets('RP-06 per uscire dal profilo bambino serve un adulto', (
+    tester,
+  ) async {
+    await settings.update(settings.value.copyWith(kidMode: true));
+    await show(tester);
+    await tester.tap(find.byKey(const Key('kidMode')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('adultGate')), findsOneWidget);
+
+    await tester.enterText(find.byKey(const Key('adultAnswer')), '1');
+    await tester.tap(find.text('Conferma'));
+    await tester.pumpAndSettle();
+    expect(settings.value.kidMode, isTrue);
+    expect(find.text('Risposta sbagliata.'), findsOneWidget);
+
+    final question = tester
+        .widget<Text>(find.byKey(const Key('adultQuestion')))
+        .data!;
+    final factors = RegExp(r'(\d+) × (\d+)').firstMatch(question)!;
+    final answer = int.parse(factors.group(1)!) * int.parse(factors.group(2)!);
+    await tester.enterText(find.byKey(const Key('adultAnswer')), '$answer');
+    await tester.tap(find.text('Conferma'));
     await tester.pumpAndSettle();
     expect(settings.value.kidMode, isFalse);
+  });
+
+  testWidgets('RP-06 annullando la domanda il profilo resta attivo', (
+    tester,
+  ) async {
+    await settings.update(settings.value.copyWith(kidMode: true));
+    await show(tester);
+    await tester.tap(find.byKey(const Key('kidMode')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Annulla'));
+    await tester.pumpAndSettle();
+    expect(settings.value.kidMode, isTrue);
   });
 }

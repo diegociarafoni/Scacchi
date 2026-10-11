@@ -16,6 +16,30 @@
   "@kidProfileDescription": {
     "description": "Spiegazione sotto l'interruttore del profilo bambino"
   },
+  "kidAdultGateTitle": "Chiedi a un adulto",
+  "@kidAdultGateTitle": {
+    "description": "Titolo della domanda per uscire dal profilo bambino"
+  },
+  "kidAdultGateQuestion": "Per uscire dal profilo bambino: quanto fa {a} × {b}?",
+  "@kidAdultGateQuestion": {
+    "description": "Moltiplicazione da risolvere per uscire dal profilo bambino",
+    "placeholders": {
+      "a": {
+        "type": "int"
+      },
+      "b": {
+        "type": "int"
+      }
+    }
+  },
+  "kidAdultGateWrong": "Risposta sbagliata.",
+  "@kidAdultGateWrong": {
+    "description": "Errore sotto il campo della risposta"
+  },
+  "kidAdultGateConfirm": "Conferma",
+  "@kidAdultGateConfirm": {
+    "description": "Pulsante che controlla la risposta"
+  },
   "kidBotPinoDescription": "Un pulcino allegro che ama attaccare",
   "@kidBotPinoDescription": {
     "description": "Descrizione amichevole del bot Pino nel profilo bambino (RP-06), al posto di Elo, stile e apertura"
