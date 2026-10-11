@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dartchess/dartchess.dart';
 
 import '../engine/uci.dart';
+import '../l10n/app_localizations.dart';
 import '../review/board_utils.dart';
 import '../review/coach.dart';
 import '../review/game_review.dart';
@@ -51,7 +52,12 @@ class CoachSession {
   /// sulla stessa posizione contano come uno.
   int get hintsUsed => _hinted.length;
 
-  Future<MoveVerdict> judge(Position before, Move move) async {
+  /// Con [kid] (profilo bambino, RP-06) la spiegazione non cita numeri.
+  Future<MoveVerdict> judge(
+    Position before,
+    Move move, {
+    AppLocalizations? kid,
+  }) async {
     final review = await reviewGame(
       initial: before,
       moves: [move],
@@ -60,7 +66,7 @@ class CoachSession {
     final m = review!.moves.single;
     return MoveVerdict(
       m,
-      explainMove(m),
+      explainMove(m, kid: kid),
       shouldWarn: warnsFor(m.classification, warnFrom),
     );
   }

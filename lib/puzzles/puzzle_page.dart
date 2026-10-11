@@ -5,6 +5,7 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../progress/activity.dart';
 import '../progress/progress_feedback.dart';
 import '../settings/settings.dart';
@@ -215,7 +216,10 @@ class _PuzzlePageState extends State<PuzzlePage> {
     final side = _session.puzzle.playerSide == Side.white ? 'Bianco' : 'Nero';
     final rating = widget.trainer.rating.rating.round();
     final delta = _delta;
-    final outcome = _repeat
+    // Profilo bambino (RP-06): l'esito non cita il punteggio.
+    final outcome = AppSettings.of(context).kidMode
+        ? ''
+        : _repeat
         ? ' Già visto: punteggio invariato.'
         : delta == null
         ? ''
@@ -252,6 +256,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
         .whereType<String>()
         .take(3)
         .join(', ');
+    final kid = AppSettings.of(context).kidMode;
     return Scaffold(
       appBar: AppBar(title: Text(widget.title)),
       body: SafeArea(
@@ -304,6 +309,12 @@ class _PuzzlePageState extends State<PuzzlePage> {
                             child: Text(
                               last
                                   ? 'Non ci sono altri puzzle per ora.'
+                                  : kid
+                                  // Restano i temi, senza difficoltà né punteggio.
+                                  ? (done
+                                        ? themes
+                                        : AppLocalizations.of(context)
+                                              .kidPuzzleKeepGoing)
                                   : done
                                   ? 'Puzzle ${puzzle.rating}'
                                         '${themes.isEmpty ? '' : ' · $themes'}'

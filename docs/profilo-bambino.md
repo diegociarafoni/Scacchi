@@ -15,7 +15,7 @@ Per disattivarlo serve un adulto, come nel controllo genitori di ChessKid: compa
 | Barra in basso | Tre schede: Gioca, Puzzle, Tu (le Aperture sono nascoste) | Disponibile |
 | Scheda Tu | Solo Profilo, Percorso e Minigiochi; nascoste Statistiche, La tua settimana, Scacchiera fisica e Archivio | Disponibile |
 | Avversari | Nella nuova partita solo «Due giocatori» e «Bot» (niente «Computer» con livello ed Elo). I bot sono i tre più facili della scala, Pino, Chiara e Rocco, con avatar, nome e una breve descrizione al posto di Elo, stile e apertura; restano lucchetti e spunta, senza la data della vittoria. In partita il bot ha frasi brevi e incoraggianti e il titolo non mostra l'Elo. Se l'ultima scelta era il computer o un bot più forte, si ripiega su Pino. Senza motore compare «Su questo dispositivo i bot non sono disponibili.» | Disponibile |
-| Numeri | Niente rating, precisione e punteggi del motore | In sviluppo |
+| Numeri | Niente rating, XP, precisione e punteggi del motore: stelle, fiamme e parole al loro posto (dettagli sotto) | Disponibile |
 | Testi | Frasi brevi e semplici in partita (vedi sotto) | Disponibile |
 | Partita | Senza analisi, revisione ed editor di posizione; le nuove partite solo a scacchi classici, senza tempo o con una cadenza lenta | Disponibile |
 
@@ -32,6 +32,27 @@ Se il profilo si attiva mentre è aperta la scheda Aperture, si torna alla sched
 - Gli annunci per i lettori di schermo usano le stesse frasi, anche per resa e pareggio concordato.
 
 Una partita contro un bot o il computer resta com'è iniziata: avversario e frasi seguono il profilo attivo all'inizio della partita, e il cambio vale dalla partita successiva. Elo e livello sotto il titolo restano nascosti finché il profilo è attivo, e in tutta la partita se è iniziata con il profilo.
+
+## Niente numeri
+
+Il criterio: spariscono i numeri che **misurano** il bambino (punteggi, XP, percentuali, valutazioni del motore, conteggi e record); restano quelli che **descrivono un compito** (titoli di sfide e traguardi come «Risolvi 3 puzzle», nomi dei temi come «Matto in 1», numeri delle mosse e coordinate della scacchiera).
+
+Le stelle si fermano a dieci (`kidMaxStars`): una fila più lunga si conterebbe e tornerebbe a essere un numero.
+
+| Schermata | Al posto dei numeri |
+|---|---|
+| Notifica dei progressi | «Bravo, continua così!» invece di «+N XP»; nuovo livello, obiettivo, sfide, traguardi e ricompense diventano frasi senza cifre; la ricompensa non ha il nome (solo italiano), così in inglese le lingue non si mescolano; record e scudo della serie (che nel profilo bambino non si vede) non si annunciano |
+| Scheda Tu | Intestazione con stelle del livello e fiamma della serie, senza «Livello N» e «N giorni di fila» |
+| Profilo | Livello come una stella per livello («Le tue stelle»); barra del livello senza «XP / XP»; serie come fiamma accesa o spenta, senza giorni, record e protezioni; barra dell'obiettivo senza conteggio; sfide con la barra ma senza «n/m»; sezione Record personali nascosta; nascosta anche la sezione Impostazioni (interruttore degli XP, obiettivo, giorno di riposo, promemoria), scelte da adulti |
+| Sblocchi | Avatar, cornici, temi e pezzi bloccati dicono «Si sblocca giocando» invece di «Livello N» o del traguardo, anche nel testo per i lettori di schermo e nell'avviso delle Impostazioni |
+| Hub dei puzzle | Niente punteggio né contatori: una stella per puzzle risolto (fino a dieci); niente difficoltà del puzzle del giorno né numero di puzzle da ripassare; nascoste le modalità a tempo (Storm, Sopravvivenza, Serie), costruite su punti, errori e record; nei temi spariscono i conteggi |
+| Puzzle | Nessun punteggio né variazione dopo il puzzle; sotto la scacchiera «Forza, ce la puoi fare!» e, a puzzle concluso, solo i temi |
+| Revisione | Precisione da una a cinque stelle (una ogni 20 punti interi: sotto 40 una, da 80 a 99,9 quattro, 100 cinque) con un giudizio a parole («Perfetto!», «Molto bene», «Bene», «Così così», «Da migliorare»); niente Elo stimato né conteggi per categoria; le classificazioni delle mosse restano a simboli e parole; «Sto guardando la partita…» durante l'analisi; il coach dice «potevi dare scacco matto con…» e «perdi dei pezzi» invece di «matto in N» e «circa N pedoni» |
+| Analisi e barra di valutazione | La barra resta, senza cifre; il lettore di schermo dice solo chi è avanti (fascia di parità tra 40 e 60% di probabilità); niente punteggi delle linee né profondità |
+
+Stelle, fiamma, giudizi della precisione e requisito di sblocco sono in `lib/kids/kid_display.dart`. Le pagine leggono `AppSettings.of(context).kidMode` e prendono i testi `kid…` da `AppLocalizations` solo nel profilo bambino. Test: `test/kids/no_numbers_test.dart`.
+
+Anche l'allenatore durante la partita usa le frasi senza numeri: `GamePage` passa i testi del profilo a `CoachSession.judge(kid: ...)`.
 
 ## Codice
 

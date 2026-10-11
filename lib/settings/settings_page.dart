@@ -4,6 +4,7 @@ import 'package:dartchess/dartchess.dart' show PieceKind;
 import 'package:flutter/material.dart';
 
 import '../backup/backup_page.dart';
+import '../kids/kid_display.dart';
 import '../l10n/app_localizations.dart';
 import '../progress/progress_controller.dart';
 import '../progress/rewards.dart';
@@ -312,6 +313,11 @@ class _Choices<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Profilo bambino (RP-06): il requisito non cita il livello.
+    final kid = AppSettings.of(context).kidMode;
+    String why(Requirement r) => kid
+        ? kidRequirement(AppLocalizations.of(context))
+        : 'Si sblocca con: ${r.label}';
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Wrap(
@@ -323,7 +329,7 @@ class _Choices<T> extends StatelessWidget {
               ChoiceChip(
                 avatar: const Icon(Icons.lock_outline, size: 18),
                 label: Text(label(v)),
-                tooltip: 'Si sblocca con: ${requirement.label}',
+                tooltip: why(requirement),
                 selected: v == selected,
                 onSelected: (_) {
                   final messenger = ScaffoldMessenger.of(context);
@@ -331,7 +337,9 @@ class _Choices<T> extends StatelessWidget {
                   messenger.showSnackBar(
                     SnackBar(
                       content: Text(
-                        '${label(v)} si sblocca con: ${requirement.label}',
+                        kid
+                            ? '${label(v)}: ${why(requirement).toLowerCase()}'
+                            : '${label(v)} si sblocca con: ${requirement.label}',
                       ),
                     ),
                   );
