@@ -25,11 +25,16 @@ class PlayedMove {
     required this.move,
     required this.san,
     required this.after,
+    this.clock,
   });
 
   final Move move;
   final String san;
   final Position after;
+
+  /// Tempo residuo di chi ha mosso, dopo la mossa; `null` senza orologio
+  /// (RF-67).
+  final Duration? clock;
 }
 
 /// Stato della partita: cronologia, annullamento e condizioni di fine partita.
@@ -58,13 +63,23 @@ class ChessGame {
     Position initial,
     Iterable<Move> moves, {
     Variant variant = Variant.standard,
+    List<Duration?> clocks = const [],
   }) {
     final game = ChessGame(initial: initial, variant: variant);
+    var i = 0;
     for (final move in moves) {
       final pos = game.position;
       if (pos.isGameOver || !isPlayableMove(pos, move)) return null;
       final (after, san) = pos.makeSan(move);
-      game._moves.add(PlayedMove(move: move, san: san, after: after));
+      game._moves.add(
+        PlayedMove(
+          move: move,
+          san: san,
+          after: after,
+          clock: i < clocks.length ? clocks[i] : null,
+        ),
+      );
+      i++;
     }
     return game;
   }
@@ -86,10 +101,10 @@ class ChessGame {
       _moves.isNotEmpty || _resigned != null || _drawAgreed || _flagged != null;
 
   /// Gioca [move] se è legale. Restituisce `false` se la mossa viene rifiutata.
-  bool play(Move move) {
+  bool play(Move move, {Duration? clock}) {
     if (isOver || !isPlayableMove(position, move)) return false;
     final (after, san) = position.makeSan(move);
-    _moves.add(PlayedMove(move: move, san: san, after: after));
+    _moves.add(PlayedMove(move: move, san: san, after: after, clock: clock));
     return true;
   }
 
