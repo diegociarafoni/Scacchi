@@ -113,6 +113,23 @@ void main() {
       expect((await s.hint(Chess.initial, HintLevel.move))?.san, 'e4');
     });
 
+    test('un\'analisi vuota (interrotta) non resta in cache', () async {
+      var n = 0;
+      final s = CoachSession(
+        evaluate: (_) async => n++ == 0
+            ? []
+            : [
+                const InfoLine(
+                  multipv: 1,
+                  pv: ['e2e4'],
+                  score: EngineScore.cp(0),
+                ),
+              ],
+      );
+      expect(await s.hint(Chess.initial, HintLevel.move), isNull);
+      expect((await s.hint(Chess.initial, HintLevel.move))?.san, 'e4');
+    });
+
     test('conta una volta per posizione i suggerimenti usati', () async {
       final s = session();
       await s.hint(scholarBeforeBlack(), HintLevel.piece);
