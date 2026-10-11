@@ -503,6 +503,45 @@ void main() {
     expect(clockText(tester, Side.black), isIn(['1:00', '0:59']));
   });
 
+  testWidgets(
+    'RF-40 durante la valutazione della patta non si perde per tempo',
+    (tester) async {
+      await tester.pumpWidget(
+        app(
+          connect: () async =>
+              FirstLegalMoveEngine(delay: const Duration(seconds: 1)),
+        ),
+      );
+      await startComputerGame(tester, side: 'Bianco', time: '1+0');
+      await tester.pump(const Duration(seconds: 1));
+      await tapMove(tester, 'e2e4');
+      await tester.pump(const Duration(milliseconds: 1500));
+      expect(activeClock(Side.white), findsOneWidget);
+      await tester.pump(const Duration(seconds: 59, milliseconds: 200));
+      expect(find.textContaining('Tempo scaduto'), findsNothing);
+      await tester.tap(find.text('Patta'));
+      await tester.pump(const Duration(milliseconds: 1500));
+      expect(find.textContaining('Tempo scaduto'), findsNothing);
+      expect(find.text('Il computer rifiuta la patta.'), findsOneWidget);
+    },
+  );
+
+  testWidgets('RF-40 in attesa di Riprova il tempo del computer è fermo', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      app(connect: () async => FirstLegalMoveEngine(forcedMove: 'e2e5')),
+    );
+    await startComputerGame(tester, side: 'Bianco', time: '3+0');
+    await tester.pump(const Duration(seconds: 1));
+    await tapMove(tester, 'e2e4');
+    await tester.pump(const Duration(milliseconds: 500));
+    expect(find.text('Il computer non risponde.'), findsOneWidget);
+    await tester.pump(const Duration(seconds: 10));
+    expect(clockText(tester, Side.black), '3:00');
+    expect(find.byKey(const ValueKey('clock-active')), findsNothing);
+  });
+
   testWidgets('senza motore disponibile la scelta Computer è disattivata', (
     tester,
   ) async {

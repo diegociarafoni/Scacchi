@@ -26,7 +26,7 @@ Durante la riflessione del computer la scacchiera è bloccata e compare la scrit
 - Con l'orologio, il tempo del computer scorre mentre pensa e riceve l'incremento come il giocatore; se il tempo scade durante la riflessione la ricerca viene interrotta. **Annulla** ripristina gli orologi di entrambe le mosse ritirate, anche dopo un tempo scaduto alla prima mossa.
 - Con l'orologio il computer non pensa più di un trentesimo del tempo residuo più tre quarti dell'incremento (minimo 50 ms): riflessione e ritardo artificiale del livello vengono ridotti di conseguenza (`EngineLevel.withinClock`), così anche il livello 8 non perde per tempo nelle cadenze brevi.
 - Mentre è aperta una finestra (nuova partita, abbandono, patta) o l'app è in background, orologio e computer sono fermi: la ricerca in corso viene interrotta, il suo tempo restituito al computer, e riparte alla chiusura o al ritorno nell'app.
-- Il tempo impiegato dal computer per valutare una patta non viene addebitato al giocatore, che nel frattempo non può muovere.
+- Mentre il computer valuta una patta l'orologio è fermo, perché il giocatore non può muovere. Se il motore non risponde, l'orologio del computer resta fermo, senza il tempo della ricerca fallita, fino a **Riprova**.
 
 ## Piattaforme
 

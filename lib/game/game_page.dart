@@ -56,7 +56,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   ChessClock? _clock;
   Timer? _ticker;
 
-  /// Snapshot dell'orologio all'inizio della riflessione del computer.
+  /// Orologio all'inizio della riflessione del computer in corso.
   Map<Side, Duration>? _searchClock;
 
   /// Sospensioni attive (finestre aperte, app in background).
@@ -97,7 +97,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     if (_suspensions++ > 0) return;
     final clock = _clock;
     _clockBeforeSuspension = clock?.isRunning ?? false;
-    final searchStart = _task == _ComputerTask.move ? _searchClock : null;
+    final searchStart = _searchClock;
     _cancelComputerMove();
     if (clock != null && searchStart != null) {
       clock.restore(searchStart, null);
@@ -117,11 +117,28 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _computerMove();
   }
 
-  /// Mostra una finestra con orologio e computer fermi; il chiamante chiama [_resume].
-  Future<T?> _suspendedDialog<T>(WidgetBuilder builder) {
+  /// Esegue [action] con orologio e computer fermi; riparte se [restart] lo consente.
+  Future<T?> _whileSuspended<T>(
+    Future<T?> Function() action, {
+    bool Function(T? result)? restart,
+  }) async {
     _suspend();
-    return showDialog<T>(context: context, builder: builder);
+    T? result;
+    try {
+      result = await action();
+    } finally {
+      if (mounted) _resume(restart: restart?.call(result) ?? true);
+    }
+    return result;
   }
+
+  Future<T?> _suspendedDialog<T>(
+    WidgetBuilder builder, {
+    bool Function(T? result)? restart,
+  }) => _whileSuspended(
+    () => showDialog<T>(context: context, builder: builder),
+    restart: restart,
+  );
 
   @override
   void didUpdateWidget(GamePage oldWidget) {
@@ -225,6 +242,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final generation = _generation;
     _task = _ComputerTask.move;
     final clock = _clock;
+    if (clock != null && !clock.isRunning && _game.moves.isNotEmpty) {
+      clock.start(side);
+    }
     _searchClock = clock?.snapshot();
     var level = engineLevel(_setup.level);
     if (clock != null) {
@@ -247,8 +267,11 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     }
     if (!mounted || generation != _generation) return;
     _task = _ComputerTask.none;
+    final searchStart = _searchClock;
+    _searchClock = null;
     if (reply == null ? !_game.isOver : !_play(reply.move) && !_game.isOver) {
       error ??= reply ?? 'nessuna mossa';
+      if (searchStart != null) clock?.restore(searchStart, null);
     }
     _refresh();
     if (error != null) {
@@ -267,6 +290,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     if (_thinking) _computer?.stop();
     _task = _ComputerTask.none;
+    _searchClock = null;
   }
 
   /// Ferma l'orologio a fine partita e aggiorna il timer di visualizzazione.
@@ -322,15 +346,15 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   );
 
   Future<void> _newGame() async {
-    _suspend();
-    final setup = await showNewGameDialog(
-      context,
-      initial: _setup,
-      computerAvailable: widget.computerAvailable,
+    final setup = await _whileSuspended(
+      () => showNewGameDialog(
+        context,
+        initial: _setup,
+        computerAvailable: widget.computerAvailable,
+      ),
+      restart: (setup) => setup == null,
     );
-    if (!mounted) return;
-    _resume(restart: setup == null);
-    if (setup == null) return;
+    if (setup == null || !mounted) return;
     _cancelComputerMove();
     _clockBeforeSuspension = false;
     _setup = setup;
@@ -413,9 +437,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           ),
         ],
       ),
+      restart: (confirmed) => confirmed != true,
     );
     if (!mounted) return;
-    _resume(restart: confirmed != true);
     if (confirmed == true) {
       _game.resign(side);
       _refresh(animate: false);
@@ -425,38 +449,33 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// Il computer accetta la patta solo se si valuta in svantaggio.
   Future<void> _offerDrawToComputer() async {
     if (_thinking) return;
-    final generation = _generation;
     final turn = _game.position.turn;
-    final clock = _clock;
-    final clockStart = clock?.snapshot();
-    _task = _ComputerTask.draw;
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    _refresh(animate: false);
     int? computerScore;
     Object? error;
-    try {
-      final score = await _computerPlayer.evaluate(
-        _game.initial.fen,
-        _moveHistory,
-      );
-      if (score != null) {
-        computerScore = turn == _computerSide
-            ? score.comparable
-            : -score.comparable;
+    var current = false;
+    await _whileSuspended<void>(() async {
+      final generation = _generation;
+      _task = _ComputerTask.draw;
+      _refresh(animate: false);
+      try {
+        final score = await _computerPlayer.evaluate(
+          _game.initial.fen,
+          _moveHistory,
+        );
+        if (score != null) {
+          computerScore = turn == _computerSide
+              ? score.comparable
+              : -score.comparable;
+        }
+      } catch (e) {
+        error = e;
       }
-    } catch (e) {
-      error = e;
-    }
-    if (!mounted || generation != _generation) return;
-    _task = _ComputerTask.none;
-    if (clock != null && clock.isRunning && !_game.isOver) {
-      clock.restore(clockStart!, clock.active);
-    }
-    _refresh(animate: false);
-    if (_game.isOver) return;
+      current = mounted && generation == _generation;
+      if (current) _task = _ComputerTask.none;
+    }, restart: (_) => !(current && _accepts(computerScore)));
+    if (!mounted || !current || _game.isOver) return;
     if (error != null) return _showMessage('Il computer non risponde.');
-    if (computerScore != null && computerScore <= -_drawAcceptanceCp) {
-      _cancelComputerMove();
+    if (_accepts(computerScore)) {
       _game.agreeDraw();
       _refresh(animate: false);
       _showMessage('Il computer accetta la patta.');
@@ -464,6 +483,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       _showMessage('Il computer rifiuta la patta.');
     }
   }
+
+  bool _accepts(int? computerScore) =>
+      computerScore != null && computerScore <= -_drawAcceptanceCp;
 
   Future<void> _offerDraw() async {
     if (_computerSide != null) return _offerDrawToComputer();
@@ -482,9 +504,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           ),
         ],
       ),
+      restart: (accepted) => accepted != true,
     );
     if (!mounted) return;
-    _resume(restart: accepted != true);
     if (accepted == true) {
       _game.agreeDraw();
       _refresh(animate: false);
