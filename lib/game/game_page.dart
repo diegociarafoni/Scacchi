@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 
 import '../openings/opening_name.dart';
@@ -12,7 +13,9 @@ import '../settings/settings_page.dart';
 import 'chess_game.dart';
 import 'clock.dart';
 import 'material.dart';
+import 'move_input.dart';
 import 'move_label.dart';
+import 'move_speech.dart';
 import 'sounds.dart';
 import 'variant.dart';
 
@@ -147,7 +150,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       return;
     }
     if (!_game.position.isLegal(move)) return;
-    final preview = _game.position.play(move);
+    final (preview, san) = _game.position.makeSan(move);
+    _announce('Da confermare. ${describeSan(san, _game.position.turn)}');
     _board.updatePosition(
       _staticData(preview, move),
       animate: viaDragAndDrop != true,
@@ -173,12 +177,15 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     if (flagged != null) {
       _game.flag(flagged);
       _play(GameSound.gameEnd);
+      _announce(statusText(_game));
       _refresh(animate: false);
       return;
     }
     final before = clock?.snapshot();
     final position = _game.position;
     if (!_game.play(move)) return;
+    final spoken = describeSan(_game.moves.last.san, position.turn);
+    _announce(_game.isOver ? '$spoken. ${statusText(_game)}' : spoken);
     final sound = soundForLastMove(_game, position);
     if (sound != null) _play(sound);
     if (clock != null) {
@@ -251,6 +258,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     if (flagged != null && !_game.isOver) {
       _game.flag(flagged);
       _play(GameSound.gameEnd);
+      _announce(statusText(_game));
       _refresh(animate: false);
       return;
     }
@@ -259,6 +267,14 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       _play(GameSound.lowTime);
     }
     _tick.value++;
+  }
+
+  void _announce(String message) {
+    SemanticsService.sendAnnouncement(
+      View.of(context),
+      message,
+      Directionality.of(context),
+    );
   }
 
   void _play(GameSound sound) {
@@ -334,6 +350,17 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     if (pos is! ThreeCheck) return 0;
     final (white, black) = pos.remainingChecks;
     return 3 - (side == Side.white ? white : black);
+  }
+
+  Future<void> _typeMove() async {
+    final position = _game.position;
+    final move = await showDialog<Move>(
+      context: context,
+      builder: (_) => _MoveInputDialog(position: position),
+    );
+    if (move == null || !mounted || _viewPly != null || _game.isOver) return;
+    if (_pendingMove != null || !identical(position, _game.position)) return;
+    _onMove(move);
   }
 
   void _undo() {
@@ -459,6 +486,13 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
               )
             : Text(_title),
         actions: [
+          IconButton(
+            tooltip: 'Mossa da tastiera',
+            icon: const Icon(Icons.keyboard_outlined),
+            onPressed: _game.isOver || _pendingMove != null || _viewPly != null
+                ? null
+                : _typeMove,
+          ),
           IconButton(
             tooltip: 'Impostazioni',
             icon: const Icon(Icons.settings_outlined),
@@ -1094,4 +1128,66 @@ class _KeepVisibleState extends State<_KeepVisible> {
 
   @override
   Widget build(BuildContext context) => widget.child;
+}
+
+class _MoveInputDialog extends StatefulWidget {
+  const _MoveInputDialog({required this.position});
+
+  final Position position;
+
+  @override
+  State<_MoveInputDialog> createState() => _MoveInputDialogState();
+}
+
+class _MoveInputDialogState extends State<_MoveInputDialog> {
+  final _text = TextEditingController();
+  String? _error;
+
+  @override
+  void dispose() {
+    _text.dispose();
+    super.dispose();
+  }
+
+  void _submit() {
+    switch (parseMoveInput(widget.position, _text.text)) {
+      case MoveInputOk(:final move):
+        Navigator.of(context).pop(move);
+      case MoveInputAmbiguous():
+        setState(() => _error = 'R è ambigua: usa K per il re, T per la torre');
+      case MoveInputInvalid():
+        setState(() => _error = 'Mossa non valida');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Mossa da tastiera'),
+      content: TextField(
+        controller: _text,
+        autofocus: true,
+        autocorrect: false,
+        enableSuggestions: false,
+        textInputAction: TextInputAction.done,
+        decoration: InputDecoration(
+          labelText: 'Mossa',
+          hintText: 'es. e4, Cf3, Nf3, O-O, e7e8q',
+          errorText: _error,
+        ),
+        onChanged: (_) {
+          if (_error != null) setState(() => _error = null);
+        },
+        // Mantiene la tastiera aperta dopo una mossa non valida.
+        onEditingComplete: _submit,
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Annulla'),
+        ),
+        FilledButton(onPressed: _submit, child: const Text('Gioca')),
+      ],
+    );
+  }
 }

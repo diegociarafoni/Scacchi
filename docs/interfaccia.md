@@ -63,6 +63,19 @@ Toccando una mossa nella striscia (o nella lista, in orizzontale) la scacchiera 
 - Andare oltre l'ultima mossa, una nuova partita o "Annulla" riportano alla posizione corrente; durante la revisione "Annulla" non toglie mosse.
 - I numeri delle mosse partono dalla posizione iniziale della partita, anche quando è importata da un FEN.
 
+## Mossa da tastiera e lettori di schermo
+
+L'icona della tastiera nella barra del titolo apre un campo in cui scrivere la mossa (requisito RNF-07), utile con TalkBack e VoiceOver o con una tastiera fisica. Sono accettate:
+
+- notazione algebrica inglese (`Nf3`, `exd5`, `Qxf7#`) e italiana (`Cf3`, `Dxf7`), con R per il re in italiano e T per la torre; l'iniziale del pezzo può essere minuscola (`cf3`);
+- arrocco come `O-O`, `0-0-0` o `o-o`;
+- promozione con o senza `=` (`e8=Q`, `e8D`), sempre indicando il pezzo;
+- coordinate UCI, anche maiuscole (`g1f3`, `e7e8q`).
+
+Spazi, segni di scacco e annotazioni vengono ignorati. Se `R` indica sia una mossa di re (italiano) sia una di torre (inglese), il campo chiede di usare K o T. Una mossa non valida mostra un errore e lascia la tastiera aperta. La mossa passa per lo stesso percorso di quelle sulla scacchiera, quindi rispetta orologio e conferma della mossa. Il comando è disattivato a partita conclusa, durante la revisione e con una mossa in attesa di conferma.
+
+Dopo ogni mossa il lettore di schermo annuncia una frase in italiano, per esempio «Bianco: cavallo prende f7, scacco», «Nero: pedone della colonna e prende d5» o «Nero: arrocco corto». Una mossa in attesa di conferma è annunciata come «Da confermare», e la fine della partita, anche per tempo scaduto, è annunciata con il risultato.
+
 ## Impostazioni
 
 Si aprono dall'icona a forma di ingranaggio nella barra del titolo. Ogni modifica si applica subito e viene salvata sul dispositivo.

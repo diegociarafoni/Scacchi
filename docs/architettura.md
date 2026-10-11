@@ -28,6 +28,9 @@ lib/
     material.dart         Pezzi catturati e vantaggio di materiale
     clock.dart            Cadenze e orologio a due lati
     sounds.dart           Scelta e riproduzione di suoni e vibrazione
+    move_label.dart       Numerazione delle mosse nella lista
+    move_input.dart       Lettura di una mossa scritta (SAN inglese o italiana, UCI)
+    move_speech.dart      Frase da annunciare al lettore di schermo per ogni mossa
     game_page.dart        Schermata di gioco
   progress/               Gamification: XP, livelli, serie, traguardi (vedi gamification.md)
   archive/                Archivio delle partite e PGN (vedi archivio.md)
@@ -51,6 +54,9 @@ test/
   material_test.dart      Test del materiale catturato
   clock_test.dart         Test di cadenze, orologio e tempo scaduto
   sound_test.dart         Test della scelta del suono per ogni mossa
+  move_label_test.dart    Test della numerazione delle mosse
+  move_input_test.dart    Test della lettura delle mosse scritte
+  move_speech_test.dart   Test delle frasi per il lettore di schermo
 assets/sounds/            Suoni dell'app (WAV)
 tool/generate_sounds.py   Generatore dei suoni
   settings_test.dart      Test delle impostazioni e del salvataggio
@@ -90,6 +96,10 @@ Calcola da una partita i pezzi catturati da ciascun lato, ripercorrendo le mosse
 ### Suoni (`lib/game/sounds.dart`)
 
 `soundForLastMove` sceglie l'effetto dell'ultima mossa a partire dalla posizione precedente, in Dart puro. `SoundPlayer` riproduce l'effetto con un lettore a bassa latenza per suono e, se attiva, la vibrazione tramite `HapticFeedback`; un errore di riproduzione non interrompe la partita.
+
+### Mossa scritta e annunci (`lib/game/move_input.dart`, `move_speech.dart`)
+
+`parseMoveInput` prova il testo come UCI, poi come SAN inglese e come SAN con le iniziali italiane (R re, D donna, T torre, A alfiere, C cavallo) tramite `Position.parseSan` di dartchess. Se le due letture danno mosse legali diverse restituisce `MoveInputAmbiguous`. `describeSan` trasforma la SAN in una frase italiana che `GamePage` invia con `SemanticsService.sendAnnouncement` dopo ogni mossa.
 
 ### Impostazioni (`lib/settings/`)
 
