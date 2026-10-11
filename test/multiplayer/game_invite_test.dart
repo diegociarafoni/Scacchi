@@ -46,19 +46,15 @@ void main() {
     expect(back.lanAddress, isNull);
   });
 
-  test('RMP-01 l\'invito si legge anche come link web condiviso', () {
-    final link = sample().toLink().replaceFirst(
-      'scacchi://partita',
-      'https://scacchi.app/partita',
-    );
-    expect(GameInvite.parse(link)?.gameId, sample().gameId);
-  });
-
   group('RMP-01 un invito non valido viene scartato', () {
     final good = sample().toLink();
     final cases = {
       'testo qualunque': 'ciao',
       'altro schema': good.replaceFirst('scacchi://', 'http://'),
+      'link web di un sito qualunque': good.replaceFirst(
+        'scacchi://partita',
+        'https://esempio.it/partita',
+      ),
       'versione sconosciuta': good.replaceFirst('v=1', 'v=9'),
       'UUID non valido': good.replaceFirst(sample().gameId, 'xyz'),
       'segreto corto': good.replaceFirst(RegExp('s=[^&]+'), 's=AAAA'),

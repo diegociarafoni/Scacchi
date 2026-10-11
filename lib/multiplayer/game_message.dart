@@ -1,3 +1,7 @@
+/// Semimosse oltre le quali un numero non è credibile (la partita più lunga
+/// possibile ne ha meno di 12 000, ma nessuna partita reale supera questo).
+const maxPlies = 2000;
+
 /// Messaggi scambiati tra i due telefoni di una partita.
 sealed class GameMessage {
   const GameMessage();
@@ -15,11 +19,13 @@ sealed class GameMessage {
         'm': final String uci,
         'h': final String hash,
       }
-          when seq > 0 && uci.length <= 5 && hash.length <= 64 =>
+          when seq > 0 &&
+              seq <= maxPlies &&
+              uci.length <= 5 &&
+              hash.length <= 64 =>
         MoveMessage(seq: seq, uci: uci, positionHash: hash),
-      {'t': 'sync', 'n': final int from} when from > 0 => SyncRequest(
-        fromSeq: from,
-      ),
+      {'t': 'sync', 'n': final int from} when from > 0 && from <= maxPlies =>
+        SyncRequest(fromSeq: from),
       _ => null,
     };
   }

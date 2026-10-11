@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:dartchess/dartchess.dart';
+
 import 'game_invite.dart';
 import 'game_message.dart';
 import 'game_sync.dart';
@@ -13,7 +15,11 @@ import 'transport.dart';
 class MultiplayerSession {
   MultiplayerSession._(this.invite, this.identity, this.transport, this.sync)
     : _codec = MessageCodec(gameId: invite.gameId, secret: invite.secret) {
-    _sub = transport.incoming.listen(_onData);
+    // Un messaggio alla volta: decifrature concluse fuori ordine
+    // produrrebbero buchi fittizi nel registro.
+    _sub = transport.incoming.listen(
+      (data) => _queue = _queue.then((_) => _onData(data)),
+    );
   }
 
   /// Chi ha creato l'invito; l'avversario si fissa al suo primo ingresso.
@@ -59,6 +65,11 @@ class MultiplayerSession {
   final GameSync sync;
   final MessageCodec _codec;
   late final StreamSubscription<Uint8List> _sub;
+  Future<void> _queue = Future.value();
+
+  // Messaggi sigillati di ogni semimossa, rimandati identici nel recupero:
+  // così ognuno arriva con la firma del suo autore.
+  final _sealed = <int, Uint8List>{};
 
   final _events = StreamController<SyncResult>.broadcast();
 
@@ -69,26 +80,33 @@ class MultiplayerSession {
   bool get pendingDelivery => _pending;
   bool _pending = false;
 
-  /// L'invitato si presenta all'ospite.
-  Future<void> announce() => _send(const JoinMessage());
+  /// L'invitato si presenta all'ospite; `false` se nessun canale è
+  /// disponibile. Facoltativo: anche la prima mossa lo presenta.
+  Future<bool> announce() => _send(const JoinMessage());
 
   /// Gioca [uci]; se nessun canale è disponibile la mossa resta in attesa
   /// e parte con [resendLast].
   Future<void> play(String uci) async {
     final message = sync.playLocal(uci);
-    _pending = !await _send(message);
+    _pending = !await _sendSealed(await _seal(message));
   }
 
   /// Ripete l'ultima mossa: da chiamare quando un canale torna disponibile.
   Future<void> resendLast() async {
     final last = sync.myLastMove;
     if (last == null) return;
-    _pending = !await _send(last);
+    _pending = !await _sendSealed(_sealed[last.seq] ?? await _seal(last));
   }
 
-  Future<bool> _send(GameMessage message) async {
+  Future<Uint8List> _seal(MoveMessage move) async =>
+      _sealed[move.seq] = await _codec.seal(move, identity);
+
+  Future<bool> _send(GameMessage message) async =>
+      _sendSealed(await _codec.seal(message, identity));
+
+  Future<bool> _sendSealed(Uint8List data) async {
     try {
-      await transport.send(await _codec.seal(message, identity));
+      await transport.send(data);
       return true;
     } on TransportUnavailable {
       return false;
@@ -99,17 +117,22 @@ class MultiplayerSession {
     final opened = await _codec.open(data);
     if (opened == null || _events.isClosed) return;
     final result = sync.receive(opened.message, opened.author);
+    if (result case MoveAccepted(:final move)) _sealed[move.seq] = data;
     switch (result) {
       case Gap(:final fromSeq):
         await _send(SyncRequest(fromSeq: fromSeq));
       case ResendRequested(:final fromSeq):
         for (final m in sync.movesFrom(fromSeq)) {
-          await _send(m);
+          final mine = (m.seq.isOdd ? Side.white : Side.black) == sync.mySide;
+          final data = _sealed[m.seq] ?? (mine ? await _seal(m) : null);
+          if (data != null) await _sendSealed(data);
         }
       case Duplicate() when _peerMissesOurMove(opened.message):
         // L'avversario ripete la sua ultima mossa: non ha visto la nostra.
         await resendLast();
-      case PeerJoined() when sync.myLastMove != null:
+      case PeerJoined() || Duplicate()
+          when opened.message is JoinMessage && sync.myLastMove != null:
+        // L'avversario entra o rientra: forse non ha visto la nostra mossa.
         await resendLast();
       default:
         break;

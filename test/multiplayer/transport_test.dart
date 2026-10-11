@@ -86,4 +86,14 @@ void main() {
       await blePeer.close();
     },
   );
+
+  test('RMP-05 un canale arrivato dopo la chiusura viene chiuso', () async {
+    final multi = MultiTransport([]);
+    await multi.close();
+    final (late, latePeer) = LoopbackTransport.pair();
+    multi.add(late);
+    await pumpEventQueue();
+    expect(() => latePeer.send(b(1)), throwsA(isA<TransportUnavailable>()));
+    await latePeer.close();
+  });
 }

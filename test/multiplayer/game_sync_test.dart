@@ -69,11 +69,12 @@ void main() {
     final restored = guest();
     final result = restored.receive(third, hostKey);
     expect(result, isA<Gap>().having((r) => r.fromSeq, 'fromSeq', 1));
+    // L'ospite rimanda ogni mossa con la firma originale del suo autore.
     for (final m in h.movesFrom(1)) {
-      restored.receive(m, hostKey);
+      restored.receive(m, m.seq.isOdd ? hostKey : guestKey);
     }
     expect(restored.moves, ['e2e4', 'e7e5', 'g1f3']);
-    // Finito il recupero l'avversario non può più muovere al suo posto.
+    // L'avversario non può muovere al suo posto.
     final forged = MoveMessage(
       seq: 4,
       uci: 'b8c6',
@@ -98,6 +99,45 @@ void main() {
     );
   });
 
+  test('RMP-03 un buco forzato non permette di muovere per l\'altro', () {
+    final h = host()..receive(const JoinMessage(), guestKey);
+    final g = guest();
+    relay(h, g, 'e2e4');
+    relay(g, h, 'e7e5');
+    // Tocca all'ospite (semimossa 3): l'invitato finge un buco...
+    const far = MoveMessage(seq: 4, uci: 'b8c6', positionHash: '00');
+    expect(h.receive(far, guestKey), isA<Gap>());
+    // ...e prova a giocare la mossa del Bianco.
+    final forged = MoveMessage(
+      seq: 3,
+      uci: 'g1f3',
+      positionHash: positionHash(h.position.play(Move.parse('g1f3')!)),
+    );
+    expect(h.receive(forged, guestKey), isA<Rejected>());
+    expect(h.moves, ['e2e4', 'e7e5']);
+  });
+
+  test('RMP-02 le proprie mosse rimandate dall\'avversario sono doppioni', () {
+    final h = host()..receive(const JoinMessage(), guestKey);
+    final g = guest();
+    relay(h, g, 'e2e4');
+    final mine = g.playLocal('e7e5');
+    expect(g.receive(mine, guestKey), isA<Duplicate>());
+  });
+
+  test('RMP-03 la prima mossa dell\'invitato vale come presentazione', () {
+    final h = GameSync(mySide: Side.black, myKey: hostKey);
+    final g = GameSync(mySide: Side.white, myKey: guestKey, peerKey: hostKey);
+    expect(h.receive(g.playLocal('e2e4'), guestKey), isA<MoveAccepted>());
+    expect(h.peerKey, guestKey);
+    final intruder = GameSync(mySide: Side.white, myKey: strangerKey)
+      ..playLocal('e2e4');
+    expect(
+      h.receive(intruder.movesFrom(1).single, strangerKey),
+      isA<Rejected>(),
+    );
+  });
+
   group('RMP-02 RMP-03 mosse non valide vengono rifiutate', () {
     late GameSync h;
     late GameSync g;
@@ -118,9 +158,14 @@ void main() {
     });
 
     test('con il colore sbagliato', () {
-      final m = h.playLocal('e2e4');
-      // L'ospite si rimanda la propria mossa come se fosse dell'avversario.
+      // L'invitato, che ha il Nero, prova a giocare la prima mossa del Bianco.
+      final m = MoveMessage(
+        seq: 1,
+        uci: 'e2e4',
+        positionHash: positionHash(Chess.initial.play(Move.parse('e2e4')!)),
+      );
       expect(h.receive(m, guestKey), isA<Rejected>());
+      expect(h.moves, isEmpty);
     });
 
     test('illegale', () {

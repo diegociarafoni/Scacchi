@@ -73,10 +73,7 @@ class GameInvite {
     if (text.length > maxInviteLength) return null;
     final uri = Uri.tryParse(text.trim());
     if (uri == null) return null;
-    final ours =
-        (uri.scheme == 'scacchi' && uri.host == 'partita') ||
-        (uri.scheme == 'https' && uri.path == '/partita');
-    if (!ours) return null;
+    if (uri.scheme != 'scacchi' || uri.host != 'partita') return null;
     final Map<String, String> q;
     try {
       q = uri.queryParameters;

@@ -88,10 +88,6 @@ class GameSync {
   final _moves = <String>[];
   final _hashes = <String>[];
 
-  // Dopo un buco nel registro si accettano dall'avversario anche le proprie
-  // mosse perse, fino a questa semimossa.
-  int? _recoverUntil;
-
   Uint8List? get peerKey => _peerKey;
   List<String> get moves => List.unmodifiable(_moves);
   Position get position => _position;
@@ -150,23 +146,23 @@ class GameSync {
   }
 
   SyncResult _receiveMove(MoveMessage m, List<int> author) {
-    if (!_fromPeer(author)) return const Rejected('autore sconosciuto');
-    // Semimosse dispari al Bianco, pari al Nero.
-    final side = m.seq.isOdd ? Side.white : Side.black;
-    final known = _moves.length;
-    final recovering = _recoverUntil != null && m.seq <= _recoverUntil!;
-    if (side == mySide && !(recovering && m.seq > known)) {
-      return const Rejected('colore sbagliato');
+    final mine = _same(author, myKey);
+    if (!mine && !_fromPeer(author)) {
+      // Prima mossa dell'invitato arrivata prima della sua presentazione.
+      if (_peerKey != null) return const Rejected('autore sconosciuto');
+      _peerKey = Uint8List.fromList(author);
     }
+    final known = _moves.length;
     if (m.seq <= known) {
       return _moves[m.seq - 1] == m.uci && _hashes[m.seq - 1] == m.positionHash
           ? const Duplicate()
           : const Rejected('in contrasto con il registro');
     }
-    if (m.seq > known + 1) {
-      if (side != mySide) _recoverUntil = m.seq;
-      return Gap(known + 1);
-    }
+    // Semimosse dispari al Bianco, pari al Nero. Le proprie mosse arrivano
+    // solo nel recupero, rimandate dall'avversario con la nostra firma.
+    final side = m.seq.isOdd ? Side.white : Side.black;
+    if ((side == mySide) != mine) return const Rejected('colore sbagliato');
+    if (m.seq > known + 1) return Gap(known + 1);
     final move = Move.parse(m.uci);
     if (move == null || isGameOver || !_position.isLegal(move)) {
       return const Rejected('mossa illegale');
@@ -176,9 +172,6 @@ class GameSync {
       return const Rejected('posizione diversa');
     }
     _apply(m.uci, move);
-    if (_recoverUntil != null && _moves.length >= _recoverUntil!) {
-      _recoverUntil = null;
-    }
     return MoveAccepted(m);
   }
 

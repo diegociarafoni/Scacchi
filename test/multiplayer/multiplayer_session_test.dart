@@ -143,4 +143,54 @@ void main() {
     await host.close();
     await guest.close();
   });
+
+  test(
+    'RMP-03 la prima mossa arrivata prima della presentazione vale',
+    () async {
+      final inv = GameInvite(
+        gameId: newGameId(),
+        secret: newSecret(),
+        hostKey: hostId.publicKey,
+        hostSide: Side.black,
+      );
+      final (a, z) = LoopbackTransport.pair();
+      final host = MultiplayerSession.host(inv, hostId, MultiTransport([a]));
+      final guest = MultiplayerSession.join(inv, guestId, MultiTransport([z]));
+      await guest.play('e2e4');
+      await pumpEventQueue();
+      expect(host.sync.moves, ['e2e4']);
+      expect(host.sync.peerKey, guestId.publicKey);
+      await host.close();
+      await guest.close();
+    },
+  );
+
+  test('RMP-06 chi rientra riceve di nuovo l\'ultima mossa', () async {
+    final inv = invite();
+    final (a, z) = LoopbackTransport.pair();
+    final host = MultiplayerSession.host(inv, hostId, MultiTransport([a]));
+    final guest = MultiplayerSession.join(inv, guestId, MultiTransport([z]));
+    expect(await guest.announce(), isTrue);
+    await pumpEventQueue();
+    z.online = false;
+    await host.play('e2e4');
+    await pumpEventQueue();
+    expect(guest.sync.moves, isEmpty);
+    z.online = true;
+    await guest.announce();
+    await pumpEventQueue();
+    expect(guest.sync.moves, ['e2e4']);
+    await host.close();
+    await guest.close();
+  });
+
+  test('RMP-05 la presentazione senza canali lo segnala', () async {
+    final inv = invite();
+    final (a, z) = LoopbackTransport.pair();
+    final guest = MultiplayerSession.join(inv, guestId, MultiTransport([z]));
+    a.online = false;
+    expect(await guest.announce(), isFalse);
+    await guest.close();
+    await a.close();
+  });
 }

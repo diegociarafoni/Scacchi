@@ -40,7 +40,7 @@ MultiplayerSession          lib/multiplayer/multiplayer_session.dart
 
 | File | Ruolo |
 |---|---|
-| `game_invite.dart` | `GameInvite`: link `scacchi://partita?v=1&g=<uuid>&s=<segreto>&k=<chiave>&c=w|b[&lan=host:porta]`, campi binari in Base64 URL senza padding. Accetta anche `https://…/partita?…` per i link condivisi. `newGameId`, `newSecret` usano `Random.secure`. |
+| `game_invite.dart` | `GameInvite`: link `scacchi://partita?v=1&g=<uuid>&s=<segreto>&k=<chiave>&c=w|b[&lan=host:porta]`, campi binari in Base64 URL senza padding. `newGameId`, `newSecret` usano `Random.secure`. |
 | `player_identity.dart` | `PlayerIdentity`: coppia di chiavi Ed25519; il seme di 32 byte andrà nel portachiavi di sistema (fase 2). |
 | `game_message.dart` | Messaggi: `JoinMessage` (l'invitato si presenta), `MoveMessage` (semimossa, UCI, impronta), `SyncRequest` (rimandare da una semimossa). |
 | `message_codec.dart` | `MessageCodec`: sigillo dei messaggi. |
@@ -60,10 +60,12 @@ nonce (12 byte) | AES-256-GCM( {"a": chiave autore, "b": corpo JSON, "s": firma}
 
 ### Regole del registro
 
-- Le semimosse dispari sono del Bianco, le pari del Nero: una mossa del proprio colore ricevuta dall'avversario viene rifiutata.
+- Le semimosse dispari sono del Bianco, le pari del Nero. Una semimossa del proprio colore viene accettata solo se porta la propria firma: succede nel recupero, quando l'avversario rimanda i messaggi originali. L'avversario non può quindi muovere al posto dell'altro, nemmeno fingendo un buco nel registro.
 - Semimossa già nota con stesso contenuto: doppione, ignorato (i canali paralleli consegnano più copie). Con contenuto diverso: rifiutata.
-- Semimossa oltre la successiva attesa: buco nel registro (`Gap`), la sessione invia `SyncRequest` e l'avversario rimanda le mosse. Solo durante questo recupero si accettano dall'avversario anche le proprie mosse perse, fino alla semimossa che ha rivelato il buco; il controllo di legalità e l'impronta di ogni posizione restano attivi.
-- Se l'avversario ripete una mossa più vecchia della nostra ultima, significa che non ha ricevuto la nostra: la sessione la rimanda. Lo stesso accade quando l'avversario rientra.
+- Semimossa oltre la successiva attesa: buco nel registro (`Gap`); la sessione invia `SyncRequest` e l'avversario rimanda, identici, i messaggi sigillati di ogni semimossa, ciascuno con la firma del suo autore. Numeri oltre 2000 semimosse sono scartati.
+- L'invitato si presenta con `JoinMessage`, ma anche la sua prima mossa vale come presentazione: se la mossa arriva prima (i canali non garantiscono l'ordine), la partita non si blocca.
+- Se l'avversario ripete una mossa più vecchia della nostra ultima, oppure rientra con un nuovo `JoinMessage`, significa che forse non ha ricevuto la nostra: la sessione la rimanda.
+- I messaggi in arrivo si elaborano uno alla volta, nell'ordine di arrivo.
 - A partita finita non si accettano altre mosse.
 
 ### Cadenza (fasi successive)
@@ -80,7 +82,7 @@ In presenza si gioca con l'orologio; quando la partita passa a distanza l'orolog
 | MASVS-AUTH | Nessun account: l'identità è la chiave Ed25519; la chiave dell'avversario si fissa al primo ingresso. |
 | MASVS-PRIVACY | Nessun dato personale; il relay vedrà solo byte cifrati e chiavi casuali per partita. |
 
-Limiti noti: l'invito contiene il segreto, quindi chi lo intercetta prima dell'avversario può occupare la partita (l'ospite vedrà una chiave diversa da quella attesa); un telefono che ripristina un backup vecchio si fida dell'avversario per le proprie mosse perse, sempre verificate per legalità.
+Limiti noti: l'invito contiene il segreto, quindi chi lo intercetta prima dell'avversario può occupare la partita (l'ospite vedrà una chiave diversa da quella attesa). I messaggi sigillati restano per ora in memoria: il salvataggio insieme alla partita, necessario per il recupero dopo un riavvio, arriva con la fase 2.
 
 ## Test
 

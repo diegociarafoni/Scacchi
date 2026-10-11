@@ -42,6 +42,10 @@ class MultiTransport implements MessageTransport {
 
   /// Aggiunge un canale appena diventa disponibile, anche a partita in corso.
   void add(MessageTransport channel) {
+    if (_incoming.isClosed) {
+      unawaited(channel.close());
+      return;
+    }
     _channels.add(channel);
     _subs.add(channel.incoming.listen(_incoming.add, onError: (_) {}));
   }
