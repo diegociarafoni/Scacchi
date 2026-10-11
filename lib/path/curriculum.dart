@@ -558,6 +558,32 @@ const List<Chapter> curriculum = [
     title: 'Tattiche',
     stages: [
       Stage(
+        id: 'tactics.hanging',
+        title: 'Pezzi indifesi',
+        intro:
+            'Un pezzo è indifeso se nessun altro pezzo lo protegge. Prima di '
+            'catturare, guarda se il pezzo è difeso: se lo è, potresti perdere '
+            'il tuo.',
+        exercises: [
+          LineExercise(
+            instructions:
+                'La donna può catturare due pezzi, ma uno è difeso dal '
+                'pedone. Prendi quello indifeso.',
+            fen: '6k1/5ppp/4p3/3n4/6b1/8/5PPP/3Q2K1 w - - 0 1',
+            steps: ['d1g4'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'L\'alfiere attacca due pezzi neri. Cattura quello che '
+                'nessuno difende.',
+            fen: '6k1/5ppp/3p4/r3n3/8/2B5/5PPP/6K1 w - - 0 1',
+            steps: ['c3a5'],
+            goal: LineGoal.line,
+          ),
+        ],
+      ),
+      Stage(
         id: 'tactics.fork',
         title: 'La forchetta',
         intro: 'La forchetta è un attacco a due pezzi nello stesso momento. L\'avversario può salvarne uno solo e l\'altro lo catturi tu.',
@@ -577,6 +603,48 @@ const List<Chapter> curriculum = [
             steps: ['d4d5', 'c6e5', 'd5e6'],
             goal: LineGoal.line,
           ),
+          LineExercise(
+            instructions:
+                'Forchetta reale: con il cavallo attacca insieme re e '
+                'donna, poi cattura la donna.',
+            fen: '3q3k/6pp/8/6N1/8/8/5PPP/6K1 w - - 0 1',
+            steps: ['g5f7', 'h8g8', 'f7d8'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Anche la donna fa forchette: dai scacco e attacca la torre '
+                'nello stesso momento.',
+            fen: 'r5k1/6pp/8/8/8/8/5PPP/3Q2K1 w - - 0 1',
+            steps: ['d1d5', 'g8f8', 'd5a8'],
+            goal: LineGoal.line,
+          ),
+        ],
+      ),
+      Stage(
+        id: 'tactics.pin',
+        title: 'L\'inchiodatura',
+        intro:
+            'Un pezzo è inchiodato quando non può spostarsi perché dietro di '
+            'lui c\'è il re, o un pezzo che vale di più. Un pezzo inchiodato '
+            'è un bersaglio: attaccalo!',
+        exercises: [
+          LineExercise(
+            instructions:
+                'Il cavallo nero è inchiodato al re dall\'alfiere. '
+                'Attaccalo con un pedone.',
+            fen: 'r3k2r/ppp2ppp/2n5/1B6/3P4/8/PPP2PPP/R3K2R w KQkq - 0 1',
+            steps: ['d4d5'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Inchioda la donna al re con la torre: non può più '
+                'lasciare la colonna e vinci la donna per la torre.',
+            fen: '4k3/8/8/4q3/8/8/5KPP/R7 w - - 0 1',
+            steps: ['a1e1'],
+            goal: LineGoal.line,
+          ),
         ],
       ),
       Stage(
@@ -590,6 +658,82 @@ const List<Chapter> curriculum = [
                 'dietro di lui.',
             fen: 'R7/8/4k3/8/8/8/4q3/6K1 w - - 0 1',
             steps: ['a8e8', 'e6d5', 'e8e2'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Infilata con l\'alfiere: scacco al re e poi cattura la '
+                'torre.',
+            fen: '8/8/B7/3k4/8/K7/P7/7r w - - 0 1',
+            steps: ['a6b7', 'd5c5', 'b7h1'],
+            goal: LineGoal.line,
+          ),
+        ],
+      ),
+      Stage(
+        id: 'tactics.discovered',
+        title: 'L\'attacco di scoperta',
+        intro:
+            'Se sposti un pezzo che sta davanti a una torre, a un alfiere o '
+            'alla donna, scopri il loro attacco. Così attacchi con due pezzi '
+            'in una mossa sola.',
+        exercises: [
+          LineExercise(
+            instructions:
+                'Sposta il cavallo: la torre dà scacco e il cavallo '
+                'attacca la donna. Poi catturala.',
+            fen: '4k3/8/8/8/4N3/8/q7/4R1K1 w - - 0 1',
+            steps: ['e4c3', 'e8d7', 'c3a2'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Sposta il cavallo dando scacco: l\'alfiere scoperto '
+                'attacca la torre. Poi catturala.',
+            fen: '7r/4k3/8/8/3N4/8/1B4P1/6K1 w - - 0 1',
+            steps: ['d4f5|d4c6', 'e7e8', 'b2h8'],
+            goal: LineGoal.line,
+          ),
+        ],
+      ),
+      Stage(
+        id: 'tactics.double-check',
+        title: 'Lo scacco doppio',
+        intro:
+            'Nello scacco doppio due pezzi danno scacco insieme. Non si può '
+            'parare né catturare tutti e due: il re deve per forza spostarsi.',
+        exercises: [
+          LineExercise(
+            instructions:
+                '$_mateIn1 Il cavallo dà scacco e scopre la torre: '
+                'scacco doppio!',
+            fen: '3qkb2/3p1p2/8/8/4N3/8/8/4R1K1 w - - 0 1',
+            steps: ['e4f6'],
+            goal: LineGoal.mate,
+          ),
+          LineExercise(
+            instructions:
+                '$_mateIn1 Muovi l\'alfiere: dà scacco lui e lo dà anche '
+                'la torre.',
+            fen: '3qkb2/5p2/8/8/8/8/4B3/4R1K1 w - - 0 1',
+            steps: ['e2b5'],
+            goal: LineGoal.mate,
+          ),
+        ],
+      ),
+      Stage(
+        id: 'tactics.defender',
+        title: 'Elimina il difensore',
+        intro:
+            'Se un pezzo nemico è difeso da un solo pezzo, cattura il '
+            'difensore: poi il pezzo resta indifeso e lo prendi.',
+        exercises: [
+          LineExercise(
+            instructions:
+                'Il cavallo nero difende l\'alfiere. Cattura il cavallo, '
+                'poi prendi l\'alfiere con la torre.',
+            fen: '6k1/5ppp/5n2/3b2B1/8/8/5PPP/3R2K1 w - - 0 1',
+            steps: ['g5f6', 'g7f6', 'd1d5'],
             goal: LineGoal.line,
           ),
         ],
