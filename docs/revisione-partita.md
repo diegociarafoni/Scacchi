@@ -106,6 +106,7 @@ Le regole si applicano in quest'ordine, e vale la prima che riconosce qualcosa:
 | Forchetta concessa | Il pezzo che risponde, senza poter essere catturato, attacca insieme due pezzi: il re, pezzi che valgono più di lui o pezzi indifesi | "Dopo Nc2+ il cavallo nero attacca insieme il re e la torre: è una forchetta." |
 | Ripresa mancata | La mossa migliore riprende sulla casa dove l'avversario ha appena catturato | "Potevi riprendere il pezzo: bxc6 cattura l'alfiere." |
 | Cattura netta mancata | La mossa migliore cattura con un guadagno di almeno due pedoni | "Potevi vincere materiale: Qxd5 cattura la torre." |
+| Inchiodatura concessa | Il pezzo che risponde (alfiere, torre o donna) inchioda al re un tuo pezzo non pedone, non si può catturare e non inchiodava già lo stesso pezzo | "Dopo Bb4 l'alfiere nero inchioda il cavallo in d2 contro il re." |
 | Doppio attacco mancato | La mossa migliore attacca due pezzi con le stesse condizioni della forchetta | "Potevi fare un doppio attacco con Nc7+: il cavallo attacca il re e la torre." |
 | Scoperta mancata | Dopo la mossa migliore un pezzo rimasto fermo attacca una casa occupata che prima non attaccava (l'arrocco è escluso) | "Potevi fare un attacco di scoperta con Nc6+: l'alfiere attacca la donna." |
 | Perdita di materiale | Rispetto a prima della mossa, dopo la variante prevista (quattro semimosse) si hanno almeno due pedoni in meno | "Questa mossa perde materiale: circa 3 pedoni nella variante prevista." |
@@ -113,7 +114,7 @@ Le regole si applicano in quest'ordine, e vale la prima che riconosce qualcosa:
 
 Le mosse non sbagliate ricevono una frase di lode per categoria ("È la mossa migliore.").
 
-Non ancora coperti: inchiodatura e re esposto (RF-70) e il commento in tempo reale durante la partita (RF-72).
+Non ancora coperti: re esposto (RF-70) e il commento in tempo reale durante la partita (RF-72).
 
 ## Puzzle dagli errori
 

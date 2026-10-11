@@ -118,6 +118,45 @@ void main() {
       expect(explainMove(m)!.theme, isNot(CoachTheme.allowedFork));
     });
 
+    test('inchiodatura concessa', () async {
+      // Dopo h3 l'alfiere nero va in b4 e inchioda il cavallo in d2 al re.
+      final m = await reviewOne(
+        '7k/4b3/8/8/8/8/P2N3P/4K3 w - - 0 1',
+        'h2h3',
+        best: line(['a2a3'], const EngineScore.cp(150)),
+        reply: line(['e7b4'], const EngineScore.cp(0)),
+      );
+      final c = explainMove(m)!;
+      expect(c.theme, CoachTheme.allowedPin);
+      expect(c.text, contains('inchioda il cavallo in d2'));
+      expect(c.text, contains('re'));
+    });
+
+    test(
+      'non è inchiodatura se il pezzo che inchioda si può prendere',
+      () async {
+        // Il pedone in a3 prende l'alfiere in b4.
+        final m = await reviewOne(
+          '7k/4b3/8/8/8/P7/3N3P/4K3 w - - 0 1',
+          'h2h3',
+          best: line(['d2f3'], const EngineScore.cp(150)),
+          reply: line(['e7b4'], const EngineScore.cp(0)),
+        );
+        expect(explainMove(m)!.theme, isNot(CoachTheme.allowedPin));
+      },
+    );
+
+    test('non è inchiodatura se il pezzo era già inchiodato', () async {
+      // L'alfiere in b4 inchioda già il cavallo e si limita a spostarsi in a5.
+      final m = await reviewOne(
+        '7k/8/8/8/1b6/8/P2N3P/4K3 w - - 0 1',
+        'h2h3',
+        best: line(['a2a3'], const EngineScore.cp(150)),
+        reply: line(['b4a5'], const EngineScore.cp(0)),
+      );
+      expect(explainMove(m)!.theme, isNot(CoachTheme.allowedPin));
+    });
+
     test('ripresa mancata', () async {
       // Il Nero cattura il cavallo in c6 e il Bianco non lo riprende con bxc6.
       final initial = Chess.fromSetup(
