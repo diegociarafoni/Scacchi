@@ -1,5 +1,7 @@
 import 'package:chessground/chessground.dart';
+import 'package:dartchess/dartchess.dart' show Side;
 import 'package:flutter/foundation.dart';
+import 'package:flutter/painting.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum AnimationSpeed {
@@ -18,7 +20,7 @@ enum BoardTheme {
   green('Verde', ChessboardColorScheme.green),
   brown('Legno', ChessboardColorScheme.brown),
   blue('Blu', ChessboardColorScheme.blue),
-  grey('Grigio', ChessboardColorScheme.grey);
+  grey('Grigio', _grey);
 
   const BoardTheme(this.label, this.colorScheme);
 
@@ -26,18 +28,46 @@ enum BoardTheme {
   final ChessboardColorScheme colorScheme;
 }
 
-/// Set di pezzi con licenza compatibile con la GPL (vedi CREDITS.md).
-enum PieceStyle {
-  cburnett('Classico', PieceSet.cburnett),
-  merida('Merida', PieceSet.merida),
-  california('California', PieceSet.california),
-  cardinal('Cardinal', PieceSet.cardinal),
-  maestro('Maestro', PieceSet.maestro);
+/// Il tema grigio di chessground usa un'immagine con licenza AGPL: qui solo colori.
+const _grey = ChessboardColorScheme(
+  lightSquare: Color(0xffb8b8b8),
+  darkSquare: Color(0xff7d7d7d),
+  background: SolidColorChessboardBackground(
+    lightSquare: Color(0xffb8b8b8),
+    darkSquare: Color(0xff7d7d7d),
+  ),
+  whiteCoordBackground: SolidColorChessboardBackground(
+    lightSquare: Color(0xffb8b8b8),
+    darkSquare: Color(0xff7d7d7d),
+    coordinates: true,
+  ),
+  blackCoordBackground: SolidColorChessboardBackground(
+    lightSquare: Color(0xffb8b8b8),
+    darkSquare: Color(0xff7d7d7d),
+    coordinates: true,
+    orientation: Side.black,
+  ),
+  lastMove: HighlightDetails(solidColor: Color(0x809cc700)),
+  selected: HighlightDetails(solidColor: Color(0x6014551e)),
+  validMoves: Color(0x4014551e),
+  validPremoves: Color(0x40203085),
+);
 
-  const PieceStyle(this.label, this.pieceSet);
+/// Set di pezzi la cui licenza permette la distribuzione negli store insieme
+/// a codice GPL-3.0 (vedi CREDITS.md). Esclusi i set CC BY-NC-SA.
+enum PieceStyle {
+  cburnett('Classico', PieceSet.cburnett, 'Colin M.L. Burnett', 'GPL-2.0+'),
+  merida('Merida', PieceSet.merida, 'Armando Hernández Marroquín', 'GPL-2.0+'),
+  chessnut('Chessnut', PieceSet.chessnut, 'Alexis Luengas', 'Apache-2.0'),
+  fantasy('Fantasy', PieceSet.fantasy, 'Maurizio Monge', 'MIT'),
+  spatial('Spatial', PieceSet.spatial, 'Maurizio Monge', 'MIT');
+
+  const PieceStyle(this.label, this.pieceSet, this.author, this.license);
 
   final String label;
   final PieceSet pieceSet;
+  final String author;
+  final String license;
 }
 
 class AppSettings {
@@ -54,6 +84,7 @@ class AppSettings {
     this.volume = 1.0,
     this.haptics = true,
     this.tableMode = false,
+    this.confirmMove = false,
   });
 
   final bool showLegalMoves;
@@ -68,6 +99,7 @@ class AppSettings {
   final double volume;
   final bool haptics;
   final bool tableMode;
+  final bool confirmMove;
 
   AppSettings copyWith({
     bool? showLegalMoves,
@@ -82,6 +114,7 @@ class AppSettings {
     double? volume,
     bool? haptics,
     bool? tableMode,
+    bool? confirmMove,
   }) => AppSettings(
     showLegalMoves: showLegalMoves ?? this.showLegalMoves,
     showCoordinates: showCoordinates ?? this.showCoordinates,
@@ -95,6 +128,7 @@ class AppSettings {
     volume: volume ?? this.volume,
     haptics: haptics ?? this.haptics,
     tableMode: tableMode ?? this.tableMode,
+    confirmMove: confirmMove ?? this.confirmMove,
   );
 
   late final ChessboardSettings board = ChessboardSettings(
@@ -124,7 +158,8 @@ class AppSettings {
       other.sound == sound &&
       other.volume == volume &&
       other.haptics == haptics &&
-      other.tableMode == tableMode;
+      other.tableMode == tableMode &&
+      other.confirmMove == confirmMove;
 
   @override
   int get hashCode => Object.hash(
@@ -140,6 +175,7 @@ class AppSettings {
     volume,
     haptics,
     tableMode,
+    confirmMove,
   );
 }
 
@@ -177,6 +213,7 @@ class SettingsController extends ValueNotifier<AppSettings> {
         volume: read<double>('volume', d.volume).clamp(0.0, 1.0),
         haptics: read('haptics', d.haptics),
         tableMode: read('tableMode', d.tableMode),
+        confirmMove: read('confirmMove', d.confirmMove),
       ),
     );
   }
@@ -211,6 +248,8 @@ class SettingsController extends ValueNotifier<AppSettings> {
         prefs.setBool('haptics', settings.haptics),
       if (old.tableMode != settings.tableMode)
         prefs.setBool('tableMode', settings.tableMode),
+      if (old.confirmMove != settings.confirmMove)
+        prefs.setBool('confirmMove', settings.confirmMove),
     ];
     try {
       await Future.wait(writes);

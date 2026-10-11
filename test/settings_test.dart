@@ -20,6 +20,7 @@ void main() {
     expect(settings.value.volume, 1.0);
     expect(settings.value.haptics, isTrue);
     expect(settings.value.tableMode, isFalse);
+    expect(settings.value.confirmMove, isFalse);
   });
 
   test('RP-04 le impostazioni sono salvate in locale', () async {
@@ -38,6 +39,7 @@ void main() {
         volume: 0.4,
         haptics: false,
         tableMode: true,
+        confirmMove: true,
       ),
     );
     final reloaded = await SettingsController.load();
