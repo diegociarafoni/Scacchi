@@ -14,11 +14,15 @@ class GameSetup {
     this.opponent = Opponent.human,
     this.sideChoice = SideChoice.white,
     this.level = defaultEngineLevel,
+    this.adaptive = false,
   });
 
   final Opponent opponent;
   final SideChoice sideChoice;
   final int level;
+
+  /// Il livello segue i risultati del giocatore (RF-26).
+  final bool adaptive;
 
   Side resolveHumanSide(math.Random random) => switch (sideChoice) {
     SideChoice.white => Side.white,
@@ -30,10 +34,12 @@ class GameSetup {
     Opponent? opponent,
     SideChoice? sideChoice,
     int? level,
+    bool? adaptive,
   }) => GameSetup(
     opponent: opponent ?? this.opponent,
     sideChoice: sideChoice ?? this.sideChoice,
     level: level ?? this.level,
+    adaptive: adaptive ?? this.adaptive,
   );
 }
 
@@ -43,17 +49,19 @@ class OpponentPicker extends StatelessWidget {
     super.key,
     required this.setup,
     required this.computerAvailable,
+    required this.adaptiveLevel,
     required this.onChanged,
   });
 
   final GameSetup setup;
   final bool computerAvailable;
+  final int adaptiveLevel;
   final ValueChanged<GameSetup> onChanged;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final level = engineLevel(setup.level);
+    final level = engineLevel(setup.adaptive ? adaptiveLevel : setup.level);
     final vsComputer = setup.opponent == Opponent.computer;
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -107,14 +115,24 @@ class OpponentPicker extends StatelessWidget {
             'Circa ${level.approxElo} Elo',
             style: theme.textTheme.bodySmall,
           ),
-          Slider(
-            value: setup.level.toDouble(),
-            min: 1,
-            max: engineLevels.length.toDouble(),
-            divisions: engineLevels.length - 1,
-            label: level.name,
-            onChanged: (v) => onChanged(setup.copyWith(level: v.round())),
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            title: const Text('Adattivo'),
+            subtitle: const Text(
+              'Il livello si adegua ai tuoi risultati, per vincere circa metà delle partite.',
+            ),
+            value: setup.adaptive,
+            onChanged: (v) => onChanged(setup.copyWith(adaptive: v)),
           ),
+          if (!setup.adaptive)
+            Slider(
+              value: setup.level.toDouble(),
+              min: 1,
+              max: engineLevels.length.toDouble(),
+              divisions: engineLevels.length - 1,
+              label: level.name,
+              onChanged: (v) => onChanged(setup.copyWith(level: v.round())),
+            ),
         ],
       ],
     );

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 
+import '../engine/adaptive.dart';
 import '../engine/computer_player.dart';
 import '../engine/levels.dart';
 import '../engine/uci_transport.dart';
@@ -17,6 +18,7 @@ import '../review/engine_evaluator.dart';
 import '../review/review_page.dart';
 import '../settings/settings.dart';
 import '../settings/settings_page.dart';
+import '../storage/key_value_store.dart';
 import 'chess_game.dart';
 import 'clock.dart';
 import 'material.dart';
@@ -36,11 +38,15 @@ class GamePage extends StatefulWidget {
     bool? computerAvailable,
     this.createComputer,
     this.now,
+    this.store,
   }) : computerAvailable = computerAvailable ?? StockfishTransport.isSupported;
 
   final SettingsController settings;
   final bool computerAvailable;
   final ComputerPlayer Function()? createComputer;
+
+  /// Archivio della stima dell'avversario adattivo; quello su file se assente.
+  final KeyValueStore? store;
 
   /// Ora corrente per l'orologio; quella di sistema se assente.
   final DateTime Function()? now;
@@ -59,6 +65,12 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   );
   Side _orientation = Side.white;
   GameSetup _setup = const GameSetup();
+  AdaptiveOpponent _adaptive = const AdaptiveOpponent();
+  Future<KeyValueStore>? _store;
+
+  /// Livello della partita in corso contro il computer.
+  int _gameLevel = defaultEngineLevel;
+  bool _resultRecorded = false;
 
   /// Ultima variante scelta per la partita tra due persone.
   Variant _twoPlayerVariant = Variant.standard;
@@ -105,6 +117,35 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _autoFlip = _settings.autoFlip;
     widget.settings.addListener(_onSettingsChanged);
     WidgetsBinding.instance.addObserver(this);
+    unawaited(_loadAdaptive());
+  }
+
+  Future<KeyValueStore> _openStore() => _store ??= () async {
+    if (widget.store != null) return widget.store!;
+    try {
+      return await JsonFileStore.open();
+    } catch (_) {
+      return MemoryStore();
+    }
+  }();
+
+  Future<void> _loadAdaptive() async {
+    final loaded = await AdaptiveOpponent.load(await _openStore());
+    if (mounted) setState(() => _adaptive = loaded);
+  }
+
+  /// Aggiorna la stima del giocatore a fine partita adattiva, una sola volta.
+  void _recordAdaptiveResult() {
+    final side = _computerSide;
+    if (side == null || !_setup.adaptive || _resultRecorded || !_game.isOver) {
+      return;
+    }
+    _resultRecorded = true;
+    final winner = _game.outcome?.winner;
+    final score = winner == null ? 0.5 : (winner == side ? 0.0 : 1.0);
+    _adaptive = _adaptive.record(score);
+    final adaptive = _adaptive;
+    unawaited(_openStore().then(adaptive.save).catchError((_) {}));
   }
 
   @override
@@ -244,6 +285,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _viewPly = null;
     _syncClock();
     _board.updatePosition(_gameData(), animate: animate, resetPremove: true);
+    _recordAdaptiveResult();
     setState(() {
       if (_settings.autoFlip && _computerSide == null) {
         _orientation = _game.position.turn;
@@ -331,7 +373,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       clock.start(side);
     }
     _searchClock = clock?.snapshot();
-    var level = engineLevel(_setup.level);
+    var level = engineLevel(_gameLevel);
     if (clock != null) {
       level = level.withinClock(
         clock.remaining(side),
@@ -506,6 +548,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           whiteName: _settings.whiteName,
           blackName: _settings.blackName,
           setup: _setup,
+          adaptiveLevel: _adaptive.level,
           computerAvailable: widget.computerAvailable,
         ),
       ),
@@ -516,6 +559,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _clockBeforeSuspension = false;
     final setup = choice.setup;
     _setup = setup;
+    _gameLevel = setup.adaptive ? _adaptive.level : setup.level;
+    _resultRecorded = false;
     final vsComputer = setup.opponent == Opponent.computer;
     if (!vsComputer) _twoPlayerVariant = choice.variant;
     final variant = vsComputer ? Variant.standard : choice.variant;
@@ -859,8 +904,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                 children: [
                   title,
                   Text(
-                    'Computer, livello ${_setup.level}: '
-                    '${engineLevel(_setup.level).name}',
+                    'Computer, livello $_gameLevel: '
+                    '${engineLevel(_gameLevel).name}',
                     style: Theme.of(context).textTheme.labelMedium,
                   ),
                 ],
@@ -1430,6 +1475,7 @@ class _TimeControlSheet extends StatefulWidget {
     required this.whiteName,
     required this.blackName,
     required this.setup,
+    required this.adaptiveLevel,
     required this.computerAvailable,
   });
 
@@ -1437,6 +1483,7 @@ class _TimeControlSheet extends StatefulWidget {
   final String whiteName;
   final String blackName;
   final GameSetup setup;
+  final int adaptiveLevel;
   final bool computerAvailable;
 
   @override
@@ -1498,6 +1545,7 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
             const SizedBox(height: 8),
             OpponentPicker(
               setup: _setup,
+              adaptiveLevel: widget.adaptiveLevel,
               computerAvailable: widget.computerAvailable,
               onChanged: (setup) => setState(() => _setup = setup),
             ),

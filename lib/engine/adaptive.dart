@@ -18,8 +18,7 @@ class AdaptiveOpponent {
   /// Livello con l'Elo indicativo più vicino alla stima.
   int get level => engineLevels
       .reduce(
-        (a, b) =>
-            (a.approxElo - rating).abs() <= (b.approxElo - rating).abs()
+        (a, b) => (a.approxElo - rating).abs() <= (b.approxElo - rating).abs()
             ? a
             : b,
       )

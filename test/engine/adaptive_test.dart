@@ -35,22 +35,25 @@ void main() {
     expect(a.level, 1);
   });
 
-  test('RF-26 contro un giocatore stabile le vittorie si avvicinano al 50%', () {
-    for (final strength in [800, 1500, 2200]) {
-      final random = math.Random(strength);
-      var a = const AdaptiveOpponent();
-      var wins = 0.0;
-      for (var i = 0; i < 300; i++) {
-        final opponent = engineLevel(a.level).approxElo;
-        final score = random.nextDouble() < _expected(strength, opponent)
-            ? 1.0
-            : 0.0;
-        if (i >= 100) wins += score;
-        a = a.record(score);
+  test(
+    'RF-26 contro un giocatore stabile le vittorie si avvicinano al 50%',
+    () {
+      for (final strength in [800, 1500, 2200]) {
+        final random = math.Random(strength);
+        var a = const AdaptiveOpponent();
+        var wins = 0.0;
+        for (var i = 0; i < 300; i++) {
+          final opponent = engineLevel(a.level).approxElo;
+          final score = random.nextDouble() < _expected(strength, opponent)
+              ? 1.0
+              : 0.0;
+          if (i >= 100) wins += score;
+          a = a.record(score);
+        }
+        expect(wins / 200, inInclusiveRange(0.35, 0.65), reason: '$strength');
       }
-      expect(wins / 200, inInclusiveRange(0.35, 0.65), reason: '$strength');
-    }
-  });
+    },
+  );
 
   test('si salva e si ricarica', () async {
     final store = MemoryStore();
