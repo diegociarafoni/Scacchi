@@ -157,6 +157,28 @@ void main() {
       expect(explainMove(m)!.theme, isNot(CoachTheme.allowedPin));
     });
 
+    test('la torre inchioda un pezzo sulla colonna del re', () async {
+      final m = await reviewOne(
+        'r6k/8/8/8/8/8/P3N2P/4K3 w - - 0 1',
+        'h2h3',
+        best: line(['a2a3'], const EngineScore.cp(150)),
+        reply: line(['a8e8'], const EngineScore.cp(0)),
+      );
+      final c = explainMove(m)!;
+      expect(c.theme, CoachTheme.allowedPin);
+      expect(c.text, contains('la torre nera inchioda il cavallo in e2'));
+    });
+
+    test('un pedone inchiodato non conta', () async {
+      final m = await reviewOne(
+        'r6k/8/8/8/8/8/P3P2P/4K3 w - - 0 1',
+        'h2h3',
+        best: line(['a2a3'], const EngineScore.cp(150)),
+        reply: line(['a8e8'], const EngineScore.cp(0)),
+      );
+      expect(explainMove(m)!.theme, isNot(CoachTheme.allowedPin));
+    });
+
     test('ripresa mancata', () async {
       // Il Nero cattura il cavallo in c6 e il Bianco non lo riprende con bxc6.
       final initial = Chess.fromSetup(

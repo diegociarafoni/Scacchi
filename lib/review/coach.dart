@@ -41,9 +41,10 @@ CoachComment? explainMove(MoveReview m, {MoveReview? previous}) {
       _missedMate(m) ??
       _hanging(before, after, m.replyLine) ??
       _allowedFork(after, m.replyLine) ??
-      _allowedPin(after, m.replyLine) ??
       _missedTactic(before, m, previous) ??
       _materialLoss(before, after, m.replyLine) ??
+      // Una inchiodatura è un danno più lieve: non copre perdite concrete.
+      _allowedPin(after, m.replyLine) ??
       (m.bestSan == null
           ? null
           : CoachComment(

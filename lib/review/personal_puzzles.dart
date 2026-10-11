@@ -131,7 +131,7 @@ const _themes = {
   CoachTheme.allowedMate: {'defensiveMove'},
   CoachTheme.hangingPiece: {'defensiveMove'},
   CoachTheme.allowedFork: {'defensiveMove'},
-  CoachTheme.allowedPin: {'defensiveMove', 'pin'},
+  CoachTheme.allowedPin: {'defensiveMove'},
   CoachTheme.materialLoss: {'defensiveMove'},
   CoachTheme.missedCapture: {'hangingPiece'},
   CoachTheme.missedFork: {'fork'},
