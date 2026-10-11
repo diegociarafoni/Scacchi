@@ -2,7 +2,7 @@
 
 ## Aggiornamenti
 
-[Dependabot](../.github/dependabot.yml) apre ogni settimana PR per pacchetti pub, azioni GitHub e Gradle. Gli aggiornamenti minori e di correzione dei pacchetti pub sono raggruppati in una sola PR. I messaggi rispettano la convenzione Angular (`build(deps): …`, `ci(deps): …`) e passano gli stessi controlli di ogni altra PR.
+[Dependabot](../.github/dependabot.yml) apre ogni settimana PR per pacchetti pub, azioni GitHub e Gradle. Gli aggiornamenti minori e di correzione dei pacchetti pub sono raggruppati in una sola PR, e così tutti quelli delle azioni GitHub, compresa l'azione locale in `.github/actions/`. I messaggi rispettano la convenzione Angular (`build(deps): …`, `ci(deps): …`) e passano gli stessi controlli di ogni altra PR.
 
 Dependabot propone solo versioni pubblicate da almeno 7 giorni (`cooldown`): un pacchetto compromesso viene di solito scoperto e ritirato prima di allora. Gli aggiornamenti di sicurezza non hanno questa attesa.
 

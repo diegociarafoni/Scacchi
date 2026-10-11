@@ -32,8 +32,8 @@ Per ogni mossa `perdita = win% con la mossa migliore − win% con la mossa gioca
 | Categoria | Simbolo | Regola |
 |---|---|---|
 | Brillante | !! | Sacrificio (vedi sotto), mossa migliore o con perdita ≤ 2, dopo la mossa win% ≥ 50, prima < 97 |
-| Ottima | ! | Mossa migliore; la seconda scelta del motore vale almeno 20 punti in meno e sotto il 60%; non è la semplice punizione di un errore grave dell'avversario |
-| Libro | 📖 | Mossa di apertura nota con perdita ≤ 10 (il riconoscimento delle aperture è fornito dal modulo aperture) |
+| Ottima | ! | Mossa migliore; la seconda scelta del motore vale almeno 20 punti in meno e sotto il 60%; non è la semplice punizione di un errore grave dell'avversario; dopo la mossa win% ≥ 30 |
+| Libro | 📖 | Mossa di apertura nota con perdita ≤ 10. Non ancora collegato: `reviewGame` accetta `isBook`, ma la schermata non lo passa, quindi oggi nessuna mossa risulta di libro |
 | Migliore | ★ | Prima scelta del motore |
 | Eccellente | 👍 | Perdita ≤ 2 |
 | Buona | ✓ | Perdita ≤ 5 |
@@ -72,7 +72,7 @@ Un pedone offerto non basta, come su chess.com.
 
 ## Schermata di revisione
 
-Si apre dal menu della partita (⋮ → **Revisione della partita**), disponibile quando il motore è presente e c'è almeno una mossa. Il codice è in `lib/review/review_page.dart`.
+Si apre dal menu della partita (⋮ → **Revisione della partita**: c'è il motore, c'è almeno una mossa e il computer non sta pensando; la voce manca nelle partite di tornei e percorso e nel profilo bambino) oppure toccando una partita nell'**Archivio** della scheda Tu. Il codice è in `lib/review/review_page.dart`.
 
 | Elemento | Requisito | Comportamento |
 |---|---|---|
@@ -86,9 +86,9 @@ Si apre dal menu della partita (⋮ → **Revisione della partita**), disponibil
 | Lista mosse | RF-61 | Ogni mossa con il simbolo della categoria, bordo del colore della categoria |
 | Navigazione | RM-01 | Barra in basso: inizio, precedente, successiva, fine |
 
-**Cache** (RF-66): la revisione calcolata resta in memoria per la sessione (`ReviewCache`), quindi riaprirla è immediato. Il salvataggio nel database locale arriverà con l'archivio delle partite.
+**Cache** (RF-66): le ultime 20 revisioni restano in memoria per la sessione (`ReviewCache`), quindi riaprirle è immediato. Non vengono salvate su disco.
 
-**Progressi**: `ReviewPage.onReviewed` viene chiamata solo per un'analisi nuova, quindi una revisione vale XP una volta per sessione della schermata di partita (riaprirla dalla cache non ne dà altri; una nuova sessione sulla stessa partita è già coperta dall'anti-abuso delle attività). `GamePage` registra `ReviewCompleted` tramite `ActivityRecorder`, con la precisione di chi ha giocato contro il computer e il numero di mosse brillanti, e mostra il riepilogo con `showProgressFeedback`. Nella partita tra due persone la precisione non è di nessuno in particolare e non viene registrata.
+**Progressi**: `ReviewPage.onReviewed` viene chiamata solo per un'analisi nuova, quindi una revisione vale XP una volta per sessione della schermata di partita (riaprirla dalla cache non ne dà altri; una nuova sessione sulla stessa partita è già coperta dall'anti-abuso delle attività). `GamePage` registra `ReviewCompleted` tramite `ActivityRecorder`, con la precisione di chi ha giocato contro il computer e il numero di mosse brillanti, e mostra il riepilogo con `showProgressFeedback`. Nella partita tra due persone la precisione non è di nessuno in particolare e non viene registrata. Dall'archivio la revisione vale XP allo stesso modo, con la precisione del lato del giocatore salvato, senza il riepilogo a schermo.
 
 **Accessibilità**: la barra di valutazione ha un'etichetta descrittiva ("Bianco avanti di 1.5", "Matto in 2 per il Nero"), le mosse della lista sono pulsanti con mossa e categoria, la precisione è letta come percentuale.
 
@@ -108,15 +108,15 @@ Le regole si applicano in quest'ordine, e vale la prima che riconosce qualcosa:
 | Forchetta concessa | Il pezzo che risponde, senza poter essere catturato, attacca insieme due pezzi: il re, pezzi che valgono più di lui o pezzi indifesi | "Dopo Nc2+ il cavallo nero attacca insieme il re e la torre: è una forchetta." |
 | Ripresa mancata | La mossa migliore riprende sulla casa dove l'avversario ha appena catturato | "Potevi riprendere il pezzo: bxc6 cattura l'alfiere." |
 | Cattura netta mancata | La mossa migliore cattura con un guadagno di almeno due pedoni | "Potevi vincere materiale: Qxd5 cattura la torre." |
-| Inchiodatura concessa | Il pezzo che risponde (alfiere, torre o donna) inchioda al re un tuo pezzo non pedone, non si può catturare e non inchiodava già lo stesso pezzo | "Dopo Bb4 l'alfiere nero inchioda il cavallo in d2 contro il re." |
 | Doppio attacco mancato | La mossa migliore attacca due pezzi con le stesse condizioni della forchetta | "Potevi fare un doppio attacco con Nc7+: il cavallo attacca il re e la torre." |
 | Scoperta mancata | Dopo la mossa migliore un pezzo rimasto fermo attacca una casa occupata che prima non attaccava (l'arrocco è escluso) | "Potevi fare un attacco di scoperta con Nc6+: l'alfiere attacca la donna." |
 | Perdita di materiale | Rispetto a prima della mossa, dopo la variante prevista (quattro semimosse) si hanno almeno due pedoni in meno | "Questa mossa perde materiale: circa 3 pedoni nella variante prevista." |
+| Inchiodatura concessa | Il pezzo che risponde (alfiere, torre o donna) inchioda al re un tuo pezzo non pedone, non si può catturare e non inchiodava già lo stesso pezzo (si controlla per ultima: è un danno più lieve) | "Dopo Bb4 l'alfiere nero inchioda il cavallo in d2 contro il re." |
 | Generica | Nessuna delle precedenti | "Meglio e4: la tua posizione peggiora." |
 
 Le mosse non sbagliate ricevono una frase di lode per categoria ("È la mossa migliore.").
 
-Non ancora coperti: re esposto (RF-70) e il commento in tempo reale durante la partita (RF-72).
+Non ancora coperto: re esposto (RF-70). Il commento in tempo reale durante la partita (RF-72) è dell'allenatore: vedi [allenatore.md](allenatore.md).
 
 ## Puzzle dagli errori
 
