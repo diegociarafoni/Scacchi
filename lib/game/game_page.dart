@@ -17,6 +17,10 @@ import '../engine/bots.dart';
 import '../engine/computer_player.dart';
 import '../engine/levels.dart';
 import '../engine/uci_transport.dart';
+import '../exchange/qr_l10n.dart';
+import '../exchange/qr_receive_page.dart';
+import '../exchange/qr_send_page.dart';
+import '../exchange/qr_transfer.dart';
 import '../l10n/app_localizations.dart';
 import '../openings/opening_name.dart';
 import '../progress/activity.dart';
@@ -68,6 +72,7 @@ class GamePage extends StatefulWidget {
     this.challenge,
     this.onFinished,
     this.store,
+    this.qrScanner = zxingScanner,
     this.onSavePuzzles,
   }) : computerAvailable = computerAvailable ?? StockfishTransport.isSupported;
 
@@ -103,6 +108,9 @@ class GamePage extends StatefulWidget {
 
   /// Sceglie la posizione Chess960; sostituibile nei test.
   final int Function() chess960Id;
+
+  /// Lettore QR per continuare una partita passata da un altro telefono.
+  final QrScannerBuilder qrScanner;
 
   @override
   State<GamePage> createState() => _GamePageState();
@@ -590,7 +598,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   void _finishGame() {
     final game = _game;
     if (!game.isOver) return;
-    final side = _computerSide?.opposite;
+    final (side, elo) = _playerAndElo;
     final ending =
         '${identityHashCode(game)}:${game.endReason}:${game.moves.length}';
     if (side != null && ending != _reportedEnding) {
@@ -605,9 +613,6 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     }
     if (game.moves.isEmpty) return;
     final now = _clockNow();
-    final elo = side == null
-        ? null
-        : (_bot?.elo ?? engineLevel(_gameLevel).approxElo);
     final key =
         '${identityHashCode(game)}:${game.endReason}:${game.moves.length}';
     if (key != _archivedKey) {
@@ -642,10 +647,18 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   void _archive(ChessGame game, Side? side, DateTime now, int? elo) {
     final save = widget.onSave;
     if (save == null) return;
+    final saved = _savedGame(game, side, now, elo);
+    unawaited(
+      save(saved)
+          .onError((Object e, _) => debugPrint('Partita non salvata: $e')),
+    );
+  }
+
+  SavedGame _savedGame(ChessGame game, Side? side, DateTime now, int? elo) {
     String name(Side s) => side == null
         ? (_settings.nameOf(s) ?? (s == Side.white ? 'Bianco' : 'Nero'))
         : (s == side ? 'Tu' : (_bot?.name ?? 'Computer'));
-    final saved = SavedGame.fromGame(
+    return SavedGame.fromGame(
       game,
       id: _gameId,
       white: name(Side.white),
@@ -657,9 +670,65 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       timeControl: _clock?.control.label,
       opponentElo: elo,
     );
-    unawaited(
-      save(saved)
-          .onError((Object e, _) => debugPrint('Partita non salvata: $e')),
+  }
+
+  /// Colore dell'utente ed Elo dell'avversario; `null` tra due persone.
+  (Side?, int?) get _playerAndElo {
+    final side = _computerSide?.opposite;
+    return (
+      side,
+      side == null ? null : (_bot?.elo ?? engineLevel(_gameLevel).approxElo),
+    );
+  }
+
+  /// Mostra la partita, anche in corso, come QR per un altro telefono.
+  Future<void> _sendQr() async {
+    final (side, elo) = _playerAndElo;
+    final saved = _savedGame(_game, side, _clockNow(), elo);
+    final frames = encodeTransfer(saved.pgn);
+    await _whileSuspended(
+      () => Navigator.of(context).push<void>(
+        MaterialPageRoute(
+          builder: (_) => QrSendPage(title: saved.title, frames: frames),
+        ),
+      ),
+    );
+  }
+
+  /// Continua qui, tra due persone e senza orologio, una partita ricevuta.
+  /// I nomi delle impostazioni non cambiano: quelli del PGN possono essere
+  /// "Tu" o il nome di un bot sull'altro telefono.
+  Future<void> _receiveQr() async {
+    final l10n = qrL10n(context);
+    // Riprende la partita corrente se quella ricevuta non si continua.
+    final games = await _whileSuspended(() async {
+      final text = await Navigator.of(context).push<String>(
+        MaterialPageRoute(
+          builder: (_) => QrReceivePage(scanner: widget.qrScanner),
+        ),
+      );
+      return text == null ? null : receivedGames(text);
+    }, restart: (games) => games?.firstOrNull?.game.isOver ?? true);
+    if (!mounted || games == null) return;
+    if (games.isEmpty) {
+      _showMessage(l10n.qrInvalidGame);
+      return;
+    }
+    final game = games.first.game;
+    if (game.isOver) {
+      _showMessage(l10n.qrFinishedGame);
+      return;
+    }
+    _bot = null;
+    _resultRecorded = false;
+    _botResultRecorded = false;
+    _twoPlayerVariant = game.variant;
+    // Come per l'editor: si archivia, ma non vale XP una partita iniziata altrove.
+    _beginGame(
+      game,
+      _setup.copyWith(opponent: Opponent.human),
+      null,
+      fromEditor: true,
     );
   }
 
@@ -1690,30 +1759,48 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                 ],
               ),
         actions: [
-          // Stockfish analizza solo gli scacchi classici; analisi e revisione
-          // sono strumenti da adulti, nascosti nel profilo bambino.
-          if (widget.computerAvailable &&
-              !_isChallenge &&
-              _game.variant == Variant.standard &&
-              l == null)
+          // Una sfida (guardiano, torneo) non si sostituisce con un'altra
+          // partita; nel profilo bambino restano nascosti gli strumenti adulti.
+          if (!_isChallenge && l == null)
             PopupMenuButton<String>(
               tooltip: 'Altre azioni',
               onSelected: (value) {
                 if (value == 'review') _openReview();
                 if (value == 'analysis') _openAnalysis();
+                if (value == 'qrSend') unawaited(_sendQr());
+                if (value == 'qrReceive') unawaited(_receiveQr());
               },
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  value: 'analysis',
-                  enabled: _task != _ComputerTask.draw,
-                  child: const Text('Analisi della posizione'),
-                ),
-                PopupMenuItem(
-                  value: 'review',
-                  enabled: _game.moves.isNotEmpty && !_thinking,
-                  child: const Text('Revisione della partita'),
-                ),
-              ],
+              itemBuilder: (context) {
+                final l10n = qrL10n(context);
+                return [
+                  // Stockfish analizza solo gli scacchi classici.
+                  if (widget.computerAvailable &&
+                      _game.variant == Variant.standard) ...[
+                    PopupMenuItem(
+                      value: 'analysis',
+                      enabled: _task != _ComputerTask.draw,
+                      child: const Text('Analisi della posizione'),
+                    ),
+                    PopupMenuItem(
+                      value: 'review',
+                      enabled: _game.moves.isNotEmpty && !_thinking,
+                      child: const Text('Revisione della partita'),
+                    ),
+                  ],
+                  PopupMenuItem(
+                    value: 'qrSend',
+                    // Una posizione dell'editor si può passare anche senza mosse.
+                    enabled:
+                        (_game.moves.isNotEmpty || _fromEditor) && !_thinking,
+                    child: Text(l10n.qrSendTitle),
+                  ),
+                  PopupMenuItem(
+                    value: 'qrReceive',
+                    enabled: !_thinking,
+                    child: Text(l10n.qrReceiveTitle),
+                  ),
+                ];
+              },
             ),
           if (!_isChallenge && l == null)
             IconButton(
