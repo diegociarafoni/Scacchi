@@ -1,5 +1,6 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scacchi/progress/activity.dart';
 import 'package:scacchi/tournament/tournament.dart';
 
 const bots = [
@@ -226,5 +227,35 @@ void main() {
     final back = Tournament.fromJson(t.toJson());
     expect(back.toJson(), t.toJson());
     expect(back.userGame?.opponent, t.userGame?.opponent);
+  });
+
+  group('tournamentPoints', () {
+    const normal = UserGame(
+      opponent: Player(name: 'x', elo: 1000),
+      color: Side.white,
+    );
+    const armageddonWhite = UserGame(
+      opponent: Player(name: 'x', elo: 1000),
+      color: Side.white,
+      armageddon: true,
+    );
+    const armageddonBlack = UserGame(
+      opponent: Player(name: 'x', elo: 1000),
+      color: Side.black,
+      armageddon: true,
+    );
+
+    test('partita normale: 1, ½, 0', () {
+      expect(tournamentPoints(GameResult.win, normal), 1);
+      expect(tournamentPoints(GameResult.draw, normal), 0.5);
+      expect(tournamentPoints(GameResult.loss, normal), 0);
+    });
+
+    test('Armageddon: la patta vale una vittoria per il nero', () {
+      expect(tournamentPoints(GameResult.draw, armageddonBlack), 1);
+      expect(tournamentPoints(GameResult.draw, armageddonWhite), 0);
+      expect(tournamentPoints(GameResult.win, armageddonWhite), 1);
+      expect(tournamentPoints(GameResult.loss, armageddonBlack), 0);
+    });
   });
 }

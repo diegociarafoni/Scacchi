@@ -23,6 +23,7 @@ class YouPage extends StatelessWidget {
     this.reminders,
     this.simple = false,
     this.playGuardian,
+    this.tournamentPage,
   });
 
   /// Fonti dei dati: chiamate a ogni apertura, così un errore si riprova.
@@ -40,6 +41,10 @@ class YouPage extends StatelessWidget {
 
   /// Partita contro il guardiano; senza, le tappe guardiano mostrano un avviso.
   final PlayGuardian? playGuardian;
+
+  /// Schermata dei tornei; senza, la voce non compare (servono le partite
+  /// contro il computer).
+  final Future<Widget> Function()? tournamentPage;
 
   void _push(BuildContext context, Widget page) =>
       Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => page));
@@ -118,6 +123,13 @@ class YouPage extends StatelessWidget {
                   (c) => PathPage(controller: c, playGuardian: playGuardian),
                 ),
               ),
+              if (tournamentPage != null)
+                _Entry(
+                  icon: Icons.emoji_events_outlined,
+                  title: 'Tornei',
+                  subtitle: 'Gironi ed eliminazione diretta contro i bot',
+                  onTap: () => _open(context, tournamentPage!(), (w) => w),
+                ),
               _Entry(
                 icon: Icons.videogame_asset_outlined,
                 title: 'Minigiochi',

@@ -24,7 +24,11 @@ import '../reminders/reminder.dart';
 import '../reminders/reminder_controller.dart';
 import '../review/personal_puzzles.dart';
 import '../settings/settings.dart';
+import '../stats/local_rating.dart';
 import '../storage/key_value_store.dart';
+import '../tournament/tournament.dart';
+import '../tournament/tournament_controller.dart';
+import '../tournament/tournament_page.dart';
 import 'you_page.dart';
 
 /// Navigazione principale con la barra in basso, nella zona del pollice.
@@ -40,6 +44,7 @@ class HomeShell extends StatefulWidget {
     this.path,
     this.computerAvailable,
     this.createComputer,
+    this.tournaments,
   });
 
   final SettingsController settings;
@@ -68,6 +73,9 @@ class HomeShell extends StatefulWidget {
   final bool? computerAvailable;
   final ComputerPlayer Function()? createComputer;
 
+  /// Sostituibile nei test; di default i tornei salvati.
+  final Future<TournamentController> Function()? tournaments;
+
   @override
   State<HomeShell> createState() => _HomeShellState();
 }
@@ -80,6 +88,7 @@ class _HomeShellState extends State<HomeShell> {
   ReminderController? _reminders;
   ReminderScheduler? _scheduler;
   Future<PathController>? _path;
+  Future<TournamentController>? _tournaments;
 
   /// La scheda Tu si costruisce alla prima apertura, poi resta in memoria.
   var _youVisited = false;
@@ -143,6 +152,63 @@ class _HomeShellState extends State<HomeShell> {
             _path = null;
             Error.throwWithStackTrace(e, st);
           });
+
+  /// Un solo torneo in memoria, salvato a ogni partita.
+  Future<TournamentController> _tournamentController() => _tournaments ??=
+      (widget.tournaments ??
+              () => TournamentController.open(recordActivity: _record))()
+          .catchError((Object e, StackTrace st) {
+            _tournaments = null;
+            Error.throwWithStackTrace(e, st);
+          });
+
+  /// Bot del torneo: un avversario per ogni livello del motore.
+  static final _bots = [
+    for (final l in engineLevels)
+      Player(name: l.name, elo: l.approxElo, levelId: l.id),
+  ];
+
+  Future<Widget> _tournamentPage() async {
+    final controller = await _tournamentController();
+    final games = await (await _archive()).list();
+    return TournamentPage(
+      controller: controller,
+      bots: _bots,
+      userElo: LocalRating.from(games).rating,
+      play: _playTournamentGame,
+    );
+  }
+
+  /// Gioca la partita del torneo e restituisce i punti, o `null` se non si è
+  /// conclusa. L'uscita dalla partita vale una sconfitta.
+  Future<double?> _playTournamentGame(
+    BuildContext context,
+    UserGame game,
+  ) async {
+    GameResult? result;
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => GamePage(
+          settings: widget.settings,
+          computerAvailable: true,
+          createComputer: widget.createComputer,
+          challenge: GameChallenge(
+            title: 'Torneo · ${game.opponent.name}',
+            levelId:
+                game.opponent.levelId ??
+                engineLevelForElo(game.opponent.elo).id,
+            side: game.color,
+          ),
+          onFinished: (r, _) => result = r,
+          onActivity: _record,
+          onSave: _saveGame,
+          progress: _progressController,
+        ),
+      ),
+    );
+    // Uscire prima di muovere vale una sconfitta: non si rilancia la partita.
+    return tournamentPoints(result ?? GameResult.loss, game);
+  }
 
   bool get _computerAvailable =>
       widget.computerAvailable ?? StockfishTransport.isSupported;
@@ -271,6 +337,7 @@ class _HomeShellState extends State<HomeShell> {
               reminders: () => _reminders,
               simple: _kidMode,
               playGuardian: _computerAvailable ? _playGuardian : null,
+              tournamentPage: _computerAvailable ? _tournamentPage : null,
             )
           else
             const SizedBox.shrink(),
