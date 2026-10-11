@@ -35,4 +35,18 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get kidAdultGateConfirm => 'Conferma';
+
+  @override
+  String get kidBotPinoDescription => 'Un pulcino allegro che ama attaccare';
+
+  @override
+  String get kidBotChiaraDescription =>
+      'Gioca con calma e aspetta le tue mosse';
+
+  @override
+  String get kidBotRoccoDescription => 'Una volpe furba piena di sorprese';
+
+  @override
+  String get kidBotUnavailable =>
+      'Su questo dispositivo i bot non sono disponibili.';
 }
