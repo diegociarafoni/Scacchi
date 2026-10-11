@@ -5,6 +5,7 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
 import 'quiz.dart';
+import 'minigame.dart';
 
 /// Sessione di dieci domande a scelta multipla, senza tempo.
 class QuizPage extends StatefulWidget {
@@ -23,7 +24,7 @@ class QuizPage extends StatefulWidget {
   final Random random;
 
   /// Chiamata con il numero di risposte giuste a fine sessione.
-  final ValueChanged<int> onFinished;
+  final ValueChanged<MinigameResult> onFinished;
 
   @override
   State<QuizPage> createState() => _QuizPageState();
@@ -35,6 +36,7 @@ class _QuizPageState extends State<QuizPage> {
   int _score = 0;
   int? _chosen;
   bool _finished = false;
+  final _clock = Stopwatch()..start();
 
   void _choose(int i) {
     if (_chosen != null) return;
@@ -47,7 +49,7 @@ class _QuizPageState extends State<QuizPage> {
   void _advance() {
     if (_index + 1 == QuizPage.questions) {
       setState(() => _finished = true);
-      widget.onFinished(_score);
+      widget.onFinished((score: _score, duration: _clock.elapsed));
       return;
     }
     setState(() {
@@ -65,6 +67,7 @@ class _QuizPageState extends State<QuizPage> {
       _finished = false;
       _item = widget.next(widget.random);
     });
+    _clock.reset();
   }
 
   @override

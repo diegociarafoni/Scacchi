@@ -6,13 +6,8 @@ import '../game/material.dart';
 import 'blind.dart';
 
 /// Materiale del bianco meno quello del nero.
-int materialBalance(Board board) {
-  int score(Side side) => board
-      .materialCount(side)
-      .entries
-      .fold(0, (sum, e) => sum + e.value * pieceValues[e.key]!);
-  return score(Side.white) - score(Side.black);
-}
+int materialBalance(Board board) =>
+    materialScore(board, Side.white) - materialScore(board, Side.black);
 
 String balanceLabel(int balance) => balance == 0
     ? 'Pari'
@@ -52,10 +47,16 @@ Position _randomGame(Random random, int plies) {
     final moves = legalMoves(pos);
     final captures = [
       for (final m in moves)
-        if (pos.board.pieceAt(m.to) != null) m,
+        if (_isCapture(pos, m)) m,
     ];
     final pool = captures.isNotEmpty && random.nextBool() ? captures : moves;
     pos = pos.play(pool[random.nextInt(pool.length)]);
   }
   return pos;
 }
+
+/// Cattura normale o en passant (il pedone cambia colonna su una casa vuota).
+bool _isCapture(Position pos, NormalMove move) =>
+    pos.board.pieceAt(move.to)?.color == pos.turn.opposite ||
+    (pos.board.roleAt(move.from) == Role.pawn &&
+        move.from.file != move.to.file);

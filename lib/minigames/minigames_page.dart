@@ -20,9 +20,13 @@ class MinigamesPage extends StatelessWidget {
 
   void _open(BuildContext context, Minigame game) {
     final random = Random();
-    Future<void> finished(int score) async {
+    Future<void> finished(MinigameResult result) async {
       final update = await progress?.record(
-        MinigameFinished(game: game.id, score: score),
+        MinigameFinished(
+          game: game.id,
+          score: result.score,
+          duration: result.duration,
+        ),
       );
       if (update != null && context.mounted) {
         showProgressFeedback(context, update);

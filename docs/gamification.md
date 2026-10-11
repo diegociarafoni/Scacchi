@@ -16,7 +16,7 @@ Requisiti RG-01, RG-02, RG-05, RG-07, RG-08 e RG-12. Il codice è in `lib/progre
 | Partita patta | 12 |
 | Partita vinta | 15 |
 | Puzzle risolto | 5 |
-| Minigioco concluso | 5 |
+| Minigioco concluso con almeno un punto | 5 |
 | Sessione di puzzle a tempo o a serie conclusa | 10 |
 | Lezione completata | 20 |
 | Revisione completata | 20 |

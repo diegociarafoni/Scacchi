@@ -100,10 +100,10 @@ String _roleName(Role role) => switch (role) {
 
 /// Svolgimento di una scacchiera.
 class CaptureAllRun {
-  CaptureAllRun(this.board)
+  CaptureAllRun(this.board, {int? optimalMoves})
     : square = board.start,
       remaining = [...board.targets],
-      optimalMoves = board.optimalMoves;
+      optimalMoves = optimalMoves ?? board.optimalMoves;
 
   final CaptureAllBoard board;
   final int optimalMoves;

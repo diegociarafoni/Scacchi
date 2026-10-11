@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 import 'board_layout.dart';
 import 'coordinates.dart';
+import 'minigame.dart';
 
 /// Allenatore delle coordinate a tempo: la scacchiera è senza lettere né
 /// numeri, si tocca la casa indicata.
@@ -19,8 +20,8 @@ class CoordinatesPage extends StatefulWidget {
 
   final Random random;
 
-  /// Chiamata con il punteggio alla fine di ogni sessione.
-  final ValueChanged<int> onFinished;
+  /// Chiamata alla fine di ogni sessione completa; chi esce prima la abbandona.
+  final ValueChanged<MinigameResult> onFinished;
 
   @override
   State<CoordinatesPage> createState() => _CoordinatesPageState();
@@ -56,7 +57,10 @@ class _CoordinatesPageState extends State<CoordinatesPage> {
   void _stop() {
     _timer?.cancel();
     setState(() => _timer = null);
-    widget.onFinished(_drill!.score);
+    widget.onFinished((
+      score: _drill!.score,
+      duration: CoordinateDrill.duration,
+    ));
   }
 
   void _tap(Square square) {

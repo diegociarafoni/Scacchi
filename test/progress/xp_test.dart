@@ -26,6 +26,7 @@ void main() {
         xpFor(const MinigameFinished(game: 'coordinate', score: 3)),
         xpFor(const PuzzleSolved()),
       );
+      expect(xpFor(const MinigameFinished(game: 'coordinate', score: 0)), 0);
     });
 
     test('un puzzle risolto vale XP', () {

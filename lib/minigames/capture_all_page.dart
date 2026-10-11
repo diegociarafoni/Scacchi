@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import 'board_layout.dart';
 import 'capture_all.dart';
+import 'minigame.dart';
 
 /// "Cattura tutto": cinque scacchiere in cui un solo pezzo cattura i pedoni.
 class CaptureAllPage extends StatefulWidget {
@@ -18,7 +19,7 @@ class CaptureAllPage extends StatefulWidget {
   final Random random;
 
   /// Chiamata con il totale delle stelle a fine sessione.
-  final ValueChanged<int> onFinished;
+  final ValueChanged<MinigameResult> onFinished;
 
   @override
   State<CaptureAllPage> createState() => _CaptureAllPageState();
@@ -26,6 +27,7 @@ class CaptureAllPage extends StatefulWidget {
 
 class _CaptureAllPageState extends State<CaptureAllPage> {
   late CaptureAllSession _session = CaptureAllSession(widget.random);
+  final _clock = Stopwatch()..start();
   late final ChessboardController _board = ChessboardController(
     game: _gameData(),
   );
@@ -68,14 +70,19 @@ class _CaptureAllPageState extends State<CaptureAllPage> {
   }
 
   void _retry() {
-    setState(() => _session.run = CaptureAllRun(_run.board));
+    setState(
+      () => _session.run = CaptureAllRun(
+        _run.board,
+        optimalMoves: _run.optimalMoves,
+      ),
+    );
     _board.updatePosition(_gameData(), animate: false);
   }
 
   void _next() {
     setState(() => _session.finishRound(_run.stars));
     if (_session.done) {
-      widget.onFinished(_session.score);
+      widget.onFinished((score: _session.score, duration: _clock.elapsed));
     } else {
       _board.updatePosition(_gameData(), animate: false);
     }
@@ -83,6 +90,7 @@ class _CaptureAllPageState extends State<CaptureAllPage> {
 
   void _again() {
     setState(() => _session = CaptureAllSession(widget.random));
+    _clock.reset();
     _board.updatePosition(_gameData(), animate: false);
   }
 

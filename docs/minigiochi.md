@@ -17,16 +17,19 @@ Solo le coordinate hanno un limite di tempo, perché è il senso dell'esercizio;
 
 - Tutto si genera in locale con un `Random`; i test passano un seme fisso e ottengono sempre le stesse domande.
 - **Cattura tutto**: il minimo di mosse si calcola con una ricerca in ampiezza sugli stati (casa del pezzo, pedoni rimasti), tenendo conto dei pedoni come ostacoli. Le stelle seguono la stessa regola delle tappe del percorso: tre al minimo, due con al massimo due mosse in più, una altrimenti. L'alfiere riceve solo pedoni sulle case del proprio colore, così ogni scacchiera è risolvibile; i test lo verificano su 200 scacchiere giocando la soluzione trovata.
-- **Alla cieca**: mosse legali scelte a caso con `dartchess`; le scelte sono il pezzo giusto più tre alternative tra i dodici pezzi e la casa vuota.
-- **Conta del materiale**: partita casuale da 20 a 49 semimosse, con le catture favorite per creare squilibri; la posizione non è mai finita. Le alternative sono vicine alla risposta (±1, ±2, ±3, ±5 o il segno opposto).
+- **Alla cieca**: mosse legali scelte a caso con `dartchess` (l'arrocco compare una volta sola, anche se la scacchiera lo accetta pure come re sulla torre); le scelte sono il pezzo giusto più tre alternative tra i dodici pezzi e la casa vuota.
+- **Conta del materiale**: partita casuale da 20 a 49 semimosse, con le catture favorite per creare squilibri (comprese quelle en passant); la posizione non è mai finita. Le alternative sono vicine alla risposta (±1, ±2, ±3, ±5 o il segno opposto).
 
 ## Progressi
 
-A fine sessione la schermata registra `MinigameFinished(game: 'coordinate', score: n)`:
+A fine sessione la schermata registra `MinigameFinished(game: 'coordinate', score: n, duration: d)`:
 
-- 5 XP, come un puzzle;
+- 5 XP, come un puzzle, se il punteggio è almeno 1: una sessione a vuoto non vale XP;
+- la durata, che conta per l'obiettivo giornaliero a minuti;
 - il record del minigioco in `PersonalRecords.minigames`, mostrato nell'elenco dei minigiochi e nel Profilo;
 - due traguardi: *Occhio di lince* (20 coordinate in una sessione) e *Giocoliere* (tutti i minigiochi provati).
+
+Una sessione chiusa prima della fine (tasto indietro) è abbandonata e non si registra.
 
 I minigiochi non contano come puzzle né come sessioni a tempo dei puzzle, così non falsano quei record e quelle sfide.
 

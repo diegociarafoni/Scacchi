@@ -45,7 +45,10 @@ void main() {
     final scores = <int>[];
     await tester.pumpWidget(
       MaterialApp(
-        home: CoordinatesPage(random: Random(1), onFinished: scores.add),
+        home: CoordinatesPage(
+          random: Random(1),
+          onFinished: (r) => scores.add(r.score),
+        ),
       ),
     );
     await tester.tap(find.text('Inizia'));
@@ -100,7 +103,10 @@ void main() {
     final scores = <int>[];
     await tester.pumpWidget(
       MaterialApp(
-        home: CaptureAllPage(random: Random(5), onFinished: scores.add),
+        home: CaptureAllPage(
+          random: Random(5),
+          onFinished: (r) => scores.add(r.score),
+        ),
       ),
     );
     final mirror = CaptureAllSession(Random(5));
@@ -132,7 +138,7 @@ void main() {
           title: 'Conta del materiale',
           next: materialItem,
           random: Random(3),
-          onFinished: scores.add,
+          onFinished: (r) => scores.add(r.score),
         ),
       ),
     );
@@ -227,7 +233,9 @@ void main() {
       await tester.pump(const Duration(seconds: 31));
       await settle(tester);
       expect(progress.state.records.minigames, {'coordinate': 0});
-      expect(find.textContaining('XP'), findsOneWidget);
+      // Il tempo conta per l'obiettivo a minuti; senza punti niente XP.
+      expect(progress.state.todaySeconds, 30);
+      expect(progress.state.xp, 0);
       await tester.tap(find.text('Fine'));
       await settle(tester);
       expect(find.text('Record 0'), findsOneWidget);

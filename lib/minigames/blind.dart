@@ -59,18 +59,21 @@ class BlindQuestion {
 }
 
 /// Mosse legali in un ordine stabile; le promozioni diventano donna.
+/// L'arrocco compare una volta sola: `makeLegalMoves` lo elenca anche come
+/// re che va sulla torre, utile solo alla scacchiera.
 List<NormalMove> legalMoves(Position pos) => [
   for (final MapEntry(key: from, value: dests) in makeLegalMoves(pos).entries)
     for (final to in dests)
-      NormalMove(
-        from: from,
-        to: to,
-        promotion:
-            pos.board.roleAt(from) == Role.pawn &&
-                (to.rank == 0 || to.rank == 7)
-            ? Role.queen
-            : null,
-      ),
+      if (pos.board.pieceAt(to)?.color != pos.turn)
+        NormalMove(
+          from: from,
+          to: to,
+          promotion:
+              pos.board.roleAt(from) == Role.pawn &&
+                  (to.rank == 0 || to.rank == 7)
+              ? Role.queen
+              : null,
+        ),
 ];
 
 String pieceLabel(Piece? piece) {

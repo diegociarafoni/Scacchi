@@ -171,6 +171,15 @@ void main() {
       expect(materialBalance(Board.standard), 0);
     });
 
+    test('arrocco una sola volta tra le mosse legali', () {
+      final pos = Chess.fromSetup(
+        Setup.parseFen('r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1'),
+      );
+      final kingMoves = legalMoves(pos).where((m) => m.from == Square.e1);
+      expect(kingMoves.where((m) => m.to == Square.h1), isEmpty);
+      expect(kingMoves.where((m) => m.to == Square.g1), hasLength(1));
+    });
+
     test('etichette', () {
       expect(balanceLabel(0), 'Pari');
       expect(balanceLabel(3), 'Bianco +3');

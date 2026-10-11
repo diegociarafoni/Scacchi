@@ -29,11 +29,7 @@ class MaterialBalance {
     }
     final board = game.position.board;
     final score = {
-      for (final side in Side.values)
-        side: board
-            .materialCount(side)
-            .entries
-            .fold(0, (sum, e) => sum + e.value * pieceValues[e.key]!),
+      for (final side in Side.values) side: materialScore(board, side),
     };
     return MaterialBalance._(captured, score);
   }
@@ -58,3 +54,9 @@ class MaterialBalance {
   /// Materiale di [side] meno quello dell'avversario.
   int advantage(Side side) => _score[side]! - _score[side.opposite]!;
 }
+
+/// Somma dei valori dei pezzi di [side] sulla scacchiera.
+int materialScore(Board board, Side side) => board
+    .materialCount(side)
+    .entries
+    .fold(0, (sum, e) => sum + e.value * pieceValues[e.key]!);

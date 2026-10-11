@@ -13,12 +13,16 @@ class BoardLayout extends StatelessWidget {
   /// Spazio minimo sotto la scacchiera in verticale per testo e comandi.
   static const double _portraitReserve = 240;
 
+  /// Larghezza minima del pannello accanto alla scacchiera in orizzontale.
+  static const double _landscapePanel = 280;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final landscape = constraints.maxWidth > constraints.maxHeight;
+          final landscape =
+              constraints.maxWidth - constraints.maxHeight >= _landscapePanel;
           final size = math.max(
             0.0,
             landscape
