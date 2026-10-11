@@ -48,6 +48,7 @@ lib/
   tournament/             Tornei offline contro bot (vedi tornei.md)
   reminders/              Promemoria giornaliero con notifiche locali (vedi gamification.md)
   exchange/               Scambio di partite tra telefoni con il QR (vedi scambio-qr.md)
+  multiplayer/            Partita tra due telefoni su più canali (vedi multigiocatore.md)
   storage/                File JSON locali con versione e scrittura atomica
   settings/
     settings.dart         Impostazioni, valori predefiniti e salvataggio locale

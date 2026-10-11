@@ -27,6 +27,8 @@
 | [zxing-cpp](https://github.com/zxing-cpp/zxing-cpp), incluso in flutter_zxing | Decodifica dei QR sul dispositivo | Apache-2.0 |
 | [zint](https://github.com/zint/zint), incluso in flutter_zxing | Generazione dei codici a barre nativa (non usata dall'app) | BSD-3-Clause |
 | [camera](https://pub.dev/packages/camera) e [image_picker](https://pub.dev/packages/image_picker) (Flutter) | Fotocamera e scelta di un'immagine per il lettore QR | BSD-3-Clause |
+| [cryptography](https://pub.dev/packages/cryptography) (Gohilla) | Firma Ed25519, cifratura AES-GCM e HKDF del multigiocatore | Apache-2.0 |
+| [crypto](https://pub.dev/packages/crypto) (Dart) | Impronta SHA-256 delle posizioni nel multigiocatore | BSD-3-Clause |
 | Suoni in `assets/sounds/`, generati da `tool/generate_sounds.py` | Effetti sonori | Opera originale del progetto, CC0 |
 | [audioplayers](https://pub.dev/packages/audioplayers) | Riproduzione dei suoni | MIT |
 | [Database dei puzzle di Lichess](https://database.lichess.org/#puzzles) | Puzzle inclusi nell'app (sottoinsieme) | CC0 |
