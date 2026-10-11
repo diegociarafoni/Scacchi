@@ -28,7 +28,7 @@ lib/
   archive/                Archivio delle partite e PGN (vedi archivio.md)
   storage/                File JSON locali con versione e scrittura atomica
   puzzles/                Puzzle: modello, punteggio, schermate (vedi puzzle.md)
-  openings/               Aperture: libro, nome in partita, explorer (vedi aperture.md)
+  openings/               Aperture: libro, nome in partita, explorer, repertorio (vedi aperture.md)
   training/               Scacchiera per esercizi condivisa
 assets/
   puzzles/puzzles.csv     Puzzle Lichess inclusi (CC0)
