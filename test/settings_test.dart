@@ -2,7 +2,7 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart' show ThemeMode;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/game/notation.dart';
+import 'package:scacchi/settings/notation.dart';
 import 'package:scacchi/settings/settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

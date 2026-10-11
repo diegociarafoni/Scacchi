@@ -1,7 +1,7 @@
 import 'package:dartchess/dartchess.dart';
 
+import '../settings/notation.dart';
 import 'chess_game.dart';
-import 'notation.dart';
 
 /// Mossa in notazione SAN numerata secondo la posizione iniziale della partita;
 /// il numero accompagna sempre il Bianco, il Nero solo se [number].
@@ -10,7 +10,7 @@ String moveLabel(
   ChessGame game,
   int ply, {
   bool number = false,
-  MoveNotation notation = MoveNotation.english,
+  required MoveNotation notation,
 }) {
   final start = game.initial;
   final abs =

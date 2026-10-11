@@ -30,13 +30,3 @@ String formatSan(String san, MoveNotation notation) {
   }
   return buffer.toString();
 }
-
-final _sanInText = RegExp(
-  r'\b[KQRBN][a-h]?[1-8]?x?[a-h][1-8](?:=[QRBN])?[+#]?',
-);
-
-/// Converte tutte le mosse in SAN contenute in una frase.
-String formatSanText(String text, MoveNotation notation) =>
-    notation == MoveNotation.english
-    ? text
-    : text.replaceAllMapped(_sanInText, (m) => formatSan(m[0]!, notation));

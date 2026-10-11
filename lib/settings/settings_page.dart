@@ -4,13 +4,13 @@ import 'package:dartchess/dartchess.dart' show PieceKind;
 import 'package:flutter/material.dart';
 
 import '../backup/backup_page.dart';
-import '../game/notation.dart';
 import '../kids/kid_display.dart';
 import '../l10n/app_localizations.dart';
 import '../progress/progress_controller.dart';
 import '../progress/rewards.dart';
 import 'adult_gate.dart';
 import 'board_preview.dart';
+import 'notation.dart';
 import 'settings.dart';
 
 class SettingsPage extends StatelessWidget {

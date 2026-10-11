@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/game/notation.dart';
+import 'package:scacchi/settings/notation.dart';
 
 void main() {
   group('RF-76 notazione delle mosse', () {
@@ -38,13 +38,6 @@ void main() {
         expect(formatSan('O-O-O+', n), 'O-O-O+');
         expect(formatSan('', n), '');
       }
-    });
-
-    test('un testo con più mosse le converte tutte', () {
-      expect(
-        formatSanText('Meglio Nf3 o Bc4: Qxf7# vince.', MoveNotation.italian),
-        'Meglio Cf3 o Ac4: Dxf7# vince.',
-      );
     });
   });
 }

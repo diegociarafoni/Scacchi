@@ -2,12 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/game/notation.dart';
 import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/main.dart';
 import 'package:scacchi/progress/progress_controller.dart';
 import 'package:scacchi/progress/progress_state.dart';
 import 'package:scacchi/progress/progress_store.dart';
+import 'package:scacchi/settings/notation.dart';
 import 'package:scacchi/settings/settings.dart';
 import 'package:scacchi/settings/settings_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';

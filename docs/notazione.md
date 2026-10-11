@@ -14,7 +14,7 @@ Pedoni e arrocchi (O-O, O-O-O) non cambiano. La partita, l'archivio e i PGN rest
 
 | File | Ruolo |
 |---|---|
-| `lib/game/notation.dart` | `MoveNotation`, `formatSan` (una mossa) e `formatSanText` (le mosse dentro una frase) |
+| `lib/settings/notation.dart` | `MoveNotation` e `formatSan` (una mossa in SAN → notazione scelta) |
 | `lib/settings/settings.dart` | Impostazione `notation`, salvata in locale |
 | `lib/game/move_label.dart` | `moveLabel` accetta la notazione |
 
@@ -22,6 +22,6 @@ Pedoni e arrocchi (O-O, O-O-O) non cambiano. La partita, l'archivio e i PGN rest
 
 - Elenco delle mosse e barra «Posizione dopo…» nella schermata di gioco.
 
-Le altre schermate (revisione, analisi, aperture, spiegazioni del coach) passano per `formatSan` e `formatSanText` e si aggiungono a parte, schermata per schermata.
+Le altre schermate (revisione, analisi, aperture, spiegazioni del coach) passano per `formatSan` e si aggiungono a parte, schermata per schermata.
 
 I suggerimenti dell'allenatore non usano la notazione: dicono «Sposta il re in f1» (vedi [allenatore.md](allenatore.md)).

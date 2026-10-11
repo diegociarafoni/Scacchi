@@ -4,9 +4,8 @@ import 'package:flutter/material.dart' show ThemeMode;
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../game/notation.dart';
-
 import 'color_blind.dart';
+import 'notation.dart';
 
 enum AnimationSpeed {
   none('Nessuna', Duration.zero),

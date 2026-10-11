@@ -1884,7 +1884,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                   ? _ViewBar(
                       text: viewPly == -1
                           ? 'Posizione iniziale'
-                          : 'Posizione dopo ${moveLabel(_game, viewPly, number: true, notation: _settings.notation)}',
+                          : 'Posizione dopo ${moveLabel(_game, viewPly, number: true, notation: AppSettings.of(context).notation)}',
                       onPrevious: viewPly > -1
                           ? () => _showPly(viewPly - 1)
                           : null,
