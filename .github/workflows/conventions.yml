@@ -40,6 +40,9 @@ jobs:
         run: |
           base="$(git merge-base "origin/$BASE_REF" "$HEAD")"
           dart tool/check_commit_msg.dart --range "$base..$HEAD"
+      # Gira anche sulle PR di sola documentazione, che ci.yml ignora.
+      - name: Documentazione (link, percorsi, indice, mappa del codice)
+        run: dart tool/check_docs.dart
       - name: Segreti nei commit della PR (Gitleaks)
         env:
           BASE_REF: ${{ github.base_ref }}
