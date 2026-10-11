@@ -108,4 +108,19 @@ void main() {
     await b.up();
     expect(swipes, isEmpty);
   });
+
+  testWidgets('RF-10 dopo un gesto interrotto si può scorrere ancora', (
+    tester,
+  ) async {
+    await show(tester);
+    final a = await tester.startGesture(square(tester, 'd5'));
+    await tester.pumpWidget(const SizedBox());
+    await a.cancel();
+    await show(tester);
+    await tester.startGesture(square(tester, 'd4'));
+    await tester.pumpWidget(const SizedBox());
+    await show(tester);
+    await tester.dragFrom(square(tester, 'd5'), const Offset(120, 0));
+    expect(swipes, [-1]);
+  });
 }

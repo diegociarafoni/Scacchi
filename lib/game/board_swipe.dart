@@ -36,6 +36,13 @@ class _BoardSwipeState extends State<BoardSwipe> {
   int? _tracked;
   Offset _start = Offset.zero;
 
+  @override
+  void didUpdateWidget(BoardSwipe old) {
+    super.didUpdateWidget(old);
+    _pointers.clear();
+    _tracked = null;
+  }
+
   Square? _squareAt(Offset local) {
     final cell = widget.size / 8;
     final file = (local.dx / cell).floor();
