@@ -107,7 +107,8 @@ void main() {
         for (final (i, e) in s.exercises.indexed) {
           final start = switch (e) {
             StarsExercise() => '${e.role.name} ${e.start.name}',
-            LineExercise() => e.fen,
+            // Contatori ed en passant non cambiano la posizione.
+            LineExercise() => e.fen.split(' ').take(3).join(' '),
           };
           final where = '${s.id} #${i + 1}';
           expect(seen.putIfAbsent(start, () => where), where, reason: start);
@@ -143,36 +144,47 @@ void main() {
   });
 }
 
-/// La soluzione è legale, ogni risposta è legale e, per i matti, le risposte
-/// sono forzate e l'ultima mossa dà matto.
+/// La soluzione è legale, ogni risposta è legale dopo ogni alternativa
+/// accettata e, per i matti, le risposte sono forzate e ogni ramo finisce con
+/// il matto.
 void _checkLine(LineExercise e) {
-  Position pos = Chess.fromSetup(Setup.parseFen(e.fen));
-  expect(pos.isGameOver, isFalse);
-  for (final (i, step) in e.steps.indexed) {
-    final playerStep = i.isEven;
-    final options = step.split('|');
-    if (!playerStep) {
+  final start = Chess.fromSetup(Setup.parseFen(e.fen));
+  expect(start.isGameOver, isFalse);
+  expect(e.steps.length.isOdd, isTrue);
+  void walk(Position pos, int i, {required bool main}) {
+    if (i == e.steps.length) {
+      if (e.goal == LineGoal.mate) expect(pos.isCheckmate, isTrue);
+      if (e.goal == LineGoal.check) expect(pos.isCheck, isTrue);
+      return;
+    }
+    // L'ultimo passo di un matto accetta qualunque matto: dopo un'alternativa
+    // può servirne uno diverso da quello scritto.
+    if (!main && e.goal == LineGoal.mate && i == e.steps.length - 1) {
+      expect(
+        _legal(pos).any((m) => pos.play(m).isCheckmate),
+        isTrue,
+        reason: 'nessun matto in ${pos.fen}',
+      );
+      return;
+    }
+    final options = e.steps[i].split('|');
+    if (i.isOdd) {
       expect(options, hasLength(1));
       if (e.goal == LineGoal.mate) {
         expect(pos.legalMoves.values.fold(0, (n, s) => n + s.size), 1);
       }
     }
-    for (final uci in options) {
-      expect(
-        pos.isLegal(Move.parse(uci)!),
-        isTrue,
-        reason: '$uci in ${pos.fen}',
-      );
+    for (final (j, uci) in options.indexed) {
+      final move = Move.parse(uci)!;
+      expect(pos.isLegal(move), isTrue, reason: '$uci in ${pos.fen}');
+      walk(pos.play(move), i + 1, main: main && j == 0);
     }
-    pos = pos.play(Move.parse(options.first)!);
   }
-  expect(e.steps.length.isOdd, isTrue);
-  if (e.goal == LineGoal.mate) expect(pos.isCheckmate, isTrue);
+
+  walk(start, 0, main: true);
   if (e.goal == LineGoal.mate) _checkAlternatives(e);
-  if (e.goal == LineGoal.check) expect(pos.isCheck, isTrue);
 }
 
-/// Nei matti in più mosse ogni prima mossa che forza il matto è accettata.
 void _checkAlternatives(LineExercise e) {
   final moves = (e.steps.length + 1) ~/ 2;
   if (moves < 2) return;
