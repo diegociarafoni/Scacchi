@@ -5,6 +5,7 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
+import '../settings/settings.dart';
 import 'board_layout.dart';
 import 'coordinates.dart';
 import 'minigame.dart';
@@ -86,9 +87,7 @@ class _CoordinatesPageState extends State<CoordinatesPage> {
             if (highlight != null)
               highlight.$1: SquareHighlight(
                 details: HighlightDetails(
-                  solidColor: highlight.$2
-                      ? const Color(0x8040A040)
-                      : const Color(0x80D04040),
+                  solidColor: AppSettings.of(context).answerColor(highlight.$2),
                 ),
               ),
           },

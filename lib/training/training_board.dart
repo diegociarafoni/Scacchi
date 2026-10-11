@@ -79,11 +79,10 @@ class _TrainingBoardState extends State<TrainingBoard> {
     // vale qui perché negli esercizi si gioca sempre da un solo lato, e la
     // promozione automatica a donna renderebbe irrisolvibili i puzzle con
     // sottopromozione.
-    final board = (SettingsScope.maybeOf(context)?.board ?? AppSettings().board)
-        .copyWith(
-          pieceOrientationBehavior: PieceOrientationBehavior.facingUser,
-          autoQueenPromotion: false,
-        );
+    final board = AppSettings.of(context).board.copyWith(
+      pieceOrientationBehavior: PieceOrientationBehavior.facingUser,
+      autoQueenPromotion: false,
+    );
     return Chessboard(
       size: widget.size,
       controller: _controller,
