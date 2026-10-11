@@ -35,6 +35,7 @@ import '../review/game_review.dart';
 import '../review/move_classification.dart';
 import '../review/personal_puzzles.dart';
 import '../review/review_page.dart';
+import '../settings/board_frame.dart';
 import '../settings/notation.dart';
 import '../settings/settings.dart';
 import '../settings/settings_page.dart';
@@ -1924,20 +1925,25 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                       ),
                     );
               final boardSettings = _settings.board;
-              final board = BoardSwipe(
-                enabled: _pendingMove == null && _game.moves.isNotEmpty,
+              final board = BoardFrame.of(
+                _settings,
                 size: boardSize,
                 orientation: _orientation,
-                canStartAt: _canDragFrom,
-                onSwipe: _swipe,
-                child: Chessboard(
-                  size: boardSize,
-                  controller: _board,
+                builder: (size) => BoardSwipe(
+                  enabled: _pendingMove == null && _game.moves.isNotEmpty,
+                  size: size,
                   orientation: _orientation,
-                  onMove: _onMove,
-                  settings: boardSettings,
-                  annotations: _badgeAnnotations(),
-                  shapes: _visibleHint(),
+                  canStartAt: _canDragFrom,
+                  onSwipe: _swipe,
+                  child: Chessboard(
+                    size: size,
+                    controller: _board,
+                    orientation: _orientation,
+                    onMove: _onMove,
+                    settings: boardSettings,
+                    annotations: _badgeAnnotations(),
+                    shapes: _visibleHint(),
+                  ),
                 ),
               );
               final viewPly = _viewPly;

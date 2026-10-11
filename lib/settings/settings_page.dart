@@ -81,6 +81,17 @@ class SettingsPage extends StatelessWidget {
                           set((c) => c.copyWith(showCoordinates: v)),
                     ),
                     SwitchListTile(
+                      key: const Key('coordinatesOutside'),
+                      title: const Text('Coordinate fuori dalla scacchiera'),
+                      subtitle: const Text(
+                        'Lettere e numeri sul bordo, senza coprire i pezzi',
+                      ),
+                      value: s.coordinatesOutside,
+                      onChanged: s.showCoordinates
+                          ? (v) => set((c) => c.copyWith(coordinatesOutside: v))
+                          : null,
+                    ),
+                    SwitchListTile(
                       title: const Text('Promuovi sempre a donna'),
                       value: s.autoQueen,
                       onChanged: (v) => set((c) => c.copyWith(autoQueen: v)),
@@ -165,7 +176,7 @@ class SettingsPage extends StatelessWidget {
                       label: (p) => p.label,
                       avatar: (p) => Image(
                         key: Key('piece-icon-${p.name}'),
-                        image: p.pieceSet.assets[PieceKind.whiteKnight]!,
+                        image: p.assets[PieceKind.whiteKnight]!,
                         width: 24,
                         height: 24,
                       ),

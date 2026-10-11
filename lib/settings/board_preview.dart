@@ -2,6 +2,7 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
+import 'board_frame.dart';
 import 'settings.dart';
 
 /// Posizione di prova: l'alfiere in b5 è selezionato e può prendere in c6.
@@ -40,6 +41,7 @@ class _BoardPreviewState extends State<BoardPreview> {
     s.boardTheme,
     s.pieceSet,
     s.showCoordinates,
+    s.coordinatesOutside,
     s.showLegalMoves,
     s.colorBlind,
     s.animation,
@@ -86,34 +88,39 @@ class _BoardPreviewState extends State<BoardPreview> {
             child: SizedBox(
               width: size,
               height: size,
-              child: Stack(
-                children: [
-                  StaticChessboard(
-                    size: size,
-                    orientation: Side.white,
-                    fen: position.fen,
-                    lastMove: _played ? _move : null,
-                    settings: StaticChessboardSettings.fromBoardSettings(
-                      s.board,
+              child: BoardFrame.of(
+                s,
+                size: size,
+                orientation: Side.white,
+                builder: (size) => Stack(
+                  children: [
+                    StaticChessboard(
+                      size: size,
+                      orientation: Side.white,
+                      fen: position.fen,
+                      lastMove: _played ? _move : null,
+                      settings: StaticChessboardSettings.fromBoardSettings(
+                        s.board,
+                      ),
+                      squareHighlights: {
+                        if (!_played)
+                          _selected: SquareHighlight(details: scheme.selected),
+                      },
                     ),
-                    squareHighlights: {
-                      if (!_played)
-                        _selected: SquareHighlight(details: scheme.selected),
-                    },
-                  ),
-                  if (!_played && s.showLegalMoves)
-                    IgnorePointer(
-                      child: CustomPaint(
-                        key: const Key('preview-dots'),
-                        size: Size.square(size),
-                        painter: _DotsPainter(
-                          position: _before,
-                          from: _selected,
-                          color: scheme.validMoves,
+                    if (!_played && s.showLegalMoves)
+                      IgnorePointer(
+                        child: CustomPaint(
+                          key: const Key('preview-dots'),
+                          size: Size.square(size),
+                          painter: _DotsPainter(
+                            position: _before,
+                            from: _selected,
+                            color: scheme.validMoves,
+                          ),
                         ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
