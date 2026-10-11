@@ -31,6 +31,15 @@ Il rilascio è pensato per consumare pochi minuti:
 
 Per un telefono a 32 bit si può compilare a mano un APK universale togliendo `--target-platform android-arm64` dal workflow.
 
+## Frequenza dei rilasci
+
+Per risparmiare minuti di Actions si pubblica a blocchi, non a ogni funzione:
+
+- **Regola predefinita**: una nuova versione solo quando `main` ha accumulato almeno circa 5 PR di funzionalità dall'ultima, oppure quando il responsabile del progetto la chiede.
+- Le correzioni urgenti (un difetto che impedisce di usare l'app) possono uscire prima, come versione di correzione (`0.3.1`).
+- Prima di pubblicare si aspetta la CI verde sul commit di `main`: così il rilascio salta analisi e test già passati e costa circa 11 minuti invece di 16.
+- Le funzioni uscite tra due rilasci restano in `main`, installabili compilando o dal prossimo APK; `docs/README.md` indica lo stato di ciascuna.
+
 ## Pubblicare una versione
 
 ```bash
