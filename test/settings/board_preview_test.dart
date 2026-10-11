@@ -286,6 +286,8 @@ void main() {
     }
   });
 
+  // I golden dipendono dal sistema operativo: in locale si escludono con
+  // --exclude-tags golden, in CI girano su Linux.
   group('golden', () {
     const phones = {
       'small': Size(320, 568),
@@ -299,7 +301,7 @@ void main() {
           find.byType(MaterialApp),
           matchesGoldenFile('goldens/settings_$name.png'),
         );
-      });
+      }, tags: 'golden');
     }
 
     testWidgets('RNF-07 chip di temi e pezzi con colori e cavallo', (
@@ -312,7 +314,7 @@ void main() {
         find.byType(MaterialApp),
         matchesGoldenFile('goldens/settings_chips.png'),
       );
-    });
+    }, tags: 'golden');
 
     testWidgets('RNF-07 impostazioni con colori per daltonici', (tester) async {
       settings = SettingsController.defaults();
@@ -328,6 +330,6 @@ void main() {
         find.byType(MaterialApp),
         matchesGoldenFile('goldens/settings_color_blind.png'),
       );
-    });
+    }, tags: 'golden');
   });
 }

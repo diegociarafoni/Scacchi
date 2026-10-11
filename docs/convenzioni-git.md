@@ -47,7 +47,7 @@ La descrizione inizia con la minuscola, tranne quando comincia con una sigla (`f
 
 L'unico `chore` ammesso nei commit è quello generato da release-please (`chore(main): release x.y.z`).
 
-Nei commit del ramo sono ammessi anche i messaggi generati da git (`Merge branch …`, `Revert "…"`) e i `fixup!`/`squash!` di un messaggio valido, che spariscono con lo squash merge. Il titolo della PR, che diventa il commit su `main`, deve invece seguire sempre la convenzione.
+Nei commit del ramo sono ammessi anche i messaggi generati da git (`Merge branch …`, `Revert "…"`) e i `fixup!`/`squash!`/`amend!` di un messaggio valido, che spariscono con lo squash merge. Il titolo della PR, che diventa il commit su `main`, deve invece seguire sempre la convenzione.
 
 Il controllo è in `tool/check_commit_msg.dart` e gira in locale (hook `commit-msg`) e in CI su ogni commit della PR e sul suo titolo.
 
@@ -78,7 +78,7 @@ Dove gli hook non sono installati (per esempio le sessioni di Claude Code) si la
 tool/verifica.sh --titolo "feat(game): titolo della PR" --test
 ```
 
-Controlla nome del ramo, messaggi dei commit dal punto in cui il ramo si stacca da `main`, titolo della PR (facoltativo), formattazione e analisi; con `--test` anche i test senza golden (circa 2 minuti). Segnala inoltre un sottomodulo nell'indice, di solito una copia di lavoro di Claude Code (`.claude/worktrees/…`) aggiunta per errore, che in CI fa fallire il checkout con "No url found for submodule path": la cartella è ora in `.gitignore`, e un errore già commesso si toglie con `git rm --cached <percorso>`.
+Controlla nome del ramo, messaggi dei commit dal punto in cui il ramo si stacca da `main`, titolo della PR (facoltativo), documentazione (`tool/check_docs.dart`: link, percorsi citati, indice e [mappa del codice](mappa-del-codice.md)), formattazione e analisi; con `--test` anche i test senza golden, cioè senza l'etichetta `golden` dichiarata in `dart_test.yaml` (circa 2 minuti). Segnala inoltre un sottomodulo nell'indice, di solito una copia di lavoro di Claude Code (`.claude/worktrees/…`) aggiunta per errore, che in CI fa fallire il checkout con "No url found for submodule path": la cartella è ora in `.gitignore`, e un errore già commesso si toglie con `git rm --cached <percorso>`.
 
 Per un'emergenza `git commit --no-verify` salta gli hook, ma la CI esegue comunque gli stessi controlli.
 
