@@ -112,7 +112,7 @@ I golden si rigenerano con `flutter test test/settings --update-goldens` dopo un
 | RF-52 esplorazione lineare con avanti e indietro | ✓ | |
 | RF-60 revisione completa con avanzamento e interruzione | ✓ | |
 | RF-61, RF-62 classificazione delle mosse, Brillante e Ottima | ✓ | |
-| RF-55 annotazioni (simbolo e commento) sulle mosse, conservate in import ed export PGN (modifica nell'interfaccia: da fare) | ✓ | |
+| RF-55 annotazioni (simbolo e commento) sulle mosse, conservate in import ed export PGN (modifica dalla revisione di una partita dell'archivio; nella partita in corso e nell'analisi: da fare) | ✓ | ✓ |
 | RF-56 minaccia dell'avversario nell'analisi (nella partita con l'allenatore: da fare) | ✓ | ✓ |
 | RF-63 precisione, conteggi e stima della forza | ✓ | |
 | RF-67 tempo residuo a ogni mossa nel PGN (`[%clk]`, import ed export), registrato in partita, tempo per mossa ed errori in fretta nella revisione | ✓ | |

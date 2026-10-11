@@ -18,7 +18,7 @@ Revisione completa della partita (requisiti RF-60…RF-66): ogni mossa viene ana
 | `lib/review/personal_puzzles.dart` | Puzzle personali dagli errori (`puzzlesFromReview`) |
 | `lib/review/board_utils.dart` | Utilità sulla scacchiera: mosse del motore, arrocco, `threatFen` per la minaccia |
 | `lib/review/eval_bar.dart`, `score_format.dart` | Barra di valutazione e formato dei punteggi |
-| `lib/review/review_page.dart` | Schermata di revisione |
+| `lib/review/review_page.dart` | Schermata di revisione, con le note personali sulle mosse |
 
 Il nucleo è Dart puro: riceve un `PositionEvaluator` (FEN → varianti del motore), quindi si testa con un motore finto e, se installato, con Stockfish reale.
 
@@ -71,6 +71,10 @@ Sotto il riepilogo, il riquadro **Precisione per fase** (RF-68) mostra la precis
 ## Tempo per mossa
 
 Se la partita aveva l'orologio, sotto il riepilogo compare il riquadro **Tempo per mossa** (RF-67): un istogramma con il tempo speso su ogni mossa (un tocco porta alla mossa) e l'elenco degli errori giocati in fretta. `timeSpent` ricava il tempo dai residui registrati a ogni mossa: residuo precedente dello stesso lato, più l'incremento, meno il residuo attuale; la prima mossa di ogni lato parte dal tempo iniziale della cadenza e non prende incremento. Un errore (imprecisione, errore, occasione mancata, errore grave) è «in fretta» se è durato meno del 40% del tempo medio di quel lato (`hastyPlies`); servono almeno quattro mosse cronometrate e una media di 3 secondi, altrimenti non si giudica. Il riquadro non compare senza tempi registrati (partite senza orologio, PGN importati senza `[%clk]`) né nel profilo bambino. Dall'archivio la cadenza viene da quella salvata con la partita; se manca, la prima mossa di ogni lato non ha durata.
+
+## Annotazioni personali
+
+Su ogni mossa si può scrivere una nota (RF-55): un simbolo (`!`, `?`, `!!`, `??`, `!?`, `?!`) e un commento. Nella schermata di revisione, sotto la mossa scelta, **Aggiungi nota** (o **Modifica nota**) apre una finestra con i sei simboli e il campo di testo; salvare una nota vuota la toglie. La nota compare come «La tua nota: …» e nella lista la mossa porta un ✎. Il pulsante c'è solo quando la revisione sa dove salvare (`ReviewPage.onNoteChanged`): aprendo una partita dall'**Archivio** la nota entra nel PGN salvato (`SavedGame.copyWith(pgn:)`, con le intestazioni originali) e resta in export; dalla partita appena giocata le note non si modificano.
 
 ## Analisi con il motore
 
