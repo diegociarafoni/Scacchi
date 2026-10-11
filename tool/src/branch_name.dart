@@ -1,12 +1,15 @@
 import 'commit_message.dart';
 
+// I rami ammettono anche hotfix e chore, che non sono tipi di commit Angular.
+final _branchTypes = {...angularTypes, 'hotfix', 'chore'};
+
 final _feature = RegExp(
-  '^(${angularTypes.join('|')})/[a-z0-9][a-z0-9._-]*'
+  '^(${_branchTypes.join('|')})/[a-z0-9][a-z0-9._-]*'
   r'(/[a-z0-9][a-z0-9._-]*)*$',
 );
 
 // Rami creati da strumenti automatici.
-const _automationPrefixes = ['dependabot/', 'release-please--', 'claude/'];
+const _automationPrefixes = ['dependabot/', 'release-please--'];
 
 /// Errore sul nome del ramo, oppure `null` se valido.
 String? validateBranchName(String name) {
@@ -16,7 +19,7 @@ String? validateBranchName(String name) {
   if (_automationPrefixes.any(name.startsWith)) return null;
   if (_feature.hasMatch(name)) return null;
   return 'il ramo "$name" non segue il formato tipo/descrizione-in-minuscolo '
-      '(tipi: ${angularTypes.join(', ')})';
+      '(tipi: ${_branchTypes.join(', ')})';
 }
 
 /// Rami di destinazione letti dall'input del hook pre-push di git

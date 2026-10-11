@@ -16,9 +16,9 @@ fix/arrocco-lungo
 docs/guida-sviluppo
 ```
 
-Tipi ammessi: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `revert`, gli stessi dei commit. Solo minuscole, cifre, `.`, `_`, `-` e `/` tra le parti.
+Tipi ammessi: `feat`, `fix`, `hotfix`, `chore`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `revert`: quelli dei commit più `hotfix` e `chore`, validi solo per i rami. Solo minuscole, cifre, `.`, `_`, `-` e `/` tra le parti.
 
-Sono accettati anche i rami creati dagli strumenti automatici: `dependabot/…`, `release-please--…` e `claude/…` (sessioni di Claude Code).
+Sono accettati anche i rami creati da Dependabot (`dependabot/…`) e da release-please (`release-please--…`). I rami proposti dagli ambienti di lavoro, come `claude/…`, non sono ammessi: il ramo si rinomina prima del push. Il ramo si elimina dopo il merge.
 
 ## Messaggi di commit (Angular)
 

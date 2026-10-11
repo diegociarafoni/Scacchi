@@ -12,7 +12,8 @@ void main() {
       'refactor/motore.v2',
       'dependabot/pub/dartchess-0.15.0',
       'release-please--branches--main',
-      'claude/project-thread-3b4wlf',
+      'hotfix/crash-allo-avvio',
+      'chore/aggiorna-dipendenze',
     ]) {
       test('accetta "$ok"', () => expect(validateBranchName(ok), isNull));
     }
@@ -25,8 +26,8 @@ void main() {
       'feat/',
       'feat/Orologio',
       'fix/spazi non ammessi',
-      // chore non è un tipo Angular: anche i commit lo rifiutano.
-      'chore/aggiorna-dipendenze',
+      // I rami di sessione degli strumenti non rispettano lo standard.
+      'claude/project-thread-3b4wlf',
     ]) {
       test('rifiuta "$ko"', () => expect(validateBranchName(ko), isNotNull));
     }
