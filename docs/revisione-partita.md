@@ -12,6 +12,7 @@ Equivalente locale di Game Review di chess.com (requisiti RF-60…RF-66): ogni m
 | `lib/review/accuracy.dart` | Precisione per mossa e per partita, stima indicativa dell'Elo |
 | `lib/review/game_review.dart` | `reviewGame`: analisi di tutte le posizioni, avanzamento, interruzione |
 | `lib/review/engine_evaluator.dart` | Collegamento a `ComputerPlayer.analyse` (lo stesso motore dell'avversario) |
+| `lib/review/move_time.dart` | Tempo speso su ogni mossa (`timeSpent`) e errori giocati in fretta (`hastyPlies`) |
 | `lib/review/game_phase.dart` | Fase della partita (apertura, mediogioco, finale) per la precisione per fase e i temi dei puzzle |
 | `lib/review/coach.dart` | Coach testuale: `explainMove` e temi degli errori |
 | `lib/review/personal_puzzles.dart` | Puzzle personali dagli errori (`puzzlesFromReview`) |
@@ -66,6 +67,10 @@ Un pedone offerto non basta, come su chess.com.
 ## Precisione per fase
 
 Sotto il riepilogo, il riquadro **Precisione per fase** (RF-68) mostra la precisione di Bianco e Nero in apertura, mediogioco e finale, per capire cosa allenare. `GameReview.accuracyByPhase(side)` raggruppa le mosse del giocatore per la fase della posizione di partenza e applica la stessa media della precisione complessiva; una fase senza mosse mostra «—». La regola di fase (`phaseOf`, `lib/review/game_phase.dart`) è la stessa dei temi dei puzzle personali: apertura fino alla decima mossa, finale con al massimo quattro pezzi oltre a re e pedoni, altrimenti mediogioco. Nel profilo bambino il riquadro non compare.
+
+## Tempo per mossa
+
+Se la partita aveva l'orologio, sotto il riepilogo compare il riquadro **Tempo per mossa** (RF-67): un istogramma con il tempo speso su ogni mossa (un tocco porta alla mossa) e l'elenco degli errori giocati in fretta. `timeSpent` ricava il tempo dai residui registrati a ogni mossa: residuo precedente dello stesso lato, più l'incremento, meno il residuo attuale; la prima mossa di ogni lato parte dal tempo iniziale della cadenza e non prende incremento. Un errore (imprecisione, errore, occasione mancata, errore grave) è «in fretta» se è durato meno del 40% del tempo medio di quel lato (`hastyPlies`); servono almeno quattro mosse cronometrate e una media di 3 secondi, altrimenti non si giudica. Il riquadro non compare senza tempi registrati (partite senza orologio, PGN importati senza `[%clk]`) né nel profilo bambino. Dall'archivio la cadenza viene da quella salvata con la partita; se manca, la prima mossa di ogni lato non ha durata.
 
 ## Analisi con il motore
 
