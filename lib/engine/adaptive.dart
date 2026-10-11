@@ -24,9 +24,10 @@ class AdaptiveOpponent {
       )
       .id;
 
-  /// Registra il punteggio del giocatore (1, 0.5, 0) contro il livello attuale.
-  AdaptiveOpponent record(double score) {
-    final opponent = engineLevel(level).approxElo;
+  /// Registra il punteggio del giocatore (1, 0.5, 0) contro il livello
+  /// giocato, o contro quello attuale se non indicato.
+  AdaptiveOpponent record(double score, {int? level}) {
+    final opponent = engineLevel(level ?? this.level).approxElo;
     final expected = 1 / (1 + math.pow(10, (opponent - rating) / 400));
     final k = games < _provisionalGames ? 64 : 32;
     final next = (rating + k * (score - expected)).round();
@@ -56,5 +57,5 @@ class AdaptiveOpponent {
 
 const _startRating = 1100;
 const _provisionalGames = 10;
-const _minRating = 400;
-const _maxRating = 3200;
+const _minRating = 500;
+const _maxRating = 3100;

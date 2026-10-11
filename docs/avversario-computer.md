@@ -54,10 +54,12 @@ va riavviata. Se il processo termina durante la partita compare "Il computer non
 
 Con **Adattivo** attivo il livello segue i risultati del giocatore, per far vincere circa metà delle partite (requisito RF-26).
 
-- L'app tiene una stima Elo del giocatore, che parte da 1100 e resta tra 400 e 3200.
+- L'app tiene una stima Elo del giocatore, che parte da 1100.
 - Il livello usato è quello con l'Elo indicativo più vicino alla stima; il pannello mostra "Livello N" e nasconde il cursore.
 - A fine partita (matto, abbandono, tempo, patta) la stima si aggiorna con la formula Elo: vittoria 1, patta 0,5, sconfitta 0. Il fattore K è 64 nelle prime 10 partite e 32 dopo.
-- Ogni partita conta una sola volta; annullare un abbandono non la riconta.
+- Ogni partita conta una sola volta, e solo se ha almeno una mossa. **Annulla** dopo la fine della partita ripristina la stima precedente.
+- Il risultato si registra alla fine: lasciare una partita a metà per aprirne un'altra non la conta.
+- La stima resta tra 500 e 3100 Elo, cioè intorno ai livelli disponibili, e l'attesa di risultato si calcola contro il livello effettivamente giocato.
 - La stima è salvata sul dispositivo (chiave `adaptiveOpponent`, `lib/engine/adaptive.dart`) e non esce mai da lì.
 - Le partite con il livello scelto a mano non cambiano la stima.
 

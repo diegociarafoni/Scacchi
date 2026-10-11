@@ -66,6 +66,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   Side _orientation = Side.white;
   GameSetup _setup = const GameSetup();
   AdaptiveOpponent _adaptive = const AdaptiveOpponent();
+
+  /// Stima prima dell'esito della partita in corso, per ripristinarla se si annulla.
+  AdaptiveOpponent _adaptiveBefore = const AdaptiveOpponent();
   Future<KeyValueStore>? _store;
 
   /// Livello della partita in corso contro il computer.
@@ -131,19 +134,33 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   Future<void> _loadAdaptive() async {
     final loaded = await AdaptiveOpponent.load(await _openStore());
-    if (mounted) setState(() => _adaptive = loaded);
+    if (mounted && !_resultRecorded && _adaptive.games == 0) {
+      setState(() => _adaptive = loaded);
+    }
   }
 
-  /// Aggiorna la stima del giocatore a fine partita adattiva, una sola volta.
+  /// Aggiorna la stima a fine partita adattiva, una sola volta; se la partita
+  /// viene riaperta (annulla) ripristina quella precedente. Le partite chiuse
+  /// senza mosse non contano.
   void _recordAdaptiveResult() {
     final side = _computerSide;
-    if (side == null || !_setup.adaptive || _resultRecorded || !_game.isOver) {
+    if (side == null || !_setup.adaptive) return;
+    if (_resultRecorded && !_game.isOver) {
+      _resultRecorded = false;
+      _adaptive = _adaptiveBefore;
+      _saveAdaptive();
       return;
     }
+    if (_resultRecorded || !_game.isOver || _game.moves.isEmpty) return;
     _resultRecorded = true;
+    _adaptiveBefore = _adaptive;
     final winner = _game.outcome?.winner;
     final score = winner == null ? 0.5 : (winner == side ? 0.0 : 1.0);
-    _adaptive = _adaptive.record(score);
+    _adaptive = _adaptive.record(score, level: _gameLevel);
+    _saveAdaptive();
+  }
+
+  void _saveAdaptive() {
     final adaptive = _adaptive;
     unawaited(_openStore().then(adaptive.save).catchError((_) {}));
   }

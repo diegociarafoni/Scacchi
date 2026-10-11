@@ -1,3 +1,4 @@
+import 'package:chessground/chessground.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/engine/adaptive.dart';
@@ -61,21 +62,64 @@ void main() {
     expect(find.textContaining('Computer, livello 6'), findsOneWidget);
   });
 
-  testWidgets('RF-26 l\'esito della partita aggiorna la stima', (tester) async {
-    final store = MemoryStore();
+  Future<void> playE4(WidgetTester tester) async {
+    final rect = tester.getRect(find.byType(Chessboard));
+    final size = rect.width / 8;
+    Offset at(int file, int rank) =>
+        rect.topLeft + Offset((file + 0.5) * size, (7 - rank + 0.5) * size);
+    await tester.tapAt(at(4, 1));
+    await tester.pump();
+    await tester.tapAt(at(4, 3));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+  }
+
+  Future<void> resign(WidgetTester tester) async {
+    await tester.tap(find.text('Abbandona'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilledButton, 'Abbandona'));
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> startAdaptive(WidgetTester tester, MemoryStore store) async {
     await tester.pumpWidget(app(store));
     await tester.pumpAndSettle();
     await openComputerSheet(tester);
     await chooseAdaptive(tester);
     await chooseTime(tester, 'Senza tempo');
     await tester.pumpAndSettle(const Duration(seconds: 1));
-    await tester.tap(find.text('Abbandona'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(FilledButton, 'Abbandona'));
-    await tester.pumpAndSettle();
+  }
+
+  testWidgets('RF-26 l\'esito della partita aggiorna la stima', (tester) async {
+    final store = MemoryStore();
+    await startAdaptive(tester, store);
+    await playE4(tester);
+    await resign(tester);
     final saved = await AdaptiveOpponent.load(store);
     expect(saved.games, 1);
     expect(saved.rating, lessThan(1100));
+  });
+
+  testWidgets('RF-26 una partita chiusa senza mosse non conta', (tester) async {
+    final store = MemoryStore();
+    await startAdaptive(tester, store);
+    await resign(tester);
+    expect((await AdaptiveOpponent.load(store)).games, 0);
+  });
+
+  testWidgets('RF-26 annullare l\'abbandono ripristina la stima', (
+    tester,
+  ) async {
+    final store = MemoryStore();
+    await startAdaptive(tester, store);
+    await playE4(tester);
+    await resign(tester);
+    await tester.tap(find.text('Annulla'));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    final saved = await AdaptiveOpponent.load(store);
+    expect(saved.games, 0);
+    expect(saved.rating, 1100);
+    await resign(tester);
+    expect((await AdaptiveOpponent.load(store)).games, 1);
   });
 
   testWidgets('RF-26 senza la modalità adattiva la stima non cambia', (
@@ -86,10 +130,8 @@ void main() {
     await tester.pumpAndSettle();
     await startComputerGame(tester, side: 'Bianco');
     await tester.pumpAndSettle(const Duration(seconds: 1));
-    await tester.tap(find.text('Abbandona'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(FilledButton, 'Abbandona'));
-    await tester.pumpAndSettle();
+    await playE4(tester);
+    await resign(tester);
     expect((await AdaptiveOpponent.load(store)).games, 0);
   });
 }

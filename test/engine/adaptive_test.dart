@@ -69,4 +69,25 @@ void main() {
     await store.write(AdaptiveOpponent.storeKey, '{"rating":"x"}');
     expect((await AdaptiveOpponent.load(store)).games, 0);
   });
+
+  test('RF-26 l\'aspettativa si calcola contro il livello giocato', () {
+    const a = AdaptiveOpponent(rating: 1100, games: 20);
+    final weak = a.record(1, level: 1).rating;
+    final strong = a.record(1, level: 8).rating;
+    expect(strong, greaterThan(weak));
+    expect(weak, a.rating + (32 * (1 - _expected(1100, 600))).round());
+  });
+
+  test('RF-26 la stima resta nell\'intervallo dei livelli', () {
+    var low = const AdaptiveOpponent(rating: 520, games: 30);
+    for (var i = 0; i < 20; i++) {
+      low = low.record(0);
+    }
+    expect(low.rating, 500);
+    var high = const AdaptiveOpponent(rating: 3050, games: 30);
+    for (var i = 0; i < 20; i++) {
+      high = high.record(1);
+    }
+    expect(high.rating, 3100);
+  });
 }
