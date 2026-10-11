@@ -3,11 +3,27 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/progress/activity.dart';
+import 'package:scacchi/progress/avatar.dart';
 import 'package:scacchi/progress/daily_goal.dart';
 import 'package:scacchi/progress/profile_page.dart';
 import 'package:scacchi/progress/progress_controller.dart';
 import 'package:scacchi/progress/progress_feedback.dart';
 import 'package:scacchi/progress/progress_store.dart';
+import 'package:scacchi/reminders/reminder.dart';
+import 'package:scacchi/reminders/reminder_controller.dart';
+
+class _Scheduler implements ReminderScheduler {
+  bool permission = true;
+
+  @override
+  Future<bool> requestPermission() async => permission;
+
+  @override
+  Future<void> schedule(Reminder reminder) async {}
+
+  @override
+  Future<void> cancel() async {}
+}
 
 void main() {
   late Directory dir;
@@ -25,12 +41,17 @@ void main() {
   });
   tearDown(() => dir.deleteSync(recursive: true));
 
-  Future<void> show(WidgetTester tester) async {
+  Future<void> show(
+    WidgetTester tester, {
+    ReminderController? reminders,
+  }) async {
     tester.view.physicalSize = const Size(1170, 2532);
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
-      MaterialApp(home: ProfilePage(controller: controller)),
+      MaterialApp(
+        home: ProfilePage(controller: controller, reminders: reminders),
+      ),
     );
     await tester.pumpAndSettle();
   }
@@ -131,6 +152,99 @@ void main() {
     await show(tester);
     await tester.scrollUntilVisible(find.text('Coordinate a tempo'), 200);
     expect(find.text('17'), findsOneWidget);
+  });
+
+  testWidgets('RG-06 sceglie avatar e cornice tra quelli sbloccati', (
+    tester,
+  ) async {
+    await show(tester);
+    expect(find.bySemanticsLabel(RegExp('Avatar: Pedone')), findsOneWidget);
+    await tester.tap(find.byKey(const Key('avatar')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Livello 4'), findsOneWidget);
+    await tester.tap(find.bySemanticsLabel(RegExp('^Torre, ')));
+    await tester.pumpAndSettle();
+    expect(controller.settings.avatar, Avatar.pawn);
+
+    await tester.tap(find.bySemanticsLabel(RegExp('^Cavallo')));
+    await tester.pumpAndSettle();
+    expect(controller.settings.avatar, Avatar.knight);
+  });
+
+  testWidgets('RG-06 con "Sblocca tutto" ogni cornice è disponibile', (
+    tester,
+  ) async {
+    await tester.runAsync(
+      () => controller.updateSettings(
+        controller.settings.copyWith(unlockAll: true),
+      ),
+    );
+    await show(tester);
+    await tester.tap(find.byKey(const Key('avatar')));
+    await tester.pumpAndSettle();
+    expect(find.text('Livello 4'), findsNothing);
+    await tester.tap(find.bySemanticsLabel(RegExp('^Oro')));
+    await tester.pumpAndSettle();
+    expect(controller.settings.frame, AvatarFrame.gold);
+  });
+
+  testWidgets('RG-11 senza notifiche disponibili il promemoria non compare', (
+    tester,
+  ) async {
+    await show(tester);
+    await tester.scrollUntilVisible(find.byKey(const Key('restDay')), 200);
+    expect(find.byKey(const Key('reminder')), findsNothing);
+  });
+
+  testWidgets('RG-11 attiva il promemoria scegliendo l\'orario', (
+    tester,
+  ) async {
+    final reminders = ReminderController(controller, _Scheduler());
+    addTearDown(reminders.dispose);
+    await show(tester, reminders: reminders);
+    final toggle = find.byKey(const Key('reminder'));
+    await tester.scrollUntilVisible(toggle, 200);
+    await tester.ensureVisible(toggle);
+    await tester.pumpAndSettle();
+    expect(tester.widget<SwitchListTile>(toggle).value, isFalse);
+
+    await tester.tap(toggle);
+    await tester.pumpAndSettle();
+    expect(find.text('Orario del promemoria'), findsOneWidget);
+    await tester.tap(find.text('Conferma'));
+    await tester.pumpAndSettle();
+
+    expect(controller.settings.reminder, 19 * 60);
+    await tester.scrollUntilVisible(find.byKey(const Key('reminderTime')), 200);
+    expect(find.text('19:00'), findsOneWidget);
+  });
+
+  testWidgets('RG-11 senza permesso il promemoria resta spento', (
+    tester,
+  ) async {
+    final reminders = ReminderController(
+      controller,
+      _Scheduler()..permission = false,
+    );
+    addTearDown(reminders.dispose);
+    await show(tester, reminders: reminders);
+    final toggle = find.byKey(const Key('reminder'));
+    await tester.scrollUntilVisible(toggle, 200);
+    await tester.ensureVisible(toggle);
+    await tester.pumpAndSettle();
+    await tester.tap(toggle);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Conferma'));
+    await tester.pumpAndSettle();
+
+    expect(controller.settings.reminder, isNull);
+    expect(
+      find.text(
+        'Senza il permesso per le notifiche il promemoria resta spento.',
+      ),
+      findsOneWidget,
+    );
   });
 
   testWidgets('RG-12 con la gamification spenta il profilo è nascosto', (

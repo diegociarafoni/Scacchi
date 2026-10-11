@@ -42,6 +42,10 @@ class _ScacchiAppState extends State<ScacchiApp> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(colorSchemeSeed: seed, brightness: Brightness.light),
       darkTheme: ThemeData(colorSchemeSeed: seed, brightness: Brightness.dark),
+      // Sopra il Navigator, così anche le pagine aperte con push lo vedono.
+      builder: (context, child) => settings == null
+          ? child!
+          : SettingsScope(controller: settings, child: child!),
       home: settings == null ? const Scaffold() : HomeShell(settings: settings),
     );
   }
