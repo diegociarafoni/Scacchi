@@ -43,4 +43,4 @@ I minigiochi non contano come puzzle né come sessioni a tempo dei puzzle, così
 | `quiz_page.dart` | Dieci domande a scelta multipla, usata da Alla cieca e Conta del materiale |
 | `board_layout.dart` | Scacchiera e pannello affiancati in orizzontale, impilati in verticale |
 
-L'accesso dalla schermata principale arriva con il collegamento delle nuove schermate, dopo la partita contro il computer.
+I minigiochi si aprono dalla scheda Tu e registrano punteggi e XP nei progressi.

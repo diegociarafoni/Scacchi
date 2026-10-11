@@ -15,7 +15,12 @@ class GameArchive {
 
   /// Archivio condiviso sul file predefinito nella cartella dati dell'app:
   /// tutte le schermate usano la stessa istanza e la stessa cache.
-  static Future<GameArchive> open() => _shared ??= _openDefault();
+  static Future<GameArchive> open() =>
+      _shared ??= _openDefault().catchError((Object e) {
+        // Un errore si riprova alla prossima apertura.
+        _shared = null;
+        throw e;
+      });
 
   static Future<GameArchive>? _shared;
 
