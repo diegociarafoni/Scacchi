@@ -308,8 +308,16 @@ void main() {
       await tester.tapAt(at('a8'));
       await tester.pump();
       await tester.tapAt(at('a1'));
-      await tester.pumpAndSettle(const Duration(seconds: 1));
+      await tester.pump(const Duration(milliseconds: 500));
       expect(find.text('Scacco matto. Vince il Nero.'), findsOneWidget);
+      await tester.pump(const Duration(seconds: 5));
+      await tester.pump(const Duration(milliseconds: 500));
+      expect(
+        bots.first
+            .phrases(BotEvent.loss)
+            .any((p) => find.textContaining(p).evaluate().isNotEmpty),
+        isTrue,
+      );
       final collection = await BotCollection.load(store);
       expect(collection.isBeaten(bots.first), isFalse);
       expect((await AdaptiveOpponent.load(store)).games, 0);

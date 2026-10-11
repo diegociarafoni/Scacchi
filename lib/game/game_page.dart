@@ -184,7 +184,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   void _recordBotResult() {
     final bot = _bot;
     final side = _computerSide;
-    if (bot == null || side == null || !_standardStart) return;
+    if (bot == null || side == null) return;
     if (_botResultRecorded && !_game.isOver) {
       _botResultRecorded = false;
       if (!identical(_collection, _collectionBefore)) {
@@ -198,7 +198,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _botResultRecorded = true;
     final winner = _game.outcome?.winner;
     _collectionBefore = _collection;
-    if (winner != null && winner != side) {
+    if (_standardStart && winner != null && winner != side) {
       final updated = _collection.beat(bot.id, DateTime.now());
       if (!identical(updated, _collection)) {
         _collection = updated;
@@ -719,6 +719,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   void _beginGame(ChessGame game, GameSetup setup, ChessClock? clock) {
     _cancelComputerMove();
     _clockBeforeSuspension = false;
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     _game = game;
     _clock = clock;
     _clockHistory.clear();
@@ -772,7 +773,11 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     if (!mounted || result == null) return;
     final (position, chosen) = result;
     // Contro una persona restano le scelte fatte per il computer.
-    if (chosen.opponent == Opponent.human) _bot = null;
+    if (chosen.opponent == Opponent.human) {
+      _bot = null;
+      _resultRecorded = false;
+      _botResultRecorded = false;
+    }
     final setup = chosen.opponent == Opponent.human
         ? chosen
         : _applySetup(chosen);
