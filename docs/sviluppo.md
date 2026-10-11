@@ -46,6 +46,7 @@ Ogni funzione nasce dai requisiti del progetto, nel documento dei requisiti, con
 | Statistiche | `test/stats/` | Bilancio, rating locale, schermata | `flutter test test/stats` |
 | Minigiochi | `test/minigames/` | Generazione risolvibile, risposte, schermate, registrazione dei punteggi | `flutter test test/minigames` |
 | Tornei | `test/tournament/` | Abbinamenti, simulazione, spareggi, salvataggio, schermata | `flutter test test/tournament` |
+| Scacchiera per esercizi | `test/training/` | Tema, pezzi e coordinate presi dalle impostazioni, senza capovolgere i pezzi | `flutter test test/training` |
 | Archivio | `test/archive/` | PGN, salvataggio su file, schermata Partite | `flutter test test/archive` |
 | End-to-end | `integration_test/*_test.dart` | L'app reale avviata su un dispositivo o desktop, con tocchi e trascinamenti sulla scacchiera | `flutter test integration_test -d <dispositivo>` |
 
@@ -63,6 +64,8 @@ I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisic
 | RF-02, RF-04, RF-07, RF-12, RP-01, RP-04 impostazioni salvate | ✓ | ✓ |
 | RF-40, RF-41 cadenze, incremento, avvisi, tempo scaduto | ✓ | ✓ |
 | RP-03 suoni e vibrazione, RF-31 modalità tavolo | ✓ | ✓ |
+| RNF-07 mossa da tastiera, annuncio delle mosse | ✓ | ✓ |
+| RF-30 nomi dei giocatori | ✓ | ✓ |
 | RF-09 conferma della mossa | ✓ | ✓ |
 | RF-25 matto, stallo, materiale insufficiente, ripetizione, 50 mosse, abbandono | ✓ | matto, abbandono |
 | RF-31 rotazione automatica a ogni turno | | ✓ |

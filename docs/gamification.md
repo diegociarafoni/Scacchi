@@ -1,6 +1,6 @@
 # Gamification
 
-Requisiti RG-01, RG-02, RG-05, RG-06, RG-07, RG-08 e RG-12. Il codice è in `lib/progress/`, in Dart puro tranne la schermata e il controller.
+Requisiti RG-01, RG-02, RG-05, RG-06, RG-07, RG-08, RG-11 e RG-12. Il codice è in `lib/progress/`, in Dart puro tranne la schermata e il controller.
 
 ## Principi
 
@@ -83,6 +83,17 @@ La tabella completa è in `lib/progress/rewards.dart`. Una ricompensa appena mer
 
 Per rispetto di RV-01, l'interruttore "Sblocca tutto" (nelle impostazioni dell'app e del Profilo) rende tutto disponibile. Con la gamification spenta non c'è nulla da sbloccare. Il tema o il set già scelto resta applicato anche se torna bloccato, per esempio spegnendo "Sblocca tutto".
 
+## Promemoria giornaliero (RG-11)
+
+Spento di default. Nel Profilo, "Promemoria giornaliero" chiede il permesso per le notifiche e l'orario (24 ore, proposto alle 19:00); se il permesso è negato resta spento e lo dice. Le regole sono in `lib/reminders/reminder.dart` (`nextReminder`), in Dart puro:
+
+- al massimo una notifica al giorno, con un solo promemoria programmato alla volta;
+- oggi solo se l'obiettivo manca e l'orario non è passato, altrimenti domani;
+- mai nel giorno di riposo;
+- il testo ricorda la serie in corso ("Serie di 4 giorni: basta 1 partita per continuarla.") o l'obiettivo, senza toni colpevolizzanti.
+
+`ReminderController` si allinea all'avvio, al ritorno nell'app e quando cambiano obiettivo, orario o attività del giorno; con la gamification spenta cancella il promemoria. Chi non apre l'app per giorni riceve un solo promemoria, non uno al giorno: nessuna insistenza. `LocalNotificationScheduler` usa `flutter_local_notifications` con orario approssimato (`inexactAllowWhileIdle`), quindi non serve il permesso per le sveglie esatte; su Android il promemoria sopravvive al riavvio. Le notifiche programmate esistono solo su Android e iOS: altrove l'opzione non compare.
+
 ## Componenti
 
 | File | Ruolo |
@@ -101,7 +112,7 @@ Per rispetto di RV-01, l'interruttore "Sblocca tutto" (nelle impostazioni dell'a
 | `progress_store.dart` | Salvataggio su file JSON tramite `JsonFile` |
 | `progress_controller.dart` | `ChangeNotifier` per l'interfaccia: carica, registra, salva |
 | `progress_feedback.dart` | Notifica in-app di XP, livello, obiettivo e traguardi |
-| `profile_page.dart` | Schermata Profilo con avatar, livello, serie, obiettivo, traguardi e impostazioni |
+| `profile_page.dart` | Schermata Profilo con avatar, livello, serie, obiettivo, traguardi, promemoria e impostazioni |
 
 ## Salvataggio
 
@@ -131,4 +142,4 @@ Le altre schermate registrano:
 
 ## Integrazione prevista
 
-Il collegamento alla schermata di gioco (registrazione a fine partita, accesso al Profilo e passaggio dei progressi a `SettingsPage(progress: ...)`, senza il quale temi e pezzi restano tutti disponibili) arriva in una modifica separata, per non sovrapporsi al lavoro in corso sulla partita contro il computer.
+Il collegamento alla schermata di gioco (registrazione a fine partita, accesso al Profilo e passaggio dei progressi a `SettingsPage(progress: ...)`, creazione di `ReminderController` con `LocalNotificationScheduler` all'avvio su Android e iOS, senza il quale temi e pezzi restano tutti disponibili) arriva in una modifica separata, per non sovrapporsi al lavoro in corso sulla partita contro il computer.

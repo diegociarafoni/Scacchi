@@ -53,6 +53,16 @@ Per ciascun giocatore una riga mostra le icone dei pezzi avversari catturati, da
 - Si ferma mentre è aperto un dialogo (abbandono, patta, nuova partita) e quando l'app va in secondo piano, e riparte al ritorno.
 - Una mossa fatta a tempo già scaduto non viene accettata.
 
+## Nomi dei giocatori
+
+Il pannello "Nuova" ha due campi facoltativi, "Nome del Bianco" e "Nome del Nero" (al massimo 24 caratteri, spazi iniziali e finali ignorati), per il gioco a due sullo stesso telefono (RF-30). I nomi vengono ricordati per le partite successive. Se indicati:
+
+- compaiono a sinistra della riga del materiale di ciascun giocatore;
+- riga di stato e dialoghi di abbandono e patta li affiancano al colore, per esempio «Muove Anna (Bianco).», «Scacco. Muove Bruno (Nero).», «Scacco matto. Vince Anna (Bianco).» o «Bruno (Nero) accetta la patta?»;
+- il lettore di schermo usa il nome per materiale, orologio e annuncio delle mosse («Bruno: pedone e5»).
+
+Lasciando un campo vuoto torna il colore.
+
 ## Rivedere le mosse
 
 Toccando una mossa nella striscia (o nella lista, in orizzontale) la scacchiera mostra la posizione dopo quella mossa, con la mossa evidenziata. La riga di stato diventa una barra con mossa precedente, mossa successiva, il testo "Posizione dopo 12... Nf6" (o "Posizione iniziale") e il pulsante "Torna alla partita".
@@ -62,6 +72,19 @@ Toccando una mossa nella striscia (o nella lista, in orizzontale) la scacchiera 
 - Con una tastiera: frecce sinistra e destra per scorrere, Home per la posizione iniziale, Fine per tornare alla partita.
 - Andare oltre l'ultima mossa, una nuova partita o "Annulla" riportano alla posizione corrente; durante la revisione "Annulla" non toglie mosse.
 - I numeri delle mosse partono dalla posizione iniziale della partita, anche quando è importata da un FEN.
+
+## Mossa da tastiera e lettori di schermo
+
+L'icona della tastiera nella barra del titolo apre un campo in cui scrivere la mossa (requisito RNF-07), utile con TalkBack e VoiceOver o con una tastiera fisica. Sono accettate:
+
+- notazione algebrica inglese (`Nf3`, `exd5`, `Qxf7#`) e italiana (`Cf3`, `Dxf7`), con R per il re in italiano e T per la torre; l'iniziale del pezzo può essere minuscola (`cf3`);
+- arrocco come `O-O`, `0-0-0` o `o-o`;
+- promozione con o senza `=` (`e8=Q`, `e8D`), sempre indicando il pezzo;
+- coordinate UCI, anche maiuscole (`g1f3`, `e7e8q`).
+
+Spazi, segni di scacco e annotazioni vengono ignorati. Se `R` indica sia una mossa di re (italiano) sia una di torre (inglese), il campo chiede di usare K o T. Una mossa non valida mostra un errore e lascia la tastiera aperta. La mossa passa per lo stesso percorso di quelle sulla scacchiera, quindi rispetta orologio e conferma della mossa. Il comando è disattivato a partita conclusa, durante la revisione e con una mossa in attesa di conferma.
+
+Dopo ogni mossa il lettore di schermo annuncia una frase in italiano, per esempio «Bianco: cavallo prende f7, scacco», «Nero: pedone della colonna e prende d5» o «Nero: arrocco corto». Una mossa in attesa di conferma è annunciata come «Da confermare», e la fine della partita, anche per tempo scaduto, è annunciata con il risultato.
 
 ## Impostazioni
 
@@ -83,6 +106,8 @@ Si aprono dall'icona a forma di ingranaggio nella barra del titolo. Ogni modific
 | Pezzi | Classico, Merida, Chessnut, Fantasy, Spatial; sbloccabili Celtic, Shapes, Firi, Mpchess, Kiwen-suwi, Totoy, RhosGFX | Classico |
 | Sblocca tutto | Rende disponibili le ricompense estetiche senza sbloccarle (vedi [gamification.md](gamification.md)) | Disattiva |
 | Animazioni | Nessuna, Veloce, Normale, Lenta | Normale |
+
+Tema, pezzi, coordinate, mosse legali, frecce e animazioni valgono anche per le scacchiere dei problemi, delle aperture e del repertorio, che si aggiornano subito quando cambiano. La modalità tavolo vale solo per la partita, perché negli esercizi si gioca sempre da un solo lato; anche la promozione automatica a donna vale solo per la partita, perché alcuni puzzle si risolvono promuovendo a un altro pezzo.
 
 I set di pezzi disponibili sono solo quelli con licenza compatibile con la GPL e con la distribuzione commerciale, elencati in `CREDITS.md`: i set CC BY-NC-SA di chessground (California, Cardinal, Maestro e altri) sono esclusi, e chi li aveva scelti torna al set Classico. I temi usano solo colori, senza le immagini di chessground (licenza AGPL). Anche le icone dei pezzi catturati usano il set scelto.
 

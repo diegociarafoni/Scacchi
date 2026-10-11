@@ -367,4 +367,88 @@ void main() {
     expect(fen(), live);
     expect(find.text('2. Nf3'), findsOneWidget);
   });
+
+  testWidgets('RNF-07 mossa scritta da tastiera', (tester) async {
+    await _start(tester);
+    Future<void> type(String text) async {
+      await tester.tap(find.byTooltip('Mossa da tastiera'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), text);
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
+    }
+
+    await type('e4');
+    expect(find.text('1. e4'), findsOneWidget);
+    await type('Cf6');
+    expect(find.text('Nf6'), findsOneWidget);
+
+    await type('e6');
+    expect(find.text('Mossa non valida'), findsOneWidget);
+    await tester.enterText(find.byType(TextField), 'e5');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+    expect(find.text('2. e5'), findsOneWidget);
+    expect(find.byType(TextField), findsNothing);
+
+    await type('');
+    await tester.tap(find.text('Annulla').last);
+    await tester.pumpAndSettle();
+    expect(find.byType(TextField), findsNothing);
+    expect(find.text('Muove il Nero.'), findsOneWidget);
+  });
+
+  testWidgets('RF-30 nomi dei giocatori', (tester) async {
+    await _start(tester);
+    await tester.tap(find.text('Nuova'));
+    await tester.pumpAndSettle();
+    await tester.enterText(
+      find.widgetWithText(TextField, 'Nome del Bianco'),
+      'Anna',
+    );
+    await tester.enterText(
+      find.widgetWithText(TextField, 'Nome del Nero'),
+      'Bruno',
+    );
+    await tester.tap(find.text('Senza tempo'));
+    await tester.pumpAndSettle();
+    expect(find.text('Muove Anna (Bianco).'), findsOneWidget);
+    String nameAt(String side) =>
+        tester.widget<Text>(find.byKey(ValueKey('player-$side'))).data!;
+    expect(nameAt('white'), 'Anna');
+    expect(nameAt('black'), 'Bruno');
+    final boardTop = tester.getTopLeft(find.byType(Chessboard)).dy;
+    expect(
+      tester.getCenter(find.byKey(const ValueKey('player-black'))).dy,
+      lessThan(boardTop),
+    );
+    expect(
+      tester.getCenter(find.byKey(const ValueKey('player-white'))).dy,
+      greaterThan(boardTop),
+    );
+
+    for (final m in _scholarsMate) {
+      await _tapMove(tester, m);
+    }
+    expect(find.text('Scacco matto. Vince Anna (Bianco).'), findsOneWidget);
+
+    await tester.tap(find.text('Nuova'));
+    await tester.pumpAndSettle();
+    expect(
+      tester
+          .widget<TextField>(find.widgetWithText(TextField, 'Nome del Nero'))
+          .controller!
+          .text,
+      'Bruno',
+    );
+    await tester.enterText(
+      find.widgetWithText(TextField, 'Nome del Bianco'),
+      '',
+    );
+    await tester.enterText(find.widgetWithText(TextField, 'Nome del Nero'), '');
+    await tester.tap(find.text('Senza tempo'));
+    await tester.pumpAndSettle();
+    expect(find.text('Muove il Bianco.'), findsOneWidget);
+    expect(find.byKey(const ValueKey('player-white')), findsNothing);
+  });
 }
