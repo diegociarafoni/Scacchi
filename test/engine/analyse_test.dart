@@ -3,12 +3,11 @@ import 'dart:async';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/engine/computer_player.dart';
+import 'package:scacchi/engine/process_transport.dart';
 import 'package:scacchi/engine/uci_transport.dart';
 import 'package:scacchi/review/engine_evaluator.dart';
 import 'package:scacchi/review/game_review.dart';
 import 'package:scacchi/review/move_classification.dart';
-
-import 'process_transport.dart';
 
 class _Engine implements UciTransport {
   _Engine(this.onGo);
@@ -150,9 +149,7 @@ void main() {
 
   group(
     'RF-51 analisi con Stockfish vero',
-    skip: ProcessTransport.findBinary() == null
-        ? 'Stockfish non installato'
-        : null,
+    skip: ProcessTransport.binary == null ? 'Stockfish non installato' : null,
     () {
       test('trova il matto in uno', () async {
         final player = ComputerPlayer(connect: ProcessTransport.start);
