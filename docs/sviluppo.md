@@ -94,7 +94,7 @@ I golden si rigenerano con `flutter test test/settings --update-goldens` dopo un
 | RF-20 colore e livello contro il computer | ✓ | ✓ |
 | RF-21 motore separato, scacchiera bloccata mentre pensa, ritardo artificiale | ✓ | ✓ |
 | Annullamento contro il computer (mossa e risposta) | | ✓ |
-| RP-05 italiano predefinito, struttura per altre lingue | ✓ | ✓ |
+| RP-05 italiano predefinito, struttura per altre lingue; testi di backup, minigiochi, statistiche e aiuto FEN già tradotti (chiavi e segnaposto uguali in it/en, pagine in inglese) | ✓ | ✓ |
 | RF-40, RF-41 cadenze, incremento, avvisi, tempo scaduto | ✓ | ✓ |
 | RF-40 orologio contro il computer, annullamento con orologio | | ✓ |
 | RP-03 suoni e vibrazione, RF-31 modalità tavolo | ✓ | ✓ |
