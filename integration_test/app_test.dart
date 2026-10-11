@@ -209,6 +209,35 @@ void main() {
     expect(prefs.getString('boardTheme'), 'blue');
   });
 
+  testWidgets('RP-04 anteprima delle impostazioni', (tester) async {
+    await _start(tester);
+    await _openSettings(tester);
+    final preview = find.byKey(const Key('board-preview'));
+    StaticChessboard board() => tester.widget<StaticChessboard>(
+      find.descendant(of: preview, matching: find.byType(StaticChessboard)),
+    );
+    expect(board().settings.colorScheme, ChessboardColorScheme.green);
+    final top = tester.getTopLeft(preview);
+
+    await tester.scrollUntilVisible(find.text('Blu'), 100);
+    await tester.tap(find.text('Blu'));
+    await tester.pumpAndSettle();
+    expect(board().settings.colorScheme, ChessboardColorScheme.blue);
+    await tester.scrollUntilVisible(find.text('Merida'), 100);
+    await tester.tap(find.text('Merida'));
+    await tester.pumpAndSettle();
+    expect(board().settings.pieceAssets, PieceSet.meridaAssets);
+    expect(tester.getTopLeft(preview), top);
+
+    final start = board().fen;
+    await tester.tap(preview);
+    await tester.pumpAndSettle();
+    expect(board().fen, isNot(start));
+    await tester.tap(preview);
+    await tester.pumpAndSettle();
+    expect(board().fen, start);
+  });
+
   testWidgets('RF-06 cambiare il tema non annulla il capovolgimento', (
     tester,
   ) async {
