@@ -5,7 +5,7 @@ on:
     tags: ['v*']
   # Verifica la build release quando cambia la sua configurazione, senza pubblicare.
   pull_request:
-    paths: ['.github/workflows/apk-release.yml', 'android/**']
+    paths: ['.github/workflows/apk-release.yml', 'android/**', 'tool/*keystore*.py']
   workflow_dispatch:
     inputs:
       version:
@@ -26,7 +26,9 @@ jobs:
     outputs:
       tag: ${{ steps.version.outputs.tag }}
     env:
-      SIGN: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' && github.event_name != 'pull_request' }}
+      # Sulle PR non si firma: il codice della PR non deve vedere la chiave.
+      SIGN_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' && github.event_name != 'pull_request' }}
+      SIGN_SEED: ${{ secrets.ANDROID_KEYSTORE_BASE64 == '' && secrets.ANDROID_SIGNING_SEED != '' && github.event_name != 'pull_request' }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -78,21 +80,49 @@ jobs:
       - run: flutter analyze
       - run: flutter test
 
-      - name: Chiave di firma
-        if: env.SIGN == 'true'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test della chiave derivata
+        run: |
+          python -m pip install --quiet 'cryptography==44.0.2'
+          python -m unittest discover -s tool -p 'test_*keystore*.py'
+
+      - name: Chiave di firma dal keystore
+        if: env.SIGN_KEYSTORE == 'true'
         env:
           KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
           echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/release.jks"
-          echo "ANDROID_KEYSTORE_PATH=$RUNNER_TEMP/release.jks" >> "$GITHUB_ENV"
+          {
+            echo "ANDROID_KEYSTORE_PATH=$RUNNER_TEMP/release.jks"
+            echo "ANDROID_KEYSTORE_PASSWORD=$KEYSTORE_PASSWORD"
+            echo "ANDROID_KEY_ALIAS=$KEY_ALIAS"
+            echo "ANDROID_KEY_PASSWORD=$KEY_PASSWORD"
+          } >> "$GITHUB_ENV"
+
+      # Sulle PR una frase pubblica verifica tutto il percorso di firma senza segreti.
+      - name: Chiave di firma dalla frase segreta
+        if: env.SIGN_SEED == 'true' || github.event_name == 'pull_request'
+        env:
+          ANDROID_SIGNING_SEED: ${{ github.event_name == 'pull_request' && 'frase pubblica, solo per verificare le PR' || secrets.ANDROID_SIGNING_SEED }}
+        run: |
+          password="$(python tool/derive_keystore.py "$RUNNER_TEMP/release.jks")"
+          echo "::add-mask::$password"
+          {
+            echo "ANDROID_KEYSTORE_PATH=$RUNNER_TEMP/release.jks"
+            echo "ANDROID_KEYSTORE_PASSWORD=$password"
+            echo "ANDROID_KEY_ALIAS=scacchi"
+            echo "ANDROID_KEY_PASSWORD=$password"
+          } >> "$GITHUB_ENV"
 
       - name: Build APK release
         env:
           BUILD_NAME: ${{ steps.version.outputs.name }}
           BUILD_NUMBER: ${{ steps.version.outputs.code }}
-          ANDROID_KEYSTORE_PASSWORD: ${{ env.SIGN == 'true' && secrets.ANDROID_KEYSTORE_PASSWORD || '' }}
-          ANDROID_KEY_ALIAS: ${{ env.SIGN == 'true' && secrets.ANDROID_KEY_ALIAS || '' }}
-          ANDROID_KEY_PASSWORD: ${{ env.SIGN == 'true' && secrets.ANDROID_KEY_PASSWORD || '' }}
         run: |
           flutter build apk --release --build-name="$BUILD_NAME" --build-number="$BUILD_NUMBER"
           mkdir -p dist
@@ -115,7 +145,7 @@ jobs:
       GH_TOKEN: ${{ github.token }}
       GH_REPO: ${{ github.repository }}
       TAG: ${{ needs.build.outputs.tag }}
-      SIGNED: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+      SIGNED: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' || secrets.ANDROID_SIGNING_SEED != '' }}
     steps:
       - uses: actions/download-artifact@v4
         with:
