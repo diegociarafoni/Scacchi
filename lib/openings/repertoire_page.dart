@@ -1,6 +1,8 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
+import '../settings/notation.dart';
+import '../settings/settings.dart';
 import 'repertoire.dart';
 import 'repertoire_drill_page.dart';
 
@@ -103,7 +105,12 @@ class _RepertoirePageState extends State<RepertoirePage> {
               itemCount: lines.length,
               itemBuilder: (context, i) => ListTile(
                 title: Text(lines[i].name),
-                subtitle: Text(lines[i].san),
+                subtitle: Text(
+                  formatMoveText(
+                    lines[i].san,
+                    AppSettings.of(context).notation,
+                  ),
+                ),
                 trailing: IconButton(
                   tooltip: 'Elimina la linea',
                   icon: const Icon(Icons.delete_outline),

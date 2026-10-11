@@ -11,6 +11,7 @@ import '../review/board_utils.dart';
 import '../review/eval_bar.dart';
 import '../review/score_format.dart';
 import '../review/win_probability.dart';
+import '../settings/notation.dart';
 import '../settings/settings.dart';
 
 /// Analisi continua di [fen] con [multiPv] varianti, interrotta annullando
@@ -386,7 +387,7 @@ class _AnalysisPageState extends State<AnalysisPage>
       final move = parseEngineMove(pos, uci);
       if (move == null) break;
       final (next, san) = pos.makeSan(move);
-      out.add(san);
+      out.add(formatSan(san, AppSettings.of(context).notation));
       pos = next;
     }
     return out.join(' ');
@@ -395,9 +396,10 @@ class _AnalysisPageState extends State<AnalysisPage>
   String _history() => [
     for (var i = 0; i < _sans.length; i++)
       if (_positions[i].turn == Side.white || i == 0)
-        '${moveNumber(_positions[i])} ${_sans[i]}'
+        '${moveNumber(_positions[i])} '
+            '${formatSan(_sans[i], AppSettings.of(context).notation)}'
       else
-        _sans[i],
+        formatSan(_sans[i], AppSettings.of(context).notation),
   ].join(' ');
 
   Widget _navigation() => SizedBox(

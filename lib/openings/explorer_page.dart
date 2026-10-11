@@ -4,6 +4,8 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
 import '../game/chess_game.dart';
+import '../settings/notation.dart';
+import '../settings/settings.dart';
 import '../training/training_board.dart';
 import 'opening_assets.dart';
 import 'opening_book.dart';
@@ -66,6 +68,7 @@ class _ExplorerPageState extends State<ExplorerPage> {
   Widget build(BuildContext context) {
     final positions = _positions;
     final text = Theme.of(context).textTheme;
+    final notation = AppSettings.of(context).notation;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Esplora aperture'),
@@ -140,7 +143,7 @@ class _ExplorerPageState extends State<ExplorerPage> {
                                     leading: SizedBox(
                                       width: 56,
                                       child: Text(
-                                        m.san,
+                                        formatSan(m.san, notation),
                                         style: text.titleMedium,
                                       ),
                                     ),
@@ -247,7 +250,8 @@ class _ExplorerPageState extends State<ExplorerPage> {
     final parts = <String>[];
     for (var i = 0; i < _moves.length; i++) {
       final san = positions[i].makeSan(_moves[i]).$2;
-      parts.add(i.isEven ? '${i ~/ 2 + 1}. $san' : san);
+      final shown = formatSan(san, AppSettings.of(context).notation);
+      parts.add(i.isEven ? '${i ~/ 2 + 1}. $shown' : shown);
     }
     return parts.join(' ');
   }
