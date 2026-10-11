@@ -34,7 +34,7 @@ void main() {
   tearDown(() => dir.deleteSync(recursive: true));
 
   Future<void> show(WidgetTester tester, {ReminderScheduler? scheduler}) async {
-    tester.view.physicalSize = const Size(1170, 2532);
+    tester.view.physicalSize = const Size(1170, 3400);
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
@@ -60,6 +60,8 @@ void main() {
       'Percorso',
       'Minigiochi',
       'Statistiche',
+      'La tua settimana',
+      'Scacchiera fisica',
       'Archivio',
     ]) {
       expect(find.text(label), findsOneWidget, reason: label);
