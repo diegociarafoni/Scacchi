@@ -26,7 +26,7 @@ La versione mostrata dall'app (`versionName`) è quella del tag senza la `v`; il
 I tag con suffisso (`v1.2.0-beta.1`) diventano pre-release. Gli altri sono la "latest release", per cui questo link porta sempre all'ultima versione stabile:
 
 ```
-https://github.com/diegociarafoni/Scacchi/releases/latest/download/scacchi.apk
+https://github.com/diegociarafoni/rokko/releases/latest/download/scacchi.apk
 ```
 
 ## Minuti di GitHub Actions
@@ -85,7 +85,7 @@ La build sceglie la chiave in quest'ordine:
 `tool/derive_keystore.py` ricava dalla frase, in modo deterministico, una chiave RSA a 3072 bit e un certificato sempre identico (scrypt sulla frase, numeri primi da un flusso SHAKE-256, campi del certificato fissi e firma PKCS#1 v1.5). Stessa frase, stesso certificato: non c'è nessun file da conservare o caricare, e la copia di sicurezza è la frase stessa.
 
 1. Generare una frase casuale lunga (almeno 32 caratteri, meglio 40 o più) con il generatore di un gestore di password e salvarla lì. Non usare una frase inventata o una citazione: il certificato pubblico di ogni APK permette di provare frasi a tentativi, e chi la indovina può firmare aggiornamenti dell'app. Spazi iniziali e finali sono ignorati.
-2. Aprire https://github.com/diegociarafoni/Scacchi/settings/secrets/actions, toccare **New repository secret**, nome `ANDROID_SIGNING_SEED`, valore la frase, **Add secret**. Funziona anche dal browser del telefono.
+2. Aprire https://github.com/diegociarafoni/rokko/settings/secrets/actions, toccare **New repository secret**, nome `ANDROID_SIGNING_SEED`, valore la frase, **Add secret**. Funziona anche dal browser del telefono.
 3. Pubblicare una nuova versione. Chi aveva installato una versione firmata con la chiave di debug deve disinstallarla una volta; da lì in poi gli aggiornamenti si installano sopra.
 
 L'impronta SHA-256 del certificato compare nel log del passo "Build APK release firmato", nella riga `Certificato SHA-256: …` stampata da `tool/derive_keystore.py`. Cambiare la frase, o il sale `SALT` nello script, cambia la chiave e richiede di nuovo una disinstallazione. Per una build locale firmata:

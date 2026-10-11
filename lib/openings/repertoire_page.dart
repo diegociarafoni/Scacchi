@@ -1,6 +1,8 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
+import '../settings/notation.dart';
+import '../settings/settings.dart';
 import 'repertoire.dart';
 import 'repertoire_drill_page.dart';
 
@@ -46,12 +48,18 @@ class _RepertoirePageState extends State<RepertoirePage> {
         ],
       ),
     );
-    if (text == null) return;
+    if (text == null || !mounted) return;
     final lines = linesFromPgn(text);
+    final notation = AppSettings.of(context).notation;
     var added = 0;
     final errors = <String>[];
     for (final (i, moves) in lines.indexed) {
-      final error = await _t.addLine(widget.side, 'PGN ${i + 1}', moves);
+      final error = await _t.addLine(
+        widget.side,
+        'PGN ${i + 1}',
+        moves,
+        notation: notation,
+      );
       error == null ? added++ : errors.add(error);
     }
     if (!mounted) return;
@@ -103,7 +111,12 @@ class _RepertoirePageState extends State<RepertoirePage> {
               itemCount: lines.length,
               itemBuilder: (context, i) => ListTile(
                 title: Text(lines[i].name),
-                subtitle: Text(lines[i].san),
+                subtitle: Text(
+                  formatMoveText(
+                    lines[i].san,
+                    AppSettings.of(context).notation,
+                  ),
+                ),
                 trailing: IconButton(
                   tooltip: 'Elimina la linea',
                   icon: const Icon(Icons.delete_outline),
