@@ -9,8 +9,9 @@ nessuna connessione, nessun server, nessun dato che esce dal telefono.
 2. Scegliere **Computer**.
 3. Scegliere il colore: Bianco, Nero o a caso. La scacchiera si orienta dal lato del giocatore.
 4. Scegliere il livello con il cursore (da 1 a 8).
-5. Scegliere il tempo: "Senza tempo" o una cadenza (vedi [interfaccia.md](interfaccia.md)).
-6. Toccare **Gioca**. Se il giocatore ha il Nero, il computer muove per primo.
+5. Toccare la cadenza, "Senza tempo" o una cadenza (vedi [interfaccia.md](interfaccia.md)): la partita inizia. Se il giocatore ha il Nero, il computer muove per primo.
+
+Contro il computer si gioca solo la variante classica e senza nomi dei giocatori: varianti e nomi compaiono nel pannello solo scegliendo **Due giocatori**.
 
 Durante la riflessione del computer la scacchiera è bloccata e compare la scritta
 "Il computer sta pensando…".
@@ -88,7 +89,7 @@ lib/engine/
   uci_transport.dart  canale verso il motore; StockfishTransport usa multistockfish
   computer_player.dart ComputerPlayer: coda delle richieste, opzioni, ricerca
 lib/game/
-  new_game_dialog.dart scelta di avversario, colore e livello
+  opponent_picker.dart scelta di avversario, colore e livello
   game_page.dart       integrazione nella schermata di gioco
 ```
 
