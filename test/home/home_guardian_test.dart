@@ -75,11 +75,11 @@ void main() {
 
   Future<void> unlockFirstGuardian(WidgetTester tester) async {
     var p = path.progress;
-    for (final s in curriculum[0].stages) {
-      p = p.complete(s.id, 3);
-    }
-    for (final s in curriculum[1].stages.where((s) => !s.isGuardian)) {
-      p = p.complete(s.id, 3);
+    final mates = curriculum.indexWhere((c) => c.id == 'mates');
+    for (final c in curriculum.take(mates + 1)) {
+      for (final s in c.stages.where((s) => !s.isGuardian)) {
+        p = p.complete(s.id, 3);
+      }
     }
     await tester.runAsync(() => path.replace(p));
   }

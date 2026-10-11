@@ -27,14 +27,17 @@ void main() {
   });
 
   test('i guardiani non bloccano il percorso', () {
+    final mates = curriculum.indexWhere((c) => c.id == 'mates');
     var p = const PathProgress();
-    for (final c in curriculum.take(2)) {
+    for (final c in curriculum.take(mates + 1)) {
       for (final s in c.stages.where((s) => !s.isGuardian)) {
         p = p.complete(s.id, 1);
       }
     }
-    expect(p.isUnlocked(curriculum[2].stages.first.id), isTrue);
-    expect(p.nextStage?.id, curriculum[2].stages.first.id);
+    final after = curriculum[mates + 1].stages.first;
+    expect(curriculum[mates].stages.last.isGuardian, isTrue);
+    expect(p.isUnlocked(after.id), isTrue);
+    expect(p.nextStage?.id, after.id);
   });
 
   test('alla fine delle lezioni "Continua" propone i guardiani', () {
@@ -45,6 +48,48 @@ void main() {
       }
     }
     expect(p.nextStage?.isGuardian, isTrue);
+  });
+
+  test('lezioni aggiunte prima di tappe completate non bloccano il resto', () {
+    // Chi aveva completato i Matti prima che arrivassero nuove lezioni.
+    final mates = curriculum.firstWhere((c) => c.id == 'mates');
+    final lessons = mates.stages.where((s) => !s.isGuardian).toList();
+    var p = const PathProgress();
+    for (final s in curriculum.first.stages) {
+      p = p.complete(s.id, 3);
+    }
+    for (final s in lessons) {
+      p = p.complete(s.id, 3);
+    }
+    final added = curriculum[1].stages.first;
+    expect(p.isCompleted(added.id), isFalse);
+    expect(p.isUnlocked(added.id), isTrue);
+    expect(p.isUnlocked(lessons.first.id), isTrue);
+    final after = curriculum[curriculum.indexOf(mates) + 1].stages.first;
+    expect(p.isUnlocked(after.id), isTrue);
+    expect(p.isUnlocked(curriculum[1].stages[1].id), isTrue);
+    expect(p.nextStage?.id, added.id);
+  });
+
+  test(
+    'una lezione aggiunta nello stesso capitolo non blocca le successive',
+    () {
+      // Chi aveva finito i pezzi prima che arrivasse la tappa sulle catture.
+      var p = const PathProgress();
+      for (final s in curriculum.first.stages) {
+        if (s.id != 'pieces.capture') p = p.complete(s.id, 3);
+      }
+      p = p.complete(curriculum[1].stages.first.id, 3);
+      expect(p.isUnlocked('pieces.capture'), isTrue);
+      expect(p.isUnlocked(curriculum[1].stages[1].id), isTrue);
+      expect(p.isUnlocked(curriculum[1].stages[2].id), isFalse);
+      expect(p.nextStage?.id, 'pieces.capture');
+    },
+  );
+
+  test('senza tappe completate più avanti serve la lezione precedente', () {
+    final p = const PathProgress().complete(first.id, 1);
+    expect(p.isUnlocked(curriculum.first.stages[2].id), isFalse);
   });
 
   test('le stelle di tappe rimosse non contano', () {

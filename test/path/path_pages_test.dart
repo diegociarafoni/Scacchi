@@ -24,6 +24,11 @@ Future<void> _tapMove(WidgetTester tester, String from, String to) async {
   await tester.pumpAndSettle();
 }
 
+Future<void> _start(WidgetTester tester) async {
+  await tester.tap(find.text('Inizia'));
+  await tester.pumpAndSettle();
+}
+
 void main() {
   late Directory dir;
   late PathController controller;
@@ -85,6 +90,8 @@ void main() {
     );
     await tester.tap(find.text('apri'));
     await tester.pumpAndSettle();
+    expect(find.text(stage.intro!), findsOneWidget);
+    await _start(tester);
     expect(find.textContaining('torre'), findsWidgets);
 
     await _tapMove(tester, 'a1', 'a8');
@@ -109,8 +116,25 @@ void main() {
     final stage = stageById('mates.one')!;
     await tester.pumpWidget(MaterialApp(home: StagePage(stage: stage)));
     await tester.pumpAndSettle();
+    await _start(tester);
     await _tapMove(tester, 'a1', 'a7');
     expect(find.text('Non è la mossa giusta, riprova.'), findsOneWidget);
+    await _tapMove(tester, 'a1', 'a8');
+    expect(find.text('Esatto!'), findsOneWidget);
+  });
+
+  testWidgets('RG-03 la spiegazione precede gli esercizi', (tester) async {
+    phone(tester);
+    final stage = stageById('rules.check')!;
+    await tester.pumpWidget(MaterialApp(home: StagePage(stage: stage)));
+    await tester.pumpAndSettle();
+    expect(find.text(stage.intro!), findsOneWidget);
+    expect(find.text(stage.exercises.first.instructions), findsNothing);
+    // Prima di "Inizia" la scacchiera non accetta mosse.
+    await _tapMove(tester, 'a1', 'a8');
+    expect(find.text('Esatto!'), findsNothing);
+    await _start(tester);
+    expect(find.text(stage.exercises.first.instructions), findsOneWidget);
     await _tapMove(tester, 'a1', 'a8');
     expect(find.text('Esatto!'), findsOneWidget);
   });
@@ -142,6 +166,7 @@ void main() {
       MaterialApp(home: StagePage(stage: stageById('pieces.king')!)),
     );
     await tester.pumpAndSettle();
+    await _start(tester);
     for (final (from, to) in [
       ('e1', 'e2'),
       ('e2', 'e3'),
@@ -152,18 +177,21 @@ void main() {
     ]) {
       await _tapMove(tester, from, to);
     }
-    expect(find.text('Tappa completata'), findsOneWidget);
+    expect(
+      tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
+      isNotNull,
+    );
     expect(tester.takeException(), isNull);
   });
 
   testWidgets('il guardiano senza motore mostra un avviso', (tester) async {
     phone(tester);
     var p = controller.progress;
-    for (final s in curriculum[0].stages) {
-      p = p.complete(s.id, 3);
-    }
-    for (final s in curriculum[1].stages.where((s) => !s.isGuardian)) {
-      p = p.complete(s.id, 3);
+    final mates = curriculum.indexWhere((c) => c.id == 'mates');
+    for (final c in curriculum.take(mates + 1)) {
+      for (final s in c.stages.where((s) => !s.isGuardian)) {
+        p = p.complete(s.id, 3);
+      }
     }
     await tester.runAsync(() => controller.replace(p));
     await tester.pumpWidget(

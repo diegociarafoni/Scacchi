@@ -134,6 +134,21 @@ void main() {
       expect(LineRun(castle).play(Move.parse('e1g1')!), MoveVerdict.solved);
     });
 
+    test('con l\'obiettivo scacco vale ogni scacco dello stesso pezzo', () {
+      const check = LineExercise(
+        instructions: 'Dai scacco.',
+        fen: '4k3/p7/8/8/8/3B4/7P/1R2K3 w - - 0 1',
+        steps: ['d3b5'],
+        goal: LineGoal.check,
+      );
+      // Lo scacco va dato con il pezzo dell'esercizio.
+      expect(LineRun(check).play(Move.parse('b1b8')!), MoveVerdict.wrong);
+      expect(LineRun(check).play(Move.parse('d3e2')!), MoveVerdict.wrong);
+      expect(LineRun(check).play(Move.parse('d3h7')!), MoveVerdict.wrong);
+      expect(LineRun(check).play(Move.parse('d3g6')!), MoveVerdict.solved);
+      expect(LineRun(check).play(Move.parse('d3b5')!), MoveVerdict.solved);
+    });
+
     test('tre errori o più valgono una stella', () {
       final run = LineRun(backRank);
       for (var i = 0; i < 3; i++) {
