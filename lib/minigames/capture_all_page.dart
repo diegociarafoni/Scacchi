@@ -4,6 +4,7 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../settings/settings.dart';
 import 'board_layout.dart';
 import 'capture_all.dart';
@@ -99,16 +100,18 @@ class _CaptureAllPageState extends State<CaptureAllPage> {
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
     final run = _run;
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cattura tutto'),
+        title: Text(l10n.minigamesCaptureAllTitle),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(4),
           child: LinearProgressIndicator(
             value: _session.round / CaptureAllSession.rounds,
-            semanticsLabel:
-                'Scacchiera ${min(_session.round + 1, CaptureAllSession.rounds)} '
-                'di ${CaptureAllSession.rounds}',
+            semanticsLabel: l10n.minigamesCaptureAllProgress(
+              min(_session.round + 1, CaptureAllSession.rounds),
+              CaptureAllSession.rounds,
+            ),
           ),
         ),
       ),
@@ -125,16 +128,25 @@ class _CaptureAllPageState extends State<CaptureAllPage> {
         panel: _session.done
             ? Column(
                 children: [
-                  Text('Sessione finita', style: text.titleLarge),
                   Text(
-                    '${_session.score} stelle su ${CaptureAllSession.maxScore}',
+                    l10n.minigamesCaptureAllSessionOver,
+                    style: text.titleLarge,
+                  ),
+                  Text(
+                    l10n.minigamesCaptureAllScore(
+                      _session.score,
+                      CaptureAllSession.maxScore,
+                    ),
                     style: text.titleMedium,
                   ),
                   const SizedBox(height: 12),
-                  FilledButton(onPressed: _again, child: const Text('Ancora')),
+                  FilledButton(
+                    onPressed: _again,
+                    child: Text(l10n.minigamesAgain),
+                  ),
                   TextButton(
                     onPressed: () => Navigator.pop(context),
-                    child: const Text('Fine'),
+                    child: Text(l10n.minigamesDone),
                   ),
                 ],
               )
@@ -143,25 +155,28 @@ class _CaptureAllPageState extends State<CaptureAllPage> {
                 children: [
                   Text(run.board.instructions, style: text.titleMedium),
                   Text(
-                    'Mosse ${run.moves}, minimo ${run.optimalMoves}',
+                    l10n.minigamesCaptureAllMoves(run.moves, run.optimalMoves),
                     style: text.bodyMedium,
                   ),
                   const SizedBox(height: 12),
                   if (run.done) ...[
                     Text(
                       '${'★' * run.stars}${'☆' * (3 - run.stars)}',
-                      semanticsLabel: '${run.stars} stelle su 3',
+                      semanticsLabel: l10n.minigamesCaptureAllStars(run.stars),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 32,
                         color: Theme.of(context).colorScheme.tertiary,
                       ),
                     ),
-                    FilledButton(onPressed: _next, child: const Text('Avanti')),
+                    FilledButton(
+                      onPressed: _next,
+                      child: Text(l10n.minigamesNext),
+                    ),
                   ],
                   TextButton(
                     onPressed: _retry,
-                    child: const Text('Ricomincia'),
+                    child: Text(l10n.minigamesCaptureAllRetry),
                   ),
                 ],
               ),

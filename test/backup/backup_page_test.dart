@@ -5,6 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/backup/backup.dart';
 import 'package:scacchi/backup/backup_page.dart';
 
+import '../localized_app.dart';
+
 void main() {
   late Directory dir;
   String? shared;
@@ -30,7 +32,7 @@ void main() {
   }
 
   Future<void> open(WidgetTester tester) => tester.pumpWidget(
-    MaterialApp(
+    localizedApp(
       home: BackupPage(
         directory: () async => dir,
         preferences: () => {'sound': true},

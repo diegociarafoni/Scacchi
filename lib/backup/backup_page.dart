@@ -5,17 +5,22 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../l10n/app_localizations.dart';
 import 'backup.dart';
 
 typedef ShareBackup = Future<void> Function(String text, String fileName);
 
-Future<void> _shareWithSystem(String text, String fileName) async {
+Future<void> _shareWithSystem(
+  String text,
+  String fileName,
+  String subject,
+) async {
   final tmp = await getTemporaryDirectory();
   final file = File('${tmp.path}/$fileName');
   await file.writeAsString(text, flush: true);
   try {
     await SharePlus.instance.share(
-      ShareParams(files: [XFile(file.path)], subject: 'Backup di Rokko'),
+      ShareParams(files: [XFile(file.path)], subject: subject),
     );
   } finally {
     // Copia completa dei dati: non lasciarla nella cartella temporanea.
@@ -29,12 +34,14 @@ class BackupPage extends StatefulWidget {
     super.key,
     this.directory = getApplicationSupportDirectory,
     required this.preferences,
-    this.share = _shareWithSystem,
+    this.share,
   });
 
   final Future<Directory> Function() directory;
   final Map<String, Object> Function() preferences;
-  final ShareBackup share;
+
+  /// Senza, il file passa alla condivisione di sistema.
+  final ShareBackup? share;
 
   /// Pagina collegata alle preferenze di sistema, già caricate.
   static Future<BackupPage> system() async {
@@ -70,19 +77,24 @@ Future<void> applyPreferencesToSystem(Map<String, Object> preferences) async {
 }
 
 class _BackupPageState extends State<BackupPage> {
-  String? _message;
+  String Function(AppLocalizations l10n)? _message;
 
   Future<void> _export() async {
+    final l10n = AppLocalizations.of(context);
+    final share =
+        widget.share ??
+        (text, fileName) =>
+            _shareWithSystem(text, fileName, l10n.backupShareSubject);
     try {
       final backup = await Backup.collect(
         await widget.directory(),
         widget.preferences(),
       );
       final stamp = DateTime.now().toIso8601String().substring(0, 10);
-      await widget.share(backup.encode(), 'rokko-backup-$stamp.json');
-      _say('Backup pronto da salvare');
+      await share(backup.encode(), 'rokko-backup-$stamp.json');
+      _say((l) => l.backupExported);
     } on Object catch (e) {
-      _say('Backup non riuscito: $e');
+      _say((l) => l.backupExportFailed('$e'));
     }
   }
 
@@ -95,45 +107,55 @@ class _BackupPageState extends State<BackupPage> {
     try {
       final backup = Backup.decode(text);
       await backup.stage(await widget.directory());
-      _say('Backup pronto. Chiudi e riapri l\'app per ripristinare i dati.');
+      _say((l) => l.backupRestoreStaged);
     } on BackupException catch (e) {
-      _say(e.message);
+      _say((l) => _problem(l, e));
     } on Object catch (e) {
-      _say('Ripristino non riuscito: $e');
+      _say((l) => l.backupRestoreFailed('$e'));
     }
   }
 
-  void _say(String text) {
-    if (mounted) setState(() => _message = text);
+  static String _problem(AppLocalizations l, BackupException e) {
+    final detail = e.detail ?? '';
+    return switch (e.problem) {
+      BackupProblem.notApp => l.backupErrorNotApp,
+      BackupProblem.newerVersion => l.backupErrorNewerVersion,
+      BackupProblem.unexpectedFile => l.backupErrorUnexpectedFile(detail),
+      BackupProblem.invalidFile => l.backupErrorInvalidFile(detail),
+      BackupProblem.invalidPreference => l.backupErrorInvalidPreference(detail),
+      BackupProblem.unreadable => l.backupErrorUnreadable,
+    };
+  }
+
+  void _say(String Function(AppLocalizations l10n) message) {
+    if (mounted) setState(() => _message = message);
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final message = _message;
     return Scaffold(
-      appBar: AppBar(title: const Text('Backup e ripristino')),
+      appBar: AppBar(title: Text(l10n.backupTitle)),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          const Text(
-            'Il backup contiene partite, progressi, percorso, tornei, '
-            'allenamento e impostazioni. Salvalo in un posto sicuro: senza '
-            'rete non esiste una copia online.',
-          ),
+          Text(l10n.backupIntro),
           const SizedBox(height: 16),
           FilledButton.icon(
             onPressed: _export,
             icon: const Icon(Icons.ios_share),
-            label: const Text('Condividi il backup'),
+            label: Text(l10n.backupShare),
           ),
           const SizedBox(height: 8),
           OutlinedButton.icon(
             onPressed: _restore,
             icon: const Icon(Icons.restore),
-            label: const Text('Ripristina da testo'),
+            label: Text(l10n.backupRestoreFromText),
           ),
-          if (_message != null) ...[
+          if (message != null) ...[
             const SizedBox(height: 16),
-            Text(_message!, key: const Key('backup-message')),
+            Text(message(l10n), key: const Key('backup-message')),
           ],
         ],
       ),
@@ -159,26 +181,24 @@ class _PasteDialogState extends State<_PasteDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return AlertDialog(
-      title: const Text('Ripristina il backup'),
+      title: Text(l10n.backupRestoreDialogTitle),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
-            'Incolla il contenuto del file di backup. I dati attuali '
-            'vengono sostituiti.',
-          ),
+          Text(l10n.backupRestoreDialogBody),
           TextField(controller: _controller, maxLines: 4),
         ],
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Annulla'),
+          child: Text(l10n.backupCancel),
         ),
         FilledButton(
           onPressed: () => Navigator.pop(context, _controller.text),
-          child: const Text('Ripristina'),
+          child: Text(l10n.backupRestore),
         ),
       ],
     );

@@ -17,6 +17,7 @@ import 'package:scacchi/settings/color_blind.dart';
 import 'package:scacchi/settings/settings.dart';
 import 'package:scacchi/storage/key_value_store.dart';
 
+import '../localized_app.dart';
 import '../puzzles/fixtures.dart';
 
 Future<void> pumpColorBlind(WidgetTester tester, Widget home) async {
@@ -28,7 +29,7 @@ Future<void> pumpColorBlind(WidgetTester tester, Widget home) async {
   await tester.pumpWidget(
     SettingsScope(
       controller: settings,
-      child: MaterialApp(home: home),
+      child: localizedApp(home: home),
     ),
   );
   await tester.pumpAndSettle();

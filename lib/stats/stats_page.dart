@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 import '../archive/game_archive.dart';
 import '../archive/saved_game.dart';
+import '../l10n/app_localizations.dart';
 import 'local_rating.dart';
 import 'stats.dart';
 
@@ -51,68 +52,63 @@ class _StatsPageState extends State<StatsPage> {
   Widget build(BuildContext context) {
     final stats = _stats;
     final rating = _rating;
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Statistiche')),
+      appBar: AppBar(title: Text(l10n.statsTitle)),
       body: _failed
-          ? const _Message(
-              'L\'archivio delle partite non si è potuto leggere: riprova più '
-              'tardi.',
-            )
+          ? _Message(l10n.statsLoadFailed)
           : stats == null || rating == null
           ? const Center(child: CircularProgressIndicator())
           : stats.all.games == 0 &&
                 rating.history.isEmpty &&
                 stats.localGames == 0
-          ? const _Message(
-              'Gioca qualche partita contro il computer per vedere le '
-              'statistiche.',
-            )
+          ? _Message(l10n.statsEmpty)
           : ListView(
               padding: const EdgeInsets.all(16),
               children: [
                 _RatingCard(rating: rating),
                 const SizedBox(height: 16),
-                _Section('Bilancio', [
-                  _ScoreRow('Tutte', stats.all),
+                _Section(l10n.statsRecord, [
+                  _ScoreRow(l10n.statsAllGames, stats.all),
                   for (final side in Side.values)
                     if (stats.byColor[side] case final s?)
                       _ScoreRow(
-                        side == Side.white ? 'Con il bianco' : 'Con il nero',
+                        side == Side.white
+                            ? l10n.statsWithWhite
+                            : l10n.statsWithBlack,
                         s,
                       ),
                   if (stats.localGames > 0)
                     ListTile(
                       contentPadding: EdgeInsets.zero,
-                      title: const Text('Partite tra due persone'),
+                      title: Text(l10n.statsLocalGames),
                       trailing: Text('${stats.localGames}'),
                     ),
                 ]),
                 if (stats.byTimeControl.isNotEmpty)
-                  _Section('Per cadenza', [
+                  _Section(l10n.statsByTimeControl, [
                     for (final e in stats.byTimeControl.entries)
                       _ScoreRow(e.key, e.value),
                   ]),
                 if (stats.openings.isNotEmpty)
-                  _Section('Aperture più giocate', [
+                  _Section(l10n.statsTopOpenings, [
                     for (final o in stats.openings.take(5))
                       ListTile(
                         contentPadding: EdgeInsets.zero,
                         title: Text(o.name),
-                        trailing: Text(
-                          o.games == 1 ? '1 partita' : '${o.games} partite',
-                        ),
+                        trailing: Text(l10n.statsGames(o.games)),
                       ),
                   ]),
                 if (stats.averageAccuracy case final avg?)
-                  _Section('Precisione', [
+                  _Section(l10n.statsAccuracy, [
                     ListTile(
                       contentPadding: EdgeInsets.zero,
-                      title: const Text('Media'),
+                      title: Text(l10n.statsAverage),
                       trailing: Text('${avg.toStringAsFixed(1)}%'),
                     ),
                     _Sparkline(
                       values: [for (final p in stats.accuracyTrend) p.$2],
-                      label: 'Andamento della precisione',
+                      label: l10n.statsAccuracyTrend,
                     ),
                   ]),
               ],
@@ -144,6 +140,7 @@ class _RatingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -151,20 +148,19 @@ class _RatingCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Rating stimato ${rating.rating}',
+              l10n.statsRating(rating.rating),
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             Text(
               rating.provisional
-                  ? 'provvisorio: servono ${LocalRating.provisionalGames} '
-                        'partite contro il computer'
-                  : 'su ${rating.history.length} partite contro il computer',
+                  ? l10n.statsRatingProvisional(LocalRating.provisionalGames)
+                  : l10n.statsRatingGames(rating.history.length),
             ),
             if (rating.history.length > 1) ...[
               const SizedBox(height: 12),
               _Sparkline(
                 values: [for (final p in rating.history) p.$2.toDouble()],
-                label: 'Andamento del rating',
+                label: l10n.statsRatingTrend,
               ),
             ],
           ],
@@ -204,6 +200,7 @@ class _ScoreRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final percent = score.percent;
+    final l10n = AppLocalizations.of(context);
     return MergeSemantics(
       child: ListTile(
         contentPadding: EdgeInsets.zero,
@@ -212,9 +209,8 @@ class _ScoreRow extends StatelessWidget {
         trailing: Text(
           percent == null ? '–' : '${percent.toStringAsFixed(0)}%',
           semanticsLabel: percent == null
-              ? 'nessuna partita'
-              : '${score.wins} vittorie, ${score.draws} patte, '
-                    '${score.losses} sconfitte',
+              ? l10n.statsNoGames
+              : l10n.statsScoreDetail(score.wins, score.draws, score.losses),
         ),
       ),
     );
@@ -233,10 +229,13 @@ class _Sparkline extends StatelessWidget {
     final min = values.reduce((a, b) => a < b ? a : b);
     final max = values.reduce((a, b) => a > b ? a : b);
     return Semantics(
-      label:
-          '$label: da ${values.first.toStringAsFixed(0)} a '
-          '${values.last.toStringAsFixed(0)}, minimo ${min.toStringAsFixed(0)}, '
-          'massimo ${max.toStringAsFixed(0)}',
+      label: AppLocalizations.of(context).statsTrend(
+        label,
+        values.first.toStringAsFixed(0),
+        values.last.toStringAsFixed(0),
+        min.toStringAsFixed(0),
+        max.toStringAsFixed(0),
+      ),
       child: SizedBox(
         height: 64,
         width: double.infinity,
