@@ -19,6 +19,7 @@ L'elenco completo con le note è nella pagina delle Release; lo stato delle funz
 |---|---|
 | Push di un tag `vX.Y.Z` | Build e Release `vX.Y.Z` con `scacchi.apk` e `scacchi.apk.sha256` |
 | Avvio manuale (Actions → Rilascio APK → Run workflow) con **version** = `X.Y.Z` | Crea il tag `vX.Y.Z` sul commit del branch scelto e pubblica la Release; se il tag esiste già su un altro commit si ferma |
+| CI verde su `main` (evento `workflow_run`) | Pre-release `nightly` con `scacchi.apk`, ricreata a ogni main: sostituisce la precedente |
 | Avvio manuale con **version** vuoto | Solo build: l'APK resta per 7 giorni come artefatto dell'esecuzione |
 
 La versione mostrata dall'app (`versionName`) è quella del tag senza la `v`; il `versionCode` è il numero di commit nella cronologia del tag, quindi cresce a ogni versione successiva su `main`. Il rilascio parte solo se `flutter analyze` e `flutter test` passano, e un tag già esistente deve puntare al commit compilato.
@@ -28,6 +29,21 @@ I tag con suffisso (`v1.2.0-beta.1`) diventano pre-release. Gli altri sono la "l
 ```
 https://github.com/diegociarafoni/rokko/releases/latest/download/scacchi.apk
 ```
+
+## Nightly a ogni merge
+
+Ogni volta che la CI passa su `main`, il workflow compila l'APK firmato e ricrea la pre-release **nightly** (nome `Rokko nightly <commit>`). Il link non cambia mai e porta sempre all'ultimo `main` verificato:
+
+```
+https://github.com/diegociarafoni/rokko/releases/download/nightly/scacchi.apk
+```
+
+- È firmata con la stessa chiave delle versioni numerate, quindi si installa sopra di esse e viceversa; il `versionCode` cresce con i commit di `main`, perciò Android accetta l'aggiornamento (le versioni numerate vanno pubblicate da `main`).
+- Parte solo dopo una CI riuscita su un evento `push` di `main` e non rifà analisi e test.
+- Più merge ravvicinati non si accodano: resta solo l'ultima esecuzione, e un nightly non sostituisce mai uno più recente (si pubblica solo se il commit è ancora la punta di `main`).
+- La release è sempre la stessa: a ogni merge cambiano file, commit e note, non l'indirizzo, e non partono notifiche.
+- Non compare in `releases/latest`, che resta l'ultima versione numerata.
+- Se la CI di `main` è rossa non esce nessun nightly: l'ultimo resta disponibile.
 
 ## Minuti di GitHub Actions
 
@@ -44,7 +60,7 @@ Per un telefono a 32 bit si può compilare a mano un APK universale togliendo `-
 
 ## Frequenza dei rilasci
 
-Per risparmiare minuti di Actions si pubblica a blocchi, non a ogni funzione:
+Le versioni numerate escono a blocchi (il nightly copre l'uso quotidiano):
 
 - **Regola predefinita**: una nuova versione solo quando `main` ha accumulato almeno circa 5 PR di funzionalità dall'ultima, oppure quando il responsabile del progetto la chiede.
 - Le correzioni urgenti (un difetto che impedisce di usare l'app) possono uscire prima, come versione di correzione (`0.3.1`).
