@@ -319,7 +319,7 @@ void main() {
 
   group(
     'con Stockfish vero',
-    skip: ProcessTransport.findBinary() == null
+    skip: ProcessTransport.binary == null
         ? 'Stockfish non installato (impostare STOCKFISH_PATH)'
         : null,
     () {

@@ -81,7 +81,7 @@ void main() {
 
   group(
     'contro il computer',
-    skip: ProcessTransport.findBinary() == null
+    skip: ProcessTransport.binary == null
         ? 'Stockfish non installato (impostare STOCKFISH_PATH)'
         : null,
     () {

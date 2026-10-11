@@ -20,11 +20,12 @@ class StockfishTransport implements UciTransport {
 
   static bool get _mobile => Platform.isAndroid || Platform.isIOS;
 
-  /// Calcolato una volta: sui computer controlla i file del sistema.
-  static final bool isSupported =
+  /// Sui computer serve lo Stockfish installato; su macOS la sandbox dell'app
+  /// non permette di avviarlo.
+  static bool get isSupported =>
       _mobile ||
-      ((Platform.isLinux || Platform.isMacOS || Platform.isWindows) &&
-          ProcessTransport.findBinary() != null);
+      ((Platform.isLinux || Platform.isWindows) &&
+          ProcessTransport.binary != null);
 
   /// Sul telefono riprova se il motore precedente non ha ancora liberato il posto.
   static Future<UciTransport> start() async {

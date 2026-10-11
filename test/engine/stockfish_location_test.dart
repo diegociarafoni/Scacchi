@@ -56,4 +56,15 @@ void main() {
       isNull,
     );
   });
+
+  test('toglie virgolette e separatori finali dalle cartelle di PATH', () {
+    expect(
+      findStockfish(
+        environment: {'PATH': r'"C:\Program Files\Stockfish\";C:\b'},
+        exists: (p) => p == r'C:\Program Files\Stockfish\stockfish.exe',
+        windows: true,
+      ),
+      r'C:\Program Files\Stockfish\stockfish.exe',
+    );
+  });
 }

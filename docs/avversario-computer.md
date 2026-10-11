@@ -35,15 +35,19 @@ Durante la riflessione del computer la scacchiera è bloccata e compare la scrit
 |---|---|
 | Android | Sì |
 | iOS | Sì |
-| Windows, macOS, Linux | Sì, se Stockfish è installato; altrimenti l'opzione appare disattivata |
+| Windows, Linux | Sì, se Stockfish è installato; altrimenti l'opzione appare disattivata |
+| macOS | Non ancora: la sandbox dell'app impedisce di avviare un programma esterno |
 
 Su Android e iOS il motore arriva dal plugin [multistockfish](https://github.com/lichess-org/dart-multistockfish)
-di Lichess (Stockfish 19 incluso nell'app). Sui computer l'app usa lo Stockfish installato,
+di Lichess (Stockfish 19 incluso nell'app). Su Windows e Linux l'app usa lo Stockfish installato,
 avviato come processo esterno (`ProcessTransport`): lo cerca in `STOCKFISH_PATH`, poi nelle
 cartelle di `PATH` (`stockfish.exe` su Windows), poi in `/usr/games`, `/usr/bin`, `/usr/local/bin`
-e `/opt/homebrew/bin`. Per installarlo: `sudo apt install stockfish` su Debian e Ubuntu,
-`brew install stockfish` su macOS, l'eseguibile di [stockfishchess.org](https://stockfishchess.org/download/)
-su Windows. La ricerca avviene una volta all'avvio dell'app.
+e `/opt/homebrew/bin`. Per installarlo: `sudo apt install stockfish` su Debian e Ubuntu; su
+Windows scaricare l'eseguibile da [stockfishchess.org](https://stockfishchess.org/download/) e
+rinominarlo `stockfish.exe` in una cartella di `PATH`, oppure indicarne il percorso completo nella
+variabile `STOCKFISH_PATH`. La ricerca avviene una volta all'avvio dell'app: dopo l'installazione
+va riavviata. Se il processo termina durante la partita compare "Il computer non risponde." e
+**Riprova** lo riavvia.
 
 ## Livelli
 
