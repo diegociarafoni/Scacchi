@@ -3,6 +3,9 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/editor/position_editor_page.dart';
+import 'package:scacchi/engine/adaptive.dart';
+import 'package:scacchi/engine/bot_collection.dart';
+import 'package:scacchi/engine/bots.dart';
 import 'package:scacchi/engine/computer_player.dart';
 import 'package:scacchi/game/game_page.dart';
 import 'package:scacchi/settings/settings.dart';
@@ -197,14 +200,19 @@ void main() {
   group('RF-24 posizione personalizzata contro il motore', () {
     const checkFen = '4k3/8/8/8/8/8/4Q3/4K3 b - - 0 1';
 
-    Future<void> editPosition(WidgetTester tester) async {
+    Future<void> editPosition(
+      WidgetTester tester, {
+      MemoryStore? store,
+      String fen = checkFen,
+    }) async {
       phone(tester);
       await tester.pumpWidget(
         MaterialApp(
           home: GamePage(
             settings: SettingsController.defaults(),
             computerAvailable: true,
-            store: MemoryStore(),
+            store: store ?? MemoryStore(),
+            now: () => TestWidgetsFlutterBinding.instance.clock.now(),
             createComputer: () =>
                 ComputerPlayer(connect: () async => FirstLegalMoveEngine()),
           ),
@@ -213,7 +221,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.byTooltip('Editor di posizione'));
       await tester.pumpAndSettle();
-      await pasteFen(tester, checkFen);
+      await pasteFen(tester, fen);
       await scrollTap(tester, find.text('Gioca da qui'));
     }
 
@@ -274,6 +282,81 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('Gioca questa posizione'), findsNothing);
       expect(find.text('Muove il Bianco.'), findsOneWidget);
+    });
+
+    testWidgets('una posizione creata non conta per la collezione dei bot', (
+      tester,
+    ) async {
+      final store = MemoryStore();
+      await editPosition(
+        tester,
+        store: store,
+        fen: 'r5k1/5ppp/8/8/8/8/5PPP/6K1 b - - 0 1',
+      );
+      await scrollTap(tester, find.text('Bot'));
+      await scrollTap(tester, find.text('Nero'));
+      await scrollTap(tester, find.widgetWithText(FilledButton, 'Gioca'));
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+      final rect = tester.getRect(find.byType(Chessboard));
+      final size = rect.width / 8;
+      Offset at(String sq) =>
+          rect.topLeft +
+          Offset(
+            (7 - (sq.codeUnitAt(0) - 97) + 0.5) * size,
+            (int.parse(sq[1]) - 1 + 0.5) * size,
+          );
+      await tester.tapAt(at('a8'));
+      await tester.pump();
+      await tester.tapAt(at('a1'));
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+      expect(find.text('Scacco matto. Vince il Nero.'), findsOneWidget);
+      final collection = await BotCollection.load(store);
+      expect(collection.isBeaten(bots.first), isFalse);
+      expect((await AdaptiveOpponent.load(store)).games, 0);
+    });
+
+    testWidgets('chiudere la scelta non ferma l\'orologio della partita', (
+      tester,
+    ) async {
+      phone(tester);
+      await tester.pumpWidget(
+        MaterialApp(
+          home: GamePage(
+            settings: SettingsController.defaults(),
+            computerAvailable: true,
+            store: MemoryStore(),
+            now: () => TestWidgetsFlutterBinding.instance.clock.now(),
+            createComputer: () =>
+                ComputerPlayer(connect: () async => FirstLegalMoveEngine()),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await startComputerGame(tester, side: 'Bianco', time: '3+2');
+      await tester.pump(const Duration(seconds: 1));
+      final rect = tester.getRect(find.byType(Chessboard));
+      final size = rect.width / 8;
+      Offset at(String sq) =>
+          rect.topLeft +
+          Offset(
+            (sq.codeUnitAt(0) - 97 + 0.5) * size,
+            (7 - (int.parse(sq[1]) - 1) + 0.5) * size,
+          );
+      await tester.tapAt(at('e2'));
+      await tester.pump();
+      await tester.tapAt(at('e4'));
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.tap(find.byTooltip('Editor di posizione'));
+      await tester.pumpAndSettle();
+      await pasteFen(tester, checkFen);
+      await scrollTap(tester, find.text('Gioca da qui'));
+      await tester.tapAt(const Offset(10, 10));
+      await tester.pumpAndSettle();
+      String white() =>
+          tester.widget<Text>(find.byKey(const ValueKey('clock-white'))).data!;
+      final before = white();
+      await tester.pump(const Duration(seconds: 5));
+      expect(white(), isNot(before));
     });
   });
 }

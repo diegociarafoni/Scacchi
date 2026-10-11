@@ -160,7 +160,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// senza mosse non contano.
   void _recordAdaptiveResult() {
     final side = _computerSide;
-    if (side == null || _bot != null || !_setup.adaptive) return;
+    if (side == null || _bot != null || !_setup.adaptive || !_standardStart) {
+      return;
+    }
     if (_resultRecorded && !_game.isOver) {
       _resultRecorded = false;
       _adaptive = _adaptiveBefore;
@@ -182,7 +184,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   void _recordBotResult() {
     final bot = _bot;
     final side = _computerSide;
-    if (bot == null || side == null) return;
+    if (bot == null || side == null || !_standardStart) return;
     if (_botResultRecorded && !_game.isOver) {
       _botResultRecorded = false;
       if (!identical(_collection, _collectionBefore)) {
@@ -503,14 +505,16 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     }
   }
 
+  /// Partita di scacchi classici dalla posizione iniziale: solo queste contano
+  /// per la stima adattiva e per la collezione dei bot.
+  bool get _standardStart =>
+      _game.variant == Variant.standard &&
+      _game.initial.fen == Chess.initial.fen;
+
   /// Mossa del libro d'apertura del bot, solo negli scacchi classici.
   Move? _bookMove() {
     final bot = _bot;
-    if (bot == null ||
-        _game.variant != Variant.standard ||
-        _game.initial.fen != Chess.initial.fen) {
-      return null;
-    }
+    if (bot == null || !_standardStart) return null;
     return bot.bookMoveFor(_game.initial, _moveHistory, _random);
   }
 
@@ -683,39 +687,22 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       restart: (choice) => choice == null,
     );
     if (!mounted || choice == null) return;
-    _cancelComputerMove();
-    _clockBeforeSuspension = false;
     final setup = _applySetup(choice.setup);
-    final bot = _bot;
     final vsComputer = setup.opponent != Opponent.human;
     if (!vsComputer) _twoPlayerVariant = choice.variant;
     final variant = vsComputer ? Variant.standard : choice.variant;
-    _game = ChessGame(
-      initial: initialPosition(
-        variant,
-        chess960Id: variant == Variant.chess960 ? widget.chess960Id() : null,
-      ),
-      variant: variant,
-    );
     final control = choice.control;
-    _clock = control == null ? null : ChessClock(control, now: widget.now);
-    _clockHistory.clear();
-    _lowTime.reset();
-    _clearBoardInteraction();
-    if (vsComputer) {
-      final human = setup.resolveHumanSide(_random);
-      _computerSide = human.opposite;
-      _orientation = human;
-      _computerPlayer.newGame().ignore();
-    } else {
-      if (_computerSide != null) _orientation = Side.white;
-      _computerSide = null;
-      _computer?.dispose().ignore();
-      _computer = null;
-    }
-    _refresh(animate: false);
-    unawaited(_computerMove());
-    if (bot != null) _botSay(BotEvent.start);
+    _beginGame(
+      ChessGame(
+        initial: initialPosition(
+          variant,
+          chess960Id: variant == Variant.chess960 ? widget.chess960Id() : null,
+        ),
+        variant: variant,
+      ),
+      setup,
+      control == null ? null : ChessClock(control, now: widget.now),
+    );
     if (vsComputer) return;
     unawaited(
       widget.settings.update(
@@ -727,23 +714,48 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     );
   }
 
+  /// Avvia [game] contro l'avversario di [setup]: azzera orologio e cronologia,
+  /// dispone i lati e fa muovere subito chi tocca.
+  void _beginGame(ChessGame game, GameSetup setup, ChessClock? clock) {
+    _cancelComputerMove();
+    _clockBeforeSuspension = false;
+    _game = game;
+    _clock = clock;
+    _clockHistory.clear();
+    _lowTime.reset();
+    _clearBoardInteraction();
+    if (setup.opponent != Opponent.human) {
+      final human = setup.resolveHumanSide(_random);
+      _computerSide = human.opposite;
+      _orientation = human;
+      _computerPlayer.newGame().ignore();
+    } else {
+      if (_computerSide != null) _orientation = Side.white;
+      _computerSide = null;
+      _computer?.dispose().ignore();
+      _computer = null;
+    }
+    _refresh(animate: false);
+    unawaited(_computerMove());
+    if (_bot != null) _botSay(BotEvent.start);
+  }
+
   /// Apre l'editor sulla posizione mostrata e gioca senza orologio quella scelta.
   Future<void> _editPosition() async {
     final shown = _shownPosition;
-    final position = await _whileSuspended(
-      () => Navigator.of(context).push<Position>(
+    // Editor e scelta dell'avversario sono un'unica sospensione: chiudere uno
+    // dei due lascia la partita, orologio compreso, com'era.
+    final result = await _whileSuspended<(Position, GameSetup)>(() async {
+      final position = await Navigator.of(context).push<Position>(
         MaterialPageRoute(
           builder: (_) =>
               PositionEditorPage(initialFen: shown.fen, board: _settings.board),
         ),
-      ),
-      restart: (position) => position == null,
-    );
-    if (!mounted || position == null) return;
-    var chosen = _setup.copyWith(opponent: Opponent.human);
-    if (widget.computerAvailable) {
-      final picked = await _whileSuspended(
-        () => showModalBottomSheet<GameSetup>(
+      );
+      if (position == null || !mounted) return null;
+      var chosen = _setup.copyWith(opponent: Opponent.human);
+      if (widget.computerAvailable) {
+        final picked = await showModalBottomSheet<GameSetup>(
           context: context,
           isScrollControlled: true,
           builder: (context) => _PositionSheet(
@@ -751,37 +763,20 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
             adaptiveLevel: _adaptive.level,
             collection: _collection,
           ),
-        ),
-        restart: (picked) => picked == null,
-      );
-      if (!mounted || picked == null) return;
-      chosen = picked;
-    }
-    _cancelComputerMove();
-    _clockBeforeSuspension = false;
-    final previous = _setup;
-    final setup = _applySetup(chosen);
-    final bot = _bot;
-    if (setup.opponent == Opponent.human) _setup = previous;
-    _game = ChessGame(initial: position);
-    _clock = null;
-    _clockHistory.clear();
-    _lowTime.reset();
-    _clearBoardInteraction();
-    if (setup.opponent == Opponent.human) {
-      if (_computerSide != null) _orientation = Side.white;
-      _computerSide = null;
-      _computer?.dispose().ignore();
-      _computer = null;
-    } else {
-      final human = setup.resolveHumanSide(_random);
-      _computerSide = human.opposite;
-      _orientation = human;
-      _computerPlayer.newGame().ignore();
-    }
-    _refresh(animate: false);
-    unawaited(_computerMove());
-    if (bot != null) _botSay(BotEvent.start);
+        );
+        if (picked == null) return null;
+        chosen = picked;
+      }
+      return (position, chosen);
+    }, restart: (result) => result == null);
+    if (!mounted || result == null) return;
+    final (position, chosen) = result;
+    // Contro una persona restano le scelte fatte per il computer.
+    if (chosen.opponent == Opponent.human) _bot = null;
+    final setup = chosen.opponent == Opponent.human
+        ? chosen
+        : _applySetup(chosen);
+    _beginGame(ChessGame(initial: position), setup, null);
   }
 
   String get _title => switch (_game.variant) {
