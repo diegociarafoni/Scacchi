@@ -41,10 +41,35 @@ Per verificare l'integrità del file: `sha256sum -c scacchi.apk.sha256`.
 
 Android installa un aggiornamento solo se è firmato con la stessa chiave della versione presente.
 
-- **Senza segreti configurati** la build usa la chiave di debug che Gradle genera sul runner. Ogni esecuzione ne genera una diversa, quindi per passare a una nuova versione bisogna prima disinstallare l'app (le partite salvate vanno perse). Va bene per provare l'app, non per gli utenti.
-- **Con una chiave di rilascio** gli aggiornamenti si installano sopra la versione precedente. È la stessa chiave da usare poi come chiave di caricamento su Google Play.
+La build sceglie la chiave in quest'ordine:
 
-### Configurare una chiave di rilascio
+1. **Keystore** nei segreti `ANDROID_KEYSTORE_*` (vedi sotto). Se c'è anche la frase segreta la build lo segnala con un avviso: togliere poi il keystore cambierebbe la firma.
+2. **Frase segreta** nel segreto `ANDROID_SIGNING_SEED`: è il metodo consigliato.
+3. **Nessun segreto**: chiave di debug generata dal runner, diversa a ogni esecuzione; per passare a una nuova versione bisogna prima disinstallare l'app (e le partite salvate vanno perse).
+
+Sulle pull request la build firma con una frase pubblica fissa, così il percorso di firma è verificato senza esporre segreti al codice della PR; quell'APK non viene caricato come artefatto.
+
+### Metodo consigliato: frase segreta
+
+`tool/derive_keystore.py` ricava dalla frase, in modo deterministico, una chiave RSA a 3072 bit e un certificato sempre identico (scrypt sulla frase, numeri primi da un flusso SHAKE-256, campi del certificato fissi e firma PKCS#1 v1.5). Stessa frase, stesso certificato: non c'è nessun file da conservare o caricare, e la copia di sicurezza è la frase stessa.
+
+1. Generare una frase casuale lunga (almeno 32 caratteri, meglio 40 o più) con il generatore di un gestore di password e salvarla lì. Non usare una frase inventata o una citazione: il certificato pubblico di ogni APK permette di provare frasi a tentativi, e chi la indovina può firmare aggiornamenti dell'app. Spazi iniziali e finali sono ignorati.
+2. Aprire https://github.com/diegociarafoni/Scacchi/settings/secrets/actions, toccare **New repository secret**, nome `ANDROID_SIGNING_SEED`, valore la frase, **Add secret**. Funziona anche dal browser del telefono.
+3. Pubblicare una nuova versione. Chi aveva installato una versione firmata con la chiave di debug deve disinstallarla una volta; da lì in poi gli aggiornamenti si installano sopra.
+
+L'impronta SHA-256 del certificato compare nel log del passo "Chiave di firma dalla frase segreta". Cambiare la frase, o il sale `SALT` nello script, cambia la chiave e richiede di nuovo una disinstallazione. Per una build locale firmata:
+
+```bash
+export ANDROID_SIGNING_SEED='...'
+export ANDROID_KEYSTORE_PATH=/tmp/scacchi.p12
+export ANDROID_KEYSTORE_PASSWORD="$(python3 tool/derive_keystore.py "$ANDROID_KEYSTORE_PATH")"
+export ANDROID_KEY_PASSWORD="$ANDROID_KEYSTORE_PASSWORD" ANDROID_KEY_ALIAS=scacchi
+flutter build apk --release
+```
+
+Serve il pacchetto Python `cryptography`. Su Google Play questa chiave si usa come chiave di caricamento: la chiave di firma finale la gestisce Play App Signing.
+
+### Alternativa: keystore tradizionale
 
 1. Generare il keystore, una volta sola, e conservarlo con le password in un luogo sicuro (perderlo impedisce di aggiornare l'app):
 
@@ -66,7 +91,7 @@ Android installa un aggiornamento solo se è firmato con la stessa chiave della 
 
 Il keystore non va mai aggiunto al repository: `android/.gitignore` esclude `*.jks` e `*.keystore`.
 
-### Build locale firmata
+### Build locale firmata con un keystore
 
 `android/app/build.gradle.kts` legge la chiave dalle stesse variabili d'ambiente; senza `ANDROID_KEYSTORE_PATH` firma con la chiave di debug locale.
 
