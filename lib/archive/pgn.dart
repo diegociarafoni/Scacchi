@@ -1,6 +1,7 @@
 import 'package:dartchess/dartchess.dart';
 
 import '../game/chess_game.dart';
+import '../game/variant.dart';
 
 /// Partita letta da un PGN, con le sue intestazioni.
 class PgnRecord {
@@ -33,7 +34,15 @@ String exportPgn(ChessGame game, {Map<String, String> headers = const {}}) {
     ...headers,
     'Result': resultTag(game),
   };
-  if (game.initial.fen != Chess.initial.fen) {
+  // Il nome della variante viene dalla partita, non da un PGN importato.
+  pgnHeaders.remove('Variant');
+  if (game.variant != Variant.standard) {
+    pgnHeaders['Variant'] = game.variant.pgnName;
+  }
+  // Chess960 ha sempre bisogno della FEN: la posizione iniziale cambia.
+  if (game.variant == Variant.chess960 ||
+      game.initial.fen !=
+          initialPosition(game.variant, chess960Id: standardChess960Id).fen) {
     pgnHeaders['FEN'] = game.initial.fen;
     pgnHeaders['SetUp'] = '1';
   }
@@ -52,7 +61,8 @@ String exportPgn(ChessGame game, {Map<String, String> headers = const {}}) {
 }
 
 /// Legge una o più partite; commenti e varianti si ignorano, una partita con
-/// mosse illegali o posizione non valida viene scartata.
+/// mosse illegali, posizione non valida o variante non supportata viene
+/// scartata.
 PgnImport importPgn(String text) {
   if (text.trim().isEmpty) return const PgnImport([], 0);
   final games = <PgnRecord>[];
@@ -68,11 +78,9 @@ PgnImport importPgn(String text) {
   return PgnImport(games, skipped);
 }
 
-const _classicalVariants = {'standard', 'chess', 'from position'};
-
 ChessGame? _replay(PgnGame<PgnNodeData> pgn) {
-  final variant = pgn.headers['Variant']?.toLowerCase();
-  if (variant != null && !_classicalVariants.contains(variant)) return null;
+  final variant = Variant.fromPgn(pgn.headers['Variant']);
+  if (variant == null) return null;
   final Position initial;
   try {
     initial = PgnGame.startingPosition(pgn.headers);
@@ -80,7 +88,6 @@ ChessGame? _replay(PgnGame<PgnNodeData> pgn) {
     // FEN malformato o posizione non valida.
     return null;
   }
-  if (initial is! Chess) return null;
   final moves = <Move>[];
   Position pos = initial;
   for (final data in pgn.moves.mainline()) {
@@ -89,7 +96,7 @@ ChessGame? _replay(PgnGame<PgnNodeData> pgn) {
     moves.add(move);
     pos = pos.play(move);
   }
-  final game = ChessGame.replay(initial, moves);
+  final game = ChessGame.replay(initial, moves, variant: variant);
   if (game != null && !game.isOver) {
     // Il risultato senza matto o patta sulla scacchiera è un abbandono o
     // una patta concordata.

@@ -2,21 +2,34 @@ import 'dart:convert';
 
 import '../storage/key_value_store.dart';
 
-/// Ripasso dei puzzle sbagliati a intervalli crescenti (sistema di Leitner).
+/// Ripetizione dilazionata a intervalli crescenti (sistema di Leitner), per i
+/// puzzle sbagliati e per le mosse del repertorio.
 class ReviewQueue {
-  ReviewQueue._(this._store);
+  ReviewQueue._(this._store, this._key, this._retire);
 
   static const storageKey = 'puzzles.review.v1';
 
-  /// Giorni di attesa per ciascun livello; superato l'ultimo il puzzle è imparato.
+  /// Giorni di attesa per ciascun livello.
   static const intervals = [1, 3, 7, 14, 30];
 
+  /// Livello delle carte nuove, mai ripassate.
+  static const newBox = -1;
+
   final KeyValueStore _store;
+  final String _key;
+
+  /// Se vero, superato l'ultimo livello la carta è imparata ed esce; altrimenti
+  /// resta all'ultimo intervallo.
+  final bool _retire;
   final Map<String, ({int box, DateTime due})> _items = {};
 
-  static Future<ReviewQueue> load(KeyValueStore store) async {
-    final q = ReviewQueue._(store);
-    final raw = await store.read(storageKey);
+  static Future<ReviewQueue> load(
+    KeyValueStore store, {
+    String key = storageKey,
+    bool retire = true,
+  }) async {
+    final q = ReviewQueue._(store, key, retire);
+    final raw = await store.read(key);
     if (raw != null) {
       try {
         final json = jsonDecode(raw) as Map<String, dynamic>;
@@ -38,6 +51,10 @@ class ReviewQueue {
 
   bool contains(String id) => _items.containsKey(id);
 
+  bool isNew(String id) => _items[id]?.box == newBox;
+
+  Iterable<String> get ids => _items.keys;
+
   /// Puzzle da ripassare, dal più in ritardo.
   List<String> due(DateTime now) {
     final list = _items.entries.where((e) => !e.value.due.isAfter(now)).toList()
@@ -46,6 +63,20 @@ class ReviewQueue {
   }
 
   Future<void> failed(String id, DateTime now) => _schedule(id, 0, now);
+
+  /// Aggiunge carte nuove, da imparare subito; quelle già presenti restano.
+  Future<void> addNew(Iterable<String> ids, DateTime now) {
+    final today = DateTime(now.year, now.month, now.day);
+    for (final id in ids) {
+      _items.putIfAbsent(id, () => (box: newBox, due: today));
+    }
+    return _save();
+  }
+
+  Future<void> remove(Iterable<String> ids) {
+    ids.forEach(_items.remove);
+    return _save();
+  }
 
   Future<void> reviewed(
     String id, {
@@ -57,6 +88,7 @@ class ReviewQueue {
     if (!solved) return _schedule(id, 0, now);
     final box = item.box + 1;
     if (box >= intervals.length) {
+      if (!_retire) return _schedule(id, intervals.length - 1, now);
       _items.remove(id);
       return _save();
     }
@@ -71,7 +103,7 @@ class ReviewQueue {
   }
 
   Future<void> _save() => _store.write(
-    storageKey,
+    _key,
     jsonEncode({
       for (final e in _items.entries)
         e.key: {'b': e.value.box, 'd': e.value.due.millisecondsSinceEpoch},

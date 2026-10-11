@@ -48,7 +48,7 @@ Il test `test/puzzles/puzzle_dataset_test.dart` verifica che ogni soluzione sia 
 | `lib/puzzles/puzzle_trainer.dart` | Punteggio del giocatore, puzzle già visti, salvataggio, evento di puzzle concluso |
 | `lib/puzzles/puzzle_page.dart` | Schermata di risoluzione |
 | `lib/puzzles/puzzle_hub_page.dart` | Punteggio e modalità |
-| `lib/training/training_board.dart` | Scacchiera per esercizi, riusabile da puzzle e aperture |
+| `lib/training/training_board.dart` | Scacchiera per esercizi, riusabile da puzzle e aperture; segue le impostazioni della scacchiera tramite `SettingsScope` |
 
 ## Regole di risoluzione
 

@@ -1,5 +1,6 @@
 import 'package:chessground/chessground.dart';
-import 'package:flutter/foundation.dart';
+import 'package:dartchess/dartchess.dart' show Side;
+import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum AnimationSpeed {
@@ -14,30 +15,79 @@ enum AnimationSpeed {
   final Duration duration;
 }
 
+/// Temi a tinta unita: le immagini delle scacchiere di chessground hanno
+/// licenza AGPL. Alcuni si sbloccano con i progressi (`progress/rewards.dart`).
 enum BoardTheme {
-  green('Verde', ChessboardColorScheme.green),
-  brown('Legno', ChessboardColorScheme.brown),
-  blue('Blu', ChessboardColorScheme.blue),
-  grey('Grigio', ChessboardColorScheme.grey);
+  green('Verde', scheme: ChessboardColorScheme.green),
+  brown('Legno', scheme: ChessboardColorScheme.brown),
+  blue('Blu', scheme: ChessboardColorScheme.blue),
+  grey('Grigio', light: Color(0xffb8b8b8), dark: Color(0xff7d7d7d)),
+  sand('Sabbia', light: Color(0xfff3e5c0), dark: Color(0xffc8a26b)),
+  ocean('Oceano', light: Color(0xffd6ecf0), dark: Color(0xff3f7f93)),
+  coral('Corallo', light: Color(0xfffbe3d6), dark: Color(0xffd9776a)),
+  night('Notte', light: Color(0xff9aa5b8), dark: Color(0xff3b4459)),
+  gold('Oro', light: Color(0xfffaf0c8), dark: Color(0xffc9a227));
 
-  const BoardTheme(this.label, this.colorScheme);
+  const BoardTheme(this.label, {this.scheme, this.light, this.dark})
+    : assert(scheme != null || (light != null && dark != null));
 
   final String label;
-  final ChessboardColorScheme colorScheme;
+
+  /// Schema di chessground, se il tema non è definito dai soli [light] e [dark].
+  final ChessboardColorScheme? scheme;
+  final Color? light;
+  final Color? dark;
+
+  static final _solid = <BoardTheme, ChessboardColorScheme>{};
+
+  /// Sempre la stessa istanza per tema, per non ridisegnare lo sfondo.
+  ChessboardColorScheme get colorScheme =>
+      scheme ?? _solid.putIfAbsent(this, () => _solidScheme(light!, dark!));
 }
 
-/// Set di pezzi con licenza compatibile con la GPL (vedi CREDITS.md).
-enum PieceStyle {
-  cburnett('Classico', PieceSet.cburnett),
-  merida('Merida', PieceSet.merida),
-  california('California', PieceSet.california),
-  cardinal('Cardinal', PieceSet.cardinal),
-  maestro('Maestro', PieceSet.maestro);
+ChessboardColorScheme _solidScheme(Color light, Color dark) {
+  ChessboardBackground background({Side? coordinates}) =>
+      SolidColorChessboardBackground(
+        lightSquare: light,
+        darkSquare: dark,
+        coordinates: coordinates != null,
+        orientation: coordinates ?? Side.white,
+      );
+  return ChessboardColorScheme(
+    lightSquare: light,
+    darkSquare: dark,
+    background: background(),
+    whiteCoordBackground: background(coordinates: Side.white),
+    blackCoordBackground: background(coordinates: Side.black),
+    lastMove: const HighlightDetails(solidColor: Color(0x809cc700)),
+    selected: const HighlightDetails(solidColor: Color(0x6014551e)),
+    validMoves: const Color(0x4014551e),
+    validPremoves: const Color(0x40203085),
+  );
+}
 
-  const PieceStyle(this.label, this.pieceSet);
+/// Set di pezzi la cui licenza permette la distribuzione negli store insieme
+/// a codice GPL-3.0 (vedi CREDITS.md). Esclusi i set CC BY-NC-SA.
+enum PieceStyle {
+  cburnett('Classico', PieceSet.cburnett, 'Colin M.L. Burnett', 'GPL-2.0+'),
+  merida('Merida', PieceSet.merida, 'Armando Hernández Marroquín', 'GPL-2.0+'),
+  chessnut('Chessnut', PieceSet.chessnut, 'Alexis Luengas', 'Apache-2.0'),
+  fantasy('Fantasy', PieceSet.fantasy, 'Maurizio Monge', 'MIT'),
+  spatial('Spatial', PieceSet.spatial, 'Maurizio Monge', 'MIT'),
+  celtic('Celtic', PieceSet.celtic, 'Maurizio Monge', 'MIT'),
+  shapes('Shapes', PieceSet.shapes, 'flugsio', 'CC BY-SA 4.0'),
+  firi('Firi', PieceSet.firi, 'James Faure', 'CC BY 4.0'),
+  mpchess('Mpchess', PieceSet.mpchess, 'Maxime Chupin', 'GPL-3.0+'),
+  kiwenSuwi('Kiwen-suwi', PieceSet.kiwenSuwi, 'neverRare', 'CC BY 4.0'),
+  totoy('Totoy', PieceSet.totoy, 'Kosal Sen', 'CC BY 4.0'),
+  rhosgfx('RhosGFX', PieceSet.rhosgfx, 'RhosGFX', 'CC0');
+
+  const PieceStyle(this.label, this.pieceSet, this.author, this.license);
 
   final String label;
   final PieceSet pieceSet;
+  final String author;
+  final String license;
 }
 
 class AppSettings {
@@ -54,7 +104,20 @@ class AppSettings {
     this.volume = 1.0,
     this.haptics = true,
     this.tableMode = false,
-  });
+    this.confirmMove = false,
+    String whiteName = '',
+    String blackName = '',
+  }) : whiteName = _cleanName(whiteName),
+       blackName = _cleanName(blackName);
+
+  static const maxNameLength = 24;
+
+  static String _cleanName(String name) {
+    final trimmed = name.trim();
+    return trimmed.length > maxNameLength
+        ? trimmed.substring(0, maxNameLength).trim()
+        : trimmed;
+  }
 
   final bool showLegalMoves;
   final bool showCoordinates;
@@ -68,6 +131,15 @@ class AppSettings {
   final double volume;
   final bool haptics;
   final bool tableMode;
+  final bool confirmMove;
+  final String whiteName;
+  final String blackName;
+
+  /// Nome scelto per [side], `null` se non indicato.
+  String? nameOf(Side side) {
+    final name = side == Side.white ? whiteName : blackName;
+    return name.isEmpty ? null : name;
+  }
 
   AppSettings copyWith({
     bool? showLegalMoves,
@@ -82,6 +154,9 @@ class AppSettings {
     double? volume,
     bool? haptics,
     bool? tableMode,
+    bool? confirmMove,
+    String? whiteName,
+    String? blackName,
   }) => AppSettings(
     showLegalMoves: showLegalMoves ?? this.showLegalMoves,
     showCoordinates: showCoordinates ?? this.showCoordinates,
@@ -95,6 +170,9 @@ class AppSettings {
     volume: volume ?? this.volume,
     haptics: haptics ?? this.haptics,
     tableMode: tableMode ?? this.tableMode,
+    confirmMove: confirmMove ?? this.confirmMove,
+    whiteName: whiteName ?? this.whiteName,
+    blackName: blackName ?? this.blackName,
   );
 
   late final ChessboardSettings board = ChessboardSettings(
@@ -124,7 +202,10 @@ class AppSettings {
       other.sound == sound &&
       other.volume == volume &&
       other.haptics == haptics &&
-      other.tableMode == tableMode;
+      other.tableMode == tableMode &&
+      other.confirmMove == confirmMove &&
+      other.whiteName == whiteName &&
+      other.blackName == blackName;
 
   @override
   int get hashCode => Object.hash(
@@ -140,6 +221,9 @@ class AppSettings {
     volume,
     haptics,
     tableMode,
+    confirmMove,
+    whiteName,
+    blackName,
   );
 }
 
@@ -177,6 +261,9 @@ class SettingsController extends ValueNotifier<AppSettings> {
         volume: read<double>('volume', d.volume).clamp(0.0, 1.0),
         haptics: read('haptics', d.haptics),
         tableMode: read('tableMode', d.tableMode),
+        confirmMove: read('confirmMove', d.confirmMove),
+        whiteName: read('whiteName', d.whiteName),
+        blackName: read('blackName', d.blackName),
       ),
     );
   }
@@ -211,6 +298,12 @@ class SettingsController extends ValueNotifier<AppSettings> {
         prefs.setBool('haptics', settings.haptics),
       if (old.tableMode != settings.tableMode)
         prefs.setBool('tableMode', settings.tableMode),
+      if (old.confirmMove != settings.confirmMove)
+        prefs.setBool('confirmMove', settings.confirmMove),
+      if (old.whiteName != settings.whiteName)
+        prefs.setString('whiteName', settings.whiteName),
+      if (old.blackName != settings.blackName)
+        prefs.setString('blackName', settings.blackName),
     ];
     try {
       await Future.wait(writes);
@@ -227,4 +320,20 @@ class SettingsController extends ValueNotifier<AppSettings> {
       );
     }
   }
+}
+
+/// Espone le impostazioni a tutte le schermate, così le scacchiere di problemi
+/// e allenamento le seguono senza passare il controller a ogni pagina.
+class SettingsScope extends InheritedNotifier<SettingsController> {
+  const SettingsScope({
+    super.key,
+    required SettingsController controller,
+    required super.child,
+  }) : super(notifier: controller);
+
+  /// Impostazioni correnti, o null fuori dall'app (per esempio nei test).
+  static AppSettings? maybeOf(BuildContext context) => context
+      .dependOnInheritedWidgetOfExactType<SettingsScope>()
+      ?.notifier
+      ?.value;
 }
