@@ -110,7 +110,7 @@ Il workflow `.github/workflows/ci.yml` gira su ogni pull request e su ogni push 
 
 1. **test**: installa Stockfish (per i test d'integrazione del motore), verifica della formattazione, `flutter analyze`, `flutter test`.
 2. **e2e**: se i test passano, installa Stockfish ed esegue i test end-to-end sull'app Linux desktop con uno schermo virtuale (`xvfb`), un file alla volta perché avvii ravvicinati dell'app Linux nello stesso comando falliscono.
-3. **android**: se i test passano, compila un APK di debug e lo pubblica come artefatto `scacchi-debug-apk`, scaricabile dalla pagina dell'esecuzione.
+3. **android**: se i test passano, libera spazio sul runner (la compilazione nativa di Stockfish con l'NDK lo esaurisce), compila un APK di debug e lo pubblica come artefatto `scacchi-debug-apk`, scaricabile dalla pagina dell'esecuzione.
 
 ## Convenzioni
 
