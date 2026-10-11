@@ -47,6 +47,17 @@ void main() {
     expect(swipes, [1, -1]);
   });
 
+  testWidgets('RF-10 un rebuild a dito giù non fa perdere lo scorrimento', (
+    tester,
+  ) async {
+    await show(tester);
+    final gesture = await tester.startGesture(square(tester, 'd5'));
+    await show(tester);
+    await gesture.moveBy(const Offset(-120, 0));
+    await gesture.up();
+    expect(swipes, [1]);
+  });
+
   testWidgets('RF-10 un tocco o un movimento breve non scorre', (tester) async {
     await show(tester);
     await tester.tapAt(square(tester, 'd5'));

@@ -1538,6 +1538,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                     );
               final boardSettings = _settings.board;
               final board = BoardSwipe(
+                enabled: _pendingMove == null && _game.moves.isNotEmpty,
                 size: boardSize,
                 orientation: _orientation,
                 canStartAt: _canDragFrom,

@@ -39,8 +39,10 @@ class _BoardSwipeState extends State<BoardSwipe> {
   @override
   void didUpdateWidget(BoardSwipe old) {
     super.didUpdateWidget(old);
-    _pointers.clear();
-    _tracked = null;
+    if (old.size != widget.size || old.orientation != widget.orientation) {
+      _pointers.clear();
+      _tracked = null;
+    }
   }
 
   Square? _squareAt(Offset local) {
