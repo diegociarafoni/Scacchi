@@ -2,6 +2,8 @@ import 'dart:io' show Platform;
 
 import 'package:multistockfish/multistockfish.dart';
 
+import 'process_transport.dart';
+
 /// Canale di testo verso un motore UCI.
 abstract interface class UciTransport {
   Stream<String> get lines;
@@ -9,17 +11,24 @@ abstract interface class UciTransport {
   Future<void> dispose();
 }
 
-/// Stockfish 19 nativo tramite il plugin multistockfish.
+/// Stockfish 19 nativo tramite il plugin multistockfish su Android e iOS;
+/// sui computer lo Stockfish installato, come processo esterno.
 class StockfishTransport implements UciTransport {
   StockfishTransport._(this._engine);
 
   final Stockfish _engine;
 
-  /// multistockfish supporta solo Android e iOS.
-  static bool get isSupported => Platform.isAndroid || Platform.isIOS;
+  static bool get _mobile => Platform.isAndroid || Platform.isIOS;
 
-  /// Riprova se il motore precedente non ha ancora liberato il posto.
+  /// Calcolato una volta: sui computer controlla i file del sistema.
+  static final bool isSupported =
+      _mobile ||
+      ((Platform.isLinux || Platform.isMacOS || Platform.isWindows) &&
+          ProcessTransport.findBinary() != null);
+
+  /// Sul telefono riprova se il motore precedente non ha ancora liberato il posto.
   static Future<UciTransport> start() async {
+    if (!_mobile) return ProcessTransport.start();
     for (var attempt = 1; ; attempt++) {
       try {
         return StockfishTransport._(await Stockfish.create());

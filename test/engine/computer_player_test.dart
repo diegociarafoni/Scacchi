@@ -8,7 +8,7 @@ import 'package:scacchi/engine/uci.dart';
 import 'package:scacchi/engine/uci_transport.dart';
 import 'package:scacchi/game/chess_game.dart';
 
-import 'process_transport.dart';
+import 'package:scacchi/engine/process_transport.dart';
 
 // Il Bianco dà matto in una con Dxf7#.
 const mateInOne =

@@ -35,11 +35,15 @@ Durante la riflessione del computer la scacchiera è bloccata e compare la scrit
 |---|---|
 | Android | Sì |
 | iOS | Sì |
-| Windows, macOS, Linux | Non ancora: l'opzione appare disattivata |
+| Windows, macOS, Linux | Sì, se Stockfish è installato; altrimenti l'opzione appare disattivata |
 
-Il motore arriva dal plugin [multistockfish](https://github.com/lichess-org/dart-multistockfish)
-di Lichess, che oggi supporta solo Android e iOS. Per il desktop si potrà aggiungere in futuro
-un'altra implementazione di `UciTransport`, ad esempio un eseguibile Stockfish incluso nell'app.
+Su Android e iOS il motore arriva dal plugin [multistockfish](https://github.com/lichess-org/dart-multistockfish)
+di Lichess (Stockfish 19 incluso nell'app). Sui computer l'app usa lo Stockfish installato,
+avviato come processo esterno (`ProcessTransport`): lo cerca in `STOCKFISH_PATH`, poi nelle
+cartelle di `PATH` (`stockfish.exe` su Windows), poi in `/usr/games`, `/usr/bin`, `/usr/local/bin`
+e `/opt/homebrew/bin`. Per installarlo: `sudo apt install stockfish` su Debian e Ubuntu,
+`brew install stockfish` su macOS, l'eseguibile di [stockfishchess.org](https://stockfishchess.org/download/)
+su Windows. La ricerca avviene una volta all'avvio dell'app.
 
 ## Livelli
 
@@ -86,7 +90,8 @@ lib/engine/
   uci.dart            parsing del protocollo UCI (bestmove, info, score)
   levels.dart         definizione degli 8 livelli
   choose.dart         scelta "umana" tra le candidate
-  uci_transport.dart  canale verso il motore; StockfishTransport usa multistockfish
+  uci_transport.dart  canale verso il motore; StockfishTransport usa multistockfish o il processo
+  process_transport.dart Stockfish installato sul computer, come processo esterno
   computer_player.dart ComputerPlayer: coda delle richieste, opzioni, ricerca
 lib/game/
   opponent_picker.dart scelta di avversario, colore e livello
@@ -120,13 +125,13 @@ flutter test
 ```
 
 - `test/engine/uci_test.dart`, `choose_test.dart`: parsing e scelta delle mosse.
+- `test/engine/stockfish_location_test.dart`: ricerca di Stockfish sui computer.
 - `test/engine/computer_player_test.dart`: con un motore finto e, se installato, con Stockfish
   vero (`apt install stockfish`, oppure la variabile `STOCKFISH_PATH`). Senza Stockfish i test
   d'integrazione vengono saltati; in CI Stockfish è installato, quindi girano sempre.
 - `test/computer_game_test.dart`: la partita contro il computer nell'interfaccia, con un motore finto.
 - `integration_test/computer_test.dart`: test end-to-end sull'app desktop contro un vero Stockfish
-  (colore, livello, scacchiera bloccata, annullamento, patta). Su desktop l'app non usa il motore,
-  quindi il test gli collega un processo Stockfish esterno.
+  (colore, livello, scacchiera bloccata, annullamento, patta), con lo Stockfish installato.
 
 Nuove funzioni del computer si sviluppano partendo dai test, con nel nome il requisito
 (vedi [sviluppo.md](sviluppo.md)).
