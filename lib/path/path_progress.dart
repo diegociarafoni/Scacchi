@@ -3,6 +3,8 @@ import 'curriculum.dart';
 /// Stelle massime ottenibili nel percorso.
 final int maxStars = curriculum.fold(0, (n, c) => n + 3 * c.stages.length);
 
+final List<Stage> _stages = [for (final c in curriculum) ...c.stages];
+
 /// Migliori stelle (1-3) per tappa completata.
 class PathProgress {
   const PathProgress([this.stars = const {}]);
@@ -18,16 +20,16 @@ class PathProgress {
   int chapterStars(Chapter chapter) =>
       chapter.stages.fold(0, (n, s) => n + starsFor(s.id));
 
-  /// Una tappa è aperta se tutte le lezioni precedenti sono completate; i
-  /// guardiani sono sfide facoltative e non bloccano il percorso.
+  /// Una tappa è aperta se la lezione precedente è completata o se lo è già
+  /// una lezione successiva: così le lezioni aggiunte con un aggiornamento non
+  /// richiudono il percorso. I guardiani sono sfide facoltative e non bloccano.
   bool isUnlocked(String stageId) {
-    for (final c in curriculum) {
-      for (final s in c.stages) {
-        if (s.id == stageId) return true;
-        if (!s.isGuardian && !isCompleted(s.id)) return false;
-      }
-    }
-    return false;
+    final i = _stages.indexWhere((s) => s.id == stageId);
+    if (i < 0) return false;
+    final previous = _stages.take(i).where((s) => !s.isGuardian).lastOrNull;
+    return previous == null ||
+        isCompleted(previous.id) ||
+        _stages.skip(i).any((s) => !s.isGuardian && isCompleted(s.id));
   }
 
   /// Prima lezione non completata da proporre con "Continua"; finite le

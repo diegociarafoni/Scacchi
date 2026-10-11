@@ -7,11 +7,22 @@ void main() {
   test('RG-03 capitoli richiesti nell\'ordine del percorso', () {
     expect(curriculum.map((c) => c.title), [
       'Il movimento dei pezzi',
+      'Le regole',
       'Matti elementari',
       'Tattiche',
       'Finali',
       'Aperture',
     ]);
+  });
+
+  test('ogni lezione ha una spiegazione breve', () {
+    for (final c in curriculum) {
+      for (final s in c.stages.where((s) => !s.isGuardian)) {
+        expect(s.intro, isNotNull, reason: s.id);
+        expect(s.intro!.trim(), isNotEmpty, reason: s.id);
+        expect(s.intro!.length, lessThanOrEqualTo(400), reason: s.id);
+      }
+    }
   });
 
   test('identificativi unici e tappe non vuote', () {
@@ -32,8 +43,9 @@ void main() {
     }
   });
 
-  test('ogni capitolo dopo il primo ha un bot guardiano finale', () {
-    for (final c in curriculum.skip(1)) {
+  test('dai Matti in poi ogni capitolo ha un bot guardiano finale', () {
+    final mates = curriculum.indexWhere((c) => c.id == 'mates');
+    for (final c in curriculum.skip(mates)) {
       expect(c.stages.last.guardianElo, isNotNull, reason: c.id);
     }
   });
@@ -83,4 +95,5 @@ void _checkLine(LineExercise e) {
   }
   expect(e.steps.length.isOdd, isTrue);
   if (e.goal == LineGoal.mate) expect(pos.isCheckmate, isTrue);
+  if (e.goal == LineGoal.check) expect(pos.isCheck, isTrue);
 }
