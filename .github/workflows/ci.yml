@@ -102,14 +102,13 @@ jobs:
       # Spazio per NDK e compilazione nativa di Stockfish: si rimuovono toolchain non usate.
       - run: sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/.ghcup /usr/share/swift /usr/local/share/boost /opt/hostedtoolcache/CodeQL && df -h /
       - uses: actions/checkout@v4
-      - run: command -v ccache || sudo apt-get install -y --no-install-recommends ccache
+      - run: command -v ccache || (sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends ccache)
       - uses: actions/cache@v4
         with:
           path: .ccache
-          key: ccache-android-${{ hashFiles('pubspec.lock') }}-${{ github.sha }}
-          restore-keys: |
-            ccache-android-${{ hashFiles('pubspec.lock') }}-
-            ccache-android-
+          # I sorgenti compilati cambiano solo con le versioni dei plugin: una voce per pubspec.lock.
+          key: ccache-android-${{ hashFiles('pubspec.lock') }}
+          restore-keys: ccache-android-
       # NDK e CMake sono scaricati e decompressi a ogni giro se mancano.
       - uses: actions/cache@v4
         with:
@@ -128,11 +127,9 @@ jobs:
           flutter-version: 3.47.7
           cache: true
       - run: flutter build apk --debug --target-platform android-arm64
-      - name: Diagnostica della compilazione nativa
-        if: always()
-        run: |
-          ccache -s || true
-          find build -type d \( -name arm64-v8a -o -name armeabi-v7a -o -name x86_64 \) -path '*cxx*' -prune | sort | head -20
+      - name: Statistiche di ccache
+        if: success()
+        run: ccache -s
       - uses: actions/upload-artifact@v4
         with:
           name: scacchi-debug-apk

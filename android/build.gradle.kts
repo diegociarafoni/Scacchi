@@ -23,7 +23,7 @@ System.getenv("SCACCHI_NATIVE_ABIS")?.takeIf { it.isNotBlank() }?.let { abis ->
                 ?.abiFilters
                 ?.apply {
                     clear()
-                    addAll(abis.split(","))
+                    addAll(abis.split(",").map { it.trim() })
                 }
         }
     }
