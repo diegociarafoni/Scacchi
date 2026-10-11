@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import '../archive/game_archive.dart';
 import '../archive/pgn.dart';
 import '../archive/saved_game.dart';
+import '../endgames/endgame_controller.dart';
+import '../endgames/endgames_page.dart';
 import '../engine/computer_player.dart';
 import '../engine/levels.dart';
 import '../engine/uci_transport.dart';
@@ -50,6 +52,7 @@ class HomeShell extends StatefulWidget {
     this.computerAvailable,
     this.createComputer,
     this.tournaments,
+    this.endgames,
   });
 
   final SettingsController settings;
@@ -81,6 +84,9 @@ class HomeShell extends StatefulWidget {
   /// Sostituibile nei test; di default i tornei salvati.
   final Future<TournamentController> Function()? tournaments;
 
+  /// Sostituibile nei test; di default i progressi salvati dei finali.
+  final Future<EndgameController> Function()? endgames;
+
   @override
   State<HomeShell> createState() => _HomeShellState();
 }
@@ -94,6 +100,7 @@ class _HomeShellState extends State<HomeShell> {
   ReminderScheduler? _scheduler;
   Future<PathController>? _path;
   Future<TournamentController>? _tournaments;
+  Future<EndgameController>? _endgames;
 
   /// La scheda Tu si costruisce alla prima apertura, poi resta in memoria.
   var _youVisited = false;
@@ -166,6 +173,21 @@ class _HomeShellState extends State<HomeShell> {
             _tournaments = null;
             Error.throwWithStackTrace(e, st);
           });
+
+  /// Un solo allenatore dei finali in memoria, salvato a ogni prova.
+  Future<EndgameController> _endgameController() => _endgames ??=
+      (widget.endgames ??
+              () => EndgameController.open(recordActivity: _record))()
+          .catchError((Object e, StackTrace st) {
+            _endgames = null;
+            Error.throwWithStackTrace(e, st);
+          });
+
+  Future<Widget> _endgamesPage() async => EndgamesPage(
+    controller: await _endgameController(),
+    createComputer: widget.createComputer ?? ComputerPlayer.new,
+    simple: _kidMode,
+  );
 
   /// Bot del torneo: un avversario per ogni livello del motore.
   static final _bots = [
@@ -403,6 +425,7 @@ class _HomeShellState extends State<HomeShell> {
               playGuardian: _computerAvailable ? _playGuardian : null,
               openGame: _openSavedGame,
               tournamentPage: _computerAvailable ? _tournamentPage : null,
+              endgamesPage: _computerAvailable ? _endgamesPage : null,
             )
           else
             const SizedBox.shrink(),

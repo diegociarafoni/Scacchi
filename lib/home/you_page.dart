@@ -27,6 +27,7 @@ class YouPage extends StatelessWidget {
     this.simple = false,
     this.playGuardian,
     this.tournamentPage,
+    this.endgamesPage,
     this.openGame,
   });
 
@@ -49,6 +50,10 @@ class YouPage extends StatelessWidget {
   /// Schermata dei tornei; senza, la voce non compare (servono le partite
   /// contro il computer).
   final Future<Widget> Function()? tournamentPage;
+
+  /// Allenatore dei finali contro il motore (RF-86); senza, la voce non
+  /// compare.
+  final Future<Widget> Function()? endgamesPage;
 
   /// Apre una partita dell'archivio; senza, le righe non sono toccabili.
   final void Function(BuildContext context, SavedGame game)? openGame;
@@ -139,6 +144,14 @@ class YouPage extends StatelessWidget {
                   (c) => PathPage(controller: c, playGuardian: playGuardian),
                 ),
               ),
+              if (endgamesPage != null)
+                _Entry(
+                  icon: Icons.flag_outlined,
+                  title: 'Finali',
+                  subtitle:
+                      'Lucena, Philidor e i matti elementari contro il motore',
+                  onTap: () => _open(context, endgamesPage!(), (w) => w),
+                ),
               // Classifica ed Elo dei bot: nel profilo bambino niente numeri.
               if (tournamentPage != null && !simple)
                 _Entry(

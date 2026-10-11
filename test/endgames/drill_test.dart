@@ -50,8 +50,10 @@ void main() {
       final run = DrillRun(drill);
       run.play(_m('b3c3'));
       expect(run.userToMove, isFalse);
-      run.reply(_m('h8g8'));
+      expect(run.reply(_m('h8h7')), isFalse);
+      expect(run.reply(_m('h8g8')), isTrue);
       expect(run.userToMove, isTrue);
+      expect(run.history, [_m('b3c3'), _m('h8g8')]);
     });
   });
 

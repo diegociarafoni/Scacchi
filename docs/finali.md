@@ -1,6 +1,6 @@
 # Allenatore dei finali
 
-Requisito RF-86: posizioni teoriche da vincere o pattare contro il motore a forza piena, con obiettivo dichiarato, da 1 a 3 stelle in base alle mosse e ripetizione delle posizioni fallite. Il codice è in `lib/endgames/`. Questa parte contiene la logica; le schermate arrivano con la PR successiva.
+Requisito RF-86: posizioni teoriche da vincere o pattare contro il motore a forza piena, con obiettivo dichiarato, da 1 a 3 stelle in base alle mosse e ripetizione delle posizioni fallite. Il codice è in `lib/endgames/`.
 
 ## Posizioni
 
@@ -28,3 +28,9 @@ Stelle (`drillStars`): 3 entro il par, 2 fino a metà del par in più (arrotonda
 ## Progressi e ripetizione
 
 `EndgameProgress` tiene le stelle migliori per posizione e l'insieme delle posizioni fallite e non ancora riuscite; `ordered` mette queste per prime. `EndgameController` salva in `endgames.json` (`JsonFile`, versione 1) e registra un `LessonCompleted` (XP e obiettivo giornaliero) solo la prima volta che una posizione riesce.
+
+## Schermate
+
+La voce **Finali** della scheda Tu compare solo dove gira il motore (Android e iOS, o Windows e Linux con Stockfish installato), come i Tornei; c'è anche nel profilo bambino. `EndgamesPage` elenca le posizioni: prima quelle da ripetere, con la scritta «Da ripetere», poi le altre con l'obiettivo; a destra le stelle migliori.
+
+`DrillPage` mostra la spiegazione con l'obiettivo e il pulsante «Inizia»; la scacchiera è girata quando si gioca con il Nero. Dopo ogni mossa dell'utente il motore risponde a forza piena (`analysisLevel`, livello 20 a 300 ms per mossa) e intanto la scacchiera è bloccata. Sotto la scacchiera c'è il conteggio delle mosse rispetto al par (nascosto nel profilo bambino, che non mostra numeri). Il motore riceve la posizione iniziale e tutte le mosse giocate, così vede le ripetizioni. A fine prova compaiono l'esito, le stelle, «Riprova» e «Fine»; l'esito si salva subito. Uscire da una prova iniziata e non finita la conta come fallita, quindi torna da ripetere. Se il motore non risponde o dà una mossa illegale, un messaggio lo dice e «Riprova» riparte dalla posizione iniziale; in quel caso uscire non conta come fallimento. Il pedone promuove sempre a donna.

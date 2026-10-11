@@ -77,6 +77,12 @@ class DrillRun {
 
   final Map<String, int> _seen = {};
 
+  final List<Move> _history = [];
+
+  /// Mosse di entrambi dalla posizione iniziale, per dare al motore la
+  /// storia (e quindi le ripetizioni).
+  List<Move> get history => List.unmodifiable(_history);
+
   bool get userToMove => _state == DrillState.playing && _position.turn == side;
 
   /// Stelle ottenute, zero se la prova non è (ancora) riuscita.
@@ -113,15 +119,16 @@ class DrillRun {
     return true;
   }
 
-  /// Applica la risposta del motore.
-  void reply(Move move) {
+  /// Applica la risposta del motore; `false` se non è il suo turno o la
+  /// mossa è illegale.
+  bool reply(Move move) {
     if (_state != DrillState.playing ||
         _position.turn == side ||
         !_position.isLegal(move)) {
-      return;
+      return false;
     }
     _apply(move);
-    if (_ended()) return;
+    if (_ended()) return true;
     switch (drill.goal) {
       case DrillGoal.hold:
         if (_bareKing(side) && !_bareKing(side.opposite)) {
@@ -134,10 +141,12 @@ class DrillRun {
       case DrillGoal.mate:
         break;
     }
+    return true;
   }
 
   void _apply(Move move) {
     _position = _position.play(move);
+    _history.add(move);
     final key = _key(_position);
     _seen[key] = (_seen[key] ?? 0) + 1;
   }
