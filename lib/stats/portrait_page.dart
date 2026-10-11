@@ -103,7 +103,7 @@ class _PortraitPageState extends State<PortraitPage> {
       String two(int n) => n.toString().padLeft(2, '0');
       await widget.share(
         data.buffer.asUint8List(),
-        'scacchi-settimana-${to.year}-${two(to.month)}-${two(to.day)}.png',
+        'rokko-settimana-${to.year}-${two(to.month)}-${two(to.day)}.png',
       );
       if (mounted) setState(() => _message = null);
     } on Object catch (e) {
