@@ -8,7 +8,7 @@ Ogni `SavedGame` può indicare, oltre a giocatori e risultato:
 
 | Campo | Significato |
 |---|---|
-| `playerSide` | Colore dell'utente; assente nelle partite tra due persone e in quelle importate |
+| `playerSide` | Colore dell'utente; assente nelle partite tra due persone, in quelle su scacchiera fisica e in quelle importate |
 | `timeControl` | Cadenza in minuti più incremento (`5+0`, `15+10`); salvata anche nel PGN come `TimeControl` in secondi (`0.5+0` diventa `30+0`) |
 | `opponentElo` | Elo indicativo del bot avversario |
 | `accuracy` | Precisione dell'utente dalla revisione, aggiornabile con `copyWith(accuracy: () => 82.5)`; `() => null` la azzera |
