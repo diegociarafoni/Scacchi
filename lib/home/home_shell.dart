@@ -8,6 +8,7 @@ import '../engine/computer_player.dart';
 import '../engine/levels.dart';
 import '../engine/uci_transport.dart';
 import '../game/challenge.dart';
+import '../game/clock.dart';
 import '../game/game_page.dart';
 import '../openings/opening_assets.dart';
 import '../openings/openings_hub_page.dart';
@@ -296,6 +297,8 @@ class _HomeShellState extends State<HomeShell> {
             ),
             onSavePuzzles: _savePersonalPuzzles,
             puzzlePlayers: players,
+            clocks: [for (final m in game.moves) m.clock],
+            timeControl: TimeControl.parse(saved.timeControl ?? ''),
           ),
         ),
       );
