@@ -1,0 +1,285 @@
+import 'dart:io';
+
+import 'package:dartchess/dartchess.dart' hide File;
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+
+import '../archive/game_archive.dart';
+import '../archive/saved_game.dart';
+import 'local_rating.dart';
+import 'stats.dart';
+
+/// Statistiche e rating locale calcolati dall'archivio delle partite.
+class StatsPage extends StatefulWidget {
+  const StatsPage({super.key, required this.archive});
+
+  final GameArchive archive;
+
+  @override
+  State<StatsPage> createState() => _StatsPageState();
+}
+
+class _StatsPageState extends State<StatsPage> {
+  GameStats? _stats;
+  LocalRating? _rating;
+  bool _failed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  Future<void> _load() async {
+    final List<SavedGame> games;
+    try {
+      games = await widget.archive.list();
+    } on FileSystemException catch (e) {
+      debugPrint('Lettura dell\'archivio non riuscita: $e');
+      if (mounted) setState(() => _failed = true);
+      return;
+    }
+    if (!mounted) return;
+    setState(() {
+      _stats = GameStats.from(games);
+      _rating = LocalRating.from(games);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final stats = _stats;
+    final rating = _rating;
+    return Scaffold(
+      appBar: AppBar(title: const Text('Statistiche')),
+      body: _failed
+          ? const _Message(
+              'L\'archivio delle partite non si è potuto leggere: riprova più '
+              'tardi.',
+            )
+          : stats == null || rating == null
+          ? const Center(child: CircularProgressIndicator())
+          : stats.all.games == 0 &&
+                rating.history.isEmpty &&
+                stats.localGames == 0
+          ? const _Message(
+              'Gioca qualche partita contro il computer per vedere le '
+              'statistiche.',
+            )
+          : ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                _RatingCard(rating: rating),
+                const SizedBox(height: 16),
+                _Section('Bilancio', [
+                  _ScoreRow('Tutte', stats.all),
+                  for (final side in Side.values)
+                    if (stats.byColor[side] case final s?)
+                      _ScoreRow(
+                        side == Side.white ? 'Con il bianco' : 'Con il nero',
+                        s,
+                      ),
+                  if (stats.localGames > 0)
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text('Partite tra due persone'),
+                      trailing: Text('${stats.localGames}'),
+                    ),
+                ]),
+                if (stats.byTimeControl.isNotEmpty)
+                  _Section('Per cadenza', [
+                    for (final e in stats.byTimeControl.entries)
+                      _ScoreRow(e.key, e.value),
+                  ]),
+                if (stats.openings.isNotEmpty)
+                  _Section('Aperture più giocate', [
+                    for (final o in stats.openings.take(5))
+                      ListTile(
+                        contentPadding: EdgeInsets.zero,
+                        title: Text(o.name),
+                        trailing: Text(
+                          o.games == 1 ? '1 partita' : '${o.games} partite',
+                        ),
+                      ),
+                  ]),
+                if (stats.averageAccuracy case final avg?)
+                  _Section('Precisione', [
+                    ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      title: const Text('Media'),
+                      trailing: Text('${avg.toStringAsFixed(1)}%'),
+                    ),
+                    _Sparkline(
+                      values: [for (final p in stats.accuracyTrend) p.$2],
+                      label: 'Andamento della precisione',
+                    ),
+                  ]),
+              ],
+            ),
+    );
+  }
+}
+
+class _Message extends StatelessWidget {
+  const _Message(this.text);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Text(text, textAlign: TextAlign.center),
+      ),
+    );
+  }
+}
+
+class _RatingCard extends StatelessWidget {
+  const _RatingCard({required this.rating});
+
+  final LocalRating rating;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Rating stimato ${rating.rating}',
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+            Text(
+              rating.provisional
+                  ? 'provvisorio: servono ${LocalRating.provisionalGames} '
+                        'partite contro il computer'
+                  : 'su ${rating.history.length} partite contro il computer',
+            ),
+            if (rating.history.length > 1) ...[
+              const SizedBox(height: 12),
+              _Sparkline(
+                values: [for (final p in rating.history) p.$2.toDouble()],
+                label: 'Andamento del rating',
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _Section extends StatelessWidget {
+  const _Section(this.title, this.children);
+
+  final String title;
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(title, style: Theme.of(context).textTheme.titleLarge),
+          ...children,
+        ],
+      ),
+    );
+  }
+}
+
+class _ScoreRow extends StatelessWidget {
+  const _ScoreRow(this.label, this.score);
+
+  final String label;
+  final Score score;
+
+  @override
+  Widget build(BuildContext context) {
+    final percent = score.percent;
+    return MergeSemantics(
+      child: ListTile(
+        contentPadding: EdgeInsets.zero,
+        title: Text(label),
+        subtitle: Text(score.toString()),
+        trailing: Text(
+          percent == null ? '–' : '${percent.toStringAsFixed(0)}%',
+          semanticsLabel: percent == null
+              ? 'nessuna partita'
+              : '${score.wins} vittorie, ${score.draws} patte, '
+                    '${score.losses} sconfitte',
+        ),
+      ),
+    );
+  }
+}
+
+/// Andamento compatto di una serie di valori.
+class _Sparkline extends StatelessWidget {
+  const _Sparkline({required this.values, required this.label});
+
+  final List<double> values;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final min = values.reduce((a, b) => a < b ? a : b);
+    final max = values.reduce((a, b) => a > b ? a : b);
+    return Semantics(
+      label:
+          '$label: da ${values.first.toStringAsFixed(0)} a '
+          '${values.last.toStringAsFixed(0)}, minimo ${min.toStringAsFixed(0)}, '
+          'massimo ${max.toStringAsFixed(0)}',
+      child: SizedBox(
+        height: 64,
+        width: double.infinity,
+        child: CustomPaint(
+          painter: _SparklinePainter(
+            values,
+            min,
+            max,
+            Theme.of(context).colorScheme.primary,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _SparklinePainter extends CustomPainter {
+  _SparklinePainter(this.values, this.min, this.max, this.color);
+
+  final List<double> values;
+  final double min;
+  final double max;
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (values.length < 2) return;
+    final span = max - min == 0 ? 1 : max - min;
+    final path = Path();
+    for (final (i, v) in values.indexed) {
+      final x = size.width * i / (values.length - 1);
+      final y = size.height * (1 - (v - min) / span);
+      i == 0 ? path.moveTo(x, y) : path.lineTo(x, y);
+    }
+    canvas.drawPath(
+      path,
+      Paint()
+        ..color = color
+        ..strokeWidth = 2
+        ..style = PaintingStyle.stroke,
+    );
+  }
+
+  @override
+  bool shouldRepaint(_SparklinePainter old) =>
+      !listEquals(old.values, values) || old.color != color;
+}
