@@ -1,6 +1,6 @@
 # Rilascio Android (APK)
 
-Il workflow `.github/workflows/apk-release.yml` compila un APK release universale (tutte le architetture in un unico file) e lo pubblica come allegato di una GitHub Release, scaricabile direttamente dal telefono.
+Il workflow `.github/workflows/apk-release.yml` compila un APK release per telefoni a 64 bit (arm64, cioè tutti i telefoni Android degli ultimi anni) e lo pubblica come allegato di una GitHub Release, scaricabile direttamente dal telefono.
 
 ## Quando parte
 
@@ -8,8 +8,7 @@ Il workflow `.github/workflows/apk-release.yml` compila un APK release universal
 |---|---|
 | Push di un tag `vX.Y.Z` | Build e Release `vX.Y.Z` con `scacchi.apk` e `scacchi.apk.sha256` |
 | Avvio manuale (Actions → Rilascio APK → Run workflow) con **version** = `X.Y.Z` | Crea il tag `vX.Y.Z` sul commit del branch scelto e pubblica la Release; se il tag esiste già su un altro commit si ferma |
-| Avvio manuale con **version** vuoto | Solo build: l'APK resta come artefatto dell'esecuzione |
-| Pull request che tocca `android/` o il workflow | Solo build, per verificare la configurazione |
+| Avvio manuale con **version** vuoto | Solo build: l'APK resta per 7 giorni come artefatto dell'esecuzione |
 
 La versione mostrata dall'app (`versionName`) è quella del tag senza la `v`; il `versionCode` è il numero di commit nella cronologia del tag, quindi cresce a ogni versione successiva su `main`. Il rilascio parte solo se `flutter analyze` e `flutter test` passano, e un tag già esistente deve puntare al commit compilato.
 
@@ -18,6 +17,19 @@ I tag con suffisso (`v1.2.0-beta.1`) diventano pre-release. Gli altri sono la "l
 ```
 https://github.com/diegociarafoni/Scacchi/releases/latest/download/scacchi.apk
 ```
+
+## Minuti di GitHub Actions
+
+Il rilascio è pensato per consumare pochi minuti:
+
+- un solo job, perché ogni job viene conteggiato arrotondato al minuto;
+- nessuna esecuzione sulle pull request: la loro build Android è già nella CI;
+- `flutter analyze`, `flutter test` e i test di `tool/derive_keystore.py` girano solo se la CI non è già passata sullo stesso commit (il caso normale quando si rilascia da `main`);
+- cache di Flutter e di Gradle;
+- build della sola architettura arm64, che dimezza circa il tempo di compilazione e riduce molto l'APK;
+- `timeout-minutes: 30` contro le esecuzioni bloccate.
+
+Per un telefono a 32 bit si può compilare a mano un APK universale togliendo `--target-platform android-arm64` dal workflow.
 
 ## Pubblicare una versione
 
@@ -47,7 +59,6 @@ La build sceglie la chiave in quest'ordine:
 2. **Frase segreta** nel segreto `ANDROID_SIGNING_SEED`: è il metodo consigliato.
 3. **Nessun segreto**: chiave di debug generata dal runner, diversa a ogni esecuzione; per passare a una nuova versione bisogna prima disinstallare l'app (e le partite salvate vanno perse).
 
-Sulle pull request la build firma con una frase pubblica fissa, così il percorso di firma è verificato senza esporre segreti al codice della PR; quell'APK non viene caricato come artefatto.
 
 ### Metodo consigliato: frase segreta
 
