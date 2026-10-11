@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../archive/archive_page.dart';
 import '../archive/game_archive.dart';
+import '../kids/kid_display.dart';
+import '../l10n/app_localizations.dart';
 import '../minigames/minigames_page.dart';
 import '../path/path_controller.dart';
 import '../path/path_page.dart';
@@ -90,15 +92,25 @@ class YouPage extends StatelessWidget {
                             frame: controller.settings.frame,
                             size: 48,
                           ),
-                          title: Text(
-                            'Livello ${levelForXp(controller.state.xp)}',
-                            style: Theme.of(context).textTheme.titleLarge,
-                          ),
-                          subtitle: Text(
-                            controller.streak == 1
-                                ? '1 giorno di fila'
-                                : '${controller.streak} giorni di fila',
-                          ),
+                          // Profilo bambino (RP-06): stelle e fiamma come nel
+                          // Profilo, senza livello né giorni in cifre.
+                          title: simple
+                              ? KidStars(
+                                  count: levelForXp(controller.state.xp),
+                                  label: AppLocalizations.of(context)
+                                      .kidLevelStarsLabel,
+                                )
+                              : Text(
+                                  'Livello ${levelForXp(controller.state.xp)}',
+                                  style: Theme.of(context).textTheme.titleLarge,
+                                ),
+                          subtitle: simple
+                              ? KidFlame(lit: controller.streak > 0)
+                              : Text(
+                                  controller.streak == 1
+                                      ? '1 giorno di fila'
+                                      : '${controller.streak} giorni di fila',
+                                ),
                         )
                       : const SizedBox.shrink(),
                 ),

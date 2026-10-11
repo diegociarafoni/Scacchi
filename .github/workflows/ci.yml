@@ -88,10 +88,34 @@ jobs:
     needs: test
     if: needs.test.outputs.android == 'true'
     timeout-minutes: 30
+    env:
+      # La compilazione nativa di Stockfish (tre librerie) è il grosso del tempo:
+      # ccache la salta per i file C++ non cambiati, cmake lo usa da queste variabili.
+      CMAKE_C_COMPILER_LAUNCHER: ccache
+      CMAKE_CXX_COMPILER_LAUNCHER: ccache
+      CCACHE_DIR: ${{ github.workspace }}/.ccache
+      CCACHE_MAXSIZE: 400M
+      CCACHE_COMPILERCHECK: content
+      # Solo arm64, come l'APK di rilascio, anche per le librerie dei plugin.
+      SCACCHI_NATIVE_ABIS: arm64-v8a
     steps:
       # Spazio per NDK e compilazione nativa di Stockfish: si rimuovono toolchain non usate.
       - run: sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/.ghcup /usr/share/swift /usr/local/share/boost /opt/hostedtoolcache/CodeQL && df -h /
       - uses: actions/checkout@v4
+      - run: command -v ccache || (sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends ccache)
+      - uses: actions/cache@v4
+        with:
+          path: .ccache
+          # I sorgenti compilati cambiano solo con le versioni dei plugin: una voce per pubspec.lock.
+          key: ccache-android-${{ hashFiles('pubspec.lock') }}
+          restore-keys: ccache-android-
+      # NDK e CMake sono scaricati e decompressi a ogni giro se mancano.
+      - uses: actions/cache@v4
+        with:
+          path: |
+            /usr/local/lib/android/sdk/ndk/28.2.13676358
+            /usr/local/lib/android/sdk/cmake/3.22.1
+          key: android-sdk-ndk28c-cmake3.22.1
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -102,8 +126,10 @@ jobs:
           channel: stable
           flutter-version: 3.47.7
           cache: true
-      # Solo arm64, come l'APK di rilascio: metà della compilazione nativa.
       - run: flutter build apk --debug --target-platform android-arm64
+      - name: Statistiche di ccache
+        if: success()
+        run: ccache -s
       - uses: actions/upload-artifact@v4
         with:
           name: scacchi-debug-apk

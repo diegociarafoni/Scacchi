@@ -1,7 +1,9 @@
 import 'package:dartchess/dartchess.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/coach/coach_session.dart';
 import 'package:scacchi/engine/uci.dart';
+import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/review/coach.dart';
 import 'package:scacchi/review/move_classification.dart';
 
@@ -31,6 +33,23 @@ void main() {
       expect(v.shouldWarn, isTrue);
       expect(v.comment?.theme, CoachTheme.allowedMate);
       expect(v.review.bestSan, 'g6');
+    });
+
+    test('RP-06 nel profilo bambino la spiegazione non ha numeri', () async {
+      final adult = await session().judge(
+        scholarBeforeBlack(),
+        Move.parse('g8f6')!,
+      );
+      // Le case (f7) restano: spariscono solo i numeri del motore.
+      final engineNumbers = RegExp(r'matto in \d|\d+ pedon');
+      expect(adult.comment!.text, contains(engineNumbers));
+      final kid = await session().judge(
+        scholarBeforeBlack(),
+        Move.parse('g8f6')!,
+        kid: lookupAppLocalizations(const Locale('it')),
+      );
+      expect(kid.comment!.theme, CoachTheme.allowedMate);
+      expect(kid.comment!.text, isNot(contains(engineNumbers)));
     });
 
     test('la mossa migliore non avverte', () async {

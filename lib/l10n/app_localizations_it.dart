@@ -278,6 +278,117 @@ class AppLocalizationsIt extends AppLocalizations {
   String get kidGameHint => 'Aiuto';
 
   @override
+  String get kidProgressGreat => 'Bravo, continua così!';
+
+  @override
+  String get kidProgressGoal => 'Obiettivo di oggi raggiunto!';
+
+  @override
+  String get kidProgressLevelUp => 'Sei salito di livello: una stella in più!';
+
+  @override
+  String get kidProgressChallenge => 'Sfida completata!';
+
+  @override
+  String get kidProgressAchievement => 'Nuovo traguardo!';
+
+  @override
+  String get kidProgressReward => 'Hai sbloccato una ricompensa!';
+
+  @override
+  String get kidLevelTitle => 'Le tue stelle';
+
+  @override
+  String get kidLevelStarsLabel => 'Una stella per ogni livello raggiunto';
+
+  @override
+  String get kidLevelProgress =>
+      'Gioca ancora per guadagnare un\'altra stella!';
+
+  @override
+  String get kidLevelProgressLabel => 'Strada verso la prossima stella';
+
+  @override
+  String get kidStreakOn => 'Stai giocando tutti i giorni: la fiamma è accesa!';
+
+  @override
+  String get kidStreakOff => 'Gioca oggi per accendere la fiamma!';
+
+  @override
+  String get kidGoalToday => 'Obiettivo di oggi';
+
+  @override
+  String get kidChallengeProgress => 'Strada verso la sfida';
+
+  @override
+  String get kidPuzzleHubTitle => 'Risolvi i puzzle e raccogli stelle!';
+
+  @override
+  String get kidPuzzleStarsLabel => 'Le stelle dei puzzle risolti';
+
+  @override
+  String get kidPuzzleTraining => 'Puzzle scelti per te';
+
+  @override
+  String get kidPuzzleDaily => 'Un puzzle nuovo ogni giorno';
+
+  @override
+  String get kidPuzzleReviewDue => 'Ci sono puzzle da ripassare';
+
+  @override
+  String get kidPuzzleReviewNone => 'Niente da ripassare oggi';
+
+  @override
+  String get kidPuzzleKeepGoing => 'Forza, ce la puoi fare!';
+
+  @override
+  String get kidAccuracy5 => 'Perfetto!';
+
+  @override
+  String get kidAccuracy4 => 'Molto bene';
+
+  @override
+  String get kidAccuracy3 => 'Bene';
+
+  @override
+  String get kidAccuracy2 => 'Così così';
+
+  @override
+  String get kidAccuracy1 => 'Da migliorare';
+
+  @override
+  String get kidReviewAnalysing => 'Sto guardando la partita…';
+
+  @override
+  String get kidAnalysisThinking => 'Il computer sta pensando…';
+
+  @override
+  String get kidEvalWhite => 'Il Bianco è in vantaggio';
+
+  @override
+  String get kidEvalBlack => 'Il Nero è in vantaggio';
+
+  @override
+  String get kidEvalEven => 'Partita in equilibrio';
+
+  @override
+  String get kidUnlockByPlaying => 'Si sblocca giocando';
+
+  @override
+  String get kidCoachMaterialLoss =>
+      'Attento: con questa mossa perdi dei pezzi.';
+
+  @override
+  String kidCoachAllowedMate(String move, String reply) {
+    return 'Dopo $move l\'avversario può dare scacco matto con $reply.';
+  }
+
+  @override
+  String kidCoachMissedMate(String move) {
+    return 'Con $move potevi dare scacco matto!';
+  }
+
+  @override
   String get qrSendTitle => 'Passa con QR';
 
   @override
