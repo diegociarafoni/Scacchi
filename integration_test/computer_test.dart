@@ -135,6 +135,46 @@ void main() {
         await tester.tap(find.text('Patta'));
         await _waitFor(tester, find.text('Il computer rifiuta la patta.'));
       });
+
+      testWidgets('RF-24 dalla posizione creata il computer trova il matto', (
+        tester,
+      ) async {
+        tester.view.physicalSize = const Size(1170, 2532);
+        tester.view.devicePixelRatio = 3;
+        addTearDown(tester.view.reset);
+        await tester.pumpWidget(
+          MaterialApp(
+            home: GamePage(
+              settings: SettingsController.defaults(),
+              computerAvailable: true,
+              createComputer: () =>
+                  ComputerPlayer(connect: ProcessTransport.start),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(find.byTooltip('Editor di posizione'));
+        await tester.pumpAndSettle();
+        Future<void> tapVisible(Finder finder) async {
+          await tester.ensureVisible(finder);
+          await tester.pumpAndSettle();
+          await tester.tap(finder);
+          await tester.pumpAndSettle();
+        }
+
+        await tapVisible(find.text('Incolla FEN'));
+        await tester.enterText(
+          find.byType(TextField),
+          '6k1/5ppp/8/8/8/8/5PPP/R5K1 w - - 0 1',
+        );
+        await tester.tap(find.text('Carica'));
+        await tester.pumpAndSettle();
+        await tapVisible(find.text('Gioca da qui'));
+        await tapVisible(find.text('Computer'));
+        await tapVisible(find.text('Nero'));
+        await tapVisible(find.widgetWithText(FilledButton, 'Gioca'));
+        await _waitFor(tester, find.text('Scacco matto. Vince il Bianco.'));
+      });
     },
   );
 }
