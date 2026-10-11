@@ -263,7 +263,8 @@ class _HomeShellState extends State<HomeShell> {
       messenger.showSnackBar(
         const SnackBar(
           content: Text(
-            'La revisione richiede il motore, disponibile su Android e iOS.',
+            'La revisione richiede il motore: su Android e iOS è incluso, '
+            'su Windows e Linux serve Stockfish installato.',
           ),
         ),
       );
