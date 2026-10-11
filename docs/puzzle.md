@@ -80,11 +80,11 @@ Sostituisce il puzzle del giorno di chess.com senza server: l'indice è `(giorni
 Ogni modalità spiega cosa fare, come si vince o si perde, tempo o vite e come si calcola il punteggio (`PuzzleGuide`, `lib/puzzles/mode_guide.dart`).
 
 - **Serie, Storm, Rush e Sopravvivenza**: prima di partire compare una schermata con l'**Obiettivo** e **Come si gioca**; il tempo parte solo con **Inizia** (e "Gioca ancora" a fine serie riparte senza ripetere la spiegazione). Il testo dell'obiettivo resta in cima durante il gioco.
-- **Allenamento, Per tema, Puzzle del giorno e Ripasso**: la spiegazione si apre da sola, in un pannello, la prima volta che si entra nella modalità (`puzzles.guides.v1` ricorda quelle già lette) e si riapre sempre dall'icona **Come funziona** nella barra del titolo. Nel profilo bambino non compare, perché è fatta di regole e numeri.
+- **Allenamento, Per tema, Puzzle del giorno e Ripasso**: la spiegazione si apre da sola, in un pannello, la prima volta che si entra nella modalità (`puzzles.guides.v1` ricorda quelle già lette) e si riapre sempre dall'icona **Come funziona** nella barra del titolo. Nel profilo bambino non compare, perché è fatta di regole e numeri (le modalità a serie non sono disponibili in quel profilo).
 
 Durante il gioco l'avanzamento è sempre visibile:
 
-- nelle serie, i punti, il tempo rimasto (con una barra, che sale quando arrivano i secondi bonus della combo) e le vite come cuori con etichetta per i lettori di schermo ("Vite: 2 su 3"); l'icona **Come funziona** ferma il tempo finché il pannello è aperto;
+- nelle serie, i punti, il tempo rimasto (con una barra, che sale quando arrivano i secondi bonus della combo) e le vite come cuori con etichetta per i lettori di schermo ("Vite: 2 su 3"); l'icona **Come funziona** riapre le regole, ma il tempo continua a scorrere;
 - a fine serie, la schermata dice perché è finita (tempo scaduto, vite finite, primo errore o puzzle esauriti);
 - nei puzzle singoli, la barra delle **mosse trovate** ("Mosse trovate: 1 di 3"); nel profilo bambino resta solo la barra, senza cifre.
 

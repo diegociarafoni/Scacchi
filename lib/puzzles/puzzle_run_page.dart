@@ -41,6 +41,7 @@ class PuzzleRunPage extends StatefulWidget {
 class _PuzzleRunPageState extends State<PuzzleRunPage> {
   final _stopwatch = Stopwatch();
   late PuzzleRun _run;
+  late final PuzzleGuide _guide = PuzzleGuide.forRun(widget.mode);
   Timer? _ticker;
   int _revision = 0;
   bool _intro = true;
@@ -99,12 +100,8 @@ class _PuzzleRunPageState extends State<PuzzleRunPage> {
     }
   }
 
-  /// Rilegge le regole a metà serie: il tempo resta fermo finché è aperta.
-  Future<void> _showGuide() async {
-    _stopwatch.stop();
-    await showPuzzleGuide(context, PuzzleGuide.forRun(widget.mode));
-    if (mounted && !_ended) _stopwatch.start();
-  }
+  /// Rilegge le regole a metà serie; il tempo continua a scorrere.
+  Future<void> _showGuide() => showPuzzleGuide(context, _guide);
 
   void _onMove(Move move) {
     final result = _run.tryMove(move);
@@ -169,7 +166,7 @@ class _PuzzleRunPageState extends State<PuzzleRunPage> {
 
   @override
   Widget build(BuildContext context) {
-    final guide = PuzzleGuide.forRun(widget.mode);
+    final guide = _guide;
     final best = widget.trainer.records.best(widget.mode);
     return Scaffold(
       appBar: AppBar(
@@ -228,85 +225,90 @@ class _PuzzleRunPageState extends State<PuzzleRunPage> {
     return LayoutBuilder(
       builder: (context, c) {
         final size = math.max(0.0, math.min(c.maxWidth, c.maxHeight - 230));
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-              child: Text(
-                guide.goal,
-                key: const Key('run-goal'),
-                textAlign: TextAlign.center,
-                style: text.bodyMedium,
-              ),
-            ),
-            if (remaining != null && total != null)
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                // La barra è solo grafica: il tempo lo legge il testo sotto.
-                child: ExcludeSemantics(
-                  child: LinearProgressIndicator(
-                    value: total.inMilliseconds == 0
-                        ? 0
-                        : remaining.inMilliseconds / total.inMilliseconds,
+        // Scorrevole come ultima difesa su schermi bassi o con testo grande.
+        return Center(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                  child: Text(
+                    guide.goal,
+                    key: const Key('run-goal'),
+                    textAlign: TextAlign.center,
+                    style: text.bodyMedium,
                   ),
                 ),
-              ),
-            Padding(
-              padding: const EdgeInsets.all(12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Text(
-                    'Punti ${_run.score}',
-                    key: const Key('run-score'),
-                    style: text.titleLarge,
-                  ),
-                  if (remaining != null)
-                    Semantics(
-                      label: 'Tempo rimasto: ${_format(remaining)}',
-                      excludeSemantics: true,
-                      child: Text(
-                        _format(remaining),
-                        key: const Key('run-clock'),
-                        style: text.titleLarge,
+                if (remaining != null && total != null)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                    // La barra è solo grafica: il tempo lo legge il testo sotto.
+                    child: ExcludeSemantics(
+                      child: LinearProgressIndicator(
+                        value: total.inMilliseconds == 0
+                            ? 0
+                            : remaining.inMilliseconds / total.inMilliseconds,
                       ),
                     ),
-                  if (max != null) _Lives(total: max, lost: _run.mistakes),
-                  if (widget.mode == PuzzleRunMode.storm)
-                    Text('Combo ${_run.combo}', style: text.titleMedium),
-                ],
-              ),
-            ),
-            TrainingBoard(
-              size: size,
-              position: _run.current.position,
-              lastMove: _run.current.lastMove,
-              player: _run.current.puzzle.playerSide,
-              revision: _revision,
-              onMove: _onMove,
-            ),
-            SizedBox(
-              height: 56,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Semantics(
-                    liveRegion: true,
-                    child: Text(_flash ?? '', style: text.titleMedium),
                   ),
-                  if (widget.mode == PuzzleRunMode.streak)
-                    TextButton.icon(
-                      onPressed: _run.canSkip
-                          ? () => setState(() => _run.skip())
-                          : null,
-                      icon: const Icon(Icons.skip_next),
-                      label: const Text('Salta'),
-                    ),
-                ],
-              ),
+                Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text(
+                        'Punti ${_run.score}',
+                        key: const Key('run-score'),
+                        style: text.titleLarge,
+                      ),
+                      if (remaining != null)
+                        Semantics(
+                          label: 'Tempo rimasto: ${_format(remaining)}',
+                          excludeSemantics: true,
+                          child: Text(
+                            _format(remaining),
+                            key: const Key('run-clock'),
+                            style: text.titleLarge,
+                          ),
+                        ),
+                      if (max != null) _Lives(total: max, lost: _run.mistakes),
+                      if (widget.mode == PuzzleRunMode.storm)
+                        Text('Combo ${_run.combo}', style: text.titleMedium),
+                    ],
+                  ),
+                ),
+                TrainingBoard(
+                  size: size,
+                  position: _run.current.position,
+                  lastMove: _run.current.lastMove,
+                  player: _run.current.puzzle.playerSide,
+                  revision: _revision,
+                  onMove: _onMove,
+                ),
+                SizedBox(
+                  height: 56,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Semantics(
+                        liveRegion: true,
+                        child: Text(_flash ?? '', style: text.titleMedium),
+                      ),
+                      if (widget.mode == PuzzleRunMode.streak)
+                        TextButton.icon(
+                          onPressed: _run.canSkip
+                              ? () => setState(() => _run.skip())
+                              : null,
+                          icon: const Icon(Icons.skip_next),
+                          label: const Text('Salta'),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         );
       },
     );

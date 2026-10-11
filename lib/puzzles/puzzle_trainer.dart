@@ -47,9 +47,7 @@ class PuzzleTrainer {
     final guides = await store.read(guidesKey);
     if (guides != null) {
       try {
-        t._guidesSeen.addAll([
-          for (final id in jsonDecode(guides) as List) id as String,
-        ]);
+        t._guidesSeen.addAll((jsonDecode(guides) as List).whereType<String>());
       } on Object {
         // Elenco illeggibile: le spiegazioni si ripresentano, nulla di grave.
       }

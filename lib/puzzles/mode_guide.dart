@@ -27,7 +27,7 @@ class PuzzleGuide {
     rules: [
       'I puzzle sono scelti in base al tuo punteggio: se vai bene diventano più difficili.',
       'Muovi il pezzo giusto: se la mossa è corretta l\'avversario risponde e tocca a te, se è sbagliata viene annullata.',
-      'Risolto al primo tentativo, il punteggio sale. Se sbagli o guardi la soluzione il puzzle conta come fallito, il punteggio scende e il puzzle torna nel ripasso.',
+      'Su un puzzle nuovo, risolto al primo tentativo il punteggio sale; se sbagli o guardi la soluzione conta come fallito, il punteggio scende e il puzzle torna nel ripasso. I puzzle già visti non cambiano il punteggio.',
       'Il suggerimento non toglie nulla: cerchia il pezzo da muovere.',
       'Non c\'è tempo né limite di errori: puoi fermarti quando vuoi.',
     ],
@@ -39,7 +39,7 @@ class PuzzleGuide {
     goal: 'Allena un solo schema tattico: tutti i puzzle hanno lo stesso tema.',
     rules: [
       'Muovi il pezzo giusto: se la mossa è corretta l\'avversario risponde, se è sbagliata viene annullata.',
-      'Risolto al primo tentativo, il punteggio sale; con errori o soluzione mostrata il puzzle conta come fallito e torna nel ripasso.',
+      'Su un puzzle nuovo, risolto al primo tentativo il punteggio sale; con errori o soluzione mostrata conta come fallito, il punteggio scende e il puzzle torna nel ripasso.',
       'Non c\'è tempo né limite di errori.',
     ],
   );
@@ -95,8 +95,7 @@ class PuzzleGuide {
       PuzzleRunMode.rush3 || PuzzleRunMode.rush5 => PuzzleGuide(
         id: mode.name,
         title: mode.label,
-        goal:
-            'Risolvi più puzzle che puoi in $minutes minuti, con al massimo tre errori.',
+        goal: 'Risolvi più puzzle che puoi in $minutes minuti, con tre vite.',
         rules: [
           ...base,
           'Un errore ti toglie una vita e passa al puzzle successivo.',
@@ -107,7 +106,7 @@ class PuzzleGuide {
       PuzzleRunMode.survival => PuzzleGuide(
         id: mode.name,
         title: mode.label,
-        goal: 'Risolvi più puzzle che puoi, con al massimo tre errori e senza limite di tempo.',
+        goal: 'Risolvi più puzzle che puoi, con tre vite e senza limite di tempo.',
         rules: [
           ...base,
           'Un errore ti toglie una vita e passa al puzzle successivo.',

@@ -134,6 +134,46 @@ void main() {
       expect(find.byType(LinearProgressIndicator), findsNothing);
     });
 
+    testWidgets('su uno schermo basso la serie non va in overflow', (
+      tester,
+    ) async {
+      final trainer = await phone(tester);
+      tester.view.physicalSize = const Size(960, 900);
+      await tester.pumpWidget(
+        MaterialApp(
+          home: PuzzleRunPage(
+            trainer: trainer,
+            mode: PuzzleRunMode.rush5,
+            clock: () => Duration.zero,
+          ),
+        ),
+      );
+      await begin(tester);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('riaprire le regole non ferma il tempo', (tester) async {
+      final trainer = await phone(tester);
+      var elapsed = Duration.zero;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: PuzzleRunPage(
+            trainer: trainer,
+            mode: PuzzleRunMode.storm,
+            clock: () => elapsed,
+          ),
+        ),
+      );
+      await begin(tester);
+      await tester.tap(find.byTooltip('Come funziona'));
+      await tester.pumpAndSettle();
+      elapsed = const Duration(minutes: 3);
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.tap(find.text('Ho capito'));
+      await tester.pumpAndSettle();
+      expect(find.text('Serie conclusa'), findsOneWidget);
+    });
+
     testWidgets('il risultato dice com\'è finita la serie', (tester) async {
       final trainer = await phone(tester);
       await tester.pumpWidget(

@@ -95,8 +95,14 @@ class _PuzzlePageState extends State<PuzzlePage> {
     if (guide == null || widget.trainer.guideSeen(guide.id)) return;
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (!mounted || AppSettings.of(context).kidMode) return;
-      unawaited(widget.trainer.markGuideSeen(guide.id));
       await showPuzzleGuide(context, guide);
+      // Letta davvero solo se è stata chiusa; un errore di salvataggio non
+      // deve interrompere nulla.
+      try {
+        await widget.trainer.markGuideSeen(guide.id);
+      } on Object {
+        // Al prossimo ingresso la spiegazione si riapre.
+      }
     });
   }
 
@@ -398,7 +404,9 @@ class _Progress extends StatelessWidget {
         label: showNumbers
             ? 'Mosse trovate: $done di $total'
             : 'Avanzamento del puzzle',
-        value: showNumbers ? null : '${(done * 100 / total).round()}%',
+        value: showNumbers || total == 0
+            ? null
+            : '${(done * 100 / total).round()}%',
         excludeSemantics: true,
         child: Column(
           children: [
