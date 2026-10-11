@@ -142,4 +142,6 @@ Le altre schermate registrano:
 
 ## Integrazione prevista
 
-Il Profilo si apre dalla scheda Tu e `HomeShell` crea il `ReminderController` all'avvio su Android e iOS. Il collegamento alla schermata di gioco (registrazione a fine partita e passaggio dei progressi a `SettingsPage(progress: ...)`, senza il quale temi e pezzi restano tutti disponibili) arriva in una modifica separata, per non sovrapporsi al lavoro in corso sulla partita contro il computer.
+Il Profilo si apre dalla scheda Tu e `HomeShell` crea il `ReminderController` all'avvio su Android e iOS. `GamePage` riceve da `HomeShell` il registratore delle attività e i progressi: a fine partita registra `GamePlayed` (con `gameActivity`) una sola volta per partita e mostra "+N XP" sopra la barra dei comandi; le impostazioni ricevono i progressi per bloccare temi e pezzi non ancora sbloccati.
+
+Valgono solo le partite iniziate da **Nuova** e di almeno 4 semimosse: abbandonare subito o giocare una posizione preparata con l'editor non fa guadagnare XP. La durata che conta per l'obiettivo a minuti è al massimo un'ora per partita, per non gonfiarla con le pause. Dopo un annulla dell'abbandono la stessa partita non assegna XP una seconda volta. Le partite dei guardiani del percorso (vedi [percorso.md](percorso.md)) valgono XP come le altre, e così le partite dei tornei (vedi [tornei.md](tornei.md)).

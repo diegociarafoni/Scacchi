@@ -103,6 +103,72 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Scacchi'**
   String get appTitle;
+
+  /// Intestazione della sezione del profilo nelle Impostazioni
+  ///
+  /// In it, this message translates to:
+  /// **'Profilo'**
+  String get kidProfileSection;
+
+  /// Interruttore del profilo bambino (RP-06) nelle Impostazioni
+  ///
+  /// In it, this message translates to:
+  /// **'Profilo bambino'**
+  String get kidProfile;
+
+  /// Spiegazione sotto l'interruttore del profilo bambino
+  ///
+  /// In it, this message translates to:
+  /// **'Interfaccia e testi più semplici, bot amichevoli, niente numeri'**
+  String get kidProfileDescription;
+
+  /// Titolo della domanda per uscire dal profilo bambino
+  ///
+  /// In it, this message translates to:
+  /// **'Chiedi a un adulto'**
+  String get kidAdultGateTitle;
+
+  /// Moltiplicazione da risolvere per uscire dal profilo bambino
+  ///
+  /// In it, this message translates to:
+  /// **'Per uscire dal profilo bambino: quanto fa {a} × {b}?'**
+  String kidAdultGateQuestion(int a, int b);
+
+  /// Errore sotto il campo della risposta
+  ///
+  /// In it, this message translates to:
+  /// **'Risposta sbagliata.'**
+  String get kidAdultGateWrong;
+
+  /// Pulsante che controlla la risposta
+  ///
+  /// In it, this message translates to:
+  /// **'Conferma'**
+  String get kidAdultGateConfirm;
+
+  /// Descrizione amichevole del bot Pino nel profilo bambino (RP-06), al posto di Elo, stile e apertura
+  ///
+  /// In it, this message translates to:
+  /// **'Un pulcino allegro che ama attaccare'**
+  String get kidBotPinoDescription;
+
+  /// Descrizione amichevole del bot Chiara nel profilo bambino (RP-06), al posto di Elo, stile e apertura
+  ///
+  /// In it, this message translates to:
+  /// **'Gioca con calma e aspetta le tue mosse'**
+  String get kidBotChiaraDescription;
+
+  /// Descrizione amichevole del bot Rocco nel profilo bambino (RP-06), al posto di Elo, stile e apertura
+  ///
+  /// In it, this message translates to:
+  /// **'Una volpe furba piena di sorprese'**
+  String get kidBotRoccoDescription;
+
+  /// Nel profilo bambino, al posto dell'avviso su Stockfish quando il motore non è disponibile
+  ///
+  /// In it, this message translates to:
+  /// **'Su questo dispositivo i bot non sono disponibili.'**
+  String get kidBotUnavailable;
 }
 
 class _AppLocalizationsDelegate

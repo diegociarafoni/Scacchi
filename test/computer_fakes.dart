@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dartchess/dartchess.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/engine/uci_transport.dart';
 
@@ -10,6 +11,8 @@ class FirstLegalMoveEngine implements UciTransport {
     this.scoreCp = 0,
     this.forcedMove,
     this.delay = Duration.zero,
+    this.script,
+    this.scoreByFen,
   });
 
   /// Ritardo della risposta a `go`.
@@ -18,8 +21,14 @@ class FirstLegalMoveEngine implements UciTransport {
   /// Se presente, il motore risponde sempre con questa mossa.
   final String? forcedMove;
 
+  /// Mosse da giocare nell'ordine, una per ogni `go`; poi la prima legale.
+  final List<String>? script;
+
   /// Valutazione riportata, dal punto di vista di chi muove.
   final int scoreCp;
+
+  /// Se presente, valutazione in funzione della posizione analizzata.
+  final int Function(String fen)? scoreByFen;
   final _out = StreamController<String>.broadcast();
   String _fen = Chess.initial.fen;
 
@@ -32,10 +41,7 @@ class FirstLegalMoveEngine implements UciTransport {
     final replies = switch (command) {
       'uci' => ['uciok'],
       'isready' => ['readyok'],
-      _ when command.startsWith('go') => [
-        'info depth 1 score cp $scoreCp pv ${forcedMove ?? _firstMove()}',
-        'bestmove ${forcedMove ?? _firstMove()}',
-      ],
+      _ when command.startsWith('go') => _goReplies(),
       _ => const <String>[],
     };
     if (command.startsWith('go') && delay > Duration.zero) {
@@ -43,6 +49,15 @@ class FirstLegalMoveEngine implements UciTransport {
     } else {
       scheduleMicrotask(() => replies.forEach(_out.add));
     }
+  }
+
+  List<String> _goReplies() {
+    final scripted = script != null && script!.isNotEmpty
+        ? script!.removeAt(0)
+        : null;
+    final move = scripted ?? forcedMove ?? _firstMove();
+    final cp = scoreByFen?.call(_fen) ?? scoreCp;
+    return ['info depth 1 score cp $cp pv $move', 'bestmove $move'];
   }
 
   String _currentFen(String command) {
@@ -93,6 +108,18 @@ Future<void> startComputerGame(
 
 /// Tocca la cadenza nel pannello della nuova partita, che avvia la partita.
 Future<void> chooseTime(WidgetTester tester, String time) async {
+  if (find.text(time).evaluate().isEmpty) {
+    await tester.scrollUntilVisible(
+      find.text(time),
+      300,
+      scrollable: find
+          .descendant(
+            of: find.byType(BottomSheet),
+            matching: find.byType(Scrollable),
+          )
+          .first,
+    );
+  }
   await tester.ensureVisible(find.text(time));
   await tester.pump(const Duration(milliseconds: 500));
   await tester.tap(find.text(time));

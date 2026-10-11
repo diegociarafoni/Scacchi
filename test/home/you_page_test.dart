@@ -33,14 +33,18 @@ void main() {
   });
   tearDown(() => dir.deleteSync(recursive: true));
 
-  Future<void> show(WidgetTester tester, {ReminderScheduler? scheduler}) async {
-    tester.view.physicalSize = const Size(1170, 2532);
+  Future<void> show(
+    WidgetTester tester, {
+    ReminderScheduler? scheduler,
+    SettingsController? settings,
+  }) async {
+    tester.view.physicalSize = const Size(1170, 3400);
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
       MaterialApp(
         home: HomeShell(
-          settings: SettingsController.defaults(),
+          settings: settings ?? SettingsController.defaults(),
           progress: () async => progress,
           archive: () async => GameArchive(File('${dir.path}/games.json')),
           reminderScheduler: () => scheduler,
@@ -60,6 +64,8 @@ void main() {
       'Percorso',
       'Minigiochi',
       'Statistiche',
+      'La tua settimana',
+      'Scacchiera fisica',
       'Archivio',
     ]) {
       expect(find.text(label), findsOneWidget, reason: label);
@@ -92,5 +98,30 @@ void main() {
     await tester.pumpAndSettle();
     await tester.scrollUntilVisible(find.byKey(const Key('restDay')), 200);
     expect(find.byKey(const Key('reminder')), findsNothing);
+  });
+
+  testWidgets('RP-06 il profilo bambino semplifica schede e sezioni', (
+    tester,
+  ) async {
+    final settings = SettingsController.defaults();
+    await settings.update(settings.value.copyWith(kidMode: true));
+    await show(tester, settings: settings);
+    expect(find.text('Aperture'), findsNothing);
+    for (final label in ['Profilo', 'Percorso', 'Minigiochi']) {
+      expect(find.text(label), findsOneWidget, reason: label);
+    }
+    for (final label in [
+      'Statistiche',
+      'La tua settimana',
+      'Scacchiera fisica',
+      'Archivio',
+    ]) {
+      expect(find.text(label), findsNothing, reason: label);
+    }
+
+    await settings.update(settings.value.copyWith(kidMode: false));
+    await tester.pumpAndSettle();
+    expect(find.text('Aperture'), findsOneWidget);
+    expect(find.text('Statistiche'), findsOneWidget);
   });
 }

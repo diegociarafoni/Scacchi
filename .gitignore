@@ -49,3 +49,6 @@ app.*.map.json
 
 # Copie di lavoro degli agenti di Claude Code: mai nei commit
 /.claude/worktrees/
+
+# Artefatti dei golden falliti
+**/failures/

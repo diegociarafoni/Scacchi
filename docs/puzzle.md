@@ -53,11 +53,15 @@ Il test `test/puzzles/puzzle_dataset_test.dart` verifica che ogni soluzione sia 
 ## Regole di risoluzione
 
 - Il puzzle parte con la mossa dell'avversario già giocata; la scacchiera è orientata dal lato del giocatore.
-- Una mossa diversa dalla soluzione viene annullata con il messaggio "Non è la mossa giusta. Riprova." e il puzzle conta come fallito, ma si può continuare a cercare.
+- Una mossa diversa dalla soluzione viene annullata con il messaggio "Non è la mossa giusta. Premi «Riprova» per ricominciare." e il puzzle conta come fallito, ma si può continuare a cercare.
 - All'ultima mossa è accettato anche un matto diverso da quello previsto, come su Lichess.
 - L'arrocco è riconosciuto sia come mossa del re di due case sia come re sulla torre.
 - **Suggerimento**: cerchia il pezzo da muovere; non fa fallire il puzzle.
 - **Soluzione**: gioca la mossa giusta al posto del giocatore e fa fallire il puzzle.
+- **Riprova**: compare dopo un errore o una soluzione mostrata, resta visibile per non spostare la scacchiera, e riporta il puzzle alla posizione iniziale. Errori e soluzioni mostrate restano segnati: anche se il nuovo tentativo riesce, il puzzle conta come fallito per il punteggio e per il ripasso, e senza XP se la soluzione era stata mostrata. L'esito viene registrato quando il puzzle finisce o si passa oltre con «Prossimo»; uscendo dalla schermata a metà non si registra nulla.
+- **Prossimo**: si attiva a fine puzzle e ogni volta che c'è «Riprova»; in quel caso il puzzle viene registrato come fallito, senza XP. Resta disattivato se la sequenza non ha altri puzzle, per esempio nel puzzle del giorno.
+
+I quattro pulsanti stanno in una riga che va a capo su due righe sugli schermi stretti, senza spezzare le etichette.
 
 ## Punteggio (RF-81)
 
@@ -97,7 +101,7 @@ Ogni puzzle sbagliato nell'allenamento, anche se già visto, entra in una coda d
 | 3 | 14 giorni |
 | 4 | 30 giorni |
 
-Un ripasso riuscito fa salire di livello; superato l'ultimo, il puzzle è considerato imparato ed esce dalla coda. Un nuovo errore lo riporta al livello 0. Le scadenze sono calcolate a giorni di calendario (dalla mezzanotte), così un errore della sera torna disponibile dal mattino dopo. La voce "Ripasso degli errori" mostra quanti puzzle sono in scadenza oggi, dal più in ritardo, ignorando quelli non più presenti nella raccolta dopo un aggiornamento; il ripasso non modifica il punteggio e, finiti i puzzle in scadenza, lo segnala.
+Un ripasso riuscito fa salire di livello; superato l'ultimo, il puzzle è considerato imparato ed esce dalla coda. Un nuovo errore lo riporta al livello 0. Le scadenze sono calcolate a giorni di calendario (dalla mezzanotte), così un errore della sera torna disponibile dal mattino dopo. La voce "Ripasso degli errori" mostra quanti puzzle sono in scadenza oggi, dal più in ritardo, ignorando quelli non più presenti nella raccolta dopo un aggiornamento; vi entrano anche i puzzle personali ricavati dagli errori delle proprie partite (vedi [revisione-partita.md](revisione-partita.md)); il ripasso non modifica il punteggio e, finiti i puzzle in scadenza, lo segnala.
 
 Le schermate di risoluzione ricevono i puzzle da un `PuzzleFeed` (`lib/puzzles/puzzle_feed.dart`): `RatedFeed` per l'allenamento e i temi, `SingleFeed` per il puzzle del giorno, `ReviewFeed` per il ripasso.
 

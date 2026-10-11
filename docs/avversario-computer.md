@@ -6,12 +6,13 @@ nessuna connessione, nessun server, nessun dato che esce dal telefono.
 ## Come si gioca
 
 1. Toccare **Nuova**.
-2. Scegliere **Computer**.
+2. Scegliere **Computer** (oppure **Bot**, vedi [bot.md](bot.md)).
 3. Scegliere il colore: Bianco, Nero o a caso. La scacchiera si orienta dal lato del giocatore.
 4. Scegliere il livello con il cursore (da 1 a 8).
-5. Toccare la cadenza, "Senza tempo" o una cadenza (vedi [interfaccia.md](interfaccia.md)): la partita inizia. Se il giocatore ha il Nero, il computer muove per primo.
+5. In alternativa al cursore, attivare **Adattivo**: il livello lo sceglie l'app (vedi [Avversario adattivo](#avversario-adattivo)).
+6. Toccare la cadenza, "Senza tempo" o una cadenza (vedi [interfaccia.md](interfaccia.md)): la partita inizia. Se il giocatore ha il Nero, il computer muove per primo.
 
-Contro il computer si gioca solo la variante classica e senza nomi dei giocatori: varianti e nomi compaiono nel pannello solo scegliendo **Due giocatori**. Anche una posizione creata con l'editor (vedi [editor-posizione.md](editor-posizione.md)) si gioca in due: aprire l'editor durante una partita contro il computer la chiude.
+Contro il computer si gioca solo la variante classica e senza nomi dei giocatori: varianti e nomi compaiono nel pannello solo scegliendo **Due giocatori**. Una posizione creata con l'editor (vedi [editor-posizione.md](editor-posizione.md)) si può giocare anche contro il computer o un bot (RF-24): aprire l'editor durante una partita la sostituisce con la posizione scelta, in due o contro il computer a seconda della scelta nel pannello **Gioca questa posizione**.
 
 Durante la riflessione del computer la scacchiera è bloccata e compare la scritta
 "Il computer sta pensando…".
@@ -48,6 +49,19 @@ rinominarlo `stockfish.exe` in una cartella di `PATH`, oppure indicarne il perco
 variabile `STOCKFISH_PATH`. La ricerca avviene una volta all'avvio dell'app: dopo l'installazione
 va riavviata. Se il processo termina durante la partita compare "Il computer non risponde." e
 **Riprova** lo riavvia.
+
+## Avversario adattivo
+
+Con **Adattivo** attivo il livello segue i risultati del giocatore, per far vincere circa metà delle partite (requisito RF-26).
+
+- L'app tiene una stima Elo del giocatore, che parte da 1100.
+- Il livello usato è quello con l'Elo indicativo più vicino alla stima; il pannello mostra "Livello N" e nasconde il cursore.
+- A fine partita (matto, abbandono, tempo, patta) la stima si aggiorna con la formula Elo: vittoria 1, patta 0,5, sconfitta 0. Il fattore K è 64 nelle prime 10 partite e 32 dopo.
+- Ogni partita conta una sola volta, e solo se ha almeno una mossa. **Annulla** dopo la fine della partita ripristina la stima precedente.
+- Il risultato si registra alla fine: lasciare una partita a metà per aprirne un'altra non la conta.
+- La stima resta tra 500 e 3100 Elo, cioè intorno ai livelli disponibili, e l'attesa di risultato si calcola contro il livello effettivamente giocato.
+- La stima è salvata sul dispositivo (chiave `adaptiveOpponent`, `lib/engine/adaptive.dart`) e non esce mai da lì.
+- Le partite con il livello scelto a mano non cambiano la stima.
 
 ## Livelli
 
@@ -133,6 +147,7 @@ flutter test
 - `test/engine/computer_player_test.dart`: con un motore finto e, se installato, con Stockfish
   vero (`apt install stockfish`, oppure la variabile `STOCKFISH_PATH`). Senza Stockfish i test
   d'integrazione vengono saltati; in CI Stockfish è installato, quindi girano sempre.
+- `test/engine/adaptive_test.dart`, `test/adaptive_game_test.dart`: stima, livello scelto e aggiornamento a fine partita.
 - `test/computer_game_test.dart`: la partita contro il computer nell'interfaccia, con un motore finto.
 - `integration_test/computer_test.dart`: test end-to-end sull'app desktop contro un vero Stockfish
   (colore, livello, scacchiera bloccata, annullamento, patta), con lo Stockfish installato.
@@ -149,8 +164,9 @@ Nuove funzioni del computer si sviluppano partendo dai test, con nel nome il req
 | RF-25 patta accettata dal bot in base alla valutazione | ✓ |
 | RNF-03 Stockfish nativo via FFI in isolate, 1 thread | ✓ (Android, iOS) |
 | RF-22 modalità Allenamento (suggerimento, barra di valutazione) | Da fare: `EngineMove` espone già variante e valutazione |
-| RF-23 bot con personalità | Da fare: lo stile si può ottenere con `chooseCandidate` e un libro d'apertura |
-| RF-26 avversario adattivo | Da fare |
+| RF-23 bot con personalità | ✓ (vedi [bot.md](bot.md)) |
+| RF-24 partenza da una posizione personalizzata | ✓ dall'editor (vedi [editor-posizione.md](editor-posizione.md)) |
+| RF-26 avversario adattivo | ✓ |
 
 ## Licenza
 
