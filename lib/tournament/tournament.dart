@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:dartchess/dartchess.dart';
 
+import '../progress/activity.dart' show GameResult;
 import '../progress/challenges.dart' show mix32;
 
 /// Formula del torneo (RG-09).
@@ -135,6 +136,16 @@ class UserGame {
   /// Spareggio dopo una patta: con il nero basta pattare.
   final bool armageddon;
 }
+
+/// Punti dell'utente per l'esito di [game]: 1, ½ o 0; nello spareggio
+/// Armageddon la patta vale una vittoria per il nero e una sconfitta per il
+/// bianco.
+double tournamentPoints(GameResult result, UserGame game) => switch (result) {
+  GameResult.win => 1,
+  GameResult.loss => 0,
+  _ when game.armageddon => game.color == Side.black ? 1 : 0,
+  _ => 0.5,
+};
 
 /// Riga della classifica del girone.
 class Standing {

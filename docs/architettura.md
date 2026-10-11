@@ -36,6 +36,7 @@ lib/
     move_input.dart       Lettura di una mossa scritta (SAN inglese o italiana, UCI)
     move_speech.dart      Frase da annunciare al lettore di schermo per ogni mossa
     game_page.dart        Schermata di gioco
+    challenge.dart        Partita già impostata da un'altra schermata (guardiani, tornei)
     opponent_picker.dart  Scelta di avversario, colore e livello
   engine/                 Avversario computer (vedi avversario-computer.md)
   review/                 Revisione della partita (vedi revisione-partita.md)
@@ -134,6 +135,8 @@ A partita conclusa `GameData.playerSide` vale `PlayerSide.none`, quindi la scacc
 Contro il computer, dopo la mossa del giocatore `GamePage` chiede a `ComputerPlayer` la risposta per la posizione FEN corrente e la passa a `ChessGame.play`; mentre il computer pensa la scacchiera è bloccata. I dettagli sono in [avversario-computer.md](avversario-computer.md).
 
 A fine partita (per qualunque causa: matto, abbandono, patta, tempo) `GamePage` passa il `SavedGame` a `onSave` (archivio) e, se la partita vale, l'attività di `progress/game_activity.dart` a `onActivity` (progressi); i due procedono in modo indipendente e un errore dell'uno non ferma l'altro. `HomeShell` fornisce entrambi.
+
+Con `GamePage.challenge` (`GameChallenge`: titolo, livello del motore, colore, cadenza) la partita contro il computer parte da sola alla prima apertura, senza Nuova, Annulla ed editor; a fine partita `onFinished` comunica esito e mosse a chi l'ha lanciata (guardiani del percorso, vedi [percorso.md](percorso.md)).
 
 ## Evoluzioni previste
 

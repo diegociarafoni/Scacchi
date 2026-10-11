@@ -37,6 +37,10 @@ class Puzzle {
       if (line.trim().isNotEmpty) Puzzle.parseCsv(line.trim()),
   ];
 
+  /// Riga CSV `id,fen,mosse uci,punteggio,temi`, leggibile da [Puzzle.parseCsv].
+  String toCsv() =>
+      '$id,$fen,${moves.map((m) => m.uci).join(' ')},$rating,${themes.join(' ')}';
+
   final String id;
   final String fen;
   final List<Move> moves;

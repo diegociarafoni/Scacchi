@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/progress/progress_controller.dart';
 import 'package:scacchi/progress/progress_state.dart';
 import 'package:scacchi/progress/progress_store.dart';
@@ -30,6 +31,9 @@ void main() {
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: const Locale('it'),
         home: SettingsPage(
           controller: settings,
           progress: withProgress ? progress : null,
@@ -87,5 +91,54 @@ void main() {
     expect(find.byKey(const Key('unlockAll')), findsNothing);
     await tapChip(tester, 'Notte');
     expect(settings.value.boardTheme, BoardTheme.night);
+  });
+
+  testWidgets('RP-06 il profilo bambino si attiva dalle Impostazioni', (
+    tester,
+  ) async {
+    await show(tester);
+    final toggle = find.byKey(const Key('kidMode'));
+    expect(find.text('Profilo bambino'), findsOneWidget);
+    await tester.tap(toggle);
+    await tester.pumpAndSettle();
+    expect(settings.value.kidMode, isTrue);
+  });
+
+  testWidgets('RP-06 per uscire dal profilo bambino serve un adulto', (
+    tester,
+  ) async {
+    await settings.update(settings.value.copyWith(kidMode: true));
+    await show(tester);
+    await tester.tap(find.byKey(const Key('kidMode')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('adultGate')), findsOneWidget);
+
+    await tester.enterText(find.byKey(const Key('adultAnswer')), '1');
+    await tester.tap(find.text('Conferma'));
+    await tester.pumpAndSettle();
+    expect(settings.value.kidMode, isTrue);
+    expect(find.text('Risposta sbagliata.'), findsOneWidget);
+
+    final question = tester
+        .widget<Text>(find.byKey(const Key('adultQuestion')))
+        .data!;
+    final factors = RegExp(r'(\d+) × (\d+)').firstMatch(question)!;
+    final answer = int.parse(factors.group(1)!) * int.parse(factors.group(2)!);
+    await tester.enterText(find.byKey(const Key('adultAnswer')), '$answer');
+    await tester.tap(find.text('Conferma'));
+    await tester.pumpAndSettle();
+    expect(settings.value.kidMode, isFalse);
+  });
+
+  testWidgets('RP-06 annullando la domanda il profilo resta attivo', (
+    tester,
+  ) async {
+    await settings.update(settings.value.copyWith(kidMode: true));
+    await show(tester);
+    await tester.tap(find.byKey(const Key('kidMode')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Annulla'));
+    await tester.pumpAndSettle();
+    expect(settings.value.kidMode, isTrue);
   });
 }

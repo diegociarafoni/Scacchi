@@ -113,6 +113,7 @@ class AppSettings {
     this.tableMode = false,
     this.confirmMove = false,
     this.colorBlind = false,
+    this.kidMode = false,
     String whiteName = '',
     String blackName = '',
   }) : whiteName = _cleanName(whiteName),
@@ -147,6 +148,10 @@ class AppSettings {
   final bool tableMode;
   final bool confirmMove;
   final bool colorBlind;
+
+  /// Profilo bambino (RP-06): interfaccia e testi semplici, bot amichevoli,
+  /// nessuna statistica numerica.
+  final bool kidMode;
   final String whiteName;
   final String blackName;
 
@@ -185,6 +190,7 @@ class AppSettings {
     bool? tableMode,
     bool? confirmMove,
     bool? colorBlind,
+    bool? kidMode,
     String? whiteName,
     String? blackName,
   }) => AppSettings(
@@ -202,6 +208,7 @@ class AppSettings {
     tableMode: tableMode ?? this.tableMode,
     confirmMove: confirmMove ?? this.confirmMove,
     colorBlind: colorBlind ?? this.colorBlind,
+    kidMode: kidMode ?? this.kidMode,
     whiteName: whiteName ?? this.whiteName,
     blackName: blackName ?? this.blackName,
   );
@@ -238,6 +245,7 @@ class AppSettings {
       other.tableMode == tableMode &&
       other.confirmMove == confirmMove &&
       other.colorBlind == colorBlind &&
+      other.kidMode == kidMode &&
       other.whiteName == whiteName &&
       other.blackName == blackName;
 
@@ -257,6 +265,7 @@ class AppSettings {
     tableMode,
     confirmMove,
     colorBlind,
+    kidMode,
     whiteName,
     blackName,
   );
@@ -298,6 +307,7 @@ class SettingsController extends ValueNotifier<AppSettings> {
         tableMode: read('tableMode', d.tableMode),
         confirmMove: read('confirmMove', d.confirmMove),
         colorBlind: read('colorBlind', d.colorBlind),
+        kidMode: read('kidMode', d.kidMode),
         whiteName: read('whiteName', d.whiteName),
         blackName: read('blackName', d.blackName),
       ),
@@ -338,6 +348,8 @@ class SettingsController extends ValueNotifier<AppSettings> {
         prefs.setBool('confirmMove', settings.confirmMove),
       if (old.colorBlind != settings.colorBlind)
         prefs.setBool('colorBlind', settings.colorBlind),
+      if (old.kidMode != settings.kidMode)
+        prefs.setBool('kidMode', settings.kidMode),
       if (old.whiteName != settings.whiteName)
         prefs.setString('whiteName', settings.whiteName),
       if (old.blackName != settings.blackName)
