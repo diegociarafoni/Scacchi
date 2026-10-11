@@ -81,6 +81,6 @@ Nei test di widget il lettore è sostituito da uno finto tramite il parametro `s
 
 ## Limiti noti
 
-- Il tempo residuo dell'orologio non passa all'altro telefono: la partita continua senza orologio.
+- L'orologio non passa all'altro telefono: la partita continua senza orologio. I tempi residui già registrati a ogni mossa (`[%clk]`) viaggiano invece nel PGN.
 - Su desktop il lettore non ha una fotocamera (il pacchetto `camera` non la supporta); si può comunque mostrare il QR.
 - Una partita contro il computer ricevuta prosegue tra due persone.
