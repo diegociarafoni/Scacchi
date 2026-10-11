@@ -89,6 +89,18 @@ class CoachSession {
       san: pos.makeSan(best).$2,
     );
   }
+
+  /// La mossa che l'avversario giocherebbe se toccasse a lui (RF-56), con la
+  /// destinazione da mostrare (il re per l'arrocco). `null` sotto scacco o se
+  /// il motore non indica nulla.
+  Future<NormalMove?> threat(Position pos) async {
+    final fen = threatFen(pos);
+    if (fen == null) return null;
+    final uci = (await _evaluate(fen)).firstOrNull?.pv.firstOrNull;
+    if (uci == null) return null;
+    final move = Move.parse(uci);
+    return move is NormalMove ? move : null;
+  }
 }
 
 /// L'occasione mancata non peggiora la posizione: si segnala nel commento,

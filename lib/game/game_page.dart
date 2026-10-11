@@ -35,6 +35,7 @@ import '../review/game_review.dart';
 import '../review/move_classification.dart';
 import '../review/personal_puzzles.dart';
 import '../review/review_page.dart';
+import '../settings/notation.dart';
 import '../settings/settings.dart';
 import '../settings/settings_page.dart';
 import '../storage/key_value_store.dart';
@@ -173,6 +174,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   ({int ply, Square square, MoveClass verdict})? _badge;
   String? _hintedFen;
   Set<Shape> _hintShapes = const {};
+  String? _threatFen;
+  Set<Shape> _threatShapes = const {};
   late CoachSession _coach = _newCoach();
 
   CoachSession _newCoach() => CoachSession(
@@ -801,10 +804,14 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// Il giudizio resta sulla casa finché è la mossa dell'utente o la risposta
   /// del computer non la occupa; non si mostra sfogliando la cronologia.
   /// Il suggerimento resta finché la posizione è quella per cui è stato dato.
-  Set<Shape> _visibleHint() =>
-      _hintedFen == _game.position.fen && _viewPly == null
-      ? _hintShapes
-      : const {};
+  Set<Shape> _visibleHint() {
+    if (_viewPly != null) return const {};
+    final fen = _game.position.fen;
+    return {
+      if (_hintedFen == fen) ..._hintShapes,
+      if (_threatFen == fen) ..._threatShapes,
+    };
+  }
 
   Map<Square, Annotation> _badgeAnnotations() {
     final badge = _badge;
@@ -885,6 +892,42 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       );
     }, restart: (retry) => retry != true);
     if (retry == true && mounted && _game.moves.length == plies) _undo();
+  }
+
+  /// Freccia rossa con la mossa che l'avversario giocherebbe se toccasse a lui
+  /// (RF-56).
+  Future<void> _showThreat() async {
+    final position = _game.position;
+    NormalMove? threat;
+    try {
+      threat = await _whileSuspended(() => _coach.threat(position));
+    } on Object {
+      threat = null;
+    }
+    if (!mounted || !identical(position, _game.position)) return;
+    if (threat == null) {
+      _showMessage('Nessuna minaccia da mostrare.');
+      return;
+    }
+    final fen = threatFen(position);
+    final flipped = fen == null ? null : Chess.fromSetup(Setup.parseFen(fen));
+    final move = flipped == null ? null : parseEngineMove(flipped, threat.uci);
+    final san = move == null ? null : flipped!.makeSan(move).$2;
+    setState(() {
+      _threatFen = position.fen;
+      _threatShapes = {
+        Arrow(
+          color: const Color(0xCCC0392B),
+          orig: threat!.from,
+          dest: threat.to,
+        ),
+      };
+    });
+    _showMessage(
+      san == null
+          ? 'La freccia rossa mostra la minaccia dell\'avversario.'
+          : 'Se toccasse all\'avversario giocherebbe ${formatSan(san, AppSettings.of(context).notation)}: la freccia rossa.',
+    );
   }
 
   /// Suggerimento a livelli: prima il pezzo, poi la mossa.
@@ -1262,6 +1305,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _coachOn = false;
     _badge = null;
     _hintedFen = null;
+    _threatFen = null;
     _coach = _newCoach();
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     _game = game;
@@ -1760,6 +1804,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       },
       hintAvailable: _computerSide != null && !_isChallenge,
       onHint: _humanToMove && _pendingMove == null ? _giveHint : null,
+      onThreat: _humanToMove && _pendingMove == null ? _showThreat : null,
     );
     // Il libro delle aperture vale solo per gli scacchi classici; ai bambini
     // i nomi delle aperture non dicono nulla, quelli delle varianti sì (una
@@ -2183,6 +2228,7 @@ class _GameActions extends StatelessWidget {
     required this.onCoach,
     required this.hintAvailable,
     required this.onHint,
+    required this.onThreat,
   });
 
   final _ActionLabels labels;
@@ -2199,6 +2245,9 @@ class _GameActions extends StatelessWidget {
   /// Il suggerimento non dipende dall'allenatore, ma non c'è nelle sfide.
   final bool hintAvailable;
   final VoidCallback? onHint;
+
+  /// Solo con l'allenatore acceso.
+  final VoidCallback? onThreat;
 
   @override
   Widget build(BuildContext context) {
@@ -2218,6 +2267,15 @@ class _GameActions extends StatelessWidget {
               onCoach,
               highlighted: coachOn!,
               tooltip: 'Ti avvisa quando sbagli una mossa e ti fa riprenderla',
+            ),
+          if (coachOn ?? false)
+            _ActionButton(
+              Icons.warning_amber,
+              'Minaccia',
+              onThreat,
+              tooltip:
+                  'Mostra con una freccia rossa la mossa che '
+                  'l\'avversario giocherebbe se toccasse a lui',
             ),
           if (hintAvailable)
             _ActionButton(
