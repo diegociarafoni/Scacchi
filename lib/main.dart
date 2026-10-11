@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'home/home_shell.dart';
+import 'l10n/app_localizations.dart';
 import 'settings/settings.dart';
 
 void main() {
@@ -38,8 +39,12 @@ class _ScacchiAppState extends State<ScacchiApp> {
     const seed = Color(0xFF769656);
     final settings = _settings;
     return MaterialApp(
-      title: 'Scacchi',
+      onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
       debugShowCheckedModeBanner: false,
+      // Italiano predefinito finché non sono tradotti tutti i testi.
+      locale: const Locale('it'),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       theme: ThemeData(colorSchemeSeed: seed, brightness: Brightness.light),
       darkTheme: ThemeData(colorSchemeSeed: seed, brightness: Brightness.dark),
       // Sopra il Navigator, così anche le pagine aperte con push lo vedono.
