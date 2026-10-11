@@ -9,9 +9,11 @@ import '../openings/repertoire.dart';
 import '../progress/activity.dart';
 import '../progress/progress_controller.dart';
 import '../progress/progress_tracker.dart';
+import '../puzzles/puzzle.dart';
 import '../puzzles/puzzle_assets.dart';
 import '../puzzles/puzzle_hub_page.dart';
 import '../puzzles/puzzle_trainer.dart';
+import '../review/personal_puzzles.dart';
 import '../reminders/local_notification_scheduler.dart';
 import '../reminders/reminder.dart';
 import '../reminders/reminder_controller.dart';
@@ -130,6 +132,15 @@ class _HomeShellState extends State<HomeShell> {
     }
   }
 
+  /// Mette i puzzle dagli errori nel ripasso. Il caricamento dei puzzle è lo
+  /// stesso della scheda Puzzle: un solo archivio in memoria.
+  Future<int> _savePersonalPuzzles(List<MistakePuzzle> puzzles) async {
+    final trainer = await (_trainer ??= _loadTrainer());
+    return trainer.addPersonal([
+      for (final p in puzzles) (Puzzle.parseCsv(p.toCsv()), p.explanation),
+    ]);
+  }
+
   Future<PuzzleTrainer>
   _loadTrainer() => (widget.puzzleTrainer ?? loadPuzzleTrainer)().catchError((
     Object e,
@@ -150,7 +161,11 @@ class _HomeShellState extends State<HomeShell> {
       body: IndexedStack(
         index: _tab,
         children: [
-          GamePage(settings: widget.settings),
+          GamePage(
+            settings: widget.settings,
+            onActivity: _record,
+            onSavePuzzles: _savePersonalPuzzles,
+          ),
           if (_trainer != null)
             PuzzleHubPage(trainer: _trainer!, onActivity: _record)
           else

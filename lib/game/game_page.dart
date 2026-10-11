@@ -13,7 +13,13 @@ import '../engine/uci_transport.dart';
 import '../analysis/analysis_page.dart';
 import '../editor/position_editor_page.dart';
 import '../openings/opening_name.dart';
+import '../progress/activity.dart';
+import '../progress/progress_feedback.dart';
+import '../puzzles/activity_recorder.dart';
 import '../review/engine_evaluator.dart';
+import '../review/game_review.dart';
+import '../review/move_classification.dart';
+import '../review/personal_puzzles.dart';
 import '../review/review_page.dart';
 import '../settings/settings.dart';
 import '../settings/settings_page.dart';
@@ -36,6 +42,8 @@ class GamePage extends StatefulWidget {
     bool? computerAvailable,
     this.createComputer,
     this.now,
+    this.onActivity,
+    this.onSavePuzzles,
   }) : computerAvailable = computerAvailable ?? StockfishTransport.isSupported;
 
   final SettingsController settings;
@@ -44,6 +52,12 @@ class GamePage extends StatefulWidget {
 
   /// Ora corrente per l'orologio; quella di sistema se assente.
   final DateTime Function()? now;
+
+  /// Registra le attività della partita nei progressi.
+  final ActivityRecorder? onActivity;
+
+  /// Salva i puzzle ricavati dagli errori della revisione.
+  final Future<int> Function(List<MistakePuzzle> puzzles)? onSavePuzzles;
 
   /// Sceglie la posizione Chess960; sostituibile nei test.
   final int Function() chess960Id;
@@ -784,6 +798,12 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// Revisione della partita con orologio e computer fermi.
   void _openReview() {
     final moves = _moveHistory;
+    final computer = _computerSide;
+    // Contro il computer contano gli errori di chi ha giocato, non quelli
+    // del motore.
+    final players = computer == null
+        ? {Side.white, Side.black}
+        : {computer.opposite};
     _withEngine(
       (player) => ReviewPage(
         initial: _game.initial,
@@ -791,8 +811,27 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         evaluate: engineEvaluator(player),
         onCancel: player.stopAnalysis,
         analyseLive: _liveAnalysis(player),
+        onReviewed: (review) => _recordReview(review, players),
+        onSavePuzzles: widget.onSavePuzzles,
+        puzzlePlayers: players,
       ),
     );
+  }
+
+  /// Una revisione nuova vale XP; con due giocatori la precisione non è di
+  /// nessuno in particolare e non si registra.
+  Future<void> _recordReview(GameReview review, Set<Side> players) async {
+    final record = widget.onActivity;
+    if (record == null) return;
+    final update = await record(
+      ReviewCompleted(
+        accuracy: players.length == 1 ? review.accuracy(players.single) : null,
+        brilliantMoves: [
+          for (final side in players) review.count(side, MoveClass.brilliant),
+        ].fold(0, (a, b) => a + b),
+      ),
+    );
+    if (update != null && mounted) showProgressFeedback(context, update);
   }
 
   /// Apre una pagina che usa il motore. Nella partita tra due persone il

@@ -95,6 +95,8 @@ I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisic
 | RF-70 spiegazioni: matto concesso o mancato, pezzo in presa, forchetta, perdita di materiale | ✓ | |
 | RF-71 cattura netta, doppio attacco, scoperta dalla variante del motore | ✓ | |
 | Cap. 7, errori trasformati in puzzle personali | ✓ | |
+| Cap. 7, puzzle personali salvati e nel ripasso | ✓ | ✓ |
+| RG-01 la revisione vale XP, una volta per partita | | ✓ |
 | RF-31 rotazione automatica a ogni turno | | ✓ |
 | RF-32 patta concordata e annullamento | ✓ | ✓ |
 | RF-100 salvataggio e partita da riprendere | ✓ | |

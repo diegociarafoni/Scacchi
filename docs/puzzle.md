@@ -97,7 +97,7 @@ Ogni puzzle sbagliato nell'allenamento, anche se già visto, entra in una coda d
 | 3 | 14 giorni |
 | 4 | 30 giorni |
 
-Un ripasso riuscito fa salire di livello; superato l'ultimo, il puzzle è considerato imparato ed esce dalla coda. Un nuovo errore lo riporta al livello 0. Le scadenze sono calcolate a giorni di calendario (dalla mezzanotte), così un errore della sera torna disponibile dal mattino dopo. La voce "Ripasso degli errori" mostra quanti puzzle sono in scadenza oggi, dal più in ritardo, ignorando quelli non più presenti nella raccolta dopo un aggiornamento; il ripasso non modifica il punteggio e, finiti i puzzle in scadenza, lo segnala.
+Un ripasso riuscito fa salire di livello; superato l'ultimo, il puzzle è considerato imparato ed esce dalla coda. Un nuovo errore lo riporta al livello 0. Le scadenze sono calcolate a giorni di calendario (dalla mezzanotte), così un errore della sera torna disponibile dal mattino dopo. La voce "Ripasso degli errori" mostra quanti puzzle sono in scadenza oggi, dal più in ritardo, ignorando quelli non più presenti nella raccolta dopo un aggiornamento; vi entrano anche i puzzle personali ricavati dagli errori delle proprie partite (vedi [revisione-partita.md](revisione-partita.md)); il ripasso non modifica il punteggio e, finiti i puzzle in scadenza, lo segnala.
 
 Le schermate di risoluzione ricevono i puzzle da un `PuzzleFeed` (`lib/puzzles/puzzle_feed.dart`): `RatedFeed` per l'allenamento e i temi, `SingleFeed` per il puzzle del giorno, `ReviewFeed` per il ripasso.
 

@@ -10,6 +10,7 @@ import 'coach.dart';
 import 'eval_bar.dart';
 import 'game_review.dart';
 import 'move_classification.dart';
+import 'personal_puzzles.dart';
 
 /// Revisioni già calcolate in questa sessione, per riaprirle all'istante.
 /// Tiene solo le più recenti per limitare la memoria.
@@ -68,6 +69,8 @@ class ReviewPage extends StatefulWidget {
     this.onCancel,
     this.onReviewed,
     this.analyseLive,
+    this.onSavePuzzles,
+    this.puzzlePlayers = const {Side.white, Side.black},
   });
 
   final Position initial;
@@ -84,11 +87,20 @@ class ReviewPage extends StatefulWidget {
   /// Analisi continua per aprire la posizione mostrata nell'analisi libera.
   final LiveAnalysis? analyseLive;
 
+  /// Salva i puzzle ricavati dagli errori e restituisce quanti sono nuovi; se
+  /// assente il pulsante non compare.
+  final Future<int> Function(List<MistakePuzzle> puzzles)? onSavePuzzles;
+
+  /// Lati le cui mosse sbagliate diventano puzzle.
+  final Set<Side> puzzlePlayers;
+
   @override
   State<ReviewPage> createState() => _ReviewPageState();
 }
 
 enum _Phase { analysing, cancelled, failed, done }
+
+enum _SaveState { idle, saving, saved, already, failed }
 
 class _ReviewPageState extends State<ReviewPage> {
   late final List<Position> _positions = [widget.initial];
@@ -109,6 +121,10 @@ class _ReviewPageState extends State<ReviewPage> {
   String? _retryMessage;
   bool _showSolution = false;
   Move? _retrySolved;
+
+  List<MistakePuzzle>? _puzzles;
+  _SaveState _save = _SaveState.idle;
+  int _savedCount = 0;
 
   @override
   void initState() {
@@ -161,6 +177,66 @@ class _ReviewPageState extends State<ReviewPage> {
     } catch (_) {
       if (mounted && !_cancelled) setState(() => _phase = _Phase.failed);
     }
+  }
+
+  /// Puzzle dagli errori dei giocatori scelti; id stabili per la stessa
+  /// partita, così salvare due volte non duplica.
+  List<MistakePuzzle> _puzzlesOf(GameReview review) =>
+      _puzzles ??= puzzlesFromReview(
+        review,
+        players: widget.puzzlePlayers,
+        gameId: _cacheKey.hashCode.toRadixString(36),
+      );
+
+  Future<void> _savePuzzles(GameReview review) async {
+    final save = widget.onSavePuzzles;
+    if (save == null || _save == _SaveState.saving) return;
+    setState(() => _save = _SaveState.saving);
+    try {
+      final added = await save(_puzzlesOf(review));
+      if (!mounted) return;
+      setState(() {
+        _savedCount = added;
+        _save = added == 0 ? _SaveState.already : _SaveState.saved;
+      });
+    } on Object {
+      if (mounted) setState(() => _save = _SaveState.failed);
+    }
+  }
+
+  Widget? _savePuzzlesTile(GameReview review) {
+    if (widget.onSavePuzzles == null) return null;
+    final count = _puzzlesOf(review).length;
+    if (count == 0) return null;
+    final text = Theme.of(context).textTheme.bodyMedium;
+    final message = switch (_save) {
+      _SaveState.saved =>
+        'Puzzle salvati: $_savedCount. Li trovi in Puzzle › Ripasso degli errori.',
+      _SaveState.already => 'Questi puzzle sono già salvati.',
+      _SaveState.failed => 'Salvataggio non riuscito. Riprova.',
+      _ => null,
+    };
+    final done = _save == _SaveState.saved || _save == _SaveState.already;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Wrap(
+        spacing: 12,
+        runSpacing: 4,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: [
+          if (!done)
+            OutlinedButton.icon(
+              icon: const Icon(Icons.extension_outlined),
+              onPressed: _save == _SaveState.saving
+                  ? null
+                  : () => _savePuzzles(review),
+              label: Text('Salva gli errori come puzzle ($count)'),
+            ),
+          if (message != null)
+            Text(message, style: text, semanticsLabel: message),
+        ],
+      ),
+    );
   }
 
   void _cancel({bool notify = true}) {
@@ -392,6 +468,7 @@ class _ReviewPageState extends State<ReviewPage> {
         final review = _review!;
         return [
           _Summary(review: review),
+          ?_savePuzzlesTile(review),
           SizedBox(
             height: 72,
             child: Padding(

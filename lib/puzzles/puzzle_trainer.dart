@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'glicko2.dart';
+import 'personal_puzzles.dart';
 import 'puzzle.dart';
 import 'puzzle_library.dart';
 import 'review_queue.dart';
@@ -20,6 +21,7 @@ class PuzzleTrainer {
   final KeyValueStore _store;
   final DateTime Function() now;
   late final ReviewQueue reviews;
+  late final PersonalPuzzles personal;
   late final RunRecords records;
   Glicko2Rating _rating = const Glicko2Rating();
   final Set<String> _seen = {};
@@ -38,6 +40,7 @@ class PuzzleTrainer {
   }) async {
     final t = PuzzleTrainer._(library, store, now);
     t.reviews = await ReviewQueue.load(store);
+    t.personal = await PersonalPuzzles.load(store);
     t.records = await RunRecords.load(store);
     final raw = await store.read(storageKey);
     if (raw != null) {
@@ -60,10 +63,21 @@ class PuzzleTrainer {
     return t;
   }
 
-  /// Puzzle da ripassare oggi che esistono ancora nella raccolta.
+  /// Puzzle della raccolta o tra quelli personali.
+  Puzzle? puzzleById(String id) => library.byId(id) ?? personal.byId(id);
+
+  /// Puzzle da ripassare oggi che esistono ancora.
   List<Puzzle> dueReviews() => [
-    for (final id in reviews.due(now())) ?library.byId(id),
+    for (final id in reviews.due(now())) ?puzzleById(id),
   ];
+
+  /// Salva puzzle ricavati dagli errori e li mette nel ripasso di oggi come
+  /// carte nuove. Restituisce quanti non erano già presenti.
+  Future<int> addPersonal(Iterable<(Puzzle, String?)> items) async {
+    final added = await personal.add(items);
+    await reviews.addNew([for (final (p, _) in items) p.id], now());
+    return added;
+  }
 
   Puzzle next({String? theme}) =>
       library.next(rating: _rating.rating, theme: theme, seen: _seen);
@@ -71,6 +85,12 @@ class PuzzleTrainer {
   /// Registra l'esito e restituisce la variazione di punteggio, oppure `null`
   /// se il puzzle era già stato visto: le ripetizioni non cambiano il punteggio.
   Future<double?> record(Puzzle puzzle, {required bool solved}) async {
+    if (PersonalPuzzles.isPersonal(puzzle.id)) {
+      // Il punteggio misura i puzzle del database: quelli personali valgono
+      // solo per il ripasso.
+      if (!solved) await reviews.failed(puzzle.id, now());
+      return null;
+    }
     if (!_seen.add(puzzle.id)) {
       if (!solved) await reviews.failed(puzzle.id, now());
       // In fondo all'ordine dei visti, così si ricomincia dal meno recente.
