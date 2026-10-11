@@ -17,6 +17,10 @@ import '../engine/bots.dart';
 import '../engine/computer_player.dart';
 import '../engine/levels.dart';
 import '../engine/uci_transport.dart';
+import '../exchange/qr_l10n.dart';
+import '../exchange/qr_receive_page.dart';
+import '../exchange/qr_send_page.dart';
+import '../exchange/qr_transfer.dart';
 import '../l10n/app_localizations.dart';
 import '../openings/opening_name.dart';
 import '../progress/activity.dart';
@@ -68,6 +72,7 @@ class GamePage extends StatefulWidget {
     this.challenge,
     this.onFinished,
     this.store,
+    this.qrScanner = zxingScanner,
     this.onSavePuzzles,
   }) : computerAvailable = computerAvailable ?? StockfishTransport.isSupported;
 
@@ -103,6 +108,9 @@ class GamePage extends StatefulWidget {
 
   /// Sceglie la posizione Chess960; sostituibile nei test.
   final int Function() chess960Id;
+
+  /// Lettore QR per continuare una partita passata da un altro telefono.
+  final QrScannerBuilder qrScanner;
 
   @override
   State<GamePage> createState() => _GamePageState();
@@ -163,6 +171,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// simbolo sulla casa d'arrivo, come nella revisione.
   ({int ply, Square square, MoveClass verdict})? _badge;
   String? _hintedFen;
+  Shape? _hintShape;
   late CoachSession _coach = _newCoach();
 
   CoachSession _newCoach() => CoachSession(
@@ -590,7 +599,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   void _finishGame() {
     final game = _game;
     if (!game.isOver) return;
-    final side = _computerSide?.opposite;
+    final (side, elo) = _playerAndElo;
     final ending =
         '${identityHashCode(game)}:${game.endReason}:${game.moves.length}';
     if (side != null && ending != _reportedEnding) {
@@ -605,9 +614,6 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     }
     if (game.moves.isEmpty) return;
     final now = _clockNow();
-    final elo = side == null
-        ? null
-        : (_bot?.elo ?? engineLevel(_gameLevel).approxElo);
     final key =
         '${identityHashCode(game)}:${game.endReason}:${game.moves.length}';
     if (key != _archivedKey) {
@@ -642,10 +648,18 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   void _archive(ChessGame game, Side? side, DateTime now, int? elo) {
     final save = widget.onSave;
     if (save == null) return;
+    final saved = _savedGame(game, side, now, elo);
+    unawaited(
+      save(saved)
+          .onError((Object e, _) => debugPrint('Partita non salvata: $e')),
+    );
+  }
+
+  SavedGame _savedGame(ChessGame game, Side? side, DateTime now, int? elo) {
     String name(Side s) => side == null
         ? (_settings.nameOf(s) ?? (s == Side.white ? 'Bianco' : 'Nero'))
         : (s == side ? 'Tu' : (_bot?.name ?? 'Computer'));
-    final saved = SavedGame.fromGame(
+    return SavedGame.fromGame(
       game,
       id: _gameId,
       white: name(Side.white),
@@ -657,9 +671,65 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       timeControl: _clock?.control.label,
       opponentElo: elo,
     );
-    unawaited(
-      save(saved)
-          .onError((Object e, _) => debugPrint('Partita non salvata: $e')),
+  }
+
+  /// Colore dell'utente ed Elo dell'avversario; `null` tra due persone.
+  (Side?, int?) get _playerAndElo {
+    final side = _computerSide?.opposite;
+    return (
+      side,
+      side == null ? null : (_bot?.elo ?? engineLevel(_gameLevel).approxElo),
+    );
+  }
+
+  /// Mostra la partita, anche in corso, come QR per un altro telefono.
+  Future<void> _sendQr() async {
+    final (side, elo) = _playerAndElo;
+    final saved = _savedGame(_game, side, _clockNow(), elo);
+    final frames = encodeTransfer(saved.pgn);
+    await _whileSuspended(
+      () => Navigator.of(context).push<void>(
+        MaterialPageRoute(
+          builder: (_) => QrSendPage(title: saved.title, frames: frames),
+        ),
+      ),
+    );
+  }
+
+  /// Continua qui, tra due persone e senza orologio, una partita ricevuta.
+  /// I nomi delle impostazioni non cambiano: quelli del PGN possono essere
+  /// "Tu" o il nome di un bot sull'altro telefono.
+  Future<void> _receiveQr() async {
+    final l10n = qrL10n(context);
+    // Riprende la partita corrente se quella ricevuta non si continua.
+    final games = await _whileSuspended(() async {
+      final text = await Navigator.of(context).push<String>(
+        MaterialPageRoute(
+          builder: (_) => QrReceivePage(scanner: widget.qrScanner),
+        ),
+      );
+      return text == null ? null : receivedGames(text);
+    }, restart: (games) => games?.firstOrNull?.game.isOver ?? true);
+    if (!mounted || games == null) return;
+    if (games.isEmpty) {
+      _showMessage(l10n.qrInvalidGame);
+      return;
+    }
+    final game = games.first.game;
+    if (game.isOver) {
+      _showMessage(l10n.qrFinishedGame);
+      return;
+    }
+    _bot = null;
+    _resultRecorded = false;
+    _botResultRecorded = false;
+    _twoPlayerVariant = game.variant;
+    // Come per l'editor: si archivia, ma non vale XP una partita iniziata altrove.
+    _beginGame(
+      game,
+      _setup.copyWith(opponent: Opponent.human),
+      null,
+      fromEditor: true,
     );
   }
 
@@ -729,6 +799,15 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   /// Il giudizio resta sulla casa finché è la mossa dell'utente o la risposta
   /// del computer non la occupa; non si mostra sfogliando la cronologia.
+  /// Il suggerimento resta finché la posizione è quella per cui è stato dato.
+  Set<Shape> _hintShapes() {
+    final shape = _hintShape;
+    if (shape == null || _hintedFen != _game.position.fen || _viewPly != null) {
+      return const {};
+    }
+    return {shape};
+  }
+
   Map<Square, Annotation> _badgeAnnotations() {
     final badge = _badge;
     if (badge == null || _viewPly != null || !_coachOn) return const {};
@@ -826,6 +905,12 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       return;
     }
     _hintedFen = position.fen;
+    const color = Color(0xCC15781B);
+    setState(
+      () => _hintShape = level == HintLevel.piece
+          ? Circle(color: color, orig: hint!.from)
+          : Arrow(color: color, orig: hint!.from, dest: hint.to!),
+    );
     _showMessage(
       level == HintLevel.piece
           ? 'Prova a muovere il pezzo in ${hint.from.name}.'
@@ -1645,13 +1730,20 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           : _resign,
       // Nelle sfide niente aiuti: né suggerimenti né ripetizione della mossa.
       coachOn: _computerSide == null || _isChallenge ? null : _coachOn,
-      onCoach: () => setState(() {
-        _coachOn = !_coachOn;
-        if (!_coachOn) _badge = null;
-      }),
-      onHint: _coachOn && _humanToMove && _pendingMove == null
-          ? _giveHint
-          : null,
+      onCoach: () {
+        setState(() {
+          _coachOn = !_coachOn;
+          if (!_coachOn) _badge = null;
+        });
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        _showMessage(
+          _coachOn
+              ? 'Allenatore attivo: ti avviso se sbagli una mossa.'
+              : 'Allenatore disattivato.',
+        );
+      },
+      hintAvailable: _computerSide != null && !_isChallenge,
+      onHint: _humanToMove && _pendingMove == null ? _giveHint : null,
     );
     // Il libro delle aperture vale solo per gli scacchi classici; ai bambini
     // i nomi delle aperture non dicono nulla, quelli delle varianti sì (una
@@ -1690,30 +1782,48 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                 ],
               ),
         actions: [
-          // Stockfish analizza solo gli scacchi classici; analisi e revisione
-          // sono strumenti da adulti, nascosti nel profilo bambino.
-          if (widget.computerAvailable &&
-              !_isChallenge &&
-              _game.variant == Variant.standard &&
-              l == null)
+          // Una sfida (guardiano, torneo) non si sostituisce con un'altra
+          // partita; nel profilo bambino restano nascosti gli strumenti adulti.
+          if (!_isChallenge && l == null)
             PopupMenuButton<String>(
               tooltip: 'Altre azioni',
               onSelected: (value) {
                 if (value == 'review') _openReview();
                 if (value == 'analysis') _openAnalysis();
+                if (value == 'qrSend') unawaited(_sendQr());
+                if (value == 'qrReceive') unawaited(_receiveQr());
               },
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  value: 'analysis',
-                  enabled: _task != _ComputerTask.draw,
-                  child: const Text('Analisi della posizione'),
-                ),
-                PopupMenuItem(
-                  value: 'review',
-                  enabled: _game.moves.isNotEmpty && !_thinking,
-                  child: const Text('Revisione della partita'),
-                ),
-              ],
+              itemBuilder: (context) {
+                final l10n = qrL10n(context);
+                return [
+                  // Stockfish analizza solo gli scacchi classici.
+                  if (widget.computerAvailable &&
+                      _game.variant == Variant.standard) ...[
+                    PopupMenuItem(
+                      value: 'analysis',
+                      enabled: _task != _ComputerTask.draw,
+                      child: const Text('Analisi della posizione'),
+                    ),
+                    PopupMenuItem(
+                      value: 'review',
+                      enabled: _game.moves.isNotEmpty && !_thinking,
+                      child: const Text('Revisione della partita'),
+                    ),
+                  ],
+                  PopupMenuItem(
+                    value: 'qrSend',
+                    // Una posizione dell'editor si può passare anche senza mosse.
+                    enabled:
+                        (_game.moves.isNotEmpty || _fromEditor) && !_thinking,
+                    child: Text(l10n.qrSendTitle),
+                  ),
+                  PopupMenuItem(
+                    value: 'qrReceive',
+                    enabled: !_thinking,
+                    child: Text(l10n.qrReceiveTitle),
+                  ),
+                ];
+              },
             ),
           if (!_isChallenge && l == null)
             IconButton(
@@ -1766,6 +1876,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                   onMove: _onMove,
                   settings: boardSettings,
                   annotations: _badgeAnnotations(),
+                  shapes: _hintShapes(),
                 ),
               );
               final viewPly = _viewPly;
@@ -2029,7 +2140,7 @@ class _ActionLabels {
     this.draw = 'Patta',
     this.resign = 'Abbandona',
     this.coach = 'Allenatore',
-    this.hint = 'Aiuto',
+    this.hint = 'Suggerisci',
   });
 
   final String newGame;
@@ -2051,6 +2162,7 @@ class _GameActions extends StatelessWidget {
     required this.onResign,
     required this.coachOn,
     required this.onCoach,
+    required this.hintAvailable,
     required this.onHint,
   });
 
@@ -2064,6 +2176,9 @@ class _GameActions extends StatelessWidget {
   /// `null` nella partita tra due persone, dove l'allenatore non c'è.
   final bool? coachOn;
   final VoidCallback onCoach;
+
+  /// Il suggerimento non dipende dall'allenatore, ma non c'è nelle sfide.
+  final bool hintAvailable;
   final VoidCallback? onHint;
 
   @override
@@ -2082,9 +2197,18 @@ class _GameActions extends StatelessWidget {
               coachOn! ? Icons.school : Icons.school_outlined,
               labels.coach,
               onCoach,
+              highlighted: coachOn!,
+              tooltip: 'Ti avvisa quando sbagli una mossa e ti fa riprenderla',
             ),
-          if (coachOn ?? false)
-            _ActionButton(Icons.lightbulb_outline, labels.hint, onHint),
+          if (hintAvailable)
+            _ActionButton(
+              Icons.lightbulb_outline,
+              labels.hint,
+              onHint,
+              tooltip:
+                  'Primo tocco: evidenzia il pezzo da muovere. '
+                  'Secondo tocco: mostra la freccia della mossa migliore',
+            ),
         ],
       ),
     );
@@ -2092,27 +2216,42 @@ class _GameActions extends StatelessWidget {
 }
 
 class _ActionButton extends StatelessWidget {
-  const _ActionButton(this.icon, this.label, this.onPressed);
+  const _ActionButton(
+    this.icon,
+    this.label,
+    this.onPressed, {
+    this.highlighted = false,
+    this.tooltip,
+  });
 
   final IconData icon;
   final String label;
   final VoidCallback? onPressed;
 
+  /// Comando acceso, come l'allenatore.
+  final bool highlighted;
+  final String? tooltip;
+
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
     final color = onPressed == null
         ? Theme.of(context).disabledColor
-        : Theme.of(context).colorScheme.onSurface;
-    return Expanded(
-      child: InkWell(
-        onTap: onPressed,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: color),
-            const SizedBox(height: 4),
-            // Con sei pulsanti le etichette lunghe si rimpiccioliscono.
-            FittedBox(
+        : highlighted
+        ? scheme.primary
+        : scheme.onSurface;
+    Widget button = InkWell(
+      onTap: onPressed,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, color: color),
+          const SizedBox(height: 4),
+          // Con sette pulsanti le etichette lunghe si rimpiccioliscono, con
+          // un margine per non toccare quelle vicine.
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 2),
+            child: FittedBox(
               fit: BoxFit.scaleDown,
               child: Text(
                 label,
@@ -2120,10 +2259,14 @@ class _ActionButton extends StatelessWidget {
                     ?.copyWith(color: color),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
+    if (tooltip != null && onPressed != null) {
+      button = Tooltip(message: tooltip, child: button);
+    }
+    return Expanded(child: button);
   }
 }
 

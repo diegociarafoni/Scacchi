@@ -12,6 +12,7 @@ Ogni cartella di `lib/` ha qui il documento che descrive le sue funzioni. La tab
 | `lib/coach/` | [allenatore.md](allenatore.md) | Partita con l'allenatore: avvisi, ripresa della mossa, suggerimenti |
 | `lib/editor/` | [editor-posizione.md](editor-posizione.md) | Editor di posizione e FEN |
 | `lib/engine/` | [avversario-computer.md](avversario-computer.md), [bot.md](bot.md) | Motore Stockfish, livelli, bot con personalità |
+| `lib/exchange/` | [scambio-qr.md](scambio-qr.md) | Scambio di partite tra telefoni con il QR, senza rete |
 | `lib/game/` | [regole-di-gioco.md](regole-di-gioco.md), [interfaccia.md](interfaccia.md), [avversario-computer.md](avversario-computer.md) | Stato della partita, varianti, orologio, suoni, schermata di gioco |
 | `lib/home/` | [interfaccia.md](interfaccia.md), [architettura.md](architettura.md) | Barra di navigazione e scheda Tu |
 | `lib/kids/` | [profilo-bambino.md](profilo-bambino.md) | Profilo bambino senza numeri |

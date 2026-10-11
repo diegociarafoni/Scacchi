@@ -41,6 +41,12 @@ Future<PuzzleTrainer> phone(WidgetTester tester) {
   );
 }
 
+/// Passa dalla spiegazione alla serie.
+Future<void> begin(WidgetTester tester) async {
+  await tester.tap(find.text('Inizia'));
+  await tester.pump();
+}
+
 void main() {
   testWidgets('RF-82 Streak: due risolti, un errore, record salvato', (
     tester,
@@ -62,6 +68,7 @@ void main() {
         ),
       ),
     );
+    await begin(tester);
     await tapMove(tester, 'a1a8');
     await tapMove(tester, 'b1b8');
     expect(find.text('Punti 2'), findsOneWidget);
@@ -89,6 +96,7 @@ void main() {
         ),
       ),
     );
+    await begin(tester);
     expect(find.text('3:00'), findsOneWidget);
     elapsed = const Duration(minutes: 3);
     await tester.pump(const Duration(milliseconds: 300));
@@ -105,6 +113,7 @@ void main() {
         home: PuzzleRunPage(trainer: trainer, mode: PuzzleRunMode.survival),
       ),
     );
+    await begin(tester);
     await tapMove(tester, 'a1a8');
     await tester.pumpWidget(const MaterialApp(home: SizedBox()));
     await tester.pumpAndSettle();

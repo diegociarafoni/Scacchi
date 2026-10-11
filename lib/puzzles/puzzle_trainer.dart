@@ -13,6 +13,7 @@ class PuzzleTrainer {
   PuzzleTrainer._(this.library, this._store, this.now);
 
   static const storageKey = 'puzzles.trainer.v1';
+  static const guidesKey = 'puzzles.guides.v1';
 
   /// Deviazione attribuita ai puzzle, il cui punteggio è già stabile.
   static const puzzleDeviation = 75.0;
@@ -25,6 +26,7 @@ class PuzzleTrainer {
   late final RunRecords records;
   Glicko2Rating _rating = const Glicko2Rating();
   final Set<String> _seen = {};
+  final Set<String> _guidesSeen = {};
   int _solved = 0;
   int _failed = 0;
 
@@ -42,6 +44,14 @@ class PuzzleTrainer {
     t.reviews = await ReviewQueue.load(store);
     t.personal = await PersonalPuzzles.load(store);
     t.records = await RunRecords.load(store);
+    final guides = await store.read(guidesKey);
+    if (guides != null) {
+      try {
+        t._guidesSeen.addAll((jsonDecode(guides) as List).whereType<String>());
+      } on Object {
+        // Elenco illeggibile: le spiegazioni si ripresentano, nulla di grave.
+      }
+    }
     final raw = await store.read(storageKey);
     if (raw != null) {
       try {
@@ -61,6 +71,15 @@ class PuzzleTrainer {
       }
     }
     return t;
+  }
+
+  /// Vero se la spiegazione [id] è già stata letta e non serve riaprirla da sola.
+  bool guideSeen(String id) => _guidesSeen.contains(id);
+
+  Future<void> markGuideSeen(String id) async {
+    if (_guidesSeen.add(id)) {
+      await _store.write(guidesKey, jsonEncode(_guidesSeen.toList()));
+    }
   }
 
   /// Puzzle della raccolta o tra quelli personali.

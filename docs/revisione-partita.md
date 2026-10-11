@@ -111,12 +111,13 @@ Le regole si applicano in quest'ordine, e vale la prima che riconosce qualcosa:
 | Doppio attacco mancato | La mossa migliore attacca due pezzi con le stesse condizioni della forchetta | "Potevi fare un doppio attacco con Nc7+: il cavallo attacca il re e la torre." |
 | Scoperta mancata | Dopo la mossa migliore un pezzo rimasto fermo attacca una casa occupata che prima non attaccava (l'arrocco è escluso) | "Potevi fare un attacco di scoperta con Nc6+: l'alfiere attacca la donna." |
 | Perdita di materiale | Rispetto a prima della mossa, dopo la variante prevista (quattro semimosse) si hanno almeno due pedoni in meno | "Questa mossa perde materiale: circa 3 pedoni nella variante prevista." |
-| Inchiodatura concessa | Il pezzo che risponde (alfiere, torre o donna) inchioda al re un tuo pezzo non pedone, non si può catturare e non inchiodava già lo stesso pezzo (si controlla per ultima: è un danno più lieve) | "Dopo Bb4 l'alfiere nero inchioda il cavallo in d2 contro il re." |
+| Inchiodatura concessa | Il pezzo che risponde (alfiere, torre o donna) inchioda al re un tuo pezzo non pedone, non si può catturare e non inchiodava già lo stesso pezzo (si controlla dopo la perdita di materiale: è un danno più lieve) | "Dopo Bb4 l'alfiere nero inchioda il cavallo in d2 contro il re." |
+| Re scoperto | Mossa del re (un passo, senza arrocco) o di un pedone entro la terza traversa davanti al re ancora sulla traversa di partenza, a cui l'avversario risponde con uno scacco che prima della mossa non era possibile (dopo l'inchiodatura) | "Dopo f3 il tuo re resta scoperto: Qd4+ è scacco." |
 | Generica | Nessuna delle precedenti | "Meglio e4: la tua posizione peggiora." |
 
 Le mosse non sbagliate ricevono una frase di lode per categoria ("È la mossa migliore.").
 
-Non ancora coperto: re esposto (RF-70). Il commento in tempo reale durante la partita (RF-72) è dell'allenatore: vedi [allenatore.md](allenatore.md).
+Il commento in tempo reale durante la partita (RF-72) è dell'allenatore: vedi [allenatore.md](allenatore.md).
 
 ## Puzzle dagli errori
 

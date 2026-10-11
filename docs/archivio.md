@@ -35,6 +35,7 @@ Quando arriverà il database locale (RNF-08), il file sarà importato alla prima
 - per ogni partita: condividi il PGN con il menu di condivisione del sistema, copia negli appunti, elimina con conferma;
 - in alto: importa (incollando il testo, con pulsante "Incolla") ed esporta tutto l'archivio in un unico PGN;
 - tocco su una partita: callback `onOpen`. Dalla scheda Tu la partita si apre nella revisione (vedi [revisione-partita.md](revisione-partita.md)): il PGN si rilegge con `importPgn`, l'analisi usa il motore e vale XP come le altre revisioni. Dove il motore non c'è (desktop) un avviso lo spiega.
+- per ogni partita, **Passa con QR**, e in alto **Ricevi con QR** per importare una partita letta con la fotocamera da un altro telefono (vedi [scambio-qr.md](scambio-qr.md)).
 
 ## Integrazione prevista
 
