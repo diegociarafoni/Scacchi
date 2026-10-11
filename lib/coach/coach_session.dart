@@ -98,7 +98,10 @@ PositionEvaluator _memoize(PositionEvaluator inner) {
   return (fen) async {
     final f = cache.putIfAbsent(fen, () => inner(fen));
     try {
-      return await f;
+      final lines = await f;
+      // Un'analisi interrotta torna vuota: non va ricordata.
+      if (lines.isEmpty) unawaited(cache.remove(fen));
+      return lines;
     } catch (_) {
       unawaited(cache.remove(fen));
       rethrow;

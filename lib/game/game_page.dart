@@ -94,8 +94,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   /// Allenatore in partita (RF-73): giudica le mosse dell'utente.
   bool _coachOn = false;
-  int _hintLevel = 0;
-  late final CoachSession _coach = CoachSession(
+  String? _hintedFen;
+  late CoachSession _coach = _newCoach();
+
+  CoachSession _newCoach() => CoachSession(
     evaluate: (fen) => _computerPlayer.analyse(fen, depth: 12, multiPv: 2),
   );
   _ComputerTask _task = _ComputerTask.none;
@@ -418,7 +420,6 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final played = _apply(move);
     if (!played && !_game.isOver) return;
     _refresh(animate: played && animate);
-    _hintLevel = 0;
     if (played) unawaited(_afterHumanMove(before, move));
   }
 
@@ -429,6 +430,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       return _computerMove();
     }
     final plies = _game.moves.length;
+    _showMessage(
+      'L\'allenatore valuta la mossa…',
+      duration: const Duration(seconds: 2),
+    );
     final retry = await _whileSuspended<bool>(() async {
       final MoveVerdict verdict;
       try {
@@ -436,7 +441,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       } on Object {
         return false;
       }
-      if (!mounted || _game.moves.length != plies) return false;
+      if (!mounted || _game.isOver || _game.moves.length != plies) {
+        return false;
+      }
       final text = verdict.comment?.text;
       if (!verdict.shouldWarn) {
         if (text != null) _announce(text);
@@ -465,11 +472,11 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   /// Suggerimento a livelli: prima il pezzo, poi la mossa.
   Future<void> _giveHint() async {
-    final level = _hintLevel == 0 ? HintLevel.piece : HintLevel.move;
     final position = _game.position;
+    final level = _hintedFen == position.fen ? HintLevel.move : HintLevel.piece;
     CoachHint? hint;
     try {
-      hint = await _coach.hint(position, level);
+      hint = await _whileSuspended(() => _coach.hint(position, level));
     } on Object {
       hint = null;
     }
@@ -478,7 +485,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       _showMessage('Nessun suggerimento disponibile.');
       return;
     }
-    _hintLevel = 1;
+    _hintedFen = position.fen;
     _showMessage(
       level == HintLevel.piece
           ? 'Prova a muovere il pezzo in ${hint.from.name}.'
@@ -748,6 +755,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _setup = setup;
     _bot = bot;
     _gameLevel = setup.adaptive ? _adaptive.level : setup.level;
+    _coachOn = false;
+    _hintedFen = null;
+    _coach = _newCoach();
     _resultRecorded = false;
     _botResultRecorded = false;
     final vsComputer = setup.opponent != Opponent.human;
