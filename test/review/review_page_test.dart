@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/analysis/analysis_page.dart';
 import 'package:scacchi/engine/uci.dart';
+import 'package:scacchi/game/clock.dart';
 import 'package:scacchi/review/game_review.dart';
 import 'package:scacchi/review/personal_puzzles.dart';
 import 'package:scacchi/review/review_page.dart';
@@ -17,6 +18,8 @@ Future<void> pumpReview(
   PositionEvaluator? evaluate,
   VoidCallback? onCancel,
   ValueChanged<GameReview>? onReviewed,
+  List<Duration?> clocks = const [],
+  TimeControl? control,
 }) async {
   tester.view.physicalSize = const Size(1170, 2532);
   tester.view.devicePixelRatio = 3;
@@ -29,6 +32,8 @@ Future<void> pumpReview(
         evaluate: evaluate ?? fakeEngine(scholar, overrides: scholarOverrides),
         onCancel: onCancel,
         onReviewed: onReviewed,
+        clocks: clocks,
+        timeControl: control,
       ),
     ),
   );
@@ -202,6 +207,32 @@ void main() {
       expect(find.byKey(const ValueKey('accuracy-white')), findsOneWidget);
       expect(find.byKey(const ValueKey('accuracy-black')), findsOneWidget);
       expect(find.textContaining('Elo stimato'), findsWidgets);
+    });
+
+    testWidgets('il tempo per mossa compare solo con i tempi registrati', (
+      tester,
+    ) async {
+      await pumpReview(tester);
+      await tester.pumpAndSettle();
+      expect(find.text('Tempo per mossa'), findsNothing);
+
+      ReviewCache.clear();
+      await pumpReview(
+        tester,
+        control: const TimeControl(minutes: 5),
+        clocks: [
+          for (var i = 0; i < scholar.length; i++)
+            Duration(seconds: 300 - 10 * (i + 1)),
+        ],
+      );
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text('Tempo per mossa'));
+      await tester.tap(find.text('Tempo per mossa'));
+      await tester.pumpAndSettle();
+      expect(
+        find.bySemanticsLabel(RegExp(r'Tempo per mossa\. ')),
+        findsOneWidget,
+      );
     });
 
     testWidgets('la precisione si divide per fase della partita', (

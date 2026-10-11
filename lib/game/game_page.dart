@@ -1596,6 +1596,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           onReviewed: (review) => _recordReview(review, players),
           onSavePuzzles: widget.onSavePuzzles,
           puzzlePlayers: players,
+          clocks: [for (final m in _game.moves) m.clock],
+          timeControl: _clock?.control,
         ),
       ),
     );
