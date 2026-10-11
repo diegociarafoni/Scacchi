@@ -99,6 +99,7 @@ I golden si rigenerano con `flutter test test/settings --update-goldens` dopo un
 | RF-60 revisione completa con avanzamento e interruzione | ✓ | |
 | RF-61, RF-62 classificazione delle mosse, Brillante e Ottima | ✓ | |
 | RF-63 precisione, conteggi e stima della forza | ✓ | |
+| RF-68 precisione per fase (apertura, mediogioco, finale) nella revisione | ✓ | ✓ |
 | RF-50 barra di valutazione con valore numerico | ✓ | |
 | RF-54 freccia della mossa migliore | ✓ | |
 | RF-64 grafico della valutazione cliccabile con momenti chiave | ✓ | |

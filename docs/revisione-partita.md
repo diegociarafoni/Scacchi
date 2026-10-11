@@ -57,6 +57,10 @@ Un pedone offerto non basta, come su chess.com.
 - Precisione della partita: media tra media aritmetica e media armonica delle mosse del giocatore, così un errore grave isolato pesa più che nella media semplice.
 - Stima della forza (assente se il giocatore non ha mosse): interpolazione lineare indicativa (50% ≈ 400, 70% ≈ 1200, 80% ≈ 1700, 90% ≈ 2300, 95% ≈ 2700). È mostrata come stima, non come rating.
 
+## Precisione per fase
+
+Sotto il riepilogo, il riquadro **Precisione per fase** (RF-68) mostra la precisione di Bianco e Nero in apertura, mediogioco e finale, per capire cosa allenare. `GameReview.accuracyByPhase(side)` raggruppa le mosse del giocatore per la fase della posizione di partenza e applica la stessa media della precisione complessiva; una fase senza mosse mostra «—». La regola di fase (`phaseOf`, `lib/review/game_phase.dart`) è la stessa dei temi dei puzzle personali: apertura fino alla decima mossa, finale con al massimo quattro pezzi oltre a re e pedoni, altrimenti mediogioco. Nel profilo bambino il riquadro non compare.
+
 ## Analisi con il motore
 
 `ComputerPlayer.analyse(fen, depth:, multiPv:)` usa la stessa istanza di Stockfish dell'avversario (su telefono il motore nativo è uno solo) e imposta la forza piena (`Skill Level 20`, `UCI_LimitStrength false`); le opzioni del livello vengono ripristinate alla mossa successiva del computer. La revisione chiede due varianti per posizione a profondità 14 (RNF-05) e salta le posizioni finali.
