@@ -17,6 +17,7 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | [statistiche.md](statistiche.md) | Statistiche delle partite e rating locale stimato |
 | [minigiochi.md](minigiochi.md) | Coordinate a tempo, cattura tutto, visualizzazione alla cieca, conta del materiale |
 | [tornei.md](tornei.md) | Tornei offline contro bot: girone, eliminazione diretta, bacheca |
+| [localizzazione.md](localizzazione.md) | Lingua predefinita e come aggiungere testi e lingue |
 | [sviluppo.md](sviluppo.md) | Ambiente, comandi, test, CI e convenzioni |
 | [rilascio-android.md](rilascio-android.md) | Rilascio dell'APK, installazione sul telefono, chiave di firma |
 | [licenza.md](licenza.md) | Licenza del progetto e componenti di terze parti |
