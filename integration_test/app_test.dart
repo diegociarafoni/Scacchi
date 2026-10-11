@@ -177,8 +177,9 @@ void main() {
     await tester.tap(find.text('Mostra le mosse legali'));
     await tester.tap(find.text('Promuovi sempre a donna'));
     await tester.pumpAndSettle();
-    await tester.scrollUntilVisible(find.text('Merida'), 100);
+    await tester.scrollUntilVisible(find.text('Blu'), 100);
     await tester.tap(find.text('Blu'));
+    await tester.scrollUntilVisible(find.text('Merida'), 100);
     await tester.tap(find.text('Merida'));
     await tester.scrollUntilVisible(find.text('Nessuna'), 100);
     await tester.tap(find.text('Nessuna'));
