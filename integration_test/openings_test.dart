@@ -76,7 +76,13 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Aggiungi'));
     await tester.pumpAndSettle();
-    await tester.pageBack();
+    // pageBack cerca il tooltip inglese "Back"; l'app è in italiano.
+    await tester.tap(
+      find.byTooltip(
+        MaterialLocalizations.of(tester.element(find.byType(Scaffold).last))
+            .backButtonTooltip,
+      ),
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.text('Repertorio con il Nero'));
     await tester.pumpAndSettle();
