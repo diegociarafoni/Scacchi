@@ -10,8 +10,8 @@ Requisito RG-03: una mappa di capitoli e tappe sul modello di Duolingo e del mod
 | Le regole | Lo scacco, via dallo scacco (spostare il re, catturare, mettere in mezzo), l'arrocco, la presa al varco, la promozione, lo stallo |
 | Matti elementari | Matto in una (primi esempi), il matto del corridoio (con la donna e attirando via il difensore), donna e re, le torri a scala in due mosse, matti famosi (Anastasia, arabo, Boden, Damiano), matto in due (anche il matto affogato con sacrificio di donna), guardiano (400 Elo) |
 | Tattiche | Pezzi indifesi, forchetta (cavallo, pedone, forchetta reale, donna), inchiodatura, infilata (torre e alfiere), attacco di scoperta, scacco doppio, elimina il difensore, guardiano (800) |
-| Finali | Matto di donna, matto di torre, guardiano (1000) |
-| Aperture | Il centro, lo sviluppo (con la Partita Italiana), l'arrocco, guardiano (1200) |
+| Finali | Matto di donna, matto di torre, la regola del quadrato, l'opposizione, lo sfondamento, guardiano (1000) |
+| Aperture | Il centro, lo sviluppo (con la Partita Italiana), l'arrocco, il matto del barbiere (darlo e pararlo), guardiano (1200) |
 
 Ogni tappa è breve (2-5 minuti) e si apre con una spiegazione di due o tre frasi, scritta in modo semplice perché valga anche per il profilo bambino; la scacchiera accetta mosse solo dopo «Inizia». I contenuti sono originali (posizioni costruite per il progetto) e in italiano. Durante la stesura le posizioni tattiche sono state analizzate con Stockfish: la mossa richiesta è la migliore e la risposta automatica del Nero è una difesa ragionevole, non un errore che regala il punto. Il test automatico controlla legalità e matti, non la qualità delle risposte: chi aggiunge esercizi tattici ripete questa verifica.
 
