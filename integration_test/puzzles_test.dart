@@ -56,4 +56,19 @@ void main() {
     expect(_message(tester), startsWith('Puzzle concluso.'));
     expect(find.textContaining('Matto in 1'), findsWidgets);
   });
+
+  testWidgets('RF-82 la Serie parte con i puzzle reali e consente un salto', (
+    tester,
+  ) async {
+    await _start(tester);
+    await tester.tap(find.text('Puzzle').last);
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(find.text('Serie'), 200);
+    await tester.tap(find.text('Serie'));
+    await tester.pumpAndSettle();
+    expect(find.text('Punti 0'), findsOneWidget);
+    await tester.tap(find.text('Salta'));
+    await tester.pumpAndSettle();
+    expect(find.text('Punti 0'), findsOneWidget);
+  });
 }
