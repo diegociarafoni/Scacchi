@@ -29,7 +29,7 @@ void main() {
       'feat(Board): scope maiuscolo',
       'feat: titolo\ncorpo senza riga vuota',
       'feat: ${'x' * 100}',
-      'fixup! feat: qualcosa',
+      'Merge board and clock widgets',
     ]) {
       test(
         'rifiuta "$ko"',
@@ -37,11 +37,49 @@ void main() {
       );
     }
 
-    test('ignora le righe di commento di git', () {
+    test('dall\'editor ignora le righe di commento di git', () {
       expect(
-        validateCommitMessage('fix: corregge lo stallo\n# Please enter...'),
+        validateCommitMessage(
+          'fix: corregge lo stallo\n# Please enter...',
+          source: MessageSource.editor,
+        ),
         isEmpty,
       );
+    });
+
+    test('nella cronologia una riga con # fa parte del messaggio', () {
+      expect(validateCommitMessage('#42 feat: x'), isNotEmpty);
+    });
+
+    test('fixup e squash ammessi nei commit, sparisce con lo squash merge', () {
+      for (final source in [MessageSource.editor, MessageSource.history]) {
+        expect(
+          validateCommitMessage('fixup! feat: qualcosa', source: source),
+          isEmpty,
+        );
+        expect(
+          validateCommitMessage('squash! fix: altro', source: source),
+          isEmpty,
+        );
+      }
+    });
+
+    test('il titolo della PR diventa il commit su main: niente eccezioni', () {
+      for (final title in [
+        'fixup! feat: qualcosa',
+        'Merge branch \'main\' into feat/orologio',
+        '#42 feat: x',
+      ]) {
+        expect(
+          validateCommitMessage(title, source: MessageSource.pullRequestTitle),
+          isNotEmpty,
+          reason: title,
+        );
+      }
+    });
+
+    test('fixup di un messaggio non valido resta non valido', () {
+      expect(validateCommitMessage('fixup! aggiunge cose'), isNotEmpty);
     });
   });
 }

@@ -18,3 +18,17 @@ String? validateBranchName(String name) {
   return 'il ramo "$name" non segue il formato tipo/descrizione-in-minuscolo '
       '(tipi: ${angularTypes.join(', ')})';
 }
+
+/// Rami di destinazione letti dall'input del hook pre-push di git
+/// (`<ref locale> <sha locale> <ref remoto> <sha remoto>` per riga),
+/// esclusi tag e cancellazioni.
+List<String> pushedBranches(String prePushInput) {
+  const zero = '0000000000000000000000000000000000000000';
+  return [
+    for (final line in prePushInput.split('\n'))
+      if (line.trim().split(RegExp(r'\s+'))
+          case [_, final localSha, final remoteRef, _]
+          when localSha != zero && remoteRef.startsWith('refs/heads/'))
+        remoteRef.substring('refs/heads/'.length),
+  ];
+}

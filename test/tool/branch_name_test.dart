@@ -31,4 +31,27 @@ void main() {
       test('rifiuta "$ko"', () => expect(validateBranchName(ko), isNotNull));
     }
   });
+
+  group('rami di destinazione del pre-push', () {
+    const zero = '0000000000000000000000000000000000000000';
+    test('controlla il ramo remoto, non quello corrente', () {
+      expect(
+        pushedBranches(
+          'refs/heads/feat/x abc refs/heads/main def\n'
+          'refs/heads/feat/x abc refs/heads/feat/x $zero\n',
+        ),
+        ['main', 'feat/x'],
+      );
+    });
+
+    test('ignora tag e cancellazioni', () {
+      expect(
+        pushedBranches(
+          'refs/tags/v1.0.0 abc refs/tags/v1.0.0 $zero\n'
+          '(delete) $zero refs/heads/feat/vecchio abc\n',
+        ),
+        isEmpty,
+      );
+    });
+  });
 }

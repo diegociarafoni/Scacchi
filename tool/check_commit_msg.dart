@@ -6,6 +6,7 @@ import 'src/commit_message.dart';
 /// `--range <base>..<head>` (CI) oppure `--text "<messaggio>"` (titolo della PR).
 void main(List<String> args) {
   final messages = <String, String>{};
+  var source = MessageSource.history;
   if (args.length == 2 && args[0] == '--range') {
     final log = Process.runSync('git', [
       'log',
@@ -20,8 +21,10 @@ void main(List<String> args) {
     }
   } else if (args.length == 2 && args[0] == '--text') {
     messages['titolo'] = args[1];
+    source = MessageSource.pullRequestTitle;
   } else if (args.length == 1) {
     messages['messaggio'] = File(args[0]).readAsStringSync();
+    source = MessageSource.editor;
   } else {
     _fail(
       'uso: check_commit_msg.dart <file> | --range a..b | --text "messaggio"',
@@ -30,7 +33,7 @@ void main(List<String> args) {
 
   var failed = false;
   messages.forEach((id, message) {
-    final errors = validateCommitMessage(message);
+    final errors = validateCommitMessage(message, source: source);
     if (errors.isEmpty) return;
     failed = true;
     stderr.writeln('✗ $id: ${message.split('\n').first}');

@@ -47,7 +47,9 @@ L'ambito è facoltativo, in minuscolo (`board`, `game`, `l10n`, `deps`). Un `!` 
 
 L'unico `chore` ammesso nei commit è quello generato da release-please (`chore(main): release x.y.z`).
 
-Il controllo è in `tool/check_commit_msg.dart` e gira in locale (hook `commit-msg`) e in CI su ogni commit e sul titolo della PR.
+Nei commit del ramo sono ammessi anche i messaggi generati da git (`Merge branch …`, `Revert "…"`) e i `fixup!`/`squash!` di un messaggio valido, che spariscono con lo squash merge. Il titolo della PR, che diventa il commit su `main`, deve invece seguire sempre la convenzione.
+
+Il controllo è in `tool/check_commit_msg.dart` e gira in locale (hook `commit-msg`) e in CI su ogni commit della PR e sul suo titolo.
 
 ## Hook locali (lefthook)
 
@@ -57,7 +59,7 @@ Il controllo è in `tool/check_commit_msg.dart` e gira in locale (hook `commit-m
 |---|---|
 | `pre-commit` | formattazione dei file in commit, `flutter analyze`, Gitleaks sui file in commit |
 | `commit-msg` | messaggio secondo la convenzione Angular |
-| `pre-push` | nome del ramo, che blocca il push da `main`; test senza golden (i golden dipendono dal sistema operativo e girano in CI su Linux) |
+| `pre-push` | nome dei rami di destinazione, che blocca anche `git push origin main` da qualsiasi ramo; test senza golden (i golden dipendono dal sistema operativo e girano in CI su Linux) |
 
 Installazione, una volta per clone:
 

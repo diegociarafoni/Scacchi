@@ -27,7 +27,11 @@ jobs:
           TITLE: ${{ github.event.pull_request.title }}
         run: dart tool/check_commit_msg.dart --text "$TITLE"
       - name: Messaggi dei commit
+        # Dal punto in cui il ramo si stacca da main: i commit arrivati
+        # unendo main non sono di questa PR.
         env:
-          BASE: ${{ github.event.pull_request.base.sha }}
+          BASE_REF: ${{ github.base_ref }}
           HEAD: ${{ github.event.pull_request.head.sha }}
-        run: dart tool/check_commit_msg.dart --range "$BASE..$HEAD"
+        run: |
+          base="$(git merge-base "origin/$BASE_REF" "$HEAD")"
+          dart tool/check_commit_msg.dart --range "$base..$HEAD"

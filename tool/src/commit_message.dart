@@ -20,14 +20,34 @@ final _header = RegExp(
 final _scope = RegExp(r'^[a-z0-9][a-z0-9._/-]*$');
 
 // Messaggi generati da git o dagli strumenti di rilascio.
-final _gitGenerated = RegExp(r'^(Merge |Revert ")');
+final _gitMerge = RegExp(
+  r'^Merge (branch|remote-tracking branch|pull request|commit) ',
+);
+final _gitRevert = RegExp(r'^Revert "');
 final _releaseCommit = RegExp(r'^chore\(main\): release \S+$');
+// Commit da unire con rebase --autosquash: spariscono con lo squash merge.
+final _autosquash = RegExp(r'^(fixup|squash|amend)! ');
+
+/// Da dove arriva il messaggio da controllare.
+enum MessageSource {
+  /// File del hook commit-msg: le righe che iniziano con # sono commenti di git.
+  editor,
+
+  /// Commit già nella cronologia del ramo.
+  history,
+
+  /// Titolo della PR, che con lo squash merge diventa il commit su `main`.
+  pullRequestTitle,
+}
 
 /// Errori del messaggio di commit secondo la convenzione Angular; vuoto se valido.
-List<String> validateCommitMessage(String message) {
+List<String> validateCommitMessage(
+  String message, {
+  MessageSource source = MessageSource.history,
+}) {
   final lines = message
       .split('\n')
-      .where((l) => !l.startsWith('#'))
+      .where((l) => source != MessageSource.editor || !l.startsWith('#'))
       .map((l) => l.trimRight())
       .toList();
   while (lines.isNotEmpty && lines.last.isEmpty) {
@@ -35,9 +55,16 @@ List<String> validateCommitMessage(String message) {
   }
   if (lines.isEmpty) return ['messaggio vuoto'];
 
-  final header = lines.first;
-  if (_gitGenerated.hasMatch(header) || _releaseCommit.hasMatch(header)) {
+  var header = lines.first;
+  if (_releaseCommit.hasMatch(header) || _gitRevert.hasMatch(header)) {
     return const [];
+  }
+  if (source != MessageSource.pullRequestTitle) {
+    if (_gitMerge.hasMatch(header)) return const [];
+    while (_autosquash.hasMatch(header)) {
+      header = header.replaceFirst(_autosquash, '');
+    }
+    lines[0] = header;
   }
 
   final errors = <String>[];
