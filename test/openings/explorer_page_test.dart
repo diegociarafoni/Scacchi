@@ -32,16 +32,22 @@ void main() {
     expect(opening(tester), 'Posizione iniziale');
     await tester.tap(find.text('e4'));
     await tester.pumpAndSettle();
-    expect(find.text('Sicilian Defense'), findsOneWidget);
+    expect(find.text('Difesa siciliana'), findsOneWidget);
     await tester.tap(find.text('e5'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Nf3'));
     await tester.pumpAndSettle();
-    expect(opening(tester), 'C40 King\'s Knight Opening');
+    expect(opening(tester), 'C40 Apertura del cavallo di re');
     expect(find.text('1. e4 e5 2. Nf3'), findsOneWidget);
     await tester.tap(find.text('Indietro'));
     await tester.pumpAndSettle();
     expect(find.text('1. e4 e5'), findsOneWidget);
+  });
+
+  testWidgets('la schermata è in italiano', (tester) async {
+    await phone(tester, ExplorerPage(book: Future.value(book)));
+    expect(find.text('Esplora aperture'), findsOneWidget);
+    expect(find.text('Explorer'), findsNothing);
   });
 
   testWidgets('RF-92 le mosse iniziali illegali vengono scartate', (
@@ -57,7 +63,7 @@ void main() {
     expect(find.text('1. e4'), findsOneWidget);
     await tester.tap(find.text('c5'));
     await tester.pumpAndSettle();
-    expect(opening(tester), 'B20 Sicilian Defense');
+    expect(opening(tester), 'B20 Difesa siciliana');
   });
 
   testWidgets('RF-92 un errore di caricamento non lascia la rotella', (
@@ -97,6 +103,10 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    expect(find.text('B20 Sicilian Defense'), findsOneWidget);
+    expect(find.text('B20 Difesa siciliana'), findsOneWidget);
+    expect(
+      tester.widget<Semantics>(find.byType(Semantics).last).properties.label,
+      'Apertura: Difesa siciliana',
+    );
   });
 }

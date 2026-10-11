@@ -29,10 +29,10 @@ class OpeningName extends StatelessWidget {
         final opening = snapshot.data?.classifyPositions(positions);
         if (opening == null) return Text(fallback);
         return Semantics(
-          label: 'Apertura: ${opening.name}',
+          label: 'Apertura: ${opening.localName}',
           excludeSemantics: true,
           child: Text(
-            '${opening.eco} ${opening.name}',
+            '${opening.eco} ${opening.localName}',
             key: const Key('opening-name'),
             overflow: TextOverflow.ellipsis,
           ),

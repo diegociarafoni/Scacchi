@@ -49,7 +49,7 @@ void main() {
     await _start(tester);
     await tester.tap(find.text('Aperture').last);
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Explorer'));
+    await tester.tap(find.text('Esplora aperture'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('e4'));
     await tester.pumpAndSettle();
@@ -66,7 +66,7 @@ void main() {
     await _start(tester);
     await tester.tap(find.text('Aperture').last);
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Explorer'));
+    await tester.tap(find.text('Esplora aperture'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('e4'));
     await tester.pumpAndSettle();

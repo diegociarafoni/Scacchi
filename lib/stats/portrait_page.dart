@@ -10,6 +10,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../archive/game_archive.dart';
+import '../openings/opening_names_it.dart';
 import 'portrait.dart';
 
 typedef ShareImage = Future<void> Function(Uint8List png, String fileName);
@@ -169,7 +170,9 @@ class _Card extends StatelessWidget {
       if (p.openings.isNotEmpty)
         (
           'Aperture preferite',
-          p.openings.map((o) => '${o.name} (${o.games})').join(', '),
+          p.openings
+              .map((o) => '${openingNameIt(o.name)} (${o.games})')
+              .join(', '),
         ),
       if (p.accuracy case final a?) ('Precisione media', '${a.round()}%'),
       if (p.matingPiece case final r?)

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 import '../archive/game_archive.dart';
 import '../archive/saved_game.dart';
+import '../openings/opening_names_it.dart';
 import 'local_rating.dart';
 import 'stats.dart';
 
@@ -97,7 +98,7 @@ class _StatsPageState extends State<StatsPage> {
                     for (final o in stats.openings.take(5))
                       ListTile(
                         contentPadding: EdgeInsets.zero,
-                        title: Text(o.name),
+                        title: Text(openingNameIt(o.name)),
                         trailing: Text(
                           o.games == 1 ? '1 partita' : '${o.games} partite',
                         ),
