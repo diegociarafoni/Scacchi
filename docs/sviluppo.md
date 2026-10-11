@@ -58,7 +58,7 @@ I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisic
 | RF-01 mossa con due tocchi e trascinamento, mosse illegali ignorate | ✓ | ✓ |
 | RF-04 promozione | ✓ | |
 | RF-06 capovolgimento della scacchiera | | ✓ |
-| RF-10 lista delle mosse in SAN | ✓ | ✓ |
+| RF-10 lista delle mosse in SAN, navigazione tra le posizioni | ✓ | ✓ |
 | RF-11 pezzi catturati e vantaggio di materiale | ✓ | ✓ |
 | RF-02, RF-04, RF-07, RF-12, RP-01, RP-04 impostazioni salvate | ✓ | ✓ |
 | RF-40, RF-41 cadenze, incremento, avvisi, tempo scaduto | ✓ | ✓ |

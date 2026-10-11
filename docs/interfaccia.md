@@ -36,7 +36,7 @@ Per ciascun giocatore una riga mostra le icone dei pezzi avversari catturati, da
 
 | Comando | Effetto |
 |---|---|
-| Nuova | Apre la scelta della cadenza e inizia una nuova partita dalla posizione iniziale |
+| Nuova | Apre la scelta della variante (Classica, Chess960, Re della collina, Tre scacchi) e della cadenza; toccando la cadenza inizia la nuova partita |
 | Annulla | Annulla l'ultima mossa; disattivato se non ci sono mosse |
 | Gira | Capovolge la scacchiera |
 | Patta | Chiede all'avversario se accetta la patta; disattivato a partita conclusa |
@@ -52,6 +52,16 @@ Per ciascun giocatore una riga mostra le icone dei pezzi avversari catturati, da
 - Sotto i 20 secondi mostra anche i decimi.
 - Si ferma mentre è aperto un dialogo (abbandono, patta, nuova partita) e quando l'app va in secondo piano, e riparte al ritorno.
 - Una mossa fatta a tempo già scaduto non viene accettata.
+
+## Rivedere le mosse
+
+Toccando una mossa nella striscia (o nella lista, in orizzontale) la scacchiera mostra la posizione dopo quella mossa, con la mossa evidenziata. La riga di stato diventa una barra con mossa precedente, mossa successiva, il testo "Posizione dopo 12... Nf6" (o "Posizione iniziale") e il pulsante "Torna alla partita".
+
+- Durante la revisione la scacchiera non accetta mosse, le righe del materiale seguono la posizione mostrata e l'orologio continua a scorrere.
+- Con una mossa in attesa di conferma la navigazione è disattivata finché non viene confermata o scartata.
+- Con una tastiera: frecce sinistra e destra per scorrere, Home per la posizione iniziale, Fine per tornare alla partita.
+- Andare oltre l'ultima mossa, una nuova partita o "Annulla" riportano alla posizione corrente; durante la revisione "Annulla" non toglie mosse.
+- I numeri delle mosse partono dalla posizione iniziale della partita, anche quando è importata da un FEN.
 
 ## Impostazioni
 

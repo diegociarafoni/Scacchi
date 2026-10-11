@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../openings/opening_name.dart';
 import '../settings/settings.dart';
@@ -11,13 +12,22 @@ import '../settings/settings_page.dart';
 import 'chess_game.dart';
 import 'clock.dart';
 import 'material.dart';
+import 'move_label.dart';
 import 'sounds.dart';
+import 'variant.dart';
 
 /// Partita tra due persone sullo stesso dispositivo.
 class GamePage extends StatefulWidget {
-  const GamePage({super.key, required this.settings});
+  const GamePage({
+    super.key,
+    required this.settings,
+    this.chess960Id = randomChess960Id,
+  });
 
   final SettingsController settings;
+
+  /// Sceglie la posizione Chess960; sostituibile nei test.
+  final int Function() chess960Id;
 
   @override
   State<GamePage> createState() => _GamePageState();
@@ -37,6 +47,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   final SoundPlayer _sounds = SoundPlayer();
   final LowTimeAlarm _lowTime = LowTimeAlarm();
   Move? _pendingMove;
+
+  /// Semimossa visualizzata (-1 = posizione iniziale), null = partita in corso.
+  int? _viewPly;
 
   AppSettings get _settings => widget.settings.value;
 
@@ -108,8 +121,19 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     );
   }
 
+  /// Posizione da mostrare senza poter muovere.
+  GameData _staticData(Position pos, Move? lastMove) => GameData(
+    fen: pos.fen,
+    lastMove: lastMove,
+    playerSide: PlayerSide.none,
+    sideToMove: pos.turn,
+    kingSquareInCheck: pos.isCheck ? pos.board.kingOf(pos.turn) : null,
+    validMoves: const {},
+  );
+
   void _refresh({bool animate = true}) {
     _pendingMove = null;
+    _viewPly = null;
     _syncClock();
     _board.updatePosition(_gameData(), animate: animate, resetPremove: true);
     setState(() {
@@ -125,16 +149,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     if (!_game.position.isLegal(move)) return;
     final preview = _game.position.play(move);
     _board.updatePosition(
-      GameData(
-        fen: preview.fen,
-        lastMove: move,
-        playerSide: PlayerSide.none,
-        sideToMove: preview.turn,
-        kingSquareInCheck: preview.isCheck
-            ? preview.board.kingOf(preview.turn)
-            : null,
-        validMoves: const {},
-      ),
+      _staticData(preview, move),
       animate: viaDragAndDrop != true,
     );
     setState(() => _pendingMove = move);
@@ -175,6 +190,47 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       }
     }
     _refresh(animate: animate);
+  }
+
+  /// Mostra la posizione dopo la semimossa [ply] (-1 = iniziale); `null` o
+  /// oltre l'ultima mossa torna alla partita in corso.
+  void _showPly(int? ply) {
+    if (_pendingMove != null || _game.moves.isEmpty) return;
+    if (ply == null || ply >= _game.moves.length) {
+      if (_viewPly != null) {
+        _clearBoardInteraction();
+        _refresh(animate: false);
+      }
+      return;
+    }
+    final target = ply < -1 ? -1 : ply;
+    _board.updatePosition(
+      target == -1
+          ? _staticData(_game.initial, null)
+          : _staticData(_game.moves[target].after, _game.moves[target].move),
+      animate: false,
+    );
+    setState(() => _viewPly = target);
+  }
+
+  KeyEventResult _onKey(FocusNode _, KeyEvent event) {
+    if (event is! KeyDownEvent && event is! KeyRepeatEvent) {
+      return KeyEventResult.ignored;
+    }
+    final current = _viewPly ?? _game.moves.length - 1;
+    final key = event.logicalKey;
+    if (key == LogicalKeyboardKey.arrowLeft) {
+      _showPly(current - 1);
+    } else if (key == LogicalKeyboardKey.arrowRight) {
+      _showPly(current + 1);
+    } else if (key == LogicalKeyboardKey.home) {
+      _showPly(-1);
+    } else if (key == LogicalKeyboardKey.end) {
+      _showPly(null);
+    } else {
+      return KeyEventResult.ignored;
+    }
+    return KeyEventResult.handled;
   }
 
   /// Ferma l'orologio a fine partita e aggiorna il timer di visualizzazione.
@@ -230,14 +286,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   /// Chiude selezione e selettore di promozione rimasti aperti sulla scacchiera.
   void _clearBoardInteraction() {
-    final pos = _game.position;
     _board.updatePosition(
-      GameData(
-        fen: pos.fen,
-        playerSide: PlayerSide.none,
-        sideToMove: pos.turn,
-        validMoves: const {},
-      ),
+      _staticData(_game.position, _game.lastMove),
       animate: false,
     );
   }
@@ -246,11 +296,19 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final choice = await _withClockPaused(
       () => showModalBottomSheet<_TimeChoice>(
         context: context,
-        builder: (context) => const _TimeControlSheet(),
+        isScrollControlled: true,
+        builder: (context) => _TimeControlSheet(variant: _game.variant),
       ),
     );
     if (!mounted || choice == null) return;
-    _game = ChessGame();
+    final variant = choice.variant;
+    _game = ChessGame(
+      initial: initialPosition(
+        variant,
+        chess960Id: variant == Variant.chess960 ? widget.chess960Id() : null,
+      ),
+      variant: variant,
+    );
     _clock = choice.control == null ? null : ChessClock(choice.control!);
     _clockHistory.clear();
     _lowTime.reset();
@@ -258,7 +316,31 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _refresh(animate: false);
   }
 
+  String get _title => switch (_game.variant) {
+    Variant.standard => 'Scacchi',
+    Variant.chess960 => switch (chess960IdOf(_game.initial)) {
+      null => 'Chess960',
+      final id => 'Chess960 n. $id',
+    },
+    Variant.kingOfTheHill => Variant.kingOfTheHill.label,
+    // Non "1-0": si confonderebbe con un risultato.
+    Variant.threeCheck =>
+      'Scacchi dati: Bianco ${_checksGiven(Side.white)}, '
+          'Nero ${_checksGiven(Side.black)}',
+  };
+
+  int _checksGiven(Side side) {
+    final pos = _game.position;
+    if (pos is! ThreeCheck) return 0;
+    final (white, black) = pos.remainingChecks;
+    return 3 - (side == Side.white ? white : black);
+  }
+
   void _undo() {
+    if (_viewPly != null) {
+      _showPly(null);
+      return;
+    }
     if (_pendingMove != null) {
       _discardPending();
       return;
@@ -357,17 +439,25 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     final actions = _GameActions(
       onNewGame: _newGame,
-      onUndo: _game.canUndo || _pendingMove != null ? _undo : null,
+      onUndo: _game.canUndo || _pendingMove != null || _viewPly != null
+          ? _undo
+          : null,
       onFlip: () => setState(() => _orientation = _orientation.opposite),
       onDraw: _game.isOver || _pendingMove != null ? null : _offerDraw,
       onResign: _game.isOver || _pendingMove != null ? null : _resign,
     );
     return Scaffold(
       appBar: AppBar(
-        title: OpeningName(
-          positions: [_game.initial, for (final m in _game.moves) m.after],
-          fallback: 'Scacchi',
-        ),
+        // Il libro delle aperture vale solo per gli scacchi classici.
+        title: _game.variant == Variant.standard
+            ? OpeningName(
+                positions: [
+                  _game.initial,
+                  for (final m in _game.moves) m.after,
+                ],
+                fallback: 'Scacchi',
+              )
+            : Text(_title),
         actions: [
           IconButton(
             tooltip: 'Impostazioni',
@@ -380,88 +470,117 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           ),
         ],
       ),
-      body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final landscape =
-                constraints.maxWidth > constraints.maxHeight * 1.2;
-            final boardSize = landscape
-                ? math.min(constraints.maxHeight, constraints.maxWidth * 0.6)
-                : math.max(
-                    0.0,
-                    math.min(
-                      constraints.maxWidth,
-                      constraints.maxHeight - _portraitChromeHeight,
+      body: Focus(
+        autofocus: true,
+        onKeyEvent: _onKey,
+        child: SafeArea(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final landscape =
+                  constraints.maxWidth > constraints.maxHeight * 1.2;
+              final boardSize = landscape
+                  ? math.min(constraints.maxHeight, constraints.maxWidth * 0.6)
+                  : math.max(
+                      0.0,
+                      math.min(
+                        constraints.maxWidth,
+                        constraints.maxHeight - _portraitChromeHeight,
+                      ),
+                    );
+              final boardSettings = _settings.board;
+              final board = Chessboard(
+                size: boardSize,
+                controller: _board,
+                orientation: _orientation,
+                onMove: _onMove,
+                settings: boardSettings,
+              );
+              final viewPly = _viewPly;
+              final Widget status = viewPly != null
+                  ? _ViewBar(
+                      text: viewPly == -1
+                          ? 'Posizione iniziale'
+                          : 'Posizione dopo ${moveLabel(_game, viewPly, number: true)}',
+                      onPrevious: viewPly > -1
+                          ? () => _showPly(viewPly - 1)
+                          : null,
+                      onNext: () => _showPly(viewPly + 1),
+                      onBack: () => _showPly(null),
+                    )
+                  : _pendingMove == null
+                  ? _StatusLine(game: _game)
+                  : _ConfirmBar(
+                      onConfirm: _confirmPending,
+                      onDiscard: _discardPending,
+                    );
+              final moves = _MoveList(
+                game: _game,
+                horizontal: !landscape,
+                selected: viewPly,
+                onSelect: _showPly,
+              );
+              final balance = MaterialBalance.of(
+                viewPly == null
+                    ? _game
+                    : ChessGame.replay(
+                            _game.initial,
+                            _game.moves.take(viewPly + 1).map((m) => m.move),
+                          ) ??
+                          _game,
+              );
+              final topMaterial = _MaterialRow(
+                balance: balance,
+                side: _orientation.opposite,
+                pieceAssets: boardSettings.pieceAssets,
+                clock: _clockView(_orientation.opposite),
+              );
+              final bottomMaterial = _MaterialRow(
+                balance: balance,
+                side: _orientation,
+                pieceAssets: boardSettings.pieceAssets,
+                clock: _clockView(_orientation),
+              );
+              if (landscape) {
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    board,
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          topMaterial,
+                          status,
+                          Expanded(child: moves),
+                          bottomMaterial,
+                          actions,
+                        ],
+                      ),
                     ),
-                  );
-            final boardSettings = _settings.board;
-            final board = Chessboard(
-              size: boardSize,
-              controller: _board,
-              orientation: _orientation,
-              onMove: _onMove,
-              settings: boardSettings,
-            );
-            final Widget status = _pendingMove == null
-                ? _StatusLine(game: _game)
-                : _ConfirmBar(
-                    onConfirm: _confirmPending,
-                    onDiscard: _discardPending,
-                  );
-            final moves = _MoveList(game: _game, horizontal: !landscape);
-            final balance = MaterialBalance.of(_game);
-            final topMaterial = _MaterialRow(
-              balance: balance,
-              side: _orientation.opposite,
-              pieceAssets: boardSettings.pieceAssets,
-              clock: _clockView(_orientation.opposite),
-            );
-            final bottomMaterial = _MaterialRow(
-              balance: balance,
-              side: _orientation,
-              pieceAssets: boardSettings.pieceAssets,
-              clock: _clockView(_orientation),
-            );
-            if (landscape) {
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                  ],
+                );
+              }
+              return Column(
                 children: [
-                  board,
                   Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        topMaterial,
-                        status,
-                        Expanded(child: moves),
-                        bottomMaterial,
-                        actions,
-                      ],
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(height: _moveStripHeight, child: moves),
+                          status,
+                          topMaterial,
+                          board,
+                          bottomMaterial,
+                        ],
+                      ),
                     ),
                   ),
+                  actions,
                 ],
               );
-            }
-            return Column(
-              children: [
-                Expanded(
-                  child: Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SizedBox(height: _moveStripHeight, child: moves),
-                        status,
-                        topMaterial,
-                        board,
-                        bottomMaterial,
-                      ],
-                    ),
-                  ),
-                ),
-                actions,
-              ],
-            );
-          },
+            },
+          ),
         ),
       ),
     );
@@ -493,6 +612,14 @@ String statusText(ChessGame game) {
     GameEndReason.threefoldRepetition => 'Triplice ripetizione. Patta.',
     GameEndReason.fiftyMoveRule => 'Regola delle 50 mosse. Patta.',
     GameEndReason.agreement => 'Patta concordata.',
+    GameEndReason.variantEnd => switch (game.variant) {
+      Variant.kingOfTheHill =>
+        'Re al centro. Vince il ${_sideName(game.outcome!.winner!)}.',
+      Variant.threeCheck =>
+        'Terzo scacco. Vince il ${_sideName(game.outcome!.winner!)}.',
+      // Senza una vittoria propria della variante non si arriva qui.
+      Variant.standard || Variant.chess960 => 'Partita finita.',
+    },
     GameEndReason.timeout =>
       game.outcome!.winner == null
           ? 'Tempo scaduto. Patta per materiale insufficiente.'
@@ -524,35 +651,66 @@ class _StatusLine extends StatelessWidget {
 }
 
 class _MoveList extends StatelessWidget {
-  const _MoveList({required this.game, required this.horizontal});
+  const _MoveList({
+    required this.game,
+    required this.horizontal,
+    required this.selected,
+    required this.onSelect,
+  });
 
   final ChessGame game;
   final bool horizontal;
+  final int? selected;
+  final ValueChanged<int> onSelect;
 
   @override
   Widget build(BuildContext context) {
     final moves = game.moves;
-    final items = [
-      for (var i = 0; i < moves.length; i++)
-        i.isEven ? '${i ~/ 2 + 1}. ${moves[i].san}' : moves[i].san,
-    ];
-    final style = Theme.of(context).textTheme.bodyLarge;
+    final theme = Theme.of(context);
+    Widget item(int i) {
+      final isSelected = i == selected;
+      final chip = InkWell(
+        key: ValueKey('move-$i'),
+        borderRadius: BorderRadius.circular(4),
+        onTap: () => onSelect(i),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+          decoration: isSelected
+              ? BoxDecoration(
+                  color: theme.colorScheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(4),
+                )
+              : null,
+          child: Text(moveLabel(game, i), style: theme.textTheme.bodyLarge),
+        ),
+      );
+      return isSelected ? _KeepVisible(child: chip) : chip;
+    }
+
     if (horizontal) {
-      return ListView.separated(
+      return SingleChildScrollView(
         scrollDirection: Axis.horizontal,
+        // Ancorata a destra: l'ultima mossa resta visibile.
         reverse: true,
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        itemCount: items.length,
-        separatorBuilder: (_, _) => const SizedBox(width: 12),
-        // Ordine inverso: l'ultima mossa resta visibile.
-        itemBuilder: (context, i) =>
-            Center(child: Text(items[items.length - 1 - i], style: style)),
+        child: Row(
+          children: [
+            for (var i = 0; i < moves.length; i++) ...[
+              if (i > 0) const SizedBox(width: 8),
+              item(i),
+            ],
+          ],
+        ),
       );
     }
     return SingleChildScrollView(
       reverse: true,
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Text(items.join('  '), style: style),
+      child: Wrap(
+        spacing: 8,
+        runSpacing: 4,
+        children: [for (var i = 0; i < moves.length; i++) item(i)],
+      ),
     );
   }
 }
@@ -750,13 +908,24 @@ class _ClockView extends StatelessWidget {
 }
 
 class _TimeChoice {
-  const _TimeChoice(this.control);
+  const _TimeChoice(this.control, this.variant);
 
   final TimeControl? control;
+  final Variant variant;
 }
 
-class _TimeControlSheet extends StatelessWidget {
-  const _TimeControlSheet();
+/// Scelta di variante e cadenza: toccare una cadenza avvia la partita.
+class _TimeControlSheet extends StatefulWidget {
+  const _TimeControlSheet({required this.variant});
+
+  final Variant variant;
+
+  @override
+  State<_TimeControlSheet> createState() => _TimeControlSheetState();
+}
+
+class _TimeControlSheetState extends State<_TimeControlSheet> {
+  late Variant _variant = widget.variant;
 
   @override
   Widget build(BuildContext context) {
@@ -766,7 +935,7 @@ class _TimeControlSheet extends StatelessWidget {
     }
     Widget chip(String label, TimeControl? control) => ActionChip(
       label: Text(label),
-      onPressed: () => Navigator.pop(context, _TimeChoice(control)),
+      onPressed: () => Navigator.pop(context, _TimeChoice(control, _variant)),
     );
     return SafeArea(
       child: ListView(
@@ -775,6 +944,27 @@ class _TimeControlSheet extends StatelessWidget {
         children: [
           Text('Nuova partita', style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 12),
+          Text('Variante', style: Theme.of(context).textTheme.titleSmall),
+          const SizedBox(height: 4),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              for (final v in Variant.values)
+                ChoiceChip(
+                  label: Text(v.label),
+                  selected: v == _variant,
+                  onSelected: (_) => setState(() => _variant = v),
+                ),
+            ],
+          ),
+          if (_variant.description.isNotEmpty) ...[
+            const SizedBox(height: 4),
+            Text(_variant.description),
+          ],
+          const SizedBox(height: 12),
+          Text('Cadenza', style: Theme.of(context).textTheme.titleSmall),
+          const SizedBox(height: 4),
           chip('Senza tempo', null),
           for (final entry in groups.entries) ...[
             const SizedBox(height: 12),
@@ -826,4 +1016,82 @@ class _ConfirmBar extends StatelessWidget {
       ),
     );
   }
+}
+
+class _ViewBar extends StatelessWidget {
+  const _ViewBar({
+    required this.text,
+    required this.onPrevious,
+    required this.onNext,
+    required this.onBack,
+  });
+
+  final String text;
+  final VoidCallback? onPrevious;
+  final VoidCallback onNext;
+  final VoidCallback onBack;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: _statusHeight,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Row(
+          children: [
+            IconButton(
+              tooltip: 'Mossa precedente',
+              onPressed: onPrevious,
+              icon: const Icon(Icons.chevron_left),
+            ),
+            Expanded(
+              child: Text(
+                text,
+                style: Theme.of(context).textTheme.titleSmall,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            IconButton(
+              tooltip: 'Mossa successiva',
+              onPressed: onNext,
+              icon: const Icon(Icons.chevron_right),
+            ),
+            TextButton(
+              onPressed: onBack,
+              child: const Text('Torna alla partita'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Porta il figlio nella parte visibile della lista che lo contiene.
+class _KeepVisible extends StatefulWidget {
+  const _KeepVisible({required this.child});
+
+  final Widget child;
+
+  @override
+  State<_KeepVisible> createState() => _KeepVisibleState();
+}
+
+class _KeepVisibleState extends State<_KeepVisible> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        Scrollable.ensureVisible(
+          context,
+          alignment: 0.5,
+          duration: const Duration(milliseconds: 150),
+        );
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
 }
