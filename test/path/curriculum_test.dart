@@ -52,6 +52,28 @@ void main() {
     ]);
   });
 
+  test('RG-03 finali e aperture con le idee di base', () {
+    List<String> ids(String chapter) => [
+      for (final s in curriculum.firstWhere((c) => c.id == chapter).stages)
+        s.id,
+    ];
+    expect(ids('endgames'), [
+      'endgames.queen',
+      'endgames.rook',
+      'endgames.square',
+      'endgames.opposition',
+      'endgames.breakthrough',
+      'endgames.guardian',
+    ]);
+    expect(ids('openings'), [
+      'openings.center',
+      'openings.develop',
+      'openings.castle',
+      'openings.scholar',
+      'openings.guardian',
+    ]);
+  });
+
   test('identificativi unici e tappe non vuote', () {
     final ids = [
       for (final c in curriculum)

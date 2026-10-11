@@ -771,6 +771,76 @@ const List<Chapter> curriculum = [
           ),
         ],
       ),
+      Stage(
+        id: 'endgames.square',
+        title: 'La regola del quadrato',
+        intro:
+            'Un pedone corre a promuovere: il re lo ferma solo se riesce a '
+            'entrare nel suo quadrato, cioè il quadrato che va dal pedone fino '
+            'all\'ultima traversa.',
+        exercises: [
+          LineExercise(
+            instructions:
+                'Il pedone nero corre verso la prima traversa. Entra nel '
+                'suo quadrato con il re per fermarlo.',
+            fen: '7k/8/8/8/1p3K2/8/8/8 w - - 0 1',
+            steps: ['f4e4|f4e3'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Il re nero è fuori dal quadrato del tuo pedone: spingilo '
+                'e non lo prende più.',
+            fen: '8/8/8/P3k3/8/8/8/7K w - - 0 1',
+            steps: ['a5a6'],
+            goal: LineGoal.line,
+          ),
+        ],
+      ),
+      Stage(
+        id: 'endgames.opposition',
+        title: 'L\'opposizione',
+        intro:
+            'Quando i due re sono uno di fronte all\'altro con una casa in '
+            'mezzo, chi deve muovere è costretto a cedere il passo. Avere '
+            'l\'opposizione aiuta il tuo re a scortare il pedone.',
+        exercises: [
+          LineExercise(
+            instructions:
+                'Il tuo re è davanti al pedone. Spostati di lato restando '
+                'vicino: il pedone avanza protetto e va a promozione.',
+            fen: '4k3/8/4K3/4P3/8/8/8/8 w - - 0 1',
+            steps: ['e6d6|e6f6'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'I re sono uno di fronte all\'altro. Trova una mossa che '
+                'vince: sposta il re di lato o usa la mossa di riserva del '
+                'pedone.',
+            fen: '8/8/3k4/8/3K4/8/3P4/8 w - - 0 1',
+            steps: ['d2d3|d4e4|d4c4'],
+            goal: LineGoal.line,
+          ),
+        ],
+      ),
+      Stage(
+        id: 'endgames.breakthrough',
+        title: 'Lo sfondamento',
+        intro:
+            'A volte tre pedoni contro tre possono creare un pedone passato '
+            'sacrificandosi: uno avanza, gli altri aprono la strada.',
+        exercises: [
+          LineExercise(
+            instructions:
+                'Sfonda con i pedoni: sacrifica il pedone centrale, poi '
+                'un altro, finché uno arriva a promozione.',
+            fen: '6k1/ppp5/8/PPP5/8/8/8/6K1 w - - 0 1',
+            steps: ['b5b6', 'a7b6', 'c5c6', 'b7c6', 'a5a6'],
+            goal: LineGoal.line,
+          ),
+        ],
+      ),
       Stage(id: 'endgames.guardian', title: 'Il guardiano', guardianElo: 1000),
     ],
   ),
@@ -821,6 +891,35 @@ const List<Chapter> curriculum = [
             instructions: 'Metti al sicuro il re con l\'arrocco corto.',
             fen: 'r1bqk1nr/pppp1ppp/2n5/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4',
             steps: ['e1g1'],
+            goal: LineGoal.line,
+          ),
+        ],
+      ),
+      Stage(
+        id: 'openings.scholar',
+        title: 'Il matto del barbiere',
+        intro:
+            'Il matto del barbiere colpisce la casa f7, difesa solo dal re, '
+            'con donna e alfiere. Saperlo dare è utile, ma è ancora più utile '
+            'saperlo parare.',
+        exercises: [
+          LineExercise(
+            instructions: '$_mateIn1 Il Nero ha dimenticato di difendere f7.',
+            fen:
+                'r1bqkb1r/pppp1ppp/2n2n2/4p2Q/2B1P3/8/PPPP1PPP/'
+                'RNB1K1NR w KQkq - 4 4',
+            steps: ['h5f7'],
+            goal: LineGoal.mate,
+          ),
+          LineExercise(
+            instructions:
+                'Ora è il Nero che minaccia matto in f2 con donna e '
+                'alfiere. Difendi f2 con la donna, oppure chiudi la '
+                'diagonale con un pedone.',
+            fen:
+                'rnb1k1nr/pppp1ppp/8/2b1p3/2B1P2q/2N5/PPPP1PPP/'
+                'R1BQK1NR w KQkq - 4 4',
+            steps: ['d1e2|d1f3|g2g3'],
             goal: LineGoal.line,
           ),
         ],
