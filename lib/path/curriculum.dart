@@ -210,8 +210,8 @@ const List<Chapter> curriculum = [
           ),
           StarsExercise(
             instructions:
-                'Sfida: le stelle sono vicine, ma il cavallo non '
-                'ci arriva con un salto solo.',
+                'Sfida: dopo ogni stella il cavallo deve tornare '
+                'indietro. Trova la strada più corta.',
             role: Role.knight,
             start: Square.d4,
             stars: [Square.c6, Square.e6, Square.f3],
@@ -1128,8 +1128,9 @@ const List<Chapter> curriculum = [
           ),
           LineExercise(
             instructions:
-                '$_mateIn2 Prima una mossa d\'attesa con la torre: il '
-                're nero dovrà mettersi di fronte al tuo.',
+                '$_mateIn2 Prima porta la torre in g1: toglie al re '
+                'nero la colonna g e lo costringe a mettersi di fronte '
+                'al tuo.',
             fen: '5k2/8/4K3/8/8/8/8/4R3 w - - 0 1',
             steps: ['e1g1', 'f8e8', 'g1g8'],
             goal: LineGoal.mate,
@@ -1315,7 +1316,7 @@ const List<Chapter> curriculum = [
           LineExercise(
             instructions: 'Porta in gioco un cavallo o un alfiere.',
             fen: 'rnbqkbnr/ppp1pppp/8/3p4/3P4/8/PPP1PPPP/RNBQKBNR w KQkq - 0 2',
-            steps: ['g1f3|b1c3|c1f4|c1g5'],
+            steps: ['g1f3|b1c3|b1d2|c1f4|c1g5|c1e3|c1d2'],
             goal: LineGoal.line,
           ),
           LineExercise(
@@ -1337,7 +1338,7 @@ const List<Chapter> curriculum = [
           LineExercise(
             instructions:
                 'La donna nera è uscita presto. Sviluppa un pezzo che '
-                'la attacca.',
+                'la attacca senza farti catturare.',
             fen: 'rnb1kbnr/ppp1pppp/8/3q4/8/8/PPPP1PPP/RNBQKBNR w KQkq - 0 3',
             steps: ['b1c3'],
             goal: LineGoal.line,
@@ -1366,7 +1367,7 @@ const List<Chapter> curriculum = [
                 'Per arroccare corto le case tra re e torre devono '
                 'essere vuote. Sposta l\'alfiere, poi arrocca.',
             fen: 'rnbqkbnr/ppp2ppp/3p4/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 0 3',
-            steps: ['f1c4|f1e2|f1b5|f1d3', 'c7c6', 'e1g1'],
+            steps: ['f1c4|f1e2|f1d3', 'c7c6', 'e1g1'],
             goal: LineGoal.line,
           ),
           LineExercise(
@@ -1374,7 +1375,7 @@ const List<Chapter> curriculum = [
                 'Sfida: cavallo in f3, poi fuori l\'alfiere, poi '
                 'arrocca corto.',
             fen: 'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2',
-            steps: ['g1f3', 'b8c6', 'f1b5|f1e2|f1c4', 'g7g6', 'e1g1'],
+            steps: ['g1f3', 'b8c6', 'f1b5|f1e2|f1c4|f1d3', 'g7g6', 'e1g1'],
             goal: LineGoal.line,
           ),
         ],
