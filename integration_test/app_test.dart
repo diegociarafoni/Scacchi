@@ -1,6 +1,7 @@
 import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart' show Side;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:scacchi/main.dart';
@@ -315,5 +316,54 @@ void main() {
     await tester.tap(find.text('Abbandona'));
     await tester.pumpAndSettle();
     expect(find.text('Abbandonare la partita?'), findsNothing);
+  });
+
+  testWidgets('RF-10 navigazione nella lista delle mosse', (tester) async {
+    await _start(tester);
+    for (final m in ['e2e4', 'e7e5', 'g1f3']) {
+      await _tapMove(tester, m);
+    }
+    String fen() =>
+        tester.widget<Chessboard>(find.byType(Chessboard)).controller.game.fen;
+    final live = fen();
+
+    await tester.tap(find.text('1. e4'));
+    await tester.pumpAndSettle();
+    expect(find.text('Posizione dopo 1. e4'), findsOneWidget);
+    expect(
+      fen(),
+      startsWith('rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b'),
+    );
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowRight);
+    await tester.pumpAndSettle();
+    expect(find.text('Posizione dopo 1... e5'), findsOneWidget);
+
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+    await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+    await tester.pumpAndSettle();
+    expect(find.text('Posizione iniziale'), findsOneWidget);
+
+    await _tapMove(tester, 'd2d4');
+    expect(find.text('Posizione iniziale'), findsOneWidget);
+
+    await tester.tap(find.text('Torna alla partita'));
+    await tester.pumpAndSettle();
+    expect(fen(), live);
+    expect(find.text('Muove il Nero.'), findsOneWidget);
+
+    await tester.tap(find.text('1. e4'));
+    await tester.pumpAndSettle();
+    await tester.sendKeyEvent(LogicalKeyboardKey.end);
+    await tester.pumpAndSettle();
+    expect(find.text('Muove il Nero.'), findsOneWidget);
+
+    await tester.tap(find.text('2. Nf3'));
+    await tester.pumpAndSettle();
+    expect(find.text('Posizione dopo 2. Nf3'), findsOneWidget);
+    await tester.tap(find.text('Annulla'));
+    await tester.pumpAndSettle();
+    expect(fen(), live);
+    expect(find.text('2. Nf3'), findsOneWidget);
   });
 }
