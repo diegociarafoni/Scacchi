@@ -140,6 +140,8 @@ Le altre schermate registrano:
 | Minigiochi | `MinigameFinished(game: 'coordinate', score: n)` a fine sessione (vedi [minigiochi.md](minigiochi.md)) |
 | Tornei | `TournamentFinished(rank: 1, players: 8)` a fine torneo (vedi [tornei.md](tornei.md)) |
 
+Nel profilo bambino (RP-06) la notifica e il Profilo non mostrano numeri: stelle per il livello, fiamma per la serie, frasi incoraggianti al posto di «+N XP», niente record personali. Vedi [profilo-bambino.md](profilo-bambino.md#niente-numeri).
+
 ## Integrazione prevista
 
 Il Profilo si apre dalla scheda Tu e `HomeShell` crea il `ReminderController` all'avvio su Android e iOS. `GamePage` riceve da `HomeShell` il registratore delle attività e i progressi: a fine partita registra `GamePlayed` (con `gameActivity`) una sola volta per partita e mostra "+N XP" sopra la barra dei comandi; le impostazioni ricevono i progressi per bloccare temi e pezzi non ancora sbloccati.

@@ -37,7 +37,7 @@ void main() {
   testWidgets('RP-06 nella nuova partita non c\'è il computer', (tester) async {
     await tester.pumpWidget(app(await kidSettings()));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Nuova'));
+    await tester.tap(find.text('Nuova partita'));
     await tester.pumpAndSettle();
     expect(find.text('Bot'), findsOneWidget);
     expect(find.text('Computer'), findsNothing);
@@ -52,7 +52,7 @@ void main() {
   ) async {
     await tester.pumpWidget(app(await kidSettings()));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Nuova'));
+    await tester.tap(find.text('Nuova partita'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Bot'));
     await tester.pumpAndSettle();
@@ -71,7 +71,7 @@ void main() {
     final settings = await kidSettings();
     await tester.pumpWidget(app(settings));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Nuova'));
+    await tester.tap(find.text('Nuova partita'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Bot'));
     await tester.pumpAndSettle();
@@ -96,7 +96,9 @@ void main() {
     expect(saidAny(bot.phrases(BotEvent.win)), isFalse);
   });
 
-  testWidgets('RP-06 una partita normale resta normale', (tester) async {
+  testWidgets('RP-06 una partita normale nasconde l\'Elo col profilo attivo', (
+    tester,
+  ) async {
     final settings = await kidSettings(kidMode: false);
     await tester.pumpWidget(app(settings));
     await tester.pumpAndSettle();
@@ -108,7 +110,8 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
     await settings.update(settings.value.copyWith(kidMode: true));
     await tester.pumpAndSettle();
-    expect(find.textContaining('${bots.first.elo} Elo'), findsOneWidget);
+    expect(find.textContaining('${bots.first.elo} Elo'), findsNothing);
+    expect(find.textContaining(bots.first.name), findsWidgets);
   });
 
   testWidgets('RP-06 la scelta del computer diventa un bot amichevole', (
@@ -125,7 +128,7 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
     await settings.update(settings.value.copyWith(kidMode: true));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Nuova'));
+    await tester.tap(find.text('Nuova partita'));
     await tester.pumpAndSettle();
     expect(find.text('Pino'), findsOneWidget);
     await chooseTime(tester, 'Senza tempo');

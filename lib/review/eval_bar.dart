@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../engine/uci.dart';
+import '../l10n/app_localizations.dart';
+import '../settings/settings.dart';
 import 'score_format.dart';
 
 const double evalBarWidth = 20;
@@ -20,7 +22,10 @@ class EvalBar extends StatelessWidget {
     // Il matto avvenuto non ha segno: il vincitore si ricava dalla probabilità.
     final mated = s?.mate == 0;
     final winner = win >= 50 ? 'Bianco' : 'Nero';
-    final label = s == null
+    // Profilo bambino (RP-06): la barra resta, senza cifre; a voce si dice
+    // solo chi è avanti.
+    final kid = AppSettings.of(context).kidMode;
+    final label = s == null || kid
         ? ''
         : mated
         ? (win >= 50 ? '1-0' : '0-1')
@@ -29,6 +34,8 @@ class EvalBar extends StatelessWidget {
         ? 'Valutazione non disponibile'
         : mated
         ? 'Scacco matto: vince il $winner'
+        : kid
+        ? _kidDescription(AppLocalizations.of(context), win)
         : describeScore(s);
     return Semantics(
       label: description,
@@ -73,4 +80,11 @@ class EvalBar extends StatelessWidget {
       ),
     );
   }
+
+  /// Fascia centrale ampia: piccoli vantaggi contano come equilibrio.
+  static String _kidDescription(AppLocalizations l, double win) => win >= 60
+      ? l.kidEvalWhite
+      : win <= 40
+      ? l.kidEvalBlack
+      : l.kidEvalEven;
 }

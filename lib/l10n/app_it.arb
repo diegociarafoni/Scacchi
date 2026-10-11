@@ -55,5 +55,482 @@
   "kidBotUnavailable": "Su questo dispositivo i bot non sono disponibili.",
   "@kidBotUnavailable": {
     "description": "Nel profilo bambino, al posto dell'avviso su Stockfish quando il motore non è disponibile"
+  },
+  "kidGameYourTurn": "Tocca a te!",
+  "@kidGameYourTurn": {
+    "description": "Riga di stato nel profilo bambino: tocca al giocatore contro il computer"
+  },
+  "kidGameTurnSide": "{side, select, white{Tocca al Bianco!} other{Tocca al Nero!}}",
+  "@kidGameTurnSide": {
+    "description": "Riga di stato nel profilo bambino: tocca a un colore, tra due persone",
+    "placeholders": {
+      "side": {
+        "type": "String",
+        "description": "Colore: white o black"
+      }
+    }
+  },
+  "kidGameTurnName": "{name}, tocca a te!",
+  "@kidGameTurnName": {
+    "description": "Riga di stato nel profilo bambino: tocca a un giocatore con nome",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "Nome del giocatore o dell'avversario"
+      }
+    }
+  },
+  "kidGameOpponentTurn": "{name} sta per muovere",
+  "@kidGameOpponentTurn": {
+    "description": "Riga di stato nel profilo bambino: tocca al computer o al bot; name è a inizio frase",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "Nome del giocatore o dell'avversario"
+      }
+    }
+  },
+  "kidGameThinking": "{name} ci sta pensando…",
+  "@kidGameThinking": {
+    "description": "Riga di stato nel profilo bambino mentre il computer o il bot sceglie la mossa",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "Nome del giocatore o dell'avversario"
+      }
+    }
+  },
+  "kidGameDrawThinking": "{name} ci pensa un attimo…",
+  "@kidGameDrawThinking": {
+    "description": "Riga di stato nel profilo bambino mentre il computer valuta il pareggio",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "Nome del giocatore o dell'avversario"
+      }
+    }
+  },
+  "kidGameCheckYou": "Scacco! Il tuo re è in pericolo",
+  "@kidGameCheckYou": {
+    "description": "Riga di stato nel profilo bambino: il re del giocatore è sotto scacco"
+  },
+  "kidGameCheckOpponent": "Scacco! Il re avversario è in pericolo",
+  "@kidGameCheckOpponent": {
+    "description": "Riga di stato nel profilo bambino: il giocatore dà scacco al computer"
+  },
+  "kidGameCheckSide": "{side, select, white{Scacco! Il re bianco è in pericolo} other{Scacco! Il re nero è in pericolo}}",
+  "@kidGameCheckSide": {
+    "description": "Riga di stato nel profilo bambino: scacco tra due persone",
+    "placeholders": {
+      "side": {
+        "type": "String",
+        "description": "Colore: white o black"
+      }
+    }
+  },
+  "kidGameCheckName": "Scacco! {name}, il tuo re è in pericolo",
+  "@kidGameCheckName": {
+    "description": "Riga di stato nel profilo bambino: scacco a un giocatore con nome",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "Nome del giocatore o dell'avversario"
+      }
+    }
+  },
+  "kidGameCheckmate": "Scacco matto!",
+  "@kidGameCheckmate": {
+    "description": "Inizio della frase di fine partita per scacco matto, nel profilo bambino"
+  },
+  "kidGameTimeUp": "Tempo finito!",
+  "@kidGameTimeUp": {
+    "description": "Inizio della frase di fine partita per tempo scaduto, nel profilo bambino"
+  },
+  "kidGameKingOfTheHill": "Il re è arrivato al centro!",
+  "@kidGameKingOfTheHill": {
+    "description": "Inizio della frase di fine partita a Re della collina, nel profilo bambino"
+  },
+  "kidGameThirdCheck": "Terzo scacco!",
+  "@kidGameThirdCheck": {
+    "description": "Inizio della frase di fine partita a Tre scacchi, nel profilo bambino"
+  },
+  "kidGameOver": "Partita finita!",
+  "@kidGameOver": {
+    "description": "Inizio generico della frase di fine partita, nel profilo bambino"
+  },
+  "kidGameYouResigned": "Ti sei arreso.",
+  "@kidGameYouResigned": {
+    "description": "Inizio della frase di fine partita quando il giocatore si arrende al computer"
+  },
+  "kidGameResignedSide": "{side, select, white{Il Bianco si arrende.} other{Il Nero si arrende.}}",
+  "@kidGameResignedSide": {
+    "description": "Inizio della frase di fine partita per resa, tra due persone",
+    "placeholders": {
+      "side": {
+        "type": "String",
+        "description": "Colore: white o black"
+      }
+    }
+  },
+  "kidGameResignedName": "{name} si arrende.",
+  "@kidGameResignedName": {
+    "description": "Inizio della frase di fine partita per resa di un giocatore con nome",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "Nome del giocatore o dell'avversario"
+      }
+    }
+  },
+  "kidGameYouWon": "Hai vinto!",
+  "@kidGameYouWon": {
+    "description": "Esito nel profilo bambino: ha vinto il giocatore contro il computer"
+  },
+  "kidGameOpponentWon": "{name} ha vinto. Riprova!",
+  "@kidGameOpponentWon": {
+    "description": "Esito nel profilo bambino: ha vinto il computer o il bot; name è a inizio frase",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "Nome del giocatore o dell'avversario"
+      }
+    }
+  },
+  "kidGameWinnerSide": "{side, select, white{Ha vinto il Bianco!} other{Ha vinto il Nero!}}",
+  "@kidGameWinnerSide": {
+    "description": "Esito nel profilo bambino: vincitore tra due persone",
+    "placeholders": {
+      "side": {
+        "type": "String",
+        "description": "Colore: white o black"
+      }
+    }
+  },
+  "kidGameWinnerName": "Ha vinto {name}!",
+  "@kidGameWinnerName": {
+    "description": "Esito nel profilo bambino: vincitore con nome",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "Nome del giocatore o dell'avversario"
+      }
+    }
+  },
+  "kidGameStalemate": "Stallo: il re non può muoversi ma non è sotto scacco. Pareggio!",
+  "@kidGameStalemate": {
+    "description": "Fine partita per stallo, spiegata in parole semplici"
+  },
+  "kidGameInsufficientMaterial": "Sono rimasti troppo pochi pezzi per dare scacco matto. Pareggio!",
+  "@kidGameInsufficientMaterial": {
+    "description": "Fine partita per materiale insufficiente, in parole semplici"
+  },
+  "kidGameRepetition": "La stessa posizione è tornata tre volte. Pareggio!",
+  "@kidGameRepetition": {
+    "description": "Fine partita per triplice ripetizione, in parole semplici"
+  },
+  "kidGameFiftyMoves": "Tante mosse senza catture né mosse di pedone. Pareggio!",
+  "@kidGameFiftyMoves": {
+    "description": "Fine partita per la regola delle 50 mosse, in parole semplici"
+  },
+  "kidGameAgreedDraw": "Pareggio deciso insieme!",
+  "@kidGameAgreedDraw": {
+    "description": "Fine partita per patta concordata, nel profilo bambino"
+  },
+  "kidGameTimeUpDraw": "Tempo finito, ma con questi pezzi nessuno può vincere. Pareggio!",
+  "@kidGameTimeUpDraw": {
+    "description": "Fine partita per tempo scaduto senza materiale per vincere"
+  },
+  "kidGameComputer": "Il computer",
+  "@kidGameComputer": {
+    "description": "Nome del computer a inizio frase nel profilo bambino"
+  },
+  "kidGameNew": "Nuova partita",
+  "@kidGameNew": {
+    "description": "Pulsante della barra dei comandi per una nuova partita, nel profilo bambino"
+  },
+  "kidGameDraw": "Pareggio?",
+  "@kidGameDraw": {
+    "description": "Pulsante della barra dei comandi per proporre il pareggio, nel profilo bambino"
+  },
+  "kidGameResign": "Mi arrendo",
+  "@kidGameResign": {
+    "description": "Pulsante della barra dei comandi per arrendersi, nel profilo bambino"
+  },
+  "kidGameResignTitle": "Vuoi arrenderti?",
+  "@kidGameResignTitle": {
+    "description": "Titolo del dialogo di resa contro il computer, nel profilo bambino"
+  },
+  "kidGameResignTitleSide": "{side, select, white{Bianco, vuoi arrenderti?} other{Nero, vuoi arrenderti?}}",
+  "@kidGameResignTitleSide": {
+    "description": "Titolo del dialogo di resa tra due persone, nel profilo bambino",
+    "placeholders": {
+      "side": {
+        "type": "String",
+        "description": "Colore: white o black"
+      }
+    }
+  },
+  "kidGameResignTitleName": "{name}, vuoi arrenderti?",
+  "@kidGameResignTitleName": {
+    "description": "Titolo del dialogo di resa per un giocatore con nome",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "Nome del giocatore o dell'avversario"
+      }
+    }
+  },
+  "kidGameResignBody": "Se ti arrendi, la partita finisce.",
+  "@kidGameResignBody": {
+    "description": "Testo del dialogo di resa, nel profilo bambino"
+  },
+  "kidGameResignNo": "No, continuo",
+  "@kidGameResignNo": {
+    "description": "Pulsante che chiude il dialogo di resa senza arrendersi"
+  },
+  "kidGameResignYes": "Sì, mi arrendo",
+  "@kidGameResignYes": {
+    "description": "Pulsante che conferma la resa, nel profilo bambino"
+  },
+  "kidGameDrawOfferSide": "{side, select, white{Bianco, vuoi fare pareggio?} other{Nero, vuoi fare pareggio?}}",
+  "@kidGameDrawOfferSide": {
+    "description": "Titolo del dialogo di pareggio tra due persone: chiede all'avversario",
+    "placeholders": {
+      "side": {
+        "type": "String",
+        "description": "Colore: white o black"
+      }
+    }
+  },
+  "kidGameDrawOfferName": "{name}, vuoi fare pareggio?",
+  "@kidGameDrawOfferName": {
+    "description": "Titolo del dialogo di pareggio per un giocatore con nome",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "Nome del giocatore o dell'avversario"
+      }
+    }
+  },
+  "kidGameDrawNo": "No, giochiamo",
+  "@kidGameDrawNo": {
+    "description": "Pulsante che rifiuta il pareggio, nel profilo bambino"
+  },
+  "kidGameDrawYes": "Sì, pareggio",
+  "@kidGameDrawYes": {
+    "description": "Pulsante che accetta il pareggio, nel profilo bambino"
+  },
+  "kidGameDrawAccepted": "{name} accetta il pareggio!",
+  "@kidGameDrawAccepted": {
+    "description": "Messaggio quando il computer o il bot accetta il pareggio; name è a inizio frase",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "Nome del giocatore o dell'avversario"
+      }
+    }
+  },
+  "kidGameDrawRefused": "{name} vuole continuare a giocare.",
+  "@kidGameDrawRefused": {
+    "description": "Messaggio quando il computer o il bot rifiuta il pareggio",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "Nome del giocatore o dell'avversario"
+      }
+    }
+  },
+  "kidGameTimeTitle": "Quanto tempo?",
+  "@kidGameTimeTitle": {
+    "description": "Titolo della scelta della cadenza nel pannello Nuova partita, nel profilo bambino"
+  },
+  "kidGameSlowClock": "Con l'orologio, con calma",
+  "@kidGameSlowClock": {
+    "description": "Cadenza lenta con orologio (15 minuti più 10 secondi a mossa), nel profilo bambino"
+  },
+  "kidGameUndo": "Annulla",
+  "@kidGameUndo": {
+    "description": "Pulsante della barra dei comandi che annulla l'ultima mossa, nel profilo bambino"
+  },
+  "kidGameFlip": "Gira",
+  "@kidGameFlip": {
+    "description": "Pulsante della barra dei comandi che capovolge la scacchiera, nel profilo bambino"
+  },
+  "kidGameWhiteName": "Nome del Bianco",
+  "@kidGameWhiteName": {
+    "description": "Campo del nome del giocatore col Bianco nel pannello Nuova partita, nel profilo bambino"
+  },
+  "kidGameBlackName": "Nome del Nero",
+  "@kidGameBlackName": {
+    "description": "Campo del nome del giocatore col Nero nel pannello Nuova partita, nel profilo bambino"
+  },
+  "kidGameNameHint": "Facoltativo",
+  "@kidGameNameHint": {
+    "description": "Suggerimento nei campi dei nomi: si possono lasciare vuoti"
+  },
+  "kidGameNoClock": "Senza tempo",
+  "@kidGameNoClock": {
+    "description": "Cadenza senza orologio nel pannello Nuova partita, nel profilo bambino"
+  },
+  "kidGameCoach": "Allenatore",
+  "@kidGameCoach": {
+    "description": "Pulsante della barra dei comandi che accende l'allenatore, nel profilo bambino"
+  },
+  "kidGameHint": "Aiuto",
+  "@kidGameHint": {
+    "description": "Pulsante della barra dei comandi che chiede un suggerimento, nel profilo bambino"
+  },
+  "kidProgressGreat": "Bravo, continua così!",
+  "@kidProgressGreat": {
+    "description": "Notifica dei progressi nel profilo bambino, al posto di «+N XP»"
+  },
+  "kidProgressGoal": "Obiettivo di oggi raggiunto!",
+  "@kidProgressGoal": {
+    "description": "Obiettivo giornaliero completato, nel profilo bambino"
+  },
+  "kidProgressLevelUp": "Sei salito di livello: una stella in più!",
+  "@kidProgressLevelUp": {
+    "description": "Nuovo livello, senza il numero, nel profilo bambino"
+  },
+  "kidProgressChallenge": "Sfida completata!",
+  "@kidProgressChallenge": {
+    "description": "Sfida completata, nel profilo bambino (il titolo può contenere numeri)"
+  },
+  "kidProgressAchievement": "Nuovo traguardo!",
+  "@kidProgressAchievement": {
+    "description": "Traguardo sbloccato, nel profilo bambino (il titolo può contenere numeri)"
+  },
+  "kidProgressReward": "Hai sbloccato una ricompensa!",
+  "@kidProgressReward": {
+    "description": "Ricompensa sbloccata nel profilo bambino, senza il nome (che è solo in italiano)"
+  },
+  "kidLevelTitle": "Le tue stelle",
+  "@kidLevelTitle": {
+    "description": "Titolo della scheda del livello nel profilo bambino: una stella per livello"
+  },
+  "kidLevelStarsLabel": "Una stella per ogni livello raggiunto",
+  "@kidLevelStarsLabel": {
+    "description": "Descrizione per i lettori di schermo delle stelle del livello"
+  },
+  "kidLevelProgress": "Gioca ancora per guadagnare un'altra stella!",
+  "@kidLevelProgress": {
+    "description": "Testo sotto la barra del livello, senza cifre"
+  },
+  "kidLevelProgressLabel": "Strada verso la prossima stella",
+  "@kidLevelProgressLabel": {
+    "description": "Descrizione per i lettori di schermo della barra del livello"
+  },
+  "kidStreakOn": "Stai giocando tutti i giorni: la fiamma è accesa!",
+  "@kidStreakOn": {
+    "description": "Serie di giorni attiva, senza il numero di giorni"
+  },
+  "kidStreakOff": "Gioca oggi per accendere la fiamma!",
+  "@kidStreakOff": {
+    "description": "Serie di giorni non ancora iniziata"
+  },
+  "kidGoalToday": "Obiettivo di oggi",
+  "@kidGoalToday": {
+    "description": "Etichetta della barra dell'obiettivo giornaliero, senza cifre"
+  },
+  "kidChallengeProgress": "Strada verso la sfida",
+  "@kidChallengeProgress": {
+    "description": "Descrizione per i lettori di schermo della barra di una sfida"
+  },
+  "kidPuzzleHubTitle": "Risolvi i puzzle e raccogli stelle!",
+  "@kidPuzzleHubTitle": {
+    "description": "Intestazione dell'hub dei puzzle al posto del punteggio"
+  },
+  "kidPuzzleStarsLabel": "Le stelle dei puzzle risolti",
+  "@kidPuzzleStarsLabel": {
+    "description": "Descrizione per i lettori di schermo delle stelle dei puzzle risolti"
+  },
+  "kidPuzzleTraining": "Puzzle scelti per te",
+  "@kidPuzzleTraining": {
+    "description": "Sottotitolo di Allenamento senza riferimento al punteggio"
+  },
+  "kidPuzzleDaily": "Un puzzle nuovo ogni giorno",
+  "@kidPuzzleDaily": {
+    "description": "Sottotitolo del puzzle del giorno senza la difficoltà numerica"
+  },
+  "kidPuzzleReviewDue": "Ci sono puzzle da ripassare",
+  "@kidPuzzleReviewDue": {
+    "description": "Ripasso con puzzle in attesa, senza il conteggio"
+  },
+  "kidPuzzleReviewNone": "Niente da ripassare oggi",
+  "@kidPuzzleReviewNone": {
+    "description": "Ripasso senza puzzle in attesa"
+  },
+  "kidPuzzleKeepGoing": "Forza, ce la puoi fare!",
+  "@kidPuzzleKeepGoing": {
+    "description": "Sotto la scacchiera del puzzle, al posto del punteggio"
+  },
+  "kidAccuracy5": "Perfetto!",
+  "@kidAccuracy5": {
+    "description": "Giudizio della precisione con cinque stelle"
+  },
+  "kidAccuracy4": "Molto bene",
+  "@kidAccuracy4": {
+    "description": "Giudizio della precisione con quattro stelle"
+  },
+  "kidAccuracy3": "Bene",
+  "@kidAccuracy3": {
+    "description": "Giudizio della precisione con tre stelle"
+  },
+  "kidAccuracy2": "Così così",
+  "@kidAccuracy2": {
+    "description": "Giudizio della precisione con due stelle"
+  },
+  "kidAccuracy1": "Da migliorare",
+  "@kidAccuracy1": {
+    "description": "Giudizio della precisione con una stella"
+  },
+  "kidReviewAnalysing": "Sto guardando la partita…",
+  "@kidReviewAnalysing": {
+    "description": "Revisione in corso, senza il conteggio delle posizioni"
+  },
+  "kidAnalysisThinking": "Il computer sta pensando…",
+  "@kidAnalysisThinking": {
+    "description": "Stato dell'analisi al posto della profondità"
+  },
+  "kidEvalWhite": "Il Bianco è in vantaggio",
+  "@kidEvalWhite": {
+    "description": "Barra di valutazione senza cifre, vantaggio del Bianco"
+  },
+  "kidEvalBlack": "Il Nero è in vantaggio",
+  "@kidEvalBlack": {
+    "description": "Barra di valutazione senza cifre, vantaggio del Nero"
+  },
+  "kidEvalEven": "Partita in equilibrio",
+  "@kidEvalEven": {
+    "description": "Barra di valutazione senza cifre, posizione pari"
+  },
+  "kidUnlockByPlaying": "Si sblocca giocando",
+  "@kidUnlockByPlaying": {
+    "description": "Requisito di avatar, cornici, temi e pezzi bloccati nel profilo bambino, al posto di «Livello N»"
+  },
+  "kidCoachMaterialLoss": "Attento: con questa mossa perdi dei pezzi.",
+  "@kidCoachMaterialLoss": {
+    "description": "Coach nel profilo bambino: perdita di materiale senza il conto dei pedoni"
+  },
+  "kidCoachAllowedMate": "Dopo {move} l'avversario può dare scacco matto con {reply}.",
+  "@kidCoachAllowedMate": {
+    "description": "Coach nel profilo bambino: matto concesso, senza «matto in N»; move e reply in notazione SAN",
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "reply": {
+        "type": "String"
+      }
+    }
+  },
+  "kidCoachMissedMate": "Con {move} potevi dare scacco matto!",
+  "@kidCoachMissedMate": {
+    "description": "Coach nel profilo bambino: matto mancato, senza «matto in N»; move in notazione SAN",
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
   }
 }
