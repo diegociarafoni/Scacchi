@@ -5,6 +5,7 @@ import '../archive/game_archive.dart';
 import '../minigames/minigames_page.dart';
 import '../path/path_controller.dart';
 import '../path/path_page.dart';
+import '../physical/physical_game_page.dart';
 import '../progress/profile_page.dart';
 import '../progress/progress_controller.dart';
 import '../progress/xp.dart';
@@ -120,6 +121,12 @@ class YouPage extends StatelessWidget {
                 subtitle: 'Risultati, aperture, cadenze e rating locale',
                 onTap: () =>
                     _open(context, archive(), (a) => StatsPage(archive: a)),
+              ),
+              _Entry(
+                icon: Icons.timer_outlined,
+                title: 'Scacchiera fisica',
+                subtitle: 'Orologio e registro per una partita dal vivo',
+                onTap: () => _push(context, PhysicalGamePage(archive: archive)),
               ),
               _Entry(
                 icon: Icons.inventory_2_outlined,
