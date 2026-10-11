@@ -35,9 +35,11 @@ Ogni funzione nasce dai requisiti del progetto, nel documento dei requisiti, con
 
 | Livello | Cartella | Cosa verifica | Comando |
 |---|---|---|---|
-| Unitari | `test/chess_game_test.dart`, `test/material_test.dart` | Regole e fine partita su `ChessGame`; pezzi catturati e vantaggio su `MaterialBalance`; senza interfaccia | `flutter test` |
+| Unitari | `test/chess_game_test.dart`, `test/material_test.dart`, `test/settings_test.dart` | Regole e fine partita su `ChessGame`; pezzi catturati e vantaggio su `MaterialBalance`; impostazioni e salvataggio; senza interfaccia | `flutter test` |
 | Widget | `test/widget_test.dart` | Avvio dell'app e stato iniziale | `flutter test` |
 | Gamification | `test/progress/` | Regole di XP, serie e traguardi; salvataggio; schermata Profilo | `flutter test test/progress` |
+| Percorso | `test/path/` | Esercizi, contenuti, sblocco, mappa e tappe sulla scacchiera | `flutter test test/path` |
+| Statistiche | `test/stats/` | Bilancio, rating locale, schermata | `flutter test test/stats` |
 | Archivio | `test/archive/` | PGN, salvataggio su file, schermata Partite | `flutter test test/archive` |
 | End-to-end | `integration_test/*_test.dart` | L'app reale avviata su un dispositivo o desktop, con tocchi e trascinamenti sulla scacchiera | `flutter test integration_test -d <dispositivo>` |
 
@@ -52,6 +54,7 @@ I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisic
 | RF-06 capovolgimento della scacchiera | | ✓ |
 | RF-10 lista delle mosse in SAN | ✓ | ✓ |
 | RF-11 pezzi catturati e vantaggio di materiale | ✓ | ✓ |
+| RF-02, RF-04, RF-07, RF-12, RP-01, RP-04 impostazioni salvate | ✓ | ✓ |
 | RF-25 matto, stallo, materiale insufficiente, ripetizione, 50 mosse, abbandono | ✓ | matto, abbandono |
 | RF-31 rotazione automatica a ogni turno | | ✓ |
 | RF-32 patta concordata e annullamento | ✓ | ✓ |
@@ -60,8 +63,11 @@ I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisic
 | RF-102 import ed export PGN, condivisione, copia | ✓ | |
 | Annullamento di abbandono e patta senza perdita di mosse | ✓ | |
 | RF-04 chiusura del selettore di promozione con Annulla | | ✓ |
+| RF-110 rating locale contro il computer | ✓ | |
+| RF-111 statistiche per colore, cadenza, aperture, precisione | ✓ | |
 | RG-01 XP e livelli | ✓ | |
 | RG-02 obiettivo giornaliero, serie, riposo, protezioni | ✓ | |
+| RG-03 percorso a tappe, stelle, sblocco, contenuti verificati | ✓ | |
 | RG-05 33 traguardi e notifica in-app | ✓ | |
 | RG-07 sfide giornaliere e settimanali | ✓ | |
 | RG-08 record personali | ✓ | |

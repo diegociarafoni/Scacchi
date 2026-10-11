@@ -5,12 +5,16 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
 import '../openings/opening_name.dart';
+import '../settings/settings.dart';
+import '../settings/settings_page.dart';
 import 'chess_game.dart';
 import 'material.dart';
 
 /// Partita tra due persone sullo stesso dispositivo.
 class GamePage extends StatefulWidget {
-  const GamePage({super.key});
+  const GamePage({super.key, required this.settings});
+
+  final SettingsController settings;
 
   @override
   State<GamePage> createState() => _GamePageState();
@@ -22,12 +26,40 @@ class _GamePageState extends State<GamePage> {
     game: _gameData(),
   );
   Side _orientation = Side.white;
-  bool _autoFlip = false;
+
+  AppSettings get _settings => widget.settings.value;
+
+  late bool _autoFlip = _settings.autoFlip;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.settings.addListener(_onSettingsChanged);
+  }
+
+  @override
+  void didUpdateWidget(GamePage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.settings != widget.settings) {
+      oldWidget.settings.removeListener(_onSettingsChanged);
+      widget.settings.addListener(_onSettingsChanged);
+      _onSettingsChanged();
+    }
+  }
 
   @override
   void dispose() {
+    widget.settings.removeListener(_onSettingsChanged);
     _board.dispose();
     super.dispose();
+  }
+
+  void _onSettingsChanged() {
+    setState(() {
+      final turnedOn = _settings.autoFlip && !_autoFlip;
+      _autoFlip = _settings.autoFlip;
+      if (turnedOn) _orientation = _game.position.turn;
+    });
   }
 
   GameData _gameData() {
@@ -45,7 +77,7 @@ class _GamePageState extends State<GamePage> {
   void _refresh({bool animate = true}) {
     _board.updatePosition(_gameData(), animate: animate, resetPremove: true);
     setState(() {
-      if (_autoFlip) _orientation = _game.position.turn;
+      if (_settings.autoFlip) _orientation = _game.position.turn;
     });
   }
 
@@ -146,20 +178,14 @@ class _GamePageState extends State<GamePage> {
           fallback: 'Scacchi',
         ),
         actions: [
-          PopupMenuButton<String>(
-            onSelected: (value) {
-              if (value == 'autoflip') {
-                setState(() => _autoFlip = !_autoFlip);
-                if (_autoFlip) _refresh(animate: false);
-              }
-            },
-            itemBuilder: (context) => [
-              CheckedPopupMenuItem(
-                value: 'autoflip',
-                checked: _autoFlip,
-                child: const Text('Ruota a ogni turno'),
+          IconButton(
+            tooltip: 'Impostazioni',
+            icon: const Icon(Icons.settings_outlined),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => SettingsPage(controller: widget.settings),
               ),
-            ],
+            ),
           ),
         ],
       ),
@@ -177,9 +203,7 @@ class _GamePageState extends State<GamePage> {
                       constraints.maxHeight - _portraitChromeHeight,
                     ),
                   );
-            const boardSettings = ChessboardSettings(
-              colorScheme: ChessboardColorScheme.green,
-            );
+            final boardSettings = _settings.board;
             final board = Chessboard(
               size: boardSize,
               controller: _board,

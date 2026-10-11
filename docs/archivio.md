@@ -12,7 +12,7 @@ Le partite stanno in `games.json` nella cartella dati dell'app (`getApplicationS
 - un file non valido (JSON rotto, versione futura, voce incompleta) viene rinominato in `games.json.bad-<ms>` invece di essere sovrascritto; un errore di lettura del disco, invece, non tocca il file e la schermata mostra un messaggio;
 - `GameArchive.open()` restituisce sempre la stessa istanza, così tutte le schermate condividono cache e coda dei salvataggi.
 
-Ogni partita (`SavedGame`) conserva identificativo, data di creazione e di aggiornamento, nomi dei giocatori, tipo (`locale`, `computer`, `importata`), risultato PGN e il PGN completo. Le mosse stanno solo nel PGN, che è anche il formato di export: una sola fonte di verità.
+Ogni partita (`SavedGame`) conserva identificativo, data di creazione e di aggiornamento, nomi dei giocatori, tipo (`locale`, `computer`, `importata`), risultato PGN e il PGN completo; facoltativamente colore dell'utente, cadenza, Elo del bot, precisione e apertura, usati dalle statistiche (vedi [statistiche.md](statistiche.md)). Le mosse stanno solo nel PGN, che è anche il formato di export: una sola fonte di verità.
 
 `GameArchive.save` inserisce o sostituisce la partita con lo stesso identificativo, quindi la schermata di gioco può salvare a ogni mossa (RF-100) con lo stesso id. `GameArchive.unfinished` restituisce la partita propria non conclusa più recente da riprendere all'avvio; le partite importate sono escluse.
 
