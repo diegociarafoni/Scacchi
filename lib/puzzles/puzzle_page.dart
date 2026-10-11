@@ -11,6 +11,8 @@ import '../progress/progress_feedback.dart';
 import '../settings/settings.dart';
 import '../training/training_board.dart';
 import 'activity_recorder.dart';
+import 'guide_view.dart';
+import 'mode_guide.dart';
 import 'puzzle.dart';
 import 'puzzle_feed.dart';
 import 'puzzle_session.dart';
@@ -28,6 +30,7 @@ class PuzzlePage extends StatefulWidget {
     this.puzzle,
     this.feed,
     this.title = 'Puzzle',
+    this.guide,
     this.onActivity,
     this.replyDelay = const Duration(milliseconds: 400),
   });
@@ -41,6 +44,9 @@ class PuzzlePage extends StatefulWidget {
   /// Sorgente alternativa, per esempio il ripasso degli errori.
   final PuzzleFeed? feed;
   final String title;
+
+  /// Spiegazione della modalità: si apre da sola la prima volta e dall'icona.
+  final PuzzleGuide? guide;
 
   /// Riceve un `PuzzleSolved` per ogni puzzle risolto, per XP e obiettivi.
   final ActivityRecorder? onActivity;
@@ -73,12 +79,25 @@ class _PuzzlePageState extends State<PuzzlePage> {
   @override
   void initState() {
     super.initState();
+    _showGuideOnce();
     final first = _feed.next();
     if (first == null) {
       _empty = true;
     } else {
       _start(first);
     }
+  }
+
+  /// Apre la spiegazione la prima volta che si entra nella modalità; il profilo
+  /// bambino non la riceve, perché è fatta di regole e numeri.
+  void _showGuideOnce() {
+    final guide = widget.guide;
+    if (guide == null || widget.trainer.guideSeen(guide.id)) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted || AppSettings.of(context).kidMode) return;
+      unawaited(widget.trainer.markGuideSeen(guide.id));
+      await showPuzzleGuide(context, guide);
+    });
   }
 
   @override
@@ -258,7 +277,17 @@ class _PuzzlePageState extends State<PuzzlePage> {
         .join(', ');
     final kid = AppSettings.of(context).kidMode;
     return Scaffold(
-      appBar: AppBar(title: Text(widget.title)),
+      appBar: AppBar(
+        title: Text(widget.title),
+        actions: [
+          if (widget.guide != null && !kid)
+            IconButton(
+              tooltip: 'Come funziona',
+              icon: const Icon(Icons.help_outline),
+              onPressed: () => showPuzzleGuide(context, widget.guide!),
+            ),
+        ],
+      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -269,7 +298,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
                   // salgono a due righe sugli schermi stretti.
                   final size = math.max(
                     0.0,
-                    math.min(c.maxWidth, c.maxHeight - 120),
+                    math.min(c.maxWidth, c.maxHeight - 170),
                   );
                   // Scorrevole come ultima difesa su schermi molto bassi.
                   return Center(
@@ -287,6 +316,11 @@ class _PuzzlePageState extends State<PuzzlePage> {
                                 style: Theme.of(context).textTheme.titleMedium,
                               ),
                             ),
+                          ),
+                          _Progress(
+                            done: _session.playerMovesDone,
+                            total: _session.playerMoves,
+                            showNumbers: !kid,
                           ),
                           TrainingBoard(
                             size: size,
@@ -336,6 +370,46 @@ class _PuzzlePageState extends State<PuzzlePage> {
               onRetry: _canRetry ? _retry : null,
               onNext: canSkip ? _next : null,
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Avanzamento nel puzzle: mosse trovate sul totale. Nel profilo bambino c'è
+/// solo la barra, senza cifre.
+class _Progress extends StatelessWidget {
+  const _Progress({
+    required this.done,
+    required this.total,
+    required this.showNumbers,
+  });
+
+  final int done;
+  final int total;
+  final bool showNumbers;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+      child: Semantics(
+        label: showNumbers
+            ? 'Mosse trovate: $done di $total'
+            : 'Avanzamento del puzzle',
+        value: showNumbers ? null : '${(done * 100 / total).round()}%',
+        excludeSemantics: true,
+        child: Column(
+          children: [
+            if (showNumbers)
+              Text(
+                'Mosse trovate: $done di $total',
+                key: const Key('puzzle-progress'),
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            const SizedBox(height: 4),
+            LinearProgressIndicator(value: total == 0 ? 0 : done / total),
           ],
         ),
       ),

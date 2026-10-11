@@ -48,6 +48,8 @@ Il test `test/puzzles/puzzle_dataset_test.dart` verifica che ogni soluzione sia 
 | `lib/puzzles/puzzle_trainer.dart` | Punteggio del giocatore, puzzle già visti, salvataggio, evento di puzzle concluso |
 | `lib/puzzles/puzzle_page.dart` | Schermata di risoluzione |
 | `lib/puzzles/puzzle_hub_page.dart` | Punteggio e modalità |
+| `lib/puzzles/mode_guide.dart` | Obiettivo e regole di ogni modalità, in italiano |
+| `lib/puzzles/guide_view.dart` | Schermata e pannello con la spiegazione |
 | `lib/training/training_board.dart` | Scacchiera per esercizi, riusabile da puzzle e aperture; segue le impostazioni della scacchiera tramite `SettingsScope` |
 
 ## Regole di risoluzione
@@ -72,6 +74,21 @@ Il puzzle successivo è quello non ancora visto con difficoltà più vicina al p
 ## Puzzle del giorno (RF-84)
 
 Sostituisce il puzzle del giorno di chess.com senza server: l'indice è `(giorni dal 1970 × 7919) mod numero di puzzle`, uguale per tutti i dispositivi con la stessa versione della raccolta.
+
+## Obiettivo e regole di ogni modalità
+
+Ogni modalità spiega cosa fare, come si vince o si perde, tempo o vite e come si calcola il punteggio (`PuzzleGuide`, `lib/puzzles/mode_guide.dart`).
+
+- **Serie, Storm, Rush e Sopravvivenza**: prima di partire compare una schermata con l'**Obiettivo** e **Come si gioca**; il tempo parte solo con **Inizia** (e "Gioca ancora" a fine serie riparte senza ripetere la spiegazione). Il testo dell'obiettivo resta in cima durante il gioco.
+- **Allenamento, Per tema, Puzzle del giorno e Ripasso**: la spiegazione si apre da sola, in un pannello, la prima volta che si entra nella modalità (`puzzles.guides.v1` ricorda quelle già lette) e si riapre sempre dall'icona **Come funziona** nella barra del titolo. Nel profilo bambino non compare, perché è fatta di regole e numeri.
+
+Durante il gioco l'avanzamento è sempre visibile:
+
+- nelle serie, i punti, il tempo rimasto (con una barra, che sale quando arrivano i secondi bonus della combo) e le vite come cuori con etichetta per i lettori di schermo ("Vite: 2 su 3"); l'icona **Come funziona** ferma il tempo finché il pannello è aperto;
+- a fine serie, la schermata dice perché è finita (tempo scaduto, vite finite, primo errore o puzzle esauriti);
+- nei puzzle singoli, la barra delle **mosse trovate** ("Mosse trovate: 1 di 3"); nel profilo bambino resta solo la barra, senza cifre.
+
+I numeri citati nei testi (10 secondi, 3/5/7/10 secondi di bonus, intervalli del ripasso) hanno un test che li confronta con le regole del codice.
 
 ## Modalità a serie (RF-82)
 
