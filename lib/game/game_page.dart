@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import '../analysis/analysis_page.dart';
 import '../archive/saved_game.dart';
 import '../coach/coach_session.dart';
+import '../coach/hint_text.dart';
 import '../editor/position_editor_page.dart';
 import '../engine/adaptive.dart';
 import '../engine/bot_collection.dart';
@@ -171,7 +172,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// simbolo sulla casa d'arrivo, come nella revisione.
   ({int ply, Square square, MoveClass verdict})? _badge;
   String? _hintedFen;
-  Shape? _hintShape;
+  Set<Shape> _hintShapes = const {};
   late CoachSession _coach = _newCoach();
 
   CoachSession _newCoach() => CoachSession(
@@ -800,13 +801,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// Il giudizio resta sulla casa finché è la mossa dell'utente o la risposta
   /// del computer non la occupa; non si mostra sfogliando la cronologia.
   /// Il suggerimento resta finché la posizione è quella per cui è stato dato.
-  Set<Shape> _hintShapes() {
-    final shape = _hintShape;
-    if (shape == null || _hintedFen != _game.position.fen || _viewPly != null) {
-      return const {};
-    }
-    return {shape};
-  }
+  Set<Shape> _visibleHint() =>
+      _hintedFen == _game.position.fen && _viewPly == null
+      ? _hintShapes
+      : const {};
 
   Map<Square, Annotation> _badgeAnnotations() {
     final badge = _badge;
@@ -904,18 +902,26 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       _showMessage('Nessun suggerimento disponibile.');
       return;
     }
-    _hintedFen = position.fen;
     const color = Color(0xCC15781B);
+    final to = hint.to;
+    final text = to == null
+        ? describeHintPiece(position, hint.from)
+        : describeHintMove(
+            position,
+            NormalMove(from: hint.from, to: to, promotion: hint.promotion),
+            showSquare: !_kid,
+          );
+    _hintedFen = position.fen;
     setState(
-      () => _hintShape = level == HintLevel.piece
-          ? Circle(color: color, orig: hint!.from)
-          : Arrow(color: color, orig: hint!.from, dest: hint.to!),
+      () => _hintShapes = to == null
+          ? {Circle(color: color, orig: hint!.from)}
+          : {
+              Circle(color: color, orig: hint!.from),
+              Circle(color: color, orig: to),
+              Arrow(color: color, orig: hint.from, dest: to),
+            },
     );
-    _showMessage(
-      level == HintLevel.piece
-          ? 'Prova a muovere il pezzo in ${hint.from.name}.'
-          : 'Prova ${hint.san}.',
-    );
+    _showMessage(text);
   }
 
   /// Gioca [move] con orologio, suono e annuncio; con il tempo scaduto chiude la partita.
@@ -1876,7 +1882,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                   onMove: _onMove,
                   settings: boardSettings,
                   annotations: _badgeAnnotations(),
-                  shapes: _hintShapes(),
+                  shapes: _visibleHint(),
                 ),
               );
               final viewPly = _viewPly;
