@@ -9,7 +9,7 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | [architettura.md](architettura.md) | Stack, struttura delle cartelle, componenti e flusso di una mossa |
 | [regole-di-gioco.md](regole-di-gioco.md) | Regole implementate e condizioni di fine partita |
 | [interfaccia.md](interfaccia.md) | Schermata di gioco, layout su telefono e tablet, comandi |
-| [gamification.md](gamification.md) | XP, livelli, obiettivo giornaliero, serie, traguardi |
+| [gamification.md](gamification.md) | XP, livelli, obiettivo giornaliero, serie, traguardi, ricompense estetiche |
 | [archivio.md](archivio.md) | Salvataggio delle partite, storico, import ed export PGN |
 | [puzzle.md](puzzle.md) | Puzzle: dati, punteggio, modalità, puzzle del giorno |
 | [aperture.md](aperture.md) | Nomi delle aperture, mosse di libro, explorer, repertorio |
@@ -34,7 +34,7 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | Puzzle Storm, Rush, sopravvivenza, Serie, ripasso degli errori | Disponibile |
 | Nome dell'apertura in partita, explorer ridotto | Disponibile |
 | Repertorio di aperture con ripasso dilazionato | Disponibile |
-| Gamification: XP, livelli, obiettivo giornaliero, serie, traguardi | Logica e Profilo disponibili, collegamento alla partita in sviluppo |
+| Gamification: XP, livelli, obiettivo giornaliero, serie, traguardi, ricompense estetiche | Logica e Profilo disponibili, collegamento alla partita in sviluppo |
 | Archivio partite, import ed export PGN | Logica e schermata disponibili, collegamento alla partita in sviluppo |
 | Percorso a tappe con stelle | Mappa ed esercizi pronti; accesso dalla schermata principale e guardiani in arrivo con il collegamento alla partita |
 | Statistiche e rating locale | Calcolo e schermata pronti; accesso dalla schermata principale in arrivo |

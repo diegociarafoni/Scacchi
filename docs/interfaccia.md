@@ -79,8 +79,9 @@ Si aprono dall'icona a forma di ingranaggio nella barra del titolo. Ogni modific
 | Suoni | Suoni per mossa, cattura, arrocco, scacco, promozione, fine partita e tempo sotto i 10 secondi | Attivi |
 | Volume | Volume dei suoni, da 0 a 100% | 100% |
 | Vibrazione | Vibrazione breve a ogni mossa, più marcata per catture e fine partita | Attiva |
-| Tema della scacchiera | Verde, Legno, Blu, Grigio | Verde |
-| Pezzi | Classico, Merida, Chessnut, Fantasy, Spatial | Classico |
+| Tema della scacchiera | Verde, Legno, Blu, Grigio; sbloccabili Sabbia, Oceano, Corallo, Notte, Oro | Verde |
+| Pezzi | Classico, Merida, Chessnut, Fantasy, Spatial; sbloccabili Celtic, Shapes, Firi, Mpchess, Kiwen-suwi, Totoy, RhosGFX | Classico |
+| Sblocca tutto | Rende disponibili le ricompense estetiche senza sbloccarle (vedi [gamification.md](gamification.md)) | Disattiva |
 | Animazioni | Nessuna, Veloce, Normale, Lenta | Normale |
 
 I set di pezzi disponibili sono solo quelli con licenza compatibile con la GPL e con la distribuzione commerciale, elencati in `CREDITS.md`: i set CC BY-NC-SA di chessground (California, Cardinal, Maestro e altri) sono esclusi, e chi li aveva scelti torna al set Classico. I temi usano solo colori, senza le immagini di chessground (licenza AGPL). Anche le icone dei pezzi catturati usano il set scelto.

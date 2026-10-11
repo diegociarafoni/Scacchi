@@ -7,7 +7,13 @@
 | Set di pezzi "cburnett" di Colin M.L. Burnett, incluso in chessground | Pezzi "Classico" | GPL-2.0+ / CC BY-SA 3.0 |
 | Set di pezzi "merida" di Armando Hernández Marroquín, incluso in chessground | Pezzi "Merida" | GPL-2.0+ |
 | Set di pezzi "chessnut" di Alexis Luengas, incluso in chessground | Pezzi "Chessnut" | Apache-2.0 |
-| Set di pezzi "fantasy" e "spatial" di Maurizio Monge, inclusi in chessground | Pezzi "Fantasy" e "Spatial" | MIT |
+| Set di pezzi "fantasy", "spatial" e "celtic" di Maurizio Monge, inclusi in chessground | Pezzi "Fantasy", "Spatial" e "Celtic" | MIT |
+| Set di pezzi "shapes" di flugsio, incluso in chessground | Pezzi "Shapes" | CC BY-SA 4.0 |
+| Set di pezzi "firi" di James Faure, incluso in chessground | Pezzi "Firi" | CC BY 4.0 |
+| Set di pezzi "mpchess" di Maxime Chupin, incluso in chessground | Pezzi "Mpchess" | GPL-3.0+ |
+| Set di pezzi "kiwen-suwi" di neverRare, incluso in chessground | Pezzi "Kiwen-suwi" | CC BY 4.0 |
+| Set di pezzi "totoy" di Kosal Sen, incluso in chessground | Pezzi "Totoy" | CC BY 4.0 |
+| Set di pezzi "rhosgfx" di RhosGFX, incluso in chessground | Pezzi "RhosGFX" | CC0 |
 | [shared_preferences](https://pub.dev/packages/shared_preferences) | Salvataggio delle impostazioni | BSD-3-Clause |
 | [Flutter](https://flutter.dev) | Framework dell'interfaccia | BSD-3-Clause |
 | [path_provider](https://pub.dev/packages/path_provider) (Flutter) | Cartella dati dell'app per i salvataggi | BSD-3-Clause |
