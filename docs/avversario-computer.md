@@ -164,7 +164,7 @@ Nuove funzioni del computer si sviluppano partendo dai test, con nel nome il req
 | RF-25 patta accettata dal bot in base alla valutazione | ✓ |
 | RNF-03 Stockfish nativo via FFI in isolate, 1 thread | ✓ (Android, iOS) |
 | RF-22 modalità Allenamento (suggerimento, barra di valutazione) | Da fare: `EngineMove` espone già variante e valutazione |
-| RF-23 bot con personalità | Da fare: lo stile si può ottenere con `chooseCandidate` e un libro d'apertura |
+| RF-23 bot con personalità | Dati, stile, libro e frasi pronti (vedi [bot.md](bot.md)); manca la scelta nella partita |
 | RF-26 avversario adattivo | ✓ |
 
 ## Licenza
