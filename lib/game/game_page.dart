@@ -280,16 +280,25 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   }
 
   void _announce(String message) {
-    SemanticsService.sendAnnouncement(
-      View.of(context),
-      message,
-      Directionality.of(context),
+    unawaited(
+      SemanticsService.sendAnnouncement(
+        View.of(context),
+        message,
+        Directionality.of(context),
+      ),
     );
   }
 
   void _play(GameSound sound) {
     final s = _settings;
-    _sounds.play(sound, enabled: s.sound, volume: s.volume, haptics: s.haptics);
+    unawaited(
+      _sounds.play(
+        sound,
+        enabled: s.sound,
+        volume: s.volume,
+        haptics: s.haptics,
+      ),
+    );
   }
 
   /// Esegue [action] con l'orologio fermo, poi lo riavvia se la partita continua.

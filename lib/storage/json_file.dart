@@ -16,7 +16,7 @@ class JsonFile {
   /// `null`. Gli errori di lettura del disco si propagano senza toccare il file.
   Future<T?> read<T>(T Function(Map<String, Object?> json) decode) async {
     await _pending;
-    if (!await file.exists()) return null;
+    if (!file.existsSync()) return null;
     final text = await file.readAsString();
     try {
       final json = jsonDecode(text) as Map<String, Object?>;

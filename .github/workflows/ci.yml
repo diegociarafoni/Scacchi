@@ -17,8 +17,9 @@ jobs:
           cache: true
       - run: flutter pub get
       - run: flutter gen-l10n && git diff --exit-code lib/l10n
-      - run: dart format --output=none --set-exit-if-changed lib test integration_test
-      - run: flutter analyze
+      - run: dart format --output=none --set-exit-if-changed lib test integration_test tool
+      # Regole rigorose in analysis_options.yaml: anche gli avvisi informativi bloccano.
+      - run: flutter analyze --fatal-infos --fatal-warnings
       - run: flutter test
 
   e2e:

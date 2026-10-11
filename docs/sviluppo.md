@@ -6,6 +6,9 @@
 - Per Android: Android Studio o Android SDK, Java 17.
 - Per iOS e macOS: un Mac con Xcode, oppure un servizio di build in cloud.
 - Per Linux desktop: le librerie di sviluppo GTK 3 e GStreamer (`libgtk-3-dev`, `libgstreamer1.0-dev`, `libgstreamer-plugins-base1.0-dev`) e, per riprodurre i suoni, i plugin `gstreamer1.0-plugins-base` e `gstreamer1.0-plugins-good`: senza questi ultimi l'app si chiude al primo suono.
+- Per gli hook locali: [lefthook](https://lefthook.dev) e [Gitleaks](https://github.com/gitleaks/gitleaks), vedi [convenzioni-git.md](convenzioni-git.md).
+
+Dopo il clone, una volta: `lefthook install`.
 
 ## Comandi
 
@@ -115,3 +118,5 @@ Il workflow `.github/workflows/apk-release.yml` produce l'APK release installabi
 - La documentazione completa sta in `docs/`, da aggiornare insieme al codice che descrive.
 - Testi dell'interfaccia in italiano.
 - Logica di gioco separata dall'interfaccia (`ChessGame` non importa Flutter), così da poterla testare in isolamento.
+- Analisi statica rigorosa (`analysis_options.yaml`): tipi stretti, `Future` sempre attesi o marcati con `unawaited`, nessun avviso ammesso.
+- Rami, commit Angular, hook e merge: [convenzioni-git.md](convenzioni-git.md).

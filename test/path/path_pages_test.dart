@@ -24,15 +24,6 @@ Future<void> _tapMove(WidgetTester tester, String from, String to) async {
   await tester.pumpAndSettle();
 }
 
-Future<void> settle(WidgetTester tester) async {
-  for (var i = 0; i < 10; i++) {
-    await tester.runAsync(
-      () => Future<void>.delayed(const Duration(milliseconds: 20)),
-    );
-    await tester.pumpAndSettle();
-  }
-}
-
 void main() {
   late Directory dir;
   late PathController controller;

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
@@ -74,7 +76,7 @@ class _PositionEditorPageState extends State<PositionEditorPage> {
   }
 
   void _copy() {
-    Clipboard.setData(ClipboardData(text: _draft.fen));
+    unawaited(Clipboard.setData(ClipboardData(text: _draft.fen)));
     ScaffoldMessenger.of(context)
         .showSnackBar(const SnackBar(content: Text('FEN copiato.')));
   }

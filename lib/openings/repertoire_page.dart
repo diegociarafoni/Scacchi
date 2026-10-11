@@ -66,7 +66,7 @@ class _RepertoirePageState extends State<RepertoirePage> {
 
   Future<void> _drill() async {
     await Navigator.of(context).push(
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (_) => RepertoireDrillPage(trainer: _t, side: widget.side),
       ),
     );

@@ -5,7 +5,7 @@ import 'package:scacchi/game/move_input.dart';
 Position _fen(String fen) => Chess.fromSetup(Setup.parseFen(fen));
 
 void main() {
-  final start = Chess.initial;
+  const start = Chess.initial;
 
   String? uci(Position pos, String text) {
     final r = parseMoveInput(pos, text);

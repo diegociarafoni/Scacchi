@@ -1,6 +1,13 @@
 include: package:flutter_lints/flutter.yaml
 
 analyzer:
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+  errors:
+    # In CI ogni avviso e suggerimento blocca la build (flutter analyze --fatal-infos).
+    todo: ignore
   exclude:
     - build/**
     - android/**
@@ -9,6 +16,42 @@ analyzer:
     - windows/**
     - macos/**
     - linux/**
+    - lib/l10n/app_localizations*.dart
 
 linter:
   rules:
+    - always_declare_return_types
+    - avoid_dynamic_calls
+    - avoid_catches_without_on_clauses
+    - avoid_empty_else
+    - avoid_redundant_argument_values
+    - avoid_relative_lib_imports
+    - avoid_slow_async_io
+    - avoid_type_to_string
+    - avoid_unused_constructor_parameters
+    - avoid_void_async
+    - cancel_subscriptions
+    - close_sinks
+    - directives_ordering
+    - discarded_futures
+    - literal_only_boolean_expressions
+    - no_adjacent_strings_in_list
+    - no_runtimeType_toString
+    - only_throw_errors
+    - prefer_const_constructors
+    - prefer_const_declarations
+    - prefer_const_literals_to_create_immutables
+    - prefer_final_fields
+    - prefer_final_in_for_each
+    - prefer_final_locals
+    - prefer_single_quotes
+    - sort_child_properties_last
+    - test_types_in_equals
+    - throw_in_finally
+    - unawaited_futures
+    - unnecessary_lambdas
+    - unnecessary_parenthesis
+    - unnecessary_statements
+    - unreachable_from_main
+    - use_build_context_synchronously
+    - use_super_parameters

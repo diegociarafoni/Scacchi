@@ -47,9 +47,9 @@ class _HomeShellState extends State<HomeShell> {
   Future<RepertoireTrainer> _loadRepertoire() =>
       (widget.repertoire ??
               () async => RepertoireTrainer.load(await JsonFileStore.open()))()
-          .catchError((Object e) {
+          .catchError((Object e, StackTrace st) {
             _repertoire = null;
-            throw e;
+            Error.throwWithStackTrace(e, st);
           });
 
   @override
@@ -74,10 +74,11 @@ class _HomeShellState extends State<HomeShell> {
   Future<PuzzleTrainer>
   _loadTrainer() => (widget.puzzleTrainer ?? loadPuzzleTrainer)().catchError((
     Object e,
+    StackTrace st,
   ) {
     // Un errore di caricamento si riprova alla prossima apertura della scheda.
     _trainer = null;
-    throw e;
+    Error.throwWithStackTrace(e, st);
   });
 
   @override
