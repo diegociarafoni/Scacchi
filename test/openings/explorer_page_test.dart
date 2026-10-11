@@ -103,7 +103,12 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    expect(find.text('B20 Difesa siciliana'), findsOneWidget);
-    expect(find.bySemanticsLabel('Apertura: Difesa siciliana'), findsOneWidget);
+    // Il codice ECO non compare nel titolo: tagliava il nome in inglese.
+    expect(find.text('Difesa siciliana'), findsOneWidget);
+    expect(find.textContaining('B20'), findsNothing);
+    expect(
+      find.bySemanticsLabel('Apertura: Difesa siciliana (B20)'),
+      findsOneWidget,
+    );
   });
 }
