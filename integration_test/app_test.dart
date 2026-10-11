@@ -1,4 +1,5 @@
 import 'package:chessground/chessground.dart';
+import 'package:dartchess/dartchess.dart' show Side;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -217,6 +218,38 @@ void main() {
     expect(board().orientation.name, 'black');
   });
 
+  testWidgets('RF-40 nuova partita con orologio', (tester) async {
+    await _start(tester);
+    expect(find.byKey(const ValueKey('clock-white')), findsNothing);
+    await tester.tap(find.text('Nuova'));
+    await tester.pumpAndSettle();
+    expect(find.text('Senza tempo'), findsOneWidget);
+    await tester.tap(find.text('3+2'));
+    await tester.pumpAndSettle();
+    Text clock(Side side) =>
+        tester.widget<Text>(find.byKey(ValueKey('clock-${side.name}')));
+    expect(clock(Side.white).data, '3:00');
+    expect(clock(Side.black).data, '3:00');
+    expect(find.byKey(const ValueKey('clock-active')), findsNothing);
+
+    await _tapMove(tester, 'e2e4');
+    final active = find.byKey(const ValueKey('clock-active'));
+    expect(
+      find.descendant(
+        of: active,
+        matching: find.byKey(const ValueKey('clock-black')),
+      ),
+      findsOneWidget,
+    );
+    await tester.pump(const Duration(milliseconds: 300));
+
+    await tester.tap(find.text('Nuova'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Senza tempo'));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('clock-white')), findsNothing);
+  });
+
   testWidgets('RF-120 una nuova partita Chess960 mescola la prima traversa', (
     tester,
   ) async {
@@ -224,6 +257,8 @@ void main() {
     await tester.tap(find.text('Nuova'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Chess960'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Senza tempo'));
     await tester.pumpAndSettle();
     expect(find.textContaining('Chess960 n. '), findsOneWidget);
     expect(find.text('Muove il Bianco.'), findsOneWidget);

@@ -35,6 +35,8 @@ Future<void> start(WidgetTester tester, String variant) async {
   await tester.pumpAndSettle();
   await tester.tap(find.text(variant));
   await tester.pumpAndSettle();
+  await tester.tap(find.text('Senza tempo'));
+  await tester.pumpAndSettle();
 }
 
 void main() {

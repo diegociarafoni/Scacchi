@@ -13,6 +13,7 @@ enum GameEndReason {
   fiftyMoveRule,
   resignation,
   agreement,
+  timeout,
 
   /// Vittoria propria della variante: re al centro, terzo scacco.
   variantEnd,
@@ -60,6 +61,7 @@ class ChessGame {
   final List<PlayedMove> _moves = [];
   Side? _resigned;
   bool _drawAgreed = false;
+  Side? _flagged;
 
   List<PlayedMove> get moves => List.unmodifiable(_moves);
 
@@ -67,7 +69,8 @@ class ChessGame {
 
   Move? get lastMove => _moves.isEmpty ? null : _moves.last.move;
 
-  bool get canUndo => _moves.isNotEmpty || _resigned != null || _drawAgreed;
+  bool get canUndo =>
+      _moves.isNotEmpty || _resigned != null || _drawAgreed || _flagged != null;
 
   /// Gioca [move] se è legale. Restituisce `false` se la mossa viene rifiutata.
   bool play(Move move) {
@@ -77,11 +80,12 @@ class ChessGame {
     return true;
   }
 
-  /// Revoca abbandono o patta concordata se presenti, altrimenti toglie l'ultima mossa.
+  /// Revoca abbandono, patta concordata o tempo scaduto se presenti, altrimenti toglie l'ultima mossa.
   void undo() {
-    if (_resigned != null || _drawAgreed) {
+    if (_resigned != null || _drawAgreed || _flagged != null) {
       _resigned = null;
       _drawAgreed = false;
+      _flagged = null;
     } else if (_moves.isNotEmpty) {
       _moves.removeLast();
     }
@@ -95,9 +99,15 @@ class ChessGame {
     if (!isOver) _drawAgreed = true;
   }
 
+  /// Registra il tempo scaduto per [side].
+  void flag(Side side) {
+    if (!isOver) _flagged = side;
+  }
+
   GameEndReason? get endReason {
     if (_resigned != null) return GameEndReason.resignation;
     if (_drawAgreed) return GameEndReason.agreement;
+    if (_flagged != null) return GameEndReason.timeout;
     final pos = position;
     if (pos.isVariantEnd) return GameEndReason.variantEnd;
     if (pos.isCheckmate) return GameEndReason.checkmate;
@@ -114,6 +124,10 @@ class ChessGame {
     null => null,
     GameEndReason.checkmate => Outcome(winner: position.turn.opposite),
     GameEndReason.resignation => Outcome(winner: _resigned!.opposite),
+    GameEndReason.timeout =>
+      position.hasInsufficientMaterial(_flagged!.opposite)
+          ? Outcome.draw
+          : Outcome(winner: _flagged!.opposite),
     GameEndReason.variantEnd => position.variantOutcome,
     _ => Outcome.draw,
   };
