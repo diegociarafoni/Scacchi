@@ -9,6 +9,7 @@ Nelle partite contro il computer o un bot la barra dei comandi ha il pulsante **
 - dopo ogni mossa dell'utente, e prima della risposta del computer, l'allenatore la giudica; con orologio e computer fermi durante il giudizio;
 - se è un errore o un errore grave compare un riquadro con la spiegazione e due scelte: **Riprova** (la mossa viene annullata, anche per l'orologio) o **Continua** (la partita prosegue);
 - nelle altre mosse il commento viene solo annunciato ai lettori di schermo;
+- il giudizio della mossa compare anche sulla scacchiera come nella revisione e su chess.com: il simbolo (`!!`, `!`, `★`, `?!`, `?`, `??`…) con il suo colore sulla casa d'arrivo. Resta finché non muove di nuovo l'utente, sparisce se la risposta del computer occupa quella casa, se si annulla la mossa, si sfoglia la cronologia o si spegne l'allenatore;
 - il pulsante **Aiuto** dà un suggerimento a livelli: al primo tocco il pezzo da muovere, al secondo la mossa.
 
 Se il motore non risponde l'allenatore tace e la partita prosegue. Nella partita tra due persone il pulsante non c'è.

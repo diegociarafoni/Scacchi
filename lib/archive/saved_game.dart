@@ -99,6 +99,9 @@ class SavedGame {
 
   bool get finished => result != '*';
 
+  /// Giocatori, per titoli ed elenchi.
+  String get title => '$white – $black';
+
   /// Punti dell'utente (1, ½, 0), o `null` se in corso o senza colore.
   double? get playerScore {
     final side = playerSide;

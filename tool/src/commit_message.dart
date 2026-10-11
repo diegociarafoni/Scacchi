@@ -25,6 +25,8 @@ final _gitMerge = RegExp(
 );
 final _gitRevert = RegExp(r'^Revert "');
 final _releaseCommit = RegExp(r'^chore\(main\): release \S+$');
+// Una sigla (XP, PGN, UCI, RF-10) può aprire la descrizione.
+final _acronym = RegExp(r'^[A-Z][A-Z0-9]+(?![A-Za-z])');
 // Commit da unire con rebase --autosquash: spariscono con lo squash merge.
 final _autosquash = RegExp(r'^(fixup|squash|amend)! ');
 
@@ -96,7 +98,7 @@ List<String> validateCommitMessage(
     errors.add('descrizione mancante');
   } else {
     final first = subject[0];
-    if (first != first.toLowerCase()) {
+    if (first != first.toLowerCase() && !_acronym.hasMatch(subject)) {
       errors.add('la descrizione inizia con la minuscola');
     }
     if (subject.endsWith('.')) {

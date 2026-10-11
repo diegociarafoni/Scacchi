@@ -543,4 +543,24 @@ void main() {
     expect(find.text('Muove il Bianco.'), findsOneWidget);
     expect(find.byKey(const ValueKey('player-white')), findsNothing);
   });
+
+  testWidgets('RP-02 tema scuro scelto nelle impostazioni', (tester) async {
+    await _start(tester);
+    Brightness brightness() =>
+        Theme.of(tester.element(find.byType(Chessboard))).brightness;
+    expect(brightness(), Brightness.light);
+
+    await _openSettings(tester);
+    await tester.tap(find.text('Scuro'));
+    await tester.pumpAndSettle();
+    expect(
+      Theme.of(tester.element(find.text('Impostazioni').last)).brightness,
+      Brightness.dark,
+    );
+    await _back(tester);
+    await tester.pumpAndSettle();
+    expect(brightness(), Brightness.dark);
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getString('themeMode'), 'dark');
+  });
 }

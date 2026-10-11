@@ -398,6 +398,12 @@ class _StreakCard extends StatelessWidget {
               '${progress.clamp(0, goal.target)} / ${goal.target} '
               '${_unit(goal.kind)}',
             ),
+            const SizedBox(height: 12),
+            for (final line in controller.streakInfo.lines)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: Text(line),
+              ),
           ],
         ),
       ),

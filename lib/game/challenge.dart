@@ -4,12 +4,13 @@ import '../progress/activity.dart';
 
 /// Partita già impostata contro il computer, lanciata da un'altra schermata
 /// (guardiano del percorso, partita di un torneo): parte subito, senza scelte
-/// e senza poter ricominciare o annullare.
+/// e senza poter ricominciare; l'annullamento dipende da [allowUndo].
 class GameChallenge {
   const GameChallenge({
     required this.title,
     required this.levelId,
     required this.side,
+    this.allowUndo = false,
   });
 
   /// Titolo della schermata, per esempio "Il guardiano".
@@ -20,6 +21,10 @@ class GameChallenge {
 
   /// Colore dell'utente.
   final Side side;
+
+  /// Se l'annullamento è consentito: sì nell'allenamento (guardiano), no nelle
+  /// partite che contano come torneo.
+  final bool allowUndo;
 }
 
 /// Stelle di una sfida vinta, in base alla lunghezza della partita: tre fino a

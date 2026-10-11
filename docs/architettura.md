@@ -12,6 +12,7 @@
 | Motore | [multistockfish](https://pub.dev/packages/multistockfish) (Stockfish 19 nativo) | Avversario computer su Android e iOS, in isolate separati |
 | File locali | [path_provider](https://pub.dev/packages/path_provider) | Cartella dati dell'app per i salvataggi |
 | Condivisione | [share_plus](https://pub.dev/packages/share_plus) | Menu di condivisione del sistema per il PGN |
+| Codici QR | [qr](https://pub.dev/packages/qr) e [flutter_zxing](https://pub.dev/packages/flutter_zxing) (zxing-cpp) | Generazione dei QR in Dart e lettura con la fotocamera, tutto sul dispositivo (vedi scambio-qr.md) |
 
 Entrambe le librerie sono sviluppate da Lichess e sono usate dalla sua app mobile.
 
@@ -46,6 +47,7 @@ lib/
   minigames/              Minigiochi di allenamento (vedi minigiochi.md)
   tournament/             Tornei offline contro bot (vedi tornei.md)
   reminders/              Promemoria giornaliero con notifiche locali (vedi gamification.md)
+  exchange/               Scambio di partite tra telefoni con il QR (vedi scambio-qr.md)
   storage/                File JSON locali con versione e scrittura atomica
   settings/
     settings.dart         Impostazioni, valori predefiniti e salvataggio locale

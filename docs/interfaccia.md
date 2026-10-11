@@ -45,6 +45,7 @@ Per ciascun giocatore una riga mostra le icone dei pezzi avversari catturati, da
 | Gira | Capovolge la scacchiera |
 | Patta | Chiede all'avversario se accetta la patta; disattivato a partita conclusa |
 | Abbandona | Chiede conferma e fa abbandonare il lato al tratto; disattivato a partita conclusa |
+| Menu ⋮, "Passa con QR" e "Ricevi con QR" | Passa la partita, anche in corso, a un altro telefono o la continua da un QR letto con la fotocamera; il menu c'è anche senza motore e nelle varianti, non nelle sfide contro guardiani e tornei né nel profilo bambino (vedi [scambio-qr.md](scambio-qr.md)) |
 | Menu ⋮, "Analisi della posizione" | Apre l'analisi libera della posizione corrente con orologio e computer fermi (vedi [analisi.md](analisi.md)) |
 | Menu ⋮, "Revisione della partita" | Apre la revisione con classificazione delle mosse e precisione (vedi [revisione-partita.md](revisione-partita.md)); il menu c'è solo dove c'è il motore e negli scacchi classici, non nelle varianti né nel profilo bambino |
 
@@ -103,6 +104,7 @@ Si aprono dall'icona a forma di ingranaggio nella barra del titolo. Ogni modific
 
 | Impostazione | Effetto | Predefinito |
 |---|---|---|
+| Aspetto dell'app | Sistema, Chiaro o Scuro: tema chiaro o scuro di tutta l'app, oppure lo stesso del telefono (requisito RP-02) | Sistema |
 | Mostra le mosse legali | Puntini sulle case raggiungibili dal pezzo selezionato | Attiva |
 | Coordinate | Lettere e numeri sui bordi della scacchiera | Attiva |
 | Promuovi sempre a donna | Salta il selettore di promozione | Disattiva |
@@ -129,7 +131,7 @@ A ogni mossa suona un solo effetto, scelto in quest'ordine di priorità: fine pa
 
 ## Tema
 
-L'app segue il tema chiaro o scuro del sistema. Tutti i testi sono in italiano.
+L'app segue il tema chiaro o scuro del sistema, a meno che in Impostazioni, alla voce «Aspetto dell'app», si scelga Chiaro o Scuro; la scelta vale subito per tutte le schermate. Tutti i testi sono in italiano.
 
 ### Colori per daltonici
 

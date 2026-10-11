@@ -55,6 +55,17 @@ class SettingsPage extends StatelessWidget {
                         set((c) => c.copyWith(kidMode: v));
                       },
                     ),
+                    const _Header('Aspetto dell\'app'),
+                    _Choices(
+                      values: ThemeMode.values,
+                      selected: s.themeMode,
+                      label: (m) => switch (m) {
+                        ThemeMode.system => 'Sistema',
+                        ThemeMode.light => 'Chiaro',
+                        ThemeMode.dark => 'Scuro',
+                      },
+                      onSelected: (m) => set((c) => c.copyWith(themeMode: m)),
+                    ),
                     const _Header('Scacchiera'),
                     SwitchListTile(
                       title: const Text('Mostra le mosse legali'),

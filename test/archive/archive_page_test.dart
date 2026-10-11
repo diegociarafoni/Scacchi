@@ -7,7 +7,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/archive/archive_page.dart';
 import 'package:scacchi/archive/game_archive.dart';
 import 'package:scacchi/archive/saved_game.dart';
+import 'package:scacchi/exchange/qr_send_page.dart';
+import 'package:scacchi/exchange/qr_transfer.dart';
 import 'package:scacchi/game/chess_game.dart';
+import 'package:scacchi/l10n/app_localizations.dart';
 
 ChessGame play(List<String> uci) {
   final game = ChessGame();
@@ -32,6 +35,7 @@ void main() {
   late GameArchive archive;
   final shared = <String>[];
   final opened = <String>[];
+  ValueChanged<String>? scan;
 
   setUp(() async {
     dir = Directory.systemTemp.createTempSync('archive_page');
@@ -70,10 +74,17 @@ void main() {
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
       MaterialApp(
+        locale: const Locale('it'),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         home: ArchivePage(
           archive: archive,
           share: (text) async => shared.add(text),
           onOpen: (g) => opened.add(g.id),
+          scanner: (context, {required onCode, required onError}) {
+            scan = onCode;
+            return const SizedBox.expand();
+          },
         ),
       ),
     );
@@ -160,5 +171,41 @@ void main() {
     await tester.tap(find.text('Copia PGN'));
     await tester.pumpAndSettle();
     expect(copied, contains('Qh4#'));
+  });
+
+  testWidgets('Cap. 7 scambio QR: passa una partita con QR', (tester) async {
+    await show(tester);
+    await tester.tap(find.byTooltip('Azioni per Anna – Bruno'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Passa con QR'));
+    await tester.pumpAndSettle();
+    final page = tester.widget<QrSendPage>(find.byType(QrSendPage));
+    final assembler = TransferAssembler();
+    final event = page.frames.map(assembler.add).last;
+    expect((event as TransferComplete).text, contains('2. g4 Qh4# 0-1'));
+  });
+
+  testWidgets('Cap. 7 scambio QR: riceve una partita e la importa', (
+    tester,
+  ) async {
+    await show(tester);
+    await tester.tap(find.byTooltip('Ricevi con QR'));
+    await tester.pumpAndSettle();
+    encodeTransfer('[White "Elena"]\n[Black "Franco"]\n\n1. d4 d5 *')
+        .forEach(scan!);
+    await settle(tester);
+    expect(find.text('Elena – Franco'), findsOneWidget);
+    expect(find.text('1 partita importata'), findsOneWidget);
+  });
+
+  testWidgets('Cap. 7 scambio QR: un testo che non è una partita non si '
+      'importa', (tester) async {
+    await show(tester);
+    await tester.tap(find.byTooltip('Ricevi con QR'));
+    await tester.pumpAndSettle();
+    encodeTransfer('ciao').forEach(scan!);
+    await settle(tester);
+    expect(find.text('Il QR non contiene una partita valida.'), findsOneWidget);
+    expect(await tester.runAsync(archive.list), hasLength(2));
   });
 }

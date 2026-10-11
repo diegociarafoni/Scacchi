@@ -55,6 +55,8 @@ Ogni funzione nasce dai requisiti del progetto, nel documento dei requisiti, con
 | Tornei | `test/tournament/` | Abbinamenti, simulazione, spareggi, salvataggio, schermata | `flutter test test/tournament` |
 | Scacchiera per esercizi | `test/training/` | Tema, pezzi e coordinate presi dalle impostazioni, senza capovolgere i pezzi | `flutter test test/training` |
 | Archivio | `test/archive/` | PGN, salvataggio su file, schermata Partite | `flutter test test/archive` |
+| Scambio QR | `test/exchange/`, `test/game/game_qr_test.dart` | Fotogrammi QR, validazione dei dati letti, schermate Passa e Ricevi, partita continuata (vedi scambio-qr.md) | `flutter test test/exchange` |
+| End-to-end | `integration_test/qr_exchange_test.dart` | QR disegnato dall'app letto da zxing-cpp, fotocamera assente | `flutter test integration_test/qr_exchange_test.dart -d linux` |
 | Golden | `test/settings/goldens/` | Schermata Impostazioni su telefono piccolo, medio e grande, con e senza colori per daltonici, e chip di temi e pezzi | `flutter test test/settings/board_preview_test.dart` |
 | End-to-end | `integration_test/*_test.dart` | L'app reale avviata su un dispositivo o desktop, con tocchi e trascinamenti sulla scacchiera | `flutter test integration_test -d <dispositivo>` |
 | End-to-end | `integration_test/computer_test.dart` | Partite contro un vero Stockfish (processo esterno, richiede `stockfish` installato) | `flutter test integration_test/computer_test.dart -d linux` |
@@ -87,6 +89,7 @@ I golden si rigenerano con `flutter test test/settings --update-goldens` dopo un
 | RP-04 anteprima delle impostazioni (widget test e golden su tre telefoni) | ✓ | |
 | RP-06 profilo bambino: impostazione, schede e sezioni semplificate | ✓ | |
 | RP-06 profilo bambino: niente statistiche numeriche in profilo, puzzle, revisione e analisi (widget test) | ✓ | |
+| RP-02 tema chiaro, scuro o di sistema scelto in Impostazioni (unitari, widget test e golden) | ✓ | ✓ |
 | RF-30 nomi dei giocatori | ✓ | ✓ |
 | RF-09 conferma della mossa | ✓ | ✓ |
 | RF-25 matto, stallo, materiale insufficiente, ripetizione, 50 mosse, abbandono | ✓ | matto, abbandono |
@@ -102,10 +105,12 @@ I golden si rigenerano con `flutter test test/settings --update-goldens` dopo un
 | RF-65 Riprova sugli errori | ✓ | |
 | RF-66 cache della revisione (in memoria) | ✓ | |
 | RF-70 spiegazioni: matto concesso o mancato, pezzo in presa, forchetta, inchiodatura, perdita di materiale | ✓ | |
+| RF-72 giudizio con simbolo sulla casa della mossa (con l'allenatore acceso) | ✓ | ✓ |
 | RF-71 cattura netta, doppio attacco, scoperta dalla variante del motore | ✓ | |
 | Cap. 7, errori trasformati in puzzle personali | ✓ | |
 | Cap. 7, puzzle personali salvati e nel ripasso | ✓ | ✓ |
 | RG-01 la revisione vale XP, una volta per partita | | ✓ |
+| Cap. 7, scambio tra telefoni con il QR | ✓ | ✓ |
 | RF-31 rotazione automatica a ogni turno | | ✓ |
 | RF-32 patta concordata e annullamento | ✓ | ✓ |
 | RF-100 salvataggio e partita da riprendere | ✓ | |
@@ -140,7 +145,7 @@ I golden si rigenerano con `flutter test test/settings --update-goldens` dopo un
 
 Il workflow `.github/workflows/ci.yml` gira su ogni pull request e su ogni push su `main`, tranne quando cambiano solo `docs/`, file Markdown o `LICENSE`:
 
-1. **test**, sempre: installa Stockfish (per i test d'integrazione del motore), verifica di localizzazione e formattazione, `flutter analyze`, `flutter test`. È il controllo bloccante di ogni PR.
+1. **test**, sempre: installa Stockfish (per i test d'integrazione del motore), verifica di localizzazione e formattazione, `flutter analyze`, `flutter test`, licenze delle dipendenze. È il controllo bloccante di ogni PR.
 2. **e2e**, se i test passano: installa Stockfish ed esegue i test end-to-end sull'app Linux desktop con uno schermo virtuale (`xvfb`), un file alla volta perché avvii ravvicinati dell'app Linux nello stesso comando falliscono.
 3. **android**, se i test passano: libera spazio sul runner (la compilazione nativa di Stockfish con l'NDK lo esaurisce), compila un APK di debug solo arm64 e lo pubblica come artefatto `scacchi-debug-apk` per 7 giorni.
 
@@ -172,6 +177,11 @@ Con 2000 minuti al mese si passa da circa 17 a circa 55 PR tipiche. Per controll
 
 Con le regole di protezione di `main` attive (vedi [convenzioni-git.md](convenzioni-git.md)) un job saltato conta come superato, ma una PR di sola documentazione non avvia la CI e resterebbe in attesa dei controlli obbligatori: in quel caso va tolto `paths-ignore` dall'evento `pull_request`.
 
+Altri workflow:
+
+- **Convenzioni** (`conventions.yml`, su ogni PR, meno di un minuto): nome del ramo, titolo della PR, messaggi dei commit e Gitleaks sui commit della PR, vedi [convenzioni-git.md](convenzioni-git.md).
+- **Sicurezza** (`security.yml`): Trivy, OSV-Scanner, Gitleaks su tutta la cronologia, zizmor e SBOM, su `main`, ogni lunedì e sulle PR che cambiano dipendenze o workflow, vedi [sicurezza.md](sicurezza.md).
+
 Il workflow `.github/workflows/apk-release.yml` produce l'APK release installabile sul telefono e lo pubblica come GitHub Release: vedi [rilascio-android.md](rilascio-android.md).
 
 ## Convenzioni
@@ -181,4 +191,5 @@ Il workflow `.github/workflows/apk-release.yml` produce l'APK release installabi
 - Testi dell'interfaccia in italiano.
 - Logica di gioco separata dall'interfaccia (`ChessGame` non importa Flutter), così da poterla testare in isolamento.
 - Analisi statica rigorosa (`analysis_options.yaml`): tipi stretti, `Future` sempre attesi o marcati con `unawaited`, nessun avviso ammesso.
+- Prima del push: `tool/verifica.sh --test` (rami, commit, formattazione, analisi, test), vedi [convenzioni-git.md](convenzioni-git.md#senza-hook-toolverificash).
 - Rami, commit Angular, hook e merge: [convenzioni-git.md](convenzioni-git.md).
