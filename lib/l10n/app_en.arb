@@ -1,4 +1,7 @@
 {
   "@@locale": "en",
-  "appTitle": "Chess"
+  "appTitle": "Chess",
+  "kidProfileSection": "Profile",
+  "kidProfile": "Kid profile",
+  "kidProfileDescription": "Simpler screens and words, friendly bots, no numbers"
 }

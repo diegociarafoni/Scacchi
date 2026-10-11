@@ -23,6 +23,7 @@ void main() {
     expect(settings.value.tableMode, isFalse);
     expect(settings.value.confirmMove, isFalse);
     expect(settings.value.colorBlind, isFalse);
+    expect(settings.value.kidMode, isFalse);
   });
 
   test('RP-04 le impostazioni sono salvate in locale', () async {
@@ -43,6 +44,7 @@ void main() {
         tableMode: true,
         confirmMove: true,
         colorBlind: true,
+        kidMode: true,
       ),
     );
     final reloaded = await SettingsController.load();

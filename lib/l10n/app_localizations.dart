@@ -103,6 +103,24 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Scacchi'**
   String get appTitle;
+
+  /// Intestazione della sezione del profilo nelle Impostazioni
+  ///
+  /// In it, this message translates to:
+  /// **'Profilo'**
+  String get kidProfileSection;
+
+  /// Interruttore del profilo bambino (RP-06) nelle Impostazioni
+  ///
+  /// In it, this message translates to:
+  /// **'Profilo bambino'**
+  String get kidProfile;
+
+  /// Spiegazione sotto l'interruttore del profilo bambino
+  ///
+  /// In it, this message translates to:
+  /// **'Interfaccia e testi più semplici, bot amichevoli, niente numeri'**
+  String get kidProfileDescription;
 }
 
 class _AppLocalizationsDelegate

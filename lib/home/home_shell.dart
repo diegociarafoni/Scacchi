@@ -146,12 +146,35 @@ class _HomeShellState extends State<HomeShell> {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => ListenableBuilder(
+    listenable: widget.settings,
+    builder: (context, _) => _build(context, widget.settings.value.kidMode),
+  );
+
+  Widget _build(BuildContext context, bool kidMode) {
+    // Nel profilo bambino le aperture restano nascoste (RP-06).
+    final tabs = [0, 1, if (!kidMode) 2, 3];
+    if (!tabs.contains(_tab)) _tab = 0;
     if (_tab == 1) {
       _trainer ??= _loadTrainer();
     }
     if (_tab == 2) _repertoire ??= _loadRepertoire();
     if (_tab == 3) _youVisited = true;
+    const destinations = [
+      NavigationDestination(
+        icon: Icon(Icons.sports_esports_outlined),
+        label: 'Gioca',
+      ),
+      NavigationDestination(
+        icon: Icon(Icons.extension_outlined),
+        label: 'Puzzle',
+      ),
+      NavigationDestination(
+        icon: Icon(Icons.menu_book_outlined),
+        label: 'Aperture',
+      ),
+      NavigationDestination(icon: Icon(Icons.person_outline), label: 'Tu'),
+    ];
     return Scaffold(
       body: IndexedStack(
         index: _tab,
@@ -176,29 +199,16 @@ class _HomeShellState extends State<HomeShell> {
               path: _pathController,
               archive: _archive,
               reminders: () => _reminders,
+              simple: kidMode,
             )
           else
             const SizedBox.shrink(),
         ],
       ),
       bottomNavigationBar: NavigationBar(
-        selectedIndex: _tab,
-        onDestinationSelected: (i) => setState(() => _tab = i),
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(Icons.sports_esports_outlined),
-            label: 'Gioca',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.extension_outlined),
-            label: 'Puzzle',
-          ),
-          NavigationDestination(
-            icon: Icon(Icons.menu_book_outlined),
-            label: 'Aperture',
-          ),
-          NavigationDestination(icon: Icon(Icons.person_outline), label: 'Tu'),
-        ],
+        selectedIndex: tabs.indexOf(_tab),
+        onDestinationSelected: (i) => setState(() => _tab = tabs[i]),
+        destinations: [for (final t in tabs) destinations[t]],
       ),
     );
   }

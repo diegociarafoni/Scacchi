@@ -4,6 +4,7 @@ import 'package:dartchess/dartchess.dart' show PieceKind;
 import 'package:flutter/material.dart';
 
 import '../backup/backup_page.dart';
+import '../l10n/app_localizations.dart';
 import '../progress/progress_controller.dart';
 import '../progress/rewards.dart';
 import 'board_preview.dart';
@@ -25,6 +26,7 @@ class SettingsPage extends StatelessWidget {
         listenable: Listenable.merge([controller, progress]),
         builder: (context, _) {
           final s = controller.value;
+          final l10n = AppLocalizations.of(context);
           void set(AppSettings Function(AppSettings) change) =>
               controller.update(change(controller.value));
           final p = progress;
@@ -39,6 +41,15 @@ class SettingsPage extends StatelessWidget {
               Expanded(
                 child: ListView(
                   children: [
+                    _Header(l10n.kidProfileSection),
+                    SwitchListTile(
+                      key: const Key('kidMode'),
+                      secondary: const Icon(Icons.child_care),
+                      title: Text(l10n.kidProfile),
+                      subtitle: Text(l10n.kidProfileDescription),
+                      value: s.kidMode,
+                      onChanged: (v) => set((c) => c.copyWith(kidMode: v)),
+                    ),
                     const _Header('Scacchiera'),
                     SwitchListTile(
                       title: const Text('Mostra le mosse legali'),

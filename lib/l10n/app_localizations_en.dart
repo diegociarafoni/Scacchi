@@ -11,4 +11,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get appTitle => 'Chess';
+
+  @override
+  String get kidProfileSection => 'Profile';
+
+  @override
+  String get kidProfile => 'Kid profile';
+
+  @override
+  String get kidProfileDescription =>
+      'Simpler screens and words, friendly bots, no numbers';
 }

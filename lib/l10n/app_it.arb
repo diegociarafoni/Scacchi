@@ -3,5 +3,17 @@
   "appTitle": "Scacchi",
   "@appTitle": {
     "description": "Titolo dell'app nel selettore delle attività; il nome sotto l'icona è in AndroidManifest.xml e Info.plist"
+  },
+  "kidProfileSection": "Profilo",
+  "@kidProfileSection": {
+    "description": "Intestazione della sezione del profilo nelle Impostazioni"
+  },
+  "kidProfile": "Profilo bambino",
+  "@kidProfile": {
+    "description": "Interruttore del profilo bambino (RP-06) nelle Impostazioni"
+  },
+  "kidProfileDescription": "Interfaccia e testi più semplici, bot amichevoli, niente numeri",
+  "@kidProfileDescription": {
+    "description": "Spiegazione sotto l'interruttore del profilo bambino"
   }
 }

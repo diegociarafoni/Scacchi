@@ -21,6 +21,7 @@ class YouPage extends StatelessWidget {
     required this.path,
     required this.archive,
     this.reminders,
+    this.simple = false,
   });
 
   /// Fonti dei dati: chiamate a ogni apertura, così un errore si riprova.
@@ -31,6 +32,10 @@ class YouPage extends StatelessWidget {
   /// Promemoria giornaliero, se il dispositivo ha le notifiche programmate;
   /// letto all'apertura del Profilo perché nasce dopo i progressi.
   final ReminderController? Function()? reminders;
+
+  /// Profilo bambino (RP-06): niente statistiche, archivio e strumenti per
+  /// adulti, solo profilo, percorso e minigiochi.
+  final bool simple;
 
   void _push(BuildContext context, Widget page) =>
       Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => page));
@@ -116,33 +121,40 @@ class YouPage extends StatelessWidget {
                   (p) => MinigamesPage(progress: p),
                 ),
               ),
-              _Entry(
-                icon: Icons.insights_outlined,
-                title: 'Statistiche',
-                subtitle: 'Risultati, aperture, cadenze e rating locale',
-                onTap: () =>
-                    _open(context, archive(), (a) => StatsPage(archive: a)),
-              ),
-              _Entry(
-                icon: Icons.auto_awesome_outlined,
-                title: 'La tua settimana',
-                subtitle: 'Riepilogo degli ultimi sette giorni, da condividere',
-                onTap: () =>
-                    _open(context, archive(), (a) => PortraitPage(archive: a)),
-              ),
-              _Entry(
-                icon: Icons.timer_outlined,
-                title: 'Scacchiera fisica',
-                subtitle: 'Orologio e registro per una partita dal vivo',
-                onTap: () => _push(context, PhysicalGamePage(archive: archive)),
-              ),
-              _Entry(
-                icon: Icons.inventory_2_outlined,
-                title: 'Archivio',
-                subtitle: 'Partite salvate, import ed export PGN',
-                onTap: () =>
-                    _open(context, archive(), (a) => ArchivePage(archive: a)),
-              ),
+              if (!simple) ...[
+                _Entry(
+                  icon: Icons.insights_outlined,
+                  title: 'Statistiche',
+                  subtitle: 'Risultati, aperture, cadenze e rating locale',
+                  onTap: () =>
+                      _open(context, archive(), (a) => StatsPage(archive: a)),
+                ),
+                _Entry(
+                  icon: Icons.auto_awesome_outlined,
+                  title: 'La tua settimana',
+                  subtitle:
+                      'Riepilogo degli ultimi sette giorni, da condividere',
+                  onTap: () => _open(
+                    context,
+                    archive(),
+                    (a) => PortraitPage(archive: a),
+                  ),
+                ),
+                _Entry(
+                  icon: Icons.timer_outlined,
+                  title: 'Scacchiera fisica',
+                  subtitle: 'Orologio e registro per una partita dal vivo',
+                  onTap: () =>
+                      _push(context, PhysicalGamePage(archive: archive)),
+                ),
+                _Entry(
+                  icon: Icons.inventory_2_outlined,
+                  title: 'Archivio',
+                  subtitle: 'Partite salvate, import ed export PGN',
+                  onTap: () =>
+                      _open(context, archive(), (a) => ArchivePage(archive: a)),
+                ),
+              ],
             ],
           );
         },

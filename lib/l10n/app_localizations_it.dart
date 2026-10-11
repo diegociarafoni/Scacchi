@@ -11,4 +11,14 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get appTitle => 'Scacchi';
+
+  @override
+  String get kidProfileSection => 'Profilo';
+
+  @override
+  String get kidProfile => 'Profilo bambino';
+
+  @override
+  String get kidProfileDescription =>
+      'Interfaccia e testi più semplici, bot amichevoli, niente numeri';
 }
