@@ -156,7 +156,7 @@ I golden si rigenerano con `flutter test test/settings --update-goldens` dopo un
 | RG-01 XP per i puzzle risolti | ✓ | |
 | RF-82 Combo a tempo, corsa, sopravvivenza, serie | ✓ | ✓ |
 | RF-85 ripasso dei puzzle sbagliati | ✓ | |
-| RF-86 allenatore dei finali: esito, stelle, ripetizione | ✓ | |
+| RF-86 allenatore dei finali: esito, stelle, ripetizione, schermate | ✓ | |
 | RG-08 record personali delle serie | ✓ | ✓ |
 | RF-90 nome dell'apertura in partita | ✓ | ✓ |
 | RF-91 mosse di libro | ✓ | |
