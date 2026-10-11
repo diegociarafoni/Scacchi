@@ -2104,23 +2104,28 @@ class _ActionButton extends StatelessWidget {
         ? Theme.of(context).disabledColor
         : Theme.of(context).colorScheme.onSurface;
     return Expanded(
-      child: InkWell(
-        onTap: onPressed,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: color),
-            const SizedBox(height: 4),
-            // Con sei pulsanti le etichette lunghe si rimpiccioliscono.
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                label,
-                style: Theme.of(context).textTheme.labelMedium
-                    ?.copyWith(color: color),
+      // Senza, il lettore di schermo non lo annuncia come pulsante né come disattivato.
+      child: Semantics(
+        button: true,
+        enabled: onPressed != null,
+        child: InkWell(
+          onTap: onPressed,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(icon, color: color),
+              const SizedBox(height: 4),
+              // Con sei pulsanti le etichette lunghe si rimpiccioliscono.
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  label,
+                  style: Theme.of(context).textTheme.labelMedium
+                      ?.copyWith(color: color),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

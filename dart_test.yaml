@@ -1,0 +1,3 @@
+tags:
+  # Immagini di riferimento generate su Linux: confrontarle solo su Linux (CI o Docker).
+  golden:
