@@ -11,9 +11,10 @@ Prima versione giocabile:
 - promozione con scelta del pezzo;
 - fine partita: scacco matto, stallo, materiale insufficiente, triplice ripetizione, regola delle 50 mosse, patta concordata, abbandono;
 - annullamento delle mosse, nuova partita, lista delle mosse in notazione algebrica;
-- capovolgimento della scacchiera, anche automatico a ogni turno.
+- capovolgimento della scacchiera, anche automatico a ogni turno;
+- partita contro il computer (Stockfish sul dispositivo, Android e iOS) con 8 livelli di difficoltà.
 
-In arrivo: partita contro il computer (Stockfish sul dispositivo), orologio, salvataggio delle partite e PGN.
+In arrivo: orologio, salvataggio delle partite e PGN.
 
 ## Documentazione
 
@@ -21,4 +22,4 @@ La documentazione completa è in [docs/](docs/README.md): architettura, regole d
 
 ## Licenza
 
-GPL-3.0, vedi [LICENSE](LICENSE). Le risorse di terze parti sono elencate in [CREDITS.md](CREDITS.md).
+GPL-3.0, vedi [LICENSE](LICENSE), con un permesso aggiuntivo per la pubblicazione sugli store (vedi [NOTICE.md](NOTICE.md)). Le risorse di terze parti sono elencate in [CREDITS.md](CREDITS.md).

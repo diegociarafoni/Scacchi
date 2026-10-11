@@ -9,6 +9,7 @@
 | Salvataggio impostazioni | [shared_preferences](https://pub.dev/packages/shared_preferences) | Memorizzazione locale delle impostazioni |
 | Audio | [audioplayers](https://pub.dev/packages/audioplayers) | Riproduzione dei suoni |
 | Scacchiera | [chessground](https://pub.dev/packages/chessground) | Disegno della scacchiera, trascinamento e tocco, animazioni, evidenziazioni, scelta della promozione |
+| Motore | [multistockfish](https://pub.dev/packages/multistockfish) (Stockfish 19 nativo) | Avversario computer su Android e iOS, in isolate separati |
 | File locali | [path_provider](https://pub.dev/packages/path_provider) | Cartella dati dell'app per i salvataggi |
 | Condivisione | [share_plus](https://pub.dev/packages/share_plus) | Menu di condivisione del sistema per il PGN |
 
@@ -33,6 +34,8 @@ lib/
     move_input.dart       Lettura di una mossa scritta (SAN inglese o italiana, UCI)
     move_speech.dart      Frase da annunciare al lettore di schermo per ogni mossa
     game_page.dart        Schermata di gioco
+    opponent_picker.dart  Scelta di avversario, colore e livello
+  engine/                 Avversario computer (vedi avversario-computer.md)
   progress/               Gamification: XP, livelli, serie, traguardi (vedi gamification.md)
   archive/                Archivio delle partite e PGN (vedi archivio.md)
   path/                   Percorso a tappe con stelle (vedi percorso.md)
@@ -64,6 +67,8 @@ tool/generate_sounds.py   Generatore dei suoni
   settings_test.dart      Test delle impostazioni e del salvataggio
   training/               Test della scacchiera per esercizi
   widget_test.dart        Test di avvio dell'interfaccia
+  computer_game_test.dart Partita contro il computer nell'interfaccia
+  engine/                 Test del protocollo UCI, dei livelli e di Stockfish
 integration_test/
   app_test.dart           Test end-to-end sull'app reale
 docs/                     Questa documentazione
@@ -121,6 +126,7 @@ Flusso di una mossa:
 
 A partita conclusa `GameData.playerSide` vale `PlayerSide.none`, quindi la scacchiera non accetta altre mosse.
 
+Contro il computer, dopo la mossa del giocatore `GamePage` chiede a `ComputerPlayer` la risposta per la posizione FEN corrente e la passa a `ChessGame.play`; mentre il computer pensa la scacchiera è bloccata. I dettagli sono in [avversario-computer.md](avversario-computer.md).
+
 ## Evoluzioni previste
 
-- Il motore Stockfish per la partita contro il computer si aggancerà a `GamePage` come secondo giocatore, ricevendo la posizione FEN e restituendo una mossa da passare a `ChessGame.play`.
