@@ -23,6 +23,66 @@ CoachSession session({List<String>? calls}) => CoachSession(
 );
 
 void main() {
+  group('RF-56 minaccia dell\'avversario', () {
+    test(
+      'è la mossa che l\'avversario giocherebbe se toccasse a lui',
+      () async {
+        final fens = <String>[];
+        final s = CoachSession(
+          evaluate: (fen) async {
+            fens.add(fen);
+            return [
+              const InfoLine(
+                multipv: 1,
+                pv: ['h5f7'],
+                score: EngineScore.mate(1),
+              ),
+            ];
+          },
+        );
+        final move = await s.threat(scholarBeforeBlack());
+        expect(move, const NormalMove(from: Square.h5, to: Square.f7));
+        // Il motore ha analizzato la posizione con il turno passato al Bianco.
+        expect(fens.single.split(' ')[1], 'w');
+      },
+    );
+
+    test('sotto scacco non c\'è una minaccia da mostrare', () async {
+      var calls = 0;
+      final s = CoachSession(
+        evaluate: (_) async {
+          calls++;
+          return [];
+        },
+      );
+      final checked = Chess.fromSetup(
+        Setup.parseFen('4k3/8/8/8/8/8/4r3/4K3 w - - 0 1'),
+      );
+      expect(await s.threat(checked), isNull);
+      expect(calls, 0);
+    });
+
+    test('senza risposta del motore non c\'è minaccia', () async {
+      final s = CoachSession(evaluate: (_) async => []);
+      expect(await s.threat(Chess.initial), isNull);
+    });
+
+    test('l\'arrocco si mostra con la destinazione del re', () async {
+      final s = CoachSession(
+        evaluate: (_) async => [
+          const InfoLine(multipv: 1, pv: ['e8g8'], score: EngineScore.cp(0)),
+        ],
+      );
+      final pos = Chess.fromSetup(
+        Setup.parseFen('r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1'),
+      );
+      expect(
+        await s.threat(pos),
+        const NormalMove(from: Square.e8, to: Square.g8),
+      );
+    });
+  });
+
   group('RF-73 avviso in tempo reale', () {
     test('un errore grave avverte e spiega', () async {
       final v = await session().judge(
