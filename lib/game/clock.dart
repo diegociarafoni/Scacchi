@@ -132,3 +132,18 @@ String formatClock(Duration d) {
 }
 
 bool isLowTime(Duration d) => d < const Duration(seconds: 10);
+
+/// Segnala quando un lato scende sotto la soglia di poco tempo; si riarma se risale.
+class LowTimeAlarm {
+  final Set<Side> _warned = {};
+
+  bool check(Side side, Duration remaining) {
+    if (!isLowTime(remaining)) {
+      _warned.remove(side);
+      return false;
+    }
+    return _warned.add(side);
+  }
+
+  void reset() => _warned.clear();
+}

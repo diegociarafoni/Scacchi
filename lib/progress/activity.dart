@@ -1,5 +1,8 @@
 import 'package:dartchess/dartchess.dart';
 
+/// Registrazione di un'attività nei progressi, passata alle schermate.
+typedef RecordActivity = Future<void> Function(Activity activity);
+
 /// Risultato di una partita dal punto di vista del giocatore.
 ///
 /// [local] indica una partita tra due persone sullo stesso dispositivo, senza
@@ -67,6 +70,32 @@ class PuzzleRunFinished extends Activity {
   /// Identificativo stabile della modalità, per esempio `rush5` o `streak`.
   final String mode;
   final int score;
+}
+
+/// Fine di una sessione di minigioco (RG-10).
+class MinigameFinished extends Activity {
+  const MinigameFinished({
+    required this.game,
+    required this.score,
+    super.duration,
+  });
+
+  /// Identificativo stabile del minigioco, per esempio `coordinate`.
+  final String game;
+  final int score;
+}
+
+/// Fine di un torneo offline contro bot (RG-09).
+class TournamentFinished extends Activity {
+  const TournamentFinished({
+    required this.rank,
+    required this.players,
+    super.duration,
+  });
+
+  /// Posizione finale dell'utente, da 1.
+  final int rank;
+  final int players;
 }
 
 class LessonCompleted extends Activity {

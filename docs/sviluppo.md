@@ -5,7 +5,7 @@
 - [Flutter](https://docs.flutter.dev/get-started/install), canale stable, versione 3.47 o successiva (la CI usa 3.47.7).
 - Per Android: Android Studio o Android SDK, Java 17.
 - Per iOS e macOS: un Mac con Xcode, oppure un servizio di build in cloud.
-- Per Linux desktop: le librerie di sviluppo GTK 3 (`libgtk-3-dev`).
+- Per Linux desktop: le librerie di sviluppo GTK 3 e GStreamer (`libgtk-3-dev`, `libgstreamer1.0-dev`, `libgstreamer-plugins-base1.0-dev`) e, per riprodurre i suoni, i plugin `gstreamer1.0-plugins-base` e `gstreamer1.0-plugins-good`: senza questi ultimi l'app si chiude al primo suono.
 
 ## Comandi
 
@@ -19,6 +19,10 @@ dart format lib test                  # formattazione
 flutter build apk                     # APK Android
 flutter build ios                     # app iOS (su Mac)
 ```
+
+## Suoni
+
+I file in `assets/sounds/` si rigenerano con `python3 tool/generate_sounds.py`.
 
 ## Test
 
@@ -35,13 +39,15 @@ Ogni funzione nasce dai requisiti del progetto, nel documento dei requisiti, con
 
 | Livello | Cartella | Cosa verifica | Comando |
 |---|---|---|---|
-| Unitari | `test/chess_game_test.dart`, `test/material_test.dart`, `test/settings_test.dart`, `test/clock_test.dart` | Regole e fine partita su `ChessGame`; pezzi catturati e vantaggio su `MaterialBalance`; impostazioni e salvataggio; orologio; senza interfaccia | `flutter test` |
+| Unitari | `test/chess_game_test.dart`, `test/material_test.dart`, `test/settings_test.dart`, `test/clock_test.dart`, `test/sound_test.dart` | Regole e fine partita su `ChessGame`; pezzi catturati e vantaggio su `MaterialBalance`; impostazioni e salvataggio; orologio; scelta dei suoni; senza interfaccia | `flutter test` |
 | Unitari | `test/engine/` | Protocollo UCI, scelta delle mosse, `ComputerPlayer` con motore finto e con Stockfish reale (se installato) | `flutter test` |
 | Widget | `test/widget_test.dart` | Avvio dell'app e stato iniziale | `flutter test` |
 | Widget | `test/computer_game_test.dart` | Partita contro il computer con un motore finto | `flutter test` |
 | Gamification | `test/progress/` | Regole di XP, serie e traguardi; salvataggio; schermata Profilo | `flutter test test/progress` |
 | Percorso | `test/path/` | Esercizi, contenuti, sblocco, mappa e tappe sulla scacchiera | `flutter test test/path` |
 | Statistiche | `test/stats/` | Bilancio, rating locale, schermata | `flutter test test/stats` |
+| Minigiochi | `test/minigames/` | Generazione risolvibile, risposte, schermate, registrazione dei punteggi | `flutter test test/minigames` |
+| Tornei | `test/tournament/` | Abbinamenti, simulazione, spareggi, salvataggio, schermata | `flutter test test/tournament` |
 | Archivio | `test/archive/` | PGN, salvataggio su file, schermata Partite | `flutter test test/archive` |
 | End-to-end | `integration_test/*_test.dart` | L'app reale avviata su un dispositivo o desktop, con tocchi e trascinamenti sulla scacchiera | `flutter test integration_test -d <dispositivo>` |
 | End-to-end | `integration_test/computer_test.dart` | Partite contro un vero Stockfish (processo esterno, richiede `stockfish` installato) | `flutter test integration_test/computer_test.dart -d linux` |
@@ -65,6 +71,7 @@ I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisic
 | Annullamento contro il computer (mossa e risposta) | | ✓ |
 | RF-40, RF-41 cadenze, incremento, avvisi, tempo scaduto | ✓ | ✓ |
 | RF-40 orologio contro il computer, annullamento con orologio | | ✓ |
+| RP-03 suoni e vibrazione, RF-31 modalità tavolo | ✓ | ✓ |
 | RF-25 matto, stallo, materiale insufficiente, ripetizione, 50 mosse, abbandono | ✓ | matto, abbandono |
 | RF-25 patta accettata dal computer in base alla valutazione | ✓ | ✓ |
 | RF-31 rotazione automatica a ogni turno | | ✓ |
@@ -79,15 +86,23 @@ I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisic
 | RG-01 XP e livelli | ✓ | |
 | RG-02 obiettivo giornaliero, serie, riposo, protezioni | ✓ | |
 | RG-03 percorso a tappe, stelle, sblocco, contenuti verificati | ✓ | |
-| RG-05 33 traguardi e notifica in-app | ✓ | |
+| RG-05 37 traguardi e notifica in-app | ✓ | |
 | RG-07 sfide giornaliere e settimanali | ✓ | |
 | RG-08 record personali | ✓ | |
+| RG-10 minigiochi | ✓ | |
+| RG-09 tornei offline contro bot | ✓ | |
 | RG-12 gamification disattivabile | ✓ | |
 | RF-80 raccolta di puzzle inclusa e valida | ✓ | ✓ |
 | RF-81 risoluzione e punteggio Glicko-2 | ✓ | ✓ |
 | RF-83 suggerimento, soluzione, filtro per tema | ✓ | ✓ |
 | RF-84 puzzle del giorno | ✓ | ✓ |
 | RG-01 XP per i puzzle risolti | ✓ | |
+| RF-82 Storm, Rush, sopravvivenza, Serie | ✓ | ✓ |
+| RF-85 ripasso dei puzzle sbagliati | ✓ | |
+| RG-08 record personali delle serie | ✓ | ✓ |
+| RF-90 nome dell'apertura in partita | ✓ | ✓ |
+| RF-91 mosse di libro | ✓ | |
+| RF-92 explorer ridotto | ✓ | ✓ |
 
 ## Integrazione continua
 

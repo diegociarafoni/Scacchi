@@ -8,12 +8,14 @@ import 'package:flutter/material.dart';
 import '../engine/computer_player.dart';
 import '../engine/levels.dart';
 import '../engine/uci_transport.dart';
+import '../openings/opening_name.dart';
 import '../settings/settings.dart';
 import '../settings/settings_page.dart';
 import 'chess_game.dart';
 import 'clock.dart';
 import 'material.dart';
 import 'new_game_dialog.dart';
+import 'sounds.dart';
 
 /// Partita tra due persone sullo stesso dispositivo o contro il computer.
 class GamePage extends StatefulWidget {
@@ -65,6 +67,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   bool _inBackground = false;
   final List<Map<Side, Duration>> _clockHistory = [];
   final ValueNotifier<int> _tick = ValueNotifier(0);
+  final SoundPlayer _sounds = SoundPlayer();
+  final LowTimeAlarm _lowTime = LowTimeAlarm();
 
   AppSettings get _settings => widget.settings.value;
 
@@ -158,6 +162,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
     _ticker?.cancel();
     _tick.dispose();
+    _sounds.dispose();
     _board.dispose();
     super.dispose();
   }
@@ -219,10 +224,14 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final flagged = clock?.flagged;
     if (flagged != null) {
       _game.flag(flagged);
+      _playSound(GameSound.gameEnd);
       return false;
     }
     final before = clock?.snapshot();
+    final position = _game.position;
     if (!_game.play(move)) return false;
+    final sound = soundForLastMove(_game, position);
+    if (sound != null) _playSound(sound);
     if (clock != null) {
       _clockHistory.add(before!);
       if (clock.isRunning) {
@@ -306,14 +315,27 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   }
 
   void _onTick(Timer _) {
-    final flagged = _clock?.flagged;
+    final clock = _clock;
+    final flagged = clock?.flagged;
     if (flagged != null && !_game.isOver) {
       _cancelComputerMove();
       _game.flag(flagged);
+      _playSound(GameSound.gameEnd);
       _refresh(animate: false);
-    } else {
-      _tick.value++;
+      return;
     }
+    final active = clock?.active;
+    if (active != null &&
+        active != _computerSide &&
+        _lowTime.check(active, clock!.remaining(active))) {
+      _playSound(GameSound.lowTime);
+    }
+    _tick.value++;
+  }
+
+  void _playSound(GameSound sound) {
+    final s = _settings;
+    _sounds.play(sound, enabled: s.sound, volume: s.volume, haptics: s.haptics);
   }
 
   /// Chiude selezione e selettore di promozione rimasti aperti sulla scacchiera.
@@ -362,6 +384,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final control = setup.timeControl;
     _clock = control == null ? null : ChessClock(control, now: widget.now);
     _clockHistory.clear();
+    _lowTime.reset();
     _clearBoardInteraction();
     if (setup.opponent == Opponent.computer) {
       final human = setup.resolveHumanSide(_random);
@@ -442,6 +465,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     if (!mounted) return;
     if (confirmed == true) {
       _game.resign(side);
+      _playSound(GameSound.gameEnd);
       _refresh(animate: false);
     }
   }
@@ -477,6 +501,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     if (error != null) return _showMessage('Il computer non risponde.');
     if (_accepts(computerScore)) {
       _game.agreeDraw();
+      _playSound(GameSound.gameEnd);
       _refresh(animate: false);
       _showMessage('Il computer accetta la patta.');
     } else {
@@ -509,6 +534,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     if (!mounted) return;
     if (accepted == true) {
       _game.agreeDraw();
+      _playSound(GameSound.gameEnd);
       _refresh(animate: false);
     }
   }
@@ -538,11 +564,23 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     return Scaffold(
       appBar: AppBar(
         title: _computerSide == null
-            ? const Text('Scacchi')
+            ? OpeningName(
+                positions: [
+                  _game.initial,
+                  for (final m in _game.moves) m.after,
+                ],
+                fallback: 'Scacchi',
+              )
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Scacchi'),
+                  OpeningName(
+                    positions: [
+                      _game.initial,
+                      for (final m in _game.moves) m.after,
+                    ],
+                    fallback: 'Scacchi',
+                  ),
                   Text(
                     'Computer, livello ${_setup.level}: '
                     '${engineLevel(_setup.level).name}',

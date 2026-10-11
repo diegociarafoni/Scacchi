@@ -16,9 +16,11 @@ Requisiti RG-01, RG-02, RG-05, RG-07, RG-08 e RG-12. Il codice è in `lib/progre
 | Partita patta | 12 |
 | Partita vinta | 15 |
 | Puzzle risolto | 5 |
+| Minigioco concluso con almeno un punto | 5 |
 | Sessione di puzzle a tempo o a serie conclusa | 10 |
 | Lezione completata | 20 |
 | Revisione completata | 20 |
+| Torneo concluso | 30 |
 | Obiettivo giornaliero raggiunto | +10 |
 | Sfida giornaliera completata | +20 |
 | Sfida settimanale completata | +50 |
@@ -48,11 +50,11 @@ Il livello *L* richiede `50 × L × (L − 1)` XP totali: livello 2 a 100 XP, 3 
 
 ## Record personali (RG-08)
 
-Serie più lunga, bot più forte battuto (Elo), matto con meno mosse (solo vittorie per scacco matto, non per abbandono), precisione migliore in revisione, punteggio puzzle massimo e miglior punteggio per ciascuna modalità a tempo o a serie. Tutti i record sono elencati nel Profilo. La notifica in-app annuncia un record solo quando ne batte uno precedente (il primo valore si salva in silenzio) e, per il punteggio puzzle, solo quando supera un nuovo centinaio, per non ripetersi a ogni puzzle.
+Serie più lunga, bot più forte battuto (Elo), matto con meno mosse (solo vittorie per scacco matto, non per abbandono), precisione migliore in revisione, punteggio puzzle massimo e miglior punteggio per ciascuna modalità a tempo o a serie e per ciascun minigioco. Tutti i record sono elencati nel Profilo. La notifica in-app annuncia un record solo quando ne batte uno precedente (il primo valore si salva in silenzio) e, per il punteggio puzzle, solo quando supera un nuovo centinaio, per non ripetersi a ogni puzzle.
 
 ## Traguardi (RG-05)
 
-33 traguardi in quattro categorie (gioco, tattica, costanza, curiosità), sbloccabili una sola volta e annunciati con una notifica in-app (`showProgressFeedback`). Alcuni esempi: prima vittoria, vittoria con il nero, miniatura (matto in meno di 20 mosse), bot da 1500 e 2000 Elo battuti, matto con il cavallo o con un pedone, vittoria con arrocco lungo, brillante trovata, 10 puzzle di forchetta o di matto, 20 punti in una modalità a tempo, giornata perfetta (tre sfide), 3, 7 e 30 giorni di fila, precisione del 90%, livello 5 e 10. L'elenco completo è in `lib/progress/achievements.dart`.
+37 traguardi in quattro categorie (gioco, tattica, costanza, curiosità), sbloccabili una sola volta e annunciati con una notifica in-app (`showProgressFeedback`). Alcuni esempi: prima vittoria, vittoria con il nero, miniatura (matto in meno di 20 mosse), bot da 1500 e 2000 Elo battuti, matto con il cavallo o con un pedone, vittoria con arrocco lungo, brillante trovata, 10 puzzle di forchetta o di matto, 20 punti in una modalità a tempo, giornata perfetta (tre sfide), 3, 7 e 30 giorni di fila, precisione del 90%, livello 5 e 10, 20 coordinate in una sessione, tutti i minigiochi provati, primo torneo concluso e primo torneo vinto. L'elenco completo è in `lib/progress/achievements.dart`.
 
 ## Componenti
 
@@ -95,6 +97,8 @@ Le altre schermate registrano:
 | Puzzle | `PuzzleSolved(themes: {...}, rating: r)` a ogni puzzle risolto; `PuzzleRunFinished(mode: 'rush5', score: n)` a fine sessione a tempo |
 | Revisione | `ReviewCompleted(accuracy: 87.5, brilliantMoves: 1)` a fine analisi |
 | Lezioni e percorso | `LessonCompleted()` |
+| Minigiochi | `MinigameFinished(game: 'coordinate', score: n)` a fine sessione (vedi [minigiochi.md](minigiochi.md)) |
+| Tornei | `TournamentFinished(rank: 1, players: 8)` a fine torneo (vedi [tornei.md](tornei.md)) |
 
 ## Integrazione prevista
 

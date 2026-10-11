@@ -274,7 +274,7 @@ class ProgressTracker {
           for (final t in themes) t: (s.puzzleThemes[t] ?? 0) + 1,
         },
       ),
-      PuzzleRunFinished() => s,
+      PuzzleRunFinished() || MinigameFinished() || TournamentFinished() => s,
       LessonCompleted() => s.copyWith(lessonsCompleted: s.lessonsCompleted + 1),
       ReviewCompleted(:final brilliantMoves) => s.copyWith(
         reviewsCompleted: s.reviewsCompleted + 1,
