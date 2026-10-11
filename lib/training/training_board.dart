@@ -76,10 +76,13 @@ class _TrainingBoardState extends State<TrainingBoard> {
   @override
   Widget build(BuildContext context) {
     // Tema, pezzi e coordinate scelti dall'utente; la modalità tavolo non
-    // vale qui perché negli esercizi si gioca sempre da un solo lato.
+    // vale qui perché negli esercizi si gioca sempre da un solo lato, e la
+    // promozione automatica a donna renderebbe irrisolvibili i puzzle con
+    // sottopromozione.
     final board = (SettingsScope.maybeOf(context)?.board ?? AppSettings().board)
         .copyWith(
           pieceOrientationBehavior: PieceOrientationBehavior.facingUser,
+          autoQueenPromotion: false,
         );
     return Chessboard(
       size: widget.size,

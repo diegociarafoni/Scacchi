@@ -42,6 +42,7 @@ void main() {
       pieceSet: PieceStyle.values.last,
       showCoordinates: false,
       tableMode: true,
+      autoQueen: true,
     );
     await settings.update(changed);
     await tester.pump();
@@ -52,5 +53,7 @@ void main() {
     expect(s.enableCoordinates, isFalse);
     // Negli esercizi i pezzi non si capovolgono mai.
     expect(s.pieceOrientationBehavior, PieceOrientationBehavior.facingUser);
+    // Altrimenti i puzzle con sottopromozione non si potrebbero risolvere.
+    expect(s.autoQueenPromotion, isFalse);
   });
 }
