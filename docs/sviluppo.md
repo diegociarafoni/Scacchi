@@ -46,6 +46,7 @@ Ogni funzione nasce dai requisiti del progetto, nel documento dei requisiti, con
 | Statistiche | `test/stats/` | Bilancio, rating locale, schermata | `flutter test test/stats` |
 | Minigiochi | `test/minigames/` | Generazione risolvibile, risposte, schermate, registrazione dei punteggi | `flutter test test/minigames` |
 | Tornei | `test/tournament/` | Abbinamenti, simulazione, spareggi, salvataggio, schermata | `flutter test test/tournament` |
+| Scacchiera per esercizi | `test/training/` | Tema, pezzi e coordinate presi dalle impostazioni, senza capovolgere i pezzi | `flutter test test/training` |
 | Archivio | `test/archive/` | PGN, salvataggio su file, schermata Partite | `flutter test test/archive` |
 | End-to-end | `integration_test/*_test.dart` | L'app reale avviata su un dispositivo o desktop, con tocchi e trascinamenti sulla scacchiera | `flutter test integration_test -d <dispositivo>` |
 
