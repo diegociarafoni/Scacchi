@@ -122,8 +122,8 @@ void main() {
     await tester.pump();
     expect(
       find.text(
-        'Le partite del torneo arrivano con la partita contro il '
-        'computer.',
+        'Le partite del torneo non sono disponibili su '
+        'questo dispositivo.',
       ),
       findsOneWidget,
     );
