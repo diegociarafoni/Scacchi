@@ -118,6 +118,17 @@ void main() {
     });
   });
 
+  test('con "Sblocca tutto" non si annuncia nulla di nuovo', () {
+    final update = ProgressTracker().record(
+      ProgressState(xp: xpForLevel(2) - 1),
+      const GamePlayed(result: GameResult.loss),
+      DateTime(2026, 10, 5, 12),
+      settings.copyWith(unlockAll: true),
+    );
+    expect(update.newLevel, 2);
+    expect(update.rewards, isEmpty);
+  });
+
   group('preferenze del profilo', () {
     test('avatar, cornice e "Sblocca tutto" si salvano', () {
       final s = settings.copyWith(

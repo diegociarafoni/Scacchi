@@ -94,7 +94,7 @@ class ProgressTracker {
     Activity? activity,
     ProgressSettings settings,
   ) {
-    final before = s;
+    final start = s;
     final today = s.today!;
     final goalReached =
         s.coveredThrough != today &&
@@ -170,7 +170,8 @@ class ProgressTracker {
       challengesCompleted: completed,
       weeklyCompleted: weeklyCompleted,
       newRecords: newRecords,
-      rewards: newRewards(before, s),
+      // Con "Sblocca tutto" le ricompense erano già disponibili.
+      rewards: settings.unlockAll ? const [] : newRewards(start, s),
     );
   }
 

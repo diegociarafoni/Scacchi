@@ -111,10 +111,8 @@ class SettingsPage extends StatelessWidget {
               if (p != null && p.settings.enabled)
                 SwitchListTile(
                   key: const Key('unlockAll'),
-                  title: const Text('Sblocca tutto'),
-                  subtitle: const Text(
-                    'Temi, pezzi e avatar disponibili senza doverli sbloccare',
-                  ),
+                  title: const Text(unlockAllTitle),
+                  subtitle: const Text(unlockAllSubtitle),
                   value: p.settings.unlockAll,
                   onChanged: (v) =>
                       p.updateSettings(p.settings.copyWith(unlockAll: v)),

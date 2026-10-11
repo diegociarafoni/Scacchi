@@ -29,25 +29,21 @@ enum BoardTheme {
   night('Notte', light: Color(0xff9aa5b8), dark: Color(0xff3b4459)),
   gold('Oro', light: Color(0xfffaf0c8), dark: Color(0xffc9a227));
 
-  const BoardTheme(
-    this.label, {
-    this.scheme,
-    this.light = const Color(0x00000000),
-    this.dark = const Color(0x00000000),
-  });
+  const BoardTheme(this.label, {this.scheme, this.light, this.dark})
+    : assert(scheme != null || (light != null && dark != null));
 
   final String label;
 
   /// Schema di chessground, se il tema non è definito dai soli [light] e [dark].
   final ChessboardColorScheme? scheme;
-  final Color light;
-  final Color dark;
+  final Color? light;
+  final Color? dark;
 
   static final _solid = <BoardTheme, ChessboardColorScheme>{};
 
   /// Sempre la stessa istanza per tema, per non ridisegnare lo sfondo.
   ChessboardColorScheme get colorScheme =>
-      scheme ?? _solid.putIfAbsent(this, () => _solidScheme(light, dark));
+      scheme ?? _solid.putIfAbsent(this, () => _solidScheme(light!, dark!));
 }
 
 ChessboardColorScheme _solidScheme(Color light, Color dark) {

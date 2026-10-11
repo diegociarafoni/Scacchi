@@ -52,6 +52,11 @@ class AchievementRequirement extends Requirement {
   int get hashCode => id.hashCode;
 }
 
+/// Testi dell'interruttore che rende disponibili tutte le ricompense (RV-01).
+const unlockAllTitle = 'Sblocca tutto';
+const unlockAllSubtitle =
+    'Temi, pezzi e avatar disponibili senza doverli sbloccare';
+
 /// Ricompense sbloccabili; tutto ciò che non è qui è disponibile da subito.
 const Map<Enum, Requirement> _requirements = {
   BoardTheme.sand: LevelRequirement(2),

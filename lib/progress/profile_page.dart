@@ -151,7 +151,9 @@ class ProfileAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     return Semantics(
-      label: 'Avatar: ${avatar.label}',
+      label: frame.color == null
+          ? 'Avatar: ${avatar.label}'
+          : 'Avatar: ${avatar.label}, cornice ${frame.label}',
       excludeSemantics: true,
       child: Container(
         width: size,
@@ -407,10 +409,8 @@ class _Settings extends StatelessWidget {
         ),
         if (s.enabled) ...[
           SwitchListTile(
-            title: const Text('Sblocca tutto'),
-            subtitle: const Text(
-              'Temi, pezzi e avatar senza doverli sbloccare.',
-            ),
+            title: const Text(unlockAllTitle),
+            subtitle: const Text(unlockAllSubtitle),
             value: s.unlockAll,
             onChanged: (v) =>
                 controller.updateSettings(s.copyWith(unlockAll: v)),
