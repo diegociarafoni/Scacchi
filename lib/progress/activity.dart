@@ -59,7 +59,7 @@ class PuzzleSolved extends Activity {
   final int? rating;
 }
 
-/// Fine di una sessione a tempo o a serie di puzzle (Rush, Storm, Streak).
+/// Fine di una sessione a tempo o a serie di puzzle (combo, corsa, serie).
 class PuzzleRunFinished extends Activity {
   const PuzzleRunFinished({
     required this.mode,

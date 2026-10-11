@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
 /// Precisione di una mossa (0–100) dalla probabilità di vittoria prima e dopo,
-/// dal punto di vista di chi muove (formula di Lichess).
+/// dal punto di vista di chi muove.
 double moveAccuracy(double winBefore, double winAfter) {
   final loss = math.max(0.0, winBefore - winAfter);
   final raw =
