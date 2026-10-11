@@ -4,10 +4,10 @@ Analisi libera con Stockfish locale (requisiti RF-50, RF-51, RF-52 in parte, RF-
 
 ## Come si apre
 
-- Dal menu della partita: **Analisi della posizione** apre la posizione corrente. Mentre è aperta, l'eventuale mossa del computer viene sospesa e riprende alla chiusura, perché il motore è uno solo.
+- Dal menu della partita (⋮): **Analisi della posizione** apre la posizione mostrata sulla scacchiera, anche se si stanno scorrendo le mosse precedenti. Mentre è aperta, orologio e mossa del computer sono sospesi e riprendono alla chiusura, perché il motore è uno solo. Nella partita tra due persone il motore viene avviato solo per l'analisi e chiuso al ritorno.
 - Dalla revisione della partita: il pulsante **Analizza la posizione** nella barra del titolo apre la posizione mostrata.
 
-Entrambe le voci compaiono solo dove c'è il motore (Android e iOS).
+Entrambe le voci compaiono solo dove c'è il motore (Android e iOS) e negli scacchi classici: Stockfish non analizza Chess960, Re della collina e Tre scacchi. La voce del menu è disattivata mentre il computer valuta una proposta di patta.
 
 ## Schermata
 
@@ -22,11 +22,12 @@ Entrambe le voci compaiono solo dove c'è il motore (Android e iOS).
 
 ## Motore
 
-`ComputerPlayer.analyseLive(fen, multiPv:, maxDepth: 40)` restituisce un flusso di varianti ordinate. La ricerca usa la forza piena e si ferma alla profondità massima oppure quando chi ascolta annulla l'iscrizione: in quel caso il motore riceve `stop` e la coda delle richieste si libera. Se l'iscrizione viene annullata prima che la ricerca parta, la ricerca non viene inviata.
+`ComputerPlayer.analyseLive(fen, multiPv:, maxDepth: 40)` restituisce un flusso di varianti ordinate. La ricerca usa la forza piena e si ferma alla profondità massima oppure quando chi ascolta annulla l'iscrizione: in quel caso il motore riceve `stop` e la coda delle richieste si libera. Se l'iscrizione viene annullata prima che la ricerca parta, la ricerca non viene inviata, e annullarla non ferma la ricerca di un'altra richiesta.
 
-Per la batteria (RNF-05) la schermata ridisegna le linee al massimo ogni 250 ms, anche se il motore ne invia molte di più.
+Il flusso emette un aggiornamento alla fine di ogni iterazione, quando tutte le varianti hanno la stessa profondità, così le linee mostrate sono confrontabili tra loro. I punteggi parziali del motore (`lowerbound`, `upperbound`) vengono scartati.
+
+Per la batteria (RNF-05) la schermata ridisegna le linee al massimo ogni 250 ms, anche se il motore ne invia molte di più, e ferma il motore quando l'app va in secondo piano; al ritorno l'analisi riparte, a meno che non fosse in pausa.
 
 ## Limiti attuali
 
 - Le varianti non formano ancora un albero (RF-52): c'è una sola linea di esplorazione, senza promozione né eliminazione di varianti.
-- L'editor di posizione (RF-53) non è ancora disponibile.

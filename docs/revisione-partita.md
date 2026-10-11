@@ -61,7 +61,8 @@ Un pedone offerto non basta, come su chess.com.
 
 `ComputerPlayer.analyse(fen, depth:, multiPv:)` usa la stessa istanza di Stockfish dell'avversario (su telefono il motore nativo è uno solo) e imposta la forza piena (`Skill Level 20`, `UCI_LimitStrength false`); le opzioni del livello vengono ripristinate alla mossa successiva del computer. La revisione chiede due varianti per posizione a profondità 14 (RNF-05) e salta le posizioni finali.
 
-- **Interruzione**: `reviewGame` controlla `isCancelled` prima e dopo ogni posizione e restituisce `null`; chi interrompe chiama anche `ComputerPlayer.stop` per fermare subito la ricerca in corso.
+- **Interruzione**: `reviewGame` controlla `isCancelled` prima e dopo ogni posizione e restituisce `null`; chi interrompe chiama anche `ComputerPlayer.stopAnalysis`, che ferma subito l'analisi in corso e quella in coda senza toccare la mossa del computer. Così, tornando alla partita con la revisione ancora in corso, il computer gioca la sua mossa a piena profondità. La revisione si apre con orologio e computer fermi e solo negli scacchi classici.
+- **Punteggi parziali**: le righe `lowerbound` e `upperbound` del motore vengono ignorate.
 - **Tempo massimo**: se una ricerca supera il limite, `ComputerPlayer` chiude il motore e la richiesta successiva ne avvia uno nuovo, così una risposta tardiva non viene scambiata per quella di una nuova ricerca.
 - **Valutazione mancante**: se il motore non restituisce un punteggio, la revisione fallisce con un errore invece di supporre una patta.
 

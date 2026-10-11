@@ -186,4 +186,21 @@ void main() {
       expect(live.cancelled, 1);
     });
   });
+
+  testWidgets('RNF-05 in secondo piano il motore si ferma e poi riparte', (
+    tester,
+  ) async {
+    final live = await pumpAnalysis(tester);
+    expect(live.requests, hasLength(1));
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+    await tester.pump();
+    expect(live.cancelled, 1);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    await tester.pump();
+    expect(live.requests, hasLength(2));
+  });
 }

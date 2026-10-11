@@ -96,6 +96,47 @@ void main() {
       },
     );
 
+    test('scarta i punteggi parziali del motore', () async {
+      final fake = _Engine(
+        (_) => [
+          'info depth 12 multipv 1 score cp 40 pv e2e4',
+          'info depth 13 multipv 1 score cp 90 lowerbound pv e2e4',
+          'info depth 13 multipv 1 score cp 10 upperbound pv e2e4',
+          'bestmove e2e4',
+        ],
+      );
+      final player = ComputerPlayer(connect: () async => fake);
+      final lines = await player.analyse(Chess.initial.fen, depth: 13);
+      expect(lines.single.score!.cp, 40);
+      await player.dispose();
+    });
+
+    test('stopAnalysis prima della ricerca non la avvia', () async {
+      final fake = _Engine((_) => ['bestmove e2e4']);
+      final player = ComputerPlayer(connect: () async => fake);
+      final pending = player.analyse(Chess.initial.fen, depth: 14);
+      player.stopAnalysis();
+      expect(await pending, isEmpty);
+      expect(fake.sent.where((c) => c.startsWith('go')), isEmpty);
+      await player.dispose();
+    });
+
+    test('stopAnalysis non ferma la mossa del computer', () async {
+      final fake = _Engine(
+        (_) => ['info depth 1 score cp 0 pv e2e4', 'bestmove e2e4'],
+      );
+      final player = ComputerPlayer(connect: () async => fake);
+      final move = player.bestMove(Chess.initial.fen, const [], analysisLevel);
+      player.stopAnalysis();
+      await move;
+      expect(fake.sent, isNot(contains('stop')));
+      expect(
+        fake.sent.where((c) => c.startsWith('go')).single,
+        isNot('go depth 1'),
+      );
+      await player.dispose();
+    });
+
     test('ripristina le opzioni del livello alla mossa successiva', () async {
       final fake = _Engine((_) => ['bestmove e2e4']);
       final player = ComputerPlayer(connect: () async => fake);

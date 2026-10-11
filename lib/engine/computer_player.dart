@@ -62,6 +62,10 @@ class ComputerPlayer {
   /// Incrementato da [stop]: le ricerche richieste prima terminano subito.
   int _stopEpoch = 0;
   bool _searching = false;
+
+  /// Incrementato da [stopAnalysis].
+  int _analysisEpoch = 0;
+  bool _analysing = false;
   Completer<void>? _replyDelay;
   bool _disposed = false;
 
@@ -116,33 +120,46 @@ class ComputerPlayer {
   }
 
   /// Analisi a forza piena di [fen] fino a [depth], con [multiPv] varianti
-  /// ordinate dalla migliore. Vuota se non esistono mosse legali.
+  /// ordinate dalla migliore. Vuota se non esistono mosse legali o se è
+  /// stata fermata con [stopAnalysis] o [stop] prima di partire.
   Future<List<InfoLine>> analyse(
     String fen, {
     required int depth,
     int multiPv = 1,
     Duration timeout = const Duration(minutes: 2),
-  }) => _enqueue(() async {
-    await _applyOptions(_fullStrength(multiPv));
-    _send('position fen ${fen.trim()}');
-    return _sorted(await _go('go depth $depth', timeout), multiPv);
-  });
+  }) {
+    final epoch = (_stopEpoch, _analysisEpoch);
+    return _enqueue(() async {
+      bool stopped() => epoch != (_stopEpoch, _analysisEpoch);
+      if (stopped()) return const [];
+      await _applyOptions(_fullStrength(multiPv));
+      if (stopped()) return const [];
+      _send('position fen ${fen.trim()}');
+      _analysing = true;
+      try {
+        return _sorted(await _go('go depth $depth', timeout), multiPv);
+      } finally {
+        _analysing = false;
+      }
+    });
+  }
 
   /// Analisi continua a forza piena: emette le varianti ordinate a ogni
-  /// aggiornamento del motore, fino a [maxDepth] o finché chi ascolta non
-  /// annulla l'iscrizione (che ferma la ricerca e libera la coda).
+  /// iterazione completa del motore, fino a [maxDepth] o finché chi ascolta
+  /// non annulla l'iscrizione (che ferma la ricerca e libera la coda).
   Stream<List<InfoLine>> analyseLive(
     String fen, {
     int multiPv = 1,
     int maxDepth = 40,
   }) {
     var cancelled = false;
+    var running = false;
     late final StreamController<List<InfoLine>> out;
     out = StreamController<List<InfoLine>>(
       onCancel: () {
         cancelled = true;
-        // Solo la ricerca in corso: le richieste in coda restano valide.
-        if (_searching && !_disposed) _send('stop');
+        // Solo la propria ricerca: le altre richieste restano valide.
+        if (running && !_disposed) _send('stop');
       },
     );
     _enqueue(() async {
@@ -150,13 +167,19 @@ class ComputerPlayer {
       await _applyOptions(_fullStrength(multiPv));
       if (cancelled) return;
       _send('position fen ${fen.trim()}');
-      await _go(
-        'go depth $maxDepth',
-        const Duration(minutes: 30),
-        onUpdate: (infos) {
-          if (!out.isClosed) out.add(_sorted(infos, multiPv));
-        },
-      );
+      running = true;
+      try {
+        // Nessun limite pratico: l'analisi resta aperta finché serve.
+        await _go(
+          'go depth $maxDepth',
+          const Duration(hours: 24),
+          onUpdate: (infos) {
+            if (!out.isClosed) out.add(_sorted(infos, multiPv));
+          },
+        );
+      } finally {
+        running = false;
+      }
     }).then(
       (_) => out.close(),
       onError: (Object e) {
@@ -165,6 +188,13 @@ class ComputerPlayer {
       },
     );
     return out.stream;
+  }
+
+  /// Ferma l'analisi in corso o in coda di [analyse], senza toccare le
+  /// mosse del computer.
+  void stopAnalysis() {
+    _analysisEpoch++;
+    if (_analysing && !_disposed) _send('stop');
   }
 
   /// Fa terminare subito la ricerca in corso e quelle già in coda.
@@ -352,18 +382,23 @@ class ComputerPlayer {
   }
 
   /// Avvia una ricerca e raccoglie le varianti per numero fino a
-  /// `bestmove`. Interrompibile con [stop].
+  /// `bestmove`, scartando i punteggi parziali (`lowerbound`/`upperbound`).
+  /// [onUpdate] arriva alla fine di ogni iterazione, quando tutte le
+  /// varianti hanno la stessa profondità. Interrompibile con [stop].
   Future<Map<int, InfoLine>> _go(
     String command,
     Duration timeout, {
     void Function(Map<int, InfoLine> infos)? onUpdate,
   }) async {
     final infos = <int, InfoLine>{};
+    var lines = 0;
     void onInfo(String line) {
+      if (line.contains(' lowerbound') || line.contains(' upperbound')) return;
       final info = parseInfo(line);
       if (info == null) return;
       infos[info.multipv] = info;
-      onUpdate?.call(infos);
+      if (info.multipv > lines) lines = info.multipv;
+      if (info.multipv == lines) onUpdate?.call(infos);
     }
 
     _listeners.add(onInfo);

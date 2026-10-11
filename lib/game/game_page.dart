@@ -372,6 +372,13 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   List<Move> get _moveHistory => [for (final m in _game.moves) m.move];
 
+  /// Posizione sulla scacchiera, anche mentre si scorrono le mosse.
+  Position get _shownPosition {
+    final ply = _viewPly;
+    if (ply == null) return _game.position;
+    return ply == -1 ? _game.initial : _game.moves[ply].after;
+  }
+
   void _cancelComputerMove() {
     _generation++;
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -550,12 +557,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   /// Apre l'editor sulla posizione mostrata e gioca senza orologio quella scelta.
   Future<void> _editPosition() async {
-    final ply = _viewPly;
-    final shown = ply == null
-        ? _game.position
-        : ply == -1
-        ? _game.initial
-        : _game.moves[ply].after;
+    final shown = _shownPosition;
     final position = await _whileSuspended(
       () => Navigator.of(context).push<Position>(
         MaterialPageRoute(
@@ -767,37 +769,45 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   LiveAnalysis _liveAnalysis(ComputerPlayer player) =>
       (fen, multiPv) => player.analyseLive(fen, multiPv: multiPv);
 
-  /// Analisi della posizione attuale con orologio e computer fermi.
+  /// Analisi della posizione mostrata con orologio e computer fermi.
   void _openAnalysis() {
-    _whileSuspended(
-      () => Navigator.of(context).push(
-        MaterialPageRoute<void>(
-          builder: (_) => AnalysisPage(
-            initial: _game.position,
-            analyse: _liveAnalysis(_computerPlayer),
-            orientation: _orientation,
-          ),
-        ),
+    final position = _shownPosition;
+    _withEngine(
+      (player) => AnalysisPage(
+        initial: position,
+        analyse: _liveAnalysis(player),
+        orientation: _orientation,
       ),
     );
   }
 
   /// Revisione della partita con orologio e computer fermi.
   void _openReview() {
-    final player = _computerPlayer;
-    _whileSuspended(
-      () => Navigator.of(context).push(
-        MaterialPageRoute<void>(
-          builder: (_) => ReviewPage(
-            initial: _game.initial,
-            moves: [for (final m in _game.moves) m.move],
-            evaluate: engineEvaluator(player),
-            onCancel: player.stop,
-            analyseLive: _liveAnalysis(player),
-          ),
-        ),
+    final moves = _moveHistory;
+    _withEngine(
+      (player) => ReviewPage(
+        initial: _game.initial,
+        moves: moves,
+        evaluate: engineEvaluator(player),
+        onCancel: player.stopAnalysis,
+        analyseLive: _liveAnalysis(player),
       ),
     );
+  }
+
+  /// Apre una pagina che usa il motore. Nella partita tra due persone il
+  /// motore serve solo a quella pagina e si chiude al ritorno.
+  Future<void> _withEngine(Widget Function(ComputerPlayer player) page) async {
+    final player = _computerPlayer;
+    await _whileSuspended(
+      () =>
+          Navigator.of(context)
+              .push(MaterialPageRoute<void>(builder: (_) => page(player))),
+    );
+    if (_computerSide == null && identical(_computer, player)) {
+      _computer = null;
+      player.dispose().ignore();
+    }
   }
 
   Widget? _clockView(Side side) {
@@ -865,9 +875,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                 if (value == 'analysis') _openAnalysis();
               },
               itemBuilder: (context) => [
-                const PopupMenuItem(
+                PopupMenuItem(
                   value: 'analysis',
-                  child: Text('Analisi della posizione'),
+                  enabled: _task != _ComputerTask.draw,
+                  child: const Text('Analisi della posizione'),
                 ),
                 PopupMenuItem(
                   value: 'review',

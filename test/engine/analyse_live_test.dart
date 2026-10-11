@@ -28,7 +28,8 @@ class _InfiniteEngine implements UciTransport {
         _out
           ..add('info depth 1 multipv 1 score cp 20 pv e2e4')
           ..add('info depth 1 multipv 2 score cp 10 pv d2d4')
-          ..add('info depth 2 multipv 1 score cp 25 pv e2e4 e7e5');
+          ..add('info depth 2 multipv 1 score cp 25 pv e2e4 e7e5')
+          ..add('info depth 2 multipv 2 score cp 15 pv d2d4 d7d5');
       }
       if (command == 'stop') _out.add('bestmove e2e4');
     });
@@ -56,6 +57,40 @@ void main() {
       await sub.cancel();
       await player.dispose();
     });
+
+    test('emette solo iterazioni complete', () async {
+      final fake = _InfiniteEngine();
+      final player = ComputerPlayer(connect: () async => fake);
+      final updates = <List<InfoLine>>[];
+      final sub = player
+          .analyseLive(Chess.initial.fen, multiPv: 2)
+          .listen(updates.add);
+      await pumpEventQueue();
+      for (final u in updates.skip(1)) {
+        expect(u.map((l) => l.depth).toSet(), hasLength(1));
+      }
+      expect(updates.last.map((l) => l.score!.cp), [25, 15]);
+      await sub.cancel();
+      await player.dispose();
+    });
+
+    test(
+      'annullare un\'analisi in coda non ferma la ricerca in corso',
+      () async {
+        final fake = _InfiniteEngine();
+        final player = ComputerPlayer(connect: () async => fake);
+        final first = player.analyseLive(Chess.initial.fen).listen((_) {});
+        final queued = player.analyseLive(Chess.initial.fen).listen((_) {});
+        await pumpEventQueue();
+        await queued.cancel();
+        await pumpEventQueue();
+        expect(fake.sent, isNot(contains('stop')));
+        await first.cancel();
+        await pumpEventQueue();
+        expect(fake.sent.where((c) => c == 'stop'), hasLength(1));
+        await player.dispose();
+      },
+    );
 
     test('interrompere ferma il motore e libera la coda', () async {
       final fake = _InfiniteEngine();

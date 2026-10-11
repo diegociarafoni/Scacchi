@@ -35,7 +35,8 @@ class AnalysisPage extends StatefulWidget {
   State<AnalysisPage> createState() => _AnalysisPageState();
 }
 
-class _AnalysisPageState extends State<AnalysisPage> {
+class _AnalysisPageState extends State<AnalysisPage>
+    with WidgetsBindingObserver {
   late final List<Position> _positions = [widget.initial];
   final _moves = <Move>[];
   final _sans = <String>[];
@@ -43,6 +44,9 @@ class _AnalysisPageState extends State<AnalysisPage> {
   bool _failed = false;
   int _multiPv = 1;
   bool _paused = false;
+
+  /// App in secondo piano: il motore si ferma per non consumare batteria.
+  bool _background = false;
   bool _arrow = true;
 
   List<InfoLine> _lines = const [];
@@ -58,11 +62,27 @@ class _AnalysisPageState extends State<AnalysisPage> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _start();
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    final background =
+        state == AppLifecycleState.paused || state == AppLifecycleState.hidden;
+    if (state != AppLifecycleState.resumed && !background) return;
+    if (background == _background) return;
+    _background = background;
+    if (background) {
+      _stop();
+    } else {
+      setState(_start);
+    }
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _stop();
     _board.dispose();
     super.dispose();
@@ -72,7 +92,7 @@ class _AnalysisPageState extends State<AnalysisPage> {
     _stop();
     _lines = const [];
     _failed = false;
-    if (_paused || _pos.isGameOver) return;
+    if (_paused || _background || _pos.isGameOver) return;
     _analysis = widget
         .analyse(_pos.fen, _multiPv)
         .listen(

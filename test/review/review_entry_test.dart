@@ -14,6 +14,7 @@ import 'package:scacchi/settings/settings.dart';
 
 /// Motore finto che valuta ogni posizione in parità.
 class _EvenEngine implements UciTransport {
+  bool disposed = false;
   final _out = StreamController<String>.broadcast();
 
   @override
@@ -34,7 +35,10 @@ class _EvenEngine implements UciTransport {
   }
 
   @override
-  Future<void> dispose() => _out.close();
+  Future<void> dispose() {
+    disposed = true;
+    return _out.close();
+  }
 }
 
 Future<void> openMenu(WidgetTester tester) async {
@@ -120,4 +124,48 @@ void main() {
     expect(find.textContaining('Chess960'), findsOneWidget);
     expect(find.byType(PopupMenuButton<String>), findsNothing);
   });
+
+  testWidgets(
+    'l\'analisi parte dalla posizione mostrata e nel gioco a due il motore '
+    'si chiude al ritorno',
+    (tester) async {
+      tester.view.physicalSize = const Size(1170, 2532);
+      tester.view.devicePixelRatio = 3;
+      addTearDown(tester.view.reset);
+      final engines = <_EvenEngine>[];
+      await tester.pumpWidget(
+        MaterialApp(
+          home: GamePage(
+            settings: SettingsController.defaults(),
+            computerAvailable: true,
+            createComputer: () =>
+                ComputerPlayer(connect: () async => engines.last),
+          ),
+        ),
+      );
+      final board = tester.widget<Chessboard>(find.byType(Chessboard));
+      board.onMove!(NormalMove.fromUci('e2e4'));
+      await tester.pumpAndSettle();
+      tester.widget<Chessboard>(find.byType(Chessboard)).onMove!(
+        NormalMove.fromUci('e7e5'),
+      );
+      await tester.pumpAndSettle();
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
+      await tester.pumpAndSettle();
+
+      engines.add(_EvenEngine());
+      await openMenu(tester);
+      await tester.tap(find.text('Analisi della posizione'));
+      await tester.pumpAndSettle();
+      final page = tester.widget<AnalysisPage>(find.byType(AnalysisPage));
+      expect(
+        page.initial.fen,
+        Chess.initial.play(NormalMove.fromUci('e2e4')).fen,
+      );
+
+      await tester.pageBack();
+      await tester.pumpAndSettle();
+      expect(engines.single.disposed, isTrue);
+    },
+  );
 }
