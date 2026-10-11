@@ -87,12 +87,12 @@ void main() {
       await _tapMove(tester, m);
     }
     expect(find.text('Scacco matto. Vince il Bianco.'), findsOneWidget);
-    expect(find.text('4. Qxf7#'), findsOneWidget);
+    expect(find.text('4. ♛xf7#'), findsOneWidget);
 
     await tester.tap(find.text('Annulla'));
     await tester.pumpAndSettle();
     expect(find.text('Muove il Bianco.'), findsOneWidget);
-    expect(find.text('4. Qxf7#'), findsNothing);
+    expect(find.text('4. ♛xf7#'), findsNothing);
   });
 
   testWidgets('RF-25 abbandono con conferma', (tester) async {
@@ -400,7 +400,7 @@ void main() {
     expect(find.text('Posizione dopo 1. e4'), findsOneWidget);
     await swipe(-150);
     await swipe(-150);
-    expect(find.text('Posizione dopo 2. Nf3'), findsOneWidget);
+    expect(find.text('Posizione dopo 2. ♞f3'), findsOneWidget);
     await swipe(-150);
     expect(find.textContaining('Posizione dopo'), findsNothing);
     expect(find.text('Muove il Nero.'), findsOneWidget);
@@ -451,13 +451,13 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Muove il Nero.'), findsOneWidget);
 
-    await tester.tap(find.text('2. Nf3'));
+    await tester.tap(find.text('2. ♞f3'));
     await tester.pumpAndSettle();
-    expect(find.text('Posizione dopo 2. Nf3'), findsOneWidget);
+    expect(find.text('Posizione dopo 2. ♞f3'), findsOneWidget);
     await tester.tap(find.text('Annulla'));
     await tester.pumpAndSettle();
     expect(fen(), live);
-    expect(find.text('2. Nf3'), findsOneWidget);
+    expect(find.text('2. ♞f3'), findsOneWidget);
   });
 
   testWidgets('RNF-07 mossa scritta da tastiera', (tester) async {
@@ -473,7 +473,7 @@ void main() {
     await type('e4');
     expect(find.text('1. e4'), findsOneWidget);
     await type('Cf6');
-    expect(find.text('Nf6'), findsOneWidget);
+    expect(find.text('♞f6'), findsOneWidget);
 
     await type('e6');
     expect(find.text('Mossa non valida'), findsOneWidget);

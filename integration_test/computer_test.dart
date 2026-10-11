@@ -5,6 +5,7 @@ import 'package:integration_test/integration_test.dart';
 import 'package:scacchi/engine/computer_player.dart';
 import 'package:scacchi/engine/process_transport.dart';
 import 'package:scacchi/game/game_page.dart';
+import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/settings/settings.dart';
 
 Offset _square(WidgetTester tester, String name) {
@@ -144,6 +145,9 @@ void main() {
         addTearDown(tester.view.reset);
         await tester.pumpWidget(
           MaterialApp(
+            locale: const Locale('it'),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
             home: GamePage(
               settings: SettingsController.defaults(),
               computerAvailable: true,
