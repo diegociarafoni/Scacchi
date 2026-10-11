@@ -182,22 +182,22 @@ void main() {
     test('re scoperto dopo una mossa del pedone di fronte al re', () async {
       final m = await reviewOne(
         'k2q4/8/8/8/8/8/5PPP/6K1 w - - 0 1',
-        'g2g4',
+        'f2f3',
         best: line(['h2h3'], const EngineScore.cp(150)),
-        reply: line(['d8d1'], const EngineScore.cp(0)),
+        reply: line(['d8d4'], const EngineScore.cp(0)),
       );
       final c = explainMove(m)!;
       expect(c.theme, CoachTheme.exposedKing);
-      expect(c.text, contains('re'));
-      expect(c.text, contains('Qd1+'));
+      expect(c.text, contains('Dopo f3 il tuo re resta scoperto'));
+      expect(c.text, contains('Qd4+'));
     });
 
     test('re scoperto dopo una mossa del re', () async {
       final m = await reviewOne(
-        'k2q4/8/8/8/8/8/P7/4K3 w - - 0 1',
-        'e1f1',
-        best: line(['a2a3'], const EngineScore.cp(150)),
-        reply: line(['d8d1'], const EngineScore.cp(0)),
+        'r6k/8/8/8/8/8/8/4K3 w - - 0 1',
+        'e1e2',
+        best: line(['e1f1'], const EngineScore.cp(150)),
+        reply: line(['a8a2'], const EngineScore.cp(0)),
       );
       expect(explainMove(m)!.theme, CoachTheme.exposedKing);
     });
@@ -214,6 +214,27 @@ void main() {
         expect(explainMove(m)!.theme, isNot(CoachTheme.exposedKing));
       },
     );
+
+    test('l\'arrocco non è re scoperto', () async {
+      final m = await reviewOne(
+        'k2q4/8/8/8/8/8/6PP/4K2R w K - 0 1',
+        'e1g1',
+        best: line(['h2h3'], const EngineScore.cp(150)),
+        reply: line(['d8d4'], const EngineScore.cp(0)),
+      );
+      expect(explainMove(m)!.theme, isNot(CoachTheme.exposedKing));
+    });
+
+    test('uno scacco già possibile prima non è colpa della mossa', () async {
+      // Il Nero poteva già dare scacco in d1 con la donna.
+      final m = await reviewOne(
+        'k2q4/8/8/8/8/8/5PPP/6K1 w - - 0 1',
+        'h2h3',
+        best: line(['g2g3'], const EngineScore.cp(150)),
+        reply: line(['d8d1'], const EngineScore.cp(0)),
+      );
+      expect(explainMove(m)!.theme, isNot(CoachTheme.exposedKing));
+    });
 
     test('ripresa mancata', () async {
       // Il Nero cattura il cavallo in c6 e il Bianco non lo riprende con bxc6.

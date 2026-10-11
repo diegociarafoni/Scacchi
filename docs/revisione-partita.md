@@ -109,7 +109,7 @@ Le regole si applicano in quest'ordine, e vale la prima che riconosce qualcosa:
 | Ripresa mancata | La mossa migliore riprende sulla casa dove l'avversario ha appena catturato | "Potevi riprendere il pezzo: bxc6 cattura l'alfiere." |
 | Cattura netta mancata | La mossa migliore cattura con un guadagno di almeno due pedoni | "Potevi vincere materiale: Qxd5 cattura la torre." |
 | Inchiodatura concessa | Il pezzo che risponde (alfiere, torre o donna) inchioda al re un tuo pezzo non pedone, non si può catturare e non inchiodava già lo stesso pezzo | "Dopo Bb4 l'alfiere nero inchioda il cavallo in d2 contro il re." |
-| Re scoperto | Mossa del re (senza arrocco) o di un pedone davanti al re ancora sulla sua traversa di partenza, a cui l'avversario risponde con scacco | "Dopo g4 il tuo re resta scoperto: Qd1+ è scacco." |
+| Re scoperto | Mossa del re (un passo, senza arrocco) o di un pedone entro la terza traversa davanti al re ancora sulla traversa di partenza, a cui l'avversario risponde con uno scacco che prima della mossa non era possibile | "Dopo f3 il tuo re resta scoperto: Qd4+ è scacco." |
 | Doppio attacco mancato | La mossa migliore attacca due pezzi con le stesse condizioni della forchetta | "Potevi fare un doppio attacco con Nc7+: il cavallo attacca il re e la torre." |
 | Scoperta mancata | Dopo la mossa migliore un pezzo rimasto fermo attacca una casa occupata che prima non attaccava (l'arrocco è escluso) | "Potevi fare un attacco di scoperta con Nc6+: l'alfiere attacca la donna." |
 | Perdita di materiale | Rispetto a prima della mossa, dopo la variante prevista (quattro semimosse) si hanno almeno due pedoni in meno | "Questa mossa perde materiale: circa 3 pedoni nella variante prevista." |
