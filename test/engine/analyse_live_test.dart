@@ -6,7 +6,7 @@ import 'package:scacchi/engine/computer_player.dart';
 import 'package:scacchi/engine/uci.dart';
 import 'package:scacchi/engine/uci_transport.dart';
 
-import 'process_transport.dart';
+import 'package:scacchi/engine/process_transport.dart';
 
 /// Motore finto: a ogni `go` manda alcune righe e risponde con `bestmove`
 /// solo dopo `stop`.
@@ -121,9 +121,7 @@ void main() {
 
     test(
       'con Stockfish vero trova il matto in uno',
-      skip: ProcessTransport.findBinary() == null
-          ? 'Stockfish non installato'
-          : null,
+      skip: ProcessTransport.binary == null ? 'Stockfish non installato' : null,
       () async {
         final player = ComputerPlayer(connect: ProcessTransport.start);
         final lines = await player
