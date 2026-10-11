@@ -122,6 +122,30 @@ abstract class AppLocalizations {
   /// **'Interfaccia e testi più semplici, bot amichevoli, niente numeri'**
   String get kidProfileDescription;
 
+  /// Titolo della domanda per uscire dal profilo bambino
+  ///
+  /// In it, this message translates to:
+  /// **'Chiedi a un adulto'**
+  String get kidAdultGateTitle;
+
+  /// Moltiplicazione da risolvere per uscire dal profilo bambino
+  ///
+  /// In it, this message translates to:
+  /// **'Per uscire dal profilo bambino: quanto fa {a} × {b}?'**
+  String kidAdultGateQuestion(int a, int b);
+
+  /// Errore sotto il campo della risposta
+  ///
+  /// In it, this message translates to:
+  /// **'Risposta sbagliata.'**
+  String get kidAdultGateWrong;
+
+  /// Pulsante che controlla la risposta
+  ///
+  /// In it, this message translates to:
+  /// **'Conferma'**
+  String get kidAdultGateConfirm;
+
   /// Riga di stato nel profilo bambino: tocca al giocatore contro il computer
   ///
   /// In it, this message translates to:

@@ -25,10 +25,14 @@ import '../progress/progress_controller.dart';
 import '../progress/progress_feedback.dart';
 import '../puzzles/activity_recorder.dart';
 import '../review/engine_evaluator.dart';
+import '../review/game_review.dart';
+import '../review/move_classification.dart';
+import '../review/personal_puzzles.dart';
 import '../review/review_page.dart';
 import '../settings/settings.dart';
 import '../settings/settings_page.dart';
 import '../storage/key_value_store.dart';
+import 'challenge.dart';
 import 'chess_game.dart';
 import 'clock.dart';
 import 'material.dart';
@@ -59,7 +63,10 @@ class GamePage extends StatefulWidget {
     this.onActivity,
     this.onSave,
     this.progress,
+    this.challenge,
+    this.onFinished,
     this.store,
+    this.onSavePuzzles,
   }) : computerAvailable = computerAvailable ?? StockfishTransport.isSupported;
 
   final SettingsController settings;
@@ -78,8 +85,19 @@ class GamePage extends StatefulWidget {
   /// Salva la partita finita nell'archivio; senza, nessun salvataggio.
   final Future<void> Function(SavedGame game)? onSave;
 
+  /// Partita già impostata da un'altra schermata: parte subito e non si può
+  /// ricominciare né annullare.
+  final GameChallenge? challenge;
+
+  /// Esito per l'utente e mosse complete giocate, a fine partita contro il
+  /// computer, una volta per partita (sfide).
+  final void Function(GameResult result, int moves)? onFinished;
+
   /// Progressi da mostrare nelle impostazioni (temi e ricompense da sbloccare).
   final Future<ProgressController> Function()? progress;
+
+  /// Salva i puzzle ricavati dagli errori della revisione.
+  final Future<int> Function(List<MistakePuzzle> puzzles)? onSavePuzzles;
 
   /// Sceglie la posizione Chess960; sostituibile nei test.
   final int Function() chess960Id;
@@ -97,6 +115,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   /// Partita i cui XP sono già stati assegnati, per farlo una volta sola.
   ChessGame? _recordedGame;
+
+  /// Partita il cui esito è già stato comunicato a [GamePage.onFinished].
+  ChessGame? _reportedGame;
 
   /// Ultimo stato salvato nell'archivio (partita, esito, mosse).
   String? _archivedKey;
@@ -257,6 +278,31 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     widget.settings.addListener(_onSettingsChanged);
     WidgetsBinding.instance.addObserver(this);
     unawaited(_loadProfile());
+    if (_isChallenge) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _startChallenge());
+    }
+  }
+
+  bool get _isChallenge => widget.challenge != null;
+
+  /// Una sfida non ha ancora iniziato la partita: fino ad allora la scacchiera
+  /// non accetta mosse.
+  late bool _awaitingChallenge = _isChallenge;
+
+  void _startChallenge() {
+    final challenge = widget.challenge;
+    if (!mounted || challenge == null) return;
+    _awaitingChallenge = false;
+    final setup = _applySetup(
+      GameSetup(
+        opponent: Opponent.computer,
+        sideChoice: challenge.side == Side.white
+            ? SideChoice.white
+            : SideChoice.black,
+        level: challenge.levelId,
+      ),
+    );
+    _beginGame(ChessGame(), setup, null);
   }
 
   Future<KeyValueStore> _openStore() => _store ??= () async {
@@ -457,7 +503,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   }
 
   PlayerSide get _playerSide {
-    if (_game.isOver || _thinking) return PlayerSide.none;
+    if (_game.isOver || _thinking || _awaitingChallenge) {
+      return PlayerSide.none;
+    }
     return switch (_computerSide) {
       null => PlayerSide.both,
       Side.white => PlayerSide.black,
@@ -534,8 +582,19 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// assegnano una volta sola per partita.
   void _finishGame() {
     final game = _game;
-    if (!game.isOver || game.moves.isEmpty) return;
+    if (!game.isOver) return;
     final side = _computerSide?.opposite;
+    if (side != null && !identical(game, _reportedGame)) {
+      _reportedGame = game;
+      final winner = game.outcome?.winner;
+      widget.onFinished?.call(
+        winner == null
+            ? GameResult.draw
+            : (winner == side ? GameResult.win : GameResult.loss),
+        (game.moves.length + 1) ~/ 2,
+      );
+    }
+    if (game.moves.isEmpty) return;
     final now = _clockNow();
     final elo = side == null
         ? null
@@ -1373,6 +1432,12 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// Revisione della partita con orologio e computer fermi.
   void _openReview() {
     final moves = _moveHistory;
+    final computer = _computerSide;
+    // Contro il computer contano gli errori di chi ha giocato, non quelli
+    // del motore.
+    final players = computer == null
+        ? {Side.white, Side.black}
+        : {computer.opposite};
     unawaited(
       _withEngine(
         (player) => ReviewPage(
@@ -1381,9 +1446,28 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           evaluate: engineEvaluator(player),
           onCancel: player.stopAnalysis,
           analyseLive: _liveAnalysis(player),
+          onReviewed: (review) => _recordReview(review, players),
+          onSavePuzzles: widget.onSavePuzzles,
+          puzzlePlayers: players,
         ),
       ),
     );
+  }
+
+  /// Una revisione nuova vale XP; con due giocatori la precisione non è di
+  /// nessuno in particolare e non si registra.
+  Future<void> _recordReview(GameReview review, Set<Side> players) async {
+    final record = widget.onActivity;
+    if (record == null) return;
+    final update = await record(
+      ReviewCompleted(
+        accuracy: players.length == 1 ? review.accuracy(players.single) : null,
+        brilliantMoves: [
+          for (final side in players) review.count(side, MoveClass.brilliant),
+        ].fold(0, (a, b) => a + b),
+      ),
+    );
+    if (update != null && mounted) showProgressFeedback(context, update);
   }
 
   /// Apre una pagina che usa il motore. Nella partita tra due persone il
@@ -1441,8 +1525,41 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     );
   }
 
+  /// Uscire da una sfida in corso la fa perdere: prima si chiede conferma.
+  Future<void> _confirmLeaveChallenge() async {
+    final leave = await _suspendedDialog<bool>(
+      (context) => AlertDialog(
+        title: const Text('Lasciare la sfida?'),
+        content: const Text('La partita in corso conta come persa.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Continua'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Esci'),
+          ),
+        ],
+      ),
+      restart: (leave) => leave != true,
+    );
+    if (leave == true && mounted) Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final inProgress = _isChallenge && !_game.isOver && _game.moves.isNotEmpty;
+    return PopScope(
+      canPop: !inProgress,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) unawaited(_confirmLeaveChallenge());
+      },
+      child: _buildScaffold(context),
+    );
+  }
+
+  Widget _buildScaffold(BuildContext context) {
     // La valutazione della patta è breve: nel frattempo la partita resta com'è.
     final evaluating = _task == _ComputerTask.draw;
     // Solo nel profilo bambino: fuori servono i delegati di localizzazione.
@@ -1455,9 +1572,11 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
               draw: l.kidGameDraw,
               resign: l.kidGameResign,
             ),
-      onNewGame: evaluating ? null : _newGame,
+      onNewGame: evaluating || _isChallenge ? null : _newGame,
       onUndo:
-          !evaluating && (_canUndo || _pendingMove != null || _viewPly != null)
+          !evaluating &&
+              !_isChallenge &&
+              (_canUndo || _pendingMove != null || _viewPly != null)
           ? _undo
           : null,
       onFlip: () => setState(() => _orientation = _orientation.opposite),
@@ -1468,7 +1587,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       onResign: _game.isOver || _pendingMove != null || evaluating
           ? null
           : _resign,
-      coachOn: _computerSide == null ? null : _coachOn,
+      // Nelle sfide niente aiuti: né suggerimenti né ripetizione della mossa.
+      coachOn: _computerSide == null || _isChallenge ? null : _coachOn,
       onCoach: () => setState(() => _coachOn = !_coachOn),
       onHint: _coachOn && _humanToMove && _pendingMove == null
           ? _giveHint
@@ -1476,7 +1596,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     );
     // Il libro delle aperture vale solo per gli scacchi classici; ai bambini
     // i nomi delle aperture non dicono nulla.
-    final title = l != null
+    final title = _isChallenge
+        ? Text(widget.challenge!.title)
+        : l != null
         ? Text(l.appTitle)
         : _game.variant == Variant.standard
         ? OpeningName(
@@ -1510,6 +1632,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           // Stockfish analizza solo gli scacchi classici; analisi e revisione
           // sono strumenti da adulti, nascosti nel profilo bambino.
           if (widget.computerAvailable &&
+              !_isChallenge &&
               _game.variant == Variant.standard &&
               l == null)
             PopupMenuButton<String>(
@@ -1531,7 +1654,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                 ),
               ],
             ),
-          if (l == null)
+          if (!_isChallenge && l == null)
             IconButton(
               tooltip: 'Editor di posizione',
               icon: const Icon(Icons.edit_note),

@@ -195,3 +195,14 @@ EngineLevel engineLevel(int id) => engineLevels.firstWhere(
   (l) => l.id == id,
   orElse: () => throw RangeError.range(id, 1, engineLevels.length, 'livello'),
 );
+
+/// Livello con l'Elo indicativo più vicino a [elo]; a pari distanza il più debole.
+EngineLevel engineLevelForElo(int elo) {
+  var best = engineLevels.first;
+  for (final level in engineLevels) {
+    if ((level.approxElo - elo).abs() < (best.approxElo - elo).abs()) {
+      best = level;
+    }
+  }
+  return best;
+}
