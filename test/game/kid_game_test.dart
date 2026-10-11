@@ -1,5 +1,6 @@
 import 'package:chessground/chessground.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/engine/computer_player.dart';
 import 'package:scacchi/game/game_page.dart';
@@ -33,6 +34,7 @@ Future<void> pumpGame(
   WidgetTester tester,
   SettingsController settings, {
   bool computer = false,
+  Locale locale = const Locale('it'),
 }) async {
   tester.view.physicalSize = const Size(1170, 2532);
   tester.view.devicePixelRatio = 3;
@@ -41,7 +43,7 @@ Future<void> pumpGame(
     MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      locale: const Locale('it'),
+      locale: locale,
       home: GamePage(
         settings: settings,
         computerAvailable: computer,
@@ -52,6 +54,31 @@ Future<void> pumpGame(
     ),
   );
   await tester.pumpAndSettle();
+}
+
+/// Raccoglie gli annunci inviati ai lettori di schermo.
+List<String> recordAnnouncements(WidgetTester tester) {
+  final messages = <String>[];
+  tester.binding.defaultBinaryMessenger.setMockDecodedMessageHandler<dynamic>(
+    SystemChannels.accessibility,
+    (message) async {
+      final map = message as Map<Object?, Object?>;
+      if (map['type'] == 'announce') {
+        messages.add(
+          (map['data']! as Map<Object?, Object?>)['message']! as String,
+        );
+      }
+      return null;
+    },
+  );
+  addTearDown(
+    () => tester.binding.defaultBinaryMessenger
+        .setMockDecodedMessageHandler<dynamic>(
+          SystemChannels.accessibility,
+          null,
+        ),
+  );
+  return messages;
 }
 
 void main() {
@@ -200,5 +227,66 @@ void main() {
     expect(find.text('Nuova'), findsOneWidget);
     expect(find.text('Abbandona'), findsOneWidget);
     expect(find.text('Patta'), findsOneWidget);
+  });
+
+  testWidgets('RP-06 annuncia resa e pareggio con le frasi della riga', (
+    tester,
+  ) async {
+    final announced = recordAnnouncements(tester);
+    await pumpGame(tester, await kidSettings());
+    await tester.tap(find.text('Mi arrendo'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Sì, mi arrendo'));
+    await tester.pumpAndSettle();
+    expect(announced, contains('Il Bianco si arrende. Ha vinto il Nero!'));
+
+    await tester.tap(find.text('Annulla'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Pareggio?'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Sì, pareggio'));
+    await tester.pumpAndSettle();
+    expect(announced, contains('Pareggio deciso insieme!'));
+  });
+
+  testWidgets('anche senza profilo bambino la resa viene annunciata', (
+    tester,
+  ) async {
+    final announced = recordAnnouncements(tester);
+    await pumpGame(tester, await kidSettings(kid: false));
+    await tester.tap(find.text('Abbandona'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilledButton, 'Abbandona'));
+    await tester.pumpAndSettle();
+    expect(announced, contains('Abbandono. Vince il Nero.'));
+  });
+
+  testWidgets('RP-06 una variante in corso tiene il suo titolo', (
+    tester,
+  ) async {
+    final settings = await kidSettings(kid: false);
+    await pumpGame(tester, settings);
+    await tester.tap(find.text('Nuova'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Tre scacchi'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Senza tempo'));
+    await tester.pumpAndSettle();
+    await settings.update(settings.value.copyWith(kidMode: true));
+    await tester.pumpAndSettle();
+    expect(find.text('Scacchi dati: Bianco 0, Nero 0'), findsOneWidget);
+  });
+
+  testWidgets('RP-06 pannello e barra interamente localizzati', (tester) async {
+    await pumpGame(tester, await kidSettings(), locale: const Locale('en'));
+    expect(find.text('Undo'), findsOneWidget);
+    expect(find.text('Flip'), findsOneWidget);
+    await tester.tap(find.text('New game'));
+    await tester.pumpAndSettle();
+    expect(find.text('New game'), findsNWidgets(2));
+    expect(find.text("White's name"), findsOneWidget);
+    expect(find.text("Black's name"), findsOneWidget);
+    expect(find.text('Optional'), findsNWidgets(2));
+    expect(find.text('No clock'), findsOneWidget);
   });
 }

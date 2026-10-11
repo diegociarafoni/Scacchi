@@ -17,7 +17,7 @@ Per disattivarlo serve un adulto, come nel controllo genitori di ChessKid: compa
 | Avversari | Solo bot amichevoli, senza Elo né livelli numerici | In sviluppo |
 | Numeri | Niente rating, precisione e punteggi del motore | In sviluppo |
 | Testi | Frasi brevi e semplici in partita (vedi sotto) | Disponibile |
-| Partita | Senza analisi, revisione ed editor di posizione; solo scacchi classici, senza tempo o con una cadenza lenta | Disponibile |
+| Partita | Senza analisi, revisione ed editor di posizione; le nuove partite solo a scacchi classici, senza tempo o con una cadenza lenta | Disponibile |
 
 Se il profilo si attiva mentre è aperta la scheda Aperture, si torna alla scheda Gioca.
 
@@ -27,9 +27,9 @@ Se il profilo si attiva mentre è aperta la scheda Aperture, si torna alla sched
 - Fine partita con causa ed esito: «Scacco matto! Hai vinto!», «Ti sei arreso. Il computer ha vinto. Riprova!», «Ha vinto il Nero!». Quando vince il giocatore (o chiunque, tra due persone) la riga aggiunge 🎉, che il lettore di schermo non legge.
 - Le patte spiegano il motivo: «Stallo: il re non può muoversi ma non è sotto scacco. Pareggio!», «Sono rimasti troppo pochi pezzi per dare scacco matto. Pareggio!», «La stessa posizione è tornata tre volte. Pareggio!», «Pareggio deciso insieme!».
 - Comandi: «Nuova partita», «Pareggio?», «Mi arrendo». Dialoghi: «Vuoi arrenderti?» con «No, continuo» / «Sì, mi arrendo»; «Nero, vuoi fare pareggio?» con «No, giochiamo» / «Sì, pareggio».
-- Titolo «Scacchi» al posto del nome dell'apertura; sotto, il bot senza Elo o «Il computer» senza livello.
-- Il pannello «Nuova partita» non mostra le varianti e, sotto «Quanto tempo?», offre solo «Senza tempo» e «Con l'orologio, con calma» (15+10). La variante scelta prima resta per quando il profilo si spegne.
-- Gli annunci per i lettori di schermo usano le stesse frasi.
+- Titolo «Scacchi» al posto del nome dell'apertura (una variante mostra ancora il suo titolo); sotto, il bot senza Elo o «Il computer» senza livello.
+- Il pannello «Nuova partita» non mostra le varianti e, sotto «Quanto tempo?», offre solo «Senza tempo» e «Con l'orologio, con calma» (15+10). Il limite vale per le nuove partite: una partita in corso quando si attiva il profilo, anche in variante o con una cadenza veloce, continua com'è. La variante scelta prima resta per quando il profilo si spegne. Tutti i testi del pannello e della barra dei comandi sono nei file `.arb`.
+- Gli annunci per i lettori di schermo usano le stesse frasi, anche per resa e pareggio concordato.
 
 ## Codice
 

@@ -421,6 +421,54 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Con l\'orologio, con calma'**
   String get kidGameSlowClock;
+
+  /// Pulsante della barra dei comandi che annulla l'ultima mossa, nel profilo bambino
+  ///
+  /// In it, this message translates to:
+  /// **'Annulla'**
+  String get kidGameUndo;
+
+  /// Pulsante della barra dei comandi che capovolge la scacchiera, nel profilo bambino
+  ///
+  /// In it, this message translates to:
+  /// **'Gira'**
+  String get kidGameFlip;
+
+  /// Campo del nome del giocatore col Bianco nel pannello Nuova partita, nel profilo bambino
+  ///
+  /// In it, this message translates to:
+  /// **'Nome del Bianco'**
+  String get kidGameWhiteName;
+
+  /// Campo del nome del giocatore col Nero nel pannello Nuova partita, nel profilo bambino
+  ///
+  /// In it, this message translates to:
+  /// **'Nome del Nero'**
+  String get kidGameBlackName;
+
+  /// Suggerimento nei campi dei nomi: si possono lasciare vuoti
+  ///
+  /// In it, this message translates to:
+  /// **'Facoltativo'**
+  String get kidGameNameHint;
+
+  /// Cadenza senza orologio nel pannello Nuova partita, nel profilo bambino
+  ///
+  /// In it, this message translates to:
+  /// **'Senza tempo'**
+  String get kidGameNoClock;
+
+  /// Pulsante della barra dei comandi che accende l'allenatore, nel profilo bambino
+  ///
+  /// In it, this message translates to:
+  /// **'Allenatore'**
+  String get kidGameCoach;
+
+  /// Pulsante della barra dei comandi che chiede un suggerimento, nel profilo bambino
+  ///
+  /// In it, this message translates to:
+  /// **'Aiuto'**
+  String get kidGameHint;
 }
 
 class _AppLocalizationsDelegate

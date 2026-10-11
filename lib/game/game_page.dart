@@ -205,23 +205,18 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final reason = game.endReason;
     if (reason == null) {
       final check = game.position.isCheck;
-      final name = _nameOf(turn);
-      final String text;
-      if (player != null) {
-        text = check
-            ? (turn == player ? l.kidGameCheckYou : l.kidGameCheckOpponent)
-            : (turn == player
-                  ? l.kidGameYourTurn
-                  : l.kidGameOpponentTurn(opponent));
-      } else if (check) {
-        text = name == null
-            ? l.kidGameCheckSide(turn.name)
-            : l.kidGameCheckName(name);
-      } else {
-        text = name == null
-            ? l.kidGameTurnSide(turn.name)
-            : l.kidGameTurnName(name);
-      }
+      final text = player != null
+          ? (check
+                ? (turn == player ? l.kidGameCheckYou : l.kidGameCheckOpponent)
+                : (turn == player
+                      ? l.kidGameYourTurn
+                      : l.kidGameOpponentTurn(opponent)))
+          : switch (_nameOf(turn)) {
+              null when check => l.kidGameCheckSide(turn.name),
+              null => l.kidGameTurnSide(turn.name),
+              final name when check => l.kidGameCheckName(name),
+              final name => l.kidGameTurnName(name),
+            };
       return (text: text, celebrate: false);
     }
     final winner = game.outcome?.winner;
@@ -1255,79 +1250,66 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   Future<void> _resign() async {
     final side = _computerSide?.opposite ?? _game.position.turn;
-    final confirmed = await _suspendedDialog<bool>(
-      (context) => _kid
-          ? _kidResignDialog(context, side)
-          : AlertDialog(
-              title: const Text('Abbandonare la partita?'),
-              content: Text('Abbandona ${_player(side, _nameOf)}.'),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context, false),
-                  child: const Text('Annulla'),
-                ),
-                FilledButton(
-                  onPressed: () => Navigator.pop(context, true),
-                  child: const Text('Abbandona'),
-                ),
-              ],
-            ),
-      restart: (confirmed) => confirmed != true,
-    );
+    final confirmed = await _suspendedDialog<bool>((context) {
+      if (!_kid) {
+        return _yesNoDialog(
+          context,
+          title: 'Abbandonare la partita?',
+          content: 'Abbandona ${_player(side, _nameOf)}.',
+          no: 'Annulla',
+          yes: 'Abbandona',
+        );
+      }
+      final l = _kidL10n(context);
+      return _yesNoDialog(
+        context,
+        title: _computerSide != null
+            ? l.kidGameResignTitle
+            : switch (_nameOf(side)) {
+                null => l.kidGameResignTitleSide(side.name),
+                final name => l.kidGameResignTitleName(name),
+              },
+        content: l.kidGameResignBody,
+        no: l.kidGameResignNo,
+        yes: l.kidGameResignYes,
+      );
+    }, restart: (confirmed) => confirmed != true);
     if (!mounted) return;
     if (confirmed == true) {
       _game.resign(side);
-      _playSound(GameSound.gameEnd);
-      _refresh(animate: false);
+      _endByChoice();
     }
   }
 
-  AlertDialog _kidResignDialog(BuildContext context, Side side) {
-    final l = _kidL10n(context);
-    final name = _nameOf(side);
-    return AlertDialog(
-      title: Text(
-        _computerSide != null
-            ? l.kidGameResignTitle
-            : name == null
-            ? l.kidGameResignTitleSide(side.name)
-            : l.kidGameResignTitleName(name),
-      ),
-      content: Text(l.kidGameResignBody),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context, false),
-          child: Text(l.kidGameResignNo),
-        ),
-        FilledButton(
-          onPressed: () => Navigator.pop(context, true),
-          child: Text(l.kidGameResignYes),
-        ),
-      ],
-    );
+  /// Chiude la partita dopo resa o patta concordata: il cambio di stato non
+  /// arriva da una mossa, quindi l'esito va annunciato qui.
+  void _endByChoice() {
+    _playSound(GameSound.gameEnd);
+    _refresh(animate: false);
+    _announce(_statusMessage());
   }
 
-  AlertDialog _kidDrawDialog(BuildContext context, Side opponent) {
-    final l = _kidL10n(context);
-    final name = _nameOf(opponent);
-    return AlertDialog(
-      title: Text(
-        name == null
-            ? l.kidGameDrawOfferSide(opponent.name)
-            : l.kidGameDrawOfferName(name),
+  /// Domanda sì/no di resa e patta; il "sì" chiude il dialogo con `true`.
+  AlertDialog _yesNoDialog(
+    BuildContext context, {
+    required String title,
+    String? content,
+    required String no,
+    required String yes,
+  }) => AlertDialog(
+    title: Text(title),
+    content: content == null ? null : Text(content),
+    actions: [
+      TextButton(
+        onPressed: () => Navigator.pop(context, false),
+        child: Text(no),
       ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context, false),
-          child: Text(l.kidGameDrawNo),
-        ),
-        FilledButton(
-          onPressed: () => Navigator.pop(context, true),
-          child: Text(l.kidGameDrawYes),
-        ),
-      ],
-    );
-  }
+      FilledButton(
+        onPressed: () => Navigator.pop(context, true),
+        child: Text(yes),
+      ),
+    ],
+  );
 
   /// Il computer accetta la patta solo se si valuta in svantaggio.
   Future<void> _offerDrawToComputer() async {
@@ -1364,8 +1346,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final l = _kid ? _kidL10n(context) : null;
     if (_accepts(computerScore)) {
       _game.agreeDraw();
-      _playSound(GameSound.gameEnd);
-      _refresh(animate: false);
+      _endByChoice();
       _showMessage(
         l?.kidGameDrawAccepted(_kidOpponent(l)) ??
             'Il computer accetta la patta.',
@@ -1384,31 +1365,31 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   Future<void> _offerDraw() async {
     if (_computerSide != null) return _offerDrawToComputer();
     final opponent = _game.position.turn.opposite;
-    final accepted = await _suspendedDialog<bool>(
-      (context) => _kid
-          ? _kidDrawDialog(context, opponent)
-          : AlertDialog(
-              title: Text(
-                '${_capitalized(_player(opponent, _nameOf))} accetta la patta?',
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context, false),
-                  child: const Text('Rifiuta'),
-                ),
-                FilledButton(
-                  onPressed: () => Navigator.pop(context, true),
-                  child: const Text('Accetta'),
-                ),
-              ],
-            ),
-      restart: (accepted) => accepted != true,
-    );
+    final accepted = await _suspendedDialog<bool>((context) {
+      if (!_kid) {
+        return _yesNoDialog(
+          context,
+          title:
+              '${_capitalized(_player(opponent, _nameOf))} accetta la patta?',
+          no: 'Rifiuta',
+          yes: 'Accetta',
+        );
+      }
+      final l = _kidL10n(context);
+      return _yesNoDialog(
+        context,
+        title: switch (_nameOf(opponent)) {
+          null => l.kidGameDrawOfferSide(opponent.name),
+          final name => l.kidGameDrawOfferName(name),
+        },
+        no: l.kidGameDrawNo,
+        yes: l.kidGameDrawYes,
+      );
+    }, restart: (accepted) => accepted != true);
     if (!mounted) return;
     if (accepted == true) {
       _game.agreeDraw();
-      _playSound(GameSound.gameEnd);
-      _refresh(animate: false);
+      _endByChoice();
     }
   }
 
@@ -1486,29 +1467,25 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   }
 
   Widget _statusLine(AppLocalizations? l) {
-    if (l == null) {
-      return _StatusLine(
-        text: switch (_task) {
-          _ComputerTask.none => statusText(_game, _nameOf),
-          _ComputerTask.move => 'Il computer sta pensando…',
-          _ComputerTask.draw => 'Il computer valuta la patta…',
-        },
-      );
-    }
-    return switch (_task) {
-      _ComputerTask.none => switch (_kidStatus(l)) {
-        (:final text, :final celebrate) => _StatusLine(
-          text: text,
-          celebrate: celebrate,
-        ),
-      },
-      _ComputerTask.move => _StatusLine(
-        text: l.kidGameThinking(_kidOpponent(l)),
+    final (:text, :celebrate) = switch (_task) {
+      _ComputerTask.none =>
+        l == null
+            ? (text: statusText(_game, _nameOf), celebrate: false)
+            : _kidStatus(l),
+      _ComputerTask.move => (
+        text: l == null
+            ? 'Il computer sta pensando…'
+            : l.kidGameThinking(_kidOpponent(l)),
+        celebrate: false,
       ),
-      _ComputerTask.draw => _StatusLine(
-        text: l.kidGameDrawThinking(_kidOpponent(l)),
+      _ComputerTask.draw => (
+        text: l == null
+            ? 'Il computer valuta la patta…'
+            : l.kidGameDrawThinking(_kidOpponent(l)),
+        celebrate: false,
       ),
     };
+    return _StatusLine(text: text, celebrate: celebrate);
   }
 
   Widget? _clockView(Side side) {
@@ -1569,8 +1546,12 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           ? const _ActionLabels()
           : _ActionLabels(
               newGame: l.kidGameNew,
+              undo: l.kidGameUndo,
+              flip: l.kidGameFlip,
               draw: l.kidGameDraw,
               resign: l.kidGameResign,
+              coach: l.kidGameCoach,
+              hint: l.kidGameHint,
             ),
       onNewGame: evaluating || _isChallenge ? null : _newGame,
       onUndo:
@@ -1595,17 +1576,18 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           : null,
     );
     // Il libro delle aperture vale solo per gli scacchi classici; ai bambini
-    // i nomi delle aperture non dicono nulla.
+    // i nomi delle aperture non dicono nulla, quelli delle varianti sì (una
+    // variante iniziata prima del profilo mostra ancora il conteggio).
     final title = _isChallenge
         ? Text(widget.challenge!.title)
+        : _game.variant != Variant.standard
+        ? Text(_title)
         : l != null
         ? Text(l.appTitle)
-        : _game.variant == Variant.standard
-        ? OpeningName(
+        : OpeningName(
             positions: [_game.initial, for (final m in _game.moves) m.after],
             fallback: 'Scacchi',
-          )
-        : Text(_title);
+          );
     return Scaffold(
       appBar: AppBar(
         title: _computerSide == null
@@ -1955,13 +1937,21 @@ class _MoveList extends StatelessWidget {
 class _ActionLabels {
   const _ActionLabels({
     this.newGame = 'Nuova',
+    this.undo = 'Annulla',
+    this.flip = 'Gira',
     this.draw = 'Patta',
     this.resign = 'Abbandona',
+    this.coach = 'Allenatore',
+    this.hint = 'Aiuto',
   });
 
   final String newGame;
+  final String undo;
+  final String flip;
   final String draw;
   final String resign;
+  final String coach;
+  final String hint;
 }
 
 class _GameActions extends StatelessWidget {
@@ -1996,18 +1986,18 @@ class _GameActions extends StatelessWidget {
       child: Row(
         children: [
           _ActionButton(Icons.add, labels.newGame, onNewGame),
-          _ActionButton(Icons.undo, 'Annulla', onUndo),
-          _ActionButton(Icons.swap_vert, 'Gira', onFlip),
+          _ActionButton(Icons.undo, labels.undo, onUndo),
+          _ActionButton(Icons.swap_vert, labels.flip, onFlip),
           _ActionButton(Icons.handshake_outlined, labels.draw, onDraw),
           _ActionButton(Icons.flag_outlined, labels.resign, onResign),
           if (coachOn != null)
             _ActionButton(
               coachOn! ? Icons.school : Icons.school_outlined,
-              'Allenatore',
+              labels.coach,
               onCoach,
             ),
           if (coachOn ?? false)
-            _ActionButton(Icons.lightbulb_outline, 'Aiuto', onHint),
+            _ActionButton(Icons.lightbulb_outline, labels.hint, onHint),
         ],
       ),
     );
@@ -2221,8 +2211,11 @@ AppLocalizations _kidL10n(BuildContext context) =>
     Localizations.of<AppLocalizations>(context, AppLocalizations) ??
     lookupAppLocalizations(const Locale('it'));
 
-/// Cadenza lenta del profilo bambino, la più calma tra le Rapid.
-const _kidClock = TimeControl(minutes: 15, increment: 10);
+/// Cadenza lenta del profilo bambino: 15+10, l'unica Rapid con incremento,
+/// così una mossa pensata a lungo restituisce un po' di tempo.
+final _kidClock = TimeControl.presets.firstWhere(
+  (t) => t.minutes == 15 && t.increment == 10,
+);
 
 /// Scelta dell'avversario per una posizione creata con l'editor (RF-24).
 class _PositionSheet extends StatefulWidget {
@@ -2317,6 +2310,10 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    // Fuori dal profilo bambino i testi restano fissi: i test montano la
+    // pagina anche senza delegati di localizzazione.
+    final l = widget.kid ? _kidL10n(context) : null;
+    final noClock = l?.kidGameNoClock ?? 'Senza tempo';
     final groups = <String, List<TimeControl>>{};
     for (final t in TimeControl.presets) {
       groups.putIfAbsent(t.category, () => []).add(t);
@@ -2336,7 +2333,7 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
             textCapitalization: TextCapitalization.words,
             decoration: InputDecoration(
               labelText: label,
-              hintText: 'Facoltativo',
+              hintText: l?.kidGameNameHint ?? 'Facoltativo',
               counterText: '',
             ),
           ),
@@ -2350,7 +2347,10 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
           shrinkWrap: true,
           padding: const EdgeInsets.all(16),
           children: [
-            Text('Nuova partita', style: theme.textTheme.titleLarge),
+            Text(
+              l?.kidGameNew ?? 'Nuova partita',
+              style: theme.textTheme.titleLarge,
+            ),
             const SizedBox(height: 8),
             OpponentPicker(
               setup: _setup,
@@ -2363,13 +2363,13 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
               const SizedBox(height: 8),
               Row(
                 children: [
-                  nameField(_white, 'Nome del Bianco'),
+                  nameField(_white, l?.kidGameWhiteName ?? 'Nome del Bianco'),
                   const SizedBox(width: 12),
-                  nameField(_black, 'Nome del Nero'),
+                  nameField(_black, l?.kidGameBlackName ?? 'Nome del Nero'),
                 ],
               ),
             ],
-            if (_setup.opponent == Opponent.human && !widget.kid) ...[
+            if (_setup.opponent == Opponent.human && l == null) ...[
               const SizedBox(height: 16),
               Text('Variante', style: theme.textTheme.titleSmall),
               const SizedBox(height: 4),
@@ -2391,27 +2391,24 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
               ],
             ],
             const SizedBox(height: 12),
-            if (widget.kid) ...[
-              Text(
-                _kidL10n(context).kidGameTimeTitle,
-                style: theme.textTheme.titleSmall,
-              ),
+            if (l != null) ...[
+              Text(l.kidGameTimeTitle, style: theme.textTheme.titleSmall),
               const SizedBox(height: 4),
               // Bullet e Blitz mettono fretta: ai bambini solo tempi lunghi.
               Wrap(
                 spacing: 8,
                 runSpacing: 8,
                 children: [
-                  chip('Senza tempo', null),
-                  chip(_kidL10n(context).kidGameSlowClock, _kidClock),
+                  chip(noClock, null),
+                  chip(l.kidGameSlowClock, _kidClock),
                 ],
               ),
             ] else ...[
               Text('Cadenza', style: theme.textTheme.titleSmall),
               const SizedBox(height: 4),
-              chip('Senza tempo', null),
+              chip(noClock, null),
             ],
-            if (!widget.kid)
+            if (l == null)
               for (final entry in groups.entries) ...[
                 const SizedBox(height: 12),
                 Text(entry.key, style: theme.textTheme.titleSmall),

@@ -238,4 +238,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get kidGameSlowClock => 'With a clock, no rush';
+
+  @override
+  String get kidGameUndo => 'Undo';
+
+  @override
+  String get kidGameFlip => 'Flip';
+
+  @override
+  String get kidGameWhiteName => 'White\'s name';
+
+  @override
+  String get kidGameBlackName => 'Black\'s name';
+
+  @override
+  String get kidGameNameHint => 'Optional';
+
+  @override
+  String get kidGameNoClock => 'No clock';
+
+  @override
+  String get kidGameCoach => 'Coach';
+
+  @override
+  String get kidGameHint => 'Hint';
 }

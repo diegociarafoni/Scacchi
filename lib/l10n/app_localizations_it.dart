@@ -238,4 +238,28 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get kidGameSlowClock => 'Con l\'orologio, con calma';
+
+  @override
+  String get kidGameUndo => 'Annulla';
+
+  @override
+  String get kidGameFlip => 'Gira';
+
+  @override
+  String get kidGameWhiteName => 'Nome del Bianco';
+
+  @override
+  String get kidGameBlackName => 'Nome del Nero';
+
+  @override
+  String get kidGameNameHint => 'Facoltativo';
+
+  @override
+  String get kidGameNoClock => 'Senza tempo';
+
+  @override
+  String get kidGameCoach => 'Allenatore';
+
+  @override
+  String get kidGameHint => 'Aiuto';
 }

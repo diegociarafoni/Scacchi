@@ -331,5 +331,37 @@
   "kidGameSlowClock": "Con l'orologio, con calma",
   "@kidGameSlowClock": {
     "description": "Cadenza lenta con orologio (15 minuti più 10 secondi a mossa), nel profilo bambino"
+  },
+  "kidGameUndo": "Annulla",
+  "@kidGameUndo": {
+    "description": "Pulsante della barra dei comandi che annulla l'ultima mossa, nel profilo bambino"
+  },
+  "kidGameFlip": "Gira",
+  "@kidGameFlip": {
+    "description": "Pulsante della barra dei comandi che capovolge la scacchiera, nel profilo bambino"
+  },
+  "kidGameWhiteName": "Nome del Bianco",
+  "@kidGameWhiteName": {
+    "description": "Campo del nome del giocatore col Bianco nel pannello Nuova partita, nel profilo bambino"
+  },
+  "kidGameBlackName": "Nome del Nero",
+  "@kidGameBlackName": {
+    "description": "Campo del nome del giocatore col Nero nel pannello Nuova partita, nel profilo bambino"
+  },
+  "kidGameNameHint": "Facoltativo",
+  "@kidGameNameHint": {
+    "description": "Suggerimento nei campi dei nomi: si possono lasciare vuoti"
+  },
+  "kidGameNoClock": "Senza tempo",
+  "@kidGameNoClock": {
+    "description": "Cadenza senza orologio nel pannello Nuova partita, nel profilo bambino"
+  },
+  "kidGameCoach": "Allenatore",
+  "@kidGameCoach": {
+    "description": "Pulsante della barra dei comandi che accende l'allenatore, nel profilo bambino"
+  },
+  "kidGameHint": "Aiuto",
+  "@kidGameHint": {
+    "description": "Pulsante della barra dei comandi che chiede un suggerimento, nel profilo bambino"
   }
 }

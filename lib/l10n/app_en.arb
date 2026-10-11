@@ -53,5 +53,13 @@
   "kidGameDrawAccepted": "{name} accepts the draw!",
   "kidGameDrawRefused": "{name} wants to keep playing.",
   "kidGameTimeTitle": "How much time?",
-  "kidGameSlowClock": "With a clock, no rush"
+  "kidGameSlowClock": "With a clock, no rush",
+  "kidGameUndo": "Undo",
+  "kidGameFlip": "Flip",
+  "kidGameWhiteName": "White's name",
+  "kidGameBlackName": "Black's name",
+  "kidGameNameHint": "Optional",
+  "kidGameNoClock": "No clock",
+  "kidGameCoach": "Coach",
+  "kidGameHint": "Hint"
 }
