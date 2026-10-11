@@ -83,6 +83,9 @@ I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisic
 | RF-82 Storm, Rush, sopravvivenza, Serie | ✓ | ✓ |
 | RF-85 ripasso dei puzzle sbagliati | ✓ | |
 | RG-08 record personali delle serie | ✓ | ✓ |
+| RF-90 nome dell'apertura in partita | ✓ | ✓ |
+| RF-91 mosse di libro | ✓ | |
+| RF-92 explorer ridotto | ✓ | ✓ |
 
 ## Integrazione continua
 

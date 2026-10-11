@@ -5,6 +5,7 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
+import '../openings/opening_name.dart';
 import '../settings/settings.dart';
 import '../settings/settings_page.dart';
 import 'chess_game.dart';
@@ -300,7 +301,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     );
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Scacchi'),
+        title: OpeningName(
+          positions: [_game.initial, for (final m in _game.moves) m.after],
+          fallback: 'Scacchi',
+        ),
         actions: [
           IconButton(
             tooltip: 'Impostazioni',
