@@ -89,6 +89,7 @@ I golden si rigenerano con `flutter test test/settings --update-goldens` dopo un
 | RP-04 anteprima delle impostazioni (widget test e golden su tre telefoni) | ✓ | |
 | RP-06 profilo bambino: impostazione, schede e sezioni semplificate | ✓ | |
 | RP-06 profilo bambino: niente statistiche numeriche in profilo, puzzle, revisione e analisi (widget test) | ✓ | |
+| RP-02 tema chiaro, scuro o di sistema scelto in Impostazioni (unitari, widget test e golden) | ✓ | ✓ |
 | RF-30 nomi dei giocatori | ✓ | ✓ |
 | RF-09 conferma della mossa | ✓ | ✓ |
 | RF-25 matto, stallo, materiale insufficiente, ripetizione, 50 mosse, abbandono | ✓ | matto, abbandono |
@@ -104,6 +105,7 @@ I golden si rigenerano con `flutter test test/settings --update-goldens` dopo un
 | RF-65 Riprova sugli errori | ✓ | |
 | RF-66 cache della revisione (in memoria) | ✓ | |
 | RF-70 spiegazioni: matto concesso o mancato, pezzo in presa, forchetta, inchiodatura, perdita di materiale | ✓ | |
+| RF-72 giudizio con simbolo sulla casa della mossa (con l'allenatore acceso) | ✓ | ✓ |
 | RF-71 cattura netta, doppio attacco, scoperta dalla variante del motore | ✓ | |
 | Cap. 7, errori trasformati in puzzle personali | ✓ | |
 | Cap. 7, puzzle personali salvati e nel ripasso | ✓ | ✓ |

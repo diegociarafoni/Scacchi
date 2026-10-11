@@ -41,6 +41,7 @@ Il livello *L* richiede `50 × L × (L − 1)` XP totali: livello 2 a 100 XP, 3 
 - **Giorno di riposo**: un giorno della settimana a scelta che non interrompe la serie e non la allunga (se si gioca anche quel giorno, conta normalmente).
 - **Protezione (congelamento)**: se ne guadagna una ogni 7 giorni di serie, al massimo 2. Copre automaticamente un giorno saltato. Non è acquistabile.
 - Se i giorni saltati sono più delle protezioni disponibili, la serie torna a zero; il record personale resta.
+- **Spiegazione in chiaro** (`streak_info.dart`): la scheda Serie del Profilo dice cosa serve ogni giorno («gioca 1 partita», «risolvi 5 puzzle», «allenati per 10 minuti»), lo stato di oggi (fatto, da fare con quanto manca, riposo), il prossimo traguardo (3, 7 e 30 giorni) e cosa succede saltando un giorno (protezione disponibile o ripartenza da zero col record che resta). La scheda Tu mostra accanto alla serie «Oggi: fatto/da fare/riposo». Nel profilo bambino restano la fiamma e le frasi senza numeri.
 
 ## Sfide giornaliere e settimanali (RG-07)
 

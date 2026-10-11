@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../archive/archive_page.dart';
 import '../archive/game_archive.dart';
+import '../archive/saved_game.dart';
 import '../kids/kid_display.dart';
 import '../l10n/app_localizations.dart';
 import '../minigames/minigames_page.dart';
@@ -26,6 +27,7 @@ class YouPage extends StatelessWidget {
     this.simple = false,
     this.playGuardian,
     this.tournamentPage,
+    this.openGame,
   });
 
   /// Fonti dei dati: chiamate a ogni apertura, così un errore si riprova.
@@ -47,6 +49,9 @@ class YouPage extends StatelessWidget {
   /// Schermata dei tornei; senza, la voce non compare (servono le partite
   /// contro il computer).
   final Future<Widget> Function()? tournamentPage;
+
+  /// Apre una partita dell'archivio; senza, le righe non sono toccabili.
+  final void Function(BuildContext context, SavedGame game)? openGame;
 
   void _push(BuildContext context, Widget page) =>
       Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => page));
@@ -107,9 +112,8 @@ class YouPage extends StatelessWidget {
                           subtitle: simple
                               ? KidFlame(lit: controller.streak > 0)
                               : Text(
-                                  controller.streak == 1
-                                      ? '1 giorno di fila'
-                                      : '${controller.streak} giorni di fila',
+                                  '${controller.streak == 1 ? '1 giorno di fila' : '${controller.streak} giorni di fila'}'
+                                  ' · ${controller.streakInfo.summary}',
                                 ),
                         )
                       : const SizedBox.shrink(),
@@ -182,8 +186,16 @@ class YouPage extends StatelessWidget {
                   icon: Icons.inventory_2_outlined,
                   title: 'Archivio',
                   subtitle: 'Partite salvate, import ed export PGN',
-                  onTap: () =>
-                      _open(context, archive(), (a) => ArchivePage(archive: a)),
+                  onTap: () => _open(
+                    context,
+                    archive(),
+                    (a) => ArchivePage(
+                      archive: a,
+                      onOpen: openGame == null
+                          ? null
+                          : (g) => openGame!(context, g),
+                    ),
+                  ),
                 ),
               ],
             ],

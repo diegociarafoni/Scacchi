@@ -37,6 +37,7 @@ void main() {
       WidgetTester tester, {
       Side side = Side.white,
       bool pushed = false,
+      bool allowUndo = false,
     }) async {
       results.clear();
       tester.view.physicalSize = const Size(1170, 2532);
@@ -48,7 +49,12 @@ void main() {
         now: () => DateTime(2026, 10, 11, 12),
         createComputer: () =>
             ComputerPlayer(connect: () async => FirstLegalMoveEngine()),
-        challenge: GameChallenge(title: 'Il guardiano', levelId: 2, side: side),
+        challenge: GameChallenge(
+          title: 'Il guardiano',
+          levelId: 2,
+          side: side,
+          allowUndo: allowUndo,
+        ),
         onFinished: (result, _) => results.add(result),
       );
       await tester.pumpWidget(
@@ -102,6 +108,39 @@ void main() {
       await tester.pumpAndSettle(const Duration(seconds: 1));
       expect(results, [GameResult.loss]);
       expect(find.byType(Chessboard), findsOneWidget);
+    });
+
+    Future<void> playE4(WidgetTester tester) async {
+      final rect = tester.getRect(find.byType(Chessboard));
+      final size = rect.width / 8;
+      Offset square(int file, int rank) =>
+          rect.topLeft + Offset((file + 0.5) * size, (8 - rank + 0.5) * size);
+      await tester.tapAt(square(4, 2));
+      await tester.pump();
+      await tester.tapAt(square(4, 4));
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+    }
+
+    String fen(WidgetTester tester) =>
+        tester.widget<Chessboard>(find.byType(Chessboard)).controller.game.fen;
+
+    testWidgets('annulla funziona se la sfida lo consente', (tester) async {
+      await open(tester, allowUndo: true);
+      final start = fen(tester);
+      await playE4(tester);
+      expect(fen(tester), isNot(start));
+      await tester.tap(find.text('Annulla'));
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+      expect(fen(tester), start);
+    });
+
+    testWidgets('annulla non c\'è nelle sfide competitive', (tester) async {
+      await open(tester);
+      await playE4(tester);
+      final played = fen(tester);
+      await tester.tap(find.text('Annulla'), warnIfMissed: false);
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+      expect(fen(tester), played);
     });
 
     testWidgets('uscire a partita in corso chiede conferma', (tester) async {
