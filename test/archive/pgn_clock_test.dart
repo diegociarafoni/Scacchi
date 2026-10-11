@@ -55,5 +55,17 @@ void main() {
       expect(back.moves[0].clock, const Duration(hours: 1, seconds: 5));
       expect(back.moves[1].clock, isNull);
     });
+
+    test('frazioni di secondo e [%emt] accanto a [%clk]', () {
+      final back = importPgn(
+        '[Event "x"]\n\n1. e4 { [%emt 0:00:02] [%clk 0:04:57.5] } *',
+      ).games.single.game;
+      expect(
+        back.moves.single.clock,
+        const Duration(minutes: 4, seconds: 57, milliseconds: 500),
+      );
+      final again = importPgn(exportPgn(back)).games.single.game;
+      expect(again.moves.single.clock, back.moves.single.clock);
+    });
   });
 }

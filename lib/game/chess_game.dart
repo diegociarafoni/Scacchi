@@ -66,8 +66,13 @@ class ChessGame {
     List<Duration?> clocks = const [],
   }) {
     final game = ChessGame(initial: initial, variant: variant);
+    final list = moves.toList();
+    assert(
+      clocks.isEmpty || clocks.length == list.length,
+      'un tempo per ogni mossa, o nessuno',
+    );
     var i = 0;
-    for (final move in moves) {
+    for (final move in list) {
       final pos = game.position;
       if (pos.isGameOver || !isPlayableMove(pos, move)) return null;
       final (after, san) = pos.makeSan(move);
