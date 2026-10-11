@@ -96,9 +96,29 @@ final _random = math.Random();
 
 int randomChess960Id() => _random.nextInt(960);
 
-/// Posizione iniziale della variante; per Chess960 serve il numero.
-Position initialPosition(Variant variant, {int? chess960Id}) =>
-    switch (variant) {
-      Variant.chess960 => chess960Position(chess960Id ?? randomChess960Id()),
-      _ => Position.initialPosition(variant.rule),
-    };
+Map<String, int>? _idsByRank;
+
+/// Numero Chess960 della posizione, se è una posizione iniziale Chess960.
+int? chess960IdOf(Position pos) {
+  final ranks = pos.board.fen.split('/');
+  if (ranks.length != 8 ||
+      ranks[1] != 'pppppppp' ||
+      ranks[6] != 'PPPPPPPP' ||
+      ranks[0] != ranks[7].toLowerCase()) {
+    return null;
+  }
+  _idsByRank ??= {for (var id = 0; id < 960; id++) chess960BackRank(id): id};
+  return _idsByRank![ranks[7]];
+}
+
+/// Posizione iniziale della variante; Chess960 richiede il numero, così due
+/// chiamate danno sempre la stessa posizione.
+Position initialPosition(Variant variant, {int? chess960Id}) {
+  if (variant == Variant.chess960) {
+    if (chess960Id == null) {
+      throw ArgumentError.notNull('chess960Id');
+    }
+    return chess960Position(chess960Id);
+  }
+  return Position.initialPosition(variant.rule);
+}

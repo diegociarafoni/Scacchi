@@ -32,12 +32,17 @@ String exportPgn(ChessGame game, {Map<String, String> headers = const {}}) {
   final pgnHeaders = {
     ...PgnGame.defaultHeaders(),
     ...headers,
-    if (game.variant != Variant.standard) 'Variant': game.variant.pgnName,
     'Result': resultTag(game),
   };
+  // Il nome della variante viene dalla partita, non da un PGN importato.
+  pgnHeaders.remove('Variant');
+  if (game.variant != Variant.standard) {
+    pgnHeaders['Variant'] = game.variant.pgnName;
+  }
   // Chess960 ha sempre bisogno della FEN: la posizione iniziale cambia.
   if (game.variant == Variant.chess960 ||
-      game.initial.fen != initialPosition(game.variant).fen) {
+      game.initial.fen !=
+          initialPosition(game.variant, chess960Id: standardChess960Id).fen) {
     pgnHeaders['FEN'] = game.initial.fen;
     pgnHeaders['SetUp'] = '1';
   }

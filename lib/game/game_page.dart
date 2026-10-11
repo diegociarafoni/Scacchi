@@ -193,9 +193,6 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     );
   }
 
-  /// Numero della posizione Chess960 in corso, per il titolo.
-  int? _chess960Id;
-
   Future<void> _newGame() async {
     final choice = await _withClockPaused(
       () => showModalBottomSheet<_TimeChoice>(
@@ -206,9 +203,11 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     );
     if (!mounted || choice == null) return;
     final variant = choice.variant;
-    _chess960Id = variant == Variant.chess960 ? widget.chess960Id() : null;
     _game = ChessGame(
-      initial: initialPosition(variant, chess960Id: _chess960Id),
+      initial: initialPosition(
+        variant,
+        chess960Id: variant == Variant.chess960 ? widget.chess960Id() : null,
+      ),
       variant: variant,
     );
     _clock = choice.control == null ? null : ChessClock(choice.control!);
@@ -219,11 +218,15 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   String get _title => switch (_game.variant) {
     Variant.standard => 'Scacchi',
-    Variant.chess960 => 'Chess960 n. $_chess960Id',
+    Variant.chess960 => switch (chess960IdOf(_game.initial)) {
+      null => 'Chess960',
+      final id => 'Chess960 n. $id',
+    },
+    Variant.kingOfTheHill => Variant.kingOfTheHill.label,
+    // Non "1-0": si confonderebbe con un risultato.
     Variant.threeCheck =>
-      'Tre scacchi ${_checksGiven(Side.white)}-'
-          '${_checksGiven(Side.black)}',
-    final v => v.label,
+      'Scacchi dati: Bianco ${_checksGiven(Side.white)}, '
+          'Nero ${_checksGiven(Side.black)}',
   };
 
   int _checksGiven(Side side) {
@@ -457,7 +460,10 @@ String statusText(ChessGame game) {
     GameEndReason.variantEnd => switch (game.variant) {
       Variant.kingOfTheHill =>
         'Re al centro. Vince il ${_sideName(game.outcome!.winner!)}.',
-      _ => 'Terzo scacco. Vince il ${_sideName(game.outcome!.winner!)}.',
+      Variant.threeCheck =>
+        'Terzo scacco. Vince il ${_sideName(game.outcome!.winner!)}.',
+      // Senza una vittoria propria della variante non si arriva qui.
+      Variant.standard || Variant.chess960 => 'Partita finita.',
     },
     GameEndReason.timeout =>
       game.outcome!.winner == null

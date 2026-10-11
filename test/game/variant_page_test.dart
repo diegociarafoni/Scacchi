@@ -65,11 +65,11 @@ void main() {
     tester,
   ) async {
     await start(tester, 'Tre scacchi');
-    expect(find.text('Tre scacchi 0-0'), findsOneWidget);
+    expect(find.text('Scacchi dati: Bianco 0, Nero 0'), findsOneWidget);
     for (final uci in ['e2e4', 'e7e5', 'd1h5', 'b8c6', 'h5f7', 'e8f7']) {
       await tapMove(tester, uci);
     }
-    expect(find.text('Tre scacchi 1-0'), findsOneWidget);
+    expect(find.text('Scacchi dati: Bianco 1, Nero 0'), findsOneWidget);
     for (final uci in ['f1c4', 'd7d5', 'c4d5']) {
       await tapMove(tester, uci);
     }

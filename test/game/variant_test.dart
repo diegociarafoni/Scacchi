@@ -33,6 +33,24 @@ void main() {
       expect(ranks, hasLength(960));
     });
 
+    test('il numero si ricava dalla posizione iniziale', () {
+      expect(chess960IdOf(chess960Position(3)), 3);
+      expect(chess960IdOf(Chess.initial), standardChess960Id);
+      final moved = chess960Position(3).play(Move.parse('b2b3')!);
+      expect(chess960IdOf(moved), isNull);
+    });
+
+    test('la posizione Chess960 non si estrae mai a caso di nascosto', () {
+      expect(() => initialPosition(Variant.chess960), throwsArgumentError);
+    });
+
+    test('variante e posizione devono avere le stesse regole', () {
+      expect(
+        () => ChessGame(initial: Chess.initial, variant: Variant.threeCheck),
+        throwsArgumentError,
+      );
+    });
+
     test('arrocco con il re che va sulla torre', () {
       // Posizione 3: BQNNRKRB, re in f1 e torre in g1 si scambiano di casa.
       expect(chess960BackRank(3), 'BQNNRKRB');

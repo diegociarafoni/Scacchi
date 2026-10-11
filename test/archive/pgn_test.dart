@@ -134,6 +134,12 @@ void main() {
       }
     });
 
+    test('una partita classica non conserva un Variant importato', () {
+      final game = ChessGame()..play(Move.parse('e2e4')!);
+      final pgn = exportPgn(game, headers: {'Variant': 'wild/0'});
+      expect(pgn, isNot(contains('Variant')));
+    });
+
     test('le varianti non supportate vengono scartate', () {
       final imported = importPgn('[Variant "Atomic"]\n\n1. e4 *');
       expect(imported.games, isEmpty);

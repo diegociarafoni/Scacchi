@@ -36,7 +36,12 @@ class PlayedMove {
 class ChessGame {
   ChessGame({Position? initial, this.variant = Variant.standard})
     : initial =
-          initial ?? initialPosition(variant, chess960Id: standardChess960Id);
+          initial ?? initialPosition(variant, chess960Id: standardChess960Id) {
+    // Le regole vengono dalla posizione: devono essere quelle della variante.
+    if (this.initial.rule != variant.rule) {
+      throw ArgumentError.value(variant, 'variant', 'diversa dalla posizione');
+    }
+  }
 
   /// Partita ricostruita da mosse già giocate, per esempio da un PGN. Ignora
   /// ripetizioni e regola delle 50 mosse non reclamate; `null` se una mossa è
