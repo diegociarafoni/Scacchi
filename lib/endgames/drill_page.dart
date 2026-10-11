@@ -46,6 +46,11 @@ class _DrillPageState extends State<DrillPage> {
 
   @override
   void dispose() {
+    // Lasciare una prova a metà conta come fallita, così torna da ripetere;
+    // non se il motore si è fermato.
+    if (_run.state == DrillState.playing && _run.moves > 0 && !_engineFailed) {
+      _save(0).ignore();
+    }
     _board.dispose();
     _player.dispose().ignore();
     super.dispose();
@@ -88,21 +93,21 @@ class _DrillPageState extends State<DrillPage> {
     EngineMove? reply;
     try {
       reply = await _player.bestMove(
-        _run.position.fen,
-        const [],
+        widget.drill.fen,
+        _run.history,
         analysisLevel,
       );
     } on Object catch (e) {
       debugPrint('Motore non disponibile: $e');
-      if (!mounted || attempt != _attempt) return;
+    }
+    if (!mounted || attempt != _attempt) return;
+    if (reply == null || !_run.reply(reply.move)) {
       setState(() {
         _thinking = false;
         _engineFailed = true;
       });
       return;
     }
-    if (!mounted || attempt != _attempt || reply == null) return;
-    _run.reply(reply.move);
     setState(() => _thinking = false);
     _board.updatePosition(_gameData(lastMove: reply.move));
     if (_run.state != DrillState.playing) await _finish();
@@ -111,10 +116,19 @@ class _DrillPageState extends State<DrillPage> {
   Future<void> _finish() async {
     _clock.stop();
     setState(() {});
-    await widget.controller.finish(widget.drill, _run.stars, _clock.elapsed);
+    await _save(_run.stars);
+  }
+
+  Future<void> _save(int stars) async {
+    try {
+      await widget.controller.finish(widget.drill, stars, _clock.elapsed);
+    } on Object catch (e) {
+      debugPrint('Esito del finale non salvato: $e');
+    }
   }
 
   void _retry() {
+    _player.stop();
     setState(() {
       _attempt++;
       _run = DrillRun(widget.drill);

@@ -123,6 +123,29 @@ void main() {
     expect(find.textContaining('Mosse: 0'), findsOneWidget);
   });
 
+  testWidgets('RF-86 lasciare una prova a metà la segna da ripetere', (
+    tester,
+  ) async {
+    await openDrill(tester, _mateIn2, script: ['h8h7']);
+    await tester.tap(find.text('Inizia'));
+    await tester.pumpAndSettle();
+    await _tapMove(tester, 'b3', 'g3');
+    await tester.pumpWidget(const MaterialApp(home: SizedBox()));
+    await _settle(tester);
+    expect(controller.progress.toRepeat, {'queen-mate'});
+  });
+
+  testWidgets('una risposta illegale del motore si segnala', (tester) async {
+    await openDrill(tester, _mateIn2, script: ['a1a2']);
+    await tester.tap(find.text('Inizia'));
+    await tester.pumpAndSettle();
+    await _tapMove(tester, 'b3', 'g3');
+    expect(find.text('Il motore non risponde: riprova.'), findsOneWidget);
+    await tester.tap(find.text('Riprova'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Mosse: 0'), findsOneWidget);
+  });
+
   testWidgets('con il Nero la scacchiera è girata', (tester) async {
     await openDrill(
       tester,

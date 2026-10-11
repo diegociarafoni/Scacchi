@@ -20,10 +20,13 @@ class EndgamesPage extends StatelessWidget {
   final ComputerPlayer Function() createComputer;
   final bool simple;
 
-  static String _goal(DrillGoal goal) => switch (goal) {
+  static String _goal(EndgameDrill drill) => switch (drill.goal) {
     DrillGoal.mate => 'Dai scacco matto',
     DrillGoal.promote => 'Promuovi il pedone',
-    DrillGoal.hold => 'Resisti con il Nero',
+    DrillGoal.hold =>
+      drill.fen.split(' ')[1] == 'b'
+          ? 'Resisti con il Nero'
+          : 'Resisti con il Bianco',
   };
 
   @override
@@ -42,7 +45,7 @@ class EndgamesPage extends StatelessWidget {
                   subtitle: Text(
                     progress.toRepeat.contains(drill.id)
                         ? 'Da ripetere'
-                        : _goal(drill.goal),
+                        : _goal(drill),
                   ),
                   trailing: Text(
                     '${'★' * progress.starsFor(drill.id)}'
