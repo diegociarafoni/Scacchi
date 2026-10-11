@@ -115,8 +115,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// Partita i cui XP sono già stati assegnati, per farlo una volta sola.
   ChessGame? _recordedGame;
 
-  /// Partita il cui esito è già stato comunicato a [GamePage.onFinished].
-  ChessGame? _reportedGame;
+  /// Esito già comunicato a [GamePage.onFinished]; dopo un annulla la partita
+  /// riprende e l'esito nuovo sostituisce il precedente.
+  String? _reportedEnding;
 
   /// Ultimo stato salvato nell'archivio (partita, esito, mosse).
   String? _archivedKey;
@@ -501,8 +502,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final game = _game;
     if (!game.isOver) return;
     final side = _computerSide?.opposite;
-    if (side != null && !identical(game, _reportedGame)) {
-      _reportedGame = game;
+    final ending =
+        '${identityHashCode(game)}:${game.endReason}:${game.moves.length}';
+    if (side != null && ending != _reportedEnding) {
+      _reportedEnding = ending;
       final winner = game.outcome?.winner;
       widget.onFinished?.call(
         winner == null
@@ -1374,7 +1377,15 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       ),
       restart: (leave) => leave != true,
     );
-    if (leave == true && mounted) Navigator.of(context).pop();
+    if (leave != true || !mounted) return;
+    // L'uscita vale una resa: l'esito arriva a chi ha lanciato la sfida.
+    final side = _computerSide?.opposite;
+    if (side != null && !_game.isOver) {
+      _cancelComputerMove();
+      _game.resign(side);
+      _refresh(animate: false);
+    }
+    Navigator.of(context).pop();
   }
 
   @override
