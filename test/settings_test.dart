@@ -1,4 +1,5 @@
 import 'package:chessground/chessground.dart';
+import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/settings/settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -92,5 +93,22 @@ void main() {
       settings.value.board.pieceOrientationBehavior,
       PieceOrientationBehavior.opponentUpsideDown,
     );
+  });
+
+  test('RF-30 nomi dei giocatori salvati, senza spazi superflui', () async {
+    final settings = await SettingsController.load();
+    expect(settings.value.whiteName, '');
+    expect(settings.value.blackName, '');
+    await settings.update(
+      settings.value.copyWith(whiteName: 'Anna', blackName: 'Bruno'),
+    );
+    final reloaded = await SettingsController.load();
+    expect(reloaded.value.whiteName, 'Anna');
+    expect(reloaded.value.blackName, 'Bruno');
+    expect(reloaded.value.nameOf(Side.white), 'Anna');
+    expect(AppSettings().nameOf(Side.black), isNull);
+    expect(AppSettings(whiteName: '  ').nameOf(Side.white), isNull);
+    expect(AppSettings(blackName: ' Bruno ').blackName, 'Bruno');
+    expect(AppSettings(whiteName: 'x' * 40).whiteName.length, 24);
   });
 }

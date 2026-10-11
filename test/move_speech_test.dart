@@ -26,6 +26,7 @@ void main() {
       'Bianco: torre della colonna a in d1',
     );
     expect(describeSan('Kxe2', Side.black), 'Nero: re prende e2');
+    expect(describeSan('e5', Side.black, name: 'Bruno'), 'Bruno: pedone e5');
     expect(
       describeSan('N1f3', Side.white),
       'Bianco: cavallo della traversa 1 in f3',
