@@ -10,6 +10,7 @@ import '../progress/progress_controller.dart';
 import '../progress/rewards.dart';
 import 'adult_gate.dart';
 import 'board_preview.dart';
+import 'notation.dart';
 import 'settings.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -149,6 +150,13 @@ class SettingsPage extends StatelessWidget {
                       ),
                       value: s.colorBlind,
                       onChanged: (v) => set((c) => c.copyWith(colorBlind: v)),
+                    ),
+                    const _Header('Notazione delle mosse'),
+                    _Choices(
+                      values: MoveNotation.values,
+                      selected: s.notation,
+                      label: (n) => n.choice,
+                      onSelected: (n) => set((c) => c.copyWith(notation: n)),
                     ),
                     const _Header('Pezzi'),
                     _Choices(
