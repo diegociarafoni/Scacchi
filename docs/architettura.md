@@ -20,7 +20,7 @@ La piattaforma web non è supportata: `dartchess` usa interi a 64 bit (bitboard)
 ```
 lib/
   main.dart               Avvio dell'app, tema chiaro e scuro
-  home/home_shell.dart    Barra di navigazione in basso (Gioca, Puzzle)
+  home/home_shell.dart    Barra di navigazione in basso (Gioca, Puzzle, Aperture)
   game/
     chess_game.dart       Stato della partita, senza dipendenze dall'interfaccia
     material.dart         Pezzi catturati e vantaggio di materiale
@@ -36,6 +36,7 @@ lib/
     settings.dart         Impostazioni, valori predefiniti e salvataggio locale
     settings_page.dart    Schermata delle impostazioni
   puzzles/                Puzzle: modello, punteggio, schermate (vedi puzzle.md)
+  openings/               Aperture: libro, nome in partita, explorer (vedi aperture.md)
   training/               Scacchiera per esercizi condivisa
 assets/
   puzzles/puzzles.csv     Puzzle Lichess inclusi (CC0)
