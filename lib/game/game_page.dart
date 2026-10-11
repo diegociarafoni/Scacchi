@@ -6,6 +6,7 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../editor/position_editor_page.dart';
 import '../openings/opening_name.dart';
 import '../settings/settings.dart';
 import '../settings/settings_page.dart';
@@ -316,6 +317,34 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _refresh(animate: false);
   }
 
+  /// Apre l'editor sulla posizione mostrata e gioca senza orologio quella scelta.
+  Future<void> _editPosition() async {
+    final ply = _viewPly;
+    final shown = ply == null
+        ? _game.position
+        : ply == -1
+        ? _game.initial
+        : _game.moves[ply].after;
+    final position = await _withClockPaused(
+      () => Navigator.of(context).push<Position>(
+        MaterialPageRoute(
+          builder: (_) => PositionEditorPage(
+            initialFen: _game.variant == Variant.standard ? shown.fen : null,
+          ),
+        ),
+      ),
+    );
+    if (!mounted || position == null) return;
+    _game = ChessGame(initial: position);
+    _clock = null;
+    _viewPly = null;
+    _pendingMove = null;
+    _clockHistory.clear();
+    _lowTime.reset();
+    _clearBoardInteraction();
+    _refresh(animate: false);
+  }
+
   String get _title => switch (_game.variant) {
     Variant.standard => 'Scacchi',
     Variant.chess960 => switch (chess960IdOf(_game.initial)) {
@@ -459,6 +488,11 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
               )
             : Text(_title),
         actions: [
+          IconButton(
+            tooltip: 'Editor di posizione',
+            icon: const Icon(Icons.edit_note),
+            onPressed: _editPosition,
+          ),
           IconButton(
             tooltip: 'Impostazioni',
             icon: const Icon(Icons.settings_outlined),
