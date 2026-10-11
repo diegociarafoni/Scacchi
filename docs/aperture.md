@@ -36,7 +36,7 @@ La notazione delle mosse resta quella inglese (Nf3, Bb5) come nel resto dell'app
 
 Dalla scheda **Aperture**, **Esplora aperture** mostra la posizione corrente con il nome dell'apertura, la sequenza delle mosse e le continuazioni del libro. Per ogni continuazione indica la mossa in SAN, il nome dell'apertura raggiunta e la quota delle varianti del libro che proseguono così.
 
-Le statistiche di vittoria del database di Lichess o di chess.com non sono disponibili offline (sono escluse dai requisiti): la percentuale misura quanto è ricca di varianti con nome una continuazione, non quanto è giocata. Si può muovere anche fuori dal libro; la schermata lo segnala. In alto compaiono codice ECO e nome dell'apertura; **Indietro** toglie l'ultima mossa, **Inizio** torna alla posizione iniziale e l'icona **Gira la scacchiera** cambia il lato.
+Le statistiche di vittoria dei database online non sono disponibili offline (sono escluse dai requisiti): la percentuale misura quanto è ricca di varianti con nome una continuazione, non quanto è giocata. Si può muovere anche fuori dal libro; la schermata lo segnala. In alto compaiono codice ECO e nome dell'apertura; **Indietro** toglie l'ultima mossa, **Inizio** torna alla posizione iniziale e l'icona **Gira la scacchiera** cambia il lato.
 
 ### Repertorio (RF-93)
 

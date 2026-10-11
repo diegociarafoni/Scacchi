@@ -1,4 +1,4 @@
-/// Categorie di Game Review di chess.com.
+/// Categorie della revisione della partita (RF-61).
 enum MoveClass {
   brilliant('Brillante', '!!'),
   great('Ottima', '!'),
@@ -48,8 +48,7 @@ class MoveFacts {
   double get loss => winBefore - winAfter;
 }
 
-/// Soglie di perdita in punti percentuali, sul modello dei "expected points"
-/// di chess.com.
+/// Soglie di perdita in punti percentuali di probabilità di vittoria.
 const excellentMaxLoss = 2.0;
 const goodMaxLoss = 5.0;
 const inaccuracyMaxLoss = 10.0;

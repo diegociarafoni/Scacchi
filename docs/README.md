@@ -50,7 +50,7 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | Impostazioni salvate: mosse legali, coordinate, promozione, frecce, temi, pezzi, animazioni | Disponibile |
 | Partita contro il computer (Stockfish) | Disponibile su Android e iOS; su Windows e Linux con Stockfish installato |
 | Puzzle con punteggio, temi e puzzle del giorno | Disponibile |
-| Puzzle Storm, Rush, sopravvivenza, Serie, ripasso degli errori, con la spiegazione di ogni modalità | Disponibile |
+| Puzzle: combo a tempo, corsa, sopravvivenza, serie, ripasso degli errori, con la spiegazione di ogni modalità | Disponibile |
 | Nome dell'apertura in partita (in italiano), Esplora aperture | Disponibile |
 | Repertorio di aperture con ripasso dilazionato | Disponibile |
 | Gamification: XP, livelli, obiettivo giornaliero, serie, traguardi, ricompense estetiche, promemoria | Disponibile: XP a fine partita, Profilo e promemoria dalla scheda Tu |

@@ -6,22 +6,23 @@ import 'puzzle.dart';
 import 'puzzle_library.dart';
 import 'puzzle_session.dart';
 
-/// Modalità a serie: Storm e Rush a tempo, sopravvivenza e Streak senza tempo.
+/// Modalità a serie: combo e corsa a tempo, sopravvivenza e serie senza tempo.
+/// I nomi dei valori sono identificativi salvati nei record: non cambiarli.
 enum PuzzleRunMode {
   storm(
-    'Puzzle Storm',
+    'Combo a tempo',
     '3 minuti, secondi bonus con le combo',
     limit: Duration(minutes: 3),
     maxMistakes: null,
   ),
   rush3(
-    'Rush 3 minuti',
+    'Corsa 3 minuti',
     '3 minuti, tre errori',
     limit: Duration(minutes: 3),
     maxMistakes: 3,
   ),
   rush5(
-    'Rush 5 minuti',
+    'Corsa 5 minuti',
     '5 minuti, tre errori',
     limit: Duration(minutes: 5),
     maxMistakes: 3,
@@ -152,7 +153,7 @@ class PuzzleRun {
     }
   }
 
-  /// Salta il puzzle corrente; in Streak è consentito una volta.
+  /// Salta il puzzle corrente; nella serie è consentito una volta.
   bool skip() {
     if (!canSkip) return false;
     _skipUsed = true;
@@ -160,7 +161,7 @@ class PuzzleRun {
     return true;
   }
 
-  /// Secondi guadagnati raggiungendo la combo [combo], come in Puzzle Storm.
+  /// Secondi guadagnati raggiungendo la combo [combo].
   static Duration comboBonus(int combo) => switch (combo) {
     5 => const Duration(seconds: 3),
     12 => const Duration(seconds: 5),
