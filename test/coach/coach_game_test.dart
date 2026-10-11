@@ -119,4 +119,18 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
     expect(badges(tester), isEmpty);
   });
+
+  testWidgets('RF-72 spegnendo l\'allenatore il giudizio sparisce', (
+    tester,
+  ) async {
+    await startWithCoach(tester);
+    await tapMove(tester, 'e2e4');
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.tap(find.text('Continua'));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    expect(badges(tester), isNotEmpty);
+    await tester.tap(find.text('Allenatore'));
+    await tester.pumpAndSettle();
+    expect(badges(tester), isEmpty);
+  });
 }

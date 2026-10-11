@@ -775,7 +775,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       }
       final text = verdict.comment?.text;
       final played = verdict.review.move;
-      if (played is NormalMove) {
+      // Se nel frattempo l'allenatore è stato spento, il giudizio non serve.
+      if (played is NormalMove && _coachOn) {
         setState(
           () => _badge = (
             ply: plies - 1,
