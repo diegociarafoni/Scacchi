@@ -1,0 +1,18 @@
+{
+  "licenses": {
+    "allowed": [
+      "MIT",
+      "BSD-2-Clause",
+      "BSD-3-Clause",
+      "Apache-2.0",
+      "ISC",
+      "Zlib",
+      "Unlicense",
+      "MPL-2.0",
+      "LGPL-2.1",
+      "LGPL-3.0",
+      "GPL-3.0"
+    ],
+    "overrides": {}
+  }
+}

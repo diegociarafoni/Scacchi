@@ -33,7 +33,9 @@ jobs:
       e2e: ${{ steps.scope.outputs.e2e }}
       android: ${{ steps.scope.outputs.android }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - name: Job pesanti necessari
         id: scope
         env:
@@ -51,7 +53,7 @@ jobs:
           has() { grep -qE "$1" <<< "$files" && echo true || echo false; }
           echo "e2e=$(has '^(integration_test/|linux/|pubspec\.(yaml|lock)$|\.github/workflows/ci(-completa)?\.yml$)')" >> "$GITHUB_OUTPUT"
           echo "android=$(has '^(android/|pubspec\.(yaml|lock)$|\.github/workflows/ci(-completa)?\.yml$)')" >> "$GITHUB_OUTPUT"
-      - uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           channel: stable
           flutter-version: 3.47.7
@@ -63,6 +65,8 @@ jobs:
       # Regole rigorose in analysis_options.yaml: anche gli avvisi informativi bloccano.
       - run: flutter analyze --fatal-infos --fatal-warnings
       - run: flutter test
+      - name: Licenze delle dipendenze compatibili con GPL-3.0
+        run: dart run tool/check_licenses.dart
 
   e2e:
     runs-on: ubuntu-latest
@@ -70,9 +74,11 @@ jobs:
     if: needs.test.outputs.e2e == 'true'
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - run: sudo apt-get update && sudo apt-get install -y libgtk-3-dev ninja-build xvfb libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good stockfish
-      - uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           channel: stable
           flutter-version: 3.47.7
@@ -101,27 +107,29 @@ jobs:
     steps:
       # Spazio per NDK e compilazione nativa di Stockfish: si rimuovono toolchain non usate.
       - run: sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/.ghcup /usr/share/swift /usr/local/share/boost /opt/hostedtoolcache/CodeQL && df -h /
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
       - run: command -v ccache || (sudo apt-get update -qq && sudo apt-get install -y --no-install-recommends ccache)
-      - uses: actions/cache@v4
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         with:
           path: .ccache
           # I sorgenti compilati cambiano solo con le versioni dei plugin: una voce per pubspec.lock.
           key: ccache-android-${{ hashFiles('pubspec.lock') }}
           restore-keys: ccache-android-
       # NDK e CMake sono scaricati e decompressi a ogni giro se mancano.
-      - uses: actions/cache@v4
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         with:
           path: |
             /usr/local/lib/android/sdk/ndk/28.2.13676358
             /usr/local/lib/android/sdk/cmake/3.22.1
           key: android-sdk-ndk28c-cmake3.22.1
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
         with:
           distribution: temurin
           java-version: 17
           cache: gradle
-      - uses: subosito/flutter-action@v2
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           channel: stable
           flutter-version: 3.47.7
@@ -130,7 +138,7 @@ jobs:
       - name: Statistiche di ccache
         if: success()
         run: ccache -s
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: scacchi-debug-apk
           path: build/app/outputs/flutter-apk/app-debug.apk
