@@ -22,6 +22,7 @@ lib/
   main.dart               Avvio dell'app, tema chiaro e scuro
   game/
     chess_game.dart       Stato della partita, senza dipendenze dall'interfaccia
+    variant.dart          Varianti e posizioni iniziali Chess960 (vedi regole-di-gioco.md)
     material.dart         Pezzi catturati e vantaggio di materiale
     game_page.dart        Schermata di gioco
   progress/               Gamification: XP, livelli, serie, traguardi (vedi gamification.md)

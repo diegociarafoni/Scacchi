@@ -30,6 +30,7 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | Archivio partite, import ed export PGN | Logica e schermata disponibili, collegamento alla partita in sviluppo |
 | Percorso a tappe con stelle | Mappa ed esercizi pronti; accesso dalla schermata principale e guardiani in arrivo con il collegamento alla partita |
 | Statistiche e rating locale | Calcolo e schermata pronti; accesso dalla schermata principale in arrivo |
+| Varianti: Chess960, Re della collina, Tre scacchi | Disponibile nella partita a due; Stockfish per Chess960 con la partita contro il computer |
 | Orologio | Pianificato |
 
 I requisiti completi sono nel documento dei requisiti del progetto.

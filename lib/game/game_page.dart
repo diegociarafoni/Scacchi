@@ -8,12 +8,20 @@ import '../settings/settings.dart';
 import '../settings/settings_page.dart';
 import 'chess_game.dart';
 import 'material.dart';
+import 'variant.dart';
 
 /// Partita tra due persone sullo stesso dispositivo.
 class GamePage extends StatefulWidget {
-  const GamePage({super.key, required this.settings});
+  const GamePage({
+    super.key,
+    required this.settings,
+    this.chess960Id = randomChess960Id,
+  });
 
   final SettingsController settings;
+
+  /// Sceglie la posizione Chess960; sostituibile nei test.
+  final int Function() chess960Id;
 
   @override
   State<GamePage> createState() => _GamePageState();
@@ -98,10 +106,53 @@ class _GamePageState extends State<GamePage> {
     );
   }
 
-  void _newGame() {
-    _game = ChessGame();
+  /// Numero della posizione Chess960 in corso, per il titolo.
+  int? _chess960Id;
+
+  Future<void> _newGame() async {
+    final variant = await showModalBottomSheet<Variant>(
+      context: context,
+      showDragHandle: true,
+      builder: (context) => SafeArea(
+        child: ListView(
+          shrinkWrap: true,
+          children: [
+            const ListTile(title: Text('Nuova partita')),
+            for (final v in Variant.values)
+              ListTile(
+                title: Text(v.label),
+                subtitle: v.description.isEmpty ? null : Text(v.description),
+                selected: v == _game.variant,
+                onTap: () => Navigator.pop(context, v),
+              ),
+          ],
+        ),
+      ),
+    );
+    if (variant == null || !mounted) return;
+    _chess960Id = variant == Variant.chess960 ? widget.chess960Id() : null;
+    _game = ChessGame(
+      initial: initialPosition(variant, chess960Id: _chess960Id),
+      variant: variant,
+    );
     _clearBoardInteraction();
     _refresh(animate: false);
+  }
+
+  String get _title => switch (_game.variant) {
+    Variant.standard => 'Scacchi',
+    Variant.chess960 => 'Chess960 n. $_chess960Id',
+    Variant.threeCheck =>
+      'Tre scacchi ${_checksGiven(Side.white)}-'
+          '${_checksGiven(Side.black)}',
+    final v => v.label,
+  };
+
+  int _checksGiven(Side side) {
+    final pos = _game.position;
+    if (pos is! ThreeCheck) return 0;
+    final (white, black) = pos.remainingChecks;
+    return 3 - (side == Side.white ? white : black);
   }
 
   void _undo() {
@@ -172,7 +223,7 @@ class _GamePageState extends State<GamePage> {
     );
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Scacchi'),
+        title: Text(_title),
         actions: [
           IconButton(
             tooltip: 'Impostazioni',
@@ -291,6 +342,11 @@ String statusText(ChessGame game) {
     GameEndReason.threefoldRepetition => 'Triplice ripetizione. Patta.',
     GameEndReason.fiftyMoveRule => 'Regola delle 50 mosse. Patta.',
     GameEndReason.agreement => 'Patta concordata.',
+    GameEndReason.variantEnd => switch (game.variant) {
+      Variant.kingOfTheHill =>
+        'Re al centro. Vince il ${_sideName(game.outcome!.winner!)}.',
+      _ => 'Terzo scacco. Vince il ${_sideName(game.outcome!.winner!)}.',
+    },
   };
 }
 

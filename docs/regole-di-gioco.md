@@ -35,3 +35,19 @@ Si usa il contatore di semimosse della posizione (`halfmoves`), che si azzera a 
 - "Annulla" toglie l'ultima mossa, anche a partita conclusa, e riporta la partita in corso. Se la partita è finita per abbandono o patta concordata, revoca solo l'abbandono o la patta, senza togliere mosse; funziona anche prima della prima mossa.
 - "Patta" chiede all'avversario del lato al tratto se accetta; se accetta, la partita finisce patta.
 - "Abbandona" chiede conferma e assegna la vittoria al lato che non è al tratto.
+
+## Varianti
+
+"Nuova" chiede la variante (RF-120, RF-121). Le regole sono quelle di `dartchess`, le stesse di Lichess; `lib/game/variant.dart` sceglie la posizione iniziale e `ChessGame` conosce la variante della partita.
+
+| Variante | Differenze |
+|---|---|
+| Classica | Nessuna |
+| Chess960 | Prima traversa mescolata, uguale per i due colori: re tra le torri, alfieri su case di colore opposto. 960 posizioni numerate secondo Scharnagl (la 518 è quella classica), estratte a caso; il numero compare nel titolo. |
+| Re della collina | Vince anche chi porta il re in d4, e4, d5 o e5, purché la casa non sia attaccata (il re non può andare sotto scacco). |
+| Tre scacchi | Vince anche chi dà il terzo scacco; il titolo mostra gli scacchi dati (Bianco-Nero). |
+
+**Arrocco in Chess960.** Il re va dove andrebbe negli scacchi classici (g1/c1, g8/c8) e la torre accanto a lui (f1/d1, f8/d8). Sulla scacchiera si arrocca portando il re sulla torre con cui si vuole arroccare: è l'unico modo non ambiguo quando il re è già vicino alla casa di arrivo. Le case tra re, torre e le loro destinazioni devono essere libere, a parte il re e la torre stessi, e il re non può attraversare case attaccate.
+
+**Fine della partita.** Matto, stallo, ripetizione e 50 mosse valgono come negli scacchi classici. La vittoria propria della variante ha il motivo "Re al centro" o "Terzo scacco". A Tre scacchi la ripetizione confronta anche gli scacchi rimasti. Il materiale insufficiente non vale a Re della collina, dove un re solo può ancora vincere.
+

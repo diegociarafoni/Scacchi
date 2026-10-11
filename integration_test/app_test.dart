@@ -216,4 +216,16 @@ void main() {
     await tester.pumpAndSettle();
     expect(board().orientation.name, 'black');
   });
+
+  testWidgets('RF-120 una nuova partita Chess960 mescola la prima traversa', (
+    tester,
+  ) async {
+    await _start(tester);
+    await tester.tap(find.text('Nuova'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Chess960'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Chess960 n. '), findsOneWidget);
+    expect(find.text('Muove il Bianco.'), findsOneWidget);
+  });
 }

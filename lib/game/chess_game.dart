@@ -2,6 +2,8 @@ import 'dart:math' as math;
 
 import 'package:dartchess/dartchess.dart';
 
+import 'variant.dart';
+
 /// Motivo per cui la partita è terminata.
 enum GameEndReason {
   checkmate,
@@ -11,6 +13,9 @@ enum GameEndReason {
   fiftyMoveRule,
   resignation,
   agreement,
+
+  /// Vittoria propria della variante: re al centro, terzo scacco.
+  variantEnd,
 }
 
 /// Una mossa giocata, con la notazione algebrica (SAN) e la posizione risultante.
@@ -28,13 +33,19 @@ class PlayedMove {
 
 /// Stato della partita: cronologia, annullamento e condizioni di fine partita.
 class ChessGame {
-  ChessGame({Position? initial}) : initial = initial ?? Chess.initial;
+  ChessGame({Position? initial, this.variant = Variant.standard})
+    : initial =
+          initial ?? initialPosition(variant, chess960Id: standardChess960Id);
 
   /// Partita ricostruita da mosse già giocate, per esempio da un PGN. Ignora
   /// ripetizioni e regola delle 50 mosse non reclamate; `null` se una mossa è
   /// illegale o segue un matto o uno stallo.
-  static ChessGame? replay(Position initial, Iterable<Move> moves) {
-    final game = ChessGame(initial: initial);
+  static ChessGame? replay(
+    Position initial,
+    Iterable<Move> moves, {
+    Variant variant = Variant.standard,
+  }) {
+    final game = ChessGame(initial: initial, variant: variant);
     for (final move in moves) {
       final pos = game.position;
       if (pos.isGameOver || !pos.isLegal(move)) return null;
@@ -45,6 +56,7 @@ class ChessGame {
   }
 
   final Position initial;
+  final Variant variant;
   final List<PlayedMove> _moves = [];
   Side? _resigned;
   bool _drawAgreed = false;
@@ -87,6 +99,7 @@ class ChessGame {
     if (_resigned != null) return GameEndReason.resignation;
     if (_drawAgreed) return GameEndReason.agreement;
     final pos = position;
+    if (pos.isVariantEnd) return GameEndReason.variantEnd;
     if (pos.isCheckmate) return GameEndReason.checkmate;
     if (pos.isStalemate) return GameEndReason.stalemate;
     if (pos.isInsufficientMaterial) return GameEndReason.insufficientMaterial;
@@ -101,6 +114,7 @@ class ChessGame {
     null => null,
     GameEndReason.checkmate => Outcome(winner: position.turn.opposite),
     GameEndReason.resignation => Outcome(winner: _resigned!.opposite),
+    GameEndReason.variantEnd => position.variantOutcome,
     _ => Outcome.draw,
   };
 
@@ -118,7 +132,10 @@ class ChessGame {
     return count >= 3;
   }
 
-  /// Chiave di confronto per la ripetizione: pezzi, tratto, arrocco, en passant.
-  static String _repetitionKey(Position pos) =>
-      pos.fen.split(' ').take(4).join(' ');
+  /// Chiave di confronto per la ripetizione: la FEN senza i contatori delle
+  /// mosse, quindi con gli scacchi rimasti a Tre scacchi.
+  static String _repetitionKey(Position pos) {
+    final fields = pos.fen.split(' ');
+    return fields.take(fields.length - 2).join(' ');
+  }
 }
