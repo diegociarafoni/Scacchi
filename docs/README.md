@@ -43,7 +43,7 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | Impostazioni salvate: mosse legali, coordinate, promozione, frecce, temi, pezzi, animazioni | Disponibile |
 | Partita contro il computer (Stockfish) | Disponibile su Android e iOS |
 | Puzzle con punteggio, temi e puzzle del giorno | Disponibile |
-| Puzzle Storm, Rush, sopravvivenza, Serie, ripasso degli errori | Disponibile |
+| Puzzle: combo a tempo, corsa, sopravvivenza, serie, ripasso degli errori | Disponibile |
 | Nome dell'apertura in partita, explorer ridotto | Disponibile |
 | Repertorio di aperture con ripasso dilazionato | Disponibile |
 | Gamification: XP, livelli, obiettivo giornaliero, serie, traguardi, ricompense estetiche, promemoria | Disponibile: XP a fine partita, Profilo e promemoria dalla scheda Tu |

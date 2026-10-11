@@ -77,11 +77,11 @@ Il puzzle del giorno non richiede un server: l'indice è `(giorni dal 1970 × 79
 
 | Modalità | Tempo | Fine | Note |
 |---|---|---|---|
-| Puzzle Storm | 3 minuti | Allo scadere del tempo | Combo: +3 s a 5, +5 s a 12, +7 s a 20, +10 s a 30 e poi ogni 10; un errore toglie 10 s e azzera la combo |
-| Rush 3 minuti | 3 minuti | Tempo o tre errori | |
-| Rush 5 minuti | 5 minuti | Tempo o tre errori | |
+| Combo a tempo | 3 minuti | Allo scadere del tempo | Combo: +3 s a 5, +5 s a 12, +7 s a 20, +10 s a 30 e poi ogni 10; un errore toglie 10 s e azzera la combo |
+| Corsa 3 minuti | 3 minuti | Tempo o tre errori | |
+| Corsa 5 minuti | 5 minuti | Tempo o tre errori | |
 | Sopravvivenza | Nessuno | Tre errori | |
-| Serie (Streak) | Nessuno | Primo errore | Un solo salto consentito |
+| Serie | Nessuno | Primo errore | Un solo salto consentito |
 
 In tutte le modalità la difficoltà cresce: il puzzle numero *n* è scelto a caso tra quelli con punteggio in `[600 + 60·n, 600 + 60·n + 40)`, mai ripetuto nella stessa serie. Il passo (60) è più ampio della finestra (40), così ogni puzzle è più difficile del precedente; se la finestra è vuota si prende il primo puzzle più difficile e, in cima alla raccolta, il più difficile rimasto. La ricerca usa l'ordinamento per punteggio (ricerca binaria), senza scorrere tutta la raccolta a ogni mossa. Un errore fa passare subito al puzzle successivo. Le serie non modificano il punteggio puzzle.
 

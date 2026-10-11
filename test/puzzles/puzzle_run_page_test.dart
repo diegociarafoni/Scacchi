@@ -42,7 +42,7 @@ Future<PuzzleTrainer> phone(WidgetTester tester) {
 }
 
 void main() {
-  testWidgets('RF-82 Streak: due risolti, un errore, record salvato', (
+  testWidgets('RF-82 Serie: due risolti, un errore, record salvato', (
     tester,
   ) async {
     final trainer = await phone(tester);
@@ -77,7 +77,7 @@ void main() {
     expect(find.text('+15 XP'), findsOneWidget);
   });
 
-  testWidgets('RF-82 Storm finisce allo scadere del tempo', (tester) async {
+  testWidgets('RF-82 Combo a tempo finisce allo scadere del tempo', (tester) async {
     final trainer = await phone(tester);
     var elapsed = Duration.zero;
     await tester.pumpWidget(
