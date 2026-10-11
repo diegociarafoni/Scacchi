@@ -12,6 +12,7 @@ import datetime
 import hashlib
 import os
 import sys
+import unicodedata
 
 from cryptography import x509
 from cryptography.hazmat.primitives import hashes, serialization
@@ -77,8 +78,25 @@ def prime(stream: Stream, bits: int) -> int:
             return candidate
 
 
-def derive_key(seed: str) -> rsa.RSAPrivateKey:
-    master = hashlib.scrypt(seed.encode(), salt=SALT, n=2**15, r=8, p=1, dklen=64, maxmem=2**26)
+MIN_SEED_LENGTH = 32
+
+
+def normalize(seed: str) -> str:
+    """Stessa frase anche se incollata con spazi attorno o accenti in forma diversa."""
+    return unicodedata.normalize("NFC", seed.strip())
+
+
+def master_key(seed: str) -> bytes:
+    return hashlib.scrypt(
+        normalize(seed).encode(), salt=SALT, n=2**17, r=8, p=1, dklen=64, maxmem=2**28
+    )
+
+
+def store_password(master: bytes) -> str:
+    return Stream(master, b"store").read(32).hex()
+
+
+def derive_key(master: bytes) -> rsa.RSAPrivateKey:
     p = prime(Stream(master, b"p"), KEY_BITS // 2)
     q = prime(Stream(master, b"q"), KEY_BITS // 2)
     if p == q:
@@ -117,15 +135,19 @@ def certificate(key: rsa.RSAPrivateKey) -> x509.Certificate:
 
 def main() -> int:
     seed = os.environ.get("ANDROID_SIGNING_SEED", "")
-    if len(seed) < 20:
-        print("ANDROID_SIGNING_SEED deve avere almeno 20 caratteri", file=sys.stderr)
+    if len(normalize(seed)) < MIN_SEED_LENGTH:
+        print(
+            f"ANDROID_SIGNING_SEED deve avere almeno {MIN_SEED_LENGTH} caratteri casuali",
+            file=sys.stderr,
+        )
         return 1
     if len(sys.argv) != 2:
         print(__doc__, file=sys.stderr)
         return 2
-    key = derive_key(seed)
+    master = master_key(seed)
+    key = derive_key(master)
     cert = certificate(key)
-    password = hashlib.sha256(SALT + b"store" + seed.encode()).hexdigest()
+    password = store_password(master)
     encryption = (
         serialization.PrivateFormat.PKCS12.encryption_builder()
         .kdf_rounds(50000)

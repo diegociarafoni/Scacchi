@@ -43,17 +43,17 @@ Android installa un aggiornamento solo se è firmato con la stessa chiave della 
 
 La build sceglie la chiave in quest'ordine:
 
-1. **Keystore** nei segreti `ANDROID_KEYSTORE_*` (vedi sotto).
+1. **Keystore** nei segreti `ANDROID_KEYSTORE_*` (vedi sotto). Se c'è anche la frase segreta la build lo segnala con un avviso: togliere poi il keystore cambierebbe la firma.
 2. **Frase segreta** nel segreto `ANDROID_SIGNING_SEED`: è il metodo consigliato.
 3. **Nessun segreto**: chiave di debug generata dal runner, diversa a ogni esecuzione; per passare a una nuova versione bisogna prima disinstallare l'app (e le partite salvate vanno perse).
 
-Sulle pull request la build firma con una frase pubblica fissa, così il percorso di firma è verificato senza esporre segreti al codice della PR.
+Sulle pull request la build firma con una frase pubblica fissa, così il percorso di firma è verificato senza esporre segreti al codice della PR; quell'APK non viene caricato come artefatto.
 
 ### Metodo consigliato: frase segreta
 
 `tool/derive_keystore.py` ricava dalla frase, in modo deterministico, una chiave RSA a 3072 bit e un certificato sempre identico (scrypt sulla frase, numeri primi da un flusso SHAKE-256, campi del certificato fissi e firma PKCS#1 v1.5). Stessa frase, stesso certificato: non c'è nessun file da conservare o caricare, e la copia di sicurezza è la frase stessa.
 
-1. Generare una frase casuale lunga (almeno 20 caratteri, meglio 40 o più) con un gestore di password e salvarla lì. Chi la conosce può firmare aggiornamenti dell'app: non va condivisa.
+1. Generare una frase casuale lunga (almeno 32 caratteri, meglio 40 o più) con il generatore di un gestore di password e salvarla lì. Non usare una frase inventata o una citazione: il certificato pubblico di ogni APK permette di provare frasi a tentativi, e chi la indovina può firmare aggiornamenti dell'app. Spazi iniziali e finali sono ignorati.
 2. Aprire https://github.com/diegociarafoni/Scacchi/settings/secrets/actions, toccare **New repository secret**, nome `ANDROID_SIGNING_SEED`, valore la frase, **Add secret**. Funziona anche dal browser del telefono.
 3. Pubblicare una nuova versione. Chi aveva installato una versione firmata con la chiave di debug deve disinstallarla una volta; da lì in poi gli aggiornamenti si installano sopra.
 
@@ -86,6 +86,8 @@ Serve il pacchetto Python `cryptography`. Su Google Play questa chiave si usa co
    | `ANDROID_KEYSTORE_PASSWORD` | password del keystore |
    | `ANDROID_KEY_ALIAS` | `scacchi` (l'alias scelto) |
    | `ANDROID_KEY_PASSWORD` | password della chiave |
+
+3. Dalla build successiva l'APK è firmato con questa chiave. Chi aveva installato una versione firmata con la chiave di debug deve disinstallarla una volta.
 
 Il keystore non va mai aggiunto al repository: `android/.gitignore` esclude `*.jks` e `*.keystore`.
 
