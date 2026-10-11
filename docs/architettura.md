@@ -39,6 +39,7 @@ lib/
   stats/                  Statistiche e rating locale (vedi statistiche.md)
   minigames/              Minigiochi di allenamento (vedi minigiochi.md)
   tournament/             Tornei offline contro bot (vedi tornei.md)
+  reminders/              Promemoria giornaliero con notifiche locali (vedi gamification.md)
   storage/                File JSON locali con versione e scrittura atomica
   settings/
     settings.dart         Impostazioni, valori predefiniti e salvataggio locale
@@ -61,6 +62,7 @@ test/
 assets/sounds/            Suoni dell'app (WAV)
 tool/generate_sounds.py   Generatore dei suoni
   settings_test.dart      Test delle impostazioni e del salvataggio
+  training/               Test della scacchiera per esercizi
   widget_test.dart        Test di avvio dell'interfaccia
 integration_test/
   app_test.dart           Test end-to-end sull'app reale
@@ -104,7 +106,7 @@ Calcola da una partita i pezzi catturati da ciascun lato, ripercorrendo le mosse
 
 ### Impostazioni (`lib/settings/`)
 
-`AppSettings` è un valore immutabile con tutte le opzioni e la loro traduzione in `ChessboardSettings` di chessground. `SettingsController` lo carica all'avvio da `shared_preferences`, lo espone come `ValueNotifier` e lo salva a ogni modifica; valori salvati sconosciuti o di tipo errato tornano al predefinito, e se la memoria locale non è disponibile l'app parte con i valori predefiniti. Vengono scritti solo i valori modificati. L'app carica le impostazioni prima di mostrare la partita, e `GamePage` si ridisegna quando cambiano.
+`AppSettings` è un valore immutabile con tutte le opzioni e la loro traduzione in `ChessboardSettings` di chessground. `SettingsController` lo carica all'avvio da `shared_preferences`, lo espone come `ValueNotifier` e lo salva a ogni modifica; valori salvati sconosciuti o di tipo errato tornano al predefinito, e se la memoria locale non è disponibile l'app parte con i valori predefiniti. Vengono scritti solo i valori modificati. L'app carica le impostazioni prima di mostrare la partita, e `GamePage` si ridisegna quando cambiano. `SettingsScope` (un `InheritedNotifier` messo nel `builder` di `MaterialApp`, sopra il Navigator) espone le stesse impostazioni a tutte le pagine: `TrainingBoard` lo legge, così puzzle, esploratore e repertorio seguono le scelte dell'utente senza ricevere il controller come parametro. Fuori dall'app, per esempio nei test, usa i valori predefiniti.
 
 ### `GamePage` (`lib/game/game_page.dart`)
 
