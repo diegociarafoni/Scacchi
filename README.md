@@ -1,6 +1,6 @@
-# Scacchi
+# Rokko
 
-Un'applicazione di scacchi offline, open source e completamente gratuita, per Android, iOS e desktop (Windows, macOS, Linux). Nessuna pubblicità, nessun account, nessun dato che lascia il dispositivo.
+Rokko è un'applicazione di scacchi offline, open source e completamente gratuita, per Android, iOS e desktop (Windows, macOS, Linux). Nessuna pubblicità, nessun account, nessun dato che lascia il dispositivo.
 
 ## Stato
 

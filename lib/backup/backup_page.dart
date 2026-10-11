@@ -15,7 +15,7 @@ Future<void> _shareWithSystem(String text, String fileName) async {
   await file.writeAsString(text, flush: true);
   try {
     await SharePlus.instance.share(
-      ShareParams(files: [XFile(file.path)], subject: 'Backup di Scacchi'),
+      ShareParams(files: [XFile(file.path)], subject: 'Backup di Rokko'),
     );
   } finally {
     // Copia completa dei dati: non lasciarla nella cartella temporanea.

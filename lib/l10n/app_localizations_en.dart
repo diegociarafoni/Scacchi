@@ -10,7 +10,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'Chess';
+  String get appTitle => 'Rokko';
 
   @override
   String get kidProfileSection => 'Profile';
@@ -436,7 +436,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get qrCameraError =>
-      'The camera is not available. Allow Scacchi to use the camera in the phone settings and try again.';
+      'The camera is not available. Allow Rokko to use the camera in the phone settings and try again.';
 
   @override
   String get qrRetry => 'Try again';

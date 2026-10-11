@@ -73,7 +73,7 @@ class Backup {
     try {
       final json = jsonDecode(text) as Map<String, Object?>;
       if (json['app'] != _app) {
-        throw BackupException('Non è un backup di Scacchi');
+        throw BackupException('Non è un backup di Rokko');
       }
       final version = json['version'];
       if (version is! int || version < 1 || version > _version) {

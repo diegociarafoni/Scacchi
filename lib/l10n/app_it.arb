@@ -1,6 +1,6 @@
 {
   "@@locale": "it",
-  "appTitle": "Scacchi",
+  "appTitle": "Rokko",
   "@appTitle": {
     "description": "Titolo dell'app nel selettore delle attività; il nome sotto l'icona è in AndroidManifest.xml e Info.plist"
   },
@@ -609,7 +609,7 @@
   "@qrRestarted": {
     "description": "Si è inquadrato il QR di un'altra partita"
   },
-  "qrCameraError": "Non riesco a usare la fotocamera. Consenti l'accesso alla fotocamera per Scacchi nelle impostazioni del telefono e riprova.",
+  "qrCameraError": "Non riesco a usare la fotocamera. Consenti l'accesso alla fotocamera per Rokko nelle impostazioni del telefono e riprova.",
   "@qrCameraError": {
     "description": "Permesso negato o fotocamera assente"
   },
