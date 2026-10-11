@@ -5,6 +5,7 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../settings/settings.dart';
 import 'board_layout.dart';
 import 'coordinates.dart';
@@ -75,8 +76,9 @@ class _CoordinatesPageState extends State<CoordinatesPage> {
     final drill = _drill;
     final text = Theme.of(context).textTheme;
     final highlight = _lastTap;
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Coordinate a tempo')),
+      appBar: AppBar(title: Text(l10n.minigamesCoordinatesTitle)),
       body: BoardLayout(
         board: (size) => StaticChessboard(
           size: size,
@@ -98,7 +100,7 @@ class _CoordinatesPageState extends State<CoordinatesPage> {
             if (_running) ...[
               Semantics(
                 liveRegion: true,
-                label: 'Tocca la casa ${drill!.target.name}',
+                label: l10n.minigamesCoordinatesTarget(drill!.target.name),
                 child: ExcludeSemantics(
                   child: Text(
                     drill.target.name,
@@ -109,36 +111,39 @@ class _CoordinatesPageState extends State<CoordinatesPage> {
                 ),
               ),
               Text(
-                'Punteggio ${drill.score}',
+                l10n.minigamesCoordinatesScore(drill.score),
                 textAlign: TextAlign.center,
                 style: text.titleMedium,
               ),
-              Text('$_left secondi', textAlign: TextAlign.center),
+              Text(
+                l10n.minigamesCoordinatesSecondsLeft(_left),
+                textAlign: TextAlign.center,
+              ),
             ] else ...[
               if (drill != null) ...[
                 Text(
-                  'Tempo scaduto',
+                  l10n.minigamesCoordinatesTimeUp,
                   textAlign: TextAlign.center,
                   style: text.titleLarge,
                 ),
                 Text(
-                  'Punteggio ${drill.score}: ${drill.score} '
-                  '${drill.score == 1 ? 'giusta' : 'giuste'}, '
-                  '${drill.mistakes} '
-                  '${drill.mistakes == 1 ? 'sbagliata' : 'sbagliate'}',
+                  l10n.minigamesCoordinatesSummary(drill.score, drill.mistakes),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 12),
               ] else
-                const Text(
-                  'Tocca la casa indicata, senza coordinate sulla scacchiera. '
-                  'Hai 30 secondi.',
-                ),
+                Text(l10n.minigamesCoordinatesIntro),
               const SizedBox(height: 12),
               SegmentedButton<Side>(
-                segments: const [
-                  ButtonSegment(value: Side.white, label: Text('Bianco')),
-                  ButtonSegment(value: Side.black, label: Text('Nero')),
+                segments: [
+                  ButtonSegment(
+                    value: Side.white,
+                    label: Text(l10n.minigamesCoordinatesWhite),
+                  ),
+                  ButtonSegment(
+                    value: Side.black,
+                    label: Text(l10n.minigamesCoordinatesBlack),
+                  ),
                 ],
                 selected: {_side},
                 onSelectionChanged: (s) => setState(() => _side = s.first),
@@ -146,12 +151,16 @@ class _CoordinatesPageState extends State<CoordinatesPage> {
               const SizedBox(height: 12),
               FilledButton(
                 onPressed: _start,
-                child: Text(drill == null ? 'Inizia' : 'Ancora'),
+                child: Text(
+                  drill == null
+                      ? l10n.minigamesCoordinatesStart
+                      : l10n.minigamesAgain,
+                ),
               ),
               if (drill != null)
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('Fine'),
+                  child: Text(l10n.minigamesDone),
                 ),
             ],
           ],

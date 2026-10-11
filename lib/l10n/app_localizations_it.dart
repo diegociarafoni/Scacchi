@@ -468,4 +468,348 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get editorFenHelpClose => 'Ho capito';
+
+  @override
+  String get backupTitle => 'Backup e ripristino';
+
+  @override
+  String get backupIntro =>
+      'Il backup contiene partite, progressi, percorso, tornei, allenamento e impostazioni. Salvalo in un posto sicuro: senza rete non esiste una copia online.';
+
+  @override
+  String get backupShare => 'Condividi il backup';
+
+  @override
+  String get backupShareSubject => 'Backup di Rokko';
+
+  @override
+  String get backupRestoreFromText => 'Ripristina da testo';
+
+  @override
+  String get backupExported => 'Backup pronto da salvare';
+
+  @override
+  String backupExportFailed(String error) {
+    return 'Backup non riuscito: $error';
+  }
+
+  @override
+  String get backupRestoreStaged =>
+      'Backup pronto. Chiudi e riapri l\'app per ripristinare i dati.';
+
+  @override
+  String backupRestoreFailed(String error) {
+    return 'Ripristino non riuscito: $error';
+  }
+
+  @override
+  String get backupErrorNotApp => 'Non è un backup di Rokko';
+
+  @override
+  String get backupErrorNewerVersion =>
+      'Backup creato da una versione più recente';
+
+  @override
+  String backupErrorUnexpectedFile(String file) {
+    return 'File inatteso nel backup: $file';
+  }
+
+  @override
+  String backupErrorInvalidFile(String file) {
+    return 'File non valido nel backup: $file';
+  }
+
+  @override
+  String backupErrorInvalidPreference(String name) {
+    return 'Preferenza non valida: $name';
+  }
+
+  @override
+  String get backupErrorUnreadable => 'Backup non leggibile';
+
+  @override
+  String get backupRestoreDialogTitle => 'Ripristina il backup';
+
+  @override
+  String get backupRestoreDialogBody =>
+      'Incolla il contenuto del file di backup. I dati attuali vengono sostituiti.';
+
+  @override
+  String get backupCancel => 'Annulla';
+
+  @override
+  String get backupRestore => 'Ripristina';
+
+  @override
+  String get minigamesTitle => 'Minigiochi';
+
+  @override
+  String minigamesRecord(int score) {
+    return 'Record $score';
+  }
+
+  @override
+  String get minigamesCoordinatesTitle => 'Coordinate a tempo';
+
+  @override
+  String get minigamesCoordinatesDescription =>
+      'Tocca la casa indicata: quante ne trovi in 30 secondi?';
+
+  @override
+  String get minigamesCaptureAllTitle => 'Cattura tutto';
+
+  @override
+  String get minigamesCaptureAllDescription =>
+      'Un solo pezzo cattura tutti i pedoni con meno mosse possibile.';
+
+  @override
+  String get minigamesBlindTitle => 'Alla cieca';
+
+  @override
+  String get minigamesBlindDescription =>
+      'Leggi le mosse senza scacchiera e indica cosa c\'è su una casa.';
+
+  @override
+  String get minigamesMaterialTitle => 'Conta del materiale';
+
+  @override
+  String get minigamesMaterialDescription => 'Chi è in vantaggio, e di quanto?';
+
+  @override
+  String get minigamesAgain => 'Ancora';
+
+  @override
+  String get minigamesDone => 'Fine';
+
+  @override
+  String get minigamesNext => 'Avanti';
+
+  @override
+  String minigamesCaptureAllProgress(int board, int total) {
+    return 'Scacchiera $board di $total';
+  }
+
+  @override
+  String get minigamesCaptureAllSessionOver => 'Sessione finita';
+
+  @override
+  String minigamesCaptureAllScore(int score, int max) {
+    String _temp0 = intl.Intl.pluralLogic(
+      score,
+      locale: localeName,
+      other: '$score stelle su $max',
+      one: '$score stella su $max',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String minigamesCaptureAllMoves(int moves, int optimal) {
+    return 'Mosse $moves, minimo $optimal';
+  }
+
+  @override
+  String minigamesCaptureAllStars(int stars) {
+    String _temp0 = intl.Intl.pluralLogic(
+      stars,
+      locale: localeName,
+      other: '$stars stelle su 3',
+      one: '$stars stella su 3',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get minigamesCaptureAllRetry => 'Ricomincia';
+
+  @override
+  String minigamesCoordinatesTarget(String square) {
+    return 'Tocca la casa $square';
+  }
+
+  @override
+  String minigamesCoordinatesScore(int score) {
+    return 'Punteggio $score';
+  }
+
+  @override
+  String minigamesCoordinatesSecondsLeft(int seconds) {
+    String _temp0 = intl.Intl.pluralLogic(
+      seconds,
+      locale: localeName,
+      other: '$seconds secondi',
+      one: '$seconds secondo',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get minigamesCoordinatesTimeUp => 'Tempo scaduto';
+
+  @override
+  String minigamesCoordinatesSummary(int score, int mistakes) {
+    String _temp0 = intl.Intl.pluralLogic(
+      score,
+      locale: localeName,
+      other: '$score giuste',
+      one: '$score giusta',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      mistakes,
+      locale: localeName,
+      other: '$mistakes sbagliate',
+      one: '$mistakes sbagliata',
+    );
+    return 'Punteggio $score: $_temp0, $_temp1';
+  }
+
+  @override
+  String get minigamesCoordinatesIntro =>
+      'Tocca la casa indicata, senza coordinate sulla scacchiera. Hai 30 secondi.';
+
+  @override
+  String get minigamesCoordinatesWhite => 'Bianco';
+
+  @override
+  String get minigamesCoordinatesBlack => 'Nero';
+
+  @override
+  String get minigamesCoordinatesStart => 'Inizia';
+
+  @override
+  String minigamesQuizResult(int score, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      score,
+      locale: localeName,
+      other: '$score risposte giuste su $total',
+      one: '$score risposta giusta su $total',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String minigamesQuizQuestion(int number, int total) {
+    return 'Domanda $number di $total';
+  }
+
+  @override
+  String get minigamesQuizCorrect => 'Esatto!';
+
+  @override
+  String minigamesQuizAnswer(String answer) {
+    return 'Era: $answer';
+  }
+
+  @override
+  String get statsTitle => 'Statistiche';
+
+  @override
+  String get statsLoadFailed =>
+      'L\'archivio delle partite non si è potuto leggere: riprova più tardi.';
+
+  @override
+  String get statsEmpty =>
+      'Gioca qualche partita contro il computer per vedere le statistiche.';
+
+  @override
+  String get statsRecord => 'Bilancio';
+
+  @override
+  String get statsAllGames => 'Tutte';
+
+  @override
+  String get statsWithWhite => 'Con il bianco';
+
+  @override
+  String get statsWithBlack => 'Con il nero';
+
+  @override
+  String get statsLocalGames => 'Partite tra due persone';
+
+  @override
+  String get statsByTimeControl => 'Per cadenza';
+
+  @override
+  String get statsTopOpenings => 'Aperture più giocate';
+
+  @override
+  String statsGames(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count partite',
+      one: '$count partita',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get statsAccuracy => 'Precisione';
+
+  @override
+  String get statsAverage => 'Media';
+
+  @override
+  String get statsAccuracyTrend => 'Andamento della precisione';
+
+  @override
+  String statsRating(int rating) {
+    return 'Rating stimato $rating';
+  }
+
+  @override
+  String statsRatingProvisional(int count) {
+    return 'provvisorio: servono $count partite contro il computer';
+  }
+
+  @override
+  String statsRatingGames(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'su $count partite contro il computer',
+      one: 'su $count partita contro il computer',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get statsRatingTrend => 'Andamento del rating';
+
+  @override
+  String get statsNoGames => 'nessuna partita';
+
+  @override
+  String statsScoreDetail(int wins, int draws, int losses) {
+    String _temp0 = intl.Intl.pluralLogic(
+      wins,
+      locale: localeName,
+      other: '$wins vittorie',
+      one: '$wins vittoria',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      draws,
+      locale: localeName,
+      other: '$draws patte',
+      one: '$draws patta',
+    );
+    String _temp2 = intl.Intl.pluralLogic(
+      losses,
+      locale: localeName,
+      other: '$losses sconfitte',
+      one: '$losses sconfitta',
+    );
+    return '$_temp0, $_temp1, $_temp2';
+  }
+
+  @override
+  String statsTrend(
+    String label,
+    String first,
+    String last,
+    String min,
+    String max,
+  ) {
+    return '$label: da $first a $last, minimo $min, massimo $max';
+  }
 }

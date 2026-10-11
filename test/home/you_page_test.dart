@@ -4,11 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/archive/game_archive.dart';
 import 'package:scacchi/home/home_shell.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/progress/progress_controller.dart';
 import 'package:scacchi/progress/progress_store.dart';
 import 'package:scacchi/reminders/reminder.dart';
 import 'package:scacchi/settings/settings.dart';
+
+import '../localized_app.dart';
 
 class _Scheduler implements ReminderScheduler {
   final scheduled = <Reminder>[];
@@ -43,11 +44,7 @@ void main() {
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
-      MaterialApp(
-        // Il profilo bambino usa i testi localizzati; locale di sistema del
-        // test, così pageBack trova ancora il pulsante «Back».
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
+      localizedApp(
         home: HomeShell(
           settings: settings ?? SettingsController.defaults(),
           progress: () async => progress,
@@ -79,7 +76,7 @@ void main() {
     await tester.tap(find.text('Minigiochi'));
     await tester.pumpAndSettle();
     expect(find.widgetWithText(AppBar, 'Minigiochi'), findsOneWidget);
-    await tester.pageBack();
+    await tester.tap(find.byTooltip('Indietro'));
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('Profilo'));

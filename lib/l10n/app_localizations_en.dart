@@ -463,4 +463,335 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get editorFenHelpClose => 'Got it';
+
+  @override
+  String get backupTitle => 'Backup and restore';
+
+  @override
+  String get backupIntro =>
+      'The backup contains games, progress, learning path, tournaments, training and settings. Keep it somewhere safe: the app works offline, so there is no online copy.';
+
+  @override
+  String get backupShare => 'Share the backup';
+
+  @override
+  String get backupShareSubject => 'Rokko backup';
+
+  @override
+  String get backupRestoreFromText => 'Restore from text';
+
+  @override
+  String get backupExported => 'Backup ready to save';
+
+  @override
+  String backupExportFailed(String error) {
+    return 'Backup failed: $error';
+  }
+
+  @override
+  String get backupRestoreStaged =>
+      'Backup ready. Close and reopen the app to restore your data.';
+
+  @override
+  String backupRestoreFailed(String error) {
+    return 'Restore failed: $error';
+  }
+
+  @override
+  String get backupErrorNotApp => 'This is not a Rokko backup';
+
+  @override
+  String get backupErrorNewerVersion => 'Backup created by a newer version';
+
+  @override
+  String backupErrorUnexpectedFile(String file) {
+    return 'Unexpected file in the backup: $file';
+  }
+
+  @override
+  String backupErrorInvalidFile(String file) {
+    return 'Invalid file in the backup: $file';
+  }
+
+  @override
+  String backupErrorInvalidPreference(String name) {
+    return 'Invalid preference: $name';
+  }
+
+  @override
+  String get backupErrorUnreadable => 'Unreadable backup';
+
+  @override
+  String get backupRestoreDialogTitle => 'Restore the backup';
+
+  @override
+  String get backupRestoreDialogBody =>
+      'Paste the contents of the backup file. Your current data will be replaced.';
+
+  @override
+  String get backupCancel => 'Cancel';
+
+  @override
+  String get backupRestore => 'Restore';
+
+  @override
+  String get minigamesTitle => 'Minigames';
+
+  @override
+  String minigamesRecord(int score) {
+    return 'Best $score';
+  }
+
+  @override
+  String get minigamesCoordinatesTitle => 'Timed coordinates';
+
+  @override
+  String get minigamesCoordinatesDescription =>
+      'Tap the given square: how many can you find in 30 seconds?';
+
+  @override
+  String get minigamesCaptureAllTitle => 'Capture them all';
+
+  @override
+  String get minigamesCaptureAllDescription =>
+      'A single piece captures every pawn in as few moves as possible.';
+
+  @override
+  String get minigamesBlindTitle => 'Blindfold';
+
+  @override
+  String get minigamesBlindDescription =>
+      'Read the moves without a board and say what is on a square.';
+
+  @override
+  String get minigamesMaterialTitle => 'Material count';
+
+  @override
+  String get minigamesMaterialDescription => 'Who is ahead, and by how much?';
+
+  @override
+  String get minigamesAgain => 'Again';
+
+  @override
+  String get minigamesDone => 'Done';
+
+  @override
+  String get minigamesNext => 'Next';
+
+  @override
+  String minigamesCaptureAllProgress(int board, int total) {
+    return 'Board $board of $total';
+  }
+
+  @override
+  String get minigamesCaptureAllSessionOver => 'Session over';
+
+  @override
+  String minigamesCaptureAllScore(int score, int max) {
+    String _temp0 = intl.Intl.pluralLogic(
+      score,
+      locale: localeName,
+      other: '$score stars out of $max',
+      one: '$score star out of $max',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String minigamesCaptureAllMoves(int moves, int optimal) {
+    return 'Moves $moves, minimum $optimal';
+  }
+
+  @override
+  String minigamesCaptureAllStars(int stars) {
+    String _temp0 = intl.Intl.pluralLogic(
+      stars,
+      locale: localeName,
+      other: '$stars stars out of 3',
+      one: '$stars star out of 3',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get minigamesCaptureAllRetry => 'Start over';
+
+  @override
+  String minigamesCoordinatesTarget(String square) {
+    return 'Tap the square $square';
+  }
+
+  @override
+  String minigamesCoordinatesScore(int score) {
+    return 'Score $score';
+  }
+
+  @override
+  String minigamesCoordinatesSecondsLeft(int seconds) {
+    String _temp0 = intl.Intl.pluralLogic(
+      seconds,
+      locale: localeName,
+      other: '$seconds seconds',
+      one: '$seconds second',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get minigamesCoordinatesTimeUp => 'Time\'s up';
+
+  @override
+  String minigamesCoordinatesSummary(int score, int mistakes) {
+    return 'Score $score: $score right, $mistakes wrong';
+  }
+
+  @override
+  String get minigamesCoordinatesIntro =>
+      'Tap the given square, with no coordinates on the board. You have 30 seconds.';
+
+  @override
+  String get minigamesCoordinatesWhite => 'White';
+
+  @override
+  String get minigamesCoordinatesBlack => 'Black';
+
+  @override
+  String get minigamesCoordinatesStart => 'Start';
+
+  @override
+  String minigamesQuizResult(int score, int total) {
+    String _temp0 = intl.Intl.pluralLogic(
+      score,
+      locale: localeName,
+      other: '$score correct answers out of $total',
+      one: '$score correct answer out of $total',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String minigamesQuizQuestion(int number, int total) {
+    return 'Question $number of $total';
+  }
+
+  @override
+  String get minigamesQuizCorrect => 'Correct!';
+
+  @override
+  String minigamesQuizAnswer(String answer) {
+    return 'It was: $answer';
+  }
+
+  @override
+  String get statsTitle => 'Statistics';
+
+  @override
+  String get statsLoadFailed =>
+      'The game archive could not be read: try again later.';
+
+  @override
+  String get statsEmpty =>
+      'Play a few games against the computer to see your statistics.';
+
+  @override
+  String get statsRecord => 'Results';
+
+  @override
+  String get statsAllGames => 'All';
+
+  @override
+  String get statsWithWhite => 'With white';
+
+  @override
+  String get statsWithBlack => 'With black';
+
+  @override
+  String get statsLocalGames => 'Two-player games';
+
+  @override
+  String get statsByTimeControl => 'By time control';
+
+  @override
+  String get statsTopOpenings => 'Most played openings';
+
+  @override
+  String statsGames(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count games',
+      one: '$count game',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get statsAccuracy => 'Accuracy';
+
+  @override
+  String get statsAverage => 'Average';
+
+  @override
+  String get statsAccuracyTrend => 'Accuracy trend';
+
+  @override
+  String statsRating(int rating) {
+    return 'Estimated rating $rating';
+  }
+
+  @override
+  String statsRatingProvisional(int count) {
+    return 'provisional: $count games against the computer are needed';
+  }
+
+  @override
+  String statsRatingGames(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'from $count games against the computer',
+      one: 'from $count game against the computer',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get statsRatingTrend => 'Rating trend';
+
+  @override
+  String get statsNoGames => 'no games';
+
+  @override
+  String statsScoreDetail(int wins, int draws, int losses) {
+    String _temp0 = intl.Intl.pluralLogic(
+      wins,
+      locale: localeName,
+      other: '$wins wins',
+      one: '$wins win',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      draws,
+      locale: localeName,
+      other: '$draws draws',
+      one: '$draws draw',
+    );
+    String _temp2 = intl.Intl.pluralLogic(
+      losses,
+      locale: localeName,
+      other: '$losses losses',
+      one: '$losses loss',
+    );
+    return '$_temp0, $_temp1, $_temp2';
+  }
+
+  @override
+  String statsTrend(
+    String label,
+    String first,
+    String last,
+    String min,
+    String max,
+  ) {
+    return '$label: from $first to $last, minimum $min, maximum $max';
+  }
 }

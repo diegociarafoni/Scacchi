@@ -116,8 +116,8 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    await tester.ensureVisible(find.text('Nf6 ??'));
-    await tester.tap(find.text('Nf6 ??'));
+    await tester.ensureVisible(find.text('♞f6 ??'));
+    await tester.tap(find.text('♞f6 ??'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Riprova'));
     await tester.pumpAndSettle();
@@ -149,7 +149,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('1…'), findsOneWidget);
     expect(find.text('2.'), findsOneWidget);
-    expect(find.textContaining('2. Nf3 è'), findsOneWidget);
+    expect(find.textContaining('2. ♞f3 è'), findsOneWidget);
   });
 
   testWidgets('RF-54 la freccia dell\'arrocco punta alla casa del re', (
@@ -331,21 +331,21 @@ void main() {
     ) async {
       await pumpReview(tester);
       await tester.pumpAndSettle();
-      await tester.ensureVisible(find.text('Nf6 ??'));
-      await tester.tap(find.text('Nf6 ??'));
+      await tester.ensureVisible(find.text('♞f6 ??'));
+      await tester.tap(find.text('♞f6 ??'));
       await tester.pumpAndSettle();
-      expect(find.text('3… Nf6 è un errore grave'), findsOneWidget);
+      expect(find.text('3… ♞f6 è un errore grave'), findsOneWidget);
       expect(find.text('Migliore: g6'), findsOneWidget);
     });
 
     testWidgets('RF-70 il coach spiega l\'errore', (tester) async {
       await pumpReview(tester);
       await tester.pumpAndSettle();
-      await tester.ensureVisible(find.text('Nf6 ??'));
-      await tester.tap(find.text('Nf6 ??'));
+      await tester.ensureVisible(find.text('♞f6 ??'));
+      await tester.tap(find.text('♞f6 ??'));
       await tester.pumpAndSettle();
       expect(
-        find.text('Dopo Nf6 il Bianco dà matto in 1 con Qxf7#.'),
+        find.text('Dopo ♞f6 il Bianco dà matto in 1 con ♛xf7#.'),
         findsOneWidget,
       );
     });
@@ -403,12 +403,12 @@ void main() {
     testWidgets('RF-65 Riprova: si cerca la mossa migliore', (tester) async {
       await pumpReview(tester);
       await tester.pumpAndSettle();
-      await tester.ensureVisible(find.text('Nf6 ??'));
-      await tester.tap(find.text('Nf6 ??'));
+      await tester.ensureVisible(find.text('♞f6 ??'));
+      await tester.tap(find.text('♞f6 ??'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Riprova'));
       await tester.pumpAndSettle();
-      expect(find.text('Trova una mossa migliore di Nf6'), findsOneWidget);
+      expect(find.text('Trova una mossa migliore di ♞f6'), findsOneWidget);
 
       Chessboard board() => tester.widget<Chessboard>(find.byType(Chessboard));
       board().onMove!(NormalMove.fromUci('a7a6'));
@@ -429,8 +429,8 @@ void main() {
     ) async {
       await pumpReview(tester);
       await tester.pumpAndSettle();
-      await tester.ensureVisible(find.text('Nf6 ??'));
-      await tester.tap(find.text('Nf6 ??'));
+      await tester.ensureVisible(find.text('♞f6 ??'));
+      await tester.tap(find.text('♞f6 ??'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Riprova'));
       await tester.pumpAndSettle();
@@ -444,8 +444,8 @@ void main() {
     testWidgets('RF-65 Riprova: si può vedere la soluzione', (tester) async {
       await pumpReview(tester);
       await tester.pumpAndSettle();
-      await tester.ensureVisible(find.text('Nf6 ??'));
-      await tester.tap(find.text('Nf6 ??'));
+      await tester.ensureVisible(find.text('♞f6 ??'));
+      await tester.tap(find.text('♞f6 ??'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Riprova'));
       await tester.pumpAndSettle();

@@ -10,6 +10,7 @@ import '../game/clock.dart';
 import '../game/move_note.dart';
 import '../kids/kid_display.dart';
 import '../l10n/app_localizations.dart';
+import '../settings/notation.dart';
 import '../settings/settings.dart';
 import 'board_utils.dart';
 import 'coach.dart';
@@ -307,10 +308,8 @@ class _ReviewPageState extends State<ReviewPage> {
   Future<void> _editNote(int ply) async {
     final note = await showDialog<MoveNote>(
       context: context,
-      builder: (_) => _NoteDialog(
-        san: widget.moves.isEmpty ? '' : _review!.moves[ply].san,
-        note: _notes[ply],
-      ),
+      builder: (_) =>
+          _NoteDialog(san: _n(_review!.moves[ply].san), note: _notes[ply]),
     );
     if (note == null || !mounted) return;
     final saved = note.isEmpty ? null : note;
@@ -358,10 +357,10 @@ class _ReviewPageState extends State<ReviewPage> {
     final best = review.moves[ply].bestSan;
     setState(() {
       if (san == best) {
-        _retryMessage = 'Esatto: $san è la mossa migliore.';
+        _retryMessage = 'Esatto: ${_n(san)} è la mossa migliore.';
         _retrySolved = move;
       } else {
-        _retryMessage = '$san non è la mossa migliore. Riprova.';
+        _retryMessage = '${_n(san)} non è la mossa migliore. Riprova.';
       }
     });
     // Dopo un tentativo sbagliato rimette la posizione di partenza.
@@ -370,15 +369,22 @@ class _ReviewPageState extends State<ReviewPage> {
 
   /// Spiegazioni del coach, calcolate una volta per mossa e solo per gli
   /// errori.
-  final _comments = <int, CoachComment?>{};
+  final _comments = <(int, MoveNotation, bool), CoachComment?>{};
+
+  String _n(String san) => formatSan(san, AppSettings.of(context).notation);
 
   CoachComment? _comment(GameReview review, MoveReview m) {
     if (!m.classification.isError) return null;
     return _comments.putIfAbsent(
-      m.ply,
+      (
+        m.ply,
+        AppSettings.of(context).notation,
+        AppSettings.of(context).kidMode,
+      ),
       () => explainMove(
         m,
         previous: m.ply > 0 ? review.moves[m.ply - 1] : null,
+        notation: AppSettings.of(context).notation,
         // Profilo bambino (RP-06): spiegazioni senza «matto in N» e pedoni.
         kid: AppSettings.of(context).kidMode
             ? AppLocalizations.of(context)
@@ -571,7 +577,7 @@ class _ReviewPageState extends State<ReviewPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Trova una mossa migliore di ${m.san}',
+                'Trova una mossa migliore di ${_n(m.san)}',
                 style: text.titleMedium,
               ),
               if (_retryMessage != null)
@@ -583,7 +589,7 @@ class _ReviewPageState extends State<ReviewPage> {
                 Padding(
                   padding: const EdgeInsets.only(top: 8),
                   child: Text(
-                    'La mossa migliore era ${m.bestSan}.',
+                    'La mossa migliore era ${_n(m.bestSan!)}.',
                     style: text.bodyLarge,
                   ),
                 ),
@@ -615,11 +621,11 @@ class _ReviewPageState extends State<ReviewPage> {
       final c = m.classification;
       info = [
         Text(
-          '${moveNumber(_positions[m.ply])} ${m.san} è ${moveClassPhrase(c)}',
+          '${moveNumber(_positions[m.ply])} ${_n(m.san)} è ${moveClassPhrase(c)}',
           style: text.titleMedium,
         ),
         if (!m.playedBest && m.bestSan != null)
-          Text('Migliore: ${m.bestSan}', style: text.bodyLarge),
+          Text('Migliore: ${_n(m.bestSan!)}', style: text.bodyLarge),
         if (_comment(review, m) case final comment?)
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -917,8 +923,9 @@ class _TimePerMove extends StatelessWidget {
       (a, d) => math.max(a, d?.inMilliseconds ?? 0),
     );
     final colors = Theme.of(context).colorScheme;
+    final notation = AppSettings.of(context).notation;
     final label =
-        'Tempo per mossa. ${hasty.isEmpty ? 'Nessun errore giocato in fretta.' : 'Errori giocati in fretta: ${hasty.map((p) => review.moves[p].san).join(', ')}.'}';
+        'Tempo per mossa. ${hasty.isEmpty ? 'Nessun errore giocato in fretta.' : 'Errori giocati in fretta: ${hasty.map((p) => formatSan(review.moves[p].san, notation)).join(', ')}.'}';
     return ExpansionTile(
       title: const Text('Tempo per mossa'),
       children: [
@@ -967,7 +974,7 @@ class _TimePerMove extends StatelessWidget {
             dense: true,
             title: Text(
               'Errori giocati in fretta: '
-              '${hasty.map((p) => '${moveNumber(Chess.fromSetup(Setup.parseFen(review.moves[p].fenBefore)))} ${review.moves[p].san}').join(', ')}',
+              '${hasty.map((p) => '${moveNumber(Chess.fromSetup(Setup.parseFen(review.moves[p].fenBefore)))} ${formatSan(review.moves[p].san, notation)}').join(', ')}',
             ),
             subtitle: const Text(
               'Meno del 40% del tuo tempo medio per mossa: prima di muovere, '
@@ -1080,6 +1087,7 @@ class _MoveList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final notation = AppSettings.of(context).notation;
     return Wrap(
       spacing: 6,
       runSpacing: 6,
@@ -1092,7 +1100,7 @@ class _MoveList extends StatelessWidget {
             button: true,
             selected: selected == m.ply + 1,
             label:
-                '${moveNumber(positions[m.ply])} ${m.san}, '
+                '${moveNumber(positions[m.ply])} ${formatSan(m.san, notation)}, '
                 '${m.classification.label}'
                 '${notes[m.ply] == null ? '' : ', con una nota'}',
             excludeSemantics: true,
@@ -1109,7 +1117,7 @@ class _MoveList extends StatelessWidget {
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
-                  '${m.san} ${m.classification.symbol}'
+                  '${formatSan(m.san, notation)} ${m.classification.symbol}'
                   '${notes[m.ply] == null ? '' : ' ✎'}',
                 ),
               ),
