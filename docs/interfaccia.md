@@ -4,7 +4,7 @@ L'app è progettata prima di tutto per il telefono in verticale.
 
 ## Navigazione
 
-La barra in basso ha quattro schede: Gioca, Puzzle, Aperture e Tu. La scheda Tu mostra avatar, livello e serie, e porta a Profilo, Percorso, Minigiochi, Statistiche e Archivio. Se i dati salvati di una sezione non si possono leggere, un messaggio lo dice e si può riprovare.
+La barra in basso ha quattro schede: Gioca, Puzzle, Aperture e Tu. La scheda Tu mostra avatar, livello e serie, e porta a Profilo, Percorso, Minigiochi, Statistiche e Archivio. Se i dati salvati di una sezione non si possono leggere, un messaggio lo dice e si può riprovare. Nel profilo bambino le Aperture sono nascoste e la scheda Tu mostra solo Profilo, Percorso e Minigiochi (vedi [profilo-bambino.md](profilo-bambino.md)). 
 
 ## Telefono in verticale
 
