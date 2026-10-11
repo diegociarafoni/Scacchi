@@ -273,6 +273,26 @@ void main() {
       expect(find.byType(KidFlame), findsOneWidget);
     });
 
+    testWidgets('la scheda Tu non mostra i Tornei, che hanno Elo e punti', (
+      tester,
+    ) async {
+      setPhone(tester);
+      await tester.pumpWidget(
+        kidApp(
+          YouPage(
+            simple: true,
+            progress: () async => controller,
+            path: () => Completer<PathController>().future,
+            archive: () => Completer<GameArchive>().future,
+            tournamentPage: () async => const SizedBox(),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Tornei'), findsNothing);
+      expect(find.text('Percorso'), findsOneWidget);
+    });
+
     testWidgets('le stelle si fermano a dieci', (tester) async {
       await tester.pumpWidget(
         kidApp(const Scaffold(body: KidStars(count: 25, label: 'stelle'))),
