@@ -12,7 +12,7 @@ nessuna connessione, nessun server, nessun dato che esce dal telefono.
 5. In alternativa al cursore, attivare **Adattivo**: il livello lo sceglie l'app (vedi [Avversario adattivo](#avversario-adattivo)).
 6. Toccare la cadenza, "Senza tempo" o una cadenza (vedi [interfaccia.md](interfaccia.md)): la partita inizia. Se il giocatore ha il Nero, il computer muove per primo.
 
-Contro il computer si gioca solo la variante classica e senza nomi dei giocatori: varianti e nomi compaiono nel pannello solo scegliendo **Due giocatori**. Anche una posizione creata con l'editor (vedi [editor-posizione.md](editor-posizione.md)) si gioca in due: aprire l'editor durante una partita contro il computer la chiude.
+Contro il computer si gioca solo la variante classica e senza nomi dei giocatori: varianti e nomi compaiono nel pannello solo scegliendo **Due giocatori**. Una posizione creata con l'editor (vedi [editor-posizione.md](editor-posizione.md)) si può giocare anche contro il computer o un bot (RF-24): aprire l'editor durante una partita la sostituisce con la posizione scelta, in due o contro il computer a seconda della scelta nel pannello **Gioca questa posizione**.
 
 Durante la riflessione del computer la scacchiera è bloccata e compare la scritta
 "Il computer sta pensando…".
@@ -165,6 +165,7 @@ Nuove funzioni del computer si sviluppano partendo dai test, con nel nome il req
 | RNF-03 Stockfish nativo via FFI in isolate, 1 thread | ✓ (Android, iOS) |
 | RF-22 modalità Allenamento (suggerimento, barra di valutazione) | Da fare: `EngineMove` espone già variante e valutazione |
 | RF-23 bot con personalità | ✓ (vedi [bot.md](bot.md)) |
+| RF-24 partenza da una posizione personalizzata | ✓ dall'editor (vedi [editor-posizione.md](editor-posizione.md)) |
 | RF-26 avversario adattivo | ✓ |
 
 ## Licenza
