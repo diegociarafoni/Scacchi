@@ -106,7 +106,19 @@ class AppSettings {
     this.haptics = true,
     this.tableMode = false,
     this.confirmMove = false,
-  });
+    String whiteName = '',
+    String blackName = '',
+  }) : whiteName = _cleanName(whiteName),
+       blackName = _cleanName(blackName);
+
+  static const maxNameLength = 24;
+
+  static String _cleanName(String name) {
+    final trimmed = name.trim();
+    return trimmed.length > maxNameLength
+        ? trimmed.substring(0, maxNameLength).trim()
+        : trimmed;
+  }
 
   final bool showLegalMoves;
   final bool showCoordinates;
@@ -121,6 +133,14 @@ class AppSettings {
   final bool haptics;
   final bool tableMode;
   final bool confirmMove;
+  final String whiteName;
+  final String blackName;
+
+  /// Nome scelto per [side], `null` se non indicato.
+  String? nameOf(Side side) {
+    final name = side == Side.white ? whiteName : blackName;
+    return name.isEmpty ? null : name;
+  }
 
   AppSettings copyWith({
     bool? showLegalMoves,
@@ -136,6 +156,8 @@ class AppSettings {
     bool? haptics,
     bool? tableMode,
     bool? confirmMove,
+    String? whiteName,
+    String? blackName,
   }) => AppSettings(
     showLegalMoves: showLegalMoves ?? this.showLegalMoves,
     showCoordinates: showCoordinates ?? this.showCoordinates,
@@ -150,6 +172,8 @@ class AppSettings {
     haptics: haptics ?? this.haptics,
     tableMode: tableMode ?? this.tableMode,
     confirmMove: confirmMove ?? this.confirmMove,
+    whiteName: whiteName ?? this.whiteName,
+    blackName: blackName ?? this.blackName,
   );
 
   late final ChessboardSettings board = ChessboardSettings(
@@ -180,7 +204,9 @@ class AppSettings {
       other.volume == volume &&
       other.haptics == haptics &&
       other.tableMode == tableMode &&
-      other.confirmMove == confirmMove;
+      other.confirmMove == confirmMove &&
+      other.whiteName == whiteName &&
+      other.blackName == blackName;
 
   @override
   int get hashCode => Object.hash(
@@ -197,6 +223,8 @@ class AppSettings {
     haptics,
     tableMode,
     confirmMove,
+    whiteName,
+    blackName,
   );
 }
 
@@ -235,6 +263,8 @@ class SettingsController extends ValueNotifier<AppSettings> {
         haptics: read('haptics', d.haptics),
         tableMode: read('tableMode', d.tableMode),
         confirmMove: read('confirmMove', d.confirmMove),
+        whiteName: read('whiteName', d.whiteName),
+        blackName: read('blackName', d.blackName),
       ),
     );
   }
@@ -271,6 +301,10 @@ class SettingsController extends ValueNotifier<AppSettings> {
         prefs.setBool('tableMode', settings.tableMode),
       if (old.confirmMove != settings.confirmMove)
         prefs.setBool('confirmMove', settings.confirmMove),
+      if (old.whiteName != settings.whiteName)
+        prefs.setString('whiteName', settings.whiteName),
+      if (old.blackName != settings.blackName)
+        prefs.setString('blackName', settings.blackName),
     ];
     try {
       await Future.wait(writes);

@@ -151,7 +151,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     }
     if (!_game.position.isLegal(move)) return;
     final (preview, san) = _game.position.makeSan(move);
-    _announce('Da confermare. ${describeSan(san, _game.position.turn)}');
+    final turn = _game.position.turn;
+    _announce(
+      'Da confermare. ${describeSan(san, turn, name: _settings.nameOf(turn))}',
+    );
     _board.updatePosition(
       _staticData(preview, move),
       animate: viaDragAndDrop != true,
@@ -177,15 +180,21 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     if (flagged != null) {
       _game.flag(flagged);
       _play(GameSound.gameEnd);
-      _announce(statusText(_game));
+      _announce(statusText(_game, _settings.nameOf));
       _refresh(animate: false);
       return;
     }
     final before = clock?.snapshot();
     final position = _game.position;
     if (!_game.play(move)) return;
-    final spoken = describeSan(_game.moves.last.san, position.turn);
-    _announce(_game.isOver ? '$spoken. ${statusText(_game)}' : spoken);
+    final spoken = describeSan(
+      _game.moves.last.san,
+      position.turn,
+      name: _settings.nameOf(position.turn),
+    );
+    _announce(
+      _game.isOver ? '$spoken. ${statusText(_game, _settings.nameOf)}' : spoken,
+    );
     final sound = soundForLastMove(_game, position);
     if (sound != null) _play(sound);
     if (clock != null) {
@@ -258,7 +267,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     if (flagged != null && !_game.isOver) {
       _game.flag(flagged);
       _play(GameSound.gameEnd);
-      _announce(statusText(_game));
+      _announce(statusText(_game, _settings.nameOf));
       _refresh(animate: false);
       return;
     }
@@ -313,7 +322,11 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       () => showModalBottomSheet<_TimeChoice>(
         context: context,
         isScrollControlled: true,
-        builder: (context) => _TimeControlSheet(variant: _game.variant),
+        builder: (context) => _TimeControlSheet(
+          variant: _game.variant,
+          whiteName: _settings.whiteName,
+          blackName: _settings.blackName,
+        ),
       ),
     );
     if (!mounted || choice == null) return;
@@ -330,6 +343,14 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _lowTime.reset();
     _clearBoardInteraction();
     _refresh(animate: false);
+    unawaited(
+      widget.settings.update(
+        _settings.copyWith(
+          whiteName: choice.whiteName,
+          blackName: choice.blackName,
+        ),
+      ),
+    );
   }
 
   String get _title => switch (_game.variant) {
@@ -399,7 +420,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Abbandonare la partita?'),
-          content: Text('Abbandona il ${_sideName(side)}.'),
+          content: Text('Abbandona ${_player(side, _settings.nameOf)}.'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
@@ -427,7 +448,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       () => showDialog<bool>(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text('Il ${_sideName(opponent)} accetta la patta?'),
+          title: Text(
+            '${_capitalized(_player(opponent, _settings.nameOf))} accetta la patta?',
+          ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
@@ -456,6 +479,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       listenable: _tick,
       builder: (context, _) => _ClockView(
         side: side,
+        name: _settings.nameOf(side),
         remaining: clock.remaining(side),
         active: clock.active == side,
       ),
@@ -542,7 +566,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                       onBack: () => _showPly(null),
                     )
                   : _pendingMove == null
-                  ? _StatusLine(game: _game)
+                  ? _StatusLine(game: _game, nameOf: _settings.nameOf)
                   : _ConfirmBar(
                       onConfirm: _confirmPending,
                       onDiscard: _discardPending,
@@ -565,12 +589,14 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
               final topMaterial = _MaterialRow(
                 balance: balance,
                 side: _orientation.opposite,
+                name: _settings.nameOf(_orientation.opposite),
                 pieceAssets: boardSettings.pieceAssets,
                 clock: _clockView(_orientation.opposite),
               );
               final bottomMaterial = _MaterialRow(
                 balance: balance,
                 side: _orientation,
+                name: _settings.nameOf(_orientation),
                 pieceAssets: boardSettings.pieceAssets,
                 clock: _clockView(_orientation),
               );
@@ -630,17 +656,31 @@ const double _portraitChromeHeight =
 
 String _sideName(Side side) => side == Side.white ? 'Bianco' : 'Nero';
 
-String statusText(ChessGame game) {
+/// "il Bianco", oppure "Anna (Bianco)" se il giocatore ha un nome.
+String _player(Side side, String? Function(Side)? nameOf) {
+  final name = nameOf?.call(side);
+  return name == null ? 'il ${_sideName(side)}' : '$name (${_sideName(side)})';
+}
+
+String _capitalized(String s) => s[0].toUpperCase() + s.substring(1);
+
+/// Stato della partita; [nameOf] affianca al colore il nome scelto.
+String statusText(ChessGame game, [String? Function(Side)? nameOf]) {
+  String player(Side side) => _player(side, nameOf);
+  final named =
+      nameOf?.call(Side.white) != null || nameOf?.call(Side.black) != null;
+
   final turn = game.position.turn;
   return switch (game.endReason) {
     null =>
       game.position.isCheck
-          ? 'Scacco al ${_sideName(turn)}. Muove il ${_sideName(turn)}.'
-          : 'Muove il ${_sideName(turn)}.',
-    GameEndReason.checkmate =>
-      'Scacco matto. Vince il ${_sideName(turn.opposite)}.',
+          ? named
+                ? 'Scacco. Muove ${player(turn)}.'
+                : 'Scacco al ${_sideName(turn)}. Muove ${player(turn)}.'
+          : 'Muove ${player(turn)}.',
+    GameEndReason.checkmate => 'Scacco matto. Vince ${player(turn.opposite)}.',
     GameEndReason.resignation =>
-      'Abbandono. Vince il ${_sideName(game.outcome!.winner!)}.',
+      'Abbandono. Vince ${player(game.outcome!.winner!)}.',
     GameEndReason.stalemate => 'Stallo. Patta.',
     GameEndReason.insufficientMaterial => 'Materiale insufficiente. Patta.',
     GameEndReason.threefoldRepetition => 'Triplice ripetizione. Patta.',
@@ -657,14 +697,15 @@ String statusText(ChessGame game) {
     GameEndReason.timeout =>
       game.outcome!.winner == null
           ? 'Tempo scaduto. Patta per materiale insufficiente.'
-          : 'Tempo scaduto. Vince il ${_sideName(game.outcome!.winner!)}.',
+          : 'Tempo scaduto. Vince ${player(game.outcome!.winner!)}.',
   };
 }
 
 class _StatusLine extends StatelessWidget {
-  const _StatusLine({required this.game});
+  const _StatusLine({required this.game, required this.nameOf});
 
   final ChessGame game;
+  final String? Function(Side) nameOf;
 
   @override
   Widget build(BuildContext context) {
@@ -675,7 +716,9 @@ class _StatusLine extends StatelessWidget {
         child: Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            statusText(game),
+            statusText(game, nameOf),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.titleMedium,
           ),
         ),
@@ -826,12 +869,14 @@ class _MaterialRow extends StatelessWidget {
   const _MaterialRow({
     required this.balance,
     required this.side,
+    required this.name,
     required this.pieceAssets,
     this.clock,
   });
 
   final MaterialBalance balance;
   final Side side;
+  final String? name;
   final PieceAssets pieceAssets;
   final Widget? clock;
 
@@ -841,7 +886,7 @@ class _MaterialRow extends StatelessWidget {
     final opponent = side.opposite;
     final captured = balance.capturedBy(side);
     final description = [
-      '${_sideName(side)}: ',
+      name == null ? '${_sideName(side)}: ' : '$name, ${_sideName(side)}: ',
       captured.isEmpty
           ? 'nessun pezzo catturato'
           : 'ha catturato ${captured.map((r) => _roleNames[r]).join(', ')}',
@@ -882,6 +927,23 @@ class _MaterialRow extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 12),
         child: Row(
           children: [
+            if (name != null) ...[
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 120),
+                // Già letto nella descrizione del materiale.
+                child: ExcludeSemantics(
+                  child: Text(
+                    name!,
+                    key: ValueKey('player-${side.name}'),
+                    maxLines: 1,
+                    softWrap: false,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.labelLarge,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+            ],
             Expanded(child: material),
             ?clock,
           ],
@@ -894,11 +956,13 @@ class _MaterialRow extends StatelessWidget {
 class _ClockView extends StatelessWidget {
   const _ClockView({
     required this.side,
+    required this.name,
     required this.remaining,
     required this.active,
   });
 
   final Side side;
+  final String? name;
   final Duration remaining;
   final bool active;
 
@@ -918,7 +982,7 @@ class _ClockView extends StatelessWidget {
         : scheme.onSurfaceVariant;
     return Semantics(
       label:
-          'Orologio del ${_sideName(side)}: '
+          '${name == null ? 'Orologio del ${_sideName(side)}' : 'Orologio di $name'}: '
           '${remaining.inMinutes} minuti e ${remaining.inSeconds % 60} secondi',
       excludeSemantics: true,
       child: Container(
@@ -942,17 +1006,25 @@ class _ClockView extends StatelessWidget {
 }
 
 class _TimeChoice {
-  const _TimeChoice(this.control, this.variant);
+  const _TimeChoice(this.control, this.variant, this.whiteName, this.blackName);
 
   final TimeControl? control;
   final Variant variant;
+  final String whiteName;
+  final String blackName;
 }
 
-/// Scelta di variante e cadenza: toccare una cadenza avvia la partita.
+/// Scelta di variante, nomi e cadenza: toccare una cadenza avvia la partita.
 class _TimeControlSheet extends StatefulWidget {
-  const _TimeControlSheet({required this.variant});
+  const _TimeControlSheet({
+    required this.variant,
+    required this.whiteName,
+    required this.blackName,
+  });
 
   final Variant variant;
+  final String whiteName;
+  final String blackName;
 
   @override
   State<_TimeControlSheet> createState() => _TimeControlSheetState();
@@ -960,57 +1032,96 @@ class _TimeControlSheet extends StatefulWidget {
 
 class _TimeControlSheetState extends State<_TimeControlSheet> {
   late Variant _variant = widget.variant;
+  late final _white = TextEditingController(text: widget.whiteName);
+  late final _black = TextEditingController(text: widget.blackName);
+
+  @override
+  void dispose() {
+    _white.dispose();
+    _black.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final groups = <String, List<TimeControl>>{};
     for (final t in TimeControl.presets) {
       groups.putIfAbsent(t.category, () => []).add(t);
     }
     Widget chip(String label, TimeControl? control) => ActionChip(
       label: Text(label),
-      onPressed: () => Navigator.pop(context, _TimeChoice(control, _variant)),
+      onPressed: () => Navigator.pop(
+        context,
+        _TimeChoice(control, _variant, _white.text, _black.text),
+      ),
     );
-    return SafeArea(
-      child: ListView(
-        shrinkWrap: true,
-        padding: const EdgeInsets.all(16),
-        children: [
-          Text('Nuova partita', style: Theme.of(context).textTheme.titleLarge),
-          const SizedBox(height: 12),
-          Text('Variante', style: Theme.of(context).textTheme.titleSmall),
-          const SizedBox(height: 4),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              for (final v in Variant.values)
-                ChoiceChip(
-                  label: Text(v.label),
-                  selected: v == _variant,
-                  onSelected: (_) => setState(() => _variant = v),
-                ),
-            ],
+    Widget nameField(TextEditingController controller, String label) =>
+        Expanded(
+          child: TextField(
+            controller: controller,
+            maxLength: AppSettings.maxNameLength,
+            textCapitalization: TextCapitalization.words,
+            decoration: InputDecoration(
+              labelText: label,
+              hintText: 'Facoltativo',
+              counterText: '',
+            ),
           ),
-          if (_variant.description.isNotEmpty) ...[
-            const SizedBox(height: 4),
-            Text(_variant.description),
-          ],
-          const SizedBox(height: 12),
-          Text('Cadenza', style: Theme.of(context).textTheme.titleSmall),
-          const SizedBox(height: 4),
-          chip('Senza tempo', null),
-          for (final entry in groups.entries) ...[
-            const SizedBox(height: 12),
-            Text(entry.key, style: Theme.of(context).textTheme.titleSmall),
+        );
+    return SafeArea(
+      child: Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.viewInsetsOf(context).bottom,
+        ),
+        child: ListView(
+          shrinkWrap: true,
+          padding: const EdgeInsets.all(16),
+          children: [
+            Text('Nuova partita', style: theme.textTheme.titleLarge),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                nameField(_white, 'Nome del Bianco'),
+                const SizedBox(width: 12),
+                nameField(_black, 'Nome del Nero'),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Text('Variante', style: theme.textTheme.titleSmall),
             const SizedBox(height: 4),
             Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: [for (final t in entry.value) chip(t.label, t)],
+              children: [
+                for (final v in Variant.values)
+                  ChoiceChip(
+                    label: Text(v.label),
+                    selected: v == _variant,
+                    onSelected: (_) => setState(() => _variant = v),
+                  ),
+              ],
             ),
+            if (_variant.description.isNotEmpty) ...[
+              const SizedBox(height: 4),
+              Text(_variant.description),
+            ],
+            const SizedBox(height: 12),
+            Text('Cadenza', style: theme.textTheme.titleSmall),
+            const SizedBox(height: 4),
+            chip('Senza tempo', null),
+            for (final entry in groups.entries) ...[
+              const SizedBox(height: 12),
+              Text(entry.key, style: theme.textTheme.titleSmall),
+              const SizedBox(height: 4),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [for (final t in entry.value) chip(t.label, t)],
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
