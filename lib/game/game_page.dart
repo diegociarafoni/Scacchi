@@ -561,26 +561,18 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       onDraw: _game.isOver || _thinking || _computerToMove ? null : _offerDraw,
       onResign: _game.isOver ? null : _resign,
     );
+    final opening = OpeningName(
+      positions: [_game.initial, for (final m in _game.moves) m.after],
+      fallback: 'Scacchi',
+    );
     return Scaffold(
       appBar: AppBar(
         title: _computerSide == null
-            ? OpeningName(
-                positions: [
-                  _game.initial,
-                  for (final m in _game.moves) m.after,
-                ],
-                fallback: 'Scacchi',
-              )
+            ? opening
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  OpeningName(
-                    positions: [
-                      _game.initial,
-                      for (final m in _game.moves) m.after,
-                    ],
-                    fallback: 'Scacchi',
-                  ),
+                  opening,
                   Text(
                     'Computer, livello ${_setup.level}: '
                     '${engineLevel(_setup.level).name}',
