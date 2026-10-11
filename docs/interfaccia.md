@@ -69,10 +69,10 @@ Si aprono dall'icona a forma di ingranaggio nella barra del titolo. Ogni modific
 | Volume | Volume dei suoni, da 0 a 100% | 100% |
 | Vibrazione | Vibrazione breve a ogni mossa, più marcata per catture e fine partita | Attiva |
 | Tema della scacchiera | Verde, Legno, Blu, Grigio | Verde |
-| Pezzi | Classico, Merida, California, Cardinal, Maestro | Classico |
+| Pezzi | Classico, Merida, Chessnut, Fantasy, Spatial | Classico |
 | Animazioni | Nessuna, Veloce, Normale, Lenta | Normale |
 
-I set di pezzi disponibili sono solo quelli con licenza compatibile con la GPL, elencati in `CREDITS.md`. Anche le icone dei pezzi catturati usano il set scelto.
+I set di pezzi disponibili sono solo quelli con licenza compatibile con la GPL e con la distribuzione commerciale, elencati in `CREDITS.md`: i set CC BY-NC-SA di chessground (California, Cardinal, Maestro e altri) sono esclusi, e chi li aveva scelti torna al set Classico. I temi usano solo colori, senza le immagini di chessground (licenza AGPL). Anche le icone dei pezzi catturati usano il set scelto.
 
 ## Suoni
 
