@@ -13,7 +13,8 @@ la forza viene dal livello, la personalità dal resto. Sono in `lib/engine/bots.
 
 Durante la partita la barra del titolo mostra avatar, nome ed Elo del bot, che saluta all'inizio.
 Il bot gioca le prime mosse dal proprio libro d'apertura finché l'avversario non devia (con una breve
-attesa, come negli altri livelli); poi decide Stockfish con lo stile del bot. Commenta con una frase
+attesa, come negli altri livelli); poi decide Stockfish con lo stile del bot. Il libro vale solo
+nelle partite che partono dalla posizione iniziale, non da una posizione dell'editor. Commenta con una frase
 i propri scacchi, ogni tanto le proprie catture, e la fine della partita (vittoria, sconfitta, patta).
 Il bot gioca solo gli scacchi classici; le altre regole della partita contro il computer (annulla,
 patta, orologio, abbandono) valgono anche qui, vedi [avversario-computer.md](avversario-computer.md).
@@ -23,7 +24,7 @@ patta, orologio, abbandono) valgono anche qui, vedi [avversario-computer.md](avv
 Si comincia con Pino: gli altri bot sono bloccati (lucchetto). Battere un bot sblocca il successivo e
 lo aggiunge alla **collezione**, dove nell'elenco compare con un segno di spunta e la data della prima
 vittoria ("Battuto il 11/10/2026"). Un bot già battuto si può rigiocare quando si vuole. Una partita
-conta solo se ha almeno una mossa; perdere o pattare non cambia la collezione. La collezione è salvata
+conta solo se ha almeno una mossa ed è partita dalla posizione iniziale; perdere o pattare non cambia la collezione. La collezione è salvata
 sul dispositivo (chiave `botCollection`, `lib/engine/bot_collection.dart`).
 
 ## I bot
@@ -85,7 +86,7 @@ nome e una breve descrizione (chiavi `kidBot...Description` nei file `.arb`) al 
 apertura; la scala con i lucchetti resta, la spunta del bot battuto non riporta la data. Il titolo della
 partita non mostra l'Elo. `GameSetup.forKids()` trasforma una scelta del computer o di un bot più forte in
 una partita contro Pino. Una partita già iniziata non cambia se il profilo si attiva o si disattiva a metà:
-titolo e frasi seguono il profilo attivo all'inizio. Le descrizioni sono in `friendlyBotDescriptions`.
+le frasi seguono il profilo attivo all'inizio; l'Elo nel titolo resta nascosto finché il profilo è attivo, e per tutta la partita se è iniziata con il profilo. Le descrizioni sono in `friendlyBotDescriptions`.
 
 Le frasi sono quelle di `Bot.phrases(evento, friendly: true)`: brevi, uguali per tutti gli stili e senza
 prese in giro (niente «Grazie del regalo» o «hai sbagliato»); il saluto riporta il nome del bot ma non

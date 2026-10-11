@@ -26,6 +26,7 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | [localizzazione.md](localizzazione.md) | Lingua predefinita e come aggiungere testi e lingue |
 | [sviluppo.md](sviluppo.md) | Ambiente, comandi, test, CI e convenzioni |
 | [convenzioni-git.md](convenzioni-git.md) | Rami, commit Angular, hook locali, merge e protezione di `main` |
+| [mappa-del-codice.md](mappa-del-codice.md) | Cartelle di `lib/` e documento che le descrive, controllo automatico della documentazione |
 | [sicurezza.md](sicurezza.md) | Scanner di sicurezza, SBOM e catena di fornitura |
 | [dipendenze-e-licenze.md](dipendenze-e-licenze.md) | Aggiornamenti automatici e licenze ammesse |
 | [avversario-computer.md](avversario-computer.md) | Partita contro il computer: livelli, motore Stockfish, piattaforme |
@@ -45,7 +46,7 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | Layout per telefono e tablet | Disponibile |
 | Pezzi catturati e vantaggio di materiale | Disponibile |
 | Impostazioni salvate: mosse legali, coordinate, promozione, frecce, temi, pezzi, animazioni | Disponibile |
-| Partita contro il computer (Stockfish) | Disponibile su Android e iOS |
+| Partita contro il computer (Stockfish) | Disponibile su Android e iOS; su Windows e Linux con Stockfish installato |
 | Puzzle con punteggio, temi e puzzle del giorno | Disponibile |
 | Puzzle Storm, Rush, sopravvivenza, Serie, ripasso degli errori | Disponibile |
 | Nome dell'apertura in partita (in italiano), Esplora aperture | Disponibile |
@@ -56,15 +57,19 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | Scambio di partite tra telefoni con il QR, senza rete | Disponibile dal menu della partita e dall'archivio; lettura con la fotocamera su Android e iOS |
 | Backup e ripristino dei dati in un file | Disponibile dalle Impostazioni |
 | Archivio partite, import ed export PGN | Disponibile dalla scheda Tu; le partite finite si salvano da sole, riprendere una partita è in arrivo |
-| Percorso a tappe con stelle | Disponibile dalla scheda Tu, con i guardiani su Android e iOS |
+| Percorso a tappe con stelle | Disponibile dalla scheda Tu, con i guardiani dove c'è il motore |
 | Statistiche e rating locale | Disponibile dalla scheda Tu |
 | Editor di posizione con FEN e validazione | Disponibile |
 | Varianti: Chess960, Re della collina, Tre scacchi | Disponibile nella partita a due |
 | Minigiochi | Disponibile dalla scheda Tu, con record e XP |
-| Tornei contro bot | Formule, classifica, tabellone e bacheca; si giocano dalla scheda Tu contro il motore (Android e iOS) |
+| Tornei contro bot | Formule, classifica, tabellone e bacheca; si giocano dalla scheda Tu contro il motore (Android e iOS; Windows e Linux con Stockfish installato) |
 | Orologio con cadenze e incremento | Disponibile |
 | Suoni, vibrazione, modalità tavolo | Disponibile |
-| Revisione della partita: classificazione, precisione, grafico, Riprova | Disponibile dove c'è il motore (Android e iOS) |
-| Analisi libera della posizione con linee del motore | Disponibile dove c'è il motore (Android e iOS) |
+| Revisione della partita: classificazione, precisione, grafico, Riprova | Disponibile dove c'è il motore (Android e iOS; Windows e Linux con Stockfish installato), anche dall'archivio |
+| Analisi libera della posizione con linee del motore | Disponibile dove c'è il motore (Android e iOS; Windows e Linux con Stockfish installato) |
+| Bot con personalità, collezione e avversario adattivo | Disponibile dove c'è il motore |
+| Partita con l'allenatore: avvisi, ripresa della mossa, suggerimenti | Disponibile dove c'è il motore |
+| Profilo bambino: schede semplificate, bot amichevoli, niente numeri | Disponibile dalle Impostazioni |
+| Tema dell'app chiaro, scuro o di sistema, colori per daltonici | Disponibile dalle Impostazioni |
 
 I requisiti completi sono nel documento dei requisiti del progetto.

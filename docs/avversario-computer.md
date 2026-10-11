@@ -1,6 +1,6 @@
 # Avversario computer
 
-La partita contro il computer usa **Stockfish 19**, eseguito interamente sul dispositivo:
+La partita contro il computer usa **Stockfish** (la versione 19 inclusa nell'app su Android e iOS, quella installata su Windows e Linux), eseguito interamente sul dispositivo:
 nessuna connessione, nessun server, nessun dato che esce dal telefono.
 
 ## Come si gioca
@@ -25,6 +25,7 @@ Durante la riflessione del computer la scacchiera è bloccata e compare la scrit
 - Se il motore non risponde, o propone una mossa che le regole rifiutano, compare il messaggio "Il computer non risponde." con il pulsante **Riprova**, sopra la barra dei comandi; il motore viene riavviato alla richiesta successiva. Il messaggio sparisce con una nuova partita o un annullamento.
 - La patta si può offrire solo nel proprio turno.
 - La rotazione automatica della scacchiera è disattivata contro il computer.
+- Il pulsante **Allenatore** giudica ogni mossa e dà suggerimenti (vedi [allenatore.md](allenatore.md)); dal menu ⋮ si aprono **Analisi della posizione** e **Revisione della partita** (vedi [analisi.md](analisi.md) e [revisione-partita.md](revisione-partita.md)).
 - Con l'orologio, il tempo del computer scorre mentre pensa e riceve l'incremento come il giocatore; se il tempo scade durante la riflessione la ricerca viene interrotta. **Annulla** ripristina gli orologi di entrambe le mosse ritirate, anche dopo un tempo scaduto alla prima mossa.
 - Con l'orologio il computer non pensa più di un trentesimo del tempo residuo più tre quarti dell'incremento (minimo 50 ms): riflessione e ritardo artificiale del livello vengono ridotti di conseguenza (`EngineLevel.withinClock`), così anche il livello 8 non perde per tempo nelle cadenze brevi.
 - Mentre è aperta una finestra (nuova partita, abbandono, patta) o l'app è in background, orologio e computer sono fermi: la ricerca in corso viene interrotta, il suo tempo restituito al computer, e riparte alla chiusura o al ritorno nell'app.
@@ -57,7 +58,7 @@ Con **Adattivo** attivo il livello segue i risultati del giocatore, per far vinc
 - L'app tiene una stima Elo del giocatore, che parte da 1100.
 - Il livello usato è quello con l'Elo indicativo più vicino alla stima; il pannello mostra "Livello N" e nasconde il cursore.
 - A fine partita (matto, abbandono, tempo, patta) la stima si aggiorna con la formula Elo: vittoria 1, patta 0,5, sconfitta 0. Il fattore K è 64 nelle prime 10 partite e 32 dopo.
-- Ogni partita conta una sola volta, e solo se ha almeno una mossa. **Annulla** dopo la fine della partita ripristina la stima precedente.
+- Ogni partita conta una sola volta, e solo se ha almeno una mossa ed è partita dalla posizione iniziale: le partite avviate dall'editor di posizione non cambiano la stima. **Annulla** dopo la fine della partita ripristina la stima precedente.
 - Il risultato si registra alla fine: lasciare una partita a metà per aprirne un'altra non la conta.
 - La stima resta tra 500 e 3100 Elo, cioè intorno ai livelli disponibili, e l'attesa di risultato si calcola contro il livello effettivamente giocato.
 - La stima è salvata sul dispositivo (chiave `adaptiveOpponent`, `lib/engine/adaptive.dart`) e non esce mai da lì.
@@ -163,7 +164,7 @@ Nuove funzioni del computer si sviluppano partendo dai test, con nel nome il req
 | RF-21 motore in isolate separato, ritardo artificiale ai livelli bassi | ✓ |
 | RF-25 patta accettata dal bot in base alla valutazione | ✓ |
 | RNF-03 Stockfish nativo via FFI in isolate, 1 thread | ✓ (Android, iOS) |
-| RF-22 modalità Allenamento (suggerimento, barra di valutazione) | Da fare: `EngineMove` espone già variante e valutazione |
+| RF-22 modalità Allenamento (suggerimento, barra di valutazione) | In parte: suggerimento con **Aiuto** dell'allenatore (vedi [allenatore.md](allenatore.md)); barra di valutazione in analisi e revisione, non ancora in partita |
 | RF-23 bot con personalità | ✓ (vedi [bot.md](bot.md)) |
 | RF-24 partenza da una posizione personalizzata | ✓ dall'editor (vedi [editor-posizione.md](editor-posizione.md)) |
 | RF-26 avversario adattivo | ✓ |
