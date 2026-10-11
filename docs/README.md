@@ -12,7 +12,7 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | [gamification.md](gamification.md) | XP, livelli, obiettivo giornaliero, serie, traguardi, ricompense estetiche |
 | [archivio.md](archivio.md) | Salvataggio delle partite, storico, import ed export PGN |
 | [puzzle.md](puzzle.md) | Puzzle: dati, punteggio, modalità, puzzle del giorno |
-| [aperture.md](aperture.md) | Nomi delle aperture, mosse di libro, explorer |
+| [aperture.md](aperture.md) | Nomi delle aperture, mosse di libro, explorer, repertorio |
 | [percorso.md](percorso.md) | Percorso a tappe con stelle e bot guardiani |
 | [statistiche.md](statistiche.md) | Statistiche delle partite e rating locale stimato |
 | [minigiochi.md](minigiochi.md) | Coordinate a tempo, cattura tutto, visualizzazione alla cieca, conta del materiale |
@@ -34,6 +34,7 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | Puzzle con punteggio, temi e puzzle del giorno | Disponibile |
 | Puzzle Storm, Rush, sopravvivenza, Serie, ripasso degli errori | Disponibile |
 | Nome dell'apertura in partita, explorer ridotto | Disponibile |
+| Repertorio di aperture con ripasso dilazionato | Disponibile |
 | Gamification: XP, livelli, obiettivo giornaliero, serie, traguardi, ricompense estetiche | Logica e Profilo disponibili, collegamento alla partita in sviluppo |
 | Archivio partite, import ed export PGN | Logica e schermata disponibili, collegamento alla partita in sviluppo |
 | Percorso a tappe con stelle | Mappa ed esercizi pronti; accesso dalla schermata principale e guardiani in arrivo con il collegamento alla partita |

@@ -40,7 +40,7 @@ lib/
     settings.dart         Impostazioni, valori predefiniti e salvataggio locale
     settings_page.dart    Schermata delle impostazioni
   puzzles/                Puzzle: modello, punteggio, schermate (vedi puzzle.md)
-  openings/               Aperture: libro, nome in partita, explorer (vedi aperture.md)
+  openings/               Aperture: libro, nome in partita, explorer, repertorio (vedi aperture.md)
   training/               Scacchiera per esercizi condivisa
 assets/
   puzzles/puzzles.csv     Puzzle Lichess inclusi (CC0)
