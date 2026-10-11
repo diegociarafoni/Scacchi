@@ -24,6 +24,7 @@ lib/
   home/home_shell.dart    Barra di navigazione in basso (Gioca, Puzzle, Aperture)
   game/
     chess_game.dart       Stato della partita, senza dipendenze dall'interfaccia
+    variant.dart          Varianti e posizioni iniziali Chess960 (vedi regole-di-gioco.md)
     material.dart         Pezzi catturati e vantaggio di materiale
     clock.dart            Cadenze e orologio a due lati
     sounds.dart           Scelta e riproduzione di suoni e vibrazione
