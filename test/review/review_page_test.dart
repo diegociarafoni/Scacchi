@@ -249,8 +249,8 @@ void main() {
         onNoteChanged: (ply, note) async => changes.add((ply, note)),
       );
       await tester.pumpAndSettle();
-      await tester.ensureVisible(find.text('Nf6 ??'));
-      await tester.tap(find.text('Nf6 ??'));
+      await tester.ensureVisible(find.text('♞f6 ??'));
+      await tester.tap(find.text('♞f6 ??'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Aggiungi nota'));
       await tester.pumpAndSettle();
@@ -263,7 +263,7 @@ void main() {
       ]);
       expect(find.text('La tua nota: ? Avevo fretta'), findsOneWidget);
       expect(find.text('Modifica nota'), findsOneWidget);
-      expect(find.textContaining('Nf6 ?? ✎'), findsOneWidget);
+      expect(find.textContaining('♞f6 ?? ✎'), findsOneWidget);
     });
 
     testWidgets('RF-55 una nota vuota la toglie', (tester) async {
@@ -277,8 +277,8 @@ void main() {
         onNoteChanged: (ply, note) async => changes.add((ply, note)),
       );
       await tester.pumpAndSettle();
-      await tester.ensureVisible(find.textContaining('Nf6 ??'));
-      await tester.tap(find.textContaining('Nf6 ??'));
+      await tester.ensureVisible(find.textContaining('♞f6 ??'));
+      await tester.tap(find.textContaining('♞f6 ??'));
       await tester.pumpAndSettle();
       expect(find.text('La tua nota: Da rivedere'), findsOneWidget);
       await tester.tap(find.text('Modifica nota'));
@@ -295,8 +295,8 @@ void main() {
       (tester) async {
         await pumpReview(tester);
         await tester.pumpAndSettle();
-        await tester.ensureVisible(find.text('Nf6 ??'));
-        await tester.tap(find.text('Nf6 ??'));
+        await tester.ensureVisible(find.text('♞f6 ??'));
+        await tester.tap(find.text('♞f6 ??'));
         await tester.pumpAndSettle();
         expect(find.text('Aggiungi nota'), findsNothing);
       },
