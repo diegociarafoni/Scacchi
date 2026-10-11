@@ -56,7 +56,7 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | Editor di posizione con FEN e validazione | Disponibile |
 | Varianti: Chess960, Re della collina, Tre scacchi | Disponibile nella partita a due |
 | Minigiochi | Disponibile dalla scheda Tu, con record e XP |
-| Tornei contro bot | Formule, classifica, tabellone e bacheca pronti; partite e accesso in arrivo con la partita contro il computer |
+| Tornei contro bot | Formule, classifica, tabellone e bacheca; si giocano dalla scheda Tu contro il motore (Android e iOS) |
 | Orologio con cadenze e incremento | Disponibile |
 | Suoni, vibrazione, modalità tavolo | Disponibile |
 | Revisione della partita: classificazione, precisione, grafico, Riprova | Disponibile dove c'è il motore (Android e iOS) |

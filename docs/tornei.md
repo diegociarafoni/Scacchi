@@ -39,4 +39,10 @@ A torneo concluso si registra `TournamentFinished(rank: n, players: m)`: 30 XP, 
 - durante: la prossima partita con colore e avversario, la classifica del girone o il tabellone per turni, e l'abbandono con conferma;
 - alla fine: la posizione e il pulsante per un nuovo torneo.
 
-Senza `play` la partita non parte e la schermata lo dice. Il collegamento al motore, ai livelli dei bot e alla schermata principale arriva dopo la partita contro il computer (PR #2).
+Senza `play` la partita non parte e la schermata lo dice.
+
+## Collegamento
+
+La voce **Tornei** della scheda Tu compare dove gira il motore (Android e iOS). `HomeShell` tiene un solo `TournamentController` in memoria, usa come bot gli otto livelli del motore (nome e Elo del livello) e come forza dell'utente il rating locale calcolato sull'archivio.
+
+Ogni partita è una sfida preimpostata (`GameChallenge`, titolo «Torneo · avversario», colore assegnato dal sorteggio) con il livello del bot. I punti sono 1, ½ o 0 (`tournamentPoints`); nello spareggio Armageddon la patta vale una vittoria per il nero e una sconfitta per il bianco. Uscire dalla partita, anche prima della prima mossa (a partita in corso dopo conferma), equivale a una resa: lo 0 si registra e la partita non si può rigiocare. La partita vale XP e viene archiviata come tutte le altre contro il computer.
