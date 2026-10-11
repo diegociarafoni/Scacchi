@@ -37,12 +37,12 @@ void main() {
     // Il libro si carica in un isolate: si attende che il nome compaia.
     for (
       var i = 0;
-      i < 50 && find.text('B20 Sicilian Defense').evaluate().isEmpty;
+      i < 50 && find.text('B20 Difesa siciliana').evaluate().isEmpty;
       i++
     ) {
       await tester.pump(const Duration(milliseconds: 100));
     }
-    expect(find.text('B20 Sicilian Defense'), findsOneWidget);
+    expect(find.text('B20 Difesa siciliana'), findsOneWidget);
   });
 
   testWidgets('RF-92 l\'explorer segue le mosse del libro', (tester) async {
@@ -55,9 +55,9 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('c5'));
     await tester.pumpAndSettle();
-    expect(find.text('B20 Sicilian Defense'), findsOneWidget);
+    expect(find.text('B20 Difesa siciliana'), findsOneWidget);
     await _tapMove(tester, 'a2a3');
-    expect(find.textContaining('Sicilian Defense'), findsWidgets);
+    expect(find.textContaining('Difesa siciliana'), findsWidgets);
   });
 
   testWidgets('RF-93 una linea dell\'explorer si ripassa dal repertorio', (
