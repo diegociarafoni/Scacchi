@@ -12,6 +12,8 @@ void main() {
       'test(game): copre lo stallo\n\nCorpo del messaggio.',
       'chore(main): release 1.1.0',
       'build(deps): bump dartchess from 0.14.0 to 0.15.0',
+      'feat(game): XP e salvataggio in archivio a fine partita',
+      'fix(archive): PGN con commenti annidati',
       'Merge branch \'main\' into feat/orologio',
       'Revert "feat: aggiunge l\'orologio"\n\nThis reverts commit abc.',
     ]) {
@@ -24,6 +26,8 @@ void main() {
       'feat:manca lo spazio',
       'feat: ',
       'feat: Maiuscola iniziale',
+      'feat: ComputerPlayer con più livelli',
+      'feat: Xp in maiuscolo irregolare',
       'feat: termina con il punto.',
       'chore: pulizia generica',
       'feat(Board): scope maiuscolo',
