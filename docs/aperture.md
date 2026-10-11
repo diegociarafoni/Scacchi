@@ -6,7 +6,7 @@ Riconoscimento delle aperture, mosse di libro, Esplora aperture e repertorio con
 
 `assets/openings/openings.tsv` deriva dal dataset [chess-openings](https://github.com/lichess-org/chess-openings) di Lichess (CC0): 3.865 righe `eco\tname\tuci`, circa 380 KB. Lo script `tool/datasets/build_openings.py` scarica i cinque file del dataset e converte le mosse da SAN a UCI, così l'app non deve interpretare la notazione algebrica all'avvio. Viene rigenerato dallo stesso workflow dei puzzle (`docs/puzzle.md`).
 
-I nomi restano in inglese, come nel dataset e nell'app di Lichess: sono i nomi con cui le aperture si cercano nei libri e online.
+I nomi del dataset sono in inglese; l'app li mostra in italiano (vedi [Nomi in italiano](#nomi-in-italiano)) e conserva l'originale nelle partite salvate e nei file esportati.
 
 ## Libro delle aperture
 
