@@ -201,7 +201,7 @@ Con le regole di protezione di `main` attive (vedi [convenzioni-git.md](convenzi
 
 Altri workflow:
 
-- **Convenzioni** (`conventions.yml`, su ogni PR, meno di un minuto): nome del ramo, titolo della PR, messaggi dei commit, Gitleaks sui commit della PR e controllo della documentazione (anche sulle PR di sola documentazione), vedi [convenzioni-git.md](convenzioni-git.md) e [mappa-del-codice.md](mappa-del-codice.md).
+- **Convenzioni** (`conventions.yml`, su ogni PR aperta, meno di un minuto; su una PR già unita, per esempio dopo una modifica del titolo, il job si salta): nome del ramo, titolo della PR, messaggi dei commit, Gitleaks sui commit della PR e controllo della documentazione (anche sulle PR di sola documentazione), vedi [convenzioni-git.md](convenzioni-git.md) e [mappa-del-codice.md](mappa-del-codice.md).
 - **Sicurezza** (`security.yml`): Trivy, OSV-Scanner, Gitleaks su tutta la cronologia, zizmor e SBOM, su `main`, ogni lunedì, a mano e sulle PR che cambiano dipendenze, `.github/`, `android/`, `tool/policy.json` o `.gitleaks.toml`, vedi [sicurezza.md](sicurezza.md).
 - **Dataset** (`datasets.yml`, a mano o sulle PR che cambiano `tool/datasets/`): rigenera puzzle e aperture dai dati Lichess, vedi [puzzle.md](puzzle.md).
 
