@@ -14,6 +14,9 @@ concurrency:
 jobs:
   conventions:
     name: Ramo, titolo della PR e commit
+    # Modificare il titolo di una PR già unita rilancia il workflow, ma il
+    # commit di testa non è più scaricabile con il ramo eliminato.
+    if: github.event.pull_request.state == 'open'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
