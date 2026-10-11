@@ -1,5 +1,7 @@
 import 'package:dartchess/dartchess.dart';
 
+import 'chess_game.dart';
+
 /// Esito della lettura di una mossa scritta.
 sealed class MoveInputResult {
   const MoveInputResult();
@@ -35,7 +37,9 @@ MoveInputResult parseMoveInput(Position pos, String text) {
   final lower = t.toLowerCase();
   if (_uci.hasMatch(lower)) {
     final move = Move.parse(lower)!;
-    return _legal(pos, move) ? MoveInputOk(move) : const MoveInputInvalid();
+    return isPlayableMove(pos, move)
+        ? MoveInputOk(move)
+        : const MoveInputInvalid();
   }
 
   if (_castling.hasMatch(t)) {
@@ -62,19 +66,6 @@ MoveInputResult _bothNotations(Position pos, String t) {
   return move == null ? const MoveInputInvalid() : MoveInputOk(move);
 }
 
-/// Legale e, se il pedone arriva in fondo, con il pezzo di promozione.
-bool _legal(Position pos, Move move) {
-  if (!pos.isLegal(move)) return false;
-  if (move case NormalMove(:final from, :final to, promotion: null)) {
-    final piece = pos.board.pieceAt(from);
-    if (piece?.role == Role.pawn &&
-        (to.rank == Rank.first || to.rank == Rank.eighth)) {
-      return false;
-    }
-  }
-  return true;
-}
-
 Move? _san(Position pos, String text, String Function(String) piece) {
   var t = text;
   if (!t.startsWith('O') && RegExp('[A-Z]').hasMatch(t[0])) {
@@ -93,5 +84,5 @@ Move? _san(Position pos, String text, String Function(String) piece) {
     // dartchess non valida la lunghezza di ogni testo malformato.
     return null;
   }
-  return move != null && _legal(pos, move) ? move : null;
+  return move != null && isPlayableMove(pos, move) ? move : null;
 }

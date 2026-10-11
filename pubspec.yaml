@@ -16,6 +16,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   dartchess: ^0.14.0
   chessground: ^10.3.0
+  multistockfish: ^0.6.1
   path_provider: ^2.1.6
   share_plus: ^13.3.1
   shared_preferences: ^2.5.6
