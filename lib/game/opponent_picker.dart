@@ -7,6 +7,7 @@ import '../engine/bot_collection.dart';
 import '../engine/bots.dart';
 import '../engine/levels.dart';
 import '../engine/style.dart';
+import '../l10n/app_localizations.dart';
 
 enum Opponent { human, computer, bot }
 
@@ -50,6 +51,17 @@ class GameSetup {
     adaptive: adaptive ?? this.adaptive,
     botId: botId ?? this.botId,
   );
+
+  /// Configurazione per il profilo bambino (RP-06): niente computer e solo
+  /// bot amichevoli, ripiegando sul primo.
+  GameSetup forKids() {
+    if (opponent == Opponent.human) return this;
+    final friendly = friendlyBots.any((b) => b.id == botId);
+    return copyWith(
+      opponent: Opponent.bot,
+      botId: friendly ? botId : friendlyBots.first.id,
+    );
+  }
 }
 
 /// Scelta dell'avversario e, contro il computer, di colore e livello.
@@ -61,9 +73,13 @@ class OpponentPicker extends StatelessWidget {
     required this.adaptiveLevel,
     required this.collection,
     required this.onChanged,
+    this.kidMode = false,
   });
 
   final GameSetup setup;
+
+  /// Profilo bambino (RP-06): niente computer, solo bot amichevoli e nessun numero.
+  final bool kidMode;
   final bool computerAvailable;
   final int adaptiveLevel;
   final BotCollection collection;
@@ -72,6 +88,7 @@ class OpponentPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final setup = kidMode ? this.setup.forKids() : this.setup;
     final level = engineLevel(setup.adaptive ? adaptiveLevel : setup.level);
     final vsBot = setup.opponent == Opponent.bot;
     final vsComputer = setup.opponent == Opponent.computer;
@@ -86,12 +103,13 @@ class OpponentPicker extends StatelessWidget {
               icon: Icon(Icons.people_outline),
               label: Text('Due giocatori'),
             ),
-            ButtonSegment(
-              value: Opponent.computer,
-              icon: const Icon(Icons.memory),
-              label: const Text('Computer'),
-              enabled: computerAvailable,
-            ),
+            if (!kidMode)
+              ButtonSegment(
+                value: Opponent.computer,
+                icon: const Icon(Icons.memory),
+                label: const Text('Computer'),
+                enabled: computerAvailable,
+              ),
             ButtonSegment(
               value: Opponent.bot,
               icon: const Icon(Icons.emoji_people_outlined),
@@ -126,10 +144,11 @@ class OpponentPicker extends StatelessWidget {
           ),
           if (vsBot) ...[
             const SizedBox(height: 8),
-            for (final bot in bots)
+            for (final bot in kidMode ? friendlyBots : bots)
               _BotTile(
                 bot: bot,
                 collection: collection,
+                kidMode: kidMode,
                 selected: bot.id == setup.botId,
                 onTap: () => onChanged(setup.copyWith(botId: bot.id)),
               ),
@@ -173,12 +192,14 @@ class _BotTile extends StatelessWidget {
   const _BotTile({
     required this.bot,
     required this.collection,
+    required this.kidMode,
     required this.selected,
     required this.onTap,
   });
 
   final Bot bot;
   final BotCollection collection;
+  final bool kidMode;
   final bool selected;
   final VoidCallback onTap;
 
@@ -186,12 +207,14 @@ class _BotTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final unlocked = collection.isUnlocked(bot);
     final beatenOn = collection.beatenOn(bot);
-    final details = [
-      '${bot.elo} Elo',
-      styleLabel(bot.style),
-      bot.openingName,
-      if (beatenOn != null) 'Battuto il ${_date(beatenOn)}',
-    ].join(' · ');
+    final details = kidMode
+        ? _kidDescription(AppLocalizations.of(context))
+        : [
+            '${bot.elo} Elo',
+            styleLabel(bot.style),
+            bot.openingName,
+            if (beatenOn != null) 'Battuto il ${_date(beatenOn)}',
+          ].join(' · ');
     return ListTile(
       contentPadding: EdgeInsets.zero,
       enabled: unlocked,
@@ -210,6 +233,13 @@ class _BotTile extends StatelessWidget {
       onTap: unlocked ? onTap : null,
     );
   }
+
+  String _kidDescription(AppLocalizations l10n) => switch (bot.id) {
+    'pino' => l10n.kidBotPinoDescription,
+    'chiara' => l10n.kidBotChiaraDescription,
+    'rocco' => l10n.kidBotRoccoDescription,
+    _ => '',
+  };
 
   static String _date(DateTime d) =>
       '${d.day.toString().padLeft(2, '0')}/${d.month.toString().padLeft(2, '0')}/${d.year}';

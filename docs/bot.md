@@ -77,12 +77,26 @@ restituisce `null` e si torna al motore.
 `mistake`, `win`, `loss`, `draw`. Il saluto è proprio del bot e riporta il suo nome; le altre frasi
 dipendono dallo stile.
 
+## Profilo bambino
+
+Con il profilo bambino attivo (RP-06, vedi [profilo-bambino.md](profilo-bambino.md)) si gioca solo contro
+i bot amichevoli, `friendlyBots`: i primi tre della scala (Pino, Chiara, Rocco). L'elenco mostra avatar,
+nome e una breve descrizione (chiavi `kidBot...Description` nei file `.arb`) al posto di Elo, stile e
+apertura; la scala con i lucchetti resta, la spunta del bot battuto non riporta la data. Il titolo della
+partita non mostra l'Elo. `GameSetup.forKids()` trasforma una scelta del computer o di un bot più forte in
+una partita contro Pino.
+
+Le frasi sono quelle di `Bot.phrases(evento, friendly: true)`: brevi, uguali per tutti gli stili e senza
+prese in giro (niente «Grazie del regalo» o «hai sbagliato»); il saluto riporta il nome del bot ma non
+l'apertura.
+
 ## Test
 
 - `test/engine/bots_test.dart`: scala, dati, linee del libro legali, frasi.
 - `test/engine/bot_collection_test.dart`: sblocco, data della prima vittoria, salvataggio.
 - `test/bot_game_test.dart`: la scelta del bot nel pannello, il libro in partita, saluto e frasi finali, vittoria e collezione.
 - `test/engine/style_test.dart`: i bonus di stile.
+- `test/engine/kid_bots_test.dart`, `test/game/kid_opponent_picker_test.dart` e `test/kid_bot_game_test.dart`: i bot amichevoli del profilo bambino.
 - `test/engine/choose_test.dart` e `computer_player_test.dart`: il bonus nella scelta tra candidate.
 
 ## Stato

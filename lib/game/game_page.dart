@@ -269,7 +269,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   void _botSay(BotEvent event) {
     final bot = _bot;
     if (bot == null || !mounted) return;
-    _showMessage('${bot.avatar} ${bot.name}: ${bot.phrase(event, _random)}');
+    final text = bot.phrase(event, _random, friendly: _settings.kidMode);
+    _showMessage('${bot.avatar} ${bot.name}: $text');
   }
 
   void _saveAdaptive() {
@@ -887,7 +888,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   /// Memorizza la scelta dell'avversario; un bot bloccato diventa il primo.
   GameSetup _applySetup(GameSetup chosen) {
-    var setup = chosen;
+    var setup = _settings.kidMode ? chosen.forKids() : chosen;
     var bot = setup.opponent == Opponent.bot ? botById(setup.botId) : null;
     if (bot != null && !_collection.isUnlocked(bot)) {
       bot = bots.first;
@@ -914,6 +915,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           adaptiveLevel: _adaptive.level,
           collection: _collection,
           computerAvailable: widget.computerAvailable,
+          kidMode: _settings.kidMode,
         ),
       ),
       restart: (choice) => choice == null,
@@ -1004,6 +1006,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
             setup: chosen,
             adaptiveLevel: _adaptive.level,
             collection: _collection,
+            kidMode: _settings.kidMode,
           ),
         );
         if (picked == null) return null;
@@ -1312,7 +1315,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                   title,
                   Text(
                     _bot != null
-                        ? '${_bot!.avatar} ${_bot!.name} (${_bot!.elo} Elo)'
+                        ? _settings.kidMode
+                              ? '${_bot!.avatar} ${_bot!.name}'
+                              : '${_bot!.avatar} ${_bot!.name} (${_bot!.elo} Elo)'
                         : 'Computer, livello $_gameLevel: '
                               '${engineLevel(_gameLevel).name}',
                     style: Theme.of(context).textTheme.labelMedium,
@@ -1898,18 +1903,22 @@ class _PositionSheet extends StatefulWidget {
     required this.setup,
     required this.adaptiveLevel,
     required this.collection,
+    required this.kidMode,
   });
 
   final GameSetup setup;
   final int adaptiveLevel;
   final BotCollection collection;
+  final bool kidMode;
 
   @override
   State<_PositionSheet> createState() => _PositionSheetState();
 }
 
 class _PositionSheetState extends State<_PositionSheet> {
-  late GameSetup _setup = widget.setup;
+  late GameSetup _setup = widget.kidMode
+      ? widget.setup.forKids()
+      : widget.setup;
 
   @override
   Widget build(BuildContext context) => SafeArea(
@@ -1927,6 +1936,7 @@ class _PositionSheetState extends State<_PositionSheet> {
           adaptiveLevel: widget.adaptiveLevel,
           collection: widget.collection,
           computerAvailable: true,
+          kidMode: widget.kidMode,
           onChanged: (setup) => setState(() => _setup = setup),
         ),
         const SizedBox(height: 16),
@@ -1950,6 +1960,7 @@ class _TimeControlSheet extends StatefulWidget {
     required this.adaptiveLevel,
     required this.collection,
     required this.computerAvailable,
+    required this.kidMode,
   });
 
   final Variant variant;
@@ -1959,6 +1970,7 @@ class _TimeControlSheet extends StatefulWidget {
   final int adaptiveLevel;
   final BotCollection collection;
   final bool computerAvailable;
+  final bool kidMode;
 
   @override
   State<_TimeControlSheet> createState() => _TimeControlSheetState();
@@ -1966,9 +1978,11 @@ class _TimeControlSheet extends StatefulWidget {
 
 class _TimeControlSheetState extends State<_TimeControlSheet> {
   late Variant _variant = widget.variant;
-  late GameSetup _setup = widget.computerAvailable
-      ? widget.setup
-      : widget.setup.copyWith(opponent: Opponent.human);
+  late GameSetup _setup = !widget.computerAvailable
+      ? widget.setup.copyWith(opponent: Opponent.human)
+      : widget.kidMode
+      ? widget.setup.forKids()
+      : widget.setup;
   late final _white = TextEditingController(text: widget.whiteName);
   late final _black = TextEditingController(text: widget.blackName);
 
@@ -2022,6 +2036,7 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
               adaptiveLevel: widget.adaptiveLevel,
               collection: widget.collection,
               computerAvailable: widget.computerAvailable,
+              kidMode: widget.kidMode,
               onChanged: (setup) => setState(() => _setup = setup),
             ),
             if (_setup.opponent == Opponent.human) ...[

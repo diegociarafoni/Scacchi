@@ -21,4 +21,13 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get kidProfileDescription =>
       'Simpler screens and words, friendly bots, no numbers';
+
+  @override
+  String get kidBotPinoDescription => 'A cheerful chick who loves to attack';
+
+  @override
+  String get kidBotChiaraDescription => 'Plays calmly and waits for your moves';
+
+  @override
+  String get kidBotRoccoDescription => 'A clever fox full of surprises';
 }

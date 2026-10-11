@@ -3,5 +3,8 @@
   "appTitle": "Chess",
   "kidProfileSection": "Profile",
   "kidProfile": "Kid profile",
-  "kidProfileDescription": "Simpler screens and words, friendly bots, no numbers"
+  "kidProfileDescription": "Simpler screens and words, friendly bots, no numbers",
+  "kidBotPinoDescription": "A cheerful chick who loves to attack",
+  "kidBotChiaraDescription": "Plays calmly and waits for your moves",
+  "kidBotRoccoDescription": "A clever fox full of surprises"
 }

@@ -21,4 +21,14 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get kidProfileDescription =>
       'Interfaccia e testi più semplici, bot amichevoli, niente numeri';
+
+  @override
+  String get kidBotPinoDescription => 'Un pulcino allegro che ama attaccare';
+
+  @override
+  String get kidBotChiaraDescription =>
+      'Gioca con calma e aspetta le tue mosse';
+
+  @override
+  String get kidBotRoccoDescription => 'Una volpe furba piena di sorprese';
 }

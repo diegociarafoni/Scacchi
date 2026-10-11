@@ -121,6 +121,24 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Interfaccia e testi più semplici, bot amichevoli, niente numeri'**
   String get kidProfileDescription;
+
+  /// Descrizione amichevole del bot Pino nel profilo bambino (RP-06), al posto di Elo, stile e apertura
+  ///
+  /// In it, this message translates to:
+  /// **'Un pulcino allegro che ama attaccare'**
+  String get kidBotPinoDescription;
+
+  /// Descrizione amichevole del bot Chiara nel profilo bambino (RP-06), al posto di Elo, stile e apertura
+  ///
+  /// In it, this message translates to:
+  /// **'Gioca con calma e aspetta le tue mosse'**
+  String get kidBotChiaraDescription;
+
+  /// Descrizione amichevole del bot Rocco nel profilo bambino (RP-06), al posto di Elo, stile e apertura
+  ///
+  /// In it, this message translates to:
+  /// **'Una volpe furba piena di sorprese'**
+  String get kidBotRoccoDescription;
 }
 
 class _AppLocalizationsDelegate

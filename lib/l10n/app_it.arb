@@ -15,5 +15,17 @@
   "kidProfileDescription": "Interfaccia e testi più semplici, bot amichevoli, niente numeri",
   "@kidProfileDescription": {
     "description": "Spiegazione sotto l'interruttore del profilo bambino"
+  },
+  "kidBotPinoDescription": "Un pulcino allegro che ama attaccare",
+  "@kidBotPinoDescription": {
+    "description": "Descrizione amichevole del bot Pino nel profilo bambino (RP-06), al posto di Elo, stile e apertura"
+  },
+  "kidBotChiaraDescription": "Gioca con calma e aspetta le tue mosse",
+  "@kidBotChiaraDescription": {
+    "description": "Descrizione amichevole del bot Chiara nel profilo bambino (RP-06), al posto di Elo, stile e apertura"
+  },
+  "kidBotRoccoDescription": "Una volpe furba piena di sorprese",
+  "@kidBotRoccoDescription": {
+    "description": "Descrizione amichevole del bot Rocco nel profilo bambino (RP-06), al posto di Elo, stile e apertura"
   }
 }

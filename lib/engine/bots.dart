@@ -66,16 +66,24 @@ class Bot {
     return next.isEmpty ? null : next[random.nextInt(next.length)];
   }
 
-  List<String> phrases(BotEvent event) => switch (event) {
-    BotEvent.start => [
-      'Ciao, sono $name. Oggi si gioca $openingName!',
-      '$name al tavolo: buona partita!',
-    ],
-    _ => _phrasesByStyle[style]![event]!,
-  };
+  /// Frasi per [event]; con [friendly] quelle brevi e incoraggianti del
+  /// profilo bambino (RP-06), uguali per tutti gli stili.
+  List<String> phrases(BotEvent event, {bool friendly = false}) =>
+      switch (event) {
+        BotEvent.start when friendly => [
+          'Ciao, sono $name!',
+          'Sono $name, giochiamo insieme?',
+        ],
+        BotEvent.start => [
+          'Ciao, sono $name. Oggi si gioca $openingName!',
+          '$name al tavolo: buona partita!',
+        ],
+        _ when friendly => _friendlyPhrases[event]!,
+        _ => _phrasesByStyle[style]![event]!,
+      };
 
-  String phrase(BotEvent event, math.Random random) {
-    final options = phrases(event);
+  String phrase(BotEvent event, math.Random random, {bool friendly = false}) {
+    final options = phrases(event, friendly: friendly);
     return options[random.nextInt(options.length)];
   }
 
@@ -188,6 +196,19 @@ const bots = <Bot>[
 ];
 
 Bot? botById(String id) => bots.where((b) => b.id == id).firstOrNull;
+
+/// Bot del profilo bambino (RP-06): i più facili della scala.
+final friendlyBots = bots.take(3).toList(growable: false);
+
+/// Niente prese in giro: il bambino deve sentirsi incoraggiato.
+const _friendlyPhrases = <BotEvent, List<String>>{
+  BotEvent.check: ['Scacco! Salva il tuo re.', 'Scacco! Dove va il re?'],
+  BotEvent.capture: ['Ho preso un pezzo!', 'Preso! Ora tocca a te.'],
+  BotEvent.mistake: ['Pensaci con calma.', 'Guarda bene la scacchiera!'],
+  BotEvent.win: ['Bella partita! Giochiamo ancora?', 'Ho vinto io, rivincita?'],
+  BotEvent.loss: ['Hai vinto tu, bravissimo!', 'Evviva, hai vinto!'],
+  BotEvent.draw: ['Pari! Bella partita.', 'Pareggio! Siamo bravi.'],
+};
 
 const _styleTemperature = 25;
 
