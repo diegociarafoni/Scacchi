@@ -7,10 +7,18 @@ import '../progress/progress_tracker.dart';
 import '../puzzles/puzzle_assets.dart';
 import '../puzzles/puzzle_hub_page.dart';
 import '../puzzles/puzzle_trainer.dart';
+import '../settings/settings.dart';
 
 /// Navigazione principale con la barra in basso, nella zona del pollice.
 class HomeShell extends StatefulWidget {
-  const HomeShell({super.key, this.puzzleTrainer, this.progress});
+  const HomeShell({
+    super.key,
+    required this.settings,
+    this.puzzleTrainer,
+    this.progress,
+  });
+
+  final SettingsController settings;
 
   /// Sostituibile nei test; di default carica i puzzle inclusi nell'app.
   final Future<PuzzleTrainer> Function()? puzzleTrainer;
@@ -57,7 +65,7 @@ class _HomeShellState extends State<HomeShell> {
       body: IndexedStack(
         index: _tab,
         children: [
-          const GamePage(),
+          GamePage(settings: widget.settings),
           if (_trainer != null)
             PuzzleHubPage(trainer: _trainer!, onActivity: _record)
           else

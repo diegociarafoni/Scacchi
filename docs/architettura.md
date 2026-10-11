@@ -6,6 +6,7 @@
 |---|---|---|
 | Linguaggio e framework | Dart, Flutter (canale stable, 3.47 o successivo) | Un solo codice per Android, iOS, Windows, macOS e Linux |
 | Regole degli scacchi | [dartchess](https://pub.dev/packages/dartchess) | Generazione delle mosse legali, notazione SAN, scacco, matto, stallo, materiale insufficiente |
+| Salvataggio impostazioni | [shared_preferences](https://pub.dev/packages/shared_preferences) | Memorizzazione locale delle impostazioni |
 | Scacchiera | [chessground](https://pub.dev/packages/chessground) | Disegno della scacchiera, trascinamento e tocco, animazioni, evidenziazioni, scelta della promozione |
 | File locali | [path_provider](https://pub.dev/packages/path_provider) | Cartella dati dell'app per i salvataggi |
 | Condivisione | [share_plus](https://pub.dev/packages/share_plus) | Menu di condivisione del sistema per il PGN |
@@ -26,7 +27,12 @@ lib/
     game_page.dart        Schermata di gioco
   progress/               Gamification: XP, livelli, serie, traguardi (vedi gamification.md)
   archive/                Archivio delle partite e PGN (vedi archivio.md)
+  path/                   Percorso a tappe con stelle (vedi percorso.md)
+  stats/                  Statistiche e rating locale (vedi statistiche.md)
   storage/                File JSON locali con versione e scrittura atomica
+  settings/
+    settings.dart         Impostazioni, valori predefiniti e salvataggio locale
+    settings_page.dart    Schermata delle impostazioni
   puzzles/                Puzzle: modello, punteggio, schermate (vedi puzzle.md)
   training/               Scacchiera per esercizi condivisa
 assets/
@@ -36,6 +42,7 @@ tool/datasets/            Script che generano i dataset in assets/
 test/
   chess_game_test.dart    Test delle regole e della fine partita
   material_test.dart      Test del materiale catturato
+  settings_test.dart      Test delle impostazioni e del salvataggio
   widget_test.dart        Test di avvio dell'interfaccia
 integration_test/
   app_test.dart           Test end-to-end sull'app reale
@@ -64,6 +71,10 @@ Modello della partita, in Dart puro e quindi testabile senza interfaccia.
 ### `MaterialBalance` (`lib/game/material.dart`)
 
 Calcola da una partita i pezzi catturati da ciascun lato, ripercorrendo le mosse (comprese le prese en passant), e la differenza di materiale presente sulla scacchiera. È Dart puro e si testa senza interfaccia.
+
+### Impostazioni (`lib/settings/`)
+
+`AppSettings` è un valore immutabile con tutte le opzioni e la loro traduzione in `ChessboardSettings` di chessground. `SettingsController` lo carica all'avvio da `shared_preferences`, lo espone come `ValueNotifier` e lo salva a ogni modifica; valori salvati sconosciuti o di tipo errato tornano al predefinito, e se la memoria locale non è disponibile l'app parte con i valori predefiniti. Vengono scritti solo i valori modificati. L'app carica le impostazioni prima di mostrare la partita, e `GamePage` si ridisegna quando cambiano.
 
 ### `GamePage` (`lib/game/game_page.dart`)
 
