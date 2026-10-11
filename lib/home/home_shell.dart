@@ -9,7 +9,6 @@ import '../openings/repertoire.dart';
 import '../progress/activity.dart';
 import '../progress/progress_controller.dart';
 import '../progress/progress_tracker.dart';
-import '../puzzles/puzzle.dart';
 import '../puzzles/puzzle_assets.dart';
 import '../puzzles/puzzle_hub_page.dart';
 import '../puzzles/puzzle_trainer.dart';
@@ -136,9 +135,7 @@ class _HomeShellState extends State<HomeShell> {
   /// stesso della scheda Puzzle: un solo archivio in memoria.
   Future<int> _savePersonalPuzzles(List<MistakePuzzle> puzzles) async {
     final trainer = await (_trainer ??= _loadTrainer());
-    return trainer.addPersonal([
-      for (final p in puzzles) (Puzzle.parseCsv(p.toCsv()), p.explanation),
-    ]);
+    return trainer.addPersonal([for (final p in puzzles) p.toPuzzle()]);
   }
 
   Future<PuzzleTrainer>

@@ -1,5 +1,6 @@
 import 'package:dartchess/dartchess.dart';
 
+import '../puzzles/puzzle.dart';
 import 'board_utils.dart';
 import 'coach.dart';
 import 'game_review.dart';
@@ -27,6 +28,9 @@ class MistakePuzzle {
 
   /// Spiegazione del coach dell'errore originale, da mostrare dopo.
   final String? explanation;
+
+  /// Il puzzle nel modello del modulo puzzle, con l'arrocco standard.
+  Puzzle toPuzzle() => Puzzle.parseCsv(toCsv());
 
   /// Riga `id,fen,mosse uci,punteggio,temi` del database Lichess, con
   /// l'arrocco nella forma standard (e1g1).
@@ -139,4 +143,18 @@ String _phase(Position pos) {
   final pieces =
       pos.board.occupied.size - pos.board.pawns.size - pos.board.kings.size;
   return pieces <= 4 ? 'endgame' : 'middlegame';
+}
+
+/// Identificativo stabile di una partita per i puzzle: lo stesso valore a ogni
+/// avvio e su ogni piattaforma, a differenza di `hashCode`. È FNV-1a a 32 bit;
+/// la moltiplicazione è scritta con somme di scorrimenti per non superare la
+/// precisione dei numeri sul web.
+String gameIdOf(String key) {
+  const mask = 0xffffffff;
+  var h = 0x811c9dc5;
+  for (final unit in key.codeUnits) {
+    h ^= unit;
+    h = (h + (h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24)) & mask;
+  }
+  return h.toRadixString(36);
 }

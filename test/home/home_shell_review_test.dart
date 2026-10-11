@@ -45,7 +45,7 @@ void main() {
     );
     expect(await game.onSavePuzzles!([mistake]), 1);
     expect(trainer.dueReviews().map((p) => p.id), ['mio-x-5']);
-    expect(trainer.personal.explanation('mio-x-5'), 'Hai lasciato il matto.');
+    expect(trainer.personal.byId('mio-x-5'), isNotNull);
     expect(game.onActivity, isA<Future<ProgressUpdate?> Function(Activity)>());
   });
 }

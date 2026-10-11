@@ -71,12 +71,15 @@ class PuzzleTrainer {
     for (final id in reviews.due(now())) ?puzzleById(id),
   ];
 
-  /// Salva puzzle ricavati dagli errori e li mette nel ripasso di oggi come
-  /// carte nuove. Restituisce quanti non erano già presenti.
-  Future<int> addPersonal(Iterable<(Puzzle, String?)> items) async {
-    final added = await personal.add(items);
-    await reviews.addNew([for (final (p, _) in items) p.id], now());
-    return added;
+  /// Salva puzzle ricavati dagli errori e mette quelli nuovi nel ripasso di
+  /// oggi come carte nuove. Restituisce quanti non erano già presenti; quelli
+  /// già salvati, anche se imparati, non tornano in coda.
+  Future<int> addPersonal(Iterable<Puzzle> puzzles) async {
+    final (:added, :evicted) = await personal.add(puzzles);
+    // Un puzzle scartato non ha più nulla da ripassare.
+    await reviews.remove(evicted);
+    await reviews.addNew(added, now());
+    return added.length;
   }
 
   Puzzle next({String? theme}) =>
@@ -85,9 +88,8 @@ class PuzzleTrainer {
   /// Registra l'esito e restituisce la variazione di punteggio, oppure `null`
   /// se il puzzle era già stato visto: le ripetizioni non cambiano il punteggio.
   Future<double?> record(Puzzle puzzle, {required bool solved}) async {
+    // I puzzle dei propri errori servono a ripassare: non spostano il punteggio.
     if (PersonalPuzzles.isPersonal(puzzle.id)) {
-      // Il punteggio misura i puzzle del database: quelli personali valgono
-      // solo per il ripasso.
       if (!solved) await reviews.failed(puzzle.id, now());
       return null;
     }

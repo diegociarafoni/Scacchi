@@ -185,7 +185,7 @@ class _ReviewPageState extends State<ReviewPage> {
       _puzzles ??= puzzlesFromReview(
         review,
         players: widget.puzzlePlayers,
-        gameId: _cacheKey.hashCode.toRadixString(36),
+        gameId: gameIdOf(_cacheKey),
       );
 
   Future<void> _savePuzzles(GameReview review) async {
