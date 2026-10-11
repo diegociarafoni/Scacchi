@@ -69,6 +69,19 @@ class PuzzleRunFinished extends Activity {
   final int score;
 }
 
+/// Fine di una sessione di minigioco (RG-10).
+class MinigameFinished extends Activity {
+  const MinigameFinished({
+    required this.game,
+    required this.score,
+    super.duration,
+  });
+
+  /// Identificativo stabile del minigioco, per esempio `coordinate`.
+  final String game;
+  final int score;
+}
+
 class LessonCompleted extends Activity {
   const LessonCompleted({super.duration});
 }
