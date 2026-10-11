@@ -65,6 +65,8 @@ class BoardFrame extends StatelessWidget {
       child: DecoratedBox(
         decoration: BoxDecoration(color: scheme.darkSquare),
         child: Stack(
+          // I pezzi trascinati verso il bordo non vanno tagliati dalla cornice.
+          clipBehavior: Clip.none,
           children: [
             Positioned(left: margin, top: margin, child: builder(inner)),
             // Le caselle si leggono già dalla scacchiera accessibile.
