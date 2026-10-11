@@ -936,7 +936,15 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     }
     final before = clock?.snapshot();
     final position = _game.position;
-    if (!_game.play(move)) return false;
+    // Tempo residuo di chi muove dopo la mossa, incremento compreso (RF-67);
+    // la prima mossa avvia l'orologio e non lo incrementa.
+    final left = clock == null
+        ? null
+        : clock.remaining(position.turn) +
+              (clock.isRunning
+                  ? Duration(seconds: clock.control.increment)
+                  : Duration.zero);
+    if (!_game.play(move, clock: left)) return false;
     final spoken = describeSan(
       _game.moves.last.san,
       position.turn,
@@ -1890,7 +1898,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                   ? _ViewBar(
                       text: viewPly == -1
                           ? 'Posizione iniziale'
-                          : 'Posizione dopo ${moveLabel(_game, viewPly, number: true)}',
+                          : 'Posizione dopo ${moveLabel(_game, viewPly, number: true, notation: AppSettings.of(context).notation)}',
                       onPrevious: viewPly > -1
                           ? () => _showPly(viewPly - 1)
                           : null,
@@ -2103,7 +2111,10 @@ class _MoveList extends StatelessWidget {
                   borderRadius: BorderRadius.circular(4),
                 )
               : null,
-          child: Text(moveLabel(game, i), style: theme.textTheme.bodyLarge),
+          child: Text(
+            moveLabel(game, i, notation: AppSettings.of(context).notation),
+            style: theme.textTheme.bodyLarge,
+          ),
         ),
       );
       return isSelected ? _KeepVisible(child: chip) : chip;

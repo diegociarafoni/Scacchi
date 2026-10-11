@@ -10,7 +10,7 @@ class AppLocalizationsIt extends AppLocalizations {
   AppLocalizationsIt([String locale = 'it']) : super(locale);
 
   @override
-  String get appTitle => 'Scacchi';
+  String get appTitle => 'Rokko';
 
   @override
   String get kidProfileSection => 'Profilo';
@@ -441,7 +441,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get qrCameraError =>
-      'Non riesco a usare la fotocamera. Consenti l\'accesso alla fotocamera per Scacchi nelle impostazioni del telefono e riprova.';
+      'Non riesco a usare la fotocamera. Consenti l\'accesso alla fotocamera per Rokko nelle impostazioni del telefono e riprova.';
 
   @override
   String get qrRetry => 'Riprova';
@@ -455,4 +455,17 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get qrMalformed => 'QR non valido: ignorato.';
+
+  @override
+  String get editorFenTitle => 'Posizione (FEN)';
+
+  @override
+  String get editorFenHelpTooltip => 'Che cos\'è il FEN?';
+
+  @override
+  String get editorFenHelpBody =>
+      'Il FEN è una riga di testo che descrive una posizione: i pezzi sulla scacchiera, di chi è il turno, l\'arrocco e le mosse. Serve per copiare la posizione in altre app e per incollarne una ricevuta da altrove: usa «Copia FEN» e «Incolla FEN».';
+
+  @override
+  String get editorFenHelpClose => 'Ho capito';
 }

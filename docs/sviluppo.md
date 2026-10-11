@@ -28,6 +28,10 @@ flutter build ios                     # app iOS (su Mac)
 
 I file in `assets/sounds/` si rigenerano con `python3 tool/generate_sounds.py`.
 
+## Icone e schermata di avvio
+
+Si rigenerano con `tool/generate_icons.py` e i due generatori Flutter, come descritto in [identita-visiva.md](identita-visiva.md).
+
 ## Test
 
 ### Metodo: prima i test
@@ -48,15 +52,24 @@ Ogni funzione nasce dai requisiti del progetto, nel documento dei requisiti, con
 | Widget | `test/analysis/` | Schermata di analisi con motore finto: linee, MultiPV, esplorazione, pausa, freccia | `flutter test` |
 | Unitari e widget | `test/review/` | Probabilità di vittoria, classificazione, sacrifici, precisione, revisione con motore finto, schermata di revisione e accesso dal menu | `flutter test` |
 | Widget | `test/widget_test.dart`, `test/l10n_test.dart` | Avvio dell'app e stato iniziale; lingua italiana predefinita | `flutter test` |
+| Unitari | `test/branding_test.dart` | Nome Rokko su Android e iOS, identificativo invariato, icona monocromatica | `flutter test` |
 | Widget | `test/computer_game_test.dart` | Partita contro il computer con un motore finto | `flutter test` |
-| Gamification | `test/progress/` | Regole di XP, serie e traguardi; salvataggio; schermata Profilo | `flutter test test/progress` |
+| Gamification | `test/progress/` | Regole di XP, serie (anche la sua spiegazione in parole) e traguardi; salvataggio; schermata Profilo | `flutter test test/progress` |
 | Percorso | `test/path/` | Esercizi, contenuti, sblocco, mappa e tappe sulla scacchiera | `flutter test test/path` |
 | Statistiche | `test/stats/` | Bilancio, rating locale, schermata | `flutter test test/stats` |
 | Minigiochi | `test/minigames/` | Generazione risolvibile, risposte, schermate, registrazione dei punteggi | `flutter test test/minigames` |
+| Scheda Tu | `test/home/` | Voci della scheda Tu: guardiani del percorso, tornei contro il motore finto, apertura di una partita dell'archivio nella revisione | `flutter test test/home` |
 | Tornei | `test/tournament/` | Abbinamenti, simulazione, spareggi, salvataggio, schermata | `flutter test test/tournament` |
 | Scacchiera per esercizi | `test/training/` | Tema, pezzi e coordinate presi dalle impostazioni, senza capovolgere i pezzi | `flutter test test/training` |
 | Archivio | `test/archive/` | PGN, salvataggio su file, schermata Partite | `flutter test test/archive` |
 | Scambio QR | `test/exchange/`, `test/game/game_qr_test.dart` | Fotogrammi QR, validazione dei dati letti, schermate Passa e Ricevi, partita continuata (vedi scambio-qr.md) | `flutter test test/exchange` |
+| Allenatore | `test/coach/` | Avvisi, Riprova e Continua, suggerimento a livelli, frasi in parole semplici | `flutter test test/coach` |
+| Puzzle | `test/puzzles/` | Dataset, Glicko-2, sessioni, Storm, Rush e Serie, ripasso, spiegazione delle modalità | `flutter test test/puzzles` |
+| Aperture | `test/openings/` | Libro, nomi italiani, Esplora aperture, repertorio | `flutter test test/openings` |
+| Regole | `test/regole/` | Partite di riferimento e perft | `flutter test test/regole` |
+| Editor, backup, scacchiera fisica, promemoria | `test/editor/`, `test/backup/`, `test/physical/`, `test/reminders/` | FEN e validazione, backup e ripristino, orologio e registro, promemoria | `flutter test test/editor test/backup test/physical test/reminders` |
+| Profilo bambino | `test/kids/` | Niente numeri, scheda Tu semplificata | `flutter test test/kids` |
+| Strumenti | `test/tool/` | Controlli di rami, commit, documentazione e licenze | `flutter test test/tool` |
 | Multigiocatore | `test/multiplayer/` | Invito, firma e cifratura, registro delle mosse, canali multipli, sessione con passaggio tra canali (vedi multigiocatore.md) | `flutter test test/multiplayer` |
 | End-to-end | `integration_test/qr_exchange_test.dart` | QR disegnato dall'app letto da zxing-cpp, fotocamera assente | `flutter test integration_test/qr_exchange_test.dart -d linux` |
 | Golden | `test/settings/goldens/` | Schermata Impostazioni su telefono piccolo, medio e grande, con e senza colori per daltonici, e chip di temi e pezzi | `flutter test test/settings/board_preview_test.dart` |
@@ -100,7 +113,9 @@ I golden si rigenerano con `flutter test test/settings --update-goldens` dopo un
 | RF-52 esplorazione lineare con avanti e indietro | ✓ | |
 | RF-60 revisione completa con avanzamento e interruzione | ✓ | |
 | RF-61, RF-62 classificazione delle mosse, Brillante e Ottima | ✓ | |
+| RF-56 minaccia dell'avversario nell'analisi (nella partita con l'allenatore: da fare) | ✓ | ✓ |
 | RF-63 precisione, conteggi e stima della forza | ✓ | |
+| RF-67 tempo residuo a ogni mossa nel PGN (`[%clk]`, import ed export) | ✓ | |
 | RF-68 precisione per fase (apertura, mediogioco, finale) nella revisione | ✓ | ✓ |
 | RF-50 barra di valutazione con valore numerico | ✓ | |
 | RF-54 freccia della mossa migliore | ✓ | |
@@ -109,6 +124,8 @@ I golden si rigenerano con `flutter test test/settings --update-goldens` dopo un
 | RF-66 cache della revisione (in memoria) | ✓ | |
 | RF-70 spiegazioni: matto concesso o mancato, pezzo in presa, forchetta, inchiodatura, re scoperto, perdita di materiale | ✓ | |
 | RF-72 giudizio con simbolo sulla casa della mossa (con l'allenatore acceso) | ✓ | ✓ |
+| RF-73 allenatore: avviso in tempo reale, Riprova e Continua | ✓ | |
+| RF-74 suggerimento a livelli, in parole semplici, con cerchio e freccia | ✓ | |
 | RF-71 cattura netta, doppio attacco, scoperta dalla variante del motore | ✓ | |
 | Cap. 7, errori trasformati in puzzle personali | ✓ | |
 | Cap. 7, puzzle personali salvati e nel ripasso | ✓ | ✓ |
@@ -143,6 +160,7 @@ I golden si rigenerano con `flutter test test/settings --update-goldens` dopo un
 | RF-90 nome dell'apertura in partita | ✓ | ✓ |
 | RF-91 mosse di libro | ✓ | |
 | RF-92 Esplora aperture | ✓ | ✓ |
+| RF-93 repertorio e ripasso dilazionato | ✓ | ✓ |
 
 ## Integrazione continua
 

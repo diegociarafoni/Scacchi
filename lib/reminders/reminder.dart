@@ -58,7 +58,7 @@ Reminder? nextReminder({
   }
   return Reminder(
     at: on(offset),
-    title: 'Scacchi',
+    title: 'Rokko',
     // Un promemoria per un giorno futuro con l'obiettivo di oggi mancato
     // troverebbe la serie già interrotta.
     body: streak > 0 && (offset == 0 || goalReachedToday)

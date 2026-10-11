@@ -4,7 +4,7 @@ L'app è progettata prima di tutto per il telefono in verticale.
 
 ## Navigazione
 
-La barra in basso ha quattro schede: Gioca, Puzzle, Aperture e Tu. La scheda Tu mostra avatar, livello e serie, e porta a Profilo, Percorso, Minigiochi, Statistiche e Archivio. Se i dati salvati di una sezione non si possono leggere, un messaggio lo dice e si può riprovare. Nel profilo bambino le Aperture sono nascoste e la scheda Tu mostra solo Profilo, Percorso e Minigiochi (vedi [profilo-bambino.md](profilo-bambino.md)). 
+La barra in basso ha quattro schede: Gioca, Puzzle, Aperture e Tu. La scheda Tu mostra avatar, livello e serie, e porta a Profilo, Percorso, Tornei (dove c'è il motore), Minigiochi, Statistiche, La tua settimana, Scacchiera fisica e Archivio. Se i dati salvati di una sezione non si possono leggere, un messaggio lo dice e si può riprovare. Nel profilo bambino le Aperture sono nascoste e la scheda Tu mostra solo Profilo, Percorso e Minigiochi (vedi [profilo-bambino.md](profilo-bambino.md)). 
 
 ## Telefono in verticale
 
@@ -16,7 +16,7 @@ Dall'alto verso il basso:
 4. **Materiale del giocatore in alto**: pezzi che ha catturato e vantaggio.
 5. **Scacchiera** a tutta larghezza.
 6. **Materiale del giocatore in basso**.
-7. **Barra dei comandi** in basso, alla portata del pollice: Nuova, Annulla, Gira, Patta, Abbandona (nel profilo bambino «Nuova partita», «Pareggio?» e «Mi arrendo», vedi [profilo-bambino.md](profilo-bambino.md)).
+7. **Barra dei comandi** in basso, alla portata del pollice: Nuova, Annulla, Gira, Patta, Abbandona; contro il computer o un bot anche Allenatore e Suggerisci, tranne nelle sfide (vedi [allenatore.md](allenatore.md)) (nel profilo bambino «Nuova partita», «Pareggio?» e «Mi arrendo», vedi [profilo-bambino.md](profilo-bambino.md)).
 
 Striscia, stato, righe del materiale e scacchiera sono centrati insieme nello spazio disponibile. La scacchiera ha come lato il minimo tra la larghezza dello schermo e l'altezza rimasta dopo striscia, stato, righe del materiale e comandi.
 
@@ -45,6 +45,8 @@ Per ciascun giocatore una riga mostra le icone dei pezzi avversari catturati, da
 | Gira | Capovolge la scacchiera |
 | Patta | Chiede all'avversario se accetta la patta; disattivato a partita conclusa |
 | Abbandona | Chiede conferma e fa abbandonare il lato al tratto; disattivato a partita conclusa |
+| Allenatore | Acceso o spento: da acceso giudica ogni mossa e avvisa degli errori con Riprova o Continua; solo contro il computer o un bot, non nelle sfide (vedi [allenatore.md](allenatore.md)) |
+| Suggerisci | Primo tocco: cerchia il pezzo da muovere con una frase semplice; secondo tocco: freccia della mossa migliore e motivo; anche ad allenatore spento, non nelle sfide |
 | Menu ⋮, "Passa con QR" e "Ricevi con QR" | Passa la partita, anche in corso, a un altro telefono o la continua da un QR letto con la fotocamera; il menu c'è anche senza motore e nelle varianti, non nelle sfide contro guardiani e tornei né nel profilo bambino (vedi [scambio-qr.md](scambio-qr.md)) |
 | Menu ⋮, "Analisi della posizione" | Apre l'analisi libera della posizione corrente con orologio e computer fermi (vedi [analisi.md](analisi.md)) |
 | Menu ⋮, "Revisione della partita" | Apre la revisione con classificazione delle mosse e precisione (vedi [revisione-partita.md](revisione-partita.md)); il menu c'è solo dove c'è il motore e negli scacchi classici, non nelle varianti né nel profilo bambino |
