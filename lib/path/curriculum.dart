@@ -807,18 +807,19 @@ const List<Chapter> curriculum = [
         exercises: [
           LineExercise(
             instructions:
-                'Il tuo re è davanti al pedone. Spostati di lato: il re '
-                'nero dovrà cedere e il pedone andrà a promozione.',
+                'Il tuo re è davanti al pedone. Spostati di lato restando '
+                'vicino: il pedone avanza protetto e va a promozione.',
             fen: '4k3/8/4K3/4P3/8/8/8/8 w - - 0 1',
             steps: ['e6d6|e6f6'],
             goal: LineGoal.line,
           ),
           LineExercise(
             instructions:
-                'Una sola mossa del re vince: trovala pensando '
-                'all\'opposizione.',
-            fen: '8/8/8/3k4/8/3K4/3P4/8 w - - 0 1',
-            steps: ['d3e3'],
+                'I re sono uno di fronte all\'altro. Trova una mossa che '
+                'vince: sposta il re di lato o usa la mossa di riserva del '
+                'pedone.',
+            fen: '8/8/3k4/8/3K4/8/3P4/8 w - - 0 1',
+            steps: ['d2d3|d4e4|d4c4'],
             goal: LineGoal.line,
           ),
         ],
@@ -913,7 +914,8 @@ const List<Chapter> curriculum = [
           LineExercise(
             instructions:
                 'Ora è il Nero che minaccia matto in f2 con donna e '
-                'alfiere. Para la minaccia senza perdere materiale.',
+                'alfiere. Difendi f2 con la donna, oppure chiudi la '
+                'diagonale con un pedone.',
             fen:
                 'rnb1k1nr/pppp1ppp/8/2b1p3/2B1P2q/2N5/PPPP1PPP/'
                 'R1BQK1NR w KQkq - 4 4',
