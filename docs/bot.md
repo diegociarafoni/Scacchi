@@ -1,7 +1,7 @@
 # Bot con personalità
 
 I bot (requisito RF-23) sono avversari con un nome, un avatar, un Elo, uno stile di gioco,
-un'apertura preferita e brevi frasi di reazione, sul modello dei bot di chess.com. Ogni bot è
+un'apertura preferita e brevi frasi di reazione. Ogni bot è
 costruito sopra uno degli 8 livelli del motore descritti in [avversario-computer.md](avversario-computer.md):
 la forza viene dal livello, la personalità dal resto. Sono in `lib/engine/bots.dart`.
 

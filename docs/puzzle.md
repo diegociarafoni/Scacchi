@@ -1,6 +1,6 @@
 # Puzzle
 
-Problemi tattici offline, sul modello dei puzzle di chess.com e Lichess (requisiti RF-80 – RF-85).
+Problemi tattici offline (requisiti RF-80 – RF-85).
 
 ## Dati
 
@@ -64,7 +64,7 @@ Il test `test/puzzles/puzzle_dataset_test.dart` verifica che ogni soluzione sia 
 
 - Il puzzle parte con la mossa dell'avversario già giocata; la scacchiera è orientata dal lato del giocatore.
 - Una mossa diversa dalla soluzione viene annullata con il messaggio "Non è la mossa giusta. Premi «Riprova» per ricominciare." e il puzzle conta come fallito, ma si può continuare a cercare.
-- All'ultima mossa è accettato anche un matto diverso da quello previsto, come su Lichess.
+- All'ultima mossa è accettato anche un matto diverso da quello previsto.
 - L'arrocco è riconosciuto sia come mossa del re di due case sia come re sulla torre.
 - **Suggerimento**: cerchia il pezzo da muovere; non fa fallire il puzzle.
 - **Soluzione**: gioca la mossa giusta al posto del giocatore e fa fallire il puzzle.
@@ -81,13 +81,13 @@ Il puzzle successivo è quello non ancora visto con difficoltà più vicina al p
 
 ## Puzzle del giorno (RF-84)
 
-Sostituisce il puzzle del giorno di chess.com senza server: l'indice è `(giorni dal 1970 × 7919) mod numero di puzzle`, uguale per tutti i dispositivi con la stessa versione della raccolta.
+Il puzzle del giorno non richiede un server: l'indice è `(giorni dal 1970 × 7919) mod numero di puzzle`, uguale per tutti i dispositivi con la stessa versione della raccolta.
 
 ## Obiettivo e regole di ogni modalità
 
 Ogni modalità spiega cosa fare, come si vince o si perde, tempo o vite e come si calcola il punteggio (`PuzzleGuide`, `lib/puzzles/mode_guide.dart`).
 
-- **Serie, Storm, Rush e Sopravvivenza**: prima di partire compare una schermata con l'**Obiettivo** e **Come si gioca**; il tempo parte solo con **Inizia** (e "Gioca ancora" a fine serie riparte senza ripetere la spiegazione). Il testo dell'obiettivo resta in cima durante il gioco.
+- **Serie, Combo a tempo, Corsa e Sopravvivenza**: prima di partire compare una schermata con l'**Obiettivo** e **Come si gioca**; il tempo parte solo con **Inizia** (e "Gioca ancora" a fine serie riparte senza ripetere la spiegazione). Il testo dell'obiettivo resta in cima durante il gioco.
 - **Allenamento, Per tema, Puzzle del giorno e Ripasso**: la spiegazione si apre da sola, in un pannello, la prima volta che si entra nella modalità (`puzzles.guides.v1` ricorda quelle già lette) e si riapre sempre dall'icona **Come funziona** nella barra del titolo. Nel profilo bambino non compare, perché è fatta di regole e numeri (le modalità a serie non sono disponibili in quel profilo).
 
 Durante il gioco l'avanzamento è sempre visibile:
@@ -102,11 +102,11 @@ I numeri citati nei testi (10 secondi, 3/5/7/10 secondi di bonus, intervalli del
 
 | Modalità | Tempo | Fine | Note |
 |---|---|---|---|
-| Puzzle Storm | 3 minuti | Allo scadere del tempo | Combo: +3 s a 5, +5 s a 12, +7 s a 20, +10 s a 30 e poi ogni 10; un errore toglie 10 s e azzera la combo |
-| Rush 3 minuti | 3 minuti | Tempo o tre errori | |
-| Rush 5 minuti | 5 minuti | Tempo o tre errori | |
+| Combo a tempo | 3 minuti | Allo scadere del tempo | Combo: +3 s a 5, +5 s a 12, +7 s a 20, +10 s a 30 e poi ogni 10; un errore toglie 10 s e azzera la combo |
+| Corsa 3 minuti | 3 minuti | Tempo o tre errori | |
+| Corsa 5 minuti | 5 minuti | Tempo o tre errori | |
 | Sopravvivenza | Nessuno | Tre errori | |
-| Serie (Streak) | Nessuno | Primo errore | Un solo salto consentito |
+| Serie | Nessuno | Primo errore | Un solo salto consentito |
 
 In tutte le modalità la difficoltà cresce: il puzzle numero *n* è scelto a caso tra quelli con punteggio in `[600 + 60·n, 600 + 60·n + 40)`, mai ripetuto nella stessa serie. Il passo (60) è più ampio della finestra (40), così ogni puzzle è più difficile del precedente; se la finestra è vuota si prende il primo puzzle più difficile e, in cima alla raccolta, il più difficile rimasto. La ricerca usa l'ordinamento per punteggio (ricerca binaria), senza scorrere tutta la raccolta a ogni mossa. Un errore fa passare subito al puzzle successivo. Le serie non modificano il punteggio puzzle.
 
@@ -116,7 +116,7 @@ Il modello è `lib/puzzles/puzzle_run.dart`, la schermata `lib/puzzles/puzzle_ru
 
 ## Ripasso degli errori (RF-85)
 
-Ogni puzzle sbagliato nell'allenamento, anche se già visto, entra in una coda di ripasso a intervalli crescenti, sul modello di Chess Tempo (sistema di Leitner, `lib/puzzles/review_queue.dart`):
+Ogni puzzle sbagliato nell'allenamento, anche se già visto, entra in una coda di ripasso a intervalli crescenti (sistema di Leitner, `lib/puzzles/review_queue.dart`):
 
 | Livello | Torna dopo |
 |---|---|

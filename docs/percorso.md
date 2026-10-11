@@ -1,6 +1,6 @@
 # Percorso a tappe
 
-Requisito RG-03: una mappa di capitoli e tappe sul modello di Duolingo e del modulo "Impara" di Lichess, con valutazione da 1 a 3 stelle. Il codice è in `lib/path/`.
+Requisito RG-03: una mappa di capitoli e tappe con valutazione da 1 a 3 stelle. Il codice è in `lib/path/`.
 
 ## Capitoli
 
@@ -10,8 +10,8 @@ Requisito RG-03: una mappa di capitoli e tappe sul modello di Duolingo e del mod
 | Le regole | Lo scacco, via dallo scacco (spostare il re, catturare, mettere in mezzo), l'arrocco, la presa al varco, la promozione, lo stallo |
 | Matti elementari | Matto in una (primi esempi), il matto del corridoio (con la donna e attirando via il difensore), donna e re, le torri a scala in due mosse, matti famosi (Anastasia, arabo, Boden, Damiano), matto in due (anche il matto affogato con sacrificio di donna), guardiano (400 Elo) |
 | Tattiche | Pezzi indifesi, forchetta (cavallo, pedone, forchetta reale, donna), inchiodatura, infilata (torre e alfiere), attacco di scoperta, scacco doppio, elimina il difensore, guardiano (800) |
-| Finali | Matto di donna, matto di torre, guardiano (1000) |
-| Aperture | Il centro, lo sviluppo (con la Partita Italiana), l'arrocco, guardiano (1200) |
+| Finali | Matto di donna, matto di torre, la regola del quadrato, l'opposizione, lo sfondamento, guardiano (1000) |
+| Aperture | Il centro, lo sviluppo (con la Partita Italiana), l'arrocco, il matto del barbiere (darlo e pararlo), guardiano (1200) |
 
 Ogni tappa è breve (2-5 minuti) e si apre con una spiegazione di due o tre frasi, scritta in modo semplice perché valga anche per il profilo bambino; la scacchiera accetta mosse solo dopo «Inizia». I contenuti sono originali (posizioni costruite per il progetto) e in italiano. Durante la stesura le posizioni tattiche sono state analizzate con Stockfish: la mossa richiesta è la migliore e la risposta automatica del Nero è una difesa ragionevole, non un errore che regala il punto. Il test automatico controlla legalità e matti, non la qualità delle risposte: chi aggiunge esercizi tattici ripete questa verifica.
 
@@ -27,7 +27,7 @@ La tappa vale la media delle stelle dei suoi esercizi, arrotondata per difetto.
 
 ## Bot guardiano
 
-L'ultima tappa dei capitoli dai Matti elementari in poi è una partita contro un bot dell'Elo indicato. `PathPage` riceve `playGuardian`, che gioca la partita e restituisce le stelle (o `null` se non vinta). Il percorso si apre dalla scheda Tu e, dove gira Stockfish (Android e iOS), toccare il guardiano apre una partita già impostata: l'utente ha il Bianco, il livello è quello del motore con l'Elo più vicino a quello del guardiano (`engineLevelForElo`), senza orologio, e non si possono ricominciare, usare l'editor, il coach o l'analisi; **Annulla** funziona (`GameChallenge.allowUndo`), perché il guardiano è allenamento, mentre nelle partite dei tornei resta disattivato. Uscire a partita in corso chiede conferma e conta come persa; dopo una sconfitta si riprova riaprendo la tappa. I livelli del motore partono da 600 Elo, quindi il guardiano da 400 gioca al livello 1 (600) e quello da 1000 al livello 2 (900): il livello effettivo è scritto sotto il titolo. Altrove la tappa mostra un avviso.
+L'ultima tappa dei capitoli dai Matti elementari in poi è una partita contro un bot dell'Elo indicato. `PathPage` riceve `playGuardian`, che gioca la partita e restituisce le stelle (o `null` se non vinta). Il percorso si apre dalla scheda Tu e, dove gira Stockfish (Android e iOS, o Windows e Linux con Stockfish installato), toccare il guardiano apre una partita già impostata: l'utente ha il Bianco, il livello è quello del motore con l'Elo più vicino a quello del guardiano (`engineLevelForElo`), senza orologio, e non si possono ricominciare, usare l'editor, il coach o l'analisi; **Annulla** funziona (`GameChallenge.allowUndo`), perché il guardiano è allenamento, mentre nelle partite dei tornei resta disattivato. Uscire a partita in corso chiede conferma e conta come persa; dopo una sconfitta si riprova riaprendo la tappa. I livelli del motore partono da 600 Elo, quindi il guardiano da 400 gioca al livello 1 (600) e quello da 1000 al livello 2 (900): il livello effettivo è scritto sotto il titolo. Altrove la tappa mostra un avviso.
 
 Stelle (`challengeStars`): vittoria in al massimo 40 mosse 3 stelle, fino a 60 mosse 2, oltre 1; patta e sconfitta non ne danno e si può riprovare. La partita registra XP e archivio come le altre (vedi [gamification.md](gamification.md)). Il percorso non si completa col guardiano: le stelle restano le migliori ottenute.
 

@@ -92,7 +92,10 @@ List<MistakePuzzle> puzzlesFromReview(
         moves: [previous.move, ...solution],
         rating: mateIn != null ? 800 + 300 * mateIn : 900 + 200 * playerMoves,
         themes: {
-          if (mateIn != null) 'mateIn$mateIn' else ...?_themes[comment?.theme],
+          if (mateIn != null)
+            'mateIn$mateIn'
+          else
+            ...?(comment == null ? null : lichessThemes(comment.theme)),
           _phaseTheme(start),
         },
         explanation: comment?.text,
@@ -128,11 +131,15 @@ List<Move> _solution(
   return moves;
 }
 
+/// Temi Lichess del puzzle nato da un errore con questo tema del coach.
+Set<String> lichessThemes(CoachTheme theme) => _themes[theme] ?? const {};
+
 const _themes = {
   CoachTheme.allowedMate: {'defensiveMove'},
   CoachTheme.hangingPiece: {'defensiveMove'},
   CoachTheme.allowedFork: {'defensiveMove'},
   CoachTheme.allowedPin: {'defensiveMove'},
+  CoachTheme.exposedKing: {'defensiveMove'},
   CoachTheme.materialLoss: {'defensiveMove'},
   CoachTheme.missedCapture: {'hangingPiece'},
   CoachTheme.missedFork: {'fork'},

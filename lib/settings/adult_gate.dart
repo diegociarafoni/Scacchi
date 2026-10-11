@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
 
-/// Domanda per adulti prima di uscire dal profilo bambino (RP-06), come il
-/// controllo genitori di ChessKid: una moltiplicazione che un bambino piccolo
-/// non risolve al volo. Restituisce true se la risposta è giusta.
+/// Domanda per adulti prima di uscire dal profilo bambino (RP-06): una
+/// moltiplicazione che un bambino piccolo non risolve al volo. Restituisce
+/// true se la risposta è giusta.
 Future<bool> askAdult(BuildContext context, {math.Random? random}) async {
   final r = random ?? math.Random();
   final a = 6 + r.nextInt(4);

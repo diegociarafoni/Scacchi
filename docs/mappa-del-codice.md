@@ -11,6 +11,7 @@ Ogni cartella di `lib/` ha qui il documento che descrive le sue funzioni. La tab
 | `lib/backup/` | [backup.md](backup.md) | Backup e ripristino dei dati locali |
 | `lib/coach/` | [allenatore.md](allenatore.md) | Partita con l'allenatore: avvisi, ripresa della mossa, suggerimenti |
 | `lib/editor/` | [editor-posizione.md](editor-posizione.md) | Editor di posizione e FEN |
+| `lib/endgames/` | [finali.md](finali.md) | Allenatore dei finali: posizioni teoriche, esito, stelle, ripetizione |
 | `lib/engine/` | [avversario-computer.md](avversario-computer.md), [bot.md](bot.md) | Motore Stockfish, livelli, bot con personalità |
 | `lib/exchange/` | [scambio-qr.md](scambio-qr.md) | Scambio di partite tra telefoni con il QR, senza rete |
 | `lib/game/` | [regole-di-gioco.md](regole-di-gioco.md), [interfaccia.md](interfaccia.md), [avversario-computer.md](avversario-computer.md) | Stato della partita, varianti, orologio, suoni, schermata di gioco |

@@ -1,12 +1,27 @@
 import 'dart:convert';
 import 'dart:io';
 
-/// Errore di un backup illeggibile o non compatibile.
+/// Motivo per cui un backup viene rifiutato.
+enum BackupProblem {
+  notApp,
+  newerVersion,
+  unexpectedFile,
+  invalidFile,
+  invalidPreference,
+  unreadable,
+}
+
+/// Errore di un backup illeggibile o non compatibile; [detail] è il file o la
+/// preferenza coinvolta, se c'è.
 class BackupException implements FormatException {
-  BackupException(this.message);
+  BackupException(this.problem, [this.detail]);
+
+  final BackupProblem problem;
+  final String? detail;
 
   @override
-  final String message;
+  String get message =>
+      detail == null ? problem.name : '${problem.name}: $detail';
 
   @override
   dynamic get source => null;
@@ -73,22 +88,22 @@ class Backup {
     try {
       final json = jsonDecode(text) as Map<String, Object?>;
       if (json['app'] != _app) {
-        throw BackupException('Non è un backup di Rokko');
+        throw BackupException(BackupProblem.notApp);
       }
       final version = json['version'];
       if (version is! int || version < 1 || version > _version) {
-        throw BackupException('Backup creato da una versione più recente');
+        throw BackupException(BackupProblem.newerVersion);
       }
       final files = <String, String>{};
       for (final e in ((json['files'] ?? {}) as Map<String, Object?>).entries) {
         if (!dataFiles.contains(e.key)) {
-          throw BackupException('File inatteso nel backup: ${e.key}');
+          throw BackupException(BackupProblem.unexpectedFile, e.key);
         }
         final content = e.value! as String;
         final stored = jsonDecode(content) as Map<String, Object?>;
         final fileVersion = stored['version'];
         if (fileVersion is! int || fileVersion < 1) {
-          throw BackupException('File non valido nel backup: ${e.key}');
+          throw BackupException(BackupProblem.invalidFile, e.key);
         }
         files[e.key] = content;
       }
@@ -101,14 +116,16 @@ class Backup {
             v is num ||
             v is String ||
             (v is List && v.every((x) => x is String));
-        if (!simple) throw BackupException('Preferenza non valida: ${e.key}');
+        if (!simple) {
+          throw BackupException(BackupProblem.invalidPreference, e.key);
+        }
         preferences[e.key] = v is List ? List<String>.from(v) : v!;
       }
       return Backup(files: files, preferences: preferences);
     } on BackupException {
       rethrow;
     } on Object {
-      throw BackupException('Backup non leggibile');
+      throw BackupException(BackupProblem.unreadable);
     }
   }
 

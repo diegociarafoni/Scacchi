@@ -93,7 +93,7 @@ void main() {
     expect(find.text('Revisione della partita'), findsNothing);
     expect(
       find.text(
-        'La revisione richiede il motore, disponibile su Android e iOS.',
+        'La revisione richiede il motore: su Android e iOS è incluso, su Windows e Linux serve Stockfish installato.',
       ),
       findsOneWidget,
     );

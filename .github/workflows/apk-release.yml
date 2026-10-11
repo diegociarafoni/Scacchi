@@ -5,6 +5,11 @@ name: Rilascio APK
 on:
   push:
     tags: ['v*']
+  # Ogni CI verde su main aggiorna la pre-release "nightly" (link fisso, APK sempre l'ultima).
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
   workflow_dispatch:
     inputs:
       version:
@@ -15,12 +20,14 @@ on:
 permissions:
   contents: read
 
+# I nightly si sostituiscono a vicenda (conta solo l'ultimo main); le versioni numerate no.
 concurrency:
-  group: apk-release
-  cancel-in-progress: false
+  group: apk-release-${{ github.event_name == 'workflow_run' && 'nightly' || 'versione' }}
+  cancel-in-progress: ${{ github.event_name == 'workflow_run' }}
 
 jobs:
   release:
+    if: github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && github.event.workflow_run.head_repository.full_name == github.repository)
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
@@ -31,6 +38,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          # Per il nightly si compila il commit che la CI ha verificato.
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
           # La cronologia completa serve per il versionCode.
           fetch-depth: 0
 
@@ -38,7 +47,16 @@ jobs:
         id: version
         env:
           INPUT_VERSION: ${{ inputs.version }}
+          EVENT: ${{ github.event_name }}
         run: |
+          sha="$(git rev-parse HEAD)"
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+          if [ "$EVENT" = "workflow_run" ]; then
+            echo "tag=nightly" >> "$GITHUB_OUTPUT"
+            echo "name=nightly-${sha:0:7}" >> "$GITHUB_OUTPUT"
+            echo "code=$(git rev-list --count HEAD)" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           if [ "$GITHUB_REF_TYPE" = "tag" ]; then
             tag="$GITHUB_REF_NAME"
           elif [ -n "$INPUT_VERSION" ]; then
@@ -52,8 +70,8 @@ jobs:
           # Un tag esistente deve puntare al commit che si compila.
           if [ -n "$tag" ] && git rev-parse -q --verify "refs/tags/$tag" > /dev/null; then
             tagged="$(git rev-list -n1 "$tag")"
-            if [ "$tagged" != "$GITHUB_SHA" ]; then
-              echo "::error::$tag punta già a $tagged, non a $GITHUB_SHA"; exit 1
+            if [ "$tagged" != "$sha" ]; then
+              echo "::error::$tag punta già a $tagged, non a $sha"; exit 1
             fi
           fi
           name="${tag#v}"
@@ -67,8 +85,12 @@ jobs:
         id: ci
         env:
           GH_TOKEN: ${{ github.token }}
+          SHA: ${{ steps.version.outputs.sha }}
+          EVENT: ${{ github.event_name }}
         run: |
-          passed="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ci.yml --commit "$GITHUB_SHA" \
+          # Il nightly parte da una CI riuscita: nessun controllo da rifare.
+          if [ "$EVENT" = "workflow_run" ]; then echo "passed=true" >> "$GITHUB_OUTPUT"; exit 0; fi
+          passed="$(gh run list --repo "$GITHUB_REPOSITORY" --workflow ci.yml --commit "$SHA" \
             --status success --json databaseId --jq 'length' || echo 0)"
           echo "passed=$([ "${passed:-0}" -gt 0 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
 
@@ -134,13 +156,13 @@ jobs:
           flutter build apk --release --target-platform android-arm64 \
             --build-name="$BUILD_NAME" --build-number="$BUILD_NUMBER"
           mkdir -p dist
-          cp build/app/outputs/flutter-apk/app-release.apk dist/scacchi.apk
-          (cd dist && sha256sum scacchi.apk > scacchi.apk.sha256)
+          cp build/app/outputs/flutter-apk/app-release.apk dist/rokko.apk
+          (cd dist && sha256sum rokko.apk > rokko.apk.sha256)
 
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: steps.version.outputs.tag == ''
         with:
-          name: scacchi-apk
+          name: rokko-apk
           path: dist/
           retention-days: 7
 
@@ -150,6 +172,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
           TAG: ${{ steps.version.outputs.tag }}
+          SHA: ${{ steps.version.outputs.sha }}
           SIGNED: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' || secrets.ANDROID_SIGNING_SEED != '' }}
         run: |
           if [ "$SIGNED" = "true" ]; then
@@ -158,19 +181,42 @@ jobs:
             signing="Firmato con una chiave di debug generata dalla build: per installare una versione successiva bisogna prima disinstallare questa."
           fi
           cat > notes.md <<NOTES
-          Installazione su Android (telefoni a 64 bit): aprire dal telefono il file **scacchi.apk** qui sotto, consentire l'installazione da questa origine e confermare.
+          Installazione su Android (telefoni a 64 bit): aprire dal telefono il file **rokko.apk** qui sotto, consentire l'installazione da questa origine e confermare.
 
           $signing
 
           Istruzioni complete: docs/rilascio-android.md
           NOTES
-          if gh release view "$TAG" > /dev/null 2>&1; then
+          if [ "$TAG" = "nightly" ]; then
+            # Un CI più lento non deve sostituire un nightly più recente: si pubblica
+            # solo se il commit è ancora la punta di main.
+            tip="$(gh api "repos/$GH_REPO/commits/main" --jq .sha)"
+            if [ "$tip" != "$SHA" ]; then
+              echo "::notice::Nightly saltato: main è già avanzato a ${tip:0:7}"; exit 0
+            fi
+            cat > notes.md <<NOTES
+          Versione di prova aggiornata a ogni modifica di \`main\` che supera la CI (commit \`${SHA:0:7}\`). Si installa sopra qualunque versione firmata con la stessa chiave.
+
+          $signing
+
+          Per una versione stabile usare l'ultima release numerata.
+          NOTES
+            # La release resta la stessa (stesso indirizzo, nessuna notifica): cambiano file, tag e note.
+            if gh release view nightly > /dev/null 2>&1; then
+              gh release upload nightly dist/* --clobber
+              gh api -X PATCH "repos/$GH_REPO/git/refs/tags/nightly" -f sha="$SHA" -F force=true > /dev/null
+              gh release edit nightly --title "Rokko nightly ${SHA:0:7}" --notes-file notes.md
+            else
+              gh release create nightly dist/* --target "$SHA" --prerelease \
+                --title "Rokko nightly ${SHA:0:7}" --notes-file notes.md
+            fi
+          elif gh release view "$TAG" > /dev/null 2>&1; then
             # Il passo Versione ha già verificato che il tag punti a questo commit.
             gh release upload "$TAG" dist/* --clobber
           else
             prerelease=""
             # Le pre-release non compaiono in releases/latest: solo i tag con suffisso lo sono.
             case "$TAG" in *-*) prerelease="--prerelease" ;; esac
-            gh release create "$TAG" dist/* --target "$GITHUB_SHA" \
-              --title "Scacchi ${TAG#v}" --notes-file notes.md $prerelease
+            gh release create "$TAG" dist/* --target "$SHA" \
+              --title "Rokko ${TAG#v}" --notes-file notes.md $prerelease
           fi

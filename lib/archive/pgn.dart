@@ -1,6 +1,7 @@
 import 'package:dartchess/dartchess.dart';
 
 import '../game/chess_game.dart';
+import '../game/move_note.dart';
 import '../game/variant.dart';
 
 /// Partita letta da un PGN, con le sue intestazioni.
@@ -50,12 +51,16 @@ String exportPgn(ChessGame game, {Map<String, String> headers = const {}}) {
   PgnNode<PgnNodeData> node = root;
   for (final m in game.moves) {
     final clock = m.clock;
+    final note = m.note;
+    final text = note?.comment;
+    final symbol = note?.symbol;
     final child = PgnChildNode(
       PgnNodeData(
         san: m.san,
-        comments: clock == null
+        comments: clock == null && text == null
             ? null
-            : [PgnComment(clock: clock).makeComment()],
+            : [PgnComment(text: text, clock: clock).makeComment()],
+        nags: symbol == null ? null : [symbol.nag],
       ),
     );
     node.children.add(child);
@@ -68,8 +73,8 @@ String exportPgn(ChessGame game, {Map<String, String> headers = const {}}) {
   ).makePgn();
 }
 
-/// Legge una o più partite; i commenti di testo e le varianti si ignorano,
-/// il tempo `[%clk]` di ogni mossa si conserva, una partita con
+/// Legge una o più partite; le varianti si ignorano, il tempo `[%clk]`, il
+/// commento e il simbolo (`!`, `?`…) di ogni mossa si conservano, una partita con
 /// mosse illegali, posizione non valida o variante non supportata viene
 /// scartata.
 PgnImport importPgn(String text) {
@@ -99,12 +104,14 @@ ChessGame? _replay(PgnGame<PgnNodeData> pgn) {
   }
   final moves = <Move>[];
   final clocks = <Duration?>[];
+  final notes = <MoveNote?>[];
   Position pos = initial;
   for (final data in pgn.moves.mainline()) {
     final move = pos.parseSan(data.san);
     if (move == null) return null;
     moves.add(move);
     clocks.add(_clockOf(data.comments));
+    notes.add(_noteOf(data));
     pos = pos.play(move);
   }
   final game = ChessGame.replay(
@@ -112,6 +119,7 @@ ChessGame? _replay(PgnGame<PgnNodeData> pgn) {
     moves,
     variant: variant,
     clocks: clocks,
+    notes: notes,
   );
   if (game != null && !game.isOver) {
     // Il risultato senza matto o patta sulla scacchiera è un abbandono o
@@ -135,4 +143,19 @@ Duration? _clockOf(List<String>? comments) {
     if (clock != null) return clock;
   }
   return null;
+}
+
+/// Simbolo (primo NAG di giudizio) e commenti di testo della mossa, se ci sono.
+MoveNote? _noteOf(PgnNodeData data) {
+  MoveSymbol? symbol;
+  for (final nag in data.nags ?? const <int>[]) {
+    symbol = MoveSymbol.fromNag(nag);
+    if (symbol != null) break;
+  }
+  final texts = [
+    for (final c in data.comments ?? const <String>[])
+      ?PgnComment.fromPgn(c).text?.trim(),
+  ].where((t) => t.isNotEmpty);
+  final note = MoveNote.of(symbol: symbol, comment: texts.join(' '));
+  return note.isEmpty ? null : note;
 }

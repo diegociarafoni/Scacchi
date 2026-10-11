@@ -95,7 +95,7 @@ I golden si rigenerano con `flutter test test/settings --update-goldens` dopo un
 | RF-20 colore e livello contro il computer | ✓ | ✓ |
 | RF-21 motore separato, scacchiera bloccata mentre pensa, ritardo artificiale | ✓ | ✓ |
 | Annullamento contro il computer (mossa e risposta) | | ✓ |
-| RP-05 italiano predefinito, struttura per altre lingue | ✓ | ✓ |
+| RP-05 italiano predefinito, struttura per altre lingue; testi di backup, minigiochi, statistiche e aiuto FEN già tradotti (chiavi e segnaposto uguali in it/en, pagine in inglese) | ✓ | ✓ |
 | RF-40, RF-41 cadenze, incremento, avvisi, tempo scaduto | ✓ | ✓ |
 | RF-40 orologio contro il computer, annullamento con orologio | | ✓ |
 | RP-03 suoni e vibrazione, RF-31 modalità tavolo | ✓ | ✓ |
@@ -113,9 +113,10 @@ I golden si rigenerano con `flutter test test/settings --update-goldens` dopo un
 | RF-52 esplorazione lineare con avanti e indietro | ✓ | |
 | RF-60 revisione completa con avanzamento e interruzione | ✓ | |
 | RF-61, RF-62 classificazione delle mosse, Brillante e Ottima | ✓ | |
+| RF-55 annotazioni (simbolo e commento) sulle mosse, conservate in import ed export PGN (modifica nell'interfaccia: da fare) | ✓ | |
 | RF-56 minaccia dell'avversario nell'analisi (nella partita con l'allenatore: da fare) | ✓ | ✓ |
 | RF-63 precisione, conteggi e stima della forza | ✓ | |
-| RF-67 tempo residuo a ogni mossa nel PGN (`[%clk]`, import ed export) | ✓ | |
+| RF-67 tempo residuo a ogni mossa nel PGN (`[%clk]`, import ed export), registrato in partita, tempo per mossa ed errori in fretta nella revisione | ✓ | |
 | RF-68 precisione per fase (apertura, mediogioco, finale) nella revisione | ✓ | ✓ |
 | RF-50 barra di valutazione con valore numerico | ✓ | |
 | RF-54 freccia della mossa migliore | ✓ | |
@@ -154,8 +155,9 @@ I golden si rigenerano con `flutter test test/settings --update-goldens` dopo un
 | RF-83 suggerimento, soluzione, filtro per tema | ✓ | ✓ |
 | RF-84 puzzle del giorno | ✓ | ✓ |
 | RG-01 XP per i puzzle risolti | ✓ | |
-| RF-82 Storm, Rush, sopravvivenza, Serie | ✓ | ✓ |
+| RF-82 Combo a tempo, corsa, sopravvivenza, serie | ✓ | ✓ |
 | RF-85 ripasso dei puzzle sbagliati | ✓ | |
+| RF-86 allenatore dei finali: esito, stelle, ripetizione | ✓ | |
 | RG-08 record personali delle serie | ✓ | ✓ |
 | RF-90 nome dell'apertura in partita | ✓ | ✓ |
 | RF-91 mosse di libro | ✓ | |

@@ -7,6 +7,8 @@ import 'package:scacchi/archive/game_archive.dart';
 import 'package:scacchi/archive/saved_game.dart';
 import 'package:scacchi/stats/stats_page.dart';
 
+import '../localized_app.dart';
+
 Future<void> settle(WidgetTester tester) async {
   for (var i = 0; i < 10; i++) {
     await tester.runAsync(
@@ -30,7 +32,7 @@ void main() {
     tester.view.physicalSize = const Size(1170, 2532);
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
-    await tester.pumpWidget(MaterialApp(home: StatsPage(archive: archive)));
+    await tester.pumpWidget(localizedApp(home: StatsPage(archive: archive)));
     await settle(tester);
   }
 

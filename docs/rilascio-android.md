@@ -1,6 +1,6 @@
 # Rilascio Android (APK)
 
-Il workflow `.github/workflows/apk-release.yml` compila un APK release per telefoni a 64 bit (arm64, cioè tutti i telefoni Android degli ultimi anni) e lo pubblica come allegato di una GitHub Release, scaricabile direttamente dal telefono. L'app installata si chiama **Rokko**; il file e l'identificativo del pacchetto (`io.github.diegociarafoni.scacchi`) restano `scacchi`, perché cambiarli impedirebbe l'aggiornamento sopra le versioni già installate.
+Il workflow `.github/workflows/apk-release.yml` compila un APK release per telefoni a 64 bit (arm64, cioè tutti i telefoni Android degli ultimi anni) e lo pubblica come allegato di una GitHub Release, scaricabile direttamente dal telefono. L'app installata si chiama **Rokko**; il file è `rokko.apk` (fino alla v0.4.0 si chiamava `scacchi.apk`). L'identificativo del pacchetto (`io.github.diegociarafoni.scacchi`) non cambia, altrimenti l'aggiornamento sopra le versioni già installate non sarebbe possibile.
 
 ## Versioni pubblicate
 
@@ -17,8 +17,9 @@ L'elenco completo con le note è nella pagina delle Release; lo stato delle funz
 
 | Evento | Risultato |
 |---|---|
-| Push di un tag `vX.Y.Z` | Build e Release `vX.Y.Z` con `scacchi.apk` e `scacchi.apk.sha256` |
+| Push di un tag `vX.Y.Z` | Build e Release `vX.Y.Z` con `rokko.apk` e `rokko.apk.sha256` |
 | Avvio manuale (Actions → Rilascio APK → Run workflow) con **version** = `X.Y.Z` | Crea il tag `vX.Y.Z` sul commit del branch scelto e pubblica la Release; se il tag esiste già su un altro commit si ferma |
+| CI verde su `main` (evento `workflow_run`) | Pre-release `nightly` con `rokko.apk`, ricreata a ogni main: sostituisce la precedente |
 | Avvio manuale con **version** vuoto | Solo build: l'APK resta per 7 giorni come artefatto dell'esecuzione |
 
 La versione mostrata dall'app (`versionName`) è quella del tag senza la `v`; il `versionCode` è il numero di commit nella cronologia del tag, quindi cresce a ogni versione successiva su `main`. Il rilascio parte solo se `flutter analyze` e `flutter test` passano, e un tag già esistente deve puntare al commit compilato.
@@ -26,8 +27,23 @@ La versione mostrata dall'app (`versionName`) è quella del tag senza la `v`; il
 I tag con suffisso (`v1.2.0-beta.1`) diventano pre-release. Gli altri sono la "latest release", per cui questo link porta sempre all'ultima versione stabile:
 
 ```
-https://github.com/diegociarafoni/Scacchi/releases/latest/download/scacchi.apk
+https://github.com/diegociarafoni/rokko/releases/latest/download/rokko.apk
 ```
+
+## Nightly a ogni merge
+
+Ogni volta che la CI passa su `main`, il workflow compila l'APK firmato e ricrea la pre-release **nightly** (nome `Rokko nightly <commit>`). Il link non cambia mai e porta sempre all'ultimo `main` verificato:
+
+```
+https://github.com/diegociarafoni/rokko/releases/download/nightly/rokko.apk
+```
+
+- È firmata con la stessa chiave delle versioni numerate, quindi si installa sopra di esse e viceversa; il `versionCode` cresce con i commit di `main`, perciò Android accetta l'aggiornamento (le versioni numerate vanno pubblicate da `main`).
+- Parte solo dopo una CI riuscita su un evento `push` di `main` e non rifà analisi e test.
+- Più merge ravvicinati non si accodano: resta solo l'ultima esecuzione, e un nightly non sostituisce mai uno più recente (si pubblica solo se il commit è ancora la punta di `main`).
+- La release è sempre la stessa: a ogni merge cambiano file, commit e note, non l'indirizzo, e non partono notifiche.
+- Non compare in `releases/latest`, che resta l'ultima versione numerata.
+- Se la CI di `main` è rossa non esce nessun nightly: l'ultimo resta disponibile.
 
 ## Minuti di GitHub Actions
 
@@ -44,7 +60,7 @@ Per un telefono a 32 bit si può compilare a mano un APK universale togliendo `-
 
 ## Frequenza dei rilasci
 
-Per risparmiare minuti di Actions si pubblica a blocchi, non a ogni funzione:
+Le versioni numerate escono a blocchi (il nightly copre l'uso quotidiano):
 
 - **Regola predefinita**: una nuova versione solo quando `main` ha accumulato almeno circa 5 PR di funzionalità dall'ultima, oppure quando il responsabile del progetto la chiede.
 - Le correzioni urgenti (un difetto che impedisce di usare l'app) possono uscire prima, come versione di correzione (`0.3.1`).
@@ -63,11 +79,11 @@ In alternativa, dall'interfaccia di GitHub con l'avvio manuale descritto sopra.
 
 ## Installare sul telefono
 
-1. Dal browser del telefono aprire la pagina della Release (o il link qui sopra) e toccare **scacchi.apk**. Se il repository è privato serve essere collegati a GitHub nel browser.
+1. Dal browser del telefono aprire la pagina della Release (o il link qui sopra) e toccare **rokko.apk**. Se il repository è privato serve essere collegati a GitHub nel browser.
 2. Aprire il file scaricato. Android chiede di consentire l'installazione di app da questa origine (il browser o il gestore file): consentirla e tornare indietro.
 3. Toccare **Installa**. Google Play Protect può segnalare un'app di sviluppatore sconosciuto: scegliere **Installa comunque**.
 
-Per verificare l'integrità del file: `sha256sum -c scacchi.apk.sha256`.
+Per verificare l'integrità del file: `sha256sum -c rokko.apk.sha256`.
 
 ## Firma
 
@@ -85,7 +101,7 @@ La build sceglie la chiave in quest'ordine:
 `tool/derive_keystore.py` ricava dalla frase, in modo deterministico, una chiave RSA a 3072 bit e un certificato sempre identico (scrypt sulla frase, numeri primi da un flusso SHAKE-256, campi del certificato fissi e firma PKCS#1 v1.5). Stessa frase, stesso certificato: non c'è nessun file da conservare o caricare, e la copia di sicurezza è la frase stessa.
 
 1. Generare una frase casuale lunga (almeno 32 caratteri, meglio 40 o più) con il generatore di un gestore di password e salvarla lì. Non usare una frase inventata o una citazione: il certificato pubblico di ogni APK permette di provare frasi a tentativi, e chi la indovina può firmare aggiornamenti dell'app. Spazi iniziali e finali sono ignorati.
-2. Aprire https://github.com/diegociarafoni/Scacchi/settings/secrets/actions, toccare **New repository secret**, nome `ANDROID_SIGNING_SEED`, valore la frase, **Add secret**. Funziona anche dal browser del telefono.
+2. Aprire https://github.com/diegociarafoni/rokko/settings/secrets/actions, toccare **New repository secret**, nome `ANDROID_SIGNING_SEED`, valore la frase, **Add secret**. Funziona anche dal browser del telefono.
 3. Pubblicare una nuova versione. Chi aveva installato una versione firmata con la chiave di debug deve disinstallarla una volta; da lì in poi gli aggiornamenti si installano sopra.
 
 L'impronta SHA-256 del certificato compare nel log del passo "Build APK release firmato", nella riga `Certificato SHA-256: …` stampata da `tool/derive_keystore.py`. Cambiare la frase, o il sale `SALT` nello script, cambia la chiave e richiede di nuovo una disinstallazione. Per una build locale firmata:
@@ -105,7 +121,7 @@ Serve il pacchetto Python `cryptography`. Su Google Play questa chiave si usa co
 1. Generare il keystore, una volta sola, e conservarlo con le password in un luogo sicuro (perderlo impedisce di aggiornare l'app):
 
    ```bash
-   keytool -genkeypair -v -keystore scacchi-release.jks -keyalg RSA -keysize 4096 \
+   keytool -genkeypair -v -keystore rokko-release.jks -keyalg RSA -keysize 4096 \
      -validity 10000 -alias scacchi
    ```
 
@@ -113,7 +129,7 @@ Serve il pacchetto Python `cryptography`. Su Google Play questa chiave si usa co
 
    | Segreto | Valore |
    |---|---|
-   | `ANDROID_KEYSTORE_BASE64` | output di `base64 -w0 scacchi-release.jks` |
+   | `ANDROID_KEYSTORE_BASE64` | output di `base64 -w0 rokko-release.jks` |
    | `ANDROID_KEYSTORE_PASSWORD` | password del keystore |
    | `ANDROID_KEY_ALIAS` | `scacchi` (l'alias scelto) |
    | `ANDROID_KEY_PASSWORD` | password della chiave |
@@ -127,7 +143,7 @@ Il keystore non va mai aggiunto al repository: `android/.gitignore` esclude `*.j
 `android/app/build.gradle.kts` legge la chiave dalle stesse variabili d'ambiente; senza `ANDROID_KEYSTORE_PATH` firma con la chiave di debug locale.
 
 ```bash
-export ANDROID_KEYSTORE_PATH=$HOME/scacchi-release.jks
+export ANDROID_KEYSTORE_PATH=$HOME/rokko-release.jks
 export ANDROID_KEYSTORE_PASSWORD=... ANDROID_KEY_ALIAS=scacchi ANDROID_KEY_PASSWORD=...
 flutter build apk --release
 ```
