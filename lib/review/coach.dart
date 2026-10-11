@@ -1,5 +1,6 @@
 import 'package:dartchess/dartchess.dart';
 
+import '../l10n/app_localizations.dart';
 import 'board_utils.dart';
 import 'game_review.dart';
 import 'move_classification.dart';
@@ -30,19 +31,25 @@ class CoachComment {
 /// Spiegazione breve della mossa, generata localmente con regole a modello
 /// (RF-70, RF-71). [previous] è la mossa precedente dell'avversario, per
 /// riconoscere una ripresa mancata. `null` se mancano i dati per spiegarla.
-CoachComment? explainMove(MoveReview m, {MoveReview? previous}) {
+/// Con [kid] (profilo bambino, RP-06) le frasi che citano numeri del motore
+/// («matto in N», «circa N pedoni») diventano versioni senza cifre.
+CoachComment? explainMove(
+  MoveReview m, {
+  MoveReview? previous,
+  AppLocalizations? kid,
+}) {
   final c = m.classification;
   if (!c.isError) return CoachComment(CoachTheme.praise, _praise[c]!);
 
   final before = Chess.fromSetup(Setup.parseFen(m.fenBefore));
   final after = before.play(m.move);
 
-  return _allowedMate(m, after) ??
-      _missedMate(m) ??
+  return _allowedMate(m, after, kid) ??
+      _missedMate(m, kid) ??
       _hanging(before, after, m.replyLine) ??
       _allowedFork(after, m.replyLine) ??
       _missedTactic(before, m, previous) ??
-      _materialLoss(before, after, m.replyLine) ??
+      _materialLoss(before, after, m.replyLine, kid) ??
       // Una inchiodatura è un danno più lieve: non copre perdite concrete.
       _allowedPin(after, m.replyLine) ??
       (m.bestSan == null
@@ -63,18 +70,24 @@ const _praise = {
   MoveClass.book: 'Mossa della teoria delle aperture.',
 };
 
-CoachComment? _allowedMate(MoveReview m, Position after) {
+CoachComment? _allowedMate(
+  MoveReview m,
+  Position after,
+  AppLocalizations? kid,
+) {
   final mate = m.replyScore?.mate;
   final reply = parseEngineMove(after, m.replyLine.firstOrNull);
   if (mate == null || mate <= 0 || reply == null) return null;
+  final replySan = after.makeSan(reply).$2;
   return CoachComment(
     CoachTheme.allowedMate,
-    'Dopo ${m.san} il ${_sideName(after.turn)} dà matto in $mate con '
-    '${after.makeSan(reply).$2}.',
+    kid?.kidCoachAllowedMate(m.san, replySan) ??
+        'Dopo ${m.san} il ${_sideName(after.turn)} dà matto in $mate con '
+            '$replySan.',
   );
 }
 
-CoachComment? _missedMate(MoveReview m) {
+CoachComment? _missedMate(MoveReview m, AppLocalizations? kid) {
   final mate = m.bestScore?.mate;
   if (mate == null || mate <= 0 || m.bestSan == null) return null;
   // Ha ancora il matto, solo più lungo: non è un matto mancato.
@@ -82,7 +95,8 @@ CoachComment? _missedMate(MoveReview m) {
   if (replyMate != null && replyMate < 0) return null;
   return CoachComment(
     CoachTheme.missedMate,
-    'Avevi il matto in $mate con ${m.bestSan}.',
+    kid?.kidCoachMissedMate(m.bestSan!) ??
+        'Avevi il matto in $mate con ${m.bestSan}.',
   );
 }
 
@@ -247,6 +261,7 @@ CoachComment? _materialLoss(
   Position before,
   Position after,
   List<String> reply,
+  AppLocalizations? kid,
 ) {
   final me = before.turn;
   var pos = after;
@@ -259,8 +274,9 @@ CoachComment? _materialLoss(
   if (lost < 2) return null;
   return CoachComment(
     CoachTheme.materialLoss,
-    'Questa mossa perde materiale: circa $lost pedoni nella variante '
-    'prevista.',
+    kid?.kidCoachMaterialLoss ??
+        'Questa mossa perde materiale: circa $lost pedoni nella variante '
+            'prevista.',
   );
 }
 

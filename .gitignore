@@ -47,5 +47,8 @@ app.*.map.json
 # Widget Preview related
 .widget_preview/
 
+# Copie di lavoro degli agenti di Claude Code: mai nei commit
+/.claude/worktrees/
+
 # Artefatti dei golden falliti
 **/failures/

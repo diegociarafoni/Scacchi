@@ -113,6 +113,8 @@ Punteggio, puzzle visti, contatori, coda di ripasso (`puzzles.review.v1`) e reco
 
 Ogni puzzle nuovo portato a termine dal giocatore, anche dopo un tentativo sbagliato, registra un `PuzzleSolved` con temi, punteggio aggiornato e durata nel `ProgressController` (XP, obiettivo giornaliero "5 puzzle", traguardi) e mostra la notifica `showProgressFeedback`. Un puzzle concluso con "Soluzione" non vale XP. Nelle modalità a serie i puzzle risolti e un `PuzzleRunFinished` (modalità e punteggio) vengono registrati a fine serie, con un'unica notifica riassuntiva; anche i puzzle del ripasso valgono XP, perché arrivano solo alla scadenza e non si possono ripetere a piacere. Gli XP premiano l'impegno, come le partite perse (RG-01): per questo un puzzle risolto dopo un errore vale XP anche se per il punteggio conta come fallito. Il collegamento passa da `HomeShell`, che apre i progressi alla prima attività, alle schermate tramite il parametro `onActivity` (`lib/puzzles/activity_recorder.dart`).
 
+Nel profilo bambino (RP-06) l'hub e la pagina del puzzle non mostrano punteggio, difficoltà e contatori e le modalità a tempo sono nascoste: vedi [profilo-bambino.md](profilo-bambino.md#niente-numeri).
+
 ## Navigazione
 
 L'app ha una barra di navigazione in basso (`lib/home/home_shell.dart`) con le schede **Gioca**, **Puzzle** e **Aperture**. I puzzle vengono caricati solo alla prima apertura della scheda, così l'avvio dell'app non rallenta.
