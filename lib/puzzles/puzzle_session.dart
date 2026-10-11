@@ -27,6 +27,9 @@ class PuzzleSession {
   /// Vero se almeno una mossa è stata mostrata con "Soluzione".
   bool get revealed => _revealed;
 
+  /// Vero se è stata giocata almeno una mossa sbagliata.
+  bool get mistake => _mistake;
+
   /// Vero se il puzzle è stato risolto senza errori e senza vedere la soluzione.
   bool get firstTry => !_mistake && !_revealed;
 
