@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:chessground/chessground.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/material.dart';
 import '../settings/settings.dart';
 import '../settings/settings_page.dart';
 import 'chess_game.dart';
+import 'clock.dart';
 import 'material.dart';
 
 /// Partita tra due persone sullo stesso dispositivo.
@@ -19,12 +21,17 @@ class GamePage extends StatefulWidget {
   State<GamePage> createState() => _GamePageState();
 }
 
-class _GamePageState extends State<GamePage> {
+class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   ChessGame _game = ChessGame();
   late final ChessboardController _board = ChessboardController(
     game: _gameData(),
   );
   Side _orientation = Side.white;
+  ChessClock? _clock;
+  Timer? _ticker;
+  Side? _pausedInBackground;
+  final List<Map<Side, Duration>> _clockHistory = [];
+  final ValueNotifier<int> _tick = ValueNotifier(0);
 
   AppSettings get _settings => widget.settings.value;
 
@@ -34,6 +41,25 @@ class _GamePageState extends State<GamePage> {
   void initState() {
     super.initState();
     widget.settings.addListener(_onSettingsChanged);
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    final clock = _clock;
+    if (clock == null) return;
+    if (state == AppLifecycleState.resumed) {
+      final side = _pausedInBackground;
+      _pausedInBackground = null;
+      if (side != null && !_game.isOver) clock.start(side);
+      _syncClock();
+    } else if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.hidden) {
+      if (clock.isRunning) {
+        _pausedInBackground = clock.active;
+        clock.pause();
+      }
+    }
   }
 
   @override
@@ -49,6 +75,9 @@ class _GamePageState extends State<GamePage> {
   @override
   void dispose() {
     widget.settings.removeListener(_onSettingsChanged);
+    WidgetsBinding.instance.removeObserver(this);
+    _ticker?.cancel();
+    _tick.dispose();
     _board.dispose();
     super.dispose();
   }
@@ -74,6 +103,7 @@ class _GamePageState extends State<GamePage> {
   }
 
   void _refresh({bool animate = true}) {
+    _syncClock();
     _board.updatePosition(_gameData(), animate: animate, resetPremove: true);
     setState(() {
       if (_settings.autoFlip) _orientation = _game.position.turn;
@@ -81,7 +111,64 @@ class _GamePageState extends State<GamePage> {
   }
 
   void _onMove(Move move, {bool? viaDragAndDrop}) {
-    if (_game.play(move)) _refresh(animate: viaDragAndDrop != true);
+    final clock = _clock;
+    final flagged = clock?.flagged;
+    if (flagged != null) {
+      _game.flag(flagged);
+      _refresh(animate: false);
+      return;
+    }
+    final before = clock?.snapshot();
+    if (!_game.play(move)) return;
+    if (clock != null) {
+      _clockHistory.add(before!);
+      if (clock.isRunning) {
+        clock.switchAfterMove();
+      } else {
+        clock.start(_game.position.turn);
+      }
+    }
+    _refresh(animate: viaDragAndDrop != true);
+  }
+
+  /// Ferma l'orologio a fine partita e aggiorna il timer di visualizzazione.
+  void _syncClock() {
+    final clock = _clock;
+    if (clock != null && _game.isOver) clock.pause();
+    if (clock != null && clock.isRunning) {
+      _ticker ??= Timer.periodic(const Duration(milliseconds: 100), _onTick);
+    } else {
+      _ticker?.cancel();
+      _ticker = null;
+    }
+  }
+
+  void _onTick(Timer _) {
+    final flagged = _clock?.flagged;
+    if (flagged != null && !_game.isOver) {
+      _game.flag(flagged);
+      _refresh(animate: false);
+    } else {
+      _tick.value++;
+    }
+  }
+
+  /// Esegue [action] con l'orologio fermo, poi lo riavvia se la partita continua.
+  Future<T> _withClockPaused<T>(Future<T> Function() action) async {
+    final clock = _clock;
+    final side = clock?.active;
+    clock?.pause();
+    try {
+      return await action();
+    } finally {
+      if (mounted &&
+          side != null &&
+          identical(clock, _clock) &&
+          !_game.isOver) {
+        clock!.start(side);
+        _syncClock();
+      }
+    }
   }
 
   /// Chiude selezione e selettore di promozione rimasti aperti sulla scacchiera.
@@ -98,35 +185,61 @@ class _GamePageState extends State<GamePage> {
     );
   }
 
-  void _newGame() {
+  Future<void> _newGame() async {
+    final choice = await _withClockPaused(
+      () => showModalBottomSheet<_TimeChoice>(
+        context: context,
+        builder: (context) => const _TimeControlSheet(),
+      ),
+    );
+    if (!mounted || choice == null) return;
     _game = ChessGame();
+    _clock = choice.control == null ? null : ChessClock(choice.control!);
+    _clockHistory.clear();
     _clearBoardInteraction();
     _refresh(animate: false);
   }
 
   void _undo() {
+    final clock = _clock;
+    final timedOut = _game.endReason == GameEndReason.timeout;
+    final revokesOnly = const {
+      GameEndReason.resignation,
+      GameEndReason.agreement,
+    }.contains(_game.endReason);
     _game.undo();
+    if (timedOut) _game.undo();
+    if (clock != null && !revokesOnly) {
+      final before = _clockHistory.isEmpty ? null : _clockHistory.removeLast();
+      if (before != null) {
+        clock.restore(before, _game.moves.isEmpty ? null : _game.position.turn);
+      }
+    } else if (clock != null && revokesOnly && _game.moves.isNotEmpty) {
+      clock.start(_game.position.turn);
+    }
     _clearBoardInteraction();
     _refresh(animate: false);
   }
 
   Future<void> _resign() async {
     final side = _game.position.turn;
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Abbandonare la partita?'),
-        content: Text('Abbandona il ${_sideName(side)}.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Annulla'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Abbandona'),
-          ),
-        ],
+    final confirmed = await _withClockPaused(
+      () => showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Abbandonare la partita?'),
+          content: Text('Abbandona il ${_sideName(side)}.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Annulla'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('Abbandona'),
+            ),
+          ],
+        ),
       ),
     );
     if (!mounted) return;
@@ -138,20 +251,22 @@ class _GamePageState extends State<GamePage> {
 
   Future<void> _offerDraw() async {
     final opponent = _game.position.turn.opposite;
-    final accepted = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Il ${_sideName(opponent)} accetta la patta?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Rifiuta'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Accetta'),
-          ),
-        ],
+    final accepted = await _withClockPaused(
+      () => showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Il ${_sideName(opponent)} accetta la patta?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Rifiuta'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('Accetta'),
+            ),
+          ],
+        ),
       ),
     );
     if (!mounted) return;
@@ -159,6 +274,19 @@ class _GamePageState extends State<GamePage> {
       _game.agreeDraw();
       _refresh(animate: false);
     }
+  }
+
+  Widget? _clockView(Side side) {
+    final clock = _clock;
+    if (clock == null) return null;
+    return ListenableBuilder(
+      listenable: _tick,
+      builder: (context, _) => _ClockView(
+        side: side,
+        remaining: clock.remaining(side),
+        active: clock.active == side,
+      ),
+    );
   }
 
   @override
@@ -214,11 +342,13 @@ class _GamePageState extends State<GamePage> {
               balance: balance,
               side: _orientation.opposite,
               pieceAssets: boardSettings.pieceAssets,
+              clock: _clockView(_orientation.opposite),
             );
             final bottomMaterial = _MaterialRow(
               balance: balance,
               side: _orientation,
               pieceAssets: boardSettings.pieceAssets,
+              clock: _clockView(_orientation),
             );
             if (landscape) {
               return Row(
@@ -269,7 +399,7 @@ class _GamePageState extends State<GamePage> {
 const double _moveStripHeight = 40;
 const double _statusHeight = 48;
 const double _actionsHeight = 72;
-const double _materialHeight = 28;
+const double _materialHeight = 36;
 const double _portraitChromeHeight =
     _moveStripHeight + _statusHeight + _actionsHeight + 2 * _materialHeight;
 
@@ -291,6 +421,10 @@ String statusText(ChessGame game) {
     GameEndReason.threefoldRepetition => 'Triplice ripetizione. Patta.',
     GameEndReason.fiftyMoveRule => 'Regola delle 50 mosse. Patta.',
     GameEndReason.agreement => 'Patta concordata.',
+    GameEndReason.timeout =>
+      game.outcome!.winner == null
+          ? 'Tempo scaduto. Patta per materiale insufficiente.'
+          : 'Tempo scaduto. Vince il ${_sideName(game.outcome!.winner!)}.',
   };
 }
 
@@ -429,11 +563,13 @@ class _MaterialRow extends StatelessWidget {
     required this.balance,
     required this.side,
     required this.pieceAssets,
+    this.clock,
   });
 
   final MaterialBalance balance;
   final Side side;
   final PieceAssets pieceAssets;
+  final Widget? clock;
 
   @override
   Widget build(BuildContext context) {
@@ -447,42 +583,138 @@ class _MaterialRow extends StatelessWidget {
           : 'ha catturato ${captured.map((r) => _roleNames[r]).join(', ')}',
       if (advantage > 0) ', vantaggio di $advantage',
     ].join();
-    return Semantics(
+    final material = Semantics(
       label: description,
       excludeSemantics: true,
-      child: SizedBox(
-        height: _materialHeight,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Row(
-                children: [
-                  for (final (i, role) in captured.indexed)
-                    Image(
-                      key: ValueKey(
-                        'captured-${opponent.name}-${role.name}-$i',
-                      ),
-                      image:
-                          pieceAssets[Piece(color: opponent, role: role).kind]!,
-                      width: 20,
-                      height: 20,
-                    ),
-                  if (advantage > 0) ...[
-                    const SizedBox(width: 6),
-                    Text(
-                      '+$advantage',
-                      key: ValueKey('advantage-${side.name}'),
-                      style: Theme.of(context).textTheme.labelLarge,
-                    ),
-                  ],
-                ],
-              ),
-            ),
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Row(
+            children: [
+              for (final (i, role) in captured.indexed)
+                Image(
+                  key: ValueKey('captured-${opponent.name}-${role.name}-$i'),
+                  image: pieceAssets[Piece(color: opponent, role: role).kind]!,
+                  width: 20,
+                  height: 20,
+                ),
+              if (advantage > 0) ...[
+                const SizedBox(width: 6),
+                Text(
+                  '+$advantage',
+                  key: ValueKey('advantage-${side.name}'),
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
+              ],
+            ],
           ),
         ),
+      ),
+    );
+    return SizedBox(
+      height: _materialHeight,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        child: Row(
+          children: [
+            Expanded(child: material),
+            ?clock,
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ClockView extends StatelessWidget {
+  const _ClockView({
+    required this.side,
+    required this.remaining,
+    required this.active,
+  });
+
+  final Side side;
+  final Duration remaining;
+  final bool active;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final low = active && isLowTime(remaining);
+    final background = low
+        ? scheme.error
+        : active
+        ? scheme.primary
+        : scheme.surfaceContainerHighest;
+    final foreground = low
+        ? scheme.onError
+        : active
+        ? scheme.onPrimary
+        : scheme.onSurfaceVariant;
+    return Semantics(
+      label:
+          'Orologio del ${_sideName(side)}: '
+          '${remaining.inMinutes} minuti e ${remaining.inSeconds % 60} secondi',
+      excludeSemantics: true,
+      child: Container(
+        key: active ? const ValueKey('clock-active') : null,
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        decoration: BoxDecoration(
+          color: background,
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: Text(
+          formatClock(remaining),
+          key: ValueKey('clock-${side.name}'),
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            color: foreground,
+            fontFeatures: const [FontFeature.tabularFigures()],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _TimeChoice {
+  const _TimeChoice(this.control);
+
+  final TimeControl? control;
+}
+
+class _TimeControlSheet extends StatelessWidget {
+  const _TimeControlSheet();
+
+  @override
+  Widget build(BuildContext context) {
+    final groups = <String, List<TimeControl>>{};
+    for (final t in TimeControl.presets) {
+      groups.putIfAbsent(t.category, () => []).add(t);
+    }
+    Widget chip(String label, TimeControl? control) => ActionChip(
+      label: Text(label),
+      onPressed: () => Navigator.pop(context, _TimeChoice(control)),
+    );
+    return SafeArea(
+      child: ListView(
+        shrinkWrap: true,
+        padding: const EdgeInsets.all(16),
+        children: [
+          Text('Nuova partita', style: Theme.of(context).textTheme.titleLarge),
+          const SizedBox(height: 12),
+          chip('Senza tempo', null),
+          for (final entry in groups.entries) ...[
+            const SizedBox(height: 12),
+            Text(entry.key, style: Theme.of(context).textTheme.titleSmall),
+            const SizedBox(height: 4),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [for (final t in entry.value) chip(t.label, t)],
+            ),
+          ],
+        ],
       ),
     );
   }
