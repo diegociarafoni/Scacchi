@@ -35,6 +35,7 @@ import '../review/game_review.dart';
 import '../review/move_classification.dart';
 import '../review/personal_puzzles.dart';
 import '../review/review_page.dart';
+import '../settings/notation.dart';
 import '../settings/settings.dart';
 import '../settings/settings_page.dart';
 import '../storage/key_value_store.dart';
@@ -925,7 +926,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _showMessage(
       san == null
           ? 'La freccia rossa mostra la minaccia dell\'avversario.'
-          : 'Se toccasse all\'avversario giocherebbe $san: la freccia rossa.',
+          : 'Se toccasse all\'avversario giocherebbe ${formatSan(san, AppSettings.of(context).notation)}: la freccia rossa.',
     );
   }
 
