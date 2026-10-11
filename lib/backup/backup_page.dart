@@ -79,7 +79,7 @@ class _BackupPageState extends State<BackupPage> {
         widget.preferences(),
       );
       final stamp = DateTime.now().toIso8601String().substring(0, 10);
-      await widget.share(backup.encode(), 'scacchi-backup-$stamp.json');
+      await widget.share(backup.encode(), 'rokko-backup-$stamp.json');
       _say('Backup pronto da salvare');
     } on Object catch (e) {
       _say('Backup non riuscito: $e');

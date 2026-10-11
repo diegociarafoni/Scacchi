@@ -67,7 +67,7 @@ HOLED = "transparent"
 IMAGES = {
     # Icona completa: iOS e Android senza icone adattive.
     "icon": (svg(background(ORANGE) + rook(CREAM, BROWN)), 1024),
-    # Primo piano adattivo Android; lo sfondo è il colore in pubspec.yaml.
+    # Primo piano adattivo Android; lo sfondo è il colore in flutter_launcher_icons.yaml.
     "foreground": (svg(rook(CREAM, BROWN)), 432),
     # Icona a tema di Android 13+ e icona colorata dal sistema su iOS 18.
     "monochrome": (svg(rook("#FFFFFF", HOLED)), 432),

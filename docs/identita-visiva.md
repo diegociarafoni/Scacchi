@@ -11,9 +11,12 @@ L'app si chiama **Rokko**, da *arrocco* e da *rook* (la torre in inglese): breve
 | Nome sotto l'icona su Android | `android/app/src/main/AndroidManifest.xml`, `android:label` |
 | Nome sotto l'icona su iOS | `ios/Runner/Info.plist`, `CFBundleDisplayName` |
 | Titolo dell'app e testi che la nominano | `lib/l10n/app_it.arb`, `lib/l10n/app_en.arb` (`appTitle`, `qrCameraError`) |
-| Promemoria e backup | `lib/reminders/reminder.dart`, `lib/backup/` |
+| Finestra su Linux e Windows | `linux/runner/my_application.cc`, `windows/runner/main.cpp`, `windows/runner/Runner.rc` |
+| Promemoria, backup (`rokko-backup-….json`) e scheda della settimana (`rokko-settimana-….png`) | `lib/reminders/reminder.dart`, `lib/backup/`, `lib/stats/portrait_page.dart` |
 
 `test/branding_test.dart` controlla che i nomi nativi siano Rokko e che l'identificativo non cambi.
+
+Su macOS il pacchetto si chiama ancora `scacchi.app`: rinominarlo tocca il progetto Xcode in più punti e va verificato su un Mac. Il tag `Event` delle partite in PGN resta «Scacchi», che descrive il gioco e non l'app.
 
 ## Icona
 
@@ -33,7 +36,7 @@ Varianti generate:
 
 ## Schermata di avvio
 
-Torre al centro su sfondo arancione col tema chiaro, torre arancione su sfondo scuro col tema scuro. Su Android 12 e successivi usa la schermata di sistema con la stessa immagine.
+Torre al centro su sfondo arancione col tema chiaro, torre arancione su sfondo scuro col tema scuro. Su Android 12 e successivi usa la schermata di sistema con la stessa immagine, senza cerchio di sfondo. La schermata segue il tema del telefono, perché compare prima che l'app legga le impostazioni: chi sceglie nell'app un tema diverso da quello del telefono vede per un istante l'altra versione.
 
 ## Rigenerare le immagini
 
@@ -46,4 +49,4 @@ dart run flutter_launcher_icons           # icone Android e iOS (flutter_launche
 dart run flutter_native_splash:create     # schermata di avvio (flutter_native_splash.yaml)
 ```
 
-I due generatori sono dipendenze di sviluppo e non finiscono nell'app. `flutter_launcher_icons` 0.14 cambia per errore `ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS` in `ios/Runner.xcodeproj/project.pbxproj`: quella modifica va annullata con `git checkout ios/Runner.xcodeproj/project.pbxproj` prima del commit.
+I due generatori sono dipendenze di sviluppo e non finiscono nell'app. `flutter_launcher_icons` 0.14 cambia per errore `ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS` in `ios/Runner.xcodeproj/project.pbxproj`: quella modifica va annullata con `git checkout ios/Runner.xcodeproj/project.pbxproj` prima del commit; `test/branding_test.dart` fallisce se la modifica resta.

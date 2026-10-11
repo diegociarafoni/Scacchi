@@ -23,6 +23,28 @@ void main() {
         RegExp(r'<key>CFBundleDisplayName</key>\s*<string>Rokko</string>'),
       ),
     );
+    expect(
+      plist,
+      matches(RegExp(r'<key>CFBundleName</key>\s*<string>Rokko</string>')),
+    );
+  });
+
+  // flutter_launcher_icons 0.14 scrive per errore AppIcon in questa opzione.
+  test('il progetto Xcode non porta la modifica errata delle icone', () {
+    final project = File('ios/Runner.xcodeproj/project.pbxproj')
+        .readAsStringSync();
+    expect(project, isNot(contains('SYMBOL_EXTENSIONS = AppIcon')));
+  });
+
+  test('Linux e Windows mostrano Rokko', () {
+    expect(
+      File('linux/runner/my_application.cc').readAsStringSync(),
+      isNot(contains('"scacchi"')),
+    );
+    expect(
+      File('windows/runner/main.cpp').readAsStringSync(),
+      contains('L"Rokko"'),
+    );
   });
 
   test('icone adattive con versione monocromatica', () {

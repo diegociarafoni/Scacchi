@@ -11,7 +11,7 @@ Offline non esiste una copia online dei dati: il backup (RF-103) li raccoglie in
 
 **Impostazioni → Backup e ripristino**
 
-- **Condividi il backup** crea `scacchi-backup-AAAA-MM-GG.json` e apre il menu di condivisione del sistema.
+- **Condividi il backup** crea `rokko-backup-AAAA-MM-GG.json` e apre il menu di condivisione del sistema.
 - **Ripristina da testo** chiede di incollare il contenuto del file e rifiuta i backup non validi. Il backup valido resta in attesa (`ripristino-in-attesa.json`) e viene applicato al prossimo avvio, prima che qualunque archivio sia caricato, così nessun dato in memoria lo sovrascrive. Chiudi e riapri l'app.
 
 All'avvio i file locali sostituiti, o assenti dal backup, restano accanto con suffisso `.prima-del-ripristino-<ora>`; le preferenze vengono sostituite per intero.
