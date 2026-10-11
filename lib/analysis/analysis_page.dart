@@ -55,7 +55,8 @@ class _AnalysisPageState extends State<AnalysisPage>
   /// a mossa nulla.
   bool _threat = false;
   InfoLine? _threatLine;
-  StreamSubscription<List<InfoLine>>? _threatAnalysis;
+  Position? _threatPos;
+  bool _mainStarted = false;
 
   List<InfoLine> _lines = const [];
   List<InfoLine>? _pending;
@@ -96,11 +97,44 @@ class _AnalysisPageState extends State<AnalysisPage>
     super.dispose();
   }
 
+  /// Profondità a cui la ricerca della minaccia basta per la freccia.
+  static const _threatDepth = 14;
+
   void _start() {
     _stop();
     _lines = const [];
     _failed = false;
+    _threatLine = null;
+    _threatPos = null;
+    _mainStarted = false;
     if (_paused || _background || _pos.isGameOver) return;
+    final fen = _threat ? threatFen(_pos) : null;
+    if (fen == null) return _startMain();
+    // Il motore ha una sola coda: prima la ricerca breve della minaccia, poi
+    // quella principale.
+    _threatPos = Chess.fromSetup(Setup.parseFen(fen));
+    _analysis = widget
+        .analyse(fen, 1)
+        .listen(
+          (lines) {
+            final line = lines.firstOrNull;
+            if (line == null || !mounted) return;
+            setState(() => _threatLine = line);
+            if ((line.depth ?? 0) >= _threatDepth) _startMain();
+          },
+          // Senza la minaccia resta l'analisi principale.
+          onError: (Object _) => _startMain(),
+          // Matto o fine della ricerca prima della profondità voluta.
+          onDone: () {
+            if (mounted && !_mainStarted) _startMain();
+          },
+        );
+  }
+
+  /// Analisi principale della posizione, dopo l'eventuale minaccia.
+  void _startMain() {
+    _mainStarted = true;
+    unawaited(_analysis?.cancel());
     _analysis = widget
         .analyse(_pos.fen, _multiPv)
         .listen(
@@ -109,25 +143,9 @@ class _AnalysisPageState extends State<AnalysisPage>
             if (mounted) setState(() => _failed = true);
           },
         );
-    _startThreat();
-  }
-
-  void _startThreat() {
-    _threatLine = null;
-    final fen = threatFen(_pos);
-    if (!_threat || fen == null) return;
-    _threatAnalysis = widget.analyse(fen, 1).listen(
-      (lines) {
-        if (mounted) setState(() => _threatLine = lines.firstOrNull);
-      },
-      // Senza la seconda analisi resta l'analisi principale.
-      onError: (Object _) {},
-    );
   }
 
   void _stop() {
-    unawaited(_threatAnalysis?.cancel());
-    _threatAnalysis = null;
     _throttle?.cancel();
     _throttle = null;
     _pending = null;
@@ -174,12 +192,8 @@ class _AnalysisPageState extends State<AnalysisPage>
   }
 
   void _toggleThreat() {
-    setState(() {
-      _threat = !_threat;
-      unawaited(_threatAnalysis?.cancel());
-      _threatAnalysis = null;
-      _startThreat();
-    });
+    setState(() => _threat = !_threat);
+    _start();
   }
 
   void _setMultiPv(int value) {
@@ -200,19 +214,11 @@ class _AnalysisPageState extends State<AnalysisPage>
 
   Set<Shape> _shapes() => {
     ..._arrowFor(_pos, _arrow ? _lines.firstOrNull : null, _bestColor),
-    ..._arrowFor(_threatPosition, _threatLine, _threatColor),
+    ..._arrowFor(_threatPos, _threatLine, _threatColor),
   };
 
   static const _bestColor = Color(0xCC3E8E2F);
   static const _threatColor = Color(0xCCC0392B);
-
-  /// Posizione a mossa nulla, se la minaccia è attiva e possibile.
-  Position? get _threatPosition {
-    final fen = threatFen(_pos);
-    return !_threat || fen == null
-        ? null
-        : Chess.fromSetup(Setup.parseFen(fen));
-  }
 
   Set<Shape> _arrowFor(Position? pos, InfoLine? line, Color color) {
     if (pos == null) return const {};
