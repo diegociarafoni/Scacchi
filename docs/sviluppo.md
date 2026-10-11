@@ -114,11 +114,39 @@ I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisic
 
 ## Integrazione continua
 
-Il workflow `.github/workflows/ci.yml` gira su ogni pull request e su ogni push su `main`:
+Il workflow `.github/workflows/ci.yml` gira su ogni pull request e su ogni push su `main`, tranne quando cambiano solo `docs/`, file Markdown o `LICENSE`:
 
-1. **test**: installa Stockfish (per i test d'integrazione del motore), verifica della formattazione, `flutter analyze`, `flutter test`.
-2. **e2e**: se i test passano, installa Stockfish ed esegue i test end-to-end sull'app Linux desktop con uno schermo virtuale (`xvfb`), un file alla volta perché avvii ravvicinati dell'app Linux nello stesso comando falliscono.
-3. **android**: se i test passano, libera spazio sul runner (la compilazione nativa di Stockfish con l'NDK lo esaurisce), compila un APK di debug e lo pubblica come artefatto `scacchi-debug-apk`, scaricabile dalla pagina dell'esecuzione.
+1. **test**, sempre: installa Stockfish (per i test d'integrazione del motore), verifica di localizzazione e formattazione, `flutter analyze`, `flutter test`. È il controllo bloccante di ogni PR.
+2. **e2e**, se i test passano: installa Stockfish ed esegue i test end-to-end sull'app Linux desktop con uno schermo virtuale (`xvfb`), un file alla volta perché avvii ravvicinati dell'app Linux nello stesso comando falliscono.
+3. **android**, se i test passano: libera spazio sul runner (la compilazione nativa di Stockfish con l'NDK lo esaurisce), compila un APK di debug solo arm64 e lo pubblica come artefatto `scacchi-debug-apk` per 7 giorni.
+
+e2e e android girano sempre su `main`; su una PR solo se la PR tocca i file che li riguardano (`integration_test/` o `linux/` per e2e, `android/` per android, `pubspec.*`, `ci.yml` e `ci-completa.yml` per entrambi) oppure se ha l'etichetta **`ci-completa`**: aggiungerla avvia subito tutta la CI con il workflow `ci-completa.yml`, senza bisogno di un nuovo push, e da lì in poi ogni push sulla PR la esegue per intero. L'etichetta si crea una volta in **Issues → Labels → New label**. I job avviati dall'etichetta compaiono come `ci / test`, `ci / e2e` e `ci / android` e devono essere verdi prima del merge. Conviene metterla sulle PR che cambiano molto l'interfaccia: senza, e2e gira solo dopo il merge su `main`.
+
+### Consumo di minuti
+
+Il repository è privato: ogni job si paga in minuti di Actions, arrotondati per eccesso al minuto, sul piano gratuito 2000 al mese. Per spenderne pochi:
+
+- un nuovo push sulla stessa PR annulla il giro precedente ancora in corso (`concurrency`), su `main` invece ogni commit ha il suo giro completo;
+- e2e e build Android, i job lunghi, girano sulle PR solo quando servono (vedi sopra);
+- le modifiche alla sola documentazione non avviano la CI;
+- cache di Flutter e pub (`subosito/flutter-action`) e di Gradle (`setup-java`);
+- APK di debug solo per arm64, come quello di rilascio;
+- solo runner Linux, che costano un decimo di quelli macOS;
+- ogni job ha un `timeout-minutes`, così un job bloccato non consuma le 6 ore predefinite.
+
+Durate misurate sulle esecuzioni dell'11 ottobre 2026, in minuti fatturati:
+
+| Evento | Prima | Dopo |
+|---|---|---|
+| Push su una PR che tocca solo `lib/` o `test/` | 23 (convenzioni 1, test 4, e2e 5, android 13) | 5 (convenzioni 1, test 4) |
+| Push su una PR che tocca `android/` o `pubspec.*` | 23 | circa 12 (android arm64 con cache di Gradle, stima) |
+| PR di sola documentazione | 23 | 1 (convenzioni) |
+| Merge su `main` | 22 | circa 16 |
+| PR tipica: 4 push e merge | 114 | circa 36 (−68%) |
+
+Con 2000 minuti al mese si passa da circa 17 a circa 55 PR tipiche. Per controllare il consumo: **Settings → Billing and plans → Usage** del proprio account GitHub.
+
+Con le regole di protezione di `main` attive (vedi [convenzioni-git.md](convenzioni-git.md)) un job saltato conta come superato, ma una PR di sola documentazione non avvia la CI e resterebbe in attesa dei controlli obbligatori: in quel caso va tolto `paths-ignore` dall'evento `pull_request`.
 
 Il workflow `.github/workflows/apk-release.yml` produce l'APK release installabile sul telefono e lo pubblica come GitHub Release: vedi [rilascio-android.md](rilascio-android.md).
 

@@ -87,7 +87,7 @@ Da fare una volta, in **Settings** del repository:
 2. **Rules → Rulesets → New branch ruleset**: nome `main`, destinazione **Default branch**, stato **Active**, con queste regole:
    - **Restrict deletions** e **Block force pushes**;
    - **Require a pull request before merging**, metodo di merge consentito **Squash**, con **Require conversation resolution before merging**;
-   - **Require status checks to pass**, con **Require branches to be up to date** e i controlli `test`, `e2e`, `android` e `Ramo, titolo della PR e commit` (aggiungere quelli nuovi quando entrano in CI).
+   - **Require status checks to pass**, con **Require branches to be up to date** e i controlli `test`, `e2e`, `android` e `Ramo, titolo della PR e commit` (aggiungere quelli nuovi quando entrano in CI; vedi anche la nota sulle PR di sola documentazione in [sviluppo.md](sviluppo.md#consumo-di-minuti)).
 
 Su un account GitHub Free le regole dei rami sono applicate solo ai repository pubblici: per un repository privato serve GitHub Pro. Fino ad allora l'hook `pre-push` e la CI restano l'unica protezione.
 
