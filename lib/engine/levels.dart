@@ -1,3 +1,7 @@
+import 'dart:math' as math;
+
+import 'style.dart';
+
 /// Livello di difficoltà. Vedi docs/avversario-computer.md.
 class EngineLevel {
   const EngineLevel({
@@ -11,6 +15,7 @@ class EngineLevel {
     this.multiPv = 1,
     this.temperatureCp = 0,
     this.minReply = Duration.zero,
+    this.style,
   });
 
   final int id;
@@ -38,6 +43,9 @@ class EngineLevel {
   /// Attesa minima prima di restituire la mossa.
   final Duration minReply;
 
+  /// Stile di un bot: sposta la scelta tra le candidate (RF-23).
+  final BotStyle? style;
+
   EngineLevel copyWith({Duration? movetime, Duration? minReply}) => EngineLevel(
     id: id,
     name: name,
@@ -49,6 +57,27 @@ class EngineLevel {
     multiPv: multiPv,
     temperatureCp: temperatureCp,
     minReply: minReply ?? this.minReply,
+    style: style,
+  );
+
+  /// Stessa forza di base, ma sceglie tra almeno [multiPv] candidate con il
+  /// bonus di [style] e la [temperatureCp] data (RF-23).
+  EngineLevel withStyle(
+    BotStyle style, {
+    int multiPv = 3,
+    int temperatureCp = 0,
+  }) => EngineLevel(
+    id: id,
+    name: name,
+    approxElo: approxElo,
+    skill: skill,
+    movetime: movetime,
+    uciElo: uciElo,
+    depth: depth,
+    multiPv: math.max(this.multiPv, multiPv),
+    temperatureCp: math.max(this.temperatureCp, temperatureCp),
+    minReply: minReply,
+    style: style,
   );
 
   /// Riflessione e attesa ridotte a una quota del tempo residuo più l'incremento.

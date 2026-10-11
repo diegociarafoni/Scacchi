@@ -42,4 +42,28 @@ void main() {
     expect(counts['d2d4']!, greaterThan(counts['a2a3']!));
     expect(counts['a2a3']!, greaterThan(0));
   });
+
+  test('RF-23 il bonus di stile può ribaltare l\'ordine delle candidate', () {
+    final best = chooseCandidate(
+      candidates,
+      0,
+      math.Random(1),
+      bonus: (c) => c.pv.first == 'd2d4' ? 20 : 0,
+    );
+    expect(best!.pv.first, 'd2d4');
+  });
+
+  test('RF-23 il bonus non scavalca un matto a favore', () {
+    final withMate = [
+      ...candidates,
+      const InfoLine(multipv: 4, pv: ['d1h5'], score: EngineScore.mate(1)),
+    ];
+    final chosen = chooseCandidate(
+      withMate,
+      500,
+      math.Random(3),
+      bonus: (c) => c.pv.first == 'a2a3' ? 5000 : 0,
+    );
+    expect(chosen!.pv.first, 'd1h5');
+  });
 }

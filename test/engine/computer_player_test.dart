@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/engine/computer_player.dart';
 import 'package:scacchi/engine/levels.dart';
 import 'package:scacchi/engine/process_transport.dart';
+import 'package:scacchi/engine/style.dart';
 import 'package:scacchi/engine/uci.dart';
 import 'package:scacchi/engine/uci_transport.dart';
 import 'package:scacchi/game/chess_game.dart';
@@ -68,6 +69,27 @@ void main() {
       ]);
       await player.dispose();
     });
+
+    test(
+      'RF-23 lo stile del livello sposta la scelta tra le candidate',
+      () async {
+        // Dopo 1.e4 d5 l'aggressivo preferisce la cattura (e4d5) alla mossa
+        // leggermente migliore.
+        final fake = FakeEngine(
+          (_) => [
+            'info depth 1 multipv 1 score cp 50 pv g1f3',
+            'info depth 1 multipv 2 score cp 30 pv e4d5',
+            'bestmove g1f3',
+          ],
+        );
+        final player = ComputerPlayer(connect: () async => fake);
+        final level = fast(8).withStyle(BotStyle.aggressive);
+        final moves = [NormalMove.fromUci('e2e4'), NormalMove.fromUci('d7d5')];
+        final move = await player.bestMove(Chess.initial.fen, moves, level);
+        expect(move!.move, NormalMove.fromUci('e4d5'));
+        await player.dispose();
+      },
+    );
 
     test('RF-20 nei livelli bassi sceglie tra le varianti candidate', () async {
       final fake = FakeEngine(
