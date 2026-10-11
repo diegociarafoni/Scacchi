@@ -732,10 +732,11 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       'L\'allenatore valuta la mossa…',
       duration: const Duration(seconds: 2),
     );
+    final kid = _kid ? _kidL10n(context) : null;
     final retry = await _whileSuspended<bool>(() async {
       final MoveVerdict verdict;
       try {
-        verdict = await _coach.judge(before, move);
+        verdict = await _coach.judge(before, move, kid: kid);
       } on Object {
         return false;
       }
