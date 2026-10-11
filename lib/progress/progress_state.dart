@@ -13,6 +13,7 @@ class ProgressSettings {
     this.unlockAll = false,
     this.avatar = Avatar.pawn,
     this.frame = AvatarFrame.none,
+    this.reminder,
   });
 
   /// Interruttore generale: spento, non si registra nulla e il profilo è nascosto.
@@ -28,6 +29,10 @@ class ProgressSettings {
   final Avatar avatar;
   final AvatarFrame frame;
 
+  /// Orario del promemoria giornaliero in minuti dalla mezzanotte; `null`
+  /// se spento, come di default (RG-11).
+  final int? reminder;
+
   ProgressSettings copyWith({
     bool? enabled,
     DailyGoal? goal,
@@ -35,6 +40,7 @@ class ProgressSettings {
     bool? unlockAll,
     Avatar? avatar,
     AvatarFrame? frame,
+    int? Function()? reminder,
   }) => ProgressSettings(
     enabled: enabled ?? this.enabled,
     goal: goal ?? this.goal,
@@ -42,6 +48,7 @@ class ProgressSettings {
     unlockAll: unlockAll ?? this.unlockAll,
     avatar: avatar ?? this.avatar,
     frame: frame ?? this.frame,
+    reminder: reminder == null ? this.reminder : reminder(),
   );
 
   Map<String, Object?> toJson() => {
@@ -51,6 +58,7 @@ class ProgressSettings {
     'unlockAll': unlockAll,
     'avatar': avatar.name,
     'frame': frame.name,
+    'reminder': reminder,
   };
 
   static ProgressSettings fromJson(Map<String, Object?> json) =>
@@ -64,6 +72,7 @@ class ProgressSettings {
         avatar: Avatar.values.asNameMap()[json['avatar']] ?? Avatar.pawn,
         frame:
             AvatarFrame.values.asNameMap()[json['frame']] ?? AvatarFrame.none,
+        reminder: json['reminder'] as int?,
       );
 
   @override
@@ -74,11 +83,12 @@ class ProgressSettings {
       other.restDay == restDay &&
       other.unlockAll == unlockAll &&
       other.avatar == avatar &&
-      other.frame == frame;
+      other.frame == frame &&
+      other.reminder == reminder;
 
   @override
   int get hashCode =>
-      Object.hash(enabled, goal, restDay, unlockAll, avatar, frame);
+      Object.hash(enabled, goal, restDay, unlockAll, avatar, frame, reminder);
 }
 
 /// Progressi del giocatore. I giorni sono numeri di giorno di calendario

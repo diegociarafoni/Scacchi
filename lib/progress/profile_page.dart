@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../minigames/minigame.dart';
+import '../reminders/reminder_controller.dart';
 import 'achievements.dart';
 import 'avatar.dart';
 import 'challenges.dart';
@@ -35,9 +36,13 @@ const _weekdays = [
 
 /// Profilo del giocatore: livello, serie, obiettivo, traguardi e preferenze.
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key, required this.controller});
+  const ProfilePage({super.key, required this.controller, this.reminders});
 
   final ProgressController controller;
+
+  /// Promemoria giornaliero; senza, l'opzione non compare (per esempio su
+  /// desktop, dove le notifiche programmate non sono disponibili).
+  final ReminderController? reminders;
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +72,7 @@ class ProfilePage extends StatelessWidget {
                 _Achievements(unlocked: controller.state.unlocked),
                 const SizedBox(height: 24),
               ],
-              _Settings(controller: controller),
+              _Settings(controller: controller, reminders: reminders),
             ],
           );
         },
@@ -389,9 +394,37 @@ class _Achievements extends StatelessWidget {
 }
 
 class _Settings extends StatelessWidget {
-  const _Settings({required this.controller});
+  const _Settings({required this.controller, this.reminders});
 
   final ProgressController controller;
+  final ReminderController? reminders;
+
+  Future<void> _pickReminder(BuildContext context, int? current) async {
+    final reminders = this.reminders!;
+    final minutes = current ?? 19 * 60;
+    final time = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay(hour: minutes ~/ 60, minute: minutes % 60),
+      helpText: 'Orario del promemoria',
+      cancelText: 'Annulla',
+      confirmText: 'Conferma',
+      builder: (context, child) => MediaQuery(
+        data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+        child: child!,
+      ),
+    );
+    if (time == null) return;
+    final granted = await reminders.enable(time.hour * 60 + time.minute);
+    if (!granted && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Senza il permesso per le notifiche il promemoria resta spento.',
+          ),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -444,6 +477,25 @@ class _Settings extends StatelessWidget {
                   controller.updateSettings(s.copyWith(restDay: () => d)),
             ),
           ),
+          if (reminders case final reminders?) ...[
+            SwitchListTile(
+              key: const Key('reminder'),
+              title: const Text('Promemoria giornaliero'),
+              subtitle: const Text(
+                "Una notifica al giorno, solo se l'obiettivo manca.",
+              ),
+              value: s.reminder != null,
+              onChanged: (on) =>
+                  on ? _pickReminder(context, s.reminder) : reminders.disable(),
+            ),
+            if (s.reminder case final minutes?)
+              ListTile(
+                key: const Key('reminderTime'),
+                title: const Text('Orario del promemoria'),
+                trailing: Text(_clock(minutes)),
+                onTap: () => _pickReminder(context, minutes),
+              ),
+          ],
         ],
       ],
     );
@@ -542,3 +594,6 @@ class _Records extends StatelessWidget {
     );
   }
 }
+
+String _clock(int minutes) =>
+    '${minutes ~/ 60}:${(minutes % 60).toString().padLeft(2, '0')}';

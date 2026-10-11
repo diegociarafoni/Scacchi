@@ -17,6 +17,8 @@
 | [shared_preferences](https://pub.dev/packages/shared_preferences) | Salvataggio delle impostazioni | BSD-3-Clause |
 | [Flutter](https://flutter.dev) | Framework dell'interfaccia | BSD-3-Clause |
 | [path_provider](https://pub.dev/packages/path_provider) (Flutter) | Cartella dati dell'app per i salvataggi | BSD-3-Clause |
+| [flutter_local_notifications](https://pub.dev/packages/flutter_local_notifications) (Michael Bui) | Promemoria giornaliero con notifiche locali | BSD-3-Clause |
+| [timezone](https://pub.dev/packages/timezone) | Orario del promemoria per le notifiche programmate | BSD-2-Clause |
 | [share_plus](https://pub.dev/packages/share_plus) (Flutter Community) | Condivisione PGN con il menu del sistema | BSD-3-Clause |
 | Suoni in `assets/sounds/`, generati da `tool/generate_sounds.py` | Effetti sonori | Opera originale del progetto, CC0 |
 | [audioplayers](https://pub.dev/packages/audioplayers) | Riproduzione dei suoni | MIT |
