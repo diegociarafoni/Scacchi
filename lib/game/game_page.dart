@@ -17,6 +17,7 @@ import '../engine/bots.dart';
 import '../engine/computer_player.dart';
 import '../engine/levels.dart';
 import '../engine/uci_transport.dart';
+import '../exchange/qr_l10n.dart';
 import '../exchange/qr_receive_page.dart';
 import '../exchange/qr_send_page.dart';
 import '../exchange/qr_transfer.dart';
@@ -698,7 +699,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// I nomi delle impostazioni non cambiano: quelli del PGN possono essere
   /// "Tu" o il nome di un bot sull'altro telefono.
   Future<void> _receiveQr() async {
-    final l10n = AppLocalizations.of(context);
+    final l10n = qrL10n(context);
     // Riprende la partita corrente se quella ricevuta non si continua.
     final games = await _whileSuspended(() async {
       final text = await Navigator.of(context).push<String>(
@@ -1770,7 +1771,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                 if (value == 'qrReceive') unawaited(_receiveQr());
               },
               itemBuilder: (context) {
-                final l10n = AppLocalizations.of(context);
+                final l10n = qrL10n(context);
                 return [
                   // Stockfish analizza solo gli scacchi classici.
                   if (widget.computerAvailable &&

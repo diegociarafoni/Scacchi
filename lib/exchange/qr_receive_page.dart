@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_zxing/flutter_zxing.dart';
 
 import '../archive/pgn.dart';
-import '../l10n/app_localizations.dart';
+import 'qr_l10n.dart';
 import 'qr_transfer.dart';
 
 /// Costruisce il lettore QR: [onCode] riceve il testo di ogni QR letto,
@@ -63,7 +63,7 @@ class _QrReceivePageState extends State<QrReceivePage> {
 
   void _onCode(String frame) {
     if (_done || !mounted) return;
-    final l10n = AppLocalizations.of(context);
+    final l10n = qrL10n(context);
     final event = _assembler.add(frame);
     switch (event) {
       case FrameAccepted(:final received, :final total):
@@ -110,7 +110,7 @@ class _QrReceivePageState extends State<QrReceivePage> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = qrL10n(context);
     return Scaffold(
       appBar: AppBar(title: Text(l10n.qrReceiveTitle)),
       body: SafeArea(

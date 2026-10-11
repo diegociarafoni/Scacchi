@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:qr/qr.dart';
 
-import '../l10n/app_localizations.dart';
 import 'qr_code_view.dart';
+import 'qr_l10n.dart';
 import 'qr_transfer.dart';
 
 /// Mostra i fotogrammi QR di una partita; se sono più d'uno scorrono in
@@ -69,7 +69,7 @@ class _QrSendPageState extends State<QrSendPage> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = qrL10n(context);
     final playing = _timer != null;
     if (_tooLarge) {
       return Scaffold(

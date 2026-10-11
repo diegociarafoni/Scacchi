@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../exchange/qr_l10n.dart';
 import '../exchange/qr_receive_page.dart';
 import '../exchange/qr_send_page.dart';
 import '../exchange/qr_transfer.dart';
-import '../l10n/app_localizations.dart';
 import 'game_archive.dart';
 import 'pgn.dart';
 import 'saved_game.dart';
@@ -108,9 +108,8 @@ class _ArchivePageState extends State<ArchivePage> {
     if (text == null || !mounted) return;
     final games = receivedGames(text);
     if (games.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context).qrInvalidGame)),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(qrL10n(context).qrInvalidGame)));
       return;
     }
     await _showImport(widget.archive.importRecords(PgnImport(games, 0)));
@@ -174,7 +173,7 @@ class _ArchivePageState extends State<ArchivePage> {
         title: const Text('Partite'),
         actions: [
           IconButton(
-            tooltip: AppLocalizations.of(context).qrReceiveTitle,
+            tooltip: qrL10n(context).qrReceiveTitle,
             icon: const Icon(Icons.qr_code_scanner),
             onPressed: _receive,
           ),
@@ -268,7 +267,7 @@ class _GameTile extends StatelessWidget {
           const PopupMenuItem(value: _Action.copy, child: Text('Copia PGN')),
           PopupMenuItem(
             value: _Action.qr,
-            child: Text(AppLocalizations.of(context).qrSendTitle),
+            child: Text(qrL10n(context).qrSendTitle),
           ),
           const PopupMenuItem(value: _Action.delete, child: Text('Elimina')),
         ],
