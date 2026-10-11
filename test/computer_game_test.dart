@@ -541,7 +541,9 @@ void main() {
     await tester.tap(find.text('Nuova'));
     await tester.pumpAndSettle();
     expect(
-      find.text('Il computer è disponibile su Android e iOS.'),
+      find.text(
+        'Per giocare contro il computer qui serve Stockfish installato.',
+      ),
       findsOneWidget,
     );
   });
