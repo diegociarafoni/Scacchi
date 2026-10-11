@@ -52,9 +52,7 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('la scheda Tu porta a profilo, percorso e altro', (
-    tester,
-  ) async {
+  testWidgets('la scheda Tu porta a profilo, percorso e altro', (tester) async {
     await show(tester);
     expect(find.text('Livello 1'), findsOneWidget);
     for (final label in [
