@@ -4,6 +4,12 @@ import 'package:dartchess/dartchess.dart';
 /// del motore senza cambiarne la forza di base. Vedi docs/bot.md.
 enum BotStyle { aggressive, positional, gambitist }
 
+String styleLabel(BotStyle style) => switch (style) {
+  BotStyle.aggressive => 'aggressivo',
+  BotStyle.positional => 'posizionale',
+  BotStyle.gambitist => 'gambettista',
+};
+
 /// Bonus in centipedoni per [move] giocata da chi muove in [position].
 int styleBonus(Position position, Move move, BotStyle style) {
   if (move is! NormalMove) return 0;

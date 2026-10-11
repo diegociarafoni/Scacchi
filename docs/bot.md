@@ -5,7 +5,28 @@ un'apertura preferita e brevi frasi di reazione, sul modello dei bot di chess.co
 costruito sopra uno degli 8 livelli del motore descritti in [avversario-computer.md](avversario-computer.md):
 la forza viene dal livello, la personalità dal resto. Sono in `lib/engine/bots.dart`.
 
-## La scala
+## Come si gioca
+
+1. Toccare **Nuova** e scegliere **Bot**.
+2. Scegliere il colore e il bot dall'elenco: ogni riga mostra avatar, nome, Elo, stile e apertura preferita.
+3. Toccare la cadenza, "Senza tempo" o una cadenza: la partita inizia.
+
+Durante la partita la barra del titolo mostra avatar, nome ed Elo del bot, che saluta all'inizio.
+Il bot gioca le prime mosse dal proprio libro d'apertura finché l'avversario non devia (con una breve
+attesa, come negli altri livelli); poi decide Stockfish con lo stile del bot. Commenta con una frase
+i propri scacchi, ogni tanto le proprie catture, e la fine della partita (vittoria, sconfitta, patta).
+Il bot gioca solo gli scacchi classici; le altre regole della partita contro il computer (annulla,
+patta, orologio, abbandono) valgono anche qui, vedi [avversario-computer.md](avversario-computer.md).
+
+## La scala e la collezione
+
+Si comincia con Pino: gli altri bot sono bloccati (lucchetto). Battere un bot sblocca il successivo e
+lo aggiunge alla **collezione**, dove nell'elenco compare con un segno di spunta e la data della prima
+vittoria ("Battuto il 11/10/2026"). Un bot già battuto si può rigiocare quando si vuole. Una partita
+conta solo se ha almeno una mossa; perdere o pattare non cambia la collezione. La collezione è salvata
+sul dispositivo (chiave `botCollection`, `lib/engine/bot_collection.dart`).
+
+## I bot
 
 Gli 8 bot sono in ordine di forza e formano la scala da superare uno dopo l'altro (RG-04).
 
@@ -59,6 +80,8 @@ dipendono dallo stile.
 ## Test
 
 - `test/engine/bots_test.dart`: scala, dati, linee del libro legali, frasi.
+- `test/engine/bot_collection_test.dart`: sblocco, data della prima vittoria, salvataggio.
+- `test/bot_game_test.dart`: la scelta del bot nel pannello, il libro in partita, saluto e frasi finali, vittoria e collezione.
 - `test/engine/style_test.dart`: i bonus di stile.
 - `test/engine/choose_test.dart` e `computer_player_test.dart`: il bonus nella scelta tra candidate.
 
@@ -66,5 +89,5 @@ dipendono dallo stile.
 
 | Requisito | Stato |
 |---|---|
-| RF-23 bot con personalità | Dati, stile, libro e frasi pronti; manca la scelta del bot e la visualizzazione nella partita |
-| RG-04 scala dei bot | Scala definita; mancano lo sblocco battendo il precedente e la collezione |
+| RF-23 bot con personalità | ✓ nome, avatar, Elo, stile, libro d'apertura e frasi su scacco, cattura e fine partita; manca la frase sull'errore, che richiede la valutazione della mossa dell'avversario |
+| RG-04 scala dei bot | ✓ sblocco battendo il precedente e collezione con la data della vittoria |
