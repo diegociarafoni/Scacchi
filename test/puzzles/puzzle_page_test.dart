@@ -52,10 +52,8 @@ class _TwoPuzzles implements PuzzleFeed {
   bool get hasNext => _served < 2;
 
   @override
-  Future<FeedOutcome> finished(Puzzle puzzle, {required bool solved}) async {
-    final delta = await trainer.record(puzzle, solved: solved);
-    return (ratingDelta: delta, awardXp: delta != null);
-  }
+  Future<FeedOutcome> finished(Puzzle puzzle, {required bool solved}) =>
+      RatedFeed(trainer).finished(puzzle, solved: solved);
 }
 
 Future<PuzzleTrainer> pump(
@@ -133,7 +131,8 @@ void main() {
       start,
     );
     expect(message(tester), startsWith('Posizione iniziale.'));
-    expect(find.text('Riprova'), findsNothing);
+    // Il pulsante resta, così la barra non cambia altezza a metà tentativo.
+    expect(find.text('Riprova'), findsOneWidget);
     await tapMove(tester, 'e1g1');
     expect(message(tester), startsWith('Puzzle concluso.'));
     expect(trainer.failedCount, 1);
@@ -152,6 +151,59 @@ void main() {
     await tester.pumpAndSettle();
     expect(trainer.failedCount, 1);
     expect(message(tester), startsWith('Trova la mossa migliore'));
+  });
+
+  testWidgets('dopo Soluzione e Riprova il puzzle non vale XP', (tester) async {
+    final activities = <Activity>[];
+    final trainer = await pump(
+      tester,
+      activities: activities,
+      puzzle: hangingQueen,
+    );
+    await tester.tap(find.text('Soluzione'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Riprova'));
+    await tester.pumpAndSettle();
+    for (final move in ['e6e7', 'b3c1', 'h6c1']) {
+      await tapMove(tester, move);
+    }
+    await tester.pump();
+    expect(message(tester), startsWith('Puzzle concluso.'));
+    expect(trainer.failedCount, 1);
+    expect(activities, isEmpty);
+  });
+
+  testWidgets('dopo Soluzione sono attivi sia Riprova sia Prossimo', (
+    tester,
+  ) async {
+    await pump(tester, twoPuzzles: true);
+    // Il primo puzzle ha una sola mossa: la soluzione lo conclude.
+    await tester.tap(find.text('Soluzione'));
+    await tester.pumpAndSettle();
+    expect(find.text('Riprova'), findsOneWidget);
+    expect(
+      tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
+      isNotNull,
+    );
+  });
+
+  testWidgets('su uno schermo basso la pagina non va in overflow', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(960, 900);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+    final trainer = await PuzzleTrainer.load(
+      PuzzleLibrary([backRank]),
+      MemoryStore(),
+    );
+    await tester.pumpWidget(
+      MaterialApp(
+        home: PuzzlePage(trainer: trainer, puzzle: backRank),
+      ),
+    );
+    await tapMove(tester, 'a1a7');
+    expect(tester.takeException(), isNull);
   });
 
   for (final width in [320.0, 360.0]) {

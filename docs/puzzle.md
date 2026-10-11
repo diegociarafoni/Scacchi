@@ -58,8 +58,8 @@ Il test `test/puzzles/puzzle_dataset_test.dart` verifica che ogni soluzione sia 
 - L'arrocco è riconosciuto sia come mossa del re di due case sia come re sulla torre.
 - **Suggerimento**: cerchia il pezzo da muovere; non fa fallire il puzzle.
 - **Soluzione**: gioca la mossa giusta al posto del giocatore e fa fallire il puzzle.
-- **Riprova**: compare dopo un errore o una soluzione mostrata e riporta il puzzle alla posizione iniziale. L'errore resta registrato: anche se il nuovo tentativo riesce, il puzzle conta come fallito per il punteggio e per il ripasso.
-- **Prossimo**: si attiva a fine puzzle e anche dopo un errore; in quel caso il puzzle viene registrato come fallito, senza XP. Resta disattivato se la sequenza non ha altri puzzle, per esempio nel puzzle del giorno.
+- **Riprova**: compare dopo un errore o una soluzione mostrata, resta visibile per non spostare la scacchiera, e riporta il puzzle alla posizione iniziale. Errori e soluzioni mostrate restano segnati: anche se il nuovo tentativo riesce, il puzzle conta come fallito per il punteggio e per il ripasso, e senza XP se la soluzione era stata mostrata. L'esito viene registrato quando il puzzle finisce o si passa oltre con «Prossimo»; uscendo dalla schermata a metà non si registra nulla.
+- **Prossimo**: si attiva a fine puzzle e ogni volta che c'è «Riprova»; in quel caso il puzzle viene registrato come fallito, senza XP. Resta disattivato se la sequenza non ha altri puzzle, per esempio nel puzzle del giorno.
 
 I quattro pulsanti stanno in una riga che va a capo su due righe sugli schermi stretti, senza spezzare le etichette.
 

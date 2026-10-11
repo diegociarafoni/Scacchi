@@ -64,8 +64,8 @@ class _PuzzlePageState extends State<PuzzlePage> {
   bool _recorded = false;
   bool _repeat = false;
 
-  /// Vero dopo "Riprova": il nuovo tentativo non vale come risolto al primo colpo.
-  bool _retried = false;
+  /// Cambia a ogni puzzle: un esito in ritardo non tocca il puzzle successivo.
+  int _epoch = 0;
   Timer? _replyTimer;
   final _stopwatch = Stopwatch();
 
@@ -93,7 +93,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
     _hint = null;
     _recorded = false;
     _repeat = false;
-    _retried = false;
+    _epoch++;
     _stopwatch
       ..reset()
       ..start();
@@ -124,36 +124,43 @@ class _PuzzlePageState extends State<PuzzlePage> {
     });
   }
 
-  bool get _clean => _session.firstTry && !_retried;
-
   /// Dopo un errore o una soluzione mostrata si può ricominciare da capo.
-  bool get _canRetry => _session.mistake || _session.revealed;
+  bool get _canRetry => !_session.firstTry;
 
   void _finish() {
-    _feedback = _clean ? _Feedback.solved : _Feedback.revealed;
+    _feedback = _session.firstTry ? _Feedback.solved : _Feedback.revealed;
     if (_recorded) return;
     _recorded = true;
     _stopwatch.stop();
-    unawaited(_record(_session.puzzle, solved: _clean));
+    unawaited(
+      _record(
+        _session.puzzle,
+        solved: _session.firstTry,
+        awardXp: !_session.revealed,
+      ),
+    );
   }
 
+  /// [awardXp] è deciso da chi chiama, prima dell'attesa: dopo, la sessione
+  /// potrebbe essere già un'altra.
   Future<void> _record(
     Puzzle puzzle, {
     required bool solved,
-    bool skipped = false,
+    required bool awardXp,
   }) async {
+    final epoch = _epoch;
     final outcome = await _feed.finished(puzzle, solved: solved);
     final delta = outcome.ratingDelta;
     if (!mounted) return;
-    setState(() {
-      _delta = delta;
-      _repeat = delta == null && !outcome.awardXp;
-    });
+    if (epoch == _epoch) {
+      setState(() {
+        _delta = delta;
+        _repeat = delta == null && !outcome.awardXp;
+      });
+    }
     final record = widget.onActivity;
     // Le ripetizioni e le soluzioni mostrate non valgono XP.
-    if (record == null || !outcome.awardXp || _session.revealed || skipped) {
-      return;
-    }
+    if (record == null || !outcome.awardXp || !awardXp) return;
     final update = await record(
       PuzzleSolved(
         themes: puzzle.themes,
@@ -185,8 +192,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
   void _retry() {
     _replyTimer?.cancel();
     setState(() {
-      _session = PuzzleSession(_session.puzzle);
-      _retried = true;
+      _session.restart();
       _feedback = _Feedback.restarted;
       _hint = null;
       _revision++;
@@ -199,7 +205,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
     if (!_recorded && _session.state != PuzzleState.solved) {
       _recorded = true;
       _stopwatch.stop();
-      unawaited(_record(_session.puzzle, solved: false, skipped: true));
+      unawaited(_record(_session.puzzle, solved: false, awardXp: false));
     }
     final next = _feed.next();
     if (next != null) setState(() => _start(next));
@@ -239,7 +245,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
     }
     final done = _session.state == PuzzleState.solved;
     final last = done && !_feed.hasNext;
-    final canSkip = (done || _session.mistake) && _feed.hasNext;
+    final canSkip = (done || _canRetry) && _feed.hasNext;
     final puzzle = _session.puzzle;
     final themes = puzzle.themes
         .map((t) => puzzleThemeLabels[t])
@@ -256,52 +262,58 @@ class _PuzzlePageState extends State<PuzzlePage> {
                 builder: (context, c) {
                   // Il lato segue lo spazio rimasto sopra i pulsanti, che
                   // salgono a due righe sugli schermi stretti.
-                  final size = math.min(c.maxWidth, c.maxHeight - 200);
+                  final size = math.max(
+                    0.0,
+                    math.min(c.maxWidth, c.maxHeight - 120),
+                  );
+                  // Scorrevole come ultima difesa su schermi molto bassi.
                   return Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: Semantics(
-                            liveRegion: true,
-                            child: Text(
-                              _message,
-                              key: const Key('puzzle-message'),
-                              style: Theme.of(context).textTheme.titleMedium,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: Semantics(
+                              liveRegion: true,
+                              child: Text(
+                                _message,
+                                key: const Key('puzzle-message'),
+                                style: Theme.of(context).textTheme.titleMedium,
+                              ),
                             ),
                           ),
-                        ),
-                        TrainingBoard(
-                          size: size,
-                          position: _session.position,
-                          lastMove: _session.lastMove,
-                          player: puzzle.playerSide,
-                          enabled: !done && !_session.awaitingReply,
-                          revision: _revision,
-                          shapes: {
-                            if (_hint != null)
-                              Circle(
-                                color: AppSettings.of(context).hintColor,
-                                orig: _hint!,
-                              ),
-                          },
-                          onMove: _onMove,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Text(
-                            last
-                                ? 'Non ci sono altri puzzle per ora.'
-                                : done
-                                ? 'Puzzle ${puzzle.rating}'
-                                      '${themes.isEmpty ? '' : ' · $themes'}'
-                                : 'Il tuo punteggio: '
-                                      '${widget.trainer.rating.rating.round()}',
-                            style: Theme.of(context).textTheme.bodyMedium,
+                          TrainingBoard(
+                            size: size,
+                            position: _session.position,
+                            lastMove: _session.lastMove,
+                            player: puzzle.playerSide,
+                            enabled: !done && !_session.awaitingReply,
+                            revision: _revision,
+                            shapes: {
+                              if (_hint != null)
+                                Circle(
+                                  color: AppSettings.of(context).hintColor,
+                                  orig: _hint!,
+                                ),
+                            },
+                            onMove: _onMove,
                           ),
-                        ),
-                      ],
+                          Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Text(
+                              last
+                                  ? 'Non ci sono altri puzzle per ora.'
+                                  : done
+                                  ? 'Puzzle ${puzzle.rating}'
+                                        '${themes.isEmpty ? '' : ' · $themes'}'
+                                  : 'Il tuo punteggio: '
+                                        '${widget.trainer.rating.rating.round()}',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },

@@ -33,6 +33,15 @@ class PuzzleSession {
   /// Vero se il puzzle è stato risolto senza errori e senza vedere la soluzione.
   bool get firstTry => !_mistake && !_revealed;
 
+  /// Ricomincia dalla posizione iniziale. Errori e soluzioni mostrate restano
+  /// registrati, così un nuovo tentativo riuscito non vale "al primo colpo".
+  void restart() {
+    _position = puzzle.start;
+    _lastMove = puzzle.opponentMove;
+    _ply = 0;
+    _state = PuzzleState.playing;
+  }
+
   /// Vero quando tocca all'avversario rispondere.
   bool get awaitingReply =>
       _state == PuzzleState.playing && _ply.isOdd && _ply < _solution.length;
