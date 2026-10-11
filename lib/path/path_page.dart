@@ -45,7 +45,8 @@ class _PathPageState extends State<PathPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
-              'Il guardiano si sfida su Android e iOS, dove gioca il computer.',
+              'Il guardiano si sfida dove gioca il computer: Android e iOS, '
+              'o Windows e Linux con Stockfish installato.',
             ),
           ),
         );

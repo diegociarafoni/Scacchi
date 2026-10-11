@@ -1,6 +1,7 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/engine/uci.dart';
+import 'package:scacchi/review/coach.dart';
 import 'package:scacchi/review/game_review.dart';
 import 'package:scacchi/review/personal_puzzles.dart';
 
@@ -40,6 +41,19 @@ void main() {
       expect(p.moves.map((m) => m.uci), ['d1h5', 'g7g6']);
       expect(p.themes, containsAll(['defensiveMove', 'opening']));
       expect(p.explanation, 'Dopo Nf6 il Bianco dà matto in 1 con Qxf7#.');
+    });
+
+    test('ogni danno concesso, re scoperto compreso, è difesa', () {
+      for (final theme in [
+        CoachTheme.allowedMate,
+        CoachTheme.hangingPiece,
+        CoachTheme.allowedFork,
+        CoachTheme.allowedPin,
+        CoachTheme.exposedKing,
+        CoachTheme.materialLoss,
+      ]) {
+        expect(lichessThemes(theme), {'defensiveMove'}, reason: theme.name);
+      }
     });
 
     test('gli errori dell\'avversario non diventano puzzle', () async {
