@@ -16,9 +16,11 @@ fix/arrocco-lungo
 docs/guida-sviluppo
 ```
 
-Tipi ammessi: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `revert`, gli stessi dei commit. Solo minuscole, cifre, `.`, `_`, `-` e `/` tra le parti.
+Tipi ammessi: quelli dei commit (`feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `revert`) più `hotfix` e `chore`, che valgono solo per i rami: i commit di un ramo `chore/…` usano un tipo Angular, per esempio `build:`. Solo minuscole, cifre, `.`, `_`, `-` e `/` tra le parti.
 
-Sono accettati anche i rami creati dagli strumenti automatici: `dependabot/…`, `release-please--…` e `claude/…` (sessioni di Claude Code).
+Sono accettati anche i rami creati dagli strumenti automatici: `dependabot/…` e `release-please--…`. Le sessioni di Claude Code seguono le stesse regole delle persone: niente `claude/…`, anche quando l'ambiente propone quel nome.
+
+Dopo il merge il ramo si elimina, su GitHub (vedi **Automatically delete head branches** più sotto) e in locale.
 
 ## Messaggi di commit (Angular)
 
