@@ -80,7 +80,7 @@ class OpponentPicker extends StatelessWidget {
         if (!computerAvailable) ...[
           const SizedBox(height: 8),
           Text(
-            'Il computer è disponibile su Android e iOS.',
+            'Per giocare contro il computer qui serve Stockfish installato.',
             style: theme.textTheme.bodySmall,
           ),
         ],

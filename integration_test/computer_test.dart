@@ -6,7 +6,7 @@ import 'package:scacchi/engine/computer_player.dart';
 import 'package:scacchi/game/game_page.dart';
 import 'package:scacchi/settings/settings.dart';
 
-import '../test/engine/process_transport.dart';
+import 'package:scacchi/engine/process_transport.dart';
 
 Offset _square(WidgetTester tester, String name) {
   final rect = tester.getRect(find.byType(Chessboard));
@@ -81,7 +81,7 @@ void main() {
 
   group(
     'contro il computer',
-    skip: ProcessTransport.findBinary() == null
+    skip: ProcessTransport.binary == null
         ? 'Stockfish non installato (impostare STOCKFISH_PATH)'
         : null,
     () {
