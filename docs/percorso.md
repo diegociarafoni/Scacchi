@@ -24,7 +24,7 @@ La tappa vale la media delle stelle dei suoi esercizi, arrotondata per difetto.
 
 ## Bot guardiano
 
-L'ultima tappa dei capitoli 2-5 è una partita contro un bot dell'Elo indicato. `PathPage` riceve `playGuardian`, che gioca la partita e restituisce le stelle (o `null` se non vinta). Finché la partita contro il computer non è collegata, toccare il guardiano mostra un avviso.
+L'ultima tappa dei capitoli 2-5 è una partita contro un bot dell'Elo indicato. `PathPage` riceve `playGuardian`, che gioca la partita e restituisce le stelle (o `null` se non vinta). Finché la partita contro il computer non è collegata, toccare il guardiano mostra un avviso. Il percorso si apre dalla scheda Tu.
 
 ## Verifica dei contenuti
 

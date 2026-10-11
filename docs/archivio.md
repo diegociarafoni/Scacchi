@@ -38,4 +38,4 @@ Quando arriverà il database locale (RNF-08), il file sarà importato alla prima
 
 ## Integrazione prevista
 
-Salvataggio a ogni mossa, ripresa all'avvio e accesso alla schermata Partite dalla schermata di gioco arrivano in una modifica separata, per non sovrapporsi al lavoro in corso sulla partita contro il computer. Filtri per data e risultato, apertura e copia del FEN (RF-101 e RF-102, P1) seguiranno.
+L'archivio si apre dalla scheda Tu. Salvataggio a ogni mossa, ripresa all'avvio e apertura di una partita salvata sulla scacchiera arrivano in una modifica separata, per non sovrapporsi al lavoro in corso sulla partita contro il computer. Filtri per data e risultato, apertura e copia del FEN (RF-101 e RF-102, P1) seguiranno.
