@@ -66,6 +66,8 @@ class _HomeShellState extends State<HomeShell> {
   /// La scheda Tu si costruisce alla prima apertura, poi resta in memoria.
   var _youVisited = false;
 
+  late bool _kidMode = widget.settings.value.kidMode;
+
   Future<RepertoireTrainer> _loadRepertoire() =>
       (widget.repertoire ??
               () async => RepertoireTrainer.load(await JsonFileStore.open()))()
@@ -77,6 +79,7 @@ class _HomeShellState extends State<HomeShell> {
   @override
   void initState() {
     super.initState();
+    widget.settings.addListener(_onSettings);
     // Caricamento anticipato in background, per il nome dell'apertura in partita.
     openingBook().ignore();
     _scheduler =
@@ -92,6 +95,7 @@ class _HomeShellState extends State<HomeShell> {
 
   @override
   void dispose() {
+    widget.settings.removeListener(_onSettings);
     _reminders?.dispose();
     super.dispose();
   }
@@ -145,16 +149,21 @@ class _HomeShellState extends State<HomeShell> {
     Error.throwWithStackTrace(e, st);
   });
 
-  @override
-  Widget build(BuildContext context) => ListenableBuilder(
-    listenable: widget.settings,
-    builder: (context, _) => _build(context, widget.settings.value.kidMode),
-  );
+  /// Ricostruisce solo quando cambia il profilo bambino, non a ogni
+  /// impostazione.
+  void _onSettings() {
+    final kidMode = widget.settings.value.kidMode;
+    if (kidMode == _kidMode) return;
+    setState(() {
+      _kidMode = kidMode;
+      // Le aperture spariscono: se erano aperte si torna a Gioca (RP-06).
+      if (kidMode && _tab == 2) _tab = 0;
+    });
+  }
 
-  Widget _build(BuildContext context, bool kidMode) {
-    // Nel profilo bambino le aperture restano nascoste (RP-06).
-    final tabs = [0, 1, if (!kidMode) 2, 3];
-    if (!tabs.contains(_tab)) _tab = 0;
+  @override
+  Widget build(BuildContext context) {
+    final tabs = [0, 1, if (!_kidMode) 2, 3];
     if (_tab == 1) {
       _trainer ??= _loadTrainer();
     }
@@ -199,7 +208,7 @@ class _HomeShellState extends State<HomeShell> {
               path: _pathController,
               archive: _archive,
               reminders: () => _reminders,
-              simple: kidMode,
+              simple: _kidMode,
             )
           else
             const SizedBox.shrink(),

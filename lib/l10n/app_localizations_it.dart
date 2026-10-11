@@ -21,4 +21,18 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get kidProfileDescription =>
       'Interfaccia e testi più semplici, bot amichevoli, niente numeri';
+
+  @override
+  String get kidAdultGateTitle => 'Chiedi a un adulto';
+
+  @override
+  String kidAdultGateQuestion(int a, int b) {
+    return 'Per uscire dal profilo bambino: quanto fa $a × $b?';
+  }
+
+  @override
+  String get kidAdultGateWrong => 'Risposta sbagliata.';
+
+  @override
+  String get kidAdultGateConfirm => 'Conferma';
 }
