@@ -88,7 +88,7 @@ Si apre dal menu della partita (⋮ → **Revisione della partita**), disponibil
 
 **Cache** (RF-66): la revisione calcolata resta in memoria per la sessione (`ReviewCache`), quindi riaprirla è immediato. Il salvataggio nel database locale arriverà con l'archivio delle partite.
 
-**Progressi**: `ReviewPage.onReviewed` viene chiamata solo per un'analisi nuova, per registrare `ReviewCompleted` nei progressi una volta per partita.
+**Progressi**: `ReviewPage.onReviewed` viene chiamata solo per un'analisi nuova, quindi una revisione vale XP una volta per sessione della schermata di partita (riaprirla dalla cache non ne dà altri; una nuova sessione sulla stessa partita è già coperta dall'anti-abuso delle attività). `GamePage` registra `ReviewCompleted` tramite `ActivityRecorder`, con la precisione di chi ha giocato contro il computer e il numero di mosse brillanti, e mostra il riepilogo con `showProgressFeedback`. Nella partita tra due persone la precisione non è di nessuno in particolare e non viene registrata.
 
 **Accessibilità**: la barra di valutazione ha un'etichetta descrittiva ("Bianco avanti di 1.5", "Matto in 2 per il Nero"), le mosse della lista sono pulsanti con mossa e categoria, la precisione è letta come percentuale.
 
@@ -126,6 +126,17 @@ Proposta "Allenamento dagli errori" del capitolo 7 dei requisiti: `puzzlesFromRe
 - **Temi**: `mateInN` solo se la soluzione arriva davvero al matto, altrimenti dal tema del coach (`defensiveMove` per ciò che si è concesso, `hangingPiece`, `fork`, `discoveredAttack` per ciò che si è mancato) più la fase (`opening` fino alla decima mossa, `endgame` con al massimo quattro pezzi oltre a re e pedoni, altrimenti `middlegame`).
 - **Punteggio**: indicativo, 900 + 200 per mossa del giocatore, oppure 800 + 300 × N per il matto in N.
 - **Identificativo**: `mio-<partita>-<semimossa>`, con i caratteri diversi da lettere, cifre, `_` e `-` sostituiti da `_`; così lo stesso errore non viene aggiunto due volte e la riga CSV resta valida.
-- **Spiegazione**: la frase del coach sull'errore originale, da mostrare dopo la soluzione.
+- **Spiegazione**: la frase del coach sull'errore originale (non salvata con il puzzle, vedi sotto).
 
-`toCsv()` produce la riga `id,fen,mosse,punteggio,temi` con l'arrocco nella forma standard (`e1g1`), leggibile da `Puzzle.parseCsv`. Il salvataggio e la ripetizione dilazionata useranno il ripasso del modulo puzzle (sistema di Leitner) quando sarà su `main`.
+`toCsv()` produce la riga `id,fen,mosse,punteggio,temi` con l'arrocco nella forma standard (`e1g1`), leggibile da `Puzzle.parseCsv`. 
+
+### Salvataggio e ripasso
+
+Nel riepilogo della revisione il pulsante **Salva gli errori come puzzle (N)** compare se c'è almeno un puzzle da salvare. Contro il computer contano solo gli errori di chi ha giocato, non quelli del motore; tra due persone contano entrambi i lati.
+
+- `PuzzleTrainer.addPersonal` salva i puzzle in `PersonalPuzzles` (`lib/puzzles/personal_puzzles.dart`, chiave `puzzles.personal.v1`, al massimo 200: i più vecchi vengono scartati) e li aggiunge alla coda di ripasso come carte nuove. Salvare di nuovo la stessa partita non duplica nulla e lo dice ("Questi puzzle sono già salvati.").
+- Si trovano in **Puzzle › Ripasso degli errori**, con gli intervalli del sistema di Leitner degli altri puzzle. Il punteggio dei puzzle non cambia: vale solo per quelli del database, quindi un puzzle personale (id `mio-…`) sbagliato o risolto agisce solo sul ripasso.
+- Se il salvataggio fallisce compare "Salvataggio non riuscito. Riprova." e il pulsante resta disponibile.
+- La spiegazione del coach non viene conservata: il puzzle è salvato come riga CSV Lichess. Mostrarla dopo la soluzione richiederebbe un campo dedicato.
+- Se la scrittura su disco fallisce nulla viene aggiunto in memoria, così il salvataggio si può riprovare. Oltre 200 puzzle si scartano i più vecchi, anche dal ripasso.
+- L'identificativo della partita nell'id (`mio-<partita>-<semimossa>`) è un FNV-1a della chiave della revisione, uguale su tutte le piattaforme.
