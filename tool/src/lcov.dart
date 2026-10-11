@@ -12,7 +12,7 @@ Map<String, FileCoverage> parseLcov(String lcov) {
   String? file;
   var found = 0;
   var hit = 0;
-  for (final line in lcov.split('\n')) {
+  for (final line in lcov.split(RegExp(r'\r?\n'))) {
     if (line.startsWith('SF:')) {
       file = line.substring(3).replaceAll(r'\', '/');
       found = 0;

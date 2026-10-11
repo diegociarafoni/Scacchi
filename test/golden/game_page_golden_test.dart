@@ -1,6 +1,8 @@
 @Tags(['golden'])
 library;
 
+import 'dart:io';
+
 import 'package:chessground/chessground.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -48,9 +50,14 @@ Future<void> _play(WidgetTester tester, List<String> uci) async {
   await tester.pumpAndSettle();
 }
 
+// I riferimenti sono generati su Linux: altrove il rendering dei caratteri differisce.
+final _skip = Platform.isLinux ? null : 'riferimenti generati solo su Linux';
+
 void main() {
   for (final device in Device.values) {
-    testWidgets('posizione iniziale su ${device.name}', (tester) async {
+    testWidgets('posizione iniziale su ${device.name}', skip: _skip != null, (
+      tester,
+    ) async {
       await _pumpApp(tester, device);
       await expectLater(
         find.byType(ScacchiApp),
@@ -59,20 +66,24 @@ void main() {
     });
   }
 
-  testWidgets('scacco matto in tema scuro su telefono medio', (tester) async {
-    await _pumpApp(tester, Device.phoneMedium, brightness: Brightness.dark);
-    await _play(tester, [
-      'e2e4',
-      'e7e5',
-      'f1c4',
-      'b8c6',
-      'd1h5',
-      'g8f6',
-      'h5f7',
-    ]);
-    await expectLater(
-      find.byType(ScacchiApp),
-      matchesGoldenFile('goldens/scacco-matto-scuro-telefono-medio.png'),
-    );
-  });
+  testWidgets(
+    'scacco matto in tema scuro su telefono medio',
+    skip: _skip != null,
+    (tester) async {
+      await _pumpApp(tester, Device.phoneMedium, brightness: Brightness.dark);
+      await _play(tester, [
+        'e2e4',
+        'e7e5',
+        'f1c4',
+        'b8c6',
+        'd1h5',
+        'g8f6',
+        'h5f7',
+      ]);
+      await expectLater(
+        find.byType(ScacchiApp),
+        matchesGoldenFile('goldens/scacco-matto-scuro-telefono-medio.png'),
+      );
+    },
+  );
 }

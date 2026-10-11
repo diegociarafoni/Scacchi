@@ -8,9 +8,11 @@ import 'package:flutter_test/flutter_test.dart';
 /// invece dei rettangoli del font di test.
 Future<void> testExecutable(FutureOr<void> Function() testMain) async {
   TestWidgetsFlutterBinding.ensureInitialized();
-  final fonts =
-      '${Platform.environment['FLUTTER_ROOT']}'
-      '/bin/cache/artifacts/material_fonts';
+  final root = Platform.environment['FLUTTER_ROOT'];
+  if (root == null) {
+    throw StateError('FLUTTER_ROOT non è impostata: servono i font dell\'SDK');
+  }
+  final fonts = '$root/bin/cache/artifacts/material_fonts';
   await _load('Roboto', [
     '$fonts/Roboto-Regular.ttf',
     '$fonts/Roboto-Medium.ttf',

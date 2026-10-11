@@ -12,7 +12,14 @@ void main() {
       ((policy['coverage'] as Map<String, dynamic>)['gameLogicMinPercent']
               as num)
           .toDouble();
-  final report = parseLcov(File('coverage/lcov.info').readAsStringSync());
+  final lcov = File('coverage/lcov.info');
+  if (!lcov.existsSync()) {
+    stderr.writeln(
+      'coverage/lcov.info manca: eseguire flutter test --coverage',
+    );
+    exit(2);
+  }
+  final report = parseLcov(lcov.readAsStringSync());
 
   // I file mai caricati dai test non compaiono in lcov: contano come scoperti.
   final logic = <String, FileCoverage>{};
