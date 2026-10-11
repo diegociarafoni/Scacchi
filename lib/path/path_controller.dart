@@ -8,8 +8,6 @@ import '../storage/json_file.dart';
 import 'curriculum.dart';
 import 'path_progress.dart';
 
-typedef RecordActivity = Future<void> Function(Activity activity);
-
 /// Stato del percorso per l'interfaccia, salvato a ogni tappa completata.
 class PathController extends ChangeNotifier {
   PathController(File file, {this.recordActivity})

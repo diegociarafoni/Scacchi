@@ -250,6 +250,36 @@ void main() {
     expect(find.byKey(const ValueKey('clock-white')), findsNothing);
   });
 
+  testWidgets('RF-31 RP-03 modalità tavolo, suoni e vibrazione', (
+    tester,
+  ) async {
+    await _start(tester);
+    ChessboardSettings board() =>
+        tester.widget<Chessboard>(find.byType(Chessboard)).settings;
+    expect(
+      board().pieceOrientationBehavior,
+      PieceOrientationBehavior.facingUser,
+    );
+    await _openSettings(tester);
+    await tester.tap(find.text('Modalità tavolo'));
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(find.text('Vibrazione'), 100);
+    await tester.tap(find.text('Suoni'));
+    await tester.tap(find.text('Vibrazione'));
+    await tester.pumpAndSettle();
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+    expect(
+      board().pieceOrientationBehavior,
+      PieceOrientationBehavior.opponentUpsideDown,
+    );
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getBool('sound'), isFalse);
+    expect(prefs.getBool('haptics'), isFalse);
+    await _tapMove(tester, 'e2e4');
+    expect(find.text('Muove il Nero.'), findsOneWidget);
+  });
+
   testWidgets('RF-120 una nuova partita Chess960 mescola la prima traversa', (
     tester,
   ) async {

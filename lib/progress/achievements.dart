@@ -290,6 +290,20 @@ final List<Achievement> _more = [
     test: (s, _) =>
         Minigame.values.every((m) => s.records.minigames.containsKey(m.id)),
   ),
+  Achievement(
+    id: 'tournament_done',
+    title: 'Torneista',
+    description: 'Porta a termine un torneo contro i bot.',
+    category: AchievementCategory.game,
+    test: (_, a) => a is TournamentFinished,
+  ),
+  Achievement(
+    id: 'tournament_won',
+    title: 'Coppa in bacheca',
+    description: 'Vinci un torneo contro i bot.',
+    category: AchievementCategory.game,
+    test: (_, a) => a is TournamentFinished && a.rank == 1,
+  ),
 ];
 
 Achievement? achievementById(String id) {
