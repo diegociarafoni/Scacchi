@@ -10,7 +10,7 @@ class AppLocalizationsIt extends AppLocalizations {
   AppLocalizationsIt([String locale = 'it']) : super(locale);
 
   @override
-  String get appTitle => 'Scacchi';
+  String get appTitle => 'Rokko';
 
   @override
   String get kidProfileSection => 'Profilo';
@@ -441,7 +441,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get qrCameraError =>
-      'Non riesco a usare la fotocamera. Consenti l\'accesso alla fotocamera per Scacchi nelle impostazioni del telefono e riprova.';
+      'Non riesco a usare la fotocamera. Consenti l\'accesso alla fotocamera per Rokko nelle impostazioni del telefono e riprova.';
 
   @override
   String get qrRetry => 'Riprova';

@@ -78,10 +78,10 @@ void main() {
     await startWithCoach(tester);
     await tester.tap(find.text('Suggerisci'));
     await tester.pumpAndSettle();
-    expect(find.textContaining('pezzo in'), findsOneWidget);
+    expect(find.textContaining('Muovi'), findsOneWidget);
     await tester.tap(find.text('Suggerisci'));
     await tester.pumpAndSettle();
-    expect(find.textContaining('Prova'), findsOneWidget);
+    expect(find.textContaining('Sposta'), findsOneWidget);
   });
 
   Map<Square, Annotation> badges(WidgetTester tester) =>
@@ -95,7 +95,7 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
     await tester.tap(find.text('Suggerisci'));
     await tester.pumpAndSettle();
-    expect(find.textContaining('pezzo in'), findsOneWidget);
+    expect(find.textContaining('Muovi'), findsOneWidget);
     expect(find.byIcon(Icons.school_outlined), findsOneWidget);
   });
 
@@ -111,6 +111,7 @@ void main() {
     await tester.tap(find.text('Suggerisci'));
     await tester.pumpAndSettle();
     expect(shapes().whereType<Arrow>(), hasLength(1));
+    expect(shapes().whereType<Circle>(), hasLength(2));
     await tapMove(tester, 'e2e4');
     await tester.pumpAndSettle(const Duration(seconds: 1));
     expect(shapes(), isEmpty);

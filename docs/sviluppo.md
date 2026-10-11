@@ -17,8 +17,9 @@ flutter pub get                       # dipendenze
 flutter run                           # avvio sul dispositivo o emulatore collegato
 flutter test                          # test unitari e di widget
 flutter test integration_test -d linux  # test e2e (su Linux senza schermo: xvfb-run -a ...)
-flutter analyze                       # analisi statica
-dart format lib test                  # formattazione
+flutter analyze --fatal-infos --fatal-warnings  # analisi statica, come in CI
+dart format lib test integration_test tool      # formattazione, come in CI
+dart tool/check_docs.dart             # link, percorsi, indice e mappa del codice
 flutter build apk                     # APK Android
 flutter build ios                     # app iOS (su Mac)
 ```
@@ -26,6 +27,10 @@ flutter build ios                     # app iOS (su Mac)
 ## Suoni
 
 I file in `assets/sounds/` si rigenerano con `python3 tool/generate_sounds.py`.
+
+## Icone e schermata di avvio
+
+Si rigenerano con `tool/generate_icons.py` e i due generatori Flutter, come descritto in [identita-visiva.md](identita-visiva.md).
 
 ## Test
 
@@ -47,6 +52,7 @@ Ogni funzione nasce dai requisiti del progetto, nel documento dei requisiti, con
 | Widget | `test/analysis/` | Schermata di analisi con motore finto: linee, MultiPV, esplorazione, pausa, freccia | `flutter test` |
 | Unitari e widget | `test/review/` | Probabilità di vittoria, classificazione, sacrifici, precisione, revisione con motore finto, schermata di revisione e accesso dal menu | `flutter test` |
 | Widget | `test/widget_test.dart`, `test/l10n_test.dart` | Avvio dell'app e stato iniziale; lingua italiana predefinita | `flutter test` |
+| Unitari | `test/branding_test.dart` | Nome Rokko su Android e iOS, identificativo invariato, icona monocromatica | `flutter test` |
 | Widget | `test/computer_game_test.dart` | Partita contro il computer con un motore finto | `flutter test` |
 | Gamification | `test/progress/` | Regole di XP, serie e traguardi; salvataggio; schermata Profilo | `flutter test test/progress` |
 | Percorso | `test/path/` | Esercizi, contenuti, sblocco, mappa e tappe sulla scacchiera | `flutter test test/path` |
@@ -99,12 +105,13 @@ I golden si rigenerano con `flutter test test/settings --update-goldens` dopo un
 | RF-60 revisione completa con avanzamento e interruzione | ✓ | |
 | RF-61, RF-62 classificazione delle mosse, Brillante e Ottima | ✓ | |
 | RF-63 precisione, conteggi e stima della forza | ✓ | |
+| RF-68 precisione per fase (apertura, mediogioco, finale) nella revisione | ✓ | ✓ |
 | RF-50 barra di valutazione con valore numerico | ✓ | |
 | RF-54 freccia della mossa migliore | ✓ | |
 | RF-64 grafico della valutazione cliccabile con momenti chiave | ✓ | |
 | RF-65 Riprova sugli errori | ✓ | |
 | RF-66 cache della revisione (in memoria) | ✓ | |
-| RF-70 spiegazioni: matto concesso o mancato, pezzo in presa, forchetta, inchiodatura, perdita di materiale | ✓ | |
+| RF-70 spiegazioni: matto concesso o mancato, pezzo in presa, forchetta, inchiodatura, re scoperto, perdita di materiale | ✓ | |
 | RF-72 giudizio con simbolo sulla casa della mossa (con l'allenatore acceso) | ✓ | ✓ |
 | RF-71 cattura netta, doppio attacco, scoperta dalla variante del motore | ✓ | |
 | Cap. 7, errori trasformati in puzzle personali | ✓ | |
@@ -139,7 +146,7 @@ I golden si rigenerano con `flutter test test/settings --update-goldens` dopo un
 | RG-08 record personali delle serie | ✓ | ✓ |
 | RF-90 nome dell'apertura in partita | ✓ | ✓ |
 | RF-91 mosse di libro | ✓ | |
-| RF-92 explorer ridotto | ✓ | ✓ |
+| RF-92 Esplora aperture | ✓ | ✓ |
 
 ## Integrazione continua
 
@@ -179,8 +186,9 @@ Con le regole di protezione di `main` attive (vedi [convenzioni-git.md](convenzi
 
 Altri workflow:
 
-- **Convenzioni** (`conventions.yml`, su ogni PR, meno di un minuto): nome del ramo, titolo della PR, messaggi dei commit e Gitleaks sui commit della PR, vedi [convenzioni-git.md](convenzioni-git.md).
-- **Sicurezza** (`security.yml`): Trivy, OSV-Scanner, Gitleaks su tutta la cronologia, zizmor e SBOM, su `main`, ogni lunedì e sulle PR che cambiano dipendenze o workflow, vedi [sicurezza.md](sicurezza.md).
+- **Convenzioni** (`conventions.yml`, su ogni PR, meno di un minuto): nome del ramo, titolo della PR, messaggi dei commit, Gitleaks sui commit della PR e controllo della documentazione (anche sulle PR di sola documentazione), vedi [convenzioni-git.md](convenzioni-git.md) e [mappa-del-codice.md](mappa-del-codice.md).
+- **Sicurezza** (`security.yml`): Trivy, OSV-Scanner, Gitleaks su tutta la cronologia, zizmor e SBOM, su `main`, ogni lunedì, a mano e sulle PR che cambiano dipendenze, `.github/`, `android/`, `tool/policy.json` o `.gitleaks.toml`, vedi [sicurezza.md](sicurezza.md).
+- **Dataset** (`datasets.yml`, a mano o sulle PR che cambiano `tool/datasets/`): rigenera puzzle e aperture dai dati Lichess, vedi [puzzle.md](puzzle.md).
 
 Il workflow `.github/workflows/apk-release.yml` produce l'APK release installabile sul telefono e lo pubblica come GitHub Release: vedi [rilascio-android.md](rilascio-android.md).
 
@@ -191,5 +199,5 @@ Il workflow `.github/workflows/apk-release.yml` produce l'APK release installabi
 - Testi dell'interfaccia in italiano.
 - Logica di gioco separata dall'interfaccia (`ChessGame` non importa Flutter), così da poterla testare in isolamento.
 - Analisi statica rigorosa (`analysis_options.yaml`): tipi stretti, `Future` sempre attesi o marcati con `unawaited`, nessun avviso ammesso.
-- Prima del push: `tool/verifica.sh --test` (rami, commit, formattazione, analisi, test), vedi [convenzioni-git.md](convenzioni-git.md#senza-hook-toolverificash).
+- Prima del push: `tool/verifica.sh --test` (rami, commit, documentazione, formattazione, analisi, test), vedi [convenzioni-git.md](convenzioni-git.md#senza-hook-toolverificash).
 - Rami, commit Angular, hook e merge: [convenzioni-git.md](convenzioni-git.md).

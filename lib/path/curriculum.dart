@@ -7,12 +7,16 @@ class Stage {
   const Stage({
     required this.id,
     required this.title,
+    this.intro,
     this.exercises = const [],
     this.guardianElo,
   });
 
   final String id;
   final String title;
+
+  /// Spiegazione breve mostrata prima del primo esercizio.
+  final String? intro;
   final List<Exercise> exercises;
 
   /// Elo del bot guardiano; `null` per le tappe di esercizi.
@@ -41,6 +45,7 @@ const List<Chapter> curriculum = [
       Stage(
         id: 'pieces.rook',
         title: 'La torre',
+        intro: 'La torre corre dritta, in orizzontale e in verticale, per quante case vuoi. Non può saltare gli altri pezzi.',
         exercises: [
           StarsExercise(
             instructions:
@@ -61,6 +66,7 @@ const List<Chapter> curriculum = [
       Stage(
         id: 'pieces.bishop',
         title: 'L\'alfiere',
+        intro: 'L\'alfiere corre in diagonale. Un alfiere nasce su una casa chiara e l\'altro su una scura, e ognuno resta sempre sul suo colore.',
         exercises: [
           StarsExercise(
             instructions:
@@ -81,6 +87,7 @@ const List<Chapter> curriculum = [
       Stage(
         id: 'pieces.queen',
         title: 'La donna',
+        intro: 'La donna è il pezzo più forte: si muove come la torre e come l\'alfiere insieme, in tutte e otto le direzioni.',
         exercises: [
           StarsExercise(
             instructions:
@@ -89,11 +96,18 @@ const List<Chapter> curriculum = [
             start: Square.d1,
             stars: [Square.d8, Square.h4, Square.a4, Square.h8],
           ),
+          StarsExercise(
+            instructions: 'Raccogli le stelle con meno mosse possibile.',
+            role: Role.queen,
+            start: Square.a1,
+            stars: [Square.b6, Square.f2, Square.g7, Square.c8],
+          ),
         ],
       ),
       Stage(
         id: 'pieces.king',
         title: 'Il re',
+        intro: 'Il re è il pezzo più importante ma anche il più lento: fa un passo solo, in qualunque direzione.',
         exercises: [
           StarsExercise(
             instructions: 'Il re si muove di una casa in ogni direzione.',
@@ -101,11 +115,18 @@ const List<Chapter> curriculum = [
             start: Square.e1,
             stars: [Square.e3, Square.g3, Square.g1],
           ),
+          StarsExercise(
+            instructions: 'Raccogli le stelle con meno passi possibile.',
+            role: Role.king,
+            start: Square.e4,
+            stars: [Square.c6, Square.f7, Square.h5],
+          ),
         ],
       ),
       Stage(
         id: 'pieces.knight',
         title: 'Il cavallo',
+        intro: 'Il cavallo salta a forma di L: due case dritto e una di lato. È l\'unico pezzo che può scavalcare gli altri.',
         exercises: [
           StarsExercise(
             instructions: 'Il cavallo salta a forma di L e scavalca i pezzi.',
@@ -124,6 +145,7 @@ const List<Chapter> curriculum = [
       Stage(
         id: 'pieces.pawn',
         title: 'Il pedone',
+        intro: 'Il pedone va solo avanti, una casa alla volta. Alla sua prima mossa può farne due. Se arriva in fondo diventa un pezzo nuovo.',
         exercises: [
           StarsExercise(
             instructions:
@@ -143,6 +165,228 @@ const List<Chapter> curriculum = [
           ),
         ],
       ),
+      Stage(
+        id: 'pieces.capture',
+        title: 'Catturare',
+        intro:
+            'Per catturare un pezzo avversario vai sulla sua casa: il pezzo '
+            'catturato esce dalla scacchiera. I pezzi non valgono tutti uguale: '
+            'pedone 1, cavallo e alfiere 3, torre 5, donna 9.',
+        exercises: [
+          LineExercise(
+            instructions: 'Cattura il cavallo con la torre.',
+            fen: '4k3/8/8/8/R2n4/8/8/4K3 w - - 0 1',
+            steps: ['a4d4'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Il pedone cattura in diagonale, in avanti. '
+                'Prendi l\'alfiere.',
+            fen: '4k3/8/8/3bp3/4P3/8/8/4K3 w - - 0 1',
+            steps: ['e4d5'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Il cavallo può catturare tre pezzi. Scegli quello che '
+                'vale di più.',
+            fen: '7k/8/2p5/1n3q2/3N4/8/8/K7 w - - 0 1',
+            steps: ['d4f5'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Cattura il pezzo che nessuno difende, così non perdi '
+                'la torre.',
+            fen: '6k1/4p3/3n4/8/8/K7/8/3R3b w - - 0 1',
+            steps: ['d1h1'],
+            goal: LineGoal.line,
+          ),
+        ],
+      ),
+    ],
+  ),
+  Chapter(
+    id: 'rules',
+    title: 'Le regole',
+    stages: [
+      Stage(
+        id: 'rules.check',
+        title: 'Lo scacco',
+        intro:
+            'Quando un pezzo attacca il re, il re è sotto scacco. Chi è '
+            'sotto scacco deve salvare subito il re: non può fare altre mosse.',
+        exercises: [
+          LineExercise(
+            instructions: 'Dai scacco al re nero con la torre.',
+            fen: '4k3/8/8/8/8/8/8/R3K3 w - - 0 1',
+            steps: ['a1a8'],
+            goal: LineGoal.check,
+          ),
+          LineExercise(
+            instructions: 'Dai scacco con il cavallo.',
+            fen: '4k3/p7/8/8/6N1/8/7P/4K3 w - - 0 1',
+            steps: ['g4f6'],
+            goal: LineGoal.check,
+          ),
+          LineExercise(
+            instructions: 'Dai scacco con l\'alfiere: ci sono due modi.',
+            fen: '4k3/p7/8/8/8/3B4/7P/4K3 w - - 0 1',
+            steps: ['d3b5|d3g6'],
+            goal: LineGoal.check,
+          ),
+          LineExercise(
+            instructions:
+                'Dai scacco con la donna, ma su una casa dove il re non '
+                'può catturarla.',
+            fen: '4k3/8/8/8/8/8/8/3QK3 w - - 0 1',
+            steps: ['d1e2|d1a4|d1h5'],
+            goal: LineGoal.line,
+          ),
+        ],
+      ),
+      Stage(
+        id: 'rules.escape',
+        title: 'Via dallo scacco',
+        intro:
+            'Per uscire dallo scacco ci sono tre modi: spostare il re, '
+            'catturare il pezzo che dà scacco, oppure mettere un pezzo in mezzo.',
+        exercises: [
+          LineExercise(
+            instructions:
+                'La torre nera dà scacco. Cattura il pezzo che dà scacco.',
+            fen: 'R3r3/7k/8/8/8/8/8/4K3 w - - 0 1',
+            steps: ['a8e8'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions: 'Para lo scacco mettendo il cavallo in mezzo.',
+            fen: '4r2k/8/8/8/8/2N5/8/4K3 w - - 0 1',
+            steps: ['c3e2|c3e4'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Sposta il re fuori dalla traversa della torre, senza '
+                'finire vicino al re nero.',
+            fen: '8/8/8/8/8/2k5/8/r3K3 w - - 0 1',
+            steps: ['e1e2|e1f2'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Il re è in pericolo. Trova l\'unica mossa che lo salva.',
+            fen: '6k1/5ppp/8/8/2B5/8/5PPP/r5K1 w - - 0 1',
+            steps: ['c4f1'],
+            goal: LineGoal.line,
+          ),
+        ],
+      ),
+      Stage(
+        id: 'rules.castle',
+        title: 'Come si arrocca',
+        intro:
+            'Con l\'arrocco il re fa due passi verso una torre e la torre lo '
+            'scavalca. Si può fare se re e torre non si sono mai mossi, se tra '
+            'loro non ci sono pezzi e se il re non passa da case attaccate.',
+        exercises: [
+          LineExercise(
+            instructions: 'Arrocca corto, verso la torre più vicina.',
+            fen: 'r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1',
+            steps: ['e1g1'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions: 'Ora arrocca lungo, verso la torre più lontana.',
+            fen: 'r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1',
+            steps: ['e1c1'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'L\'alfiere nero controlla una casa dove passerebbe il re. '
+                'Arrocca dal lato giusto.',
+            fen: '4k3/8/8/8/2b5/8/8/R3K2R w KQ - 0 1',
+            steps: ['e1c1'],
+            goal: LineGoal.line,
+          ),
+        ],
+      ),
+      Stage(
+        id: 'rules.en-passant',
+        title: 'La presa al varco',
+        intro:
+            'Se un pedone avversario avanza di due case e si ferma accanto al '
+            'tuo, alla mossa subito dopo puoi catturarlo come se avesse fatto '
+            'un passo solo. È la presa al varco, o en passant.',
+        exercises: [
+          LineExercise(
+            instructions:
+                'Il pedone nero è appena andato da d7 a d5. Catturalo al '
+                'varco.',
+            fen: '4k3/8/8/3pP3/8/8/8/4K3 w - d6 0 1',
+            steps: ['e5d6'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Il pedone nero è appena andato da c7 a c5. Catturalo al '
+                'varco.',
+            fen: '4k3/8/8/1Pp5/8/8/8/4K3 w - c6 0 1',
+            steps: ['b5c6'],
+            goal: LineGoal.line,
+          ),
+        ],
+      ),
+      Stage(
+        id: 'rules.promotion',
+        title: 'La promozione',
+        intro:
+            'Il pedone che arriva in fondo si trasforma in donna, torre, '
+            'alfiere o cavallo: quasi sempre conviene la donna. Qui diventa '
+            'donna da solo.',
+        exercises: [
+          LineExercise(
+            instructions: 'Promuovi il pedone catturando la torre.',
+            fen: '1r2k3/P7/8/8/8/8/8/4K3 w - - 0 1',
+            steps: ['a7b8q'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions: 'Promuovi il pedone e dai scacco matto.',
+            fen: '7k/4P3/6K1/8/8/8/8/8 w - - 0 1',
+            steps: ['e7e8q'],
+            goal: LineGoal.mate,
+          ),
+        ],
+      ),
+      Stage(
+        id: 'rules.stalemate',
+        title: 'Lo stallo',
+        intro:
+            'Se chi deve muovere non è sotto scacco ma non ha nessuna mossa, '
+            'la partita finisce pari: è stallo. Quando sei in vantaggio lascia '
+            'sempre una mossa al re avversario, finché non dai matto.',
+        exercises: [
+          LineExercise(
+            instructions:
+                'Dai scacco matto. Attento: una mossa sembra buona ma è '
+                'stallo.',
+            fen: 'k7/7Q/1K6/8/8/8/8/8 w - - 0 1',
+            steps: ['h7b7'],
+            goal: LineGoal.mate,
+          ),
+          LineExercise(
+            instructions:
+                'Dai scacco matto con la donna, senza chiudere il re in '
+                'stallo.',
+            fen: '8/8/8/8/8/3Q4/2K5/k7 w - - 0 1',
+            steps: ['d3a3'],
+            goal: LineGoal.mate,
+          ),
+        ],
+      ),
     ],
   ),
   Chapter(
@@ -152,6 +396,7 @@ const List<Chapter> curriculum = [
       Stage(
         id: 'mates.one',
         title: 'Matto in una',
+        intro: 'Scacco matto vuol dire che il re è sotto scacco e non ha modo di salvarsi. Con il matto la partita è vinta.',
         exercises: [
           LineExercise(
             instructions: '$_mateIn1 Il re è chiuso dai suoi pedoni.',
@@ -176,6 +421,7 @@ const List<Chapter> curriculum = [
       Stage(
         id: 'mates.two',
         title: 'Matto in due',
+        intro: 'A volte il matto arriva in due mosse: la prima costringe l\'avversario a una risposta obbligata, la seconda chiude il re.',
         exercises: [
           LineExercise(
             instructions: '$_mateIn2 Sacrifica una torre sull\'ottava.',
@@ -195,6 +441,7 @@ const List<Chapter> curriculum = [
       Stage(
         id: 'tactics.fork',
         title: 'La forchetta',
+        intro: 'La forchetta è un attacco a due pezzi nello stesso momento. L\'avversario può salvarne uno solo e l\'altro lo catturi tu.',
         exercises: [
           LineExercise(
             instructions:
@@ -216,6 +463,7 @@ const List<Chapter> curriculum = [
       Stage(
         id: 'tactics.skewer',
         title: 'L\'infilata',
+        intro: 'L\'infilata attacca un pezzo importante che ne copre un altro: quando il primo si sposta, catturi quello dietro.',
         exercises: [
           LineExercise(
             instructions:
@@ -237,6 +485,7 @@ const List<Chapter> curriculum = [
       Stage(
         id: 'endgames.queen',
         title: 'Matto di donna',
+        intro: 'Con donna e re contro re da solo si vince sempre: si spinge il re avversario sul bordo e lo si chiude con l\'aiuto del proprio re.',
         exercises: [
           LineExercise(
             instructions: '$_mateIn1 Il re bianco protegge la donna.',
@@ -249,6 +498,7 @@ const List<Chapter> curriculum = [
       Stage(
         id: 'endgames.rook',
         title: 'Matto di torre',
+        intro: 'Anche torre e re vincono contro il re da solo. Il tuo re si mette davanti a quello avversario e la torre dà matto sul bordo.',
         exercises: [
           LineExercise(
             instructions: '$_mateIn1 Il re bianco toglie le case di fuga.',
@@ -268,6 +518,7 @@ const List<Chapter> curriculum = [
       Stage(
         id: 'openings.center',
         title: 'Il centro',
+        intro: 'Le quattro case al centro (e4, d4, e5, d5) sono le più importanti: da lì i pezzi controllano tutta la scacchiera. Inizia con un pedone centrale.',
         exercises: [
           LineExercise(
             instructions: 'Occupa il centro con un pedone.',
@@ -280,6 +531,7 @@ const List<Chapter> curriculum = [
       Stage(
         id: 'openings.develop',
         title: 'Sviluppa i pezzi',
+        intro: 'Sviluppare vuol dire portare in gioco cavalli e alfieri nelle prime mosse, prima di muovere di nuovo gli stessi pezzi o la donna.',
         exercises: [
           LineExercise(
             instructions: 'Porta in gioco un cavallo o un alfiere.',
@@ -300,6 +552,7 @@ const List<Chapter> curriculum = [
       Stage(
         id: 'openings.castle',
         title: 'L\'arrocco',
+        intro: 'Nelle prime mosse arrocca presto: il re va al sicuro dietro i pedoni e la torre entra in gioco.',
         exercises: [
           LineExercise(
             instructions: 'Metti al sicuro il re con l\'arrocco corto.',

@@ -2,6 +2,7 @@ import 'package:dartchess/dartchess.dart';
 
 import '../archive/saved_game.dart';
 import '../game/chess_game.dart';
+import '../openings/opening_names_it.dart';
 import 'stats.dart';
 
 /// Riepilogo degli ultimi sette giorni dell'utente, calcolato dall'archivio
@@ -43,7 +44,10 @@ class PlayerPortrait {
     for (final g in mine) {
       final points = g.playerScore!;
       score = score.add(points);
-      if (g.opening case final o?) openings[o] = (openings[o] ?? 0) + 1;
+      if (g.opening case final o?) {
+        final name = openingNameIt(o);
+        openings[name] = (openings[name] ?? 0) + 1;
+      }
       if (g.accuracy case final a?) accuracies.add(a);
       days[g.createdAt.weekday] = (days[g.createdAt.weekday] ?? 0) + 1;
       if (points == 1) {

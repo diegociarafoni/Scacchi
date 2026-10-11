@@ -34,7 +34,7 @@ class _OpeningsHubPageState extends State<OpeningsHubPage> {
             children: [
               ListTile(
                 leading: const Icon(Icons.account_tree_outlined),
-                title: const Text('Explorer'),
+                title: const Text('Esplora aperture'),
                 subtitle: const Text(
                   'Nomi e continuazioni di oltre 3.000 aperture',
                 ),

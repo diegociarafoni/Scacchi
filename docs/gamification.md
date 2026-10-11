@@ -99,9 +99,10 @@ Spento di default. Nel Profilo, "Promemoria giornaliero" chiede il permesso per 
 
 | File | Ruolo |
 |---|---|
-| `activity.dart` | Attività registrabili: partita, puzzle, sessione a tempo, lezione, revisione |
+| `activity.dart` | Attività registrabili: partita, puzzle, sessione a tempo o a serie, minigioco, torneo, lezione, revisione |
 | `challenges.dart` | Tipi di sfida, generazione delle sfide del giorno e della settimana |
 | `records.dart` | Record personali e loro aggiornamento |
+| `streak_info.dart` | Spiegazione della serie in parole: cosa serve ogni giorno, stato di oggi, prossimo traguardo, cosa succede saltando un giorno |
 | `game_activity.dart` | Converte una `ChessGame` conclusa in attività: risultato, pezzo che dà il matto (anche di scoperta o con l'arrocco), arrocco lungo |
 | `xp.dart` | Tabella degli XP e curva dei livelli |
 | `daily_goal.dart` | Obiettivo giornaliero e scelte proposte |
@@ -143,7 +144,7 @@ Le altre schermate registrano:
 
 Nel profilo bambino (RP-06) la notifica e il Profilo non mostrano numeri: stelle per il livello, fiamma per la serie, frasi incoraggianti al posto di «+N XP», niente record personali. Vedi [profilo-bambino.md](profilo-bambino.md#niente-numeri).
 
-## Integrazione prevista
+## Integrazione nell'app
 
 Il Profilo si apre dalla scheda Tu e `HomeShell` crea il `ReminderController` all'avvio su Android e iOS. `GamePage` riceve da `HomeShell` il registratore delle attività e i progressi: a fine partita registra `GamePlayed` (con `gameActivity`) una sola volta per partita e mostra "+N XP" sopra la barra dei comandi; le impostazioni ricevono i progressi per bloccare temi e pezzi non ancora sbloccati.
 

@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Controlli veloci prima del push, gli stessi che la CI esegue su ogni PR:
 # nome del ramo, messaggi dei commit, titolo della PR (facoltativo), nessun
-# sottomodulo, formattazione e analisi. Con --test anche i test senza golden.
+# sottomodulo, documentazione, formattazione e analisi. Con --test anche i test
+# senza golden.
 #
 #   tool/verifica.sh [--titolo "feat(game): titolo della PR"] [--test]
 set -euo pipefail
@@ -33,6 +34,7 @@ if git ls-files -s | grep -q '^160000'; then
   exit 1
 fi
 
+dart tool/check_docs.dart
 dart format --output=none --set-exit-if-changed lib test integration_test tool
 flutter analyze --fatal-infos --fatal-warnings
 if $test_run; then flutter test --exclude-tags golden; fi

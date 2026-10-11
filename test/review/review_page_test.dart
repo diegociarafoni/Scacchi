@@ -204,6 +204,30 @@ void main() {
       expect(find.textContaining('Elo stimato'), findsWidgets);
     });
 
+    testWidgets('la precisione si divide per fase della partita', (
+      tester,
+    ) async {
+      await pumpReview(tester);
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text('Precisione per fase'));
+      await tester.tap(find.text('Precisione per fase'));
+      await tester.pumpAndSettle();
+      // La partita del barbiere finisce in apertura: le altre fasi sono vuote.
+      expect(find.text('Apertura'), findsOneWidget);
+      expect(find.text('Mediogioco'), findsOneWidget);
+      expect(find.text('Finale'), findsOneWidget);
+      // I valori dicono di chi sono.
+      expect(find.text('Bianco — · Nero —'), findsNWidgets(2));
+      expect(
+        find.bySemanticsLabel(RegExp(r'Apertura: Bianco \d+, Nero \d+')),
+        findsOneWidget,
+      );
+      expect(
+        find.bySemanticsLabel('Mediogioco: Bianco —, Nero —'),
+        findsOneWidget,
+      );
+    });
+
     testWidgets('RF-61 la lista mostra la categoria di ogni mossa', (
       tester,
     ) async {

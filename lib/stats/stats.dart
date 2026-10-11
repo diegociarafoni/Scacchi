@@ -1,6 +1,7 @@
 import 'package:dartchess/dartchess.dart';
 
 import '../archive/saved_game.dart';
+import '../openings/opening_names_it.dart';
 
 /// Vittorie, patte e sconfitte.
 class Score {
@@ -72,7 +73,10 @@ class GameStats {
       );
       final tc = g.timeControl ?? noClock;
       byTc[tc] = (byTc[tc] ?? const Score()).add(points);
-      if (g.opening case final o?) openings[o] = (openings[o] ?? 0) + 1;
+      if (g.opening case final o?) {
+        final name = openingNameIt(o);
+        openings[name] = (openings[name] ?? 0) + 1;
+      }
       if (g.accuracy case final a?) trend.add((g.createdAt, a));
     }
     trend.sort((a, b) => a.$1.compareTo(b.$1));
