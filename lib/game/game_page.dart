@@ -328,17 +328,14 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final position = await _withClockPaused(
       () => Navigator.of(context).push<Position>(
         MaterialPageRoute(
-          builder: (_) => PositionEditorPage(
-            initialFen: _game.variant == Variant.standard ? shown.fen : null,
-          ),
+          builder: (_) =>
+              PositionEditorPage(initialFen: shown.fen, board: _settings.board),
         ),
       ),
     );
     if (!mounted || position == null) return;
     _game = ChessGame(initial: position);
     _clock = null;
-    _viewPly = null;
-    _pendingMove = null;
     _clockHistory.clear();
     _lowTime.reset();
     _clearBoardInteraction();

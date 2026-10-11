@@ -105,7 +105,7 @@ void main() {
   });
 
   test('parseFen accetta il solo campo della scacchiera', () {
-    final draft = PositionDraft.parseFen('4k3/8/8/8/8/8/8/4K3')!;
+    final draft = PositionDraft.parseFen('4k3/8/8/8/8/8/8/R3K3')!;
     expect(draft.turn, Side.white);
     expect(draft.problem, isNull);
   });
@@ -124,5 +124,37 @@ void main() {
     for (final p in SetupProblem.values) {
       expect(p.message, isNotEmpty);
     }
+  });
+
+  test('una posizione già finita non si gioca', () {
+    const mate = '6k1/5ppp/8/8/8/8/8/R5K1 b - - 0 1';
+    expect(PositionDraft.parseFen(mate)!.problem, isNull);
+    const mated = 'R5k1/5ppp/8/8/8/8/8/6K1 b - - 0 1';
+    expect(PositionDraft.parseFen(mated)!.problem, SetupProblem.gameOver);
+    expect(kings().problem, SetupProblem.gameOver);
+    const fifty = '4k3/8/8/8/8/8/8/R3K3 w - - 100 80';
+    expect(PositionDraft.parseFen(fifty)!.problem, SetupProblem.gameOver);
+    expect(PositionDraft.parseFen(fifty)!.toPosition(), isNull);
+  });
+
+  test('flipped conserva i contatori del FEN', () {
+    final draft = PositionDraft.parseFen(
+      'r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 12 40',
+    )!.flipped();
+    expect(draft.fen, 'r3k2r/8/8/8/8/8/8/R3K2R b KQkq - 12 40');
+  });
+
+  test('una casa en passant impossibile non entra nel FEN', () {
+    final draft = PositionDraft.parseFen(
+      'rnbqkbnr/pppp1ppp/8/4p3/8/8/PPPPPPPP/RNBQKBNR w KQkq e3 0 2',
+    )!;
+    expect(draft.fen, contains(' w KQkq - '));
+  });
+
+  test('un tocco che non cambia nulla conserva l\'en passant', () {
+    const fen = 'rnbqkbnr/ppp1pppp/8/8/3pP3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 3';
+    final draft = PositionDraft.parseFen(fen)!;
+    expect(draft.put(sq('e5'), null).fen, fen);
+    expect(draft.put(sq('e4'), _wp).fen, fen);
   });
 }

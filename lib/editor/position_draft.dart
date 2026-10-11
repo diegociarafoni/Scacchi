@@ -20,7 +20,9 @@ enum SetupProblem {
   kings('Serve esattamente un re per colore.'),
   pawnsOnBackrank('I pedoni non possono stare in prima o in ottava traversa.'),
   oppositeCheck('Il giocatore che non ha il tratto è sotto scacco.'),
-  impossibleCheck('Lo scacco al re non è raggiungibile con mosse legali.');
+  impossibleCheck('Lo scacco al re non è raggiungibile con mosse legali.'),
+  invalid('La posizione non è valida.'),
+  gameOver('In questa posizione la partita è già finita.');
 
   const SetupProblem(this.message);
 
@@ -29,7 +31,7 @@ enum SetupProblem {
 
 /// Posizione in costruzione nell'editor: può essere illegale finché non si gioca.
 class PositionDraft {
-  const PositionDraft._({
+  PositionDraft._({
     required this.board,
     required this.turn,
     required this.castling,
@@ -45,7 +47,7 @@ class PositionDraft {
   );
 
   factory PositionDraft.empty() =>
-      const PositionDraft._(board: Board.empty, turn: Side.white, castling: {});
+      PositionDraft._(board: Board.empty, turn: Side.white, castling: {});
 
   /// `null` se [fen] non è leggibile. Accetta anche il solo campo della scacchiera.
   static PositionDraft? parseFen(String fen) {
@@ -62,10 +64,19 @@ class PositionDraft {
         for (final right in CastlingRight.values)
           if (setup.castlingRights.has(right.rook)) right,
       },
-      epSquare: setup.epSquare,
+      epSquare: _validEpSquare(setup),
       halfmoves: setup.halfmoves,
       fullmoves: setup.fullmoves,
     )._withValidCastling();
+  }
+
+  /// La casa en passant che la posizione legale conserverebbe.
+  static Square? _validEpSquare(Setup setup) {
+    try {
+      return Chess.fromSetup(setup).epSquare;
+    } on PositionSetupException {
+      return null;
+    }
   }
 
   final Board board;
@@ -92,7 +103,10 @@ class PositionDraft {
       board.pieceAt(right.rook) == Piece(color: right.side, role: Role.rook);
 
   /// Mette [piece] su [square], o la svuota se `null`.
-  PositionDraft put(Square square, Piece? piece) => PositionDraft._(
+  PositionDraft put(Square square, Piece? piece) =>
+      board.pieceAt(square) == piece ? this : _put(square, piece);
+
+  PositionDraft _put(Square square, Piece? piece) => PositionDraft._(
     board: piece == null
         ? board.removePieceAt(square)
         : board.setPieceAt(square, piece),
@@ -136,6 +150,8 @@ class PositionDraft {
       board: flippedBoard,
       turn: turn.opposite,
       castling: {},
+      halfmoves: halfmoves,
+      fullmoves: fullmoves,
     )._withValidCastling(
       requested: {
         for (final right in castling)
@@ -159,22 +175,35 @@ class PositionDraft {
     );
   }
 
-  SetupProblem? get problem {
+  late final (Position?, SetupProblem?) _validated = _validate();
+
+  (Position?, SetupProblem?) _validate() {
+    final Position position;
     try {
-      Chess.fromSetup(_setup);
-      return null;
+      position = Chess.fromSetup(_setup);
     } on PositionSetupException catch (e) {
-      return switch (e.cause) {
-        IllegalSetupCause.empty => SetupProblem.empty,
-        IllegalSetupCause.kings => SetupProblem.kings,
-        IllegalSetupCause.pawnsOnBackrank => SetupProblem.pawnsOnBackrank,
-        IllegalSetupCause.oppositeCheck => SetupProblem.oppositeCheck,
-        IllegalSetupCause.impossibleCheck ||
-        IllegalSetupCause.variant => SetupProblem.impossibleCheck,
-      };
+      return (
+        null,
+        switch (e.cause) {
+          IllegalSetupCause.empty => SetupProblem.empty,
+          IllegalSetupCause.kings => SetupProblem.kings,
+          IllegalSetupCause.pawnsOnBackrank => SetupProblem.pawnsOnBackrank,
+          IllegalSetupCause.oppositeCheck => SetupProblem.oppositeCheck,
+          IllegalSetupCause.impossibleCheck => SetupProblem.impossibleCheck,
+          IllegalSetupCause.variant => SetupProblem.invalid,
+        },
+      );
     }
+    final over =
+        position.isCheckmate ||
+        position.isStalemate ||
+        position.isInsufficientMaterial ||
+        position.halfmoves >= 100;
+    return over ? (null, SetupProblem.gameOver) : (position, null);
   }
 
+  SetupProblem? get problem => _validated.$2;
+
   /// `null` se la posizione non è legale.
-  Position? toPosition() => problem == null ? Chess.fromSetup(_setup) : null;
+  Position? toPosition() => _validated.$1;
 }

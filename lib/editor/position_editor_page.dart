@@ -3,29 +3,28 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../minigames/blind.dart' show pieceLabel;
 import '../minigames/board_layout.dart';
 import 'position_draft.dart';
 
 /// Editor di posizione: pezzi liberi, tratto, arrocco, FEN. Restituisce la
 /// posizione da giocare con `Navigator.pop`.
 class PositionEditorPage extends StatefulWidget {
-  const PositionEditorPage({super.key, this.initialFen});
+  const PositionEditorPage({
+    super.key,
+    this.initialFen,
+    this.board = const ChessboardSettings(),
+  });
 
   /// Posizione di partenza; senza, quella iniziale degli scacchi.
   final String? initialFen;
 
+  /// Aspetto della scacchiera e dei pezzi scelto nelle impostazioni.
+  final ChessboardSettings board;
+
   @override
   State<PositionEditorPage> createState() => _PositionEditorPageState();
 }
-
-const _roleNames = {
-  Role.king: 're',
-  Role.queen: 'donna',
-  Role.rook: 'torre',
-  Role.bishop: 'alfiere',
-  Role.knight: 'cavallo',
-  Role.pawn: 'pedone',
-};
 
 const _castlingLabels = {
   CastlingRight.whiteKingSide: 'O-O bianco',
@@ -33,15 +32,6 @@ const _castlingLabels = {
   CastlingRight.blackKingSide: 'O-O nero',
   CastlingRight.blackQueenSide: 'O-O-O nero',
 };
-
-String _pieceLabel(Piece piece) {
-  final role = _roleNames[piece.role]!;
-  final female = piece.role == Role.queen || piece.role == Role.rook;
-  final color = piece.color == Side.white
-      ? (female ? 'bianca' : 'bianco')
-      : (female ? 'nera' : 'nero');
-  return '${role[0].toUpperCase()}${role.substring(1)} $color';
-}
 
 class _PositionEditorPageState extends State<PositionEditorPage> {
   late PositionDraft _draft;
@@ -100,7 +90,7 @@ class _PositionEditorPageState extends State<PositionEditorPage> {
     return Semantics(
       selected: selected,
       button: true,
-      label: piece == null ? 'Gomma' : _pieceLabel(piece),
+      label: piece == null ? 'Gomma' : pieceLabel(piece),
       child: ExcludeSemantics(
         child: InkWell(
           key: key,
@@ -120,7 +110,7 @@ class _PositionEditorPageState extends State<PositionEditorPage> {
             padding: const EdgeInsets.all(2),
             child: piece == null
                 ? const Icon(Icons.delete_outline)
-                : Image(image: PieceSet.cburnett.assets[piece.kind]!),
+                : Image(image: widget.board.pieceAssets[piece.kind]!),
           ),
         ),
       ),
@@ -149,6 +139,7 @@ class _PositionEditorPageState extends State<PositionEditorPage> {
           orientation: _orientation,
           fen: _draft.board.fen,
           onTouchedSquare: _tap,
+          settings: StaticChessboardSettings.fromBoardSettings(widget.board),
         ),
         panel: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,

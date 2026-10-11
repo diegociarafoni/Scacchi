@@ -1,6 +1,6 @@
 # Editor di posizione
 
-Requisito RF-53. Si apre dalla partita con l'icona **Editor di posizione** nella barra in alto e parte dalla posizione mostrata in quel momento (per le varianti parte dalla posizione iniziale degli scacchi).
+Requisito RF-53. Si apre dalla partita con l'icona **Editor di posizione** nella barra in alto e parte dalla posizione mostrata in quel momento, con il set di pezzi e i colori scelti nelle impostazioni. La partita che si avvia è sempre di scacchi classici, anche se si parte da una variante.
 
 ## Comandi
 
@@ -23,9 +23,10 @@ La posizione è controllata con dartchess (`Chess.fromSetup`). Il messaggio sott
 - non c'è esattamente un re per colore;
 - pedoni in prima o in ottava traversa;
 - il giocatore che non ha il tratto è sotto scacco;
-- scacco non raggiungibile con mosse legali (troppi pezzi che danno scacco, o scacco impossibile dopo la spinta di due case indicata dall'en passant).
+- scacco non raggiungibile con mosse legali (troppi pezzi che danno scacco, o scacco impossibile dopo la spinta di due case indicata dall'en passant);
+- partita già finita: matto, stallo, materiale insufficiente o regola delle 50 mosse raggiunta dal contatore del FEN.
 
-La casa en passant viene letta dal FEN e conservata finché la posizione non cambia; qualsiasi modifica la cancella. I contatori delle semimosse e delle mosse del FEN incollato sono conservati.
+La casa en passant viene letta dal FEN, scartata se non è sulla traversa giusta o non c'è il pedone appena spinto, e conservata finché i pezzi non cambiano. I contatori delle semimosse e delle mosse del FEN incollato sono conservati, anche invertendo i colori.
 
 ## Codice
 
