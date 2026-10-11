@@ -8,7 +8,7 @@ Requisito RG-03: una mappa di capitoli e tappe sul modello di Duolingo e del mod
 |---|---|
 | Il movimento dei pezzi | Torre, alfiere, donna, re, cavallo, pedone (con promozione), catturare (con il valore dei pezzi) |
 | Le regole | Lo scacco, via dallo scacco (spostare il re, catturare, mettere in mezzo), l'arrocco, la presa al varco, la promozione, lo stallo |
-| Matti elementari | Matto in una (corridoio, scala di torri, affogato), il matto del corridoio, donna e re, le torri a scala, matti famosi (Anastasia, arabo, Boden, Damiano), matto in due (anche il matto affogato con sacrificio di donna), guardiano (400 Elo) |
+| Matti elementari | Matto in una (primi esempi), il matto del corridoio (con la donna e attirando via il difensore), donna e re, le torri a scala in due mosse, matti famosi (Anastasia, arabo, Boden, Damiano), matto in due (anche il matto affogato con sacrificio di donna), guardiano (400 Elo) |
 | Tattiche | Forchetta di cavallo e di pedone, infilata, guardiano (800) |
 | Finali | Matto di donna, matto di torre, guardiano (1000) |
 | Aperture | Il centro, lo sviluppo (con la Partita Italiana), l'arrocco, guardiano (1200) |
@@ -33,7 +33,7 @@ Stelle (`challengeStars`): vittoria in al massimo 40 mosse 3 stelle, fino a 60 m
 
 ## Verifica dei contenuti
 
-`test/path/curriculum_test.dart` controlla ogni esercizio: mosse della soluzione e risposte legali, risposte forzate (unica mossa legale) negli esercizi di matto, ultima mossa che dà matto (o scacco, per l'obiettivo scacco), una spiegazione per ogni lezione, stelle raggiungibili e mai sulla casa di partenza. Un errore in un FEN o in una soluzione fa fallire la CI.
+`test/path/curriculum_test.dart` controlla ogni esercizio: mosse della soluzione e risposte legali, risposte forzate (unica mossa legale) negli esercizi di matto, ogni prima mossa che forza il matto accettata tra le alternative, ultima mossa che dà matto (o scacco, per l'obiettivo scacco), una spiegazione per ogni lezione, stelle raggiungibili e mai sulla casa di partenza. Un errore in un FEN o in una soluzione fa fallire la CI.
 
 ## Salvataggio e XP
 

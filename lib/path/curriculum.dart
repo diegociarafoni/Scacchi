@@ -427,12 +427,6 @@ const List<Chapter> curriculum = [
             'questo conviene lasciare al re una casa di fuga.',
         exercises: [
           LineExercise(
-            instructions: '$_mateIn1 Usa la torre.',
-            fen: '6k1/5ppp/8/8/8/8/5PPP/3R2K1 w - - 0 1',
-            steps: ['d1d8'],
-            goal: LineGoal.mate,
-          ),
-          LineExercise(
             instructions: '$_mateIn1 Usa la donna.',
             fen: '6k1/5ppp/8/8/8/8/5PPP/4Q1K1 w - - 0 1',
             steps: ['e1e8'],
@@ -469,9 +463,7 @@ const List<Chapter> curriculum = [
             goal: LineGoal.mate,
           ),
           LineExercise(
-            instructions:
-                '$_mateIn1 Metti la donna proprio davanti al re nero, '
-                'protetta dal tuo re.',
+            instructions: '$_mateIn1 La donna lavora insieme al re.',
             fen: 'k7/2K5/8/8/8/8/8/1Q6 w - - 0 1',
             steps: ['b1b7'],
             goal: LineGoal.mate,
@@ -488,16 +480,10 @@ const List<Chapter> curriculum = [
         exercises: [
           LineExercise(
             instructions:
-                '$_mateIn2 Prima chiudi la settima traversa, poi dai '
-                'scacco sull\'ottava.',
+                '$_mateIn2 Prima chiudi la settima traversa con una torre, '
+                'poi dai scacco sull\'ottava con l\'altra.',
             fen: '7k/8/8/8/8/8/R7/1R4K1 w - - 0 1',
-            steps: ['a2a7', 'h8g8', 'b1b8'],
-            goal: LineGoal.mate,
-          ),
-          LineExercise(
-            instructions: '$_mateIn1 Le torri salgono a scala.',
-            fen: '1k6/7R/6R1/8/8/8/8/4K3 w - - 0 1',
-            steps: ['g6g8'],
+            steps: ['a2a7|b1b7', 'h8g8', 'b1b8'],
             goal: LineGoal.mate,
           ),
         ],
