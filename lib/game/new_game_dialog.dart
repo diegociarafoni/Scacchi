@@ -4,6 +4,7 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
 import '../engine/levels.dart';
+import 'clock.dart';
 
 enum Opponent { human, computer }
 
@@ -14,11 +15,15 @@ class GameSetup {
     this.opponent = Opponent.human,
     this.sideChoice = SideChoice.white,
     this.level = defaultEngineLevel,
+    this.timeControl,
   });
 
   final Opponent opponent;
   final SideChoice sideChoice;
   final int level;
+
+  /// Cadenza dell'orologio; `null` per giocare senza tempo.
+  final TimeControl? timeControl;
 
   Side resolveHumanSide(math.Random random) => switch (sideChoice) {
     SideChoice.white => Side.white,
@@ -34,6 +39,14 @@ class GameSetup {
     opponent: opponent ?? this.opponent,
     sideChoice: sideChoice ?? this.sideChoice,
     level: level ?? this.level,
+    timeControl: timeControl,
+  );
+
+  GameSetup withTime(TimeControl? control) => GameSetup(
+    opponent: opponent,
+    sideChoice: sideChoice,
+    level: level,
+    timeControl: control,
   );
 }
 
@@ -136,6 +149,25 @@ class _NewGameDialogState extends State<_NewGameDialog> {
                     setState(() => _setup = _setup.copyWith(level: v.round())),
               ),
             ],
+            const SizedBox(height: 20),
+            Text('Tempo', style: theme.textTheme.labelLarge),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final control in <TimeControl?>[
+                  null,
+                  ...TimeControl.presets,
+                ])
+                  ChoiceChip(
+                    label: Text(control?.label ?? 'Senza tempo'),
+                    selected: _setup.timeControl == control,
+                    onSelected: (_) =>
+                        setState(() => _setup = _setup.withTime(control)),
+                  ),
+              ],
+            ),
           ],
         ),
       ),

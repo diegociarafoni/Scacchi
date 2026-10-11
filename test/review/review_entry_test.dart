@@ -9,6 +9,7 @@ import 'package:scacchi/engine/computer_player.dart';
 import 'package:scacchi/engine/uci_transport.dart';
 import 'package:scacchi/game/game_page.dart';
 import 'package:scacchi/review/review_page.dart';
+import 'package:scacchi/settings/settings.dart';
 
 /// Motore finto che valuta ogni posizione in parità.
 class _EvenEngine implements UciTransport {
@@ -45,6 +46,7 @@ void main() {
 
   Widget app({bool computer = true}) => MaterialApp(
     home: GamePage(
+      settings: SettingsController.defaults(),
       computerAvailable: computer,
       createComputer: () => ComputerPlayer(connect: () async => _EvenEngine()),
     ),
@@ -95,8 +97,6 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(app(computer: false));
-    await openMenu(tester);
-    expect(find.text('Revisione della partita'), findsNothing);
-    expect(find.text('Analisi della posizione'), findsNothing);
+    expect(find.byType(PopupMenuButton<String>), findsNothing);
   });
 }

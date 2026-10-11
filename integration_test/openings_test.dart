@@ -1,0 +1,62 @@
+import 'package:chessground/chessground.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
+import 'package:scacchi/main.dart';
+
+Offset _square(WidgetTester tester, String name) {
+  final rect = tester.getRect(find.byType(Chessboard));
+  final size = rect.width / 8;
+  final file = name.codeUnitAt(0) - 'a'.codeUnitAt(0);
+  final rank = int.parse(name[1]);
+  return rect.topLeft + Offset((file + 0.5) * size, (8 - rank + 0.5) * size);
+}
+
+Future<void> _tapMove(WidgetTester tester, String uci) async {
+  await tester.tapAt(_square(tester, uci.substring(0, 2)));
+  await tester.pump();
+  await tester.tapAt(_square(tester, uci.substring(2, 4)));
+  await tester.pumpAndSettle();
+}
+
+Future<void> _start(WidgetTester tester) async {
+  tester.view.physicalSize = const Size(1170, 2532);
+  tester.view.devicePixelRatio = 3;
+  addTearDown(tester.view.reset);
+  await tester.pumpWidget(const ScacchiApp());
+  await tester.pumpAndSettle();
+}
+
+void main() {
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
+  testWidgets('RF-90 la partita mostra il nome dell\'apertura', (tester) async {
+    await _start(tester);
+    await _tapMove(tester, 'e2e4');
+    await _tapMove(tester, 'c7c5');
+    // Il libro si carica in un isolate: si attende che il nome compaia.
+    for (
+      var i = 0;
+      i < 50 && find.text('B20 Sicilian Defense').evaluate().isEmpty;
+      i++
+    ) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+    expect(find.text('B20 Sicilian Defense'), findsOneWidget);
+  });
+
+  testWidgets('RF-92 l\'explorer segue le mosse del libro', (tester) async {
+    await _start(tester);
+    await tester.tap(find.text('Aperture').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Explorer'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('e4'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('c5'));
+    await tester.pumpAndSettle();
+    expect(find.text('B20 Sicilian Defense'), findsOneWidget);
+    await _tapMove(tester, 'a2a3');
+    expect(find.textContaining('Sicilian Defense'), findsWidgets);
+  });
+}

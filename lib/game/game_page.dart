@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:chessground/chessground.dart';
@@ -6,53 +7,177 @@ import 'package:flutter/material.dart';
 
 import '../engine/computer_player.dart';
 import '../engine/levels.dart';
-import '../engine/uci.dart';
 import '../engine/uci_transport.dart';
 import '../analysis/analysis_page.dart';
+import '../openings/opening_name.dart';
 import '../review/engine_evaluator.dart';
 import '../review/review_page.dart';
+import '../settings/settings.dart';
+import '../settings/settings_page.dart';
 import 'chess_game.dart';
+import 'clock.dart';
+import 'material.dart';
 import 'new_game_dialog.dart';
+import 'sounds.dart';
 
 /// Partita tra due persone sullo stesso dispositivo o contro il computer.
 class GamePage extends StatefulWidget {
-  GamePage({super.key, bool? computerAvailable, this.createComputer})
-    : computerAvailable = computerAvailable ?? StockfishTransport.isSupported;
+  GamePage({
+    super.key,
+    required this.settings,
+    bool? computerAvailable,
+    this.createComputer,
+    this.now,
+  }) : computerAvailable = computerAvailable ?? StockfishTransport.isSupported;
 
+  final SettingsController settings;
   final bool computerAvailable;
   final ComputerPlayer Function()? createComputer;
+
+  /// Ora corrente per l'orologio; quella di sistema se assente.
+  final DateTime Function()? now;
 
   @override
   State<GamePage> createState() => _GamePageState();
 }
 
-class _GamePageState extends State<GamePage> {
+class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   ChessGame _game = ChessGame();
   late final ChessboardController _board = ChessboardController(
     game: _gameData(),
   );
   Side _orientation = Side.white;
-  bool _autoFlip = false;
   GameSetup _setup = const GameSetup();
   final _random = math.Random();
 
   /// Lato giocato dal computer; `null` nella partita tra due persone.
   Side? _computerSide;
   ComputerPlayer? _computer;
-  bool _thinking = false;
-
-  /// Valutazione dell'ultima mossa del computer, dal suo punto di vista.
-  EngineScore? _computerScore;
+  _ComputerTask _task = _ComputerTask.none;
+  bool get _thinking => _task != _ComputerTask.none;
 
   /// Invalida le risposte del computer per posizioni non più attuali.
   int _generation = 0;
+  ChessClock? _clock;
+  Timer? _ticker;
+
+  /// Orologio all'inizio della riflessione del computer in corso.
+  Map<Side, Duration>? _searchClock;
+
+  /// Sospensioni attive (finestre aperte, app in background).
+  int _suspensions = 0;
+  bool _clockBeforeSuspension = false;
+  bool _inBackground = false;
+  final List<Map<Side, Duration>> _clockHistory = [];
+  final ValueNotifier<int> _tick = ValueNotifier(0);
+  final SoundPlayer _sounds = SoundPlayer();
+  final LowTimeAlarm _lowTime = LowTimeAlarm();
+
+  AppSettings get _settings => widget.settings.value;
+
+  late bool _autoFlip;
+
+  @override
+  void initState() {
+    super.initState();
+    _autoFlip = _settings.autoFlip;
+    widget.settings.addListener(_onSettingsChanged);
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      if (!_inBackground) return;
+      _inBackground = false;
+      _resume();
+    } else if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.hidden) {
+      if (_inBackground) return;
+      _inBackground = true;
+      _suspend();
+    }
+  }
+
+  /// Ferma orologio e computer; la ricerca interrotta non costa tempo al computer.
+  void _suspend() {
+    if (_suspensions++ > 0) return;
+    final clock = _clock;
+    _clockBeforeSuspension = clock?.isRunning ?? false;
+    final searchStart = _searchClock;
+    _cancelComputerMove();
+    if (clock != null && searchStart != null) {
+      clock.restore(searchStart, null);
+    } else {
+      clock?.pause();
+    }
+    _syncClock();
+    _tick.value++;
+  }
+
+  /// Chiude una sospensione; all'ultima, se [restart], riparte da dove era.
+  void _resume({bool restart = true}) {
+    if (_suspensions == 0 || --_suspensions > 0 || !restart) return;
+    if (!mounted || _game.isOver) return;
+    if (_clockBeforeSuspension) _clock?.start(_game.position.turn);
+    _refresh(animate: false);
+    _computerMove();
+  }
+
+  /// Esegue [action] con orologio e computer fermi; riparte se [restart] lo consente.
+  Future<T?> _whileSuspended<T>(
+    Future<T?> Function() action, {
+    bool Function(T? result)? restart,
+  }) async {
+    _suspend();
+    T? result;
+    try {
+      result = await action();
+    } finally {
+      if (mounted) _resume(restart: restart?.call(result) ?? true);
+    }
+    return result;
+  }
+
+  Future<T?> _suspendedDialog<T>(
+    WidgetBuilder builder, {
+    bool Function(T? result)? restart,
+  }) => _whileSuspended(
+    () => showDialog<T>(context: context, builder: builder),
+    restart: restart,
+  );
+
+  @override
+  void didUpdateWidget(GamePage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.settings != widget.settings) {
+      oldWidget.settings.removeListener(_onSettingsChanged);
+      widget.settings.addListener(_onSettingsChanged);
+      _onSettingsChanged();
+    }
+  }
 
   @override
   void dispose() {
+    widget.settings.removeListener(_onSettingsChanged);
     _generation++;
-    _computer?.dispose();
+    _computer?.dispose().ignore();
+    WidgetsBinding.instance.removeObserver(this);
+    _ticker?.cancel();
+    _tick.dispose();
+    _sounds.dispose();
     _board.dispose();
     super.dispose();
+  }
+
+  void _onSettingsChanged() {
+    setState(() {
+      final turnedOn = _settings.autoFlip && !_autoFlip;
+      _autoFlip = _settings.autoFlip;
+      if (turnedOn && _computerSide == null) {
+        _orientation = _game.position.turn;
+      }
+    });
   }
 
   PlayerSide get _playerSide {
@@ -80,66 +205,190 @@ class _GamePageState extends State<GamePage> {
   }
 
   void _refresh({bool animate = true}) {
+    _syncClock();
     _board.updatePosition(_gameData(), animate: animate, resetPremove: true);
     setState(() {
-      if (_autoFlip && _computerSide == null) {
+      if (_settings.autoFlip && _computerSide == null) {
         _orientation = _game.position.turn;
       }
     });
   }
 
   void _onMove(Move move, {bool? viaDragAndDrop}) {
-    if (!_game.play(move)) return;
-    _refresh(animate: viaDragAndDrop != true);
-    _computerMove();
+    final played = _play(move);
+    if (!played && !_game.isOver) return;
+    _refresh(animate: played && viaDragAndDrop != true);
+    if (played) _computerMove();
+  }
+
+  /// Gioca [move] e aggiorna l'orologio; con il tempo scaduto chiude la partita.
+  bool _play(Move move) {
+    final clock = _clock;
+    final flagged = clock?.flagged;
+    if (flagged != null) {
+      _game.flag(flagged);
+      _playSound(GameSound.gameEnd);
+      return false;
+    }
+    final before = clock?.snapshot();
+    final position = _game.position;
+    if (!_game.play(move)) return false;
+    final sound = soundForLastMove(_game, position);
+    if (sound != null) _playSound(sound);
+    if (clock != null) {
+      _clockHistory.add(before!);
+      if (clock.isRunning) {
+        clock.switchAfterMove();
+      } else {
+        clock.start(_game.position.turn);
+      }
+    }
+    return true;
   }
 
   Future<void> _computerMove() async {
     final side = _computerSide;
-    if (side == null || _game.isOver || _game.position.turn != side) return;
+    if (_thinking || side == null || _game.isOver || _suspensions > 0) return;
+    if (_game.position.turn != side) return;
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     final generation = _generation;
-    _thinking = true;
+    _task = _ComputerTask.move;
+    final clock = _clock;
+    if (clock != null && !clock.isRunning && _game.moves.isNotEmpty) {
+      clock.start(side);
+    }
+    _searchClock = clock?.snapshot();
+    var level = engineLevel(_setup.level);
+    if (clock != null) {
+      level = level.withinClock(
+        clock.remaining(side),
+        Duration(seconds: clock.control.increment),
+      );
+    }
     _refresh(animate: false);
     EngineMove? reply;
     Object? error;
     try {
       reply = await _computerPlayer.bestMove(
-        _game.position.fen,
-        engineLevel(_setup.level),
+        _game.initial.fen,
+        _moveHistory,
+        level,
       );
     } catch (e) {
       error = e;
     }
     if (!mounted || generation != _generation) return;
-    _thinking = false;
-    if (reply != null) {
-      _computerScore = reply.score;
-      _game.play(reply.move);
+    _task = _ComputerTask.none;
+    final searchStart = _searchClock;
+    _searchClock = null;
+    if (reply == null ? !_game.isOver : !_play(reply.move) && !_game.isOver) {
+      error ??= reply ?? 'nessuna mossa';
+      if (searchStart != null) clock?.restore(searchStart, null);
     }
     _refresh();
-    if (error != null) _showMessage('Il computer non risponde. Riprova.');
+    if (error != null) {
+      _showMessage(
+        'Il computer non risponde.',
+        duration: const Duration(days: 1),
+        action: SnackBarAction(label: 'Riprova', onPressed: _computerMove),
+      );
+    }
   }
+
+  List<Move> get _moveHistory => [for (final m in _game.moves) m.move];
 
   void _cancelComputerMove() {
     _generation++;
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     if (_thinking) _computer?.stop();
-    _thinking = false;
+    _task = _ComputerTask.none;
+    _searchClock = null;
   }
 
-  void _showMessage(String text) =>
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
+  /// Ferma l'orologio a fine partita e aggiorna il timer di visualizzazione.
+  void _syncClock() {
+    final clock = _clock;
+    if (clock != null && _game.isOver) clock.pause();
+    if (clock != null && clock.isRunning) {
+      _ticker ??= Timer.periodic(const Duration(milliseconds: 100), _onTick);
+    } else {
+      _ticker?.cancel();
+      _ticker = null;
+    }
+  }
+
+  void _onTick(Timer _) {
+    final clock = _clock;
+    final flagged = clock?.flagged;
+    if (flagged != null && !_game.isOver) {
+      _cancelComputerMove();
+      _game.flag(flagged);
+      _playSound(GameSound.gameEnd);
+      _refresh(animate: false);
+      return;
+    }
+    final active = clock?.active;
+    if (active != null &&
+        active != _computerSide &&
+        _lowTime.check(active, clock!.remaining(active))) {
+      _playSound(GameSound.lowTime);
+    }
+    _tick.value++;
+  }
+
+  void _playSound(GameSound sound) {
+    final s = _settings;
+    _sounds.play(sound, enabled: s.sound, volume: s.volume, haptics: s.haptics);
+  }
+
+  /// Chiude selezione e selettore di promozione rimasti aperti sulla scacchiera.
+  void _clearBoardInteraction() {
+    final pos = _game.position;
+    _board.updatePosition(
+      GameData(
+        fen: pos.fen,
+        playerSide: PlayerSide.none,
+        sideToMove: pos.turn,
+        validMoves: const {},
+      ),
+      animate: false,
+    );
+  }
+
+  /// Messaggio sopra la barra dei comandi, per non coprirla.
+  void _showMessage(
+    String text, {
+    Duration duration = const Duration(seconds: 4),
+    SnackBarAction? action,
+  }) => ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(text),
+      duration: duration,
+      action: action,
+      behavior: SnackBarBehavior.floating,
+      margin: const EdgeInsets.fromLTRB(16, 0, 16, _actionsHeight + 8),
+    ),
+  );
 
   Future<void> _newGame() async {
-    final setup = await showNewGameDialog(
-      context,
-      initial: _setup,
-      computerAvailable: widget.computerAvailable,
+    final setup = await _whileSuspended(
+      () => showNewGameDialog(
+        context,
+        initial: _setup,
+        computerAvailable: widget.computerAvailable,
+      ),
+      restart: (setup) => setup == null,
     );
     if (setup == null || !mounted) return;
     _cancelComputerMove();
+    _clockBeforeSuspension = false;
     _setup = setup;
     _game = ChessGame();
-    _computerScore = null;
+    final control = setup.timeControl;
+    _clock = control == null ? null : ChessClock(control, now: widget.now);
+    _clockHistory.clear();
+    _lowTime.reset();
+    _clearBoardInteraction();
     if (setup.opponent == Opponent.computer) {
       final human = setup.resolveHumanSide(_random);
       _computerSide = human.opposite;
@@ -147,30 +396,60 @@ class _GamePageState extends State<GamePage> {
       _computerPlayer.newGame().ignore();
     } else {
       _computerSide = null;
+      _computer?.dispose().ignore();
+      _computer = null;
     }
     _refresh(animate: false);
     _computerMove();
   }
 
+  bool get _endedByChoice => switch (_game.endReason) {
+    GameEndReason.resignation || GameEndReason.agreement => true,
+    _ => false,
+  };
+
   void _undo() {
     _cancelComputerMove();
+    final revokeOnly = _endedByChoice;
+    final timedOut = _game.endReason == GameEndReason.timeout;
     _game.undo();
-    if (_computerSide == _game.position.turn && _game.canUndo) _game.undo();
+    if (timedOut) _game.undo();
+    if (revokeOnly) {
+      if (_game.moves.isNotEmpty) _clock?.start(_game.position.turn);
+    } else {
+      _restoreClock();
+      if (_computerToMove && _game.canUndo) {
+        _game.undo();
+        _restoreClock();
+      }
+    }
+    _clearBoardInteraction();
     _refresh(animate: false);
     _computerMove();
   }
 
+  void _restoreClock() {
+    final clock = _clock;
+    if (clock == null || _clockHistory.isEmpty) return;
+    clock.restore(
+      _clockHistory.removeLast(),
+      _game.moves.isEmpty ? null : _game.position.turn,
+    );
+  }
+
+  bool get _computerToMove => _computerSide == _game.position.turn;
+
   bool get _canUndo {
     if (!_game.canUndo) return false;
-    if (_computerSide != Side.white) return true;
+    if (_computerSide != Side.white || _endedByChoice) return true;
+    if (_game.endReason == GameEndReason.timeout) return true;
     return _game.moves.length > 1;
   }
 
   Future<void> _resign() async {
     final side = _computerSide?.opposite ?? _game.position.turn;
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
+    final confirmed = await _suspendedDialog<bool>(
+      (context) => AlertDialog(
         title: const Text('Abbandonare la partita?'),
         content: Text('Abbandona il ${_sideName(side)}.'),
         actions: [
@@ -184,20 +463,48 @@ class _GamePageState extends State<GamePage> {
           ),
         ],
       ),
+      restart: (confirmed) => confirmed != true,
     );
+    if (!mounted) return;
     if (confirmed == true) {
-      _cancelComputerMove();
       _game.resign(side);
+      _playSound(GameSound.gameEnd);
       _refresh(animate: false);
     }
   }
 
   /// Il computer accetta la patta solo se si valuta in svantaggio.
-  void _offerDrawToComputer() {
-    final score = _computerScore?.comparable ?? 0;
-    if (score <= -_drawAcceptanceCp) {
-      _cancelComputerMove();
+  Future<void> _offerDrawToComputer() async {
+    if (_thinking) return;
+    final turn = _game.position.turn;
+    int? computerScore;
+    Object? error;
+    var current = false;
+    await _whileSuspended<void>(() async {
+      final generation = _generation;
+      _task = _ComputerTask.draw;
+      _refresh(animate: false);
+      try {
+        final score = await _computerPlayer.evaluate(
+          _game.initial.fen,
+          _moveHistory,
+        );
+        if (score != null) {
+          computerScore = turn == _computerSide
+              ? score.comparable
+              : -score.comparable;
+        }
+      } catch (e) {
+        error = e;
+      }
+      current = mounted && generation == _generation;
+      if (current) _task = _ComputerTask.none;
+    }, restart: (_) => !(current && _accepts(computerScore)));
+    if (!mounted || !current || _game.isOver) return;
+    if (error != null) return _showMessage('Il computer non risponde.');
+    if (_accepts(computerScore)) {
       _game.agreeDraw();
+      _playSound(GameSound.gameEnd);
       _refresh(animate: false);
       _showMessage('Il computer accetta la patta.');
     } else {
@@ -205,12 +512,14 @@ class _GamePageState extends State<GamePage> {
     }
   }
 
+  bool _accepts(int? computerScore) =>
+      computerScore != null && computerScore <= -_drawAcceptanceCp;
+
   Future<void> _offerDraw() async {
     if (_computerSide != null) return _offerDrawToComputer();
     final opponent = _game.position.turn.opposite;
-    final accepted = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
+    final accepted = await _suspendedDialog<bool>(
+      (context) => AlertDialog(
         title: Text('Il ${_sideName(opponent)} accetta la patta?'),
         actions: [
           TextButton(
@@ -223,9 +532,12 @@ class _GamePageState extends State<GamePage> {
           ),
         ],
       ),
+      restart: (accepted) => accepted != true,
     );
+    if (!mounted) return;
     if (accepted == true) {
       _game.agreeDraw();
+      _playSound(GameSound.gameEnd);
       _refresh(animate: false);
     }
   }
@@ -233,34 +545,48 @@ class _GamePageState extends State<GamePage> {
   LiveAnalysis _liveAnalysis(ComputerPlayer player) =>
       (fen, multiPv) => player.analyseLive(fen, multiPv: multiPv);
 
+  /// Analisi della posizione attuale con orologio e computer fermi.
   void _openAnalysis() {
-    _cancelComputerMove();
-    Navigator.of(context)
-        .push(
-          MaterialPageRoute<void>(
-            builder: (_) => AnalysisPage(
-              initial: _game.position,
-              analyse: _liveAnalysis(_computerPlayer),
-              orientation: _orientation,
-            ),
+    _whileSuspended(
+      () => Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => AnalysisPage(
+            initial: _game.position,
+            analyse: _liveAnalysis(_computerPlayer),
+            orientation: _orientation,
           ),
-        )
-        .then((_) {
-          if (mounted) _computerMove();
-        });
+        ),
+      ),
+    );
   }
 
+  /// Revisione della partita con orologio e computer fermi.
   void _openReview() {
     final player = _computerPlayer;
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (_) => ReviewPage(
-          initial: _game.initial,
-          moves: [for (final m in _game.moves) m.move],
-          evaluate: engineEvaluator(player),
-          onCancel: player.stop,
-          analyseLive: _liveAnalysis(player),
+    _whileSuspended(
+      () => Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => ReviewPage(
+            initial: _game.initial,
+            moves: [for (final m in _game.moves) m.move],
+            evaluate: engineEvaluator(player),
+            onCancel: player.stop,
+            analyseLive: _liveAnalysis(player),
+          ),
         ),
+      ),
+    );
+  }
+
+  Widget? _clockView(Side side) {
+    final clock = _clock;
+    if (clock == null) return null;
+    return ListenableBuilder(
+      listenable: _tick,
+      builder: (context, _) => _ClockView(
+        side: side,
+        remaining: clock.remaining(side),
+        active: clock.active == side,
       ),
     );
   }
@@ -271,17 +597,21 @@ class _GamePageState extends State<GamePage> {
       onNewGame: _newGame,
       onUndo: _canUndo ? _undo : null,
       onFlip: () => setState(() => _orientation = _orientation.opposite),
-      onDraw: _game.isOver || _thinking ? null : _offerDraw,
+      onDraw: _game.isOver || _thinking || _computerToMove ? null : _offerDraw,
       onResign: _game.isOver ? null : _resign,
+    );
+    final opening = OpeningName(
+      positions: [_game.initial, for (final m in _game.moves) m.after],
+      fallback: 'Scacchi',
     );
     return Scaffold(
       appBar: AppBar(
         title: _computerSide == null
-            ? const Text('Scacchi')
+            ? opening
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Scacchi'),
+                  opening,
                   Text(
                     'Computer, livello ${_setup.level}: '
                     '${engineLevel(_setup.level).name}',
@@ -290,33 +620,33 @@ class _GamePageState extends State<GamePage> {
                 ],
               ),
         actions: [
-          PopupMenuButton<String>(
-            onSelected: (value) {
-              if (value == 'autoflip') {
-                setState(() => _autoFlip = !_autoFlip);
-                if (_autoFlip) _refresh(animate: false);
-              }
-              if (value == 'review') _openReview();
-              if (value == 'analysis') _openAnalysis();
-            },
-            itemBuilder: (context) => [
-              if (widget.computerAvailable)
-                PopupMenuItem(
+          if (widget.computerAvailable)
+            PopupMenuButton<String>(
+              tooltip: 'Altre azioni',
+              onSelected: (value) {
+                if (value == 'review') _openReview();
+                if (value == 'analysis') _openAnalysis();
+              },
+              itemBuilder: (context) => [
+                const PopupMenuItem(
                   value: 'analysis',
                   child: Text('Analisi della posizione'),
                 ),
-              if (widget.computerAvailable)
                 PopupMenuItem(
                   value: 'review',
                   enabled: _game.moves.isNotEmpty && !_thinking,
                   child: const Text('Revisione della partita'),
                 ),
-              CheckedPopupMenuItem(
-                value: 'autoflip',
-                checked: _autoFlip,
-                child: const Text('Ruota a ogni turno'),
+              ],
+            ),
+          IconButton(
+            tooltip: 'Impostazioni',
+            icon: const Icon(Icons.settings_outlined),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute<void>(
+                builder: (_) => SettingsPage(controller: widget.settings),
               ),
-            ],
+            ),
           ),
         ],
       ),
@@ -327,23 +657,42 @@ class _GamePageState extends State<GamePage> {
                 constraints.maxWidth > constraints.maxHeight * 1.2;
             final boardSize = landscape
                 ? math.min(constraints.maxHeight, constraints.maxWidth * 0.6)
-                : math.min(
-                    constraints.maxWidth,
-                    constraints.maxHeight - _portraitChromeHeight,
+                : math.max(
+                    0.0,
+                    math.min(
+                      constraints.maxWidth,
+                      constraints.maxHeight - _portraitChromeHeight,
+                    ),
                   );
+            final boardSettings = _settings.board;
             final board = Chessboard(
               size: boardSize,
               controller: _board,
               orientation: _orientation,
               onMove: _onMove,
-              settings: const ChessboardSettings(
-                colorScheme: ChessboardColorScheme.green,
-              ),
+              settings: boardSettings,
             );
             final status = _StatusLine(
-              text: _thinking ? 'Il computer sta pensando…' : statusText(_game),
+              text: switch (_task) {
+                _ComputerTask.none => statusText(_game),
+                _ComputerTask.move => 'Il computer sta pensando…',
+                _ComputerTask.draw => 'Il computer valuta la patta…',
+              },
             );
             final moves = _MoveList(game: _game, horizontal: !landscape);
+            final balance = MaterialBalance.of(_game);
+            final topMaterial = _MaterialRow(
+              balance: balance,
+              side: _orientation.opposite,
+              pieceAssets: boardSettings.pieceAssets,
+              clock: _clockView(_orientation.opposite),
+            );
+            final bottomMaterial = _MaterialRow(
+              balance: balance,
+              side: _orientation,
+              pieceAssets: boardSettings.pieceAssets,
+              clock: _clockView(_orientation),
+            );
             if (landscape) {
               return Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -353,8 +702,10 @@ class _GamePageState extends State<GamePage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
+                        topMaterial,
                         status,
                         Expanded(child: moves),
+                        bottomMaterial,
                         actions,
                       ],
                     ),
@@ -371,7 +722,9 @@ class _GamePageState extends State<GamePage> {
                       children: [
                         SizedBox(height: _moveStripHeight, child: moves),
                         status,
+                        topMaterial,
                         board,
+                        bottomMaterial,
                       ],
                     ),
                   ),
@@ -386,12 +739,16 @@ class _GamePageState extends State<GamePage> {
   }
 }
 
+/// Operazione in corso del computer.
+enum _ComputerTask { none, move, draw }
+
 const int _drawAcceptanceCp = 50;
 const double _moveStripHeight = 40;
 const double _statusHeight = 48;
 const double _actionsHeight = 72;
+const double _materialHeight = 36;
 const double _portraitChromeHeight =
-    _moveStripHeight + _statusHeight + _actionsHeight;
+    _moveStripHeight + _statusHeight + _actionsHeight + 2 * _materialHeight;
 
 String _sideName(Side side) => side == Side.white ? 'Bianco' : 'Nero';
 
@@ -411,6 +768,10 @@ String statusText(ChessGame game) {
     GameEndReason.threefoldRepetition => 'Triplice ripetizione. Patta.',
     GameEndReason.fiftyMoveRule => 'Regola delle 50 mosse. Patta.',
     GameEndReason.agreement => 'Patta concordata.',
+    GameEndReason.timeout =>
+      game.outcome!.winner == null
+          ? 'Tempo scaduto. Patta per materiale insufficiente.'
+          : 'Tempo scaduto. Vince il ${_sideName(game.outcome!.winner!)}.',
   };
 }
 
@@ -526,6 +887,134 @@ class _ActionButton extends StatelessWidget {
                   ?.copyWith(color: color),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+const _roleNames = {
+  Role.pawn: 'pedone',
+  Role.knight: 'cavallo',
+  Role.bishop: 'alfiere',
+  Role.rook: 'torre',
+  Role.queen: 'donna',
+  Role.king: 're',
+};
+
+class _MaterialRow extends StatelessWidget {
+  const _MaterialRow({
+    required this.balance,
+    required this.side,
+    required this.pieceAssets,
+    this.clock,
+  });
+
+  final MaterialBalance balance;
+  final Side side;
+  final PieceAssets pieceAssets;
+  final Widget? clock;
+
+  @override
+  Widget build(BuildContext context) {
+    final advantage = balance.advantage(side);
+    final opponent = side.opposite;
+    final captured = balance.capturedBy(side);
+    final description = [
+      '${_sideName(side)}: ',
+      captured.isEmpty
+          ? 'nessun pezzo catturato'
+          : 'ha catturato ${captured.map((r) => _roleNames[r]).join(', ')}',
+      if (advantage > 0) ', vantaggio di $advantage',
+    ].join();
+    final material = Semantics(
+      label: description,
+      excludeSemantics: true,
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Row(
+            children: [
+              for (final (i, role) in captured.indexed)
+                Image(
+                  key: ValueKey('captured-${opponent.name}-${role.name}-$i'),
+                  image: pieceAssets[Piece(color: opponent, role: role).kind]!,
+                  width: 20,
+                  height: 20,
+                ),
+              if (advantage > 0) ...[
+                const SizedBox(width: 6),
+                Text(
+                  '+$advantage',
+                  key: ValueKey('advantage-${side.name}'),
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+    return SizedBox(
+      height: _materialHeight,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        child: Row(
+          children: [
+            Expanded(child: material),
+            ?clock,
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ClockView extends StatelessWidget {
+  const _ClockView({
+    required this.side,
+    required this.remaining,
+    required this.active,
+  });
+
+  final Side side;
+  final Duration remaining;
+  final bool active;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final low = active && isLowTime(remaining);
+    final background = low
+        ? scheme.error
+        : active
+        ? scheme.primary
+        : scheme.surfaceContainerHighest;
+    final foreground = low
+        ? scheme.onError
+        : active
+        ? scheme.onPrimary
+        : scheme.onSurfaceVariant;
+    return Semantics(
+      label:
+          'Orologio del ${_sideName(side)}: '
+          '${remaining.inMinutes} minuti e ${remaining.inSeconds % 60} secondi',
+      excludeSemantics: true,
+      child: Container(
+        key: active ? const ValueKey('clock-active') : null,
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        decoration: BoxDecoration(
+          color: background,
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: Text(
+          formatClock(remaining),
+          key: ValueKey('clock-${side.name}'),
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            color: foreground,
+            fontFeatures: const [FontFeature.tabularFigures()],
+          ),
         ),
       ),
     );

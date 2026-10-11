@@ -38,19 +38,31 @@ class EngineLevel {
   /// Attesa minima prima di restituire la mossa.
   final Duration minReply;
 
-  EngineLevel copyWith({Duration? minReply}) => EngineLevel(
+  EngineLevel copyWith({Duration? movetime, Duration? minReply}) => EngineLevel(
     id: id,
     name: name,
     approxElo: approxElo,
     skill: skill,
-    movetime: movetime,
+    movetime: movetime ?? this.movetime,
     uciElo: uciElo,
     depth: depth,
     multiPv: multiPv,
     temperatureCp: temperatureCp,
     minReply: minReply ?? this.minReply,
   );
+
+  /// Riflessione e attesa ridotte a una quota del tempo residuo più l'incremento.
+  EngineLevel withinClock(Duration remaining, Duration increment) {
+    var budget = remaining ~/ 30 + increment * 3 ~/ 4;
+    if (budget < _minClockMovetime) budget = _minClockMovetime;
+    return copyWith(
+      movetime: movetime < budget ? movetime : budget,
+      minReply: minReply < budget ? minReply : budget,
+    );
+  }
 }
+
+const _minClockMovetime = Duration(milliseconds: 50);
 
 const engineLevels = <EngineLevel>[
   EngineLevel(

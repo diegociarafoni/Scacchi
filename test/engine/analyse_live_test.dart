@@ -21,6 +21,7 @@ class _InfiniteEngine implements UciTransport {
   void send(String command) {
     sent.add(command);
     scheduleMicrotask(() {
+      if (_out.isClosed) return;
       if (command == 'uci') _out.add('uciok');
       if (command == 'isready') _out.add('readyok');
       if (command.startsWith('go')) {
