@@ -12,6 +12,12 @@ Equivalente locale di Game Review di chess.com (requisiti RF-60…RF-66): ogni m
 | `lib/review/accuracy.dart` | Precisione per mossa e per partita, stima indicativa dell'Elo |
 | `lib/review/game_review.dart` | `reviewGame`: analisi di tutte le posizioni, avanzamento, interruzione |
 | `lib/review/engine_evaluator.dart` | Collegamento a `ComputerPlayer.analyse` (lo stesso motore dell'avversario) |
+| `lib/review/game_phase.dart` | Fase della partita (apertura, mediogioco, finale) per la precisione per fase e i temi dei puzzle |
+| `lib/review/coach.dart` | Coach testuale: `explainMove` e temi degli errori |
+| `lib/review/personal_puzzles.dart` | Puzzle personali dagli errori (`puzzlesFromReview`) |
+| `lib/review/board_utils.dart` | Utilità sulla scacchiera: mosse del motore, arrocco, `threatFen` per la minaccia |
+| `lib/review/eval_bar.dart`, `score_format.dart` | Barra di valutazione e formato dei punteggi |
+| `lib/review/review_page.dart` | Schermata di revisione |
 
 Il nucleo è Dart puro: riceve un `PositionEvaluator` (FEN → varianti del motore), quindi si testa con un motore finto e, se installato, con Stockfish reale.
 
