@@ -8,6 +8,7 @@ import 'challenges.dart';
 import 'progress_state.dart';
 import 'progress_store.dart';
 import 'progress_tracker.dart';
+import 'streak_info.dart';
 
 /// Stato della gamification per l'interfaccia, salvato a ogni modifica.
 class ProgressController extends ChangeNotifier {
@@ -37,6 +38,17 @@ class ProgressController extends ChangeNotifier {
   int get streak => _tracker.currentStreak(_state, _clock(), _settings);
   int get freezes => _tracker.currentFreezes(_state, _clock(), _settings);
   int get todayProgress => _tracker.todayProgress(_state, _clock(), _settings);
+
+  /// Spiegazione della serie di oggi: obiettivo, stato, traguardo e rischi.
+  StreakInfo get streakInfo => describeStreak(
+    streak: streak,
+    bestStreak: _state.bestStreak,
+    freezes: freezes,
+    goal: _settings.goal,
+    progress: todayProgress,
+    restDayToday: _clock().weekday == _settings.restDay,
+  );
+
   List<(Challenge, int)> get challenges =>
       _tracker.challengeProgress(_state, _clock());
   (Challenge, int) get weeklyChallenge =>
