@@ -11,6 +11,7 @@ import '../engine/computer_player.dart';
 import '../engine/levels.dart';
 import '../engine/uci_transport.dart';
 import '../analysis/analysis_page.dart';
+import '../editor/position_editor_page.dart';
 import '../openings/opening_name.dart';
 import '../review/engine_evaluator.dart';
 import '../review/review_page.dart';
@@ -547,6 +548,38 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     );
   }
 
+  /// Apre l'editor sulla posizione mostrata e gioca senza orologio quella scelta.
+  Future<void> _editPosition() async {
+    final ply = _viewPly;
+    final shown = ply == null
+        ? _game.position
+        : ply == -1
+        ? _game.initial
+        : _game.moves[ply].after;
+    final position = await _whileSuspended(
+      () => Navigator.of(context).push<Position>(
+        MaterialPageRoute(
+          builder: (_) =>
+              PositionEditorPage(initialFen: shown.fen, board: _settings.board),
+        ),
+      ),
+      restart: (position) => position == null,
+    );
+    if (!mounted || position == null) return;
+    _cancelComputerMove();
+    _clockBeforeSuspension = false;
+    if (_computerSide != null) _orientation = Side.white;
+    _computerSide = null;
+    _computer?.dispose().ignore();
+    _computer = null;
+    _game = ChessGame(initial: position);
+    _clock = null;
+    _clockHistory.clear();
+    _lowTime.reset();
+    _clearBoardInteraction();
+    _refresh(animate: false);
+  }
+
   String get _title => switch (_game.variant) {
     Variant.standard => 'Scacchi',
     Variant.chess960 => switch (chess960IdOf(_game.initial)) {
@@ -823,7 +856,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                 ],
               ),
         actions: [
-          if (widget.computerAvailable)
+          // Stockfish analizza solo gli scacchi classici.
+          if (widget.computerAvailable && _game.variant == Variant.standard)
             PopupMenuButton<String>(
               tooltip: 'Altre azioni',
               onSelected: (value) {
@@ -842,6 +876,11 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                 ),
               ],
             ),
+          IconButton(
+            tooltip: 'Editor di posizione',
+            icon: const Icon(Icons.edit_note),
+            onPressed: _editPosition,
+          ),
           IconButton(
             tooltip: 'Mossa da tastiera',
             icon: const Icon(Icons.keyboard_outlined),

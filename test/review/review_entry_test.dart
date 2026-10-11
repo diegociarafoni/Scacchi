@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/analysis/analysis_page.dart';
 import 'package:scacchi/engine/computer_player.dart';
@@ -65,7 +66,7 @@ void main() {
       find.widgetWithText(PopupMenuItem<String>, 'Revisione della partita'),
     );
     expect(item.enabled, isFalse, reason: 'nessuna mossa giocata');
-    await tester.tapAt(const Offset(10, 10));
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
     await tester.pumpAndSettle();
 
     tester.widget<Chessboard>(find.byType(Chessboard)).onMove!(
@@ -97,6 +98,26 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(app(computer: false));
+    expect(find.byType(PopupMenuButton<String>), findsNothing);
+  });
+
+  testWidgets('nelle varianti revisione e analisi non sono disponibili', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1170, 2532);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(app());
+    expect(find.byType(PopupMenuButton<String>), findsOneWidget);
+    await tester.tap(find.text('Nuova'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Due giocatori'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Chess960'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Senza tempo'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Chess960'), findsOneWidget);
     expect(find.byType(PopupMenuButton<String>), findsNothing);
   });
 }

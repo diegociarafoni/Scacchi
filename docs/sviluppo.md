@@ -39,11 +39,11 @@ Ogni funzione nasce dai requisiti del progetto, nel documento dei requisiti, con
 
 | Livello | Cartella | Cosa verifica | Comando |
 |---|---|---|---|
-| Unitari | `test/chess_game_test.dart`, `test/material_test.dart`, `test/settings_test.dart`, `test/clock_test.dart`, `test/sound_test.dart` | Regole e fine partita su `ChessGame`; pezzi catturati e vantaggio su `MaterialBalance`; impostazioni e salvataggio; orologio; scelta dei suoni; senza interfaccia | `flutter test` |
+| Unitari | `test/chess_game_test.dart`, `test/material_test.dart`, `test/settings_test.dart`, `test/clock_test.dart`, `test/sound_test.dart`, `test/move_label_test.dart`, `test/move_input_test.dart`, `test/move_speech_test.dart` | Regole e fine partita su `ChessGame`; pezzi catturati e vantaggio su `MaterialBalance`; impostazioni e salvataggio; orologio; scelta dei suoni; numerazione, lettura e annuncio delle mosse; senza interfaccia | `flutter test` |
 | Unitari | `test/engine/` | Protocollo UCI, scelta delle mosse, `ComputerPlayer` con motore finto e con Stockfish reale (se installato) | `flutter test` |
 | Widget | `test/analysis/` | Schermata di analisi con motore finto: linee, MultiPV, esplorazione, pausa, freccia | `flutter test` |
 | Unitari e widget | `test/review/` | Probabilità di vittoria, classificazione, sacrifici, precisione, revisione con motore finto, schermata di revisione e accesso dal menu | `flutter test` |
-| Widget | `test/widget_test.dart` | Avvio dell'app e stato iniziale | `flutter test` |
+| Widget | `test/widget_test.dart`, `test/l10n_test.dart` | Avvio dell'app e stato iniziale; lingua italiana predefinita | `flutter test` |
 | Widget | `test/computer_game_test.dart` | Partita contro il computer con un motore finto | `flutter test` |
 | Gamification | `test/progress/` | Regole di XP, serie e traguardi; salvataggio; schermata Profilo | `flutter test test/progress` |
 | Percorso | `test/path/` | Esercizi, contenuti, sblocco, mappa e tappe sulla scacchiera | `flutter test test/path` |
@@ -72,6 +72,7 @@ I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisic
 | RF-20 colore e livello contro il computer | ✓ | ✓ |
 | RF-21 motore separato, scacchiera bloccata mentre pensa, ritardo artificiale | ✓ | ✓ |
 | Annullamento contro il computer (mossa e risposta) | | ✓ |
+| RP-05 italiano predefinito, struttura per altre lingue | ✓ | ✓ |
 | RF-40, RF-41 cadenze, incremento, avvisi, tempo scaduto | ✓ | ✓ |
 | RF-40 orologio contro il computer, annullamento con orologio | | ✓ |
 | RP-03 suoni e vibrazione, RF-31 modalità tavolo | ✓ | ✓ |

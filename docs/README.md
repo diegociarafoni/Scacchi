@@ -10,6 +10,7 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | [regole-di-gioco.md](regole-di-gioco.md) | Regole implementate e condizioni di fine partita |
 | [interfaccia.md](interfaccia.md) | Schermata di gioco, layout su telefono e tablet, comandi |
 | [gamification.md](gamification.md) | XP, livelli, obiettivo giornaliero, serie, traguardi, ricompense estetiche, promemoria |
+| [editor-posizione.md](editor-posizione.md) | Editor di posizione, FEN e validazione |
 | [archivio.md](archivio.md) | Salvataggio delle partite, storico, import ed export PGN |
 | [puzzle.md](puzzle.md) | Puzzle: dati, punteggio, modalità, puzzle del giorno |
 | [aperture.md](aperture.md) | Nomi delle aperture, mosse di libro, explorer, repertorio |
@@ -17,6 +18,7 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | [statistiche.md](statistiche.md) | Statistiche delle partite e rating locale stimato |
 | [minigiochi.md](minigiochi.md) | Coordinate a tempo, cattura tutto, visualizzazione alla cieca, conta del materiale |
 | [tornei.md](tornei.md) | Tornei offline contro bot: girone, eliminazione diretta, bacheca |
+| [localizzazione.md](localizzazione.md) | Lingua predefinita e come aggiungere testi e lingue |
 | [sviluppo.md](sviluppo.md) | Ambiente, comandi, test, CI e convenzioni |
 | [avversario-computer.md](avversario-computer.md) | Partita contro il computer: livelli, motore Stockfish, piattaforme |
 | [revisione-partita.md](revisione-partita.md) | Revisione della partita: probabilità di vittoria, classificazione delle mosse, precisione |
@@ -42,6 +44,7 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | Archivio partite, import ed export PGN | Logica e schermata disponibili, collegamento alla partita in sviluppo |
 | Percorso a tappe con stelle | Mappa ed esercizi pronti; accesso dalla schermata principale e guardiani in arrivo con il collegamento alla partita |
 | Statistiche e rating locale | Calcolo e schermata pronti; accesso dalla schermata principale in arrivo |
+| Editor di posizione con FEN e validazione | Disponibile |
 | Varianti: Chess960, Re della collina, Tre scacchi | Disponibile nella partita a due |
 | Minigiochi | Quattro minigiochi pronti con record e XP; accesso dalla schermata principale in arrivo |
 | Tornei contro bot | Formule, classifica, tabellone e bacheca pronti; partite e accesso in arrivo con la partita contro il computer |
