@@ -53,6 +53,16 @@ Per ciascun giocatore una riga mostra le icone dei pezzi avversari catturati, da
 - Si ferma mentre è aperto un dialogo (abbandono, patta, nuova partita) e quando l'app va in secondo piano, e riparte al ritorno.
 - Una mossa fatta a tempo già scaduto non viene accettata.
 
+## Nomi dei giocatori
+
+Il pannello "Nuova" ha due campi facoltativi, "Nome del Bianco" e "Nome del Nero" (al massimo 24 caratteri, spazi iniziali e finali ignorati), per il gioco a due sullo stesso telefono (RF-30). I nomi vengono ricordati per le partite successive. Se indicati:
+
+- compaiono a sinistra della riga del materiale di ciascun giocatore;
+- riga di stato e dialoghi di abbandono e patta li affiancano al colore, per esempio «Muove Anna (Bianco).», «Scacco. Muove Bruno (Nero).», «Scacco matto. Vince Anna (Bianco).» o «Bruno (Nero) accetta la patta?»;
+- il lettore di schermo usa il nome per materiale, orologio e annuncio delle mosse («Bruno: pedone e5»).
+
+Lasciando un campo vuoto torna il colore.
+
 ## Rivedere le mosse
 
 Toccando una mossa nella striscia (o nella lista, in orizzontale) la scacchiera mostra la posizione dopo quella mossa, con la mossa evidenziata. La riga di stato diventa una barra con mossa precedente, mossa successiva, il testo "Posizione dopo 12... Nf6" (o "Posizione iniziale") e il pulsante "Torna alla partita".

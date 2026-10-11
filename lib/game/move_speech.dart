@@ -12,9 +12,10 @@ final _sanPattern = RegExp(
   r'^([KQRBN])?([a-h]?[1-8]?)(x)?([a-h][1-8])(?:=([QRBN]))?([+#])?$',
 );
 
-/// Frase in italiano per annunciare una mossa SAN con il lettore di schermo.
-String describeSan(String san, Side side) {
-  final who = side == Side.white ? 'Bianco' : 'Nero';
+/// Frase in italiano per annunciare una mossa SAN con il lettore di schermo;
+/// [name] sostituisce il colore.
+String describeSan(String san, Side side, {String? name}) {
+  final who = name ?? (side == Side.white ? 'Bianco' : 'Nero');
   final check = san.endsWith('#')
       ? ', scacco matto'
       : san.endsWith('+')
