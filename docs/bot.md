@@ -27,6 +27,10 @@ vittoria ("Battuto il 11/10/2026"). Un bot già battuto si può rigiocare quando
 conta solo se ha almeno una mossa ed è partita dalla posizione iniziale; perdere o pattare non cambia la collezione. La collezione è salvata
 sul dispositivo (chiave `botCollection`, `lib/engine/bot_collection.dart`).
 
+## Computer o bot?
+
+Nella schermata Nuova partita una riga sotto la scelta spiega l'avversario selezionato: **Computer** è un avversario senza volto di cui si sceglie il livello (o si lascia che si adatti), **Bot** è un personaggio con nome, stile e apertura preferita, da sbloccare uno alla volta. Ogni bot bloccato dice quale bot battere per sbloccarlo («Si sblocca battendo Pino»). I testi sono localizzati (`opponentHint*`, `botUnlockHint` in `lib/l10n`).
+
 ## I bot
 
 Gli 8 bot sono in ordine di forza e formano la scala da superare uno dopo l'altro (RG-04).

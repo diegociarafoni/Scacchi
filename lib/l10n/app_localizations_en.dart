@@ -794,4 +794,19 @@ class AppLocalizationsEn extends AppLocalizations {
   ) {
     return '$label: from $first to $last, minimum $min, maximum $max';
   }
+
+  @override
+  String get opponentHintHuman => 'Two players share the same device.';
+
+  @override
+  String get opponentHintComputer => 'Pick a level or let it adapt to you.';
+
+  @override
+  String get opponentHintBot =>
+      'Opponents with a personality, unlocked one by one.';
+
+  @override
+  String botUnlockHint(String name) {
+    return 'Unlocks by beating $name';
+  }
 }

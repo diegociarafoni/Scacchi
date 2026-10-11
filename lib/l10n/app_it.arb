@@ -961,5 +961,18 @@
         "type": "String"
       }
     }
+  },
+  "opponentHintHuman": "Si gioca in due sullo stesso dispositivo.",
+  "opponentHintComputer": "Scegli il livello o lascia che si adatti a te.",
+  "opponentHintBot": "Avversari con personalità da sbloccare uno a uno.",
+  "botUnlockHint": "Si sblocca battendo {name}",
+  "@botUnlockHint": {
+    "description": "Sotto un bot bloccato: quale bot battere per sbloccarlo",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "Nome del bot da battere"
+      }
+    }
   }
 }

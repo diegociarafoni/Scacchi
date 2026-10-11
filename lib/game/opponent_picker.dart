@@ -64,6 +64,11 @@ class GameSetup {
   }
 }
 
+/// Testi localizzati; senza localizzazione nel contesto si usa l'italiano.
+AppLocalizations _l10n(BuildContext context) =>
+    Localizations.of<AppLocalizations>(context, AppLocalizations) ??
+    lookupAppLocalizations(const Locale('it'));
+
 /// Scelta dell'avversario e, contro il computer, di colore e livello.
 class OpponentPicker extends StatelessWidget {
   const OpponentPicker({
@@ -121,6 +126,12 @@ class OpponentPicker extends StatelessWidget {
           onSelectionChanged: (s) =>
               onChanged(shown.copyWith(opponent: s.first)),
         ),
+        const SizedBox(height: 8),
+        Text(switch (shown.opponent) {
+          Opponent.human => _l10n(context).opponentHintHuman,
+          Opponent.computer => _l10n(context).opponentHintComputer,
+          Opponent.bot => _l10n(context).opponentHintBot,
+        }, style: theme.textTheme.bodySmall),
         if (!computerAvailable) ...[
           const SizedBox(height: 8),
           Text(
@@ -206,6 +217,8 @@ class _BotTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final unlocked = collection.isUnlocked(bot);
+    final index = bots.indexOf(bot);
+    final previous = index > 0 ? bots[index - 1] : null;
     final beatenOn = collection.beatenOn(bot);
     final details = kidMode
         ? friendlyBotDescriptions[bot.id]?.call(AppLocalizations.of(context)) ??
@@ -215,6 +228,7 @@ class _BotTile extends StatelessWidget {
             styleLabel(bot.style),
             bot.openingName,
             if (beatenOn != null) 'Battuto il ${_date(beatenOn)}',
+            if (!unlocked) _l10n(context).botUnlockHint(previous!.name),
           ].join(' · ');
     return ListTile(
       contentPadding: EdgeInsets.zero,
