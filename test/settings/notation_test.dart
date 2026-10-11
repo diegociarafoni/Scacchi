@@ -39,5 +39,13 @@ void main() {
         expect(formatSan('', n), '');
       }
     });
+
+    test('un testo di mosse converte ogni mossa e lascia i numeri', () {
+      expect(
+        formatMoveText('1. e4 e5 2. Nf3 Nc6', MoveNotation.italian),
+        '1. e4 e5 2. Cf3 Cc6',
+      );
+      expect(formatMoveText('1. Nf3', MoveNotation.figurine), '1. ♞f3');
+    });
   });
 }

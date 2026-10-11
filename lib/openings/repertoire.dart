@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dartchess/dartchess.dart';
 
 import '../puzzles/review_queue.dart';
+import '../settings/notation.dart';
 import '../storage/key_value_store.dart';
 import 'opening_book.dart';
 
@@ -196,7 +197,12 @@ class RepertoireTrainer {
   int dueCount(Side side) => _dueSet(side).length;
 
   /// Aggiunge una linea; restituisce un messaggio d'errore se non è valida.
-  Future<String?> addLine(Side side, String name, List<Move> moves) async {
+  Future<String?> addLine(
+    Side side,
+    String name,
+    List<Move> moves, {
+    MoveNotation notation = MoveNotation.english,
+  }) async {
     if (moves.isEmpty) return 'La linea è vuota.';
     final replayed = OpeningBook.replay(moves);
     if (replayed.length != moves.length + 1) {
@@ -210,7 +216,7 @@ class RepertoireTrainer {
       if (other != null && other != move) {
         final pos = replayed.firstWhere((p) => _cardId(side, p) == id);
         return 'In questa posizione il repertorio prevede già '
-            '${pos.makeSan(other).$2}.';
+            '${formatSan(pos.makeSan(other).$2, notation)}.';
       }
     }
     _lines[side]!.add(RepertoireLine(name, moves));

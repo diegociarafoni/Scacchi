@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/engine/uci.dart';
 import 'package:scacchi/review/coach.dart';
 import 'package:scacchi/review/game_review.dart';
+import 'package:scacchi/settings/notation.dart';
 
 /// Revisione di una sola mossa con le varianti date prima e dopo.
 Future<MoveReview> reviewOne(
@@ -25,6 +26,23 @@ InfoLine line(List<String> pv, EngineScore score) =>
 
 void main() {
   group('RF-70 spiegazioni degli errori', () {
+    test('le mosse citate seguono la notazione scelta (RF-76)', () async {
+      final m = await reviewOne(
+        'r1bqkbnr/pppp1ppp/2n5/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 3 3',
+        'g8f6',
+        best: line(['g7g6'], const EngineScore.cp(-30)),
+        reply: line(['h5f7'], const EngineScore.mate(1)),
+      );
+      expect(
+        explainMove(m, notation: MoveNotation.italian)!.text,
+        'Dopo Cf6 il Bianco dà matto in 1 con Dxf7#.',
+      );
+      expect(
+        explainMove(m, notation: MoveNotation.figurine)!.text,
+        'Dopo ♞f6 il Bianco dà matto in 1 con ♛xf7#.',
+      );
+    });
+
     test('pezzo lasciato in presa', () async {
       final m = await reviewOne(
         '4k3/8/8/3q4/8/2B5/8/4K3 w - - 0 1',
