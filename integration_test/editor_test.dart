@@ -45,6 +45,8 @@ void main() {
       await tester.pump();
     }
     await _tap(tester, find.text('Gioca da qui'));
+    final play = find.widgetWithText(FilledButton, 'Gioca');
+    if (play.evaluate().isNotEmpty) await _tap(tester, play);
     expect(find.text('Muove il Bianco.'), findsOneWidget);
 
     await tester.tapAt(_square(tester, Chessboard, 'a1'));

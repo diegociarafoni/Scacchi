@@ -32,6 +32,12 @@ La casa en passant viene letta dal FEN, scartata se non è sulla traversa giusta
 
 - `lib/editor/position_draft.dart`: modello immutabile della posizione in costruzione (Dart puro), con arrocco, tratto, FEN e validazione.
 - `lib/editor/position_editor_page.dart`: schermata; restituisce la `Position` scelta con `Navigator.pop`.
-- `GamePage._editPosition`: apre l'editor e avvia la partita.
+- `GamePage._editPosition`: apre l'editor, chiede come giocare la posizione e avvia la partita.
 
-Da fare: partenza dalla posizione contro il computer (RF-24), quando la partita contro Stockfish sarà su `main`.
+## Giocare la posizione contro il computer (RF-24)
+
+Dopo **Gioca da qui**, se il computer è disponibile (vedi [avversario-computer.md](avversario-computer.md)), compare il pannello **Gioca questa posizione**, con la stessa scelta della nuova partita: **Due giocatori** (predefinito), **Computer** (colore, livello o Adattivo) o **Bot**. **Gioca** avvia la partita dalla posizione; il computer muove subito se tocca a lui. Il bot non usa il suo libro d'apertura, perché la posizione non è quella iniziale. Chiudere il pannello senza scegliere lascia la partita com'era. Se il computer non è disponibile, la posizione si gioca direttamente in due.
+
+La partita dalla posizione non ha orologio e resta di scacchi classici.
+
+Le partite da una posizione creata non aggiornano la stima dell'avversario adattivo né la collezione dei bot: contano solo quelle dalla posizione iniziale degli scacchi classici.
