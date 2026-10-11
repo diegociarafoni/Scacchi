@@ -216,6 +216,8 @@ void main() {
       expect(find.text('Apertura'), findsOneWidget);
       expect(find.text('Mediogioco'), findsOneWidget);
       expect(find.text('Finale'), findsOneWidget);
+      // I valori dicono di chi sono.
+      expect(find.text('Bianco — · Nero —'), findsNWidgets(2));
       expect(
         find.bySemanticsLabel(RegExp(r'Apertura: Bianco \d+, Nero \d+')),
         findsOneWidget,

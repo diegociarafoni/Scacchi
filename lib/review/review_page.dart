@@ -742,7 +742,9 @@ class _PhaseAccuracy extends StatelessWidget {
             child: ListTile(
               dense: true,
               title: Text(phase.label),
-              trailing: Text('${value(white[phase])}   ${value(black[phase])}'),
+              trailing: Text(
+                'Bianco ${value(white[phase])} · Nero ${value(black[phase])}',
+              ),
             ),
           ),
       ],
