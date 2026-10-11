@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
+import '../game/chess_game.dart';
 import '../training/training_board.dart';
 import 'opening_assets.dart';
 import 'opening_book.dart';
@@ -44,7 +45,7 @@ class _ExplorerPageState extends State<ExplorerPage> {
 
   void _play(Move move) {
     final pos = _positions.last;
-    if (!pos.isLegal(move)) return;
+    if (!isPlayableMove(pos, move)) return;
     setState(() {
       _moves.add(move);
       _positions = [..._positions, pos.play(move)];
