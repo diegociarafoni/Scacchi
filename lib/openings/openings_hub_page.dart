@@ -49,7 +49,9 @@ class _OpeningsHubPageState extends State<OpeningsHubPage> {
                     'Repertorio con il ${side == Side.white ? 'Bianco' : 'Nero'}',
                   ),
                   subtitle: Text(
-                    trainer == null
+                    snapshot.hasError
+                        ? 'Repertorio non disponibile'
+                        : trainer == null
                         ? 'Caricamento...'
                         : '${trainer.lines(side).length} linee · '
                               '${trainer.dueCount(side)} mosse da ripassare',

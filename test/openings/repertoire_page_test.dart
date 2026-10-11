@@ -111,4 +111,12 @@ void main() {
     expect(find.text('1 linee · 1 mosse da ripassare'), findsOneWidget);
     expect(find.text('0 linee · 0 mosse da ripassare'), findsOneWidget);
   });
+
+  testWidgets('RF-93 l\'hub segnala un repertorio non caricabile', (
+    tester,
+  ) async {
+    final failing = Future<RepertoireTrainer>.error(StateError('x'))..ignore();
+    await phone(tester, OpeningsHubPage(repertoire: failing));
+    expect(find.text('Repertorio non disponibile'), findsNWidgets(2));
+  });
 }

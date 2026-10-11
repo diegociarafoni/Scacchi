@@ -185,8 +185,12 @@ class RepertoireTrainer {
     for (final l in _lines[side]!) ..._cards(side, l.moves),
   };
 
-  Set<String> _dueSet(Side side) =>
-      _queue.due(now()).where((id) => id.startsWith('${side.name}:')).toSet();
+  /// Solo carte di linee esistenti: un salvataggio interrotto può lasciarne
+  /// di orfane nella coda.
+  Set<String> _dueSet(Side side) {
+    final cards = _allCards(side);
+    return _queue.due(now()).where(cards.containsKey).toSet();
+  }
 
   int cardCount(Side side) => _allCards(side).length;
 

@@ -181,11 +181,16 @@ class _ExplorerPageState extends State<ExplorerPage> {
   }
 
   Future<void> _addToRepertoire() async {
-    final book = await _book;
+    OpeningBook? book;
+    try {
+      book = await _book;
+    } on Object {
+      // Senza libro si propone un nome generico.
+    }
     if (!mounted) return;
     // Niente dispose: il dialogo lo usa ancora durante l'animazione di uscita.
     final name = TextEditingController(
-      text: book.classifyPositions(_positions)?.name ?? 'Linea',
+      text: book?.classifyPositions(_positions)?.name ?? 'Linea',
     );
     // Di norma la linea finisce con la mossa del proprio colore.
     var side = _moves.length.isOdd ? Side.white : Side.black;

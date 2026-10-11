@@ -147,6 +147,17 @@ void main() {
       },
     );
 
+    test('le carte senza linea non contano come da ripassare', () async {
+      final store = MemoryStore();
+      await store.write(
+        RepertoireTrainer.queueKey,
+        '{"white:orfana":{"b":0,"d":0}}',
+      );
+      final t = await RepertoireTrainer.load(store, now: () => day0);
+      expect(t.dueCount(Side.white), 0);
+      expect(t.nextDrill(Side.white), isNull);
+    });
+
     test('nessun allenamento quando non ci sono carte in scadenza', () async {
       final t = await trainer();
       expect(t.nextDrill(Side.white), isNull);
