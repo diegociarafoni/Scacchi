@@ -2,6 +2,7 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/game/chess_game.dart';
 import 'package:scacchi/game/move_label.dart';
+import 'package:scacchi/game/notation.dart';
 
 ChessGame _game(Position initial, List<String> uci) {
   final game = ChessGame(initial: initial);
@@ -29,5 +30,12 @@ void main() {
     final game = _game(start, ['e7e5', 'g1f3']);
     expect(moveLabel(game, 0), '12... e5');
     expect(moveLabel(game, 1), '13. Nf3');
+  });
+
+  test('RF-76 la notazione scelta si applica all\'etichetta', () {
+    final game = _game(Chess.initial, ['e2e4', 'e7e5', 'g1f3']);
+    expect(moveLabel(game, 2, notation: MoveNotation.figurine), '2. ♞f3');
+    expect(moveLabel(game, 2, notation: MoveNotation.italian), '2. Cf3');
+    expect(moveLabel(game, 2), '2. Nf3');
   });
 }

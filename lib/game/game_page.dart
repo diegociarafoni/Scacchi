@@ -1884,7 +1884,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                   ? _ViewBar(
                       text: viewPly == -1
                           ? 'Posizione iniziale'
-                          : 'Posizione dopo ${moveLabel(_game, viewPly, number: true)}',
+                          : 'Posizione dopo ${moveLabel(_game, viewPly, number: true, notation: _settings.notation)}',
                       onPrevious: viewPly > -1
                           ? () => _showPly(viewPly - 1)
                           : null,
@@ -2097,7 +2097,10 @@ class _MoveList extends StatelessWidget {
                   borderRadius: BorderRadius.circular(4),
                 )
               : null,
-          child: Text(moveLabel(game, i), style: theme.textTheme.bodyLarge),
+          child: Text(
+            moveLabel(game, i, notation: AppSettings.of(context).notation),
+            style: theme.textTheme.bodyLarge,
+          ),
         ),
       );
       return isSelected ? _KeepVisible(child: chip) : chip;

@@ -2,6 +2,7 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart' show ThemeMode;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scacchi/game/notation.dart';
 import 'package:scacchi/settings/settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -26,7 +27,27 @@ void main() {
     expect(settings.value.colorBlind, isFalse);
     expect(settings.value.kidMode, isFalse);
     expect(settings.value.themeMode, ThemeMode.system);
+    expect(settings.value.notation, MoveNotation.figurine);
   });
+
+  test(
+    'RF-76 la notazione scelta è salvata e un valore ignoto vale figurativa',
+    () async {
+      final settings = await SettingsController.load();
+      await settings.update(
+        settings.value.copyWith(notation: MoveNotation.italian),
+      );
+      expect(
+        (await SettingsController.load()).value.notation,
+        MoveNotation.italian,
+      );
+      SharedPreferences.setMockInitialValues({'notation': 'inesistente'});
+      expect(
+        (await SettingsController.load()).value.notation,
+        MoveNotation.figurine,
+      );
+    },
+  );
 
   test('RP-04 le impostazioni sono salvate in locale', () async {
     final settings = await SettingsController.load();

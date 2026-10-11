@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scacchi/game/notation.dart';
 import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/main.dart';
 import 'package:scacchi/progress/progress_controller.dart';
@@ -53,6 +54,17 @@ void main() {
     await tester.tap(chip);
     await tester.pumpAndSettle();
   }
+
+  testWidgets('RF-76 la notazione delle mosse si sceglie dalle Impostazioni', (
+    tester,
+  ) async {
+    await show(tester);
+    expect(settings.value.notation, MoveNotation.figurine);
+    await tapChip(tester, 'Italiana (Cf3)');
+    expect(settings.value.notation, MoveNotation.italian);
+    await tapChip(tester, 'Inglese (Nf3)');
+    expect(settings.value.notation, MoveNotation.english);
+  });
 
   testWidgets('RG-06 un tema bloccato dice come sbloccarlo', (tester) async {
     await show(tester);

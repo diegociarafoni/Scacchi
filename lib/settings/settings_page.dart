@@ -4,6 +4,7 @@ import 'package:dartchess/dartchess.dart' show PieceKind;
 import 'package:flutter/material.dart';
 
 import '../backup/backup_page.dart';
+import '../game/notation.dart';
 import '../kids/kid_display.dart';
 import '../l10n/app_localizations.dart';
 import '../progress/progress_controller.dart';
@@ -149,6 +150,13 @@ class SettingsPage extends StatelessWidget {
                       ),
                       value: s.colorBlind,
                       onChanged: (v) => set((c) => c.copyWith(colorBlind: v)),
+                    ),
+                    const _Header('Notazione delle mosse'),
+                    _Choices(
+                      values: MoveNotation.values,
+                      selected: s.notation,
+                      label: (n) => n.choice,
+                      onSelected: (n) => set((c) => c.copyWith(notation: n)),
                     ),
                     const _Header('Pezzi'),
                     _Choices(
