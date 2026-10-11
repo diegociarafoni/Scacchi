@@ -1,0 +1,7 @@
+# Regole predefinite di Gitleaks più le eccezioni verificate a mano, ognuna con il motivo.
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Dati dei puzzle Lichess: gli id come MKEY8 somigliano a chiavi"
+paths = ['''(^|/)assets/puzzles/puzzles\.csv$''']

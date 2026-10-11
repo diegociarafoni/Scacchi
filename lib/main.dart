@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'home/home_shell.dart';
@@ -21,11 +23,13 @@ class _ScacchiAppState extends State<ScacchiApp> {
   @override
   void initState() {
     super.initState();
-    SettingsController.load()
-        .catchError((Object _) => SettingsController.defaults())
-        .then((s) {
-          if (mounted) setState(() => _settings = s);
-        });
+    unawaited(
+      SettingsController.load()
+          .catchError((Object _) => SettingsController.defaults())
+          .then((s) {
+            if (mounted) setState(() => _settings = s);
+          }),
+    );
   }
 
   @override

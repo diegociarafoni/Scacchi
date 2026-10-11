@@ -4,8 +4,8 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
-import 'quiz.dart';
 import 'minigame.dart';
+import 'quiz.dart';
 
 /// Sessione di dieci domande a scelta multipla, senza tempo.
 class QuizPage extends StatefulWidget {

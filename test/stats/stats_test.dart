@@ -34,8 +34,8 @@ SavedGame game(
 void main() {
   group('RF-111 statistiche', () {
     final games = [
-      game('1-0', side: Side.white, tc: '5+0'),
-      game('0-1', side: Side.white, tc: '5+0'),
+      game('1-0', tc: '5+0'),
+      game('0-1', tc: '5+0'),
       game('1/2-1/2', side: Side.black, tc: '10+0'),
       game('0-1', side: Side.black, tc: '10+0'),
       game('*', side: Side.black),
@@ -103,7 +103,7 @@ void main() {
     test('precisione media e andamento nel tempo', () {
       final s = GameStats.from([
         game('1-0', accuracy: 70, day: 2),
-        game('0-1', accuracy: 80, day: 1),
+        game('0-1', accuracy: 80),
         game('1-0'),
       ]);
       expect(s.averageAccuracy, 75);
@@ -138,12 +138,12 @@ void main() {
     test('ordine cronologico e solo partite contro il computer', () {
       final r = LocalRating.from([
         game('1-0', elo: 1000, day: 3),
-        game('0-1', elo: 1000, day: 1),
+        game('0-1', elo: 1000),
         game('1-0', side: null, mode: 'locale', day: 2),
         game('1-0', elo: 1000, mode: SavedGame.imported, day: 2),
       ]);
       expect(r.history, hasLength(2));
-      expect(r.history.first.$1, DateTime(2026, 10, 1));
+      expect(r.history.first.$1, DateTime(2026, 10));
     });
 
     test('partite alla stessa ora: ordine stabile per identificativo', () {

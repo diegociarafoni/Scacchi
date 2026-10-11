@@ -62,7 +62,7 @@ void main() {
     });
 
     test('domani se l\'orario di oggi è passato', () {
-      final r = next(now: DateTime(2026, 10, 5, 19, 0))!;
+      final r = next(now: DateTime(2026, 10, 5, 19))!;
       expect(r.at, DateTime(2026, 10, 6, 19));
     });
 

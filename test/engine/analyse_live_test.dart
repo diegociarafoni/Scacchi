@@ -3,10 +3,9 @@ import 'dart:async';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/engine/computer_player.dart';
+import 'package:scacchi/engine/process_transport.dart';
 import 'package:scacchi/engine/uci.dart';
 import 'package:scacchi/engine/uci_transport.dart';
-
-import 'package:scacchi/engine/process_transport.dart';
 
 /// Motore finto: a ogni `go` manda alcune righe e risponde con `bestmove`
 /// solo dopo `stop`.

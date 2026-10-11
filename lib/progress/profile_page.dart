@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../minigames/minigame.dart';
@@ -454,7 +456,9 @@ class _Settings extends StatelessWidget {
                   DropdownMenuItem(value: g, child: Text(goalLabel(g))),
               ],
               onChanged: (g) {
-                if (g != null) controller.updateSettings(s.copyWith(goal: g));
+                if (g != null) {
+                  unawaited(controller.updateSettings(s.copyWith(goal: g)));
+                }
               },
             ),
           ),

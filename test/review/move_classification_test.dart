@@ -41,7 +41,7 @@ void main() {
     });
 
     test('le mosse di libro restano tali anche se non sono le migliori', () {
-      expect(classify(before: 52, after: 50, book: true), MoveClass.book);
+      expect(classify(before: 52, book: true), MoveClass.book);
     });
 
     test('un errore di libro resta un errore', () {
@@ -72,10 +72,7 @@ void main() {
     });
 
     test('non è Brillante un sacrificio che peggiora la posizione', () {
-      expect(
-        classify(before: 70, after: 50, sacrifice: true),
-        MoveClass.mistake,
-      );
+      expect(classify(before: 70, sacrifice: true), MoveClass.mistake);
     });
 
     test('Ottima: unica mossa buona in posizione critica', () {

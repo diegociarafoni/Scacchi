@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:chessground/chessground.dart';
@@ -124,7 +125,7 @@ class _ReviewPageState extends State<ReviewPage> {
       _review = cached;
       _phase = _Phase.done;
     } else {
-      _analyse();
+      unawaited(_analyse());
     }
   }
 
@@ -158,7 +159,7 @@ class _ReviewPageState extends State<ReviewPage> {
         _review = review;
         _phase = _Phase.done;
       });
-    } catch (_) {
+    } on Object {
       if (mounted && !_cancelled) setState(() => _phase = _Phase.failed);
     }
   }
@@ -197,7 +198,7 @@ class _ReviewPageState extends State<ReviewPage> {
     );
   }
 
-  void _refreshBoard() => _board.updatePosition(_gameData(), animate: true);
+  void _refreshBoard() => _board.updatePosition(_gameData());
 
   void _select(int index) {
     setState(() {
