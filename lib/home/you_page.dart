@@ -112,9 +112,8 @@ class YouPage extends StatelessWidget {
                           subtitle: simple
                               ? KidFlame(lit: controller.streak > 0)
                               : Text(
-                                  controller.streak == 1
-                                      ? '1 giorno di fila'
-                                      : '${controller.streak} giorni di fila',
+                                  '${controller.streak == 1 ? '1 giorno di fila' : '${controller.streak} giorni di fila'}'
+                                  ' · ${controller.streakInfo.summary}',
                                 ),
                         )
                       : const SizedBox.shrink(),
