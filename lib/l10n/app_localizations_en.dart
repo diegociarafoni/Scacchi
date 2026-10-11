@@ -23,6 +23,20 @@ class AppLocalizationsEn extends AppLocalizations {
       'Simpler screens and words, friendly bots, no numbers';
 
   @override
+  String get kidAdultGateTitle => 'Ask a grown-up';
+
+  @override
+  String kidAdultGateQuestion(int a, int b) {
+    return 'To leave the kid profile: what is $a × $b?';
+  }
+
+  @override
+  String get kidAdultGateWrong => 'Wrong answer.';
+
+  @override
+  String get kidAdultGateConfirm => 'Confirm';
+
+  @override
   String get kidProgressGreat => 'Well done, keep going!';
 
   @override

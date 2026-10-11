@@ -11,6 +11,7 @@ enum CoachTheme {
   missedMate,
   hangingPiece,
   allowedFork,
+  allowedPin,
   missedCapture,
   missedFork,
   missedDiscovery,
@@ -42,6 +43,8 @@ CoachComment? explainMove(MoveReview m, {MoveReview? previous}) {
       _allowedFork(after, m.replyLine) ??
       _missedTactic(before, m, previous) ??
       _materialLoss(before, after, m.replyLine) ??
+      // Una inchiodatura è un danno più lieve: non copre perdite concrete.
+      _allowedPin(after, m.replyLine) ??
       (m.bestSan == null
           ? null
           : CoachComment(
@@ -122,6 +125,46 @@ CoachComment? _allowedFork(Position after, List<String> reply) {
     'Dopo ${after.makeSan(first).$2} ${_the(mover.role)} ${_colorAdj(mover)} '
     'attacca insieme ${_list(targets)}: è una forchetta.',
   );
+}
+
+/// La risposta dell'avversario inchioda al re un nostro pezzo con un alfiere,
+/// una torre o la donna che non possiamo prendere. Se il pezzo era già
+/// inchiodato dallo stesso attaccante, non è una novità della mossa.
+CoachComment? _allowedPin(Position after, List<String> reply) {
+  final first = parseEngineMove(after, reply.firstOrNull);
+  if (first is! NormalMove) return null;
+  final slider = after.board.pieceAt(first.from);
+  if (slider == null || !_isSlider(slider.role)) return null;
+  final next = after.play(first);
+  final me = slider.color.opposite;
+  final pinned = _pinnedPiece(next, first.to, slider, me);
+  if (pinned == null) return null;
+  if (_pinnedPiece(after, first.from, slider, me) == pinned) return null;
+  if (next.board.attacksTo(first.to, me).isNotEmpty) return null;
+  final role = next.board.pieceAt(pinned)!.role;
+  return CoachComment(
+    CoachTheme.allowedPin,
+    'Dopo ${after.makeSan(first).$2} ${_the(slider.role)} '
+    '${_colorAdj(slider)} inchioda ${_the(role)} in ${pinned.name} contro '
+    'il re.',
+  );
+}
+
+bool _isSlider(Role role) =>
+    role == Role.bishop || role == Role.rook || role == Role.queen;
+
+/// Il solo pezzo (non pedone) di [victim] tra il pezzo in [from] e il suo
+/// re, se sono sulla stessa linea di attacco del pezzo.
+Square? _pinnedPiece(Position pos, Square from, Piece slider, Side victim) {
+  final king = pos.board.kingOf(victim);
+  if (king == null) return null;
+  if (!attacks(slider, from, SquareSet.empty).has(king)) return null;
+  final blockers = pos.board.occupied.intersect(between(from, king));
+  if (blockers.size != 1) return null;
+  final square = blockers.first!;
+  final piece = pos.board.pieceAt(square)!;
+  if (piece.color != victim || piece.role == Role.pawn) return null;
+  return square;
 }
 
 /// Tattica nella prima mossa della variante migliore: ripresa o cattura

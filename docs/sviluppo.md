@@ -101,9 +101,11 @@ I golden si rigenerano con `flutter test test/settings --update-goldens` dopo un
 | RF-64 grafico della valutazione cliccabile con momenti chiave | ✓ | |
 | RF-65 Riprova sugli errori | ✓ | |
 | RF-66 cache della revisione (in memoria) | ✓ | |
-| RF-70 spiegazioni: matto concesso o mancato, pezzo in presa, forchetta, perdita di materiale | ✓ | |
+| RF-70 spiegazioni: matto concesso o mancato, pezzo in presa, forchetta, inchiodatura, perdita di materiale | ✓ | |
 | RF-71 cattura netta, doppio attacco, scoperta dalla variante del motore | ✓ | |
 | Cap. 7, errori trasformati in puzzle personali | ✓ | |
+| Cap. 7, puzzle personali salvati e nel ripasso | ✓ | ✓ |
+| RG-01 la revisione vale XP, una volta per partita | | ✓ |
 | RF-31 rotazione automatica a ogni turno | | ✓ |
 | RF-32 patta concordata e annullamento | ✓ | ✓ |
 | RF-100 salvataggio e partita da riprendere | ✓ | |
