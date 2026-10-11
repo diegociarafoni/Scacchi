@@ -379,5 +379,158 @@
   "kidGameHint": "Aiuto",
   "@kidGameHint": {
     "description": "Pulsante della barra dei comandi che chiede un suggerimento, nel profilo bambino"
+  },
+  "kidProgressGreat": "Bravo, continua così!",
+  "@kidProgressGreat": {
+    "description": "Notifica dei progressi nel profilo bambino, al posto di «+N XP»"
+  },
+  "kidProgressGoal": "Obiettivo di oggi raggiunto!",
+  "@kidProgressGoal": {
+    "description": "Obiettivo giornaliero completato, nel profilo bambino"
+  },
+  "kidProgressLevelUp": "Sei salito di livello: una stella in più!",
+  "@kidProgressLevelUp": {
+    "description": "Nuovo livello, senza il numero, nel profilo bambino"
+  },
+  "kidProgressChallenge": "Sfida completata!",
+  "@kidProgressChallenge": {
+    "description": "Sfida completata, nel profilo bambino (il titolo può contenere numeri)"
+  },
+  "kidProgressAchievement": "Nuovo traguardo!",
+  "@kidProgressAchievement": {
+    "description": "Traguardo sbloccato, nel profilo bambino (il titolo può contenere numeri)"
+  },
+  "kidProgressReward": "Hai sbloccato una ricompensa!",
+  "@kidProgressReward": {
+    "description": "Ricompensa sbloccata nel profilo bambino, senza il nome (che è solo in italiano)"
+  },
+  "kidLevelTitle": "Le tue stelle",
+  "@kidLevelTitle": {
+    "description": "Titolo della scheda del livello nel profilo bambino: una stella per livello"
+  },
+  "kidLevelStarsLabel": "Una stella per ogni livello raggiunto",
+  "@kidLevelStarsLabel": {
+    "description": "Descrizione per i lettori di schermo delle stelle del livello"
+  },
+  "kidLevelProgress": "Gioca ancora per guadagnare un'altra stella!",
+  "@kidLevelProgress": {
+    "description": "Testo sotto la barra del livello, senza cifre"
+  },
+  "kidLevelProgressLabel": "Strada verso la prossima stella",
+  "@kidLevelProgressLabel": {
+    "description": "Descrizione per i lettori di schermo della barra del livello"
+  },
+  "kidStreakOn": "Stai giocando tutti i giorni: la fiamma è accesa!",
+  "@kidStreakOn": {
+    "description": "Serie di giorni attiva, senza il numero di giorni"
+  },
+  "kidStreakOff": "Gioca oggi per accendere la fiamma!",
+  "@kidStreakOff": {
+    "description": "Serie di giorni non ancora iniziata"
+  },
+  "kidGoalToday": "Obiettivo di oggi",
+  "@kidGoalToday": {
+    "description": "Etichetta della barra dell'obiettivo giornaliero, senza cifre"
+  },
+  "kidChallengeProgress": "Strada verso la sfida",
+  "@kidChallengeProgress": {
+    "description": "Descrizione per i lettori di schermo della barra di una sfida"
+  },
+  "kidPuzzleHubTitle": "Risolvi i puzzle e raccogli stelle!",
+  "@kidPuzzleHubTitle": {
+    "description": "Intestazione dell'hub dei puzzle al posto del punteggio"
+  },
+  "kidPuzzleStarsLabel": "Le stelle dei puzzle risolti",
+  "@kidPuzzleStarsLabel": {
+    "description": "Descrizione per i lettori di schermo delle stelle dei puzzle risolti"
+  },
+  "kidPuzzleTraining": "Puzzle scelti per te",
+  "@kidPuzzleTraining": {
+    "description": "Sottotitolo di Allenamento senza riferimento al punteggio"
+  },
+  "kidPuzzleDaily": "Un puzzle nuovo ogni giorno",
+  "@kidPuzzleDaily": {
+    "description": "Sottotitolo del puzzle del giorno senza la difficoltà numerica"
+  },
+  "kidPuzzleReviewDue": "Ci sono puzzle da ripassare",
+  "@kidPuzzleReviewDue": {
+    "description": "Ripasso con puzzle in attesa, senza il conteggio"
+  },
+  "kidPuzzleReviewNone": "Niente da ripassare oggi",
+  "@kidPuzzleReviewNone": {
+    "description": "Ripasso senza puzzle in attesa"
+  },
+  "kidPuzzleKeepGoing": "Forza, ce la puoi fare!",
+  "@kidPuzzleKeepGoing": {
+    "description": "Sotto la scacchiera del puzzle, al posto del punteggio"
+  },
+  "kidAccuracy5": "Perfetto!",
+  "@kidAccuracy5": {
+    "description": "Giudizio della precisione con cinque stelle"
+  },
+  "kidAccuracy4": "Molto bene",
+  "@kidAccuracy4": {
+    "description": "Giudizio della precisione con quattro stelle"
+  },
+  "kidAccuracy3": "Bene",
+  "@kidAccuracy3": {
+    "description": "Giudizio della precisione con tre stelle"
+  },
+  "kidAccuracy2": "Così così",
+  "@kidAccuracy2": {
+    "description": "Giudizio della precisione con due stelle"
+  },
+  "kidAccuracy1": "Da migliorare",
+  "@kidAccuracy1": {
+    "description": "Giudizio della precisione con una stella"
+  },
+  "kidReviewAnalysing": "Sto guardando la partita…",
+  "@kidReviewAnalysing": {
+    "description": "Revisione in corso, senza il conteggio delle posizioni"
+  },
+  "kidAnalysisThinking": "Il computer sta pensando…",
+  "@kidAnalysisThinking": {
+    "description": "Stato dell'analisi al posto della profondità"
+  },
+  "kidEvalWhite": "Il Bianco è in vantaggio",
+  "@kidEvalWhite": {
+    "description": "Barra di valutazione senza cifre, vantaggio del Bianco"
+  },
+  "kidEvalBlack": "Il Nero è in vantaggio",
+  "@kidEvalBlack": {
+    "description": "Barra di valutazione senza cifre, vantaggio del Nero"
+  },
+  "kidEvalEven": "Partita in equilibrio",
+  "@kidEvalEven": {
+    "description": "Barra di valutazione senza cifre, posizione pari"
+  },
+  "kidUnlockByPlaying": "Si sblocca giocando",
+  "@kidUnlockByPlaying": {
+    "description": "Requisito di avatar, cornici, temi e pezzi bloccati nel profilo bambino, al posto di «Livello N»"
+  },
+  "kidCoachMaterialLoss": "Attento: con questa mossa perdi dei pezzi.",
+  "@kidCoachMaterialLoss": {
+    "description": "Coach nel profilo bambino: perdita di materiale senza il conto dei pedoni"
+  },
+  "kidCoachAllowedMate": "Dopo {move} l'avversario può dare scacco matto con {reply}.",
+  "@kidCoachAllowedMate": {
+    "description": "Coach nel profilo bambino: matto concesso, senza «matto in N»; move e reply in notazione SAN",
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "reply": {
+        "type": "String"
+      }
+    }
+  },
+  "kidCoachMissedMate": "Con {move} potevi dare scacco matto!",
+  "@kidCoachMissedMate": {
+    "description": "Coach nel profilo bambino: matto mancato, senza «matto in N»; move in notazione SAN",
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
   }
 }

@@ -6,10 +6,12 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
 import '../engine/uci.dart';
+import '../l10n/app_localizations.dart';
 import '../review/board_utils.dart';
 import '../review/eval_bar.dart';
 import '../review/score_format.dart';
 import '../review/win_probability.dart';
+import '../settings/settings.dart';
 
 /// Analisi continua di [fen] con [multiPv] varianti, interrotta annullando
 /// l'iscrizione al flusso.
@@ -285,6 +287,10 @@ class _AnalysisPageState extends State<AnalysisPage>
     if (_failed) return 'Motore non disponibile';
     if (_paused) return 'Analisi in pausa';
     if (_pos.isGameOver) return 'Partita finita';
+    // Profilo bambino (RP-06): niente profondità del motore.
+    if (AppSettings.of(context).kidMode) {
+      return AppLocalizations.of(context).kidAnalysisThinking;
+    }
     final depth = _lines.firstOrNull?.depth;
     return depth == null ? 'Analisi…' : 'Profondità $depth';
   }
@@ -300,7 +306,9 @@ class _AnalysisPageState extends State<AnalysisPage>
       leading: SizedBox(
         width: 56,
         child: Text(
-          white == null ? '' : formatScore(white),
+          white == null || AppSettings.of(context).kidMode
+              ? ''
+              : formatScore(white),
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
       ),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/archive/game_archive.dart';
 import 'package:scacchi/home/home_shell.dart';
+import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/progress/progress_controller.dart';
 import 'package:scacchi/progress/progress_store.dart';
 import 'package:scacchi/reminders/reminder.dart';
@@ -43,6 +44,10 @@ void main() {
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
       MaterialApp(
+        // Il profilo bambino usa i testi localizzati; locale di sistema del
+        // test, così pageBack trova ancora il pulsante «Back».
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         home: HomeShell(
           settings: settings ?? SettingsController.defaults(),
           progress: () async => progress,
