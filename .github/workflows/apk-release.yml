@@ -1,0 +1,120 @@
+name: Rilascio APK
+
+on:
+  push:
+    tags: ['v*']
+  # Verifica la build release quando cambia la sua configurazione, senza pubblicare.
+  pull_request:
+    paths: ['.github/workflows/apk-release.yml', 'android/**']
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Versione da pubblicare (es. 0.1.0): crea il tag v<versione> sul commit scelto. Vuoto = solo artefatto.'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+concurrency:
+  group: apk-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      HAS_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Versione
+        id: version
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          if [ "$GITHUB_REF_TYPE" = "tag" ]; then
+            tag="$GITHUB_REF_NAME"
+          elif [ -n "$INPUT_VERSION" ]; then
+            tag="v${INPUT_VERSION#v}"
+          else
+            tag=""
+          fi
+          if [ -n "$tag" ] && ! [[ "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([-+][0-9A-Za-z.-]+)?$ ]]; then
+            echo "::error::Tag non valido: $tag (atteso vX.Y.Z)"; exit 1
+          fi
+          name="${tag#v}"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "name=${name:-0.0.0-dev}" >> "$GITHUB_OUTPUT"
+
+      # Il runner standard non ha spazio sufficiente per la build release con il motore nativo.
+      - name: Spazio su disco
+        run: sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/.ghcup /usr/local/share/boost /usr/local/lib/node_modules
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.47.7
+          cache: true
+      - run: flutter pub get
+
+      - name: Chiave di firma
+        if: env.HAS_KEYSTORE == 'true'
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/release.jks"
+          echo "ANDROID_KEYSTORE_PATH=$RUNNER_TEMP/release.jks" >> "$GITHUB_ENV"
+
+      - name: Build APK release
+        env:
+          BUILD_NAME: ${{ steps.version.outputs.name }}
+          BUILD_NUMBER: ${{ github.run_number }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          flutter build apk --release \
+            --build-name="$BUILD_NAME" --build-number="$BUILD_NUMBER"
+          mkdir -p dist
+          cp build/app/outputs/flutter-apk/app-release.apk dist/scacchi.apk
+          (cd dist && sha256sum scacchi.apk > scacchi.apk.sha256)
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: scacchi-apk-${{ steps.version.outputs.name }}
+          path: dist/
+
+      - name: Rilascio GitHub
+        if: steps.version.outputs.tag != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          if [ "$HAS_KEYSTORE" = "true" ]; then
+            signing="Firmato con la chiave di rilascio del progetto."
+          else
+            signing="Firmato con una chiave di debug generata dalla build: per aggiornare da un'altra versione può servire disinstallare prima l'app."
+          fi
+          cat > notes.md <<NOTES
+          Installazione su Android: aprire dal telefono il file **scacchi.apk** qui sotto, consentire l'installazione da questa origine e confermare.
+
+          $signing
+
+          Istruzioni complete: docs/rilascio-android.md
+          NOTES
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            gh release upload "$TAG" dist/* --clobber
+          else
+            prerelease=""
+            # Le pre-release non compaiono in releases/latest: solo i tag con suffisso lo sono.
+            case "$TAG" in *-*) prerelease="--prerelease" ;; esac
+            gh release create "$TAG" dist/* --target "$GITHUB_SHA" \
+              --title "Scacchi ${TAG#v}" --notes-file notes.md $prerelease
+          fi
