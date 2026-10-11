@@ -41,3 +41,5 @@ Dopo **Gioca da qui**, se il computer è disponibile (vedi [avversario-computer.
 La partita dalla posizione non ha orologio e resta di scacchi classici.
 
 Le partite da una posizione creata non aggiornano la stima dell'avversario adattivo né la collezione dei bot: contano solo quelle dalla posizione iniziale degli scacchi classici.
+
+Sopra la stringa FEN c'è il titolo **Posizione (FEN)** con l'icona di aiuto (?) che apre una breve spiegazione: cos'è il FEN e come copiarlo o incollarlo da altre app. Titolo e testi sono nei file di traduzione (`editorFen*`).
