@@ -1339,8 +1339,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final result = await _whileSuspended<(Position, GameSetup)>(() async {
       final position = await Navigator.of(context).push<Position>(
         MaterialPageRoute(
-          builder: (_) =>
-              PositionEditorPage(initialFen: shown.fen, board: _settings.board),
+          builder: (_) => PositionEditorPage(
+            initialFen: shown.fen,
+            board: _settings.editorBoard,
+          ),
         ),
       );
       if (position == null || !mounted) return null;
@@ -1983,14 +1985,14 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                 balance: balance,
                 side: _orientation.opposite,
                 name: _nameOf(_orientation.opposite),
-                pieceAssets: boardSettings.pieceAssets,
+                pieceAssets: _settings.pieceAssets,
                 clock: _clockView(_orientation.opposite),
               );
               final bottomMaterial = _MaterialRow(
                 balance: balance,
                 side: _orientation,
                 name: _nameOf(_orientation),
-                pieceAssets: boardSettings.pieceAssets,
+                pieceAssets: _settings.pieceAssets,
                 clock: _clockView(_orientation),
               );
               if (landscape) {

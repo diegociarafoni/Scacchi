@@ -5,6 +5,7 @@ import 'package:dartchess/dartchess.dart' show PieceKind, Side;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/settings/board_frame.dart';
+import 'package:scacchi/settings/color_blind.dart';
 import 'package:scacchi/settings/settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -73,6 +74,7 @@ void main() {
     test('solo i temi scuri usano l\'alone', () {
       final dim = BoardTheme.values.where((t) => t.dim).toSet();
       expect(dim, {
+        BoardTheme.night,
         BoardTheme.crepuscolo,
         BoardTheme.castello,
         BoardTheme.spazio,
@@ -118,6 +120,30 @@ void main() {
         expect(File(image.assetName).existsSync(), isTrue, reason: t.name);
       }
     });
+  });
+
+  test('fuori dalla scacchiera i pezzi non hanno alone', () {
+    final s = AppSettings(
+      boardTheme: BoardTheme.spazio,
+      pieceSet: PieceStyle.rokko,
+      coordinatesOutside: true,
+    );
+    expect(s.pieceAssets, PieceStyle.rokko.assets);
+    expect(s.editorBoard.pieceAssets, PieceStyle.rokko.assets);
+    expect(s.editorBoard.enableCoordinates, isTrue, reason: 'senza cornice');
+  });
+
+  test('RNF-07 le evidenziazioni si vedono su ogni scacchiera con texture', () {
+    for (final t in BoardTheme.values.where((t) => t.textured)) {
+      final s = t.colorScheme;
+      for (final h in [s.lastMove.solidColor!, s.selected.solidColor!]) {
+        expect(
+          highlightContrast(h, t.light!, t.dark!),
+          greaterThanOrEqualTo(1.25),
+          reason: t.name,
+        );
+      }
+    }
   });
 
   group('coordinate fuori dalla scacchiera', () {

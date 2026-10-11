@@ -31,7 +31,7 @@ enum BoardTheme {
   sand('Sabbia', light: Color(0xfff3e5c0), dark: Color(0xffc8a26b)),
   ocean('Oceano', light: Color(0xffd6ecf0), dark: Color(0xff3f7f93)),
   coral('Corallo', light: Color(0xfffbe3d6), dark: Color(0xffd9776a)),
-  night('Notte', light: Color(0xff9aa5b8), dark: Color(0xff3b4459)),
+  night('Notte', light: Color(0xff9aa5b8), dark: Color(0xff3b4459), dim: true),
   gold('Oro', light: Color(0xfffaf0c8), dark: Color(0xffc9a227)),
   arancia(
     'Arancia',
@@ -129,14 +129,39 @@ enum BoardTheme {
   /// Sempre la stessa istanza per tema, per non ridisegnare lo sfondo.
   ChessboardColorScheme get colorScheme =>
       scheme ??
-      _solid.putIfAbsent(this, () => _solidScheme(light!, dark!, image));
+      _solid.putIfAbsent(this, () => _customScheme(light!, dark!, image));
 
   /// Stesse case di [colorScheme], evidenziazioni senza rosso e verde.
   ChessboardColorScheme get colorBlindScheme =>
       _colorBlind.putIfAbsent(this, () => colorBlindHighlights(colorScheme));
 }
 
-ChessboardColorScheme _solidScheme(
+/// Evidenziazioni candidate: per ogni tema vince la più discreta tra quelle
+/// ben visibili, così i colori per daltonici possono ancora eguagliarla.
+const _lastMoveHues = [
+  Color(0x809cc700),
+  Color(0xb3ffb000),
+  Color(0x99e8453c),
+  Color(0xb30f6fff),
+  Color(0x66ffffff),
+  Color(0x80ffffff),
+];
+const _selectedHues = [
+  Color(0x6014551e),
+  Color(0x50000000),
+  Color(0x66000000),
+  Color(0x4dffffff),
+  Color(0x80ffffff),
+];
+
+Color _visible(List<Color> hues, Color light, Color dark) {
+  double contrast(Color h) => highlightContrast(h, light, dark);
+  final visible = hues.where((h) => contrast(h) >= 1.25).toList()
+    ..sort((a, b) => contrast(a).compareTo(contrast(b)));
+  return visible.isEmpty ? hues.first : visible.first;
+}
+
+ChessboardColorScheme _customScheme(
   Color light,
   Color dark, [
   AssetImage? image,
@@ -161,8 +186,17 @@ ChessboardColorScheme _solidScheme(
     background: background(),
     whiteCoordBackground: background(coordinates: Side.white),
     blackCoordBackground: background(coordinates: Side.black),
-    lastMove: const HighlightDetails(solidColor: Color(0x809cc700)),
-    selected: const HighlightDetails(solidColor: Color(0x6014551e)),
+    // I temi a tinta unita tengono le evidenziazioni di sempre.
+    lastMove: HighlightDetails(
+      solidColor: image == null
+          ? _lastMoveHues.first
+          : _visible(_lastMoveHues, light, dark),
+    ),
+    selected: HighlightDetails(
+      solidColor: image == null
+          ? _selectedHues.first
+          : _visible(_selectedHues, light, dark),
+    ),
     validMoves: const Color(0x4014551e),
     validPremoves: const Color(0x40203085),
   );
@@ -300,6 +334,16 @@ class AppSettings {
   final MoveNotation notation;
   final String whiteName;
   final String blackName;
+
+  /// Pezzi fuori dalla scacchiera (catturati, tavolozze): mai con l'alone.
+  PieceAssets get pieceAssets => pieceSet.assets;
+
+  /// Scacchiera senza [BoardFrame], come quella dell'editor: coordinate sulle
+  /// case se attive e pezzi della tavolozza senza alone.
+  ChessboardSettings get editorBoard => board.copyWith(
+    enableCoordinates: showCoordinates,
+    pieceAssets: pieceAssets,
+  );
 
   /// Vero se le coordinate vanno disegnate fuori, da [BoardFrame].
   bool get outsideCoordinates => showCoordinates && coordinatesOutside;
