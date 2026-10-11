@@ -8,6 +8,9 @@ const transferPrefix = 'SC1';
 /// Lunghezza oltre la quale un fotogramma non viene nemmeno analizzato.
 const maxFrameLength = 4096;
 
+/// Numero massimo di parti accettate da chi riceve.
+const maxTransferFrames = 64;
+
 const _alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
 
 final _crcTable = List<int>.generate(256, (n) {
@@ -153,7 +156,10 @@ class _TooLarge implements Exception {}
 /// considerati non affidabili: ogni fotogramma viene validato e il testo
 /// decompresso non può superare [maxTextBytes].
 class TransferAssembler {
-  TransferAssembler({this.maxFrames = 64, this.maxTextBytes = 256 * 1024});
+  TransferAssembler({
+    this.maxFrames = maxTransferFrames,
+    this.maxTextBytes = 256 * 1024,
+  });
 
   final int maxFrames;
   final int maxTextBytes;

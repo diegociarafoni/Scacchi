@@ -102,6 +102,25 @@ void main() {
       expect(find.text('Parte 1 di ${frames.length}'), findsOneWidget);
     });
 
+    testWidgets(
+      'Cap. 7 scambio QR: oltre il limite di parti non mostra il QR',
+      (tester) async {
+        await tester.pumpWidget(
+          _app(
+            QrSendPage(
+              title: 'Enorme',
+              frames: List.filled(maxTransferFrames + 1, 'SC1/x'),
+            ),
+          ),
+        );
+        expect(find.byType(QrCodeView), findsNothing);
+        expect(
+          find.text('La partita è troppo grande per essere ricevuta.'),
+          findsOneWidget,
+        );
+      },
+    );
+
     testWidgets('Cap. 7 scambio QR: il QR resta nero su bianco anche col '
         'tema scuro', (tester) async {
       await tester.pumpWidget(
@@ -207,6 +226,32 @@ void main() {
       await tester.pump();
       expect(
         find.text('Il QR è danneggiato: ricomincia la lettura.'),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('Cap. 7 scambio QR: dopo un errore finale l\'avanzamento '
+        'riparte da zero', (tester) async {
+      final scanner = await show(tester, []);
+      final frames = encodeTransfer(_longText(), maxDataLength: 100);
+      for (final f in frames.skip(1)) {
+        scanner.onCode!(f);
+      }
+      await tester.pump();
+      expect(
+        find.text('${frames.length - 1} di ${frames.length} parti lette'),
+        findsOneWidget,
+      );
+      final parts = frames.first.split('/');
+      final data = parts.last;
+      final first = data.startsWith('A') ? 'B' : 'A';
+      scanner.onCode!(
+        [...parts.take(4), '$first${data.substring(1)}'].join('/'),
+      );
+      await tester.pump();
+      expect(find.textContaining('parti lette'), findsNothing);
+      expect(
+        find.text('Inquadra il codice QR mostrato dall\'altro telefono.'),
         findsOneWidget,
       );
     });

@@ -10,6 +10,7 @@ import '../exchange/qr_send_page.dart';
 import '../exchange/qr_transfer.dart';
 import '../l10n/app_localizations.dart';
 import 'game_archive.dart';
+import 'pgn.dart';
 import 'saved_game.dart';
 
 typedef ShareText = Future<void> Function(String text);
@@ -80,11 +81,11 @@ class _ArchivePageState extends State<ArchivePage> {
       builder: (context) => const _ImportDialog(),
     );
     if (text == null || !mounted) return;
-    await _importText(text);
+    await _showImport(widget.archive.importPgn(text));
   }
 
-  Future<void> _importText(String text) async {
-    final result = await widget.archive.importPgn(text);
+  Future<void> _showImport(Future<PgnImport> import) async {
+    final result = await import;
     await _reload();
     if (!mounted) return;
     final n = result.games.length;
@@ -105,28 +106,31 @@ class _ArchivePageState extends State<ArchivePage> {
       MaterialPageRoute(builder: (_) => QrReceivePage(scanner: widget.scanner)),
     );
     if (text == null || !mounted) return;
-    if (receivedGames(text).isEmpty) {
+    final games = receivedGames(text);
+    if (games.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(AppLocalizations.of(context).qrInvalidGame)),
       );
       return;
     }
-    await _importText(text);
+    await _showImport(widget.archive.importRecords(PgnImport(games, 0)));
   }
 
-  Future<void> _sendQr(SavedGame game) => Navigator.of(context).push<void>(
-    MaterialPageRoute(
-      builder: (_) =>
-          QrSendPage(title: _title(game), frames: encodeTransfer(game.pgn)),
-    ),
-  );
+  Future<void> _sendQr(SavedGame game) {
+    final frames = encodeTransfer(game.pgn);
+    return Navigator.of(context).push<void>(
+      MaterialPageRoute(
+        builder: (_) => QrSendPage(title: game.title, frames: frames),
+      ),
+    );
+  }
 
   Future<void> _delete(SavedGame game) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Eliminare la partita?'),
-        content: Text(_title(game)),
+        content: Text(game.title),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -231,8 +235,6 @@ class _ArchivePageState extends State<ArchivePage> {
 
 enum _Action { share, copy, qr, delete }
 
-String _title(SavedGame g) => '${g.white} – ${g.black}';
-
 String _date(DateTime d) =>
     '${d.day.toString().padLeft(2, '0')}/'
     '${d.month.toString().padLeft(2, '0')}/${d.year}';
@@ -252,11 +254,11 @@ class _GameTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final result = game.finished ? game.result : 'In corso';
     return ListTile(
-      title: Text(_title(game)),
+      title: Text(game.title),
       subtitle: Text('${_date(game.updatedAt)} · ${game.mode} · $result'),
       onTap: onTap,
       trailing: PopupMenuButton<_Action>(
-        tooltip: 'Azioni per ${_title(game)}',
+        tooltip: 'Azioni per ${game.title}',
         onSelected: onAction,
         itemBuilder: (context) => [
           const PopupMenuItem(

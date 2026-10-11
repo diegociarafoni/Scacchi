@@ -71,4 +71,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get qrInvalidGame => 'The QR code does not contain a valid game.';
+
+  @override
+  String get qrFinishedGame =>
+      'The game is already over: receive it from You › Archive › Receive via QR.';
+
+  @override
+  String get qrMalformed => 'Invalid QR code: ignored.';
 }

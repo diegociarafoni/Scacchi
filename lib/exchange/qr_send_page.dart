@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:qr/qr.dart';
 
 import '../l10n/app_localizations.dart';
 import 'qr_code_view.dart';
+import 'qr_transfer.dart';
 
 /// Mostra i fotogrammi QR di una partita; se sono più d'uno scorrono in
 /// ciclo, così chi riceve può leggerli in qualunque ordine.
@@ -31,10 +33,17 @@ class _QrSendPageState extends State<QrSendPage> {
 
   int get _count => widget.frames.length;
 
+  // Oltre il limite di chi riceve sarebbe inutile mostrarlo.
+  bool get _tooLarge => _count > maxTransferFrames;
+
+  late final _images = _tooLarge
+      ? const <QrImage>[]
+      : [for (final f in widget.frames) qrImage(f)];
+
   @override
   void initState() {
     super.initState();
-    if (_count > 1) _play();
+    if (_count > 1 && !_tooLarge) _play();
   }
 
   @override
@@ -62,6 +71,17 @@ class _QrSendPageState extends State<QrSendPage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final playing = _timer != null;
+    if (_tooLarge) {
+      return Scaffold(
+        appBar: AppBar(title: Text(l10n.qrSendTitle)),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Text(l10n.qrTooLarge, textAlign: TextAlign.center),
+          ),
+        ),
+      );
+    }
     return Scaffold(
       appBar: AppBar(title: Text(l10n.qrSendTitle)),
       body: SafeArea(
@@ -79,6 +99,7 @@ class _QrSendPageState extends State<QrSendPage> {
                 constraints: const BoxConstraints(maxWidth: 420),
                 child: QrCodeView(
                   data: widget.frames[_index],
+                  image: _images[_index],
                   label: l10n.qrCodeLabel,
                 ),
               ),

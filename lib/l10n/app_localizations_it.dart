@@ -72,4 +72,11 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get qrInvalidGame => 'Il QR non contiene una partita valida.';
+
+  @override
+  String get qrFinishedGame =>
+      'La partita è già conclusa: ricevila da Tu › Archivio › Ricevi con QR.';
+
+  @override
+  String get qrMalformed => 'QR non valido: ignorato.';
 }

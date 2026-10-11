@@ -91,5 +91,13 @@
   "qrInvalidGame": "Il QR non contiene una partita valida.",
   "@qrInvalidGame": {
     "description": "PGN ricevuto ma non importabile"
+  },
+  "qrFinishedGame": "La partita è già conclusa: ricevila da Tu › Archivio › Ricevi con QR.",
+  "@qrFinishedGame": {
+    "description": "Una partita finita non si continua: va nell'archivio"
+  },
+  "qrMalformed": "QR non valido: ignorato.",
+  "@qrMalformed": {
+    "description": "Un fotogramma rovinato o in conflitto, scartato senza perdere le parti lette"
   }
 }

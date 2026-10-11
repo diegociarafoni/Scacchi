@@ -84,12 +84,29 @@ void main() {
     ).forEach(scan!);
     await tester.pumpAndSettle();
     expect(find.byType(GamePage), findsOneWidget);
-    expect(settings.value.whiteName, 'Anna');
-    expect(settings.value.blackName, 'Bruno');
+    // I nomi salvati nelle impostazioni restano quelli dell'utente.
+    expect(settings.value.whiteName, '');
     // Tocca al Nero: la partita prosegue da dove era arrivata.
     await tapMove(tester, 'd8h4');
     expect(saved.single.pgn, contains('1. f3 e5 2. g4 Qh4# 0-1'));
-    expect(saved.single.white, 'Anna');
+  });
+
+  testWidgets('Cap. 7 scambio QR: una partita già conclusa si riceve '
+      'dall\'archivio', (tester) async {
+    await open(tester);
+    await tapMove(tester, 'e2e4');
+    await menu(tester, 'Ricevi con QR');
+    encodeTransfer('1. f3 e5 2. g4 Qh4# 0-1').forEach(scan!);
+    await tester.pumpAndSettle();
+    expect(
+      find.text(
+        'La partita è già conclusa: ricevila da Tu › Archivio › Ricevi con QR.',
+      ),
+      findsOneWidget,
+    );
+    expect(saved, isEmpty);
+    await tapMove(tester, 'e7e5');
+    expect(find.text('e5'), findsOneWidget);
   });
 
   testWidgets('Cap. 7 scambio QR: un testo che non è una partita lascia la '

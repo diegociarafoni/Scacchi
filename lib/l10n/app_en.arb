@@ -18,5 +18,7 @@
   "qrRestarted": "New game framed: reading restarted.",
   "qrCameraError": "The camera is not available. Allow Scacchi to use the camera in the phone settings and try again.",
   "qrRetry": "Try again",
-  "qrInvalidGame": "The QR code does not contain a valid game."
+  "qrInvalidGame": "The QR code does not contain a valid game.",
+  "qrFinishedGame": "The game is already over: receive it from You › Archive › Receive via QR.",
+  "qrMalformed": "Invalid QR code: ignored."
 }

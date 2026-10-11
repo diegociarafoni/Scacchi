@@ -460,11 +460,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   void _finishGame() {
     final game = _game;
     if (!game.isOver || game.moves.isEmpty) return;
-    final side = _computerSide?.opposite;
+    final (side, elo) = _playerAndElo;
     final now = _clockNow();
-    final elo = side == null
-        ? null
-        : (_bot?.elo ?? engineLevel(_gameLevel).approxElo);
     final key =
         '${identityHashCode(game)}:${game.endReason}:${game.moves.length}';
     if (key != _archivedKey) {
@@ -524,50 +521,56 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     );
   }
 
+  /// Colore dell'utente ed Elo dell'avversario; `null` tra due persone.
+  (Side?, int?) get _playerAndElo {
+    final side = _computerSide?.opposite;
+    return (
+      side,
+      side == null ? null : (_bot?.elo ?? engineLevel(_gameLevel).approxElo),
+    );
+  }
+
   /// Mostra la partita, anche in corso, come QR per un altro telefono.
   Future<void> _sendQr() async {
-    final side = _computerSide?.opposite;
-    final elo = side == null
-        ? null
-        : (_bot?.elo ?? engineLevel(_gameLevel).approxElo);
+    final (side, elo) = _playerAndElo;
     final saved = _savedGame(_game, side, _clockNow(), elo);
+    final frames = encodeTransfer(saved.pgn);
     await _whileSuspended(
       () => Navigator.of(context).push<void>(
         MaterialPageRoute(
-          builder: (_) => QrSendPage(
-            title: '${saved.white} – ${saved.black}',
-            frames: encodeTransfer(saved.pgn),
-          ),
+          builder: (_) => QrSendPage(title: saved.title, frames: frames),
         ),
       ),
     );
   }
 
   /// Continua qui, tra due persone e senza orologio, una partita ricevuta.
+  /// I nomi delle impostazioni non cambiano: quelli del PGN possono essere
+  /// "Tu" o il nome di un bot sull'altro telefono.
   Future<void> _receiveQr() async {
-    final text = await _whileSuspended(
-      () => Navigator.of(context).push<String>(
+    final l10n = AppLocalizations.of(context);
+    // Riprende la partita corrente se quella ricevuta non si continua.
+    final games = await _whileSuspended(() async {
+      final text = await Navigator.of(context).push<String>(
         MaterialPageRoute(
           builder: (_) => QrReceivePage(scanner: widget.qrScanner),
         ),
-      ),
-      restart: (text) => text == null,
-    );
-    if (!mounted || text == null) return;
-    final games = receivedGames(text);
+      );
+      return text == null ? null : receivedGames(text);
+    }, restart: (games) => games?.firstOrNull?.game.isOver ?? true);
+    if (!mounted || games == null) return;
     if (games.isEmpty) {
-      _showMessage(AppLocalizations.of(context).qrInvalidGame);
+      _showMessage(l10n.qrInvalidGame);
       return;
     }
-    final record = games.first;
-    String? name(String key) => switch (record.headers[key]?.trim()) {
-      null || '' || '?' => null,
-      final n => n,
-    };
+    final game = games.first.game;
+    if (game.isOver) {
+      _showMessage(l10n.qrFinishedGame);
+      return;
+    }
     _bot = null;
     _resultRecorded = false;
     _botResultRecorded = false;
-    final game = record.game;
     _twoPlayerVariant = game.variant;
     // Come per l'editor: si archivia, ma non vale XP una partita iniziata altrove.
     _beginGame(
@@ -575,12 +578,6 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       _setup.copyWith(opponent: Opponent.human),
       null,
       fromEditor: true,
-    );
-    await widget.settings.update(
-      _settings.copyWith(
-        whiteName: name('White') ?? _settings.whiteName,
-        blackName: name('Black') ?? _settings.blackName,
-      ),
     );
   }
 
@@ -1419,7 +1416,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                 ],
                 PopupMenuItem(
                   value: 'qrSend',
-                  enabled: _game.moves.isNotEmpty && !_thinking,
+                  // Una posizione dell'editor si può passare anche senza mosse.
+                  enabled:
+                      (_game.moves.isNotEmpty || _fromEditor) && !_thinking,
                   child: Text(l10n.qrSendTitle),
                 ),
                 PopupMenuItem(

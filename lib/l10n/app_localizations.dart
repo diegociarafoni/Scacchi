@@ -211,6 +211,18 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Il QR non contiene una partita valida.'**
   String get qrInvalidGame;
+
+  /// Una partita finita non si continua: va nell'archivio
+  ///
+  /// In it, this message translates to:
+  /// **'La partita è già conclusa: ricevila da Tu › Archivio › Ricevi con QR.'**
+  String get qrFinishedGame;
+
+  /// Un fotogramma rovinato o in conflitto, scartato senza perdere le parti lette
+  ///
+  /// In it, this message translates to:
+  /// **'QR non valido: ignorato.'**
+  String get qrMalformed;
 }
 
 class _AppLocalizationsDelegate

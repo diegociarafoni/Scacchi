@@ -7,13 +7,15 @@ Proposta del capitolo 7 dei requisiti: passare una partita in corso o un PGN da 
 | Dove | Azione | Effetto |
 |---|---|---|
 | Gioca › menu ⋮ › **Passa con QR** | Mostra la partita sullo schermo come QR | La partita resta sospesa (orologio fermo) finché si torna indietro |
-| Gioca › menu ⋮ › **Ricevi con QR** | Apre la fotocamera | La partita ricevuta continua su questo telefono, tra due persone e senza orologio |
+| Gioca › menu ⋮ › **Ricevi con QR** | Apre la fotocamera | Una partita in corso continua su questo telefono, tra due persone e senza orologio; una già conclusa va ricevuta dall'archivio |
 | Tu › Archivio › menu di una partita › **Passa con QR** | Mostra la partita salvata come QR | |
 | Tu › Archivio › **Ricevi con QR** (icona in alto) | Apre la fotocamera | La partita ricevuta entra nell'archivio come `importata` |
 
 Una partita fino a circa 40 mosse sta in un solo QR. Una più lunga, o un PGN con molti commenti, diventa una sequenza di QR che scorrono da soli in ciclo (0,8 secondi ciascuno): chi riceve tiene la fotocamera puntata e le parti si raccolgono in qualunque ordine, anche saltandone qualcuna al primo giro. Sotto il QR ci sono Pausa e i pulsanti per scorrere le parti a mano; chi riceve vede "3 di 6 parti lette", sente una vibrazione leggera a ogni parte nuova e il lettore di schermo annuncia l'avanzamento.
 
-Una partita continuata con Ricevi con QR prende i nomi dei giocatori dal PGN, si salva nell'archivio a fine partita come le altre, ma non assegna XP (come quelle preparate con l'editor): è iniziata su un altro telefono. Il tempo residuo dell'orologio non viene trasferito.
+Una partita continuata con Ricevi con QR si salva nell'archivio a fine partita come le altre, ma non assegna XP (come quelle preparate con l'editor): è iniziata su un altro telefono. I nomi dei giocatori nelle impostazioni non cambiano, perché nel PGN di chi invia possono esserci "Tu" o il nome di un bot. Se la lettura fallisce o il QR non contiene una partita, la partita corrente riprende com'era, orologio compreso. Il tempo residuo dell'orologio non viene trasferito.
+
+Passa con QR è attivo appena c'è una mossa, oppure subito per una posizione preparata con l'editor. Una partita che supererebbe le 64 parti accettate da chi riceve non viene mostrata: la schermata dice che è troppo grande.
 
 ## Formato dei fotogrammi
 
@@ -40,11 +42,11 @@ I dati letti dalla fotocamera sono input non fidato (OWASP MASVS-CODE-4). `Trans
 | Prefisso diverso da `SC1/` | "Questo QR non contiene una partita." |
 | Campi mancanti, numeri non validi, caratteri fuori dall'alfabeto Base32, parte oltre il totale | Rifiutato |
 | Più di 64 parti | Rifiutato (troppo grande) |
-| Stessa parte con dati diversi, totale diverso per lo stesso ID | Rifiutato, si tiene la parte già letta |
+| Stessa parte con dati diversi, totale diverso per lo stesso ID | "QR non valido: ignorato.", si tengono le parti già lette |
 | CRC-32 non corrispondente, zlib o UTF-8 non validi | "Il QR è danneggiato: ricomincia la lettura." e si riparte da zero |
 | Testo decompresso oltre 256 KiB | Rifiutato: la decompressione procede a blocchi e si ferma al limite, così una "bomba zip" non esaurisce la memoria |
 
-Il testo ricomposto passa poi da `importPgn` (vedi [archivio.md](archivio.md)), che scarta mosse illegali, FEN non validi e varianti non supportate; un testo senza mosse e senza posizione di partenza non viene considerato una partita.
+Il testo ricomposto passa poi da `importPgn` (vedi [archivio.md](archivio.md)), che scarta mosse illegali, FEN non validi e varianti non supportate; le partite senza mosse e senza posizione di partenza vengono scartate (`receivedGames`) e solo quelle rimaste entrano nell'archivio (`GameArchive.importRecords`).
 
 ## Fotocamera: pacchetti e licenze
 
@@ -70,9 +72,9 @@ Perché flutter_zxing e non `mobile_scanner`, il pacchetto più diffuso: su Andr
 | Livello | File | Cosa verifica |
 |---|---|---|
 | Unitari | `test/exchange/qr_transfer_test.dart` | CRC-32 e Base32 sui vettori standard; andata e ritorno di partite brevi, lunghe, vuote e con accenti; ordine casuale e duplicati; alfabeto alfanumerico; QR estranei, malformati, alterati, troppo grandi; bomba zip; cambio di partita |
-| Widget | `test/exchange/qr_pages_test.dart` | QR singolo e a fotogrammi, scorrimento, pausa e passi a mano, bianco e nero col tema scuro; ricezione in qualunque ordine, avanzamento, annuncio al lettore di schermo, QR estraneo, danneggiato, fotocamera negata |
+| Widget | `test/exchange/qr_pages_test.dart` | QR singolo e a fotogrammi, scorrimento, pausa e passi a mano, bianco e nero col tema scuro, partita oltre il limite di parti; ricezione in qualunque ordine, avanzamento, azzeramento dopo un errore finale, annuncio al lettore di schermo, QR estraneo, danneggiato, fotocamera negata |
 | Widget | `test/archive/archive_page_test.dart` | Passa con QR dall'archivio, ricezione e import, testo che non è una partita |
-| Widget | `test/game/game_qr_test.dart` | Passa la partita in corso; continua una partita ricevuta fino al matto con i nomi del PGN; testo non valido che lascia la partita com'era |
+| Widget | `test/game/game_qr_test.dart` | Passa la partita in corso; continua una partita ricevuta fino al matto; partita già conclusa rimandata all'archivio; testo non valido che lascia la partita com'era |
 | E2E | `integration_test/qr_exchange_test.dart` | Sull'app reale: il QR della partita in corso, catturato dallo schermo, viene letto da zxing-cpp (lo stesso decodificatore del telefono); ogni parte di una partita lunga si legge alla densità reale; senza fotocamera la schermata spiega cosa fare |
 
 Nei test di widget il lettore è sostituito da uno finto tramite il parametro `scanner` (`qrScanner` in `GamePage`): la fotocamera non esiste in `flutter test`.

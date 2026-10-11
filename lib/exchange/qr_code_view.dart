@@ -1,21 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:qr/qr.dart';
 
+/// Matrice del QR di [data]. Correzione media: tollera riflessi sullo
+/// schermo senza far crescere troppo il codice.
+QrImage qrImage(String data) =>
+    QrImage(QrCode(payload: QrPayload.fromString(data)));
+
 /// Codice QR disegnato in Dart, nero su bianco con il margine bianco
 /// richiesto dai lettori, qualunque sia il tema.
 class QrCodeView extends StatelessWidget {
-  const QrCodeView({super.key, required this.data, required this.label});
+  const QrCodeView({
+    super.key,
+    required this.data,
+    required this.label,
+    this.image,
+  });
 
   final String data;
+
+  /// Matrice già calcolata per [data], per non ricalcolarla a ogni disegno.
+  final QrImage? image;
 
   /// Descrizione per il lettore di schermo.
   final String label;
 
   @override
   Widget build(BuildContext context) {
-    // Correzione media: tollera riflessi sullo schermo senza far crescere
-    // troppo il codice.
-    final image = QrImage(QrCode(payload: QrPayload.fromString(data)));
+    final image = this.image ?? qrImage(data);
     return Semantics(
       label: label,
       image: true,

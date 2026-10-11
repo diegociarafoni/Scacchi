@@ -74,10 +74,13 @@ class _QrReceivePageState extends State<QrReceivePage> {
       case FrameDuplicate():
         break;
       case FrameRejected(:final reason):
-        _show(_progress, switch (reason) {
+        // Dopo un errore sull'intera partita il ricompositore riparte da zero.
+        final restarted = _assembler.received == 0;
+        _show(restarted ? null : _progress, switch (reason) {
           RejectReason.foreign => l10n.qrForeign,
           RejectReason.tooLarge => l10n.qrTooLarge,
-          RejectReason.malformed || RejectReason.corrupted => l10n.qrCorrupted,
+          RejectReason.malformed => l10n.qrMalformed,
+          RejectReason.corrupted => l10n.qrCorrupted,
         });
       case TransferComplete(:final text):
         _done = true;
