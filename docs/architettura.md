@@ -31,6 +31,7 @@ lib/
   path/                   Percorso a tappe con stelle (vedi percorso.md)
   stats/                  Statistiche e rating locale (vedi statistiche.md)
   minigames/              Minigiochi di allenamento (vedi minigiochi.md)
+  tournament/             Tornei offline contro bot (vedi tornei.md)
   storage/                File JSON locali con versione e scrittura atomica
   settings/
     settings.dart         Impostazioni, valori predefiniti e salvataggio locale
