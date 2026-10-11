@@ -1,7 +1,6 @@
 import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart' show Side;
-import 'package:flutter/foundation.dart';
-import 'package:flutter/painting.dart';
+import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum AnimationSpeed {
@@ -287,4 +286,20 @@ class SettingsController extends ValueNotifier<AppSettings> {
       );
     }
   }
+}
+
+/// Espone le impostazioni a tutte le schermate, così le scacchiere di problemi
+/// e allenamento le seguono senza passare il controller a ogni pagina.
+class SettingsScope extends InheritedNotifier<SettingsController> {
+  const SettingsScope({
+    super.key,
+    required SettingsController controller,
+    required super.child,
+  }) : super(notifier: controller);
+
+  /// Impostazioni correnti, o null fuori dall'app (per esempio nei test).
+  static AppSettings? maybeOf(BuildContext context) => context
+      .dependOnInheritedWidgetOfExactType<SettingsScope>()
+      ?.notifier
+      ?.value;
 }
