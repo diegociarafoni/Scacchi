@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../archive/game_archive.dart';
+import '../archive/saved_game.dart';
 import '../game/game_page.dart';
 import '../openings/opening_assets.dart';
 import '../openings/openings_hub_page.dart';
@@ -121,6 +122,10 @@ class _HomeShellState extends State<HomeShell> {
             Error.throwWithStackTrace(e, st);
           });
 
+  Future<void> _saveGame(SavedGame game) async => (await _archive()).save(game);
+
+  Future<GameArchive> _archive() => (widget.archive ?? GameArchive.open)();
+
   Future<ProgressUpdate?> _record(Activity activity) async {
     try {
       return await (await _progressController()).record(activity);
@@ -151,7 +156,12 @@ class _HomeShellState extends State<HomeShell> {
       body: IndexedStack(
         index: _tab,
         children: [
-          GamePage(settings: widget.settings),
+          GamePage(
+            settings: widget.settings,
+            onActivity: _record,
+            onSave: _saveGame,
+            progress: _progressController,
+          ),
           if (_trainer != null)
             PuzzleHubPage(trainer: _trainer!, onActivity: _record)
           else
@@ -164,7 +174,7 @@ class _HomeShellState extends State<HomeShell> {
             YouPage(
               progress: _progressController,
               path: _pathController,
-              archive: widget.archive ?? GameArchive.open,
+              archive: _archive,
               reminders: () => _reminders,
             )
           else

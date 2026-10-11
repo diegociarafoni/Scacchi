@@ -131,5 +131,7 @@ A partita conclusa `GameData.playerSide` vale `PlayerSide.none`, quindi la scacc
 
 Contro il computer, dopo la mossa del giocatore `GamePage` chiede a `ComputerPlayer` la risposta per la posizione FEN corrente e la passa a `ChessGame.play`; mentre il computer pensa la scacchiera è bloccata. I dettagli sono in [avversario-computer.md](avversario-computer.md).
 
+A fine partita (per qualunque causa: matto, abbandono, patta, tempo) `GamePage` passa il `SavedGame` a `onSave` (archivio) e, se la partita vale, l'attività di `progress/game_activity.dart` a `onActivity` (progressi); i due procedono in modo indipendente e un errore dell'uno non ferma l'altro. `HomeShell` fornisce entrambi.
+
 ## Evoluzioni previste
 
