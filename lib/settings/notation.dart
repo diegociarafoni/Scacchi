@@ -32,6 +32,6 @@ String formatSan(String san, MoveNotation notation) {
 }
 
 /// Come [formatSan] per un testo di mosse separate da spazi
-/// (`1. Nf3 Nc6`): i numeri di mossa restano uguali.
+/// (`1. Nf3 Nc6`): i numeri di mossa restano uguali. Non adatto a frasi.
 String formatMoveText(String text, MoveNotation notation) =>
     text.split(' ').map((token) => formatSan(token, notation)).join(' ');

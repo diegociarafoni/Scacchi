@@ -324,15 +324,18 @@ class _ReviewPageState extends State<ReviewPage> {
 
   /// Spiegazioni del coach, calcolate una volta per mossa e solo per gli
   /// errori.
-  final _comments = <int, CoachComment?>{};
+  final _comments = <(int, MoveNotation, bool), CoachComment?>{};
 
   String _n(String san) => formatSan(san, AppSettings.of(context).notation);
 
   CoachComment? _comment(GameReview review, MoveReview m) {
     if (!m.classification.isError) return null;
     return _comments.putIfAbsent(
-      m.ply * MoveNotation.values.length +
-          AppSettings.of(context).notation.index,
+      (
+        m.ply,
+        AppSettings.of(context).notation,
+        AppSettings.of(context).kidMode,
+      ),
       () => explainMove(
         m,
         previous: m.ply > 0 ? review.moves[m.ply - 1] : null,

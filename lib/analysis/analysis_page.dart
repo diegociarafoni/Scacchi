@@ -381,26 +381,29 @@ class _AnalysisPageState extends State<AnalysisPage>
 
   /// Prime otto semimosse della variante in notazione SAN.
   String _sanLine(List<String> pv) {
+    final notation = AppSettings.of(context).notation;
     final out = <String>[];
     Position pos = _pos;
     for (final uci in pv.take(8)) {
       final move = parseEngineMove(pos, uci);
       if (move == null) break;
       final (next, san) = pos.makeSan(move);
-      out.add(formatSan(san, AppSettings.of(context).notation));
+      out.add(formatSan(san, notation));
       pos = next;
     }
     return out.join(' ');
   }
 
-  String _history() => [
-    for (var i = 0; i < _sans.length; i++)
-      if (_positions[i].turn == Side.white || i == 0)
-        '${moveNumber(_positions[i])} '
-            '${formatSan(_sans[i], AppSettings.of(context).notation)}'
-      else
-        formatSan(_sans[i], AppSettings.of(context).notation),
-  ].join(' ');
+  String _history() {
+    final notation = AppSettings.of(context).notation;
+    return [
+      for (var i = 0; i < _sans.length; i++)
+        if (_positions[i].turn == Side.white || i == 0)
+          '${moveNumber(_positions[i])} ${formatSan(_sans[i], notation)}'
+        else
+          formatSan(_sans[i], notation),
+    ].join(' ');
+  }
 
   Widget _navigation() => SizedBox(
     height: 56,

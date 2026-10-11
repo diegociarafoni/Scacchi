@@ -48,12 +48,18 @@ class _RepertoirePageState extends State<RepertoirePage> {
         ],
       ),
     );
-    if (text == null) return;
+    if (text == null || !mounted) return;
     final lines = linesFromPgn(text);
+    final notation = AppSettings.of(context).notation;
     var added = 0;
     final errors = <String>[];
     for (final (i, moves) in lines.indexed) {
-      final error = await _t.addLine(widget.side, 'PGN ${i + 1}', moves);
+      final error = await _t.addLine(
+        widget.side,
+        'PGN ${i + 1}',
+        moves,
+        notation: notation,
+      );
       error == null ? added++ : errors.add(error);
     }
     if (!mounted) return;

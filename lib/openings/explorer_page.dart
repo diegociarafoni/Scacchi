@@ -236,7 +236,9 @@ class _ExplorerPageState extends State<ExplorerPage> {
     );
     final label = name.text.trim().isEmpty ? 'Linea' : name.text.trim();
     if (confirmed != true || !mounted) return;
-    final error = await widget.repertoire!.addLine(side, label, [..._moves]);
+    final error = await widget.repertoire!.addLine(side, label, [
+      ..._moves,
+    ], notation: AppSettings.of(context).notation);
     if (!mounted) return;
     final color = side == Side.white ? 'Bianco' : 'Nero';
     ScaffoldMessenger.of(context).showSnackBar(
