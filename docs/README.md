@@ -12,6 +12,9 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | [gamification.md](gamification.md) | XP, livelli, obiettivo giornaliero, serie, traguardi, ricompense estetiche, promemoria |
 | [editor-posizione.md](editor-posizione.md) | Editor di posizione, FEN e validazione |
 | [archivio.md](archivio.md) | Salvataggio delle partite, storico, import ed export PGN |
+| [ritratto-settimana.md](ritratto-settimana.md) | Scheda degli ultimi sette giorni, condivisibile come immagine |
+| [scacchiera-fisica.md](scacchiera-fisica.md) | Orologio e registro di una partita su scacchiera reale |
+| [backup.md](backup.md) | Backup e ripristino di tutti i dati locali in un file |
 | [puzzle.md](puzzle.md) | Puzzle: dati, punteggio, modalità, puzzle del giorno |
 | [aperture.md](aperture.md) | Nomi delle aperture, mosse di libro, explorer, repertorio |
 | [percorso.md](percorso.md) | Percorso a tappe con stelle e bot guardiani |
@@ -20,8 +23,11 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | [tornei.md](tornei.md) | Tornei offline contro bot: girone, eliminazione diretta, bacheca |
 | [localizzazione.md](localizzazione.md) | Lingua predefinita e come aggiungere testi e lingue |
 | [sviluppo.md](sviluppo.md) | Ambiente, comandi, test, CI e convenzioni |
+| [convenzioni-git.md](convenzioni-git.md) | Rami, commit Angular, hook locali, merge e protezione di `main` |
 | [avversario-computer.md](avversario-computer.md) | Partita contro il computer: livelli, motore Stockfish, piattaforme |
+| [bot.md](bot.md) | Bot con personalità: scala degli 8 bot, stile di gioco, libro d'apertura, frasi |
 | [revisione-partita.md](revisione-partita.md) | Revisione della partita: probabilità di vittoria, classificazione delle mosse, precisione |
+| [allenatore.md](allenatore.md) | Partita con l'allenatore: avvisi in tempo reale, ripresa della mossa, suggerimenti a livelli |
 | [analisi.md](analisi.md) | Analisi libera della posizione: linee del motore, barra, esplorazione |
 | [rilascio-android.md](rilascio-android.md) | Rilascio dell'APK, installazione sul telefono, chiave di firma |
 | [licenza.md](licenza.md) | Licenza del progetto e componenti di terze parti |
@@ -41,6 +47,9 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | Nome dell'apertura in partita, explorer ridotto | Disponibile |
 | Repertorio di aperture con ripasso dilazionato | Disponibile |
 | Gamification: XP, livelli, obiettivo giornaliero, serie, traguardi, ricompense estetiche, promemoria | Profilo e promemoria disponibili dalla scheda Tu; XP delle partite in arrivo con il collegamento alla partita |
+| La tua settimana: scheda condivisibile degli ultimi sette giorni | Disponibile dalla scheda Tu |
+| Scacchiera fisica: orologio e registro della partita dal vivo | Disponibile dalla scheda Tu |
+| Backup e ripristino dei dati in un file | Disponibile dalle Impostazioni |
 | Archivio partite, import ed export PGN | Disponibile dalla scheda Tu; salvataggio automatico delle partite in arrivo con il collegamento alla partita |
 | Percorso a tappe con stelle | Disponibile dalla scheda Tu; guardiani in arrivo con la partita contro il computer |
 | Statistiche e rating locale | Disponibile dalla scheda Tu |

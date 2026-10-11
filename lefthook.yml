@@ -1,0 +1,30 @@
+# Hook git locali (https://lefthook.dev): i controlli veloci prima del commit,
+# tutto il resto in CI. Installazione: docs/convenzioni-git.md.
+pre-commit:
+  parallel: true
+  jobs:
+    - name: formattazione
+      glob: "*.dart"
+      run: dart format --output=none --set-exit-if-changed {staged_files}
+    - name: analisi statica
+      glob: "*.{dart,yaml,arb}"
+      run: flutter analyze --fatal-infos --fatal-warnings
+    - name: segreti
+      run: gitleaks git --pre-commit --staged --redact --no-banner
+
+commit-msg:
+  jobs:
+    - name: messaggio secondo la convenzione Angular
+      run: dart tool/check_commit_msg.dart {1}
+
+# Prima del push i test, troppo lenti per ogni commit.
+pre-push:
+  parallel: true
+  jobs:
+    - name: nome del ramo
+      # git passa su stdin i rami di destinazione: si controllano quelli.
+      use_stdin: true
+      run: dart tool/check_branch_name.dart --pre-push
+    - name: test
+      # I golden dipendono dal sistema operativo: girano solo in CI su Linux.
+      run: flutter test --exclude-tags golden

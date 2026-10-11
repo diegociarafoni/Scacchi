@@ -80,8 +80,8 @@ void main() {
       () => archive.save(
         SavedGame(
           id: 'l',
-          createdAt: DateTime(2026, 10, 1),
-          updatedAt: DateTime(2026, 10, 1),
+          createdAt: DateTime(2026, 10),
+          updatedAt: DateTime(2026, 10),
           white: 'A',
           black: 'B',
           mode: SavedGame.local,

@@ -5,7 +5,9 @@ import 'package:dartchess/dartchess.dart';
 
 import 'choose.dart';
 import 'levels.dart';
+import 'style.dart';
 import 'uci.dart';
+import 'uci_moves.dart';
 import 'uci_transport.dart';
 
 /// Mossa scelta dal computer.
@@ -52,6 +54,8 @@ class ComputerPlayer {
   final Duration timeoutMargin;
 
   UciTransport? _transport;
+  // Cancellata in _shutdown, che la chiude insieme al motore.
+  // ignore: cancel_subscriptions
   StreamSubscription<String>? _subscription;
   Future<void>? _ready;
   Future<void> _queue = Future.value();
@@ -86,7 +90,7 @@ class ComputerPlayer {
           l(line);
         }
       },
-      onError: (Object e) => _failPending(e),
+      onError: _failPending,
       onDone: () => _failPending(StateError('Il motore si è chiuso')),
     );
     await _command('uci', (l) => l == 'uciok', const Duration(seconds: 30));
@@ -162,30 +166,32 @@ class ComputerPlayer {
         if (running && !_disposed) _send('stop');
       },
     );
-    _enqueue(() async {
-      if (cancelled) return;
-      await _applyOptions(_fullStrength(multiPv));
-      if (cancelled) return;
-      _send('position fen ${fen.trim()}');
-      running = true;
-      try {
-        // Nessun limite pratico: l'analisi resta aperta finché serve.
-        await _go(
-          'go depth $maxDepth',
-          const Duration(hours: 24),
-          onUpdate: (infos) {
-            if (!out.isClosed) out.add(_sorted(infos, multiPv));
-          },
-        );
-      } finally {
-        running = false;
-      }
-    }).then(
-      (_) => out.close(),
-      onError: (Object e) {
-        if (!out.isClosed) out.addError(e);
-        out.close();
-      },
+    unawaited(
+      _enqueue(() async {
+        if (cancelled) return;
+        await _applyOptions(_fullStrength(multiPv));
+        if (cancelled) return;
+        _send('position fen ${fen.trim()}');
+        running = true;
+        try {
+          // Nessun limite pratico: l'analisi resta aperta finché serve.
+          await _go(
+            'go depth $maxDepth',
+            const Duration(hours: 24),
+            onUpdate: (infos) {
+              if (!out.isClosed) out.add(_sorted(infos, multiPv));
+            },
+          );
+        } finally {
+          running = false;
+        }
+      }).then(
+        (_) => out.close(),
+        onError: (Object e) {
+          if (!out.isClosed) out.addError(e);
+          unawaited(out.close());
+        },
+      ),
     );
     return out.stream;
   }
@@ -250,7 +256,7 @@ class ComputerPlayer {
     Position position = Chess.fromSetup(Setup.parseFen(initialFen));
     final history = <String>[];
     for (final move in moves) {
-      history.add(_standardUci(position, move));
+      history.add(standardUci(position, move));
       position = position.play(move);
     }
     _send(
@@ -292,6 +298,10 @@ class ComputerPlayer {
                 _lastCompleteIteration(byDepth, level.multiPv),
                 level.temperatureCp,
                 _random,
+                bonus: level.style == null
+                    ? null
+                    : (c) => _styleBonus(position, c, level.style!),
+                windowCp: level.styleWindowCp,
               )
             : null) ??
         infos.values.where((i) => i.pv.first == engineMove).firstOrNull ??
@@ -309,12 +319,15 @@ class ComputerPlayer {
     }
 
     return EngineMove(
-      move: position.normalizeMove(NormalMove.fromUci(chosen.pv.first)),
+      move: moveFromStandardUci(position, chosen.pv.first),
       pv: chosen.pv,
       score: chosen.score,
       depth: chosen.depth,
     );
   }
+
+  static int _styleBonus(Position position, InfoLine line, BotStyle style) =>
+      styleBonus(position, moveFromStandardUci(position, line.pv.first), style);
 
   /// Linee dell'iterazione più profonda in cui il motore ha valutato tutte
   /// le varianti richieste (o il massimo che ha prodotto).
@@ -338,18 +351,6 @@ class ComputerPlayer {
       }
     }
     return const [];
-  }
-
-  /// UCI standard: l'arrocco di dartchess (re su torre) diventa e1g1/e1c1.
-  static String _standardUci(Position position, Move move) {
-    final uci = move.uci;
-    if (move is! NormalMove ||
-        position.board.roleAt(move.from) != Role.king ||
-        position.board.pieceAt(move.to)?.color != position.turn) {
-      return uci;
-    }
-    final file = uci.codeUnitAt(2) > uci.codeUnitAt(0) ? 'g' : 'c';
-    return '${uci.substring(0, 2)}$file${uci[3]}';
   }
 
   Future<void> _applyLevel(EngineLevel level) => _applyOptions({

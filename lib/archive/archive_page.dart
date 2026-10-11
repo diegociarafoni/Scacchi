@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -39,7 +40,7 @@ class _ArchivePageState extends State<ArchivePage> {
   @override
   void initState() {
     super.initState();
-    _reload();
+    unawaited(_reload());
   }
 
   Future<void> _reload() async {

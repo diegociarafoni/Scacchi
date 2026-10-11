@@ -1,12 +1,12 @@
 import 'dart:convert';
 
+import '../storage/key_value_store.dart';
 import 'glicko2.dart';
 import 'personal_puzzles.dart';
 import 'puzzle.dart';
 import 'puzzle_library.dart';
 import 'review_queue.dart';
 import 'run_records.dart';
-import '../storage/key_value_store.dart';
 
 /// Punteggio puzzle del giocatore e scelta del puzzle successivo.
 class PuzzleTrainer {

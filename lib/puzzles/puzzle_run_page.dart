@@ -8,8 +8,8 @@ import '../progress/activity.dart';
 import '../progress/progress_feedback.dart';
 import '../progress/progress_tracker.dart';
 import '../training/training_board.dart';
-import 'puzzle.dart';
 import 'activity_recorder.dart';
+import 'puzzle.dart';
 import 'puzzle_run.dart';
 import 'puzzle_trainer.dart';
 
@@ -106,10 +106,12 @@ class _PuzzleRunPageState extends State<PuzzleRunPage> {
     _ended = true;
     _stopwatch.stop();
     _ticker?.cancel();
-    widget.trainer.records.submit(widget.mode, _run.score).then((record) {
-      if (mounted) setState(() => _newRecord = record);
-    });
-    _recordActivities(_run.solved, _stopwatch.elapsed);
+    unawaited(
+      widget.trainer.records.submit(widget.mode, _run.score).then((record) {
+        if (mounted) setState(() => _newRecord = record);
+      }),
+    );
+    unawaited(_recordActivities(_run.solved, _stopwatch.elapsed));
   }
 
   /// Registra i puzzle risolti e mostra un'unica notifica riassuntiva.

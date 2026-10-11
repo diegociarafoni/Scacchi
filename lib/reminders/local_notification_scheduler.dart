@@ -32,10 +32,10 @@ class LocalNotificationScheduler implements ReminderScheduler {
           ),
         ),
       )
-      .catchError((Object e) {
+      .catchError((Object e, StackTrace st) {
         // Un errore di avvio si riprova alla chiamata successiva.
         _initialized = null;
-        throw e;
+        Error.throwWithStackTrace(e, st);
       });
 
   @override

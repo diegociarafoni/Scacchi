@@ -58,7 +58,7 @@ void main() {
     test('raggiunto con il numero richiesto di puzzle', () {
       const s = ProgressSettings(goal: DailyGoal(GoalKind.puzzles, 3));
       var state = ProgressState.initial;
-      var reached = <bool>[];
+      final reached = <bool>[];
       for (var i = 0; i < 4; i++) {
         final u = tracker.record(state, const PuzzleSolved(), day(5), s);
         reached.add(u.goalReached);

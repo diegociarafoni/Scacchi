@@ -63,7 +63,7 @@ class _TrainingBoardState extends State<TrainingBoard> {
         old.enabled != widget.enabled ||
         old.revision != widget.revision ||
         old.player != widget.player) {
-      _controller.updatePosition(_data(), animate: true, resetPremove: true);
+      _controller.updatePosition(_data(), resetPremove: true);
     }
   }
 

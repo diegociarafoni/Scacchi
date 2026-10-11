@@ -4,18 +4,18 @@ import '../archive/game_archive.dart';
 import '../game/game_page.dart';
 import '../openings/opening_assets.dart';
 import '../openings/openings_hub_page.dart';
-import '../path/path_controller.dart';
 import '../openings/repertoire.dart';
+import '../path/path_controller.dart';
 import '../progress/activity.dart';
 import '../progress/progress_controller.dart';
 import '../progress/progress_tracker.dart';
 import '../puzzles/puzzle_assets.dart';
 import '../puzzles/puzzle_hub_page.dart';
 import '../puzzles/puzzle_trainer.dart';
-import '../review/personal_puzzles.dart';
 import '../reminders/local_notification_scheduler.dart';
 import '../reminders/reminder.dart';
 import '../reminders/reminder_controller.dart';
+import '../review/personal_puzzles.dart';
 import '../settings/settings.dart';
 import '../storage/key_value_store.dart';
 import 'you_page.dart';
@@ -69,9 +69,9 @@ class _HomeShellState extends State<HomeShell> {
   Future<RepertoireTrainer> _loadRepertoire() =>
       (widget.repertoire ??
               () async => RepertoireTrainer.load(await JsonFileStore.open()))()
-          .catchError((Object e) {
+          .catchError((Object e, StackTrace st) {
             _repertoire = null;
-            throw e;
+            Error.throwWithStackTrace(e, st);
           });
 
   @override
@@ -105,11 +105,11 @@ class _HomeShellState extends State<HomeShell> {
           }
           return p;
         },
-        onError: (Object e) {
+        onError: (Object e, StackTrace st) {
           // Si riprova alla prossima richiesta invece di restare bloccati.
           _progress = null;
           debugPrint('Progressi non disponibili: $e');
-          throw e;
+          Error.throwWithStackTrace(e, st);
         },
       );
 
@@ -117,9 +117,9 @@ class _HomeShellState extends State<HomeShell> {
   /// schermate aperte insieme.
   Future<PathController> _pathController() =>
       _path ??= PathController.open(recordActivity: _record)
-          .catchError((Object e) {
+          .catchError((Object e, StackTrace st) {
             _path = null;
-            throw e;
+            Error.throwWithStackTrace(e, st);
           });
 
   Future<ProgressUpdate?> _record(Activity activity) async {
@@ -141,10 +141,11 @@ class _HomeShellState extends State<HomeShell> {
   Future<PuzzleTrainer>
   _loadTrainer() => (widget.puzzleTrainer ?? loadPuzzleTrainer)().catchError((
     Object e,
+    StackTrace st,
   ) {
     // Un errore di caricamento si riprova alla prossima apertura della scheda.
     _trainer = null;
-    throw e;
+    Error.throwWithStackTrace(e, st);
   });
 
   @override

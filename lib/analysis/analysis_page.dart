@@ -107,7 +107,7 @@ class _AnalysisPageState extends State<AnalysisPage>
     _throttle?.cancel();
     _throttle = null;
     _pending = null;
-    _analysis?.cancel();
+    unawaited(_analysis?.cancel());
     _analysis = null;
   }
 
@@ -130,7 +130,7 @@ class _AnalysisPageState extends State<AnalysisPage>
 
   void _go(int index) {
     setState(() => _index = index);
-    _board.updatePosition(_gameData(), animate: true);
+    _board.updatePosition(_gameData());
     _start();
   }
 

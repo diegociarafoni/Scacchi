@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
@@ -16,10 +17,10 @@ class GameArchive {
   /// Archivio condiviso sul file predefinito nella cartella dati dell'app:
   /// tutte le schermate usano la stessa istanza e la stessa cache.
   static Future<GameArchive> open() =>
-      _shared ??= _openDefault().catchError((Object e) {
+      _shared ??= _openDefault().catchError((Object e, StackTrace st) {
         // Un errore si riprova alla prossima apertura.
         _shared = null;
-        throw e;
+        Error.throwWithStackTrace(e, st);
       });
 
   static Future<GameArchive>? _shared;
@@ -96,11 +97,19 @@ class GameArchive {
 
   /// Una sola lettura condivisa anche da chiamate contemporanee; dopo un
   /// errore di lettura la prossima chiamata riprova.
-  Future<List<SavedGame>> _load() => _games ??= _read()
-    ..catchError((Object _) {
-      _games = null;
-      return <SavedGame>[];
-    });
+  Future<List<SavedGame>> _load() {
+    final cached = _games;
+    if (cached != null) return cached;
+    final games = _games = _read();
+    // Gestore aggiunto una sola volta, sulla lettura appena avviata.
+    unawaited(
+      games.catchError((Object _) {
+        if (identical(_games, games)) _games = null;
+        return <SavedGame>[];
+      }),
+    );
+    return games;
+  }
 
   Future<List<SavedGame>> _read() async =>
       await _file.read(

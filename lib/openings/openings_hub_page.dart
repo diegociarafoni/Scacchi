@@ -17,7 +17,8 @@ class OpeningsHubPage extends StatefulWidget {
 
 class _OpeningsHubPageState extends State<OpeningsHubPage> {
   Future<void> _open(Widget page) async {
-    await Navigator.of(context).push(MaterialPageRoute(builder: (_) => page));
+    await Navigator.of(context)
+        .push(MaterialPageRoute<void>(builder: (_) => page));
     if (mounted) setState(() {});
   }
 

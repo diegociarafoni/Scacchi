@@ -5,10 +5,12 @@ import '../archive/game_archive.dart';
 import '../minigames/minigames_page.dart';
 import '../path/path_controller.dart';
 import '../path/path_page.dart';
+import '../physical/physical_game_page.dart';
 import '../progress/profile_page.dart';
 import '../progress/progress_controller.dart';
 import '../progress/xp.dart';
 import '../reminders/reminder_controller.dart';
+import '../stats/portrait_page.dart';
 import '../stats/stats_page.dart';
 
 /// Scheda "Tu": profilo e tutto ciò che riguarda i propri progressi.
@@ -120,6 +122,19 @@ class YouPage extends StatelessWidget {
                 subtitle: 'Risultati, aperture, cadenze e rating locale',
                 onTap: () =>
                     _open(context, archive(), (a) => StatsPage(archive: a)),
+              ),
+              _Entry(
+                icon: Icons.auto_awesome_outlined,
+                title: 'La tua settimana',
+                subtitle: 'Riepilogo degli ultimi sette giorni, da condividere',
+                onTap: () =>
+                    _open(context, archive(), (a) => PortraitPage(archive: a)),
+              ),
+              _Entry(
+                icon: Icons.timer_outlined,
+                title: 'Scacchiera fisica',
+                subtitle: 'Orologio e registro per una partita dal vivo',
+                onTap: () => _push(context, PhysicalGamePage(archive: archive)),
               ),
               _Entry(
                 icon: Icons.inventory_2_outlined,
