@@ -15,6 +15,7 @@
 | Set di pezzi "totoy" di Kosal Sen, incluso in chessground | Pezzi "Totoy" | CC BY 4.0 |
 | Set di pezzi "rhosgfx" di RhosGFX, incluso in chessground | Pezzi "RhosGFX" | CC0 |
 | [shared_preferences](https://pub.dev/packages/shared_preferences) | Salvataggio delle impostazioni | BSD-3-Clause |
+| [Stockfish](https://stockfishchess.org) 19, tramite [multistockfish](https://github.com/lichess-org/dart-multistockfish) (Lichess) | Avversario computer | GPL-3.0 |
 | [Flutter](https://flutter.dev) | Framework dell'interfaccia | BSD-3-Clause |
 | [intl](https://pub.dev/packages/intl) (Dart) | Testi tradotti e formati locali | BSD-3-Clause |
 | [path_provider](https://pub.dev/packages/path_provider) (Flutter) | Cartella dati dell'app per i salvataggi | BSD-3-Clause |

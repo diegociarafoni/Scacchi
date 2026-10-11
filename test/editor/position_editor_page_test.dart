@@ -2,9 +2,12 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scacchi/engine/computer_player.dart';
 import 'package:scacchi/editor/position_editor_page.dart';
 import 'package:scacchi/game/game_page.dart';
 import 'package:scacchi/settings/settings.dart';
+
+import '../computer_fakes.dart';
 
 void phone(WidgetTester tester) {
   tester.view.physicalSize = const Size(1170, 2532);
@@ -152,5 +155,35 @@ void main() {
     await pasteFen(tester, '4k3/8/8/8/8/8/4Q3/4K3 b - - 0 1');
     await scrollTap(tester, find.text('Gioca da qui'));
     expect(find.text('Scacco al Nero. Muove il Nero.'), findsOneWidget);
+  });
+
+  testWidgets('la posizione creata si gioca in due anche dopo il computer', (
+    tester,
+  ) async {
+    phone(tester);
+    await tester.pumpWidget(
+      MaterialApp(
+        home: GamePage(
+          settings: SettingsController.defaults(),
+          computerAvailable: true,
+          createComputer: () =>
+              ComputerPlayer(connect: () async => FirstLegalMoveEngine()),
+        ),
+      ),
+    );
+    await startComputerGame(tester, side: 'Nero');
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    expect(find.textContaining('Computer, livello'), findsOneWidget);
+    await tester.tap(find.byTooltip('Editor di posizione'));
+    await tester.pumpAndSettle();
+    await pasteFen(tester, '4k3/8/8/8/8/8/4Q3/4K3 b - - 0 1');
+    await scrollTap(tester, find.text('Gioca da qui'));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    expect(find.textContaining('Computer, livello'), findsNothing);
+    expect(find.text('Scacco al Nero. Muove il Nero.'), findsOneWidget);
+    expect(
+      tester.widget<Chessboard>(find.byType(Chessboard)).orientation,
+      Side.white,
+    );
   });
 }
