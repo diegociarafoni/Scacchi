@@ -228,6 +228,7 @@ class _HomeShellState extends State<HomeShell> {
             title: 'Il guardiano',
             levelId: engineLevelForElo(stage.guardianElo!).id,
             side: Side.white,
+            allowUndo: true,
           ),
           onFinished: (r, m) {
             result = r;

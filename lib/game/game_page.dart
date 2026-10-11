@@ -1589,7 +1589,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       onNewGame: evaluating || _isChallenge ? null : _newGame,
       onUndo:
           !evaluating &&
-              !_isChallenge &&
+              (!_isChallenge || widget.challenge!.allowUndo) &&
               (_canUndo || _pendingMove != null || _viewPly != null)
           ? _undo
           : null,
