@@ -21,6 +21,7 @@ class YouPage extends StatelessWidget {
     required this.path,
     required this.archive,
     this.reminders,
+    this.playGuardian,
   });
 
   /// Fonti dei dati: chiamate a ogni apertura, così un errore si riprova.
@@ -31,6 +32,9 @@ class YouPage extends StatelessWidget {
   /// Promemoria giornaliero, se il dispositivo ha le notifiche programmate;
   /// letto all'apertura del Profilo perché nasce dopo i progressi.
   final ReminderController? Function()? reminders;
+
+  /// Partita contro il guardiano; senza, le tappe guardiano mostrano un avviso.
+  final PlayGuardian? playGuardian;
 
   void _push(BuildContext context, Widget page) =>
       Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => page));
@@ -103,8 +107,11 @@ class YouPage extends StatelessWidget {
                 icon: Icons.route_outlined,
                 title: 'Percorso',
                 subtitle: 'Tappe con stelle, dalle basi al finale',
-                onTap: () =>
-                    _open(context, path(), (c) => PathPage(controller: c)),
+                onTap: () => _open(
+                  context,
+                  path(),
+                  (c) => PathPage(controller: c, playGuardian: playGuardian),
+                ),
               ),
               _Entry(
                 icon: Icons.videogame_asset_outlined,

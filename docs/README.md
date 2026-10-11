@@ -51,7 +51,7 @@ Scacchi è un'applicazione di scacchi offline, open source e gratuita, pensata p
 | Scacchiera fisica: orologio e registro della partita dal vivo | Disponibile dalla scheda Tu |
 | Backup e ripristino dei dati in un file | Disponibile dalle Impostazioni |
 | Archivio partite, import ed export PGN | Disponibile dalla scheda Tu; le partite finite si salvano da sole, riprendere una partita è in arrivo |
-| Percorso a tappe con stelle | Disponibile dalla scheda Tu; guardiani in arrivo con la partita contro il computer |
+| Percorso a tappe con stelle | Disponibile dalla scheda Tu, con i guardiani su Android e iOS |
 | Statistiche e rating locale | Disponibile dalla scheda Tu |
 | Editor di posizione con FEN e validazione | Disponibile |
 | Varianti: Chess960, Re della collina, Tre scacchi | Disponibile nella partita a due |

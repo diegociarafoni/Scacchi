@@ -1,11 +1,17 @@
+import 'package:dartchess/dartchess.dart' show Side;
 import 'package:flutter/material.dart';
 
 import '../archive/game_archive.dart';
 import '../archive/saved_game.dart';
+import '../engine/computer_player.dart';
+import '../engine/levels.dart';
+import '../engine/uci_transport.dart';
+import '../game/challenge.dart';
 import '../game/game_page.dart';
 import '../openings/opening_assets.dart';
 import '../openings/openings_hub_page.dart';
 import '../openings/repertoire.dart';
+import '../path/curriculum.dart';
 import '../path/path_controller.dart';
 import '../progress/activity.dart';
 import '../progress/progress_controller.dart';
@@ -30,6 +36,9 @@ class HomeShell extends StatefulWidget {
     this.repertoire,
     this.archive,
     this.reminderScheduler,
+    this.path,
+    this.computerAvailable,
+    this.createComputer,
   });
 
   final SettingsController settings;
@@ -49,6 +58,14 @@ class HomeShell extends StatefulWidget {
   /// Sostituibile nei test; di default le notifiche locali dove esistono
   /// (Android e iOS), altrimenti nessun promemoria.
   final ReminderScheduler? Function()? reminderScheduler;
+
+  /// Sostituibile nei test; di default il percorso salvato.
+  final Future<PathController> Function()? path;
+
+  /// Sostituibili nei test; di default il motore c'è dove Stockfish è
+  /// supportato (Android e iOS).
+  final bool? computerAvailable;
+  final ComputerPlayer Function()? createComputer;
 
   @override
   State<HomeShell> createState() => _HomeShellState();
@@ -115,12 +132,45 @@ class _HomeShellState extends State<HomeShell> {
 
   /// Un solo percorso in memoria, per non sovrascrivere le stelle tra due
   /// schermate aperte insieme.
-  Future<PathController> _pathController() =>
-      _path ??= PathController.open(recordActivity: _record)
+  Future<PathController> _pathController() => _path ??=
+      (widget.path ?? () => PathController.open(recordActivity: _record))()
           .catchError((Object e, StackTrace st) {
             _path = null;
             Error.throwWithStackTrace(e, st);
           });
+
+  bool get _computerAvailable =>
+      widget.computerAvailable ?? StockfishTransport.isSupported;
+
+  /// Gioca il guardiano di [stage] e restituisce le stelle, o `null` se non si
+  /// è vinto.
+  Future<int?> _playGuardian(BuildContext context, Stage stage) async {
+    GameResult? result;
+    var moves = 0;
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => GamePage(
+          settings: widget.settings,
+          computerAvailable: true,
+          createComputer: widget.createComputer,
+          challenge: GameChallenge(
+            title: 'Il guardiano',
+            levelId: engineLevelForElo(stage.guardianElo!).id,
+            side: Side.white,
+          ),
+          onFinished: (r, m) {
+            result = r;
+            moves = m;
+          },
+          onActivity: _record,
+          onSave: _saveGame,
+          progress: _progressController,
+        ),
+      ),
+    );
+    final r = result;
+    return r == null ? null : challengeStars(r, moves: moves);
+  }
 
   Future<void> _saveGame(SavedGame game) async => (await _archive()).save(game);
 
@@ -161,6 +211,8 @@ class _HomeShellState extends State<HomeShell> {
             onActivity: _record,
             onSave: _saveGame,
             progress: _progressController,
+            computerAvailable: widget.computerAvailable,
+            createComputer: widget.createComputer,
           ),
           if (_trainer != null)
             PuzzleHubPage(trainer: _trainer!, onActivity: _record)
@@ -176,6 +228,7 @@ class _HomeShellState extends State<HomeShell> {
               path: _pathController,
               archive: _archive,
               reminders: () => _reminders,
+              playGuardian: _computerAvailable ? _playGuardian : null,
             )
           else
             const SizedBox.shrink(),
