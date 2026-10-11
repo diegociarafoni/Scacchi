@@ -59,7 +59,8 @@ String? parseBestMove(String line) {
 
 /// Interpreta una riga `info` che contiene una variante; altrimenti `null`.
 InfoLine? parseInfo(String line) {
-  if (!line.startsWith('info ') || !line.contains(' pv ')) return null;
+  if (!line.startsWith('info ') || line.startsWith('info string')) return null;
+  if (!line.contains(' pv ')) return null;
   final t = line.trim().split(RegExp(r'\s+'));
   var multipv = 1;
   int? depth;
@@ -77,7 +78,7 @@ InfoLine? parseInfo(String line) {
         if (value != null && kind == 'cp') score = EngineScore.cp(value);
         if (value != null && kind == 'mate') score = EngineScore.mate(value);
       case 'pv':
-        pv = t.sublist(i + 1);
+        pv = t.sublist(i + 1).takeWhile(_uciMove.hasMatch).toList();
         i = t.length;
     }
   }

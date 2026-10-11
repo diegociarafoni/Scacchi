@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:dartchess/dartchess.dart';
 
 /// Motivo per cui la partita è terminata.
@@ -9,6 +11,7 @@ enum GameEndReason {
   fiftyMoveRule,
   resignation,
   agreement,
+  timeout,
 }
 
 /// Una mossa giocata, con la notazione algebrica (SAN) e la posizione risultante.
@@ -28,10 +31,25 @@ class PlayedMove {
 class ChessGame {
   ChessGame({Position? initial}) : initial = initial ?? Chess.initial;
 
+  /// Partita ricostruita da mosse già giocate, per esempio da un PGN. Ignora
+  /// ripetizioni e regola delle 50 mosse non reclamate; `null` se una mossa è
+  /// illegale o segue un matto o uno stallo.
+  static ChessGame? replay(Position initial, Iterable<Move> moves) {
+    final game = ChessGame(initial: initial);
+    for (final move in moves) {
+      final pos = game.position;
+      if (pos.isGameOver || !pos.isLegal(move)) return null;
+      final (after, san) = pos.makeSan(move);
+      game._moves.add(PlayedMove(move: move, san: san, after: after));
+    }
+    return game;
+  }
+
   final Position initial;
   final List<PlayedMove> _moves = [];
   Side? _resigned;
   bool _drawAgreed = false;
+  Side? _flagged;
 
   List<PlayedMove> get moves => List.unmodifiable(_moves);
 
@@ -39,7 +57,8 @@ class ChessGame {
 
   Move? get lastMove => _moves.isEmpty ? null : _moves.last.move;
 
-  bool get canUndo => _moves.isNotEmpty;
+  bool get canUndo =>
+      _moves.isNotEmpty || _resigned != null || _drawAgreed || _flagged != null;
 
   /// Gioca [move] se è legale. Restituisce `false` se la mossa viene rifiutata.
   bool play(Move move) {
@@ -49,10 +68,15 @@ class ChessGame {
     return true;
   }
 
+  /// Revoca abbandono, patta concordata o tempo scaduto se presenti, altrimenti toglie l'ultima mossa.
   void undo() {
-    _resigned = null;
-    _drawAgreed = false;
-    if (_moves.isNotEmpty) _moves.removeLast();
+    if (_resigned != null || _drawAgreed || _flagged != null) {
+      _resigned = null;
+      _drawAgreed = false;
+      _flagged = null;
+    } else if (_moves.isNotEmpty) {
+      _moves.removeLast();
+    }
   }
 
   void resign(Side side) {
@@ -63,9 +87,15 @@ class ChessGame {
     if (!isOver) _drawAgreed = true;
   }
 
+  /// Registra il tempo scaduto per [side].
+  void flag(Side side) {
+    if (!isOver) _flagged = side;
+  }
+
   GameEndReason? get endReason {
     if (_resigned != null) return GameEndReason.resignation;
     if (_drawAgreed) return GameEndReason.agreement;
+    if (_flagged != null) return GameEndReason.timeout;
     final pos = position;
     if (pos.isCheckmate) return GameEndReason.checkmate;
     if (pos.isStalemate) return GameEndReason.stalemate;
@@ -81,14 +111,23 @@ class ChessGame {
     null => null,
     GameEndReason.checkmate => Outcome(winner: position.turn.opposite),
     GameEndReason.resignation => Outcome(winner: _resigned!.opposite),
+    GameEndReason.timeout =>
+      position.hasInsufficientMaterial(_flagged!.opposite)
+          ? Outcome.draw
+          : Outcome(winner: _flagged!.opposite),
     _ => Outcome.draw,
   };
 
+  /// Confronta solo le posizioni successive all'ultima cattura o mossa di pedone.
   bool get _isThreefoldRepetition {
+    final positions = [initial, for (final m in _moves) m.after];
+    final last = positions.length - 1;
+    final first = math.max(0, last - position.halfmoves);
+    if (last - first < 8) return false;
     final current = _repetitionKey(position);
-    var count = _repetitionKey(initial) == current ? 1 : 0;
-    for (final m in _moves) {
-      if (_repetitionKey(m.after) == current) count++;
+    var count = 0;
+    for (var i = first; i <= last; i++) {
+      if (_repetitionKey(positions[i]) == current) count++;
     }
     return count >= 3;
   }
