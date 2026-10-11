@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
+import '../settings/settings.dart';
 import 'progress_tracker.dart';
 import 'rewards.dart';
 
@@ -20,9 +22,28 @@ String? progressMessage(ProgressUpdate update) {
   ].join(' · ');
 }
 
+/// Versione del profilo bambino: solo incoraggiamenti, senza XP né numeri.
+/// I titoli di sfide e traguardi possono contenere cifre e non si ripetono;
+/// i record sono tutti numerici e restano fuori.
+String? kidProgressMessage(ProgressUpdate update, AppLocalizations l) {
+  if (update.xpGained == 0) return null;
+  return [
+    l.kidProgressGreat,
+    if (update.goalReached) l.kidProgressGoal,
+    if (update.newLevel != null) l.kidProgressLevelUp,
+    if (update.freezeEarned) l.kidProgressFreeze,
+    if (update.challengesCompleted.isNotEmpty || update.weeklyCompleted)
+      l.kidProgressChallenge,
+    if (update.unlocked.isNotEmpty) l.kidProgressAchievement,
+    for (final r in update.rewards) l.kidProgressReward(rewardName(r)),
+  ].join(' · ');
+}
+
 /// Notifica in-app non invasiva dei progressi.
 void showProgressFeedback(BuildContext context, ProgressUpdate update) {
-  final message = progressMessage(update);
+  final message = AppSettings.of(context).kidMode
+      ? kidProgressMessage(update, AppLocalizations.of(context))
+      : progressMessage(update);
   if (message == null) return;
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
 }

@@ -86,6 +86,7 @@ I golden si rigenerano con `flutter test test/settings --update-goldens` dopo un
 | RNF-07 colori per daltonici | ✓ | ✓ |
 | RP-04 anteprima delle impostazioni (widget test e golden su tre telefoni) | ✓ | |
 | RP-06 profilo bambino: impostazione, schede e sezioni semplificate | ✓ | |
+| RP-06 profilo bambino: niente statistiche numeriche in profilo, puzzle, revisione e analisi (widget test) | ✓ | |
 | RF-30 nomi dei giocatori | ✓ | ✓ |
 | RF-09 conferma della mossa | ✓ | ✓ |
 | RF-25 matto, stallo, materiale insufficiente, ripetizione, 50 mosse, abbandono | ✓ | matto, abbandono |

@@ -92,6 +92,8 @@ Si apre dal menu della partita (⋮ → **Revisione della partita**), disponibil
 
 **Accessibilità**: la barra di valutazione ha un'etichetta descrittiva ("Bianco avanti di 1.5", "Matto in 2 per il Nero"), le mosse della lista sono pulsanti con mossa e categoria, la precisione è letta come percentuale.
 
+Nel profilo bambino (RP-06) la precisione diventa da una a cinque stelle con un giudizio a parole, spariscono Elo stimato, conteggi per categoria e cifre della barra di valutazione: vedi [profilo-bambino.md](profilo-bambino.md#niente-numeri).
+
 ## Coach testuale
 
 `explainMove` (`lib/review/coach.dart`) produce una frase breve per ogni mossa, con regole a modello e senza modelli linguistici (RF-70, RF-71). Sulla schermata di revisione compare sotto la mossa scelta quando è un errore; viene calcolata una sola volta per mossa. Ogni frase ha un tema (`CoachTheme`) che servirà a raggruppare gli errori ricorrenti.

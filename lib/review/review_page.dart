@@ -6,6 +6,8 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
 import '../analysis/analysis_page.dart';
+import '../l10n/app_localizations.dart';
+import '../settings/settings.dart';
 import 'board_utils.dart';
 import 'coach.dart';
 import 'eval_bar.dart';
@@ -369,7 +371,9 @@ class _ReviewPageState extends State<ReviewPage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  'Analisi in corso: $_done di $_total',
+                  AppSettings.of(context).kidMode
+                      ? AppLocalizations.of(context).kidReviewAnalysing
+                      : 'Analisi in corso: $_done di $_total',
                   style: text.titleMedium,
                 ),
                 const SizedBox(height: 8),
@@ -559,9 +563,25 @@ class _Summary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
+    // Profilo bambino (RP-06): precisione a stelle e parole, niente Elo
+    // stimato né conteggi per categoria.
+    final kid = AppSettings.of(context).kidMode;
     Widget column(Side side) {
       final name = side == Side.white ? 'Bianco' : 'Nero';
       final accuracy = review.accuracy(side);
+      if (kid) {
+        return Expanded(
+          child: Column(
+            children: [
+              Text(name, style: text.titleSmall),
+              _KidAccuracy(
+                key: ValueKey('accuracy-${side.name}'),
+                accuracy: accuracy,
+              ),
+            ],
+          ),
+        );
+      }
       final elo = review.estimatedElo(side);
       return Expanded(
         child: Column(
@@ -588,24 +608,65 @@ class _Summary extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
           child: Row(children: [column(Side.white), column(Side.black)]),
         ),
-        ExpansionTile(
-          title: const Text('Mosse per categoria'),
-          children: [
-            for (final c in MoveClass.values)
-              ListTile(
-                dense: true,
-                leading: _Badge(c),
-                title: Text(c.label),
-                trailing: Text(
-                  '${review.count(Side.white, c)}   '
-                  '${review.count(Side.black, c)}',
-                  semanticsLabel:
-                      'Bianco ${review.count(Side.white, c)}, '
-                      'Nero ${review.count(Side.black, c)}',
+        if (!kid)
+          ExpansionTile(
+            title: const Text('Mosse per categoria'),
+            children: [
+              for (final c in MoveClass.values)
+                ListTile(
+                  dense: true,
+                  leading: _Badge(c),
+                  title: Text(c.label),
+                  trailing: Text(
+                    '${review.count(Side.white, c)}   '
+                    '${review.count(Side.black, c)}',
+                    semanticsLabel:
+                        'Bianco ${review.count(Side.white, c)}, '
+                        'Nero ${review.count(Side.black, c)}',
+                  ),
                 ),
-              ),
-          ],
+            ],
+          ),
+      ],
+    );
+  }
+}
+
+/// Precisione da una a cinque stelle con un giudizio a parole.
+class _KidAccuracy extends StatelessWidget {
+  const _KidAccuracy({super.key, required this.accuracy});
+
+  final double? accuracy;
+
+  /// Una stella ogni venti punti percentuali, almeno una.
+  static int stars(double accuracy) => (accuracy / 20).ceil().clamp(1, 5);
+
+  @override
+  Widget build(BuildContext context) {
+    final accuracy = this.accuracy;
+    if (accuracy == null) return const Text('—');
+    final l = AppLocalizations.of(context);
+    final n = stars(accuracy);
+    final words = switch (n) {
+      5 => l.kidAccuracy5,
+      4 => l.kidAccuracy4,
+      3 => l.kidAccuracy3,
+      2 => l.kidAccuracy2,
+      _ => l.kidAccuracy1,
+    };
+    final color = Theme.of(context).colorScheme.primary;
+    return Column(
+      children: [
+        ExcludeSemantics(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              for (var i = 0; i < 5; i++)
+                Icon(i < n ? Icons.star : Icons.star_border, color: color),
+            ],
+          ),
         ),
+        Text(words, style: Theme.of(context).textTheme.titleMedium),
       ],
     );
   }

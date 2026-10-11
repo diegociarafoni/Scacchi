@@ -28,6 +28,8 @@ Il flusso emette un aggiornamento alla fine di ogni iterazione, quando tutte le 
 
 Per la batteria (RNF-05) la schermata ridisegna le linee al massimo ogni 250 ms, anche se il motore ne invia molte di più, e ferma il motore quando l'app va in secondo piano; al ritorno l'analisi riparte, a meno che non fosse in pausa.
 
+Nel profilo bambino (RP-06) la barra di valutazione non ha cifre e le linee non mostrano punteggio né profondità: vedi [profilo-bambino.md](profilo-bambino.md#niente-numeri).
+
 ## Limiti attuali
 
 - Le varianti non formano ancora un albero (RF-52): c'è una sola linea di esplorazione, senza promozione né eliminazione di varianti.
