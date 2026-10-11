@@ -1,3 +1,4 @@
+import 'package:chessground/chessground.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/settings/settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,6 +16,10 @@ void main() {
     expect(settings.value.animation, AnimationSpeed.normal);
     expect(settings.value.boardTheme, BoardTheme.green);
     expect(settings.value.pieceSet, PieceStyle.cburnett);
+    expect(settings.value.sound, isTrue);
+    expect(settings.value.volume, 1.0);
+    expect(settings.value.haptics, isTrue);
+    expect(settings.value.tableMode, isFalse);
   });
 
   test('RP-04 le impostazioni sono salvate in locale', () async {
@@ -29,6 +34,10 @@ void main() {
         animation: AnimationSpeed.none,
         boardTheme: BoardTheme.blue,
         pieceSet: PieceStyle.merida,
+        sound: false,
+        volume: 0.4,
+        haptics: false,
+        tableMode: true,
       ),
     );
     final reloaded = await SettingsController.load();
@@ -68,5 +77,18 @@ void main() {
     final settings = await SettingsController.load();
     expect(settings.value.showCoordinates, isTrue);
     expect(settings.value.boardTheme, BoardTheme.green);
+  });
+
+  test('RF-31 modalità tavolo capovolge i pezzi dell\'avversario', () async {
+    final settings = await SettingsController.load();
+    expect(
+      settings.value.board.pieceOrientationBehavior,
+      PieceOrientationBehavior.facingUser,
+    );
+    await settings.update(settings.value.copyWith(tableMode: true));
+    expect(
+      settings.value.board.pieceOrientationBehavior,
+      PieceOrientationBehavior.opponentUpsideDown,
+    );
   });
 }

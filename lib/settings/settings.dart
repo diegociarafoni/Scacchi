@@ -50,6 +50,10 @@ class AppSettings {
     this.animation = AnimationSpeed.normal,
     this.boardTheme = BoardTheme.green,
     this.pieceSet = PieceStyle.cburnett,
+    this.sound = true,
+    this.volume = 1.0,
+    this.haptics = true,
+    this.tableMode = false,
   });
 
   final bool showLegalMoves;
@@ -60,6 +64,10 @@ class AppSettings {
   final AnimationSpeed animation;
   final BoardTheme boardTheme;
   final PieceStyle pieceSet;
+  final bool sound;
+  final double volume;
+  final bool haptics;
+  final bool tableMode;
 
   AppSettings copyWith({
     bool? showLegalMoves,
@@ -70,6 +78,10 @@ class AppSettings {
     AnimationSpeed? animation,
     BoardTheme? boardTheme,
     PieceStyle? pieceSet,
+    bool? sound,
+    double? volume,
+    bool? haptics,
+    bool? tableMode,
   }) => AppSettings(
     showLegalMoves: showLegalMoves ?? this.showLegalMoves,
     showCoordinates: showCoordinates ?? this.showCoordinates,
@@ -79,6 +91,10 @@ class AppSettings {
     animation: animation ?? this.animation,
     boardTheme: boardTheme ?? this.boardTheme,
     pieceSet: pieceSet ?? this.pieceSet,
+    sound: sound ?? this.sound,
+    volume: volume ?? this.volume,
+    haptics: haptics ?? this.haptics,
+    tableMode: tableMode ?? this.tableMode,
   );
 
   late final ChessboardSettings board = ChessboardSettings(
@@ -89,6 +105,9 @@ class AppSettings {
     animationDuration: animation.duration,
     autoQueenPromotion: autoQueen,
     drawShape: DrawShapeOptions(enable: drawShapes),
+    pieceOrientationBehavior: tableMode
+        ? PieceOrientationBehavior.opponentUpsideDown
+        : PieceOrientationBehavior.facingUser,
   );
 
   @override
@@ -101,7 +120,11 @@ class AppSettings {
       other.autoFlip == autoFlip &&
       other.animation == animation &&
       other.boardTheme == boardTheme &&
-      other.pieceSet == pieceSet;
+      other.pieceSet == pieceSet &&
+      other.sound == sound &&
+      other.volume == volume &&
+      other.haptics == haptics &&
+      other.tableMode == tableMode;
 
   @override
   int get hashCode => Object.hash(
@@ -113,6 +136,10 @@ class AppSettings {
     animation,
     boardTheme,
     pieceSet,
+    sound,
+    volume,
+    haptics,
+    tableMode,
   );
 }
 
@@ -146,6 +173,10 @@ class SettingsController extends ValueNotifier<AppSettings> {
         animation: byName(AnimationSpeed.values, 'animation', d.animation),
         boardTheme: byName(BoardTheme.values, 'boardTheme', d.boardTheme),
         pieceSet: byName(PieceStyle.values, 'pieceSet', d.pieceSet),
+        sound: read('sound', d.sound),
+        volume: read<double>('volume', d.volume).clamp(0.0, 1.0),
+        haptics: read('haptics', d.haptics),
+        tableMode: read('tableMode', d.tableMode),
       ),
     );
   }
@@ -173,6 +204,13 @@ class SettingsController extends ValueNotifier<AppSettings> {
         prefs.setString('boardTheme', settings.boardTheme.name),
       if (old.pieceSet != settings.pieceSet)
         prefs.setString('pieceSet', settings.pieceSet.name),
+      if (old.sound != settings.sound) prefs.setBool('sound', settings.sound),
+      if (old.volume != settings.volume)
+        prefs.setDouble('volume', settings.volume),
+      if (old.haptics != settings.haptics)
+        prefs.setBool('haptics', settings.haptics),
+      if (old.tableMode != settings.tableMode)
+        prefs.setBool('tableMode', settings.tableMode),
     ];
     try {
       await Future.wait(writes);

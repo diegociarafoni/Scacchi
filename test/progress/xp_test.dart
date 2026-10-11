@@ -29,6 +29,13 @@ void main() {
       expect(xpFor(const MinigameFinished(game: 'coordinate', score: 0)), 0);
     });
 
+    test('un torneo concluso vale più di una vittoria', () {
+      expect(
+        xpFor(const TournamentFinished(rank: 3, players: 6)),
+        greaterThan(xpFor(const GamePlayed(result: GameResult.win))),
+      );
+    });
+
     test('un puzzle risolto vale XP', () {
       expect(xpFor(const PuzzleSolved()), greaterThan(0));
     });

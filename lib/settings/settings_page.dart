@@ -46,6 +46,33 @@ class SettingsPage extends StatelessWidget {
                 value: s.autoFlip,
                 onChanged: (v) => set((c) => c.copyWith(autoFlip: v)),
               ),
+              SwitchListTile(
+                title: const Text('Modalità tavolo'),
+                subtitle: const Text(
+                  'Pezzi in alto capovolti, per giocare uno di fronte all\'altro',
+                ),
+                value: s.tableMode,
+                onChanged: (v) => set((c) => c.copyWith(tableMode: v)),
+              ),
+              const _Header('Suoni e vibrazione'),
+              SwitchListTile(
+                title: const Text('Suoni'),
+                value: s.sound,
+                onChanged: (v) => set((c) => c.copyWith(sound: v)),
+              ),
+              ListTile(
+                title: const Text('Volume'),
+                subtitle: _VolumeSlider(
+                  value: s.volume,
+                  enabled: s.sound,
+                  onChangeEnd: (v) => set((c) => c.copyWith(volume: v)),
+                ),
+              ),
+              SwitchListTile(
+                title: const Text('Vibrazione'),
+                value: s.haptics,
+                onChanged: (v) => set((c) => c.copyWith(haptics: v)),
+              ),
               const _Header('Tema della scacchiera'),
               _Choices(
                 values: BoardTheme.values,
@@ -123,6 +150,41 @@ class _Choices<T> extends StatelessWidget {
             ),
         ],
       ),
+    );
+  }
+}
+
+/// Cursore del volume che salva solo al rilascio.
+class _VolumeSlider extends StatefulWidget {
+  const _VolumeSlider({
+    required this.value,
+    required this.enabled,
+    required this.onChangeEnd,
+  });
+
+  final double value;
+  final bool enabled;
+  final ValueChanged<double> onChangeEnd;
+
+  @override
+  State<_VolumeSlider> createState() => _VolumeSliderState();
+}
+
+class _VolumeSliderState extends State<_VolumeSlider> {
+  double? _dragging;
+
+  @override
+  Widget build(BuildContext context) {
+    final value = _dragging ?? widget.value;
+    return Slider(
+      value: value,
+      divisions: 10,
+      label: '${(value * 100).round()}%',
+      onChanged: widget.enabled ? (v) => setState(() => _dragging = v) : null,
+      onChangeEnd: (v) {
+        setState(() => _dragging = null);
+        widget.onChangeEnd(v);
+      },
     );
   }
 }

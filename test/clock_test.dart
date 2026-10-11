@@ -131,4 +131,16 @@ void main() {
     expect(clock.remaining(Side.black), const Duration(minutes: 1));
     expect(clock.active, Side.white);
   });
+
+  test('RF-41 avviso di poco tempo una volta per discesa, poi riarmato', () {
+    final alarm = LowTimeAlarm();
+    expect(alarm.check(Side.white, const Duration(seconds: 12)), isFalse);
+    expect(alarm.check(Side.white, const Duration(seconds: 9)), isTrue);
+    expect(alarm.check(Side.white, const Duration(seconds: 8)), isFalse);
+    expect(alarm.check(Side.black, const Duration(seconds: 9)), isTrue);
+    expect(alarm.check(Side.white, const Duration(seconds: 11)), isFalse);
+    expect(alarm.check(Side.white, const Duration(seconds: 9)), isTrue);
+    alarm.reset();
+    expect(alarm.check(Side.black, const Duration(seconds: 9)), isTrue);
+  });
 }
