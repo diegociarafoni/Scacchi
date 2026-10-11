@@ -21,22 +21,32 @@ La piattaforma web non è supportata: `dartchess` usa interi a 64 bit (bitboard)
 ```
 lib/
   main.dart               Avvio dell'app, tema chiaro e scuro
+  home/home_shell.dart    Barra di navigazione in basso (Gioca, Puzzle)
   game/
     chess_game.dart       Stato della partita, senza dipendenze dall'interfaccia
     material.dart         Pezzi catturati e vantaggio di materiale
+    clock.dart            Cadenze e orologio a due lati
     game_page.dart        Schermata di gioco
     new_game_dialog.dart  Scelta di avversario, colore e livello
   engine/                 Avversario computer (vedi avversario-computer.md)
   progress/               Gamification: XP, livelli, serie, traguardi (vedi gamification.md)
   archive/                Archivio delle partite e PGN (vedi archivio.md)
   path/                   Percorso a tappe con stelle (vedi percorso.md)
+  stats/                  Statistiche e rating locale (vedi statistiche.md)
   storage/                File JSON locali con versione e scrittura atomica
   settings/
     settings.dart         Impostazioni, valori predefiniti e salvataggio locale
     settings_page.dart    Schermata delle impostazioni
+  puzzles/                Puzzle: modello, punteggio, schermate (vedi puzzle.md)
+  training/               Scacchiera per esercizi condivisa
+assets/
+  puzzles/puzzles.csv     Puzzle Lichess inclusi (CC0)
+  openings/openings.tsv   Nomi delle aperture Lichess (CC0)
+tool/datasets/            Script che generano i dataset in assets/
 test/
   chess_game_test.dart    Test delle regole e della fine partita
   material_test.dart      Test del materiale catturato
+  clock_test.dart         Test di cadenze, orologio e tempo scaduto
   settings_test.dart      Test delle impostazioni e del salvataggio
   widget_test.dart        Test di avvio dell'interfaccia
   computer_game_test.dart Partita contro il computer nell'interfaccia
@@ -68,6 +78,10 @@ Modello della partita, in Dart puro e quindi testabile senza interfaccia.
 ### `MaterialBalance` (`lib/game/material.dart`)
 
 Calcola da una partita i pezzi catturati da ciascun lato, ripercorrendo le mosse (comprese le prese en passant), e la differenza di materiale presente sulla scacchiera. È Dart puro e si testa senza interfaccia.
+
+### Orologio (`lib/game/clock.dart`)
+
+`TimeControl` descrive una cadenza (minuti e incremento). `ChessClock` tiene il tempo residuo dei due lati e fa scorrere solo quello del lato attivo; l'ora corrente è iniettabile per i test. Offre istantanee e ripristino, usate da `GamePage` per annullare le mosse. `GamePage` aggiorna la visualizzazione ogni 100 ms ridisegnando solo gli orologi, registra il tempo scaduto con `ChessGame.flag` e ferma l'orologio a fine partita.
 
 ### Impostazioni (`lib/settings/`)
 

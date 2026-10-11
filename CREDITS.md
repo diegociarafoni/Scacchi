@@ -13,3 +13,5 @@
 | [Flutter](https://flutter.dev) | Framework dell'interfaccia | BSD-3-Clause |
 | [path_provider](https://pub.dev/packages/path_provider) (Flutter) | Cartella dati dell'app per i salvataggi | BSD-3-Clause |
 | [share_plus](https://pub.dev/packages/share_plus) (Flutter Community) | Condivisione PGN con il menu del sistema | BSD-3-Clause |
+| [Database dei puzzle di Lichess](https://database.lichess.org/#puzzles) | Puzzle inclusi nell'app (sottoinsieme) | CC0 |
+| [chess-openings](https://github.com/lichess-org/chess-openings) (Lichess) | Nomi e codici ECO delle aperture | CC0 |

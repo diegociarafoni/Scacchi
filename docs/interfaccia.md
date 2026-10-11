@@ -36,11 +36,22 @@ Per ciascun giocatore una riga mostra le icone dei pezzi avversari catturati, da
 
 | Comando | Effetto |
 |---|---|
-| Nuova | Inizia una nuova partita dalla posizione iniziale |
+| Nuova | Apre la finestra della nuova partita (avversario, colore, livello, cadenza) e inizia dalla posizione iniziale |
 | Annulla | Annulla l'ultima mossa; disattivato se non ci sono mosse |
 | Gira | Capovolge la scacchiera |
 | Patta | Chiede all'avversario se accetta la patta; disattivato a partita conclusa |
 | Abbandona | Chiede conferma e fa abbandonare il lato al tratto; disattivato a partita conclusa |
+
+## Orologio
+
+"Nuova" apre una finestra in cui si sceglie l'avversario (vedi [avversario-computer.md](avversario-computer.md)) e la cadenza: "Senza tempo" oppure le cadenze di chess.com, cioè Bullet (1+0, 1+1, 2+1), Blitz (3+0, 3+2, 5+0) e Rapid (10+0, 15+10, 30+0), dove il primo numero sono i minuti per giocatore e il secondo i secondi aggiunti dopo ogni mossa.
+
+- Ogni orologio sta a destra della riga del materiale del rispettivo giocatore.
+- Il tempo inizia a scorrere dopo la prima mossa del Bianco, per il Nero.
+- L'orologio di chi ha il tratto è evidenziato; sotto i 10 secondi diventa rosso.
+- Sotto i 20 secondi mostra anche i decimi.
+- Si ferma mentre è aperto un dialogo (abbandono, patta, nuova partita) e quando l'app va in secondo piano, e riparte al ritorno.
+- Una mossa fatta a tempo già scaduto non viene accettata.
 
 ## Impostazioni
 

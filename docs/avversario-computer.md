@@ -9,7 +9,8 @@ nessuna connessione, nessun server, nessun dato che esce dal telefono.
 2. Scegliere **Computer**.
 3. Scegliere il colore: Bianco, Nero o a caso. La scacchiera si orienta dal lato del giocatore.
 4. Scegliere il livello con il cursore (da 1 a 8).
-5. Toccare **Gioca**. Se il giocatore ha il Nero, il computer muove per primo.
+5. Scegliere il tempo: "Senza tempo" o una cadenza (vedi [interfaccia.md](interfaccia.md)).
+6. Toccare **Gioca**. Se il giocatore ha il Nero, il computer muove per primo.
 
 Durante la riflessione del computer la scacchiera è bloccata e compare la scritta
 "Il computer sta pensando…".
@@ -22,6 +23,7 @@ Durante la riflessione del computer la scacchiera è bloccata e compare la scrit
 - Se il motore non risponde, o propone una mossa che le regole rifiutano, compare il messaggio "Il computer non risponde." con il pulsante **Riprova**, sopra la barra dei comandi; il motore viene riavviato alla richiesta successiva. Il messaggio sparisce con una nuova partita o un annullamento.
 - La patta si può offrire solo nel proprio turno.
 - La rotazione automatica della scacchiera è disattivata contro il computer.
+- Con l'orologio, il tempo del computer scorre mentre pensa e riceve l'incremento come il giocatore; se il tempo scade durante la riflessione la ricerca viene interrotta. **Annulla** ripristina gli orologi di entrambe le mosse ritirate. Mentre è aperta una finestra (nuova partita, abbandono) orologio e computer restano fermi e ripartono alla chiusura.
 
 ## Piattaforme
 

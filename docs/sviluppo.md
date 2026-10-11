@@ -35,14 +35,15 @@ Ogni funzione nasce dai requisiti del progetto, nel documento dei requisiti, con
 
 | Livello | Cartella | Cosa verifica | Comando |
 |---|---|---|---|
-| Unitari | `test/chess_game_test.dart`, `test/material_test.dart`, `test/settings_test.dart` | Regole e fine partita su `ChessGame`; pezzi catturati e vantaggio su `MaterialBalance`; impostazioni e salvataggio; senza interfaccia | `flutter test` |
+| Unitari | `test/chess_game_test.dart`, `test/material_test.dart`, `test/settings_test.dart`, `test/clock_test.dart` | Regole e fine partita su `ChessGame`; pezzi catturati e vantaggio su `MaterialBalance`; impostazioni e salvataggio; orologio; senza interfaccia | `flutter test` |
 | Unitari | `test/engine/` | Protocollo UCI, scelta delle mosse, `ComputerPlayer` con motore finto e con Stockfish reale (se installato) | `flutter test` |
 | Widget | `test/widget_test.dart` | Avvio dell'app e stato iniziale | `flutter test` |
 | Widget | `test/computer_game_test.dart` | Partita contro il computer con un motore finto | `flutter test` |
 | Gamification | `test/progress/` | Regole di XP, serie e traguardi; salvataggio; schermata Profilo | `flutter test test/progress` |
 | Percorso | `test/path/` | Esercizi, contenuti, sblocco, mappa e tappe sulla scacchiera | `flutter test test/path` |
+| Statistiche | `test/stats/` | Bilancio, rating locale, schermata | `flutter test test/stats` |
 | Archivio | `test/archive/` | PGN, salvataggio su file, schermata Partite | `flutter test test/archive` |
-| End-to-end | `integration_test/app_test.dart` | L'app reale avviata su un dispositivo o desktop, con tocchi e trascinamenti sulla scacchiera | `flutter test integration_test -d <dispositivo>` |
+| End-to-end | `integration_test/*_test.dart` | L'app reale avviata su un dispositivo o desktop, con tocchi e trascinamenti sulla scacchiera | `flutter test integration_test -d <dispositivo>` |
 | End-to-end | `integration_test/computer_test.dart` | Partite contro un vero Stockfish (processo esterno, richiede `stockfish` installato) | `flutter test integration_test/computer_test.dart -d linux` |
 
 Su desktop i file e2e vanno eseguiti uno alla volta: avviandone più di uno nello stesso comando, l'app del secondo file non parte. La CI li esegue in sequenza.
@@ -62,6 +63,8 @@ I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisic
 | RF-20 colore e livello contro il computer | ✓ | ✓ |
 | RF-21 motore separato, scacchiera bloccata mentre pensa, ritardo artificiale | ✓ | ✓ |
 | Annullamento contro il computer (mossa e risposta) | | ✓ |
+| RF-40, RF-41 cadenze, incremento, avvisi, tempo scaduto | ✓ | ✓ |
+| RF-40 orologio contro il computer, annullamento con orologio | | ✓ |
 | RF-25 matto, stallo, materiale insufficiente, ripetizione, 50 mosse, abbandono | ✓ | matto, abbandono |
 | RF-25 patta accettata dal computer in base alla valutazione | ✓ | ✓ |
 | RF-31 rotazione automatica a ogni turno | | ✓ |
@@ -71,6 +74,8 @@ I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisic
 | RF-102 import ed export PGN, condivisione, copia | ✓ | |
 | Annullamento di abbandono e patta senza perdita di mosse | ✓ | |
 | RF-04 chiusura del selettore di promozione con Annulla | | ✓ |
+| RF-110 rating locale contro il computer | ✓ | |
+| RF-111 statistiche per colore, cadenza, aperture, precisione | ✓ | |
 | RG-01 XP e livelli | ✓ | |
 | RG-02 obiettivo giornaliero, serie, riposo, protezioni | ✓ | |
 | RG-03 percorso a tappe, stelle, sblocco, contenuti verificati | ✓ | |
@@ -78,13 +83,18 @@ I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisic
 | RG-07 sfide giornaliere e settimanali | ✓ | |
 | RG-08 record personali | ✓ | |
 | RG-12 gamification disattivabile | ✓ | |
+| RF-80 raccolta di puzzle inclusa e valida | ✓ | ✓ |
+| RF-81 risoluzione e punteggio Glicko-2 | ✓ | ✓ |
+| RF-83 suggerimento, soluzione, filtro per tema | ✓ | ✓ |
+| RF-84 puzzle del giorno | ✓ | ✓ |
+| RG-01 XP per i puzzle risolti | ✓ | |
 
 ## Integrazione continua
 
 Il workflow `.github/workflows/ci.yml` gira su ogni pull request e su ogni push su `main`:
 
 1. **test**: installa Stockfish (per i test d'integrazione del motore), verifica della formattazione, `flutter analyze`, `flutter test`.
-2. **e2e**: se i test passano, installa Stockfish ed esegue i test end-to-end sull'app Linux desktop con uno schermo virtuale (`xvfb`).
+2. **e2e**: se i test passano, installa Stockfish ed esegue i test end-to-end sull'app Linux desktop con uno schermo virtuale (`xvfb`), un file alla volta perché avvii ravvicinati dell'app Linux nello stesso comando falliscono.
 3. **android**: se i test passano, compila un APK di debug e lo pubblica come artefatto `scacchi-debug-apk`, scaricabile dalla pagina dell'esecuzione.
 
 ## Convenzioni

@@ -84,6 +84,7 @@ class FirstLegalMoveEngine implements UciTransport {
 Future<void> startComputerGame(
   WidgetTester tester, {
   required String side,
+  String? time,
 }) async {
   await tester.tap(find.text('Nuova'));
   await tester.pumpAndSettle();
@@ -91,7 +92,28 @@ Future<void> startComputerGame(
   await tester.pumpAndSettle();
   await tester.tap(find.text(side));
   await tester.pumpAndSettle();
+  if (time != null) {
+    await tester.ensureVisible(find.text(time));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(time));
+    await tester.pumpAndSettle();
+  }
   await tester.tap(find.text('Gioca'));
+}
+
+Offset square(WidgetTester tester, String name) {
+  final rect = tester.getRect(find.byType(Chessboard));
+  final size = rect.width / 8;
+  final file = name.codeUnitAt(0) - 'a'.codeUnitAt(0);
+  final rank = int.parse(name[1]) - 1;
+  return rect.topLeft + Offset((file + 0.5) * size, (7 - rank + 0.5) * size);
+}
+
+Future<void> tapMove(WidgetTester tester, String uci) async {
+  await tester.tapAt(square(tester, uci.substring(0, 2)));
+  await tester.pump();
+  await tester.tapAt(square(tester, uci.substring(2, 4)));
+  await tester.pump();
 }
 
 void main() {
@@ -324,6 +346,69 @@ void main() {
     expect(orientation(), Side.black);
     await tester.pumpAndSettle(const Duration(seconds: 1));
     expect(orientation(), Side.black);
+  });
+
+  Finder activeClock(Side side) => find.descendant(
+    of: find.byKey(const ValueKey('clock-active')),
+    matching: find.byKey(ValueKey('clock-${side.name}')),
+  );
+  String clockText(WidgetTester tester, Side side) =>
+      tester.widget<Text>(find.byKey(ValueKey('clock-${side.name}'))).data!;
+
+  testWidgets('RF-40 contro il computer l\'orologio torna al giocatore', (
+    tester,
+  ) async {
+    await tester.pumpWidget(app());
+    await startComputerGame(tester, side: 'Bianco', time: '3+2');
+    await tester.pump(const Duration(seconds: 1));
+    expect(clockText(tester, Side.white), '3:00');
+    await tapMove(tester, 'e2e4');
+    await tester.pump(const Duration(milliseconds: 500));
+    expect(find.textContaining('1. '), findsOneWidget);
+    expect(find.text('Muove il Bianco.'), findsOneWidget);
+    expect(activeClock(Side.white), findsOneWidget);
+    expect(clockText(tester, Side.black), isIn(['3:01', '3:02']));
+  });
+
+  testWidgets('RF-40 annullare contro il computer ripristina gli orologi', (
+    tester,
+  ) async {
+    await tester.pumpWidget(app());
+    await startComputerGame(tester, side: 'Bianco', time: '3+2');
+    await tester.pump(const Duration(seconds: 1));
+    await tapMove(tester, 'e2e4');
+    await tester.pump(const Duration(milliseconds: 500));
+    await tester.tap(find.text('Annulla'));
+    await tester.pump(const Duration(milliseconds: 500));
+    expect(find.textContaining('1. '), findsNothing);
+    expect(find.byKey(const ValueKey('clock-active')), findsNothing);
+    expect(clockText(tester, Side.white), '3:00');
+    expect(clockText(tester, Side.black), '3:00');
+  });
+
+  testWidgets('RF-40 nella nuova partita si sceglie anche il tempo', (
+    tester,
+  ) async {
+    await tester.pumpWidget(app());
+    await tester.tap(find.text('Nuova'));
+    await tester.pumpAndSettle();
+    expect(find.text('Senza tempo'), findsOneWidget);
+    await tester.ensureVisible(find.text('5+0'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('5+0'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Gioca'));
+    await tester.pump(const Duration(milliseconds: 500));
+    expect(clockText(tester, Side.white), '5:00');
+    await tester.tap(find.text('Nuova'));
+    await tester.pump(const Duration(milliseconds: 500));
+    await tester.ensureVisible(find.text('Senza tempo'));
+    await tester.pump(const Duration(milliseconds: 500));
+    await tester.tap(find.text('Senza tempo'));
+    await tester.pump(const Duration(milliseconds: 500));
+    await tester.tap(find.text('Gioca'));
+    await tester.pump(const Duration(milliseconds: 500));
+    expect(find.byKey(const ValueKey('clock-white')), findsNothing);
   });
 
   testWidgets('senza motore disponibile la scelta Computer è disattivata', (
