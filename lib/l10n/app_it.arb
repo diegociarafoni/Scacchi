@@ -3,5 +3,41 @@
   "appTitle": "Scacchi",
   "@appTitle": {
     "description": "Titolo dell'app nel selettore delle attività; il nome sotto l'icona è in AndroidManifest.xml e Info.plist"
+  },
+  "kidProfileSection": "Profilo",
+  "@kidProfileSection": {
+    "description": "Intestazione della sezione del profilo nelle Impostazioni"
+  },
+  "kidProfile": "Profilo bambino",
+  "@kidProfile": {
+    "description": "Interruttore del profilo bambino (RP-06) nelle Impostazioni"
+  },
+  "kidProfileDescription": "Interfaccia e testi più semplici, bot amichevoli, niente numeri",
+  "@kidProfileDescription": {
+    "description": "Spiegazione sotto l'interruttore del profilo bambino"
+  },
+  "kidAdultGateTitle": "Chiedi a un adulto",
+  "@kidAdultGateTitle": {
+    "description": "Titolo della domanda per uscire dal profilo bambino"
+  },
+  "kidAdultGateQuestion": "Per uscire dal profilo bambino: quanto fa {a} × {b}?",
+  "@kidAdultGateQuestion": {
+    "description": "Moltiplicazione da risolvere per uscire dal profilo bambino",
+    "placeholders": {
+      "a": {
+        "type": "int"
+      },
+      "b": {
+        "type": "int"
+      }
+    }
+  },
+  "kidAdultGateWrong": "Risposta sbagliata.",
+  "@kidAdultGateWrong": {
+    "description": "Errore sotto il campo della risposta"
+  },
+  "kidAdultGateConfirm": "Conferma",
+  "@kidAdultGateConfirm": {
+    "description": "Pulsante che controlla la risposta"
   }
 }
