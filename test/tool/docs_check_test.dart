@@ -39,6 +39,10 @@ void main() {
       expect(headingSlug('Perché sì'), 'perché-sì');
     });
 
+    test('dei link nel titolo resta il testo', () {
+      expect(headingSlug('Vedi [regole](regole.md)'), 'vedi-regole');
+    });
+
     test('titoli duplicati con suffisso', () {
       expect(headingAnchors('# A\n## A\n```\n# non titolo\n```\n'), {
         'a',
@@ -90,6 +94,39 @@ void main() {
       expect(_check({'README.md': '[x](../fuori.md)'}), [
         'README.md:1 link fuori dal repository: ../fuori.md',
       ]);
+    });
+
+    test('con titolo o tra parentesi angolari', () {
+      expect(
+        _check({'docs/regole.md': '[a](manca.md "Titolo") [b](<no.md>)'}),
+        [
+          'docs/regole.md:1 link rotto: manca.md',
+          'docs/regole.md:1 link rotto: no.md',
+        ],
+      );
+    });
+
+    test('ancora non decodificabile', () {
+      expect(_check({'docs/regole.md': '[a](#a%zz)'}), [
+        'docs/regole.md:1 ancora con caratteri non validi: #a%zz',
+      ]);
+    });
+
+    test('esempi tra apici inversi si ignorano', () {
+      expect(
+        _check({'docs/regole.md': 'Si scrive `[testo](manca.md)`.'}),
+        isEmpty,
+      );
+    });
+
+    test('blocchi ~~~ e recinti più lunghi', () {
+      expect(
+        _check({
+          'docs/regole.md':
+              '~~~\n[x](manca.md)\n~~~\n````\n```\n[y](manca.md)\n````',
+        }),
+        isEmpty,
+      );
     });
 
     test('nei blocchi di codice si ignorano', () {
@@ -144,6 +181,19 @@ void main() {
       expect(_check({}, libDirs: []), [
         'docs/mappa-del-codice.md: lib/game/ non esiste più in lib/',
       ]);
+    });
+
+    test('le sottocartelle non sono righe della mappa', () {
+      expect(
+        _check(
+          {
+            'docs/mappa-del-codice.md':
+                '$_map| `lib/game/widgets/` | [regole.md](regole.md) |',
+          },
+          files: {'lib/game/widgets'},
+        ),
+        isEmpty,
+      );
     });
 
     test('riga senza documento', () {

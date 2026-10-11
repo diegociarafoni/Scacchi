@@ -17,8 +17,9 @@ flutter pub get                       # dipendenze
 flutter run                           # avvio sul dispositivo o emulatore collegato
 flutter test                          # test unitari e di widget
 flutter test integration_test -d linux  # test e2e (su Linux senza schermo: xvfb-run -a ...)
-flutter analyze                       # analisi statica
-dart format lib test                  # formattazione
+flutter analyze --fatal-infos --fatal-warnings  # analisi statica, come in CI
+dart format lib test integration_test tool      # formattazione, come in CI
+dart tool/check_docs.dart             # link, percorsi, indice e mappa del codice
 flutter build apk                     # APK Android
 flutter build ios                     # app iOS (su Mac)
 ```
@@ -176,8 +177,9 @@ Con le regole di protezione di `main` attive (vedi [convenzioni-git.md](convenzi
 
 Altri workflow:
 
-- **Convenzioni** (`conventions.yml`, su ogni PR, meno di un minuto): nome del ramo, titolo della PR, messaggi dei commit e Gitleaks sui commit della PR, vedi [convenzioni-git.md](convenzioni-git.md).
-- **Sicurezza** (`security.yml`): Trivy, OSV-Scanner, Gitleaks su tutta la cronologia, zizmor e SBOM, su `main`, ogni lunedì e sulle PR che cambiano dipendenze o workflow, vedi [sicurezza.md](sicurezza.md).
+- **Convenzioni** (`conventions.yml`, su ogni PR, meno di un minuto): nome del ramo, titolo della PR, messaggi dei commit, Gitleaks sui commit della PR e controllo della documentazione (anche sulle PR di sola documentazione), vedi [convenzioni-git.md](convenzioni-git.md) e [mappa-del-codice.md](mappa-del-codice.md).
+- **Sicurezza** (`security.yml`): Trivy, OSV-Scanner, Gitleaks su tutta la cronologia, zizmor e SBOM, su `main`, ogni lunedì, a mano e sulle PR che cambiano dipendenze, `.github/`, `android/`, `tool/policy.json` o `.gitleaks.toml`, vedi [sicurezza.md](sicurezza.md).
+- **Dataset** (`datasets.yml`, a mano o sulle PR che cambiano `tool/datasets/`): rigenera puzzle e aperture dai dati Lichess, vedi [puzzle.md](puzzle.md).
 
 Il workflow `.github/workflows/apk-release.yml` produce l'APK release installabile sul telefono e lo pubblica come GitHub Release: vedi [rilascio-android.md](rilascio-android.md).
 
@@ -188,5 +190,5 @@ Il workflow `.github/workflows/apk-release.yml` produce l'APK release installabi
 - Testi dell'interfaccia in italiano.
 - Logica di gioco separata dall'interfaccia (`ChessGame` non importa Flutter), così da poterla testare in isolamento.
 - Analisi statica rigorosa (`analysis_options.yaml`): tipi stretti, `Future` sempre attesi o marcati con `unawaited`, nessun avviso ammesso.
-- Prima del push: `tool/verifica.sh --test` (rami, commit, formattazione, analisi, test), vedi [convenzioni-git.md](convenzioni-git.md#senza-hook-toolverificash).
+- Prima del push: `tool/verifica.sh --test` (rami, commit, documentazione, formattazione, analisi, test), vedi [convenzioni-git.md](convenzioni-git.md#senza-hook-toolverificash).
 - Rami, commit Angular, hook e merge: [convenzioni-git.md](convenzioni-git.md).

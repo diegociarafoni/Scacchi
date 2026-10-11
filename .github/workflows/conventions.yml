@@ -40,9 +40,6 @@ jobs:
         run: |
           base="$(git merge-base "origin/$BASE_REF" "$HEAD")"
           dart tool/check_commit_msg.dart --range "$base..$HEAD"
-      # Gira anche sulle PR di sola documentazione, che ci.yml ignora.
-      - name: Documentazione (link, percorsi, indice, mappa del codice)
-        run: dart tool/check_docs.dart
       - name: Segreti nei commit della PR (Gitleaks)
         env:
           BASE_REF: ${{ github.base_ref }}
@@ -54,3 +51,7 @@ jobs:
           tar xzf "$RUNNER_TEMP/gitleaks.tar.gz" -C "$RUNNER_TEMP" gitleaks
           base="$(git merge-base "origin/$BASE_REF" "$HEAD")"
           "$RUNNER_TEMP/gitleaks" git --redact --no-banner --log-opts="$base..$HEAD" .
+      # Gira anche sulle PR di sola documentazione, che ci.yml ignora.
+      - name: Documentazione (link, percorsi, indice, mappa del codice)
+        if: '!cancelled()'
+        run: dart tool/check_docs.dart

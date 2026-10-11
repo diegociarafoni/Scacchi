@@ -59,7 +59,7 @@ Il controllo è in `tool/check_commit_msg.dart` e gira in locale (hook `commit-m
 |---|---|
 | `pre-commit` | formattazione dei file in commit, `flutter analyze`, Gitleaks sui file in commit |
 | `commit-msg` | messaggio secondo la convenzione Angular |
-| `pre-push` | nome dei rami di destinazione, che blocca anche `git push origin main` da qualsiasi ramo; messaggi di tutti i commit del ramo (gli stessi della CI); nessun sottomodulo nell'indice; test senza golden (i golden dipendono dal sistema operativo e girano in CI su Linux) |
+| `pre-push` | nome dei rami di destinazione, che blocca anche `git push origin main` da qualsiasi ramo; messaggi di tutti i commit del ramo (gli stessi della CI); documentazione (`tool/check_docs.dart`); nessun sottomodulo nell'indice; test senza golden (i golden dipendono dal sistema operativo e girano in CI su Linux) |
 
 Installazione, una volta per clone:
 
