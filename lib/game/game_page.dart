@@ -356,10 +356,11 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// Segnala una volta l'uscita dalla linea del repertorio (RF-94); dopo un
   /// annulla che rientra nella linea la segnalazione si riarma.
   void _checkLine() {
+    if (_zen) return;
     final ply = _lineDeviationNow();
     if (ply == _reportedDeviation) return;
     _reportedDeviation = ply;
-    if (ply == null || _zen) return;
+    if (ply == null) return;
     final by = ply.isEven ? Side.white : Side.black;
     final notice = _showMessage(
       by == _computerSide
@@ -912,7 +913,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       } on Object {
         return false;
       }
-      if (!mounted || _game.isOver || _game.moves.length != plies) {
+      if (!mounted ||
+          _game.isOver ||
+          _game.moves.length != plies ||
+          !_coaching) {
         return false;
       }
       final text = verdict.comment?.text;
@@ -1150,7 +1154,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     } on Object {
       followUp = null;
     }
-    if (!mounted || !identical(after, _game.position)) return;
+    if (!mounted || _zen || !identical(after, _game.position)) return;
     final text = explainComputerMove(
       _kidL10n(context),
       before,
@@ -2063,7 +2067,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                   constraints.maxWidth > constraints.maxHeight * 1.2;
               final viewPly = _viewPly;
               // In zen lo stato si vede a fine partita o quando serve un
-              // comando; il materiale lascia posto al solo orologio.
+              // comando; il suo spazio resta riservato perché la scacchiera
+              // non cambi misura. Il materiale lascia posto al solo orologio.
               final showStatus =
                   !_zen ||
                   _game.isOver ||
@@ -2072,7 +2077,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
               final showMaterial = !_zen || _clock != null;
               final chromeHeight =
                   _moveStripHeight +
-                  (showStatus ? _statusHeight : 0) +
+                  _statusHeight +
                   _actionsHeight +
                   (showMaterial ? 2 * _materialHeight : 0);
               final boardSize = landscape
@@ -2107,7 +2112,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                 ),
               );
               final Widget status = !showStatus
-                  ? const SizedBox.shrink()
+                  ? const SizedBox(height: _statusHeight)
                   : viewPly != null
                   ? _ViewBar(
                       text: viewPly == -1

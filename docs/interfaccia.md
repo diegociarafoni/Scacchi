@@ -137,7 +137,7 @@ Per giocare senza distrazioni (requisito RP-07). Si accende dalle Impostazioni o
 - La riga di stato ("Muove il Bianco") è nascosta mentre si gioca; ricompare a partita finita, sfogliando le mosse e quando serve confermare una mossa. Chi usa un lettore di schermo continua a sentire ogni mossa annunciata.
 - L'allenatore, i giudizi sulle mosse, la freccia della minaccia, «Spiegami perché», i commenti dei bot e l'avviso di uscita dal repertorio restano muti, e i loro pulsanti spariscono; il suggerimento su richiesta resta. Lo stato dell'allenatore si ritrova uscendo dallo zen.
 - Niente festa a fine partita vinta.
-- L'orologio resta se la partita ne ha uno, perché serve: il resto della riga dei giocatori sparisce. Senza orologio la scacchiera si ingrandisce.
+- L'orologio resta se la partita ne ha uno, perché serve: il resto della riga dei giocatori sparisce. Senza orologio la scacchiera si ingrandisce; lo spazio della riga di stato resta riservato, così la scacchiera non cambia misura quando lo stato compare.
 
 Sempre visibili: scacchiera, elenco delle mosse, comandi (nuova, annulla, gira, patta, abbandona) e suggerimento. Suoni, vibrazione e animazione dei pezzi seguono le loro impostazioni. Il codice è in `lib/game/game_page.dart` (`_zen`) e `lib/settings/settings.dart` (`zenMode`).
 

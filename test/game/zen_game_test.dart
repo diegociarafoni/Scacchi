@@ -1,3 +1,4 @@
+import 'package:chessground/chessground.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/engine/bots.dart';
@@ -153,5 +154,26 @@ void main() {
     await tester.tap(find.byKey(const Key('zenToggle')));
     await tester.pumpAndSettle();
     expect(button().isSelected, isTrue);
+  });
+
+  testWidgets('RP-07 la scacchiera non cambia misura quando lo stato compare', (
+    tester,
+  ) async {
+    await open(tester, zen: true);
+    await tapMove(tester, 'e2e4');
+    final before = tester.getSize(find.byType(Chessboard));
+    await tester.tap(find.textContaining('e4').first);
+    await tester.pumpAndSettle();
+    expect(tester.getSize(find.byType(Chessboard)), before);
+  });
+
+  testWidgets('RP-07 la barra del titolo regge uno schermo stretto', (
+    tester,
+  ) async {
+    await open(tester, zen: true);
+    tester.view.physicalSize = const Size(360, 740);
+    tester.view.devicePixelRatio = 1;
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
   });
 }
