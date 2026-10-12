@@ -981,7 +981,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       _threatFen = position.fen;
       _threatShapes = {
         Arrow(
-          color: const Color(0xCCC0392B),
+          color: _settings.threatColor,
           orig: threat!.from,
           dest: threat.to,
         ),
@@ -1009,7 +1009,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       _showMessage('Nessun suggerimento disponibile.');
       return;
     }
-    const color = Color(0xCC15781B);
+    final color = _settings.hintColor;
     final to = hint.to;
     final text = to == null
         ? describeHintPiece(position, hint.from)
