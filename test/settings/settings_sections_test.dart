@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -69,11 +68,7 @@ void main() {
       'Profilo e dati',
       'Avatar, progressi e copie di sicurezza',
     ),
-    (
-      SettingsSection.style,
-      'Stile',
-      "Tema dell'app, scacchiera, pezzi e animazioni",
-    ),
+    (SettingsSection.style, 'Stile', 'Scacchiera, pezzi, sfondo e suoni'),
     (
       SettingsSection.board,
       'Scacchiera',
@@ -152,8 +147,10 @@ void main() {
   testWidgets('poche sezioni, ciascuna con almeno due voci', (tester) async {
     expect(SettingsSection.values.length, lessThanOrEqualTo(6));
     await show(tester, logical: const Size(390, 3000));
-    // Il profilo bambino è una sola scelta, tenuta a parte in fondo.
-    for (final (id, _, _) in order.where((e) => e.$1 != SettingsSection.kid)) {
+    // Il profilo bambino è una sola scelta in fondo; Stile ha schede proprie.
+    for (final (id, _, _) in order.where(
+      (e) => e.$1 != SettingsSection.kid && e.$1 != SettingsSection.style,
+    )) {
       await openSection(tester, id);
       final count =
           find.byType(SwitchListTile).evaluate().length +
@@ -164,8 +161,7 @@ void main() {
               )
               .evaluate()
               .length +
-          find.byType(SettingsChoiceTile<AnimationSpeed>).evaluate().length +
-          find.byType(SettingsGallery<BoardTheme>).evaluate().length;
+          find.byType(SettingsChoiceTile<AnimationSpeed>).evaluate().length;
       expect(count, greaterThanOrEqualTo(2), reason: id.name);
       await backToMenu(tester);
     }
@@ -192,7 +188,9 @@ void main() {
     tester,
   ) async {
     await show(tester, logical: const Size(390, 3000));
-    for (final (id, title, _) in order) {
+    for (final (id, title, _) in order.where(
+      (e) => e.$1 != SettingsSection.style,
+    )) {
       await openSection(tester, id);
       for (final tile in tester.widgetList<SwitchListTile>(
         find.byType(SwitchListTile),
@@ -210,8 +208,13 @@ void main() {
   testWidgets('le impostazioni sono nelle sezioni giuste', (tester) async {
     await show(tester, logical: const Size(390, 3000));
     const keys = {
-      SettingsSection.profile: ['openProfile', 'progressEnabled', 'backup'],
-      SettingsSection.style: ['unlockAll', 'theme-tile-spazio'],
+      SettingsSection.profile: [
+        'openProfile',
+        'progressEnabled',
+        'unlockAll',
+        'backup',
+      ],
+      SettingsSection.style: ['theme-tile-spazio'],
       SettingsSection.board: [
         'sound',
         'haptics',
@@ -353,39 +356,6 @@ void main() {
     expect(find.byKey(const Key('board-preview')), findsOneWidget);
   });
 
-  testWidgets('i temi sono una galleria con le case e la scelta', (
-    tester,
-  ) async {
-    await show(tester);
-    await openSection(tester, SettingsSection.style);
-    for (final theme in BoardTheme.values) {
-      final tile = find.byKey(Key('theme-tile-${theme.name}'));
-      await tester.scrollUntilVisible(tile, 200);
-      expect(tester.getSize(tile).shortestSide, greaterThanOrEqualTo(48));
-    }
-    final selected = tester.getSemantics(
-      find.byKey(const Key('theme-tile-spazio')),
-    );
-    expect(selected.flagsCollection.isSelected, ui.Tristate.isTrue);
-    expect(selected.label, contains('Spazio'));
-  });
-
-  testWidgets('una scelta bloccata non è solo più chiara: ha il lucchetto '
-      'e dice come sbloccarla', (tester) async {
-    await show(tester);
-    await openSection(tester, SettingsSection.style);
-    final tile = find.byKey(const Key('theme-tile-sand'));
-    await tester.scrollUntilVisible(tile, 200);
-    expect(
-      find.descendant(of: tile, matching: find.byIcon(Icons.lock_outline)),
-      findsOneWidget,
-    );
-    expect(
-      tester.getSemantics(tile).label,
-      allOf(contains('Sabbia'), contains('bloccato'), contains('Livello 2')),
-    );
-  });
-
   testWidgets('RNF-07 testo al 130% su telefono stretto senza overflow', (
     tester,
   ) async {
@@ -426,12 +396,8 @@ void main() {
       findsOneWidget,
     );
     await backToMenu(tester);
-    await openSection(tester, SettingsSection.style);
-    await tester.scrollUntilVisible(
-      find.byKey(const Key('theme-tile-brown')),
-      200,
-    );
-    expect(find.text('Wood'), findsOneWidget);
+    await openSection(tester, SettingsSection.accessibility);
+    expect(find.text('App appearance'), findsOneWidget);
   });
 
   test('U4 nelle pagine non restano testi o tooltip scritti nel codice', () {

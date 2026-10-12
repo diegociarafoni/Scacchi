@@ -8,6 +8,7 @@ Ogni cartella di `lib/` ha qui il documento che descrive le sue funzioni. La tab
 |---|---|---|
 | `lib/analysis/` | [analisi.md](analisi.md) | Analisi libera della posizione con le linee del motore e l'albero delle varianti |
 | `lib/archive/` | [archivio.md](archivio.md) | Archivio delle partite, import ed export PGN |
+| `lib/bot_gallery/` | [bot.md](bot.md) | Galleria dei bot (RG-18): fasce per Elo, saluti localizzati, scelta di colore e avversario |
 | `lib/badges/` | [badge.md](badge.md) | Badge (RG-17): catalogo, regole di sblocco, scheda della raccolta, testi |
 | `lib/backup/` | [backup.md](backup.md) | Backup e ripristino dei dati locali |
 | `lib/coach/` | [allenatore.md](allenatore.md) | Partita con l'allenatore: avvisi, ripresa della mossa, suggerimenti |
@@ -36,6 +37,7 @@ Ogni cartella di `lib/` ha qui il documento che descrive le sue funzioni. La tab
 | `lib/storage/` | [architettura.md](architettura.md), [gamification.md](gamification.md) | File JSON locali con versione e scrittura atomica |
 | `lib/story/` | [storia.md](storia.md) | Percorso a storia: capitoli con racconto, lezioni, puzzle, guardiani e un bot da battere |
 | `lib/tablebase/` | [finali-perfetti.md](finali-perfetti.md) | Finali perfetti: tabelle del matto esatto fino a quattro pezzi, generate sul telefono, scheda con risultato e mossa perfetta |
+| `lib/style/` | [stile.md](stile.md) | Schermata Stile: anteprima dal vivo e schede Scacchiera, Pezzi, Sfondo (con foto propria) e Suoni |
 | `lib/summary/` | [riepilogo-settimanale.md](riepilogo-settimanale.md) | Riepilogo settimanale: progressi, errore ricorrente, un consiglio |
 | `lib/tournament/` | [tornei.md](tornei.md) | Tornei offline contro bot |
 | `lib/training/` | [puzzle.md](puzzle.md) | Scacchiera per esercizi condivisa |

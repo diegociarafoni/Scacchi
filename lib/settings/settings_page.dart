@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
 import '../progress/progress_controller.dart';
+import '../style/style_page.dart';
 import '../theme/rokko_theme.dart';
 import 'section_pages.dart';
 import 'settings.dart';
@@ -26,7 +27,7 @@ class SettingsPage extends StatelessWidget {
       controller: controller,
       progress: progress,
     ),
-    SettingsSection.style => AppearanceSettingsPage(
+    SettingsSection.style => StylePage(
       controller: controller,
       progress: progress,
     ),
@@ -59,8 +60,8 @@ class SettingsPage extends StatelessWidget {
     ),
     SettingsSection.style => (
       Icons.palette_outlined,
-      l10n.settingsSectionStyle,
-      l10n.settingsSectionStyleHint,
+      l10n.styleTitle,
+      l10n.styleEntrySubtitle,
     ),
     SettingsSection.board => (
       Icons.grid_on,

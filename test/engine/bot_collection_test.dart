@@ -6,20 +6,47 @@ import 'package:scacchi/storage/key_value_store.dart';
 void main() {
   final day = DateTime.utc(2026, 10, 11);
 
-  test('RG-04 all\'inizio è sbloccato solo il primo bot', () {
+  Bot bot(String id) => botById(id)!;
+
+  test('RG-04 all\'inizio sono aperti i due gradini più bassi', () {
     const collection = BotCollection();
-    expect(collection.isUnlocked(bots.first), isTrue);
-    for (final bot in bots.skip(1)) {
-      expect(collection.isUnlocked(bot), isFalse, reason: bot.id);
+    for (final id in ['lia', 'pino', 'nico']) {
+      expect(collection.isUnlocked(bot(id)), isTrue, reason: id);
+    }
+    for (final b in bots.where((b) => b.elo > 700)) {
+      expect(collection.isUnlocked(b), isFalse, reason: b.id);
     }
     expect(collection.isBeaten(bots.first), isFalse);
   });
 
-  test('RG-04 battere un bot sblocca il successivo', () {
-    final collection = const BotCollection().beat(bots[0].id, day);
-    expect(collection.isBeaten(bots[0]), isTrue);
-    expect(collection.isUnlocked(bots[1]), isTrue);
-    expect(collection.isUnlocked(bots[2]), isFalse);
+  test('RG-04 battere un bot apre il gradino di Elo successivo', () {
+    final collection = const BotCollection().beat('pino', day);
+    expect(collection.isBeaten(bot('pino')), isTrue);
+    expect(collection.isUnlocked(bot('chiara')), isTrue);
+    expect(collection.isUnlocked(bot('viola')), isTrue);
+    expect(collection.isUnlocked(bot('rocco')), isFalse);
+  });
+
+  test('RG-04 chi aveva battuto Pino non perde l\'accesso a Chiara', () {
+    final old = const BotCollection()
+        .beat('pino', day)
+        .beat('chiara', day)
+        .beat('rocco', day);
+    for (final id in ['pino', 'chiara', 'rocco', 'ettore', 'marta']) {
+      expect(old.isUnlocked(bot(id)), isTrue, reason: id);
+    }
+    expect(old.isUnlocked(bot('duilio')), isFalse);
+  });
+
+  test('RG-04 il bot da battere per sbloccare è del gradino sotto', () {
+    expect(BotCollection.unlockedBy(bot('lia')), isEmpty);
+    expect(BotCollection.unlockedBy(bot('chiara')).map((b) => b.id), [
+      'pino',
+      'nico',
+    ]);
+    expect(BotCollection.unlockedBy(bot('stella')).map((b) => b.id), [
+      'massimo',
+    ]);
   });
 
   test('RG-04 si può rigiocare un bot già battuto', () {
@@ -43,14 +70,14 @@ void main() {
   test('RG-04 la collezione si salva e si ricarica', () async {
     final store = MemoryStore();
     await const BotCollection()
-        .beat(bots[0].id, day)
-        .beat(bots[1].id, day)
+        .beat('pino', day)
+        .beat('chiara', day)
         .save(store);
     final loaded = await BotCollection.load(store);
-    expect(loaded.isBeaten(bots[0]), isTrue);
-    expect(loaded.beatenOn(bots[1]), day);
-    expect(loaded.isUnlocked(bots[2]), isTrue);
-    expect(loaded.isBeaten(bots[2]), isFalse);
+    expect(loaded.isBeaten(bot('pino')), isTrue);
+    expect(loaded.beatenOn(bot('chiara')), day);
+    expect(loaded.isUnlocked(bot('rocco')), isTrue);
+    expect(loaded.isBeaten(bot('rocco')), isFalse);
   });
 
   test('RG-04 dati illeggibili ripartono da una collezione vuota', () async {
@@ -68,7 +95,7 @@ void main() {
       '{"beaten":{"pino":"ieri","chiara":"2026-10-11T00:00:00.000Z"}}',
     );
     final loaded = await BotCollection.load(store);
-    expect(loaded.isBeaten(bots[0]), isFalse);
-    expect(loaded.isBeaten(bots[1]), isTrue);
+    expect(loaded.isBeaten(bot('pino')), isFalse);
+    expect(loaded.isBeaten(bot('chiara')), isTrue);
   });
 }

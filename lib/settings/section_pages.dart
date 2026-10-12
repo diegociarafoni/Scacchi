@@ -1,11 +1,9 @@
-import 'package:dartchess/dartchess.dart' show PieceKind;
 import 'package:flutter/material.dart';
 
 import '../backup/backup_page.dart';
 import '../l10n/app_localizations.dart';
 import '../progress/profile_page.dart';
 import '../progress/progress_controller.dart';
-import '../progress/rewards.dart';
 import 'adult_gate.dart';
 import 'notation.dart';
 import 'settings.dart';
@@ -134,77 +132,6 @@ class BoardSettingsPage extends _SectionPage {
   }
 }
 
-/// Pagina Stile: aspetto dell'app, temi e pezzi.
-class AppearanceSettingsPage extends _SectionPage {
-  const AppearanceSettingsPage({
-    super.key,
-    required super.controller,
-    super.progress,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    final p = progress;
-    return SettingsSectionScaffold(
-      title: l10n.settingsSectionStyle,
-      listenable: _listenable,
-      pinned: (_) => SettingsPreviewCard(settings: _s),
-      builder: (context) {
-        final s = _s;
-        Requirement? locked(Enum item) =>
-            p == null || isUnlocked(item, p.state, p.settings)
-            ? null
-            : requirementOf(item);
-        return [
-          SettingsChoiceTile<ThemeMode>(
-            title: l10n.settingsAppTheme,
-            description: l10n.settingsAppThemeDescription,
-            values: ThemeMode.values,
-            selected: s.themeMode,
-            label: (m) => themeModeLabel(l10n, m),
-            onSelected: (m) => _set((c) => c.copyWith(themeMode: m)),
-          ),
-          SettingsSubheader(l10n.settingsBoardTheme),
-          SettingsGallery<BoardTheme>(
-            keyPrefix: 'theme-tile',
-            values: BoardTheme.values,
-            selected: s.boardTheme,
-            label: (t) => themeLabel(l10n, t),
-            visual: ThemeSwatch.new,
-            locked: locked,
-            onSelected: (t) => _set((c) => c.copyWith(boardTheme: t)),
-          ),
-          SettingsSubheader(l10n.settingsPieces),
-          SettingsGallery<PieceStyle>(
-            keyPrefix: 'piece-tile',
-            values: PieceStyle.values,
-            selected: s.pieceSet,
-            label: (st) => pieceLabel(l10n, st),
-            visual: (st) => Image(
-              key: Key('piece-icon-${st.name}'),
-              image: st.assets[PieceKind.whiteKnight]!,
-              width: 48,
-              height: 48,
-            ),
-            locked: locked,
-            onSelected: (st) => _set((c) => c.copyWith(pieceSet: st)),
-          ),
-          if (p != null && p.settings.enabled)
-            SwitchListTile(
-              key: const Key('unlockAll'),
-              title: Text(l10n.settingsUnlockAll),
-              subtitle: Text(l10n.settingsUnlockAllDescription),
-              value: p.settings.unlockAll,
-              onChanged: (v) =>
-                  p.updateSettings(p.settings.copyWith(unlockAll: v)),
-            ),
-        ];
-      },
-    );
-  }
-}
-
 class GameSettingsPage extends _SectionPage {
   const GameSettingsPage({
     super.key,
@@ -272,6 +199,14 @@ class AccessibilitySettingsPage extends _SectionPage {
       builder: (context) {
         final s = _s;
         return [
+          SettingsChoiceTile<ThemeMode>(
+            title: l10n.settingsAppTheme,
+            description: l10n.settingsAppThemeDescription,
+            values: ThemeMode.values,
+            selected: s.themeMode,
+            label: (m) => themeModeLabel(l10n, m),
+            onSelected: (m) => _set((c) => c.copyWith(themeMode: m)),
+          ),
           SwitchListTile(
             key: const Key('colorBlind'),
             title: Text(l10n.settingsColorBlind),
@@ -340,6 +275,15 @@ class ProfileSettingsPage extends _SectionPage {
                   p.updateSettings(p.settings.copyWith(enabled: v)),
             ),
         ],
+        if (p != null && p.settings.enabled)
+          SwitchListTile(
+            key: const Key('unlockAll'),
+            title: Text(l10n.settingsUnlockAll),
+            subtitle: Text(l10n.settingsUnlockAllDescription),
+            value: p.settings.unlockAll,
+            onChanged: (v) =>
+                p.updateSettings(p.settings.copyWith(unlockAll: v)),
+          ),
         ListTile(
           key: const Key('backup'),
           leading: const Icon(Icons.backup_outlined),

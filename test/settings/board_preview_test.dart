@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:chessground/chessground.dart';
-import 'package:dartchess/dartchess.dart' show PieceKind;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -116,16 +115,19 @@ void main() {
   });
 
   testWidgets('RP-04 ogni scelta aggiorna subito l\'anteprima', (tester) async {
-    await show(tester, section: SettingsSection.style);
-    await tapChip(tester, 'Oceano');
+    await show(tester);
+    await settings.update(
+      settings.value.copyWith(
+        boardTheme: BoardTheme.ocean,
+        pieceSet: PieceStyle.merida,
+      ),
+    );
+    await tester.pumpAndSettle();
     expect(
       board(tester).settings.colorScheme,
       same(BoardTheme.ocean.colorScheme),
     );
-    await tapChip(tester, 'Merida');
     expect(board(tester).settings.pieceAssets, PieceStyle.merida.assets);
-    await backToMenu(tester);
-    await openSection(tester, SettingsSection.board);
     await tapChip(tester, 'Lenta');
     expect(
       board(tester).settings.animationDuration,
@@ -199,12 +201,12 @@ void main() {
   testWidgets(
     'RP-04 cambiare un\'impostazione riporta alla posizione di prova',
     (tester) async {
-      await show(tester, section: SettingsSection.style);
+      await show(tester);
       final start = board(tester).fen;
       await tester.tap(find.byKey(const Key('board-preview')));
       await tester.pumpAndSettle();
       expect(board(tester).fen, isNot(start));
-      await tapChip(tester, 'Oceano');
+      await tapChip(tester, 'Veloce');
       expect(board(tester).fen, start);
       expect(find.byKey(const Key('preview-dots')), findsOneWidget);
     },
@@ -284,43 +286,11 @@ void main() {
     );
   });
 
-  testWidgets('RP-04 i temi mostrano i colori delle case, i pezzi il cavallo', (
-    tester,
-  ) async {
-    await show(tester, section: SettingsSection.style);
-    for (final theme in BoardTheme.values) {
-      final swatch = find.byKey(Key('theme-swatch-${theme.name}'));
-      await tester.scrollUntilVisible(swatch, 200);
-      final colors = tester
-          .widgetList<ColoredBox>(
-            find.descendant(of: swatch, matching: find.byType(ColoredBox)),
-          )
-          .map((b) => b.color)
-          .toList();
-      expect(colors, hasLength(16));
-      expect(colors.first, theme.colorScheme.lightSquare);
-      expect(colors[1], theme.colorScheme.darkSquare);
-    }
-    for (final style in PieceStyle.values) {
-      final icon = find.byKey(Key('piece-icon-${style.name}'));
-      await tester.scrollUntilVisible(icon, 200);
-      final image = tester.widget<Image>(icon);
-      expect(
-        (image.image as AssetImage).assetName,
-        style.assets[PieceKind.whiteKnight]!.assetName,
-      );
-    }
-  });
-
-  /// Carica davvero le immagini visibili: senza, i golden dipendono da quanto
-  /// è veloce la decodifica e le icone dei pezzi risultano a volte vuote.
+  /// Carica davvero le immagini dei pezzi dell'anteprima: senza, i golden
+  /// dipendono da quanto è veloce la decodifica.
   Future<void> loadImages(WidgetTester tester) async {
     final context = tester.element(find.byType(Scaffold).last);
     await tester.runAsync(() async {
-      for (final image in tester.widgetList<Image>(find.byType(Image))) {
-        await precacheImage(image.image, context);
-      }
-      // I pezzi dell'anteprima sono disegnati senza passare da un Image.
       for (final piece in settings.value.board.pieceAssets.values) {
         await precacheImage(piece, context);
       }
@@ -348,26 +318,6 @@ void main() {
         );
       }, tags: 'golden');
     }
-
-    testWidgets('RNF-07 chip di temi e pezzi con colori e cavallo', (
-      tester,
-    ) async {
-      await show(
-        tester,
-        logical: const Size(360, 780),
-        section: SettingsSection.style,
-      );
-      await tester.scrollUntilVisible(
-        find.byKey(const Key('piece-tile-rokko')),
-        200,
-      );
-      await tester.pumpAndSettle();
-      await loadImages(tester);
-      await expectLater(
-        find.byType(MaterialApp),
-        matchesGoldenFile('goldens/settings_chips.png'),
-      );
-    }, tags: 'golden');
 
     testWidgets('RNF-07 impostazioni con colori per daltonici', (tester) async {
       settings = SettingsController.defaults();

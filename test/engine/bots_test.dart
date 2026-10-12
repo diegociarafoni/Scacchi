@@ -41,12 +41,32 @@ void main() {
   });
 
   group('la scala dei bot', () {
-    test('RG-04 ci sono 8 bot, dal più debole al più forte', () {
-      expect(bots, hasLength(8));
-      expect(bots.map((b) => b.levelId), [1, 2, 3, 4, 5, 6, 7, 8]);
-      expect(bots.map((b) => b.id).toSet(), hasLength(8));
+    test('RG-04 ci sono 15 bot, con Elo non decrescente e anche ripetuto', () {
+      expect(bots, hasLength(15));
+      expect(bots.map((b) => b.id).toSet(), hasLength(15));
+      expect(bots.map((b) => b.name).toSet(), hasLength(15));
+      expect(bots.map((b) => b.avatar).toSet(), hasLength(15));
       final elo = bots.map((b) => b.elo).toList();
       expect([...elo]..sort(), elo);
+      expect(elo.toSet().length, lessThan(elo.length));
+    });
+
+    test('RG-04 ogni livello da 400 a 1850 ha almeno un bot', () {
+      final levels = bots.map((b) => b.levelId).toSet();
+      expect(levels, {0, 1, 2, 3, 4, 5, 6, 7, 8});
+      expect(bots.where((b) => b.elo <= 1850).map((b) => b.levelId).toSet(), {
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+      });
+    });
+
+    test('RG-04 il profilo bambino ha gli stessi tre bot di sempre', () {
+      expect(friendlyBots.map((b) => b.id), ['pino', 'chiara', 'rocco']);
     });
 
     test('RF-23 ogni bot ha nome, avatar, Elo, stile e apertura', () {
@@ -167,6 +187,16 @@ void main() {
   });
 
   group('frasi', () {
+    test('ogni stile ha battute di compagnia brevi', () {
+      for (final bot in bots) {
+        final chat = bot.phrases(BotEvent.chat);
+        expect(chat.length, greaterThanOrEqualTo(2), reason: bot.id);
+        for (final p in chat) {
+          expect(p.length, lessThanOrEqualTo(60), reason: p);
+        }
+      }
+    });
+
     test('RF-23 ogni bot ha frasi per ogni evento', () {
       for (final bot in bots) {
         for (final event in BotEvent.values) {

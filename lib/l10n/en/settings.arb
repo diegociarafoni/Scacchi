@@ -81,8 +81,6 @@
   "settingsThemeTerracotta": "Terracotta",
   "settingsSectionProfile": "Profile and data",
   "settingsSectionProfileHint": "Avatar, progress and backups",
-  "settingsSectionStyle": "Style",
-  "settingsSectionStyleHint": "App theme, board, pieces and animations",
   "settingsLegalMovesDescription": "Dots on the squares the selected piece can reach",
   "settingsCoordinatesDescription": "Letters and numbers to recognise the squares",
   "settingsLastMove": "Highlight the last move",

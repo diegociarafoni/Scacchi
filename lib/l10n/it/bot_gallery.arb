@@ -1,0 +1,384 @@
+{
+  "botGalleryTitle": "Scegli il bot",
+  "@botGalleryTitle": {
+    "description": "Titolo della galleria dei bot"
+  },
+  "botTierNovice": "Neofita",
+  "@botTierNovice": {
+    "description": "Fascia dei bot più deboli"
+  },
+  "botTierBeginner": "Principiante",
+  "@botTierBeginner": {
+    "description": "Fascia dei principianti"
+  },
+  "botTierIntermediate": "Intermedio",
+  "@botTierIntermediate": {
+    "description": "Fascia intermedia"
+  },
+  "botTierAdvanced": "Avanzato",
+  "@botTierAdvanced": {
+    "description": "Fascia avanzata"
+  },
+  "botTierMaster": "Maestro",
+  "@botTierMaster": {
+    "description": "Fascia dei maestri"
+  },
+  "botTierFriends": "I tuoi amici",
+  "@botTierFriends": {
+    "description": "Titolo della fascia nel profilo bambino"
+  },
+  "botTierAdaptive": "Adattivo",
+  "@botTierAdaptive": {
+    "description": "Fascia con il bot che si adatta"
+  },
+  "botTierHeading": "{tier} · {count}",
+  "@botTierHeading": {
+    "description": "Titolo di una fascia con il numero di bot",
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "botGalleryElo": "{elo} Elo",
+  "@botGalleryElo": {
+    "description": "Elo di un bot",
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "botGalleryStateLocked": "bloccato",
+  "@botGalleryStateLocked": {
+    "description": "Stato letto dai lettori di schermo"
+  },
+  "botGalleryStateBeaten": "battuto",
+  "@botGalleryStateBeaten": {
+    "description": "Stato letto dai lettori di schermo"
+  },
+  "botGalleryStateOpen": "disponibile",
+  "@botGalleryStateOpen": {
+    "description": "Stato letto dai lettori di schermo"
+  },
+  "botGalleryCellLabel": "{name}, {elo} Elo, {state}",
+  "@botGalleryCellLabel": {
+    "description": "Nome per i lettori di schermo di un bot nella griglia",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "elo": {
+        "type": "int"
+      },
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "botGalleryCellLabelKid": "{name}, {state}",
+  "@botGalleryCellLabelKid": {
+    "description": "Nome per i lettori di schermo di un bot nel profilo bambino",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "botGalleryLockedTease": "Ci vediamo più avanti, quando sarai pronto!",
+  "@botGalleryLockedTease": {
+    "description": "Battuta di un bot ancora bloccato"
+  },
+  "botStyleAggressive": "aggressivo",
+  "@botStyleAggressive": {
+    "description": "Stile di gioco"
+  },
+  "botStyleGambitist": "gambettista",
+  "@botStyleGambitist": {
+    "description": "Stile di gioco"
+  },
+  "botStylePositional": "posizionale",
+  "@botStylePositional": {
+    "description": "Stile di gioco"
+  },
+  "botGalleryStyle": "Stile: {style}",
+  "@botGalleryStyle": {
+    "description": "Riga con lo stile del bot",
+    "placeholders": {
+      "style": {
+        "type": "String"
+      }
+    }
+  },
+  "botAdaptiveName": "Adattivo",
+  "@botAdaptiveName": {
+    "description": "Nome della carta del bot adattivo"
+  },
+  "botAdaptiveGreeting": "Mi adatto a te: se vinci gioco meglio, se perdi mi calmo.",
+  "@botAdaptiveGreeting": {
+    "description": "Saluto del bot adattivo"
+  },
+  "botAdaptiveRematch": "Ci siamo allenati bene. Ancora una?",
+  "@botAdaptiveRematch": {
+    "description": "Battuta del bot adattivo"
+  },
+  "botAdaptiveHint": "Ora gioco a circa {elo} Elo",
+  "@botAdaptiveHint": {
+    "description": "Livello attuale del bot adattivo",
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "botGuardiansTitle": "I custodi della Storia",
+  "@botGuardiansTitle": {
+    "description": "Sezione dei custodi della Storia"
+  },
+  "botGuardiansProgress": "{met} di {total} custodi incontrati",
+  "@botGuardiansProgress": {
+    "description": "Avanzamento dei custodi incontrati",
+    "placeholders": {
+      "met": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "botGuardiansHint": "Si incontrano finendo i capitoli della Storia.",
+  "@botGuardiansHint": {
+    "description": "Come si incontrano i custodi"
+  },
+  "botGuardianUnmet": "custode non ancora incontrato",
+  "@botGuardianUnmet": {
+    "description": "Custode non ancora incontrato"
+  },
+  "botSideWhite": "Gioca con il Bianco",
+  "@botSideWhite": {
+    "description": "Giocare con il Bianco"
+  },
+  "botSideRandom": "Colore a sorte",
+  "@botSideRandom": {
+    "description": "Colore a sorte"
+  },
+  "botSideBlack": "Gioca con il Nero",
+  "@botSideBlack": {
+    "description": "Giocare con il Nero"
+  },
+  "botGalleryPlay": "Gioca",
+  "@botGalleryPlay": {
+    "description": "Bottone per iniziare"
+  },
+  "botGalleryLockedPlay": "Bloccato",
+  "@botGalleryLockedPlay": {
+    "description": "Bottone disattivato di un bot bloccato"
+  },
+  "botGalleryBeatenBadge": "battuto",
+  "@botGalleryBeatenBadge": {
+    "description": "Corona di un bot battuto"
+  },
+  "botGreetingLia": "Ciao, sono Lia! Muovo un pedone e vediamo che succede.",
+  "@botGreetingLia": {
+    "description": "botGreetingLia"
+  },
+  "botRematchLia": "Mi hai battuta! Facciamo ancora una partita?",
+  "@botRematchLia": {
+    "description": "botRematchLia"
+  },
+  "botGreetingPino": "Pio pio! Sono Pino, giochiamo? Io attacco subito!",
+  "@botGreetingPino": {
+    "description": "botGreetingPino"
+  },
+  "botRematchPino": "Mi hai battuto! La prossima volta attacco più forte.",
+  "@botRematchPino": {
+    "description": "botRematchPino"
+  },
+  "botGreetingNico": "Piano piano, senza fretta. Ti va una partita?",
+  "@botGreetingNico": {
+    "description": "botGreetingNico"
+  },
+  "botRematchNico": "Hai vinto con calma, bravo. Ancora una?",
+  "@botRematchNico": {
+    "description": "botRematchNico"
+  },
+  "botGreetingChiara": "Ciao, sono Chiara. Una partita tranquilla, come in giardino?",
+  "@botGreetingChiara": {
+    "description": "botGreetingChiara"
+  },
+  "botRematchChiara": "Il tuo gioco è fiorito! Rigiochiamo?",
+  "@botRematchChiara": {
+    "description": "botRematchChiara"
+  },
+  "botGreetingViola": "Che bella giornata per una sinfonia di mosse! Si comincia?",
+  "@botGreetingViola": {
+    "description": "botGreetingViola"
+  },
+  "botRematchViola": "Hai stonato la mia melodia! Facciamo il bis?",
+  "@botRematchViola": {
+    "description": "botRematchViola"
+  },
+  "botGreetingRocco": "Un pedone a te, la partita a me. Ci stai?",
+  "@botGreetingRocco": {
+    "description": "botGreetingRocco"
+  },
+  "botRematchRocco": "Mi hai scoperto! Ma ho altri trucchi.",
+  "@botRematchRocco": {
+    "description": "botRematchRocco"
+  },
+  "botGreetingEttore": "Ruggisco prima di giocare. Preparati!",
+  "@botGreetingEttore": {
+    "description": "botGreetingEttore"
+  },
+  "botRematchEttore": "Un ruggito per la tua vittoria. Rivincita?",
+  "@botRematchEttore": {
+    "description": "botRematchEttore"
+  },
+  "botGreetingMarta": "Ho pensato a questa partita tutta la notte. Siediti.",
+  "@botGreetingMarta": {
+    "description": "botGreetingMarta"
+  },
+  "botRematchMarta": "Ben giocata. Ho molto da ripensare.",
+  "@botRematchMarta": {
+    "description": "botRematchMarta"
+  },
+  "botGreetingBruna": "Mi sono appena svegliata, ma la scacchiera mi sveglia del tutto.",
+  "@botGreetingBruna": {
+    "description": "botGreetingBruna"
+  },
+  "botRematchBruna": "Mi hai battuta! Torno in letargo… ma solo per un minuto.",
+  "@botRematchBruna": {
+    "description": "botRematchBruna"
+  },
+  "botGreetingDuilio": "Scintille e fiamme: a me piace attaccare. Sei pronto?",
+  "@botGreetingDuilio": {
+    "description": "botGreetingDuilio"
+  },
+  "botRematchDuilio": "Mi hai spento le fiamme! Riaccendiamole.",
+  "@botRematchDuilio": {
+    "description": "botRematchDuilio"
+  },
+  "botGreetingCarlo": "Dammi un pezzo e ti darò uno spettacolo. Giochiamo?",
+  "@botGreetingCarlo": {
+    "description": "botGreetingCarlo"
+  },
+  "botRematchCarlo": "Ti sei ripreso tutto, complimenti!",
+  "@botRematchCarlo": {
+    "description": "botRematchCarlo"
+  },
+  "botGreetingElena": "Guardo la scacchiera dall'alto. Vediamo se sai volare.",
+  "@botGreetingElena": {
+    "description": "botGreetingElena"
+  },
+  "botRematchElena": "Hai volato in alto. Mi piace.",
+  "@botRematchElena": {
+    "description": "botRematchElena"
+  },
+  "botGreetingAda": "Calcolo ogni traiettoria. Come sei messo con le stelle?",
+  "@botGreetingAda": {
+    "description": "botGreetingAda"
+  },
+  "botRematchAda": "Il tuo piano era migliore del mio. Rifacciamo i conti?",
+  "@botRematchAda": {
+    "description": "botRematchAda"
+  },
+  "botGreetingMassimo": "Il branco ti saluta. Un gambetto per cominciare?",
+  "@botGreetingMassimo": {
+    "description": "botGreetingMassimo"
+  },
+  "botRematchMassimo": "Hai domato il lupo. Rispetto.",
+  "@botRematchMassimo": {
+    "description": "botRematchMassimo"
+  },
+  "botGreetingStella": "Sono la stella più luminosa dell'Accademia. Riesci a guardarmi?",
+  "@botGreetingStella": {
+    "description": "botGreetingStella"
+  },
+  "botRematchStella": "Hai spento la mia luce… per ora.",
+  "@botRematchStella": {
+    "description": "botRematchStella"
+  },
+  "botGreetingTino": "Ciao, sono Tino! Ti faccio vedere come si muovono i pezzi.",
+  "@botGreetingTino": {
+    "description": "botGreetingTino"
+  },
+  "botRematchTino": "Bravo! Ora muovi i pezzi meglio di me.",
+  "@botRematchTino": {
+    "description": "botRematchTino"
+  },
+  "botUnlockStory": "Si sblocca finendo il capitolo della Storia con questo custode",
+  "@botUnlockStory": {
+    "description": "Sotto un custode bloccato: come sbloccarlo"
+  },
+  "botGalleryOpen": "Apri la galleria dei bot",
+  "@botGalleryOpen": {
+    "description": "Bottone che apre la galleria dei bot dalla scelta dell'avversario"
+  },
+  "botOptions": "Opzioni",
+  "@botOptions": {
+    "description": "botOptions"
+  },
+  "botOptionsTime": "Cadenza",
+  "@botOptionsTime": {
+    "description": "botOptionsTime"
+  },
+  "botOptionsNoClock": "Nessun timer",
+  "@botOptionsNoClock": {
+    "description": "botOptionsNoClock"
+  },
+  "botOptionsVariant": "Variante",
+  "@botOptionsVariant": {
+    "description": "botOptionsVariant"
+  },
+  "botVariantStandard": "Classica",
+  "@botVariantStandard": {
+    "description": "botVariantStandard"
+  },
+  "botVariantChess960": "Chess960",
+  "@botVariantChess960": {
+    "description": "botVariantChess960"
+  },
+  "botVariantKingOfTheHill": "Re della collina",
+  "@botVariantKingOfTheHill": {
+    "description": "botVariantKingOfTheHill"
+  },
+  "botVariantThreeCheck": "Tre scacchi",
+  "@botVariantThreeCheck": {
+    "description": "botVariantThreeCheck"
+  },
+  "botOptionsHelp": "Aiuti",
+  "@botOptionsHelp": {
+    "description": "botOptionsHelp"
+  },
+  "botOptionsCoach": "Allenatore",
+  "@botOptionsCoach": {
+    "description": "botOptionsCoach"
+  },
+  "botOptionsCoachHint": "Ti avvisa se sbagli una mossa.",
+  "@botOptionsCoachHint": {
+    "description": "botOptionsCoachHint"
+  },
+  "botOptionsSummary": "{time} · {variant}",
+  "@botOptionsSummary": {
+    "description": "Riassunto delle opzioni scelte",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "variant": {
+        "type": "String"
+      }
+    }
+  },
+  "botOptionsKidSlow": "Con l'orologio, con calma",
+  "@botOptionsKidSlow": {
+    "description": "botOptionsKidSlow"
+  }
+}

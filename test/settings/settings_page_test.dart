@@ -35,6 +35,7 @@ void main() {
     bool withProgress = true,
     SettingsSection section = SettingsSection.board,
   }) async {
+    await tester.pumpWidget(const SizedBox.shrink());
     tester.view.physicalSize = const Size(1170, 2532);
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
@@ -100,58 +101,29 @@ void main() {
     );
   });
 
-  testWidgets('RP-01 i nuovi pezzi e le nuove scacchiere si scelgono', (
-    tester,
-  ) async {
-    await show(tester, section: SettingsSection.style);
-    await tapChip(tester, 'Castello');
-    expect(settings.value.boardTheme, BoardTheme.castello);
-    await tapChip(tester, 'Arcano');
-    expect(settings.value.pieceSet, PieceStyle.arcano);
-  });
-
-  testWidgets('RG-06 un tema bloccato dice come sbloccarlo', (tester) async {
-    await show(tester, section: SettingsSection.style);
-    await tapChip(tester, 'Sabbia');
-    expect(settings.value.boardTheme, BoardTheme.spazio);
-    expect(find.text('Sabbia si sblocca con: Livello 2'), findsOneWidget);
-
-    await tapChip(tester, 'Legno');
-    expect(settings.value.boardTheme, BoardTheme.brown);
-  });
-
   testWidgets('RG-06 "Sblocca tutto" rende disponibili temi e pezzi', (
     tester,
   ) async {
-    await show(tester, section: SettingsSection.style);
+    await show(tester, section: SettingsSection.profile);
     final toggle = find.byKey(const Key('unlockAll'));
-    await tester.scrollUntilVisible(toggle, 200);
-    await tester.ensureVisible(toggle);
-    await tester.pumpAndSettle();
+    expect(progress.settings.unlockAll, isFalse);
     await tester.tap(toggle);
     await tester.pumpAndSettle();
     expect(progress.settings.unlockAll, isTrue);
-
-    await tapChip(tester, 'Celtic');
-    expect(settings.value.pieceSet, PieceStyle.celtic);
   });
 
-  testWidgets('senza progressi tutto è disponibile', (tester) async {
-    await show(tester, withProgress: false, section: SettingsSection.style);
-    expect(find.byKey(const Key('unlockAll')), findsNothing);
-    await tapChip(tester, 'Oro');
-    expect(settings.value.boardTheme, BoardTheme.gold);
-  });
-
-  testWidgets('con la gamification spenta tutto è disponibile', (tester) async {
-    await tester.runAsync(
-      () => progress.updateSettings(const ProgressSettings(enabled: false)),
-    );
-    await show(tester, section: SettingsSection.style);
-    expect(find.byKey(const Key('unlockAll')), findsNothing);
-    await tapChip(tester, 'Notte');
-    expect(settings.value.boardTheme, BoardTheme.night);
-  });
+  testWidgets(
+    'senza progressi o con i progressi spenti non c\'è «Sblocca tutto»',
+    (tester) async {
+      await show(tester, withProgress: false, section: SettingsSection.profile);
+      expect(find.byKey(const Key('unlockAll')), findsNothing);
+      await tester.runAsync(
+        () => progress.updateSettings(const ProgressSettings(enabled: false)),
+      );
+      await show(tester, section: SettingsSection.profile);
+      expect(find.byKey(const Key('unlockAll')), findsNothing);
+    },
+  );
 
   testWidgets('RP-06 il profilo bambino si attiva dalle Impostazioni', (
     tester,
@@ -205,7 +177,7 @@ void main() {
   testWidgets('RP-02 aspetto dell\'app: Sistema predefinito, poi Chiaro', (
     tester,
   ) async {
-    await show(tester, section: SettingsSection.style);
+    await show(tester, section: SettingsSection.accessibility);
     ChoiceChip chip(String label) =>
         tester.widget(find.widgetWithText(ChoiceChip, label));
     expect(chip('Sistema').selected, isTrue);
@@ -241,7 +213,7 @@ void main() {
       }
     });
     await tester.pumpAndSettle();
-    await openSection(tester, SettingsSection.style);
+    await openSection(tester, SettingsSection.accessibility);
     await tapChip(tester, 'Scuro');
     expect(mode(), ThemeMode.dark);
     expect(

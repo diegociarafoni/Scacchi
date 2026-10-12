@@ -369,14 +369,6 @@
   "@settingsSectionProfileHint": {
     "description": "Impostazioni: riga sotto il titolo della sezione Profilo"
   },
-  "settingsSectionStyle": "Stile",
-  "@settingsSectionStyle": {
-    "description": "Impostazioni: titolo della sezione Stile e della sua pagina"
-  },
-  "settingsSectionStyleHint": "Tema dell'app, scacchiera, pezzi e animazioni",
-  "@settingsSectionStyleHint": {
-    "description": "Impostazioni: riga sotto il titolo della sezione Stile"
-  },
   "settingsLegalMovesDescription": "Punti sulle case dove può andare il pezzo scelto",
   "@settingsLegalMovesDescription": {
     "description": "Impostazioni: descrizione"
