@@ -17,5 +17,52 @@
   },
   "coverage": {
     "gameLogicMinPercent": 80
+  },
+  "privacy": {
+    "forbiddenPackages": [
+      "firebase_analytics",
+      "firebase_crashlytics",
+      "firebase_messaging",
+      "firebase_core",
+      "google_mobile_ads",
+      "facebook_app_events",
+      "flutter_facebook_auth",
+      "sentry_flutter",
+      "amplitude_flutter",
+      "mixpanel_flutter",
+      "appsflyer_sdk",
+      "adjust_sdk",
+      "unity_ads_plugin",
+      "applovin_max",
+      "onesignal_flutter",
+      "webview_flutter",
+      "flutter_inappwebview",
+      "url_launcher"
+    ],
+    "transitiveAllowed": {},
+    "androidPermissions": {
+      "android.permission.RECEIVE_BOOT_COMPLETED": "Riprogramma il promemoria giornaliero dopo il riavvio (RG-11)",
+      "android.permission.CAMERA": "Lettura del QR per scambiare le partite, chiesta solo all'apertura del lettore"
+    }
+  },
+  "logging": {
+    "unguardedBaseline": {
+      "lib/endgames/drill_page.dart": 2,
+      "lib/endgames/endgame_controller.dart": 2,
+      "lib/exchange/qr_receive_page.dart": 1,
+      "lib/game/game_page.dart": 3,
+      "lib/game/sounds.dart": 1,
+      "lib/home/home_shell.dart": 2,
+      "lib/home/you_page.dart": 1,
+      "lib/main.dart": 1,
+      "lib/path/path_controller.dart": 2,
+      "lib/physical/physical_game_page.dart": 1,
+      "lib/progress/progress_controller.dart": 2,
+      "lib/reminders/reminder_controller.dart": 1,
+      "lib/stats/portrait_page.dart": 2,
+      "lib/stats/stats_page.dart": 1,
+      "lib/storage/key_value_store.dart": 1,
+      "lib/tournament/tournament_controller.dart": 2
+    }
   }
 }

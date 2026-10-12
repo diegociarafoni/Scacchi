@@ -61,6 +61,7 @@ Ogni funzione nasce dai requisiti del progetto, nel documento dei requisiti, con
 | Scheda Tu | `test/home/` | Voci della scheda Tu: guardiani del percorso, tornei contro il motore finto, apertura di una partita dell'archivio nella revisione | `flutter test test/home` |
 | Tornei | `test/tournament/` | Abbinamenti, simulazione, spareggi, salvataggio, schermata | `flutter test test/tournament` |
 | Scacchiera per esercizi | `test/training/` | Tema, pezzi e coordinate presi dalle impostazioni, senza capovolgere i pezzi | `flutter test test/training` |
+| Sicurezza | `test/security/` | Controlli OWASP MASVS sui sorgenti: permessi, log, SDK vietati, esportazioni (vedi sicurezza.md) | `flutter test test/security` |
 | Archivio | `test/archive/` | PGN, salvataggio su file, schermata Partite | `flutter test test/archive` |
 | Scambio QR | `test/exchange/`, `test/game/game_qr_test.dart` | Fotogrammi QR, validazione dei dati letti, schermate Passa e Ricevi, partita continuata (vedi scambio-qr.md) | `flutter test test/exchange` |
 | Allenatore | `test/coach/` | Avvisi, Riprova e Continua, suggerimento a livelli, frasi in parole semplici | `flutter test test/coach` |
