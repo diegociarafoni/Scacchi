@@ -11,6 +11,7 @@ import 'lan_transport.dart';
 import 'local_address.dart';
 import 'multiplayer_session.dart';
 import 'player_identity.dart';
+import 'remote_watch.dart';
 import 'saved_game.dart';
 import 'transport.dart';
 
@@ -73,37 +74,55 @@ class MultiplayerController extends ChangeNotifier {
     addExtraChannels(session.transport, session.invite, isHost: isHost);
   }
 
-  /// Crea l'invito e attende l'avversario. [NoLocalNetwork] se il telefono
-  /// non è in una Wi-Fi o in un hotspot.
+  /// Crea l'invito e attende l'avversario. Con [remote] la partita si gioca
+  /// anche a distanza, e basta internet: senza Wi-Fi né hotspot l'invito
+  /// viaggia come link. Altrimenti [NoLocalNetwork] se il telefono non è in
+  /// una rete locale.
   static Future<MultiplayerController> host({
     required Side side,
     OpenHost openHost = openLanHost,
+    bool remote = false,
     SavedGameStore? store,
   }) async {
-    final channel = await openHost();
+    HostChannel? lan;
     try {
-      if (channel.lanAddress == null) throw const NoLocalNetwork();
+      lan = await openHost();
+    } on NoLocalNetwork {
+      if (!remote) rethrow;
+    }
+    if (!remote && lan?.lanAddress == null) {
+      await lan?.transport.close();
+      throw const NoLocalNetwork();
+    }
+    final opened = <MessageTransport>[?lan?.transport];
+    try {
       final identity = await PlayerIdentity.generate();
       final invite = GameInvite(
         gameId: newGameId(),
         secret: newSecret(),
         hostKey: identity.publicKey,
         hostSide: side,
-        lanAddress: channel.lanAddress,
+        lanAddress: lan?.lanAddress,
+        remote: remote,
       );
       final session = MultiplayerSession.host(
         invite,
         identity,
-        MultiTransport([channel.transport]),
+        MultiTransport(opened),
       );
-      return MultiplayerController._(
+      final controller = MultiplayerController._(
         session,
         invite.toLink(),
         store,
         await identity.seed(),
       );
+      // A distanza l'amico può arrivare ore dopo: l'invito si salva subito.
+      if (remote) unawaited(controller._persist());
+      return controller;
     } catch (_) {
-      await channel.transport.close();
+      for (final t in opened) {
+        await t.close();
+      }
       rethrow;
     }
   }
@@ -129,12 +148,22 @@ class MultiplayerController extends ChangeNotifier {
         sealed: saved.sealed,
       );
     }
-    final lan = invite.lanAddress;
-    final port = lan == null ? null : _split(lan)?.$2;
+    final lanInvite = invite.lanAddress;
+    final port = lanInvite == null ? null : _split(lanInvite)?.$2;
     if (!listEquals(identity.publicKey, invite.hostKey)) {
       throw const FormatException('chiave non coerente con l\'invito');
     }
-    final channel = await openHost(port);
+    HostChannel? lan;
+    // Un invito solo a distanza non ha un indirizzo da riaprire; uno misto
+    // riparte anche senza Wi-Fi.
+    if (lanInvite != null || !invite.remote) {
+      try {
+        lan = await openHost(port);
+      } on NoLocalNetwork {
+        if (!invite.remote) rethrow;
+      }
+    }
+    final opened = <MessageTransport>[?lan?.transport];
     try {
       // Se la porta di prima era occupata l'indirizzo è cambiato.
       final current = GameInvite(
@@ -142,12 +171,13 @@ class MultiplayerController extends ChangeNotifier {
         secret: invite.secret,
         hostKey: invite.hostKey,
         hostSide: invite.hostSide,
-        lanAddress: channel.lanAddress ?? invite.lanAddress,
+        lanAddress: lan?.lanAddress ?? invite.lanAddress,
+        remote: invite.remote,
       );
       final session = MultiplayerSession.host(
         current,
         identity,
-        MultiTransport([channel.transport]),
+        MultiTransport(opened),
         moves: saved.moves,
         peerKey: saved.peerKey,
         sealed: saved.sealed,
@@ -159,7 +189,9 @@ class MultiplayerController extends ChangeNotifier {
         saved.seed,
       );
     } catch (_) {
-      await channel.transport.close();
+      for (final t in opened) {
+        await t.close();
+      }
       rethrow;
     }
   }
@@ -189,13 +221,15 @@ class MultiplayerController extends ChangeNotifier {
   }) async {
     final lan = invite.lanAddress;
     final target = lan == null ? null : _split(lan);
-    if (target == null) throw const NoLocalNetwork();
-    final transport = MultiTransport([openGuest(target.$1, target.$2)]);
+    if (target == null && !invite.remote) throw const NoLocalNetwork();
+    final opened = <MessageTransport>[
+      ?target == null ? null : openGuest(target.$1, target.$2),
+    ];
     try {
       final session = MultiplayerSession.join(
         invite,
         identity,
-        transport,
+        MultiTransport(opened),
         moves: moves,
         sealed: sealed,
       );
@@ -209,7 +243,9 @@ class MultiplayerController extends ChangeNotifier {
       unawaited(controller._persist());
       return controller;
     } catch (_) {
-      await transport.close();
+      for (final t in opened) {
+        await t.close();
+      }
       rethrow;
     }
   }
@@ -273,7 +309,27 @@ class MultiplayerController extends ChangeNotifier {
     }
     if (_disposed) return;
     notifyListeners();
+    _syncWatch();
     unawaited(_persist());
+  }
+
+  RemoteWatch? _watch;
+  bool _watching = false;
+
+  /// Controllo in background delle partite a distanza: si accende finché la
+  /// partita è in corso e si spegne alla fine.
+  void useWatch(RemoteWatch? watch) {
+    _watch = watch;
+    _syncWatch();
+  }
+
+  void _syncWatch() {
+    final watch = _watch;
+    if (watch == null || !session.invite.remote || _disposed) return;
+    final wanted = !_sync.isGameOver;
+    if (wanted == _watching) return;
+    _watching = wanted;
+    unawaited(wanted ? watch.enable() : watch.disable());
   }
 
   /// Archivio arrivato dopo la creazione del controller (se non ne ha già uno).
@@ -284,11 +340,15 @@ class MultiplayerController extends ChangeNotifier {
   }
 
   /// Salva la partita a ogni cambiamento; a partita finita la toglie. Chi
-  /// ospita non salva finché nessuno è entrato: l'invito non è ancora usato.
+  /// ospita in rete locale non salva finché nessuno è entrato: l'invito non è
+  /// ancora usato. A distanza sì, perché l'amico può arrivare molto dopo.
   Future<void> _persist() {
     final store = _store;
     if (store == null || _finished) return Future.value();
-    if (isHost && _sync.peerKey == null && _sync.moves.isEmpty) {
+    if (isHost &&
+        !session.invite.remote &&
+        _sync.peerKey == null &&
+        _sync.moves.isEmpty) {
       return Future.value();
     }
     final finished = _sync.isGameOver;

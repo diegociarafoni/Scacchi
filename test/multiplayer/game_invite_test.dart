@@ -46,6 +46,37 @@ void main() {
     expect(back.lanAddress, isNull);
   });
 
+  test('RMP-32 l\'invito a distanza va e torna dal link', () {
+    final inv = GameInvite(
+      gameId: newGameId(),
+      secret: newSecret(),
+      hostKey: Uint8List(32),
+      hostSide: Side.black,
+      remote: true,
+    );
+    final back = GameInvite.parse(inv.toLink())!;
+    expect(back.remote, isTrue);
+    expect(back.lanAddress, isNull);
+    expect(inv.toLink(), contains('r=1'));
+  });
+
+  test('RMP-32 senza il segno r l\'invito è solo in rete locale', () {
+    expect(GameInvite.parse(sample().toLink())!.remote, isFalse);
+    expect(sample().toLink(), isNot(contains('r=')));
+  });
+
+  test('RMP-32 un valore di r sconosciuto rende l\'invito non valido', () {
+    final good = GameInvite(
+      gameId: newGameId(),
+      secret: newSecret(),
+      hostKey: Uint8List(32),
+      hostSide: Side.white,
+      remote: true,
+    ).toLink();
+    expect(GameInvite.parse(good.replaceFirst('r=1', 'r=2')), isNull);
+    expect(GameInvite.parse(good.replaceFirst('r=1', 'r=')), isNull);
+  });
+
   group('RMP-01 un invito non valido viene scartato', () {
     final good = sample().toLink();
     final cases = {

@@ -29,7 +29,7 @@ class _FakeScanner {
 
 Future<void> _wait(WidgetTester tester) async {
   await tester.runAsync(
-    () => Future<void>.delayed(const Duration(milliseconds: 100)),
+    () => Future<void>.delayed(const Duration(milliseconds: 400)),
   );
   await tester.pump();
 }
@@ -42,6 +42,7 @@ void main() {
     await tester.pumpWidget(
       localizedApp(
         home: MultiplayerPage(
+          remoteByDefault: false,
           openHost: () async => (transport: a, lanAddress: '10.0.0.2:4000'),
         ),
       ),
@@ -80,6 +81,7 @@ void main() {
     await tester.pumpWidget(
       localizedApp(
         home: MultiplayerPage(
+          remoteByDefault: false,
           openHost: () async => throw const NoLocalNetwork(),
         ),
       ),
@@ -96,6 +98,7 @@ void main() {
     await tester.pumpWidget(
       localizedApp(
         home: MultiplayerPage(
+          remoteByDefault: false,
           openHost: () async => throw const SocketException('porta occupata'),
         ),
       ),
@@ -126,7 +129,11 @@ void main() {
     final scanner = _FakeScanner();
     await tester.pumpWidget(
       localizedApp(
-        home: MultiplayerPage(scanner: scanner.build, openGuest: (_, _) => b),
+        home: MultiplayerPage(
+          remoteByDefault: false,
+          scanner: scanner.build,
+          openGuest: (_, _) => b,
+        ),
       ),
     );
     await tester.tap(find.text('Unisciti con il QR'));
@@ -182,7 +189,11 @@ void main() {
         );
         await Future<void>.delayed(const Duration(milliseconds: 50));
         await host.play(Move.parse('e2e4')!);
-        await Future<void>.delayed(const Duration(milliseconds: 50));
+        // Il salvataggio è asincrono: si aspetta che la mossa sia sul disco.
+        for (var i = 0; i < 40; i++) {
+          if ((await store.load())?.moves.isNotEmpty ?? false) break;
+          await Future<void>.delayed(const Duration(milliseconds: 50));
+        }
         await host.close();
         await guest.close();
       });
@@ -200,7 +211,10 @@ void main() {
     testWidgets('RMP-09 senza partite salvate non c\'è il riquadro', (
       tester,
     ) async {
-      await openPage(tester, MultiplayerPage(store: store));
+      await openPage(
+        tester,
+        MultiplayerPage(remoteByDefault: false, store: store),
+      );
       expect(find.text('Riprendi la partita'), findsNothing);
     });
 
@@ -212,6 +226,7 @@ void main() {
       await openPage(
         tester,
         MultiplayerPage(
+          remoteByDefault: false,
           store: store,
           openResumeHost: (_) async =>
               (transport: a, lanAddress: '10.0.0.2:4000'),
@@ -227,7 +242,10 @@ void main() {
 
     testWidgets('RMP-09 si può eliminare la partita salvata', (tester) async {
       await saveOne(tester);
-      await openPage(tester, MultiplayerPage(store: store));
+      await openPage(
+        tester,
+        MultiplayerPage(remoteByDefault: false, store: store),
+      );
       await tester.tap(find.text('Elimina'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Elimina').last);
@@ -246,6 +264,7 @@ void main() {
         await openPage(
           tester,
           MultiplayerPage(
+            remoteByDefault: false,
             store: store,
             openHost: () async {
               opened++;

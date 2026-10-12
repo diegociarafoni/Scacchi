@@ -43,6 +43,7 @@ class GameInvite {
     required this.hostKey,
     required this.hostSide,
     this.lanAddress,
+    this.remote = false,
   });
 
   final String gameId;
@@ -55,6 +56,10 @@ class GameInvite {
   /// `host:porta` in rete locale, se l'ospite è raggiungibile così.
   final String? lanAddress;
 
+  /// La partita può giocarsi anche a distanza, su relay internet: chi
+  /// riceve l'invito apre quel canale oltre a quello locale, se c'è.
+  final bool remote;
+
   String toLink() => Uri(
     scheme: 'scacchi',
     host: 'partita',
@@ -65,6 +70,7 @@ class GameInvite {
       'k': _b64(hostKey),
       'c': hostSide == Side.white ? 'w' : 'b',
       'lan': ?lanAddress,
+      if (remote) 'r': '1',
     },
   ).toString();
 
@@ -94,12 +100,15 @@ class GameInvite {
     if (side == null) return null;
     final lan = q['lan'];
     if (lan != null && !_validAddress(lan)) return null;
+    final remote = q['r'];
+    if (remote != null && remote != '1') return null;
     return GameInvite(
       gameId: gameId,
       secret: secret,
       hostKey: key,
       hostSide: side,
       lanAddress: lan,
+      remote: remote != null,
     );
   }
 }
