@@ -2,6 +2,9 @@
 /// possibile ne ha meno di 12 000, ma nessuna partita reale supera questo).
 const maxPlies = 2000;
 
+/// Tempo massimo dichiarabile in una mossa: un giorno.
+const maxClockMs = 86400000;
+
 /// Messaggi scambiati tra i due telefoni di una partita.
 sealed class GameMessage {
   const GameMessage();
@@ -23,12 +26,26 @@ sealed class GameMessage {
               seq <= maxPlies &&
               uci.length <= 5 &&
               hash.length <= 64 =>
-        MoveMessage(seq: seq, uci: uci, positionHash: hash),
+        _move(seq, uci, hash, json['c']),
+      {'t': 'flag', 'n': final int plies} when plies > 0 && plies <= maxPlies =>
+        FlagMessage(plies: plies),
       {'t': 'sync', 'n': final int from} when from > 0 && from <= maxPlies =>
         SyncRequest(fromSeq: from),
       _ => null,
     };
   }
+}
+
+MoveMessage? _move(int seq, String uci, String hash, Object? clock) {
+  if (clock != null && (clock is! int || clock < 0 || clock > maxClockMs)) {
+    return null;
+  }
+  return MoveMessage(
+    seq: seq,
+    uci: uci,
+    positionHash: hash,
+    timeMs: clock as int?,
+  );
 }
 
 /// L'invitato si presenta all'ospite con la propria chiave.
@@ -46,17 +63,20 @@ class JoinMessage extends GameMessage {
 }
 
 /// Semimossa numero [seq] (da 1) in UCI, con l'impronta della posizione
-/// risultante per accorgersi subito di qualunque divergenza.
+/// risultante per accorgersi subito di qualunque divergenza. [timeMs] è il
+/// tempo che resta a chi ha mosso, incremento compreso (partite a tempo).
 class MoveMessage extends GameMessage {
   const MoveMessage({
     required this.seq,
     required this.uci,
     required this.positionHash,
+    this.timeMs,
   });
 
   final int seq;
   final String uci;
   final String positionHash;
+  final int? timeMs;
 
   @override
   Map<String, Object> toJson() => {
@@ -64,6 +84,7 @@ class MoveMessage extends GameMessage {
     'n': seq,
     'm': uci,
     'h': positionHash,
+    'c': ?timeMs,
   };
 
   @override
@@ -71,10 +92,11 @@ class MoveMessage extends GameMessage {
       other is MoveMessage &&
       other.seq == seq &&
       other.uci == uci &&
-      other.positionHash == positionHash;
+      other.positionHash == positionHash &&
+      other.timeMs == timeMs;
 
   @override
-  int get hashCode => Object.hash(seq, uci, positionHash);
+  int get hashCode => Object.hash(seq, uci, positionHash, timeMs);
 
   @override
   String toString() => 'MoveMessage($seq $uci)';
@@ -95,4 +117,21 @@ class SyncRequest extends GameMessage {
 
   @override
   int get hashCode => fromSeq.hashCode;
+}
+
+/// Chi è di turno dichiara di aver finito il tempo dopo [plies] semimosse.
+class FlagMessage extends GameMessage {
+  const FlagMessage({required this.plies});
+
+  final int plies;
+
+  @override
+  Map<String, Object> toJson() => {'t': 'flag', 'n': plies};
+
+  @override
+  bool operator ==(Object other) =>
+      other is FlagMessage && other.plies == plies;
+
+  @override
+  int get hashCode => Object.hash('flag', plies);
 }

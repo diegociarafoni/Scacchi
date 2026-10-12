@@ -4,6 +4,8 @@ import 'dart:typed_data';
 
 import 'package:dartchess/dartchess.dart';
 
+import '../game/clock.dart';
+
 /// Schema dei link d'invito; `scacchi` (il nome vecchio) si legge ancora, così
 /// i QR già in giro restano validi.
 const inviteScheme = 'rokko';
@@ -19,6 +21,10 @@ final _uuidPattern = RegExp(
   r'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$',
 );
 final _hostPattern = RegExp(r'^[0-9A-Za-z.\-]{1,253}$|^\[[0-9A-Fa-f:.]+\]$');
+
+/// Limiti della cadenza accettata da un invito non fidato.
+const maxInviteMinutes = 180;
+const maxInviteIncrement = 60;
 
 final _random = Random.secure();
 
@@ -48,6 +54,7 @@ class GameInvite {
     required this.hostKey,
     required this.hostSide,
     this.lanAddress,
+    this.timeControl,
     this.remote = false,
     this.ble = false,
   });
@@ -61,6 +68,9 @@ class GameInvite {
 
   /// `host:porta` in rete locale, se l'ospite è raggiungibile così.
   final String? lanAddress;
+
+  /// Cadenza scelta da chi crea la partita; `null` senza orologio.
+  final TimeControl? timeControl;
 
   /// La partita può giocarsi anche a distanza, su relay internet: chi
   /// riceve l'invito apre quel canale oltre a quello locale, se c'è.
@@ -79,6 +89,7 @@ class GameInvite {
       'k': _b64(hostKey),
       'c': hostSide == Side.white ? 'w' : 'b',
       'lan': ?lanAddress,
+      'tc': ?timeControl?.label,
       if (remote) 'r': '1',
       if (ble) 'ble': '1',
     },
@@ -111,14 +122,25 @@ class GameInvite {
     if (side == null) return null;
     final lan = q['lan'];
     if (lan != null && !_validAddress(lan)) return null;
+    final tcText = q['tc'];
+    final control = tcText == null ? null : TimeControl.parse(tcText);
+    if (tcText != null &&
+        (control == null ||
+            control.minutes > maxInviteMinutes ||
+            control.increment > maxInviteIncrement)) {
+      return null;
+    }
     final remote = q['r'];
     if (remote != null && remote != '1') return null;
+    // A distanza le mosse arrivano anche dopo ore: niente orologio.
+    if (remote != null && q['tc'] != null) return null;
     return GameInvite(
       gameId: gameId,
       secret: secret,
       hostKey: key,
       hostSide: side,
       lanAddress: lan,
+      timeControl: control,
       remote: remote != null,
       ble: q['ble'] == '1',
     );

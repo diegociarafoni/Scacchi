@@ -37,6 +37,7 @@ class MultiplayerSession {
     PlayerIdentity identity,
     MultiTransport transport, {
     Iterable<String> moves = const [],
+    Iterable<int?> times = const [],
     Uint8List? peerKey,
     Map<int, Uint8List> sealed = const {},
   }) => MultiplayerSession._(
@@ -48,6 +49,7 @@ class MultiplayerSession {
       myKey: identity.publicKey,
       peerKey: peerKey,
       moves: moves,
+      times: times,
     ),
     sealed,
   );
@@ -58,6 +60,7 @@ class MultiplayerSession {
     PlayerIdentity identity,
     MultiTransport transport, {
     Iterable<String> moves = const [],
+    Iterable<int?> times = const [],
     Map<int, Uint8List> sealed = const {},
   }) => MultiplayerSession._(
     invite,
@@ -68,6 +71,7 @@ class MultiplayerSession {
       myKey: identity.publicKey,
       peerKey: invite.hostKey,
       moves: moves,
+      times: times,
     ),
     sealed,
   );
@@ -103,16 +107,28 @@ class MultiplayerSession {
 
   /// Gioca [uci]; se nessun canale è disponibile la mossa resta in attesa
   /// e parte con [resendLast].
-  Future<void> play(String uci) async {
-    final message = sync.playLocal(uci);
+  Future<void> play(String uci, {int? timeMs}) async {
+    final message = sync.playLocal(uci, timeMs: timeMs);
     _pending = !await _sendSealed(await _seal(message));
   }
 
   /// Ripete l'ultima mossa: da chiamare quando un canale torna disponibile.
   Future<void> resendLast() async {
+    final flag = _flagSealed;
+    if (flag != null) await _sendSealed(flag);
     final last = sync.myLastMove;
     if (last == null) return;
     _pending = !await _sendSealed(_sealed[last.seq] ?? await _seal(last));
+  }
+
+  Uint8List? _flagSealed;
+
+  /// Dichiara finito il tempo di questo telefono; se nessun canale è
+  /// disponibile il messaggio riparte con [resendLast].
+  Future<void> flagSelf() async {
+    final message = sync.flagSelf();
+    final data = _flagSealed = await _codec.seal(message, identity);
+    await _sendSealed(data);
   }
 
   Future<Uint8List> _seal(MoveMessage move) async =>

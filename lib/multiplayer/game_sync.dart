@@ -10,6 +10,13 @@ import 'game_message.dart';
 String positionHash(Position position) =>
     sha256.convert(utf8.encode(position.fen)).toString().substring(0, 32);
 
+/// Esito di una partita in cui scade il tempo di [flagged]: patta se l'altro
+/// lato non ha materiale per dare matto.
+Outcome timeoutOutcome(Position position, Side flagged) =>
+    position.hasInsufficientMaterial(flagged.opposite)
+    ? Outcome.draw
+    : Outcome(winner: flagged.opposite);
+
 /// Esito di [GameSync.receive].
 sealed class SyncResult {
   const SyncResult();
@@ -45,6 +52,13 @@ class ResendRequested extends SyncResult {
   final int fromSeq;
 }
 
+/// L'avversario ha dichiarato finito il suo tempo.
+class Flagged extends SyncResult {
+  const Flagged(this.side);
+
+  final Side side;
+}
+
 class Rejected extends SyncResult {
   const Rejected(this.reason);
 
@@ -70,13 +84,17 @@ class GameSync {
     required this.myKey,
     this._peerKey,
     Iterable<String> moves = const [],
+    Iterable<int?> times = const [],
   }) {
+    final timeList = times.toList();
+    var i = 0;
     for (final uci in moves) {
       final move = Move.parse(uci);
       if (move == null || !_position.isLegal(move)) {
         throw ArgumentError.value(uci, 'moves', 'mossa non valida');
       }
-      _apply(uci, move);
+      _apply(uci, move, i < timeList.length ? timeList[i] : null);
+      i++;
     }
   }
 
@@ -88,12 +106,26 @@ class GameSync {
   String? _lastSan;
   final _moves = <String>[];
   final _hashes = <String>[];
+  final _times = <int?>[];
+  Side? _flagged;
 
   Uint8List? get peerKey => _peerKey;
   List<String> get moves => List.unmodifiable(_moves);
+
+  /// Tempo residuo dichiarato da chi ha giocato ogni semimossa, in
+  /// millisecondi; `null` dove non era noto.
+  List<int?> get times => List.unmodifiable(_times);
   Position get position => _position;
   Side get turn => _position.turn;
-  bool get isGameOver => _position.isGameOver;
+  bool get isGameOver => _flagged != null || _position.isGameOver;
+
+  /// Lato che ha perso per tempo scaduto, se è successo.
+  Side? get flagged => _flagged;
+
+  Outcome? get outcome {
+    final side = _flagged;
+    return side == null ? _position.outcome : timeoutOutcome(_position, side);
+  }
 
   /// Ultima semimossa in notazione SAN, per annunciarla.
   String? get lastSan => _lastSan;
@@ -114,15 +146,32 @@ class GameSync {
   ];
 
   /// Gioca [uci] dal proprio telefono e restituisce il messaggio da inviare.
-  MoveMessage playLocal(String uci) {
+  MoveMessage playLocal(String uci, {int? timeMs}) {
     if (isGameOver) throw StateError('partita finita');
     if (turn != mySide) throw StateError('non è il tuo turno');
     final move = Move.parse(uci);
     if (move == null || !_position.isLegal(move)) {
       throw ArgumentError.value(uci, 'uci', 'mossa illegale');
     }
-    _apply(uci, move);
+    _apply(uci, move, timeMs);
     return _message(_moves.length);
+  }
+
+  /// Dichiara finito il tempo di questo telefono, di turno; restituisce il
+  /// messaggio per l'avversario.
+  FlagMessage flagSelf() {
+    if (isGameOver) throw StateError('partita finita');
+    if (turn != mySide) throw StateError('non è il tuo turno');
+    _flagged = mySide;
+    return FlagMessage(plies: _moves.length);
+  }
+
+  /// L'avversario non ha più tempo e non si fa sentire: la vittoria si
+  /// registra qui, senza messaggio. `false` se non era il suo turno.
+  bool flagPeer() {
+    if (isGameOver || turn == mySide) return false;
+    _flagged = turn;
+    return true;
   }
 
   SyncResult receive(GameMessage message, List<int> author) {
@@ -134,7 +183,24 @@ class GameSync {
         return ResendRequested(fromSeq);
       case MoveMessage():
         return _receiveMove(message, author);
+      case FlagMessage():
+        return _receiveFlag(message, author);
     }
+  }
+
+  SyncResult _receiveFlag(FlagMessage m, List<int> author) {
+    if (!_fromPeer(author)) return const Rejected('autore sconosciuto');
+    if (_flagged == mySide.opposite && m.plies == _moves.length) {
+      return const Duplicate();
+    }
+    if (m.plies > _moves.length) return Gap(_moves.length + 1);
+    if (isGameOver ||
+        m.plies < _moves.length ||
+        _position.turn != mySide.opposite) {
+      return const Rejected('tempo scaduto non valido');
+    }
+    _flagged = mySide.opposite;
+    return Flagged(_flagged!);
   }
 
   SyncResult _join(List<int> author) {
@@ -175,7 +241,7 @@ class GameSync {
     if (positionHash(next) != m.positionHash) {
       return const Rejected('posizione diversa');
     }
-    _apply(m.uci, move);
+    _apply(m.uci, move, m.timeMs);
     return MoveAccepted(m);
   }
 
@@ -184,17 +250,19 @@ class GameSync {
     return peer != null && _same(peer, author);
   }
 
-  void _apply(String uci, Move move) {
+  void _apply(String uci, Move move, int? timeMs) {
     final (next, san) = _position.makeSan(move);
     _position = next;
     _lastSan = san;
     _moves.add(uci);
     _hashes.add(positionHash(_position));
+    _times.add(timeMs);
   }
 
   MoveMessage _message(int seq) => MoveMessage(
     seq: seq,
     uci: _moves[seq - 1],
     positionHash: _hashes[seq - 1],
+    timeMs: _times[seq - 1],
   );
 }
