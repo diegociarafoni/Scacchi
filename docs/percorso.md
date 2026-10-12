@@ -1,6 +1,6 @@
 # Percorso a tappe
 
-Requisito RG-03: una mappa di capitoli e tappe con valutazione da 1 a 3 stelle. Il codice è in `lib/path/`.
+Requisito RG-03: una mappa di capitoli e tappe con valutazione da 1 a 3 stelle. Il codice è in `lib/path/`. La trama a capitoli che lo usa è descritta in [storia.md](storia.md).
 
 ## Capitoli
 

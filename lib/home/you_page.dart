@@ -15,6 +15,7 @@ import '../progress/xp.dart';
 import '../reminders/reminder_controller.dart';
 import '../stats/portrait_page.dart';
 import '../stats/stats_page.dart';
+import '../story/story_l10n.dart';
 
 /// Scheda "Tu": profilo e tutto ciò che riguarda i propri progressi.
 class YouPage extends StatelessWidget {
@@ -26,6 +27,7 @@ class YouPage extends StatelessWidget {
     this.reminders,
     this.simple = false,
     this.playGuardian,
+    this.storyPage,
     this.tournamentPage,
     this.endgamesPage,
     this.openGame,
@@ -46,6 +48,9 @@ class YouPage extends StatelessWidget {
 
   /// Partita contro il guardiano; senza, le tappe guardiano mostrano un avviso.
   final PlayGuardian? playGuardian;
+
+  /// Percorso a storia (RG-13); senza, la voce non compare.
+  final Future<Widget> Function()? storyPage;
 
   /// Schermata dei tornei; senza, la voce non compare (servono le partite
   /// contro il computer).
@@ -144,6 +149,13 @@ class YouPage extends StatelessWidget {
                   (c) => PathPage(controller: c, playGuardian: playGuardian),
                 ),
               ),
+              if (storyPage != null)
+                _Entry(
+                  icon: Icons.auto_stories_outlined,
+                  title: storyL10n(context).storyTitle,
+                  subtitle: storyL10n(context).storyEntrySubtitle,
+                  onTap: () => _open(context, storyPage!(), (w) => w),
+                ),
               if (endgamesPage != null)
                 _Entry(
                   icon: Icons.flag_outlined,
