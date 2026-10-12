@@ -1,31 +1,17 @@
 import 'dart:async';
-import 'dart:io';
-import 'dart:ui' as ui;
 
-import 'package:dartchess/dartchess.dart' hide File;
+import 'package:dartchess/dartchess.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
 
 import '../archive/game_archive.dart';
+import '../share/image_sharing.dart';
 import 'portrait.dart';
 
-typedef ShareImage = Future<void> Function(Uint8List png, String fileName);
+export '../share/image_sharing.dart' show ShareImage;
 
-Future<void> _shareWithSystem(Uint8List png, String fileName) async {
-  final tmp = await getTemporaryDirectory();
-  final file = File('${tmp.path}/$fileName');
-  await file.writeAsBytes(png, flush: true);
-  try {
-    await SharePlus.instance.share(
-      ShareParams(files: [XFile(file.path)], subject: 'La mia settimana'),
-    );
-  } finally {
-    if (file.existsSync()) await file.delete();
-  }
-}
+Future<void> _shareWithSystem(Uint8List png, String fileName) =>
+    shareImageWithSystem(png, fileName, subject: 'La mia settimana');
 
 const _weekdays = {
   DateTime.monday: 'lunedì',
@@ -90,19 +76,15 @@ class _PortraitPageState extends State<PortraitPage> {
   }
 
   Future<void> _share() async {
-    final boundary =
-        _card.currentContext?.findRenderObject() as RenderRepaintBoundary?;
-    if (boundary == null || _sharing) return;
+    if (_sharing) return;
     _sharing = true;
     try {
-      final image = await boundary.toImage(pixelRatio: 3);
-      final data = await image.toByteData(format: ui.ImageByteFormat.png);
-      image.dispose();
-      if (data == null) return;
+      final png = await capturePng(_card, pixelRatio: 3);
+      if (png == null) return;
       final to = _portrait!.to;
       String two(int n) => n.toString().padLeft(2, '0');
       await widget.share(
-        data.buffer.asUint8List(),
+        png,
         'rokko-settimana-${to.year}-${two(to.month)}-${two(to.day)}.png',
       );
       if (mounted) setState(() => _message = null);
