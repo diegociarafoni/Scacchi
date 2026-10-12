@@ -23,6 +23,7 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | [percorso.md](percorso.md) | Percorso a tappe con stelle e bot guardiani |
 | [storia.md](storia.md) | Percorso a storia: capitoli, puzzle e sfide a tema sopra il percorso |
 | [finali.md](finali.md) | Allenatore dei finali contro il motore: Lucena, Philidor, matti elementari |
+| [finali-perfetti.md](finali-perfetti.md) | Risultato esatto e mossa migliore nei finali con pochi pezzi, tabelle generate sul telefono |
 | [statistiche.md](statistiche.md) | Statistiche delle partite e rating locale stimato |
 | [minigiochi.md](minigiochi.md) | Coordinate a tempo, cattura tutto, visualizzazione alla cieca, conta del materiale |
 | [tornei.md](tornei.md) | Tornei offline contro bot: girone, eliminazione diretta, bacheca |
@@ -70,7 +71,7 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | Percorso a tappe con stelle e spiegazione di ogni tappa: pezzi, regole, matti elementari e famosi, tattiche, finali di pedoni, aperture | Disponibile dalla scheda Tu, con i guardiani dove c'è il motore |
 | Statistiche e rating locale | Disponibile dalla scheda Tu |
 | Editor di posizione con FEN e validazione | Disponibile |
-| Varianti: Chess960, Re della collina, Tre scacchi | Disponibile nella partita a due |
+| Varianti: Chess960, Re della collina, Tre scacchi | Disponibile nella partita a due e contro il computer |
 | Minigiochi | Disponibile dalla scheda Tu, con record e XP |
 | Tornei contro bot | Formule, classifica, tabellone e bacheca; si giocano dalla scheda Tu contro il motore (Android e iOS; Windows e Linux con Stockfish installato) |
 | Orologio con cadenze e incremento | Disponibile |

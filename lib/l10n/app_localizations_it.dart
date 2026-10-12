@@ -1276,6 +1276,55 @@ class AppLocalizationsIt extends AppLocalizations {
   String get shareImageSubject => 'Posizione di scacchi';
 
   @override
+  String get tablebaseTitle => 'Finale perfetto';
+
+  @override
+  String get tablebaseCalculating =>
+      'Calcolo il finale perfetto… succede solo la prima volta';
+
+  @override
+  String tablebaseWhiteMates(int moves) {
+    String _temp0 = intl.Intl.pluralLogic(
+      moves,
+      locale: localeName,
+      other: 'Il Bianco vince: matto in $moves mosse',
+      one: 'Il Bianco vince: matto in $moves mossa',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tablebaseBlackMates(int moves) {
+    String _temp0 = intl.Intl.pluralLogic(
+      moves,
+      locale: localeName,
+      other: 'Il Nero vince: matto in $moves mosse',
+      one: 'Il Nero vince: matto in $moves mossa',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tablebaseWhiteWins => 'Il Bianco vince';
+
+  @override
+  String get tablebaseBlackWins => 'Il Nero vince';
+
+  @override
+  String get tablebaseDraw => 'Patta con il gioco perfetto';
+
+  @override
+  String tablebaseBestMove(String move) {
+    return 'Mossa perfetta: $move';
+  }
+
+  @override
+  String get tablebaseBestMoveHint => 'Gioca la mossa perfetta';
+
+  @override
+  String get tablebaseShowMove => 'Mostra la mossa perfetta';
+
+  @override
   String get personalTitle => 'Le tue aperture';
 
   @override

@@ -19,6 +19,7 @@ import '../engine/bots.dart';
 import '../engine/computer_player.dart';
 import '../engine/levels.dart';
 import '../engine/uci_transport.dart';
+import '../engine/variant_engine.dart';
 import '../exchange/qr_l10n.dart';
 import '../exchange/qr_receive_page.dart';
 import '../exchange/qr_send_page.dart';
@@ -44,6 +45,7 @@ import '../settings/settings_page.dart';
 import '../share/position_image.dart';
 import '../share/position_image_page.dart';
 import '../storage/key_value_store.dart';
+import '../tablebase/shared_tablebase.dart';
 import 'board_swipe.dart';
 import 'challenge.dart';
 import 'chess_game.dart';
@@ -73,6 +75,7 @@ class GamePage extends StatefulWidget {
     this.chess960Id = randomChess960Id,
     bool? computerAvailable,
     this.createComputer,
+    this.createVariantEngine,
     this.now,
     this.onActivity,
     this.onSave,
@@ -87,6 +90,9 @@ class GamePage extends StatefulWidget {
   final SettingsController settings;
   final bool computerAvailable;
   final ComputerPlayer Function()? createComputer;
+
+  /// Avversario di Chess960, Re della collina e Tre scacchi (RF-123).
+  final VariantEngine Function()? createVariantEngine;
 
   /// Archivio della stima dell'avversario adattivo; quello su file se assente.
   final KeyValueStore? store;
@@ -169,13 +175,14 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   Handicap? _handicap;
   Side _handicapHuman = Side.white;
 
-  /// Ultima variante scelta per la partita tra due persone.
-  Variant _twoPlayerVariant = Variant.standard;
+  /// Ultima variante scelta nel pannello Nuova, con persone o contro il computer.
+  Variant _chosenVariant = Variant.standard;
   final _random = math.Random();
 
   /// Lato giocato dal computer; `null` nella partita tra due persone.
   Side? _computerSide;
   ComputerPlayer? _computer;
+  VariantEngine? _variantEngine;
 
   /// Allenatore in partita (RF-73): giudica le mosse dell'utente.
   bool _coachOn = false;
@@ -588,6 +595,12 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   ComputerPlayer get _computerPlayer =>
       _computer ??= widget.createComputer?.call() ?? ComputerPlayer();
 
+  /// Le varianti non passano da Stockfish, che non ne conosce le regole.
+  bool get _engineGame => _game.variant == Variant.standard;
+
+  VariantEngine get _variantPlayer =>
+      _variantEngine ??= widget.createVariantEngine?.call() ?? VariantEngine();
+
   GameData _gameData() {
     final pos = _game.position;
     return GameData(
@@ -734,7 +747,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     // Un handicap falsa il confronto: senza Elo non entra nel rating locale.
     return (
       side,
-      side == null || _handicap != null
+      side == null || _handicap != null || !_engineGame
           ? null
           : (_bot?.elo ?? engineLevel(_gameLevel).approxElo),
     );
@@ -781,7 +794,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _bot = null;
     _resultRecorded = false;
     _botResultRecorded = false;
-    _twoPlayerVariant = game.variant;
+    _chosenVariant = game.variant;
     // Come per l'editor: si archivia, ma non vale XP una partita iniziata altrove.
     _beginGame(
       game,
@@ -1093,11 +1106,13 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         await Future<void>.delayed(level.minReply);
         reply = EngineMove(move: book, pv: const []);
       } else {
-        reply = await _computerPlayer.bestMove(
-          _game.initial.fen,
-          _moveHistory,
-          level,
-        );
+        reply = _engineGame
+            ? await _computerPlayer.bestMove(
+                _game.initial.fen,
+                _moveHistory,
+                level,
+              )
+            : await _variantPlayer.bestMove(_game.position, level);
       }
     } on Object catch (e) {
       error = e;
@@ -1136,7 +1151,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     // Con l'orologio acceso l'analisi della minaccia fermerebbe il tempo
     // dell'utente: si spiega solo la mossa.
     try {
-      followUp = _clock != null
+      followUp = _clock != null || !_engineGame
           ? null
           : await _whileSuspended(() => _coach.threat(after));
     } on Object {
@@ -1181,7 +1196,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   void _cancelComputerMove() {
     _generation++;
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    if (_thinking) _computer?.stop();
+    if (_thinking) {
+      _computer?.stop();
+      _variantEngine?.stop();
+    }
     _task = _ComputerTask.none;
     _searchClock = null;
   }
@@ -1340,7 +1358,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         isScrollControlled: true,
         builder: (context) => _TimeControlSheet(
           kid: _kid,
-          variant: _kid ? Variant.standard : _twoPlayerVariant,
+          variant: _kid ? Variant.standard : _chosenVariant,
           whiteName: _settings.whiteName,
           blackName: _settings.blackName,
           setup: _setup,
@@ -1357,8 +1375,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final vsComputer = setup.opponent != Opponent.human;
     // Il profilo bambino gioca solo la classica: la variante scelta prima
     // resta per quando il profilo si spegne.
-    if (!vsComputer && !_kid) _twoPlayerVariant = choice.variant;
-    final variant = vsComputer ? Variant.standard : choice.variant;
+    if (!_kid) _chosenVariant = choice.variant;
+    final variant = _kid ? Variant.standard : choice.variant;
     final control = choice.control;
     final human = vsComputer ? setup.resolveHumanSide(_random) : Side.white;
     final handicap = _kid
@@ -1436,7 +1454,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       _handicapHuman = human;
       _computerSide = human.opposite;
       _orientation = human;
-      _computerPlayer.newGame().ignore();
+      if (_engineGame) _computerPlayer.newGame().ignore();
     } else {
       _handicapHuman = Side.white;
       if (_computerSide != null) _orientation = Side.white;
@@ -1656,10 +1674,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       _task = _ComputerTask.draw;
       _refresh(animate: false);
       try {
-        final score = await _computerPlayer.evaluate(
-          _game.initial.fen,
-          _moveHistory,
-        );
+        final score = _engineGame
+            ? await _computerPlayer.evaluate(_game.initial.fen, _moveHistory)
+            : await _variantPlayer.evaluate(_game.position);
         if (score != null) {
           computerScore = turn == _computerSide
               ? score.comparable
@@ -1759,6 +1776,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           initial: position,
           analyse: _liveAnalysis(player),
           orientation: _orientation,
+          tablebase: sharedTablebase(),
         ),
       ),
     );
@@ -1934,7 +1952,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           ? null
           : _resign,
       // Nelle sfide niente aiuti: né suggerimenti né ripetizione della mossa.
-      coachOn: _computerSide == null || _isChallenge ? null : _coachOn,
+      coachOn: _computerSide == null || _isChallenge || !_engineGame
+          ? null
+          : _coachOn,
       onCoach: () {
         setState(() {
           _coachOn = !_coachOn;
@@ -1947,7 +1967,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
               : 'Allenatore disattivato.',
         );
       },
-      hintAvailable: _computerSide != null && !_isChallenge,
+      hintAvailable: _computerSide != null && !_isChallenge && _engineGame,
       onHint: _humanToMove && _pendingMove == null ? _giveHint : null,
       onThreat: _humanToMove && _pendingMove == null ? _showThreat : null,
     );
@@ -2875,7 +2895,7 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
                 ],
               ),
             ],
-            if (_setup.opponent == Opponent.human && l == null) ...[
+            if (l == null) ...[
               const SizedBox(height: 16),
               Text('Variante', style: theme.textTheme.titleSmall),
               const SizedBox(height: 4),
@@ -2941,7 +2961,7 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
     final theme = Theme.of(context);
     final l = _kidL10n(context);
     final human = _setup.opponent == Opponent.human;
-    final standard = !human || _variant == Variant.standard;
+    final standard = _variant == Variant.standard;
     final pieces = {
       HandicapPiece.fPawn: l.handicapPieceFPawn,
       HandicapPiece.knight: l.handicapPieceKnight,

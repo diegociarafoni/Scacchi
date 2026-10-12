@@ -1551,6 +1551,61 @@
   "@shareImageSubject": {
     "description": "shareImageSubject"
   },
+  "tablebaseTitle": "Finale perfetto",
+  "@tablebaseTitle": {
+    "description": "Titolo della scheda con il risultato esatto dei finali con pochi pezzi"
+  },
+  "tablebaseCalculating": "Calcolo il finale perfetto… succede solo la prima volta",
+  "@tablebaseCalculating": {
+    "description": "Attesa mentre l'app genera la tabella dei finali, solo al primo uso"
+  },
+  "tablebaseWhiteMates": "{moves, plural, one{Il Bianco vince: matto in {moves} mossa} other{Il Bianco vince: matto in {moves} mosse}}",
+  "@tablebaseWhiteMates": {
+    "description": "Risultato esatto: vince il Bianco, con le mosse al matto",
+    "placeholders": {
+      "moves": {
+        "type": "int"
+      }
+    }
+  },
+  "tablebaseBlackMates": "{moves, plural, one{Il Nero vince: matto in {moves} mossa} other{Il Nero vince: matto in {moves} mosse}}",
+  "@tablebaseBlackMates": {
+    "description": "Risultato esatto: vince il Nero, con le mosse al matto",
+    "placeholders": {
+      "moves": {
+        "type": "int"
+      }
+    }
+  },
+  "tablebaseWhiteWins": "Il Bianco vince",
+  "@tablebaseWhiteWins": {
+    "description": "Risultato esatto senza numeri, per il profilo bambino"
+  },
+  "tablebaseBlackWins": "Il Nero vince",
+  "@tablebaseBlackWins": {
+    "description": "Risultato esatto senza numeri, per il profilo bambino"
+  },
+  "tablebaseDraw": "Patta con il gioco perfetto",
+  "@tablebaseDraw": {
+    "description": "Risultato esatto: nessuno dei due può vincere"
+  },
+  "tablebaseBestMove": "Mossa perfetta: {move}",
+  "@tablebaseBestMove": {
+    "description": "Mossa migliore del finale perfetto",
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "tablebaseBestMoveHint": "Gioca la mossa perfetta",
+  "@tablebaseBestMoveHint": {
+    "description": "Descrizione per i lettori di schermo del pulsante con la mossa perfetta"
+  },
+  "tablebaseShowMove": "Mostra la mossa perfetta",
+  "@tablebaseShowMove": {
+    "description": "Pulsante dell'allenatore dei finali che disegna la mossa perfetta sulla scacchiera"
+  },
   "personalTitle": "Le tue aperture",
   "@personalTitle": {
     "description": "Titolo della schermata e della voce nella scheda Aperture"

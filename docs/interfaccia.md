@@ -40,7 +40,7 @@ Per ciascun giocatore una riga mostra le icone dei pezzi avversari catturati, da
 
 | Comando | Effetto |
 |---|---|
-| Nuova | Apre la scelta dell'avversario (due giocatori o computer, con colore e livello), della variante (Classica, Chess960, Re della collina, Tre scacchi; contro il computer solo Classica) e della cadenza; toccando la cadenza inizia la nuova partita |
+| Nuova | Apre la scelta dell'avversario (due giocatori o computer, con colore e livello), della variante (Classica, Chess960, Re della collina, Tre scacchi, anche contro il computer) e della cadenza; toccando la cadenza inizia la nuova partita |
 | Annulla | Annulla l'ultima mossa; disattivato se non ci sono mosse |
 | Gira | Capovolge la scacchiera |
 | Patta | Chiede all'avversario se accetta la patta; disattivato a partita conclusa |

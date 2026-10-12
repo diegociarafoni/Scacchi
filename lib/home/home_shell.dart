@@ -43,6 +43,7 @@ import '../story/story_controller.dart';
 import '../story/story_feed.dart';
 import '../story/story_l10n.dart';
 import '../story/story_page.dart';
+import '../tablebase/shared_tablebase.dart';
 import '../tournament/tournament.dart';
 import '../tournament/tournament_controller.dart';
 import '../tournament/tournament_page.dart';
@@ -202,6 +203,7 @@ class _HomeShellState extends State<HomeShell> {
     controller: await _endgameController(),
     createComputer: widget.createComputer ?? ComputerPlayer.new,
     simple: _kidMode,
+    tablebase: sharedTablebase(),
   );
 
   /// Una sola storia in memoria, salvata a ogni passo.

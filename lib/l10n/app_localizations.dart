@@ -1982,6 +1982,66 @@ abstract class AppLocalizations {
   /// **'Posizione di scacchi'**
   String get shareImageSubject;
 
+  /// Titolo della scheda con il risultato esatto dei finali con pochi pezzi
+  ///
+  /// In it, this message translates to:
+  /// **'Finale perfetto'**
+  String get tablebaseTitle;
+
+  /// Attesa mentre l'app genera la tabella dei finali, solo al primo uso
+  ///
+  /// In it, this message translates to:
+  /// **'Calcolo il finale perfetto… succede solo la prima volta'**
+  String get tablebaseCalculating;
+
+  /// Risultato esatto: vince il Bianco, con le mosse al matto
+  ///
+  /// In it, this message translates to:
+  /// **'{moves, plural, one{Il Bianco vince: matto in {moves} mossa} other{Il Bianco vince: matto in {moves} mosse}}'**
+  String tablebaseWhiteMates(int moves);
+
+  /// Risultato esatto: vince il Nero, con le mosse al matto
+  ///
+  /// In it, this message translates to:
+  /// **'{moves, plural, one{Il Nero vince: matto in {moves} mossa} other{Il Nero vince: matto in {moves} mosse}}'**
+  String tablebaseBlackMates(int moves);
+
+  /// Risultato esatto senza numeri, per il profilo bambino
+  ///
+  /// In it, this message translates to:
+  /// **'Il Bianco vince'**
+  String get tablebaseWhiteWins;
+
+  /// Risultato esatto senza numeri, per il profilo bambino
+  ///
+  /// In it, this message translates to:
+  /// **'Il Nero vince'**
+  String get tablebaseBlackWins;
+
+  /// Risultato esatto: nessuno dei due può vincere
+  ///
+  /// In it, this message translates to:
+  /// **'Patta con il gioco perfetto'**
+  String get tablebaseDraw;
+
+  /// Mossa migliore del finale perfetto
+  ///
+  /// In it, this message translates to:
+  /// **'Mossa perfetta: {move}'**
+  String tablebaseBestMove(String move);
+
+  /// Descrizione per i lettori di schermo del pulsante con la mossa perfetta
+  ///
+  /// In it, this message translates to:
+  /// **'Gioca la mossa perfetta'**
+  String get tablebaseBestMoveHint;
+
+  /// Pulsante dell'allenatore dei finali che disegna la mossa perfetta sulla scacchiera
+  ///
+  /// In it, this message translates to:
+  /// **'Mostra la mossa perfetta'**
+  String get tablebaseShowMove;
+
   /// Titolo della schermata e della voce nella scheda Aperture
   ///
   /// In it, this message translates to:
