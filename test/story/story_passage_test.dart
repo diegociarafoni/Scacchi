@@ -63,17 +63,26 @@ void main() {
     }
   }
 
-  Future<void> save(WidgetTester tester, Finder f) async {
+  /// Tocca [f] e aspetta il salvataggio su file, che è I/O vero: si attende
+  /// finché [until] è vero (senza un tempo fisso, che sotto carico non basta).
+  Future<void> save(
+    WidgetTester tester,
+    Finder f, {
+    required bool Function() until,
+  }) async {
     await tester.ensureVisible(f);
     await tester.pumpAndSettle();
     await tester.tap(f);
-    for (var i = 0; i < 15; i++) {
+    for (var i = 0; i < 400 && (i == 0 || !until()); i++) {
       await tester.runAsync(
         () => Future<void>.delayed(const Duration(milliseconds: 20)),
       );
       await tester.pumpAndSettle();
     }
   }
+
+  bool shown(Finder f) => f.evaluate().isNotEmpty;
+  final passage = find.byKey(const ValueKey('story-passage'));
 
   testWidgets('RG-13 concluse le lezioni il foglio annuncia i puzzle', (
     tester,
@@ -98,12 +107,13 @@ void main() {
       find.textContaining(
         'Lezioni: ${lessons.length - 1} su ${lessons.length}',
       ),
+      until: () => shown(passage),
     );
     expect(played, 1);
     expect(find.byKey(const ValueKey('story-passage')), findsOneWidget);
     expect(find.text('Lezioni concluse!'), findsOneWidget);
     expect(find.text('Ai puzzle'), findsOneWidget);
-    await save(tester, find.text('Ai puzzle'));
+    await save(tester, find.text('Ai puzzle'), until: () => puzzlesOpened);
     expect(puzzlesOpened, isTrue);
   });
 
@@ -120,10 +130,14 @@ void main() {
         return false;
       },
     );
-    await save(tester, find.textContaining('Puzzle del capitolo'));
+    await save(
+      tester,
+      find.textContaining('Puzzle del capitolo'),
+      until: () => shown(find.text('Puzzle risolti!')),
+    );
     expect(find.text('Puzzle risolti!'), findsOneWidget);
     expect(find.textContaining('Pino ti aspetta'), findsOneWidget);
-    await save(tester, find.text('Sfida Pino'));
+    await save(tester, find.text('Sfida Pino'), until: () => boss == 1);
     expect(boss, 1);
   });
 
@@ -140,8 +154,12 @@ void main() {
         return false;
       },
     );
-    await save(tester, find.textContaining('Puzzle del capitolo'));
-    await save(tester, find.text('Più tardi'));
+    await save(
+      tester,
+      find.textContaining('Puzzle del capitolo'),
+      until: () => shown(passage),
+    );
+    await save(tester, find.text('Più tardi'), until: () => !shown(passage));
     expect(find.byKey(const ValueKey('story-passage')), findsNothing);
     expect(boss, 0);
   });
@@ -156,7 +174,11 @@ void main() {
       await story.puzzlesSolved(first, first.puzzleCount);
     });
     await show(tester, boss: (c, bot) async => true);
-    await save(tester, find.textContaining('Sfida a Pino'));
+    await save(
+      tester,
+      find.textContaining('Sfida a Pino'),
+      until: () => shown(find.text('Hai battuto Pino!')),
+    );
     expect(find.text('Hai battuto Pino!'), findsOneWidget);
     expect(find.text('Capitolo 1 concluso!'), findsOneWidget);
     expect(find.textContaining('Si apre il capitolo 2'), findsOneWidget);
@@ -172,7 +194,12 @@ void main() {
       await story.puzzlesSolved(first, first.puzzleCount);
     });
     await show(tester, boss: (c, bot) async => false);
-    await save(tester, find.textContaining('Sfida a Pino'));
+    await save(
+      tester,
+      find.textContaining('Sfida a Pino'),
+      until: () =>
+          shown(find.text('Pino resiste ancora: riprova quando vuoi.')),
+    );
     expect(find.byKey(const ValueKey('story-passage')), findsNothing);
     expect(
       find.text('Pino resiste ancora: riprova quando vuoi.'),
@@ -188,7 +215,11 @@ void main() {
       textScale: 1.3,
       puzzles: (c, ch, r) async => r,
     );
-    await save(tester, find.textContaining('Chapter puzzles'));
+    await save(
+      tester,
+      find.textContaining('Chapter puzzles'),
+      until: () => shown(find.text('Puzzles solved!')),
+    );
     expect(find.text('Puzzles solved!'), findsOneWidget);
     expect(tester.takeException(), isNull);
     final size = tester.getSize(find.text('Later'));
