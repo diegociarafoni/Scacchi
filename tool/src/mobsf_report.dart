@@ -29,8 +29,11 @@ class MobsfPolicy {
   /// Punteggio di sicurezza minimo (0-100).
   final int minScore;
 
-  /// Avvisi gravi accettati: titolo → motivo.
+  /// Avvisi gravi accettati: inizio del titolo → motivo. L'inizio basta perché
+  /// MobSF aggiunge ai titoli parti variabili (versione, valori letti dal manifest).
   final Map<String, String> acceptedHigh;
+
+  bool isAccepted(String title) => acceptedHigh.keys.any(title.startsWith);
 }
 
 /// Il punteggio sta in `appsec.security_score` nelle versioni recenti, in cima al rapporto nelle precedenti.
@@ -60,8 +63,7 @@ List<String> mobsfViolations(Map<String, dynamic> report, MobsfPolicy policy) {
   }
   return [
     for (final title in high)
-      if (!policy.acceptedHigh.containsKey(title))
-        'avviso grave non accettato: $title',
+      if (!policy.isAccepted(title)) 'avviso grave non accettato: $title',
     if (score < policy.minScore)
       'punteggio di sicurezza $score (minimo ${policy.minScore})',
   ];
@@ -72,9 +74,9 @@ Object? mobsfScore(Map<String, dynamic> report) => _score(report);
 
 /// Avvisi accettati nella policy che il rapporto non contiene più: da togliere.
 List<String> staleAccepted(Map<String, dynamic> report, MobsfPolicy policy) {
-  final present = (_highTitles(report) ?? const <String>[]).toSet();
+  final present = _highTitles(report) ?? const <String>[];
   return [
-    for (final title in policy.acceptedHigh.keys)
-      if (!present.contains(title)) title,
+    for (final prefix in policy.acceptedHigh.keys)
+      if (!present.any((t) => t.startsWith(prefix))) prefix,
   ];
 }

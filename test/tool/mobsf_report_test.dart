@@ -41,6 +41,19 @@ void main() {
     expect(mobsfViolations(r, policy), isEmpty);
   });
 
+  test(
+    'un avviso accettato vale anche con un suffisso variabile nel titolo',
+    () {
+      final r = _report(
+        high: [
+          'App può essere installata su Android vulnerabile 7.0, [minSdk=24]',
+        ],
+      );
+      expect(mobsfViolations(r, policy), isEmpty);
+      expect(staleAccepted(r, policy), isEmpty);
+    },
+  );
+
   test('un avviso grave non accettato è una violazione', () {
     final v = mobsfViolations(_report(high: ['Componente esportato']), policy);
     expect(v, hasLength(1));

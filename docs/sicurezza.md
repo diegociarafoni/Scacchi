@@ -43,7 +43,7 @@ Il riferimento è [OWASP MASVS v2](https://mas.owasp.org/MASVS/), con i casi di 
 Il workflow `MobSF` (`.github/workflows/mobsf.yml`) esegue l'analisi statica di [MobSF](https://github.com/MobSF/Mobile-Security-Framework-MobSF) (OWASP MASVS) sull'APK del nightly, quindi sull'APK firmato che gli utenti installano. Parte ogni mercoledì su `main`, a richiesta (Actions → MobSF → Run workflow, con il tag di una release numerata oppure vuoto per il nightly) e sulle PR che toccano la scansione; non gira sulle altre PR perché è pesante. Analizza un APK già pubblicato: non ne costruisce uno. MobSF è un container fissato per digest (v4.5.3), avviato sul runner con una chiave API casuale: nessun APK né dato lascia il runner. `tool/check_mobsf.dart` applica al rapporto JSON la sezione `mobsf` di `tool/policy.json`:
 
 - `minSecurityScore`: punteggio di sicurezza minimo (0-100);
-- `acceptedHigh`: gli avvisi gravi (`appsec.high`) ammessi, titolo → motivo. Ogni altro avviso grave fa fallire il workflow. Un avviso accettato che il rapporto non contiene più viene segnalato come da togliere.
+- `acceptedHigh`: gli avvisi gravi (`appsec.high`) ammessi, inizio del titolo → motivo. Ogni altro avviso grave fa fallire il workflow. Un avviso accettato che il rapporto non contiene più viene segnalato come da togliere.
 
 Il rapporto completo è allegato al workflow (artefatto `mobsf-report`, 30 giorni).
 
