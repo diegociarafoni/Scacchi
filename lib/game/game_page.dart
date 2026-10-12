@@ -82,6 +82,7 @@ class GamePage extends StatefulWidget {
     this.createComputer,
     this.createVariantEngine,
     this.now,
+    this.random,
     this.onActivity,
     this.onSave,
     this.resume,
@@ -105,6 +106,9 @@ class GamePage extends StatefulWidget {
 
   /// Ora corrente per l'orologio; quella di sistema se assente.
   final DateTime Function()? now;
+
+  /// Fonte del caso per le battute del bot; fissa nei golden.
+  final math.Random? random;
 
   /// Registra la partita finita nei progressi; senza, nessun XP.
   final ActivityRecorder? onActivity;
@@ -192,7 +196,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   /// Ultima variante scelta nel pannello Nuova, con persone o contro il computer.
   Variant _chosenVariant = Variant.standard;
-  final _random = math.Random();
+  late final math.Random _random = widget.random ?? math.Random();
 
   /// Lato giocato dal computer; `null` nella partita tra due persone.
   Side? _computerSide;

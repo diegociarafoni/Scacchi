@@ -2,6 +2,7 @@
 library;
 
 import 'dart:io';
+import 'dart:math' as math;
 
 import 'package:chessground/chessground.dart';
 import 'package:flutter/material.dart';
@@ -38,6 +39,7 @@ void main() {
               computerAvailable: true,
               store: MemoryStore(),
               now: () => DateTime(2026, 10, 12, 12),
+              random: math.Random(1),
               createComputer: () =>
                   ComputerPlayer(connect: () async => FirstLegalMoveEngine()),
             ),
