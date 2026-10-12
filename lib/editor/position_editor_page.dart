@@ -8,6 +8,8 @@ import 'package:flutter/services.dart';
 import '../l10n/app_localizations.dart';
 import '../minigames/blind.dart' show pieceLabel;
 import '../minigames/board_layout.dart';
+import '../share/position_image.dart';
+import '../share/position_image_page.dart';
 import 'position_draft.dart';
 
 /// Editor di posizione: pezzi liberi, tratto, arrocco, FEN. Restituisce la
@@ -128,6 +130,10 @@ class _PositionEditorPageState extends State<PositionEditorPage> {
       appBar: AppBar(
         title: const Text('Editor di posizione'),
         actions: [
+          PositionImageButton(
+            image: () =>
+                PositionImage(fen: _draft.fen, orientation: _orientation),
+          ),
           IconButton(
             tooltip: 'Capovolgi la scacchiera',
             icon: const Icon(Icons.swap_vert),

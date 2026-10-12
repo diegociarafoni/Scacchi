@@ -41,6 +41,8 @@ import '../settings/board_frame.dart';
 import '../settings/notation.dart';
 import '../settings/settings.dart';
 import '../settings/settings_page.dart';
+import '../share/position_image.dart';
+import '../share/position_image_page.dart';
 import '../storage/key_value_store.dart';
 import 'board_swipe.dart';
 import 'challenge.dart';
@@ -1730,6 +1732,24 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   LiveAnalysis _liveAnalysis(ComputerPlayer player) =>
       (fen, multiPv) => player.analyseLive(fen, multiPv: multiPv);
 
+  /// Esporta come immagine la posizione mostrata, anche scorrendo le mosse.
+  void _exportImage() {
+    final ply = _viewPly;
+    final Move? last = ply == null
+        ? _game.lastMove
+        : (ply == -1 ? null : _game.moves[ply].move);
+    unawaited(
+      openPositionImage(
+        context,
+        PositionImage(
+          fen: _shownPosition.fen,
+          orientation: _orientation,
+          lastMove: last,
+        ),
+      ),
+    );
+  }
+
   /// Analisi della posizione mostrata con orologio e computer fermi.
   void _openAnalysis() {
     final position = _shownPosition;
@@ -1980,6 +2000,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                 if (value == 'analysis') _openAnalysis();
                 if (value == 'qrSend') unawaited(_sendQr());
                 if (value == 'qrReceive') unawaited(_receiveQr());
+                if (value == 'image') _exportImage();
               },
               itemBuilder: (context) {
                 final l10n = qrL10n(context);
@@ -1998,6 +2019,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                       child: const Text('Revisione della partita'),
                     ),
                   ],
+                  PopupMenuItem(
+                    value: 'image',
+                    child: Text(shareImageL10n(context).shareImageTitle),
+                  ),
                   PopupMenuItem(
                     value: 'qrSend',
                     // Una posizione dell'editor si può passare anche senza mosse.
