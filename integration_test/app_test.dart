@@ -75,6 +75,16 @@ Future<void> _section(WidgetTester tester, String name) async {
   _page = name;
 }
 
+/// Nella pagina Stile apre la scheda [tab] e sceglie la voce con chiave [key].
+Future<void> _styleChoose(WidgetTester tester, String tab, Key key) async {
+  await tester.tap(find.widgetWithText(Tab, tab));
+  await tester.pumpAndSettle();
+  await tester.ensureVisible(find.byKey(key));
+  await tester.pumpAndSettle();
+  await tester.tap(find.byKey(key));
+  await tester.pumpAndSettle();
+}
+
 Future<void> _tapSetting(WidgetTester tester, String label) async {
   final finder = find.text(label);
   await _reveal(tester, finder);
@@ -242,11 +252,8 @@ void main() {
     await _tapSetting(tester, 'Promuovi sempre a donna');
     await tester.pumpAndSettle();
     await _section(tester, 'style');
-    await _reveal(tester, find.text('Blu'));
-    await tester.tap(find.text('Blu'));
-    await _reveal(tester, find.text('Merida'));
-    await tester.tap(find.text('Merida'));
-    await tester.pumpAndSettle();
+    await _styleChoose(tester, 'Scacchiera', const Key('theme-swatch-blue'));
+    await _styleChoose(tester, 'Pezzi', const Key('piece-tile-merida'));
     await _back(tester);
     await tester.pumpAndSettle();
 
@@ -273,13 +280,9 @@ void main() {
     expect(board().settings.colorScheme, BoardTheme.spazio.colorScheme);
     final top = tester.getTopLeft(preview);
 
-    await _reveal(tester, find.text('Blu'));
-    await tester.tap(find.text('Blu'));
-    await tester.pumpAndSettle();
+    await _styleChoose(tester, 'Scacchiera', const Key('theme-swatch-blue'));
     expect(board().settings.colorScheme, BoardTheme.blue.colorScheme);
-    await _reveal(tester, find.text('Merida'));
-    await tester.tap(find.text('Merida'));
-    await tester.pumpAndSettle();
+    await _styleChoose(tester, 'Pezzi', const Key('piece-tile-merida'));
     expect(board().settings.pieceAssets, PieceSet.meridaAssets);
     expect(tester.getTopLeft(preview), top);
 
@@ -307,9 +310,7 @@ void main() {
     expect(board().orientation.name, 'black');
     await _openSettings(tester);
     await _section(tester, 'style');
-    await _reveal(tester, find.text('Blu'));
-    await tester.tap(find.text('Blu'));
-    await tester.pumpAndSettle();
+    await _styleChoose(tester, 'Scacchiera', const Key('theme-swatch-blue'));
     await _back(tester);
     await tester.pumpAndSettle();
     expect(board().orientation.name, 'black');
@@ -611,11 +612,11 @@ void main() {
     expect(brightness(), Brightness.light);
 
     await _openSettings(tester);
-    await _section(tester, 'style');
+    await _section(tester, 'accessibility');
     await _tapSetting(tester, 'Scuro');
     await tester.pumpAndSettle();
     expect(
-      Theme.of(tester.element(find.text('Stile').last)).brightness,
+      Theme.of(tester.element(find.text('Accessibilità').last)).brightness,
       Brightness.dark,
     );
     await _back(tester);
