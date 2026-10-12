@@ -1,0 +1,49 @@
+{
+  "multiplayerClockTitle": "Tempo di gioco",
+  "@multiplayerClockTitle": {
+    "description": "Titolo della scelta della cadenza"
+  },
+  "multiplayerClockNone": "Senza orologio",
+  "@multiplayerClockNone": {
+    "description": "Scelta di giocare senza orologio"
+  },
+  "multiplayerClockHint": "Lo decide chi crea la partita: l'altro telefono lo riceve con l'invito.",
+  "@multiplayerClockHint": {
+    "description": "Spiegazione della scelta della cadenza"
+  },
+  "multiplayerClockYou": "Tu",
+  "@multiplayerClockYou": {
+    "description": "Etichetta del proprio orologio"
+  },
+  "multiplayerClockPeer": "Avversario",
+  "@multiplayerClockPeer": {
+    "description": "Etichetta dell'orologio dell'avversario"
+  },
+  "multiplayerClockSemantics": "Orologio di {who}: {minutes} minuti e {seconds} secondi",
+  "@multiplayerClockSemantics": {
+    "description": "Descrizione per i lettori di schermo di un orologio",
+    "placeholders": {
+      "who": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "int"
+      },
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "multiplayerWhiteWinsOnTime": "Tempo scaduto: vince il Bianco",
+  "@multiplayerWhiteWinsOnTime": {
+    "description": "Esito per tempo scaduto"
+  },
+  "multiplayerBlackWinsOnTime": "Tempo scaduto: vince il Nero",
+  "@multiplayerBlackWinsOnTime": {
+    "description": "Esito per tempo scaduto"
+  },
+  "multiplayerDrawOnTime": "Tempo scaduto, ma senza materiale per il matto: patta",
+  "@multiplayerDrawOnTime": {
+    "description": "Esito per tempo scaduto contro chi non può dare matto"
+  }
+}

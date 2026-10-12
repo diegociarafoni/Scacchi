@@ -4,12 +4,14 @@ import 'dart:io' show SocketException;
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/foundation.dart';
 
+import '../game/clock.dart';
 import 'channel_registry.dart';
 import 'game_invite.dart';
 import 'game_sync.dart';
 import 'lan_discovery.dart';
 import 'lan_transport.dart';
 import 'local_address.dart';
+import 'match_clock.dart';
 import 'multiplayer_session.dart';
 import 'player_identity.dart';
 import 'remote_watch.dart';
@@ -54,6 +56,10 @@ Future<HostChannel> openLanHostAt(int? port) async {
 MessageTransport openLanGuest(String host, int port) =>
     LanTransport.connect(host, port);
 
+/// Dopo quanto un avversario senza tempo e senza notizie perde a tavolino:
+/// copre il ritardo con cui il suo telefono si accorge della scadenza.
+const peerFlagGrace = Duration(seconds: 15);
+
 enum MultiplayerStatus { waitingPeer, connecting, myTurn, peerTurn, finished }
 
 /// Stato della partita a due per l'interfaccia: chi muove, l'ultima mossa,
@@ -64,9 +70,28 @@ class MultiplayerController extends ChangeNotifier {
     this.inviteLink,
     this._store,
     this._seedBytes,
-    this._discovery,
-  ) {
-    _sub = session.events.listen((_) => _changed());
+    this._discovery, {
+    DateTime Function()? now,
+    int? turnStartedAt,
+  }) : _now = now ?? DateTime.now {
+    final control = session.invite.timeControl;
+    if (control != null) {
+      final started = turnStartedAt == null
+          ? null
+          : _notAfterNow(turnStartedAt);
+      clock = MatchClock.restore(
+        control,
+        times: session.sync.times,
+        turnStartedAt: started,
+        now: _now,
+      );
+      _turnStartedAt = turnStartedAt ?? _now().millisecondsSinceEpoch;
+      if (session.sync.isGameOver) clock!.stop();
+    } else {
+      clock = null;
+    }
+    _sub = session.events.listen(_onEvent);
+    if (clock?.active != null && !session.sync.isGameOver) _startTicker();
     // Il canale si è (ri)collegato all'ospite: la sessione si ripresenta da
     // sola, qui basta aggiornare lo stato.
     _connSub = session.transport.connected.listen((_) {
@@ -83,10 +108,12 @@ class MultiplayerController extends ChangeNotifier {
   /// [NoLocalNetwork] se il telefono non è in una rete locale.
   static Future<MultiplayerController> host({
     required Side side,
+    TimeControl? timeControl,
     bool bluetooth = false,
     OpenHost openHost = openLanHost,
     bool remote = false,
     SavedGameStore? store,
+    DateTime Function()? now,
     LanDiscovery discovery = const BonsoirLanDiscovery(),
   }) async {
     HostChannel? lan;
@@ -114,6 +141,8 @@ class MultiplayerController extends ChangeNotifier {
         lanAddress: lan?.lanAddress,
         remote: remote,
         ble: bluetooth,
+        // A distanza le mosse possono arrivare ore dopo: niente orologio.
+        timeControl: remote ? null : timeControl,
       );
       final session = MultiplayerSession.host(
         invite,
@@ -126,6 +155,7 @@ class MultiplayerController extends ChangeNotifier {
         store,
         await identity.seed(),
         discovery,
+        now: now,
       ).._advertise(invite.gameId, lan?.lanAddress);
       // A distanza l'amico può arrivare ore dopo: l'invito si salva subito.
       if (remote) unawaited(controller._persist());
@@ -146,6 +176,7 @@ class MultiplayerController extends ChangeNotifier {
     ResumeHost openHost = openLanHostAt,
     OpenGuest openGuest = openLanGuest,
     SavedGameStore? store,
+    DateTime Function()? now,
     LanDiscovery discovery = const BonsoirLanDiscovery(),
   }) async {
     final invite = saved.invite;
@@ -158,7 +189,10 @@ class MultiplayerController extends ChangeNotifier {
         store,
         discovery,
         moves: saved.moves,
+        times: saved.times,
         sealed: saved.sealed,
+        turnStartedAt: saved.turnStartedAt,
+        now: now,
       );
     }
     final lanInvite = invite.lanAddress;
@@ -188,12 +222,14 @@ class MultiplayerController extends ChangeNotifier {
         lanAddress: lan?.lanAddress ?? invite.lanAddress,
         remote: invite.remote,
         ble: invite.ble,
+        timeControl: invite.timeControl,
       );
       final session = MultiplayerSession.host(
         current,
         identity,
         MultiTransport(opened),
         moves: saved.moves,
+        times: saved.times,
         peerKey: saved.peerKey,
         sealed: saved.sealed,
       );
@@ -203,6 +239,8 @@ class MultiplayerController extends ChangeNotifier {
         store,
         saved.seed,
         discovery,
+        now: now,
+        turnStartedAt: saved.turnStartedAt,
       ).._advertise(invite.gameId, lan?.lanAddress);
     } catch (_) {
       for (final t in opened) {
@@ -224,6 +262,7 @@ class MultiplayerController extends ChangeNotifier {
     GameInvite invite, {
     OpenGuest openGuest = openLanGuest,
     SavedGameStore? store,
+    DateTime Function()? now,
     LanDiscovery discovery = const BonsoirLanDiscovery(),
   }) async => _joinAs(
     invite,
@@ -231,6 +270,7 @@ class MultiplayerController extends ChangeNotifier {
     openGuest,
     store,
     discovery,
+    now: now,
   );
 
   static Future<MultiplayerController> _joinAs(
@@ -240,7 +280,10 @@ class MultiplayerController extends ChangeNotifier {
     SavedGameStore? store,
     LanDiscovery discovery, {
     List<String> moves = const [],
+    List<int?> times = const [],
     Map<int, Uint8List> sealed = const {},
+    int? turnStartedAt,
+    DateTime Function()? now,
   }) async {
     final lan = invite.lanAddress;
     final target = lan == null ? null : _split(lan);
@@ -263,6 +306,7 @@ class MultiplayerController extends ChangeNotifier {
         identity,
         MultiTransport(opened),
         moves: moves,
+        times: times,
         sealed: sealed,
       );
       final controller = MultiplayerController._(
@@ -271,6 +315,8 @@ class MultiplayerController extends ChangeNotifier {
         store,
         await identity.seed(),
         discovery,
+        now: now,
+        turnStartedAt: turnStartedAt,
       );
       if (await session.announce()) controller._reached = true;
       unawaited(controller._persist());
@@ -284,6 +330,7 @@ class MultiplayerController extends ChangeNotifier {
   }
 
   final MultiplayerSession session;
+  final DateTime Function() _now;
   SavedGameStore? _store;
   final LanDiscovery _discovery;
   void Function()? _stopAdvert;
@@ -299,6 +346,29 @@ class MultiplayerController extends ChangeNotifier {
   bool _reached = false;
   bool _disposed = false;
 
+  // Un orologio di sistema portato indietro non deve regalare tempo.
+  DateTime _notAfterNow(int epochMs) {
+    final at = DateTime.fromMillisecondsSinceEpoch(epochMs, isUtc: true);
+    final now = _now();
+    return at.isAfter(now) ? now : at;
+  }
+
+  /// Orologio della partita; `null` se si gioca senza tempo.
+  late final MatchClock? clock;
+  int _turnStartedAt = 0;
+  DateTime? _peerZeroSince;
+  bool _flagging = false;
+  Timer? _ticker;
+
+  /// Scatta a ogni passo dell'orologio, per ridisegnare i tempi senza
+  /// rifare tutta la schermata.
+  final ticks = ValueNotifier<int>(0);
+
+  TimeControl? get timeControl => session.invite.timeControl;
+
+  /// La partita è finita perché a qualcuno è scaduto il tempo.
+  bool get endedOnTime => _sync.flagged != null;
+
   GameSync get _sync => session.sync;
   Side get mySide => _sync.mySide;
   Position get position => _sync.position;
@@ -313,7 +383,7 @@ class MultiplayerController extends ChangeNotifier {
   /// Ultima mossa in notazione SAN, per annunciarla.
   String? get lastSan => _sync.lastSan;
 
-  Outcome? get outcome => position.outcome;
+  Outcome? get outcome => _sync.outcome;
 
   MultiplayerStatus get status {
     final peer = isHost ? _sync.peerKey != null : _reached;
@@ -330,15 +400,80 @@ class MultiplayerController extends ChangeNotifier {
 
   /// Gioca [move]; `false` se non è il proprio turno o la mossa è illegale.
   Future<bool> play(Move move) async {
-    if (status != MultiplayerStatus.myTurn || !position.isLegal(move)) {
+    if (status != MultiplayerStatus.myTurn ||
+        !position.isLegal(move) ||
+        clock?.flagged == mySide) {
       return false;
     }
-    await session.play(move.uci);
+    final left = clock?.moved(_sync.moves.length + 1);
+    _turnStartedAt = _now().millisecondsSinceEpoch;
+    _peerZeroSince = null;
+    await session.play(move.uci, timeMs: left?.inMilliseconds);
     _changed();
     return true;
   }
 
+  void _onEvent(SyncResult result) {
+    if (result case MoveAccepted(:final move)) {
+      final ms = move.timeMs;
+      clock?.moved(
+        move.seq,
+        left: ms == null ? null : Duration(milliseconds: ms),
+      );
+      _turnStartedAt = _now().millisecondsSinceEpoch;
+      _peerZeroSince = null;
+    }
+    _changed();
+  }
+
+  /// Controlla l'orologio: dichiara perso il proprio tempo scaduto e, se
+  /// l'avversario non si fa vivo dopo [peerFlagGrace], gli dà la sconfitta.
+  void tick() {
+    final c = clock;
+    if (c == null || _disposed) return;
+    if (_sync.isGameOver) {
+      c.stop();
+      _ticker?.cancel();
+      _ticker = null;
+      return;
+    }
+    final turn = position.turn;
+    if (c.active == turn && c.remaining(turn) == Duration.zero) {
+      if (turn == mySide) {
+        unawaited(_flagSelf());
+      } else {
+        final since = _peerZeroSince ??= _now();
+        if (_now().difference(since) >= peerFlagGrace && _sync.flagPeer()) {
+          _changed();
+        }
+      }
+    }
+    ticks.value++;
+  }
+
+  Future<void> _flagSelf() async {
+    if (_flagging) return;
+    _flagging = true;
+    try {
+      try {
+        await session.flagSelf();
+      } on Object catch (e) {
+        if (kDebugMode) debugPrint('Tempo scaduto non inviato: $e');
+      }
+      _changed();
+    } finally {
+      _flagging = false;
+    }
+  }
+
+  void _startTicker() {
+    if (clock == null || _ticker != null || _disposed) return;
+    _ticker = Timer.periodic(const Duration(milliseconds: 100), (_) => tick());
+  }
+
   void _changed() {
+    if (_sync.isGameOver) clock?.stop();
+    if (clock?.active != null) _startTicker();
     if (!_reached && !isHost && _sync.moves.isNotEmpty) {
       _reached = true;
     }
@@ -417,6 +552,8 @@ class MultiplayerController extends ChangeNotifier {
       moves: _sync.moves,
       peerKey: isHost ? _sync.peerKey : null,
       sealed: session.sealedMessages,
+      times: _sync.times,
+      turnStartedAt: clock == null ? null : _turnStartedAt,
     );
     if (finished) _finished = true;
     return _writes = _writes.then((_) async {
@@ -432,6 +569,8 @@ class MultiplayerController extends ChangeNotifier {
   Future<void> close() async {
     if (_disposed) return;
     _disposed = true;
+    _ticker?.cancel();
+    _ticker = null;
     await _sub.cancel();
     await _connSub.cancel();
     _stopAdvert?.call();
@@ -441,6 +580,7 @@ class MultiplayerController extends ChangeNotifier {
   @override
   void dispose() {
     unawaited(close());
+    ticks.dispose();
     super.dispose();
   }
 }

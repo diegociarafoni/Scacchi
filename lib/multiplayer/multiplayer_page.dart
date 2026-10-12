@@ -10,6 +10,7 @@ import 'package:share_plus/share_plus.dart';
 
 import '../exchange/qr_code_view.dart';
 import '../exchange/qr_receive_page.dart';
+import '../game/clock.dart';
 import '../game/move_speech.dart';
 import '../l10n/app_localizations.dart';
 import '../training/training_board.dart';
@@ -81,6 +82,7 @@ class MultiplayerPage extends StatefulWidget {
 
 class _MultiplayerPageState extends State<MultiplayerPage> {
   Side _side = Side.white;
+  TimeControl? _control;
   late bool _remote = widget.remoteByDefault;
   _Channel _channel = _Channel.wifi;
   bool _busy = false;
@@ -328,6 +330,21 @@ class _MultiplayerPageState extends State<MultiplayerPage> {
             onChanged: _busy ? null : (v) => setState(() => _remote = v),
           ),
           const SizedBox(height: 8),
+          DropdownButtonFormField<TimeControl?>(
+            key: ValueKey('clock-${_remote ? 'off' : _control?.label}'),
+            initialValue: _remote ? null : _control,
+            decoration: InputDecoration(
+              labelText: l10n.multiplayerClockTitle,
+              helperText: l10n.multiplayerClockHint,
+            ),
+            items: [
+              DropdownMenuItem(child: Text(l10n.multiplayerClockNone)),
+              for (final control in TimeControl.presets)
+                DropdownMenuItem(value: control, child: Text(control.label)),
+            ],
+            onChanged: _remote ? null : (v) => setState(() => _control = v),
+          ),
+          const SizedBox(height: 16),
           FilledButton.icon(
             icon: const Icon(Icons.qr_code_2),
             label: Text(l10n.multiplayerCreate),
@@ -338,6 +355,7 @@ class _MultiplayerPageState extends State<MultiplayerPage> {
                     if (bluetooth) await widget.bluetoothCheck(isHost: true);
                     return MultiplayerController.host(
                       side: _side,
+                      timeControl: _control,
                       bluetooth: bluetooth,
                       openHost: widget.openHost,
                       remote: _remote,
@@ -588,12 +606,28 @@ class _MultiplayerGamePageState extends State<MultiplayerGamePage> {
     MultiplayerStatus.connecting => l10n.multiplayerConnecting,
     MultiplayerStatus.myTurn => l10n.multiplayerYourTurn,
     MultiplayerStatus.peerTurn => l10n.multiplayerPeerTurn,
+    MultiplayerStatus.finished when _c.endedOnTime =>
+      switch (_c.outcome?.winner) {
+        Side.white => l10n.multiplayerWhiteWinsOnTime,
+        Side.black => l10n.multiplayerBlackWinsOnTime,
+        null => l10n.multiplayerDrawOnTime,
+      },
     MultiplayerStatus.finished => switch (_c.outcome?.winner) {
       Side.white => l10n.multiplayerWhiteWins,
       Side.black => l10n.multiplayerBlackWins,
       null => l10n.multiplayerDraw,
     },
   };
+
+  Widget _clockRow(Side side, String who) => ValueListenableBuilder<int>(
+    valueListenable: _c.ticks,
+    builder: (context, _, _) => _ClockView(
+      side: side,
+      who: who,
+      remaining: _c.clock!.remaining(side),
+      active: _c.clock!.active == side && !_c.endedOnTime,
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -662,7 +696,10 @@ class _MultiplayerGamePageState extends State<MultiplayerGamePage> {
                         ),
                       ),
                     ],
-                  ] else
+                  ] else ...[
+                    if (_c.clock != null)
+                      _clockRow(_c.mySide.opposite, l10n.multiplayerClockPeer),
+                    if (_c.clock != null) const SizedBox(height: 8),
                     Center(
                       child: TrainingBoard(
                         size: size,
@@ -675,6 +712,10 @@ class _MultiplayerGamePageState extends State<MultiplayerGamePage> {
                         onMove: _onMove,
                       ),
                     ),
+                    if (_c.clock != null) const SizedBox(height: 8),
+                    if (_c.clock != null)
+                      _clockRow(_c.mySide, l10n.multiplayerClockYou),
+                  ],
                   if (_c.pendingDelivery) ...[
                     const SizedBox(height: 12),
                     Text(l10n.multiplayerPending, textAlign: TextAlign.center),
@@ -683,6 +724,67 @@ class _MultiplayerGamePageState extends State<MultiplayerGamePage> {
               );
             },
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Tempo di un giocatore, nei colori usati dall'orologio delle altre partite.
+class _ClockView extends StatelessWidget {
+  const _ClockView({
+    required this.side,
+    required this.who,
+    required this.remaining,
+    required this.active,
+  });
+
+  final Side side;
+  final String who;
+  final Duration remaining;
+  final bool active;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final low = active && isLowTime(remaining);
+    final background = low
+        ? scheme.error
+        : active
+        ? scheme.primary
+        : scheme.surfaceContainerHighest;
+    final foreground = low
+        ? scheme.onError
+        : active
+        ? scheme.onPrimary
+        : scheme.onSurfaceVariant;
+    return Semantics(
+      label: multiplayerL10n(context).multiplayerClockSemantics(
+        who,
+        remaining.inMinutes,
+        remaining.inSeconds % 60,
+      ),
+      excludeSemantics: true,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: background,
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(who, style: TextStyle(color: foreground)),
+            ),
+            Text(
+              formatClock(remaining),
+              key: ValueKey('clock-${side.name}'),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: foreground,
+                fontFeatures: const [FontFeature.tabularFigures()],
+              ),
+            ),
+          ],
         ),
       ),
     );

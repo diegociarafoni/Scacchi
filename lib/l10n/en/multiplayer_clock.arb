@@ -1,0 +1,11 @@
+{
+  "multiplayerClockTitle": "Time control",
+  "multiplayerClockNone": "No clock",
+  "multiplayerClockHint": "Whoever creates the game decides: the other phone receives it with the invite.",
+  "multiplayerClockYou": "You",
+  "multiplayerClockPeer": "Opponent",
+  "multiplayerClockSemantics": "{who}'s clock: {minutes} minutes and {seconds} seconds",
+  "multiplayerWhiteWinsOnTime": "Time out: White wins",
+  "multiplayerBlackWinsOnTime": "Time out: Black wins",
+  "multiplayerDrawOnTime": "Time out, but no mating material: draw"
+}
