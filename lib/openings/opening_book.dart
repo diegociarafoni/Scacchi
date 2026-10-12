@@ -121,7 +121,10 @@ class OpeningBook {
     return null;
   }
 
-  bool _inBook(Position pos) {
+  bool _inBook(Position pos) => isKnown(pos);
+
+  /// Se la posizione è nel libro: ha un nome o delle continuazioni.
+  bool isKnown(Position pos) {
     final k = key(pos);
     return _names.containsKey(k) || _edges.containsKey(k);
   }
