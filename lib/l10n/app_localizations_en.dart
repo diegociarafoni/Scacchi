@@ -825,4 +825,97 @@ class AppLocalizationsEn extends AppLocalizations {
   String botUnlockHint(String name) {
     return 'Unlocks by beating $name';
   }
+
+  @override
+  String get challengeTitle => 'Challenge a friend';
+
+  @override
+  String get challengeSubtitle => 'The same puzzles on two phones, no network';
+
+  @override
+  String get challengeIntro =>
+      'Pick the run and show the QR code to your friend: you both play the same puzzles. At the end you swap scores with a second QR code.';
+
+  @override
+  String get challengePrepare => 'Set up the challenge';
+
+  @override
+  String challengeReady(String mode) {
+    return 'Challenge ready: $mode';
+  }
+
+  @override
+  String get challengeShowInvite => 'Show the QR code to your friend';
+
+  @override
+  String get challengePlay => 'Play your run';
+
+  @override
+  String get challengeReceive => 'Receive a challenge';
+
+  @override
+  String challengeInviteTitle(String mode) {
+    return 'Challenge: $mode';
+  }
+
+  @override
+  String get challengeInviteHint =>
+      'Your friend opens Puzzles › Challenge a friend › Receive a challenge and scans the code.';
+
+  @override
+  String get challengeReceiveHint =>
+      'Scan the challenge QR code your friend is showing.';
+
+  @override
+  String get challengeNotInvite =>
+      'This QR code is not a challenge: ask your friend to show the challenge QR code.';
+
+  @override
+  String get challengeLibraryMismatch =>
+      'The two phones have different puzzles: update Rokko on both.';
+
+  @override
+  String get challengeCompareTitle => 'Challenge with your friend';
+
+  @override
+  String get challengeShowResult => 'Show my result';
+
+  @override
+  String challengeResultTitle(int score) {
+    return 'My result: $score';
+  }
+
+  @override
+  String get challengeResultHint =>
+      'Your friend scans this code to see your score.';
+
+  @override
+  String get challengeReadResult => 'Read your friend\'s result';
+
+  @override
+  String get challengeReadResultHint =>
+      'Scan the result QR code your friend is showing.';
+
+  @override
+  String get challengeNotResult =>
+      'This QR code is not a result: ask your friend to show the result QR code.';
+
+  @override
+  String get challengeOtherChallenge =>
+      'That result belongs to a different challenge.';
+
+  @override
+  String challengeWon(int mine, int theirs) {
+    return 'You won: $mine to $theirs';
+  }
+
+  @override
+  String challengeLost(int mine, int theirs) {
+    return 'Your friend won: $theirs to $mine';
+  }
+
+  @override
+  String challengeDraw(int mine, int theirs) {
+    return 'A draw: $mine to $theirs';
+  }
 }

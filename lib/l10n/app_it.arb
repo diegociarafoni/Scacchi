@@ -984,5 +984,140 @@
         "description": "Nome del bot da battere"
       }
     }
+  },
+  "challengeTitle": "Sfida un amico",
+  "@challengeTitle": {
+    "description": "Voce della scheda Puzzle e titolo della schermata"
+  },
+  "challengeSubtitle": "Gli stessi puzzle su due telefoni, senza rete",
+  "@challengeSubtitle": {
+    "description": "Sottotitolo della voce nella scheda Puzzle"
+  },
+  "challengeIntro": "Scegli la prova e mostra il QR all'amico: giocate gli stessi puzzle. A fine prova vi scambiate i punteggi con un secondo QR.",
+  "@challengeIntro": {
+    "description": "Spiegazione in cima alla schermata della sfida"
+  },
+  "challengePrepare": "Prepara la sfida",
+  "@challengePrepare": {
+    "description": "Pulsante che crea la sfida"
+  },
+  "challengeReady": "Sfida pronta: {mode}",
+  "@challengeReady": {
+    "description": "Sfida creata, in attesa di mostrare il QR",
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "challengeShowInvite": "Mostra il QR all'amico",
+  "@challengeShowInvite": {
+    "description": "Pulsante che apre il QR della sfida"
+  },
+  "challengePlay": "Gioca la tua prova",
+  "@challengePlay": {
+    "description": "Pulsante che avvia la prova"
+  },
+  "challengeReceive": "Ricevi una sfida",
+  "@challengeReceive": {
+    "description": "Pulsante che apre la fotocamera"
+  },
+  "challengeInviteTitle": "Sfida: {mode}",
+  "@challengeInviteTitle": {
+    "description": "Titolo sopra il QR della sfida",
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "challengeInviteHint": "L'amico apre Puzzle › Sfida un amico › Ricevi una sfida e inquadra il codice.",
+  "@challengeInviteHint": {
+    "description": "Istruzioni sotto il QR della sfida"
+  },
+  "challengeReceiveHint": "Inquadra il QR della sfida mostrato dall'amico.",
+  "@challengeReceiveHint": {
+    "description": "Istruzioni sotto la fotocamera per la sfida"
+  },
+  "challengeNotInvite": "Questo QR non è una sfida: chiedi all'amico di mostrare il QR della sfida.",
+  "@challengeNotInvite": {
+    "description": "Errore: QR letto di altro tipo"
+  },
+  "challengeLibraryMismatch": "I due telefoni hanno puzzle diversi: aggiornate Rokko su entrambi.",
+  "@challengeLibraryMismatch": {
+    "description": "Errore: raccolte di puzzle diverse"
+  },
+  "challengeCompareTitle": "Sfida con l'amico",
+  "@challengeCompareTitle": {
+    "description": "Titolo del confronto a fine prova"
+  },
+  "challengeShowResult": "Mostra il mio risultato",
+  "@challengeShowResult": {
+    "description": "Pulsante che apre il QR del risultato"
+  },
+  "challengeResultTitle": "Il mio risultato: {score}",
+  "@challengeResultTitle": {
+    "description": "Titolo sopra il QR del risultato",
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "challengeResultHint": "L'amico inquadra questo codice per vedere il tuo punteggio.",
+  "@challengeResultHint": {
+    "description": "Istruzioni sotto il QR del risultato"
+  },
+  "challengeReadResult": "Leggi il risultato dell'amico",
+  "@challengeReadResult": {
+    "description": "Pulsante che apre la fotocamera per il risultato"
+  },
+  "challengeReadResultHint": "Inquadra il QR del risultato mostrato dall'amico.",
+  "@challengeReadResultHint": {
+    "description": "Istruzioni sotto la fotocamera per il risultato"
+  },
+  "challengeNotResult": "Questo QR non è un risultato: chiedi all'amico di mostrare il QR del risultato.",
+  "@challengeNotResult": {
+    "description": "Errore: QR letto di altro tipo"
+  },
+  "challengeOtherChallenge": "Il risultato è di un'altra sfida.",
+  "@challengeOtherChallenge": {
+    "description": "Errore: il risultato non appartiene a questa sfida"
+  },
+  "challengeWon": "Hai vinto: {mine} a {theirs}",
+  "@challengeWon": {
+    "description": "Esito del confronto",
+    "placeholders": {
+      "mine": {
+        "type": "int"
+      },
+      "theirs": {
+        "type": "int"
+      }
+    }
+  },
+  "challengeLost": "Ha vinto l'amico: {theirs} a {mine}",
+  "@challengeLost": {
+    "description": "Esito del confronto",
+    "placeholders": {
+      "mine": {
+        "type": "int"
+      },
+      "theirs": {
+        "type": "int"
+      }
+    }
+  },
+  "challengeDraw": "Pareggio: {mine} a {theirs}",
+  "@challengeDraw": {
+    "description": "Esito del confronto",
+    "placeholders": {
+      "mine": {
+        "type": "int"
+      },
+      "theirs": {
+        "type": "int"
+      }
+    }
   }
 }
