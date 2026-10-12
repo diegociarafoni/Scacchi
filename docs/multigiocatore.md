@@ -11,8 +11,8 @@ Partita tra due persone su due telefoni, pensata per funzionare in ogni situazio
 | 2b | Abbinamento via QR, permessi di rete e schermata di gioco in rete locale | Disponibile da Tu › Gioca con un amico |
 | 2c-1 | Salvataggio e ripresa della partita in rete locale | Disponibile da Tu › Gioca con un amico › Riprendi la partita |
 | 2c-2 | Ricerca mDNS dopo un cambio di indirizzo | Disponibile |
-| 3 | Canale Bluetooth LE | Da fare |
-| 4 | Relay Nostr, link d'invito, notifiche in background, schermate | Da fare |
+| 3 | Canale Bluetooth LE, scelta Wi-Fi o Bluetooth nella schermata | Disponibile da Tu › Gioca con un amico › Come collegarvi |
+| 4 | Relay Nostr, link d'invito, avvisi in background (solo Android), schermate | Disponibile da Tu › Gioca con un amico con «Gioca anche a distanza» |
 
 ## Requisiti
 
@@ -28,6 +28,14 @@ Partita tra due persone su due telefoni, pensata per funzionare in ogni situazio
 | RMP-09 | La partita a due si salva a ogni mossa in `multiplayer.json` (invito, seme privato, registro, chiave dell'avversario, messaggi sigillati) e a partita finita il salvataggio sparisce. Chi ospita salva solo dopo l'ingresso dell'avversario. Uscire lascia la partita salvata; da Tu › Gioca con un amico compare «Riprendi la partita» (anche «Elimina»). Chi ospita riapre l'ascolto sulla porta di prima, se libera; l'invitato si ricollega all'indirizzo dell'invito e i registri si riallineano. Una partita nuova sostituisce quella salvata solo dopo conferma; un file non valido viene messo da parte. Chi ospita e esce mentre attende l'avversario non lascia nulla da riprendere. Se la porta di prima è occupata, l'ospite usa un'altra porta e aggiorna l'invito salvato. |
 | RMP-10 | Chi ospita annuncia la partita in rete locale (mDNS, servizio `_rokko-chess._tcp`, nome = impronta dell'id della partita, non l'id). Se l'invitato non raggiunge più l'indirizzo dell'invito, dopo ogni tentativo fallito cerca l'annuncio con il nome della sua partita (al massimo 6 secondi) e si ricollega al nuovo indirizzo. L'annuncio è facoltativo: se non funziona la partita non si ferma; finisce con la chiusura della partita. |
 | RMP-11 | Oltre al Wi-Fi, i canali registrati in `extraChannelFactories` (`channel_registry.dart`) si aprono a ogni partita nuova, unita o ripresa e si aggiungono al `MultiTransport` appena pronti; un canale assente o che fallisce non ferma la partita. |
+| RMP-20 | Vicini senza Wi-Fi si gioca via Bluetooth LE. Da «Gioca con un amico» chi crea sceglie «Come collegarvi» (Wi-Fi o Bluetooth); l'invito Bluetooth porta `ble=1`, non ha indirizzo di rete e il QR si inquadra come sempre; il canale si apre solo se l'invito lo prevede, quindi una partita in Wi-Fi non chiede permessi Bluetooth. L'ospite annuncia, senza nome, un servizio GATT il cui UUID deriva dall'id della partita; l'invitato lo cerca con quel filtro, si collega e si ricollega da solo se cade. I messaggi sigillati si spezzano nei pacchetti dell'MTU e si ricompongono con memoria limitata. Bluetooth spento, permesso negato o telefono senza BLE danno un avviso chiaro. La partita si salva e riprende anche via Bluetooth. |
+| RMP-30 | Per ogni partita a distanza la chiave Nostr (secp256k1) e le etichette degli slot si derivano dal segreto dell'invito con HKDF-SHA256, uguali sui due telefoni senza scambiarsi altro. Partite o segreti diversi danno chiavi e slot diversi: il relay vede solo una chiave pubblica casuale per partita. |
+| RMP-31 | Il canale `NostrTransport` pubblica ogni messaggio sigillato come evento sostituibile (tipo 30078, firma Schnorr BIP-340) con il messaggio in base64; ogni lato ha 4 slot a rotazione, quindi il relay conserva solo gli ultimi messaggi e mai lo storico. Si ascoltano solo gli slot dell'altro lato; eventi con id o firma sbagliati, altra chiave, slot estraneo, contenuto non base64 o oltre 1024 byte si scartano, e una copia già vista non si ripete. Si usano solo relay `wss`, tutti insieme: un invio riesce se un relay risponde `OK` entro 8 secondi. Un relay caduto si ricontatta con attese da 2 a 60 secondi e al ritorno si ripubblicano gli eventi in corso. |
+| RMP-32 | L'invito a distanza porta `r=1` (altri valori lo rendono non valido). Solo con `r=1` la partita apre il canale Nostr, a ogni partita nuova, unita o ripresa; senza, nessun relay viene contattato. Senza Wi-Fi né hotspot l'ospite può creare la partita a distanza e l'invitato entrare con un invito senza `lan`; senza `r=1` e senza `lan` l'invito non è utilizzabile. Se l'ospite ha la Wi-Fi, l'invito porta entrambi e la partita passa da un canale all'altro da sola. |
+| RMP-33 | Chi rientra in una partita a distanza (ripresa dopo la chiusura dell'app) trova sul relay l'ultima mossa dell'amico e si riallinea; l'ospite può riprendere anche senza Wi-Fi, e l'amico può arrivare ore dopo. |
+| RMP-34 | In Tu › Gioca con un amico l'interruttore «Gioca anche a distanza» (acceso all'inizio) aggiunge il canale a distanza. Chi ospita a distanza condivide il link con le app di messaggi o mostra il QR; l'altro lo incolla da «Unisciti con il link» (anche dentro un messaggio con altro testo) o lo inquadra; un testo che non è un invito si rifiuta. L'ospite a distanza salva la partita subito, anche senza avversario, e uscire in attesa la lascia riprendibile. L'app non registra alcun link profondo (MASVS-PLATFORM). |
+| RMP-40 | Con una partita a distanza salvata, il controllo in background si collega una volta ai relay, guarda se l'amico ha giocato oltre il registro locale e, se sì, mostra una notifica locale con la sua mossa (o «La partita è finita») nella lingua del telefono. Per ogni mossa si avvisa una sola volta; il controllo non salva nulla, alla riapertura la partita si riallinea da sola. Senza partita salvata, o in rete locale, non fa nulla. |
+| RMP-41 | Su Android un lavoro periodico di WorkManager (ogni 15 minuti, con rete) esegue il controllo: si accende quando parte una partita a distanza, si spegne a partita finita o quando non c'è più una partita da seguire. Il permesso per le notifiche si chiede in quel momento. Su iOS il sistema non garantisce l'esecuzione in background, quindi non si programma nulla. |
 | RMP-06 | Cambiare canale non cambia la partita. Chi è rimasto indietro chiede le mosse mancanti e si rimette in pari; una mossa non partita si ripete quando un canale torna disponibile. |
 
 Questi requisiti sostituiscono, per il solo modulo multigiocatore, l'esclusione delle partite tra persone su più dispositivi e il vincolo "nessun permesso di rete" di RNF-01, che resta valido per il gioco da soli.
@@ -42,13 +50,13 @@ MultiplayerSession          lib/multiplayer/multiplayer_session.dart
   ├─ MessageCodec           firma + cifratura dei messaggi
   └─ MultiTransport         tutti i canali insieme
        ├─ Wi-Fi locale      LanTransport
-       ├─ Bluetooth LE      (fase 3)
+       ├─ Bluetooth LE      BleTransport
        └─ relay Nostr       (fase 4)
 ```
 
 | File | Ruolo |
 |---|---|
-| `game_invite.dart` | `GameInvite`: link `scacchi://partita?v=1&g=<uuid>&s=<segreto>&k=<chiave>&c=w|b[&lan=host:porta]`, campi binari in Base64 URL senza padding. `newGameId`, `newSecret` usano `Random.secure`. |
+| `game_invite.dart` | `GameInvite`: link `rokko://partita?v=1&g=<uuid>&s=<segreto>&k=<chiave>&c=w|b[&lan=host:porta]`, campi binari in Base64 URL senza padding; i link col vecchio schema `scacchi://` si leggono ancora, si scrive sempre `rokko://`. `newGameId`, `newSecret` usano `Random.secure`. |
 | `player_identity.dart` | `PlayerIdentity`: coppia di chiavi Ed25519; il seme di 32 byte è salvato con la partita (`saved_game.dart`). |
 | `game_message.dart` | Messaggi: `JoinMessage` (l'invitato si presenta), `MoveMessage` (semimossa, UCI, impronta), `SyncRequest` (rimandare da una semimossa). |
 | `message_codec.dart` | `MessageCodec`: sigillo dei messaggi. |
@@ -57,6 +65,9 @@ MultiplayerSession          lib/multiplayer/multiplayer_session.dart
 | `lan_discovery.dart` | `LanDiscovery` e `BonsoirLanDiscovery` (pacchetto `bonsoir`, MIT): annuncio e ricerca mDNS; `lanServiceName`. |
 | `channel_registry.dart` | `ChannelFactory` e `extraChannelFactories`: dove si registra un canale in più (Bluetooth LE, relay). |
 | `lan_transport.dart` | `LanTransport`: canale Wi-Fi su TCP (vedi sotto). |
+| `ble_fragmenter.dart` | `BleFragmenter` e `BleReassembler`: messaggio ↔ pacchetti con intestazione di 4 byte. |
+| `ble_transport.dart` | `BleLink` (estremo del collegamento), `BleTransport` (canale `MessageTransport`), `bleServiceUuid`. |
+| `ble_link.dart` | Adattatore su `bluetooth_low_energy`: `BlePeripheralLink` (ospite), `BleCentralLink` (invitato), `ensureBluetoothReady`, `checkBluetooth`, `BluetoothUnavailable` e `openBleChannel`, la riga registrata in `extraChannelFactories`. |
 | `saved_game.dart` | `SavedGame` e `SavedGameStore`: la partita in corso in `multiplayer.json`, nella cartella privata dell'app (`JsonFile`, scrittura atomica). |
 | `multiplayer_session.dart` | `MultiplayerSession`: collega registro, sigillo e canali e reagisce ai messaggi. |
 
@@ -76,9 +87,20 @@ nonce (12 byte) | AES-256-GCM( {"a": chiave autore, "b": corpo JSON, "s": firma}
 
 A ogni collegamento nuovo `MultiTransport.connected` avvisa la sessione, che fa ripresentare l'invitato e ripete la propria ultima mossa: dopo un'uscita dalla Wi-Fi la partita riprende senza azioni dell'utente.
 
+### Canale Bluetooth LE
+
+Per giocare vicini senza Wi-Fi né rete (RMP-20). `GameInvite.ble` (`ble=1` nel link) dice a entrambi di aprire il Bluetooth; un invito può avere `lan`, `ble` o tutti e due, e `MultiTransport` usa quelli disponibili insieme. `openBleChannel` è registrato in `extraChannelFactories` (RMP-11): restituisce `null` se l'invito non è Bluetooth. `MultiplayerController.host(bluetooth: true)` non apre la rete locale e crea un invito senza `lan`; l'invitato e la ripresa saltano la rete locale quando l'invito non ha indirizzo ma ha `ble`. La schermata controlla prima permessi e Bluetooth acceso (`checkBluetooth`) e mostra l'avviso; il canale poi si apre in sottofondo e `connected` avvisa la sessione.
+
+- **Servizio.** UUID del servizio GATT = primi 128 bit di SHA-256(`scacchi-ble-v1|<id partita>`): l'invitato filtra la ricerca su quello, e dall'annuncio non si risale all'id. Due caratteristiche fisse: `…4c01` (l'invitato scrive, con risposta) e `…4c02` (l'ospite notifica).
+- **Ruoli.** L'ospite è periferica (`BlePeripheralLink`): pubblica il servizio, si annuncia senza nome e risponde con notifiche a chi si iscrive; si ripubblica se il Bluetooth viene spento e riacceso e si riannuncia dopo ogni uscita. L'invitato è centrale (`BleCentralLink`): cerca, si collega, scopre il servizio, si iscrive alle notifiche e, se il collegamento cade o la ricerca non trova nulla, ricomincia con attese da 1 a 8 secondi.
+- **Pacchetti.** Ogni scrittura o notifica porta al più `MTU - 3` byte (20 finché la MTU non è nota). Intestazione di 4 byte: id del messaggio (2), indice (1), numero di frammenti (1). `BleReassembler` ricompone in qualunque ordine (l'id parte da un numero casuale), ignora i doppioni e tiene al massimo 4 messaggi incompleti e 2048 byte per messaggio; frammenti incoerenti si scartano in silenzio.
+- **Collegamenti.** L'ospite accetta scritture solo da telefoni iscritti alle sue risposte e tiene al massimo 3 telefoni iscritti e, oltre, scollega il più vecchio. Il Bluetooth non autentica nessuno: come per il Wi-Fi, chi non ha il segreto dell'invito non produce messaggi validi.
+- **Permessi.** Android 12 e successivi: `BLUETOOTH_SCAN` (`neverForLocation`), `BLUETOOTH_CONNECT`, `BLUETOOTH_ADVERTISE`, richiesti a runtime solo quando si sceglie il Bluetooth. Android 11 e precedenti: `BLUETOOTH`, `BLUETOOTH_ADMIN` e `ACCESS_FINE_LOCATION` con `maxSdkVersion="30"`; la posizione non viene letta né salvata (il sistema la pretende per cercare dispositivi BLE e il GPS deve essere acceso). iOS: `NSBluetoothAlwaysUsageDescription`. Tutti i motivi sono in `tool/policy.json`.
+- **Limiti noti.** Si gioca in primo piano: in background iOS limita annunci e ricerche e non c'è ancora il recupero in background (fase 4). La portata è quella del BLE (qualche metro). Un invio riuscito vuol dire consegnato al sistema operativo, come nel Wi-Fi; la mossa si ripete al ricollegamento. Se il Bluetooth si spegne o un permesso viene tolto dopo il controllo iniziale, il canale non parte e l'errore resta nel registro di debug: la schermata continua a mostrare l'attesa. Come ogni radio aperta, il BLE si può disturbare: chi è vicino e ha l'id del servizio può occupare uno dei 3 posti dell'ospite o interferire con i frammenti in arrivo, ma non può falsificare né leggere le mosse; i messaggi persi si richiedono con la sincronizzazione del registro. Verificato con una radio finta in memoria (`ble_link_test.dart`); la prova su due telefoni veri va fatta a mano prima di annunciarlo.
+
 ### Schermata
 
-`MultiplayerPage` (voce Tu › Gioca con un amico) offre la scelta del colore, «Crea la partita» e «Unisciti con il QR». `MultiplayerController` tiene lo stato per l'interfaccia: crea identità e invito per partita, apre il canale con `openLanHost` (indirizzo IPv4 privato scelto da `pickLanAddress` preferendo Wi-Fi e hotspot ed escludendo dati mobili e VPN, porta scelta dal sistema) o `openLanGuest`, e avvisa a ogni mossa. L'invito si mostra una sola volta come QR del link `scacchi://`, non a ogni mossa; la fotocamera riusa il lettore dello scambio QR. `MultiplayerGamePage` mostra il QR finché l'avversario non arriva, poi la scacchiera orientata dal proprio lato, con le mosse permesse solo al proprio turno.
+`MultiplayerPage` (voce Tu › Gioca con un amico) offre la scelta del colore, «Come collegarvi» (Wi-Fi o Bluetooth), l'interruttore «Gioca anche a distanza», «Crea la partita» e «Unisciti con il QR». `MultiplayerController` tiene lo stato per l'interfaccia: crea identità e invito per partita, apre il canale con `openLanHost` (indirizzo IPv4 privato scelto da `pickLanAddress` preferendo Wi-Fi e hotspot ed escludendo dati mobili e VPN, porta scelta dal sistema) o `openLanGuest`, e avvisa a ogni mossa. L'invito si mostra una sola volta come QR del link `rokko://`, non a ogni mossa; la fotocamera riusa il lettore dello scambio QR. `MultiplayerGamePage` mostra il QR finché l'avversario non arriva, poi la scacchiera orientata dal proprio lato, con le mosse permesse solo al proprio turno.
 
 Su Android il permesso `INTERNET` è dichiarato con il motivo in `tool/policy.json`; su iOS `NSLocalNetworkUsageDescription` spiega l'uso della rete locale. Nessun socket si apre finché non si crea o si inquadra un invito. `NSBonjourServices` dichiara solo `_rokko-chess._tcp`; su Android `bonsoir` aggiunge `CHANGE_WIFI_MULTICAST_STATE` (in `tool/policy.json` tra i permessi aggiunti dalle librerie).
 
@@ -92,6 +114,23 @@ Su Android il permesso `INTERNET` è dichiarato con il motivo in `tool/policy.js
 - I messaggi in arrivo si elaborano uno alla volta, nell'ordine di arrivo.
 - A partita finita non si accettano altre mosse.
 
+### Gioco a distanza (relay Nostr)
+
+| File | Ruolo |
+|---|---|
+| `nostr_event.dart` | `NostrEvent` (id e firma NIP-01, forma validata) e `RelayKeys` (chiave e slot derivati dal segreto). |
+| `nostr_transport.dart` | `NostrTransport`, relay predefiniti (`defaultRelays`) e `openNostrChannel`, registrato in `channel_registry.dart`. |
+| `remote_turn_check.dart` | `checkRemoteGame`: collegamento unico al relay con la partita salvata e avviso una volta per mossa. |
+| `remote_watch.dart`, `remote_watch_task.dart` | `RemoteWatch` / `BackgroundRemoteWatch` (WorkManager), lavoro in background, notifica locale e registro degli avvisi. |
+
+Come funziona: ogni telefono scrive nei propri 4 slot (eventi sostituibili con `d` casuale per partita e lato) e ascolta quelli dell'altro. Poiché i turni si alternano, un telefono può perdere al massimo l'ultima mossa dell'altro, e quella resta sul relay finché non ne arriva una nuova: per questo basta conservare pochi eventi. I 4 slot a rotazione evitano che un messaggio di servizio (richiesta di recupero, presentazione) cancelli l'ultima mossa ancora da consegnare. Il contenuto è sempre il messaggio sigillato di `MessageCodec`: il relay non può leggerlo né falsificarlo, e chi ha la chiave Nostr (derivata dal segreto) non può comunque firmare mosse a nome dell'avversario.
+
+L'invito a distanza ha `r=1`. Il canale si apre dal registro dei canali solo con `r=1`; gli eventi si firmano con la chiave della partita, quindi qualunque relay li accetta senza account. I relay predefiniti sono quattro pubblici (`relay.damus.io`, `nos.lol`, `relay.primal.net`, `offchain.pub`); ne basta uno. Cambiare l'elenco è una riga in `defaultRelays`; un relay proprio sarebbe un altro valore dello stesso elenco.
+
+Controllo in background: `BackgroundRemoteWatch` registra un lavoro periodico di WorkManager (Android) che chiama `checkRemoteGame` in un isolate a parte: legge `multiplayer.json`, apre il canale, aspetta fino a 15 secondi e, se il registro cresce, mostra la notifica. Il registro degli avvisi (`PrefsNotifiedLog`) tiene in `shared_preferences` fino a quale mossa si è già avvisato. Il ritardo tipico è di 15 minuti, adeguato alla corrispondenza. Android 13 e successivi chiedono il permesso delle notifiche quando parte la prima partita a distanza.
+
+Limiti noti: i relay pubblici possono rifiutare o perdere eventi (per questo se ne usano più d'uno e si ripubblica a ogni ricollegamento); vedono l'indirizzo IP dei telefoni e l'ora delle mosse. Le prove su relay veri e su telefoni veri non sono state fatte dall'ambiente di sviluppo (rete bloccata): vanno fatte a mano. Il lavoro in background non è provato su un telefono, e su iOS manca. La schermata di gioco non ha ancora un orologio: una partita a distanza è per corrispondenza.
+
 ### Cadenza (fasi successive)
 
 In presenza si gioca con l'orologio; quando la partita passa a distanza l'orologio va in pausa e la cadenza diventa per corrispondenza, con la ripresa dell'orologio dal vivo concordata al ritorno in presenza.
@@ -104,10 +143,11 @@ In presenza si gioca con l'orologio; quando la partita passa a distanza l'orolog
 | MASVS-NETWORK | Cifratura end-to-end su ogni canale, anche locale; il relay non legge né falsifica le mosse. |
 | MASVS-CODE | Invito e messaggi sono input non fidato: limiti di lunghezza, validazione di ogni campo, scarto silenzioso. |
 | MASVS-AUTH | Nessun account: l'identità è la chiave Ed25519; la chiave dell'avversario si fissa al primo ingresso. |
-| MASVS-PRIVACY | Nessun dato personale; il relay vedrà solo byte cifrati e chiavi casuali per partita. |
+| MASVS-PRIVACY | Nessun dato personale; il relay vede solo byte cifrati, una chiave casuale per partita e l'indirizzo IP di chi si collega; il canale a distanza si apre solo se l'invito lo prevede e l'interruttore è acceso. |
+| MASVS-PLATFORM | Nessun link profondo né schema URL registrato: il link d'invito si incolla da dentro l'app. Il lavoro in background non è esportato e WorkManager non usa servizi in primo piano. |
 
 Limiti noti: l'invito contiene il segreto, quindi chi lo intercetta prima dell'avversario può occupare la partita (l'ospite vedrà una chiave diversa da quella attesa). Il salvataggio contiene il seme privato della partita: sta nella cartella privata dell'app, escluso dai backup di Android (`backup_rules.xml`, `data_extraction_rules.xml`); su iOS segue il backup del dispositivo, cifrato. Chi legge il file può firmare al posto del giocatore, ma solo in quella partita: l'identità è generata per ogni partita. Se l'indirizzo dell'ospite cambia dopo il riavvio, l'invitato lo ritrova con la ricerca mDNS (RMP-10), purché i due telefoni siano ancora nella stessa rete.
 
 ## Test
 
-`flutter test test/multiplayer`: salvataggio e ripresa (`saved_game_test.dart`), invito, sigillo, registro, canali e sessione completa con canali in memoria, compreso il passaggio Wi-Fi → relay → Wi-Fi e il recupero dopo un ripristino. `lan_transport_test.dart` usa socket TCP veri su 127.0.0.1: pacchetti spezzati, pacchetti troppo grandi, limite di collegamenti, ricollegamento senza invii, chiusura durante il collegamento, una partita completa e una mossa consegnata dopo la caduta del collegamento. `multiplayer_controller_test.dart` e `multiplayer_page_test.dart` provano stato e schermata con canali in memoria e un lettore QR finto: attesa, turni, matto, nuovi tentativi dell'invitato, assenza di Wi-Fi, QR estraneo e conferma d'uscita.
+`flutter test test/multiplayer`: Bluetooth (`ble_fragmenter_test.dart`: frammenti in disordine, doppi, incoerenti, memoria limitata; `ble_transport_test.dart`: canale su un collegamento in memoria; `ble_link_test.dart`: ospite e invitato su una radio finta, permessi, Bluetooth spento, ricollegamento, limite di collegamenti; `multiplayer_bluetooth_test.dart` e `multiplayer_bluetooth_page_test.dart`: partita intera, ripresa e schermata), eventi Nostr e chiavi (`nostr_event_test.dart`), canale su un relay finto in memoria (`nostr_transport_test.dart`, `fake_relay.dart`: slot, relay spento o che non risponde, caduta e ritorno, eventi falsi), controller e schermata a distanza (`remote_controller_test.dart`, `remote_page_test.dart`), controllo e testi degli avvisi (`remote_turn_check_test.dart`, `remote_watch_test.dart`); salvataggio e ripresa (`saved_game_test.dart`), invito, sigillo, registro, canali e sessione completa con canali in memoria, compreso il passaggio Wi-Fi → relay → Wi-Fi e il recupero dopo un ripristino. `lan_transport_test.dart` usa socket TCP veri su 127.0.0.1: pacchetti spezzati, pacchetti troppo grandi, limite di collegamenti, ricollegamento senza invii, chiusura durante il collegamento, una partita completa e una mossa consegnata dopo la caduta del collegamento. `multiplayer_controller_test.dart` e `multiplayer_page_test.dart` provano stato e schermata con canali in memoria e un lettore QR finto: attesa, turni, matto, nuovi tentativi dell'invitato, assenza di Wi-Fi, QR estraneo e conferma d'uscita.

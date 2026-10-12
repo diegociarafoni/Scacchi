@@ -1,0 +1,88 @@
+{
+  "multiplayerRemoteIntro": "A distanza basta internet: mandi un link all'amico e giocate quando volete, anche a ore di distanza.",
+  "@multiplayerRemoteIntro": {
+    "description": "Spiegazione del gioco a distanza nella schermata iniziale"
+  },
+  "multiplayerRemoteSwitch": "Gioca anche a distanza",
+  "@multiplayerRemoteSwitch": {
+    "description": "Interruttore che aggiunge il canale internet alla partita"
+  },
+  "multiplayerRemoteSwitchHint": "L'amico può unirsi da lontano con un link. Le mosse passano cifrate da relay pubblici: nessun account e nessun server nostro.",
+  "@multiplayerRemoteSwitchHint": {
+    "description": "Spiegazione sotto l'interruttore del gioco a distanza"
+  },
+  "multiplayerRemoteShare": "Condividi il link d'invito",
+  "@multiplayerRemoteShare": {
+    "description": "Pulsante che condivide il link dell'invito con le app di messaggi"
+  },
+  "multiplayerRemoteShareSubject": "Invito a una partita di scacchi",
+  "@multiplayerRemoteShareSubject": {
+    "description": "Oggetto del messaggio con il link d'invito"
+  },
+  "multiplayerRemoteShareText": "Giochiamo a scacchi su Rokko! Apri l'app, scegli Gioca con un amico, poi Unisciti con il link e incolla questo link: {link}",
+  "@multiplayerRemoteShareText": {
+    "description": "Testo del messaggio con il link d'invito",
+    "placeholders": {
+      "link": {
+        "type": "String"
+      }
+    }
+  },
+  "multiplayerRemoteWaitingHint": "Manda il link all'amico oppure fagli inquadrare il QR. La partita resta salvata: puoi chiudere l'app e riprenderla da Gioca con un amico.",
+  "@multiplayerRemoteWaitingHint": {
+    "description": "Suggerimento sotto il QR di una partita a distanza"
+  },
+  "multiplayerRemoteLeaveBodyWaiting": "La partita resta salvata e il link vale ancora: potrai riprenderla da Gioca con un amico.",
+  "@multiplayerRemoteLeaveBodyWaiting": {
+    "description": "Conferma d'uscita mentre si attende l'amico in una partita a distanza"
+  },
+  "multiplayerRemoteJoinLink": "Unisciti con il link",
+  "@multiplayerRemoteJoinLink": {
+    "description": "Pulsante che apre l'inserimento del link d'invito"
+  },
+  "multiplayerRemoteLinkTitle": "Incolla il link d'invito",
+  "@multiplayerRemoteLinkTitle": {
+    "description": "Titolo della finestra dove si incolla il link"
+  },
+  "multiplayerRemoteLinkField": "Link d'invito",
+  "@multiplayerRemoteLinkField": {
+    "description": "Etichetta del campo dove si incolla il link"
+  },
+  "multiplayerRemotePaste": "Incolla",
+  "@multiplayerRemotePaste": {
+    "description": "Pulsante che incolla dagli appunti"
+  },
+  "multiplayerRemoteLinkInvalid": "Questo link non è un invito a una partita.",
+  "@multiplayerRemoteLinkInvalid": {
+    "description": "Errore per un testo incollato che non è un invito"
+  },
+  "multiplayerRemoteLinkConfirm": "Unisciti",
+  "@multiplayerRemoteLinkConfirm": {
+    "description": "Pulsante che conferma il link incollato"
+  },
+  "multiplayerRemoteNotifyChannel": "Partite a distanza",
+  "@multiplayerRemoteNotifyChannel": {
+    "description": "Nome del canale di notifica delle partite a distanza"
+  },
+  "multiplayerRemoteNotifyChannelDescription": "Avvisa quando l'amico ha giocato la sua mossa.",
+  "@multiplayerRemoteNotifyChannelDescription": {
+    "description": "Descrizione del canale di notifica delle partite a distanza"
+  },
+  "multiplayerRemoteNotifyTitle": "Tocca a te",
+  "@multiplayerRemoteNotifyTitle": {
+    "description": "Titolo della notifica quando l'amico ha mosso"
+  },
+  "multiplayerRemoteNotifyBody": "Il tuo amico ha giocato {move}.",
+  "@multiplayerRemoteNotifyBody": {
+    "description": "Testo della notifica con la mossa dell'amico",
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "multiplayerRemoteNotifyOver": "La partita con il tuo amico è finita.",
+  "@multiplayerRemoteNotifyOver": {
+    "description": "Testo della notifica quando l'ultima mossa dell'amico chiude la partita"
+  }
+}

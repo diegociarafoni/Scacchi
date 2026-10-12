@@ -30,6 +30,16 @@ I tag con suffisso (`v1.2.0-beta.1`) diventano pre-release. Gli altri sono la "l
 https://github.com/diegociarafoni/rokko/releases/latest/download/rokko.apk
 ```
 
+## Changelog e proposta di versione
+
+Il workflow `.github/workflows/release-please.yml` (release-please) tiene aperta su `main` una PR **«chore(main): release X.Y.Z»**. Contiene l'aggiornamento di `CHANGELOG.md` con le modifiche dall'ultima versione, raggruppate in Novità (`feat`), Correzioni (`fix`), Prestazioni (`perf`) e Annullamenti (`revert`); gli altri tipi di commit non compaiono. La versione proposta segue i commit: prima della 1.0 una novità alza la seconda cifra, una correzione la terza.
+
+**Unire la PR non pubblica nulla.** Release-please aggiorna `CHANGELOG.md`, `.release-please-manifest.json` e `version.txt`, crea il tag `vX.Y.Z` e una release **in bozza** con le note del changelog. Il tag è creato con il token del workflow, che non avvia altri workflow, quindi `Rilascio APK` non parte. La versione dell'app resta quella del tag: `pubspec.yaml` non viene toccato.
+
+**La versione esce solo su richiesta.** Quando si decide di pubblicare: Actions → Rilascio APK → Run workflow, scegliendo come ramo il **tag** `vX.Y.Z` (non `main`, che nel frattempo può essere andato avanti) e **version** = `X.Y.Z`. Il workflow costruisce l'APK, lo allega alla bozza e la pubblica, mantenendo le note del changelog. Senza bozza (versioni fatte a mano, come nella tabella sopra) la Release si crea come prima.
+
+Con il solo token del workflow GitHub non avvia la CI sulla PR creata da un workflow, e i controlli obbligatori restano in attesa: si sbloccano da «Update branch», che fa partire i controlli a nome di chi lo preme. Non si usa un token personale per aggirarlo, perché con quello anche la creazione del tag avvierebbe la pubblicazione.
+
 ## Nightly a ogni merge
 
 Ogni volta che la CI passa su `main`, il workflow compila l'APK firmato e ricrea la pre-release **nightly** (nome `Rokko nightly <commit>`). Il link non cambia mai e porta sempre all'ultimo `main` verificato:
