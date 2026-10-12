@@ -42,7 +42,8 @@ void main() {
           'Altra',
           uci('e2e4 e7e5 f2f4'),
         );
-        expect(error, contains('Nf3'));
+        expect(error?.kind, RepertoireErrorKind.conflict);
+        expect(error?.san, 'Nf3');
         expect(t.lines(Side.white), hasLength(1));
       },
     );
@@ -63,8 +64,14 @@ void main() {
 
     test('rifiuta linee illegali o vuote', () async {
       final t = await trainer();
-      expect(await t.addLine(Side.white, 'x', uci('e2e5')), isNotNull);
-      expect(await t.addLine(Side.white, 'x', const []), isNotNull);
+      expect(
+        (await t.addLine(Side.white, 'x', uci('e2e5')))?.kind,
+        RepertoireErrorKind.illegal,
+      );
+      expect(
+        (await t.addLine(Side.white, 'x', const []))?.kind,
+        RepertoireErrorKind.empty,
+      );
     });
 
     test('per il Nero le carte sono le mosse del Nero', () async {

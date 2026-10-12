@@ -8,7 +8,7 @@ Requisito RP-05: italiano come lingua predefinita, con la struttura pronta per a
 - La lingua è fissata all'italiano (`locale: Locale('it')` in `lib/main.dart`), quindi anche i testi di Material (pulsante Indietro, selettori, campi di testo) sono in italiano su qualunque dispositivo. `l10n.yaml` indica l'italiano come lingua preferita, così resterà la lingua di ripiego anche quando il `locale` fisso verrà tolto.
 - Su iOS e macOS la regione di sviluppo è l'italiano; le finestre native del sistema (condivisione, permessi) seguono la lingua del dispositivo se è italiano o inglese, altrimenti usano l'italiano.
 - Il nome sotto l'icona non viene da `appTitle`: è `android:label` in `android/app/src/main/AndroidManifest.xml` e `CFBundleDisplayName` in `ios/Runner/Info.plist`.
-- Sono dichiarate italiano e inglese (`supportedLocales`, e `CFBundleLocalizations` su iOS). Sono tradotti il nome dell'app, i testi del profilo bambino (prefissi `kid`, `kidGame`, `kidBot`), quelli dello scambio QR (prefisso `qr`) e le schermate elencate in [Schermate migrate](#schermate-migrate); gli altri testi sono ancora scritti in italiano nel codice.
+- Sono dichiarate italiano e inglese (`supportedLocales`, e `CFBundleLocalizations` su iOS). Sono tradotti il nome dell'app, i testi del profilo bambino (prefissi `kid`, `kidGame`, `kidBot`), quelli dello scambio QR (prefisso `qr`), le aperture (prefisso `openings`) e le schermate elencate in [Schermate migrate](#schermate-migrate); gli altri testi sono ancora scritti in italiano nel codice.
 
 ## File
 
@@ -41,6 +41,7 @@ Creare `lib/l10n/app_<codice>.arb` con tutte le chiavi e rigenerare. Per renderl
 | Elenco dei minigiochi | `lib/minigames/minigames_page.dart` | Nessuno; titoli e descrizioni dei minigiochi sono nei file `.arb` |
 | Coordinate a tempo, Cattura tutto, Alla cieca, Conta del materiale | `lib/minigames/*_page.dart` | Domande e risposte dei quiz (`quiz.dart`, `blind.dart`, `material_quiz.dart`) e istruzioni delle scacchiere di Cattura tutto (`capture_all.dart`) |
 | Editor di posizione (solo titolo e aiuto sul FEN, `editorFen…`) | `lib/editor/position_editor_page.dart` | Pulsanti, avvisi e dialoghi dell'editor |
+| Aperture: scheda, Esplora aperture, repertorio, ripasso, dialogo e avvisi di Gioca un'apertura (prefisso `openings`) | `lib/openings/*_page.dart`, `lib/openings/opening_game_dialog.dart`, `lib/openings/opening_name.dart` | Nessuno; i nomi delle aperture sono tradotti in `opening_names_it.dart`, gli errori di `RepertoireTrainer.addLine` sono codici (`RepertoireError`) tradotti da `repertoireErrorText`, i nomi delle linee salvate restano nella lingua in cui sono state create |
 | Statistiche | `lib/stats/stats_page.dart` | Bilancio sintetico `+V =P -S` (`Score.toString` in `stats.dart`), nomi delle cadenze e delle aperture che arrivano dall'archivio |
 
 ## Testi da spostare

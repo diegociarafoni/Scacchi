@@ -11,6 +11,7 @@ import 'opening_assets.dart';
 import 'opening_book.dart';
 import 'opening_game.dart';
 import 'opening_game_dialog.dart';
+import 'openings_l10n.dart';
 import 'repertoire.dart';
 
 /// Esplora aperture: continuazioni del libro dalla posizione corrente (RF-92).
@@ -75,26 +76,27 @@ class _ExplorerPageState extends State<ExplorerPage> {
     final positions = _positions;
     final text = Theme.of(context).textTheme;
     final notation = AppSettings.of(context).notation;
+    final l = openingsL10n(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Esplora aperture'),
+        title: Text(l.openingsExplorer),
         actions: [
           if (widget.repertoire != null)
             IconButton(
-              tooltip: 'Aggiungi al repertorio',
+              tooltip: l.openingsAddToRepertoire,
               icon: const Icon(Icons.bookmark_add_outlined),
               onPressed: _moves.isEmpty ? null : _addToRepertoire,
             ),
           if (widget.onPlay != null)
             IconButton(
-              tooltip: 'Gioca questa apertura',
+              tooltip: l.openingsPlayOpening,
               icon: const Icon(Icons.play_arrow),
               onPressed: _moves.isEmpty || positions.last.isGameOver
                   ? null
                   : _playOpening,
             ),
           IconButton(
-            tooltip: 'Gira la scacchiera',
+            tooltip: l.openingsFlipBoard,
             icon: const Icon(Icons.swap_vert),
             onPressed: () =>
                 setState(() => _orientation = _orientation.opposite),
@@ -106,9 +108,7 @@ class _ExplorerPageState extends State<ExplorerPage> {
           future: _book,
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return const Center(
-                child: Text('Impossibile caricare le aperture.'),
-              );
+              return Center(child: Text(l.openingsLoadFailed));
             }
             final book = snapshot.data;
             if (book == null) {
@@ -126,8 +126,8 @@ class _ExplorerPageState extends State<ExplorerPage> {
                         opening != null
                             ? '${opening.eco} ${opening.localName}'
                             : _moves.isEmpty
-                            ? 'Posizione iniziale'
-                            : 'Apertura senza nome',
+                            ? l.openingsStartPosition
+                            : l.openingsUnnamed,
                         key: const Key('explorer-opening'),
                         style: text.titleMedium,
                       ),
@@ -145,7 +145,7 @@ class _ExplorerPageState extends State<ExplorerPage> {
                       child: next.isEmpty
                           ? Center(
                               child: Text(
-                                'Fuori dal libro delle aperture',
+                                l.openingsOutOfBook,
                                 style: text.bodyLarge,
                               ),
                             )
@@ -176,14 +176,14 @@ class _ExplorerPageState extends State<ExplorerPage> {
                           child: TextButton.icon(
                             onPressed: _moves.isEmpty ? null : _back,
                             icon: const Icon(Icons.undo),
-                            label: const Text('Indietro'),
+                            label: Text(l.openingsBack),
                           ),
                         ),
                         Expanded(
                           child: TextButton.icon(
                             onPressed: _moves.isEmpty ? null : _reset,
                             icon: const Icon(Icons.first_page),
-                            label: const Text('Inizio'),
+                            label: Text(l.openingsReset),
                           ),
                         ),
                       ],
@@ -199,6 +199,7 @@ class _ExplorerPageState extends State<ExplorerPage> {
   }
 
   Future<void> _playOpening() async {
+    final l = openingsL10n(context);
     final choice = await askOpeningGame(
       context,
       // Di norma si gioca il colore che deve muovere dopo l'apertura.
@@ -213,7 +214,7 @@ class _ExplorerPageState extends State<ExplorerPage> {
     }
     if (!mounted) return;
     final title =
-        book?.classifyPositions(_positions)?.localName ?? 'Apertura libera';
+        book?.classifyPositions(_positions)?.localName ?? l.openingsFreeTitle;
     await widget.onPlay!(
       context,
       OpeningGameRequest.explorer(
@@ -233,9 +234,12 @@ class _ExplorerPageState extends State<ExplorerPage> {
       // Senza libro si propone un nome generico.
     }
     if (!mounted) return;
+    final l = openingsL10n(context);
     // Niente dispose: il dialogo lo usa ancora durante l'animazione di uscita.
     final name = TextEditingController(
-      text: book?.classifyPositions(_positions)?.localName ?? 'Linea',
+      text:
+          book?.classifyPositions(_positions)?.localName ??
+          l.openingsDefaultLineName,
     );
     // Di norma la linea finisce con la mossa del proprio colore.
     var side = _moves.length.isOdd ? Side.white : Side.black;
@@ -243,19 +247,25 @@ class _ExplorerPageState extends State<ExplorerPage> {
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setDialog) => AlertDialog(
-          title: const Text('Aggiungi al repertorio'),
+          title: Text(l.openingsAddToRepertoire),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 controller: name,
-                decoration: const InputDecoration(labelText: 'Nome'),
+                decoration: InputDecoration(labelText: l.openingsLineName),
               ),
               const SizedBox(height: 16),
               SegmentedButton<Side>(
-                segments: const [
-                  ButtonSegment(value: Side.white, label: Text('Bianco')),
-                  ButtonSegment(value: Side.black, label: Text('Nero')),
+                segments: [
+                  ButtonSegment(
+                    value: Side.white,
+                    label: Text(l.openingsWhite),
+                  ),
+                  ButtonSegment(
+                    value: Side.black,
+                    label: Text(l.openingsBlack),
+                  ),
                 ],
                 selected: {side},
                 onSelectionChanged: (s) => setDialog(() => side = s.first),
@@ -265,26 +275,33 @@ class _ExplorerPageState extends State<ExplorerPage> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context, false),
-              child: const Text('Annulla'),
+              child: Text(l.openingsCancel),
             ),
             FilledButton(
               onPressed: () => Navigator.pop(context, true),
-              child: const Text('Aggiungi'),
+              child: Text(l.openingsAdd),
             ),
           ],
         ),
       ),
     );
-    final label = name.text.trim().isEmpty ? 'Linea' : name.text.trim();
+    final label = name.text.trim().isEmpty
+        ? l.openingsDefaultLineName
+        : name.text.trim();
     if (confirmed != true || !mounted) return;
     final error = await widget.repertoire!.addLine(side, label, [
       ..._moves,
     ], notation: AppSettings.of(context).notation);
     if (!mounted) return;
-    final color = side == Side.white ? 'Bianco' : 'Nero';
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(error ?? 'Linea aggiunta al repertorio del $color.'),
+        content: Text(
+          error != null
+              ? repertoireErrorText(l, error)
+              : side == Side.white
+              ? l.openingsLineAddedWhite
+              : l.openingsLineAddedBlack,
+        ),
       ),
     );
   }

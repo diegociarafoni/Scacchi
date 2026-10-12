@@ -825,4 +825,210 @@ class AppLocalizationsEn extends AppLocalizations {
   String botUnlockHint(String name) {
     return 'Unlocks by beating $name';
   }
+
+  @override
+  String get openingsTitle => 'Openings';
+
+  @override
+  String get openingsExplorer => 'Explore openings';
+
+  @override
+  String get openingsExplorerSubtitle =>
+      'Names and continuations of over 3,000 openings';
+
+  @override
+  String get openingsRepertoireWhite => 'Repertoire as White';
+
+  @override
+  String get openingsRepertoireBlack => 'Repertoire as Black';
+
+  @override
+  String get openingsRepertoireUnavailable => 'Repertoire unavailable';
+
+  @override
+  String get openingsLoading => 'Loading...';
+
+  @override
+  String openingsRepertoireSummary(int lines, int due) {
+    String _temp0 = intl.Intl.pluralLogic(
+      lines,
+      locale: localeName,
+      other: '$lines lines',
+      one: '1 line',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      due,
+      locale: localeName,
+      other: '$due moves to review',
+      one: '1 move to review',
+    );
+    return '$_temp0 · $_temp1';
+  }
+
+  @override
+  String get openingsWhite => 'White';
+
+  @override
+  String get openingsBlack => 'Black';
+
+  @override
+  String get openingsCancel => 'Cancel';
+
+  @override
+  String get openingsBack => 'Back';
+
+  @override
+  String get openingsReset => 'Start';
+
+  @override
+  String get openingsFlipBoard => 'Flip the board';
+
+  @override
+  String get openingsLoadFailed => 'Could not load the openings.';
+
+  @override
+  String get openingsStartPosition => 'Starting position';
+
+  @override
+  String get openingsUnnamed => 'Unnamed opening';
+
+  @override
+  String get openingsOutOfBook => 'Out of the opening book';
+
+  @override
+  String get openingsFreeTitle => 'Free opening';
+
+  @override
+  String get openingsAddToRepertoire => 'Add to repertoire';
+
+  @override
+  String get openingsAdd => 'Add';
+
+  @override
+  String get openingsLineName => 'Name';
+
+  @override
+  String get openingsDefaultLineName => 'Line';
+
+  @override
+  String openingsPgnLineName(int n) {
+    return 'PGN $n';
+  }
+
+  @override
+  String get openingsLineAddedWhite => 'Line added to White\'s repertoire.';
+
+  @override
+  String get openingsLineAddedBlack => 'Line added to Black\'s repertoire.';
+
+  @override
+  String get openingsPlayOpening => 'Play this opening';
+
+  @override
+  String get openingsPlayLine => 'Play the line';
+
+  @override
+  String get openingsPlayDialogTitle => 'Play against the computer';
+
+  @override
+  String get openingsPlayLevel => 'Level';
+
+  @override
+  String get openingsPlay => 'Play';
+
+  @override
+  String get openingsLeftByComputer => 'The computer left the repertoire line.';
+
+  @override
+  String get openingsLeftByUser => 'You left the repertoire line.';
+
+  @override
+  String openingsGameSemantics(String name, String eco) {
+    return 'Opening: $name ($eco)';
+  }
+
+  @override
+  String get openingsImportPgn => 'Import PGN';
+
+  @override
+  String get openingsImportHelper => 'Each variation becomes a line.';
+
+  @override
+  String get openingsImport => 'Import';
+
+  @override
+  String get openingsNoValidLines => 'No valid lines in the PGN.';
+
+  @override
+  String openingsLinesAdded(int added) {
+    return 'Lines added: $added';
+  }
+
+  @override
+  String openingsLinesAddedDiscarded(int added, int discarded, String reason) {
+    return 'Lines added: $added. Discarded: $discarded ($reason)';
+  }
+
+  @override
+  String get openingsNoLines =>
+      'No lines. Add them from Explore openings with the \"Add to repertoire\" button or import a PGN.';
+
+  @override
+  String get openingsDeleteLine => 'Delete the line';
+
+  @override
+  String get openingsNothingToReview => 'No moves to review';
+
+  @override
+  String openingsReviewMoves(int due) {
+    String _temp0 = intl.Intl.pluralLogic(
+      due,
+      locale: localeName,
+      other: '$due moves',
+      one: '1 move',
+    );
+    return 'Review $_temp0';
+  }
+
+  @override
+  String get openingsDrillTitle => 'Repertoire review';
+
+  @override
+  String openingsDrillDone(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count moves',
+      one: '1 move',
+    );
+    return 'Review complete: $_temp0.';
+  }
+
+  @override
+  String get openingsDrillNewMove =>
+      'New move: play the one shown by the arrow.';
+
+  @override
+  String openingsDrillPrompt(String name) {
+    return 'Line \"$name\": what is your move?';
+  }
+
+  @override
+  String get openingsDrillWrong =>
+      'That is not the repertoire move: here is the right one.';
+
+  @override
+  String get openingsErrorEmpty => 'The line is empty.';
+
+  @override
+  String get openingsErrorIllegal => 'The line contains an illegal move.';
+
+  @override
+  String get openingsErrorNoOwnMoves =>
+      'The line has no moves for your colour.';
+
+  @override
+  String openingsErrorConflict(String san) {
+    return 'In this position the repertoire already has $san.';
+  }
 }

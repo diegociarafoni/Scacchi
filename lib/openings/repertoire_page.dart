@@ -5,6 +5,7 @@ import '../settings/notation.dart';
 import '../settings/settings.dart';
 import 'opening_game.dart';
 import 'opening_game_dialog.dart';
+import 'openings_l10n.dart';
 import 'repertoire.dart';
 import 'repertoire_drill_page.dart';
 
@@ -29,31 +30,31 @@ class RepertoirePage extends StatefulWidget {
 
 class _RepertoirePageState extends State<RepertoirePage> {
   RepertoireTrainer get _t => widget.trainer;
-  String get _color => widget.side == Side.white ? 'Bianco' : 'Nero';
 
   Future<void> _importPgn() async {
+    final l = openingsL10n(context);
     // Niente dispose: il dialogo lo usa ancora durante l'animazione di uscita.
     final controller = TextEditingController();
     final text = await showDialog<String>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Importa PGN'),
+        title: Text(l.openingsImportPgn),
         content: TextField(
           controller: controller,
           maxLines: 6,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             hintText: '1. e4 e5 2. Nf3 Nc6 (2... d6 3. d4) 3. Bc4',
-            helperText: 'Ogni variante diventa una linea.',
+            helperText: l.openingsImportHelper,
           ),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Annulla'),
+            child: Text(l.openingsCancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, controller.text),
-            child: const Text('Importa'),
+            child: Text(l.openingsImport),
           ),
         ],
       ),
@@ -62,11 +63,11 @@ class _RepertoirePageState extends State<RepertoirePage> {
     final lines = linesFromPgn(text);
     final notation = AppSettings.of(context).notation;
     var added = 0;
-    final errors = <String>[];
+    final errors = <RepertoireError>[];
     for (final (i, moves) in lines.indexed) {
       final error = await _t.addLine(
         widget.side,
-        'PGN ${i + 1}',
+        l.openingsPgnLineName(i + 1),
         moves,
         notation: notation,
       );
@@ -75,9 +76,14 @@ class _RepertoirePageState extends State<RepertoirePage> {
     if (!mounted) return;
     setState(() {});
     final message = lines.isEmpty
-        ? 'Nessuna linea valida nel PGN.'
-        : 'Linee aggiunte: $added'
-              '${errors.isEmpty ? '' : '. Scartate: ${errors.length} (${errors.first})'}';
+        ? l.openingsNoValidLines
+        : errors.isEmpty
+        ? l.openingsLinesAdded(added)
+        : l.openingsLinesAddedDiscarded(
+            added,
+            errors.length,
+            repertoireErrorText(l, errors.first),
+          );
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(message)));
   }
@@ -107,28 +113,29 @@ class _RepertoirePageState extends State<RepertoirePage> {
 
   @override
   Widget build(BuildContext context) {
+    final l = openingsL10n(context);
     final lines = _t.lines(widget.side);
     final due = _t.dueCount(widget.side);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Repertorio con il $_color'),
+        title: Text(
+          widget.side == Side.white
+              ? l.openingsRepertoireWhite
+              : l.openingsRepertoireBlack,
+        ),
         actions: [
           IconButton(
-            tooltip: 'Importa PGN',
+            tooltip: l.openingsImportPgn,
             icon: const Icon(Icons.file_download_outlined),
             onPressed: _importPgn,
           ),
         ],
       ),
       body: lines.isEmpty
-          ? const Center(
+          ? Center(
               child: Padding(
-                padding: EdgeInsets.all(24),
-                child: Text(
-                  'Nessuna linea. Aggiungile da Esplora aperture con il pulsante '
-                  '"Aggiungi al repertorio" o importa un PGN.',
-                  textAlign: TextAlign.center,
-                ),
+                padding: const EdgeInsets.all(24),
+                child: Text(l.openingsNoLines, textAlign: TextAlign.center),
               ),
             )
           : ListView.builder(
@@ -146,12 +153,12 @@ class _RepertoirePageState extends State<RepertoirePage> {
                   children: [
                     if (widget.onPlay != null)
                       IconButton(
-                        tooltip: 'Gioca la linea',
+                        tooltip: l.openingsPlayLine,
                         icon: const Icon(Icons.play_arrow),
                         onPressed: () => _play(lines[i]),
                       ),
                     IconButton(
-                      tooltip: 'Elimina la linea',
+                      tooltip: l.openingsDeleteLine,
                       icon: const Icon(Icons.delete_outline),
                       onPressed: () async {
                         await _t.removeLine(widget.side, i);
@@ -169,7 +176,7 @@ class _RepertoirePageState extends State<RepertoirePage> {
             onPressed: due == 0 ? null : _drill,
             icon: const Icon(Icons.school_outlined),
             label: Text(
-              due == 0 ? 'Nessuna mossa da ripassare' : 'Ripassa $due mosse',
+              due == 0 ? l.openingsNothingToReview : l.openingsReviewMoves(due),
             ),
           ),
         ),

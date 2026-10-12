@@ -25,6 +25,7 @@ import '../exchange/qr_transfer.dart';
 import '../l10n/app_localizations.dart';
 import '../openings/opening_game.dart';
 import '../openings/opening_name.dart';
+import '../openings/openings_l10n.dart';
 import '../progress/activity.dart';
 import '../progress/game_activity.dart';
 import '../progress/progress_controller.dart';
@@ -347,11 +348,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     if (ply == _reportedDeviation) return;
     _reportedDeviation = ply;
     if (ply == null) return;
+    final l = openingsL10n(context);
     final by = ply.isEven ? Side.white : Side.black;
     final notice = _showMessage(
-      by == _computerSide
-          ? 'Il computer è uscito dalla linea del repertorio.'
-          : 'Sei uscito dalla linea del repertorio.',
+      by == _computerSide ? l.openingsLeftByComputer : l.openingsLeftByUser,
     );
     _lineNotice = notice;
     // Il messaggio dell'utente deve restare visibile anche se subito dopo

@@ -4,8 +4,10 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../settings/settings.dart';
 import '../training/training_board.dart';
+import 'openings_l10n.dart';
 import 'repertoire.dart';
 
 /// Ripasso delle mosse in scadenza, una linea dopo l'altra (RF-93).
@@ -28,7 +30,9 @@ class _RepertoireDrillPageState extends State<RepertoireDrillPage> {
   bool _showAnswer = false;
   int _revision = 0;
   int _reviewed = 0;
-  String _message = '';
+
+  /// Messaggio mostrato; si risolve nella lingua al momento di disegnarlo.
+  String Function(AppLocalizations l) _message = (_) => '';
 
   @override
   void initState() {
@@ -39,14 +43,17 @@ class _RepertoireDrillPageState extends State<RepertoireDrillPage> {
   void _nextLine() {
     _drill = widget.trainer.nextDrill(widget.side);
     _showAnswer = false;
+    final reviewed = _reviewed;
     _message = _drill == null
-        ? 'Ripasso completato: $_reviewed mosse.'
+        ? (l) => l.openingsDrillDone(reviewed)
         : _prompt(_drill!);
   }
 
-  String _prompt(RepertoireDrill d) => d.isNew
-      ? 'Nuova mossa: gioca quella indicata dalla freccia.'
-      : 'Linea "${d.line.name}": qual è la tua mossa?';
+  String Function(AppLocalizations l) _prompt(RepertoireDrill d) {
+    final isNew = d.isNew;
+    final name = d.line.name;
+    return (l) => isNew ? l.openingsDrillNewMove : l.openingsDrillPrompt(name);
+  }
 
   Future<void> _onMove(Move move) async {
     final drill = _drill;
@@ -60,7 +67,7 @@ class _RepertoireDrillPageState extends State<RepertoireDrillPage> {
         case DrillResult.wrong:
           _revision++;
           _showAnswer = true;
-          _message = 'Non è la mossa del repertorio: ecco quella giusta.';
+          _message = (l) => l.openingsDrillWrong;
         case DrillResult.correct:
           _reviewed++;
           _showAnswer = false;
@@ -84,7 +91,7 @@ class _RepertoireDrillPageState extends State<RepertoireDrillPage> {
           )
         : null;
     return Scaffold(
-      appBar: AppBar(title: const Text('Ripasso del repertorio')),
+      appBar: AppBar(title: Text(openingsL10n(context).openingsDrillTitle)),
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, c) {
@@ -97,7 +104,7 @@ class _RepertoireDrillPageState extends State<RepertoireDrillPage> {
                   child: Semantics(
                     liveRegion: true,
                     child: Text(
-                      _message,
+                      _message(openingsL10n(context)),
                       key: const Key('drill-message'),
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.titleMedium,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'opening_assets.dart';
 import 'opening_book.dart';
+import 'openings_l10n.dart';
 
 /// Nome dell'apertura raggiunta dalla partita, o [fallback] fuori dal libro
 /// (RF-90).
@@ -29,7 +30,8 @@ class OpeningName extends StatelessWidget {
         final opening = snapshot.data?.classifyPositions(positions);
         if (opening == null) return Text(fallback);
         return Semantics(
-          label: 'Apertura: ${opening.localName} (${opening.eco})',
+          label: openingsL10n(context)
+              .openingsGameSemantics(opening.localName, opening.eco),
           excludeSemantics: true,
           child: Text(
             // Solo il nome italiano, su due righe: il codice ECO occupava lo

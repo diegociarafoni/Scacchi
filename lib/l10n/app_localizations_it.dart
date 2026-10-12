@@ -844,4 +844,212 @@ class AppLocalizationsIt extends AppLocalizations {
   String botUnlockHint(String name) {
     return 'Si sblocca battendo $name';
   }
+
+  @override
+  String get openingsTitle => 'Aperture';
+
+  @override
+  String get openingsExplorer => 'Esplora aperture';
+
+  @override
+  String get openingsExplorerSubtitle =>
+      'Nomi e continuazioni di oltre 3.000 aperture';
+
+  @override
+  String get openingsRepertoireWhite => 'Repertorio con il Bianco';
+
+  @override
+  String get openingsRepertoireBlack => 'Repertorio con il Nero';
+
+  @override
+  String get openingsRepertoireUnavailable => 'Repertorio non disponibile';
+
+  @override
+  String get openingsLoading => 'Caricamento...';
+
+  @override
+  String openingsRepertoireSummary(int lines, int due) {
+    String _temp0 = intl.Intl.pluralLogic(
+      lines,
+      locale: localeName,
+      other: '$lines linee',
+      one: '1 linea',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      due,
+      locale: localeName,
+      other: '$due mosse da ripassare',
+      one: '1 mossa da ripassare',
+    );
+    return '$_temp0 · $_temp1';
+  }
+
+  @override
+  String get openingsWhite => 'Bianco';
+
+  @override
+  String get openingsBlack => 'Nero';
+
+  @override
+  String get openingsCancel => 'Annulla';
+
+  @override
+  String get openingsBack => 'Indietro';
+
+  @override
+  String get openingsReset => 'Inizio';
+
+  @override
+  String get openingsFlipBoard => 'Gira la scacchiera';
+
+  @override
+  String get openingsLoadFailed => 'Impossibile caricare le aperture.';
+
+  @override
+  String get openingsStartPosition => 'Posizione iniziale';
+
+  @override
+  String get openingsUnnamed => 'Apertura senza nome';
+
+  @override
+  String get openingsOutOfBook => 'Fuori dal libro delle aperture';
+
+  @override
+  String get openingsFreeTitle => 'Apertura libera';
+
+  @override
+  String get openingsAddToRepertoire => 'Aggiungi al repertorio';
+
+  @override
+  String get openingsAdd => 'Aggiungi';
+
+  @override
+  String get openingsLineName => 'Nome';
+
+  @override
+  String get openingsDefaultLineName => 'Linea';
+
+  @override
+  String openingsPgnLineName(int n) {
+    return 'PGN $n';
+  }
+
+  @override
+  String get openingsLineAddedWhite =>
+      'Linea aggiunta al repertorio del Bianco.';
+
+  @override
+  String get openingsLineAddedBlack => 'Linea aggiunta al repertorio del Nero.';
+
+  @override
+  String get openingsPlayOpening => 'Gioca questa apertura';
+
+  @override
+  String get openingsPlayLine => 'Gioca la linea';
+
+  @override
+  String get openingsPlayDialogTitle => 'Gioca contro il computer';
+
+  @override
+  String get openingsPlayLevel => 'Livello';
+
+  @override
+  String get openingsPlay => 'Gioca';
+
+  @override
+  String get openingsLeftByComputer =>
+      'Il computer è uscito dalla linea del repertorio.';
+
+  @override
+  String get openingsLeftByUser => 'Sei uscito dalla linea del repertorio.';
+
+  @override
+  String openingsGameSemantics(String name, String eco) {
+    return 'Apertura: $name ($eco)';
+  }
+
+  @override
+  String get openingsImportPgn => 'Importa PGN';
+
+  @override
+  String get openingsImportHelper => 'Ogni variante diventa una linea.';
+
+  @override
+  String get openingsImport => 'Importa';
+
+  @override
+  String get openingsNoValidLines => 'Nessuna linea valida nel PGN.';
+
+  @override
+  String openingsLinesAdded(int added) {
+    return 'Linee aggiunte: $added';
+  }
+
+  @override
+  String openingsLinesAddedDiscarded(int added, int discarded, String reason) {
+    return 'Linee aggiunte: $added. Scartate: $discarded ($reason)';
+  }
+
+  @override
+  String get openingsNoLines =>
+      'Nessuna linea. Aggiungile da Esplora aperture con il pulsante \"Aggiungi al repertorio\" o importa un PGN.';
+
+  @override
+  String get openingsDeleteLine => 'Elimina la linea';
+
+  @override
+  String get openingsNothingToReview => 'Nessuna mossa da ripassare';
+
+  @override
+  String openingsReviewMoves(int due) {
+    String _temp0 = intl.Intl.pluralLogic(
+      due,
+      locale: localeName,
+      other: '$due mosse',
+      one: '1 mossa',
+    );
+    return 'Ripassa $_temp0';
+  }
+
+  @override
+  String get openingsDrillTitle => 'Ripasso del repertorio';
+
+  @override
+  String openingsDrillDone(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count mosse',
+      one: '1 mossa',
+    );
+    return 'Ripasso completato: $_temp0.';
+  }
+
+  @override
+  String get openingsDrillNewMove =>
+      'Nuova mossa: gioca quella indicata dalla freccia.';
+
+  @override
+  String openingsDrillPrompt(String name) {
+    return 'Linea \"$name\": qual è la tua mossa?';
+  }
+
+  @override
+  String get openingsDrillWrong =>
+      'Non è la mossa del repertorio: ecco quella giusta.';
+
+  @override
+  String get openingsErrorEmpty => 'La linea è vuota.';
+
+  @override
+  String get openingsErrorIllegal => 'La linea contiene una mossa illegale.';
+
+  @override
+  String get openingsErrorNoOwnMoves =>
+      'La linea non contiene mosse del tuo colore.';
+
+  @override
+  String openingsErrorConflict(String san) {
+    return 'In questa posizione il repertorio prevede già $san.';
+  }
 }

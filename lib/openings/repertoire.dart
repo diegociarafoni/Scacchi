@@ -7,6 +7,22 @@ import '../settings/notation.dart';
 import '../storage/key_value_store.dart';
 import 'opening_book.dart';
 
+enum RepertoireErrorKind { empty, illegal, noOwnMoves, conflict }
+
+/// Motivo per cui una linea non entra nel repertorio; il testo lo sceglie la
+/// schermata, nella lingua dell'utente.
+class RepertoireError {
+  const RepertoireError(this.kind, [this.san]);
+
+  const RepertoireError.conflict(String san)
+    : this(RepertoireErrorKind.conflict, san);
+
+  final RepertoireErrorKind kind;
+
+  /// Mossa già prevista, per [RepertoireErrorKind.conflict].
+  final String? san;
+}
+
 /// Una linea del repertorio, dalla posizione iniziale.
 class RepertoireLine {
   const RepertoireLine(this.name, this.moves);
@@ -197,26 +213,29 @@ class RepertoireTrainer {
   int dueCount(Side side) => _dueSet(side).length;
 
   /// Aggiunge una linea; restituisce un messaggio d'errore se non è valida.
-  Future<String?> addLine(
+  Future<RepertoireError?> addLine(
     Side side,
     String name,
     List<Move> moves, {
     MoveNotation notation = MoveNotation.english,
   }) async {
-    if (moves.isEmpty) return 'La linea è vuota.';
+    if (moves.isEmpty) return const RepertoireError(RepertoireErrorKind.empty);
     final replayed = OpeningBook.replay(moves);
     if (replayed.length != moves.length + 1) {
-      return 'La linea contiene una mossa illegale.';
+      return const RepertoireError(RepertoireErrorKind.illegal);
     }
     final known = _allCards(side);
     final cards = _cards(side, moves);
-    if (cards.isEmpty) return 'La linea non contiene mosse del tuo colore.';
+    if (cards.isEmpty) {
+      return const RepertoireError(RepertoireErrorKind.noOwnMoves);
+    }
     for (final MapEntry(key: id, value: move) in cards.entries) {
       final other = known[id];
       if (other != null && other != move) {
         final pos = replayed.firstWhere((p) => _cardId(side, p) == id);
-        return 'In questa posizione il repertorio prevede già '
-            '${formatSan(pos.makeSan(other).$2, notation)}.';
+        return RepertoireError.conflict(
+          formatSan(pos.makeSan(other).$2, notation),
+        );
       }
     }
     _lines[side]!.add(RepertoireLine(name, moves));

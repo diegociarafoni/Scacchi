@@ -1315,6 +1315,324 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Si sblocca battendo {name}'**
   String botUnlockHint(String name);
+
+  /// Titolo della scheda Aperture
+  ///
+  /// In it, this message translates to:
+  /// **'Aperture'**
+  String get openingsTitle;
+
+  /// Voce e titolo dell'explorer delle aperture
+  ///
+  /// In it, this message translates to:
+  /// **'Esplora aperture'**
+  String get openingsExplorer;
+
+  /// Sottotitolo della voce Esplora aperture
+  ///
+  /// In it, this message translates to:
+  /// **'Nomi e continuazioni di oltre 3.000 aperture'**
+  String get openingsExplorerSubtitle;
+
+  /// Voce e titolo del repertorio del Bianco
+  ///
+  /// In it, this message translates to:
+  /// **'Repertorio con il Bianco'**
+  String get openingsRepertoireWhite;
+
+  /// Voce e titolo del repertorio del Nero
+  ///
+  /// In it, this message translates to:
+  /// **'Repertorio con il Nero'**
+  String get openingsRepertoireBlack;
+
+  /// Sottotitolo se il repertorio non si carica
+  ///
+  /// In it, this message translates to:
+  /// **'Repertorio non disponibile'**
+  String get openingsRepertoireUnavailable;
+
+  /// Sottotitolo durante il caricamento del repertorio
+  ///
+  /// In it, this message translates to:
+  /// **'Caricamento...'**
+  String get openingsLoading;
+
+  /// Sottotitolo del repertorio: linee e mosse in scadenza
+  ///
+  /// In it, this message translates to:
+  /// **'{lines, plural, one{1 linea} other{{lines} linee}} · {due, plural, one{1 mossa da ripassare} other{{due} mosse da ripassare}}'**
+  String openingsRepertoireSummary(int lines, int due);
+
+  /// Colore dei pezzi bianchi
+  ///
+  /// In it, this message translates to:
+  /// **'Bianco'**
+  String get openingsWhite;
+
+  /// Colore dei pezzi neri
+  ///
+  /// In it, this message translates to:
+  /// **'Nero'**
+  String get openingsBlack;
+
+  /// Pulsante che chiude un dialogo senza scegliere
+  ///
+  /// In it, this message translates to:
+  /// **'Annulla'**
+  String get openingsCancel;
+
+  /// Toglie l'ultima mossa nell'explorer
+  ///
+  /// In it, this message translates to:
+  /// **'Indietro'**
+  String get openingsBack;
+
+  /// Riporta l'explorer alla posizione iniziale
+  ///
+  /// In it, this message translates to:
+  /// **'Inizio'**
+  String get openingsReset;
+
+  /// Descrizione dell'icona che cambia il lato della scacchiera
+  ///
+  /// In it, this message translates to:
+  /// **'Gira la scacchiera'**
+  String get openingsFlipBoard;
+
+  /// Errore nell'explorer se il libro non si carica
+  ///
+  /// In it, this message translates to:
+  /// **'Impossibile caricare le aperture.'**
+  String get openingsLoadFailed;
+
+  /// Nome della posizione senza mosse nell'explorer
+  ///
+  /// In it, this message translates to:
+  /// **'Posizione iniziale'**
+  String get openingsStartPosition;
+
+  /// Posizione dell'explorer che non ha un nome nel libro
+  ///
+  /// In it, this message translates to:
+  /// **'Apertura senza nome'**
+  String get openingsUnnamed;
+
+  /// Nessuna continuazione nel libro
+  ///
+  /// In it, this message translates to:
+  /// **'Fuori dal libro delle aperture'**
+  String get openingsOutOfBook;
+
+  /// Titolo della partita da un'apertura senza nome
+  ///
+  /// In it, this message translates to:
+  /// **'Apertura libera'**
+  String get openingsFreeTitle;
+
+  /// Icona e titolo del dialogo per aggiungere la linea corrente
+  ///
+  /// In it, this message translates to:
+  /// **'Aggiungi al repertorio'**
+  String get openingsAddToRepertoire;
+
+  /// Conferma l'aggiunta al repertorio
+  ///
+  /// In it, this message translates to:
+  /// **'Aggiungi'**
+  String get openingsAdd;
+
+  /// Campo del nome della linea
+  ///
+  /// In it, this message translates to:
+  /// **'Nome'**
+  String get openingsLineName;
+
+  /// Nome proposto per una linea senza apertura riconosciuta
+  ///
+  /// In it, this message translates to:
+  /// **'Linea'**
+  String get openingsDefaultLineName;
+
+  /// Nome di una linea importata da PGN
+  ///
+  /// In it, this message translates to:
+  /// **'PGN {n}'**
+  String openingsPgnLineName(int n);
+
+  /// Conferma dopo l'aggiunta al repertorio del Bianco
+  ///
+  /// In it, this message translates to:
+  /// **'Linea aggiunta al repertorio del Bianco.'**
+  String get openingsLineAddedWhite;
+
+  /// Conferma dopo l'aggiunta al repertorio del Nero
+  ///
+  /// In it, this message translates to:
+  /// **'Linea aggiunta al repertorio del Nero.'**
+  String get openingsLineAddedBlack;
+
+  /// Icona dell'explorer che avvia la partita dall'apertura (RF-94)
+  ///
+  /// In it, this message translates to:
+  /// **'Gioca questa apertura'**
+  String get openingsPlayOpening;
+
+  /// Icona di una linea del repertorio che avvia la partita (RF-94)
+  ///
+  /// In it, this message translates to:
+  /// **'Gioca la linea'**
+  String get openingsPlayLine;
+
+  /// Titolo del dialogo con colore e livello (RF-94)
+  ///
+  /// In it, this message translates to:
+  /// **'Gioca contro il computer'**
+  String get openingsPlayDialogTitle;
+
+  /// Campo del livello del computer
+  ///
+  /// In it, this message translates to:
+  /// **'Livello'**
+  String get openingsPlayLevel;
+
+  /// Conferma l'avvio della partita
+  ///
+  /// In it, this message translates to:
+  /// **'Gioca'**
+  String get openingsPlay;
+
+  /// Avviso in partita (RF-94)
+  ///
+  /// In it, this message translates to:
+  /// **'Il computer è uscito dalla linea del repertorio.'**
+  String get openingsLeftByComputer;
+
+  /// Avviso in partita (RF-94)
+  ///
+  /// In it, this message translates to:
+  /// **'Sei uscito dalla linea del repertorio.'**
+  String get openingsLeftByUser;
+
+  /// Etichetta per i lettori di schermo del nome dell'apertura in partita
+  ///
+  /// In it, this message translates to:
+  /// **'Apertura: {name} ({eco})'**
+  String openingsGameSemantics(String name, String eco);
+
+  /// Icona e titolo del dialogo di importazione
+  ///
+  /// In it, this message translates to:
+  /// **'Importa PGN'**
+  String get openingsImportPgn;
+
+  /// Aiuto sotto il campo del PGN
+  ///
+  /// In it, this message translates to:
+  /// **'Ogni variante diventa una linea.'**
+  String get openingsImportHelper;
+
+  /// Conferma l'importazione del PGN
+  ///
+  /// In it, this message translates to:
+  /// **'Importa'**
+  String get openingsImport;
+
+  /// Esito di un'importazione senza linee
+  ///
+  /// In it, this message translates to:
+  /// **'Nessuna linea valida nel PGN.'**
+  String get openingsNoValidLines;
+
+  /// Esito dell'importazione
+  ///
+  /// In it, this message translates to:
+  /// **'Linee aggiunte: {added}'**
+  String openingsLinesAdded(int added);
+
+  /// Esito dell'importazione con linee scartate; reason è il primo motivo
+  ///
+  /// In it, this message translates to:
+  /// **'Linee aggiunte: {added}. Scartate: {discarded} ({reason})'**
+  String openingsLinesAddedDiscarded(int added, int discarded, String reason);
+
+  /// Repertorio vuoto
+  ///
+  /// In it, this message translates to:
+  /// **'Nessuna linea. Aggiungile da Esplora aperture con il pulsante \"Aggiungi al repertorio\" o importa un PGN.'**
+  String get openingsNoLines;
+
+  /// Icona che elimina una linea
+  ///
+  /// In it, this message translates to:
+  /// **'Elimina la linea'**
+  String get openingsDeleteLine;
+
+  /// Pulsante di ripasso senza mosse in scadenza
+  ///
+  /// In it, this message translates to:
+  /// **'Nessuna mossa da ripassare'**
+  String get openingsNothingToReview;
+
+  /// Pulsante che avvia il ripasso
+  ///
+  /// In it, this message translates to:
+  /// **'Ripassa {due, plural, one{1 mossa} other{{due} mosse}}'**
+  String openingsReviewMoves(int due);
+
+  /// Titolo della schermata di ripasso
+  ///
+  /// In it, this message translates to:
+  /// **'Ripasso del repertorio'**
+  String get openingsDrillTitle;
+
+  /// Fine del ripasso
+  ///
+  /// In it, this message translates to:
+  /// **'Ripasso completato: {count, plural, one{1 mossa} other{{count} mosse}}.'**
+  String openingsDrillDone(int count);
+
+  /// Invito del ripasso per una mossa mai vista
+  ///
+  /// In it, this message translates to:
+  /// **'Nuova mossa: gioca quella indicata dalla freccia.'**
+  String get openingsDrillNewMove;
+
+  /// Invito del ripasso
+  ///
+  /// In it, this message translates to:
+  /// **'Linea \"{name}\": qual è la tua mossa?'**
+  String openingsDrillPrompt(String name);
+
+  /// Dopo una mossa sbagliata nel ripasso
+  ///
+  /// In it, this message translates to:
+  /// **'Non è la mossa del repertorio: ecco quella giusta.'**
+  String get openingsDrillWrong;
+
+  /// Errore: linea senza mosse
+  ///
+  /// In it, this message translates to:
+  /// **'La linea è vuota.'**
+  String get openingsErrorEmpty;
+
+  /// Errore: mossa illegale
+  ///
+  /// In it, this message translates to:
+  /// **'La linea contiene una mossa illegale.'**
+  String get openingsErrorIllegal;
+
+  /// Errore: nessuna mossa del colore del repertorio
+  ///
+  /// In it, this message translates to:
+  /// **'La linea non contiene mosse del tuo colore.'**
+  String get openingsErrorNoOwnMoves;
+
+  /// Errore: un'altra mossa è già prevista
+  ///
+  /// In it, this message translates to:
+  /// **'In questa posizione il repertorio prevede già {san}.'**
+  String openingsErrorConflict(String san);
 }
 
 class _AppLocalizationsDelegate

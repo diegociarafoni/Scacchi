@@ -111,7 +111,7 @@ void main() {
     await phone(tester, OpeningsHubPage(repertoire: Future.value(t)));
     expect(find.text('Esplora aperture'), findsOneWidget);
     expect(find.text('Explorer'), findsNothing);
-    expect(find.text('1 linee · 1 mosse da ripassare'), findsOneWidget);
+    expect(find.text('1 linea · 1 mossa da ripassare'), findsOneWidget);
     expect(find.text('0 linee · 0 mosse da ripassare'), findsOneWidget);
   });
 

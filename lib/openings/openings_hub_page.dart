@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'explorer_page.dart';
 import 'opening_game.dart';
+import 'openings_l10n.dart';
 import 'repertoire.dart';
 import 'repertoire_page.dart';
 
@@ -28,8 +29,9 @@ class _OpeningsHubPageState extends State<OpeningsHubPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l = openingsL10n(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Aperture')),
+      appBar: AppBar(title: Text(l.openingsTitle)),
       body: FutureBuilder<RepertoireTrainer>(
         future: widget.repertoire,
         builder: (context, snapshot) {
@@ -38,10 +40,8 @@ class _OpeningsHubPageState extends State<OpeningsHubPage> {
             children: [
               ListTile(
                 leading: const Icon(Icons.account_tree_outlined),
-                title: const Text('Esplora aperture'),
-                subtitle: const Text(
-                  'Nomi e continuazioni di oltre 3.000 aperture',
-                ),
+                title: Text(l.openingsExplorer),
+                subtitle: Text(l.openingsExplorerSubtitle),
                 onTap: () => _open(
                   ExplorerPage(repertoire: trainer, onPlay: widget.onPlay),
                 ),
@@ -53,15 +53,19 @@ class _OpeningsHubPageState extends State<OpeningsHubPage> {
                     side == Side.white ? Icons.circle_outlined : Icons.circle,
                   ),
                   title: Text(
-                    'Repertorio con il ${side == Side.white ? 'Bianco' : 'Nero'}',
+                    side == Side.white
+                        ? l.openingsRepertoireWhite
+                        : l.openingsRepertoireBlack,
                   ),
                   subtitle: Text(
                     snapshot.hasError
-                        ? 'Repertorio non disponibile'
+                        ? l.openingsRepertoireUnavailable
                         : trainer == null
-                        ? 'Caricamento...'
-                        : '${trainer.lines(side).length} linee · '
-                              '${trainer.dueCount(side)} mosse da ripassare',
+                        ? l.openingsLoading
+                        : l.openingsRepertoireSummary(
+                            trainer.lines(side).length,
+                            trainer.dueCount(side),
+                          ),
                   ),
                   enabled: trainer != null,
                   onTap: () => _open(

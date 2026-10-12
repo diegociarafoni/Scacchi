@@ -64,6 +64,8 @@ Una partita contro il computer che parte da un'apertura, in due modi:
 
 Una finestra chiede colore (nell'explorer) e livello del computer. È una `GameChallenge` (vedi [architettura.md](architettura.md)) con le mosse iniziali (`startMoves`) e la linea da seguire (`line`); l'annullamento è consentito, la partita viene salvata in archivio come le altre. Senza motore (Windows e Linux senza Stockfish) le icone non compaiono.
 
+I testi delle schermate sono nei file `.arb` (prefisso `openings`), in italiano e inglese; vedi [localizzazione.md](localizzazione.md).
+
 ## Componenti
 
 | File | Ruolo |
@@ -77,5 +79,6 @@ Una finestra chiede colore (nell'explorer) e livello del computer. È una `GameC
 | `lib/openings/repertoire.dart` | Linee, carte, ripasso, import PGN |
 | `lib/openings/repertoire_page.dart` | Linee di un colore, import PGN |
 | `lib/openings/repertoire_drill_page.dart` | Ripasso sulla scacchiera |
+| `lib/openings/openings_l10n.dart` | Testi localizzati (ripiego sull'italiano senza delegati) e testo degli errori del repertorio |
 | `lib/openings/opening_game.dart` | Richiesta di partita da un'apertura, uscita dalla linea |
 | `lib/openings/opening_game_dialog.dart` | Scelta di colore e livello |
