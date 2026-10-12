@@ -121,5 +121,7 @@ void main() {
       AppSettings(colorBlind: true).hintColor,
       BoardMarks.of(BoardTheme.green, colorBlind: true).hint,
     );
+    // Gli esercizi usano sempre la scacchiera verde, quindi i suoi segni.
+    expect(night.exerciseMarks, same(BoardMarks.of(BoardTheme.green)));
   });
 }

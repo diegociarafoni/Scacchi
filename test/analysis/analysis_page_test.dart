@@ -382,7 +382,7 @@ void main() {
       );
       expect(page.image.fen, Chess.initial.fen);
       expect(page.image.orientation, Side.black);
-      expect(page.image.shapes, hasLength(1));
+      expect(markArrows(page.image.shapes), hasLength(1));
     },
   );
 }

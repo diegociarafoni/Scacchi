@@ -432,6 +432,10 @@ class AppSettings {
   /// Colori di frecce e cerchi sulla scacchiera del tema scelto.
   BoardMarks get marks => BoardMarks.of(boardTheme, colorBlind: colorBlind);
 
+  /// Frecce e cerchi sulla scacchiera degli esercizi ([exerciseScheme]).
+  BoardMarks get exerciseMarks =>
+      BoardMarks.of(BoardTheme.green, colorBlind: colorBlind);
+
   /// Colore di indizi e frecce di suggerimento.
   Color get hintColor => marks.hint;
 
