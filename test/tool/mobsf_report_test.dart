@@ -6,9 +6,9 @@ Map<String, dynamic> _report({
   List<String> high = const [],
   List<String> warning = const [],
   Object? score = 70,
-}) => {
+}) => <String, dynamic>{
   'security_score': score,
-  'appsec': {
+  'appsec': <String, dynamic>{
     'high': [
       for (final t in high) {'title': t, 'section': 'manifest'},
     ],
@@ -50,6 +50,28 @@ void main() {
   test('un punteggio sotto il minimo è una violazione', () {
     final v = mobsfViolations(_report(score: 59), policy);
     expect(v.single, contains('59'));
+  });
+
+  test('il punteggio si legge anche da appsec.security_score', () {
+    final r = _report(score: null)..remove('security_score');
+    (r['appsec'] as Map<String, dynamic>)['security_score'] = 80;
+    expect(mobsfViolations(r, policy), isEmpty);
+    (r['appsec'] as Map<String, dynamic>)['security_score'] = 10;
+    expect(mobsfViolations(r, policy).single, contains('10'));
+  });
+
+  test('un motivo mancante o vuoto nella policy è un errore', () {
+    for (final reason in [null, '', 1]) {
+      expect(
+        () => MobsfPolicy.fromJson({
+          'mobsf': {
+            'minSecurityScore': 40,
+            'acceptedHigh': {'Titolo': reason},
+          },
+        }),
+        throwsA(isA<FormatException>()),
+      );
+    }
   });
 
   test('un rapporto senza appsec o punteggio non è valido', () {

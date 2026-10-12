@@ -15,6 +15,11 @@ class MobsfPolicy {
         'tool/policy.json: mancano mobsf.minSecurityScore o mobsf.acceptedHigh',
       );
     }
+    if (accepted.values.any((v) => v is! String || v.trim().isEmpty)) {
+      throw const FormatException(
+        'tool/policy.json: ogni mobsf.acceptedHigh ha bisogno di un motivo',
+      );
+    }
     return MobsfPolicy(
       minScore: score.toInt(),
       acceptedHigh: accepted.map((k, v) => MapEntry(k, v as String)),
@@ -26,6 +31,13 @@ class MobsfPolicy {
 
   /// Avvisi gravi accettati: titolo → motivo.
   final Map<String, String> acceptedHigh;
+}
+
+/// Il punteggio sta in `appsec.security_score` nelle versioni recenti, in cima al rapporto nelle precedenti.
+Object? _score(Map<String, dynamic> report) {
+  final appsec = report['appsec'];
+  return report['security_score'] ??
+      (appsec is Map<String, dynamic> ? appsec['security_score'] : null);
 }
 
 List<String>? _highTitles(Map<String, dynamic> report) {
@@ -42,7 +54,7 @@ List<String>? _highTitles(Map<String, dynamic> report) {
 /// Violazioni della policy in un rapporto MobSF; vuota se è rispettata.
 List<String> mobsfViolations(Map<String, dynamic> report, MobsfPolicy policy) {
   final high = _highTitles(report);
-  final score = report['security_score'];
+  final score = _score(report);
   if (high == null || score is! num) {
     return ['rapporto incompleto: mancano appsec.high o security_score'];
   }
@@ -54,6 +66,9 @@ List<String> mobsfViolations(Map<String, dynamic> report, MobsfPolicy policy) {
       'punteggio di sicurezza $score (minimo ${policy.minScore})',
   ];
 }
+
+/// Punteggio di sicurezza del rapporto, se presente.
+Object? mobsfScore(Map<String, dynamic> report) => _score(report);
 
 /// Avvisi accettati nella policy che il rapporto non contiene più: da togliere.
 List<String> staleAccepted(Map<String, dynamic> report, MobsfPolicy policy) {

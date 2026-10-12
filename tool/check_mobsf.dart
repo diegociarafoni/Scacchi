@@ -11,12 +11,23 @@ void main(List<String> args) {
     stderr.writeln('${file.path} manca: eseguire prima la scansione MobSF');
     exit(2);
   }
-  final report = jsonDecode(file.readAsStringSync()) as Map<String, dynamic>;
+  final Object? decoded;
+  try {
+    decoded = jsonDecode(file.readAsStringSync());
+  } on FormatException catch (e) {
+    stderr.writeln('✗ ${file.path} non è JSON: ${e.message}');
+    exit(1);
+  }
+  if (decoded is! Map<String, dynamic>) {
+    stderr.writeln('✗ ${file.path} non contiene un rapporto MobSF');
+    exit(1);
+  }
+  final report = decoded;
   final policy = MobsfPolicy.fromJson(
     jsonDecode(File('tool/policy.json').readAsStringSync())
         as Map<String, dynamic>,
   );
-  stdout.writeln('Punteggio di sicurezza: ${report['security_score']}');
+  stdout.writeln('Punteggio di sicurezza: ${mobsfScore(report)}');
   final appsec = report['appsec'];
   if (appsec is Map<String, dynamic>) {
     for (final level in ['high', 'warning', 'info', 'secure', 'hotspot']) {
