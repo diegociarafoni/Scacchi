@@ -156,10 +156,10 @@ void main() {
   });
 
   test('la mossa sbagliata è rossa, arancione con i colori per daltonici', () {
-    expect(const AppSettings().wrongColor, const Color(0xffd32f2f));
+    expect(AppSettings().wrongColor, const Color(0xffd32f2f));
     expect(
-      const AppSettings(colorBlind: true).wrongColor,
-      isNot(const AppSettings().wrongColor),
+      AppSettings(colorBlind: true).wrongColor,
+      isNot(AppSettings().wrongColor),
     );
   });
 }
