@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../exchange/qr_l10n.dart';
 import '../kids/kid_display.dart';
 import '../l10n/app_localizations.dart';
 import '../settings/settings.dart';
 import 'activity_recorder.dart';
+import 'friend_challenge_page.dart';
 import 'mode_guide.dart';
 import 'puzzle_feed.dart';
 import 'puzzle_page.dart';
@@ -160,6 +162,19 @@ class _PuzzleHubPageState extends State<PuzzleHubPage> {
                       ),
                     ),
                   ),
+              // Anche la sfida ruota attorno a punteggi e confronto.
+              if (!kid)
+                ListTile(
+                  leading: const Icon(Icons.people_outline),
+                  title: Text(qrL10n(context).challengeTitle),
+                  subtitle: Text(qrL10n(context).challengeSubtitle),
+                  onTap: () => _open(
+                    FriendChallengePage(
+                      trainer: trainer,
+                      onActivity: widget.onActivity,
+                    ),
+                  ),
+                ),
             ],
           );
         },

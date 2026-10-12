@@ -3,15 +3,25 @@ import 'package:flutter/material.dart';
 
 import '../settings/notation.dart';
 import '../settings/settings.dart';
+import 'opening_game.dart';
+import 'opening_game_dialog.dart';
 import 'repertoire.dart';
 import 'repertoire_drill_page.dart';
 
 /// Linee del repertorio di un colore, con importazione PGN e ripasso.
 class RepertoirePage extends StatefulWidget {
-  const RepertoirePage({super.key, required this.trainer, required this.side});
+  const RepertoirePage({
+    super.key,
+    required this.trainer,
+    required this.side,
+    this.onPlay,
+  });
 
   final RepertoireTrainer trainer;
   final Side side;
+
+  /// Avvia una partita lungo la linea; assente senza motore.
+  final PlayOpening? onPlay;
 
   @override
   State<RepertoirePage> createState() => _RepertoirePageState();
@@ -72,6 +82,20 @@ class _RepertoirePageState extends State<RepertoirePage> {
         .showSnackBar(SnackBar(content: Text(message)));
   }
 
+  Future<void> _play(RepertoireLine line) async {
+    final choice = await askOpeningGame(context, widget.side, lockSide: true);
+    if (choice == null || !mounted) return;
+    await widget.onPlay!(
+      context,
+      OpeningGameRequest.repertoire(
+        line.name,
+        line.moves,
+        widget.side,
+        levelId: choice.levelId,
+      ),
+    );
+  }
+
   Future<void> _drill() async {
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
@@ -117,13 +141,24 @@ class _RepertoirePageState extends State<RepertoirePage> {
                     AppSettings.of(context).notation,
                   ),
                 ),
-                trailing: IconButton(
-                  tooltip: 'Elimina la linea',
-                  icon: const Icon(Icons.delete_outline),
-                  onPressed: () async {
-                    await _t.removeLine(widget.side, i);
-                    if (mounted) setState(() {});
-                  },
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (widget.onPlay != null)
+                      IconButton(
+                        tooltip: 'Gioca la linea',
+                        icon: const Icon(Icons.play_arrow),
+                        onPressed: () => _play(lines[i]),
+                      ),
+                    IconButton(
+                      tooltip: 'Elimina la linea',
+                      icon: const Icon(Icons.delete_outline),
+                      onPressed: () async {
+                        await _t.removeLine(widget.side, i);
+                        if (mounted) setState(() {});
+                      },
+                    ),
+                  ],
                 ),
               ),
             ),

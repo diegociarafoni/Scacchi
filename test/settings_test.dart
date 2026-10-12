@@ -1,6 +1,6 @@
 import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
-import 'package:flutter/material.dart' show ThemeMode;
+import 'package:flutter/material.dart' show Color, ThemeMode;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/settings/notation.dart';
 import 'package:scacchi/settings/settings.dart';
@@ -25,6 +25,7 @@ void main() {
     expect(settings.value.tableMode, isFalse);
     expect(settings.value.confirmMove, isFalse);
     expect(settings.value.colorBlind, isFalse);
+    expect(settings.value.explainWhy, isFalse);
     expect(settings.value.kidMode, isFalse);
     expect(settings.value.themeMode, ThemeMode.system);
     expect(settings.value.notation, MoveNotation.figurine);
@@ -67,6 +68,7 @@ void main() {
         tableMode: true,
         confirmMove: true,
         colorBlind: true,
+        explainWhy: true,
         kidMode: true,
         themeMode: ThemeMode.dark,
       ),
@@ -153,5 +155,13 @@ void main() {
     expect(AppSettings(whiteName: '  ').nameOf(Side.white), isNull);
     expect(AppSettings(blackName: ' Bruno ').blackName, 'Bruno');
     expect(AppSettings(whiteName: 'x' * 40).whiteName.length, 24);
+  });
+
+  test('la mossa sbagliata è rossa, arancione con i colori per daltonici', () {
+    expect(AppSettings().wrongColor, const Color(0xffd32f2f));
+    expect(
+      AppSettings(colorBlind: true).wrongColor,
+      isNot(AppSettings().wrongColor),
+    );
   });
 }

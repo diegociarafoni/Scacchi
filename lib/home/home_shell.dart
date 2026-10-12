@@ -12,7 +12,9 @@ import '../engine/uci_transport.dart';
 import '../game/challenge.dart';
 import '../game/clock.dart';
 import '../game/game_page.dart';
+import '../game/handicap.dart';
 import '../openings/opening_assets.dart';
+import '../openings/opening_game.dart';
 import '../openings/openings_hub_page.dart';
 import '../openings/repertoire.dart';
 import '../path/curriculum.dart';
@@ -273,6 +275,29 @@ class _HomeShellState extends State<HomeShell> {
     return r == null ? null : challengeStars(r, moves: moves);
   }
 
+  /// Gioca contro il computer a partire da un'apertura (RF-94).
+  Future<void> _playOpening(BuildContext context, OpeningGameRequest request) =>
+      Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => GamePage(
+            settings: widget.settings,
+            computerAvailable: true,
+            createComputer: widget.createComputer,
+            challenge: GameChallenge(
+              title: request.title,
+              levelId: request.levelId,
+              side: request.side,
+              allowUndo: true,
+              startMoves: request.startMoves,
+              line: request.line,
+            ),
+            onActivity: _record,
+            onSave: _saveGame,
+            progress: _progressController,
+          ),
+        ),
+      );
+
   /// Apre nella revisione una partita dell'archivio.
   Future<void> _openSavedGame(BuildContext context, SavedGame saved) async {
     final messenger = ScaffoldMessenger.of(context);
@@ -330,6 +355,10 @@ class _HomeShellState extends State<HomeShell> {
               );
             },
             timeControl: TimeControl.parse(saved.timeControl ?? ''),
+            startTimes: Handicap.startTimesFromPgn(
+              imported.first.headers['Handicap'],
+              TimeControl.parse(saved.timeControl ?? ''),
+            ),
           ),
         ),
       );
@@ -433,7 +462,10 @@ class _HomeShellState extends State<HomeShell> {
           else
             const SizedBox.shrink(),
           if (_repertoire != null)
-            OpeningsHubPage(repertoire: _repertoire!)
+            OpeningsHubPage(
+              repertoire: _repertoire!,
+              onPlay: _computerAvailable ? _playOpening : null,
+            )
           else
             const SizedBox.shrink(),
           if (_tab == 3 || _youVisited)
