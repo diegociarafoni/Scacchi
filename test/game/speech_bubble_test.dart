@@ -46,7 +46,12 @@ Future<void> pump(
 Future<void> startBot(WidgetTester tester) async {
   await tapGameAction(tester, 'Nuova');
   await tester.pumpAndSettle();
+  await openCustomSheet(tester);
   await tester.tap(find.text('Bot'));
+  await tester.pumpAndSettle();
+  await tester.ensureVisible(find.text('Pino'));
+  await tester.pumpAndSettle();
+  await tester.tap(find.text('Pino'));
   await tester.pumpAndSettle();
   await chooseTime(tester, 'Senza tempo');
   await tester.pumpAndSettle(const Duration(seconds: 1));
