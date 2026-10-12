@@ -54,49 +54,49 @@ Future<void> pump(
 Finder action(String id) => find.byKey(ValueKey('gameAction-$id'));
 
 void main() {
-  testWidgets('la barra ha al più 4 comandi da almeno 48 dp', (tester) async {
-    await pump(tester, size: const Size(360, 640), computer: true);
-    await tester.tap(action('more'));
-    await tester.pumpAndSettle();
-    await tapGameAction(tester, 'Nuova');
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Computer'));
-    await tester.pumpAndSettle();
-    await chooseTime(tester, 'Senza tempo');
-    await tester.pumpAndSettle(const Duration(seconds: 1));
-    final bar = find.byWidgetPredicate(
-      (w) =>
-          w.key is ValueKey &&
-          '${(w.key! as ValueKey).value}'.startsWith('gameAction-'),
-    );
-    expect(bar.evaluate().length, inInclusiveRange(3, 4));
-    for (final e in bar.evaluate()) {
-      final size = tester.getSize(find.byWidget(e.widget));
-      expect(size.width, greaterThanOrEqualTo(48));
-      expect(size.height, greaterThanOrEqualTo(48));
-    }
-    expect(find.text('Abbandona'), findsNothing);
-    expect(find.text('Patta'), findsNothing);
-  });
-
-  testWidgets('«Altro» apre il pannello Partita con i comandi rari', (
+  testWidgets('Nuova, Patta e Abbandona stanno in vista, da almeno 45 dp', (
     tester,
   ) async {
-    await pump(tester);
-    await tester.tap(action('more'));
-    await tester.pumpAndSettle();
-    expect(find.text('Partita'), findsOneWidget);
-    for (final label in ['Nuova', 'Patta', 'Abbandona']) {
-      expect(find.text(label), findsOneWidget, reason: label);
+    for (final size in const [Size(360, 640), Size(320, 568)]) {
+      await pump(tester, size: size, computer: true);
+      await tapGameAction(tester, 'Nuova');
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Computer'));
+      await tester.pumpAndSettle();
+      await chooseTime(tester, 'Senza tempo');
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+      for (final id in ['new', 'draw', 'resign', 'undo']) {
+        final rect = tester.getRect(action(id));
+        expect(rect.width, greaterThanOrEqualTo(45), reason: '$id $size');
+        expect(rect.height, greaterThanOrEqualTo(48), reason: '$id $size');
+        expect(rect.right, lessThanOrEqualTo(size.width), reason: '$id $size');
+      }
+      expect(tester.takeException(), isNull);
     }
+  });
+
+  testWidgets(
+    'partita tra due persone: tutti i comandi in vista, niente Altro',
+    (tester) async {
+      await pump(tester);
+      for (final label in ['Nuova', 'Patta', 'Abbandona', 'Annulla', 'Gira']) {
+        expect(find.text(label), findsOneWidget, reason: label);
+      }
+      expect(action('more'), findsNothing);
+    },
+  );
+
+  testWidgets('Abbandona dalla barra chiede conferma', (tester) async {
+    await pump(tester);
+    await tester.tap(action('resign'));
+    await tester.pumpAndSettle();
+    expect(find.text('Abbandonare la partita?'), findsOneWidget);
   });
 
   testWidgets(
     'Allenatore è un interruttore e Minaccia compare solo se acceso',
     (tester) async {
       await pump(tester, computer: true);
-      await tester.tap(action('more'));
-      await tester.pumpAndSettle();
       await tapGameAction(tester, 'Nuova');
       await tester.pumpAndSettle();
       await tester.tap(find.text('Computer'));
@@ -115,13 +115,13 @@ void main() {
     },
   );
 
-  testWidgets('il pulsante Altro ha etichetta e ruolo per il lettore', (
+  testWidgets('i pulsanti della barra hanno etichetta e ruolo per il lettore', (
     tester,
   ) async {
     final handle = tester.ensureSemantics();
     await pump(tester);
-    final data = tester.getSemantics(action('more'));
-    expect(data.label, contains('Altro'));
+    final data = tester.getSemantics(action('resign'));
+    expect(data.label, contains('Abbandona'));
     // ignore: deprecated_member_use
     expect(data.hasFlag(SemanticsFlag.isButton), isTrue);
     handle.dispose();
@@ -192,7 +192,7 @@ void main() {
   ) async {
     await pump(tester, size: const Size(390, 900));
     final board = tester.getRect(find.byType(Chessboard));
-    final bar = tester.getRect(action('more'));
+    final bar = tester.getRect(action('undo'));
     // Sotto la scacchiera restano solo il giocatore e i comandi.
     expect(bar.top - board.bottom, lessThan(60));
   });

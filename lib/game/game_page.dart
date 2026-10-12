@@ -2667,7 +2667,10 @@ class _ActionLabels {
   final String hintTip;
 }
 
-/// Barra dei comandi frequenti; il resto sta nel pannello «Partita».
+/// Barra dei comandi in vista; il pannello «Partita» tiene gli altri.
+///
+/// Gli adulti hanno in barra anche Nuova, Patta e Abbandona; ai bambini
+/// restano tre comandi grandi e il resto nel pannello.
 class _GameActions extends StatelessWidget {
   const _GameActions({
     required this.kid,
@@ -2706,7 +2709,13 @@ class _GameActions extends StatelessWidget {
   /// Nel profilo bambino «Gira» cede il posto al suggerimento.
   bool get _flipInPanel => kid && hintAvailable;
 
-  void _openPanel(BuildContext context) {
+  /// Sotto questa larghezza i pulsanti scenderebbero sotto i 45 dp.
+  static const double _fullBarWidth = 7 * 45;
+
+  /// Gli adulti hanno Nuova, Patta e Abbandona sempre in vista.
+  bool get _gameInBar => !kid;
+
+  void _openPanel(BuildContext context, {required bool flipInPanel}) {
     final theme = Theme.of(context);
     void pick(BuildContext sheet, VoidCallback? action) {
       Navigator.of(sheet).pop();
@@ -2734,14 +2743,15 @@ class _GameActions extends StatelessWidget {
                     ),
                   ),
                 ),
-                _PanelTile(
-                  Icons.add,
-                  labels.newGame,
-                  onNewGame,
-                  kid: kid,
-                  pick: pick,
-                ),
-                if (_flipInPanel)
+                if (!_gameInBar)
+                  _PanelTile(
+                    Icons.add,
+                    labels.newGame,
+                    onNewGame,
+                    kid: kid,
+                    pick: pick,
+                  ),
+                if (flipInPanel)
                   _PanelTile(
                     Icons.swap_vert,
                     labels.flip,
@@ -2749,20 +2759,22 @@ class _GameActions extends StatelessWidget {
                     kid: kid,
                     pick: pick,
                   ),
-                _PanelTile(
-                  Icons.handshake_outlined,
-                  labels.draw,
-                  onDraw,
-                  kid: kid,
-                  pick: pick,
-                ),
-                _PanelTile(
-                  Icons.flag_outlined,
-                  labels.resign,
-                  onResign,
-                  kid: kid,
-                  pick: pick,
-                ),
+                if (!_gameInBar) ...[
+                  _PanelTile(
+                    Icons.handshake_outlined,
+                    labels.draw,
+                    onDraw,
+                    kid: kid,
+                    pick: pick,
+                  ),
+                  _PanelTile(
+                    Icons.flag_outlined,
+                    labels.resign,
+                    onResign,
+                    kid: kid,
+                    pick: pick,
+                  ),
+                ],
                 if (coachOn != null)
                   SwitchListTile(
                     secondary: const Icon(Icons.school_outlined),
@@ -2792,28 +2804,53 @@ class _GameActions extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: _actionsHeight,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          if (hintAvailable)
-            _ActionButton(
-              'hint',
-              Icons.lightbulb_outline,
-              labels.hint,
-              onHint,
-              tooltip: labels.hintTip,
-            ),
-          _ActionButton('undo', Icons.undo, labels.undo, onUndo),
-          if (!_flipInPanel)
-            _ActionButton('flip', Icons.swap_vert, labels.flip, onFlip),
-          _ActionButton(
-            'more',
-            Icons.more_horiz,
-            labels.more,
-            () => _openPanel(context),
-            dot: coachOn ?? false,
-          ),
-        ],
+      child: LayoutBuilder(
+        builder: (context, box) {
+          // Su schermi stretti «Gira» passa nel pannello per non schiacciare
+          // i pulsanti.
+          final flipInPanel =
+              _flipInPanel || (_gameInBar && box.maxWidth < _fullBarWidth);
+          final hasPanel = !_gameInBar || coachOn != null || flipInPanel;
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (hintAvailable)
+                _ActionButton(
+                  'hint',
+                  Icons.lightbulb_outline,
+                  labels.hint,
+                  onHint,
+                  tooltip: labels.hintTip,
+                ),
+              _ActionButton('undo', Icons.undo, labels.undo, onUndo),
+              if (!flipInPanel)
+                _ActionButton('flip', Icons.swap_vert, labels.flip, onFlip),
+              if (_gameInBar) ...[
+                _ActionButton('new', Icons.add, labels.newGame, onNewGame),
+                _ActionButton(
+                  'draw',
+                  Icons.handshake_outlined,
+                  labels.draw,
+                  onDraw,
+                ),
+                _ActionButton(
+                  'resign',
+                  Icons.flag_outlined,
+                  labels.resign,
+                  onResign,
+                ),
+              ],
+              if (hasPanel)
+                _ActionButton(
+                  'more',
+                  Icons.more_horiz,
+                  labels.more,
+                  () => _openPanel(context, flipInPanel: flipInPanel),
+                  dot: coachOn ?? false,
+                ),
+            ],
+          );
+        },
       ),
     );
   }

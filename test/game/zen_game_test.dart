@@ -105,6 +105,10 @@ void main() {
     final bot = bots.first;
     expect(find.textContaining('${bot.elo} Elo'), findsOneWidget);
     Future<int> coachSwitches() async {
+      // Senza allenatore non c'è «Altro»: nessun interruttore.
+      if (find.byKey(const ValueKey('gameAction-more')).evaluate().isEmpty) {
+        return 0;
+      }
       await tester.tap(find.byKey(const ValueKey('gameAction-more')));
       await tester.pumpAndSettle();
       final n = find.byType(SwitchListTile).evaluate().length;
