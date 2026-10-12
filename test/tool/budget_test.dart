@@ -62,12 +62,34 @@ void main() {
 
   test('il budget si legge dalla policy', () {
     final b = FrameBudget.fromJson({
-      'minFrames': 30,
-      'p90BuildMs': 20,
-      'p99BuildMs': 50,
+      'budget': {
+        'frames': {'minFrames': 30, 'p90BuildMs': 20, 'p99BuildMs': 50},
+      },
     });
     expect(b.minFrames, 30);
     expect(b.p90BuildMs, 20);
     expect(b.p99BuildMs, 50);
+  });
+
+  test('una chiave mancante nella policy dà un errore chiaro', () {
+    expect(
+      () => FrameBudget.fromJson({'budget': <String, dynamic>{}}),
+      throwsA(
+        isA<FormatException>().having(
+          (e) => e.message,
+          'message',
+          contains('budget.frames.minFrames'),
+        ),
+      ),
+    );
+    expect(
+      () => budgetValue(
+        {
+          'budget': {'apkMaxMegabytes': 'x'},
+        },
+        ['apkMaxMegabytes'],
+      ),
+      throwsFormatException,
+    );
   });
 }

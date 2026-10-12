@@ -24,9 +24,9 @@ class FrameBudget {
   });
 
   factory FrameBudget.fromJson(Map<String, dynamic> json) => FrameBudget(
-    minFrames: json['minFrames'] as int,
-    p90BuildMs: json['p90BuildMs'] as num,
-    p99BuildMs: json['p99BuildMs'] as num,
+    minFrames: budgetValue(json, ['frames', 'minFrames']).toInt(),
+    p90BuildMs: budgetValue(json, ['frames', 'p90BuildMs']),
+    p99BuildMs: budgetValue(json, ['frames', 'p99BuildMs']),
   );
 
   final int minFrames;
@@ -54,4 +54,19 @@ List<String> frameViolations(Map<String, dynamic> report, FrameBudget budget) {
     if (p99 > budget.p99BuildMs)
       '99° percentile della costruzione $p99 ms (massimo ${budget.p99BuildMs} ms)',
   ];
+}
+
+/// Legge un valore numerico dalla sezione `budget` di `tool/policy.json`, con un
+/// messaggio chiaro se la chiave manca.
+num budgetValue(Map<String, dynamic> policy, List<String> path) {
+  Object? node = policy['budget'];
+  for (final key in path) {
+    node = node is Map<String, dynamic> ? node[key] : null;
+  }
+  if (node is! num) {
+    throw FormatException(
+      'tool/policy.json: manca il valore numerico budget.${path.join('.')}',
+    );
+  }
+  return node;
 }

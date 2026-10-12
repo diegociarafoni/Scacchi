@@ -17,8 +17,7 @@ void main(List<String> args) {
   final policy = jsonDecode(
     File('tool/policy.json').readAsStringSync(),
   ) as Map<String, dynamic>;
-  final max =
-      (policy['budget'] as Map<String, dynamic>)['apkMaxMegabytes'] as num;
+  final max = budgetValue(policy, ['apkMaxMegabytes']);
   final verdict = checkApkSize(apk.lengthSync(), maxMegabytes: max);
   stdout.writeln('${verdict.ok ? '✓' : '✗'} ${verdict.message}');
   if (!verdict.ok) exit(1);

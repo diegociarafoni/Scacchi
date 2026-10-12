@@ -34,13 +34,28 @@ void main() {
     await tester.pumpWidget(const ScacchiApp());
     await tester.pumpAndSettle();
 
+    // Un rapporto vecchio non deve passare per quello di questa esecuzione.
+    final out = File('build/performance.json');
+    if (out.existsSync()) out.deleteSync();
+
+    Future<void> play(String m) async {
+      await tester.tapAt(_square(tester, m.substring(0, 2)));
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.tapAt(_square(tester, m.substring(2, 4)));
+      await tester.pumpAndSettle();
+    }
+
+    // Una mossa di riscaldamento fuori dalla misura: compilazione JIT e primi fotogrammi.
+    await play(_moves.first);
+
     await binding.watchPerformance(() async {
-      for (final m in _moves) {
-        await tester.tapAt(_square(tester, m.substring(0, 2)));
-        await tester.pump(const Duration(milliseconds: 100));
-        await tester.tapAt(_square(tester, m.substring(2, 4)));
-        await tester.pumpAndSettle();
+      for (final m in _moves.skip(1)) {
+        await play(m);
       }
+      // Le mosse sono state giocate davvero (tocchi fuori dalla scacchiera non contano).
+      expect(find.text('Muove il Bianco.'), findsOneWidget);
+      expect(find.text('4. d3'), findsOneWidget);
+      expect(find.text('Tu'), findsOneWidget);
       await tester.tap(find.text('Tu'));
       await tester.pumpAndSettle();
       await tester.fling(
@@ -52,7 +67,7 @@ void main() {
     });
 
     final report = binding.reportData!['performance'] as Map<String, dynamic>;
-    File('build/performance.json')
+    out
       ..createSync(recursive: true)
       ..writeAsStringSync(jsonEncode(report));
   });
