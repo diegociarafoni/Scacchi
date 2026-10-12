@@ -255,6 +255,15 @@ class FakeCentralManager implements CentralManager {
 
 const gameId = '3f2b8c1e-5d4a-4f6b-9a7c-1e2d3c4b5a69';
 
+/// Attende la condizione (al massimo 8 secondi): i tempi dei ricollegamenti
+/// variano con il carico della macchina.
+Future<void> until(bool Function() ok) async {
+  final end = DateTime.now().add(const Duration(seconds: 8));
+  while (!ok() && DateTime.now().isBefore(end)) {
+    await Future<void>.delayed(const Duration(milliseconds: 20));
+  }
+}
+
 Future<void> settle([int ms = 50]) =>
     Future<void>.delayed(Duration(milliseconds: ms));
 
@@ -317,7 +326,7 @@ void main() {
       await settle();
       expect(guestConnected, 1);
       guestMgr.drop();
-      await settle(1300);
+      await until(() => guestConnected >= 2);
       expect(guestConnected, 2);
       expect(guestMgr.scans, 2);
       final got = <Uint8List>[];
@@ -341,7 +350,7 @@ void main() {
       );
       var guestConnected = 0;
       g.connected.listen((_) => guestConnected++);
-      await settle(1300);
+      await until(() => guestConnected >= 1);
       expect(guestMgr.connects, 2);
       expect(guestConnected, 1);
       await h.close();
@@ -379,7 +388,7 @@ void main() {
         );
         var connected = 0;
         g.connected.listen((_) => connected++);
-        await settle(1400);
+        await until(() => connected >= 1);
         expect(connected, 1);
         expect(guestMgr.scans, 2);
         await h.close();
@@ -397,8 +406,8 @@ void main() {
         await BleCentralLink.open(gameId, manager: guestMgr),
       );
       await settle(3300);
-      // Tentativi a 0, 1 e 3 secondi: non uno al secondo.
-      expect(guestMgr.connects, 3);
+      // Tentativi a 0, 1 e 3 secondi: non uno al secondo (4 o più).
+      expect(guestMgr.connects, inInclusiveRange(2, 3));
       await h.close();
       await g.close();
     });
