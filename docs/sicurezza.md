@@ -19,6 +19,18 @@ Le eccezioni di Gitleaks stanno in `.gitleaks.toml`, ognuna con il motivo. Oggi 
 
 I report SARIF di ogni scanner sono nell'artefatto `security-reports` del workflow e vengono caricati nella scheda **Security → Code scanning** di GitHub. Il repository è pubblico, quindi il code scanning è disponibile senza costi. Il caricamento resta con `continue-on-error`: se fallisce (per esempio su un fork senza il permesso `security-events`) non blocca il workflow e i report restano consultabili negli artefatti.
 
+## Scorecard e provenienza dell'APK
+
+**OpenSSF Scorecard.** Il workflow `Scorecard` (`.github/workflows/scorecard.yml`, solo dal ramo `main`) valuta ogni lunedì, e a ogni modifica delle regole di protezione di `main`, le pratiche del repository: azioni fissate per SHA, permessi minimi dei workflow, protezione dei rami, dipendenze aggiornate, analisi statica, politica di sicurezza. Il punteggio è pubblico su https://scorecard.dev/viewer/?uri=github.com/diegociarafoni/rokko, il report SARIF è nella scheda **Security → Code scanning** e nell'artefatto `scorecard`. Non blocca nessuna PR: serve a vedere dove manca qualcosa. Non duplica `Sicurezza`, che cerca vulnerabilità e segreti, mentre Scorecard giudica il processo.
+
+**Provenienza.** Ogni APK delle versioni numerate pubblicate da `Rilascio APK` ha un'attestazione di provenienza (SLSA) firmata dal workflow, senza chiavi da custodire. L'attestazione è in un job a parte, l'unico con i permessi per firmarla, così nessun passo della build può usarli. Il nightly e gli APK delle esecuzioni manuali senza versione non sono attestati: il primo è sostituito a ogni merge, i secondi non sono pubblicati. Chi scarica una versione numerata può verificare che sia stata costruita da questo repository e da questo workflow:
+
+```
+gh attestation verify rokko.apk --repo diegociarafoni/rokko
+```
+
+L'attestazione si aggiunge al file `rokko.apk.sha256` già presente nella Release, che controlla solo l'integrità del download.
+
 ## OWASP MASVS
 
 Il riferimento è [OWASP MASVS v2](https://mas.owasp.org/MASVS/), con i casi di test della [MASTG](https://mas.owasp.org/MASTG/). L'app funziona offline, non ha account e non raccoglie dati: la superficie di attacco è piccola e i controlli servono soprattutto a mantenerla tale mentre l'app cresce. `test/security/masvs_test.dart` verifica i sorgenti a ogni `flutter test`; i controlli sull'APK compilato sono in `tool/check_apk.dart`.
@@ -31,7 +43,7 @@ Il riferimento è [OWASP MASVS v2](https://mas.owasp.org/MASVS/), con i casi di 
 | MASVS-CODE | Il manifest non forza `debuggable`; il rilascio usa la chiave dello store quando `ANDROID_KEYSTORE_PATH` c'è | test sorgenti | Attivo |
 | MASVS-CODE | Dipendenze senza vulnerabilità note | Trivy, OSV-Scanner | Attivo |
 | MASVS-PRIVACY | Nessun SDK di analisi, pubblicità o tracciamento (`privacy.forbiddenPackages`); un pacchetto vietato è ammesso solo come dipendenza indiretta, con il motivo in `privacy.transitiveAllowed` | test sorgenti | Attivo |
-| MASVS-PRIVACY | Solo i permessi Android elencati in `privacy.androidPermissions` con il motivo (oggi `RECEIVE_BOOT_COMPLETED`, `CAMERA` e `INTERNET`, quest'ultimo solo per la partita con un amico in rete locale); iOS chiede solo fotocamera, libreria e rete locale, con la spiegazione | test sorgenti | Attivo |
+| MASVS-PRIVACY | Solo i permessi Android elencati in `privacy.androidPermissions` con il motivo (oggi `RECEIVE_BOOT_COMPLETED`, `CAMERA`, `INTERNET` per la partita con un amico in rete locale e i permessi Bluetooth per quella vicini senza Wi-Fi, chiesti solo scegliendo il Bluetooth); iOS chiede solo Bluetooth, fotocamera, libreria e rete locale, con la spiegazione | test sorgenti | Attivo |
 | MASVS-AUTH | Non applicabile: niente account né login | | N/A |
 | MASVS-RESILIENCE | Anti-manomissione e rilevamento di root non previsti: l'app è open source e senza dati da proteggere | | Escluso per scelta |
 | MASVS-CRYPTO | La crittografia del multigiocatore ([multigiocatore.md](multigiocatore.md)) è oggi nel nucleo senza canali; la dichiarazione `ITSAppUsesNonExemptEncryption` per l'App Store va decisa con la prima versione che la usa | | Da fare |
@@ -47,7 +59,7 @@ Il workflow `MobSF` (`.github/workflows/mobsf.yml`) esegue l'analisi statica di 
 
 Il rapporto completo è allegato al workflow (artefatto `mobsf-report`, 30 giorni).
 
-Aggiungere un permesso, per esempio `INTERNET` per il multigiocatore in rete, fa fallire il test finché il permesso non compare in `tool/policy.json` con il motivo: la scelta resta visibile in revisione.
+Aggiungere un permesso, per esempio `INTERNET` o `BLUETOOTH_SCAN` per il multigiocatore, fa fallire il test finché il permesso non compare in `tool/policy.json` con il motivo: la scelta resta visibile in revisione.
 
 ## Catena di fornitura
 

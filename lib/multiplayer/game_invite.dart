@@ -43,6 +43,7 @@ class GameInvite {
     required this.hostKey,
     required this.hostSide,
     this.lanAddress,
+    this.ble = false,
   });
 
   final String gameId;
@@ -55,6 +56,9 @@ class GameInvite {
   /// `host:porta` in rete locale, se l'ospite è raggiungibile così.
   final String? lanAddress;
 
+  /// L'ospite ascolta anche via Bluetooth LE (vicini, senza rete).
+  final bool ble;
+
   String toLink() => Uri(
     scheme: 'scacchi',
     host: 'partita',
@@ -65,6 +69,7 @@ class GameInvite {
       'k': _b64(hostKey),
       'c': hostSide == Side.white ? 'w' : 'b',
       'lan': ?lanAddress,
+      if (ble) 'ble': '1',
     },
   ).toString();
 
@@ -100,6 +105,7 @@ class GameInvite {
       hostKey: key,
       hostSide: side,
       lanAddress: lan,
+      ble: q['ble'] == '1',
     );
   }
 }

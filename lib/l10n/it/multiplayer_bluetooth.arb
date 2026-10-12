@@ -1,0 +1,34 @@
+{
+  "multiplayerChannelLabel": "Come collegarvi",
+  "@multiplayerChannelLabel": {
+    "description": "Etichetta della scelta tra Wi-Fi e Bluetooth nella schermata Gioca con un amico"
+  },
+  "multiplayerChannelWifi": "Wi-Fi",
+  "@multiplayerChannelWifi": {
+    "description": "Scelta del collegamento tramite Wi-Fi o hotspot"
+  },
+  "multiplayerChannelBluetooth": "Bluetooth",
+  "@multiplayerChannelBluetooth": {
+    "description": "Scelta del collegamento tramite Bluetooth, senza Wi-Fi"
+  },
+  "multiplayerBluetoothHint": "Con il Bluetooth i due telefoni devono stare vicini e non serve alcuna rete.",
+  "@multiplayerBluetoothHint": {
+    "description": "Spiegazione sotto la scelta Bluetooth"
+  },
+  "multiplayerBluetoothInviteHint": "Tenete i telefoni vicini: le mosse viaggiano via Bluetooth.",
+  "@multiplayerBluetoothInviteHint": {
+    "description": "Sotto il QR di una partita Bluetooth, in attesa dell'avversario"
+  },
+  "multiplayerBluetoothOff": "Accendi il Bluetooth, poi riprova.",
+  "@multiplayerBluetoothOff": {
+    "description": "Avviso quando il Bluetooth è spento"
+  },
+  "multiplayerBluetoothDenied": "Serve il permesso Bluetooth: consentilo dalle impostazioni del telefono, poi riprova.",
+  "@multiplayerBluetoothDenied": {
+    "description": "Avviso quando il permesso Bluetooth è negato"
+  },
+  "multiplayerBluetoothUnsupported": "Questo telefono non supporta il Bluetooth a basso consumo.",
+  "@multiplayerBluetoothUnsupported": {
+    "description": "Avviso quando il telefono non ha il Bluetooth LE"
+  }
+}

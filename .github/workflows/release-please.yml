@@ -1,9 +1,10 @@
 name: Changelog
 
 # Mantiene aperta una PR «chore(main): release X.Y.Z» con l'elenco delle modifiche
-# (CHANGELOG.md) ricavato dai commit di main. Non crea tag né Release: la versione
-# la pubblica sempre Rilascio APK (tag vX.Y.Z o avvio manuale), come descritto in
-# docs/rilascio-android.md, così l'APK e la Release restano un unico passaggio.
+# (CHANGELOG.md) ricavato dai commit di main. Unirla crea il tag vX.Y.Z e una release
+# in bozza con le note, ma non pubblica nulla: il tag è creato con il token del
+# workflow, che non avvia Rilascio APK. Le versioni escono solo su richiesta, avviando
+# Rilascio APK sul tag (docs/rilascio-android.md), che allega l'APK e pubblica la bozza.
 on:
   push:
     branches: [main]
@@ -29,6 +30,4 @@ jobs:
         with:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
-          # Con il solo token del workflow GitHub non avvia la CI sulla PR creata: con
-          # il segreto facoltativo RELEASE_PLEASE_TOKEN (token personale) i controlli partono.
-          token: ${{ secrets.RELEASE_PLEASE_TOKEN || github.token }}
+          token: ${{ github.token }}

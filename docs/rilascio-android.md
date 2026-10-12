@@ -34,14 +34,11 @@ https://github.com/diegociarafoni/rokko/releases/latest/download/rokko.apk
 
 Il workflow `.github/workflows/release-please.yml` (release-please) tiene aperta su `main` una PR **«chore(main): release X.Y.Z»**. Contiene l'aggiornamento di `CHANGELOG.md` con le modifiche dall'ultima versione, raggruppate in Novità (`feat`), Correzioni (`fix`), Prestazioni (`perf`) e Annullamenti (`revert`); gli altri tipi di commit non compaiono. La versione proposta segue i commit: prima della 1.0 una novità alza la seconda cifra, una correzione la terza.
 
-La PR non pubblica nulla. Quando la versione è pronta:
+**Unire la PR non pubblica nulla.** Release-please aggiorna `CHANGELOG.md`, `.release-please-manifest.json` e `version.txt`, crea il tag `vX.Y.Z` e una release **in bozza** con le note del changelog. Il tag è creato con il token del workflow, che non avvia altri workflow, quindi `Rilascio APK` non parte. La versione dell'app resta quella del tag: `pubspec.yaml` non viene toccato.
 
-1. si unisce la PR (squash), che fissa il changelog e aggiorna `.release-please-manifest.json`;
-2. si avvia **Rilascio APK** con **version** = `X.Y.Z` (o si crea il tag `vX.Y.Z`), come nella tabella sopra.
+**La versione esce solo su richiesta.** Quando si decide di pubblicare: Actions → Rilascio APK → Run workflow, scegliendo come ramo il **tag** `vX.Y.Z` (non `main`, che nel frattempo può essere andato avanti) e **version** = `X.Y.Z`. Il workflow costruisce l'APK, lo allega alla bozza e la pubblica, mantenendo le note del changelog. Senza bozza (versioni fatte a mano, come nella tabella sopra) la Release si crea come prima.
 
-Release-please non crea né tag né Release, per non avere due flussi che pubblicano la stessa versione. La base da cui conta le modifiche è la versione in `.release-please-manifest.json` (oggi 0.8.1).
-
-Con il solo token del workflow, GitHub non avvia la CI sulla PR creata da un workflow, e i controlli obbligatori restano in attesa. Due modi per sbloccarla: aggiungere il segreto `RELEASE_PLEASE_TOKEN` (token personale con permessi su contenuti e PR, usato in automatico se presente) oppure, a mano, aggiornare il ramo della PR dal pulsante «Update branch».
+Con il solo token del workflow GitHub non avvia la CI sulla PR creata da un workflow, e i controlli obbligatori restano in attesa: si sbloccano da «Update branch», che fa partire i controlli a nome di chi lo preme. Non si usa un token personale per aggirarlo, perché con quello anche la creazione del tag avvierebbe la pubblicazione.
 
 ## Nightly a ogni merge
 
