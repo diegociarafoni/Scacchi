@@ -9,6 +9,8 @@ import 'package:scacchi/progress/progress_controller.dart';
 import 'package:scacchi/progress/progress_store.dart';
 import 'package:scacchi/settings/settings.dart';
 
+import '../localized_app.dart';
+
 Offset square(WidgetTester tester, String name) {
   final rect = tester.getRect(find.byType(Chessboard));
   final size = rect.width / 8;
@@ -42,7 +44,7 @@ void main() {
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: HomeShell(
           settings: SettingsController.defaults(),
           progress: () async => progress,
