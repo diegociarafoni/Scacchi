@@ -44,6 +44,7 @@ import 'board_swipe.dart';
 import 'challenge.dart';
 import 'chess_game.dart';
 import 'clock.dart';
+import 'handicap.dart';
 import 'material.dart';
 import 'move_input.dart';
 import 'move_label.dart';
@@ -158,6 +159,11 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// Profilo bambino all'inizio della partita: bot, titolo e frasi restano
   /// coerenti anche se l'impostazione cambia a partita in corso.
   bool _kidGame = false;
+
+  /// Handicap della partita in corso (RF-27) e colore di chi gioca, da cui
+  /// dipende chi lo concede.
+  Handicap? _handicap;
+  Side _handicapHuman = Side.white;
 
   /// Ultima variante scelta per la partita tra due persone.
   Variant _twoPlayerVariant = Variant.standard;
@@ -675,15 +681,19 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       playerSide: side,
       timeControl: _clock?.control.label,
       opponentElo: elo,
+      headers: {'Handicap': ?_handicap?.pgnValue(_handicapHuman)},
     );
   }
 
   /// Colore dell'utente ed Elo dell'avversario; `null` tra due persone.
   (Side?, int?) get _playerAndElo {
     final side = _computerSide?.opposite;
+    // Un handicap falsa il confronto: senza Elo non entra nel rating locale.
     return (
       side,
-      side == null ? null : (_bot?.elo ?? engineLevel(_gameLevel).approxElo),
+      side == null || _handicap != null
+          ? null
+          : (_bot?.elo ?? engineLevel(_gameLevel).approxElo),
     );
   }
 
@@ -1070,6 +1080,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// Partita di scacchi classici dalla posizione iniziale: solo queste contano
   /// per la stima adattiva e per la collezione dei bot.
   bool get _standardStart =>
+      _handicap == null &&
       _game.variant == Variant.standard &&
       _game.initial.fen == Chess.initial.fen;
 
@@ -1271,16 +1282,36 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     if (!vsComputer && !_kid) _twoPlayerVariant = choice.variant;
     final variant = vsComputer ? Variant.standard : choice.variant;
     final control = choice.control;
+    final human = vsComputer ? setup.resolveHumanSide(_random) : Side.white;
+    final handicap = _kid
+        ? null
+        : choice.handicap?.usable(
+            control: control,
+            standard: variant == Variant.standard,
+          );
+    final pieceOdds = handicap?.piece != null;
     _beginGame(
       ChessGame(
-        initial: initialPosition(
-          variant,
-          chess960Id: variant == Variant.chess960 ? widget.chess960Id() : null,
-        ),
+        initial: pieceOdds
+            ? handicap!.startPosition(human)
+            : initialPosition(
+                variant,
+                chess960Id: variant == Variant.chess960
+                    ? widget.chess960Id()
+                    : null,
+              ),
         variant: variant,
       ),
       setup,
-      control == null ? null : ChessClock(control, now: widget.now),
+      control == null
+          ? null
+          : ChessClock(
+              control,
+              now: widget.now,
+              startTimes: handicap?.startTimes(control, human),
+            ),
+      handicap: handicap,
+      humanSide: human,
     );
     if (vsComputer) return;
     unawaited(
@@ -1300,6 +1331,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     GameSetup setup,
     ChessClock? clock, {
     bool fromEditor = false,
+    Handicap? handicap,
+    Side? humanSide,
   }) {
     _cancelComputerMove();
     _clockBeforeSuspension = false;
@@ -1311,16 +1344,19 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     _game = game;
     _clock = clock;
+    _handicap = handicap;
     _clockHistory.clear();
     _lowTime.reset();
     _clearBoardInteraction();
     _startRecording(fromEditor: fromEditor);
     if (setup.opponent != Opponent.human) {
-      final human = setup.resolveHumanSide(_random);
+      final human = humanSide ?? setup.resolveHumanSide(_random);
+      _handicapHuman = human;
       _computerSide = human.opposite;
       _orientation = human;
       _computerPlayer.newGame().ignore();
     } else {
+      _handicapHuman = Side.white;
       if (_computerSide != null) _orientation = Side.white;
       _computerSide = null;
       _computer?.dispose().ignore();
@@ -1816,6 +1852,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         ? Text(widget.challenge!.title)
         : _game.variant != Variant.standard
         ? Text(_title)
+        : _handicap != null
+        ? Text(_kidL10n(context).handicapGameTitle)
         : l != null
         ? Text(l.appTitle)
         : OpeningName(
@@ -2511,6 +2549,7 @@ class _TimeChoice {
     this.whiteName,
     this.blackName,
     this.setup,
+    this.handicap,
   );
 
   final TimeControl? control;
@@ -2518,6 +2557,7 @@ class _TimeChoice {
   final String whiteName;
   final String blackName;
   final GameSetup setup;
+  final Handicap? handicap;
 }
 
 /// Testi del profilo bambino; in italiano se la pagina è montata senza i
@@ -2619,6 +2659,17 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
       : widget.setup.copyWith(opponent: Opponent.human);
   late final _white = TextEditingController(text: widget.whiteName);
   late final _black = TextEditingController(text: widget.blackName);
+  HandicapPiece? _handicapPiece;
+  int? _handicapMinutes;
+  var _handicapGiver = HandicapGiver.player;
+
+  Handicap? get _handicap => _handicapPiece == null && _handicapMinutes == null
+      ? null
+      : Handicap(
+          piece: _handicapPiece,
+          giverMinutes: _handicapMinutes,
+          giver: _handicapGiver,
+        );
 
   @override
   void dispose() {
@@ -2642,7 +2693,14 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
       label: Text(label),
       onPressed: () => Navigator.pop(
         context,
-        _TimeChoice(control, _variant, _white.text, _black.text, _setup),
+        _TimeChoice(
+          control,
+          _variant,
+          _white.text,
+          _black.text,
+          _setup,
+          _handicap,
+        ),
       ),
     );
     Widget nameField(TextEditingController controller, String label) =>
@@ -2711,6 +2769,7 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
                 Text(_variant.description),
               ],
             ],
+            if (l == null) ..._handicapSection(context),
             const SizedBox(height: 12),
             if (l != null) ...[
               Text(l.kidGameTimeTitle, style: theme.textTheme.titleSmall),
@@ -2744,6 +2803,115 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
         ),
       ),
     );
+  }
+
+  /// Scelta dell'handicap (RF-27): pezzo in meno e tempo di chi concede.
+  List<Widget> _handicapSection(BuildContext context) {
+    final theme = Theme.of(context);
+    final l = _kidL10n(context);
+    final human = _setup.opponent == Opponent.human;
+    final standard = !human || _variant == Variant.standard;
+    final pieces = {
+      HandicapPiece.fPawn: l.handicapPieceFPawn,
+      HandicapPiece.knight: l.handicapPieceKnight,
+      HandicapPiece.rook: l.handicapPieceRook,
+      HandicapPiece.queen: l.handicapPieceQueen,
+    };
+    final summary = _handicap == null
+        ? null
+        : [
+            if (_handicapPiece != null) pieces[_handicapPiece]!,
+            if (_handicapMinutes != null)
+              l.handicapTimeMinutes(_handicapMinutes!),
+          ].join(' · ');
+    final children = [
+      Text(l.handicapHint, style: theme.textTheme.bodySmall),
+      const SizedBox(height: 8),
+      Text(l.handicapPieceTitle, style: theme.textTheme.labelLarge),
+      const SizedBox(height: 4),
+      Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: [
+          ChoiceChip(
+            key: const ValueKey('handicap-piece-none'),
+            label: Text(l.handicapNone),
+            selected: _handicapPiece == null,
+            onSelected: (_) => setState(() => _handicapPiece = null),
+          ),
+          for (final MapEntry(:key, :value) in pieces.entries)
+            ChoiceChip(
+              key: ValueKey('handicap-piece-${key.name}'),
+              label: Text(value),
+              selected: _handicapPiece == key,
+              onSelected: standard
+                  ? (_) => setState(() => _handicapPiece = key)
+                  : null,
+            ),
+        ],
+      ),
+      const SizedBox(height: 8),
+      Text(l.handicapTimeTitle, style: theme.textTheme.labelLarge),
+      const SizedBox(height: 4),
+      Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: [
+          ChoiceChip(
+            key: const ValueKey('handicap-time-none'),
+            label: Text(l.handicapTimeEqual),
+            selected: _handicapMinutes == null,
+            onSelected: (_) => setState(() => _handicapMinutes = null),
+          ),
+          for (final m in Handicap.timeOptions)
+            ChoiceChip(
+              key: ValueKey('handicap-time-$m'),
+              label: Text(l.handicapTimeMinutes(m)),
+              selected: _handicapMinutes == m,
+              onSelected: (_) => setState(() => _handicapMinutes = m),
+            ),
+        ],
+      ),
+      Text(l.handicapTimeHint, style: theme.textTheme.bodySmall),
+      if (_handicap != null) ...[
+        const SizedBox(height: 8),
+        Text(l.handicapGiverTitle, style: theme.textTheme.labelLarge),
+        const SizedBox(height: 4),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            for (final g in HandicapGiver.values)
+              ChoiceChip(
+                key: ValueKey('handicap-giver-${g.name}'),
+                label: Text(switch ((g, human)) {
+                  (HandicapGiver.player, true) => l.handicapGiverWhite,
+                  (HandicapGiver.opponent, true) => l.handicapGiverBlack,
+                  (HandicapGiver.player, false) => l.handicapGiverYou,
+                  (HandicapGiver.opponent, false) => l.handicapGiverOpponent,
+                }),
+                selected: _handicapGiver == g,
+                onSelected: (_) => setState(() => _handicapGiver = g),
+              ),
+          ],
+        ),
+      ],
+    ];
+    // Chiuso per default: la scelta più comune resta una nuova partita normale.
+    return [
+      const SizedBox(height: 8),
+      ExpansionTile(
+        key: const ValueKey('handicap-section'),
+        tilePadding: EdgeInsets.zero,
+        childrenPadding: const EdgeInsets.only(bottom: 8),
+        shape: const Border(),
+        collapsedShape: const Border(),
+        expandedCrossAxisAlignment: CrossAxisAlignment.start,
+        title: Text(l.handicapTitle, style: theme.textTheme.titleSmall),
+        subtitle: summary == null ? null : Text(summary),
+        children: children,
+      ),
+    ];
   }
 }
 

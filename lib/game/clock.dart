@@ -52,12 +52,17 @@ class TimeControl {
 
 /// Orologio a due lati; il tempo scorre solo per il lato attivo.
 class ChessClock {
-  ChessClock(this.control, {DateTime Function()? now})
-    : _now = now ?? DateTime.now,
-      _remaining = {
-        for (final side in Side.values)
-          side: Duration(minutes: control.minutes),
-      };
+  /// [startTimes] sostituisce il tempo iniziale di [control] per un lato, per
+  /// gli handicap di tempo (RF-27).
+  ChessClock(
+    this.control, {
+    DateTime Function()? now,
+    Map<Side, Duration>? startTimes,
+  }) : _now = now ?? DateTime.now,
+       _remaining = {
+         for (final side in Side.values)
+           side: startTimes?[side] ?? Duration(minutes: control.minutes),
+       };
 
   final TimeControl control;
   final DateTime Function() _now;
