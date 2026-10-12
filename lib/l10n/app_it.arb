@@ -1117,7 +1117,7 @@
   "@storyVillageIntro": {
     "description": "storyVillageIntro"
   },
-  "storyVillageBoss": "Pino, il custode del villaggio, ti sfida per vedere se hai imparato davvero.",
+  "storyVillageBoss": "{name}, il custode del villaggio, ti sfida per vedere se hai imparato davvero.",
   "@storyVillageBoss": {
     "description": "storyVillageBoss",
     "placeholders": {

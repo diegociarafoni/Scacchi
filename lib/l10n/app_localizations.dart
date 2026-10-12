@@ -1451,7 +1451,7 @@ abstract class AppLocalizations {
   /// storyVillageBoss
   ///
   /// In it, this message translates to:
-  /// **'Pino, il custode del villaggio, ti sfida per vedere se hai imparato davvero.'**
+  /// **'{name}, il custode del villaggio, ti sfida per vedere se hai imparato davvero.'**
   String storyVillageBoss(String name);
 
   /// storyVillageOutro

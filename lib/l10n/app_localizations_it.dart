@@ -931,7 +931,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String storyVillageBoss(String name) {
-    return 'Pino, il custode del villaggio, ti sfida per vedere se hai imparato davvero.';
+    return '$name, il custode del villaggio, ti sfida per vedere se hai imparato davvero.';
   }
 
   @override
