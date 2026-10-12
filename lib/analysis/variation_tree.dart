@@ -37,9 +37,11 @@ class VariationTree {
   VariationNode? play(Move move) {
     final from = current.position;
     if (!from.isLegal(move)) return null;
-    final existing = current.children.where((n) => n.move == move);
-    if (existing.isNotEmpty) return current = existing.first;
     final (next, san) = from.makeSan(move);
+    // Il SAN è unico tra le mosse di una posizione, quale che sia la forma
+    // con cui è arrivata la mossa (per esempio l'arrocco).
+    final existing = current.children.where((n) => n.san == san);
+    if (existing.isNotEmpty) return current = existing.first;
     final node = VariationNode._(current, move, san, next);
     current.children.add(node);
     return current = node;

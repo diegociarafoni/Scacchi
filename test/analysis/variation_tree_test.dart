@@ -124,6 +124,24 @@ void main() {
       expect(tree.current.san, 'c5');
     });
 
+    test(
+      'eliminare un antenato della posizione corrente torna al suo genitore',
+      () {
+        final tree = VariationTree(Chess.initial)
+          ..play(m('e2e4'))
+          ..play(m('e7e5'))
+          ..back()
+          ..play(m('c7c5'))
+          ..play(m('g1f3'))
+          ..play(m('d7d6'));
+        final c5 = tree.current.parent!.parent!;
+        tree.promote(tree.current);
+        tree.delete(c5);
+        expect(tree.current.san, 'e4');
+        expect(tree.mainLine.map((n) => n.san), ['e4', 'e5']);
+      },
+    );
+
     test('la radice non si elimina', () {
       final tree = VariationTree(Chess.initial)..play(m('e2e4'));
       tree.delete(tree.root);

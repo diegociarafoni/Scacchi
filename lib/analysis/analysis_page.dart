@@ -187,7 +187,10 @@ class _AnalysisPageState extends State<AnalysisPage>
   }
 
   void _delete() {
-    _tree.delete(_tree.current);
+    final before = _tree.current;
+    _tree.delete(before);
+    // Il motore riparte solo se la posizione è cambiata.
+    if (_tree.current == before) return setState(() {});
     _moved();
   }
 
@@ -481,19 +484,22 @@ class _AnalysisPageState extends State<AnalysisPage>
         : san;
     final selected = node == _tree.current;
     final scheme = Theme.of(context).colorScheme;
-    return InkWell(
-      borderRadius: BorderRadius.circular(6),
-      onTap: () => _select(node),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-        decoration: BoxDecoration(
-          color: selected ? scheme.primaryContainer : null,
-          borderRadius: BorderRadius.circular(6),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontWeight: _tree.isMainLine(node) ? FontWeight.w600 : null,
+    return Semantics(
+      selected: selected,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(6),
+        onTap: () => _select(node),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+          decoration: BoxDecoration(
+            color: selected ? scheme.primaryContainer : null,
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontWeight: _tree.isMainLine(node) ? FontWeight.w600 : null,
+            ),
           ),
         ),
       ),
