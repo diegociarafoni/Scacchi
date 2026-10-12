@@ -13,8 +13,10 @@ void _explore(LineExercise e, List<String> played, List<String> failures) {
   if (run.done) return;
   final last = run.step == e.steps.length - 1;
   // All'ultimo passo di un matto vale qualunque matto, come nel gioco.
+  final listed = e.steps[run.step].split('|');
   final options = last && e.goal == LineGoal.mate
       ? [
+          ...listed,
           for (final m in run.position.legalMoves.entries)
             for (final to in m.value.squares)
               for (final promotion in [null, Role.queen])
@@ -28,7 +30,7 @@ void _explore(LineExercise e, List<String> played, List<String> failures) {
                         .isCheckmate)
                   NormalMove(from: m.key, to: to, promotion: promotion).uci,
         ]
-      : e.steps[run.step].split('|');
+      : listed;
   final legal = options.where((u) => run.position.isLegal(Move.parse(u)!));
   if (legal.isEmpty) {
     failures.add('${e.fen} dopo $played: nessuna mossa legale');

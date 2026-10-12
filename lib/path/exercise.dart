@@ -172,7 +172,7 @@ class LineRun extends ExerciseRun {
     final san = position.makeSan(move).$2;
     final last = step == exercise.steps.length - 1;
     final after = position.play(move);
-    // Le alternative non legali in questa posizione (dopo l'altra scelta) si ignorano.
+    // Dopo un'alternativa, quelle dell'altra scelta possono non essere legali.
     final expected = exercise.steps[step]
         .split('|')
         .map(Move.parse)
