@@ -97,7 +97,7 @@ class _GuessPageState extends State<GuessPage> {
         _clock.elapsed,
       );
     } on Object catch (e) {
-      debugPrint('Risultato della partita non salvato: $e');
+      if (kDebugMode) debugPrint('Risultato della partita non salvato: $e');
     }
   }
 
