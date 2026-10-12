@@ -393,6 +393,8 @@ class _HomeShellState extends State<HomeShell> {
         ),
       ),
     );
+    // L'avviso dell'ultimo puzzle non resta sopra la Storia.
+    if (context.mounted) ScaffoldMessenger.of(context).hideCurrentSnackBar();
     return feed.solved;
   }
 

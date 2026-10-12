@@ -39,7 +39,8 @@ class StoryPuzzleFeed implements PuzzleFeed {
   Future<FeedOutcome> finished(Puzzle puzzle, {required bool solved}) async {
     // Prima dell'attesa: la pagina legge hasNext subito dopo la soluzione.
     if (solved) _solved++;
+    final outcome = await _inner.finished(puzzle, solved: solved);
     onOutcome?.call(solved);
-    return _inner.finished(puzzle, solved: solved);
+    return outcome;
   }
 }

@@ -107,6 +107,10 @@ void main() {
           expect(line.length, lessThanOrEqualTo(90), reason: reason);
           expect(line, isNot(matches(RegExp(r'\d'))), reason: reason);
         }
+        expect({
+          for (final o in storyChapters)
+            l10n.guardianLine(o, GuardianMoment.welcome),
+        }, hasLength(storyChapters.length));
         expect(
           l10n.storyGuardianSays(c.bot.name, 'ciao'),
           contains(c.bot.name),
