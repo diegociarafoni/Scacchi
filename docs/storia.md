@@ -41,7 +41,7 @@ Quando un passo si conclude (lezioni, puzzle, guardiano o sfida), la schermata m
 
 ## Stato e salvataggio
 
-Chi ha già battuto un bot o risolto dei puzzle in un capitolo successivo trova concluso anche il Capitolo 0 (`StoryProgress.isChapterDone`), così l'aggiunta del capitolo non toglie nulla a chi era più avanti. Lo stato deriva dal percorso: le lezioni e i guardiani completati contano così come sono, comprese le lezioni aggiunte con un aggiornamento dei contenuti (per questo la storia non elenca le singole lezioni, ma il capitolo del percorso). Salva da sé, in `story.json` (`StoryController`, con `JsonFile`), solo i puzzle risolti per capitolo e i capitoli con il bot battuto. Capitoli sconosciuti o valori illeggibili sono ignorati alla lettura.
+Chi ha già battuto un bot o risolto dei puzzle in un capitolo successivo trova concluso anche il Capitolo 0 (`StoryProgress.isChapterDone`), così l'aggiunta del capitolo non toglie nulla a chi era più avanti. «Continua da dove eri» nella scheda Tu guarda solo il percorso, non la storia: a chi è oltre il Capitolo 0 senza averne fatto le lezioni nuove propone quelle lezioni. Lo stato deriva dal percorso: le lezioni e i guardiani completati contano così come sono, comprese le lezioni aggiunte con un aggiornamento dei contenuti (per questo la storia non elenca le singole lezioni, ma il capitolo del percorso). Salva da sé, in `story.json` (`StoryController`, con `JsonFile`), solo i puzzle risolti per capitolo e i capitoli con il bot battuto. Capitoli sconosciuti o valori illeggibili sono ignorati alla lettura.
 
 ## Testi e accessibilità
 

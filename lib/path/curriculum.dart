@@ -494,9 +494,9 @@ const List<Chapter> curriculum = [
           LineExercise(
             instructions:
                 'Sfida: il cavallo nero attacca la tua torre. Difendila con la '
-                'donna, in uno dei due modi.',
+                'donna o con il re.',
             fen: '6k1/8/8/8/3n4/5R2/8/Q3K3 w - - 0 1',
-            steps: ['a1a3|a1d1'],
+            steps: ['a1a3|a1d1|e1f2'],
             goal: LineGoal.line,
           ),
         ],
