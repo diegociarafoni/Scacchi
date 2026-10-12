@@ -1,0 +1,157 @@
+{
+  "botGalleryTitle": "Choose a bot",
+  "botTierNovice": "Novice",
+  "botTierBeginner": "Beginner",
+  "botTierIntermediate": "Intermediate",
+  "botTierAdvanced": "Advanced",
+  "botTierMaster": "Master",
+  "botTierFriends": "Your friends",
+  "botTierAdaptive": "Adaptive",
+  "botTierHeading": "{tier} · {count}",
+  "@botTierHeading": {
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "botGalleryElo": "{elo} Elo",
+  "@botGalleryElo": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "botGalleryStateLocked": "locked",
+  "botGalleryStateBeaten": "beaten",
+  "botGalleryStateOpen": "available",
+  "botGalleryCellLabel": "{name}, {elo} Elo, {state}",
+  "@botGalleryCellLabel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "elo": {
+        "type": "int"
+      },
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "botGalleryCellLabelKid": "{name}, {state}",
+  "@botGalleryCellLabelKid": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "botGalleryLockedTease": "See you later, when you're ready!",
+  "botStyleAggressive": "aggressive",
+  "botStyleGambitist": "gambit player",
+  "botStylePositional": "positional",
+  "botGalleryStyle": "Style: {style}",
+  "@botGalleryStyle": {
+    "placeholders": {
+      "style": {
+        "type": "String"
+      }
+    }
+  },
+  "botAdaptiveName": "Adaptive",
+  "botAdaptiveGreeting": "I adapt to you: win and I play better, lose and I ease off.",
+  "botAdaptiveRematch": "Good practice. One more?",
+  "botAdaptiveHint": "Playing at about {elo} Elo now",
+  "@botAdaptiveHint": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "botGuardiansTitle": "The Story guardians",
+  "botGuardiansProgress": "{met} of {total} guardians met",
+  "@botGuardiansProgress": {
+    "placeholders": {
+      "met": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "botGuardiansHint": "You meet them by finishing Story chapters.",
+  "botGuardianUnmet": "guardian not met yet",
+  "botSideWhite": "Play as White",
+  "botSideRandom": "Random colour",
+  "botSideBlack": "Play as Black",
+  "botGalleryPlay": "Play",
+  "botGalleryLockedPlay": "Locked",
+  "botGalleryBeatenBadge": "beaten",
+  "botGreetingLia": "Hi, I'm Lia! I'll push a pawn and we'll see what happens.",
+  "botRematchLia": "You beat me! Shall we play another one?",
+  "botGreetingPino": "Cheep cheep! I'm Pino, shall we play? I attack right away!",
+  "botRematchPino": "You beat me! Next time I'll attack harder.",
+  "botGreetingNico": "Nice and slow, no rush. Fancy a game?",
+  "botRematchNico": "You won calmly, well done. One more?",
+  "botGreetingChiara": "Hi, I'm Chiara. A quiet game, like in a garden?",
+  "botRematchChiara": "Your play has blossomed! Play again?",
+  "botGreetingViola": "What a lovely day for a symphony of moves! Shall we begin?",
+  "botRematchViola": "You put my tune out of key! Encore?",
+  "botGreetingRocco": "A pawn for you, the game for me. Deal?",
+  "botRematchRocco": "You found me out! But I have more tricks.",
+  "botGreetingEttore": "I roar before I play. Get ready!",
+  "botRematchEttore": "A roar for your victory. Rematch?",
+  "botGreetingMarta": "I thought about this game all night. Sit down.",
+  "botRematchMarta": "Well played. I have a lot to rethink.",
+  "botGreetingBruna": "I just woke up, but the board wakes me right up.",
+  "botRematchBruna": "You beat me! Back to hibernation… for a minute.",
+  "botGreetingDuilio": "Sparks and flames: I love to attack. Ready?",
+  "botRematchDuilio": "You put out my flames! Let's relight them.",
+  "botGreetingCarlo": "Give me a piece and I'll give you a show. Shall we play?",
+  "botRematchCarlo": "You took everything back, well done!",
+  "botGreetingElena": "I watch the board from above. Let's see if you can fly.",
+  "botRematchElena": "You flew high. I like that.",
+  "botGreetingAda": "I calculate every trajectory. How are you with the stars?",
+  "botRematchAda": "Your plan beat mine. Shall we redo the sums?",
+  "botGreetingMassimo": "The pack says hello. A gambit to start?",
+  "botRematchMassimo": "You tamed the wolf. Respect.",
+  "botGreetingStella": "I'm the brightest star of the Academy. Can you look at me?",
+  "botRematchStella": "You put out my light… for now.",
+  "botGreetingTino": "Hi, I'm Tino! I'll show you how the pieces move.",
+  "botRematchTino": "Well done! You move the pieces better than me now.",
+  "botUnlockStory": "Unlocks by finishing the Story chapter with this guardian",
+  "botGalleryOpen": "Open the bot gallery",
+  "botOptions": "Options",
+  "botOptionsTime": "Time control",
+  "botOptionsNoClock": "No timer",
+  "botOptionsVariant": "Variant",
+  "botVariantStandard": "Standard",
+  "botVariantChess960": "Chess960",
+  "botVariantKingOfTheHill": "King of the Hill",
+  "botVariantThreeCheck": "Three-check",
+  "botOptionsHelp": "Help",
+  "botOptionsCoach": "Coach",
+  "botOptionsCoachHint": "Warns you when you make a mistake.",
+  "botOptionsSummary": "{time} · {variant}",
+  "@botOptionsSummary": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "variant": {
+        "type": "String"
+      }
+    }
+  },
+  "botOptionsKidSlow": "With a clock, taking it easy"
+}

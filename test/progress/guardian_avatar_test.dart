@@ -17,10 +17,11 @@ void main() {
       expect(characters.toSet(), hasLength(guardians.length));
     });
 
-    test('i bot senza personaggio disegnato mostrano la loro emoji', () {
-      for (final id in ['lia', 'nico', 'viola', 'ettore', 'bruna']) {
-        expect(guardianCharacter(id), isNull, reason: id);
-      }
+    test('ogni bot ha il suo personaggio, tutti diversi', () {
+      final all = [...bots, ...storyOnlyBots];
+      final characters = [for (final b in all) guardianCharacter(b.id)];
+      expect(characters, everyElement(isNotNull));
+      expect(characters.toSet(), hasLength(all.length));
     });
 
     test('un bot sconosciuto non ha un personaggio', () {

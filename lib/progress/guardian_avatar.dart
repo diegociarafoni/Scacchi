@@ -15,6 +15,14 @@ AvatarCharacter? guardianCharacter(String botId) => switch (botId) {
   'elena' => AvatarCharacter.eagle,
   'massimo' => AvatarCharacter.wolf,
   'stella' => AvatarCharacter.star,
+  'lia' => AvatarCharacter.butterfly,
+  'nico' => AvatarCharacter.turtle,
+  'viola' => AvatarCharacter.violet,
+  'ettore' => AvatarCharacter.lion,
+  'bruna' => AvatarCharacter.bear,
+  'carlo' => AvatarCharacter.raccoon,
+  'ada' => AvatarCharacter.astronomer,
+  'tino' => AvatarCharacter.hatchling,
   _ => null,
 };
 

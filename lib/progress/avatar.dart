@@ -12,6 +12,14 @@ enum AvatarCharacter {
   eagle,
   wolf,
   star,
+  butterfly,
+  turtle,
+  violet,
+  lion,
+  bear,
+  raccoon,
+  astronomer,
+  hatchling,
 }
 
 /// Espressione di un personaggio, per accompagnare le attività della Storia.
