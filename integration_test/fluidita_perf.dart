@@ -1,6 +1,3 @@
-// ignore_for_file: invalid_use_of_visible_for_testing_member
-// Come negli altri test su dispositivo: i valori iniziali di SharedPreferences sono solo per i test.
-
 import 'dart:convert';
 import 'dart:io';
 

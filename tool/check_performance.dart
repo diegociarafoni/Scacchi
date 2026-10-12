@@ -4,12 +4,12 @@ import 'dart:io';
 import 'src/budget.dart';
 
 /// Applica il budget dei fotogrammi di `tool/policy.json` al rapporto scritto da
-/// `performance_test/fluidita_test.dart` (predefinito: build/performance.json).
+/// `integration_test/fluidita_perf.dart` (predefinito: build/performance.json).
 void main(List<String> args) {
   final file = File(args.isEmpty ? 'build/performance.json' : args.single);
   if (!file.existsSync()) {
     stderr.writeln(
-      '${file.path} manca: eseguire performance_test/fluidita_test.dart',
+      '${file.path} manca: eseguire integration_test/fluidita_perf.dart',
     );
     exit(2);
   }

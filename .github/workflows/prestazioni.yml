@@ -9,7 +9,7 @@ on:
     paths-ignore: ['docs/**', '**/*.md', 'LICENSE']
   pull_request:
     paths:
-      - 'performance_test/**'
+      - 'integration_test/fluidita_perf.dart'
       - 'tool/check_performance.dart'
       - 'tool/src/budget.dart'
       - 'tool/policy.json'
@@ -39,7 +39,7 @@ jobs:
           cache: true
       - run: dart tool/l10n.dart --solo-unione
       - run: flutter pub get
-      - run: xvfb-run -a flutter test performance_test/fluidita_test.dart -d linux
+      - run: xvfb-run -a flutter test integration_test/fluidita_perf.dart -d linux
       - name: Budget dei fotogrammi
         run: dart run tool/check_performance.dart
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2

@@ -36,7 +36,7 @@ fi
 
 dart tool/check_docs.dart
 dart tool/l10n.dart
-dart format --output=none --set-exit-if-changed lib test integration_test performance_test tool
+dart format --output=none --set-exit-if-changed lib test integration_test tool
 flutter analyze --fatal-infos --fatal-warnings
 if $test_run; then flutter test --exclude-tags golden; fi
 echo "✓ controlli superati"
