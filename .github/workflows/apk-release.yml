@@ -165,6 +165,9 @@ jobs:
       - name: Controlli MASVS sul manifest dell'APK
         run: dart run tool/check_apk.dart build/app/outputs/flutter-apk/app-release.apk
 
+      - name: Budget di dimensione dell'APK
+        run: dart run tool/check_size.dart build/app/outputs/flutter-apk/app-release.apk
+
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: steps.version.outputs.tag == ''
         with:
