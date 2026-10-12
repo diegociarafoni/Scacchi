@@ -240,7 +240,12 @@ void main() {
       );
       await tester.pumpAndSettle();
       await tester.scrollUntilVisible(find.text('Sabbia'), 200);
-      expect(find.byTooltip('Si sblocca giocando'), findsWidgets);
+      final semantics = tester.ensureSemantics();
+      expect(
+        find.bySemanticsLabel(RegExp('Sabbia, bloccato. Si sblocca giocando')),
+        findsOneWidget,
+      );
+      semantics.dispose();
       await tester.ensureVisible(find.text('Sabbia'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Sabbia'));
@@ -285,12 +290,14 @@ void main() {
             path: () => Completer<PathController>().future,
             archive: () => Completer<GameArchive>().future,
             tournamentPage: () async => const SizedBox(),
+            storyPage: () async => const SizedBox(),
           ),
         ),
       );
       await tester.pumpAndSettle();
       expect(find.text('Tornei'), findsNothing);
-      expect(find.text('Percorso'), findsOneWidget);
+      expect(find.text('Storia'), findsOneWidget);
+      expect(find.text('Percorso'), findsNothing);
     });
 
     testWidgets('le stelle si fermano a dieci', (tester) async {

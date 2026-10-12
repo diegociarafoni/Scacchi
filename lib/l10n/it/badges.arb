@@ -371,5 +371,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "badgeChapterStrategyName": "Mente da stratega",
+  "badgeChapterStrategyDesc": "Completa le lezioni di strategia.",
+  "badgeChapterCapablancaName": "Allievo del maestro",
+  "badgeChapterCapablancaDesc": "Completa le lezioni della scuola di Capablanca.",
+  "badgeStoryPlainName": "Il piano giusto",
+  "badgeStoryPlainDesc": "Batti Massimo nel capitolo «La pianura dei piani».",
+  "badgeStoryAcademyName": "Primo dell'accademia",
+  "badgeStoryAcademyDesc": "Batti Stella nel capitolo «L'accademia del maestro»."
 }

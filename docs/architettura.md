@@ -60,7 +60,8 @@ lib/
   storage/                File JSON locali con versione e scrittura atomica
   settings/
     settings.dart         Impostazioni, valori predefiniti e salvataggio locale
-    settings_page.dart    Schermata delle impostazioni
+    settings_page.dart    Schermata delle impostazioni: sezioni comprimibili, gallerie di temi e pezzi
+    settings_labels.dart  Nomi tradotti di temi, pezzi, notazioni e animazioni
     board_preview.dart    Anteprima della scacchiera nelle Impostazioni
     color_blind.dart      Colori per daltonici (Okabe-Ito)
     adult_gate.dart       Domanda per l'adulto del profilo bambino

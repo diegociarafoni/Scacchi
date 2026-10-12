@@ -182,6 +182,8 @@ final List<BadgeDef> badges = [
   _chapter('tactics', Icons.bolt),
   _chapter('endgames', Icons.hourglass_bottom),
   _chapter('openings', Icons.meeting_room),
+  _chapter('strategy', Icons.route),
+  _chapter('capablanca', Icons.school),
   BadgeDef.counter(
     'guardians_3',
     BadgeFamily.learn,
@@ -322,6 +324,8 @@ final List<BadgeDef> badges = [
   _story('forest', Icons.forest),
   _story('castle', Icons.fort),
   _story('crown', Icons.auto_awesome),
+  _story('plain', Icons.landscape),
+  _story('academy', Icons.account_balance),
   BadgeDef.counter(
     'story_all',
     BadgeFamily.story,

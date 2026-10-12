@@ -1,6 +1,6 @@
 # Badge
 
-Requisito RG-17. Una raccolta di 46 badge legati a ciò che si impara e si gioca, distinta dai [traguardi](gamification.md#traguardi-rg-05): i traguardi sono contatori che sbloccano temi, pezzi e cornici; i badge sono un riconoscimento tematico e non danno né XP né ricompense (RG-12). Il catalogo con le scelte di prodotto è in `badge.md` tra i file del progetto; qui c'è come funziona il codice, in `lib/badges/`.
+Requisito RG-17. Una raccolta di 50 badge legati a ciò che si impara e si gioca, distinta dai [traguardi](gamification.md#traguardi-rg-05): i traguardi sono contatori che sbloccano temi, pezzi e cornici; i badge sono un riconoscimento tematico e non danno né XP né ricompense (RG-12). Il catalogo con le scelte di prodotto è in `badge.md` tra i file del progetto; qui c'è come funziona il codice, in `lib/badges/`.
 
 ## Famiglie
 

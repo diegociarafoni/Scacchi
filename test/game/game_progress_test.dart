@@ -16,6 +16,7 @@ import 'package:scacchi/progress/progress_tracker.dart';
 import 'package:scacchi/settings/settings.dart';
 
 import '../computer_fakes.dart';
+import '../game_actions.dart';
 
 Offset square(WidgetTester tester, String name) {
   final rect = tester.getRect(find.byType(Chessboard));
@@ -72,7 +73,7 @@ void main() {
     tester,
   ) async {
     await open(tester);
-    await tester.tap(find.text('Nuova'));
+    await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Senza tempo'));
     await tester.pumpAndSettle();
@@ -93,7 +94,7 @@ void main() {
 
   testWidgets('una partita già registrata non si ripete', (tester) async {
     await open(tester);
-    await tester.tap(find.text('Nuova'));
+    await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Senza tempo'));
     await tester.pumpAndSettle();
@@ -107,14 +108,14 @@ void main() {
 
   Future<void> startLocal(WidgetTester tester) async {
     await open(tester);
-    await tester.tap(find.text('Nuova'));
+    await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Senza tempo'));
     await tester.pumpAndSettle();
   }
 
   Future<void> resign(WidgetTester tester) async {
-    await tester.tap(find.text('Abbandona'));
+    await tapGameAction(tester, 'Abbandona');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Abbandona').last);
     await tester.pumpAndSettle();
@@ -164,7 +165,7 @@ void main() {
     tester,
   ) async {
     await open(tester);
-    await tester.tap(find.byTooltip('Editor di posizione'));
+    await openPositionEditor(tester);
     await tester.pumpAndSettle();
     await tester.ensureVisible(find.text('Incolla FEN'));
     await tester.pumpAndSettle();
@@ -202,7 +203,7 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 2));
     // Il motore finto non difende: se la partita non è finita, si abbandona.
     if (activities.isEmpty) {
-      await tester.tap(find.text('Abbandona'));
+      await tapGameAction(tester, 'Abbandona');
       await tester.pumpAndSettle();
       await tester.tap(find.text('Abbandona').last);
       await tester.pumpAndSettle();

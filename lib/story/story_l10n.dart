@@ -18,7 +18,9 @@ extension StoryTexts on AppLocalizations {
     'tower' => storyTowerTitle,
     'forest' => storyForestTitle,
     'castle' => storyCastleTitle,
-    _ => storyCrownTitle,
+    'crown' => storyCrownTitle,
+    'plain' => storyPlainTitle,
+    _ => storyAcademyTitle,
   };
 
   String chapterIntro(StoryChapter c) => switch (c.id) {
@@ -27,7 +29,9 @@ extension StoryTexts on AppLocalizations {
     'tower' => storyTowerIntro,
     'forest' => storyForestIntro,
     'castle' => storyCastleIntro,
-    _ => storyCrownIntro,
+    'crown' => storyCrownIntro,
+    'plain' => storyPlainIntro,
+    _ => storyAcademyIntro,
   };
 
   String chapterBoss(StoryChapter c) => switch (c.id) {
@@ -36,7 +40,9 @@ extension StoryTexts on AppLocalizations {
     'tower' => storyTowerBoss(c.bot.name),
     'forest' => storyForestBoss(c.bot.name),
     'castle' => storyCastleBoss(c.bot.name),
-    _ => storyCrownBoss(c.bot.name),
+    'crown' => storyCrownBoss(c.bot.name),
+    'plain' => storyPlainBoss(c.bot.name),
+    _ => storyAcademyBoss(c.bot.name),
   };
 
   String chapterOutro(StoryChapter c) => switch (c.id) {
@@ -45,6 +51,8 @@ extension StoryTexts on AppLocalizations {
     'tower' => storyTowerOutro,
     'forest' => storyForestOutro,
     'castle' => storyCastleOutro,
-    _ => storyCrownOutro,
+    'crown' => storyCrownOutro,
+    'plain' => storyPlainOutro,
+    _ => storyAcademyOutro,
   };
 }
