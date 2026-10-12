@@ -10,7 +10,7 @@ L'app si chiama **Rokko**, da *arrocco* e da *rook* (la torre in inglese): breve
 |---|---|
 | Nome sotto l'icona su Android | `android/app/src/main/AndroidManifest.xml`, `android:label` |
 | Nome sotto l'icona su iOS | `ios/Runner/Info.plist`, `CFBundleDisplayName` |
-| Titolo dell'app e testi che la nominano | `lib/l10n/app_it.arb`, `lib/l10n/app_en.arb` (`appTitle`, `qrCameraError`) |
+| Titolo dell'app e testi che la nominano | `lib/l10n/it/app.arb`, `lib/l10n/en/app.arb` (`appTitle`); `qrCameraError` è in `exchange.arb` |
 | Finestra su Linux e Windows | `linux/runner/my_application.cc`, `windows/runner/main.cpp`, `windows/runner/Runner.rc` |
 | Promemoria, backup (`rokko-backup-….json`) e scheda della settimana (`rokko-settimana-….png`) | `lib/reminders/reminder.dart`, `lib/backup/`, `lib/stats/portrait_page.dart` |
 

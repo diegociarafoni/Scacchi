@@ -112,6 +112,7 @@ jobs:
           channel: stable
           flutter-version: 3.47.7
           cache: true
+      - run: dart tool/l10n.dart --solo-unione
       - run: flutter pub get
       - if: steps.ci.outputs.passed != 'true'
         run: flutter analyze && flutter test
