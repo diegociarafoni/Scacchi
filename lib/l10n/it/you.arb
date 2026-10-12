@@ -1,0 +1,138 @@
+{
+  "youTitle": "Tu",
+  "@youTitle": {
+    "description": "Titolo della scheda"
+  },
+  "youContinueTitle": "Continua da dove eri",
+  "@youContinueTitle": {
+    "description": "Scheda in testa: riprende il percorso"
+  },
+  "youContinueStage": "Prossima tappa: {stage}",
+  "@youContinueStage": {
+    "description": "Titolo della tappa proposta",
+    "placeholders": {
+      "stage": {
+        "type": "String"
+      }
+    }
+  },
+  "youContinueGuardian": "Sfida il guardiano: {stage}",
+  "@youContinueGuardian": {
+    "description": "Tappa guardiano proposta",
+    "placeholders": {
+      "stage": {
+        "type": "String"
+      }
+    }
+  },
+  "youGroupLearn": "Impara",
+  "@youGroupLearn": {
+    "description": "Intestazione del gruppo"
+  },
+  "youGroupPlay": "Gioca",
+  "@youGroupPlay": {
+    "description": "Intestazione del gruppo"
+  },
+  "youGroupData": "I miei dati",
+  "@youGroupData": {
+    "description": "Intestazione del gruppo"
+  },
+  "youLevel": "Livello {level}",
+  "@youLevel": {
+    "description": "Livello nella testata",
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "youStreak": "{days, plural, one{1 giorno di fila} other{{days} giorni di fila}}",
+  "@youStreak": {
+    "description": "Serie di giorni",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "youProfile": "Profilo",
+  "@youProfile": {
+    "description": "Voce del gruppo «I miei dati»"
+  },
+  "youProfileSubtitle": "Livello, serie, sfide, traguardi e preferenze",
+  "@youProfileSubtitle": {
+    "description": "Sottotitolo"
+  },
+  "youPath": "Percorso",
+  "@youPath": {
+    "description": "Voce del gruppo «Impara»"
+  },
+  "youPathSubtitle": "Tappe con stelle, dalle basi al finale",
+  "@youPathSubtitle": {
+    "description": "Sottotitolo"
+  },
+  "youEndgames": "Finali",
+  "@youEndgames": {
+    "description": "Voce del gruppo «Impara»"
+  },
+  "youEndgamesSubtitle": "Lucena, Philidor e i matti elementari contro il motore",
+  "@youEndgamesSubtitle": {
+    "description": "Sottotitolo"
+  },
+  "youMasters": "Grandi maestri",
+  "@youMasters": {
+    "description": "Voce del gruppo «Impara»"
+  },
+  "youMastersSubtitle": "Partite celebri da sfogliare e da indovinare",
+  "@youMastersSubtitle": {
+    "description": "Sottotitolo"
+  },
+  "youTournaments": "Tornei",
+  "@youTournaments": {
+    "description": "Voce del gruppo «Gioca»"
+  },
+  "youTournamentsSubtitle": "Gironi ed eliminazione diretta contro i bot",
+  "@youTournamentsSubtitle": {
+    "description": "Sottotitolo"
+  },
+  "youMinigames": "Minigiochi",
+  "@youMinigames": {
+    "description": "Voce del gruppo «Gioca»"
+  },
+  "youMinigamesSubtitle": "Coordinate, cattura tutto, cieca, materiale",
+  "@youMinigamesSubtitle": {
+    "description": "Sottotitolo"
+  },
+  "youWeek": "La tua settimana",
+  "@youWeek": {
+    "description": "Voce unica: riepilogo dei progressi"
+  },
+  "youWeekSubtitle": "Progressi, errore ricorrente e un consiglio",
+  "@youWeekSubtitle": {
+    "description": "Sottotitolo"
+  },
+  "youWeekShare": "Condividi la settimana",
+  "@youWeekShare": {
+    "description": "Etichetta del pulsante che apre l'immagine da condividere"
+  },
+  "youStats": "Statistiche",
+  "@youStats": {
+    "description": "Voce del gruppo «I miei dati»"
+  },
+  "youStatsSubtitle": "Risultati, aperture, cadenze e rating locale",
+  "@youStatsSubtitle": {
+    "description": "Sottotitolo"
+  },
+  "youArchive": "Archivio",
+  "@youArchive": {
+    "description": "Voce del gruppo «I miei dati»"
+  },
+  "youArchiveSubtitle": "Partite salvate, import ed export PGN",
+  "@youArchiveSubtitle": {
+    "description": "Sottotitolo"
+  },
+  "youLoadError": "I dati salvati non si possono leggere: riprova.",
+  "@youLoadError": {
+    "description": "Messaggio quando un file non si legge"
+  }
+}

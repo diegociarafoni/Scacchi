@@ -13,6 +13,7 @@ import '../settings/board_marks.dart';
 import '../settings/settings.dart';
 import '../share/position_image.dart';
 import '../share/position_image_page.dart';
+import '../theme/rokko_theme.dart';
 import '../training/training_board.dart';
 import 'activity_recorder.dart';
 import 'guide_view.dart';
@@ -34,7 +35,7 @@ class PuzzlePage extends StatefulWidget {
     this.theme,
     this.puzzle,
     this.feed,
-    this.title = 'Puzzle',
+    this.title,
     this.guide,
     this.onActivity,
     this.replyDelay = const Duration(milliseconds: 400),
@@ -48,7 +49,9 @@ class PuzzlePage extends StatefulWidget {
 
   /// Sorgente alternativa, per esempio il ripasso degli errori.
   final PuzzleFeed? feed;
-  final String title;
+
+  /// Titolo della barra; senza, quello predefinito dei puzzle.
+  final String? title;
 
   /// Spiegazione della modalità: si apre da sola la prima volta e dall'icona.
   final PuzzleGuide? guide;
@@ -264,39 +267,40 @@ class _PuzzlePageState extends State<PuzzlePage> {
     if (next != null) setState(() => _start(next));
   }
 
-  String get _message {
-    final side = _session.puzzle.playerSide == Side.white ? 'Bianco' : 'Nero';
+  String _message(AppLocalizations l) {
+    final side = l.puzzleSide(
+      _session.puzzle.playerSide == Side.white ? 'white' : 'black',
+    );
     final rating = widget.trainer.rating.rating.round();
     final delta = _delta;
     // Profilo bambino (RP-06): l'esito non cita il punteggio.
     final outcome = AppSettings.of(context).kidMode
         ? ''
         : _repeat
-        ? ' Già visto: punteggio invariato.'
+        ? ' ${l.puzzleOutcomeRepeat}'
         : delta == null
         ? ''
-        : ' Punteggio $rating (${delta >= 0 ? '+' : ''}${delta.round()}).';
+        : ' ${l.puzzleOutcomeRating(rating, '${delta >= 0 ? '+' : ''}${delta.round()}')}';
     return switch (_feedback) {
-      _Feedback.find => 'Trova la mossa migliore per il $side.',
-      _Feedback.correct => 'Giusto! Continua.',
-      _Feedback.restarted =>
-        'Posizione iniziale. Trova la mossa migliore per il $side.',
-      _Feedback.wrong =>
-        'Non è la mossa giusta. Premi «Riprova» per ricominciare.',
-      _Feedback.solved => 'Risolto!$outcome',
+      _Feedback.find => l.puzzleFind(side),
+      _Feedback.correct => l.puzzleCorrect,
+      _Feedback.restarted => l.puzzleRestarted(side),
+      _Feedback.wrong => l.puzzleWrong,
+      _Feedback.solved => '${l.puzzleSolved}$outcome',
       _Feedback.revealed =>
         _session.state == PuzzleState.solved
-            ? 'Puzzle concluso.$outcome'
-            : 'Ecco la mossa giusta.',
+            ? '${l.puzzleDone}$outcome'
+            : l.puzzleRevealed,
     };
   }
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     if (_empty) {
       return Scaffold(
-        appBar: AppBar(title: Text(widget.title)),
-        body: const Center(child: Text('Nessun puzzle da proporre.')),
+        appBar: AppBar(title: Text(widget.title ?? l.puzzleDefaultTitle)),
+        body: Center(child: Text(l.puzzleEmpty)),
       );
     }
     final done = _session.state == PuzzleState.solved;
@@ -313,13 +317,10 @@ class _PuzzlePageState extends State<PuzzlePage> {
     final goal = PuzzleGoal.of(puzzle);
     final goalText = goal == null
         ? null
-        : Localizations.of<AppLocalizations>(
-            context,
-            AppLocalizations,
-          )?.puzzleGoal((kid && goal.isMate ? PuzzleGoal.mate : goal).key);
+        : l.puzzleGoal((kid && goal.isMate ? PuzzleGoal.mate : goal).key);
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(widget.title ?? l.puzzleDefaultTitle),
         actions: [
           if (!kid)
             PositionImageButton(
@@ -331,7 +332,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
             ),
           if (widget.guide != null && !kid)
             IconButton(
-              tooltip: 'Come funziona',
+              tooltip: l.puzzleHelp,
               icon: const Icon(Icons.help_outline),
               onPressed: () => showPuzzleGuide(context, widget.guide!),
             ),
@@ -347,7 +348,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
                   // salgono a due righe sugli schermi stretti.
                   final size = math.max(
                     0.0,
-                    math.min(c.maxWidth, c.maxHeight - 170),
+                    math.min(c.maxWidth, c.maxHeight - 190),
                   );
                   // Scorrevole come ultima difesa su schermi molto bassi.
                   return Center(
@@ -356,83 +357,50 @@ class _PuzzlePageState extends State<PuzzlePage> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           if (goalText != null)
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
-                              child: Semantics(
-                                header: true,
-                                child: Text(
-                                  goalText,
-                                  key: const Key('puzzle-goal'),
-                                  style: Theme.of(context).textTheme.titleSmall,
-                                ),
-                              ),
-                            ),
-                          Padding(
-                            padding: const EdgeInsets.all(12),
-                            child: Semantics(
-                              liveRegion: true,
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  if (_feedback == _Feedback.wrong) ...[
-                                    Icon(
-                                      Icons.cancel,
-                                      key: const Key('puzzle-wrong-icon'),
-                                      color: AppSettings.of(context).wrongColor,
-                                    ),
-                                    const SizedBox(width: 8),
-                                  ],
-                                  Flexible(
-                                    child: Text(
-                                      _message,
-                                      key: const Key('puzzle-message'),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            _GoalCard(text: goalText, side: puzzle.playerSide),
+                          _FeedbackBanner(
+                            feedback: _feedback,
+                            message: _message(l),
                           ),
                           _Progress(
                             done: _session.playerMovesDone,
                             total: _session.playerMoves,
                             showNumbers: !kid,
                           ),
-                          TrainingBoard(
-                            size: size,
-                            position: _session.position,
-                            lastMove: _session.lastMove,
-                            player: puzzle.playerSide,
-                            enabled: !done && !_session.awaitingReply,
-                            revision: _revision,
-                            shapes: {
-                              ..._wrongShapes(AppSettings.of(context).marks),
-                              if (_hint != null)
-                                ...AppSettings.of(context).marks.circle(
-                                  AppSettings.of(context).hintColor,
-                                  _hint!,
-                                ),
-                            },
-                            onMove: _onMove,
+                          KeyedSubtree(
+                            key: const Key('puzzle-board'),
+                            child: TrainingBoard(
+                              size: size,
+                              position: _session.position,
+                              lastMove: _session.lastMove,
+                              player: puzzle.playerSide,
+                              enabled: !done && !_session.awaitingReply,
+                              revision: _revision,
+                              shapes: {
+                                ..._wrongShapes(AppSettings.of(context).marks),
+                                if (_hint != null)
+                                  ...AppSettings.of(context).marks.circle(
+                                    AppSettings.of(context).hintColor,
+                                    _hint!,
+                                  ),
+                              },
+                              onMove: _onMove,
+                            ),
                           ),
                           Padding(
                             padding: const EdgeInsets.all(8),
                             child: Text(
                               last
-                                  ? 'Non ci sono altri puzzle per ora.'
+                                  ? l.puzzleNoMore
                                   : kid
                                   // Restano i temi, senza difficoltà né punteggio.
-                                  ? (done
-                                        ? themes
-                                        : AppLocalizations.of(context)
-                                              .kidPuzzleKeepGoing)
+                                  ? (done ? themes : l.kidPuzzleKeepGoing)
                                   : done
-                                  ? 'Puzzle ${puzzle.rating}'
+                                  ? '${l.puzzleDifficulty(puzzle.rating)}'
                                         '${themes.isEmpty ? '' : ' · $themes'}'
-                                  : 'Il tuo punteggio: '
-                                        '${widget.trainer.rating.rating.round()}',
+                                  : l.puzzleYourRating(
+                                      widget.trainer.rating.rating.round(),
+                                    ),
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ),
@@ -448,6 +416,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
               onSolution: done ? null : _showSolution,
               onRetry: _canRetry ? _retry : null,
               onNext: canSkip ? _next : null,
+              kid: kid,
             ),
           ],
         ),
@@ -471,12 +440,13 @@ class _Progress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
       child: Semantics(
         label: showNumbers
-            ? 'Mosse trovate: $done di $total'
-            : 'Avanzamento del puzzle',
+            ? l.puzzleProgress(done, total)
+            : l.puzzleProgressKid,
         value: showNumbers || total == 0
             ? null
             : '${(done * 100 / total).round()}%',
@@ -485,7 +455,7 @@ class _Progress extends StatelessWidget {
           children: [
             if (showNumbers)
               Text(
-                'Mosse trovate: $done di $total',
+                l.puzzleProgress(done, total),
                 key: const Key('puzzle-progress'),
                 style: Theme.of(context).textTheme.bodySmall,
               ),
@@ -504,6 +474,7 @@ class _PuzzleActions extends StatelessWidget {
     required this.onSolution,
     required this.onRetry,
     required this.onNext,
+    required this.kid,
   });
 
   final VoidCallback? onHint;
@@ -512,40 +483,192 @@ class _PuzzleActions extends StatelessWidget {
   /// Nullo finché non c'è nulla da rifare: il pulsante compare solo dopo un errore.
   final VoidCallback? onRetry;
   final VoidCallback? onNext;
+  final bool kid;
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final tokens = RokkoTokens.of(context);
+    final touch = kid ? tokens.kidTouch : tokens.minTouch;
+    final size = Size(touch, touch);
     // Wrap invece di Row: su schermi stretti i pulsanti vanno su due righe
     // invece di spezzare le etichette a metà parola.
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
       child: Wrap(
         alignment: WrapAlignment.center,
+        crossAxisAlignment: WrapCrossAlignment.center,
         spacing: 8,
         runSpacing: 4,
         children: [
           TextButton.icon(
             onPressed: onHint,
+            style: TextButton.styleFrom(minimumSize: size),
             icon: const Icon(Icons.lightbulb_outline),
-            label: const Text('Suggerimento', softWrap: false),
+            label: Text(l.puzzleHint, softWrap: false),
           ),
           TextButton.icon(
             onPressed: onSolution,
+            style: TextButton.styleFrom(minimumSize: size),
             icon: const Icon(Icons.visibility_outlined),
-            label: const Text('Soluzione', softWrap: false),
+            label: Text(l.puzzleSolution, softWrap: false),
           ),
           if (onRetry != null)
             OutlinedButton.icon(
               onPressed: onRetry,
+              style: OutlinedButton.styleFrom(minimumSize: size),
               icon: const Icon(Icons.replay),
-              label: const Text('Riprova', softWrap: false),
+              label: Text(l.puzzleRetry, softWrap: false),
             ),
           FilledButton.icon(
             onPressed: onNext,
+            style: FilledButton.styleFrom(minimumSize: size),
             icon: const Icon(Icons.arrow_forward),
-            label: const Text('Prossimo', softWrap: false),
+            label: Text(l.puzzleNext, softWrap: false),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Obiettivo del puzzle in una scheda sopra la scacchiera, con il colore che
+/// muove: è la prima cosa da leggere.
+class _GoalCard extends StatelessWidget {
+  const _GoalCard({required this.text, required this.side});
+
+  final String text;
+  final Side side;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final tokens = RokkoTokens.of(context);
+    final white = side == Side.white;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 8, 12, 0),
+      child: DecoratedBox(
+        key: const Key('puzzle-goal-card'),
+        decoration: BoxDecoration(
+          color: scheme.secondaryContainer,
+          borderRadius: BorderRadius.circular(tokens.radiusSmall),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Il colore che muove è già nel testo dell'esito: qui è solo grafica.
+              ExcludeSemantics(
+                child: Container(
+                  width: 20,
+                  height: 20,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: white ? Colors.white : Colors.black,
+                    border: Border.all(color: scheme.onSecondaryContainer),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Flexible(
+                child: Semantics(
+                  header: true,
+                  child: Text(
+                    text,
+                    key: const Key('puzzle-goal'),
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: scheme.onSecondaryContainer,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Esito dell'ultima mossa: colore, icona e testo, mai il solo colore.
+class _FeedbackBanner extends StatelessWidget {
+  const _FeedbackBanner({required this.feedback, required this.message});
+
+  final _Feedback feedback;
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final tokens = RokkoTokens.of(context);
+    final (background, foreground, icon, iconKey) = switch (feedback) {
+      _Feedback.wrong => (
+        scheme.errorContainer,
+        scheme.onErrorContainer,
+        Icons.cancel,
+        const Key('puzzle-wrong-icon'),
+      ),
+      _Feedback.solved => (
+        scheme.tertiaryContainer,
+        scheme.onTertiaryContainer,
+        Icons.check_circle,
+        const Key('puzzle-solved-icon'),
+      ),
+      _Feedback.correct => (
+        scheme.tertiaryContainer,
+        scheme.onTertiaryContainer,
+        Icons.check,
+        const Key('puzzle-correct-icon'),
+      ),
+      _Feedback.revealed => (
+        scheme.secondaryContainer,
+        scheme.onSecondaryContainer,
+        Icons.visibility_outlined,
+        const Key('puzzle-revealed-icon'),
+      ),
+      _ => (
+        scheme.surfaceContainerHighest,
+        scheme.onSurface,
+        Icons.touch_app_outlined,
+        const Key('puzzle-find-icon'),
+      ),
+    };
+    final iconColor = feedback == _Feedback.wrong
+        ? AppSettings.of(context).wrongColor
+        : foreground;
+    return Padding(
+      key: const Key('puzzle-feedback'),
+      padding: const EdgeInsets.all(12),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: background,
+          borderRadius: BorderRadius.circular(tokens.radiusSmall),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          child: Semantics(
+            liveRegion: true,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ExcludeSemantics(
+                  child: Icon(icon, key: iconKey, color: iconColor),
+                ),
+                const SizedBox(width: 8),
+                Flexible(
+                  child: Text(
+                    message,
+                    key: const Key('puzzle-message'),
+                    style: Theme.of(context).textTheme.titleMedium
+                        ?.copyWith(color: foreground),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

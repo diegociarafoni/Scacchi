@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:chessground/chessground.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+
 import 'package:scacchi/archive/game_archive.dart';
 import 'package:scacchi/engine/computer_player.dart';
 import 'package:scacchi/home/home_shell.dart';
@@ -14,6 +15,7 @@ import 'package:scacchi/settings/settings.dart';
 
 import '../computer_fakes.dart';
 import '../game_actions.dart';
+import '../localized_app.dart';
 
 Offset square(WidgetTester tester, String name) {
   final rect = tester.getRect(find.byType(Chessboard));
@@ -49,7 +51,7 @@ void main() {
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: HomeShell(
           settings: SettingsController.defaults(),
           progress: () async => progress,
@@ -101,7 +103,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Abbandona').last);
     await tester.pumpAndSettle(const Duration(seconds: 1));
-    await tester.pageBack();
+    await tester.tap(find.byType(BackButton));
     await tester.pumpAndSettle();
     expect(path.progress.stars.length, before);
   });
@@ -117,7 +119,7 @@ void main() {
       await tapMove(tester, uci);
     }
     expect(find.textContaining('Scacco matto'), findsOneWidget);
-    await tester.pageBack();
+    await tester.tap(find.byType(BackButton));
     await tester.pumpAndSettle();
     expect(path.progress.stars.length, before + 1);
   });
