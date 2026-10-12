@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/engine/bots.dart';
 import 'package:scacchi/engine/computer_player.dart';
 import 'package:scacchi/game/game_page.dart';
+import 'package:scacchi/game/speech_bubble.dart';
 import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/progress/avatar_art.dart';
 import 'package:scacchi/progress/guardian_avatar.dart';
@@ -116,5 +117,29 @@ void main() {
     await pump(tester, size: const Size(360, 780));
     await startBot(tester);
     expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('il fumetto accetta un\'icona di stato davanti al testo', (
+    tester,
+  ) async {
+    var closed = false;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: SpeechStrip(
+            opponent: null,
+            speech: const Speech(
+              'Problema risolto!',
+              icon: Icon(Icons.check_circle, key: ValueKey('state')),
+            ),
+            onDismiss: () => closed = true,
+          ),
+        ),
+      ),
+    );
+    expect(find.byKey(const ValueKey('state')), findsOneWidget);
+    expect(find.text('Problema risolto!'), findsOneWidget);
+    await tester.tap(find.byKey(_bubble));
+    expect(closed, isTrue);
   });
 }

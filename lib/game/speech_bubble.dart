@@ -12,9 +12,13 @@ class Speech {
     this.text, {
     this.bot,
     this.expression = AvatarExpression.neutral,
+    this.icon,
   });
 
   final String text;
+
+  /// Icona di stato davanti al testo (per esempio la spunta di «risolto»).
+  final Widget? icon;
 
   /// `null` per l'allenatore.
   final Bot? bot;
@@ -65,9 +69,10 @@ class SpeechStrip extends StatelessWidget {
             face,
             if (speech != null)
               Expanded(
-                child: _Bubble(
+                child: SpeechBubble(
                   key: const ValueKey('speechBubble'),
                   text: speech.text,
+                  icon: speech.icon,
                   onTap: onDismiss,
                 ),
               )
@@ -88,11 +93,19 @@ class SpeechStrip extends StatelessWidget {
   }
 }
 
-class _Bubble extends StatelessWidget {
-  const _Bubble({super.key, required this.text, required this.onTap});
+/// Il fumetto da solo, con la codina a sinistra verso il personaggio; per
+/// puzzle e partite con l'istruttore.
+class SpeechBubble extends StatelessWidget {
+  const SpeechBubble({
+    super.key,
+    required this.text,
+    required this.onTap,
+    this.icon,
+  });
 
   final String text;
   final VoidCallback onTap;
+  final Widget? icon;
 
   static const double _tail = 10;
 
@@ -143,9 +156,9 @@ class _TailPainter extends CustomPainter {
     final y = size.height / 2;
     canvas.drawPath(
       Path()
-        ..moveTo(_Bubble._tail + 1, y - 8)
+        ..moveTo(SpeechBubble._tail + 1, y - 8)
         ..lineTo(0, y)
-        ..lineTo(_Bubble._tail + 1, y + 8)
+        ..lineTo(SpeechBubble._tail + 1, y + 8)
         ..close(),
       Paint()..color = color,
     );
