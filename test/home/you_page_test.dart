@@ -143,7 +143,10 @@ void main() {
     tester,
   ) async {
     await show(tester);
+    // La voce può finire sotto la barra di navigazione: la si porta in alto.
     await tester.ensureVisible(find.text('La tua settimana'));
+    await tester.drag(find.byType(ListView).first, const Offset(0, -400));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('La tua settimana'));
     await tester.pumpAndSettle();
     expect(
