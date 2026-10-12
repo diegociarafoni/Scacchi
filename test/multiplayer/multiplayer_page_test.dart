@@ -34,6 +34,17 @@ Future<void> _wait(WidgetTester tester) async {
   await tester.pump();
 }
 
+/// Attende (in tempo reale) che [finder] compaia: i salvataggi, le chiavi e i
+/// canali hanno tempi che su un runner carico superano un'attesa fissa.
+Future<void> _waitFor(WidgetTester tester, Finder finder) async {
+  for (var i = 0; i < 100 && finder.evaluate().isEmpty; i++) {
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 50)),
+    );
+    await tester.pump();
+  }
+}
+
 void main() {
   testWidgets('RMP-08 chi crea la partita mostra il QR, poi la scacchiera', (
     tester,
@@ -183,16 +194,30 @@ void main() {
         await Future<void>.delayed(const Duration(milliseconds: 50));
         await host.play(Move.parse('e2e4')!);
         await Future<void>.delayed(const Duration(milliseconds: 50));
+        // Il salvataggio è in coda: si aspetta che la mossa sia sul disco.
+        for (var i = 0; i < 100; i++) {
+          if (((await store.load())?.moves ?? []).isNotEmpty) break;
+          await Future<void>.delayed(const Duration(milliseconds: 50));
+        }
         await host.close();
         await guest.close();
       });
     }
 
     // La lettura del file avanza solo nella zona reale.
-    Future<void> openPage(WidgetTester tester, MultiplayerPage page) async {
+    Future<void> openPage(
+      WidgetTester tester,
+      MultiplayerPage page, {
+      bool saved = true,
+    }) async {
       await tester.runAsync(() async {
         await tester.pumpWidget(localizedApp(home: page));
-        await Future<void>.delayed(const Duration(milliseconds: 200));
+        // Con una partita salvata si attende che il riquadro compaia.
+        for (var i = 0; i < 100; i++) {
+          await Future<void>.delayed(const Duration(milliseconds: 50));
+          await tester.pump();
+          if (!saved || find.byType(Card).evaluate().isNotEmpty) break;
+        }
       });
       await tester.pump();
     }
@@ -200,7 +225,7 @@ void main() {
     testWidgets('RMP-09 senza partite salvate non c\'è il riquadro', (
       tester,
     ) async {
-      await openPage(tester, MultiplayerPage(store: store));
+      await openPage(tester, MultiplayerPage(store: store), saved: false);
       expect(find.text('Riprendi la partita'), findsNothing);
     });
 
@@ -219,7 +244,7 @@ void main() {
       );
       expect(find.text('Riprendi la partita'), findsOneWidget);
       await tester.tap(find.text('Riprendi la partita'));
-      await _wait(tester);
+      await _waitFor(tester, find.byType(Chessboard));
       await tester.pumpAndSettle();
       expect(find.byType(Chessboard), findsOneWidget);
       expect(find.text('Tocca all\'avversario'), findsOneWidget);
