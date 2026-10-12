@@ -92,11 +92,13 @@ void main() {
 
     testWidgets('non si può ricominciare né annullare', (tester) async {
       await open(tester);
-      final newGame = tester.widget<InkWell>(
-        find.ancestor(of: find.text('Nuova'), matching: find.byType(InkWell)),
+      await tester.tap(find.byKey(const ValueKey('gameAction-more')));
+      await tester.pumpAndSettle();
+      final newGame = tester.widget<ListTile>(
+        find.widgetWithText(ListTile, 'Nuova'),
       );
-      expect(newGame.onTap, isNull);
-      expect(find.byTooltip('Editor di posizione'), findsNothing);
+      expect(newGame.enabled, isFalse);
+      expect(find.byTooltip('Altre azioni'), findsNothing);
     });
 
     testWidgets('l\'abbandono comunica la sconfitta una sola volta', (

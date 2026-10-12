@@ -219,8 +219,9 @@ void main() {
       findsOneWidget,
     );
     expect(coachDot(tester), isTrue);
+    await tester.pump(const Duration(seconds: 5));
     await tapGameAction(tester, 'Allenatore');
-    await tester.pump(const Duration(milliseconds: 600));
+    await tester.pumpAndSettle();
     expect(find.text('Allenatore disattivato.'), findsOneWidget);
     expect(coachDot(tester), isFalse);
   });

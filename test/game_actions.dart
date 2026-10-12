@@ -6,7 +6,9 @@ import 'package:flutter_test/flutter_test.dart';
 Future<void> tapGameAction(WidgetTester tester, String label) async {
   if (find.text(label).evaluate().isEmpty) {
     await tester.tap(find.byKey(const ValueKey('gameAction-more')));
-    await tester.pumpAndSettle();
+    // Un passo breve: le partite a tempo non devono correre durante l'apertura.
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
   }
   await tester.tap(find.text(label));
 }

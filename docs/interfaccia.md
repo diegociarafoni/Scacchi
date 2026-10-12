@@ -10,15 +10,15 @@ La barra in basso ha quattro schede: Gioca, Puzzle, Aperture e Tu. La scheda Tu 
 
 Dall'alto verso il basso:
 
-1. **Barra del titolo** con il pulsante delle impostazioni.
-2. **Striscia delle mosse**: scorre in orizzontale e mostra sempre l'ultima mossa a destra.
+1. **Barra del titolo** con il marchio Rokko (o il nome dell'apertura), il menu ⋮, la modalità zen e le impostazioni; la tastiera resta in barra solo con un lettore di schermo attivo, nelle sfide e nel profilo bambino.
+2. **Spazio delle mosse**: occupa lo spazio libero sopra la riga di stato. Lo schermo alto lo riempie con la lista delle mosse (l'ultima in basso, vicino alla scacchiera); quando lo spazio è poco diventa una striscia orizzontale. Contiene anche, una alla volta, le carte dei suggerimenti del primo uso e l'invito alla revisione.
 3. **Riga di stato**: chi muove, scacco, oppure risultato e motivo della fine partita.
 4. **Materiale del giocatore in alto**: pezzi che ha catturato e vantaggio.
 5. **Scacchiera** a tutta larghezza.
 6. **Materiale del giocatore in basso**.
-7. **Barra dei comandi** in basso, alla portata del pollice: Nuova, Annulla, Gira, Patta, Abbandona; contro il computer o un bot anche Allenatore e Suggerisci, tranne nelle sfide (vedi [allenatore.md](allenatore.md)) (nel profilo bambino «Nuova partita», «Pareggio?» e «Mi arrendo», vedi [profilo-bambino.md](profilo-bambino.md)).
+7. **Barra dei comandi** in basso, alla portata del pollice, con al massimo quattro pulsanti da 48 dp: Suggerisci (contro il computer o un bot, non nelle sfide), Annulla, Gira, Altro. «Altro» apre il pannello **Partita** con Nuova, Patta, Abbandona, l'interruttore Allenatore e, con l'allenatore acceso, Minaccia (vedi [allenatore.md](allenatore.md)); un punto su «Altro» dice che l'allenatore è acceso. Nel profilo bambino i pulsanti sono tre da 56 dp (Suggerisci o Gira, Annulla, Altro) e il pannello usa «Nuova partita», «Pareggio?» e «Mi arrendo» (vedi [profilo-bambino.md](profilo-bambino.md)).
 
-Striscia, stato, righe del materiale e scacchiera sono centrati insieme nello spazio disponibile. La scacchiera ha come lato il minimo tra la larghezza dello schermo e l'altezza rimasta dopo striscia, stato, righe del materiale e comandi.
+Stato, righe del materiale e scacchiera stanno attaccati ai comandi; l'avanzo di altezza va allo spazio delle mosse. I messaggi a fascia compaiono sopra la scacchiera, non sopra le sue ultime traverse. La scacchiera ha come lato il minimo tra la larghezza dello schermo e l'altezza rimasta dopo striscia minima, stato, righe del materiale e comandi.
 
 ## Tablet e orizzontale
 
@@ -40,17 +40,21 @@ Per ciascun giocatore una riga mostra le icone dei pezzi avversari catturati, da
 
 | Comando | Effetto |
 |---|---|
-| Nuova | Apre la scelta dell'avversario (due giocatori o computer, con colore e livello), della variante (Classica, Chess960, Re della collina, Tre scacchi, anche contro il computer) e della cadenza; toccando la cadenza inizia la nuova partita |
+| Altro | Apre il pannello «Partita» con i comandi meno frequenti |
+| Nuova (nel pannello) | Apre la scelta dell'avversario (due giocatori o computer, con colore e livello), della variante (Classica, Chess960, Re della collina, Tre scacchi, anche contro il computer) e della cadenza; toccando la cadenza inizia la nuova partita |
 | Annulla | Annulla l'ultima mossa; disattivato se non ci sono mosse |
 | Gira | Capovolge la scacchiera |
 | Patta | Chiede all'avversario se accetta la patta; disattivato a partita conclusa |
 | Abbandona | Chiede conferma e fa abbandonare il lato al tratto; disattivato a partita conclusa |
 | Allenatore | Acceso o spento: da acceso giudica ogni mossa e avvisa degli errori con Riprova o Continua; solo contro il computer o un bot, non nelle sfide (vedi [allenatore.md](allenatore.md)) |
 | Suggerisci | Primo tocco: cerchia il pezzo da muovere con una frase semplice; secondo tocco: freccia della mossa migliore e motivo; anche ad allenatore spento, non nelle sfide |
+| Menu ⋮, "Editor di posizione" e "Mossa da tastiera" | Editor e mossa scritta, spostati dalla barra del titolo; la tastiera è nel menu salvo lettore di schermo attivo |
 | Menu ⋮, "Esporta come immagine" | Apre l'anteprima della posizione mostrata, da condividere come PNG; stesse esclusioni del menu QR (vedi [esporta-immagine.md](esporta-immagine.md)) |
 | Menu ⋮, "Passa con QR" e "Ricevi con QR" | Passa la partita, anche in corso, a un altro telefono o la continua da un QR letto con la fotocamera; il menu c'è anche senza motore e nelle varianti, non nelle sfide contro guardiani e tornei né nel profilo bambino (vedi [scambio-qr.md](scambio-qr.md)) |
 | Menu ⋮, "Analisi della posizione" | Apre l'analisi libera della posizione corrente con orologio e computer fermi (vedi [analisi.md](analisi.md)) |
 | Menu ⋮, "Revisione della partita" | Apre la revisione con classificazione delle mosse e precisione (vedi [revisione-partita.md](revisione-partita.md)); il menu c'è solo dove c'è il motore e negli scacchi classici, non nelle varianti né nel profilo bambino |
+
+**Suggerimenti al primo uso**: dopo la prima mossa di una partita, una carta alla volta spiega Suggerisci, «Altro» e il menu ⋮ (con «Avanti» e «Chiudi»; «Chiudi» li spegne per sempre). A fine della prima partita finita contro il motore compare l'invito «Rivedi la partita», una volta sola. Non compaiono in zen, nelle sfide e nel profilo bambino.
 
 Nel profilo bambino riga di stato, comandi e dialoghi usano frasi brevi, e mancano il menu ⋮ e l'editor di posizione; le nuove partite non offrono varianti né cadenze Bullet e Blitz, mentre una partita già in corso continua com'è (vedi [profilo-bambino.md](profilo-bambino.md)).
 

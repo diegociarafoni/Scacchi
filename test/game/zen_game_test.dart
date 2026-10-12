@@ -104,13 +104,21 @@ void main() {
     await startBotGame(tester);
     final bot = bots.first;
     expect(find.textContaining('${bot.elo} Elo'), findsOneWidget);
-    expect(find.byIcon(Icons.school_outlined), findsOneWidget);
+    Future<int> coachSwitches() async {
+      await tester.tap(find.byKey(const ValueKey('gameAction-more')));
+      await tester.pumpAndSettle();
+      final n = find.byType(SwitchListTile).evaluate().length;
+      await tester.tapAt(const Offset(10, 10));
+      await tester.pumpAndSettle();
+      return n;
+    }
+
+    expect(await coachSwitches(), 1);
 
     await tester.tap(find.byKey(const Key('zenToggle')));
     await tester.pumpAndSettle();
     expect(find.textContaining('Elo'), findsNothing);
-    expect(find.byIcon(Icons.school_outlined), findsNothing);
-    expect(find.byIcon(Icons.school), findsNothing);
+    expect(await coachSwitches(), 0);
     expect(find.byIcon(Icons.warning_amber), findsNothing);
   });
 

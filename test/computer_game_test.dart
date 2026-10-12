@@ -420,7 +420,7 @@ void main() {
       await tapMove(tester, 'e2e4');
       await tester.pump(const Duration(milliseconds: 1500));
       expect(activeClock(Side.white), findsOneWidget);
-      await tester.pump(const Duration(seconds: 59, milliseconds: 200));
+      await tester.pump(const Duration(seconds: 58, milliseconds: 600));
       expect(find.textContaining('Tempo scaduto'), findsNothing);
       await tapGameAction(tester, 'Patta');
       await tester.pump(const Duration(milliseconds: 1500));
@@ -445,9 +445,15 @@ void main() {
     expect(find.byKey(const ValueKey('clock-active')), findsNothing);
   });
 
-  IconButton keyboardButton(WidgetTester tester) => tester.widget<IconButton>(
-    find.widgetWithIcon(IconButton, Icons.keyboard_outlined),
-  );
+  Future<bool> keyboardEnabled(WidgetTester tester) async {
+    await tester.tap(find.byTooltip('Altre azioni'));
+    await tester.pumpAndSettle();
+    return tester
+        .widget<PopupMenuItem<String>>(
+          find.widgetWithText(PopupMenuItem<String>, 'Mossa da tastiera'),
+        )
+        .enabled;
+  }
 
   testWidgets('dopo un errore del motore non si muove per il computer', (
     tester,
@@ -458,7 +464,7 @@ void main() {
     await startComputerGame(tester, side: 'Nero');
     await tester.pumpAndSettle(const Duration(seconds: 1));
     expect(find.text('Il computer non risponde.'), findsOneWidget);
-    expect(keyboardButton(tester).onPressed, isNull);
+    expect(await keyboardEnabled(tester), isFalse);
   });
 
   testWidgets('la risposta del computer non interrompe la consultazione', (

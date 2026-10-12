@@ -1461,6 +1461,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     );
   }
 
+  /// Distanza dal fondo dei messaggi: sopra la scacchiera, che altrimenti
+  /// resterebbe coperta dalla fascia, sotto i comandi.
+  double _messageBottom = _actionsHeight + 8;
+
   /// Messaggio sopra la barra dei comandi, per non coprirla.
   ScaffoldFeatureController<SnackBar, SnackBarClosedReason> _showMessage(
     String text, {
@@ -1472,7 +1476,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       duration: duration,
       action: action,
       behavior: SnackBarBehavior.floating,
-      margin: const EdgeInsets.fromLTRB(16, 0, 16, _actionsHeight + 8),
+      margin: EdgeInsets.fromLTRB(16, 0, 16, _messageBottom),
     ),
   );
 
@@ -2292,6 +2296,19 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                       math.min(
                         constraints.maxWidth,
                         constraints.maxHeight - chromeHeight,
+                      ),
+                    );
+              _messageBottom = landscape
+                  ? _actionsHeight + 8
+                  : math.min(
+                      _actionsHeight +
+                          (showMaterial ? 2 * _materialHeight : 0) +
+                          boardSize +
+                          _statusHeight +
+                          8,
+                      math.max(
+                        _actionsHeight + 8,
+                        constraints.maxHeight - 2 * _moveStripHeight,
                       ),
                     );
               final boardSettings = _settings.board;

@@ -471,7 +471,9 @@ void main() {
   testWidgets('RNF-07 mossa scritta da tastiera', (tester) async {
     await _start(tester);
     Future<void> type(String text) async {
-      await tester.tap(find.byTooltip('Mossa da tastiera'));
+      await tester.tap(find.byTooltip('Altre azioni'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Mossa da tastiera'));
       await tester.pumpAndSettle();
       await tester.enterText(find.byType(TextField), text);
       await tester.testTextInput.receiveAction(TextInputAction.done);
