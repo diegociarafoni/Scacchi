@@ -234,10 +234,20 @@ void main() {
       tester.view.devicePixelRatio = 3;
       addTearDown(tester.view.reset);
       await startWithCoach(tester);
+      // Sugli schermi stretti «Gira» passa nel pannello.
       final labels = [
-        for (final t in ['Suggerisci', 'Annulla', 'Gira', 'Altro'])
-          tester.getRect(find.text(t)),
+        for (final t in [
+          'Suggerisci',
+          'Annulla',
+          'Gira',
+          'Nuova',
+          'Patta',
+          'Abbandona',
+          'Altro',
+        ])
+          if (find.text(t).evaluate().isNotEmpty) tester.getRect(find.text(t)),
       ];
+      expect(labels.length, width < 336 ? 6 : 7);
       for (var i = 0; i + 1 < labels.length; i++) {
         expect(
           labels[i + 1].left - labels[i].right,

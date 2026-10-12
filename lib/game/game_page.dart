@@ -2709,8 +2709,8 @@ class _GameActions extends StatelessWidget {
   /// Nel profilo bambino «Gira» cede il posto al suggerimento.
   bool get _flipInPanel => kid && hintAvailable;
 
-  /// Sotto questa larghezza i pulsanti scenderebbero sotto i 45 dp.
-  static const double _fullBarWidth = 7 * 45;
+  /// Sotto questa larghezza i pulsanti scenderebbero sotto i 48 dp.
+  static const double _fullBarWidth = 7 * 48;
 
   /// Gli adulti hanno Nuova, Patta e Abbandona sempre in vista.
   bool get _gameInBar => !kid;

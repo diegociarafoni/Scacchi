@@ -54,10 +54,10 @@ Future<void> pump(
 Finder action(String id) => find.byKey(ValueKey('gameAction-$id'));
 
 void main() {
-  testWidgets('Nuova, Patta e Abbandona stanno in vista, da almeno 45 dp', (
+  testWidgets('Nuova, Patta e Abbandona stanno in vista, da almeno 48 dp', (
     tester,
   ) async {
-    for (final size in const [Size(360, 640), Size(320, 568)]) {
+    for (final size in const [Size(360, 640), Size(340, 640), Size(320, 568)]) {
       await pump(tester, size: size, computer: true);
       await tapGameAction(tester, 'Nuova');
       await tester.pumpAndSettle();
@@ -67,7 +67,7 @@ void main() {
       await tester.pumpAndSettle(const Duration(seconds: 1));
       for (final id in ['new', 'draw', 'resign', 'undo']) {
         final rect = tester.getRect(action(id));
-        expect(rect.width, greaterThanOrEqualTo(45), reason: '$id $size');
+        expect(rect.width, greaterThanOrEqualTo(48), reason: '$id $size');
         expect(rect.height, greaterThanOrEqualTo(48), reason: '$id $size');
         expect(rect.right, lessThanOrEqualTo(size.width), reason: '$id $size');
       }
