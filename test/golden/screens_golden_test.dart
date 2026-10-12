@@ -83,6 +83,8 @@ void main() {
   }) async {
     final progress = ProgressController(
       ProgressStore(File('${dir.path}/p.json')),
+      // Fisso: serie e «Oggi» non devono dipendere dal giorno in cui gira.
+      clock: () => DateTime(2026, 10, 5, 12),
     );
     await tester.runAsync(progress.load);
     await _pump(
