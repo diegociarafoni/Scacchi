@@ -7,6 +7,8 @@ Offline non esiste una copia online dei dati: il backup (RF-103) li raccoglie in
 - Partite dell'archivio, progressi, percorso, storia, tornei e allenamento (`games.json`, `progress.json`, `path.json`, `story.json`, `tornei.json`, `training.json`).
 - Impostazioni e preferenze (`SharedPreferences`): bool, numeri, testo ed elenchi di testo.
 
+Non sono inclusi, perché salvati in file fuori dall'elenco: diario della settimana (`week.json`, [riepilogo-settimanale.md](riepilogo-settimanale.md)), progressi dei grandi maestri (`masters.json`) e dell'allenatore dei finali (`endgames.json`), partita a due telefoni in corso (`multiplayer.json`, che contiene la chiave privata della partita, vedi [multigiocatore.md](multigiocatore.md)) e foto del profilo (`avatar_photo.jpg`).
+
 ## Uso
 
 **Impostazioni → Backup e ripristino**

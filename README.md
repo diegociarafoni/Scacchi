@@ -1,10 +1,10 @@
 # Rokko
 
-Rokko è un'applicazione di scacchi offline, open source e completamente gratuita, per Android, iOS e desktop (Windows, macOS, Linux). Nessuna pubblicità, nessun account, nessun dato che lascia il dispositivo.
+Rokko è un'applicazione di scacchi offline, open source e completamente gratuita, per Android, iOS e desktop (Windows, macOS, Linux). Nessuna pubblicità, nessun account, nessun dato che lascia il dispositivo: fa eccezione solo la partita con un amico su un altro telefono, facoltativa, in cui le mosse viaggiano cifrate.
 
 ## Stato
 
-- partita tra due persone sullo stesso dispositivo;
+- partita tra due persone sullo stesso dispositivo, oppure su due telefoni in Wi-Fi, Bluetooth o a distanza;
 - mosse per trascinamento o con due tocchi, evidenziazione delle mosse legali, dell'ultima mossa e dello scacco;
 - promozione con scelta del pezzo;
 - fine partita: scacco matto, stallo, materiale insufficiente, triplice ripetizione, regola delle 50 mosse, patta concordata, abbandono;
@@ -12,7 +12,7 @@ Rokko è un'applicazione di scacchi offline, open source e completamente gratuit
 - capovolgimento della scacchiera, anche automatico a ogni turno;
 - partita contro il computer (Stockfish sul dispositivo: Android e iOS, e Windows e Linux con Stockfish installato) con 8 livelli, bot con personalità e allenatore;
 - orologio con cadenze, archivio delle partite con import ed export PGN, revisione e analisi della partita;
-- puzzle, aperture, percorso a tappe, minigiochi, tornei contro i bot, gamification e profilo bambino.
+- puzzle, aperture, percorso a tappe e a storia, allenatore dei finali, partite dei grandi maestri, minigiochi, tornei contro i bot, gamification con badge e riepilogo settimanale, profilo bambino.
 
 Lo stato di ogni funzione è in [docs/README.md](docs/README.md#stato-del-progetto).
 
