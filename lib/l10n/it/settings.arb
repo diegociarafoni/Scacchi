@@ -6,5 +6,13 @@
   "settingsExplainWhyDescription": "Dopo ogni mossa del computer, una riga su cosa minaccia o prepara",
   "@settingsExplainWhyDescription": {
     "description": "Impostazioni: descrizione"
+  },
+  "settingsZenMode": "Modalità zen",
+  "@settingsZenMode": {
+    "description": "Impostazioni: titolo dell'interruttore; in partita è anche l'etichetta del pulsante"
+  },
+  "settingsZenModeDescription": "In partita restano solo scacchiera e mosse: niente Elo, materiale, stato, avvisi dell'allenatore e commenti",
+  "@settingsZenModeDescription": {
+    "description": "Impostazioni: descrizione"
   }
 }
