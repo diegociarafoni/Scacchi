@@ -2,12 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools">
     <!-- Promemoria giornaliero (RG-11): riprogrammato dopo il riavvio. -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <!-- Scambio delle partite via QR: fotocamera chiesta solo all'apertura del lettore. -->
+    <!-- Fotocamera: lettore QR delle partite e foto della scacchiera fisica, chiesta solo quando si usano. -->
     <uses-permission android:name="android.permission.CAMERA"/>
     <!-- L'app resta installabile su dispositivi senza fotocamera. -->
     <uses-feature android:name="android.hardware.camera.any" android:required="false"/>
     <!-- Minimo privilegio (MASVS-PLATFORM): il plugin della fotocamera dichiara
-         microfono e memoria esterna, che il lettore QR non usa. -->
+         microfono e memoria esterna, che né il lettore QR né le foto usano. -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" tools:node="remove"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:node="remove"/>
     <application
