@@ -8,6 +8,8 @@ class RokkoTokens extends ThemeExtension<RokkoTokens> {
     required this.action,
     required this.onAction,
     required this.star,
+    required this.success,
+    required this.warning,
     required this.boardGreen,
     this.radiusSmall = 12,
     this.radiusLarge = 20,
@@ -20,6 +22,11 @@ class RokkoTokens extends ThemeExtension<RokkoTokens> {
 
   /// Colore di testo e icone sopra [action].
   final Color onAction;
+
+  /// Stati: riuscito (collegato, corretto) e in attesa (collegamento in corso).
+  /// Mai da soli: vanno sempre con un'icona e un testo.
+  final Color success;
+  final Color warning;
 
   /// Giallo delle stelline: accenti rari (premi, serie, mascotte).
   final Color star;
@@ -42,11 +49,15 @@ class RokkoTokens extends ThemeExtension<RokkoTokens> {
     Color? action,
     Color? onAction,
     Color? star,
+    Color? success,
+    Color? warning,
     Color? boardGreen,
   }) => RokkoTokens(
     action: action ?? this.action,
     onAction: onAction ?? this.onAction,
     star: star ?? this.star,
+    success: success ?? this.success,
+    warning: warning ?? this.warning,
     boardGreen: boardGreen ?? this.boardGreen,
     radiusSmall: radiusSmall,
     radiusLarge: radiusLarge,
@@ -76,6 +87,8 @@ abstract final class RokkoTheme {
       action: dark ? const Color(0xFFB9B3FF) : indigo,
       onAction: dark ? const Color(0xFF14152E) : const Color(0xFFFFFFFF),
       star: dark ? const Color(0xFFFFE9A8) : const Color(0xFF8A6A00),
+      success: dark ? const Color(0xFF7FE3A6) : const Color(0xFF1B6B3A),
+      warning: dark ? const Color(0xFFFFC27A) : const Color(0xFF8A4B00),
       boardGreen: green,
     );
     final scheme =

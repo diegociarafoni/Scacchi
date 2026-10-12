@@ -344,7 +344,7 @@ class AppSettings {
     this.drawShapes = true,
     this.autoFlip = false,
     this.animation = AnimationSpeed.normal,
-    this.boardTheme = BoardTheme.green,
+    this.boardTheme = BoardTheme.spazio,
     this.pieceSet = PieceStyle.cburnett,
     this.sound = true,
     this.volume = 1.0,

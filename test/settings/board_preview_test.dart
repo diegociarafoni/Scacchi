@@ -97,7 +97,10 @@ void main() {
     await show(tester);
     final s = settings.value;
     expect(board(tester).settings.colorScheme, same(s.boardTheme.colorScheme));
-    expect(board(tester).settings.pieceAssets, s.pieceSet.assets);
+    expect(
+      board(tester).settings.pieceAssets,
+      s.pieceSet.assetsOn(s.boardTheme),
+    );
     expect(board(tester).settings.enableCoordinates, isTrue);
     expect(
       board(tester).settings.animationDuration,
