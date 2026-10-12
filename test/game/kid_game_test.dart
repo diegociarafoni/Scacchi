@@ -8,6 +8,7 @@ import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/settings/settings.dart';
 
 import '../computer_fakes.dart';
+import '../game_actions.dart';
 
 Offset square(WidgetTester tester, String name) {
   final rect = tester.getRect(find.byType(Chessboard));
@@ -132,6 +133,8 @@ void main() {
 
   testWidgets('RP-06 comandi con parole semplici', (tester) async {
     await pumpGame(tester, await kidSettings());
+    await tester.tap(find.byKey(const ValueKey('gameAction-more')));
+    await tester.pumpAndSettle();
     expect(find.text('Nuova partita'), findsOneWidget);
     expect(find.text('Mi arrendo'), findsOneWidget);
     expect(find.text('Pareggio?'), findsOneWidget);
@@ -142,7 +145,7 @@ void main() {
 
   testWidgets('RP-06 dialogo di resa semplice', (tester) async {
     await pumpGame(tester, await kidSettings());
-    await tester.tap(find.text('Mi arrendo'));
+    await tapGameAction(tester, 'Mi arrendo');
     await tester.pumpAndSettle();
     expect(find.text('Bianco, vuoi arrenderti?'), findsOneWidget);
     expect(find.text('No, continuo'), findsOneWidget);
@@ -156,7 +159,7 @@ void main() {
 
   testWidgets('RP-06 dialogo di pareggio semplice', (tester) async {
     await pumpGame(tester, await kidSettings());
-    await tester.tap(find.text('Pareggio?'));
+    await tapGameAction(tester, 'Pareggio?');
     await tester.pumpAndSettle();
     expect(find.text('Nero, vuoi fare pareggio?'), findsOneWidget);
     await tester.tap(find.text('Sì, pareggio'));
@@ -168,7 +171,7 @@ void main() {
     tester,
   ) async {
     await pumpGame(tester, await kidSettings());
-    await tester.tap(find.text('Nuova partita'));
+    await tapGameAction(tester, 'Nuova partita');
     await tester.pumpAndSettle();
     expect(find.text('Chess960'), findsNothing);
     expect(find.text('Variante'), findsNothing);
@@ -208,7 +211,7 @@ void main() {
     await startComputerGame(tester, side: 'Bianco');
     await settings.update(settings.value.copyWith(kidMode: true));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Mi arrendo'));
+    await tapGameAction(tester, 'Mi arrendo');
     await tester.pumpAndSettle();
     expect(find.text('Vuoi arrenderti?'), findsOneWidget);
     await tester.tap(find.text('Sì, mi arrendo'));
@@ -224,6 +227,8 @@ void main() {
   ) async {
     await pumpGame(tester, await kidSettings(kid: false));
     expect(find.text('Muove il Bianco.'), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('gameAction-more')));
+    await tester.pumpAndSettle();
     expect(find.text('Nuova'), findsOneWidget);
     expect(find.text('Abbandona'), findsOneWidget);
     expect(find.text('Patta'), findsOneWidget);
@@ -234,7 +239,7 @@ void main() {
   ) async {
     final announced = recordAnnouncements(tester);
     await pumpGame(tester, await kidSettings());
-    await tester.tap(find.text('Mi arrendo'));
+    await tapGameAction(tester, 'Mi arrendo');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Sì, mi arrendo'));
     await tester.pumpAndSettle();
@@ -242,7 +247,7 @@ void main() {
 
     await tester.tap(find.text('Annulla'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Pareggio?'));
+    await tapGameAction(tester, 'Pareggio?');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Sì, pareggio'));
     await tester.pumpAndSettle();
@@ -254,7 +259,7 @@ void main() {
   ) async {
     final announced = recordAnnouncements(tester);
     await pumpGame(tester, await kidSettings(kid: false));
-    await tester.tap(find.text('Abbandona'));
+    await tapGameAction(tester, 'Abbandona');
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(FilledButton, 'Abbandona'));
     await tester.pumpAndSettle();
@@ -266,7 +271,7 @@ void main() {
   ) async {
     final settings = await kidSettings(kid: false);
     await pumpGame(tester, settings);
-    await tester.tap(find.text('Nuova'));
+    await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Tre scacchi'));
     await tester.pumpAndSettle();
@@ -281,9 +286,9 @@ void main() {
     await pumpGame(tester, await kidSettings(), locale: const Locale('en'));
     expect(find.text('Undo'), findsOneWidget);
     expect(find.text('Flip'), findsOneWidget);
-    await tester.tap(find.text('New game'));
+    await tapGameAction(tester, 'New game');
     await tester.pumpAndSettle();
-    expect(find.text('New game'), findsNWidgets(2));
+    expect(find.text('New game'), findsOneWidget);
     expect(find.text("White's name"), findsOneWidget);
     expect(find.text("Black's name"), findsOneWidget);
     expect(find.text('Optional'), findsNWidgets(2));

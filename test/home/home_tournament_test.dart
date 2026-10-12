@@ -12,6 +12,7 @@ import 'package:scacchi/settings/settings.dart';
 import 'package:scacchi/tournament/tournament_controller.dart';
 
 import '../computer_fakes.dart';
+import '../game_actions.dart';
 import '../localized_app.dart';
 
 /// Lascia completare l'I/O su file, che nella zona finta dei test non avanza.
@@ -80,7 +81,7 @@ void main() {
     await tester.tap(find.text('Gioca'));
     await settle(tester);
     expect(find.textContaining('Torneo ·'), findsOneWidget);
-    await tester.tap(find.text('Abbandona'));
+    await tapGameAction(tester, 'Abbandona');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Abbandona').last);
     await settle(tester);

@@ -9,6 +9,7 @@ import 'package:scacchi/settings/settings.dart';
 import 'package:scacchi/storage/key_value_store.dart';
 
 import '../computer_fakes.dart';
+import '../game_actions.dart';
 import 'game_qr_test.dart' show tapMove;
 
 void main() {
@@ -43,7 +44,7 @@ void main() {
   }
 
   Future<void> startBotGame(WidgetTester tester) async {
-    await tester.tap(find.text('Nuova'));
+    await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Bot'));
     await tester.pumpAndSettle();
@@ -52,7 +53,7 @@ void main() {
   }
 
   Future<void> startTimedGame(WidgetTester tester) async {
-    await tester.tap(find.text('Nuova'));
+    await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
     await chooseTime(tester, '1+1');
     await tester.pumpAndSettle();
@@ -103,13 +104,21 @@ void main() {
     await startBotGame(tester);
     final bot = bots.first;
     expect(find.textContaining('${bot.elo} Elo'), findsOneWidget);
-    expect(find.byIcon(Icons.school_outlined), findsOneWidget);
+    Future<int> coachSwitches() async {
+      await tester.tap(find.byKey(const ValueKey('gameAction-more')));
+      await tester.pumpAndSettle();
+      final n = find.byType(SwitchListTile).evaluate().length;
+      await tester.tapAt(const Offset(10, 10));
+      await tester.pumpAndSettle();
+      return n;
+    }
+
+    expect(await coachSwitches(), 1);
 
     await tester.tap(find.byKey(const Key('zenToggle')));
     await tester.pumpAndSettle();
     expect(find.textContaining('Elo'), findsNothing);
-    expect(find.byIcon(Icons.school_outlined), findsNothing);
-    expect(find.byIcon(Icons.school), findsNothing);
+    expect(await coachSwitches(), 0);
     expect(find.byIcon(Icons.warning_amber), findsNothing);
   });
 

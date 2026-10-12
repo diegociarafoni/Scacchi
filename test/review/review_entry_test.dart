@@ -13,6 +13,8 @@ import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/review/review_page.dart';
 import 'package:scacchi/settings/settings.dart';
 
+import '../game_actions.dart';
+
 /// Motore finto che valuta ogni posizione in parità.
 class _EvenEngine implements UciTransport {
   bool disposed = false;
@@ -118,7 +120,7 @@ void main() {
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
     await tester.pumpWidget(app());
-    await tester.tap(find.text('Nuova'));
+    await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Due giocatori'));
     await tester.pumpAndSettle();

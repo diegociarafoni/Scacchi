@@ -6,6 +6,8 @@ import 'package:scacchi/main.dart';
 import 'package:scacchi/settings/settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../test/game_actions.dart';
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
@@ -19,7 +21,7 @@ void main() {
     await tester.pumpWidget(const ScacchiApp());
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Nuova'));
+    await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Chess960'));
     await tester.pumpAndSettle();
@@ -39,7 +41,7 @@ void main() {
     await tester.pumpWidget(const ScacchiApp());
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Nuova'));
+    await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Handicap'));
     await tester.pumpAndSettle();
@@ -72,7 +74,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Nuova'));
+    await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Computer'));
     await tester.pumpAndSettle();

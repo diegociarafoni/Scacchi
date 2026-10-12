@@ -14,6 +14,7 @@ import 'package:scacchi/share/position_image_page.dart';
 import 'package:scacchi/storage/key_value_store.dart';
 
 import '../computer_fakes.dart';
+import '../game_actions.dart';
 
 void phone(WidgetTester tester) {
   tester.view.physicalSize = const Size(1170, 2532);
@@ -195,7 +196,7 @@ void main() {
         ),
       ),
     );
-    await tester.tap(find.byTooltip('Editor di posizione'));
+    await openPositionEditor(tester);
     await tester.pumpAndSettle();
     await pasteFen(tester, '4k3/8/8/8/8/8/4Q3/4K3 b - - 0 1');
     await scrollTap(tester, find.text('Gioca da qui'));
@@ -222,7 +223,7 @@ void main() {
     await startComputerGame(tester, side: 'Nero');
     await tester.pumpAndSettle(const Duration(seconds: 1));
     expect(find.textContaining('Computer, livello'), findsOneWidget);
-    await tester.tap(find.byTooltip('Editor di posizione'));
+    await openPositionEditor(tester);
     await tester.pumpAndSettle();
     await pasteFen(tester, '4k3/8/8/8/8/8/4Q3/4K3 b - - 0 1');
     await scrollTap(tester, find.text('Gioca da qui'));
@@ -261,7 +262,7 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      await tester.tap(find.byTooltip('Editor di posizione'));
+      await openPositionEditor(tester);
       await tester.pumpAndSettle();
       await pasteFen(tester, fen);
       await scrollTap(tester, find.text('Gioca da qui'));
@@ -399,7 +400,7 @@ void main() {
       await tester.pump();
       await tester.tapAt(at('e4'));
       await tester.pump(const Duration(milliseconds: 500));
-      await tester.tap(find.byTooltip('Editor di posizione'));
+      await openPositionEditor(tester);
       await tester.pumpAndSettle();
       await pasteFen(tester, checkFen);
       await scrollTap(tester, find.text('Gioca da qui'));
