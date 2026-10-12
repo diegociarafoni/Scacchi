@@ -126,7 +126,7 @@ class _QuizPageState extends State<QuizPage> {
                           orientation: Side.white,
                           fen: fen,
                           settings: StaticChessboardSettings.fromBoardSettings(
-                            AppSettings.of(context).board,
+                            AppSettings.of(context).exerciseBoard,
                           ),
                           squareHighlights: {
                             if (chosen != null && item.highlight != null)

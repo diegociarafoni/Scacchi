@@ -156,7 +156,7 @@ class _StagePageState extends State<StagePage> {
               orientation: Side.white,
               onMove: _onMove,
               annotations: _annotations,
-              settings: AppSettings.of(context).board
+              settings: AppSettings.of(context).exerciseBoard
                   .copyWith(autoQueenPromotion: true),
             );
             final panel = SingleChildScrollView(

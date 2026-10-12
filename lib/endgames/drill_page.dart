@@ -190,7 +190,7 @@ class _DrillPageState extends State<DrillPage> {
               orientation: _run.side,
               onMove: _onMove,
               shapes: _hintShapes(AppSettings.of(context).marks),
-              settings: AppSettings.of(context).board
+              settings: AppSettings.of(context).exerciseBoard
                   .copyWith(autoQueenPromotion: true),
             );
             final panel = SingleChildScrollView(

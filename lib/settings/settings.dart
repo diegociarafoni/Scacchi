@@ -514,6 +514,14 @@ class AppSettings {
         : PieceOrientationBehavior.facingUser,
   );
 
+  /// Scacchiera degli esercizi a un solo lato: tema, pezzi e coordinate del
+  /// giocatore, ma pezzi sempre rivolti verso di lui anche in modalità
+  /// tavolo.
+  late final ChessboardSettings exerciseBoard = board.copyWith(
+    enableCoordinates: showCoordinates,
+    pieceOrientationBehavior: PieceOrientationBehavior.facingUser,
+  );
+
   @override
   bool operator ==(Object other) =>
       other is AppSettings &&

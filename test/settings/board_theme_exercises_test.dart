@@ -10,7 +10,7 @@ import 'package:scacchi/settings/settings.dart';
 
 import '../localized_app.dart';
 
-final _night = AppSettings(boardTheme: BoardTheme.night);
+final _night = AppSettings(boardTheme: BoardTheme.night, tableMode: true);
 
 Future<void> _pump(WidgetTester tester, Widget home) async {
   tester.view.physicalSize = const Size(1170, 2532);
@@ -29,8 +29,12 @@ Future<void> _pump(WidgetTester tester, Widget home) async {
 
 void _expectPlayerTheme(WidgetTester tester) {
   final settings = tester.widget<Chessboard>(find.byType(Chessboard)).settings;
-  expect(settings.colorScheme, _night.board.colorScheme);
-  expect(settings.pieceAssets, _night.board.pieceAssets);
+  expect(settings.colorScheme, _night.exerciseBoard.colorScheme);
+  expect(settings.pieceAssets, _night.exerciseBoard.pieceAssets);
+  expect(
+    settings.pieceOrientationBehavior,
+    PieceOrientationBehavior.facingUser,
+  );
 }
 
 void main() {

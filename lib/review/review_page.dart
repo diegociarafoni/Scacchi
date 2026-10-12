@@ -483,7 +483,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                 onMove: _onRetryMove,
                                 shapes: _shapes(),
                                 annotations: _annotations(),
-                                settings: AppSettings.of(context).board,
+                                settings: AppSettings.of(context).exerciseBoard,
                               ),
                             ],
                           ),

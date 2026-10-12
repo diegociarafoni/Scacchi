@@ -320,7 +320,7 @@ class _AnalysisPageState extends State<AnalysisPage>
                                 orientation: widget.orientation,
                                 onMove: _play,
                                 shapes: _shapes(),
-                                settings: AppSettings.of(context).board,
+                                settings: AppSettings.of(context).exerciseBoard,
                               ),
                             ],
                           ),
