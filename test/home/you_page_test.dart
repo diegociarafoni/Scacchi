@@ -40,7 +40,7 @@ void main() {
     ReminderScheduler? scheduler,
     SettingsController? settings,
   }) async {
-    tester.view.physicalSize = const Size(1170, 3700);
+    tester.view.physicalSize = const Size(1170, 3800);
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
@@ -70,8 +70,16 @@ void main() {
       'Scacchiera fisica',
       'Archivio',
     ]) {
+      // La lista è lunga: con caratteri più larghi le ultime voci stanno fuori.
+      await tester.scrollUntilVisible(
+        find.text(label),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
       expect(find.text(label), findsOneWidget, reason: label);
     }
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, 5000));
+    await tester.pumpAndSettle();
 
     await tester.tap(find.text('Minigiochi'));
     await tester.pumpAndSettle();

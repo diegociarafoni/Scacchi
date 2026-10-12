@@ -18,6 +18,7 @@ Ogni cartella di `lib/` ha qui il documento che descrive le sue funzioni. La tab
 | `lib/home/` | [interfaccia.md](interfaccia.md), [architettura.md](architettura.md) | Barra di navigazione e scheda Tu |
 | `lib/kids/` | [profilo-bambino.md](profilo-bambino.md) | Profilo bambino senza numeri |
 | `lib/l10n/` | [localizzazione.md](localizzazione.md) | Testi tradotti |
+| `lib/masters/` | [grandi-maestri.md](grandi-maestri.md) | Partite dei grandi maestri: raccolta, commento, «Indovina la mossa» |
 | `lib/minigames/` | [minigiochi.md](minigiochi.md) | Minigiochi di allenamento |
 | `lib/multiplayer/` | [multigiocatore.md](multigiocatore.md) | Partita tra due telefoni: invito, firma e cifratura, registro delle mosse, canali |
 | `lib/openings/` | [aperture.md](aperture.md) | Nomi delle aperture, explorer, repertorio |
