@@ -33,7 +33,7 @@ void main() {
   test('RMP-01 l\'invito va e torna dal link senza perdere nulla', () {
     final invite = sample(lan: '192.168.1.20:47100');
     final link = invite.toLink();
-    expect(link, startsWith('scacchi://partita?'));
+    expect(link, startsWith('rokko://partita?'));
     final back = GameInvite.parse(link)!;
     expect(back.gameId, invite.gameId);
     expect(back.secret, invite.secret);
@@ -42,9 +42,51 @@ void main() {
     expect(back.lanAddress, '192.168.1.20:47100');
   });
 
+  test('RMP-01 i link col vecchio nome scacchi:// si leggono ancora', () {
+    final old = sample(lan: '10.0.0.2:4000')
+        .toLink()
+        .replaceFirst('rokko://', 'scacchi://');
+    final back = GameInvite.parse(old)!;
+    expect(back.gameId, sample().gameId);
+    expect(back.lanAddress, '10.0.0.2:4000');
+    expect(back.toLink(), startsWith('rokko://'));
+    expect(inviteScheme, 'rokko');
+  });
+
   test('RMP-01 l\'indirizzo locale è facoltativo', () {
     final back = GameInvite.parse(sample().toLink())!;
     expect(back.lanAddress, isNull);
+  });
+
+  test('RMP-32 l\'invito a distanza va e torna dal link', () {
+    final inv = GameInvite(
+      gameId: newGameId(),
+      secret: newSecret(),
+      hostKey: Uint8List(32),
+      hostSide: Side.black,
+      remote: true,
+    );
+    final back = GameInvite.parse(inv.toLink())!;
+    expect(back.remote, isTrue);
+    expect(back.lanAddress, isNull);
+    expect(inv.toLink(), contains('r=1'));
+  });
+
+  test('RMP-32 senza il segno r l\'invito è solo in rete locale', () {
+    expect(GameInvite.parse(sample().toLink())!.remote, isFalse);
+    expect(sample().toLink(), isNot(contains('r=')));
+  });
+
+  test('RMP-32 un valore di r sconosciuto rende l\'invito non valido', () {
+    final good = GameInvite(
+      gameId: newGameId(),
+      secret: newSecret(),
+      hostKey: Uint8List(32),
+      hostSide: Side.white,
+      remote: true,
+    ).toLink();
+    expect(GameInvite.parse(good.replaceFirst('r=1', 'r=2')), isNull);
+    expect(GameInvite.parse(good.replaceFirst('r=1', 'r=')), isNull);
   });
 
   test('RMP-20 l\'invito dice se si gioca anche via Bluetooth', () {
@@ -71,9 +113,9 @@ void main() {
     final good = sample().toLink();
     final cases = {
       'testo qualunque': 'ciao',
-      'altro schema': good.replaceFirst('scacchi://', 'http://'),
+      'altro schema': good.replaceFirst('rokko://', 'http://'),
       'link web di un sito qualunque': good.replaceFirst(
-        'scacchi://partita',
+        'rokko://partita',
         'https://esempio.it/partita',
       ),
       'versione sconosciuta': good.replaceFirst('v=1', 'v=9'),
