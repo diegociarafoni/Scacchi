@@ -32,13 +32,13 @@ Corpo facoltativo, separato da una riga vuota: il perché della modifica.
 BREAKING CHANGE: cosa cambia per chi usa l'app o il codice.
 ```
 
-| Tipo | Uso | Nel changelog |
+| Tipo | Uso | Nel changelog (`release-please-config.json`) |
 |---|---|---|
 | `feat` | nuova funzione | Novità |
 | `fix` | correzione di un difetto | Correzioni |
 | `perf` | miglioramento delle prestazioni | Prestazioni |
-| `revert` | annullamento di un commit precedente | Modifiche annullate |
-| `docs` | solo documentazione | Documentazione |
+| `revert` | annullamento di un commit precedente | Annullamenti |
+| `docs` | solo documentazione | no |
 | `refactor` | riorganizzazione senza cambi di comportamento | no |
 | `test` | test aggiunti o corretti | no |
 | `build` | build, dipendenze, strumenti | no |
@@ -110,6 +110,6 @@ Da fare una volta, in **Settings** del repository:
    - **Require merge queue**, metodo di merge **Squash**, dimensione del gruppo 1 (una PR alla volta, il titolo della PR resta il commit su `main`) e tempo massimo di attesa dei controlli di 45 minuti;
    - **Require status checks to pass**, con i controlli `test`, `e2e`, `android` e `Ramo, titolo della PR e commit` (con la coda non serve Require branches to be up to date; aggiungere i controlli nuovi quando entrano in CI; vedi anche la nota sulle PR di sola documentazione in [sviluppo.md](sviluppo.md#consumo-di-minuti)).
 
-Su un account GitHub Free le regole dei rami sono applicate solo ai repository pubblici: per un repository privato serve GitHub Pro. Fino ad allora l'hook `pre-push` e la CI restano l'unica protezione.
+Su un account GitHub Free le regole dei rami sono applicate solo ai repository pubblici, come questo; se il repository tornasse privato servirebbe GitHub Pro, e fino ad allora l'hook `pre-push` e la CI resterebbero l'unica protezione.
 
 Con un solo sviluppatore non conviene richiedere approvazioni obbligatorie: GitHub non permette di approvare le proprie PR. La revisione è coperta da `/code-review`.
