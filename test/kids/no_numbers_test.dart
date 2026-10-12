@@ -240,7 +240,12 @@ void main() {
       );
       await tester.pumpAndSettle();
       await tester.scrollUntilVisible(find.text('Sabbia'), 200);
-      expect(find.byTooltip('Si sblocca giocando'), findsWidgets);
+      final semantics = tester.ensureSemantics();
+      expect(
+        find.bySemanticsLabel(RegExp('Sabbia, bloccato. Si sblocca giocando')),
+        findsOneWidget,
+      );
+      semantics.dispose();
       await tester.ensureVisible(find.text('Sabbia'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Sabbia'));
