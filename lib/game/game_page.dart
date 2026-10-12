@@ -26,6 +26,7 @@ import '../exchange/qr_receive_page.dart';
 import '../exchange/qr_send_page.dart';
 import '../exchange/qr_transfer.dart';
 import '../l10n/app_localizations.dart';
+import '../openings/opening_assets.dart';
 import '../openings/opening_game.dart';
 import '../openings/opening_name.dart';
 import '../progress/activity.dart';
@@ -827,6 +828,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           game,
           player: side,
           opponentElo: elo,
+          book: loadedOpeningBook,
           duration: elapsed.isNegative
               ? Duration.zero
               : elapsed > _maxCountedPlay

@@ -8,7 +8,7 @@ Ogni cartella di `lib/` ha qui il documento che descrive le sue funzioni. La tab
 |---|---|---|
 | `lib/analysis/` | [analisi.md](analisi.md) | Analisi libera della posizione con le linee del motore e l'albero delle varianti |
 | `lib/archive/` | [archivio.md](archivio.md) | Archivio delle partite, import ed export PGN |
-| `lib/badges/` | [badge.md](badge.md) | Badge (RG-17): catalogo, regole di sblocco, scheda della raccolta, testi |
+| `lib/badges/` | [badge.md](badge.md) | Badge (RG-17) e libri delle aperture: catalogo, regole di sblocco, medaglie, galleria, testi |
 | `lib/backup/` | [backup.md](backup.md) | Backup e ripristino dei dati locali |
 | `lib/coach/` | [allenatore.md](allenatore.md) | Partita con l'allenatore: avvisi, ripresa della mossa, suggerimenti |
 | `lib/editor/` | [editor-posizione.md](editor-posizione.md) | Editor di posizione e FEN |

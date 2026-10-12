@@ -46,6 +46,7 @@ class GamePlayed extends Activity {
     this.matedWith,
     this.castledLong = false,
     this.highlights = const {},
+    this.openingBook,
     super.duration,
   });
 
@@ -71,6 +72,9 @@ class GamePlayed extends Activity {
 
   /// Momenti memorabili della partita; vuoti nelle partite tra due persone.
   final Set<GameHighlight> highlights;
+
+  /// Libro delle aperture (`OpeningVolume.id`) a cui porta la partita.
+  final String? openingBook;
 }
 
 class PuzzleSolved extends Activity {

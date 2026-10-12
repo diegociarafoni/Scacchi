@@ -42,11 +42,32 @@ Gli eventi di partita li calcola `gameActivity` (`lib/progress/game_activity.dar
 
 ## Interfaccia
 
-La scheda Tu ha la voce **Badge** (accanto a Profilo e Statistiche; con la scheda Tu a gruppi sta in «I miei dati»). `BadgesPage` mostra il totale, poi i badge per famiglia in una griglia che si adatta alla larghezza e al corpo del testo. Un badge da ottenere è una medaglia con il lucchetto, il nome e l'avanzamento «3 / 10»; toccato apre la scheda con la descrizione e l'avanzamento. Uno ottenuto mostra l'icona e, nella scheda, la data. Ogni riquadro ha un'etichetta per i lettori di schermo («Alla francese, ottenuto» o «…, da ottenere, 3 su 10») e un'area di tocco ben oltre 48 dp.
+La scheda Tu ha la voce **Badge** (accanto a Profilo e Statistiche; con la scheda Tu a gruppi sta in «I miei dati»). `BadgesPage` ha due schede, **Badge** e **Libri**, ciascuna con il contatore «X su Y raggiunti» e la barra di avanzamento.
+
+- **Badge**: card a griglia (almeno 3 colonne, di più su schermi larghi) raggruppate per famiglia, righe alla stessa altezza anche con il testo ingrandito. Una card ottenuta ha la medaglia colorata e lo sfondo tinto con il colore della famiglia; una da ottenere è grigia con il lucchetto, mostra comunque il nome (è la caccia al tesoro) e l'avanzamento «3 / 10». Toccata apre la scheda con medaglia grande, famiglia, gradino, come si ottiene e data o avanzamento.
+- **Libri**: vedi sotto.
+
+Ogni riquadro ha un'etichetta per i lettori di schermo («Alla francese, ottenuto» o «…, da ottenere, 3 su 10») e un'area di tocco ben oltre 48 dp.
+
+### Medaglie
+
+`BadgeArt` (`badge_art.dart`) disegna la medaglia in codice, senza immagini: ogni famiglia ha la sua sagoma (scudo per Imparare, esagono per Puzzle, rombo smussato per Partite, cerchio per Storia, rosetta per Costanza) e il suo colore (`badgePalette`), con gradiente, riflesso e bordo bronzo, argento o oro per i badge a gradini. Il simbolo al centro è un'icona di Material in bianco. Da ottenere la medaglia è grigia, con la stessa sagoma e il lucchetto.
+
+`RecentBadges` (`recent_badges.dart`) è una fascia riutilizzabile con gli ultimi badge ottenuti, per esempio per la home; è vuota se non ce n'è nessuno.
+
+## Libri delle aperture
+
+Ogni apertura giocata in una partita diventa un libro della collezione. `openingVolumes` (`opening_volumes.dart`) elenca 37 libri: un identificativo stabile, il nome dell'apertura, le famiglie del dataset che lo sbloccano (per esempio «Queen's Gambit Declined» e «Accepted» per il Gambetto di donna) e le mosse della copertina, che mostrano la posizione tipica dell'apertura.
+
+A fine partita contro il computer o tra due persone, `gameActivity` classifica la partita con il libro delle aperture già caricato (`loadedOpeningBook`; la home lo scalda all'avvio) e mette in `GamePlayed.openingBook` l'identificativo del libro; il tracker aumenta il contatore `book:<id>`. Le partite brevi che non contano per i progressi non sbloccano libri. Se il libro non è ancora caricato la partita non sblocca nulla, mai un errore. Chi gioca da prima dei libri parte da zero.
+
+Nella scheda **Libri** un libro sbloccato ha la copertina colorata con la scacchiera in miniatura e il nome; uno da sbloccare è grigio con la posizione sbiadita e il lucchetto, così si intuisce l'apertura da cercare. Toccato mostra la posizione, il nome e quante volte l'hai giocata, oppure come sbloccarlo. I libri non sono badge: non hanno data, non danno XP né ricompense.
 
 ## Testi e icone
 
-I testi sono in `lib/l10n/it/badges.arb` e `lib/l10n/en/badges.arb`, con chiavi `badge<Id>Name` e `badge<Id>Desc` e il prefisso `badges…` per la schermata. Le soglie delle descrizioni sono segnaposto riempiti dalla definizione, così testo e regola non divergono. `badges_l10n.dart` collega gli identificativi ai testi; un test verifica che ogni badge abbia nome e descrizione in tutte le lingue. Le icone sono quelle di Material, senza immagini da distribuire.
+I testi sono in `lib/l10n/it/badges.arb` e `lib/l10n/en/badges.arb`, con chiavi `badge<Id>Name` e `badge<Id>Desc` e il prefisso `badges…` e `books…` per la schermata. Le soglie delle descrizioni sono segnaposto riempiti dalla definizione, così testo e regola non divergono. `badges_l10n.dart` collega gli identificativi ai testi; un test verifica che ogni badge abbia nome e descrizione in tutte le lingue. I nomi dei libri sono quelli delle aperture (`opening_names_it.dart`), in inglese quelli originali. Le icone al centro delle medaglie sono quelle di Material; sagome e colori sono disegnati in codice.
+
+Golden su tre taglie di telefono, chiaro e scuro, in `test/golden/badges_golden_test.dart`.
 
 ## Aggiungere un badge
 
@@ -57,4 +78,4 @@ I testi sono in `lib/l10n/it/badges.arb` e `lib/l10n/en/badges.arb`, con chiavi 
 
 ## Non ancora attivi
 
-I badge del multigiocatore e delle aperture sono nel catalogo di prodotto ma non nel codice: richiedono che le partite in rete e il ripasso del repertorio registrino un'attività, e quelle schermate sono in corso di ridisegno.
+I badge del multigiocatore e quelli del ripasso del repertorio sono nel catalogo di prodotto ma non nel codice: richiedono che le partite in rete e il ripasso del repertorio registrino un'attività, e quelle schermate sono in corso di ridisegno.
