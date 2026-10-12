@@ -34,8 +34,8 @@ const _highlightHues = [
 /// Contrasto minimo di ultima mossa e selezione con le case.
 const minHighlightContrast = 1.25;
 
-/// Contrasto minimo dei punti delle mosse possibili.
-const minDotContrast = 1.6;
+/// Contrasto minimo dei punti delle mosse possibili (WCAG 1.4.11).
+const minDotContrast = 3.0;
 const _maxAlpha = 0.9;
 const _minHueGap = 15.0;
 const _minSaturationGap = 0.3;

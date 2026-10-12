@@ -12,6 +12,7 @@ import 'package:scacchi/review/game_review.dart';
 import 'package:scacchi/review/personal_puzzles.dart';
 import 'package:scacchi/review/review_page.dart';
 
+import '../board_marks_helpers.dart';
 import 'fake_engine.dart';
 
 Future<void> pumpReview(
@@ -176,7 +177,7 @@ void main() {
     );
     await tester.pumpAndSettle();
     final board = tester.widget<Chessboard>(find.byType(Chessboard));
-    final arrow = board.shapes.whereType<Arrow>().single;
+    final arrow = markArrows(board.shapes).single;
     expect(arrow.orig, Square.e1);
     expect(arrow.dest, Square.g1);
   });
@@ -381,7 +382,7 @@ void main() {
       await tester.tap(find.byTooltip('Mossa precedente'));
       await tester.pumpAndSettle();
       final board = tester.widget<Chessboard>(find.byType(Chessboard));
-      final arrows = board.shapes.whereType<Arrow>();
+      final arrows = markArrows(board.shapes);
       expect(arrows.single.orig, Square.g7);
       expect(arrows.single.dest, Square.g6);
       // La categoria compare sulla casa d'arrivo della mossa giocata.

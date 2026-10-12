@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import '../l10n/app_localizations.dart';
 import '../progress/activity.dart';
 import '../progress/progress_feedback.dart';
+import '../settings/board_marks.dart';
 import '../settings/settings.dart';
 import '../share/position_image.dart';
 import '../share/position_image_page.dart';
@@ -213,13 +214,15 @@ class _PuzzlePageState extends State<PuzzlePage> {
 
   /// Freccia e cerchio rossi sulla mossa sbagliata; il rosso non è l'unico
   /// segnale: ci sono anche l'icona e il testo.
-  Set<Shape> _wrongShapes(Color color) =>
+  /// La mossa sbagliata usa il rosso della minaccia, scelto per stare a 3:1
+  /// dentro il contorno del tema.
+  Set<Shape> _wrongShapes(BoardMarks marks) =>
       switch (_feedback == _Feedback.wrong ? _wrongMove : null) {
         NormalMove(:final from, :final to) => {
-          Arrow(color: color, orig: from, dest: to),
-          Circle(color: color, orig: to),
+          ...marks.arrow(marks.threat, from, to),
+          ...marks.circle(marks.threat, to),
         },
-        DropMove(:final to) => {Circle(color: color, orig: to)},
+        DropMove(:final to) => marks.circle(marks.threat, to),
         null => const {},
       };
 
@@ -405,13 +408,11 @@ class _PuzzlePageState extends State<PuzzlePage> {
                             enabled: !done && !_session.awaitingReply,
                             revision: _revision,
                             shapes: {
-                              ..._wrongShapes(
-                                AppSettings.of(context).wrongColor,
-                              ),
+                              ..._wrongShapes(AppSettings.of(context).marks),
                               if (_hint != null)
-                                Circle(
-                                  color: AppSettings.of(context).hintColor,
-                                  orig: _hint!,
+                                ...AppSettings.of(context).marks.circle(
+                                  AppSettings.of(context).hintColor,
+                                  _hint!,
                                 ),
                             },
                             onMove: _onMove,
