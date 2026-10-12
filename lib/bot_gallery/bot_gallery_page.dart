@@ -7,7 +7,10 @@ import '../engine/bot_collection.dart';
 import '../engine/bots.dart';
 import '../engine/levels.dart';
 import '../engine/style.dart';
+import '../game/clock.dart';
+import '../game/handicap.dart';
 import '../game/opponent_picker.dart';
+import '../game/variant.dart';
 import '../l10n/app_localizations.dart';
 import '../progress/avatar.dart';
 import '../progress/guardian_avatar.dart';
@@ -15,6 +18,7 @@ import '../story/story.dart';
 import '../theme/rokko_theme.dart';
 import 'bot_greetings.dart';
 import 'bot_tiers.dart';
+import 'game_options.dart';
 
 /// Scelta fatta nella galleria: il bot (o il computer adattivo) e il colore.
 class BotGalleryResult {
@@ -22,10 +26,14 @@ class BotGalleryResult {
     required this.botId,
     required this.sideChoice,
     this.adaptive = false,
+    this.options = const GameOptions(),
   });
 
   final String botId;
   final SideChoice sideChoice;
+
+  /// Cadenza, variante, handicap e allenatore scelti con «Opzioni».
+  final GameOptions options;
 
   /// Il computer che si adatta al giocatore, al posto di un bot.
   final bool adaptive;
@@ -38,6 +46,11 @@ class BotGalleryResult {
     sideChoice: sideChoice,
   );
 }
+
+/// Testi localizzati; senza localizzazione nel contesto si usa l'italiano.
+AppLocalizations _l10n(BuildContext context) =>
+    Localizations.of<AppLocalizations>(context, AppLocalizations) ??
+    lookupAppLocalizations(const Locale('it'));
 
 const _adaptiveId = '@adaptive';
 const _gap = 8.0;
@@ -57,6 +70,8 @@ class BotGalleryPage extends StatefulWidget {
     this.adaptiveLevel = defaultEngineLevel,
     this.kidMode = false,
     this.confirmLabel,
+    this.showOptions = true,
+    this.initialOptions = const GameOptions(),
   });
 
   final BotCollection collection;
@@ -78,6 +93,10 @@ class BotGalleryPage extends StatefulWidget {
   /// Testo del bottone di conferma; di norma «Gioca».
   final String? confirmLabel;
 
+  /// Mostra il pannello «Opzioni» (cadenza, variante, handicap, allenatore).
+  final bool showOptions;
+  final GameOptions initialOptions;
+
   @override
   State<BotGalleryPage> createState() => _BotGalleryPageState();
 }
@@ -86,6 +105,13 @@ class _BotGalleryPageState extends State<BotGalleryPage> {
   late String _selected = _firstChoice();
   late SideChoice _side = widget.initialSide;
   late StoryState _story = widget.story;
+  late TimeControl? _control = widget.initialOptions.control;
+  late Variant _variant = widget.initialOptions.variant;
+  late HandicapPiece? _handicapPiece = widget.initialOptions.handicap?.piece;
+  late int? _handicapMinutes = widget.initialOptions.handicap?.giverMinutes;
+  late HandicapGiver _handicapGiver =
+      widget.initialOptions.handicap?.giver ?? HandicapGiver.player;
+  late bool _coach = widget.initialOptions.coach;
 
   @override
   void initState() {
@@ -142,18 +168,43 @@ class _BotGalleryPageState extends State<BotGalleryPage> {
 
   Bot get _bot => botById(_selected) ?? _ladder.first;
 
+  Handicap? get _handicap => _handicapPiece == null && _handicapMinutes == null
+      ? null
+      : Handicap(
+          piece: _handicapPiece,
+          giverMinutes: _handicapMinutes,
+          giver: _handicapGiver,
+        );
+
+  /// Il profilo bambino sceglie solo tra senza orologio e una cadenza lenta.
+  GameOptions get _options => widget.kidMode
+      ? GameOptions(control: _control)
+      : GameOptions(
+          control: _control,
+          variant: _variant,
+          handicap: _handicap,
+          coach: _coach,
+        );
+
   void _play() => Navigator.pop(
     context,
     BotGalleryResult(
       botId: _adaptive ? _ladder.first.id : _bot.id,
       sideChoice: _side,
       adaptive: _adaptive,
+      options: _options,
     ),
+  );
+
+  void _openOptions() => showModalBottomSheet<void>(
+    context: context,
+    isScrollControlled: true,
+    builder: (_) => _OptionsSheet(page: this),
   );
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = _l10n(context);
     final compact = MediaQuery.sizeOf(context).height < 520;
     final grid = _Grid(page: this, l10n: l10n);
     return Scaffold(
@@ -207,6 +258,7 @@ class _Hero extends StatelessWidget {
     final unlocked = adaptive || page._unlocked(bot);
     final beaten = !adaptive && page._beaten(bot);
     final kid = page.widget.kidMode;
+    final avatarSize = MediaQuery.sizeOf(context).height < 700 ? 72.0 : 88.0;
     final String line;
     if (adaptive) {
       line = l10n.botAdaptiveGreeting;
@@ -234,10 +286,10 @@ class _Hero extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             adaptive
-                ? const _AdaptiveAvatar(size: 88)
+                ? _AdaptiveAvatar(size: avatarSize)
                 : GuardianAvatar(
                     bot: bot,
-                    size: 88,
+                    size: avatarSize,
                     expression: !unlocked
                         ? AvatarExpression.neutral
                         : beaten
@@ -677,8 +729,19 @@ class _Footer extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  if (page.widget.showOptions)
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        key: const Key('gallery-options'),
+                        icon: const Icon(Icons.tune),
+                        label: Text(l10n.botOptions),
+                        onPressed: page._openOptions,
+                      ),
+                    )
+                  else
+                    const Spacer(),
+                  const SizedBox(width: 8),
                   for (final (key, side, mark, label) in [
                     (
                       'side-white',
@@ -750,7 +813,7 @@ class _SideButton extends StatelessWidget {
     final tokens = RokkoTokens.of(context);
     final scheme = Theme.of(context).colorScheme;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 2),
       child: Semantics(
         button: true,
         selected: selected,
@@ -760,7 +823,7 @@ class _SideButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(tokens.radiusSmall),
           onTap: onTap,
           child: Container(
-            width: 56,
+            width: 48,
             height: 52,
             alignment: Alignment.center,
             decoration: BoxDecoration(
@@ -802,3 +865,211 @@ class _SideMark extends StatelessWidget {
           ),
         );
 }
+
+/// Pannello a comparsa con le opzioni della partita: cadenza, variante,
+/// handicap e allenatore. Nel profilo bambino solo la cadenza.
+class _OptionsSheet extends StatefulWidget {
+  const _OptionsSheet({required this.page});
+
+  final _BotGalleryPageState page;
+
+  @override
+  State<_OptionsSheet> createState() => _OptionsSheetState();
+}
+
+class _OptionsSheetState extends State<_OptionsSheet> {
+  _BotGalleryPageState get _page => widget.page;
+
+  /// Cambia lo stato della galleria e ridisegna anche il pannello.
+  void _change(VoidCallback change) {
+    _page.setState(change);
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = _l10n(context);
+    final theme = Theme.of(context);
+    final kid = _page.widget.kidMode;
+    final groups = <String, List<TimeControl>>{};
+    for (final t in TimeControl.presets) {
+      groups.putIfAbsent(t.category, () => []).add(t);
+    }
+    Widget title(String text) => Padding(
+      padding: const EdgeInsets.only(top: 16, bottom: 8),
+      child: Semantics(
+        header: true,
+        child: Text(text, style: theme.textTheme.titleSmall),
+      ),
+    );
+    Widget chips(List<Widget> children) =>
+        Wrap(spacing: 8, runSpacing: 8, children: children);
+    Widget timeChip(String label, TimeControl? control, Key key) => ChoiceChip(
+      key: key,
+      label: Text(label),
+      selected: _page._control == control,
+      onSelected: (_) => _change(() => _page._control = control),
+    );
+    final standard = _page._variant == Variant.standard;
+    final pieces = {
+      HandicapPiece.fPawn: l10n.handicapPieceFPawn,
+      HandicapPiece.knight: l10n.handicapPieceKnight,
+      HandicapPiece.rook: l10n.handicapPieceRook,
+      HandicapPiece.queen: l10n.handicapPieceQueen,
+    };
+    return SafeArea(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.sizeOf(context).height * 0.85,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Flexible(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(l10n.botOptions, style: theme.textTheme.titleLarge),
+                    title(l10n.botOptionsTime),
+                    chips([
+                      timeChip(
+                        l10n.botOptionsNoClock,
+                        null,
+                        const Key('option-time-none'),
+                      ),
+                      if (kid)
+                        timeChip(
+                          l10n.botOptionsKidSlow,
+                          _kidClock,
+                          const Key('option-time-slow'),
+                        ),
+                    ]),
+                    if (!kid)
+                      for (final entry in groups.entries) ...[
+                        title(entry.key),
+                        chips([
+                          for (final t in entry.value)
+                            timeChip(t.label, t, Key('option-time-${t.label}')),
+                        ]),
+                      ],
+                    if (!kid) ...[
+                      title(l10n.botOptionsVariant),
+                      chips([
+                        for (final v in Variant.values)
+                          ChoiceChip(
+                            key: Key('option-variant-${v.name}'),
+                            label: Text(_variantName(l10n, v)),
+                            selected: _page._variant == v,
+                            onSelected: (_) => _change(() {
+                              _page._variant = v;
+                              // Il pezzo in meno vale solo negli scacchi classici.
+                              if (v != Variant.standard) {
+                                _page._handicapPiece = null;
+                              }
+                            }),
+                          ),
+                      ]),
+                      title(l10n.handicapTitle),
+                      Text(l10n.handicapHint, style: theme.textTheme.bodySmall),
+                      title(l10n.handicapPieceTitle),
+                      chips([
+                        ChoiceChip(
+                          key: const Key('option-handicap-piece-none'),
+                          label: Text(l10n.handicapNone),
+                          selected: _page._handicapPiece == null,
+                          onSelected: (_) =>
+                              _change(() => _page._handicapPiece = null),
+                        ),
+                        for (final MapEntry(:key, :value) in pieces.entries)
+                          ChoiceChip(
+                            key: Key('option-handicap-piece-${key.name}'),
+                            label: Text(value),
+                            selected: _page._handicapPiece == key,
+                            onSelected: standard
+                                ? (_) =>
+                                      _change(() => _page._handicapPiece = key)
+                                : null,
+                          ),
+                      ]),
+                      title(l10n.handicapTimeTitle),
+                      chips([
+                        ChoiceChip(
+                          key: const Key('option-handicap-time-none'),
+                          label: Text(l10n.handicapTimeEqual),
+                          selected: _page._handicapMinutes == null,
+                          onSelected: (_) =>
+                              _change(() => _page._handicapMinutes = null),
+                        ),
+                        for (final m in Handicap.timeOptions)
+                          ChoiceChip(
+                            key: Key('option-handicap-time-$m'),
+                            label: Text(l10n.handicapTimeMinutes(m)),
+                            selected: _page._handicapMinutes == m,
+                            onSelected: (_) =>
+                                _change(() => _page._handicapMinutes = m),
+                          ),
+                      ]),
+                      Text(
+                        l10n.handicapTimeHint,
+                        style: theme.textTheme.bodySmall,
+                      ),
+                      if (_page._handicap != null) ...[
+                        title(l10n.handicapGiverTitle),
+                        chips([
+                          for (final g in HandicapGiver.values)
+                            ChoiceChip(
+                              key: Key('option-handicap-giver-${g.name}'),
+                              label: Text(
+                                g == HandicapGiver.player
+                                    ? l10n.handicapGiverYou
+                                    : l10n.handicapGiverOpponent,
+                              ),
+                              selected: _page._handicapGiver == g,
+                              onSelected: (_) =>
+                                  _change(() => _page._handicapGiver = g),
+                            ),
+                        ]),
+                      ],
+                      title(l10n.botOptionsHelp),
+                      SwitchListTile(
+                        key: const Key('option-coach'),
+                        contentPadding: EdgeInsets.zero,
+                        title: Text(l10n.botOptionsCoach),
+                        subtitle: Text(l10n.botOptionsCoachHint),
+                        value: _page._coach,
+                        onChanged: (v) => _change(() => _page._coach = v),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+              child: FilledButton(
+                key: const Key('options-done'),
+                onPressed: () => Navigator.pop(context),
+                child: Text(MaterialLocalizations.of(context).okButtonLabel),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  static String _variantName(AppLocalizations l10n, Variant v) => switch (v) {
+    Variant.standard => l10n.botVariantStandard,
+    Variant.chess960 => l10n.botVariantChess960,
+    Variant.kingOfTheHill => l10n.botVariantKingOfTheHill,
+    Variant.threeCheck => l10n.botVariantThreeCheck,
+  };
+}
+
+/// Cadenza lenta del profilo bambino: 15+10.
+final _kidClock = TimeControl.presets.firstWhere(
+  (t) => t.minutes == 15 && t.increment == 10,
+);

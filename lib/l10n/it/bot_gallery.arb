@@ -320,5 +320,65 @@
   "botGalleryOpen": "Apri la galleria dei bot",
   "@botGalleryOpen": {
     "description": "Bottone che apre la galleria dei bot dalla scelta dell'avversario"
+  },
+  "botOptions": "Opzioni",
+  "@botOptions": {
+    "description": "botOptions"
+  },
+  "botOptionsTime": "Cadenza",
+  "@botOptionsTime": {
+    "description": "botOptionsTime"
+  },
+  "botOptionsNoClock": "Nessun timer",
+  "@botOptionsNoClock": {
+    "description": "botOptionsNoClock"
+  },
+  "botOptionsVariant": "Variante",
+  "@botOptionsVariant": {
+    "description": "botOptionsVariant"
+  },
+  "botVariantStandard": "Classica",
+  "@botVariantStandard": {
+    "description": "botVariantStandard"
+  },
+  "botVariantChess960": "Chess960",
+  "@botVariantChess960": {
+    "description": "botVariantChess960"
+  },
+  "botVariantKingOfTheHill": "Re della collina",
+  "@botVariantKingOfTheHill": {
+    "description": "botVariantKingOfTheHill"
+  },
+  "botVariantThreeCheck": "Tre scacchi",
+  "@botVariantThreeCheck": {
+    "description": "botVariantThreeCheck"
+  },
+  "botOptionsHelp": "Aiuti",
+  "@botOptionsHelp": {
+    "description": "botOptionsHelp"
+  },
+  "botOptionsCoach": "Allenatore",
+  "@botOptionsCoach": {
+    "description": "botOptionsCoach"
+  },
+  "botOptionsCoachHint": "Ti avvisa se sbagli una mossa.",
+  "@botOptionsCoachHint": {
+    "description": "botOptionsCoachHint"
+  },
+  "botOptionsSummary": "{time} · {variant}",
+  "@botOptionsSummary": {
+    "description": "Riassunto delle opzioni scelte",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "variant": {
+        "type": "String"
+      }
+    }
+  },
+  "botOptionsKidSlow": "Con l'orologio, con calma",
+  "@botOptionsKidSlow": {
+    "description": "botOptionsKidSlow"
   }
 }

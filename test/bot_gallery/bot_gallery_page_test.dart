@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/bot_gallery/bot_gallery_page.dart';
 import 'package:scacchi/engine/bot_collection.dart';
+import 'package:scacchi/game/clock.dart';
+import 'package:scacchi/game/handicap.dart';
 import 'package:scacchi/game/opponent_picker.dart';
+import 'package:scacchi/game/variant.dart';
 import 'package:scacchi/story/story.dart';
 import 'package:scacchi/theme/rokko_theme.dart';
 
@@ -68,6 +71,12 @@ Future<BotGalleryResult?> _open(
     await tester.pumpAndSettle();
   }
   return result;
+}
+
+Future<void> _tapOption(WidgetTester tester, Key key) async {
+  await tester.ensureVisible(find.byKey(key));
+  await tester.pumpAndSettle();
+  await tester.tap(find.byKey(key));
 }
 
 void main() {
@@ -327,6 +336,182 @@ void main() {
           matching: find.byIcon(Icons.workspace_premium),
         ),
         findsOneWidget,
+      );
+    });
+
+    group('opzioni della partita', () {
+      testWidgets('senza scelte le opzioni sono quelle di base', (
+        tester,
+      ) async {
+        final result = await _open(
+          tester,
+          initialBotId: 'pino',
+          act: () async => tester.tap(find.byKey(const Key('gallery-play'))),
+        );
+        expect(result!.options.control, isNull);
+        expect(result.options.variant, Variant.standard);
+        expect(result.options.handicap, isNull);
+        expect(result.options.coach, isFalse);
+      });
+
+      testWidgets('Opzioni apre il pannello con cadenza e variante', (
+        tester,
+      ) async {
+        await _open(
+          tester,
+          act: () async => tester.tap(find.byKey(const Key('gallery-options'))),
+        );
+        expect(find.text('Nessun timer'), findsOneWidget);
+        expect(find.text('Bullet'), findsOneWidget);
+        expect(find.text('Blitz'), findsOneWidget);
+        expect(find.text('Rapid'), findsOneWidget);
+        expect(find.byKey(const Key('option-time-5+0')), findsOneWidget);
+        expect(
+          find.byKey(const Key('option-variant-chess960')),
+          findsOneWidget,
+        );
+      });
+
+      testWidgets(
+        'cadenza, variante, handicap e allenatore arrivano al risultato',
+        (tester) async {
+          final result = await _open(
+            tester,
+            initialBotId: 'pino',
+            act: () async {
+              await tester.tap(find.byKey(const Key('gallery-options')));
+              await tester.pumpAndSettle();
+              await _tapOption(tester, const Key('option-time-5+0'));
+              await tester.tap(
+                find.byKey(const Key('option-handicap-piece-knight')),
+              );
+              await _tapOption(tester, const Key('option-handicap-time-2'));
+              await tester.pumpAndSettle();
+              await tester.tap(
+                find.byKey(const Key('option-handicap-giver-opponent')),
+              );
+              await tester.scrollUntilVisible(
+                find.byKey(const Key('option-coach')),
+                200,
+                scrollable: find.descendant(
+                  of: find.byType(BottomSheet),
+                  matching: find.byType(Scrollable),
+                ),
+              );
+              await _tapOption(tester, const Key('option-coach'));
+              await tester.tap(find.byKey(const Key('options-done')));
+              await tester.pumpAndSettle();
+              await tester.tap(find.byKey(const Key('gallery-play')));
+            },
+          );
+          expect(result!.options.control, const TimeControl(minutes: 5));
+          expect(result.options.handicap!.piece, HandicapPiece.knight);
+          expect(result.options.handicap!.giverMinutes, 2);
+          expect(result.options.handicap!.giver, HandicapGiver.opponent);
+          expect(result.options.coach, isTrue);
+        },
+      );
+
+      testWidgets(
+        'una variante diversa dalla classica toglie il pezzo in meno',
+        (tester) async {
+          final result = await _open(
+            tester,
+            initialBotId: 'pino',
+            act: () async {
+              await tester.tap(find.byKey(const Key('gallery-options')));
+              await tester.pumpAndSettle();
+              await tester.tap(
+                find.byKey(const Key('option-handicap-piece-rook')),
+              );
+              await tester.tap(
+                find.byKey(const Key('option-variant-chess960')),
+              );
+              await tester.tap(find.byKey(const Key('options-done')));
+              await tester.pumpAndSettle();
+              await tester.tap(find.byKey(const Key('gallery-play')));
+            },
+          );
+          expect(result!.options.variant, Variant.chess960);
+          expect(result.options.handicap, isNull);
+        },
+      );
+
+      testWidgets('le opzioni scelte restano riaprendo il pannello', (
+        tester,
+      ) async {
+        await _open(
+          tester,
+          act: () async {
+            await tester.tap(find.byKey(const Key('gallery-options')));
+            await tester.pumpAndSettle();
+            await _tapOption(tester, const Key('option-time-3+2'));
+            await tester.tap(find.byKey(const Key('options-done')));
+            await tester.pumpAndSettle();
+            await tester.tap(find.byKey(const Key('gallery-options')));
+          },
+        );
+        final chip = tester.widget<ChoiceChip>(
+          find.byKey(const Key('option-time-3+2')),
+        );
+        expect(chip.selected, isTrue);
+      });
+
+      testWidgets('profilo bambino: solo senza tempo o cadenza lenta', (
+        tester,
+      ) async {
+        final result = await _open(
+          tester,
+          kid: true,
+          act: () async {
+            await tester.tap(find.byKey(const Key('gallery-options')));
+            await tester.pumpAndSettle();
+            expect(
+              find.byKey(const Key('option-variant-chess960')),
+              findsNothing,
+            );
+            expect(find.byKey(const Key('option-coach')), findsNothing);
+            expect(find.byKey(const Key('option-time-1+0')), findsNothing);
+            await _tapOption(tester, const Key('option-time-slow'));
+            await tester.tap(find.byKey(const Key('options-done')));
+            await tester.pumpAndSettle();
+            await tester.tap(find.byKey(const Key('gallery-play')));
+          },
+        );
+        expect(
+          result!.options.control,
+          const TimeControl(minutes: 15, increment: 10),
+        );
+        expect(result.options.variant, Variant.standard);
+      });
+
+      testWidgets('il pannello è in inglese con la lingua inglese', (
+        tester,
+      ) async {
+        await _open(
+          tester,
+          locale: const Locale('en'),
+          act: () async => tester.tap(find.byKey(const Key('gallery-options'))),
+        );
+        expect(find.text('No timer'), findsOneWidget);
+        expect(find.text('Standard'), findsOneWidget);
+      });
+
+      testWidgets(
+        'il pannello non si vede se la galleria sceglie solo il bot',
+        (tester) async {
+          Device.phoneMedium.apply(tester);
+          await tester.pumpWidget(
+            localizedApp(
+              home: const BotGalleryPage(
+                collection: BotCollection(),
+                showOptions: false,
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+          expect(find.byKey(const Key('gallery-options')), findsNothing);
+        },
       );
     });
 

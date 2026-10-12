@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import '../analysis/analysis_page.dart';
 import '../archive/pgn.dart';
 import '../archive/saved_game.dart';
+import '../bot_gallery/game_options.dart';
 import '../coach/coach_session.dart';
 import '../coach/explain_why.dart';
 import '../coach/hint_text.dart';
@@ -1563,6 +1564,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       handicap: handicap,
       humanSide: human,
     );
+    if (choice.coach && vsComputer && _engineGame && !_zen) {
+      setState(() => _coachOn = true);
+    }
     if (vsComputer) return;
     unawaited(
       widget.settings.update(
@@ -3188,8 +3192,9 @@ class _TimeChoice {
     this.whiteName,
     this.blackName,
     this.setup,
-    this.handicap,
-  );
+    this.handicap, {
+    this.coach = false,
+  });
 
   final TimeControl? control;
   final Variant variant;
@@ -3197,6 +3202,9 @@ class _TimeChoice {
   final String blackName;
   final GameSetup setup;
   final Handicap? handicap;
+
+  /// Allenatore acceso dall'inizio, scelto nella galleria dei bot.
+  final bool coach;
 }
 
 /// Testi del profilo bambino; in italiano se la pagina è montata senza i
@@ -3376,6 +3384,19 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
               computerAvailable: widget.computerAvailable,
               kidMode: widget.kidMode,
               onChanged: (setup) => setState(() => _setup = setup),
+              galleryOptions: GameOptions(variant: _variant),
+              onGalleryPlay: (result) => Navigator.pop(
+                context,
+                _TimeChoice(
+                  result.options.control,
+                  result.options.variant,
+                  _white.text,
+                  _black.text,
+                  result.applyTo(_setup),
+                  result.options.handicap,
+                  coach: result.options.coach,
+                ),
+              ),
             ),
             if (_setup.opponent == Opponent.human) ...[
               const SizedBox(height: 8),

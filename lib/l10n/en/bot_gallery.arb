@@ -130,5 +130,28 @@
   "botGreetingTino": "Hi, I'm Tino! I'll show you how the pieces move.",
   "botRematchTino": "Well done! You move the pieces better than me now.",
   "botUnlockStory": "Unlocks by finishing the Story chapter with this guardian",
-  "botGalleryOpen": "Open the bot gallery"
+  "botGalleryOpen": "Open the bot gallery",
+  "botOptions": "Options",
+  "botOptionsTime": "Time control",
+  "botOptionsNoClock": "No timer",
+  "botOptionsVariant": "Variant",
+  "botVariantStandard": "Standard",
+  "botVariantChess960": "Chess960",
+  "botVariantKingOfTheHill": "King of the Hill",
+  "botVariantThreeCheck": "Three-check",
+  "botOptionsHelp": "Help",
+  "botOptionsCoach": "Coach",
+  "botOptionsCoachHint": "Warns you when you make a mistake.",
+  "botOptionsSummary": "{time} · {variant}",
+  "@botOptionsSummary": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "variant": {
+        "type": "String"
+      }
+    }
+  },
+  "botOptionsKidSlow": "With a clock, taking it easy"
 }

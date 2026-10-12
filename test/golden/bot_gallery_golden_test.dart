@@ -92,6 +92,15 @@ void main() {
     },
   );
 
+  testWidgets('galleria dei bot, pannello Opzioni', skip: _skip != null, (
+    tester,
+  ) async {
+    await _pump(tester, Device.phoneMedium, _gallery());
+    await tester.tap(find.byKey(const Key('gallery-options')));
+    await tester.pumpAndSettle();
+    await _golden(tester, 'galleria-bot-opzioni-telefono-medio');
+  });
+
   testWidgets('galleria dei bot in tema chiaro', skip: _skip != null, (
     tester,
   ) async {
