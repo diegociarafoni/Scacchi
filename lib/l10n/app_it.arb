@@ -985,6 +985,31 @@
       }
     }
   },
+  "handicapTitle": "Handicap",
+  "handicapGameTitle": "Partita a handicap",
+  "handicapHint": "Chi concede il vantaggio gioca senza un pezzo o con meno tempo. La partita non conta per il rating locale.",
+  "handicapPieceTitle": "Pezzo in meno",
+  "handicapNone": "Nessuno",
+  "handicapPieceFPawn": "Pedone f",
+  "handicapPieceKnight": "Cavallo",
+  "handicapPieceRook": "Torre",
+  "handicapPieceQueen": "Donna",
+  "handicapTimeTitle": "Tempo di chi concede",
+  "handicapTimeEqual": "Uguale",
+  "handicapTimeHint": "Vale solo con un orologio e se è inferiore alla cadenza scelta.",
+  "handicapGiverTitle": "Chi concede il vantaggio",
+  "handicapGiverYou": "Tu",
+  "handicapGiverOpponent": "L'avversario",
+  "handicapGiverWhite": "Il Bianco",
+  "handicapGiverBlack": "Il Nero",
+  "handicapTimeMinutes": "{n} min",
+  "@handicapTimeMinutes": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
   "whyPiece": "{role, select, pawn{il pedone} knight{il cavallo} bishop{l'alfiere} rook{la torre} queen{la donna} other{il re}}",
   "@whyPiece": {
     "description": "Nome del pezzo con l'articolo, per le frasi di «spiegami perché»",

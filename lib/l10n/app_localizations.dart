@@ -1316,6 +1316,114 @@ abstract class AppLocalizations {
   /// **'Si sblocca battendo {name}'**
   String botUnlockHint(String name);
 
+  /// No description provided for @handicapTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Handicap'**
+  String get handicapTitle;
+
+  /// No description provided for @handicapGameTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Partita a handicap'**
+  String get handicapGameTitle;
+
+  /// No description provided for @handicapHint.
+  ///
+  /// In it, this message translates to:
+  /// **'Chi concede il vantaggio gioca senza un pezzo o con meno tempo. La partita non conta per il rating locale.'**
+  String get handicapHint;
+
+  /// No description provided for @handicapPieceTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Pezzo in meno'**
+  String get handicapPieceTitle;
+
+  /// No description provided for @handicapNone.
+  ///
+  /// In it, this message translates to:
+  /// **'Nessuno'**
+  String get handicapNone;
+
+  /// No description provided for @handicapPieceFPawn.
+  ///
+  /// In it, this message translates to:
+  /// **'Pedone f'**
+  String get handicapPieceFPawn;
+
+  /// No description provided for @handicapPieceKnight.
+  ///
+  /// In it, this message translates to:
+  /// **'Cavallo'**
+  String get handicapPieceKnight;
+
+  /// No description provided for @handicapPieceRook.
+  ///
+  /// In it, this message translates to:
+  /// **'Torre'**
+  String get handicapPieceRook;
+
+  /// No description provided for @handicapPieceQueen.
+  ///
+  /// In it, this message translates to:
+  /// **'Donna'**
+  String get handicapPieceQueen;
+
+  /// No description provided for @handicapTimeTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Tempo di chi concede'**
+  String get handicapTimeTitle;
+
+  /// No description provided for @handicapTimeEqual.
+  ///
+  /// In it, this message translates to:
+  /// **'Uguale'**
+  String get handicapTimeEqual;
+
+  /// No description provided for @handicapTimeHint.
+  ///
+  /// In it, this message translates to:
+  /// **'Vale solo con un orologio e se è inferiore alla cadenza scelta.'**
+  String get handicapTimeHint;
+
+  /// No description provided for @handicapGiverTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Chi concede il vantaggio'**
+  String get handicapGiverTitle;
+
+  /// No description provided for @handicapGiverYou.
+  ///
+  /// In it, this message translates to:
+  /// **'Tu'**
+  String get handicapGiverYou;
+
+  /// No description provided for @handicapGiverOpponent.
+  ///
+  /// In it, this message translates to:
+  /// **'L\'avversario'**
+  String get handicapGiverOpponent;
+
+  /// No description provided for @handicapGiverWhite.
+  ///
+  /// In it, this message translates to:
+  /// **'Il Bianco'**
+  String get handicapGiverWhite;
+
+  /// No description provided for @handicapGiverBlack.
+  ///
+  /// In it, this message translates to:
+  /// **'Il Nero'**
+  String get handicapGiverBlack;
+
+  /// No description provided for @handicapTimeMinutes.
+  ///
+  /// In it, this message translates to:
+  /// **'{n} min'**
+  String handicapTimeMinutes(int n);
+
   /// Nome del pezzo con l'articolo, per le frasi di «spiegami perché»
   ///
   /// In it, this message translates to:

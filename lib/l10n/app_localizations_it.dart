@@ -846,6 +846,64 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
+  String get handicapTitle => 'Handicap';
+
+  @override
+  String get handicapGameTitle => 'Partita a handicap';
+
+  @override
+  String get handicapHint =>
+      'Chi concede il vantaggio gioca senza un pezzo o con meno tempo. La partita non conta per il rating locale.';
+
+  @override
+  String get handicapPieceTitle => 'Pezzo in meno';
+
+  @override
+  String get handicapNone => 'Nessuno';
+
+  @override
+  String get handicapPieceFPawn => 'Pedone f';
+
+  @override
+  String get handicapPieceKnight => 'Cavallo';
+
+  @override
+  String get handicapPieceRook => 'Torre';
+
+  @override
+  String get handicapPieceQueen => 'Donna';
+
+  @override
+  String get handicapTimeTitle => 'Tempo di chi concede';
+
+  @override
+  String get handicapTimeEqual => 'Uguale';
+
+  @override
+  String get handicapTimeHint =>
+      'Vale solo con un orologio e se è inferiore alla cadenza scelta.';
+
+  @override
+  String get handicapGiverTitle => 'Chi concede il vantaggio';
+
+  @override
+  String get handicapGiverYou => 'Tu';
+
+  @override
+  String get handicapGiverOpponent => 'L\'avversario';
+
+  @override
+  String get handicapGiverWhite => 'Il Bianco';
+
+  @override
+  String get handicapGiverBlack => 'Il Nero';
+
+  @override
+  String handicapTimeMinutes(int n) {
+    return '$n min';
+  }
+
+  @override
   String whyPiece(String role) {
     String _temp0 = intl.Intl.selectLogic(role, {
       'pawn': 'il pedone',
