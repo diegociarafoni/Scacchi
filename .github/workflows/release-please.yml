@@ -1,0 +1,35 @@
+name: Changelog
+
+# Mantiene aperta una PR «chore(main): release X.Y.Z» con l'elenco delle modifiche
+# (CHANGELOG.md) ricavato dai commit di main. Unirla crea il tag vX.Y.Z e una release
+# in bozza con le note, ma non pubblica nulla: il tag è creato con il token del
+# workflow, che non avvia Rilascio APK. Le versioni escono solo su richiesta, avviando
+# Rilascio APK sul tag (docs/rilascio-android.md), che allega l'APK e pubblica la bozza.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Un solo giro alla volta: la PR si aggiorna dopo ogni merge, senza annullare quello in corso.
+concurrency:
+  group: changelog
+  cancel-in-progress: false
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      pull-requests: write
+      # Per le etichette «autorelease» con cui release-please riconosce le sue PR.
+      issues: write
+    steps:
+      - uses: googleapis/release-please-action@5c625bfb5d1ff62eadeeb3772007f7f66fdcf071 # v4.4.1
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+          token: ${{ github.token }}
