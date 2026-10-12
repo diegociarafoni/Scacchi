@@ -320,6 +320,15 @@ class _HomeShellState extends State<HomeShell> {
             onSavePuzzles: _savePersonalPuzzles,
             puzzlePlayers: players,
             clocks: [for (final m in game.moves) m.clock],
+            notes: [for (final m in game.moves) m.note],
+            onNoteChanged: (ply, note) {
+              game.annotate(ply, note);
+              return _saveGame(
+                saved.copyWith(
+                  pgn: exportPgn(game, headers: imported.first.headers),
+                ),
+              );
+            },
             timeControl: TimeControl.parse(saved.timeControl ?? ''),
           ),
         ),
