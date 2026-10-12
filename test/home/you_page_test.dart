@@ -70,8 +70,19 @@ void main() {
       'Scacchiera fisica',
       'Archivio',
     ]) {
+      // La lista è lunga: con caratteri più larghi le ultime voci stanno fuori.
+      await tester.scrollUntilVisible(
+        find.text(label),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
       expect(find.text(label), findsOneWidget, reason: label);
     }
+    await tester.scrollUntilVisible(
+      find.text('Minigiochi'),
+      -200,
+      scrollable: find.byType(Scrollable).first,
+    );
 
     await tester.tap(find.text('Minigiochi'));
     await tester.pumpAndSettle();
@@ -79,6 +90,11 @@ void main() {
     await tester.tap(find.byTooltip('Indietro'));
     await tester.pumpAndSettle();
 
+    await tester.scrollUntilVisible(
+      find.text('Profilo'),
+      -200,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.tap(find.text('Profilo'));
     await tester.pumpAndSettle();
     expect(find.widgetWithText(AppBar, 'Profilo'), findsOneWidget);
