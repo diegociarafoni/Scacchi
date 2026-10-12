@@ -248,5 +248,21 @@
   "storyCrownOutro": "La corona è tua. Il regno è in pace e ogni nuova partita è una nuova storia.",
   "@storyCrownOutro": {
     "description": "storyCrownOutro"
+  },
+  "storyChapterCurrent": "In corso",
+  "@storyChapterCurrent": {
+    "description": "Etichetta del capitolo corrente nella storia"
+  },
+  "storyChapterSteps": "{done} passi su {total}",
+  "@storyChapterSteps": {
+    "description": "Passi conclusi di un capitolo, per la barra di avanzamento",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
   }
 }
