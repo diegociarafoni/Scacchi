@@ -1,0 +1,96 @@
+name: MobSF
+
+# Analisi statica dell'APK con MobSF (OWASP MASVS). Pesante: gira ogni settimana
+# su main, a richiesta (anche su una release numerata) e sulle PR che toccano la
+# scansione. Esamina l'APK di rilascio già pubblicato, non ne costruisce uno.
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/mobsf.yml'
+      - 'tool/check_mobsf.dart'
+      - 'tool/src/mobsf_report.dart'
+      - 'tool/policy.json'
+  schedule:
+    - cron: '41 5 * * 3'
+  workflow_dispatch:
+    inputs:
+      release:
+        description: 'Release da analizzare (tag, es. v0.1.0). Vuoto = nightly.'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mobsf-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  mobsf:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with:
+          channel: stable
+          flutter-version: 3.47.7
+          cache: true
+
+      - name: APK del nightly
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE: ${{ inputs.release || 'nightly' }}
+        run: |
+          mkdir -p build/mobsf
+          gh release download "$RELEASE" --repo "$GITHUB_REPOSITORY" --pattern rokko.apk --dir build/mobsf
+          ls -l build/mobsf/rokko.apk
+          # Il commit analizzato resta nel registro.
+          gh release view "$RELEASE" --repo "$GITHUB_REPOSITORY" --json name,targetCommitish --jq '"Release: \(.name) (\(.targetCommitish))"'
+
+      # Immagine fissata per digest (v4.5.3). La chiave dell'API è casuale e vale solo per questo giro.
+      - name: Avvio di MobSF
+        run: |
+          key="$(openssl rand -hex 24)"
+          echo "::add-mask::$key"
+          docker run -d --name mobsf -p 127.0.0.1:8000:8000 -e MOBSF_API_KEY="$key" \
+            opensecurity/mobile-security-framework-mobsf@sha256:5113fbad0727445dda01afdccafea5e107bfa8632ead8a169492f5caa8aa1b7c
+          for _ in $(seq 1 90); do
+            curl -sf -o /dev/null http://127.0.0.1:8000/ && exit 0
+            sleep 2
+          done
+          docker logs mobsf | tail -50
+          echo "::error::MobSF non risponde"; exit 1
+
+      - name: Scansione statica
+        run: |
+          # La chiave resta nel container e in questo passo, non negli altri.
+          key="$(docker exec mobsf printenv MOBSF_API_KEY)"
+          echo "::add-mask::$key"
+          api=http://127.0.0.1:8000/api/v1
+          trap 'docker logs mobsf 2>&1 | tail -40' ERR
+          up="$(curl -sS --fail-with-body -H "Authorization: $key" -F file=@build/mobsf/rokko.apk "$api/upload")"
+          hash="$(jq -er .hash <<< "$up")"
+          name="$(jq -er .file_name <<< "$up")"
+          curl -sS --fail-with-body -H "Authorization: $key" \
+            -d "hash=$hash" -d "scan_type=apk" -d "file_name=$name" "$api/scan" -o /dev/null
+          curl -sS --fail-with-body -H "Authorization: $key" -d "hash=$hash" \
+            "$api/report_json" -o build/mobsf/report.json
+
+      - name: Policy sul rapporto
+        run: dart tool/check_mobsf.dart
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: mobsf-report
+          path: build/mobsf/report.json
+          if-no-files-found: ignore
+          retention-days: 30
+
+      - name: Arresto di MobSF
+        if: always()
+        run: docker rm -f mobsf || true
