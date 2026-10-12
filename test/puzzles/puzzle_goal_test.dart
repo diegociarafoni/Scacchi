@@ -52,6 +52,8 @@ void main() {
       final prefix = locale.languageCode == 'it' ? 'Obiettivo: ' : 'Goal: ';
       for (final goal in PuzzleGoal.values) {
         expect(l10n.puzzleGoal(goal.key), startsWith(prefix));
+        // Una chiave mancante nei file ARB ricadrebbe sul testo generico.
+        expect(l10n.puzzleGoal(goal.key), isNot(l10n.puzzleGoal('other')));
       }
     }
     expect(

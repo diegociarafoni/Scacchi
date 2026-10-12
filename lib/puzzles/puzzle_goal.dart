@@ -15,7 +15,8 @@ enum PuzzleGoal {
   String get key => name;
 
   /// Vero per gli obiettivi di matto: negli altri la mossa matta non è lo scopo.
-  bool get isMate => index <= PuzzleGoal.mate.index;
+  bool get isMate =>
+      const {mateIn1, mateIn2, mateIn3, mateIn4, mate}.contains(this);
 
   /// Obiettivo del puzzle, o nullo se i temi non lo dicono.
   static PuzzleGoal? of(Puzzle puzzle) {
