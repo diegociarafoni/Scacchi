@@ -3,11 +3,14 @@ import 'dart:math' as math;
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
+import '../bot_gallery/bot_gallery_page.dart';
+import '../bot_gallery/game_options.dart';
 import '../engine/bot_collection.dart';
 import '../engine/bots.dart';
 import '../engine/levels.dart';
 import '../engine/style.dart';
 import '../l10n/app_localizations.dart';
+import '../story/story_controller.dart';
 
 enum Opponent { human, computer, bot, friend }
 
@@ -80,6 +83,8 @@ class OpponentPicker extends StatelessWidget {
     required this.onChanged,
     this.kidMode = false,
     this.friendAvailable = false,
+    this.onGalleryPlay,
+    this.galleryOptions = const GameOptions(),
   });
 
   final GameSetup setup;
@@ -94,6 +99,12 @@ class OpponentPicker extends StatelessWidget {
   final int adaptiveLevel;
   final BotCollection collection;
   final ValueChanged<GameSetup> onChanged;
+
+  /// Se c'è, «Gioca» nella galleria avvia la partita con le opzioni scelte
+  /// lì (cadenza, variante, handicap, allenatore); senza, la galleria mostra
+  /// solo la scelta del bot e il colore, e restituisce la configurazione.
+  final ValueChanged<BotGalleryResult>? onGalleryPlay;
+  final GameOptions galleryOptions;
 
   @override
   Widget build(BuildContext context) {
@@ -225,6 +236,34 @@ class OpponentPicker extends StatelessWidget {
                 shown.copyWith(opponent: Opponent.computer, adaptive: true),
               ),
             ),
+          OutlinedButton.icon(
+            key: const Key('open-bot-gallery'),
+            icon: const Icon(Icons.grid_view_rounded),
+            label: Text(_l10n(context).botGalleryOpen),
+            onPressed: () async {
+              final result = await Navigator.push<BotGalleryResult>(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => BotGalleryPage(
+                    collection: collection,
+                    loadStory: () async => (await StoryController.open()).state,
+                    initialBotId: shown.botId,
+                    initialSide: shown.sideChoice,
+                    adaptiveLevel: adaptiveLevel,
+                    kidMode: kidMode,
+                    showOptions: onGalleryPlay != null,
+                    initialOptions: galleryOptions,
+                  ),
+                ),
+              );
+              if (result == null) return;
+              if (onGalleryPlay != null) {
+                onGalleryPlay!(result);
+              } else {
+                onChanged(result.applyTo(shown));
+              }
+            },
+          ),
           for (final bot in kidMode ? friendlyBots : bots)
             _BotTile(
               bot: bot,
