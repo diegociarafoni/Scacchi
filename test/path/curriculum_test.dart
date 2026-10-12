@@ -34,6 +34,7 @@ void main() {
       'mates.rooks',
       'mates.patterns',
       'mates.two',
+      'mates.patterns-2',
       'mates.guardian',
     ]);
   });
@@ -48,6 +49,12 @@ void main() {
       'tactics.discovered',
       'tactics.double-check',
       'tactics.defender',
+      'tactics.overload',
+      'tactics.decoy',
+      'tactics.interference',
+      'tactics.zwischenzug',
+      'tactics.trapped',
+      'tactics.xray',
       'tactics.guardian',
     ]);
   });
