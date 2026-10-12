@@ -583,7 +583,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       _botSay(BotEvent.check);
     } else if (_game.moves.last.san.contains('x') && _random.nextInt(3) == 0) {
       _botSay(BotEvent.capture);
-    } else if (_game.moves.length >= 4 && _random.nextInt(6) == 0) {
+    } else if (_speech == null &&
+        _game.moves.length >= 4 &&
+        _random.nextInt(6) == 0) {
       _botSay(BotEvent.chat);
     }
   }
@@ -624,17 +626,22 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   /// Fumetto sopra la scacchiera; senza spazio (schermo basso o orizzontale)
   /// resta la fascia in basso.
-  void _say(Speech speech, {Duration duration = const Duration(seconds: 8)}) {
+  void _say(Speech speech, {Duration? duration}) {
     if (!_speechRoom) {
       final bot = speech.bot;
-      _showMessage(
-        bot == null ? speech.text : '${bot.avatar} ${bot.name}: ${speech.text}',
-      );
+      final text = bot == null
+          ? speech.text
+          : '${bot.avatar} ${bot.name}: ${speech.text}';
+      if (duration == null) {
+        _showMessage(text);
+      } else {
+        _showMessage(text, duration: duration);
+      }
       return;
     }
     _speechTimer?.cancel();
     setState(() => _speech = speech);
-    _speechTimer = Timer(duration, _clearSpeech);
+    _speechTimer = Timer(duration ?? const Duration(seconds: 8), _clearSpeech);
   }
 
   void _saveAdaptive() {
@@ -1366,7 +1373,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     );
     if (text == null) return;
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    _say(Speech(text), duration: const Duration(seconds: 10));
+    _say(Speech(text), duration: const Duration(seconds: 8));
   }
 
   /// Partita di scacchi classici dalla posizione iniziale: solo queste contano

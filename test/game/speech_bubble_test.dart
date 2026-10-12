@@ -142,4 +142,30 @@ void main() {
     await tester.tap(find.byKey(_bubble));
     expect(closed, isTrue);
   });
+
+  testWidgets('una frase lunga con il testo al 200% non va in overflow', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(context)
+              .copyWith(textScaler: const TextScaler.linear(2)),
+          child: child!,
+        ),
+        home: Scaffold(
+          body: SpeechStrip(
+            opponent: null,
+            speech: Speech('Una spiegazione molto lunga. ' * 8),
+            onDismiss: () {},
+          ),
+        ),
+      ),
+    );
+    expect(tester.takeException(), isNull);
+    expect(
+      tester.getSize(find.byKey(_bubble)).height,
+      lessThanOrEqualTo(speechStripHeight),
+    );
+  });
 }

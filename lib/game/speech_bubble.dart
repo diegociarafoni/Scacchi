@@ -124,6 +124,7 @@ class SpeechBubble extends StatelessWidget {
           child: CustomPaint(
             painter: _TailPainter(fill),
             child: Container(
+              constraints: const BoxConstraints(maxHeight: speechStripHeight),
               margin: const EdgeInsets.only(left: _tail),
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
               decoration: BoxDecoration(
@@ -135,12 +136,13 @@ class SpeechBubble extends StatelessWidget {
                 children: [
                   if (icon != null) ...[icon!, const SizedBox(width: 10)],
                   Flexible(
-                    child: Text(
-                      text,
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.bodyMedium
-                          ?.copyWith(color: scheme.onSurface),
+                    // Le frasi lunghe (spiegazioni) scorrono nel fumetto.
+                    child: SingleChildScrollView(
+                      child: Text(
+                        text,
+                        style: Theme.of(context).textTheme.bodyMedium
+                            ?.copyWith(color: scheme.onSurface),
+                      ),
                     ),
                   ),
                 ],
