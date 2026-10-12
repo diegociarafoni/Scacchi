@@ -7,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/analysis/analysis_page.dart';
 import 'package:scacchi/engine/uci.dart';
 import 'package:scacchi/game/clock.dart';
+import 'package:scacchi/game/move_note.dart';
 import 'package:scacchi/review/game_review.dart';
 import 'package:scacchi/review/personal_puzzles.dart';
 import 'package:scacchi/review/review_page.dart';
@@ -20,6 +21,8 @@ Future<void> pumpReview(
   ValueChanged<GameReview>? onReviewed,
   List<Duration?> clocks = const [],
   TimeControl? control,
+  List<MoveNote?> notes = const [],
+  Future<void> Function(int ply, MoveNote? note)? onNoteChanged,
 }) async {
   tester.view.physicalSize = const Size(1170, 2532);
   tester.view.devicePixelRatio = 3;
@@ -34,6 +37,8 @@ Future<void> pumpReview(
         onReviewed: onReviewed,
         clocks: clocks,
         timeControl: control,
+        notes: notes,
+        onNoteChanged: onNoteChanged,
       ),
     ),
   );
@@ -234,6 +239,68 @@ void main() {
         findsOneWidget,
       );
     });
+
+    testWidgets('RF-55 si annota una mossa con simbolo e commento', (
+      tester,
+    ) async {
+      final changes = <(int, MoveNote?)>[];
+      await pumpReview(
+        tester,
+        onNoteChanged: (ply, note) async => changes.add((ply, note)),
+      );
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.text('♞f6 ??'));
+      await tester.tap(find.text('♞f6 ??'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Aggiungi nota'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.widgetWithText(ChoiceChip, '?'));
+      await tester.enterText(find.byType(TextField), 'Avevo fretta');
+      await tester.tap(find.text('Salva'));
+      await tester.pumpAndSettle();
+      expect(changes, [
+        (5, MoveNote.of(symbol: MoveSymbol.mistake, comment: 'Avevo fretta')),
+      ]);
+      expect(find.text('La tua nota: ? Avevo fretta'), findsOneWidget);
+      expect(find.text('Modifica nota'), findsOneWidget);
+      expect(find.textContaining('♞f6 ?? ✎'), findsOneWidget);
+    });
+
+    testWidgets('RF-55 una nota vuota la toglie', (tester) async {
+      final changes = <(int, MoveNote?)>[];
+      await pumpReview(
+        tester,
+        notes: [
+          for (var i = 0; i < scholar.length; i++)
+            i == 5 ? MoveNote.of(comment: 'Da rivedere') : null,
+        ],
+        onNoteChanged: (ply, note) async => changes.add((ply, note)),
+      );
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(find.textContaining('♞f6 ??'));
+      await tester.tap(find.textContaining('♞f6 ??'));
+      await tester.pumpAndSettle();
+      expect(find.text('La tua nota: Da rivedere'), findsOneWidget);
+      await tester.tap(find.text('Modifica nota'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField), '');
+      await tester.tap(find.text('Salva'));
+      await tester.pumpAndSettle();
+      expect(changes, [(5, null)]);
+      expect(find.textContaining('La tua nota'), findsNothing);
+    });
+
+    testWidgets(
+      'RF-55 senza salvataggio le note si vedono ma non si cambiano',
+      (tester) async {
+        await pumpReview(tester);
+        await tester.pumpAndSettle();
+        await tester.ensureVisible(find.text('♞f6 ??'));
+        await tester.tap(find.text('♞f6 ??'));
+        await tester.pumpAndSettle();
+        expect(find.text('Aggiungi nota'), findsNothing);
+      },
+    );
 
     testWidgets('la precisione si divide per fase della partita', (
       tester,

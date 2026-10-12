@@ -114,10 +114,12 @@ class SavedGame {
     };
   }
 
-  /// Copia con i dati della revisione; `() => null` li azzera.
+  /// Copia con i dati della revisione (`() => null` li azzera) o con un altro
+  /// PGN, per esempio con le note modificate.
   SavedGame copyWith({
     double? Function()? accuracy,
     String? Function()? opening,
+    String? pgn,
   }) => SavedGame(
     id: id,
     createdAt: createdAt,
@@ -126,7 +128,7 @@ class SavedGame {
     black: black,
     mode: mode,
     result: result,
-    pgn: pgn,
+    pgn: pgn ?? this.pgn,
     playerSide: playerSide,
     timeControl: timeControl,
     opponentElo: opponentElo,
