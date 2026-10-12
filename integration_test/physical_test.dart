@@ -25,6 +25,8 @@ void main() {
 
     await tester.tap(find.text('Tu'));
     await tester.pumpAndSettle();
+    // La scheda Tu è una lista pigra: la voce va cercata scorrendo.
+    await tester.scrollUntilVisible(find.text('Scacchiera fisica'), 200);
     await tester.ensureVisible(find.text('Scacchiera fisica'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Scacchiera fisica'));
@@ -33,6 +35,7 @@ void main() {
     await tester.tap(find.text('Inizia la partita'));
     await tester.pumpAndSettle();
 
+    expect(find.byKey(const Key('physical-photo')), findsOneWidget);
     for (final move in ['f3', 'e5', 'g4', 'Dh4']) {
       await _type(tester, move);
     }

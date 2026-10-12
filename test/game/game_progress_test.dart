@@ -83,11 +83,11 @@ void main() {
     final activity = activities.single as GamePlayed;
     expect(activity.result, GameResult.local);
     expect(activity.checkmate, isTrue);
-    expect(saved, hasLength(1));
-    expect(saved.single.mode, SavedGame.local);
-    expect(saved.single.result, '0-1');
-    expect(saved.single.white, 'Bianco');
-    expect(saved.single.pgn, contains('Qh4#'));
+    expect(saved.map((g) => g.id).toSet(), hasLength(1));
+    expect(saved.last.mode, SavedGame.local);
+    expect(saved.last.result, '0-1');
+    expect(saved.last.white, 'Bianco');
+    expect(saved.last.pgn, contains('Qh4#'));
     expect(find.textContaining('+10 XP'), findsOneWidget);
   });
 
@@ -102,7 +102,7 @@ void main() {
     }
     await tester.pump(const Duration(seconds: 10));
     expect(activities, hasLength(1));
-    expect(saved, hasLength(1));
+    expect(saved.where((g) => g.finished), hasLength(1));
   });
 
   Future<void> startLocal(WidgetTester tester) async {
@@ -127,8 +127,8 @@ void main() {
     await tapMove(tester, 'e2e4');
     await resign(tester);
     expect(activities, isEmpty);
-    expect(saved, hasLength(1));
-    expect(saved.single.result, '1-0');
+    expect(saved.map((g) => g.id).toSet(), hasLength(1));
+    expect(saved.last.result, '1-0');
   });
 
   testWidgets('senza mosse non si archivia nulla', (tester) async {
@@ -146,7 +146,7 @@ void main() {
       await tapMove(tester, uci);
     }
     await resign(tester);
-    expect(saved.single.result, '0-1');
+    expect(saved.last.result, '0-1');
     expect(activities, hasLength(1));
     await tester.tap(find.text('Annulla'));
     await tester.pumpAndSettle();
@@ -154,8 +154,8 @@ void main() {
       await tapMove(tester, uci);
     }
     await resign(tester);
-    expect(saved, hasLength(2));
-    expect(saved.last.id, saved.first.id);
+    expect(saved.where((g) => g.finished), hasLength(2));
+    expect(saved.map((g) => g.id).toSet(), hasLength(1));
     expect(saved.last.pgn, contains('Bc4'));
     expect(activities, hasLength(1));
   });
@@ -185,7 +185,7 @@ void main() {
     }
     await resign(tester);
     expect(activities, isEmpty);
-    expect(saved, hasLength(1));
+    expect(saved.map((g) => g.id).toSet(), hasLength(1));
   });
 
   testWidgets('contro il computer la partita ha giocatore ed Elo', (
@@ -211,10 +211,10 @@ void main() {
     final activity = activities.single as GamePlayed;
     expect(activity.playerSide, Side.white);
     expect(activity.opponentElo, isNotNull);
-    expect(saved.single.mode, SavedGame.computer);
-    expect(saved.single.white, 'Tu');
-    expect(saved.single.black, 'Computer');
-    expect(saved.single.opponentElo, activity.opponentElo);
+    expect(saved.last.mode, SavedGame.computer);
+    expect(saved.last.white, 'Tu');
+    expect(saved.last.black, 'Computer');
+    expect(saved.last.opponentElo, activity.opponentElo);
   });
 
   testWidgets('le impostazioni mostrano i progressi quando sono disponibili', (

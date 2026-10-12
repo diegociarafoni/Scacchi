@@ -70,7 +70,7 @@ List<String> digitTexts(WidgetTester tester) => [
 ];
 
 void setPhone(WidgetTester tester) {
-  tester.view.physicalSize = const Size(1170, 3400);
+  tester.view.physicalSize = const Size(1170, 3800);
   tester.view.devicePixelRatio = 3;
   addTearDown(tester.view.reset);
 }

@@ -208,7 +208,7 @@ void main() {
     expect(board().enableCoordinates, isFalse);
     expect(board().showValidMoves, isFalse);
     expect(board().autoQueenPromotion, isTrue);
-    expect(board().colorScheme, ChessboardColorScheme.blue);
+    expect(board().colorScheme, BoardTheme.blue.colorScheme);
     expect(board().pieceAssets, PieceSet.meridaAssets);
     expect(board().animationDuration, Duration.zero);
 
@@ -224,13 +224,13 @@ void main() {
     StaticChessboard board() => tester.widget<StaticChessboard>(
       find.descendant(of: preview, matching: find.byType(StaticChessboard)),
     );
-    expect(board().settings.colorScheme, ChessboardColorScheme.green);
+    expect(board().settings.colorScheme, BoardTheme.green.colorScheme);
     final top = tester.getTopLeft(preview);
 
     await tester.scrollUntilVisible(find.text('Blu'), 100);
     await tester.tap(find.text('Blu'));
     await tester.pumpAndSettle();
-    expect(board().settings.colorScheme, ChessboardColorScheme.blue);
+    expect(board().settings.colorScheme, BoardTheme.blue.colorScheme);
     await tester.scrollUntilVisible(find.text('Merida'), 100);
     await tester.tap(find.text('Merida'));
     await tester.pumpAndSettle();

@@ -1,0 +1,23 @@
+{
+  "statsTitle": "Statistics",
+  "statsLoadFailed": "The game archive could not be read: try again later.",
+  "statsEmpty": "Play a few games against the computer to see your statistics.",
+  "statsRecord": "Results",
+  "statsAllGames": "All",
+  "statsWithWhite": "With white",
+  "statsWithBlack": "With black",
+  "statsLocalGames": "Two-player games",
+  "statsByTimeControl": "By time control",
+  "statsTopOpenings": "Most played openings",
+  "statsGames": "{count, plural, one{{count} game} other{{count} games}}",
+  "statsAccuracy": "Accuracy",
+  "statsAverage": "Average",
+  "statsAccuracyTrend": "Accuracy trend",
+  "statsRating": "Estimated rating {rating}",
+  "statsRatingProvisional": "provisional: {count} games against the computer are needed",
+  "statsRatingGames": "{count, plural, one{from {count} game against the computer} other{from {count} games against the computer}}",
+  "statsRatingTrend": "Rating trend",
+  "statsNoGames": "no games",
+  "statsScoreDetail": "{wins, plural, one{{wins} win} other{{wins} wins}}, {draws, plural, one{{draws} draw} other{{draws} draws}}, {losses, plural, one{{losses} loss} other{{losses} losses}}",
+  "statsTrend": "{label}: from {first} to {last}, minimum {min}, maximum {max}"
+}

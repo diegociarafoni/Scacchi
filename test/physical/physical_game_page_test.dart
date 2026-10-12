@@ -1,10 +1,16 @@
 import 'dart:io';
 
+import 'dart:typed_data';
+
+import 'package:dartchess/dartchess.dart' show Chess, Position;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/archive/game_archive.dart';
 import 'package:scacchi/archive/saved_game.dart';
+import 'package:scacchi/physical/photo_source.dart';
 import 'package:scacchi/physical/physical_game_page.dart';
+
+import 'board_render.dart';
 
 void main() {
   late Directory dir;
@@ -16,9 +22,14 @@ void main() {
   });
   tearDown(() => dir.deleteSync(recursive: true));
 
-  Future<void> open(WidgetTester tester) async {
+  Future<void> open(WidgetTester tester, {PhotoSource? photos}) async {
     await tester.pumpWidget(
-      MaterialApp(home: PhysicalGamePage(archive: () async => archive)),
+      MaterialApp(
+        home: PhysicalGamePage(
+          archive: () async => archive,
+          photos: photos ?? const CameraPhotoSource(),
+        ),
+      ),
     );
     await tester.tap(find.text('Senza tempo'));
     await tester.tap(find.text('Inizia la partita'));
@@ -99,4 +110,144 @@ void main() {
     expect(games.single.mode, SavedGame.physical);
     expect(games.single.result, '1-0');
   });
+
+  group('mossa dalla foto', () {
+    late List<Uint8List> shots;
+
+    setUp(() => shots = []);
+
+    Future<void> prepare(WidgetTester tester, List<Position> positions) async {
+      final all = await tester.runAsync(
+        () => Future.wait([for (final p in positions) toPng(render(p))]),
+      );
+      shots = all!;
+    }
+
+    Future<void> shoot(WidgetTester tester) async {
+      await tester.tap(find.byKey(const Key('physical-photo')));
+      await tester.pump();
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 300)),
+      );
+      await tester.pumpAndSettle();
+    }
+
+    Future<void> align(WidgetTester tester) async {
+      await tester.tap(find.text('Fatto'));
+      await tester.pumpAndSettle();
+    }
+
+    Position e4() => Chess.initial.play(Chess.initial.parseSan('e4')!);
+
+    testWidgets('la prima foto allinea e diventa il riferimento', (
+      tester,
+    ) async {
+      await prepare(tester, [Chess.initial]);
+      await open(tester, photos: _Shots(shots));
+      await shoot(tester);
+      expect(find.text('Allinea la scacchiera'), findsOneWidget);
+      await align(tester);
+      expect(find.textContaining('Foto di riferimento'), findsOneWidget);
+    });
+
+    testWidgets('la foto dopo la mossa propone la mossa giusta per prima', (
+      tester,
+    ) async {
+      await prepare(tester, [Chess.initial, e4()]);
+      await open(tester, photos: _Shots(shots));
+      await shoot(tester);
+      await align(tester);
+      await shoot(tester);
+      expect(find.text('Allinea la scacchiera'), findsNothing);
+      final chips = find.byKey(const Key('photo-guess'));
+      expect(chips, findsWidgets);
+      expect(
+        find.descendant(of: chips.first, matching: find.text('e4')),
+        findsOneWidget,
+      );
+      await tester.tap(chips.first);
+      await tester.pump();
+      expect(
+        tester.widget<Text>(find.byKey(const Key('physical-moves'))).data,
+        '1. e4',
+      );
+      expect(chips, findsNothing);
+    });
+
+    testWidgets('dopo una mossa scritta la vecchia foto non vale più', (
+      tester,
+    ) async {
+      await prepare(tester, [Chess.initial, e4()]);
+      await open(tester, photos: _Shots(shots));
+      await shoot(tester);
+      await align(tester);
+      await type(tester, 'e4');
+      await shoot(tester);
+      expect(find.byKey(const Key('photo-guess')), findsNothing);
+      expect(find.textContaining('Foto di riferimento'), findsOneWidget);
+    });
+
+    testWidgets('due foto uguali non propongono nulla', (tester) async {
+      await prepare(tester, [Chess.initial, Chess.initial]);
+      await open(tester, photos: _Shots(shots));
+      await shoot(tester);
+      await align(tester);
+      await shoot(tester);
+      expect(find.byKey(const Key('photo-guess')), findsNothing);
+      expect(find.textContaining('Nessuna mossa riconosciuta'), findsOneWidget);
+    });
+
+    testWidgets('una fotocamera che fallisce mostra un avviso', (tester) async {
+      await open(tester, photos: _Broken());
+      await shoot(tester);
+      expect(find.textContaining('Fotocamera non disponibile'), findsOneWidget);
+    });
+
+    testWidgets('il testo sulla foto sparisce dopo la mossa', (tester) async {
+      await prepare(tester, [Chess.initial, e4()]);
+      await open(tester, photos: _Shots(shots));
+      await shoot(tester);
+      await align(tester);
+      await shoot(tester);
+      expect(find.textContaining('conferma quella giusta'), findsOneWidget);
+      await tester.tap(find.byKey(const Key('photo-guess')).first);
+      await tester.pump();
+      expect(find.textContaining('conferma quella giusta'), findsNothing);
+    });
+
+    testWidgets('Riallinea chiede di nuovo gli angoli', (tester) async {
+      await prepare(tester, [Chess.initial, Chess.initial]);
+      await open(tester, photos: _Shots(shots));
+      await shoot(tester);
+      await align(tester);
+      await tester.tap(find.byKey(const Key('physical-realign')));
+      await tester.pump();
+      expect(find.text('Allinea la scacchiera'), findsNothing);
+      await shoot(tester);
+      expect(find.text('Allinea la scacchiera'), findsOneWidget);
+    });
+
+    testWidgets('una foto annullata non cambia nulla', (tester) async {
+      await open(tester, photos: _Shots(const []));
+      await shoot(tester);
+      expect(find.text('Allinea la scacchiera'), findsNothing);
+      expect(find.textContaining('Foto di riferimento'), findsNothing);
+    });
+  });
+}
+
+class _Broken implements PhotoSource {
+  @override
+  Future<Uint8List?> take() async => throw StateError('nessuna fotocamera');
+}
+
+class _Shots implements PhotoSource {
+  _Shots(this.queue);
+
+  final List<Uint8List> queue;
+  int _next = 0;
+
+  @override
+  Future<Uint8List?> take() async =>
+      _next < queue.length ? queue[_next++] : null;
 }

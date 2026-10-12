@@ -3,20 +3,23 @@ name: Convenzioni
 on:
   pull_request:
     types: [opened, edited, synchronize, reopened]
+  # Nella coda di merge il controllo è obbligatorio ma già superato sulla PR:
+  # il job si salta e per GitHub conta come riuscito.
+  merge_group:
 
 permissions:
   contents: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
-  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   conventions:
     name: Ramo, titolo della PR e commit
     # Modificare il titolo di una PR già unita rilancia il workflow, ma il
     # commit di testa non è più scaricabile con il ramo eliminato.
-    if: github.event.pull_request.state == 'open'
+    if: github.event_name == 'pull_request' && github.event.pull_request.state == 'open'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:

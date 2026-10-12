@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../engine/computer_player.dart';
+import '../tablebase/tablebase_service.dart';
 import 'drill.dart';
 import 'drill_page.dart';
 import 'drills.dart';
@@ -14,11 +15,15 @@ class EndgamesPage extends StatelessWidget {
     required this.controller,
     required this.createComputer,
     this.simple = false,
+    this.tablebase,
   });
 
   final EndgameController controller;
   final ComputerPlayer Function() createComputer;
   final bool simple;
+
+  /// Finali perfetti (RF-97) per la mossa perfetta nelle posizioni coperte.
+  final TablebaseService? tablebase;
 
   static String _goal(EndgameDrill drill) => switch (drill.goal) {
     DrillGoal.mate => 'Dai scacco matto',
@@ -64,6 +69,7 @@ class EndgamesPage extends StatelessWidget {
                         controller: controller,
                         createComputer: createComputer,
                         simple: simple,
+                        tablebase: tablebase,
                       ),
                     ),
                   ),

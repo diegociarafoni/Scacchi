@@ -8,30 +8,35 @@ Requisito RP-05: italiano come lingua predefinita, con la struttura pronta per a
 - La lingua è fissata all'italiano (`locale: Locale('it')` in `lib/main.dart`), quindi anche i testi di Material (pulsante Indietro, selettori, campi di testo) sono in italiano su qualunque dispositivo. `l10n.yaml` indica l'italiano come lingua preferita, così resterà la lingua di ripiego anche quando il `locale` fisso verrà tolto.
 - Su iOS e macOS la regione di sviluppo è l'italiano; le finestre native del sistema (condivisione, permessi) seguono la lingua del dispositivo se è italiano o inglese, altrimenti usano l'italiano.
 - Il nome sotto l'icona non viene da `appTitle`: è `android:label` in `android/app/src/main/AndroidManifest.xml` e `CFBundleDisplayName` in `ios/Runner/Info.plist`.
-- Sono dichiarate italiano e inglese (`supportedLocales`, e `CFBundleLocalizations` su iOS). Sono tradotti il nome dell'app, i testi del profilo bambino (prefissi `kid`, `kidGame`, `kidBot`), quelli dello scambio QR (prefisso `qr`) e le schermate elencate in [Schermate migrate](#schermate-migrate); gli altri testi sono ancora scritti in italiano nel codice.
+- Sono dichiarate italiano e inglese (`supportedLocales`, e `CFBundleLocalizations` su iOS). Sono tradotti il nome dell'app, i testi del profilo bambino (prefissi `kid`, `kidGame`, `kidBot`), quelli dello scambio QR (prefisso `qr`), quelli dell'esportazione come immagine (prefisso `shareImage`) e le schermate elencate in [Schermate migrate](#schermate-migrate); gli altri testi sono ancora scritti in italiano nel codice.
 
 ## File
 
 | File | Contenuto |
 |---|---|
 | `l10n.yaml` | Configurazione del generatore |
-| `lib/l10n/app_it.arb` | Testi italiani, modello di riferimento con le descrizioni |
-| `lib/l10n/app_en.arb` | Traduzione inglese |
-| `lib/l10n/app_localizations*.dart` | Codice generato, da non modificare a mano |
+| `lib/l10n/it/<funzione>.arb` | Testi italiani di una funzione, modello di riferimento con le descrizioni |
+| `lib/l10n/en/<funzione>.arb` | Traduzione inglese, con gli stessi nomi di file e le stesse chiavi |
+| `tool/l10n.dart` | Unisce i file per funzione e lancia `flutter gen-l10n` |
+| `lib/l10n/app_<lingua>.arb`, `lib/l10n/app_localizations*.dart` | Prodotti da `tool/l10n.dart`, non sono nel repository (`.gitignore`) |
+
+I testi sono in un file per funzione (`kids.arb`, `story.arb`, `stats.arb`, `exchange.arb`, `game.arb`, `puzzles.arb`, `openings.arb`, `coach.arb`…), con il nome della cartella di `lib/` a cui appartengono. Due PR che aggiungono testi a funzioni diverse toccano file diversi e non vanno in conflitto; per questo i file unici e il codice generato non sono versionati.
+
+Dopo un clone, e dopo ogni modifica ai `.arb` o un cambio di ramo, eseguire `dart tool/l10n.dart`. Con una copia nuova `flutter pub get` fallisce finché i file unici non esistono: il comando va dato prima (in CI `dart tool/l10n.dart --solo-unione`, che non lancia `gen-l10n`). `tool/verifica.sh` e l'hook di pre-commit lo eseguono già.
 
 ## Aggiungere un testo
 
-1. Aggiungere la chiave in `app_it.arb`, con una voce `@chiave` che ne descrive il contesto quando il testo da solo non basta e che dichiara i segnaposto. Le chiavi sono in camelCase con il prefisso della schermata (`backup…`, `minigames…`, `stats…`).
-2. Aggiungere la stessa chiave in ogni altro file `.arb`, con gli stessi segnaposto.
+1. Aggiungere la chiave nel file della funzione in `lib/l10n/it/` (uno nuovo, con lo stesso nome in `lib/l10n/en/`, se la funzione è nuova), con una voce `@chiave` che ne descrive il contesto quando il testo da solo non basta e che dichiara i segnaposto. Le chiavi sono in camelCase con il prefisso della schermata (`backup…`, `minigames…`, `stats…`).
+2. Aggiungere la stessa chiave nello stesso file di ogni altra lingua, con gli stessi segnaposto. Una chiave non può comparire in due file. Non si scrive `@@locale`: lo aggiunge `tool/l10n.dart`.
 3. Per i conteggi usare i plurali ICU (`{count, plural, one{{count} partita} other{{count} partite}}`) invece di comporre la frase nel codice.
-4. Eseguire `flutter gen-l10n` (lo fa anche `flutter pub get`) e salvare i file generati; la CI fallisce se non corrispondono ai file `.arb`.
+4. Eseguire `dart tool/l10n.dart`, che unisce i file, controlla che le lingue coincidano e rigenera il codice; i file prodotti non si committano.
 5. Nel codice usare `AppLocalizations.of(context).chiave`.
 
-`test/l10n_test.dart` controlla che italiano e inglese abbiano le stesse chiavi e gli stessi segnaposto e che nessuna traduzione sia vuota, e monta alcune schermate migrate in inglese.
+`test/tool/l10n_merge_test.dart` verifica l'unione (nessuna chiave duplicata, stessi file e stesse chiavi per lingua). `test/l10n_test.dart` controlla che italiano e inglese abbiano le stesse chiavi e gli stessi segnaposto e che nessuna traduzione sia vuota, e monta alcune schermate migrate in inglese.
 
 ## Aggiungere una lingua
 
-Creare `lib/l10n/app_<codice>.arb` con tutte le chiavi e rigenerare. Per renderla selezionabile va tolto il `locale` fisso in `lib/main.dart`, lasciando che Flutter scelga la lingua del dispositivo, solo dopo che tutti i testi dell'interfaccia sono stati spostati nei file `.arb`.
+Creare `lib/l10n/<codice>/` con tutti i file e le chiavi delle altre lingue e rigenerare con `dart tool/l10n.dart`. Per renderla selezionabile va tolto il `locale` fisso in `lib/main.dart`, lasciando che Flutter scelga la lingua del dispositivo, solo dopo che tutti i testi dell'interfaccia sono stati spostati nei file `.arb`.
 
 ## Schermate migrate
 
@@ -41,6 +46,7 @@ Creare `lib/l10n/app_<codice>.arb` con tutte le chiavi e rigenerare. Per renderl
 | Elenco dei minigiochi | `lib/minigames/minigames_page.dart` | Nessuno; titoli e descrizioni dei minigiochi sono nei file `.arb` |
 | Coordinate a tempo, Cattura tutto, Alla cieca, Conta del materiale | `lib/minigames/*_page.dart` | Domande e risposte dei quiz (`quiz.dart`, `blind.dart`, `material_quiz.dart`) e istruzioni delle scacchiere di Cattura tutto (`capture_all.dart`) |
 | Editor di posizione (solo titolo e aiuto sul FEN, `editorFen…`) | `lib/editor/position_editor_page.dart` | Pulsanti, avvisi e dialoghi dell'editor |
+| Le tue aperture | `lib/openings/personal_explorer_page.dart`, voce nella scheda Aperture (`personal…`) | Nessuno; i nomi delle aperture arrivano dal libro e sono tradotti nel codice |
 | Statistiche | `lib/stats/stats_page.dart` | Bilancio sintetico `+V =P -S` (`Score.toString` in `stats.dart`), nomi delle cadenze e delle aperture che arrivano dall'archivio |
 
 ## Testi da spostare

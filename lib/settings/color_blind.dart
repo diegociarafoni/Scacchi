@@ -31,14 +31,17 @@ const _highlightHues = [
   okabePurple,
 ];
 
-const _minHighlightContrast = 1.25;
-const _minDotContrast = 1.6;
+/// Contrasto minimo di ultima mossa e selezione con le case.
+const minHighlightContrast = 1.25;
+
+/// Contrasto minimo dei punti delle mosse possibili (WCAG 1.4.11).
+const minDotContrast = 3.0;
 const _maxAlpha = 0.9;
 const _minHueGap = 15.0;
 const _minSaturationGap = 0.3;
 
 /// Falso se [hue] ha quasi la stessa tinta e saturazione di [square].
-bool _distinctFrom(Color hue, Color square) {
+bool distinctFrom(Color hue, Color square) {
   final h = HSVColor.fromColor(hue);
   final s = HSVColor.fromColor(square);
   final gap = (h.hue - s.hue).abs();
@@ -82,14 +85,11 @@ ChessboardColorScheme colorBlindHighlights(ChessboardColorScheme base) {
     return double.infinity;
   }
 
-  final lastTarget = target(base.lastMove.solidColor, _minHighlightContrast);
-  final selectedTarget = target(
-    base.selected.solidColor,
-    _minHighlightContrast,
-  );
+  final lastTarget = target(base.lastMove.solidColor, minHighlightContrast);
+  final selectedTarget = target(base.selected.solidColor, minHighlightContrast);
   final hues = [
     for (final hue in _highlightHues)
-      if (_distinctFrom(hue, light) && _distinctFrom(hue, dark)) hue,
+      if (distinctFrom(hue, light) && distinctFrom(hue, dark)) hue,
   ];
   final lastAlpha = {for (final h in hues) h: alphaFor(h, lastTarget)};
   final selectedAlpha = {for (final h in hues) h: alphaFor(h, selectedTarget)};
@@ -115,7 +115,7 @@ ChessboardColorScheme colorBlindHighlights(ChessboardColorScheme base) {
   Color withAlpha(Color hue, double alpha) =>
       hue.withValues(alpha: math.min(alpha, _maxAlpha));
 
-  final dotTarget = target(base.validMoves, _minDotContrast);
+  final dotTarget = target(base.validMoves, minDotContrast);
   Color dots(Color hue) => withAlpha(hue, alphaFor(hue, dotTarget));
   final black = dots(const Color(0xff000000));
   final white = dots(const Color(0xffffffff));
