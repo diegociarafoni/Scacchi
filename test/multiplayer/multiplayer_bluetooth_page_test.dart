@@ -55,6 +55,11 @@ void main() {
     expect(invite.lanAddress, isNull);
     expect(checks, [true]);
     expect(find.text('In attesa dell\'avversario…'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('Tenete i telefoni vicini: le mosse viaggiano via Bluetooth.'),
+      100,
+      scrollable: find.byType(Scrollable).first,
+    );
     expect(
       find.text('Tenete i telefoni vicini: le mosse viaggiano via Bluetooth.'),
       findsOneWidget,

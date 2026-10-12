@@ -470,6 +470,10 @@ void main() {
         ),
       );
       expect(find.text('Senza orologio'), findsOneWidget);
+      await tester.ensureVisible(
+        find.byType(DropdownButtonFormField<TimeControl?>),
+      );
+      await tester.pump();
       await tester.tap(find.byType(DropdownButtonFormField<TimeControl?>));
       await tester.pumpAndSettle();
       await tester.tap(find.text('3+2').last);
@@ -498,6 +502,11 @@ void main() {
         );
         await tester.runAsync(() => play(host, 'e2e4'));
         await tester.pump();
+        await tester.scrollUntilVisible(
+          find.byKey(const ValueKey('clock-black')),
+          100,
+          scrollable: find.byType(Scrollable).first,
+        );
         expect(find.byKey(const ValueKey('clock-white')), findsOneWidget);
         expect(find.byKey(const ValueKey('clock-black')), findsOneWidget);
         expect(find.text('3:00'), findsNWidgets(2));
@@ -506,6 +515,11 @@ void main() {
         guest.tick();
         await tester.runAsync(settle);
         await tester.pump();
+        await tester.scrollUntilVisible(
+          find.text('Tempo scaduto: vince il Bianco'),
+          -100,
+          scrollable: find.byType(Scrollable).first,
+        );
         expect(find.text('Tempo scaduto: vince il Bianco'), findsOneWidget);
         await tester.runAsync(host.close);
       },

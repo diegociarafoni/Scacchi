@@ -76,6 +76,11 @@ void main() {
     expect(invite.remote, isTrue);
     expect(invite.lanAddress, isNull);
 
+    await tester.scrollUntilVisible(
+      find.text('Condividi il link d\'invito'),
+      100,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.tap(find.text('Condividi il link d\'invito'));
     await tester.pump();
     expect(shared.single, contains(view.data));
@@ -88,6 +93,8 @@ void main() {
     await tester.pumpWidget(
       localizedApp(home: const MultiplayerPage(openHost: _noWifi)),
     );
+    await tester.ensureVisible(find.byType(Switch));
+    await tester.pump();
     await tester.tap(find.byType(Switch));
     await tester.pump();
     await tester.scrollUntilVisible(
