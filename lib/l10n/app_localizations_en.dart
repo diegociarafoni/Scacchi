@@ -1392,4 +1392,190 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get personalFromHere => 'Your games from this position';
+
+  @override
+  String get weeklyEntryTitle => 'Weekly summary';
+
+  @override
+  String get weeklyEmpty =>
+      'You have not done anything in the last seven days yet. Play a game or solve a puzzle: the summary fills in by itself.';
+
+  @override
+  String get weeklyProgressHeading => 'Your progress';
+
+  @override
+  String weeklyGames(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count games',
+      one: '$count game',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String weeklyGameResults(int wins, int draws, int losses) {
+    return '$wins won, $draws drawn, $losses lost';
+  }
+
+  @override
+  String weeklyPuzzles(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count puzzles solved',
+      one: '$count puzzle solved',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String weeklyLessons(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count lessons completed',
+      one: '$count lesson completed',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String weeklyReviews(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count games reviewed',
+      one: '$count game reviewed',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String weeklyMinutes(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count minutes of training',
+      one: '$count minute of training',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String weeklyAccuracy(int percent) {
+    return 'Average accuracy $percent%';
+  }
+
+  @override
+  String weeklyAccuracyUp(int points) {
+    String _temp0 = intl.Intl.pluralLogic(
+      points,
+      locale: localeName,
+      other: '$points points more than last week',
+      one: '$points point more than last week',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String weeklyAccuracyDown(int points) {
+    String _temp0 = intl.Intl.pluralLogic(
+      points,
+      locale: localeName,
+      other: '$points points less than last week',
+      one: '$points point less than last week',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get weeklyErrorHeading => 'Most frequent mistake';
+
+  @override
+  String weeklyErrorLine(String error, int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count times',
+      one: '$count time',
+    );
+    return '$error: $_temp0';
+  }
+
+  @override
+  String get weeklyNoError => 'No mistake came up twice: great work.';
+
+  @override
+  String get weeklyErrorHangingPiece => 'pieces left hanging';
+
+  @override
+  String get weeklyErrorAllowedFork => 'forks you allowed';
+
+  @override
+  String get weeklyErrorMissedFork => 'forks you missed';
+
+  @override
+  String get weeklyErrorAllowedPin => 'pins you allowed';
+
+  @override
+  String get weeklyErrorMissedDiscovery => 'discovered attacks you missed';
+
+  @override
+  String get weeklyErrorExposedKing => 'king left exposed';
+
+  @override
+  String get weeklyErrorMissedMate => 'mates you missed';
+
+  @override
+  String get weeklyErrorAllowedMate => 'mates you allowed';
+
+  @override
+  String get weeklyErrorMaterialLoss => 'material lost';
+
+  @override
+  String get weeklyErrorMissedCapture => 'captures you missed';
+
+  @override
+  String get weeklyAdviceHeading => 'Your tip';
+
+  @override
+  String weeklyAdviceLesson(String title) {
+    return 'Revisit the lesson “$title” in the Path.';
+  }
+
+  @override
+  String weeklyAdvicePuzzles(String title) {
+    return 'Train with the “$title” puzzles.';
+  }
+
+  @override
+  String get weeklyAdviceReview =>
+      'Review one of your games: the coach shows you where to improve.';
+
+  @override
+  String get weeklyAdviceSolvePuzzles =>
+      'Solve a few puzzles: a few minutes a day is enough.';
+
+  @override
+  String get weeklyAdviceKeepGoing =>
+      'Keep it up: training a little but often works.';
+
+  @override
+  String get weeklyOpenLesson => 'Open the lesson';
+
+  @override
+  String get weeklyOpenPuzzles => 'Open the puzzles';
+
+  @override
+  String get weeklyKidActive => 'You practised this week. Well done!';
+
+  @override
+  String get weeklyKidDaysLabel => 'The stars are the days you practised';
+
+  @override
+  String weeklyKidError(String error) {
+    return 'Pay more attention to: $error.';
+  }
 }

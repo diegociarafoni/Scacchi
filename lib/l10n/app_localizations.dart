@@ -2173,6 +2173,222 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Le tue partite da questa posizione'**
   String get personalFromHere;
+
+  /// Voce della scheda Tu
+  ///
+  /// In it, this message translates to:
+  /// **'Riepilogo settimanale'**
+  String get weeklyEntryTitle;
+
+  /// Pagina vuota del riepilogo
+  ///
+  /// In it, this message translates to:
+  /// **'Negli ultimi sette giorni non hai ancora fatto nulla. Gioca una partita o risolvi un puzzle: il riepilogo si riempie da solo.'**
+  String get weeklyEmpty;
+
+  /// Titolo della sezione progressi
+  ///
+  /// In it, this message translates to:
+  /// **'I tuoi progressi'**
+  String get weeklyProgressHeading;
+
+  /// Partite della settimana
+  ///
+  /// In it, this message translates to:
+  /// **'{count, plural, one{{count} partita} other{{count} partite}}'**
+  String weeklyGames(int count);
+
+  /// Esiti delle partite
+  ///
+  /// In it, this message translates to:
+  /// **'{wins} vinte, {draws} patte, {losses} perse'**
+  String weeklyGameResults(int wins, int draws, int losses);
+
+  /// Puzzle della settimana
+  ///
+  /// In it, this message translates to:
+  /// **'{count, plural, one{{count} puzzle risolto} other{{count} puzzle risolti}}'**
+  String weeklyPuzzles(int count);
+
+  /// Lezioni della settimana
+  ///
+  /// In it, this message translates to:
+  /// **'{count, plural, one{{count} lezione completata} other{{count} lezioni completate}}'**
+  String weeklyLessons(int count);
+
+  /// Revisioni della settimana
+  ///
+  /// In it, this message translates to:
+  /// **'{count, plural, one{{count} partita rivista} other{{count} partite riviste}}'**
+  String weeklyReviews(int count);
+
+  /// Minuti di allenamento
+  ///
+  /// In it, this message translates to:
+  /// **'{count, plural, one{{count} minuto di allenamento} other{{count} minuti di allenamento}}'**
+  String weeklyMinutes(int count);
+
+  /// Precisione media delle revisioni
+  ///
+  /// In it, this message translates to:
+  /// **'Precisione media {percent}%'**
+  String weeklyAccuracy(int percent);
+
+  /// Precisione in aumento
+  ///
+  /// In it, this message translates to:
+  /// **'{points, plural, one{{points} punto in più della settimana scorsa} other{{points} punti in più della settimana scorsa}}'**
+  String weeklyAccuracyUp(int points);
+
+  /// Precisione in calo
+  ///
+  /// In it, this message translates to:
+  /// **'{points, plural, one{{points} punto in meno della settimana scorsa} other{{points} punti in meno della settimana scorsa}}'**
+  String weeklyAccuracyDown(int points);
+
+  /// Titolo della sezione errore
+  ///
+  /// In it, this message translates to:
+  /// **'Errore più frequente'**
+  String get weeklyErrorHeading;
+
+  /// Errore ricorrente con il numero di volte
+  ///
+  /// In it, this message translates to:
+  /// **'{error}: {count, plural, one{{count} volta} other{{count} volte}}'**
+  String weeklyErrorLine(String error, int count);
+
+  /// Nessun errore ricorrente
+  ///
+  /// In it, this message translates to:
+  /// **'Nessun errore si è ripetuto: ottimo lavoro.'**
+  String get weeklyNoError;
+
+  /// Nome di un errore ricorrente, in minuscolo
+  ///
+  /// In it, this message translates to:
+  /// **'pezzi lasciati in presa'**
+  String get weeklyErrorHangingPiece;
+
+  /// Nome di un errore ricorrente, in minuscolo
+  ///
+  /// In it, this message translates to:
+  /// **'forchette subite'**
+  String get weeklyErrorAllowedFork;
+
+  /// Nome di un errore ricorrente, in minuscolo
+  ///
+  /// In it, this message translates to:
+  /// **'forchette mancate'**
+  String get weeklyErrorMissedFork;
+
+  /// Nome di un errore ricorrente, in minuscolo
+  ///
+  /// In it, this message translates to:
+  /// **'inchiodature subite'**
+  String get weeklyErrorAllowedPin;
+
+  /// Nome di un errore ricorrente, in minuscolo
+  ///
+  /// In it, this message translates to:
+  /// **'attacchi di scoperta mancati'**
+  String get weeklyErrorMissedDiscovery;
+
+  /// Nome di un errore ricorrente, in minuscolo
+  ///
+  /// In it, this message translates to:
+  /// **'re lasciato scoperto'**
+  String get weeklyErrorExposedKing;
+
+  /// Nome di un errore ricorrente, in minuscolo
+  ///
+  /// In it, this message translates to:
+  /// **'matti mancati'**
+  String get weeklyErrorMissedMate;
+
+  /// Nome di un errore ricorrente, in minuscolo
+  ///
+  /// In it, this message translates to:
+  /// **'matti subiti'**
+  String get weeklyErrorAllowedMate;
+
+  /// Nome di un errore ricorrente, in minuscolo
+  ///
+  /// In it, this message translates to:
+  /// **'perdite di materiale'**
+  String get weeklyErrorMaterialLoss;
+
+  /// Nome di un errore ricorrente, in minuscolo
+  ///
+  /// In it, this message translates to:
+  /// **'catture mancate'**
+  String get weeklyErrorMissedCapture;
+
+  /// Titolo della sezione consiglio
+  ///
+  /// In it, this message translates to:
+  /// **'Il consiglio'**
+  String get weeklyAdviceHeading;
+
+  /// Consiglio: lezione
+  ///
+  /// In it, this message translates to:
+  /// **'Ripassa la lezione «{title}» del Percorso.'**
+  String weeklyAdviceLesson(String title);
+
+  /// Consiglio: puzzle di un tema
+  ///
+  /// In it, this message translates to:
+  /// **'Allenati con i puzzle «{title}».'**
+  String weeklyAdvicePuzzles(String title);
+
+  /// Consiglio: rivedere una partita
+  ///
+  /// In it, this message translates to:
+  /// **'Rivedi una delle tue partite: il coach ti mostra dove migliorare.'**
+  String get weeklyAdviceReview;
+
+  /// Consiglio: puzzle
+  ///
+  /// In it, this message translates to:
+  /// **'Risolvi qualche puzzle: bastano pochi minuti al giorno.'**
+  String get weeklyAdviceSolvePuzzles;
+
+  /// Consiglio: continuare
+  ///
+  /// In it, this message translates to:
+  /// **'Continua così: allenarti poco ma spesso funziona.'**
+  String get weeklyAdviceKeepGoing;
+
+  /// Pulsante che apre la lezione consigliata
+  ///
+  /// In it, this message translates to:
+  /// **'Apri la lezione'**
+  String get weeklyOpenLesson;
+
+  /// Pulsante che apre i puzzle consigliati
+  ///
+  /// In it, this message translates to:
+  /// **'Apri i puzzle'**
+  String get weeklyOpenPuzzles;
+
+  /// Profilo bambino: frase sui progressi
+  ///
+  /// In it, this message translates to:
+  /// **'Questa settimana ti sei allenato. Bravo!'**
+  String get weeklyKidActive;
+
+  /// Profilo bambino: etichetta per i lettori di schermo
+  ///
+  /// In it, this message translates to:
+  /// **'Le stelle sono i giorni in cui ti sei allenato'**
+  String get weeklyKidDaysLabel;
+
+  /// Profilo bambino: errore ricorrente
+  ///
+  /// In it, this message translates to:
+  /// **'Fai più attenzione a: {error}.'**
+  String weeklyKidError(String error);
 }
 
 class _AppLocalizationsDelegate

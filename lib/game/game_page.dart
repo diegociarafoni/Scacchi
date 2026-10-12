@@ -37,6 +37,7 @@ import '../review/engine_evaluator.dart';
 import '../review/game_review.dart';
 import '../review/move_classification.dart';
 import '../review/personal_puzzles.dart';
+import '../review/review_activity.dart';
 import '../review/review_page.dart';
 import '../settings/board_frame.dart';
 import '../settings/notation.dart';
@@ -1799,7 +1800,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           evaluate: engineEvaluator(player),
           onCancel: player.stopAnalysis,
           analyseLive: _liveAnalysis(player),
-          onReviewed: (review) => _recordReview(review, players),
+          onReviewed: (review) => _recordReview(review, players, moves),
           onSavePuzzles: widget.onSavePuzzles,
           puzzlePlayers: players,
           clocks: [for (final m in _game.moves) m.clock],
@@ -1812,16 +1813,15 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   /// Una revisione nuova vale XP; con due giocatori la precisione non è di
   /// nessuno in particolare e non si registra.
-  Future<void> _recordReview(GameReview review, Set<Side> players) async {
+  Future<void> _recordReview(
+    GameReview review,
+    Set<Side> players,
+    List<Move> moves,
+  ) async {
     final record = widget.onActivity;
     if (record == null) return;
     final update = await record(
-      ReviewCompleted(
-        accuracy: players.length == 1 ? review.accuracy(players.single) : null,
-        brilliantMoves: [
-          for (final side in players) review.count(side, MoveClass.brilliant),
-        ].fold(0, (a, b) => a + b),
-      ),
+      reviewActivity(review, players, initial: _game.initial, moves: moves),
     );
     if (update != null && mounted) showProgressFeedback(context, update);
   }
