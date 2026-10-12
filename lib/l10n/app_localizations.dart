@@ -1519,6 +1519,150 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Dopo ogni mossa del computer, una riga su cosa minaccia o prepara'**
   String get settingsExplainWhyDescription;
+
+  /// Voce della scheda Puzzle e titolo della schermata
+  ///
+  /// In it, this message translates to:
+  /// **'Sfida un amico'**
+  String get challengeTitle;
+
+  /// Sottotitolo della voce nella scheda Puzzle
+  ///
+  /// In it, this message translates to:
+  /// **'Gli stessi puzzle su due telefoni, senza rete'**
+  String get challengeSubtitle;
+
+  /// Spiegazione in cima alla schermata della sfida
+  ///
+  /// In it, this message translates to:
+  /// **'Scegli la prova e mostra il QR all\'amico: giocate gli stessi puzzle. A fine prova vi scambiate i punteggi con un secondo QR.'**
+  String get challengeIntro;
+
+  /// Pulsante che crea la sfida
+  ///
+  /// In it, this message translates to:
+  /// **'Prepara la sfida'**
+  String get challengePrepare;
+
+  /// Sfida creata, in attesa di mostrare il QR
+  ///
+  /// In it, this message translates to:
+  /// **'Sfida pronta: {mode}'**
+  String challengeReady(String mode);
+
+  /// Pulsante che apre il QR della sfida
+  ///
+  /// In it, this message translates to:
+  /// **'Mostra il QR all\'amico'**
+  String get challengeShowInvite;
+
+  /// Pulsante che avvia la prova
+  ///
+  /// In it, this message translates to:
+  /// **'Gioca la tua prova'**
+  String get challengePlay;
+
+  /// Pulsante che apre la fotocamera
+  ///
+  /// In it, this message translates to:
+  /// **'Ricevi una sfida'**
+  String get challengeReceive;
+
+  /// Titolo sopra il QR della sfida
+  ///
+  /// In it, this message translates to:
+  /// **'Sfida: {mode}'**
+  String challengeInviteTitle(String mode);
+
+  /// Istruzioni sotto il QR della sfida
+  ///
+  /// In it, this message translates to:
+  /// **'L\'amico apre Puzzle › Sfida un amico › Ricevi una sfida e inquadra il codice.'**
+  String get challengeInviteHint;
+
+  /// Istruzioni sotto la fotocamera per la sfida
+  ///
+  /// In it, this message translates to:
+  /// **'Inquadra il QR della sfida mostrato dall\'amico.'**
+  String get challengeReceiveHint;
+
+  /// Errore: QR letto di altro tipo
+  ///
+  /// In it, this message translates to:
+  /// **'Questo QR non è una sfida: chiedi all\'amico di mostrare il QR della sfida.'**
+  String get challengeNotInvite;
+
+  /// Errore: raccolte di puzzle diverse
+  ///
+  /// In it, this message translates to:
+  /// **'I due telefoni hanno puzzle diversi: aggiornate Rokko su entrambi.'**
+  String get challengeLibraryMismatch;
+
+  /// Titolo del confronto a fine prova
+  ///
+  /// In it, this message translates to:
+  /// **'Sfida con l\'amico'**
+  String get challengeCompareTitle;
+
+  /// Pulsante che apre il QR del risultato
+  ///
+  /// In it, this message translates to:
+  /// **'Mostra il mio risultato'**
+  String get challengeShowResult;
+
+  /// Titolo sopra il QR del risultato
+  ///
+  /// In it, this message translates to:
+  /// **'Il mio risultato: {score}'**
+  String challengeResultTitle(int score);
+
+  /// Istruzioni sotto il QR del risultato
+  ///
+  /// In it, this message translates to:
+  /// **'L\'amico inquadra questo codice per vedere il tuo punteggio.'**
+  String get challengeResultHint;
+
+  /// Pulsante che apre la fotocamera per il risultato
+  ///
+  /// In it, this message translates to:
+  /// **'Leggi il risultato dell\'amico'**
+  String get challengeReadResult;
+
+  /// Istruzioni sotto la fotocamera per il risultato
+  ///
+  /// In it, this message translates to:
+  /// **'Inquadra il QR del risultato mostrato dall\'amico.'**
+  String get challengeReadResultHint;
+
+  /// Errore: QR letto di altro tipo
+  ///
+  /// In it, this message translates to:
+  /// **'Questo QR non è un risultato: chiedi all\'amico di mostrare il QR del risultato.'**
+  String get challengeNotResult;
+
+  /// Errore: il risultato non appartiene a questa sfida
+  ///
+  /// In it, this message translates to:
+  /// **'Il risultato è di un\'altra sfida.'**
+  String get challengeOtherChallenge;
+
+  /// Esito del confronto
+  ///
+  /// In it, this message translates to:
+  /// **'Hai vinto: {mine} a {theirs}'**
+  String challengeWon(int mine, int theirs);
+
+  /// Esito del confronto
+  ///
+  /// In it, this message translates to:
+  /// **'Ha vinto l\'amico: {theirs} a {mine}'**
+  String challengeLost(int mine, int theirs);
+
+  /// Esito del confronto
+  ///
+  /// In it, this message translates to:
+  /// **'Pareggio: {mine} a {theirs}'**
+  String challengeDraw(int mine, int theirs);
 }
 
 class _AppLocalizationsDelegate

@@ -122,6 +122,39 @@ Il miglior risultato di ogni modalità è salvato come record personale (RG-08, 
 
 Il modello è `lib/puzzles/puzzle_run.dart`, la schermata `lib/puzzles/puzzle_run_page.dart`; il tempo arriva da una funzione iniettabile, così i test non aspettano minuti veri.
 
+## Sfida a tempo tra amici (RF-95)
+
+Due telefoni giocano la stessa prova a tempo e ne confrontano i punteggi, senza rete, account o server. Si usa il trasporto QR dello scambio di partite ([scambio-qr.md](scambio-qr.md)). Si apre da **Puzzle › Sfida un amico**; nel profilo bambino la voce non compare, come le altre modalità a tempo.
+
+| Passo | Chi | Cosa succede |
+|---|---|---|
+| 1 | Chi lancia | Sceglie la prova (Combo a tempo, Corsa 3 o 5 minuti) e tocca **Prepara la sfida**: l'app estrae un seme casuale a 32 bit |
+| 2 | Chi lancia | **Mostra il QR all'amico**: il QR porta prova, seme e impronta della raccolta di puzzle |
+| 3 | L'amico | **Ricevi una sfida** e inquadra il QR: si apre la stessa prova, con la spiegazione e il pulsante Inizia |
+| 4 | Entrambi | Giocano la prova (anche in momenti diversi): il seme guida la scelta dei puzzle, quindi la sequenza è identica sui due telefoni |
+| 5 | Entrambi | A fine prova **Mostra il mio risultato** (QR col punteggio) e **Leggi il risultato dell'amico**; poi la schermata dice "Hai vinto: 9 a 7", "Ha vinto l'amico: 7 a 9" o "Pareggio: 8 a 8" |
+
+Perché i puzzle sono gli stessi: `PuzzleRun` accetta un generatore casuale e la sfida usa `SeededRandom` (mulberry32, sequenza fissa per ogni seme: `Random(seed)` di Dart non garantisce la stessa sequenza tra versioni e piattaforme). Con esso la scelta di ogni puzzle dipende solo dal seme, dalla prova e dalla raccolta, non dalle risposte date (un errore e una risposta giusta fanno avanzare allo stesso modo). Per questo sono ammesse solo le prove a tempo, dove tutti hanno la stessa durata e un errore non cambia la sequenza; sopravvivenza e serie, che finiscono in momenti diversi, restano fuori.
+
+Messaggi (`lib/puzzles/friend_challenge.dart`, Dart puro): JSON compatto in un solo fotogramma `SC1`, in due forme.
+
+| Campo | Lancio | Risultato |
+|---|---|---|
+| `k` | `sfida` | `risultato` |
+| `v` | 1 | 1 |
+| `m` | nome della prova (`storm`, `rush3`, `rush5`) | idem |
+| `s` | seme, intero da 0 a 4294967295 | idem |
+| `l` | impronta della raccolta, CRC-32 in 8 cifre esadecimali | idem |
+| `p` | | punteggio, da 0 a 9999 |
+
+L'**impronta della raccolta** è il CRC-32 di versione dell'algoritmo, identificativi, punteggi e ordine dei puzzle: se i due telefoni hanno versioni diverse dei puzzle, il seme darebbe serie diverse, quindi la sfida non parte e l'app chiede di aggiornare Rokko su entrambi. Un risultato appartiene alla sfida solo se coincidono prova, seme e impronta; uno di un'altra sfida viene respinto con un avviso.
+
+Sicurezza (MASVS-CODE-4): il testo letto dalla fotocamera è input non fidato. Dopo il ricompositore dei QR, `parseChallenge` rifiuta testi oltre 512 caratteri, JSON non valido o non oggetto, versione o tipo sconosciuti, prove non a tempo, semi o punteggi fuori intervallo e impronte malformate. Il QR del risultato **non è firmato**: è pensato per una sfida tra amici, non per una classifica, e chi vuole può barare mostrando un punteggio inventato. Non c'è nessun dato personale nei QR.
+
+In una sfida si gioca una volta sola: **Gioca ancora** non compare, perché ripeterebbe gli stessi puzzle. Record personali, XP e traguardi valgono come in una serie normale. La schermata del confronto è una colonna scorrevole, con etichette e annunci per i lettori di schermo (l'esito è una regione viva) e i testi nei file `.arb` (`challenge*`) in italiano e inglese.
+
+Il codice è in `lib/puzzles/friend_challenge.dart` (messaggi e confronto), `friend_challenge_page.dart` (lancio e ricezione) e `challenge_result_panel.dart` (confronto a fine prova); `PuzzleRunPage` riceve la sfida con il parametro `challenge`.
+
 ## Ripasso degli errori (RF-85)
 
 Ogni puzzle sbagliato nell'allenamento, anche se già visto, entra in una coda di ripasso a intervalli crescenti (sistema di Leitner, `lib/puzzles/review_queue.dart`):

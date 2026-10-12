@@ -9,6 +9,12 @@ import 'package:scacchi/exchange/qr_send_page.dart';
 import 'package:scacchi/exchange/qr_transfer.dart';
 import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/main.dart';
+import 'package:scacchi/puzzles/friend_challenge.dart';
+import 'package:scacchi/puzzles/friend_challenge_page.dart';
+import 'package:scacchi/puzzles/puzzle.dart';
+import 'package:scacchi/puzzles/puzzle_library.dart';
+import 'package:scacchi/puzzles/puzzle_trainer.dart';
+import 'package:scacchi/storage/key_value_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Offset _square(WidgetTester tester, String name) {
@@ -125,5 +131,40 @@ void main() {
       await tester.tap(find.byTooltip('Parte successiva'));
     }
     expect((last! as TransferComplete).text, text);
+  });
+
+  testWidgets('RF-95 sfida tra amici: il QR di lancio e quello del risultato '
+      'si leggono con il decodificatore reale', (tester) async {
+    tester.view.physicalSize = const Size(1170, 2532);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+    final trainer = await PuzzleTrainer.load(
+      PuzzleLibrary([
+        for (var r = 400; r < 2000; r += 50)
+          Puzzle.parseCsv(
+            'p$r,7k/6pp/8/8/1n6/8/8/RR4K1 b - - 0 1,b4c2 a1a8,$r,mateIn1',
+          ),
+      ]),
+      MemoryStore(),
+    );
+    await tester.pumpWidget(
+      MaterialApp(
+        locale: const Locale('it'),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: FriendChallengePage(trainer: trainer, newSeed: () => 4242),
+      ),
+    );
+    await tester.tap(find.text('Prepara la sfida'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text("Mostra il QR all'amico"));
+    await tester.pumpAndSettle();
+
+    final frame = await _scanShownQr(tester);
+    final event = TransferAssembler().add(frame!);
+    final invite = parseChallenge((event as TransferComplete).text);
+    expect(invite, isA<ChallengeInvite>());
+    expect(invite!.challenge.seed, 4242);
+    expect(invite.challenge.library, libraryFingerprint(trainer.library));
   });
 }
