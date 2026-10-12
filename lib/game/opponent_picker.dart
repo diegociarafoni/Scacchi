@@ -217,7 +217,6 @@ class _BotTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final unlocked = collection.isUnlocked(bot);
-    final previous = BotCollection.unlockedBy(bot).firstOrNull;
     final beatenOn = collection.beatenOn(bot);
     final details = kidMode
         ? friendlyBotDescriptions[bot.id]?.call(AppLocalizations.of(context)) ??
@@ -227,7 +226,10 @@ class _BotTile extends StatelessWidget {
             styleLabel(bot.style),
             bot.openingName,
             if (beatenOn != null) 'Battuto il ${_date(beatenOn)}',
-            if (!unlocked) _l10n(context).botUnlockHint(previous!.name),
+            if (!unlocked)
+              _l10n(context).botUnlockHint(
+                BotCollection.unlockedBy(bot).map((b) => b.name).join(' / '),
+              ),
           ].join(' · ');
     return ListTile(
       contentPadding: EdgeInsets.zero,
@@ -239,7 +241,7 @@ class _BotTile extends StatelessWidget {
       trailing: !unlocked
           ? const Icon(
               Icons.lock_outline,
-              semanticLabel: 'Bloccato: batti il bot precedente',
+              semanticLabel: 'Bloccato: batti un bot del gradino sotto',
             )
           : beatenOn != null
           ? const Icon(Icons.check_circle_outline, semanticLabel: 'Battuto')

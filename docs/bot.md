@@ -32,7 +32,7 @@ Nella schermata Nuova partita una riga sotto la scelta spiega l'avversario selez
 
 ## I bot
 
-Gli 8 bot sono in ordine di forza e formano la scala da superare uno dopo l'altro (RG-04).
+I 15 bot sono in ordine di Elo e formano la scala da superare a gradini (RG-04).
 
 | # | Bot | Livello | Elo indicativo | Stile | Apertura preferita |
 |---|-----|--------:|---------------:|-------|--------------------|
@@ -46,9 +46,9 @@ Gli 8 bot sono in ordine di forza e formano la scala da superare uno dopo l'altr
 | 8 | Marta 🦉 | 4 | 1400 | posizionale | Inglese |
 | 9 | Bruna 🐻 | 4 | 1400 | posizionale | Difesa Francese |
 | 10 | Duilio 🔥 | 5 | 1600 | aggressivo | Siciliana |
-| 11 | Carlo 🦊 | 5 | 1600 | gambettista | Gambetto Budapest |
+| 11 | Carlo 🦝 | 5 | 1600 | gambettista | Gambetto Budapest |
 | 12 | Elena 🦅 | 6 | 1850 | posizionale | Spagnola |
-| 13 | Ada 🦉 | 6 | 1850 | posizionale | Inglese |
+| 13 | Ada 🔭 | 6 | 1850 | posizionale | Inglese |
 | 14 | Massimo 🐺 | 7 | 2250 | gambettista | Gambetto Evans |
 | 15 | Stella ⭐ | 8 | 2700 | aggressivo | Difesa Est-Indiana |
 

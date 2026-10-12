@@ -108,7 +108,7 @@ const bots = <Bot>[
     openingName: 'il Gambetto di Re',
     book: [
       ['e2e4', 'e7e5', 'f2f4', 'e5f4', 'g1f3'],
-      ['e2e4', 'e7e5', 'f2f4', 'd7d5', 'e4d5'],
+      ['e2e4', 'e7e5', 'f2f4', 'e5f4', 'f1c4'],
     ],
   ),
   Bot(
@@ -222,7 +222,7 @@ const bots = <Bot>[
   Bot(
     id: 'carlo',
     name: 'Carlo',
-    avatar: '🦊',
+    avatar: '🦝',
     levelId: 5,
     style: BotStyle.gambitist,
     openingName: 'il Gambetto Budapest',
@@ -246,7 +246,7 @@ const bots = <Bot>[
   Bot(
     id: 'ada',
     name: 'Ada',
-    avatar: '🦉',
+    avatar: '🔭',
     levelId: 6,
     style: BotStyle.positional,
     openingName: 'l\'Inglese',

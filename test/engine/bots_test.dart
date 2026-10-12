@@ -45,6 +45,7 @@ void main() {
       expect(bots, hasLength(15));
       expect(bots.map((b) => b.id).toSet(), hasLength(15));
       expect(bots.map((b) => b.name).toSet(), hasLength(15));
+      expect(bots.map((b) => b.avatar).toSet(), hasLength(15));
       final elo = bots.map((b) => b.elo).toList();
       expect([...elo]..sort(), elo);
       expect(elo.toSet().length, lessThan(elo.length));
