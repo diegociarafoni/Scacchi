@@ -12,6 +12,8 @@ import '../engine/uci_transport.dart';
 import '../game/challenge.dart';
 import '../game/clock.dart';
 import '../game/game_page.dart';
+import '../masters/masters_controller.dart';
+import '../masters/masters_page.dart';
 import '../openings/opening_assets.dart';
 import '../openings/openings_hub_page.dart';
 import '../openings/repertoire.dart';
@@ -53,6 +55,7 @@ class HomeShell extends StatefulWidget {
     this.createComputer,
     this.tournaments,
     this.endgames,
+    this.masters,
   });
 
   final SettingsController settings;
@@ -87,6 +90,10 @@ class HomeShell extends StatefulWidget {
   /// Sostituibile nei test; di default i progressi salvati dei finali.
   final Future<EndgameController> Function()? endgames;
 
+  /// Sostituibile nei test; di default i risultati salvati di «Indovina la
+  /// mossa».
+  final Future<MastersController> Function()? masters;
+
   @override
   State<HomeShell> createState() => _HomeShellState();
 }
@@ -101,6 +108,7 @@ class _HomeShellState extends State<HomeShell> {
   Future<PathController>? _path;
   Future<TournamentController>? _tournaments;
   Future<EndgameController>? _endgames;
+  Future<MastersController>? _masters;
 
   /// La scheda Tu si costruisce alla prima apertura, poi resta in memoria.
   var _youVisited = false;
@@ -182,6 +190,18 @@ class _HomeShellState extends State<HomeShell> {
             _endgames = null;
             Error.throwWithStackTrace(e, st);
           });
+
+  /// Un solo controller delle partite dei maestri in memoria.
+  Future<MastersController> _mastersController() => _masters ??=
+      (widget.masters ??
+              () => MastersController.open(recordActivity: _record))()
+          .catchError((Object e, StackTrace st) {
+            _masters = null;
+            Error.throwWithStackTrace(e, st);
+          });
+
+  Future<Widget> _mastersPage() async =>
+      MastersPage(controller: await _mastersController(), simple: _kidMode);
 
   Future<Widget> _endgamesPage() async => EndgamesPage(
     controller: await _endgameController(),
@@ -435,6 +455,7 @@ class _HomeShellState extends State<HomeShell> {
               openGame: _openSavedGame,
               tournamentPage: _computerAvailable ? _tournamentPage : null,
               endgamesPage: _computerAvailable ? _endgamesPage : null,
+              mastersPage: _mastersPage,
             )
           else
             const SizedBox.shrink(),
