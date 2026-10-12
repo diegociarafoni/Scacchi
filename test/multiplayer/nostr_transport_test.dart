@@ -285,6 +285,33 @@ void main() {
     },
   );
 
+  test(
+    'RMP-31 un relay che rifiuta la sottoscrizione non conta come collegato',
+    () async {
+      final refusing = FakeRelay()..refusingSubscriptions = true;
+      final live = FakeRelay();
+      final white = await player(Side.white, [refusing, live]);
+      final black = await player(Side.black, [refusing, live]);
+      await Future<void>.delayed(const Duration(milliseconds: 250));
+      expect(white.connectedRelays, 1);
+      expect(refusing.connections, greaterThan(1));
+      final got = black.incoming.first;
+      await white.send(bytes('via live'));
+      expect(await got.timeout(const Duration(seconds: 2)), bytes('via live'));
+    },
+  );
+
+  test('RMP-31 un collegamento che si rompe subito si riprova', () async {
+    final relay = FakeRelay()..breakingSends = true;
+    final white = await player(Side.white, [relay]);
+    await Future<void>.delayed(const Duration(milliseconds: 250));
+    expect(white.connectedRelays, 0);
+    expect(relay.connections, greaterThan(1));
+    relay.breakingSends = false;
+    await Future<void>.delayed(const Duration(milliseconds: 250));
+    expect(white.connectedRelays, 1);
+  });
+
   test('RMP-31 solo relay cifrati wss: ws e altro si rifiutano', () async {
     await expectLater(
       NostrTransport.open(

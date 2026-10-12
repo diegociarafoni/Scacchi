@@ -87,7 +87,9 @@ class MultiplayerController extends ChangeNotifier {
     HostChannel? lan;
     try {
       lan = await openHost();
-    } on NoLocalNetwork {
+    } on Object {
+      // A distanza la rete locale è facoltativa: porta occupata, VPN o
+      // permesso negato non impediscono di giocare via internet.
       if (!remote) rethrow;
     }
     if (!remote && lan?.lanAddress == null) {
@@ -159,7 +161,7 @@ class MultiplayerController extends ChangeNotifier {
     if (lanInvite != null || !invite.remote) {
       try {
         lan = await openHost(port);
-      } on NoLocalNetwork {
+      } on Object {
         if (!invite.remote) rethrow;
       }
     }

@@ -30,9 +30,16 @@ typedef RelayConnector = Future<RelaySocket> Function(Uri url);
 
 /// WebSocket di sistema; la chiusura da parte del relay termina il flusso.
 Future<RelaySocket> connectWebSocket(Uri url) async {
+  final pending = WebSocket.connect(url.toString());
   // ignore: close_sinks
-  final socket = await WebSocket.connect(url.toString())
-      .timeout(const Duration(seconds: 10));
+  final WebSocket socket;
+  try {
+    socket = await pending.timeout(const Duration(seconds: 10));
+  } on TimeoutException {
+    // Il collegamento che arriva dopo il tempo non deve restare aperto.
+    unawaited(pending.then((late) => late.close(), onError: (Object _) {}));
+    rethrow;
+  }
   socket.pingInterval = const Duration(seconds: 25);
   return _IoRelaySocket(socket);
 }
@@ -191,21 +198,27 @@ class NostrTransport implements MessageTransport, ConnectionAware {
       onError: (Object _) => _lost(relay),
       cancelOnError: true,
     );
-    socket.send(
-      jsonEncode([
-        'REQ',
-        _subId,
-        {
-          'kinds': [nostrGameKind],
-          'authors': [_keys.publicKey],
-          '#d': _peerSlots.toList(),
-        },
-      ]),
-    );
-    // Un relay può aver perso gli eventi o l'invio può essere partito mentre
-    // era giù: si ripubblica quel che c'è.
-    for (final e in _ring.whereType<NostrEvent>()) {
-      socket.send(jsonEncode(['EVENT', e.toJson()]));
+    try {
+      socket.send(
+        jsonEncode([
+          'REQ',
+          _subId,
+          {
+            'kinds': [nostrGameKind],
+            'authors': [_keys.publicKey],
+            '#d': _peerSlots.toList(),
+          },
+        ]),
+      );
+      // Un relay può aver perso gli eventi o l'invio può essere partito mentre
+      // era giù: si ripubblica quel che c'è.
+      for (final e in _ring.whereType<NostrEvent>()) {
+        socket.send(jsonEncode(['EVENT', e.toJson()]));
+      }
+    } on Object {
+      // Chiuso subito dopo l'apertura: si riprova come per ogni caduta.
+      _lost(relay);
+      return;
     }
     if (wasDown && !_connected.isClosed) _connected.add(null);
   }
@@ -243,6 +256,10 @@ class NostrTransport implements MessageTransport, ConnectionAware {
     }
     if (msg is! List || msg.isEmpty) return;
     switch (msg[0]) {
+      // Il relay rifiuta la sottoscrizione (accesso riservato, limiti): da
+      // qui non arriverebbe nulla, anche se accetta le pubblicazioni.
+      case 'CLOSED' when msg.length >= 2 && msg[1] == _subId:
+        _lost(relay);
       case 'EVENT' when msg.length >= 3 && msg[1] == _subId:
         _onEvent(NostrEvent.fromJson(msg[2]));
       case 'OK' when msg.length >= 3 && msg[1] is String:

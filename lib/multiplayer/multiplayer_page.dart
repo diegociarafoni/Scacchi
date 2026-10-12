@@ -126,18 +126,24 @@ class _MultiplayerPageState extends State<MultiplayerPage> {
     return ok ?? false;
   }
 
-  Future<void> _discard() async {
-    if (!await _confirmDiscard()) return;
+  // Tolta la partita salvata, il controllo in background non serve più.
+  Future<void> _clearSaved() async {
+    final watch = widget.remoteWatch ?? const BackgroundRemoteWatch();
+    if (_saved?.invite.remote ?? false) unawaited(watch.disable());
     await _store?.clear();
     if (mounted) setState(() => _saved = null);
+  }
+
+  Future<void> _discard() async {
+    if (!await _confirmDiscard()) return;
+    await _clearSaved();
   }
 
   // Una partita nuova prenderebbe il posto di quella salvata: si chiede prima.
   Future<void> _startNew(Future<MultiplayerController> Function() open) async {
     if (_saved != null) {
       if (!await _confirmDiscard()) return;
-      await _store?.clear();
-      if (mounted) setState(() => _saved = null);
+      await _clearSaved();
     }
     await _start(open);
   }

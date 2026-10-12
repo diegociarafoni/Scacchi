@@ -19,6 +19,13 @@ class FakeRelay {
   /// Se falso accetta gli eventi ma non risponde con `OK`.
   bool acknowledging = true;
 
+  /// Se vero risponde `CLOSED` a ogni sottoscrizione, come un relay riservato.
+  bool refusingSubscriptions = false;
+
+  /// Se vero ogni invio su un collegamento già aperto lancia, come un
+  /// WebSocket chiuso un attimo dopo l'apertura.
+  bool breakingSends = false;
+
   int connections = 0;
   final received = <NostrEvent>[];
 
@@ -76,6 +83,7 @@ class _FakeSocket implements RelaySocket {
 
   @override
   void send(String text) {
+    if (_relay.breakingSends) throw StateError('collegamento chiuso');
     final msg = jsonDecode(text) as List;
     switch (msg[0]) {
       case 'EVENT':
@@ -105,6 +113,10 @@ class _FakeSocket implements RelaySocket {
         }
       case 'REQ':
         final id = msg[1] as String;
+        if (_relay.refusingSubscriptions) {
+          _reply(['CLOSED', id, 'auth-required: accesso riservato']);
+          return;
+        }
         final filter = Map<String, Object?>.from(msg[2] as Map);
         _subs[id] = filter;
         for (final e in _relay.stored.values) {

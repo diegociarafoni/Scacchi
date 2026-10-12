@@ -194,7 +194,8 @@ void main() {
     expect(await host.play(Move.parse('h5f7')!), isTrue);
     await settle();
     final n = _Notifier();
-    await check(n, _Log());
+    // Partita chiusa dall'amico: dopo l'avviso non c'è più nulla da seguire.
+    expect(await check(n, _Log()), isFalse);
     expect(n.turns.single.over, isTrue);
     expect(n.turns.single.san, 'Qxf7#');
     await host.close();

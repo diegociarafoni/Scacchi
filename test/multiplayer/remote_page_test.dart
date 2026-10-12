@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart' hide File;
 import 'package:flutter/material.dart';
@@ -7,9 +9,21 @@ import 'package:scacchi/multiplayer/channel_registry.dart';
 import 'package:scacchi/multiplayer/game_invite.dart';
 import 'package:scacchi/multiplayer/multiplayer_controller.dart';
 import 'package:scacchi/multiplayer/multiplayer_page.dart';
+import 'package:scacchi/multiplayer/remote_watch.dart';
+import 'package:scacchi/multiplayer/saved_game.dart';
 import 'package:scacchi/multiplayer/transport.dart';
 
 import '../localized_app.dart';
+
+class _Watch implements RemoteWatch {
+  final calls = <String>[];
+
+  @override
+  Future<void> enable() async => calls.add('on');
+
+  @override
+  Future<void> disable() async => calls.add('off');
+}
 
 Future<void> _wait(WidgetTester tester) async {
   await tester.runAsync(
@@ -141,5 +155,41 @@ void main() {
     await tester.binding.handlePopRoute();
     await tester.pumpAndSettle();
     expect(find.textContaining('il link vale ancora'), findsOneWidget);
+  });
+
+  testWidgets('RMP-41 eliminare la partita a distanza spegne il controllo', (
+    tester,
+  ) async {
+    final dir = Directory.systemTemp.createTempSync('rokko_remote_page');
+    addTearDown(() => dir.deleteSync(recursive: true));
+    final store = SavedGameStore(File('${dir.path}/m.json'));
+    final (remote, _) = LoopbackTransport.pair();
+    _registerRemote(host: remote);
+    await tester.runAsync(() async {
+      final host = await MultiplayerController.host(
+        side: Side.white,
+        openHost: _noWifi,
+        remote: true,
+        store: store,
+      );
+      await Future<void>.delayed(const Duration(milliseconds: 200));
+      await host.close();
+    });
+    final watch = _Watch();
+    await tester.runAsync(() async {
+      await tester.pumpWidget(
+        localizedApp(
+          home: MultiplayerPage(store: store, remoteWatch: watch),
+        ),
+      );
+      await Future<void>.delayed(const Duration(milliseconds: 300));
+    });
+    await tester.pump();
+    await tester.tap(find.text('Elimina'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Elimina').last);
+    await _wait(tester);
+    expect(watch.calls, ['off']);
+    expect(find.text('Riprendi la partita'), findsNothing);
   });
 }

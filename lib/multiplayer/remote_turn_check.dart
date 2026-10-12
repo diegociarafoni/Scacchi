@@ -90,8 +90,9 @@ Future<RemoteTurn?> findRemoteTurn(
 }
 
 /// Controllo periodico in background: avvisa una sola volta per mossa.
-/// `false` se non c'è più una partita a distanza da seguire, e il controllo
-/// periodico si può togliere.
+/// `false` se non c'è più una partita a distanza da seguire (non c'è, o
+/// l'ultima mossa dell'amico l'ha chiusa), e il controllo periodico si può
+/// togliere.
 Future<bool> checkRemoteGame({
   required SavedGameStore store,
   required TurnNotifier notifier,
@@ -108,8 +109,9 @@ Future<bool> checkRemoteGame({
   );
   if (turn == null) return true;
   final id = saved.invite.gameId;
-  if (turn.moves <= await log.read(id)) return true;
-  await notifier.notify(turn);
-  await log.write(id, turn.moves);
-  return true;
+  if (turn.moves > await log.read(id)) {
+    await notifier.notify(turn);
+    await log.write(id, turn.moves);
+  }
+  return !turn.over;
 }

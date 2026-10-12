@@ -307,4 +307,24 @@ void main() {
     expect(watch.calls, isEmpty);
     await host.close();
   });
+
+  test(
+    'RMP-32 un errore della rete locale non ferma la partita a distanza',
+    () async {
+      final host = await MultiplayerController.host(
+        side: Side.white,
+        openHost: () async => throw const SocketException('porta occupata'),
+        remote: true,
+      );
+      expect(GameInvite.parse(host.inviteLink)!.lanAddress, isNull);
+      await host.close();
+      await expectLater(
+        MultiplayerController.host(
+          side: Side.white,
+          openHost: () async => throw const SocketException('porta occupata'),
+        ),
+        throwsA(isA<SocketException>()),
+      );
+    },
+  );
 }
