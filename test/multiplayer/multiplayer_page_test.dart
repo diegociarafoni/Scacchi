@@ -460,7 +460,9 @@ void main() {
       ..physicalSize = const Size(360, 640) * 2
       ..devicePixelRatio = 2;
     addTearDown(tester.view.reset);
-    await tester.pumpWidget(localizedApp(home: const MultiplayerPage()));
+    await tester.pumpWidget(
+      localizedApp(home: const MultiplayerPage(remoteByDefault: false)),
+    );
     await tester.pumpAndSettle();
     final hint = find.textContaining('Lo decide chi crea');
     await tester.scrollUntilVisible(hint, 100);
@@ -469,4 +471,21 @@ void main() {
     // Più alto di una riga: il testo va a capo invece di troncarsi.
     expect(tester.getSize(hint).height, greaterThan(16));
   });
+
+  testWidgets(
+    'RMP-11 con la partita a distanza il tempo spiega perché è grigio',
+    (tester) async {
+      tester.view
+        ..physicalSize = const Size(360, 1400) * 2
+        ..devicePixelRatio = 2;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(localizedApp(home: const MultiplayerPage()));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('Lo decide chi crea'), findsNothing);
+      await tester.tap(find.byType(SwitchListTile));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('Lo decide chi crea'), findsOneWidget);
+      expect(find.textContaining('a distanza non'), findsNothing);
+    },
+  );
 }

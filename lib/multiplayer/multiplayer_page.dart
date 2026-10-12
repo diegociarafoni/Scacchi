@@ -392,7 +392,9 @@ class _MultiplayerPageState extends State<MultiplayerPage> {
                     isExpanded: true,
                     decoration: InputDecoration(
                       labelText: l10n.multiplayerClockTitle,
-                      helperText: l10n.multiplayerClockHint,
+                      helperText: _remote
+                          ? l10n.multiplayerClockRemoteHint
+                          : l10n.multiplayerClockHint,
                       helperMaxLines: 3,
                     ),
                     items: [
