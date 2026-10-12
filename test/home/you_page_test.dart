@@ -143,6 +143,7 @@ void main() {
     tester,
   ) async {
     await show(tester);
+    await tester.ensureVisible(find.text('La tua settimana'));
     await tester.tap(find.text('La tua settimana'));
     await tester.pumpAndSettle();
     expect(

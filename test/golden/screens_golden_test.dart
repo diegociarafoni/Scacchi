@@ -91,6 +91,8 @@ void main() {
       HomeShell(
         settings: SettingsController.defaults()
           ..value = AppSettings(kidMode: kid),
+        // Fissato: altrimenti dipende dal Stockfish installato sulla macchina.
+        computerAvailable: true,
         progress: () async => progress,
         path: () async => path,
         archive: () async => GameArchive(File('${dir.path}/games.json')),
