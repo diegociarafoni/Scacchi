@@ -44,6 +44,12 @@
       "android.permission.RECEIVE_BOOT_COMPLETED": "Riprogramma il promemoria giornaliero dopo il riavvio (RG-11)",
       "android.permission.CAMERA": "Lettura del QR per scambiare le partite, chiesta solo all'apertura del lettore",
       "android.permission.INTERNET": "Partita con un amico in rete locale (RMP-07, RMP-08): socket TCP verso l'altro telefono, solo dopo aver creato o inquadrato un invito"
+    },
+    "mergedPermissions": {
+      "android.permission.POST_NOTIFICATIONS": "Aggiunto da flutter_local_notifications: serve al promemoria giornaliero, richiesto a runtime solo se attivato",
+      "android.permission.VIBRATE": "Aggiunto da flutter_local_notifications per la vibrazione della notifica",
+      "android.permission.READ_EXTERNAL_STORAGE": "Aggiunto da una libreria del lettore QR (camera o image_picker) per scegliere un'immagine; nessun accesso senza azione dell'utente",
+      "android.permission.ACCESS_NETWORK_STATE": "Aggiunto da una libreria (stato della rete, nessun dato inviato)"
     }
   },
   "logging": {
