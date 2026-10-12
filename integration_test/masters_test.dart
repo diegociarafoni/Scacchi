@@ -28,7 +28,11 @@ void main() {
 
       await tester.tap(find.text('Tu'));
       await tester.pumpAndSettle();
-      await tester.ensureVisible(find.text('Grandi maestri'));
+      await tester.scrollUntilVisible(
+        find.text('Grandi maestri'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
       await tester.pumpAndSettle();
       await tester.tap(find.text('Grandi maestri'));
       await tester.pumpAndSettle();
