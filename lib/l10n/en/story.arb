@@ -142,5 +142,21 @@
       }
     }
   },
-  "storyCrownOutro": "The crown is yours. The kingdom is at peace and every new game is a new story."
+  "storyCrownOutro": "The crown is yours. The kingdom is at peace and every new game is a new story.",
+  "storyChapterCurrent": "In progress",
+  "@storyChapterCurrent": {
+    "description": "Etichetta del capitolo corrente nella storia"
+  },
+  "storyChapterSteps": "{done} steps out of {total}",
+  "@storyChapterSteps": {
+    "description": "Passi conclusi di un capitolo, per la barra di avanzamento",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  }
 }
