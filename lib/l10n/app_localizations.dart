@@ -1663,6 +1663,516 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Pareggio: {mine} a {theirs}'**
   String challengeDraw(int mine, int theirs);
+
+  /// Titolo della schermata della storia
+  ///
+  /// In it, this message translates to:
+  /// **'Storia'**
+  String get storyTitle;
+
+  /// storyEntrySubtitle
+  ///
+  /// In it, this message translates to:
+  /// **'Un viaggio a capitoli: lezioni, puzzle e sfide'**
+  String get storyEntrySubtitle;
+
+  /// storyChapterNumber
+  ///
+  /// In it, this message translates to:
+  /// **'Capitolo {n}'**
+  String storyChapterNumber(int n);
+
+  /// storyProgress
+  ///
+  /// In it, this message translates to:
+  /// **'{done} capitoli su {total}'**
+  String storyProgress(int done, int total);
+
+  /// storyChapterLocked
+  ///
+  /// In it, this message translates to:
+  /// **'Si apre concludendo il capitolo precedente'**
+  String get storyChapterLocked;
+
+  /// storyChapterDone
+  ///
+  /// In it, this message translates to:
+  /// **'Capitolo concluso'**
+  String get storyChapterDone;
+
+  /// storyContinue
+  ///
+  /// In it, this message translates to:
+  /// **'Continua'**
+  String get storyContinue;
+
+  /// storyFinished
+  ///
+  /// In it, this message translates to:
+  /// **'La storia è finita. Lezioni, puzzle e partite restano disponibili nel resto dell\'app.'**
+  String get storyFinished;
+
+  /// storyStepLessons
+  ///
+  /// In it, this message translates to:
+  /// **'Lezioni: {value} su {total}'**
+  String storyStepLessons(int value, int total);
+
+  /// storyStepPuzzles
+  ///
+  /// In it, this message translates to:
+  /// **'Puzzle del capitolo: {value} su {total}'**
+  String storyStepPuzzles(int value, int total);
+
+  /// storyStepGuardian
+  ///
+  /// In it, this message translates to:
+  /// **'Il guardiano del capitolo'**
+  String get storyStepGuardian;
+
+  /// storyStepBoss
+  ///
+  /// In it, this message translates to:
+  /// **'Sfida a {name}'**
+  String storyStepBoss(String name);
+
+  /// storyStepDone
+  ///
+  /// In it, this message translates to:
+  /// **'fatto'**
+  String get storyStepDone;
+
+  /// storyStepTodo
+  ///
+  /// In it, this message translates to:
+  /// **'da fare'**
+  String get storyStepTodo;
+
+  /// storyStepLocked
+  ///
+  /// In it, this message translates to:
+  /// **'bloccato'**
+  String get storyStepLocked;
+
+  /// storyStepLockedHint
+  ///
+  /// In it, this message translates to:
+  /// **'Prima concludi il passo precedente.'**
+  String get storyStepLockedHint;
+
+  /// storyEngineMissing
+  ///
+  /// In it, this message translates to:
+  /// **'Le sfide si giocano dove gira il computer: Android e iOS, o Windows e Linux con Stockfish installato.'**
+  String get storyEngineMissing;
+
+  /// storyBossWon
+  ///
+  /// In it, this message translates to:
+  /// **'Hai battuto {name}!'**
+  String storyBossWon(String name);
+
+  /// storyBossLost
+  ///
+  /// In it, this message translates to:
+  /// **'{name} resiste ancora: riprova quando vuoi.'**
+  String storyBossLost(String name);
+
+  /// storyPuzzlesNone
+  ///
+  /// In it, this message translates to:
+  /// **'I puzzle non si possono caricare: riprova.'**
+  String get storyPuzzlesNone;
+
+  /// storyVillageTitle
+  ///
+  /// In it, this message translates to:
+  /// **'Il villaggio dei pezzi'**
+  String get storyVillageTitle;
+
+  /// storyVillageIntro
+  ///
+  /// In it, this message translates to:
+  /// **'Arrivi al villaggio ai piedi della Rocca. Gli abitanti non ricordano più come si muovono i loro pezzi: aiutali con le lezioni, poi dimostra di accorgerti subito di un pezzo lasciato in presa.'**
+  String get storyVillageIntro;
+
+  /// storyVillageBoss
+  ///
+  /// In it, this message translates to:
+  /// **'{name}, il custode del villaggio, ti sfida per vedere se hai imparato davvero.'**
+  String storyVillageBoss(String name);
+
+  /// storyVillageOutro
+  ///
+  /// In it, this message translates to:
+  /// **'Il villaggio ti saluta con una festa. La strada per le porte della città è aperta.'**
+  String get storyVillageOutro;
+
+  /// storyGatesTitle
+  ///
+  /// In it, this message translates to:
+  /// **'Le porte della città'**
+  String get storyGatesTitle;
+
+  /// storyGatesIntro
+  ///
+  /// In it, this message translates to:
+  /// **'Le guardie ti fermano alle porte: per entrare devi conoscere le regole, dallo scacco all\'arrocco. Una promozione ben vista apre anche il cancello più alto.'**
+  String get storyGatesIntro;
+
+  /// storyGatesBoss
+  ///
+  /// In it, this message translates to:
+  /// **'{name}, capitana delle guardie, vuole una prova prima di lasciarti passare.'**
+  String storyGatesBoss(String name);
+
+  /// storyGatesOutro
+  ///
+  /// In it, this message translates to:
+  /// **'Le porte si aprono. Davanti a te si alza la torre del re.'**
+  String get storyGatesOutro;
+
+  /// storyTowerTitle
+  ///
+  /// In it, this message translates to:
+  /// **'La torre del re'**
+  String get storyTowerTitle;
+
+  /// storyTowerIntro
+  ///
+  /// In it, this message translates to:
+  /// **'In cima alla torre vive il re, e sa difendersi. Impara i matti per metterlo alle strette, anche quando i suoi stessi pezzi gli fanno da muro.'**
+  String get storyTowerIntro;
+
+  /// storyTowerBoss
+  ///
+  /// In it, this message translates to:
+  /// **'{name}, il cavaliere che ama i gambetti, ti aspetta in cima alle scale.'**
+  String storyTowerBoss(String name);
+
+  /// storyTowerOutro
+  ///
+  /// In it, this message translates to:
+  /// **'Il re della torre è in scacco matto. Resta il bosco, e le sue trappole.'**
+  String get storyTowerOutro;
+
+  /// storyForestTitle
+  ///
+  /// In it, this message translates to:
+  /// **'Il bosco delle trappole'**
+  String get storyForestTitle;
+
+  /// storyForestIntro
+  ///
+  /// In it, this message translates to:
+  /// **'Nel bosco ogni pezzo nasconde una trappola: forchette, inchiodature, infilate. Impara a vederle prima degli altri.'**
+  String get storyForestIntro;
+
+  /// storyForestBoss
+  ///
+  /// In it, this message translates to:
+  /// **'{name}, la guida del bosco, conosce ogni sentiero e ogni insidia.'**
+  String storyForestBoss(String name);
+
+  /// storyForestOutro
+  ///
+  /// In it, this message translates to:
+  /// **'Hai attraversato il bosco senza cadere in nessuna trappola. Il castello ti aspetta.'**
+  String get storyForestOutro;
+
+  /// storyCastleTitle
+  ///
+  /// In it, this message translates to:
+  /// **'Il castello dei finali'**
+  String get storyCastleTitle;
+
+  /// storyCastleIntro
+  ///
+  /// In it, this message translates to:
+  /// **'Nel castello sulla scacchiera restano pochi pezzi e ogni mossa conta. Qui si decide chi sa chiudere una partita.'**
+  String get storyCastleIntro;
+
+  /// storyCastleBoss
+  ///
+  /// In it, this message translates to:
+  /// **'{name}, il castellano, difende l\'ingresso della sala della corona.'**
+  String storyCastleBoss(String name);
+
+  /// storyCastleOutro
+  ///
+  /// In it, this message translates to:
+  /// **'Il portone si apre: la corona è vicina.'**
+  String get storyCastleOutro;
+
+  /// storyCrownTitle
+  ///
+  /// In it, this message translates to:
+  /// **'La corona'**
+  String get storyCrownTitle;
+
+  /// storyCrownIntro
+  ///
+  /// In it, this message translates to:
+  /// **'Ultima tappa: la sala della corona. Partire bene è mezza vittoria: il centro, lo sviluppo, l\'arrocco.'**
+  String get storyCrownIntro;
+
+  /// storyCrownBoss
+  ///
+  /// In it, this message translates to:
+  /// **'{name}, la guardiana della corona, gioca le aperture come nessun altro.'**
+  String storyCrownBoss(String name);
+
+  /// storyCrownOutro
+  ///
+  /// In it, this message translates to:
+  /// **'La corona è tua. Il regno è in pace e ogni nuova partita è una nuova storia.'**
+  String get storyCrownOutro;
+
+  /// shareImageTitle
+  ///
+  /// In it, this message translates to:
+  /// **'Esporta come immagine'**
+  String get shareImageTitle;
+
+  /// shareImageAction
+  ///
+  /// In it, this message translates to:
+  /// **'Condividi'**
+  String get shareImageAction;
+
+  /// shareImageFlip
+  ///
+  /// In it, this message translates to:
+  /// **'Capovolgi la scacchiera'**
+  String get shareImageFlip;
+
+  /// shareImageCoordinates
+  ///
+  /// In it, this message translates to:
+  /// **'Coordinate'**
+  String get shareImageCoordinates;
+
+  /// shareImageLastMove
+  ///
+  /// In it, this message translates to:
+  /// **'Ultima mossa'**
+  String get shareImageLastMove;
+
+  /// shareImageCaption
+  ///
+  /// In it, this message translates to:
+  /// **'Didascalia (facoltativa)'**
+  String get shareImageCaption;
+
+  /// shareImagePreview
+  ///
+  /// In it, this message translates to:
+  /// **'Anteprima della scacchiera'**
+  String get shareImagePreview;
+
+  /// shareImageFailed
+  ///
+  /// In it, this message translates to:
+  /// **'Condivisione non riuscita'**
+  String get shareImageFailed;
+
+  /// shareImageSubject
+  ///
+  /// In it, this message translates to:
+  /// **'Posizione di scacchi'**
+  String get shareImageSubject;
+
+  /// Titolo della scheda con il risultato esatto dei finali con pochi pezzi
+  ///
+  /// In it, this message translates to:
+  /// **'Finale perfetto'**
+  String get tablebaseTitle;
+
+  /// Attesa mentre l'app genera la tabella dei finali, solo al primo uso
+  ///
+  /// In it, this message translates to:
+  /// **'Calcolo il finale perfetto… succede solo la prima volta'**
+  String get tablebaseCalculating;
+
+  /// Risultato esatto: vince il Bianco, con le mosse al matto
+  ///
+  /// In it, this message translates to:
+  /// **'{moves, plural, one{Il Bianco vince: matto in {moves} mossa} other{Il Bianco vince: matto in {moves} mosse}}'**
+  String tablebaseWhiteMates(int moves);
+
+  /// Risultato esatto: vince il Nero, con le mosse al matto
+  ///
+  /// In it, this message translates to:
+  /// **'{moves, plural, one{Il Nero vince: matto in {moves} mossa} other{Il Nero vince: matto in {moves} mosse}}'**
+  String tablebaseBlackMates(int moves);
+
+  /// Risultato esatto senza numeri, per il profilo bambino
+  ///
+  /// In it, this message translates to:
+  /// **'Il Bianco vince'**
+  String get tablebaseWhiteWins;
+
+  /// Risultato esatto senza numeri, per il profilo bambino
+  ///
+  /// In it, this message translates to:
+  /// **'Il Nero vince'**
+  String get tablebaseBlackWins;
+
+  /// Risultato esatto: nessuno dei due può vincere
+  ///
+  /// In it, this message translates to:
+  /// **'Patta con il gioco perfetto'**
+  String get tablebaseDraw;
+
+  /// Mossa migliore del finale perfetto
+  ///
+  /// In it, this message translates to:
+  /// **'Mossa perfetta: {move}'**
+  String tablebaseBestMove(String move);
+
+  /// Descrizione per i lettori di schermo del pulsante con la mossa perfetta
+  ///
+  /// In it, this message translates to:
+  /// **'Gioca la mossa perfetta'**
+  String get tablebaseBestMoveHint;
+
+  /// Pulsante dell'allenatore dei finali che disegna la mossa perfetta sulla scacchiera
+  ///
+  /// In it, this message translates to:
+  /// **'Mostra la mossa perfetta'**
+  String get tablebaseShowMove;
+
+  /// Titolo della schermata e della voce nella scheda Aperture
+  ///
+  /// In it, this message translates to:
+  /// **'Le tue aperture'**
+  String get personalTitle;
+
+  /// Sottotitolo della voce nella scheda Aperture
+  ///
+  /// In it, this message translates to:
+  /// **'Le mosse che hai giocato, con i risultati'**
+  String get personalHubSubtitle;
+
+  /// Errore di lettura dell'archivio
+  ///
+  /// In it, this message translates to:
+  /// **'L\'archivio delle partite non si è potuto leggere: riprova più tardi.'**
+  String get personalLoadFailed;
+
+  /// Archivio senza partite utili
+  ///
+  /// In it, this message translates to:
+  /// **'Gioca qualche partita contro il computer per costruire il tuo albero delle aperture.'**
+  String get personalEmpty;
+
+  /// Filtri senza partite
+  ///
+  /// In it, this message translates to:
+  /// **'Nessuna partita con questi filtri.'**
+  String get personalNoGamesFiltered;
+
+  /// Posizione fuori dall'albero
+  ///
+  /// In it, this message translates to:
+  /// **'Non hai mai giocato da questa posizione.'**
+  String get personalNoGamesHere;
+
+  /// Filtro colore: tutte le partite
+  ///
+  /// In it, this message translates to:
+  /// **'Entrambi'**
+  String get personalSideAll;
+
+  /// Filtro colore: partite con il bianco
+  ///
+  /// In it, this message translates to:
+  /// **'Bianco'**
+  String get personalSideWhite;
+
+  /// Filtro colore: partite con il nero
+  ///
+  /// In it, this message translates to:
+  /// **'Nero'**
+  String get personalSideBlack;
+
+  /// Etichetta del filtro per avversario
+  ///
+  /// In it, this message translates to:
+  /// **'Avversario'**
+  String get personalOpponent;
+
+  /// Filtro avversario senza restrizioni
+  ///
+  /// In it, this message translates to:
+  /// **'Tutti gli avversari'**
+  String get personalAllOpponents;
+
+  /// Partite in cui è stata giocata una mossa
+  ///
+  /// In it, this message translates to:
+  /// **'{count, plural, one{{count} partita} other{{count} partite}}'**
+  String personalGames(int count);
+
+  /// Partite che rispettano i filtri
+  ///
+  /// In it, this message translates to:
+  /// **'{count, plural, one{{count} partita considerata} other{{count} partite considerate}}'**
+  String personalGamesTotal(int count);
+
+  /// Vittorie, patte e sconfitte in breve
+  ///
+  /// In it, this message translates to:
+  /// **'{wins}V · {draws}P · {losses}S'**
+  String personalScore(int wins, int draws, int losses);
+
+  /// Vittorie, patte e sconfitte per i lettori di schermo
+  ///
+  /// In it, this message translates to:
+  /// **'{wins} vinte, {draws} patte, {losses} perse'**
+  String personalScoreSemantics(int wins, int draws, int losses);
+
+  /// Titolo senza mosse
+  ///
+  /// In it, this message translates to:
+  /// **'Posizione iniziale'**
+  String get personalStartPosition;
+
+  /// Titolo di una posizione senza nome nel libro
+  ///
+  /// In it, this message translates to:
+  /// **'Apertura senza nome'**
+  String get personalNoName;
+
+  /// Torna alla mossa precedente
+  ///
+  /// In it, this message translates to:
+  /// **'Indietro'**
+  String get personalBack;
+
+  /// Torna alla posizione iniziale
+  ///
+  /// In it, this message translates to:
+  /// **'Inizio'**
+  String get personalStart;
+
+  /// Tooltip del pulsante che gira la scacchiera
+  ///
+  /// In it, this message translates to:
+  /// **'Gira la scacchiera'**
+  String get personalFlip;
+
+  /// Tooltip: apre il libro delle aperture nella stessa posizione
+  ///
+  /// In it, this message translates to:
+  /// **'Apri nell\'explorer delle aperture'**
+  String get personalOpenInBook;
+
+  /// Tooltip nell'explorer delle aperture: apre l'albero personale
+  ///
+  /// In it, this message translates to:
+  /// **'Le tue partite da questa posizione'**
+  String get personalFromHere;
 }
 
 class _AppLocalizationsDelegate

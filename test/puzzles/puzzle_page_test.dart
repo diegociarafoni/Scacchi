@@ -11,9 +11,13 @@ import 'package:scacchi/puzzles/puzzle_feed.dart';
 import 'package:scacchi/puzzles/puzzle_library.dart';
 import 'package:scacchi/puzzles/puzzle_page.dart';
 import 'package:scacchi/puzzles/puzzle_trainer.dart';
+import 'package:scacchi/settings/board_marks.dart';
+import 'package:scacchi/settings/settings.dart';
+import 'package:scacchi/share/position_image_page.dart';
 import 'package:scacchi/storage/key_value_store.dart';
 import 'package:scacchi/training/training_board.dart';
 
+import '../board_marks_helpers.dart';
 import '../localized_app.dart';
 import 'fixtures.dart';
 
@@ -130,11 +134,15 @@ void main() {
     await tapMove(tester, 'a1a7');
     expect(find.byKey(const Key('puzzle-wrong-icon')), findsOneWidget);
     expect(
-      boardShapes(tester).whereType<Arrow>().single,
+      markArrows(boardShapes(tester)).single,
       isA<Arrow>()
           .having((a) => a.orig, 'orig', Square.a1)
           .having((a) => a.dest, 'dest', Square.a7)
-          .having((a) => a.color, 'color', const Color(0xffd32f2f)),
+          .having(
+            (a) => a.color,
+            'color',
+            BoardMarks.of(BoardTheme.green).threat,
+          ),
     );
     expect(haptics, ['HapticFeedbackType.heavyImpact']);
 
@@ -348,5 +356,18 @@ void main() {
     await tester.tap(find.text('Soluzione'));
     await tester.pumpAndSettle();
     expect(activities, isEmpty);
+  });
+
+  testWidgets('RF-104 esporta come immagine la posizione del puzzle', (
+    tester,
+  ) async {
+    await pump(tester);
+    await tester.tap(find.byTooltip('Esporta come immagine'));
+    await tester.pumpAndSettle();
+    final page = tester.widget<PositionImagePage>(
+      find.byType(PositionImagePage),
+    );
+    expect(page.image.fen, backRank.start.fen);
+    expect(page.image.orientation, backRank.playerSide);
   });
 }
