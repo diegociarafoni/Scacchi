@@ -31,9 +31,7 @@ void main() {
     'RF-97 la prima volta calcola e salva, la seconda legge dal disco',
     () async {
       final first = TablebaseService(where, builder: _inline);
-      expect(await first.isReady(mate), isFalse);
       expect(await first.prepare(mate), isTrue);
-      expect(await first.isReady(mate), isTrue);
       expect(first.tablebase.probe(mate), const TbEvaluation(TbOutcome.win, 1));
       expect(
         dir.listSync(recursive: true).whereType<File>().map((f) => f.path),
@@ -41,7 +39,6 @@ void main() {
       );
 
       final second = TablebaseService(where, builder: _failing);
-      expect(await second.isReady(mate), isTrue);
       expect(await second.prepare(mate), isTrue);
       expect(second.tablebase.bestMove(mate), Move.parse('b3b8'));
     },
@@ -72,7 +69,6 @@ void main() {
         .firstWhere((f) => f.path.contains('KQvK.'));
     file.writeAsBytesSync([1, 2, 3]);
     final again = TablebaseService(where, builder: _inline);
-    expect(await again.isReady(mate), isTrue);
     expect(await again.prepare(mate), isTrue);
     expect(again.tablebase.probe(mate)!.plies, 1);
   });
@@ -88,14 +84,26 @@ void main() {
 
   test('RF-97 posizioni con troppi pezzi non sono coperte', () async {
     final service = TablebaseService(where, builder: _failing);
-    expect(service.covers(Chess.initial), isFalse);
     expect(await service.prepare(Chess.initial), isFalse);
-    expect(await service.isReady(Chess.initial), isFalse);
   });
 
   test('RF-97 il calcolo in un isolate dà lo stesso risultato', () async {
     final service = TablebaseService(where);
     expect(await service.prepare(mate), isTrue);
     expect(service.tablebase.probe(mate)!.plies, 1);
+  });
+
+  test('RF-97 un calcolo fallito non si ritenta a ogni richiesta', () async {
+    var calls = 0;
+    final service = TablebaseService(
+      where,
+      builder: (m, r) async {
+        calls++;
+        throw StateError('no');
+      },
+    );
+    expect(await service.prepare(mate), isFalse);
+    expect(await service.prepare(mate), isFalse);
+    expect(calls, 1);
   });
 }

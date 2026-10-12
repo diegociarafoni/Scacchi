@@ -71,10 +71,11 @@ void main() {
     await open(tester);
     expect(find.text('Finale perfetto'), findsOneWidget);
     expect(find.text('Il Bianco vince: matto in 2 mosse'), findsOneWidget);
-    await tester.tap(find.textContaining('Mossa perfetta'));
+    await tester.tap(find.text('Mostra la mossa perfetta'));
     await tester.pump();
     // La mossa si vede sulla scacchiera ma non si gioca da sola.
     expect(find.textContaining('Mosse: 0'), findsOneWidget);
+    expect(find.textContaining('Qb7#'), findsNothing);
   });
 
   testWidgets('RF-97 nel profilo bambino senza numeri', (tester) async {

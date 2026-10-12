@@ -19,6 +19,7 @@ class PerfectEndgameCard extends StatefulWidget {
     required this.notation,
     this.kid = false,
     this.onBestMove,
+    this.hideMove = false,
   });
 
   final TablebaseService service;
@@ -30,6 +31,9 @@ class PerfectEndgameCard extends StatefulWidget {
 
   /// Quando c'è, il pulsante della mossa perfetta la fa vedere o giocare.
   final void Function(Move move)? onBestMove;
+
+  /// Allenamento: la mossa non si scrive, la mostra il pulsante.
+  final bool hideMove;
 
   @override
   State<PerfectEndgameCard> createState() => _PerfectEndgameCardState();
@@ -55,7 +59,9 @@ class _PerfectEndgameCardState extends State<PerfectEndgameCard> {
       widget.service.prepare(pos).then((ok) {
         if (!mounted) return;
         setState(() {
-          if (!ok) _failed.add(key);
+          if (!ok || widget.service.tablebase.probe(pos) == null) {
+            _failed.add(key);
+          }
         });
       }),
     );
@@ -126,11 +132,15 @@ class _PerfectEndgameCardState extends State<PerfectEndgameCard> {
     Move best,
   ) {
     final san = formatSan(pos.makeSan(best).$2, widget.notation);
-    final label = l10n.tablebaseBestMove(san);
     final onTap = widget.onBestMove;
+    final label = widget.hideMove && onTap != null
+        ? l10n.tablebaseShowMove
+        : l10n.tablebaseBestMove(san);
     return Semantics(
       button: onTap != null,
-      label: onTap == null ? label : '$label. ${l10n.tablebaseBestMoveHint}',
+      label: onTap == null || widget.hideMove
+          ? label
+          : '$label. ${l10n.tablebaseBestMoveHint}',
       excludeSemantics: true,
       child: ActionChip(
         label: Text(label),

@@ -217,6 +217,7 @@ class _DrillPageState extends State<DrillPage> {
                         position: _run.position,
                         notation: AppSettings.of(context).notation,
                         kid: widget.simple,
+                        hideMove: true,
                         onBestMove: (move) => setState(() => _hint = move),
                       ),
                     if (_thinking)

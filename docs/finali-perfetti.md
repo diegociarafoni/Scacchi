@@ -5,7 +5,7 @@ Requisito RF-97: nei finali con pochi pezzi l'app conosce il risultato esatto e 
 ## Che cosa si vede
 
 - **Analisi della posizione**: sopra le linee del motore compare la scheda «Finale perfetto» con chi vince e in quante mosse («Il Bianco vince: matto in 5 mosse»), oppure «Patta con il gioco perfetto», e la mossa perfetta, che si gioca con un tocco.
-- **Allenatore dei finali**: durante la prova, quando tocca all'utente, la stessa scheda mostra il matto più rapido da quella posizione; «Mossa perfetta» disegna una freccia sulla scacchiera senza giocarla. Le stelle non cambiano e non dipendono dall'uso del suggerimento. Nel profilo bambino non ci sono numeri: la scheda dice solo chi vince.
+- **Allenatore dei finali**: durante la prova, quando tocca all'utente, la stessa scheda mostra il matto più rapido da quella posizione; «Mostra la mossa perfetta» disegna una freccia (la mossa non è scritta finché non si tocca) sulla scacchiera senza giocarla. Le stelle non cambiano e non dipendono dall'uso del suggerimento. Nel profilo bambino non ci sono numeri: la scheda dice solo chi vince.
 - La scheda non compare con più di quattro pezzi, a partita finita o se la tabella non si riesce a calcolare.
 
 La prima volta che serve un materiale l'app mostra «Calcolo il finale perfetto… succede solo la prima volta»; poi la tabella è sul telefono.
@@ -39,7 +39,7 @@ Con quattro pezzi i pedoni sono esclusi per il tempo di calcolo: re, donna e ped
 
 `TbSet` raccoglie le tabelle (i Bianchi sono sempre il lato più forte, quindi una tabella vale per i due colori) e le cerca per codice del materiale. `Tablebase` traduce una `Position` di dartchess in una valutazione (`TbEvaluation`: esito e semimosse) e ordina le mosse legali (`rankedMoves`): prima le vittorie più rapide, poi le patte, poi le sconfitte più lunghe.
 
-`TablebaseService` gestisce disco e isolate: una richiesta alla volta, tabella cercata prima in memoria, poi in `tablebase/<materiale>.v<formato>.tb` nella cartella dati (zlib, scritta in modo atomico), altrimenti calcolata in un isolate. Un file danneggiato si rigenera. Se il disco non è scrivibile le tabelle restano valide in memoria. `tablebaseFormat` va alzato se cambia l'algoritmo.
+`TablebaseService` gestisce disco e isolate: una richiesta alla volta, tabella cercata prima in memoria, poi in `tablebase/<materiale>.v<formato>.tb` nella cartella dati (zlib, scritta in modo atomico), altrimenti calcolata in un isolate. Un file danneggiato si rigenera. Se il disco non è scrivibile le tabelle restano valide in memoria; un calcolo fallito non si ritenta a ogni mossa. `tablebaseFormat` va alzato se cambia l'algoritmo.
 
 ## Tempi e spazio
 

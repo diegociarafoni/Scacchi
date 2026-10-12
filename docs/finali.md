@@ -37,4 +37,4 @@ La voce **Finali** della scheda Tu compare solo dove gira il motore (Android e i
 
 ## Mossa perfetta
 
-Nelle posizioni con al massimo quattro pezzi (donna e re, torre e re, re e pedone, alfiere e cavallo) durante la prova compare la scheda «Finale perfetto» con il matto più rapido da quella posizione e il pulsante «Mossa perfetta», che disegna una freccia sulla scacchiera. Non cambia le stelle. Lucena e Philidor hanno cinque pezzi e restano senza scheda. Dettagli in [finali-perfetti.md](finali-perfetti.md).
+Nelle posizioni con al massimo quattro pezzi (donna e re, torre e re, re e pedone, alfiere e cavallo) durante la prova compare la scheda «Finale perfetto» con il matto più rapido da quella posizione e il pulsante «Mostra la mossa perfetta», che disegna una freccia sulla scacchiera. Non cambia le stelle. Lucena e Philidor hanno cinque pezzi e restano senza scheda. Dettagli in [finali-perfetti.md](finali-perfetti.md).

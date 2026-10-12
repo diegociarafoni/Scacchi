@@ -60,32 +60,22 @@ class TablebaseService {
   /// parallelo per non consumare batteria e memoria.
   Future<void> _queue = Future.value();
 
-  late final Tablebase tablebase = Tablebase(_set);
+  /// Materiali per cui il calcolo è fallito: non si ritenta a ogni mossa.
+  final Set<int> _failed = {};
 
-  /// Vero se la posizione ha un materiale gestito.
-  bool covers(Position pos) => Tablebase.covers(pos);
+  late final Tablebase tablebase = Tablebase(_set);
 
   /// Rende disponibili le tabelle per [pos], generandole se servono.
   /// Restituisce `false` se la posizione non è coperta o se la generazione
   /// non è riuscita (disco pieno, memoria).
   Future<bool> prepare(Position pos) {
     final material = Tablebase.materialOf(pos);
-    if (material == null) return Future.value(false);
+    if (material == null || _failed.contains(material.canonical.code)) {
+      return Future.value(false);
+    }
     final run = _queue.then((_) => _prepare(material));
     _queue = run.then<void>((_) {}, onError: (Object _) {});
     return run;
-  }
-
-  /// Vero se tutte le tabelle per [pos] sono già in memoria o su disco, cioè
-  /// se [prepare] sarà rapido.
-  Future<bool> isReady(Position pos) async {
-    final material = Tablebase.materialOf(pos);
-    if (material == null) return false;
-    for (final m in TbSet.closure(material)) {
-      if (_set.table(m) != null) continue;
-      if (!(await _file(m)).existsSync()) return false;
-    }
-    return true;
   }
 
   Future<bool> _prepare(TbMaterial material) async {
@@ -103,8 +93,9 @@ class TablebaseService {
         }
       }
       if (!missing) return true;
-      for (final table in _set.tables) {
-        ready[table.material.name] = table.values;
+      for (final m in needed) {
+        final table = _set.table(m);
+        if (table != null) ready[m.name] = table.values;
       }
       final created = await builder(material.canonical.name, ready);
       for (final entry in created.entries) {
@@ -114,6 +105,7 @@ class TablebaseService {
       }
       return _set.table(material) != null;
     } on Object {
+      _failed.add(material.canonical.code);
       return false;
     }
   }
@@ -146,7 +138,7 @@ class TablebaseService {
       await tmp.writeAsBytes(ZLibEncoder().convert(values), flush: true);
       // Rinomina atomica: un'interruzione non lascia il file a metà.
       await tmp.rename(file.path);
-    } on FileSystemException {
+    } on Object {
       // Senza cache le tabelle restano valide in memoria.
     }
   }
