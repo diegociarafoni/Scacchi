@@ -10,7 +10,7 @@ import '../minigames/minigames_page.dart';
 import '../multiplayer/multiplayer_page.dart';
 import '../path/curriculum.dart';
 import '../path/path_controller.dart';
-import '../path/path_page.dart';
+import '../path/path_page.dart' show PlayGuardian;
 import '../path/stage_page.dart';
 import '../physical/physical_game_page.dart';
 import '../physical/physical_l10n.dart';
@@ -20,6 +20,7 @@ import '../progress/xp.dart';
 import '../reminders/reminder_controller.dart';
 import '../stats/portrait_page.dart';
 import '../stats/stats_page.dart';
+import '../story/story.dart';
 import '../story/story_l10n.dart';
 import '../summary/weekly_summary_page.dart';
 import '../theme/rokko_theme.dart';
@@ -55,7 +56,7 @@ class YouPage extends StatefulWidget {
   /// adulti, solo profilo, percorso e minigiochi.
   final bool simple;
 
-  /// Partita contro il guardiano; senza, le tappe guardiano mostrano un avviso.
+  /// Partita contro il guardiano; la Storia la riceve da HomeShell.
   final PlayGuardian? playGuardian;
 
   /// Percorso a storia (RG-13); senza, la voce non compare.
@@ -156,16 +157,6 @@ class _YouPageState extends State<YouPage> {
         builder: (context, snapshot) {
           final controller = snapshot.data;
           final learn = <Widget>[
-            _Entry(
-              icon: Icons.route_outlined,
-              title: l10n.youPath,
-              subtitle: l10n.youPathSubtitle,
-              onTap: () => _open(
-                context,
-                w.path(),
-                (c) => PathPage(controller: c, playGuardian: w.playGuardian),
-              ),
-            ),
             if (w.storyPage != null)
               _Entry(
                 icon: Icons.auto_stories_outlined,
@@ -308,17 +299,12 @@ class _YouPageState extends State<YouPage> {
     );
   }
 
-  /// Riprende dalla prossima tappa: le lezioni si aprono subito, il
-  /// guardiano passa dal Percorso, che sa avviare la partita.
+  /// Riprende dalla Storia, che propone il passo giusto; senza storia le
+  /// lezioni si aprono da sole.
   Future<void> _continue(Stage stage) async {
-    if (stage.isGuardian) {
-      return _open(
-        context,
-        _pathFuture,
-        (c) => PathPage(controller: c, playGuardian: widget.playGuardian),
-      );
-    }
-    return _playLesson(context, stage);
+    final story = widget.storyPage;
+    if (story != null) return _open(context, story(), (p) => p);
+    if (!stage.isGuardian) return _playLesson(context, stage);
   }
 }
 
@@ -375,7 +361,7 @@ class _ContinueCard extends StatelessWidget {
         return ListenableBuilder(
           listenable: controller,
           builder: (context, _) {
-            final stage = controller.progress.nextStage;
+            final stage = nextStoryStage(controller.progress);
             if (stage == null) return const SizedBox.shrink();
             final l10n = AppLocalizations.of(context);
             final scheme = Theme.of(context).colorScheme;

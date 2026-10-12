@@ -290,12 +290,14 @@ void main() {
             path: () => Completer<PathController>().future,
             archive: () => Completer<GameArchive>().future,
             tournamentPage: () async => const SizedBox(),
+            storyPage: () async => const SizedBox(),
           ),
         ),
       );
       await tester.pumpAndSettle();
       expect(find.text('Tornei'), findsNothing);
-      expect(find.text('Percorso'), findsOneWidget);
+      expect(find.text('Storia'), findsOneWidget);
+      expect(find.text('Percorso'), findsNothing);
     });
 
     testWidgets('le stelle si fermano a dieci', (tester) async {
