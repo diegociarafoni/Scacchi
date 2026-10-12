@@ -3,7 +3,7 @@
   "@multiplayerTitle": {
     "description": "Titolo della schermata e voce di menu della partita su due telefoni"
   },
-  "multiplayerEntrySubtitle": "Su due telefoni nella stessa Wi-Fi o hotspot",
+  "multiplayerEntrySubtitle": "Su due telefoni, con Wi-Fi, hotspot o Bluetooth",
   "@multiplayerEntrySubtitle": {
     "description": "Sottotitolo della voce di menu"
   },
