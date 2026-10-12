@@ -3267,6 +3267,10 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
   var _handicapGiver = HandicapGiver.player;
   bool get _friend => _setup.opponent == Opponent.friend;
 
+  // Il pannello nasce alla prima scelta di «Amico» e poi resta, per non
+  // perdere colore, canale e cadenza passando da un avversario all'altro.
+  bool _friendShown = false;
+
   Handicap? get _handicap => _handicapPiece == null && _handicapMinutes == null
       ? null
       : Handicap(
@@ -3341,12 +3345,24 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
               computerAvailable: widget.computerAvailable,
               kidMode: widget.kidMode,
               friendAvailable: !widget.kid && !widget.kidMode,
-              onChanged: (setup) => setState(() => _setup = setup),
+              onChanged: (setup) => setState(() {
+                _setup = setup;
+                _friendShown |= setup.opponent == Opponent.friend;
+              }),
             ),
-            if (_friend) ...[
-              const SizedBox(height: 16),
-              FriendGamePanel(inCard: false, clockBuilder: _friendClock),
-            ],
+            if (_friendShown)
+              Offstage(
+                offstage: !_friend,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: FriendGamePanel(
+                    inCard: false,
+                    clockBuilder: _friendClock,
+                    // La partita a due telefoni prende il posto del foglio.
+                    onGameClosed: () => Navigator.pop(context),
+                  ),
+                ),
+              ),
             if (_setup.opponent == Opponent.human) ...[
               const SizedBox(height: 8),
               Row(
@@ -3446,7 +3462,7 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
         if (remote) ...[
           const SizedBox(height: 4),
           Text(
-            AppLocalizations.of(context).friendClockRemoteHint,
+            multiplayerL10n(context).friendClockRemoteHint,
             style: theme.textTheme.bodySmall,
           ),
         ],

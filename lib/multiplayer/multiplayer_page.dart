@@ -68,6 +68,7 @@ class FriendGamePanel extends StatefulWidget {
     this.remoteWatch,
     this.clockBuilder,
     this.inCard = true,
+    this.onGameClosed,
   });
 
   final OpenHost openHost;
@@ -86,6 +87,9 @@ class FriendGamePanel extends StatefulWidget {
 
   /// Impostazioni dentro una scheda, come nella pagina; nel foglio no.
   final bool inCard;
+
+  /// Chiamata quando si torna dalla schermata della partita a due telefoni.
+  final VoidCallback? onGameClosed;
   final ResumeHost openResumeHost;
 
   /// Dove sta la partita salvata; per default il file dell'app.
@@ -206,6 +210,7 @@ class _FriendGamePanelState extends State<FriendGamePanel> {
           ),
         ),
       );
+      if (mounted) widget.onGameClosed?.call();
     } on NoLocalNetwork {
       messenger.showSnackBar(
         SnackBar(content: Text(l10n.multiplayerNoNetwork)),
@@ -256,7 +261,6 @@ class _FriendGamePanelState extends State<FriendGamePanel> {
     });
   }
 
-  @override
   @override
   Widget build(BuildContext context) {
     final l10n = multiplayerL10n(context);

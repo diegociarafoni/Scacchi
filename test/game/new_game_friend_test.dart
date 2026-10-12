@@ -102,4 +102,24 @@ void main() {
     await _openSheet(tester, kid: true);
     expect(find.text('Amico'), findsNothing);
   });
+
+  testWidgets('cambiando avversario e tornando, le scelte restano', (
+    tester,
+  ) async {
+    await _openSheet(tester);
+    await tester.tap(find.text('Amico'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byType(Switch));
+    await tester.pumpAndSettle();
+    final chip = find.widgetWithText(ChoiceChip, '3+0');
+    await tester.ensureVisible(chip);
+    await tester.tap(chip);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Due giocatori'));
+    await tester.pumpAndSettle();
+    expect(find.text('Crea la partita'), findsNothing);
+    await tester.tap(find.text('Amico'));
+    await tester.pumpAndSettle();
+    expect(tester.widget<ChoiceChip>(chip).selected, isTrue);
+  });
 }
