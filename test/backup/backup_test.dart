@@ -47,6 +47,101 @@ void main() {
     expect(backup.files.keys, contains('story.json'));
   });
 
+  group('dati aggiunti dopo la prima versione', () {
+    const extra = [
+      'week.json',
+      'masters.json',
+      'endgames.json',
+      'multiplayer.json',
+    ];
+
+    test('settimana, maestri, finali e partita a due telefoni', () async {
+      for (final n in extra) {
+        data(n, '{"version":1,"n":"$n"}');
+      }
+      final backup = await Backup.collect(dir, {});
+      expect(backup.files.keys, containsAll(extra));
+      final copy = Backup.decode(backup.encode());
+      expect(copy.files, backup.files);
+    });
+
+    test('la foto del profilo viaggia nel file come binario', () async {
+      final bytes = List<int>.generate(256, (i) => i);
+      File('${dir.path}/avatar_photo.jpg').writeAsBytesSync(bytes);
+      final backup = await Backup.collect(dir, {});
+      expect(backup.binaries['avatar_photo.jpg'], bytes);
+      final copy = Backup.decode(backup.encode());
+      expect(copy.binaries['avatar_photo.jpg'], bytes);
+    });
+
+    test('il ripristino riscrive file e foto', () async {
+      data('week.json', '{"version":1,"n":1}');
+      File('${dir.path}/avatar_photo.jpg').writeAsBytesSync([1, 2, 3]);
+      final backup = await Backup.collect(dir, {});
+      data('week.json', '{"version":1,"n":2}');
+      File('${dir.path}/avatar_photo.jpg').writeAsBytesSync([9]);
+      await backup.stage(dir);
+      await Backup.applyPending(dir, (_) async {});
+      expect(file('week.json'), '{"version":1,"n":1}');
+      expect(File('${dir.path}/avatar_photo.jpg').readAsBytesSync(), [1, 2, 3]);
+    });
+
+    test('un backup vecchio non tocca i dati che non conosceva', () async {
+      for (final n in extra) {
+        data(n, '{"version":1}');
+      }
+      File('${dir.path}/avatar_photo.jpg').writeAsBytesSync([7]);
+      data('games.json', '{"version":1,"games":[2]}');
+      final old = jsonEncode({
+        'app': 'scacchi',
+        'version': 1,
+        'files': {'games.json': '{"version":1,"games":[1]}'},
+        'preferences': <String, Object?>{},
+      });
+      await Backup.decode(old).stage(dir);
+      await Backup.applyPending(dir, (_) async {});
+      expect(file('games.json'), '{"version":1,"games":[1]}');
+      for (final n in extra) {
+        expect(file(n), '{"version":1}');
+      }
+      expect(File('${dir.path}/avatar_photo.jpg').readAsBytesSync(), [7]);
+    });
+
+    test('un backup nuovo senza foto toglie quella locale', () async {
+      final backup = await Backup.collect(dir, {});
+      File('${dir.path}/avatar_photo.jpg').writeAsBytesSync([7]);
+      await backup.stage(dir);
+      await Backup.applyPending(dir, (_) async {});
+      expect(File('${dir.path}/avatar_photo.jpg').existsSync(), isFalse);
+    });
+
+    test('rifiuta un binario fuori elenco o non base64', () {
+      Map<String, Object?> json(Object blobs) => {
+        'app': 'scacchi',
+        'version': 2,
+        'files': <String, Object?>{},
+        'binaries': blobs,
+        'preferences': <String, Object?>{},
+      };
+      expect(
+        () => Backup.decode(jsonEncode(json({'../x.jpg': 'AAA='}))),
+        throwsA(isA<BackupException>()),
+      );
+      for (final bad in ['%%%', null]) {
+        expect(
+          () => Backup.decode(jsonEncode(json({'avatar_photo.jpg': bad}))),
+          throwsA(
+            isA<BackupException>().having(
+              (e) => e.problem,
+              'problem',
+              BackupProblem.invalidFile,
+            ),
+          ),
+        );
+      }
+    });
+  });
+
   group('ripristino all\'avvio', () {
     test('sostituisce i dati e conserva quelli precedenti', () async {
       data('games.json', '{"version":1,"games":[1]}');
@@ -121,7 +216,7 @@ void main() {
       expect(() => Backup.decode('ciao'), throwsA(isA<BackupException>()));
     });
     rejects('altra app', {...valid(), 'app': 'altro'});
-    rejects('versione futura', {...valid(), 'version': 2});
+    rejects('versione futura', {...valid(), 'version': 3});
     rejects('nome di file fuori dall\'elenco', {
       ...valid(),
       'files': {'../evil.json': '{"version":1}'},
