@@ -13,8 +13,14 @@ import 'transport.dart';
 /// Partita a due su uno o più canali: unisce registro, sigillo e canali.
 /// Cambiare canale non cambia la partita, che continua su quello che c'è.
 class MultiplayerSession {
-  MultiplayerSession._(this.invite, this.identity, this.transport, this.sync)
-    : _codec = MessageCodec(gameId: invite.gameId, secret: invite.secret) {
+  MultiplayerSession._(
+    this.invite,
+    this.identity,
+    this.transport,
+    this.sync,
+    Map<int, Uint8List> sealed,
+  ) : _codec = MessageCodec(gameId: invite.gameId, secret: invite.secret) {
+    _sealed.addAll(sealed);
     // Un messaggio alla volta: decifrature concluse fuori ordine
     // produrrebbero buchi fittizi nel registro.
     _sub = transport.incoming.listen(
@@ -32,6 +38,7 @@ class MultiplayerSession {
     MultiTransport transport, {
     Iterable<String> moves = const [],
     Uint8List? peerKey,
+    Map<int, Uint8List> sealed = const {},
   }) => MultiplayerSession._(
     invite,
     identity,
@@ -42,6 +49,7 @@ class MultiplayerSession {
       peerKey: peerKey,
       moves: moves,
     ),
+    sealed,
   );
 
   /// Chi ha ricevuto l'invito; conosce già la chiave dell'ospite.
@@ -50,6 +58,7 @@ class MultiplayerSession {
     PlayerIdentity identity,
     MultiTransport transport, {
     Iterable<String> moves = const [],
+    Map<int, Uint8List> sealed = const {},
   }) => MultiplayerSession._(
     invite,
     identity,
@@ -60,6 +69,7 @@ class MultiplayerSession {
       peerKey: invite.hostKey,
       moves: moves,
     ),
+    sealed,
   );
 
   final GameInvite invite;
@@ -74,6 +84,9 @@ class MultiplayerSession {
   // Messaggi sigillati di ogni semimossa, rimandati identici nel recupero:
   // così ognuno arriva con la firma del suo autore.
   final _sealed = <int, Uint8List>{};
+
+  /// Copia dei messaggi sigillati, da salvare con la partita.
+  Map<int, Uint8List> get sealedMessages => Map.of(_sealed);
 
   final _events = StreamController<SyncResult>.broadcast();
 
