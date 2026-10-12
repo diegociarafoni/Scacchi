@@ -8,16 +8,7 @@ import 'settings.dart';
 
 /// Voci del menu delle Impostazioni, nell'ordine in cui compaiono; il profilo
 /// bambino sta in fondo, separato.
-enum SettingsSection {
-  profile,
-  style,
-  board,
-  game,
-  coach,
-  accessibility,
-  data,
-  kid,
-}
+enum SettingsSection { profile, style, board, game, accessibility, kid }
 
 /// Menu di sezioni: icona, nome e una riga che dice cosa contiene. Le
 /// impostazioni stanno nelle pagine delle sezioni.
@@ -26,14 +17,14 @@ class SettingsPage extends StatelessWidget {
 
   final SettingsController controller;
 
-  /// Progressi che sbloccano temi e pezzi; senza, tutto è disponibile e la
-  /// sezione Profilo non c'è.
+  /// Progressi che sbloccano temi e pezzi; senza, tutto è disponibile e il
+  /// Profilo ha solo il backup.
   final ProgressController? progress;
 
   Widget _page(SettingsSection section) => switch (section) {
     SettingsSection.profile => ProfileSettingsPage(
       controller: controller,
-      progress: progress!,
+      progress: progress,
     ),
     SettingsSection.style => AppearanceSettingsPage(
       controller: controller,
@@ -47,15 +38,7 @@ class SettingsPage extends StatelessWidget {
       controller: controller,
       progress: progress,
     ),
-    SettingsSection.coach => CoachSettingsPage(
-      controller: controller,
-      progress: progress,
-    ),
     SettingsSection.accessibility => AccessibilitySettingsPage(
-      controller: controller,
-      progress: progress,
-    ),
-    SettingsSection.data => DataSettingsPage(
       controller: controller,
       progress: progress,
     ),
@@ -89,20 +72,10 @@ class SettingsPage extends StatelessWidget {
       l10n.settingsSectionGame,
       l10n.settingsSectionGameHint,
     ),
-    SettingsSection.coach => (
-      Icons.school_outlined,
-      l10n.settingsSectionCoach,
-      l10n.settingsSectionCoachHint,
-    ),
     SettingsSection.accessibility => (
       Icons.accessibility_new,
       l10n.settingsSectionAccessibility,
       l10n.settingsSectionAccessibilityHint,
-    ),
-    SettingsSection.data => (
-      Icons.backup_outlined,
-      l10n.settingsSectionData,
-      l10n.settingsSectionDataHint,
     ),
     SettingsSection.kid => (
       Icons.child_care,
@@ -115,10 +88,7 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final tokens = RokkoTokens.of(context);
-    final sections = [
-      for (final s in SettingsSection.values)
-        if (s != SettingsSection.profile || progress != null) s,
-    ];
+    const sections = SettingsSection.values;
     Widget tile(SettingsSection section) {
       final (icon, title, hint) = _entry(l10n, section);
       return ListTile(

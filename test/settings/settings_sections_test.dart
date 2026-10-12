@@ -9,6 +9,7 @@ import 'package:scacchi/progress/progress_controller.dart';
 import 'package:scacchi/progress/progress_store.dart';
 import 'package:scacchi/settings/settings.dart';
 import 'package:scacchi/settings/settings_page.dart';
+import 'package:scacchi/settings/settings_widgets.dart';
 import 'package:scacchi/theme/rokko_theme.dart';
 
 import 'settings_nav.dart';
@@ -63,7 +64,11 @@ void main() {
   Finder section(SettingsSection s) => find.byKey(Key('section-${s.name}'));
 
   const order = [
-    (SettingsSection.profile, 'Profilo', 'Avatar, foto e progressi'),
+    (
+      SettingsSection.profile,
+      'Profilo e dati',
+      'Avatar, progressi e copie di sicurezza',
+    ),
     (
       SettingsSection.style,
       'Stile',
@@ -74,18 +79,16 @@ void main() {
       'Scacchiera',
       'Suoni, vibrazione, coordinate, mosse legali e notazione',
     ),
-    (SettingsSection.game, 'Gioca', 'Promozione, rotazione e modalità tavolo'),
     (
-      SettingsSection.coach,
-      'Istruttore',
-      'Spiegazioni dopo le mosse del computer',
+      SettingsSection.game,
+      'Partita',
+      'Promozione, rotazione, modalità tavolo e spiegazioni',
     ),
     (
       SettingsSection.accessibility,
       'Accessibilità',
       'Colori per daltonici, modalità zen e conferma della mossa',
     ),
-    (SettingsSection.data, 'Dati', 'Copie di sicurezza dei dati locali'),
     (
       SettingsSection.kid,
       'Profilo bambino',
@@ -138,10 +141,34 @@ void main() {
     expect(find.byType(Divider), findsOneWidget);
   });
 
-  testWidgets('senza progressi la sezione Profilo non c\'è', (tester) async {
+  testWidgets('senza progressi il Profilo ha solo il backup', (tester) async {
     await show(tester, withProgress: false);
-    expect(section(SettingsSection.profile), findsNothing);
-    expect(section(SettingsSection.style), findsOneWidget);
+    await openSection(tester, SettingsSection.profile);
+    expect(find.byKey(const Key('backup')), findsOneWidget);
+    expect(find.byKey(const Key('openProfile')), findsNothing);
+    expect(find.byKey(const Key('progressEnabled')), findsNothing);
+  });
+
+  testWidgets('poche sezioni, ciascuna con almeno due voci', (tester) async {
+    expect(SettingsSection.values.length, lessThanOrEqualTo(6));
+    await show(tester, logical: const Size(390, 3000));
+    // Il profilo bambino è una sola scelta, tenuta a parte in fondo.
+    for (final (id, _, _) in order.where((e) => e.$1 != SettingsSection.kid)) {
+      await openSection(tester, id);
+      final count =
+          find.byType(SwitchListTile).evaluate().length +
+          find
+              .descendant(
+                of: find.byType(ListView),
+                matching: find.byType(ListTile),
+              )
+              .evaluate()
+              .length +
+          find.byType(SettingsChoiceTile<AnimationSpeed>).evaluate().length +
+          find.byType(SettingsGallery<BoardTheme>).evaluate().length;
+      expect(count, greaterThanOrEqualTo(2), reason: id.name);
+      await backToMenu(tester);
+    }
   });
 
   testWidgets('ogni sezione si apre in una pagina propria e si torna al menu', (
@@ -183,7 +210,7 @@ void main() {
   testWidgets('le impostazioni sono nelle sezioni giuste', (tester) async {
     await show(tester, logical: const Size(390, 3000));
     const keys = {
-      SettingsSection.profile: ['openProfile', 'progressEnabled'],
+      SettingsSection.profile: ['openProfile', 'progressEnabled', 'backup'],
       SettingsSection.style: ['unlockAll', 'theme-tile-spazio'],
       SettingsSection.board: [
         'sound',
@@ -194,10 +221,13 @@ void main() {
         'legalMoves',
         'drawShapes',
       ],
-      SettingsSection.game: ['autoQueen', 'autoFlip', 'tableMode'],
-      SettingsSection.coach: ['explainWhy'],
+      SettingsSection.game: [
+        'autoQueen',
+        'autoFlip',
+        'tableMode',
+        'explainWhy',
+      ],
       SettingsSection.accessibility: ['colorBlind', 'zenMode', 'confirmMove'],
-      SettingsSection.data: ['backup'],
       SettingsSection.kid: ['kidMode'],
     };
     for (final MapEntry(key: id, value: ids) in keys.entries) {
@@ -379,13 +409,11 @@ void main() {
     await show(tester, locale: 'en', logical: const Size(390, 1200));
     expect(find.text('Settings'), findsOneWidget);
     for (final title in [
-      'Profile',
+      'Profile and data',
       'Style',
       'Board',
-      'Play',
-      'Coach',
+      'Game',
       'Accessibility',
-      'Data',
       'Kid profile',
     ]) {
       expect(find.text(title), findsOneWidget, reason: title);

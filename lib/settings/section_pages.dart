@@ -242,34 +242,15 @@ class GameSettingsPage extends _SectionPage {
             value: s.tableMode,
             onChanged: (v) => _set((c) => c.copyWith(tableMode: v)),
           ),
+          SwitchListTile(
+            key: const Key('explainWhy'),
+            title: Text(l10n.settingsExplainWhy),
+            subtitle: Text(l10n.settingsExplainWhyDescription),
+            value: s.explainWhy,
+            onChanged: (v) => _set((c) => c.copyWith(explainWhy: v)),
+          ),
         ];
       },
-    );
-  }
-}
-
-class CoachSettingsPage extends _SectionPage {
-  const CoachSettingsPage({
-    super.key,
-    required super.controller,
-    super.progress,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    return SettingsSectionScaffold(
-      title: l10n.settingsSectionCoach,
-      listenable: _listenable,
-      builder: (context) => [
-        SwitchListTile(
-          key: const Key('explainWhy'),
-          title: Text(l10n.settingsExplainWhy),
-          subtitle: Text(l10n.settingsExplainWhyDescription),
-          value: _s.explainWhy,
-          onChanged: (v) => _set((c) => c.copyWith(explainWhy: v)),
-        ),
-      ],
     );
   }
 }
@@ -318,48 +299,9 @@ class AccessibilitySettingsPage extends _SectionPage {
   }
 }
 
+/// Profilo, progressi e copie di sicurezza; senza progressi resta il backup.
 class ProfileSettingsPage extends _SectionPage {
   const ProfileSettingsPage({
-    super.key,
-    required super.controller,
-    required ProgressController super.progress,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    final p = progress!;
-    return SettingsSectionScaffold(
-      title: l10n.settingsSectionProfile,
-      listenable: _listenable,
-      builder: (context) => [
-        ListTile(
-          key: const Key('openProfile'),
-          leading: const Icon(Icons.person_outline),
-          title: Text(l10n.settingsOpenProfile),
-          subtitle: Text(l10n.settingsOpenProfileDescription),
-          trailing: const Icon(Icons.chevron_right),
-          onTap: () => Navigator.push(
-            context,
-            MaterialPageRoute<void>(builder: (_) => ProfilePage(controller: p)),
-          ),
-        ),
-        // Scelta da adulti: nel profilo bambino non si cambia da qui.
-        if (!_s.kidMode)
-          SwitchListTile(
-            key: const Key('progressEnabled'),
-            title: Text(l10n.settingsProgressEnabled),
-            subtitle: Text(l10n.settingsProgressEnabledDescription),
-            value: p.settings.enabled,
-            onChanged: (v) => p.updateSettings(p.settings.copyWith(enabled: v)),
-          ),
-      ],
-    );
-  }
-}
-
-class DataSettingsPage extends _SectionPage {
-  const DataSettingsPage({
     super.key,
     required super.controller,
     super.progress,
@@ -368,10 +310,36 @@ class DataSettingsPage extends _SectionPage {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final p = progress;
     return SettingsSectionScaffold(
-      title: l10n.settingsSectionData,
+      title: l10n.settingsSectionProfile,
       listenable: _listenable,
       builder: (context) => [
+        if (p != null) ...[
+          ListTile(
+            key: const Key('openProfile'),
+            leading: const Icon(Icons.person_outline),
+            title: Text(l10n.settingsOpenProfile),
+            subtitle: Text(l10n.settingsOpenProfileDescription),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute<void>(
+                builder: (_) => ProfilePage(controller: p),
+              ),
+            ),
+          ),
+          // Scelta da adulti: nel profilo bambino non si cambia da qui.
+          if (!_s.kidMode)
+            SwitchListTile(
+              key: const Key('progressEnabled'),
+              title: Text(l10n.settingsProgressEnabled),
+              subtitle: Text(l10n.settingsProgressEnabledDescription),
+              value: p.settings.enabled,
+              onChanged: (v) =>
+                  p.updateSettings(p.settings.copyWith(enabled: v)),
+            ),
+        ],
         ListTile(
           key: const Key('backup'),
           leading: const Icon(Icons.backup_outlined),

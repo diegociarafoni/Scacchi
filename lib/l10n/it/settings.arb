@@ -27,11 +27,11 @@
   "@settingsSectionBoardHint": {
     "description": "Impostazioni: riga sotto il titolo della sezione Scacchiera"
   },
-  "settingsSectionGame": "Gioca",
+  "settingsSectionGame": "Partita",
   "@settingsSectionGame": {
     "description": "Impostazioni: titolo della sezione"
   },
-  "settingsSectionGameHint": "Promozione, rotazione e modalità tavolo",
+  "settingsSectionGameHint": "Promozione, rotazione, modalità tavolo e spiegazioni",
   "@settingsSectionGameHint": {
     "description": "Impostazioni: riga sotto il titolo della sezione Gioco"
   },
@@ -42,14 +42,6 @@
   "settingsSectionAccessibilityHint": "Colori per daltonici, modalità zen e conferma della mossa",
   "@settingsSectionAccessibilityHint": {
     "description": "Impostazioni: riga sotto il titolo della sezione Accessibilità"
-  },
-  "settingsSectionData": "Dati",
-  "@settingsSectionData": {
-    "description": "Impostazioni: titolo della sezione"
-  },
-  "settingsSectionDataHint": "Copie di sicurezza dei dati locali",
-  "@settingsSectionDataHint": {
-    "description": "Impostazioni: riga sotto il titolo della sezione Dati"
   },
   "settingsPreview": "Anteprima",
   "@settingsPreview": {
@@ -369,11 +361,11 @@
   "@settingsThemeTerracotta": {
     "description": "Impostazioni: nome del tema della scacchiera"
   },
-  "settingsSectionProfile": "Profilo",
+  "settingsSectionProfile": "Profilo e dati",
   "@settingsSectionProfile": {
     "description": "Impostazioni: titolo della sezione Profilo"
   },
-  "settingsSectionProfileHint": "Avatar, foto e progressi",
+  "settingsSectionProfileHint": "Avatar, progressi e copie di sicurezza",
   "@settingsSectionProfileHint": {
     "description": "Impostazioni: riga sotto il titolo della sezione Profilo"
   },
@@ -384,14 +376,6 @@
   "settingsSectionStyleHint": "Tema dell'app, scacchiera, pezzi e animazioni",
   "@settingsSectionStyleHint": {
     "description": "Impostazioni: riga sotto il titolo della sezione Stile"
-  },
-  "settingsSectionCoach": "Istruttore",
-  "@settingsSectionCoach": {
-    "description": "Impostazioni: titolo della sezione"
-  },
-  "settingsSectionCoachHint": "Spiegazioni dopo le mosse del computer",
-  "@settingsSectionCoachHint": {
-    "description": "Impostazioni: riga sotto il titolo della sezione Istruttore"
   },
   "settingsLegalMovesDescription": "Punti sulle case dove può andare il pezzo scelto",
   "@settingsLegalMovesDescription": {

@@ -109,18 +109,18 @@ La pagina principale è un menu di sezioni: ogni voce ha icona, nome e una riga 
 
 | Sezione | Contenuto |
 |---|---|
-| Profilo | Apre il profilo (avatar, foto, obiettivo giornaliero, promemoria) e accende o spegne XP, serie e traguardi; c'è solo se i progressi sono disponibili |
+| Profilo e dati | Apre il profilo (avatar, foto, obiettivo giornaliero, promemoria), accende o spegne XP, serie e traguardi (non nel profilo bambino) e apre backup e ripristino; senza progressi resta solo il backup |
 | Stile | Aspetto dell'app, galleria dei temi, galleria dei pezzi, «Sblocca tutto» (`AppearanceSettingsPage`, che la pagina Stile del thread dedicato sostituirà) |
 | Scacchiera | Suoni, volume, vibrazione, coordinate (anche fuori), evidenzia l'ultima mossa, mosse legali, frecce e cerchi, animazioni, notazione |
-| Gioca | Promuovi sempre a donna, ruota a ogni turno, modalità tavolo |
-| Istruttore | «Spiegami perché» |
+| Partita | Promuovi sempre a donna, ruota a ogni turno, modalità tavolo, «Spiegami perché» |
 | Accessibilità | Colori per daltonici, modalità zen, conferma della mossa |
-| Dati | Backup e ripristino |
 | Profilo bambino | In fondo, sotto un separatore; per uscirne serve la domanda per adulti |
+
+Poche sezioni, nessuna con meno di due voci (lo controlla un test): una sezione per ogni cosa che l'utente cerca, non una per ogni funzione.
 
 Le pagine che cambiano l'aspetto della scacchiera (Stile, Scacchiera, Accessibilità) hanno in cima, fissa mentre si scorre, un'anteprima: mostra una posizione di prova con tema, pezzi, coordinate, mosse legali, ultima mossa, colori per daltonici e velocità delle animazioni correnti, e si aggiorna a ogni scelta. Toccandola si gioca la mossa di prova (l'alfiere prende in c6), con l'animazione scelta; un secondo tocco la ripristina. Il pulsante a destra del titolo (48 dp) la comprime a una riga con tema e pezzi, per lasciare spazio alle impostazioni sui telefoni piccoli. L'anteprima ha un'etichetta per i lettori di schermo.
 
-Il codice è diviso così: `settings_page.dart` è il menu (`SettingsSection`), `section_pages.dart` ha una pagina per sezione e `settings_widgets.dart` i pezzi condivisi (anteprima, gallerie, scelte a chip, volume). Una sezione nuova si aggiunge a `SettingsSection`, alle voci del menu e a una pagina in `section_pages.dart`.
+Il codice è diviso così: `settings_page.dart` è il menu (`SettingsSection`), `section_pages.dart` ha una pagina per sezione e `settings_widgets.dart` i pezzi condivisi (anteprima, gallerie, scelte a chip, volume). Una sezione nuova si aggiunge a `SettingsSection`, alle voci del menu e a una pagina in `section_pages.dart`, solo se ha almeno due voci.
 
 **Non ancora disponibili** (richiedono lavoro vero, non solo una voce di menu): lingua scelta nell'app (oggi segue il telefono), impostazioni della Home (cosa mostrare nella dashboard), dei Problemi (difficoltà, punteggio, obiettivi, timer, feedback sugli errori) e dell'Analisi (analisi rapida, barra di valutazione, frecce, linee del motore, commenti), «Ingrandisci i pezzi», metodo di arrocco, schermata di fine partita e notifiche.
 
