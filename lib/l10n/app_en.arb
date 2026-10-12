@@ -449,5 +449,67 @@
   "tablebaseDraw": "Draw with perfect play",
   "tablebaseBestMove": "Perfect move: {move}",
   "tablebaseBestMoveHint": "Play the perfect move",
-  "tablebaseShowMove": "Show the perfect move"
+  "tablebaseShowMove": "Show the perfect move",
+  "personalTitle": "Your openings",
+  "personalHubSubtitle": "The moves you have played, with results",
+  "personalLoadFailed": "The game archive could not be read: try again later.",
+  "personalEmpty": "Play a few games against the computer to build your opening tree.",
+  "personalNoGamesFiltered": "No games match these filters.",
+  "personalNoGamesHere": "You have never played from this position.",
+  "personalSideAll": "Both",
+  "personalSideWhite": "White",
+  "personalSideBlack": "Black",
+  "personalOpponent": "Opponent",
+  "personalAllOpponents": "All opponents",
+  "personalGames": "{count, plural, one{{count} game} other{{count} games}}",
+  "@personalGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "personalGamesTotal": "{count, plural, one{{count} game counted} other{{count} games counted}}",
+  "@personalGamesTotal": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "personalScore": "{wins}W · {draws}D · {losses}L",
+  "@personalScore": {
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      }
+    }
+  },
+  "personalScoreSemantics": "{wins} won, {draws} drawn, {losses} lost",
+  "@personalScoreSemantics": {
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      }
+    }
+  },
+  "personalStartPosition": "Starting position",
+  "personalNoName": "Unnamed opening",
+  "personalBack": "Back",
+  "personalStart": "Start",
+  "personalFlip": "Flip the board",
+  "personalOpenInBook": "Open in the openings explorer",
+  "personalFromHere": "Your games from this position"
 }
