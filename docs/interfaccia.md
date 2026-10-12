@@ -145,6 +145,6 @@ Per ogni tema `lib/settings/color_blind.dart` sceglie, tra blu, azzurro, giallo,
 2. ogni evidenziazione deve avere, sia sulle case chiare sia sulle scure, un rapporto di contrasto WCAG almeno pari a quello dell'evidenziazione originale del tema e mai sotto 1,25, con trasparenza massima del 90%;
 3. tra le coppie valide vince quella con la trasparenza più bassa, così i pezzi restano ben visibili.
 
-I puntini delle mosse legali sono neri o bianchi, con contrasto almeno 1,6; le premosse usano il primo colore della palette non preso dalle altre evidenziazioni. Lo schema è calcolato una volta per tema e riusato, così la scacchiera non ridisegna lo sfondo.
+I puntini delle mosse legali sono neri o bianchi, con contrasto almeno 3:1 (tranne su Notte, Castello e Retrò, vedi docs/pezzi-e-scacchiere.md); le premosse usano il primo colore della palette non preso dalle altre evidenziazioni. Lo schema è calcolato una volta per tema e riusato, così la scacchiera non ridisegna lo sfondo.
 
 L'opzione vale per partita, problemi, aperture, repertorio, percorso e minigiochi. Restano invariati il bagliore rosso del re sotto scacco, disegnato da chessground con un colore fisso e riconoscibile anche dalla posizione sul re, e la casa gialla del quiz sul materiale, che non usa la coppia rosso-verde.
