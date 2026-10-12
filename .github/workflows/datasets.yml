@@ -39,11 +39,13 @@ jobs:
         shell: bash
         run: |
           python3 -m unittest discover -s tool/datasets -p 'test_*.py'
+          set +e +o pipefail
           curl -sSfL https://database.lichess.org/standard/lichess_db_standard_rated_2025-01.pgn.zst \
             | zstd -dc \
-            | python3 tool/datasets/build_opening_stats.py --max-games 6000000 --min-games 200 \
+            | python3 tool/datasets/build_opening_stats.py --max-games 6000000 --min-games 100 \
             > assets/openings/opening_stats.tsv
           status=("${PIPESTATUS[@]}")
+          set -e
           [ "${status[2]}" -eq 0 ]
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
