@@ -464,6 +464,16 @@
   "@kidPuzzleKeepGoing": {
     "description": "Sotto la scacchiera del puzzle, al posto del punteggio"
   },
+  "puzzleGoal": "{goal, select, mateIn1{Obiettivo: matto in 1} mateIn2{Obiettivo: matto in 2} mateIn3{Obiettivo: matto in 3} mateIn4{Obiettivo: matto in 4} mate{Obiettivo: dai matto} crushing{Obiettivo: ottieni un vantaggio decisivo} advantage{Obiettivo: ottieni il vantaggio} equality{Obiettivo: ottieni la parità} other{Obiettivo: trova la mossa migliore}}",
+  "@puzzleGoal": {
+    "description": "Obiettivo del puzzle mostrato sopra la scacchiera e letto dai lettori di schermo",
+    "placeholders": {
+      "goal": {
+        "type": "String",
+        "description": "Obiettivo: mateIn1, mateIn2, mateIn3, mateIn4, mate, crushing, advantage o equality"
+      }
+    }
+  },
   "kidAccuracy5": "Perfetto!",
   "@kidAccuracy5": {
     "description": "Giudizio della precisione con cinque stelle"

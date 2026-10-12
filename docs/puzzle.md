@@ -54,6 +54,7 @@ Il test `test/puzzles/puzzle_dataset_test.dart` verifica che ogni soluzione sia 
 | `lib/puzzles/run_records.dart` | Record personali delle serie |
 | `lib/puzzles/review_queue.dart` | Coda di ripasso a intervalli (Leitner) |
 | `lib/puzzles/personal_puzzles.dart` | Puzzle ricavati dagli errori delle proprie partite |
+| `lib/puzzles/puzzle_goal.dart` | Obiettivo del puzzle ricavato dai temi (`PuzzleGoal`) |
 | `lib/puzzles/themes.dart` | Nomi italiani dei temi offerti come filtro |
 | `lib/puzzles/activity_recorder.dart` | Collegamento con i progressi (`PuzzleSolved`, `PuzzleRunFinished`) |
 | `lib/puzzles/mode_guide.dart` | Obiettivo e regole di ogni modalità, in italiano |
@@ -78,6 +79,12 @@ I quattro pulsanti stanno in una riga che va a capo su due righe sugli schermi s
 Il punteggio del giocatore è un Glicko-2 locale che parte da 1500 con deviazione 350. Ogni puzzle concluso è una partita contro un avversario con il punteggio del puzzle e deviazione fissa 75: vinta se risolto al primo tentativo senza vedere la soluzione, persa altrimenti. Il punteggio cambia solo alla prima volta che si incontra un puzzle: rigiocare il puzzle del giorno o un puzzle già visto non modifica punteggio, contatori e XP, così non si possono accumulare punti ripetendo lo stesso problema.
 
 Il puzzle successivo è quello non ancora visto con difficoltà più vicina al punteggio attuale; finiti i puzzle di un tema si ripropone quello visto meno di recente, così si ripassano tutti a rotazione.
+
+## Obiettivo del puzzle
+
+Sopra il messaggio di stato, per tutta la durata del puzzle, compare l'obiettivo («Obiettivo: matto in 2», «Obiettivo: ottieni il vantaggio»), così si capisce se la mossa giusta è un matto o un guadagno. `PuzzleGoal.of` lo ricava dai temi Lichess con questa precedenza: `mateIn1`–`mateIn4`, `mate`/`mateIn5` («dai matto»), `equality`, `crushing`, `advantage`; senza questi temi la riga non compare. Il testo è localizzato (`puzzleGoal` in `lib/l10n`, italiano e inglese), è un'intestazione per i lettori di schermo e nel profilo bambino «matto in N» diventa «dai matto», perché lì non ci sono cifre.
+
+Il punteggio mostrato a fine puzzle (per esempio «Punteggio 1427 (-248)» dopo «Mosse trovate: 4 di 4») non è in contraddizione: «Mosse trovate» conta anche le mosse mostrate con «Soluzione», mentre il punteggio considera il puzzle fallito se è stata vista la soluzione o fatto un errore.
 
 ## Puzzle del giorno (RF-84)
 

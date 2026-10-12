@@ -12,6 +12,7 @@ import 'package:scacchi/puzzles/puzzle_trainer.dart';
 import 'package:scacchi/storage/key_value_store.dart';
 import 'package:scacchi/training/training_board.dart';
 
+import '../localized_app.dart';
 import 'fixtures.dart';
 
 Offset square(WidgetTester tester, String name, {bool flipped = false}) {
@@ -71,7 +72,7 @@ Future<PuzzleTrainer> pump(
     MemoryStore(),
   );
   await tester.pumpWidget(
-    MaterialApp(
+    localizedApp(
       home: PuzzlePage(
         trainer: trainer,
         puzzle: twoPuzzles ? null : (puzzle ?? backRank),
@@ -91,7 +92,43 @@ Future<PuzzleTrainer> pump(
   return trainer;
 }
 
+String? goalText(WidgetTester tester) => find
+    .byKey(const Key('puzzle-goal'))
+    .evaluate()
+    .map((e) => (e.widget as Text).data)
+    .firstOrNull;
+
 void main() {
+  testWidgets('l\'obiettivo è dichiarato sopra la scacchiera e resta', (
+    tester,
+  ) async {
+    await pump(tester);
+    expect(goalText(tester), 'Obiettivo: matto in 1');
+    await tapMove(tester, 'a1a8');
+    expect(goalText(tester), 'Obiettivo: matto in 1');
+  });
+
+  testWidgets('puzzle di vantaggio: l\'obiettivo non è il matto', (
+    tester,
+  ) async {
+    await pump(tester, puzzle: hangingQueen);
+    expect(goalText(tester), 'Obiettivo: ottieni un vantaggio decisivo');
+  });
+
+  testWidgets('senza temi utili non compare nessun obiettivo', (tester) async {
+    await pump(tester, puzzle: castle);
+    expect(goalText(tester), isNull);
+  });
+
+  testWidgets('l\'obiettivo è un\'intestazione per i lettori di schermo', (
+    tester,
+  ) async {
+    final handle = tester.ensureSemantics();
+    await pump(tester);
+    expect(find.bySemanticsLabel('Obiettivo: matto in 1'), findsOneWidget);
+    handle.dispose();
+  });
+
   testWidgets('RF-81 una mossa sbagliata viene annullata, la giusta risolve', (
     tester,
   ) async {

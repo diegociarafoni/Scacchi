@@ -15,6 +15,7 @@ import 'guide_view.dart';
 import 'mode_guide.dart';
 import 'puzzle.dart';
 import 'puzzle_feed.dart';
+import 'puzzle_goal.dart';
 import 'puzzle_session.dart';
 import 'puzzle_trainer.dart';
 import 'themes.dart';
@@ -282,6 +283,14 @@ class _PuzzlePageState extends State<PuzzlePage> {
         .take(3)
         .join(', ');
     final kid = AppSettings.of(context).kidMode;
+    // Il profilo bambino non ha cifre: «matto in N» diventa «dai matto».
+    final goal = PuzzleGoal.of(puzzle);
+    final goalText = goal == null
+        ? null
+        : Localizations.of<AppLocalizations>(
+            context,
+            AppLocalizations,
+          )?.puzzleGoal((kid && goal.isMate ? PuzzleGoal.mate : goal).key);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -312,6 +321,18 @@ class _PuzzlePageState extends State<PuzzlePage> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          if (goalText != null)
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+                              child: Semantics(
+                                header: true,
+                                child: Text(
+                                  goalText,
+                                  key: const Key('puzzle-goal'),
+                                  style: Theme.of(context).textTheme.titleSmall,
+                                ),
+                              ),
+                            ),
                           Padding(
                             padding: const EdgeInsets.all(12),
                             child: Semantics(
