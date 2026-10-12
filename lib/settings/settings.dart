@@ -4,6 +4,7 @@ import 'package:flutter/material.dart' show ThemeMode;
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'board_marks.dart';
 import 'color_blind.dart';
 import 'notation.dart';
 
@@ -127,9 +128,12 @@ enum BoardTheme {
   static final _colorBlind = <BoardTheme, ChessboardColorScheme>{};
 
   /// Sempre la stessa istanza per tema, per non ridisegnare lo sfondo.
-  ChessboardColorScheme get colorScheme =>
-      scheme ??
-      _solid.putIfAbsent(this, () => _customScheme(light!, dark!, image));
+  ChessboardColorScheme get colorScheme => _solid.putIfAbsent(
+    this,
+    () => scheme == null
+        ? _customScheme(light!, dark!, image)
+        : _withVisibleHighlights(scheme!),
+  );
 
   /// Stesse case di [colorScheme], evidenziazioni senza rosso e verde.
   ChessboardColorScheme get colorBlindScheme =>
@@ -140,6 +144,8 @@ enum BoardTheme {
 /// ben visibili, così i colori per daltonici possono ancora eguagliarla.
 const _lastMoveHues = [
   Color(0x809cc700),
+  Color(0x999cc700),
+  Color(0x52ffffff),
   Color(0xb3ffb000),
   Color(0x99e8453c),
   Color(0xb30f6fff),
@@ -154,11 +160,75 @@ const _selectedHues = [
   Color(0x80ffffff),
 ];
 
-Color _visible(List<Color> hues, Color light, Color dark) {
+const _dotHues = [
+  Color(0x4014551e),
+  Color(0x59000000),
+  Color(0x73000000),
+  Color(0x66ffffff),
+  Color(0x8cffffff),
+];
+
+Color _visible(
+  List<Color> hues,
+  Color light,
+  Color dark, [
+  double floor = minHighlightContrast,
+]) {
   double contrast(Color h) => highlightContrast(h, light, dark);
-  final visible = hues.where((h) => contrast(h) >= 1.25).toList()
+  final visible = hues.where((h) => contrast(h) >= floor).toList()
     ..sort((a, b) => contrast(a).compareTo(contrast(b)));
-  return visible.isEmpty ? hues.first : visible.first;
+  return visible.isEmpty
+      ? hues.reduce((a, b) => contrast(b) > contrast(a) ? b : a)
+      : visible.first;
+}
+
+/// [current] se già visibile, altrimenti il candidato più discreto che lo è.
+Color _keepOrVisible(
+  Color current,
+  List<Color> hues,
+  Color light,
+  Color dark, [
+  double floor = minHighlightContrast,
+]) => highlightContrast(current, light, dark) >= floor
+    ? current
+    : _visible(hues, light, dark, floor);
+
+/// Gli schemi di chessground con ultima mossa, selezione e punti delle mosse
+/// possibili alzati dove si confondono con le case.
+ChessboardColorScheme _withVisibleHighlights(ChessboardColorScheme s) {
+  final light = s.lightSquare;
+  final dark = s.darkSquare;
+  return ChessboardColorScheme(
+    lightSquare: light,
+    darkSquare: dark,
+    background: s.background,
+    whiteCoordBackground: s.whiteCoordBackground,
+    blackCoordBackground: s.blackCoordBackground,
+    lastMove: HighlightDetails(
+      solidColor: _keepOrVisible(
+        s.lastMove.solidColor!,
+        _lastMoveHues,
+        light,
+        dark,
+      ),
+    ),
+    selected: HighlightDetails(
+      solidColor: _keepOrVisible(
+        s.selected.solidColor!,
+        _selectedHues,
+        light,
+        dark,
+      ),
+    ),
+    validMoves: _keepOrVisible(
+      s.validMoves,
+      _dotHues,
+      light,
+      dark,
+      minDotContrast,
+    ),
+    validPremoves: s.validPremoves,
+  );
 }
 
 ChessboardColorScheme _customScheme(
@@ -186,18 +256,24 @@ ChessboardColorScheme _customScheme(
     background: background(),
     whiteCoordBackground: background(coordinates: Side.white),
     blackCoordBackground: background(coordinates: Side.black),
-    // I temi a tinta unita tengono le evidenziazioni di sempre.
+    // I temi a tinta unita tengono le evidenziazioni di sempre, se si vedono.
     lastMove: HighlightDetails(
       solidColor: image == null
-          ? _lastMoveHues.first
+          ? _keepOrVisible(_lastMoveHues.first, _lastMoveHues, light, dark)
           : _visible(_lastMoveHues, light, dark),
     ),
     selected: HighlightDetails(
       solidColor: image == null
-          ? _selectedHues.first
+          ? _keepOrVisible(_selectedHues.first, _selectedHues, light, dark)
           : _visible(_selectedHues, light, dark),
     ),
-    validMoves: const Color(0x4014551e),
+    validMoves: _keepOrVisible(
+      _dotHues.first,
+      _dotHues,
+      light,
+      dark,
+      minDotContrast,
+    ),
     validPremoves: const Color(0x40203085),
   );
 }
@@ -357,10 +433,16 @@ class AppSettings {
   /// daltonici se attive.
   ChessboardColorScheme get exerciseScheme => colorBlind
       ? BoardTheme.green.colorBlindScheme
-      : ChessboardColorScheme.green;
+      : BoardTheme.green.colorScheme;
+
+  /// Colori di frecce e cerchi sulla scacchiera del tema scelto.
+  BoardMarks get marks => BoardMarks.of(boardTheme, colorBlind: colorBlind);
 
   /// Colore di indizi e frecce di suggerimento.
-  Color get hintColor => colorBlind ? okabeBlue : const Color(0xff4caf50);
+  Color get hintColor => marks.hint;
+
+  /// Colore della freccia della minaccia.
+  Color get threatColor => marks.threat;
 
   /// Colore della casa toccata negli esercizi, secondo l'esito.
   Color answerColor(bool correct) => colorBlind
