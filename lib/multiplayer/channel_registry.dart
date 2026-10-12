@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 
+import 'ble_link.dart';
 import 'game_invite.dart';
 import 'transport.dart';
 
@@ -17,7 +18,8 @@ typedef ChannelFactory = Future<MessageTransport?> Function(
 /// Il controller li apre a ogni partita (nuova, unita o ripresa) e li aggiunge
 /// al `MultiTransport` appena sono pronti; si chiudono con la partita.
 final List<ChannelFactory> extraChannelFactories = [
-  // Esempio: openBleChannel, openNostrChannel
+  openBleChannel,
+  // Esempio: openNostrChannel
 ];
 
 /// Apre i canali di [factories] e li aggiunge a [transport] appena pronti.

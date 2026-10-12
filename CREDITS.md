@@ -31,6 +31,7 @@
 | [zint](https://github.com/zint/zint), incluso in flutter_zxing | Generazione dei codici a barre nativa (non usata dall'app) | BSD-3-Clause |
 | [camera](https://pub.dev/packages/camera) e [image_picker](https://pub.dev/packages/image_picker) (Flutter) | Fotocamera e scelta di un'immagine per il lettore QR | BSD-3-Clause |
 | [cryptography](https://pub.dev/packages/cryptography) (Gohilla) | Firma Ed25519, cifratura AES-GCM e HKDF del multigiocatore | Apache-2.0 |
+| [bluetooth_low_energy](https://pub.dev/packages/bluetooth_low_energy) (yanshouwang) | Canale Bluetooth LE del multigiocatore, per giocare vicini senza Wi-Fi | MIT |
 | [crypto](https://pub.dev/packages/crypto) (Dart) | Impronta SHA-256 delle posizioni nel multigiocatore | BSD-3-Clause |
 | Suoni in `assets/sounds/`, generati da `tool/generate_sounds.py` | Effetti sonori | Opera originale del progetto, CC0 |
 | [audioplayers](https://pub.dev/packages/audioplayers) | Riproduzione dei suoni | MIT |

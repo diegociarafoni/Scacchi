@@ -7,8 +7,19 @@
     <!-- Partita con un amico in rete locale (RMP-07, RMP-08): solo socket verso l'altro
          telefono, aperti dopo aver creato o inquadrato un invito. -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Partita con un amico via Bluetooth LE (RMP-20): cerca, si collega e si annuncia
+         solo dopo aver creato o inquadrato un invito Bluetooth. Il Bluetooth non serve
+         a ricavare la posizione (neverForLocation); prima di Android 12 il sistema
+         richiede i permessi vecchi, limitati a quelle versioni. -->
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE"/>
+    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" android:maxSdkVersion="30"/>
     <!-- L'app resta installabile su dispositivi senza fotocamera. -->
     <uses-feature android:name="android.hardware.camera.any" android:required="false"/>
+    <uses-feature android:name="android.hardware.bluetooth_le" android:required="false"/>
     <!-- Minimo privilegio (MASVS-PLATFORM): il plugin della fotocamera dichiara
          microfono e memoria esterna, che né il lettore QR né le foto usano. -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" tools:node="remove"/>
