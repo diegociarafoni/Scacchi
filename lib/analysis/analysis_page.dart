@@ -302,8 +302,8 @@ class _AnalysisPageState extends State<AnalysisPage>
                                 orientation: widget.orientation,
                                 onMove: _play,
                                 shapes: _shapes(),
-                                settings: const ChessboardSettings(
-                                  colorScheme: ChessboardColorScheme.green,
+                                settings: ChessboardSettings(
+                                  colorScheme: BoardTheme.green.colorScheme,
                                 ),
                               ),
                             ],

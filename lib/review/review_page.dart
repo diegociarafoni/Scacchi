@@ -484,8 +484,8 @@ class _ReviewPageState extends State<ReviewPage> {
                                 onMove: _onRetryMove,
                                 shapes: _shapes(),
                                 annotations: _annotations(),
-                                settings: const ChessboardSettings(
-                                  colorScheme: ChessboardColorScheme.green,
+                                settings: ChessboardSettings(
+                                  colorScheme: BoardTheme.green.colorScheme,
                                 ),
                               ),
                             ],
