@@ -63,30 +63,42 @@ Serie più lunga, bot più forte battuto (Elo), matto con meno mosse (solo vitto
 
 ## Ricompense estetiche (RG-06)
 
-Livelli e traguardi sbloccano temi della scacchiera, set di pezzi, avatar e cornici. Le scelte di sempre (temi Verde, Legno, Blu e Grigio; pezzi Classico, Merida, Chessnut, Fantasy e Spatial; avatar Pedone e Cavallo) restano disponibili da subito: le ricompense aggiungono, non tolgono.
+Livelli e traguardi sbloccano temi della scacchiera, set di pezzi, avatar e cornici. Le scelte di sempre (temi Verde, Legno, Blu e Grigio; pezzi Classico, Merida, Chessnut, Fantasy e Spatial; avatar Pedone, Cavallo, Pino e Rocco) restano disponibili da subito: le ricompense aggiungono, non tolgono.
 
 | Ricompensa | Si sblocca con |
 |---|---|
 | Tema Sabbia, avatar Alfiere | Livello 2 |
-| Pezzi Celtic, cornice Bronzo | Livello 3 |
+| Pezzi Celtic, cornice Bronzo, avatar Chiara | Livello 3 |
 | Tema Oceano, avatar Torre | Livello 4 |
-| Pezzi Firi | Livello 5 |
+| Pezzi Firi, avatar Marta | Livello 5 |
 | Tema Corallo, cornice Argento | Livello 6 |
 | Avatar Donna | Livello 7 |
-| Pezzi RhosGFX | Livello 8 |
+| Pezzi RhosGFX, avatar Gatto astronauta | Livello 8 |
+| Avatar Coniglio lunare | Livello 9 |
 | Cornice Oro | Livello 10 |
-| Tema Notte | 7 giorni di fila |
+| Tema Notte, avatar Duilio | 7 giorni di fila |
 | Pezzi Shapes | 10 puzzle risolti |
 | Pezzi Mpchess | Prima revisione |
 | Pezzi Kiwen-suwi | Tutti i minigiochi provati |
 | Pezzi Totoy | 10 vittorie |
 | Cornice Fiamma | 30 giorni di fila |
 | Cornice Alloro | Puzzle rating 1500 |
-| Tema Oro, avatar Re | Primo torneo vinto |
+| Tema Oro, avatar Re, avatar Stella Rokko | Primo torneo vinto |
 
 La tabella completa è in `lib/progress/rewards.dart`. Una ricompensa appena meritata compare nella notifica dei progressi ("Sbloccato: tema Sabbia"). Nelle impostazioni i temi e i pezzi bloccati hanno un lucchetto e, toccati, dicono come si sbloccano; avatar e cornice si scelgono toccando l'avatar nel Profilo.
 
 Per rispetto di RV-01, l'interruttore "Sblocca tutto" (nelle impostazioni dell'app e del Profilo) rende tutto disponibile. Con la gamification spenta non c'è nulla da sbloccare. Il tema o il set già scelto resta applicato anche se torna bloccato, per esempio spegnendo "Sblocca tutto".
+
+## Avatar simpatici e foto propria (RP-08, RP-09)
+
+Oltre ai sei pezzi, otto personaggi disegnati in codice (`avatar_art.dart`, nessuna immagine nell'app): Pino il pulcino, Rocco la volpe, Chiara il fiore, Marta il gufo, il gatto astronauta, il coniglio lunare, il drago Duilio e Stella Rokko. Hanno testa tonda, occhioni e guance su uno sfondo spaziale indaco e viola, e gli stessi nomi dei bot. Pino e Rocco sono subito disponibili, gli altri si sbloccano come da tabella.
+
+Nella scelta dell'avatar, la sezione «Foto» permette di usare una foto propria:
+
+- **Dalla galleria** o **Scatta una foto**, tramite il selettore di sistema (`image_picker`). La galleria non chiede permessi all'app; la fotocamera chiede il suo permesso solo quando si tocca «Scatta una foto». Se il permesso è negato o la fotocamera non c'è, compare un messaggio e non cambia nulla.
+- La foto è ridotta a 512 px al massimo, mostrata ritagliata in cerchio e circondata dalla cornice scelta. Prende il posto dell'avatar finché non si tocca **Rimuovi la foto**, che cancella il file.
+- Resta solo sul telefono, in `avatar_photo.jpg` nella cartella privata dell'app: non è nel backup (che contiene `progress.json` ma non questo file), non viene inviata e non è condivisa con l'avversario nelle partite a due telefoni. Se il file non si può scrivere, la foto resta in memoria fino alla chiusura.
+- Nel profilo bambino la sezione non compare e un'eventuale foto già salvata non viene mostrata: per prudenza non si caricano immagini di bambini (RP-06).
 
 ## Promemoria giornaliero (RG-11)
 
@@ -114,7 +126,9 @@ Spento di default. Nel Profilo, "Promemoria giornaliero" chiede il permesso per 
 | `progress_tracker.dart` | Regole: XP, obiettivo, serie, protezioni, traguardi. Funzioni pure, con l'ora passata come parametro |
 | `achievements.dart` | Elenco dei traguardi e condizioni di sblocco |
 | `rewards.dart` | Ricompense estetiche e condizioni di sblocco (livello o traguardo) |
-| `avatar.dart` | Avatar e cornici del profilo |
+| `avatar.dart` | Avatar (pezzi e personaggi) e cornici del profilo |
+| `avatar_art.dart` | Disegno in codice dei personaggi |
+| `avatar_photo.dart` | Scelta della foto del profilo da galleria o fotocamera |
 | `progress_store.dart` | Salvataggio su file JSON tramite `JsonFile` |
 | `progress_controller.dart` | `ChangeNotifier` per l'interfaccia: carica, registra, salva |
 | `progress_feedback.dart` | Notifica in-app di XP, livello, obiettivo e traguardi |

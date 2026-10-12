@@ -13,8 +13,12 @@ import 'streak_info.dart';
 
 /// Stato della gamification per l'interfaccia, salvato a ogni modifica.
 class ProgressController extends ChangeNotifier {
-  ProgressController(this._store, {DateTime Function()? clock, this._journal})
-    : _clock = clock ?? DateTime.now;
+  ProgressController(
+    this._store, {
+    DateTime Function()? clock,
+    this._journal,
+    this._photoFile,
+  }) : _clock = clock ?? DateTime.now;
 
   /// Controller sul file predefinito nella cartella dati dell'app.
   static Future<ProgressController> open() async {
@@ -22,6 +26,7 @@ class ProgressController extends ChangeNotifier {
     final controller = ProgressController(
       ProgressStore(File('${dir.path}/progress.json')),
       journal: WeekLogStore(File('${dir.path}/week.json')),
+      photoFile: File('${dir.path}/avatar_photo.jpg'),
     );
     await controller.load();
     return controller;
@@ -30,6 +35,10 @@ class ProgressController extends ChangeNotifier {
   final ProgressStore _store;
   final DateTime Function() _clock;
   final WeekLogStore? _journal;
+
+  /// Foto del profilo (RP-09): un file a parte nella cartella privata
+  /// dell'app, fuori da `progress.json` e quindi dal backup.
+  final File? _photoFile;
   final _tracker = ProgressTracker();
 
   ProgressState _state = ProgressState.initial;
@@ -37,6 +46,9 @@ class ProgressController extends ChangeNotifier {
 
   ProgressState get state => _state;
   ProgressSettings get settings => _settings;
+
+  Uint8List? get photo => _photo;
+  Uint8List? _photo;
 
   /// Conteggi degli ultimi giorni per il riepilogo settimanale (RG-16).
   WeekLog get weekLog => _weekLog;
@@ -77,7 +89,41 @@ class ProgressController extends ChangeNotifier {
       _readOnly = true;
     }
     await _loadJournal();
+    _loadPhoto();
     notifyListeners();
+  }
+
+  void _loadPhoto() {
+    try {
+      final file = _photoFile;
+      _photo = file != null && file.existsSync()
+          ? file.readAsBytesSync()
+          : null;
+    } on FileSystemException catch (e) {
+      if (kDebugMode) debugPrint('Lettura della foto non riuscita: $e');
+    }
+  }
+
+  /// Imposta la foto; se non si riesce a scrivere la si tiene in memoria.
+  Future<void> setPhoto(Uint8List bytes) async {
+    _photo = bytes;
+    notifyListeners();
+    try {
+      await _photoFile?.writeAsBytes(bytes, flush: true);
+    } on FileSystemException catch (e) {
+      if (kDebugMode) debugPrint('Salvataggio della foto non riuscito: $e');
+    }
+  }
+
+  Future<void> removePhoto() async {
+    _photo = null;
+    notifyListeners();
+    try {
+      final file = _photoFile;
+      if (file != null && file.existsSync()) await file.delete();
+    } on FileSystemException catch (e) {
+      if (kDebugMode) debugPrint('Rimozione della foto non riuscita: $e');
+    }
   }
 
   /// Un diario illeggibile non deve fermare il salvataggio dei progressi.

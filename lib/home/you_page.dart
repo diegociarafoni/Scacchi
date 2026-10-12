@@ -156,6 +156,7 @@ class YouPage extends StatelessWidget {
                           leading: ProfileAvatar(
                             avatar: controller.settings.avatar,
                             frame: controller.settings.frame,
+                            photo: simple ? null : controller.photo,
                             size: 48,
                           ),
                           // Profilo bambino (RP-06): stelle e fiamma come nel

@@ -1,0 +1,30 @@
+{
+  "avatarPhotoTitle": "Foto",
+  "@avatarPhotoTitle": {
+    "description": "Titolo della sezione per usare una foto propria come avatar (RP-09)"
+  },
+  "avatarPhotoHint": "La foto resta solo su questo telefono: non viene inviata né salvata nel backup.",
+  "@avatarPhotoHint": {
+    "description": "Rassicurazione sulla privacy della foto del profilo"
+  },
+  "avatarPhotoGallery": "Dalla galleria",
+  "@avatarPhotoGallery": {
+    "description": "Pulsante: sceglie la foto dalla galleria"
+  },
+  "avatarPhotoCamera": "Scatta una foto",
+  "@avatarPhotoCamera": {
+    "description": "Pulsante: scatta la foto con la fotocamera"
+  },
+  "avatarPhotoRemove": "Rimuovi la foto",
+  "@avatarPhotoRemove": {
+    "description": "Pulsante: cancella la foto e torna all'avatar scelto"
+  },
+  "avatarPhotoError": "Non riesco a usare la foto. Controlla i permessi di fotocamera e foto nelle impostazioni del telefono.",
+  "@avatarPhotoError": {
+    "description": "Messaggio quando la foto non è disponibile, per esempio permesso negato"
+  },
+  "avatarPhotoLabel": "Foto del profilo",
+  "@avatarPhotoLabel": {
+    "description": "Nome per i lettori di schermo dell'avatar fatto con una foto"
+  }
+}

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/progress/activity.dart';
 import 'package:scacchi/progress/avatar.dart';
 import 'package:scacchi/progress/daily_goal.dart';
@@ -50,6 +51,9 @@ void main() {
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: const Locale('it'),
         home: ProfilePage(controller: controller, reminders: reminders),
       ),
     );
@@ -212,6 +216,8 @@ void main() {
     await tester.tap(find.byKey(const Key('avatar')));
     await tester.pumpAndSettle();
     expect(find.text('Livello 4'), findsNothing);
+    await tester.ensureVisible(find.bySemanticsLabel(RegExp('^Oro')));
+    await tester.pumpAndSettle();
     await tester.tap(find.bySemanticsLabel(RegExp('^Oro')));
     await tester.pumpAndSettle();
     expect(controller.settings.frame, AvatarFrame.gold);
