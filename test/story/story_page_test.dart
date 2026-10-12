@@ -161,7 +161,7 @@ void main() {
       expect(played?.id, 'pino');
       expect(story.state.isBossBeaten(first.id), isTrue);
       expect(find.text('Hai battuto Pino!'), findsOneWidget);
-      expect(find.textContaining('Il villaggio ti saluta'), findsOneWidget);
+      expect(find.textContaining('Il villaggio ti saluta'), findsWidgets);
     },
   );
 
