@@ -1315,6 +1315,270 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Si sblocca battendo {name}'**
   String botUnlockHint(String name);
+
+  /// Titolo della schermata della storia
+  ///
+  /// In it, this message translates to:
+  /// **'Storia'**
+  String get storyTitle;
+
+  /// storyEntrySubtitle
+  ///
+  /// In it, this message translates to:
+  /// **'Un viaggio a capitoli: lezioni, puzzle e sfide'**
+  String get storyEntrySubtitle;
+
+  /// storyChapterNumber
+  ///
+  /// In it, this message translates to:
+  /// **'Capitolo {n}'**
+  String storyChapterNumber(int n);
+
+  /// storyProgress
+  ///
+  /// In it, this message translates to:
+  /// **'{done} capitoli su {total}'**
+  String storyProgress(int done, int total);
+
+  /// storyChapterLocked
+  ///
+  /// In it, this message translates to:
+  /// **'Si apre concludendo il capitolo precedente'**
+  String get storyChapterLocked;
+
+  /// storyChapterDone
+  ///
+  /// In it, this message translates to:
+  /// **'Capitolo concluso'**
+  String get storyChapterDone;
+
+  /// storyContinue
+  ///
+  /// In it, this message translates to:
+  /// **'Continua'**
+  String get storyContinue;
+
+  /// storyFinished
+  ///
+  /// In it, this message translates to:
+  /// **'La storia è finita. Puoi rigiocare ogni passo quando vuoi.'**
+  String get storyFinished;
+
+  /// storyStepLessons
+  ///
+  /// In it, this message translates to:
+  /// **'Lezioni: {value} su {total}'**
+  String storyStepLessons(int value, int total);
+
+  /// storyStepPuzzles
+  ///
+  /// In it, this message translates to:
+  /// **'Puzzle del capitolo: {value} su {total}'**
+  String storyStepPuzzles(int value, int total);
+
+  /// storyStepGuardian
+  ///
+  /// In it, this message translates to:
+  /// **'Il guardiano del capitolo'**
+  String get storyStepGuardian;
+
+  /// storyStepBoss
+  ///
+  /// In it, this message translates to:
+  /// **'Sfida a {name}'**
+  String storyStepBoss(String name);
+
+  /// storyStepDone
+  ///
+  /// In it, this message translates to:
+  /// **'fatto'**
+  String get storyStepDone;
+
+  /// storyStepTodo
+  ///
+  /// In it, this message translates to:
+  /// **'da fare'**
+  String get storyStepTodo;
+
+  /// storyStepLocked
+  ///
+  /// In it, this message translates to:
+  /// **'bloccato'**
+  String get storyStepLocked;
+
+  /// storyStepLockedHint
+  ///
+  /// In it, this message translates to:
+  /// **'Prima concludi il passo precedente.'**
+  String get storyStepLockedHint;
+
+  /// storyEngineMissing
+  ///
+  /// In it, this message translates to:
+  /// **'Le sfide si giocano dove gira il computer: Android e iOS, o Windows e Linux con Stockfish installato.'**
+  String get storyEngineMissing;
+
+  /// storyBossWon
+  ///
+  /// In it, this message translates to:
+  /// **'Hai battuto {name}!'**
+  String storyBossWon(String name);
+
+  /// storyBossLost
+  ///
+  /// In it, this message translates to:
+  /// **'{name} resiste ancora: riprova quando vuoi.'**
+  String storyBossLost(String name);
+
+  /// storyPuzzlesNone
+  ///
+  /// In it, this message translates to:
+  /// **'I puzzle non si possono caricare: riprova.'**
+  String get storyPuzzlesNone;
+
+  /// storyVillageTitle
+  ///
+  /// In it, this message translates to:
+  /// **'Il villaggio dei pezzi'**
+  String get storyVillageTitle;
+
+  /// storyVillageIntro
+  ///
+  /// In it, this message translates to:
+  /// **'Arrivi al villaggio ai piedi della Rocca. Gli abitanti non ricordano più come si muovono i loro pezzi: aiutali con le lezioni, poi dimostra di accorgerti subito di un pezzo lasciato in presa.'**
+  String get storyVillageIntro;
+
+  /// storyVillageBoss
+  ///
+  /// In it, this message translates to:
+  /// **'Pino, il custode del villaggio, ti sfida per vedere se hai imparato davvero.'**
+  String storyVillageBoss(String name);
+
+  /// storyVillageOutro
+  ///
+  /// In it, this message translates to:
+  /// **'Il villaggio ti saluta con una festa. La strada per le porte della città è aperta.'**
+  String get storyVillageOutro;
+
+  /// storyGatesTitle
+  ///
+  /// In it, this message translates to:
+  /// **'Le porte della città'**
+  String get storyGatesTitle;
+
+  /// storyGatesIntro
+  ///
+  /// In it, this message translates to:
+  /// **'Le guardie ti fermano alle porte: per entrare devi conoscere le regole, dallo scacco all\'arrocco. Una promozione ben vista apre anche il cancello più alto.'**
+  String get storyGatesIntro;
+
+  /// storyGatesBoss
+  ///
+  /// In it, this message translates to:
+  /// **'{name}, capitana delle guardie, vuole una prova prima di lasciarti passare.'**
+  String storyGatesBoss(String name);
+
+  /// storyGatesOutro
+  ///
+  /// In it, this message translates to:
+  /// **'Le porte si aprono. Davanti a te si alza la torre del re.'**
+  String get storyGatesOutro;
+
+  /// storyTowerTitle
+  ///
+  /// In it, this message translates to:
+  /// **'La torre del re'**
+  String get storyTowerTitle;
+
+  /// storyTowerIntro
+  ///
+  /// In it, this message translates to:
+  /// **'In cima alla torre vive il re, e sa difendersi. Impara i matti per metterlo alle strette, anche quando i suoi stessi pezzi gli fanno da muro.'**
+  String get storyTowerIntro;
+
+  /// storyTowerBoss
+  ///
+  /// In it, this message translates to:
+  /// **'{name}, il cavaliere che ama i gambetti, ti aspetta in cima alle scale.'**
+  String storyTowerBoss(String name);
+
+  /// storyTowerOutro
+  ///
+  /// In it, this message translates to:
+  /// **'Il re della torre è in scacco matto. Resta il bosco, e le sue trappole.'**
+  String get storyTowerOutro;
+
+  /// storyForestTitle
+  ///
+  /// In it, this message translates to:
+  /// **'Il bosco delle trappole'**
+  String get storyForestTitle;
+
+  /// storyForestIntro
+  ///
+  /// In it, this message translates to:
+  /// **'Nel bosco ogni pezzo nasconde una trappola: forchette, inchiodature, infilate. Impara a vederle prima degli altri.'**
+  String get storyForestIntro;
+
+  /// storyForestBoss
+  ///
+  /// In it, this message translates to:
+  /// **'{name}, la guida del bosco, conosce ogni sentiero e ogni insidia.'**
+  String storyForestBoss(String name);
+
+  /// storyForestOutro
+  ///
+  /// In it, this message translates to:
+  /// **'Hai attraversato il bosco senza cadere in nessuna trappola. Il castello ti aspetta.'**
+  String get storyForestOutro;
+
+  /// storyCastleTitle
+  ///
+  /// In it, this message translates to:
+  /// **'Il castello dei finali'**
+  String get storyCastleTitle;
+
+  /// storyCastleIntro
+  ///
+  /// In it, this message translates to:
+  /// **'Nel castello sulla scacchiera restano pochi pezzi e ogni mossa conta. Qui si decide chi sa chiudere una partita.'**
+  String get storyCastleIntro;
+
+  /// storyCastleBoss
+  ///
+  /// In it, this message translates to:
+  /// **'{name}, il castellano, difende l\'ingresso della sala della corona.'**
+  String storyCastleBoss(String name);
+
+  /// storyCastleOutro
+  ///
+  /// In it, this message translates to:
+  /// **'Il portone si apre: la corona è vicina.'**
+  String get storyCastleOutro;
+
+  /// storyCrownTitle
+  ///
+  /// In it, this message translates to:
+  /// **'La corona'**
+  String get storyCrownTitle;
+
+  /// storyCrownIntro
+  ///
+  /// In it, this message translates to:
+  /// **'Ultima tappa: la sala della corona. Partire bene è mezza vittoria: il centro, lo sviluppo, l\'arrocco.'**
+  String get storyCrownIntro;
+
+  /// storyCrownBoss
+  ///
+  /// In it, this message translates to:
+  /// **'{name}, la guardiana della corona, gioca le aperture come nessun altro.'**
+  String storyCrownBoss(String name);
+
+  /// storyCrownOutro
+  ///
+  /// In it, this message translates to:
+  /// **'La corona è tua. Il regno è in pace e ogni nuova partita è una nuova storia.'**
+  String get storyCrownOutro;
 }
 
 class _AppLocalizationsDelegate

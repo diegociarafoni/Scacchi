@@ -6,6 +6,7 @@ import '../archive/pgn.dart';
 import '../archive/saved_game.dart';
 import '../endgames/endgame_controller.dart';
 import '../endgames/endgames_page.dart';
+import '../engine/bots.dart';
 import '../engine/computer_player.dart';
 import '../engine/levels.dart';
 import '../engine/uci_transport.dart';
@@ -22,6 +23,7 @@ import '../progress/progress_controller.dart';
 import '../progress/progress_tracker.dart';
 import '../puzzles/puzzle_assets.dart';
 import '../puzzles/puzzle_hub_page.dart';
+import '../puzzles/puzzle_page.dart';
 import '../puzzles/puzzle_trainer.dart';
 import '../reminders/local_notification_scheduler.dart';
 import '../reminders/reminder.dart';
@@ -33,6 +35,11 @@ import '../review/review_page.dart';
 import '../settings/settings.dart';
 import '../stats/local_rating.dart';
 import '../storage/key_value_store.dart';
+import '../story/story.dart';
+import '../story/story_controller.dart';
+import '../story/story_feed.dart';
+import '../story/story_l10n.dart';
+import '../story/story_page.dart';
 import '../tournament/tournament.dart';
 import '../tournament/tournament_controller.dart';
 import '../tournament/tournament_page.dart';
@@ -53,6 +60,7 @@ class HomeShell extends StatefulWidget {
     this.createComputer,
     this.tournaments,
     this.endgames,
+    this.story,
   });
 
   final SettingsController settings;
@@ -87,6 +95,9 @@ class HomeShell extends StatefulWidget {
   /// Sostituibile nei test; di default i progressi salvati dei finali.
   final Future<EndgameController> Function()? endgames;
 
+  /// Sostituibile nei test; di default i progressi salvati della storia.
+  final Future<StoryController> Function()? story;
+
   @override
   State<HomeShell> createState() => _HomeShellState();
 }
@@ -101,6 +112,7 @@ class _HomeShellState extends State<HomeShell> {
   Future<PathController>? _path;
   Future<TournamentController>? _tournaments;
   Future<EndgameController>? _endgames;
+  Future<StoryController>? _story;
 
   /// La scheda Tu si costruisce alla prima apertura, poi resta in memoria.
   var _youVisited = false;
@@ -188,6 +200,84 @@ class _HomeShellState extends State<HomeShell> {
     createComputer: widget.createComputer ?? ComputerPlayer.new,
     simple: _kidMode,
   );
+
+  /// Una sola storia in memoria, salvata a ogni passo.
+  Future<StoryController> _storyController() =>
+      _story ??= (widget.story ?? StoryController.open)().catchError((
+        Object e,
+        StackTrace st,
+      ) {
+        _story = null;
+        Error.throwWithStackTrace(e, st);
+      });
+
+  Future<Widget> _storyPage() async => StoryPage(
+    path: await _pathController(),
+    story: await _storyController(),
+    playGuardian: _computerAvailable ? _playGuardian : null,
+    playBoss: _computerAvailable ? _playStoryBoss : null,
+    playPuzzles: _playStoryPuzzles,
+  );
+
+  /// Sfida del capitolo contro [bot]: vale come allenamento, con Annulla.
+  /// Uscire a partita in corso vale una sconfitta.
+  Future<bool> _playStoryBoss(BuildContext context, Bot bot) async {
+    GameResult? result;
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => GamePage(
+          settings: widget.settings,
+          computerAvailable: true,
+          createComputer: widget.createComputer,
+          challenge: GameChallenge(
+            title: '${bot.avatar} ${bot.name}',
+            levelId: bot.levelId,
+            side: Side.white,
+            allowUndo: true,
+          ),
+          onFinished: (r, _) => result = r,
+          onActivity: _record,
+          onSave: _saveGame,
+          progress: _progressController,
+        ),
+      ),
+    );
+    return result == GameResult.win;
+  }
+
+  /// Puzzle del tema del capitolo fino a [remaining] risolti al primo
+  /// tentativo; `null` se la raccolta non si carica.
+  Future<int?> _playStoryPuzzles(
+    BuildContext context,
+    StoryChapter chapter,
+    int remaining,
+  ) async {
+    final PuzzleTrainer trainer;
+    try {
+      trainer = await (_trainer ??= _loadTrainer());
+    } on Object catch (e) {
+      debugPrint('Puzzle non disponibili: $e');
+      return null;
+    }
+    if (!context.mounted) return 0;
+    final feed = StoryPuzzleFeed(
+      trainer,
+      theme: chapter.puzzleTheme,
+      goal: remaining,
+    );
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => PuzzlePage(
+          trainer: trainer,
+          theme: chapter.puzzleTheme,
+          feed: feed,
+          title: storyL10n(context).chapterTitle(chapter),
+          onActivity: _record,
+        ),
+      ),
+    );
+    return feed.solved;
+  }
 
   /// Bot del torneo: un avversario per ogni livello del motore.
   static final _bots = [
@@ -432,6 +522,7 @@ class _HomeShellState extends State<HomeShell> {
               reminders: () => _reminders,
               simple: _kidMode,
               playGuardian: _computerAvailable ? _playGuardian : null,
+              storyPage: _storyPage,
               openGame: _openSavedGame,
               tournamentPage: _computerAvailable ? _tournamentPage : null,
               endgamesPage: _computerAvailable ? _endgamesPage : null,

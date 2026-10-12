@@ -844,4 +844,176 @@ class AppLocalizationsIt extends AppLocalizations {
   String botUnlockHint(String name) {
     return 'Si sblocca battendo $name';
   }
+
+  @override
+  String get storyTitle => 'Storia';
+
+  @override
+  String get storyEntrySubtitle =>
+      'Un viaggio a capitoli: lezioni, puzzle e sfide';
+
+  @override
+  String storyChapterNumber(int n) {
+    return 'Capitolo $n';
+  }
+
+  @override
+  String storyProgress(int done, int total) {
+    return '$done capitoli su $total';
+  }
+
+  @override
+  String get storyChapterLocked => 'Si apre concludendo il capitolo precedente';
+
+  @override
+  String get storyChapterDone => 'Capitolo concluso';
+
+  @override
+  String get storyContinue => 'Continua';
+
+  @override
+  String get storyFinished =>
+      'La storia è finita. Puoi rigiocare ogni passo quando vuoi.';
+
+  @override
+  String storyStepLessons(int value, int total) {
+    return 'Lezioni: $value su $total';
+  }
+
+  @override
+  String storyStepPuzzles(int value, int total) {
+    return 'Puzzle del capitolo: $value su $total';
+  }
+
+  @override
+  String get storyStepGuardian => 'Il guardiano del capitolo';
+
+  @override
+  String storyStepBoss(String name) {
+    return 'Sfida a $name';
+  }
+
+  @override
+  String get storyStepDone => 'fatto';
+
+  @override
+  String get storyStepTodo => 'da fare';
+
+  @override
+  String get storyStepLocked => 'bloccato';
+
+  @override
+  String get storyStepLockedHint => 'Prima concludi il passo precedente.';
+
+  @override
+  String get storyEngineMissing =>
+      'Le sfide si giocano dove gira il computer: Android e iOS, o Windows e Linux con Stockfish installato.';
+
+  @override
+  String storyBossWon(String name) {
+    return 'Hai battuto $name!';
+  }
+
+  @override
+  String storyBossLost(String name) {
+    return '$name resiste ancora: riprova quando vuoi.';
+  }
+
+  @override
+  String get storyPuzzlesNone => 'I puzzle non si possono caricare: riprova.';
+
+  @override
+  String get storyVillageTitle => 'Il villaggio dei pezzi';
+
+  @override
+  String get storyVillageIntro =>
+      'Arrivi al villaggio ai piedi della Rocca. Gli abitanti non ricordano più come si muovono i loro pezzi: aiutali con le lezioni, poi dimostra di accorgerti subito di un pezzo lasciato in presa.';
+
+  @override
+  String storyVillageBoss(String name) {
+    return 'Pino, il custode del villaggio, ti sfida per vedere se hai imparato davvero.';
+  }
+
+  @override
+  String get storyVillageOutro =>
+      'Il villaggio ti saluta con una festa. La strada per le porte della città è aperta.';
+
+  @override
+  String get storyGatesTitle => 'Le porte della città';
+
+  @override
+  String get storyGatesIntro =>
+      'Le guardie ti fermano alle porte: per entrare devi conoscere le regole, dallo scacco all\'arrocco. Una promozione ben vista apre anche il cancello più alto.';
+
+  @override
+  String storyGatesBoss(String name) {
+    return '$name, capitana delle guardie, vuole una prova prima di lasciarti passare.';
+  }
+
+  @override
+  String get storyGatesOutro =>
+      'Le porte si aprono. Davanti a te si alza la torre del re.';
+
+  @override
+  String get storyTowerTitle => 'La torre del re';
+
+  @override
+  String get storyTowerIntro =>
+      'In cima alla torre vive il re, e sa difendersi. Impara i matti per metterlo alle strette, anche quando i suoi stessi pezzi gli fanno da muro.';
+
+  @override
+  String storyTowerBoss(String name) {
+    return '$name, il cavaliere che ama i gambetti, ti aspetta in cima alle scale.';
+  }
+
+  @override
+  String get storyTowerOutro =>
+      'Il re della torre è in scacco matto. Resta il bosco, e le sue trappole.';
+
+  @override
+  String get storyForestTitle => 'Il bosco delle trappole';
+
+  @override
+  String get storyForestIntro =>
+      'Nel bosco ogni pezzo nasconde una trappola: forchette, inchiodature, infilate. Impara a vederle prima degli altri.';
+
+  @override
+  String storyForestBoss(String name) {
+    return '$name, la guida del bosco, conosce ogni sentiero e ogni insidia.';
+  }
+
+  @override
+  String get storyForestOutro =>
+      'Hai attraversato il bosco senza cadere in nessuna trappola. Il castello ti aspetta.';
+
+  @override
+  String get storyCastleTitle => 'Il castello dei finali';
+
+  @override
+  String get storyCastleIntro =>
+      'Nel castello sulla scacchiera restano pochi pezzi e ogni mossa conta. Qui si decide chi sa chiudere una partita.';
+
+  @override
+  String storyCastleBoss(String name) {
+    return '$name, il castellano, difende l\'ingresso della sala della corona.';
+  }
+
+  @override
+  String get storyCastleOutro => 'Il portone si apre: la corona è vicina.';
+
+  @override
+  String get storyCrownTitle => 'La corona';
+
+  @override
+  String get storyCrownIntro =>
+      'Ultima tappa: la sala della corona. Partire bene è mezza vittoria: il centro, lo sviluppo, l\'arrocco.';
+
+  @override
+  String storyCrownBoss(String name) {
+    return '$name, la guardiana della corona, gioca le aperture come nessun altro.';
+  }
+
+  @override
+  String get storyCrownOutro =>
+      'La corona è tua. Il regno è in pace e ogni nuova partita è una nuova storia.';
 }
