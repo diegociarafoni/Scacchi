@@ -137,6 +137,9 @@ class ProgressState {
     this.challengeWeek,
     this.weeklyProgress = 0,
     this.records = const PersonalRecords(),
+    this.badges = const {},
+    this.tally = const {},
+    this.lastActiveDay,
   });
 
   static const initial = ProgressState();
@@ -190,6 +193,16 @@ class ProgressState {
 
   final PersonalRecords records;
 
+  /// Badge ottenuti (RG-17) con il numero del giorno in cui sono arrivati.
+  final Map<String, int> badges;
+
+  /// Contatori degli eventi che i badge usano e nessun altro archivio tiene
+  /// (giorni di gioco, tornei, partite memorabili...).
+  final Map<String, int> tally;
+
+  /// Ultimo giorno con un'attività registrata.
+  final int? lastActiveDay;
+
   ProgressState copyWith({
     int? xp,
     int? gamesPlayed,
@@ -216,6 +229,9 @@ class ProgressState {
     int? challengeWeek,
     int? weeklyProgress,
     PersonalRecords? records,
+    Map<String, int>? badges,
+    Map<String, int>? tally,
+    int? lastActiveDay,
   }) => ProgressState(
     xp: xp ?? this.xp,
     gamesPlayed: gamesPlayed ?? this.gamesPlayed,
@@ -244,6 +260,9 @@ class ProgressState {
     challengeWeek: challengeWeek ?? this.challengeWeek,
     weeklyProgress: weeklyProgress ?? this.weeklyProgress,
     records: records ?? this.records,
+    badges: badges ?? this.badges,
+    tally: tally ?? this.tally,
+    lastActiveDay: lastActiveDay ?? this.lastActiveDay,
   );
 
   Map<String, Object?> toJson() => {
@@ -272,6 +291,9 @@ class ProgressState {
     'challengeWeek': challengeWeek,
     'weeklyProgress': weeklyProgress,
     'records': records.toJson(),
+    'badges': badges,
+    'tally': tally,
+    'lastActiveDay': lastActiveDay,
   };
 
   static ProgressState fromJson(Map<String, Object?> json) {
@@ -306,6 +328,9 @@ class ProgressState {
       records: json['records'] == null
           ? const PersonalRecords()
           : PersonalRecords.fromJson((json['records']! as Map).cast()),
+      badges: _counters(json['badges']),
+      tally: _counters(json['tally']),
+      lastActiveDay: json['lastActiveDay'] as int?,
     );
   }
 
@@ -336,7 +361,10 @@ class ProgressState {
       listEquals(other.dailyProgress, dailyProgress) &&
       other.challengeWeek == challengeWeek &&
       other.weeklyProgress == weeklyProgress &&
-      other.records == records;
+      other.records == records &&
+      mapEquals(other.badges, badges) &&
+      mapEquals(other.tally, tally) &&
+      other.lastActiveDay == lastActiveDay;
 
   @override
   int get hashCode => Object.hashAll([
@@ -365,6 +393,9 @@ class ProgressState {
     challengeWeek,
     weeklyProgress,
     records,
+    Object.hashAllUnordered(badges.entries.map((e) => (e.key, e.value))),
+    Object.hashAllUnordered(tally.entries.map((e) => (e.key, e.value))),
+    lastActiveDay,
   ]);
 }
 
@@ -373,3 +404,10 @@ List<int> _threeCounters(List<Object?>? saved) => [
   for (var i = 0; i < 3; i++)
     saved != null && i < saved.length ? saved[i] as int? ?? 0 : 0,
 ];
+
+/// Mappa di numeri letta dal file; le voci non numeriche si ignorano.
+Map<String, int> _counters(Object? saved) => {
+  if (saved is Map)
+    for (final e in saved.entries)
+      if (e.key is String && e.value is int) e.key as String: e.value as int,
+};

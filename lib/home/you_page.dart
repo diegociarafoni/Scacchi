@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import '../archive/archive_page.dart';
 import '../archive/game_archive.dart';
 import '../archive/saved_game.dart';
+import '../badges/badges_l10n.dart';
+import '../badges/badges_page.dart';
 import '../kids/kid_display.dart';
 import '../l10n/app_localizations.dart';
 import '../minigames/minigames_page.dart';
@@ -256,6 +258,16 @@ class YouPage extends StatelessWidget {
                 ),
               ),
               if (!simple) ...[
+                _Entry(
+                  icon: Icons.military_tech_outlined,
+                  title: badgesL10n(context).badgesTitle,
+                  subtitle: badgesL10n(context).badgesEntrySubtitle,
+                  onTap: () => _open(
+                    context,
+                    progress(),
+                    (p) => BadgesPage(controller: p),
+                  ),
+                ),
                 _Entry(
                   icon: Icons.insights_outlined,
                   title: 'Statistiche',

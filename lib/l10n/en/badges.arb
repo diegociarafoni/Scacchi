@@ -1,0 +1,375 @@
+{
+  "badgesTitle": "Badges",
+  "badgesEntrySubtitle": "What you have learned and played, in one collection",
+  "badgesSummary": "{earned} of {total} badges",
+  "@badgesSummary": {
+    "description": "Totale dei badge ottenuti",
+    "placeholders": {
+      "earned": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "badgesFamilyLearn": "Learn",
+  "badgesFamilyPuzzles": "Puzzles",
+  "badgesFamilyGames": "Games",
+  "badgesFamilyStory": "Story",
+  "badgesFamilyHabit": "Consistency",
+  "badgesTierBronze": "Bronze",
+  "badgesTierSilver": "Silver",
+  "badgesTierGold": "Gold",
+  "badgesUnlocked": "New badge: {name}",
+  "@badgesUnlocked": {
+    "description": "Avviso quando si ottiene un badge",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "badgesSeeAction": "View",
+  "badgesEarnedOn": "Earned on {date}",
+  "@badgesEarnedOn": {
+    "description": "Data in cui il badge è stato ottenuto",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "badgesNotYet": "Not earned yet",
+  "badgesProgress": "{value} / {target}",
+  "@badgesProgress": {
+    "description": "Avanzamento verso un badge",
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "badgesSemanticsEarned": "{name}, earned",
+  "@badgesSemanticsEarned": {
+    "description": "Lettura del badge ottenuto",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "badgesSemanticsLocked": "{name}, not earned yet",
+  "@badgesSemanticsLocked": {
+    "description": "Lettura del badge da ottenere",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "badgesSemanticsLockedProgress": "{name}, not earned yet, {value} of {target}",
+  "@badgesSemanticsLockedProgress": {
+    "description": "Lettura del badge da ottenere con avanzamento",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "value": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "badgesClose": "Close",
+  "badgeChapterPiecesName": "On the March",
+  "badgeChapterPiecesDesc": "Finish the lessons on how the pieces move.",
+  "badgeChapterRulesName": "Golden Rules",
+  "badgeChapterRulesDesc": "Finish the lessons on the rules of the game.",
+  "badgeChapterMatesName": "King Hunter",
+  "badgeChapterMatesDesc": "Finish the lessons on basic checkmates.",
+  "badgeChapterTacticsName": "Tactical Mind",
+  "badgeChapterTacticsDesc": "Finish the tactics lessons.",
+  "badgeChapterEndgamesName": "Champion's Endgame",
+  "badgeChapterEndgamesDesc": "Finish the endgame lessons.",
+  "badgeChapterOpeningsName": "Wide-Open Openings",
+  "badgeChapterOpeningsDesc": "Finish the opening lessons.",
+  "badgeGuardians3Name": "Guardian Tamer",
+  "badgeGuardians3Desc": "Beat {count} guardians of the Story.",
+  "@badgeGuardians3Desc": {
+    "description": "Come si ottiene il badge «Domatore di guardiani»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStoryPuzzlesAllName": "Riddle Master",
+  "badgeStoryPuzzlesAllDesc": "Solve all {count} puzzles in the chapters of the Story.",
+  "@badgeStoryPuzzlesAllDesc": {
+    "description": "Come si ottiene il badge «Enigmista»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeEndgamesAllName": "King of Endgames",
+  "badgeEndgamesAllDesc": "Complete every position in the endgame trainer.",
+  "badgeMastersAllName": "Master's Eye",
+  "badgeMastersAllDesc": "Play every game of “Guess the move” to the end.",
+  "badgeReviews25Name": "Analyst",
+  "badgeReviews25Desc": "Review {count} games.",
+  "@badgeReviews25Desc": {
+    "description": "Come si ottiene il badge «Analista»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgePuzzles500Name": "Solution Collector",
+  "badgePuzzles500Desc": "Solve {count} puzzles.",
+  "@badgePuzzles500Desc": {
+    "description": "Come si ottiene il badge «Collezionista di soluzioni»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeThemes10Name": "Theme Explorer",
+  "badgeThemes10Desc": "Solve at least one puzzle in {count} different themes.",
+  "@badgeThemes10Desc": {
+    "description": "Come si ottiene il badge «Esploratore di temi»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgePin10Name": "Pinner",
+  "badgePin10Desc": "Solve {count} pin puzzles.",
+  "@badgePin10Desc": {
+    "description": "Come si ottiene il badge «Inchiodatore»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeSkewer5Name": "Skewered",
+  "badgeSkewer5Desc": "Solve {count} skewer puzzles.",
+  "@badgeSkewer5Desc": {
+    "description": "Come si ottiene il badge «Spiedino»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeDiscovered5Name": "Plot Twist",
+  "badgeDiscovered5Desc": "Solve {count} discovered attack puzzles.",
+  "@badgeDiscovered5Desc": {
+    "description": "Come si ottiene il badge «Colpo di scena»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeSacrifice10Name": "Lionheart",
+  "badgeSacrifice10Desc": "Solve {count} sacrifice puzzles.",
+  "@badgeSacrifice10Desc": {
+    "description": "Come si ottiene il badge «Cuor di leone»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeSmothered1Name": "Smothered!",
+  "badgeSmothered1Desc": "Solve a smothered mate puzzle.",
+  "badgeRating1800Name": "Ace",
+  "badgeRating1800Desc": "Reach a puzzle rating of {count}.",
+  "@badgeRating1800Desc": {
+    "description": "Come si ottiene il badge «Fuoriclasse»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStreakRun10Name": "Golden Run",
+  "badgeStreakRun10Desc": "Score {count} in streak mode.",
+  "@badgeStreakRun10Desc": {
+    "description": "Come si ottiene il badge «Serie d'oro»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeScholarsMateName": "Scholar's Mate",
+  "badgeScholarsMateDesc": "Win with a queen checkmate in four moves or fewer.",
+  "badgeFoolsMateName": "Fool's Mate",
+  "badgeFoolsMateDesc": "Fall for the famous two-move checkmate. It happens to everyone: have a medal.",
+  "badgeAllPiecesMateName": "Piece by Piece",
+  "badgeAllPiecesMateDesc": "Checkmate with a queen, rook, bishop, knight and pawn.",
+  "badgeEnPassantName": "Au Passage",
+  "badgeEnPassantDesc": "Capture en passant.",
+  "badgeUnderpromotionName": "Little Knight Promoted",
+  "badgeUnderpromotionDesc": "Promote a pawn to something other than a queen.",
+  "badgeStalemateName": "Stuck King",
+  "badgeStalemateDesc": "End a game in a draw by stalemate.",
+  "badgeMarathonName": "Marathon Runner",
+  "badgeMarathonDesc": "Play a game of at least {count} of your own moves.",
+  "@badgeMarathonDesc": {
+    "description": "Come si ottiene il badge «Maratoneta»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeWins100Name": "Centurion",
+  "badgeWins100Desc": "Win {count} games.",
+  "@badgeWins100Desc": {
+    "description": "Come si ottiene il badge «Centurione»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgePodiumName": "On the Podium",
+  "badgePodiumDesc": "Finish a tournament in the top three (with at least four players).",
+  "badgeTournaments5Name": "Tournament Regular",
+  "badgeTournaments5Desc": "Finish {count} tournaments.",
+  "@badgeTournaments5Desc": {
+    "description": "Come si ottiene il badge «Habitué dei tornei»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStoryVillageName": "Village Hero",
+  "badgeStoryVillageDesc": "Beat Pino in the chapter “The village of the pieces”.",
+  "badgeStoryGatesName": "Through the Gates",
+  "badgeStoryGatesDesc": "Beat Chiara in the chapter “The city gates”.",
+  "badgeStoryTowerName": "Lord of the Tower",
+  "badgeStoryTowerDesc": "Beat Rocco in the chapter “The king's tower”.",
+  "badgeStoryForestName": "King of the Woods",
+  "badgeStoryForestDesc": "Beat Marta in the chapter “The forest of traps”.",
+  "badgeStoryCastleName": "Siege Won",
+  "badgeStoryCastleDesc": "Beat Duilio in the chapter “The castle of endgames”.",
+  "badgeStoryCrownName": "The Crown Is Yours",
+  "badgeStoryCrownDesc": "Beat Elena in the chapter “The crown”.",
+  "badgeStoryAllName": "Legend",
+  "badgeStoryAllDesc": "Finish every chapter of the story.",
+  "badgeStreak14Name": "Two Weeks",
+  "badgeStreak14Desc": "Reach your goal {count} days in a row.",
+  "@badgeStreak14Desc": {
+    "description": "Come si ottiene il badge «Due settimane»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStreak60Name": "Two Months",
+  "badgeStreak60Desc": "Reach your goal {count} days in a row.",
+  "@badgeStreak60Desc": {
+    "description": "Come si ottiene il badge «Due mesi»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStreak100Name": "A Hundred Days",
+  "badgeStreak100Desc": "Reach your goal {count} days in a row.",
+  "@badgeStreak100Desc": {
+    "description": "Come si ottiene il badge «Cento giorni»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStreak365Name": "A Whole Year",
+  "badgeStreak365Desc": "Reach your goal {count} days in a row.",
+  "@badgeStreak365Desc": {
+    "description": "Come si ottiene il badge «Un anno intero»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeDays30Name": "Creature of Habit",
+  "badgeDays30Desc": "Play or train on {count} different days, not necessarily in a row.",
+  "@badgeDays30Desc": {
+    "description": "Come si ottiene il badge «Abitudinario»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeDays100Name": "At Home",
+  "badgeDays100Desc": "Play or train on {count} different days, not necessarily in a row.",
+  "@badgeDays100Desc": {
+    "description": "Come si ottiene il badge «Di casa»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeComebackName": "Welcome Back!",
+  "badgeComebackDesc": "Come back after at least {count} days away.",
+  "@badgeComebackDesc": {
+    "description": "Come si ottiene il badge «Bentornato!»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgePerfect7Name": "Seven Perfect Days",
+  "badgePerfect7Desc": "Complete all three daily challenges on {count} different days.",
+  "@badgePerfect7Desc": {
+    "description": "Come si ottiene il badge «Sette giornate perfette»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeMinigames25Name": "Tireless Trainer",
+  "badgeMinigames25Desc": "Finish {count} minigame sessions scoring at least one point.",
+  "@badgeMinigames25Desc": {
+    "description": "Come si ottiene il badge «Allenatore instancabile»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgesUnlockedMany": "{count} new badges",
+  "@badgesUnlockedMany": {
+    "description": "Avviso quando si ottengono molti badge insieme",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
+}
