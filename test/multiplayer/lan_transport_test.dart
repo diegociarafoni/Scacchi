@@ -168,6 +168,58 @@ void main() {
     await again.close();
   }, timeout: const Timeout(Duration(seconds: 20)));
 
+  test(
+    'RMP-10 se l\'ospite cambia indirizzo, l\'invitato lo ritrova',
+    () async {
+      final host = await LanTransport.host(
+        address: InternetAddress.loopbackIPv4,
+      );
+      // Indirizzo vecchio: una porta dove non ascolta nessuno.
+      final dead = await ServerSocket.bind(InternetAddress.loopbackIPv4, 0);
+      final deadPort = dead.port;
+      await dead.close();
+      var asked = 0;
+      final guest = LanTransport.connect('127.0.0.1', deadPort)
+        ..finder = () async {
+          asked++;
+          return ('127.0.0.1', host.port);
+        };
+      final connected = guest.connected.first;
+      await expectLater(
+        guest.send(bytes([1])),
+        throwsA(isA<TransportUnavailable>()),
+      );
+      await connected;
+      expect(asked, greaterThan(0));
+      final got = host.incoming.first;
+      await guest.send(bytes([7]));
+      expect(await got, bytes([7]));
+      await guest.close();
+      await host.close();
+    },
+    timeout: const Timeout(Duration(seconds: 20)),
+  );
+
+  test(
+    'RMP-10 senza risposta della ricerca l\'invitato continua a riprovare',
+    () async {
+      final dead = await ServerSocket.bind(InternetAddress.loopbackIPv4, 0);
+      final deadPort = dead.port;
+      await dead.close();
+      final guest = LanTransport.connect('127.0.0.1', deadPort)
+        ..finder = () async => null;
+      await expectLater(
+        guest.send(bytes([1])),
+        throwsA(isA<TransportUnavailable>()),
+      );
+      // Una ricerca che fallisce non deve fermare i tentativi né lanciare.
+      guest.finder = () async => throw StateError('mDNS non disponibile');
+      await Future<void>.delayed(const Duration(milliseconds: 2500));
+      await guest.close();
+    },
+    timeout: const Timeout(Duration(seconds: 20)),
+  );
+
   test('RMP-07 chiudere durante il ricollegamento non lascia code', () async {
     final host = await LanTransport.host(address: InternetAddress.loopbackIPv4);
     final guest = LanTransport.connect('127.0.0.1', host.port);
