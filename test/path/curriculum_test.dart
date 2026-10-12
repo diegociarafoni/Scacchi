@@ -11,7 +11,17 @@ void main() {
       'Matti elementari',
       'Tattiche',
       'Finali',
+      'La strategia',
       'Aperture',
+    ]);
+    expect(curriculum.map((c) => c.id), [
+      'pieces',
+      'rules',
+      'mates',
+      'tactics',
+      'endgames',
+      'strategy',
+      'openings',
     ]);
   });
 
@@ -69,7 +79,11 @@ void main() {
       'endgames.rook',
       'endgames.square',
       'endgames.opposition',
+      'endgames.key-squares',
+      'endgames.triangulation',
       'endgames.breakthrough',
+      'endgames.rook-behind',
+      'endgames.wrong-bishop',
       'endgames.guardian',
     ]);
     expect(ids('openings'), [
@@ -79,6 +93,32 @@ void main() {
       'openings.scholar',
       'openings.guardian',
     ]);
+  });
+
+  test('RG-03 la strategia insegna i piani di base', () {
+    final strategy = curriculum.firstWhere((c) => c.id == 'strategy');
+    expect(strategy.stages.map((s) => s.id), [
+      'strategy.value',
+      'strategy.open-file',
+      'strategy.outpost',
+      'strategy.bishops',
+      'strategy.passed-pawn',
+      'strategy.active',
+      'strategy.guardian',
+    ]);
+    expect(strategy.stages.last.guardianElo, 1100);
+  });
+
+  test('i guardiani diventano più forti capitolo dopo capitolo', () {
+    final elos = [
+      for (final c in curriculum)
+        for (final s in c.stages)
+          ?s.guardianElo,
+    ];
+    expect(elos, [400, 800, 1000, 1100, 1200]);
+    for (var i = 1; i < elos.length; i++) {
+      expect(elos[i], greaterThan(elos[i - 1]));
+    }
   });
 
   test('identificativi unici e tappe non vuote', () {

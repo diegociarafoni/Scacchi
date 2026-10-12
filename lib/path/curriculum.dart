@@ -1521,6 +1521,91 @@ const List<Chapter> curriculum = [
         ],
       ),
       Stage(
+        id: 'endgames.key-squares',
+        title: 'Le case chiave',
+        intro:
+            'Ogni pedone ha tre case chiave: se il tuo re ci arriva, il pedone '
+            'va a promozione, chiunque debba muovere. Se il pedone non ha '
+            'ancora passato la metà della scacchiera, sono le tre case due '
+            'traverse più avanti.',
+        exercises: [
+          LineExercise(
+            instructions:
+                'Le case chiave del pedone e4 sono d6, e6 e f6. Porta il re '
+                'su una di queste.',
+            fen: '4k3/8/2K5/8/4P3/8/8/8 w - - 0 1',
+            steps: ['c6d6'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Le case chiave del pedone d3 sono c5, d5 ed e5. Il re nero '
+                'ne sorveglia due: vai sulla terza.',
+            fen: '8/8/2k5/8/4K3/3P4/8/8 w - - 0 1',
+            steps: ['e4e5'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Anche il pedone in e2 ha le sue case chiave: d4, e4 e f4. '
+                'Raggiungine una prima del re nero.',
+            fen: '8/8/3k4/8/8/2K5/4P3/8 w - - 0 1',
+            steps: ['c3d4'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Sfida: il re nero è vicino al tuo pedone e occupa già una '
+                'casa chiave. Prendi quella che resta libera.',
+            fen: '8/8/8/8/3k4/5K2/4P3/8 w - - 0 1',
+            steps: ['f3f4'],
+            goal: LineGoal.line,
+          ),
+        ],
+      ),
+      Stage(
+        id: 'endgames.triangulation',
+        title: 'La triangolazione',
+        intro:
+            'A volte vorresti che toccasse all\'avversario: il suo re dovrebbe '
+            'cedere il passo. Il tuo re può perdere un tempo muovendosi su tre '
+            'case vicine, a triangolo, mentre il re nero ha solo due case buone.',
+        exercises: [
+          LineExercise(
+            instructions:
+                'Porta il re in d2: quando tocca al Nero, il suo re deve '
+                'lasciare c4 e il tuo entra.',
+            fen: '8/8/8/3p4/2kP4/2P5/8/4K3 w - - 0 1',
+            steps: ['e1d2'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Fai il triangolo e3, d2, d3: prima il re in d2, poi in d3. '
+                'Così il re nero perde il suo posto.',
+            fen: '8/8/8/3p4/2kP4/2P1K3/8/8 w - - 0 1',
+            steps: ['e3d2', 'c4b5', 'd2d3'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Il tuo re è in d2, ma tocca a te. Perdi un tempo con un '
+                'passo di lato: il re nero dovrà lasciare c4.',
+            fen: '8/8/8/3p4/2kP4/2P5/3K4/8 w - - 0 1',
+            steps: ['d2c2'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Sfida: lo stesso trucco dall\'altra parte della scacchiera. '
+                'Trova la mossa del re che perde un tempo.',
+            fen: '8/8/8/4p3/4Pk2/3K1P2/8/8 w - - 0 1',
+            steps: ['d3e2'],
+            goal: LineGoal.line,
+          ),
+        ],
+      ),
+      Stage(
         id: 'endgames.breakthrough',
         title: 'Lo sfondamento',
         intro:
@@ -1561,7 +1646,356 @@ const List<Chapter> curriculum = [
           ),
         ],
       ),
+      Stage(
+        id: 'endgames.rook-behind',
+        title: 'La torre dietro il pedone',
+        intro:
+            'Il posto della torre è dietro i pedoni passati: dietro il tuo lo '
+            'spinge, dietro quello avversario lo frena. Più il pedone avanza, '
+            'più la torre dietro di lui diventa forte.',
+        exercises: [
+          LineExercise(
+            instructions:
+                'La torre nera attacca il tuo pedone passato. Difendilo '
+                'mettendo la torre dietro di lui.',
+            fen: '8/5pkp/6p1/Pr6/8/6P1/5PKP/2R5 w - - 0 1',
+            steps: ['c1a1'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Porta la torre dietro il pedone a5: arrivaci lungo la '
+                'traversa.',
+            fen: '8/5pkp/6p1/P7/7R/6P1/5PKP/4r3 w - - 0 1',
+            steps: ['h4a4'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Il pedone nero in b3 corre verso la promozione. Fermalo con '
+                'la torre messa dietro di lui.',
+            fen: '8/5pkp/R5p1/6r1/8/1p4P1/5PKP/8 w - - 0 1',
+            steps: ['a6b6'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Sfida: la torre nera attacca f2. Non difenderlo: metti la '
+                'torre dietro il tuo pedone passato, che vale di più.',
+            fen: '8/5pkp/6p1/P7/8/6P1/3r1PKP/6R1 w - - 0 1',
+            steps: ['g1a1'],
+            goal: LineGoal.line,
+          ),
+        ],
+      ),
+      Stage(
+        id: 'endgames.wrong-bishop',
+        title: 'L\'alfiere sbagliato',
+        intro:
+            'Con il pedone di torre, se l\'alfiere non può andare sulla casa '
+            'dove il pedone promuove, il re che difende si chiude nell\'angolo '
+            'ed è patta. Chi difende corre nell\'angolo, chi attacca glielo '
+            'impedisce.',
+        exercises: [
+          LineExercise(
+            instructions:
+                'L\'alfiere nero va solo sulle case nere, ma h1 è bianca. '
+                'Metti il re nell\'angolo: da lì nessuno ti caccia.',
+            fen: '8/8/8/2b5/7p/6k1/8/6K1 w - - 0 1',
+            steps: ['g1h1'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Ora l\'alfiere sbagliato è il tuo: h8 è nera. Il re nero '
+                'corre verso l\'angolo: chiudigli la strada con l\'alfiere.',
+            fen: '8/5k2/7P/5B2/8/6K1/8/8 w - - 0 1',
+            steps: ['f5h7'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Il re nero vuole arrivare in h8. Con l\'alfiere controlla '
+                'le case bianche che deve attraversare.',
+            fen: '4k3/8/8/7P/4K3/3B4/8/8 w - - 0 1',
+            steps: ['d3c4'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Sfida: il pedone g4 attacca la torre. Difendila con il re: '
+                'se il Nero la prende, gli resta l\'alfiere sbagliato.',
+            fen: '2k5/8/8/2b5/6pp/5R2/8/6K1 w - - 0 1',
+            steps: ['g1g2'],
+            goal: LineGoal.line,
+          ),
+        ],
+      ),
       Stage(id: 'endgames.guardian', title: 'Il guardiano', guardianElo: 1000),
+    ],
+  ),
+  Chapter(
+    id: 'strategy',
+    title: 'La strategia',
+    stages: [
+      Stage(
+        id: 'strategy.value',
+        title: 'Il valore cambia',
+        intro:
+            'Pedone 1, cavallo e alfiere 3, torre 5, donna 9: sono una guida, '
+            'non una legge. Un pedone vicino alla promozione vale molto di '
+            'più. E quando hai più materiale, cambia i pezzi: il vantaggio '
+            'pesa di più.',
+        exercises: [
+          LineExercise(
+            instructions:
+                'Hai un cavallo in più. Cambia le donne: senza la donna il '
+                'Nero ha meno trucchi.',
+            fen: '5k2/ppp1qppp/8/8/8/5N2/PPP1QPPP/6K1 w - - 0 1',
+            steps: ['e2e7'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Sei avanti di un cavallo. Cambia le torri per semplificare '
+                'la partita.',
+            fen: '3r4/pp2kppp/2p5/8/8/2N5/PP3PPP/3R2K1 w - - 0 1',
+            steps: ['d1d8'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Il pedone in a2 sta per diventare donna: adesso vale più del '
+                'tuo cavallo. Dai il cavallo per fermarlo.',
+            fen: '8/5ppp/8/8/8/1kN5/p4PPP/6K1 w - - 0 1',
+            steps: ['c3a2'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Sfida: hai un pedone in più. Cambia le torri: il finale di '
+                'soli pedoni è vinto.',
+            fen: '3r4/1p2kppp/8/8/8/8/PP2KPPP/3R4 w - - 0 1',
+            steps: ['d1d8'],
+            goal: LineGoal.line,
+          ),
+        ],
+      ),
+      Stage(
+        id: 'strategy.open-file',
+        title: 'Torri sulle colonne aperte',
+        intro:
+            'Una colonna è aperta quando non ha pedoni. Lì la torre corre fino '
+            'in fondo e spesso entra in settima traversa, dove attacca i '
+            'pedoni avversari.',
+        exercises: [
+          LineExercise(
+            instructions:
+                'La colonna d è aperta. Mettici una torre prima del Nero.',
+            fen: 'r4rk1/ppp2ppp/8/4p3/4P3/8/PPP2PPP/R4RK1 w - - 0 1',
+            steps: ['a1d1|f1d1'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Una torre è già sulla colonna aperta. Mettici anche l\'altra: '
+                'due torri insieme sono ancora più forti.',
+            fen: 'r3r1k1/pp3ppp/2p5/4p3/4P3/8/PPPR1PPP/5RK1 w - - 0 1',
+            steps: ['f1d1'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Dalla colonna aperta entra in settima traversa: lì la torre '
+                'attacca i pedoni neri.',
+            fen: '4r1k1/pp3ppp/2p5/8/8/7P/PP3PP1/3R2K1 w - - 0 1',
+            steps: ['d1d7'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Sfida: prima conquista la colonna aperta, poi entra in '
+                'settima traversa.',
+            fen: '4r1k1/pp3ppp/2p5/8/8/7P/PP3PP1/R5K1 w - - 0 1',
+            steps: ['a1d1', 'b7b5', 'd1d7'],
+            goal: LineGoal.line,
+          ),
+        ],
+      ),
+      Stage(
+        id: 'strategy.outpost',
+        title: 'La casa forte del cavallo',
+        intro:
+            'Una casa forte è protetta da un tuo pedone e nessun pedone '
+            'avversario può più attaccarla. Un cavallo lì non si può cacciare '
+            'e controlla tutto intorno.',
+        exercises: [
+          LineExercise(
+            instructions:
+                'La casa d5 è protetta dai tuoi pedoni e nessun pedone nero '
+                'può attaccarla. Mettici il cavallo.',
+            fen: '5rk1/1p2bppp/3p4/2p1p3/2P1P3/2N5/PP3PPP/5RK1 w - - 0 1',
+            steps: ['c3d5'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Il cavallo è lontano dalla casa forte d5. Portalo lì in due '
+                'mosse.',
+            fen: '3r2k1/1p2bppp/3p4/2p1p3/2P1P3/8/PP3PPP/3R1NK1 w - - 0 1',
+            steps: ['f1e3', 'd8a8', 'e3d5'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Il cavallo nero in f6 controlla d5. Cambialo con l\'alfiere, '
+                'poi metti il tuo cavallo nella casa forte.',
+            fen: '3r2k1/1p2bppp/3p1n2/2p1p1B1/2P1P3/2N5/PP3PPP/5RK1 w - - 0 1',
+            steps: ['g5f6', 'e7f6', 'c3d5'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Sfida: il Nero non ha più i pedoni c e d. Trova la casa '
+                'forte per il cavallo: ti aiuta il pedone e5.',
+            fen: '2r3k1/pp3ppp/2b1p3/4P3/2N5/8/PP3PPP/3R2K1 w - - 0 1',
+            steps: ['c4d6'],
+            goal: LineGoal.line,
+          ),
+        ],
+      ),
+      Stage(
+        id: 'strategy.bishops',
+        title: 'Alfiere buono e alfiere cattivo',
+        intro:
+            'Un alfiere è cattivo quando i tuoi pedoni stanno sulle case del '
+            'suo colore e gli chiudono la strada; è buono quando i pedoni sono '
+            'sull\'altro colore. L\'alfiere cattivo va portato fuori dai '
+            'pedoni o cambiato.',
+        exercises: [
+          LineExercise(
+            instructions:
+                'I tuoi pedoni sono su case nere, come il tuo alfiere: è '
+                'cattivo. Portalo davanti ai pedoni, dove ha spazio.',
+            fen: '5bk1/5p2/p3p1p1/1p1pP2p/1P1P4/P5P1/7P/2B3K1 w - - 0 1',
+            steps: ['c1g5'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Il tuo alfiere è cattivo, quello nero in d6 è buono. '
+                'Cambiali.',
+            fen:
+                '3r2k1/1p3p1p/2pbp1p1/3p4/3P1B2/2P1P1P1/1P3P1P/2R3K1 '
+                'w - - 0 1',
+            steps: ['f4d6'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Il tuo alfiere è buono: i pedoni neri sono fermi sulle case '
+                'bianche. Attacca con l\'alfiere un pedone senza difesa.',
+            fen: '8/2k5/p1b1p1p1/1p1pP2p/1P1P1K1P/6P1/4B3/8 w - - 0 1',
+            steps: ['e2d3|e2d1'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Sfida: l\'alfiere nero è cattivo e non difende le case nere. '
+                'Entra con il re verso i pedoni neri.',
+            fen: '8/2k5/p1b1p1p1/1p1pP2p/1P1P3P/4K1P1/4B3/8 w - - 0 1',
+            steps: ['e3f4'],
+            goal: LineGoal.line,
+          ),
+        ],
+      ),
+      Stage(
+        id: 'strategy.passed-pawn',
+        title: 'Il pedone passato',
+        intro:
+            'Un pedone è passato quando nessun pedone avversario può fermarlo '
+            'o catturarlo. I tuoi pedoni passati vanno spinti; quelli '
+            'dell\'avversario vanno bloccati, meglio con un cavallo proprio '
+            'davanti.',
+        exercises: [
+          LineExercise(
+            instructions:
+                'Hai due pedoni passati vicini. Spingine uno: insieme corrono '
+                'verso la promozione.',
+            fen: '2r3k1/5ppp/8/2PP4/8/8/5PPP/3R2K1 w - - 0 1',
+            steps: ['d5d6|c5c6'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Sul lato di donna hai due pedoni contro uno. Spingine uno e '
+                'crea un pedone passato.',
+            fen: '6k1/2p2ppp/8/1PP5/8/8/5PPP/6K1 w - - 0 1',
+            steps: ['b5b6|c5c6'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Il pedone nero in d4 è passato. Bloccalo: metti il cavallo '
+                'proprio davanti a lui.',
+            fen: '6k1/5ppp/8/8/3p4/8/5PPP/4N1K1 w - - 0 1',
+            steps: ['e1d3'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Sfida: il tuo pedone a è passato e lontano dal re nero. '
+                'Spingilo: mentre il re nero lo insegue, il tuo re va a '
+                'prendere i pedoni neri.',
+            fen: '8/5ppp/4k3/8/P3K3/8/5PPP/8 w - - 0 1',
+            steps: ['a4a5'],
+            goal: LineGoal.line,
+          ),
+        ],
+      ),
+      Stage(
+        id: 'strategy.active',
+        title: 'Pezzi attivi',
+        intro:
+            'Un pezzo è attivo quando ha tante case e attacca; sul bordo o '
+            'chiuso dai pedoni è passivo. Migliora il tuo pezzo peggiore. Nel '
+            'finale anche il re diventa un pezzo attivo.',
+        exercises: [
+          LineExercise(
+            instructions:
+                'Il cavallo sul bordo controlla poche case. Portalo più verso '
+                'il centro.',
+            fen: '6k1/pp2bppp/2p5/8/8/N1P5/PP3PPP/6K1 w - - 0 1',
+            steps: ['a3c4|a3c2'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Nel finale il re è un pezzo forte. Avvicinalo al centro.',
+            fen: '8/pp2k1pp/5p2/8/8/8/PP3PPP/6K1 w - - 0 1',
+            steps: ['g1f1'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'La torre nera è attiva e attacca i tuoi pedoni. Non stare '
+                'solo a difendere: attacca anche tu i pedoni neri con la '
+                'torre.',
+            fen: '6k1/pp3pp1/7p/8/8/7P/Pr3PP1/2R3K1 w - - 0 1',
+            steps: ['c1c7|c1c8'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Sfida: il cavallo nero in d4 è il pezzo più attivo della '
+                'scacchiera. Cambialo.',
+            fen: '5rk1/1p3ppp/3p4/2p1p3/2PnP3/4B3/PP3PPP/3R2K1 w - - 0 1',
+            steps: ['e3d4'],
+            goal: LineGoal.line,
+          ),
+        ],
+      ),
+      Stage(id: 'strategy.guardian', title: 'Il guardiano', guardianElo: 1100),
     ],
   ),
   Chapter(
