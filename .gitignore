@@ -52,3 +52,7 @@ app.*.map.json
 
 # Artefatti dei golden falliti
 **/failures/
+
+# Testi tradotti: generati da tool/l10n.dart a partire da lib/l10n/<lingua>/*.arb
+/lib/l10n/app_*.arb
+/lib/l10n/app_localizations*.dart
