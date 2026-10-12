@@ -55,7 +55,7 @@ Serie più lunga, bot più forte battuto (Elo), matto con meno mosse (solo vitto
 
 ## Traguardi (RG-05)
 
-37 traguardi in quattro categorie (gioco, tattica, costanza, curiosità), sbloccabili una sola volta e annunciati con una notifica in-app (`showProgressFeedback`). Alcuni esempi: prima vittoria, vittoria con il nero, miniatura (matto in meno di 20 mosse), bot da 1500 e 2000 Elo battuti, matto con il cavallo o con un pedone, vittoria con arrocco lungo, brillante trovata, 10 puzzle di forchetta o di matto, 20 punti in una modalità a tempo, giornata perfetta (tre sfide), 3, 7 e 30 giorni di fila, precisione del 90%, livello 5 e 10, 20 coordinate in una sessione, tutti i minigiochi provati, primo torneo concluso e primo torneo vinto. L'elenco completo è in `lib/progress/achievements.dart`.
+37 traguardi in quattro categorie (gioco, tattica, costanza, curiosità), sbloccabili una sola volta e annunciati con una notifica in-app (`showProgressFeedback`). Alcuni esempi: prima vittoria, vittoria con il nero, miniatura (matto in meno di 20 mosse), bot da 1500 e 1850 Elo battuti, matto con il cavallo o con un pedone, vittoria con arrocco lungo, brillante trovata, 10 puzzle di forchetta o di matto, 20 punti in una modalità a tempo, giornata perfetta (tre sfide), 3, 7 e 30 giorni di fila, precisione del 90%, livello 5 e 10, 20 coordinate in una sessione, tutti i minigiochi provati, primo torneo concluso e primo torneo vinto. L'elenco completo è in `lib/progress/achievements.dart`.
 
 ## Ricompense estetiche (RG-06)
 

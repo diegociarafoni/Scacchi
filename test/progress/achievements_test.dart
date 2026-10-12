@@ -61,6 +61,17 @@ void main() {
     );
   });
 
+  test('battere il bot Esperto sblocca Ammazzagiganti', () {
+    expect(
+      unlockedBy(const GamePlayed(result: GameResult.win, opponentElo: 1850)),
+      contains('beat_2000'),
+    );
+    expect(
+      unlockedBy(const GamePlayed(result: GameResult.win, opponentElo: 1600)),
+      isNot(contains('beat_2000')),
+    );
+  });
+
   test('brillante trovata', () {
     expect(
       unlockedBy(const ReviewCompleted(brilliantMoves: 1)),

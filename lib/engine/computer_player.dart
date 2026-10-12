@@ -34,7 +34,7 @@ class EngineMove {
 const analysisLevel = EngineLevel(
   id: 0,
   name: 'Analisi',
-  approxElo: 3000,
+  approxElo: 2700,
   skill: 20,
   movetime: Duration(milliseconds: 300),
 );
