@@ -181,6 +181,20 @@ void main() {
     expect(find.text('Inizia partita'), findsOneWidget);
   });
 
+  testWidgets('uscendo da Tornei la partita in corso riparte', (tester) async {
+    await _openSheet(tester, engine: true);
+    await tester.tap(find.byKey(const ValueKey('quick-start')));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tapGameAction(tester, 'Nuova');
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Tornei'));
+    await tester.pumpAndSettle();
+    tester.state<NavigatorState>(find.byType(Navigator).first).pop();
+    await tester.pumpAndSettle();
+    expect(find.text('Pagina dei tornei'), findsNothing);
+    expect(find.text('Muove il Bianco.'), findsOneWidget);
+  });
+
   testWidgets('il profilo bambino ha la scelta semplice, senza menu', (
     tester,
   ) async {

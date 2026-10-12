@@ -398,7 +398,7 @@ class _FriendGamePanelState extends State<FriendGamePanel> {
                   if (bluetooth) await widget.bluetoothCheck(isHost: true);
                   return MultiplayerController.host(
                     side: _side,
-                    timeControl: _control,
+                    timeControl: _remote ? null : _control,
                     bluetooth: bluetooth,
                     openHost: widget.openHost,
                     remote: _remote,

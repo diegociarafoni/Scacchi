@@ -1515,8 +1515,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   }
 
   Future<void> _newGame() async {
-    final picked = await _whileSuspended<Object>(
-      () => showModalBottomSheet<Object>(
+    final picked = await _whileSuspended<_TimeChoice>(() async {
+      final result = await showModalBottomSheet<Object>(
         context: context,
         isScrollControlled: true,
         builder: (context) => _TimeControlSheet(
@@ -1532,18 +1532,22 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           tournamentPage: widget.tournamentPage,
           physicalPage: widget.physicalPage,
         ),
-      ),
-      restart: (choice) => choice == null,
-    );
+      );
+      // Tornei e scacchiera fisica prendono il posto della partita, che
+      // resta ferma finché non si torna.
+      if (result is _SheetPush && mounted) {
+        final page = await result.build();
+        if (mounted) {
+          await Navigator.of(context)
+              .push<void>(MaterialPageRoute(builder: (_) => page));
+        }
+        return null;
+      }
+      return result as _TimeChoice?;
+    }, restart: (choice) => choice == null);
     if (!mounted || picked == null) return;
-    if (picked is _SheetPush) {
-      final page = await picked.build();
-      if (!mounted) return;
-      await Navigator.of(context)
-          .push<void>(MaterialPageRoute(builder: (_) => page));
-      return;
-    }
-    final choice = picked as _TimeChoice;
+    final choice = picked;
+
     final setup = _applySetup(choice.setup);
     final vsComputer = setup.opponent != Opponent.human;
     // Il profilo bambino gioca solo la classica: la variante scelta prima
