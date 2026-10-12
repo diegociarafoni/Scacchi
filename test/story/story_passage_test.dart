@@ -117,7 +117,7 @@ void main() {
     expect(puzzlesOpened, isTrue);
   });
 
-  testWidgets('RG-13 risolti i puzzle il foglio annuncia la sfida a Pino', (
+  testWidgets('RG-13 risolti i puzzle il foglio annuncia la sfida a Tino', (
     tester,
   ) async {
     await tester.runAsync(doneLessons);
@@ -136,8 +136,8 @@ void main() {
       until: () => shown(find.text('Puzzle risolti!')),
     );
     expect(find.text('Puzzle risolti!'), findsOneWidget);
-    expect(find.textContaining('Pino ti aspetta'), findsOneWidget);
-    await save(tester, find.text('Sfida Pino'), until: () => boss == 1);
+    expect(find.textContaining('Tino ti aspetta'), findsOneWidget);
+    await save(tester, find.text('Sfida Tino'), until: () => boss == 1);
     expect(boss, 1);
   });
 
@@ -198,11 +198,11 @@ void main() {
       tester,
       find.textContaining('Sfida a Tino'),
       until: () =>
-          shown(find.text('Pino resiste ancora: riprova quando vuoi.')),
+          shown(find.text('Tino resiste ancora: riprova quando vuoi.')),
     );
     expect(find.byKey(const ValueKey('story-passage')), findsNothing);
     expect(
-      find.text('Pino resiste ancora: riprova quando vuoi.'),
+      find.text('Tino resiste ancora: riprova quando vuoi.'),
       findsOneWidget,
     );
   });

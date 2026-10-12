@@ -31,7 +31,7 @@ void main() {
     });
 
     test('la strategia e Capablanca chiudono la storia', () {
-      expect(storyChapters.map((c) => c.pathChapterId).toList().sublist(6), [
+      expect(storyChapters.map((c) => c.pathChapterId).toList().sublist(7), [
         'strategy',
         'capablanca',
       ]);
@@ -267,9 +267,9 @@ void main() {
     });
 
     test('salta le lezioni fatte e arriva al guardiano', () {
-      final chapter = storyChapters[2].pathChapter;
+      final chapter = storyChapters[3].pathChapter;
       var p = const PathProgress();
-      for (final c in storyChapters.take(3)) {
+      for (final c in storyChapters.take(4)) {
         for (final s in c.pathChapter.stages.where((s) => !s.isGuardian)) {
           p = p.complete(s.id, 3);
         }

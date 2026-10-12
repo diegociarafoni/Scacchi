@@ -119,7 +119,7 @@ void main() {
     await show(tester);
     final badge = find.byKey(ValueKey('story-badge-${first.id}'));
     expect(
-      find.descendant(of: badge, matching: find.text('1')),
+      find.descendant(of: badge, matching: find.text('0')),
       findsOneWidget,
     );
     await tester.runAsync(() async {
