@@ -68,7 +68,7 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | Percorso a tappe con stelle e spiegazione di ogni tappa: pezzi, regole, matti elementari e famosi, tattiche, finali di pedoni, aperture | Disponibile dalla scheda Tu, con i guardiani dove c'è il motore |
 | Statistiche e rating locale | Disponibile dalla scheda Tu |
 | Editor di posizione con FEN e validazione | Disponibile |
-| Varianti: Chess960, Re della collina, Tre scacchi | Disponibile nella partita a due |
+| Varianti: Chess960, Re della collina, Tre scacchi | Disponibile nella partita a due e contro il computer |
 | Minigiochi | Disponibile dalla scheda Tu, con record e XP |
 | Tornei contro bot | Formule, classifica, tabellone e bacheca; si giocano dalla scheda Tu contro il motore (Android e iOS; Windows e Linux con Stockfish installato) |
 | Orologio con cadenze e incremento | Disponibile |
