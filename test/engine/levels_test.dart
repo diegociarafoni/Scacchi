@@ -48,10 +48,46 @@ void main() {
     });
   });
 
+  group('scala dei livelli', () {
+    test('l\'Elo dichiarato cresce e i salti sono contenuti', () {
+      final elo = [for (final l in engineLevels) l.approxElo];
+      expect([...elo]..sort(), elo);
+      expect(elo.toSet(), hasLength(elo.length));
+      for (var i = 0; i + 1 < elo.length; i++) {
+        expect(elo[i + 1] - elo[i], inInclusiveRange(150, 450), reason: '$i');
+      }
+    });
+
+    test('il limitatore Elo non scende sotto il minimo di Stockfish', () {
+      for (final level in engineLevels.where((l) => l.uciElo != null)) {
+        expect(level.uciElo, greaterThanOrEqualTo(1320), reason: '${level.id}');
+      }
+    });
+
+    test('i livelli deboli perdono forza con la scelta tra più varianti', () {
+      for (final level in engineLevels.where((l) => l.id <= 4)) {
+        expect(level.uciElo, isNull, reason: '${level.id}');
+        expect(level.multiPv, greaterThan(1), reason: '${level.id}');
+        expect(level.temperatureCp, greaterThan(0), reason: '${level.id}');
+      }
+    });
+
+    test('il limitatore Elo del motore sta sopra l\'Elo dichiarato', () {
+      // Misurato: a tempo breve il limitatore rende meno del nominale.
+      for (final level in engineLevels.where((l) => l.uciElo != null)) {
+        expect(
+          level.uciElo,
+          greaterThanOrEqualTo(level.approxElo),
+          reason: '${level.id}',
+        );
+      }
+    });
+  });
+
   group('engineLevelForElo', () {
     test('sceglie il livello con l\'Elo più vicino', () {
       expect(engineLevelForElo(400).id, 1);
-      expect(engineLevelForElo(600).id, 1);
+      expect(engineLevelForElo(700).id, 1);
       expect(engineLevelForElo(1350).id, 4);
       expect(engineLevelForElo(1400).id, 4);
       expect(engineLevelForElo(5000).id, 8);

@@ -55,7 +55,7 @@ class AdaptiveOpponent {
       store.write(storeKey, jsonEncode({'rating': rating, 'games': games}));
 }
 
-const _startRating = 1100;
+const _startRating = 1150;
 const _provisionalGames = 10;
 const _minRating = 500;
-const _maxRating = 3100;
+const _maxRating = 2900;
