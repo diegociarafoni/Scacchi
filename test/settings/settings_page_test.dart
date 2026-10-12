@@ -12,6 +12,8 @@ import 'package:scacchi/settings/settings.dart';
 import 'package:scacchi/settings/settings_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'settings_nav.dart';
+
 void main() {
   late Directory dir;
   late ProgressController progress;
@@ -28,7 +30,11 @@ void main() {
   });
   tearDown(() => dir.deleteSync(recursive: true));
 
-  Future<void> show(WidgetTester tester, {bool withProgress = true}) async {
+  Future<void> show(
+    WidgetTester tester, {
+    bool withProgress = true,
+    SettingsSection section = SettingsSection.board,
+  }) async {
     tester.view.physicalSize = const Size(1170, 2532);
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
@@ -40,11 +46,11 @@ void main() {
         home: SettingsPage(
           controller: settings,
           progress: withProgress ? progress : null,
-          expanded: SettingsSection.values.toSet(),
         ),
       ),
     );
     await tester.pumpAndSettle();
+    await openSection(tester, section);
   }
 
   Future<void> tapChip(WidgetTester tester, String label) async {
@@ -82,6 +88,7 @@ void main() {
     expect(settings.value.coordinatesOutside, isTrue);
 
     final coordinates = find.text('Coordinate');
+    await tester.scrollUntilVisible(coordinates, -200);
     await tester.ensureVisible(coordinates);
     await tester.pumpAndSettle();
     await tester.tap(coordinates);
@@ -96,7 +103,7 @@ void main() {
   testWidgets('RP-01 i nuovi pezzi e le nuove scacchiere si scelgono', (
     tester,
   ) async {
-    await show(tester);
+    await show(tester, section: SettingsSection.style);
     await tapChip(tester, 'Castello');
     expect(settings.value.boardTheme, BoardTheme.castello);
     await tapChip(tester, 'Arcano');
@@ -104,7 +111,7 @@ void main() {
   });
 
   testWidgets('RG-06 un tema bloccato dice come sbloccarlo', (tester) async {
-    await show(tester);
+    await show(tester, section: SettingsSection.style);
     await tapChip(tester, 'Sabbia');
     expect(settings.value.boardTheme, BoardTheme.spazio);
     expect(find.text('Sabbia si sblocca con: Livello 2'), findsOneWidget);
@@ -116,7 +123,7 @@ void main() {
   testWidgets('RG-06 "Sblocca tutto" rende disponibili temi e pezzi', (
     tester,
   ) async {
-    await show(tester);
+    await show(tester, section: SettingsSection.style);
     final toggle = find.byKey(const Key('unlockAll'));
     await tester.scrollUntilVisible(toggle, 200);
     await tester.ensureVisible(toggle);
@@ -130,7 +137,7 @@ void main() {
   });
 
   testWidgets('senza progressi tutto è disponibile', (tester) async {
-    await show(tester, withProgress: false);
+    await show(tester, withProgress: false, section: SettingsSection.style);
     expect(find.byKey(const Key('unlockAll')), findsNothing);
     await tapChip(tester, 'Oro');
     expect(settings.value.boardTheme, BoardTheme.gold);
@@ -140,7 +147,7 @@ void main() {
     await tester.runAsync(
       () => progress.updateSettings(const ProgressSettings(enabled: false)),
     );
-    await show(tester);
+    await show(tester, section: SettingsSection.style);
     expect(find.byKey(const Key('unlockAll')), findsNothing);
     await tapChip(tester, 'Notte');
     expect(settings.value.boardTheme, BoardTheme.night);
@@ -149,9 +156,9 @@ void main() {
   testWidgets('RP-06 il profilo bambino si attiva dalle Impostazioni', (
     tester,
   ) async {
-    await show(tester);
+    await show(tester, section: SettingsSection.kid);
     final toggle = find.byKey(const Key('kidMode'));
-    expect(find.text('Profilo bambino'), findsOneWidget);
+    expect(find.text('Profilo bambino'), findsWidgets);
     await tester.tap(toggle);
     await tester.pumpAndSettle();
     expect(settings.value.kidMode, isTrue);
@@ -161,7 +168,7 @@ void main() {
     tester,
   ) async {
     await settings.update(settings.value.copyWith(kidMode: true));
-    await show(tester);
+    await show(tester, section: SettingsSection.kid);
     await tester.tap(find.byKey(const Key('kidMode')));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('adultGate')), findsOneWidget);
@@ -187,7 +194,7 @@ void main() {
     tester,
   ) async {
     await settings.update(settings.value.copyWith(kidMode: true));
-    await show(tester);
+    await show(tester, section: SettingsSection.kid);
     await tester.tap(find.byKey(const Key('kidMode')));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Annulla'));
@@ -198,7 +205,7 @@ void main() {
   testWidgets('RP-02 aspetto dell\'app: Sistema predefinito, poi Chiaro', (
     tester,
   ) async {
-    await show(tester);
+    await show(tester, section: SettingsSection.style);
     ChoiceChip chip(String label) =>
         tester.widget(find.widgetWithText(ChoiceChip, label));
     expect(chip('Sistema').selected, isTrue);
@@ -234,11 +241,13 @@ void main() {
       }
     });
     await tester.pumpAndSettle();
+    await openSection(tester, SettingsSection.style);
     await tapChip(tester, 'Scuro');
     expect(mode(), ThemeMode.dark);
     expect(
-      SettingsScope.maybeOf(tester.element(find.byType(SettingsPage)))
-          ?.themeMode,
+      SettingsScope.maybeOf(
+        tester.element(find.byType(SettingsPage, skipOffstage: false)),
+      )?.themeMode,
       ThemeMode.dark,
     );
     await tapChip(tester, 'Sistema');

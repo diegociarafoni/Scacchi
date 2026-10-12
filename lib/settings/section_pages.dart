@@ -1,0 +1,418 @@
+import 'package:dartchess/dartchess.dart' show PieceKind;
+import 'package:flutter/material.dart';
+
+import '../backup/backup_page.dart';
+import '../l10n/app_localizations.dart';
+import '../progress/profile_page.dart';
+import '../progress/progress_controller.dart';
+import '../progress/rewards.dart';
+import 'adult_gate.dart';
+import 'notation.dart';
+import 'settings.dart';
+import 'settings_labels.dart';
+import 'settings_widgets.dart';
+
+/// Pagina di una sezione delle Impostazioni: ogni interruttore ha sotto una
+/// riga che dice cosa cambia.
+abstract class _SectionPage extends StatelessWidget {
+  const _SectionPage({super.key, required this.controller, this.progress});
+
+  final SettingsController controller;
+
+  /// Progressi che sbloccano temi e pezzi; senza, tutto è disponibile.
+  final ProgressController? progress;
+
+  Listenable get _listenable => Listenable.merge([controller, progress]);
+
+  AppSettings get _s => controller.value;
+
+  void _set(AppSettings Function(AppSettings) change) =>
+      controller.update(change(controller.value));
+}
+
+class BoardSettingsPage extends _SectionPage {
+  const BoardSettingsPage({
+    super.key,
+    required super.controller,
+    super.progress,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return SettingsSectionScaffold(
+      title: l10n.settingsSectionBoard,
+      listenable: _listenable,
+      pinned: (_) => SettingsPreviewCard(settings: _s),
+      builder: (context) {
+        final s = _s;
+        return [
+          SwitchListTile(
+            key: const Key('sound'),
+            title: Text(l10n.settingsSound),
+            subtitle: Text(l10n.settingsSoundDescription),
+            value: s.sound,
+            onChanged: (v) => _set((c) => c.copyWith(sound: v)),
+          ),
+          ListTile(
+            title: Text(l10n.settingsVolume),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(l10n.settingsVolumeDescription),
+                SettingsVolumeSlider(
+                  value: s.volume,
+                  enabled: s.sound,
+                  onChangeEnd: (v) => _set((c) => c.copyWith(volume: v)),
+                ),
+              ],
+            ),
+          ),
+          SwitchListTile(
+            key: const Key('haptics'),
+            title: Text(l10n.settingsHaptics),
+            subtitle: Text(l10n.settingsHapticsDescription),
+            value: s.haptics,
+            onChanged: (v) => _set((c) => c.copyWith(haptics: v)),
+          ),
+          SwitchListTile(
+            key: const Key('coordinates'),
+            title: Text(l10n.settingsCoordinates),
+            subtitle: Text(l10n.settingsCoordinatesDescription),
+            value: s.showCoordinates,
+            onChanged: (v) => _set((c) => c.copyWith(showCoordinates: v)),
+          ),
+          SwitchListTile(
+            key: const Key('coordinatesOutside'),
+            title: Text(l10n.settingsCoordinatesOutside),
+            subtitle: Text(l10n.settingsCoordinatesOutsideDescription),
+            value: s.coordinatesOutside,
+            onChanged: s.showCoordinates
+                ? (v) => _set((c) => c.copyWith(coordinatesOutside: v))
+                : null,
+          ),
+          SwitchListTile(
+            key: const Key('lastMove'),
+            title: Text(l10n.settingsLastMove),
+            subtitle: Text(l10n.settingsLastMoveDescription),
+            value: s.showLastMove,
+            onChanged: (v) => _set((c) => c.copyWith(showLastMove: v)),
+          ),
+          SwitchListTile(
+            key: const Key('legalMoves'),
+            title: Text(l10n.settingsLegalMoves),
+            subtitle: Text(l10n.settingsLegalMovesDescription),
+            value: s.showLegalMoves,
+            onChanged: (v) => _set((c) => c.copyWith(showLegalMoves: v)),
+          ),
+          SwitchListTile(
+            key: const Key('drawShapes'),
+            title: Text(l10n.settingsDrawShapes),
+            subtitle: Text(l10n.settingsDrawShapesDescription),
+            value: s.drawShapes,
+            onChanged: (v) => _set((c) => c.copyWith(drawShapes: v)),
+          ),
+          SettingsChoiceTile<AnimationSpeed>(
+            title: l10n.settingsAnimations,
+            description: l10n.settingsAnimationsDescription,
+            values: AnimationSpeed.values,
+            selected: s.animation,
+            label: (a) => animationLabel(l10n, a),
+            onSelected: (a) => _set((c) => c.copyWith(animation: a)),
+          ),
+          SettingsChoiceTile<MoveNotation>(
+            title: l10n.settingsNotation,
+            description: l10n.settingsNotationDescription,
+            values: MoveNotation.values,
+            selected: s.notation,
+            label: (n) => notationLabel(l10n, n),
+            onSelected: (n) => _set((c) => c.copyWith(notation: n)),
+          ),
+        ];
+      },
+    );
+  }
+}
+
+/// Segnaposto della pagina Stile: aspetto dell'app, temi e pezzi.
+class AppearanceSettingsPage extends _SectionPage {
+  const AppearanceSettingsPage({
+    super.key,
+    required super.controller,
+    super.progress,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final p = progress;
+    return SettingsSectionScaffold(
+      title: l10n.settingsSectionStyle,
+      listenable: _listenable,
+      pinned: (_) => SettingsPreviewCard(settings: _s),
+      builder: (context) {
+        final s = _s;
+        Requirement? locked(Enum item) =>
+            p == null || isUnlocked(item, p.state, p.settings)
+            ? null
+            : requirementOf(item);
+        return [
+          SettingsChoiceTile<ThemeMode>(
+            title: l10n.settingsAppTheme,
+            description: l10n.settingsAppThemeDescription,
+            values: ThemeMode.values,
+            selected: s.themeMode,
+            label: (m) => themeModeLabel(l10n, m),
+            onSelected: (m) => _set((c) => c.copyWith(themeMode: m)),
+          ),
+          SettingsSubheader(l10n.settingsBoardTheme),
+          SettingsGallery<BoardTheme>(
+            keyPrefix: 'theme-tile',
+            values: BoardTheme.values,
+            selected: s.boardTheme,
+            label: (t) => themeLabel(l10n, t),
+            visual: ThemeSwatch.new,
+            locked: locked,
+            onSelected: (t) => _set((c) => c.copyWith(boardTheme: t)),
+          ),
+          SettingsSubheader(l10n.settingsPieces),
+          SettingsGallery<PieceStyle>(
+            keyPrefix: 'piece-tile',
+            values: PieceStyle.values,
+            selected: s.pieceSet,
+            label: (st) => pieceLabel(l10n, st),
+            visual: (st) => Image(
+              key: Key('piece-icon-${st.name}'),
+              image: st.assets[PieceKind.whiteKnight]!,
+              width: 48,
+              height: 48,
+            ),
+            locked: locked,
+            onSelected: (st) => _set((c) => c.copyWith(pieceSet: st)),
+          ),
+          if (p != null && p.settings.enabled)
+            SwitchListTile(
+              key: const Key('unlockAll'),
+              title: Text(l10n.settingsUnlockAll),
+              subtitle: Text(l10n.settingsUnlockAllDescription),
+              value: p.settings.unlockAll,
+              onChanged: (v) =>
+                  p.updateSettings(p.settings.copyWith(unlockAll: v)),
+            ),
+        ];
+      },
+    );
+  }
+}
+
+class GameSettingsPage extends _SectionPage {
+  const GameSettingsPage({
+    super.key,
+    required super.controller,
+    super.progress,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return SettingsSectionScaffold(
+      title: l10n.settingsSectionGame,
+      listenable: _listenable,
+      builder: (context) {
+        final s = _s;
+        return [
+          SwitchListTile(
+            key: const Key('autoQueen'),
+            title: Text(l10n.settingsAutoQueen),
+            subtitle: Text(l10n.settingsAutoQueenDescription),
+            value: s.autoQueen,
+            onChanged: (v) => _set((c) => c.copyWith(autoQueen: v)),
+          ),
+          SwitchListTile(
+            key: const Key('autoFlip'),
+            title: Text(l10n.settingsAutoFlip),
+            subtitle: Text(l10n.settingsAutoFlipDescription),
+            value: s.autoFlip,
+            onChanged: (v) => _set((c) => c.copyWith(autoFlip: v)),
+          ),
+          SwitchListTile(
+            key: const Key('tableMode'),
+            title: Text(l10n.settingsTableMode),
+            subtitle: Text(l10n.settingsTableModeDescription),
+            value: s.tableMode,
+            onChanged: (v) => _set((c) => c.copyWith(tableMode: v)),
+          ),
+        ];
+      },
+    );
+  }
+}
+
+class CoachSettingsPage extends _SectionPage {
+  const CoachSettingsPage({
+    super.key,
+    required super.controller,
+    super.progress,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return SettingsSectionScaffold(
+      title: l10n.settingsSectionCoach,
+      listenable: _listenable,
+      builder: (context) => [
+        SwitchListTile(
+          key: const Key('explainWhy'),
+          title: Text(l10n.settingsExplainWhy),
+          subtitle: Text(l10n.settingsExplainWhyDescription),
+          value: _s.explainWhy,
+          onChanged: (v) => _set((c) => c.copyWith(explainWhy: v)),
+        ),
+      ],
+    );
+  }
+}
+
+class AccessibilitySettingsPage extends _SectionPage {
+  const AccessibilitySettingsPage({
+    super.key,
+    required super.controller,
+    super.progress,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return SettingsSectionScaffold(
+      title: l10n.settingsSectionAccessibility,
+      listenable: _listenable,
+      pinned: (_) => SettingsPreviewCard(settings: _s),
+      builder: (context) {
+        final s = _s;
+        return [
+          SwitchListTile(
+            key: const Key('colorBlind'),
+            title: Text(l10n.settingsColorBlind),
+            subtitle: Text(l10n.settingsColorBlindDescription),
+            value: s.colorBlind,
+            onChanged: (v) => _set((c) => c.copyWith(colorBlind: v)),
+          ),
+          SwitchListTile(
+            key: const Key('zenMode'),
+            title: Text(l10n.settingsZenMode),
+            subtitle: Text(l10n.settingsZenModeDescription),
+            value: s.zenMode,
+            onChanged: (v) => _set((c) => c.copyWith(zenMode: v)),
+          ),
+          SwitchListTile(
+            key: const Key('confirmMove'),
+            title: Text(l10n.settingsConfirmMove),
+            subtitle: Text(l10n.settingsConfirmMoveDescription),
+            value: s.confirmMove,
+            onChanged: (v) => _set((c) => c.copyWith(confirmMove: v)),
+          ),
+        ];
+      },
+    );
+  }
+}
+
+class ProfileSettingsPage extends _SectionPage {
+  const ProfileSettingsPage({
+    super.key,
+    required super.controller,
+    required ProgressController super.progress,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final p = progress!;
+    return SettingsSectionScaffold(
+      title: l10n.settingsSectionProfile,
+      listenable: _listenable,
+      builder: (context) => [
+        ListTile(
+          key: const Key('openProfile'),
+          leading: const Icon(Icons.person_outline),
+          title: Text(l10n.settingsOpenProfile),
+          subtitle: Text(l10n.settingsOpenProfileDescription),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute<void>(builder: (_) => ProfilePage(controller: p)),
+          ),
+        ),
+        SwitchListTile(
+          key: const Key('progressEnabled'),
+          title: Text(l10n.settingsProgressEnabled),
+          subtitle: Text(l10n.settingsProgressEnabledDescription),
+          value: p.settings.enabled,
+          onChanged: (v) => p.updateSettings(p.settings.copyWith(enabled: v)),
+        ),
+      ],
+    );
+  }
+}
+
+class DataSettingsPage extends _SectionPage {
+  const DataSettingsPage({
+    super.key,
+    required super.controller,
+    super.progress,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return SettingsSectionScaffold(
+      title: l10n.settingsSectionData,
+      listenable: _listenable,
+      builder: (context) => [
+        ListTile(
+          key: const Key('backup'),
+          leading: const Icon(Icons.backup_outlined),
+          title: Text(l10n.settingsBackup),
+          subtitle: Text(l10n.settingsBackupDescription),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () async {
+            final page = await BackupPage.system();
+            if (context.mounted) {
+              await Navigator.push(
+                context,
+                MaterialPageRoute<void>(builder: (_) => page),
+              );
+            }
+          },
+        ),
+      ],
+    );
+  }
+}
+
+/// Profilo bambino (RP-06): per uscirne serve la domanda per adulti.
+class KidSettingsPage extends _SectionPage {
+  const KidSettingsPage({super.key, required super.controller, super.progress});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return SettingsSectionScaffold(
+      title: l10n.kidProfile,
+      listenable: _listenable,
+      builder: (context) => [
+        SwitchListTile(
+          key: const Key('kidMode'),
+          title: Text(l10n.kidProfile),
+          subtitle: Text(l10n.kidProfileDescription),
+          value: _s.kidMode,
+          onChanged: (v) async {
+            if (!v && !await askAdult(context)) return;
+            _set((c) => c.copyWith(kidMode: v));
+          },
+        ),
+      ],
+    );
+  }
+}

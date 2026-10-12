@@ -11,6 +11,8 @@ import 'package:scacchi/progress/progress_store.dart';
 import 'package:scacchi/settings/settings.dart';
 import 'package:scacchi/settings/settings_page.dart';
 
+import 'settings_nav.dart';
+
 void main() {
   late Directory dir;
   late ProgressController progress;
@@ -31,10 +33,12 @@ void main() {
     Size logical = const Size(390, 844),
     bool unlocked = true,
     double textScale = 1,
+    SettingsSection section = SettingsSection.board,
   }) async {
     tester.view.physicalSize = logical * 3;
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
+    await tester.pumpWidget(const SizedBox.shrink());
     await tester.runAsync(() async {
       await progress.load();
       if (unlocked) {
@@ -53,14 +57,11 @@ void main() {
               .copyWith(textScaler: TextScaler.linear(textScale)),
           child: child!,
         ),
-        home: SettingsPage(
-          controller: settings,
-          progress: progress,
-          expanded: SettingsSection.values.toSet(),
-        ),
+        home: SettingsPage(controller: settings, progress: progress),
       ),
     );
     await tester.pumpAndSettle();
+    await openSection(tester, section);
   }
 
   StaticChessboard board(WidgetTester tester) =>
@@ -115,7 +116,7 @@ void main() {
   });
 
   testWidgets('RP-04 ogni scelta aggiorna subito l\'anteprima', (tester) async {
-    await show(tester);
+    await show(tester, section: SettingsSection.style);
     await tapChip(tester, 'Oceano');
     expect(
       board(tester).settings.colorScheme,
@@ -123,18 +124,22 @@ void main() {
     );
     await tapChip(tester, 'Merida');
     expect(board(tester).settings.pieceAssets, PieceStyle.merida.assets);
+    await backToMenu(tester);
+    await openSection(tester, SettingsSection.board);
     await tapChip(tester, 'Lenta');
     expect(
       board(tester).settings.animationDuration,
       AnimationSpeed.slow.duration,
     );
+    await tapText(tester, 'Coordinate');
+    expect(board(tester).settings.enableCoordinates, isFalse);
+    await backToMenu(tester);
+    await openSection(tester, SettingsSection.accessibility);
     await tapText(tester, 'Colori per daltonici');
     expect(
       board(tester).settings.colorScheme,
       same(BoardTheme.ocean.colorBlindScheme),
     );
-    await tapText(tester, 'Coordinate');
-    expect(board(tester).settings.enableCoordinates, isFalse);
   });
 
   testWidgets('RP-04 l\'anteprima resta visibile scorrendo le impostazioni', (
@@ -142,7 +147,7 @@ void main() {
   ) async {
     await show(tester);
     final before = tester.getRect(find.byKey(const Key('board-preview')));
-    await tester.scrollUntilVisible(find.text('Backup e ripristino'), 300);
+    await tester.scrollUntilVisible(find.text('Notazione delle mosse'), 300);
     expect(tester.getRect(find.byKey(const Key('board-preview'))), before);
   });
 
@@ -194,7 +199,7 @@ void main() {
   testWidgets(
     'RP-04 cambiare un\'impostazione riporta alla posizione di prova',
     (tester) async {
-      await show(tester);
+      await show(tester, section: SettingsSection.style);
       final start = board(tester).fen;
       await tester.tap(find.byKey(const Key('board-preview')));
       await tester.pumpAndSettle();
@@ -250,7 +255,7 @@ void main() {
     final bar = tester.getRect(find.byKey(const Key('preview-bar')));
     expect(bar.height, lessThanOrEqualTo(844 * 0.3));
     await tester.scrollUntilVisible(
-      find.text('Backup e ripristino'),
+      find.text('Notazione delle mosse'),
       300,
       maxScrolls: 100,
     );
@@ -269,7 +274,7 @@ void main() {
   testWidgets('RP-04 i temi mostrano i colori delle case, i pezzi il cavallo', (
     tester,
   ) async {
-    await show(tester);
+    await show(tester, section: SettingsSection.style);
     for (final theme in BoardTheme.values) {
       final swatch = find.byKey(Key('theme-swatch-${theme.name}'));
       await tester.scrollUntilVisible(swatch, 200);
@@ -303,11 +308,13 @@ void main() {
       'large': Size(412, 915),
     };
     for (final MapEntry(key: name, value: size) in phones.entries) {
-      testWidgets('RNF-07 impostazioni su telefono $name', (tester) async {
+      testWidgets('RNF-07 impostazioni, scacchiera su telefono $name', (
+        tester,
+      ) async {
         await show(tester, logical: size);
         await expectLater(
           find.byType(MaterialApp),
-          matchesGoldenFile('goldens/settings_$name.png'),
+          matchesGoldenFile('goldens/settings_board_$name.png'),
         );
       }, tags: 'golden');
     }
@@ -315,7 +322,11 @@ void main() {
     testWidgets('RNF-07 chip di temi e pezzi con colori e cavallo', (
       tester,
     ) async {
-      await show(tester, logical: const Size(360, 780));
+      await show(
+        tester,
+        logical: const Size(360, 780),
+        section: SettingsSection.style,
+      );
       await tester.scrollUntilVisible(
         find.byKey(const Key('piece-tile-rokko')),
         200,

@@ -340,6 +340,7 @@ class AppSettings {
     this.showLegalMoves = true,
     this.showCoordinates = true,
     this.coordinatesOutside = false,
+    this.showLastMove = true,
     this.autoQueen = false,
     this.drawShapes = true,
     this.autoFlip = false,
@@ -382,6 +383,9 @@ class AppSettings {
 
   /// Coordinate attorno alla scacchiera invece che sulle case.
   final bool coordinatesOutside;
+
+  /// Colora la casa di partenza e di arrivo dell'ultima mossa.
+  final bool showLastMove;
   final bool autoQueen;
   final bool drawShapes;
   final bool autoFlip;
@@ -455,6 +459,7 @@ class AppSettings {
     bool? showLegalMoves,
     bool? showCoordinates,
     bool? coordinatesOutside,
+    bool? showLastMove,
     bool? autoQueen,
     bool? drawShapes,
     bool? autoFlip,
@@ -478,6 +483,7 @@ class AppSettings {
     showLegalMoves: showLegalMoves ?? this.showLegalMoves,
     showCoordinates: showCoordinates ?? this.showCoordinates,
     coordinatesOutside: coordinatesOutside ?? this.coordinatesOutside,
+    showLastMove: showLastMove ?? this.showLastMove,
     autoQueen: autoQueen ?? this.autoQueen,
     drawShapes: drawShapes ?? this.drawShapes,
     autoFlip: autoFlip ?? this.autoFlip,
@@ -499,10 +505,20 @@ class AppSettings {
     blackName: blackName ?? this.blackName,
   );
 
-  late final ChessboardSettings board = ChessboardSettings(
-    colorScheme: colorBlind
+  /// Schema del tema, senza l'evidenziazione dell'ultima mossa se spenta.
+  ChessboardColorScheme get _scheme {
+    final scheme = colorBlind
         ? boardTheme.colorBlindScheme
-        : boardTheme.colorScheme,
+        : boardTheme.colorScheme;
+    return showLastMove
+        ? scheme
+        : scheme.copyWith(
+            lastMove: const HighlightDetails(solidColor: Color(0x00000000)),
+          );
+  }
+
+  late final ChessboardSettings board = ChessboardSettings(
+    colorScheme: _scheme,
     pieceAssets: pieceSet.assetsOn(boardTheme),
     enableCoordinates: showCoordinates && !coordinatesOutside,
     showValidMoves: showLegalMoves,
@@ -528,6 +544,7 @@ class AppSettings {
       other.showLegalMoves == showLegalMoves &&
       other.showCoordinates == showCoordinates &&
       other.coordinatesOutside == coordinatesOutside &&
+      other.showLastMove == showLastMove &&
       other.autoQueen == autoQueen &&
       other.drawShapes == drawShapes &&
       other.autoFlip == autoFlip &&
@@ -553,6 +570,7 @@ class AppSettings {
     showLegalMoves,
     showCoordinates,
     coordinatesOutside,
+    showLastMove,
     autoQueen,
     drawShapes,
     autoFlip,
@@ -600,6 +618,7 @@ class SettingsController extends ValueNotifier<AppSettings> {
         showLegalMoves: read('showLegalMoves', d.showLegalMoves),
         showCoordinates: read('showCoordinates', d.showCoordinates),
         coordinatesOutside: read('coordinatesOutside', d.coordinatesOutside),
+        showLastMove: read('showLastMove', d.showLastMove),
         autoQueen: read('autoQueen', d.autoQueen),
         drawShapes: read('drawShapes', d.drawShapes),
         autoFlip: read('autoFlip', d.autoFlip),
@@ -636,6 +655,8 @@ class SettingsController extends ValueNotifier<AppSettings> {
         prefs.setBool('showCoordinates', settings.showCoordinates),
       if (old.coordinatesOutside != settings.coordinatesOutside)
         prefs.setBool('coordinatesOutside', settings.coordinatesOutside),
+      if (old.showLastMove != settings.showLastMove)
+        prefs.setBool('showLastMove', settings.showLastMove),
       if (old.autoQueen != settings.autoQueen)
         prefs.setBool('autoQueen', settings.autoQueen),
       if (old.drawShapes != settings.drawShapes)

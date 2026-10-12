@@ -38,6 +38,7 @@ import '../puzzles/fixtures.dart';
 import '../puzzles/puzzle_page_test.dart' show tapMove;
 import '../review/coach_test.dart' show line, reviewOne;
 import '../review/fake_engine.dart';
+import '../settings/settings_nav.dart';
 
 final _digit = RegExp(r'\d');
 
@@ -239,6 +240,7 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
+      await openSection(tester, SettingsSection.style);
       await tester.scrollUntilVisible(find.text('Sabbia'), 200);
       final semantics = tester.ensureSemantics();
       expect(

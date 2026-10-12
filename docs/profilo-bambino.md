@@ -4,7 +4,7 @@ Requisito RP-06: interfaccia semplificata, testi più semplici, bot amichevoli, 
 
 ## Attivazione
 
-Impostazioni, sezione «Profilo», interruttore «Profilo bambino». La scelta è salvata in locale (chiave `kidMode`) e rientra nel backup come le altre impostazioni. Si applica subito, senza riavviare l'app.
+Impostazioni, ultima voce del menu «Profilo bambino» (sotto un separatore), interruttore «Profilo bambino». La scelta è salvata in locale (chiave `kidMode`) e rientra nel backup come le altre impostazioni. Si applica subito, senza riavviare l'app.
 
 Per disattivarlo serve un adulto: compare la domanda «Chiedi a un adulto» con una moltiplicazione tra 6 e 9 (per esempio 7 × 8). Con una risposta sbagliata o con Annulla il profilo resta attivo.
 
