@@ -61,6 +61,20 @@ const List<Chapter> curriculum = [
             start: Square.d4,
             stars: [Square.d7, Square.g7, Square.g2, Square.b2],
           ),
+          StarsExercise(
+            instructions: 'Cinque stelle: scegli bene da quale cominciare.',
+            role: Role.rook,
+            start: Square.e5,
+            stars: [Square.b8, Square.b3, Square.g3, Square.g8, Square.e1],
+          ),
+          StarsExercise(
+            instructions:
+                'Sfida: le stelle non sono in fila. Pensa prima '
+                'di muovere.',
+            role: Role.rook,
+            start: Square.h4,
+            stars: [Square.c7, Square.f2, Square.a5, Square.d1, Square.h7],
+          ),
         ],
       ),
       Stage(
@@ -82,6 +96,22 @@ const List<Chapter> curriculum = [
             start: Square.f1,
             stars: [Square.b5, Square.e8, Square.h5, Square.d1],
           ),
+          StarsExercise(
+            instructions:
+                'Le diagonali lunghe attraversano tutta la '
+                'scacchiera. Raccogli le stelle.',
+            role: Role.bishop,
+            start: Square.d4,
+            stars: [Square.a1, Square.h8, Square.a7, Square.g1, Square.f6],
+          ),
+          StarsExercise(
+            instructions:
+                'Sfida: cinque stelle sparse, tutte del colore '
+                'dell\'alfiere.',
+            role: Role.bishop,
+            start: Square.h3,
+            stars: [Square.a2, Square.c8, Square.e2, Square.h7, Square.d5],
+          ),
         ],
       ),
       Stage(
@@ -102,6 +132,22 @@ const List<Chapter> curriculum = [
             start: Square.a1,
             stars: [Square.b6, Square.f2, Square.g7, Square.c8],
           ),
+          StarsExercise(
+            instructions:
+                'La donna può fermarsi su una casa vuota e poi '
+                'cambiare direzione.',
+            role: Role.queen,
+            start: Square.e4,
+            stars: [Square.a8, Square.h7, Square.b1, Square.g2],
+          ),
+          StarsExercise(
+            instructions:
+                'Sfida: cinque stelle sparse per tutta la '
+                'scacchiera.',
+            role: Role.queen,
+            start: Square.h8,
+            stars: [Square.c6, Square.b2, Square.f4, Square.d3, Square.g1],
+          ),
         ],
       ),
       Stage(
@@ -121,6 +167,22 @@ const List<Chapter> curriculum = [
             start: Square.e4,
             stars: [Square.c6, Square.f7, Square.h5],
           ),
+          StarsExercise(
+            instructions:
+                'Il passo in diagonale è una scorciatoia. '
+                'Raccogli le stelle.',
+            role: Role.king,
+            start: Square.h1,
+            stars: [Square.f3, Square.d3, Square.b1],
+          ),
+          StarsExercise(
+            instructions:
+                'Sfida: un lungo viaggio per il re, con meno '
+                'passi possibile.',
+            role: Role.king,
+            start: Square.h8,
+            stars: [Square.f6, Square.d7, Square.b5, Square.c4],
+          ),
         ],
       ),
       Stage(
@@ -139,6 +201,20 @@ const List<Chapter> curriculum = [
             role: Role.knight,
             start: Square.g1,
             stars: [Square.h3, Square.f4, Square.e6, Square.g7],
+          ),
+          StarsExercise(
+            instructions: 'Salta di stella in stella fino all\'altro lato.',
+            role: Role.knight,
+            start: Square.h8,
+            stars: [Square.g6, Square.e5, Square.c4, Square.a3],
+          ),
+          StarsExercise(
+            instructions:
+                'Sfida: dopo ogni stella il cavallo deve tornare '
+                'indietro. Trova la strada più corta.',
+            role: Role.knight,
+            start: Square.d4,
+            stars: [Square.c6, Square.e6, Square.f3],
           ),
         ],
       ),
@@ -162,6 +238,22 @@ const List<Chapter> curriculum = [
             role: Role.pawn,
             start: Square.b2,
             stars: [Square.b8, Square.h2],
+          ),
+          StarsExercise(
+            instructions:
+                'Promuovi il pedone, poi usa la donna per le '
+                'altre stelle.',
+            role: Role.pawn,
+            start: Square.g2,
+            stars: [Square.g8, Square.a2, Square.a8],
+          ),
+          StarsExercise(
+            instructions:
+                'Sfida: raccogli le stelle con il pedone e poi '
+                'con la donna.',
+            role: Role.pawn,
+            start: Square.c2,
+            stars: [Square.c4, Square.c8, Square.f5, Square.a6],
           ),
         ],
       ),
@@ -299,7 +391,7 @@ const List<Chapter> curriculum = [
           ),
           LineExercise(
             instructions: 'Ora arrocca lungo, verso la torre più lontana.',
-            fen: 'r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1',
+            fen: 'r3k2r/pppppppp/8/8/8/8/PPPPPPPP/R3K2R w KQkq - 0 1',
             steps: ['e1c1'],
             goal: LineGoal.line,
           ),
@@ -309,6 +401,14 @@ const List<Chapter> curriculum = [
                 'Arrocca dal lato giusto.',
             fen: '4k3/8/8/8/2b5/8/8/R3K2R w KQ - 0 1',
             steps: ['e1c1'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Il cavallo è in mezzo tra il re e la torre. '
+                'Spostalo, poi arrocca corto.',
+            fen: 'r3k2r/ppp2ppp/8/8/8/8/PPP2PPP/R3K1NR w KQkq - 0 1',
+            steps: ['g1f3|g1e2|g1h3', 'e8c8', 'e1g1'],
             goal: LineGoal.line,
           ),
         ],
@@ -337,6 +437,22 @@ const List<Chapter> curriculum = [
             steps: ['b5c6'],
             goal: LineGoal.line,
           ),
+          LineExercise(
+            instructions:
+                'Il pedone nero è appena andato da f7 a f5. Due tuoi '
+                'pedoni possono catturarlo al varco: usane uno.',
+            fen: '4k3/8/8/4PpP1/8/8/8/4K3 w - f6 0 1',
+            steps: ['e5f6|g5f6'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Il pedone nero è appena andato da g7 a g5. Catturalo '
+                'al varco: l\'altro pedone nero era lì già da prima.',
+            fen: '4k3/8/8/2pP2pP/8/8/8/4K3 w - g6 0 1',
+            steps: ['h5g6'],
+            goal: LineGoal.line,
+          ),
         ],
       ),
       Stage(
@@ -348,6 +464,12 @@ const List<Chapter> curriculum = [
             'donna da solo.',
         exercises: [
           LineExercise(
+            instructions: 'Spingi il pedone fino in fondo: diventa donna.',
+            fen: '4k3/1P6/8/8/8/8/8/4K3 w - - 0 1',
+            steps: ['b7b8q'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
             instructions: 'Promuovi il pedone catturando la torre.',
             fen: '1r2k3/P7/8/8/8/8/8/4K3 w - - 0 1',
             steps: ['a7b8q'],
@@ -358,6 +480,14 @@ const List<Chapter> curriculum = [
             fen: '7k/4P3/6K1/8/8/8/8/8 w - - 0 1',
             steps: ['e7e8q'],
             goal: LineGoal.mate,
+          ),
+          LineExercise(
+            instructions:
+                'Il re nero è lontano. Porta il pedone a promozione '
+                'in due mosse.',
+            fen: '8/8/1k4P1/8/8/8/8/K7 w - - 0 1',
+            steps: ['g6g7', 'b6c6', 'g7g8q'],
+            goal: LineGoal.line,
           ),
         ],
       ),
@@ -383,6 +513,22 @@ const List<Chapter> curriculum = [
                 'stallo.',
             fen: '8/8/8/8/8/3Q4/2K5/k7 w - - 0 1',
             steps: ['d3a3'],
+            goal: LineGoal.mate,
+          ),
+          LineExercise(
+            instructions:
+                '$_mateIn1 Con la torre. Attento a non lasciare il re '
+                'nero senza mosse.',
+            fen: 'k7/8/1K6/8/8/8/8/7R w - - 0 1',
+            steps: ['h1h8'],
+            goal: LineGoal.mate,
+          ),
+          LineExercise(
+            instructions:
+                '$_mateIn1 Il re nero non ha mosse: se non gli dai '
+                'scacco è stallo.',
+            fen: '7k/5K1p/7P/8/8/8/8/1Q6 w - - 0 1',
+            steps: ['b1b8'],
             goal: LineGoal.mate,
           ),
         ],
@@ -416,6 +562,12 @@ const List<Chapter> curriculum = [
             steps: ['g5f7'],
             goal: LineGoal.mate,
           ),
+          LineExercise(
+            instructions: '$_mateIn1 La donna attacca insieme all\'alfiere.',
+            fen: 'r2q1rk1/5ppp/8/7Q/8/3B4/5PPP/6K1 w - - 0 1',
+            steps: ['h5h7'],
+            goal: LineGoal.mate,
+          ),
         ],
       ),
       Stage(
@@ -434,9 +586,25 @@ const List<Chapter> curriculum = [
           ),
           LineExercise(
             instructions:
+                '$_mateIn1 Il cavallo nero difende una casa '
+                'dell\'ultima traversa: scegli la torre giusta.',
+            fen: '6k1/5ppp/2n5/8/8/8/4RPPP/3R2K1 w - - 0 1',
+            steps: ['e2e8'],
+            goal: LineGoal.mate,
+          ),
+          LineExercise(
+            instructions:
                 '$_mateIn2 La torre nera difende l\'ultima traversa: '
                 'attirala via.',
             fen: 'r5k1/5ppp/8/8/8/8/3R1PPP/3Q2K1 w - - 0 1',
+            steps: ['d2d8', 'a8d8', 'd1d8'],
+            goal: LineGoal.mate,
+          ),
+          LineExercise(
+            instructions:
+                '$_mateIn2 Le tue torri sono una dietro l\'altra: '
+                'sono più forti di quelle nere.',
+            fen: 'r2r2k1/5ppp/8/8/8/8/3R1PPP/3R2K1 w - - 0 1',
             steps: ['d2d8', 'a8d8', 'd1d8'],
             goal: LineGoal.mate,
           ),
@@ -468,6 +636,14 @@ const List<Chapter> curriculum = [
             steps: ['b1b7'],
             goal: LineGoal.mate,
           ),
+          LineExercise(
+            instructions:
+                '$_mateIn2 Prima avvicina il re, poi la donna dà '
+                'matto.',
+            fen: '3k4/8/1K6/8/8/8/8/4Q3 w - - 0 1',
+            steps: ['b6c6', 'd8c8', 'e1e8'],
+            goal: LineGoal.mate,
+          ),
         ],
       ),
       Stage(
@@ -480,10 +656,34 @@ const List<Chapter> curriculum = [
         exercises: [
           LineExercise(
             instructions:
+                '$_mateIn1 Una torre chiude la colonna g, l\'altra dà '
+                'matto.',
+            fen: '8/8/8/7k/8/8/R7/K5R1 w - - 0 1',
+            steps: ['a2h2'],
+            goal: LineGoal.mate,
+          ),
+          LineExercise(
+            instructions:
+                '$_mateIn1 Una torre chiude la settima traversa: con '
+                'l\'altra dai matto sull\'ottava.',
+            fen: '4k3/6R1/8/8/8/8/8/R5K1 w - - 0 1',
+            steps: ['a1a8'],
+            goal: LineGoal.mate,
+          ),
+          LineExercise(
+            instructions:
                 '$_mateIn2 Prima chiudi la settima traversa con una torre, '
                 'poi dai scacco sull\'ottava con l\'altra.',
             fen: '7k/8/8/8/8/8/R7/1R4K1 w - - 0 1',
             steps: ['a2a7|b1b7', 'h8g8', 'b1b8'],
+            goal: LineGoal.mate,
+          ),
+          LineExercise(
+            instructions:
+                '$_mateIn2 Il re nero è in mezzo al bordo: chiudi la '
+                'settima traversa e potrà andare da una parte sola.',
+            fen: '4k3/8/8/7R/8/8/6K1/3R4 w - - 0 1',
+            steps: ['h5h7', 'e8f8', 'd1d8'],
             goal: LineGoal.mate,
           ),
         ],
@@ -542,6 +742,22 @@ const List<Chapter> curriculum = [
           ),
           LineExercise(
             instructions:
+                '$_mateIn2 Sacrifica la donna per attirare il re, poi '
+                'la torre chiude l\'ultima traversa.',
+            fen: 'Q4rk1/4pppp/8/8/8/8/5PPP/3R2K1 w - - 0 1',
+            steps: ['a8f8', 'g8f8', 'd1d8'],
+            goal: LineGoal.mate,
+          ),
+          LineExercise(
+            instructions:
+                '$_mateIn2 Sacrifica la donna in h7: poi arriva il '
+                'matto di Anastasia.',
+            fen: '5r1k/4Nppp/8/7Q/8/3R4/5PPP/6K1 w - - 0 1',
+            steps: ['h5h7', 'h8h7', 'd3h3'],
+            goal: LineGoal.mate,
+          ),
+          LineExercise(
+            instructions:
                 '$_mateIn2 Sacrifica la donna: il re nero resterà '
                 'soffocato dai suoi pezzi.',
             fen: '5r1k/6pp/7N/8/2Q5/8/8/6K1 w - - 0 1',
@@ -579,6 +795,22 @@ const List<Chapter> curriculum = [
                 'nessuno difende.',
             fen: '6k1/5ppp/3p4/r3n3/8/2B5/5PPP/6K1 w - - 0 1',
             steps: ['c3a5'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Un pezzo nero è indifeso dall\'altra parte della '
+                'scacchiera. Trovalo e catturalo.',
+            fen: '1k5r/ppp5/7p/6n1/8/5N2/PB3PPP/6K1 w - - 0 1',
+            steps: ['b2h8'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Il cavallo nero è difeso dal pedone. Catturalo con '
+                'il pezzo che vale meno.',
+            fen: '6k1/4qppp/4p3/3n4/4P3/2N5/5PPP/3Q2K1 w - - 0 1',
+            steps: ['e4d5'],
             goal: LineGoal.line,
           ),
         ],
@@ -645,6 +877,22 @@ const List<Chapter> curriculum = [
             steps: ['a1e1'],
             goal: LineGoal.line,
           ),
+          LineExercise(
+            instructions:
+                'Il pedone in d7 è inchiodato dall\'alfiere e non può '
+                'difendere il cavallo. Catturalo con la torre.',
+            fen: 'r3k3/pp1p2pp/4n3/1B6/8/8/PPP2PPP/4R1K1 w - - 0 1',
+            steps: ['e1e6'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Inchioda la torre al re con l\'alfiere: la torre non '
+                'potrà più scappare.',
+            fen: 'r5k1/ppp3pp/8/3r4/8/8/PPP2PPP/4RBK1 w - - 0 1',
+            steps: ['f1c4'],
+            goal: LineGoal.line,
+          ),
         ],
       ),
       Stage(
@@ -666,6 +914,22 @@ const List<Chapter> curriculum = [
                 'torre.',
             fen: '8/8/B7/3k4/8/K7/P7/7r w - - 0 1',
             steps: ['a6b7', 'd5c5', 'b7h1'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Infilata con la donna: scacco al re, poi cattura la '
+                'torre.',
+            fen: '8/8/8/8/2k4r/8/8/3Q2K1 w - - 0 1',
+            steps: ['d1a4', 'c4d5', 'a4h4'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Sfida: tra tanti scacchi trova quello che fa '
+                'l\'infilata, poi cattura la donna.',
+            fen: '1q6/7Q/8/4k3/8/8/8/6K1 w - - 0 1',
+            steps: ['h7h2', 'e5f6', 'h2b8'],
             goal: LineGoal.line,
           ),
         ],
@@ -694,6 +958,23 @@ const List<Chapter> curriculum = [
             steps: ['d4f5|d4c6', 'e7e8', 'b2h8'],
             goal: LineGoal.line,
           ),
+          LineExercise(
+            instructions:
+                'L\'alfiere sta davanti alla torre. Spostalo dando '
+                'scacco: la torre scoperta attacca la donna. Poi '
+                'catturala.',
+            fen: '3q2k1/5ppp/8/8/8/3B4/5PPP/3R2K1 w - - 0 1',
+            steps: ['d3h7', 'g8h7', 'd1d8'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Muovi l\'alfiere e la torre dà scacco di scoperta. '
+                'Approfittane per catturare il pezzo più forte.',
+            fen: 'r3k3/1q5n/8/8/4B3/8/5PPP/4R1K1 w - - 0 1',
+            steps: ['e4b7'],
+            goal: LineGoal.line,
+          ),
         ],
       ),
       Stage(
@@ -719,6 +1000,22 @@ const List<Chapter> curriculum = [
             steps: ['e2b5'],
             goal: LineGoal.mate,
           ),
+          LineExercise(
+            instructions:
+                'Scacco doppio di cavallo e torre: il re deve '
+                'spostarsi. Poi il cavallo cattura la donna.',
+            fen: '2q1k3/5ppp/8/8/4N3/8/5PPP/4R1K1 w - - 0 1',
+            steps: ['e4d6', 'e8f8', 'd6c8'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                '$_mateIn2 Con lo scacco doppio il re è costretto a '
+                'spostarsi. Poi chiudilo.',
+            fen: '3nk2r/pp1p1ppp/1q6/8/4N3/8/PPP2PPP/4R1K1 w - - 0 1',
+            steps: ['e4f6|e4d6', 'e8f8', 'e1e8'],
+            goal: LineGoal.mate,
+          ),
         ],
       ),
       Stage(
@@ -734,6 +1031,32 @@ const List<Chapter> curriculum = [
                 'poi prendi l\'alfiere con la torre.',
             fen: '6k1/5ppp/5n2/3b2B1/8/8/5PPP/3R2K1 w - - 0 1',
             steps: ['g5f6', 'g7f6', 'd1d5'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Il cavallo in c6 difende l\'altro cavallo. Catturalo '
+                'con l\'alfiere, poi prendi il cavallo in e5 con la '
+                'torre.',
+            fen: '6k1/pp1p1ppp/2n5/1B2n3/8/8/PP4PP/4R1K1 w - - 0 1',
+            steps: ['b5c6', 'd7c6', 'e1e5'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'L\'alfiere nero è difeso solo dal cavallo. Elimina '
+                'il difensore, poi cattura l\'alfiere.',
+            fen: 'r5k1/p1p2ppp/1n6/3b4/N7/8/PP3PPP/3R2K1 w - - 0 1',
+            steps: ['a4b6', 'a7b6', 'd1d5'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Sfida: il pedone in e6 difende due pezzi, ma non può '
+                'difenderli tutti e due. Cattura quello che vale di '
+                'più.',
+            fen: '6k1/pp4pp/4p3/3r1n2/2B5/8/PP4PP/5RK1 w - - 0 1',
+            steps: ['c4d5'],
             goal: LineGoal.line,
           ),
         ],
@@ -756,6 +1079,26 @@ const List<Chapter> curriculum = [
             steps: ['b1b8'],
             goal: LineGoal.mate,
           ),
+          LineExercise(
+            instructions: '$_mateIn1 Il re nero è nell\'angolo.',
+            fen: '8/8/8/8/8/5K2/Q7/7k w - - 0 1',
+            steps: ['a2g2'],
+            goal: LineGoal.mate,
+          ),
+          LineExercise(
+            instructions: '$_mateIn2 Avvicina il re: poi la donna dà matto.',
+            fen: 'k7/3K4/8/8/8/8/7Q/8 w - - 0 1',
+            steps: ['d7c7', 'a8a7', 'h2a2'],
+            goal: LineGoal.mate,
+          ),
+          LineExercise(
+            instructions:
+                '$_mateIn2 Prima una mossa tranquilla della donna: al '
+                're nero resta una casa sola.',
+            fen: '6Q1/8/8/8/8/4K3/8/2k5 w - - 0 1',
+            steps: ['g8a2', 'c1d1', 'a2d2'],
+            goal: LineGoal.mate,
+          ),
         ],
       ),
       Stage(
@@ -767,6 +1110,29 @@ const List<Chapter> curriculum = [
             instructions: '$_mateIn1 Il re bianco toglie le case di fuga.',
             fen: '7k/8/6K1/8/8/8/8/R7 w - - 0 1',
             steps: ['a1a8'],
+            goal: LineGoal.mate,
+          ),
+          LineExercise(
+            instructions: '$_mateIn1 I re sono uno di fronte all\'altro.',
+            fen: '3k4/8/3K4/8/8/8/8/7R w - - 0 1',
+            steps: ['h1h8'],
+            goal: LineGoal.mate,
+          ),
+          LineExercise(
+            instructions:
+                '$_mateIn2 Metti il re di fronte a quello nero, poi '
+                'dai matto con la torre.',
+            fen: '7k/8/8/6K1/8/8/1R6/8 w - - 0 1',
+            steps: ['g5g6', 'h8g8', 'b2b8'],
+            goal: LineGoal.mate,
+          ),
+          LineExercise(
+            instructions:
+                '$_mateIn2 Prima porta la torre in g1: toglie al re '
+                'nero la colonna g e lo costringe a mettersi di fronte '
+                'al tuo.',
+            fen: '5k2/8/4K3/8/8/8/8/4R3 w - - 0 1',
+            steps: ['e1g1', 'f8e8', 'g1g8'],
             goal: LineGoal.mate,
           ),
         ],
@@ -793,6 +1159,22 @@ const List<Chapter> curriculum = [
                 'e non lo prende più.',
             fen: '8/8/8/P3k3/8/8/8/7K w - - 0 1',
             steps: ['a5a6'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Il pedone nero corre verso la prima traversa. Il re '
+                'entra nel quadrato da una casa sola: trovala.',
+            fen: 'k7/8/2K5/7p/8/8/8/8 w - - 0 1',
+            steps: ['c6d5'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Alla prima mossa il pedone può fare due passi: usali '
+                'per uscire dal quadrato del re nero.',
+            fen: '8/8/8/8/6k1/8/P7/7K w - - 0 1',
+            steps: ['a2a4'],
             goal: LineGoal.line,
           ),
         ],
@@ -822,6 +1204,22 @@ const List<Chapter> curriculum = [
             steps: ['d2d3|d4e4|d4c4'],
             goal: LineGoal.line,
           ),
+          LineExercise(
+            instructions:
+                'Metti il re di fronte a quello nero, con una casa in '
+                'mezzo: è l\'opposizione.',
+            fen: '8/8/8/3k4/8/8/3PK3/8 w - - 0 1',
+            steps: ['e2d3'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Sfida: se spingi subito il pedone è patta. Prendi '
+                'l\'opposizione con il re.',
+            fen: '8/8/3k4/8/4K3/3P4/8/8 w - - 0 1',
+            steps: ['e4d4'],
+            goal: LineGoal.line,
+          ),
         ],
       ),
       Stage(
@@ -833,10 +1231,34 @@ const List<Chapter> curriculum = [
         exercises: [
           LineExercise(
             instructions:
+                'Due pedoni contro uno: sacrificane uno e l\'altro va '
+                'a promozione.',
+            fen: '8/p7/8/PP6/2k5/8/8/7K w - - 0 1',
+            steps: ['b5b6', 'a7b6', 'a5b6'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Un pedone nero ne ferma due. Sacrificane uno per far '
+                'passare l\'altro.',
+            fen: '8/1p2k3/8/P1P5/8/8/8/7K w - - 0 1',
+            steps: ['c5c6', 'b7c6', 'a5a6'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
                 'Sfonda con i pedoni: sacrifica il pedone centrale, poi '
                 'un altro, finché uno arriva a promozione.',
             fen: '6k1/ppp5/8/PPP5/8/8/8/6K1 w - - 0 1',
             steps: ['b5b6', 'a7b6', 'c5c6', 'b7c6', 'a5a6'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Sfida: lo stesso trucco sull\'altra ala. Trova tu '
+                'l\'ordine giusto delle spinte.',
+            fen: 'k7/5ppp/8/5PPP/8/8/8/K7 w - - 0 1',
+            steps: ['g5g6', 'h7g6', 'f5f6', 'g7f6', 'h5h6'],
             goal: LineGoal.line,
           ),
         ],
@@ -859,6 +1281,31 @@ const List<Chapter> curriculum = [
             steps: ['e2e4|d2d4'],
             goal: LineGoal.line,
           ),
+          LineExercise(
+            instructions:
+                'Il Nero non ha preso il centro. Porta al centro '
+                'anche l\'altro pedone.',
+            fen: 'rnbqkbnr/1ppppppp/p7/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2',
+            steps: ['d2d4'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Il pedone nero in d5 attacca il tuo pedone in e4. '
+                'Catturalo.',
+            fen:
+                'rnbqkbnr/ppp1pppp/8/3p4/4P3/8/PPPP1PPP/RNBQKBNR w KQkq d6 0 2',
+            steps: ['e4d5'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Spingi l\'altro pedone centrale: così attacchi il '
+                'pedone nero in e5.',
+            fen: 'r1bqkbnr/pppp1ppp/2n5/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 2 3',
+            steps: ['d2d4'],
+            goal: LineGoal.line,
+          ),
         ],
       ),
       Stage(
@@ -868,8 +1315,8 @@ const List<Chapter> curriculum = [
         exercises: [
           LineExercise(
             instructions: 'Porta in gioco un cavallo o un alfiere.',
-            fen: 'rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2',
-            steps: ['g1f3|b1c3|f1c4|f1b5'],
+            fen: 'rnbqkbnr/ppp1pppp/8/3p4/3P4/8/PPP1PPPP/RNBQKBNR w KQkq - 0 2',
+            steps: ['g1f3|b1c3|b1d2|c1f4|c1g5|c1e3|c1d2'],
             goal: LineGoal.line,
           ),
           LineExercise(
@@ -878,6 +1325,22 @@ const List<Chapter> curriculum = [
                 'alfiere in c4.',
             fen: 'rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2',
             steps: ['g1f3', 'b8c6', 'f1c4'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Il cavallo nero attacca il pedone in e4. Difendilo '
+                'sviluppando un cavallo.',
+            fen: 'r1bqkb1r/pppp1ppp/2n2n2/4p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4',
+            steps: ['b1c3'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'La donna nera è uscita presto. Sviluppa un pezzo che '
+                'la attacca senza farti catturare.',
+            fen: 'rnb1kbnr/ppp1pppp/8/3q4/8/8/PPPP1PPP/RNBQKBNR w KQkq - 0 3',
+            steps: ['b1c3'],
             goal: LineGoal.line,
           ),
         ],
@@ -891,6 +1354,28 @@ const List<Chapter> curriculum = [
             instructions: 'Metti al sicuro il re con l\'arrocco corto.',
             fen: 'r1bqk1nr/pppp1ppp/2n5/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4',
             steps: ['e1g1'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions: 'Ora arrocca lungo: il re va verso la torre di a1.',
+            fen: 'rn2kb1r/pp3ppp/2p1pn2/q4b2/3P4/2N2N2/PPPBQPPP/R3KB1R w KQkq - 0 8',
+            steps: ['e1c1'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Per arroccare corto le case tra re e torre devono '
+                'essere vuote. Sposta l\'alfiere, poi arrocca.',
+            fen: 'rnbqkbnr/ppp2ppp/3p4/4p3/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 0 3',
+            steps: ['f1c4|f1e2|f1d3', 'c7c6', 'e1g1'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Sfida: cavallo in f3, poi fuori l\'alfiere, poi '
+                'arrocca corto.',
+            fen: 'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2',
+            steps: ['g1f3', 'b8c6', 'f1b5|f1e2|f1c4|f1d3', 'g7g6', 'e1g1'],
             goal: LineGoal.line,
           ),
         ],
@@ -912,6 +1397,12 @@ const List<Chapter> curriculum = [
             goal: LineGoal.mate,
           ),
           LineExercise(
+            instructions: '$_mateIn1 Questa volta la donna è in f3.',
+            fen: 'r1bqkbnr/ppp2ppp/2np4/4p3/2B1P3/5Q2/PPPP1PPP/RNB1K1NR w KQkq - 0 4',
+            steps: ['f3f7'],
+            goal: LineGoal.mate,
+          ),
+          LineExercise(
             instructions:
                 'Ora è il Nero che minaccia matto in f2 con donna e '
                 'alfiere. Difendi f2 con la donna, oppure chiudi la '
@@ -920,6 +1411,14 @@ const List<Chapter> curriculum = [
                 'rnb1k1nr/pppp1ppp/8/2b1p3/2B1P2q/2N5/PPPP1PPP/'
                 'R1BQK1NR w KQkq - 4 4',
             steps: ['d1e2|d1f3|g2g3'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Il Nero minaccia ancora matto in f2 con donna e '
+                'alfiere. Para la minaccia sviluppando un cavallo.',
+            fen: 'rnb1k1nr/pppp1ppp/5q2/2b1p3/2B1P3/2N5/PPPP1PPP/R1BQK1NR w KQkq - 4 4',
+            steps: ['g1f3|g1h3'],
             goal: LineGoal.line,
           ),
         ],

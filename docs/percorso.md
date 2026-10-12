@@ -13,7 +13,7 @@ Requisito RG-03: una mappa di capitoli e tappe con valutazione da 1 a 3 stelle. 
 | Finali | Matto di donna, matto di torre, la regola del quadrato, l'opposizione, lo sfondamento, guardiano (1000) |
 | Aperture | Il centro, lo sviluppo (con la Partita Italiana), l'arrocco, il matto del barbiere (darlo e pararlo), guardiano (1200) |
 
-Ogni tappa è breve (2-5 minuti) e si apre con una spiegazione di due o tre frasi, scritta in modo semplice perché valga anche per il profilo bambino; la scacchiera accetta mosse solo dopo «Inizia». I contenuti sono originali (posizioni costruite per il progetto) e in italiano. Durante la stesura le posizioni tattiche sono state analizzate con Stockfish: la mossa richiesta è la migliore e la risposta automatica del Nero è una difesa ragionevole, non un errore che regala il punto. Il test automatico controlla legalità e matti, non la qualità delle risposte: chi aggiunge esercizi tattici ripete questa verifica.
+Ogni lezione ha 4 esercizi progressivi (il test ne ammette da 4 a 5), dal più facile al più difficile: prima l'esempio evidente, poi versioni con distrazioni, nascoste o difese; l'ultimo è spesso una piccola sfida, indicata con «Sfida». Ogni tappa è breve (2-5 minuti) e si apre con una spiegazione di due o tre frasi, scritta in modo semplice perché valga anche per il profilo bambino; la scacchiera accetta mosse solo dopo «Inizia». I contenuti sono originali (posizioni costruite per il progetto) e in italiano. Durante la stesura le posizioni tattiche sono state analizzate con Stockfish: la mossa richiesta è la migliore e la risposta automatica del Nero è una difesa ragionevole, non un errore che regala il punto. Il test automatico controlla legalità e matti in ogni ramo delle alternative accettate, non la qualità delle risposte: chi aggiunge esercizi tattici ripete questa verifica.
 
 Una tappa si apre quando la lezione precedente è completata, oppure quando è già completata una lezione che viene dopo: così le lezioni aggiunte con un aggiornamento restano aperte per chi era già più avanti e non richiudono le tappe successive. Senza tappe saltate equivale a «tutte le lezioni precedenti completate». I guardiani sono sfide facoltative e non bloccano il percorso. Il pulsante "Continua" porta alla prima lezione non completata (anche una appena aggiunta) e, finite le lezioni, al primo guardiano non battuto. Un doppio tocco non apre due tappe.
 
@@ -33,7 +33,7 @@ Stelle (`challengeStars`): vittoria in al massimo 40 mosse 3 stelle, fino a 60 m
 
 ## Verifica dei contenuti
 
-`test/path/curriculum_test.dart` controlla ogni esercizio: mosse della soluzione e risposte legali, risposte forzate (unica mossa legale) negli esercizi di matto, ogni prima mossa che forza il matto accettata tra le alternative, ultima mossa che dà matto (o scacco, per l'obiettivo scacco), una spiegazione per ogni lezione, stelle raggiungibili e mai sulla casa di partenza. Un errore in un FEN o in una soluzione fa fallire la CI.
+`test/path/curriculum_test.dart` controlla ogni esercizio: mosse della soluzione e risposte legali, risposte forzate (unica mossa legale) negli esercizi di matto, ogni prima mossa che forza il matto accettata tra le alternative, ultima mossa che dà matto (o scacco, per l'obiettivo scacco), una spiegazione e da 4 a 5 esercizi per ogni lezione, nessuna partenza ripetuta in tutto il percorso (stesso FEN, o stesso pezzo sulla stessa casa negli esercizi a stelle), stelle raggiungibili e mai sulla casa di partenza. Un errore in un FEN o in una soluzione fa fallire la CI.
 
 ## Salvataggio e XP
 
