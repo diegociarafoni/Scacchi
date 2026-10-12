@@ -77,5 +77,13 @@
       "lib/storage/key_value_store.dart": 1,
       "lib/tournament/tournament_controller.dart": 2
     }
+  },
+  "budget": {
+    "apkMaxMegabytes": 80,
+    "frames": {
+      "minFrames": 50,
+      "p90BuildMs": 33,
+      "p99BuildMs": 100
+    }
   }
 }
