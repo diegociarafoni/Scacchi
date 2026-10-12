@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'channel_registry.dart';
 import 'game_invite.dart';
 import 'game_sync.dart';
+import 'lan_discovery.dart';
 import 'lan_transport.dart';
 import 'local_address.dart';
 import 'multiplayer_session.dart';
@@ -62,6 +63,7 @@ class MultiplayerController extends ChangeNotifier {
     this.inviteLink,
     this._store,
     this._seedBytes,
+    this._discovery,
   ) {
     _sub = session.events.listen((_) => _changed());
     // Il canale si è (ri)collegato all'ospite: la sessione si ripresenta da
@@ -81,6 +83,7 @@ class MultiplayerController extends ChangeNotifier {
     bool bluetooth = false,
     OpenHost openHost = openLanHost,
     SavedGameStore? store,
+    LanDiscovery discovery = const BonsoirLanDiscovery(),
   }) async {
     final channel = bluetooth ? null : await openHost();
     try {
@@ -106,7 +109,8 @@ class MultiplayerController extends ChangeNotifier {
         invite.toLink(),
         store,
         await identity.seed(),
-      );
+        discovery,
+      ).._advertise(invite.gameId, channel?.lanAddress);
     } catch (_) {
       await channel?.transport.close();
       rethrow;
@@ -121,6 +125,7 @@ class MultiplayerController extends ChangeNotifier {
     ResumeHost openHost = openLanHostAt,
     OpenGuest openGuest = openLanGuest,
     SavedGameStore? store,
+    LanDiscovery discovery = const BonsoirLanDiscovery(),
   }) async {
     final invite = saved.invite;
     final identity = await PlayerIdentity.fromSeed(saved.seed);
@@ -130,6 +135,7 @@ class MultiplayerController extends ChangeNotifier {
         identity,
         openGuest,
         store,
+        discovery,
         moves: saved.moves,
         sealed: saved.sealed,
       );
@@ -163,7 +169,8 @@ class MultiplayerController extends ChangeNotifier {
         current.toLink(),
         store,
         saved.seed,
-      );
+        discovery,
+      ).._advertise(invite.gameId, channel?.lanAddress);
     } catch (_) {
       await channel?.transport.close();
       rethrow;
@@ -182,14 +189,21 @@ class MultiplayerController extends ChangeNotifier {
     GameInvite invite, {
     OpenGuest openGuest = openLanGuest,
     SavedGameStore? store,
-  }) async =>
-      _joinAs(invite, await PlayerIdentity.generate(), openGuest, store);
+    LanDiscovery discovery = const BonsoirLanDiscovery(),
+  }) async => _joinAs(
+    invite,
+    await PlayerIdentity.generate(),
+    openGuest,
+    store,
+    discovery,
+  );
 
   static Future<MultiplayerController> _joinAs(
     GameInvite invite,
     PlayerIdentity identity,
     OpenGuest openGuest,
-    SavedGameStore? store, {
+    SavedGameStore? store,
+    LanDiscovery discovery, {
     List<String> moves = const [],
     Map<int, Uint8List> sealed = const {},
   }) async {
@@ -197,9 +211,12 @@ class MultiplayerController extends ChangeNotifier {
     final target = lan == null ? null : _split(lan);
     // Un invito solo Bluetooth non ha indirizzo: il canale lo apre il registro.
     if (target == null && !invite.ble) throw const NoLocalNetwork();
-    final transport = MultiTransport([
-      if (target != null) openGuest(target.$1, target.$2),
-    ]);
+    final channel = target == null ? null : openGuest(target.$1, target.$2);
+    if (channel is LanTransport) {
+      final name = lanServiceName(invite.gameId);
+      channel.finder = () => discovery.find(name);
+    }
+    final transport = MultiTransport([?channel]);
     try {
       final session = MultiplayerSession.join(
         invite,
@@ -213,6 +230,7 @@ class MultiplayerController extends ChangeNotifier {
         invite.toLink(),
         store,
         await identity.seed(),
+        discovery,
       );
       if (await session.announce()) controller._reached = true;
       unawaited(controller._persist());
@@ -225,6 +243,8 @@ class MultiplayerController extends ChangeNotifier {
 
   final MultiplayerSession session;
   SavedGameStore? _store;
+  final LanDiscovery _discovery;
+  void Function()? _stopAdvert;
   final Uint8List _seedBytes;
   bool _finished = false;
   Future<void> _writes = Future.value();
@@ -285,6 +305,27 @@ class MultiplayerController extends ChangeNotifier {
     unawaited(_persist());
   }
 
+  // Annuncio mDNS: l'invitato ritrova l'ospite se il suo indirizzo cambia.
+  // Facoltativo, un errore non ferma la partita.
+  void _advertise(String gameId, String? lanAddress) {
+    final port = lanAddress == null ? null : _split(lanAddress)?.$2;
+    if (port == null) return;
+    unawaited(
+      _discovery
+          .advertise(lanServiceName(gameId), port)
+          .then((stop) {
+            if (_disposed) {
+              stop();
+            } else {
+              _stopAdvert = stop;
+            }
+          })
+          .catchError((Object e) {
+            if (kDebugMode) debugPrint('Annuncio mDNS non riuscito: $e');
+          }),
+    );
+  }
+
   /// Archivio arrivato dopo la creazione del controller (se non ne ha già uno).
   void useStore(SavedGameStore? store) {
     if (_store != null || store == null || _disposed) return;
@@ -327,6 +368,7 @@ class MultiplayerController extends ChangeNotifier {
     _disposed = true;
     await _sub.cancel();
     await _connSub.cancel();
+    _stopAdvert?.call();
     await session.close();
   }
 

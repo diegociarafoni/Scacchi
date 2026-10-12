@@ -75,6 +75,10 @@
 	<string>Il Bluetooth serve solo a giocare con un amico vicino, senza Wi-Fi. Le mosse viaggiano cifrate e solo tra i due telefoni.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>La fotocamera serve solo a leggere il codice QR di una partita passata da un altro telefono. Le immagini non vengono salvate né inviate.</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_rokko-chess._tcp</string>
+	</array>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>La rete locale serve solo a giocare con un amico sull'altro telefono, nella stessa Wi-Fi o sull'hotspot. Le mosse viaggiano cifrate e solo tra i due telefoni.</string>
 	<key>NSPhotoLibraryUsageDescription</key>

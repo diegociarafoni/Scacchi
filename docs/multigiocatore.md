@@ -10,7 +10,7 @@ Partita tra due persone su due telefoni, pensata per funzionare in ogni situazio
 | 2a | Canale Wi-Fi locale su TCP con ricollegamento automatico | Disponibile (senza interfaccia) |
 | 2b | Abbinamento via QR, permessi di rete e schermata di gioco in rete locale | Disponibile da Tu › Gioca con un amico |
 | 2c-1 | Salvataggio e ripresa della partita in rete locale | Disponibile da Tu › Gioca con un amico › Riprendi la partita |
-| 2c-2 | Ricerca mDNS dopo un cambio di indirizzo | Da fare |
+| 2c-2 | Ricerca mDNS dopo un cambio di indirizzo | Disponibile |
 | 3 | Canale Bluetooth LE, scelta Wi-Fi o Bluetooth nella schermata | Disponibile da Tu › Gioca con un amico › Come collegarvi |
 | 4 | Relay Nostr, link d'invito, notifiche in background, schermate | Da fare |
 
@@ -26,6 +26,7 @@ Partita tra due persone su due telefoni, pensata per funzionare in ogni situazio
 | RMP-07 | In rete locale (stessa Wi-Fi o hotspot) l'ospite ascolta su TCP e l'invitato si collega all'indirizzo dell'invito; l'invitato si ricollega da solo, anche se l'ospite apre la partita dopo di lui, e a ogni collegamento nuovo si ripete l'ultima mossa. Pacchetti oltre 4096 byte chiudono il collegamento; l'ospite tiene al massimo 4 collegamenti e oltre chiude il più vecchio. |
 | RMP-08 | Da Tu › Gioca con un amico un telefono sceglie il colore e crea la partita: mostra il QR dell'invito con l'indirizzo in rete locale; l'altro lo inquadra e si collega; se l'ospite non risponde il canale riprova da solo. Poi si gioca a turno sulla scacchiera, con lo stato (attesa, turno, esito) annunciato al lettore di schermo insieme alle mosse dell'avversario. Senza Wi-Fi o hotspot compare un avviso; un QR estraneo viene rifiutato; uscire chiede conferma. |
 | RMP-09 | La partita a due si salva a ogni mossa in `multiplayer.json` (invito, seme privato, registro, chiave dell'avversario, messaggi sigillati) e a partita finita il salvataggio sparisce. Chi ospita salva solo dopo l'ingresso dell'avversario. Uscire lascia la partita salvata; da Tu › Gioca con un amico compare «Riprendi la partita» (anche «Elimina»). Chi ospita riapre l'ascolto sulla porta di prima, se libera; l'invitato si ricollega all'indirizzo dell'invito e i registri si riallineano. Una partita nuova sostituisce quella salvata solo dopo conferma; un file non valido viene messo da parte. Chi ospita e esce mentre attende l'avversario non lascia nulla da riprendere. Se la porta di prima è occupata, l'ospite usa un'altra porta e aggiorna l'invito salvato. |
+| RMP-10 | Chi ospita annuncia la partita in rete locale (mDNS, servizio `_rokko-chess._tcp`, nome = impronta dell'id della partita, non l'id). Se l'invitato non raggiunge più l'indirizzo dell'invito, dopo ogni tentativo fallito cerca l'annuncio con il nome della sua partita (al massimo 6 secondi) e si ricollega al nuovo indirizzo. L'annuncio è facoltativo: se non funziona la partita non si ferma; finisce con la chiusura della partita. |
 | RMP-11 | Oltre al Wi-Fi, i canali registrati in `extraChannelFactories` (`channel_registry.dart`) si aprono a ogni partita nuova, unita o ripresa e si aggiungono al `MultiTransport` appena pronti; un canale assente o che fallisce non ferma la partita. |
 | RMP-20 | Vicini senza Wi-Fi si gioca via Bluetooth LE. Da «Gioca con un amico» chi crea sceglie «Come collegarvi» (Wi-Fi o Bluetooth); l'invito Bluetooth porta `ble=1`, non ha indirizzo di rete e il QR si inquadra come sempre; il canale si apre solo se l'invito lo prevede, quindi una partita in Wi-Fi non chiede permessi Bluetooth. L'ospite annuncia, senza nome, un servizio GATT il cui UUID deriva dall'id della partita; l'invitato lo cerca con quel filtro, si collega e si ricollega da solo se cade. I messaggi sigillati si spezzano nei pacchetti dell'MTU e si ricompongono con memoria limitata. Bluetooth spento, permesso negato o telefono senza BLE danno un avviso chiaro. La partita si salva e riprende anche via Bluetooth. |
 | RMP-06 | Cambiare canale non cambia la partita. Chi è rimasto indietro chiede le mosse mancanti e si rimette in pari; una mossa non partita si ripete quando un canale torna disponibile. |
@@ -54,6 +55,7 @@ MultiplayerSession          lib/multiplayer/multiplayer_session.dart
 | `message_codec.dart` | `MessageCodec`: sigillo dei messaggi. |
 | `game_sync.dart` | `GameSync`: registro e validazione. `positionHash`: SHA-256 del FEN, primi 128 bit in esadecimale. |
 | `transport.dart` | `MessageTransport`, `MultiTransport`, `LoopbackTransport` (in memoria, per i test), `ConnectionAware` per i canali che segnalano un collegamento nuovo. |
+| `lan_discovery.dart` | `LanDiscovery` e `BonsoirLanDiscovery` (pacchetto `bonsoir`, MIT): annuncio e ricerca mDNS; `lanServiceName`. |
 | `channel_registry.dart` | `ChannelFactory` e `extraChannelFactories`: dove si registra un canale in più (Bluetooth LE, relay). |
 | `lan_transport.dart` | `LanTransport`: canale Wi-Fi su TCP (vedi sotto). |
 | `ble_fragmenter.dart` | `BleFragmenter` e `BleReassembler`: messaggio ↔ pacchetti con intestazione di 4 byte. |
@@ -93,7 +95,7 @@ Per giocare vicini senza Wi-Fi né rete (RMP-20). `GameInvite.ble` (`ble=1` nel 
 
 `MultiplayerPage` (voce Tu › Gioca con un amico) offre la scelta del colore, «Come collegarvi» (Wi-Fi o Bluetooth), «Crea la partita» e «Unisciti con il QR». `MultiplayerController` tiene lo stato per l'interfaccia: crea identità e invito per partita, apre il canale con `openLanHost` (indirizzo IPv4 privato scelto da `pickLanAddress` preferendo Wi-Fi e hotspot ed escludendo dati mobili e VPN, porta scelta dal sistema) o `openLanGuest`, e avvisa a ogni mossa. L'invito si mostra una sola volta come QR del link `scacchi://`, non a ogni mossa; la fotocamera riusa il lettore dello scambio QR. `MultiplayerGamePage` mostra il QR finché l'avversario non arriva, poi la scacchiera orientata dal proprio lato, con le mosse permesse solo al proprio turno.
 
-Su Android il permesso `INTERNET` è dichiarato con il motivo in `tool/policy.json`; su iOS `NSLocalNetworkUsageDescription` spiega l'uso della rete locale. Nessun socket si apre finché non si crea o si inquadra un invito. `NSBonjourServices` arriverà con la ricerca mDNS (fase 2c).
+Su Android il permesso `INTERNET` è dichiarato con il motivo in `tool/policy.json`; su iOS `NSLocalNetworkUsageDescription` spiega l'uso della rete locale. Nessun socket si apre finché non si crea o si inquadra un invito. `NSBonjourServices` dichiara solo `_rokko-chess._tcp`; su Android `bonsoir` aggiunge `CHANGE_WIFI_MULTICAST_STATE` (in `tool/policy.json` tra i permessi aggiunti dalle librerie).
 
 ### Regole del registro
 
@@ -119,7 +121,7 @@ In presenza si gioca con l'orologio; quando la partita passa a distanza l'orolog
 | MASVS-AUTH | Nessun account: l'identità è la chiave Ed25519; la chiave dell'avversario si fissa al primo ingresso. |
 | MASVS-PRIVACY | Nessun dato personale; il relay vedrà solo byte cifrati e chiavi casuali per partita. |
 
-Limiti noti: l'invito contiene il segreto, quindi chi lo intercetta prima dell'avversario può occupare la partita (l'ospite vedrà una chiave diversa da quella attesa). Il salvataggio contiene il seme privato della partita: sta nella cartella privata dell'app, escluso dai backup di Android (`backup_rules.xml`, `data_extraction_rules.xml`); su iOS segue il backup del dispositivo, cifrato. Chi legge il file può firmare al posto del giocatore, ma solo in quella partita: l'identità è generata per ogni partita. Se l'indirizzo dell'ospite cambia dopo il riavvio, l'invitato non lo ritrova finché non arriva la ricerca mDNS (fase 2c-2).
+Limiti noti: l'invito contiene il segreto, quindi chi lo intercetta prima dell'avversario può occupare la partita (l'ospite vedrà una chiave diversa da quella attesa). Il salvataggio contiene il seme privato della partita: sta nella cartella privata dell'app, escluso dai backup di Android (`backup_rules.xml`, `data_extraction_rules.xml`); su iOS segue il backup del dispositivo, cifrato. Chi legge il file può firmare al posto del giocatore, ma solo in quella partita: l'identità è generata per ogni partita. Se l'indirizzo dell'ospite cambia dopo il riavvio, l'invitato lo ritrova con la ricerca mDNS (RMP-10), purché i due telefoni siano ancora nella stessa rete.
 
 ## Test
 

@@ -5,6 +5,7 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
+import '../settings/settings.dart';
 import 'minigame.dart';
 import 'quiz.dart';
 
@@ -124,6 +125,9 @@ class _QuizPageState extends State<QuizPage> {
                           size: min(constraints.maxWidth - 32, 360),
                           orientation: Side.white,
                           fen: fen,
+                          settings: StaticChessboardSettings.fromBoardSettings(
+                            AppSettings.of(context).exerciseBoard,
+                          ),
                           squareHighlights: {
                             if (chosen != null && item.highlight != null)
                               item.highlight!: const SquareHighlight(
