@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../l10n/app_localizations.dart';
 import '../progress/activity.dart';
@@ -68,6 +69,9 @@ class _PuzzlePageState extends State<PuzzlePage> {
   _Feedback _feedback = _Feedback.find;
   double? _delta;
   Square? _hint;
+
+  /// Mossa sbagliata appena tentata, mostrata in rosso finché non si riprova.
+  Move? _wrongMove;
   int _revision = 0;
   bool _recorded = false;
   bool _repeat = false;
@@ -118,6 +122,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
     _feedback = _Feedback.find;
     _delta = null;
     _hint = null;
+    _wrongMove = null;
     _recorded = false;
     _repeat = false;
     _epoch++;
@@ -130,10 +135,15 @@ class _PuzzlePageState extends State<PuzzlePage> {
     final result = _session.tryMove(move);
     setState(() {
       _hint = null;
+      _wrongMove = null;
       switch (result) {
         case PuzzleMoveResult.wrong || PuzzleMoveResult.illegal:
           _feedback = _Feedback.wrong;
+          _wrongMove = move;
           _revision++;
+          if (AppSettings.of(context).haptics) {
+            unawaited(HapticFeedback.heavyImpact());
+          }
         case PuzzleMoveResult.correct:
           _feedback = _Feedback.correct;
           _scheduleReply();
@@ -198,12 +208,27 @@ class _PuzzlePageState extends State<PuzzlePage> {
     if (mounted && update != null) showProgressFeedback(context, update);
   }
 
-  void _showHint() => setState(() => _hint = _session.hint());
+  void _showHint() => setState(() {
+    _wrongMove = null;
+    _hint = _session.hint();
+  });
+
+  /// Freccia e cerchio rossi sulla mossa sbagliata; il rosso non è l'unico
+  /// segnale: ci sono anche l'icona e il testo.
+  Set<Shape> _wrongShapes(Color color) => switch (_wrongMove) {
+    NormalMove(:final from, :final to) => {
+      Arrow(color: color, orig: from, dest: to),
+      Circle(color: color, orig: to),
+    },
+    DropMove(:final to) => {Circle(color: color, orig: to)},
+    null => const {},
+  };
 
   void _showSolution() {
     _replyTimer?.cancel();
     setState(() {
       _hint = null;
+      _wrongMove = null;
       _session.playReply();
       _session.showNextMove();
       if (_session.state == PuzzleState.solved) {
@@ -222,6 +247,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
       _session.restart();
       _feedback = _Feedback.restarted;
       _hint = null;
+      _wrongMove = null;
       _revision++;
     });
   }
@@ -337,10 +363,27 @@ class _PuzzlePageState extends State<PuzzlePage> {
                             padding: const EdgeInsets.all(12),
                             child: Semantics(
                               liveRegion: true,
-                              child: Text(
-                                _message,
-                                key: const Key('puzzle-message'),
-                                style: Theme.of(context).textTheme.titleMedium,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  if (_feedback == _Feedback.wrong) ...[
+                                    Icon(
+                                      Icons.cancel,
+                                      key: const Key('puzzle-wrong-icon'),
+                                      color: AppSettings.of(context).wrongColor,
+                                    ),
+                                    const SizedBox(width: 8),
+                                  ],
+                                  Flexible(
+                                    child: Text(
+                                      _message,
+                                      key: const Key('puzzle-message'),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
@@ -357,6 +400,9 @@ class _PuzzlePageState extends State<PuzzlePage> {
                             enabled: !done && !_session.awaitingReply,
                             revision: _revision,
                             shapes: {
+                              ..._wrongShapes(
+                                AppSettings.of(context).wrongColor,
+                              ),
                               if (_hint != null)
                                 Circle(
                                   color: AppSettings.of(context).hintColor,

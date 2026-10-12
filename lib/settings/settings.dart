@@ -362,6 +362,10 @@ class AppSettings {
       ? (correct ? okabeBlue : okabeOrange).withValues(alpha: 0.5)
       : Color(correct ? 0x8040a040 : 0x80d04040);
 
+  /// Colore pieno della mossa sbagliata negli esercizi: rosso, arancione per
+  /// daltonici. Va sempre accompagnato da icona e testo.
+  Color get wrongColor => colorBlind ? okabeOrange : const Color(0xffd32f2f);
+
   /// Nome scelto per [side], `null` se non indicato.
   String? nameOf(Side side) {
     final name = side == Side.white ? whiteName : blackName;

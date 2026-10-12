@@ -65,6 +65,7 @@ Il test `test/puzzles/puzzle_dataset_test.dart` verifica che ogni soluzione sia 
 
 - Il puzzle parte con la mossa dell'avversario già giocata; la scacchiera è orientata dal lato del giocatore.
 - Una mossa diversa dalla soluzione viene annullata con il messaggio "Non è la mossa giusta. Premi «Riprova» per ricominciare." e il puzzle conta come fallito, ma si può continuare a cercare.
+- La mossa sbagliata resta segnata sulla scacchiera con una freccia e un cerchio rossi (arancioni con i colori per daltonici, `AppSettings.wrongColor`) finché non si riprova, si chiede un suggerimento o la soluzione. Il rosso non è l'unico segnale: compare l'icona ✕ accanto al messaggio, il messaggio è una regione "live" che i lettori di schermo annunciano, e con la vibrazione attiva si sente un colpo deciso.
 - All'ultima mossa è accettato anche un matto diverso da quello previsto.
 - L'arrocco è riconosciuto sia come mossa del re di due case sia come re sulla torre.
 - **Suggerimento**: cerchia il pezzo da muovere; non fa fallire il puzzle.
