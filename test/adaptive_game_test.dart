@@ -96,7 +96,7 @@ void main() {
     await resign(tester);
     final saved = await AdaptiveOpponent.load(store);
     expect(saved.games, 1);
-    expect(saved.rating, lessThan(1100));
+    expect(saved.rating, lessThan(1150));
   });
 
   testWidgets('RF-26 una partita chiusa senza mosse non conta', (tester) async {
@@ -117,7 +117,7 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
     final saved = await AdaptiveOpponent.load(store);
     expect(saved.games, 0);
-    expect(saved.rating, 1100);
+    expect(saved.rating, 1150);
     await resign(tester);
     expect((await AdaptiveOpponent.load(store)).games, 1);
   });
