@@ -8,15 +8,16 @@ import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../exchange/qr_code_view.dart';
 import '../exchange/qr_receive_page.dart';
 import '../game/clock.dart';
 import '../game/move_speech.dart';
 import '../l10n/app_localizations.dart';
+import '../theme/rokko_theme.dart';
 import '../training/training_board.dart';
 import 'ble_link.dart';
 import 'game_invite.dart';
 import 'multiplayer_controller.dart';
+import 'multiplayer_widgets.dart';
 import 'remote_watch.dart';
 import 'saved_game.dart';
 
@@ -239,6 +240,8 @@ class _MultiplayerPageState extends State<MultiplayerPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = multiplayerL10n(context);
+    final theme = Theme.of(context);
+    final tokens = RokkoTokens.of(context);
     return Scaffold(
       appBar: AppBar(title: Text(l10n.multiplayerTitle)),
       body: ListView(
@@ -246,20 +249,37 @@ class _MultiplayerPageState extends State<MultiplayerPage> {
         children: [
           if (_saved case final saved?) ...[
             Card(
+              margin: EdgeInsets.zero,
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Row(
+                      children: [
+                        ExcludeSemantics(
+                          child: Icon(Icons.history, color: tokens.action),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            l10n.multiplayerUiResumeTitle,
+                            style: theme.textTheme.titleMedium,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
                     Text(l10n.multiplayerResumeBody(saved.moves.length)),
                     const SizedBox(height: 12),
-                    Row(
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
                       children: [
                         FilledButton(
                           onPressed: _busy ? null : () => _resume(saved),
                           child: Text(l10n.multiplayerResume),
                         ),
-                        const SizedBox(width: 8),
                         TextButton(
                           onPressed: _busy ? null : _discard,
                           child: Text(l10n.multiplayerDiscard),
@@ -272,77 +292,117 @@ class _MultiplayerPageState extends State<MultiplayerPage> {
             ),
             const SizedBox(height: 16),
           ],
-          Text(l10n.multiplayerIntro),
-          const SizedBox(height: 8),
-          Text(l10n.multiplayerRemoteIntro),
-          const SizedBox(height: 24),
-          Text(
-            l10n.multiplayerYourColor,
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
-          const SizedBox(height: 8),
-          SegmentedButton<Side>(
-            segments: [
-              ButtonSegment(
-                value: Side.white,
-                label: Text(l10n.multiplayerWhite),
+          Card(
+            margin: EdgeInsets.zero,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.multiplayerUiStepsTitle,
+                    style: theme.textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 8),
+                  _Step(1, l10n.multiplayerUiStepCreate),
+                  _Step(2, l10n.multiplayerUiStepScan),
+                  _Step(3, l10n.multiplayerUiStepPlay),
+                  const SizedBox(height: 8),
+                  Text(l10n.multiplayerIntro),
+                  const SizedBox(height: 8),
+                  Text(l10n.multiplayerRemoteIntro),
+                ],
               ),
-              ButtonSegment(
-                value: Side.black,
-                label: Text(l10n.multiplayerBlack),
-              ),
-            ],
-            selected: {_side},
-            onSelectionChanged: (s) => setState(() => _side = s.first),
+            ),
           ),
           const SizedBox(height: 16),
-          Text(
-            l10n.multiplayerChannelLabel,
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
-          const SizedBox(height: 8),
-          SegmentedButton<_Channel>(
-            segments: [
-              ButtonSegment(
-                value: _Channel.wifi,
-                icon: const Icon(Icons.wifi),
-                label: Text(l10n.multiplayerChannelWifi),
+          Card(
+            margin: EdgeInsets.zero,
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    l10n.multiplayerYourColor,
+                    style: theme.textTheme.titleSmall,
+                  ),
+                  const SizedBox(height: 8),
+                  SegmentedButton<Side>(
+                    segments: [
+                      ButtonSegment(
+                        value: Side.white,
+                        label: Text(l10n.multiplayerWhite),
+                      ),
+                      ButtonSegment(
+                        value: Side.black,
+                        label: Text(l10n.multiplayerBlack),
+                      ),
+                    ],
+                    selected: {_side},
+                    onSelectionChanged: (s) => setState(() => _side = s.first),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    l10n.multiplayerChannelLabel,
+                    style: theme.textTheme.titleSmall,
+                  ),
+                  const SizedBox(height: 8),
+                  SegmentedButton<_Channel>(
+                    segments: [
+                      ButtonSegment(
+                        value: _Channel.wifi,
+                        icon: const Icon(Icons.wifi),
+                        label: Text(l10n.multiplayerChannelWifi),
+                      ),
+                      ButtonSegment(
+                        value: _Channel.bluetooth,
+                        icon: const Icon(Icons.bluetooth),
+                        label: Text(l10n.multiplayerChannelBluetooth),
+                      ),
+                    ],
+                    selected: {_channel},
+                    onSelectionChanged: (s) =>
+                        setState(() => _channel = s.first),
+                  ),
+                  if (_channel == _Channel.bluetooth) ...[
+                    const SizedBox(height: 8),
+                    Text(l10n.multiplayerBluetoothHint),
+                  ],
+                  const SizedBox(height: 8),
+                  SwitchListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(l10n.multiplayerRemoteSwitch),
+                    subtitle: Text(l10n.multiplayerRemoteSwitchHint),
+                    value: _remote,
+                    onChanged: _busy
+                        ? null
+                        : (v) => setState(() => _remote = v),
+                  ),
+                  const SizedBox(height: 8),
+                  DropdownButtonFormField<TimeControl?>(
+                    key: ValueKey('clock-${_remote ? 'off' : _control?.label}'),
+                    initialValue: _remote ? null : _control,
+                    isExpanded: true,
+                    decoration: InputDecoration(
+                      labelText: l10n.multiplayerClockTitle,
+                      helperText: l10n.multiplayerClockHint,
+                    ),
+                    items: [
+                      DropdownMenuItem(child: Text(l10n.multiplayerClockNone)),
+                      for (final control in TimeControl.presets)
+                        DropdownMenuItem(
+                          value: control,
+                          child: Text(control.label),
+                        ),
+                    ],
+                    onChanged: _remote
+                        ? null
+                        : (v) => setState(() => _control = v),
+                  ),
+                ],
               ),
-              ButtonSegment(
-                value: _Channel.bluetooth,
-                icon: const Icon(Icons.bluetooth),
-                label: Text(l10n.multiplayerChannelBluetooth),
-              ),
-            ],
-            selected: {_channel},
-            onSelectionChanged: (s) => setState(() => _channel = s.first),
-          ),
-          if (_channel == _Channel.bluetooth) ...[
-            const SizedBox(height: 8),
-            Text(l10n.multiplayerBluetoothHint),
-          ],
-          const SizedBox(height: 8),
-          SwitchListTile(
-            contentPadding: EdgeInsets.zero,
-            title: Text(l10n.multiplayerRemoteSwitch),
-            subtitle: Text(l10n.multiplayerRemoteSwitchHint),
-            value: _remote,
-            onChanged: _busy ? null : (v) => setState(() => _remote = v),
-          ),
-          const SizedBox(height: 8),
-          DropdownButtonFormField<TimeControl?>(
-            key: ValueKey('clock-${_remote ? 'off' : _control?.label}'),
-            initialValue: _remote ? null : _control,
-            decoration: InputDecoration(
-              labelText: l10n.multiplayerClockTitle,
-              helperText: l10n.multiplayerClockHint,
             ),
-            items: [
-              DropdownMenuItem(child: Text(l10n.multiplayerClockNone)),
-              for (final control in TimeControl.presets)
-                DropdownMenuItem(value: control, child: Text(control.label)),
-            ],
-            onChanged: _remote ? null : (v) => setState(() => _control = v),
           ),
           const SizedBox(height: 16),
           FilledButton.icon(
@@ -376,6 +436,42 @@ class _MultiplayerPageState extends State<MultiplayerPage> {
             onPressed: _busy ? null : () => _join(byLink: true),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Passo numerato di «Come si gioca».
+class _Step extends StatelessWidget {
+  const _Step(this.number, this.text);
+
+  final int number;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final tokens = RokkoTokens.of(context);
+    return Semantics(
+      label: '$number. $text',
+      excludeSemantics: true,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ExcludeSemantics(
+              child: CircleAvatar(
+                radius: 12,
+                backgroundColor: tokens.action,
+                foregroundColor: tokens.onAction,
+                child: Text('$number', style: theme.textTheme.labelMedium),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(child: Text(text)),
+          ],
+        ),
       ),
     );
   }
@@ -619,6 +715,24 @@ class _MultiplayerGamePageState extends State<MultiplayerGamePage> {
     },
   };
 
+  /// Un canale per ogni modo con cui l'invito può essere raggiunto; lo stato
+  /// segue quello della partita.
+  List<ChannelLink> _channels() {
+    final invite = _c.session.invite;
+    final level = switch (_c.status) {
+      _ when _c.pendingDelivery => LinkLevel.offline,
+      MultiplayerStatus.waitingPeer ||
+      MultiplayerStatus.connecting => LinkLevel.connecting,
+      _ => LinkLevel.connected,
+    };
+    return [
+      if (invite.lanAddress != null)
+        ChannelLink(channel: LinkChannel.wifi, level: level),
+      if (invite.ble) ChannelLink(channel: LinkChannel.bluetooth, level: level),
+      if (invite.remote) ChannelLink(channel: LinkChannel.remote, level: level),
+    ];
+  }
+
   Widget _clockRow(Side side, String who) => ValueListenableBuilder<int>(
     valueListenable: _c.ticks,
     builder: (context, _, _) => _ClockView(
@@ -659,14 +773,13 @@ class _MultiplayerGamePageState extends State<MultiplayerGamePage> {
                     ),
                   ),
                   const SizedBox(height: 12),
+                  ConnectionIndicator(channels: _channels()),
+                  const SizedBox(height: 12),
                   if (waiting) ...[
                     Center(
-                      child: SizedBox(
-                        width: min(size, 320),
-                        child: QrCodeView(
-                          data: _c.inviteLink,
-                          label: l10n.multiplayerInviteQrLabel,
-                        ),
+                      child: InviteCard(
+                        data: _c.inviteLink,
+                        maxWidth: min(size, 320),
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -769,7 +882,9 @@ class _ClockView extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
           color: background,
-          borderRadius: BorderRadius.circular(6),
+          borderRadius: BorderRadius.circular(
+            RokkoTokens.of(context).radiusSmall,
+          ),
         ),
         child: Row(
           children: [
