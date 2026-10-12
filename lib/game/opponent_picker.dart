@@ -9,7 +9,7 @@ import '../engine/levels.dart';
 import '../engine/style.dart';
 import '../l10n/app_localizations.dart';
 
-enum Opponent { human, computer, bot }
+enum Opponent { human, computer, bot, friend }
 
 enum SideChoice { white, black, random }
 
@@ -79,9 +79,13 @@ class OpponentPicker extends StatelessWidget {
     required this.collection,
     required this.onChanged,
     this.kidMode = false,
+    this.friendAvailable = false,
   });
 
   final GameSetup setup;
+
+  /// Mostra «Amico»: partita su due telefoni (RMP-08), fuori dal profilo bambino.
+  final bool friendAvailable;
 
   /// Profilo bambino (RP-06): niente computer, solo bot amichevoli e nessun numero.
   final bool kidMode;
@@ -97,30 +101,47 @@ class OpponentPicker extends StatelessWidget {
     final level = engineLevel(shown.adaptive ? adaptiveLevel : shown.level);
     final vsBot = shown.opponent == Opponent.bot;
     final vsComputer = shown.opponent == Opponent.computer;
+    final crowded = friendAvailable && !kidMode;
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         SegmentedButton<Opponent>(
+          // Con quattro scelte non c'è posto per icone e spunta: i nomi
+          // andrebbero a capo a metà parola.
+          showSelectedIcon: !crowded,
+          style: crowded
+              ? SegmentedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 8,
+                  ),
+                )
+              : null,
           segments: [
-            const ButtonSegment(
+            ButtonSegment(
               value: Opponent.human,
-              icon: Icon(Icons.people_outline),
-              label: Text('Due giocatori'),
+              icon: crowded ? null : const Icon(Icons.people_outline),
+              label: const Text('Due giocatori'),
             ),
             if (!kidMode)
               ButtonSegment(
                 value: Opponent.computer,
-                icon: const Icon(Icons.memory),
+                icon: crowded ? null : const Icon(Icons.memory),
                 label: const Text('Computer'),
                 enabled: computerAvailable,
               ),
             ButtonSegment(
               value: Opponent.bot,
-              icon: const Icon(Icons.emoji_people_outlined),
+              icon: crowded ? null : const Icon(Icons.emoji_people_outlined),
               label: const Text('Bot'),
               enabled: computerAvailable,
             ),
+            if (friendAvailable && !kidMode)
+              ButtonSegment(
+                value: Opponent.friend,
+                label: Text(_l10n(context).opponentFriend),
+              ),
           ],
           selected: {shown.opponent},
           onSelectionChanged: (s) =>
@@ -131,6 +152,7 @@ class OpponentPicker extends StatelessWidget {
           Opponent.human => _l10n(context).opponentHintHuman,
           Opponent.computer => _l10n(context).opponentHintComputer,
           Opponent.bot => _l10n(context).opponentHintBot,
+          Opponent.friend => _l10n(context).opponentHintFriend,
         }, style: theme.textTheme.bodySmall),
         if (!computerAvailable) ...[
           const SizedBox(height: 8),

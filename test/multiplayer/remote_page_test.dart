@@ -136,6 +136,8 @@ void main() {
         200,
         scrollable: find.byType(Scrollable).first,
       );
+      await tester.ensureVisible(find.text('Unisciti con il link'));
+      await tester.pump();
       await tester.tap(find.text('Unisciti con il link'));
       await tester.pumpAndSettle();
       await tester.tap(find.byTooltip('Incolla'));
@@ -159,6 +161,8 @@ void main() {
       200,
       scrollable: find.byType(Scrollable).first,
     );
+    await tester.ensureVisible(find.text('Unisciti con il link'));
+    await tester.pump();
     await tester.tap(find.text('Unisciti con il link'));
     await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('Incolla'));

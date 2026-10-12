@@ -26,6 +26,7 @@ import '../exchange/qr_receive_page.dart';
 import '../exchange/qr_send_page.dart';
 import '../exchange/qr_transfer.dart';
 import '../l10n/app_localizations.dart';
+import '../multiplayer/multiplayer_page.dart';
 import '../openings/opening_game.dart';
 import '../openings/opening_name.dart';
 import '../progress/activity.dart';
@@ -3264,6 +3265,7 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
   HandicapPiece? _handicapPiece;
   int? _handicapMinutes;
   var _handicapGiver = HandicapGiver.player;
+  bool get _friend => _setup.opponent == Opponent.friend;
 
   Handicap? get _handicap => _handicapPiece == null && _handicapMinutes == null
       ? null
@@ -3338,8 +3340,13 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
               collection: widget.collection,
               computerAvailable: widget.computerAvailable,
               kidMode: widget.kidMode,
+              friendAvailable: !widget.kid && !widget.kidMode,
               onChanged: (setup) => setState(() => _setup = setup),
             ),
+            if (_friend) ...[
+              const SizedBox(height: 16),
+              FriendGamePanel(inCard: false, clockBuilder: _friendClock),
+            ],
             if (_setup.opponent == Opponent.human) ...[
               const SizedBox(height: 8),
               Row(
@@ -3350,7 +3357,7 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
                 ],
               ),
             ],
-            if (l == null) ...[
+            if (l == null && !_friend) ...[
               const SizedBox(height: 16),
               Text('Variante', style: theme.textTheme.titleSmall),
               const SizedBox(height: 4),
@@ -3375,39 +3382,87 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
                 Text(_variant.description),
               ],
             ],
-            if (l == null) ..._handicapSection(context),
-            const SizedBox(height: 12),
-            if (l != null) ...[
-              Text(l.kidGameTimeTitle, style: theme.textTheme.titleSmall),
-              const SizedBox(height: 4),
-              // Bullet e Blitz mettono fretta: ai bambini solo tempi lunghi.
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  chip(noClock, null),
-                  chip(l.kidGameSlowClock, _kidClock),
-                ],
-              ),
-            ] else ...[
-              Text('Cadenza', style: theme.textTheme.titleSmall),
-              const SizedBox(height: 4),
-              chip(noClock, null),
-            ],
-            if (l == null)
-              for (final entry in groups.entries) ...[
-                const SizedBox(height: 12),
-                Text(entry.key, style: theme.textTheme.titleSmall),
+            // «Amico» ha cadenza e comandi nel suo pannello.
+            if (!_friend) ...[
+              if (l == null) ..._handicapSection(context),
+              const SizedBox(height: 12),
+              if (l != null) ...[
+                Text(l.kidGameTimeTitle, style: theme.textTheme.titleSmall),
                 const SizedBox(height: 4),
+                // Bullet e Blitz mettono fretta: ai bambini solo tempi lunghi.
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
-                  children: [for (final t in entry.value) chip(t.label, t)],
+                  children: [
+                    chip(noClock, null),
+                    chip(l.kidGameSlowClock, _kidClock),
+                  ],
                 ),
+              ] else ...[
+                Text('Cadenza', style: theme.textTheme.titleSmall),
+                const SizedBox(height: 4),
+                chip(noClock, null),
+                for (final entry in groups.entries) ...[
+                  const SizedBox(height: 12),
+                  Text(entry.key, style: theme.textTheme.titleSmall),
+                  const SizedBox(height: 4),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [for (final t in entry.value) chip(t.label, t)],
+                  ),
+                ],
               ],
+            ],
           ],
         ),
       ),
+    );
+  }
+
+  /// Cadenza della partita con un amico: si sceglie qui e la partita parte dai
+  /// comandi, non toccando una cadenza; a distanza resta senza orologio.
+  Widget _friendClock(
+    BuildContext context, {
+    required bool remote,
+    required bool enabled,
+    required TimeControl? control,
+    required ValueChanged<TimeControl?> onChanged,
+  }) {
+    final theme = Theme.of(context);
+    Widget chip(String label, TimeControl? value) => ChoiceChip(
+      label: Text(label),
+      selected: control == value,
+      onSelected: enabled ? (_) => onChanged(value) : null,
+    );
+    final groups = <String, List<TimeControl>>{};
+    for (final t in TimeControl.presets) {
+      groups.putIfAbsent(t.category, () => []).add(t);
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Cadenza', style: theme.textTheme.titleSmall),
+        if (remote) ...[
+          const SizedBox(height: 4),
+          Text(
+            AppLocalizations.of(context).friendClockRemoteHint,
+            style: theme.textTheme.bodySmall,
+          ),
+        ],
+        const SizedBox(height: 4),
+        chip('Senza tempo', null),
+        for (final entry in groups.entries) ...[
+          const SizedBox(height: 12),
+          Text(entry.key, style: theme.textTheme.labelLarge),
+          const SizedBox(height: 4),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [for (final t in entry.value) chip(t.label, t)],
+          ),
+        ],
+      ],
     );
   }
 

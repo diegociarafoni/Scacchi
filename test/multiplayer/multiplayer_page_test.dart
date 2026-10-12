@@ -370,6 +370,8 @@ void main() {
       100,
       scrollable: find.byType(Scrollable).first,
     );
+    await tester.ensureVisible(find.text('Crea la partita'));
+    await tester.pump();
     await tester.tap(find.text('Crea la partita'));
     await _wait(tester);
     await tester.pumpAndSettle();

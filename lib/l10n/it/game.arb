@@ -58,5 +58,8 @@
   "gameTipMore": "Sotto «Altro» trovi patta, abbandono, allenatore e l'editor di posizione.",
   "gameTipMenu": "Dal menu ⋮ analizzi la posizione e rivedi la partita.",
   "gameReviewInvite": "Partita finita. Vuoi capire dove migliorare?",
-  "gameReviewInviteAction": "Rivedi la partita"
+  "gameReviewInviteAction": "Rivedi la partita",
+  "opponentFriend": "Amico",
+  "opponentHintFriend": "Si gioca su due telefoni, vicini o lontani.",
+  "friendClockRemoteHint": "A distanza si gioca senza orologio: spegni «Gioca anche a distanza» per sceglierlo."
 }
