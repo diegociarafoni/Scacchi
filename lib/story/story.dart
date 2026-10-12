@@ -14,6 +14,7 @@ class StoryChapter {
     required this.botId,
     required this.puzzleTheme,
     required this.puzzleCount,
+    this.puzzleRating,
   });
 
   final String id;
@@ -26,6 +27,10 @@ class StoryChapter {
   final String puzzleTheme;
   final int puzzleCount;
 
+  /// Difficoltà massima dei puzzle, se il capitolo parte più in basso di
+  /// quanto sia l'utente.
+  final int? puzzleRating;
+
   Bot get bot => botById(botId)!;
 
   Chapter get pathChapter =>
@@ -33,6 +38,14 @@ class StoryChapter {
 }
 
 const storyChapters = <StoryChapter>[
+  StoryChapter(
+    id: 'prologue',
+    pathChapterId: 'moves',
+    botId: 'tino',
+    puzzleTheme: 'mateIn1',
+    puzzleCount: 3,
+    puzzleRating: 500,
+  ),
   StoryChapter(
     id: 'village',
     pathChapterId: 'pieces',
@@ -192,8 +205,17 @@ class StoryProgress {
     ];
   }
 
-  bool isChapterDone(StoryChapter chapter) =>
-      steps(chapter).every((s) => s.done);
+  /// Concluso se ogni passo è fatto, se il suo bot è battuto o se la storia
+  /// è già andata oltre: chi ha battuto un bot o risolto puzzle più avanti
+  /// non rifà le lezioni aggiunte o spostate prima.
+  bool isChapterDone(StoryChapter chapter) {
+    if (state.isBossBeaten(chapter.id)) return true;
+    if (steps(chapter).every((s) => s.done)) return true;
+    final later = storyChapters.skip(storyChapters.indexOf(chapter) + 1);
+    return later.any(
+      (c) => state.isBossBeaten(c.id) || state.puzzlesSolved(c.id) > 0,
+    );
+  }
 
   int get completedChapters => storyChapters.where(isChapterDone).length;
 

@@ -13,6 +13,7 @@ AppLocalizations storyL10n(BuildContext context) =>
 /// epilogo.
 extension StoryTexts on AppLocalizations {
   String chapterTitle(StoryChapter c) => switch (c.id) {
+    'prologue' => storyPrologueTitle,
     'village' => storyVillageTitle,
     'gates' => storyGatesTitle,
     'tower' => storyTowerTitle,
@@ -24,6 +25,7 @@ extension StoryTexts on AppLocalizations {
   };
 
   String chapterIntro(StoryChapter c) => switch (c.id) {
+    'prologue' => storyPrologueIntro,
     'village' => storyVillageIntro,
     'gates' => storyGatesIntro,
     'tower' => storyTowerIntro,
@@ -35,6 +37,7 @@ extension StoryTexts on AppLocalizations {
   };
 
   String chapterBoss(StoryChapter c) => switch (c.id) {
+    'prologue' => storyPrologueBoss(c.bot.name),
     'village' => storyVillageBoss(c.bot.name),
     'gates' => storyGatesBoss(c.bot.name),
     'tower' => storyTowerBoss(c.bot.name),
@@ -46,6 +49,7 @@ extension StoryTexts on AppLocalizations {
   };
 
   String chapterOutro(StoryChapter c) => switch (c.id) {
+    'prologue' => storyPrologueOutro,
     'village' => storyVillageOutro,
     'gates' => storyGatesOutro,
     'tower' => storyTowerOutro,

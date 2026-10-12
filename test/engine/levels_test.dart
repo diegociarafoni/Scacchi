@@ -106,4 +106,26 @@ void main() {
       expect(ties, greaterThan(0));
     });
   });
+
+  group('livello 0 della storia', () {
+    test('ha 400 Elo e sta sotto il primo livello', () {
+      final level = engineLevel(0);
+      expect(level.approxElo, 400);
+      expect(level.approxElo, lessThan(engineLevel(1).approxElo));
+    });
+
+    test('non compare fra i livelli scelti dall\'utente', () {
+      expect(engineLevels.map((l) => l.id), [1, 2, 3, 4, 5, 6, 7, 8]);
+    });
+
+    test('un Elo vicino a 400 continua a dare il livello 1', () {
+      expect(engineLevelForElo(400).id, 1);
+    });
+
+    test('sceglie fra molte mosse con una temperatura alta', () {
+      final level = engineLevel(0);
+      expect(level.multiPv, greaterThan(engineLevel(1).multiPv));
+      expect(level.temperatureCp, greaterThan(engineLevel(1).temperatureCp));
+    });
+  });
 }

@@ -77,8 +77,19 @@
     }
   },
   "storyPuzzlesNone": "The puzzles could not be loaded: try again.",
+  "storyPrologueTitle": "The path of first steps",
+  "storyPrologueIntro": "Before the village there is a path, and on the path a curious chick. Learn with it how every piece moves: rook, bishop, queen, king, knight and pawn.",
+  "storyPrologueBoss": "{name}, the chick of the path, wants a game to try the new pieces.",
+  "@storyPrologueBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPrologueOutro": "The pieces have no secrets left. The village at the foot of the fortress is a few steps away.",
   "storyVillageTitle": "The village of the pieces",
-  "storyVillageIntro": "You reach the village at the foot of the Rokko fortress. The villagers no longer remember how their pieces move: help them with the lessons, then show you can spot a piece left hanging.",
+  "storyVillageIntro": "You reach the village at the foot of the Rokko fortress. The villagers play all day but leave pieces hanging: learn to capture and defend, then show you can spot an undefended piece.",
   "storyVillageBoss": "{name}, the village keeper, challenges you to see if you really learned.",
   "@storyVillageBoss": {
     "placeholders": {

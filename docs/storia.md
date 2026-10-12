@@ -8,7 +8,8 @@ La storia accompagna il giocatore dal villaggio ai piedi della Rocca fino alla c
 
 | Capitolo | Lezioni e guardiano (percorso) | Puzzle | Sfida finale |
 |---|---|---|---|
-| Il villaggio dei pezzi | Il movimento dei pezzi | 3 pezzi in presa | Pino |
+| Il sentiero dei primi passi («Capitolo 0») | Come si muovono i pezzi | 3 matti in una, scelti tra i più facili | Tino (400 Elo) |
+| Il villaggio dei pezzi | Catturare e difendere | 3 pezzi in presa | Pino |
 | Le porte della città | Le regole | 3 promozioni | Chiara |
 | La torre del re | Matti elementari, guardiano | 3 matti sulla traversa | Rocco |
 | Il bosco delle trappole | Tattiche, guardiano | 4 forchette | Marta |
@@ -17,7 +18,7 @@ La storia accompagna il giocatore dal villaggio ai piedi della Rocca fino alla c
 | La pianura dei piani | La strategia, guardiano | 3 pedoni avanzati | Massimo |
 | L'accademia del maestro | La scuola di Capablanca, guardiano | 3 finali di torri | Stella |
 
-I bot sono quelli della scala (vedi [bot.md](bot.md)) in ordine di forza crescente: la sfida usa il loro livello del motore, senza orologio e con **Annulla** (come il guardiano). Lo stile e il libro d'aperture del bot non sono applicati alla sfida.
+I bot sono quelli della scala (vedi [bot.md](bot.md)) in ordine di forza crescente; Tino, il custode del Capitolo 0, gioca solo nella Storia, al livello 0 (400 Elo, fuori dai livelli scelti dall'utente): la sfida usa il loro livello del motore, senza orologio e con **Annulla** (come il guardiano). Lo stile e il libro d'aperture del bot non sono applicati alla sfida.
 
 ## Passi
 
@@ -40,7 +41,7 @@ Quando un passo si conclude (lezioni, puzzle, guardiano o sfida), la schermata m
 
 ## Stato e salvataggio
 
-Lo stato deriva dal percorso: le lezioni e i guardiani completati contano così come sono, comprese le lezioni aggiunte con un aggiornamento dei contenuti (per questo la storia non elenca le singole lezioni, ma il capitolo del percorso). Salva da sé, in `story.json` (`StoryController`, con `JsonFile`), solo i puzzle risolti per capitolo e i capitoli con il bot battuto. Capitoli sconosciuti o valori illeggibili sono ignorati alla lettura.
+Chi ha già battuto un bot o risolto dei puzzle in un capitolo successivo trova concluso anche il Capitolo 0 (`StoryProgress.isChapterDone`), così l'aggiunta del capitolo non toglie nulla a chi era più avanti. «Continua da dove eri» nella scheda Tu guarda solo il percorso, non la storia: a chi è oltre il Capitolo 0 senza averne fatto le lezioni nuove propone quelle lezioni. Lo stato deriva dal percorso: le lezioni e i guardiani completati contano così come sono, comprese le lezioni aggiunte con un aggiornamento dei contenuti (per questo la storia non elenca le singole lezioni, ma il capitolo del percorso). Salva da sé, in `story.json` (`StoryController`, con `JsonFile`), solo i puzzle risolti per capitolo e i capitoli con il bot battuto. Capitoli sconosciuti o valori illeggibili sono ignorati alla lettura.
 
 ## Testi e accessibilità
 
@@ -48,7 +49,7 @@ I testi (racconto, passi, avvisi) sono nei file `.arb` in italiano e in inglese;
 
 ## Come aggiungere un capitolo
 
-Aggiungere un `StoryChapter` in `storyChapters` (capitolo del percorso, bot, tema e numero di puzzle) e le quattro stringhe `story<Id>Title`, `Intro`, `Boss` (con `{name}`), `Outro` nei due `.arb`, poi il caso in `story_l10n.dart`. I test controllano che il capitolo punti a un capitolo del percorso e a un bot esistenti, che i bot siano in ordine di forza, che il tema abbia puzzle a sufficienza e che ogni testo esista nelle due lingue.
+I puzzle di un capitolo possono avere un tetto di difficoltà (`StoryChapter.puzzleRating`): il Capitolo 0 pesca puzzle fino a 500 punti anche se il punteggio dell'utente è più alto. Aggiungere un `StoryChapter` in `storyChapters` (capitolo del percorso, bot, tema e numero di puzzle) e le quattro stringhe `story<Id>Title`, `Intro`, `Boss` (con `{name}`), `Outro` nei due `.arb`, poi il caso in `story_l10n.dart`. I test controllano che il capitolo punti a un capitolo del percorso e a un bot esistenti, che i bot siano in ordine di forza, che il tema abbia puzzle a sufficienza e che ogni testo esista nelle due lingue.
 
 ## Componenti
 

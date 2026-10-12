@@ -74,15 +74,15 @@ void main() {
   test(
     'una lezione aggiunta nello stesso capitolo non blocca le successive',
     () {
-      // Chi aveva finito i pezzi prima che arrivasse la tappa sulle catture.
+      // Chi aveva finito il capitolo e una lezione dopo «Catturare»: la
+      // tappa saltata e quelle dopo restano aperte.
       var p = const PathProgress();
       for (final s in curriculum.first.stages) {
-        if (s.id != 'pieces.capture') p = p.complete(s.id, 3);
+        p = p.complete(s.id, 3);
       }
-      p = p.complete(curriculum[1].stages.first.id, 3);
+      p = p.complete('pieces.hanging', 3);
       expect(p.isUnlocked('pieces.capture'), isTrue);
-      expect(p.isUnlocked(curriculum[1].stages[1].id), isTrue);
-      expect(p.isUnlocked(curriculum[1].stages[2].id), isFalse);
+      expect(p.isUnlocked('pieces.defend'), isTrue);
       expect(p.nextStage?.id, 'pieces.capture');
     },
   );

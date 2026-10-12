@@ -31,7 +31,7 @@ void main() {
     });
 
     test('la strategia e Capablanca chiudono la storia', () {
-      expect(storyChapters.map((c) => c.pathChapterId).toList().sublist(6), [
+      expect(storyChapters.map((c) => c.pathChapterId).toList().sublist(7), [
         'strategy',
         'capablanca',
       ]);
@@ -189,6 +189,46 @@ void main() {
       expect(p.currentChapterIndex, isNull);
     });
 
+    test('il capitolo 0 è il primo, con Tino e puzzle facili', () {
+      expect(first.id, 'prologue');
+      expect(first.pathChapterId, 'moves');
+      expect(first.botId, 'tino');
+      expect(first.puzzleRating, lessThanOrEqualTo(600));
+      expect(storyChapters[1].puzzleRating, isNull);
+    });
+
+    test('chi è già oltre il capitolo 0 lo ritrova concluso', () {
+      final village = storyChapters[1];
+      const none = PathProgress();
+      expect(
+        const StoryProgress(none, StoryState()).isChapterDone(first),
+        isFalse,
+      );
+      final beaten = StoryProgress(
+        none,
+        const StoryState().withBossBeaten(village.id),
+      );
+      expect(beaten.isChapterDone(first), isTrue);
+      expect(beaten.isChapterUnlocked(1), isTrue);
+      final solving = StoryProgress(
+        none,
+        const StoryState().withPuzzleSolved(village.id, village.puzzleCount),
+      );
+      expect(solving.isChapterDone(first), isTrue);
+      expect(solving.isChapterDone(village), isFalse);
+      expect(solving.currentChapterIndex, 1);
+    });
+
+    test('chi ha battuto il bot di un capitolo lo ritrova concluso', () {
+      final village = storyChapters[1];
+      final p = StoryProgress(
+        const PathProgress(),
+        const StoryState().withBossBeaten(village.id),
+      );
+      expect(p.isChapterDone(village), isTrue);
+      expect(p.isChapterUnlocked(2), isTrue);
+    });
+
     test('i puzzle risolti non superano l\'obiettivo', () {
       var state = const StoryState();
       for (var i = 0; i < 20; i++) {
@@ -227,9 +267,9 @@ void main() {
     });
 
     test('salta le lezioni fatte e arriva al guardiano', () {
-      final chapter = storyChapters[2].pathChapter;
+      final chapter = storyChapters[3].pathChapter;
       var p = const PathProgress();
-      for (final c in storyChapters.take(3)) {
+      for (final c in storyChapters.take(4)) {
         for (final s in c.pathChapter.stages.where((s) => !s.isGuardian)) {
           p = p.complete(s.id, 3);
         }

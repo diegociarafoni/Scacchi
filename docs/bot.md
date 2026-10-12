@@ -46,6 +46,10 @@ Gli 8 bot sono in ordine di forza e formano la scala da superare uno dopo l'altr
 | 7 | Massimo 🐺 | 7 | 2250 | gambettista | Gambetto Evans |
 | 8 | Stella ⭐ | 8 | 2700 | aggressivo | Difesa Est-Indiana |
 
+### Tino, solo nella Storia
+
+Tino 🐥 è il custode del Capitolo 0: livello 0, 400 Elo, scelta tra molte mosse con temperatura 600. Sta in `storyOnlyBots` e non nella scala: non si sblocca, non gioca nei tornei e non compare nella schermata Nuova partita. `botById` lo trova.
+
 ## Stile di gioco
 
 Lo stile non cambia la forza del motore: sposta la scelta tra le prime candidate. Il bot chiede a
