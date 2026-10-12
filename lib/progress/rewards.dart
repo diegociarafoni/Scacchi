@@ -15,22 +15,29 @@ sealed class Requirement {
 }
 
 class LevelRequirement extends Requirement {
-  const LevelRequirement(this.level);
+  const LevelRequirement(this.level, {this.keptAchievement});
 
   final int level;
 
+  /// Traguardo che un tempo sbloccava la ricompensa: chi lo ha già la tiene.
+  final String? keptAchievement;
+
   @override
-  bool isMet(ProgressState state) => levelForXp(state.xp) >= level;
+  bool isMet(ProgressState state) =>
+      levelForXp(state.xp) >= level ||
+      (keptAchievement != null && state.unlocked.contains(keptAchievement));
 
   @override
   String get label => 'Livello $level';
 
   @override
   bool operator ==(Object other) =>
-      other is LevelRequirement && other.level == level;
+      other is LevelRequirement &&
+      other.level == level &&
+      other.keptAchievement == keptAchievement;
 
   @override
-  int get hashCode => level.hashCode;
+  int get hashCode => Object.hash(level, keptAchievement);
 }
 
 class AchievementRequirement extends Requirement {
@@ -74,12 +81,23 @@ const Map<Enum, Requirement> _requirements = {
   Avatar.bishop: LevelRequirement(2),
   Avatar.rook: LevelRequirement(4),
   Avatar.queen: LevelRequirement(7),
-  Avatar.king: AchievementRequirement('tournament_won'),
+  Avatar.king: LevelRequirement(11, keptAchievement: 'tournament_won'),
+  Avatar.eagle: LevelRequirement(11),
+  Avatar.wolf: LevelRequirement(12),
+  Avatar.flower: LevelRequirement(3),
+  Avatar.owl: LevelRequirement(5),
+  Avatar.astroCat: LevelRequirement(8),
+  Avatar.rabbit: LevelRequirement(9),
+  Avatar.dragon: LevelRequirement(10),
+  Avatar.star: LevelRequirement(13),
   AvatarFrame.bronze: LevelRequirement(3),
   AvatarFrame.silver: LevelRequirement(6),
   AvatarFrame.gold: LevelRequirement(10),
-  AvatarFrame.flame: AchievementRequirement('streak_30'),
-  AvatarFrame.laurel: AchievementRequirement('puzzle_rating_1500'),
+  AvatarFrame.flame: LevelRequirement(8, keptAchievement: 'streak_30'),
+  AvatarFrame.laurel: LevelRequirement(
+    12,
+    keptAchievement: 'puzzle_rating_1500',
+  ),
 };
 
 /// Tutte le ricompense con una condizione di sblocco.

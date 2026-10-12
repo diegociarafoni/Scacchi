@@ -337,6 +337,7 @@ class _Header extends StatelessWidget {
       leading: ProfileAvatar(
         avatar: controller.settings.avatar,
         frame: controller.settings.frame,
+        photo: simple ? null : controller.activePhoto,
         size: 48,
       ),
       // Profilo bambino (RP-06): stelle e fiamma come nel Profilo, senza
