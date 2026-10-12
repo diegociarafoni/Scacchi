@@ -49,7 +49,7 @@ void main() {
       expect(find.text(bot.name), findsOneWidget, reason: bot.id);
       expect(find.text(bot.avatar), findsOneWidget, reason: bot.id);
     }
-    for (final bot in bots.skip(friendlyBots.length)) {
+    for (final bot in bots.where((b) => !friendlyBots.contains(b))) {
       expect(find.text(bot.name), findsNothing, reason: bot.id);
     }
     expect(find.textContaining('Elo'), findsNothing);
