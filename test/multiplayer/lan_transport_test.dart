@@ -264,4 +264,28 @@ void main() {
     },
     timeout: const Timeout(Duration(seconds: 20)),
   );
+
+  test(
+    'RMP-07 l\'invitato entra anche se l\'ospite apre la partita dopo',
+    () async {
+      final spare = await ServerSocket.bind(InternetAddress.loopbackIPv4, 0);
+      final port = spare.port;
+      await spare.close();
+      final guest = LanTransport.connect('127.0.0.1', port);
+      final connected = guest.connected.first;
+      await expectLater(
+        guest.send(bytes([1])),
+        throwsA(isA<TransportUnavailable>()),
+      );
+      final host = await LanTransport.host(
+        address: InternetAddress.loopbackIPv4,
+        port: port,
+      );
+      await connected.timeout(const Duration(seconds: 10));
+      expect(host.connections, 1);
+      await guest.close();
+      await host.close();
+    },
+    timeout: const Timeout(Duration(seconds: 20)),
+  );
 }

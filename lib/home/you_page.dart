@@ -7,6 +7,7 @@ import '../archive/saved_game.dart';
 import '../kids/kid_display.dart';
 import '../l10n/app_localizations.dart';
 import '../minigames/minigames_page.dart';
+import '../multiplayer/multiplayer_page.dart';
 import '../path/curriculum.dart';
 import '../path/path_controller.dart';
 import '../path/path_page.dart';
@@ -270,6 +271,12 @@ class YouPage extends StatelessWidget {
                     archive(),
                     (a) => PortraitPage(archive: a),
                   ),
+                ),
+                _Entry(
+                  icon: Icons.people_outline,
+                  title: multiplayerL10n(context).multiplayerTitle,
+                  subtitle: multiplayerL10n(context).multiplayerEntrySubtitle,
+                  onTap: () => _push(context, const MultiplayerPage()),
                 ),
                 _Entry(
                   icon: Icons.timer_outlined,

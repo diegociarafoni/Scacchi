@@ -144,13 +144,14 @@ void main() {
       expect(allowed.difference(declared), isEmpty, reason: 'permesso inutile');
     });
 
-    test('iOS chiede solo fotocamera e libreria, con la spiegazione', () {
+    test('iOS chiede solo fotocamera, libreria e rete locale, spiegandoli', () {
       final keys = RegExp(r'<key>(NS\w+UsageDescription)</key>')
           .allMatches(infoPlist)
           .map((m) => m.group(1))
           .toSet();
       expect(keys, {
         'NSCameraUsageDescription',
+        'NSLocalNetworkUsageDescription',
         'NSPhotoLibraryUsageDescription',
       });
     });
