@@ -71,6 +71,16 @@ void main() {
       },
     );
 
+    test('chi aveva il vecchio traguardo tiene Re, Fiamma e Alloro', () {
+      const old = ProgressState(
+        unlocked: ['tournament_won', 'streak_30', 'puzzle_rating_1500'],
+      );
+      for (final item in [Avatar.king, AvatarFrame.flame, AvatarFrame.laurel]) {
+        expect(isUnlocked(item, old, settings), isTrue, reason: '$item');
+        expect(isUnlocked(item, ProgressState.initial, settings), isFalse);
+      }
+    });
+
     test('«Sblocca tutto» li rende disponibili', () {
       final all = settings.copyWith(unlockAll: true);
       for (final a in Avatar.values) {

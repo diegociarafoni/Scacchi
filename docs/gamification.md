@@ -94,7 +94,7 @@ Per rispetto di RV-01, l'interruttore "Sblocca tutto" (nelle impostazioni dell'a
 
 ## Avatar simpatici e foto propria (RP-08, RP-09)
 
-Oltre ai sei pezzi, dieci personaggi disegnati in codice (`avatar_art.dart`, nessuna immagine nell'app): Pino il pulcino, Rocco la volpe, Chiara il fiore, Marta il gufo, il drago Duilio, Elena l'aquila, Massimo il lupo, Stella (la stella), più il gatto astronauta e il coniglio lunare. Hanno testa tonda, occhioni e guance su uno sfondo spaziale indaco e viola, e gli stessi nomi dei bot. Pino e Rocco sono subito disponibili, gli altri si sbloccano salendo di livello, come da tabella. Cornici e avatar si sbloccano tutti per livello e non per traguardo; i traguardi restano per temi e pezzi.
+Oltre ai sei pezzi, dieci personaggi disegnati in codice (`avatar_art.dart`, nessuna immagine nell'app): Pino il pulcino, Rocco la volpe, Chiara il fiore, Marta il gufo, il drago Duilio, Elena l'aquila, Massimo il lupo, Stella (la stella), più il gatto astronauta e il coniglio lunare. Hanno testa tonda, occhioni e guance su uno sfondo spaziale indaco e viola, e gli stessi nomi dei bot. Pino e Rocco sono subito disponibili, gli altri si sbloccano salendo di livello, come da tabella. Cornici e avatar si sbloccano tutti per livello e non per traguardo (chi aveva già meritato Re, Fiamma o Alloro con il vecchio traguardo li tiene); i traguardi restano per temi e pezzi.
 
 ### Custodi nella Storia
 

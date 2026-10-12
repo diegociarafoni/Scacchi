@@ -155,7 +155,9 @@ class ProgressController extends ChangeNotifier {
   }
 
   Future<void> _queuePhotoWrite(Future<void> Function() job) =>
-      _photoQueue = _photoQueue.then((_) => job());
+      _photoQueue = _photoQueue.then((_) => job()).onError((e, _) {
+        if (kDebugMode) debugPrint('Foto del profilo: $e');
+      });
 
   /// Un diario illeggibile non deve fermare il salvataggio dei progressi.
   Future<void> _loadJournal() async {

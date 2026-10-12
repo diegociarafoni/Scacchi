@@ -343,6 +343,7 @@ class _AvatarPicker extends StatelessWidget {
       builder: (context, _) {
         final s = controller.settings;
         final kid = AppSettings.of(context).kidMode;
+        final photoShown = !kid && controller.activePhoto != null;
         Widget option<T extends Enum>(
           T item,
           String label,
@@ -419,7 +420,7 @@ class _AvatarPicker extends StatelessWidget {
                       option(
                         a,
                         a.label,
-                        a == s.avatar && !s.usePhoto,
+                        a == s.avatar && !photoShown,
                         ProfileAvatar(avatar: a, frame: s.frame, size: 48),
                         () => s.copyWith(avatar: a, usePhoto: false),
                       ),
