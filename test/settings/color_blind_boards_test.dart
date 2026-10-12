@@ -17,6 +17,7 @@ import 'package:scacchi/settings/board_marks.dart';
 import 'package:scacchi/settings/settings.dart';
 import 'package:scacchi/storage/key_value_store.dart';
 
+import '../board_marks_helpers.dart';
 import '../localized_app.dart';
 import '../puzzles/fixtures.dart';
 
@@ -112,8 +113,7 @@ void main() {
     await tester.tap(find.text('Suggerimento'));
     await tester.pumpAndSettle();
     final shapes = tester.widget<Chessboard>(find.byType(Chessboard)).shapes;
-    expect(shapes.single, isA<Circle>());
-    expect((shapes.single as Circle).color, safeHint);
+    expect(markCircles(shapes).single.rings.last, safeHint);
   });
 
   testWidgets('RNF-07 la freccia del ripasso è blu', (tester) async {
@@ -125,6 +125,6 @@ void main() {
     await tester.tap(find.text('Ripassa 2 mosse'));
     await tester.pumpAndSettle();
     final shapes = tester.widget<Chessboard>(find.byType(Chessboard)).shapes;
-    expect((shapes.single as Arrow).color, safeHint);
+    expect(markArrows(shapes).single.color, safeHint);
   });
 }

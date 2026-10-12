@@ -5,6 +5,7 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
 import '../engine/computer_player.dart';
+import '../settings/board_marks.dart';
 import '../settings/settings.dart';
 import '../tablebase/perfect_endgame_card.dart';
 import '../tablebase/tablebase_service.dart';
@@ -155,13 +156,10 @@ class _DrillPageState extends State<DrillPage> {
     _board.updatePosition(_gameData(), animate: false);
   }
 
-  Set<Shape> _hintShapes() {
-    final hint = _hint;
-    if (hint is! NormalMove) return const {};
-    return {
-      Arrow(color: const Color(0xCC3E8E2F), orig: hint.from, dest: hint.to),
-    };
-  }
+  Set<Shape> _hintShapes(BoardMarks marks) => switch (_hint) {
+    NormalMove(:final from, :final to) => marks.arrow(marks.hint, from, to),
+    _ => const {},
+  };
 
   String get _counter => switch (widget.drill.goal) {
     DrillGoal.hold => 'Mosse: ${_run.moves} di ${widget.drill.par}',
@@ -191,7 +189,7 @@ class _DrillPageState extends State<DrillPage> {
               controller: _board,
               orientation: _run.side,
               onMove: _onMove,
-              shapes: _hintShapes(),
+              shapes: _hintShapes(AppSettings.of(context).exerciseMarks),
               settings: ChessboardSettings(
                 colorScheme: AppSettings.of(context).exerciseScheme,
                 autoQueenPromotion: true,

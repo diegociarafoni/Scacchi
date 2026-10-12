@@ -242,17 +242,22 @@ class _AnalysisPageState extends State<AnalysisPage>
       colorBlind: AppSettings.of(context).colorBlind,
     );
     return {
-      ..._arrowFor(_pos, _arrow ? _lines.firstOrNull : null, marks.hint),
-      ..._arrowFor(_threatPos, _threatLine, marks.threat),
+      ..._arrowFor(marks, _pos, _arrow ? _lines.firstOrNull : null, marks.hint),
+      ..._arrowFor(marks, _threatPos, _threatLine, marks.threat),
     };
   }
 
-  Set<Shape> _arrowFor(Position? pos, InfoLine? line, Color color) {
+  Set<Shape> _arrowFor(
+    BoardMarks marks,
+    Position? pos,
+    InfoLine? line,
+    Color color,
+  ) {
     if (pos == null) return const {};
     final move = parseEngineMove(pos, line?.pv.firstOrNull);
     if (move is! NormalMove) return const {};
     final shown = kingDestination(pos, move);
-    return {Arrow(color: color, orig: shown.from, dest: shown.to)};
+    return marks.arrow(color, shown.from, shown.to);
   }
 
   @override

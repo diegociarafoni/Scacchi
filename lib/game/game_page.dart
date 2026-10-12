@@ -982,13 +982,11 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final san = move == null ? null : flipped!.makeSan(move).$2;
     setState(() {
       _threatFen = position.fen;
-      _threatShapes = {
-        Arrow(
-          color: _settings.threatColor,
-          orig: threat!.from,
-          dest: threat.to,
-        ),
-      };
+      _threatShapes = _settings.marks.arrow(
+        _settings.threatColor,
+        threat!.from,
+        threat.to,
+      );
     });
     _showMessage(
       san == null
@@ -1012,7 +1010,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       _showMessage('Nessun suggerimento disponibile.');
       return;
     }
-    final color = _settings.hintColor;
+    final marks = _settings.marks;
+    final color = marks.hint;
     final to = hint.to;
     final text = to == null
         ? describeHintPiece(position, hint.from)
@@ -1024,11 +1023,12 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _hintedFen = position.fen;
     setState(
       () => _hintShapes = to == null
-          ? {Circle(color: color, orig: hint!.from)}
+          ? marks.circle(color, hint!.from)
           : {
-              Circle(color: color, orig: hint!.from),
-              Circle(color: color, orig: to),
-              Arrow(color: color, orig: hint.from, dest: to),
+              // Prima la freccia: il suo contorno non deve coprire i cerchi.
+              ...marks.arrow(color, hint!.from, to),
+              ...marks.circle(color, hint.from),
+              ...marks.circle(color, to),
             },
     );
     _showMessage(text);
