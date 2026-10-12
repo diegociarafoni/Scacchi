@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/engine/bots.dart';
 import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/path/curriculum.dart';
