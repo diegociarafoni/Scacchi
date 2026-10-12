@@ -196,7 +196,7 @@ jobs:
             # La build può durare a lungo: si rileggono i tag, che nel frattempo possono essere cambiati.
             auth="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
             git -c "http.extraheader=AUTHORIZATION: basic $auth" fetch -q --tags --force \
-              "https://github.com/$GH_REPO.git"
+              "https://github.com/$GH_REPO.git" || echo "::warning::Tag non aggiornati: controllo sui tag scaricati all'inizio"
             for ref in nightly $(git tag -l 'v*'); do
               other="$(git rev-parse -q --verify "refs/tags/$ref^{commit}" || true)"
               [ -n "$other" ] && [ "$other" != "$SHA" ] || continue
