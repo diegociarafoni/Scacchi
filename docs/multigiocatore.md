@@ -145,7 +145,7 @@ Limiti noti: i relay pubblici possono rifiutare o perdere eventi (per questo se 
 - Ogni telefono è autorevole sul proprio tempo: dopo la propria mossa legge il residuo dal `MatchClock` e lo spedisce con la mossa; chi riceve lo adotta e fa partire l'orologio dell'avversario. Non si compensa la latenza: chi riceve parte con un ritardo di pochi millisecondi, a suo vantaggio, e un tempo dichiarato non può superare quello della mossa precedente più l'incremento (alla prima mossa, il tempo iniziale più l'incremento).
 - Un timer da 100 ms (`tick`) controlla il proprio orologio con l'ora di parete: a tempo scaduto il telefono dichiara la sconfitta, non accetta altre mosse e avvisa l'avversario; il messaggio si ripete a ogni nuovo collegamento.
 - Il telefono non dichiara mai la scadenza dell'altro: la stima locale è in anticipo della latenza. Solo se l'avversario resta a zero oltre `peerFlagGrace` (15 s) la vittoria si assegna senza suo messaggio, ad esempio perché ha chiuso l'app; una sua mossa valida arrivata prima vince sul tavolino e l'orologio riparte.
-- Una partita a distanza (`r=1`) non ha orologio: le mosse possono arrivare ore dopo, quindi la cadenza è disattivata e l'invito non porta `tc`. L'orologio per corrispondenza resta da fare.
+- Una partita a distanza (`r=1`) non ha orologio: le mosse possono arrivare ore dopo, quindi la cadenza è disattivata e l'invito non porta `tc`. L'orologio per corrispondenza resta da fare. Con l'interruttore acceso il menu del tempo è grigio e il testo di aiuto lo spiega: per l'orologio basta spegnere «Gioca anche a distanza» (Wi-Fi o Bluetooth).
 
 ## Sicurezza (OWASP MASVS)
 

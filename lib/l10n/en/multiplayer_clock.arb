@@ -2,6 +2,7 @@
   "multiplayerClockTitle": "Time control",
   "multiplayerClockNone": "No clock",
   "multiplayerClockHint": "Whoever creates the game decides: the other phone receives it with the invite.",
+  "multiplayerClockRemoteHint": "Remote games have no clock: turn off “Also play from afar” to choose one.",
   "multiplayerClockYou": "You",
   "multiplayerClockPeer": "Opponent",
   "multiplayerClockSemantics": "{who}'s clock: {minutes} minutes and {seconds} seconds",

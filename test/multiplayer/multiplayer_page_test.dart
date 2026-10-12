@@ -429,4 +429,63 @@ void main() {
       );
     }
   });
+
+  testWidgets(
+    'RMP-09 spazio sotto l\'ultimo bottone oltre la barra di sistema',
+    (tester) async {
+      tester.view
+        ..physicalSize = const Size(360, 640) * 2
+        ..devicePixelRatio = 2
+        ..padding = const FakeViewPadding(bottom: 96);
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(localizedApp(home: const MultiplayerPage()));
+      await tester.pumpAndSettle();
+      final link = find.text('Unisciti con il link');
+      await tester.scrollUntilVisible(link, 100);
+      await tester.drag(find.byType(ListView), const Offset(0, -2000));
+      await tester.pumpAndSettle();
+      final button = find.ancestor(
+        of: link,
+        matching: find.byType(OutlinedButton),
+      );
+      // 640 dp di schermo, 48 dp di barra di sistema (96 px / 2) + margine.
+      expect(tester.getBottomLeft(button).dy, lessThanOrEqualTo(640 - 48 - 16));
+    },
+  );
+
+  testWidgets('RMP-10 il testo di aiuto del tempo di gioco va a capo', (
+    tester,
+  ) async {
+    tester.view
+      ..physicalSize = const Size(360, 640) * 2
+      ..devicePixelRatio = 2;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      localizedApp(home: const MultiplayerPage(remoteByDefault: false)),
+    );
+    await tester.pumpAndSettle();
+    final hint = find.textContaining('Lo decide chi crea');
+    await tester.scrollUntilVisible(hint, 100);
+    final text = tester.widget<Text>(hint);
+    expect(text.maxLines, greaterThan(1));
+    // Più alto di una riga: il testo va a capo invece di troncarsi.
+    expect(tester.getSize(hint).height, greaterThan(16));
+  });
+
+  testWidgets(
+    'RMP-11 con la partita a distanza il tempo spiega perché è grigio',
+    (tester) async {
+      tester.view
+        ..physicalSize = const Size(360, 1400) * 2
+        ..devicePixelRatio = 2;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(localizedApp(home: const MultiplayerPage()));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('Lo decide chi crea'), findsNothing);
+      await tester.tap(find.byType(SwitchListTile));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('Lo decide chi crea'), findsOneWidget);
+      expect(find.textContaining('a distanza non'), findsNothing);
+    },
+  );
 }
