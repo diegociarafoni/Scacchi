@@ -29,8 +29,14 @@ class VariantEngine {
   void stop() => _epoch++;
 
   /// Mossa del computer in [position]; `null` senza mosse legali o se la
-  /// ricerca è stata fermata con [stop].
-  Future<EngineMove?> bestMove(Position position, EngineLevel level) async {
+  /// ricerca è stata fermata con [stop]. Con la [history] delle posizioni
+  /// precedenti la partita riconosce le ripetizioni: le evita se è in
+  /// vantaggio e le cerca se è in svantaggio.
+  Future<EngineMove?> bestMove(
+    Position position,
+    EngineLevel level, {
+    List<Position> history = const [],
+  }) async {
     final epoch = _epoch;
     final started = Stopwatch()..start();
     final request = _Request(
@@ -41,6 +47,7 @@ class VariantEngine {
           .inMilliseconds,
       temperatureCp: level.temperatureCp,
       seed: _random.nextInt(1 << 31),
+      history: [for (final p in history) p.fen],
     );
     final reply = await _runner(() => _chooseMove(request));
     if (epoch != _epoch) return null;
@@ -60,7 +67,10 @@ class VariantEngine {
   }
 
   /// Valutazione di [position] dal punto di vista di chi muove.
-  Future<EngineScore?> evaluate(Position position) async {
+  Future<EngineScore?> evaluate(
+    Position position, {
+    List<Position> history = const [],
+  }) async {
     final epoch = _epoch;
     final request = _Request(
       fen: position.fen,
@@ -69,6 +79,7 @@ class VariantEngine {
       budgetMs: 300,
       temperatureCp: 0,
       seed: 0,
+      history: [for (final p in history) p.fen],
     );
     final reply = await _runner(() => _evaluate(request));
     return epoch != _epoch ? null : _toScore(reply.score);
@@ -96,6 +107,7 @@ class _Request {
     required this.budgetMs,
     required this.temperatureCp,
     required this.seed,
+    this.history = const [],
   });
 
   final String fen;
@@ -104,6 +116,9 @@ class _Request {
   final int budgetMs;
   final int temperatureCp;
   final int seed;
+
+  /// Posizioni (FEN) già comparse nella partita, prima di quella da muovere.
+  final List<String> history;
 
   Position get position =>
       Position.setupPosition(Rule.values.byName(rule), Setup.parseFen(fen));
@@ -125,7 +140,7 @@ EngineScore _toScore(int score) {
 /// Ricerca alla radice, eseguita nell'isolate.
 _Reply _chooseMove(_Request request) {
   final root = request.position;
-  final search = _Search(request.budgetMs);
+  final search = _Search(request.budgetMs)..seed(request);
   final moves = search.orderedMoves(root);
   if (moves.isEmpty) return (uci: null, score: 0, depth: 0);
   if (request.temperatureCp > 0) {
@@ -216,7 +231,7 @@ _Reply _chooseWithNoise(
 
 _Reply _evaluate(_Request request) {
   final root = request.position;
-  final search = _Search(request.budgetMs);
+  final search = _Search(request.budgetMs)..seed(request);
   var score = 0;
   var reached = 0;
   for (var depth = 1; depth <= request.depth; depth++) {
@@ -250,6 +265,31 @@ class _Search {
   _Search(this._budgetMs);
 
   final int _budgetMs;
+
+  /// Quante volte ogni posizione è già comparsa, nella partita e nella linea
+  /// in esame: una seconda comparsa vale patta, come nel gioco dal vivo.
+  final _seen = <int, int>{};
+
+  void seed(_Request request) {
+    for (final fen in request.history) {
+      final key = _key(
+        Position.setupPosition(
+          Rule.values.byName(request.rule),
+          Setup.parseFen(fen),
+        ),
+      );
+      _seen[key] = (_seen[key] ?? 0) + 1;
+    }
+    final root = _key(request.position);
+    _seen[root] = (_seen[root] ?? 0) + 1;
+  }
+
+  static int _key(Position pos) => Object.hash(
+    pos.board,
+    pos.turn,
+    pos.castles.castlingRights,
+    pos is ThreeCheck ? pos.remainingChecks : null,
+  );
   final _clock = Stopwatch()..start();
   int _nodes = 0;
 
@@ -271,18 +311,25 @@ class _Search {
     if (depth <= 0) return _quiesce(pos, alpha, beta, ply, 0);
     final moves = orderedMoves(pos);
     if (moves.isEmpty) return pos.isCheck ? ply - _mate : 0;
+    final key = _key(pos);
+    if (ply > 0 && (_seen[key] ?? 0) > 0) return 0;
+    _seen[key] = (_seen[key] ?? 0) + 1;
     var best = -_inf;
-    for (final move in moves) {
-      final score = -negamax(
-        pos.playUnchecked(move),
-        depth - 1,
-        -beta,
-        -alpha,
-        ply + 1,
-      );
-      if (score > best) best = score;
-      if (score > alpha) alpha = score;
-      if (alpha >= beta) break;
+    try {
+      for (final move in moves) {
+        final score = -negamax(
+          pos.playUnchecked(move),
+          depth - 1,
+          -beta,
+          -alpha,
+          ply + 1,
+        );
+        if (score > best) best = score;
+        if (score > alpha) alpha = score;
+        if (alpha >= beta) break;
+      }
+    } finally {
+      _seen[key] = _seen[key]! - 1;
     }
     return best;
   }

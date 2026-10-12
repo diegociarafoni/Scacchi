@@ -597,6 +597,17 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// Le varianti non passano da Stockfish, che non ne conosce le regole.
   bool get _engineGame => _game.variant == Variant.standard;
 
+  /// Posizioni già comparse prima di quella da muovere, per le ripetizioni.
+  List<Position> get _priorPositions {
+    final moves = _game.moves;
+    return moves.isEmpty
+        ? const []
+        : [
+            _game.initial,
+            for (final m in moves.take(moves.length - 1)) m.after,
+          ];
+  }
+
   VariantEngine get _variantPlayer =>
       _variantEngine ??= widget.createVariantEngine?.call() ?? VariantEngine();
 
@@ -1111,7 +1122,11 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                 _moveHistory,
                 level,
               )
-            : await _variantPlayer.bestMove(_game.position, level);
+            : await _variantPlayer.bestMove(
+                _game.position,
+                level,
+                history: _priorPositions,
+              );
       }
     } on Object catch (e) {
       error = e;
@@ -1675,7 +1690,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       try {
         final score = _engineGame
             ? await _computerPlayer.evaluate(_game.initial.fen, _moveHistory)
-            : await _variantPlayer.evaluate(_game.position);
+            : await _variantPlayer.evaluate(
+                _game.position,
+                history: _priorPositions,
+              );
         if (score != null) {
           computerScore = turn == _computerSide
               ? score.comparable
