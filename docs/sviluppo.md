@@ -70,6 +70,7 @@ Ogni funzione nasce dai requisiti del progetto, nel documento dei requisiti, con
 | Editor, backup, scacchiera fisica, promemoria | `test/editor/`, `test/backup/`, `test/physical/`, `test/reminders/` | FEN e validazione, backup e ripristino, orologio e registro, promemoria | `flutter test test/editor test/backup test/physical test/reminders` |
 | Profilo bambino | `test/kids/` | Niente numeri, scheda Tu semplificata | `flutter test test/kids` |
 | Strumenti | `test/tool/` | Controlli di rami, commit, documentazione e licenze | `flutter test test/tool` |
+| Multigiocatore | `test/multiplayer/` | Invito, firma e cifratura, registro delle mosse, canali multipli, sessione con passaggio tra canali (vedi multigiocatore.md) | `flutter test test/multiplayer` |
 | End-to-end | `integration_test/qr_exchange_test.dart` | QR disegnato dall'app letto da zxing-cpp, fotocamera assente | `flutter test integration_test/qr_exchange_test.dart -d linux` |
 | Golden | `test/settings/goldens/` | Schermata Impostazioni su telefono piccolo, medio e grande, con e senza colori per daltonici, e chip di temi e pezzi | `flutter test test/settings/board_preview_test.dart` |
 | End-to-end | `integration_test/*_test.dart` | L'app reale avviata su un dispositivo o desktop, con tocchi e trascinamenti sulla scacchiera | `flutter test integration_test -d <dispositivo>` |
