@@ -1,0 +1,47 @@
+name: Sposta tag e pulisci rami
+
+# Una tantum, dopo la riscrittura dello storico: ricolloca i tag sui nuovi
+# commit e cancella i rami delle PR già unite o chiuse. Si lancia a mano e il
+# file va rimosso subito dopo.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  sposta:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - name: Tag sui commit riscritti
+        run: |
+          set -euo pipefail
+          main_sha="$(gh api "repos/$GH_REPO/git/ref/heads/main" --jq .object.sha)"
+          while read -r tag sha; do
+            gh api -X PATCH "repos/$GH_REPO/git/refs/tags/$tag" -f sha="$sha" -F force=true --jq '.ref + " -> " + .object.sha'
+          done <<EOF
+          v0.1.0 6937344346bc56eb3344ed680f094c08d785d2e3
+          v0.1.1 9580008f1335ac6907227720c4dd255d39dc67da
+          v0.2.0 8cf3f54d11595bd7cf284de289415148fd1b8c48
+          v0.3.0 b630f0d56659a75402095c14bb4bc955151d4a05
+          v0.4.0 cbfce0aa468c397a07afae30bc26539bc9667d3e
+          v0.5.0 8ada36808a4d6e5dc311f22dadb4011027e2178b
+          nightly $main_sha
+          EOF
+
+      - name: Rami delle PR già unite o chiuse
+        run: |
+          set -euo pipefail
+          gh pr list --state open --limit 500 --json headRefName --jq '.[].headRefName' | sort -u > aperti.txt
+          gh pr list --state closed --limit 500 --json headRefName,headRepositoryOwner \
+            --jq '.[] | select(.headRepositoryOwner.login == "${{ github.repository_owner }}") | .headRefName' | sort -u > chiusi.txt
+          comm -23 chiusi.txt aperti.txt | grep -vE '^(main|chore/backup-)' | while read -r b; do
+            if gh api -X DELETE "repos/$GH_REPO/git/refs/heads/$b" > /dev/null 2>&1; then
+              echo "eliminato $b"
+            fi
+          done
