@@ -72,6 +72,10 @@ nonce (12 byte) | AES-256-GCM( {"a": chiave autore, "b": corpo JSON, "s": firma}
 
 A ogni collegamento nuovo `MultiTransport.connected` avvisa la sessione, che fa ripresentare l'invitato e ripete la propria ultima mossa: dopo un'uscita dalla Wi-Fi la partita riprende senza azioni dell'utente.
 
+### Grafica della schermata
+
+I componenti sono in `lib/multiplayer/multiplayer_widgets.dart`. `ConnectionIndicator` mostra una voce per canale (`LinkChannel`: Wi-Fi, Bluetooth, a distanza) con icona, nome e stato (`LinkLevel`: collegato, in collegamento, non raggiungibile); lo stato si legge dalla forma dell'icona e dal testo, non solo dal colore, ed è annunciato dal lettore di schermo. Un canale nuovo si aggiunge come voce di `_channels` in `MultiplayerGamePage` e di `LinkChannel`. `InviteCard` mostra il QR, sempre nero su bianco con margine fisso anche nel tema scuro, con la didascalia «Mostra questo codice al tuo amico». I testi nuovi sono in `lib/l10n/<lingua>/multiplayer_ui.arb`; i golden fedeli (tema Rokko, font reali) in `test/golden/multiplayer_golden_test.dart`.
+
 ### Schermata
 
 `MultiplayerPage` (voce Tu › Gioca con un amico) offre la scelta del colore, «Crea la partita» e «Unisciti con il QR». `MultiplayerController` tiene lo stato per l'interfaccia: crea identità e invito per partita, apre il canale con `openLanHost` (indirizzo IPv4 privato scelto da `pickLanAddress` preferendo Wi-Fi e hotspot ed escludendo dati mobili e VPN, porta scelta dal sistema) o `openLanGuest`, e avvisa a ogni mossa. L'invito si mostra una sola volta come QR del link `scacchi://`, non a ogni mossa; la fotocamera riusa il lettore dello scambio QR. `MultiplayerGamePage` mostra il QR finché l'avversario non arriva, poi la scacchiera orientata dal proprio lato, con le mosse permesse solo al proprio turno.
