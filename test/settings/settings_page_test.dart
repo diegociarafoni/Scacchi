@@ -40,6 +40,7 @@ void main() {
         home: SettingsPage(
           controller: settings,
           progress: withProgress ? progress : null,
+          expanded: SettingsSection.values.toSet(),
         ),
       ),
     );
@@ -47,11 +48,13 @@ void main() {
   }
 
   Future<void> tapChip(WidgetTester tester, String label) async {
+    // Modalità, notazione e animazioni sono chip; temi e pezzi, tessere.
     final chip = find.widgetWithText(ChoiceChip, label);
-    if (chip.evaluate().isEmpty) await tester.scrollUntilVisible(chip, 200);
-    await tester.ensureVisible(chip);
+    final target = chip.evaluate().isNotEmpty ? chip : find.text(label);
+    if (target.evaluate().isEmpty) await tester.scrollUntilVisible(target, 200);
+    await tester.ensureVisible(target);
     await tester.pumpAndSettle();
-    await tester.tap(chip);
+    await tester.tap(target);
     await tester.pumpAndSettle();
   }
 
@@ -72,12 +75,14 @@ void main() {
     await show(tester);
     final toggle = find.byKey(const Key('coordinatesOutside'));
     await tester.scrollUntilVisible(toggle, 200);
+    await tester.ensureVisible(toggle);
+    await tester.pumpAndSettle();
     await tester.tap(toggle);
     await tester.pumpAndSettle();
     expect(settings.value.coordinatesOutside, isTrue);
 
     final coordinates = find.text('Coordinate');
-    await tester.scrollUntilVisible(coordinates, -200);
+    await tester.ensureVisible(coordinates);
     await tester.pumpAndSettle();
     await tester.tap(coordinates);
     await tester.pumpAndSettle();
@@ -114,6 +119,8 @@ void main() {
     await show(tester);
     final toggle = find.byKey(const Key('unlockAll'));
     await tester.scrollUntilVisible(toggle, 200);
+    await tester.ensureVisible(toggle);
+    await tester.pumpAndSettle();
     await tester.tap(toggle);
     await tester.pumpAndSettle();
     expect(progress.settings.unlockAll, isTrue);

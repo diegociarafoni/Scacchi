@@ -101,7 +101,13 @@ Dopo ogni mossa il lettore di schermo annuncia una frase in italiano, per esempi
 
 ## Impostazioni
 
-In cima alla pagina, sempre visibile mentre si scorre, c'è un'anteprima della scacchiera: mostra una posizione di prova con tema, pezzi, coordinate, mosse legali, colori per daltonici e velocità delle animazioni correnti, e si aggiorna a ogni scelta. Toccandola si gioca la mossa di prova (l'alfiere prende in c6), con l'animazione scelta; un secondo tocco la ripristina. I chip dei temi mostrano i colori delle case chiare e scure, quelli dei pezzi il cavallo del set, così si riconoscono a colpo d'occhio. L'anteprima ha un'etichetta per i lettori di schermo.
+In cima alla pagina, sempre visibile mentre si scorre, c'è un'anteprima della scacchiera: mostra una posizione di prova con tema, pezzi, coordinate, mosse legali, colori per daltonici e velocità delle animazioni correnti, e si aggiorna a ogni scelta. Toccandola si gioca la mossa di prova (l'alfiere prende in c6), con l'animazione scelta; un secondo tocco la ripristina. Il pulsante a destra del titolo (48 dp) la comprime a una riga con tema e pezzi, per lasciare spazio alle impostazioni sui telefoni piccoli. L'anteprima ha un'etichetta per i lettori di schermo.
+
+Sotto l'anteprima le impostazioni sono in sezioni comprimibili, ciascuna con icona, titolo e una riga che dice cosa contiene. All'apertura sono aperte solo «Profilo» e «Aspetto»; le altre si aprono con un tocco (l'intestazione è alta almeno 48 dp e i lettori di schermo la annunciano come comprimibile). Le sezioni, nell'ordine: Profilo (profilo bambino), Aspetto (aspetto dell'app, galleria dei temi, galleria dei pezzi, «Sblocca tutto», animazioni), Scacchiera (mosse legali, coordinate, frecce e cerchi, notazione), Gioco (promozione, spiegazioni, rotazione, modalità tavolo), Accessibilità (colori per daltonici, modalità zen, conferma della mossa), Suoni e vibrazione, Dati (backup).
+
+I temi e i pezzi sono gallerie di tessere: ogni tema mostra una scacchiera 4×4 con le sue case chiare e scure, ogni set il suo cavallo, con il nome sotto. La scelta attiva ha bordo marcato e segno di spunta; una tessera ancora bloccata ha il lucchetto (non solo la tinta più spenta), e toccarla dice come sbloccarla; per i lettori di schermo è «selezionato» o «bloccato» con il requisito. Il profilo bambino non cita mai il livello.
+
+Tutti i testi e le descrizioni della pagina sono in italiano e inglese in `lib/l10n/<lingua>/settings.arb` (prefisso `settings`); i nomi dei set di pezzi sono nomi propri e restano uguali in ogni lingua, tranne «Classico». Un test (`test/settings/settings_sections_test.dart`) fallisce se in `settings_page.dart` compare di nuovo un testo scritto nel codice.
 
 Si aprono dall'icona a forma di ingranaggio nella barra del titolo. Ogni modifica si applica subito e viene salvata sul dispositivo.
 
@@ -156,7 +162,7 @@ Nel puzzle l'obiettivo sta in una scheda sopra la scacchiera, con il colore che 
 
 Il tema è in `lib/theme/rokko_theme.dart` e segue lo stile spaziale della scacchiera «Spazio»: indaco `#4A4F86`, notte `#1D1F45` e viola di nebulosa `#725692`. Nel tema scuro i comandi sono lavanda (`#B9B3FF`) su fondo `#12132B`, nel chiaro indaco su fondo `#F5F3FC`; le stelline (`star`, giallo) sono un accento raro. Il verde `#769656` resta solo della scacchiera. Raggi di 12 dp (pulsanti) e 20 dp (schede, dialoghi), bersagli minimi di 48 dp (56 dp nel profilo bambino). Un test verifica il contrasto minimo 4,5:1 di pulsanti, testi e accenti in entrambi i temi. Le schermate leggono i valori con `RokkoTokens.of(context)` (`action`, `onAction`, `star`, `boardGreen`, raggi, bersagli) e mettono il marchio nella barra del titolo con `RokkoWordmark`; non scrivono colori e misure a mano.
 
-L'app segue il tema chiaro o scuro del sistema, a meno che in Impostazioni, alla voce «Aspetto dell'app», si scelga Chiaro o Scuro; la scelta vale subito per tutte le schermate. Tutti i testi sono in italiano.
+L'app segue il tema chiaro o scuro del sistema, a meno che in Impostazioni, alla voce «Aspetto dell'app», si scelga Chiaro o Scuro; la scelta vale subito per tutte le schermate. Le Impostazioni sono tradotte in italiano e inglese.
 
 ### Colori per daltonici
 
