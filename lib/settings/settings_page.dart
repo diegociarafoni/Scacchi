@@ -8,6 +8,7 @@ import '../kids/kid_display.dart';
 import '../l10n/app_localizations.dart';
 import '../progress/progress_controller.dart';
 import '../progress/rewards.dart';
+import '../style/style_page.dart';
 import '../theme/rokko_theme.dart';
 import 'adult_gate.dart';
 import 'board_preview.dart';
@@ -111,6 +112,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: ListView(
                   padding: const EdgeInsets.only(bottom: 24),
                   children: [
+                    _StyleEntry(controller: controller, progress: p),
                     _section(
                       SettingsSection.kid,
                       icon: Icons.child_care,
@@ -358,6 +360,39 @@ class _SettingsPageState extends State<SettingsPage> {
             ],
           );
         },
+      ),
+    );
+  }
+}
+
+/// Voce che apre la schermata Stile: scacchiera, pezzi, sfondo e suoni.
+class _StyleEntry extends StatelessWidget {
+  const _StyleEntry({required this.controller, required this.progress});
+
+  final SettingsController controller;
+  final ProgressController? progress;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final tokens = RokkoTokens.of(context);
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      clipBehavior: Clip.antiAlias,
+      child: ListTile(
+        key: const Key('style-entry'),
+        leading: Icon(Icons.brush_outlined, color: tokens.action),
+        title: Text(l10n.styleTitle),
+        subtitle: Text(l10n.styleEntrySubtitle),
+        trailing: const Icon(Icons.chevron_right),
+        minTileHeight: tokens.minTouch,
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute<void>(
+            builder: (_) =>
+                StylePage(controller: controller, progress: progress),
+          ),
+        ),
       ),
     );
   }
