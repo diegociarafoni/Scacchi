@@ -22,7 +22,7 @@
 | [Flutter](https://flutter.dev) | Framework dell'interfaccia | BSD-3-Clause |
 | [intl](https://pub.dev/packages/intl) (Dart) | Testi tradotti e formati locali | BSD-3-Clause |
 | [path_provider](https://pub.dev/packages/path_provider) (Flutter) | Cartella dati dell'app per i salvataggi | BSD-3-Clause |
-| [flutter_local_notifications](https://pub.dev/packages/flutter_local_notifications) (Michael Bui) | Promemoria giornaliero con notifiche locali | BSD-3-Clause |
+| [flutter_local_notifications](https://pub.dev/packages/flutter_local_notifications) (Michael Bui) | Promemoria giornaliero e avvisi delle mosse nelle partite a distanza, con notifiche locali | BSD-3-Clause |
 | [timezone](https://pub.dev/packages/timezone) | Orario del promemoria per le notifiche programmate | BSD-2-Clause |
 | [share_plus](https://pub.dev/packages/share_plus) (Flutter Community) | Condivisione PGN con il menu del sistema | BSD-3-Clause |
 | [qr](https://pub.dev/packages/qr) (Dart) | Generazione dei codici QR per lo scambio delle partite | BSD-3-Clause |
@@ -32,6 +32,9 @@
 | [camera](https://pub.dev/packages/camera) e [image_picker](https://pub.dev/packages/image_picker) (Flutter) | Fotocamera e scelta di un'immagine per il lettore QR | BSD-3-Clause |
 | [cryptography](https://pub.dev/packages/cryptography) (Gohilla) | Firma Ed25519, cifratura AES-GCM e HKDF del multigiocatore | Apache-2.0 |
 | [bluetooth_low_energy](https://pub.dev/packages/bluetooth_low_energy) (yanshouwang) | Canale Bluetooth LE del multigiocatore, per giocare vicini senza Wi-Fi | MIT |
+| [bonsoir](https://pub.dev/packages/bonsoir) (Skyost) | Annuncio e ricerca mDNS della partita in rete locale | MIT |
+| [bip340](https://pub.dev/packages/bip340) (fiatjaf) | Firma Schnorr degli eventi Nostr della partita a distanza | MIT |
+| [workmanager](https://pub.dev/packages/workmanager) (Flutter Community) | Controllo in background delle partite a distanza su Android | MIT |
 | [crypto](https://pub.dev/packages/crypto) (Dart) | Impronta SHA-256 delle posizioni nel multigiocatore | BSD-3-Clause |
 | Suoni in `assets/sounds/`, generati da `tool/generate_sounds.py` | Effetti sonori | Opera originale del progetto, CC0 |
 | [audioplayers](https://pub.dev/packages/audioplayers) | Riproduzione dei suoni | MIT |

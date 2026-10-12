@@ -65,7 +65,7 @@ I traguardi sono distinti dai [badge](badge.md) (RG-17), una collezione tematica
 
 ## Ricompense estetiche (RG-06)
 
-Livelli e traguardi sbloccano temi della scacchiera, set di pezzi, avatar e cornici. Le scelte di sempre (temi Verde, Legno, Blu e Grigio; pezzi Classico, Merida, Chessnut, Fantasy e Spatial; avatar Pedone, Cavallo, Pino e Rocco) restano disponibili da subito: le ricompense aggiungono, non tolgono.
+Livelli e traguardi sbloccano temi della scacchiera, set di pezzi, avatar e cornici. Le scelte di sempre (temi Verde, Legno, Blu, Grigio e le dieci scacchiere di Rokko; pezzi Classico, Merida, Chessnut, Fantasy, Spatial e i cinque set di Rokko, vedi [pezzi-e-scacchiere.md](pezzi-e-scacchiere.md); avatar Pedone, Cavallo, Pino e Rocco) restano disponibili da subito: le ricompense aggiungono, non tolgono.
 
 | Ricompensa | Si sblocca con |
 |---|---|
