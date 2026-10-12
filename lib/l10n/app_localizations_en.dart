@@ -1228,4 +1228,92 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get storyCrownOutro =>
       'The crown is yours. The kingdom is at peace and every new game is a new story.';
+
+  @override
+  String get personalTitle => 'Your openings';
+
+  @override
+  String get personalHubSubtitle => 'The moves you have played, with results';
+
+  @override
+  String get personalLoadFailed =>
+      'The game archive could not be read: try again later.';
+
+  @override
+  String get personalEmpty =>
+      'Play a few games against the computer to build your opening tree.';
+
+  @override
+  String get personalNoGamesFiltered => 'No games match these filters.';
+
+  @override
+  String get personalNoGamesHere => 'You have never played from this position.';
+
+  @override
+  String get personalSideAll => 'Both';
+
+  @override
+  String get personalSideWhite => 'White';
+
+  @override
+  String get personalSideBlack => 'Black';
+
+  @override
+  String get personalOpponent => 'Opponent';
+
+  @override
+  String get personalAllOpponents => 'All opponents';
+
+  @override
+  String personalGames(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count games',
+      one: '$count game',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String personalGamesTotal(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count games counted',
+      one: '$count game counted',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String personalScore(int wins, int draws, int losses) {
+    return '${wins}W · ${draws}D · ${losses}L';
+  }
+
+  @override
+  String personalScoreSemantics(int wins, int draws, int losses) {
+    return '$wins won, $draws drawn, $losses lost';
+  }
+
+  @override
+  String get personalStartPosition => 'Starting position';
+
+  @override
+  String get personalNoName => 'Unnamed opening';
+
+  @override
+  String get personalBack => 'Back';
+
+  @override
+  String get personalStart => 'Start';
+
+  @override
+  String get personalFlip => 'Flip the board';
+
+  @override
+  String get personalOpenInBook => 'Open in the openings explorer';
+
+  @override
+  String get personalFromHere => 'Your games from this position';
 }

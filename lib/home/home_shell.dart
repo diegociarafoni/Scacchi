@@ -544,6 +544,7 @@ class _HomeShellState extends State<HomeShell> {
             OpeningsHubPage(
               repertoire: _repertoire!,
               onPlay: _computerAvailable ? _playOpening : null,
+              archive: _archive,
             )
           else
             const SizedBox.shrink(),
