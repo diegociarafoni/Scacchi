@@ -878,7 +878,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get openingsBack => 'Back';
 
   @override
-  String get openingsReset => 'Start';
+  String get openingsReset => 'To start';
 
   @override
   String get openingsFlipBoard => 'Flip the board';
@@ -1024,8 +1024,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get openingsErrorIllegal => 'The line contains an illegal move.';
 
   @override
-  String get openingsErrorNoOwnMoves =>
-      'The line has no moves for your colour.';
+  String get openingsErrorNoOwnMoves => 'The line has no moves for your color.';
 
   @override
   String openingsErrorConflict(String san) {

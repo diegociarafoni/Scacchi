@@ -82,7 +82,7 @@ void main() {
     expect(find.byTooltip('Add to repertoire'), findsOneWidget);
     expect(find.byTooltip('Play this opening'), findsOneWidget);
     expect(find.text('Back'), findsOneWidget);
-    expect(find.text('Start'), findsOneWidget);
+    expect(find.text('To start'), findsOneWidget);
   });
 
   testWidgets('RP-05 l\'explorer in inglese dà il nome in inglese e il libro', (

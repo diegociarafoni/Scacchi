@@ -212,7 +212,7 @@ class RepertoireTrainer {
 
   int dueCount(Side side) => _dueSet(side).length;
 
-  /// Aggiunge una linea; restituisce un messaggio d'errore se non è valida.
+  /// Aggiunge una linea; restituisce il motivo se non è valida.
   Future<RepertoireError?> addLine(
     Side side,
     String name,

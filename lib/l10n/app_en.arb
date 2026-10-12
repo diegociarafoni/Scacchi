@@ -258,7 +258,7 @@
   "@openingsBack": {
     "description": "Toglie l'ultima mossa nell'explorer"
   },
-  "openingsReset": "Start",
+  "openingsReset": "To start",
   "@openingsReset": {
     "description": "Riporta l'explorer alla posizione iniziale"
   },
@@ -458,7 +458,7 @@
   "@openingsErrorIllegal": {
     "description": "Errore: mossa illegale"
   },
-  "openingsErrorNoOwnMoves": "The line has no moves for your colour.",
+  "openingsErrorNoOwnMoves": "The line has no moves for your color.",
   "@openingsErrorNoOwnMoves": {
     "description": "Errore: nessuna mossa del colore del repertorio"
   },
