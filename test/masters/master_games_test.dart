@@ -10,6 +10,35 @@ void main() {
     expect(ids.length, masterGames.length);
   });
 
+  test('RF-87 la raccolta è in ordine cronologico', () {
+    final years = masterGames.map((g) => g.year).toList();
+    expect(years, [...years]..sort());
+  });
+
+  test('RF-87 ci sono le partite di Capablanca da Chess Fundamentals', () {
+    final byId = {for (final g in masterGames) g.id: g};
+    final burn = byId['capablanca-burn-1911'];
+    final teichmann = byId['capablanca-teichmann-1913'];
+    final marshall = byId['marshall-capablanca-1918'];
+    expect(burn, isNotNull);
+    expect(teichmann, isNotNull);
+    expect(marshall, isNotNull);
+    expect(
+      (burn!.white, burn.result, burn.moves.length),
+      ('Capablanca', '1-0', 91),
+    );
+    expect(
+      (teichmann!.white, teichmann.result, teichmann.moves.length),
+      ('Capablanca', '1-0', 75),
+    );
+    expect(
+      (marshall!.black, marshall.result, marshall.moves.length),
+      ('Capablanca', '0-1', 78),
+    );
+    // L'ultima mossa del libro: il re nero prende il pedone in f4.
+    expect(marshall.moves.last, 'Kxf4');
+  });
+
   for (final game in masterGames) {
     group('RF-87 ${game.id}', () {
       test('tutte le mosse sono legali e il risultato torna', () {
