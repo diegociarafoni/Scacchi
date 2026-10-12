@@ -47,6 +47,19 @@ void main() {
       }
     });
 
+    test(
+      'cornici e avatar si sbloccano tutti per livello, non per traguardo',
+      () {
+        for (final item in [...Avatar.values, ...AvatarFrame.values]) {
+          expect(
+            requirementOf(item),
+            anyOf(isNull, isA<LevelRequirement>()),
+            reason: '$item',
+          );
+        }
+      },
+    );
+
     test('«Sblocca tutto» li rende disponibili', () {
       final all = settings.copyWith(unlockAll: true);
       for (final a in Avatar.values) {

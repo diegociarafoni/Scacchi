@@ -73,17 +73,17 @@ Livelli e traguardi sbloccano temi della scacchiera, set di pezzi, avatar e corn
 | Pezzi Firi, avatar Marta | Livello 5 |
 | Tema Corallo, cornice Argento | Livello 6 |
 | Avatar Donna | Livello 7 |
-| Pezzi RhosGFX, avatar Gatto astronauta | Livello 8 |
+| Pezzi RhosGFX, avatar Gatto astronauta, cornice Fiamma | Livello 8 |
 | Avatar Coniglio lunare | Livello 9 |
-| Cornice Oro | Livello 10 |
-| Tema Notte, avatar Duilio | 7 giorni di fila |
+| Cornice Oro, avatar Duilio | Livello 10 |
+| Avatar Re | Livello 11 |
+| Cornice Alloro, avatar Stella Rokko | Livello 12 |
+| Tema Notte | 7 giorni di fila |
 | Pezzi Shapes | 10 puzzle risolti |
 | Pezzi Mpchess | Prima revisione |
 | Pezzi Kiwen-suwi | Tutti i minigiochi provati |
 | Pezzi Totoy | 10 vittorie |
-| Cornice Fiamma | 30 giorni di fila |
-| Cornice Alloro | Puzzle rating 1500 |
-| Tema Oro, avatar Re, avatar Stella Rokko | Primo torneo vinto |
+| Tema Oro | Primo torneo vinto |
 
 La tabella completa è in `lib/progress/rewards.dart`. Una ricompensa appena meritata compare nella notifica dei progressi ("Sbloccato: tema Sabbia"). Nelle impostazioni i temi e i pezzi bloccati hanno un lucchetto e, toccati, dicono come si sbloccano; avatar e cornice si scelgono toccando l'avatar nel Profilo.
 
@@ -91,7 +91,7 @@ Per rispetto di RV-01, l'interruttore "Sblocca tutto" (nelle impostazioni dell'a
 
 ## Avatar simpatici e foto propria (RP-08, RP-09)
 
-Oltre ai sei pezzi, otto personaggi disegnati in codice (`avatar_art.dart`, nessuna immagine nell'app): Pino il pulcino, Rocco la volpe, Chiara il fiore, Marta il gufo, il gatto astronauta, il coniglio lunare, il drago Duilio e Stella Rokko. Hanno testa tonda, occhioni e guance su uno sfondo spaziale indaco e viola, e gli stessi nomi dei bot. Pino e Rocco sono subito disponibili, gli altri si sbloccano come da tabella.
+Oltre ai sei pezzi, otto personaggi disegnati in codice (`avatar_art.dart`, nessuna immagine nell'app): Pino il pulcino, Rocco la volpe, Chiara il fiore, Marta il gufo, il gatto astronauta, il coniglio lunare, il drago Duilio e Stella Rokko. Hanno testa tonda, occhioni e guance su uno sfondo spaziale indaco e viola, e gli stessi nomi dei bot. Pino e Rocco sono subito disponibili, gli altri si sbloccano salendo di livello, come da tabella. Cornici e avatar si sbloccano tutti per livello e non per traguardo; i traguardi restano per temi e pezzi.
 
 Nella scelta dell'avatar, la sezione «Foto» permette di usare una foto propria:
 

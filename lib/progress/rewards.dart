@@ -74,18 +74,18 @@ const Map<Enum, Requirement> _requirements = {
   Avatar.bishop: LevelRequirement(2),
   Avatar.rook: LevelRequirement(4),
   Avatar.queen: LevelRequirement(7),
-  Avatar.king: AchievementRequirement('tournament_won'),
+  Avatar.king: LevelRequirement(11),
   Avatar.flower: LevelRequirement(3),
   Avatar.owl: LevelRequirement(5),
   Avatar.astroCat: LevelRequirement(8),
   Avatar.rabbit: LevelRequirement(9),
-  Avatar.dragon: AchievementRequirement('streak_7'),
-  Avatar.star: AchievementRequirement('tournament_won'),
+  Avatar.dragon: LevelRequirement(10),
+  Avatar.star: LevelRequirement(12),
   AvatarFrame.bronze: LevelRequirement(3),
   AvatarFrame.silver: LevelRequirement(6),
   AvatarFrame.gold: LevelRequirement(10),
-  AvatarFrame.flame: AchievementRequirement('streak_30'),
-  AvatarFrame.laurel: AchievementRequirement('puzzle_rating_1500'),
+  AvatarFrame.flame: LevelRequirement(8),
+  AvatarFrame.laurel: LevelRequirement(12),
 };
 
 /// Tutte le ricompense con una condizione di sblocco.
