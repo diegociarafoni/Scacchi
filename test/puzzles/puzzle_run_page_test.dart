@@ -12,6 +12,8 @@ import 'package:scacchi/puzzles/puzzle_run_page.dart';
 import 'package:scacchi/puzzles/puzzle_trainer.dart';
 import 'package:scacchi/storage/key_value_store.dart';
 
+import '../localized_app.dart';
+
 Puzzle p(String id, int rating) => Puzzle.parseCsv(
   '$id,7k/6pp/8/8/1n6/8/8/RR4K1 b - - 0 1,b4c2 a1a8,$rating,mateIn1',
 );
@@ -54,7 +56,7 @@ void main() {
     final trainer = await phone(tester);
     final activities = <Activity>[];
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: PuzzleRunPage(
           trainer: trainer,
           mode: PuzzleRunMode.streak,
@@ -90,7 +92,7 @@ void main() {
     final trainer = await phone(tester);
     var elapsed = Duration.zero;
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: PuzzleRunPage(
           trainer: trainer,
           mode: PuzzleRunMode.storm,
@@ -111,13 +113,13 @@ void main() {
   ) async {
     final trainer = await phone(tester);
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: PuzzleRunPage(trainer: trainer, mode: PuzzleRunMode.survival),
       ),
     );
     await begin(tester);
     await tapMove(tester, 'a1a8');
-    await tester.pumpWidget(const MaterialApp(home: SizedBox()));
+    await tester.pumpWidget(localizedApp(home: SizedBox()));
     await tester.pumpAndSettle();
     expect(trainer.records.best(PuzzleRunMode.survival), 1);
   });
@@ -132,14 +134,14 @@ void main() {
       now: () => today,
     );
     await tester.pumpWidget(
-      MaterialApp(home: PuzzleHubPage(trainer: Future.value(trainer))),
+      localizedApp(home: PuzzleHubPage(trainer: Future.value(trainer))),
     );
     await tester.pumpAndSettle();
     expect(find.text('Nessun puzzle da ripassare oggi'), findsOneWidget);
     await trainer.record(trainer.library.byId('a')!, solved: false);
     today = today.add(const Duration(days: 1));
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: PuzzleHubPage(
           key: const ValueKey(2),
           trainer: Future.value(trainer),

@@ -5,9 +5,11 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
 import '../exchange/qr_receive_page.dart';
+import '../l10n/app_localizations.dart';
 import '../progress/activity.dart';
 import '../progress/progress_feedback.dart';
 import '../progress/progress_tracker.dart';
+import '../theme/rokko_theme.dart';
 import '../training/training_board.dart';
 import 'activity_recorder.dart';
 import 'challenge_result_panel.dart';
@@ -59,7 +61,7 @@ class _PuzzleRunPageState extends State<PuzzleRunPage> {
   bool _intro = true;
   bool _ended = false;
   bool _newRecord = false;
-  String? _flash;
+  bool? _right;
 
   @override
   void initState() {
@@ -87,7 +89,7 @@ class _PuzzleRunPageState extends State<PuzzleRunPage> {
     );
     _ended = false;
     _newRecord = false;
-    _flash = null;
+    _right = null;
   }
 
   void _begin() {
@@ -120,10 +122,10 @@ class _PuzzleRunPageState extends State<PuzzleRunPage> {
   void _onMove(Move move) {
     final result = _run.tryMove(move);
     setState(() {
-      _flash = switch (result) {
-        RunMoveResult.solved => 'Giusto!',
-        RunMoveResult.wrong => 'Sbagliato',
-        _ => _flash,
+      _right = switch (result) {
+        RunMoveResult.solved => true,
+        RunMoveResult.wrong => false,
+        _ => _right,
       };
       if (result == RunMoveResult.wrong || result == RunMoveResult.illegal) {
         _revision++;
@@ -181,14 +183,15 @@ class _PuzzleRunPageState extends State<PuzzleRunPage> {
   @override
   Widget build(BuildContext context) {
     final guide = _guide;
+    final l = AppLocalizations.of(context);
     final best = widget.trainer.records.best(widget.mode);
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.mode.label),
+        title: Text(l.puzzleRunLabel(widget.mode.name)),
         actions: [
           if (!_intro && !_ended)
             IconButton(
-              tooltip: 'Come funziona',
+              tooltip: l.puzzleHelp,
               icon: const Icon(Icons.help_outline),
               onPressed: _showGuide,
             ),
@@ -199,9 +202,9 @@ class _PuzzleRunPageState extends State<PuzzleRunPage> {
             ? Center(
                 child: GuideBody(
                   guide: guide,
-                  actionLabel: 'Inizia',
+                  actionLabel: l.puzzleRunStart,
                   onAction: _begin,
-                  footer: best > 0 ? 'Il tuo record: $best puzzle.' : null,
+                  footer: best > 0 ? l.puzzleRunRecordFooter(best) : null,
                 ),
               )
             : _ended
@@ -210,7 +213,7 @@ class _PuzzleRunPageState extends State<PuzzleRunPage> {
                 best: best,
                 bestCombo: _run.bestCombo,
                 newRecord: _newRecord,
-                reason: _endText(),
+                reason: _endText(l),
                 // Con la stessa sfida rigiocare darebbe gli stessi puzzle.
                 onAgain: widget.challenge == null
                     ? () => setState(_restart)
@@ -229,20 +232,21 @@ class _PuzzleRunPageState extends State<PuzzleRunPage> {
   }
 
   /// Frase che dice perché la serie è finita.
-  String? _endText() {
+  String? _endText(AppLocalizations l) {
     final max = widget.mode.maxMistakes;
     return switch (_run.endReason) {
-      RunEnd.mistakes when max == 1 =>
-        'Hai sbagliato un puzzle: la serie è finita.',
-      RunEnd.mistakes => 'Hai perso tutte e tre le vite.',
-      RunEnd.time => 'Il tempo è scaduto.',
-      RunEnd.exhausted => 'Hai risolto tutti i puzzle disponibili.',
+      RunEnd.mistakes when max == 1 => l.puzzleRunEndMistake,
+      RunEnd.mistakes => l.puzzleRunEndLives,
+      RunEnd.time => l.puzzleRunEndTime,
+      RunEnd.exhausted => l.puzzleRunEndExhausted,
       null => null,
     };
   }
 
   Widget _playing(BuildContext context, PuzzleGuide guide) {
     final text = Theme.of(context).textTheme;
+    final l = AppLocalizations.of(context);
+    final tokens = RokkoTokens.of(context);
     final remaining = _run.remaining;
     final total = _run.totalTime;
     final max = widget.mode.maxMistakes;
@@ -257,11 +261,24 @@ class _PuzzleRunPageState extends State<PuzzleRunPage> {
               children: [
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                  child: Text(
-                    guide.goal,
-                    key: const Key('run-goal'),
-                    textAlign: TextAlign.center,
-                    style: text.bodyMedium,
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.secondaryContainer,
+                      borderRadius: BorderRadius.circular(tokens.radiusSmall),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Text(
+                        guide.goal,
+                        key: const Key('run-goal'),
+                        textAlign: TextAlign.center,
+                        style: text.bodyMedium?.copyWith(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSecondaryContainer,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
                 if (remaining != null && total != null)
@@ -282,13 +299,13 @@ class _PuzzleRunPageState extends State<PuzzleRunPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Text(
-                        'Punti ${_run.score}',
+                        l.puzzleRunScore(_run.score),
                         key: const Key('run-score'),
                         style: text.titleLarge,
                       ),
                       if (remaining != null)
                         Semantics(
-                          label: 'Tempo rimasto: ${_format(remaining)}',
+                          label: l.puzzleRunTimeLeft(_format(remaining)),
                           excludeSemantics: true,
                           child: Text(
                             _format(remaining),
@@ -298,7 +315,10 @@ class _PuzzleRunPageState extends State<PuzzleRunPage> {
                         ),
                       if (max != null) _Lives(total: max, lost: _run.mistakes),
                       if (widget.mode == PuzzleRunMode.storm)
-                        Text('Combo ${_run.combo}', style: text.titleMedium),
+                        Text(
+                          l.puzzleRunCombo(_run.combo),
+                          style: text.titleMedium,
+                        ),
                     ],
                   ),
                 ),
@@ -311,21 +331,26 @@ class _PuzzleRunPageState extends State<PuzzleRunPage> {
                   onMove: _onMove,
                 ),
                 SizedBox(
-                  height: 56,
+                  height: 64,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Semantics(
                         liveRegion: true,
-                        child: Text(_flash ?? '', style: text.titleMedium),
+                        child: _right == null
+                            ? const SizedBox.shrink()
+                            : _Flash(right: _right!),
                       ),
                       if (widget.mode == PuzzleRunMode.streak)
                         TextButton.icon(
                           onPressed: _run.canSkip
                               ? () => setState(() => _run.skip())
                               : null,
+                          style: TextButton.styleFrom(
+                            minimumSize: Size(tokens.minTouch, tokens.minTouch),
+                          ),
                           icon: const Icon(Icons.skip_next),
-                          label: const Text('Salta'),
+                          label: Text(l.puzzleSkip),
                         ),
                     ],
                   ),
@@ -335,6 +360,33 @@ class _PuzzleRunPageState extends State<PuzzleRunPage> {
           ),
         );
       },
+    );
+  }
+}
+
+/// Esito dell'ultimo puzzle: icona, testo e colore, mai il solo colore.
+class _Flash extends StatelessWidget {
+  const _Flash({required this.right});
+
+  final bool right;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final scheme = Theme.of(context).colorScheme;
+    final color = right ? scheme.tertiary : scheme.error;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ExcludeSemantics(
+          child: Icon(right ? Icons.check_circle : Icons.cancel, color: color),
+        ),
+        const SizedBox(width: 6),
+        Text(
+          right ? l.puzzleRunRight : l.puzzleRunWrong,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+      ],
     );
   }
 }
@@ -349,8 +401,9 @@ class _Lives extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final color = Theme.of(context).colorScheme.error;
+    final l = AppLocalizations.of(context);
     return Semantics(
-      label: 'Vite: ${total - lost} su $total',
+      label: l.puzzleRunLives(total - lost, total),
       excludeSemantics: true,
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -388,13 +441,17 @@ class _Result extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
+    final l = AppLocalizations.of(context);
     return Center(
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Serie conclusa', style: text.headlineSmall),
+            Semantics(
+              header: true,
+              child: Text(l.puzzleRunOver, style: text.headlineSmall),
+            ),
             if (reason != null) ...[
               const SizedBox(height: 8),
               Text(reason!, style: text.bodyLarge),
@@ -405,19 +462,19 @@ class _Result extends StatelessWidget {
               key: const Key('run-final-score'),
               style: text.displayMedium,
             ),
-            Text('puzzle risolti', style: text.titleMedium),
+            Text(l.puzzleRunSolvedLabel, style: text.titleMedium),
             const SizedBox(height: 16),
             if (newRecord)
-              Text('Nuovo record personale!', style: text.titleLarge)
+              Text(l.puzzleRunNewRecord, style: text.titleLarge)
             else
-              Text('Record: $best', style: text.titleMedium),
-            if (bestCombo > 0) Text('Combo migliore: $bestCombo'),
+              Text(l.puzzleRunBest(best), style: text.titleMedium),
+            if (bestCombo > 0) Text(l.puzzleRunBestCombo(bestCombo)),
             const SizedBox(height: 24),
             if (onAgain != null)
               FilledButton.icon(
                 onPressed: onAgain,
                 icon: const Icon(Icons.replay),
-                label: const Text('Gioca ancora'),
+                label: Text(l.puzzleRunAgain),
               ),
             ?extra,
           ],
