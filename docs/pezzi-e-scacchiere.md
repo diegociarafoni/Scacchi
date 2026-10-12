@@ -29,7 +29,11 @@ I set del progetto non richiamano personaggi, nomi o simboli di opere esistenti,
 | Giardino | Prato con fili d'erba | |
 | Terracotta | Piastrelle con decoro a stella | |
 
-Le texture sono in `assets/boards/`, in WebP da 1024 px. Per ogni tema con texture l'ultima mossa e la casa selezionata prendono, tra alcuni colori candidati, il più discreto che abbia contrasto almeno 1,25 sia sulle case chiare sia sulle scure (per esempio sul tema Retrò il verde lime si perderebbe); i temi a tinta unita tengono i colori di sempre. Le immagini delle scacchiere di chessground hanno licenza AGPL e non si usano. I colori delle case chiare e scure di ogni tema restano in `lib/settings/settings.dart`: servono alle coordinate, ai colori per daltonici e ai chip delle Impostazioni.
+Le texture sono in `assets/boards/`, in WebP da 1024 px. Per ogni tema con texture l'ultima mossa e la casa selezionata prendono, tra alcuni colori candidati, il più discreto che abbia contrasto almeno 1,25 sia sulle case chiare sia sulle scure (per esempio sul tema Retrò il verde lime si perderebbe); gli altri temi tengono i colori di sempre se raggiungono quella soglia, altrimenti prendono il candidato più discreto che la raggiunge (sul Verde l'ultima mossa diventa ambra). I punti delle mosse possibili seguono la stessa regola con soglia 1,6. Le immagini delle scacchiere di chessground hanno licenza AGPL e non si usano. I colori delle case chiare e scure di ogni tema restano in `lib/settings/settings.dart`: servono alle coordinate, ai colori per daltonici e ai chip delle Impostazioni.
+
+## Frecce e cerchi
+
+Suggerimenti, mossa migliore, risposta attesa nel ripasso e minaccia non hanno un colore fisso: `BoardMarks` (`lib/settings/board_marks.dart`) sceglie per ogni tema il primo colore candidato, in ordine di preferenza, con contrasto almeno 1,5 su entrambe le case e tinta diversa da quella delle case. Il suggerimento resta verde o blu, la minaccia rossa o arancione; sulle scacchiere a metà luminosità si passa a varianti più scure, su Spazio a varianti chiare. Con i colori per daltonici i candidati sono blu (suggerimento) e vermiglio o arancione (minaccia). Analisi e revisione usano sempre la scacchiera verde e quindi i suoi segni. `test/settings/board_marks_test.dart` controlla contrasto e famiglia di colore su tutti i temi.
 
 ## Alone sui temi scuri
 

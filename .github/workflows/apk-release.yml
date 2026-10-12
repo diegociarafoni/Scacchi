@@ -20,10 +20,12 @@ on:
 permissions:
   contents: read
 
-# I nightly si sostituiscono a vicenda (conta solo l'ultimo main); le versioni numerate no.
+# Una build in corso non si annulla (con merge ravvicinati non finirebbe mai): resta in attesa
+# solo l'ultima, che parte al termine della precedente. I nightly e le versioni numerate
+# hanno gruppi separati.
 concurrency:
   group: apk-release-${{ github.event_name == 'workflow_run' && 'nightly' || 'versione' }}
-  cancel-in-progress: ${{ github.event_name == 'workflow_run' }}
+  cancel-in-progress: false
 
 jobs:
   release:
@@ -191,6 +193,10 @@ jobs:
             # Un nightly non deve mai tornare indietro: Android rifiuta un APK con versionCode
             # più basso («App non installata»). Non si pubblica un commit che è un antenato
             # del nightly attuale o di una release numerata (anche con suffisso).
+            # La build può durare a lungo: si rileggono i tag, che nel frattempo possono essere cambiati.
+            auth="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+            git -c "http.extraheader=AUTHORIZATION: basic $auth" fetch -q --tags --force \
+              "https://github.com/$GH_REPO.git" || echo "::warning::Tag non aggiornati: controllo sui tag scaricati all'inizio"
             for ref in nightly $(git tag -l 'v*'); do
               other="$(git rev-parse -q --verify "refs/tags/$ref^{commit}" || true)"
               [ -n "$other" ] && [ "$other" != "$SHA" ] || continue

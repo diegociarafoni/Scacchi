@@ -260,6 +260,196 @@
   "challengeWon": "You won: {mine} to {theirs}",
   "challengeLost": "Your friend won: {theirs} to {mine}",
   "challengeDraw": "A draw: {mine} to {theirs}",
+  "storyTitle": "Story",
+  "storyEntrySubtitle": "A journey in chapters: lessons, puzzles and challenges",
+  "storyChapterNumber": "Chapter {n}",
+  "@storyChapterNumber": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "storyProgress": "{done} chapters out of {total}",
+  "@storyProgress": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyChapterLocked": "Opens when you finish the previous chapter",
+  "storyChapterDone": "Chapter finished",
+  "storyContinue": "Continue",
+  "storyFinished": "The story is over. Lessons, puzzles and games stay available in the rest of the app.",
+  "storyStepLessons": "Lessons: {value} of {total}",
+  "@storyStepLessons": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyStepPuzzles": "Chapter puzzles: {value} of {total}",
+  "@storyStepPuzzles": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyStepGuardian": "The chapter guardian",
+  "storyStepBoss": "Challenge {name}",
+  "@storyStepBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyStepDone": "done",
+  "storyStepTodo": "to do",
+  "storyStepLocked": "locked",
+  "storyStepLockedHint": "Finish the previous step first.",
+  "storyEngineMissing": "Challenges are played where the computer opponent runs: Android and iOS, or Windows and Linux with Stockfish installed.",
+  "storyBossWon": "You beat {name}!",
+  "@storyBossWon": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyBossLost": "{name} holds out for now: try again whenever you like.",
+  "@storyBossLost": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPuzzlesNone": "The puzzles could not be loaded: try again.",
+  "storyVillageTitle": "The village of the pieces",
+  "storyVillageIntro": "You reach the village at the foot of the Rokko fortress. The villagers no longer remember how their pieces move: help them with the lessons, then show you can spot a piece left hanging.",
+  "storyVillageBoss": "{name}, the village keeper, challenges you to see if you really learned.",
+  "@storyVillageBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyVillageOutro": "The village throws a party in your honour. The road to the city gates is open.",
+  "storyGatesTitle": "The city gates",
+  "storyGatesIntro": "The guards stop you at the gates: to enter you must know the rules, from check to castling. A promotion spotted in time even opens the highest gate.",
+  "storyGatesBoss": "{name}, captain of the guards, wants a test before letting you through.",
+  "@storyGatesBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyGatesOutro": "The gates swing open. Ahead of you rises the king's tower.",
+  "storyTowerTitle": "The king's tower",
+  "storyTowerIntro": "The king lives at the top of the tower, and he knows how to defend himself. Learn the checkmates that corner him, even when his own pieces form a wall.",
+  "storyTowerBoss": "{name}, the knight who loves gambits, is waiting at the top of the stairs.",
+  "@storyTowerBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyTowerOutro": "The king of the tower is checkmated. The forest and its traps remain.",
+  "storyForestTitle": "The forest of traps",
+  "storyForestIntro": "In the forest every piece hides a trap: forks, pins, skewers. Learn to see them before anyone else does.",
+  "storyForestBoss": "{name}, the forest guide, knows every path and every snare.",
+  "@storyForestBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyForestOutro": "You crossed the forest without falling into a single trap. The castle awaits.",
+  "storyCastleTitle": "The castle of endgames",
+  "storyCastleIntro": "In the castle only a few pieces are left on the board and every move counts. Here we find out who can close a game.",
+  "storyCastleBoss": "{name}, the castellan, guards the entrance to the crown room.",
+  "@storyCastleBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyCastleOutro": "The great door opens: the crown is near.",
+  "storyCrownTitle": "The crown",
+  "storyCrownIntro": "Last stop: the crown room. A good start is half the victory: the centre, development, castling.",
+  "storyCrownBoss": "{name}, the keeper of the crown, plays openings like no one else.",
+  "@storyCrownBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyCrownOutro": "The crown is yours. The kingdom is at peace and every new game is a new story.",
+  "shareImageTitle": "Export as image",
+  "@shareImageTitle": {
+    "description": "shareImageTitle"
+  },
+  "shareImageAction": "Share",
+  "@shareImageAction": {
+    "description": "shareImageAction"
+  },
+  "shareImageFlip": "Flip the board",
+  "@shareImageFlip": {
+    "description": "shareImageFlip"
+  },
+  "shareImageCoordinates": "Coordinates",
+  "@shareImageCoordinates": {
+    "description": "shareImageCoordinates"
+  },
+  "shareImageLastMove": "Last move",
+  "@shareImageLastMove": {
+    "description": "shareImageLastMove"
+  },
+  "shareImageCaption": "Caption (optional)",
+  "@shareImageCaption": {
+    "description": "shareImageCaption"
+  },
+  "shareImagePreview": "Board preview",
+  "@shareImagePreview": {
+    "description": "shareImagePreview"
+  },
+  "shareImageFailed": "Sharing failed",
+  "@shareImageFailed": {
+    "description": "shareImageFailed"
+  },
+  "shareImageSubject": "Chess position",
+  "@shareImageSubject": {
+    "description": "shareImageSubject"
+  },
+  "tablebaseTitle": "Perfect endgame",
+  "tablebaseCalculating": "Working out the perfect endgame… this only happens the first time",
+  "tablebaseWhiteMates": "{moves, plural, one{White wins: mate in {moves} move} other{White wins: mate in {moves} moves}}",
+  "tablebaseBlackMates": "{moves, plural, one{Black wins: mate in {moves} move} other{Black wins: mate in {moves} moves}}",
+  "tablebaseWhiteWins": "White wins",
+  "tablebaseBlackWins": "Black wins",
+  "tablebaseDraw": "Draw with perfect play",
+  "tablebaseBestMove": "Perfect move: {move}",
+  "tablebaseBestMoveHint": "Play the perfect move",
+  "tablebaseShowMove": "Show the perfect move",
   "weeklyEntryTitle": "Weekly summary",
   "weeklyEmpty": "You have not done anything in the last seven days yet. Play a game or solve a puzzle: the summary fills in by itself.",
   "weeklyProgressHeading": "Your progress",

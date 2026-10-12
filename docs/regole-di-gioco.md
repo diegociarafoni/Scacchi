@@ -43,7 +43,7 @@ Si usa il contatore di semimosse della posizione (`halfmoves`), che si azzera a 
 
 ## Varianti
 
-Nel pannello "Nuova", scegliendo **Due giocatori**, si sceglie anche la variante (RF-120, RF-121); contro computer e bot e nel profilo bambino si gioca solo a scacchi classici. Le regole sono quelle di `dartchess`; `lib/game/variant.dart` sceglie la posizione iniziale e `ChessGame` conosce la variante della partita.
+Nel pannello "Nuova" si sceglie anche la variante (RF-120, RF-121), in due sullo stesso telefono, contro il computer e contro i bot (RF-123, vedi [avversario-computer.md](avversario-computer.md#varianti)); nel profilo bambino si gioca solo a scacchi classici. Le regole sono quelle di `dartchess`; `lib/game/variant.dart` sceglie la posizione iniziale e `ChessGame` conosce la variante della partita.
 
 | Variante | Differenze |
 |---|---|

@@ -13,7 +13,7 @@ import 'package:scacchi/path/stage_page.dart';
 import 'package:scacchi/puzzles/puzzle_library.dart';
 import 'package:scacchi/puzzles/puzzle_page.dart';
 import 'package:scacchi/puzzles/puzzle_trainer.dart';
-import 'package:scacchi/settings/color_blind.dart';
+import 'package:scacchi/settings/board_marks.dart';
 import 'package:scacchi/settings/settings.dart';
 import 'package:scacchi/storage/key_value_store.dart';
 
@@ -41,6 +41,9 @@ Offset squareOn(WidgetTester tester, Finder board, Square square) {
   return rect.topLeft +
       Offset((square.file + 0.5) * size, (7 - square.rank + 0.5) * size);
 }
+
+/// Il blu Okabe-Ito scelto per la scacchiera verde.
+final safeHint = BoardMarks.of(BoardTheme.green, colorBlind: true).hint;
 
 void main() {
   final safe = AppSettings(colorBlind: true);
@@ -110,7 +113,7 @@ void main() {
     await tester.pumpAndSettle();
     final shapes = tester.widget<Chessboard>(find.byType(Chessboard)).shapes;
     expect(shapes.single, isA<Circle>());
-    expect((shapes.single as Circle).color, okabeBlue);
+    expect((shapes.single as Circle).color, safeHint);
   });
 
   testWidgets('RNF-07 la freccia del ripasso è blu', (tester) async {
@@ -122,6 +125,6 @@ void main() {
     await tester.tap(find.text('Ripassa 2 mosse'));
     await tester.pumpAndSettle();
     final shapes = tester.widget<Chessboard>(find.byType(Chessboard)).shapes;
-    expect((shapes.single as Arrow).color, okabeBlue);
+    expect((shapes.single as Arrow).color, safeHint);
   });
 }
