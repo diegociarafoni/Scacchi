@@ -57,9 +57,5 @@
   "gameTipMore": "Patta e abbandono sono nella barra; dal menu ⋮ apri anche l'editor di posizione.",
   "gameTipMenu": "Dal menu ⋮ analizzi la posizione e rivedi la partita.",
   "gameReviewInvite": "Partita finita. Vuoi capire dove migliorare?",
-  "gameReviewInviteAction": "Rivedi la partita",
-  "opponentFriend": "Sfida un amico",
-  "opponentHintFriend": "Si gioca in due: sullo stesso telefono oppure ognuno sul suo, vicini o lontani.",
-  "opponentFriendSame": "Sullo stesso telefono",
-  "opponentFriendApart": "Ognuno sul suo"
+  "gameReviewInviteAction": "Rivedi la partita"
 }

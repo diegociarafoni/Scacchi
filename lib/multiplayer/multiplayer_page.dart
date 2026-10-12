@@ -38,13 +38,12 @@ Future<String?> clipboardText() async =>
     (await Clipboard.getData(Clipboard.kTextPlain))?.text;
 
 /// Come ci si collega all'altro telefono.
-enum _Channel { wifi, bluetooth }
+enum _Channel { wifi, bluetooth, remote }
 
 /// Cadenza della partita con un amico: lo stato è del pannello, il disegno
 /// di chi lo ospita.
 typedef FriendClockBuilder = Widget Function(
   BuildContext context, {
-  required bool remote,
   required bool enabled,
   required TimeControl? control,
   required ValueChanged<TimeControl?> onChanged,
@@ -64,7 +63,7 @@ class FriendGamePanel extends StatefulWidget {
     this.store,
     this.shareInvite = shareInviteText,
     this.readClipboard = clipboardText,
-    this.remoteByDefault = true,
+    this.remoteByDefault = false,
     this.remoteWatch,
     this.clockBuilder,
     this.inCard = true,
@@ -79,7 +78,7 @@ class FriendGamePanel extends StatefulWidget {
   /// di sistema.
   final RemoteWatch? remoteWatch;
 
-  /// Stato iniziale dell'interruttore del gioco a distanza.
+  /// Parte dal canale a distanza invece che dal Wi-Fi.
   final bool remoteByDefault;
 
   /// Disegno della cadenza; per default il menu della pagina.
@@ -107,8 +106,10 @@ class FriendGamePanel extends StatefulWidget {
 class _FriendGamePanelState extends State<FriendGamePanel> {
   Side _side = Side.white;
   TimeControl? _control;
-  late bool _remote = widget.remoteByDefault;
-  _Channel _channel = _Channel.wifi;
+  late _Channel _channel = widget.remoteByDefault
+      ? _Channel.remote
+      : _Channel.wifi;
+  bool get _remote => _channel == _Channel.remote;
   bool _busy = false;
   SavedGameStore? _store;
   SavedGame? _saved;
@@ -300,30 +301,35 @@ class _FriendGamePanelState extends State<FriendGamePanel> {
               icon: const Icon(Icons.bluetooth),
               label: Text(l10n.multiplayerChannelBluetooth),
             ),
+            ButtonSegment(
+              value: _Channel.remote,
+              icon: const Icon(Icons.public),
+              label: Text(l10n.multiplayerChannelRemote),
+            ),
           ],
           selected: {_channel},
           onSelectionChanged: (s) => setState(() => _channel = s.first),
         ),
-        if (_channel == _Channel.bluetooth) ...[
-          const SizedBox(height: 8),
-          Text(l10n.multiplayerBluetoothHint),
-        ],
         const SizedBox(height: 8),
-        SwitchListTile(
-          contentPadding: EdgeInsets.zero,
-          title: Text(l10n.multiplayerRemoteSwitch),
-          subtitle: Text(l10n.multiplayerRemoteSwitchHint),
-          value: _remote,
-          onChanged: _busy ? null : (v) => setState(() => _remote = v),
-        ),
-        const SizedBox(height: 8),
-        (widget.clockBuilder ?? _clockMenu)(
-          context,
-          remote: _remote,
-          enabled: !_remote && !_busy,
-          control: _remote ? null : _control,
-          onChanged: (v) => setState(() => _control = v),
-        ),
+        Text(switch (_channel) {
+          _Channel.wifi => l10n.multiplayerWifiHint,
+          _Channel.bluetooth => l10n.multiplayerBluetoothHint,
+          _Channel.remote => l10n.multiplayerRemoteSwitchHint,
+        }),
+        const SizedBox(height: 16),
+        // A distanza le mosse arrivano anche ore dopo: niente orologio.
+        if (_remote)
+          Text(
+            l10n.multiplayerClockRemoteHint,
+            style: theme.textTheme.bodySmall,
+          )
+        else
+          (widget.clockBuilder ?? _clockMenu)(
+            context,
+            enabled: !_busy,
+            control: _control,
+            onChanged: (v) => setState(() => _control = v),
+          ),
       ],
     );
     return Column(
@@ -418,21 +424,18 @@ class _FriendGamePanelState extends State<FriendGamePanel> {
 
   Widget _clockMenu(
     BuildContext context, {
-    required bool remote,
     required bool enabled,
     required TimeControl? control,
     required ValueChanged<TimeControl?> onChanged,
   }) {
     final l10n = multiplayerL10n(context);
     return DropdownButtonFormField<TimeControl?>(
-      key: ValueKey('clock-${remote ? 'off' : control?.label}'),
+      key: ValueKey('clock-${control?.label}'),
       initialValue: control,
       isExpanded: true,
       decoration: InputDecoration(
         labelText: l10n.multiplayerClockTitle,
-        helperText: remote
-            ? l10n.multiplayerClockRemoteHint
-            : l10n.multiplayerClockHint,
+        helperText: l10n.multiplayerClockHint,
         helperMaxLines: 3,
       ),
       items: [
@@ -440,7 +443,7 @@ class _FriendGamePanelState extends State<FriendGamePanel> {
         for (final c in TimeControl.presets)
           DropdownMenuItem(value: c, child: Text(c.label)),
       ],
-      onChanged: remote ? null : onChanged,
+      onChanged: enabled ? onChanged : null,
     );
   }
 }
@@ -458,7 +461,7 @@ class MultiplayerPage extends StatelessWidget {
     this.store,
     this.shareInvite = shareInviteText,
     this.readClipboard = clipboardText,
-    this.remoteByDefault = true,
+    this.remoteByDefault = false,
     this.remoteWatch,
   });
 

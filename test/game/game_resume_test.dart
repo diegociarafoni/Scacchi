@@ -87,6 +87,8 @@ void main() {
     await open(tester);
     await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
+    await openCustomSheet(tester, two: true);
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Senza tempo'));
     await tester.pumpAndSettle();
     await tapMove(tester, 'e2e4');
@@ -101,6 +103,8 @@ void main() {
   testWidgets('una partita senza mosse non si salva', (tester) async {
     await open(tester);
     await tapGameAction(tester, 'Nuova');
+    await tester.pumpAndSettle();
+    await openCustomSheet(tester, two: true);
     await tester.pumpAndSettle();
     await tester.tap(find.text('Senza tempo'));
     await tester.pumpAndSettle();

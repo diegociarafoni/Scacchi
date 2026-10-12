@@ -105,7 +105,12 @@ void main() {
     await tester.pumpAndSettle();
     await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
+    await openCustomSheet(tester);
     await tester.tap(find.text('Bot'));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text(botById('pino')!.name));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(botById('pino')!.name));
     await tester.pumpAndSettle();
     await chooseTime(tester, 'Senza tempo');
     await tester.pumpAndSettle(const Duration(seconds: 1));

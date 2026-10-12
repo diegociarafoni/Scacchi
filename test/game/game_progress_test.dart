@@ -75,6 +75,8 @@ void main() {
     await open(tester);
     await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
+    await openCustomSheet(tester, two: true);
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Senza tempo'));
     await tester.pumpAndSettle();
     for (final uci in foolsMate) {
@@ -96,6 +98,8 @@ void main() {
     await open(tester);
     await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
+    await openCustomSheet(tester, two: true);
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Senza tempo'));
     await tester.pumpAndSettle();
     for (final uci in foolsMate) {
@@ -109,6 +113,8 @@ void main() {
   Future<void> startLocal(WidgetTester tester) async {
     await open(tester);
     await tapGameAction(tester, 'Nuova');
+    await tester.pumpAndSettle();
+    await openCustomSheet(tester, two: true);
     await tester.pumpAndSettle();
     await tester.tap(find.text('Senza tempo'));
     await tester.pumpAndSettle();

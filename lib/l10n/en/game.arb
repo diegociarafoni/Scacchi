@@ -41,9 +41,5 @@
   "gameTipMore": "Draw and resign are in the bar; the ⋮ menu also opens the position editor.",
   "gameTipMenu": "The ⋮ menu lets you analyse the position and review the game.",
   "gameReviewInvite": "Game over. Want to see where to improve?",
-  "gameReviewInviteAction": "Review the game",
-  "opponentFriend": "Challenge a friend",
-  "opponentHintFriend": "Played by two: on the same phone, or each on their own, near or far.",
-  "opponentFriendSame": "Same phone",
-  "opponentFriendApart": "Each on their own"
+  "gameReviewInviteAction": "Review the game"
 }

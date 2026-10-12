@@ -548,6 +548,8 @@ void main() {
     );
     await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
+    await openCustomSheet(tester, two: true);
+    await tester.pumpAndSettle();
     expect(
       find.text(
         'Per giocare contro il computer qui serve Stockfish installato.',

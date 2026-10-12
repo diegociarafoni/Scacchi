@@ -1,6 +1,5 @@
 {
   "multiplayerRemoteIntro": "To play from afar you only need internet: send your friend a link and play whenever you like, even hours apart.",
-  "multiplayerRemoteSwitch": "Also play from afar",
   "multiplayerRemoteSwitchHint": "Your friend can join from anywhere with a link. Moves travel encrypted through public relays: no account and no server of ours.",
   "multiplayerRemoteShare": "Share the invite link",
   "multiplayerRemoteShareSubject": "Invitation to a chess game",

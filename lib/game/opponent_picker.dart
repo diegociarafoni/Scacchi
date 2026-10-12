@@ -12,7 +12,7 @@ import '../engine/style.dart';
 import '../l10n/app_localizations.dart';
 import '../story/story_controller.dart';
 
-enum Opponent { human, computer, bot, friend }
+enum Opponent { human, computer, bot }
 
 enum SideChoice { white, black, random }
 
@@ -72,6 +72,31 @@ AppLocalizations _l10n(BuildContext context) =>
     Localizations.of<AppLocalizations>(context, AppLocalizations) ??
     lookupAppLocalizations(const Locale('it'));
 
+/// Apre la galleria dei bot; con [options] mostra anche il pannello Opzioni e
+/// «Gioca» restituisce la partita già configurata.
+Future<BotGalleryResult?> openBotGallery(
+  BuildContext context, {
+  required BotCollection collection,
+  required GameSetup setup,
+  required int adaptiveLevel,
+  required bool kidMode,
+  GameOptions? options,
+}) => Navigator.push<BotGalleryResult>(
+  context,
+  MaterialPageRoute(
+    builder: (_) => BotGalleryPage(
+      collection: collection,
+      loadStory: () async => (await StoryController.open()).state,
+      initialBotId: setup.botId,
+      initialSide: setup.sideChoice,
+      adaptiveLevel: adaptiveLevel,
+      kidMode: kidMode,
+      showOptions: options != null,
+      initialOptions: options ?? const GameOptions(),
+    ),
+  ),
+);
+
 /// Scelta dell'avversario e, contro il computer, di colore e livello.
 class OpponentPicker extends StatelessWidget {
   const OpponentPicker({
@@ -82,16 +107,11 @@ class OpponentPicker extends StatelessWidget {
     required this.collection,
     required this.onChanged,
     this.kidMode = false,
-    this.friendAvailable = false,
     this.onGalleryPlay,
     this.galleryOptions = const GameOptions(),
   });
 
   final GameSetup setup;
-
-  /// Mostra «Sfida un amico», con partita sullo stesso telefono o su due
-  /// telefoni (RMP-08), al posto di «Due giocatori»; non c'è nel profilo bambino.
-  final bool friendAvailable;
 
   /// Profilo bambino (RP-06): niente computer, solo bot amichevoli e nessun numero.
   final bool kidMode;
@@ -115,89 +135,42 @@ class OpponentPicker extends StatelessWidget {
     // tra i bot, dove stanno anche i livelli fissi.
     final vsAdaptive = shown.opponent == Opponent.computer && shown.adaptive;
     final vsBot = shown.opponent == Opponent.bot;
-    final withFriend =
-        shown.opponent == Opponent.human || shown.opponent == Opponent.friend;
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (friendAvailable && !kidMode) ...[
-          // Due scelte: contro un bot (anche adattivo) o contro un amico, che
-          // a sua volta gioca sullo stesso telefono o sul suo.
-          SegmentedButton<bool>(
-            segments: [
-              ButtonSegment(
-                value: false,
-                icon: const Icon(Icons.emoji_people_outlined),
-                label: const Text('Bot'),
-                enabled: computerAvailable,
-              ),
-              ButtonSegment(
-                value: true,
-                icon: const Icon(Icons.people_outline),
-                label: Text(_l10n(context).opponentFriend),
-              ),
-            ],
-            selected: {withFriend},
-            onSelectionChanged: (s) => onChanged(
-              s.first == withFriend
-                  ? shown
-                  : s.first
-                  ? shown.copyWith(opponent: Opponent.human)
-                  : shown.copyWith(opponent: Opponent.computer, adaptive: true),
+        SegmentedButton<Opponent>(
+          segments: [
+            const ButtonSegment(
+              value: Opponent.human,
+              icon: Icon(Icons.people_outline),
+              label: Text('Due giocatori'),
             ),
-          ),
-          if (withFriend) ...[
-            const SizedBox(height: 8),
-            SegmentedButton<Opponent>(
-              segments: [
-                ButtonSegment(
-                  value: Opponent.human,
-                  icon: const Icon(Icons.phone_android),
-                  label: Text(_l10n(context).opponentFriendSame),
-                ),
-                ButtonSegment(
-                  value: Opponent.friend,
-                  icon: const Icon(Icons.smartphone),
-                  label: Text(_l10n(context).opponentFriendApart),
-                ),
-              ],
-              selected: {shown.opponent},
-              onSelectionChanged: (s) =>
-                  onChanged(shown.copyWith(opponent: s.first)),
+            ButtonSegment(
+              value: Opponent.bot,
+              icon: const Icon(Icons.emoji_people_outlined),
+              label: const Text('Bot'),
+              enabled: computerAvailable,
             ),
           ],
-        ] else
-          SegmentedButton<Opponent>(
-            segments: [
-              const ButtonSegment(
-                value: Opponent.human,
-                icon: Icon(Icons.people_outline),
-                label: Text('Due giocatori'),
-              ),
-              ButtonSegment(
-                value: Opponent.bot,
-                icon: const Icon(Icons.emoji_people_outlined),
-                label: const Text('Bot'),
-                enabled: computerAvailable,
-              ),
-            ],
-            selected: {
-              shown.opponent == Opponent.computer
-                  ? Opponent.bot
-                  : shown.opponent,
-            },
-            onSelectionChanged: (s) => onChanged(
-              s.first == Opponent.bot && vsAdaptive
-                  ? shown
-                  : shown.copyWith(opponent: s.first),
-            ),
+          selected: {
+            shown.opponent == Opponent.computer ? Opponent.bot : shown.opponent,
+          },
+          // Contro un bot si riparte dall'adattivo, del livello del giocatore.
+          onSelectionChanged: (s) => onChanged(
+            s.first != Opponent.bot
+                ? shown.copyWith(opponent: s.first)
+                : vsAdaptive || vsBot
+                ? shown
+                : kidMode
+                ? shown.copyWith(opponent: Opponent.bot)
+                : shown.copyWith(opponent: Opponent.computer, adaptive: true),
           ),
+        ),
         const SizedBox(height: 8),
         Text(switch (shown.opponent) {
           Opponent.human => _l10n(context).opponentHintHuman,
           Opponent.computer || Opponent.bot => _l10n(context).opponentHintBot,
-          Opponent.friend => _l10n(context).opponentHintFriend,
         }, style: theme.textTheme.bodySmall),
         if (!computerAvailable) ...[
           const SizedBox(height: 8),
@@ -241,20 +214,13 @@ class OpponentPicker extends StatelessWidget {
             icon: const Icon(Icons.grid_view_rounded),
             label: Text(_l10n(context).botGalleryOpen),
             onPressed: () async {
-              final result = await Navigator.push<BotGalleryResult>(
+              final result = await openBotGallery(
                 context,
-                MaterialPageRoute(
-                  builder: (_) => BotGalleryPage(
-                    collection: collection,
-                    loadStory: () async => (await StoryController.open()).state,
-                    initialBotId: shown.botId,
-                    initialSide: shown.sideChoice,
-                    adaptiveLevel: adaptiveLevel,
-                    kidMode: kidMode,
-                    showOptions: onGalleryPlay != null,
-                    initialOptions: galleryOptions,
-                  ),
-                ),
+                collection: collection,
+                setup: shown,
+                adaptiveLevel: adaptiveLevel,
+                kidMode: kidMode,
+                options: onGalleryPlay == null ? null : galleryOptions,
               );
               if (result == null) return;
               if (onGalleryPlay != null) {

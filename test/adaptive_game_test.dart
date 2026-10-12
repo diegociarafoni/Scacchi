@@ -25,6 +25,7 @@ void main() {
   Future<void> openComputerSheet(WidgetTester tester) async {
     await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
+    await openCustomSheet(tester);
     await tester.tap(find.text('Bot'));
     await tester.pumpAndSettle();
   }

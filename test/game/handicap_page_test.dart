@@ -52,6 +52,8 @@ void main() {
     );
     await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
+    await openCustomSheet(tester, two: true);
+    await tester.pumpAndSettle();
   }
 
   Future<void> pick(WidgetTester tester, String key) async {

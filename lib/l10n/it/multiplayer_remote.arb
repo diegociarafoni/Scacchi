@@ -3,13 +3,9 @@
   "@multiplayerRemoteIntro": {
     "description": "Spiegazione del gioco a distanza nella schermata iniziale"
   },
-  "multiplayerRemoteSwitch": "Gioca anche a distanza",
-  "@multiplayerRemoteSwitch": {
-    "description": "Interruttore che aggiunge il canale internet alla partita"
-  },
   "multiplayerRemoteSwitchHint": "L'amico può unirsi da lontano con un link. Le mosse passano cifrate da relay pubblici: nessun account e nessun server nostro.",
   "@multiplayerRemoteSwitchHint": {
-    "description": "Spiegazione sotto l'interruttore del gioco a distanza"
+    "description": "Spiegazione sotto la scelta «A distanza»"
   },
   "multiplayerRemoteShare": "Condividi il link d'invito",
   "@multiplayerRemoteShare": {

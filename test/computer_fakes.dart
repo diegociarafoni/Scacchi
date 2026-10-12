@@ -107,8 +107,27 @@ Future<void> startComputerGame(
   await chooseTime(tester, time ?? 'Senza tempo');
 }
 
+/// Dal menu della nuova partita apre la scelta completa («Partita
+/// personalizzata», o «Due giocatori» con [two]); non fa nulla se è già aperta.
+Future<void> openCustomSheet(WidgetTester tester, {bool two = false}) async {
+  if (find.byKey(const ValueKey('quick-start')).evaluate().isEmpty) return;
+  await scrollSheetTo(tester, find.byKey(const ValueKey('menu-more')));
+  await tester.tap(find.text('Altre modalità'));
+  await tester.pumpAndSettle();
+  // «Due giocatori» c'è sempre, subito dopo la scelta completa.
+  await scrollSheetTo(tester, find.byKey(const ValueKey('menu-two')));
+  final custom = find.byKey(const ValueKey('menu-custom'));
+  final entry = !two && custom.evaluate().isNotEmpty
+      ? custom
+      : find.byKey(const ValueKey('menu-two'));
+  await scrollSheetTo(tester, entry);
+  await tester.tap(entry);
+  await tester.pumpAndSettle();
+}
+
 /// Sceglie nel foglio della nuova partita il bot «Adattivo», cioè il motore.
 Future<void> chooseAdaptiveComputer(WidgetTester tester) async {
+  await openCustomSheet(tester);
   await tester.tap(find.text('Bot'));
   await tester.pumpAndSettle();
   await tester.ensureVisible(find.byKey(const ValueKey('adaptive-opponent')));
@@ -119,10 +138,7 @@ Future<void> chooseAdaptiveComputer(WidgetTester tester) async {
 
 /// Sceglie nel foglio della nuova partita la partita in due sullo stesso telefono.
 Future<void> chooseTwoPlayers(WidgetTester tester) async {
-  await tester.tap(find.text('Sfida un amico'));
-  await tester.pumpAndSettle();
-  await tester.tap(find.text('Sullo stesso telefono'));
-  await tester.pumpAndSettle();
+  await openCustomSheet(tester, two: true);
 }
 
 /// Scorre il foglio della nuova partita fino a [finder]: la lista dei bot lo
@@ -146,6 +162,7 @@ Future<void> scrollSheetTo(WidgetTester tester, Finder finder) async {
 
 /// Tocca la cadenza nel pannello della nuova partita, che avvia la partita.
 Future<void> chooseTime(WidgetTester tester, String time) async {
+  await openCustomSheet(tester);
   if (find.text(time).evaluate().isEmpty) {
     await tester.scrollUntilVisible(
       find.text(time),

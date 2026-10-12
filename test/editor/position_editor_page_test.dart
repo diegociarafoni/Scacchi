@@ -312,6 +312,7 @@ void main() {
     ) async {
       await editPosition(tester);
       await scrollTap(tester, find.text('Bot'));
+      await scrollTap(tester, find.text('Pino'));
       await scrollTap(tester, find.text('Nero'));
       await scrollTap(tester, find.widgetWithText(FilledButton, 'Gioca'));
       await tester.pumpAndSettle(const Duration(seconds: 1));
@@ -339,6 +340,7 @@ void main() {
         fen: 'r5k1/5ppp/8/8/8/8/5PPP/6K1 b - - 0 1',
       );
       await scrollTap(tester, find.text('Bot'));
+      await scrollTap(tester, find.text('Pino'));
       await scrollTap(tester, find.text('Nero'));
       await scrollTap(tester, find.widgetWithText(FilledButton, 'Gioca'));
       await tester.pumpAndSettle(const Duration(seconds: 1));

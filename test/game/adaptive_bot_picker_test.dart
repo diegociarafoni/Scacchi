@@ -9,7 +9,6 @@ void main() {
     GameSetup setup, {
     ValueChanged<GameSetup>? onChanged,
     bool kidMode = false,
-    bool friend = true,
     int adaptiveLevel = 3,
   }) => MaterialApp(
     localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -23,7 +22,6 @@ void main() {
           adaptiveLevel: adaptiveLevel,
           collection: const BotCollection(),
           kidMode: kidMode,
-          friendAvailable: friend,
           onChanged: onChanged ?? (_) {},
         ),
       ),
@@ -32,33 +30,14 @@ void main() {
 
   final adaptive = find.byKey(const ValueKey('adaptive-opponent'));
 
-  testWidgets('la scelta è Bot e «Sfida un amico»: niente «Computer»', (
+  testWidgets('la scelta è Due giocatori e Bot: niente «Computer»', (
     tester,
   ) async {
     await tester.pumpWidget(picker(const GameSetup()));
     expect(find.text('Bot'), findsOneWidget);
-    expect(find.text('Sfida un amico'), findsOneWidget);
+    expect(find.text('Due giocatori'), findsOneWidget);
     expect(find.text('Computer'), findsNothing);
     expect(find.byType(Slider), findsNothing);
-  });
-
-  testWidgets('«Sfida un amico» chiede dove si gioca', (tester) async {
-    GameSetup? changed;
-    await tester.pumpWidget(
-      picker(
-        const GameSetup(opponent: Opponent.computer, adaptive: true),
-        onChanged: (s) => changed = s,
-      ),
-    );
-    expect(find.text('Sullo stesso telefono'), findsNothing);
-    await tester.tap(find.text('Sfida un amico'));
-    expect(changed?.opponent, Opponent.human);
-    await tester.pumpWidget(
-      picker(const GameSetup(), onChanged: (s) => changed = s),
-    );
-    expect(find.text('Sullo stesso telefono'), findsOneWidget);
-    await tester.tap(find.text('Ognuno sul suo'));
-    expect(changed?.opponent, Opponent.friend);
   });
 
   testWidgets('tornando a «Bot» si riparte dall\'adattivo', (tester) async {
@@ -113,7 +92,7 @@ void main() {
   testWidgets('senza amici (editor) restano Due giocatori e Bot', (
     tester,
   ) async {
-    await tester.pumpWidget(picker(const GameSetup(), friend: false));
+    await tester.pumpWidget(picker(const GameSetup()));
     expect(find.text('Due giocatori'), findsOneWidget);
     expect(find.text('Bot'), findsOneWidget);
     expect(find.text('Sfida un amico'), findsNothing);
