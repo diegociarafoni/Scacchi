@@ -1,3 +1,5 @@
+import '../badges/badge_def.dart';
+import '../badges/badge_sources.dart';
 import 'achievements.dart';
 import 'activity.dart';
 import 'challenges.dart';
@@ -63,11 +65,31 @@ class ProgressTracker {
     ProgressState state,
     Activity activity,
     DateTime now,
-    ProgressSettings settings,
-  ) {
+    ProgressSettings settings, [
+    BadgeSources sources = BadgeSources.empty,
+  ]) {
     if (!settings.enabled) return ProgressUpdate(state: state);
     final s = _count(_startDay(state, now, settings), activity);
-    return _finish(s, state.xp, xpFor(activity), activity, settings);
+    return _finish(
+      _markActive(s, state.lastActiveDay),
+      state.xp,
+      xpFor(activity),
+      activity,
+      settings,
+      sources,
+    );
+  }
+
+  /// Badge che gli avanzamenti degli altri salvataggi fanno ottenere; lo
+  /// stato è lo stesso oggetto se non cambia nulla.
+  ProgressState refreshBadges(
+    ProgressState state,
+    DateTime now,
+    ProgressSettings settings,
+    BadgeSources sources,
+  ) {
+    if (!settings.enabled) return state;
+    return _unlockBadges(state, sources, _day(state, now));
   }
 
   /// Riconosce l'obiettivo di oggi già raggiunto, per esempio dopo averlo
@@ -92,8 +114,9 @@ class ProgressTracker {
     int oldXp,
     int xp,
     Activity? activity,
-    ProgressSettings settings,
-  ) {
+    ProgressSettings settings, [
+    BadgeSources sources = BadgeSources.empty,
+  ]) {
     final start = s;
     final today = s.today!;
     final goalReached =
@@ -160,6 +183,7 @@ class ProgressTracker {
     if (unlocked.isNotEmpty) {
       s = s.copyWith(unlocked: [...s.unlocked, for (final a in unlocked) a.id]);
     }
+    s = _unlockBadges(s, sources, today);
     return ProgressUpdate(
       state: s,
       xpGained: xp,
@@ -173,6 +197,28 @@ class ProgressTracker {
       // Con "Sblocca tutto" le ricompense erano già disponibili.
       rewards: settings.unlockAll ? const [] : newRewards(start, s),
     );
+  }
+
+  ProgressState _unlockBadges(ProgressState s, BadgeSources sources, int day) {
+    final facts = BadgeFacts(s, sources);
+    final earned = [
+      for (final b in badges)
+        if (!s.badges.containsKey(b.id) && b.isMet(facts)) b.id,
+    ];
+    if (earned.isEmpty) return s;
+    return s.copyWith(badges: {...s.badges, for (final id in earned) id: day});
+  }
+
+  /// Conta il giorno di gioco e un eventuale ritorno dopo una lunga pausa.
+  ProgressState _markActive(ProgressState s, int? lastActive) {
+    final today = s.today!;
+    if (lastActive != null && today <= lastActive) return s;
+    final tally = {...s.tally};
+    tally['days'] = (tally['days'] ?? 0) + 1;
+    if (lastActive != null && today - lastActive >= comebackDays) {
+      tally['comeback'] = (tally['comeback'] ?? 0) + 1;
+    }
+    return s.copyWith(tally: tally, lastActiveDay: today);
   }
 
   int _advance(ChallengeKind kind, Activity? activity, bool goalReached) {
@@ -268,12 +314,18 @@ class ProgressTracker {
   ProgressState _count(ProgressState s, Activity a) {
     s = s.copyWith(todaySeconds: s.todaySeconds + a.duration.inSeconds);
     return switch (a) {
-      GamePlayed(:final result) => s.copyWith(
-        gamesPlayed: s.gamesPlayed + 1,
-        todayGames: s.todayGames + 1,
-        wins: s.wins + (result == GameResult.win ? 1 : 0),
-        draws: s.draws + (result == GameResult.draw ? 1 : 0),
-      ),
+      GamePlayed(:final result, :final matedWith, :final highlights) =>
+        s.copyWith(
+          gamesPlayed: s.gamesPlayed + 1,
+          todayGames: s.todayGames + 1,
+          wins: s.wins + (result == GameResult.win ? 1 : 0),
+          draws: s.draws + (result == GameResult.draw ? 1 : 0),
+          tally: _bump(s.tally, [
+            for (final h in highlights) 'game:${h.name}',
+            if (result == GameResult.win && matedWith != null)
+              mateKey(matedWith),
+          ]),
+        ),
       PuzzleSolved(:final themes) => s.copyWith(
         puzzlesSolved: s.puzzlesSolved + 1,
         todayPuzzles: s.todayPuzzles + 1,
@@ -282,7 +334,15 @@ class ProgressTracker {
           for (final t in themes) t: (s.puzzleThemes[t] ?? 0) + 1,
         },
       ),
-      PuzzleRunFinished() || MinigameFinished() || TournamentFinished() => s,
+      PuzzleRunFinished() => s,
+      MinigameFinished(:final score) =>
+        score > 0 ? s.copyWith(tally: _bump(s.tally, ['minigames'])) : s,
+      TournamentFinished(:final rank, :final players) => s.copyWith(
+        tally: _bump(s.tally, [
+          'tournaments',
+          if (rank <= 3 && players >= podiumMinPlayers) 'podium',
+        ]),
+      ),
       LessonCompleted() => s.copyWith(lessonsCompleted: s.lessonsCompleted + 1),
       ReviewCompleted(:final brilliantMoves) => s.copyWith(
         reviewsCompleted: s.reviewsCompleted + 1,
@@ -291,3 +351,8 @@ class ProgressTracker {
     };
   }
 }
+
+Map<String, int> _bump(Map<String, int> tally, Iterable<String> keys) => {
+  ...tally,
+  for (final k in keys) k: (tally[k] ?? 0) + 1,
+};

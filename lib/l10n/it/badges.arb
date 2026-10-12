@@ -1,0 +1,383 @@
+{
+  "badgesTitle": "Badge",
+  "badgesEntrySubtitle": "Quello che hai imparato e giocato, in una raccolta",
+  "badgesSummary": "{earned} di {total} badge",
+  "@badgesSummary": {
+    "description": "Totale dei badge ottenuti",
+    "placeholders": {
+      "earned": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "badgesFamilyLearn": "Imparare",
+  "badgesFamilyPuzzles": "Puzzle",
+  "badgesFamilyGames": "Partite",
+  "badgesFamilyStory": "Storia",
+  "badgesFamilyHabit": "Costanza",
+  "badgesTierBronze": "Bronzo",
+  "badgesTierSilver": "Argento",
+  "badgesTierGold": "Oro",
+  "badgesUnlocked": "Nuovo badge: {name}",
+  "@badgesUnlocked": {
+    "description": "Avviso quando si ottiene un badge",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "badgesSeeAction": "Vedi",
+  "badgesEarnedOn": "Ottenuto il {date}",
+  "@badgesEarnedOn": {
+    "description": "Data in cui il badge è stato ottenuto",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "badgesNotYet": "Ancora da ottenere",
+  "badgesProgress": "{value} / {target}",
+  "@badgesProgress": {
+    "description": "Avanzamento verso un badge",
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "badgesSemanticsEarned": "{name}, ottenuto",
+  "@badgesSemanticsEarned": {
+    "description": "Lettura del badge ottenuto",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "badgesSemanticsLocked": "{name}, da ottenere",
+  "@badgesSemanticsLocked": {
+    "description": "Lettura del badge da ottenere",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "badgesSemanticsLockedProgress": "{name}, da ottenere, {value} su {target}",
+  "@badgesSemanticsLockedProgress": {
+    "description": "Lettura del badge da ottenere con avanzamento",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "value": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "badgesClose": "Chiudi",
+  "badgeChapterPiecesName": "Tutti in marcia",
+  "badgeChapterPiecesDesc": "Completa le lezioni sul movimento dei pezzi.",
+  "badgeChapterRulesName": "Le regole d'oro",
+  "badgeChapterRulesDesc": "Completa le lezioni sulle regole del gioco.",
+  "badgeChapterMatesName": "Cacciatore di re",
+  "badgeChapterMatesDesc": "Completa le lezioni sui matti elementari.",
+  "badgeChapterTacticsName": "Mente tattica",
+  "badgeChapterTacticsDesc": "Completa le lezioni di tattica.",
+  "badgeChapterEndgamesName": "Finale da campione",
+  "badgeChapterEndgamesDesc": "Completa le lezioni sui finali.",
+  "badgeChapterOpeningsName": "Aperture spalancate",
+  "badgeChapterOpeningsDesc": "Completa le lezioni sulle aperture.",
+  "badgeGuardians3Name": "Domatore di guardiani",
+  "badgeGuardians3Desc": "Batti {count} guardiani della Storia.",
+  "@badgeGuardians3Desc": {
+    "description": "Come si ottiene il badge «Domatore di guardiani»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStoryPuzzlesAllName": "Enigmista",
+  "badgeStoryPuzzlesAllDesc": "Risolvi tutti i {count} puzzle dei capitoli della Storia.",
+  "@badgeStoryPuzzlesAllDesc": {
+    "description": "Come si ottiene il badge «Enigmista»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeEndgamesAllName": "Re dei finali",
+  "badgeEndgamesAllDesc": "Completa tutte le posizioni dell'allenatore dei finali.",
+  "badgeMastersAllName": "Occhio da maestro",
+  "badgeMastersAllDesc": "Gioca fino in fondo tutte le partite di «Indovina la mossa».",
+  "badgeReviews25Name": "Analista",
+  "badgeReviews25Desc": "Rivedi {count} partite.",
+  "@badgeReviews25Desc": {
+    "description": "Come si ottiene il badge «Analista»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgePuzzles500Name": "Collezionista di soluzioni",
+  "badgePuzzles500Desc": "Risolvi {count} puzzle.",
+  "@badgePuzzles500Desc": {
+    "description": "Come si ottiene il badge «Collezionista di soluzioni»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeThemes10Name": "Esploratore di temi",
+  "badgeThemes10Desc": "Risolvi almeno un puzzle in {count} temi diversi.",
+  "@badgeThemes10Desc": {
+    "description": "Come si ottiene il badge «Esploratore di temi»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgePin10Name": "Inchiodatore",
+  "badgePin10Desc": "Risolvi {count} puzzle di inchiodatura.",
+  "@badgePin10Desc": {
+    "description": "Come si ottiene il badge «Inchiodatore»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeSkewer5Name": "Spiedino",
+  "badgeSkewer5Desc": "Risolvi {count} puzzle di infilata.",
+  "@badgeSkewer5Desc": {
+    "description": "Come si ottiene il badge «Spiedino»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeDiscovered5Name": "Colpo di scena",
+  "badgeDiscovered5Desc": "Risolvi {count} puzzle di attacco di scoperta.",
+  "@badgeDiscovered5Desc": {
+    "description": "Come si ottiene il badge «Colpo di scena»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeSacrifice10Name": "Cuor di leone",
+  "badgeSacrifice10Desc": "Risolvi {count} puzzle di sacrificio.",
+  "@badgeSacrifice10Desc": {
+    "description": "Come si ottiene il badge «Cuor di leone»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeSmothered1Name": "Matto affogato!",
+  "badgeSmothered1Desc": "Risolvi un puzzle di matto affogato.",
+  "badgeRating1800Name": "Fuoriclasse",
+  "badgeRating1800Desc": "Raggiungi {count} di punteggio puzzle.",
+  "@badgeRating1800Desc": {
+    "description": "Come si ottiene il badge «Fuoriclasse»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStreakRun10Name": "Serie d'oro",
+  "badgeStreakRun10Desc": "Fai {count} punti nella modalità a serie.",
+  "@badgeStreakRun10Desc": {
+    "description": "Come si ottiene il badge «Serie d'oro»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeScholarsMateName": "Matto del barbiere",
+  "badgeScholarsMateDesc": "Vinci con il matto della donna in quattro mosse o meno.",
+  "badgeFoolsMateName": "Il matto del pazzo",
+  "badgeFoolsMateDesc": "Subisci il famoso matto in due mosse: capita a tutti, la medaglia è meritata.",
+  "badgeAllPiecesMateName": "Pezzo dopo pezzo",
+  "badgeAllPiecesMateDesc": "Dai matto con donna, torre, alfiere, cavallo e pedone.",
+  "badgeEnPassantName": "Alla francese",
+  "badgeEnPassantDesc": "Cattura con la presa en passant.",
+  "badgeUnderpromotionName": "Cavallino promosso",
+  "badgeUnderpromotionDesc": "Promuovi un pedone a un pezzo diverso dalla donna.",
+  "badgeStalemateName": "Re in trappola",
+  "badgeStalemateDesc": "Chiudi una partita con una patta per stallo.",
+  "badgeMarathonName": "Maratoneta",
+  "badgeMarathonDesc": "Gioca una partita di almeno {count} mosse tue.",
+  "@badgeMarathonDesc": {
+    "description": "Come si ottiene il badge «Maratoneta»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeWins100Name": "Centurione",
+  "badgeWins100Desc": "Vinci {count} partite.",
+  "@badgeWins100Desc": {
+    "description": "Come si ottiene il badge «Centurione»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgePodiumName": "Sul podio",
+  "badgePodiumDesc": "Chiudi un torneo tra i primi tre (con almeno quattro giocatori).",
+  "badgeTournaments5Name": "Habitué dei tornei",
+  "badgeTournaments5Desc": "Porta a termine {count} tornei.",
+  "@badgeTournaments5Desc": {
+    "description": "Come si ottiene il badge «Habitué dei tornei»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStoryVillageName": "Eroe del villaggio",
+  "badgeStoryVillageDesc": "Batti Pino nel capitolo «Il villaggio dei pezzi».",
+  "badgeStoryGatesName": "Oltre le porte",
+  "badgeStoryGatesDesc": "Batti Chiara nel capitolo «Le porte della città».",
+  "badgeStoryTowerName": "Signore della torre",
+  "badgeStoryTowerDesc": "Batti Rocco nel capitolo «La torre del re».",
+  "badgeStoryForestName": "Re del bosco",
+  "badgeStoryForestDesc": "Batti Marta nel capitolo «Il bosco delle trappole».",
+  "badgeStoryCastleName": "Assedio vinto",
+  "badgeStoryCastleDesc": "Batti Duilio nel capitolo «Il castello dei finali».",
+  "badgeStoryCrownName": "La corona è tua",
+  "badgeStoryCrownDesc": "Batti Elena nel capitolo «La corona».",
+  "badgeStoryAllName": "Leggenda",
+  "badgeStoryAllDesc": "Concludi tutti i capitoli della storia.",
+  "badgeStreak14Name": "Due settimane",
+  "badgeStreak14Desc": "Raggiungi l'obiettivo {count} giorni di fila.",
+  "@badgeStreak14Desc": {
+    "description": "Come si ottiene il badge «Due settimane»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStreak60Name": "Due mesi",
+  "badgeStreak60Desc": "Raggiungi l'obiettivo {count} giorni di fila.",
+  "@badgeStreak60Desc": {
+    "description": "Come si ottiene il badge «Due mesi»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStreak100Name": "Cento giorni",
+  "badgeStreak100Desc": "Raggiungi l'obiettivo {count} giorni di fila.",
+  "@badgeStreak100Desc": {
+    "description": "Come si ottiene il badge «Cento giorni»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStreak365Name": "Un anno intero",
+  "badgeStreak365Desc": "Raggiungi l'obiettivo {count} giorni di fila.",
+  "@badgeStreak365Desc": {
+    "description": "Come si ottiene il badge «Un anno intero»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeDays30Name": "Abitudinario",
+  "badgeDays30Desc": "Gioca o ti alleni in {count} giorni diversi, anche non di fila.",
+  "@badgeDays30Desc": {
+    "description": "Come si ottiene il badge «Abitudinario»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeDays100Name": "Di casa",
+  "badgeDays100Desc": "Gioca o ti alleni in {count} giorni diversi, anche non di fila.",
+  "@badgeDays100Desc": {
+    "description": "Come si ottiene il badge «Di casa»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeComebackName": "Bentornato!",
+  "badgeComebackDesc": "Torna a giocare dopo almeno {count} giorni di pausa.",
+  "@badgeComebackDesc": {
+    "description": "Come si ottiene il badge «Bentornato!»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgePerfect7Name": "Sette giornate perfette",
+  "badgePerfect7Desc": "Completa tutte e tre le sfide del giorno in {count} giorni diversi.",
+  "@badgePerfect7Desc": {
+    "description": "Come si ottiene il badge «Sette giornate perfette»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeMinigames25Name": "Allenatore instancabile",
+  "badgeMinigames25Desc": "Concludi {count} sessioni di minigioco con almeno un punto.",
+  "@badgeMinigames25Desc": {
+    "description": "Come si ottiene il badge «Allenatore instancabile»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgesUnlockedMany": "{count} nuovi badge",
+  "@badgesUnlockedMany": {
+    "description": "Avviso quando si ottengono molti badge insieme",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeChapterStrategyName": "Mente da stratega",
+  "badgeChapterStrategyDesc": "Completa le lezioni di strategia.",
+  "badgeChapterCapablancaName": "Allievo del maestro",
+  "badgeChapterCapablancaDesc": "Completa le lezioni della scuola di Capablanca.",
+  "badgeStoryPlainName": "Il piano giusto",
+  "badgeStoryPlainDesc": "Batti Massimo nel capitolo «La pianura dei piani».",
+  "badgeStoryAcademyName": "Primo dell'accademia",
+  "badgeStoryAcademyDesc": "Batti Stella nel capitolo «L'accademia del maestro»."
+}

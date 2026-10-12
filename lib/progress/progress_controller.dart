@@ -1,8 +1,11 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../badges/badge_def.dart';
+import '../badges/badge_sources.dart';
 import '../summary/week_log.dart';
 import 'activity.dart';
 import 'challenges.dart';
@@ -37,6 +40,19 @@ class ProgressController extends ChangeNotifier {
 
   ProgressState get state => _state;
   ProgressSettings get settings => _settings;
+
+  /// Badge ottenuti (RG-17) con il giorno in cui sono arrivati.
+  Map<String, int> get badges => _state.badges;
+
+  BadgeSources _badgeSources = BadgeSources.empty;
+
+  /// Avanzamenti dei salvataggi di Percorso, finali, maestri e Storia.
+  BadgeSources get badgeSources => _badgeSources;
+
+  final _unlocks = StreamController<List<BadgeDef>>.broadcast();
+
+  /// Badge appena ottenuti, un elenco per ogni aggiornamento.
+  Stream<List<BadgeDef>> get badgeUnlocks => _unlocks.stream;
 
   /// Conteggi degli ultimi giorni per il riepilogo settimanale (RG-16).
   WeekLog get weekLog => _weekLog;
@@ -90,14 +106,50 @@ class ProgressController extends ChangeNotifier {
   }
 
   Future<ProgressUpdate> record(Activity activity) async {
-    final update = _tracker.record(_state, activity, _clock(), _settings);
+    final update = _tracker.record(
+      _state,
+      activity,
+      _clock(),
+      _settings,
+      _badgeSources,
+    );
     if (!identical(update.state, _state)) {
+      final before = _state.badges;
       _state = update.state;
+      _announceBadges(before);
       notifyListeners();
       await _save();
     }
     if (_settings.enabled) await _journalize(activity);
     return update;
+  }
+
+  /// Gli avanzamenti letti dai salvataggi degli altri archivi; sblocca i badge
+  /// già meritati, anche prima dell'introduzione dei badge.
+  Future<void> updateBadgeSources(BadgeSources sources) async {
+    if (sources == _badgeSources) return;
+    _badgeSources = sources;
+    final next = _tracker.refreshBadges(_state, _clock(), _settings, sources);
+    if (identical(next, _state)) return;
+    final before = _state.badges;
+    _state = next;
+    _announceBadges(before);
+    notifyListeners();
+    await _save();
+  }
+
+  void _announceBadges(Map<String, int> before) {
+    final fresh = [
+      for (final id in _state.badges.keys)
+        if (!before.containsKey(id)) ?badgeById(id),
+    ];
+    if (fresh.isNotEmpty && !_unlocks.isClosed) _unlocks.add(fresh);
+  }
+
+  @override
+  void dispose() {
+    unawaited(_unlocks.close());
+    super.dispose();
   }
 
   Future<void> _journalize(Activity activity) async {

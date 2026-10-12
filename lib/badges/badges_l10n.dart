@@ -1,0 +1,138 @@
+import 'package:flutter/widgets.dart';
+
+import '../l10n/app_localizations.dart';
+import 'badge_def.dart';
+
+/// Testi dei badge. Come per la storia, senza i delegate (schermate montate
+/// nei test) si usa l'italiano, la lingua predefinita.
+AppLocalizations badgesL10n(BuildContext context) =>
+    Localizations.of<AppLocalizations>(context, AppLocalizations) ??
+    lookupAppLocalizations(const Locale('it'));
+
+/// Nome del badge, dai file `lib/l10n/<lingua>/badges.arb`.
+String badgeName(AppLocalizations l, BadgeDef b) => switch (b.id) {
+  'chapter_pieces' => l.badgeChapterPiecesName,
+  'chapter_rules' => l.badgeChapterRulesName,
+  'chapter_mates' => l.badgeChapterMatesName,
+  'chapter_tactics' => l.badgeChapterTacticsName,
+  'chapter_endgames' => l.badgeChapterEndgamesName,
+  'chapter_openings' => l.badgeChapterOpeningsName,
+  'chapter_strategy' => l.badgeChapterStrategyName,
+  'chapter_capablanca' => l.badgeChapterCapablancaName,
+  'guardians_3' => l.badgeGuardians3Name,
+  'story_puzzles_all' => l.badgeStoryPuzzlesAllName,
+  'endgames_all' => l.badgeEndgamesAllName,
+  'masters_all' => l.badgeMastersAllName,
+  'reviews_25' => l.badgeReviews25Name,
+  'puzzles_500' => l.badgePuzzles500Name,
+  'themes_10' => l.badgeThemes10Name,
+  'pin_10' => l.badgePin10Name,
+  'skewer_5' => l.badgeSkewer5Name,
+  'discovered_5' => l.badgeDiscovered5Name,
+  'sacrifice_10' => l.badgeSacrifice10Name,
+  'smothered_1' => l.badgeSmothered1Name,
+  'rating_1800' => l.badgeRating1800Name,
+  'streak_run_10' => l.badgeStreakRun10Name,
+  'scholars_mate' => l.badgeScholarsMateName,
+  'fools_mate' => l.badgeFoolsMateName,
+  'all_pieces_mate' => l.badgeAllPiecesMateName,
+  'en_passant' => l.badgeEnPassantName,
+  'underpromotion' => l.badgeUnderpromotionName,
+  'stalemate' => l.badgeStalemateName,
+  'marathon' => l.badgeMarathonName,
+  'wins_100' => l.badgeWins100Name,
+  'podium' => l.badgePodiumName,
+  'tournaments_5' => l.badgeTournaments5Name,
+  'story_village' => l.badgeStoryVillageName,
+  'story_gates' => l.badgeStoryGatesName,
+  'story_tower' => l.badgeStoryTowerName,
+  'story_forest' => l.badgeStoryForestName,
+  'story_castle' => l.badgeStoryCastleName,
+  'story_crown' => l.badgeStoryCrownName,
+  'story_plain' => l.badgeStoryPlainName,
+  'story_academy' => l.badgeStoryAcademyName,
+  'story_all' => l.badgeStoryAllName,
+  'streak_14' => l.badgeStreak14Name,
+  'streak_60' => l.badgeStreak60Name,
+  'streak_100' => l.badgeStreak100Name,
+  'streak_365' => l.badgeStreak365Name,
+  'days_30' => l.badgeDays30Name,
+  'days_100' => l.badgeDays100Name,
+  'comeback' => l.badgeComebackName,
+  'perfect_7' => l.badgePerfect7Name,
+  'minigames_25' => l.badgeMinigames25Name,
+  _ => b.id,
+};
+
+/// Come si ottiene il badge; le soglie vengono dalla definizione, così testo e
+/// regola non possono divergere.
+String badgeDescription(AppLocalizations l, BadgeDef b) => switch (b.id) {
+  'chapter_pieces' => l.badgeChapterPiecesDesc,
+  'chapter_rules' => l.badgeChapterRulesDesc,
+  'chapter_mates' => l.badgeChapterMatesDesc,
+  'chapter_tactics' => l.badgeChapterTacticsDesc,
+  'chapter_endgames' => l.badgeChapterEndgamesDesc,
+  'chapter_openings' => l.badgeChapterOpeningsDesc,
+  'chapter_strategy' => l.badgeChapterStrategyDesc,
+  'chapter_capablanca' => l.badgeChapterCapablancaDesc,
+  'guardians_3' => l.badgeGuardians3Desc(b.quoted),
+  'story_puzzles_all' => l.badgeStoryPuzzlesAllDesc(b.quoted),
+  'endgames_all' => l.badgeEndgamesAllDesc,
+  'masters_all' => l.badgeMastersAllDesc,
+  'reviews_25' => l.badgeReviews25Desc(b.quoted),
+  'puzzles_500' => l.badgePuzzles500Desc(b.quoted),
+  'themes_10' => l.badgeThemes10Desc(b.quoted),
+  'pin_10' => l.badgePin10Desc(b.quoted),
+  'skewer_5' => l.badgeSkewer5Desc(b.quoted),
+  'discovered_5' => l.badgeDiscovered5Desc(b.quoted),
+  'sacrifice_10' => l.badgeSacrifice10Desc(b.quoted),
+  'smothered_1' => l.badgeSmothered1Desc,
+  'rating_1800' => l.badgeRating1800Desc(b.quoted),
+  'streak_run_10' => l.badgeStreakRun10Desc(b.quoted),
+  'scholars_mate' => l.badgeScholarsMateDesc,
+  'fools_mate' => l.badgeFoolsMateDesc,
+  'all_pieces_mate' => l.badgeAllPiecesMateDesc,
+  'en_passant' => l.badgeEnPassantDesc,
+  'underpromotion' => l.badgeUnderpromotionDesc,
+  'stalemate' => l.badgeStalemateDesc,
+  'marathon' => l.badgeMarathonDesc(b.quoted),
+  'wins_100' => l.badgeWins100Desc(b.quoted),
+  'podium' => l.badgePodiumDesc,
+  'tournaments_5' => l.badgeTournaments5Desc(b.quoted),
+  'story_village' => l.badgeStoryVillageDesc,
+  'story_gates' => l.badgeStoryGatesDesc,
+  'story_tower' => l.badgeStoryTowerDesc,
+  'story_forest' => l.badgeStoryForestDesc,
+  'story_castle' => l.badgeStoryCastleDesc,
+  'story_crown' => l.badgeStoryCrownDesc,
+  'story_plain' => l.badgeStoryPlainDesc,
+  'story_academy' => l.badgeStoryAcademyDesc,
+  'story_all' => l.badgeStoryAllDesc,
+  'streak_14' => l.badgeStreak14Desc(b.quoted),
+  'streak_60' => l.badgeStreak60Desc(b.quoted),
+  'streak_100' => l.badgeStreak100Desc(b.quoted),
+  'streak_365' => l.badgeStreak365Desc(b.quoted),
+  'days_30' => l.badgeDays30Desc(b.quoted),
+  'days_100' => l.badgeDays100Desc(b.quoted),
+  'comeback' => l.badgeComebackDesc(b.quoted),
+  'perfect_7' => l.badgePerfect7Desc(b.quoted),
+  'minigames_25' => l.badgeMinigames25Desc(b.quoted),
+  _ => '',
+};
+
+String badgeFamilyTitle(AppLocalizations l, BadgeFamily family) =>
+    switch (family) {
+      BadgeFamily.learn => l.badgesFamilyLearn,
+      BadgeFamily.puzzles => l.badgesFamilyPuzzles,
+      BadgeFamily.games => l.badgesFamilyGames,
+      BadgeFamily.story => l.badgesFamilyStory,
+      BadgeFamily.habit => l.badgesFamilyHabit,
+    };
+
+/// Nome del gradino, o `null` per i badge senza gradini.
+String? badgeTierLabel(AppLocalizations l, BadgeTier tier) => switch (tier) {
+  BadgeTier.none => null,
+  BadgeTier.bronze => l.badgesTierBronze,
+  BadgeTier.silver => l.badgesTierSilver,
+  BadgeTier.gold => l.badgesTierGold,
+};
