@@ -19,6 +19,72 @@ class PersonalMove {
   int get games => wins + draws + losses;
 }
 
+/// Partita dell'archivio già letta: mosse, risultato e filtri.
+class _ParsedGame {
+  _ParsedGame(this.side, this.opponent, this.score, this.moves);
+
+  final Side side;
+  final String opponent;
+  final double score;
+  final List<(Move, String)> moves;
+}
+
+/// Partite dell'archivio utili all'albero, lette una sola volta: cambiare i
+/// filtri non rilegge i PGN.
+class PersonalGames {
+  PersonalGames._(this._games);
+
+  /// Tiene le partite concluse con un colore dell'utente, con regole standard
+  /// e dalla posizione iniziale.
+  factory PersonalGames.from(Iterable<SavedGame> games) {
+    final parsed = <_ParsedGame>[];
+    for (final saved in games) {
+      final mine = saved.playerSide;
+      final score = saved.playerScore;
+      if (mine == null ||
+          score == null ||
+          !saved.finished ||
+          saved.mode == SavedGame.imported) {
+        continue;
+      }
+      final record = importPgn(saved.pgn).games;
+      if (record.isEmpty) continue;
+      final game = record.first.game;
+      if (game.moves.isEmpty ||
+          game.variant != Variant.standard ||
+          game.initial.fen != Chess.initial.fen) {
+        continue;
+      }
+      parsed.add(
+        _ParsedGame(mine, PersonalOpeningTree.opponentOf(saved), score, [
+          for (final m in game.moves) (m.move, m.san),
+        ]),
+      );
+    }
+    return PersonalGames._(parsed);
+  }
+
+  final List<_ParsedGame> _games;
+
+  bool get isEmpty => _games.isEmpty;
+
+  /// Avversari delle partite considerate, senza doppioni.
+  List<String> get opponents =>
+      {for (final g in _games) g.opponent}.toList()
+        ..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
+
+  /// Albero delle partite che rispettano [side] e [opponent].
+  PersonalOpeningTree tree({Side? side, String? opponent}) {
+    final tree = PersonalOpeningTree._();
+    for (final g in _games) {
+      if (side != null && g.side != side) continue;
+      if (opponent != null && g.opponent != opponent) continue;
+      tree._add(g.moves, g.score);
+    }
+    return tree;
+  }
+}
+
 /// Albero delle aperture costruito dalle partite concluse dell'utente (RF-96).
 ///
 /// Le posizioni si confrontano per EPD, come nel libro delle aperture, quindi
@@ -26,47 +92,22 @@ class PersonalMove {
 class PersonalOpeningTree {
   PersonalOpeningTree._();
 
-  /// Costruisce l'albero dalle partite concluse con un colore dell'utente.
-  /// [side] e [opponent] restringono le partite considerate.
+  /// Albero delle partite di [games] che rispettano [side] e [opponent].
   factory PersonalOpeningTree.build(
     Iterable<SavedGame> games, {
     Side? side,
     String? opponent,
-  }) {
-    final tree = PersonalOpeningTree._();
-    for (final saved in games) {
-      final mine = saved.playerSide;
-      if (mine == null || !saved.finished || saved.mode == SavedGame.imported) {
-        continue;
-      }
-      if (side != null && mine != side) continue;
-      if (opponent != null && opponentOf(saved) != opponent) continue;
-      final score = saved.playerScore;
-      final record = importPgn(saved.pgn).games;
-      if (score == null || record.isEmpty) continue;
-      final game = record.first.game;
-      if (game.moves.isEmpty) continue;
-      // Le varianti e le posizioni di partenza libere non hanno un albero.
-      if (game.variant != Variant.standard ||
-          game.initial.fen != Chess.initial.fen) {
-        continue;
-      }
-      tree._add(game.initial, [
-        for (final m in game.moves) (m.move, m.san),
-      ], score);
-    }
-    return tree;
-  }
+  }) => PersonalGames.from(games).tree(side: side, opponent: opponent);
 
   final Map<String, Map<String, PersonalMove>> _moves = {};
 
   /// Partite considerate.
   int games = 0;
 
-  void _add(Position start, List<(Move, String)> moves, double score) {
+  void _add(List<(Move, String)> moves, double score) {
     games++;
     final seen = <String>{};
-    var pos = start;
+    Position pos = Chess.initial;
     for (final (move, san) in moves) {
       final key = OpeningBook.key(pos);
       if (seen.add('$key|$san')) {
@@ -102,10 +143,4 @@ class PersonalOpeningTree {
     Side.black => game.white,
     null => '',
   };
-
-  /// Avversari delle partite con un colore dell'utente, senza doppioni.
-  static List<String> opponents(Iterable<SavedGame> games) => {
-    for (final g in games)
-      if (g.playerSide != null) opponentOf(g),
-  }.toList()..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase()));
 }

@@ -95,6 +95,13 @@ void main() {
     expect(find.textContaining('Gioca qualche partita'), findsOneWidget);
   });
 
+  testWidgets('RF-96 con sole partite non utili invita a giocare', (
+    tester,
+  ) async {
+    await show(tester, games: [game('1', '1. e4 e5', '*')]);
+    expect(find.textContaining('Gioca qualche partita'), findsOneWidget);
+  });
+
   testWidgets('RF-96 mostra le mosse giocate con numero e risultati', (
     tester,
   ) async {
@@ -181,6 +188,11 @@ void main() {
     await settle(tester);
     expect(find.text('Esplora aperture'), findsOneWidget);
     expect(find.text('1. e4'), findsOneWidget);
+    // Il passaggio sostituisce la schermata: le pagine non si accumulano.
+    expect(
+      find.byType(PersonalExplorerPage, skipOffstage: false),
+      findsNothing,
+    );
   });
 
   testWidgets('RF-96 dall\'explorer si aprono le proprie partite da lì', (

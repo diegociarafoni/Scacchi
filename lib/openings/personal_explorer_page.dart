@@ -46,16 +46,13 @@ class PersonalExplorerPage extends StatefulWidget {
 
 class _PersonalExplorerPageState extends State<PersonalExplorerPage> {
   late final Future<OpeningBook> _book = widget.book ?? openingBook();
-  late final Future<List<SavedGame>> _games = widget.archive.then(
-    (a) => a.list(),
-  );
   final List<Move> _moves = [];
   late List<Position> _positions;
   Side _orientation = Side.white;
   Side? _side;
   String? _opponent;
   PersonalOpeningTree? _tree;
-  List<String> _opponents = const [];
+  PersonalGames? _games;
   bool _failed = false;
 
   @override
@@ -69,26 +66,21 @@ class _PersonalExplorerPageState extends State<PersonalExplorerPage> {
   Future<void> _load() async {
     final List<SavedGame> games;
     try {
-      games = await _games;
+      games = await (await widget.archive).list();
     } on Object {
       if (mounted) setState(() => _failed = true);
       return;
     }
     if (!mounted) return;
     setState(() {
-      _opponents = PersonalOpeningTree.opponents(games);
-      _build(games);
+      _games = PersonalGames.from(games);
+      _refilter();
     });
   }
 
   /// Ricalcola l'albero con i filtri correnti.
-  Future<void> _refilter() async {
-    final games = await _games;
-    if (mounted) setState(() => _build(games));
-  }
-
-  void _build(List<SavedGame> games) {
-    _tree = PersonalOpeningTree.build(games, side: _side, opponent: _opponent);
+  void _refilter() {
+    _tree = _games!.tree(side: _side, opponent: _opponent);
   }
 
   void _play(Move move) {
@@ -111,18 +103,22 @@ class _PersonalExplorerPageState extends State<PersonalExplorerPage> {
   });
 
   void _setSide(Side? side) {
-    _side = side;
-    if (side != null) _orientation = side;
-    unawaited(_refilter());
+    setState(() {
+      _side = side;
+      if (side != null) _orientation = side;
+      _refilter();
+    });
   }
 
   void _setOpponent(String? opponent) {
-    _opponent = opponent;
-    unawaited(_refilter());
+    setState(() {
+      _opponent = opponent;
+      _refilter();
+    });
   }
 
   void _openBook() {
-    Navigator.of(context).push(
+    Navigator.of(context).pushReplacement(
       MaterialPageRoute<void>(
         builder: (_) => ExplorerPage(
           book: _book,
@@ -169,8 +165,7 @@ class _PersonalExplorerPageState extends State<PersonalExplorerPage> {
     final tree = _tree!;
     final text = Theme.of(context).textTheme;
     final notation = AppSettings.of(context).notation;
-    final noGames = _opponents.isEmpty && _side == null && _opponent == null;
-    if (noGames) return _Message(l10n.personalEmpty);
+    if (_games!.isEmpty) return _Message(l10n.personalEmpty);
     final next = tree.continuationsAt(_positions.last);
     return LayoutBuilder(
       builder: (context, c) {
@@ -180,7 +175,7 @@ class _PersonalExplorerPageState extends State<PersonalExplorerPage> {
             _Filters(
               side: _side,
               opponent: _opponent,
-              opponents: _opponents,
+              opponents: _games!.opponents,
               onSide: _setSide,
               onOpponent: _setOpponent,
             ),

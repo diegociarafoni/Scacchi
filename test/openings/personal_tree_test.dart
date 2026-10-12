@@ -104,12 +104,13 @@ void main() {
 
   test('RF-96 elenco degli avversari senza doppioni, in ordine', () {
     expect(
-      PersonalOpeningTree.opponents([
+      PersonalGames.from([
         game('1. e4 e5', opponent: 'bruno'),
         game('1. d4 d5', opponent: 'Anna'),
         game('1. c4 e5', opponent: 'Anna'),
         game('1. e4 e5', side: null, opponent: 'Zeno'),
-      ]),
+        game('1. e4 e5', result: '*', opponent: 'Carla'),
+      ]).opponents,
       ['Anna', 'bruno'],
     );
   });
