@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:scacchi/main.dart';
+import 'package:scacchi/physical/photo_source.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> _type(WidgetTester tester, String move) async {
@@ -35,7 +36,10 @@ void main() {
     await tester.tap(find.text('Inizia la partita'));
     await tester.pumpAndSettle();
 
-    expect(find.byKey(const Key('physical-photo')), findsOneWidget);
+    expect(
+      find.byKey(const Key('physical-photo')),
+      kPhotoMove ? findsOneWidget : findsNothing,
+    );
     for (final move in ['f3', 'e5', 'g4', 'Dh4']) {
       await _type(tester, move);
     }
