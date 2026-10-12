@@ -7,6 +7,7 @@ import '../masters/master_games.dart';
 import '../path/curriculum.dart';
 import '../progress/activity.dart';
 import '../progress/progress_state.dart';
+import '../progress/xp.dart';
 import '../puzzles/puzzle_run.dart';
 import '../puzzles/themes.dart';
 import '../story/story.dart';
@@ -138,6 +139,26 @@ BadgeDef _streak(String id, int days, BadgeTier tier, IconData icon) =>
       tier: tier,
     );
 
+BadgeDef _level(String id, int level, BadgeTier tier) => BadgeDef.counter(
+  id,
+  BadgeFamily.habit,
+  Icons.stairs,
+  target: level,
+  value: (f) => levelForXp(f.state.xp),
+  tier: tier,
+);
+
+int _storyLessons(BadgeFacts f) => storyChapters.fold(
+  0,
+  (n, c) => n + (f.sources.lessonsByChapter[c.pathChapterId] ?? 0),
+);
+
+/// Lezioni da completare in tutti i capitoli della Storia.
+final int _storyLessonTotal = storyChapters.fold(
+  0,
+  (n, c) => n + c.pathChapter.stages.where((s) => !s.isGuardian).length,
+);
+
 BadgeDef _chapter(String chapterId, IconData icon) {
   assert(
     storyChapters.any((c) => c.pathChapterId == chapterId),
@@ -185,6 +206,19 @@ final List<BadgeDef> badges = [
   _chapter('openings', Icons.meeting_room),
   _chapter('strategy', Icons.route),
   _chapter('capablanca', Icons.school),
+  BadgeDef.event(
+    'story_start',
+    BadgeFamily.story,
+    Icons.flag,
+    when: (f) => _storyLessons(f) >= 1,
+  ),
+  BadgeDef.counter(
+    'story_half',
+    BadgeFamily.story,
+    Icons.hiking,
+    target: (_storyLessonTotal + 1) ~/ 2,
+    value: _storyLessons,
+  ),
   BadgeDef.counter(
     'guardians_3',
     BadgeFamily.learn,
@@ -329,6 +363,13 @@ final List<BadgeDef> badges = [
   _story('plain', Icons.landscape),
   _story('academy', Icons.account_balance),
   BadgeDef.counter(
+    'story_chapters_3',
+    BadgeFamily.story,
+    Icons.signpost,
+    target: 3,
+    value: (f) => f.sources.storyBeaten.length,
+  ),
+  BadgeDef.counter(
     'story_all',
     BadgeFamily.story,
     Icons.menu_book,
@@ -337,6 +378,10 @@ final List<BadgeDef> badges = [
         storyChapters.where((c) => f.sources.storyBeaten.contains(c.id)).length,
   ),
 
+  _level('lv_3', 3, BadgeTier.bronze),
+  _level('lv_8', 8, BadgeTier.silver),
+  _level('lv_15', 15, BadgeTier.gold),
+  _level('lv_20', 20, BadgeTier.gold),
   _streak('streak_14', 14, BadgeTier.bronze, Icons.calendar_view_week),
   _streak('streak_60', 60, BadgeTier.silver, Icons.calendar_month),
   _streak('streak_100', 100, BadgeTier.gold, Icons.filter_9_plus),

@@ -63,6 +63,13 @@ String badgeName(AppLocalizations l, BadgeDef b) => switch (b.id) {
   'comeback' => l.badgeComebackName,
   'perfect_7' => l.badgePerfect7Name,
   'minigames_25' => l.badgeMinigames25Name,
+  'story_start' => l.badgeStoryStartName,
+  'story_half' => l.badgeStoryHalfName,
+  'story_chapters_3' => l.badgeStoryChapters3Name,
+  'lv_3' => l.badgeLv3Name,
+  'lv_8' => l.badgeLv8Name,
+  'lv_15' => l.badgeLv15Name,
+  'lv_20' => l.badgeLv20Name,
   _ => b.id,
 };
 
@@ -121,6 +128,13 @@ String badgeDescription(AppLocalizations l, BadgeDef b) => switch (b.id) {
   'comeback' => l.badgeComebackDesc(b.quoted),
   'perfect_7' => l.badgePerfect7Desc(b.quoted),
   'minigames_25' => l.badgeMinigames25Desc(b.quoted),
+  'story_start' => l.badgeStoryStartDesc,
+  'story_half' => l.badgeStoryHalfDesc,
+  'story_chapters_3' => l.badgeStoryChapters3Desc(b.quoted),
+  'lv_3' => l.badgeLv3Desc(b.quoted),
+  'lv_8' => l.badgeLv8Desc(b.quoted),
+  'lv_15' => l.badgeLv15Desc(b.quoted),
+  'lv_20' => l.badgeLv20Desc(b.quoted),
   _ => '',
 };
 

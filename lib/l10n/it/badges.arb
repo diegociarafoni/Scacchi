@@ -383,5 +383,59 @@
   "badgeStoryPlainName": "Il piano giusto",
   "badgeStoryPlainDesc": "Batti Massimo nel capitolo «La pianura dei piani».",
   "badgeStoryAcademyName": "Primo dell'accademia",
-  "badgeStoryAcademyDesc": "Batti Stella nel capitolo «L'accademia del maestro»."
+  "badgeStoryAcademyDesc": "Batti Stella nel capitolo «L'accademia del maestro».",
+  "badgeStoryStartName": "Si parte!",
+  "badgeStoryStartDesc": "Completa la prima lezione della Storia.",
+  "badgeStoryHalfName": "Metà del viaggio",
+  "badgeStoryHalfDesc": "Completa metà delle lezioni della Storia.",
+  "badgeStoryChapters3Name": "Tre capitoli alle spalle",
+  "badgeStoryChapters3Desc": "Batti i bot di {count} capitoli della Storia.",
+  "@badgeStoryChapters3Desc": {
+    "description": "Come si ottiene il badge «Tre capitoli alle spalle»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeLv3Name": "Apprendista",
+  "badgeLv3Desc": "Raggiungi il livello {count}.",
+  "@badgeLv3Desc": {
+    "description": "Come si ottiene il badge «Apprendista»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeLv8Name": "Scacchista",
+  "badgeLv8Desc": "Raggiungi il livello {count}.",
+  "@badgeLv8Desc": {
+    "description": "Come si ottiene il badge «Scacchista»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeLv15Name": "Veterano",
+  "badgeLv15Desc": "Raggiungi il livello {count}.",
+  "@badgeLv15Desc": {
+    "description": "Come si ottiene il badge «Veterano»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeLv20Name": "Maestro della Rocca",
+  "badgeLv20Desc": "Raggiungi il livello {count}.",
+  "@badgeLv20Desc": {
+    "description": "Come si ottiene il badge «Maestro della Rocca»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }
