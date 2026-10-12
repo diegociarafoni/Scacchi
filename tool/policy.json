@@ -49,7 +49,8 @@
       "android.permission.POST_NOTIFICATIONS": "Aggiunto da flutter_local_notifications: serve al promemoria giornaliero, richiesto a runtime solo se attivato",
       "android.permission.VIBRATE": "Aggiunto da flutter_local_notifications per la vibrazione della notifica",
       "android.permission.READ_EXTERNAL_STORAGE": "Aggiunto da una libreria del lettore QR (camera o image_picker) per scegliere un'immagine; nessun accesso senza azione dell'utente",
-      "android.permission.ACCESS_NETWORK_STATE": "Aggiunto da una libreria (stato della rete, nessun dato inviato)"
+      "android.permission.ACCESS_NETWORK_STATE": "Aggiunto da una libreria (stato della rete, nessun dato inviato)",
+      "android.permission.CHANGE_WIFI_MULTICAST_STATE": "Aggiunto da bonsoir: l'annuncio mDNS con cui l'invitato ritrova l'ospite in rete locale (RMP-10), attivo solo durante una partita a due"
     }
   },
   "logging": {

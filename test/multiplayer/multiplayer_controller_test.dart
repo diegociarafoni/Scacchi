@@ -5,6 +5,8 @@ import 'dart:typed_data';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/multiplayer/game_invite.dart';
+import 'package:scacchi/multiplayer/lan_discovery.dart';
+import 'package:scacchi/multiplayer/lan_transport.dart';
 import 'package:scacchi/multiplayer/local_address.dart';
 import 'package:scacchi/multiplayer/multiplayer_controller.dart';
 import 'package:scacchi/multiplayer/transport.dart';
@@ -30,6 +32,26 @@ Future<(MultiplayerController, MultiplayerController)> pair({
   );
   await settle();
   return (host, guest);
+}
+
+/// Ricerca finta: registra gli annunci e risponde con l'indirizzo dato.
+class FakeDiscovery implements LanDiscovery {
+  final adverts = <(String, int)>[];
+  int stopped = 0;
+  (String, int)? answer;
+  final searched = <String>[];
+
+  @override
+  Future<void Function()> advertise(String name, int port) async {
+    adverts.add((name, port));
+    return () => stopped++;
+  }
+
+  @override
+  Future<(String, int)?> find(String name, {Duration? timeout}) async {
+    searched.add(name);
+    return answer;
+  }
 }
 
 void main() {
@@ -190,6 +212,59 @@ void main() {
       throwsA(isA<NoLocalNetwork>()),
     );
   });
+
+  group('ricerca in rete locale', () {
+    test(
+      'RMP-10 l\'ospite annuncia la partita e smette alla chiusura',
+      () async {
+        final (a, _) = LoopbackTransport.pair();
+        final discovery = FakeDiscovery();
+        final host = await MultiplayerController.host(
+          side: Side.white,
+          openHost: () async => (transport: a, lanAddress: '10.0.0.2:4000'),
+          discovery: discovery,
+        );
+        await settle();
+        final id = GameInvite.parse(host.inviteLink)!.gameId;
+        expect(discovery.adverts, [(lanServiceName(id), 4000)]);
+        await host.close();
+        expect(discovery.stopped, 1);
+      },
+    );
+
+    test('RMP-10 un annuncio che fallisce non ferma la partita', () async {
+      final (a, _) = LoopbackTransport.pair();
+      final host = await MultiplayerController.host(
+        side: Side.white,
+        openHost: () async => (transport: a, lanAddress: '10.0.0.2:4000'),
+        discovery: _BrokenDiscovery(),
+      );
+      await settle();
+      expect(host.status, MultiplayerStatus.waitingPeer);
+      await host.close();
+    });
+
+    test('RMP-10 l\'invitato cerca la partita per nome', () async {
+      final (a, b) = LoopbackTransport.pair();
+      final host = await MultiplayerController.host(
+        side: Side.white,
+        openHost: () async => (transport: a, lanAddress: '10.0.0.2:4000'),
+      );
+      final invite = GameInvite.parse(host.inviteLink)!;
+      final discovery = FakeDiscovery()..answer = ('10.0.0.9', 4100);
+      final lan = LanTransport.connect('127.0.0.1', 1);
+      final guest = await MultiplayerController.join(
+        invite,
+        openGuest: (_, _) => lan,
+        discovery: discovery,
+      );
+      expect(await lan.finder!(), ('10.0.0.9', 4100));
+      expect(discovery.searched, [lanServiceName(invite.gameId)]);
+      await guest.close();
+      await host.close();
+      await b.close();
+    });
+  });
 }
 
 /// Canale che rifiuta gli invii finché non si collega con [comeUp].
@@ -221,4 +296,14 @@ class _Unavailable implements MessageTransport, ConnectionAware {
 
   @override
   Future<void> close() => _inner.close();
+}
+
+class _BrokenDiscovery implements LanDiscovery {
+  @override
+  Future<void Function()> advertise(String name, int port) async =>
+      throw StateError('niente mDNS');
+
+  @override
+  Future<(String, int)?> find(String name, {Duration? timeout}) async =>
+      throw StateError('niente mDNS');
 }
