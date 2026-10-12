@@ -14,11 +14,15 @@ class QrSendPage extends StatefulWidget {
     super.key,
     required this.title,
     required this.frames,
+    this.hint,
     this.interval = const Duration(milliseconds: 800),
   });
 
   final String title;
   final List<String> frames;
+
+  /// Istruzioni sotto il QR; di default quelle dello scambio di partite.
+  final String? hint;
 
   /// Tempo di ogni fotogramma: abbastanza per una lettura anche al buio.
   final Duration interval;
@@ -132,7 +136,7 @@ class _QrSendPageState extends State<QrSendPage> {
               ),
             ],
             const SizedBox(height: 16),
-            Text(l10n.qrSendHint, textAlign: TextAlign.center),
+            Text(widget.hint ?? l10n.qrSendHint, textAlign: TextAlign.center),
           ],
         ),
       ),

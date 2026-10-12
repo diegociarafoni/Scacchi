@@ -46,9 +46,21 @@ Widget zxingScanner(
 /// Legge con la fotocamera i QR di una partita e restituisce con `pop` il
 /// testo ricomposto.
 class QrReceivePage extends StatefulWidget {
-  const QrReceivePage({super.key, this.scanner = zxingScanner});
+  const QrReceivePage({
+    super.key,
+    this.scanner = zxingScanner,
+    this.title,
+    this.hint,
+    this.foreignMessage,
+  });
 
   final QrScannerBuilder scanner;
+
+  /// Titolo, istruzioni e avviso per un QR estraneo; di default quelli dello
+  /// scambio di partite.
+  final String? title;
+  final String? hint;
+  final String? foreignMessage;
 
   @override
   State<QrReceivePage> createState() => _QrReceivePageState();
@@ -77,7 +89,7 @@ class _QrReceivePageState extends State<QrReceivePage> {
         // Dopo un errore sull'intera partita il ricompositore riparte da zero.
         final restarted = _assembler.received == 0;
         _show(restarted ? null : _progress, switch (reason) {
-          RejectReason.foreign => l10n.qrForeign,
+          RejectReason.foreign => widget.foreignMessage ?? l10n.qrForeign,
           RejectReason.tooLarge => l10n.qrTooLarge,
           RejectReason.malformed => l10n.qrMalformed,
           RejectReason.corrupted => l10n.qrCorrupted,
@@ -112,7 +124,7 @@ class _QrReceivePageState extends State<QrReceivePage> {
   Widget build(BuildContext context) {
     final l10n = qrL10n(context);
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.qrReceiveTitle)),
+      appBar: AppBar(title: Text(widget.title ?? l10n.qrReceiveTitle)),
       body: SafeArea(
         child: _cameraFailed
             ? Padding(
@@ -145,7 +157,7 @@ class _QrReceivePageState extends State<QrReceivePage> {
                     child: Column(
                       children: [
                         Text(
-                          _progress ?? l10n.qrReceiveHint,
+                          _progress ?? widget.hint ?? l10n.qrReceiveHint,
                           style: Theme.of(context).textTheme.titleMedium,
                           textAlign: TextAlign.center,
                         ),
