@@ -12,6 +12,9 @@ import 'package:scacchi/storage/key_value_store.dart';
 import 'computer_fakes.dart';
 import 'game_actions.dart';
 
+final _pino = botById('pino')!;
+final _chiara = botById('chiara')!;
+
 void main() {
   Widget app(MemoryStore store, {List<String>? script}) => MaterialApp(
     home: GamePage(
@@ -58,7 +61,7 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('RG-04 solo il primo bot è sbloccato all\'inizio', (
+  testWidgets('RG-04 all\'inizio sono sbloccati solo i bot più deboli', (
     tester,
   ) async {
     await tester.pumpWidget(app(MemoryStore()));
@@ -67,34 +70,40 @@ void main() {
     for (final bot in bots) {
       expect(find.text(bot.name), findsOneWidget, reason: bot.id);
     }
-    expect(find.byIcon(Icons.lock_outline), findsNWidgets(bots.length - 1));
+    expect(
+      find.byIcon(Icons.lock_outline),
+      findsNWidgets(bots.where((b) => b.elo > 700).length),
+    );
   });
 
   testWidgets('RG-04 un bot bloccato non si può scegliere', (tester) async {
     await tester.pumpWidget(app(MemoryStore()));
     await tester.pumpAndSettle();
     await openBotSheet(tester);
-    await pickBot(tester, bots[1].name);
+    await pickBot(tester, _chiara.name);
     await chooseTime(tester, 'Senza tempo');
     await tester.pumpAndSettle(const Duration(seconds: 1));
-    expect(find.textContaining(bots[0].name), findsWidgets);
-    expect(find.textContaining(bots[1].name), findsNothing);
+    expect(find.textContaining(_pino.name), findsWidgets);
+    expect(find.textContaining(_chiara.name), findsNothing);
   });
 
   testWidgets('RG-04 battere un bot sblocca il successivo', (tester) async {
     final store = MemoryStore();
     await const BotCollection()
-        .beat(bots[0].id, DateTime.utc(2026, 10, 11))
+        .beat(_pino.id, DateTime.utc(2026, 10, 11))
         .save(store);
     await tester.pumpWidget(app(store));
     await tester.pumpAndSettle();
     await openBotSheet(tester);
-    expect(find.byIcon(Icons.lock_outline), findsNWidgets(bots.length - 2));
+    expect(
+      find.byIcon(Icons.lock_outline),
+      findsNWidgets(bots.where((b) => b.elo > 900).length),
+    );
     expect(find.textContaining('Battuto'), findsOneWidget);
-    await pickBot(tester, bots[1].name);
+    await pickBot(tester, _chiara.name);
     await chooseTime(tester, 'Senza tempo');
     await tester.pumpAndSettle(const Duration(seconds: 1));
-    expect(find.textContaining(bots[1].name), findsWidgets);
+    expect(find.textContaining(_chiara.name), findsWidgets);
   });
 
   testWidgets('RF-23 la partita mostra nome, avatar ed Elo e il saluto', (
@@ -105,7 +114,7 @@ void main() {
     await openBotSheet(tester);
     await chooseTime(tester, 'Senza tempo');
     await tester.pumpAndSettle(const Duration(seconds: 1));
-    final bot = bots.first;
+    final bot = _pino;
     expect(find.textContaining('${bot.avatar} ${bot.name}'), findsWidgets);
     expect(find.textContaining('${bot.elo}'), findsWidgets);
     expect(said(bot, BotEvent.start), isTrue);
@@ -139,9 +148,9 @@ void main() {
     await tapMove(tester, 'e2e4');
     await tapMove(tester, 'd1h5');
     final collection = await BotCollection.load(store);
-    expect(collection.isBeaten(bots[0]), isTrue);
-    expect(collection.isUnlocked(bots[1]), isTrue);
-    expect(said(bots[0], BotEvent.loss), isTrue);
+    expect(collection.isBeaten(_pino), isTrue);
+    expect(collection.isUnlocked(_chiara), isTrue);
+    expect(said(_pino, BotEvent.loss), isTrue);
   });
 
   testWidgets('RG-04 perdere non aggiunge il bot alla collezione', (
@@ -159,7 +168,7 @@ void main() {
     await tester.tap(find.widgetWithText(FilledButton, 'Abbandona'));
     await tester.pumpAndSettle();
     expect((await BotCollection.load(store)).beaten, isEmpty);
-    expect(said(bots[0], BotEvent.win), isTrue);
+    expect(said(_pino, BotEvent.win), isTrue);
   });
 
   testWidgets(
@@ -174,7 +183,7 @@ void main() {
       await tapMove(tester, 'd2d4');
       await tapMove(tester, 'e2e4');
       await tapMove(tester, 'd1h5');
-      expect((await BotCollection.load(store)).isBeaten(bots[0]), isTrue);
+      expect((await BotCollection.load(store)).isBeaten(_pino), isTrue);
       await tester.tap(find.text('Annulla'));
       await tester.pumpAndSettle(const Duration(seconds: 1));
       expect((await BotCollection.load(store)).beaten, isEmpty);

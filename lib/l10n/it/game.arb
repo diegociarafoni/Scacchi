@@ -55,7 +55,7 @@
   "gameTipNext": "Avanti",
   "gameTipClose": "Chiudi",
   "gameTipHint": "Sei in difficoltà? Tocca Suggerisci: prima il pezzo da muovere, poi la mossa.",
-  "gameTipMore": "Sotto «Altro» trovi patta, abbandono, allenatore e l'editor di posizione.",
+  "gameTipMore": "Patta e abbandono sono nella barra; dal menu ⋮ apri anche l'editor di posizione.",
   "gameTipMenu": "Dal menu ⋮ analizzi la posizione e rivedi la partita.",
   "gameReviewInvite": "Partita finita. Vuoi capire dove migliorare?",
   "gameReviewInviteAction": "Rivedi la partita"

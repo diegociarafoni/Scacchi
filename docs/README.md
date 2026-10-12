@@ -42,7 +42,7 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | [sicurezza.md](sicurezza.md) | Scanner di sicurezza, SBOM e catena di fornitura |
 | [dipendenze-e-licenze.md](dipendenze-e-licenze.md) | Aggiornamenti automatici e licenze ammesse |
 | [avversario-computer.md](avversario-computer.md) | Partita contro il computer: livelli, motore Stockfish, piattaforme |
-| [bot.md](bot.md) | Bot con personalità: scala degli 8 bot, stile di gioco, libro d'apertura, frasi |
+| [bot.md](bot.md) | Bot con personalità: scala dei 15 bot, stile di gioco, libro d'apertura, frasi |
 | [revisione-partita.md](revisione-partita.md) | Revisione della partita: probabilità di vittoria, classificazione, precisione (anche per fase), coach testuale, puzzle dagli errori |
 | [notazione.md](notazione.md) | Notazione delle mosse: figurativa, italiana, inglese |
 | [allenatore.md](allenatore.md) | Partita con l'allenatore: avvisi in tempo reale, ripresa della mossa, suggerimenti a livelli |

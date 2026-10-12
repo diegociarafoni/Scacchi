@@ -59,11 +59,18 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(picker(const GameSetup(opponent: Opponent.bot)));
-    for (var i = 1; i < bots.length; i++) {
+    const collection = BotCollection();
+    final locked = bots.where((b) => !collection.isUnlocked(b));
+    expect(locked, isNotEmpty);
+    for (final b in locked) {
+      final name = BotCollection.unlockedBy(b).first.name;
+      final count = locked
+          .where((l) => BotCollection.unlockedBy(l).first.name == name)
+          .length;
       expect(
-        find.textContaining('Si sblocca battendo ${bots[i - 1].name}'),
-        findsOneWidget,
-        reason: bots[i].id,
+        find.textContaining('Si sblocca battendo $name'),
+        findsNWidgets(count),
+        reason: b.id,
       );
     }
     expect(find.textContaining('Si sblocca battendo Stella'), findsNothing);
@@ -73,7 +80,7 @@ void main() {
     tester,
   ) async {
     final collection = const BotCollection().beat(
-      bots.first.id,
+      'pino',
       DateTime.utc(2026, 10, 11),
     );
     await tester.pumpWidget(
@@ -94,13 +101,7 @@ void main() {
         ),
       ),
     );
-    expect(
-      find.textContaining('Si sblocca battendo ${bots.first.name}'),
-      findsNothing,
-    );
-    expect(
-      find.textContaining('Si sblocca battendo ${bots[1].name}'),
-      findsOneWidget,
-    );
+    expect(find.textContaining('Si sblocca battendo Pino'), findsNothing);
+    expect(find.textContaining('Si sblocca battendo Chiara'), findsWidgets);
   });
 }
