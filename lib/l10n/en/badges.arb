@@ -383,5 +383,59 @@
   "badgeStoryPlainName": "The Right Plan",
   "badgeStoryPlainDesc": "Beat Massimo in the chapter “The plain of plans”.",
   "badgeStoryAcademyName": "Top of the Academy",
-  "badgeStoryAcademyDesc": "Beat Stella in the chapter “The master's academy”."
+  "badgeStoryAcademyDesc": "Beat Stella in the chapter “The master's academy”.",
+  "badgeStoryStartName": "Off We Go!",
+  "badgeStoryStartDesc": "Finish the first lesson of the Story.",
+  "badgeStoryHalfName": "Halfway There",
+  "badgeStoryHalfDesc": "Finish half of the lessons in the Story.",
+  "badgeStoryChapters3Name": "Three Chapters Down",
+  "badgeStoryChapters3Desc": "Beat the bots of {count} chapters of the Story.",
+  "@badgeStoryChapters3Desc": {
+    "description": "Come si ottiene il badge «Tre capitoli alle spalle»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeLv3Name": "Apprentice",
+  "badgeLv3Desc": "Reach level {count}.",
+  "@badgeLv3Desc": {
+    "description": "Come si ottiene il badge «Apprendista»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeLv8Name": "Chess Player",
+  "badgeLv8Desc": "Reach level {count}.",
+  "@badgeLv8Desc": {
+    "description": "Come si ottiene il badge «Scacchista»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeLv15Name": "Veteran",
+  "badgeLv15Desc": "Reach level {count}.",
+  "@badgeLv15Desc": {
+    "description": "Come si ottiene il badge «Veterano»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeLv20Name": "Master of the Rokko",
+  "badgeLv20Desc": "Reach level {count}.",
+  "@badgeLv20Desc": {
+    "description": "Come si ottiene il badge «Maestro della Rocca»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

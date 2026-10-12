@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import '../analysis/analysis_page.dart';
 import '../archive/pgn.dart';
 import '../archive/saved_game.dart';
+import '../bot_gallery/game_options.dart';
 import '../coach/coach_session.dart';
 import '../coach/explain_why.dart';
 import '../coach/hint_text.dart';
@@ -29,6 +30,7 @@ import '../l10n/app_localizations.dart';
 import '../openings/opening_game.dart';
 import '../openings/opening_name.dart';
 import '../progress/activity.dart';
+import '../progress/avatar.dart';
 import '../progress/game_activity.dart';
 import '../progress/progress_controller.dart';
 import '../progress/progress_feedback.dart';
@@ -60,6 +62,7 @@ import 'move_label.dart';
 import 'move_speech.dart';
 import 'opponent_picker.dart';
 import 'sounds.dart';
+import 'speech_bubble.dart';
 import 'variant.dart';
 
 /// Semimosse minime perché una partita valga XP: abbandonare subito non deve
@@ -80,6 +83,7 @@ class GamePage extends StatefulWidget {
     this.createComputer,
     this.createVariantEngine,
     this.now,
+    this.random,
     this.onActivity,
     this.onSave,
     this.resume,
@@ -103,6 +107,9 @@ class GamePage extends StatefulWidget {
 
   /// Ora corrente per l'orologio; quella di sistema se assente.
   final DateTime Function()? now;
+
+  /// Fonte del caso per le battute del bot; fissa nei golden.
+  final math.Random? random;
 
   /// Registra la partita finita nei progressi; senza, nessun XP.
   final ActivityRecorder? onActivity;
@@ -190,7 +197,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   /// Ultima variante scelta nel pannello Nuova, con persone o contro il computer.
   Variant _chosenVariant = Variant.standard;
-  final _random = math.Random();
+  late final math.Random _random = widget.random ?? math.Random();
 
   /// Lato giocato dal computer; `null` nella partita tra due persone.
   Side? _computerSide;
@@ -581,14 +588,67 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       _botSay(BotEvent.check);
     } else if (_game.moves.last.san.contains('x') && _random.nextInt(3) == 0) {
       _botSay(BotEvent.capture);
+    } else if (_speech == null &&
+        _game.moves.length >= 4 &&
+        _random.nextInt(6) == 0) {
+      _botSay(BotEvent.chat);
     }
   }
 
   void _botSay(BotEvent event) {
     final bot = _bot;
     if (bot == null || !mounted || _zen) return;
+    // Le battute di compagnia non meritano una fascia che copre la scacchiera.
+    if (event == BotEvent.chat && !_speechRoom) return;
     final text = bot.phrase(event, _random, friendly: _kidGame);
-    _showMessage('${bot.avatar} ${bot.name}: $text');
+    _say(
+      Speech(
+        text,
+        bot: bot,
+        expression: switch (event) {
+          BotEvent.start => AvatarExpression.greeting,
+          BotEvent.win || BotEvent.capture => AvatarExpression.happy,
+          BotEvent.loss => AvatarExpression.surprised,
+          BotEvent.check => AvatarExpression.challenge,
+          BotEvent.mistake => AvatarExpression.encouraging,
+          _ => AvatarExpression.neutral,
+        },
+      ),
+    );
+  }
+
+  Speech? _speech;
+  Timer? _speechTimer;
+
+  /// Dove c'è spazio sopra la scacchiera, impostato dal layout.
+  bool _speechRoom = false;
+
+  Widget _strip() =>
+      SpeechStrip(opponent: _bot, speech: _speech, onDismiss: _clearSpeech);
+
+  void _clearSpeech() {
+    _speechTimer?.cancel();
+    if (_speech != null && mounted) setState(() => _speech = null);
+  }
+
+  /// Fumetto sopra la scacchiera; senza spazio (schermo basso o orizzontale)
+  /// resta la fascia in basso.
+  void _say(Speech speech, {Duration? duration}) {
+    if (!_speechRoom) {
+      final bot = speech.bot;
+      final text = bot == null
+          ? speech.text
+          : '${bot.avatar} ${bot.name}: ${speech.text}';
+      if (duration == null) {
+        _showMessage(text);
+      } else {
+        _showMessage(text, duration: duration);
+      }
+      return;
+    }
+    _speechTimer?.cancel();
+    setState(() => _speech = speech);
+    _speechTimer = Timer(duration ?? const Duration(seconds: 8), _clearSpeech);
   }
 
   void _saveAdaptive() {
@@ -676,6 +736,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _computer?.dispose().ignore();
     WidgetsBinding.instance.removeObserver(this);
     _ticker?.cancel();
+    _speechTimer?.cancel();
     _tick.dispose();
     _sounds.dispose();
     _board.dispose();
@@ -1115,7 +1176,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     }
     if (!mounted || !identical(position, _game.position)) return;
     if (threat == null) {
-      _showMessage('Nessuna minaccia da mostrare.');
+      _say(const Speech('Nessuna minaccia da mostrare.'));
       return;
     }
     final fen = threatFen(position);
@@ -1130,10 +1191,12 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         threat.to,
       );
     });
-    _showMessage(
-      san == null
-          ? 'La freccia rossa mostra la minaccia dell\'avversario.'
-          : 'Se toccasse all\'avversario giocherebbe ${formatSan(san, AppSettings.of(context).notation)}: la freccia rossa.',
+    _say(
+      Speech(
+        san == null
+            ? 'La freccia rossa mostra la minaccia dell\'avversario.'
+            : 'Se toccasse all\'avversario giocherebbe ${formatSan(san, AppSettings.of(context).notation)}: la freccia rossa.',
+      ),
     );
   }
 
@@ -1149,7 +1212,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     }
     if (!mounted || !identical(position, _game.position)) return;
     if (hint == null) {
-      _showMessage('Nessun suggerimento disponibile.');
+      _say(const Speech('Nessun suggerimento disponibile.'));
       return;
     }
     final marks = _settings.marks;
@@ -1173,7 +1236,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
               ...marks.circle(color, to),
             },
     );
-    _showMessage(text);
+    _say(Speech(text, expression: AvatarExpression.encouraging));
   }
 
   /// Gioca [move] con orologio, suono e annuncio; con il tempo scaduto chiude la partita.
@@ -1317,7 +1380,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     );
     if (text == null) return;
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    _showMessage(text, duration: const Duration(seconds: 8));
+    _say(Speech(text), duration: const Duration(seconds: 8));
   }
 
   /// Partita di scacchi classici dalla posizione iniziale: solo queste contano
@@ -1494,7 +1557,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     var setup = _kidGame ? chosen.forKids() : chosen;
     var bot = setup.opponent == Opponent.bot ? botById(setup.botId) : null;
     if (bot != null && !_collection.isUnlocked(bot)) {
-      bot = _kidGame ? friendlyBots.first : bots.first;
+      bot = _kidGame ? friendlyBots.first : botById('pino')!;
       setup = setup.copyWith(botId: bot.id);
     }
     _setup = setup;
@@ -1563,6 +1626,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       handicap: handicap,
       humanSide: human,
     );
+    if (choice.coach && vsComputer && _engineGame && !_zen) {
+      setState(() => _coachOn = true);
+    }
     if (vsComputer) return;
     unawaited(
       widget.settings.update(
@@ -1594,6 +1660,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _badge = null;
     _hintedFen = null;
     _threatFen = null;
+    _speechTimer?.cancel();
+    _speech = null;
     _coach = _newCoach();
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     _game = game;
@@ -2417,10 +2485,22 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                   Expanded(
                     child: LayoutBuilder(
                       builder: (context, box) {
-                        final banner =
+                        _speechRoom =
+                            !_zen &&
+                            box.maxHeight >=
+                                _moveStripHeight + speechStripHeight;
+                        final tip =
                             box.maxHeight >= _moveStripHeight + _bannerHeight
                             ? _banner(context)
                             : null;
+                        // Il fumetto ha la precedenza sul suggerimento; lo
+                        // sfidante resta in vista quando non c'è altro.
+                        final banner = _speechRoom && _speech != null
+                            ? _strip()
+                            : tip ??
+                                  (_speechRoom && _bot != null
+                                      ? _strip()
+                                      : null);
                         return Column(
                           children: [
                             ?banner,
@@ -2667,7 +2747,10 @@ class _ActionLabels {
   final String hintTip;
 }
 
-/// Barra dei comandi frequenti; il resto sta nel pannello «Partita».
+/// Barra dei comandi in vista; il pannello «Partita» tiene gli altri.
+///
+/// Gli adulti hanno in barra anche Nuova, Patta e Abbandona; ai bambini
+/// restano tre comandi grandi e il resto nel pannello.
 class _GameActions extends StatelessWidget {
   const _GameActions({
     required this.kid,
@@ -2706,7 +2789,13 @@ class _GameActions extends StatelessWidget {
   /// Nel profilo bambino «Gira» cede il posto al suggerimento.
   bool get _flipInPanel => kid && hintAvailable;
 
-  void _openPanel(BuildContext context) {
+  /// Sotto questa larghezza i pulsanti scenderebbero sotto i 48 dp.
+  static const double _fullBarWidth = 7 * 48;
+
+  /// Gli adulti hanno Nuova, Patta e Abbandona sempre in vista.
+  bool get _gameInBar => !kid;
+
+  void _openPanel(BuildContext context, {required bool flipInPanel}) {
     final theme = Theme.of(context);
     void pick(BuildContext sheet, VoidCallback? action) {
       Navigator.of(sheet).pop();
@@ -2734,14 +2823,15 @@ class _GameActions extends StatelessWidget {
                     ),
                   ),
                 ),
-                _PanelTile(
-                  Icons.add,
-                  labels.newGame,
-                  onNewGame,
-                  kid: kid,
-                  pick: pick,
-                ),
-                if (_flipInPanel)
+                if (!_gameInBar)
+                  _PanelTile(
+                    Icons.add,
+                    labels.newGame,
+                    onNewGame,
+                    kid: kid,
+                    pick: pick,
+                  ),
+                if (flipInPanel)
                   _PanelTile(
                     Icons.swap_vert,
                     labels.flip,
@@ -2749,20 +2839,22 @@ class _GameActions extends StatelessWidget {
                     kid: kid,
                     pick: pick,
                   ),
-                _PanelTile(
-                  Icons.handshake_outlined,
-                  labels.draw,
-                  onDraw,
-                  kid: kid,
-                  pick: pick,
-                ),
-                _PanelTile(
-                  Icons.flag_outlined,
-                  labels.resign,
-                  onResign,
-                  kid: kid,
-                  pick: pick,
-                ),
+                if (!_gameInBar) ...[
+                  _PanelTile(
+                    Icons.handshake_outlined,
+                    labels.draw,
+                    onDraw,
+                    kid: kid,
+                    pick: pick,
+                  ),
+                  _PanelTile(
+                    Icons.flag_outlined,
+                    labels.resign,
+                    onResign,
+                    kid: kid,
+                    pick: pick,
+                  ),
+                ],
                 if (coachOn != null)
                   SwitchListTile(
                     secondary: const Icon(Icons.school_outlined),
@@ -2792,28 +2884,53 @@ class _GameActions extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: _actionsHeight,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          if (hintAvailable)
-            _ActionButton(
-              'hint',
-              Icons.lightbulb_outline,
-              labels.hint,
-              onHint,
-              tooltip: labels.hintTip,
-            ),
-          _ActionButton('undo', Icons.undo, labels.undo, onUndo),
-          if (!_flipInPanel)
-            _ActionButton('flip', Icons.swap_vert, labels.flip, onFlip),
-          _ActionButton(
-            'more',
-            Icons.more_horiz,
-            labels.more,
-            () => _openPanel(context),
-            dot: coachOn ?? false,
-          ),
-        ],
+      child: LayoutBuilder(
+        builder: (context, box) {
+          // Su schermi stretti «Gira» passa nel pannello per non schiacciare
+          // i pulsanti.
+          final flipInPanel =
+              _flipInPanel || (_gameInBar && box.maxWidth < _fullBarWidth);
+          final hasPanel = !_gameInBar || coachOn != null || flipInPanel;
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              if (hintAvailable)
+                _ActionButton(
+                  'hint',
+                  Icons.lightbulb_outline,
+                  labels.hint,
+                  onHint,
+                  tooltip: labels.hintTip,
+                ),
+              _ActionButton('undo', Icons.undo, labels.undo, onUndo),
+              if (!flipInPanel)
+                _ActionButton('flip', Icons.swap_vert, labels.flip, onFlip),
+              if (_gameInBar) ...[
+                _ActionButton('new', Icons.add, labels.newGame, onNewGame),
+                _ActionButton(
+                  'draw',
+                  Icons.handshake_outlined,
+                  labels.draw,
+                  onDraw,
+                ),
+                _ActionButton(
+                  'resign',
+                  Icons.flag_outlined,
+                  labels.resign,
+                  onResign,
+                ),
+              ],
+              if (hasPanel)
+                _ActionButton(
+                  'more',
+                  Icons.more_horiz,
+                  labels.more,
+                  () => _openPanel(context, flipInPanel: flipInPanel),
+                  dot: coachOn ?? false,
+                ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -3151,8 +3268,9 @@ class _TimeChoice {
     this.whiteName,
     this.blackName,
     this.setup,
-    this.handicap,
-  );
+    this.handicap, {
+    this.coach = false,
+  });
 
   final TimeControl? control;
   final Variant variant;
@@ -3160,6 +3278,9 @@ class _TimeChoice {
   final String blackName;
   final GameSetup setup;
   final Handicap? handicap;
+
+  /// Allenatore acceso dall'inizio, scelto nella galleria dei bot.
+  final bool coach;
 }
 
 /// Testi del profilo bambino; in italiano se la pagina è montata senza i
@@ -3339,6 +3460,22 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
               computerAvailable: widget.computerAvailable,
               kidMode: widget.kidMode,
               onChanged: (setup) => setState(() => _setup = setup),
+              galleryOptions: GameOptions(
+                variant: _variant,
+                handicap: _handicap,
+              ),
+              onGalleryPlay: (result) => Navigator.pop(
+                context,
+                _TimeChoice(
+                  result.options.control,
+                  result.options.variant,
+                  _white.text,
+                  _black.text,
+                  result.applyTo(widget.kidMode ? _setup.forKids() : _setup),
+                  result.options.handicap,
+                  coach: result.options.coach,
+                ),
+              ),
             ),
             if (_setup.opponent == Opponent.human) ...[
               const SizedBox(height: 8),

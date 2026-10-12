@@ -3,13 +3,25 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/engine/bots.dart';
 import 'package:scacchi/progress/avatar.dart';
 import 'package:scacchi/progress/guardian_avatar.dart';
+import 'package:scacchi/story/story.dart';
 
 void main() {
   group('RP-08 custodi della Storia', () {
-    test('ogni bot della scala ha il suo personaggio, tutti diversi', () {
-      final characters = [for (final b in bots) guardianCharacter(b.id)];
+    test('ogni custode della Storia ha il suo personaggio, tutti diversi', () {
+      final guardians = [
+        for (final c in storyChapters)
+          if (c.botId != 'tino') c.botId,
+      ];
+      final characters = [for (final id in guardians) guardianCharacter(id)];
       expect(characters, everyElement(isNotNull));
-      expect(characters.toSet(), hasLength(bots.length));
+      expect(characters.toSet(), hasLength(guardians.length));
+    });
+
+    test('ogni bot ha il suo personaggio, tutti diversi', () {
+      final all = [...bots, ...storyOnlyBots];
+      final characters = [for (final b in all) guardianCharacter(b.id)];
+      expect(characters, everyElement(isNotNull));
+      expect(characters.toSet(), hasLength(all.length));
     });
 
     test('un bot sconosciuto non ha un personaggio', () {

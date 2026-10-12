@@ -16,7 +16,7 @@ Dall'alto verso il basso:
 4. **Materiale del giocatore in alto**: pezzi che ha catturato e vantaggio.
 5. **Scacchiera** a tutta larghezza.
 6. **Materiale del giocatore in basso**.
-7. **Barra dei comandi** in basso, alla portata del pollice, con al massimo quattro pulsanti da 48 dp: Suggerisci (contro il computer o un bot, non nelle sfide), Annulla, Gira, Altro. «Altro» apre il pannello **Partita** con Nuova, Patta, Abbandona, l'interruttore Allenatore e, con l'allenatore acceso, Minaccia (vedi [allenatore.md](allenatore.md)); un punto su «Altro» dice che l'allenatore è acceso. Nel profilo bambino i pulsanti sono tre da 56 dp (Suggerisci o Gira, Annulla, Altro) e il pannello usa «Nuova partita», «Pareggio?» e «Mi arrendo» (vedi [profilo-bambino.md](profilo-bambino.md)).
+7. **Barra dei comandi** in basso, alla portata del pollice, con tutti i comandi della partita in vista, da almeno 48 dp: Suggerisci (contro il computer o un bot, non nelle sfide), Annulla, Gira, Nuova, Patta e Abbandona. Il pulsante «Altro» compare solo quando serve: apre il pannello **Partita** con l'interruttore Allenatore (contro il computer) e, con l'allenatore acceso, Minaccia (vedi [allenatore.md](allenatore.md)); un punto su «Altro» dice che l'allenatore è acceso. Sotto i 336 dp di larghezza «Gira» passa nel pannello per non schiacciare i pulsanti. Nel profilo bambino i pulsanti sono tre da 56 dp (Suggerisci o Gira, Annulla, Altro) e il pannello usa «Nuova partita», «Pareggio?» e «Mi arrendo» (vedi [profilo-bambino.md](profilo-bambino.md)).
 
 Stato, righe del materiale e scacchiera stanno attaccati ai comandi; l'avanzo di altezza va allo spazio delle mosse. I messaggi a fascia compaiono sopra la scacchiera, non sopra le sue ultime traverse. La scacchiera ha come lato il minimo tra la larghezza dello schermo e l'altezza rimasta dopo striscia minima, stato, righe del materiale e comandi.
 
@@ -40,8 +40,8 @@ Per ciascun giocatore una riga mostra le icone dei pezzi avversari catturati, da
 
 | Comando | Effetto |
 |---|---|
-| Altro | Apre il pannello «Partita» con i comandi meno frequenti |
-| Nuova (nel pannello) | Apre la scelta dell'avversario (due giocatori o computer, con colore e livello), della variante (Classica, Chess960, Re della collina, Tre scacchi, anche contro il computer) e della cadenza; toccando la cadenza inizia la nuova partita |
+| Altro | Apre il pannello «Partita» con Allenatore e Minaccia (e «Gira» sugli schermi stretti); non c'è dove il pannello sarebbe vuoto |
+| Nuova | Apre la scelta dell'avversario (due giocatori o computer, con colore e livello), della variante (Classica, Chess960, Re della collina, Tre scacchi, anche contro il computer) e della cadenza; toccando la cadenza inizia la nuova partita |
 | Annulla | Annulla l'ultima mossa; disattivato se non ci sono mosse |
 | Gira | Capovolge la scacchiera |
 | Patta | Chiede all'avversario se accetta la patta; disattivato a partita conclusa |
@@ -54,7 +54,9 @@ Per ciascun giocatore una riga mostra le icone dei pezzi avversari catturati, da
 | Menu ⋮, "Analisi della posizione" | Apre l'analisi libera della posizione corrente con orologio e computer fermi (vedi [analisi.md](analisi.md)) |
 | Menu ⋮, "Revisione della partita" | Apre la revisione con classificazione delle mosse e precisione (vedi [revisione-partita.md](revisione-partita.md)); il menu c'è solo dove c'è il motore e negli scacchi classici, non nelle varianti né nel profilo bambino |
 
-**Suggerimenti al primo uso**: dopo la prima mossa di una partita, una carta alla volta spiega Suggerisci, «Altro» e il menu ⋮ (con «Avanti» e «Chiudi»; «Chiudi» li spegne per sempre). A fine della prima partita finita contro il motore compare l'invito «Rivedi la partita», una volta sola. Non compaiono in zen, nelle sfide e nel profilo bambino.
+**Personaggi e fumetti**: nello spazio libero sopra la scacchiera (almeno 136 dp) lo sfidante, cioè il bot, compare con il suo avatar e il suo nome; quando parla (saluto, scacco, cattura, fine partita e, una volta ogni tanto, una battuta di compagnia scelta dal suo carattere) la frase esce in un fumetto per 8 secondi, o fino a un tocco. Suggerimento, minaccia e «Spiegami perché» sono invece il fumetto dell'allenatore, il gatto astronauta. Il fumetto ha la precedenza sui suggerimenti del primo uso; in zen non c'è. Il widget è riusabile: `SpeechStrip` (`lib/game/speech_bubble.dart`) mostra un personaggio (`Speech.bot`, oppure l'allenatore se nullo) con un `Speech` che ha testo, espressione e un'icona di stato facoltativa; `SpeechBubble` è il solo fumetto, per chi disegna già il personaggio. Pensato anche per puzzle e partita con l'istruttore. Dove manca lo spazio (schermi bassi, orizzontale) i messaggi restano nella fascia in basso come prima.
+
+**Suggerimenti al primo uso**: dopo la prima mossa di una partita, una carta alla volta spiega Suggerisci, la barra con patta e abbandono e il menu ⋮ (con «Avanti» e «Chiudi»; «Chiudi» li spegne per sempre). A fine della prima partita finita contro il motore compare l'invito «Rivedi la partita», una volta sola. Non compaiono in zen, nelle sfide e nel profilo bambino.
 
 Nel profilo bambino riga di stato, comandi e dialoghi usano frasi brevi, e mancano il menu ⋮ e l'editor di posizione; le nuove partite non offrono varianti né cadenze Bullet e Blitz, mentre una partita già in corso continua com'è (vedi [profilo-bambino.md](profilo-bambino.md)).
 

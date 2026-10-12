@@ -92,12 +92,10 @@ void main() {
 
     testWidgets('non si può ricominciare né annullare', (tester) async {
       await open(tester);
-      await tester.tap(find.byKey(const ValueKey('gameAction-more')));
-      await tester.pumpAndSettle();
-      final newGame = tester.widget<ListTile>(
-        find.widgetWithText(ListTile, 'Nuova'),
+      final newGame = tester.widget<InkWell>(
+        find.byKey(const ValueKey('gameAction-new')),
       );
-      expect(newGame.enabled, isFalse);
+      expect(newGame.onTap, isNull);
       expect(find.byTooltip('Altre azioni'), findsNothing);
     });
 
