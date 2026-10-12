@@ -110,7 +110,7 @@ restituisce `null` e si torna al motore.
 ## Frasi
 
 `Bot.phrase(evento, random)` restituisce una frase per `BotEvent.start`, `check`, `capture`,
-`mistake`, `win`, `loss`, `draw`. Il saluto è proprio del bot e riporta il suo nome; le altre frasi
+`mistake`, `win`, `loss`, `draw`, `chat` (battute di compagnia, ogni tanto dopo una mossa del bot). Il saluto è proprio del bot e riporta il suo nome; le altre frasi
 dipendono dallo stile.
 
 ## Profilo bambino

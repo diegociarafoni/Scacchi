@@ -50,4 +50,31 @@ String themeLabel(AppLocalizations l, BoardTheme t) => switch (t) {
   BoardTheme.retro => l.settingsThemeRetro,
   BoardTheme.giardino => l.settingsThemeGiardino,
   BoardTheme.terracotta => l.settingsThemeTerracotta,
+  BoardTheme.marmo => l.styleThemeMarmo,
+  BoardTheme.metallo => l.styleThemeMetallo,
+  BoardTheme.vetro => l.styleThemeVetro,
+  BoardTheme.menta => l.styleThemeMenta,
+  BoardTheme.cipria => l.styleThemeCipria,
+  BoardTheme.ardesia => l.styleThemeArdesia,
+};
+
+String backdropLabel(AppLocalizations l, BoardBackdrop b) => switch (b) {
+  BoardBackdrop.standard => l.styleBackdropStandard,
+  BoardBackdrop.graphite => l.styleBackdropGraphite,
+  BoardBackdrop.feltro => l.styleBackdropFeltro,
+  BoardBackdrop.ardesia => l.styleBackdropArdesia,
+  BoardBackdrop.perla => l.styleBackdropPerla,
+  BoardBackdrop.notte => l.styleBackdropNotte,
+  BoardBackdrop.tramonto => l.styleBackdropTramonto,
+  BoardBackdrop.oceano => l.styleBackdropOceano,
+  BoardBackdrop.foresta => l.styleBackdropForesta,
+  BoardBackdrop.cuoio => l.styleBackdropCuoio,
+  BoardBackdrop.spazio => l.styleBackdropSpazio,
+  BoardBackdrop.photo => l.styleBackdropPhoto,
+};
+
+String soundSetLabel(AppLocalizations l, SoundSet s) => switch (s) {
+  SoundSet.classico => l.styleSoundClassico,
+  SoundSet.legno => l.styleSoundLegno,
+  SoundSet.cristallo => l.styleSoundCristallo,
 };

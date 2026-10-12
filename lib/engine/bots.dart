@@ -8,7 +8,7 @@ import 'style.dart';
 import 'uci_moves.dart';
 
 /// Momenti della partita in cui un bot può commentare (RF-23).
-enum BotEvent { start, check, capture, mistake, win, loss, draw }
+enum BotEvent { start, check, capture, mistake, win, loss, draw, chat }
 
 /// Bot con personalità (RF-23): una forza
 /// di base (un livello del motore), uno stile, un'apertura preferita e frasi
@@ -321,6 +321,7 @@ const _friendlyPhrases = <BotEvent, List<String>>{
   BotEvent.win: ['Bella partita! Giochiamo ancora?', 'Ho vinto io, rivincita?'],
   BotEvent.loss: ['Hai vinto tu, bravissimo!', 'Evviva, hai vinto!'],
   BotEvent.draw: ['Pari! Bella partita.', 'Pareggio! Siamo bravi.'],
+  BotEvent.chat: ['Che bella partita!', 'Ci stiamo divertendo!', 'Tocca a te!'],
 };
 
 const _styleTemperature = 25;
@@ -345,6 +346,11 @@ const _phrasesByStyle = <BotStyle, Map<BotEvent, List<String>>>{
       'Patta: volevo di più, ma va bene.',
       'Pari, ma la prossima volta attacco di più.',
     ],
+    BotEvent.chat: [
+      'Si attacca, non si aspetta!',
+      'Non ho paura di niente.',
+      'Muovi, che ti raggiungo.',
+    ],
   },
   BotStyle.positional: {
     BotEvent.check: ['Scacco, con calma.', 'Scacco: la posizione lo permette.'],
@@ -365,6 +371,11 @@ const _phrasesByStyle = <BotStyle, Map<BotEvent, List<String>>>{
       'Mi hai superato in posizione, bravo.',
     ],
     BotEvent.draw: ['Patta equilibrata, giusta così.', 'Una patta onesta.'],
+    BotEvent.chat: [
+      'Prendo tempo: la posizione lo merita.',
+      'Qui conta la struttura.',
+      'Niente fretta, gioco con calma.',
+    ],
   },
   BotStyle.gambitist: {
     BotEvent.check: [
@@ -390,6 +401,11 @@ const _phrasesByStyle = <BotStyle, Map<BotEvent, List<String>>>{
     BotEvent.draw: [
       'Patta: un po\' di fumo e basta.',
       'Pari, ma che partita movimentata.',
+    ],
+    BotEvent.chat: [
+      'Un pedone in più o in meno, che importa?',
+      'Il bello deve ancora venire.',
+      'Mi piace quando si rischia.',
     ],
   },
 };
