@@ -125,6 +125,7 @@ I golden si rigenerano con `flutter test test/settings --update-goldens` dopo un
 | RF-66 cache della revisione (in memoria) | ✓ | |
 | RF-70 spiegazioni: matto concesso o mancato, pezzo in presa, forchetta, inchiodatura, re scoperto, perdita di materiale | ✓ | |
 | RF-72 giudizio con simbolo sulla casa della mossa (con l'allenatore acceso) | ✓ | ✓ |
+| RF-122 spiegami perché: frasi per cattura, scacco, arrocco, promozione, minacce, sviluppo; interruttore in Impostazioni | ✓ | |
 | RF-73 allenatore: avviso in tempo reale, Riprova e Continua | ✓ | |
 | RF-74 suggerimento a livelli, in parole semplici, con cerchio e freccia | ✓ | |
 | RF-71 cattura netta, doppio attacco, scoperta dalla variante del motore | ✓ | |

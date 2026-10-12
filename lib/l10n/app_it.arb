@@ -1010,6 +1010,126 @@
       }
     }
   },
+  "whyPiece": "{role, select, pawn{il pedone} knight{il cavallo} bishop{l'alfiere} rook{la torre} queen{la donna} other{il re}}",
+  "@whyPiece": {
+    "description": "Nome del pezzo con l'articolo, per le frasi di «spiegami perché»",
+    "placeholders": {
+      "role": {
+        "type": "String",
+        "description": "role"
+      }
+    }
+  },
+  "whyMate": "Scacco matto!",
+  "@whyMate": {
+    "description": "Spiegami perché: la mossa dà matto"
+  },
+  "whyCastle": "Arrocca: mette il re al sicuro.",
+  "@whyCastle": {
+    "description": "Spiegami perché: arrocco"
+  },
+  "whyPromote": "Promuove il pedone: diventa {role, select, queen{una donna} rook{una torre} bishop{un alfiere} knight{un cavallo} other{un pezzo}}.",
+  "@whyPromote": {
+    "description": "Spiegami perché: promozione",
+    "placeholders": {
+      "role": {
+        "type": "String",
+        "description": "Ruolo scelto per la promozione"
+      }
+    }
+  },
+  "whyCapture": "Cattura {victim} con {attacker}.",
+  "@whyCapture": {
+    "description": "Spiegami perché: cattura",
+    "placeholders": {
+      "victim": {
+        "type": "String",
+        "description": "victim"
+      },
+      "attacker": {
+        "type": "String",
+        "description": "attacker"
+      }
+    }
+  },
+  "whyCheck": "Dà scacco al tuo re.",
+  "@whyCheck": {
+    "description": "Spiegami perché: scacco"
+  },
+  "whySafe": "Mette al sicuro {piece}, che era sotto attacco.",
+  "@whySafe": {
+    "description": "Spiegami perché: pezzo salvato",
+    "placeholders": {
+      "piece": {
+        "type": "String",
+        "description": "piece"
+      }
+    }
+  },
+  "whyThreatCapture": "Minaccia di catturare {victim} in {square}.",
+  "@whyThreatCapture": {
+    "description": "Spiegami perché: minaccia di cattura",
+    "placeholders": {
+      "victim": {
+        "type": "String",
+        "description": "victim"
+      },
+      "square": {
+        "type": "String",
+        "description": "square"
+      }
+    }
+  },
+  "whyThreatCaptureKid": "Minaccia di catturare {victim}.",
+  "@whyThreatCaptureKid": {
+    "description": "Spiegami perché, profilo bambino: minaccia di cattura senza casa",
+    "placeholders": {
+      "victim": {
+        "type": "String",
+        "description": "victim"
+      }
+    }
+  },
+  "whyThreatCheck": "Prepara uno scacco al tuo re.",
+  "@whyThreatCheck": {
+    "description": "Spiegami perché: minaccia di scacco"
+  },
+  "whyThreatPromote": "Prepara la promozione di un pedone.",
+  "@whyThreatPromote": {
+    "description": "Spiegami perché: minaccia di promozione"
+  },
+  "whyDevelop": "Sviluppa {piece}: entra in gioco.",
+  "@whyDevelop": {
+    "description": "Spiegami perché: sviluppo di un pezzo",
+    "placeholders": {
+      "piece": {
+        "type": "String",
+        "description": "piece"
+      }
+    }
+  },
+  "whyCenter": "Prende spazio al centro.",
+  "@whyCenter": {
+    "description": "Spiegami perché: pedone al centro"
+  },
+  "whyImprove": "Sposta {piece} su una casa più utile.",
+  "@whyImprove": {
+    "description": "Spiegami perché: mossa tranquilla",
+    "placeholders": {
+      "piece": {
+        "type": "String",
+        "description": "piece"
+      }
+    }
+  },
+  "settingsExplainWhy": "Spiegami perché",
+  "@settingsExplainWhy": {
+    "description": "Impostazioni: titolo dell'interruttore"
+  },
+  "settingsExplainWhyDescription": "Dopo ogni mossa del computer, una riga su cosa minaccia o prepara",
+  "@settingsExplainWhyDescription": {
+    "description": "Impostazioni: descrizione"
+  },
   "challengeTitle": "Sfida un amico",
   "@challengeTitle": {
     "description": "Voce della scheda Puzzle e titolo della schermata"

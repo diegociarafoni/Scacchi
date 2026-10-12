@@ -1424,6 +1424,102 @@ abstract class AppLocalizations {
   /// **'{n} min'**
   String handicapTimeMinutes(int n);
 
+  /// Nome del pezzo con l'articolo, per le frasi di «spiegami perché»
+  ///
+  /// In it, this message translates to:
+  /// **'{role, select, pawn{il pedone} knight{il cavallo} bishop{l\'alfiere} rook{la torre} queen{la donna} other{il re}}'**
+  String whyPiece(String role);
+
+  /// Spiegami perché: la mossa dà matto
+  ///
+  /// In it, this message translates to:
+  /// **'Scacco matto!'**
+  String get whyMate;
+
+  /// Spiegami perché: arrocco
+  ///
+  /// In it, this message translates to:
+  /// **'Arrocca: mette il re al sicuro.'**
+  String get whyCastle;
+
+  /// Spiegami perché: promozione
+  ///
+  /// In it, this message translates to:
+  /// **'Promuove il pedone: diventa {role, select, queen{una donna} rook{una torre} bishop{un alfiere} knight{un cavallo} other{un pezzo}}.'**
+  String whyPromote(String role);
+
+  /// Spiegami perché: cattura
+  ///
+  /// In it, this message translates to:
+  /// **'Cattura {victim} con {attacker}.'**
+  String whyCapture(String victim, String attacker);
+
+  /// Spiegami perché: scacco
+  ///
+  /// In it, this message translates to:
+  /// **'Dà scacco al tuo re.'**
+  String get whyCheck;
+
+  /// Spiegami perché: pezzo salvato
+  ///
+  /// In it, this message translates to:
+  /// **'Mette al sicuro {piece}, che era sotto attacco.'**
+  String whySafe(String piece);
+
+  /// Spiegami perché: minaccia di cattura
+  ///
+  /// In it, this message translates to:
+  /// **'Minaccia di catturare {victim} in {square}.'**
+  String whyThreatCapture(String victim, String square);
+
+  /// Spiegami perché, profilo bambino: minaccia di cattura senza casa
+  ///
+  /// In it, this message translates to:
+  /// **'Minaccia di catturare {victim}.'**
+  String whyThreatCaptureKid(String victim);
+
+  /// Spiegami perché: minaccia di scacco
+  ///
+  /// In it, this message translates to:
+  /// **'Prepara uno scacco al tuo re.'**
+  String get whyThreatCheck;
+
+  /// Spiegami perché: minaccia di promozione
+  ///
+  /// In it, this message translates to:
+  /// **'Prepara la promozione di un pedone.'**
+  String get whyThreatPromote;
+
+  /// Spiegami perché: sviluppo di un pezzo
+  ///
+  /// In it, this message translates to:
+  /// **'Sviluppa {piece}: entra in gioco.'**
+  String whyDevelop(String piece);
+
+  /// Spiegami perché: pedone al centro
+  ///
+  /// In it, this message translates to:
+  /// **'Prende spazio al centro.'**
+  String get whyCenter;
+
+  /// Spiegami perché: mossa tranquilla
+  ///
+  /// In it, this message translates to:
+  /// **'Sposta {piece} su una casa più utile.'**
+  String whyImprove(String piece);
+
+  /// Impostazioni: titolo dell'interruttore
+  ///
+  /// In it, this message translates to:
+  /// **'Spiegami perché'**
+  String get settingsExplainWhy;
+
+  /// Impostazioni: descrizione
+  ///
+  /// In it, this message translates to:
+  /// **'Dopo ogni mossa del computer, una riga su cosa minaccia o prepara'**
+  String get settingsExplainWhyDescription;
+
   /// Voce della scheda Puzzle e titolo della schermata
   ///
   /// In it, this message translates to:
