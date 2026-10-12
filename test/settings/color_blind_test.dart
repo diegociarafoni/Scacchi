@@ -95,8 +95,9 @@ void main() {
   test('RNF-07 indizi ed esiti senza rosso e verde', () {
     final normal = AppSettings();
     final safe = AppSettings(colorBlind: true);
-    expect(normal.hintColor.toARGB32(), Colors.green.toARGB32());
-    expect(okabeIto, contains(safe.hintColor.withAlpha(255)));
+    // Il suggerimento per daltonici è blu, mai verde come quello normale.
+    expect(HSVColor.fromColor(safe.hintColor).hue, inInclusiveRange(190, 215));
+    expect(HSVColor.fromColor(normal.hintColor).hue, lessThan(150));
     expect(okabeIto, contains(safe.answerColor(true).withAlpha(255)));
     expect(okabeIto, contains(safe.answerColor(false).withAlpha(255)));
     expect(safe.answerColor(true), isNot(safe.answerColor(false)));
