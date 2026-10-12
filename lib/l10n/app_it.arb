@@ -1171,7 +1171,7 @@
   "@storyContinue": {
     "description": "storyContinue"
   },
-  "storyFinished": "La storia è finita. Puoi rigiocare ogni passo quando vuoi.",
+  "storyFinished": "La storia è finita. Lezioni, puzzle e partite restano disponibili nel resto dell'app.",
   "@storyFinished": {
     "description": "storyFinished"
   },

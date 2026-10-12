@@ -992,7 +992,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get storyFinished =>
-      'The story is over. You can replay any step whenever you like.';
+      'The story is over. Lessons, puzzles and games stay available in the rest of the app.';
 
   @override
   String storyStepLessons(int value, int total) {

@@ -1011,7 +1011,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get storyFinished =>
-      'La storia è finita. Puoi rigiocare ogni passo quando vuoi.';
+      'La storia è finita. Lezioni, puzzle e partite restano disponibili nel resto dell\'app.';
 
   @override
   String storyStepLessons(int value, int total) {

@@ -205,4 +205,21 @@ void main() {
     await tester.pumpAndSettle();
     expect(puzzlesOpened, isTrue);
   });
+
+  testWidgets('RG-13 un passo già fatto non si riapre', (tester) async {
+    var called = false;
+    await show(
+      tester,
+      puzzles: (context, chapter, remaining) async {
+        called = true;
+        return 1;
+      },
+    );
+    await finishLessons(tester);
+    await tester.runAsync(() => story.puzzlesSolved(first, first.puzzleCount));
+    await tester.pumpAndSettle();
+    await tester.tap(find.textContaining('Puzzle del capitolo'));
+    await tester.pumpAndSettle();
+    expect(called, isFalse);
+  });
 }

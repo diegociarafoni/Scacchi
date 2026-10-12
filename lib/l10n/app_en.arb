@@ -260,7 +260,7 @@
   "storyChapterLocked": "Opens when you finish the previous chapter",
   "storyChapterDone": "Chapter finished",
   "storyContinue": "Continue",
-  "storyFinished": "The story is over. You can replay any step whenever you like.",
+  "storyFinished": "The story is over. Lessons, puzzles and games stay available in the rest of the app.",
   "storyStepLessons": "Lessons: {value} of {total}",
   "@storyStepLessons": {
     "placeholders": {

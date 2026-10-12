@@ -108,7 +108,10 @@ class _StoryPageState extends State<StoryPage> {
   Future<void> _guardian(StoryChapter chapter) async {
     final play = widget.playGuardian;
     if (play == null) return _say(storyL10n(context).storyEngineMissing);
-    final stage = chapter.pathChapter.stages.firstWhere((s) => s.isGuardian);
+    final stage = chapter.pathChapter.stages
+        .where((s) => s.isGuardian)
+        .firstOrNull;
+    if (stage == null) return;
     final stars = await play(context, stage);
     if (stars != null && stars > 0) {
       await widget.path.complete(stage, stars, Duration.zero);
@@ -323,12 +326,12 @@ class _StepTile extends StatelessWidget {
         : l10n.storyStepLocked;
     return Semantics(
       container: true,
-      button: unlocked,
+      button: unlocked && !step.done,
       label: '$title, $state',
       excludeSemantics: true,
       child: ListTile(
         contentPadding: EdgeInsets.zero,
-        enabled: unlocked,
+        enabled: unlocked && !step.done,
         leading: step.kind == StoryStepKind.boss
             ? ExcludeSemantics(
                 child: Text(
@@ -354,7 +357,7 @@ class _StepTile extends StatelessWidget {
               ? Icons.chevron_right
               : Icons.lock_outline,
         ),
-        onTap: unlocked ? onTap : null,
+        onTap: unlocked && !step.done ? onTap : null,
       ),
     );
   }

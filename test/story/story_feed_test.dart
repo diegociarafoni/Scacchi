@@ -28,4 +28,15 @@ void main() {
       expect(feed.next(), isNull);
     },
   );
+
+  test(
+    'RG-13 il puzzle risolto conta subito, senza attendere il salvataggio',
+    () async {
+      final feed = StoryPuzzleFeed(await trainer(), theme: 'castling', goal: 1);
+      final pending = feed.finished(feed.next()!, solved: true);
+      expect(feed.solved, 1);
+      expect(feed.hasNext, isFalse);
+      await pending;
+    },
+  );
 }

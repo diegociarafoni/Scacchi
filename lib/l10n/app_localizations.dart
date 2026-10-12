@@ -1565,7 +1565,7 @@ abstract class AppLocalizations {
   /// storyFinished
   ///
   /// In it, this message translates to:
-  /// **'La storia è finita. Puoi rigiocare ogni passo quando vuoi.'**
+  /// **'La storia è finita. Lezioni, puzzle e partite restano disponibili nel resto dell\'app.'**
   String get storyFinished;
 
   /// storyStepLessons
