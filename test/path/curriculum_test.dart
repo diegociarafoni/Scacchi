@@ -14,6 +14,7 @@ void main() {
       'Finali',
       'La strategia',
       'Aperture',
+      'La scuola di Capablanca',
     ]);
     expect(curriculum.map((c) => c.id), [
       'pieces',
@@ -23,6 +24,7 @@ void main() {
       'endgames',
       'strategy',
       'openings',
+      'capablanca',
     ]);
   });
 
@@ -110,12 +112,25 @@ void main() {
     expect(strategy.stages.last.guardianElo, 1100);
   });
 
+  test('la scuola di Capablanca chiude il percorso', () {
+    final capablanca = curriculum.last;
+    expect(capablanca.id, 'capablanca');
+    expect(capablanca.stages.map((s) => s.id), [
+      'capablanca.race',
+      'capablanca.distant-opposition',
+      'capablanca.combinations',
+      'capablanca.opening-rules',
+      'capablanca.guardian',
+    ]);
+    expect(capablanca.stages.last.guardianElo, 1300);
+  });
+
   test('l\'Elo dei guardiani cresce capitolo dopo capitolo', () {
     final elos = [
       for (final c in curriculum)
         for (final s in c.stages) ?s.guardianElo,
     ];
-    expect(elos, [400, 800, 1000, 1100, 1200]);
+    expect(elos, [400, 800, 1000, 1100, 1200, 1300]);
     for (var i = 1; i < elos.length; i++) {
       expect(elos[i], greaterThan(elos[i - 1]));
     }
