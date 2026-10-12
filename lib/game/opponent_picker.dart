@@ -171,7 +171,11 @@ class OpponentPicker extends StatelessWidget {
                 enabled: computerAvailable,
               ),
             ],
-            selected: {vsAdaptive ? Opponent.bot : shown.opponent},
+            selected: {
+              shown.opponent == Opponent.computer
+                  ? Opponent.bot
+                  : shown.opponent,
+            },
             onSelectionChanged: (s) => onChanged(
               s.first == Opponent.bot && vsAdaptive
                   ? shown

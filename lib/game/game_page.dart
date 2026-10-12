@@ -3300,7 +3300,9 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
       ? widget.setup.copyWith(opponent: Opponent.human)
       : widget.setup.opponent == Opponent.computer && !widget.setup.adaptive
       ? widget.setup.copyWith(opponent: Opponent.bot)
-      : widget.setup.opponent == Opponent.human && !widget.kidMode
+      : widget.setup.opponent == Opponent.human &&
+            !widget.kid &&
+            !widget.kidMode
       ? widget.setup.copyWith(opponent: Opponent.computer, adaptive: true)
       : widget.setup;
   late final _white = TextEditingController(text: widget.whiteName);
@@ -3402,7 +3404,11 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
                     inCard: false,
                     clockBuilder: _friendClock,
                     // La partita a due telefoni prende il posto del foglio.
-                    onGameClosed: () => Navigator.pop(context),
+                    onGameClosed: () {
+                      if (ModalRoute.of(context)?.isCurrent ?? false) {
+                        Navigator.pop(context);
+                      }
+                    },
                   ),
                 ),
               ),
