@@ -13,6 +13,7 @@ class ProgressSettings {
     this.unlockAll = false,
     this.avatar = Avatar.pawn,
     this.frame = AvatarFrame.none,
+    this.usePhoto = false,
     this.reminder,
   });
 
@@ -29,6 +30,9 @@ class ProgressSettings {
   final Avatar avatar;
   final AvatarFrame frame;
 
+  /// Mostra la foto del profilo al posto dell'avatar (RP-09).
+  final bool usePhoto;
+
   /// Orario del promemoria giornaliero in minuti dalla mezzanotte; `null`
   /// se spento, come di default (RG-11).
   final int? reminder;
@@ -40,6 +44,7 @@ class ProgressSettings {
     bool? unlockAll,
     Avatar? avatar,
     AvatarFrame? frame,
+    bool? usePhoto,
     int? Function()? reminder,
   }) => ProgressSettings(
     enabled: enabled ?? this.enabled,
@@ -48,6 +53,7 @@ class ProgressSettings {
     unlockAll: unlockAll ?? this.unlockAll,
     avatar: avatar ?? this.avatar,
     frame: frame ?? this.frame,
+    usePhoto: usePhoto ?? this.usePhoto,
     reminder: reminder == null ? this.reminder : reminder(),
   );
 
@@ -58,6 +64,7 @@ class ProgressSettings {
     'unlockAll': unlockAll,
     'avatar': avatar.name,
     'frame': frame.name,
+    'usePhoto': usePhoto,
     'reminder': reminder,
   };
 
@@ -72,6 +79,7 @@ class ProgressSettings {
         avatar: Avatar.values.asNameMap()[json['avatar']] ?? Avatar.pawn,
         frame:
             AvatarFrame.values.asNameMap()[json['frame']] ?? AvatarFrame.none,
+        usePhoto: json['usePhoto'] as bool? ?? false,
         reminder: json['reminder'] as int?,
       );
 
@@ -84,11 +92,20 @@ class ProgressSettings {
       other.unlockAll == unlockAll &&
       other.avatar == avatar &&
       other.frame == frame &&
+      other.usePhoto == usePhoto &&
       other.reminder == reminder;
 
   @override
-  int get hashCode =>
-      Object.hash(enabled, goal, restDay, unlockAll, avatar, frame, reminder);
+  int get hashCode => Object.hash(
+    enabled,
+    goal,
+    restDay,
+    unlockAll,
+    avatar,
+    frame,
+    usePhoto,
+    reminder,
+  );
 }
 
 /// Progressi del giocatore. I giorni sono numeri di giorno di calendario

@@ -22,9 +22,11 @@ class CharacterAvatar extends StatelessWidget {
   final double size;
 
   @override
-  Widget build(BuildContext context) => CustomPaint(
-    size: Size.square(size),
-    painter: _CharacterPainter(character),
+  Widget build(BuildContext context) => RepaintBoundary(
+    child: CustomPaint(
+      size: Size.square(size),
+      painter: _CharacterPainter(character),
+    ),
   );
 }
 

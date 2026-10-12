@@ -47,8 +47,16 @@ class ProgressController extends ChangeNotifier {
   ProgressState get state => _state;
   ProgressSettings get settings => _settings;
 
+  /// Foto salvata, anche se al momento si mostra un avatar.
   Uint8List? get photo => _photo;
   Uint8List? _photo;
+
+  /// Foto da mostrare come avatar, se scelta.
+  Uint8List? get activePhoto => _settings.usePhoto ? _photo : null;
+
+  /// Le scritture della foto si accodano, così «Rimuovi» non scavalca un
+  /// salvataggio ancora in corso.
+  Future<void> _photoQueue = Future.value();
 
   /// Conteggi degli ultimi giorni per il riepilogo settimanale (RG-16).
   WeekLog get weekLog => _weekLog;
@@ -89,15 +97,15 @@ class ProgressController extends ChangeNotifier {
       _readOnly = true;
     }
     await _loadJournal();
-    _loadPhoto();
+    await _loadPhoto();
     notifyListeners();
   }
 
-  void _loadPhoto() {
+  Future<void> _loadPhoto() async {
     try {
       final file = _photoFile;
       _photo = file != null && file.existsSync()
-          ? file.readAsBytesSync()
+          ? await file.readAsBytes()
           : null;
     } on FileSystemException catch (e) {
       if (kDebugMode) debugPrint('Lettura della foto non riuscita: $e');
@@ -107,24 +115,31 @@ class ProgressController extends ChangeNotifier {
   /// Imposta la foto; se non si riesce a scrivere la si tiene in memoria.
   Future<void> setPhoto(Uint8List bytes) async {
     _photo = bytes;
-    notifyListeners();
-    try {
-      await _photoFile?.writeAsBytes(bytes, flush: true);
-    } on FileSystemException catch (e) {
-      if (kDebugMode) debugPrint('Salvataggio della foto non riuscito: $e');
-    }
+    await updateSettings(_settings.copyWith(usePhoto: true));
+    await _queuePhotoWrite(() async {
+      try {
+        await _photoFile?.writeAsBytes(bytes, flush: true);
+      } on FileSystemException catch (e) {
+        if (kDebugMode) debugPrint('Salvataggio della foto non riuscito: $e');
+      }
+    });
   }
 
   Future<void> removePhoto() async {
     _photo = null;
-    notifyListeners();
-    try {
-      final file = _photoFile;
-      if (file != null && file.existsSync()) await file.delete();
-    } on FileSystemException catch (e) {
-      if (kDebugMode) debugPrint('Rimozione della foto non riuscita: $e');
-    }
+    await updateSettings(_settings.copyWith(usePhoto: false));
+    await _queuePhotoWrite(() async {
+      try {
+        final file = _photoFile;
+        if (file != null && file.existsSync()) await file.delete();
+      } on FileSystemException catch (e) {
+        if (kDebugMode) debugPrint('Rimozione della foto non riuscita: $e');
+      }
+    });
   }
+
+  Future<void> _queuePhotoWrite(Future<void> Function() job) =>
+      _photoQueue = _photoQueue.then((_) => job());
 
   /// Un diario illeggibile non deve fermare il salvataggio dei progressi.
   Future<void> _loadJournal() async {

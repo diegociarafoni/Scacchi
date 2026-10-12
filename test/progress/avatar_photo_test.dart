@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scacchi/progress/avatar.dart';
 import 'package:scacchi/progress/avatar_photo.dart';
 import 'package:scacchi/progress/profile_page.dart';
 import 'package:scacchi/progress/progress_controller.dart';
@@ -198,14 +199,32 @@ void main() {
       expect(find.byKey(const Key('photo-remove')), findsNothing);
     });
 
-    testWidgets(
-      'scegliere un avatar dopo la foto la lascia in uso fino a «Rimuovi»',
-      (tester) async {
-        await tester.runAsync(() => controller.setPhoto(_png));
-        await openPicker(tester);
-        expect(find.byType(Image), findsWidgets);
-      },
-    );
+    testWidgets('scegliere un avatar dopo la foto la mette da parte', (
+      tester,
+    ) async {
+      await tester.runAsync(() => controller.setPhoto(_png));
+      expect(controller.activePhoto, _png);
+      await openPicker(tester);
+      await tester.tap(find.bySemanticsLabel(RegExp('^Pino')));
+      await tester.pumpAndSettle();
+      expect(controller.settings.avatar, Avatar.chick);
+      expect(controller.activePhoto, isNull);
+      expect(controller.photo, _png);
+      expect(find.byKey(const Key('photo-remove')), findsOneWidget);
+    });
+
+    testWidgets('rimuovere subito dopo aver scelto non riporta la foto', (
+      tester,
+    ) async {
+      await tester.runAsync(() async {
+        await Future.wait([
+          controller.setPhoto(_png),
+          controller.removePhoto(),
+        ]);
+      });
+      expect(photoFile.existsSync(), isFalse);
+      expect(controller.photo, isNull);
+    });
 
     testWidgets('profilo bambino: nessuna scelta di foto e foto non mostrata', (
       tester,

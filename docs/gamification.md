@@ -96,7 +96,7 @@ Oltre ai sei pezzi, otto personaggi disegnati in codice (`avatar_art.dart`, ness
 Nella scelta dell'avatar, la sezione «Foto» permette di usare una foto propria:
 
 - **Dalla galleria** o **Scatta una foto**, tramite il selettore di sistema (`image_picker`). La galleria non chiede permessi all'app; la fotocamera chiede il suo permesso solo quando si tocca «Scatta una foto». Se il permesso è negato o la fotocamera non c'è, compare un messaggio e non cambia nulla.
-- La foto è ridotta a 512 px al massimo, mostrata ritagliata in cerchio e circondata dalla cornice scelta. Prende il posto dell'avatar finché non si tocca **Rimuovi la foto**, che cancella il file.
+- La foto è ridotta a 512 px al massimo, mostrata ritagliata in cerchio e circondata dalla cornice scelta. Prende il posto dell'avatar finché non si sceglie un altro avatar (la foto resta salvata, in `usePhoto` c'è la scelta) o non si tocca **Rimuovi la foto**, che cancella il file.
 - Resta solo sul telefono, in `avatar_photo.jpg` nella cartella privata dell'app: non è nel backup (che contiene `progress.json` ma non questo file), non viene inviata e non è condivisa con l'avversario nelle partite a due telefoni. Se il file non si può scrivere, la foto resta in memoria fino alla chiusura.
 - Nel profilo bambino la sezione non compare e un'eventuale foto già salvata non viene mostrata: per prudenza non si caricano immagini di bambini (RP-06).
 

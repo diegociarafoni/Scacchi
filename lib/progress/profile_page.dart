@@ -145,7 +145,7 @@ class _LevelCard extends StatelessWidget {
                       avatar: settings.avatar,
                       frame: settings.frame,
                       // Profilo bambino: niente foto (RP-09).
-                      photo: kid ? null : controller.photo,
+                      photo: kid ? null : controller.activePhoto,
                     ),
                   ),
                 ),
@@ -254,7 +254,8 @@ class ProfileAvatar extends StatelessWidget {
                 width: size,
                 height: size,
                 fit: BoxFit.cover,
-                cacheWidth: (size * 3).round(),
+                cacheWidth: (size * MediaQuery.devicePixelRatioOf(context))
+                    .round(),
                 gaplessPlayback: true,
                 errorBuilder: (_, _, _) => const Icon(Icons.person),
               )
@@ -411,9 +412,9 @@ class _AvatarPicker extends StatelessWidget {
                       option(
                         a,
                         a.label,
-                        a == s.avatar,
+                        a == s.avatar && !s.usePhoto,
                         ProfileAvatar(avatar: a, frame: s.frame, size: 48),
-                        () => s.copyWith(avatar: a),
+                        () => s.copyWith(avatar: a, usePhoto: false),
                       ),
                   ],
                 ),

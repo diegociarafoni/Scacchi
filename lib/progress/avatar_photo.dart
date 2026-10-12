@@ -35,7 +35,7 @@ class SystemPhotoPicker implements PhotoPicker {
         requestFullMetadata: false,
       );
       return await file?.readAsBytes();
-    } on PlatformException {
+    } on Exception {
       throw const PhotoUnavailable();
     }
   }
