@@ -15,6 +15,7 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | [ritratto-settimana.md](ritratto-settimana.md) | Scheda degli ultimi sette giorni, condivisibile come immagine |
 | [scacchiera-fisica.md](scacchiera-fisica.md) | Orologio e registro di una partita su scacchiera reale |
 | [scambio-qr.md](scambio-qr.md) | Passare una partita, anche in corso, a un altro telefono con il QR, senza rete |
+| [multigiocatore.md](multigiocatore.md) | Partita tra due telefoni: protocollo, canali locali e a distanza, sicurezza |
 | [backup.md](backup.md) | Backup e ripristino di tutti i dati locali in un file |
 | [puzzle.md](puzzle.md) | Puzzle: dati, punteggio, modalità, puzzle del giorno |
 | [aperture.md](aperture.md) | Nomi delle aperture, mosse di libro, Esplora aperture, repertorio |
@@ -58,6 +59,7 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | La tua settimana: scheda condivisibile degli ultimi sette giorni | Disponibile dalla scheda Tu |
 | Scacchiera fisica: orologio e registro della partita dal vivo | Disponibile dalla scheda Tu |
 | Scambio di partite tra telefoni con il QR, senza rete | Disponibile dal menu della partita e dall'archivio; lettura con la fotocamera su Android e iOS |
+| Multigiocatore tra due telefoni (Wi-Fi, Bluetooth, a distanza) | Nucleo del protocollo pronto, canali e schermate in arrivo |
 | Backup e ripristino dei dati in un file | Disponibile dalle Impostazioni |
 | Archivio partite, import ed export PGN | Disponibile dalla scheda Tu; le partite finite si salvano da sole, riprendere una partita è in arrivo |
 | Percorso a tappe con stelle e spiegazione di ogni tappa: pezzi, regole, matti elementari e famosi, tattiche, finali di pedoni, aperture | Disponibile dalla scheda Tu, con i guardiani dove c'è il motore |
