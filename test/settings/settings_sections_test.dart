@@ -62,6 +62,24 @@ void main() {
   Finder header(SettingsSection s) =>
       find.descendant(of: section(s), matching: find.byType(ListTile)).first;
 
+  testWidgets('U6 una sezione aperta resta aperta scorrendo via e tornando', (
+    tester,
+  ) async {
+    await show(tester);
+    await tester.scrollUntilVisible(section(SettingsSection.board), 200);
+    await tester.tap(header(SettingsSection.board));
+    await tester.pumpAndSettle();
+    final legal = find.byKey(
+      const Key('coordinatesOutside'),
+      skipOffstage: false,
+    );
+    expect(legal, findsOneWidget);
+    await tester.scrollUntilVisible(section(SettingsSection.data), 200);
+    await tester.drag(find.byType(ListView).first, const Offset(0, 10000));
+    await tester.pumpAndSettle();
+    expect(legal, findsOneWidget);
+  });
+
   testWidgets('U6 le impostazioni sono in sezioni comprimibili', (
     tester,
   ) async {

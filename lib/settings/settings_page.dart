@@ -61,22 +61,24 @@ class _SettingsPageState extends State<SettingsPage> {
     required List<Widget> children,
   }) {
     final tokens = RokkoTokens.of(context);
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      clipBehavior: Clip.antiAlias,
-      child: ExpansionTile(
-        key: Key('section-${id.name}'),
-        initiallyExpanded: _open.contains(id),
-        onExpansionChanged: (v) => v ? _open.add(id) : _open.remove(id),
-        leading: Icon(icon, color: tokens.action),
-        title: Text(title),
-        subtitle: Text(hint),
-        minTileHeight: tokens.minTouch,
-        shape: const Border(),
-        collapsedShape: const Border(),
-        expandedCrossAxisAlignment: CrossAxisAlignment.stretch,
-        childrenPadding: const EdgeInsets.only(bottom: 8),
-        children: children,
+    return _KeepAlive(
+      child: Card(
+        margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        clipBehavior: Clip.antiAlias,
+        child: ExpansionTile(
+          key: Key('section-${id.name}'),
+          initiallyExpanded: _open.contains(id),
+          onExpansionChanged: (v) => v ? _open.add(id) : _open.remove(id),
+          leading: Icon(icon, color: tokens.action),
+          title: Text(title),
+          subtitle: Text(hint),
+          minTileHeight: tokens.minTouch,
+          shape: const Border(),
+          collapsedShape: const Border(),
+          expandedCrossAxisAlignment: CrossAxisAlignment.stretch,
+          childrenPadding: const EdgeInsets.only(bottom: 8),
+          children: children,
+        ),
       ),
     );
   }
@@ -739,5 +741,28 @@ class _VolumeSliderState extends State<_VolumeSlider> {
         widget.onChangeEnd(v);
       },
     );
+  }
+}
+
+/// Tiene viva la sezione fuori dallo schermo: altrimenti, scorrendo via e
+/// tornando, si richiuderebbe da sola.
+class _KeepAlive extends StatefulWidget {
+  const _KeepAlive({required this.child});
+
+  final Widget child;
+
+  @override
+  State<_KeepAlive> createState() => _KeepAliveState();
+}
+
+class _KeepAliveState extends State<_KeepAlive>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return widget.child;
   }
 }
