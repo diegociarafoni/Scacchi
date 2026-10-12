@@ -55,7 +55,7 @@ MessageTransport openLanGuest(String host, int port) =>
 
 /// Dopo quanto un avversario senza tempo e senza notizie perde a tavolino:
 /// copre il ritardo con cui il suo telefono si accorge della scadenza.
-const peerFlagGrace = Duration(seconds: 5);
+const peerFlagGrace = Duration(seconds: 15);
 
 enum MultiplayerStatus { waitingPeer, connecting, myTurn, peerTurn, finished }
 

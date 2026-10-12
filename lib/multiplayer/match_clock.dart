@@ -10,6 +10,9 @@ class MatchClock {
   MatchClock(this.control, {DateTime Function()? now})
     : _real = now ?? DateTime.now {
     _clock = ChessClock(control, now: _read);
+    _after = {
+      for (final side in Side.values) side: Duration(minutes: control.minutes),
+    };
   }
 
   /// Ricostruisce l'orologio dalle semimosse già giocate. [times] è il tempo
@@ -35,6 +38,9 @@ class MatchClock {
   final TimeControl control;
   final DateTime Function() _real;
   late final ChessClock _clock;
+
+  /// Tempo di ciascun lato dopo la sua ultima mossa.
+  late final Map<Side, Duration> _after;
   DateTime? _frozen;
 
   DateTime _read() => _frozen ?? _real();
@@ -53,6 +59,10 @@ class MatchClock {
   /// Bianco non costa tempo né dà incremento.
   Duration moved(int ply, {Duration? left}) {
     final mover = ply.isOdd ? Side.white : Side.black;
+    // Chi muove non può guadagnare più dell'incremento rispetto al tempo
+    // dichiarato alla mossa precedente (all'inizio, il tempo iniziale).
+    final cap = _after[mover]! + Duration(seconds: control.increment);
+    if (left != null && left > cap) left = cap;
     if (ply == 1) {
       _clock.start(Side.black);
     } else {
@@ -65,7 +75,7 @@ class MatchClock {
         mover.opposite: _clock.remaining(mover.opposite),
       }, mover.opposite);
     }
-    return _clock.remaining(mover);
+    return _after[mover] = _clock.remaining(mover);
   }
 
   /// Ferma l'orologio, a partita finita.

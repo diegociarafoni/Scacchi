@@ -45,6 +45,7 @@ Future<(MultiplayerController, MultiplayerController)> pair(
   TimeControl? control = blitz,
   Side hostSide = Side.white,
   (LoopbackTransport, LoopbackTransport)? loops,
+  FakeNow? guestNow,
 }) async {
   final (a, b) = loops ?? LoopbackTransport.pair();
   final host = await MultiplayerController.host(
@@ -55,7 +56,7 @@ Future<(MultiplayerController, MultiplayerController)> pair(
   );
   final guest = await MultiplayerController.join(
     GameInvite.parse(host.inviteLink)!,
-    now: now.call,
+    now: (guestNow ?? now).call,
     openGuest: (_, _) => b,
   );
   await settle();
@@ -228,6 +229,17 @@ void main() {
         expect(clock.active, Side.black);
       },
     );
+
+    test('RMP-50 un tempo dichiarato troppo alto viene limitato', () {
+      final clock = MatchClock(blitz, now: FakeNow().call)..moved(1);
+      clock.moved(2, left: const Duration(hours: 5));
+      // Tempo iniziale più incremento, non di più.
+      expect(clock.remaining(Side.black), const Duration(seconds: 182));
+      // Alla mossa dopo il tetto parte dal valore dichiarato prima.
+      clock.moved(3);
+      clock.moved(4, left: const Duration(hours: 1));
+      expect(clock.remaining(Side.black), const Duration(seconds: 184));
+    });
 
     test('RMP-50 il lato senza tempo risulta scaduto', () {
       final now = FakeNow();
