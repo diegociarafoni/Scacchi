@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../summary/week_log.dart';
 import 'activity.dart';
 import 'challenges.dart';
 import 'progress_state.dart';
@@ -12,7 +13,7 @@ import 'streak_info.dart';
 
 /// Stato della gamification per l'interfaccia, salvato a ogni modifica.
 class ProgressController extends ChangeNotifier {
-  ProgressController(this._store, {DateTime Function()? clock})
+  ProgressController(this._store, {DateTime Function()? clock, this._journal})
     : _clock = clock ?? DateTime.now;
 
   /// Controller sul file predefinito nella cartella dati dell'app.
@@ -20,6 +21,7 @@ class ProgressController extends ChangeNotifier {
     final dir = await getApplicationSupportDirectory();
     final controller = ProgressController(
       ProgressStore(File('${dir.path}/progress.json')),
+      journal: WeekLogStore(File('${dir.path}/week.json')),
     );
     await controller.load();
     return controller;
@@ -27,6 +29,7 @@ class ProgressController extends ChangeNotifier {
 
   final ProgressStore _store;
   final DateTime Function() _clock;
+  final WeekLogStore? _journal;
   final _tracker = ProgressTracker();
 
   ProgressState _state = ProgressState.initial;
@@ -34,6 +37,10 @@ class ProgressController extends ChangeNotifier {
 
   ProgressState get state => _state;
   ProgressSettings get settings => _settings;
+
+  /// Conteggi degli ultimi giorni per il riepilogo settimanale (RG-16).
+  WeekLog get weekLog => _weekLog;
+  WeekLog _weekLog = const WeekLog();
 
   int get streak => _tracker.currentStreak(_state, _clock(), _settings);
   int get freezes => _tracker.currentFreezes(_state, _clock(), _settings);
@@ -65,6 +72,7 @@ class ProgressController extends ChangeNotifier {
       _state = data.state;
       _settings = data.settings;
       _readOnly = false;
+      _weekLog = await _journal?.load() ?? const WeekLog();
     } on FileSystemException catch (e) {
       debugPrint('Lettura dei progressi non riuscita: $e');
       _readOnly = true;
@@ -73,6 +81,7 @@ class ProgressController extends ChangeNotifier {
   }
 
   Future<ProgressUpdate> record(Activity activity) async {
+    if (_settings.enabled) await _journalize(activity);
     final update = _tracker.record(_state, activity, _clock(), _settings);
     if (!identical(update.state, _state)) {
       _state = update.state;
@@ -80,6 +89,18 @@ class ProgressController extends ChangeNotifier {
       await _save();
     }
     return update;
+  }
+
+  Future<void> _journalize(Activity activity) async {
+    final next = _weekLog.record(activity, _clock());
+    if (identical(next, _weekLog)) return;
+    _weekLog = next;
+    if (_readOnly) return;
+    try {
+      await _journal?.save(next);
+    } on FileSystemException catch (e) {
+      debugPrint('Salvataggio del diario non riuscito: $e');
+    }
   }
 
   Future<void> updateSettings(ProgressSettings settings) async {

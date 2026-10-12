@@ -49,6 +49,10 @@ Il livello *L* richiede `50 × L × (L − 1)` XP totali: livello 2 a 100 XP, 3 
 - Una sfida settimanale (da lunedì a domenica): 10 partite, 5 vittorie, 25 puzzle, obiettivo raggiunto 5 giorni o 3 revisioni.
 - Le sfide si completano una sola volta e danno XP bonus; nessuna penalità se restano incomplete.
 
+## Riepilogo settimanale (RG-16)
+
+Il diario dei conteggi giornalieri che alimenta il [riepilogo settimanale](riepilogo-settimanale.md) è tenuto da `ProgressController.record`, insieme ai progressi, e rispetta lo stesso interruttore (RG-12).
+
 ## Record personali (RG-08)
 
 Serie più lunga, bot più forte battuto (Elo), matto con meno mosse (solo vittorie per scacco matto, non per abbandono), precisione migliore in revisione, punteggio puzzle massimo e miglior punteggio per ciascuna modalità a tempo o a serie e per ciascun minigioco. Tutti i record sono elencati nel Profilo. La notifica in-app annuncia un record solo quando ne batte uno precedente (il primo valore si salva in silenzio) e, per il punteggio puzzle, solo quando supera un nuovo centinaio, per non ripetersi a ogni puzzle.
