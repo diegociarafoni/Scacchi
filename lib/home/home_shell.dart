@@ -30,6 +30,7 @@ import '../openings/repertoire.dart';
 import '../path/curriculum.dart';
 import '../path/path_controller.dart';
 import '../progress/activity.dart';
+import '../progress/avatar.dart';
 import '../progress/progress_controller.dart';
 import '../progress/progress_tracker.dart';
 import '../puzzles/mode_guide.dart';
@@ -47,6 +48,7 @@ import '../review/review_page.dart';
 import '../settings/settings.dart';
 import '../stats/local_rating.dart';
 import '../storage/key_value_store.dart';
+import '../story/guardian_says.dart';
 import '../story/story.dart';
 import '../story/story_controller.dart';
 import '../story/story_feed.dart';
@@ -378,6 +380,7 @@ class _HomeShellState extends State<HomeShell> {
       theme: chapter.puzzleTheme,
       goal: remaining,
       maxRating: chapter.puzzleRating,
+      onOutcome: (solved) => _guardianSnack(context, chapter, solved),
     );
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
@@ -391,6 +394,30 @@ class _HomeShellState extends State<HomeShell> {
       ),
     );
     return feed.solved;
+  }
+
+  /// Il custode commenta il puzzle appena concluso, senza bloccare.
+  void _guardianSnack(BuildContext context, StoryChapter chapter, bool solved) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 3),
+          content: GuardianSays(
+            chapter: chapter,
+            moment: solved
+                ? GuardianMoment.puzzleOk
+                : GuardianMoment.puzzleRetry,
+            expression: solved
+                ? AvatarExpression.happy
+                : AvatarExpression.encouraging,
+            size: 40,
+            style: const TextStyle(fontStyle: FontStyle.italic),
+          ),
+        ),
+      );
   }
 
   /// Bot del torneo: un avversario per ogni livello del motore.

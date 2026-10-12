@@ -10,6 +10,7 @@ class StoryPuzzleFeed implements PuzzleFeed {
     required this.theme,
     required this.goal,
     int? maxRating,
+    this.onOutcome,
   }) : _inner = RatedFeed(
          trainer,
          theme: theme,
@@ -20,6 +21,9 @@ class StoryPuzzleFeed implements PuzzleFeed {
   final String theme;
   final int goal;
   final RatedFeed _inner;
+
+  /// Chiamata a ogni puzzle concluso, con l'esito.
+  final void Function(bool solved)? onOutcome;
   int _solved = 0;
 
   /// Puzzle risolti al primo tentativo in questa sessione.
@@ -35,6 +39,7 @@ class StoryPuzzleFeed implements PuzzleFeed {
   Future<FeedOutcome> finished(Puzzle puzzle, {required bool solved}) async {
     // Prima dell'attesa: la pagina legge hasNext subito dopo la soluzione.
     if (solved) _solved++;
+    onOutcome?.call(solved);
     return _inner.finished(puzzle, solved: solved);
   }
 }
