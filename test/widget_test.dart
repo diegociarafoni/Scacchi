@@ -11,7 +11,7 @@ void main() {
     await tester.pumpWidget(const ScacchiApp());
     await tester.pumpAndSettle();
     expect(find.text('Muove il Bianco.'), findsOneWidget);
-    expect(find.text('Altro'), findsOneWidget);
+    expect(find.text('Abbandona'), findsOneWidget);
   });
 
   testWidgets('le frecce non aprono la revisione senza mosse', (tester) async {
