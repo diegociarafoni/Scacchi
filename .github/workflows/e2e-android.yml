@@ -36,6 +36,8 @@ jobs:
       CCACHE_MAXSIZE: 400M
       CCACHE_COMPILERCHECK: content
       SYSTEM_IMAGE: system-images;android-34;default;x86_64
+      # Cartella dell'AVD esplicita: sul runner ANDROID_AVD_HOME può puntare altrove.
+      ANDROID_AVD_HOME: ${{ runner.temp }}/avd
     steps:
       - run: sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/.ghcup /usr/share/swift /usr/local/share/boost /opt/hostedtoolcache/CodeQL && df -h /
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -81,6 +83,7 @@ jobs:
           export PATH="$sdk/cmdline-tools/latest/bin:$sdk/emulator:$sdk/platform-tools:$PATH"
           yes | sdkmanager --licenses > /dev/null || true
           sdkmanager --install "emulator" "platform-tools" "$SYSTEM_IMAGE" > /dev/null
+          mkdir -p "$ANDROID_AVD_HOME"
           echo no | avdmanager create avd --force --name ci --device pixel_6 --package "$SYSTEM_IMAGE"
 
       - name: Avvio dell'emulatore
