@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
@@ -7,15 +8,26 @@ import '../archive/game_archive.dart';
 import '../archive/saved_game.dart';
 import '../game/chess_game.dart';
 import '../game/clock.dart';
+import 'board_align_page.dart';
+import 'board_photo.dart';
+import 'photo_source.dart';
 import 'physical_game.dart';
 
 /// Registra e cronometra una partita giocata su una scacchiera reale: le mosse
 /// si scrivono o si scelgono tra quelle legali, l'orologio passa da solo.
 class PhysicalGamePage extends StatefulWidget {
-  const PhysicalGamePage({super.key, required this.archive, this.now});
+  const PhysicalGamePage({
+    super.key,
+    required this.archive,
+    this.now,
+    this.photos = const CameraPhotoSource(),
+  });
 
   final Future<GameArchive> Function() archive;
   final DateTime Function()? now;
+
+  /// Fotocamera per leggere la mossa dalla foto della scacchiera.
+  final PhotoSource photos;
 
   @override
   State<PhysicalGamePage> createState() => _PhysicalGamePageState();
@@ -32,6 +44,16 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
   DateTime? _startedAt;
   bool _saved = false;
   String? _message;
+  String? _note;
+
+  // Foto di riferimento: vale solo finché la posizione è quella in cui è
+  // stata scattata.
+  BoardFrame? _baseline;
+  String? _baselineFen;
+  BoardQuad? _quad;
+  Side _view = Side.white;
+  List<_PhotoGuess> _guesses = const [];
+  bool _reading = false;
 
   DateTime get _now => (widget.now ?? DateTime.now)();
 
@@ -52,6 +74,10 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
       _startedAt = _now;
       _saved = false;
       _message = null;
+      _note = null;
+      _baseline = null;
+      _baselineFen = null;
+      _guesses = const [];
     });
     _ticker = Timer.periodic(const Duration(milliseconds: 100), (_) => _tick());
   }
@@ -67,7 +93,7 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
 
   void _afterChange() {
     final game = _game!;
-    setState(() {});
+    setState(() => _guesses = const []);
     if (game.isOver) unawaited(_save());
     _focus.requestFocus();
   }
@@ -89,6 +115,102 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
     _message = null;
     _afterChange();
   }
+
+  /// Fotografa la scacchiera: la prima foto fa da riferimento, quelle dopo
+  /// vengono confrontate con la precedente per dedurre la mossa.
+  Future<void> _photo() async {
+    if (_reading) return;
+    _reading = true;
+    try {
+      final bytes = await widget.photos.take();
+      if (bytes == null || !mounted) return;
+      final frame = await decodeFrame(bytes);
+      if (frame == null) {
+        _show(error: 'Immagine non leggibile');
+        return;
+      }
+      if (_quad == null && !await _align(bytes, frame)) return;
+      final game = _game!;
+      final fen = game.position.fen;
+      final before = _baseline;
+      if (before == null || _baselineFen != fen) {
+        setState(() {
+          _baseline = frame;
+          _baselineFen = fen;
+          _guesses = const [];
+          _message = null;
+          _note =
+              'Foto di riferimento salvata. Dopo la prossima mossa scatta '
+              'un\'altra foto.';
+        });
+        return;
+      }
+      final found = guessMoves(
+        game.position,
+        before: before,
+        after: frame,
+        quad: _quad!,
+        view: _view,
+      );
+      if (found.isEmpty) {
+        _show(error: 'Nessuna mossa riconosciuta: la scacchiera è uguale.');
+        return;
+      }
+      final pos = game.position;
+      setState(() {
+        _guesses = [
+          for (final g in found.take(4))
+            _PhotoGuess(
+              san: pos.makeSan(g.move).$2,
+              move: g.move,
+              frame: frame,
+            ),
+        ];
+        _message = null;
+        _note = 'Mosse più probabili dalla foto: conferma quella giusta.';
+      });
+    } finally {
+      _reading = false;
+    }
+  }
+
+  /// Chiede dove sta la scacchiera nella foto; false se si annulla.
+  Future<bool> _align(Uint8List bytes, BoardFrame frame) async {
+    final result = await Navigator.push<AlignResult>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => BoardAlignPage(
+          image: bytes,
+          aspect: frame.width / frame.height,
+          initial: _quad ?? BoardQuad.inset(.08),
+          view: _view,
+        ),
+      ),
+    );
+    if (result == null || !mounted) return false;
+    setState(() {
+      _quad = result.quad;
+      _view = result.view;
+      _baseline = null;
+    });
+    return true;
+  }
+
+  void _playGuess(_PhotoGuess g) {
+    final game = _game!;
+    _playSuggestion((san: g.san, move: g.move));
+    if (game.moves.isNotEmpty) {
+      setState(() {
+        _baseline = g.frame;
+        _baselineFen = game.position.fen;
+      });
+    }
+  }
+
+  void _show({String? error}) => setState(() {
+    _message = error;
+    _note = null;
+  });
 
   Future<void> _save() async {
     final game = _game;
@@ -229,6 +351,11 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 if (game.isOver) ..._over(game),
+                if (_note != null && _message == null && !game.isOver)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Text(_note!),
+                  ),
                 if (_message != null)
                   Padding(
                     padding: const EdgeInsets.only(top: 8),
@@ -261,6 +388,30 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
                 onSubmitted: _submit,
               ),
             ),
+            if (_guesses.isNotEmpty)
+              SizedBox(
+                height: 48,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  children: [
+                    const Icon(Icons.photo_camera_outlined),
+                    for (final (i, g) in _guesses.indexed)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4,
+                          vertical: 6,
+                        ),
+                        child: ActionChip(
+                          key: const Key('photo-guess'),
+                          avatar: i == 0 ? const Icon(Icons.check) : null,
+                          label: Text(g.san),
+                          onPressed: () => _playGuess(g),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
             SizedBox(
               height: 48,
               child: ListView(
@@ -300,6 +451,13 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
             onPressed: () => setState(running ? game.pause : game.resume),
             icon: Icon(running ? Icons.pause : Icons.play_arrow),
             label: Text(running ? 'Pausa' : 'Riprendi'),
+          ),
+        if (!game.isOver)
+          TextButton.icon(
+            key: const Key('physical-photo'),
+            onPressed: _photo,
+            icon: const Icon(Icons.photo_camera_outlined),
+            label: const Text('Mossa dalla foto'),
           ),
         TextButton.icon(
           onPressed: game.canUndo
@@ -368,6 +526,18 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
     }
     return buffer.toString().trim();
   }
+}
+
+class _PhotoGuess {
+  const _PhotoGuess({
+    required this.san,
+    required this.move,
+    required this.frame,
+  });
+
+  final String san;
+  final Move move;
+  final BoardFrame frame;
 }
 
 class _ClockPanel extends StatelessWidget {
