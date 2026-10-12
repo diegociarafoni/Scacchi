@@ -36,5 +36,27 @@
         "type": "int"
       }
     }
-  }
+  },
+  "gameActionNew": "Nuova",
+  "gameActionUndo": "Annulla",
+  "gameActionFlip": "Gira",
+  "gameActionDraw": "Patta",
+  "gameActionResign": "Abbandona",
+  "gameActionCoach": "Allenatore",
+  "gameActionThreat": "Minaccia",
+  "gameActionHint": "Suggerisci",
+  "gameActionMore": "Altro",
+  "gamePanelTitle": "Partita",
+  "gameEditorAction": "Editor di posizione",
+  "gameKeyboardAction": "Mossa da tastiera",
+  "gameCoachTip": "Ti avvisa se sbagli una mossa e ti fa riprenderla",
+  "gameThreatTip": "Mostra con una freccia rossa la mossa dell'avversario",
+  "gameHintTip": "Tocca una volta per il pezzo, due per la mossa migliore",
+  "gameTipNext": "Avanti",
+  "gameTipClose": "Chiudi",
+  "gameTipHint": "Sei in difficoltà? Tocca Suggerisci: prima il pezzo da muovere, poi la mossa.",
+  "gameTipMore": "Sotto «Altro» trovi patta, abbandono, allenatore e l'editor di posizione.",
+  "gameTipMenu": "Dal menu ⋮ analizzi la posizione e rivedi la partita.",
+  "gameReviewInvite": "Partita finita. Vuoi capire dove migliorare?",
+  "gameReviewInviteAction": "Rivedi la partita"
 }

@@ -9,6 +9,7 @@ import 'package:scacchi/progress/activity.dart';
 import 'package:scacchi/settings/settings.dart';
 
 import '../computer_fakes.dart';
+import '../game_actions.dart';
 
 void main() {
   group('challengeStars', () {
@@ -102,7 +103,7 @@ void main() {
       tester,
     ) async {
       await open(tester);
-      await tester.tap(find.text('Abbandona'));
+      await tapGameAction(tester, 'Abbandona');
       await tester.pumpAndSettle();
       await tester.tap(find.text('Abbandona').last);
       await tester.pumpAndSettle(const Duration(seconds: 1));

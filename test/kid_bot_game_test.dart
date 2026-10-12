@@ -9,6 +9,7 @@ import 'package:scacchi/settings/settings.dart';
 import 'package:scacchi/storage/key_value_store.dart';
 
 import 'computer_fakes.dart';
+import 'game_actions.dart';
 
 void main() {
   Future<SettingsController> kidSettings({bool kidMode = true}) async {
@@ -87,7 +88,7 @@ void main() {
     await tester.pump();
     await tester.tapAt(rect.topLeft + Offset(size / 2, size * 5.5));
     await tester.pumpAndSettle(const Duration(seconds: 2));
-    await tester.tap(find.text('Abbandona'));
+    await tapGameAction(tester, 'Abbandona');
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(FilledButton, 'Abbandona'));
     await tester.pumpAndSettle();
@@ -102,7 +103,7 @@ void main() {
     final settings = await kidSettings(kidMode: false);
     await tester.pumpWidget(app(settings));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Nuova'));
+    await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Bot'));
     await tester.pumpAndSettle();
@@ -120,7 +121,7 @@ void main() {
     final settings = await kidSettings(kidMode: false);
     await tester.pumpWidget(app(settings));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Nuova'));
+    await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Computer'));
     await tester.pumpAndSettle();

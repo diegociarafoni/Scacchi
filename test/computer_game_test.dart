@@ -10,6 +10,7 @@ import 'package:scacchi/game/game_page.dart';
 import 'package:scacchi/settings/settings.dart';
 
 import 'computer_fakes.dart';
+import 'game_actions.dart';
 
 Offset square(WidgetTester tester, String name) {
   final rect = tester.getRect(find.byType(Chessboard));
@@ -70,7 +71,7 @@ void main() {
     await tester.pumpWidget(app());
     await startComputerGame(tester, side: 'Bianco');
     await tester.pumpAndSettle(const Duration(seconds: 1));
-    await tester.tap(find.text('Patta'));
+    await tapGameAction(tester, 'Patta');
     await tester.pump();
     expect(find.text('Il computer rifiuta la patta.'), findsOneWidget);
     expect(find.text('Muove il Bianco.'), findsOneWidget);
@@ -82,7 +83,7 @@ void main() {
     await tester.pumpWidget(app(scoreCp: 500));
     await startComputerGame(tester, side: 'Bianco');
     await tester.pumpAndSettle(const Duration(seconds: 1));
-    await tester.tap(find.text('Patta'));
+    await tapGameAction(tester, 'Patta');
     await tester.pumpAndSettle(const Duration(seconds: 1));
     expect(find.text('Patta concordata.'), findsOneWidget);
   });
@@ -113,7 +114,7 @@ void main() {
       await tester.pumpWidget(app());
       await startComputerGame(tester, side: 'Nero');
       await tester.pumpAndSettle(const Duration(seconds: 1));
-      await tester.tap(find.text('Abbandona'));
+      await tapGameAction(tester, 'Abbandona');
       await tester.pumpAndSettle();
       await tester.tap(find.widgetWithText(FilledButton, 'Abbandona'));
       await tester.pumpAndSettle();
@@ -136,7 +137,7 @@ void main() {
     );
     await startComputerGame(tester, side: 'Bianco');
     await tester.pumpAndSettle(const Duration(seconds: 1));
-    await tester.tap(find.text('Patta'));
+    await tapGameAction(tester, 'Patta');
     await tester.pump();
     expect(find.text('Il computer valuta la patta…'), findsOneWidget);
     await tester.pumpAndSettle(const Duration(seconds: 1));
@@ -182,7 +183,7 @@ void main() {
     await startComputerGame(tester, side: 'Bianco');
     await tester.pumpAndSettle(const Duration(seconds: 1));
     expect(engine.disposed, isFalse);
-    await tester.tap(find.text('Nuova'));
+    await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Due giocatori'));
     await tester.pumpAndSettle();
@@ -205,7 +206,7 @@ void main() {
     );
     await startComputerGame(tester, side: 'Nero');
     await tester.pumpAndSettle(const Duration(seconds: 1));
-    await tester.tap(find.text('Patta'));
+    await tapGameAction(tester, 'Patta');
     await tester.pumpAndSettle(const Duration(seconds: 1));
     expect(find.text('Il computer rifiuta la patta.'), findsNothing);
     expect(find.text('Riprova'), findsOneWidget);
@@ -219,7 +220,7 @@ void main() {
     );
     await startComputerGame(tester, side: 'Bianco');
     await tester.pumpAndSettle(const Duration(seconds: 1));
-    await tester.tap(find.text('Patta'));
+    await tapGameAction(tester, 'Patta');
     await tester.pumpAndSettle(const Duration(seconds: 1));
     expect(find.text('Il computer rifiuta la patta.'), findsNothing);
     expect(find.text('Il computer non risponde.'), findsOneWidget);
@@ -301,13 +302,13 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(app());
-    await tester.tap(find.text('Nuova'));
+    await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
     expect(find.text('Senza tempo'), findsOneWidget);
     await chooseTime(tester, '5+0');
     await tester.pump(const Duration(milliseconds: 500));
     expect(clockText(tester, Side.white), '5:00');
-    await tester.tap(find.text('Nuova'));
+    await tapGameAction(tester, 'Nuova');
     await tester.pump(const Duration(milliseconds: 500));
     await chooseTime(tester, 'Senza tempo');
     await tester.pump(const Duration(milliseconds: 500));
@@ -360,7 +361,7 @@ void main() {
     await tapMove(tester, 'e2e4');
     for (var i = 0; i < 3; i++) {
       await tester.pump(const Duration(milliseconds: 1100));
-      await tester.tap(find.text('Nuova'));
+      await tapGameAction(tester, 'Nuova');
       await tester.pump(const Duration(milliseconds: 500));
       await tester.tapAt(const Offset(10, 10));
       await tester.pump(const Duration(milliseconds: 500));
@@ -384,7 +385,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 1500));
     expect(activeClock(Side.white), findsOneWidget);
     final before = clockText(tester, Side.white);
-    await tester.tap(find.text('Patta'));
+    await tapGameAction(tester, 'Patta');
     await tester.pump(const Duration(milliseconds: 1100));
     expect(find.text('Il computer rifiuta la patta.'), findsOneWidget);
     expect(clockText(tester, Side.white), before);
@@ -421,7 +422,7 @@ void main() {
       expect(activeClock(Side.white), findsOneWidget);
       await tester.pump(const Duration(seconds: 59, milliseconds: 200));
       expect(find.textContaining('Tempo scaduto'), findsNothing);
-      await tester.tap(find.text('Patta'));
+      await tapGameAction(tester, 'Patta');
       await tester.pump(const Duration(milliseconds: 1500));
       expect(find.textContaining('Tempo scaduto'), findsNothing);
       expect(find.text('Il computer rifiuta la patta.'), findsOneWidget);
@@ -498,7 +499,7 @@ void main() {
     Side orientation() =>
         tester.widget<Chessboard>(find.byType(Chessboard)).orientation;
     expect(orientation(), Side.black);
-    await tester.tap(find.text('Nuova'));
+    await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Due giocatori'));
     await tester.pumpAndSettle();
@@ -538,7 +539,7 @@ void main() {
         ),
       ),
     );
-    await tester.tap(find.text('Nuova'));
+    await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
     expect(
       find.text(

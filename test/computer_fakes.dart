@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/engine/uci_transport.dart';
 
+import 'game_actions.dart';
+
 /// Motore finto che gioca sempre la prima mossa legale.
 class FirstLegalMoveEngine implements UciTransport {
   FirstLegalMoveEngine({
@@ -95,7 +97,7 @@ Future<void> startComputerGame(
   required String side,
   String? time,
 }) async {
-  await tester.tap(find.text('Nuova'));
+  await tapGameAction(tester, 'Nuova');
   await tester.pumpAndSettle();
   await tester.tap(find.text('Computer'));
   await tester.pumpAndSettle();

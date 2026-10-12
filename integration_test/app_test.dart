@@ -8,6 +8,8 @@ import 'package:scacchi/main.dart';
 import 'package:scacchi/settings/settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../test/game_actions.dart';
+
 Offset _square(WidgetTester tester, String name) {
   final rect = tester.getRect(find.byType(Chessboard));
   final size = rect.width / 8;
@@ -107,7 +109,7 @@ void main() {
   testWidgets('RF-25 abbandono con conferma', (tester) async {
     await _start(tester);
     await _tapMove(tester, 'e2e4');
-    await tester.tap(find.text('Abbandona'));
+    await tapGameAction(tester, 'Abbandona');
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(FilledButton, 'Abbandona'));
     await tester.pumpAndSettle();
@@ -117,7 +119,7 @@ void main() {
   testWidgets('RF-32 patta concordata', (tester) async {
     await _start(tester);
     await _tapMove(tester, 'e2e4');
-    await tester.tap(find.text('Patta'));
+    await tapGameAction(tester, 'Patta');
     await tester.pumpAndSettle();
     expect(find.text('Il Bianco accetta la patta?'), findsOneWidget);
     await tester.tap(find.widgetWithText(FilledButton, 'Accetta'));
@@ -270,7 +272,7 @@ void main() {
   testWidgets('RF-40 nuova partita con orologio', (tester) async {
     await _start(tester);
     expect(find.byKey(const ValueKey('clock-white')), findsNothing);
-    await tester.tap(find.text('Nuova'));
+    await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
     expect(find.text('Senza tempo'), findsOneWidget);
     await tester.tap(find.text('3+2'));
@@ -292,7 +294,7 @@ void main() {
     );
     await tester.pump(const Duration(milliseconds: 300));
 
-    await tester.tap(find.text('Nuova'));
+    await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Senza tempo'));
     await tester.pumpAndSettle();
@@ -365,7 +367,7 @@ void main() {
     expect(find.text('Muove il Nero.'), findsOneWidget);
 
     await _tapMove(tester, 'd7d5');
-    await tester.tap(find.text('Abbandona'));
+    await tapGameAction(tester, 'Abbandona');
     await tester.pumpAndSettle();
     expect(find.text('Abbandonare la partita?'), findsNothing);
   });
@@ -498,7 +500,7 @@ void main() {
 
   testWidgets('RF-30 nomi dei giocatori', (tester) async {
     await _start(tester);
-    await tester.tap(find.text('Nuova'));
+    await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
     await tester.enterText(
       find.widgetWithText(TextField, 'Nome del Bianco'),
@@ -530,7 +532,7 @@ void main() {
     }
     expect(find.text('Scacco matto. Vince Anna (Bianco).'), findsOneWidget);
 
-    await tester.tap(find.text('Nuova'));
+    await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
     expect(
       tester

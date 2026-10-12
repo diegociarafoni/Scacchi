@@ -8,6 +8,8 @@ import 'package:scacchi/game/game_page.dart';
 import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/settings/settings.dart';
 
+import '../test/game_actions.dart';
+
 Offset _square(WidgetTester tester, String name) {
   final rect = tester.getRect(find.byType(Chessboard));
   final size = rect.width / 8;
@@ -53,7 +55,7 @@ Future<void> _startComputerGame(
     ),
   );
   await tester.pumpAndSettle();
-  await tester.tap(find.text('Nuova'));
+  await tapGameAction(tester, 'Nuova');
   await tester.pumpAndSettle();
   await tester.tap(find.text('Computer'));
   await tester.pumpAndSettle();
@@ -133,7 +135,7 @@ void main() {
         await _startComputerGame(tester, side: 'Bianco', level: 8);
         await _tapMove(tester, 'e2e4');
         await _waitFor(tester, find.text('Muove il Bianco.'));
-        await tester.tap(find.text('Patta'));
+        await tapGameAction(tester, 'Patta');
         await _waitFor(tester, find.text('Il computer rifiuta la patta.'));
       });
 
@@ -157,7 +159,7 @@ void main() {
           ),
         );
         await tester.pumpAndSettle();
-        await tester.tap(find.byTooltip('Editor di posizione'));
+        await openPositionEditor(tester);
         await tester.pumpAndSettle();
         Future<void> tapVisible(Finder finder) async {
           await tester.ensureVisible(finder);

@@ -9,6 +9,7 @@ import 'package:scacchi/settings/settings.dart';
 import '../board_marks_helpers.dart';
 import '../computer_fakes.dart';
 import '../computer_game_test.dart' show tapMove;
+import '../game_actions.dart';
 
 /// Il Bianco vale 0, il Nero +900: ogni mossa del Bianco è un errore grave.
 int _blunderScore(String fen) =>
@@ -29,9 +30,19 @@ Future<void> startWithCoach(WidgetTester tester) async {
   await tester.pumpWidget(app());
   await startComputerGame(tester, side: 'Bianco');
   await tester.pumpAndSettle(const Duration(seconds: 1));
-  await tester.tap(find.text('Allenatore'));
+  await tapGameAction(tester, 'Allenatore');
   await tester.pumpAndSettle();
 }
+
+/// Il punto sul pulsante «Altro» dice che l'allenatore è acceso.
+bool coachDot(WidgetTester tester) => tester
+    .widget<Badge>(
+      find.descendant(
+        of: find.byKey(const ValueKey('gameAction-more')),
+        matching: find.byType(Badge),
+      ),
+    )
+    .isLabelVisible;
 
 void main() {
   testWidgets('RF-73 senza allenatore l\'errore non viene segnalato', (
@@ -91,8 +102,12 @@ void main() {
     await tester.pumpWidget(app());
     await startComputerGame(tester, side: 'Bianco');
     await tester.pumpAndSettle(const Duration(seconds: 1));
+    await tester.tap(find.byKey(const ValueKey('gameAction-more')));
+    await tester.pumpAndSettle();
     expect(find.text('Minaccia'), findsNothing);
     await tester.tap(find.text('Allenatore'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('gameAction-more')));
     await tester.pumpAndSettle();
     expect(find.text('Minaccia'), findsOneWidget);
   });
@@ -101,7 +116,7 @@ void main() {
     tester,
   ) async {
     await startWithCoach(tester);
-    await tester.tap(find.text('Minaccia'));
+    await tapGameAction(tester, 'Minaccia');
     await tester.pumpAndSettle();
     final shapes = tester.widget<Chessboard>(find.byType(Chessboard)).shapes;
     expect(markArrows(shapes), hasLength(1));
@@ -123,7 +138,7 @@ void main() {
     await tester.tap(find.text('Suggerisci'));
     await tester.pumpAndSettle();
     expect(find.textContaining('Muovi'), findsOneWidget);
-    expect(find.byIcon(Icons.school_outlined), findsOneWidget);
+    expect(coachDot(tester), isFalse);
   });
 
   testWidgets('RF-74 il suggerimento si vede sulla scacchiera', (tester) async {
@@ -186,7 +201,7 @@ void main() {
     await tester.tap(find.text('Continua'));
     await tester.pumpAndSettle(const Duration(seconds: 1));
     expect(badges(tester), isNotEmpty);
-    await tester.tap(find.text('Allenatore'));
+    await tapGameAction(tester, 'Allenatore');
     await tester.pumpAndSettle();
     expect(badges(tester), isEmpty);
   });
@@ -197,17 +212,17 @@ void main() {
     await tester.pumpWidget(app());
     await startComputerGame(tester, side: 'Bianco');
     await tester.pumpAndSettle(const Duration(seconds: 1));
-    await tester.tap(find.text('Allenatore'));
+    await tapGameAction(tester, 'Allenatore');
     await tester.pump();
     expect(
       find.textContaining('Allenatore attivo: ti avviso se sbagli una mossa'),
       findsOneWidget,
     );
-    expect(find.byIcon(Icons.school), findsOneWidget);
-    await tester.tap(find.text('Allenatore'));
-    await tester.pump();
+    expect(coachDot(tester), isTrue);
+    await tapGameAction(tester, 'Allenatore');
+    await tester.pump(const Duration(milliseconds: 600));
     expect(find.text('Allenatore disattivato.'), findsOneWidget);
-    expect(find.byIcon(Icons.school_outlined), findsOneWidget);
+    expect(coachDot(tester), isFalse);
   });
 
   for (final width in [320.0, 360.0]) {
@@ -219,15 +234,7 @@ void main() {
       addTearDown(tester.view.reset);
       await startWithCoach(tester);
       final labels = [
-        for (final t in [
-          'Nuova',
-          'Annulla',
-          'Gira',
-          'Patta',
-          'Abbandona',
-          'Allenatore',
-          'Suggerisci',
-        ])
+        for (final t in ['Suggerisci', 'Annulla', 'Gira', 'Altro'])
           tester.getRect(find.text(t)),
       ];
       for (var i = 0; i + 1 < labels.length; i++) {

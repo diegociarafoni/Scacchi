@@ -8,6 +8,7 @@ import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/settings/settings.dart';
 
 import '../computer_fakes.dart';
+import '../game_actions.dart';
 
 Offset square(WidgetTester tester, String name) {
   final rect = tester.getRect(find.byType(Chessboard));
@@ -254,7 +255,7 @@ void main() {
   ) async {
     final announced = recordAnnouncements(tester);
     await pumpGame(tester, await kidSettings(kid: false));
-    await tester.tap(find.text('Abbandona'));
+    await tapGameAction(tester, 'Abbandona');
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(FilledButton, 'Abbandona'));
     await tester.pumpAndSettle();
@@ -266,7 +267,7 @@ void main() {
   ) async {
     final settings = await kidSettings(kid: false);
     await pumpGame(tester, settings);
-    await tester.tap(find.text('Nuova'));
+    await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Tre scacchi'));
     await tester.pumpAndSettle();

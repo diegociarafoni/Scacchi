@@ -13,6 +13,7 @@ import 'package:scacchi/progress/progress_store.dart';
 import 'package:scacchi/settings/settings.dart';
 
 import '../computer_fakes.dart';
+import '../game_actions.dart';
 
 Offset square(WidgetTester tester, String name) {
   final rect = tester.getRect(find.byType(Chessboard));
@@ -96,7 +97,7 @@ void main() {
     await unlockFirstGuardian(tester);
     await openGuardian(tester);
     final before = path.progress.stars.length;
-    await tester.tap(find.text('Abbandona'));
+    await tapGameAction(tester, 'Abbandona');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Abbandona').last);
     await tester.pumpAndSettle(const Duration(seconds: 1));
