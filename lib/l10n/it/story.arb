@@ -232,7 +232,7 @@
   "@storyCrownTitle": {
     "description": "storyCrownTitle"
   },
-  "storyCrownIntro": "Ultima tappa: la sala della corona. Partire bene è mezza vittoria: il centro, lo sviluppo, l'arrocco.",
+  "storyCrownIntro": "La sala della corona. Partire bene è mezza vittoria: il centro, lo sviluppo, l'arrocco.",
   "@storyCrownIntro": {
     "description": "storyCrownIntro"
   },
@@ -245,7 +245,7 @@
       }
     }
   },
-  "storyCrownOutro": "La corona è tua. Il regno è in pace e ogni nuova partita è una nuova storia.",
+  "storyCrownOutro": "La corona è tua. Ma oltre le mura si apre una pianura ancora da esplorare.",
   "@storyCrownOutro": {
     "description": "storyCrownOutro"
   },
@@ -347,5 +347,47 @@
   "storyPassageClose": "Chiudi",
   "@storyPassageClose": {
     "description": "Foglio di passaggio della storia"
+  },
+  "storyPlainTitle": "La pianura dei piani",
+  "@storyPlainTitle": {
+    "description": "storyPlainTitle"
+  },
+  "storyPlainIntro": "Oltre la corona si apre una pianura silenziosa, dove le battaglie si vincono prima di cominciare: servono un piano, pezzi attivi e un po' di pazienza.",
+  "@storyPlainIntro": {
+    "description": "storyPlainIntro"
+  },
+  "storyPlainBoss": "{name}, il lupo della pianura, prepara ogni attacco con un gambetto e un piano preciso.",
+  "@storyPlainBoss": {
+    "description": "storyPlainBoss",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPlainOutro": "La pianura è tua. Ora sai che ogni pezzo ha un compito e ogni mossa ha un perché.",
+  "@storyPlainOutro": {
+    "description": "storyPlainOutro"
+  },
+  "storyAcademyTitle": "L'accademia del maestro",
+  "@storyAcademyTitle": {
+    "description": "storyAcademyTitle"
+  },
+  "storyAcademyIntro": "In cima alla collina vive un vecchio maestro che insegna con pochi principi: contare le mosse, trovare l'opposizione, non dimenticare le regole dell'apertura.",
+  "@storyAcademyIntro": {
+    "description": "storyAcademyIntro"
+  },
+  "storyAcademyBoss": "{name}, la stella dell'accademia, attacca senza sosta e non perdona un errore.",
+  "@storyAcademyBoss": {
+    "description": "storyAcademyBoss",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyAcademyOutro": "L'accademia ti saluta come uno dei suoi. La storia è finita, ma la partita continua.",
+  "@storyAcademyOutro": {
+    "description": "storyAcademyOutro"
   }
 }

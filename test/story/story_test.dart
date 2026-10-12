@@ -23,6 +23,20 @@ void main() {
   final first = storyChapters.first;
 
   group('RG-13 contenuti della storia', () {
+    test('ogni capitolo del percorso ha il suo capitolo nella storia', () {
+      expect(
+        {for (final c in storyChapters) c.pathChapterId},
+        {for (final c in curriculum) c.id},
+      );
+    });
+
+    test('la strategia e Capablanca chiudono la storia', () {
+      expect(storyChapters.map((c) => c.pathChapterId).toList().sublist(6), [
+        'strategy',
+        'capablanca',
+      ]);
+    });
+
     test('ogni capitolo punta a un capitolo del percorso e a un bot', () {
       for (final c in storyChapters) {
         expect(
@@ -223,10 +237,10 @@ void main() {
       expect(nextStoryStage(p), chapter.stages.firstWhere((s) => s.isGuardian));
     });
 
-    test('ignora i capitoli del percorso che la storia non racconta', () {
+    test('è null solo quando ogni tappa del percorso è fatta', () {
       var p = const PathProgress();
-      for (final c in storyChapters) {
-        for (final s in c.pathChapter.stages) {
+      for (final c in curriculum) {
+        for (final s in c.stages) {
           p = p.complete(s.id, 3);
         }
       }
