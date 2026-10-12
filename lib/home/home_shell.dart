@@ -282,6 +282,54 @@ class _HomeShellState extends State<HomeShell> {
       );
       return;
     }
+    if (!saved.finished && saved.mode != SavedGame.imported) {
+      final choice = await showDialog<String>(
+        context: context,
+        builder: (context) => SimpleDialog(
+          title: const Text('Partita in corso'),
+          children: [
+            SimpleDialogOption(
+              onPressed: () => Navigator.pop(context, 'resume'),
+              child: const Text('Riprendi la partita'),
+            ),
+            SimpleDialogOption(
+              onPressed: () => Navigator.pop(context, 'review'),
+              child: const Text('Rivedi la partita'),
+            ),
+          ],
+        ),
+      );
+      if (choice == null) return;
+      if (choice == 'resume') {
+        if (saved.mode == SavedGame.computer && !_computerAvailable) {
+          messenger.showSnackBar(
+            const SnackBar(
+              content: Text(
+                'Per riprendere una partita contro il computer serve il '
+                'motore: su Android e iOS è incluso, su Windows e Linux serve '
+                'Stockfish installato.',
+              ),
+            ),
+          );
+          return;
+        }
+        await navigator.push(
+          MaterialPageRoute<void>(
+            builder: (_) => GamePage(
+              settings: widget.settings,
+              computerAvailable: _computerAvailable,
+              createComputer: widget.createComputer,
+              resume: saved,
+              onActivity: _record,
+              onSavePuzzles: _savePersonalPuzzles,
+              onSave: _saveGame,
+              progress: _progressController,
+            ),
+          ),
+        );
+        return;
+      }
+    }
     if (!_computerAvailable) {
       messenger.showSnackBar(
         const SnackBar(

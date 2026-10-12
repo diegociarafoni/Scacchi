@@ -62,7 +62,7 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | Scambio di partite tra telefoni con il QR, senza rete | Disponibile dal menu della partita e dall'archivio; lettura con la fotocamera su Android e iOS |
 | Multigiocatore tra due telefoni (Wi-Fi, Bluetooth, a distanza) | Nucleo del protocollo pronto, canali e schermate in arrivo |
 | Backup e ripristino dei dati in un file | Disponibile dalle Impostazioni |
-| Archivio partite, import ed export PGN | Disponibile dalla scheda Tu; le partite finite si salvano da sole, riprendere una partita è in arrivo |
+| Archivio partite, import ed export PGN | Disponibile dalla scheda Tu; le partite si salvano da sole a ogni mossa e quelle interrotte si possono riprendere |
 | Percorso a tappe con stelle e spiegazione di ogni tappa: pezzi, regole, matti elementari e famosi, tattiche, finali di pedoni, aperture | Disponibile dalla scheda Tu, con i guardiani dove c'è il motore |
 | Statistiche e rating locale | Disponibile dalla scheda Tu |
 | Editor di posizione con FEN e validazione | Disponibile |
