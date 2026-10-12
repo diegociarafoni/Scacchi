@@ -846,6 +846,144 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
+  String get handicapTitle => 'Handicap';
+
+  @override
+  String get handicapGameTitle => 'Partita a handicap';
+
+  @override
+  String get handicapHint =>
+      'Chi concede il vantaggio gioca senza un pezzo o con meno tempo. La partita non conta per il rating locale.';
+
+  @override
+  String get handicapPieceTitle => 'Pezzo in meno';
+
+  @override
+  String get handicapNone => 'Nessuno';
+
+  @override
+  String get handicapPieceFPawn => 'Pedone f';
+
+  @override
+  String get handicapPieceKnight => 'Cavallo';
+
+  @override
+  String get handicapPieceRook => 'Torre';
+
+  @override
+  String get handicapPieceQueen => 'Donna';
+
+  @override
+  String get handicapTimeTitle => 'Tempo di chi concede';
+
+  @override
+  String get handicapTimeEqual => 'Uguale';
+
+  @override
+  String get handicapTimeHint =>
+      'Vale solo con un orologio e se è inferiore alla cadenza scelta.';
+
+  @override
+  String get handicapGiverTitle => 'Chi concede il vantaggio';
+
+  @override
+  String get handicapGiverYou => 'Tu';
+
+  @override
+  String get handicapGiverOpponent => 'L\'avversario';
+
+  @override
+  String get handicapGiverWhite => 'Il Bianco';
+
+  @override
+  String get handicapGiverBlack => 'Il Nero';
+
+  @override
+  String handicapTimeMinutes(int n) {
+    return '$n min';
+  }
+
+  @override
+  String whyPiece(String role) {
+    String _temp0 = intl.Intl.selectLogic(role, {
+      'pawn': 'il pedone',
+      'knight': 'il cavallo',
+      'bishop': 'l\'alfiere',
+      'rook': 'la torre',
+      'queen': 'la donna',
+      'other': 'il re',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get whyMate => 'Scacco matto!';
+
+  @override
+  String get whyCastle => 'Arrocca: mette il re al sicuro.';
+
+  @override
+  String whyPromote(String role) {
+    String _temp0 = intl.Intl.selectLogic(role, {
+      'queen': 'una donna',
+      'rook': 'una torre',
+      'bishop': 'un alfiere',
+      'knight': 'un cavallo',
+      'other': 'un pezzo',
+    });
+    return 'Promuove il pedone: diventa $_temp0.';
+  }
+
+  @override
+  String whyCapture(String victim, String attacker) {
+    return 'Cattura $victim con $attacker.';
+  }
+
+  @override
+  String get whyCheck => 'Dà scacco al tuo re.';
+
+  @override
+  String whySafe(String piece) {
+    return 'Mette al sicuro $piece, che era sotto attacco.';
+  }
+
+  @override
+  String whyThreatCapture(String victim, String square) {
+    return 'Minaccia di catturare $victim in $square.';
+  }
+
+  @override
+  String whyThreatCaptureKid(String victim) {
+    return 'Minaccia di catturare $victim.';
+  }
+
+  @override
+  String get whyThreatCheck => 'Prepara uno scacco al tuo re.';
+
+  @override
+  String get whyThreatPromote => 'Prepara la promozione di un pedone.';
+
+  @override
+  String whyDevelop(String piece) {
+    return 'Sviluppa $piece: entra in gioco.';
+  }
+
+  @override
+  String get whyCenter => 'Prende spazio al centro.';
+
+  @override
+  String whyImprove(String piece) {
+    return 'Sposta $piece su una casa più utile.';
+  }
+
+  @override
+  String get settingsExplainWhy => 'Spiegami perché';
+
+  @override
+  String get settingsExplainWhyDescription =>
+      'Dopo ogni mossa del computer, una riga su cosa minaccia o prepara';
+
+  @override
   String get storyTitle => 'Storia';
 
   @override

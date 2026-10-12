@@ -1,6 +1,6 @@
 # Aperture
 
-Riconoscimento delle aperture, mosse di libro, Esplora aperture e repertorio con ripetizione dilazionata (requisiti RF-90, RF-91, RF-92, RF-93).
+Riconoscimento delle aperture, mosse di libro, Esplora aperture e repertorio con ripetizione dilazionata, partita da un'apertura (requisiti RF-90, RF-91, RF-92, RF-93, RF-94).
 
 ## Dati
 
@@ -55,6 +55,15 @@ Una linea è rifiutata se in una posizione già presente il repertorio prevede u
 
 Linee e carte sono salvate in `training.json`, lo stesso file dei puzzle (`JsonFileStore`, istanza unica per evitare scritture concorrenti), con le chiavi `openings.repertoire.v1` e `openings.repertoire.review.v1`.
 
+### Gioca un'apertura (RF-94)
+
+Una partita contro il computer che parte da un'apertura, in due modi:
+
+- **dall'explorer**, con l'icona **Gioca questa apertura** (attiva dopo almeno una mossa): le mosse scelte sono già giocate e si prosegue dalla posizione raggiunta. Il colore proposto è quello che deve muovere;
+- **da una linea del repertorio**, con l'icona **Gioca la linea**: si parte dalla posizione iniziale con il colore del repertorio (non modificabile) e l'utente gioca le proprie mosse. Se il computer esce dalla linea compare «Il computer è uscito dalla linea del repertorio.»; se ne esce l'utente, «Sei uscito dalla linea del repertorio.». Ogni segnalazione compare una volta; se con **Annulla** si rientra nella linea, una nuova uscita viene segnalata di nuovo.
+
+Una finestra chiede colore (nell'explorer) e livello del computer. È una `GameChallenge` (vedi [architettura.md](architettura.md)) con le mosse iniziali (`startMoves`) e la linea da seguire (`line`); l'annullamento è consentito, la partita viene salvata in archivio come le altre. Senza motore (Windows e Linux senza Stockfish) le icone non compaiono.
+
 ## Componenti
 
 | File | Ruolo |
@@ -68,3 +77,5 @@ Linee e carte sono salvate in `training.json`, lo stesso file dei puzzle (`JsonF
 | `lib/openings/repertoire.dart` | Linee, carte, ripasso, import PGN |
 | `lib/openings/repertoire_page.dart` | Linee di un colore, import PGN |
 | `lib/openings/repertoire_drill_page.dart` | Ripasso sulla scacchiera |
+| `lib/openings/opening_game.dart` | Richiesta di partita da un'apertura, uscita dalla linea |
+| `lib/openings/opening_game_dialog.dart` | Scelta di colore e livello |

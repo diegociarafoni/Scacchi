@@ -1316,6 +1316,210 @@ abstract class AppLocalizations {
   /// **'Si sblocca battendo {name}'**
   String botUnlockHint(String name);
 
+  /// No description provided for @handicapTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Handicap'**
+  String get handicapTitle;
+
+  /// No description provided for @handicapGameTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Partita a handicap'**
+  String get handicapGameTitle;
+
+  /// No description provided for @handicapHint.
+  ///
+  /// In it, this message translates to:
+  /// **'Chi concede il vantaggio gioca senza un pezzo o con meno tempo. La partita non conta per il rating locale.'**
+  String get handicapHint;
+
+  /// No description provided for @handicapPieceTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Pezzo in meno'**
+  String get handicapPieceTitle;
+
+  /// No description provided for @handicapNone.
+  ///
+  /// In it, this message translates to:
+  /// **'Nessuno'**
+  String get handicapNone;
+
+  /// No description provided for @handicapPieceFPawn.
+  ///
+  /// In it, this message translates to:
+  /// **'Pedone f'**
+  String get handicapPieceFPawn;
+
+  /// No description provided for @handicapPieceKnight.
+  ///
+  /// In it, this message translates to:
+  /// **'Cavallo'**
+  String get handicapPieceKnight;
+
+  /// No description provided for @handicapPieceRook.
+  ///
+  /// In it, this message translates to:
+  /// **'Torre'**
+  String get handicapPieceRook;
+
+  /// No description provided for @handicapPieceQueen.
+  ///
+  /// In it, this message translates to:
+  /// **'Donna'**
+  String get handicapPieceQueen;
+
+  /// No description provided for @handicapTimeTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Tempo di chi concede'**
+  String get handicapTimeTitle;
+
+  /// No description provided for @handicapTimeEqual.
+  ///
+  /// In it, this message translates to:
+  /// **'Uguale'**
+  String get handicapTimeEqual;
+
+  /// No description provided for @handicapTimeHint.
+  ///
+  /// In it, this message translates to:
+  /// **'Vale solo con un orologio e se è inferiore alla cadenza scelta.'**
+  String get handicapTimeHint;
+
+  /// No description provided for @handicapGiverTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Chi concede il vantaggio'**
+  String get handicapGiverTitle;
+
+  /// No description provided for @handicapGiverYou.
+  ///
+  /// In it, this message translates to:
+  /// **'Tu'**
+  String get handicapGiverYou;
+
+  /// No description provided for @handicapGiverOpponent.
+  ///
+  /// In it, this message translates to:
+  /// **'L\'avversario'**
+  String get handicapGiverOpponent;
+
+  /// No description provided for @handicapGiverWhite.
+  ///
+  /// In it, this message translates to:
+  /// **'Il Bianco'**
+  String get handicapGiverWhite;
+
+  /// No description provided for @handicapGiverBlack.
+  ///
+  /// In it, this message translates to:
+  /// **'Il Nero'**
+  String get handicapGiverBlack;
+
+  /// No description provided for @handicapTimeMinutes.
+  ///
+  /// In it, this message translates to:
+  /// **'{n} min'**
+  String handicapTimeMinutes(int n);
+
+  /// Nome del pezzo con l'articolo, per le frasi di «spiegami perché»
+  ///
+  /// In it, this message translates to:
+  /// **'{role, select, pawn{il pedone} knight{il cavallo} bishop{l\'alfiere} rook{la torre} queen{la donna} other{il re}}'**
+  String whyPiece(String role);
+
+  /// Spiegami perché: la mossa dà matto
+  ///
+  /// In it, this message translates to:
+  /// **'Scacco matto!'**
+  String get whyMate;
+
+  /// Spiegami perché: arrocco
+  ///
+  /// In it, this message translates to:
+  /// **'Arrocca: mette il re al sicuro.'**
+  String get whyCastle;
+
+  /// Spiegami perché: promozione
+  ///
+  /// In it, this message translates to:
+  /// **'Promuove il pedone: diventa {role, select, queen{una donna} rook{una torre} bishop{un alfiere} knight{un cavallo} other{un pezzo}}.'**
+  String whyPromote(String role);
+
+  /// Spiegami perché: cattura
+  ///
+  /// In it, this message translates to:
+  /// **'Cattura {victim} con {attacker}.'**
+  String whyCapture(String victim, String attacker);
+
+  /// Spiegami perché: scacco
+  ///
+  /// In it, this message translates to:
+  /// **'Dà scacco al tuo re.'**
+  String get whyCheck;
+
+  /// Spiegami perché: pezzo salvato
+  ///
+  /// In it, this message translates to:
+  /// **'Mette al sicuro {piece}, che era sotto attacco.'**
+  String whySafe(String piece);
+
+  /// Spiegami perché: minaccia di cattura
+  ///
+  /// In it, this message translates to:
+  /// **'Minaccia di catturare {victim} in {square}.'**
+  String whyThreatCapture(String victim, String square);
+
+  /// Spiegami perché, profilo bambino: minaccia di cattura senza casa
+  ///
+  /// In it, this message translates to:
+  /// **'Minaccia di catturare {victim}.'**
+  String whyThreatCaptureKid(String victim);
+
+  /// Spiegami perché: minaccia di scacco
+  ///
+  /// In it, this message translates to:
+  /// **'Prepara uno scacco al tuo re.'**
+  String get whyThreatCheck;
+
+  /// Spiegami perché: minaccia di promozione
+  ///
+  /// In it, this message translates to:
+  /// **'Prepara la promozione di un pedone.'**
+  String get whyThreatPromote;
+
+  /// Spiegami perché: sviluppo di un pezzo
+  ///
+  /// In it, this message translates to:
+  /// **'Sviluppa {piece}: entra in gioco.'**
+  String whyDevelop(String piece);
+
+  /// Spiegami perché: pedone al centro
+  ///
+  /// In it, this message translates to:
+  /// **'Prende spazio al centro.'**
+  String get whyCenter;
+
+  /// Spiegami perché: mossa tranquilla
+  ///
+  /// In it, this message translates to:
+  /// **'Sposta {piece} su una casa più utile.'**
+  String whyImprove(String piece);
+
+  /// Impostazioni: titolo dell'interruttore
+  ///
+  /// In it, this message translates to:
+  /// **'Spiegami perché'**
+  String get settingsExplainWhy;
+
+  /// Impostazioni: descrizione
+  ///
+  /// In it, this message translates to:
+  /// **'Dopo ogni mossa del computer, una riga su cosa minaccia o prepara'**
+  String get settingsExplainWhyDescription;
+
   /// Titolo della schermata della storia
   ///
   /// In it, this message translates to:

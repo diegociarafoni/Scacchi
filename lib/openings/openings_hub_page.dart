@@ -2,14 +2,18 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
 import 'explorer_page.dart';
+import 'opening_game.dart';
 import 'repertoire.dart';
 import 'repertoire_page.dart';
 
 /// Punto di ingresso delle aperture: explorer e repertori.
 class OpeningsHubPage extends StatefulWidget {
-  const OpeningsHubPage({super.key, required this.repertoire});
+  const OpeningsHubPage({super.key, required this.repertoire, this.onPlay});
 
   final Future<RepertoireTrainer> repertoire;
+
+  /// Avvia una partita da un'apertura; assente senza motore.
+  final PlayOpening? onPlay;
 
   @override
   State<OpeningsHubPage> createState() => _OpeningsHubPageState();
@@ -38,7 +42,9 @@ class _OpeningsHubPageState extends State<OpeningsHubPage> {
                 subtitle: const Text(
                   'Nomi e continuazioni di oltre 3.000 aperture',
                 ),
-                onTap: () => _open(ExplorerPage(repertoire: trainer)),
+                onTap: () => _open(
+                  ExplorerPage(repertoire: trainer, onPlay: widget.onPlay),
+                ),
               ),
               const Divider(),
               for (final side in Side.values)
@@ -58,8 +64,13 @@ class _OpeningsHubPageState extends State<OpeningsHubPage> {
                               '${trainer.dueCount(side)} mosse da ripassare',
                   ),
                   enabled: trainer != null,
-                  onTap: () =>
-                      _open(RepertoirePage(trainer: trainer!, side: side)),
+                  onTap: () => _open(
+                    RepertoirePage(
+                      trainer: trainer!,
+                      side: side,
+                      onPlay: widget.onPlay,
+                    ),
+                  ),
                 ),
             ],
           );

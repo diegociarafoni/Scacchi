@@ -82,6 +82,7 @@ class ReviewPage extends StatefulWidget {
     this.puzzlePlayers = const {Side.white, Side.black},
     this.clocks = const [],
     this.timeControl,
+    this.startTimes,
     this.notes = const [],
     this.onNoteChanged,
   });
@@ -111,6 +112,9 @@ class ReviewPage extends StatefulWidget {
   /// con [timeControl] permette di mostrare il tempo speso su ogni mossa.
   final List<Duration?> clocks;
   final TimeControl? timeControl;
+
+  /// Tempo iniziale di ciascun lato se diverso (partita a handicap, RF-27).
+  final Map<Side, Duration>? startTimes;
 
   /// Annotazioni personali delle mosse (RF-55), una per mossa o nessuna.
   final List<MoveNote?> notes;
@@ -541,6 +545,7 @@ class _ReviewPageState extends State<ReviewPage> {
               clocks: widget.clocks,
               first: widget.initial.turn,
               control: widget.timeControl,
+              startTimes: widget.startTimes,
               players: widget.puzzlePlayers,
               onSelect: (ply) => _select(ply + 1),
             ),
@@ -886,6 +891,7 @@ class _TimePerMove extends StatelessWidget {
     required this.clocks,
     required this.first,
     required this.control,
+    required this.startTimes,
     required this.players,
     required this.onSelect,
   });
@@ -897,6 +903,7 @@ class _TimePerMove extends StatelessWidget {
   final List<Duration?> clocks;
   final Side first;
   final TimeControl? control;
+  final Map<Side, Duration>? startTimes;
   final ValueChanged<int> onSelect;
 
   static const _errors = {
@@ -909,7 +916,12 @@ class _TimePerMove extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (clocks.length != review.moves.length) return const SizedBox.shrink();
-    final spent = timeSpent(clocks, first: first, control: control);
+    final spent = timeSpent(
+      clocks,
+      first: first,
+      control: control,
+      startTimes: startTimes,
+    );
     if (spent.every((d) => d == null)) return const SizedBox.shrink();
     final hasty = hastyPlies(
       spent,
