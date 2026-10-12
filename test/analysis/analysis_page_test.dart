@@ -243,7 +243,10 @@ void main() {
       expect(arrows.single.orig, Square.e7);
       expect(arrows.single.dest, Square.e5);
       // Diversa dalla freccia verde della mossa migliore.
-      expect(arrows.single.color, BoardMarks.of(BoardTheme.green).threat);
+      expect(
+        arrows.single.color,
+        BoardMarks.of(AppSettings().boardTheme).threat,
+      );
     });
 
     testWidgets('RF-56 la minaccia di una posizione non resta sulla seguente', (
