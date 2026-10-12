@@ -766,6 +766,49 @@ const List<Chapter> curriculum = [
           ),
         ],
       ),
+      Stage(
+        id: 'mates.patterns-2',
+        title: 'Altri matti famosi',
+        intro:
+            'Ecco altri matti con un nome. Guarda bene i pezzi neri vicino al '
+            're: spesso sono proprio loro a chiudergli la strada.',
+        exercises: [
+          LineExercise(
+            instructions:
+                '$_mateIn1 Matto delle spalline: le torri nere stanno ai '
+                'lati del re come due spalline.',
+            fen: '3rkr2/pp4pp/8/8/8/1Q6/5PPP/6K1 w - - 0 1',
+            steps: ['b3e6'],
+            goal: LineGoal.mate,
+          ),
+          LineExercise(
+            instructions:
+                '$_mateIn1 Matto di Greco: l\'alfiere controlla g8 e la '
+                'torre arriva sulla colonna h.',
+            fen: '5r1k/pp4p1/8/8/2B5/3R4/5PPP/6K1 w - - 0 1',
+            steps: ['d3h3'],
+            goal: LineGoal.mate,
+          ),
+          LineExercise(
+            instructions:
+                '$_mateIn1 Matto a coda di rondine: la donna dà scacco da '
+                'vicino, protetta dal pedone, e dietro il re ci sono i suoi '
+                'pezzi.',
+            fen: '2b1r3/pp2kppp/8/4P3/8/8/5PPP/3Q2K1 w - - 0 1',
+            steps: ['d1d6'],
+            goal: LineGoal.mate,
+          ),
+          LineExercise(
+            instructions:
+                '$_mateIn2 Sfida: matto dell\'Opera. Sacrifica la donna per '
+                'togliere il cavallo che difende d8, poi torre e alfiere '
+                'danno matto.',
+            fen: '4kb1r/pp3ppp/2n5/6B1/2Q5/8/5PPP/3R2K1 w - - 0 1',
+            steps: ['c4c6', 'b7c6', 'd1d8'],
+            goal: LineGoal.mate,
+          ),
+        ],
+      ),
       Stage(id: 'mates.guardian', title: 'Il guardiano', guardianElo: 400),
     ],
   ),
@@ -1058,6 +1101,261 @@ const List<Chapter> curriculum = [
             fen: '6k1/pp4pp/4p3/3r1n2/2B5/8/PP4PP/5RK1 w - - 0 1',
             steps: ['c4d5'],
             goal: LineGoal.line,
+          ),
+        ],
+      ),
+      Stage(
+        id: 'tactics.overload',
+        title: 'Il pezzo sovraccarico',
+        intro:
+            'Un pezzo è sovraccarico quando ha due compiti: difendere due '
+            'pezzi, oppure un pezzo e una casa importante. Non può fare '
+            'tutto: attacca uno dei due e l\'altro resta senza difesa.',
+        exercises: [
+          LineExercise(
+            instructions:
+                'La torre nera difende il cavallo e anche l\'ultima '
+                'traversa. Cattura il cavallo: se la torre riprende, la '
+                'tua torre dà matto.',
+            fen: '3r2k1/5ppp/q7/3n4/8/5Q2/5PPP/4R1K1 w - - 0 1',
+            steps: ['f3d5'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'La donna nera difende la torre e anche la casa e8. '
+                'Cattura la torre: se la donna riprende, dai matto.',
+            fen: '3q2k1/p1r2ppp/8/8/8/8/P4PPP/2R1R1K1 w - - 0 1',
+            steps: ['c1c7'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Il cavallo in f6 difende il cavallo in d5 e anche la casa '
+                'h7. Cattura in d5: se riprende, la donna dà matto in h7.',
+            fen: '2q2rk1/p4ppp/5n2/3n4/8/2NQ4/PPB2PPP/5RK1 w - - 0 1',
+            steps: ['c3d5'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Sfida: la donna nera difende il cavallo e l\'alfiere. '
+                'Cattura il cavallo con l\'alfiere: se la donna riprende, '
+                'l\'alfiere in b4 resta indifeso.',
+            fen: 'r5k1/p3qppp/8/4n3/Qb3B2/8/P4PP1/5RK1 w - - 0 1',
+            steps: ['f4e5', 'e7e5', 'a4b4'],
+            goal: LineGoal.line,
+          ),
+        ],
+      ),
+      Stage(
+        id: 'tactics.decoy',
+        title: 'L\'adescamento',
+        intro:
+            'Adescare vuol dire attirare un pezzo nemico, di solito il re, su '
+            'una casa cattiva. Spesso sacrifichi un pezzo: l\'avversario lo '
+            'cattura e finisce proprio dove vuoi tu.',
+        exercises: [
+          LineExercise(
+            instructions:
+                'Sacrifica la torre in h8: il re deve catturarla. Poi il '
+                'cavallo attacca insieme re e donna.',
+            fen: '6k1/5pp1/3q4/6N1/8/7R/5PP1/6K1 w - - 0 1',
+            steps: ['h3h8', 'g8h8', 'g5f7'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Dai scacco con la torre in d8: la donna nera deve '
+                'catturarla. Poi il cavallo attacca insieme re e donna.',
+            fen: '7k/pp2qppp/8/6N1/8/8/PP3PPP/3R2K1 w - - 0 1',
+            steps: ['d1d8', 'e7d8', 'g5f7'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Cattura in f7 con l\'alfiere: il re deve riprendere. Poi il '
+                'cavallo dà scacco e attacca la donna.',
+            fen: 'r4bkr/pp3ppp/8/8/2B1q3/5N2/PP3PPP/R2R2K1 w - - 0 1',
+            steps: ['c4f7', 'g8f7', 'f3g5'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                '$_mateIn2 Sfida: sacrifica la torre in h7 per attirare il '
+                're, poi la donna dà matto.',
+            fen: 'r6k/pp4pp/5p2/q4P2/2B5/7R/PP4P1/3Q2K1 w - - 0 1',
+            steps: ['h3h7', 'h8h7', 'd1h5'],
+            goal: LineGoal.mate,
+          ),
+        ],
+      ),
+      Stage(
+        id: 'tactics.interference',
+        title: 'L\'interferenza',
+        intro:
+            'Un pezzo può difendere da lontano, lungo una linea. Se metti un '
+            'tuo pezzo in mezzo a quella linea, la difesa si interrompe.',
+        exercises: [
+          LineExercise(
+            instructions:
+                'La torre nera controlla c8 lungo l\'ottava traversa. Metti '
+                'la tua torre in mezzo, in d8: se la torre nera la cattura, '
+                'il pedone la riprende e diventa donna.',
+            fen: '7r/2P2pkp/6p1/8/8/8/5PPP/3R2K1 w - - 0 1',
+            steps: ['d1d8', 'h8d8', 'c7d8q'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'La torre nera difende l\'alfiere lungo la quinta traversa. '
+                'Metti il cavallo in mezzo dando scacco: l\'alfiere resta '
+                'indifeso.',
+            fen: '8/ppk2p1p/8/r5b1/4P3/2N5/P4P1P/6RK w - - 0 1',
+            steps: ['c3d5'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'La torre in d8 difende l\'alfiere in d4. Metti il cavallo in '
+                'mezzo dando scacco: il pedone in e5 lo protegge.',
+            fen: '3rk3/pp3ppp/8/4P3/2Nb4/8/PP3PPP/3R2K1 w - - 0 1',
+            steps: ['c4d6'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                '$_mateIn2 Sfida: la torre nera controlla l\'ottava '
+                'traversa. Mettiti in mezzo con scacco: il pedone farà il '
+                'resto.',
+            fen: 'r6k/2P2ppp/8/8/8/8/5PPP/3R2K1 w - - 0 1',
+            steps: ['d1d8', 'a8d8', 'c7d8q'],
+            goal: LineGoal.mate,
+          ),
+        ],
+      ),
+      Stage(
+        id: 'tactics.zwischenzug',
+        title: 'La mossa intermedia',
+        intro:
+            'Quando l\'avversario cattura, non sempre conviene riprendere '
+            'subito. Prima cerca una mossa più forte, come uno scacco o una '
+            'cattura: poi riprendi.',
+        exercises: [
+          LineExercise(
+            instructions:
+                'Il Nero ha preso la tua donna in e2. Prima cattura la '
+                'torre con scacco, poi riprendi la donna.',
+            fen: '3r2k1/5pp1/7p/8/8/8/4qPPP/3RR1K1 w - - 0 1',
+            steps: ['d1d8', 'g8h7', 'e1e2'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Il Nero ha preso la tua donna in d1. Prima cattura la torre '
+                'con il cavallo dando scacco, poi riprendi la donna.',
+            fen: '4r3/pp3pkp/3N2p1/8/8/6P1/5PKP/R2q4 w - - 0 1',
+            steps: ['d6e8', 'g7f8', 'a1d1'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Il Nero ha preso la tua donna in b1. Prima promuovi il '
+                'pedone dando scacco, poi riprendi.',
+            fen: '6k1/2P2pp1/7p/8/8/6P1/r4PKP/Rq6 w - - 0 1',
+            steps: ['c7c8q', 'g8h7', 'a1b1'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Sfida: il Nero ha preso il tuo alfiere in e2. Non '
+                'riprendere subito: c\'è uno scacco che vince di più.',
+            fen: 'r5k1/5pp1/7p/3Q4/7q/8/4rPPP/4R1K1 w - - 0 1',
+            steps: ['d5a8', 'g8h7', 'e1e2'],
+            goal: LineGoal.line,
+          ),
+        ],
+      ),
+      Stage(
+        id: 'tactics.trapped',
+        title: 'Il pezzo intrappolato',
+        intro:
+            'Un pezzo è intrappolato quando non ha case sicure dove scappare. '
+            'Attaccalo: dovunque vada, lo catturi.',
+        exercises: [
+          LineExercise(
+            instructions:
+                'L\'alfiere nero ha preso un pedone in a2. Chiudigli la '
+                'strada con un pedone: non potrà più uscire.',
+            fen: '6k1/5ppp/8/8/8/2P5/bPK2PPP/8 w - - 0 1',
+            steps: ['b2b3'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'L\'alfiere nero in h5 è chiuso dal suo pedone in g6. '
+                'Attaccalo con un pedone: non ha case dove scappare.',
+            fen: '4r1k1/5p1p/6p1/7b/8/7P/5PP1/3R2K1 w - - 0 1',
+            steps: ['g2g4'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Il cavallo nero è sul bordo. Attaccalo con un pedone: '
+                'tutte le case dove può andare sono controllate.',
+            fen: '6k1/1p3ppp/2p5/n7/8/3P4/PPP2PPP/6K1 w - - 0 1',
+            steps: ['b2b4'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Sfida: attacca l\'alfiere con un pedone. Quando si ritira, '
+                'attaccalo con l\'altro pedone: resterà in trappola.',
+            fen: '3r4/pp3pkp/8/7b/4P2P/3P1PP1/PP3K2/3R4 w - - 0 1',
+            steps: ['g3g4', 'h5g6', 'h4h5'],
+            goal: LineGoal.line,
+          ),
+        ],
+      ),
+      Stage(
+        id: 'tactics.xray',
+        title: 'Batteria e raggi X',
+        intro:
+            'Due pezzi sulla stessa linea, uno dietro l\'altro, formano una '
+            'batteria. Il pezzo dietro difende quello davanti come ai raggi '
+            'X, e insieme attaccano una casa due volte.',
+        exercises: [
+          LineExercise(
+            instructions:
+                '$_mateIn1 Donna e alfiere sono in batteria sulla '
+                'diagonale: l\'alfiere dietro protegge la donna.',
+            fen: 'r2q1rk1/pp3ppp/8/8/8/3Q4/PP3PPP/1B4K1 w - - 0 1',
+            steps: ['d3h7'],
+            goal: LineGoal.mate,
+          ),
+          LineExercise(
+            instructions:
+                '$_mateIn1 La torre dietro la donna la protegge sulla '
+                'colonna g.',
+            fen: '2rr2k1/pp3ppp/8/8/6Q1/8/PP3P1P/6RK w - - 0 1',
+            steps: ['g4g7'],
+            goal: LineGoal.mate,
+          ),
+          LineExercise(
+            instructions:
+                'Il cavallo nero è attaccato da due torri e difeso da una '
+                'sola. Catturalo.',
+            fen: '2b3k1/pp3pp1/7p/r3n3/8/7P/PP2RPP1/4R1K1 w - - 0 1',
+            steps: ['e2e5'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                '$_mateIn2 Sfida: la torre in e1 protegge la donna. '
+                'Sacrifica la donna in e8, poi la torre dà matto.',
+            fen: '3rr1k1/pp3ppp/8/8/8/8/PP2QPPP/4R1K1 w - - 0 1',
+            steps: ['e2e8', 'd8e8', 'e1e8'],
+            goal: LineGoal.mate,
           ),
         ],
       ),
