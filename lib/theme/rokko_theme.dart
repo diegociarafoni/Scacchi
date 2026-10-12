@@ -123,7 +123,9 @@ abstract final class RokkoTheme {
         style: OutlinedButton.styleFrom(shape: shape, minimumSize: minSize),
       ),
       cardTheme: CardThemeData(
+        elevation: 0,
         shape: RoundedRectangleBorder(
+          side: BorderSide(color: scheme.outlineVariant),
           borderRadius: BorderRadius.circular(tokens.radiusLarge),
         ),
       ),

@@ -84,4 +84,12 @@ void main() {
     expect(find.text('Rokko'), findsOneWidget);
     expect(find.byIcon(Icons.castle), findsOneWidget);
   });
+
+  test('le schede sono piatte con un filo di contorno, senza ombra nera', () {
+    for (final t in [RokkoTheme.light(), RokkoTheme.dark()]) {
+      expect(t.cardTheme.elevation, 0);
+      final shape = t.cardTheme.shape! as RoundedRectangleBorder;
+      expect(shape.side.color, t.colorScheme.outlineVariant);
+    }
+  });
 }
