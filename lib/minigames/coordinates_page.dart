@@ -84,6 +84,10 @@ class _CoordinatesPageState extends State<CoordinatesPage> {
           size: size,
           orientation: _side,
           fen: '8/8/8/8/8/8/8/8',
+          settings: StaticChessboardSettings.fromBoardSettings(
+            AppSettings.of(context).exerciseBoard
+                .copyWith(enableCoordinates: false),
+          ),
           onTouchedSquare: _tap,
           squareHighlights: {
             if (highlight != null)
