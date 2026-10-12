@@ -227,8 +227,6 @@ void main() {
   ) async {
     await pumpGame(tester, await kidSettings(kid: false));
     expect(find.text('Muove il Bianco.'), findsOneWidget);
-    await tester.tap(find.byKey(const ValueKey('gameAction-more')));
-    await tester.pumpAndSettle();
     expect(find.text('Nuova'), findsOneWidget);
     expect(find.text('Abbandona'), findsOneWidget);
     expect(find.text('Patta'), findsOneWidget);

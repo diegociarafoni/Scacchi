@@ -39,7 +39,7 @@
   "gameTipNext": "Next",
   "gameTipClose": "Close",
   "gameTipHint": "Stuck? Tap Hint: first the piece to move, then the move.",
-  "gameTipMore": "Under \"More\" you find draw, resign, coach and the position editor.",
+  "gameTipMore": "Draw and resign are in the bar; the ⋮ menu also opens the position editor.",
   "gameTipMenu": "The ⋮ menu lets you analyse the position and review the game.",
   "gameReviewInvite": "Game over. Want to see where to improve?",
   "gameReviewInviteAction": "Review the game",

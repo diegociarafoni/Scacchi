@@ -14,7 +14,7 @@ Partita tra due persone su due telefoni, pensata per funzionare in ogni situazio
 | 2c-2 | Ricerca mDNS dopo un cambio di indirizzo | Disponibile |
 | 3 | Canale Bluetooth LE, scelta Wi-Fi o Bluetooth nella schermata | Disponibile da Tu › Gioca con un amico › Come collegarvi |
 | 4 | Relay Nostr, link d'invito, avvisi in background (solo Android), schermate | Disponibile da Tu › Gioca con un amico con «Gioca anche a distanza» |
-| 5 | Scelta «Amico» nel foglio Nuova partita, con gli stessi comandi della pagina | Disponibile da Altro › Nuova › Amico |
+| 5 | Scelta «Amico» nel foglio Nuova partita, con gli stessi comandi della pagina | Disponibile da Nuova › Amico |
 
 ## Requisiti
 
