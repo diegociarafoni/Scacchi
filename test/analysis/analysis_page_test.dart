@@ -10,6 +10,8 @@ import 'package:scacchi/settings/board_marks.dart';
 import 'package:scacchi/settings/settings.dart';
 import 'package:scacchi/share/position_image_page.dart';
 
+import '../board_marks_helpers.dart';
+
 /// Motore finto: ogni richiesta apre un flusso controllato dal test.
 class FakeLive {
   final requests = <({String fen, int multiPv})>[];
@@ -236,7 +238,7 @@ void main() {
       ]);
       await settle(tester);
       expect(live.requests.last.fen, Chess.initial.fen);
-      final arrows = board(tester).shapes.whereType<Arrow>().toList();
+      final arrows = markArrows(board(tester).shapes).toList();
       expect(arrows, hasLength(1));
       expect(arrows.single.orig, Square.e7);
       expect(arrows.single.dest, Square.e5);
@@ -321,7 +323,7 @@ void main() {
       final live = await pumpAnalysis(tester);
       live.emit([e4]);
       await settle(tester);
-      final arrow = board(tester).shapes.whereType<Arrow>().single;
+      final arrow = markArrows(board(tester).shapes).single;
       expect(arrow.orig, Square.e2);
       expect(arrow.dest, Square.e4);
       await tester.tap(find.byTooltip('Freccia della mossa migliore'));
@@ -380,7 +382,7 @@ void main() {
       );
       expect(page.image.fen, Chess.initial.fen);
       expect(page.image.orientation, Side.black);
-      expect(page.image.shapes, hasLength(1));
+      expect(markArrows(page.image.shapes), hasLength(1));
     },
   );
 }

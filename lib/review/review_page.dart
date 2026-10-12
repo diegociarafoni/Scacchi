@@ -416,7 +416,7 @@ class _ReviewPageState extends State<ReviewPage> {
       BoardTheme.green,
       colorBlind: AppSettings.of(context).colorBlind,
     );
-    return {Arrow(color: marks.hint, orig: shown.from, dest: shown.to)};
+    return marks.arrow(marks.hint, shown.from, shown.to);
   }
 
   Map<Square, Annotation> _annotations() {

@@ -1606,6 +1606,126 @@
   "@tablebaseShowMove": {
     "description": "Pulsante dell'allenatore dei finali che disegna la mossa perfetta sulla scacchiera"
   },
+  "personalTitle": "Le tue aperture",
+  "@personalTitle": {
+    "description": "Titolo della schermata e della voce nella scheda Aperture"
+  },
+  "personalHubSubtitle": "Le mosse che hai giocato, con i risultati",
+  "@personalHubSubtitle": {
+    "description": "Sottotitolo della voce nella scheda Aperture"
+  },
+  "personalLoadFailed": "L'archivio delle partite non si è potuto leggere: riprova più tardi.",
+  "@personalLoadFailed": {
+    "description": "Errore di lettura dell'archivio"
+  },
+  "personalEmpty": "Gioca qualche partita contro il computer per costruire il tuo albero delle aperture.",
+  "@personalEmpty": {
+    "description": "Archivio senza partite utili"
+  },
+  "personalNoGamesFiltered": "Nessuna partita con questi filtri.",
+  "@personalNoGamesFiltered": {
+    "description": "Filtri senza partite"
+  },
+  "personalNoGamesHere": "Non hai mai giocato da questa posizione.",
+  "@personalNoGamesHere": {
+    "description": "Posizione fuori dall'albero"
+  },
+  "personalSideAll": "Entrambi",
+  "@personalSideAll": {
+    "description": "Filtro colore: tutte le partite"
+  },
+  "personalSideWhite": "Bianco",
+  "@personalSideWhite": {
+    "description": "Filtro colore: partite con il bianco"
+  },
+  "personalSideBlack": "Nero",
+  "@personalSideBlack": {
+    "description": "Filtro colore: partite con il nero"
+  },
+  "personalOpponent": "Avversario",
+  "@personalOpponent": {
+    "description": "Etichetta del filtro per avversario"
+  },
+  "personalAllOpponents": "Tutti gli avversari",
+  "@personalAllOpponents": {
+    "description": "Filtro avversario senza restrizioni"
+  },
+  "personalGames": "{count, plural, one{{count} partita} other{{count} partite}}",
+  "@personalGames": {
+    "description": "Partite in cui è stata giocata una mossa",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "personalGamesTotal": "{count, plural, one{{count} partita considerata} other{{count} partite considerate}}",
+  "@personalGamesTotal": {
+    "description": "Partite che rispettano i filtri",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "personalScore": "{wins}V · {draws}P · {losses}S",
+  "@personalScore": {
+    "description": "Vittorie, patte e sconfitte in breve",
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      }
+    }
+  },
+  "personalScoreSemantics": "{wins} vinte, {draws} patte, {losses} perse",
+  "@personalScoreSemantics": {
+    "description": "Vittorie, patte e sconfitte per i lettori di schermo",
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      }
+    }
+  },
+  "personalStartPosition": "Posizione iniziale",
+  "@personalStartPosition": {
+    "description": "Titolo senza mosse"
+  },
+  "personalNoName": "Apertura senza nome",
+  "@personalNoName": {
+    "description": "Titolo di una posizione senza nome nel libro"
+  },
+  "personalBack": "Indietro",
+  "@personalBack": {
+    "description": "Torna alla mossa precedente"
+  },
+  "personalStart": "Inizio",
+  "@personalStart": {
+    "description": "Torna alla posizione iniziale"
+  },
+  "personalFlip": "Gira la scacchiera",
+  "@personalFlip": {
+    "description": "Tooltip del pulsante che gira la scacchiera"
+  },
+  "personalOpenInBook": "Apri nell'explorer delle aperture",
+  "@personalOpenInBook": {
+    "description": "Tooltip: apre il libro delle aperture nella stessa posizione"
+  },
+  "personalFromHere": "Le tue partite da questa posizione",
+  "@personalFromHere": {
+    "description": "Tooltip nell'explorer delle aperture: apre l'albero personale"
+  },
   "weeklyEntryTitle": "Riepilogo settimanale",
   "@weeklyEntryTitle": {
     "description": "Voce della scheda Tu"

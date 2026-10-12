@@ -20,7 +20,7 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | [multigiocatore.md](multigiocatore.md) | Partita tra due telefoni: protocollo, canali locali e a distanza, sicurezza |
 | [backup.md](backup.md) | Backup e ripristino di tutti i dati locali in un file |
 | [puzzle.md](puzzle.md) | Puzzle: dati, punteggio, modalità, puzzle del giorno |
-| [aperture.md](aperture.md) | Nomi delle aperture, mosse di libro, Esplora aperture, repertorio |
+| [aperture.md](aperture.md) | Nomi delle aperture, mosse di libro, Esplora aperture, repertorio, le tue aperture |
 | [percorso.md](percorso.md) | Percorso a tappe con stelle e bot guardiani |
 | [storia.md](storia.md) | Percorso a storia: capitoli, puzzle e sfide a tema sopra il percorso |
 | [finali.md](finali.md) | Allenatore dei finali contro il motore: Lucena, Philidor, matti elementari |
@@ -61,6 +61,7 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | Puzzle: combo a tempo, corsa, sopravvivenza, serie, ripasso degli errori, con la spiegazione di ogni modalità | Disponibile |
 | Nome dell'apertura in partita (in italiano), Esplora aperture | Disponibile |
 | Repertorio di aperture con ripasso dilazionato | Disponibile |
+| Le tue aperture: albero costruito dalle tue partite, con risultati e filtri per colore e avversario | Disponibile |
 | Gamification: XP, livelli, obiettivo giornaliero, serie, traguardi, ricompense estetiche, promemoria | Disponibile: XP a fine partita, Profilo e promemoria dalla scheda Tu |
 | La tua settimana: scheda condivisibile degli ultimi sette giorni | Disponibile dalla scheda Tu |
 | Scacchiera fisica: orologio e registro della partita dal vivo | Disponibile dalla scheda Tu |
