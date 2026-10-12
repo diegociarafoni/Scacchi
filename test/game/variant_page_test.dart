@@ -4,6 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/game/game_page.dart';
 import 'package:scacchi/settings/settings.dart';
 
+import '../game_actions.dart';
+
 Offset square(WidgetTester tester, String name) {
   final rect = tester.getRect(find.byType(Chessboard));
   final size = rect.width / 8;
@@ -31,7 +33,7 @@ Future<void> start(WidgetTester tester, String variant) async {
       ),
     ),
   );
-  await tester.tap(find.text('Nuova'));
+  await tapGameAction(tester, 'Nuova');
   await tester.pumpAndSettle();
   await tester.tap(find.text(variant));
   await tester.pumpAndSettle();

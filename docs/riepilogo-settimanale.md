@@ -7,7 +7,7 @@ Requisito RG-16: una scheda offline sugli ultimi sette giorni con i progressi, l
 - **Progressi**: partite (vinte, patte, perse), puzzle risolti, lezioni completate, revisioni, minuti di allenamento e precisione media delle revisioni, con la differenza rispetto ai sette giorni precedenti. Le righe a zero non compaiono.
 - **Errore più frequente**: il tema che il coach ha riconosciuto più spesso negli errori delle tue partite riviste (pezzi lasciati in presa, forchette subite o mancate, inchiodature, matti, re scoperto, catture mancate, perdite di materiale). Conta solo se compare almeno due volte; i commenti generici non contano.
 - **Un consiglio**, scelto così, nell'ordine:
-  1. se c'è un errore ricorrente, la lezione del Percorso o i puzzle del tema che lo corregge (tabella sotto), con un pulsante per aprirli;
+  1. se c'è un errore ricorrente, la lezione della Storia o i puzzle del tema che lo corregge (tabella sotto), con un pulsante per aprirli;
   2. se hai giocato ma non rivisto nulla, rivedere una partita;
   3. se non hai risolto puzzle, risolverne qualcuno;
   4. altrimenti, continuare così.

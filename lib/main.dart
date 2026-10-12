@@ -9,6 +9,7 @@ import 'backup/backup_page.dart';
 import 'home/home_shell.dart';
 import 'l10n/app_localizations.dart';
 import 'settings/settings.dart';
+import 'theme/rokko_theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -61,16 +62,6 @@ class _ScacchiAppState extends State<ScacchiApp> {
     );
   }
 
-  static const _seed = Color(0xFF769656);
-  static final _light = ThemeData(
-    colorSchemeSeed: _seed,
-    brightness: Brightness.light,
-  );
-  static final _dark = ThemeData(
-    colorSchemeSeed: _seed,
-    brightness: Brightness.dark,
-  );
-
   Widget _app(SettingsController? settings, ThemeMode themeMode) {
     return MaterialApp(
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
@@ -79,8 +70,8 @@ class _ScacchiAppState extends State<ScacchiApp> {
       locale: const Locale('it'),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      theme: _light,
-      darkTheme: _dark,
+      theme: RokkoTheme.light(),
+      darkTheme: RokkoTheme.dark(),
       themeMode: themeMode,
       // Sopra il Navigator, così anche le pagine aperte con push lo vedono.
       builder: (context, child) => settings == null

@@ -123,11 +123,7 @@ void main() {
   });
 
   test('fuori dalla scacchiera i pezzi non hanno alone', () {
-    final s = AppSettings(
-      boardTheme: BoardTheme.spazio,
-      pieceSet: PieceStyle.rokko,
-      coordinatesOutside: true,
-    );
+    final s = AppSettings(pieceSet: PieceStyle.rokko, coordinatesOutside: true);
     expect(s.pieceAssets, PieceStyle.rokko.assets);
     expect(s.editorBoard.pieceAssets, PieceStyle.rokko.assets);
     expect(s.editorBoard.enableCoordinates, isTrue, reason: 'senza cornice');

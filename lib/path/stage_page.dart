@@ -5,6 +5,7 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
 import '../settings/settings.dart';
+import '../theme/rokko_theme.dart';
 import 'curriculum.dart';
 import 'exercise.dart';
 
@@ -231,10 +232,7 @@ class _Result extends StatelessWidget {
         Text(
           '${'★' * stars}${'☆' * (3 - stars)}',
           semanticsLabel: '$stars stelle su 3',
-          style: TextStyle(
-            fontSize: 32,
-            color: Theme.of(context).colorScheme.tertiary,
-          ),
+          style: TextStyle(fontSize: 32, color: RokkoTokens.of(context).star),
         ),
         const SizedBox(height: 8),
         FilledButton(

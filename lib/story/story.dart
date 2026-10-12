@@ -75,6 +75,20 @@ const storyChapters = <StoryChapter>[
     puzzleTheme: 'opening',
     puzzleCount: 3,
   ),
+  StoryChapter(
+    id: 'plain',
+    pathChapterId: 'strategy',
+    botId: 'massimo',
+    puzzleTheme: 'advancedPawn',
+    puzzleCount: 3,
+  ),
+  StoryChapter(
+    id: 'academy',
+    pathChapterId: 'capablanca',
+    botId: 'stella',
+    puzzleTheme: 'rookEndgame',
+    puzzleCount: 3,
+  ),
 ];
 
 /// Parte della storia che il percorso non conosce, salvata in `story.json`.
@@ -203,4 +217,21 @@ class StoryProgress {
     }
     return null;
   }
+}
+
+/// Prima lezione, o guardiano, ancora da fare nei capitoli della storia;
+/// `null` se tutto è fatto. Serve a «Continua da dove eri» della scheda Tu.
+/// I capitoli del percorso che la storia non racconta non contano.
+Stage? nextStoryStage(PathProgress path) {
+  for (final chapter in storyChapters) {
+    final stages = chapter.pathChapter.stages;
+    // Nel capitolo prima le lezioni, poi il guardiano.
+    for (final s in [
+      ...stages.where((s) => !s.isGuardian),
+      ...stages.where((s) => s.isGuardian),
+    ]) {
+      if (!path.isCompleted(s.id)) return s;
+    }
+  }
+  return null;
 }

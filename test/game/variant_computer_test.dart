@@ -8,6 +8,7 @@ import 'package:scacchi/game/game_page.dart';
 import 'package:scacchi/settings/settings.dart';
 
 import '../computer_fakes.dart';
+import '../game_actions.dart';
 
 Future<T> direct<T>(T Function() task) async => task();
 
@@ -37,7 +38,7 @@ void main() {
     addTearDown(tester.view.reset);
     stockfishStarts = 0;
     await tester.pumpWidget(app());
-    await tester.tap(find.text('Nuova'));
+    await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Computer'));
     await tester.pumpAndSettle();
@@ -75,7 +76,7 @@ void main() {
     tester,
   ) async {
     await start(tester, 'Tre scacchi');
-    await tester.tap(find.text('Patta'));
+    await tapGameAction(tester, 'Patta');
     await tester.pumpAndSettle(const Duration(seconds: 2));
     expect(find.text('Il computer rifiuta la patta.'), findsOneWidget);
     expect(stockfishStarts, 0);

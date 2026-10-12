@@ -4,21 +4,21 @@ L'app è progettata prima di tutto per il telefono in verticale.
 
 ## Navigazione
 
-La barra in basso ha quattro schede: Gioca, Puzzle, Aperture e Tu. La scheda Tu mostra avatar, livello e serie, e porta a Profilo, Percorso, Storia, Finali e Tornei (dove c'è il motore), Grandi maestri, Minigiochi, Statistiche, La tua settimana, Scacchiera fisica e Archivio. Se i dati salvati di una sezione non si possono leggere, un messaggio lo dice e si può riprovare. Nel profilo bambino le Aperture sono nascoste e la scheda Tu mostra solo Profilo, Percorso, Storia, Finali (dove c'è il motore), Grandi maestri e Minigiochi (vedi [profilo-bambino.md](profilo-bambino.md)). 
+La barra in basso ha quattro schede: Gioca, Puzzle, Aperture e Tu. La scheda Tu (`lib/home/you_page.dart`, testi in `lib/l10n/<lingua>/you.arb`) mostra avatar, livello e serie, poi la scheda in evidenza «Continua da dove eri», che apre la Storia (la prossima tappa è quella della Storia), e tre gruppi con intestazione letta come tale dai lettori di schermo: **Impara** (Storia, Finali dove c'è il motore, Grandi maestri), **Gioca** (Tornei dove c'è il motore, Multigiocatore, Scacchiera fisica, Minigiochi) e **I miei dati** (Profilo, Statistiche, La tua settimana, Archivio). «La tua settimana» è una sola voce e apre il riepilogo; gli adulti hanno a destra il pulsante «Condividi la settimana» per l'immagine. Le voci hanno un tocco di almeno 48 dp. Se i dati salvati di una sezione non si possono leggere, un messaggio lo dice e si può riprovare. Nel profilo bambino le Aperture sono nascoste e la scheda Tu mostra solo Percorso, Storia, Finali (dove c'è il motore), Grandi maestri, Minigiochi, Profilo e La tua settimana (vedi [profilo-bambino.md](profilo-bambino.md)). 
 
 ## Telefono in verticale
 
 Dall'alto verso il basso:
 
-1. **Barra del titolo** con il pulsante delle impostazioni.
-2. **Striscia delle mosse**: scorre in orizzontale e mostra sempre l'ultima mossa a destra.
+1. **Barra del titolo** con il marchio Rokko (o il nome dell'apertura), il menu ⋮, la modalità zen e le impostazioni; la tastiera resta in barra solo con un lettore di schermo attivo, nelle sfide e nel profilo bambino.
+2. **Spazio delle mosse**: occupa lo spazio libero sopra la riga di stato. Lo schermo alto lo riempie con la lista delle mosse (l'ultima in basso, vicino alla scacchiera); quando lo spazio è poco diventa una striscia orizzontale. Contiene anche, una alla volta, le carte dei suggerimenti del primo uso e l'invito alla revisione.
 3. **Riga di stato**: chi muove, scacco, oppure risultato e motivo della fine partita.
 4. **Materiale del giocatore in alto**: pezzi che ha catturato e vantaggio.
 5. **Scacchiera** a tutta larghezza.
 6. **Materiale del giocatore in basso**.
-7. **Barra dei comandi** in basso, alla portata del pollice: Nuova, Annulla, Gira, Patta, Abbandona; contro il computer o un bot anche Allenatore e Suggerisci, tranne nelle sfide (vedi [allenatore.md](allenatore.md)) (nel profilo bambino «Nuova partita», «Pareggio?» e «Mi arrendo», vedi [profilo-bambino.md](profilo-bambino.md)).
+7. **Barra dei comandi** in basso, alla portata del pollice, con al massimo quattro pulsanti da 48 dp: Suggerisci (contro il computer o un bot, non nelle sfide), Annulla, Gira, Altro. «Altro» apre il pannello **Partita** con Nuova, Patta, Abbandona, l'interruttore Allenatore e, con l'allenatore acceso, Minaccia (vedi [allenatore.md](allenatore.md)); un punto su «Altro» dice che l'allenatore è acceso. Nel profilo bambino i pulsanti sono tre da 56 dp (Suggerisci o Gira, Annulla, Altro) e il pannello usa «Nuova partita», «Pareggio?» e «Mi arrendo» (vedi [profilo-bambino.md](profilo-bambino.md)).
 
-Striscia, stato, righe del materiale e scacchiera sono centrati insieme nello spazio disponibile. La scacchiera ha come lato il minimo tra la larghezza dello schermo e l'altezza rimasta dopo striscia, stato, righe del materiale e comandi.
+Stato, righe del materiale e scacchiera stanno attaccati ai comandi; l'avanzo di altezza va allo spazio delle mosse. I messaggi a fascia compaiono sopra la scacchiera, non sopra le sue ultime traverse. La scacchiera ha come lato il minimo tra la larghezza dello schermo e l'altezza rimasta dopo striscia minima, stato, righe del materiale e comandi.
 
 ## Tablet e orizzontale
 
@@ -40,17 +40,21 @@ Per ciascun giocatore una riga mostra le icone dei pezzi avversari catturati, da
 
 | Comando | Effetto |
 |---|---|
-| Nuova | Apre la scelta dell'avversario (due giocatori o computer, con colore e livello), della variante (Classica, Chess960, Re della collina, Tre scacchi, anche contro il computer) e della cadenza; toccando la cadenza inizia la nuova partita |
+| Altro | Apre il pannello «Partita» con i comandi meno frequenti |
+| Nuova (nel pannello) | Apre la scelta dell'avversario (due giocatori o computer, con colore e livello), della variante (Classica, Chess960, Re della collina, Tre scacchi, anche contro il computer) e della cadenza; toccando la cadenza inizia la nuova partita |
 | Annulla | Annulla l'ultima mossa; disattivato se non ci sono mosse |
 | Gira | Capovolge la scacchiera |
 | Patta | Chiede all'avversario se accetta la patta; disattivato a partita conclusa |
 | Abbandona | Chiede conferma e fa abbandonare il lato al tratto; disattivato a partita conclusa |
 | Allenatore | Acceso o spento: da acceso giudica ogni mossa e avvisa degli errori con Riprova o Continua; solo contro il computer o un bot, non nelle sfide (vedi [allenatore.md](allenatore.md)) |
 | Suggerisci | Primo tocco: cerchia il pezzo da muovere con una frase semplice; secondo tocco: freccia della mossa migliore e motivo; anche ad allenatore spento, non nelle sfide |
+| Menu ⋮, "Editor di posizione" e "Mossa da tastiera" | Editor e mossa scritta, spostati dalla barra del titolo; la tastiera è nel menu salvo lettore di schermo attivo |
 | Menu ⋮, "Esporta come immagine" | Apre l'anteprima della posizione mostrata, da condividere come PNG; stesse esclusioni del menu QR (vedi [esporta-immagine.md](esporta-immagine.md)) |
 | Menu ⋮, "Passa con QR" e "Ricevi con QR" | Passa la partita, anche in corso, a un altro telefono o la continua da un QR letto con la fotocamera; il menu c'è anche senza motore e nelle varianti, non nelle sfide contro guardiani e tornei né nel profilo bambino (vedi [scambio-qr.md](scambio-qr.md)) |
 | Menu ⋮, "Analisi della posizione" | Apre l'analisi libera della posizione corrente con orologio e computer fermi (vedi [analisi.md](analisi.md)) |
 | Menu ⋮, "Revisione della partita" | Apre la revisione con classificazione delle mosse e precisione (vedi [revisione-partita.md](revisione-partita.md)); il menu c'è solo dove c'è il motore e negli scacchi classici, non nelle varianti né nel profilo bambino |
+
+**Suggerimenti al primo uso**: dopo la prima mossa di una partita, una carta alla volta spiega Suggerisci, «Altro» e il menu ⋮ (con «Avanti» e «Chiudi»; «Chiudi» li spegne per sempre). A fine della prima partita finita contro il motore compare l'invito «Rivedi la partita», una volta sola. Non compaiono in zen, nelle sfide e nel profilo bambino.
 
 Nel profilo bambino riga di stato, comandi e dialoghi usano frasi brevi, e mancano il menu ⋮ e l'editor di posizione; le nuove partite non offrono varianti né cadenze Bullet e Blitz, mentre una partita già in corso continua com'è (vedi [profilo-bambino.md](profilo-bambino.md)).
 
@@ -101,7 +105,13 @@ Dopo ogni mossa il lettore di schermo annuncia una frase in italiano, per esempi
 
 ## Impostazioni
 
-In cima alla pagina, sempre visibile mentre si scorre, c'è un'anteprima della scacchiera: mostra una posizione di prova con tema, pezzi, coordinate, mosse legali, colori per daltonici e velocità delle animazioni correnti, e si aggiorna a ogni scelta. Toccandola si gioca la mossa di prova (l'alfiere prende in c6), con l'animazione scelta; un secondo tocco la ripristina. I chip dei temi mostrano i colori delle case chiare e scure, quelli dei pezzi il cavallo del set, così si riconoscono a colpo d'occhio. L'anteprima ha un'etichetta per i lettori di schermo.
+In cima alla pagina, sempre visibile mentre si scorre, c'è un'anteprima della scacchiera: mostra una posizione di prova con tema, pezzi, coordinate, mosse legali, colori per daltonici e velocità delle animazioni correnti, e si aggiorna a ogni scelta. Toccandola si gioca la mossa di prova (l'alfiere prende in c6), con l'animazione scelta; un secondo tocco la ripristina. Il pulsante a destra del titolo (48 dp) la comprime a una riga con tema e pezzi, per lasciare spazio alle impostazioni sui telefoni piccoli. L'anteprima ha un'etichetta per i lettori di schermo.
+
+Sotto l'anteprima le impostazioni sono in sezioni comprimibili, ciascuna con icona, titolo e una riga che dice cosa contiene. All'apertura sono aperte solo «Profilo» e «Aspetto»; le altre si aprono con un tocco (l'intestazione è alta almeno 48 dp e i lettori di schermo la annunciano come comprimibile). Le sezioni, nell'ordine: Profilo (profilo bambino), Aspetto (aspetto dell'app, galleria dei temi, galleria dei pezzi, «Sblocca tutto», animazioni), Scacchiera (mosse legali, coordinate, frecce e cerchi, notazione), Gioco (promozione, spiegazioni, rotazione, modalità tavolo), Accessibilità (colori per daltonici, modalità zen, conferma della mossa), Suoni e vibrazione, Dati (backup).
+
+I temi e i pezzi sono gallerie di tessere: ogni tema mostra una scacchiera 4×4 con le sue case chiare e scure, ogni set il suo cavallo, con il nome sotto. La scelta attiva ha bordo marcato e segno di spunta; una tessera ancora bloccata ha il lucchetto (non solo la tinta più spenta), e toccarla dice come sbloccarla; per i lettori di schermo è «selezionato» o «bloccato» con il requisito. Il profilo bambino non cita mai il livello.
+
+Tutti i testi e le descrizioni della pagina sono in italiano e inglese in `lib/l10n/<lingua>/settings.arb` (prefisso `settings`); i nomi dei set di pezzi sono nomi propri e restano uguali in ogni lingua, tranne «Classico». Un test (`test/settings/settings_sections_test.dart`) fallisce se in `settings_page.dart` compare di nuovo un testo scritto nel codice.
 
 Si aprono dall'icona a forma di ingranaggio nella barra del titolo. Ogni modifica si applica subito e viene salvata sul dispositivo.
 
@@ -121,7 +131,7 @@ Si aprono dall'icona a forma di ingranaggio nella barra del titolo. Ogni modific
 | Suoni | Suoni per mossa, cattura, arrocco, scacco, promozione, fine partita e tempo sotto i 10 secondi | Attivi |
 | Volume | Volume dei suoni, da 0 a 100% | 100% |
 | Vibrazione | Vibrazione breve a ogni mossa, più marcata per catture e fine partita | Attiva |
-| Tema della scacchiera | Verde, Legno, Blu, Grigio, Arancia, Crepuscolo, Pergamena, Castello, Bosco elfico, Noce, Spazio, Retrò, Giardino, Terracotta; sbloccabili Sabbia, Oceano, Corallo, Notte, Oro | Verde |
+| Tema della scacchiera | Verde, Legno, Blu, Grigio, Arancia, Crepuscolo, Pergamena, Castello, Bosco elfico, Noce, Spazio, Retrò, Giardino, Terracotta; sbloccabili Sabbia, Oceano, Corallo, Notte, Oro | Spazio (chi ha già scelto un altro tema lo mantiene) |
 | Pezzi | Classico, Merida, Chessnut, Fantasy, Spatial, Rokko, Pixel, Arcano, Papercut, Noto; sbloccabili Celtic, Shapes, Firi, Mpchess, Kiwen-suwi, Totoy, RhosGFX | Classico |
 | Sblocca tutto | Rende disponibili le ricompense estetiche senza sbloccarle (vedi [gamification.md](gamification.md)) | Disattiva |
 | Animazioni | Nessuna, Veloce, Normale, Lenta | Normale |
@@ -146,9 +156,17 @@ Sempre visibili: scacchiera, elenco delle mosse, comandi (nuova, annulla, gira, 
 
 A ogni mossa suona un solo effetto, scelto in quest'ordine di priorità: fine partita, scacco, promozione, arrocco, cattura (anche en passant), mossa semplice. Con l'orologio, un breve segnale avvisa quando il tempo di un giocatore scende sotto i 10 secondi, una volta per partita. I suoni sono generati dallo script `tool/generate_sounds.py`.
 
+## Puzzle
+
+La scheda Puzzle ha il punteggio in alto, il puzzle del giorno come scheda grande e colorata, poi due gruppi: «Allenati» (allenamento, per tema, ripasso) e «Modalità a tempo» (serie e sfida a un amico). Nel profilo bambino restano le stelle e le voci semplici, senza cifre né modalità a tempo.
+
+Nel puzzle l'obiettivo sta in una scheda sopra la scacchiera, con il colore che muove. Sotto, una fascia dice l'esito con icona, testo e colore insieme (da risolvere, giusto, errore, risolto, soluzione mostrata); è una regione viva per i lettori di schermo. I pulsanti hanno almeno 48 dp (56 nel profilo bambino). Nelle serie l'esito dell'ultimo puzzle ha icona e testo. Tutti i testi dell'interfaccia sono in `lib/l10n/<lingua>/puzzles.arb`; restano in italiano nel codice le regole delle modalità (`mode_guide.dart`) e i nomi dei temi (`themes.dart`). Golden con tema reale in `test/golden/puzzle_golden_test.dart`.
+
 ## Tema
 
-L'app segue il tema chiaro o scuro del sistema, a meno che in Impostazioni, alla voce «Aspetto dell'app», si scelga Chiaro o Scuro; la scelta vale subito per tutte le schermate. Tutti i testi sono in italiano.
+Il tema è in `lib/theme/rokko_theme.dart` e segue lo stile spaziale della scacchiera «Spazio»: indaco `#4A4F86`, notte `#1D1F45` e viola di nebulosa `#725692`. Nel tema scuro i comandi sono lavanda (`#B9B3FF`) su fondo `#12132B`, nel chiaro indaco su fondo `#F5F3FC`; le stelline (`star`, giallo) sono un accento raro. Il verde `#769656` resta solo della scacchiera. Raggi di 12 dp (pulsanti) e 20 dp (schede, dialoghi), bersagli minimi di 48 dp (56 dp nel profilo bambino). Un test verifica il contrasto minimo 4,5:1 di pulsanti, testi e accenti in entrambi i temi. Le schermate leggono i valori con `RokkoTokens.of(context)` (`action`, `onAction`, `star`, `success`, `warning`, `boardGreen`, raggi, bersagli) e mettono il marchio nella barra del titolo con `RokkoWordmark`; non scrivono colori e misure a mano.
+
+L'app segue il tema chiaro o scuro del sistema, a meno che in Impostazioni, alla voce «Aspetto dell'app», si scelga Chiaro o Scuro; la scelta vale subito per tutte le schermate. Le Impostazioni sono tradotte in italiano e inglese.
 
 ### Colori per daltonici
 

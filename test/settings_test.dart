@@ -17,7 +17,7 @@ void main() {
     expect(settings.value.drawShapes, isTrue);
     expect(settings.value.autoFlip, isFalse);
     expect(settings.value.animation, AnimationSpeed.normal);
-    expect(settings.value.boardTheme, BoardTheme.green);
+    expect(settings.value.boardTheme, BoardTheme.spazio);
     expect(settings.value.pieceSet, PieceStyle.cburnett);
     expect(settings.value.sound, isTrue);
     expect(settings.value.volume, 1.0);
@@ -80,10 +80,19 @@ void main() {
     expect(reloaded.value.animation, AnimationSpeed.none);
   });
 
+  test(
+    'la scelta salvata di un altro tema non cambia col nuovo predefinito',
+    () async {
+      SharedPreferences.setMockInitialValues({'boardTheme': 'green'});
+      final settings = await SettingsController.load();
+      expect(settings.value.boardTheme, BoardTheme.green);
+    },
+  );
+
   test('RP-04 valori sconosciuti tornano al predefinito', () async {
     SharedPreferences.setMockInitialValues({'boardTheme': 'inesistente'});
     final settings = await SettingsController.load();
-    expect(settings.value.boardTheme, BoardTheme.green);
+    expect(settings.value.boardTheme, BoardTheme.spazio);
   });
 
   test('RP-02 aspetto dell\'app salvato per nome', () async {
@@ -124,7 +133,7 @@ void main() {
     });
     final settings = await SettingsController.load();
     expect(settings.value.showCoordinates, isTrue);
-    expect(settings.value.boardTheme, BoardTheme.green);
+    expect(settings.value.boardTheme, BoardTheme.spazio);
   });
 
   test('RF-31 modalità tavolo capovolge i pezzi dell\'avversario', () async {

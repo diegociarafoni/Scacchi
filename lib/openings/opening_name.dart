@@ -11,12 +11,16 @@ class OpeningName extends StatelessWidget {
     super.key,
     required this.positions,
     required this.fallback,
+    this.fallbackWidget,
     this.book,
   });
 
   /// Posizioni della partita, dalla iniziale all'ultima.
   final List<Position> positions;
   final String fallback;
+
+  /// Mostrato al posto di [fallback] finché la posizione non ha un nome.
+  final Widget? fallbackWidget;
 
   /// Sostituibile nei test; di default il libro incluso nell'app.
   final Future<OpeningBook>? book;
@@ -27,7 +31,7 @@ class OpeningName extends StatelessWidget {
       future: book ?? openingBook(),
       builder: (context, snapshot) {
         final opening = snapshot.data?.classifyPositions(positions);
-        if (opening == null) return Text(fallback);
+        if (opening == null) return fallbackWidget ?? Text(fallback);
         return Semantics(
           label: 'Apertura: ${opening.localName} (${opening.eco})',
           excludeSemantics: true,

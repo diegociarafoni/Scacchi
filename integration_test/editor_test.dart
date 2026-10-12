@@ -5,6 +5,8 @@ import 'package:integration_test/integration_test.dart';
 import 'package:scacchi/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../test/game_actions.dart';
+
 Offset _square(WidgetTester tester, Type board, String name) {
   final rect = tester.getRect(find.byType(board));
   final size = rect.width / 8;
@@ -33,7 +35,7 @@ void main() {
     await tester.pumpWidget(const ScacchiApp());
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byTooltip('Editor di posizione'));
+    await openPositionEditor(tester);
     await tester.pumpAndSettle();
     await _tap(tester, find.text('Svuota'));
     expect(find.text('La scacchiera è vuota.'), findsOneWidget);

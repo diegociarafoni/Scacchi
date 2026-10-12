@@ -9,6 +9,7 @@ import 'package:scacchi/progress/activity.dart';
 import 'package:scacchi/settings/settings.dart';
 
 import '../computer_fakes.dart';
+import '../game_actions.dart';
 
 void main() {
   group('challengeStars', () {
@@ -91,18 +92,20 @@ void main() {
 
     testWidgets('non si può ricominciare né annullare', (tester) async {
       await open(tester);
-      final newGame = tester.widget<InkWell>(
-        find.ancestor(of: find.text('Nuova'), matching: find.byType(InkWell)),
+      await tester.tap(find.byKey(const ValueKey('gameAction-more')));
+      await tester.pumpAndSettle();
+      final newGame = tester.widget<ListTile>(
+        find.widgetWithText(ListTile, 'Nuova'),
       );
-      expect(newGame.onTap, isNull);
-      expect(find.byTooltip('Editor di posizione'), findsNothing);
+      expect(newGame.enabled, isFalse);
+      expect(find.byTooltip('Altre azioni'), findsNothing);
     });
 
     testWidgets('l\'abbandono comunica la sconfitta una sola volta', (
       tester,
     ) async {
       await open(tester);
-      await tester.tap(find.text('Abbandona'));
+      await tapGameAction(tester, 'Abbandona');
       await tester.pumpAndSettle();
       await tester.tap(find.text('Abbandona').last);
       await tester.pumpAndSettle(const Duration(seconds: 1));
