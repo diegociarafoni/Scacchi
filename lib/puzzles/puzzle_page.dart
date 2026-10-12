@@ -133,17 +133,16 @@ class _PuzzlePageState extends State<PuzzlePage> {
 
   void _onMove(Move move) {
     final result = _session.tryMove(move);
+    if (result == PuzzleMoveResult.wrong && AppSettings.of(context).haptics) {
+      unawaited(HapticFeedback.heavyImpact());
+    }
     setState(() {
       _hint = null;
-      _wrongMove = null;
       switch (result) {
         case PuzzleMoveResult.wrong || PuzzleMoveResult.illegal:
           _feedback = _Feedback.wrong;
-          _wrongMove = move;
+          _wrongMove = result == PuzzleMoveResult.wrong ? move : null;
           _revision++;
-          if (AppSettings.of(context).haptics) {
-            unawaited(HapticFeedback.heavyImpact());
-          }
         case PuzzleMoveResult.correct:
           _feedback = _Feedback.correct;
           _scheduleReply();
@@ -208,27 +207,24 @@ class _PuzzlePageState extends State<PuzzlePage> {
     if (mounted && update != null) showProgressFeedback(context, update);
   }
 
-  void _showHint() => setState(() {
-    _wrongMove = null;
-    _hint = _session.hint();
-  });
+  void _showHint() => setState(() => _hint = _session.hint());
 
   /// Freccia e cerchio rossi sulla mossa sbagliata; il rosso non è l'unico
   /// segnale: ci sono anche l'icona e il testo.
-  Set<Shape> _wrongShapes(Color color) => switch (_wrongMove) {
-    NormalMove(:final from, :final to) => {
-      Arrow(color: color, orig: from, dest: to),
-      Circle(color: color, orig: to),
-    },
-    DropMove(:final to) => {Circle(color: color, orig: to)},
-    null => const {},
-  };
+  Set<Shape> _wrongShapes(Color color) =>
+      switch (_feedback == _Feedback.wrong ? _wrongMove : null) {
+        NormalMove(:final from, :final to) => {
+          Arrow(color: color, orig: from, dest: to),
+          Circle(color: color, orig: to),
+        },
+        DropMove(:final to) => {Circle(color: color, orig: to)},
+        null => const {},
+      };
 
   void _showSolution() {
     _replyTimer?.cancel();
     setState(() {
       _hint = null;
-      _wrongMove = null;
       _session.playReply();
       _session.showNextMove();
       if (_session.state == PuzzleState.solved) {
@@ -247,7 +243,6 @@ class _PuzzlePageState extends State<PuzzlePage> {
       _session.restart();
       _feedback = _Feedback.restarted;
       _hint = null;
-      _wrongMove = null;
       _revision++;
     });
   }
