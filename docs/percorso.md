@@ -8,8 +8,8 @@ Requisito RG-03: una mappa di capitoli e tappe con valutazione da 1 a 3 stelle. 
 |---|---|
 | Il movimento dei pezzi | Torre, alfiere, donna, re, cavallo, pedone (con promozione), catturare (con il valore dei pezzi) |
 | Le regole | Lo scacco, via dallo scacco (spostare il re, catturare, mettere in mezzo), l'arrocco, la presa al varco, la promozione, lo stallo |
-| Matti elementari | Matto in una (primi esempi), il matto del corridoio (con la donna e attirando via il difensore), donna e re, le torri a scala in due mosse, matti famosi (Anastasia, arabo, Boden, Damiano), matto in due (anche il matto affogato con sacrificio di donna), guardiano (400 Elo) |
-| Tattiche | Pezzi indifesi, forchetta (cavallo, pedone, forchetta reale, donna), inchiodatura, infilata (torre e alfiere), attacco di scoperta, scacco doppio, elimina il difensore, guardiano (800) |
+| Matti elementari | Matto in una (primi esempi), il matto del corridoio (con la donna e attirando via il difensore), donna e re, le torri a scala in due mosse, matti famosi (Anastasia, arabo, Boden, Damiano), matto in due (anche il matto affogato con sacrificio di donna), altri matti famosi (spalline, Greco, Cozio, Opera), guardiano (400 Elo) |
+| Tattiche | Pezzi indifesi, forchetta (cavallo, pedone, forchetta reale, donna), inchiodatura, infilata (torre e alfiere), attacco di scoperta, scacco doppio, elimina il difensore, il pezzo sovraccarico, l'adescamento, l'interferenza, la mossa intermedia, il pezzo intrappolato, batteria e raggi X, guardiano (800) |
 | Finali | Matto di donna, matto di torre, la regola del quadrato, l'opposizione, lo sfondamento, guardiano (1000) |
 | Aperture | Il centro, lo sviluppo (con la Partita Italiana), l'arrocco, il matto del barbiere (darlo e pararlo), guardiano (1200) |
 
@@ -58,3 +58,9 @@ final path = await PathController.open(recordActivity: progress.record);
 Le stelle di tappe rimosse in un aggiornamento dei contenuti restano nel file ma non contano nel totale.
 
 La schermata della tappa usa la scacchiera a tutta larghezza in verticale e affianca testo e comandi in orizzontale; il pannello sotto la scacchiera scorre se lo spazio non basta.
+
+## Fonti di ispirazione
+
+- La scelta dei temi si ispira al capitolo sulle tattiche del Wikibooks «Chess» (CC BY-SA 4.0, https://en.wikibooks.org/wiki/Chess/Tactics) e alla voce di Wikipedia «Checkmate pattern» (CC BY-SA 4.0).
+- L'indice delle tattiche di «Predator at the Chessboard» (W. Farnsworth, CC BY-NC-ND, http://www.chesstactics.org/) è stato consultato solo come elenco di temi, senza prenderne testi o posizioni.
+- Tutte le posizioni e i testi sono originali.
