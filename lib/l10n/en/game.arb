@@ -44,6 +44,5 @@
   "gameReviewInvite": "Game over. Want to see where to improve?",
   "gameReviewInviteAction": "Review the game",
   "opponentFriend": "Friend",
-  "opponentHintFriend": "Played on two phones, side by side or far apart.",
-  "friendClockRemoteHint": "Remote games have no clock: turn off \"Also play from afar\" to pick one."
+  "opponentHintFriend": "Played on two phones, side by side or far apart."
 }

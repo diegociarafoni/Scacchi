@@ -60,6 +60,5 @@
   "gameReviewInvite": "Partita finita. Vuoi capire dove migliorare?",
   "gameReviewInviteAction": "Rivedi la partita",
   "opponentFriend": "Amico",
-  "opponentHintFriend": "Si gioca su due telefoni, vicini o lontani.",
-  "friendClockRemoteHint": "A distanza si gioca senza orologio: spegni «Gioca anche a distanza» per sceglierlo."
+  "opponentHintFriend": "Si gioca su due telefoni, vicini o lontani."
 }

@@ -3462,7 +3462,7 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
         if (remote) ...[
           const SizedBox(height: 4),
           Text(
-            multiplayerL10n(context).friendClockRemoteHint,
+            multiplayerL10n(context).multiplayerClockRemoteHint,
             style: theme.textTheme.bodySmall,
           ),
         ],

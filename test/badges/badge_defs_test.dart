@@ -1,7 +1,6 @@
 import 'dart:ui' show Locale;
 
 import 'package:flutter/material.dart' show Icons;
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/badges/badge_def.dart';
 import 'package:scacchi/badges/badge_sources.dart';
@@ -15,6 +14,7 @@ import 'package:scacchi/path/curriculum.dart';
 import 'package:scacchi/path/path_progress.dart';
 import 'package:scacchi/progress/progress_state.dart';
 import 'package:scacchi/progress/records.dart';
+import 'package:scacchi/progress/xp.dart';
 import 'package:scacchi/story/story.dart';
 
 BadgeDef badge(String id) => badgeById(id)!;
@@ -26,8 +26,8 @@ ProgressState withTally(Map<String, int> t) => ProgressState(tally: t);
 
 void main() {
   group('RG-17 catalogo', () {
-    test('52 badge con identificativi unici in cinque famiglie', () {
-      expect(badges, hasLength(52));
+    test('59 badge con identificativi unici in cinque famiglie', () {
+      expect(badges, hasLength(59));
       expect(badges.map((b) => b.id).toSet(), hasLength(badges.length));
       for (final f in BadgeFamily.values) {
         expect(badges.where((b) => b.family == f), isNotEmpty, reason: '$f');
@@ -48,7 +48,7 @@ void main() {
         );
         expect(
           b.value(const BadgeFacts(ProgressState.initial)),
-          0,
+          lessThan(b.target),
           reason: b.id,
         );
       }
@@ -415,6 +415,105 @@ void main() {
       expect(met('comeback', withTally({'comeback': 1})), isTrue);
       expect(met('perfect_7', const ProgressState(perfectDays: 7)), isTrue);
       expect(met('minigames_25', withTally({'minigames': 25})), isTrue);
+    });
+  });
+
+  group('RG-17 livelli e avanzamento nella Storia', () {
+    test('badge di livello dagli XP del profilo', () {
+      for (final (id, level) in [
+        ('lv_3', 3),
+        ('lv_8', 8),
+        ('lv_15', 15),
+        ('lv_20', 20),
+      ]) {
+        expect(
+          met(id, ProgressState(xp: xpForLevel(level))),
+          isTrue,
+          reason: id,
+        );
+        expect(
+          met(id, ProgressState(xp: xpForLevel(level) - 1)),
+          isFalse,
+          reason: id,
+        );
+      }
+    });
+
+    test('i traguardi di livello restano separati dai badge', () {
+      expect(badgeById('level_5'), isNull);
+      expect(badgeById('level_10'), isNull);
+    });
+
+    test('lezioni della Storia: si parte e metà del viaggio', () {
+      final lessons = {
+        for (final c in storyChapters)
+          c.pathChapter.id: c.pathChapter.stages
+              .where((s) => !s.isGuardian)
+              .length,
+      };
+      final total = lessons.values.fold(0, (a, b) => a + b);
+      expect(met('story_start', ProgressState.initial), isFalse);
+      expect(
+        met(
+          'story_start',
+          ProgressState.initial,
+          BadgeSources(
+            lessonsByChapter: {storyChapters.first.pathChapterId: 1},
+          ),
+        ),
+        isTrue,
+      );
+      final half = (total + 1) ~/ 2;
+      expect(badge('story_half').target, half);
+      expect(
+        met(
+          'story_half',
+          ProgressState.initial,
+          BadgeSources(lessonsByChapter: lessons),
+        ),
+        isTrue,
+      );
+      expect(
+        met(
+          'story_half',
+          ProgressState.initial,
+          BadgeSources(
+            lessonsByChapter: {storyChapters.first.pathChapterId: 1},
+          ),
+        ),
+        isFalse,
+      );
+    });
+
+    test('lezioni fuori dalla Storia non contano', () {
+      expect(
+        met(
+          'story_start',
+          ProgressState.initial,
+          const BadgeSources(lessonsByChapter: {'fuori': 30}),
+        ),
+        isFalse,
+      );
+    });
+
+    test('tre capitoli con il bot battuto', () {
+      final ids = storyChapters.map((c) => c.id).toList();
+      expect(
+        met(
+          'story_chapters_3',
+          ProgressState.initial,
+          BadgeSources(storyBeaten: {ids[0], ids[1]}),
+        ),
+        isFalse,
+      );
+      expect(
+        met(
+          'story_chapters_3',
+          ProgressState.initial,
+          BadgeSources(storyBeaten: {ids[0], ids[1], ids[2]}),
+        ),
+        isTrue,
+      );
     });
   });
 

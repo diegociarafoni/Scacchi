@@ -430,7 +430,10 @@ class _FriendGamePanelState extends State<FriendGamePanel> {
       isExpanded: true,
       decoration: InputDecoration(
         labelText: l10n.multiplayerClockTitle,
-        helperText: l10n.multiplayerClockHint,
+        helperText: remote
+            ? l10n.multiplayerClockRemoteHint
+            : l10n.multiplayerClockHint,
+        helperMaxLines: 3,
       ),
       items: [
         DropdownMenuItem(child: Text(l10n.multiplayerClockNone)),
@@ -477,7 +480,13 @@ class MultiplayerPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.multiplayerTitle)),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        // Spazio sotto la barra di sistema, o l'ultimo bottone resta tagliato.
+        padding: EdgeInsets.fromLTRB(
+          16,
+          16,
+          16,
+          16 + MediaQuery.paddingOf(context).bottom,
+        ),
         children: [
           Card(
             margin: EdgeInsets.zero,
