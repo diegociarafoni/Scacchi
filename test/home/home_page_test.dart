@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/archive/saved_game.dart';
 import 'package:scacchi/engine/bot_collection.dart';
-import 'package:scacchi/engine/bots.dart';
+import 'package:scacchi/home/home_logic.dart';
 import 'package:scacchi/home/home_page.dart';
 import 'package:scacchi/path/path_controller.dart';
 import 'package:scacchi/progress/progress_controller.dart';
@@ -211,10 +211,11 @@ void main() {
   ) async {
     await show(tester);
     expect(find.byKey(const Key('home-recommended')), findsOneWidget);
-    expect(find.text(bots.first.name), findsOneWidget);
+    final pick = recommendedBot(800, const BotCollection());
+    expect(find.text(pick.name), findsOneWidget);
     await tester.tap(find.byKey(const Key('home-recommended')));
     await tester.pumpAndSettle();
-    expect(calls, ['bot:${bots.first.id}']);
+    expect(calls, ['bot:${pick.id}']);
   });
 
   testWidgets('senza motore il bot consigliato non compare', (tester) async {

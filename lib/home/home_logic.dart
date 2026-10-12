@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:dartchess/dartchess.dart' show Side;
 
 import '../archive/saved_game.dart';
@@ -58,17 +60,26 @@ NextStep chooseNextStep({SavedGame? openGame, Stage? storyStage}) {
 
 /// Bot da proporre: il più forte, tra quelli già sbloccati, che non supera il
 /// proprio livello di più di [recommendedBotMargin] Elo; se nessuno è così
-/// debole, il primo sbloccato.
+/// debole, il più debole sbloccato. A pari Elo, il primo non ancora battuto.
 Bot recommendedBot(int rating, BotCollection collection) {
   final unlocked = [
     for (final b in bots)
       if (collection.isUnlocked(b)) b,
   ];
-  Bot pick = unlocked.first;
-  for (final b in unlocked) {
-    if (b.elo <= rating + recommendedBotMargin && b.elo >= pick.elo) pick = b;
-  }
-  return pick;
+  final weakest = unlocked.map((b) => b.elo).reduce(math.min);
+  final reach = math.max(rating + recommendedBotMargin, weakest);
+  final top = unlocked
+      .where((b) => b.elo <= reach)
+      .map((b) => b.elo)
+      .reduce(math.max);
+  final tier = [
+    for (final b in unlocked)
+      if (b.elo == top) b,
+  ];
+  return tier.firstWhere(
+    (b) => !collection.isBeaten(b),
+    orElse: () => tier.first,
+  );
 }
 
 /// Funzione dell'app raggiungibile dalla Home.

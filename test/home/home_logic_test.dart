@@ -82,35 +82,65 @@ void main() {
   });
 
   group('recommendedBot', () {
-    test('senza vittorie il primo bot', () {
-      expect(recommendedBot(800, const BotCollection()), bots.first);
-    });
+    List<Bot> unlockedBots(BotCollection c) => [
+      for (final b in bots)
+        if (c.isUnlocked(b)) b,
+    ];
 
-    test('un bot sbloccato non supera di molto il livello', () {
+    BotCollection beatAll() {
       var collection = const BotCollection();
       for (final b in bots) {
         collection = collection.beat(b.id, DateTime(2026));
       }
-      final pick = recommendedBot(1000, collection);
+      return collection;
+    }
+
+    test('è sempre un bot sbloccato', () {
+      for (final rating in [100, 800, 1500, 3000]) {
+        for (final c in [const BotCollection(), beatAll()]) {
+          expect(c.isUnlocked(recommendedBot(rating, c)), isTrue);
+        }
+      }
+    });
+
+    test('non supera il livello di più del margine, se c\'è di meglio', () {
+      final c = beatAll();
+      final pick = recommendedBot(1000, c);
       expect(pick.elo, lessThanOrEqualTo(1000 + recommendedBotMargin));
-      // Il più forte tra quelli alla portata.
-      final stronger = bots.where(
-        (b) => b.elo > pick.elo && b.elo <= 1000 + recommendedBotMargin,
-      );
+      final stronger = unlockedBots(
+        c,
+      ).where((b) => b.elo > pick.elo && b.elo <= 1000 + recommendedBotMargin);
       expect(stronger, isEmpty);
     });
 
-    test('non propone un bot ancora bloccato', () {
-      final pick = recommendedBot(3000, const BotCollection());
-      expect(pick, bots.first);
+    test('con un livello alto sceglie il più forte sbloccato', () {
+      const c = BotCollection();
+      final pick = recommendedBot(3000, c);
+      final top = unlockedBots(c)
+          .map((b) => b.elo)
+          .reduce((a, b) => a > b ? a : b);
+      expect(pick.elo, top);
     });
 
-    test('con un rating basso resta sul bot più debole sbloccato', () {
-      final pick = recommendedBot(
-        100,
-        BotCollection({bots.first.id: DateTime(2026)}),
-      );
-      expect(pick, bots.first);
+    test('con un livello basso resta sul più debole sbloccato', () {
+      final c = beatAll();
+      final pick = recommendedBot(100, c);
+      final weakest = bots.map((b) => b.elo).reduce((a, b) => a < b ? a : b);
+      expect(pick.elo, weakest);
+    });
+
+    test('a pari Elo preferisce un bot non ancora battuto', () {
+      final byElo = <int, List<Bot>>{};
+      for (final b in bots) {
+        byElo.putIfAbsent(b.elo, () => []).add(b);
+      }
+      final tier = byElo.values.firstWhere((t) => t.length > 1);
+      final last = tier.last;
+      final c = BotCollection({
+        for (final b in bots)
+          if (b.id != last.id) b.id: DateTime(2026),
+      });
+      expect(recommendedBot(tier.first.elo - recommendedBotMargin, c), last);
     });
   });
 
