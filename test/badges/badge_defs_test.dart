@@ -1,5 +1,7 @@
 import 'dart:ui' show Locale;
 
+import 'package:flutter/material.dart' show Icons;
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/badges/badge_def.dart';
 import 'package:scacchi/badges/badge_sources.dart';
@@ -417,6 +419,17 @@ void main() {
       expect(met('perfect_7', const ProgressState(perfectDays: 7)), isTrue);
       expect(met('minigames_25', withTally({'minigames': 25})), isTrue);
     });
+  });
+
+  test('una soglia vuota non regala il badge', () {
+    final empty = BadgeDef.counter(
+      'vuoto',
+      BadgeFamily.learn,
+      Icons.lock,
+      target: 0,
+      value: (_) => 0,
+    );
+    expect(empty.isMet(const BadgeFacts(ProgressState.initial)), isFalse);
   });
 
   test('il valore mostrato non supera la soglia', () {

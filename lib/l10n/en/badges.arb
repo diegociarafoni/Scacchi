@@ -362,5 +362,14 @@
         "type": "int"
       }
     }
+  },
+  "badgesUnlockedMany": "{count} new badges",
+  "@badgesUnlockedMany": {
+    "description": "Avviso quando si ottengono molti badge insieme",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

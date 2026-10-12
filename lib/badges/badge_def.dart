@@ -82,7 +82,8 @@ class BadgeDef {
   /// Avanzamento, mai oltre la soglia.
   int value(BadgeFacts facts) => min(max(_value(facts), 0), target);
 
-  bool isMet(BadgeFacts facts) => _value(facts) >= target;
+  /// Una soglia vuota (contenuto assente) non regala il badge.
+  bool isMet(BadgeFacts facts) => target > 0 && _value(facts) >= target;
 
   /// Vero se ha senso mostrare «3 / 10».
   bool get hasProgress => target > 1;

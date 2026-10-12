@@ -210,10 +210,12 @@ class _HomeShellState extends State<HomeShell> {
         return null;
       },
     );
-    final path = await quiet(_pathController());
-    final endgames = await quiet(_endgameController());
-    final masters = await quiet(_mastersController());
-    final story = await quiet(_storyController());
+    final (path, endgames, masters, story) = await (
+      quiet(_pathController()),
+      quiet(_endgameController()),
+      quiet(_mastersController()),
+      quiet(_storyController()),
+    ).wait;
     if (!mounted) return;
     void push() => unawaited(
       p
@@ -244,7 +246,11 @@ class _HomeShellState extends State<HomeShell> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          l.badgesUnlocked([for (final b in fresh) badgeName(l, b)].join(', ')),
+          fresh.length > 3
+              ? l.badgesUnlockedMany(fresh.length)
+              : l.badgesUnlocked(
+                  [for (final b in fresh) badgeName(l, b)].join(', '),
+                ),
         ),
         action: SnackBarAction(
           label: l.badgesSeeAction,
