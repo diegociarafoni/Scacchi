@@ -17,10 +17,7 @@ void main(List<String> args) {
   final policy = jsonDecode(
     File('tool/policy.json').readAsStringSync(),
   ) as Map<String, dynamic>;
-  final budget = FrameBudget.fromJson(
-    (policy['budget'] as Map<String, dynamic>)['frames']
-        as Map<String, dynamic>,
-  );
+  final budget = FrameBudget.fromJson(policy);
   stdout.writeln(
     'Fotogrammi: ${report['frame_count']}, costruzione: media '
     '${report['average_frame_build_time_millis']} ms, '
