@@ -69,18 +69,18 @@ Future<void> play(MultiplayerController c, String uci) async {
 
 void main() {
   group('invito con la cadenza', () {
-    test('RMP-10 la cadenza viaggia nel link e si rilegge', () {
+    test('RMP-50 la cadenza viaggia nel link e si rilegge', () {
       final link = invite(control: blitz).toLink();
       expect(GameInvite.parse(link)!.timeControl, blitz);
     });
 
-    test('RMP-10 senza cadenza la partita resta senza orologio', () {
+    test('RMP-50 senza cadenza la partita resta senza orologio', () {
       final back = GameInvite.parse(invite().toLink())!;
       expect(back.timeControl, isNull);
     });
 
     test(
-      'RMP-10 una cadenza non valida o fuori misura rende nullo l\'invito',
+      'RMP-50 una cadenza non valida o fuori misura rende nullo l\'invito',
       () {
         final base = invite().toLink();
         for (final tc in [
@@ -99,7 +99,7 @@ void main() {
   });
 
   group('messaggi', () {
-    test('RMP-10 la mossa porta il tempo di chi l\'ha giocata', () {
+    test('RMP-50 la mossa porta il tempo di chi l\'ha giocata', () {
       const m = MoveMessage(
         seq: 1,
         uci: 'e2e4',
@@ -110,19 +110,19 @@ void main() {
       expect(m.toJson()['c'], 179000);
     });
 
-    test('RMP-10 una mossa senza tempo resta valida', () {
+    test('RMP-50 una mossa senza tempo resta valida', () {
       final json = {'t': 'move', 'n': 1, 'm': 'e2e4', 'h': 'abc'};
       expect((GameMessage.fromJson(json)! as MoveMessage).timeMs, isNull);
     });
 
-    test('RMP-10 un tempo negativo, enorme o non numerico è scartato', () {
+    test('RMP-50 un tempo negativo, enorme o non numerico è scartato', () {
       for (final c in <Object>[-1, 86400001, 'x', 1.5]) {
         final json = {'t': 'move', 'n': 1, 'm': 'e2e4', 'h': 'abc', 'c': c};
         expect(GameMessage.fromJson(json), isNull, reason: '$c');
       }
     });
 
-    test('RMP-10 il messaggio di tempo scaduto si rilegge', () {
+    test('RMP-50 il messaggio di tempo scaduto si rilegge', () {
       const f = FlagMessage(plies: 6);
       expect(GameMessage.fromJson(f.toJson()), f);
       expect(GameMessage.fromJson({'t': 'flag', 'n': 0}), isNull);
@@ -135,7 +135,7 @@ void main() {
     GameSync guest() =>
         GameSync(mySide: Side.black, myKey: guestKey, peerKey: hostKey);
 
-    test('RMP-10 i tempi delle mosse si conservano e si rimandano', () {
+    test('RMP-50 i tempi delle mosse si conservano e si rimandano', () {
       final h = host()..receive(const JoinMessage(), guestKey);
       final g = guest();
       g.receive(h.playLocal('e2e4', timeMs: 180000), hostKey);
@@ -153,7 +153,7 @@ void main() {
       );
     });
 
-    test('RMP-10 il tempo scaduto di chi è di turno chiude la partita', () {
+    test('RMP-50 il tempo scaduto di chi è di turno chiude la partita', () {
       final h = host()..receive(const JoinMessage(), guestKey);
       final g = guest();
       g.receive(h.playLocal('e2e4'), hostKey);
@@ -167,7 +167,7 @@ void main() {
       expect(h.receive(flag, guestKey), isA<Duplicate>());
     });
 
-    test('RMP-10 il tempo scaduto è valido solo dal giocatore di turno', () {
+    test('RMP-50 il tempo scaduto è valido solo dal giocatore di turno', () {
       final h = host()..receive(const JoinMessage(), guestKey);
       // Tocca al Bianco: il Nero non può dichiarare scaduto il proprio tempo.
       expect(h.receive(const FlagMessage(plies: 0 + 1), guestKey), isA<Gap>());
@@ -181,13 +181,13 @@ void main() {
       expect(h.isGameOver, isFalse);
     });
 
-    test('RMP-10 con la partita chiusa non si gioca più', () {
+    test('RMP-50 con la partita chiusa non si gioca più', () {
       final h = host()..receive(const JoinMessage(), guestKey);
       h.flagSelf();
       expect(() => h.playLocal('e2e4'), throwsStateError);
     });
 
-    test('RMP-10 senza materiale per il matto il tempo scaduto è patta', () {
+    test('RMP-50 senza materiale per il matto il tempo scaduto è patta', () {
       final bare = Chess.fromSetup(
         Setup.parseFen('8/8/8/8/8/2k5/8/K6R w - - 0 1'),
       );
@@ -202,7 +202,7 @@ void main() {
   });
 
   group('orologio della partita', () {
-    test('RMP-10 parte alla prima mossa e il primo bianco non perde tempo', () {
+    test('RMP-50 parte alla prima mossa e il primo bianco non perde tempo', () {
       final now = FakeNow();
       final clock = MatchClock(blitz, now: now.call);
       expect(clock.active, isNull);
@@ -213,7 +213,7 @@ void main() {
     });
 
     test(
-      'RMP-10 la mossa aggiunge l\'incremento e il tempo dichiarato vale',
+      'RMP-50 la mossa aggiunge l\'incremento e il tempo dichiarato vale',
       () {
         final now = FakeNow();
         final clock = MatchClock(blitz, now: now.call)..moved(1);
@@ -229,7 +229,7 @@ void main() {
       },
     );
 
-    test('RMP-10 il lato senza tempo risulta scaduto', () {
+    test('RMP-50 il lato senza tempo risulta scaduto', () {
       final now = FakeNow();
       final clock = MatchClock(blitz, now: now.call)..moved(1);
       now.advance(const Duration(minutes: 3, seconds: 1));
@@ -237,7 +237,7 @@ void main() {
     });
 
     test(
-      'RMP-10 dal registro si ricostruisce lo stato, col tempo trascorso',
+      'RMP-50 dal registro si ricostruisce lo stato, col tempo trascorso',
       () {
         final now = FakeNow();
         final started = now.value;
@@ -256,7 +256,7 @@ void main() {
   });
 
   group('partita a tempo tra due telefoni', () {
-    test('RMP-10 chi crea decide la cadenza e l\'altro la riceve', () async {
+    test('RMP-50 chi crea decide la cadenza e l\'altro la riceve', () async {
       final (host, guest) = await pair(FakeNow());
       expect(host.timeControl, blitz);
       expect(guest.timeControl, blitz);
@@ -264,7 +264,7 @@ void main() {
       await guest.close();
     });
 
-    test('RMP-10 senza cadenza non c\'è orologio', () async {
+    test('RMP-50 senza cadenza non c\'è orologio', () async {
       final (host, guest) = await pair(FakeNow(), control: null);
       expect(host.clock, isNull);
       expect(guest.clock, isNull);
@@ -273,7 +273,7 @@ void main() {
     });
 
     test(
-      'RMP-10 il tempo viaggia con la mossa e i due orologi concordano',
+      'RMP-50 il tempo viaggia con la mossa e i due orologi concordano',
       () async {
         final now = FakeNow();
         final (host, guest) = await pair(now);
@@ -294,7 +294,7 @@ void main() {
       },
     );
 
-    test('RMP-10 scaduto il proprio tempo si perde e l\'altro lo sa', () async {
+    test('RMP-50 scaduto il proprio tempo si perde e l\'altro lo sa', () async {
       final now = FakeNow();
       final (host, guest) = await pair(now);
       await play(host, 'e2e4');
@@ -311,7 +311,7 @@ void main() {
       await guest.close();
     });
 
-    test('RMP-10 non si muove a tempo scaduto', () async {
+    test('RMP-50 non si muove a tempo scaduto', () async {
       final now = FakeNow();
       final (host, guest) = await pair(now);
       await play(host, 'e2e4');
@@ -322,7 +322,7 @@ void main() {
     });
 
     test(
-      'RMP-10 se l\'avversario sparisce, dopo la tolleranza si vince',
+      'RMP-50 se l\'avversario sparisce, dopo la tolleranza si vince',
       () async {
         final now = FakeNow();
         final loops = LoopbackTransport.pair();
@@ -342,7 +342,7 @@ void main() {
     );
 
     test(
-      'RMP-10 la partita riprende col tempo che passa mentre l\'app è chiusa',
+      'RMP-50 la partita riprende col tempo che passa mentre l\'app è chiusa',
       () async {
         final dir = Directory.systemTemp.createTempSync('rokko_clock');
         addTearDown(() => dir.deleteSync(recursive: true));
@@ -398,14 +398,14 @@ void main() {
       turnStartedAt: at,
     );
 
-    test('RMP-10 tempi e inizio del turno si rileggono', () {
+    test('RMP-50 tempi e inizio del turno si rileggono', () {
       final json = sample(times: [180000, 177000], at: 1700000000000).toJson();
       final back = SavedGame.fromJson(json)!;
       expect(back.times, [180000, 177000]);
       expect(back.turnStartedAt, 1700000000000);
     });
 
-    test('RMP-10 un salvataggio senza tempi si legge ancora', () {
+    test('RMP-50 un salvataggio senza tempi si legge ancora', () {
       final json = sample().toJson();
       expect(json.containsKey('times'), isFalse);
       final back = SavedGame.fromJson(json)!;
@@ -415,7 +415,7 @@ void main() {
   });
 
   group('schermata', () {
-    testWidgets('RMP-10 chi crea sceglie la cadenza e la trova nell\'invito', (
+    testWidgets('RMP-50 chi crea sceglie la cadenza e la trova nell\'invito', (
       tester,
     ) async {
       final (a, _) = LoopbackTransport.pair();
@@ -437,7 +437,7 @@ void main() {
     });
 
     testWidgets(
-      'RMP-10 in partita si vedono i due orologi e l\'esito a tempo',
+      'RMP-50 in partita si vedono i due orologi e l\'esito a tempo',
       (tester) async {
         final now = FakeNow();
         final (host, guest) = (await tester.runAsync(() => pair(now)))!;

@@ -48,7 +48,7 @@ class SavedGame {
     'seed': base64.encode(seed),
     'moves': moves,
     'peerKey': ?peerKey == null ? null : base64.encode(peerKey!),
-    if (times.any((t) => t != null)) 'times': times,
+    if (times.isNotEmpty) 'times': times,
     'turnStartedAt': ?turnStartedAt,
     'sealed': {
       for (final e in sealed.entries) '${e.key}': base64.encode(e.value),

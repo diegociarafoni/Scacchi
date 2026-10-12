@@ -87,6 +87,7 @@ class MultiplayerController extends ChangeNotifier {
       clock = null;
     }
     _sub = session.events.listen(_onEvent);
+    if (clock?.active != null && !session.sync.isGameOver) _startTicker();
     // Il canale si è (ri)collegato all'ospite: la sessione si ripresenta da
     // sola, qui basta aggiornare lo stato.
     _connSub = session.transport.connected.listen((_) {
