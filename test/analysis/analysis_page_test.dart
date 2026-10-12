@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/analysis/analysis_page.dart';
 import 'package:scacchi/engine/uci.dart';
+import 'package:scacchi/settings/board_marks.dart';
+import 'package:scacchi/settings/settings.dart';
 
 /// Motore finto: ogni richiesta apre un flusso controllato dal test.
 class FakeLive {
@@ -238,7 +240,7 @@ void main() {
       expect(arrows.single.orig, Square.e7);
       expect(arrows.single.dest, Square.e5);
       // Diversa dalla freccia verde della mossa migliore.
-      expect(arrows.single.color, const Color(0xCCC0392B));
+      expect(arrows.single.color, BoardMarks.of(BoardTheme.green).threat);
     });
 
     testWidgets('RF-56 la minaccia di una posizione non resta sulla seguente', (
