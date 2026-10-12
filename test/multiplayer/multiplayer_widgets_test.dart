@@ -32,7 +32,7 @@ void main() {
     expect(find.text('Wi-Fi'), findsOneWidget);
     expect(find.text('Collegato'), findsOneWidget);
     expect(find.byIcon(Icons.check_circle), findsOneWidget);
-    expect(find.bySemanticsLabel('Wi-Fi: collegato'), findsOneWidget);
+    expect(find.bySemanticsLabel('Wi-Fi: Collegato'), findsOneWidget);
     handle.dispose();
   });
 

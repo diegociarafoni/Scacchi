@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../exchange/qr_code_view.dart';
 import '../l10n/app_localizations.dart';
 import '../theme/rokko_theme.dart';
+import 'multiplayer_page.dart' show multiplayerL10n;
 
 /// Canali con cui i due telefoni possono parlarsi: un canale nuovo è una voce
 /// in più qui e nella lista di [ConnectionIndicator].
@@ -57,7 +58,7 @@ class _ChannelChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = multiplayerL10n(context);
     final scheme = Theme.of(context).colorScheme;
     final tokens = RokkoTokens.of(context);
     final (icon, color, state, spoken) = switch (link.level) {
@@ -65,19 +66,19 @@ class _ChannelChip extends StatelessWidget {
         Icons.check_circle,
         scheme.primary,
         l10n.multiplayerUiLinkConnected,
-        l10n.multiplayerUiLinkConnected.toLowerCase(),
+        l10n.multiplayerUiLinkConnected,
       ),
       LinkLevel.connecting => (
         Icons.sync,
         scheme.tertiary,
         l10n.multiplayerUiLinkConnecting,
-        l10n.multiplayerUiLinkConnecting.toLowerCase(),
+        l10n.multiplayerUiLinkConnecting,
       ),
       LinkLevel.offline => (
         Icons.error,
         scheme.error,
         l10n.multiplayerUiLinkOffline,
-        l10n.multiplayerUiLinkOffline.toLowerCase(),
+        l10n.multiplayerUiLinkOffline,
       ),
     };
     final name = link.channel.label(l10n);
@@ -127,7 +128,7 @@ class InviteCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = multiplayerL10n(context);
     final theme = Theme.of(context);
     final tokens = RokkoTokens.of(context);
     return Card(

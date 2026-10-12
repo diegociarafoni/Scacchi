@@ -240,7 +240,6 @@ class _MultiplayerPageState extends State<MultiplayerPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = multiplayerL10n(context);
-    final ui = multiplayerL10n(context);
     final theme = Theme.of(context);
     final tokens = RokkoTokens.of(context);
     return Scaffold(
@@ -264,7 +263,7 @@ class _MultiplayerPageState extends State<MultiplayerPage> {
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            ui.multiplayerUiResumeTitle,
+                            l10n.multiplayerUiResumeTitle,
                             style: theme.textTheme.titleMedium,
                           ),
                         ),
@@ -301,13 +300,13 @@ class _MultiplayerPageState extends State<MultiplayerPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    ui.multiplayerUiStepsTitle,
+                    l10n.multiplayerUiStepsTitle,
                     style: theme.textTheme.titleMedium,
                   ),
                   const SizedBox(height: 8),
-                  _Step(1, ui.multiplayerUiStepCreate),
-                  _Step(2, ui.multiplayerUiStepScan),
-                  _Step(3, ui.multiplayerUiStepPlay),
+                  _Step(1, l10n.multiplayerUiStepCreate),
+                  _Step(2, l10n.multiplayerUiStepScan),
+                  _Step(3, l10n.multiplayerUiStepPlay),
                   const SizedBox(height: 8),
                   Text(l10n.multiplayerIntro),
                   const SizedBox(height: 8),
@@ -453,22 +452,26 @@ class _Step extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final tokens = RokkoTokens.of(context);
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ExcludeSemantics(
-            child: CircleAvatar(
-              radius: 12,
-              backgroundColor: tokens.action,
-              foregroundColor: tokens.onAction,
-              child: Text('$number', style: theme.textTheme.labelMedium),
+    return Semantics(
+      label: '$number. $text',
+      excludeSemantics: true,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ExcludeSemantics(
+              child: CircleAvatar(
+                radius: 12,
+                backgroundColor: tokens.action,
+                foregroundColor: tokens.onAction,
+                child: Text('$number', style: theme.textTheme.labelMedium),
+              ),
             ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(child: Text(text)),
-        ],
+            const SizedBox(width: 12),
+            Expanded(child: Text(text)),
+          ],
+        ),
       ),
     );
   }
