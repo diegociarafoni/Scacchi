@@ -302,6 +302,34 @@ void main() {
       expect(result!.botId, 'tino');
     });
 
+    testWidgets('un bot iniziale che non si vede cade sul primo disponibile', (
+      tester,
+    ) async {
+      await _open(tester, kid: true, initialBotId: 'stella');
+      expect(
+        tester.widget<Text>(find.byKey(const Key('gallery-name'))).data,
+        'Pino',
+      );
+    });
+
+    testWidgets('Tino ha la corona se il suo capitolo è concluso', (
+      tester,
+    ) async {
+      await _open(tester, story: const StoryState(beaten: {'prologue'}));
+      await tester.scrollUntilVisible(
+        find.byKey(const Key('guardian-tino')),
+        300,
+        scrollable: find.byType(Scrollable).first,
+      );
+      expect(
+        find.descendant(
+          of: find.byKey(const Key('guardian-tino')),
+          matching: find.byIcon(Icons.workspace_premium),
+        ),
+        findsOneWidget,
+      );
+    });
+
     testWidgets('profilo bambino: solo i bot amici, niente numeri', (
       tester,
     ) async {

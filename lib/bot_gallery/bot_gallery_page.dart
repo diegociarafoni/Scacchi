@@ -110,10 +110,12 @@ class _BotGalleryPageState extends State<BotGalleryPage> {
 
   String _firstChoice() {
     final initial = widget.initialBotId;
-    if (initial != null &&
-        (botById(initial) != null || initial == _adaptiveId)) {
-      return initial;
-    }
+    final visible =
+        _ladder.any((b) => b.id == initial) ||
+        (!widget.kidMode &&
+            (initial == _adaptiveId ||
+                storyOnlyBots.any((b) => b.id == initial)));
+    if (initial != null && visible) return initial;
     final next = _ladder.where(
       (b) => widget.collection.isUnlocked(b) && !widget.collection.isBeaten(b),
     );
@@ -131,6 +133,10 @@ class _BotGalleryPageState extends State<BotGalleryPage> {
       : widget.collection.isUnlocked(bot);
 
   bool _met(Bot bot) => _story.isBossBeaten(_chapterOf(bot)?.id ?? '');
+
+  /// Battuto in scala o, per un custode solo della Storia, nel suo capitolo.
+  bool _beaten(Bot bot) =>
+      widget.collection.isBeaten(bot) || (_storyOnly(bot) && _met(bot));
 
   bool get _adaptive => _selected == _adaptiveId;
 
@@ -199,7 +205,7 @@ class _Hero extends StatelessWidget {
     final adaptive = page._adaptive;
     final bot = page._bot;
     final unlocked = adaptive || page._unlocked(bot);
-    final beaten = !adaptive && page.widget.collection.isBeaten(bot);
+    final beaten = !adaptive && page._beaten(bot);
     final kid = page.widget.kidMode;
     final String line;
     if (adaptive) {
@@ -372,7 +378,7 @@ class _Grid extends StatelessWidget {
           bot: bot,
           size: cell,
           locked: !page._unlocked(bot),
-          beaten: page.widget.collection.isBeaten(bot),
+          beaten: page._beaten(bot),
           selected: !page._adaptive && page._selected == bot.id,
           dim: prefix == 'guardian' && !page._met(bot),
           kid: kid,
