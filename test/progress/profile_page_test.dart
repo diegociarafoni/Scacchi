@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/progress/activity.dart';
 import 'package:scacchi/progress/avatar.dart';
 import 'package:scacchi/progress/daily_goal.dart';
@@ -50,6 +51,9 @@ void main() {
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: const Locale('it'),
         home: ProfilePage(controller: controller, reminders: reminders),
       ),
     );
@@ -212,6 +216,8 @@ void main() {
     await tester.tap(find.byKey(const Key('avatar')));
     await tester.pumpAndSettle();
     expect(find.text('Livello 4'), findsNothing);
+    await tester.ensureVisible(find.bySemanticsLabel(RegExp('^Oro')));
+    await tester.pumpAndSettle();
     await tester.tap(find.bySemanticsLabel(RegExp('^Oro')));
     await tester.pumpAndSettle();
     expect(controller.settings.frame, AvatarFrame.gold);
@@ -336,5 +342,39 @@ void main() {
     );
     await again.load();
     expect(again.settings.goal, const DailyGoal(GoalKind.minutes, 10));
+  });
+
+  testWidgets('le impostazioni a testo ingrandito non vanno in overflow', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1080, 2400);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: const Locale('it'),
+        builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(context)
+              .copyWith(textScaler: const TextScaler.linear(1.3)),
+          child: child!,
+        ),
+        home: ProfilePage(
+          controller: controller,
+          reminders: ReminderController(controller, _Scheduler()),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(find.byKey(const Key('reminder')), 300);
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, -2000));
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+    final last = tester.getRect(find.byKey(const Key('reminder')));
+    final screen = tester.view.physicalSize / tester.view.devicePixelRatio;
+    // Dopo l'ultima voce resta almeno uno spazio, e ogni voce è alta 48 dp.
+    expect(last.bottom, lessThanOrEqualTo(screen.height - 16));
+    expect(last.height, greaterThanOrEqualTo(48));
   });
 }
