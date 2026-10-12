@@ -61,6 +61,8 @@ Serie più lunga, bot più forte battuto (Elo), matto con meno mosse (solo vitto
 
 37 traguardi in quattro categorie (gioco, tattica, costanza, curiosità), sbloccabili una sola volta e annunciati con una notifica in-app (`showProgressFeedback`). Alcuni esempi: prima vittoria, vittoria con il nero, miniatura (matto in meno di 20 mosse), bot da 1500 e 1850 Elo battuti, matto con il cavallo o con un pedone, vittoria con arrocco lungo, brillante trovata, 10 puzzle di forchetta o di matto, 20 punti in una modalità a tempo, giornata perfetta (tre sfide), 3, 7 e 30 giorni di fila, precisione del 90%, livello 5 e 10, 20 coordinate in una sessione, tutti i minigiochi provati, primo torneo concluso e primo torneo vinto. L'elenco completo è in `lib/progress/achievements.dart`.
 
+I traguardi sono distinti dai [badge](badge.md) (RG-17), una collezione tematica di 46 riconoscimenti che non sblocca ricompense.
+
 ## Ricompense estetiche (RG-06)
 
 Livelli e traguardi sbloccano temi della scacchiera, set di pezzi, avatar e cornici. Le scelte di sempre (temi Verde, Legno, Blu e Grigio; pezzi Classico, Merida, Chessnut, Fantasy e Spatial; avatar Pedone e Cavallo) restano disponibili da subito: le ricompense aggiungono, non tolgono.
@@ -113,6 +115,7 @@ Spento di default. Nel Profilo, "Promemoria giornaliero" chiede il permesso per 
 | `progress_state.dart` | Stato dei progressi e impostazioni, serializzabili in JSON |
 | `progress_tracker.dart` | Regole: XP, obiettivo, serie, protezioni, traguardi. Funzioni pure, con l'ora passata come parametro |
 | `achievements.dart` | Elenco dei traguardi e condizioni di sblocco |
+| `lib/badges/` | Badge (RG-17), vedi [badge.md](badge.md); lo stato tiene `badges`, `tally` e `lastActiveDay` |
 | `rewards.dart` | Ricompense estetiche e condizioni di sblocco (livello o traguardo) |
 | `avatar.dart` | Avatar e cornici del profilo |
 | `progress_store.dart` | Salvataggio su file JSON tramite `JsonFile` |
