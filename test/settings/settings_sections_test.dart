@@ -144,10 +144,10 @@ void main() {
       expect(tester.getSize(tile).shortestSide, greaterThanOrEqualTo(48));
     }
     final selected = tester.getSemantics(
-      find.byKey(const Key('theme-tile-green')),
+      find.byKey(const Key('theme-tile-spazio')),
     );
     expect(selected.flagsCollection.isSelected, ui.Tristate.isTrue);
-    expect(selected.label, contains('Verde'));
+    expect(selected.label, contains('Spazio'));
   });
 
   testWidgets('U6 una scelta bloccata non è solo più chiara: ha il lucchetto '

@@ -116,6 +116,12 @@ abstract final class RokkoTheme {
       colorScheme: scheme,
       scaffoldBackgroundColor: scheme.surface,
       extensions: [tokens],
+      floatingActionButtonTheme: const FloatingActionButtonThemeData(
+        elevation: 0,
+        focusElevation: 0,
+        hoverElevation: 0,
+        highlightElevation: 0,
+      ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(shape: shape, minimumSize: minSize),
       ),

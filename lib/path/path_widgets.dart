@@ -326,13 +326,25 @@ class StageNode extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 4),
-                        Text(
-                          stage.title,
-                          textAlign: TextAlign.center,
-                          style: theme.textTheme.labelLarge?.copyWith(
-                            color: unlocked
-                                ? scheme.onSurface
-                                : scheme.onSurfaceVariant,
+                        // Fondo pieno: il sentiero passa dietro il nome, non sopra.
+                        DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: scheme.surface,
+                            borderRadius: BorderRadius.circular(
+                              RokkoTokens.of(context).radiusSmall / 2,
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 6),
+                            child: Text(
+                              stage.title,
+                              textAlign: TextAlign.center,
+                              style: theme.textTheme.labelLarge?.copyWith(
+                                color: unlocked
+                                    ? scheme.onSurface
+                                    : scheme.onSurfaceVariant,
+                              ),
+                            ),
                           ),
                         ),
                         if (guardian)
