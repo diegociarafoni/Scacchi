@@ -1235,4 +1235,31 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get storyCrownOutro =>
       'The crown is yours. The kingdom is at peace and every new game is a new story.';
+
+  @override
+  String get shareImageTitle => 'Export as image';
+
+  @override
+  String get shareImageAction => 'Share';
+
+  @override
+  String get shareImageFlip => 'Flip the board';
+
+  @override
+  String get shareImageCoordinates => 'Coordinates';
+
+  @override
+  String get shareImageLastMove => 'Last move';
+
+  @override
+  String get shareImageCaption => 'Caption (optional)';
+
+  @override
+  String get shareImagePreview => 'Board preview';
+
+  @override
+  String get shareImageFailed => 'Sharing failed';
+
+  @override
+  String get shareImageSubject => 'Chess position';
 }

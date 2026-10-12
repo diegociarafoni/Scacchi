@@ -48,7 +48,7 @@ Ogni funzione nasce dai requisiti del progetto, nel documento dei requisiti, con
 | Livello | Cartella | Cosa verifica | Comando |
 |---|---|---|---|
 | Unitari | `test/chess_game_test.dart`, `test/material_test.dart`, `test/settings_test.dart`, `test/clock_test.dart`, `test/sound_test.dart`, `test/move_label_test.dart`, `test/move_input_test.dart`, `test/move_speech_test.dart` | Regole e fine partita su `ChessGame`; pezzi catturati e vantaggio su `MaterialBalance`; impostazioni e salvataggio; orologio; scelta dei suoni; numerazione, lettura e annuncio delle mosse; senza interfaccia | `flutter test` |
-| Unitari | `test/engine/` | Protocollo UCI, scelta delle mosse, `ComputerPlayer` con motore finto e con Stockfish reale (se installato) | `flutter test` |
+| Unitari | `test/engine/` | Protocollo UCI, scelta delle mosse, `ComputerPlayer` con motore finto e con Stockfish reale (se installato), `VariantEngine` nelle varianti | `flutter test` |
 | Widget | `test/analysis/` | Schermata di analisi con motore finto: linee, MultiPV, esplorazione, albero delle varianti (promozione, eliminazione), pausa, freccia | `flutter test` |
 | Unitari e widget | `test/review/` | Probabilità di vittoria, classificazione, sacrifici, precisione, revisione con motore finto, schermata di revisione e accesso dal menu | `flutter test` |
 | Widget | `test/widget_test.dart`, `test/l10n_test.dart` | Avvio dell'app e stato iniziale; lingua italiana predefinita | `flutter test` |
@@ -129,6 +129,7 @@ I golden si rigenerano con `flutter test test/settings --update-goldens` dopo un
 | RF-70 spiegazioni: matto concesso o mancato, pezzo in presa, forchetta, inchiodatura, re scoperto, perdita di materiale | ✓ | |
 | RF-72 giudizio con simbolo sulla casa della mossa (con l'allenatore acceso) | ✓ | ✓ |
 | RF-122 spiegami perché: frasi per cattura, scacco, arrocco, promozione, minacce, sviluppo; interruttore in Impostazioni | ✓ | |
+| RF-123 il computer e i bot giocano Chess960, Re della collina e Tre scacchi con un motore in Dart; niente aiuti di Stockfish | ✓ | |
 | RF-73 allenatore: avviso in tempo reale, Riprova e Continua | ✓ | |
 | RF-74 suggerimento a livelli, in parole semplici, con cerchio e freccia | ✓ | |
 | RF-71 cattura netta, doppio attacco, scoperta dalla variante del motore | ✓ | |

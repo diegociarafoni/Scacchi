@@ -19,6 +19,7 @@ import '../engine/bots.dart';
 import '../engine/computer_player.dart';
 import '../engine/levels.dart';
 import '../engine/uci_transport.dart';
+import '../engine/variant_engine.dart';
 import '../exchange/qr_l10n.dart';
 import '../exchange/qr_receive_page.dart';
 import '../exchange/qr_send_page.dart';
@@ -41,6 +42,8 @@ import '../settings/board_frame.dart';
 import '../settings/notation.dart';
 import '../settings/settings.dart';
 import '../settings/settings_page.dart';
+import '../share/position_image.dart';
+import '../share/position_image_page.dart';
 import '../storage/key_value_store.dart';
 import 'board_swipe.dart';
 import 'challenge.dart';
@@ -71,6 +74,7 @@ class GamePage extends StatefulWidget {
     this.chess960Id = randomChess960Id,
     bool? computerAvailable,
     this.createComputer,
+    this.createVariantEngine,
     this.now,
     this.onActivity,
     this.onSave,
@@ -85,6 +89,9 @@ class GamePage extends StatefulWidget {
   final SettingsController settings;
   final bool computerAvailable;
   final ComputerPlayer Function()? createComputer;
+
+  /// Avversario di Chess960, Re della collina e Tre scacchi (RF-123).
+  final VariantEngine Function()? createVariantEngine;
 
   /// Archivio della stima dell'avversario adattivo; quello su file se assente.
   final KeyValueStore? store;
@@ -167,13 +174,14 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   Handicap? _handicap;
   Side _handicapHuman = Side.white;
 
-  /// Ultima variante scelta per la partita tra due persone.
-  Variant _twoPlayerVariant = Variant.standard;
+  /// Ultima variante scelta nel pannello Nuova, con persone o contro il computer.
+  Variant _chosenVariant = Variant.standard;
   final _random = math.Random();
 
   /// Lato giocato dal computer; `null` nella partita tra due persone.
   Side? _computerSide;
   ComputerPlayer? _computer;
+  VariantEngine? _variantEngine;
 
   /// Allenatore in partita (RF-73): giudica le mosse dell'utente.
   bool _coachOn = false;
@@ -593,6 +601,12 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   ComputerPlayer get _computerPlayer =>
       _computer ??= widget.createComputer?.call() ?? ComputerPlayer();
 
+  /// Le varianti non passano da Stockfish, che non ne conosce le regole.
+  bool get _engineGame => _game.variant == Variant.standard;
+
+  VariantEngine get _variantPlayer =>
+      _variantEngine ??= widget.createVariantEngine?.call() ?? VariantEngine();
+
   GameData _gameData() {
     final pos = _game.position;
     return GameData(
@@ -739,7 +753,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     // Un handicap falsa il confronto: senza Elo non entra nel rating locale.
     return (
       side,
-      side == null || _handicap != null
+      side == null || _handicap != null || !_engineGame
           ? null
           : (_bot?.elo ?? engineLevel(_gameLevel).approxElo),
     );
@@ -786,7 +800,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _bot = null;
     _resultRecorded = false;
     _botResultRecorded = false;
-    _twoPlayerVariant = game.variant;
+    _chosenVariant = game.variant;
     // Come per l'editor: si archivia, ma non vale XP una partita iniziata altrove.
     _beginGame(
       game,
@@ -979,7 +993,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       _threatFen = position.fen;
       _threatShapes = {
         Arrow(
-          color: const Color(0xCCC0392B),
+          color: _settings.threatColor,
           orig: threat!.from,
           dest: threat.to,
         ),
@@ -1007,7 +1021,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       _showMessage('Nessun suggerimento disponibile.');
       return;
     }
-    const color = Color(0xCC15781B);
+    final color = _settings.hintColor;
     final to = hint.to;
     final text = to == null
         ? describeHintPiece(position, hint.from)
@@ -1101,11 +1115,13 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         await Future<void>.delayed(level.minReply);
         reply = EngineMove(move: book, pv: const []);
       } else {
-        reply = await _computerPlayer.bestMove(
-          _game.initial.fen,
-          _moveHistory,
-          level,
-        );
+        reply = _engineGame
+            ? await _computerPlayer.bestMove(
+                _game.initial.fen,
+                _moveHistory,
+                level,
+              )
+            : await _variantPlayer.bestMove(_game.position, level);
       }
     } on Object catch (e) {
       error = e;
@@ -1148,7 +1164,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     // Con l'orologio acceso l'analisi della minaccia fermerebbe il tempo
     // dell'utente: si spiega solo la mossa.
     try {
-      followUp = _clock != null
+      followUp = _clock != null || !_engineGame
           ? null
           : await _whileSuspended(() => _coach.threat(after));
     } on Object {
@@ -1193,7 +1209,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   void _cancelComputerMove() {
     _generation++;
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    if (_thinking) _computer?.stop();
+    if (_thinking) {
+      _computer?.stop();
+      _variantEngine?.stop();
+    }
     _task = _ComputerTask.none;
     _searchClock = null;
   }
@@ -1352,7 +1371,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         isScrollControlled: true,
         builder: (context) => _TimeControlSheet(
           kid: _kid,
-          variant: _kid ? Variant.standard : _twoPlayerVariant,
+          variant: _kid ? Variant.standard : _chosenVariant,
           whiteName: _settings.whiteName,
           blackName: _settings.blackName,
           setup: _setup,
@@ -1369,8 +1388,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final vsComputer = setup.opponent != Opponent.human;
     // Il profilo bambino gioca solo la classica: la variante scelta prima
     // resta per quando il profilo si spegne.
-    if (!vsComputer && !_kid) _twoPlayerVariant = choice.variant;
-    final variant = vsComputer ? Variant.standard : choice.variant;
+    if (!_kid) _chosenVariant = choice.variant;
+    final variant = _kid ? Variant.standard : choice.variant;
     final control = choice.control;
     final human = vsComputer ? setup.resolveHumanSide(_random) : Side.white;
     final handicap = _kid
@@ -1448,7 +1467,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       _handicapHuman = human;
       _computerSide = human.opposite;
       _orientation = human;
-      _computerPlayer.newGame().ignore();
+      if (_engineGame) _computerPlayer.newGame().ignore();
     } else {
       _handicapHuman = Side.white;
       if (_computerSide != null) _orientation = Side.white;
@@ -1668,10 +1687,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       _task = _ComputerTask.draw;
       _refresh(animate: false);
       try {
-        final score = await _computerPlayer.evaluate(
-          _game.initial.fen,
-          _moveHistory,
-        );
+        final score = _engineGame
+            ? await _computerPlayer.evaluate(_game.initial.fen, _moveHistory)
+            : await _variantPlayer.evaluate(_game.position);
         if (score != null) {
           computerScore = turn == _computerSide
               ? score.comparable
@@ -1743,6 +1761,24 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   LiveAnalysis _liveAnalysis(ComputerPlayer player) =>
       (fen, multiPv) => player.analyseLive(fen, multiPv: multiPv);
+
+  /// Esporta come immagine la posizione mostrata, anche scorrendo le mosse.
+  void _exportImage() {
+    final ply = _viewPly;
+    final Move? last = ply == null
+        ? _game.lastMove
+        : (ply == -1 ? null : _game.moves[ply].move);
+    unawaited(
+      openPositionImage(
+        context,
+        PositionImage(
+          fen: _shownPosition.fen,
+          orientation: _orientation,
+          lastMove: last,
+        ),
+      ),
+    );
+  }
 
   /// Analisi della posizione mostrata con orologio e computer fermi.
   void _openAnalysis() {
@@ -1928,7 +1964,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           ? null
           : _resign,
       // Nelle sfide niente aiuti: né suggerimenti né ripetizione della mossa.
-      coachOn: _computerSide == null || _isChallenge || _zen ? null : _coachOn,
+      coachOn: _computerSide == null || _isChallenge || _zen || !_engineGame
+          ? null
+          : _coachOn,
       onCoach: () {
         setState(() {
           _coachOn = !_coachOn;
@@ -1941,7 +1979,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
               : 'Allenatore disattivato.',
         );
       },
-      hintAvailable: _computerSide != null && !_isChallenge,
+      hintAvailable: _computerSide != null && !_isChallenge && _engineGame,
       onHint: _humanToMove && _pendingMove == null ? _giveHint : null,
       onThreat: _humanToMove && _pendingMove == null ? _showThreat : null,
     );
@@ -1994,6 +2032,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                 if (value == 'analysis') _openAnalysis();
                 if (value == 'qrSend') unawaited(_sendQr());
                 if (value == 'qrReceive') unawaited(_receiveQr());
+                if (value == 'image') _exportImage();
               },
               itemBuilder: (context) {
                 final l10n = qrL10n(context);
@@ -2012,6 +2051,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                       child: const Text('Revisione della partita'),
                     ),
                   ],
+                  PopupMenuItem(
+                    value: 'image',
+                    child: Text(shareImageL10n(context).shareImageTitle),
+                  ),
                   PopupMenuItem(
                     value: 'qrSend',
                     // Una posizione dell'editor si può passare anche senza mosse.
@@ -2905,7 +2948,7 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
                 ],
               ),
             ],
-            if (_setup.opponent == Opponent.human && l == null) ...[
+            if (l == null) ...[
               const SizedBox(height: 16),
               Text('Variante', style: theme.textTheme.titleSmall),
               const SizedBox(height: 4),
@@ -2971,7 +3014,7 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
     final theme = Theme.of(context);
     final l = _kidL10n(context);
     final human = _setup.opponent == Opponent.human;
-    final standard = !human || _variant == Variant.standard;
+    final standard = _variant == Variant.standard;
     final pieces = {
       HandicapPiece.fPawn: l.handicapPieceFPawn,
       HandicapPiece.knight: l.handicapPieceKnight,

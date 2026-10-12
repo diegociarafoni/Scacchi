@@ -1254,4 +1254,31 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get storyCrownOutro =>
       'La corona è tua. Il regno è in pace e ogni nuova partita è una nuova storia.';
+
+  @override
+  String get shareImageTitle => 'Esporta come immagine';
+
+  @override
+  String get shareImageAction => 'Condividi';
+
+  @override
+  String get shareImageFlip => 'Capovolgi la scacchiera';
+
+  @override
+  String get shareImageCoordinates => 'Coordinate';
+
+  @override
+  String get shareImageLastMove => 'Ultima mossa';
+
+  @override
+  String get shareImageCaption => 'Didascalia (facoltativa)';
+
+  @override
+  String get shareImagePreview => 'Anteprima della scacchiera';
+
+  @override
+  String get shareImageFailed => 'Condivisione non riuscita';
+
+  @override
+  String get shareImageSubject => 'Posizione di scacchi';
 }

@@ -10,6 +10,7 @@ import '../game/clock.dart';
 import '../game/move_note.dart';
 import '../kids/kid_display.dart';
 import '../l10n/app_localizations.dart';
+import '../settings/board_marks.dart';
 import '../settings/notation.dart';
 import '../settings/settings.dart';
 import 'board_utils.dart';
@@ -409,9 +410,12 @@ class _ReviewPageState extends State<ReviewPage> {
         : _showSolution && _retrySolved == null;
     if (!showArrow || best is! NormalMove) return const {};
     final shown = kingDestination(_positions[ply], best);
-    return {
-      Arrow(color: const Color(0xCC3E8E2F), orig: shown.from, dest: shown.to),
-    };
+    // La scacchiera della revisione è sempre verde.
+    final marks = BoardMarks.of(
+      BoardTheme.green,
+      colorBlind: AppSettings.of(context).colorBlind,
+    );
+    return {Arrow(color: marks.hint, orig: shown.from, dest: shown.to)};
   }
 
   Map<Square, Annotation> _annotations() {
@@ -480,8 +484,8 @@ class _ReviewPageState extends State<ReviewPage> {
                                 onMove: _onRetryMove,
                                 shapes: _shapes(),
                                 annotations: _annotations(),
-                                settings: const ChessboardSettings(
-                                  colorScheme: ChessboardColorScheme.green,
+                                settings: ChessboardSettings(
+                                  colorScheme: BoardTheme.green.colorScheme,
                                 ),
                               ),
                             ],

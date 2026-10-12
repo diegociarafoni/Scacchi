@@ -1522,5 +1522,41 @@
   "storyCrownOutro": "La corona è tua. Il regno è in pace e ogni nuova partita è una nuova storia.",
   "@storyCrownOutro": {
     "description": "storyCrownOutro"
+  },
+  "shareImageTitle": "Esporta come immagine",
+  "@shareImageTitle": {
+    "description": "shareImageTitle"
+  },
+  "shareImageAction": "Condividi",
+  "@shareImageAction": {
+    "description": "shareImageAction"
+  },
+  "shareImageFlip": "Capovolgi la scacchiera",
+  "@shareImageFlip": {
+    "description": "shareImageFlip"
+  },
+  "shareImageCoordinates": "Coordinate",
+  "@shareImageCoordinates": {
+    "description": "shareImageCoordinates"
+  },
+  "shareImageLastMove": "Ultima mossa",
+  "@shareImageLastMove": {
+    "description": "shareImageLastMove"
+  },
+  "shareImageCaption": "Didascalia (facoltativa)",
+  "@shareImageCaption": {
+    "description": "shareImageCaption"
+  },
+  "shareImagePreview": "Anteprima della scacchiera",
+  "@shareImagePreview": {
+    "description": "shareImagePreview"
+  },
+  "shareImageFailed": "Condivisione non riuscita",
+  "@shareImageFailed": {
+    "description": "shareImageFailed"
+  },
+  "shareImageSubject": "Posizione di scacchi",
+  "@shareImageSubject": {
+    "description": "shareImageSubject"
   }
 }
