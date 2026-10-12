@@ -245,7 +245,13 @@ class _MultiplayerPageState extends State<MultiplayerPage> {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.multiplayerTitle)),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        // Spazio sotto la barra di sistema, o l'ultimo bottone resta tagliato.
+        padding: EdgeInsets.fromLTRB(
+          16,
+          16,
+          16,
+          16 + MediaQuery.paddingOf(context).bottom,
+        ),
         children: [
           if (_saved case final saved?) ...[
             Card(
@@ -387,6 +393,7 @@ class _MultiplayerPageState extends State<MultiplayerPage> {
                     decoration: InputDecoration(
                       labelText: l10n.multiplayerClockTitle,
                       helperText: l10n.multiplayerClockHint,
+                      helperMaxLines: 3,
                     ),
                     items: [
                       DropdownMenuItem(child: Text(l10n.multiplayerClockNone)),
