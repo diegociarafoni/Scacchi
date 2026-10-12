@@ -130,12 +130,20 @@ class SpeechBubble extends StatelessWidget {
                 color: fill,
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: Text(
-                text,
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.bodyMedium
-                    ?.copyWith(color: scheme.onSurface),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (icon != null) ...[icon!, const SizedBox(width: 10)],
+                  Flexible(
+                    child: Text(
+                      text,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.bodyMedium
+                          ?.copyWith(color: scheme.onSurface),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
