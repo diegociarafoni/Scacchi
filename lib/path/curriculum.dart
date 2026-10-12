@@ -791,9 +791,9 @@ const List<Chapter> curriculum = [
           ),
           LineExercise(
             instructions:
-                '$_mateIn1 Matto a coda di rondine: la donna dà scacco da '
-                'vicino, protetta dal pedone, e dietro il re ci sono i suoi '
-                'pezzi.',
+                '$_mateIn1 Matto di Cozio: la donna dà scacco in diagonale, '
+                'protetta dal pedone. Le due case di fuga che la donna non '
+                'controlla sono occupate dalla torre e dal pedone neri.',
             fen: '2b1r3/pp2kppp/8/4P3/8/8/5PPP/3Q2K1 w - - 0 1',
             steps: ['d1d6'],
             goal: LineGoal.mate,
@@ -1139,11 +1139,11 @@ const List<Chapter> curriculum = [
           ),
           LineExercise(
             instructions:
-                'Sfida: la donna nera difende il cavallo e l\'alfiere. '
-                'Cattura il cavallo con l\'alfiere: se la donna riprende, '
-                'l\'alfiere in b4 resta indifeso.',
-            fen: 'r5k1/p3qppp/8/4n3/Qb3B2/8/P4PP1/5RK1 w - - 0 1',
-            steps: ['f4e5', 'e7e5', 'a4b4'],
+                'Sfida: la donna nera difende sia l\'alfiere sia il '
+                'cavallo. Cattura l\'alfiere con il pedone: se la donna '
+                'riprende, il cavallo in c5 resta indifeso.',
+            fen: '6k1/pp2qppp/8/2n3b1/7P/5Q2/PP3PP1/2R3K1 w - - 0 1',
+            steps: ['h4g5'],
             goal: LineGoal.line,
           ),
         ],
@@ -1166,7 +1166,7 @@ const List<Chapter> curriculum = [
           ),
           LineExercise(
             instructions:
-                'Dai scacco con la torre in d8: la donna nera deve '
+                'Dai scacco con la torre in d8: alla donna nera conviene '
                 'catturarla. Poi il cavallo attacca insieme re e donna.',
             fen: '7k/pp2qppp/8/6N1/8/8/PP3PPP/3R2K1 w - - 0 1',
             steps: ['d1d8', 'e7d8', 'g5f7'],
@@ -1209,8 +1209,8 @@ const List<Chapter> curriculum = [
           LineExercise(
             instructions:
                 'La torre nera difende l\'alfiere lungo la quinta traversa. '
-                'Metti il cavallo in mezzo dando scacco: l\'alfiere resta '
-                'indifeso.',
+                'Metti il cavallo in mezzo dando scacco: vinci materiale, '
+                'l\'alfiere oppure la torre in cambio del cavallo.',
             fen: '8/ppk2p1p/8/r5b1/4P3/2N5/P4P1P/6RK w - - 0 1',
             steps: ['c3d5'],
             goal: LineGoal.line,
@@ -1218,18 +1218,18 @@ const List<Chapter> curriculum = [
           LineExercise(
             instructions:
                 'La torre in d8 difende l\'alfiere in d4. Metti il cavallo in '
-                'mezzo dando scacco: il pedone in e5 lo protegge.',
+                'mezzo dando scacco, protetto dal pedone: vinci l\'alfiere '
+                'oppure la torre in cambio del cavallo.',
             fen: '3rk3/pp3ppp/8/4P3/2Nb4/8/PP3PPP/3R2K1 w - - 0 1',
             steps: ['c4d6'],
             goal: LineGoal.line,
           ),
           LineExercise(
             instructions:
-                '$_mateIn2 Sfida: la torre nera controlla l\'ottava '
-                'traversa. Mettiti in mezzo con scacco: il pedone farà il '
-                'resto.',
-            fen: 'r6k/2P2ppp/8/8/8/8/5PPP/3R2K1 w - - 0 1',
-            steps: ['d1d8', 'a8d8', 'c7d8q'],
+                '$_mateIn2 Sfida: la torre nera in h8 difende c8. Mettiti '
+                'in mezzo con scacco: il pedone farà il resto.',
+            fen: 'k6r/ppP2ppp/8/8/8/8/5PPP/3R2K1 w - - 0 1',
+            steps: ['d1d8', 'h8d8', 'c7d8q'],
             goal: LineGoal.mate,
           ),
         ],
@@ -1295,7 +1295,7 @@ const List<Chapter> curriculum = [
             instructions:
                 'L\'alfiere nero in h5 è chiuso dal suo pedone in g6. '
                 'Attaccalo con un pedone: non ha case dove scappare.',
-            fen: '4r1k1/5p1p/6p1/7b/8/7P/5PP1/3R2K1 w - - 0 1',
+            fen: '6k1/pp3p1p/6p1/7b/8/2N4P/PP3PP1/6K1 w - - 0 1',
             steps: ['g2g4'],
             goal: LineGoal.line,
           ),
@@ -1309,10 +1309,10 @@ const List<Chapter> curriculum = [
           ),
           LineExercise(
             instructions:
-                'Sfida: attacca l\'alfiere con un pedone. Quando si ritira, '
-                'attaccalo con l\'altro pedone: resterà in trappola.',
+                'Sfida: attacca l\'alfiere con un pedone. Se si ritira in '
+                'g6, l\'altro pedone lo chiude in trappola.',
             fen: '3r4/pp3pkp/8/7b/4P2P/3P1PP1/PP3K2/3R4 w - - 0 1',
-            steps: ['g3g4', 'h5g6', 'h4h5'],
+            steps: ['g3g4'],
             goal: LineGoal.line,
           ),
         ],
