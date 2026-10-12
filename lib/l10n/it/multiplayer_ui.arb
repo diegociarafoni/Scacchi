@@ -1,0 +1,62 @@
+{
+  "multiplayerUiChannelWifi": "Wi-Fi",
+  "@multiplayerUiChannelWifi": {
+    "description": "Nome del canale di collegamento Wi-Fi o hotspot"
+  },
+  "multiplayerUiChannelBluetooth": "Bluetooth",
+  "@multiplayerUiChannelBluetooth": {
+    "description": "Nome del canale di collegamento Bluetooth"
+  },
+  "multiplayerUiChannelRemote": "A distanza",
+  "@multiplayerUiChannelRemote": {
+    "description": "Nome del canale di collegamento a distanza"
+  },
+  "multiplayerUiLinkConnected": "Collegato",
+  "@multiplayerUiLinkConnected": {
+    "description": "Stato: collegamento attivo"
+  },
+  "multiplayerUiLinkConnecting": "In collegamento",
+  "@multiplayerUiLinkConnecting": {
+    "description": "Stato: collegamento in corso"
+  },
+  "multiplayerUiLinkOffline": "Non raggiungibile",
+  "@multiplayerUiLinkOffline": {
+    "description": "Stato: l'altro telefono non risponde"
+  },
+  "multiplayerUiLinkSemantics": "{channel}: {state}",
+  "@multiplayerUiLinkSemantics": {
+    "description": "Voce per il lettore di schermo: canale e stato",
+    "placeholders": {
+      "channel": {
+        "type": "String"
+      },
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "multiplayerUiShowFriend": "Mostra questo codice al tuo amico",
+  "@multiplayerUiShowFriend": {
+    "description": "Didascalia sopra il QR dell'invito"
+  },
+  "multiplayerUiStepsTitle": "Come si gioca",
+  "@multiplayerUiStepsTitle": {
+    "description": "Titolo dei passaggi nella schermata iniziale"
+  },
+  "multiplayerUiStepCreate": "Uno di voi crea la partita e mostra il QR o manda il link.",
+  "@multiplayerUiStepCreate": {
+    "description": "Primo passaggio"
+  },
+  "multiplayerUiStepScan": "L'altro lo inquadra con la fotocamera.",
+  "@multiplayerUiStepScan": {
+    "description": "Secondo passaggio"
+  },
+  "multiplayerUiStepPlay": "Giocate a turno: le mosse viaggiano da sole.",
+  "@multiplayerUiStepPlay": {
+    "description": "Terzo passaggio"
+  },
+  "multiplayerUiResumeTitle": "Partita in sospeso",
+  "@multiplayerUiResumeTitle": {
+    "description": "Titolo del riquadro della partita salvata"
+  }
+}
