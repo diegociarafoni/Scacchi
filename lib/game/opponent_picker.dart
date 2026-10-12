@@ -3,11 +3,13 @@ import 'dart:math' as math;
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
+import '../bot_gallery/bot_gallery_page.dart';
 import '../engine/bot_collection.dart';
 import '../engine/bots.dart';
 import '../engine/levels.dart';
 import '../engine/style.dart';
 import '../l10n/app_localizations.dart';
+import '../story/story_controller.dart';
 
 enum Opponent { human, computer, bot }
 
@@ -155,6 +157,28 @@ class OpponentPicker extends StatelessWidget {
           ),
           if (vsBot) ...[
             const SizedBox(height: 8),
+            OutlinedButton.icon(
+              key: const Key('open-bot-gallery'),
+              icon: const Icon(Icons.grid_view_rounded),
+              label: Text(_l10n(context).botGalleryOpen),
+              onPressed: () async {
+                final result = await Navigator.push<BotGalleryResult>(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => BotGalleryPage(
+                      collection: collection,
+                      loadStory: () async =>
+                          (await StoryController.open()).state,
+                      initialBotId: shown.botId,
+                      initialSide: shown.sideChoice,
+                      adaptiveLevel: adaptiveLevel,
+                      kidMode: kidMode,
+                    ),
+                  ),
+                );
+                if (result != null) onChanged(result.applyTo(shown));
+              },
+            ),
             for (final bot in kidMode ? friendlyBots : bots)
               _BotTile(
                 bot: bot,

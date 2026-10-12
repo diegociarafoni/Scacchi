@@ -58,6 +58,24 @@ Lia gioca al livello 0 (400 Elo), lo stesso di Tino; gli altri nuovi bot riusano
 
 Tino 🐥 è il custode del Capitolo 0: livello 0, 400 Elo, scelta tra molte mosse con temperatura 600. Sta in `storyOnlyBots` e non nella scala: non si sblocca e non compare nella schermata Nuova partita. I tornei non usano i bot ma i livelli del motore. `botById` lo trova.
 
+## La galleria dei bot (RG-18)
+
+Dalla scelta dell'avversario, con **Bot** selezionato, il bottone «Apri la galleria dei bot» apre `BotGalleryPage` (`lib/bot_gallery/`), che restituisce con «Gioca» un `BotGalleryResult` (bot, colore, e se si è scelto il computer adattivo). `BotGalleryResult.applyTo(GameSetup)` lo riporta nella configurazione della partita; un'altra schermata può aprire la galleria con `Navigator.push<BotGalleryResult>` e il testo del bottone di conferma in `confirmLabel`.
+
+Struttura, dall'alto:
+
+- **Il bot scelto**: avatar grande con l'espressione dello stato (saluto, contento se già battuto, neutro se bloccato), fumetto con la battuta nel carattere del bot, nome, Elo e stile. Un bot bloccato si vede lo stesso, dice come si sblocca e il bottone «Gioca» è spento.
+- **Le fasce** (`lib/bot_gallery/bot_tiers.dart`), per Elo: Neofita (fino a 799), Principiante (800-1299), Intermedio (1300-1699), Avanzato (1700-2099), Maestro (da 2100). Ogni bot è una cella con lucchetto se bloccato e corona se già battuto; la cella scelta ha il bordo evidenziato.
+- **Adattivo**: la carta del computer che si adatta ai risultati (RF-26), con l'Elo del livello attuale.
+- **I custodi della Storia**: i nove custodi dei capitoli con una barra di avanzamento «n di 9 custodi incontrati»; un custode è incontrato quando il capitolo ha il bot battuto. Tino, che sta solo nella Storia, si può scegliere dopo il Capitolo 0 (`storyOnlyBots`). La galleria legge la Storia da sola (`loadStory`).
+- **Colore** in basso: Bianco, a sorte (predefinito), Nero, sempre accanto a «Gioca».
+
+I saluti e le battute di rivincita di ogni bot, e tutti i testi della galleria, sono in `lib/l10n/<lingua>/bot_gallery.arb` (italiano e inglese); `lib/bot_gallery/bot_greetings.dart` li associa agli id. Ogni bot ha un personaggio disegnato in codice con le sei espressioni (`lib/progress/avatar_art.dart`, `guardianCharacter`): Lia farfalla, Nico tartaruga, Viola fiore viola con nota, Ettore leone, Bruna orsa, Carlo procione, Ada con gli occhiali, Tino pulcino nel guscio.
+
+Profilo bambino: solo i tre bot amici in una fascia «I tuoi amici», senza Elo, Adattivo né custodi. Accessibilità: ogni cella è un bottone con nome, Elo e stato («bloccato», «battuto», «disponibile») letti dai lettori di schermo; bersagli da almeno 48 dp; nessun overflow col testo al 130%. Il layout orizzontale fa scorrere anche il bot in alto.
+
+Golden in `test/golden/bot_gallery_golden_test.dart` (tre dimensioni di telefono, tema chiaro e scuro, testo al 130%, inglese, bambino, bot bloccato, tabella dei personaggi con le sei espressioni).
+
 ## Stile di gioco
 
 Lo stile non cambia la forza del motore: sposta la scelta tra le prime candidate. Il bot chiede a
@@ -113,6 +131,7 @@ l'apertura.
 - `test/engine/bots_test.dart`: scala, dati, linee del libro legali, frasi.
 - `test/engine/bot_collection_test.dart`: sblocco per gradino di Elo, compatibilità con le collezioni già salvate, data della prima vittoria, salvataggio.
 - `test/bot_game_test.dart`: la scelta del bot nel pannello, il libro in partita, saluto e frasi finali, vittoria e collezione.
+- `test/bot_gallery/`: fasce, saluti in italiano e inglese, la pagina della galleria (scelta, blocchi, corone, custodi, Adattivo, bambino, accessibilità) e l'entrata dalla scelta dell'avversario.
 - `test/engine/style_test.dart`: i bonus di stile.
 - `test/engine/kid_bots_test.dart`, `test/game/kid_opponent_picker_test.dart` e `test/kid_bot_game_test.dart`: i bot amichevoli del profilo bambino.
 - `test/engine/choose_test.dart` e `computer_player_test.dart`: il bonus nella scelta tra candidate.
@@ -122,4 +141,5 @@ l'apertura.
 | Requisito | Stato |
 |---|---|
 | RF-23 bot con personalità | ✓ nome, avatar, Elo, stile, libro d'apertura e frasi su scacco, cattura e fine partita; manca la frase sull'errore, che richiede la valutazione della mossa dell'avversario |
+| RG-18 galleria dei bot | ✓ fasce per Elo, saluto nel fumetto in italiano e inglese, lucchetti e corone, Adattivo, custodi della Storia con avanzamento, colore; personaggi disegnati per tutti i bot |
 | RG-04 scala dei bot | ✓ sblocco battendo il precedente e collezione con la data della vittoria |
