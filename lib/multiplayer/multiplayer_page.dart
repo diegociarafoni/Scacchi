@@ -13,6 +13,7 @@ import '../l10n/app_localizations.dart';
 import '../training/training_board.dart';
 import 'game_invite.dart';
 import 'multiplayer_controller.dart';
+import 'saved_game.dart';
 
 /// Testi del multigiocatore, in italiano anche senza i delegate.
 AppLocalizations multiplayerL10n(BuildContext context) =>
@@ -26,10 +27,16 @@ class MultiplayerPage extends StatefulWidget {
     super.key,
     this.openHost = openLanHost,
     this.openGuest = openLanGuest,
+    this.openResumeHost = openLanHostAt,
     this.scanner = zxingScanner,
+    this.store,
   });
 
   final OpenHost openHost;
+  final ResumeHost openResumeHost;
+
+  /// Dove sta la partita salvata; per default il file dell'app.
+  final SavedGameStore? store;
   final OpenGuest openGuest;
   final QrScannerBuilder scanner;
 
@@ -40,14 +47,83 @@ class MultiplayerPage extends StatefulWidget {
 class _MultiplayerPageState extends State<MultiplayerPage> {
   Side _side = Side.white;
   bool _busy = false;
+  SavedGameStore? _store;
+  SavedGame? _saved;
+  late final Future<void> _ready;
+
+  @override
+  void initState() {
+    super.initState();
+    _ready = _loadSaved();
+  }
+
+  Future<void> _loadSaved() async {
+    try {
+      final store = _store = widget.store ?? await SavedGameStore.open();
+      final saved = await store.load();
+      if (mounted) setState(() => _saved = saved);
+    } on Object catch (e) {
+      if (kDebugMode) debugPrint('Partita salvata non letta: $e');
+    }
+  }
+
+  Future<void> _resume(SavedGame saved) => _start(
+    () => MultiplayerController.resume(
+      saved,
+      openHost: widget.openResumeHost,
+      openGuest: widget.openGuest,
+      store: _store,
+    ),
+  );
+
+  Future<bool> _confirmDiscard() async {
+    final l10n = multiplayerL10n(context);
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.multiplayerDiscardTitle),
+        content: Text(l10n.multiplayerDiscardBody),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(l10n.multiplayerStay),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(l10n.multiplayerDiscard),
+          ),
+        ],
+      ),
+    );
+    return ok ?? false;
+  }
+
+  Future<void> _discard() async {
+    if (!await _confirmDiscard()) return;
+    await _store?.clear();
+    if (mounted) setState(() => _saved = null);
+  }
+
+  // Una partita nuova prenderebbe il posto di quella salvata: si chiede prima.
+  Future<void> _startNew(Future<MultiplayerController> Function() open) async {
+    if (_saved != null) {
+      if (!await _confirmDiscard()) return;
+      await _store?.clear();
+      if (mounted) setState(() => _saved = null);
+    }
+    await _start(open);
+  }
 
   Future<void> _start(Future<MultiplayerController> Function() open) async {
     setState(() => _busy = true);
+
     final l10n = multiplayerL10n(context);
     final messenger = ScaffoldMessenger.of(context);
     final navigator = Navigator.of(context);
     try {
       final controller = await open();
+      // Chi è partito prima che il file fosse pronto comincia a salvare ora.
+      unawaited(_ready.then((_) => controller.useStore(_store)));
       if (!mounted) {
         await controller.close();
         return;
@@ -77,8 +153,12 @@ class _MultiplayerPageState extends State<MultiplayerPage> {
       MaterialPageRoute(builder: (_) => _ScanPage(scanner: widget.scanner)),
     );
     if (invite == null || !mounted) return;
-    await _start(
-      () => MultiplayerController.join(invite, openGuest: widget.openGuest),
+    await _startNew(
+      () => MultiplayerController.join(
+        invite,
+        openGuest: widget.openGuest,
+        store: _store,
+      ),
     );
   }
 
@@ -90,6 +170,34 @@ class _MultiplayerPageState extends State<MultiplayerPage> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
+          if (_saved case final saved?) ...[
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(l10n.multiplayerResumeBody(saved.moves.length)),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        FilledButton(
+                          onPressed: _busy ? null : () => _resume(saved),
+                          child: Text(l10n.multiplayerResume),
+                        ),
+                        const SizedBox(width: 8),
+                        TextButton(
+                          onPressed: _busy ? null : _discard,
+                          child: Text(l10n.multiplayerDiscard),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
           Text(l10n.multiplayerIntro),
           const SizedBox(height: 24),
           Text(
@@ -117,10 +225,11 @@ class _MultiplayerPageState extends State<MultiplayerPage> {
             label: Text(l10n.multiplayerCreate),
             onPressed: _busy
                 ? null
-                : () => _start(
+                : () => _startNew(
                     () => MultiplayerController.host(
                       side: _side,
                       openHost: widget.openHost,
+                      store: _store,
                     ),
                   ),
           ),
@@ -252,7 +361,11 @@ class _MultiplayerGamePageState extends State<MultiplayerGamePage> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(l10n.multiplayerLeaveTitle),
-        content: Text(l10n.multiplayerLeaveBody),
+        content: Text(
+          _c.status == MultiplayerStatus.waitingPeer
+              ? l10n.multiplayerLeaveBodyWaiting
+              : l10n.multiplayerLeaveBody,
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),

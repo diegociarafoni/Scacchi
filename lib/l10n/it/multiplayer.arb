@@ -95,9 +95,13 @@
   "@multiplayerLeaveTitle": {
     "description": "Titolo della conferma di uscita"
   },
-  "multiplayerLeaveBody": "Il collegamento con l'altro telefono si chiude e la partita non viene salvata.",
+  "multiplayerLeaveBody": "Il collegamento con l'altro telefono si chiude, ma la partita resta salvata: potrai riprenderla da qui.",
   "@multiplayerLeaveBody": {
     "description": "Testo della conferma di uscita"
+  },
+  "multiplayerLeaveBodyWaiting": "Il collegamento si chiude e l'invito non sarà più valido.",
+  "@multiplayerLeaveBodyWaiting": {
+    "description": "Testo della conferma di uscita mentre si attende l'avversario"
   },
   "multiplayerLeave": "Lascia",
   "@multiplayerLeave": {
@@ -110,5 +114,30 @@
   "multiplayerStartError": "Non è stato possibile avviare la partita: riprova.",
   "@multiplayerStartError": {
     "description": "Errore generico all'avvio della partita in rete locale"
+  },
+  "multiplayerResume": "Riprendi la partita",
+  "@multiplayerResume": {
+    "description": "Pulsante che riprende la partita a due salvata"
+  },
+  "multiplayerResumeBody": "Hai una partita con un amico lasciata a metà. {moves, plural, =1{Una mossa giocata} other{{moves} mosse giocate}}.",
+  "@multiplayerResumeBody": {
+    "description": "Riquadro della partita a due salvata",
+    "placeholders": {
+      "moves": {
+        "type": "int"
+      }
+    }
+  },
+  "multiplayerDiscard": "Elimina",
+  "@multiplayerDiscard": {
+    "description": "Pulsante che elimina la partita a due salvata"
+  },
+  "multiplayerDiscardTitle": "Eliminare la partita?",
+  "@multiplayerDiscardTitle": {
+    "description": "Titolo della conferma di eliminazione della partita salvata"
+  },
+  "multiplayerDiscardBody": "La partita non si potrà più riprendere, nemmeno se l'altro telefono è ancora in attesa.",
+  "@multiplayerDiscardBody": {
+    "description": "Testo della conferma di eliminazione"
   }
 }

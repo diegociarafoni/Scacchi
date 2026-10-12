@@ -44,6 +44,19 @@ class JsonFile {
     return next;
   }
 
+  /// Elimina il file, dopo i salvataggi già accodati.
+  Future<void> delete() {
+    final next = _pending.then((_) async {
+      try {
+        await file.delete();
+      } on PathNotFoundException {
+        // Già assente.
+      }
+    });
+    _pending = next.catchError((Object _) {});
+    return next;
+  }
+
   Future<void> _write(Map<String, Object?> data) async {
     await file.parent.create(recursive: true);
     final tmp = File('${file.path}.tmp');
