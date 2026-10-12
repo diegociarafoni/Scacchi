@@ -72,10 +72,10 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
     super.didChangeDependencies();
     final l10n = physicalL10n(context);
     // I nomi lasciati al valore predefinito seguono la lingua dell'app.
-    if (_white.text.isEmpty || _white.text == _defaultWhite) {
+    if (_defaultWhite == null || _white.text == _defaultWhite) {
       _white.text = l10n.physicalWhite;
     }
-    if (_black.text.isEmpty || _black.text == _defaultBlack) {
+    if (_defaultBlack == null || _black.text == _defaultBlack) {
       _black.text = l10n.physicalBlack;
     }
     _defaultWhite = l10n.physicalWhite;
