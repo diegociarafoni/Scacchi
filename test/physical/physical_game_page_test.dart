@@ -22,12 +22,17 @@ void main() {
   });
   tearDown(() => dir.deleteSync(recursive: true));
 
-  Future<void> open(WidgetTester tester, {PhotoSource? photos}) async {
+  Future<void> open(
+    WidgetTester tester, {
+    PhotoSource? photos,
+    bool photoMove = true,
+  }) async {
     await tester.pumpWidget(
       MaterialApp(
         home: PhysicalGamePage(
           archive: () async => archive,
           photos: photos ?? const CameraPhotoSource(),
+          photoMove: photoMove,
         ),
       ),
     );
@@ -109,6 +114,12 @@ void main() {
     expect(games, hasLength(1));
     expect(games.single.mode, SavedGame.physical);
     expect(games.single.result, '1-0');
+  });
+
+  testWidgets('senza il flag la mossa dalla foto non compare', (tester) async {
+    await open(tester, photoMove: false);
+    expect(find.byKey(const Key('physical-photo')), findsNothing);
+    expect(find.text('Mossa dalla foto'), findsNothing);
   });
 
   group('mossa dalla foto', () {

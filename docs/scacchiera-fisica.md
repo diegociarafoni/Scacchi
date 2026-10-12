@@ -13,6 +13,8 @@ Il pannello del Nero è ruotato di 180° per chi gli siede di fronte. **Pausa**,
 
 ## Mossa dalla foto (RP-08)
 
+**Stato:** la funzione è completa ma nelle versioni di rilascio è spenta (flag di compilazione `ROKKO_PHOTO_MOVE`, di norma falso): il pulsante non compare. Per provarla: `flutter run --dart-define=ROKKO_PHOTO_MOVE=true`. Il codice e i test restano, quindi riaccenderla è questione di un parametro.
+
 Invece di scrivere la mossa si può fotografare la scacchiera con **Mossa dalla foto**, tutto sul telefono e senza rete. L'app non riconosce i pezzi: confronta due foto della stessa scacchiera e vede quali caselle sono cambiate, poi sceglie tra le mosse legali quelle che cambiano proprio quelle caselle (arrocco e presa al varco comprese).
 
 1. Prima foto: si trascinano i quattro cerchi sugli angoli della scacchiera e si indica quale colore sta in basso nella foto. È la foto di riferimento; l'inquadratura resta la stessa per tutta la partita.
