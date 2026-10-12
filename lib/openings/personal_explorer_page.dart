@@ -15,6 +15,7 @@ import 'explorer_page.dart';
 import 'opening_assets.dart';
 import 'opening_book.dart';
 import 'opening_game.dart';
+import 'openings_l10n.dart';
 import 'personal_tree.dart';
 import 'repertoire.dart';
 
@@ -187,7 +188,7 @@ class _PersonalExplorerPageState extends State<PersonalExplorerPage> {
                   dense: true,
                   title: Text(
                     opening != null
-                        ? '${opening.eco} ${opening.localName}'
+                        ? '${opening.eco} ${openingDisplayName(l10n, opening)}'
                         : _moves.isEmpty
                         ? l10n.personalStartPosition
                         : l10n.personalNoName,

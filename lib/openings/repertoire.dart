@@ -12,10 +12,12 @@ enum RepertoireErrorKind { empty, illegal, noOwnMoves, conflict }
 /// Motivo per cui una linea non entra nel repertorio; il testo lo sceglie la
 /// schermata, nella lingua dell'utente.
 class RepertoireError {
-  const RepertoireError(this.kind, [this.san]);
+  const RepertoireError(this.kind)
+    : san = null,
+      assert(kind != RepertoireErrorKind.conflict, 'usare .conflict');
 
-  const RepertoireError.conflict(String san)
-    : this(RepertoireErrorKind.conflict, san);
+  const RepertoireError.conflict(String this.san)
+    : kind = RepertoireErrorKind.conflict;
 
   final RepertoireErrorKind kind;
 

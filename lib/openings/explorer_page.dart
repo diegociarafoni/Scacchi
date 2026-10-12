@@ -137,7 +137,7 @@ class _ExplorerPageState extends State<ExplorerPage> {
                     ListTile(
                       title: Text(
                         opening != null
-                            ? '${opening.eco} ${opening.localName}'
+                            ? '${opening.eco} ${openingDisplayName(l, opening)}'
                             : _moves.isEmpty
                             ? l.openingsStartPosition
                             : l.openingsUnnamed,
@@ -174,7 +174,11 @@ class _ExplorerPageState extends State<ExplorerPage> {
                                         style: text.titleMedium,
                                       ),
                                     ),
-                                    title: Text(m.opening?.localName ?? ''),
+                                    title: Text(
+                                      m.opening == null
+                                          ? ''
+                                          : openingDisplayName(l, m.opening!),
+                                    ),
                                     trailing: Text(
                                       '${(m.share * 100).round()}%',
                                     ),
@@ -226,7 +230,6 @@ class _ExplorerPageState extends State<ExplorerPage> {
   }
 
   Future<void> _playOpening() async {
-    final l = openingsL10n(context);
     final choice = await askOpeningGame(
       context,
       // Di norma si gioca il colore che deve muovere dopo l'apertura.
@@ -240,8 +243,11 @@ class _ExplorerPageState extends State<ExplorerPage> {
       // Senza libro il titolo resta generico.
     }
     if (!mounted) return;
-    final title =
-        book?.classifyPositions(_positions)?.localName ?? l.openingsFreeTitle;
+    final l = openingsL10n(context);
+    final opening = book?.classifyPositions(_positions);
+    final title = opening == null
+        ? l.openingsFreeTitle
+        : openingDisplayName(l, opening);
     await widget.onPlay!(
       context,
       OpeningGameRequest.explorer(
@@ -263,10 +269,11 @@ class _ExplorerPageState extends State<ExplorerPage> {
     if (!mounted) return;
     final l = openingsL10n(context);
     // Niente dispose: il dialogo lo usa ancora durante l'animazione di uscita.
+    final opening = book?.classifyPositions(_positions);
     final name = TextEditingController(
-      text:
-          book?.classifyPositions(_positions)?.localName ??
-          l.openingsDefaultLineName,
+      text: opening == null
+          ? l.openingsDefaultLineName
+          : openingDisplayName(l, opening),
     );
     // Di norma la linea finisce con la mossa del proprio colore.
     var side = _moves.length.isOdd ? Side.white : Side.black;

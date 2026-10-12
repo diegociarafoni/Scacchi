@@ -29,14 +29,15 @@ class OpeningName extends StatelessWidget {
       builder: (context, snapshot) {
         final opening = snapshot.data?.classifyPositions(positions);
         if (opening == null) return Text(fallback);
+        final l = openingsL10n(context);
+        final name = openingDisplayName(l, opening);
         return Semantics(
-          label: openingsL10n(context)
-              .openingsGameSemantics(opening.localName, opening.eco),
+          label: l.openingsGameSemantics(name, opening.eco),
           excludeSemantics: true,
           child: Text(
-            // Solo il nome italiano, su due righe: il codice ECO occupava lo
-            // spazio e il nome veniva troncato.
-            opening.localName,
+            // Solo il nome, su due righe: il codice ECO occupava lo spazio e
+            // il nome veniva troncato.
+            name,
             key: const Key('opening-name'),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,

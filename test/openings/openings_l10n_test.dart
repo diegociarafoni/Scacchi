@@ -9,6 +9,7 @@ import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/openings/explorer_page.dart';
 import 'package:scacchi/openings/opening_book.dart';
 import 'package:scacchi/openings/opening_game_dialog.dart';
+import 'package:scacchi/openings/opening_name.dart';
 import 'package:scacchi/openings/openings_hub_page.dart';
 import 'package:scacchi/openings/openings_l10n.dart';
 import 'package:scacchi/openings/repertoire.dart';
@@ -29,6 +30,14 @@ final book = OpeningBook.parseTsv(
 
 List<Move> uci(String moves) =>
     moves.split(' ').map((m) => Move.parse(m)!).toList();
+
+List<Position> positionsOf(String moves) {
+  final out = <Position>[Chess.initial];
+  for (final m in uci(moves)) {
+    out.add(out.last.play(m));
+  }
+  return out;
+}
 
 Future<void> phone(WidgetTester tester, Widget home, {Locale? locale}) async {
   tester.view.physicalSize = const Size(1170, 2532);
@@ -98,6 +107,7 @@ void main() {
       ),
     );
     expect(find.text('Out of the opening book'), findsOneWidget);
+    expect(find.text("C40 King's Knight Opening"), findsOneWidget);
     await tester.tap(find.byTooltip('Add to repertoire'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Add'));
@@ -197,6 +207,46 @@ void main() {
     expect(find.text('You left the repertoire line.'), findsOneWidget);
   });
 
+  testWidgets('RP-05 in italiano l\'explorer dà il nome italiano', (
+    tester,
+  ) async {
+    await phone(
+      tester,
+      ExplorerPage(
+        book: Future.value(book),
+        initialMoves: uci('e2e4 e7e5 g1f3'),
+        repertoire: await trainer(),
+      ),
+      locale: const Locale('it'),
+    );
+    expect(
+      find.text(
+        'C40 ${book.classifyPositions(positionsOf('e2e4 e7e5 g1f3'))!.localName}',
+      ),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('RP-05 in partita il nome dell\'apertura è in inglese', (
+    tester,
+  ) async {
+    await phone(
+      tester,
+      Scaffold(
+        body: OpeningName(
+          positions: positionsOf('e2e4 e7e5 g1f3'),
+          fallback: 'Game',
+          book: Future.value(book),
+        ),
+      ),
+    );
+    expect(find.text("King's Knight Opening"), findsOneWidget);
+    expect(
+      find.bySemanticsLabel("Opening: King's Knight Opening (C40)"),
+      findsOneWidget,
+    );
+  });
+
   test('RP-05 gli errori del repertorio si traducono', () {
     final l = lookupAppLocalizations(en);
     expect(
@@ -206,6 +256,11 @@ void main() {
     expect(
       repertoireErrorText(l, const RepertoireError(RepertoireErrorKind.empty)),
       'The line is empty.',
+    );
+    // Il conflitto ha sempre la mossa: senza, il testo resterebbe a metà.
+    expect(
+      () => RepertoireError(RepertoireErrorKind.conflict),
+      throwsA(isA<AssertionError>()),
     );
   });
 }
