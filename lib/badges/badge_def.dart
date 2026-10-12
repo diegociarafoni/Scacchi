@@ -367,7 +367,8 @@ final List<BadgeDef> badges = [
     BadgeFamily.story,
     Icons.signpost,
     target: 3,
-    value: (f) => f.sources.storyBeaten.length,
+    value: (f) =>
+        storyChapters.where((c) => f.sources.storyBeaten.contains(c.id)).length,
   ),
   BadgeDef.counter(
     'story_all',
