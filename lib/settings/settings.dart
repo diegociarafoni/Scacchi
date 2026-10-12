@@ -282,6 +282,7 @@ class AppSettings {
     this.tableMode = false,
     this.confirmMove = false,
     this.colorBlind = false,
+    this.explainWhy = false,
     this.kidMode = false,
     this.themeMode = ThemeMode.system,
     this.notation = MoveNotation.figurine,
@@ -322,6 +323,10 @@ class AppSettings {
   final bool tableMode;
   final bool confirmMove;
   final bool colorBlind;
+
+  /// «Spiegami perché» (RF-122): dopo ogni mossa del computer una riga su cosa
+  /// minaccia o prepara.
+  final bool explainWhy;
 
   /// Profilo bambino (RP-06): interfaccia e testi semplici, bot amichevoli,
   /// nessuna statistica numerica.
@@ -384,6 +389,7 @@ class AppSettings {
     bool? tableMode,
     bool? confirmMove,
     bool? colorBlind,
+    bool? explainWhy,
     bool? kidMode,
     ThemeMode? themeMode,
     MoveNotation? notation,
@@ -405,6 +411,7 @@ class AppSettings {
     tableMode: tableMode ?? this.tableMode,
     confirmMove: confirmMove ?? this.confirmMove,
     colorBlind: colorBlind ?? this.colorBlind,
+    explainWhy: explainWhy ?? this.explainWhy,
     kidMode: kidMode ?? this.kidMode,
     themeMode: themeMode ?? this.themeMode,
     notation: notation ?? this.notation,
@@ -445,6 +452,7 @@ class AppSettings {
       other.tableMode == tableMode &&
       other.confirmMove == confirmMove &&
       other.colorBlind == colorBlind &&
+      other.explainWhy == explainWhy &&
       other.kidMode == kidMode &&
       other.themeMode == themeMode &&
       other.notation == notation &&
@@ -452,7 +460,7 @@ class AppSettings {
       other.blackName == blackName;
 
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     showLegalMoves,
     showCoordinates,
     coordinatesOutside,
@@ -468,12 +476,13 @@ class AppSettings {
     tableMode,
     confirmMove,
     colorBlind,
+    explainWhy,
     kidMode,
     themeMode,
     notation,
     whiteName,
     blackName,
-  );
+  ]);
 }
 
 /// Impostazioni correnti, salvate in locale a ogni modifica.
@@ -513,6 +522,7 @@ class SettingsController extends ValueNotifier<AppSettings> {
         tableMode: read('tableMode', d.tableMode),
         confirmMove: read('confirmMove', d.confirmMove),
         colorBlind: read('colorBlind', d.colorBlind),
+        explainWhy: read('explainWhy', d.explainWhy),
         kidMode: read('kidMode', d.kidMode),
         themeMode: byName(ThemeMode.values, 'themeMode', d.themeMode),
         notation: byName(MoveNotation.values, 'notation', d.notation),
@@ -558,6 +568,8 @@ class SettingsController extends ValueNotifier<AppSettings> {
         prefs.setBool('confirmMove', settings.confirmMove),
       if (old.colorBlind != settings.colorBlind)
         prefs.setBool('colorBlind', settings.colorBlind),
+      if (old.explainWhy != settings.explainWhy)
+        prefs.setBool('explainWhy', settings.explainWhy),
       if (old.kidMode != settings.kidMode)
         prefs.setBool('kidMode', settings.kidMode),
       if (old.themeMode != settings.themeMode)
