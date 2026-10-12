@@ -223,6 +223,19 @@ void main() {
     expect(board(tester).fen, played);
   });
 
+  testWidgets('RP-04 l\'ultima mossa si spegne anche nell\'anteprima', (
+    tester,
+  ) async {
+    await show(tester);
+    final start = board(tester).fen;
+    await tester.tap(find.byKey(const Key('board-preview')));
+    await tester.pumpAndSettle();
+    expect(board(tester).fen, isNot(start));
+    await tapText(tester, 'Evidenzia l\'ultima mossa');
+    expect(board(tester).fen, start);
+    expect(board(tester).settings.colorScheme.lastMove.solidColor!.a, 0);
+  });
+
   testWidgets('RNF-07 l\'anteprima si può raggiungere con la tastiera', (
     tester,
   ) async {

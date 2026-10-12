@@ -276,6 +276,16 @@ void main() {
     expect(progress.settings.enabled, isFalse);
   });
 
+  testWidgets('nel profilo bambino XP, serie e traguardi non si cambiano', (
+    tester,
+  ) async {
+    await settings.update(settings.value.copyWith(kidMode: true));
+    await show(tester);
+    await openSection(tester, SettingsSection.profile);
+    expect(find.byKey(const Key('openProfile')), findsOneWidget);
+    expect(find.byKey(const Key('progressEnabled')), findsNothing);
+  });
+
   testWidgets('il menu e le pagine hanno tocchi da 48 dp', (tester) async {
     await show(tester, logical: const Size(390, 1200));
     for (final (id, _, _) in order) {

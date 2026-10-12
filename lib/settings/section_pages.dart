@@ -134,7 +134,7 @@ class BoardSettingsPage extends _SectionPage {
   }
 }
 
-/// Segnaposto della pagina Stile: aspetto dell'app, temi e pezzi.
+/// Pagina Stile: aspetto dell'app, temi e pezzi.
 class AppearanceSettingsPage extends _SectionPage {
   const AppearanceSettingsPage({
     super.key,
@@ -344,13 +344,15 @@ class ProfileSettingsPage extends _SectionPage {
             MaterialPageRoute<void>(builder: (_) => ProfilePage(controller: p)),
           ),
         ),
-        SwitchListTile(
-          key: const Key('progressEnabled'),
-          title: Text(l10n.settingsProgressEnabled),
-          subtitle: Text(l10n.settingsProgressEnabledDescription),
-          value: p.settings.enabled,
-          onChanged: (v) => p.updateSettings(p.settings.copyWith(enabled: v)),
-        ),
+        // Scelta da adulti: nel profilo bambino non si cambia da qui.
+        if (!_s.kidMode)
+          SwitchListTile(
+            key: const Key('progressEnabled'),
+            title: Text(l10n.settingsProgressEnabled),
+            subtitle: Text(l10n.settingsProgressEnabledDescription),
+            value: p.settings.enabled,
+            onChanged: (v) => p.updateSettings(p.settings.copyWith(enabled: v)),
+          ),
       ],
     );
   }
