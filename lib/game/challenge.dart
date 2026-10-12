@@ -11,6 +11,8 @@ class GameChallenge {
     required this.levelId,
     required this.side,
     this.allowUndo = false,
+    this.startMoves = const [],
+    this.line,
   });
 
   /// Titolo della schermata, per esempio "Il guardiano".
@@ -25,6 +27,13 @@ class GameChallenge {
   /// Se l'annullamento è consentito: sì nell'allenamento (guardiano), no nelle
   /// partite che contano come torneo.
   final bool allowUndo;
+
+  /// Mosse già giocate all'inizio (apertura scelta, RF-94).
+  final List<Move> startMoves;
+
+  /// Linea del repertorio da seguire: se qualcuno ne esce, la partita lo
+  /// segnala.
+  final List<Move>? line;
 }
 
 /// Stelle di una sfida vinta, in base alla lunghezza della partita: tre fino a
