@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../engine/bots.dart';
+import '../path/curriculum.dart';
 import '../path/path_controller.dart';
 import '../path/path_page.dart';
 import '../path/path_widgets.dart';
@@ -12,6 +13,13 @@ import 'story_l10n.dart';
 
 /// Gioca la sfida contro [bot] e dice se è stata vinta.
 typedef PlayStoryBoss = Future<bool> Function(BuildContext context, Bot bot);
+
+/// Svolge una lezione e restituisce le stelle ottenute, o `null` se uscita
+/// senza finire; di norma apre [StagePage].
+typedef PlayStoryLesson = Future<int?> Function(
+  BuildContext context,
+  Stage stage,
+);
 
 /// Apre i puzzle del capitolo e restituisce quanti ne ha risolti al primo
 /// tentativo (al massimo [remaining]); `null` se i puzzle non si caricano.
@@ -31,6 +39,7 @@ class StoryPage extends StatefulWidget {
     this.playGuardian,
     this.playBoss,
     this.playPuzzles,
+    this.playLesson,
   });
 
   final PathController path;
@@ -38,6 +47,7 @@ class StoryPage extends StatefulWidget {
   final PlayGuardian? playGuardian;
   final PlayStoryBoss? playBoss;
   final PlayStoryPuzzles? playPuzzles;
+  final PlayStoryLesson? playLesson;
 
   @override
   State<StoryPage> createState() => _StoryPageState();
@@ -50,11 +60,11 @@ class _StoryPageState extends State<StoryPage> {
   StoryProgress get _progress =>
       StoryProgress(widget.path.progress, widget.story.state);
 
-  Future<void> _run(Future<void> Function() action) async {
-    if (_busy) return;
+  Future<T?> _run<T>(Future<T> Function() action) async {
+    if (_busy) return null;
     _busy = true;
     try {
-      await action();
+      return await action();
     } finally {
       _busy = false;
     }
@@ -63,19 +73,100 @@ class _StoryPageState extends State<StoryPage> {
   void _say(String text) =>
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
 
-  Future<void> _open(StoryChapter chapter, StoryStepKind kind) =>
-      _run(() async {
-        switch (kind) {
-          case StoryStepKind.lessons:
-            await _lesson(chapter);
-          case StoryStepKind.puzzles:
-            await _puzzles(chapter);
-          case StoryStepKind.guardian:
-            await _guardian(chapter);
-          case StoryStepKind.boss:
-            await _boss(chapter);
-        }
-      });
+  Future<void> _open(StoryChapter chapter, StoryStepKind kind) async {
+    final follow = await _run(() async {
+      final wasDone = _progress
+          .steps(chapter)
+          .firstWhere((s) => s.kind == kind)
+          .done;
+      switch (kind) {
+        case StoryStepKind.lessons:
+          await _lesson(chapter);
+        case StoryStepKind.puzzles:
+          await _puzzles(chapter);
+        case StoryStepKind.guardian:
+          await _guardian(chapter);
+        case StoryStepKind.boss:
+          await _boss(chapter);
+      }
+      if (!mounted || wasDone) return null;
+      return _passage(chapter, kind);
+    });
+    // Il passo successivo si apre fuori dal blocco, che altrimenti lo rifiuta.
+    if (follow != null && mounted) await _open(follow.$1, follow.$2);
+  }
+
+  /// Foglio di passaggio: celebra il passo appena concluso e propone il
+  /// successivo. Restituisce quello da aprire subito, se scelto.
+  Future<(StoryChapter, StoryStepKind)?> _passage(
+    StoryChapter chapter,
+    StoryStepKind kind,
+  ) async {
+    final progress = _progress;
+    final step = progress.steps(chapter).firstWhere((s) => s.kind == kind);
+    if (!step.done) return null;
+    final l10n = storyL10n(context);
+    final index = storyChapters.indexOf(chapter);
+    (StoryChapter, StoryStepKind)? target;
+    final String title;
+    String? subtitle;
+    final String body;
+    String? action;
+    var icon = Icons.check;
+    if (progress.isChapterDone(chapter)) {
+      final hasNext = index + 1 < storyChapters.length;
+      final nextChapter = hasNext ? storyChapters[index + 1] : null;
+      icon = Icons.emoji_events_outlined;
+      title = hasNext
+          ? l10n.storyPassageChapterTitle(index + 1)
+          : l10n.storyPassageStoryDone;
+      if (kind == StoryStepKind.boss) {
+        subtitle = l10n.storyBossWon(chapter.bot.name);
+      }
+      body = nextChapter == null
+          ? l10n.chapterOutro(chapter)
+          : '${l10n.chapterOutro(chapter)}\n\n'
+                '${l10n.storyPassageChapterNext(index + 2, l10n.chapterTitle(nextChapter))}';
+      if (nextChapter != null) {
+        action = l10n.storyPassageGoChapter;
+        target = (nextChapter, StoryStepKind.lessons);
+      }
+    } else {
+      final next = progress.steps(chapter).firstWhere((s) => !s.done).kind;
+      target = (chapter, next);
+      title = switch (kind) {
+        StoryStepKind.lessons => l10n.storyPassageLessonsTitle,
+        StoryStepKind.puzzles => l10n.storyPassagePuzzlesTitle,
+        _ => l10n.storyPassageGuardianTitle,
+      };
+      body = switch (next) {
+        StoryStepKind.puzzles => l10n.storyPassageNextPuzzles,
+        StoryStepKind.guardian => l10n.storyPassageNextGuardian,
+        _ => l10n.storyPassageNextBoss(chapter.bot.name),
+      };
+      action = switch (next) {
+        StoryStepKind.puzzles => l10n.storyPassageGoPuzzles,
+        StoryStepKind.guardian => l10n.storyPassageGoGuardian,
+        _ => l10n.storyPassageGoBoss(chapter.bot.name),
+      };
+    }
+    final go = await showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (_) => _PassageSheet(
+        icon: icon,
+        title: title,
+        subtitle: subtitle,
+        body: body,
+        action: action,
+        dismiss: action == null
+            ? l10n.storyPassageClose
+            : l10n.storyPassageLater,
+      ),
+    );
+    return go == true ? target : null;
+  }
 
   Future<void> _lesson(StoryChapter chapter) async {
     final stage = chapter.pathChapter.stages
@@ -83,10 +174,13 @@ class _StoryPageState extends State<StoryPage> {
         .firstOrNull;
     if (stage == null) return;
     final started = DateTime.now();
-    final stars = await Navigator.push<int>(
-      context,
-      MaterialPageRoute(builder: (_) => StagePage(stage: stage)),
-    );
+    final play = widget.playLesson;
+    final stars = play != null
+        ? await play(context, stage)
+        : await Navigator.push<int>(
+            context,
+            MaterialPageRoute(builder: (_) => StagePage(stage: stage)),
+          );
     if (stars != null && stars > 0) {
       await widget.path.complete(
         stage,
@@ -125,12 +219,10 @@ class _StoryPageState extends State<StoryPage> {
     if (play == null) return _say(storyL10n(context).storyEngineMissing);
     final won = await play(context, chapter.bot);
     if (!mounted) return;
-    final l10n = storyL10n(context);
     if (won) {
       await widget.story.bossBeaten(chapter);
-      if (mounted) _say(l10n.storyBossWon(chapter.bot.name));
     } else {
-      _say(l10n.storyBossLost(chapter.bot.name));
+      _say(storyL10n(context).storyBossLost(chapter.bot.name));
     }
   }
 
@@ -629,6 +721,118 @@ class _StepTile extends StatelessWidget {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Foglio di passaggio fra un passo e l'altro: icona che compare con un
+/// piccolo rimbalzo (ferma se l'utente ha disattivato le animazioni), cosa è
+/// stato fatto e cosa viene dopo.
+class _PassageSheet extends StatelessWidget {
+  const _PassageSheet({
+    required this.icon,
+    required this.title,
+    required this.body,
+    required this.dismiss,
+    this.subtitle,
+    this.action,
+  });
+
+  final IconData icon;
+  final String title;
+  final String? subtitle;
+  final String body;
+  final String? action;
+  final String dismiss;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final tokens = RokkoTokens.of(context);
+    final still = MediaQuery.disableAnimationsOf(context);
+    return SafeArea(
+      child: SingleChildScrollView(
+        key: const ValueKey('story-passage'),
+        padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ExcludeSemantics(
+              child: TweenAnimationBuilder<double>(
+                tween: Tween(begin: still ? 1 : 0, end: 1),
+                duration: still
+                    ? Duration.zero
+                    : const Duration(milliseconds: 700),
+                curve: Curves.elasticOut,
+                builder: (context, t, _) => Transform.scale(
+                  scale: t,
+                  child: Column(
+                    children: [
+                      Container(
+                        width: 72,
+                        height: 72,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: tokens.action,
+                        ),
+                        child: Icon(icon, size: 40, color: tokens.onAction),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          for (final size in const [18.0, 26.0, 18.0])
+                            Icon(Icons.star, size: size, color: tokens.star),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Semantics(
+              header: true,
+              liveRegion: true,
+              child: Text(
+                title,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.headlineSmall,
+              ),
+            ),
+            if (subtitle != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Text(
+                  subtitle!,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.titleMedium,
+                ),
+              ),
+            const SizedBox(height: 12),
+            Text(
+              body,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodyLarge,
+            ),
+            const SizedBox(height: 24),
+            if (action != null)
+              FilledButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: Text(action!),
+              ),
+            const SizedBox(height: 8),
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              style: TextButton.styleFrom(
+                minimumSize: Size.fromHeight(tokens.minTouch),
+              ),
+              child: Text(dismiss),
+            ),
+          ],
         ),
       ),
     );
