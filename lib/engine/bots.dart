@@ -285,10 +285,10 @@ const bots = <Bot>[
     avatar: '🐈',
     levelId: 7,
     style: BotStyle.aggressive,
-    openingName: 'la Scozzese',
+    openingName: 'il Gambetto Smith-Morra',
     book: [
-      ['e2e4', 'e7e5', 'g1f3', 'b8c6', 'd2d4', 'e5d4', 'f3d4', 'g8f6'],
-      ['e2e4', 'e7e5', 'g1f3', 'b8c6', 'd2d4', 'e5d4', 'f1c4'],
+      ['e2e4', 'c7c5', 'd2d4', 'c5d4', 'c2c3', 'd4c3', 'b1c3', 'b8c6'],
+      ['e2e4', 'c7c5', 'd2d4', 'c5d4', 'c2c3', 'g8f6', 'e4e5'],
     ],
   ),
   Bot(

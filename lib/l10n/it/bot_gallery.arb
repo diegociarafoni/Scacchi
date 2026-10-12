@@ -389,7 +389,7 @@
   "@botRematchLuna": {
     "description": "botRematchLuna"
   },
-  "botGreetingCosmo": "Decollo tra tre, due, uno… si gioca! Pronto all'attacco?",
+  "botGreetingCosmo": "Decollo tra tre, due, uno… si gioca! Si attacca?",
   "@botGreetingCosmo": {
     "description": "botGreetingCosmo"
   },

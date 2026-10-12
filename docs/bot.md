@@ -51,7 +51,7 @@ I 17 bot sono in ordine di Elo e formano la scala da superare a gradini (RG-04).
 | 13 | Ada 🔭 | 6 | 1850 | posizionale | Inglese |
 | 14 | Luna 🐇 | 6 | 1850 | posizionale | Catalana |
 | 15 | Massimo 🐺 | 7 | 2250 | gambettista | Gambetto Evans |
-| 16 | Cosmo 🐈 | 7 | 2250 | aggressivo | Scozzese |
+| 16 | Cosmo 🐈 | 7 | 2250 | aggressivo | Gambetto Smith-Morra |
 | 17 | Stella ⭐ | 8 | 2700 | aggressivo | Difesa Est-Indiana |
 
 Lia gioca al livello 0 (400 Elo), lo stesso di Tino; gli altri nuovi bot riusano i livelli esistenti, quindi non servono nuove calibrazioni. Le frasi dipendono dallo stile, non dal bot: i nuovi bot non ne hanno di proprie.
