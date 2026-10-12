@@ -10,6 +10,7 @@ import 'package:scacchi/archive/saved_game.dart';
 import 'package:scacchi/physical/photo_source.dart';
 import 'package:scacchi/physical/physical_game_page.dart';
 
+import '../localized_app.dart';
 import 'board_render.dart';
 
 void main() {
@@ -24,7 +25,7 @@ void main() {
 
   Future<void> open(WidgetTester tester, {PhotoSource? photos}) async {
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: PhysicalGamePage(
           archive: () async => archive,
           photos: photos ?? const CameraPhotoSource(),
@@ -76,7 +77,7 @@ void main() {
   testWidgets('con l\'orologio parte quello del bianco', (tester) async {
     final fixed = DateTime(2026);
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: PhysicalGamePage(archive: () async => archive, now: () => fixed),
       ),
     );
@@ -109,6 +110,29 @@ void main() {
     expect(games, hasLength(1));
     expect(games.single.mode, SavedGame.physical);
     expect(games.single.result, '1-0');
+  });
+
+  testWidgets('in inglese i testi della schermata sono tradotti', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      localizedApp(
+        locale: const Locale('en'),
+        home: PhysicalGamePage(archive: () async => archive),
+      ),
+    );
+    expect(find.text('Physical board'), findsOneWidget);
+    expect(find.text('Untimed'), findsOneWidget);
+    await tester.tap(find.text('Untimed'));
+    await tester.tap(find.text('Start the game'));
+    await tester.pump();
+    expect(find.text('No moves'), findsOneWidget);
+    expect(find.text('Move from photo'), findsOneWidget);
+    await type(tester, 'e5');
+    expect(find.textContaining('Invalid move'), findsOneWidget);
+    await tester.tap(find.text('Draw'));
+    await tester.pumpAndSettle();
+    expect(find.text('Draw agreed?'), findsOneWidget);
   });
 
   group('mossa dalla foto', () {

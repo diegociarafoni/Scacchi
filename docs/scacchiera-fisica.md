@@ -27,6 +27,10 @@ Il riconoscimento dei pezzi da una foto singola, per analizzare una posizione qu
 
 La partita finisce con matto, stallo, materiale insufficiente, ripetizione, 50 mosse, abbandono, patta concordata o tempo scaduto. Quando finisce viene salvata nell'archivio con modo `fisica`; se dopo un annullamento finisce di nuovo, la nuova versione sostituisce la precedente, mentre un annullamento da solo non cambia l'archivio. La partita si può aprire, esportare in PGN e rivedere come le altre. Non entra nelle statistiche né nel rating, perché non ha un lato dell'utente.
 
+## Lingue
+
+I testi sono in italiano e inglese in `lib/l10n/<lingua>/physical.arb` (prefisso `physical`); i nomi predefiniti dei giocatori seguono la lingua dell'app. L'intestazione `Site` del PGN resta «Scacchiera fisica» in ogni lingua, perché è un dato dell'archivio.
+
 ## Codice
 
 `lib/physical/physical_game.dart` (partita, suggerimenti, orologio, PGN), `lib/physical/physical_game_page.dart` (schermata), `lib/physical/board_photo.dart` (confronto tra foto e mosse probabili), `lib/physical/photo_source.dart` (fotocamera e decodifica) e `lib/physical/board_align_page.dart` (allineamento della scacchiera). Test in `test/physical/` e `integration_test/physical_test.dart`.

@@ -273,8 +273,8 @@ class YouPage extends StatelessWidget {
                 ),
                 _Entry(
                   icon: Icons.timer_outlined,
-                  title: 'Scacchiera fisica',
-                  subtitle: 'Orologio e registro per una partita dal vivo',
+                  title: storyL10n(context).physicalTitle,
+                  subtitle: storyL10n(context).physicalEntrySubtitle,
                   onTap: () =>
                       _push(context, PhysicalGamePage(archive: archive)),
                 ),
