@@ -4,8 +4,6 @@ import 'package:chessground/chessground.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../localized_app.dart';
-
 import 'package:scacchi/archive/game_archive.dart';
 import 'package:scacchi/engine/computer_player.dart';
 import 'package:scacchi/home/home_shell.dart';
@@ -16,6 +14,7 @@ import 'package:scacchi/progress/progress_store.dart';
 import 'package:scacchi/settings/settings.dart';
 
 import '../computer_fakes.dart';
+import '../localized_app.dart';
 
 Offset square(WidgetTester tester, String name) {
   final rect = tester.getRect(find.byType(Chessboard));
