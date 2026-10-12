@@ -148,6 +148,8 @@ A ogni mossa suona un solo effetto, scelto in quest'ordine di priorità: fine pa
 
 ## Tema
 
+Il tema è in `lib/theme/rokko_theme.dart`: arancione `#F2994A` come colore d'azione (pulsanti, selezioni), verde `#769656` solo per la scacchiera, raggi di 12 dp (pulsanti) e 20 dp (schede, dialoghi), bersagli minimi di 48 dp (56 dp nel profilo bambino). Le schermate leggono questi valori con `RokkoTokens.of(context)` e mettono il marchio nella barra del titolo con `RokkoWordmark`; non scrivono colori e misure a mano.
+
 L'app segue il tema chiaro o scuro del sistema, a meno che in Impostazioni, alla voce «Aspetto dell'app», si scelga Chiaro o Scuro; la scelta vale subito per tutte le schermate. Tutti i testi sono in italiano.
 
 ### Colori per daltonici
