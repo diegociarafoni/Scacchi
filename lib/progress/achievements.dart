@@ -201,9 +201,9 @@ final List<Achievement> _more = [
   Achievement(
     id: 'beat_2000',
     title: 'Ammazzagiganti',
-    description: 'Batti un bot da 2000 Elo o più.',
+    description: 'Batti un bot da 1850 Elo o più.',
     category: AchievementCategory.game,
-    test: (s, _) => (s.records.strongestBot ?? 0) >= 2000,
+    test: (s, _) => (s.records.strongestBot ?? 0) >= 1850,
   ),
   Achievement(
     id: 'brilliant',

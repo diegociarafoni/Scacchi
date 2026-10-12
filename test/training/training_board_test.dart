@@ -49,11 +49,27 @@ void main() {
 
     final s = boardSettings(tester);
     expect(s.colorScheme, changed.boardTheme.colorScheme);
-    expect(s.pieceAssets, changed.pieceSet.pieceSet.assets);
+    expect(s.pieceAssets, changed.pieceSet.assetsOn(changed.boardTheme));
     expect(s.enableCoordinates, isFalse);
     // Negli esercizi i pezzi non si capovolgono mai.
     expect(s.pieceOrientationBehavior, PieceOrientationBehavior.facingUser);
     // Altrimenti i puzzle con sottopromozione non si potrebbero risolvere.
     expect(s.autoQueenPromotion, isFalse);
+  });
+
+  testWidgets('con le coordinate esterne la scacchiera si rimpicciolisce', (
+    tester,
+  ) async {
+    final settings = SettingsController.defaults();
+    addTearDown(settings.dispose);
+    await settings.update(settings.value.copyWith(coordinatesOutside: true));
+    await tester.pumpWidget(board(settings: settings));
+    expect(
+      tester.widget<Chessboard>(find.byType(Chessboard)).size,
+      lessThan(320),
+    );
+    expect(boardSettings(tester).enableCoordinates, isFalse);
+    expect(find.text('a'), findsOneWidget);
+    expect(find.text('8'), findsOneWidget);
   });
 }

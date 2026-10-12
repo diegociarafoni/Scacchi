@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 import '../analysis/analysis_page.dart';
 import '../game/clock.dart';
+import '../game/move_note.dart';
 import '../kids/kid_display.dart';
 import '../l10n/app_localizations.dart';
 import '../settings/notation.dart';
@@ -81,6 +82,8 @@ class ReviewPage extends StatefulWidget {
     this.puzzlePlayers = const {Side.white, Side.black},
     this.clocks = const [],
     this.timeControl,
+    this.notes = const [],
+    this.onNoteChanged,
   });
 
   final Position initial;
@@ -109,6 +112,13 @@ class ReviewPage extends StatefulWidget {
   final List<Duration?> clocks;
   final TimeControl? timeControl;
 
+  /// Annotazioni personali delle mosse (RF-55), una per mossa o nessuna.
+  final List<MoveNote?> notes;
+
+  /// Chiamata quando l'utente scrive, cambia o toglie la nota di una mossa;
+  /// se assente la revisione mostra le note ma non le modifica.
+  final Future<void> Function(int ply, MoveNote? note)? onNoteChanged;
+
   @override
   State<ReviewPage> createState() => _ReviewPageState();
 }
@@ -121,6 +131,11 @@ class _ReviewPageState extends State<ReviewPage> {
   late final List<Position> _positions = [widget.initial];
   late final String _cacheKey = ReviewCache.key(widget.initial, widget.moves);
   late final ChessboardController _board;
+
+  late final List<MoveNote?> _notes = [
+    for (var i = 0; i < widget.moves.length; i++)
+      i < widget.notes.length ? widget.notes[i] : null,
+  ];
 
   _Phase _phase = _Phase.analysing;
   int _done = 0;
@@ -289,6 +304,27 @@ class _ReviewPageState extends State<ReviewPage> {
   }
 
   void _refreshBoard() => _board.updatePosition(_gameData());
+
+  Future<void> _editNote(int ply) async {
+    final note = await showDialog<MoveNote>(
+      context: context,
+      builder: (_) =>
+          _NoteDialog(san: _n(_review!.moves[ply].san), note: _notes[ply]),
+    );
+    if (note == null || !mounted) return;
+    final saved = note.isEmpty ? null : note;
+    final previous = _notes[ply];
+    setState(() => _notes[ply] = saved);
+    try {
+      await widget.onNoteChanged?.call(ply, saved);
+    } on Exception {
+      if (!mounted) return;
+      setState(() => _notes[ply] = previous);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Nota non salvata. Riprova.')),
+      );
+    }
+  }
 
   void _select(int index) {
     setState(() {
@@ -599,14 +635,38 @@ class _ReviewPageState extends State<ReviewPage> {
               Expanded(child: Text(comment.text, style: text.bodyMedium)),
             ],
           ),
-        if (c.isError && m.bestSan != null)
-          Align(
-            alignment: Alignment.centerLeft,
-            child: FilledButton.tonal(
-              onPressed: () => _startRetry(m.ply),
-              child: const Text('Riprova'),
-            ),
+        if (_notes[m.ply] case final note?)
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 8,
+            children: [
+              const Icon(Icons.edit_note, size: 20),
+              Expanded(
+                child: Text(
+                  'La tua nota: '
+                  '${[?note.symbol?.text, ?note.comment].join(' ')}',
+                  style: text.bodyMedium,
+                ),
+              ),
+            ],
           ),
+        Wrap(
+          spacing: 8,
+          children: [
+            if (c.isError && m.bestSan != null)
+              FilledButton.tonal(
+                onPressed: () => _startRetry(m.ply),
+                child: const Text('Riprova'),
+              ),
+            if (widget.onNoteChanged != null)
+              OutlinedButton(
+                onPressed: () => _editNote(m.ply),
+                child: Text(
+                  _notes[m.ply] == null ? 'Aggiungi nota' : 'Modifica nota',
+                ),
+              ),
+          ],
+        ),
       ];
     }
     return [
@@ -623,6 +683,7 @@ class _ReviewPageState extends State<ReviewPage> {
         child: _MoveList(
           review: review,
           positions: _positions,
+          notes: _notes,
           selected: _index,
           onSelect: _select,
         ),
@@ -744,6 +805,79 @@ class _Summary extends StatelessWidget {
   }
 }
 
+/// Scelta di simbolo e commento personali per una mossa (RF-55). Restituisce
+/// la nota (anche vuota, per toglierla) o niente se si annulla.
+class _NoteDialog extends StatefulWidget {
+  const _NoteDialog({required this.san, required this.note});
+
+  final String san;
+  final MoveNote? note;
+
+  @override
+  State<_NoteDialog> createState() => _NoteDialogState();
+}
+
+class _NoteDialogState extends State<_NoteDialog> {
+  late MoveSymbol? _symbol = widget.note?.symbol;
+  late final TextEditingController _comment = TextEditingController(
+    text: widget.note?.comment,
+  );
+
+  @override
+  void dispose() {
+    _comment.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text('Nota su ${widget.san}'),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Wrap(
+              spacing: 8,
+              children: [
+                for (final symbol in MoveSymbol.values)
+                  ChoiceChip(
+                    label: Text(symbol.text),
+                    selected: _symbol == symbol,
+                    onSelected: (on) =>
+                        setState(() => _symbol = on ? symbol : null),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _comment,
+              decoration: const InputDecoration(labelText: 'Commento'),
+              maxLines: 3,
+              minLines: 1,
+              textCapitalization: TextCapitalization.sentences,
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Annulla'),
+        ),
+        FilledButton(
+          onPressed: () => Navigator.pop(
+            context,
+            MoveNote.of(symbol: _symbol, comment: _comment.text),
+          ),
+          child: const Text('Salva'),
+        ),
+      ],
+    );
+  }
+}
+
 /// Tempo speso su ogni mossa e errori giocati in fretta (RF-67). Non compare
 /// se la partita non aveva l'orologio.
 class _TimePerMove extends StatelessWidget {
@@ -789,8 +923,9 @@ class _TimePerMove extends StatelessWidget {
       (a, d) => math.max(a, d?.inMilliseconds ?? 0),
     );
     final colors = Theme.of(context).colorScheme;
+    final notation = AppSettings.of(context).notation;
     final label =
-        'Tempo per mossa. ${hasty.isEmpty ? 'Nessun errore giocato in fretta.' : 'Errori giocati in fretta: ${hasty.map((p) => review.moves[p].san).join(', ')}.'}';
+        'Tempo per mossa. ${hasty.isEmpty ? 'Nessun errore giocato in fretta.' : 'Errori giocati in fretta: ${hasty.map((p) => formatSan(review.moves[p].san, notation)).join(', ')}.'}';
     return ExpansionTile(
       title: const Text('Tempo per mossa'),
       children: [
@@ -839,7 +974,7 @@ class _TimePerMove extends StatelessWidget {
             dense: true,
             title: Text(
               'Errori giocati in fretta: '
-              '${hasty.map((p) => '${moveNumber(Chess.fromSetup(Setup.parseFen(review.moves[p].fenBefore)))} ${review.moves[p].san}').join(', ')}',
+              '${hasty.map((p) => '${moveNumber(Chess.fromSetup(Setup.parseFen(review.moves[p].fenBefore)))} ${formatSan(review.moves[p].san, notation)}').join(', ')}',
             ),
             subtitle: const Text(
               'Meno del 40% del tuo tempo medio per mossa: prima di muovere, '
@@ -938,12 +1073,14 @@ class _MoveList extends StatelessWidget {
   const _MoveList({
     required this.review,
     required this.positions,
+    required this.notes,
     required this.selected,
     required this.onSelect,
   });
 
   final GameReview review;
   final List<Position> positions;
+  final List<MoveNote?> notes;
   final int selected;
   final ValueChanged<int> onSelect;
 
@@ -964,7 +1101,8 @@ class _MoveList extends StatelessWidget {
             selected: selected == m.ply + 1,
             label:
                 '${moveNumber(positions[m.ply])} ${formatSan(m.san, notation)}, '
-                '${m.classification.label}',
+                '${m.classification.label}'
+                '${notes[m.ply] == null ? '' : ', con una nota'}',
             excludeSemantics: true,
             child: InkWell(
               onTap: () => onSelect(m.ply + 1),
@@ -979,7 +1117,8 @@ class _MoveList extends StatelessWidget {
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
-                  '${formatSan(m.san, notation)} ${m.classification.symbol}',
+                  '${formatSan(m.san, notation)} ${m.classification.symbol}'
+                  '${notes[m.ply] == null ? '' : ' ✎'}',
                 ),
               ),
             ),

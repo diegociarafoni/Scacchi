@@ -55,27 +55,27 @@ va riavviata. Se il processo termina durante la partita compare "Il computer non
 
 Con **Adattivo** attivo il livello segue i risultati del giocatore, per far vincere circa metà delle partite (requisito RF-26).
 
-- L'app tiene una stima Elo del giocatore, che parte da 1100.
+- L'app tiene una stima Elo del giocatore, che parte da 1150, l'Elo del livello predefinito.
 - Il livello usato è quello con l'Elo indicativo più vicino alla stima; il pannello mostra "Livello N" e nasconde il cursore.
 - A fine partita (matto, abbandono, tempo, patta) la stima si aggiorna con la formula Elo: vittoria 1, patta 0,5, sconfitta 0. Il fattore K è 64 nelle prime 10 partite e 32 dopo.
 - Ogni partita conta una sola volta, e solo se ha almeno una mossa ed è partita dalla posizione iniziale: le partite avviate dall'editor di posizione non cambiano la stima. **Annulla** dopo la fine della partita ripristina la stima precedente.
 - Il risultato si registra alla fine: lasciare una partita a metà per aprirne un'altra non la conta.
-- La stima resta tra 500 e 3100 Elo, cioè intorno ai livelli disponibili, e l'attesa di risultato si calcola contro il livello effettivamente giocato.
+- La stima resta tra 500 e 2900 Elo, cioè a 200 Elo dal livello più debole e da quello più forte, e l'attesa di risultato si calcola contro il livello effettivamente giocato.
 - La stima è salvata sul dispositivo (chiave `adaptiveOpponent`, `lib/engine/adaptive.dart`) e non esce mai da lì.
 - Le partite con il livello scelto a mano non cambiano la stima.
 
 ## Livelli
 
-| # | Nome | Elo indicativo | Come si ottiene |
+| # | Nome | Elo dichiarato | Come si ottiene |
 |---|------|---------------:|-----------------|
-| 1 | Principiante | 600 | profondità 1, sceglie tra 6 candidate, temperatura 300 |
-| 2 | Esordiente | 900 | profondità 3, 5 candidate, temperatura 160 |
-| 3 | Dilettante | 1100 | profondità 5, 4 candidate, temperatura 80 |
-| 4 | Giocatore di circolo | 1350 | profondità 8, 3 candidate, temperatura 35 |
+| 1 | Principiante | 700 | profondità 4, sceglie tra 6 candidate, temperatura 320 |
+| 2 | Esordiente | 900 | profondità 4, 5 candidate, temperatura 200 |
+| 3 | Dilettante | 1150 | profondità 4, 4 candidate, temperatura 160 |
+| 4 | Giocatore di circolo | 1400 | profondità 4, 4 candidate, temperatura 80 |
 | 5 | Agonista | 1600 | limitatore Elo di Stockfish a 1600 |
-| 6 | Esperto | 2000 | limitatore Elo a 2000 |
-| 7 | Maestro | 2400 | limitatore Elo a 2400 |
-| 8 | Campione | ~3000 | piena forza, 2 secondi a mossa |
+| 6 | Esperto | 1850 | limitatore Elo di Stockfish a 2300 |
+| 7 | Maestro | 2250 | piena forza, profondità 10 |
+| 8 | Campione | 2700 | piena forza, 2 secondi a mossa |
 
 Il livello predefinito è il 3.
 
@@ -99,8 +99,38 @@ persona, invece di pezzi regalati a caso. Due regole fisse:
 I livelli bassi aspettano inoltre qualche centinaio di millisecondi prima di muovere, perché una
 risposta istantanea risulta innaturale.
 
-Gli Elo dei livelli 1–4 sono stime: vanno tarati giocando, modificando i parametri in
-`lib/engine/levels.dart`.
+## Taratura
+
+L'Elo dichiarato è misurato, non stimato a tavolino. `tool/calibrate_test.dart` fa giocare due livelli
+tra loro (colori alternati, sei mosse iniziali a caso per variare le partite) e ricava dal punteggio
+la differenza di Elo; come ancora serve Stockfish col solo limitatore (`u1600` = `UCI_Elo` 1600):
+
+```
+CAL_A=3 CAL_B=4 CAL_GAMES=16 flutter test tool/calibrate_test.dart
+```
+
+Con 16 partite l'errore è di circa ±100 Elo, quindi si leggono le tendenze, non i singoli valori.
+Ultima misura, differenza Elo di B su A (tra parentesi quella dichiarata):
+
+| Sfida | Misurata | Dichiarata |
+|---|---:|---:|
+| 1 → 2 | +83 | +200 |
+| 1 → 3 | +406 | +450 |
+| 2 → 3 | +105 | +250 |
+| 2 → 4 | +482 | +500 |
+| 3 → 4 | +268 | +250 |
+| 3 → 5 | oltre +529 | +450 |
+| 4 → 5 | +235 | +200 |
+| 5 → 6 | da +150 a +300 (tre misure) | +250 |
+| 6 → 7 | +406 | +400 |
+| 7 → 8 | oltre +446 | +450 |
+
+Due cose emerse dalla misura:
+
+- A tempo breve il limitatore di Stockfish rende meno del nominale oltre i 1600 Elo: `UCI_Elo` 2000 giocava come circa 1750 e 2400 come circa 2050. Per questo il livello 6 usa `UCI_Elo` 2300 per dichiarare 1850, e il livello 7 non usa il limitatore ma una profondità fissa (10) con 3 secondi di tolleranza: la forza non dipende dalla velocità del dispositivo finché la profondità si raggiunge entro quel tempo.
+- Il solo numero di candidate non basta a modulare la forza dei livelli bassi: a profondità 4 pesa soprattutto la temperatura, circa 2,5 Elo ogni centipedone.
+
+Oltre il livello 8 non si misura: la forza piena dipende dal dispositivo, e 2700 è un valore prudente.
 
 ## Architettura
 
@@ -160,7 +190,7 @@ Nuove funzioni del computer si sviluppano partendo dai test, con nel nome il req
 
 | Requisito | Stato |
 |---|---|
-| RF-20 scelta di colore e livello | ✓ (8 livelli, Elo indicativo 600–3000) |
+| RF-20 scelta di colore e livello | ✓ (8 livelli, Elo dichiarato 700–2700) |
 | RF-21 motore in isolate separato, ritardo artificiale ai livelli bassi | ✓ |
 | RF-25 patta accettata dal bot in base alla valutazione | ✓ |
 | RNF-03 Stockfish nativo via FFI in isolate, 1 thread | ✓ (Android, iOS) |

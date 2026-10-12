@@ -620,6 +620,12 @@ abstract class AppLocalizations {
   /// **'Forza, ce la puoi fare!'**
   String get kidPuzzleKeepGoing;
 
+  /// Obiettivo del puzzle mostrato sopra la scacchiera e letto dai lettori di schermo
+  ///
+  /// In it, this message translates to:
+  /// **'{goal, select, mateIn1{Obiettivo: matto in 1} mateIn2{Obiettivo: matto in 2} mateIn3{Obiettivo: matto in 3} mateIn4{Obiettivo: matto in 4} mate{Obiettivo: dai matto} crushing{Obiettivo: ottieni un vantaggio decisivo} advantage{Obiettivo: ottieni il vantaggio} equality{Obiettivo: ottieni la parità} other{Obiettivo: trova la mossa migliore}}'**
+  String puzzleGoal(String goal);
+
   /// Giudizio della precisione con cinque stelle
   ///
   /// In it, this message translates to:
@@ -1285,6 +1291,30 @@ abstract class AppLocalizations {
     String min,
     String max,
   );
+
+  /// No description provided for @opponentHintHuman.
+  ///
+  /// In it, this message translates to:
+  /// **'Si gioca in due sullo stesso dispositivo.'**
+  String get opponentHintHuman;
+
+  /// No description provided for @opponentHintComputer.
+  ///
+  /// In it, this message translates to:
+  /// **'Scegli il livello o lascia che si adatti a te.'**
+  String get opponentHintComputer;
+
+  /// No description provided for @opponentHintBot.
+  ///
+  /// In it, this message translates to:
+  /// **'Avversari con personalità da sbloccare uno a uno.'**
+  String get opponentHintBot;
+
+  /// Sotto un bot bloccato: quale bot battere per sbloccarlo
+  ///
+  /// In it, this message translates to:
+  /// **'Si sblocca battendo {name}'**
+  String botUnlockHint(String name);
 }
 
 class _AppLocalizationsDelegate

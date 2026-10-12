@@ -92,6 +92,25 @@ void main() {
       expect(() => ChessGame().annotate(0, null), throwsRangeError);
     });
 
+    test(
+      'annotare una partita importata ne conserva intestazioni e risultato',
+      () {
+        final source = importPgn(
+          '[Event "Torneo"]\n[White "Anna"]\n[Black "Bruno"]\n'
+          '[Result "1-0"]\n\n1. e4 e5 2. Nf3 1-0',
+        ).games.single;
+        source.game.annotate(2, MoveNote.of(symbol: MoveSymbol.good));
+        final again = importPgn(exportPgn(source.game, headers: source.headers))
+            .games
+            .single;
+        expect(again.headers['Event'], 'Torneo');
+        expect(again.headers['White'], 'Anna');
+        expect(again.headers['Result'], '1-0');
+        expect(again.game.moves[2].note?.symbol, MoveSymbol.good);
+        expect(again.game.outcome, source.game.outcome);
+      },
+    );
+
     test('togliere la nota la cancella', () {
       final g = game(['e2e4']);
       g.annotate(0, MoveNote.of(symbol: MoveSymbol.good));

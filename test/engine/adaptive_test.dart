@@ -8,6 +8,13 @@ import 'package:scacchi/storage/key_value_store.dart';
 double _expected(int a, int b) => 1 / (1 + math.pow(10, (b - a) / 400));
 
 void main() {
+  test('la stima iniziale è l\'Elo del livello predefinito', () {
+    expect(
+      const AdaptiveOpponent().rating,
+      engineLevel(defaultEngineLevel).approxElo,
+    );
+  });
+
   test('si parte dal livello predefinito', () {
     expect(const AdaptiveOpponent().level, defaultEngineLevel);
   });
@@ -75,7 +82,7 @@ void main() {
     final weak = a.record(1, level: 1).rating;
     final strong = a.record(1, level: 8).rating;
     expect(strong, greaterThan(weak));
-    expect(weak, a.rating + (32 * (1 - _expected(1100, 600))).round());
+    expect(weak, a.rating + (32 * (1 - _expected(1150, 700))).round());
   });
 
   test('RF-26 la stima resta nell\'intervallo dei livelli', () {
@@ -83,11 +90,11 @@ void main() {
     for (var i = 0; i < 20; i++) {
       low = low.record(0);
     }
-    expect(low.rating, 500);
-    var high = const AdaptiveOpponent(rating: 3050, games: 30);
+    expect(low.rating, engineLevels.first.approxElo - 200);
+    var high = const AdaptiveOpponent(rating: 2850, games: 30);
     for (var i = 0; i < 20; i++) {
       high = high.record(1);
     }
-    expect(high.rating, 3100);
+    expect(high.rating, engineLevels.last.approxElo + 200);
   });
 }

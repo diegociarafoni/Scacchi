@@ -342,6 +342,22 @@ class AppLocalizationsIt extends AppLocalizations {
   String get kidPuzzleKeepGoing => 'Forza, ce la puoi fare!';
 
   @override
+  String puzzleGoal(String goal) {
+    String _temp0 = intl.Intl.selectLogic(goal, {
+      'mateIn1': 'Obiettivo: matto in 1',
+      'mateIn2': 'Obiettivo: matto in 2',
+      'mateIn3': 'Obiettivo: matto in 3',
+      'mateIn4': 'Obiettivo: matto in 4',
+      'mate': 'Obiettivo: dai matto',
+      'crushing': 'Obiettivo: ottieni un vantaggio decisivo',
+      'advantage': 'Obiettivo: ottieni il vantaggio',
+      'equality': 'Obiettivo: ottieni la parità',
+      'other': 'Obiettivo: trova la mossa migliore',
+    });
+    return '$_temp0';
+  }
+
+  @override
   String get kidAccuracy5 => 'Perfetto!';
 
   @override
@@ -811,5 +827,21 @@ class AppLocalizationsIt extends AppLocalizations {
     String max,
   ) {
     return '$label: da $first a $last, minimo $min, massimo $max';
+  }
+
+  @override
+  String get opponentHintHuman => 'Si gioca in due sullo stesso dispositivo.';
+
+  @override
+  String get opponentHintComputer =>
+      'Scegli il livello o lascia che si adatti a te.';
+
+  @override
+  String get opponentHintBot =>
+      'Avversari con personalità da sbloccare uno a uno.';
+
+  @override
+  String botUnlockHint(String name) {
+    return 'Si sblocca battendo $name';
   }
 }

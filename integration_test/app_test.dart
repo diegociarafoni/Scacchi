@@ -41,6 +41,15 @@ Future<void> _openSettings(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
+Future<void> _tapSetting(WidgetTester tester, String label) async {
+  final finder = find.text(label);
+  await tester.scrollUntilVisible(finder, 100);
+  await tester.ensureVisible(finder);
+  await tester.pumpAndSettle();
+  await tester.tap(finder);
+  await tester.pumpAndSettle();
+}
+
 Future<void> _back(WidgetTester tester) async {
   final context = tester.element(find.byType(Scaffold).last);
   await tester.tap(
@@ -129,8 +138,7 @@ void main() {
     await _start(tester);
     Chessboard board() => tester.widget<Chessboard>(find.byType(Chessboard));
     await _openSettings(tester);
-    await tester.tap(find.text('Ruota a ogni turno'));
-    await tester.pumpAndSettle();
+    await _tapSetting(tester, 'Ruota a ogni turno');
     await _back(tester);
     await tester.pumpAndSettle();
     await _tapMove(tester, 'e2e4');
@@ -244,8 +252,7 @@ void main() {
     await _start(tester);
     Chessboard board() => tester.widget<Chessboard>(find.byType(Chessboard));
     await _openSettings(tester);
-    await tester.tap(find.text('Ruota a ogni turno'));
-    await tester.pumpAndSettle();
+    await _tapSetting(tester, 'Ruota a ogni turno');
     await _back(tester);
     await tester.pumpAndSettle();
     await tester.tap(find.text('Gira'));
@@ -303,8 +310,7 @@ void main() {
       PieceOrientationBehavior.facingUser,
     );
     await _openSettings(tester);
-    await tester.tap(find.text('Modalità tavolo'));
-    await tester.pumpAndSettle();
+    await _tapSetting(tester, 'Modalità tavolo');
     await tester.scrollUntilVisible(find.text('Suoni'), 100);
     await tester.ensureVisible(find.text('Suoni'));
     await tester.pumpAndSettle();

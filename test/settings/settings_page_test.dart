@@ -66,6 +66,38 @@ void main() {
     expect(settings.value.notation, MoveNotation.english);
   });
 
+  testWidgets('RP-04 coordinate fuori dalla scacchiera, solo se visibili', (
+    tester,
+  ) async {
+    await show(tester);
+    final toggle = find.byKey(const Key('coordinatesOutside'));
+    await tester.scrollUntilVisible(toggle, 200);
+    await tester.tap(toggle);
+    await tester.pumpAndSettle();
+    expect(settings.value.coordinatesOutside, isTrue);
+
+    final coordinates = find.text('Coordinate');
+    await tester.scrollUntilVisible(coordinates, -200);
+    await tester.pumpAndSettle();
+    await tester.tap(coordinates);
+    await tester.pumpAndSettle();
+    expect(
+      tester.widget<SwitchListTile>(toggle).onChanged,
+      isNull,
+      reason: 'senza coordinate la scelta non ha effetto',
+    );
+  });
+
+  testWidgets('RP-01 i nuovi pezzi e le nuove scacchiere si scelgono', (
+    tester,
+  ) async {
+    await show(tester);
+    await tapChip(tester, 'Castello');
+    expect(settings.value.boardTheme, BoardTheme.castello);
+    await tapChip(tester, 'Arcano');
+    expect(settings.value.pieceSet, PieceStyle.arcano);
+  });
+
   testWidgets('RG-06 un tema bloccato dice come sbloccarlo', (tester) async {
     await show(tester);
     await tapChip(tester, 'Sabbia');

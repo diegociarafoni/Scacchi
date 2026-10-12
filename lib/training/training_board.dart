@@ -2,6 +2,7 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
+import '../settings/board_frame.dart';
 import '../settings/settings.dart';
 
 /// Scacchiera per esercizi: mostra [position] e accetta mosse solo da [player].
@@ -79,17 +80,24 @@ class _TrainingBoardState extends State<TrainingBoard> {
     // vale qui perché negli esercizi si gioca sempre da un solo lato, e la
     // promozione automatica a donna renderebbe irrisolvibili i puzzle con
     // sottopromozione.
-    final board = AppSettings.of(context).board.copyWith(
+    final settings = AppSettings.of(context);
+    final board = settings.board.copyWith(
       pieceOrientationBehavior: PieceOrientationBehavior.facingUser,
       autoQueenPromotion: false,
     );
-    return Chessboard(
+    final orientation = widget.orientation ?? widget.player;
+    return BoardFrame.of(
+      settings,
       size: widget.size,
-      controller: _controller,
-      orientation: widget.orientation ?? widget.player,
-      shapes: widget.shapes,
-      onMove: (move, {viaDragAndDrop}) => widget.onMove(move),
-      settings: board,
+      orientation: orientation,
+      builder: (size) => Chessboard(
+        size: size,
+        controller: _controller,
+        orientation: orientation,
+        shapes: widget.shapes,
+        onMove: (move, {viaDragAndDrop}) => widget.onMove(move),
+        settings: board,
+      ),
     );
   }
 }

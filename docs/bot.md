@@ -27,20 +27,24 @@ vittoria ("Battuto il 11/10/2026"). Un bot già battuto si può rigiocare quando
 conta solo se ha almeno una mossa ed è partita dalla posizione iniziale; perdere o pattare non cambia la collezione. La collezione è salvata
 sul dispositivo (chiave `botCollection`, `lib/engine/bot_collection.dart`).
 
+## Computer o bot?
+
+Nella schermata Nuova partita una riga sotto la scelta spiega l'avversario selezionato: **Computer** è un avversario senza volto di cui si sceglie il livello (o si lascia che si adatti), **Bot** è un personaggio con nome, stile e apertura preferita, da sbloccare uno alla volta. Ogni bot bloccato dice quale bot battere per sbloccarlo («Si sblocca battendo Pino»). I testi sono localizzati (`opponentHint*`, `botUnlockHint` in `lib/l10n`).
+
 ## I bot
 
 Gli 8 bot sono in ordine di forza e formano la scala da superare uno dopo l'altro (RG-04).
 
 | # | Bot | Livello | Elo indicativo | Stile | Apertura preferita |
 |---|-----|--------:|---------------:|-------|--------------------|
-| 1 | Pino 🐣 | 1 | 600 | aggressivo | Italiana |
+| 1 | Pino 🐣 | 1 | 700 | aggressivo | Italiana |
 | 2 | Chiara 🌼 | 2 | 900 | posizionale | Gambetto di Donna |
-| 3 | Rocco 🦊 | 3 | 1100 | gambettista | Gambetto di Re |
-| 4 | Marta 🦉 | 4 | 1350 | posizionale | Inglese |
+| 3 | Rocco 🦊 | 3 | 1150 | gambettista | Gambetto di Re |
+| 4 | Marta 🦉 | 4 | 1400 | posizionale | Inglese |
 | 5 | Duilio 🔥 | 5 | 1600 | aggressivo | Siciliana |
-| 6 | Elena 🦅 | 6 | 2000 | posizionale | Spagnola |
-| 7 | Massimo 🐺 | 7 | 2400 | gambettista | Gambetto Evans |
-| 8 | Stella ⭐ | 8 | ~3000 | aggressivo | Difesa Est-Indiana |
+| 6 | Elena 🦅 | 6 | 1850 | posizionale | Spagnola |
+| 7 | Massimo 🐺 | 7 | 2250 | gambettista | Gambetto Evans |
+| 8 | Stella ⭐ | 8 | 2700 | aggressivo | Difesa Est-Indiana |
 
 ## Stile di gioco
 
@@ -59,9 +63,9 @@ Come lo stile si combina con la forza dipende dal livello su cui è costruito il
 
 | Livelli | Come si ottiene la forza | Effetto dello stile |
 |---|---|---|
-| 1-4 (Pino, Chiara, Rocco, Marta) | scelta a caso tra le candidate con la temperatura del livello (35-300) | il bonus pesa sulla scelta; con temperature alte resta una tendenza più che una regola |
-| 5-7 (Duilio, Elena, Massimo) | limitatore Elo di Stockfish | nessuno sulla mossa, che resta quella del motore alla forza dichiarata; lo stile si vede nel libro e nelle frasi |
-| 8 (Stella) | piena forza | il bonus agisce solo tra candidate entro 30 cp dalla migliore, quindi la forza non cala |
+| 1-4 (Pino, Chiara, Rocco, Marta) | scelta a caso tra le candidate con la temperatura del livello (80-320) | il bonus pesa sulla scelta; con temperature alte resta una tendenza più che una regola |
+| 5-6 (Duilio, Elena) | limitatore Elo di Stockfish | nessuno sulla mossa, che resta quella del motore alla forza dichiarata; lo stile si vede nel libro e nelle frasi |
+| 7-8 (Massimo, Stella) | piena forza (profondità 10 e 2 secondi) | il bonus agisce solo tra candidate entro 30 cp dalla migliore, quindi la forza non cala |
 
 ## Libro d'apertura
 

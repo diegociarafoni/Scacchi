@@ -1,6 +1,6 @@
 # Analisi della posizione
 
-Analisi libera con Stockfish locale (requisiti RF-50, RF-51, RF-52 in parte, RF-54). Il codice è in `lib/analysis/analysis_page.dart`.
+Analisi libera con Stockfish locale (requisiti RF-50, RF-51, RF-52, RF-54). Il codice è in `lib/analysis/analysis_page.dart`; l'albero delle mosse è in `lib/analysis/variation_tree.dart`.
 
 ## Come si apre
 
@@ -17,7 +17,9 @@ Entrambe le voci compaiono solo dove c'è il motore (Android, iOS e, con Stockfi
 | Linee del motore | RF-51 | Da 1 a 3 linee (selettore "1 linea / 2 linee / 3 linee"), ognuna con valutazione e prime otto semimosse in SAN; toccare una linea ne gioca la prima mossa |
 | Profondità | RF-51 | "Profondità N" aggiornata durante la ricerca |
 | Pausa | RF-51 | Il pulsante centrale ferma e riprende l'analisi; chiudendo la pagina il motore si ferma |
-| Esplorazione | RF-52 | Si muovono i pezzi di entrambi i colori; **Indietro** e **Avanti** scorrono le mosse; una mossa nuova da una posizione precedente sostituisce il seguito |
+| Esplorazione | RF-52 | Si muovono i pezzi di entrambi i colori; **Indietro** e **Avanti** scorrono la linea principale (Avanti segue la prima continuazione) |
+| Varianti | RF-52 | Una mossa diversa da una posizione precedente non cancella il seguito: apre una variante. Sotto la scacchiera l'elenco delle mosse mostra la linea principale in riga (in grassetto) e le varianti rientrate sotto la mossa a cui si alternano; toccare una mossa porta in quella posizione. Rigiocare una mossa già presente la seleziona senza duplicarla |
+| Promuovi / elimina | RF-52 | Sulla mossa selezionata: **Promuovi a linea principale** (attivo solo sulle varianti) rende principale tutta la linea fino a quella mossa; **Elimina la mossa e il seguito** toglie il ramo e riporta alla mossa precedente |
 | Freccia | RF-54 | Freccia verde della mossa migliore, attivabile dalla barra del titolo; l'arrocco punta alla casa del re |
 | Minaccia | RF-56 | Il pulsante con il triangolo di avviso nella barra del titolo mostra con una freccia rossa la mossa migliore che l'avversario giocherebbe se toccasse a lui. Sulla posizione con il turno passato (`threatFen`, mossa nulla, senza presa en passant) il motore fa prima una ricerca a una linea fino a profondità 14, perché ha una coda sola, poi riprende l'analisi principale; la freccia resta finché non si cambia posizione. Con l'analisi in pausa o l'app in secondo piano non parte nulla. Non è disponibile quando chi muove è sotto scacco o la partita è finita |
 
@@ -31,6 +33,10 @@ Per la batteria (RNF-05) la schermata ridisegna le linee al massimo ogni 250 ms,
 
 Nel profilo bambino (RP-06) la barra di valutazione non ha cifre e le linee non mostrano punteggio né profondità: vedi [profilo-bambino.md](profilo-bambino.md#niente-numeri).
 
+## Albero delle varianti
+
+`VariationTree` tiene la posizione iniziale come radice e, per ogni mossa, i figli: il primo è la continuazione principale, gli altri sono varianti. `play` aggiunge o seleziona, `promote` porta in prima posizione la mossa e i suoi antenati, `delete` toglie il ramo (la radice no). Non è collegato al PGN: l'albero vive solo finché la pagina è aperta.
+
 ## Limiti attuali
 
-- Le varianti non formano ancora un albero (RF-52): c'è una sola linea di esplorazione, senza promozione né eliminazione di varianti.
+- L'albero non si salva né si esporta in PGN.

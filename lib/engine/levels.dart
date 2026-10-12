@@ -77,9 +77,9 @@ class EngineLevel {
 
   /// Livello di un bot con lo stile [style] (RF-23). Dove la forza viene dalla
   /// scelta tra più candidate (livelli 1-4) lo stile pesa su quella scelta;
-  /// a piena forza (livello 8) entra solo tra candidate entro
+  /// a piena forza (livelli 7 e 8) entra solo tra candidate entro
   /// [fullStrengthWindowCp] dalla migliore, quindi la forza non cala; dove la
-  /// forza viene dal limitatore Elo di Stockfish (livelli 5-7) la mossa resta
+  /// forza viene dal limitatore Elo di Stockfish (livelli 5 e 6) la mossa resta
   /// quella del motore e lo stile si esprime con libro e frasi.
   EngineLevel withStyle(
     BotStyle style, {
@@ -113,12 +113,12 @@ const engineLevels = <EngineLevel>[
   EngineLevel(
     id: 1,
     name: 'Principiante',
-    approxElo: 600,
+    approxElo: 700,
     skill: 0,
-    depth: 1,
-    movetime: Duration(milliseconds: 50),
+    depth: 4,
+    movetime: Duration(milliseconds: 200),
     multiPv: 6,
-    temperatureCp: 300,
+    temperatureCp: 320,
     minReply: Duration(milliseconds: 600),
   ),
   EngineLevel(
@@ -126,32 +126,32 @@ const engineLevels = <EngineLevel>[
     name: 'Esordiente',
     approxElo: 900,
     skill: 0,
-    depth: 3,
-    movetime: Duration(milliseconds: 100),
+    depth: 4,
+    movetime: Duration(milliseconds: 200),
     multiPv: 5,
-    temperatureCp: 160,
+    temperatureCp: 200,
     minReply: Duration(milliseconds: 600),
   ),
   EngineLevel(
     id: 3,
     name: 'Dilettante',
-    approxElo: 1100,
+    approxElo: 1150,
     skill: 3,
-    depth: 5,
+    depth: 4,
     movetime: Duration(milliseconds: 200),
     multiPv: 4,
-    temperatureCp: 80,
+    temperatureCp: 160,
     minReply: Duration(milliseconds: 500),
   ),
   EngineLevel(
     id: 4,
     name: 'Giocatore di circolo',
-    approxElo: 1350,
+    approxElo: 1400,
     skill: 6,
-    depth: 8,
-    movetime: Duration(milliseconds: 300),
-    multiPv: 3,
-    temperatureCp: 35,
+    depth: 4,
+    movetime: Duration(milliseconds: 200),
+    multiPv: 4,
+    temperatureCp: 80,
     minReply: Duration(milliseconds: 500),
   ),
   EngineLevel(
@@ -166,24 +166,24 @@ const engineLevels = <EngineLevel>[
   EngineLevel(
     id: 6,
     name: 'Esperto',
-    approxElo: 2000,
+    approxElo: 1850,
     skill: 20,
-    uciElo: 2000,
+    uciElo: 2300,
     movetime: Duration(milliseconds: 800),
     minReply: Duration(milliseconds: 300),
   ),
   EngineLevel(
     id: 7,
     name: 'Maestro',
-    approxElo: 2400,
+    approxElo: 2250,
     skill: 20,
-    uciElo: 2400,
-    movetime: Duration(milliseconds: 1200),
+    depth: 10,
+    movetime: Duration(seconds: 3),
   ),
   EngineLevel(
     id: 8,
     name: 'Campione',
-    approxElo: 3000,
+    approxElo: 2700,
     skill: 20,
     movetime: Duration(seconds: 2),
   ),

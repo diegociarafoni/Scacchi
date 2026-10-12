@@ -6,7 +6,7 @@ Ogni cartella di `lib/` ha qui il documento che descrive le sue funzioni. La tab
 
 | Cartella | Documenti | Funzioni |
 |---|---|---|
-| `lib/analysis/` | [analisi.md](analisi.md) | Analisi libera della posizione con le linee del motore |
+| `lib/analysis/` | [analisi.md](analisi.md) | Analisi libera della posizione con le linee del motore e l'albero delle varianti |
 | `lib/archive/` | [archivio.md](archivio.md) | Archivio delle partite, import ed export PGN |
 | `lib/backup/` | [backup.md](backup.md) | Backup e ripristino dei dati locali |
 | `lib/coach/` | [allenatore.md](allenatore.md) | Partita con l'allenatore: avvisi, ripresa della mossa, suggerimenti |
@@ -27,7 +27,7 @@ Ogni cartella di `lib/` ha qui il documento che descrive le sue funzioni. La tab
 | `lib/puzzles/` | [puzzle.md](puzzle.md) | Puzzle, modalità a tempo, ripasso degli errori |
 | `lib/reminders/` | [gamification.md](gamification.md) | Promemoria giornaliero con notifiche locali |
 | `lib/review/` | [revisione-partita.md](revisione-partita.md) | Revisione della partita, classificazione delle mosse, precisione |
-| `lib/settings/` | [interfaccia.md](interfaccia.md), [notazione.md](notazione.md), [profilo-bambino.md](profilo-bambino.md) | Impostazioni, colori per daltonici, controllo dell'adulto |
+| `lib/settings/` | [interfaccia.md](interfaccia.md), [pezzi-e-scacchiere.md](pezzi-e-scacchiere.md), [notazione.md](notazione.md), [profilo-bambino.md](profilo-bambino.md) | Impostazioni, temi e pezzi, coordinate esterne, colori per daltonici, controllo dell'adulto |
 | `lib/stats/` | [statistiche.md](statistiche.md), [ritratto-settimana.md](ritratto-settimana.md) | Statistiche, rating locale, la tua settimana |
 | `lib/storage/` | [architettura.md](architettura.md), [gamification.md](gamification.md) | File JSON locali con versione e scrittura atomica |
 | `lib/tournament/` | [tornei.md](tornei.md) | Tornei offline contro bot |

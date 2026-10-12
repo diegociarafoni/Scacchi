@@ -87,6 +87,7 @@
   "kidPuzzleReviewDue": "Some puzzles to try again",
   "kidPuzzleReviewNone": "Nothing to try again today",
   "kidPuzzleKeepGoing": "Go on, you can do it!",
+  "puzzleGoal": "{goal, select, mateIn1{Goal: mate in 1} mateIn2{Goal: mate in 2} mateIn3{Goal: mate in 3} mateIn4{Goal: mate in 4} mate{Goal: checkmate the opponent} crushing{Goal: get a decisive advantage} advantage{Goal: get the advantage} equality{Goal: reach equality} other{Goal: find the best move}}",
   "kidAccuracy5": "Perfect!",
   "kidAccuracy4": "Very good",
   "kidAccuracy3": "Good",
@@ -196,5 +197,9 @@
   "statsRatingTrend": "Rating trend",
   "statsNoGames": "no games",
   "statsScoreDetail": "{wins, plural, one{{wins} win} other{{wins} wins}}, {draws, plural, one{{draws} draw} other{{draws} draws}}, {losses, plural, one{{losses} loss} other{{losses} losses}}",
-  "statsTrend": "{label}: from {first} to {last}, minimum {min}, maximum {max}"
+  "statsTrend": "{label}: from {first} to {last}, minimum {min}, maximum {max}",
+  "opponentHintHuman": "Two players share the same device.",
+  "opponentHintComputer": "Pick a level or let it adapt to you.",
+  "opponentHintBot": "Opponents with a personality, unlocked one by one.",
+  "botUnlockHint": "Unlocks by beating {name}"
 }
