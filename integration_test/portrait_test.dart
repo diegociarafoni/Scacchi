@@ -17,13 +17,14 @@ void main() {
 
     await tester.tap(find.text('Tu'));
     await tester.pumpAndSettle();
+    final share = find.byIcon(Icons.ios_share);
     await tester.scrollUntilVisible(
-      find.text('La tua settimana'),
+      share,
       200,
       scrollable: find.byType(Scrollable).first,
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.text('La tua settimana'));
+    await tester.tap(share);
     await tester.pumpAndSettle();
 
     // Senza partite recenti compare la spiegazione, altrimenti la scheda.
