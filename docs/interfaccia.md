@@ -146,6 +146,12 @@ Sempre visibili: scacchiera, elenco delle mosse, comandi (nuova, annulla, gira, 
 
 A ogni mossa suona un solo effetto, scelto in quest'ordine di priorità: fine partita, scacco, promozione, arrocco, cattura (anche en passant), mossa semplice. Con l'orologio, un breve segnale avvisa quando il tempo di un giocatore scende sotto i 10 secondi, una volta per partita. I suoni sono generati dallo script `tool/generate_sounds.py`.
 
+## Puzzle
+
+La scheda Puzzle ha il punteggio in alto, il puzzle del giorno come scheda grande e colorata, poi due gruppi: «Allenati» (allenamento, per tema, ripasso) e «Modalità a tempo» (serie e sfida a un amico). Nel profilo bambino restano le stelle e le voci semplici, senza cifre né modalità a tempo.
+
+Nel puzzle l'obiettivo sta in una scheda sopra la scacchiera, con il colore che muove. Sotto, una fascia dice l'esito con icona, testo e colore insieme (da risolvere, giusto, errore, risolto, soluzione mostrata); è una regione viva per i lettori di schermo. I pulsanti hanno almeno 48 dp (56 nel profilo bambino). Nelle serie l'esito dell'ultimo puzzle ha icona e testo. Tutti i testi dell'interfaccia sono in `lib/l10n/<lingua>/puzzles.arb`; restano in italiano nel codice le regole delle modalità (`mode_guide.dart`) e i nomi dei temi (`themes.dart`). Golden con tema reale in `test/golden/puzzle_golden_test.dart`.
+
 ## Tema
 
 Il tema è in `lib/theme/rokko_theme.dart` e segue lo stile spaziale della scacchiera «Spazio»: indaco `#4A4F86`, notte `#1D1F45` e viola di nebulosa `#725692`. Nel tema scuro i comandi sono lavanda (`#B9B3FF`) su fondo `#12132B`, nel chiaro indaco su fondo `#F5F3FC`; le stelline (`star`, giallo) sono un accento raro. Il verde `#769656` resta solo della scacchiera. Raggi di 12 dp (pulsanti) e 20 dp (schede, dialoghi), bersagli minimi di 48 dp (56 dp nel profilo bambino). Un test verifica il contrasto minimo 4,5:1 di pulsanti, testi e accenti in entrambi i temi. Le schermate leggono i valori con `RokkoTokens.of(context)` (`action`, `onAction`, `star`, `boardGreen`, raggi, bersagli) e mettono il marchio nella barra del titolo con `RokkoWordmark`; non scrivono colori e misure a mano.
