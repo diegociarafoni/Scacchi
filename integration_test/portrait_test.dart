@@ -17,7 +17,7 @@ void main() {
 
     await tester.tap(find.text('Tu'));
     await tester.pumpAndSettle();
-    await tester.ensureVisible(find.text('La tua settimana'));
+    await tester.scrollUntilVisible(find.text('La tua settimana'), 200);
     await tester.pumpAndSettle();
     await tester.tap(find.text('La tua settimana'));
     await tester.pumpAndSettle();

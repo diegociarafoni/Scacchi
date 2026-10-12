@@ -19,7 +19,7 @@ void main() {
 
     await tester.tap(find.text('Tu'));
     await tester.pumpAndSettle();
-    await tester.ensureVisible(find.text('Riepilogo settimanale'));
+    await tester.scrollUntilVisible(find.text('Riepilogo settimanale'), 200);
     await tester.pumpAndSettle();
     await tester.tap(find.text('Riepilogo settimanale'));
     await tester.pumpAndSettle();
