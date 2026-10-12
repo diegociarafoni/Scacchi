@@ -236,11 +236,7 @@ class _AnalysisPageState extends State<AnalysisPage>
   }
 
   Set<Shape> _shapes() {
-    // La scacchiera dell'analisi è sempre verde.
-    final marks = BoardMarks.of(
-      BoardTheme.green,
-      colorBlind: AppSettings.of(context).colorBlind,
-    );
+    final marks = AppSettings.of(context).marks;
     return {
       ..._arrowFor(marks, _pos, _arrow ? _lines.firstOrNull : null, marks.hint),
       ..._arrowFor(marks, _threatPos, _threatLine, marks.threat),
@@ -324,9 +320,7 @@ class _AnalysisPageState extends State<AnalysisPage>
                                 orientation: widget.orientation,
                                 onMove: _play,
                                 shapes: _shapes(),
-                                settings: ChessboardSettings(
-                                  colorScheme: BoardTheme.green.colorScheme,
-                                ),
+                                settings: AppSettings.of(context).board,
                               ),
                             ],
                           ),

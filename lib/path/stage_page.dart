@@ -156,10 +156,8 @@ class _StagePageState extends State<StagePage> {
               orientation: Side.white,
               onMove: _onMove,
               annotations: _annotations,
-              settings: ChessboardSettings(
-                colorScheme: AppSettings.of(context).exerciseScheme,
-                autoQueenPromotion: true,
-              ),
+              settings: AppSettings.of(context).board
+                  .copyWith(autoQueenPromotion: true),
             );
             final panel = SingleChildScrollView(
               padding: const EdgeInsets.all(16),

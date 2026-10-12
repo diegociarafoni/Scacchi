@@ -189,11 +189,9 @@ class _DrillPageState extends State<DrillPage> {
               controller: _board,
               orientation: _run.side,
               onMove: _onMove,
-              shapes: _hintShapes(AppSettings.of(context).exerciseMarks),
-              settings: ChessboardSettings(
-                colorScheme: AppSettings.of(context).exerciseScheme,
-                autoQueenPromotion: true,
-              ),
+              shapes: _hintShapes(AppSettings.of(context).marks),
+              settings: AppSettings.of(context).board
+                  .copyWith(autoQueenPromotion: true),
             );
             final panel = SingleChildScrollView(
               padding: const EdgeInsets.all(16),

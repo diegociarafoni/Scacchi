@@ -121,9 +121,7 @@ class _CaptureAllPageState extends State<CaptureAllPage> {
           controller: _board,
           orientation: Side.white,
           onMove: _onMove,
-          settings: ChessboardSettings(
-            colorScheme: AppSettings.of(context).exerciseScheme,
-          ),
+          settings: AppSettings.of(context).board,
         ),
         panel: _session.done
             ? Column(

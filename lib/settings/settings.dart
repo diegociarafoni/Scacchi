@@ -427,18 +427,8 @@ class AppSettings {
   /// Vero se le coordinate vanno disegnate fuori, da [BoardFrame].
   bool get outsideCoordinates => showCoordinates && coordinatesOutside;
 
-  /// Schema verde fisso degli esercizi guidati, con le evidenziazioni per
-  /// daltonici se attive.
-  ChessboardColorScheme get exerciseScheme => colorBlind
-      ? BoardTheme.green.colorBlindScheme
-      : BoardTheme.green.colorScheme;
-
   /// Colori di frecce e cerchi sulla scacchiera del tema scelto.
   BoardMarks get marks => BoardMarks.of(boardTheme, colorBlind: colorBlind);
-
-  /// Frecce e cerchi sulla scacchiera degli esercizi ([exerciseScheme]).
-  BoardMarks get exerciseMarks =>
-      BoardMarks.of(BoardTheme.green, colorBlind: colorBlind);
 
   /// Colore di indizi e frecce di suggerimento.
   Color get hintColor => marks.hint;
