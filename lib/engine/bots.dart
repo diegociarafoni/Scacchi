@@ -96,8 +96,21 @@ class Bot {
   }
 }
 
-/// I bot in ordine di forza: la scala da superare uno dopo l'altro (RG-04).
+/// I bot in ordine di forza: la scala da superare (RG-04). A pari Elo l'ordine
+/// è quello dell'elenco; vedi docs/bot.md.
 const bots = <Bot>[
+  Bot(
+    id: 'lia',
+    name: 'Lia',
+    avatar: '🦋',
+    levelId: 0,
+    style: BotStyle.gambitist,
+    openingName: 'il Gambetto di Re',
+    book: [
+      ['e2e4', 'e7e5', 'f2f4', 'e5f4', 'g1f3'],
+      ['e2e4', 'e7e5', 'f2f4', 'e5f4', 'f1c4'],
+    ],
+  ),
   Bot(
     id: 'pino',
     name: 'Pino',
@@ -108,6 +121,18 @@ const bots = <Bot>[
     book: [
       ['e2e4', 'e7e5', 'g1f3', 'b8c6', 'f1c4', 'f8c5'],
       ['e2e4', 'e7e5', 'f1c4', 'g8f6'],
+    ],
+  ),
+  Bot(
+    id: 'nico',
+    name: 'Nico',
+    avatar: '🐢',
+    levelId: 1,
+    style: BotStyle.positional,
+    openingName: 'il sistema Londra',
+    book: [
+      ['d2d4', 'd7d5', 'g1f3', 'g8f6', 'c1f4'],
+      ['d2d4', 'g8f6', 'g1f3', 'e7e6', 'c1f4'],
     ],
   ),
   Bot(
@@ -123,6 +148,18 @@ const bots = <Bot>[
     ],
   ),
   Bot(
+    id: 'viola',
+    name: 'Viola',
+    avatar: '🎻',
+    levelId: 2,
+    style: BotStyle.aggressive,
+    openingName: 'la Scozzese',
+    book: [
+      ['e2e4', 'e7e5', 'g1f3', 'b8c6', 'd2d4', 'e5d4', 'f3d4', 'g8f6'],
+      ['e2e4', 'e7e5', 'g1f3', 'b8c6', 'd2d4', 'e5d4', 'f1c4'],
+    ],
+  ),
+  Bot(
     id: 'rocco',
     name: 'Rocco',
     avatar: '🦊',
@@ -132,6 +169,18 @@ const bots = <Bot>[
     book: [
       ['e2e4', 'e7e5', 'f2f4', 'e5f4', 'g1f3', 'g7g5'],
       ['e2e4', 'e7e5', 'f2f4', 'd7d5', 'e4d5'],
+    ],
+  ),
+  Bot(
+    id: 'ettore',
+    name: 'Ettore',
+    avatar: '🦁',
+    levelId: 3,
+    style: BotStyle.aggressive,
+    openingName: 'la Spagnola di cambio',
+    book: [
+      ['e2e4', 'e7e5', 'g1f3', 'b8c6', 'f1b5', 'a7a6', 'b5c6', 'd7c6'],
+      ['e2e4', 'e7e5', 'g1f3', 'b8c6', 'f1b5', 'g8f6', 'e1g1'],
     ],
   ),
   Bot(
@@ -147,6 +196,18 @@ const bots = <Bot>[
     ],
   ),
   Bot(
+    id: 'bruna',
+    name: 'Bruna',
+    avatar: '🐻',
+    levelId: 4,
+    style: BotStyle.positional,
+    openingName: 'la Difesa Francese',
+    book: [
+      ['e2e4', 'e7e6', 'd2d4', 'd7d5', 'b1c3', 'g8f6'],
+      ['e2e4', 'e7e6', 'd2d4', 'd7d5', 'e4e5', 'c7c5'],
+    ],
+  ),
+  Bot(
     id: 'duilio',
     name: 'Duilio',
     avatar: '🔥',
@@ -159,6 +220,18 @@ const bots = <Bot>[
     ],
   ),
   Bot(
+    id: 'carlo',
+    name: 'Carlo',
+    avatar: '🦝',
+    levelId: 5,
+    style: BotStyle.gambitist,
+    openingName: 'il Gambetto Budapest',
+    book: [
+      ['d2d4', 'g8f6', 'c2c4', 'e7e5', 'd4e5', 'f6g4'],
+      ['d2d4', 'g8f6', 'c2c4', 'e7e5', 'd4e5', 'f6g4', 'c1f4'],
+    ],
+  ),
+  Bot(
     id: 'elena',
     name: 'Elena',
     avatar: '🦅',
@@ -168,6 +241,18 @@ const bots = <Bot>[
     book: [
       ['e2e4', 'e7e5', 'g1f3', 'b8c6', 'f1b5', 'a7a6', 'b5a4', 'g8f6'],
       ['e2e4', 'e7e5', 'g1f3', 'b8c6', 'f1b5', 'g8f6', 'e1g1'],
+    ],
+  ),
+  Bot(
+    id: 'ada',
+    name: 'Ada',
+    avatar: '🔭',
+    levelId: 6,
+    style: BotStyle.positional,
+    openingName: 'l\'Inglese',
+    book: [
+      ['c2c4', 'g8f6', 'b1c3', 'e7e6', 'e2e4'],
+      ['c2c4', 'e7e5', 'b1c3', 'b8c6', 'g1f3', 'g8f6'],
     ],
   ),
   Bot(
@@ -217,7 +302,9 @@ Bot? botById(String id) =>
     [...bots, ...storyOnlyBots].where((b) => b.id == id).firstOrNull;
 
 /// Bot del profilo bambino (RP-06): i più facili della scala.
-final friendlyBots = bots.take(3).toList(growable: false);
+final friendlyBots = [
+  for (final id in const ['pino', 'chiara', 'rocco']) botById(id)!,
+];
 
 /// Descrizione mostrata al posto di Elo, stile e apertura, per id del bot.
 final friendlyBotDescriptions = <String, String Function(AppLocalizations)>{

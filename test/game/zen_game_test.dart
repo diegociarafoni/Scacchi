@@ -102,7 +102,7 @@ void main() {
   ) async {
     await open(tester);
     await startBotGame(tester);
-    final bot = bots.first;
+    final bot = botById('pino')!;
     expect(find.textContaining('${bot.elo} Elo'), findsOneWidget);
     Future<int> coachSwitches() async {
       // Senza allenatore non c'è «Altro»: nessun interruttore.
