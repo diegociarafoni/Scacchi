@@ -82,9 +82,11 @@ String _aapt2() {
   final dir = Directory('$sdk/build-tools');
   if (!dir.existsSync()) return 'aapt2';
   final latest = latestBuildTools(
-    dir.listSync().whereType<Directory>().map(
-      (d) => d.path.split(Platform.pathSeparator).last,
-    ),
+    dir
+        .listSync()
+        .whereType<Directory>()
+        .where((d) => File('${d.path}/aapt2').existsSync())
+        .map((d) => d.path.split(Platform.pathSeparator).last),
   );
   return latest == null ? 'aapt2' : '${dir.path}/$latest/aapt2';
 }

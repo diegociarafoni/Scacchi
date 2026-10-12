@@ -29,7 +29,7 @@ class AndroidManifest {
 
   List<String> get permissions => [
     for (final e in _elements)
-      if (e.name == 'uses-permission') e.attributes['name']!,
+      if (e.name.startsWith('uses-permission')) e.attributes['name']!,
   ];
 
   bool get isDebuggable =>

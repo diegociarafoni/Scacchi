@@ -67,7 +67,7 @@ jobs:
           fi
           has() { grep -qE "$1" <<< "$files" && echo true || echo false; }
           echo "e2e=$(has '^(integration_test/|linux/|pubspec\.(yaml|lock)$|\.github/workflows/ci(-completa)?\.yml$)')" >> "$GITHUB_OUTPUT"
-          echo "android=$(has '^(android/|pubspec\.(yaml|lock)$|\.github/workflows/ci(-completa)?\.yml$)')" >> "$GITHUB_OUTPUT"
+          echo "android=$(has '^(android/|tool/(check_apk\.dart|policy\.json|src/)|pubspec\.(yaml|lock)$|\.github/workflows/ci(-completa)?\.yml$)')" >> "$GITHUB_OUTPUT"
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           channel: stable

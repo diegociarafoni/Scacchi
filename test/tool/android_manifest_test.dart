@@ -13,6 +13,8 @@ N: android=$_android (line=2)
       A: $_android:name(0x01010003)="android.permission.INTERNET" (Raw: "android.permission.INTERNET")
     E: uses-permission (line=11)
       A: $_android:name(0x01010003)="io.github.diegociarafoni.scacchi.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" (Raw: "io.github.diegociarafoni.scacchi.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION")
+    E: uses-permission-sdk-23 (line=12)
+      A: $_android:name(0x01010003)="android.permission.ACCESS_FINE_LOCATION" (Raw: "android.permission.ACCESS_FINE_LOCATION")
     E: application (line=20)
       A: $_android:debuggable(0x0101000f)=true
       A: $_android:allowBackup(0x01010280)=false
@@ -39,6 +41,7 @@ void main() {
     expect(manifest.permissions, [
       'android.permission.INTERNET',
       'io.github.diegociarafoni.scacchi.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION',
+      'android.permission.ACCESS_FINE_LOCATION',
     ]);
   });
 
