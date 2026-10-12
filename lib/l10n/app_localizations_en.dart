@@ -1255,4 +1255,53 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get shareImageSubject => 'Chess position';
+
+  @override
+  String get tablebaseTitle => 'Perfect endgame';
+
+  @override
+  String get tablebaseCalculating =>
+      'Working out the perfect endgame… this only happens the first time';
+
+  @override
+  String tablebaseWhiteMates(int moves) {
+    String _temp0 = intl.Intl.pluralLogic(
+      moves,
+      locale: localeName,
+      other: 'White wins: mate in $moves moves',
+      one: 'White wins: mate in $moves move',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String tablebaseBlackMates(int moves) {
+    String _temp0 = intl.Intl.pluralLogic(
+      moves,
+      locale: localeName,
+      other: 'Black wins: mate in $moves moves',
+      one: 'Black wins: mate in $moves move',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get tablebaseWhiteWins => 'White wins';
+
+  @override
+  String get tablebaseBlackWins => 'Black wins';
+
+  @override
+  String get tablebaseDraw => 'Draw with perfect play';
+
+  @override
+  String tablebaseBestMove(String move) {
+    return 'Perfect move: $move';
+  }
+
+  @override
+  String get tablebaseBestMoveHint => 'Play the perfect move';
+
+  @override
+  String get tablebaseShowMove => 'Show the perfect move';
 }
