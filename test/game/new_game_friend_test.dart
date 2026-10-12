@@ -6,7 +6,6 @@ import 'package:scacchi/settings/settings.dart';
 import 'package:scacchi/storage/key_value_store.dart';
 
 import '../game_actions.dart';
-import 'game_controls_test.dart' show action;
 
 Future<void> _openSheet(
   WidgetTester tester, {
@@ -31,8 +30,6 @@ Future<void> _openSheet(
       ),
     ),
   );
-  await tester.pumpAndSettle();
-  await tester.tap(action('more'));
   await tester.pumpAndSettle();
   await tapGameAction(tester, kid ? 'Nuova partita' : 'Nuova');
   await tester.pumpAndSettle();

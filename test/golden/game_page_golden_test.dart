@@ -64,8 +64,6 @@ void main() {
       skip: _skip != null,
       (tester) async {
         await _pumpApp(tester, device, brightness: brightness);
-        await tester.tap(find.byKey(const ValueKey('gameAction-more')));
-        await tester.pumpAndSettle();
         await tester.tap(find.text('Nuova'));
         await tester.pumpAndSettle();
         await tester.tap(find.text('Amico'));
