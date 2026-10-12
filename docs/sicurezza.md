@@ -21,9 +21,9 @@ I report SARIF di ogni scanner sono nell'artefatto `security-reports` del workfl
 
 ## Scorecard e provenienza dell'APK
 
-**OpenSSF Scorecard.** Il workflow `Scorecard` (`.github/workflows/scorecard.yml`) valuta ogni lunedì, e a ogni modifica delle regole di protezione di `main`, le pratiche del repository: azioni fissate per SHA, permessi minimi dei workflow, protezione dei rami, dipendenze aggiornate, analisi statica, politica di sicurezza. Il punteggio è pubblico su https://scorecard.dev/viewer/?uri=github.com/diegociarafoni/rokko, il report SARIF è nella scheda **Security → Code scanning** e nell'artefatto `scorecard`. Non blocca nessuna PR: serve a vedere dove manca qualcosa. Non duplica `Sicurezza`, che cerca vulnerabilità e segreti, mentre Scorecard giudica il processo.
+**OpenSSF Scorecard.** Il workflow `Scorecard` (`.github/workflows/scorecard.yml`, solo dal ramo `main`) valuta ogni lunedì, e a ogni modifica delle regole di protezione di `main`, le pratiche del repository: azioni fissate per SHA, permessi minimi dei workflow, protezione dei rami, dipendenze aggiornate, analisi statica, politica di sicurezza. Il punteggio è pubblico su https://scorecard.dev/viewer/?uri=github.com/diegociarafoni/rokko, il report SARIF è nella scheda **Security → Code scanning** e nell'artefatto `scorecard`. Non blocca nessuna PR: serve a vedere dove manca qualcosa. Non duplica `Sicurezza`, che cerca vulnerabilità e segreti, mentre Scorecard giudica il processo.
 
-**Provenienza.** Ogni APK pubblicato da `Rilascio APK`, nightly compresi, ha un'attestazione di provenienza (SLSA) firmata dal workflow, senza chiavi da custodire. Chi scarica l'APK può verificare che sia stato costruito da questo repository e da questo workflow:
+**Provenienza.** Ogni APK delle versioni numerate pubblicate da `Rilascio APK` ha un'attestazione di provenienza (SLSA) firmata dal workflow, senza chiavi da custodire. L'attestazione è in un job a parte, l'unico con i permessi per firmarla, così nessun passo della build può usarli. Il nightly e gli APK delle esecuzioni manuali senza versione non sono attestati: il primo è sostituito a ogni merge, i secondi non sono pubblicati. Chi scarica una versione numerata può verificare che sia stata costruita da questo repository e da questo workflow:
 
 ```
 gh attestation verify rokko.apk --repo diegociarafoni/rokko

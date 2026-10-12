@@ -36,9 +36,8 @@ jobs:
       contents: write
       # Per leggere l'esito della CI sullo stesso commit.
       actions: read
-      # Attestazione di provenienza dell'APK (firmata senza chiavi da gestire).
-      id-token: write
-      attestations: write
+    outputs:
+      tag: ${{ steps.version.outputs.tag }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -171,20 +170,12 @@ jobs:
       - name: Budget di dimensione dell'APK
         run: dart run tool/check_size.dart build/app/outputs/flutter-apk/app-release.apk
 
+      # Anche per le versioni numerate: il job di attestazione scarica da qui il file da attestare.
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        if: steps.version.outputs.tag == ''
         with:
           name: rokko-apk
           path: dist/
           retention-days: 7
-
-      # Prova pubblica che l'APK è stato costruito da questo workflow su questo commit:
-      # gh attestation verify rokko.apk --repo diegociarafoni/rokko
-      - name: Attestazione di provenienza
-        if: steps.version.outputs.tag != ''
-        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
-        with:
-          subject-path: dist/rokko.apk
 
       - name: Rilascio GitHub
         if: steps.version.outputs.tag != ''
@@ -248,3 +239,27 @@ jobs:
             gh release create "$TAG" dist/* --target "$SHA" \
               --title "Rokko ${TAG#v}" --notes-file notes.md $prerelease
           fi
+
+  # Job a parte: solo qui esistono i permessi per firmare l'attestazione, così nessun
+  # passo della build (che ha le chiavi di firma e dipendenze di terzi) può usarli.
+  # Le attestazioni riguardano le versioni numerate; il nightly è sostituito a ogni merge
+  # e può essere saltato se un commit più recente l'ha già superato.
+  attestazione:
+    needs: release
+    if: needs.release.outputs.tag != '' && needs.release.outputs.tag != 'nightly'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: rokko-apk
+          path: dist
+      # Prova pubblica che l'APK è stato costruito da questo workflow:
+      # gh attestation verify rokko.apk --repo diegociarafoni/rokko
+      - uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: dist/rokko.apk
