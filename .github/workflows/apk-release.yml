@@ -229,14 +229,17 @@ jobs:
               gh release create nightly dist/* --target "$SHA" --prerelease \
                 --title "Rokko nightly ${SHA:0:7}" --notes-file notes.md
             fi
+          elif [ -n "$(gh release list --json tagName,isDraft --jq ".[] | select(.tagName == \"$TAG\" and .isDraft) | .tagName")" ]; then
+            # Bozza creata da release-please (con il changelog come note): si allega l'APK e la
+            # si pubblica qui, cioè quando la versione viene richiesta. Come sotto, le versioni
+            # con suffisso restano pre-release.
+            publish="--draft=false"
+            case "$TAG" in *-*) publish="$publish --prerelease" ;; esac
+            gh release upload "$TAG" dist/* --clobber
+            gh release edit "$TAG" $publish
           elif gh release view "$TAG" > /dev/null 2>&1; then
             # Il passo Versione ha già verificato che il tag punti a questo commit.
             gh release upload "$TAG" dist/* --clobber
-            # La bozza creata da release-please (con il changelog come note) si pubblica qui,
-            # cioè quando la versione viene richiesta.
-            if [ "$(gh release view "$TAG" --json isDraft --jq .isDraft)" = "true" ]; then
-              gh release edit "$TAG" --draft=false
-            fi
           else
             prerelease=""
             # Le pre-release non compaiono in releases/latest: solo i tag con suffisso lo sono.
