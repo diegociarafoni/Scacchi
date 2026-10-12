@@ -253,6 +253,8 @@ void main() {
             },
           ),
         );
+        await tester.ensureVisible(find.text('Crea la partita'));
+        await tester.pumpAndSettle();
         await tester.tap(find.text('Crea la partita'));
         await tester.pumpAndSettle();
         await tester.tap(find.text('Resta'));

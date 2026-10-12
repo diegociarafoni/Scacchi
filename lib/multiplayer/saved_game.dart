@@ -18,6 +18,8 @@ class SavedGame {
     required this.moves,
     required this.sealed,
     this.peerKey,
+    this.times = const [],
+    this.turnStartedAt,
   });
 
   final String inviteLink;
@@ -27,6 +29,13 @@ class SavedGame {
   final Uint8List seed;
   final List<String> moves;
   final Map<int, Uint8List> sealed;
+
+  /// Tempo dichiarato a ogni mossa, in millisecondi (partite a tempo).
+  final List<int?> times;
+
+  /// Istante (ms da epoca) in cui è iniziato il turno in corso: il tempo
+  /// scorre anche ad app chiusa.
+  final int? turnStartedAt;
 
   /// Chiave dell'avversario, nota a chi ospita solo dopo il suo ingresso.
   final Uint8List? peerKey;
@@ -39,6 +48,8 @@ class SavedGame {
     'seed': base64.encode(seed),
     'moves': moves,
     'peerKey': ?peerKey == null ? null : base64.encode(peerKey!),
+    if (times.any((t) => t != null)) 'times': times,
+    'turnStartedAt': ?turnStartedAt,
     'sealed': {
       for (final e in sealed.entries) '${e.key}': base64.encode(e.value),
     },
@@ -60,6 +71,11 @@ class SavedGame {
         seed: seed,
         moves: [for (final m in json['moves']! as List) m as String],
         peerKey: peerKey,
+        times: [
+          for (final t in json['times'] as List? ?? const [])
+            if (t == null) null else (t as int),
+        ],
+        turnStartedAt: json['turnStartedAt'] as int?,
         sealed: {
           for (final e in (json['sealed'] as Map? ?? {}).entries)
             int.parse(e.key as String): base64.decode(e.value as String),

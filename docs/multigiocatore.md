@@ -10,6 +10,7 @@ Partita tra due persone su due telefoni, pensata per funzionare in ogni situazio
 | 2a | Canale Wi-Fi locale su TCP con ricollegamento automatico | Disponibile (senza interfaccia) |
 | 2b | Abbinamento via QR, permessi di rete e schermata di gioco in rete locale | Disponibile da Tu › Gioca con un amico |
 | 2c-1 | Salvataggio e ripresa della partita in rete locale | Disponibile da Tu › Gioca con un amico › Riprendi la partita |
+| 2d | Orologio: cadenza scelta alla creazione, tempo nella mossa, vittoria per tempo scaduto | Disponibile da Tu › Gioca con un amico |
 | 2c-2 | Ricerca mDNS dopo un cambio di indirizzo | Da fare |
 | 3 | Canale Bluetooth LE | Da fare |
 | 4 | Relay Nostr, link d'invito, notifiche in background, schermate | Da fare |
@@ -26,6 +27,7 @@ Partita tra due persone su due telefoni, pensata per funzionare in ogni situazio
 | RMP-07 | In rete locale (stessa Wi-Fi o hotspot) l'ospite ascolta su TCP e l'invitato si collega all'indirizzo dell'invito; l'invitato si ricollega da solo, anche se l'ospite apre la partita dopo di lui, e a ogni collegamento nuovo si ripete l'ultima mossa. Pacchetti oltre 4096 byte chiudono il collegamento; l'ospite tiene al massimo 4 collegamenti e oltre chiude il più vecchio. |
 | RMP-08 | Da Tu › Gioca con un amico un telefono sceglie il colore e crea la partita: mostra il QR dell'invito con l'indirizzo in rete locale; l'altro lo inquadra e si collega; se l'ospite non risponde il canale riprova da solo. Poi si gioca a turno sulla scacchiera, con lo stato (attesa, turno, esito) annunciato al lettore di schermo insieme alle mosse dell'avversario. Senza Wi-Fi o hotspot compare un avviso; un QR estraneo viene rifiutato; uscire chiede conferma. |
 | RMP-09 | La partita a due si salva a ogni mossa in `multiplayer.json` (invito, seme privato, registro, chiave dell'avversario, messaggi sigillati) e a partita finita il salvataggio sparisce. Chi ospita salva solo dopo l'ingresso dell'avversario. Uscire lascia la partita salvata; da Tu › Gioca con un amico compare «Riprendi la partita» (anche «Elimina»). Chi ospita riapre l'ascolto sulla porta di prima, se libera; l'invitato si ricollega all'indirizzo dell'invito e i registri si riallineano. Una partita nuova sostituisce quella salvata solo dopo conferma; un file non valido viene messo da parte. Chi ospita e esce mentre attende l'avversario non lascia nulla da riprendere. Se la porta di prima è occupata, l'ospite usa un'altra porta e aggiorna l'invito salvato. |
+| RMP-10 | Chi crea la partita sceglie la cadenza (le stesse dell'orologio contro il computer, oppure «Senza orologio») e la scelta viaggia nell'invito (`tc=minuti+incremento`, al massimo 180+60; una cadenza non valida rende nullo l'invito). Ogni mossa porta il tempo che resta a chi l'ha giocata, incremento compreso: i due orologi si riallineano a ogni mossa senza dipendere dalla latenza. Il tempo parte con la prima mossa e il primo tratto del Bianco non costa nulla. Chi resta senza tempo dichiara la scadenza (`FlagMessage`, firmato e cifrato): l'avversario vince, o patta se non ha materiale per il matto. Se un avversario a tempo scaduto non si fa vivo entro 5 secondi, la vittoria si assegna dal proprio telefono. I tempi e l'inizio del turno si salvano con la partita e il tempo scorre anche ad app chiusa. |
 | RMP-06 | Cambiare canale non cambia la partita. Chi è rimasto indietro chiede le mosse mancanti e si rimette in pari; una mossa non partita si ripete quando un canale torna disponibile. |
 
 Questi requisiti sostituiscono, per il solo modulo multigiocatore, l'esclusione delle partite tra persone su più dispositivi e il vincolo "nessun permesso di rete" di RNF-01, che resta valido per il gioco da soli.
@@ -46,13 +48,14 @@ MultiplayerSession          lib/multiplayer/multiplayer_session.dart
 
 | File | Ruolo |
 |---|---|
-| `game_invite.dart` | `GameInvite`: link `scacchi://partita?v=1&g=<uuid>&s=<segreto>&k=<chiave>&c=w|b[&lan=host:porta]`, campi binari in Base64 URL senza padding. `newGameId`, `newSecret` usano `Random.secure`. |
+| `game_invite.dart` | `GameInvite`: link `scacchi://partita?v=1&g=<uuid>&s=<segreto>&k=<chiave>&c=w|b[&lan=host:porta][&tc=minuti+incremento]`, campi binari in Base64 URL senza padding. `newGameId`, `newSecret` usano `Random.secure`. |
 | `player_identity.dart` | `PlayerIdentity`: coppia di chiavi Ed25519; il seme di 32 byte è salvato con la partita (`saved_game.dart`). |
-| `game_message.dart` | Messaggi: `JoinMessage` (l'invitato si presenta), `MoveMessage` (semimossa, UCI, impronta), `SyncRequest` (rimandare da una semimossa). |
+| `game_message.dart` | Messaggi: `JoinMessage` (l'invitato si presenta), `MoveMessage` (semimossa, UCI, impronta, tempo residuo facoltativo `c` in millisecondi), `FlagMessage` (tempo scaduto dopo N semimosse), `SyncRequest` (rimandare da una semimossa). |
 | `message_codec.dart` | `MessageCodec`: sigillo dei messaggi. |
 | `game_sync.dart` | `GameSync`: registro e validazione. `positionHash`: SHA-256 del FEN, primi 128 bit in esadecimale. |
 | `transport.dart` | `MessageTransport`, `MultiTransport`, `LoopbackTransport` (in memoria, per i test), `ConnectionAware` per i canali che segnalano un collegamento nuovo. |
 | `lan_transport.dart` | `LanTransport`: canale Wi-Fi su TCP (vedi sotto). |
+| `match_clock.dart` | `MatchClock`: il `ChessClock` delle partite contro il computer guidato dal registro; ricostruito dai tempi delle mosse e dall'inizio del turno. |
 | `saved_game.dart` | `SavedGame` e `SavedGameStore`: la partita in corso in `multiplayer.json`, nella cartella privata dell'app (`JsonFile`, scrittura atomica). |
 | `multiplayer_session.dart` | `MultiplayerSession`: collega registro, sigillo e canali e reagisce ai messaggi. |
 
@@ -74,7 +77,7 @@ A ogni collegamento nuovo `MultiTransport.connected` avvisa la sessione, che fa 
 
 ### Schermata
 
-`MultiplayerPage` (voce Tu › Gioca con un amico) offre la scelta del colore, «Crea la partita» e «Unisciti con il QR». `MultiplayerController` tiene lo stato per l'interfaccia: crea identità e invito per partita, apre il canale con `openLanHost` (indirizzo IPv4 privato scelto da `pickLanAddress` preferendo Wi-Fi e hotspot ed escludendo dati mobili e VPN, porta scelta dal sistema) o `openLanGuest`, e avvisa a ogni mossa. L'invito si mostra una sola volta come QR del link `scacchi://`, non a ogni mossa; la fotocamera riusa il lettore dello scambio QR. `MultiplayerGamePage` mostra il QR finché l'avversario non arriva, poi la scacchiera orientata dal proprio lato, con le mosse permesse solo al proprio turno.
+`MultiplayerPage` (voce Tu › Gioca con un amico) offre la scelta del colore, quella della cadenza, «Crea la partita» e «Unisciti con il QR». `MultiplayerController` tiene lo stato per l'interfaccia: crea identità e invito per partita, apre il canale con `openLanHost` (indirizzo IPv4 privato scelto da `pickLanAddress` preferendo Wi-Fi e hotspot ed escludendo dati mobili e VPN, porta scelta dal sistema) o `openLanGuest`, e avvisa a ogni mossa. L'invito si mostra una sola volta come QR del link `scacchi://`, non a ogni mossa; la fotocamera riusa il lettore dello scambio QR. `MultiplayerGamePage` mostra il QR finché l'avversario non arriva, poi la scacchiera orientata dal proprio lato, con le mosse permesse solo al proprio turno e, nelle partite a tempo, i due orologi sopra e sotto la scacchiera (`ticks` li ridisegna senza rifare la schermata).
 
 Su Android il permesso `INTERNET` è dichiarato con il motivo in `tool/policy.json`; su iOS `NSLocalNetworkUsageDescription` spiega l'uso della rete locale. Nessun socket si apre finché non si crea o si inquadra un invito. `NSBonjourServices` arriverà con la ricerca mDNS (fase 2c).
 
@@ -88,9 +91,14 @@ Su Android il permesso `INTERNET` è dichiarato con il motivo in `tool/policy.js
 - I messaggi in arrivo si elaborano uno alla volta, nell'ordine di arrivo.
 - A partita finita non si accettano altre mosse.
 
-### Cadenza (fasi successive)
+### Orologio
 
-In presenza si gioca con l'orologio; quando la partita passa a distanza l'orologio va in pausa e la cadenza diventa per corrispondenza, con la ripresa dell'orologio dal vivo concordata al ritorno in presenza.
+`MultiplayerController.clock` esiste solo se l'invito porta una cadenza; i testi sono in `lib/l10n/<lingua>/multiplayer_clock.arb`.
+
+- Ogni telefono è autorevole sul proprio tempo: dopo la propria mossa legge il residuo dal `MatchClock` e lo spedisce con la mossa; chi riceve lo adotta e fa partire l'orologio dell'avversario. Non si compensa la latenza: chi riceve parte con un ritardo di pochi millisecondi, a suo vantaggio, e un valore dichiarato non può superare un giorno.
+- Un timer da 100 ms (`tick`) controlla il proprio orologio con l'ora di parete: a tempo scaduto il telefono dichiara la sconfitta, non accetta altre mosse e avvisa l'avversario; il messaggio si ripete a ogni nuovo collegamento.
+- Il telefono non dichiara mai la scadenza dell'altro: la stima locale è in anticipo della latenza. Solo se l'avversario resta a zero oltre `peerFlagGrace` (5 s) la vittoria si assegna senza suo messaggio, ad esempio perché ha chiuso l'app.
+- Quando la partita passerà a distanza (fase 4) l'orologio andrà in pausa e la cadenza diventerà per corrispondenza.
 
 ## Sicurezza (OWASP MASVS)
 
@@ -106,4 +114,4 @@ Limiti noti: l'invito contiene il segreto, quindi chi lo intercetta prima dell'a
 
 ## Test
 
-`flutter test test/multiplayer`: salvataggio e ripresa (`saved_game_test.dart`), invito, sigillo, registro, canali e sessione completa con canali in memoria, compreso il passaggio Wi-Fi → relay → Wi-Fi e il recupero dopo un ripristino. `lan_transport_test.dart` usa socket TCP veri su 127.0.0.1: pacchetti spezzati, pacchetti troppo grandi, limite di collegamenti, ricollegamento senza invii, chiusura durante il collegamento, una partita completa e una mossa consegnata dopo la caduta del collegamento. `multiplayer_controller_test.dart` e `multiplayer_page_test.dart` provano stato e schermata con canali in memoria e un lettore QR finto: attesa, turni, matto, nuovi tentativi dell'invitato, assenza di Wi-Fi, QR estraneo e conferma d'uscita.
+`flutter test test/multiplayer`: salvataggio e ripresa (`saved_game_test.dart`), invito, sigillo, registro, canali e sessione completa con canali in memoria, compreso il passaggio Wi-Fi → relay → Wi-Fi e il recupero dopo un ripristino. `lan_transport_test.dart` usa socket TCP veri su 127.0.0.1: pacchetti spezzati, pacchetti troppo grandi, limite di collegamenti, ricollegamento senza invii, chiusura durante il collegamento, una partita completa e una mossa consegnata dopo la caduta del collegamento. `multiplayer_clock_test.dart` copre cadenza nell'invito, tempo nelle mosse, tempo scaduto, patta per materiale insufficiente, ripresa col tempo trascorso e la schermata a tempo. `multiplayer_controller_test.dart` e `multiplayer_page_test.dart` provano stato e schermata con canali in memoria e un lettore QR finto: attesa, turni, matto, nuovi tentativi dell'invitato, assenza di Wi-Fi, QR estraneo e conferma d'uscita.

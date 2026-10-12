@@ -4,6 +4,8 @@ import 'dart:typed_data';
 
 import 'package:dartchess/dartchess.dart';
 
+import '../game/clock.dart';
+
 /// Versione del formato dell'invito.
 const inviteVersion = 1;
 
@@ -14,6 +16,10 @@ final _uuidPattern = RegExp(
   r'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$',
 );
 final _hostPattern = RegExp(r'^[0-9A-Za-z.\-]{1,253}$|^\[[0-9A-Fa-f:.]+\]$');
+
+/// Limiti della cadenza accettata da un invito non fidato.
+const maxInviteMinutes = 180;
+const maxInviteIncrement = 60;
 
 final _random = Random.secure();
 
@@ -43,6 +49,7 @@ class GameInvite {
     required this.hostKey,
     required this.hostSide,
     this.lanAddress,
+    this.timeControl,
   });
 
   final String gameId;
@@ -55,6 +62,9 @@ class GameInvite {
   /// `host:porta` in rete locale, se l'ospite è raggiungibile così.
   final String? lanAddress;
 
+  /// Cadenza scelta da chi crea la partita; `null` senza orologio.
+  final TimeControl? timeControl;
+
   String toLink() => Uri(
     scheme: 'scacchi',
     host: 'partita',
@@ -65,6 +75,7 @@ class GameInvite {
       'k': _b64(hostKey),
       'c': hostSide == Side.white ? 'w' : 'b',
       'lan': ?lanAddress,
+      'tc': ?timeControl?.label,
     },
   ).toString();
 
@@ -94,12 +105,21 @@ class GameInvite {
     if (side == null) return null;
     final lan = q['lan'];
     if (lan != null && !_validAddress(lan)) return null;
+    final tcText = q['tc'];
+    final control = tcText == null ? null : TimeControl.parse(tcText);
+    if (tcText != null &&
+        (control == null ||
+            control.minutes > maxInviteMinutes ||
+            control.increment > maxInviteIncrement)) {
+      return null;
+    }
     return GameInvite(
       gameId: gameId,
       secret: secret,
       hostKey: key,
       hostSide: side,
       lanAddress: lan,
+      timeControl: control,
     );
   }
 }
