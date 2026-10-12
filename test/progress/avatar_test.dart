@@ -22,10 +22,19 @@ void main() {
         expect(a.glyph, isNotNull, reason: '$a');
       }
       final characters = Avatar.values.where((a) => a.character != null);
-      expect(characters, hasLength(8));
+      expect(characters, hasLength(10));
       expect(
         characters.map((a) => a.label),
-        containsAll(['Pino', 'Rocco', 'Chiara', 'Marta', 'Duilio']),
+        containsAll([
+          'Pino',
+          'Rocco',
+          'Chiara',
+          'Marta',
+          'Duilio',
+          'Elena',
+          'Massimo',
+          'Stella',
+        ]),
       );
     });
 
@@ -40,6 +49,8 @@ void main() {
         Avatar.astroCat,
         Avatar.rabbit,
         Avatar.dragon,
+        Avatar.eagle,
+        Avatar.wolf,
         Avatar.star,
       ]) {
         expect(requirementOf(a), isNotNull, reason: '$a');

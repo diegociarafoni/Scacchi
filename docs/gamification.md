@@ -76,8 +76,9 @@ Livelli e traguardi sbloccano temi della scacchiera, set di pezzi, avatar e corn
 | Pezzi RhosGFX, avatar Gatto astronauta, cornice Fiamma | Livello 8 |
 | Avatar Coniglio lunare | Livello 9 |
 | Cornice Oro, avatar Duilio | Livello 10 |
-| Avatar Re | Livello 11 |
-| Cornice Alloro, avatar Stella Rokko | Livello 12 |
+| Avatar Re, avatar Elena | Livello 11 |
+| Cornice Alloro, avatar Massimo | Livello 12 |
+| Avatar Stella | Livello 13 |
 | Tema Notte | 7 giorni di fila |
 | Pezzi Shapes | 10 puzzle risolti |
 | Pezzi Mpchess | Prima revisione |
@@ -91,7 +92,11 @@ Per rispetto di RV-01, l'interruttore "Sblocca tutto" (nelle impostazioni dell'a
 
 ## Avatar simpatici e foto propria (RP-08, RP-09)
 
-Oltre ai sei pezzi, otto personaggi disegnati in codice (`avatar_art.dart`, nessuna immagine nell'app): Pino il pulcino, Rocco la volpe, Chiara il fiore, Marta il gufo, il gatto astronauta, il coniglio lunare, il drago Duilio e Stella Rokko. Hanno testa tonda, occhioni e guance su uno sfondo spaziale indaco e viola, e gli stessi nomi dei bot. Pino e Rocco sono subito disponibili, gli altri si sbloccano salendo di livello, come da tabella. Cornici e avatar si sbloccano tutti per livello e non per traguardo; i traguardi restano per temi e pezzi.
+Oltre ai sei pezzi, dieci personaggi disegnati in codice (`avatar_art.dart`, nessuna immagine nell'app): Pino il pulcino, Rocco la volpe, Chiara il fiore, Marta il gufo, il drago Duilio, Elena l'aquila, Massimo il lupo, Stella (la stella), più il gatto astronauta e il coniglio lunare. Hanno testa tonda, occhioni e guance su uno sfondo spaziale indaco e viola, e gli stessi nomi dei bot. Pino e Rocco sono subito disponibili, gli altri si sbloccano salendo di livello, come da tabella. Cornici e avatar si sbloccano tutti per livello e non per traguardo; i traguardi restano per temi e pezzi.
+
+### Custodi nella Storia
+
+Gli otto bot della scala sono i custodi della Storia, ognuno con il suo personaggio (`guardianCharacter(botId)`). `GuardianAvatar(bot: …, expression: …, size: …)` (`lib/progress/guardian_avatar.dart`, senza dipendenze dalla schermata Profilo) li disegna con una delle espressioni di `AvatarExpression`: `neutral`, `greeting` (saluto, con la zampa alzata), `happy` (contento), `encouraging` (incoraggiante, con scintille), `challenge` (sfida, sopracciglia decise e sorriso di sfida) e `surprised` (stupito). È decorativo e escluso dai lettori di schermo, quindi la battuta va in un testo a parte; con `background: false` si posa su qualunque superficie, e un bot senza personaggio mostra la sua emoji. Per un nuovo custode: un valore in `AvatarCharacter`, il suo disegno in `avatar_art.dart` e la riga in `guardianCharacter`.
 
 Nella scelta dell'avatar, la sezione «Foto» permette di usare una foto propria:
 
@@ -127,7 +132,8 @@ Spento di default. Nel Profilo, "Promemoria giornaliero" chiede il permesso per 
 | `achievements.dart` | Elenco dei traguardi e condizioni di sblocco |
 | `rewards.dart` | Ricompense estetiche e condizioni di sblocco (livello o traguardo) |
 | `avatar.dart` | Avatar (pezzi e personaggi) e cornici del profilo |
-| `avatar_art.dart` | Disegno in codice dei personaggi |
+| `avatar_art.dart` | Disegno in codice dei personaggi, con sei espressioni |
+| `guardian_avatar.dart` | `GuardianAvatar(bot, expression, size)`: il custode di un bot, riusabile nella Storia |
 | `avatar_photo.dart` | Scelta della foto del profilo da galleria o fotocamera |
 | `progress_store.dart` | Salvataggio su file JSON tramite `JsonFile` |
 | `progress_controller.dart` | `ChangeNotifier` per l'interfaccia: carica, registra, salva |

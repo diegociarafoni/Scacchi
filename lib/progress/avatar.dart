@@ -1,7 +1,28 @@
 import 'dart:ui' show Color;
 
 /// Personaggi disegnati in codice (RP-08): i custodi della Storia.
-enum AvatarCharacter { chick, fox, flower, owl, astroCat, rabbit, dragon, star }
+enum AvatarCharacter {
+  chick,
+  fox,
+  flower,
+  owl,
+  astroCat,
+  rabbit,
+  dragon,
+  eagle,
+  wolf,
+  star,
+}
+
+/// Espressione di un personaggio, per accompagnare le attività della Storia.
+enum AvatarExpression {
+  neutral,
+  greeting,
+  happy,
+  encouraging,
+  challenge,
+  surprised,
+}
 
 /// Avatar del profilo: il simbolo di un pezzo o un personaggio.
 enum Avatar {
@@ -18,7 +39,9 @@ enum Avatar {
   astroCat('Gatto astronauta', character: AvatarCharacter.astroCat),
   rabbit('Coniglio lunare', character: AvatarCharacter.rabbit),
   dragon('Duilio', character: AvatarCharacter.dragon),
-  star('Stella Rokko', character: AvatarCharacter.star);
+  eagle('Elena', character: AvatarCharacter.eagle),
+  wolf('Massimo', character: AvatarCharacter.wolf),
+  star('Stella', character: AvatarCharacter.star);
 
   const Avatar(this.label, {this.glyph, this.character});
 
