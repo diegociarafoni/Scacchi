@@ -60,5 +60,15 @@
   "personalStart": "Start",
   "personalFlip": "Flip the board",
   "personalOpenInBook": "Open in the openings explorer",
-  "personalFromHere": "Your games from this position"
+  "personalFromHere": "Your games from this position",
+  "explorerTitle": "Explore openings",
+  "explorerLoadFailed": "The openings could not be loaded.",
+  "explorerStartPosition": "Starting position",
+  "explorerNoName": "Unnamed opening",
+  "explorerOutOfBook": "Out of the opening book",
+  "explorerFlip": "Flip board",
+  "explorerRestart": "Restart",
+  "explorerBack": "Back",
+  "explorerForward": "Forward",
+  "explorerMoveSemantics": "{move}: {games, plural, one{{games} game} other{{games} games}}, white {white}%, draws {draws}%, black {black}%"
 }
