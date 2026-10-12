@@ -35,6 +35,7 @@ import '../review/game_review.dart';
 import '../review/move_classification.dart';
 import '../review/personal_puzzles.dart';
 import '../review/review_page.dart';
+import '../settings/board_frame.dart';
 import '../settings/notation.dart';
 import '../settings/settings.dart';
 import '../settings/settings_page.dart';
@@ -1338,8 +1339,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final result = await _whileSuspended<(Position, GameSetup)>(() async {
       final position = await Navigator.of(context).push<Position>(
         MaterialPageRoute(
-          builder: (_) =>
-              PositionEditorPage(initialFen: shown.fen, board: _settings.board),
+          builder: (_) => PositionEditorPage(
+            initialFen: shown.fen,
+            board: _settings.editorBoard,
+          ),
         ),
       );
       if (position == null || !mounted) return null;
@@ -1924,20 +1927,25 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                       ),
                     );
               final boardSettings = _settings.board;
-              final board = BoardSwipe(
-                enabled: _pendingMove == null && _game.moves.isNotEmpty,
+              final board = BoardFrame.of(
+                _settings,
                 size: boardSize,
                 orientation: _orientation,
-                canStartAt: _canDragFrom,
-                onSwipe: _swipe,
-                child: Chessboard(
-                  size: boardSize,
-                  controller: _board,
+                builder: (size) => BoardSwipe(
+                  enabled: _pendingMove == null && _game.moves.isNotEmpty,
+                  size: size,
                   orientation: _orientation,
-                  onMove: _onMove,
-                  settings: boardSettings,
-                  annotations: _badgeAnnotations(),
-                  shapes: _visibleHint(),
+                  canStartAt: _canDragFrom,
+                  onSwipe: _swipe,
+                  child: Chessboard(
+                    size: size,
+                    controller: _board,
+                    orientation: _orientation,
+                    onMove: _onMove,
+                    settings: boardSettings,
+                    annotations: _badgeAnnotations(),
+                    shapes: _visibleHint(),
+                  ),
                 ),
               );
               final viewPly = _viewPly;
@@ -1977,14 +1985,14 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                 balance: balance,
                 side: _orientation.opposite,
                 name: _nameOf(_orientation.opposite),
-                pieceAssets: boardSettings.pieceAssets,
+                pieceAssets: _settings.pieceAssets,
                 clock: _clockView(_orientation.opposite),
               );
               final bottomMaterial = _MaterialRow(
                 balance: balance,
                 side: _orientation,
                 name: _nameOf(_orientation),
-                pieceAssets: boardSettings.pieceAssets,
+                pieceAssets: _settings.pieceAssets,
                 clock: _clockView(_orientation),
               );
               if (landscape) {

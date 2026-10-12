@@ -47,3 +47,26 @@ flutter:
     - assets/sounds/
     - assets/puzzles/
     - assets/openings/
+    - assets/boards/
+    - assets/pieces/arcano/
+    - assets/pieces/noto/
+    - assets/pieces/papercut/
+    - assets/pieces/pixel/
+    - assets/pieces/rokko/
+    - assets/pieces/halo/arcano/
+    - assets/pieces/halo/cburnett/
+    - assets/pieces/halo/celtic/
+    - assets/pieces/halo/chessnut/
+    - assets/pieces/halo/fantasy/
+    - assets/pieces/halo/firi/
+    - assets/pieces/halo/kiwenSuwi/
+    - assets/pieces/halo/merida/
+    - assets/pieces/halo/mpchess/
+    - assets/pieces/halo/noto/
+    - assets/pieces/halo/papercut/
+    - assets/pieces/halo/pixel/
+    - assets/pieces/halo/rhosgfx/
+    - assets/pieces/halo/rokko/
+    - assets/pieces/halo/shapes/
+    - assets/pieces/halo/spatial/
+    - assets/pieces/halo/totoy/

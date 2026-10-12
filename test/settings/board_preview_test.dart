@@ -97,7 +97,7 @@ void main() {
     await show(tester);
     final s = settings.value;
     expect(board(tester).settings.colorScheme, same(s.boardTheme.colorScheme));
-    expect(board(tester).settings.pieceAssets, s.pieceSet.pieceSet.assets);
+    expect(board(tester).settings.pieceAssets, s.pieceSet.assets);
     expect(board(tester).settings.enableCoordinates, isTrue);
     expect(
       board(tester).settings.animationDuration,
@@ -113,10 +113,7 @@ void main() {
       same(BoardTheme.ocean.colorScheme),
     );
     await tapChip(tester, 'Merida');
-    expect(
-      board(tester).settings.pieceAssets,
-      PieceStyle.merida.pieceSet.assets,
-    );
+    expect(board(tester).settings.pieceAssets, PieceStyle.merida.assets);
     await tapChip(tester, 'Lenta');
     expect(
       board(tester).settings.animationDuration,
@@ -281,7 +278,7 @@ void main() {
       final image = tester.widget<Image>(icon);
       expect(
         (image.image as AssetImage).assetName,
-        style.pieceSet.assets[PieceKind.whiteKnight]!.assetName,
+        style.assets[PieceKind.whiteKnight]!.assetName,
       );
     }
   });
