@@ -14,6 +14,8 @@ import '../review/win_probability.dart';
 import '../settings/board_marks.dart';
 import '../settings/notation.dart';
 import '../settings/settings.dart';
+import '../share/position_image.dart';
+import '../share/position_image_page.dart';
 import 'variation_tree.dart';
 
 /// Analisi continua di [fen] con [multiPv] varianti, interrotta annullando
@@ -254,6 +256,14 @@ class _AnalysisPageState extends State<AnalysisPage>
       appBar: AppBar(
         title: const Text('Analisi'),
         actions: [
+          PositionImageButton(
+            image: () => PositionImage(
+              fen: _pos.fen,
+              orientation: widget.orientation,
+              lastMove: _tree.current.move,
+              shapes: _shapes(),
+            ),
+          ),
           IconButton(
             tooltip: 'Freccia della mossa migliore',
             isSelected: _arrow,
