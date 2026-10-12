@@ -87,7 +87,9 @@ async function piece(set, kind, src, glyph) {
 }
 
 const GLYPH = { K: ["♔", "♚"], Q: ["♕", "♛"], R: ["♖", "♜"], B: ["♗", "♝"], N: ["♘", "♞"], P: ["♙", "♟"] };
-for (const [set, draw] of only ? [] : Object.entries(PIECE_SETS)) {
+// SETS=staunton,morbido rigenera solo quei set di pezzi (e i loro aloni).
+const onlySets = process.env.SETS?.split(",");
+for (const [set, draw] of Object.entries(PIECE_SETS).filter(([k]) => onlySets ? onlySets.includes(k) : !only)) {
   for (const kind of kinds) {
     if (set === "noto") {
       const white = kind[0] === "w";
@@ -98,13 +100,13 @@ for (const [set, draw] of only ? [] : Object.entries(PIECE_SETS)) {
     }
   }
 }
-for (const kind of only ? [] : kinds) {
+for (const kind of only || onlySets ? [] : kinds) {
   const svg = fs.readFileSync(path.join(root, "tool/board_art/papercut", `${kind}.svg`));
   await piece("papercut", kind, "data:image/svg+xml;base64," + svg.toString("base64"));
 }
 
 const cg = chessgroundDir();
-for (const [name, dir] of only ? [] : Object.entries(chessgroundSets)) {
+for (const [name, dir] of only || onlySets ? [] : Object.entries(chessgroundSets)) {
   for (const kind of kinds.filter((k) => k[0] === "b")) {
     const src = "data:image/webp;base64," + fs.readFileSync(path.join(cg, dir, "4.0x", `${kind}.webp`)).toString("base64");
     for (const [d, size] of sizes) write(out("pieces", "halo", name, d, `${kind}.webp`), await page.evaluate((o) => window.render(o), { src, size, halo: true }));

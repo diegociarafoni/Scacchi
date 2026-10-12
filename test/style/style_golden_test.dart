@@ -101,6 +101,19 @@ void main() {
     await golden(tester, 'stile-pezzi-scuro-telefono-medio');
   }, skip: _skip != null);
 
+  testWidgets('Stile, pezzi Staunton su Noce, telefono medio', (tester) async {
+    await pumpStyle(
+      tester,
+      Device.phoneMedium,
+      settings: AppSettings(
+        boardTheme: BoardTheme.noce,
+        pieceSet: PieceStyle.staunton,
+      ),
+      tab: 'Pezzi',
+    );
+    await golden(tester, 'stile-pezzi-staunton-noce-telefono-medio');
+  }, skip: _skip != null);
+
   testWidgets('Stile, suoni, telefono medio', (tester) async {
     await pumpStyle(
       tester,

@@ -114,7 +114,12 @@ const THEMES = {
     desc: "Piastrelle mediterranee con un piccolo decoro a stella. Si lega al nostro arancio senza ripeterlo." }
 };
 
+import { pieceStaunton, pieceMorbido, pieceStampa } from "./staunton.mjs";
+
 export const PIECE_SETS = {
+  staunton: (t, c) => pieceStaunton(t, c),
+  morbido: (t, c) => pieceMorbido(t, c),
+  stampa: (t, c) => pieceStampa(t, c),
   rokko: (t, c) => pieceRokko(t, c, { faces: false }),
   pixel: (t, c) => piecePixel(t, c),
   arcano: (t, c) => pieceArcano(t, c),
