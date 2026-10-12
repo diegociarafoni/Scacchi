@@ -330,15 +330,20 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _beginGame(game ?? ChessGame(), setup, null);
   }
 
+  int? _lineDeviationNow() {
+    final line = widget.challenge?.line;
+    return line == null
+        ? null
+        : lineDeviation(line, [for (final m in _game.moves) m.move]);
+  }
+
   /// Semimossa già segnalata come uscita dalla linea del repertorio.
   int? _reportedDeviation;
 
   /// Segnala una volta l'uscita dalla linea del repertorio (RF-94); dopo un
   /// annulla che rientra nella linea la segnalazione si riarma.
   void _checkLine() {
-    final line = widget.challenge?.line;
-    if (line == null) return;
-    final ply = lineDeviation(line, [for (final m in _game.moves) m.move]);
+    final ply = _lineDeviationNow();
     if (ply == _reportedDeviation) return;
     _reportedDeviation = ply;
     if (ply == null) return;
@@ -1473,6 +1478,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       }
     }
     _clearBoardInteraction();
+    // Dopo un annulla l'uscita già segnalata vale solo se resta nella partita.
+    _reportedDeviation = _lineDeviationNow();
     _refresh(animate: false);
     unawaited(_computerMove());
   }

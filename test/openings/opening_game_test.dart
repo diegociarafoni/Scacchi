@@ -22,6 +22,16 @@ void main() {
       expect(lineDeviation(line, [...line, ...uci('f1c4 g8f6')]), isNull);
     });
 
+    test(
+      'l\'arrocco è lo stesso con re sulla torre o sulla casa di arrivo',
+      () {
+        final italian = uci('e2e4 e7e5 g1f3 b8c6 f1c4 g8f6 e1h1');
+        final played = uci('e2e4 e7e5 g1f3 b8c6 f1c4 g8f6 e1g1');
+        expect(lineDeviation(italian, played), isNull);
+        expect(lineDeviation(played, italian), isNull);
+      },
+    );
+
     test('restituisce la prima semimossa diversa', () {
       expect(lineDeviation(line, uci('e2e4 c7c5')), 1);
       expect(lineDeviation(line, uci('d2d4')), 0);

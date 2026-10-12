@@ -57,11 +57,20 @@ typedef PlayOpening = Future<void> Function(
 );
 
 /// Semimossa (da 0) in cui [played] si discosta da [line], o `null` se la
-/// segue ancora; oltre la fine della linea non si esce da nulla.
+/// segue ancora; oltre la fine della linea non si esce da nulla. L'arrocco
+/// vale con il re sulla torre come sulla casa di arrivo.
 int? lineDeviation(List<Move> line, List<Move> played) {
   final shared = played.length < line.length ? played.length : line.length;
+  Position pos = Chess.initial;
   for (var i = 0; i < shared; i++) {
-    if (played[i] != line[i]) return i;
+    final a = line[i];
+    final b = played[i];
+    if (!pos.isLegal(a) || !pos.isLegal(b)) return a == b ? null : i;
+    if (pos.normalizeMove(a as NormalMove) !=
+        pos.normalizeMove(b as NormalMove)) {
+      return i;
+    }
+    pos = pos.play(a);
   }
   return null;
 }

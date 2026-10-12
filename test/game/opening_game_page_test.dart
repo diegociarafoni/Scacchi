@@ -115,4 +115,17 @@ void main() {
     await tapMove(tester, 'g1', 'f3');
     expect(find.textContaining('uscito dalla linea'), findsNothing);
   });
+
+  testWidgets('RF-94 dopo annulla una nuova uscita dalla linea si segnala', (
+    tester,
+  ) async {
+    await open(tester, start: '', line: 'e2e4 e7e5', reply: ['d7d5', 'd7d5']);
+    await tapMove(tester, 'd2', 'd4');
+    expect(find.text('Sei uscito dalla linea del repertorio.'), findsOneWidget);
+    await tester.tap(find.text('Annulla'));
+    await tester.pumpAndSettle(const Duration(seconds: 5));
+    expect(find.textContaining('uscito dalla linea'), findsNothing);
+    await tapMove(tester, 'd2', 'd4');
+    expect(find.text('Sei uscito dalla linea del repertorio.'), findsOneWidget);
+  });
 }
