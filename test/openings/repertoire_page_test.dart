@@ -9,6 +9,7 @@ import 'package:scacchi/openings/repertoire.dart';
 import 'package:scacchi/openings/repertoire_page.dart';
 import 'package:scacchi/storage/key_value_store.dart';
 
+import '../localized_app.dart';
 import '../puzzles/puzzle_page_test.dart' show tapMove;
 
 final book = OpeningBook.parseTsv(
@@ -23,7 +24,7 @@ Future<void> phone(WidgetTester tester, Widget home) async {
   tester.view.physicalSize = const Size(1170, 2532);
   tester.view.devicePixelRatio = 3;
   addTearDown(tester.view.reset);
-  await tester.pumpWidget(MaterialApp(home: home));
+  await tester.pumpWidget(localizedApp(home: home));
   await tester.pumpAndSettle();
 }
 
@@ -53,7 +54,9 @@ void main() {
     await tapMove(tester, 'g1f3');
     expect(message(tester), 'Ripasso completato: 2 mosse.');
 
-    await tester.pageBack();
+    // pageBack cerca il tooltip inglese: con l'app in italiano è «Indietro».
+    await tester.tap(find.byTooltip('Indietro'));
+    await tester.pumpAndSettle();
     await tester.pumpAndSettle();
     expect(find.text('Nessuna mossa da ripassare'), findsOneWidget);
   });
