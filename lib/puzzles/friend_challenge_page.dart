@@ -44,7 +44,7 @@ class _FriendChallengePageState extends State<FriendChallengePage> {
     _error = null;
     _challenge = FriendChallenge(
       mode: _mode,
-      seed: widget.newSeed?.call() ?? math.Random.secure().nextInt(1 << 32),
+      seed: widget.newSeed?.call() ?? math.Random.secure().nextInt(0x100000000),
       library: _library,
     );
   });

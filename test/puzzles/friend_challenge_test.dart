@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math' as math;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/exchange/qr_transfer.dart';
@@ -82,7 +81,7 @@ void main() {
           challenge.mode,
           lib,
           clock: () => Duration.zero,
-          random: math.Random(challenge.seed),
+          random: SeededRandom(challenge.seed),
         );
         final ids = <String>[];
         for (var i = 0; i < 8; i++) {
@@ -99,13 +98,37 @@ void main() {
         challenge.mode,
         _library(),
         clock: () => Duration.zero,
-        random: math.Random(challenge.seed + 1),
+        random: SeededRandom(challenge.seed + 1),
       );
       for (var i = 0; i < 8; i++) {
         other.add(run.current.puzzle.id);
         run.tryMove(run.current.puzzle.solution.first);
       }
       expect(other, isNot(sequence(_library())));
+    });
+
+    test('il generatore dà sempre la stessa sequenza per un seme', () {
+      final a = SeededRandom(7);
+      final b = SeededRandom(7);
+      final first = [for (var i = 0; i < 20; i++) a.nextInt(1000)];
+      expect([for (var i = 0; i < 20; i++) b.nextInt(1000)], first);
+      expect(first.toSet().length, greaterThan(10));
+      expect(first.every((n) => n >= 0 && n < 1000), isTrue);
+      // Valori fissi: se cambiano, i telefoni con versioni diverse non
+      // sceglierebbero più gli stessi puzzle (aumentare _algorithm).
+      expect(first.take(5).toList(), [532, 690, 334, 430, 375]);
+      expect(SeededRandom(8).nextInt(1000), isNot(first.first));
+      final d = SeededRandom(1).nextDouble();
+      expect(d, inInclusiveRange(0, 1));
+    });
+
+    test('un punteggio diverso nella raccolta cambia l\'impronta', () {
+      PuzzleLibrary withRating(int r) =>
+          PuzzleLibrary([_p('a', r), _p('b', 900)]);
+      expect(
+        libraryFingerprint(withRating(500)),
+        isNot(libraryFingerprint(withRating(501))),
+      );
     });
 
     test('la raccolta diversa cambia l\'impronta', () {

@@ -83,7 +83,7 @@ class _PuzzleRunPageState extends State<PuzzleRunPage> {
       widget.mode,
       widget.trainer.library,
       clock: widget.clock ?? () => _stopwatch.elapsed,
-      random: challenge == null ? null : math.Random(challenge.seed),
+      random: challenge == null ? null : SeededRandom(challenge.seed),
     );
     _ended = false;
     _newRecord = false;

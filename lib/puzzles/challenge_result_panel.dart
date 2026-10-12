@@ -57,6 +57,7 @@ class _ChallengeResultPanelState extends State<ChallengeResultPanel> {
     if (text == null || !mounted) return;
     final message = parseChallenge(text);
     setState(() {
+      _theirs = null;
       if (message is! ChallengeResult) {
         _error = l10n.challengeNotResult;
       } else if (!message.answers(widget.challenge)) {

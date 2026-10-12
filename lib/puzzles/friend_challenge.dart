@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math' as math;
 
 import '../exchange/qr_transfer.dart';
 import 'puzzle_library.dart';
@@ -17,11 +18,51 @@ const _maxMessageLength = 512;
 const _maxScore = 9999;
 const _version = 1;
 
+/// Versione dell'algoritmo che sceglie i puzzle da un seme: va aumentata se
+/// cambiano `PuzzleRun` o [SeededRandom], così telefoni con versioni diverse
+/// non si accordano su una sfida che darebbe serie diverse.
+const _algorithm = 1;
+
 /// Impronta della raccolta di puzzle: due telefoni giocano la stessa sfida
-/// solo se hanno gli stessi puzzle, altrimenti il seme darebbe serie diverse.
+/// solo se hanno gli stessi puzzle (identificativi, punteggi e ordine) e lo
+/// stesso algoritmo di scelta, altrimenti il seme darebbe serie diverse.
 String libraryFingerprint(PuzzleLibrary library) {
-  final ids = utf8.encode(library.puzzles.map((p) => p.id).join(','));
+  final ids = utf8.encode(
+    'v$_algorithm|${library.puzzles.map((p) => '${p.id}:${p.rating}').join(',')}',
+  );
   return crc32(ids).toRadixString(16).toUpperCase().padLeft(8, '0');
+}
+
+/// Generatore pseudocasuale con sequenza fissa per ogni seme (mulberry32).
+/// `math.Random(seed)` non garantisce la stessa sequenza tra versioni di Dart o
+/// piattaforme, e qui i due telefoni devono scegliere gli stessi puzzle.
+class SeededRandom implements math.Random {
+  SeededRandom(int seed) : _state = seed & _mask;
+
+  static const _mask = 0xFFFFFFFF;
+  int _state;
+
+  int _next32() {
+    _state = (_state + 0x6D2B79F5) & _mask;
+    var t = _state;
+    t = ((t ^ (t >> 15)) * (t | 1)) & _mask;
+    t ^= (t + (((t ^ (t >> 7)) * (t | 61)) & _mask)) & _mask;
+    return (t ^ (t >> 14)) & _mask;
+  }
+
+  @override
+  int nextInt(int max) {
+    if (max <= 0 || max > 0x100000000) {
+      throw RangeError.range(max, 1, 0x100000000, 'max');
+    }
+    return _next32() % max;
+  }
+
+  @override
+  double nextDouble() => _next32() / 0x100000000;
+
+  @override
+  bool nextBool() => _next32() & 1 == 1;
 }
 
 /// Prova, seme dei puzzle e raccolta: tutto ciò che serve per giocare gli

@@ -133,7 +133,7 @@ Due telefoni giocano la stessa prova a tempo e ne confrontano i punteggi, senza 
 | 4 | Entrambi | Giocano la prova (anche in momenti diversi): il seme guida la scelta dei puzzle, quindi la sequenza è identica sui due telefoni |
 | 5 | Entrambi | A fine prova **Mostra il mio risultato** (QR col punteggio) e **Leggi il risultato dell'amico**; poi la schermata dice "Hai vinto: 9 a 7", "Ha vinto l'amico: 7 a 9" o "Pareggio: 8 a 8" |
 
-Perché i puzzle sono gli stessi: `PuzzleRun` accetta un generatore casuale, e con `Random(seed)` la scelta di ogni puzzle dipende solo dal seme, dalla prova e dalla raccolta, non dalle risposte date (un errore e una risposta giusta fanno avanzare allo stesso modo). Per questo sono ammesse solo le prove a tempo, dove tutti hanno la stessa durata e un errore non cambia la sequenza; sopravvivenza e serie, che finiscono in momenti diversi, restano fuori.
+Perché i puzzle sono gli stessi: `PuzzleRun` accetta un generatore casuale e la sfida usa `SeededRandom` (mulberry32, sequenza fissa per ogni seme: `Random(seed)` di Dart non garantisce la stessa sequenza tra versioni e piattaforme). Con esso la scelta di ogni puzzle dipende solo dal seme, dalla prova e dalla raccolta, non dalle risposte date (un errore e una risposta giusta fanno avanzare allo stesso modo). Per questo sono ammesse solo le prove a tempo, dove tutti hanno la stessa durata e un errore non cambia la sequenza; sopravvivenza e serie, che finiscono in momenti diversi, restano fuori.
 
 Messaggi (`lib/puzzles/friend_challenge.dart`, Dart puro): JSON compatto in un solo fotogramma `SC1`, in due forme.
 
@@ -146,7 +146,7 @@ Messaggi (`lib/puzzles/friend_challenge.dart`, Dart puro): JSON compatto in un s
 | `l` | impronta della raccolta, CRC-32 in 8 cifre esadecimali | idem |
 | `p` | | punteggio, da 0 a 9999 |
 
-L'**impronta della raccolta** è il CRC-32 degli identificativi dei puzzle: se i due telefoni hanno versioni diverse dei puzzle, il seme darebbe serie diverse, quindi la sfida non parte e l'app chiede di aggiornare Rokko su entrambi. Un risultato appartiene alla sfida solo se coincidono prova, seme e impronta; uno di un'altra sfida viene respinto con un avviso.
+L'**impronta della raccolta** è il CRC-32 di versione dell'algoritmo, identificativi, punteggi e ordine dei puzzle: se i due telefoni hanno versioni diverse dei puzzle, il seme darebbe serie diverse, quindi la sfida non parte e l'app chiede di aggiornare Rokko su entrambi. Un risultato appartiene alla sfida solo se coincidono prova, seme e impronta; uno di un'altra sfida viene respinto con un avviso.
 
 Sicurezza (MASVS-CODE-4): il testo letto dalla fotocamera è input non fidato. Dopo il ricompositore dei QR, `parseChallenge` rifiuta testi oltre 512 caratteri, JSON non valido o non oggetto, versione o tipo sconosciuti, prove non a tempo, semi o punteggi fuori intervallo e impronte malformate. Il QR del risultato **non è firmato**: è pensato per una sfida tra amici, non per una classifica, e chi vuole può barare mostrando un punteggio inventato. Non c'è nessun dato personale nei QR.
 
