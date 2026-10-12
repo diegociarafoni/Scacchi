@@ -41,6 +41,12 @@ void main() {
     expect(copy.preferences, original.preferences);
   });
 
+  test('RG-13 il file della storia fa parte del backup', () async {
+    data('story.json', '{"version":1,"beaten":["village"]}');
+    final backup = await Backup.collect(dir, {});
+    expect(backup.files.keys, contains('story.json'));
+  });
+
   group('ripristino all\'avvio', () {
     test('sostituisce i dati e conserva quelli precedenti', () async {
       data('games.json', '{"version":1,"games":[1]}');

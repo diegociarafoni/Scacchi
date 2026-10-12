@@ -4,6 +4,7 @@ import 'package:flutter/material.dart' show ThemeMode;
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'board_marks.dart';
 import 'color_blind.dart';
 import 'notation.dart';
 
@@ -127,9 +128,12 @@ enum BoardTheme {
   static final _colorBlind = <BoardTheme, ChessboardColorScheme>{};
 
   /// Sempre la stessa istanza per tema, per non ridisegnare lo sfondo.
-  ChessboardColorScheme get colorScheme =>
-      scheme ??
-      _solid.putIfAbsent(this, () => _customScheme(light!, dark!, image));
+  ChessboardColorScheme get colorScheme => _solid.putIfAbsent(
+    this,
+    () => scheme == null
+        ? _customScheme(light!, dark!, image)
+        : _withVisibleHighlights(scheme!),
+  );
 
   /// Stesse case di [colorScheme], evidenziazioni senza rosso e verde.
   ChessboardColorScheme get colorBlindScheme =>
@@ -140,6 +144,8 @@ enum BoardTheme {
 /// ben visibili, così i colori per daltonici possono ancora eguagliarla.
 const _lastMoveHues = [
   Color(0x809cc700),
+  Color(0x999cc700),
+  Color(0x52ffffff),
   Color(0xb3ffb000),
   Color(0x99e8453c),
   Color(0xb30f6fff),
@@ -154,11 +160,75 @@ const _selectedHues = [
   Color(0x80ffffff),
 ];
 
-Color _visible(List<Color> hues, Color light, Color dark) {
+/// Punti delle mosse possibili: nero o bianco, dal più trasparente al più
+/// coprente.
+final _dotHues = [
+  for (var step = 5; step <= 18; step++)
+    for (final c in const [Color(0xff000000), Color(0xffffffff)])
+      c.withValues(alpha: step * 0.05),
+];
+
+Color _visible(
+  List<Color> hues,
+  Color light,
+  Color dark, [
+  double floor = minHighlightContrast,
+]) {
   double contrast(Color h) => highlightContrast(h, light, dark);
-  final visible = hues.where((h) => contrast(h) >= 1.25).toList()
+  final visible = hues.where((h) => contrast(h) >= floor).toList()
     ..sort((a, b) => contrast(a).compareTo(contrast(b)));
-  return visible.isEmpty ? hues.first : visible.first;
+  return visible.isEmpty
+      ? hues.reduce((a, b) => contrast(b) > contrast(a) ? b : a)
+      : visible.first;
+}
+
+/// [current] se già visibile, altrimenti il candidato più discreto che lo è.
+Color _keepOrVisible(
+  Color current,
+  List<Color> hues,
+  Color light,
+  Color dark, [
+  double floor = minHighlightContrast,
+]) => highlightContrast(current, light, dark) >= floor
+    ? current
+    : _visible(hues, light, dark, floor);
+
+/// Gli schemi di chessground con ultima mossa, selezione e punti delle mosse
+/// possibili alzati dove si confondono con le case.
+ChessboardColorScheme _withVisibleHighlights(ChessboardColorScheme s) {
+  final light = s.lightSquare;
+  final dark = s.darkSquare;
+  return ChessboardColorScheme(
+    lightSquare: light,
+    darkSquare: dark,
+    background: s.background,
+    whiteCoordBackground: s.whiteCoordBackground,
+    blackCoordBackground: s.blackCoordBackground,
+    lastMove: HighlightDetails(
+      solidColor: _keepOrVisible(
+        s.lastMove.solidColor!,
+        _lastMoveHues,
+        light,
+        dark,
+      ),
+    ),
+    selected: HighlightDetails(
+      solidColor: _keepOrVisible(
+        s.selected.solidColor!,
+        _selectedHues,
+        light,
+        dark,
+      ),
+    ),
+    validMoves: _keepOrVisible(
+      s.validMoves,
+      _dotHues,
+      light,
+      dark,
+      minDotContrast,
+    ),
+    validPremoves: s.validPremoves,
+  );
 }
 
 ChessboardColorScheme _customScheme(
@@ -186,18 +256,18 @@ ChessboardColorScheme _customScheme(
     background: background(),
     whiteCoordBackground: background(coordinates: Side.white),
     blackCoordBackground: background(coordinates: Side.black),
-    // I temi a tinta unita tengono le evidenziazioni di sempre.
+    // I temi a tinta unita tengono le evidenziazioni di sempre, se si vedono.
     lastMove: HighlightDetails(
       solidColor: image == null
-          ? _lastMoveHues.first
+          ? _keepOrVisible(_lastMoveHues.first, _lastMoveHues, light, dark)
           : _visible(_lastMoveHues, light, dark),
     ),
     selected: HighlightDetails(
       solidColor: image == null
-          ? _selectedHues.first
+          ? _keepOrVisible(_selectedHues.first, _selectedHues, light, dark)
           : _visible(_selectedHues, light, dark),
     ),
-    validMoves: const Color(0x4014551e),
+    validMoves: _visible(_dotHues, light, dark, minDotContrast),
     validPremoves: const Color(0x40203085),
   );
 }
@@ -282,6 +352,8 @@ class AppSettings {
     this.tableMode = false,
     this.confirmMove = false,
     this.colorBlind = false,
+    this.explainWhy = false,
+    this.zenMode = false,
     this.kidMode = false,
     this.themeMode = ThemeMode.system,
     this.notation = MoveNotation.figurine,
@@ -323,6 +395,13 @@ class AppSettings {
   final bool confirmMove;
   final bool colorBlind;
 
+  /// «Spiegami perché» (RF-122): dopo ogni mossa del computer una riga su cosa
+  /// minaccia o prepara.
+  final bool explainWhy;
+
+  /// Durante la partita restano scacchiera e mosse (RP-07).
+  final bool zenMode;
+
   /// Profilo bambino (RP-06): interfaccia e testi semplici, bot amichevoli,
   /// nessuna statistica numerica.
   final bool kidMode;
@@ -352,15 +431,29 @@ class AppSettings {
   /// daltonici se attive.
   ChessboardColorScheme get exerciseScheme => colorBlind
       ? BoardTheme.green.colorBlindScheme
-      : ChessboardColorScheme.green;
+      : BoardTheme.green.colorScheme;
+
+  /// Colori di frecce e cerchi sulla scacchiera del tema scelto.
+  BoardMarks get marks => BoardMarks.of(boardTheme, colorBlind: colorBlind);
+
+  /// Frecce e cerchi sulla scacchiera degli esercizi ([exerciseScheme]).
+  BoardMarks get exerciseMarks =>
+      BoardMarks.of(BoardTheme.green, colorBlind: colorBlind);
 
   /// Colore di indizi e frecce di suggerimento.
-  Color get hintColor => colorBlind ? okabeBlue : const Color(0xff4caf50);
+  Color get hintColor => marks.hint;
+
+  /// Colore della freccia della minaccia.
+  Color get threatColor => marks.threat;
 
   /// Colore della casa toccata negli esercizi, secondo l'esito.
   Color answerColor(bool correct) => colorBlind
       ? (correct ? okabeBlue : okabeOrange).withValues(alpha: 0.5)
       : Color(correct ? 0x8040a040 : 0x80d04040);
+
+  /// Colore pieno della mossa sbagliata negli esercizi: rosso, arancione per
+  /// daltonici. Va sempre accompagnato da icona e testo.
+  Color get wrongColor => colorBlind ? okabeOrange : const Color(0xffd32f2f);
 
   /// Nome scelto per [side], `null` se non indicato.
   String? nameOf(Side side) {
@@ -384,6 +477,8 @@ class AppSettings {
     bool? tableMode,
     bool? confirmMove,
     bool? colorBlind,
+    bool? explainWhy,
+    bool? zenMode,
     bool? kidMode,
     ThemeMode? themeMode,
     MoveNotation? notation,
@@ -405,6 +500,8 @@ class AppSettings {
     tableMode: tableMode ?? this.tableMode,
     confirmMove: confirmMove ?? this.confirmMove,
     colorBlind: colorBlind ?? this.colorBlind,
+    explainWhy: explainWhy ?? this.explainWhy,
+    zenMode: zenMode ?? this.zenMode,
     kidMode: kidMode ?? this.kidMode,
     themeMode: themeMode ?? this.themeMode,
     notation: notation ?? this.notation,
@@ -445,6 +542,8 @@ class AppSettings {
       other.tableMode == tableMode &&
       other.confirmMove == confirmMove &&
       other.colorBlind == colorBlind &&
+      other.explainWhy == explainWhy &&
+      other.zenMode == zenMode &&
       other.kidMode == kidMode &&
       other.themeMode == themeMode &&
       other.notation == notation &&
@@ -452,7 +551,7 @@ class AppSettings {
       other.blackName == blackName;
 
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     showLegalMoves,
     showCoordinates,
     coordinatesOutside,
@@ -468,12 +567,14 @@ class AppSettings {
     tableMode,
     confirmMove,
     colorBlind,
+    explainWhy,
+    zenMode,
     kidMode,
     themeMode,
     notation,
     whiteName,
     blackName,
-  );
+  ]);
 }
 
 /// Impostazioni correnti, salvate in locale a ogni modifica.
@@ -513,6 +614,8 @@ class SettingsController extends ValueNotifier<AppSettings> {
         tableMode: read('tableMode', d.tableMode),
         confirmMove: read('confirmMove', d.confirmMove),
         colorBlind: read('colorBlind', d.colorBlind),
+        explainWhy: read('explainWhy', d.explainWhy),
+        zenMode: read('zenMode', d.zenMode),
         kidMode: read('kidMode', d.kidMode),
         themeMode: byName(ThemeMode.values, 'themeMode', d.themeMode),
         notation: byName(MoveNotation.values, 'notation', d.notation),
@@ -558,6 +661,10 @@ class SettingsController extends ValueNotifier<AppSettings> {
         prefs.setBool('confirmMove', settings.confirmMove),
       if (old.colorBlind != settings.colorBlind)
         prefs.setBool('colorBlind', settings.colorBlind),
+      if (old.explainWhy != settings.explainWhy)
+        prefs.setBool('explainWhy', settings.explainWhy),
+      if (old.zenMode != settings.zenMode)
+        prefs.setBool('zenMode', settings.zenMode),
       if (old.kidMode != settings.kidMode)
         prefs.setBool('kidMode', settings.kidMode),
       if (old.themeMode != settings.themeMode)

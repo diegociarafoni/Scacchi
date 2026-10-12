@@ -3,12 +3,17 @@ import 'dart:math' as math;
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
+import '../archive/game_archive.dart';
 import '../game/chess_game.dart';
+import '../l10n/app_localizations.dart';
 import '../settings/notation.dart';
 import '../settings/settings.dart';
 import '../training/training_board.dart';
 import 'opening_assets.dart';
 import 'opening_book.dart';
+import 'opening_game.dart';
+import 'opening_game_dialog.dart';
+import 'personal_explorer_page.dart';
 import 'repertoire.dart';
 
 /// Esplora aperture: continuazioni del libro dalla posizione corrente (RF-92).
@@ -18,6 +23,8 @@ class ExplorerPage extends StatefulWidget {
     this.book,
     this.initialMoves = const [],
     this.repertoire,
+    this.onPlay,
+    this.archive,
   });
 
   /// Sostituibile nei test; di default il libro incluso nell'app.
@@ -26,6 +33,12 @@ class ExplorerPage extends StatefulWidget {
 
   /// Se presente, la linea corrente si può aggiungere al repertorio.
   final RepertoireTrainer? repertoire;
+
+  /// Avvia la partita dall'apertura raggiunta; assente senza motore.
+  final PlayOpening? onPlay;
+
+  /// Se presente, si apre l'albero delle proprie partite dalla stessa posizione.
+  final Future<GameArchive> Function()? archive;
 
   @override
   State<ExplorerPage> createState() => _ExplorerPageState();
@@ -73,11 +86,25 @@ class _ExplorerPageState extends State<ExplorerPage> {
       appBar: AppBar(
         title: const Text('Esplora aperture'),
         actions: [
+          if (widget.archive != null)
+            IconButton(
+              tooltip: AppLocalizations.of(context).personalFromHere,
+              icon: const Icon(Icons.history_edu_outlined),
+              onPressed: _openPersonal,
+            ),
           if (widget.repertoire != null)
             IconButton(
               tooltip: 'Aggiungi al repertorio',
               icon: const Icon(Icons.bookmark_add_outlined),
               onPressed: _moves.isEmpty ? null : _addToRepertoire,
+            ),
+          if (widget.onPlay != null)
+            IconButton(
+              tooltip: 'Gioca questa apertura',
+              icon: const Icon(Icons.play_arrow),
+              onPressed: _moves.isEmpty || positions.last.isGameOver
+                  ? null
+                  : _playOpening,
             ),
           IconButton(
             tooltip: 'Gira la scacchiera',
@@ -180,6 +207,47 @@ class _ExplorerPageState extends State<ExplorerPage> {
             );
           },
         ),
+      ),
+    );
+  }
+
+  void _openPersonal() {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute<void>(
+        builder: (_) => PersonalExplorerPage(
+          archive: widget.archive!(),
+          book: _book,
+          initialMoves: [..._moves],
+          repertoire: widget.repertoire,
+          onPlay: widget.onPlay,
+        ),
+      ),
+    );
+  }
+
+  Future<void> _playOpening() async {
+    final choice = await askOpeningGame(
+      context,
+      // Di norma si gioca il colore che deve muovere dopo l'apertura.
+      _positions.last.turn,
+    );
+    if (choice == null || !mounted) return;
+    OpeningBook? book;
+    try {
+      book = await _book;
+    } on Object {
+      // Senza libro il titolo resta generico.
+    }
+    if (!mounted) return;
+    final title =
+        book?.classifyPositions(_positions)?.localName ?? 'Apertura libera';
+    await widget.onPlay!(
+      context,
+      OpeningGameRequest.explorer(
+        title,
+        [..._moves],
+        choice.side,
+        levelId: choice.levelId,
       ),
     );
   }

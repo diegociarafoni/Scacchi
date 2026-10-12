@@ -1,0 +1,94 @@
+{
+  "statsTitle": "Statistiche",
+  "statsLoadFailed": "L'archivio delle partite non si è potuto leggere: riprova più tardi.",
+  "statsEmpty": "Gioca qualche partita contro il computer per vedere le statistiche.",
+  "statsRecord": "Bilancio",
+  "@statsRecord": {
+    "description": "Sezione con vittorie, patte e sconfitte"
+  },
+  "statsAllGames": "Tutte",
+  "@statsAllGames": {
+    "description": "Tutte le partite"
+  },
+  "statsWithWhite": "Con il bianco",
+  "statsWithBlack": "Con il nero",
+  "statsLocalGames": "Partite tra due persone",
+  "statsByTimeControl": "Per cadenza",
+  "statsTopOpenings": "Aperture più giocate",
+  "statsGames": "{count, plural, one{{count} partita} other{{count} partite}}",
+  "@statsGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statsAccuracy": "Precisione",
+  "statsAverage": "Media",
+  "statsAccuracyTrend": "Andamento della precisione",
+  "statsRating": "Rating stimato {rating}",
+  "@statsRating": {
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      }
+    }
+  },
+  "statsRatingProvisional": "provvisorio: servono {count} partite contro il computer",
+  "@statsRatingProvisional": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statsRatingGames": "{count, plural, one{su {count} partita contro il computer} other{su {count} partite contro il computer}}",
+  "@statsRatingGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "statsRatingTrend": "Andamento del rating",
+  "statsNoGames": "nessuna partita",
+  "@statsNoGames": {
+    "description": "Etichetta per la lettura dello schermo di un bilancio vuoto"
+  },
+  "statsScoreDetail": "{wins, plural, one{{wins} vittoria} other{{wins} vittorie}}, {draws, plural, one{{draws} patta} other{{draws} patte}}, {losses, plural, one{{losses} sconfitta} other{{losses} sconfitte}}",
+  "@statsScoreDetail": {
+    "description": "Etichetta per la lettura dello schermo della percentuale",
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      }
+    }
+  },
+  "statsTrend": "{label}: da {first} a {last}, minimo {min}, massimo {max}",
+  "@statsTrend": {
+    "description": "Etichetta per la lettura dello schermo di un grafico",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "first": {
+        "type": "String"
+      },
+      "last": {
+        "type": "String"
+      },
+      "min": {
+        "type": "String"
+      },
+      "max": {
+        "type": "String"
+      }
+    }
+  }
+}

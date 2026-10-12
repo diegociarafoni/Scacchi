@@ -10,6 +10,7 @@ import 'package:scacchi/engine/computer_player.dart';
 import 'package:scacchi/game/game_page.dart';
 import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/settings/settings.dart';
+import 'package:scacchi/share/position_image_page.dart';
 import 'package:scacchi/storage/key_value_store.dart';
 
 import '../computer_fakes.dart';
@@ -410,5 +411,25 @@ void main() {
       await tester.pump(const Duration(seconds: 5));
       expect(white(), isNot(before));
     });
+  });
+
+  testWidgets('RF-104 esporta come immagine la posizione costruita', (
+    tester,
+  ) async {
+    await openEditor(tester);
+    await tester.tap(find.byKey(const Key('editor-eraser')));
+    await tester.tapAt(square(tester, 'e2'));
+    await tester.pump();
+    await tester.tap(find.byTooltip('Capovolgi la scacchiera'));
+    await tester.pump();
+    final expected = fen(tester);
+    await tester.tap(find.byTooltip('Esporta come immagine'));
+    await tester.pumpAndSettle();
+    final page = tester.widget<PositionImagePage>(
+      find.byType(PositionImagePage),
+    );
+    expect(page.image.fen, expected);
+    expect(page.image.fen, isNot(Chess.initial.fen));
+    expect(page.image.orientation, Side.black);
   });
 }

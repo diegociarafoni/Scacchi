@@ -17,7 +17,26 @@ CodeQL non supporta Dart, quindi non è usato.
 
 Le eccezioni di Gitleaks stanno in `.gitleaks.toml`, ognuna con il motivo. Oggi c'è solo `assets/puzzles/puzzles.csv`: alcuni identificativi dei puzzle Lichess (per esempio `MKEY8`) somigliano a chiavi API. Ogni nuova eccezione va verificata a mano e limitata al file che la richiede.
 
-I report SARIF di ogni scanner sono nell'artefatto `security-reports` del workflow e vengono caricati nella scheda **Security → Code scanning** di GitHub. Sui repository privati il code scanning richiede GitHub Code Security: senza, il caricamento fallisce senza bloccare il workflow (`continue-on-error`) e i report restano consultabili negli artefatti.
+I report SARIF di ogni scanner sono nell'artefatto `security-reports` del workflow e vengono caricati nella scheda **Security → Code scanning** di GitHub. Il repository è pubblico, quindi il code scanning è disponibile senza costi. Il caricamento resta con `continue-on-error`: se fallisce (per esempio su un fork senza il permesso `security-events`) non blocca il workflow e i report restano consultabili negli artefatti.
+
+## OWASP MASVS
+
+Il riferimento è [OWASP MASVS v2](https://mas.owasp.org/MASVS/), con i casi di test della [MASTG](https://mas.owasp.org/MASTG/). L'app funziona offline, non ha account e non raccoglie dati: la superficie di attacco è piccola e i controlli servono soprattutto a mantenerla tale mentre l'app cresce. `test/security/masvs_test.dart` verifica i sorgenti a ogni `flutter test`; i controlli sull'APK compilato arriveranno in una PR successiva.
+
+| Area | Cosa si controlla | Strumento | Stato |
+|---|---|---|---|
+| MASVS-STORAGE | Nessun nuovo `print`, `debugPrint` o `dart:developer` fuori da `if (kDebugMode)`: in rilascio finirebbero nel logcat. I 25 esistenti riportano solo errori di lettura e scrittura e sono una base in `tool/policy.json` (`logging.unguardedBaseline`) che può solo scendere | test sorgenti | Attivo |
+| MASVS-NETWORK | Nessun traffico in chiaro su Android, App Transport Security non disattivata su iOS | test sorgenti | Attivo |
+| MASVS-PLATFORM | Solo `MainActivity` esportata, nessun deep link né schema URL, nessuna WebView tra le dipendenze vietate | test sorgenti | Attivo |
+| MASVS-CODE | Il manifest non forza `debuggable`; il rilascio usa la chiave dello store quando `ANDROID_KEYSTORE_PATH` c'è | test sorgenti | Attivo |
+| MASVS-CODE | Dipendenze senza vulnerabilità note | Trivy, OSV-Scanner | Attivo |
+| MASVS-PRIVACY | Nessun SDK di analisi, pubblicità o tracciamento (`privacy.forbiddenPackages`); un pacchetto vietato è ammesso solo come dipendenza indiretta, con il motivo in `privacy.transitiveAllowed` | test sorgenti | Attivo |
+| MASVS-PRIVACY | Solo i permessi Android elencati in `privacy.androidPermissions` con il motivo (oggi `RECEIVE_BOOT_COMPLETED` e `CAMERA`); iOS chiede solo fotocamera e libreria, con la spiegazione | test sorgenti | Attivo |
+| MASVS-AUTH | Non applicabile: niente account né login | | N/A |
+| MASVS-RESILIENCE | Anti-manomissione e rilevamento di root non previsti: l'app è open source e senza dati da proteggere | | Escluso per scelta |
+| MASVS-CRYPTO | La crittografia del multigiocatore ([multigiocatore.md](multigiocatore.md)) è oggi nel nucleo senza canali; la dichiarazione `ITSAppUsesNonExemptEncryption` per l'App Store va decisa con la prima versione che la usa | | Da fare |
+
+Aggiungere un permesso, per esempio `INTERNET` per il multigiocatore in rete, fa fallire il test finché il permesso non compare in `tool/policy.json` con il motivo: la scelta resta visibile in revisione.
 
 ## Catena di fornitura
 

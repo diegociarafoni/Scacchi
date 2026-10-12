@@ -1,5 +1,7 @@
 import 'package:chessground/chessground.dart';
+import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/progress/activity.dart';
 import 'package:scacchi/progress/progress_state.dart';
@@ -9,9 +11,13 @@ import 'package:scacchi/puzzles/puzzle_feed.dart';
 import 'package:scacchi/puzzles/puzzle_library.dart';
 import 'package:scacchi/puzzles/puzzle_page.dart';
 import 'package:scacchi/puzzles/puzzle_trainer.dart';
+import 'package:scacchi/settings/board_marks.dart';
+import 'package:scacchi/settings/settings.dart';
+import 'package:scacchi/share/position_image_page.dart';
 import 'package:scacchi/storage/key_value_store.dart';
 import 'package:scacchi/training/training_board.dart';
 
+import '../board_marks_helpers.dart';
 import '../localized_app.dart';
 import 'fixtures.dart';
 
@@ -98,7 +104,54 @@ String? goalText(WidgetTester tester) => find
     .map((e) => (e.widget as Text).data)
     .firstOrNull;
 
+Set<Shape> boardShapes(WidgetTester tester) =>
+    tester.widget<Chessboard>(find.byType(Chessboard)).shapes;
+
 void main() {
+  testWidgets('mossa sbagliata: freccia rossa, icona e vibrazione', (
+    tester,
+  ) async {
+    final haptics = <String?>[];
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+      SystemChannels.platform,
+      (call) async {
+        if (call.method == 'HapticFeedback.vibrate') {
+          haptics.add(call.arguments as String?);
+        }
+        return null;
+      },
+    );
+    addTearDown(
+      () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        SystemChannels.platform,
+        null,
+      ),
+    );
+    await pump(tester);
+    expect(find.byKey(const Key('puzzle-wrong-icon')), findsNothing);
+    expect(boardShapes(tester), isEmpty);
+
+    await tapMove(tester, 'a1a7');
+    expect(find.byKey(const Key('puzzle-wrong-icon')), findsOneWidget);
+    expect(
+      markArrows(boardShapes(tester)).single,
+      isA<Arrow>()
+          .having((a) => a.orig, 'orig', Square.a1)
+          .having((a) => a.dest, 'dest', Square.a7)
+          .having(
+            (a) => a.color,
+            'color',
+            BoardMarks.of(BoardTheme.green).threat,
+          ),
+    );
+    expect(haptics, ['HapticFeedbackType.heavyImpact']);
+
+    await tester.tap(find.text('Riprova'));
+    await tester.pumpAndSettle();
+    expect(find.byKey(const Key('puzzle-wrong-icon')), findsNothing);
+    expect(boardShapes(tester), isEmpty);
+  });
+
   testWidgets('l\'obiettivo è dichiarato sopra la scacchiera e resta', (
     tester,
   ) async {
@@ -303,5 +356,18 @@ void main() {
     await tester.tap(find.text('Soluzione'));
     await tester.pumpAndSettle();
     expect(activities, isEmpty);
+  });
+
+  testWidgets('RF-104 esporta come immagine la posizione del puzzle', (
+    tester,
+  ) async {
+    await pump(tester);
+    await tester.tap(find.byTooltip('Esporta come immagine'));
+    await tester.pumpAndSettle();
+    final page = tester.widget<PositionImagePage>(
+      find.byType(PositionImagePage),
+    );
+    expect(page.image.fen, backRank.start.fen);
+    expect(page.image.orientation, backRank.playerSide);
   });
 }

@@ -113,6 +113,20 @@ class SettingsPage extends StatelessWidget {
                       onChanged: (v) => set((c) => c.copyWith(confirmMove: v)),
                     ),
                     SwitchListTile(
+                      key: const Key('explainWhy'),
+                      title: Text(l10n.settingsExplainWhy),
+                      subtitle: Text(l10n.settingsExplainWhyDescription),
+                      value: s.explainWhy,
+                      onChanged: (v) => set((c) => c.copyWith(explainWhy: v)),
+                    ),
+                    SwitchListTile(
+                      key: const Key('zenMode'),
+                      title: Text(l10n.settingsZenMode),
+                      subtitle: Text(l10n.settingsZenModeDescription),
+                      value: s.zenMode,
+                      onChanged: (v) => set((c) => c.copyWith(zenMode: v)),
+                    ),
+                    SwitchListTile(
                       title: const Text('Ruota a ogni turno'),
                       subtitle: const Text('Nelle partite tra due persone'),
                       value: s.autoFlip,

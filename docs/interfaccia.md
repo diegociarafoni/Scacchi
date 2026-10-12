@@ -4,7 +4,7 @@ L'app è progettata prima di tutto per il telefono in verticale.
 
 ## Navigazione
 
-La barra in basso ha quattro schede: Gioca, Puzzle, Aperture e Tu. La scheda Tu mostra avatar, livello e serie, e porta a Profilo, Percorso, Finali e Tornei (dove c'è il motore), Minigiochi, Statistiche, La tua settimana, Scacchiera fisica e Archivio. Se i dati salvati di una sezione non si possono leggere, un messaggio lo dice e si può riprovare. Nel profilo bambino le Aperture sono nascoste e la scheda Tu mostra solo Profilo, Percorso, Finali (dove c'è il motore) e Minigiochi (vedi [profilo-bambino.md](profilo-bambino.md)). 
+La barra in basso ha quattro schede: Gioca, Puzzle, Aperture e Tu. La scheda Tu mostra avatar, livello e serie, e porta a Profilo, Percorso, Storia, Finali e Tornei (dove c'è il motore), Grandi maestri, Minigiochi, Statistiche, La tua settimana, Scacchiera fisica e Archivio. Se i dati salvati di una sezione non si possono leggere, un messaggio lo dice e si può riprovare. Nel profilo bambino le Aperture sono nascoste e la scheda Tu mostra solo Profilo, Percorso, Storia, Finali (dove c'è il motore), Grandi maestri e Minigiochi (vedi [profilo-bambino.md](profilo-bambino.md)). 
 
 ## Telefono in verticale
 
@@ -40,13 +40,14 @@ Per ciascun giocatore una riga mostra le icone dei pezzi avversari catturati, da
 
 | Comando | Effetto |
 |---|---|
-| Nuova | Apre la scelta dell'avversario (due giocatori o computer, con colore e livello), della variante (Classica, Chess960, Re della collina, Tre scacchi; contro il computer solo Classica) e della cadenza; toccando la cadenza inizia la nuova partita |
+| Nuova | Apre la scelta dell'avversario (due giocatori o computer, con colore e livello), della variante (Classica, Chess960, Re della collina, Tre scacchi, anche contro il computer) e della cadenza; toccando la cadenza inizia la nuova partita |
 | Annulla | Annulla l'ultima mossa; disattivato se non ci sono mosse |
 | Gira | Capovolge la scacchiera |
 | Patta | Chiede all'avversario se accetta la patta; disattivato a partita conclusa |
 | Abbandona | Chiede conferma e fa abbandonare il lato al tratto; disattivato a partita conclusa |
 | Allenatore | Acceso o spento: da acceso giudica ogni mossa e avvisa degli errori con Riprova o Continua; solo contro il computer o un bot, non nelle sfide (vedi [allenatore.md](allenatore.md)) |
 | Suggerisci | Primo tocco: cerchia il pezzo da muovere con una frase semplice; secondo tocco: freccia della mossa migliore e motivo; anche ad allenatore spento, non nelle sfide |
+| Menu ⋮, "Esporta come immagine" | Apre l'anteprima della posizione mostrata, da condividere come PNG; stesse esclusioni del menu QR (vedi [esporta-immagine.md](esporta-immagine.md)) |
 | Menu ⋮, "Passa con QR" e "Ricevi con QR" | Passa la partita, anche in corso, a un altro telefono o la continua da un QR letto con la fotocamera; il menu c'è anche senza motore e nelle varianti, non nelle sfide contro guardiani e tornei né nel profilo bambino (vedi [scambio-qr.md](scambio-qr.md)) |
 | Menu ⋮, "Analisi della posizione" | Apre l'analisi libera della posizione corrente con orologio e computer fermi (vedi [analisi.md](analisi.md)) |
 | Menu ⋮, "Revisione della partita" | Apre la revisione con classificazione delle mosse e precisione (vedi [revisione-partita.md](revisione-partita.md)); il menu c'è solo dove c'è il motore e negli scacchi classici, non nelle varianti né nel profilo bambino |
@@ -114,6 +115,7 @@ Si aprono dall'icona a forma di ingranaggio nella barra del titolo. Ogni modific
 | Frecce e cerchi | Disegno di frecce e cerchi con due dita sulla scacchiera | Attiva |
 | Conferma la mossa | Dopo ogni mossa mostra la posizione risultante con i pulsanti Conferma e Scarta al posto della riga di stato; la mossa conta solo dopo Conferma, e l'orologio continua a scorrere. Durante l'attesa "Annulla" equivale a Scarta, mentre Patta e Abbandona sono disattivati | Disattiva |
 | Ruota a ogni turno | Orienta la scacchiera dal lato di chi deve muovere | Disattiva |
+| Modalità zen | In partita restano solo scacchiera, mosse ed eventuale orologio (sezione sotto) Si accende anche dall'icona nella barra della partita | Disattiva |
 | Modalità tavolo | Capovolge i pezzi del giocatore in alto, per giocare uno di fronte all'altro con il telefono sul tavolo | Disattiva |
 | Colori per daltonici | Sostituisce le evidenziazioni (ultima mossa, casa selezionata, mosse legali, premosse) con colori della palette Okabe-Ito, leggibili con deuteranopia, protanopia e tritanopia; i colori delle case restano quelli del tema. Indizi dei problemi e frecce del ripasso passano dal verde al blu, gli esiti delle coordinate da verde e rosso a blu e arancio (requisito RNF-07) | Disattiva |
 | Suoni | Suoni per mossa, cattura, arrocco, scacco, promozione, fine partita e tempo sotto i 10 secondi | Attivi |
@@ -127,6 +129,18 @@ Si aprono dall'icona a forma di ingranaggio nella barra del titolo. Ogni modific
 Tema, pezzi, coordinate, mosse legali, frecce e animazioni valgono anche per le scacchiere dei problemi, delle aperture e del repertorio, che si aggiornano subito quando cambiano. La modalità tavolo vale solo per la partita, perché negli esercizi si gioca sempre da un solo lato; anche la promozione automatica a donna vale solo per la partita, perché alcuni puzzle si risolvono promuovendo a un altro pezzo.
 
 I set di pezzi disponibili sono solo quelli con licenza compatibile con la GPL e con la distribuzione commerciale, elencati in `CREDITS.md`: i set CC BY-NC-SA di chessground (California, Cardinal, Maestro e altri) sono esclusi, e chi li aveva scelti torna al set Classico. I temi con texture usano solo immagini nostre, mai quelle di chessground (licenza AGPL); sui temi scuri i pezzi neri hanno un alone chiaro (vedi [pezzi-e-scacchiere.md](pezzi-e-scacchiere.md)). Anche le icone dei pezzi catturati usano il set scelto.
+
+## Modalità zen
+
+Per giocare senza distrazioni (requisito RP-07). Si accende dalle Impostazioni o al volo dall'icona della figura in meditazione nella barra della partita; la scelta è la stessa impostazione, salvata sul dispositivo, quindi vale anche per le partite successive. Cosa cambia durante la partita:
+
+- Scompaiono l'Elo e il livello dell'avversario, i nomi sopra e sotto la scacchiera, i pezzi catturati e il vantaggio di materiale.
+- La riga di stato ("Muove il Bianco") è nascosta mentre si gioca; ricompare a partita finita, sfogliando le mosse e quando serve confermare una mossa. Chi usa un lettore di schermo continua a sentire ogni mossa annunciata.
+- L'allenatore, i giudizi sulle mosse, la freccia della minaccia, «Spiegami perché», i commenti dei bot e l'avviso di uscita dal repertorio restano muti, e i loro pulsanti spariscono; il suggerimento su richiesta resta. Lo stato dell'allenatore si ritrova uscendo dallo zen.
+- Niente festa a fine partita vinta.
+- L'orologio resta se la partita ne ha uno, perché serve: il resto della riga dei giocatori sparisce. Senza orologio la scacchiera si ingrandisce; lo spazio della riga di stato resta riservato, così la scacchiera non cambia misura quando lo stato compare.
+
+Sempre visibili: scacchiera, elenco delle mosse, comandi (nuova, annulla, gira, patta, abbandona) e suggerimento. Suoni, vibrazione e animazione dei pezzi seguono le loro impostazioni. Il codice è in `lib/game/game_page.dart` (`_zen`) e `lib/settings/settings.dart` (`zenMode`).
 
 ## Suoni
 
@@ -144,6 +158,6 @@ Per ogni tema `lib/settings/color_blind.dart` sceglie, tra blu, azzurro, giallo,
 2. ogni evidenziazione deve avere, sia sulle case chiare sia sulle scure, un rapporto di contrasto WCAG almeno pari a quello dell'evidenziazione originale del tema e mai sotto 1,25, con trasparenza massima del 90%;
 3. tra le coppie valide vince quella con la trasparenza più bassa, così i pezzi restano ben visibili.
 
-I puntini delle mosse legali sono neri o bianchi, con contrasto almeno 1,6; le premosse usano il primo colore della palette non preso dalle altre evidenziazioni. Lo schema è calcolato una volta per tema e riusato, così la scacchiera non ridisegna lo sfondo.
+I puntini delle mosse legali sono neri o bianchi, con contrasto almeno 3:1 (tranne su Notte, Castello e Retrò, vedi docs/pezzi-e-scacchiere.md); le premosse usano il primo colore della palette non preso dalle altre evidenziazioni. Lo schema è calcolato una volta per tema e riusato, così la scacchiera non ridisegna lo sfondo.
 
 L'opzione vale per partita, problemi, aperture, repertorio, percorso e minigiochi. Restano invariati il bagliore rosso del re sotto scacco, disegnato da chessground con un colore fisso e riconoscibile anche dalla posizione sul re, e la casa gialla del quiz sul materiale, che non usa la coppia rosso-verde.
