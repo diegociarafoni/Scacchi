@@ -342,6 +342,22 @@ class AppLocalizationsIt extends AppLocalizations {
   String get kidPuzzleKeepGoing => 'Forza, ce la puoi fare!';
 
   @override
+  String puzzleGoal(String goal) {
+    String _temp0 = intl.Intl.selectLogic(goal, {
+      'mateIn1': 'Obiettivo: matto in 1',
+      'mateIn2': 'Obiettivo: matto in 2',
+      'mateIn3': 'Obiettivo: matto in 3',
+      'mateIn4': 'Obiettivo: matto in 4',
+      'mate': 'Obiettivo: dai matto',
+      'crushing': 'Obiettivo: ottieni un vantaggio decisivo',
+      'advantage': 'Obiettivo: ottieni il vantaggio',
+      'equality': 'Obiettivo: ottieni la parità',
+      'other': 'Obiettivo: trova la mossa migliore',
+    });
+    return '$_temp0';
+  }
+
+  @override
   String get kidAccuracy5 => 'Perfetto!';
 
   @override
