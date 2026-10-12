@@ -40,7 +40,7 @@ void main() {
     ReminderScheduler? scheduler,
     SettingsController? settings,
   }) async {
-    tester.view.physicalSize = const Size(1170, 3800);
+    tester.view.physicalSize = const Size(1170, 5000);
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
@@ -65,6 +65,7 @@ void main() {
       'Profilo',
       'Percorso',
       'Minigiochi',
+      'Riepilogo settimanale',
       'Statistiche',
       'La tua settimana',
       'Scacchiera fisica',
@@ -117,7 +118,12 @@ void main() {
     await settings.update(settings.value.copyWith(kidMode: true));
     await show(tester, settings: settings);
     expect(find.text('Aperture'), findsNothing);
-    for (final label in ['Profilo', 'Percorso', 'Minigiochi']) {
+    for (final label in [
+      'Profilo',
+      'Percorso',
+      'Minigiochi',
+      'Riepilogo settimanale',
+    ]) {
       expect(find.text(label), findsOneWidget, reason: label);
     }
     for (final label in [
@@ -133,5 +139,21 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Aperture'), findsOneWidget);
     expect(find.text('Statistiche'), findsOneWidget);
+  });
+
+  testWidgets('RG-16 il riepilogo settimanale si apre dalla scheda Tu', (
+    tester,
+  ) async {
+    await show(tester);
+    await tester.tap(find.text('Riepilogo settimanale'));
+    await tester.pumpAndSettle();
+    expect(
+      find.widgetWithText(AppBar, 'Riepilogo settimanale'),
+      findsOneWidget,
+    );
+    expect(
+      find.textContaining('il riepilogo si riempie da solo'),
+      findsOneWidget,
+    );
   });
 }

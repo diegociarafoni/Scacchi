@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../archive/archive_page.dart';
@@ -6,8 +7,10 @@ import '../archive/saved_game.dart';
 import '../kids/kid_display.dart';
 import '../l10n/app_localizations.dart';
 import '../minigames/minigames_page.dart';
+import '../path/curriculum.dart';
 import '../path/path_controller.dart';
 import '../path/path_page.dart';
+import '../path/stage_page.dart';
 import '../physical/physical_game_page.dart';
 import '../progress/profile_page.dart';
 import '../progress/progress_controller.dart';
@@ -16,6 +19,7 @@ import '../reminders/reminder_controller.dart';
 import '../stats/portrait_page.dart';
 import '../stats/stats_page.dart';
 import '../story/story_l10n.dart';
+import '../summary/weekly_summary_page.dart';
 
 /// Scheda "Tu": profilo e tutto ciò che riguarda i propri progressi.
 class YouPage extends StatelessWidget {
@@ -31,6 +35,7 @@ class YouPage extends StatelessWidget {
     this.tournamentPage,
     this.endgamesPage,
     this.mastersPage,
+    this.puzzlesPage,
     this.openGame,
   });
 
@@ -64,6 +69,10 @@ class YouPage extends StatelessWidget {
   /// Partite dei grandi maestri (RF-87); funziona senza motore.
   final Future<Widget> Function()? mastersPage;
 
+  /// Puzzle di un tema, per il consiglio del riepilogo settimanale; senza, il
+  /// pulsante dei puzzle non compare.
+  final Future<Widget> Function(String theme, String title)? puzzlesPage;
+
   /// Apre una partita dell'archivio; senza, le righe non sono toccabili.
   final void Function(BuildContext context, SavedGame game)? openGame;
 
@@ -88,6 +97,42 @@ class YouPage extends StatelessWidget {
         ),
       );
     }
+  }
+
+  /// Svolge una lezione consigliata e ne salva le stelle come nel Percorso.
+  Future<void> _playLesson(BuildContext context, Stage stage) async {
+    try {
+      final controller = await path();
+      if (!context.mounted) return;
+      final started = DateTime.now();
+      final stars = await Navigator.of(
+        context,
+      ).push<int>(MaterialPageRoute(builder: (_) => StagePage(stage: stage)));
+      if (stars != null && stars > 0) {
+        await controller.complete(
+          stage,
+          stars,
+          DateTime.now().difference(started),
+        );
+      }
+    } on Object catch (e) {
+      if (kDebugMode) debugPrint('Lezione non disponibile: $e');
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('I dati salvati non si possono leggere: riprova.'),
+        ),
+      );
+    }
+  }
+
+  Future<void> _openPuzzles(
+    BuildContext context,
+    String theme,
+    String title,
+  ) async {
+    final source = puzzlesPage?.call(theme, title);
+    if (source != null) await _open(context, source, (w) => w);
   }
 
   @override
@@ -191,6 +236,20 @@ class YouPage extends StatelessWidget {
                   context,
                   progress(),
                   (p) => MinigamesPage(progress: p),
+                ),
+              ),
+              _Entry(
+                icon: Icons.event_note_outlined,
+                title: 'Riepilogo settimanale',
+                subtitle: 'Progressi, errore ricorrente e un consiglio',
+                onTap: () => _open(
+                  context,
+                  progress(),
+                  (p) => WeeklySummaryPage(
+                    log: p.weekLog,
+                    openLesson: _playLesson,
+                    openPuzzles: puzzlesPage == null ? null : _openPuzzles,
+                  ),
                 ),
               ),
               if (!simple) ...[

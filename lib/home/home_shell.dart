@@ -26,6 +26,7 @@ import '../path/path_controller.dart';
 import '../progress/activity.dart';
 import '../progress/progress_controller.dart';
 import '../progress/progress_tracker.dart';
+import '../puzzles/mode_guide.dart';
 import '../puzzles/puzzle_assets.dart';
 import '../puzzles/puzzle_hub_page.dart';
 import '../puzzles/puzzle_page.dart';
@@ -34,8 +35,8 @@ import '../reminders/local_notification_scheduler.dart';
 import '../reminders/reminder.dart';
 import '../reminders/reminder_controller.dart';
 import '../review/engine_evaluator.dart';
-import '../review/move_classification.dart';
 import '../review/personal_puzzles.dart';
+import '../review/review_activity.dart';
 import '../review/review_page.dart';
 import '../settings/settings.dart';
 import '../stats/local_rating.dart';
@@ -446,13 +447,11 @@ class _HomeShellState extends State<HomeShell> {
             analyseLive: (fen, multiPv) =>
                 player.analyseLive(fen, multiPv: multiPv),
             onReviewed: (review) => _record(
-              ReviewCompleted(
-                accuracy: players.length == 1
-                    ? review.accuracy(players.single)
-                    : null,
-                brilliantMoves: [
-                  for (final s in players) review.count(s, MoveClass.brilliant),
-                ].fold(0, (a, b) => a + b),
+              reviewActivity(
+                review,
+                players,
+                initial: game.initial,
+                moves: [for (final m in game.moves) m.move],
               ),
             ),
             onSavePuzzles: _savePersonalPuzzles,
@@ -498,6 +497,18 @@ class _HomeShellState extends State<HomeShell> {
   Future<int> _savePersonalPuzzles(List<MistakePuzzle> puzzles) async {
     final trainer = await (_trainer ??= _loadTrainer());
     return trainer.addPersonal([for (final p in puzzles) p.toPuzzle()]);
+  }
+
+  /// Puzzle di un tema, aperti dal consiglio del riepilogo settimanale.
+  Future<Widget> _puzzlesPage(String theme, String title) async {
+    final trainer = await (_trainer ??= _loadTrainer());
+    return PuzzlePage(
+      trainer: trainer,
+      theme: theme,
+      guide: PuzzleGuide.theme,
+      title: title,
+      onActivity: _record,
+    );
   }
 
   Future<PuzzleTrainer>
@@ -583,6 +594,7 @@ class _HomeShellState extends State<HomeShell> {
               tournamentPage: _computerAvailable ? _tournamentPage : null,
               endgamesPage: _computerAvailable ? _endgamesPage : null,
               mastersPage: _mastersPage,
+              puzzlesPage: _puzzlesPage,
             )
           else
             const SizedBox.shrink(),

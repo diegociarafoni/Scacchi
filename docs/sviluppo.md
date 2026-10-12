@@ -157,6 +157,7 @@ I golden si rigenerano con `flutter test test/settings --update-goldens` dopo un
 | RG-10 minigiochi | ✓ | |
 | RG-09 tornei offline contro bot | ✓ | |
 | RG-12 gamification disattivabile | ✓ | |
+| RG-16 riepilogo settimanale: progressi, errore ricorrente, un consiglio | ✓ | ✓ |
 | RF-80 raccolta di puzzle inclusa e valida | ✓ | ✓ |
 | RF-81 risoluzione e punteggio Glicko-2 | ✓ | ✓ |
 | RF-83 suggerimento, soluzione, filtro per tema | ✓ | ✓ |

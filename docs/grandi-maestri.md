@@ -13,6 +13,9 @@ Requisiti RF-87 (raccolta di partite storiche da sfogliare con commento) e RF-88
 | Anderssen – Dufresne, Berlino | 1852 | La sempreverde |
 | Morphy – Duca di Brunswick e conte Isouard, Parigi | 1858 | La partita all'opera |
 | Réti – Tartakower, Vienna | 1910 | La miniatura di Réti |
+| Capablanca – Burn, San Sebastián | 1911 | — |
+| Capablanca – Teichmann, Berlino | 1913 | — |
+| Marshall – Capablanca, New York | 1918 | — |
 | Donald Byrne – Fischer, New York | 1956 | La partita del secolo |
 | Kasparov – Topalov, Wijk aan Zee | 1999 | Il sacrificio di torre di Kasparov |
 
@@ -20,6 +23,7 @@ Requisiti RF-87 (raccolta di partite storiche da sfogliare con commento) e RF-88
 
 - Le **mosse** di una partita sono fatti storici e non sono protette dal diritto d'autore; lo stesso vale per le intestazioni (giocatori, luogo, anno, risultato). Nessun file è copiato da un database: le linee sono trascritte nel codice e verificate dal test `test/masters/master_games_test.dart`, che le rigioca con le regole e controlla che il risultato indicato coincida con la fine della partita sulla scacchiera (o, se la partita è finita per abbandono, che il risultato sia 1-0, 0-1 o 1/2-1/2).
 - I **commenti** e le introduzioni sono scritti per Rokko e seguono la licenza GPL-3.0 del progetto (vedi [licenza.md](licenza.md)).
+- Le tre partite di Capablanca vengono dalla seconda parte («Illustrative games») del libro *Chess Fundamentals* di J. R. Capablanca, 1921, di pubblico dominio (Project Gutenberg #33870). Il libro usa la notazione descrittiva: le mosse sono state convertite in SAN e il test le rigioca tutte. Introduzioni e commenti sono scritti per Rokko e riprendono a parole nostre le idee di Capablanca, cosa possibile perché il testo è di pubblico dominio.
 - Prima di aggiungere una partita si controlla che la fonte permetta il riuso: le partite storiche si possono aggiungere liberamente; per i testi di commento di altri autori serve una licenza compatibile con la GPL-3.0.
 
 Per aggiungere una partita basta una nuova voce in `masterGames`: il test la prende da solo.
