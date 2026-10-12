@@ -28,7 +28,7 @@ sul dispositivo (chiave `botCollection`, `lib/engine/bot_collection.dart`).
 
 ## Computer o bot?
 
-Nella schermata Nuova partita una riga sotto la scelta spiega l'avversario selezionato: **Computer** è un avversario senza volto di cui si sceglie il livello (o si lascia che si adatti), **Bot** è un personaggio con nome, stile e apertura preferita, da sbloccare uno alla volta. Ogni bot bloccato dice quale bot battere per sbloccarlo («Si sblocca battendo Pino»). I testi sono localizzati (`opponentHint*`, `botUnlockHint` in `lib/l10n`).
+Nella schermata Nuova partita una riga sotto la scelta spiega l'avversario selezionato: **Bot** raccoglie due tipi di avversario: **Adattivo**, in cima alla lista, è il motore senza volto che segue i tuoi risultati (non c'è nel profilo bambino), e i bot, ciascuno un personaggio con nome, stile e apertura preferita, da sbloccare uno alla volta. Ogni bot bloccato dice quale bot battere per sbloccarlo («Si sblocca battendo Pino»). I testi sono localizzati (`opponentHint*`, `botUnlockHint` in `lib/l10n`).
 
 ## I bot
 

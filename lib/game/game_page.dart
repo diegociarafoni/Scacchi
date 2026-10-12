@@ -3294,9 +3294,15 @@ class _TimeControlSheet extends StatefulWidget {
 
 class _TimeControlSheetState extends State<_TimeControlSheet> {
   late Variant _variant = widget.variant;
-  late GameSetup _setup = widget.computerAvailable
-      ? widget.setup
-      : widget.setup.copyWith(opponent: Opponent.human);
+  // Si parte dal bot adattivo, del livello del giocatore; il computer a livello
+  // fisso non ha più una scelta nel foglio e ripiega sul bot.
+  late GameSetup _setup = !widget.computerAvailable
+      ? widget.setup.copyWith(opponent: Opponent.human)
+      : widget.setup.opponent == Opponent.computer && !widget.setup.adaptive
+      ? widget.setup.copyWith(opponent: Opponent.bot)
+      : widget.setup.opponent == Opponent.human && !widget.kidMode
+      ? widget.setup.copyWith(opponent: Opponent.computer, adaptive: true)
+      : widget.setup;
   late final _white = TextEditingController(text: widget.whiteName);
   late final _black = TextEditingController(text: widget.blackName);
   HandicapPiece? _handicapPiece;

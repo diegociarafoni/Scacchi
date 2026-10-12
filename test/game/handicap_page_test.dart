@@ -56,6 +56,7 @@ void main() {
 
   Future<void> pick(WidgetTester tester, String key) async {
     if (find.byKey(ValueKey(key)).hitTestable().evaluate().isEmpty) {
+      await scrollSheetTo(tester, find.text('Handicap'));
       await tester.tap(find.text('Handicap'));
       await tester.pumpAndSettle();
     }
@@ -126,8 +127,7 @@ void main() {
     tester,
   ) async {
     await open(tester, computer: true);
-    await tester.tap(find.text('Computer'));
-    await tester.pumpAndSettle();
+    await chooseAdaptiveComputer(tester);
     await pick(tester, 'handicap-piece-rook');
     await chooseTime(tester, 'Senza tempo');
     await tester.pumpAndSettle();
@@ -147,8 +147,7 @@ void main() {
     tester,
   ) async {
     await open(tester, computer: true);
-    await tester.tap(find.text('Computer'));
-    await tester.pumpAndSettle();
+    await chooseAdaptiveComputer(tester);
     await chooseTime(tester, 'Senza tempo');
     await tester.pumpAndSettle();
     await tester.pumpAndSettle(const Duration(seconds: 1));

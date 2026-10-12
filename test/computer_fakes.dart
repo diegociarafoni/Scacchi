@@ -99,13 +99,41 @@ Future<void> startComputerGame(
 }) async {
   await tapGameAction(tester, 'Nuova');
   await tester.pumpAndSettle();
-  await tester.tap(find.text('Computer'));
-  await tester.pumpAndSettle();
+  await chooseAdaptiveComputer(tester);
   await tester.ensureVisible(find.text(side));
   await tester.pumpAndSettle();
   await tester.tap(find.text(side));
   await tester.pumpAndSettle();
   await chooseTime(tester, time ?? 'Senza tempo');
+}
+
+/// Sceglie nel foglio della nuova partita il bot «Adattivo», cioè il motore.
+Future<void> chooseAdaptiveComputer(WidgetTester tester) async {
+  await tester.tap(find.text('Bot'));
+  await tester.pumpAndSettle();
+  await tester.ensureVisible(find.byKey(const ValueKey('adaptive-opponent')));
+  await tester.pumpAndSettle();
+  await tester.tap(find.byKey(const ValueKey('adaptive-opponent')));
+  await tester.pumpAndSettle();
+}
+
+/// Scorre il foglio della nuova partita fino a [finder]: la lista dei bot lo
+/// allunga e le parti in fondo non sono ancora costruite.
+Future<void> scrollSheetTo(WidgetTester tester, Finder finder) async {
+  if (finder.evaluate().isEmpty) {
+    await tester.scrollUntilVisible(
+      finder,
+      300,
+      scrollable: find
+          .descendant(
+            of: find.byType(BottomSheet),
+            matching: find.byType(Scrollable),
+          )
+          .first,
+    );
+  }
+  await tester.ensureVisible(finder);
+  await tester.pumpAndSettle();
 }
 
 /// Tocca la cadenza nel pannello della nuova partita, che avvia la partita.

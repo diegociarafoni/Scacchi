@@ -54,6 +54,18 @@ Future<void> _play(WidgetTester tester, List<String> uci) async {
 final _skip = Platform.isLinux ? null : 'riferimenti generati solo su Linux';
 
 void main() {
+  testWidgets('nuova partita parte dal bot adattivo', skip: _skip != null, (
+    tester,
+  ) async {
+    await _pumpApp(tester, Device.phoneMedium, brightness: Brightness.dark);
+    await tester.tap(find.text('Nuova'));
+    await tester.pumpAndSettle();
+    await expectLater(
+      find.byType(ScacchiApp),
+      matchesGoldenFile('goldens/nuova-partita-bot-scuro-telefono-medio.png'),
+    );
+  });
+
   for (final (device, brightness) in [
     (Device.phoneSmall, Brightness.light),
     (Device.phoneMedium, Brightness.dark),
@@ -66,7 +78,9 @@ void main() {
         await _pumpApp(tester, device, brightness: brightness);
         await tester.tap(find.text('Nuova'));
         await tester.pumpAndSettle();
-        await tester.tap(find.text('Amico'));
+        await tester.tap(find.text('Sfida un amico'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Ognuno sul suo'));
         await tester.pumpAndSettle();
         await expectLater(
           find.byType(ScacchiApp),

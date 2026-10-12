@@ -1,7 +1,6 @@
 {
   "opponentHintHuman": "Two players share the same device.",
-  "opponentHintComputer": "Pick a level or let it adapt to you.",
-  "opponentHintBot": "Opponents with a personality, unlocked one by one.",
+  "opponentHintBot": "Opponents with a personality, unlocked one by one, or the Adaptive one that follows your results.",
   "botUnlockHint": "Unlocks by beating {name}",
   "handicapTitle": "Handicap",
   "handicapGameTitle": "Handicap game",
@@ -43,6 +42,8 @@
   "gameTipMenu": "The ⋮ menu lets you analyse the position and review the game.",
   "gameReviewInvite": "Game over. Want to see where to improve?",
   "gameReviewInviteAction": "Review the game",
-  "opponentFriend": "Friend",
-  "opponentHintFriend": "Played on two phones, side by side or far apart."
+  "opponentFriend": "Challenge a friend",
+  "opponentHintFriend": "Played by two: on the same phone, or each on their own, near or far.",
+  "opponentFriendSame": "Same phone",
+  "opponentFriendApart": "Each on their own"
 }

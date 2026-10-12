@@ -25,14 +25,15 @@ void main() {
   Future<void> openComputerSheet(WidgetTester tester) async {
     await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Computer'));
+    await tester.tap(find.text('Bot'));
     await tester.pumpAndSettle();
   }
 
   Future<void> chooseAdaptive(WidgetTester tester) async {
-    await tester.ensureVisible(find.text('Adattivo'));
+    final tile = find.byKey(const ValueKey('adaptive-opponent'));
+    await tester.ensureVisible(tile);
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Adattivo'));
+    await tester.tap(tile);
     await tester.pumpAndSettle();
   }
 
@@ -121,18 +122,5 @@ void main() {
     expect(saved.rating, 1150);
     await resign(tester);
     expect((await AdaptiveOpponent.load(store)).games, 1);
-  });
-
-  testWidgets('RF-26 senza la modalità adattiva la stima non cambia', (
-    tester,
-  ) async {
-    final store = MemoryStore();
-    await tester.pumpWidget(app(store));
-    await tester.pumpAndSettle();
-    await startComputerGame(tester, side: 'Bianco');
-    await tester.pumpAndSettle(const Duration(seconds: 1));
-    await playE4(tester);
-    await resign(tester);
-    expect((await AdaptiveOpponent.load(store)).games, 0);
   });
 }

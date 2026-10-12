@@ -1,7 +1,6 @@
 {
   "opponentHintHuman": "Si gioca in due sullo stesso dispositivo.",
-  "opponentHintComputer": "Scegli il livello o lascia che si adatti a te.",
-  "opponentHintBot": "Avversari con personalità da sbloccare uno a uno.",
+  "opponentHintBot": "Avversari con personalità da sbloccare uno a uno, o l'Adattivo che segue i tuoi risultati.",
   "botUnlockHint": "Si sblocca battendo {name}",
   "@botUnlockHint": {
     "description": "Sotto un bot bloccato: quale bot battere per sbloccarlo",
@@ -59,6 +58,8 @@
   "gameTipMenu": "Dal menu ⋮ analizzi la posizione e rivedi la partita.",
   "gameReviewInvite": "Partita finita. Vuoi capire dove migliorare?",
   "gameReviewInviteAction": "Rivedi la partita",
-  "opponentFriend": "Amico",
-  "opponentHintFriend": "Si gioca su due telefoni, vicini o lontani."
+  "opponentFriend": "Sfida un amico",
+  "opponentHintFriend": "Si gioca in due: sullo stesso telefono oppure ognuno sul suo, vicini o lontani.",
+  "opponentFriendSame": "Sullo stesso telefono",
+  "opponentFriendApart": "Ognuno sul suo"
 }

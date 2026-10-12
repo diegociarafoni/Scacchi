@@ -35,42 +35,51 @@ Future<void> _openSheet(
   await tester.pumpAndSettle();
 }
 
+Future<void> _chooseApart(WidgetTester tester) async {
+  await tester.tap(find.text('Sfida un amico'));
+  await tester.pumpAndSettle();
+  await tester.tap(find.text('Ognuno sul suo'));
+  await tester.pumpAndSettle();
+}
+
 void main() {
-  testWidgets('la scelta «Amico» sta accanto alle altre, anche senza motore', (
+  testWidgets('le scelte sono Bot e «Sfida un amico», anche senza motore', (
     tester,
   ) async {
     await _openSheet(tester);
-    expect(find.text('Due giocatori'), findsOneWidget);
-    expect(find.text('Amico'), findsOneWidget);
     expect(find.text('Bot'), findsOneWidget);
+    expect(find.text('Sfida un amico'), findsOneWidget);
+    expect(find.text('Due giocatori'), findsNothing);
+    // Un amico: sullo stesso telefono o ognuno sul suo.
+    expect(find.text('Sullo stesso telefono'), findsOneWidget);
+    expect(find.text('Ognuno sul suo'), findsOneWidget);
   });
 
-  testWidgets('con «Amico» il foglio mostra colore, collegamento e comandi', (
-    tester,
-  ) async {
-    await _openSheet(tester);
-    await tester.tap(find.text('Amico'));
-    await tester.pumpAndSettle();
-    expect(find.text('Il tuo colore'), findsOneWidget);
-    expect(find.text('Wi-Fi'), findsOneWidget);
-    expect(find.text('Bluetooth'), findsOneWidget);
-    expect(find.text('Gioca anche a distanza'), findsOneWidget);
-    expect(find.text('Cadenza'), findsOneWidget);
-    expect(find.text('Crea la partita'), findsOneWidget);
-    expect(find.text('Unisciti con il QR'), findsOneWidget);
-    expect(find.text('Unisciti con il link'), findsOneWidget);
-    // Nomi, variante e handicap valgono solo per la partita su un telefono.
-    expect(find.text('Nome del Bianco'), findsNothing);
-    expect(find.text('Variante'), findsNothing);
-    expect(find.text('Handicap'), findsNothing);
-  });
+  testWidgets(
+    'con «Ognuno sul suo» il foglio mostra colore, collegamento e comandi',
+    (tester) async {
+      await _openSheet(tester);
+      await _chooseApart(tester);
+      expect(find.text('Il tuo colore'), findsOneWidget);
+      expect(find.text('Wi-Fi'), findsOneWidget);
+      expect(find.text('Bluetooth'), findsOneWidget);
+      expect(find.text('Gioca anche a distanza'), findsOneWidget);
+      expect(find.text('Cadenza'), findsOneWidget);
+      expect(find.text('Crea la partita'), findsOneWidget);
+      expect(find.text('Unisciti con il QR'), findsOneWidget);
+      expect(find.text('Unisciti con il link'), findsOneWidget);
+      // Nomi, variante e handicap valgono solo per la partita su un telefono.
+      expect(find.text('Nome del Bianco'), findsNothing);
+      expect(find.text('Variante'), findsNothing);
+      expect(find.text('Handicap'), findsNothing);
+    },
+  );
 
   testWidgets('a distanza non c\'è orologio, in presenza si sceglie', (
     tester,
   ) async {
     await _openSheet(tester);
-    await tester.tap(find.text('Amico'));
-    await tester.pumpAndSettle();
+    await _chooseApart(tester);
     final chip = find.widgetWithText(ChoiceChip, '3+0');
     expect(tester.widget<ChoiceChip>(chip).onSelected, isNull);
     await tester.tap(find.byType(Switch));
@@ -83,40 +92,35 @@ void main() {
     expect(tester.widget<ChoiceChip>(chip).selected, isTrue);
   });
 
-  testWidgets('tornando a «Due giocatori» riappaiono nomi e variante', (
-    tester,
-  ) async {
+  testWidgets('«Sullo stesso telefono» mostra nomi e variante', (tester) async {
     await _openSheet(tester);
-    await tester.tap(find.text('Amico'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Due giocatori'));
+    await _chooseApart(tester);
+    await tester.tap(find.text('Sullo stesso telefono'));
     await tester.pumpAndSettle();
     expect(find.text('Nome del Bianco'), findsOneWidget);
     expect(find.text('Crea la partita'), findsNothing);
   });
 
-  testWidgets('il profilo bambino non vede «Amico»', (tester) async {
+  testWidgets('il profilo bambino non vede «Sfida un amico»', (tester) async {
     await _openSheet(tester, kid: true);
-    expect(find.text('Amico'), findsNothing);
+    expect(find.text('Sfida un amico'), findsNothing);
   });
 
   testWidgets('cambiando avversario e tornando, le scelte restano', (
     tester,
   ) async {
     await _openSheet(tester);
-    await tester.tap(find.text('Amico'));
-    await tester.pumpAndSettle();
+    await _chooseApart(tester);
     await tester.tap(find.byType(Switch));
     await tester.pumpAndSettle();
     final chip = find.widgetWithText(ChoiceChip, '3+0');
     await tester.ensureVisible(chip);
     await tester.tap(chip);
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Due giocatori'));
+    await tester.tap(find.text('Sullo stesso telefono'));
     await tester.pumpAndSettle();
     expect(find.text('Crea la partita'), findsNothing);
-    await tester.tap(find.text('Amico'));
-    await tester.pumpAndSettle();
+    await _chooseApart(tester);
     expect(tester.widget<ChoiceChip>(chip).selected, isTrue);
   });
 }
