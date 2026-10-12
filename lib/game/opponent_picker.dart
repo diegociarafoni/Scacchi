@@ -217,8 +217,7 @@ class _BotTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final unlocked = collection.isUnlocked(bot);
-    final index = bots.indexOf(bot);
-    final previous = index > 0 ? bots[index - 1] : null;
+    final previous = BotCollection.unlockedBy(bot).firstOrNull;
     final beatenOn = collection.beatenOn(bot);
     final details = kidMode
         ? friendlyBotDescriptions[bot.id]?.call(AppLocalizations.of(context)) ??

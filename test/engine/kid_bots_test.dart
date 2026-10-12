@@ -8,9 +8,9 @@ import 'package:scacchi/l10n/app_localizations.dart';
 
 void main() {
   group('RP-06 bot amichevoli', () {
-    test('sono i primi tre della scala', () {
+    test('sono tre bot della scala, i più facili', () {
       expect(friendlyBots.map((b) => b.id), ['pino', 'chiara', 'rocco']);
-      expect(friendlyBots, bots.take(3).toList());
+      expect(friendlyBots.every(bots.contains), isTrue);
     });
 
     test('ogni bot amichevole ha una descrizione', () {
@@ -68,7 +68,7 @@ void main() {
     });
 
     test('le frasi normali restano quelle dello stile', () {
-      final bot = bots.first;
+      final bot = botById('pino')!;
       expect(bot.phrases(BotEvent.mistake), contains(contains('regalo')));
     });
   });

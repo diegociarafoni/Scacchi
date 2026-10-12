@@ -1494,7 +1494,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     var setup = _kidGame ? chosen.forKids() : chosen;
     var bot = setup.opponent == Opponent.bot ? botById(setup.botId) : null;
     if (bot != null && !_collection.isUnlocked(bot)) {
-      bot = _kidGame ? friendlyBots.first : bots.first;
+      bot = _kidGame ? friendlyBots.first : botById('pino')!;
       setup = setup.copyWith(botId: bot.id);
     }
     _setup = setup;

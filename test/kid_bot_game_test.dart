@@ -44,7 +44,7 @@ void main() {
     expect(find.text('Computer'), findsNothing);
     await tester.tap(find.text('Bot'));
     await tester.pumpAndSettle();
-    expect(find.text(bots[3].name), findsNothing);
+    expect(find.text(botById('marta')!.name), findsNothing);
     expect(find.textContaining('Elo'), findsNothing);
   });
 
@@ -111,8 +111,8 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
     await settings.update(settings.value.copyWith(kidMode: true));
     await tester.pumpAndSettle();
-    expect(find.textContaining('${bots.first.elo} Elo'), findsNothing);
-    expect(find.textContaining(bots.first.name), findsWidgets);
+    expect(find.textContaining('${botById('pino')!.elo} Elo'), findsNothing);
+    expect(find.textContaining(botById('pino')!.name), findsWidgets);
   });
 
   testWidgets('RP-06 la scelta del computer diventa un bot amichevole', (

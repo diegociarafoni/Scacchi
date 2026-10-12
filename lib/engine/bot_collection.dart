@@ -17,9 +17,27 @@ class BotCollection {
 
   DateTime? beatenOn(Bot bot) => beaten[bot.id];
 
+  /// Un bot si apre battendo uno qualunque di quelli del gradino di Elo
+  /// subito sotto; i due gradini più bassi sono aperti da subito.
   bool isUnlocked(Bot bot) {
-    final index = bots.indexOf(bot);
-    return index == 0 || (index > 0 && isBeaten(bots[index - 1]));
+    final below = unlockedBy(bot);
+    return below.isEmpty ||
+        unlockedBy(below.first).isEmpty ||
+        below.any(isBeaten);
+  }
+
+  /// Bot del gradino di Elo subito sotto quello di [bot].
+  static List<Bot> unlockedBy(Bot bot) {
+    final lower = [
+      for (final b in bots)
+        if (b.elo < bot.elo) b.elo,
+    ];
+    if (lower.isEmpty) return const [];
+    final top = lower.reduce((a, b) => a > b ? a : b);
+    return [
+      for (final b in bots)
+        if (b.elo == top) b,
+    ];
   }
 
   BotCollection beat(String botId, DateTime when) {
