@@ -234,6 +234,19 @@ void main() {
       expect(find.text('1. e4'), findsOneWidget);
     });
 
+    testWidgets('RF-92 righe di statistiche illeggibili non lasciano il '
+        'vuoto', (tester) async {
+      final wrong = OpeningStats.parseTsv(
+        'chiave\tmosse\n${keyAfter('')}\tNf6:100:40:40\n',
+      );
+      await phone(
+        tester,
+        ExplorerPage(book: Future.value(book), stats: Future.value(wrong)),
+      );
+      expect(find.text('e4'), findsOneWidget);
+      expect(find.text('100%'), findsOneWidget);
+    });
+
     testWidgets('RF-92 se le statistiche mancano si usa il libro', (
       tester,
     ) async {

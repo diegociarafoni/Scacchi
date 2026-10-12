@@ -31,3 +31,9 @@ Future<OpeningStats> openingStats() => _stats ??= rootBundle
       _stats = null;
       Error.throwWithStackTrace(e, st);
     });
+
+/// Come [openingStats], ma un errore di lettura diventa `null`: chi lo usa
+/// mostra il solo libro e nessun errore resta senza gestore.
+Future<OpeningStats?> openingStatsOrNull() => openingStats()
+    .then<OpeningStats?>((s) => s)
+    .onError<Object>((_, _) => null);

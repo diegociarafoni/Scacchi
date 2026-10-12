@@ -47,6 +47,8 @@ jobs:
           status=("${PIPESTATUS[@]}")
           set -e
           [ "${status[2]}" -eq 0 ]
+          # Con il download fallito lo script legge niente e scrive solo l'intestazione.
+          [ "$(wc -l < assets/openings/opening_stats.tsv)" -ge 1000 ]
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           channel: stable

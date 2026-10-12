@@ -38,7 +38,7 @@ class PersonalExplorerPage extends StatefulWidget {
   final Future<OpeningBook>? book;
 
   /// Passate all'explorer delle aperture quando lo si apre da qui.
-  final Future<OpeningStats>? stats;
+  final Future<OpeningStats?>? stats;
   final List<Move> initialMoves;
 
   /// Passati all'explorer delle aperture quando lo si apre da qui.

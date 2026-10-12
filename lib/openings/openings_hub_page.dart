@@ -56,7 +56,7 @@ class _OpeningsHubPageState extends State<OpeningsHubPage> {
                 ),
                 onTap: () => _open(
                   ExplorerPage(
-                    stats: openingStats(),
+                    stats: openingStatsOrNull(),
                     repertoire: trainer,
                     onPlay: widget.onPlay,
                     archive: widget.archive,
@@ -73,7 +73,7 @@ class _OpeningsHubPageState extends State<OpeningsHubPage> {
                   onTap: () => _open(
                     PersonalExplorerPage(
                       archive: widget.archive!(),
-                      stats: openingStats(),
+                      stats: openingStatsOrNull(),
                       repertoire: trainer,
                       onPlay: widget.onPlay,
                     ),

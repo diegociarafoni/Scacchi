@@ -26,7 +26,8 @@ class MoveStat {
         final rb = parts[b] * 100 % games;
         return rb != ra ? rb.compareTo(ra) : a.compareTo(b);
       });
-    for (var i = 0; i < 100 - base.fold(0, (a, b) => a + b); i++) {
+    final missing = 100 - base.fold(0, (a, b) => a + b);
+    for (var i = 0; i < missing; i++) {
       base[order[i]]++;
     }
     return (white: base[0], draws: base[1], black: base[2]);

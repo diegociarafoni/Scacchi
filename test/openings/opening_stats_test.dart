@@ -73,6 +73,8 @@ void main() {
         (1, 0, 2),
         (450, 200, 350),
         (7, 3, 0),
+        (1, 4, 1),
+        (1, 1, 4),
       ]) {
         final m = MoveStat('e4', w + d + b, w, b);
         final p = m.percents;

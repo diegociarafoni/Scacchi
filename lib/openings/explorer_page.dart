@@ -35,7 +35,7 @@ class ExplorerPage extends StatefulWidget {
 
   /// Statistiche per mossa (`openingStats()` nell'app); se mancano o non si
   /// leggono si mostra il libro.
-  final Future<OpeningStats>? stats;
+  final Future<OpeningStats?>? stats;
   final List<Move> initialMoves;
 
   /// Se presente, la linea corrente si può aggiungere al repertorio.
@@ -149,7 +149,12 @@ class _ExplorerPageState extends State<ExplorerPage> {
             }
             final (book, stats) = data;
             final opening = book.classifyPositions(positions);
-            final measured = stats?.at(positions.last) ?? const <MoveStat>[];
+            // Solo le mosse legali: una riga che non si legge non conta.
+            final measured = [
+              for (final m in stats?.at(positions.last) ?? const <MoveStat>[])
+                if (positions.last.parseSan(m.san) case final move?)
+                  (stat: m, move: move),
+            ];
             final next = book.continuationsAt(positions.last);
             return LayoutBuilder(
               builder: (context, c) {
@@ -180,17 +185,15 @@ class _ExplorerPageState extends State<ExplorerPage> {
                       child: measured.isNotEmpty
                           ? ListView(
                               children: [
-                                for (final m in measured)
-                                  if (positions.last.parseSan(m.san)
-                                      case final move?)
-                                    _StatRow(
-                                      stat: m,
-                                      label: formatSan(m.san, notation),
-                                      opening: book.nameOf(
-                                        positions.last.play(move),
-                                      ),
-                                      onTap: () => _play(move),
+                                for (final (:stat, :move) in measured)
+                                  _StatRow(
+                                    stat: stat,
+                                    label: formatSan(stat.san, notation),
+                                    opening: book.nameOf(
+                                      positions.last.play(move),
                                     ),
+                                    onTap: () => _play(move),
+                                  ),
                               ],
                             )
                           : next.isEmpty
