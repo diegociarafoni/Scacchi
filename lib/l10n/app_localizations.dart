@@ -1928,6 +1928,60 @@ abstract class AppLocalizations {
   /// **'La corona è tua. Il regno è in pace e ogni nuova partita è una nuova storia.'**
   String get storyCrownOutro;
 
+  /// shareImageTitle
+  ///
+  /// In it, this message translates to:
+  /// **'Esporta come immagine'**
+  String get shareImageTitle;
+
+  /// shareImageAction
+  ///
+  /// In it, this message translates to:
+  /// **'Condividi'**
+  String get shareImageAction;
+
+  /// shareImageFlip
+  ///
+  /// In it, this message translates to:
+  /// **'Capovolgi la scacchiera'**
+  String get shareImageFlip;
+
+  /// shareImageCoordinates
+  ///
+  /// In it, this message translates to:
+  /// **'Coordinate'**
+  String get shareImageCoordinates;
+
+  /// shareImageLastMove
+  ///
+  /// In it, this message translates to:
+  /// **'Ultima mossa'**
+  String get shareImageLastMove;
+
+  /// shareImageCaption
+  ///
+  /// In it, this message translates to:
+  /// **'Didascalia (facoltativa)'**
+  String get shareImageCaption;
+
+  /// shareImagePreview
+  ///
+  /// In it, this message translates to:
+  /// **'Anteprima della scacchiera'**
+  String get shareImagePreview;
+
+  /// shareImageFailed
+  ///
+  /// In it, this message translates to:
+  /// **'Condivisione non riuscita'**
+  String get shareImageFailed;
+
+  /// shareImageSubject
+  ///
+  /// In it, this message translates to:
+  /// **'Posizione di scacchi'**
+  String get shareImageSubject;
+
   /// Titolo della scheda con il risultato esatto dei finali con pochi pezzi
   ///
   /// In it, this message translates to:

@@ -10,6 +10,8 @@ import '../l10n/app_localizations.dart';
 import '../progress/activity.dart';
 import '../progress/progress_feedback.dart';
 import '../settings/settings.dart';
+import '../share/position_image.dart';
+import '../share/position_image_page.dart';
 import '../training/training_board.dart';
 import 'activity_recorder.dart';
 import 'guide_view.dart';
@@ -316,6 +318,14 @@ class _PuzzlePageState extends State<PuzzlePage> {
       appBar: AppBar(
         title: Text(widget.title),
         actions: [
+          if (!kid)
+            PositionImageButton(
+              image: () => PositionImage(
+                fen: _session.position.fen,
+                orientation: puzzle.playerSide,
+                lastMove: _session.lastMove,
+              ),
+            ),
           if (widget.guide != null && !kid)
             IconButton(
               tooltip: 'Come funziona',

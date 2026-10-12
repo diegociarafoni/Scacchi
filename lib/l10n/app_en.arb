@@ -404,6 +404,42 @@
     }
   },
   "storyCrownOutro": "The crown is yours. The kingdom is at peace and every new game is a new story.",
+  "shareImageTitle": "Export as image",
+  "@shareImageTitle": {
+    "description": "shareImageTitle"
+  },
+  "shareImageAction": "Share",
+  "@shareImageAction": {
+    "description": "shareImageAction"
+  },
+  "shareImageFlip": "Flip the board",
+  "@shareImageFlip": {
+    "description": "shareImageFlip"
+  },
+  "shareImageCoordinates": "Coordinates",
+  "@shareImageCoordinates": {
+    "description": "shareImageCoordinates"
+  },
+  "shareImageLastMove": "Last move",
+  "@shareImageLastMove": {
+    "description": "shareImageLastMove"
+  },
+  "shareImageCaption": "Caption (optional)",
+  "@shareImageCaption": {
+    "description": "shareImageCaption"
+  },
+  "shareImagePreview": "Board preview",
+  "@shareImagePreview": {
+    "description": "shareImagePreview"
+  },
+  "shareImageFailed": "Sharing failed",
+  "@shareImageFailed": {
+    "description": "shareImageFailed"
+  },
+  "shareImageSubject": "Chess position",
+  "@shareImageSubject": {
+    "description": "shareImageSubject"
+  },
   "tablebaseTitle": "Perfect endgame",
   "tablebaseCalculating": "Working out the perfect endgame… this only happens the first time",
   "tablebaseWhiteMates": "{moves, plural, one{White wins: mate in {moves} move} other{White wins: mate in {moves} moves}}",

@@ -11,8 +11,11 @@ import '../review/board_utils.dart';
 import '../review/eval_bar.dart';
 import '../review/score_format.dart';
 import '../review/win_probability.dart';
+import '../settings/board_marks.dart';
 import '../settings/notation.dart';
 import '../settings/settings.dart';
+import '../share/position_image.dart';
+import '../share/position_image_page.dart';
 import '../tablebase/perfect_endgame_card.dart';
 import '../tablebase/tablebase_service.dart';
 import 'variation_tree.dart';
@@ -232,13 +235,17 @@ class _AnalysisPageState extends State<AnalysisPage>
     return _pos.turn == Side.white ? s : s.negated;
   }
 
-  Set<Shape> _shapes() => {
-    ..._arrowFor(_pos, _arrow ? _lines.firstOrNull : null, _bestColor),
-    ..._arrowFor(_threatPos, _threatLine, _threatColor),
-  };
-
-  static const _bestColor = Color(0xCC3E8E2F);
-  static const _threatColor = Color(0xCCC0392B);
+  Set<Shape> _shapes() {
+    // La scacchiera dell'analisi è sempre verde.
+    final marks = BoardMarks.of(
+      BoardTheme.green,
+      colorBlind: AppSettings.of(context).colorBlind,
+    );
+    return {
+      ..._arrowFor(_pos, _arrow ? _lines.firstOrNull : null, marks.hint),
+      ..._arrowFor(_threatPos, _threatLine, marks.threat),
+    };
+  }
 
   Set<Shape> _arrowFor(Position? pos, InfoLine? line, Color color) {
     if (pos == null) return const {};
@@ -256,6 +263,14 @@ class _AnalysisPageState extends State<AnalysisPage>
       appBar: AppBar(
         title: const Text('Analisi'),
         actions: [
+          PositionImageButton(
+            image: () => PositionImage(
+              fen: _pos.fen,
+              orientation: widget.orientation,
+              lastMove: _tree.current.move,
+              shapes: _shapes(),
+            ),
+          ),
           IconButton(
             tooltip: 'Freccia della mossa migliore',
             isSelected: _arrow,
@@ -304,8 +319,8 @@ class _AnalysisPageState extends State<AnalysisPage>
                                 orientation: widget.orientation,
                                 onMove: _play,
                                 shapes: _shapes(),
-                                settings: const ChessboardSettings(
-                                  colorScheme: ChessboardColorScheme.green,
+                                settings: ChessboardSettings(
+                                  colorScheme: BoardTheme.green.colorScheme,
                                 ),
                               ),
                             ],
