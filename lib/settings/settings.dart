@@ -392,6 +392,9 @@ enum PieceStyle {
   rokko('Rokko', 'Progetto Rokko', 'GPL-3.0+'),
   pixel('Pixel', 'Progetto Rokko', 'GPL-3.0+'),
   arcano('Arcano', 'Progetto Rokko', 'GPL-3.0+'),
+  staunton('Staunton', 'Progetto Rokko', 'GPL-3.0+'),
+  morbido('Morbido', 'Progetto Rokko', 'GPL-3.0+'),
+  stampa('Stampa', 'Progetto Rokko', 'GPL-3.0+'),
   papercut('Papercut', 'Nikolay Anzarov', 'CC BY 4.0'),
   noto('Noto', 'Google (Noto Sans Symbols 2)', 'OFL-1.1');
 
