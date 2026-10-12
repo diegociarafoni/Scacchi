@@ -216,6 +216,12 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   AppSettings get _settings => widget.settings.value;
 
+  /// Modalità zen (RP-07): niente Elo, materiale, stato, avvisi e commenti.
+  bool get _zen => _settings.zenMode;
+
+  /// L'allenatore giudica solo fuori dalla modalità zen; lo stato resta.
+  bool get _coaching => _coachOn && !_zen;
+
   late bool _autoFlip;
 
   /// Profilo bambino (RP-06): testi semplici e comandi essenziali.
@@ -353,7 +359,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final ply = _lineDeviationNow();
     if (ply == _reportedDeviation) return;
     _reportedDeviation = ply;
-    if (ply == null) return;
+    if (ply == null || _zen) return;
     final by = ply.isEven ? Side.white : Side.black;
     final notice = _showMessage(
       by == _computerSide
@@ -464,7 +470,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   void _botSay(BotEvent event) {
     final bot = _bot;
-    if (bot == null || !mounted) return;
+    if (bot == null || !mounted || _zen) return;
     final text = bot.phrase(event, _random, friendly: _kidGame);
     _showMessage('${bot.avatar} ${bot.name}: $text');
   }
@@ -867,7 +873,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   Map<Square, Annotation> _badgeAnnotations() {
     final badge = _badge;
-    if (badge == null || _viewPly != null || !_coachOn) return const {};
+    if (badge == null || _viewPly != null || !_coaching) return const {};
     final length = _game.moves.length;
     if (length != badge.ply + 1 && length != badge.ply + 2) return const {};
     if (length == badge.ply + 2 && _lastMoveTo() == badge.square) {
@@ -890,7 +896,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// Con l'allenatore acceso, giudica la mossa prima della risposta del
   /// computer; un errore offre di riprenderla.
   Future<void> _afterHumanMove(Position before, Move move) async {
-    if (!_coachOn || _computerSide == null || _game.isOver) {
+    if (!_coaching || _computerSide == null || _game.isOver) {
       return _computerMove();
     }
     final plies = _game.moves.length;
@@ -912,7 +918,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       final text = verdict.comment?.text;
       final played = verdict.review.move;
       // Se nel frattempo l'allenatore è stato spento, il giudizio non serve.
-      if (played is NormalMove && _coachOn) {
+      if (played is NormalMove && _coaching) {
         setState(
           () => _badge = (
             ply: plies - 1,
@@ -1114,7 +1120,11 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _refresh();
     if (viewing != null) _showPly(viewing);
     if (played && !_game.isOver) _botReact();
-    if (played && !_game.isOver && _settings.explainWhy && !_isChallenge) {
+    if (played &&
+        !_game.isOver &&
+        _settings.explainWhy &&
+        !_isChallenge &&
+        !_zen) {
       unawaited(_explainReply(before, reply.move));
     }
     if (error != null) {
@@ -1822,7 +1832,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         celebrate: false,
       ),
     };
-    return _StatusLine(text: text, celebrate: celebrate);
+    return _StatusLine(text: text, celebrate: celebrate && !_zen);
   }
 
   Widget? _clockView(Side side) {
@@ -1914,7 +1924,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           ? null
           : _resign,
       // Nelle sfide niente aiuti: né suggerimenti né ripetizione della mossa.
-      coachOn: _computerSide == null || _isChallenge ? null : _coachOn,
+      coachOn: _computerSide == null || _isChallenge || _zen ? null : _coachOn,
       onCoach: () {
         setState(() {
           _coachOn = !_coachOn;
@@ -1948,7 +1958,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           );
     return Scaffold(
       appBar: AppBar(
-        title: _computerSide == null
+        title: _computerSide == null || _zen
             ? title
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -2027,6 +2037,16 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                 : _typeMove,
           ),
           IconButton(
+            key: const Key('zenToggle'),
+            tooltip: qrL10n(context).settingsZenMode,
+            isSelected: _zen,
+            icon: const Icon(Icons.self_improvement_outlined),
+            selectedIcon: const Icon(Icons.self_improvement),
+            onPressed: () => unawaited(
+              widget.settings.update(_settings.copyWith(zenMode: !_zen)),
+            ),
+          ),
+          IconButton(
             tooltip: 'Impostazioni',
             icon: const Icon(Icons.settings_outlined),
             onPressed: _openSettings,
@@ -2041,13 +2061,27 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
             builder: (context, constraints) {
               final landscape =
                   constraints.maxWidth > constraints.maxHeight * 1.2;
+              final viewPly = _viewPly;
+              // In zen lo stato si vede a fine partita o quando serve un
+              // comando; il materiale lascia posto al solo orologio.
+              final showStatus =
+                  !_zen ||
+                  _game.isOver ||
+                  viewPly != null ||
+                  _pendingMove != null;
+              final showMaterial = !_zen || _clock != null;
+              final chromeHeight =
+                  _moveStripHeight +
+                  (showStatus ? _statusHeight : 0) +
+                  _actionsHeight +
+                  (showMaterial ? 2 * _materialHeight : 0);
               final boardSize = landscape
                   ? math.min(constraints.maxHeight, constraints.maxWidth * 0.6)
                   : math.max(
                       0.0,
                       math.min(
                         constraints.maxWidth,
-                        constraints.maxHeight - _portraitChromeHeight,
+                        constraints.maxHeight - chromeHeight,
                       ),
                     );
               final boardSettings = _settings.board;
@@ -2072,8 +2106,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                   ),
                 ),
               );
-              final viewPly = _viewPly;
-              final Widget status = viewPly != null
+              final Widget status = !showStatus
+                  ? const SizedBox.shrink()
+                  : viewPly != null
                   ? _ViewBar(
                       text: viewPly == -1
                           ? 'Posizione iniziale'
@@ -2110,6 +2145,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                 side: _orientation.opposite,
                 name: _nameOf(_orientation.opposite),
                 pieceAssets: _settings.pieceAssets,
+                zen: _zen,
                 clock: _clockView(_orientation.opposite),
               );
               final bottomMaterial = _MaterialRow(
@@ -2117,6 +2153,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                 side: _orientation,
                 name: _nameOf(_orientation),
                 pieceAssets: _settings.pieceAssets,
+                zen: _zen,
                 clock: _clockView(_orientation),
               );
               if (landscape) {
@@ -2174,8 +2211,6 @@ const double _moveStripHeight = 40;
 const double _statusHeight = 48;
 const double _actionsHeight = 72;
 const double _materialHeight = 36;
-const double _portraitChromeHeight =
-    _moveStripHeight + _statusHeight + _actionsHeight + 2 * _materialHeight;
 
 String _sideName(Side side) => side == Side.white ? 'Bianco' : 'Nero';
 
@@ -2499,6 +2534,7 @@ class _MaterialRow extends StatelessWidget {
     required this.side,
     required this.name,
     required this.pieceAssets,
+    this.zen = false,
     this.clock,
   });
 
@@ -2506,10 +2542,24 @@ class _MaterialRow extends StatelessWidget {
   final Side side;
   final String? name;
   final PieceAssets pieceAssets;
+
+  /// In zen restano solo l'orologio, se c'è.
+  final bool zen;
   final Widget? clock;
 
   @override
   Widget build(BuildContext context) {
+    if (zen) {
+      return clock == null
+          ? const SizedBox.shrink()
+          : SizedBox(
+              height: _materialHeight,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Align(alignment: Alignment.centerRight, child: clock),
+              ),
+            );
+    }
     final advantage = balance.advantage(side);
     final opponent = side.opposite;
     final captured = balance.capturedBy(side);

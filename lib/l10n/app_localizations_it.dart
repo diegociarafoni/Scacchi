@@ -984,6 +984,13 @@ class AppLocalizationsIt extends AppLocalizations {
       'Dopo ogni mossa del computer, una riga su cosa minaccia o prepara';
 
   @override
+  String get settingsZenMode => 'Modalità zen';
+
+  @override
+  String get settingsZenModeDescription =>
+      'In partita restano solo scacchiera e mosse: niente Elo, materiale, stato, avvisi dell\'allenatore e commenti';
+
+  @override
   String get challengeTitle => 'Sfida un amico';
 
   @override

@@ -283,6 +283,7 @@ class AppSettings {
     this.confirmMove = false,
     this.colorBlind = false,
     this.explainWhy = false,
+    this.zenMode = false,
     this.kidMode = false,
     this.themeMode = ThemeMode.system,
     this.notation = MoveNotation.figurine,
@@ -327,6 +328,9 @@ class AppSettings {
   /// «Spiegami perché» (RF-122): dopo ogni mossa del computer una riga su cosa
   /// minaccia o prepara.
   final bool explainWhy;
+
+  /// Durante la partita restano scacchiera e mosse (RP-07).
+  final bool zenMode;
 
   /// Profilo bambino (RP-06): interfaccia e testi semplici, bot amichevoli,
   /// nessuna statistica numerica.
@@ -394,6 +398,7 @@ class AppSettings {
     bool? confirmMove,
     bool? colorBlind,
     bool? explainWhy,
+    bool? zenMode,
     bool? kidMode,
     ThemeMode? themeMode,
     MoveNotation? notation,
@@ -416,6 +421,7 @@ class AppSettings {
     confirmMove: confirmMove ?? this.confirmMove,
     colorBlind: colorBlind ?? this.colorBlind,
     explainWhy: explainWhy ?? this.explainWhy,
+    zenMode: zenMode ?? this.zenMode,
     kidMode: kidMode ?? this.kidMode,
     themeMode: themeMode ?? this.themeMode,
     notation: notation ?? this.notation,
@@ -457,6 +463,7 @@ class AppSettings {
       other.confirmMove == confirmMove &&
       other.colorBlind == colorBlind &&
       other.explainWhy == explainWhy &&
+      other.zenMode == zenMode &&
       other.kidMode == kidMode &&
       other.themeMode == themeMode &&
       other.notation == notation &&
@@ -481,6 +488,7 @@ class AppSettings {
     confirmMove,
     colorBlind,
     explainWhy,
+    zenMode,
     kidMode,
     themeMode,
     notation,
@@ -527,6 +535,7 @@ class SettingsController extends ValueNotifier<AppSettings> {
         confirmMove: read('confirmMove', d.confirmMove),
         colorBlind: read('colorBlind', d.colorBlind),
         explainWhy: read('explainWhy', d.explainWhy),
+        zenMode: read('zenMode', d.zenMode),
         kidMode: read('kidMode', d.kidMode),
         themeMode: byName(ThemeMode.values, 'themeMode', d.themeMode),
         notation: byName(MoveNotation.values, 'notation', d.notation),
@@ -574,6 +583,8 @@ class SettingsController extends ValueNotifier<AppSettings> {
         prefs.setBool('colorBlind', settings.colorBlind),
       if (old.explainWhy != settings.explainWhy)
         prefs.setBool('explainWhy', settings.explainWhy),
+      if (old.zenMode != settings.zenMode)
+        prefs.setBool('zenMode', settings.zenMode),
       if (old.kidMode != settings.kidMode)
         prefs.setBool('kidMode', settings.kidMode),
       if (old.themeMode != settings.themeMode)

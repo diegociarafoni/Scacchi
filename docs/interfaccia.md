@@ -114,6 +114,7 @@ Si aprono dall'icona a forma di ingranaggio nella barra del titolo. Ogni modific
 | Frecce e cerchi | Disegno di frecce e cerchi con due dita sulla scacchiera | Attiva |
 | Conferma la mossa | Dopo ogni mossa mostra la posizione risultante con i pulsanti Conferma e Scarta al posto della riga di stato; la mossa conta solo dopo Conferma, e l'orologio continua a scorrere. Durante l'attesa "Annulla" equivale a Scarta, mentre Patta e Abbandona sono disattivati | Disattiva |
 | Ruota a ogni turno | Orienta la scacchiera dal lato di chi deve muovere | Disattiva |
+| Modalità zen | In partita restano solo scacchiera, mosse ed eventuale orologio (sezione sotto) Si accende anche dall'icona nella barra della partita | Disattiva |
 | Modalità tavolo | Capovolge i pezzi del giocatore in alto, per giocare uno di fronte all'altro con il telefono sul tavolo | Disattiva |
 | Colori per daltonici | Sostituisce le evidenziazioni (ultima mossa, casa selezionata, mosse legali, premosse) con colori della palette Okabe-Ito, leggibili con deuteranopia, protanopia e tritanopia; i colori delle case restano quelli del tema. Indizi dei problemi e frecce del ripasso passano dal verde al blu, gli esiti delle coordinate da verde e rosso a blu e arancio (requisito RNF-07) | Disattiva |
 | Suoni | Suoni per mossa, cattura, arrocco, scacco, promozione, fine partita e tempo sotto i 10 secondi | Attivi |
@@ -127,6 +128,18 @@ Si aprono dall'icona a forma di ingranaggio nella barra del titolo. Ogni modific
 Tema, pezzi, coordinate, mosse legali, frecce e animazioni valgono anche per le scacchiere dei problemi, delle aperture e del repertorio, che si aggiornano subito quando cambiano. La modalità tavolo vale solo per la partita, perché negli esercizi si gioca sempre da un solo lato; anche la promozione automatica a donna vale solo per la partita, perché alcuni puzzle si risolvono promuovendo a un altro pezzo.
 
 I set di pezzi disponibili sono solo quelli con licenza compatibile con la GPL e con la distribuzione commerciale, elencati in `CREDITS.md`: i set CC BY-NC-SA di chessground (California, Cardinal, Maestro e altri) sono esclusi, e chi li aveva scelti torna al set Classico. I temi con texture usano solo immagini nostre, mai quelle di chessground (licenza AGPL); sui temi scuri i pezzi neri hanno un alone chiaro (vedi [pezzi-e-scacchiere.md](pezzi-e-scacchiere.md)). Anche le icone dei pezzi catturati usano il set scelto.
+
+## Modalità zen
+
+Per giocare senza distrazioni (requisito RP-07). Si accende dalle Impostazioni o al volo dall'icona della figura in meditazione nella barra della partita; la scelta è la stessa impostazione, salvata sul dispositivo, quindi vale anche per le partite successive. Cosa cambia durante la partita:
+
+- Scompaiono l'Elo e il livello dell'avversario, i nomi sopra e sotto la scacchiera, i pezzi catturati e il vantaggio di materiale.
+- La riga di stato ("Muove il Bianco") è nascosta mentre si gioca; ricompare a partita finita, sfogliando le mosse e quando serve confermare una mossa. Chi usa un lettore di schermo continua a sentire ogni mossa annunciata.
+- L'allenatore, i giudizi sulle mosse, la freccia della minaccia, «Spiegami perché», i commenti dei bot e l'avviso di uscita dal repertorio restano muti, e i loro pulsanti spariscono; il suggerimento su richiesta resta. Lo stato dell'allenatore si ritrova uscendo dallo zen.
+- Niente festa a fine partita vinta.
+- L'orologio resta se la partita ne ha uno, perché serve: il resto della riga dei giocatori sparisce. Senza orologio la scacchiera si ingrandisce.
+
+Sempre visibili: scacchiera, elenco delle mosse, comandi (nuova, annulla, gira, patta, abbandona) e suggerimento. Suoni, vibrazione e animazione dei pezzi seguono le loro impostazioni. Il codice è in `lib/game/game_page.dart` (`_zen`) e `lib/settings/settings.dart` (`zenMode`).
 
 ## Suoni
 

@@ -965,6 +965,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'After each computer move, one line on what it threatens or prepares';
 
   @override
+  String get settingsZenMode => 'Zen mode';
+
+  @override
+  String get settingsZenModeDescription =>
+      'During a game only the board and the moves remain: no Elo, material, status, coach warnings or comments';
+
+  @override
   String get challengeTitle => 'Challenge a friend';
 
   @override

@@ -1520,6 +1520,18 @@ abstract class AppLocalizations {
   /// **'Dopo ogni mossa del computer, una riga su cosa minaccia o prepara'**
   String get settingsExplainWhyDescription;
 
+  /// Impostazioni: titolo dell'interruttore; in partita è anche l'etichetta del pulsante
+  ///
+  /// In it, this message translates to:
+  /// **'Modalità zen'**
+  String get settingsZenMode;
+
+  /// Impostazioni: descrizione
+  ///
+  /// In it, this message translates to:
+  /// **'In partita restano solo scacchiera e mosse: niente Elo, materiale, stato, avvisi dell\'allenatore e commenti'**
+  String get settingsZenModeDescription;
+
   /// Voce della scheda Puzzle e titolo della schermata
   ///
   /// In it, this message translates to:

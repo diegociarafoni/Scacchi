@@ -73,6 +73,7 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | Tornei contro bot | Formule, classifica, tabellone e bacheca; si giocano dalla scheda Tu contro il motore (Android e iOS; Windows e Linux con Stockfish installato) |
 | Orologio con cadenze e incremento | Disponibile |
 | Suoni, vibrazione, modalità tavolo | Disponibile |
+| Modalità zen: in partita solo scacchiera e mosse | Disponibile |
 | Revisione della partita: classificazione, precisione anche per fase, grafico, Riprova | Disponibile dove c'è il motore (Android e iOS; Windows e Linux con Stockfish installato), anche dall'archivio |
 | Analisi libera della posizione con linee del motore e freccia della minaccia | Disponibile dove c'è il motore (Android e iOS; Windows e Linux con Stockfish installato) |
 | Bot con personalità, collezione e avversario adattivo | Disponibile dove c'è il motore |

@@ -101,6 +101,7 @@ I golden si rigenerano con `flutter test test/settings --update-goldens` dopo un
 | RF-40, RF-41 cadenze, incremento, avvisi, tempo scaduto | ✓ | ✓ |
 | RF-40 orologio contro il computer, annullamento con orologio | | ✓ |
 | RP-03 suoni e vibrazione, RF-31 modalità tavolo | ✓ | ✓ |
+| RP-07 modalità zen: impostazione salvata e pulsante in partita, niente Elo, materiale, stato, allenatore e commenti, orologio mantenuto (`test/game/zen_game_test.dart`, `test/settings/zen_settings_test.dart`) | ✓ | |
 | RNF-07 mossa da tastiera, annuncio delle mosse | ✓ | ✓ |
 | RNF-07 colori per daltonici | ✓ | ✓ |
 | RP-04 anteprima delle impostazioni (widget test e golden su tre telefoni) | ✓ | |

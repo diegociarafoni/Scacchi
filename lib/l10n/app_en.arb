@@ -236,6 +236,8 @@
   "whyImprove": "Moves {piece} to a more useful square.",
   "settingsExplainWhy": "Explain why",
   "settingsExplainWhyDescription": "After each computer move, one line on what it threatens or prepares",
+  "settingsZenMode": "Zen mode",
+  "settingsZenModeDescription": "During a game only the board and the moves remain: no Elo, material, status, coach warnings or comments",
   "challengeTitle": "Challenge a friend",
   "challengeSubtitle": "The same puzzles on two phones, no network",
   "challengeIntro": "Pick the run and show the QR code to your friend: you both play the same puzzles. At the end you swap scores with a second QR code.",

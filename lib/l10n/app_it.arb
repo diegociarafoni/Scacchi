@@ -1130,6 +1130,14 @@
   "@settingsExplainWhyDescription": {
     "description": "Impostazioni: descrizione"
   },
+  "settingsZenMode": "Modalità zen",
+  "@settingsZenMode": {
+    "description": "Impostazioni: titolo dell'interruttore; in partita è anche l'etichetta del pulsante"
+  },
+  "settingsZenModeDescription": "In partita restano solo scacchiera e mosse: niente Elo, materiale, stato, avvisi dell'allenatore e commenti",
+  "@settingsZenModeDescription": {
+    "description": "Impostazioni: descrizione"
+  },
   "challengeTitle": "Sfida un amico",
   "@challengeTitle": {
     "description": "Voce della scheda Puzzle e titolo della schermata"
