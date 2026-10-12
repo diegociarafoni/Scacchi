@@ -39,6 +39,13 @@ void main() {
     await tester.tap(find.text('Bluetooth'));
     await tester.pump();
     expect(find.textContaining('vicini'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('Crea la partita'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.ensureVisible(find.text('Crea la partita'));
+    await tester.pump();
     await tester.tap(find.text('Crea la partita'));
     await _wait(tester);
     await tester.pumpAndSettle();
@@ -82,6 +89,13 @@ void main() {
         ),
       ),
     );
+    await tester.scrollUntilVisible(
+      find.text('Unisciti con il QR'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.ensureVisible(find.text('Unisciti con il QR'));
+    await tester.pump();
     await tester.tap(find.text('Unisciti con il QR'));
     await tester.pumpAndSettle();
     scanned!(invite.toLink());
@@ -117,6 +131,13 @@ void main() {
         ),
       ),
     );
+    await tester.scrollUntilVisible(
+      find.text('Unisciti con il QR'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.ensureVisible(find.text('Unisciti con il QR'));
+    await tester.pump();
     await tester.tap(find.text('Unisciti con il QR'));
     await tester.pumpAndSettle();
     scanned!(invite.toLink());
@@ -142,6 +163,13 @@ void main() {
         ),
       );
       await tester.tap(find.text('Bluetooth'));
+      await tester.pump();
+      await tester.scrollUntilVisible(
+        find.text('Crea la partita'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.ensureVisible(find.text('Crea la partita'));
       await tester.pump();
       await tester.tap(find.text('Crea la partita'));
       await tester.pump();

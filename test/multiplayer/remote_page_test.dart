@@ -60,6 +60,13 @@ void main() {
       ),
     );
     expect(find.text('Gioca anche a distanza'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.text('Crea la partita'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.ensureVisible(find.text('Crea la partita'));
+    await tester.pump();
     await tester.tap(find.text('Crea la partita'));
     await _wait(tester);
     await tester.pumpAndSettle();
@@ -82,6 +89,13 @@ void main() {
       localizedApp(home: const MultiplayerPage(openHost: _noWifi)),
     );
     await tester.tap(find.byType(Switch));
+    await tester.pump();
+    await tester.scrollUntilVisible(
+      find.text('Crea la partita'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.ensureVisible(find.text('Crea la partita'));
     await tester.pump();
     await tester.tap(find.text('Crea la partita'));
     await _wait(tester);
@@ -159,6 +173,13 @@ void main() {
     await tester.pumpWidget(
       localizedApp(home: const MultiplayerPage(openHost: _noWifi)),
     );
+    await tester.scrollUntilVisible(
+      find.text('Crea la partita'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.ensureVisible(find.text('Crea la partita'));
+    await tester.pump();
     await tester.tap(find.text('Crea la partita'));
     await _wait(tester);
     await tester.pumpAndSettle();

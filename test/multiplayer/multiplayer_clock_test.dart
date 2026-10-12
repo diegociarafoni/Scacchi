@@ -453,12 +453,22 @@ void main() {
       await tester.pumpWidget(
         localizedApp(
           home: MultiplayerPage(
+            remoteByDefault: false,
             openHost: () async => (transport: a, lanAddress: '10.0.0.2:4000'),
           ),
         ),
       );
       expect(find.text('Senza orologio'), findsOneWidget);
-      await tester.tap(find.text('3+2'));
+      await tester.tap(find.byType(DropdownButtonFormField<TimeControl?>));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('3+2').last);
+      await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(
+        find.text('Crea la partita'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.ensureVisible(find.text('Crea la partita'));
       await tester.pump();
       await tester.tap(find.text('Crea la partita'));
       await tester.runAsync(settle);

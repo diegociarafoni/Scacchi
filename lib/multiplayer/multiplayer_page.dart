@@ -330,36 +330,19 @@ class _MultiplayerPageState extends State<MultiplayerPage> {
             onChanged: _busy ? null : (v) => setState(() => _remote = v),
           ),
           const SizedBox(height: 8),
-          Text(
-            l10n.multiplayerClockTitle,
-            style: Theme.of(context).textTheme.titleSmall,
-          ),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              ChoiceChip(
-                label: Text(l10n.multiplayerClockNone),
-                selected: _remote || _control == null,
-                onSelected: _remote
-                    ? null
-                    : (_) => setState(() => _control = null),
-              ),
+          DropdownButtonFormField<TimeControl?>(
+            key: ValueKey('clock-${_remote ? 'off' : _control?.label}'),
+            initialValue: _remote ? null : _control,
+            decoration: InputDecoration(
+              labelText: l10n.multiplayerClockTitle,
+              helperText: l10n.multiplayerClockHint,
+            ),
+            items: [
+              DropdownMenuItem(child: Text(l10n.multiplayerClockNone)),
               for (final control in TimeControl.presets)
-                ChoiceChip(
-                  label: Text(control.label),
-                  selected: !_remote && _control == control,
-                  onSelected: _remote
-                      ? null
-                      : (_) => setState(() => _control = control),
-                ),
+                DropdownMenuItem(value: control, child: Text(control.label)),
             ],
-          ),
-          const SizedBox(height: 8),
-          Text(
-            l10n.multiplayerClockHint,
-            style: Theme.of(context).textTheme.bodySmall,
+            onChanged: _remote ? null : (v) => setState(() => _control = v),
           ),
           const SizedBox(height: 16),
           FilledButton.icon(

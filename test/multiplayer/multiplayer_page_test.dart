@@ -65,6 +65,8 @@ void main() {
       200,
       scrollable: find.byType(Scrollable).first,
     );
+    await tester.ensureVisible(find.text('Crea la partita'));
+    await tester.pump();
     await tester.tap(find.text('Crea la partita'));
     await _wait(tester);
     await tester.pumpAndSettle();
@@ -107,6 +109,8 @@ void main() {
       200,
       scrollable: find.byType(Scrollable).first,
     );
+    await tester.ensureVisible(find.text('Crea la partita'));
+    await tester.pump();
     await tester.tap(find.text('Crea la partita'));
     await tester.pump();
     await tester.pump();
@@ -129,6 +133,8 @@ void main() {
       200,
       scrollable: find.byType(Scrollable).first,
     );
+    await tester.ensureVisible(find.text('Crea la partita'));
+    await tester.pump();
     await tester.tap(find.text('Crea la partita'));
     await tester.pump();
     await tester.pump();
@@ -162,6 +168,13 @@ void main() {
         ),
       ),
     );
+    await tester.scrollUntilVisible(
+      find.text('Unisciti con il QR'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.ensureVisible(find.text('Unisciti con il QR'));
+    await tester.pump();
     await tester.tap(find.text('Unisciti con il QR'));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('fakeScanner')), findsOneWidget);
@@ -314,6 +327,8 @@ void main() {
           200,
           scrollable: find.byType(Scrollable).first,
         );
+        await tester.ensureVisible(find.text('Crea la partita'));
+        await tester.pump();
         await tester.tap(find.text('Crea la partita'));
         await tester.pumpAndSettle();
         await tester.tap(find.text('Resta'));
@@ -326,6 +341,8 @@ void main() {
           200,
           scrollable: find.byType(Scrollable).first,
         );
+        await tester.ensureVisible(find.text('Crea la partita'));
+        await tester.pump();
         await tester.tap(find.text('Crea la partita'));
         await tester.pumpAndSettle();
         await tester.tap(find.text('Elimina').last);
