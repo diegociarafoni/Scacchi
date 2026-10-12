@@ -1249,90 +1249,29 @@ class AppLocalizationsIt extends AppLocalizations {
       'La corona è tua. Il regno è in pace e ogni nuova partita è una nuova storia.';
 
   @override
-  String get personalTitle => 'Le tue aperture';
+  String get shareImageTitle => 'Esporta come immagine';
 
   @override
-  String get personalHubSubtitle => 'Le mosse che hai giocato, con i risultati';
+  String get shareImageAction => 'Condividi';
 
   @override
-  String get personalLoadFailed =>
-      'L\'archivio delle partite non si è potuto leggere: riprova più tardi.';
+  String get shareImageFlip => 'Capovolgi la scacchiera';
 
   @override
-  String get personalEmpty =>
-      'Gioca qualche partita contro il computer per costruire il tuo albero delle aperture.';
+  String get shareImageCoordinates => 'Coordinate';
 
   @override
-  String get personalNoGamesFiltered => 'Nessuna partita con questi filtri.';
+  String get shareImageLastMove => 'Ultima mossa';
 
   @override
-  String get personalNoGamesHere => 'Non hai mai giocato da questa posizione.';
+  String get shareImageCaption => 'Didascalia (facoltativa)';
 
   @override
-  String get personalSideAll => 'Entrambi';
+  String get shareImagePreview => 'Anteprima della scacchiera';
 
   @override
-  String get personalSideWhite => 'Bianco';
+  String get shareImageFailed => 'Condivisione non riuscita';
 
   @override
-  String get personalSideBlack => 'Nero';
-
-  @override
-  String get personalOpponent => 'Avversario';
-
-  @override
-  String get personalAllOpponents => 'Tutti gli avversari';
-
-  @override
-  String personalGames(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count partite',
-      one: '$count partita',
-    );
-    return '$_temp0';
-  }
-
-  @override
-  String personalGamesTotal(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count partite considerate',
-      one: '$count partita considerata',
-    );
-    return '$_temp0';
-  }
-
-  @override
-  String personalScore(int wins, int draws, int losses) {
-    return '${wins}V · ${draws}P · ${losses}S';
-  }
-
-  @override
-  String personalScoreSemantics(int wins, int draws, int losses) {
-    return '$wins vinte, $draws patte, $losses perse';
-  }
-
-  @override
-  String get personalStartPosition => 'Posizione iniziale';
-
-  @override
-  String get personalNoName => 'Apertura senza nome';
-
-  @override
-  String get personalBack => 'Indietro';
-
-  @override
-  String get personalStart => 'Inizio';
-
-  @override
-  String get personalFlip => 'Gira la scacchiera';
-
-  @override
-  String get personalOpenInBook => 'Apri nell\'explorer delle aperture';
-
-  @override
-  String get personalFromHere => 'Le tue partite da questa posizione';
+  String get shareImageSubject => 'Posizione di scacchi';
 }

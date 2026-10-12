@@ -28,6 +28,7 @@ Ogni cartella di `lib/` ha qui il documento che descrive le sue funzioni. La tab
 | `lib/reminders/` | [gamification.md](gamification.md) | Promemoria giornaliero con notifiche locali |
 | `lib/review/` | [revisione-partita.md](revisione-partita.md) | Revisione della partita, classificazione delle mosse, precisione |
 | `lib/settings/` | [interfaccia.md](interfaccia.md), [pezzi-e-scacchiere.md](pezzi-e-scacchiere.md), [notazione.md](notazione.md), [profilo-bambino.md](profilo-bambino.md) | Impostazioni, temi e pezzi, coordinate esterne, colori per daltonici, controllo dell'adulto |
+| `lib/share/` | [esporta-immagine.md](esporta-immagine.md) | Esportazione della posizione come immagine PNG e condivisione con il menu di sistema |
 | `lib/stats/` | [statistiche.md](statistiche.md), [ritratto-settimana.md](ritratto-settimana.md) | Statistiche, rating locale, la tua settimana |
 | `lib/storage/` | [architettura.md](architettura.md), [gamification.md](gamification.md) | File JSON locali con versione e scrittura atomica |
 | `lib/story/` | [storia.md](storia.md) | Percorso a storia: capitoli con racconto, lezioni, puzzle, guardiani e un bot da battere |

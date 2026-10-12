@@ -1928,137 +1928,59 @@ abstract class AppLocalizations {
   /// **'La corona è tua. Il regno è in pace e ogni nuova partita è una nuova storia.'**
   String get storyCrownOutro;
 
-  /// Titolo della schermata e della voce nella scheda Aperture
+  /// shareImageTitle
   ///
   /// In it, this message translates to:
-  /// **'Le tue aperture'**
-  String get personalTitle;
+  /// **'Esporta come immagine'**
+  String get shareImageTitle;
 
-  /// Sottotitolo della voce nella scheda Aperture
+  /// shareImageAction
   ///
   /// In it, this message translates to:
-  /// **'Le mosse che hai giocato, con i risultati'**
-  String get personalHubSubtitle;
+  /// **'Condividi'**
+  String get shareImageAction;
 
-  /// Errore di lettura dell'archivio
+  /// shareImageFlip
   ///
   /// In it, this message translates to:
-  /// **'L\'archivio delle partite non si è potuto leggere: riprova più tardi.'**
-  String get personalLoadFailed;
+  /// **'Capovolgi la scacchiera'**
+  String get shareImageFlip;
 
-  /// Archivio senza partite utili
+  /// shareImageCoordinates
   ///
   /// In it, this message translates to:
-  /// **'Gioca qualche partita contro il computer per costruire il tuo albero delle aperture.'**
-  String get personalEmpty;
+  /// **'Coordinate'**
+  String get shareImageCoordinates;
 
-  /// Filtri senza partite
+  /// shareImageLastMove
   ///
   /// In it, this message translates to:
-  /// **'Nessuna partita con questi filtri.'**
-  String get personalNoGamesFiltered;
+  /// **'Ultima mossa'**
+  String get shareImageLastMove;
 
-  /// Posizione fuori dall'albero
+  /// shareImageCaption
   ///
   /// In it, this message translates to:
-  /// **'Non hai mai giocato da questa posizione.'**
-  String get personalNoGamesHere;
+  /// **'Didascalia (facoltativa)'**
+  String get shareImageCaption;
 
-  /// Filtro colore: tutte le partite
+  /// shareImagePreview
   ///
   /// In it, this message translates to:
-  /// **'Entrambi'**
-  String get personalSideAll;
+  /// **'Anteprima della scacchiera'**
+  String get shareImagePreview;
 
-  /// Filtro colore: partite con il bianco
+  /// shareImageFailed
   ///
   /// In it, this message translates to:
-  /// **'Bianco'**
-  String get personalSideWhite;
+  /// **'Condivisione non riuscita'**
+  String get shareImageFailed;
 
-  /// Filtro colore: partite con il nero
+  /// shareImageSubject
   ///
   /// In it, this message translates to:
-  /// **'Nero'**
-  String get personalSideBlack;
-
-  /// Etichetta del filtro per avversario
-  ///
-  /// In it, this message translates to:
-  /// **'Avversario'**
-  String get personalOpponent;
-
-  /// Filtro avversario senza restrizioni
-  ///
-  /// In it, this message translates to:
-  /// **'Tutti gli avversari'**
-  String get personalAllOpponents;
-
-  /// Partite in cui è stata giocata una mossa
-  ///
-  /// In it, this message translates to:
-  /// **'{count, plural, one{{count} partita} other{{count} partite}}'**
-  String personalGames(int count);
-
-  /// Partite che rispettano i filtri
-  ///
-  /// In it, this message translates to:
-  /// **'{count, plural, one{{count} partita considerata} other{{count} partite considerate}}'**
-  String personalGamesTotal(int count);
-
-  /// Vittorie, patte e sconfitte in breve
-  ///
-  /// In it, this message translates to:
-  /// **'{wins}V · {draws}P · {losses}S'**
-  String personalScore(int wins, int draws, int losses);
-
-  /// Vittorie, patte e sconfitte per i lettori di schermo
-  ///
-  /// In it, this message translates to:
-  /// **'{wins} vinte, {draws} patte, {losses} perse'**
-  String personalScoreSemantics(int wins, int draws, int losses);
-
-  /// Titolo senza mosse
-  ///
-  /// In it, this message translates to:
-  /// **'Posizione iniziale'**
-  String get personalStartPosition;
-
-  /// Titolo di una posizione senza nome nel libro
-  ///
-  /// In it, this message translates to:
-  /// **'Apertura senza nome'**
-  String get personalNoName;
-
-  /// Torna alla mossa precedente
-  ///
-  /// In it, this message translates to:
-  /// **'Indietro'**
-  String get personalBack;
-
-  /// Torna alla posizione iniziale
-  ///
-  /// In it, this message translates to:
-  /// **'Inizio'**
-  String get personalStart;
-
-  /// Tooltip del pulsante che gira la scacchiera
-  ///
-  /// In it, this message translates to:
-  /// **'Gira la scacchiera'**
-  String get personalFlip;
-
-  /// Tooltip: apre il libro delle aperture nella stessa posizione
-  ///
-  /// In it, this message translates to:
-  /// **'Apri nell\'explorer delle aperture'**
-  String get personalOpenInBook;
-
-  /// Tooltip nell'explorer delle aperture: apre l'albero personale
-  ///
-  /// In it, this message translates to:
-  /// **'Le tue partite da questa posizione'**
-  String get personalFromHere;
+  /// **'Posizione di scacchi'**
+  String get shareImageSubject;
 }
 
 class _AppLocalizationsDelegate

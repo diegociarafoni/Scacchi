@@ -8,6 +8,7 @@ import 'package:scacchi/analysis/analysis_page.dart';
 import 'package:scacchi/engine/uci.dart';
 import 'package:scacchi/settings/board_marks.dart';
 import 'package:scacchi/settings/settings.dart';
+import 'package:scacchi/share/position_image_page.dart';
 
 /// Motore finto: ogni richiesta apre un flusso controllato dal test.
 class FakeLive {
@@ -365,4 +366,21 @@ void main() {
     await tester.pump();
     expect(live.requests, hasLength(2));
   });
+
+  testWidgets(
+    'RF-104 esporta la posizione con la freccia della mossa migliore',
+    (tester) async {
+      final live = await pumpAnalysis(tester, orientation: Side.black);
+      live.emit([e4]);
+      await settle(tester);
+      await tester.tap(find.byTooltip('Esporta come immagine'));
+      await tester.pumpAndSettle();
+      final page = tester.widget<PositionImagePage>(
+        find.byType(PositionImagePage),
+      );
+      expect(page.image.fen, Chess.initial.fen);
+      expect(page.image.orientation, Side.black);
+      expect(page.image.shapes, hasLength(1));
+    },
+  );
 }

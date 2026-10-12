@@ -11,6 +11,7 @@ import 'package:scacchi/puzzles/puzzle_feed.dart';
 import 'package:scacchi/puzzles/puzzle_library.dart';
 import 'package:scacchi/puzzles/puzzle_page.dart';
 import 'package:scacchi/puzzles/puzzle_trainer.dart';
+import 'package:scacchi/share/position_image_page.dart';
 import 'package:scacchi/storage/key_value_store.dart';
 import 'package:scacchi/training/training_board.dart';
 
@@ -348,5 +349,18 @@ void main() {
     await tester.tap(find.text('Soluzione'));
     await tester.pumpAndSettle();
     expect(activities, isEmpty);
+  });
+
+  testWidgets('RF-104 esporta come immagine la posizione del puzzle', (
+    tester,
+  ) async {
+    await pump(tester);
+    await tester.tap(find.byTooltip('Esporta come immagine'));
+    await tester.pumpAndSettle();
+    final page = tester.widget<PositionImagePage>(
+      find.byType(PositionImagePage),
+    );
+    expect(page.image.fen, backRank.start.fen);
+    expect(page.image.orientation, backRank.playerSide);
   });
 }
