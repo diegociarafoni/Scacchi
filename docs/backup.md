@@ -4,7 +4,7 @@ Offline non esiste una copia online dei dati: il backup (RF-103) li raccoglie in
 
 ## Cosa contiene
 
-- Partite dell'archivio, progressi, percorso, tornei e allenamento (`games.json`, `progress.json`, `path.json`, `tornei.json`, `training.json`).
+- Partite dell'archivio, progressi, percorso, storia, tornei e allenamento (`games.json`, `progress.json`, `path.json`, `story.json`, `tornei.json`, `training.json`).
 - Impostazioni e preferenze (`SharedPreferences`): bool, numeri, testo ed elenchi di testo.
 
 ## Uso

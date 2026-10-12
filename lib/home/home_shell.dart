@@ -1,4 +1,5 @@
 import 'package:dartchess/dartchess.dart' show Side;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../archive/game_archive.dart';
@@ -258,7 +259,7 @@ class _HomeShellState extends State<HomeShell> {
     try {
       trainer = await (_trainer ??= _loadTrainer());
     } on Object catch (e) {
-      debugPrint('Puzzle non disponibili: $e');
+      if (kDebugMode) debugPrint('Puzzle non disponibili: $e');
       return null;
     }
     if (!context.mounted) return 0;
