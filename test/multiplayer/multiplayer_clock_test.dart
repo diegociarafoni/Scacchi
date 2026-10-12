@@ -354,6 +354,25 @@ void main() {
     );
 
     test(
+      'RMP-50 una mossa in tempo arrivata durante l\'attesa non perde',
+      () async {
+        final now = FakeNow();
+        final (host, guest) = await pair(now, guestNow: FakeNow());
+        await play(host, 'e2e4');
+        now.advance(const Duration(minutes: 3, seconds: 1));
+        host.tick();
+        // Il telefono dell'avversario ha ancora tempo: la mossa era in viaggio.
+        await play(guest, 'e7e5');
+        now.advance(peerFlagGrace + const Duration(seconds: 1));
+        host.tick();
+        expect(host.status, MultiplayerStatus.myTurn);
+        expect(host.clock!.remaining(Side.black), const Duration(seconds: 182));
+        await host.close();
+        await guest.close();
+      },
+    );
+
+    test(
       'RMP-50 la partita riprende col tempo che passa mentre l\'app è chiusa',
       () async {
         final dir = Directory.systemTemp.createTempSync('rokko_clock');
