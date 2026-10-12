@@ -4,6 +4,11 @@ import 'dart:typed_data';
 
 import 'package:dartchess/dartchess.dart';
 
+/// Schema dei link d'invito; `scacchi` (il nome vecchio) si legge ancora, così
+/// i QR già in giro restano validi.
+const inviteScheme = 'rokko';
+const _legacyScheme = 'scacchi';
+
 /// Versione del formato dell'invito.
 const inviteVersion = 1;
 
@@ -61,7 +66,7 @@ class GameInvite {
   final bool remote;
 
   String toLink() => Uri(
-    scheme: 'scacchi',
+    scheme: inviteScheme,
     host: 'partita',
     queryParameters: {
       'v': '$inviteVersion',
@@ -79,7 +84,8 @@ class GameInvite {
     if (text.length > maxInviteLength) return null;
     final uri = Uri.tryParse(text.trim());
     if (uri == null) return null;
-    if (uri.scheme != 'scacchi' || uri.host != 'partita') return null;
+    if (uri.scheme != inviteScheme && uri.scheme != _legacyScheme) return null;
+    if (uri.host != 'partita') return null;
     final Map<String, String> q;
     try {
       q = uri.queryParameters;

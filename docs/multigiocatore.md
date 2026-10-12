@@ -54,7 +54,7 @@ MultiplayerSession          lib/multiplayer/multiplayer_session.dart
 
 | File | Ruolo |
 |---|---|
-| `game_invite.dart` | `GameInvite`: link `scacchi://partita?v=1&g=<uuid>&s=<segreto>&k=<chiave>&c=w|b[&lan=host:porta]`, campi binari in Base64 URL senza padding. `newGameId`, `newSecret` usano `Random.secure`. |
+| `game_invite.dart` | `GameInvite`: link `rokko://partita?v=1&g=<uuid>&s=<segreto>&k=<chiave>&c=w|b[&lan=host:porta]`, campi binari in Base64 URL senza padding; i link col vecchio schema `scacchi://` si leggono ancora, si scrive sempre `rokko://`. `newGameId`, `newSecret` usano `Random.secure`. |
 | `player_identity.dart` | `PlayerIdentity`: coppia di chiavi Ed25519; il seme di 32 byte è salvato con la partita (`saved_game.dart`). |
 | `game_message.dart` | Messaggi: `JoinMessage` (l'invitato si presenta), `MoveMessage` (semimossa, UCI, impronta), `SyncRequest` (rimandare da una semimossa). |
 | `message_codec.dart` | `MessageCodec`: sigillo dei messaggi. |
@@ -83,7 +83,7 @@ A ogni collegamento nuovo `MultiTransport.connected` avvisa la sessione, che fa 
 
 ### Schermata
 
-`MultiplayerPage` (voce Tu › Gioca con un amico) offre la scelta del colore, «Crea la partita» e «Unisciti con il QR». `MultiplayerController` tiene lo stato per l'interfaccia: crea identità e invito per partita, apre il canale con `openLanHost` (indirizzo IPv4 privato scelto da `pickLanAddress` preferendo Wi-Fi e hotspot ed escludendo dati mobili e VPN, porta scelta dal sistema) o `openLanGuest`, e avvisa a ogni mossa. L'invito si mostra una sola volta come QR del link `scacchi://`, non a ogni mossa; la fotocamera riusa il lettore dello scambio QR. `MultiplayerGamePage` mostra il QR finché l'avversario non arriva, poi la scacchiera orientata dal proprio lato, con le mosse permesse solo al proprio turno.
+`MultiplayerPage` (voce Tu › Gioca con un amico) offre la scelta del colore, «Crea la partita» e «Unisciti con il QR». `MultiplayerController` tiene lo stato per l'interfaccia: crea identità e invito per partita, apre il canale con `openLanHost` (indirizzo IPv4 privato scelto da `pickLanAddress` preferendo Wi-Fi e hotspot ed escludendo dati mobili e VPN, porta scelta dal sistema) o `openLanGuest`, e avvisa a ogni mossa. L'invito si mostra una sola volta come QR del link `rokko://`, non a ogni mossa; la fotocamera riusa il lettore dello scambio QR. `MultiplayerGamePage` mostra il QR finché l'avversario non arriva, poi la scacchiera orientata dal proprio lato, con le mosse permesse solo al proprio turno.
 
 Su Android il permesso `INTERNET` è dichiarato con il motivo in `tool/policy.json`; su iOS `NSLocalNetworkUsageDescription` spiega l'uso della rete locale. Nessun socket si apre finché non si crea o si inquadra un invito. `NSBonjourServices` arriverà con la ricerca mDNS (fase 2c).
 

@@ -337,7 +337,7 @@ class _LinkDialogState extends State<_LinkDialog> {
 
   void _confirm() {
     // Il messaggio con il link ha del testo intorno: si cerca l'invito.
-    final match = RegExp(r'scacchi://\S+').firstMatch(_text.text);
+    final match = RegExp(r'(?:rokko|scacchi)://\S+').firstMatch(_text.text);
     final invite = GameInvite.parse(match?.group(0) ?? _text.text);
     if (invite == null) {
       setState(() => _invalid = true);
