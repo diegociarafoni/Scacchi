@@ -61,7 +61,8 @@ class MatchClock {
     final mover = ply.isOdd ? Side.white : Side.black;
     // Chi muove non può guadagnare più dell'incremento rispetto al tempo
     // dichiarato alla mossa precedente (all'inizio, il tempo iniziale).
-    final cap = _after[mover]! + Duration(seconds: control.increment);
+    final cap =
+        _after[mover]! + Duration(seconds: ply == 1 ? 0 : control.increment);
     if (left != null && left > cap) left = cap;
     if (ply == 1) {
       _clock.start(Side.black);

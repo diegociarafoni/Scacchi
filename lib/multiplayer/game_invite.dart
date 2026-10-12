@@ -132,6 +132,8 @@ class GameInvite {
     }
     final remote = q['r'];
     if (remote != null && remote != '1') return null;
+    // A distanza le mosse arrivano anche dopo ore: niente orologio.
+    if (remote != null && q['tc'] != null) return null;
     return GameInvite(
       gameId: gameId,
       secret: secret,

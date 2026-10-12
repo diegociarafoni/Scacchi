@@ -75,6 +75,13 @@ void main() {
       expect(GameInvite.parse(link)!.timeControl, blitz);
     });
 
+    test('RMP-50 un invito a distanza con cadenza non è valido', () {
+      expect(
+        GameInvite.parse('${invite(control: blitz).toLink()}&r=1'),
+        isNull,
+      );
+    });
+
     test('RMP-50 senza cadenza la partita resta senza orologio', () {
       final back = GameInvite.parse(invite().toLink())!;
       expect(back.timeControl, isNull);
@@ -233,7 +240,11 @@ void main() {
     test('RMP-50 un tempo dichiarato troppo alto viene limitato', () {
       final clock = MatchClock(blitz, now: FakeNow().call)..moved(1);
       clock.moved(2, left: const Duration(hours: 5));
-      // Tempo iniziale più incremento, non di più.
+      // Tempo iniziale più incremento, non di più; la prima mossa non dà incremento.
+      expect(
+        MatchClock(blitz).moved(1, left: const Duration(hours: 1)),
+        const Duration(minutes: 3),
+      );
       expect(clock.remaining(Side.black), const Duration(seconds: 182));
       // Alla mossa dopo il tetto parte dal valore dichiarato prima.
       clock.moved(3);

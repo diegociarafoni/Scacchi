@@ -78,7 +78,7 @@ class MultiplayerController extends ChangeNotifier {
     if (control != null) {
       final started = turnStartedAt == null
           ? null
-          : DateTime.fromMillisecondsSinceEpoch(turnStartedAt, isUtc: true);
+          : _notAfterNow(turnStartedAt);
       clock = MatchClock.restore(
         control,
         times: session.sync.times,
@@ -346,6 +346,13 @@ class MultiplayerController extends ChangeNotifier {
   bool _reached = false;
   bool _disposed = false;
 
+  // Un orologio di sistema portato indietro non deve regalare tempo.
+  DateTime _notAfterNow(int epochMs) {
+    final at = DateTime.fromMillisecondsSinceEpoch(epochMs, isUtc: true);
+    final now = _now();
+    return at.isAfter(now) ? now : at;
+  }
+
   /// Orologio della partita; `null` se si gioca senza tempo.
   late final MatchClock? clock;
   int _turnStartedAt = 0;
@@ -448,7 +455,11 @@ class MultiplayerController extends ChangeNotifier {
     if (_flagging) return;
     _flagging = true;
     try {
-      await session.flagSelf();
+      try {
+        await session.flagSelf();
+      } on Object catch (e) {
+        if (kDebugMode) debugPrint('Tempo scaduto non inviato: $e');
+      }
       _changed();
     } finally {
       _flagging = false;
