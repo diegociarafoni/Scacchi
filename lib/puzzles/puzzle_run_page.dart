@@ -4,11 +4,14 @@ import 'dart:math' as math;
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
+import '../exchange/qr_receive_page.dart';
 import '../progress/activity.dart';
 import '../progress/progress_feedback.dart';
 import '../progress/progress_tracker.dart';
 import '../training/training_board.dart';
 import 'activity_recorder.dart';
+import 'challenge_result_panel.dart';
+import 'friend_challenge.dart';
 import 'guide_view.dart';
 import 'mode_guide.dart';
 import 'puzzle.dart';
@@ -23,10 +26,19 @@ class PuzzleRunPage extends StatefulWidget {
     required this.mode,
     this.clock,
     this.onActivity,
+    this.challenge,
+    this.scanner = zxingScanner,
   });
 
   final PuzzleTrainer trainer;
   final PuzzleRunMode mode;
+
+  /// Sfida a un amico (RF-95): stessi puzzle sui due telefoni grazie al seme,
+  /// una sola prova e confronto dei punteggi a fine serie.
+  final FriendChallenge? challenge;
+
+  /// Lettore QR per il risultato dell'amico, sostituibile nei test.
+  final QrScannerBuilder scanner;
 
   /// Tempo trascorso, sostituibile nei test.
   final Duration Function()? clock;
@@ -66,10 +78,12 @@ class _PuzzleRunPageState extends State<PuzzleRunPage> {
 
   /// Prepara la serie senza avviare il tempo: parte con "Inizia".
   void _prepare() {
+    final challenge = widget.challenge;
     _run = PuzzleRun(
       widget.mode,
       widget.trainer.library,
       clock: widget.clock ?? () => _stopwatch.elapsed,
+      random: challenge == null ? null : SeededRandom(challenge.seed),
     );
     _ended = false;
     _newRecord = false;
@@ -197,7 +211,17 @@ class _PuzzleRunPageState extends State<PuzzleRunPage> {
                 bestCombo: _run.bestCombo,
                 newRecord: _newRecord,
                 reason: _endText(),
-                onAgain: () => setState(_restart),
+                // Con la stessa sfida rigiocare darebbe gli stessi puzzle.
+                onAgain: widget.challenge == null
+                    ? () => setState(_restart)
+                    : null,
+                extra: widget.challenge == null
+                    ? null
+                    : ChallengeResultPanel(
+                        challenge: widget.challenge!,
+                        score: _run.score,
+                        scanner: widget.scanner,
+                      ),
               )
             : _playing(context, guide),
       ),
@@ -350,6 +374,7 @@ class _Result extends StatelessWidget {
     required this.newRecord,
     required this.reason,
     required this.onAgain,
+    this.extra,
   });
 
   final int score;
@@ -357,40 +382,46 @@ class _Result extends StatelessWidget {
   final int bestCombo;
   final bool newRecord;
   final String? reason;
-  final VoidCallback onAgain;
+  final VoidCallback? onAgain;
+  final Widget? extra;
 
   @override
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
     return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text('Serie conclusa', style: text.headlineSmall),
-          if (reason != null) ...[
-            const SizedBox(height: 8),
-            Text(reason!, style: text.bodyLarge),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Serie conclusa', style: text.headlineSmall),
+            if (reason != null) ...[
+              const SizedBox(height: 8),
+              Text(reason!, style: text.bodyLarge),
+            ],
+            const SizedBox(height: 16),
+            Text(
+              '$score',
+              key: const Key('run-final-score'),
+              style: text.displayMedium,
+            ),
+            Text('puzzle risolti', style: text.titleMedium),
+            const SizedBox(height: 16),
+            if (newRecord)
+              Text('Nuovo record personale!', style: text.titleLarge)
+            else
+              Text('Record: $best', style: text.titleMedium),
+            if (bestCombo > 0) Text('Combo migliore: $bestCombo'),
+            const SizedBox(height: 24),
+            if (onAgain != null)
+              FilledButton.icon(
+                onPressed: onAgain,
+                icon: const Icon(Icons.replay),
+                label: const Text('Gioca ancora'),
+              ),
+            ?extra,
           ],
-          const SizedBox(height: 16),
-          Text(
-            '$score',
-            key: const Key('run-final-score'),
-            style: text.displayMedium,
-          ),
-          Text('puzzle risolti', style: text.titleMedium),
-          const SizedBox(height: 16),
-          if (newRecord)
-            Text('Nuovo record personale!', style: text.titleLarge)
-          else
-            Text('Record: $best', style: text.titleMedium),
-          if (bestCombo > 0) Text('Combo migliore: $bestCombo'),
-          const SizedBox(height: 24),
-          FilledButton.icon(
-            onPressed: onAgain,
-            icon: const Icon(Icons.replay),
-            label: const Text('Gioca ancora'),
-          ),
-        ],
+        ),
       ),
     );
   }

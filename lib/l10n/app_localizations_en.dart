@@ -339,6 +339,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get kidPuzzleKeepGoing => 'Go on, you can do it!';
 
   @override
+  String puzzleGoal(String goal) {
+    String _temp0 = intl.Intl.selectLogic(goal, {
+      'mateIn1': 'Goal: mate in 1',
+      'mateIn2': 'Goal: mate in 2',
+      'mateIn3': 'Goal: mate in 3',
+      'mateIn4': 'Goal: mate in 4',
+      'mate': 'Goal: checkmate the opponent',
+      'crushing': 'Goal: get a decisive advantage',
+      'advantage': 'Goal: get the advantage',
+      'equality': 'Goal: reach equality',
+      'other': 'Goal: find the best move',
+    });
+    return '$_temp0';
+  }
+
+  @override
   String get kidAccuracy5 => 'Perfect!';
 
   @override
@@ -808,5 +824,236 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String botUnlockHint(String name) {
     return 'Unlocks by beating $name';
+  }
+
+  @override
+  String get handicapTitle => 'Handicap';
+
+  @override
+  String get handicapGameTitle => 'Handicap game';
+
+  @override
+  String get handicapHint =>
+      'Whoever gives the advantage plays without a piece or with less time. The game does not count for the local rating.';
+
+  @override
+  String get handicapPieceTitle => 'Piece removed';
+
+  @override
+  String get handicapNone => 'None';
+
+  @override
+  String get handicapPieceFPawn => 'F pawn';
+
+  @override
+  String get handicapPieceKnight => 'Knight';
+
+  @override
+  String get handicapPieceRook => 'Rook';
+
+  @override
+  String get handicapPieceQueen => 'Queen';
+
+  @override
+  String get handicapTimeTitle => 'Time of the player giving odds';
+
+  @override
+  String get handicapTimeEqual => 'Equal';
+
+  @override
+  String get handicapTimeHint =>
+      'Applies only with a clock and when it is lower than the chosen time control.';
+
+  @override
+  String get handicapGiverTitle => 'Who gives the advantage';
+
+  @override
+  String get handicapGiverYou => 'You';
+
+  @override
+  String get handicapGiverOpponent => 'The opponent';
+
+  @override
+  String get handicapGiverWhite => 'White';
+
+  @override
+  String get handicapGiverBlack => 'Black';
+
+  @override
+  String handicapTimeMinutes(int n) {
+    return '$n min';
+  }
+
+  @override
+  String whyPiece(String role) {
+    String _temp0 = intl.Intl.selectLogic(role, {
+      'pawn': 'the pawn',
+      'knight': 'the knight',
+      'bishop': 'the bishop',
+      'rook': 'the rook',
+      'queen': 'the queen',
+      'other': 'the king',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get whyMate => 'Checkmate!';
+
+  @override
+  String get whyCastle => 'Castles: puts the king safe.';
+
+  @override
+  String whyPromote(String role) {
+    String _temp0 = intl.Intl.selectLogic(role, {
+      'queen': 'a queen',
+      'rook': 'a rook',
+      'bishop': 'a bishop',
+      'knight': 'a knight',
+      'other': 'a piece',
+    });
+    return 'Promotes the pawn to $_temp0.';
+  }
+
+  @override
+  String whyCapture(String victim, String attacker) {
+    return 'Captures $victim with $attacker.';
+  }
+
+  @override
+  String get whyCheck => 'Gives check to your king.';
+
+  @override
+  String whySafe(String piece) {
+    return 'Moves $piece to safety; it was under attack.';
+  }
+
+  @override
+  String whyThreatCapture(String victim, String square) {
+    return 'Threatens to capture $victim on $square.';
+  }
+
+  @override
+  String whyThreatCaptureKid(String victim) {
+    return 'Threatens to capture $victim.';
+  }
+
+  @override
+  String get whyThreatCheck => 'Prepares a check on your king.';
+
+  @override
+  String get whyThreatPromote => 'Prepares to promote a pawn.';
+
+  @override
+  String whyDevelop(String piece) {
+    return 'Develops $piece: it joins the game.';
+  }
+
+  @override
+  String get whyCenter => 'Takes space in the centre.';
+
+  @override
+  String whyImprove(String piece) {
+    return 'Moves $piece to a more useful square.';
+  }
+
+  @override
+  String get settingsExplainWhy => 'Explain why';
+
+  @override
+  String get settingsExplainWhyDescription =>
+      'After each computer move, one line on what it threatens or prepares';
+
+  @override
+  String get challengeTitle => 'Challenge a friend';
+
+  @override
+  String get challengeSubtitle => 'The same puzzles on two phones, no network';
+
+  @override
+  String get challengeIntro =>
+      'Pick the run and show the QR code to your friend: you both play the same puzzles. At the end you swap scores with a second QR code.';
+
+  @override
+  String get challengePrepare => 'Set up the challenge';
+
+  @override
+  String challengeReady(String mode) {
+    return 'Challenge ready: $mode';
+  }
+
+  @override
+  String get challengeShowInvite => 'Show the QR code to your friend';
+
+  @override
+  String get challengePlay => 'Play your run';
+
+  @override
+  String get challengeReceive => 'Receive a challenge';
+
+  @override
+  String challengeInviteTitle(String mode) {
+    return 'Challenge: $mode';
+  }
+
+  @override
+  String get challengeInviteHint =>
+      'Your friend opens Puzzles › Challenge a friend › Receive a challenge and scans the code.';
+
+  @override
+  String get challengeReceiveHint =>
+      'Scan the challenge QR code your friend is showing.';
+
+  @override
+  String get challengeNotInvite =>
+      'This QR code is not a challenge: ask your friend to show the challenge QR code.';
+
+  @override
+  String get challengeLibraryMismatch =>
+      'The two phones have different puzzles: update Rokko on both.';
+
+  @override
+  String get challengeCompareTitle => 'Challenge with your friend';
+
+  @override
+  String get challengeShowResult => 'Show my result';
+
+  @override
+  String challengeResultTitle(int score) {
+    return 'My result: $score';
+  }
+
+  @override
+  String get challengeResultHint =>
+      'Your friend scans this code to see your score.';
+
+  @override
+  String get challengeReadResult => 'Read your friend\'s result';
+
+  @override
+  String get challengeReadResultHint =>
+      'Scan the result QR code your friend is showing.';
+
+  @override
+  String get challengeNotResult =>
+      'This QR code is not a result: ask your friend to show the result QR code.';
+
+  @override
+  String get challengeOtherChallenge =>
+      'That result belongs to a different challenge.';
+
+  @override
+  String challengeWon(int mine, int theirs) {
+    return 'You won: $mine to $theirs';
+  }
+
+  @override
+  String challengeLost(int mine, int theirs) {
+    return 'Your friend won: $theirs to $mine';
+  }
+
+  @override
+  String challengeDraw(int mine, int theirs) {
+    return 'A draw: $mine to $theirs';
   }
 }

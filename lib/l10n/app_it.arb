@@ -464,6 +464,16 @@
   "@kidPuzzleKeepGoing": {
     "description": "Sotto la scacchiera del puzzle, al posto del punteggio"
   },
+  "puzzleGoal": "{goal, select, mateIn1{Obiettivo: matto in 1} mateIn2{Obiettivo: matto in 2} mateIn3{Obiettivo: matto in 3} mateIn4{Obiettivo: matto in 4} mate{Obiettivo: dai matto} crushing{Obiettivo: ottieni un vantaggio decisivo} advantage{Obiettivo: ottieni il vantaggio} equality{Obiettivo: ottieni la parità} other{Obiettivo: trova la mossa migliore}}",
+  "@puzzleGoal": {
+    "description": "Obiettivo del puzzle mostrato sopra la scacchiera e letto dai lettori di schermo",
+    "placeholders": {
+      "goal": {
+        "type": "String",
+        "description": "Obiettivo: mateIn1, mateIn2, mateIn3, mateIn4, mate, crushing, advantage o equality"
+      }
+    }
+  },
   "kidAccuracy5": "Perfetto!",
   "@kidAccuracy5": {
     "description": "Giudizio della precisione con cinque stelle"
@@ -972,6 +982,286 @@
       "name": {
         "type": "String",
         "description": "Nome del bot da battere"
+      }
+    }
+  },
+  "handicapTitle": "Handicap",
+  "handicapGameTitle": "Partita a handicap",
+  "handicapHint": "Chi concede il vantaggio gioca senza un pezzo o con meno tempo. La partita non conta per il rating locale.",
+  "handicapPieceTitle": "Pezzo in meno",
+  "handicapNone": "Nessuno",
+  "handicapPieceFPawn": "Pedone f",
+  "handicapPieceKnight": "Cavallo",
+  "handicapPieceRook": "Torre",
+  "handicapPieceQueen": "Donna",
+  "handicapTimeTitle": "Tempo di chi concede",
+  "handicapTimeEqual": "Uguale",
+  "handicapTimeHint": "Vale solo con un orologio e se è inferiore alla cadenza scelta.",
+  "handicapGiverTitle": "Chi concede il vantaggio",
+  "handicapGiverYou": "Tu",
+  "handicapGiverOpponent": "L'avversario",
+  "handicapGiverWhite": "Il Bianco",
+  "handicapGiverBlack": "Il Nero",
+  "handicapTimeMinutes": "{n} min",
+  "@handicapTimeMinutes": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "whyPiece": "{role, select, pawn{il pedone} knight{il cavallo} bishop{l'alfiere} rook{la torre} queen{la donna} other{il re}}",
+  "@whyPiece": {
+    "description": "Nome del pezzo con l'articolo, per le frasi di «spiegami perché»",
+    "placeholders": {
+      "role": {
+        "type": "String",
+        "description": "role"
+      }
+    }
+  },
+  "whyMate": "Scacco matto!",
+  "@whyMate": {
+    "description": "Spiegami perché: la mossa dà matto"
+  },
+  "whyCastle": "Arrocca: mette il re al sicuro.",
+  "@whyCastle": {
+    "description": "Spiegami perché: arrocco"
+  },
+  "whyPromote": "Promuove il pedone: diventa {role, select, queen{una donna} rook{una torre} bishop{un alfiere} knight{un cavallo} other{un pezzo}}.",
+  "@whyPromote": {
+    "description": "Spiegami perché: promozione",
+    "placeholders": {
+      "role": {
+        "type": "String",
+        "description": "Ruolo scelto per la promozione"
+      }
+    }
+  },
+  "whyCapture": "Cattura {victim} con {attacker}.",
+  "@whyCapture": {
+    "description": "Spiegami perché: cattura",
+    "placeholders": {
+      "victim": {
+        "type": "String",
+        "description": "victim"
+      },
+      "attacker": {
+        "type": "String",
+        "description": "attacker"
+      }
+    }
+  },
+  "whyCheck": "Dà scacco al tuo re.",
+  "@whyCheck": {
+    "description": "Spiegami perché: scacco"
+  },
+  "whySafe": "Mette al sicuro {piece}, che era sotto attacco.",
+  "@whySafe": {
+    "description": "Spiegami perché: pezzo salvato",
+    "placeholders": {
+      "piece": {
+        "type": "String",
+        "description": "piece"
+      }
+    }
+  },
+  "whyThreatCapture": "Minaccia di catturare {victim} in {square}.",
+  "@whyThreatCapture": {
+    "description": "Spiegami perché: minaccia di cattura",
+    "placeholders": {
+      "victim": {
+        "type": "String",
+        "description": "victim"
+      },
+      "square": {
+        "type": "String",
+        "description": "square"
+      }
+    }
+  },
+  "whyThreatCaptureKid": "Minaccia di catturare {victim}.",
+  "@whyThreatCaptureKid": {
+    "description": "Spiegami perché, profilo bambino: minaccia di cattura senza casa",
+    "placeholders": {
+      "victim": {
+        "type": "String",
+        "description": "victim"
+      }
+    }
+  },
+  "whyThreatCheck": "Prepara uno scacco al tuo re.",
+  "@whyThreatCheck": {
+    "description": "Spiegami perché: minaccia di scacco"
+  },
+  "whyThreatPromote": "Prepara la promozione di un pedone.",
+  "@whyThreatPromote": {
+    "description": "Spiegami perché: minaccia di promozione"
+  },
+  "whyDevelop": "Sviluppa {piece}: entra in gioco.",
+  "@whyDevelop": {
+    "description": "Spiegami perché: sviluppo di un pezzo",
+    "placeholders": {
+      "piece": {
+        "type": "String",
+        "description": "piece"
+      }
+    }
+  },
+  "whyCenter": "Prende spazio al centro.",
+  "@whyCenter": {
+    "description": "Spiegami perché: pedone al centro"
+  },
+  "whyImprove": "Sposta {piece} su una casa più utile.",
+  "@whyImprove": {
+    "description": "Spiegami perché: mossa tranquilla",
+    "placeholders": {
+      "piece": {
+        "type": "String",
+        "description": "piece"
+      }
+    }
+  },
+  "settingsExplainWhy": "Spiegami perché",
+  "@settingsExplainWhy": {
+    "description": "Impostazioni: titolo dell'interruttore"
+  },
+  "settingsExplainWhyDescription": "Dopo ogni mossa del computer, una riga su cosa minaccia o prepara",
+  "@settingsExplainWhyDescription": {
+    "description": "Impostazioni: descrizione"
+  },
+  "challengeTitle": "Sfida un amico",
+  "@challengeTitle": {
+    "description": "Voce della scheda Puzzle e titolo della schermata"
+  },
+  "challengeSubtitle": "Gli stessi puzzle su due telefoni, senza rete",
+  "@challengeSubtitle": {
+    "description": "Sottotitolo della voce nella scheda Puzzle"
+  },
+  "challengeIntro": "Scegli la prova e mostra il QR all'amico: giocate gli stessi puzzle. A fine prova vi scambiate i punteggi con un secondo QR.",
+  "@challengeIntro": {
+    "description": "Spiegazione in cima alla schermata della sfida"
+  },
+  "challengePrepare": "Prepara la sfida",
+  "@challengePrepare": {
+    "description": "Pulsante che crea la sfida"
+  },
+  "challengeReady": "Sfida pronta: {mode}",
+  "@challengeReady": {
+    "description": "Sfida creata, in attesa di mostrare il QR",
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "challengeShowInvite": "Mostra il QR all'amico",
+  "@challengeShowInvite": {
+    "description": "Pulsante che apre il QR della sfida"
+  },
+  "challengePlay": "Gioca la tua prova",
+  "@challengePlay": {
+    "description": "Pulsante che avvia la prova"
+  },
+  "challengeReceive": "Ricevi una sfida",
+  "@challengeReceive": {
+    "description": "Pulsante che apre la fotocamera"
+  },
+  "challengeInviteTitle": "Sfida: {mode}",
+  "@challengeInviteTitle": {
+    "description": "Titolo sopra il QR della sfida",
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "challengeInviteHint": "L'amico apre Puzzle › Sfida un amico › Ricevi una sfida e inquadra il codice.",
+  "@challengeInviteHint": {
+    "description": "Istruzioni sotto il QR della sfida"
+  },
+  "challengeReceiveHint": "Inquadra il QR della sfida mostrato dall'amico.",
+  "@challengeReceiveHint": {
+    "description": "Istruzioni sotto la fotocamera per la sfida"
+  },
+  "challengeNotInvite": "Questo QR non è una sfida: chiedi all'amico di mostrare il QR della sfida.",
+  "@challengeNotInvite": {
+    "description": "Errore: QR letto di altro tipo"
+  },
+  "challengeLibraryMismatch": "I due telefoni hanno puzzle diversi: aggiornate Rokko su entrambi.",
+  "@challengeLibraryMismatch": {
+    "description": "Errore: raccolte di puzzle diverse"
+  },
+  "challengeCompareTitle": "Sfida con l'amico",
+  "@challengeCompareTitle": {
+    "description": "Titolo del confronto a fine prova"
+  },
+  "challengeShowResult": "Mostra il mio risultato",
+  "@challengeShowResult": {
+    "description": "Pulsante che apre il QR del risultato"
+  },
+  "challengeResultTitle": "Il mio risultato: {score}",
+  "@challengeResultTitle": {
+    "description": "Titolo sopra il QR del risultato",
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "challengeResultHint": "L'amico inquadra questo codice per vedere il tuo punteggio.",
+  "@challengeResultHint": {
+    "description": "Istruzioni sotto il QR del risultato"
+  },
+  "challengeReadResult": "Leggi il risultato dell'amico",
+  "@challengeReadResult": {
+    "description": "Pulsante che apre la fotocamera per il risultato"
+  },
+  "challengeReadResultHint": "Inquadra il QR del risultato mostrato dall'amico.",
+  "@challengeReadResultHint": {
+    "description": "Istruzioni sotto la fotocamera per il risultato"
+  },
+  "challengeNotResult": "Questo QR non è un risultato: chiedi all'amico di mostrare il QR del risultato.",
+  "@challengeNotResult": {
+    "description": "Errore: QR letto di altro tipo"
+  },
+  "challengeOtherChallenge": "Il risultato è di un'altra sfida.",
+  "@challengeOtherChallenge": {
+    "description": "Errore: il risultato non appartiene a questa sfida"
+  },
+  "challengeWon": "Hai vinto: {mine} a {theirs}",
+  "@challengeWon": {
+    "description": "Esito del confronto",
+    "placeholders": {
+      "mine": {
+        "type": "int"
+      },
+      "theirs": {
+        "type": "int"
+      }
+    }
+  },
+  "challengeLost": "Ha vinto l'amico: {theirs} a {mine}",
+  "@challengeLost": {
+    "description": "Esito del confronto",
+    "placeholders": {
+      "mine": {
+        "type": "int"
+      },
+      "theirs": {
+        "type": "int"
+      }
+    }
+  },
+  "challengeDraw": "Pareggio: {mine} a {theirs}",
+  "@challengeDraw": {
+    "description": "Esito del confronto",
+    "placeholders": {
+      "mine": {
+        "type": "int"
+      },
+      "theirs": {
+        "type": "int"
       }
     }
   }

@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import '../analysis/analysis_page.dart';
 import '../archive/saved_game.dart';
 import '../coach/coach_session.dart';
+import '../coach/explain_why.dart';
 import '../coach/hint_text.dart';
 import '../editor/position_editor_page.dart';
 import '../engine/adaptive.dart';
@@ -23,6 +24,7 @@ import '../exchange/qr_receive_page.dart';
 import '../exchange/qr_send_page.dart';
 import '../exchange/qr_transfer.dart';
 import '../l10n/app_localizations.dart';
+import '../openings/opening_game.dart';
 import '../openings/opening_name.dart';
 import '../progress/activity.dart';
 import '../progress/game_activity.dart';
@@ -44,6 +46,7 @@ import 'board_swipe.dart';
 import 'challenge.dart';
 import 'chess_game.dart';
 import 'clock.dart';
+import 'handicap.dart';
 import 'material.dart';
 import 'move_input.dart';
 import 'move_label.dart';
@@ -158,6 +161,11 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// Profilo bambino all'inizio della partita: bot, titolo e frasi restano
   /// coerenti anche se l'impostazione cambia a partita in corso.
   bool _kidGame = false;
+
+  /// Handicap della partita in corso (RF-27) e colore di chi gioca, da cui
+  /// dipende chi lo concede.
+  Handicap? _handicap;
+  Side _handicapHuman = Side.white;
 
   /// Ultima variante scelta per la partita tra due persone.
   Variant _twoPlayerVariant = Variant.standard;
@@ -322,8 +330,47 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         level: challenge.levelId,
       ),
     );
-    _beginGame(ChessGame(), setup, null);
+    // Mosse iniziali non valide: si parte dalla posizione iniziale.
+    final game = challenge.startMoves.isEmpty
+        ? null
+        : ChessGame.replay(Chess.initial, challenge.startMoves);
+    _beginGame(game ?? ChessGame(), setup, null);
   }
+
+  int? _lineDeviationNow() {
+    final line = widget.challenge?.line;
+    return line == null
+        ? null
+        : lineDeviation(line, [for (final m in _game.moves) m.move]);
+  }
+
+  /// Semimossa già segnalata come uscita dalla linea del repertorio.
+  int? _reportedDeviation;
+
+  /// Segnala una volta l'uscita dalla linea del repertorio (RF-94); dopo un
+  /// annulla che rientra nella linea la segnalazione si riarma.
+  void _checkLine() {
+    final ply = _lineDeviationNow();
+    if (ply == _reportedDeviation) return;
+    _reportedDeviation = ply;
+    if (ply == null) return;
+    final by = ply.isEven ? Side.white : Side.black;
+    final notice = _showMessage(
+      by == _computerSide
+          ? 'Il computer è uscito dalla linea del repertorio.'
+          : 'Sei uscito dalla linea del repertorio.',
+    );
+    _lineNotice = notice;
+    // Il messaggio dell'utente deve restare visibile anche se subito dopo
+    // risponde il computer.
+    unawaited(
+      notice.closed.then((_) {
+        if (identical(_lineNotice, notice)) _lineNotice = null;
+      }),
+    );
+  }
+
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? _lineNotice;
 
   Future<KeyValueStore> _openStore() => _store ??= () async {
     if (widget.store != null) return widget.store!;
@@ -675,15 +722,19 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       playerSide: side,
       timeControl: _clock?.control.label,
       opponentElo: elo,
+      headers: {'Handicap': ?_handicap?.pgnValue(_handicapHuman)},
     );
   }
 
   /// Colore dell'utente ed Elo dell'avversario; `null` tra due persone.
   (Side?, int?) get _playerAndElo {
     final side = _computerSide?.opposite;
+    // Un handicap falsa il confronto: senza Elo non entra nel rating locale.
     return (
       side,
-      side == null ? null : (_bot?.elo ?? engineLevel(_gameLevel).approxElo),
+      side == null || _handicap != null
+          ? null
+          : (_bot?.elo ?? engineLevel(_gameLevel).approxElo),
     );
   }
 
@@ -1005,6 +1056,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         clock.start(_game.position.turn);
       }
     }
+    _checkLine();
     return true;
   }
 
@@ -1012,7 +1064,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final side = _computerSide;
     if (_thinking || side == null || _game.isOver || _suspensions > 0) return;
     if (_game.position.turn != side) return;
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    final messenger = ScaffoldMessenger.of(context);
+    if (_lineNotice == null) {
+      messenger.hideCurrentSnackBar();
+    }
     final generation = _generation;
     _task = _ComputerTask.move;
     final clock = _clock;
@@ -1049,6 +1104,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _task = _ComputerTask.none;
     final searchStart = _searchClock;
     _searchClock = null;
+    final before = _game.position;
     final played = reply != null && _apply(reply.move);
     if (reply == null ? !_game.isOver : !played && !_game.isOver) {
       error ??= reply ?? 'nessuna mossa';
@@ -1058,6 +1114,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _refresh();
     if (viewing != null) _showPly(viewing);
     if (played && !_game.isOver) _botReact();
+    if (played && !_game.isOver && _settings.explainWhy && !_isChallenge) {
+      unawaited(_explainReply(before, reply.move));
+    }
     if (error != null) {
       _showMessage(
         'Il computer non risponde.',
@@ -1067,9 +1126,37 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     }
   }
 
+  /// «Spiegami perché» (RF-122): una riga su cosa fa o minaccia la mossa del
+  /// computer, con la minaccia ricavata come per la freccia di RF-56.
+  Future<void> _explainReply(Position before, Move move) async {
+    final after = _game.position;
+    NormalMove? followUp;
+    // Con l'orologio acceso l'analisi della minaccia fermerebbe il tempo
+    // dell'utente: si spiega solo la mossa.
+    try {
+      followUp = _clock != null
+          ? null
+          : await _whileSuspended(() => _coach.threat(after));
+    } on Object {
+      followUp = null;
+    }
+    if (!mounted || !identical(after, _game.position)) return;
+    final text = explainComputerMove(
+      _kidL10n(context),
+      before,
+      move,
+      followUp: followUp,
+      showSquares: !_kid,
+    );
+    if (text == null) return;
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    _showMessage(text, duration: const Duration(seconds: 8));
+  }
+
   /// Partita di scacchi classici dalla posizione iniziale: solo queste contano
   /// per la stima adattiva e per la collezione dei bot.
   bool get _standardStart =>
+      _handicap == null &&
       _game.variant == Variant.standard &&
       _game.initial.fen == Chess.initial.fen;
 
@@ -1212,7 +1299,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   }
 
   /// Messaggio sopra la barra dei comandi, per non coprirla.
-  void _showMessage(
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> _showMessage(
     String text, {
     Duration duration = const Duration(seconds: 4),
     SnackBarAction? action,
@@ -1271,16 +1358,36 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     if (!vsComputer && !_kid) _twoPlayerVariant = choice.variant;
     final variant = vsComputer ? Variant.standard : choice.variant;
     final control = choice.control;
+    final human = vsComputer ? setup.resolveHumanSide(_random) : Side.white;
+    final handicap = _kid
+        ? null
+        : choice.handicap?.usable(
+            control: control,
+            standard: variant == Variant.standard,
+          );
+    final pieceOdds = handicap?.piece != null;
     _beginGame(
       ChessGame(
-        initial: initialPosition(
-          variant,
-          chess960Id: variant == Variant.chess960 ? widget.chess960Id() : null,
-        ),
+        initial: pieceOdds
+            ? handicap!.startPosition(human)
+            : initialPosition(
+                variant,
+                chess960Id: variant == Variant.chess960
+                    ? widget.chess960Id()
+                    : null,
+              ),
         variant: variant,
       ),
       setup,
-      control == null ? null : ChessClock(control, now: widget.now),
+      control == null
+          ? null
+          : ChessClock(
+              control,
+              now: widget.now,
+              startTimes: handicap?.startTimes(control, human),
+            ),
+      handicap: handicap,
+      humanSide: human,
     );
     if (vsComputer) return;
     unawaited(
@@ -1300,7 +1407,13 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     GameSetup setup,
     ChessClock? clock, {
     bool fromEditor = false,
+    Handicap? handicap,
+    Side? humanSide,
   }) {
+    assert(
+      handicap == null || humanSide != null,
+      'chi concede dipende dal colore di chi gioca',
+    );
     _cancelComputerMove();
     _clockBeforeSuspension = false;
     _coachOn = false;
@@ -1311,16 +1424,19 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     _game = game;
     _clock = clock;
+    _handicap = handicap;
     _clockHistory.clear();
     _lowTime.reset();
     _clearBoardInteraction();
     _startRecording(fromEditor: fromEditor);
     if (setup.opponent != Opponent.human) {
-      final human = setup.resolveHumanSide(_random);
+      final human = humanSide ?? setup.resolveHumanSide(_random);
+      _handicapHuman = human;
       _computerSide = human.opposite;
       _orientation = human;
       _computerPlayer.newGame().ignore();
     } else {
+      _handicapHuman = Side.white;
       if (_computerSide != null) _orientation = Side.white;
       _computerSide = null;
       _computer?.dispose().ignore();
@@ -1434,6 +1550,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       }
     }
     _clearBoardInteraction();
+    // Dopo un annulla l'uscita già segnalata vale solo se resta nella partita.
+    _reportedDeviation = _lineDeviationNow();
     _refresh(animate: false);
     unawaited(_computerMove());
   }
@@ -1555,7 +1673,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       }
     }, restart: (_) => !(current && _accepts(computerScore)));
     if (!mounted || !current || _game.isOver) return;
-    if (error != null) return _showMessage('Il computer non risponde.');
+    if (error != null) {
+      _showMessage('Il computer non risponde.');
+      return;
+    }
     final l = _kid ? _kidL10n(context) : null;
     if (_accepts(computerScore)) {
       _game.agreeDraw();
@@ -1645,6 +1766,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           puzzlePlayers: players,
           clocks: [for (final m in _game.moves) m.clock],
           timeControl: _clock?.control,
+          startTimes: _clock?.startTimes,
         ),
       ),
     );
@@ -1816,6 +1938,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         ? Text(widget.challenge!.title)
         : _game.variant != Variant.standard
         ? Text(_title)
+        : _handicap != null
+        ? Text(_kidL10n(context).handicapGameTitle)
         : l != null
         ? Text(l.appTitle)
         : OpeningName(
@@ -2325,27 +2449,32 @@ class _ActionButton extends StatelessWidget {
         : highlighted
         ? scheme.primary
         : scheme.onSurface;
-    Widget button = InkWell(
-      onTap: onPressed,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, color: color),
-          const SizedBox(height: 4),
-          // Con sette pulsanti le etichette lunghe si rimpiccioliscono, con
-          // un margine per non toccare quelle vicine.
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 2),
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                label,
-                style: Theme.of(context).textTheme.labelMedium
-                    ?.copyWith(color: color),
+    // Senza Semantics il lettore di schermo non annuncia un pulsante né il suo stato.
+    Widget button = Semantics(
+      button: true,
+      enabled: onPressed != null,
+      child: InkWell(
+        onTap: onPressed,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: color),
+            const SizedBox(height: 4),
+            // Con sette pulsanti le etichette lunghe si rimpiccioliscono, con
+            // un margine per non toccare quelle vicine.
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 2),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  label,
+                  style: Theme.of(context).textTheme.labelMedium
+                      ?.copyWith(color: color),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
     if (tooltip != null && onPressed != null) {
@@ -2401,11 +2530,22 @@ class _MaterialRow extends StatelessWidget {
           child: Row(
             children: [
               for (final (i, role) in captured.indexed)
-                Image(
-                  key: ValueKey('captured-${opponent.name}-${role.name}-$i'),
-                  image: pieceAssets[Piece(color: opponent, role: role).kind]!,
-                  width: 20,
-                  height: 20,
+                // Nel tema scuro un pezzo nero sullo sfondo scuro sparisce:
+                // un fondo grigio medio tiene almeno 3:1 con nero e bianco.
+                DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0xFF8A8A8A)
+                        : null,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Image(
+                    key: ValueKey('captured-${opponent.name}-${role.name}-$i'),
+                    image:
+                        pieceAssets[Piece(color: opponent, role: role).kind]!,
+                    width: 20,
+                    height: 20,
+                  ),
                 ),
               if (advantage > 0) ...[
                 const SizedBox(width: 6),
@@ -2511,6 +2651,7 @@ class _TimeChoice {
     this.whiteName,
     this.blackName,
     this.setup,
+    this.handicap,
   );
 
   final TimeControl? control;
@@ -2518,6 +2659,7 @@ class _TimeChoice {
   final String whiteName;
   final String blackName;
   final GameSetup setup;
+  final Handicap? handicap;
 }
 
 /// Testi del profilo bambino; in italiano se la pagina è montata senza i
@@ -2619,6 +2761,17 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
       : widget.setup.copyWith(opponent: Opponent.human);
   late final _white = TextEditingController(text: widget.whiteName);
   late final _black = TextEditingController(text: widget.blackName);
+  HandicapPiece? _handicapPiece;
+  int? _handicapMinutes;
+  var _handicapGiver = HandicapGiver.player;
+
+  Handicap? get _handicap => _handicapPiece == null && _handicapMinutes == null
+      ? null
+      : Handicap(
+          piece: _handicapPiece,
+          giverMinutes: _handicapMinutes,
+          giver: _handicapGiver,
+        );
 
   @override
   void dispose() {
@@ -2642,7 +2795,14 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
       label: Text(label),
       onPressed: () => Navigator.pop(
         context,
-        _TimeChoice(control, _variant, _white.text, _black.text, _setup),
+        _TimeChoice(
+          control,
+          _variant,
+          _white.text,
+          _black.text,
+          _setup,
+          _handicap,
+        ),
       ),
     );
     Widget nameField(TextEditingController controller, String label) =>
@@ -2702,7 +2862,11 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
                     ChoiceChip(
                       label: Text(v.label),
                       selected: v == _variant,
-                      onSelected: (_) => setState(() => _variant = v),
+                      onSelected: (_) => setState(() {
+                        _variant = v;
+                        // Il pezzo in meno vale solo negli scacchi classici.
+                        if (v != Variant.standard) _handicapPiece = null;
+                      }),
                     ),
                 ],
               ),
@@ -2711,6 +2875,7 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
                 Text(_variant.description),
               ],
             ],
+            if (l == null) ..._handicapSection(context),
             const SizedBox(height: 12),
             if (l != null) ...[
               Text(l.kidGameTimeTitle, style: theme.textTheme.titleSmall),
@@ -2744,6 +2909,115 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
         ),
       ),
     );
+  }
+
+  /// Scelta dell'handicap (RF-27): pezzo in meno e tempo di chi concede.
+  List<Widget> _handicapSection(BuildContext context) {
+    final theme = Theme.of(context);
+    final l = _kidL10n(context);
+    final human = _setup.opponent == Opponent.human;
+    final standard = !human || _variant == Variant.standard;
+    final pieces = {
+      HandicapPiece.fPawn: l.handicapPieceFPawn,
+      HandicapPiece.knight: l.handicapPieceKnight,
+      HandicapPiece.rook: l.handicapPieceRook,
+      HandicapPiece.queen: l.handicapPieceQueen,
+    };
+    final summary = _handicap == null
+        ? null
+        : [
+            if (_handicapPiece != null) pieces[_handicapPiece]!,
+            if (_handicapMinutes != null)
+              l.handicapTimeMinutes(_handicapMinutes!),
+          ].join(' · ');
+    final children = [
+      Text(l.handicapHint, style: theme.textTheme.bodySmall),
+      const SizedBox(height: 8),
+      Text(l.handicapPieceTitle, style: theme.textTheme.labelLarge),
+      const SizedBox(height: 4),
+      Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: [
+          ChoiceChip(
+            key: const ValueKey('handicap-piece-none'),
+            label: Text(l.handicapNone),
+            selected: _handicapPiece == null,
+            onSelected: (_) => setState(() => _handicapPiece = null),
+          ),
+          for (final MapEntry(:key, :value) in pieces.entries)
+            ChoiceChip(
+              key: ValueKey('handicap-piece-${key.name}'),
+              label: Text(value),
+              selected: _handicapPiece == key,
+              onSelected: standard
+                  ? (_) => setState(() => _handicapPiece = key)
+                  : null,
+            ),
+        ],
+      ),
+      const SizedBox(height: 8),
+      Text(l.handicapTimeTitle, style: theme.textTheme.labelLarge),
+      const SizedBox(height: 4),
+      Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: [
+          ChoiceChip(
+            key: const ValueKey('handicap-time-none'),
+            label: Text(l.handicapTimeEqual),
+            selected: _handicapMinutes == null,
+            onSelected: (_) => setState(() => _handicapMinutes = null),
+          ),
+          for (final m in Handicap.timeOptions)
+            ChoiceChip(
+              key: ValueKey('handicap-time-$m'),
+              label: Text(l.handicapTimeMinutes(m)),
+              selected: _handicapMinutes == m,
+              onSelected: (_) => setState(() => _handicapMinutes = m),
+            ),
+        ],
+      ),
+      Text(l.handicapTimeHint, style: theme.textTheme.bodySmall),
+      if (_handicap != null) ...[
+        const SizedBox(height: 8),
+        Text(l.handicapGiverTitle, style: theme.textTheme.labelLarge),
+        const SizedBox(height: 4),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            for (final g in HandicapGiver.values)
+              ChoiceChip(
+                key: ValueKey('handicap-giver-${g.name}'),
+                label: Text(switch ((g, human)) {
+                  (HandicapGiver.player, true) => l.handicapGiverWhite,
+                  (HandicapGiver.opponent, true) => l.handicapGiverBlack,
+                  (HandicapGiver.player, false) => l.handicapGiverYou,
+                  (HandicapGiver.opponent, false) => l.handicapGiverOpponent,
+                }),
+                selected: _handicapGiver == g,
+                onSelected: (_) => setState(() => _handicapGiver = g),
+              ),
+          ],
+        ),
+      ],
+    ];
+    // Chiuso per default: la scelta più comune resta una nuova partita normale.
+    return [
+      const SizedBox(height: 8),
+      ExpansionTile(
+        key: const ValueKey('handicap-section'),
+        tilePadding: EdgeInsets.zero,
+        childrenPadding: const EdgeInsets.only(bottom: 8),
+        shape: const Border(),
+        collapsedShape: const Border(),
+        expandedCrossAxisAlignment: CrossAxisAlignment.start,
+        title: Text(l.handicapTitle, style: theme.textTheme.titleSmall),
+        subtitle: summary == null ? null : Text(summary),
+        children: children,
+      ),
+    ];
   }
 }
 

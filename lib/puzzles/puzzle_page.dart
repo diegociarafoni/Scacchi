@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../l10n/app_localizations.dart';
 import '../progress/activity.dart';
@@ -15,6 +16,7 @@ import 'guide_view.dart';
 import 'mode_guide.dart';
 import 'puzzle.dart';
 import 'puzzle_feed.dart';
+import 'puzzle_goal.dart';
 import 'puzzle_session.dart';
 import 'puzzle_trainer.dart';
 import 'themes.dart';
@@ -67,6 +69,9 @@ class _PuzzlePageState extends State<PuzzlePage> {
   _Feedback _feedback = _Feedback.find;
   double? _delta;
   Square? _hint;
+
+  /// Mossa sbagliata appena tentata, mostrata in rosso finché non si riprova.
+  Move? _wrongMove;
   int _revision = 0;
   bool _recorded = false;
   bool _repeat = false;
@@ -117,6 +122,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
     _feedback = _Feedback.find;
     _delta = null;
     _hint = null;
+    _wrongMove = null;
     _recorded = false;
     _repeat = false;
     _epoch++;
@@ -127,11 +133,15 @@ class _PuzzlePageState extends State<PuzzlePage> {
 
   void _onMove(Move move) {
     final result = _session.tryMove(move);
+    if (result == PuzzleMoveResult.wrong && AppSettings.of(context).haptics) {
+      unawaited(HapticFeedback.heavyImpact());
+    }
     setState(() {
       _hint = null;
       switch (result) {
         case PuzzleMoveResult.wrong || PuzzleMoveResult.illegal:
           _feedback = _Feedback.wrong;
+          _wrongMove = result == PuzzleMoveResult.wrong ? move : null;
           _revision++;
         case PuzzleMoveResult.correct:
           _feedback = _Feedback.correct;
@@ -198,6 +208,18 @@ class _PuzzlePageState extends State<PuzzlePage> {
   }
 
   void _showHint() => setState(() => _hint = _session.hint());
+
+  /// Freccia e cerchio rossi sulla mossa sbagliata; il rosso non è l'unico
+  /// segnale: ci sono anche l'icona e il testo.
+  Set<Shape> _wrongShapes(Color color) =>
+      switch (_feedback == _Feedback.wrong ? _wrongMove : null) {
+        NormalMove(:final from, :final to) => {
+          Arrow(color: color, orig: from, dest: to),
+          Circle(color: color, orig: to),
+        },
+        DropMove(:final to) => {Circle(color: color, orig: to)},
+        null => const {},
+      };
 
   void _showSolution() {
     _replyTimer?.cancel();
@@ -282,6 +304,14 @@ class _PuzzlePageState extends State<PuzzlePage> {
         .take(3)
         .join(', ');
     final kid = AppSettings.of(context).kidMode;
+    // Il profilo bambino non ha cifre: «matto in N» diventa «dai matto».
+    final goal = PuzzleGoal.of(puzzle);
+    final goalText = goal == null
+        ? null
+        : Localizations.of<AppLocalizations>(
+            context,
+            AppLocalizations,
+          )?.puzzleGoal((kid && goal.isMate ? PuzzleGoal.mate : goal).key);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -312,14 +342,43 @@ class _PuzzlePageState extends State<PuzzlePage> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          if (goalText != null)
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(12, 12, 12, 0),
+                              child: Semantics(
+                                header: true,
+                                child: Text(
+                                  goalText,
+                                  key: const Key('puzzle-goal'),
+                                  style: Theme.of(context).textTheme.titleSmall,
+                                ),
+                              ),
+                            ),
                           Padding(
                             padding: const EdgeInsets.all(12),
                             child: Semantics(
                               liveRegion: true,
-                              child: Text(
-                                _message,
-                                key: const Key('puzzle-message'),
-                                style: Theme.of(context).textTheme.titleMedium,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  if (_feedback == _Feedback.wrong) ...[
+                                    Icon(
+                                      Icons.cancel,
+                                      key: const Key('puzzle-wrong-icon'),
+                                      color: AppSettings.of(context).wrongColor,
+                                    ),
+                                    const SizedBox(width: 8),
+                                  ],
+                                  Flexible(
+                                    child: Text(
+                                      _message,
+                                      key: const Key('puzzle-message'),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
@@ -336,6 +395,9 @@ class _PuzzlePageState extends State<PuzzlePage> {
                             enabled: !done && !_session.awaitingReply,
                             revision: _revision,
                             shapes: {
+                              ..._wrongShapes(
+                                AppSettings.of(context).wrongColor,
+                              ),
                               if (_hint != null)
                                 Circle(
                                   color: AppSettings.of(context).hintColor,
