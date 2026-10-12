@@ -43,7 +43,8 @@
     "androidPermissions": {
       "android.permission.RECEIVE_BOOT_COMPLETED": "Riprogramma il promemoria giornaliero dopo il riavvio (RG-11)",
       "android.permission.CAMERA": "Lettura del QR per scambiare le partite, chiesta solo all'apertura del lettore"
-    }
+    },
+    "mergedPermissions": {}
   },
   "logging": {
     "unguardedBaseline": {

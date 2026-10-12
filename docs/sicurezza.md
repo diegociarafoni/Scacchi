@@ -21,7 +21,7 @@ I report SARIF di ogni scanner sono nell'artefatto `security-reports` del workfl
 
 ## OWASP MASVS
 
-Il riferimento è [OWASP MASVS v2](https://mas.owasp.org/MASVS/), con i casi di test della [MASTG](https://mas.owasp.org/MASTG/). L'app funziona offline, non ha account e non raccoglie dati: la superficie di attacco è piccola e i controlli servono soprattutto a mantenerla tale mentre l'app cresce. `test/security/masvs_test.dart` verifica i sorgenti a ogni `flutter test`; i controlli sull'APK compilato arriveranno in una PR successiva.
+Il riferimento è [OWASP MASVS v2](https://mas.owasp.org/MASVS/), con i casi di test della [MASTG](https://mas.owasp.org/MASTG/). L'app funziona offline, non ha account e non raccoglie dati: la superficie di attacco è piccola e i controlli servono soprattutto a mantenerla tale mentre l'app cresce. `test/security/masvs_test.dart` verifica i sorgenti a ogni `flutter test`; i controlli sull'APK compilato sono in `tool/check_apk.dart`.
 
 | Area | Cosa si controlla | Strumento | Stato |
 |---|---|---|---|
@@ -35,6 +35,8 @@ Il riferimento è [OWASP MASVS v2](https://mas.owasp.org/MASVS/), con i casi di 
 | MASVS-AUTH | Non applicabile: niente account né login | | N/A |
 | MASVS-RESILIENCE | Anti-manomissione e rilevamento di root non previsti: l'app è open source e senza dati da proteggere | | Escluso per scelta |
 | MASVS-CRYPTO | La crittografia del multigiocatore ([multigiocatore.md](multigiocatore.md)) è oggi nel nucleo senza canali; la dichiarazione `ITSAppUsesNonExemptEncryption` per l'App Store va decisa con la prima versione che la usa | | Da fare |
+
+`tool/check_apk.dart` legge con `aapt2` il manifest **finale** dell'APK, dopo l'unione con quelli delle librerie, dove compaiono permessi che nei sorgenti non ci sono. Verifica che l'APK non sia debuggable, che i permessi siano solo quelli di `privacy.androidPermissions` e `privacy.mergedPermissions` (aggiunti dalle librerie, ognuno con il motivo) e che l'unico componente esportato senza permesso sia `MainActivity`. Gira sull'APK di debug nel job `android` della CI (con `--debug`, che ammette INTERNET e salta il controllo sul debug) e sull'APK di rilascio nel workflow `Rilascio APK`, prima della pubblicazione: un APK non conforme non esce.
 
 Aggiungere un permesso, per esempio `INTERNET` per il multigiocatore in rete, fa fallire il test finché il permesso non compare in `tool/policy.json` con il motivo: la scelta resta visibile in revisione.
 

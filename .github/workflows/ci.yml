@@ -137,6 +137,8 @@ jobs:
           flutter-version: 3.47.7
           cache: true
       - run: flutter build apk --debug --target-platform android-arm64
+      - name: Controlli MASVS sul manifest dell'APK
+        run: dart run tool/check_apk.dart --debug build/app/outputs/flutter-apk/app-debug.apk
       - name: Statistiche di ccache
         if: success()
         run: ccache -s
