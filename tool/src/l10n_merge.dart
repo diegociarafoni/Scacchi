@@ -56,7 +56,7 @@ List<String> checkLocales(Map<String, Map<String, String>> sources) {
   return problems;
 }
 
-/// Legge `<cartella>/<lingua>/*.arb`.
+/// Legge `<cartella>/<lingua>/*.arb`; le cartelle senza `.arb` non sono lingue.
 Map<String, Map<String, String>> readSources(Directory root) {
   final sources = <String, Map<String, String>>{};
   for (final dir in root.listSync().whereType<Directory>()) {
@@ -66,6 +66,7 @@ Map<String, Map<String, String>> readSources(Directory root) {
           f.uri.pathSegments.last: f.readAsStringSync(),
     };
   }
+  sources.removeWhere((_, files) => files.isEmpty);
   return sources;
 }
 

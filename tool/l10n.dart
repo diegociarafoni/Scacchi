@@ -11,6 +11,8 @@ import 'src/l10n_merge.dart';
 /// `flutter pub get` di una copia nuova, che altrimenti non trova il modello
 /// e poi genera il codice da sé.
 Future<void> main(List<String> args) async {
+  // I percorsi sono relativi alla radice del repository, da qualunque cartella.
+  Directory.current = File.fromUri(Platform.script).parent.parent;
   final root = Directory('lib/l10n');
   final sources = readSources(root);
   if (sources.isEmpty) {
@@ -22,6 +24,14 @@ Future<void> main(List<String> args) async {
     stderr.writeln('✗ traduzioni incoerenti:\n  ${problems.join('\n  ')}');
     exit(1);
   }
+  // Un file di una lingua tolta resterebbe e `gen-l10n` la genererebbe ancora.
+  for (final f in root.listSync().whereType<File>()) {
+    final name = f.uri.pathSegments.last;
+    if (RegExp(r'^app_\w+\.arb$').hasMatch(name) &&
+        !sources.containsKey(name.substring(4, name.length - 4))) {
+      f.deleteSync();
+    }
+  }
   try {
     for (final MapEntry(key: locale, value: files) in sources.entries) {
       File('lib/l10n/app_$locale.arb')
@@ -32,8 +42,11 @@ Future<void> main(List<String> args) async {
     exit(1);
   }
   if (args.contains('--solo-unione')) return;
-  final result = await Process.start('flutter', [
-    'gen-l10n',
-  ], mode: ProcessStartMode.inheritStdio);
+  final result = await Process.start(
+    'flutter',
+    ['gen-l10n'],
+    mode: ProcessStartMode.inheritStdio,
+    runInShell: Platform.isWindows,
+  );
   exit(await result.exitCode);
 }

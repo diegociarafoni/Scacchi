@@ -9,11 +9,13 @@ import 'package:scacchi/main.dart';
 import 'package:scacchi/minigames/minigames_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../tool/src/l10n_merge.dart';
 import 'localized_app.dart';
 
 Map<String, String> _messages(String locale) {
+  // Dalle sorgenti, non dal file generato (che può essere di un altro ramo).
   final json = jsonDecode(
-    File('lib/l10n/app_$locale.arb').readAsStringSync(),
+    mergeArbs(locale, readSources(Directory('lib/l10n'))[locale]!),
   ) as Map<String, Object?>;
   return {
     for (final e in json.entries)
