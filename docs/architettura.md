@@ -24,7 +24,7 @@ La piattaforma web non è supportata: `dartchess` usa interi a 64 bit (bitboard)
 ```
 lib/
   main.dart               Avvio dell'app, tema chiaro e scuro
-  l10n/                   Testi tradotti (.arb) e codice generato (vedi localizzazione.md)
+  l10n/                   Testi tradotti, un .arb per funzione e lingua (vedi localizzazione.md)
   home/home_shell.dart    Barra di navigazione in basso (Gioca, Puzzle, Aperture, Tu)
   home/you_page.dart      Scheda Tu: profilo, percorso, tornei, minigiochi, statistiche, settimana, scacchiera fisica, archivio
   game/
@@ -137,4 +137,4 @@ Contro il computer, dopo la mossa del giocatore `GamePage` chiede a `ComputerPla
 
 A fine partita (per qualunque causa: matto, abbandono, patta, tempo) `GamePage` passa il `SavedGame` a `onSave` (archivio) e, se la partita vale, l'attività di `progress/game_activity.dart` a `onActivity` (progressi); i due procedono in modo indipendente e un errore dell'uno non ferma l'altro. `HomeShell` fornisce entrambi.
 
-Con `GamePage.challenge` (`GameChallenge`: titolo, livello del motore, colore, `allowUndo`) la partita contro il computer parte da sola alla prima apertura, senza Nuova né editor; Annulla c'è solo se `allowUndo` è vero (guardiano sì, torneo no). A fine partita `onFinished` comunica esito e mosse a chi l'ha lanciata (guardiani del percorso e tornei, vedi [percorso.md](percorso.md) e [tornei.md](tornei.md)).
+Con `GamePage.challenge` (`GameChallenge`: titolo, livello del motore, colore, `allowUndo`, `startMoves`, `line`) la partita contro il computer parte da sola alla prima apertura, senza Nuova né editor; Annulla c'è solo se `allowUndo` è vero (guardiano sì, torneo no). Con `startMoves` la partita parte dopo quelle mosse e con `line` segnala l'uscita dalla linea del repertorio (apertura giocata, vedi [aperture.md](aperture.md)). A fine partita `onFinished` comunica esito e mosse a chi l'ha lanciata (guardiani del percorso e tornei, vedi [percorso.md](percorso.md) e [tornei.md](tornei.md)).

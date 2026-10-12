@@ -1,0 +1,220 @@
+{
+  "weeklyEntryTitle": "Riepilogo settimanale",
+  "@weeklyEntryTitle": {
+    "description": "Voce della scheda Tu"
+  },
+  "weeklyEmpty": "Negli ultimi sette giorni non hai ancora fatto nulla. Gioca una partita o risolvi un puzzle: il riepilogo si riempie da solo.",
+  "@weeklyEmpty": {
+    "description": "Pagina vuota del riepilogo"
+  },
+  "weeklyProgressHeading": "I tuoi progressi",
+  "@weeklyProgressHeading": {
+    "description": "Titolo della sezione progressi"
+  },
+  "weeklyGames": "{count, plural, one{{count} partita} other{{count} partite}}",
+  "@weeklyGames": {
+    "description": "Partite della settimana",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "weeklyGameResults": "{wins} vinte, {draws} patte, {losses} perse",
+  "@weeklyGameResults": {
+    "description": "Esiti delle partite",
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      }
+    }
+  },
+  "weeklyPuzzles": "{count, plural, one{{count} puzzle risolto} other{{count} puzzle risolti}}",
+  "@weeklyPuzzles": {
+    "description": "Puzzle della settimana",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "weeklyLessons": "{count, plural, one{{count} lezione completata} other{{count} lezioni completate}}",
+  "@weeklyLessons": {
+    "description": "Lezioni della settimana",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "weeklyReviews": "{count, plural, one{{count} partita rivista} other{{count} partite riviste}}",
+  "@weeklyReviews": {
+    "description": "Revisioni della settimana",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "weeklyMinutes": "{count, plural, one{{count} minuto di allenamento} other{{count} minuti di allenamento}}",
+  "@weeklyMinutes": {
+    "description": "Minuti di allenamento",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "weeklyAccuracy": "Precisione media {percent}%",
+  "@weeklyAccuracy": {
+    "description": "Precisione media delle revisioni",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "weeklyAccuracyUp": "{points, plural, one{{points} punto in più della settimana scorsa} other{{points} punti in più della settimana scorsa}}",
+  "@weeklyAccuracyUp": {
+    "description": "Precisione in aumento",
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "weeklyAccuracyDown": "{points, plural, one{{points} punto in meno della settimana scorsa} other{{points} punti in meno della settimana scorsa}}",
+  "@weeklyAccuracyDown": {
+    "description": "Precisione in calo",
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "weeklyErrorHeading": "Errore più frequente",
+  "@weeklyErrorHeading": {
+    "description": "Titolo della sezione errore"
+  },
+  "weeklyErrorLine": "{error}: {count, plural, one{{count} volta} other{{count} volte}}",
+  "@weeklyErrorLine": {
+    "description": "Errore ricorrente con il numero di volte",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "weeklyNoError": "Nessun errore si è ripetuto: ottimo lavoro.",
+  "@weeklyNoError": {
+    "description": "Nessun errore ricorrente"
+  },
+  "weeklyErrorHangingPiece": "pezzi lasciati in presa",
+  "@weeklyErrorHangingPiece": {
+    "description": "Nome di un errore ricorrente, in minuscolo"
+  },
+  "weeklyErrorAllowedFork": "forchette subite",
+  "@weeklyErrorAllowedFork": {
+    "description": "Nome di un errore ricorrente, in minuscolo"
+  },
+  "weeklyErrorMissedFork": "forchette mancate",
+  "@weeklyErrorMissedFork": {
+    "description": "Nome di un errore ricorrente, in minuscolo"
+  },
+  "weeklyErrorAllowedPin": "inchiodature subite",
+  "@weeklyErrorAllowedPin": {
+    "description": "Nome di un errore ricorrente, in minuscolo"
+  },
+  "weeklyErrorMissedDiscovery": "attacchi di scoperta mancati",
+  "@weeklyErrorMissedDiscovery": {
+    "description": "Nome di un errore ricorrente, in minuscolo"
+  },
+  "weeklyErrorExposedKing": "re lasciato scoperto",
+  "@weeklyErrorExposedKing": {
+    "description": "Nome di un errore ricorrente, in minuscolo"
+  },
+  "weeklyErrorMissedMate": "matti mancati",
+  "@weeklyErrorMissedMate": {
+    "description": "Nome di un errore ricorrente, in minuscolo"
+  },
+  "weeklyErrorAllowedMate": "matti subiti",
+  "@weeklyErrorAllowedMate": {
+    "description": "Nome di un errore ricorrente, in minuscolo"
+  },
+  "weeklyErrorMaterialLoss": "perdite di materiale",
+  "@weeklyErrorMaterialLoss": {
+    "description": "Nome di un errore ricorrente, in minuscolo"
+  },
+  "weeklyErrorMissedCapture": "catture mancate",
+  "@weeklyErrorMissedCapture": {
+    "description": "Nome di un errore ricorrente, in minuscolo"
+  },
+  "weeklyAdviceHeading": "Il consiglio",
+  "@weeklyAdviceHeading": {
+    "description": "Titolo della sezione consiglio"
+  },
+  "weeklyAdviceLesson": "Ripassa la lezione «{title}» del Percorso.",
+  "@weeklyAdviceLesson": {
+    "description": "Consiglio: lezione",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "weeklyAdvicePuzzles": "Allenati con i puzzle «{title}».",
+  "@weeklyAdvicePuzzles": {
+    "description": "Consiglio: puzzle di un tema",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "weeklyAdviceReview": "Rivedi una delle tue partite: il coach ti mostra dove migliorare.",
+  "@weeklyAdviceReview": {
+    "description": "Consiglio: rivedere una partita"
+  },
+  "weeklyAdviceSolvePuzzles": "Risolvi qualche puzzle: bastano pochi minuti al giorno.",
+  "@weeklyAdviceSolvePuzzles": {
+    "description": "Consiglio: puzzle"
+  },
+  "weeklyAdviceKeepGoing": "Continua così: allenarti poco ma spesso funziona.",
+  "@weeklyAdviceKeepGoing": {
+    "description": "Consiglio: continuare"
+  },
+  "weeklyOpenLesson": "Apri la lezione",
+  "@weeklyOpenLesson": {
+    "description": "Pulsante che apre la lezione consigliata"
+  },
+  "weeklyOpenPuzzles": "Apri i puzzle",
+  "@weeklyOpenPuzzles": {
+    "description": "Pulsante che apre i puzzle consigliati"
+  },
+  "weeklyKidActive": "Questa settimana ti sei allenato. Bravo!",
+  "@weeklyKidActive": {
+    "description": "Profilo bambino: frase sui progressi"
+  },
+  "weeklyKidDaysLabel": "Le stelle sono i giorni in cui ti sei allenato",
+  "@weeklyKidDaysLabel": {
+    "description": "Profilo bambino: etichetta per i lettori di schermo"
+  },
+  "weeklyKidError": "Fai più attenzione a: {error}.",
+  "@weeklyKidError": {
+    "description": "Profilo bambino: errore ricorrente",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  }
+}

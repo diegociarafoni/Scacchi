@@ -13,7 +13,9 @@ Dopo il clone, una volta: `lefthook install`.
 ## Comandi
 
 ```sh
+dart tool/l10n.dart --solo-unione     # testi tradotti, solo in una copia nuova e prima del pub get
 flutter pub get                       # dipendenze
+dart tool/l10n.dart                   # testi tradotti: dopo ogni modifica ai .arb o cambio di ramo
 flutter run                           # avvio sul dispositivo o emulatore collegato
 flutter test                          # test unitari e di widget
 flutter test integration_test -d linux  # test e2e (su Linux senza schermo: xvfb-run -a ...)
@@ -48,23 +50,26 @@ Ogni funzione nasce dai requisiti del progetto, nel documento dei requisiti, con
 | Livello | Cartella | Cosa verifica | Comando |
 |---|---|---|---|
 | Unitari | `test/chess_game_test.dart`, `test/material_test.dart`, `test/settings_test.dart`, `test/clock_test.dart`, `test/sound_test.dart`, `test/move_label_test.dart`, `test/move_input_test.dart`, `test/move_speech_test.dart` | Regole e fine partita su `ChessGame`; pezzi catturati e vantaggio su `MaterialBalance`; impostazioni e salvataggio; orologio; scelta dei suoni; numerazione, lettura e annuncio delle mosse; senza interfaccia | `flutter test` |
-| Unitari | `test/engine/` | Protocollo UCI, scelta delle mosse, `ComputerPlayer` con motore finto e con Stockfish reale (se installato) | `flutter test` |
-| Widget | `test/analysis/` | Schermata di analisi con motore finto: linee, MultiPV, esplorazione, pausa, freccia | `flutter test` |
+| Unitari | `test/engine/` | Protocollo UCI, scelta delle mosse, `ComputerPlayer` con motore finto e con Stockfish reale (se installato), `VariantEngine` nelle varianti | `flutter test` |
+| Widget | `test/analysis/` | Schermata di analisi con motore finto: linee, MultiPV, esplorazione, albero delle varianti (promozione, eliminazione), pausa, freccia | `flutter test` |
 | Unitari e widget | `test/review/` | Probabilità di vittoria, classificazione, sacrifici, precisione, revisione con motore finto, schermata di revisione e accesso dal menu | `flutter test` |
 | Widget | `test/widget_test.dart`, `test/l10n_test.dart` | Avvio dell'app e stato iniziale; lingua italiana predefinita | `flutter test` |
 | Unitari | `test/branding_test.dart` | Nome Rokko su Android e iOS, identificativo invariato, icona monocromatica | `flutter test` |
 | Widget | `test/computer_game_test.dart` | Partita contro il computer con un motore finto | `flutter test` |
 | Gamification | `test/progress/` | Regole di XP, serie (anche la sua spiegazione in parole) e traguardi; salvataggio; schermata Profilo | `flutter test test/progress` |
 | Percorso | `test/path/` | Esercizi, contenuti, sblocco, mappa e tappe sulla scacchiera | `flutter test test/path` |
+| Storia | `test/story/`, `test/home/home_story_test.dart` | Capitoli e avanzamento, salvataggio, puzzle del tema, schermata e accesso dalla scheda Tu | `flutter test test/story test/home/home_story_test.dart` |
 | Statistiche | `test/stats/` | Bilancio, rating locale, schermata | `flutter test test/stats` |
 | Minigiochi | `test/minigames/` | Generazione risolvibile, risposte, schermate, registrazione dei punteggi | `flutter test test/minigames` |
 | Scheda Tu | `test/home/` | Voci della scheda Tu: guardiani del percorso, tornei contro il motore finto, apertura di una partita dell'archivio nella revisione | `flutter test test/home` |
 | Tornei | `test/tournament/` | Abbinamenti, simulazione, spareggi, salvataggio, schermata | `flutter test test/tournament` |
 | Scacchiera per esercizi | `test/training/` | Tema, pezzi e coordinate presi dalle impostazioni, senza capovolgere i pezzi | `flutter test test/training` |
+| Sicurezza | `test/security/` | Controlli OWASP MASVS sui sorgenti: permessi, log, SDK vietati, esportazioni (vedi sicurezza.md) | `flutter test test/security` |
 | Archivio | `test/archive/` | PGN, salvataggio su file, schermata Partite | `flutter test test/archive` |
 | Scambio QR | `test/exchange/`, `test/game/game_qr_test.dart` | Fotogrammi QR, validazione dei dati letti, schermate Passa e Ricevi, partita continuata (vedi scambio-qr.md) | `flutter test test/exchange` |
 | Allenatore | `test/coach/` | Avvisi, Riprova e Continua, suggerimento a livelli, frasi in parole semplici | `flutter test test/coach` |
-| Puzzle | `test/puzzles/` | Dataset, Glicko-2, sessioni, Storm, Rush e Serie, ripasso, spiegazione delle modalità | `flutter test test/puzzles` |
+| Puzzle | `test/puzzles/` | Dataset, Glicko-2, sessioni, Storm, Rush e Serie, ripasso, spiegazione delle modalità, sfida a tempo tra amici (messaggi QR, stessi puzzle dallo stesso seme, lancio, ricezione, confronto) | `flutter test test/puzzles` |
+| Grandi maestri | `test/masters/` | Legalità e risultato di ogni partita della raccolta, «Indovina la mossa», progresso, schermate (vedi grandi-maestri.md) | `flutter test test/masters` |
 | Aperture | `test/openings/` | Libro, nomi italiani, Esplora aperture, repertorio | `flutter test test/openings` |
 | Regole | `test/regole/` | Partite di riferimento e perft | `flutter test test/regole` |
 | Editor, backup, scacchiera fisica, promemoria | `test/editor/`, `test/backup/`, `test/physical/`, `test/reminders/` | FEN e validazione, backup e ripristino, orologio e registro, promemoria | `flutter test test/editor test/backup test/physical test/reminders` |
@@ -99,6 +104,7 @@ I golden si rigenerano con `flutter test test/settings --update-goldens` dopo un
 | RF-40, RF-41 cadenze, incremento, avvisi, tempo scaduto | ✓ | ✓ |
 | RF-40 orologio contro il computer, annullamento con orologio | | ✓ |
 | RP-03 suoni e vibrazione, RF-31 modalità tavolo | ✓ | ✓ |
+| RP-07 modalità zen: impostazione salvata e pulsante in partita, niente Elo, materiale, stato, allenatore e commenti, orologio mantenuto (`test/game/zen_game_test.dart`, `test/settings/zen_settings_test.dart`) | ✓ | |
 | RNF-07 mossa da tastiera, annuncio delle mosse | ✓ | ✓ |
 | RNF-07 colori per daltonici | ✓ | ✓ |
 | RP-04 anteprima delle impostazioni (widget test e golden su tre telefoni) | ✓ | |
@@ -125,6 +131,8 @@ I golden si rigenerano con `flutter test test/settings --update-goldens` dopo un
 | RF-66 cache della revisione (in memoria) | ✓ | |
 | RF-70 spiegazioni: matto concesso o mancato, pezzo in presa, forchetta, inchiodatura, re scoperto, perdita di materiale | ✓ | |
 | RF-72 giudizio con simbolo sulla casa della mossa (con l'allenatore acceso) | ✓ | ✓ |
+| RF-122 spiegami perché: frasi per cattura, scacco, arrocco, promozione, minacce, sviluppo; interruttore in Impostazioni | ✓ | |
+| RF-123 il computer e i bot giocano Chess960, Re della collina e Tre scacchi con un motore in Dart; niente aiuti di Stockfish | ✓ | |
 | RF-73 allenatore: avviso in tempo reale, Riprova e Continua | ✓ | |
 | RF-74 suggerimento a livelli, in parole semplici, con cerchio e freccia | ✓ | |
 | RF-71 cattura netta, doppio attacco, scoperta dalla variante del motore | ✓ | |
@@ -150,25 +158,29 @@ I golden si rigenerano con `flutter test test/settings --update-goldens` dopo un
 | RG-10 minigiochi | ✓ | |
 | RG-09 tornei offline contro bot | ✓ | |
 | RG-12 gamification disattivabile | ✓ | |
+| RG-16 riepilogo settimanale: progressi, errore ricorrente, un consiglio | ✓ | ✓ |
 | RF-80 raccolta di puzzle inclusa e valida | ✓ | ✓ |
 | RF-81 risoluzione e punteggio Glicko-2 | ✓ | ✓ |
 | RF-83 suggerimento, soluzione, filtro per tema | ✓ | ✓ |
 | RF-84 puzzle del giorno | ✓ | ✓ |
 | RG-01 XP per i puzzle risolti | ✓ | |
 | RF-82 Combo a tempo, corsa, sopravvivenza, serie | ✓ | ✓ |
+| RF-95 sfida a tempo tra amici con QR | ✓ | ✓ |
 | RF-85 ripasso dei puzzle sbagliati | ✓ | |
 | RF-86 allenatore dei finali: esito, stelle, ripetizione, schermate | ✓ | |
+| RF-87, RF-88 partite dei grandi maestri: legalità e risultato di ogni partita, «Indovina la mossa», schermate | ✓ | ✓ |
 | RG-08 record personali delle serie | ✓ | ✓ |
 | RF-90 nome dell'apertura in partita | ✓ | ✓ |
 | RF-91 mosse di libro | ✓ | |
 | RF-92 Esplora aperture | ✓ | ✓ |
 | RF-93 repertorio e ripasso dilazionato | ✓ | ✓ |
+| RF-96 albero delle proprie aperture dall'archivio | ✓ | ✓ |
 
 ## Integrazione continua
 
 Il workflow `.github/workflows/ci.yml` gira su ogni pull request e su ogni push su `main`, tranne quando cambiano solo `docs/`, file Markdown o `LICENSE`:
 
-1. **test**, sempre: installa Stockfish (per i test d'integrazione del motore), verifica di localizzazione e formattazione, `flutter analyze`, `flutter test`, licenze delle dipendenze. È il controllo bloccante di ogni PR.
+1. **test**, sempre: installa Stockfish (per i test d'integrazione del motore), verifica di localizzazione e formattazione, `flutter analyze`, `flutter test` con copertura (almeno 80% sulla logica di gioco, vedi [qualita.md](qualita.md)), licenze delle dipendenze. È il controllo bloccante di ogni PR.
 2. **e2e**, se i test passano: installa Stockfish ed esegue i test end-to-end sull'app Linux desktop con uno schermo virtuale (`xvfb`), un file alla volta perché avvii ravvicinati dell'app Linux nello stesso comando falliscono.
 3. **android**, se i test passano: libera spazio sul runner (la compilazione nativa di Stockfish con l'NDK lo esaurisce), compila un APK di debug solo arm64 e lo pubblica come artefatto `scacchi-debug-apk` per 7 giorni.
 

@@ -6,6 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/analysis/analysis_page.dart';
 import 'package:scacchi/engine/uci.dart';
+import 'package:scacchi/settings/board_marks.dart';
+import 'package:scacchi/settings/settings.dart';
+import 'package:scacchi/share/position_image_page.dart';
+
+import '../board_marks_helpers.dart';
 
 /// Motore finto: ogni richiesta apre un flusso controllato dal test.
 class FakeLive {
@@ -129,6 +134,90 @@ void main() {
       expect(live.requests.last.fen, afterE4.fen);
     });
 
+    testWidgets('RF-52 una mossa diversa crea una variante senza perdere il '
+        'seguito', (tester) async {
+      final live = await pumpAnalysis(tester);
+      board(tester).onMove!(NormalMove.fromUci('e2e4'));
+      await settle(tester);
+      board(tester).onMove!(NormalMove.fromUci('e7e5'));
+      await settle(tester);
+      await tester.tap(find.byTooltip('Indietro'));
+      await settle(tester);
+      board(tester).onMove!(NormalMove.fromUci('c7c5'));
+      await settle(tester);
+      // La linea principale resta e la variante compare tra parentesi.
+      expect(find.text('1. e4'), findsOneWidget);
+      expect(find.text('e5'), findsOneWidget);
+      expect(find.text('1… c5'), findsOneWidget);
+      expect(live.requests.last.fen, contains('2p5'));
+    });
+
+    testWidgets('RF-52 toccare una mossa dell\'albero porta in quella '
+        'posizione', (tester) async {
+      final live = await pumpAnalysis(tester);
+      board(tester).onMove!(NormalMove.fromUci('e2e4'));
+      await settle(tester);
+      board(tester).onMove!(NormalMove.fromUci('e7e5'));
+      await settle(tester);
+      board(tester).onMove!(NormalMove.fromUci('g1f3'));
+      await settle(tester);
+      await tester.tap(find.text('e5'));
+      await settle(tester);
+      final afterE5 = Chess.initial
+          .play(Move.parse('e2e4')!)
+          .play(Move.parse('e7e5')!);
+      expect(live.requests.last.fen, afterE5.fen);
+    });
+
+    testWidgets('RF-52 una variante si promuove a linea principale', (
+      tester,
+    ) async {
+      await pumpAnalysis(tester);
+      board(tester).onMove!(NormalMove.fromUci('e2e4'));
+      await settle(tester);
+      board(tester).onMove!(NormalMove.fromUci('e7e5'));
+      await settle(tester);
+      await tester.tap(find.byTooltip('Indietro'));
+      await settle(tester);
+      board(tester).onMove!(NormalMove.fromUci('c7c5'));
+      await settle(tester);
+      await tester.tap(find.byTooltip('Promuovi a linea principale'));
+      await settle(tester);
+      // Dopo la promozione la linea principale è 1. e4 c5 e il pulsante si
+      // disattiva.
+      expect(find.text('1. e4'), findsOneWidget);
+      final button = tester.widget<IconButton>(
+        find.widgetWithIcon(IconButton, Icons.upgrade),
+      );
+      expect(button.onPressed, isNull);
+    });
+
+    testWidgets('RF-52 una variante si elimina', (tester) async {
+      final live = await pumpAnalysis(tester);
+      board(tester).onMove!(NormalMove.fromUci('e2e4'));
+      await settle(tester);
+      board(tester).onMove!(NormalMove.fromUci('e7e5'));
+      await settle(tester);
+      await tester.tap(find.byTooltip('Indietro'));
+      await settle(tester);
+      board(tester).onMove!(NormalMove.fromUci('c7c5'));
+      await settle(tester);
+      await tester.tap(find.byTooltip('Elimina la mossa e il seguito'));
+      await settle(tester);
+      expect(find.text('1… c5'), findsNothing);
+      expect(find.text('e5'), findsOneWidget);
+      final afterE4 = Chess.initial.play(Move.parse('e2e4')!);
+      expect(live.requests.last.fen, afterE4.fen);
+    });
+
+    testWidgets('RF-52 dalla posizione iniziale non ci sono mosse da gestire', (
+      tester,
+    ) async {
+      await pumpAnalysis(tester);
+      expect(find.byTooltip('Promuovi a linea principale'), findsNothing);
+      expect(find.byTooltip('Elimina la mossa e il seguito'), findsNothing);
+    });
+
     testWidgets('RF-56 la minaccia analizza la posizione a mossa nulla', (
       tester,
     ) async {
@@ -149,12 +238,12 @@ void main() {
       ]);
       await settle(tester);
       expect(live.requests.last.fen, Chess.initial.fen);
-      final arrows = board(tester).shapes.whereType<Arrow>().toList();
+      final arrows = markArrows(board(tester).shapes).toList();
       expect(arrows, hasLength(1));
       expect(arrows.single.orig, Square.e7);
       expect(arrows.single.dest, Square.e5);
       // Diversa dalla freccia verde della mossa migliore.
-      expect(arrows.single.color, const Color(0xCCC0392B));
+      expect(arrows.single.color, BoardMarks.of(BoardTheme.green).threat);
     });
 
     testWidgets('RF-56 la minaccia di una posizione non resta sulla seguente', (
@@ -234,7 +323,7 @@ void main() {
       final live = await pumpAnalysis(tester);
       live.emit([e4]);
       await settle(tester);
-      final arrow = board(tester).shapes.whereType<Arrow>().single;
+      final arrow = markArrows(board(tester).shapes).single;
       expect(arrow.orig, Square.e2);
       expect(arrow.dest, Square.e4);
       await tester.tap(find.byTooltip('Freccia della mossa migliore'));
@@ -279,4 +368,21 @@ void main() {
     await tester.pump();
     expect(live.requests, hasLength(2));
   });
+
+  testWidgets(
+    'RF-104 esporta la posizione con la freccia della mossa migliore',
+    (tester) async {
+      final live = await pumpAnalysis(tester, orientation: Side.black);
+      live.emit([e4]);
+      await settle(tester);
+      await tester.tap(find.byTooltip('Esporta come immagine'));
+      await tester.pumpAndSettle();
+      final page = tester.widget<PositionImagePage>(
+        find.byType(PositionImagePage),
+      );
+      expect(page.image.fen, Chess.initial.fen);
+      expect(page.image.orientation, Side.black);
+      expect(markArrows(page.image.shapes), hasLength(1));
+    },
+  );
 }

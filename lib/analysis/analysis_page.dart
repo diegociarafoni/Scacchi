@@ -11,8 +11,14 @@ import '../review/board_utils.dart';
 import '../review/eval_bar.dart';
 import '../review/score_format.dart';
 import '../review/win_probability.dart';
+import '../settings/board_marks.dart';
 import '../settings/notation.dart';
 import '../settings/settings.dart';
+import '../share/position_image.dart';
+import '../share/position_image_page.dart';
+import '../tablebase/perfect_endgame_card.dart';
+import '../tablebase/tablebase_service.dart';
+import 'variation_tree.dart';
 
 /// Analisi continua di [fen] con [multiPv] varianti, interrotta annullando
 /// l'iscrizione al flusso.
@@ -26,10 +32,15 @@ class AnalysisPage extends StatefulWidget {
     required this.initial,
     required this.analyse,
     this.orientation = Side.white,
+    this.tablebase,
   });
 
   final Position initial;
   final LiveAnalysis analyse;
+
+  /// Finali perfetti (RF-97): se c'è, con al massimo quattro pezzi compare
+  /// il risultato esatto.
+  final TablebaseService? tablebase;
 
   /// Lato del giocatore, in basso sulla scacchiera.
   final Side orientation;
@@ -40,10 +51,7 @@ class AnalysisPage extends StatefulWidget {
 
 class _AnalysisPageState extends State<AnalysisPage>
     with WidgetsBindingObserver {
-  late final List<Position> _positions = [widget.initial];
-  final _moves = <Move>[];
-  final _sans = <String>[];
-  int _index = 0;
+  late final VariationTree _tree = VariationTree(widget.initial);
   bool _failed = false;
   int _multiPv = 1;
   bool _paused = false;
@@ -67,7 +75,7 @@ class _AnalysisPageState extends State<AnalysisPage>
     game: _gameData(),
   );
 
-  Position get _pos => _positions[_index];
+  Position get _pos => _tree.current.position;
 
   @override
   void initState() {
@@ -165,31 +173,45 @@ class _AnalysisPageState extends State<AnalysisPage>
     });
   }
 
-  GameData _gameData() => gameDataFor(
-    _pos,
-    lastMove: _index == 0 ? null : _moves[_index - 1],
-    interactive: true,
-  );
+  GameData _gameData() =>
+      gameDataFor(_pos, lastMove: _tree.current.move, interactive: true);
 
-  void _go(int index) {
-    setState(() => _index = index);
+  /// Aggiorna scacchiera e analisi dopo che [_tree] ha cambiato posizione.
+  void _moved() {
+    setState(() {});
     _board.updatePosition(_gameData());
     _start();
   }
 
   void _play(Move move, {bool? viaDragAndDrop}) {
-    if (!_pos.isLegal(move)) return;
-    final next = _pos.play(move);
-    _positions
-      ..removeRange(_index + 1, _positions.length)
-      ..add(next);
-    _moves
-      ..removeRange(_index, _moves.length)
-      ..add(move);
-    _sans
-      ..removeRange(_index, _sans.length)
-      ..add(_pos.makeSan(move).$2);
-    _go(_index + 1);
+    if (_tree.play(move) != null) _moved();
+  }
+
+  void _select(VariationNode node) {
+    _tree.select(node);
+    _moved();
+  }
+
+  void _promote() {
+    setState(() => _tree.promote(_tree.current));
+  }
+
+  void _delete() {
+    final before = _tree.current;
+    _tree.delete(before);
+    // Il motore riparte solo se la posizione è cambiata.
+    if (_tree.current == before) return setState(() {});
+    _moved();
+  }
+
+  void _back() {
+    _tree.back();
+    _moved();
+  }
+
+  void _forward() {
+    _tree.forward();
+    _moved();
   }
 
   void _toggleThreat() {
@@ -213,20 +235,29 @@ class _AnalysisPageState extends State<AnalysisPage>
     return _pos.turn == Side.white ? s : s.negated;
   }
 
-  Set<Shape> _shapes() => {
-    ..._arrowFor(_pos, _arrow ? _lines.firstOrNull : null, _bestColor),
-    ..._arrowFor(_threatPos, _threatLine, _threatColor),
-  };
+  Set<Shape> _shapes() {
+    // La scacchiera dell'analisi è sempre verde.
+    final marks = BoardMarks.of(
+      BoardTheme.green,
+      colorBlind: AppSettings.of(context).colorBlind,
+    );
+    return {
+      ..._arrowFor(marks, _pos, _arrow ? _lines.firstOrNull : null, marks.hint),
+      ..._arrowFor(marks, _threatPos, _threatLine, marks.threat),
+    };
+  }
 
-  static const _bestColor = Color(0xCC3E8E2F);
-  static const _threatColor = Color(0xCCC0392B);
-
-  Set<Shape> _arrowFor(Position? pos, InfoLine? line, Color color) {
+  Set<Shape> _arrowFor(
+    BoardMarks marks,
+    Position? pos,
+    InfoLine? line,
+    Color color,
+  ) {
     if (pos == null) return const {};
     final move = parseEngineMove(pos, line?.pv.firstOrNull);
     if (move is! NormalMove) return const {};
     final shown = kingDestination(pos, move);
-    return {Arrow(color: color, orig: shown.from, dest: shown.to)};
+    return marks.arrow(color, shown.from, shown.to);
   }
 
   @override
@@ -237,6 +268,14 @@ class _AnalysisPageState extends State<AnalysisPage>
       appBar: AppBar(
         title: const Text('Analisi'),
         actions: [
+          PositionImageButton(
+            image: () => PositionImage(
+              fen: _pos.fen,
+              orientation: widget.orientation,
+              lastMove: _tree.current.move,
+              shapes: _shapes(),
+            ),
+          ),
           IconButton(
             tooltip: 'Freccia della mossa migliore',
             isSelected: _arrow,
@@ -285,8 +324,8 @@ class _AnalysisPageState extends State<AnalysisPage>
                                 orientation: widget.orientation,
                                 onMove: _play,
                                 shapes: _shapes(),
-                                settings: const ChessboardSettings(
-                                  colorScheme: ChessboardColorScheme.green,
+                                settings: ChessboardSettings(
+                                  colorScheme: BoardTheme.green.colorScheme,
                                 ),
                               ),
                             ],
@@ -323,12 +362,25 @@ class _AnalysisPageState extends State<AnalysisPage>
                             ],
                           ),
                         ),
-                        for (final line in _lines) _lineTile(line),
-                        if (_moves.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Text(_history(), style: text.bodyLarge),
+                        if (widget.tablebase != null)
+                          PerfectEndgameCard(
+                            service: widget.tablebase!,
+                            position: _pos,
+                            notation: AppSettings.of(context).notation,
+                            kid: AppSettings.of(context).kidMode,
+                            onBestMove: _play,
                           ),
+                        for (final line in _lines) _lineTile(line),
+                        if (_tree.root.children.isNotEmpty) ...[
+                          _treeActions(),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 8,
+                            ),
+                            child: _lineView(_tree.root),
+                          ),
+                        ],
                       ],
                     ),
                   ),
@@ -394,15 +446,99 @@ class _AnalysisPageState extends State<AnalysisPage>
     return out.join(' ');
   }
 
-  String _history() {
+  /// Comandi sulla mossa corrente: promuovere la variante o eliminarla.
+  Widget _treeActions() {
+    final node = _tree.current;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        IconButton(
+          tooltip: 'Promuovi a linea principale',
+          onPressed: node.isRoot || _tree.isMainLine(node) ? null : _promote,
+          icon: const Icon(Icons.upgrade),
+        ),
+        IconButton(
+          tooltip: 'Elimina la mossa e il seguito',
+          onPressed: node.isRoot ? null : _delete,
+          icon: const Icon(Icons.delete_outline),
+        ),
+      ],
+    );
+  }
+
+  /// Le mosse che seguono [from] (o la linea che comincia da [first], se
+  /// data): la continuazione principale in riga, le varianti rientrate sotto
+  /// la mossa a cui si alternano.
+  Widget _lineView(VariationNode from, {VariationNode? first}) {
+    final blocks = <Widget>[];
+    var chips = <Widget>[];
+    void flush() {
+      if (chips.isEmpty) return;
+      blocks.add(Wrap(spacing: 4, runSpacing: 4, children: chips));
+      chips = [];
+    }
+
+    var node = from;
+    var restart = true;
+    if (first != null) {
+      chips.add(_moveChip(first, true));
+      restart = false;
+      node = first;
+    }
+    while (node.children.isNotEmpty) {
+      final main = node.children.first;
+      chips.add(_moveChip(main, restart));
+      restart = false;
+      if (node.children.length > 1) {
+        flush();
+        for (final variation in node.children.skip(1)) {
+          blocks.add(
+            Padding(
+              padding: const EdgeInsets.only(left: 16, top: 4, bottom: 4),
+              child: _lineView(node, first: variation),
+            ),
+          );
+        }
+        restart = true;
+      }
+      node = main;
+    }
+    flush();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: blocks,
+    );
+  }
+
+  Widget _moveChip(VariationNode node, bool withNumber) {
     final notation = AppSettings.of(context).notation;
-    return [
-      for (var i = 0; i < _sans.length; i++)
-        if (_positions[i].turn == Side.white || i == 0)
-          '${moveNumber(_positions[i])} ${formatSan(_sans[i], notation)}'
-        else
-          formatSan(_sans[i], notation),
-    ].join(' ');
+    final before = node.parent!.position;
+    final san = formatSan(node.san, notation);
+    final label = before.turn == Side.white || withNumber
+        ? '${moveNumber(before)} $san'
+        : san;
+    final selected = node == _tree.current;
+    final scheme = Theme.of(context).colorScheme;
+    return Semantics(
+      selected: selected,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(6),
+        onTap: () => _select(node),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+          decoration: BoxDecoration(
+            color: selected ? scheme.primaryContainer : null,
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontWeight: _tree.isMainLine(node) ? FontWeight.w600 : null,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _navigation() => SizedBox(
@@ -412,7 +548,7 @@ class _AnalysisPageState extends State<AnalysisPage>
       children: [
         IconButton(
           tooltip: 'Indietro',
-          onPressed: _index == 0 ? null : () => _go(_index - 1),
+          onPressed: _tree.canBack ? _back : null,
           icon: const Icon(Icons.chevron_left),
         ),
         IconButton(
@@ -422,7 +558,7 @@ class _AnalysisPageState extends State<AnalysisPage>
         ),
         IconButton(
           tooltip: 'Avanti',
-          onPressed: _index == _moves.length ? null : () => _go(_index + 1),
+          onPressed: _tree.canForward ? _forward : null,
           icon: const Icon(Icons.chevron_right),
         ),
       ],

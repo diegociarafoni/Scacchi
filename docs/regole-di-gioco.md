@@ -43,7 +43,7 @@ Si usa il contatore di semimosse della posizione (`halfmoves`), che si azzera a 
 
 ## Varianti
 
-Nel pannello "Nuova", scegliendo **Due giocatori**, si sceglie anche la variante (RF-120, RF-121); contro computer e bot e nel profilo bambino si gioca solo a scacchi classici. Le regole sono quelle di `dartchess`; `lib/game/variant.dart` sceglie la posizione iniziale e `ChessGame` conosce la variante della partita.
+Nel pannello "Nuova" si sceglie anche la variante (RF-120, RF-121), in due sullo stesso telefono, contro il computer e contro i bot (RF-123, vedi [avversario-computer.md](avversario-computer.md#varianti)); nel profilo bambino si gioca solo a scacchi classici. Le regole sono quelle di `dartchess`; `lib/game/variant.dart` sceglie la posizione iniziale e `ChessGame` conosce la variante della partita.
 
 | Variante | Differenze |
 |---|---|
@@ -55,6 +55,18 @@ Nel pannello "Nuova", scegliendo **Due giocatori**, si sceglie anche la variante
 **Arrocco in Chess960.** Il re va dove andrebbe negli scacchi classici (g1/c1, g8/c8) e la torre accanto a lui (f1/d1, f8/d8). Sulla scacchiera si arrocca portando il re sulla torre con cui si vuole arroccare, il modo che funziona in ogni posizione; se il re parte dalla colonna e e la torre è in un angolo vale anche la mossa classica di due case. Le case tra re, torre e le loro destinazioni devono essere libere, a parte il re e la torre stessi, e il re non può attraversare case attaccate.
 
 **Fine della partita.** Matto, stallo, ripetizione e 50 mosse valgono come negli scacchi classici. La vittoria propria della variante ha il motivo "Re al centro" o "Terzo scacco". A Tre scacchi la ripetizione confronta anche gli scacchi rimasti. Il materiale insufficiente non vale a Re della collina, dove un re solo può ancora vincere.
+
+## Partite a handicap (RF-27)
+
+Nel pannello "Nuova" la sezione **Handicap** permette di concedere un vantaggio, contro il computer, contro i bot e nella partita a due:
+
+- **Pezzo in meno**: pedone f, cavallo di donna, torre di donna o donna, tolto a chi concede. Con la torre di donna cade anche l'arrocco lungo di quel lato. Il Bianco muove sempre per primo. Vale solo negli scacchi classici.
+- **Tempo di chi concede**: 1, 2, 3 o 5 minuti contro la cadenza scelta per l'altro. Vale solo con un orologio e se è inferiore alla cadenza; altrimenti viene ignorato.
+- **Chi concede**: "Tu" o "L'avversario" contro il computer e i bot (anche se il colore è casuale), "Il Bianco" o "Il Nero" nella partita a due.
+
+`lib/game/handicap.dart` costruisce la posizione iniziale e i tempi dei due lati (`ChessClock` accetta i tempi iniziali per lato); `Handicap.usable` toglie la parte non applicabile. Il PGN riporta la posizione con `FEN` e `SetUp`, e l'intestazione `Handicap`, per esempio `White gives queen; White time 3 min`.
+
+Una partita a handicap non conta per il rating locale (il suo `opponentElo` resta vuoto), per la stima adattiva, per la collezione dei bot né per i record sull'avversario più forte. Gli XP si assegnano come per ogni partita. Nel profilo bambino la sezione non c'è.
 
 ## Verifica delle regole
 

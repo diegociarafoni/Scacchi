@@ -11,6 +11,7 @@ import '../analysis/analysis_page.dart';
 import '../archive/pgn.dart';
 import '../archive/saved_game.dart';
 import '../coach/coach_session.dart';
+import '../coach/explain_why.dart';
 import '../coach/hint_text.dart';
 import '../editor/position_editor_page.dart';
 import '../engine/adaptive.dart';
@@ -19,11 +20,13 @@ import '../engine/bots.dart';
 import '../engine/computer_player.dart';
 import '../engine/levels.dart';
 import '../engine/uci_transport.dart';
+import '../engine/variant_engine.dart';
 import '../exchange/qr_l10n.dart';
 import '../exchange/qr_receive_page.dart';
 import '../exchange/qr_send_page.dart';
 import '../exchange/qr_transfer.dart';
 import '../l10n/app_localizations.dart';
+import '../openings/opening_game.dart';
 import '../openings/opening_name.dart';
 import '../progress/activity.dart';
 import '../progress/game_activity.dart';
@@ -35,16 +38,21 @@ import '../review/engine_evaluator.dart';
 import '../review/game_review.dart';
 import '../review/move_classification.dart';
 import '../review/personal_puzzles.dart';
+import '../review/review_activity.dart';
 import '../review/review_page.dart';
 import '../settings/board_frame.dart';
 import '../settings/notation.dart';
 import '../settings/settings.dart';
 import '../settings/settings_page.dart';
+import '../share/position_image.dart';
+import '../share/position_image_page.dart';
 import '../storage/key_value_store.dart';
+import '../tablebase/shared_tablebase.dart';
 import 'board_swipe.dart';
 import 'challenge.dart';
 import 'chess_game.dart';
 import 'clock.dart';
+import 'handicap.dart';
 import 'material.dart';
 import 'move_input.dart';
 import 'move_label.dart';
@@ -69,6 +77,7 @@ class GamePage extends StatefulWidget {
     this.chess960Id = randomChess960Id,
     bool? computerAvailable,
     this.createComputer,
+    this.createVariantEngine,
     this.now,
     this.onActivity,
     this.onSave,
@@ -84,6 +93,9 @@ class GamePage extends StatefulWidget {
   final SettingsController settings;
   final bool computerAvailable;
   final ComputerPlayer Function()? createComputer;
+
+  /// Avversario di Chess960, Re della collina e Tre scacchi (RF-123).
+  final VariantEngine Function()? createVariantEngine;
 
   /// Archivio della stima dell'avversario adattivo; quello su file se assente.
   final KeyValueStore? store;
@@ -165,13 +177,19 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// coerenti anche se l'impostazione cambia a partita in corso.
   bool _kidGame = false;
 
-  /// Ultima variante scelta per la partita tra due persone.
-  Variant _twoPlayerVariant = Variant.standard;
+  /// Handicap della partita in corso (RF-27) e colore di chi gioca, da cui
+  /// dipende chi lo concede.
+  Handicap? _handicap;
+  Side _handicapHuman = Side.white;
+
+  /// Ultima variante scelta nel pannello Nuova, con persone o contro il computer.
+  Variant _chosenVariant = Variant.standard;
   final _random = math.Random();
 
   /// Lato giocato dal computer; `null` nella partita tra due persone.
   Side? _computerSide;
   ComputerPlayer? _computer;
+  VariantEngine? _variantEngine;
 
   /// Allenatore in partita (RF-73): giudica le mosse dell'utente.
   bool _coachOn = false;
@@ -213,6 +231,12 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   int? _viewPly;
 
   AppSettings get _settings => widget.settings.value;
+
+  /// Modalità zen (RP-07): niente Elo, materiale, stato, avvisi e commenti.
+  bool get _zen => _settings.zenMode;
+
+  /// L'allenatore giudica solo fuori dalla modalità zen; lo stato resta.
+  bool get _coaching => _coachOn && !_zen;
 
   late bool _autoFlip;
 
@@ -354,8 +378,48 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         level: challenge.levelId,
       ),
     );
-    _beginGame(ChessGame(), setup, null);
+    // Mosse iniziali non valide: si parte dalla posizione iniziale.
+    final game = challenge.startMoves.isEmpty
+        ? null
+        : ChessGame.replay(Chess.initial, challenge.startMoves);
+    _beginGame(game ?? ChessGame(), setup, null);
   }
+
+  int? _lineDeviationNow() {
+    final line = widget.challenge?.line;
+    return line == null
+        ? null
+        : lineDeviation(line, [for (final m in _game.moves) m.move]);
+  }
+
+  /// Semimossa già segnalata come uscita dalla linea del repertorio.
+  int? _reportedDeviation;
+
+  /// Segnala una volta l'uscita dalla linea del repertorio (RF-94); dopo un
+  /// annulla che rientra nella linea la segnalazione si riarma.
+  void _checkLine() {
+    if (_zen) return;
+    final ply = _lineDeviationNow();
+    if (ply == _reportedDeviation) return;
+    _reportedDeviation = ply;
+    if (ply == null) return;
+    final by = ply.isEven ? Side.white : Side.black;
+    final notice = _showMessage(
+      by == _computerSide
+          ? 'Il computer è uscito dalla linea del repertorio.'
+          : 'Sei uscito dalla linea del repertorio.',
+    );
+    _lineNotice = notice;
+    // Il messaggio dell'utente deve restare visibile anche se subito dopo
+    // risponde il computer.
+    unawaited(
+      notice.closed.then((_) {
+        if (identical(_lineNotice, notice)) _lineNotice = null;
+      }),
+    );
+  }
+
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? _lineNotice;
 
   Future<KeyValueStore> _openStore() => _store ??= () async {
     if (widget.store != null) return widget.store!;
@@ -449,7 +513,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   void _botSay(BotEvent event) {
     final bot = _bot;
-    if (bot == null || !mounted) return;
+    if (bot == null || !mounted || _zen) return;
     final text = bot.phrase(event, _random, friendly: _kidGame);
     _showMessage('${bot.avatar} ${bot.name}: $text');
   }
@@ -570,6 +634,12 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   ComputerPlayer get _computerPlayer =>
       _computer ??= widget.createComputer?.call() ?? ComputerPlayer();
+
+  /// Le varianti non passano da Stockfish, che non ne conosce le regole.
+  bool get _engineGame => _game.variant == Variant.standard;
+
+  VariantEngine get _variantPlayer =>
+      _variantEngine ??= widget.createVariantEngine?.call() ?? VariantEngine();
 
   GameData _gameData() {
     final pos = _game.position;
@@ -722,15 +792,19 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       playerSide: side,
       timeControl: _clock?.control.label,
       opponentElo: elo,
+      headers: {'Handicap': ?_handicap?.pgnValue(_handicapHuman)},
     );
   }
 
   /// Colore dell'utente ed Elo dell'avversario; `null` tra due persone.
   (Side?, int?) get _playerAndElo {
     final side = _computerSide?.opposite;
+    // Un handicap falsa il confronto: senza Elo non entra nel rating locale.
     return (
       side,
-      side == null ? null : (_bot?.elo ?? engineLevel(_gameLevel).approxElo),
+      side == null || _handicap != null || !_engineGame
+          ? null
+          : (_bot?.elo ?? engineLevel(_gameLevel).approxElo),
     );
   }
 
@@ -775,7 +849,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _bot = null;
     _resultRecorded = false;
     _botResultRecorded = false;
-    _twoPlayerVariant = game.variant;
+    _chosenVariant = game.variant;
     // Come per l'editor: si archivia, ma non vale XP una partita iniziata altrove.
     _beginGame(
       game,
@@ -863,7 +937,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   Map<Square, Annotation> _badgeAnnotations() {
     final badge = _badge;
-    if (badge == null || _viewPly != null || !_coachOn) return const {};
+    if (badge == null || _viewPly != null || !_coaching) return const {};
     final length = _game.moves.length;
     if (length != badge.ply + 1 && length != badge.ply + 2) return const {};
     if (length == badge.ply + 2 && _lastMoveTo() == badge.square) {
@@ -886,7 +960,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// Con l'allenatore acceso, giudica la mossa prima della risposta del
   /// computer; un errore offre di riprenderla.
   Future<void> _afterHumanMove(Position before, Move move) async {
-    if (!_coachOn || _computerSide == null || _game.isOver) {
+    if (!_coaching || _computerSide == null || _game.isOver) {
       return _computerMove();
     }
     final plies = _game.moves.length;
@@ -902,13 +976,16 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       } on Object {
         return false;
       }
-      if (!mounted || _game.isOver || _game.moves.length != plies) {
+      if (!mounted ||
+          _game.isOver ||
+          _game.moves.length != plies ||
+          !_coaching) {
         return false;
       }
       final text = verdict.comment?.text;
       final played = verdict.review.move;
       // Se nel frattempo l'allenatore è stato spento, il giudizio non serve.
-      if (played is NormalMove && _coachOn) {
+      if (played is NormalMove && _coaching) {
         setState(
           () => _badge = (
             ply: plies - 1,
@@ -963,13 +1040,11 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final san = move == null ? null : flipped!.makeSan(move).$2;
     setState(() {
       _threatFen = position.fen;
-      _threatShapes = {
-        Arrow(
-          color: const Color(0xCCC0392B),
-          orig: threat!.from,
-          dest: threat.to,
-        ),
-      };
+      _threatShapes = _settings.marks.arrow(
+        _settings.threatColor,
+        threat!.from,
+        threat.to,
+      );
     });
     _showMessage(
       san == null
@@ -993,7 +1068,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       _showMessage('Nessun suggerimento disponibile.');
       return;
     }
-    const color = Color(0xCC15781B);
+    final marks = _settings.marks;
+    final color = marks.hint;
     final to = hint.to;
     final text = to == null
         ? describeHintPiece(position, hint.from)
@@ -1005,11 +1081,12 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _hintedFen = position.fen;
     setState(
       () => _hintShapes = to == null
-          ? {Circle(color: color, orig: hint!.from)}
+          ? marks.circle(color, hint!.from)
           : {
-              Circle(color: color, orig: hint!.from),
-              Circle(color: color, orig: to),
-              Arrow(color: color, orig: hint.from, dest: to),
+              // Prima la freccia: il suo contorno non deve coprire i cerchi.
+              ...marks.arrow(color, hint!.from, to),
+              ...marks.circle(color, hint.from),
+              ...marks.circle(color, to),
             },
     );
     _showMessage(text);
@@ -1052,6 +1129,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         clock.start(_game.position.turn);
       }
     }
+    _checkLine();
     return true;
   }
 
@@ -1059,7 +1137,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final side = _computerSide;
     if (_thinking || side == null || _game.isOver || _suspensions > 0) return;
     if (_game.position.turn != side) return;
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    final messenger = ScaffoldMessenger.of(context);
+    if (_lineNotice == null) {
+      messenger.hideCurrentSnackBar();
+    }
     final generation = _generation;
     _task = _ComputerTask.move;
     final clock = _clock;
@@ -1083,11 +1164,13 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         await Future<void>.delayed(level.minReply);
         reply = EngineMove(move: book, pv: const []);
       } else {
-        reply = await _computerPlayer.bestMove(
-          _game.initial.fen,
-          _moveHistory,
-          level,
-        );
+        reply = _engineGame
+            ? await _computerPlayer.bestMove(
+                _game.initial.fen,
+                _moveHistory,
+                level,
+              )
+            : await _variantPlayer.bestMove(_game.position, level);
       }
     } on Object catch (e) {
       error = e;
@@ -1096,6 +1179,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _task = _ComputerTask.none;
     final searchStart = _searchClock;
     _searchClock = null;
+    final before = _game.position;
     final played = reply != null && _apply(reply.move);
     if (reply == null ? !_game.isOver : !played && !_game.isOver) {
       error ??= reply ?? 'nessuna mossa';
@@ -1105,6 +1189,13 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _refresh();
     if (viewing != null) _showPly(viewing);
     if (played && !_game.isOver) _botReact();
+    if (played &&
+        !_game.isOver &&
+        _settings.explainWhy &&
+        !_isChallenge &&
+        !_zen) {
+      unawaited(_explainReply(before, reply.move));
+    }
     if (error != null) {
       _showMessage(
         'Il computer non risponde.',
@@ -1114,9 +1205,37 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     }
   }
 
+  /// «Spiegami perché» (RF-122): una riga su cosa fa o minaccia la mossa del
+  /// computer, con la minaccia ricavata come per la freccia di RF-56.
+  Future<void> _explainReply(Position before, Move move) async {
+    final after = _game.position;
+    NormalMove? followUp;
+    // Con l'orologio acceso l'analisi della minaccia fermerebbe il tempo
+    // dell'utente: si spiega solo la mossa.
+    try {
+      followUp = _clock != null || !_engineGame
+          ? null
+          : await _whileSuspended(() => _coach.threat(after));
+    } on Object {
+      followUp = null;
+    }
+    if (!mounted || _zen || !identical(after, _game.position)) return;
+    final text = explainComputerMove(
+      _kidL10n(context),
+      before,
+      move,
+      followUp: followUp,
+      showSquares: !_kid,
+    );
+    if (text == null) return;
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    _showMessage(text, duration: const Duration(seconds: 8));
+  }
+
   /// Partita di scacchi classici dalla posizione iniziale: solo queste contano
   /// per la stima adattiva e per la collezione dei bot.
   bool get _standardStart =>
+      _handicap == null &&
       _game.variant == Variant.standard &&
       _game.initial.fen == Chess.initial.fen;
 
@@ -1139,7 +1258,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   void _cancelComputerMove() {
     _generation++;
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    if (_thinking) _computer?.stop();
+    if (_thinking) {
+      _computer?.stop();
+      _variantEngine?.stop();
+    }
     _task = _ComputerTask.none;
     _searchClock = null;
   }
@@ -1259,7 +1381,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   }
 
   /// Messaggio sopra la barra dei comandi, per non coprirla.
-  void _showMessage(
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> _showMessage(
     String text, {
     Duration duration = const Duration(seconds: 4),
     SnackBarAction? action,
@@ -1298,7 +1420,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         isScrollControlled: true,
         builder: (context) => _TimeControlSheet(
           kid: _kid,
-          variant: _kid ? Variant.standard : _twoPlayerVariant,
+          variant: _kid ? Variant.standard : _chosenVariant,
           whiteName: _settings.whiteName,
           blackName: _settings.blackName,
           setup: _setup,
@@ -1315,19 +1437,39 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final vsComputer = setup.opponent != Opponent.human;
     // Il profilo bambino gioca solo la classica: la variante scelta prima
     // resta per quando il profilo si spegne.
-    if (!vsComputer && !_kid) _twoPlayerVariant = choice.variant;
-    final variant = vsComputer ? Variant.standard : choice.variant;
+    if (!_kid) _chosenVariant = choice.variant;
+    final variant = _kid ? Variant.standard : choice.variant;
     final control = choice.control;
+    final human = vsComputer ? setup.resolveHumanSide(_random) : Side.white;
+    final handicap = _kid
+        ? null
+        : choice.handicap?.usable(
+            control: control,
+            standard: variant == Variant.standard,
+          );
+    final pieceOdds = handicap?.piece != null;
     _beginGame(
       ChessGame(
-        initial: initialPosition(
-          variant,
-          chess960Id: variant == Variant.chess960 ? widget.chess960Id() : null,
-        ),
+        initial: pieceOdds
+            ? handicap!.startPosition(human)
+            : initialPosition(
+                variant,
+                chess960Id: variant == Variant.chess960
+                    ? widget.chess960Id()
+                    : null,
+              ),
         variant: variant,
       ),
       setup,
-      control == null ? null : ChessClock(control, now: widget.now),
+      control == null
+          ? null
+          : ChessClock(
+              control,
+              now: widget.now,
+              startTimes: handicap?.startTimes(control, human),
+            ),
+      handicap: handicap,
+      humanSide: human,
     );
     if (vsComputer) return;
     unawaited(
@@ -1347,7 +1489,13 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     GameSetup setup,
     ChessClock? clock, {
     bool fromEditor = false,
+    Handicap? handicap,
+    Side? humanSide,
   }) {
+    assert(
+      handicap == null || humanSide != null,
+      'chi concede dipende dal colore di chi gioca',
+    );
     _cancelComputerMove();
     _clockBeforeSuspension = false;
     _coachOn = false;
@@ -1358,16 +1506,19 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     _game = game;
     _clock = clock;
+    _handicap = handicap;
     _clockHistory.clear();
     _lowTime.reset();
     _clearBoardInteraction();
     _startRecording(fromEditor: fromEditor);
     if (setup.opponent != Opponent.human) {
-      final human = setup.resolveHumanSide(_random);
+      final human = humanSide ?? setup.resolveHumanSide(_random);
+      _handicapHuman = human;
       _computerSide = human.opposite;
       _orientation = human;
-      _computerPlayer.newGame().ignore();
+      if (_engineGame) _computerPlayer.newGame().ignore();
     } else {
+      _handicapHuman = Side.white;
       if (_computerSide != null) _orientation = Side.white;
       _computerSide = null;
       _computer?.dispose().ignore();
@@ -1481,6 +1632,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       }
     }
     _clearBoardInteraction();
+    // Dopo un annulla l'uscita già segnalata vale solo se resta nella partita.
+    _reportedDeviation = _lineDeviationNow();
     _refresh(animate: false);
     unawaited(_computerMove());
   }
@@ -1583,10 +1736,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       _task = _ComputerTask.draw;
       _refresh(animate: false);
       try {
-        final score = await _computerPlayer.evaluate(
-          _game.initial.fen,
-          _moveHistory,
-        );
+        final score = _engineGame
+            ? await _computerPlayer.evaluate(_game.initial.fen, _moveHistory)
+            : await _variantPlayer.evaluate(_game.position);
         if (score != null) {
           computerScore = turn == _computerSide
               ? score.comparable
@@ -1602,7 +1754,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       }
     }, restart: (_) => !(current && _accepts(computerScore)));
     if (!mounted || !current || _game.isOver) return;
-    if (error != null) return _showMessage('Il computer non risponde.');
+    if (error != null) {
+      _showMessage('Il computer non risponde.');
+      return;
+    }
     final l = _kid ? _kidL10n(context) : null;
     if (_accepts(computerScore)) {
       _game.agreeDraw();
@@ -1656,6 +1811,24 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   LiveAnalysis _liveAnalysis(ComputerPlayer player) =>
       (fen, multiPv) => player.analyseLive(fen, multiPv: multiPv);
 
+  /// Esporta come immagine la posizione mostrata, anche scorrendo le mosse.
+  void _exportImage() {
+    final ply = _viewPly;
+    final Move? last = ply == null
+        ? _game.lastMove
+        : (ply == -1 ? null : _game.moves[ply].move);
+    unawaited(
+      openPositionImage(
+        context,
+        PositionImage(
+          fen: _shownPosition.fen,
+          orientation: _orientation,
+          lastMove: last,
+        ),
+      ),
+    );
+  }
+
   /// Analisi della posizione mostrata con orologio e computer fermi.
   void _openAnalysis() {
     final position = _shownPosition;
@@ -1665,6 +1838,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           initial: position,
           analyse: _liveAnalysis(player),
           orientation: _orientation,
+          tablebase: sharedTablebase(),
         ),
       ),
     );
@@ -1687,11 +1861,12 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           evaluate: engineEvaluator(player),
           onCancel: player.stopAnalysis,
           analyseLive: _liveAnalysis(player),
-          onReviewed: (review) => _recordReview(review, players),
+          onReviewed: (review) => _recordReview(review, players, moves),
           onSavePuzzles: widget.onSavePuzzles,
           puzzlePlayers: players,
           clocks: [for (final m in _game.moves) m.clock],
           timeControl: _clock?.control,
+          startTimes: _clock?.startTimes,
         ),
       ),
     );
@@ -1699,16 +1874,15 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   /// Una revisione nuova vale XP; con due giocatori la precisione non è di
   /// nessuno in particolare e non si registra.
-  Future<void> _recordReview(GameReview review, Set<Side> players) async {
+  Future<void> _recordReview(
+    GameReview review,
+    Set<Side> players,
+    List<Move> moves,
+  ) async {
     final record = widget.onActivity;
     if (record == null) return;
     final update = await record(
-      ReviewCompleted(
-        accuracy: players.length == 1 ? review.accuracy(players.single) : null,
-        brilliantMoves: [
-          for (final side in players) review.count(side, MoveClass.brilliant),
-        ].fold(0, (a, b) => a + b),
-      ),
+      reviewActivity(review, players, initial: _game.initial, moves: moves),
     );
     if (update != null && mounted) showProgressFeedback(context, update);
   }
@@ -1747,7 +1921,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         celebrate: false,
       ),
     };
-    return _StatusLine(text: text, celebrate: celebrate);
+    return _StatusLine(text: text, celebrate: celebrate && !_zen);
   }
 
   Widget? _clockView(Side side) {
@@ -1839,7 +2013,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           ? null
           : _resign,
       // Nelle sfide niente aiuti: né suggerimenti né ripetizione della mossa.
-      coachOn: _computerSide == null || _isChallenge ? null : _coachOn,
+      coachOn: _computerSide == null || _isChallenge || _zen || !_engineGame
+          ? null
+          : _coachOn,
       onCoach: () {
         setState(() {
           _coachOn = !_coachOn;
@@ -1852,7 +2028,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
               : 'Allenatore disattivato.',
         );
       },
-      hintAvailable: _computerSide != null && !_isChallenge,
+      hintAvailable: _computerSide != null && !_isChallenge && _engineGame,
       onHint: _humanToMove && _pendingMove == null ? _giveHint : null,
       onThreat: _humanToMove && _pendingMove == null ? _showThreat : null,
     );
@@ -1863,6 +2039,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         ? Text(widget.challenge!.title)
         : _game.variant != Variant.standard
         ? Text(_title)
+        : _handicap != null
+        ? Text(_kidL10n(context).handicapGameTitle)
         : l != null
         ? Text(l.appTitle)
         : OpeningName(
@@ -1871,7 +2049,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           );
     return Scaffold(
       appBar: AppBar(
-        title: _computerSide == null
+        title: _computerSide == null || _zen
             ? title
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -1903,6 +2081,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                 if (value == 'analysis') _openAnalysis();
                 if (value == 'qrSend') unawaited(_sendQr());
                 if (value == 'qrReceive') unawaited(_receiveQr());
+                if (value == 'image') _exportImage();
               },
               itemBuilder: (context) {
                 final l10n = qrL10n(context);
@@ -1921,6 +2100,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                       child: const Text('Revisione della partita'),
                     ),
                   ],
+                  PopupMenuItem(
+                    value: 'image',
+                    child: Text(shareImageL10n(context).shareImageTitle),
+                  ),
                   PopupMenuItem(
                     value: 'qrSend',
                     // Una posizione dell'editor si può passare anche senza mosse.
@@ -1950,6 +2133,20 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                 : _typeMove,
           ),
           IconButton(
+            key: const Key('zenToggle'),
+            tooltip: qrL10n(context).settingsZenMode,
+            isSelected: _zen,
+            icon: const Icon(Icons.self_improvement_outlined),
+            selectedIcon: const Icon(Icons.self_improvement),
+            onPressed: () {
+              // Entrando in zen sparisce anche il commento già a schermo.
+              if (!_zen) ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              unawaited(
+                widget.settings.update(_settings.copyWith(zenMode: !_zen)),
+              );
+            },
+          ),
+          IconButton(
             tooltip: 'Impostazioni',
             icon: const Icon(Icons.settings_outlined),
             onPressed: _openSettings,
@@ -1964,13 +2161,28 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
             builder: (context, constraints) {
               final landscape =
                   constraints.maxWidth > constraints.maxHeight * 1.2;
+              final viewPly = _viewPly;
+              // In zen lo stato si vede a fine partita o quando serve un
+              // comando; il suo spazio resta riservato perché la scacchiera
+              // non cambi misura. Il materiale lascia posto al solo orologio.
+              final showStatus =
+                  !_zen ||
+                  _game.isOver ||
+                  viewPly != null ||
+                  _pendingMove != null;
+              final showMaterial = !_zen || _clock != null;
+              final chromeHeight =
+                  _moveStripHeight +
+                  _statusHeight +
+                  _actionsHeight +
+                  (showMaterial ? 2 * _materialHeight : 0);
               final boardSize = landscape
                   ? math.min(constraints.maxHeight, constraints.maxWidth * 0.6)
                   : math.max(
                       0.0,
                       math.min(
                         constraints.maxWidth,
-                        constraints.maxHeight - _portraitChromeHeight,
+                        constraints.maxHeight - chromeHeight,
                       ),
                     );
               final boardSettings = _settings.board;
@@ -1995,8 +2207,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                   ),
                 ),
               );
-              final viewPly = _viewPly;
-              final Widget status = viewPly != null
+              final Widget status = !showStatus
+                  ? const SizedBox(height: _statusHeight)
+                  : viewPly != null
                   ? _ViewBar(
                       text: viewPly == -1
                           ? 'Posizione iniziale'
@@ -2033,6 +2246,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                 side: _orientation.opposite,
                 name: _nameOf(_orientation.opposite),
                 pieceAssets: _settings.pieceAssets,
+                zen: _zen,
                 clock: _clockView(_orientation.opposite),
               );
               final bottomMaterial = _MaterialRow(
@@ -2040,6 +2254,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                 side: _orientation,
                 name: _nameOf(_orientation),
                 pieceAssets: _settings.pieceAssets,
+                zen: _zen,
                 clock: _clockView(_orientation),
               );
               if (landscape) {
@@ -2097,8 +2312,6 @@ const double _moveStripHeight = 40;
 const double _statusHeight = 48;
 const double _actionsHeight = 72;
 const double _materialHeight = 36;
-const double _portraitChromeHeight =
-    _moveStripHeight + _statusHeight + _actionsHeight + 2 * _materialHeight;
 
 String _sideName(Side side) => side == Side.white ? 'Bianco' : 'Nero';
 
@@ -2372,27 +2585,32 @@ class _ActionButton extends StatelessWidget {
         : highlighted
         ? scheme.primary
         : scheme.onSurface;
-    Widget button = InkWell(
-      onTap: onPressed,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, color: color),
-          const SizedBox(height: 4),
-          // Con sette pulsanti le etichette lunghe si rimpiccioliscono, con
-          // un margine per non toccare quelle vicine.
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 2),
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                label,
-                style: Theme.of(context).textTheme.labelMedium
-                    ?.copyWith(color: color),
+    // Senza Semantics il lettore di schermo non annuncia un pulsante né il suo stato.
+    Widget button = Semantics(
+      button: true,
+      enabled: onPressed != null,
+      child: InkWell(
+        onTap: onPressed,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: color),
+            const SizedBox(height: 4),
+            // Con sette pulsanti le etichette lunghe si rimpiccioliscono, con
+            // un margine per non toccare quelle vicine.
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 2),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  label,
+                  style: Theme.of(context).textTheme.labelMedium
+                      ?.copyWith(color: color),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
     if (tooltip != null && onPressed != null) {
@@ -2417,6 +2635,7 @@ class _MaterialRow extends StatelessWidget {
     required this.side,
     required this.name,
     required this.pieceAssets,
+    this.zen = false,
     this.clock,
   });
 
@@ -2424,10 +2643,24 @@ class _MaterialRow extends StatelessWidget {
   final Side side;
   final String? name;
   final PieceAssets pieceAssets;
+
+  /// In zen restano solo l'orologio, se c'è.
+  final bool zen;
   final Widget? clock;
 
   @override
   Widget build(BuildContext context) {
+    if (zen) {
+      return clock == null
+          ? const SizedBox.shrink()
+          : SizedBox(
+              height: _materialHeight,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Align(alignment: Alignment.centerRight, child: clock),
+              ),
+            );
+    }
     final advantage = balance.advantage(side);
     final opponent = side.opposite;
     final captured = balance.capturedBy(side);
@@ -2448,11 +2681,22 @@ class _MaterialRow extends StatelessWidget {
           child: Row(
             children: [
               for (final (i, role) in captured.indexed)
-                Image(
-                  key: ValueKey('captured-${opponent.name}-${role.name}-$i'),
-                  image: pieceAssets[Piece(color: opponent, role: role).kind]!,
-                  width: 20,
-                  height: 20,
+                // Nel tema scuro un pezzo nero sullo sfondo scuro sparisce:
+                // un fondo grigio medio tiene almeno 3:1 con nero e bianco.
+                DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0xFF8A8A8A)
+                        : null,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Image(
+                    key: ValueKey('captured-${opponent.name}-${role.name}-$i'),
+                    image:
+                        pieceAssets[Piece(color: opponent, role: role).kind]!,
+                    width: 20,
+                    height: 20,
+                  ),
                 ),
               if (advantage > 0) ...[
                 const SizedBox(width: 6),
@@ -2558,6 +2802,7 @@ class _TimeChoice {
     this.whiteName,
     this.blackName,
     this.setup,
+    this.handicap,
   );
 
   final TimeControl? control;
@@ -2565,6 +2810,7 @@ class _TimeChoice {
   final String whiteName;
   final String blackName;
   final GameSetup setup;
+  final Handicap? handicap;
 }
 
 /// Testi del profilo bambino; in italiano se la pagina è montata senza i
@@ -2666,6 +2912,17 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
       : widget.setup.copyWith(opponent: Opponent.human);
   late final _white = TextEditingController(text: widget.whiteName);
   late final _black = TextEditingController(text: widget.blackName);
+  HandicapPiece? _handicapPiece;
+  int? _handicapMinutes;
+  var _handicapGiver = HandicapGiver.player;
+
+  Handicap? get _handicap => _handicapPiece == null && _handicapMinutes == null
+      ? null
+      : Handicap(
+          piece: _handicapPiece,
+          giverMinutes: _handicapMinutes,
+          giver: _handicapGiver,
+        );
 
   @override
   void dispose() {
@@ -2689,7 +2946,14 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
       label: Text(label),
       onPressed: () => Navigator.pop(
         context,
-        _TimeChoice(control, _variant, _white.text, _black.text, _setup),
+        _TimeChoice(
+          control,
+          _variant,
+          _white.text,
+          _black.text,
+          _setup,
+          _handicap,
+        ),
       ),
     );
     Widget nameField(TextEditingController controller, String label) =>
@@ -2737,7 +3001,7 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
                 ],
               ),
             ],
-            if (_setup.opponent == Opponent.human && l == null) ...[
+            if (l == null) ...[
               const SizedBox(height: 16),
               Text('Variante', style: theme.textTheme.titleSmall),
               const SizedBox(height: 4),
@@ -2749,7 +3013,11 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
                     ChoiceChip(
                       label: Text(v.label),
                       selected: v == _variant,
-                      onSelected: (_) => setState(() => _variant = v),
+                      onSelected: (_) => setState(() {
+                        _variant = v;
+                        // Il pezzo in meno vale solo negli scacchi classici.
+                        if (v != Variant.standard) _handicapPiece = null;
+                      }),
                     ),
                 ],
               ),
@@ -2758,6 +3026,7 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
                 Text(_variant.description),
               ],
             ],
+            if (l == null) ..._handicapSection(context),
             const SizedBox(height: 12),
             if (l != null) ...[
               Text(l.kidGameTimeTitle, style: theme.textTheme.titleSmall),
@@ -2791,6 +3060,115 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
         ),
       ),
     );
+  }
+
+  /// Scelta dell'handicap (RF-27): pezzo in meno e tempo di chi concede.
+  List<Widget> _handicapSection(BuildContext context) {
+    final theme = Theme.of(context);
+    final l = _kidL10n(context);
+    final human = _setup.opponent == Opponent.human;
+    final standard = _variant == Variant.standard;
+    final pieces = {
+      HandicapPiece.fPawn: l.handicapPieceFPawn,
+      HandicapPiece.knight: l.handicapPieceKnight,
+      HandicapPiece.rook: l.handicapPieceRook,
+      HandicapPiece.queen: l.handicapPieceQueen,
+    };
+    final summary = _handicap == null
+        ? null
+        : [
+            if (_handicapPiece != null) pieces[_handicapPiece]!,
+            if (_handicapMinutes != null)
+              l.handicapTimeMinutes(_handicapMinutes!),
+          ].join(' · ');
+    final children = [
+      Text(l.handicapHint, style: theme.textTheme.bodySmall),
+      const SizedBox(height: 8),
+      Text(l.handicapPieceTitle, style: theme.textTheme.labelLarge),
+      const SizedBox(height: 4),
+      Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: [
+          ChoiceChip(
+            key: const ValueKey('handicap-piece-none'),
+            label: Text(l.handicapNone),
+            selected: _handicapPiece == null,
+            onSelected: (_) => setState(() => _handicapPiece = null),
+          ),
+          for (final MapEntry(:key, :value) in pieces.entries)
+            ChoiceChip(
+              key: ValueKey('handicap-piece-${key.name}'),
+              label: Text(value),
+              selected: _handicapPiece == key,
+              onSelected: standard
+                  ? (_) => setState(() => _handicapPiece = key)
+                  : null,
+            ),
+        ],
+      ),
+      const SizedBox(height: 8),
+      Text(l.handicapTimeTitle, style: theme.textTheme.labelLarge),
+      const SizedBox(height: 4),
+      Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: [
+          ChoiceChip(
+            key: const ValueKey('handicap-time-none'),
+            label: Text(l.handicapTimeEqual),
+            selected: _handicapMinutes == null,
+            onSelected: (_) => setState(() => _handicapMinutes = null),
+          ),
+          for (final m in Handicap.timeOptions)
+            ChoiceChip(
+              key: ValueKey('handicap-time-$m'),
+              label: Text(l.handicapTimeMinutes(m)),
+              selected: _handicapMinutes == m,
+              onSelected: (_) => setState(() => _handicapMinutes = m),
+            ),
+        ],
+      ),
+      Text(l.handicapTimeHint, style: theme.textTheme.bodySmall),
+      if (_handicap != null) ...[
+        const SizedBox(height: 8),
+        Text(l.handicapGiverTitle, style: theme.textTheme.labelLarge),
+        const SizedBox(height: 4),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            for (final g in HandicapGiver.values)
+              ChoiceChip(
+                key: ValueKey('handicap-giver-${g.name}'),
+                label: Text(switch ((g, human)) {
+                  (HandicapGiver.player, true) => l.handicapGiverWhite,
+                  (HandicapGiver.opponent, true) => l.handicapGiverBlack,
+                  (HandicapGiver.player, false) => l.handicapGiverYou,
+                  (HandicapGiver.opponent, false) => l.handicapGiverOpponent,
+                }),
+                selected: _handicapGiver == g,
+                onSelected: (_) => setState(() => _handicapGiver = g),
+              ),
+          ],
+        ),
+      ],
+    ];
+    // Chiuso per default: la scelta più comune resta una nuova partita normale.
+    return [
+      const SizedBox(height: 8),
+      ExpansionTile(
+        key: const ValueKey('handicap-section'),
+        tilePadding: EdgeInsets.zero,
+        childrenPadding: const EdgeInsets.only(bottom: 8),
+        shape: const Border(),
+        collapsedShape: const Border(),
+        expandedCrossAxisAlignment: CrossAxisAlignment.start,
+        title: Text(l.handicapTitle, style: theme.textTheme.titleSmall),
+        subtitle: summary == null ? null : Text(summary),
+        children: children,
+      ),
+    ];
   }
 }
 

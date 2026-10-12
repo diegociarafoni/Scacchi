@@ -1,0 +1,38 @@
+{
+  "shareImageTitle": "Export as image",
+  "@shareImageTitle": {
+    "description": "shareImageTitle"
+  },
+  "shareImageAction": "Share",
+  "@shareImageAction": {
+    "description": "shareImageAction"
+  },
+  "shareImageFlip": "Flip the board",
+  "@shareImageFlip": {
+    "description": "shareImageFlip"
+  },
+  "shareImageCoordinates": "Coordinates",
+  "@shareImageCoordinates": {
+    "description": "shareImageCoordinates"
+  },
+  "shareImageLastMove": "Last move",
+  "@shareImageLastMove": {
+    "description": "shareImageLastMove"
+  },
+  "shareImageCaption": "Caption (optional)",
+  "@shareImageCaption": {
+    "description": "shareImageCaption"
+  },
+  "shareImagePreview": "Board preview",
+  "@shareImagePreview": {
+    "description": "shareImagePreview"
+  },
+  "shareImageFailed": "Sharing failed",
+  "@shareImageFailed": {
+    "description": "shareImageFailed"
+  },
+  "shareImageSubject": "Chess position",
+  "@shareImageSubject": {
+    "description": "shareImageSubject"
+  }
+}

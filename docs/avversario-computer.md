@@ -12,7 +12,7 @@ nessuna connessione, nessun server, nessun dato che esce dal telefono.
 5. In alternativa al cursore, attivare **Adattivo**: il livello lo sceglie l'app (vedi [Avversario adattivo](#avversario-adattivo)).
 6. Toccare la cadenza, "Senza tempo" o una cadenza (vedi [interfaccia.md](interfaccia.md)): la partita inizia. Se il giocatore ha il Nero, il computer muove per primo.
 
-Contro il computer si gioca solo la variante classica e senza nomi dei giocatori: varianti e nomi compaiono nel pannello solo scegliendo **Due giocatori**. Una posizione creata con l'editor (vedi [editor-posizione.md](editor-posizione.md)) si può giocare anche contro il computer o un bot (RF-24): aprire l'editor durante una partita la sostituisce con la posizione scelta, in due o contro il computer a seconda della scelta nel pannello **Gioca questa posizione**.
+Contro il computer e i bot si può giocare anche una variante (Chess960, Re della collina, Tre scacchi, vedi [Varianti](#varianti)); i nomi dei giocatori compaiono nel pannello solo scegliendo **Due giocatori**. Una posizione creata con l'editor (vedi [editor-posizione.md](editor-posizione.md)) si può giocare anche contro il computer o un bot (RF-24): aprire l'editor durante una partita la sostituisce con la posizione scelta, in due o contro il computer a seconda della scelta nel pannello **Gioca questa posizione**.
 
 Durante la riflessione del computer la scacchiera è bloccata e compare la scritta
 "Il computer sta pensando…".
@@ -132,6 +132,17 @@ Due cose emerse dalla misura:
 
 Oltre il livello 8 non si misura: la forza piena dipende dal dispositivo, e 2700 è un valore prudente.
 
+## Varianti
+
+Stockfish non conosce Re della collina e Tre scacchi, e Chess960 richiede un'altra notazione dell'arrocco: per le varianti (RF-123) risponde `VariantEngine` (`lib/engine/variant_engine.dart`), un motore scritto in Dart sulle regole di `dartchess`, le stesse che arbitrano la partita. Non serve Stockfish e funziona offline come il resto.
+
+- **Ricerca**: alfa-beta con approfondimento iterativo e ricerca di quiescenza (catture, promozioni, risposte allo scacco). A Re della collina la quiescenza prova anche le mosse del re, a Tre scacchi gli scacchi, perché lì una mossa "silenziosa" può vincere la partita.
+- **Valutazione**: materiale, avanzamento dei pedoni, pezzi leggeri al centro, re al sicuro nel mediogioco e attivo nel finale. A Re della collina il re è attratto dalle case centrali, a Tre scacchi ogni scacco dato vale più del precedente. Un matto o la vittoria di variante pesano più di ogni materiale.
+- **Livelli**: gli stessi otto del pannello. La profondità dipende dall'Elo indicativo (1 mossa sotto 1000, 2 sotto 1500, 3 sotto 1900, 4 sotto 2300, 5 oltre) e i livelli bassi scelgono tra tutte le mosse con la stessa temperatura usata per le candidate di Stockfish (`chooseCandidate`). Il tempo di riflessione è quello del livello, con un massimo di 3 secondi e il limite dell'orologio di `withinClock`.
+- **Interfaccia**: la ricerca gira in un isolate, quindi la scacchiera resta fluida. `stop()` scarta la risposta di una ricerca superata (annulla, nuova partita).
+- **Patta**: il computer valuta la posizione con `VariantEngine.evaluate` e accetta alle stesse condizioni di RF-25.
+- **Cosa non c'è**: suggerimenti, allenatore, minaccia, analisi e revisione usano Stockfish e restano solo negli scacchi classici; il libro d'apertura dei bot e le loro frasi di stile non si applicano. Una partita in variante non entra nel rating locale, nella stima adattiva, nella collezione dei bot né nei record sull'avversario più forte.
+
 ## Architettura
 
 ```
@@ -142,6 +153,7 @@ lib/engine/
   uci_transport.dart  canale verso il motore; StockfishTransport usa multistockfish o il processo
   process_transport.dart Stockfish installato sul computer, come processo esterno
   computer_player.dart ComputerPlayer: coda delle richieste, opzioni, ricerca
+  variant_engine.dart  VariantEngine: ricerca in Dart per Chess960, Re della collina, Tre scacchi
 lib/game/
   opponent_picker.dart scelta di avversario, colore e livello
   game_page.dart       integrazione nella schermata di gioco

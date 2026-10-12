@@ -10,8 +10,10 @@ import '../game/clock.dart';
 import '../game/move_note.dart';
 import '../kids/kid_display.dart';
 import '../l10n/app_localizations.dart';
+import '../settings/board_marks.dart';
 import '../settings/notation.dart';
 import '../settings/settings.dart';
+import '../tablebase/shared_tablebase.dart';
 import 'board_utils.dart';
 import 'coach.dart';
 import 'eval_bar.dart';
@@ -82,6 +84,7 @@ class ReviewPage extends StatefulWidget {
     this.puzzlePlayers = const {Side.white, Side.black},
     this.clocks = const [],
     this.timeControl,
+    this.startTimes,
     this.notes = const [],
     this.onNoteChanged,
   });
@@ -111,6 +114,9 @@ class ReviewPage extends StatefulWidget {
   /// con [timeControl] permette di mostrare il tempo speso su ogni mossa.
   final List<Duration?> clocks;
   final TimeControl? timeControl;
+
+  /// Tempo iniziale di ciascun lato se diverso (partita a handicap, RF-27).
+  final Map<Side, Duration>? startTimes;
 
   /// Annotazioni personali delle mosse (RF-55), una per mossa o nessuna.
   final List<MoveNote?> notes;
@@ -405,9 +411,12 @@ class _ReviewPageState extends State<ReviewPage> {
         : _showSolution && _retrySolved == null;
     if (!showArrow || best is! NormalMove) return const {};
     final shown = kingDestination(_positions[ply], best);
-    return {
-      Arrow(color: const Color(0xCC3E8E2F), orig: shown.from, dest: shown.to),
-    };
+    // La scacchiera della revisione è sempre verde.
+    final marks = BoardMarks.of(
+      BoardTheme.green,
+      colorBlind: AppSettings.of(context).colorBlind,
+    );
+    return marks.arrow(marks.hint, shown.from, shown.to);
   }
 
   Map<Square, Annotation> _annotations() {
@@ -433,8 +442,11 @@ class _ReviewPageState extends State<ReviewPage> {
               icon: const Icon(Icons.biotech_outlined),
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute<void>(
-                  builder: (_) =>
-                      AnalysisPage(initial: _boardPosition, analyse: analyse),
+                  builder: (_) => AnalysisPage(
+                    initial: _boardPosition,
+                    analyse: analyse,
+                    tablebase: sharedTablebase(),
+                  ),
                 ),
               ),
             ),
@@ -476,8 +488,8 @@ class _ReviewPageState extends State<ReviewPage> {
                                 onMove: _onRetryMove,
                                 shapes: _shapes(),
                                 annotations: _annotations(),
-                                settings: const ChessboardSettings(
-                                  colorScheme: ChessboardColorScheme.green,
+                                settings: ChessboardSettings(
+                                  colorScheme: BoardTheme.green.colorScheme,
                                 ),
                               ),
                             ],
@@ -541,6 +553,7 @@ class _ReviewPageState extends State<ReviewPage> {
               clocks: widget.clocks,
               first: widget.initial.turn,
               control: widget.timeControl,
+              startTimes: widget.startTimes,
               players: widget.puzzlePlayers,
               onSelect: (ply) => _select(ply + 1),
             ),
@@ -886,6 +899,7 @@ class _TimePerMove extends StatelessWidget {
     required this.clocks,
     required this.first,
     required this.control,
+    required this.startTimes,
     required this.players,
     required this.onSelect,
   });
@@ -897,6 +911,7 @@ class _TimePerMove extends StatelessWidget {
   final List<Duration?> clocks;
   final Side first;
   final TimeControl? control;
+  final Map<Side, Duration>? startTimes;
   final ValueChanged<int> onSelect;
 
   static const _errors = {
@@ -909,7 +924,12 @@ class _TimePerMove extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (clocks.length != review.moves.length) return const SizedBox.shrink();
-    final spent = timeSpent(clocks, first: first, control: control);
+    final spent = timeSpent(
+      clocks,
+      first: first,
+      control: control,
+      startTimes: startTimes,
+    );
     if (spent.every((d) => d == null)) return const SizedBox.shrink();
     final hasty = hastyPlies(
       spent,

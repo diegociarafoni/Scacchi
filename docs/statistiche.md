@@ -28,7 +28,7 @@ Le partite salvate prima di questi campi si leggono ancora: i campi mancanti val
 
 ## Rating locale (RF-110)
 
-`LocalRating.from(partite)` parte da 800 e applica la formula Elo a ogni partita conclusa contro il computer (con `opponentElo`), in ordine di data (a parità, per identificativo, così il calcolo è ripetibile): punteggio atteso `1 / (1 + 10^((Elo bot − rating) / 400))`, fattore K 40 nelle prime 10 partite e 20 dopo. Con meno di 10 partite il rating è indicato come provvisorio. Le partite importate non contano.
+`LocalRating.from(partite)` parte da 800 e applica la formula Elo a ogni partita conclusa contro il computer (con `opponentElo`), in ordine di data (a parità, per identificativo, così il calcolo è ripetibile): punteggio atteso `1 / (1 + 10^((Elo bot − rating) / 400))`, fattore K 40 nelle prime 10 partite e 20 dopo. Con meno di 10 partite il rating è indicato come provvisorio. Le partite importate e quelle a handicap (RF-27, vedi [regole-di-gioco.md](regole-di-gioco.md)) non contano.
 
 ## Schermata
 
