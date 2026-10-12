@@ -153,5 +153,9 @@
       }
     }
   },
-  "botOptionsKidSlow": "With a clock, taking it easy"
+  "botOptionsKidSlow": "With a clock, taking it easy",
+  "botGreetingLuna": "At night I see the whole board, even the hidden moves. Shall we play?",
+  "botRematchLuna": "You beat me by starlight! One more?",
+  "botGreetingCosmo": "Lift-off in three, two, one… let's play! Ready to attack?",
+  "botRematchCosmo": "Emergency landing: you beat me. Rematch?"
 }

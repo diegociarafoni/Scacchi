@@ -41,11 +41,11 @@ void main() {
   });
 
   group('la scala dei bot', () {
-    test('RG-04 ci sono 15 bot, con Elo non decrescente e anche ripetuto', () {
-      expect(bots, hasLength(15));
-      expect(bots.map((b) => b.id).toSet(), hasLength(15));
-      expect(bots.map((b) => b.name).toSet(), hasLength(15));
-      expect(bots.map((b) => b.avatar).toSet(), hasLength(15));
+    test('RG-04 ci sono 17 bot, con Elo non decrescente e anche ripetuto', () {
+      expect(bots, hasLength(17));
+      expect(bots.map((b) => b.id).toSet(), hasLength(17));
+      expect(bots.map((b) => b.name).toSet(), hasLength(17));
+      expect(bots.map((b) => b.avatar).toSet(), hasLength(17));
       final elo = bots.map((b) => b.elo).toList();
       expect([...elo]..sort(), elo);
       expect(elo.toSet().length, lessThan(elo.length));
