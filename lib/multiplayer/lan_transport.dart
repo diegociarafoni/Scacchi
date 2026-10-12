@@ -158,7 +158,9 @@ class LanTransport implements MessageTransport, ConnectionAware {
       }
       _attach(socket, notify: notify);
     } on SocketException {
-      // Ospite non raggiungibile ora: l'invio fallisce e si riproverà.
+      // Ospite non raggiungibile ora: l'invio fallisce e si riprova da soli,
+      // così l'invitato entra anche se l'ospite apre la partita dopo.
+      _scheduleRedial();
     }
   }
 
