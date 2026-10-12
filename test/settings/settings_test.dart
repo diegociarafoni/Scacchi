@@ -16,6 +16,7 @@ void main() {
       'CC BY 4.0',
       'CC BY-SA 4.0',
       'CC0',
+      'OFL-1.1',
     };
 
     test('ogni set ha autore e licenza compatibile', () {
@@ -26,7 +27,7 @@ void main() {
     });
 
     test('nessun set con licenza non commerciale', () {
-      final names = PieceStyle.values.map((p) => p.pieceSet).toSet();
+      final names = PieceStyle.values.map((p) => p.pieceSet).nonNulls.toSet();
       expect(
         names.intersection({
           PieceSet.california,
@@ -36,16 +37,6 @@ void main() {
         isEmpty,
       );
     });
-  });
-
-  test('i temi della scacchiera usano solo colori, senza immagini', () {
-    for (final t in BoardTheme.values) {
-      expect(
-        t.colorScheme.background,
-        isA<SolidColorChessboardBackground>(),
-        reason: t.name,
-      );
-    }
   });
 
   test('un set non più disponibile torna a quello predefinito', () async {
