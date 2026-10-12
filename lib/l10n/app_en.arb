@@ -196,5 +196,9 @@
   "statsRatingTrend": "Rating trend",
   "statsNoGames": "no games",
   "statsScoreDetail": "{wins, plural, one{{wins} win} other{{wins} wins}}, {draws, plural, one{{draws} draw} other{{draws} draws}}, {losses, plural, one{{losses} loss} other{{losses} losses}}",
-  "statsTrend": "{label}: from {first} to {last}, minimum {min}, maximum {max}"
+  "statsTrend": "{label}: from {first} to {last}, minimum {min}, maximum {max}",
+  "opponentHintHuman": "Two players share the same device.",
+  "opponentHintComputer": "Pick a level or let it adapt to you.",
+  "opponentHintBot": "Opponents with a personality, unlocked one by one.",
+  "botUnlockHint": "Unlocks by beating {name}"
 }

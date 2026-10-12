@@ -1285,6 +1285,30 @@ abstract class AppLocalizations {
     String min,
     String max,
   );
+
+  /// No description provided for @opponentHintHuman.
+  ///
+  /// In it, this message translates to:
+  /// **'Si gioca in due sullo stesso dispositivo.'**
+  String get opponentHintHuman;
+
+  /// No description provided for @opponentHintComputer.
+  ///
+  /// In it, this message translates to:
+  /// **'Scegli il livello o lascia che si adatti a te.'**
+  String get opponentHintComputer;
+
+  /// No description provided for @opponentHintBot.
+  ///
+  /// In it, this message translates to:
+  /// **'Avversari con personalità da sbloccare uno a uno.'**
+  String get opponentHintBot;
+
+  /// Sotto un bot bloccato: quale bot battere per sbloccarlo
+  ///
+  /// In it, this message translates to:
+  /// **'Si sblocca battendo {name}'**
+  String botUnlockHint(String name);
 }
 
 class _AppLocalizationsDelegate
