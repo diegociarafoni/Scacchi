@@ -78,11 +78,8 @@ void main() {
       );
       expect(find.text(label), findsOneWidget, reason: label);
     }
-    await tester.scrollUntilVisible(
-      find.text('Minigiochi'),
-      -200,
-      scrollable: find.byType(Scrollable).first,
-    );
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, 5000));
+    await tester.pumpAndSettle();
 
     await tester.tap(find.text('Minigiochi'));
     await tester.pumpAndSettle();
@@ -90,11 +87,6 @@ void main() {
     await tester.tap(find.byTooltip('Indietro'));
     await tester.pumpAndSettle();
 
-    await tester.scrollUntilVisible(
-      find.text('Profilo'),
-      -200,
-      scrollable: find.byType(Scrollable).first,
-    );
     await tester.tap(find.text('Profilo'));
     await tester.pumpAndSettle();
     expect(find.widgetWithText(AppBar, 'Profilo'), findsOneWidget);
