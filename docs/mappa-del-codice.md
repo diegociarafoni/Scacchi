@@ -6,7 +6,7 @@ Ogni cartella di `lib/` ha qui il documento che descrive le sue funzioni. La tab
 
 | Cartella | Documenti | Funzioni |
 |---|---|---|
-| `lib/analysis/` | [analisi.md](analisi.md) | Analisi libera della posizione con le linee del motore |
+| `lib/analysis/` | [analisi.md](analisi.md) | Analisi libera della posizione con le linee del motore e l'albero delle varianti |
 | `lib/archive/` | [archivio.md](archivio.md) | Archivio delle partite, import ed export PGN |
 | `lib/backup/` | [backup.md](backup.md) | Backup e ripristino dei dati locali |
 | `lib/coach/` | [allenatore.md](allenatore.md) | Partita con l'allenatore: avvisi, ripresa della mossa, suggerimenti |
