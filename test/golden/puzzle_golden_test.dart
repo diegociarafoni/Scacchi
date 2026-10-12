@@ -114,7 +114,7 @@ void main() {
         await _pump(
           tester,
           Device.phoneMedium,
-          PuzzleHubPage(trainer: _trainer(), today: DateTime(2026, 1, 1)),
+          PuzzleHubPage(trainer: _trainer(), today: DateTime(2026)),
           kid: kid,
         );
         await expectLater(

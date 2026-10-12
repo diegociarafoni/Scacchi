@@ -119,7 +119,7 @@ void main() {
     );
     await begin(tester);
     await tapMove(tester, 'a1a8');
-    await tester.pumpWidget(localizedApp(home: SizedBox()));
+    await tester.pumpWidget(localizedApp(home: const SizedBox()));
     await tester.pumpAndSettle();
     expect(trainer.records.best(PuzzleRunMode.survival), 1);
   });

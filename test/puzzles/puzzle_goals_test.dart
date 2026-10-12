@@ -228,7 +228,7 @@ void main() {
       expect(find.text(PuzzleGuide.daily.goal), findsNothing);
 
       // La seconda volta non si ripresenta, ma resta nella barra.
-      await tester.pumpWidget(localizedApp(home: SizedBox()));
+      await tester.pumpWidget(localizedApp(home: const SizedBox()));
       await open(tester, await load(store), PuzzleGuide.daily);
       expect(find.text(PuzzleGuide.daily.goal), findsNothing);
       await tester.tap(find.byTooltip('Come funziona'));
