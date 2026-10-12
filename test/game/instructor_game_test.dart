@@ -109,4 +109,13 @@ void main() {
     final page = tester.widget<ExplorerPage>(find.byType(ExplorerPage));
     expect(page.initialMoves.length, 2);
   });
+
+  testWidgets('annullando il commento segue la posizione', (tester) async {
+    await open(tester, reply: 'a7a6');
+    await tapMove(tester, 'e2', 'e4');
+    expect(find.textContaining('Il computer esce dal libro'), findsOne);
+    await tester.tap(find.text('Annulla'));
+    await tester.pumpAndSettle(const Duration(seconds: 1));
+    expect(find.textContaining('Il computer esce dal libro'), findsNothing);
+  });
 }

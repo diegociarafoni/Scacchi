@@ -396,16 +396,19 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   OpeningStats? _instructorStats;
 
   Future<void> _loadInstructor() async {
+    final OpeningBook book;
+    final OpeningStats? stats;
     try {
-      final book = await (widget.openingBook ?? openingBook());
-      final stats = await (widget.openingStats ?? openingStatsOrNull());
-      if (!mounted) return;
-      _instructorBook = book;
-      _instructorStats = stats;
-      _instructorSay();
+      book = await (widget.openingBook ?? openingBook());
+      stats = await (widget.openingStats ?? openingStatsOrNull());
     } on Object {
       // Senza libro l'istruttore resta il solo allenatore.
+      return;
     }
+    if (!mounted) return;
+    _instructorBook = book;
+    _instructorStats = stats;
+    _instructorSay();
   }
 
   /// Commento dell'istruttore sull'apertura: nome, mosse più giocate, uscita
@@ -456,13 +459,16 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// Apre l'esploratore sulla posizione raggiunta.
   void _openExplorer() {
     final moves = [for (final m in _game.moves) m.move];
+    // Con l'esploratore aperto orologio e computer restano fermi.
     unawaited(
-      Navigator.of(context).push(
-        MaterialPageRoute<void>(
-          builder: (_) => ExplorerPage(
-            book: widget.openingBook,
-            stats: widget.openingStats ?? openingStatsOrNull(),
-            initialMoves: moves,
+      _whileSuspended<void>(
+        () => Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => ExplorerPage(
+              book: widget.openingBook,
+              stats: widget.openingStats ?? openingStatsOrNull(),
+              initialMoves: moves,
+            ),
           ),
         ),
       ),
@@ -1895,6 +1901,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     // Dopo un annulla l'uscita già segnalata vale solo se resta nella partita.
     _reportedDeviation = _lineDeviationNow();
     _refresh(animate: false);
+    // Il commento sull'apertura segue la posizione tornata in campo.
+    _clearSpeech();
+    _instructorSay();
     unawaited(_computerMove());
   }
 

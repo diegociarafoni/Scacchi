@@ -121,8 +121,6 @@ class OpeningBook {
     return null;
   }
 
-  bool _inBook(Position pos) => isKnown(pos);
-
   /// Se la posizione è nel libro: ha un nome o delle continuazioni.
   bool isKnown(Position pos) {
     final k = key(pos);
@@ -134,7 +132,7 @@ class OpeningBook {
     final positions = replay(moves);
     var n = 0;
     for (final pos in positions.skip(1)) {
-      if (!_inBook(pos)) break;
+      if (!isKnown(pos)) break;
       n++;
     }
     return n;
