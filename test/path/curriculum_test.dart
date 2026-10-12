@@ -7,7 +7,8 @@ import 'package:scacchi/path/exercise.dart';
 void main() {
   test('RG-03 capitoli richiesti nell\'ordine del percorso', () {
     expect(curriculum.map((c) => c.title), [
-      'Il movimento dei pezzi',
+      'Come si muovono i pezzi',
+      'Catturare e difendere',
       'Le regole',
       'Matti elementari',
       'Tattiche',
@@ -17,6 +18,7 @@ void main() {
       'La scuola di Capablanca',
     ]);
     expect(curriculum.map((c) => c.id), [
+      'moves',
       'pieces',
       'rules',
       'mates',
@@ -27,6 +29,31 @@ void main() {
       'capablanca',
     ]);
   });
+
+  test(
+    'RG-03 il capitolo 0 insegna le mosse dei pezzi, una lezione per pezzo',
+    () {
+      final moves = curriculum.firstWhere((c) => c.id == 'moves');
+      expect(moves.stages.map((s) => s.id), [
+        'moves.board',
+        'pieces.rook',
+        'pieces.bishop',
+        'pieces.queen',
+        'pieces.king',
+        'pieces.knight',
+        'pieces.pawn',
+        'moves.pawn-capture',
+        'moves.which-piece',
+      ]);
+      expect(moves.stages.any((s) => s.isGuardian), isFalse);
+      final pieces = curriculum.firstWhere((c) => c.id == 'pieces');
+      expect(pieces.stages.map((s) => s.id), [
+        'pieces.capture',
+        'pieces.hanging',
+        'pieces.defend',
+      ]);
+    },
+  );
 
   test('ogni lezione ha una spiegazione breve', () {
     for (final c in curriculum) {

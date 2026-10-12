@@ -87,8 +87,10 @@
     }
   },
   "badgesClose": "Chiudi",
-  "badgeChapterPiecesName": "Tutti in marcia",
-  "badgeChapterPiecesDesc": "Completa le lezioni sul movimento dei pezzi.",
+  "badgeChapterMovesName": "Tutti in marcia",
+  "badgeChapterMovesDesc": "Completa le lezioni sul movimento dei pezzi.",
+  "badgeChapterPiecesName": "Pezzi al sicuro",
+  "badgeChapterPiecesDesc": "Completa le lezioni su catturare e difendere.",
   "badgeChapterRulesName": "Le regole d'oro",
   "badgeChapterRulesDesc": "Completa le lezioni sulle regole del gioco.",
   "badgeChapterMatesName": "Cacciatore di re",
@@ -259,6 +261,8 @@
       }
     }
   },
+  "badgeStoryPrologueName": "Primi passi",
+  "badgeStoryPrologueDesc": "Batti Tino nel «Capitolo 0».",
   "badgeStoryVillageName": "Eroe del villaggio",
   "badgeStoryVillageDesc": "Batti Pino nel capitolo «Il villaggio dei pezzi».",
   "badgeStoryGatesName": "Oltre le porte",

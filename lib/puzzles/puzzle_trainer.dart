@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math' as math;
 
 import '../storage/key_value_store.dart';
 import 'glicko2.dart';
@@ -101,8 +102,15 @@ class PuzzleTrainer {
     return added.length;
   }
 
-  Puzzle next({String? theme}) =>
-      library.next(rating: _rating.rating, theme: theme, seen: _seen);
+  /// Con [maxRating] il punteggio usato per scegliere non supera quel valore:
+  /// serve ai percorsi per principianti, che non devono salire con il tuo.
+  Puzzle next({String? theme, double? maxRating}) => library.next(
+    rating: maxRating == null
+        ? _rating.rating
+        : math.min(_rating.rating, maxRating),
+    theme: theme,
+    seen: _seen,
+  );
 
   /// Registra l'esito e restituisce la variazione di punteggio, oppure `null`
   /// se il puzzle era già stato visto: le ripetizioni non cambiano il punteggio.

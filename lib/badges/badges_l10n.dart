@@ -11,6 +11,7 @@ AppLocalizations badgesL10n(BuildContext context) =>
 
 /// Nome del badge, dai file `lib/l10n/<lingua>/badges.arb`.
 String badgeName(AppLocalizations l, BadgeDef b) => switch (b.id) {
+  'chapter_moves' => l.badgeChapterMovesName,
   'chapter_pieces' => l.badgeChapterPiecesName,
   'chapter_rules' => l.badgeChapterRulesName,
   'chapter_mates' => l.badgeChapterMatesName,
@@ -43,6 +44,7 @@ String badgeName(AppLocalizations l, BadgeDef b) => switch (b.id) {
   'wins_100' => l.badgeWins100Name,
   'podium' => l.badgePodiumName,
   'tournaments_5' => l.badgeTournaments5Name,
+  'story_prologue' => l.badgeStoryPrologueName,
   'story_village' => l.badgeStoryVillageName,
   'story_gates' => l.badgeStoryGatesName,
   'story_tower' => l.badgeStoryTowerName,
@@ -67,6 +69,7 @@ String badgeName(AppLocalizations l, BadgeDef b) => switch (b.id) {
 /// Come si ottiene il badge; le soglie vengono dalla definizione, così testo e
 /// regola non possono divergere.
 String badgeDescription(AppLocalizations l, BadgeDef b) => switch (b.id) {
+  'chapter_moves' => l.badgeChapterMovesDesc,
   'chapter_pieces' => l.badgeChapterPiecesDesc,
   'chapter_rules' => l.badgeChapterRulesDesc,
   'chapter_mates' => l.badgeChapterMatesDesc,
@@ -99,6 +102,7 @@ String badgeDescription(AppLocalizations l, BadgeDef b) => switch (b.id) {
   'wins_100' => l.badgeWins100Desc(b.quoted),
   'podium' => l.badgePodiumDesc,
   'tournaments_5' => l.badgeTournaments5Desc(b.quoted),
+  'story_prologue' => l.badgeStoryPrologueDesc,
   'story_village' => l.badgeStoryVillageDesc,
   'story_gates' => l.badgeStoryGatesDesc,
   'story_tower' => l.badgeStoryTowerDesc,

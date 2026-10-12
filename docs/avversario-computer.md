@@ -79,6 +79,8 @@ Con **Adattivo** attivo il livello segue i risultati del giocatore, per far vinc
 
 Il livello predefinito è il 3.
 
+La Storia usa anche un livello 0 (`storyBeginnerLevel`, 400 Elo, 8 candidate e temperatura 600), che non fa parte dei livelli scelti dall'utente né dell'adattivo e non cambia `engineLevelForElo`. La sua forza non è ancora stata misurata con `tool/calibrate_test.dart`.
+
 ### Perché i livelli bassi funzionano così
 
 Stockfish ha un limitatore di forza (`UCI_LimitStrength` / `UCI_Elo`), ma non scende sotto i

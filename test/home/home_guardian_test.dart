@@ -92,12 +92,13 @@ void main() {
     }
     await tester.runAsync(() async {
       await path.replace(p);
-      // Il guardiano è il terzo capitolo: prima vanno conclusi i due che lo
-      // precedono e i puzzle del suo.
-      for (final c in storyChapters.take(3)) {
+      // Prima vanno conclusi i capitoli che precedono quello del guardiano e
+      // risolti i puzzle del suo.
+      final own = storyChapters.indexWhere((c) => c.pathChapterId == 'mates');
+      for (final c in storyChapters.take(own + 1)) {
         await story.puzzlesSolved(c, c.puzzleCount);
       }
-      for (final c in storyChapters.take(2)) {
+      for (final c in storyChapters.take(own)) {
         await story.bossBeaten(c);
       }
     });

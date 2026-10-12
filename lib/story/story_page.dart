@@ -118,7 +118,7 @@ class _StoryPageState extends State<StoryPage> {
       final nextChapter = hasNext ? storyChapters[index + 1] : null;
       icon = Icons.emoji_events_outlined;
       title = hasNext
-          ? l10n.storyPassageChapterTitle(index + 1)
+          ? l10n.storyPassageChapterTitle(index)
           : l10n.storyPassageStoryDone;
       if (kind == StoryStepKind.boss) {
         subtitle = l10n.storyBossWon(chapter.bot.name);
@@ -126,7 +126,7 @@ class _StoryPageState extends State<StoryPage> {
       body = nextChapter == null
           ? l10n.chapterOutro(chapter)
           : '${l10n.chapterOutro(chapter)}\n\n'
-                '${l10n.storyPassageChapterNext(index + 2, l10n.chapterTitle(nextChapter))}';
+                '${l10n.storyPassageChapterNext(index + 1, l10n.chapterTitle(nextChapter))}';
       if (nextChapter != null) {
         action = l10n.storyPassageGoChapter;
         target = (nextChapter, StoryStepKind.lessons);
@@ -412,7 +412,7 @@ class _ChapterCard extends StatelessWidget {
                   alignment: Alignment.topCenter,
                   child: _Badge(
                     key: ValueKey('story-badge-${chapter.id}'),
-                    number: index + 1,
+                    number: index,
                     unlocked: unlocked,
                     done: done,
                     value: stepsDone / steps.length,
@@ -440,7 +440,7 @@ class _ChapterCard extends StatelessWidget {
                             container: true,
                             header: true,
                             label:
-                                '${l10n.storyChapterNumber(index + 1)}: $title'
+                                '${l10n.storyChapterNumber(index)}: $title'
                                 '${done ? ', ${l10n.storyChapterDone}' : ''}'
                                 '${current ? ', ${l10n.storyChapterCurrent}' : ''}'
                                 '${unlocked ? '' : ', ${l10n.storyStepLocked}'}',
@@ -449,7 +449,7 @@ class _ChapterCard extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  l10n.storyChapterNumber(index + 1),
+                                  l10n.storyChapterNumber(index),
                                   style: theme.textTheme.labelMedium?.copyWith(
                                     color: scheme.onSurfaceVariant,
                                   ),

@@ -377,6 +377,7 @@ class _HomeShellState extends State<HomeShell> {
       trainer,
       theme: chapter.puzzleTheme,
       goal: remaining,
+      maxRating: chapter.puzzleRating,
     );
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
