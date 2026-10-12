@@ -105,6 +105,7 @@ class HomeShell extends StatefulWidget {
   /// Sostituibile nei test; di default i risultati salvati di «Indovina la
   /// mossa».
   final Future<MastersController> Function()? masters;
+
   /// Sostituibile nei test; di default i progressi salvati della storia.
   final Future<StoryController> Function()? story;
 
