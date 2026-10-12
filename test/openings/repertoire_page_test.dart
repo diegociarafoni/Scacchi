@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/openings/explorer_page.dart';
 import 'package:scacchi/openings/opening_book.dart';
+import 'package:scacchi/openings/opening_game.dart';
 import 'package:scacchi/openings/openings_hub_page.dart';
 import 'package:scacchi/openings/repertoire.dart';
 import 'package:scacchi/openings/repertoire_page.dart';
@@ -120,5 +121,72 @@ void main() {
     final failing = Future<RepertoireTrainer>.error(StateError('x'))..ignore();
     await phone(tester, OpeningsHubPage(repertoire: failing));
     expect(find.text('Repertorio non disponibile'), findsNWidgets(2));
+  });
+  testWidgets('RF-94 dal repertorio si gioca la linea contro il computer', (
+    tester,
+  ) async {
+    final t = await trainer();
+    await t.addLine(Side.black, 'Siciliana', uci('e2e4 c7c5'));
+    OpeningGameRequest? request;
+    await phone(
+      tester,
+      RepertoirePage(
+        trainer: t,
+        side: Side.black,
+        onPlay: (context, r) async => request = r,
+      ),
+    );
+    await tester.tap(find.byTooltip('Gioca la linea'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Gioca'));
+    await tester.pumpAndSettle();
+    expect(request?.side, Side.black);
+    expect(request?.line, uci('e2e4 c7c5'));
+    expect(request?.startMoves, isEmpty);
+  });
+
+  testWidgets('RF-94 senza motore non c\'è il pulsante per giocare', (
+    tester,
+  ) async {
+    final t = await trainer();
+    await t.addLine(Side.black, 'Siciliana', uci('e2e4 c7c5'));
+    await phone(tester, RepertoirePage(trainer: t, side: Side.black));
+    expect(find.byTooltip('Gioca la linea'), findsNothing);
+  });
+
+  testWidgets('RF-94 dall\'explorer si gioca l\'apertura raggiunta', (
+    tester,
+  ) async {
+    OpeningGameRequest? request;
+    await phone(
+      tester,
+      ExplorerPage(
+        book: Future.value(book),
+        initialMoves: uci('e2e4 e7e5 g1f3'),
+        onPlay: (context, r) async => request = r,
+      ),
+    );
+    await tester.tap(find.byTooltip('Gioca questa apertura'));
+    await tester.pumpAndSettle();
+    // Dopo tre semimosse tocca al Nero: il colore proposto è il Nero.
+    await tester.tap(find.text('Gioca'));
+    await tester.pumpAndSettle();
+    expect(request?.side, Side.black);
+    expect(request?.startMoves, uci('e2e4 e7e5 g1f3'));
+    expect(request?.line, isNull);
+    expect(request?.title, 'Apertura del cavallo di re');
+  });
+
+  testWidgets('RF-94 nella posizione iniziale non si può giocare', (
+    tester,
+  ) async {
+    await phone(
+      tester,
+      ExplorerPage(book: Future.value(book), onPlay: (context, r) async {}),
+    );
+    final button = tester.widget<IconButton>(
+      find.widgetWithIcon(IconButton, Icons.play_arrow),
+    );
+    expect(button.onPressed, isNull);
   });
 }
