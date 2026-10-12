@@ -1,0 +1,60 @@
+# Badge
+
+Requisito RG-17. Una raccolta di 46 badge legati a ciò che si impara e si gioca, distinta dai [traguardi](gamification.md#traguardi-rg-05): i traguardi sono contatori che sbloccano temi, pezzi e cornici; i badge sono un riconoscimento tematico e non danno né XP né ricompense (RG-12). Il catalogo con le scelte di prodotto è in `badge.md` tra i file del progetto; qui c'è come funziona il codice, in `lib/badges/`.
+
+## Famiglie
+
+| Famiglia | Badge | Da dove vengono i dati |
+|---|---|---|
+| Imparare (11) | un badge per ogni capitolo della Storia (le sue lezioni), tre guardiani battuti, tutti i puzzle della Storia, tutte le posizioni dei finali, tutte le partite dei maestri, 25 revisioni | Salvataggi di Percorso (le lezioni sono quelle della Storia), finali, maestri e Storia; `reviewsCompleted` |
+| Puzzle (9) | 500 puzzle, 10 temi diversi, cinque temi singoli, punteggio 1800, 10 punti nella modalità a serie | `puzzleThemes`, `puzzlesSolved`, record |
+| Partite (10) | matto del barbiere, matto del pazzo, matto con tutti i pezzi, en passant, sottopromozione, stallo, maratona, 100 vittorie, podio, 5 tornei | Contatori degli eventi (`tally`), `wins` |
+| Storia (7) | un badge per capitolo con il bot battuto e uno per la storia intera | Salvataggio della Storia |
+| Costanza (9) | serie di 14, 60, 100 e 365 giorni, 30 e 100 giorni di gioco, ritorno dopo una pausa, 7 giornate perfette, 25 sessioni di minigioco | `bestStreak`, `perfectDays`, `tally` |
+
+I badge a gradini (serie e giorni di gioco) sono badge distinti con una scritta Bronzo, Argento o Oro: il gradino è solo estetico e c'è sempre anche il testo, non solo il colore.
+
+## Modello
+
+- `BadgeDef` (`badge_def.dart`): identificativo stabile, famiglia, icona di Material, soglia e funzione che dà l'avanzamento. I badge «a evento» hanno soglia 1. L'identificativo si salva nei progressi e non va cambiato.
+- `BadgeFacts`: i dati su cui si decide, cioè `ProgressState` e `BadgeSources`.
+- `BadgeSources` (`badge_sources.dart`): avanzamenti che stanno nei salvataggi di Percorso, finali, maestri e Storia. La Storia è l'unico percorso di apprendimento: i badge delle lezioni e dei guardiani contano solo i capitoli e i guardiani della Storia, perciò le lezioni di strategia e della scuola di Capablanca non hanno badge. Si ricalcolano a ogni modifica di quei salvataggi, quindi chi ha già finito un capitolo prima dell'arrivo dei badge lo ottiene al primo avvio.
+- `ProgressState.badges`: identificativo del badge e giorno di calendario in cui è stato ottenuto. `ProgressState.tally`: contatori degli eventi che nessun altro archivio tiene. `ProgressState.lastActiveDay`: ultimo giorno con un'attività, per i giorni di gioco e il ritorno. I file salvati prima dei badge si leggono senza perdere nulla; valori non numerici si ignorano.
+
+### Contatori degli eventi
+
+| Chiave | Quando cresce |
+|---|---|
+| `game:<evento>` | A fine partita contro il computer, per ogni evento in `GamePlayed.highlights`: `scholarsMate`, `foolsMate`, `enPassant`, `underpromotion`, `stalemate`, `marathon` |
+| `mate:<pezzo>` | Vittoria per matto con quel pezzo (`queen`, `rook`, `bishop`, `knight`, `pawn`) |
+| `tournaments`, `podium` | Torneo concluso; podio se tra i primi tre con almeno 4 giocatori |
+| `minigames` | Sessione di minigioco con almeno un punto |
+| `days` | Primo evento registrato in un nuovo giorno di calendario |
+| `comeback` | Attività dopo almeno 14 giorni senza attività |
+
+Gli eventi di partita li calcola `gameActivity` (`lib/progress/game_activity.dart`) rigiocando la partita; le partite tra due persone non ne hanno. Chi gioca da prima dei badge parte da zero sui contatori: le partite passate non si rileggono dall'archivio.
+
+## Sblocco
+
+`ProgressTracker.record` valuta tutti i badge dopo i traguardi, con le fonti correnti, e li scrive nello stato insieme al resto. `ProgressTracker.refreshBadges` fa lo stesso quando cambiano solo le fonti (per esempio dopo una lezione). Con la gamification spenta non si sblocca nulla. Un badge ottenuto non si perde, anche se poi un avanzamento cala.
+
+`ProgressController.badgeUnlocks` è un flusso con i badge appena ottenuti; `HomeShell` lo ascolta e mostra un avviso «Nuovo badge: …» con il pulsante «Vedi», che apre la raccolta. L'avviso è l'unico: non si aggiunge al riepilogo degli XP delle schermate di gioco. Nel profilo bambino non c'è avviso né raccolta (niente numeri), ma i badge si registrano comunque.
+
+## Interfaccia
+
+La scheda Tu ha la voce **Badge** (accanto a Profilo e Statistiche; con la scheda Tu a gruppi sta in «I miei dati»). `BadgesPage` mostra il totale, poi i badge per famiglia in una griglia che si adatta alla larghezza e al corpo del testo. Un badge da ottenere è una medaglia con il lucchetto, il nome e l'avanzamento «3 / 10»; toccato apre la scheda con la descrizione e l'avanzamento. Uno ottenuto mostra l'icona e, nella scheda, la data. Ogni riquadro ha un'etichetta per i lettori di schermo («Alla francese, ottenuto» o «…, da ottenere, 3 su 10») e un'area di tocco ben oltre 48 dp.
+
+## Testi e icone
+
+I testi sono in `lib/l10n/it/badges.arb` e `lib/l10n/en/badges.arb`, con chiavi `badge<Id>Name` e `badge<Id>Desc` e il prefisso `badges…` per la schermata. Le soglie delle descrizioni sono segnaposto riempiti dalla definizione, così testo e regola non divergono. `badges_l10n.dart` collega gli identificativi ai testi; un test verifica che ogni badge abbia nome e descrizione in tutte le lingue. Le icone sono quelle di Material, senza immagini da distribuire.
+
+## Aggiungere un badge
+
+1. Aggiungere la riga in `badges` (`badge_def.dart`), con un identificativo nuovo e mai riusato.
+2. Se serve un dato nuovo, un contatore in `ProgressTracker._count` o un campo di `BadgeSources`.
+3. Aggiungere `badge<Id>Name` e `badge<Id>Desc` nei due `badges.arb` e il ramo corrispondente in `badges_l10n.dart`.
+4. Aggiungere il test in `test/badges/badge_defs_test.dart` e aggiornare il numero atteso nel test del catalogo e in questo documento.
+
+## Non ancora attivi
+
+I badge del multigiocatore e delle aperture sono nel catalogo di prodotto ma non nel codice: richiedono che le partite in rete e il ripasso del repertorio registrino un'attività, e quelle schermate sono in corso di ridisegno.

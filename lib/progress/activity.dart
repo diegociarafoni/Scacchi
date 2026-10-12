@@ -9,6 +9,26 @@ typedef RecordActivity = Future<void> Function(Activity activity);
 /// un vincitore attribuibile all'utente.
 enum GameResult { win, draw, loss, local }
 
+/// Momenti memorabili di una partita, per i badge (RG-17). I nomi sono chiavi
+/// dei contatori salvati: non cambiarli.
+enum GameHighlight {
+  /// Vittoria con il matto della donna in quattro mosse o meno.
+  scholarsMate,
+
+  /// Matto subito in due mosse.
+  foolsMate,
+  enPassant,
+
+  /// Promozione a un pezzo diverso dalla donna.
+  underpromotion,
+  stalemate,
+
+  /// Almeno [marathonMoves] mosse del giocatore.
+  marathon;
+
+  static const marathonMoves = 60;
+}
+
 /// Attività che fa guadagnare XP e avanza l'obiettivo giornaliero.
 sealed class Activity {
   const Activity({this.duration = Duration.zero});
@@ -25,6 +45,7 @@ class GamePlayed extends Activity {
     this.checkmate = false,
     this.matedWith,
     this.castledLong = false,
+    this.highlights = const {},
     super.duration,
   });
 
@@ -47,6 +68,9 @@ class GamePlayed extends Activity {
 
   /// Il giocatore ha arroccato lungo nella partita.
   final bool castledLong;
+
+  /// Momenti memorabili della partita; vuoti nelle partite tra due persone.
+  final Set<GameHighlight> highlights;
 }
 
 class PuzzleSolved extends Activity {
