@@ -47,10 +47,10 @@ class MasterGame {
   };
 
   /// Posizioni dopo ogni semimossa, la prima è quella iniziale.
-  List<Position> get positions => _replay().$1;
+  List<Position> get positions => replay().$1;
 
   /// Mosse della partita, nello stesso ordine di [moves].
-  List<Move> get moveList => _replay().$2;
+  List<Move> get moveList => replay().$2;
 
   /// Mossa della semimossa [ply] (da 1).
   Move moveAt(int ply) => moveList[ply - 1];
@@ -61,7 +61,8 @@ class MasterGame {
     return ply.isOdd ? '${(ply + 1) ~/ 2}. $san' : '${ply ~/ 2}… $san';
   }
 
-  (List<Position>, List<Move>) _replay() {
+  /// Rigioca la partita una volta sola: posizioni e mosse insieme.
+  (List<Position>, List<Move>) replay() {
     final positions = <Position>[Chess.initial];
     final list = <Move>[];
     for (var i = 0; i < moves.length; i++) {

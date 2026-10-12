@@ -50,12 +50,19 @@ class MastersController extends ChangeNotifier {
     final first = _progress.bestPercent(id) == null;
     _progress = _progress.record(id, percent);
     notifyListeners();
-    if (first) await recordActivity?.call(LessonCompleted(duration: duration));
-    if (_readOnly) return;
+    if (!_readOnly) {
+      try {
+        await _file.write(_progress.toJson());
+      } on FileSystemException catch (e) {
+        debugPrint('Salvataggio delle partite dei maestri non riuscito: $e');
+      }
+    }
+    if (!first) return;
+    // L'esito è già salvato: un errore nei progressi non lo deve perdere.
     try {
-      await _file.write(_progress.toJson());
-    } on FileSystemException catch (e) {
-      debugPrint('Salvataggio delle partite dei maestri non riuscito: $e');
+      await recordActivity?.call(LessonCompleted(duration: duration));
+    } on Object catch (e) {
+      debugPrint('Attività non registrata: $e');
     }
   }
 }

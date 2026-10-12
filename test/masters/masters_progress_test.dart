@@ -49,5 +49,23 @@ void main() {
       await again.load();
       expect(again.progress.bestPercent('a'), 90);
     });
+
+    test(
+      'RF-88 il risultato si salva anche se i progressi falliscono',
+      () async {
+        final file = File('${dir.path}/masters.json');
+        final c = MastersController(
+          file,
+          recordActivity: (_) async {
+            throw StateError('progressi non scrivibili');
+          },
+        );
+        await c.load();
+        await c.finish('a', 75, const Duration(minutes: 1));
+        final again = MastersController(file);
+        await again.load();
+        expect(again.progress.bestPercent('a'), 75);
+      },
+    );
   });
 }

@@ -78,9 +78,11 @@ class _GuessPageState extends State<GuessPage> {
     if (!mounted || attempt != _attempt) return;
     _run.playOpponent();
     final opponentPly = _run.ply;
+    final reply = widget.game.notes[opponentPly];
     setState(() {
       _busy = false;
-      _note = widget.game.notes[opponentPly] ?? _note;
+      _feedback = '$_feedback Risposta: ${widget.game.label(opponentPly)}.';
+      if (reply != null) _note = [?_note, reply].join('\n\n');
     });
     if (_run.finished) await _finish();
   }

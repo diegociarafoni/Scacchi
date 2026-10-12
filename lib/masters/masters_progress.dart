@@ -10,7 +10,7 @@ class MastersProgress {
       MastersProgress(
         best: {
           for (final e in (json['best'] as Map<String, dynamic>? ?? {}).entries)
-            e.key: e.value as int,
+            e.key: (e.value as num).toInt(),
         },
       );
 

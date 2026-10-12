@@ -22,9 +22,7 @@ class GuessResult {
 /// «Indovina la mossa» (RF-88): l'utente gioca le mosse di un lato della
 /// partita e ognuna è confrontata con quella del maestro, che poi si gioca.
 class GuessRun {
-  GuessRun(this.game, this.side)
-    : _positions = game.positions,
-      _moves = game.moveList {
+  GuessRun(this.game, this.side) : _replayed = game.replay() {
     total = [
       for (var i = 0; i < _moves.length; i++)
         if (_positions[i].turn == side) i,
@@ -33,8 +31,9 @@ class GuessRun {
 
   final MasterGame game;
   final Side side;
-  final List<Position> _positions;
-  final List<Move> _moves;
+  final (List<Position>, List<Move>) _replayed;
+  List<Position> get _positions => _replayed.$1;
+  List<Move> get _moves => _replayed.$2;
 
   int _ply = 0;
 
@@ -62,7 +61,7 @@ class GuessRun {
   /// Mossa del maestro nella posizione corrente.
   Move get expected => _moves[_ply];
 
-  int get percent => total == 0 ? 0 : (_correct * 100 / total).round();
+  int get percent => total == 0 ? 0 : _correct * 100 ~/ total;
   int get stars => guessStars(percent);
 
   /// Gioca la mossa dell'utente e poi quella del maestro. Una mossa illegale

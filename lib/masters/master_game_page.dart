@@ -27,8 +27,9 @@ class MasterGamePage extends StatefulWidget {
 }
 
 class _MasterGamePageState extends State<MasterGamePage> {
-  late final List<Position> _positions = widget.game.positions;
-  late final List<Move> _moves = widget.game.moveList;
+  late final (List<Position>, List<Move>) _replayed = widget.game.replay();
+  List<Position> get _positions => _replayed.$1;
+  List<Move> get _moves => _replayed.$2;
   int _ply = 0;
   bool _flipped = false;
 
@@ -146,18 +147,7 @@ class _MasterGamePageState extends State<MasterGamePage> {
                       ),
                     ],
                   ),
-                  Wrap(
-                    spacing: 6,
-                    children: [
-                      for (var i = 1; i <= game.moves.length; i++)
-                        ChoiceChip(
-                          label: Text(game.label(i)),
-                          selected: i == _ply,
-                          onSelected: (_) => _go(i),
-                        ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 8),
                   for (final side in sides)
                     Padding(
                       padding: const EdgeInsets.only(bottom: 8),
@@ -169,6 +159,18 @@ class _MasterGamePageState extends State<MasterGamePage> {
                         ),
                       ),
                     ),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 6,
+                    children: [
+                      for (var i = 1; i <= game.moves.length; i++)
+                        ChoiceChip(
+                          label: Text(game.label(i)),
+                          selected: i == _ply,
+                          onSelected: (_) => _go(i),
+                        ),
+                    ],
+                  ),
                 ],
               ),
             );

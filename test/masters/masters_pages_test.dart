@@ -121,6 +121,7 @@ void main() {
     await tester.pumpAndSettle();
     await _tapMove(tester, 'd2', 'd4');
     expect(find.textContaining('Il maestro ha giocato 1. e4'), findsOneWidget);
+    expect(find.textContaining('Risposta: 1… e5'), findsOneWidget);
   });
 
   testWidgets('RF-88 nel profilo bambino non compaiono percentuali', (
