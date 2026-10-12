@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scacchi/multiplayer/channel_registry.dart';
 import 'package:scacchi/multiplayer/game_invite.dart';
 import 'package:scacchi/multiplayer/local_address.dart';
 import 'package:scacchi/multiplayer/multiplayer_controller.dart';
@@ -189,6 +190,41 @@ void main() {
       ),
       throwsA(isA<NoLocalNetwork>()),
     );
+  });
+
+  group('canali in più', () {
+    tearDown(extraChannelFactories.clear);
+
+    test('RMP-11 i canali registrati si aggiungono a ogni partita', () async {
+      final (extraA, extraB) = LoopbackTransport.pair(name: 'extra');
+      final seen = <(String, bool)>[];
+      extraChannelFactories
+        ..add((invite, {required isHost}) async {
+          seen.add((invite.gameId, isHost));
+          return isHost ? extraA : extraB;
+        })
+        ..add((invite, {required isHost}) async => null)
+        ..add((invite, {required isHost}) async => throw StateError('no'));
+      // Il Wi-Fi è giù: la partita viaggia solo sul canale in più.
+      final (lanA, lanB) = LoopbackTransport.pair();
+      lanA.online = false;
+      final host = await MultiplayerController.host(
+        side: Side.white,
+        openHost: () async => (transport: lanA, lanAddress: '10.0.0.2:4000'),
+      );
+      final guest = await MultiplayerController.join(
+        GameInvite.parse(host.inviteLink)!,
+        openGuest: (_, _) => lanB,
+      );
+      await settle();
+      expect(seen.map((e) => e.$2), [true, false]);
+      expect(host.session.transport.name, 'loop+extra');
+      expect(await host.play(Move.parse('e2e4')!), isTrue);
+      await settle();
+      expect(guest.session.sync.moves, ['e2e4']);
+      await host.close();
+      await guest.close();
+    });
   });
 }
 
