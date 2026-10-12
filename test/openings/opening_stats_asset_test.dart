@@ -31,13 +31,19 @@ void main() {
   });
 
   test('ogni mossa elencata è legale e i risultati sono coerenti', () {
+    // La chiave ignora l'en passant: una cattura «al varco» può comparire in
+    // una posizione dove non è legale, e l'explorer la scarta.
+    final enPassant = RegExp(r'^[a-h]x[a-h][36]$');
     var checked = 0;
     void walk(Position pos, int depth) {
       for (final m in stats.at(pos)) {
-        final move = pos.parseSan(m.san);
-        expect(move, isNotNull, reason: m.san);
         expect(m.white + m.black, lessThanOrEqualTo(m.games));
-        if (depth < 4) walk(pos.play(move!), depth + 1);
+        final move = pos.parseSan(m.san);
+        if (move == null) {
+          expect(m.san, matches(enPassant), reason: m.san);
+          continue;
+        }
+        if (depth < 4) walk(pos.play(move), depth + 1);
         checked++;
       }
     }
