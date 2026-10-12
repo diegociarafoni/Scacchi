@@ -56,7 +56,12 @@ enum MultiplayerStatus { waitingPeer, connecting, myTurn, peerTurn, finished }
 /// Stato della partita a due per l'interfaccia: chi muove, l'ultima mossa,
 /// l'esito. Avvisa a ogni cambiamento.
 class MultiplayerController extends ChangeNotifier {
-  MultiplayerController._(this.session, this.inviteLink, this._store) {
+  MultiplayerController._(
+    this.session,
+    this.inviteLink,
+    this._store,
+    this._seedBytes,
+  ) {
     _sub = session.events.listen((_) => _changed());
     // Il canale si è (ri)collegato all'ospite: la sessione si ripresenta da
     // sola, qui basta aggiornare lo stato.
@@ -89,7 +94,12 @@ class MultiplayerController extends ChangeNotifier {
         identity,
         MultiTransport([channel.transport]),
       );
-      return MultiplayerController._(session, invite.toLink(), store);
+      return MultiplayerController._(
+        session,
+        invite.toLink(),
+        store,
+        await identity.seed(),
+      );
     } catch (_) {
       await channel.transport.close();
       rethrow;
@@ -119,17 +129,33 @@ class MultiplayerController extends ChangeNotifier {
     }
     final lan = invite.lanAddress;
     final port = lan == null ? null : _split(lan)?.$2;
+    if (!listEquals(identity.publicKey, invite.hostKey)) {
+      throw const FormatException('chiave non coerente con l\'invito');
+    }
     final channel = await openHost(port);
     try {
+      // Se la porta di prima era occupata l'indirizzo è cambiato.
+      final current = GameInvite(
+        gameId: invite.gameId,
+        secret: invite.secret,
+        hostKey: invite.hostKey,
+        hostSide: invite.hostSide,
+        lanAddress: channel.lanAddress ?? invite.lanAddress,
+      );
       final session = MultiplayerSession.host(
-        invite,
+        current,
         identity,
         MultiTransport([channel.transport]),
         moves: saved.moves,
         peerKey: saved.peerKey,
         sealed: saved.sealed,
       );
-      return MultiplayerController._(session, saved.inviteLink, store);
+      return MultiplayerController._(
+        session,
+        current.toLink(),
+        store,
+        saved.seed,
+      );
     } catch (_) {
       await channel.transport.close();
       rethrow;
@@ -175,6 +201,7 @@ class MultiplayerController extends ChangeNotifier {
         session,
         invite.toLink(),
         store,
+        await identity.seed(),
       );
       if (await session.announce()) controller._reached = true;
       unawaited(controller._persist());
@@ -186,8 +213,10 @@ class MultiplayerController extends ChangeNotifier {
   }
 
   final MultiplayerSession session;
-  final SavedGameStore? _store;
-  late final Future<Uint8List> _seed = session.identity.seed();
+  SavedGameStore? _store;
+  final Uint8List _seedBytes;
+  bool _finished = false;
+  Future<void> _writes = Future.value();
 
   /// Link dell'invito, da mostrare come QR all'altro telefono.
   final String inviteLink;
@@ -245,29 +274,40 @@ class MultiplayerController extends ChangeNotifier {
     unawaited(_persist());
   }
 
-  /// Salva la partita a ogni cambiamento; a partita finita la toglie. Chi
-  /// ospita non salva finché nessuno è entrato: l'invito non è ancora usato.
-  Future<void> _persist() async {
-    final store = _store;
-    if (store == null) return;
-    if (_sync.isGameOver) return store.clear();
-    if (isHost && _sync.peerKey == null && _sync.moves.isEmpty) return;
-    await store.save(
-      SavedGame(
-        inviteLink: inviteLink,
-        isHost: isHost,
-        seed: await _seed,
-        moves: _sync.moves,
-        peerKey: isHost ? _sync.peerKey : null,
-        sealed: session.sealedMessages,
-      ),
-    );
+  /// Archivio arrivato dopo la creazione del controller (se non ne ha già uno).
+  void useStore(SavedGameStore? store) {
+    if (_store != null || store == null || _disposed) return;
+    _store = store;
+    unawaited(_persist());
   }
 
-  /// Lascia la partita per sempre: non sarà più possibile riprenderla.
-  Future<void> abandon() async {
-    await close();
-    await _store?.clear();
+  /// Salva la partita a ogni cambiamento; a partita finita la toglie. Chi
+  /// ospita non salva finché nessuno è entrato: l'invito non è ancora usato.
+  Future<void> _persist() {
+    final store = _store;
+    if (store == null || _finished) return Future.value();
+    if (isHost && _sync.peerKey == null && _sync.moves.isEmpty) {
+      return Future.value();
+    }
+    final finished = _sync.isGameOver;
+    // Istantanea subito, scrittura in ordine: un salvataggio in ritardo non
+    // può far riapparire una partita già chiusa.
+    final game = SavedGame(
+      inviteLink: inviteLink,
+      isHost: isHost,
+      seed: _seedBytes,
+      moves: _sync.moves,
+      peerKey: isHost ? _sync.peerKey : null,
+      sealed: session.sealedMessages,
+    );
+    if (finished) _finished = true;
+    return _writes = _writes.then((_) async {
+      try {
+        await (finished ? store.clear() : store.save(game));
+      } on Object catch (e) {
+        if (kDebugMode) debugPrint('Salvataggio della partita fallito: $e');
+      }
+    });
   }
 
   /// Chiude canali e sessione; dopo non avvisa più.

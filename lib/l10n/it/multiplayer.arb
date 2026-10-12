@@ -99,6 +99,10 @@
   "@multiplayerLeaveBody": {
     "description": "Testo della conferma di uscita"
   },
+  "multiplayerLeaveBodyWaiting": "Il collegamento si chiude e l'invito non sarà più valido.",
+  "@multiplayerLeaveBodyWaiting": {
+    "description": "Testo della conferma di uscita mentre si attende l'avversario"
+  },
   "multiplayerLeave": "Lascia",
   "@multiplayerLeave": {
     "description": "Conferma l'uscita"

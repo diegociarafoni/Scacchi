@@ -236,5 +236,37 @@ void main() {
       expect(find.text('Riprendi la partita'), findsNothing);
       expect(await tester.runAsync(store.load), isNull);
     });
+
+    testWidgets(
+      'RMP-09 una partita nuova chiede prima di sostituire quella salvata',
+      (tester) async {
+        await saveOne(tester);
+        var opened = 0;
+        final (a, _) = LoopbackTransport.pair();
+        await openPage(
+          tester,
+          MultiplayerPage(
+            store: store,
+            openHost: () async {
+              opened++;
+              return (transport: a, lanAddress: '10.0.0.2:4000');
+            },
+          ),
+        );
+        await tester.tap(find.text('Crea la partita'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Resta'));
+        await tester.pumpAndSettle();
+        expect(opened, 0);
+        expect(await tester.runAsync(store.load), isNotNull);
+
+        await tester.tap(find.text('Crea la partita'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Elimina').last);
+        await _wait(tester);
+        await tester.pumpAndSettle();
+        expect(opened, 1);
+      },
+    );
   });
 }

@@ -81,11 +81,18 @@ class SavedGameStore {
   static Future<SavedGameStore> open() =>
       _shared ??= getApplicationSupportDirectory().then(
         (dir) => SavedGameStore(File('${dir.path}/multiplayer.json')),
+        onError: (Object e, StackTrace st) {
+          _shared = null;
+          Error.throwWithStackTrace(e, st);
+        },
       );
 
   final JsonFile _file;
 
-  Future<SavedGame?> load() => _file.read<SavedGame?>(SavedGame.fromJson);
+  /// La partita salvata; un file non valido viene messo da parte.
+  Future<SavedGame?> load() => _file.read<SavedGame?>(
+    (json) => SavedGame.fromJson(json) ?? (throw const FormatException()),
+  );
 
   Future<void> save(SavedGame game) async {
     try {

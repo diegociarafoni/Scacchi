@@ -24,6 +24,7 @@
   "multiplayerCameraError": "Camera not available.",
   "multiplayerLeaveTitle": "Leave the game?",
   "multiplayerLeaveBody": "The connection with the other phone closes, but the game stays saved: you can resume it from here.",
+  "multiplayerLeaveBodyWaiting": "The connection closes and the invite is no longer valid.",
   "multiplayerLeave": "Leave",
   "multiplayerStay": "Stay",
   "multiplayerStartError": "The game could not be started: try again.",

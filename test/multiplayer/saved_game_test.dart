@@ -62,6 +62,19 @@ void main() {
       '{"version":1,"inviteLink":"x","isHost":true,"seed":"!!","moves":[]}',
     );
     expect(await store.load(), isNull);
+    // Messo da parte, non lasciato lì a ogni avvio.
+    expect(File('${dir.path}/multiplayer.json').existsSync(), isFalse);
+  });
+
+  test('RMP-09 un seme che non è quello dell\'invito non riprende', () async {
+    final bad = sample();
+    await expectLater(
+      MultiplayerController.resume(
+        bad,
+        openHost: (_) async => throw StateError('no'),
+      ),
+      throwsFormatException,
+    );
   });
 
   group('ripresa', () {
