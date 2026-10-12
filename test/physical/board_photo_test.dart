@@ -75,6 +75,34 @@ void main() {
     );
   });
 
+  test('topGuesses tiene una sola promozione per casella di arrivo', () {
+    final pos = Chess.fromSetup(
+      Setup.parseFen('8/P6k/8/8/8/8/6K1/8 w - - 0 1'),
+    );
+    final guesses = guessMoves(
+      pos,
+      before: render(pos),
+      after: render(after(pos, ['a8=Q'])),
+    );
+    final top = topGuesses(guesses, 3);
+    expect(top, hasLength(3));
+    expect(pos.makeSan(top.first.move).$2.split('+').first, 'a8=Q');
+    final squares = {
+      for (final g in top)
+        (g.move as NormalMove).from.value * 64 +
+            (g.move as NormalMove).to.value,
+    };
+    expect(squares, hasLength(3));
+  });
+
+  test('l\'arrocco in una posizione 960 usa le torri vere', () {
+    final pos = Chess.fromSetup(
+      Setup.parseFen('4k3/8/8/8/8/8/8/1K5R w H - 0 1'),
+    );
+    final next = pos.play(const NormalMove(from: Square.b1, to: Square.h1));
+    expect(best(pos, render(pos), render(next)), isNotNull);
+  });
+
   test('regge un cambio di luce, rumore e un piccolo spostamento', () {
     final mid = after(start, ['d4', 'd5', 'c4', 'e6']);
     final next = after(mid, ['Nc3']);

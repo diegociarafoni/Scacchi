@@ -52,7 +52,8 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
   String? _baselineFen;
   BoardQuad? _quad;
   Side _view = Side.white;
-  List<_PhotoGuess> _guesses = const [];
+  BoardFrame? _pendingFrame;
+  List<MoveSuggestion> _guesses = const [];
   bool _reading = false;
 
   DateTime get _now => (widget.now ?? DateTime.now)();
@@ -77,6 +78,7 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
       _note = null;
       _baseline = null;
       _baselineFen = null;
+      _quad = null;
       _guesses = const [];
     });
     _ticker = Timer.periodic(const Duration(milliseconds: 100), (_) => _tick());
@@ -93,7 +95,10 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
 
   void _afterChange() {
     final game = _game!;
-    setState(() => _guesses = const []);
+    setState(() {
+      _guesses = const [];
+      _note = null;
+    });
     if (game.isOver) unawaited(_save());
     _focus.requestFocus();
   }
@@ -122,14 +127,23 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
     if (_reading) return;
     _reading = true;
     try {
-      final bytes = await widget.photos.take();
+      final Uint8List? bytes;
+      try {
+        bytes = await widget.photos.take();
+      } on Object catch (e) {
+        debugPrint('Fotocamera non disponibile: $e');
+        if (mounted) _show(error: 'Fotocamera non disponibile');
+        return;
+      }
       if (bytes == null || !mounted) return;
       final frame = await decodeFrame(bytes);
+      if (!mounted) return;
       if (frame == null) {
         _show(error: 'Immagine non leggibile');
         return;
       }
       if (_quad == null && !await _align(bytes, frame)) return;
+      if (!mounted) return;
       final game = _game!;
       final fen = game.position.fen;
       final before = _baseline;
@@ -158,13 +172,10 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
       }
       final pos = game.position;
       setState(() {
+        _pendingFrame = frame;
         _guesses = [
-          for (final g in found.take(4))
-            _PhotoGuess(
-              san: pos.makeSan(g.move).$2,
-              move: g.move,
-              frame: frame,
-            ),
+          for (final g in topGuesses(found, 4))
+            (san: pos.makeSan(g.move).$2, move: g.move),
         ];
         _message = null;
         _note = 'Mosse più probabili dalla foto: conferma quella giusta.';
@@ -196,12 +207,17 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
     return true;
   }
 
-  void _playGuess(_PhotoGuess g) {
+  void _playGuess(MoveSuggestion g) {
     final game = _game!;
-    _playSuggestion((san: g.san, move: g.move));
-    if (game.moves.isNotEmpty) {
+    final frame = _pendingFrame;
+    if (game.play(g.move) != PhysicalInput.played) return;
+    _input.clear();
+    _message = null;
+    _afterChange();
+    // La foto che ha prodotto la mossa è il riferimento per la prossima.
+    if (frame != null) {
       setState(() {
-        _baseline = g.frame;
+        _baseline = frame;
         _baselineFen = game.position.fen;
       });
     }
@@ -459,6 +475,12 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
             icon: const Icon(Icons.photo_camera_outlined),
             label: const Text('Mossa dalla foto'),
           ),
+        if (!game.isOver && _quad != null)
+          TextButton(
+            key: const Key('physical-realign'),
+            onPressed: () => setState(() => _quad = null),
+            child: const Text('Riallinea'),
+          ),
         TextButton.icon(
           onPressed: game.canUndo
               ? () {
@@ -526,18 +548,6 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
     }
     return buffer.toString().trim();
   }
-}
-
-class _PhotoGuess {
-  const _PhotoGuess({
-    required this.san,
-    required this.move,
-    required this.frame,
-  });
-
-  final String san;
-  final Move move;
-  final BoardFrame frame;
 }
 
 class _ClockPanel extends StatelessWidget {

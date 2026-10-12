@@ -197,6 +197,36 @@ void main() {
       expect(find.textContaining('Nessuna mossa riconosciuta'), findsOneWidget);
     });
 
+    testWidgets('una fotocamera che fallisce mostra un avviso', (tester) async {
+      await open(tester, photos: _Broken());
+      await shoot(tester);
+      expect(find.textContaining('Fotocamera non disponibile'), findsOneWidget);
+    });
+
+    testWidgets('il testo sulla foto sparisce dopo la mossa', (tester) async {
+      await prepare(tester, [Chess.initial, e4()]);
+      await open(tester, photos: _Shots(shots));
+      await shoot(tester);
+      await align(tester);
+      await shoot(tester);
+      expect(find.textContaining('conferma quella giusta'), findsOneWidget);
+      await tester.tap(find.byKey(const Key('photo-guess')).first);
+      await tester.pump();
+      expect(find.textContaining('conferma quella giusta'), findsNothing);
+    });
+
+    testWidgets('Riallinea chiede di nuovo gli angoli', (tester) async {
+      await prepare(tester, [Chess.initial, Chess.initial]);
+      await open(tester, photos: _Shots(shots));
+      await shoot(tester);
+      await align(tester);
+      await tester.tap(find.byKey(const Key('physical-realign')));
+      await tester.pump();
+      expect(find.text('Allinea la scacchiera'), findsNothing);
+      await shoot(tester);
+      expect(find.text('Allinea la scacchiera'), findsOneWidget);
+    });
+
     testWidgets('una foto annullata non cambia nulla', (tester) async {
       await open(tester, photos: _Shots(const []));
       await shoot(tester);
@@ -204,6 +234,11 @@ void main() {
       expect(find.textContaining('Foto di riferimento'), findsNothing);
     });
   });
+}
+
+class _Broken implements PhotoSource {
+  @override
+  Future<Uint8List?> take() async => throw StateError('nessuna fotocamera');
 }
 
 class _Shots implements PhotoSource {

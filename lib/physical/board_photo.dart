@@ -147,6 +147,21 @@ List<PhotoGuess> guessMoves(
   return guesses;
 }
 
+/// Le prime [count] mosse con caselle di partenza e arrivo diverse: le
+/// quattro promozioni di una stessa mossa occupano un posto solo (la prima,
+/// cioè la donna).
+List<PhotoGuess> topGuesses(List<PhotoGuess> guesses, int count) {
+  final seen = <(Square, Square)>{};
+  final top = <PhotoGuess>[];
+  for (final g in guesses) {
+    final m = g.move;
+    if (m is NormalMove && !seen.add((m.from, m.to))) continue;
+    top.add(g);
+    if (top.length == count) break;
+  }
+  return top;
+}
+
 /// Caselle che una mossa cambia nella foto.
 Set<Square> _touched(Position pos, NormalMove move) {
   final piece = pos.board.pieceAt(move.from);
@@ -159,10 +174,16 @@ Set<Square> _touched(Position pos, NormalMove move) {
         target.role == Role.rook;
     final twoSteps = (move.to.file - move.from.file).abs() == 2;
     if (castlesOwnRook || twoSteps) {
+      // Re e torre finiscono sempre su g/f (lato di re) o c/d (lato di
+      // donna), anche negli arrocchi di Chess960.
       final kingSide = move.to.file > move.from.file;
       final rank = move.from.rank;
       touched
-        ..add(Square.fromCoords(File(kingSide ? 7 : 0), rank))
+        ..add(
+          castlesOwnRook
+              ? move.to
+              : Square.fromCoords(File(kingSide ? 7 : 0), rank),
+        )
         ..add(Square.fromCoords(File(kingSide ? 6 : 2), rank))
         ..add(Square.fromCoords(File(kingSide ? 5 : 3), rank));
     }

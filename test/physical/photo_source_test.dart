@@ -21,6 +21,14 @@ void main() {
     expect(frame.sample(.5, .5), greaterThan(100));
   });
 
+  testWidgets('decodeFrame non ingrandisce le foto piccole', (tester) async {
+    final frame = await tester.runAsync(() async {
+      final png = await toPng(render(Chess.initial));
+      return decodeFrame(png, maxSide: 900);
+    });
+    expect(frame!.width, 480);
+  });
+
   testWidgets('decodeFrame rifiuta dati che non sono un\'immagine', (
     tester,
   ) async {

@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
@@ -29,20 +30,23 @@ class CameraPhotoSource implements PhotoSource {
 /// Decodifica [bytes] in toni di grigio con il lato lungo al massimo di
 /// [maxSide] punti; null se non è un'immagine leggibile.
 Future<BoardFrame?> decodeFrame(Uint8List bytes, {int maxSide = 480}) async {
+  ui.ImmutableBuffer? buffer;
+  ui.ImageDescriptor? descriptor;
   ui.Codec? codec;
+  ui.Image? image;
   try {
-    final buffer = await ui.ImmutableBuffer.fromUint8List(bytes);
-    final descriptor = await ui.ImageDescriptor.encoded(buffer);
-    final scale =
-        maxSide /
-        (descriptor.width > descriptor.height
-            ? descriptor.width
-            : descriptor.height);
+    buffer = await ui.ImmutableBuffer.fromUint8List(bytes);
+    descriptor = await ui.ImageDescriptor.encoded(buffer);
+    // Le foto piccole non si ingrandiscono.
+    final scale = math.min(
+      1.0,
+      maxSide / math.max(descriptor.width, descriptor.height),
+    );
     codec = await descriptor.instantiateCodec(
       targetWidth: (descriptor.width * scale).round().clamp(1, maxSide),
       targetHeight: (descriptor.height * scale).round().clamp(1, maxSide),
     );
-    final image = (await codec.getNextFrame()).image;
+    image = (await codec.getNextFrame()).image;
     final data = await image.toByteData();
     if (data == null) return null;
     final rgba = data.buffer.asUint8List();
@@ -56,6 +60,9 @@ Future<BoardFrame?> decodeFrame(Uint8List bytes, {int maxSide = 480}) async {
   } on Object {
     return null;
   } finally {
+    image?.dispose();
     codec?.dispose();
+    descriptor?.dispose();
+    buffer?.dispose();
   }
 }

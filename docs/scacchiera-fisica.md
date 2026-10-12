@@ -16,10 +16,10 @@ Il pannello del Nero è ruotato di 180° per chi gli siede di fronte. **Pausa**,
 Invece di scrivere la mossa si può fotografare la scacchiera con **Mossa dalla foto**, tutto sul telefono e senza rete. L'app non riconosce i pezzi: confronta due foto della stessa scacchiera e vede quali caselle sono cambiate, poi sceglie tra le mosse legali quelle che cambiano proprio quelle caselle (arrocco e presa al varco comprese).
 
 1. Prima foto: si trascinano i quattro cerchi sugli angoli della scacchiera e si indica quale colore sta in basso nella foto. È la foto di riferimento; l'inquadratura resta la stessa per tutta la partita.
-2. Dopo ogni mossa si scatta un'altra foto: compaiono fino a quattro mosse, la più probabile con la spunta. Un tocco la gioca e la foto diventa il nuovo riferimento. Per una promozione si propongono donna, torre, alfiere, cavallo in quest'ordine.
+2. Dopo ogni mossa si scatta un'altra foto: compaiono fino a quattro mosse, la più probabile con la spunta. Un tocco la gioca e la foto diventa il nuovo riferimento. Una promozione compare una sola volta, con la donna; le altre si scrivono (`e8=T`). **Riallinea** chiede di nuovo gli angoli se il telefono o la scacchiera si sono spostati; una nuova partita riparte da zero.
 3. Se la mossa è stata scritta o annullata, la vecchia foto non vale più: la foto successiva diventa il nuovo riferimento.
 
-Limiti: la fotocamera va tenuta ferma e quasi dall'alto (un piccolo spostamento e un cambio di luce sono tollerati, la prospettiva forte no); due foto uguali non producono mosse. Le foto non vengono salvate né inviate. La scelta finale è sempre dell'utente.
+Limiti: la fotocamera va tenuta ferma e quasi dall'alto (un piccolo spostamento e un cambio di luce sono tollerati, la prospettiva forte no); due foto uguali non producono mosse. Se la fotocamera non è disponibile compare un avviso. Le foto non vengono salvate né inviate. La scelta finale è sempre dell'utente.
 
 Il riconoscimento dei pezzi da una foto singola, per analizzare una posizione qualunque, richiede un modello addestrato e resta fuori dall'app.
 
