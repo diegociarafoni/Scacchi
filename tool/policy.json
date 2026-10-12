@@ -43,7 +43,13 @@
     "androidPermissions": {
       "android.permission.RECEIVE_BOOT_COMPLETED": "Riprogramma il promemoria giornaliero dopo il riavvio (RG-11)",
       "android.permission.CAMERA": "Lettura del QR per scambiare le partite, chiesta solo all'apertura del lettore",
-      "android.permission.INTERNET": "Partita con un amico in rete locale (RMP-07, RMP-08): socket TCP verso l'altro telefono, solo dopo aver creato o inquadrato un invito"
+      "android.permission.INTERNET": "Partita con un amico in rete locale (RMP-07, RMP-08): socket TCP verso l'altro telefono, solo dopo aver creato o inquadrato un invito",
+      "android.permission.BLUETOOTH_SCAN": "Partita con un amico via Bluetooth LE (RMP-20): l'invitato cerca l'ospite; dichiarato neverForLocation, richiesto a runtime solo scegliendo il Bluetooth",
+      "android.permission.BLUETOOTH_CONNECT": "Partita via Bluetooth LE (RMP-20): collegarsi all'altro telefono, richiesto a runtime solo scegliendo il Bluetooth",
+      "android.permission.BLUETOOTH_ADVERTISE": "Partita via Bluetooth LE (RMP-20): l'ospite si annuncia con il servizio della partita, senza nome, richiesto a runtime solo scegliendo il Bluetooth",
+      "android.permission.BLUETOOTH": "Solo Android 11 e precedenti (maxSdkVersion 30): Bluetooth LE della partita (RMP-20)",
+      "android.permission.BLUETOOTH_ADMIN": "Solo Android 11 e precedenti (maxSdkVersion 30): ricerca Bluetooth LE della partita (RMP-20)",
+      "android.permission.ACCESS_FINE_LOCATION": "Solo Android 11 e precedenti (maxSdkVersion 30): quelle versioni la pretendono per cercare dispositivi Bluetooth LE; la posizione non viene letta né salvata (RMP-20)"
     },
     "mergedPermissions": {
       "android.permission.POST_NOTIFICATIONS": "Aggiunto da flutter_local_notifications: serve al promemoria giornaliero, richiesto a runtime solo se attivato",

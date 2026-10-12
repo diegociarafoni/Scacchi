@@ -74,27 +74,32 @@ class MultiplayerController extends ChangeNotifier {
   }
 
   /// Crea l'invito e attende l'avversario. [NoLocalNetwork] se il telefono
-  /// non è in una Wi-Fi o in un hotspot.
+  /// non è in una Wi-Fi o in un hotspot. Con [bluetooth] non serve la rete
+  /// locale: l'invito porta solo il Bluetooth (canale in `extraChannelFactories`).
   static Future<MultiplayerController> host({
     required Side side,
+    bool bluetooth = false,
     OpenHost openHost = openLanHost,
     SavedGameStore? store,
   }) async {
-    final channel = await openHost();
+    final channel = bluetooth ? null : await openHost();
     try {
-      if (channel.lanAddress == null) throw const NoLocalNetwork();
+      if (channel != null && channel.lanAddress == null) {
+        throw const NoLocalNetwork();
+      }
       final identity = await PlayerIdentity.generate();
       final invite = GameInvite(
         gameId: newGameId(),
         secret: newSecret(),
         hostKey: identity.publicKey,
         hostSide: side,
-        lanAddress: channel.lanAddress,
+        lanAddress: channel?.lanAddress,
+        ble: bluetooth,
       );
       final session = MultiplayerSession.host(
         invite,
         identity,
-        MultiTransport([channel.transport]),
+        MultiTransport([?channel?.transport]),
       );
       return MultiplayerController._(
         session,
@@ -103,7 +108,7 @@ class MultiplayerController extends ChangeNotifier {
         await identity.seed(),
       );
     } catch (_) {
-      await channel.transport.close();
+      await channel?.transport.close();
       rethrow;
     }
   }
@@ -134,7 +139,7 @@ class MultiplayerController extends ChangeNotifier {
     if (!listEquals(identity.publicKey, invite.hostKey)) {
       throw const FormatException('chiave non coerente con l\'invito');
     }
-    final channel = await openHost(port);
+    final channel = lan == null && invite.ble ? null : await openHost(port);
     try {
       // Se la porta di prima era occupata l'indirizzo è cambiato.
       final current = GameInvite(
@@ -142,12 +147,13 @@ class MultiplayerController extends ChangeNotifier {
         secret: invite.secret,
         hostKey: invite.hostKey,
         hostSide: invite.hostSide,
-        lanAddress: channel.lanAddress ?? invite.lanAddress,
+        lanAddress: channel?.lanAddress ?? invite.lanAddress,
+        ble: invite.ble,
       );
       final session = MultiplayerSession.host(
         current,
         identity,
-        MultiTransport([channel.transport]),
+        MultiTransport([?channel?.transport]),
         moves: saved.moves,
         peerKey: saved.peerKey,
         sealed: saved.sealed,
@@ -159,7 +165,7 @@ class MultiplayerController extends ChangeNotifier {
         saved.seed,
       );
     } catch (_) {
-      await channel.transport.close();
+      await channel?.transport.close();
       rethrow;
     }
   }
@@ -189,8 +195,11 @@ class MultiplayerController extends ChangeNotifier {
   }) async {
     final lan = invite.lanAddress;
     final target = lan == null ? null : _split(lan);
-    if (target == null) throw const NoLocalNetwork();
-    final transport = MultiTransport([openGuest(target.$1, target.$2)]);
+    // Un invito solo Bluetooth non ha indirizzo: il canale lo apre il registro.
+    if (target == null && !invite.ble) throw const NoLocalNetwork();
+    final transport = MultiTransport([
+      if (target != null) openGuest(target.$1, target.$2),
+    ]);
     try {
       final session = MultiplayerSession.join(
         invite,
