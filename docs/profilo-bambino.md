@@ -13,7 +13,7 @@ Per disattivarlo serve un adulto: compare la domanda «Chiedi a un adulto» con 
 | Area | Profilo bambino | Stato |
 |---|---|---|
 | Barra in basso | Tre schede: Gioca, Puzzle, Tu (le Aperture sono nascoste) | Disponibile |
-| Scheda Tu | Solo Profilo, Percorso, Finali (senza conteggio delle mosse), Grandi maestri (senza percentuali) e Minigiochi; nascoste Statistiche, La tua settimana, Scacchiera fisica, Archivio e Tornei (classifica ed Elo dei bot) | Disponibile |
+| Scheda Tu | Solo Profilo, Percorso, Finali (senza conteggio delle mosse), Grandi maestri (senza percentuali), Minigiochi e Riepilogo settimanale (stelle e frasi, senza numeri); nascoste Statistiche, La tua settimana, Scacchiera fisica, Archivio e Tornei (classifica ed Elo dei bot) | Disponibile |
 | Avversari | Nella nuova partita solo «Due giocatori» e «Bot» (niente «Computer» con livello ed Elo). I bot sono i tre più facili della scala, Pino, Chiara e Rocco, con avatar, nome e una breve descrizione al posto di Elo, stile e apertura; restano lucchetti e spunta, senza la data della vittoria. In partita il bot ha frasi brevi e incoraggianti e il titolo non mostra l'Elo. Se l'ultima scelta era il computer o un bot più forte, si ripiega su Pino. Senza motore compare «Su questo dispositivo i bot non sono disponibili.» | Disponibile |
 | Numeri | Niente rating, XP, precisione e punteggi del motore: stelle, fiamme e parole al loro posto (dettagli sotto) | Disponibile |
 | Testi | Frasi brevi e semplici in partita (vedi sotto) | Disponibile |

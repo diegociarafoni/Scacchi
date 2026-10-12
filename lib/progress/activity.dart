@@ -106,10 +106,19 @@ class ReviewCompleted extends Activity {
   const ReviewCompleted({
     this.accuracy,
     this.brilliantMoves = 0,
+    this.gameId,
+    this.errorThemes = const {},
     super.duration,
   });
 
   /// Precisione del giocatore in percentuale (0-100).
   final double? accuracy;
   final int brilliantMoves;
+
+  /// Identificativo stabile della partita rivista, per non contarla due volte
+  /// nel riepilogo settimanale.
+  final String? gameId;
+
+  /// Errori del giocatore per tema del coach (`CoachTheme.name`).
+  final Map<String, int> errorThemes;
 }
