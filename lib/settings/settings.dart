@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart' show PieceKind, Side;
 import 'package:flutter/material.dart' show ThemeMode;
@@ -737,7 +739,10 @@ class SettingsController extends ValueNotifier<AppSettings> {
         animation: byName(AnimationSpeed.values, 'animation', d.animation),
         boardTheme: byName(BoardTheme.values, 'boardTheme', d.boardTheme),
         pieceSet: byName(PieceStyle.values, 'pieceSet', d.pieceSet),
-        backdrop: byName(BoardBackdrop.values, 'backdrop', d.backdrop),
+        backdrop: _backdropAtLoad(
+          byName(BoardBackdrop.values, 'backdrop', d.backdrop),
+          read('backdropPhoto', d.backdropPhoto),
+        ),
         backdropPhoto: read('backdropPhoto', d.backdropPhoto),
         soundSet: byName(SoundSet.values, 'soundSet', d.soundSet),
         sound: read('sound', d.sound),
@@ -756,6 +761,13 @@ class SettingsController extends ValueNotifier<AppSettings> {
       ),
     );
   }
+
+  /// Una foto sparita (dati cancellati, app ripristinata altrove) non lascia lo
+  /// sfondo su un file che non c'è.
+  static BoardBackdrop _backdropAtLoad(BoardBackdrop b, String photo) =>
+      b == BoardBackdrop.photo && !File(photo).existsSync()
+      ? BoardBackdrop.standard
+      : b;
 
   /// Applica subito [settings] e salva solo i valori cambiati.
   Future<void> update(AppSettings settings) async {

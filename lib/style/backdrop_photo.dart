@@ -4,7 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
 /// Sceglie una foto dalla galleria e la copia nella cartella dati dell'app,
-/// ridotta: non esce mai dal telefono e non entra nel backup. Restituisce il
+/// ridotta: non esce mai dal telefono e Android la esclude dai backup. Restituisce il
 /// percorso, o null se si annulla; una foto illeggibile solleva un errore.
 Future<String?> pickBackdropPhoto() async {
   final picked = await ImagePicker().pickImage(
@@ -21,8 +21,16 @@ Future<String?> pickBackdropPhoto() async {
     '${dir.path}/sfondo-${DateTime.now().millisecondsSinceEpoch}.jpg',
   );
   await File(picked.path).copy(target.path);
-  for (final old in dir.listSync().whereType<File>()) {
-    if (old.path != target.path) old.deleteSync();
-  }
   return target.path;
+}
+
+/// Toglie dalla cartella delle foto quelle diverse da [keep]: si chiama solo
+/// dopo aver salvato la scelta, così un errore non lascia l'impostazione senza
+/// il suo file.
+Future<void> pruneBackdropPhotos(String keep) async {
+  final dir = File(keep).parent;
+  if (!dir.path.endsWith('/stile') || !dir.existsSync()) return;
+  for (final old in dir.listSync().whereType<File>()) {
+    if (old.path != keep) old.deleteSync();
+  }
 }

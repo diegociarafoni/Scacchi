@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/game/sounds.dart';
 import 'package:scacchi/settings/settings.dart';
+import 'package:scacchi/style/backdrop_photo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -41,16 +42,44 @@ void main() {
     });
 
     test('scelta e foto si salvano e si ricaricano', () async {
+      final dir = Directory.systemTemp.createTempSync('sfondo');
+      addTearDown(() => dir.deleteSync(recursive: true));
+      final photo = File('${dir.path}/sfondo.jpg')..writeAsBytesSync([1]);
       final c = await SettingsController.load();
       await c.update(
         c.value.copyWith(
           backdrop: BoardBackdrop.photo,
-          backdropPhoto: '/dati/stile/sfondo.jpg',
+          backdropPhoto: photo.path,
         ),
       );
       final again = await SettingsController.load();
       expect(again.value.backdrop, BoardBackdrop.photo);
-      expect(again.value.backdropPhoto, '/dati/stile/sfondo.jpg');
+      expect(again.value.backdropPhoto, photo.path);
+    });
+
+    test('una foto sparita riporta lo sfondo a standard', () async {
+      SharedPreferences.setMockInitialValues({
+        'backdrop': 'photo',
+        'backdropPhoto': '/non/esiste/sfondo.jpg',
+      });
+      expect(
+        (await SettingsController.load()).value.backdrop,
+        BoardBackdrop.standard,
+      );
+    });
+
+    test('le foto vecchie si tolgono solo dopo, e solo da stile/', () async {
+      final root = Directory.systemTemp.createTempSync('prune');
+      addTearDown(() => root.deleteSync(recursive: true));
+      final dir = Directory('${root.path}/stile')..createSync();
+      final old = File('${dir.path}/sfondo-1.jpg')..writeAsBytesSync([1]);
+      final keep = File('${dir.path}/sfondo-2.jpg')..writeAsBytesSync([2]);
+      final other = File('${root.path}/altro.jpg')..writeAsBytesSync([3]);
+      await pruneBackdropPhotos(keep.path);
+      expect(old.existsSync(), isFalse);
+      expect(keep.existsSync(), isTrue);
+      await pruneBackdropPhotos(other.path);
+      expect(keep.existsSync(), isTrue, reason: 'cartella diversa: nulla');
     });
 
     test('uno sfondo sconosciuto torna a standard', () async {

@@ -17,7 +17,7 @@ import 'backdrop_photo.dart';
 import 'style_gallery.dart';
 
 /// Sceglie una foto e restituisce il percorso salvato, null se si annulla.
-typedef PhotoPicker = Future<String?> Function();
+typedef BackdropPhotoPicker = Future<String?> Function();
 
 /// Fa sentire [sound] del set indicato.
 typedef SoundPreview = Future<void> Function(GameSound sound, SoundSet set);
@@ -38,7 +38,7 @@ class StylePage extends StatefulWidget {
 
   /// Progressi che sbloccano temi e pezzi; senza, tutto è disponibile.
   final ProgressController? progress;
-  final PhotoPicker pickPhoto;
+  final BackdropPhotoPicker pickPhoto;
 
   /// Riproduce il campione di un set di suoni; di norma usa i suoni dell'app.
   final SoundPreview? preview;
@@ -75,23 +75,30 @@ class _StylePageState extends State<StylePage> {
   Future<void> _choosePhoto() async {
     final messenger = ScaffoldMessenger.of(context);
     final l10n = AppLocalizations.of(context);
+    final String? path;
     try {
-      final path = await widget.pickPhoto();
-      if (path == null) return;
-      _set(
-        (c) => c.copyWith(backdrop: BoardBackdrop.photo, backdropPhoto: path),
-      );
+      path = await widget.pickPhoto();
     } on Object {
       messenger.hideCurrentSnackBar();
       messenger.showSnackBar(
         SnackBar(content: Text(l10n.styleBackdropPhotoError)),
       );
+      return;
     }
+    if (path == null) return;
+    await widget.controller.update(
+      widget.controller.value.copyWith(
+        backdrop: BoardBackdrop.photo,
+        backdropPhoto: path,
+      ),
+    );
+    unawaited(pruneBackdropPhotos(path));
   }
 
   Future<void> _chooseSounds(SoundSet set) async {
     _set((c) => c.copyWith(soundSet: set));
     await _preview(GameSound.move, set);
+    if (!mounted) return;
     await _preview(GameSound.capture, set);
   }
 
@@ -185,6 +192,7 @@ class _StylePageState extends State<StylePage> {
     AppSettings s,
     Requirement? Function(Enum) locked,
   ) => StyleGallery<BoardTheme>(
+    kid: s.kidMode,
     options: [
       for (final t in BoardTheme.values)
         StyleOption(
@@ -205,6 +213,7 @@ class _StylePageState extends State<StylePage> {
     AppSettings s,
     Requirement? Function(Enum) locked,
   ) => StyleGallery<PieceStyle>(
+    kid: s.kidMode,
     options: [
       for (final st in PieceStyle.values)
         StyleOption(
@@ -235,8 +244,10 @@ class _StylePageState extends State<StylePage> {
     AppSettings s,
     Requirement? Function(Enum) locked,
   ) {
-    final hasPhoto = s.backdropPhoto.isNotEmpty;
+    final hasPhoto =
+        s.backdropPhoto.isNotEmpty && File(s.backdropPhoto).existsSync();
     return StyleGallery<BoardBackdrop>(
+      kid: s.kidMode,
       leading: _AddPhotoTile(
         onTap: _choosePhoto,
         label: l10n.styleBackdropPhotoAdd,
@@ -265,6 +276,7 @@ class _StylePageState extends State<StylePage> {
 
   Widget _soundsTab(AppLocalizations l10n, AppSettings s) =>
       StyleGallery<SoundSet>(
+        kid: s.kidMode,
         options: [
           for (final set in SoundSet.values)
             StyleOption(

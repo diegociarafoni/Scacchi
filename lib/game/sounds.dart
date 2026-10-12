@@ -70,6 +70,7 @@ class SoundPlayer {
     if (!enabled || volume <= 0) return;
     try {
       final chosen = set ?? activeSet;
+      _releaseOtherSets(chosen);
       final player = _players.putIfAbsent((chosen, sound), AudioPlayer.new);
       await player.stop();
       await player.play(
@@ -79,6 +80,14 @@ class SoundPlayer {
       );
     } on Object catch (e) {
       debugPrint('Suono non riprodotto: $e');
+    }
+  }
+
+  /// I lettori dei set non più in uso non restano in memoria.
+  void _releaseOtherSets(SoundSet current) {
+    final stale = _players.keys.where((k) => k.$1 != current).toList();
+    for (final key in stale) {
+      unawaited(_players.remove(key)!.dispose());
     }
   }
 

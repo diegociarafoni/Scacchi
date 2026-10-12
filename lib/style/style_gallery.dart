@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../kids/kid_display.dart';
 import '../l10n/app_localizations.dart';
 import '../progress/rewards.dart';
-import '../settings/settings.dart';
 import '../theme/rokko_theme.dart';
 
 /// Una scelta della griglia: dopo [visual] il nome, il lucchetto se ancora da
@@ -32,6 +31,7 @@ class StyleGallery<T extends Enum> extends StatelessWidget {
     required this.selectedLabel,
     required this.onSelected,
     required this.locked,
+    required this.kid,
     this.leading,
     this.footer,
   });
@@ -41,6 +41,9 @@ class StyleGallery<T extends Enum> extends StatelessWidget {
   final String selectedLabel;
   final ValueChanged<T> onSelected;
   final Requirement? Function(Enum) locked;
+
+  /// Profilo bambino: il requisito non cita il livello.
+  final bool kid;
   final Widget? leading;
   final Widget? footer;
 
@@ -49,7 +52,6 @@ class StyleGallery<T extends Enum> extends StatelessWidget {
     final tokens = RokkoTokens.of(context);
     final scheme = Theme.of(context).colorScheme;
     final l10n = AppLocalizations.of(context);
-    final kid = AppSettings.of(context).kidMode;
     String why(Requirement r) =>
         kid ? kidRequirement(l10n) : l10n.settingsUnlockWith(r.label);
     return LayoutBuilder(

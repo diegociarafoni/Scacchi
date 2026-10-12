@@ -21,7 +21,7 @@ Gli sfondi sono dieci, più la foto:
 
 - Grafite, Feltro, Perla e Cuoio sono tinte unite; Ardesia, Notte, Tramonto, Oceano e Foresta sono sfumature. Sono disegnati in codice e non pesano nell'app.
 - Spazio usa la texture `assets/boards/spazio.webp`, già presente per il tema omonimo.
-- «La tua foto» si sceglie dalla galleria con «Scegli una foto»: l'immagine viene ridotta a 1600 punti per lato, copiata in `<dati dell'app>/stile/` e usata da lì. Resta solo sul telefono: non viene caricata, non entra nel backup e si cancella con i dati dell'app. Scegliere un'altra foto elimina la precedente. Se il file manca o non si legge, lo sfondo ripiega su un grigio scuro e la schermata resta usabile.
+- «La tua foto» si sceglie dalla galleria con «Scegli una foto»: l'immagine viene ridotta a 1600 punti per lato, copiata in `<dati dell'app>/stile/` e usata da lì. Resta solo sul telefono: non viene caricata, non entra nel backup di Rokko e Android la esclude dai backup automatici e dai trasferimenti (`backup_rules.xml`, `data_extraction_rules.xml`); si cancella con i dati dell'app. Scegliere un'altra foto elimina la precedente, ma solo dopo aver salvato la scelta. Se il file manca all'avvio (dati cancellati, app ripristinata altrove) lo sfondo torna Standard; se non si legge, ripiega su un grigio scuro e la schermata resta usabile.
 
 Il percorso della foto è in `AppSettings.backdropPhoto`; la scelta dello sfondo in `AppSettings.backdrop`.
 
@@ -29,7 +29,7 @@ Il percorso della foto è in `AppSettings.backdropPhoto`; la scelta dello sfondo
 
 Tre set, tutti generati da `tool/generate_sounds.py` e di nostra proprietà (CC0): Classico (quello di sempre, in `assets/sounds/`), Legno e Cristallo (in `assets/sounds/legno/` e `assets/sounds/cristallo/`). Ogni set ha gli stessi sette suoni di `GameSound`. I due set aggiunti pesano in tutto circa 130 KB. Toccando un set si sente una mossa e una cattura, a meno che i suoni siano spenti, nel qual caso la scheda lo dice.
 
-`SoundPlayer.activeSet` segue sempre la scelta: lo aggiorna `SettingsController` a ogni modifica, così la schermata di gioco usa il set scelto senza dover leggere le impostazioni a ogni suono.
+`SoundPlayer.activeSet` segue sempre la scelta: lo aggiorna `SettingsController` a ogni modifica, così la schermata di gioco usa il set scelto senza cambiare. Il lettore rilascia i suoi `AudioPlayer` dei set non più in uso.
 
 ## Peso
 
