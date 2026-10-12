@@ -23,6 +23,7 @@ import '../exchange/qr_receive_page.dart';
 import '../exchange/qr_send_page.dart';
 import '../exchange/qr_transfer.dart';
 import '../l10n/app_localizations.dart';
+import '../openings/opening_game.dart';
 import '../openings/opening_name.dart';
 import '../progress/activity.dart';
 import '../progress/game_activity.dart';
@@ -322,8 +323,42 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         level: challenge.levelId,
       ),
     );
-    _beginGame(ChessGame(), setup, null);
+    // Mosse iniziali non valide: si parte dalla posizione iniziale.
+    final game = challenge.startMoves.isEmpty
+        ? null
+        : ChessGame.replay(Chess.initial, challenge.startMoves);
+    _beginGame(game ?? ChessGame(), setup, null);
   }
+
+  /// Semimossa già segnalata come uscita dalla linea del repertorio.
+  int? _reportedDeviation;
+
+  /// Segnala una volta l'uscita dalla linea del repertorio (RF-94); dopo un
+  /// annulla che rientra nella linea la segnalazione si riarma.
+  void _checkLine() {
+    final line = widget.challenge?.line;
+    if (line == null) return;
+    final ply = lineDeviation(line, [for (final m in _game.moves) m.move]);
+    if (ply == _reportedDeviation) return;
+    _reportedDeviation = ply;
+    if (ply == null) return;
+    final by = ply.isEven ? Side.white : Side.black;
+    final notice = _showMessage(
+      by == _computerSide
+          ? 'Il computer è uscito dalla linea del repertorio.'
+          : 'Sei uscito dalla linea del repertorio.',
+    );
+    _lineNotice = notice;
+    // Il messaggio dell'utente deve restare visibile anche se subito dopo
+    // risponde il computer.
+    unawaited(
+      notice.closed.then((_) {
+        if (identical(_lineNotice, notice)) _lineNotice = null;
+      }),
+    );
+  }
+
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? _lineNotice;
 
   Future<KeyValueStore> _openStore() => _store ??= () async {
     if (widget.store != null) return widget.store!;
@@ -1005,6 +1040,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         clock.start(_game.position.turn);
       }
     }
+    _checkLine();
     return true;
   }
 
@@ -1012,7 +1048,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final side = _computerSide;
     if (_thinking || side == null || _game.isOver || _suspensions > 0) return;
     if (_game.position.turn != side) return;
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    final messenger = ScaffoldMessenger.of(context);
+    if (_lineNotice == null) {
+      messenger.hideCurrentSnackBar();
+    }
     final generation = _generation;
     _task = _ComputerTask.move;
     final clock = _clock;
@@ -1212,7 +1251,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   }
 
   /// Messaggio sopra la barra dei comandi, per non coprirla.
-  void _showMessage(
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> _showMessage(
     String text, {
     Duration duration = const Duration(seconds: 4),
     SnackBarAction? action,
@@ -1555,7 +1594,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       }
     }, restart: (_) => !(current && _accepts(computerScore)));
     if (!mounted || !current || _game.isOver) return;
-    if (error != null) return _showMessage('Il computer non risponde.');
+    if (error != null) {
+      _showMessage('Il computer non risponde.');
+      return;
+    }
     final l = _kid ? _kidL10n(context) : null;
     if (_accepts(computerScore)) {
       _game.agreeDraw();
