@@ -13,7 +13,9 @@ Dopo il clone, una volta: `lefthook install`.
 ## Comandi
 
 ```sh
+dart tool/l10n.dart --solo-unione     # testi tradotti, solo in una copia nuova e prima del pub get
 flutter pub get                       # dipendenze
+dart tool/l10n.dart                   # testi tradotti: dopo ogni modifica ai .arb o cambio di ramo
 flutter run                           # avvio sul dispositivo o emulatore collegato
 flutter test                          # test unitari e di widget
 flutter test integration_test -d linux  # test e2e (su Linux senza schermo: xvfb-run -a ...)

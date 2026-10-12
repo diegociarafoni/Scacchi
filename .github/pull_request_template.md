@@ -10,5 +10,5 @@
 
 - [ ] Test scritti prima del codice, falliti e poi passati
 - [ ] `docs/` aggiornata
-- [ ] Testi nuovi in tutte le lingue (`lib/l10n/`)
+- [ ] Testi nuovi in tutte le lingue (`lib/l10n/<lingua>/<funzione>.arb`)
 - [ ] Revisione `/code-review` eseguita prima del merge

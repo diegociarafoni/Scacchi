@@ -1,0 +1,10 @@
+{
+  "settingsExplainWhy": "Spiegami perché",
+  "@settingsExplainWhy": {
+    "description": "Impostazioni: titolo dell'interruttore"
+  },
+  "settingsExplainWhyDescription": "Dopo ogni mossa del computer, una riga su cosa minaccia o prepara",
+  "@settingsExplainWhyDescription": {
+    "description": "Impostazioni: descrizione"
+  }
+}

@@ -1,0 +1,156 @@
+{
+  "minigamesTitle": "Minigiochi",
+  "minigamesRecord": "Record {score}",
+  "@minigamesRecord": {
+    "description": "Miglior punteggio del minigioco",
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "minigamesCoordinatesTitle": "Coordinate a tempo",
+  "minigamesCoordinatesDescription": "Tocca la casa indicata: quante ne trovi in 30 secondi?",
+  "minigamesCaptureAllTitle": "Cattura tutto",
+  "minigamesCaptureAllDescription": "Un solo pezzo cattura tutti i pedoni con meno mosse possibile.",
+  "minigamesBlindTitle": "Alla cieca",
+  "minigamesBlindDescription": "Leggi le mosse senza scacchiera e indica cosa c'è su una casa.",
+  "minigamesMaterialTitle": "Conta del materiale",
+  "minigamesMaterialDescription": "Chi è in vantaggio, e di quanto?",
+  "minigamesAgain": "Ancora",
+  "@minigamesAgain": {
+    "description": "Pulsante per giocare un'altra sessione"
+  },
+  "minigamesDone": "Fine",
+  "@minigamesDone": {
+    "description": "Pulsante per tornare all'elenco dei minigiochi"
+  },
+  "minigamesNext": "Avanti",
+  "minigamesCaptureAllProgress": "Scacchiera {board} di {total}",
+  "@minigamesCaptureAllProgress": {
+    "description": "Etichetta per la lettura dello schermo della barra di avanzamento",
+    "placeholders": {
+      "board": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "minigamesCaptureAllSessionOver": "Sessione finita",
+  "minigamesCaptureAllScore": "{score, plural, one{{score} stella su {max}} other{{score} stelle su {max}}}",
+  "@minigamesCaptureAllScore": {
+    "description": "Stelle totali a fine sessione",
+    "placeholders": {
+      "score": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "minigamesCaptureAllMoves": "Mosse {moves}, minimo {optimal}",
+  "@minigamesCaptureAllMoves": {
+    "placeholders": {
+      "moves": {
+        "type": "int"
+      },
+      "optimal": {
+        "type": "int"
+      }
+    }
+  },
+  "minigamesCaptureAllStars": "{stars, plural, one{{stars} stella su 3} other{{stars} stelle su 3}}",
+  "@minigamesCaptureAllStars": {
+    "description": "Etichetta per la lettura dello schermo delle stelle di una scacchiera",
+    "placeholders": {
+      "stars": {
+        "type": "int"
+      }
+    }
+  },
+  "minigamesCaptureAllRetry": "Ricomincia",
+  "minigamesCoordinatesTarget": "Tocca la casa {square}",
+  "@minigamesCoordinatesTarget": {
+    "description": "Etichetta per la lettura dello schermo della casa da trovare",
+    "placeholders": {
+      "square": {
+        "type": "String"
+      }
+    }
+  },
+  "minigamesCoordinatesScore": "Punteggio {score}",
+  "@minigamesCoordinatesScore": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "minigamesCoordinatesSecondsLeft": "{seconds, plural, one{{seconds} secondo} other{{seconds} secondi}}",
+  "@minigamesCoordinatesSecondsLeft": {
+    "description": "Tempo rimasto",
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "minigamesCoordinatesTimeUp": "Tempo scaduto",
+  "minigamesCoordinatesSummary": "Punteggio {score}: {score, plural, one{{score} giusta} other{{score} giuste}}, {mistakes, plural, one{{mistakes} sbagliata} other{{mistakes} sbagliate}}",
+  "@minigamesCoordinatesSummary": {
+    "description": "Risultato a fine sessione",
+    "placeholders": {
+      "score": {
+        "type": "int"
+      },
+      "mistakes": {
+        "type": "int"
+      }
+    }
+  },
+  "minigamesCoordinatesIntro": "Tocca la casa indicata, senza coordinate sulla scacchiera. Hai 30 secondi.",
+  "minigamesCoordinatesWhite": "Bianco",
+  "@minigamesCoordinatesWhite": {
+    "description": "Scacchiera vista dal bianco"
+  },
+  "minigamesCoordinatesBlack": "Nero",
+  "@minigamesCoordinatesBlack": {
+    "description": "Scacchiera vista dal nero"
+  },
+  "minigamesCoordinatesStart": "Inizia",
+  "minigamesQuizResult": "{score, plural, one{{score} risposta giusta su {total}} other{{score} risposte giuste su {total}}}",
+  "@minigamesQuizResult": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "minigamesQuizQuestion": "Domanda {number} di {total}",
+  "@minigamesQuizQuestion": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "minigamesQuizCorrect": "Esatto!",
+  "minigamesQuizAnswer": "Era: {answer}",
+  "@minigamesQuizAnswer": {
+    "description": "Risposta giusta dopo una scelta sbagliata",
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  }
+}
