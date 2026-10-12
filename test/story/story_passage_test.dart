@@ -176,12 +176,12 @@ void main() {
     await show(tester, boss: (c, bot) async => true);
     await save(
       tester,
-      find.textContaining('Sfida a Pino'),
-      until: () => shown(find.text('Hai battuto Pino!')),
+      find.textContaining('Sfida a Tino'),
+      until: () => shown(find.text('Hai battuto Tino!')),
     );
-    expect(find.text('Hai battuto Pino!'), findsOneWidget);
-    expect(find.text('Capitolo 1 concluso!'), findsOneWidget);
-    expect(find.textContaining('Si apre il capitolo 2'), findsOneWidget);
+    expect(find.text('Hai battuto Tino!'), findsOneWidget);
+    expect(find.text('Capitolo 0 concluso!'), findsOneWidget);
+    expect(find.textContaining('Si apre il capitolo 1'), findsOneWidget);
     expect(find.text('Al prossimo capitolo'), findsOneWidget);
   });
 
@@ -196,7 +196,7 @@ void main() {
     await show(tester, boss: (c, bot) async => false);
     await save(
       tester,
-      find.textContaining('Sfida a Pino'),
+      find.textContaining('Sfida a Tino'),
       until: () =>
           shown(find.text('Pino resiste ancora: riprova quando vuoi.')),
     );
