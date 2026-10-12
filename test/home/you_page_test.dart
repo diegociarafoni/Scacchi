@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/archive/game_archive.dart';
 import 'package:scacchi/home/home_shell.dart';
+import 'package:scacchi/path/path_controller.dart';
 import 'package:scacchi/progress/progress_controller.dart';
 import 'package:scacchi/progress/progress_store.dart';
 import 'package:scacchi/reminders/reminder.dart';
 import 'package:scacchi/settings/settings.dart';
+import 'package:scacchi/story/story_controller.dart';
 
 import '../localized_app.dart';
 
@@ -48,6 +50,8 @@ void main() {
         home: HomeShell(
           settings: settings ?? SettingsController.defaults(),
           progress: () async => progress,
+          path: () async => PathController(File('${dir.path}/path.json')),
+          story: () async => StoryController(File('${dir.path}/story.json')),
           archive: () async => GameArchive(File('${dir.path}/games.json')),
           reminderScheduler: () => scheduler,
         ),
@@ -58,14 +62,13 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('la scheda Tu porta a profilo, percorso e altro', (tester) async {
+  testWidgets('la scheda Tu porta a profilo, storia e altro', (tester) async {
     await show(tester);
     expect(find.text('Livello 1'), findsOneWidget);
     for (final label in [
       'Profilo',
-      'Percorso',
+      'Storia',
       'Minigiochi',
-      'Riepilogo settimanale',
       'Statistiche',
       'La tua settimana',
       'Scacchiera fisica',
@@ -120,18 +123,13 @@ void main() {
     expect(find.text('Aperture'), findsNothing);
     for (final label in [
       'Profilo',
-      'Percorso',
+      'Storia',
       'Minigiochi',
-      'Riepilogo settimanale',
+      'La tua settimana',
     ]) {
       expect(find.text(label), findsOneWidget, reason: label);
     }
-    for (final label in [
-      'Statistiche',
-      'La tua settimana',
-      'Scacchiera fisica',
-      'Archivio',
-    ]) {
+    for (final label in ['Statistiche', 'Scacchiera fisica', 'Archivio']) {
       expect(find.text(label), findsNothing, reason: label);
     }
 
@@ -145,7 +143,11 @@ void main() {
     tester,
   ) async {
     await show(tester);
-    await tester.tap(find.text('Riepilogo settimanale'));
+    // La voce può finire sotto la barra di navigazione: la si porta in alto.
+    await tester.ensureVisible(find.text('La tua settimana'));
+    await tester.drag(find.byType(ListView).first, const Offset(0, -400));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('La tua settimana'));
     await tester.pumpAndSettle();
     expect(
       find.widgetWithText(AppBar, 'Riepilogo settimanale'),
@@ -155,5 +157,122 @@ void main() {
       find.textContaining('il riepilogo si riempie da solo'),
       findsOneWidget,
     );
+  });
+
+  group('U5 scheda a gruppi', () {
+    // «Gioca» è anche l'etichetta della barra di navigazione.
+    Finder inList(String text) =>
+        find.descendant(of: find.byType(ListView), matching: find.text(text));
+    double top(WidgetTester tester, String text) =>
+        tester.getTopLeft(inList(text)).dy;
+
+    testWidgets('tre gruppi con intestazione, nell\'ordine Impara-Gioca-Dati', (
+      tester,
+    ) async {
+      await show(tester);
+      for (final h in ['Impara', 'Gioca', 'I miei dati']) {
+        expect(inList(h), findsOneWidget, reason: h);
+      }
+      expect(top(tester, 'Impara'), lessThan(top(tester, 'Storia')));
+      expect(top(tester, 'Storia'), lessThan(top(tester, 'Gioca')));
+      expect(top(tester, 'Minigiochi'), lessThan(top(tester, 'I miei dati')));
+      expect(top(tester, 'I miei dati'), lessThan(top(tester, 'Profilo')));
+    });
+
+    testWidgets('le intestazioni sono annunciate come tali', (tester) async {
+      final handle = tester.ensureSemantics();
+      await show(tester);
+      expect(
+        tester.getSemantics(inList('Impara')),
+        matchesSemantics(label: 'Impara', isHeader: true),
+      );
+      handle.dispose();
+    });
+
+    testWidgets('«Continua da dove eri» propone la prossima tappa', (
+      tester,
+    ) async {
+      await show(tester);
+      expect(find.text('Continua da dove eri'), findsOneWidget);
+      expect(
+        top(tester, 'Continua da dove eri'),
+        lessThan(top(tester, 'Impara')),
+      );
+      await tester.tap(find.text('Continua da dove eri'));
+      await tester.pumpAndSettle();
+      expect(find.byType(AppBar), findsOneWidget);
+      expect(find.text('Continua da dove eri'), findsNothing);
+    });
+
+    testWidgets('le voci hanno tocco da 48 dp e testo al 130% senza overflow', (
+      tester,
+    ) async {
+      tester.platformDispatcher.textScaleFactorTestValue = 1.3;
+      addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+      await show(tester);
+      for (final label in ['Storia', 'Minigiochi', 'Profilo']) {
+        await tester.scrollUntilVisible(
+          find.text(label),
+          200,
+          scrollable: find.byType(Scrollable).first,
+        );
+        final tile = find.ancestor(
+          of: find.text(label),
+          matching: find.byType(ListTile),
+        );
+        expect(
+          tester.getSize(tile.first).height,
+          greaterThanOrEqualTo(48),
+          reason: label,
+        );
+      }
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('profilo bambino: gruppi ridotti, senza voci per adulti', (
+      tester,
+    ) async {
+      final settings = SettingsController.defaults();
+      await settings.update(settings.value.copyWith(kidMode: true));
+      await show(tester, settings: settings);
+      for (final h in ['Impara', 'Gioca', 'I miei dati']) {
+        expect(inList(h), findsOneWidget, reason: h);
+      }
+      for (final hidden in ['Statistiche', 'Archivio', 'Tornei']) {
+        expect(find.text(hidden), findsNothing, reason: hidden);
+      }
+    });
+
+    testWidgets('la settimana ha una sola voce e porta al riepilogo', (
+      tester,
+    ) async {
+      await show(tester);
+      expect(find.text('Riepilogo settimanale'), findsNothing);
+      expect(find.text('La tua settimana'), findsOneWidget);
+    });
+
+    testWidgets('in inglese i testi fissi sono tradotti', (tester) async {
+      tester.view.physicalSize = const Size(1170, 5000);
+      tester.view.devicePixelRatio = 3;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(
+        localizedApp(
+          locale: const Locale('en'),
+          home: HomeShell(
+            settings: SettingsController.defaults(),
+            progress: () async => progress,
+            path: () async => PathController(File('${dir.path}/path.json')),
+            archive: () async => GameArchive(File('${dir.path}/games.json')),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byIcon(Icons.person_outline));
+      await tester.pumpAndSettle();
+      expect(find.text('Continue where you left off'), findsOneWidget);
+      expect(find.text('Learn'), findsOneWidget);
+      expect(find.text('Your data'), findsOneWidget);
+      expect(find.text('Level 1'), findsOneWidget);
+    });
   });
 }

@@ -4,6 +4,7 @@ import '../exchange/qr_l10n.dart';
 import '../kids/kid_display.dart';
 import '../l10n/app_localizations.dart';
 import '../settings/settings.dart';
+import '../theme/rokko_theme.dart';
 import 'activity_recorder.dart';
 import 'friend_challenge_page.dart';
 import 'mode_guide.dart';
@@ -42,13 +43,14 @@ class _PuzzleHubPageState extends State<PuzzleHubPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Puzzle')),
+      appBar: AppBar(title: Text(l.puzzleHubTitle)),
       body: FutureBuilder<PuzzleTrainer>(
         future: widget.trainer,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return const Center(child: Text('Impossibile caricare i puzzle.'));
+            return Center(child: Text(l.puzzleHubLoadError));
           }
           final trainer = snapshot.data;
           if (trainer == null) {
@@ -59,126 +61,274 @@ class _PuzzleHubPageState extends State<PuzzleHubPage> {
           // Profilo bambino (RP-06): niente punteggio, conteggi e difficoltà;
           // i puzzle risolti diventano stelle.
           final kid = AppSettings.of(context).kidMode;
-          // Solo il profilo bambino ha i testi nei file .arb.
-          AppLocalizations l() => AppLocalizations.of(context);
+          final text = Theme.of(context).textTheme;
           return ListView(
+            padding: const EdgeInsets.only(bottom: 24),
             children: [
               if (kid)
                 _KidHeader(solved: trainer.solvedCount)
               else
-                ListTile(
-                  title: Text(
-                    'Punteggio ${trainer.rating.rating.round()}',
-                    style: Theme.of(context).textTheme.headlineSmall,
-                  ),
-                  subtitle: Text(
-                    'Risolti ${trainer.solvedCount} · '
-                    'Sbagliati ${trainer.failedCount} · '
-                    '${trainer.library.puzzles.length} puzzle disponibili',
-                  ),
-                ),
-              const Divider(),
-              ListTile(
-                leading: const Icon(Icons.extension_outlined),
-                title: const Text('Allenamento'),
-                subtitle: Text(
-                  kid
-                      ? l().kidPuzzleTraining
-                      : 'Puzzle adatti al tuo punteggio',
-                ),
-                onTap: () => _open(
-                  PuzzlePage(
-                    trainer: trainer,
-                    guide: PuzzleGuide.training,
-                    onActivity: widget.onActivity,
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Semantics(
+                        header: true,
+                        child: Text(
+                          l.puzzleHubRating(trainer.rating.rating.round()),
+                          style: text.headlineMedium,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        l.puzzleHubStats(
+                          trainer.solvedCount,
+                          trainer.failedCount,
+                          trainer.library.puzzles.length,
+                        ),
+                        style: text.bodyMedium,
+                      ),
+                    ],
                   ),
                 ),
-              ),
-              ListTile(
-                leading: const Icon(Icons.today_outlined),
-                title: const Text('Puzzle del giorno'),
-                subtitle: Text(
-                  kid ? l().kidPuzzleDaily : 'Difficoltà ${daily.rating}',
-                ),
+              _DailyCard(
+                title: l.puzzleDailyTitle,
+                subtitle: kid
+                    ? l.kidPuzzleDaily
+                    : l.puzzleDailySubtitle(daily.rating),
                 onTap: () => _open(
                   PuzzlePage(
                     trainer: trainer,
                     puzzle: daily,
                     guide: PuzzleGuide.daily,
-                    title: 'Puzzle del giorno',
+                    title: l.puzzleDailyTitle,
                     onActivity: widget.onActivity,
                   ),
                 ),
               ),
-              ListTile(
-                leading: const Icon(Icons.category_outlined),
-                title: const Text('Per tema'),
-                subtitle: const Text('Matti, forchette, finali e altro'),
-                onTap: () => _open(
-                  _ThemeListPage(
-                    trainer: trainer,
-                    onActivity: widget.onActivity,
-                  ),
-                ),
-              ),
-              ListTile(
-                leading: const Icon(Icons.replay_outlined),
-                title: const Text('Ripasso degli errori'),
-                subtitle: Text(
-                  kid
-                      ? (due == 0
-                            ? l().kidPuzzleReviewNone
-                            : l().kidPuzzleReviewDue)
-                      : (due == 0
-                            ? 'Nessun puzzle da ripassare oggi'
-                            : '$due da ripassare oggi'),
-                ),
-                enabled: due > 0,
-                onTap: () => _open(
-                  PuzzlePage(
-                    trainer: trainer,
-                    feed: ReviewFeed(trainer),
-                    guide: PuzzleGuide.review,
-                    title: 'Ripasso',
-                    onActivity: widget.onActivity,
-                  ),
-                ),
-              ),
-              // Le modalità a tempo ruotano attorno a punti, errori e record:
-              // nel profilo bambino non compaiono.
-              if (!kid) const Divider(),
-              if (!kid)
-                for (final mode in PuzzleRunMode.values)
-                  ListTile(
-                    leading: const Icon(Icons.bolt_outlined),
-                    title: Text(mode.label),
-                    subtitle: Text(mode.description),
-                    trailing: Text('Record ${trainer.records.best(mode)}'),
+              _Section(
+                title: l.puzzleSectionPractice,
+                children: [
+                  _HubTile(
+                    icon: Icons.extension_outlined,
+                    title: l.puzzleTraining,
+                    subtitle: kid
+                        ? l.kidPuzzleTraining
+                        : l.puzzleTrainingSubtitle,
                     onTap: () => _open(
-                      PuzzleRunPage(
+                      PuzzlePage(
                         trainer: trainer,
-                        mode: mode,
+                        guide: PuzzleGuide.training,
                         onActivity: widget.onActivity,
                       ),
                     ),
                   ),
-              // Anche la sfida ruota attorno a punteggi e confronto.
-              if (!kid)
-                ListTile(
-                  leading: const Icon(Icons.people_outline),
-                  title: Text(qrL10n(context).challengeTitle),
-                  subtitle: Text(qrL10n(context).challengeSubtitle),
-                  onTap: () => _open(
-                    FriendChallengePage(
-                      trainer: trainer,
-                      onActivity: widget.onActivity,
+                  _HubTile(
+                    icon: Icons.category_outlined,
+                    title: l.puzzleByTheme,
+                    subtitle: l.puzzleByThemeSubtitle,
+                    onTap: () => _open(
+                      _ThemeListPage(
+                        trainer: trainer,
+                        onActivity: widget.onActivity,
+                      ),
                     ),
                   ),
+                  _HubTile(
+                    icon: Icons.replay_outlined,
+                    title: l.puzzleReview,
+                    subtitle: kid
+                        ? (due == 0
+                              ? l.kidPuzzleReviewNone
+                              : l.kidPuzzleReviewDue)
+                        : (due == 0
+                              ? l.puzzleReviewNone
+                              : l.puzzleReviewDue(due)),
+                    onTap: due == 0
+                        ? null
+                        : () => _open(
+                            PuzzlePage(
+                              trainer: trainer,
+                              feed: ReviewFeed(trainer),
+                              guide: PuzzleGuide.review,
+                              title: l.puzzleReviewTitle,
+                              onActivity: widget.onActivity,
+                            ),
+                          ),
+                  ),
+                ],
+              ),
+              // Le modalità a tempo e la sfida ruotano attorno a punti, errori,
+              // record e confronto: nel profilo bambino non compaiono.
+              if (!kid)
+                _Section(
+                  title: l.puzzleSectionTimed,
+                  children: [
+                    for (final mode in PuzzleRunMode.values)
+                      _HubTile(
+                        icon: Icons.bolt_outlined,
+                        title: l.puzzleRunLabel(mode.name),
+                        subtitle: l.puzzleRunDescription(mode.name),
+                        trailing: Text(
+                          l.puzzleRecord(trainer.records.best(mode)),
+                          style: text.labelLarge,
+                        ),
+                        onTap: () => _open(
+                          PuzzleRunPage(
+                            trainer: trainer,
+                            mode: mode,
+                            onActivity: widget.onActivity,
+                          ),
+                        ),
+                      ),
+                    _HubTile(
+                      icon: Icons.people_outline,
+                      title: qrL10n(context).challengeTitle,
+                      subtitle: qrL10n(context).challengeSubtitle,
+                      onTap: () => _open(
+                        FriendChallengePage(
+                          trainer: trainer,
+                          onActivity: widget.onActivity,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
             ],
           );
         },
       ),
+    );
+  }
+}
+
+/// Puzzle del giorno: la scheda più grande e colorata, è l'invito principale.
+class _DailyCard extends StatelessWidget {
+  const _DailyCard({
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+  });
+
+  final String title;
+  final String subtitle;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    final tokens = RokkoTokens.of(context);
+    final text = Theme.of(context).textTheme;
+    final onColor = scheme.onPrimaryContainer;
+    return Card(
+      key: const Key('puzzle-hub-daily'),
+      color: scheme.primaryContainer,
+      margin: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: tokens.kidTouch + 24),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                ExcludeSemantics(
+                  child: Icon(Icons.today, size: 40, color: onColor),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: text.titleLarge?.copyWith(color: onColor),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        subtitle,
+                        style: text.bodyMedium?.copyWith(color: onColor),
+                      ),
+                    ],
+                  ),
+                ),
+                ExcludeSemantics(
+                  child: Icon(Icons.arrow_forward, color: onColor),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Gruppo di voci con un titolo, in una scheda.
+class _Section extends StatelessWidget {
+  const _Section({required this.title, required this.children});
+
+  final String title;
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    final text = Theme.of(context).textTheme;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 4),
+          child: Semantics(
+            header: true,
+            child: Text(
+              title,
+              style: text.titleSmall?.copyWith(
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+          ),
+        ),
+        Card(
+          margin: const EdgeInsets.symmetric(horizontal: 16),
+          clipBehavior: Clip.antiAlias,
+          child: Column(children: children),
+        ),
+      ],
+    );
+  }
+}
+
+/// Voce della scheda: tocco di almeno 48 dp (56 nel profilo bambino).
+class _HubTile extends StatelessWidget {
+  const _HubTile({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.onTap,
+    this.trailing,
+  });
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final VoidCallback? onTap;
+  final Widget? trailing;
+
+  @override
+  Widget build(BuildContext context) {
+    final tokens = RokkoTokens.of(context);
+    final kid = AppSettings.of(context).kidMode;
+    return ListTile(
+      leading: Icon(icon),
+      title: Text(title),
+      subtitle: Text(subtitle),
+      trailing: trailing,
+      enabled: onTap != null,
+      minTileHeight: kid ? tokens.kidTouch : tokens.minTouch,
+      onTap: onTap,
     );
   }
 }
@@ -221,7 +371,9 @@ class _ThemeListPage extends StatelessWidget {
         if (trainer.library.countFor(e.key) > 0) e,
     ];
     return Scaffold(
-      appBar: AppBar(title: const Text('Temi')),
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context).puzzleThemesTitle),
+      ),
       body: ListView.builder(
         itemCount: themes.length,
         itemBuilder: (context, i) {

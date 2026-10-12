@@ -12,6 +12,8 @@ import 'package:scacchi/settings/settings.dart';
 import 'package:scacchi/tournament/tournament_controller.dart';
 
 import '../computer_fakes.dart';
+import '../game_actions.dart';
+import '../localized_app.dart';
 
 /// Lascia completare l'I/O su file, che nella zona finta dei test non avanza.
 Future<void> settle(WidgetTester tester) async {
@@ -45,7 +47,7 @@ void main() {
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: HomeShell(
           settings: SettingsController.defaults()
             ..value = AppSettings(sound: false),
@@ -79,11 +81,11 @@ void main() {
     await tester.tap(find.text('Gioca'));
     await settle(tester);
     expect(find.textContaining('Torneo ·'), findsOneWidget);
-    await tester.tap(find.text('Abbandona'));
+    await tapGameAction(tester, 'Abbandona');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Abbandona').last);
     await settle(tester);
-    await tester.pageBack();
+    await tester.tap(find.byType(BackButton));
     await settle(tester);
     expect(tournaments.current!.currentRound, 1);
   });
@@ -96,7 +98,7 @@ void main() {
     await settle(tester);
     await tester.tap(find.text('Gioca'));
     await settle(tester);
-    await tester.pageBack();
+    await tester.tap(find.byType(BackButton));
     await settle(tester);
     expect(tournaments.current!.currentRound, 1);
   });

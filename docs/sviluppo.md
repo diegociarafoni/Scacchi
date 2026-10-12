@@ -77,7 +77,7 @@ Ogni funzione nasce dai requisiti del progetto, nel documento dei requisiti, con
 | Strumenti | `test/tool/` | Controlli di rami, commit, documentazione e licenze | `flutter test test/tool` |
 | Multigiocatore | `test/multiplayer/` | Invito, firma e cifratura, registro delle mosse, canali multipli, sessione con passaggio tra canali (vedi multigiocatore.md) | `flutter test test/multiplayer` |
 | End-to-end | `integration_test/qr_exchange_test.dart` | QR disegnato dall'app letto da zxing-cpp, fotocamera assente | `flutter test integration_test/qr_exchange_test.dart -d linux` |
-| Golden | `test/settings/goldens/` | Schermata Impostazioni su telefono piccolo, medio e grande, con e senza colori per daltonici, e chip di temi e pezzi | `flutter test test/settings/board_preview_test.dart` |
+| Golden | `test/settings/goldens/` | Schermata Impostazioni su telefono piccolo, medio e grande, con e senza colori per daltonici, e gallerie di temi e pezzi | `flutter test test/settings/board_preview_test.dart` |
 | End-to-end | `integration_test/*_test.dart` | L'app reale avviata su un dispositivo o desktop, con tocchi e trascinamenti sulla scacchiera | `flutter test integration_test -d <dispositivo>` |
 | End-to-end | `integration_test/computer_test.dart` | Partite contro un vero Stockfish (processo esterno, richiede `stockfish` installato) | `flutter test integration_test/computer_test.dart -d linux` |
 
@@ -178,7 +178,7 @@ I golden si rigenerano con `flutter test test/settings --update-goldens` dopo un
 
 ## Integrazione continua
 
-Il workflow `.github/workflows/ci.yml` gira su ogni pull request e su ogni push su `main`, tranne quando cambiano solo `docs/`, file Markdown o `LICENSE`:
+Il workflow `.github/workflows/ci.yml` gira su ogni pull request, nella coda di merge e su ogni push su `main`, tranne quando cambiano solo `docs/`, file Markdown o `LICENSE`:
 
 1. **test**, sempre: installa Stockfish (per i test d'integrazione del motore), verifica di localizzazione e formattazione, `flutter analyze`, `flutter test` con copertura (almeno 80% sulla logica di gioco, vedi [qualita.md](qualita.md)), licenze delle dipendenze. È il controllo bloccante di ogni PR.
 2. **e2e**, se i test passano: installa Stockfish ed esegue i test end-to-end sull'app Linux desktop con uno schermo virtuale (`xvfb`), un file alla volta perché avvii ravvicinati dell'app Linux nello stesso comando falliscono.
@@ -186,11 +186,11 @@ Il workflow `.github/workflows/ci.yml` gira su ogni pull request e su ogni push 
 
 e2e e android girano sempre su `main`; su una PR solo se la PR tocca i file che li riguardano (`integration_test/` o `linux/` per e2e, `android/` per android, `pubspec.*`, `ci.yml` e `ci-completa.yml` per entrambi) oppure se ha l'etichetta **`ci-completa`**: aggiungerla avvia subito tutta la CI con il workflow `ci-completa.yml`, senza bisogno di un nuovo push, e da lì in poi ogni push sulla PR la esegue per intero. L'etichetta si crea una volta in **Issues → Labels → New label**. I job avviati dall'etichetta compaiono come `ci / test`, `ci / e2e` e `ci / android` e devono essere verdi prima del merge. Conviene metterla sulle PR che cambiano molto l'interfaccia: senza, e2e gira solo dopo il merge su `main`.
 
-Fuori da `ci.yml`, due controlli pesanti girano solo dove servono, descritti in [qualita.md](qualita.md): la dimensione dell'APK nel workflow `Rilascio APK` (prima della pubblicazione) e la fluidità nel workflow `Prestazioni` (su `main`, sui tag e sulle PR che toccano la misura).
+Fuori da `ci.yml`, alcuni controlli pesanti girano solo dove servono, descritti in [qualita.md](qualita.md): i test end-to-end su emulatore Android (workflow `E2E Android`, su `main`, a richiesta e sulle PR che toccano `integration_test/`, `android/`, `pubspec.*` o il workflow), la dimensione dell'APK nel workflow `Rilascio APK` (prima della pubblicazione) e la fluidità nel workflow `Prestazioni` (su `main`, sui tag e sulle PR che toccano la misura).
 
 ### Consumo di minuti
 
-Il repository è privato: ogni job si paga in minuti di Actions, arrotondati per eccesso al minuto, sul piano gratuito 2000 al mese. Per spenderne pochi:
+Il repository è pubblico (vedi [sicurezza.md](sicurezza.md)): i runner standard non consumano minuti a pagamento, ma i job lunghi restano tempo di attesa per chi aspetta la CI. Le cifre sotto sono in minuti fatturati sul piano gratuito di un repository privato e servono come misura relativa. Per spenderne pochi:
 
 - un nuovo push sulla stessa PR annulla il giro precedente ancora in corso (`concurrency`), su `main` invece ogni commit ha il suo giro completo;
 - e2e e build Android, i job lunghi, girano sulle PR solo quando servono (vedi sopra);
@@ -217,7 +217,11 @@ Con le regole di protezione di `main` attive (vedi [convenzioni-git.md](convenzi
 Altri workflow:
 
 - **Convenzioni** (`conventions.yml`, su ogni PR aperta, meno di un minuto; su una PR già unita, per esempio dopo una modifica del titolo, il job si salta): nome del ramo, titolo della PR, messaggi dei commit, Gitleaks sui commit della PR e controllo della documentazione (anche sulle PR di sola documentazione), vedi [convenzioni-git.md](convenzioni-git.md) e [mappa-del-codice.md](mappa-del-codice.md).
-- **Sicurezza** (`security.yml`): Trivy, OSV-Scanner, Gitleaks su tutta la cronologia, zizmor e SBOM, su `main`, ogni lunedì, a mano e sulle PR che cambiano dipendenze, `.github/`, `android/`, `tool/policy.json` o `.gitleaks.toml`, vedi [sicurezza.md](sicurezza.md).
+- **Sicurezza** (`security.yml`): Trivy, OSV-Scanner, Gitleaks su tutta la cronologia, zizmor e SBOM, su `main`, ogni lunedì, a mano e sulle PR che cambiano dipendenze, `.github/`, `android/`, `Gemfile*`, `tool/policy.json` o `.gitleaks.toml`, vedi [sicurezza.md](sicurezza.md).
+- **Changelog** (`release-please.yml`): changelog e proposta di versione con release-please.
+- **Scorecard** (`scorecard.yml`): valutazione OpenSSF Scorecard, vedi [sicurezza.md](sicurezza.md).
+- **MobSF** (`mobsf.yml`): analisi statica dell'APK con MobSF, vedi [sicurezza.md](sicurezza.md).
+- **Store** (`store.yml`, solo a mano): configurazione Fastlane per Google Play, vedi [rilascio-android.md](rilascio-android.md).
 - **Dataset** (`datasets.yml`, a mano o sulle PR che cambiano `tool/datasets/`): rigenera puzzle e aperture dai dati Lichess, vedi [puzzle.md](puzzle.md).
 
 Il workflow `.github/workflows/apk-release.yml` produce l'APK release installabile sul telefono e lo pubblica come GitHub Release: vedi [rilascio-android.md](rilascio-android.md).

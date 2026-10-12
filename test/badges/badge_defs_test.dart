@@ -26,8 +26,8 @@ ProgressState withTally(Map<String, int> t) => ProgressState(tally: t);
 
 void main() {
   group('RG-17 catalogo', () {
-    test('48 badge con identificativi unici in cinque famiglie', () {
-      expect(badges, hasLength(48));
+    test('52 badge con identificativi unici in cinque famiglie', () {
+      expect(badges, hasLength(52));
       expect(badges.map((b) => b.id).toSet(), hasLength(badges.length));
       for (final f in BadgeFamily.values) {
         expect(badges.where((b) => b.family == f), isNotEmpty, reason: '$f');
@@ -112,8 +112,6 @@ void main() {
           reason: c.id,
         );
       }
-      expect(badgeById('chapter_strategy'), isNull);
-      expect(badgeById('chapter_capablanca'), isNull);
     });
 
     test('Enigmista: tutti i puzzle dei capitoli della Storia', () {

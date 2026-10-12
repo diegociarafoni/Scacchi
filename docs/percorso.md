@@ -2,6 +2,8 @@
 
 Requisito RG-03: una mappa di capitoli e tappe con valutazione da 1 a 3 stelle. Il codice è in `lib/path/`. La trama a capitoli che lo usa è descritta in [storia.md](storia.md).
 
+**Navigazione**: la Storia è l'unico percorso di apprendimento raggiungibile dall'interfaccia; la voce «Percorso» della scheda Tu è stata tolta. `PathPage` (il sentiero descritto in «Aspetto») resta nel codice ma non è collegata a nessuna schermata: potrà tornare come vista «tutte le lezioni». Stelle e salvataggi (`path.json`) restano validi e alimentano la Storia. Ogni capitolo del percorso ha il suo capitolo nella Storia (un test lo controlla), compresi «La strategia» e «La scuola di Capablanca».
+
 ## Capitoli
 
 | Capitolo | Tappe |
@@ -20,6 +22,22 @@ Ogni lezione ha 4 esercizi progressivi (il test ne ammette da 4 a 5), dal più f
 
 Una tappa si apre quando la lezione precedente è completata, oppure quando è già completata una lezione che viene dopo: così le lezioni aggiunte con un aggiornamento restano aperte per chi era già più avanti e non richiudono le tappe successive. Senza tappe saltate equivale a «tutte le lezioni precedenti completate». I guardiani sono sfide facoltative e non bloccano il percorso. Il pulsante "Continua" porta alla prima lezione non completata (anche una appena aggiunta) e, finite le lezioni, al primo guardiano non battuto. Un doppio tocco non apre due tappe.
 
+## Aspetto
+
+La schermata è un sentiero (`path_page.dart`, `path_widgets.dart`). In cima una scheda riassume le stelle totali con una barra di avanzamento e dice qual è la prossima tappa; ogni capitolo ha numero, titolo, stelle e una barra propria, con la spunta a capitolo concluso. Le tappe serpeggiano e un tratto di sentiero le unisce: pieno fin dove il percorso è aperto, tratteggiato verso le tappe bloccate.
+
+Lo stato di una tappa non dipende dal solo colore:
+
+| Stato | Segno |
+|---|---|
+| Bloccata | lucchetto, contorno tratteggiato, testo «bloccata» per i lettori di schermo con il suggerimento di completare la lezione precedente |
+| Da fare | icona della lezione, tre stelle vuote |
+| Corrente (quella di «Continua») | anello nel colore d'azione e la scritta «Sei qui» |
+| Completata | spunta e stelle piene (da una a tre) |
+| Guardiano | esagono con lo scudo e la scritta «guardiano», al posto del cerchio delle lezioni |
+
+I bersagli tattili sono almeno 48 dp (`RokkoTokens.minTouch`), il testo cresce fino al 130% senza overflow, e colori e stelline vengono dai token del tema. I testi fissi sono in `lib/l10n/<lingua>/path.arb`; titoli di capitoli e tappe restano nel contenuto del percorso.
+
 ## Esercizi
 
 **A stelle** (`StarsExercise`): un pezzo bianco da solo su scacchiera vuota raccoglie le stelle, in qualunque ordine. Il minimo di mosse si calcola da solo con una ricerca in ampiezza sugli stati (casa, pezzo, stelle raccolte), quindi i contenuti non contengono numeri da tenere aggiornati. Stelle: 3 al minimo, 2 con al massimo due mosse in più, 1 altrimenti. Il pedone avanza di uno o di due dalla seconda traversa e in ottava diventa donna (la scacchiera promuove a donna senza chiedere).
@@ -30,7 +48,7 @@ La tappa vale la media delle stelle dei suoi esercizi, arrotondata per difetto.
 
 ## Bot guardiano
 
-L'ultima tappa dei capitoli dai Matti elementari in poi è una partita contro un bot dell'Elo indicato. `PathPage` riceve `playGuardian`, che gioca la partita e restituisce le stelle (o `null` se non vinta). Il percorso si apre dalla scheda Tu e, dove gira Stockfish (Android e iOS, o Windows e Linux con Stockfish installato), toccare il guardiano apre una partita già impostata: l'utente ha il Bianco, il livello è quello del motore con l'Elo più vicino a quello del guardiano (`engineLevelForElo`), senza orologio, e non si possono ricominciare, usare l'editor, il coach o l'analisi; **Annulla** funziona (`GameChallenge.allowUndo`), perché il guardiano è allenamento, mentre nelle partite dei tornei resta disattivato. Uscire a partita in corso chiede conferma e conta come persa; dopo una sconfitta si riprova riaprendo la tappa. L'Elo dei guardiani cresce capitolo dopo capitolo: 400 (Matti elementari), 800 (Tattiche), 1000 (Finali), 1100 (La strategia), 1200 (Aperture), 1300 (La scuola di Capablanca). Il livello del motore invece non scende mai ma può ripetersi tra capitoli vicini. I livelli del motore partono da 700 Elo, quindi i guardiani da 400 e 800 giocano al livello 1 (700), quello da 1000 al livello 2 (900), quelli da 1100 e 1200 al livello 3 (1150) e quello da 1300 al livello 4 (1400): il livello effettivo è scritto sotto il titolo. Altrove la tappa mostra un avviso.
+L'ultima tappa dei capitoli dai Matti elementari in poi è una partita contro un bot dell'Elo indicato. `PathPage` riceve `playGuardian`, che gioca la partita e restituisce le stelle (o `null` se non vinta). Dalla Storia, dove gira Stockfish (Android e iOS, o Windows e Linux con Stockfish installato), toccare il guardiano apre una partita già impostata: l'utente ha il Bianco, il livello è quello del motore con l'Elo più vicino a quello del guardiano (`engineLevelForElo`), senza orologio, e non si possono ricominciare, usare l'editor, il coach o l'analisi; **Annulla** funziona (`GameChallenge.allowUndo`), perché il guardiano è allenamento, mentre nelle partite dei tornei resta disattivato. Uscire a partita in corso chiede conferma e conta come persa; dopo una sconfitta si riprova riaprendo la tappa. L'Elo dei guardiani cresce capitolo dopo capitolo: 400 (Matti elementari), 800 (Tattiche), 1000 (Finali), 1100 (La strategia), 1200 (Aperture), 1300 (La scuola di Capablanca). Il livello del motore invece non scende mai ma può ripetersi tra capitoli vicini. I livelli del motore partono da 700 Elo, quindi i guardiani da 400 e 800 giocano al livello 1 (700), quello da 1000 al livello 2 (900), quelli da 1100 e 1200 al livello 3 (1150) e quello da 1300 al livello 4 (1400): il livello effettivo è scritto sotto il titolo. Altrove la tappa mostra un avviso.
 
 Stelle (`challengeStars`): vittoria in al massimo 40 mosse 3 stelle, fino a 60 mosse 2, oltre 1; patta e sconfitta non ne danno e si può riprovare. La partita registra XP e archivio come le altre (vedi [gamification.md](gamification.md)). Il percorso non si completa col guardiano: le stelle restano le migliori ottenute.
 

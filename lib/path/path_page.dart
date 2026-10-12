@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../theme/rokko_theme.dart';
 import 'curriculum.dart';
 import 'path_controller.dart';
 import 'path_progress.dart';
+import 'path_widgets.dart';
 import 'stage_page.dart';
 
 /// Gioca la partita contro il bot guardiano e restituisce le stelle ottenute,
@@ -43,12 +45,7 @@ class _PathPageState extends State<PathPage> {
       final play = widget.playGuardian;
       if (play == null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              'Il guardiano si sfida dove gioca il computer: Android e iOS, '
-              'o Windows e Linux con Stockfish installato.',
-            ),
-          ),
+          SnackBar(content: Text(pathL10n(context).pathGuardianUnavailable)),
         );
         return;
       }
@@ -70,46 +67,45 @@ class _PathPageState extends State<PathPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = pathL10n(context);
     return ListenableBuilder(
       listenable: controller,
       builder: (context, _) {
         final progress = controller.progress;
         final next = progress.nextStage;
         return Scaffold(
-          appBar: AppBar(
-            title: const Text('Percorso'),
-            actions: [
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 16),
-                  child: Text(
-                    '★ ${progress.totalStars}/$maxStars',
-                    semanticsLabel:
-                        '${progress.totalStars} stelle su $maxStars',
-                  ),
-                ),
-              ),
-            ],
-          ),
+          appBar: AppBar(title: Text(l10n.pathTitle)),
           floatingActionButton: next == null
               ? null
               : FloatingActionButton.extended(
                   onPressed: () => _open(context, next),
                   icon: const Icon(Icons.play_arrow),
-                  label: const Text('Continua'),
+                  label: Text(l10n.pathContinue),
                 ),
           body: ListView(
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 96),
             children: [
-              for (final chapter in curriculum) ...[
-                _ChapterHeader(chapter: chapter, progress: progress),
+              _Summary(progress: progress, next: next),
+              for (final (n, chapter) in curriculum.indexed) ...[
+                _ChapterHeader(
+                  number: n + 1,
+                  chapter: chapter,
+                  progress: progress,
+                ),
                 for (final (i, stage) in chapter.stages.indexed)
-                  _StageNode(
+                  StageNode(
                     stage: stage,
-                    index: i,
                     stars: progress.starsFor(stage.id),
                     unlocked: progress.isUnlocked(stage.id),
                     current: stage.id == next?.id,
+                    alignment: _alignment(i),
+                    previousAlignment: i == 0 ? null : _alignment(i - 1),
+                    nextAlignment: i == chapter.stages.length - 1
+                        ? null
+                        : _alignment(i + 1),
+                    nextUnlocked:
+                        i < chapter.stages.length - 1 &&
+                        progress.isUnlocked(chapter.stages[i + 1].id),
                     onTap: () => _open(context, stage),
                   ),
               ],
@@ -121,117 +117,144 @@ class _PathPageState extends State<PathPage> {
   }
 }
 
-class _ChapterHeader extends StatelessWidget {
-  const _ChapterHeader({required this.chapter, required this.progress});
+/// Le tappe serpeggiano sul sentiero: al centro, a destra, al centro, a
+/// sinistra.
+double _alignment(int index) => const [0.0, 0.6, 0.0, -0.6][index % 4];
 
-  final Chapter chapter;
+/// Stelle totali e prossima tappa, in cima al sentiero.
+class _Summary extends StatelessWidget {
+  const _Summary({required this.progress, required this.next});
+
   final PathProgress progress;
+  final Stage? next;
 
   @override
   Widget build(BuildContext context) {
-    final max = chapter.stages.length * 3;
-    return Padding(
-      padding: const EdgeInsets.only(top: 24, bottom: 8),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              chapter.title,
-              style: Theme.of(context).textTheme.titleLarge,
+    final l10n = pathL10n(context);
+    final theme = Theme.of(context);
+    final stars = progress.totalStars;
+    return Card(
+      key: const ValueKey('path-summary'),
+      margin: const EdgeInsets.only(top: 8),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    l10n.pathSummaryTitle,
+                    style: theme.textTheme.titleMedium,
+                  ),
+                ),
+                Semantics(
+                  container: true,
+                  label: l10n.pathStars(stars, maxStars),
+                  excludeSemantics: true,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.star, color: RokkoTokens.of(context).star),
+                      const SizedBox(width: 4),
+                      Text('$stars/$maxStars'),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          ),
-          Text(
-            '★ ${progress.chapterStars(chapter)}/$max',
-            semanticsLabel: '${progress.chapterStars(chapter)} stelle su $max',
-          ),
-        ],
+            const SizedBox(height: 12),
+            ExcludeSemantics(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(
+                  RokkoTokens.of(context).radiusSmall,
+                ),
+                child: LinearProgressIndicator(
+                  value: maxStars == 0 ? 0 : stars / maxStars,
+                  minHeight: 10,
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              next == null ? l10n.pathAllDone : l10n.pathNext(next!.title),
+              style: theme.textTheme.bodyMedium,
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-class _StageNode extends StatelessWidget {
-  const _StageNode({
-    required this.stage,
-    required this.index,
-    required this.stars,
-    required this.unlocked,
-    required this.current,
-    required this.onTap,
+class _ChapterHeader extends StatelessWidget {
+  const _ChapterHeader({
+    required this.number,
+    required this.chapter,
+    required this.progress,
   });
 
-  final Stage stage;
-  final int index;
-  final int stars;
-  final bool unlocked;
-  final bool current;
-  final VoidCallback onTap;
+  final int number;
+  final Chapter chapter;
+  final PathProgress progress;
 
   @override
   Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final done = stars > 0;
-    final state = done
-        ? '$stars stelle su 3'
-        : unlocked
-        ? 'da fare'
-        : 'bloccata';
-    final background = !unlocked
-        ? scheme.surfaceContainerHighest
-        : done
-        ? scheme.primary
-        : scheme.primaryContainer;
-    final foreground = !unlocked
-        ? scheme.outline
-        : done
-        ? scheme.onPrimary
-        : scheme.onPrimaryContainer;
-    // Le tappe si alternano a sinistra e a destra come su una mappa.
-    const offsets = [0.0, 0.5, 0.0, -0.5];
-    return Align(
-      alignment: Alignment(offsets[index % offsets.length], 0),
-      child: Semantics(
-        button: unlocked,
-        label: '${stage.title}, $state',
-        excludeSemantics: true,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(16),
-          onTap: unlocked ? onTap : null,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
+    final l10n = pathL10n(context);
+    final theme = Theme.of(context);
+    final max = chapter.stages.length * 3;
+    final stars = progress.chapterStars(chapter);
+    final done = chapter.stages.every((s) => progress.isCompleted(s.id));
+    return Semantics(
+      container: true,
+      header: true,
+      label:
+          '${l10n.pathChapterNumber(number)}: ${chapter.title}, '
+          '${l10n.pathStars(stars, max)}'
+          '${done ? ', ${l10n.pathChapterDone}' : ''}',
+      excludeSemantics: true,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 28, bottom: 4),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               children: [
-                DecoratedBox(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: background,
-                    border: current
-                        ? Border.all(color: scheme.tertiary, width: 4)
-                        : null,
-                  ),
-                  child: SizedBox.square(
-                    dimension: 72,
-                    child: Icon(
-                      !unlocked
-                          ? Icons.lock_outline
-                          : stage.isGuardian
-                          ? Icons.smart_toy_outlined
-                          : Icons.school_outlined,
-                      color: foreground,
-                      size: 32,
-                    ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.pathChapterNumber(number),
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                      Text(chapter.title, style: theme.textTheme.titleLarge),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 4),
-                Text(stage.title),
-                Text(
-                  '${'★' * stars}${'☆' * (3 - stars)}',
-                  style: TextStyle(color: scheme.tertiary),
-                ),
+                if (done)
+                  Icon(Icons.check_circle, color: theme.colorScheme.primary),
+                const SizedBox(width: 8),
+                Icon(Icons.star, size: 18, color: RokkoTokens.of(context).star),
+                const SizedBox(width: 2),
+                Text('$stars/$max'),
               ],
             ),
-          ),
+            const SizedBox(height: 8),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(
+                RokkoTokens.of(context).radiusSmall,
+              ),
+              child: LinearProgressIndicator(
+                key: ValueKey('chapter-progress-${chapter.id}'),
+                value: max == 0 ? 0 : stars / max,
+                minHeight: 6,
+              ),
+            ),
+          ],
         ),
       ),
     );

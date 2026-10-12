@@ -19,7 +19,7 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | [scacchiera-fisica.md](scacchiera-fisica.md) | Orologio e registro di una partita su scacchiera reale |
 | [scambio-qr.md](scambio-qr.md) | Passare una partita, anche in corso, a un altro telefono con il QR, senza rete |
 | [multigiocatore.md](multigiocatore.md) | Partita tra due telefoni: protocollo, canali locali e a distanza, sicurezza |
-| [backup.md](backup.md) | Backup e ripristino di tutti i dati locali in un file |
+| [backup.md](backup.md) | Backup e ripristino dei dati locali in un file, con le esclusioni (`week.json`, `masters.json`, `endgames.json`, `multiplayer.json`, foto del profilo) |
 | [puzzle.md](puzzle.md) | Puzzle: dati, punteggio, modalità, puzzle del giorno |
 | [aperture.md](aperture.md) | Nomi delle aperture, mosse di libro, Esplora aperture, repertorio, le tue aperture |
 | [percorso.md](percorso.md) | Percorso a tappe con stelle e bot guardiani |
@@ -46,7 +46,8 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | [notazione.md](notazione.md) | Notazione delle mosse: figurativa, italiana, inglese |
 | [allenatore.md](allenatore.md) | Partita con l'allenatore: avvisi in tempo reale, ripresa della mossa, suggerimenti a livelli |
 | [analisi.md](analisi.md) | Analisi libera della posizione: linee del motore, barra, esplorazione |
-| [rilascio-android.md](rilascio-android.md) | Rilascio dell'APK, installazione sul telefono, chiave di firma |
+| [rilascio-android.md](rilascio-android.md) | Rilascio dell'APK, changelog e proposta di versione, installazione sul telefono, chiave di firma |
+| [store.md](store.md) | Fastlane per Google Play senza credenziali, elenco dei segreti da inserire |
 | [licenza.md](licenza.md) | Licenza del progetto e componenti di terze parti |
 
 ## Stato del progetto
@@ -68,10 +69,10 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | La tua settimana: scheda condivisibile degli ultimi sette giorni | Disponibile dalla scheda Tu |
 | Scacchiera fisica: orologio e registro della partita dal vivo | Disponibile dalla scheda Tu |
 | Scambio di partite tra telefoni con il QR, senza rete | Disponibile dal menu della partita e dall'archivio; lettura con la fotocamera su Android e iOS |
-| Multigiocatore tra due telefoni (Wi-Fi, Bluetooth, a distanza) | Disponibile sulla stessa Wi-Fi o hotspot da Tu › Gioca con un amico, con abbinamento via QR; Bluetooth e distanza in arrivo |
-| Backup e ripristino dei dati in un file | Disponibile dalle Impostazioni |
+| Multigiocatore tra due telefoni (Wi-Fi, Bluetooth, a distanza) | Disponibile da Tu › Gioca con un amico: stessa Wi-Fi o hotspot, Bluetooth LE vicini, a distanza con relay Nostr (avvisi in background solo su Android); abbinamento con QR o link |
+| Backup e ripristino dei dati locali in un file (con le esclusioni elencate in [backup.md](backup.md)) | Disponibile dalle Impostazioni |
 | Archivio partite, import ed export PGN | Disponibile dalla scheda Tu; le partite si salvano da sole a ogni mossa e quelle interrotte si possono riprendere |
-| Percorso a tappe con stelle e spiegazione di ogni tappa: pezzi, regole, matti elementari e famosi, tattiche, finali (di pedoni, di torre, alfiere sbagliato), strategia, aperture | Disponibile dalla scheda Tu, con i guardiani dove c'è il motore |
+| Percorso a tappe con stelle e spiegazione di ogni tappa: pezzi, regole, matti elementari e famosi, tattiche, finali (di pedoni, di torre, alfiere sbagliato), strategia, aperture | Si segue dalla Storia (scheda Tu), con i guardiani dove c'è il motore |
 | Partite dei grandi maestri: sfoglia con commento e «indovina la mossa» | Disponibile dalla scheda Tu, anche senza motore |
 | Statistiche e rating locale | Disponibile dalla scheda Tu |
 | Editor di posizione con FEN e validazione | Disponibile |
@@ -80,13 +81,24 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | Tornei contro bot | Formule, classifica, tabellone e bacheca; si giocano dalla scheda Tu contro il motore (Android e iOS; Windows e Linux con Stockfish installato) |
 | Orologio con cadenze e incremento | Disponibile |
 | Suoni, vibrazione, modalità tavolo | Disponibile |
-| Modalità zen: in partita solo scacchiera e mosse | Disponibile |
+| Modalità zen: in partita solo scacchiera, mosse e orologio | Disponibile |
 | Revisione della partita: classificazione, precisione anche per fase, grafico, Riprova | Disponibile dove c'è il motore (Android e iOS; Windows e Linux con Stockfish installato), anche dall'archivio |
 | Analisi libera della posizione con linee del motore e freccia della minaccia | Disponibile dove c'è il motore (Android e iOS; Windows e Linux con Stockfish installato) |
 | Bot con personalità, collezione e avversario adattivo | Disponibile dove c'è il motore |
 | Partita con l'allenatore: avvisi, ripresa della mossa, suggerimenti in parole con cerchio e freccia | Disponibile dove c'è il motore |
 | Profilo bambino: schede semplificate, bot amichevoli, niente numeri | Disponibile dalle Impostazioni |
 | Tema dell'app chiaro, scuro o di sistema, colori per daltonici | Disponibile dalle Impostazioni |
+| Badge: traguardi da collezionare, con progresso (#188) | Disponibile dalla scheda Tu |
+| Riepilogo settimanale (#151) | Disponibile dalla scheda Tu |
+| Allenatore dei finali: Lucena, Philidor, matti elementari, finali perfetti (#119, #127, #165) | Disponibile dalla scheda Tu |
+| Posizione come immagine PNG | Disponibile |
+| Partite a handicap (#143) | Disponibile |
+| Sfida a tempo tra amici con QR (#148) | Disponibile |
+| «Spiegami perché»: il commento dell'allenatore sulle mosse del computer | Disponibile dalle Impostazioni |
+| Varianti ad albero nell'analisi (#141) | Disponibile |
+| Aprire un'apertura contro il computer | Disponibile |
+| Note personali sulle mosse (#137) | Disponibile |
+| Avatar con foto propria (#189) | Disponibile |
 | Nome Rokko, icona e schermata di avvio chiara e scura | Disponibile (vedi [identita-visiva.md](identita-visiva.md)) |
 
 I requisiti completi sono nel documento dei requisiti del progetto.

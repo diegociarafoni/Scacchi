@@ -13,7 +13,7 @@ Per disattivarlo serve un adulto: compare la domanda «Chiedi a un adulto» con 
 | Area | Profilo bambino | Stato |
 |---|---|---|
 | Barra in basso | Tre schede: Gioca, Puzzle, Tu (le Aperture sono nascoste) | Disponibile |
-| Scheda Tu | Solo Profilo, Percorso, Finali (senza conteggio delle mosse), Grandi maestri (senza percentuali), Minigiochi e Riepilogo settimanale (stelle e frasi, senza numeri); nascoste Statistiche, La tua settimana, Scacchiera fisica, Archivio e Tornei (classifica ed Elo dei bot) | Disponibile |
+| Scheda Tu | Solo Profilo, Storia, Finali (senza conteggio delle mosse), Grandi maestri (senza percentuali), Minigiochi e La tua settimana (stelle e frasi, senza numeri); nascoste Statistiche, La tua settimana, Scacchiera fisica, Archivio e Tornei (classifica ed Elo dei bot) | Disponibile |
 | Avversari | Nella nuova partita solo «Due giocatori» e «Bot» (niente «Computer» con livello ed Elo). I bot sono i tre più facili della scala, Pino, Chiara e Rocco, con avatar, nome e una breve descrizione al posto di Elo, stile e apertura; restano lucchetti e spunta, senza la data della vittoria. In partita il bot ha frasi brevi e incoraggianti e il titolo non mostra l'Elo. Se l'ultima scelta era il computer o un bot più forte, si ripiega su Pino. Senza motore compare «Su questo dispositivo i bot non sono disponibili.» | Disponibile |
 | Numeri | Niente rating, XP, precisione e punteggi del motore: stelle, fiamme e parole al loro posto (dettagli sotto) | Disponibile |
 | Testi | Frasi brevi e semplici in partita (vedi sotto) | Disponibile |
@@ -45,6 +45,7 @@ Le stelle si fermano a dieci (`kidMaxStars`): una fila più lunga si conterebbe 
 | Notifica dei progressi | «Bravo, continua così!» invece di «+N XP»; nuovo livello, obiettivo, sfide, traguardi e ricompense diventano frasi senza cifre; la ricompensa non ha il nome (solo italiano), così in inglese le lingue non si mescolano; record e scudo della serie (che nel profilo bambino non si vede) non si annunciano |
 | Scheda Tu | Intestazione con stelle del livello e fiamma della serie, senza «Livello N» e «N giorni di fila» |
 | Profilo | Livello come una stella per livello («Le tue stelle»); barra del livello senza «XP / XP»; serie come fiamma accesa o spenta, senza giorni, record e protezioni; barra dell'obiettivo senza conteggio; sfide con la barra ma senza «n/m»; sezione Record personali nascosta; nascosta anche la sezione Impostazioni (interruttore degli XP, obiettivo, giorno di riposo, promemoria), scelte da adulti |
+| Foto del profilo | La sezione «Foto» della scelta dell'avatar non compare e una foto già salvata non viene mostrata (RP-09); restano avatar e cornici | Disponibile |
 | Sblocchi | Avatar, cornici, temi e pezzi bloccati dicono «Si sblocca giocando» invece di «Livello N» o del traguardo, anche nel testo per i lettori di schermo e nell'avviso delle Impostazioni |
 | Hub dei puzzle | Niente punteggio né contatori: una stella per puzzle risolto (fino a dieci); niente difficoltà del puzzle del giorno né numero di puzzle da ripassare; nascoste le modalità a tempo (Storm, Sopravvivenza, Serie), costruite su punti, errori e record; nei temi spariscono i conteggi |
 | Puzzle | Nessun punteggio né variazione dopo il puzzle; sotto la scacchiera «Forza, ce la puoi fare!» e, a puzzle concluso, solo i temi |

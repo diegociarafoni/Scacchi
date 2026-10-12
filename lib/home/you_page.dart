@@ -12,7 +12,7 @@ import '../minigames/minigames_page.dart';
 import '../multiplayer/multiplayer_page.dart';
 import '../path/curriculum.dart';
 import '../path/path_controller.dart';
-import '../path/path_page.dart';
+import '../path/path_page.dart' show PlayGuardian;
 import '../path/stage_page.dart';
 import '../physical/physical_game_page.dart';
 import '../physical/physical_l10n.dart';
@@ -22,11 +22,13 @@ import '../progress/xp.dart';
 import '../reminders/reminder_controller.dart';
 import '../stats/portrait_page.dart';
 import '../stats/stats_page.dart';
+import '../story/story.dart';
 import '../story/story_l10n.dart';
 import '../summary/weekly_summary_page.dart';
+import '../theme/rokko_theme.dart';
 
 /// Scheda "Tu": profilo e tutto ciò che riguarda i propri progressi.
-class YouPage extends StatelessWidget {
+class YouPage extends StatefulWidget {
   const YouPage({
     super.key,
     required this.progress,
@@ -56,7 +58,7 @@ class YouPage extends StatelessWidget {
   /// adulti, solo profilo, percorso e minigiochi.
   final bool simple;
 
-  /// Partita contro il guardiano; senza, le tappe guardiano mostrano un avviso.
+  /// Partita contro il guardiano; la Storia la riceve da HomeShell.
   final PlayGuardian? playGuardian;
 
   /// Percorso a storia (RG-13); senza, la voce non compare.
@@ -80,6 +82,17 @@ class YouPage extends StatelessWidget {
   /// Apre una partita dell'archivio; senza, le righe non sono toccabili.
   final void Function(BuildContext context, SavedGame game)? openGame;
 
+  @override
+  State<YouPage> createState() => _YouPageState();
+}
+
+class _YouPageState extends State<YouPage> {
+  // Un'unica lettura per apertura della scheda: la voce «Continua» non
+  // ricarica il percorso a ogni ricostruzione.
+  late final Future<PathController> _pathFuture = widget.path();
+
+  YouPage get _w => widget;
+
   void _push(BuildContext context, Widget page) =>
       Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => page));
 
@@ -96,9 +109,7 @@ class YouPage extends StatelessWidget {
       debugPrint('Sezione non disponibile: $e');
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('I dati salvati non si possono leggere: riprova.'),
-        ),
+        SnackBar(content: Text(AppLocalizations.of(context).youLoadError)),
       );
     }
   }
@@ -106,7 +117,7 @@ class YouPage extends StatelessWidget {
   /// Svolge una lezione consigliata e ne salva le stelle come nel Percorso.
   Future<void> _playLesson(BuildContext context, Stage stage) async {
     try {
-      final controller = await path();
+      final controller = await _w.path();
       if (!context.mounted) return;
       final started = DateTime.now();
       final stars = await Navigator.of(
@@ -123,9 +134,7 @@ class YouPage extends StatelessWidget {
       if (kDebugMode) debugPrint('Lezione non disponibile: $e');
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('I dati salvati non si possono leggere: riprova.'),
-        ),
+        SnackBar(content: Text(AppLocalizations.of(context).youLoadError)),
       );
     }
   }
@@ -135,189 +144,344 @@ class YouPage extends StatelessWidget {
     String theme,
     String title,
   ) async {
-    final source = puzzlesPage?.call(theme, title);
+    final source = _w.puzzlesPage?.call(theme, title);
     if (source != null) await _open(context, source, (w) => w);
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final w = widget;
     return Scaffold(
-      appBar: AppBar(title: const Text('Tu')),
+      appBar: AppBar(title: Text(l10n.youTitle)),
       body: FutureBuilder(
-        future: progress(),
+        future: w.progress(),
         builder: (context, snapshot) {
           final controller = snapshot.data;
+          final learn = <Widget>[
+            if (w.storyPage != null)
+              _Entry(
+                icon: Icons.auto_stories_outlined,
+                title: storyL10n(context).storyTitle,
+                subtitle: storyL10n(context).storyEntrySubtitle,
+                onTap: () => _open(context, w.storyPage!(), (p) => p),
+              ),
+            if (w.endgamesPage != null)
+              _Entry(
+                icon: Icons.flag_outlined,
+                title: l10n.youEndgames,
+                subtitle: l10n.youEndgamesSubtitle,
+                onTap: () => _open(context, w.endgamesPage!(), (p) => p),
+              ),
+            if (w.mastersPage != null)
+              _Entry(
+                icon: Icons.workspace_premium_outlined,
+                title: l10n.youMasters,
+                subtitle: l10n.youMastersSubtitle,
+                onTap: () => _open(context, w.mastersPage!(), (p) => p),
+              ),
+          ];
+          final play = <Widget>[
+            // Classifica ed Elo dei bot: nel profilo bambino niente numeri.
+            if (w.tournamentPage != null && !w.simple)
+              _Entry(
+                icon: Icons.emoji_events_outlined,
+                title: l10n.youTournaments,
+                subtitle: l10n.youTournamentsSubtitle,
+                onTap: () => _open(context, w.tournamentPage!(), (p) => p),
+              ),
+            if (!w.simple) ...[
+              _Entry(
+                icon: Icons.people_outline,
+                title: multiplayerL10n(context).multiplayerTitle,
+                subtitle: multiplayerL10n(context).multiplayerEntrySubtitle,
+                onTap: () => _push(context, const MultiplayerPage()),
+              ),
+              _Entry(
+                icon: Icons.timer_outlined,
+                title: physicalL10n(context).physicalTitle,
+                subtitle: physicalL10n(context).physicalEntrySubtitle,
+                onTap: () =>
+                    _push(context, PhysicalGamePage(archive: w.archive)),
+              ),
+            ],
+            _Entry(
+              icon: Icons.videogame_asset_outlined,
+              title: l10n.youMinigames,
+              subtitle: l10n.youMinigamesSubtitle,
+              onTap: () => _open(
+                context,
+                w.progress(),
+                (p) => MinigamesPage(progress: p),
+              ),
+            ),
+          ];
+          final data = <Widget>[
+            _Entry(
+              icon: Icons.person_outline,
+              title: l10n.youProfile,
+              subtitle: l10n.youProfileSubtitle,
+              onTap: () => _open(
+                context,
+                w.progress(),
+                (p) =>
+                    ProfilePage(controller: p, reminders: w.reminders?.call()),
+              ),
+            ),
+            if (!w.simple)
+              _Entry(
+                icon: Icons.military_tech_outlined,
+                title: badgesL10n(context).badgesTitle,
+                subtitle: badgesL10n(context).badgesEntrySubtitle,
+                onTap: () => _open(
+                  context,
+                  w.progress(),
+                  (p) => BadgesPage(controller: p),
+                ),
+              ),
+            if (!w.simple)
+              _Entry(
+                icon: Icons.insights_outlined,
+                title: l10n.youStats,
+                subtitle: l10n.youStatsSubtitle,
+                onTap: () =>
+                    _open(context, w.archive(), (a) => StatsPage(archive: a)),
+              ),
+            // Una sola voce per la settimana; l'immagine da condividere, per
+            // gli adulti, è il pulsante a destra.
+            _Entry(
+              icon: Icons.event_note_outlined,
+              title: l10n.youWeek,
+              subtitle: l10n.youWeekSubtitle,
+              onTap: () => _open(
+                context,
+                w.progress(),
+                (p) => WeeklySummaryPage(
+                  log: p.weekLog,
+                  openLesson: _playLesson,
+                  openPuzzles: w.puzzlesPage == null ? null : _openPuzzles,
+                ),
+              ),
+              action: w.simple
+                  ? null
+                  : IconButton(
+                      icon: const Icon(Icons.ios_share),
+                      tooltip: l10n.youWeekShare,
+                      onPressed: () => _open(
+                        context,
+                        w.archive(),
+                        (a) => PortraitPage(archive: a),
+                      ),
+                    ),
+            ),
+            if (!w.simple)
+              _Entry(
+                icon: Icons.inventory_2_outlined,
+                title: l10n.youArchive,
+                subtitle: l10n.youArchiveSubtitle,
+                onTap: () => _open(
+                  context,
+                  w.archive(),
+                  (a) => ArchivePage(
+                    archive: a,
+                    onOpen: w.openGame == null
+                        ? null
+                        : (g) => w.openGame!(context, g),
+                  ),
+                ),
+              ),
+          ];
           return ListView(
+            padding: const EdgeInsets.only(bottom: 24),
             children: [
               if (controller != null)
                 ListenableBuilder(
                   listenable: controller,
                   builder: (context, _) => controller.settings.enabled
-                      ? ListTile(
-                          contentPadding: const EdgeInsets.all(16),
-                          leading: ProfileAvatar(
-                            avatar: controller.settings.avatar,
-                            frame: controller.settings.frame,
-                            size: 48,
-                          ),
-                          // Profilo bambino (RP-06): stelle e fiamma come nel
-                          // Profilo, senza livello né giorni in cifre.
-                          title: simple
-                              ? KidStars(
-                                  count: levelForXp(controller.state.xp),
-                                  label: AppLocalizations.of(context)
-                                      .kidLevelStarsLabel,
-                                )
-                              : Text(
-                                  'Livello ${levelForXp(controller.state.xp)}',
-                                  style: Theme.of(context).textTheme.titleLarge,
-                                ),
-                          subtitle: simple
-                              ? KidFlame(lit: controller.streak > 0)
-                              : Text(
-                                  '${controller.streak == 1 ? '1 giorno di fila' : '${controller.streak} giorni di fila'}'
-                                  ' · ${controller.streakInfo.summary}',
-                                ),
-                        )
+                      ? _Header(controller: controller, simple: w.simple)
                       : const SizedBox.shrink(),
                 ),
-              _Entry(
-                icon: Icons.person_outline,
-                title: 'Profilo',
-                subtitle: 'Livello, serie, sfide, traguardi e preferenze',
-                onTap: () => _open(
-                  context,
-                  progress(),
-                  (p) =>
-                      ProfilePage(controller: p, reminders: reminders?.call()),
-                ),
-              ),
-              _Entry(
-                icon: Icons.route_outlined,
-                title: 'Percorso',
-                subtitle: 'Tappe con stelle, dalle basi al finale',
-                onTap: () => _open(
-                  context,
-                  path(),
-                  (c) => PathPage(controller: c, playGuardian: playGuardian),
-                ),
-              ),
-              if (storyPage != null)
-                _Entry(
-                  icon: Icons.auto_stories_outlined,
-                  title: storyL10n(context).storyTitle,
-                  subtitle: storyL10n(context).storyEntrySubtitle,
-                  onTap: () => _open(context, storyPage!(), (w) => w),
-                ),
-              if (endgamesPage != null)
-                _Entry(
-                  icon: Icons.flag_outlined,
-                  title: 'Finali',
-                  subtitle:
-                      'Lucena, Philidor e i matti elementari contro il motore',
-                  onTap: () => _open(context, endgamesPage!(), (w) => w),
-                ),
-              if (mastersPage != null)
-                _Entry(
-                  icon: Icons.workspace_premium_outlined,
-                  title: 'Grandi maestri',
-                  subtitle: 'Partite celebri da sfogliare e da indovinare',
-                  onTap: () => _open(context, mastersPage!(), (w) => w),
-                ),
-              // Classifica ed Elo dei bot: nel profilo bambino niente numeri.
-              if (tournamentPage != null && !simple)
-                _Entry(
-                  icon: Icons.emoji_events_outlined,
-                  title: 'Tornei',
-                  subtitle: 'Gironi ed eliminazione diretta contro i bot',
-                  onTap: () => _open(context, tournamentPage!(), (w) => w),
-                ),
-              _Entry(
-                icon: Icons.videogame_asset_outlined,
-                title: 'Minigiochi',
-                subtitle: 'Coordinate, cattura tutto, cieca, materiale',
-                onTap: () => _open(
-                  context,
-                  progress(),
-                  (p) => MinigamesPage(progress: p),
-                ),
-              ),
-              _Entry(
-                icon: Icons.event_note_outlined,
-                title: 'Riepilogo settimanale',
-                subtitle: 'Progressi, errore ricorrente e un consiglio',
-                onTap: () => _open(
-                  context,
-                  progress(),
-                  (p) => WeeklySummaryPage(
-                    log: p.weekLog,
-                    openLesson: _playLesson,
-                    openPuzzles: puzzlesPage == null ? null : _openPuzzles,
-                  ),
-                ),
-              ),
-              if (!simple) ...[
-                _Entry(
-                  icon: Icons.military_tech_outlined,
-                  title: badgesL10n(context).badgesTitle,
-                  subtitle: badgesL10n(context).badgesEntrySubtitle,
-                  onTap: () => _open(
-                    context,
-                    progress(),
-                    (p) => BadgesPage(controller: p),
-                  ),
-                ),
-                _Entry(
-                  icon: Icons.insights_outlined,
-                  title: 'Statistiche',
-                  subtitle: 'Risultati, aperture, cadenze e rating locale',
-                  onTap: () =>
-                      _open(context, archive(), (a) => StatsPage(archive: a)),
-                ),
-                _Entry(
-                  icon: Icons.auto_awesome_outlined,
-                  title: 'La tua settimana',
-                  subtitle:
-                      'Riepilogo degli ultimi sette giorni, da condividere',
-                  onTap: () => _open(
-                    context,
-                    archive(),
-                    (a) => PortraitPage(archive: a),
-                  ),
-                ),
-                _Entry(
-                  icon: Icons.people_outline,
-                  title: multiplayerL10n(context).multiplayerTitle,
-                  subtitle: multiplayerL10n(context).multiplayerEntrySubtitle,
-                  onTap: () => _push(context, const MultiplayerPage()),
-                ),
-                _Entry(
-                  icon: Icons.timer_outlined,
-                  title: physicalL10n(context).physicalTitle,
-                  subtitle: physicalL10n(context).physicalEntrySubtitle,
-                  onTap: () =>
-                      _push(context, PhysicalGamePage(archive: archive)),
-                ),
-                _Entry(
-                  icon: Icons.inventory_2_outlined,
-                  title: 'Archivio',
-                  subtitle: 'Partite salvate, import ed export PGN',
-                  onTap: () => _open(
-                    context,
-                    archive(),
-                    (a) => ArchivePage(
-                      archive: a,
-                      onOpen: openGame == null
-                          ? null
-                          : (g) => openGame!(context, g),
-                    ),
-                  ),
-                ),
-              ],
+              _ContinueCard(path: _pathFuture, onOpen: _continue),
+              _Group(title: l10n.youGroupLearn, children: learn),
+              _Group(title: l10n.youGroupPlay, children: play),
+              _Group(title: l10n.youGroupData, children: data),
             ],
           );
         },
       ),
+    );
+  }
+
+  /// Riprende dalla Storia, che propone il passo giusto; senza storia le
+  /// lezioni si aprono da sole.
+  Future<void> _continue(Stage stage) async {
+    final story = widget.storyPage;
+    if (story != null) return _open(context, story(), (p) => p);
+    if (!stage.isGuardian) return _playLesson(context, stage);
+  }
+}
+
+/// Avatar, livello e serie in testa alla scheda.
+class _Header extends StatelessWidget {
+  const _Header({required this.controller, required this.simple});
+
+  final ProgressController controller;
+  final bool simple;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final level = levelForXp(controller.state.xp);
+    return ListTile(
+      contentPadding: const EdgeInsets.all(16),
+      leading: ProfileAvatar(
+        avatar: controller.settings.avatar,
+        frame: controller.settings.frame,
+        photo: simple ? null : controller.activePhoto,
+        size: 48,
+      ),
+      // Profilo bambino (RP-06): stelle e fiamma come nel Profilo, senza
+      // livello né giorni in cifre.
+      title: simple
+          ? KidStars(count: level, label: l10n.kidLevelStarsLabel)
+          : Text(
+              l10n.youLevel(level),
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+      subtitle: simple
+          ? KidFlame(lit: controller.streak > 0)
+          : Text(
+              '${l10n.youStreak(controller.streak)}'
+              ' · ${controller.streakInfo.summary}',
+            ),
+    );
+  }
+}
+
+/// Scheda in evidenza: l'unico invito dominante della pagina.
+class _ContinueCard extends StatelessWidget {
+  const _ContinueCard({required this.path, required this.onOpen});
+
+  final Future<PathController> path;
+  final Future<void> Function(Stage stage) onOpen;
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<PathController>(
+      future: path,
+      builder: (context, snapshot) {
+        final controller = snapshot.data;
+        if (controller == null) return const SizedBox.shrink();
+        return ListenableBuilder(
+          listenable: controller,
+          builder: (context, _) {
+            final stage = nextStoryStage(controller.progress);
+            if (stage == null) return const SizedBox.shrink();
+            final l10n = AppLocalizations.of(context);
+            final scheme = Theme.of(context).colorScheme;
+            final tokens = RokkoTokens.of(context);
+            final text = stage.isGuardian
+                ? l10n.youContinueGuardian(stage.title)
+                : l10n.youContinueStage(stage.title);
+            return Padding(
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+              child: Semantics(
+                button: true,
+                label: '${l10n.youContinueTitle}. $text',
+                excludeSemantics: true,
+                onTap: () => onOpen(stage),
+                child: Material(
+                  color: scheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(tokens.radiusLarge),
+                  clipBehavior: Clip.antiAlias,
+                  child: InkWell(
+                    onTap: () => onOpen(stage),
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(minHeight: tokens.kidTouch),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.play_circle_fill,
+                              size: 40,
+                              color: scheme.onPrimaryContainer,
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    l10n.youContinueTitle,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium
+                                        ?.copyWith(
+                                          color: scheme.onPrimaryContainer,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                  ),
+                                  Text(
+                                    text,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                          color: scheme.onPrimaryContainer,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+/// Gruppo di voci con intestazione; senza voci non compare.
+class _Group extends StatelessWidget {
+  const _Group({required this.title, required this.children});
+
+  final String title;
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    if (children.isEmpty) return const SizedBox.shrink();
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Semantics(
+          header: true,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
+            child: Text(
+              title,
+              style: theme.textTheme.titleSmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+        Card(
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          clipBehavior: Clip.antiAlias,
+          child: Column(children: children),
+        ),
+      ],
     );
   }
 }
@@ -328,6 +492,7 @@ class _Entry extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.onTap,
+    this.action,
   });
 
   final IconData icon;
@@ -335,12 +500,16 @@ class _Entry extends StatelessWidget {
   final String subtitle;
   final VoidCallback onTap;
 
+  /// Pulsante secondario al posto della freccia.
+  final Widget? action;
+
   @override
   Widget build(BuildContext context) => ListTile(
-    leading: Icon(icon),
+    minTileHeight: RokkoTokens.of(context).minTouch,
+    leading: Icon(icon, color: Theme.of(context).colorScheme.primary),
     title: Text(title),
     subtitle: Text(subtitle),
-    trailing: const Icon(Icons.chevron_right),
+    trailing: action ?? const Icon(Icons.chevron_right),
     onTap: onTap,
   );
 }

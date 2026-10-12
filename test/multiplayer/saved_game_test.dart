@@ -10,6 +10,14 @@ import 'package:scacchi/multiplayer/transport.dart';
 
 Future<void> settle() => Future<void>.delayed(const Duration(milliseconds: 50));
 
+// Attende una condizione invece di un tempo fisso: su un runner carico la
+// ripresa da disco può superare i 50 ms.
+Future<void> until(bool Function() ok) async {
+  for (var i = 0; i < 200 && !ok(); i++) {
+    await Future<void>.delayed(const Duration(milliseconds: 10));
+  }
+}
+
 SavedGame sample() => SavedGame(
   inviteLink: GameInvite(
     gameId: newGameId(),
@@ -148,11 +156,13 @@ void main() {
         openGuest: (_, _) => b,
         store: guestStore,
       );
+      await until(() => host2.session.sync.moves.isNotEmpty);
       await settle();
       expect(host2.session.sync.moves, ['e2e4']);
       expect(host2.status, MultiplayerStatus.peerTurn);
       expect(guest2.status, MultiplayerStatus.myTurn);
       expect(await guest2.play(Move.parse('c7c5')!), isTrue);
+      await until(() => host2.session.sync.moves.length == 2);
       await settle();
       expect(host2.session.sync.moves, ['e2e4', 'c7c5']);
       expect(host2.status, MultiplayerStatus.myTurn);
@@ -172,7 +182,19 @@ void main() {
         await c.play(Move.parse(uci)!);
         await settle();
       }
+      await until(
+        () =>
+            host.status == MultiplayerStatus.finished &&
+            guest.status == MultiplayerStatus.finished,
+      );
       expect(host.status, MultiplayerStatus.finished);
+      // Il file si cancella in coda alla scrittura: si attende su disco.
+      for (var i = 0; i < 200; i++) {
+        if (await store.load() == null && await guestStore.load() == null) {
+          break;
+        }
+        await Future<void>.delayed(const Duration(milliseconds: 10));
+      }
       expect(await store.load(), isNull);
       expect(await guestStore.load(), isNull);
       await host.close();

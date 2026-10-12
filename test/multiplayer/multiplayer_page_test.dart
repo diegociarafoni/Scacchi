@@ -53,11 +53,19 @@ void main() {
     await tester.pumpWidget(
       localizedApp(
         home: MultiplayerPage(
+          remoteByDefault: false,
           openHost: () async => (transport: a, lanAddress: '10.0.0.2:4000'),
         ),
       ),
     );
     await tester.tap(find.text('Nero'));
+    await tester.pump();
+    await tester.scrollUntilVisible(
+      find.text('Crea la partita'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.ensureVisible(find.text('Crea la partita'));
     await tester.pump();
     await tester.tap(find.text('Crea la partita'));
     await _wait(tester);
@@ -91,10 +99,18 @@ void main() {
     await tester.pumpWidget(
       localizedApp(
         home: MultiplayerPage(
+          remoteByDefault: false,
           openHost: () async => throw const NoLocalNetwork(),
         ),
       ),
     );
+    await tester.scrollUntilVisible(
+      find.text('Crea la partita'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.ensureVisible(find.text('Crea la partita'));
+    await tester.pump();
     await tester.tap(find.text('Crea la partita'));
     await tester.pump();
     await tester.pump();
@@ -107,10 +123,18 @@ void main() {
     await tester.pumpWidget(
       localizedApp(
         home: MultiplayerPage(
+          remoteByDefault: false,
           openHost: () async => throw const SocketException('porta occupata'),
         ),
       ),
     );
+    await tester.scrollUntilVisible(
+      find.text('Crea la partita'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.ensureVisible(find.text('Crea la partita'));
+    await tester.pump();
     await tester.tap(find.text('Crea la partita'));
     await tester.pump();
     await tester.pump();
@@ -137,9 +161,20 @@ void main() {
     final scanner = _FakeScanner();
     await tester.pumpWidget(
       localizedApp(
-        home: MultiplayerPage(scanner: scanner.build, openGuest: (_, _) => b),
+        home: MultiplayerPage(
+          remoteByDefault: false,
+          scanner: scanner.build,
+          openGuest: (_, _) => b,
+        ),
       ),
     );
+    await tester.scrollUntilVisible(
+      find.text('Unisciti con il QR'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    await tester.ensureVisible(find.text('Unisciti con il QR'));
+    await tester.pump();
     await tester.tap(find.text('Unisciti con il QR'));
     await tester.pumpAndSettle();
     expect(find.byKey(const Key('fakeScanner')), findsOneWidget);
@@ -225,7 +260,11 @@ void main() {
     testWidgets('RMP-09 senza partite salvate non c\'è il riquadro', (
       tester,
     ) async {
-      await openPage(tester, MultiplayerPage(store: store), saved: false);
+      await openPage(
+        tester,
+        MultiplayerPage(remoteByDefault: false, store: store),
+        saved: false,
+      );
       expect(find.text('Riprendi la partita'), findsNothing);
     });
 
@@ -237,6 +276,7 @@ void main() {
       await openPage(
         tester,
         MultiplayerPage(
+          remoteByDefault: false,
           store: store,
           openResumeHost: (_) async =>
               (transport: a, lanAddress: '10.0.0.2:4000'),
@@ -252,7 +292,10 @@ void main() {
 
     testWidgets('RMP-09 si può eliminare la partita salvata', (tester) async {
       await saveOne(tester);
-      await openPage(tester, MultiplayerPage(store: store));
+      await openPage(
+        tester,
+        MultiplayerPage(remoteByDefault: false, store: store),
+      );
       await tester.tap(find.text('Elimina'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Elimina').last);
@@ -271,6 +314,7 @@ void main() {
         await openPage(
           tester,
           MultiplayerPage(
+            remoteByDefault: false,
             store: store,
             openHost: () async {
               opened++;
@@ -278,6 +322,13 @@ void main() {
             },
           ),
         );
+        await tester.scrollUntilVisible(
+          find.text('Crea la partita'),
+          200,
+          scrollable: find.byType(Scrollable).first,
+        );
+        await tester.ensureVisible(find.text('Crea la partita'));
+        await tester.pump();
         await tester.tap(find.text('Crea la partita'));
         await tester.pumpAndSettle();
         await tester.tap(find.text('Resta'));
@@ -285,6 +336,13 @@ void main() {
         expect(opened, 0);
         expect(await tester.runAsync(store.load), isNotNull);
 
+        await tester.scrollUntilVisible(
+          find.text('Crea la partita'),
+          200,
+          scrollable: find.byType(Scrollable).first,
+        );
+        await tester.ensureVisible(find.text('Crea la partita'));
+        await tester.pump();
         await tester.tap(find.text('Crea la partita'));
         await tester.pumpAndSettle();
         await tester.tap(find.text('Elimina').last);

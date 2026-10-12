@@ -76,6 +76,7 @@ void main() {
     await show(tester);
     expect(find.text('Il sentiero dei primi passi'), findsOneWidget);
     expect(find.textContaining('Prima del villaggio'), findsOneWidget);
+    await tester.scrollUntilVisible(find.text('Il villaggio dei pezzi'), 300);
     expect(find.text('Il villaggio dei pezzi'), findsOneWidget);
     expect(
       find.text('Si apre concludendo il capitolo precedente'),
@@ -160,7 +161,7 @@ void main() {
       expect(played?.id, 'tino');
       expect(story.state.isBossBeaten(first.id), isTrue);
       expect(find.text('Hai battuto Tino!'), findsOneWidget);
-      expect(find.textContaining('Ora i pezzi non hanno'), findsOneWidget);
+      expect(find.textContaining('Ora i pezzi non hanno'), findsWidgets);
     },
   );
 

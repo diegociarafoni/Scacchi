@@ -11,6 +11,8 @@ import 'package:scacchi/progress/progress_controller.dart';
 import 'package:scacchi/progress/progress_store.dart';
 import 'package:scacchi/settings/settings.dart';
 
+import '../localized_app.dart';
+
 void main() {
   late Directory dir;
   late ProgressController progress;
@@ -30,7 +32,7 @@ void main() {
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: HomeShell(
           settings: SettingsController.defaults()
             ..value = AppSettings(sound: false),

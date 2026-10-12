@@ -4,6 +4,8 @@ import 'package:integration_test/integration_test.dart';
 import 'package:scacchi/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../test/game_actions.dart';
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
@@ -17,7 +19,7 @@ void main() {
     await tester.pumpWidget(const ScacchiApp());
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byTooltip('Editor di posizione'));
+    await openPositionEditor(tester);
     await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('Esporta come immagine'));
     await tester.pumpAndSettle();

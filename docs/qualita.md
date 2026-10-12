@@ -1,6 +1,6 @@
 # Qualità
 
-Ogni controllo ha un limite misurabile e blocca la CI se non è rispettato. I limiti numerici sono in [`tool/policy.json`](../tool/policy.json), così da cambiarli in un solo punto e con una revisione visibile. Questa pagina descrive i controlli oggi attivi; le prove sul telefono arriveranno in PR successive.
+Ogni controllo ha un limite misurabile e blocca la CI se non è rispettato. I limiti numerici sono in [`tool/policy.json`](../tool/policy.json), così da cambiarli in un solo punto e con una revisione visibile. Questa pagina descrive i controlli oggi attivi, compresa la prova su emulatore Android ([End-to-end su emulatore](#end-to-end-su-emulatore)); non ci sono prove automatiche su un telefono fisico.
 
 | Controllo | Strumento | Limite | Dove gira |
 |---|---|---|---|
@@ -13,6 +13,7 @@ Ogni controllo ha un limite misurabile e blocca la CI se non è rispettato. I li
 | Dimensione dell'APK | `tool/check_size.dart` | al massimo `budget.apkMaxMegabytes` (80 MB) | rilascio e nightly, prima della pubblicazione |
 | Fluidità | `integration_test/fluidita_perf.dart` e `tool/check_performance.dart` | tempi di costruzione dei fotogrammi entro `budget.frames` | main, tag e PR che toccano la misura (workflow `Prestazioni`) |
 | Analisi statica dell'APK (MobSF) | `.github/workflows/mobsf.yml`, `tool/check_mobsf.dart` | nessun avviso grave oltre a `mobsf.acceptedHigh`, punteggio almeno `mobsf.minSecurityScore` | settimanale su main e a richiesta (vedi [sicurezza.md](sicurezza.md)) |
+| End-to-end su emulatore Android | `.github/workflows/e2e-android.yml` | i test di `integration_test/` indicati nel workflow passano su Android x86_64 (KVM) | main, a richiesta e PR che toccano il workflow, `integration_test/`, `android/` o `pubspec.*` |
 | Golden test | `flutter test` con tag `golden` | nessuna differenza di pixel | CI (Linux) |
 | Accessibilità | linee guida di `flutter_test` | vedi sotto | pre-push, CI |
 
@@ -35,6 +36,10 @@ I due controlli sono pesanti, quindi girano solo dove serve: la dimensione sull'
 dart run tool/check_size.dart build/app/outputs/flutter-apk/app-release.apk
 xvfb-run -a flutter test integration_test/fluidita_perf.dart -d linux && dart run tool/check_performance.dart
 ```
+
+## End-to-end su emulatore
+
+Il workflow `E2E Android` compila l'app di debug per x86_64 e la prova su un emulatore (API 34, accelerato con KVM, senza finestra) con `flutter test integration_test/<file>.dart -d emulator-5554`, un file alla volta come su desktop. Sono inclusi solo i test che non dipendono dal desktop (non quelli che avviano il Stockfish di sistema né quelli con la fotocamera); la suite lunga `app_test.dart` resta su desktop, perché su emulatore con rendering software supera i dieci minuti; l'elenco è nel passo «Test end-to-end». Per aggiungerne uno basta il nome del file nel ciclo. Serve a trovare problemi che il desktop non mostra: libreria nativa, permessi, dimensioni dello schermo e ciclo di vita Android.
 
 ## Golden test
 

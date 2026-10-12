@@ -7,6 +7,7 @@ import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/settings/settings.dart';
 
 import '../computer_fakes.dart';
+import '../game_actions.dart';
 import 'game_qr_test.dart' show tapMove;
 
 void main() {
@@ -30,7 +31,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Nuova'));
+    await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
     await chooseTime(tester, '1+1');
     await tester.pumpAndSettle();

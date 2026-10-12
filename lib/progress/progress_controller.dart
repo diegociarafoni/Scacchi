@@ -16,8 +16,12 @@ import 'streak_info.dart';
 
 /// Stato della gamification per l'interfaccia, salvato a ogni modifica.
 class ProgressController extends ChangeNotifier {
-  ProgressController(this._store, {DateTime Function()? clock, this._journal})
-    : _clock = clock ?? DateTime.now;
+  ProgressController(
+    this._store, {
+    DateTime Function()? clock,
+    this._journal,
+    this._photoFile,
+  }) : _clock = clock ?? DateTime.now;
 
   /// Controller sul file predefinito nella cartella dati dell'app.
   static Future<ProgressController> open() async {
@@ -25,6 +29,7 @@ class ProgressController extends ChangeNotifier {
     final controller = ProgressController(
       ProgressStore(File('${dir.path}/progress.json')),
       journal: WeekLogStore(File('${dir.path}/week.json')),
+      photoFile: File('${dir.path}/avatar_photo.jpg'),
     );
     await controller.load();
     return controller;
@@ -33,6 +38,10 @@ class ProgressController extends ChangeNotifier {
   final ProgressStore _store;
   final DateTime Function() _clock;
   final WeekLogStore? _journal;
+
+  /// Foto del profilo (RP-09): un file a parte nella cartella privata
+  /// dell'app, fuori da `progress.json` e quindi dal backup.
+  final File? _photoFile;
   final _tracker = ProgressTracker();
 
   ProgressState _state = ProgressState.initial;
@@ -40,6 +49,17 @@ class ProgressController extends ChangeNotifier {
 
   ProgressState get state => _state;
   ProgressSettings get settings => _settings;
+
+  /// Foto salvata, anche se al momento si mostra un avatar.
+  Uint8List? get photo => _photo;
+  Uint8List? _photo;
+
+  /// Foto da mostrare come avatar, se scelta.
+  Uint8List? get activePhoto => _settings.usePhoto ? _photo : null;
+
+  /// Le scritture della foto si accodano, così «Rimuovi» non scavalca un
+  /// salvataggio ancora in corso.
+  Future<void> _photoQueue = Future.value();
 
   /// Badge ottenuti (RG-17) con il giorno in cui sono arrivati.
   Map<String, int> get badges => _state.badges;
@@ -93,8 +113,51 @@ class ProgressController extends ChangeNotifier {
       _readOnly = true;
     }
     await _loadJournal();
+    await _loadPhoto();
     notifyListeners();
   }
+
+  Future<void> _loadPhoto() async {
+    try {
+      final file = _photoFile;
+      _photo = file != null && file.existsSync()
+          ? await file.readAsBytes()
+          : null;
+    } on FileSystemException catch (e) {
+      if (kDebugMode) debugPrint('Lettura della foto non riuscita: $e');
+    }
+  }
+
+  /// Imposta la foto; se non si riesce a scrivere la si tiene in memoria.
+  Future<void> setPhoto(Uint8List bytes) async {
+    _photo = bytes;
+    await updateSettings(_settings.copyWith(usePhoto: true));
+    await _queuePhotoWrite(() async {
+      try {
+        await _photoFile?.writeAsBytes(bytes, flush: true);
+      } on FileSystemException catch (e) {
+        if (kDebugMode) debugPrint('Salvataggio della foto non riuscito: $e');
+      }
+    });
+  }
+
+  Future<void> removePhoto() async {
+    _photo = null;
+    await updateSettings(_settings.copyWith(usePhoto: false));
+    await _queuePhotoWrite(() async {
+      try {
+        final file = _photoFile;
+        if (file != null && file.existsSync()) await file.delete();
+      } on FileSystemException catch (e) {
+        if (kDebugMode) debugPrint('Rimozione della foto non riuscita: $e');
+      }
+    });
+  }
+
+  Future<void> _queuePhotoWrite(Future<void> Function() job) =>
+      _photoQueue = _photoQueue.then((_) => job()).onError((e, _) {
+        if (kDebugMode) debugPrint('Foto del profilo: $e');
+      });
 
   /// Un diario illeggibile non deve fermare il salvataggio dei progressi.
   Future<void> _loadJournal() async {
