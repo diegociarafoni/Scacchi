@@ -9,6 +9,7 @@ Ogni controllo ha un limite misurabile e blocca la CI se non è rispettato. I li
 | Test unitari, widget, accessibilità | `flutter test` | tutti verdi | pre-push (senza golden), CI |
 | Copertura della logica di gioco | `tool/check_coverage.dart` | almeno 80% | CI |
 | Sicurezza OWASP MASVS (sorgenti) | `test/security/` | permessi, log e SDK secondo `tool/policy.json` | pre-push, CI |
+| Manifest dell'APK (MASVS) | `tool/check_apk.dart` | permessi ed esportazioni secondo `tool/policy.json`, non debuggable in rilascio | CI (job android), rilascio |
 | Golden test | `flutter test` con tag `golden` | nessuna differenza di pixel | CI (Linux) |
 | Accessibilità | linee guida di `flutter_test` | vedi sotto | pre-push, CI |
 

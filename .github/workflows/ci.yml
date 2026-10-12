@@ -67,7 +67,7 @@ jobs:
           fi
           has() { grep -qE "$1" <<< "$files" && echo true || echo false; }
           echo "e2e=$(has '^(integration_test/|linux/|pubspec\.(yaml|lock)$|\.github/workflows/ci(-completa)?\.yml$)')" >> "$GITHUB_OUTPUT"
-          echo "android=$(has '^(android/|pubspec\.(yaml|lock)$|\.github/workflows/ci(-completa)?\.yml$)')" >> "$GITHUB_OUTPUT"
+          echo "android=$(has '^(android/|tool/(check_apk\.dart|policy\.json|src/)|pubspec\.(yaml|lock)$|\.github/workflows/ci(-completa)?\.yml$)')" >> "$GITHUB_OUTPUT"
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           channel: stable
@@ -156,6 +156,8 @@ jobs:
           cache: true
       - run: dart tool/l10n.dart --solo-unione
       - run: flutter build apk --debug --target-platform android-arm64
+      - name: Controlli MASVS sul manifest dell'APK
+        run: dart run tool/check_apk.dart --debug build/app/outputs/flutter-apk/app-debug.apk
       - name: Statistiche di ccache
         if: success()
         run: ccache -s
