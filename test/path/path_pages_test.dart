@@ -104,6 +104,34 @@ void main() {
     await _tapMove(tester, 'd7', 'g7');
     await _tapMove(tester, 'g7', 'g2');
     await _tapMove(tester, 'g2', 'b2');
+    await tester.tap(find.text('Avanti'));
+    await tester.pumpAndSettle();
+
+    for (final (from, to) in [
+      ('e5', 'e1'),
+      ('e1', 'g1'),
+      ('g1', 'g3'),
+      ('g3', 'b3'),
+      ('b3', 'b8'),
+      ('b8', 'g8'),
+    ]) {
+      await _tapMove(tester, from, to);
+    }
+    await tester.tap(find.text('Avanti'));
+    await tester.pumpAndSettle();
+
+    for (final (from, to) in [
+      ('h4', 'h7'),
+      ('h7', 'c7'),
+      ('c7', 'd7'),
+      ('d7', 'd1'),
+      ('d1', 'f1'),
+      ('f1', 'f2'),
+      ('f2', 'a2'),
+      ('a2', 'a5'),
+    ]) {
+      await _tapMove(tester, from, to);
+    }
     expect(find.text('Tappa completata'), findsOneWidget);
     expect(find.bySemanticsLabel('3 stelle su 3'), findsOneWidget);
     await tester.tap(find.text('Fine'));
