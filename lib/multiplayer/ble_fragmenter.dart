@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:typed_data';
 
 /// Dimensione massima di un messaggio ricomposto: oltre si scarta.
@@ -12,7 +13,8 @@ const _header = 4;
 /// in una volta (MTU meno 3 byte). Intestazione: identificatore del messaggio
 /// su 2 byte, indice e numero dei frammenti su 1 byte ciascuno.
 class BleFragmenter {
-  int _next = 0;
+  // Partenza casuale: due telefoni che scrivono all'ospite non usano gli stessi id.
+  int _next = Random().nextInt(0x10000);
 
   List<Uint8List> split(Uint8List data, int chunkSize) {
     if (chunkSize <= _header) throw ArgumentError('frammento troppo piccolo');

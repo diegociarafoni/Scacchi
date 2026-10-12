@@ -77,7 +77,10 @@ class _MultiplayerPageState extends State<MultiplayerPage> {
   }
 
   Future<void> _resume(SavedGame saved) => _start(() async {
-    if (saved.invite.ble) await widget.bluetoothCheck(isHost: saved.isHost);
+    // Con anche la rete locale la partita può comunque ripartire in Wi-Fi.
+    if (saved.invite.ble && saved.invite.lanAddress == null) {
+      await widget.bluetoothCheck(isHost: saved.isHost);
+    }
     return MultiplayerController.resume(
       saved,
       openHost: widget.openResumeHost,
@@ -175,7 +178,9 @@ class _MultiplayerPageState extends State<MultiplayerPage> {
     );
     if (invite == null || !mounted) return;
     await _startNew(() async {
-      if (invite.ble) await widget.bluetoothCheck(isHost: false);
+      if (invite.ble && invite.lanAddress == null) {
+        await widget.bluetoothCheck(isHost: false);
+      }
       return MultiplayerController.join(
         invite,
         openGuest: widget.openGuest,

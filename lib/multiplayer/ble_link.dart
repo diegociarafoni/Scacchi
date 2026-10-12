@@ -67,6 +67,13 @@ Future<void> ensureBluetoothReady(
 
 bool _sameUuid(UUID a, UUID b) => a == b;
 
+/// Un pacchetto sta tra il minimo del BLE e il limite che il ricevente accetta.
+int _clampChunk(int size) => size < defaultBleChunk
+    ? defaultBleChunk
+    : size > _maxIncomingChunk
+    ? _maxIncomingChunk
+    : size;
+
 void _log(String what, Object e) {
   if (kDebugMode) debugPrint('Bluetooth, $what: $e');
 }
@@ -102,6 +109,8 @@ class BlePeripheralLink implements BleLink {
   final _chunks = StreamController<Uint8List>.broadcast();
   final _connected = StreamController<void>.broadcast();
   final _listening = <Central, int>{};
+  // Iscritti secondo il sistema, anche mentre se ne legge ancora la lunghezza.
+  final _wanted = <Central>{};
   late GATTCharacteristic _tx;
   bool _closed = false;
 
@@ -124,6 +133,8 @@ class BlePeripheralLink implements BleLink {
       ..add(
         _manager.characteristicWriteRequested.listen((e) async {
           if (!_sameUuid(e.characteristic.uuid, _rxUuid)) return;
+          // Chi non si è iscritto alle risposte non fa parte della partita.
+          if (!_listening.containsKey(e.central)) return;
           try {
             await _manager.respondWriteRequest(e.request);
           } on Object catch (err) {
@@ -139,15 +150,18 @@ class BlePeripheralLink implements BleLink {
         _manager.characteristicNotifyStateChanged.listen((e) async {
           if (!_sameUuid(e.characteristic.uuid, _txUuid)) return;
           if (!e.state) {
+            _wanted.remove(e.central);
             _listening.remove(e.central);
             return;
           }
+          _wanted.add(e.central);
           await _subscribe(e.central);
         }),
       )
       ..add(
         _manager.connectionStateChanged.listen((e) async {
           if (e.state != ConnectionState.disconnected) return;
+          _wanted.remove(e.central);
           _listening.remove(e.central);
           // Alcuni telefoni smettono di annunciarsi quando qualcuno si collega.
           await _advertise();
@@ -156,14 +170,19 @@ class BlePeripheralLink implements BleLink {
       ..add(
         _manager.mtuChanged.listen((e) {
           if (_listening.containsKey(e.central)) {
-            _listening[e.central] = _payload(e.mtu);
+            _listening[e.central] = _clampChunk(_payload(e.mtu));
           }
         }),
       )
       ..add(
         _manager.stateChanged.listen((e) async {
+          if (e.state != BluetoothLowEnergyState.poweredOn) {
+            _wanted.clear();
+            _listening.clear();
+            return;
+          }
           // Spento e riacceso: servizio e annuncio vanno rifatti.
-          if (e.state == BluetoothLowEnergyState.poweredOn) await _publish();
+          await _publish();
         }),
       );
     await _publish();
@@ -189,7 +208,8 @@ class BlePeripheralLink implements BleLink {
         _log('scollegamento', e);
       }
     }
-    _listening[central] = length < defaultBleChunk ? defaultBleChunk : length;
+    if (!_wanted.contains(central)) return;
+    _listening[central] = _clampChunk(length);
     if (!_connected.isClosed) _connected.add(null);
   }
 
@@ -299,6 +319,14 @@ class BleCentralLink implements BleLink {
         }
       }),
     );
+    link._subs.add(
+      m.mtuChanged.listen((e) {
+        final p = link._peripheral;
+        if (p != null && _sameUuid(e.peripheral.uuid, p.uuid)) {
+          link._chunkSize = _clampChunk(e.mtu - 3);
+        }
+      }),
+    );
     unawaited(link._run());
     return link;
   }
@@ -331,16 +359,31 @@ class BleCentralLink implements BleLink {
     var wait = const Duration(seconds: 1);
     while (!_closed) {
       Peripheral? found;
+      StreamSubscription<Object?>? watch;
+      var linked = false;
       try {
         found = await _find();
         if (found != null) {
-          await _link(found);
+          // Prima di collegarsi: una caduta durante la scoperta del servizio
+          // non deve passare inosservata.
+          final gone = Completer<void>();
+          final peripheral = found;
+          watch = _manager.connectionStateChanged.listen((e) {
+            if (_sameUuid(e.peripheral.uuid, peripheral.uuid) &&
+                e.state == ConnectionState.disconnected &&
+                !gone.isCompleted) {
+              gone.complete();
+            }
+          });
+          await _link(found, gone);
+          linked = true;
           wait = const Duration(seconds: 1);
-          await _lost(found);
+          await Future.any([gone.future, _closing.future]);
         }
       } on Object catch (e) {
         _log('collegamento', e);
       }
+      await watch?.cancel();
       _peripheral = null;
       _rx = null;
       if (found != null) {
@@ -352,7 +395,9 @@ class BleCentralLink implements BleLink {
       }
       if (_closed) break;
       await Future.any([Future<void>.delayed(wait), _closing.future]);
-      if (found == null) {
+      // Ricerca vuota o collegamento mai riuscito: attese crescenti, per non
+      // scaricare la batteria né far limitare le ricerche da Android.
+      if (!linked) {
         final next = wait * 2;
         wait = next > const Duration(seconds: 8)
             ? const Duration(seconds: 8)
@@ -385,7 +430,7 @@ class BleCentralLink implements BleLink {
     }
   }
 
-  Future<void> _link(Peripheral p) async {
+  Future<void> _link(Peripheral p, Completer<void> gone) async {
     await _manager.connect(p).timeout(const Duration(seconds: 15));
     final services = await _manager.discoverGATT(p);
     final service = services.where((s) => _sameUuid(s.uuid, _service));
@@ -403,32 +448,16 @@ class BleCentralLink implements BleLink {
         p,
         type: GATTCharacteristicWriteType.withResponse,
       );
-      _chunkSize = size < defaultBleChunk ? defaultBleChunk : size;
+      _chunkSize = _clampChunk(size);
     } on Object catch (e) {
       _log('lunghezza massima', e);
       _chunkSize = defaultBleChunk;
     }
     if (_closed) return;
+    if (gone.isCompleted) throw StateError('collegamento perso');
     _rx = rx;
     _peripheral = p;
     if (!_connected.isClosed) _connected.add(null);
-  }
-
-  // Attende la caduta del collegamento (o la chiusura).
-  Future<void> _lost(Peripheral p) async {
-    final done = Completer<void>();
-    final sub = _manager.connectionStateChanged.listen((e) {
-      if (_sameUuid(e.peripheral.uuid, p.uuid) &&
-          e.state == ConnectionState.disconnected &&
-          !done.isCompleted) {
-        done.complete();
-      }
-    });
-    try {
-      await Future.any([done.future, _closing.future]);
-    } finally {
-      await sub.cancel();
-    }
   }
 
   @override

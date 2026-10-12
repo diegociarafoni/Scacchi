@@ -91,6 +91,42 @@ void main() {
     expect(find.text('Tocca all\'avversario'), findsOneWidget);
   });
 
+  testWidgets('RMP-20 un invito con anche il Wi-Fi non pretende il Bluetooth', (
+    tester,
+  ) async {
+    final (a, b) = LoopbackTransport.pair();
+    final invite = GameInvite(
+      gameId: newGameId(),
+      secret: newSecret(),
+      hostKey: Uint8List(32),
+      hostSide: Side.white,
+      lanAddress: '10.0.0.2:4000',
+      ble: true,
+    );
+    ValueChanged<String>? scanned;
+    final checks = <bool>[];
+    await tester.pumpWidget(
+      localizedApp(
+        home: MultiplayerPage(
+          scanner: (context, {required onCode, required onError}) {
+            scanned = onCode;
+            return const SizedBox();
+          },
+          bluetoothCheck: ({required isHost}) async => checks.add(isHost),
+          openGuest: (_, _) => b,
+        ),
+      ),
+    );
+    await tester.tap(find.text('Unisciti con il QR'));
+    await tester.pumpAndSettle();
+    scanned!(invite.toLink());
+    await _wait(tester);
+    await tester.pumpAndSettle();
+    expect(checks, isEmpty);
+    expect(find.text('Tocca all\'avversario'), findsOneWidget);
+    await a.close();
+  });
+
   for (final (problem, text) in [
     (BluetoothProblem.off, 'Accendi il Bluetooth'),
     (BluetoothProblem.denied, 'permesso Bluetooth'),

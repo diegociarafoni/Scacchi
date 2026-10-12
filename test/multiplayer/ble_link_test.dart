@@ -33,6 +33,7 @@ class FakePeripheralManager implements PeripheralManager {
 
   BluetoothLowEnergyState fakeState;
   final int notifyLength;
+  Duration notifyDelay = Duration.zero;
   Advertisement? advertised;
   GATTService? service;
   final disconnected = <Central>[];
@@ -78,7 +79,11 @@ class FakePeripheralManager implements PeripheralManager {
   @override
   Future<void> stopAdvertising() async => advertised = null;
   @override
-  Future<int> getMaximumNotifyLength(Central central) async => notifyLength;
+  Future<int> getMaximumNotifyLength(Central central) async {
+    await Future<void>.delayed(notifyDelay);
+    return notifyLength;
+  }
+
   @override
   Future<void> respondWriteRequest(GATTWriteRequest r) async =>
       responses.add(r);
@@ -113,6 +118,12 @@ class FakePeripheralManager implements PeripheralManager {
   void drop(Central c) => _conn.add(
     CentralConnectionStateChangedEventArgs(c, ConnectionState.disconnected),
   );
+  void powerOff() => _state.add(
+    BluetoothLowEnergyStateChangedEventArgs(BluetoothLowEnergyState.poweredOff),
+  );
+  void unsubscribe(Central c) => _notifyState.add(
+    GATTCharacteristicNotifyStateChangedEventArgs(c, char(1), false),
+  );
   void powerCycle() => _state.add(
     BluetoothLowEnergyStateChangedEventArgs(BluetoothLowEnergyState.poweredOn),
   );
@@ -136,6 +147,8 @@ class FakeCentralManager implements CentralManager {
   int connects = 0;
   bool hostVisible = true;
   bool failNextConnect = false;
+  bool failConnect = false;
+  void Function()? duringDiscover;
   bool? authorized;
 
   final _discovered = StreamController<DiscoveredEventArgs>.broadcast();
@@ -181,6 +194,7 @@ class FakeCentralManager implements CentralManager {
   @override
   Future<void> connect(Peripheral p) async {
     connects++;
+    if (failConnect) throw StateError('connessione fallita');
     if (failNextConnect) {
       failNextConnect = false;
       throw StateError('connessione fallita');
@@ -190,7 +204,16 @@ class FakeCentralManager implements CentralManager {
   @override
   Future<void> disconnect(Peripheral p) async {}
   @override
-  Future<List<GATTService>> discoverGATT(Peripheral p) async => [host.service!];
+  Future<List<GATTService>> discoverGATT(Peripheral p) async {
+    final hook = duringDiscover;
+    duringDiscover = null;
+    hook?.call();
+    await Future<void>.delayed(Duration.zero);
+    return [host.service!];
+  }
+
+  @override
+  Stream<PeripheralMTUChangedEventArgs> get mtuChanged => const Stream.empty();
   @override
   Future<void> setCharacteristicNotifyState(
     Peripheral p,
@@ -342,6 +365,78 @@ void main() {
     });
 
     test(
+      'una caduta durante la scoperta del servizio fa ricominciare',
+      () async {
+        final host = FakePeripheralManager();
+        final guestMgr = FakeCentralManager(host);
+        host.radio = guestMgr;
+        guestMgr.duringDiscover = guestMgr.drop;
+        final h = BleTransport(
+          await BlePeripheralLink.open(gameId, manager: host),
+        );
+        final g = BleTransport(
+          await BleCentralLink.open(gameId, manager: guestMgr),
+        );
+        var connected = 0;
+        g.connected.listen((_) => connected++);
+        await settle(1400);
+        expect(connected, 1);
+        expect(guestMgr.scans, 2);
+        await h.close();
+        await g.close();
+      },
+    );
+
+    test('se il collegamento non riesce mai le attese crescono', () async {
+      final host = FakePeripheralManager();
+      final guestMgr = FakeCentralManager(host)..failConnect = true;
+      final h = BleTransport(
+        await BlePeripheralLink.open(gameId, manager: host),
+      );
+      final g = BleTransport(
+        await BleCentralLink.open(gameId, manager: guestMgr),
+      );
+      await settle(3300);
+      // Tentativi a 0, 1 e 3 secondi: non uno al secondo.
+      expect(guestMgr.connects, 3);
+      await h.close();
+      await g.close();
+    });
+
+    test('i pacchetti non superano il limite del ricevente', () async {
+      final host = FakePeripheralManager(notifyLength: 1000);
+      final link = await BlePeripheralLink.open(gameId, manager: host);
+      host.subscribe(_Peer(UUID.short(1)));
+      await settle();
+      expect(link.chunkSize, 512);
+      await link.close();
+    });
+
+    test('chi si disiscrive mentre si legge la lunghezza non resta', () async {
+      final host = FakePeripheralManager()
+        ..notifyDelay = const Duration(milliseconds: 30);
+      final link = await BlePeripheralLink.open(gameId, manager: host);
+      final p = _Peer(UUID.short(1));
+      host.subscribe(p);
+      host.unsubscribe(p);
+      await settle(100);
+      expect(link.isLinked, isFalse);
+      await link.close();
+    });
+
+    test('Bluetooth spento: l\'ospite non risulta più collegato', () async {
+      final host = FakePeripheralManager();
+      final link = await BlePeripheralLink.open(gameId, manager: host);
+      host.subscribe(_Peer(UUID.short(1)));
+      await settle();
+      expect(link.isLinked, isTrue);
+      host.powerOff();
+      await settle();
+      expect(link.isLinked, isFalse);
+      await link.close();
+    });
+
+    test(
       'l\'ospite scarta scritture su altre caratteristiche e troppo grandi',
       () async {
         final host = FakePeripheralManager();
@@ -350,6 +445,12 @@ void main() {
         final got = <Uint8List>[];
         t.incoming.listen(got.add);
         final stranger = _Peer(UUID.short(0x9999));
+        // Senza iscrizione alle risposte la scrittura non conta.
+        host.write(stranger, Uint8List.fromList([0, 1, 0, 1, 9]));
+        await settle();
+        expect(got, isEmpty);
+        host.subscribe(stranger);
+        await settle();
         host.write(stranger, Uint8List.fromList([0, 1, 0, 1, 7]), index: 1);
         host.write(stranger, Uint8List(600));
         host.write(stranger, Uint8List.fromList([0, 1, 0, 1, 7]));
