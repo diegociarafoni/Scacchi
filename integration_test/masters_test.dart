@@ -33,7 +33,7 @@ void main() {
       await tester.tap(find.text('Grandi maestri'));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.textContaining('Légal'));
+      await tester.tap(find.text('Légal – Saint-Brie'));
       await tester.pumpAndSettle();
       expect(find.text('Posizione iniziale'), findsOneWidget);
       await tester.tap(find.byKey(const Key('master-next')));
