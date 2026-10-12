@@ -156,7 +156,7 @@ class _Summary extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.star, color: theme.colorScheme.tertiary),
+                      Icon(Icons.star, color: RokkoTokens.of(context).star),
                       const SizedBox(width: 4),
                       Text('$stars/$maxStars'),
                     ],
@@ -238,7 +238,7 @@ class _ChapterHeader extends StatelessWidget {
                 if (done)
                   Icon(Icons.check_circle, color: theme.colorScheme.primary),
                 const SizedBox(width: 8),
-                Icon(Icons.star, size: 18, color: theme.colorScheme.tertiary),
+                Icon(Icons.star, size: 18, color: RokkoTokens.of(context).star),
                 const SizedBox(width: 2),
                 Text('$stars/$max'),
               ],

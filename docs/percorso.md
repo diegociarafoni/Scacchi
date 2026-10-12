@@ -19,6 +19,22 @@ Ogni lezione ha 4 esercizi progressivi (il test ne ammette da 4 a 5), dal più f
 
 Una tappa si apre quando la lezione precedente è completata, oppure quando è già completata una lezione che viene dopo: così le lezioni aggiunte con un aggiornamento restano aperte per chi era già più avanti e non richiudono le tappe successive. Senza tappe saltate equivale a «tutte le lezioni precedenti completate». I guardiani sono sfide facoltative e non bloccano il percorso. Il pulsante "Continua" porta alla prima lezione non completata (anche una appena aggiunta) e, finite le lezioni, al primo guardiano non battuto. Un doppio tocco non apre due tappe.
 
+## Aspetto
+
+La schermata è un sentiero (`path_page.dart`, `path_widgets.dart`). In cima una scheda riassume le stelle totali con una barra di avanzamento e dice qual è la prossima tappa; ogni capitolo ha numero, titolo, stelle e una barra propria, con la spunta a capitolo concluso. Le tappe serpeggiano e un tratto di sentiero le unisce: pieno fin dove il percorso è aperto, tratteggiato verso le tappe bloccate.
+
+Lo stato di una tappa non dipende dal solo colore:
+
+| Stato | Segno |
+|---|---|
+| Bloccata | lucchetto, contorno tratteggiato, testo «bloccata» per i lettori di schermo con il suggerimento di completare la lezione precedente |
+| Da fare | icona della lezione, tre stelle vuote |
+| Corrente (quella di «Continua») | anello nel colore d'azione e la scritta «Sei qui» |
+| Completata | spunta e stelle piene (da una a tre) |
+| Guardiano | esagono con lo scudo e la scritta «guardiano», al posto del cerchio delle lezioni |
+
+I bersagli tattili sono almeno 48 dp (`RokkoTokens.minTouch`), il testo cresce fino al 130% senza overflow, e colori e stelline vengono dai token del tema. I testi fissi sono in `lib/l10n/<lingua>/path.arb`; titoli di capitoli e tappe restano nel contenuto del percorso.
+
 ## Esercizi
 
 **A stelle** (`StarsExercise`): un pezzo bianco da solo su scacchiera vuota raccoglie le stelle, in qualunque ordine. Il minimo di mosse si calcola da solo con una ricerca in ampiezza sugli stati (casa, pezzo, stelle raccolte), quindi i contenuti non contengono numeri da tenere aggiornati. Stelle: 3 al minimo, 2 con al massimo due mosse in più, 1 altrimenti. Il pedone avanza di uno o di due dalla seconda traversa e in ottava diventa donna (la scacchiera promuove a donna senza chiedere).

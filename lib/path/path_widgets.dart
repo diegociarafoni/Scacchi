@@ -20,7 +20,7 @@ class StarRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).colorScheme.tertiary;
+    final color = RokkoTokens.of(context).star;
     return ExcludeSemantics(
       child: Row(
         mainAxisSize: MainAxisSize.min,
