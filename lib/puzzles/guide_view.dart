@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import 'mode_guide.dart';
 
 /// Obiettivo e regole di una modalità, con un pulsante per proseguire.
@@ -22,6 +23,7 @@ class GuideBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
+    final l = AppLocalizations.of(context);
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
       child: Column(
@@ -36,7 +38,7 @@ class GuideBody extends StatelessWidget {
           Semantics(
             header: true,
             child: Text(
-              'Obiettivo',
+              l.puzzleGuideGoalHeading,
               style: text.titleSmall?.copyWith(
                 color: Theme.of(context).colorScheme.primary,
               ),
@@ -48,7 +50,7 @@ class GuideBody extends StatelessWidget {
           Semantics(
             header: true,
             child: Text(
-              'Come si gioca',
+              l.puzzleGuideRulesHeading,
               style: text.titleSmall?.copyWith(
                 color: Theme.of(context).colorScheme.primary,
               ),
@@ -89,7 +91,7 @@ Future<void> showPuzzleGuide(BuildContext context, PuzzleGuide guide) {
     showDragHandle: true,
     builder: (sheet) => GuideBody(
       guide: guide,
-      actionLabel: 'Ho capito',
+      actionLabel: AppLocalizations.of(sheet).puzzleGuideGotIt,
       onAction: () => Navigator.of(sheet).pop(),
     ),
   );

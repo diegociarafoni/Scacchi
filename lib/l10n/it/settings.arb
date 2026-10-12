@@ -14,5 +14,375 @@
   "settingsZenModeDescription": "In partita restano solo scacchiera e mosse: niente Elo, materiale, stato, avvisi dell'allenatore e commenti",
   "@settingsZenModeDescription": {
     "description": "Impostazioni: descrizione"
+  },
+  "settingsTitle": "Impostazioni",
+  "@settingsTitle": {
+    "description": "Impostazioni: titolo della schermata"
+  },
+  "settingsSectionAppearance": "Aspetto",
+  "@settingsSectionAppearance": {
+    "description": "Impostazioni: titolo della sezione"
+  },
+  "settingsSectionAppearanceHint": "Tema dell'app, scacchiera, pezzi e animazioni",
+  "@settingsSectionAppearanceHint": {
+    "description": "Impostazioni: riga sotto il titolo della sezione Aspetto"
+  },
+  "settingsSectionBoard": "Scacchiera",
+  "@settingsSectionBoard": {
+    "description": "Impostazioni: titolo della sezione"
+  },
+  "settingsSectionBoardHint": "Mosse legali, coordinate, frecce e notazione",
+  "@settingsSectionBoardHint": {
+    "description": "Impostazioni: riga sotto il titolo della sezione Scacchiera"
+  },
+  "settingsSectionGame": "Gioco",
+  "@settingsSectionGame": {
+    "description": "Impostazioni: titolo della sezione"
+  },
+  "settingsSectionGameHint": "Promozione, rotazione, modalità tavolo e spiegazioni",
+  "@settingsSectionGameHint": {
+    "description": "Impostazioni: riga sotto il titolo della sezione Gioco"
+  },
+  "settingsSectionAccessibility": "Accessibilità",
+  "@settingsSectionAccessibility": {
+    "description": "Impostazioni: titolo della sezione"
+  },
+  "settingsSectionAccessibilityHint": "Colori per daltonici, modalità zen e conferma della mossa",
+  "@settingsSectionAccessibilityHint": {
+    "description": "Impostazioni: riga sotto il titolo della sezione Accessibilità"
+  },
+  "settingsSectionSound": "Suoni e vibrazione",
+  "@settingsSectionSound": {
+    "description": "Impostazioni: titolo della sezione"
+  },
+  "settingsSectionSoundHint": "Suoni, volume e vibrazione",
+  "@settingsSectionSoundHint": {
+    "description": "Impostazioni: riga sotto il titolo della sezione Suoni"
+  },
+  "settingsSectionData": "Dati",
+  "@settingsSectionData": {
+    "description": "Impostazioni: titolo della sezione"
+  },
+  "settingsSectionDataHint": "Copie di sicurezza dei dati locali",
+  "@settingsSectionDataHint": {
+    "description": "Impostazioni: riga sotto il titolo della sezione Dati"
+  },
+  "settingsPreview": "Anteprima",
+  "@settingsPreview": {
+    "description": "Impostazioni: titolo dell'anteprima della scacchiera"
+  },
+  "settingsPreviewHint": "Tocca per provare la mossa.",
+  "@settingsPreviewHint": {
+    "description": "Impostazioni: invito sotto l'anteprima"
+  },
+  "settingsPreviewCollapse": "Comprimi l'anteprima",
+  "@settingsPreviewCollapse": {
+    "description": "Impostazioni: descrizione del pulsante che comprime l'anteprima"
+  },
+  "settingsPreviewExpand": "Espandi l'anteprima",
+  "@settingsPreviewExpand": {
+    "description": "Impostazioni: descrizione del pulsante che espande l'anteprima"
+  },
+  "settingsPreviewPlay": "Anteprima della scacchiera. Tocca per giocare la mossa di prova",
+  "@settingsPreviewPlay": {
+    "description": "Impostazioni: etichetta per i lettori di schermo dell'anteprima, mossa non ancora giocata"
+  },
+  "settingsPreviewReset": "Anteprima della scacchiera. Tocca per ripristinare la mossa di prova",
+  "@settingsPreviewReset": {
+    "description": "Impostazioni: etichetta per i lettori di schermo dell'anteprima, mossa già giocata"
+  },
+  "settingsAppTheme": "Aspetto dell'app",
+  "@settingsAppTheme": {
+    "description": "Impostazioni: titolo della scelta chiaro/scuro"
+  },
+  "settingsModeSystem": "Sistema",
+  "@settingsModeSystem": {
+    "description": "Impostazioni: aspetto dell'app che segue il telefono"
+  },
+  "settingsModeLight": "Chiaro",
+  "@settingsModeLight": {
+    "description": "Impostazioni: aspetto chiaro dell'app"
+  },
+  "settingsModeDark": "Scuro",
+  "@settingsModeDark": {
+    "description": "Impostazioni: aspetto scuro dell'app"
+  },
+  "settingsBoardTheme": "Tema della scacchiera",
+  "@settingsBoardTheme": {
+    "description": "Impostazioni: titolo della galleria dei temi"
+  },
+  "settingsPieces": "Pezzi",
+  "@settingsPieces": {
+    "description": "Impostazioni: titolo della galleria dei pezzi"
+  },
+  "settingsAnimations": "Animazioni",
+  "@settingsAnimations": {
+    "description": "Impostazioni: titolo della velocità delle animazioni"
+  },
+  "settingsAnimationNone": "Nessuna",
+  "@settingsAnimationNone": {
+    "description": "Impostazioni: animazioni spente"
+  },
+  "settingsAnimationFast": "Veloce",
+  "@settingsAnimationFast": {
+    "description": "Impostazioni: animazioni veloci"
+  },
+  "settingsAnimationNormal": "Normale",
+  "@settingsAnimationNormal": {
+    "description": "Impostazioni: animazioni normali"
+  },
+  "settingsAnimationSlow": "Lenta",
+  "@settingsAnimationSlow": {
+    "description": "Impostazioni: animazioni lente"
+  },
+  "settingsNotation": "Notazione delle mosse",
+  "@settingsNotation": {
+    "description": "Impostazioni: titolo della scelta della notazione"
+  },
+  "settingsNotationFigurine": "Figurativa",
+  "@settingsNotationFigurine": {
+    "description": "Impostazioni: notazione con i simboli dei pezzi"
+  },
+  "settingsNotationItalian": "Italiana",
+  "@settingsNotationItalian": {
+    "description": "Impostazioni: notazione con le iniziali italiane dei pezzi"
+  },
+  "settingsNotationEnglish": "Inglese",
+  "@settingsNotationEnglish": {
+    "description": "Impostazioni: notazione con le iniziali inglesi dei pezzi"
+  },
+  "settingsNotationChoice": "{name} ({example})",
+  "@settingsNotationChoice": {
+    "description": "Impostazioni: nome della notazione con un esempio di mossa",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "example": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsPieceClassic": "Classico",
+  "@settingsPieceClassic": {
+    "description": "Impostazioni: nome del set di pezzi classico; gli altri set hanno nomi propri non tradotti"
+  },
+  "settingsLegalMoves": "Mostra le mosse legali",
+  "@settingsLegalMoves": {
+    "description": "Impostazioni: interruttore"
+  },
+  "settingsCoordinates": "Coordinate",
+  "@settingsCoordinates": {
+    "description": "Impostazioni: interruttore"
+  },
+  "settingsCoordinatesOutside": "Coordinate fuori dalla scacchiera",
+  "@settingsCoordinatesOutside": {
+    "description": "Impostazioni: interruttore"
+  },
+  "settingsCoordinatesOutsideDescription": "Lettere e numeri sul bordo, senza coprire i pezzi",
+  "@settingsCoordinatesOutsideDescription": {
+    "description": "Impostazioni: descrizione"
+  },
+  "settingsDrawShapes": "Frecce e cerchi",
+  "@settingsDrawShapes": {
+    "description": "Impostazioni: interruttore"
+  },
+  "settingsDrawShapesDescription": "Disegna con due dita sulla scacchiera",
+  "@settingsDrawShapesDescription": {
+    "description": "Impostazioni: descrizione"
+  },
+  "settingsAutoQueen": "Promuovi sempre a donna",
+  "@settingsAutoQueen": {
+    "description": "Impostazioni: interruttore"
+  },
+  "settingsAutoFlip": "Ruota a ogni turno",
+  "@settingsAutoFlip": {
+    "description": "Impostazioni: interruttore"
+  },
+  "settingsAutoFlipDescription": "Nelle partite tra due persone",
+  "@settingsAutoFlipDescription": {
+    "description": "Impostazioni: descrizione"
+  },
+  "settingsTableMode": "Modalità tavolo",
+  "@settingsTableMode": {
+    "description": "Impostazioni: interruttore"
+  },
+  "settingsTableModeDescription": "Pezzi in alto capovolti, per giocare uno di fronte all'altro",
+  "@settingsTableModeDescription": {
+    "description": "Impostazioni: descrizione"
+  },
+  "settingsColorBlind": "Colori per daltonici",
+  "@settingsColorBlind": {
+    "description": "Impostazioni: interruttore"
+  },
+  "settingsColorBlindDescription": "Evidenziazioni senza rosso né verde, ben contrastate su ogni tema",
+  "@settingsColorBlindDescription": {
+    "description": "Impostazioni: descrizione"
+  },
+  "settingsConfirmMove": "Conferma la mossa",
+  "@settingsConfirmMove": {
+    "description": "Impostazioni: interruttore"
+  },
+  "settingsConfirmMoveDescription": "Chiede conferma prima di giocare ogni mossa",
+  "@settingsConfirmMoveDescription": {
+    "description": "Impostazioni: descrizione"
+  },
+  "settingsSound": "Suoni",
+  "@settingsSound": {
+    "description": "Impostazioni: interruttore"
+  },
+  "settingsVolume": "Volume",
+  "@settingsVolume": {
+    "description": "Impostazioni: cursore del volume"
+  },
+  "settingsVolumeValue": "{percent}%",
+  "@settingsVolumeValue": {
+    "description": "Impostazioni: valore del volume letto dai lettori di schermo",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsHaptics": "Vibrazione",
+  "@settingsHaptics": {
+    "description": "Impostazioni: interruttore"
+  },
+  "settingsBackup": "Backup e ripristino",
+  "@settingsBackup": {
+    "description": "Impostazioni: voce che apre la schermata di backup"
+  },
+  "settingsBackupDescription": "Salva o recupera tutti i dati locali",
+  "@settingsBackupDescription": {
+    "description": "Impostazioni: descrizione della voce di backup"
+  },
+  "settingsUnlockAll": "Sblocca tutto",
+  "@settingsUnlockAll": {
+    "description": "Impostazioni: interruttore"
+  },
+  "settingsUnlockAllDescription": "Temi, pezzi e avatar disponibili senza doverli sbloccare",
+  "@settingsUnlockAllDescription": {
+    "description": "Impostazioni: descrizione"
+  },
+  "settingsUnlockWith": "Si sblocca con: {requirement}",
+  "@settingsUnlockWith": {
+    "description": "Impostazioni: condizione per sbloccare un tema o un set di pezzi",
+    "placeholders": {
+      "requirement": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLockedMessage": "{name} si sblocca con: {requirement}",
+  "@settingsLockedMessage": {
+    "description": "Impostazioni: avviso al tocco di una scelta bloccata",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "requirement": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLockedKidMessage": "{name}: {reason}",
+  "@settingsLockedKidMessage": {
+    "description": "Impostazioni: avviso al tocco di una scelta bloccata nel profilo bambino; reason è già una frase breve",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsLockedSemantics": "{name}, bloccato. {reason}",
+  "@settingsLockedSemantics": {
+    "description": "Impostazioni: etichetta per i lettori di schermo di una scelta bloccata",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsThemeGreen": "Verde",
+  "@settingsThemeGreen": {
+    "description": "Impostazioni: nome del tema della scacchiera"
+  },
+  "settingsThemeBrown": "Legno",
+  "@settingsThemeBrown": {
+    "description": "Impostazioni: nome del tema della scacchiera"
+  },
+  "settingsThemeBlue": "Blu",
+  "@settingsThemeBlue": {
+    "description": "Impostazioni: nome del tema della scacchiera"
+  },
+  "settingsThemeGrey": "Grigio",
+  "@settingsThemeGrey": {
+    "description": "Impostazioni: nome del tema della scacchiera"
+  },
+  "settingsThemeSand": "Sabbia",
+  "@settingsThemeSand": {
+    "description": "Impostazioni: nome del tema della scacchiera"
+  },
+  "settingsThemeOcean": "Oceano",
+  "@settingsThemeOcean": {
+    "description": "Impostazioni: nome del tema della scacchiera"
+  },
+  "settingsThemeCoral": "Corallo",
+  "@settingsThemeCoral": {
+    "description": "Impostazioni: nome del tema della scacchiera"
+  },
+  "settingsThemeNight": "Notte",
+  "@settingsThemeNight": {
+    "description": "Impostazioni: nome del tema della scacchiera"
+  },
+  "settingsThemeGold": "Oro",
+  "@settingsThemeGold": {
+    "description": "Impostazioni: nome del tema della scacchiera"
+  },
+  "settingsThemeArancia": "Arancia",
+  "@settingsThemeArancia": {
+    "description": "Impostazioni: nome del tema della scacchiera"
+  },
+  "settingsThemeCrepuscolo": "Crepuscolo",
+  "@settingsThemeCrepuscolo": {
+    "description": "Impostazioni: nome del tema della scacchiera"
+  },
+  "settingsThemePergamena": "Pergamena",
+  "@settingsThemePergamena": {
+    "description": "Impostazioni: nome del tema della scacchiera"
+  },
+  "settingsThemeCastello": "Castello",
+  "@settingsThemeCastello": {
+    "description": "Impostazioni: nome del tema della scacchiera"
+  },
+  "settingsThemeBosco": "Bosco elfico",
+  "@settingsThemeBosco": {
+    "description": "Impostazioni: nome del tema della scacchiera"
+  },
+  "settingsThemeNoce": "Noce",
+  "@settingsThemeNoce": {
+    "description": "Impostazioni: nome del tema della scacchiera"
+  },
+  "settingsThemeSpazio": "Spazio",
+  "@settingsThemeSpazio": {
+    "description": "Impostazioni: nome del tema della scacchiera"
+  },
+  "settingsThemeRetro": "Retrò",
+  "@settingsThemeRetro": {
+    "description": "Impostazioni: nome del tema della scacchiera"
+  },
+  "settingsThemeGiardino": "Giardino",
+  "@settingsThemeGiardino": {
+    "description": "Impostazioni: nome del tema della scacchiera"
+  },
+  "settingsThemeTerracotta": "Terracotta",
+  "@settingsThemeTerracotta": {
+    "description": "Impostazioni: nome del tema della scacchiera"
   }
 }

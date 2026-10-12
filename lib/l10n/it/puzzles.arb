@@ -143,5 +143,381 @@
         "type": "int"
       }
     }
+  },
+  "puzzleHubTitle": "Puzzle",
+  "@puzzleHubTitle": {
+    "description": "Titolo della scheda Puzzle"
+  },
+  "puzzleHubLoadError": "Impossibile caricare i puzzle.",
+  "@puzzleHubLoadError": {
+    "description": "Errore di caricamento dei puzzle"
+  },
+  "puzzleHubRating": "Punteggio {rating}",
+  "@puzzleHubRating": {
+    "description": "Punteggio in cima alla scheda Puzzle",
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleHubStats": "Risolti {solved} · Sbagliati {failed} · {total} puzzle disponibili",
+  "@puzzleHubStats": {
+    "description": "Riga sotto il punteggio",
+    "placeholders": {
+      "solved": {
+        "type": "int"
+      },
+      "failed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleTraining": "Allenamento",
+  "@puzzleTraining": {
+    "description": "Voce Allenamento"
+  },
+  "puzzleTrainingSubtitle": "Puzzle adatti al tuo punteggio",
+  "@puzzleTrainingSubtitle": {
+    "description": "Sottotitolo di Allenamento"
+  },
+  "puzzleDailyTitle": "Puzzle del giorno",
+  "@puzzleDailyTitle": {
+    "description": "Puzzle del giorno: voce e titolo"
+  },
+  "puzzleDailySubtitle": "Difficoltà {rating}",
+  "@puzzleDailySubtitle": {
+    "description": "Sottotitolo del puzzle del giorno",
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleByTheme": "Per tema",
+  "@puzzleByTheme": {
+    "description": "Voce Per tema"
+  },
+  "puzzleByThemeSubtitle": "Matti, forchette, finali e altro",
+  "@puzzleByThemeSubtitle": {
+    "description": "Sottotitolo di Per tema"
+  },
+  "puzzleThemesTitle": "Temi",
+  "@puzzleThemesTitle": {
+    "description": "Titolo dell'elenco dei temi"
+  },
+  "puzzleReview": "Ripasso degli errori",
+  "@puzzleReview": {
+    "description": "Voce Ripasso degli errori"
+  },
+  "puzzleReviewTitle": "Ripasso",
+  "@puzzleReviewTitle": {
+    "description": "Titolo della schermata di ripasso"
+  },
+  "puzzleReviewNone": "Nessun puzzle da ripassare oggi",
+  "@puzzleReviewNone": {
+    "description": "Nessun puzzle da ripassare"
+  },
+  "puzzleReviewDue": "{count} da ripassare oggi",
+  "@puzzleReviewDue": {
+    "description": "Puzzle da ripassare",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleSectionTimed": "Modalità a tempo",
+  "@puzzleSectionTimed": {
+    "description": "Intestazione delle modalità a tempo"
+  },
+  "puzzleSectionPractice": "Allenati",
+  "@puzzleSectionPractice": {
+    "description": "Intestazione delle modalità libere"
+  },
+  "puzzleRecord": "Record {best}",
+  "@puzzleRecord": {
+    "description": "Record della modalità",
+    "placeholders": {
+      "best": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunLabel": "{mode, select, storm{Combo a tempo} rush3{Corsa 3 minuti} rush5{Corsa 5 minuti} survival{Sopravvivenza} other{Serie}}",
+  "@puzzleRunLabel": {
+    "description": "Nome della modalità a serie",
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleRunDescription": "{mode, select, storm{3 minuti, secondi bonus con le combo} rush3{3 minuti, tre errori} rush5{5 minuti, tre errori} survival{Senza tempo, tre errori} other{Senza tempo, finisce al primo errore}}",
+  "@puzzleRunDescription": {
+    "description": "Descrizione della modalità a serie",
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleDefaultTitle": "Puzzle",
+  "@puzzleDefaultTitle": {
+    "description": "Titolo predefinito della schermata del puzzle"
+  },
+  "puzzleEmpty": "Nessun puzzle da proporre.",
+  "@puzzleEmpty": {
+    "description": "Nessun puzzle disponibile"
+  },
+  "puzzleHelp": "Come funziona",
+  "@puzzleHelp": {
+    "description": "Pulsante che riapre la spiegazione"
+  },
+  "puzzleSide": "{side, select, white{Bianco} other{Nero}}",
+  "@puzzleSide": {
+    "description": "Colore che muove",
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleFind": "Trova la mossa migliore per il {side}.",
+  "@puzzleFind": {
+    "description": "Invito a trovare la mossa",
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleRestarted": "Posizione iniziale. Trova la mossa migliore per il {side}.",
+  "@puzzleRestarted": {
+    "description": "Dopo aver ricominciato",
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleCorrect": "Giusto! Continua.",
+  "@puzzleCorrect": {
+    "description": "Mossa giusta"
+  },
+  "puzzleWrong": "Non è la mossa giusta. Premi «Riprova» per ricominciare.",
+  "@puzzleWrong": {
+    "description": "Mossa sbagliata"
+  },
+  "puzzleSolved": "Risolto!",
+  "@puzzleSolved": {
+    "description": "Puzzle risolto"
+  },
+  "puzzleDone": "Puzzle concluso.",
+  "@puzzleDone": {
+    "description": "Puzzle concluso dopo errori o soluzione"
+  },
+  "puzzleRevealed": "Ecco la mossa giusta.",
+  "@puzzleRevealed": {
+    "description": "Mossa mostrata"
+  },
+  "puzzleOutcomeRepeat": "Già visto: punteggio invariato.",
+  "@puzzleOutcomeRepeat": {
+    "description": "Puzzle già visto"
+  },
+  "puzzleOutcomeRating": "Punteggio {rating} ({delta}).",
+  "@puzzleOutcomeRating": {
+    "description": "Punteggio dopo il puzzle",
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      },
+      "delta": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleNoMore": "Non ci sono altri puzzle per ora.",
+  "@puzzleNoMore": {
+    "description": "Fine dei puzzle"
+  },
+  "puzzleDifficulty": "Puzzle {rating}",
+  "@puzzleDifficulty": {
+    "description": "Difficoltà del puzzle risolto",
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleYourRating": "Il tuo punteggio: {rating}",
+  "@puzzleYourRating": {
+    "description": "Punteggio sotto la scacchiera",
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleProgress": "Mosse trovate: {done} di {total}",
+  "@puzzleProgress": {
+    "description": "Mosse trovate",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleProgressKid": "Avanzamento del puzzle",
+  "@puzzleProgressKid": {
+    "description": "Avanzamento senza cifre"
+  },
+  "puzzleHint": "Suggerimento",
+  "@puzzleHint": {
+    "description": "Pulsante suggerimento"
+  },
+  "puzzleSolution": "Soluzione",
+  "@puzzleSolution": {
+    "description": "Pulsante soluzione"
+  },
+  "puzzleRetry": "Riprova",
+  "@puzzleRetry": {
+    "description": "Pulsante riprova"
+  },
+  "puzzleNext": "Prossimo",
+  "@puzzleNext": {
+    "description": "Pulsante prossimo"
+  },
+  "puzzleSkip": "Salta",
+  "@puzzleSkip": {
+    "description": "Pulsante salta"
+  },
+  "puzzleRunStart": "Inizia",
+  "@puzzleRunStart": {
+    "description": "Pulsante che avvia la serie"
+  },
+  "puzzleRunRecordFooter": "Il tuo record: {best} puzzle.",
+  "@puzzleRunRecordFooter": {
+    "description": "Record sotto le regole",
+    "placeholders": {
+      "best": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunRight": "Giusto!",
+  "@puzzleRunRight": {
+    "description": "Esito giusto"
+  },
+  "puzzleRunWrong": "Sbagliato",
+  "@puzzleRunWrong": {
+    "description": "Esito sbagliato"
+  },
+  "puzzleRunEndMistake": "Hai sbagliato un puzzle: la serie è finita.",
+  "@puzzleRunEndMistake": {
+    "description": "Fine per un errore"
+  },
+  "puzzleRunEndLives": "Hai perso tutte e tre le vite.",
+  "@puzzleRunEndLives": {
+    "description": "Fine per le vite"
+  },
+  "puzzleRunEndTime": "Il tempo è scaduto.",
+  "@puzzleRunEndTime": {
+    "description": "Fine per il tempo"
+  },
+  "puzzleRunEndExhausted": "Hai risolto tutti i puzzle disponibili.",
+  "@puzzleRunEndExhausted": {
+    "description": "Fine per esaurimento"
+  },
+  "puzzleRunScore": "Punti {score}",
+  "@puzzleRunScore": {
+    "description": "Punti della serie",
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunTimeLeft": "Tempo rimasto: {time}",
+  "@puzzleRunTimeLeft": {
+    "description": "Tempo rimasto, per i lettori di schermo",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleRunCombo": "Combo {combo}",
+  "@puzzleRunCombo": {
+    "description": "Combo in corso",
+    "placeholders": {
+      "combo": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunLives": "Vite: {left} su {total}",
+  "@puzzleRunLives": {
+    "description": "Vite rimaste",
+    "placeholders": {
+      "left": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunOver": "Serie conclusa",
+  "@puzzleRunOver": {
+    "description": "Titolo del risultato"
+  },
+  "puzzleRunSolvedLabel": "puzzle risolti",
+  "@puzzleRunSolvedLabel": {
+    "description": "Etichetta sotto il punteggio finale"
+  },
+  "puzzleRunNewRecord": "Nuovo record personale!",
+  "@puzzleRunNewRecord": {
+    "description": "Nuovo record"
+  },
+  "puzzleRunBest": "Record: {best}",
+  "@puzzleRunBest": {
+    "description": "Record personale",
+    "placeholders": {
+      "best": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunBestCombo": "Combo migliore: {combo}",
+  "@puzzleRunBestCombo": {
+    "description": "Combo migliore",
+    "placeholders": {
+      "combo": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunAgain": "Gioca ancora",
+  "@puzzleRunAgain": {
+    "description": "Pulsante rigioca"
+  },
+  "puzzleGuideGoalHeading": "Obiettivo",
+  "@puzzleGuideGoalHeading": {
+    "description": "Intestazione della spiegazione"
+  },
+  "puzzleGuideRulesHeading": "Come si gioca",
+  "@puzzleGuideRulesHeading": {
+    "description": "Intestazione della spiegazione"
+  },
+  "puzzleGuideGotIt": "Ho capito",
+  "@puzzleGuideGotIt": {
+    "description": "Chiude la spiegazione"
   }
 }
