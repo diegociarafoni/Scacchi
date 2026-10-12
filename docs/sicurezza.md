@@ -17,7 +17,7 @@ CodeQL non supporta Dart, quindi non è usato.
 
 Le eccezioni di Gitleaks stanno in `.gitleaks.toml`, ognuna con il motivo. Oggi c'è solo `assets/puzzles/puzzles.csv`: alcuni identificativi dei puzzle Lichess (per esempio `MKEY8`) somigliano a chiavi API. Ogni nuova eccezione va verificata a mano e limitata al file che la richiede.
 
-I report SARIF di ogni scanner sono nell'artefatto `security-reports` del workflow e vengono caricati nella scheda **Security → Code scanning** di GitHub. Sui repository privati il code scanning richiede GitHub Code Security: senza, il caricamento fallisce senza bloccare il workflow (`continue-on-error`) e i report restano consultabili negli artefatti.
+I report SARIF di ogni scanner sono nell'artefatto `security-reports` del workflow e vengono caricati nella scheda **Security → Code scanning** di GitHub. Il repository è pubblico, quindi il code scanning è disponibile senza costi. Il caricamento resta con `continue-on-error`: se fallisce (per esempio su un fork senza il permesso `security-events`) non blocca il workflow e i report restano consultabili negli artefatti.
 
 ## Catena di fornitura
 
