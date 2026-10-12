@@ -13,6 +13,8 @@ import '../review/score_format.dart';
 import '../review/win_probability.dart';
 import '../settings/notation.dart';
 import '../settings/settings.dart';
+import '../tablebase/perfect_endgame_card.dart';
+import '../tablebase/tablebase_service.dart';
 import 'variation_tree.dart';
 
 /// Analisi continua di [fen] con [multiPv] varianti, interrotta annullando
@@ -27,10 +29,15 @@ class AnalysisPage extends StatefulWidget {
     required this.initial,
     required this.analyse,
     this.orientation = Side.white,
+    this.tablebase,
   });
 
   final Position initial;
   final LiveAnalysis analyse;
+
+  /// Finali perfetti (RF-97): se c'è, con al massimo quattro pezzi compare
+  /// il risultato esatto.
+  final TablebaseService? tablebase;
 
   /// Lato del giocatore, in basso sulla scacchiera.
   final Side orientation;
@@ -335,6 +342,14 @@ class _AnalysisPageState extends State<AnalysisPage>
                             ],
                           ),
                         ),
+                        if (widget.tablebase != null)
+                          PerfectEndgameCard(
+                            service: widget.tablebase!,
+                            position: _pos,
+                            notation: AppSettings.of(context).notation,
+                            kid: AppSettings.of(context).kidMode,
+                            onBestMove: _play,
+                          ),
                         for (final line in _lines) _lineTile(line),
                         if (_tree.root.children.isNotEmpty) ...[
                           _treeActions(),

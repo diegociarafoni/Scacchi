@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 
 import '../engine/computer_player.dart';
 import '../settings/settings.dart';
+import '../tablebase/perfect_endgame_card.dart';
+import '../tablebase/tablebase_service.dart';
 import 'drill.dart';
 import 'endgame_controller.dart';
 
@@ -17,6 +19,7 @@ class DrillPage extends StatefulWidget {
     required this.controller,
     required this.createComputer,
     this.simple = false,
+    this.tablebase,
   });
 
   final EndgameDrill drill;
@@ -25,6 +28,10 @@ class DrillPage extends StatefulWidget {
 
   /// Profilo bambino: niente conteggio delle mosse.
   final bool simple;
+
+  /// Finali perfetti (RF-97): nelle posizioni con al massimo quattro pezzi
+  /// mostra il risultato esatto e, a richiesta, la mossa perfetta.
+  final TablebaseService? tablebase;
 
   @override
   State<DrillPage> createState() => _DrillPageState();
@@ -40,6 +47,9 @@ class _DrillPageState extends State<DrillPage> {
   bool _started = false;
   bool _thinking = false;
   bool _engineFailed = false;
+
+  /// Mossa perfetta mostrata sulla scacchiera, finché non si muove.
+  Move? _hint;
 
   /// Cambia a ogni «Riprova»: una risposta della prova precedente si scarta.
   int _attempt = 0;
@@ -79,7 +89,10 @@ class _DrillPageState extends State<DrillPage> {
 
   Future<void> _onMove(Move move, {bool? viaDragAndDrop}) async {
     if (!_run.play(move)) return;
-    setState(() => _thinking = _run.state == DrillState.playing);
+    setState(() {
+      _hint = null;
+      _thinking = _run.state == DrillState.playing;
+    });
     _board.updatePosition(
       _gameData(lastMove: move),
       animate: viaDragAndDrop != true,
@@ -134,11 +147,20 @@ class _DrillPageState extends State<DrillPage> {
       _run = DrillRun(widget.drill);
       _thinking = false;
       _engineFailed = false;
+      _hint = null;
     });
     _clock
       ..reset()
       ..start();
     _board.updatePosition(_gameData(), animate: false);
+  }
+
+  Set<Shape> _hintShapes() {
+    final hint = _hint;
+    if (hint is! NormalMove) return const {};
+    return {
+      Arrow(color: const Color(0xCC3E8E2F), orig: hint.from, dest: hint.to),
+    };
   }
 
   String get _counter => switch (widget.drill.goal) {
@@ -169,6 +191,7 @@ class _DrillPageState extends State<DrillPage> {
               controller: _board,
               orientation: _run.side,
               onMove: _onMove,
+              shapes: _hintShapes(),
               settings: ChessboardSettings(
                 colorScheme: AppSettings.of(context).exerciseScheme,
                 autoQueenPromotion: true,
@@ -186,6 +209,16 @@ class _DrillPageState extends State<DrillPage> {
                   else ...[
                     if (!widget.simple)
                       Text(_counter, textAlign: TextAlign.center),
+                    if (widget.tablebase != null &&
+                        _run.userToMove &&
+                        !_thinking)
+                      PerfectEndgameCard(
+                        service: widget.tablebase!,
+                        position: _run.position,
+                        notation: AppSettings.of(context).notation,
+                        kid: widget.simple,
+                        onBestMove: (move) => setState(() => _hint = move),
+                      ),
                     if (_thinking)
                       const Padding(
                         padding: EdgeInsets.all(8),

@@ -403,5 +403,15 @@
       }
     }
   },
-  "storyCrownOutro": "The crown is yours. The kingdom is at peace and every new game is a new story."
+  "storyCrownOutro": "The crown is yours. The kingdom is at peace and every new game is a new story.",
+  "tablebaseTitle": "Perfect endgame",
+  "tablebaseCalculating": "Working out the perfect endgame… this only happens the first time",
+  "tablebaseWhiteMates": "{moves, plural, one{White wins: mate in {moves} move} other{White wins: mate in {moves} moves}}",
+  "tablebaseBlackMates": "{moves, plural, one{Black wins: mate in {moves} move} other{Black wins: mate in {moves} moves}}",
+  "tablebaseWhiteWins": "White wins",
+  "tablebaseBlackWins": "Black wins",
+  "tablebaseDraw": "Draw with perfect play",
+  "tablebaseBestMove": "Perfect move: {move}",
+  "tablebaseBestMoveHint": "Play the perfect move",
+  "tablebaseShowMove": "Show the perfect move"
 }
