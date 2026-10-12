@@ -18,18 +18,23 @@ Ogni cartella di `lib/` ha qui il documento che descrive le sue funzioni. La tab
 | `lib/home/` | [interfaccia.md](interfaccia.md), [architettura.md](architettura.md) | Barra di navigazione e scheda Tu |
 | `lib/kids/` | [profilo-bambino.md](profilo-bambino.md) | Profilo bambino senza numeri |
 | `lib/l10n/` | [localizzazione.md](localizzazione.md) | Testi tradotti |
+| `lib/masters/` | [grandi-maestri.md](grandi-maestri.md) | Partite dei grandi maestri: raccolta, commento, «Indovina la mossa» |
 | `lib/minigames/` | [minigiochi.md](minigiochi.md) | Minigiochi di allenamento |
 | `lib/multiplayer/` | [multigiocatore.md](multigiocatore.md) | Partita tra due telefoni: invito, firma e cifratura, registro delle mosse, canali |
 | `lib/openings/` | [aperture.md](aperture.md) | Nomi delle aperture, explorer, repertorio |
 | `lib/path/` | [percorso.md](percorso.md) | Percorso a tappe con stelle e guardiani |
 | `lib/physical/` | [scacchiera-fisica.md](scacchiera-fisica.md) | Orologio e registro per la scacchiera reale |
 | `lib/progress/` | [gamification.md](gamification.md) | XP, livelli, obiettivo giornaliero, serie, traguardi, ricompense |
-| `lib/puzzles/` | [puzzle.md](puzzle.md) | Puzzle, modalità a tempo, ripasso degli errori |
+| `lib/puzzles/` | [puzzle.md](puzzle.md) | Puzzle, modalità a tempo, sfida a tempo tra amici, ripasso degli errori |
 | `lib/reminders/` | [gamification.md](gamification.md) | Promemoria giornaliero con notifiche locali |
 | `lib/review/` | [revisione-partita.md](revisione-partita.md) | Revisione della partita, classificazione delle mosse, precisione |
 | `lib/settings/` | [interfaccia.md](interfaccia.md), [pezzi-e-scacchiere.md](pezzi-e-scacchiere.md), [notazione.md](notazione.md), [profilo-bambino.md](profilo-bambino.md) | Impostazioni, temi e pezzi, coordinate esterne, colori per daltonici, controllo dell'adulto |
+| `lib/share/` | [esporta-immagine.md](esporta-immagine.md) | Esportazione della posizione come immagine PNG e condivisione con il menu di sistema |
 | `lib/stats/` | [statistiche.md](statistiche.md), [ritratto-settimana.md](ritratto-settimana.md) | Statistiche, rating locale, la tua settimana |
 | `lib/storage/` | [architettura.md](architettura.md), [gamification.md](gamification.md) | File JSON locali con versione e scrittura atomica |
+| `lib/story/` | [storia.md](storia.md) | Percorso a storia: capitoli con racconto, lezioni, puzzle, guardiani e un bot da battere |
+| `lib/tablebase/` | [finali-perfetti.md](finali-perfetti.md) | Finali perfetti: tabelle del matto esatto fino a quattro pezzi, generate sul telefono, scheda con risultato e mossa perfetta |
+| `lib/summary/` | [riepilogo-settimanale.md](riepilogo-settimanale.md) | Riepilogo settimanale: progressi, errore ricorrente, un consiglio |
 | `lib/tournament/` | [tornei.md](tornei.md) | Tornei offline contro bot |
 | `lib/training/` | [puzzle.md](puzzle.md) | Scacchiera per esercizi condivisa |
 

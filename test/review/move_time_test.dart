@@ -8,6 +8,19 @@ Duration s(int n) => Duration(seconds: n);
 void main() {
   const control = TimeControl(minutes: 1, increment: 2);
 
+  group('timeSpent con tempi iniziali diversi (RF-27)', () {
+    test('la prima mossa di ogni lato parte dal suo tempo', () {
+      final spent = timeSpent(
+        [s(58), s(55), s(50)],
+        first: Side.white,
+        control: control,
+        startTimes: {Side.white: s(60), Side.black: s(180)},
+      );
+      // Bianco 60 → 58; Nero 180 → 55; Bianco 58 + 2 − 50.
+      expect(spent, [s(2), s(125), s(10)]);
+    });
+  });
+
   group('timeSpent (RF-67)', () {
     test(
       'differenza tra i tempi residui dello stesso lato più l\'incremento',

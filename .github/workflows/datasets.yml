@@ -38,6 +38,7 @@ jobs:
           flutter-version: 3.47.7
           cache: true
       # This commit does not trigger CI: validate the datasets here.
+      - run: dart tool/l10n.dart --solo-unione
       - name: Validate
         run: flutter test test/puzzles/puzzle_dataset_test.dart test/openings/opening_book_test.dart
       # Il token si usa solo nel push, senza restare nella configurazione di git.

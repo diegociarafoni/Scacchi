@@ -104,6 +104,480 @@ abstract class AppLocalizations {
   /// **'Rokko'**
   String get appTitle;
 
+  /// Titolo della pagina di backup
+  ///
+  /// In it, this message translates to:
+  /// **'Backup e ripristino'**
+  String get backupTitle;
+
+  /// No description provided for @backupIntro.
+  ///
+  /// In it, this message translates to:
+  /// **'Il backup contiene partite, progressi, percorso, tornei, allenamento e impostazioni. Salvalo in un posto sicuro: senza rete non esiste una copia online.'**
+  String get backupIntro;
+
+  /// Pulsante che esporta il backup con la condivisione di sistema
+  ///
+  /// In it, this message translates to:
+  /// **'Condividi il backup'**
+  String get backupShare;
+
+  /// Oggetto proposto dalla condivisione di sistema, per esempio nelle email
+  ///
+  /// In it, this message translates to:
+  /// **'Backup di Rokko'**
+  String get backupShareSubject;
+
+  /// Pulsante che apre la finestra per incollare un backup
+  ///
+  /// In it, this message translates to:
+  /// **'Ripristina da testo'**
+  String get backupRestoreFromText;
+
+  /// No description provided for @backupExported.
+  ///
+  /// In it, this message translates to:
+  /// **'Backup pronto da salvare'**
+  String get backupExported;
+
+  /// Errore tecnico durante l'esportazione
+  ///
+  /// In it, this message translates to:
+  /// **'Backup non riuscito: {error}'**
+  String backupExportFailed(String error);
+
+  /// No description provided for @backupRestoreStaged.
+  ///
+  /// In it, this message translates to:
+  /// **'Backup pronto. Chiudi e riapri l\'app per ripristinare i dati.'**
+  String get backupRestoreStaged;
+
+  /// Errore tecnico durante il ripristino
+  ///
+  /// In it, this message translates to:
+  /// **'Ripristino non riuscito: {error}'**
+  String backupRestoreFailed(String error);
+
+  /// No description provided for @backupErrorNotApp.
+  ///
+  /// In it, this message translates to:
+  /// **'Non è un backup di Rokko'**
+  String get backupErrorNotApp;
+
+  /// No description provided for @backupErrorNewerVersion.
+  ///
+  /// In it, this message translates to:
+  /// **'Backup creato da una versione più recente'**
+  String get backupErrorNewerVersion;
+
+  /// No description provided for @backupErrorUnexpectedFile.
+  ///
+  /// In it, this message translates to:
+  /// **'File inatteso nel backup: {file}'**
+  String backupErrorUnexpectedFile(String file);
+
+  /// No description provided for @backupErrorInvalidFile.
+  ///
+  /// In it, this message translates to:
+  /// **'File non valido nel backup: {file}'**
+  String backupErrorInvalidFile(String file);
+
+  /// No description provided for @backupErrorInvalidPreference.
+  ///
+  /// In it, this message translates to:
+  /// **'Preferenza non valida: {name}'**
+  String backupErrorInvalidPreference(String name);
+
+  /// No description provided for @backupErrorUnreadable.
+  ///
+  /// In it, this message translates to:
+  /// **'Backup non leggibile'**
+  String get backupErrorUnreadable;
+
+  /// No description provided for @backupRestoreDialogTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Ripristina il backup'**
+  String get backupRestoreDialogTitle;
+
+  /// No description provided for @backupRestoreDialogBody.
+  ///
+  /// In it, this message translates to:
+  /// **'Incolla il contenuto del file di backup. I dati attuali vengono sostituiti.'**
+  String get backupRestoreDialogBody;
+
+  /// No description provided for @backupCancel.
+  ///
+  /// In it, this message translates to:
+  /// **'Annulla'**
+  String get backupCancel;
+
+  /// Conferma del ripristino
+  ///
+  /// In it, this message translates to:
+  /// **'Ripristina'**
+  String get backupRestore;
+
+  /// Nome del pezzo con l'articolo, per le frasi di «spiegami perché»
+  ///
+  /// In it, this message translates to:
+  /// **'{role, select, pawn{il pedone} knight{il cavallo} bishop{l\'alfiere} rook{la torre} queen{la donna} other{il re}}'**
+  String whyPiece(String role);
+
+  /// Spiegami perché: la mossa dà matto
+  ///
+  /// In it, this message translates to:
+  /// **'Scacco matto!'**
+  String get whyMate;
+
+  /// Spiegami perché: arrocco
+  ///
+  /// In it, this message translates to:
+  /// **'Arrocca: mette il re al sicuro.'**
+  String get whyCastle;
+
+  /// Spiegami perché: promozione
+  ///
+  /// In it, this message translates to:
+  /// **'Promuove il pedone: diventa {role, select, queen{una donna} rook{una torre} bishop{un alfiere} knight{un cavallo} other{un pezzo}}.'**
+  String whyPromote(String role);
+
+  /// Spiegami perché: cattura
+  ///
+  /// In it, this message translates to:
+  /// **'Cattura {victim} con {attacker}.'**
+  String whyCapture(String victim, String attacker);
+
+  /// Spiegami perché: scacco
+  ///
+  /// In it, this message translates to:
+  /// **'Dà scacco al tuo re.'**
+  String get whyCheck;
+
+  /// Spiegami perché: pezzo salvato
+  ///
+  /// In it, this message translates to:
+  /// **'Mette al sicuro {piece}, che era sotto attacco.'**
+  String whySafe(String piece);
+
+  /// Spiegami perché: minaccia di cattura
+  ///
+  /// In it, this message translates to:
+  /// **'Minaccia di catturare {victim} in {square}.'**
+  String whyThreatCapture(String victim, String square);
+
+  /// Spiegami perché, profilo bambino: minaccia di cattura senza casa
+  ///
+  /// In it, this message translates to:
+  /// **'Minaccia di catturare {victim}.'**
+  String whyThreatCaptureKid(String victim);
+
+  /// Spiegami perché: minaccia di scacco
+  ///
+  /// In it, this message translates to:
+  /// **'Prepara uno scacco al tuo re.'**
+  String get whyThreatCheck;
+
+  /// Spiegami perché: minaccia di promozione
+  ///
+  /// In it, this message translates to:
+  /// **'Prepara la promozione di un pedone.'**
+  String get whyThreatPromote;
+
+  /// Spiegami perché: sviluppo di un pezzo
+  ///
+  /// In it, this message translates to:
+  /// **'Sviluppa {piece}: entra in gioco.'**
+  String whyDevelop(String piece);
+
+  /// Spiegami perché: pedone al centro
+  ///
+  /// In it, this message translates to:
+  /// **'Prende spazio al centro.'**
+  String get whyCenter;
+
+  /// Spiegami perché: mossa tranquilla
+  ///
+  /// In it, this message translates to:
+  /// **'Sposta {piece} su una casa più utile.'**
+  String whyImprove(String piece);
+
+  /// Titolo sopra la stringa FEN nell'editor di posizione
+  ///
+  /// In it, this message translates to:
+  /// **'Posizione (FEN)'**
+  String get editorFenTitle;
+
+  /// Etichetta e suggerimento dell'icona di aiuto accanto al titolo FEN
+  ///
+  /// In it, this message translates to:
+  /// **'Che cos\'è il FEN?'**
+  String get editorFenHelpTooltip;
+
+  /// Spiegazione del FEN nella finestra di aiuto dell'editor
+  ///
+  /// In it, this message translates to:
+  /// **'Il FEN è una riga di testo che descrive una posizione: i pezzi sulla scacchiera, di chi è il turno, l\'arrocco e le mosse. Serve per copiare la posizione in altre app e per incollarne una ricevuta da altrove: usa «Copia FEN» e «Incolla FEN».'**
+  String get editorFenHelpBody;
+
+  /// Pulsante per chiudere la finestra di aiuto sul FEN
+  ///
+  /// In it, this message translates to:
+  /// **'Ho capito'**
+  String get editorFenHelpClose;
+
+  /// Titolo della schermata che mostra il QR della partita e voce di menu
+  ///
+  /// In it, this message translates to:
+  /// **'Passa con QR'**
+  String get qrSendTitle;
+
+  /// Istruzioni sotto il QR
+  ///
+  /// In it, this message translates to:
+  /// **'Sull\'altro telefono apri Tu › Archivio › Ricevi con QR e inquadra il codice.'**
+  String get qrSendHint;
+
+  /// Fotogramma mostrato di una partita lunga
+  ///
+  /// In it, this message translates to:
+  /// **'Parte {current} di {total}'**
+  String qrPart(int current, int total);
+
+  /// Ferma lo scorrimento dei fotogrammi
+  ///
+  /// In it, this message translates to:
+  /// **'Pausa'**
+  String get qrPause;
+
+  /// Riprende lo scorrimento dei fotogrammi
+  ///
+  /// In it, this message translates to:
+  /// **'Riprendi'**
+  String get qrResume;
+
+  /// Fotogramma successivo
+  ///
+  /// In it, this message translates to:
+  /// **'Parte successiva'**
+  String get qrNext;
+
+  /// Fotogramma precedente
+  ///
+  /// In it, this message translates to:
+  /// **'Parte precedente'**
+  String get qrPrevious;
+
+  /// Etichetta del QR per il lettore di schermo
+  ///
+  /// In it, this message translates to:
+  /// **'Codice QR della partita'**
+  String get qrCodeLabel;
+
+  /// Titolo della schermata con la fotocamera e azione dell'archivio
+  ///
+  /// In it, this message translates to:
+  /// **'Ricevi con QR'**
+  String get qrReceiveTitle;
+
+  /// Istruzioni sotto la fotocamera
+  ///
+  /// In it, this message translates to:
+  /// **'Inquadra il codice QR mostrato dall\'altro telefono.'**
+  String get qrReceiveHint;
+
+  /// Avanzamento della lettura, annunciato anche al lettore di schermo
+  ///
+  /// In it, this message translates to:
+  /// **'{received} di {total} parti lette'**
+  String qrReceived(int received, int total);
+
+  /// QR di altro tipo, per esempio un indirizzo web
+  ///
+  /// In it, this message translates to:
+  /// **'Questo QR non contiene una partita.'**
+  String get qrForeign;
+
+  /// Dati non validi
+  ///
+  /// In it, this message translates to:
+  /// **'Il QR è danneggiato: ricomincia la lettura.'**
+  String get qrCorrupted;
+
+  /// Oltre i limiti di sicurezza
+  ///
+  /// In it, this message translates to:
+  /// **'La partita è troppo grande per essere ricevuta.'**
+  String get qrTooLarge;
+
+  /// Si è inquadrato il QR di un'altra partita
+  ///
+  /// In it, this message translates to:
+  /// **'Nuova partita inquadrata: lettura ricominciata.'**
+  String get qrRestarted;
+
+  /// Permesso negato o fotocamera assente
+  ///
+  /// In it, this message translates to:
+  /// **'Non riesco a usare la fotocamera. Consenti l\'accesso alla fotocamera per Rokko nelle impostazioni del telefono e riprova.'**
+  String get qrCameraError;
+
+  /// Riapre la fotocamera
+  ///
+  /// In it, this message translates to:
+  /// **'Riprova'**
+  String get qrRetry;
+
+  /// PGN ricevuto ma non importabile
+  ///
+  /// In it, this message translates to:
+  /// **'Il QR non contiene una partita valida.'**
+  String get qrInvalidGame;
+
+  /// Una partita finita non si continua: va nell'archivio
+  ///
+  /// In it, this message translates to:
+  /// **'La partita è già conclusa: ricevila da Tu › Archivio › Ricevi con QR.'**
+  String get qrFinishedGame;
+
+  /// Un fotogramma rovinato o in conflitto, scartato senza perdere le parti lette
+  ///
+  /// In it, this message translates to:
+  /// **'QR non valido: ignorato.'**
+  String get qrMalformed;
+
+  /// No description provided for @opponentHintHuman.
+  ///
+  /// In it, this message translates to:
+  /// **'Si gioca in due sullo stesso dispositivo.'**
+  String get opponentHintHuman;
+
+  /// No description provided for @opponentHintComputer.
+  ///
+  /// In it, this message translates to:
+  /// **'Scegli il livello o lascia che si adatti a te.'**
+  String get opponentHintComputer;
+
+  /// No description provided for @opponentHintBot.
+  ///
+  /// In it, this message translates to:
+  /// **'Avversari con personalità da sbloccare uno a uno.'**
+  String get opponentHintBot;
+
+  /// Sotto un bot bloccato: quale bot battere per sbloccarlo
+  ///
+  /// In it, this message translates to:
+  /// **'Si sblocca battendo {name}'**
+  String botUnlockHint(String name);
+
+  /// No description provided for @handicapTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Handicap'**
+  String get handicapTitle;
+
+  /// No description provided for @handicapGameTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Partita a handicap'**
+  String get handicapGameTitle;
+
+  /// No description provided for @handicapHint.
+  ///
+  /// In it, this message translates to:
+  /// **'Chi concede il vantaggio gioca senza un pezzo o con meno tempo. La partita non conta per il rating locale.'**
+  String get handicapHint;
+
+  /// No description provided for @handicapPieceTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Pezzo in meno'**
+  String get handicapPieceTitle;
+
+  /// No description provided for @handicapNone.
+  ///
+  /// In it, this message translates to:
+  /// **'Nessuno'**
+  String get handicapNone;
+
+  /// No description provided for @handicapPieceFPawn.
+  ///
+  /// In it, this message translates to:
+  /// **'Pedone f'**
+  String get handicapPieceFPawn;
+
+  /// No description provided for @handicapPieceKnight.
+  ///
+  /// In it, this message translates to:
+  /// **'Cavallo'**
+  String get handicapPieceKnight;
+
+  /// No description provided for @handicapPieceRook.
+  ///
+  /// In it, this message translates to:
+  /// **'Torre'**
+  String get handicapPieceRook;
+
+  /// No description provided for @handicapPieceQueen.
+  ///
+  /// In it, this message translates to:
+  /// **'Donna'**
+  String get handicapPieceQueen;
+
+  /// No description provided for @handicapTimeTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Tempo di chi concede'**
+  String get handicapTimeTitle;
+
+  /// No description provided for @handicapTimeEqual.
+  ///
+  /// In it, this message translates to:
+  /// **'Uguale'**
+  String get handicapTimeEqual;
+
+  /// No description provided for @handicapTimeHint.
+  ///
+  /// In it, this message translates to:
+  /// **'Vale solo con un orologio e se è inferiore alla cadenza scelta.'**
+  String get handicapTimeHint;
+
+  /// No description provided for @handicapGiverTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Chi concede il vantaggio'**
+  String get handicapGiverTitle;
+
+  /// No description provided for @handicapGiverYou.
+  ///
+  /// In it, this message translates to:
+  /// **'Tu'**
+  String get handicapGiverYou;
+
+  /// No description provided for @handicapGiverOpponent.
+  ///
+  /// In it, this message translates to:
+  /// **'L\'avversario'**
+  String get handicapGiverOpponent;
+
+  /// No description provided for @handicapGiverWhite.
+  ///
+  /// In it, this message translates to:
+  /// **'Il Bianco'**
+  String get handicapGiverWhite;
+
+  /// No description provided for @handicapGiverBlack.
+  ///
+  /// In it, this message translates to:
+  /// **'Il Nero'**
+  String get handicapGiverBlack;
+
+  /// No description provided for @handicapTimeMinutes.
+  ///
+  /// In it, this message translates to:
+  /// **'{n} min'**
+  String handicapTimeMinutes(int n);
+
   /// Intestazione della sezione del profilo nelle Impostazioni
   ///
   /// In it, this message translates to:
@@ -620,12 +1094,6 @@ abstract class AppLocalizations {
   /// **'Forza, ce la puoi fare!'**
   String get kidPuzzleKeepGoing;
 
-  /// Obiettivo del puzzle mostrato sopra la scacchiera e letto dai lettori di schermo
-  ///
-  /// In it, this message translates to:
-  /// **'{goal, select, mateIn1{Obiettivo: matto in 1} mateIn2{Obiettivo: matto in 2} mateIn3{Obiettivo: matto in 3} mateIn4{Obiettivo: matto in 4} mate{Obiettivo: dai matto} crushing{Obiettivo: ottieni un vantaggio decisivo} advantage{Obiettivo: ottieni il vantaggio} equality{Obiettivo: ottieni la parità} other{Obiettivo: trova la mossa migliore}}'**
-  String puzzleGoal(String goal);
-
   /// Giudizio della precisione con cinque stelle
   ///
   /// In it, this message translates to:
@@ -709,264 +1177,6 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Con {move} potevi dare scacco matto!'**
   String kidCoachMissedMate(String move);
-
-  /// Titolo della schermata che mostra il QR della partita e voce di menu
-  ///
-  /// In it, this message translates to:
-  /// **'Passa con QR'**
-  String get qrSendTitle;
-
-  /// Istruzioni sotto il QR
-  ///
-  /// In it, this message translates to:
-  /// **'Sull\'altro telefono apri Tu › Archivio › Ricevi con QR e inquadra il codice.'**
-  String get qrSendHint;
-
-  /// Fotogramma mostrato di una partita lunga
-  ///
-  /// In it, this message translates to:
-  /// **'Parte {current} di {total}'**
-  String qrPart(int current, int total);
-
-  /// Ferma lo scorrimento dei fotogrammi
-  ///
-  /// In it, this message translates to:
-  /// **'Pausa'**
-  String get qrPause;
-
-  /// Riprende lo scorrimento dei fotogrammi
-  ///
-  /// In it, this message translates to:
-  /// **'Riprendi'**
-  String get qrResume;
-
-  /// Fotogramma successivo
-  ///
-  /// In it, this message translates to:
-  /// **'Parte successiva'**
-  String get qrNext;
-
-  /// Fotogramma precedente
-  ///
-  /// In it, this message translates to:
-  /// **'Parte precedente'**
-  String get qrPrevious;
-
-  /// Etichetta del QR per il lettore di schermo
-  ///
-  /// In it, this message translates to:
-  /// **'Codice QR della partita'**
-  String get qrCodeLabel;
-
-  /// Titolo della schermata con la fotocamera e azione dell'archivio
-  ///
-  /// In it, this message translates to:
-  /// **'Ricevi con QR'**
-  String get qrReceiveTitle;
-
-  /// Istruzioni sotto la fotocamera
-  ///
-  /// In it, this message translates to:
-  /// **'Inquadra il codice QR mostrato dall\'altro telefono.'**
-  String get qrReceiveHint;
-
-  /// Avanzamento della lettura, annunciato anche al lettore di schermo
-  ///
-  /// In it, this message translates to:
-  /// **'{received} di {total} parti lette'**
-  String qrReceived(int received, int total);
-
-  /// QR di altro tipo, per esempio un indirizzo web
-  ///
-  /// In it, this message translates to:
-  /// **'Questo QR non contiene una partita.'**
-  String get qrForeign;
-
-  /// Dati non validi
-  ///
-  /// In it, this message translates to:
-  /// **'Il QR è danneggiato: ricomincia la lettura.'**
-  String get qrCorrupted;
-
-  /// Oltre i limiti di sicurezza
-  ///
-  /// In it, this message translates to:
-  /// **'La partita è troppo grande per essere ricevuta.'**
-  String get qrTooLarge;
-
-  /// Si è inquadrato il QR di un'altra partita
-  ///
-  /// In it, this message translates to:
-  /// **'Nuova partita inquadrata: lettura ricominciata.'**
-  String get qrRestarted;
-
-  /// Permesso negato o fotocamera assente
-  ///
-  /// In it, this message translates to:
-  /// **'Non riesco a usare la fotocamera. Consenti l\'accesso alla fotocamera per Rokko nelle impostazioni del telefono e riprova.'**
-  String get qrCameraError;
-
-  /// Riapre la fotocamera
-  ///
-  /// In it, this message translates to:
-  /// **'Riprova'**
-  String get qrRetry;
-
-  /// PGN ricevuto ma non importabile
-  ///
-  /// In it, this message translates to:
-  /// **'Il QR non contiene una partita valida.'**
-  String get qrInvalidGame;
-
-  /// Una partita finita non si continua: va nell'archivio
-  ///
-  /// In it, this message translates to:
-  /// **'La partita è già conclusa: ricevila da Tu › Archivio › Ricevi con QR.'**
-  String get qrFinishedGame;
-
-  /// Un fotogramma rovinato o in conflitto, scartato senza perdere le parti lette
-  ///
-  /// In it, this message translates to:
-  /// **'QR non valido: ignorato.'**
-  String get qrMalformed;
-
-  /// Titolo sopra la stringa FEN nell'editor di posizione
-  ///
-  /// In it, this message translates to:
-  /// **'Posizione (FEN)'**
-  String get editorFenTitle;
-
-  /// Etichetta e suggerimento dell'icona di aiuto accanto al titolo FEN
-  ///
-  /// In it, this message translates to:
-  /// **'Che cos\'è il FEN?'**
-  String get editorFenHelpTooltip;
-
-  /// Spiegazione del FEN nella finestra di aiuto dell'editor
-  ///
-  /// In it, this message translates to:
-  /// **'Il FEN è una riga di testo che descrive una posizione: i pezzi sulla scacchiera, di chi è il turno, l\'arrocco e le mosse. Serve per copiare la posizione in altre app e per incollarne una ricevuta da altrove: usa «Copia FEN» e «Incolla FEN».'**
-  String get editorFenHelpBody;
-
-  /// Pulsante per chiudere la finestra di aiuto sul FEN
-  ///
-  /// In it, this message translates to:
-  /// **'Ho capito'**
-  String get editorFenHelpClose;
-
-  /// Titolo della pagina di backup
-  ///
-  /// In it, this message translates to:
-  /// **'Backup e ripristino'**
-  String get backupTitle;
-
-  /// No description provided for @backupIntro.
-  ///
-  /// In it, this message translates to:
-  /// **'Il backup contiene partite, progressi, percorso, tornei, allenamento e impostazioni. Salvalo in un posto sicuro: senza rete non esiste una copia online.'**
-  String get backupIntro;
-
-  /// Pulsante che esporta il backup con la condivisione di sistema
-  ///
-  /// In it, this message translates to:
-  /// **'Condividi il backup'**
-  String get backupShare;
-
-  /// Oggetto proposto dalla condivisione di sistema, per esempio nelle email
-  ///
-  /// In it, this message translates to:
-  /// **'Backup di Rokko'**
-  String get backupShareSubject;
-
-  /// Pulsante che apre la finestra per incollare un backup
-  ///
-  /// In it, this message translates to:
-  /// **'Ripristina da testo'**
-  String get backupRestoreFromText;
-
-  /// No description provided for @backupExported.
-  ///
-  /// In it, this message translates to:
-  /// **'Backup pronto da salvare'**
-  String get backupExported;
-
-  /// Errore tecnico durante l'esportazione
-  ///
-  /// In it, this message translates to:
-  /// **'Backup non riuscito: {error}'**
-  String backupExportFailed(String error);
-
-  /// No description provided for @backupRestoreStaged.
-  ///
-  /// In it, this message translates to:
-  /// **'Backup pronto. Chiudi e riapri l\'app per ripristinare i dati.'**
-  String get backupRestoreStaged;
-
-  /// Errore tecnico durante il ripristino
-  ///
-  /// In it, this message translates to:
-  /// **'Ripristino non riuscito: {error}'**
-  String backupRestoreFailed(String error);
-
-  /// No description provided for @backupErrorNotApp.
-  ///
-  /// In it, this message translates to:
-  /// **'Non è un backup di Rokko'**
-  String get backupErrorNotApp;
-
-  /// No description provided for @backupErrorNewerVersion.
-  ///
-  /// In it, this message translates to:
-  /// **'Backup creato da una versione più recente'**
-  String get backupErrorNewerVersion;
-
-  /// No description provided for @backupErrorUnexpectedFile.
-  ///
-  /// In it, this message translates to:
-  /// **'File inatteso nel backup: {file}'**
-  String backupErrorUnexpectedFile(String file);
-
-  /// No description provided for @backupErrorInvalidFile.
-  ///
-  /// In it, this message translates to:
-  /// **'File non valido nel backup: {file}'**
-  String backupErrorInvalidFile(String file);
-
-  /// No description provided for @backupErrorInvalidPreference.
-  ///
-  /// In it, this message translates to:
-  /// **'Preferenza non valida: {name}'**
-  String backupErrorInvalidPreference(String name);
-
-  /// No description provided for @backupErrorUnreadable.
-  ///
-  /// In it, this message translates to:
-  /// **'Backup non leggibile'**
-  String get backupErrorUnreadable;
-
-  /// No description provided for @backupRestoreDialogTitle.
-  ///
-  /// In it, this message translates to:
-  /// **'Ripristina il backup'**
-  String get backupRestoreDialogTitle;
-
-  /// No description provided for @backupRestoreDialogBody.
-  ///
-  /// In it, this message translates to:
-  /// **'Incolla il contenuto del file di backup. I dati attuali vengono sostituiti.'**
-  String get backupRestoreDialogBody;
-
-  /// No description provided for @backupCancel.
-  ///
-  /// In it, this message translates to:
-  /// **'Annulla'**
-  String get backupCancel;
-
-  /// Conferma del ripristino
-  ///
-  /// In it, this message translates to:
-  /// **'Ripristina'**
-  String get backupRestore;
 
   /// No description provided for @minigamesTitle.
   ///
@@ -1160,161 +1370,137 @@ abstract class AppLocalizations {
   /// **'Era: {answer}'**
   String minigamesQuizAnswer(String answer);
 
-  /// No description provided for @statsTitle.
+  /// Titolo della schermata e della voce nella scheda Aperture
   ///
   /// In it, this message translates to:
-  /// **'Statistiche'**
-  String get statsTitle;
+  /// **'Le tue aperture'**
+  String get personalTitle;
 
-  /// No description provided for @statsLoadFailed.
+  /// Sottotitolo della voce nella scheda Aperture
+  ///
+  /// In it, this message translates to:
+  /// **'Le mosse che hai giocato, con i risultati'**
+  String get personalHubSubtitle;
+
+  /// Errore di lettura dell'archivio
   ///
   /// In it, this message translates to:
   /// **'L\'archivio delle partite non si è potuto leggere: riprova più tardi.'**
-  String get statsLoadFailed;
+  String get personalLoadFailed;
 
-  /// No description provided for @statsEmpty.
+  /// Archivio senza partite utili
   ///
   /// In it, this message translates to:
-  /// **'Gioca qualche partita contro il computer per vedere le statistiche.'**
-  String get statsEmpty;
+  /// **'Gioca qualche partita contro il computer per costruire il tuo albero delle aperture.'**
+  String get personalEmpty;
 
-  /// Sezione con vittorie, patte e sconfitte
+  /// Filtri senza partite
   ///
   /// In it, this message translates to:
-  /// **'Bilancio'**
-  String get statsRecord;
+  /// **'Nessuna partita con questi filtri.'**
+  String get personalNoGamesFiltered;
 
-  /// Tutte le partite
+  /// Posizione fuori dall'albero
   ///
   /// In it, this message translates to:
-  /// **'Tutte'**
-  String get statsAllGames;
+  /// **'Non hai mai giocato da questa posizione.'**
+  String get personalNoGamesHere;
 
-  /// No description provided for @statsWithWhite.
+  /// Filtro colore: tutte le partite
   ///
   /// In it, this message translates to:
-  /// **'Con il bianco'**
-  String get statsWithWhite;
+  /// **'Entrambi'**
+  String get personalSideAll;
 
-  /// No description provided for @statsWithBlack.
+  /// Filtro colore: partite con il bianco
   ///
   /// In it, this message translates to:
-  /// **'Con il nero'**
-  String get statsWithBlack;
+  /// **'Bianco'**
+  String get personalSideWhite;
 
-  /// No description provided for @statsLocalGames.
+  /// Filtro colore: partite con il nero
   ///
   /// In it, this message translates to:
-  /// **'Partite tra due persone'**
-  String get statsLocalGames;
+  /// **'Nero'**
+  String get personalSideBlack;
 
-  /// No description provided for @statsByTimeControl.
+  /// Etichetta del filtro per avversario
   ///
   /// In it, this message translates to:
-  /// **'Per cadenza'**
-  String get statsByTimeControl;
+  /// **'Avversario'**
+  String get personalOpponent;
 
-  /// No description provided for @statsTopOpenings.
+  /// Filtro avversario senza restrizioni
   ///
   /// In it, this message translates to:
-  /// **'Aperture più giocate'**
-  String get statsTopOpenings;
+  /// **'Tutti gli avversari'**
+  String get personalAllOpponents;
 
-  /// No description provided for @statsGames.
+  /// Partite in cui è stata giocata una mossa
   ///
   /// In it, this message translates to:
   /// **'{count, plural, one{{count} partita} other{{count} partite}}'**
-  String statsGames(int count);
+  String personalGames(int count);
 
-  /// No description provided for @statsAccuracy.
+  /// Partite che rispettano i filtri
   ///
   /// In it, this message translates to:
-  /// **'Precisione'**
-  String get statsAccuracy;
+  /// **'{count, plural, one{{count} partita considerata} other{{count} partite considerate}}'**
+  String personalGamesTotal(int count);
 
-  /// No description provided for @statsAverage.
+  /// Vittorie, patte e sconfitte in breve
   ///
   /// In it, this message translates to:
-  /// **'Media'**
-  String get statsAverage;
+  /// **'{wins}V · {draws}P · {losses}S'**
+  String personalScore(int wins, int draws, int losses);
 
-  /// No description provided for @statsAccuracyTrend.
+  /// Vittorie, patte e sconfitte per i lettori di schermo
   ///
   /// In it, this message translates to:
-  /// **'Andamento della precisione'**
-  String get statsAccuracyTrend;
+  /// **'{wins} vinte, {draws} patte, {losses} perse'**
+  String personalScoreSemantics(int wins, int draws, int losses);
 
-  /// No description provided for @statsRating.
+  /// Titolo senza mosse
   ///
   /// In it, this message translates to:
-  /// **'Rating stimato {rating}'**
-  String statsRating(int rating);
+  /// **'Posizione iniziale'**
+  String get personalStartPosition;
 
-  /// No description provided for @statsRatingProvisional.
+  /// Titolo di una posizione senza nome nel libro
   ///
   /// In it, this message translates to:
-  /// **'provvisorio: servono {count} partite contro il computer'**
-  String statsRatingProvisional(int count);
+  /// **'Apertura senza nome'**
+  String get personalNoName;
 
-  /// No description provided for @statsRatingGames.
+  /// Torna alla mossa precedente
   ///
   /// In it, this message translates to:
-  /// **'{count, plural, one{su {count} partita contro il computer} other{su {count} partite contro il computer}}'**
-  String statsRatingGames(int count);
+  /// **'Indietro'**
+  String get personalBack;
 
-  /// No description provided for @statsRatingTrend.
+  /// Torna alla posizione iniziale
   ///
   /// In it, this message translates to:
-  /// **'Andamento del rating'**
-  String get statsRatingTrend;
+  /// **'Inizio'**
+  String get personalStart;
 
-  /// Etichetta per la lettura dello schermo di un bilancio vuoto
+  /// Tooltip del pulsante che gira la scacchiera
   ///
   /// In it, this message translates to:
-  /// **'nessuna partita'**
-  String get statsNoGames;
+  /// **'Gira la scacchiera'**
+  String get personalFlip;
 
-  /// Etichetta per la lettura dello schermo della percentuale
+  /// Tooltip: apre il libro delle aperture nella stessa posizione
   ///
   /// In it, this message translates to:
-  /// **'{wins, plural, one{{wins} vittoria} other{{wins} vittorie}}, {draws, plural, one{{draws} patta} other{{draws} patte}}, {losses, plural, one{{losses} sconfitta} other{{losses} sconfitte}}'**
-  String statsScoreDetail(int wins, int draws, int losses);
+  /// **'Apri nell\'explorer delle aperture'**
+  String get personalOpenInBook;
 
-  /// Etichetta per la lettura dello schermo di un grafico
+  /// Tooltip nell'explorer delle aperture: apre l'albero personale
   ///
   /// In it, this message translates to:
-  /// **'{label}: da {first} a {last}, minimo {min}, massimo {max}'**
-  String statsTrend(
-    String label,
-    String first,
-    String last,
-    String min,
-    String max,
-  );
-
-  /// No description provided for @opponentHintHuman.
-  ///
-  /// In it, this message translates to:
-  /// **'Si gioca in due sullo stesso dispositivo.'**
-  String get opponentHintHuman;
-
-  /// No description provided for @opponentHintComputer.
-  ///
-  /// In it, this message translates to:
-  /// **'Scegli il livello o lascia che si adatti a te.'**
-  String get opponentHintComputer;
-
-  /// No description provided for @opponentHintBot.
-  ///
-  /// In it, this message translates to:
-  /// **'Avversari con personalità da sbloccare uno a uno.'**
-  String get opponentHintBot;
-
-  /// Sotto un bot bloccato: quale bot battere per sbloccarlo
-  ///
-  /// In it, this message translates to:
-  /// **'Si sblocca battendo {name}'**
-  String botUnlockHint(String name);
+  /// **'Le tue partite da questa posizione'**
+  String get personalFromHere;
 
   /// Titolo della scheda Aperture
   ///
@@ -1633,6 +1819,906 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'In questa posizione il repertorio prevede già {san}.'**
   String openingsErrorConflict(String san);
+
+  /// Obiettivo del puzzle mostrato sopra la scacchiera e letto dai lettori di schermo
+  ///
+  /// In it, this message translates to:
+  /// **'{goal, select, mateIn1{Obiettivo: matto in 1} mateIn2{Obiettivo: matto in 2} mateIn3{Obiettivo: matto in 3} mateIn4{Obiettivo: matto in 4} mate{Obiettivo: dai matto} crushing{Obiettivo: ottieni un vantaggio decisivo} advantage{Obiettivo: ottieni il vantaggio} equality{Obiettivo: ottieni la parità} other{Obiettivo: trova la mossa migliore}}'**
+  String puzzleGoal(String goal);
+
+  /// Voce della scheda Puzzle e titolo della schermata
+  ///
+  /// In it, this message translates to:
+  /// **'Sfida un amico'**
+  String get challengeTitle;
+
+  /// Sottotitolo della voce nella scheda Puzzle
+  ///
+  /// In it, this message translates to:
+  /// **'Gli stessi puzzle su due telefoni, senza rete'**
+  String get challengeSubtitle;
+
+  /// Spiegazione in cima alla schermata della sfida
+  ///
+  /// In it, this message translates to:
+  /// **'Scegli la prova e mostra il QR all\'amico: giocate gli stessi puzzle. A fine prova vi scambiate i punteggi con un secondo QR.'**
+  String get challengeIntro;
+
+  /// Pulsante che crea la sfida
+  ///
+  /// In it, this message translates to:
+  /// **'Prepara la sfida'**
+  String get challengePrepare;
+
+  /// Sfida creata, in attesa di mostrare il QR
+  ///
+  /// In it, this message translates to:
+  /// **'Sfida pronta: {mode}'**
+  String challengeReady(String mode);
+
+  /// Pulsante che apre il QR della sfida
+  ///
+  /// In it, this message translates to:
+  /// **'Mostra il QR all\'amico'**
+  String get challengeShowInvite;
+
+  /// Pulsante che avvia la prova
+  ///
+  /// In it, this message translates to:
+  /// **'Gioca la tua prova'**
+  String get challengePlay;
+
+  /// Pulsante che apre la fotocamera
+  ///
+  /// In it, this message translates to:
+  /// **'Ricevi una sfida'**
+  String get challengeReceive;
+
+  /// Titolo sopra il QR della sfida
+  ///
+  /// In it, this message translates to:
+  /// **'Sfida: {mode}'**
+  String challengeInviteTitle(String mode);
+
+  /// Istruzioni sotto il QR della sfida
+  ///
+  /// In it, this message translates to:
+  /// **'L\'amico apre Puzzle › Sfida un amico › Ricevi una sfida e inquadra il codice.'**
+  String get challengeInviteHint;
+
+  /// Istruzioni sotto la fotocamera per la sfida
+  ///
+  /// In it, this message translates to:
+  /// **'Inquadra il QR della sfida mostrato dall\'amico.'**
+  String get challengeReceiveHint;
+
+  /// Errore: QR letto di altro tipo
+  ///
+  /// In it, this message translates to:
+  /// **'Questo QR non è una sfida: chiedi all\'amico di mostrare il QR della sfida.'**
+  String get challengeNotInvite;
+
+  /// Errore: raccolte di puzzle diverse
+  ///
+  /// In it, this message translates to:
+  /// **'I due telefoni hanno puzzle diversi: aggiornate Rokko su entrambi.'**
+  String get challengeLibraryMismatch;
+
+  /// Titolo del confronto a fine prova
+  ///
+  /// In it, this message translates to:
+  /// **'Sfida con l\'amico'**
+  String get challengeCompareTitle;
+
+  /// Pulsante che apre il QR del risultato
+  ///
+  /// In it, this message translates to:
+  /// **'Mostra il mio risultato'**
+  String get challengeShowResult;
+
+  /// Titolo sopra il QR del risultato
+  ///
+  /// In it, this message translates to:
+  /// **'Il mio risultato: {score}'**
+  String challengeResultTitle(int score);
+
+  /// Istruzioni sotto il QR del risultato
+  ///
+  /// In it, this message translates to:
+  /// **'L\'amico inquadra questo codice per vedere il tuo punteggio.'**
+  String get challengeResultHint;
+
+  /// Pulsante che apre la fotocamera per il risultato
+  ///
+  /// In it, this message translates to:
+  /// **'Leggi il risultato dell\'amico'**
+  String get challengeReadResult;
+
+  /// Istruzioni sotto la fotocamera per il risultato
+  ///
+  /// In it, this message translates to:
+  /// **'Inquadra il QR del risultato mostrato dall\'amico.'**
+  String get challengeReadResultHint;
+
+  /// Errore: QR letto di altro tipo
+  ///
+  /// In it, this message translates to:
+  /// **'Questo QR non è un risultato: chiedi all\'amico di mostrare il QR del risultato.'**
+  String get challengeNotResult;
+
+  /// Errore: il risultato non appartiene a questa sfida
+  ///
+  /// In it, this message translates to:
+  /// **'Il risultato è di un\'altra sfida.'**
+  String get challengeOtherChallenge;
+
+  /// Esito del confronto
+  ///
+  /// In it, this message translates to:
+  /// **'Hai vinto: {mine} a {theirs}'**
+  String challengeWon(int mine, int theirs);
+
+  /// Esito del confronto
+  ///
+  /// In it, this message translates to:
+  /// **'Ha vinto l\'amico: {theirs} a {mine}'**
+  String challengeLost(int mine, int theirs);
+
+  /// Esito del confronto
+  ///
+  /// In it, this message translates to:
+  /// **'Pareggio: {mine} a {theirs}'**
+  String challengeDraw(int mine, int theirs);
+
+  /// Impostazioni: titolo dell'interruttore
+  ///
+  /// In it, this message translates to:
+  /// **'Spiegami perché'**
+  String get settingsExplainWhy;
+
+  /// Impostazioni: descrizione
+  ///
+  /// In it, this message translates to:
+  /// **'Dopo ogni mossa del computer, una riga su cosa minaccia o prepara'**
+  String get settingsExplainWhyDescription;
+
+  /// Impostazioni: titolo dell'interruttore; in partita è anche l'etichetta del pulsante
+  ///
+  /// In it, this message translates to:
+  /// **'Modalità zen'**
+  String get settingsZenMode;
+
+  /// Impostazioni: descrizione
+  ///
+  /// In it, this message translates to:
+  /// **'In partita restano solo scacchiera e mosse: niente Elo, materiale, stato, avvisi dell\'allenatore e commenti'**
+  String get settingsZenModeDescription;
+
+  /// shareImageTitle
+  ///
+  /// In it, this message translates to:
+  /// **'Esporta come immagine'**
+  String get shareImageTitle;
+
+  /// shareImageAction
+  ///
+  /// In it, this message translates to:
+  /// **'Condividi'**
+  String get shareImageAction;
+
+  /// shareImageFlip
+  ///
+  /// In it, this message translates to:
+  /// **'Capovolgi la scacchiera'**
+  String get shareImageFlip;
+
+  /// shareImageCoordinates
+  ///
+  /// In it, this message translates to:
+  /// **'Coordinate'**
+  String get shareImageCoordinates;
+
+  /// shareImageLastMove
+  ///
+  /// In it, this message translates to:
+  /// **'Ultima mossa'**
+  String get shareImageLastMove;
+
+  /// shareImageCaption
+  ///
+  /// In it, this message translates to:
+  /// **'Didascalia (facoltativa)'**
+  String get shareImageCaption;
+
+  /// shareImagePreview
+  ///
+  /// In it, this message translates to:
+  /// **'Anteprima della scacchiera'**
+  String get shareImagePreview;
+
+  /// shareImageFailed
+  ///
+  /// In it, this message translates to:
+  /// **'Condivisione non riuscita'**
+  String get shareImageFailed;
+
+  /// shareImageSubject
+  ///
+  /// In it, this message translates to:
+  /// **'Posizione di scacchi'**
+  String get shareImageSubject;
+
+  /// No description provided for @statsTitle.
+  ///
+  /// In it, this message translates to:
+  /// **'Statistiche'**
+  String get statsTitle;
+
+  /// No description provided for @statsLoadFailed.
+  ///
+  /// In it, this message translates to:
+  /// **'L\'archivio delle partite non si è potuto leggere: riprova più tardi.'**
+  String get statsLoadFailed;
+
+  /// No description provided for @statsEmpty.
+  ///
+  /// In it, this message translates to:
+  /// **'Gioca qualche partita contro il computer per vedere le statistiche.'**
+  String get statsEmpty;
+
+  /// Sezione con vittorie, patte e sconfitte
+  ///
+  /// In it, this message translates to:
+  /// **'Bilancio'**
+  String get statsRecord;
+
+  /// Tutte le partite
+  ///
+  /// In it, this message translates to:
+  /// **'Tutte'**
+  String get statsAllGames;
+
+  /// No description provided for @statsWithWhite.
+  ///
+  /// In it, this message translates to:
+  /// **'Con il bianco'**
+  String get statsWithWhite;
+
+  /// No description provided for @statsWithBlack.
+  ///
+  /// In it, this message translates to:
+  /// **'Con il nero'**
+  String get statsWithBlack;
+
+  /// No description provided for @statsLocalGames.
+  ///
+  /// In it, this message translates to:
+  /// **'Partite tra due persone'**
+  String get statsLocalGames;
+
+  /// No description provided for @statsByTimeControl.
+  ///
+  /// In it, this message translates to:
+  /// **'Per cadenza'**
+  String get statsByTimeControl;
+
+  /// No description provided for @statsTopOpenings.
+  ///
+  /// In it, this message translates to:
+  /// **'Aperture più giocate'**
+  String get statsTopOpenings;
+
+  /// No description provided for @statsGames.
+  ///
+  /// In it, this message translates to:
+  /// **'{count, plural, one{{count} partita} other{{count} partite}}'**
+  String statsGames(int count);
+
+  /// No description provided for @statsAccuracy.
+  ///
+  /// In it, this message translates to:
+  /// **'Precisione'**
+  String get statsAccuracy;
+
+  /// No description provided for @statsAverage.
+  ///
+  /// In it, this message translates to:
+  /// **'Media'**
+  String get statsAverage;
+
+  /// No description provided for @statsAccuracyTrend.
+  ///
+  /// In it, this message translates to:
+  /// **'Andamento della precisione'**
+  String get statsAccuracyTrend;
+
+  /// No description provided for @statsRating.
+  ///
+  /// In it, this message translates to:
+  /// **'Rating stimato {rating}'**
+  String statsRating(int rating);
+
+  /// No description provided for @statsRatingProvisional.
+  ///
+  /// In it, this message translates to:
+  /// **'provvisorio: servono {count} partite contro il computer'**
+  String statsRatingProvisional(int count);
+
+  /// No description provided for @statsRatingGames.
+  ///
+  /// In it, this message translates to:
+  /// **'{count, plural, one{su {count} partita contro il computer} other{su {count} partite contro il computer}}'**
+  String statsRatingGames(int count);
+
+  /// No description provided for @statsRatingTrend.
+  ///
+  /// In it, this message translates to:
+  /// **'Andamento del rating'**
+  String get statsRatingTrend;
+
+  /// Etichetta per la lettura dello schermo di un bilancio vuoto
+  ///
+  /// In it, this message translates to:
+  /// **'nessuna partita'**
+  String get statsNoGames;
+
+  /// Etichetta per la lettura dello schermo della percentuale
+  ///
+  /// In it, this message translates to:
+  /// **'{wins, plural, one{{wins} vittoria} other{{wins} vittorie}}, {draws, plural, one{{draws} patta} other{{draws} patte}}, {losses, plural, one{{losses} sconfitta} other{{losses} sconfitte}}'**
+  String statsScoreDetail(int wins, int draws, int losses);
+
+  /// Etichetta per la lettura dello schermo di un grafico
+  ///
+  /// In it, this message translates to:
+  /// **'{label}: da {first} a {last}, minimo {min}, massimo {max}'**
+  String statsTrend(
+    String label,
+    String first,
+    String last,
+    String min,
+    String max,
+  );
+
+  /// Titolo della schermata della storia
+  ///
+  /// In it, this message translates to:
+  /// **'Storia'**
+  String get storyTitle;
+
+  /// storyEntrySubtitle
+  ///
+  /// In it, this message translates to:
+  /// **'Un viaggio a capitoli: lezioni, puzzle e sfide'**
+  String get storyEntrySubtitle;
+
+  /// storyChapterNumber
+  ///
+  /// In it, this message translates to:
+  /// **'Capitolo {n}'**
+  String storyChapterNumber(int n);
+
+  /// storyProgress
+  ///
+  /// In it, this message translates to:
+  /// **'{done} capitoli su {total}'**
+  String storyProgress(int done, int total);
+
+  /// storyChapterLocked
+  ///
+  /// In it, this message translates to:
+  /// **'Si apre concludendo il capitolo precedente'**
+  String get storyChapterLocked;
+
+  /// storyChapterDone
+  ///
+  /// In it, this message translates to:
+  /// **'Capitolo concluso'**
+  String get storyChapterDone;
+
+  /// storyContinue
+  ///
+  /// In it, this message translates to:
+  /// **'Continua'**
+  String get storyContinue;
+
+  /// storyFinished
+  ///
+  /// In it, this message translates to:
+  /// **'La storia è finita. Lezioni, puzzle e partite restano disponibili nel resto dell\'app.'**
+  String get storyFinished;
+
+  /// storyStepLessons
+  ///
+  /// In it, this message translates to:
+  /// **'Lezioni: {value} su {total}'**
+  String storyStepLessons(int value, int total);
+
+  /// storyStepPuzzles
+  ///
+  /// In it, this message translates to:
+  /// **'Puzzle del capitolo: {value} su {total}'**
+  String storyStepPuzzles(int value, int total);
+
+  /// storyStepGuardian
+  ///
+  /// In it, this message translates to:
+  /// **'Il guardiano del capitolo'**
+  String get storyStepGuardian;
+
+  /// storyStepBoss
+  ///
+  /// In it, this message translates to:
+  /// **'Sfida a {name}'**
+  String storyStepBoss(String name);
+
+  /// storyStepDone
+  ///
+  /// In it, this message translates to:
+  /// **'fatto'**
+  String get storyStepDone;
+
+  /// storyStepTodo
+  ///
+  /// In it, this message translates to:
+  /// **'da fare'**
+  String get storyStepTodo;
+
+  /// storyStepLocked
+  ///
+  /// In it, this message translates to:
+  /// **'bloccato'**
+  String get storyStepLocked;
+
+  /// storyStepLockedHint
+  ///
+  /// In it, this message translates to:
+  /// **'Prima concludi il passo precedente.'**
+  String get storyStepLockedHint;
+
+  /// storyEngineMissing
+  ///
+  /// In it, this message translates to:
+  /// **'Le sfide si giocano dove gira il computer: Android e iOS, o Windows e Linux con Stockfish installato.'**
+  String get storyEngineMissing;
+
+  /// storyBossWon
+  ///
+  /// In it, this message translates to:
+  /// **'Hai battuto {name}!'**
+  String storyBossWon(String name);
+
+  /// storyBossLost
+  ///
+  /// In it, this message translates to:
+  /// **'{name} resiste ancora: riprova quando vuoi.'**
+  String storyBossLost(String name);
+
+  /// storyPuzzlesNone
+  ///
+  /// In it, this message translates to:
+  /// **'I puzzle non si possono caricare: riprova.'**
+  String get storyPuzzlesNone;
+
+  /// storyVillageTitle
+  ///
+  /// In it, this message translates to:
+  /// **'Il villaggio dei pezzi'**
+  String get storyVillageTitle;
+
+  /// storyVillageIntro
+  ///
+  /// In it, this message translates to:
+  /// **'Arrivi al villaggio ai piedi della Rocca. Gli abitanti non ricordano più come si muovono i loro pezzi: aiutali con le lezioni, poi dimostra di accorgerti subito di un pezzo lasciato in presa.'**
+  String get storyVillageIntro;
+
+  /// storyVillageBoss
+  ///
+  /// In it, this message translates to:
+  /// **'{name}, il custode del villaggio, ti sfida per vedere se hai imparato davvero.'**
+  String storyVillageBoss(String name);
+
+  /// storyVillageOutro
+  ///
+  /// In it, this message translates to:
+  /// **'Il villaggio ti saluta con una festa. La strada per le porte della città è aperta.'**
+  String get storyVillageOutro;
+
+  /// storyGatesTitle
+  ///
+  /// In it, this message translates to:
+  /// **'Le porte della città'**
+  String get storyGatesTitle;
+
+  /// storyGatesIntro
+  ///
+  /// In it, this message translates to:
+  /// **'Le guardie ti fermano alle porte: per entrare devi conoscere le regole, dallo scacco all\'arrocco. Una promozione ben vista apre anche il cancello più alto.'**
+  String get storyGatesIntro;
+
+  /// storyGatesBoss
+  ///
+  /// In it, this message translates to:
+  /// **'{name}, capitana delle guardie, vuole una prova prima di lasciarti passare.'**
+  String storyGatesBoss(String name);
+
+  /// storyGatesOutro
+  ///
+  /// In it, this message translates to:
+  /// **'Le porte si aprono. Davanti a te si alza la torre del re.'**
+  String get storyGatesOutro;
+
+  /// storyTowerTitle
+  ///
+  /// In it, this message translates to:
+  /// **'La torre del re'**
+  String get storyTowerTitle;
+
+  /// storyTowerIntro
+  ///
+  /// In it, this message translates to:
+  /// **'In cima alla torre vive il re, e sa difendersi. Impara i matti per metterlo alle strette, anche quando i suoi stessi pezzi gli fanno da muro.'**
+  String get storyTowerIntro;
+
+  /// storyTowerBoss
+  ///
+  /// In it, this message translates to:
+  /// **'{name}, il cavaliere che ama i gambetti, ti aspetta in cima alle scale.'**
+  String storyTowerBoss(String name);
+
+  /// storyTowerOutro
+  ///
+  /// In it, this message translates to:
+  /// **'Il re della torre è in scacco matto. Resta il bosco, e le sue trappole.'**
+  String get storyTowerOutro;
+
+  /// storyForestTitle
+  ///
+  /// In it, this message translates to:
+  /// **'Il bosco delle trappole'**
+  String get storyForestTitle;
+
+  /// storyForestIntro
+  ///
+  /// In it, this message translates to:
+  /// **'Nel bosco ogni pezzo nasconde una trappola: forchette, inchiodature, infilate. Impara a vederle prima degli altri.'**
+  String get storyForestIntro;
+
+  /// storyForestBoss
+  ///
+  /// In it, this message translates to:
+  /// **'{name}, la guida del bosco, conosce ogni sentiero e ogni insidia.'**
+  String storyForestBoss(String name);
+
+  /// storyForestOutro
+  ///
+  /// In it, this message translates to:
+  /// **'Hai attraversato il bosco senza cadere in nessuna trappola. Il castello ti aspetta.'**
+  String get storyForestOutro;
+
+  /// storyCastleTitle
+  ///
+  /// In it, this message translates to:
+  /// **'Il castello dei finali'**
+  String get storyCastleTitle;
+
+  /// storyCastleIntro
+  ///
+  /// In it, this message translates to:
+  /// **'Nel castello sulla scacchiera restano pochi pezzi e ogni mossa conta. Qui si decide chi sa chiudere una partita.'**
+  String get storyCastleIntro;
+
+  /// storyCastleBoss
+  ///
+  /// In it, this message translates to:
+  /// **'{name}, il castellano, difende l\'ingresso della sala della corona.'**
+  String storyCastleBoss(String name);
+
+  /// storyCastleOutro
+  ///
+  /// In it, this message translates to:
+  /// **'Il portone si apre: la corona è vicina.'**
+  String get storyCastleOutro;
+
+  /// storyCrownTitle
+  ///
+  /// In it, this message translates to:
+  /// **'La corona'**
+  String get storyCrownTitle;
+
+  /// storyCrownIntro
+  ///
+  /// In it, this message translates to:
+  /// **'Ultima tappa: la sala della corona. Partire bene è mezza vittoria: il centro, lo sviluppo, l\'arrocco.'**
+  String get storyCrownIntro;
+
+  /// storyCrownBoss
+  ///
+  /// In it, this message translates to:
+  /// **'{name}, la guardiana della corona, gioca le aperture come nessun altro.'**
+  String storyCrownBoss(String name);
+
+  /// storyCrownOutro
+  ///
+  /// In it, this message translates to:
+  /// **'La corona è tua. Il regno è in pace e ogni nuova partita è una nuova storia.'**
+  String get storyCrownOutro;
+
+  /// Voce della scheda Tu
+  ///
+  /// In it, this message translates to:
+  /// **'Riepilogo settimanale'**
+  String get weeklyEntryTitle;
+
+  /// Pagina vuota del riepilogo
+  ///
+  /// In it, this message translates to:
+  /// **'Negli ultimi sette giorni non hai ancora fatto nulla. Gioca una partita o risolvi un puzzle: il riepilogo si riempie da solo.'**
+  String get weeklyEmpty;
+
+  /// Titolo della sezione progressi
+  ///
+  /// In it, this message translates to:
+  /// **'I tuoi progressi'**
+  String get weeklyProgressHeading;
+
+  /// Partite della settimana
+  ///
+  /// In it, this message translates to:
+  /// **'{count, plural, one{{count} partita} other{{count} partite}}'**
+  String weeklyGames(int count);
+
+  /// Esiti delle partite
+  ///
+  /// In it, this message translates to:
+  /// **'{wins} vinte, {draws} patte, {losses} perse'**
+  String weeklyGameResults(int wins, int draws, int losses);
+
+  /// Puzzle della settimana
+  ///
+  /// In it, this message translates to:
+  /// **'{count, plural, one{{count} puzzle risolto} other{{count} puzzle risolti}}'**
+  String weeklyPuzzles(int count);
+
+  /// Lezioni della settimana
+  ///
+  /// In it, this message translates to:
+  /// **'{count, plural, one{{count} lezione completata} other{{count} lezioni completate}}'**
+  String weeklyLessons(int count);
+
+  /// Revisioni della settimana
+  ///
+  /// In it, this message translates to:
+  /// **'{count, plural, one{{count} partita rivista} other{{count} partite riviste}}'**
+  String weeklyReviews(int count);
+
+  /// Minuti di allenamento
+  ///
+  /// In it, this message translates to:
+  /// **'{count, plural, one{{count} minuto di allenamento} other{{count} minuti di allenamento}}'**
+  String weeklyMinutes(int count);
+
+  /// Precisione media delle revisioni
+  ///
+  /// In it, this message translates to:
+  /// **'Precisione media {percent}%'**
+  String weeklyAccuracy(int percent);
+
+  /// Precisione in aumento
+  ///
+  /// In it, this message translates to:
+  /// **'{points, plural, one{{points} punto in più della settimana scorsa} other{{points} punti in più della settimana scorsa}}'**
+  String weeklyAccuracyUp(int points);
+
+  /// Precisione in calo
+  ///
+  /// In it, this message translates to:
+  /// **'{points, plural, one{{points} punto in meno della settimana scorsa} other{{points} punti in meno della settimana scorsa}}'**
+  String weeklyAccuracyDown(int points);
+
+  /// Titolo della sezione errore
+  ///
+  /// In it, this message translates to:
+  /// **'Errore più frequente'**
+  String get weeklyErrorHeading;
+
+  /// Errore ricorrente con il numero di volte
+  ///
+  /// In it, this message translates to:
+  /// **'{error}: {count, plural, one{{count} volta} other{{count} volte}}'**
+  String weeklyErrorLine(String error, int count);
+
+  /// Nessun errore ricorrente
+  ///
+  /// In it, this message translates to:
+  /// **'Nessun errore si è ripetuto: ottimo lavoro.'**
+  String get weeklyNoError;
+
+  /// Nome di un errore ricorrente, in minuscolo
+  ///
+  /// In it, this message translates to:
+  /// **'pezzi lasciati in presa'**
+  String get weeklyErrorHangingPiece;
+
+  /// Nome di un errore ricorrente, in minuscolo
+  ///
+  /// In it, this message translates to:
+  /// **'forchette subite'**
+  String get weeklyErrorAllowedFork;
+
+  /// Nome di un errore ricorrente, in minuscolo
+  ///
+  /// In it, this message translates to:
+  /// **'forchette mancate'**
+  String get weeklyErrorMissedFork;
+
+  /// Nome di un errore ricorrente, in minuscolo
+  ///
+  /// In it, this message translates to:
+  /// **'inchiodature subite'**
+  String get weeklyErrorAllowedPin;
+
+  /// Nome di un errore ricorrente, in minuscolo
+  ///
+  /// In it, this message translates to:
+  /// **'attacchi di scoperta mancati'**
+  String get weeklyErrorMissedDiscovery;
+
+  /// Nome di un errore ricorrente, in minuscolo
+  ///
+  /// In it, this message translates to:
+  /// **'re lasciato scoperto'**
+  String get weeklyErrorExposedKing;
+
+  /// Nome di un errore ricorrente, in minuscolo
+  ///
+  /// In it, this message translates to:
+  /// **'matti mancati'**
+  String get weeklyErrorMissedMate;
+
+  /// Nome di un errore ricorrente, in minuscolo
+  ///
+  /// In it, this message translates to:
+  /// **'matti subiti'**
+  String get weeklyErrorAllowedMate;
+
+  /// Nome di un errore ricorrente, in minuscolo
+  ///
+  /// In it, this message translates to:
+  /// **'perdite di materiale'**
+  String get weeklyErrorMaterialLoss;
+
+  /// Nome di un errore ricorrente, in minuscolo
+  ///
+  /// In it, this message translates to:
+  /// **'catture mancate'**
+  String get weeklyErrorMissedCapture;
+
+  /// Titolo della sezione consiglio
+  ///
+  /// In it, this message translates to:
+  /// **'Il consiglio'**
+  String get weeklyAdviceHeading;
+
+  /// Consiglio: lezione
+  ///
+  /// In it, this message translates to:
+  /// **'Ripassa la lezione «{title}» del Percorso.'**
+  String weeklyAdviceLesson(String title);
+
+  /// Consiglio: puzzle di un tema
+  ///
+  /// In it, this message translates to:
+  /// **'Allenati con i puzzle «{title}».'**
+  String weeklyAdvicePuzzles(String title);
+
+  /// Consiglio: rivedere una partita
+  ///
+  /// In it, this message translates to:
+  /// **'Rivedi una delle tue partite: il coach ti mostra dove migliorare.'**
+  String get weeklyAdviceReview;
+
+  /// Consiglio: puzzle
+  ///
+  /// In it, this message translates to:
+  /// **'Risolvi qualche puzzle: bastano pochi minuti al giorno.'**
+  String get weeklyAdviceSolvePuzzles;
+
+  /// Consiglio: continuare
+  ///
+  /// In it, this message translates to:
+  /// **'Continua così: allenarti poco ma spesso funziona.'**
+  String get weeklyAdviceKeepGoing;
+
+  /// Pulsante che apre la lezione consigliata
+  ///
+  /// In it, this message translates to:
+  /// **'Apri la lezione'**
+  String get weeklyOpenLesson;
+
+  /// Pulsante che apre i puzzle consigliati
+  ///
+  /// In it, this message translates to:
+  /// **'Apri i puzzle'**
+  String get weeklyOpenPuzzles;
+
+  /// Profilo bambino: frase sui progressi
+  ///
+  /// In it, this message translates to:
+  /// **'Questa settimana ti sei allenato. Bravo!'**
+  String get weeklyKidActive;
+
+  /// Profilo bambino: etichetta per i lettori di schermo
+  ///
+  /// In it, this message translates to:
+  /// **'Le stelle sono i giorni in cui ti sei allenato'**
+  String get weeklyKidDaysLabel;
+
+  /// Profilo bambino: errore ricorrente
+  ///
+  /// In it, this message translates to:
+  /// **'Fai più attenzione a: {error}.'**
+  String weeklyKidError(String error);
+
+  /// Titolo della scheda con il risultato esatto dei finali con pochi pezzi
+  ///
+  /// In it, this message translates to:
+  /// **'Finale perfetto'**
+  String get tablebaseTitle;
+
+  /// Attesa mentre l'app genera la tabella dei finali, solo al primo uso
+  ///
+  /// In it, this message translates to:
+  /// **'Calcolo il finale perfetto… succede solo la prima volta'**
+  String get tablebaseCalculating;
+
+  /// Risultato esatto: vince il Bianco, con le mosse al matto
+  ///
+  /// In it, this message translates to:
+  /// **'{moves, plural, one{Il Bianco vince: matto in {moves} mossa} other{Il Bianco vince: matto in {moves} mosse}}'**
+  String tablebaseWhiteMates(int moves);
+
+  /// Risultato esatto: vince il Nero, con le mosse al matto
+  ///
+  /// In it, this message translates to:
+  /// **'{moves, plural, one{Il Nero vince: matto in {moves} mossa} other{Il Nero vince: matto in {moves} mosse}}'**
+  String tablebaseBlackMates(int moves);
+
+  /// Risultato esatto senza numeri, per il profilo bambino
+  ///
+  /// In it, this message translates to:
+  /// **'Il Bianco vince'**
+  String get tablebaseWhiteWins;
+
+  /// Risultato esatto senza numeri, per il profilo bambino
+  ///
+  /// In it, this message translates to:
+  /// **'Il Nero vince'**
+  String get tablebaseBlackWins;
+
+  /// Risultato esatto: nessuno dei due può vincere
+  ///
+  /// In it, this message translates to:
+  /// **'Patta con il gioco perfetto'**
+  String get tablebaseDraw;
+
+  /// Mossa migliore del finale perfetto
+  ///
+  /// In it, this message translates to:
+  /// **'Mossa perfetta: {move}'**
+  String tablebaseBestMove(String move);
+
+  /// Descrizione per i lettori di schermo del pulsante con la mossa perfetta
+  ///
+  /// In it, this message translates to:
+  /// **'Gioca la mossa perfetta'**
+  String get tablebaseBestMoveHint;
+
+  /// Pulsante dell'allenatore dei finali che disegna la mossa perfetta sulla scacchiera
+  ///
+  /// In it, this message translates to:
+  /// **'Mostra la mossa perfetta'**
+  String get tablebaseShowMove;
 }
 
 class _AppLocalizationsDelegate

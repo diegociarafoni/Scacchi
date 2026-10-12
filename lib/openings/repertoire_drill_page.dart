@@ -83,13 +83,10 @@ class _RepertoireDrillPageState extends State<RepertoireDrillPage> {
   Widget build(BuildContext context) {
     final drill = _drill;
     final expected = drill?.expected;
+    final settings = AppSettings.of(context);
     final arrow = expected is NormalMove && (_showAnswer || drill!.isNew)
-        ? Arrow(
-            color: AppSettings.of(context).hintColor,
-            orig: expected.from,
-            dest: expected.to,
-          )
-        : null;
+        ? settings.marks.arrow(settings.hintColor, expected.from, expected.to)
+        : const <Shape>{};
     return Scaffold(
       appBar: AppBar(title: Text(openingsL10n(context).openingsDrillTitle)),
       body: SafeArea(
@@ -118,7 +115,7 @@ class _RepertoireDrillPageState extends State<RepertoireDrillPage> {
                     lastMove: drill.lastMove,
                     player: widget.side,
                     revision: _revision,
-                    shapes: {?arrow},
+                    shapes: arrow,
                     onMove: _onMove,
                   ),
               ],

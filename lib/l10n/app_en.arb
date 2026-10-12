@@ -1,6 +1,85 @@
 {
   "@@locale": "en",
   "appTitle": "Rokko",
+  "backupTitle": "Backup and restore",
+  "backupIntro": "The backup contains games, progress, learning path, tournaments, training and settings. Keep it somewhere safe: the app works offline, so there is no online copy.",
+  "backupShare": "Share the backup",
+  "backupShareSubject": "Rokko backup",
+  "backupRestoreFromText": "Restore from text",
+  "backupExported": "Backup ready to save",
+  "backupExportFailed": "Backup failed: {error}",
+  "backupRestoreStaged": "Backup ready. Close and reopen the app to restore your data.",
+  "backupRestoreFailed": "Restore failed: {error}",
+  "backupErrorNotApp": "This is not a Rokko backup",
+  "backupErrorNewerVersion": "Backup created by a newer version",
+  "backupErrorUnexpectedFile": "Unexpected file in the backup: {file}",
+  "backupErrorInvalidFile": "Invalid file in the backup: {file}",
+  "backupErrorInvalidPreference": "Invalid preference: {name}",
+  "backupErrorUnreadable": "Unreadable backup",
+  "backupRestoreDialogTitle": "Restore the backup",
+  "backupRestoreDialogBody": "Paste the contents of the backup file. Your current data will be replaced.",
+  "backupCancel": "Cancel",
+  "backupRestore": "Restore",
+  "whyPiece": "{role, select, pawn{the pawn} knight{the knight} bishop{the bishop} rook{the rook} queen{the queen} other{the king}}",
+  "whyMate": "Checkmate!",
+  "whyCastle": "Castles: puts the king safe.",
+  "whyPromote": "Promotes the pawn to {role, select, queen{a queen} rook{a rook} bishop{a bishop} knight{a knight} other{a piece}}.",
+  "whyCapture": "Captures {victim} with {attacker}.",
+  "whyCheck": "Gives check to your king.",
+  "whySafe": "Moves {piece} to safety; it was under attack.",
+  "whyThreatCapture": "Threatens to capture {victim} on {square}.",
+  "whyThreatCaptureKid": "Threatens to capture {victim}.",
+  "whyThreatCheck": "Prepares a check on your king.",
+  "whyThreatPromote": "Prepares to promote a pawn.",
+  "whyDevelop": "Develops {piece}: it joins the game.",
+  "whyCenter": "Takes space in the centre.",
+  "whyImprove": "Moves {piece} to a more useful square.",
+  "editorFenTitle": "Position (FEN)",
+  "editorFenHelpTooltip": "What is FEN?",
+  "editorFenHelpBody": "FEN is a line of text that describes a position: the pieces on the board, whose turn it is, castling rights and move counters. Use it to copy the position to other apps or to paste one you received: use the copy and paste buttons above.",
+  "editorFenHelpClose": "Got it",
+  "qrSendTitle": "Pass via QR",
+  "qrSendHint": "On the other phone open You › Archive › Receive via QR and frame the code.",
+  "qrPart": "Part {current} of {total}",
+  "qrPause": "Pause",
+  "qrResume": "Resume",
+  "qrNext": "Next part",
+  "qrPrevious": "Previous part",
+  "qrCodeLabel": "Game QR code",
+  "qrReceiveTitle": "Receive via QR",
+  "qrReceiveHint": "Frame the QR code shown on the other phone.",
+  "qrReceived": "{received} of {total} parts read",
+  "qrForeign": "This QR code does not contain a game.",
+  "qrCorrupted": "The QR code is damaged: start reading again.",
+  "qrTooLarge": "The game is too large to receive.",
+  "qrRestarted": "New game framed: reading restarted.",
+  "qrCameraError": "The camera is not available. Allow Rokko to use the camera in the phone settings and try again.",
+  "qrRetry": "Try again",
+  "qrInvalidGame": "The QR code does not contain a valid game.",
+  "qrFinishedGame": "The game is already over: receive it from You › Archive › Receive via QR.",
+  "qrMalformed": "Invalid QR code: ignored.",
+  "opponentHintHuman": "Two players share the same device.",
+  "opponentHintComputer": "Pick a level or let it adapt to you.",
+  "opponentHintBot": "Opponents with a personality, unlocked one by one.",
+  "botUnlockHint": "Unlocks by beating {name}",
+  "handicapTitle": "Handicap",
+  "handicapGameTitle": "Handicap game",
+  "handicapHint": "Whoever gives the advantage plays without a piece or with less time. The game does not count for the local rating.",
+  "handicapPieceTitle": "Piece removed",
+  "handicapNone": "None",
+  "handicapPieceFPawn": "F pawn",
+  "handicapPieceKnight": "Knight",
+  "handicapPieceRook": "Rook",
+  "handicapPieceQueen": "Queen",
+  "handicapTimeTitle": "Time of the player giving odds",
+  "handicapTimeEqual": "Equal",
+  "handicapTimeHint": "Applies only with a clock and when it is lower than the chosen time control.",
+  "handicapGiverTitle": "Who gives the advantage",
+  "handicapGiverYou": "You",
+  "handicapGiverOpponent": "The opponent",
+  "handicapGiverWhite": "White",
+  "handicapGiverBlack": "Black",
+  "handicapTimeMinutes": "{n} min",
   "kidProfileSection": "Profile",
   "kidProfile": "Kid profile",
   "kidProfileDescription": "Simpler screens and words, friendly bots, no numbers",
@@ -87,7 +166,6 @@
   "kidPuzzleReviewDue": "Some puzzles to try again",
   "kidPuzzleReviewNone": "Nothing to try again today",
   "kidPuzzleKeepGoing": "Go on, you can do it!",
-  "puzzleGoal": "{goal, select, mateIn1{Goal: mate in 1} mateIn2{Goal: mate in 2} mateIn3{Goal: mate in 3} mateIn4{Goal: mate in 4} mate{Goal: checkmate the opponent} crushing{Goal: get a decisive advantage} advantage{Goal: get the advantage} equality{Goal: reach equality} other{Goal: find the best move}}",
   "kidAccuracy5": "Perfect!",
   "kidAccuracy4": "Very good",
   "kidAccuracy3": "Good",
@@ -102,49 +180,6 @@
   "kidCoachMaterialLoss": "Careful: this move loses pieces.",
   "kidCoachAllowedMate": "After {move} your opponent can checkmate with {reply}.",
   "kidCoachMissedMate": "You could checkmate with {move}!",
-  "qrSendTitle": "Pass via QR",
-  "qrSendHint": "On the other phone open You › Archive › Receive via QR and frame the code.",
-  "qrPart": "Part {current} of {total}",
-  "qrPause": "Pause",
-  "qrResume": "Resume",
-  "qrNext": "Next part",
-  "qrPrevious": "Previous part",
-  "qrCodeLabel": "Game QR code",
-  "qrReceiveTitle": "Receive via QR",
-  "qrReceiveHint": "Frame the QR code shown on the other phone.",
-  "qrReceived": "{received} of {total} parts read",
-  "qrForeign": "This QR code does not contain a game.",
-  "qrCorrupted": "The QR code is damaged: start reading again.",
-  "qrTooLarge": "The game is too large to receive.",
-  "qrRestarted": "New game framed: reading restarted.",
-  "qrCameraError": "The camera is not available. Allow Rokko to use the camera in the phone settings and try again.",
-  "qrRetry": "Try again",
-  "qrInvalidGame": "The QR code does not contain a valid game.",
-  "qrFinishedGame": "The game is already over: receive it from You › Archive › Receive via QR.",
-  "qrMalformed": "Invalid QR code: ignored.",
-  "editorFenTitle": "Position (FEN)",
-  "editorFenHelpTooltip": "What is FEN?",
-  "editorFenHelpBody": "FEN is a line of text that describes a position: the pieces on the board, whose turn it is, castling rights and move counters. Use it to copy the position to other apps or to paste one you received: use the copy and paste buttons above.",
-  "editorFenHelpClose": "Got it",
-  "backupTitle": "Backup and restore",
-  "backupIntro": "The backup contains games, progress, learning path, tournaments, training and settings. Keep it somewhere safe: the app works offline, so there is no online copy.",
-  "backupShare": "Share the backup",
-  "backupShareSubject": "Rokko backup",
-  "backupRestoreFromText": "Restore from text",
-  "backupExported": "Backup ready to save",
-  "backupExportFailed": "Backup failed: {error}",
-  "backupRestoreStaged": "Backup ready. Close and reopen the app to restore your data.",
-  "backupRestoreFailed": "Restore failed: {error}",
-  "backupErrorNotApp": "This is not a Rokko backup",
-  "backupErrorNewerVersion": "Backup created by a newer version",
-  "backupErrorUnexpectedFile": "Unexpected file in the backup: {file}",
-  "backupErrorInvalidFile": "Invalid file in the backup: {file}",
-  "backupErrorInvalidPreference": "Invalid preference: {name}",
-  "backupErrorUnreadable": "Unreadable backup",
-  "backupRestoreDialogTitle": "Restore the backup",
-  "backupRestoreDialogBody": "Paste the contents of the backup file. Your current data will be replaced.",
-  "backupCancel": "Cancel",
-  "backupRestore": "Restore",
   "minigamesTitle": "Minigames",
   "minigamesRecord": "Best {score}",
   "minigamesCoordinatesTitle": "Timed coordinates",
@@ -177,31 +212,68 @@
   "minigamesQuizQuestion": "Question {number} of {total}",
   "minigamesQuizCorrect": "Correct!",
   "minigamesQuizAnswer": "It was: {answer}",
-  "statsTitle": "Statistics",
-  "statsLoadFailed": "The game archive could not be read: try again later.",
-  "statsEmpty": "Play a few games against the computer to see your statistics.",
-  "statsRecord": "Results",
-  "statsAllGames": "All",
-  "statsWithWhite": "With white",
-  "statsWithBlack": "With black",
-  "statsLocalGames": "Two-player games",
-  "statsByTimeControl": "By time control",
-  "statsTopOpenings": "Most played openings",
-  "statsGames": "{count, plural, one{{count} game} other{{count} games}}",
-  "statsAccuracy": "Accuracy",
-  "statsAverage": "Average",
-  "statsAccuracyTrend": "Accuracy trend",
-  "statsRating": "Estimated rating {rating}",
-  "statsRatingProvisional": "provisional: {count} games against the computer are needed",
-  "statsRatingGames": "{count, plural, one{from {count} game against the computer} other{from {count} games against the computer}}",
-  "statsRatingTrend": "Rating trend",
-  "statsNoGames": "no games",
-  "statsScoreDetail": "{wins, plural, one{{wins} win} other{{wins} wins}}, {draws, plural, one{{draws} draw} other{{draws} draws}}, {losses, plural, one{{losses} loss} other{{losses} losses}}",
-  "statsTrend": "{label}: from {first} to {last}, minimum {min}, maximum {max}",
-  "opponentHintHuman": "Two players share the same device.",
-  "opponentHintComputer": "Pick a level or let it adapt to you.",
-  "opponentHintBot": "Opponents with a personality, unlocked one by one.",
-  "botUnlockHint": "Unlocks by beating {name}",
+  "personalTitle": "Your openings",
+  "personalHubSubtitle": "The moves you have played, with results",
+  "personalLoadFailed": "The game archive could not be read: try again later.",
+  "personalEmpty": "Play a few games against the computer to build your opening tree.",
+  "personalNoGamesFiltered": "No games match these filters.",
+  "personalNoGamesHere": "You have never played from this position.",
+  "personalSideAll": "Both",
+  "personalSideWhite": "White",
+  "personalSideBlack": "Black",
+  "personalOpponent": "Opponent",
+  "personalAllOpponents": "All opponents",
+  "personalGames": "{count, plural, one{{count} game} other{{count} games}}",
+  "@personalGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "personalGamesTotal": "{count, plural, one{{count} game counted} other{{count} games counted}}",
+  "@personalGamesTotal": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "personalScore": "{wins}W · {draws}D · {losses}L",
+  "@personalScore": {
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      }
+    }
+  },
+  "personalScoreSemantics": "{wins} won, {draws} drawn, {losses} lost",
+  "@personalScoreSemantics": {
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      }
+    }
+  },
+  "personalStartPosition": "Starting position",
+  "personalNoName": "Unnamed opening",
+  "personalBack": "Back",
+  "personalStart": "Start",
+  "personalFlip": "Flip the board",
+  "personalOpenInBook": "Open in the openings explorer",
+  "personalFromHere": "Your games from this position",
   "openingsTitle": "Openings",
   "@openingsTitle": {
     "description": "Titolo della scheda Aperture"
@@ -470,5 +542,281 @@
         "type": "String"
       }
     }
-  }
+  },
+  "puzzleGoal": "{goal, select, mateIn1{Goal: mate in 1} mateIn2{Goal: mate in 2} mateIn3{Goal: mate in 3} mateIn4{Goal: mate in 4} mate{Goal: checkmate the opponent} crushing{Goal: get a decisive advantage} advantage{Goal: get the advantage} equality{Goal: reach equality} other{Goal: find the best move}}",
+  "challengeTitle": "Challenge a friend",
+  "challengeSubtitle": "The same puzzles on two phones, no network",
+  "challengeIntro": "Pick the run and show the QR code to your friend: you both play the same puzzles. At the end you swap scores with a second QR code.",
+  "challengePrepare": "Set up the challenge",
+  "challengeReady": "Challenge ready: {mode}",
+  "challengeShowInvite": "Show the QR code to your friend",
+  "challengePlay": "Play your run",
+  "challengeReceive": "Receive a challenge",
+  "challengeInviteTitle": "Challenge: {mode}",
+  "challengeInviteHint": "Your friend opens Puzzles › Challenge a friend › Receive a challenge and scans the code.",
+  "challengeReceiveHint": "Scan the challenge QR code your friend is showing.",
+  "challengeNotInvite": "This QR code is not a challenge: ask your friend to show the challenge QR code.",
+  "challengeLibraryMismatch": "The two phones have different puzzles: update Rokko on both.",
+  "challengeCompareTitle": "Challenge with your friend",
+  "challengeShowResult": "Show my result",
+  "challengeResultTitle": "My result: {score}",
+  "challengeResultHint": "Your friend scans this code to see your score.",
+  "challengeReadResult": "Read your friend's result",
+  "challengeReadResultHint": "Scan the result QR code your friend is showing.",
+  "challengeNotResult": "This QR code is not a result: ask your friend to show the result QR code.",
+  "challengeOtherChallenge": "That result belongs to a different challenge.",
+  "challengeWon": "You won: {mine} to {theirs}",
+  "challengeLost": "Your friend won: {theirs} to {mine}",
+  "challengeDraw": "A draw: {mine} to {theirs}",
+  "settingsExplainWhy": "Explain why",
+  "settingsExplainWhyDescription": "After each computer move, one line on what it threatens or prepares",
+  "settingsZenMode": "Zen mode",
+  "settingsZenModeDescription": "During a game only the board and the moves remain: no Elo, material, status, coach warnings or comments",
+  "shareImageTitle": "Export as image",
+  "@shareImageTitle": {
+    "description": "shareImageTitle"
+  },
+  "shareImageAction": "Share",
+  "@shareImageAction": {
+    "description": "shareImageAction"
+  },
+  "shareImageFlip": "Flip the board",
+  "@shareImageFlip": {
+    "description": "shareImageFlip"
+  },
+  "shareImageCoordinates": "Coordinates",
+  "@shareImageCoordinates": {
+    "description": "shareImageCoordinates"
+  },
+  "shareImageLastMove": "Last move",
+  "@shareImageLastMove": {
+    "description": "shareImageLastMove"
+  },
+  "shareImageCaption": "Caption (optional)",
+  "@shareImageCaption": {
+    "description": "shareImageCaption"
+  },
+  "shareImagePreview": "Board preview",
+  "@shareImagePreview": {
+    "description": "shareImagePreview"
+  },
+  "shareImageFailed": "Sharing failed",
+  "@shareImageFailed": {
+    "description": "shareImageFailed"
+  },
+  "shareImageSubject": "Chess position",
+  "@shareImageSubject": {
+    "description": "shareImageSubject"
+  },
+  "statsTitle": "Statistics",
+  "statsLoadFailed": "The game archive could not be read: try again later.",
+  "statsEmpty": "Play a few games against the computer to see your statistics.",
+  "statsRecord": "Results",
+  "statsAllGames": "All",
+  "statsWithWhite": "With white",
+  "statsWithBlack": "With black",
+  "statsLocalGames": "Two-player games",
+  "statsByTimeControl": "By time control",
+  "statsTopOpenings": "Most played openings",
+  "statsGames": "{count, plural, one{{count} game} other{{count} games}}",
+  "statsAccuracy": "Accuracy",
+  "statsAverage": "Average",
+  "statsAccuracyTrend": "Accuracy trend",
+  "statsRating": "Estimated rating {rating}",
+  "statsRatingProvisional": "provisional: {count} games against the computer are needed",
+  "statsRatingGames": "{count, plural, one{from {count} game against the computer} other{from {count} games against the computer}}",
+  "statsRatingTrend": "Rating trend",
+  "statsNoGames": "no games",
+  "statsScoreDetail": "{wins, plural, one{{wins} win} other{{wins} wins}}, {draws, plural, one{{draws} draw} other{{draws} draws}}, {losses, plural, one{{losses} loss} other{{losses} losses}}",
+  "statsTrend": "{label}: from {first} to {last}, minimum {min}, maximum {max}",
+  "storyTitle": "Story",
+  "storyEntrySubtitle": "A journey in chapters: lessons, puzzles and challenges",
+  "storyChapterNumber": "Chapter {n}",
+  "@storyChapterNumber": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "storyProgress": "{done} chapters out of {total}",
+  "@storyProgress": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyChapterLocked": "Opens when you finish the previous chapter",
+  "storyChapterDone": "Chapter finished",
+  "storyContinue": "Continue",
+  "storyFinished": "The story is over. Lessons, puzzles and games stay available in the rest of the app.",
+  "storyStepLessons": "Lessons: {value} of {total}",
+  "@storyStepLessons": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyStepPuzzles": "Chapter puzzles: {value} of {total}",
+  "@storyStepPuzzles": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyStepGuardian": "The chapter guardian",
+  "storyStepBoss": "Challenge {name}",
+  "@storyStepBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyStepDone": "done",
+  "storyStepTodo": "to do",
+  "storyStepLocked": "locked",
+  "storyStepLockedHint": "Finish the previous step first.",
+  "storyEngineMissing": "Challenges are played where the computer opponent runs: Android and iOS, or Windows and Linux with Stockfish installed.",
+  "storyBossWon": "You beat {name}!",
+  "@storyBossWon": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyBossLost": "{name} holds out for now: try again whenever you like.",
+  "@storyBossLost": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPuzzlesNone": "The puzzles could not be loaded: try again.",
+  "storyVillageTitle": "The village of the pieces",
+  "storyVillageIntro": "You reach the village at the foot of the Rokko fortress. The villagers no longer remember how their pieces move: help them with the lessons, then show you can spot a piece left hanging.",
+  "storyVillageBoss": "{name}, the village keeper, challenges you to see if you really learned.",
+  "@storyVillageBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyVillageOutro": "The village throws a party in your honour. The road to the city gates is open.",
+  "storyGatesTitle": "The city gates",
+  "storyGatesIntro": "The guards stop you at the gates: to enter you must know the rules, from check to castling. A promotion spotted in time even opens the highest gate.",
+  "storyGatesBoss": "{name}, captain of the guards, wants a test before letting you through.",
+  "@storyGatesBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyGatesOutro": "The gates swing open. Ahead of you rises the king's tower.",
+  "storyTowerTitle": "The king's tower",
+  "storyTowerIntro": "The king lives at the top of the tower, and he knows how to defend himself. Learn the checkmates that corner him, even when his own pieces form a wall.",
+  "storyTowerBoss": "{name}, the knight who loves gambits, is waiting at the top of the stairs.",
+  "@storyTowerBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyTowerOutro": "The king of the tower is checkmated. The forest and its traps remain.",
+  "storyForestTitle": "The forest of traps",
+  "storyForestIntro": "In the forest every piece hides a trap: forks, pins, skewers. Learn to see them before anyone else does.",
+  "storyForestBoss": "{name}, the forest guide, knows every path and every snare.",
+  "@storyForestBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyForestOutro": "You crossed the forest without falling into a single trap. The castle awaits.",
+  "storyCastleTitle": "The castle of endgames",
+  "storyCastleIntro": "In the castle only a few pieces are left on the board and every move counts. Here we find out who can close a game.",
+  "storyCastleBoss": "{name}, the castellan, guards the entrance to the crown room.",
+  "@storyCastleBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyCastleOutro": "The great door opens: the crown is near.",
+  "storyCrownTitle": "The crown",
+  "storyCrownIntro": "Last stop: the crown room. A good start is half the victory: the centre, development, castling.",
+  "storyCrownBoss": "{name}, the keeper of the crown, plays openings like no one else.",
+  "@storyCrownBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyCrownOutro": "The crown is yours. The kingdom is at peace and every new game is a new story.",
+  "weeklyEntryTitle": "Weekly summary",
+  "weeklyEmpty": "You have not done anything in the last seven days yet. Play a game or solve a puzzle: the summary fills in by itself.",
+  "weeklyProgressHeading": "Your progress",
+  "weeklyGames": "{count, plural, one{{count} game} other{{count} games}}",
+  "weeklyGameResults": "{wins} won, {draws} drawn, {losses} lost",
+  "weeklyPuzzles": "{count, plural, one{{count} puzzle solved} other{{count} puzzles solved}}",
+  "weeklyLessons": "{count, plural, one{{count} lesson completed} other{{count} lessons completed}}",
+  "weeklyReviews": "{count, plural, one{{count} game reviewed} other{{count} games reviewed}}",
+  "weeklyMinutes": "{count, plural, one{{count} minute of training} other{{count} minutes of training}}",
+  "weeklyAccuracy": "Average accuracy {percent}%",
+  "weeklyAccuracyUp": "{points, plural, one{{points} point more than last week} other{{points} points more than last week}}",
+  "weeklyAccuracyDown": "{points, plural, one{{points} point less than last week} other{{points} points less than last week}}",
+  "weeklyErrorHeading": "Most frequent mistake",
+  "weeklyErrorLine": "{error}: {count, plural, one{{count} time} other{{count} times}}",
+  "weeklyNoError": "No mistake came up twice: great work.",
+  "weeklyErrorHangingPiece": "pieces left hanging",
+  "weeklyErrorAllowedFork": "forks you allowed",
+  "weeklyErrorMissedFork": "forks you missed",
+  "weeklyErrorAllowedPin": "pins you allowed",
+  "weeklyErrorMissedDiscovery": "discovered attacks you missed",
+  "weeklyErrorExposedKing": "king left exposed",
+  "weeklyErrorMissedMate": "mates you missed",
+  "weeklyErrorAllowedMate": "mates you allowed",
+  "weeklyErrorMaterialLoss": "material lost",
+  "weeklyErrorMissedCapture": "captures you missed",
+  "weeklyAdviceHeading": "Your tip",
+  "weeklyAdviceLesson": "Revisit the lesson “{title}” in the Path.",
+  "weeklyAdvicePuzzles": "Train with the “{title}” puzzles.",
+  "weeklyAdviceReview": "Review one of your games: the coach shows you where to improve.",
+  "weeklyAdviceSolvePuzzles": "Solve a few puzzles: a few minutes a day is enough.",
+  "weeklyAdviceKeepGoing": "Keep it up: training a little but often works.",
+  "weeklyOpenLesson": "Open the lesson",
+  "weeklyOpenPuzzles": "Open the puzzles",
+  "weeklyKidActive": "You practised this week. Well done!",
+  "weeklyKidDaysLabel": "The stars are the days you practised",
+  "weeklyKidError": "Pay more attention to: {error}.",
+  "tablebaseTitle": "Perfect endgame",
+  "tablebaseCalculating": "Working out the perfect endgame… this only happens the first time",
+  "tablebaseWhiteMates": "{moves, plural, one{White wins: mate in {moves} move} other{White wins: mate in {moves} moves}}",
+  "tablebaseBlackMates": "{moves, plural, one{Black wins: mate in {moves} move} other{Black wins: mate in {moves} moves}}",
+  "tablebaseWhiteWins": "White wins",
+  "tablebaseBlackWins": "Black wins",
+  "tablebaseDraw": "Draw with perfect play",
+  "tablebaseBestMove": "Perfect move: {move}",
+  "tablebaseBestMoveHint": "Play the perfect move",
+  "tablebaseShowMove": "Show the perfect move"
 }

@@ -46,6 +46,7 @@ class Backup {
     'games.json',
     'progress.json',
     'path.json',
+    'story.json',
     'tornei.json',
     'training.json',
   };

@@ -3,20 +3,23 @@ name: CI
 # Minuti di Actions contati: vedi "Consumo di minuti" in docs/sviluppo.md.
 # Sulle PR girano sempre analisi, formattazione e test; e2e e build Android solo
 # su main, con l'etichetta ci-completa (ci-completa.yml) o quando la PR tocca i
-# file che li riguardano.
+# file che li riguardano. Nella coda di merge (merge_group) la stessa regola vale
+# per i file del gruppo: i controlli obbligatori girano sul risultato dell'unione.
 on:
   push:
     branches: [main]
     paths-ignore: ['docs/**', '**/*.md', 'LICENSE']
   pull_request:
     paths-ignore: ['docs/**', '**/*.md', 'LICENSE']
+  merge_group:
   workflow_call:
 
 permissions:
   contents: read
 
-# Un nuovo push sulla stessa PR annulla il giro precedente. Su main ogni commit ha
-# un gruppo a sé: nessun giro viene annullato, neanche se in attesa.
+# Un nuovo push sulla stessa PR annulla il giro precedente. Su main e nella coda
+# di merge ogni commit ha un gruppo a sé: nessun giro viene annullato, neanche
+# se in attesa.
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
@@ -42,14 +45,26 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           EVENT: ${{ github.event_name }}
           PR: ${{ github.event.pull_request.number }}
+          # Nella coda di merge si confronta il gruppo con la base su main.
+          RANGE: ${{ github.event.merge_group.base_sha }}...${{ github.event.merge_group.head_sha }}
           FULL: ${{ contains(github.event.pull_request.labels.*.name, 'ci-completa') }}
         run: |
-          if [ "$EVENT" != "pull_request" ] || [ "$FULL" = "true" ]; then
+          if { [ "$EVENT" != "pull_request" ] && [ "$EVENT" != "merge_group" ]; } || [ "$FULL" = "true" ]; then
             echo "e2e=true" >> "$GITHUB_OUTPUT"
             echo "android=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          files="$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR/files" --paginate --jq '.[].filename')"
+          if [ "$EVENT" = "merge_group" ]; then
+            files="$(gh api "repos/$GITHUB_REPOSITORY/compare/$RANGE" --paginate --jq '.files[].filename' || true)"
+            # Senza l'elenco dei file nella coda si esegue tutto.
+            if [ -z "$files" ]; then
+              echo "e2e=true" >> "$GITHUB_OUTPUT"
+              echo "android=true" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          else
+            files="$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR/files" --paginate --jq '.[].filename')"
+          fi
           has() { grep -qE "$1" <<< "$files" && echo true || echo false; }
           echo "e2e=$(has '^(integration_test/|linux/|pubspec\.(yaml|lock)$|\.github/workflows/ci(-completa)?\.yml$)')" >> "$GITHUB_OUTPUT"
           echo "android=$(has '^(android/|pubspec\.(yaml|lock)$|\.github/workflows/ci(-completa)?\.yml$)')" >> "$GITHUB_OUTPUT"
@@ -59,12 +74,16 @@ jobs:
           flutter-version: 3.47.7
           cache: true
       - run: sudo apt-get update && sudo apt-get install -y stockfish
+      # I testi tradotti non sono nel repository: si uniscono i file per funzione
+      # (e si controlla che le lingue coincidano) prima di pub get, che genera il codice.
+      - run: dart tool/l10n.dart --solo-unione
       - run: flutter pub get
-      - run: flutter gen-l10n && git diff --exit-code lib/l10n
       - run: dart format --output=none --set-exit-if-changed lib test integration_test tool
       # Regole rigorose in analysis_options.yaml: anche gli avvisi informativi bloccano.
       - run: flutter analyze --fatal-infos --fatal-warnings
-      - run: flutter test
+      - run: flutter test --coverage
+      - name: Copertura della logica di gioco
+        run: dart run tool/check_coverage.dart
       - name: Licenze delle dipendenze compatibili con GPL-3.0
         run: dart run tool/check_licenses.dart
 
@@ -83,6 +102,7 @@ jobs:
           channel: stable
           flutter-version: 3.47.7
           cache: true
+      - run: dart tool/l10n.dart --solo-unione
       # Su desktop un file alla volta: con più file l'avvio del secondo fallisce.
       - run: |
           for f in integration_test/*_test.dart; do
@@ -134,6 +154,7 @@ jobs:
           channel: stable
           flutter-version: 3.47.7
           cache: true
+      - run: dart tool/l10n.dart --solo-unione
       - run: flutter build apk --debug --target-platform android-arm64
       - name: Statistiche di ccache
         if: success()

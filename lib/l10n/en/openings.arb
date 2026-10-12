@@ -1,0 +1,333 @@
+{
+  "personalTitle": "Your openings",
+  "personalHubSubtitle": "The moves you have played, with results",
+  "personalLoadFailed": "The game archive could not be read: try again later.",
+  "personalEmpty": "Play a few games against the computer to build your opening tree.",
+  "personalNoGamesFiltered": "No games match these filters.",
+  "personalNoGamesHere": "You have never played from this position.",
+  "personalSideAll": "Both",
+  "personalSideWhite": "White",
+  "personalSideBlack": "Black",
+  "personalOpponent": "Opponent",
+  "personalAllOpponents": "All opponents",
+  "personalGames": "{count, plural, one{{count} game} other{{count} games}}",
+  "@personalGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "personalGamesTotal": "{count, plural, one{{count} game counted} other{{count} games counted}}",
+  "@personalGamesTotal": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "personalScore": "{wins}W · {draws}D · {losses}L",
+  "@personalScore": {
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      }
+    }
+  },
+  "personalScoreSemantics": "{wins} won, {draws} drawn, {losses} lost",
+  "@personalScoreSemantics": {
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      }
+    }
+  },
+  "personalStartPosition": "Starting position",
+  "personalNoName": "Unnamed opening",
+  "personalBack": "Back",
+  "personalStart": "Start",
+  "personalFlip": "Flip the board",
+  "personalOpenInBook": "Open in the openings explorer",
+  "personalFromHere": "Your games from this position",
+  "openingsTitle": "Openings",
+  "@openingsTitle": {
+    "description": "Titolo della scheda Aperture"
+  },
+  "openingsExplorer": "Explore openings",
+  "@openingsExplorer": {
+    "description": "Voce e titolo dell'explorer delle aperture"
+  },
+  "openingsExplorerSubtitle": "Names and continuations of over 3,000 openings",
+  "@openingsExplorerSubtitle": {
+    "description": "Sottotitolo della voce Esplora aperture"
+  },
+  "openingsRepertoireWhite": "Repertoire as White",
+  "@openingsRepertoireWhite": {
+    "description": "Voce e titolo del repertorio del Bianco"
+  },
+  "openingsRepertoireBlack": "Repertoire as Black",
+  "@openingsRepertoireBlack": {
+    "description": "Voce e titolo del repertorio del Nero"
+  },
+  "openingsRepertoireUnavailable": "Repertoire unavailable",
+  "@openingsRepertoireUnavailable": {
+    "description": "Sottotitolo se il repertorio non si carica"
+  },
+  "openingsLoading": "Loading...",
+  "@openingsLoading": {
+    "description": "Sottotitolo durante il caricamento del repertorio"
+  },
+  "openingsRepertoireSummary": "{lines, plural, one{1 line} other{{lines} lines}} · {due, plural, one{1 move to review} other{{due} moves to review}}",
+  "@openingsRepertoireSummary": {
+    "description": "Sottotitolo del repertorio: linee e mosse in scadenza",
+    "placeholders": {
+      "lines": {
+        "type": "int"
+      },
+      "due": {
+        "type": "int"
+      }
+    }
+  },
+  "openingsWhite": "White",
+  "@openingsWhite": {
+    "description": "Colore dei pezzi bianchi"
+  },
+  "openingsBlack": "Black",
+  "@openingsBlack": {
+    "description": "Colore dei pezzi neri"
+  },
+  "openingsCancel": "Cancel",
+  "@openingsCancel": {
+    "description": "Pulsante che chiude un dialogo senza scegliere"
+  },
+  "openingsBack": "Back",
+  "@openingsBack": {
+    "description": "Toglie l'ultima mossa nell'explorer"
+  },
+  "openingsReset": "To start",
+  "@openingsReset": {
+    "description": "Riporta l'explorer alla posizione iniziale"
+  },
+  "openingsFlipBoard": "Flip the board",
+  "@openingsFlipBoard": {
+    "description": "Descrizione dell'icona che cambia il lato della scacchiera"
+  },
+  "openingsLoadFailed": "Could not load the openings.",
+  "@openingsLoadFailed": {
+    "description": "Errore nell'explorer se il libro non si carica"
+  },
+  "openingsStartPosition": "Starting position",
+  "@openingsStartPosition": {
+    "description": "Nome della posizione senza mosse nell'explorer"
+  },
+  "openingsUnnamed": "Unnamed opening",
+  "@openingsUnnamed": {
+    "description": "Posizione dell'explorer che non ha un nome nel libro"
+  },
+  "openingsOutOfBook": "Out of the opening book",
+  "@openingsOutOfBook": {
+    "description": "Nessuna continuazione nel libro"
+  },
+  "openingsFreeTitle": "Free opening",
+  "@openingsFreeTitle": {
+    "description": "Titolo della partita da un'apertura senza nome"
+  },
+  "openingsAddToRepertoire": "Add to repertoire",
+  "@openingsAddToRepertoire": {
+    "description": "Icona e titolo del dialogo per aggiungere la linea corrente"
+  },
+  "openingsAdd": "Add",
+  "@openingsAdd": {
+    "description": "Conferma l'aggiunta al repertorio"
+  },
+  "openingsLineName": "Name",
+  "@openingsLineName": {
+    "description": "Campo del nome della linea"
+  },
+  "openingsDefaultLineName": "Line",
+  "@openingsDefaultLineName": {
+    "description": "Nome proposto per una linea senza apertura riconosciuta"
+  },
+  "openingsPgnLineName": "PGN {n}",
+  "@openingsPgnLineName": {
+    "description": "Nome di una linea importata da PGN",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "openingsLineAddedWhite": "Line added to White's repertoire.",
+  "@openingsLineAddedWhite": {
+    "description": "Conferma dopo l'aggiunta al repertorio del Bianco"
+  },
+  "openingsLineAddedBlack": "Line added to Black's repertoire.",
+  "@openingsLineAddedBlack": {
+    "description": "Conferma dopo l'aggiunta al repertorio del Nero"
+  },
+  "openingsPlayOpening": "Play this opening",
+  "@openingsPlayOpening": {
+    "description": "Icona dell'explorer che avvia la partita dall'apertura (RF-94)"
+  },
+  "openingsPlayLine": "Play the line",
+  "@openingsPlayLine": {
+    "description": "Icona di una linea del repertorio che avvia la partita (RF-94)"
+  },
+  "openingsPlayDialogTitle": "Play against the computer",
+  "@openingsPlayDialogTitle": {
+    "description": "Titolo del dialogo con colore e livello (RF-94)"
+  },
+  "openingsPlayLevel": "Level",
+  "@openingsPlayLevel": {
+    "description": "Campo del livello del computer"
+  },
+  "openingsPlay": "Play",
+  "@openingsPlay": {
+    "description": "Conferma l'avvio della partita"
+  },
+  "openingsLeftByComputer": "The computer left the repertoire line.",
+  "@openingsLeftByComputer": {
+    "description": "Avviso in partita (RF-94)"
+  },
+  "openingsLeftByUser": "You left the repertoire line.",
+  "@openingsLeftByUser": {
+    "description": "Avviso in partita (RF-94)"
+  },
+  "openingsGameSemantics": "Opening: {name} ({eco})",
+  "@openingsGameSemantics": {
+    "description": "Etichetta per i lettori di schermo del nome dell'apertura in partita",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "eco": {
+        "type": "String"
+      }
+    }
+  },
+  "openingsImportPgn": "Import PGN",
+  "@openingsImportPgn": {
+    "description": "Icona e titolo del dialogo di importazione"
+  },
+  "openingsImportHelper": "Each variation becomes a line.",
+  "@openingsImportHelper": {
+    "description": "Aiuto sotto il campo del PGN"
+  },
+  "openingsImport": "Import",
+  "@openingsImport": {
+    "description": "Conferma l'importazione del PGN"
+  },
+  "openingsNoValidLines": "No valid lines in the PGN.",
+  "@openingsNoValidLines": {
+    "description": "Esito di un'importazione senza linee"
+  },
+  "openingsLinesAdded": "Lines added: {added}",
+  "@openingsLinesAdded": {
+    "description": "Esito dell'importazione",
+    "placeholders": {
+      "added": {
+        "type": "int"
+      }
+    }
+  },
+  "openingsLinesAddedDiscarded": "Lines added: {added}. Discarded: {discarded} ({reason})",
+  "@openingsLinesAddedDiscarded": {
+    "description": "Esito dell'importazione con linee scartate; reason è il primo motivo",
+    "placeholders": {
+      "added": {
+        "type": "int"
+      },
+      "discarded": {
+        "type": "int"
+      },
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "openingsNoLines": "No lines. Add them from Explore openings with the \"Add to repertoire\" button or import a PGN.",
+  "@openingsNoLines": {
+    "description": "Repertorio vuoto"
+  },
+  "openingsDeleteLine": "Delete the line",
+  "@openingsDeleteLine": {
+    "description": "Icona che elimina una linea"
+  },
+  "openingsNothingToReview": "No moves to review",
+  "@openingsNothingToReview": {
+    "description": "Pulsante di ripasso senza mosse in scadenza"
+  },
+  "openingsReviewMoves": "Review {due, plural, one{1 move} other{{due} moves}}",
+  "@openingsReviewMoves": {
+    "description": "Pulsante che avvia il ripasso",
+    "placeholders": {
+      "due": {
+        "type": "int"
+      }
+    }
+  },
+  "openingsDrillTitle": "Repertoire review",
+  "@openingsDrillTitle": {
+    "description": "Titolo della schermata di ripasso"
+  },
+  "openingsDrillDone": "Review complete: {count, plural, one{1 move} other{{count} moves}}.",
+  "@openingsDrillDone": {
+    "description": "Fine del ripasso",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "openingsDrillNewMove": "New move: play the one shown by the arrow.",
+  "@openingsDrillNewMove": {
+    "description": "Invito del ripasso per una mossa mai vista"
+  },
+  "openingsDrillPrompt": "Line \"{name}\": what is your move?",
+  "@openingsDrillPrompt": {
+    "description": "Invito del ripasso",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "openingsDrillWrong": "That is not the repertoire move: here is the right one.",
+  "@openingsDrillWrong": {
+    "description": "Dopo una mossa sbagliata nel ripasso"
+  },
+  "openingsErrorEmpty": "The line is empty.",
+  "@openingsErrorEmpty": {
+    "description": "Errore: linea senza mosse"
+  },
+  "openingsErrorIllegal": "The line contains an illegal move.",
+  "@openingsErrorIllegal": {
+    "description": "Errore: mossa illegale"
+  },
+  "openingsErrorNoOwnMoves": "The line has no moves for your color.",
+  "@openingsErrorNoOwnMoves": {
+    "description": "Errore: nessuna mossa del colore del repertorio"
+  },
+  "openingsErrorConflict": "In this position the repertoire already has {san}.",
+  "@openingsErrorConflict": {
+    "description": "Errore: un'altra mossa è già prevista",
+    "placeholders": {
+      "san": {
+        "type": "String"
+      }
+    }
+  }
+}

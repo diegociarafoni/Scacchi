@@ -1,20 +1,31 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
+import '../archive/game_archive.dart';
+import '../l10n/app_localizations.dart';
 import 'explorer_page.dart';
 import 'opening_game.dart';
 import 'openings_l10n.dart';
+import 'personal_explorer_page.dart';
 import 'repertoire.dart';
 import 'repertoire_page.dart';
 
 /// Punto di ingresso delle aperture: explorer e repertori.
 class OpeningsHubPage extends StatefulWidget {
-  const OpeningsHubPage({super.key, required this.repertoire, this.onPlay});
+  const OpeningsHubPage({
+    super.key,
+    required this.repertoire,
+    this.onPlay,
+    this.archive,
+  });
 
   final Future<RepertoireTrainer> repertoire;
 
   /// Avvia una partita da un'apertura; assente senza motore.
   final PlayOpening? onPlay;
+
+  /// Archivio delle partite, per l'albero delle proprie aperture.
+  final Future<GameArchive> Function()? archive;
 
   @override
   State<OpeningsHubPage> createState() => _OpeningsHubPageState();
@@ -43,9 +54,28 @@ class _OpeningsHubPageState extends State<OpeningsHubPage> {
                 title: Text(l.openingsExplorer),
                 subtitle: Text(l.openingsExplorerSubtitle),
                 onTap: () => _open(
-                  ExplorerPage(repertoire: trainer, onPlay: widget.onPlay),
+                  ExplorerPage(
+                    repertoire: trainer,
+                    onPlay: widget.onPlay,
+                    archive: widget.archive,
+                  ),
                 ),
               ),
+              if (widget.archive != null)
+                ListTile(
+                  leading: const Icon(Icons.history_edu_outlined),
+                  title: Text(AppLocalizations.of(context).personalTitle),
+                  subtitle: Text(
+                    AppLocalizations.of(context).personalHubSubtitle,
+                  ),
+                  onTap: () => _open(
+                    PersonalExplorerPage(
+                      archive: widget.archive!(),
+                      repertoire: trainer,
+                      onPlay: widget.onPlay,
+                    ),
+                  ),
+                ),
               const Divider(),
               for (final side in Side.values)
                 ListTile(

@@ -241,7 +241,11 @@ void main() {
     expect(tester.takeException(), isNull);
     final bar = tester.getRect(find.byKey(const Key('preview-bar')));
     expect(bar.height, lessThanOrEqualTo(844 * 0.3));
-    await tester.scrollUntilVisible(find.text('Backup e ripristino'), 300);
+    await tester.scrollUntilVisible(
+      find.text('Backup e ripristino'),
+      300,
+      maxScrolls: 100,
+    );
   });
 
   testWidgets('RNF-07 l\'anteprima ha un\'etichetta per i lettori di schermo', (
