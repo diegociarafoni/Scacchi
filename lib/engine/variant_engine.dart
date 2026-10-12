@@ -217,7 +217,7 @@ _Reply _chooseWithNoise(
 _Reply _evaluate(_Request request) {
   final root = request.position;
   final search = _Search(request.budgetMs);
-  var score = search.negamax(root, 0, -_inf, _inf, 0);
+  var score = 0;
   var reached = 0;
   for (var depth = 1; depth <= request.depth; depth++) {
     try {
@@ -267,7 +267,7 @@ class _Search {
   int negamax(Position pos, int depth, int alpha, int beta, int ply) {
     _tick();
     if (pos.isVariantEnd) return _variantEnd(pos, ply);
-    if (pos.isInsufficientMaterial) return 0;
+    if (pos.isInsufficientMaterial || pos.halfmoves >= 100) return 0;
     if (depth <= 0) return _quiesce(pos, alpha, beta, ply, 0);
     final moves = orderedMoves(pos);
     if (moves.isEmpty) return pos.isCheck ? ply - _mate : 0;
@@ -297,9 +297,9 @@ class _Search {
   int _quiesce(Position pos, int alpha, int beta, int ply, int depth) {
     _tick();
     if (pos.isVariantEnd) return _variantEnd(pos, ply);
-    if (pos.isInsufficientMaterial) return 0;
+    if (pos.isInsufficientMaterial || pos.halfmoves >= 100) return 0;
     final inCheck = pos.isCheck;
-    if (inCheck && depth < 3) {
+    if (inCheck && depth < 6) {
       final moves = orderedMoves(pos);
       if (moves.isEmpty) return ply - _mate;
       var best = -_inf;

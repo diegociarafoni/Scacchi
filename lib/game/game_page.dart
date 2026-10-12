@@ -172,8 +172,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   Handicap? _handicap;
   Side _handicapHuman = Side.white;
 
-  /// Ultima variante scelta per la partita tra due persone.
-  Variant _twoPlayerVariant = Variant.standard;
+  /// Ultima variante scelta nel pannello Nuova, con persone o contro il computer.
+  Variant _chosenVariant = Variant.standard;
   final _random = math.Random();
 
   /// Lato giocato dal computer; `null` nella partita tra due persone.
@@ -791,7 +791,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _bot = null;
     _resultRecorded = false;
     _botResultRecorded = false;
-    _twoPlayerVariant = game.variant;
+    _chosenVariant = game.variant;
     // Come per l'editor: si archivia, ma non vale XP una partita iniziata altrove.
     _beginGame(
       game,
@@ -1355,7 +1355,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         isScrollControlled: true,
         builder: (context) => _TimeControlSheet(
           kid: _kid,
-          variant: _kid ? Variant.standard : _twoPlayerVariant,
+          variant: _kid ? Variant.standard : _chosenVariant,
           whiteName: _settings.whiteName,
           blackName: _settings.blackName,
           setup: _setup,
@@ -1372,7 +1372,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final vsComputer = setup.opponent != Opponent.human;
     // Il profilo bambino gioca solo la classica: la variante scelta prima
     // resta per quando il profilo si spegne.
-    if (!_kid) _twoPlayerVariant = choice.variant;
+    if (!_kid) _chosenVariant = choice.variant;
     final variant = _kid ? Variant.standard : choice.variant;
     final control = choice.control;
     final human = vsComputer ? setup.resolveHumanSide(_random) : Side.white;
