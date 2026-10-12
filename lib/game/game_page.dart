@@ -2498,11 +2498,22 @@ class _MaterialRow extends StatelessWidget {
           child: Row(
             children: [
               for (final (i, role) in captured.indexed)
-                Image(
-                  key: ValueKey('captured-${opponent.name}-${role.name}-$i'),
-                  image: pieceAssets[Piece(color: opponent, role: role).kind]!,
-                  width: 20,
-                  height: 20,
+                // Nel tema scuro un pezzo nero sullo sfondo scuro sparisce:
+                // un fondo grigio medio tiene almeno 3:1 con nero e bianco.
+                DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0xFF8A8A8A)
+                        : null,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Image(
+                    key: ValueKey('captured-${opponent.name}-${role.name}-$i'),
+                    image:
+                        pieceAssets[Piece(color: opponent, role: role).kind]!,
+                    width: 20,
+                    height: 20,
+                  ),
                 ),
               if (advantage > 0) ...[
                 const SizedBox(width: 6),
