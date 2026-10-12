@@ -72,7 +72,7 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>NSCameraUsageDescription</key>
-	<string>La fotocamera serve solo a leggere il codice QR di una partita passata da un altro telefono e a capire la mossa dalla foto di una scacchiera vera. Le immagini non vengono salvate né inviate.</string>
+	<string>La fotocamera serve solo a leggere il codice QR di una partita passata da un altro telefono. Le immagini non vengono salvate né inviate.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Serve solo a leggere il codice QR di una partita da un'immagine che scegli tu.</string>
 </dict>

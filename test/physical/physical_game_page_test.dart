@@ -23,12 +23,17 @@ void main() {
   });
   tearDown(() => dir.deleteSync(recursive: true));
 
-  Future<void> open(WidgetTester tester, {PhotoSource? photos}) async {
+  Future<void> open(
+    WidgetTester tester, {
+    PhotoSource? photos,
+    bool photoMove = true,
+  }) async {
     await tester.pumpWidget(
       localizedApp(
         home: PhysicalGamePage(
           archive: () async => archive,
           photos: photos ?? const CameraPhotoSource(),
+          photoMove: photoMove,
         ),
       ),
     );
@@ -118,7 +123,7 @@ void main() {
     await tester.pumpWidget(
       localizedApp(
         locale: const Locale('en'),
-        home: PhysicalGamePage(archive: () async => archive),
+        home: PhysicalGamePage(archive: () async => archive, photoMove: true),
       ),
     );
     expect(find.text('Physical board'), findsOneWidget);
@@ -145,6 +150,7 @@ void main() {
         home: PhysicalGamePage(
           archive: () async => archive,
           photos: _Shots([png]),
+          photoMove: true,
         ),
       ),
     );
@@ -171,6 +177,12 @@ void main() {
     expect(find.textContaining('Resignation'), findsOneWidget);
     expect(find.textContaining('Resignation · 1-0'), findsOneWidget);
     expect(find.text('New game'), findsOneWidget);
+  });
+
+  testWidgets('senza il flag la mossa dalla foto non compare', (tester) async {
+    await open(tester, photoMove: false);
+    expect(find.byKey(const Key('physical-photo')), findsNothing);
+    expect(find.text('Mossa dalla foto'), findsNothing);
   });
 
   group('mossa dalla foto', () {

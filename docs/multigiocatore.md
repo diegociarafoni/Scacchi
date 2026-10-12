@@ -7,7 +7,8 @@ Partita tra due persone su due telefoni, pensata per funzionare in ogni situazio
 | Fase | Contenuto | Stato |
 |---|---|---|
 | 1 | Nucleo del protocollo: invito, identità, cifratura, registro delle mosse, canali multipli | Disponibile (senza interfaccia) |
-| 2 | Canale Wi-Fi locale con ricerca mDNS e abbinamento via QR | Da fare |
+| 2a | Canale Wi-Fi locale su TCP con ricollegamento automatico | Disponibile (senza interfaccia) |
+| 2b | Ricerca mDNS, abbinamento via QR, permessi di rete e schermata di gioco | Da fare |
 | 3 | Canale Bluetooth LE | Da fare |
 | 4 | Relay Nostr, link d'invito, notifiche in background, schermate | Da fare |
 
@@ -20,6 +21,7 @@ Partita tra due persone su due telefoni, pensata per funzionare in ogni situazio
 | RMP-03 | Ogni messaggio è firmato dal suo autore (Ed25519). L'ospite fissa la chiave dell'avversario al primo ingresso; i messaggi di altre chiavi vengono scartati. |
 | RMP-04 | Ogni messaggio è cifrato end-to-end (AES-256-GCM); canali e relay vedono solo byte casuali. Messaggi alterati, di altre partite o con un altro segreto vengono scartati. |
 | RMP-05 | I canali disponibili si usano insieme: si invia su tutti, basta che uno consegni; si riceve da tutti in un solo flusso. |
+| RMP-07 | In rete locale (stessa Wi-Fi o hotspot) l'ospite ascolta su TCP e l'invitato si collega all'indirizzo dell'invito; l'invitato si ricollega da solo e a ogni collegamento nuovo si ripete l'ultima mossa. Pacchetti oltre 4096 byte chiudono il collegamento; l'ospite tiene al massimo 4 collegamenti e oltre chiude il più vecchio. |
 | RMP-06 | Cambiare canale non cambia la partita. Chi è rimasto indietro chiede le mosse mancanti e si rimette in pari; una mossa non partita si ripete quando un canale torna disponibile. |
 
 Questi requisiti sostituiscono, per il solo modulo multigiocatore, l'esclusione delle partite tra persone su più dispositivi e il vincolo "nessun permesso di rete" di RNF-01, che resta valido per il gioco da soli.
@@ -33,7 +35,7 @@ MultiplayerSession          lib/multiplayer/multiplayer_session.dart
   ├─ GameSync               registro, regole, chiavi (Dart puro, sincrono)
   ├─ MessageCodec           firma + cifratura dei messaggi
   └─ MultiTransport         tutti i canali insieme
-       ├─ Wi-Fi locale      (fase 2)
+       ├─ Wi-Fi locale      LanTransport
        ├─ Bluetooth LE      (fase 3)
        └─ relay Nostr       (fase 4)
 ```
@@ -45,7 +47,8 @@ MultiplayerSession          lib/multiplayer/multiplayer_session.dart
 | `game_message.dart` | Messaggi: `JoinMessage` (l'invitato si presenta), `MoveMessage` (semimossa, UCI, impronta), `SyncRequest` (rimandare da una semimossa). |
 | `message_codec.dart` | `MessageCodec`: sigillo dei messaggi. |
 | `game_sync.dart` | `GameSync`: registro e validazione. `positionHash`: SHA-256 del FEN, primi 128 bit in esadecimale. |
-| `transport.dart` | `MessageTransport`, `MultiTransport`, `LoopbackTransport` (in memoria, per i test). |
+| `transport.dart` | `MessageTransport`, `MultiTransport`, `LoopbackTransport` (in memoria, per i test), `ConnectionAware` per i canali che segnalano un collegamento nuovo. |
+| `lan_transport.dart` | `LanTransport`: canale Wi-Fi su TCP (vedi sotto). |
 | `multiplayer_session.dart` | `MultiplayerSession`: collega registro, sigillo e canali e reagisce ai messaggi. |
 
 ### Formato del messaggio sigillato
@@ -57,6 +60,14 @@ nonce (12 byte) | AES-256-GCM( {"a": chiave autore, "b": corpo JSON, "s": firma}
 - Chiave AES derivata con HKDF-SHA256 dal segreto dell'invito, con l'UUID come sale e `scacchi-messaggi-v1` come contesto; l'UUID è anche dato autenticato aggiuntivo, quindi un messaggio non si sposta da una partita all'altra.
 - La firma Ed25519 copre `scacchi-mossa-v1|<uuid>|`, la chiave dell'autore e il corpo: chi conosce il segreto (l'avversario) può cifrare, ma non può firmare a nome dell'altro.
 - Oltre 1024 byte un messaggio non viene neppure decifrato; ogni errore di formato porta allo scarto silenzioso (dati del canale non fidati, MASVS-CODE-4).
+
+### Canale Wi-Fi locale
+
+`LanTransport.host()` apre un `ServerSocket` su tutte le interfacce IPv4 (porta scelta dal sistema, da mettere nell'invito come `lan=host:porta`); `LanTransport.connect(host, porta)` è il lato dell'invitato, che si collega al primo invio e si ricollega da solo quando il collegamento cade, anche senza nulla da inviare, con attese crescenti da 1 a 15 secondi; al rientro annuncia la sua chiave e ripete l'ultima mossa, mentre l'ospite ripete la sua. Ogni messaggio sigillato viaggia preceduto dalla sua lunghezza su 4 byte big-endian; il decodificatore ricompone i pacchetti spezzati in qualunque punto. Un pacchetto annunciato oltre 4096 byte chiude il collegamento senza leggere oltre, e oltre il quarto collegamento l'ospite chiude il più vecchio: il canale è aperto in rete locale, quindi non deve poter consumare memoria, e un telefono uscito dalla Wi-Fi senza salutare non deve bloccare il proprio rientro. Un invio che non si svuota entro 5 secondi chiude il collegamento. Limite noto: un invio riuscito vuol dire consegnato al sistema operativo, non letto dall'altro telefono; se il collegamento era già morto la mossa riparte al ricollegamento. L'autenticità non dipende dal canale: chi si collega senza il segreto dell'invito non produce messaggi validi.
+
+A ogni collegamento nuovo `MultiTransport.connected` avvisa la sessione, che fa ripresentare l'invitato e ripete la propria ultima mossa: dopo un'uscita dalla Wi-Fi la partita riprende senza azioni dell'utente.
+
+Il permesso `INTERNET` su Android e la descrizione della rete locale su iOS (`NSLocalNetworkUsageDescription`, `NSBonjourServices`) arrivano con la schermata di gioco (fase 2b), insieme alla ricerca mDNS.
 
 ### Regole del registro
 
@@ -86,4 +97,4 @@ Limiti noti: l'invito contiene il segreto, quindi chi lo intercetta prima dell'a
 
 ## Test
 
-`flutter test test/multiplayer`: invito, sigillo, registro, canali e sessione completa con canali in memoria, compreso il passaggio Wi-Fi → relay → Wi-Fi e il recupero dopo un ripristino.
+`flutter test test/multiplayer`: invito, sigillo, registro, canali e sessione completa con canali in memoria, compreso il passaggio Wi-Fi → relay → Wi-Fi e il recupero dopo un ripristino. `lan_transport_test.dart` usa socket TCP veri su 127.0.0.1: pacchetti spezzati, pacchetti troppo grandi, limite di collegamenti, ricollegamento senza invii, chiusura durante il collegamento, una partita completa e una mossa consegnata dopo la caduta del collegamento.

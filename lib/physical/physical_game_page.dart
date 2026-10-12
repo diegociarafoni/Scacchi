@@ -23,6 +23,7 @@ class PhysicalGamePage extends StatefulWidget {
     required this.archive,
     this.now,
     this.photos = const CameraPhotoSource(),
+    this.photoMove = kPhotoMove,
   });
 
   final Future<GameArchive> Function() archive;
@@ -30,6 +31,9 @@ class PhysicalGamePage extends StatefulWidget {
 
   /// Fotocamera per leggere la mossa dalla foto della scacchiera.
   final PhotoSource photos;
+
+  /// Mostra «Mossa dalla foto»; di norma segue [kPhotoMove].
+  final bool photoMove;
 
   @override
   State<PhysicalGamePage> createState() => _PhysicalGamePageState();
@@ -487,14 +491,14 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
             icon: Icon(running ? Icons.pause : Icons.play_arrow),
             label: Text(running ? l10n.physicalPause : l10n.physicalResume),
           ),
-        if (!game.isOver)
+        if (widget.photoMove && !game.isOver)
           TextButton.icon(
             key: const Key('physical-photo'),
             onPressed: _photo,
             icon: const Icon(Icons.photo_camera_outlined),
             label: Text(l10n.physicalPhoto),
           ),
-        if (!game.isOver && _quad != null)
+        if (widget.photoMove && !game.isOver && _quad != null)
           TextButton(
             key: const Key('physical-realign'),
             onPressed: () => setState(() => _quad = null),

@@ -23,6 +23,12 @@ abstract interface class MessageTransport {
   Future<void> close();
 }
 
+/// Canale che si accorge di quando il collegamento si apre: è il momento
+/// di ripetere l'ultima mossa, che l'altro potrebbe non avere.
+abstract interface class ConnectionAware {
+  Stream<void> get connected;
+}
+
 /// Tutti i canali disponibili insieme: si invia su ognuno e si riceve da
 /// tutti. I doppioni li scarta il registro della partita.
 class MultiTransport implements MessageTransport {
@@ -32,7 +38,12 @@ class MultiTransport implements MessageTransport {
 
   final _channels = <MessageTransport>[];
   final _subs = <StreamSubscription<Uint8List>>[];
+  final _connectedSubs = <StreamSubscription<void>>[];
   final _incoming = StreamController<Uint8List>.broadcast();
+  final _connected = StreamController<void>.broadcast();
+
+  /// Un canale si è appena collegato.
+  Stream<void> get connected => _connected.stream;
 
   @override
   String get name => _channels.map((c) => c.name).join('+');
@@ -48,6 +59,11 @@ class MultiTransport implements MessageTransport {
     }
     _channels.add(channel);
     _subs.add(channel.incoming.listen(_incoming.add, onError: (_) {}));
+    if (channel is ConnectionAware) {
+      _connectedSubs.add(
+        (channel as ConnectionAware).connected.listen(_connected.add),
+      );
+    }
   }
 
   @override
@@ -64,10 +80,14 @@ class MultiTransport implements MessageTransport {
     for (final s in _subs) {
       await s.cancel();
     }
+    for (final s in _connectedSubs) {
+      await s.cancel();
+    }
     for (final c in _channels) {
       await c.close();
     }
     await _incoming.close();
+    await _connected.close();
   }
 }
 

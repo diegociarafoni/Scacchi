@@ -6,6 +6,11 @@ import 'package:image_picker/image_picker.dart';
 
 import 'board_photo.dart';
 
+/// Se «Mossa dalla foto» compare nella scacchiera fisica. Le versioni di
+/// rilascio la tengono spenta; si accende con
+/// `--dart-define=ROKKO_PHOTO_MOVE=true`.
+const kPhotoMove = bool.fromEnvironment('ROKKO_PHOTO_MOVE');
+
 /// Da dove arriva la foto della scacchiera.
 abstract interface class PhotoSource {
   /// Scatta una foto con la fotocamera; null se si annulla.
