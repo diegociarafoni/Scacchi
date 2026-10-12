@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/physical/board_align_page.dart';
 import 'package:scacchi/physical/board_photo.dart';
 
+import '../localized_app.dart';
 import 'board_render.dart';
 
 void main() {
@@ -13,7 +14,7 @@ void main() {
     results = [];
     final png = await tester.runAsync(() => toPng(render(Chess.initial)));
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: Builder(
           builder: (context) => TextButton(
             onPressed: () async => results.add(
@@ -71,7 +72,7 @@ void main() {
 
   testWidgets('tornare indietro non restituisce nulla', (tester) async {
     await open(tester);
-    await tester.pageBack();
+    await tester.tap(find.byType(BackButton));
     await tester.pumpAndSettle();
     expect(results.single, isNull);
   });

@@ -8,10 +8,12 @@ import '../archive/game_archive.dart';
 import '../archive/saved_game.dart';
 import '../game/chess_game.dart';
 import '../game/clock.dart';
+import '../l10n/app_localizations.dart';
 import 'board_align_page.dart';
 import 'board_photo.dart';
 import 'photo_source.dart';
 import 'physical_game.dart';
+import 'physical_l10n.dart';
 
 /// Registra e cronometra una partita giocata su una scacchiera reale: le mosse
 /// si scrivono o si scelgono tra quelle legali, l'orologio passa da solo.
@@ -21,6 +23,7 @@ class PhysicalGamePage extends StatefulWidget {
     required this.archive,
     this.now,
     this.photos = const CameraPhotoSource(),
+    this.photoMove = kPhotoMove,
   });
 
   final Future<GameArchive> Function() archive;
@@ -29,6 +32,9 @@ class PhysicalGamePage extends StatefulWidget {
   /// Fotocamera per leggere la mossa dalla foto della scacchiera.
   final PhotoSource photos;
 
+  /// Mostra «Mossa dalla foto»; di norma segue [kPhotoMove].
+  final bool photoMove;
+
   @override
   State<PhysicalGamePage> createState() => _PhysicalGamePageState();
 }
@@ -36,15 +42,18 @@ class PhysicalGamePage extends StatefulWidget {
 class _PhysicalGamePageState extends State<PhysicalGamePage> {
   PhysicalGame? _game;
   TimeControl? _control = const TimeControl(minutes: 10);
-  final _white = TextEditingController(text: 'Bianco');
-  final _black = TextEditingController(text: 'Nero');
+  final _white = TextEditingController();
+  final _black = TextEditingController();
   final _input = TextEditingController();
   final _focus = FocusNode();
   Timer? _ticker;
   DateTime? _startedAt;
   bool _saved = false;
-  String? _message;
-  String? _note;
+  // Testi di avviso risolti in `build`, così seguono la lingua corrente.
+  String Function(AppLocalizations)? _message;
+  String Function(AppLocalizations)? _note;
+  String? _defaultWhite;
+  String? _defaultBlack;
 
   // Foto di riferimento: vale solo finché la posizione è quella in cui è
   // stata scattata.
@@ -57,6 +66,21 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
   bool _reading = false;
 
   DateTime get _now => (widget.now ?? DateTime.now)();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final l10n = physicalL10n(context);
+    // I nomi lasciati al valore predefinito seguono la lingua dell'app.
+    if (_defaultWhite == null || _white.text == _defaultWhite) {
+      _white.text = l10n.physicalWhite;
+    }
+    if (_defaultBlack == null || _black.text == _defaultBlack) {
+      _black.text = l10n.physicalBlack;
+    }
+    _defaultWhite = l10n.physicalWhite;
+    _defaultBlack = l10n.physicalBlack;
+  }
 
   @override
   void dispose() {
@@ -106,7 +130,7 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
   void _submit(String text) {
     final game = _game!;
     if (game.playText(text) == PhysicalInput.invalid) {
-      setState(() => _message = 'Mossa non valida: «$text»');
+      setState(() => _message = (l) => l.physicalInvalidMove(text));
       return;
     }
     _input.clear();
@@ -132,14 +156,14 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
         bytes = await widget.photos.take();
       } on Object catch (e) {
         if (kDebugMode) debugPrint('Fotocamera non disponibile: $e');
-        if (mounted) _show(error: 'Fotocamera non disponibile');
+        if (mounted) _show(error: (l) => l.physicalCameraUnavailable);
         return;
       }
       if (bytes == null || !mounted) return;
       final frame = await decodeFrame(bytes);
       if (!mounted) return;
       if (frame == null) {
-        _show(error: 'Immagine non leggibile');
+        _show(error: (l) => l.physicalImageUnreadable);
         return;
       }
       if (_quad == null && !await _align(bytes, frame)) return;
@@ -153,9 +177,7 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
           _baselineFen = fen;
           _guesses = const [];
           _message = null;
-          _note =
-              'Foto di riferimento salvata. Dopo la prossima mossa scatta '
-              'un\'altra foto.';
+          _note = (l) => l.physicalReferenceSaved;
         });
         return;
       }
@@ -167,7 +189,7 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
         view: _view,
       );
       if (found.isEmpty) {
-        _show(error: 'Nessuna mossa riconosciuta: la scacchiera è uguale.');
+        _show(error: (l) => l.physicalNoMoveRecognized);
         return;
       }
       final pos = game.position;
@@ -178,7 +200,7 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
             (san: pos.makeSan(g.move).$2, move: g.move),
         ];
         _message = null;
-        _note = 'Mosse più probabili dalla foto: conferma quella giusta.';
+        _note = (l) => l.physicalGuessNote;
       });
     } finally {
       _reading = false;
@@ -223,7 +245,7 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
     }
   }
 
-  void _show({String? error}) => setState(() {
+  void _show({String Function(AppLocalizations)? error}) => setState(() {
     _message = error;
     _note = null;
   });
@@ -250,23 +272,24 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
       if (mounted) setState(() => _saved = true);
     } on Object catch (e) {
       debugPrint('Salvataggio non riuscito: $e');
-      if (mounted) setState(() => _message = 'Salvataggio non riuscito');
+      if (mounted) setState(() => _message = (l) => l.physicalSaveFailed);
     }
   }
 
   Future<void> _draw() async {
+    final l10n = physicalL10n(context);
     final ok = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text('Patta concordata?'),
+        title: Text(l10n.physicalDrawQuestion),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('No'),
+            child: Text(l10n.physicalNo),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Sì'),
+            child: Text(l10n.physicalYes),
           ),
         ],
       ),
@@ -280,7 +303,7 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
     final side = await showDialog<Side>(
       context: context,
       builder: (_) => SimpleDialog(
-        title: const Text('Chi abbandona?'),
+        title: Text(physicalL10n(context).physicalWhoResigns),
         children: [
           SimpleDialogOption(
             onPressed: () => Navigator.pop(context, Side.white),
@@ -302,34 +325,32 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
   Widget build(BuildContext context) {
     final game = _game;
     return Scaffold(
-      appBar: AppBar(title: const Text('Scacchiera fisica')),
+      appBar: AppBar(title: Text(physicalL10n(context).physicalTitle)),
       body: game == null ? _setup() : _playing(game),
     );
   }
 
   Widget _setup() {
+    final l10n = physicalL10n(context);
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        const Text(
-          'Gioca su una scacchiera vera: l\'app fa da orologio e registra la '
-          'partita. Dopo ogni mossa scrivila o toccala tra quelle legali.',
-        ),
+        Text(l10n.physicalIntro),
         const SizedBox(height: 16),
         TextField(
           controller: _white,
-          decoration: const InputDecoration(labelText: 'Bianco'),
+          decoration: InputDecoration(labelText: l10n.physicalWhite),
         ),
         TextField(
           controller: _black,
-          decoration: const InputDecoration(labelText: 'Nero'),
+          decoration: InputDecoration(labelText: l10n.physicalBlack),
         ),
         const SizedBox(height: 16),
         Wrap(
           spacing: 8,
           children: [
             ChoiceChip(
-              label: const Text('Senza tempo'),
+              label: Text(l10n.physicalUntimed),
               selected: _control == null,
               onSelected: (_) => setState(() => _control = null),
             ),
@@ -342,12 +363,13 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
           ],
         ),
         const SizedBox(height: 24),
-        FilledButton(onPressed: _begin, child: const Text('Inizia la partita')),
+        FilledButton(onPressed: _begin, child: Text(l10n.physicalStart)),
       ],
     );
   }
 
   Widget _playing(PhysicalGame game) {
+    final l10n = physicalL10n(context);
     final typed = _input.text;
     final suggestions = game.suggestions(typed);
     return SafeArea(
@@ -370,13 +392,13 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
                 if (_note != null && _message == null && !game.isOver)
                   Padding(
                     padding: const EdgeInsets.only(top: 8),
-                    child: Text(_note!),
+                    child: Text(_note!(l10n)),
                   ),
                 if (_message != null)
                   Padding(
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
-                      _message!,
+                      _message!(l10n),
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.error,
                       ),
@@ -397,8 +419,8 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
                 enableSuggestions: false,
                 decoration: InputDecoration(
                   labelText: game.turn == Side.white
-                      ? 'Mossa del Bianco (es. e4, Cf3)'
-                      : 'Mossa del Nero (es. e5, Cc6)',
+                      ? l10n.physicalInputWhite
+                      : l10n.physicalInputBlack,
                 ),
                 onChanged: (_) => setState(() => _message = null),
                 onSubmitted: _submit,
@@ -457,6 +479,7 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
   }
 
   Widget _controls(PhysicalGame game) {
+    final l10n = physicalL10n(context);
     final running = game.clock?.isRunning ?? false;
     return Wrap(
       alignment: WrapAlignment.center,
@@ -466,20 +489,20 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
           TextButton.icon(
             onPressed: () => setState(running ? game.pause : game.resume),
             icon: Icon(running ? Icons.pause : Icons.play_arrow),
-            label: Text(running ? 'Pausa' : 'Riprendi'),
+            label: Text(running ? l10n.physicalPause : l10n.physicalResume),
           ),
-        if (!game.isOver)
+        if (widget.photoMove && !game.isOver)
           TextButton.icon(
             key: const Key('physical-photo'),
             onPressed: _photo,
             icon: const Icon(Icons.photo_camera_outlined),
-            label: const Text('Mossa dalla foto'),
+            label: Text(l10n.physicalPhoto),
           ),
-        if (!game.isOver && _quad != null)
+        if (widget.photoMove && !game.isOver && _quad != null)
           TextButton(
             key: const Key('physical-realign'),
             onPressed: () => setState(() => _quad = null),
-            child: const Text('Riallinea'),
+            child: Text(l10n.physicalRealign),
           ),
         TextButton.icon(
           onPressed: game.canUndo
@@ -490,57 +513,61 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
                 }
               : null,
           icon: const Icon(Icons.undo),
-          label: const Text('Annulla'),
+          label: Text(l10n.physicalUndo),
         ),
         if (!game.isOver) ...[
-          TextButton(onPressed: _draw, child: const Text('Patta')),
-          TextButton(onPressed: _resign, child: const Text('Abbandona')),
+          TextButton(onPressed: _draw, child: Text(l10n.physicalDraw)),
+          TextButton(onPressed: _resign, child: Text(l10n.physicalResign)),
         ],
       ],
     );
   }
 
-  List<Widget> _over(PhysicalGame game) => [
-    const SizedBox(height: 12),
-    Text(
-      _resultText(game),
-      key: const Key('physical-result'),
-      style: Theme.of(context).textTheme.titleMedium,
-    ),
-    if (_saved)
-      const Text('Partita salvata nell\'archivio')
-    else if (game.moves.isEmpty)
-      const Text('Nessuna mossa da salvare'),
-    const SizedBox(height: 8),
-    Align(
-      alignment: Alignment.centerLeft,
-      child: OutlinedButton(
-        onPressed: () {
-          _ticker?.cancel();
-          setState(() => _game = null);
-        },
-        child: const Text('Nuova partita'),
+  List<Widget> _over(PhysicalGame game) {
+    final l10n = physicalL10n(context);
+    return [
+      const SizedBox(height: 12),
+      Text(
+        _resultText(game),
+        key: const Key('physical-result'),
+        style: Theme.of(context).textTheme.titleMedium,
       ),
-    ),
-  ];
+      if (_saved)
+        Text(l10n.physicalSaved)
+      else if (game.moves.isEmpty)
+        Text(l10n.physicalNothingToSave),
+      const SizedBox(height: 8),
+      Align(
+        alignment: Alignment.centerLeft,
+        child: OutlinedButton(
+          onPressed: () {
+            _ticker?.cancel();
+            setState(() => _game = null);
+          },
+          child: Text(l10n.physicalNewGame),
+        ),
+      ),
+    ];
+  }
 
   String _resultText(PhysicalGame game) {
+    final l10n = physicalL10n(context);
     final reason = switch (game.endReason) {
-      GameEndReason.checkmate => 'Scacco matto',
-      GameEndReason.resignation => 'Abbandono',
-      GameEndReason.timeout => 'Tempo scaduto',
-      GameEndReason.agreement => 'Patta concordata',
-      GameEndReason.stalemate => 'Stallo',
-      GameEndReason.insufficientMaterial => 'Materiale insufficiente',
-      GameEndReason.threefoldRepetition => 'Tripla ripetizione',
-      GameEndReason.fiftyMoveRule => 'Regola delle 50 mosse',
-      _ => 'Partita finita',
+      GameEndReason.checkmate => l10n.physicalEndCheckmate,
+      GameEndReason.resignation => l10n.physicalEndResignation,
+      GameEndReason.timeout => l10n.physicalEndTimeout,
+      GameEndReason.agreement => l10n.physicalEndAgreement,
+      GameEndReason.stalemate => l10n.physicalEndStalemate,
+      GameEndReason.insufficientMaterial => l10n.physicalEndInsufficient,
+      GameEndReason.threefoldRepetition => l10n.physicalEndRepetition,
+      GameEndReason.fiftyMoveRule => l10n.physicalEndFiftyMoves,
+      _ => l10n.physicalEndOther,
     };
-    return '$reason · ${game.result}';
+    return l10n.physicalResultLine(reason, game.result);
   }
 
   String _movesText(PhysicalGame game) {
-    if (game.moves.isEmpty) return 'Nessuna mossa';
+    if (game.moves.isEmpty) return physicalL10n(context).physicalNoMoves;
     final buffer = StringBuffer();
     for (final (i, m) in game.moves.indexed) {
       if (i.isEven) buffer.write('${i ~/ 2 + 1}. ');

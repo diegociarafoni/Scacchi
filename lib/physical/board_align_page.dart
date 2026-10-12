@@ -4,6 +4,7 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
 import 'board_photo.dart';
+import 'physical_l10n.dart';
 
 /// Riquadro scelto e lato che sta in basso nella foto.
 typedef AlignResult = ({BoardQuad quad, Side view});
@@ -61,17 +62,15 @@ class _BoardAlignPageState extends State<BoardAlignPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = physicalL10n(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Allinea la scacchiera')),
+      appBar: AppBar(title: Text(l10n.physicalAlignTitle)),
       body: SafeArea(
         child: Column(
           children: [
-            const Padding(
-              padding: EdgeInsets.all(12),
-              child: Text(
-                'Trascina i quattro cerchi sugli angoli della scacchiera. '
-                'Per le foto successive terrai la stessa inquadratura.',
-              ),
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Text(l10n.physicalAlignHelp),
             ),
             Expanded(
               child: Center(
@@ -115,16 +114,19 @@ class _BoardAlignPageState extends State<BoardAlignPage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: SegmentedButton<Side>(
-                segments: const [
+                segments: [
                   ButtonSegment(
                     value: Side.white,
-                    label: Text('Bianco in basso'),
-                    icon: Icon(Icons.arrow_upward),
+                    label: Text(l10n.physicalAlignWhiteBottom),
+                    icon: const Icon(Icons.arrow_upward),
                   ),
                   ButtonSegment(
                     value: Side.black,
-                    label: Text('Nero in basso', key: Key('align-black')),
-                    icon: Icon(Icons.arrow_downward),
+                    label: Text(
+                      l10n.physicalAlignBlackBottom,
+                      key: const Key('align-black'),
+                    ),
+                    icon: const Icon(Icons.arrow_downward),
                   ),
                 ],
                 selected: {_view},
@@ -138,7 +140,7 @@ class _BoardAlignPageState extends State<BoardAlignPage> {
                   quad: _quad,
                   view: _view,
                 )),
-                child: const Text('Fatto'),
+                child: Text(l10n.physicalAlignDone),
               ),
             ),
           ],

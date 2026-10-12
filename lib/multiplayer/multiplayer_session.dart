@@ -20,6 +20,9 @@ class MultiplayerSession {
     _sub = transport.incoming.listen(
       (data) => _queue = _queue.then((_) => _onData(data)),
     );
+    _connSub = transport.connected.listen(
+      (_) => _queue = _queue.then((_) => _onConnected()),
+    );
   }
 
   /// Chi ha creato l'invito; l'avversario si fissa al suo primo ingresso.
@@ -65,6 +68,7 @@ class MultiplayerSession {
   final GameSync sync;
   final MessageCodec _codec;
   late final StreamSubscription<Uint8List> _sub;
+  late final StreamSubscription<void> _connSub;
   Future<void> _queue = Future.value();
 
   // Messaggi sigillati di ogni semimossa, rimandati identici nel recupero:
@@ -140,11 +144,22 @@ class MultiplayerSession {
     if (!_events.isClosed) _events.add(result);
   }
 
+  // Collegamento nuovo: l'invitato si ripresenta e ciascuno ripete la sua
+  // ultima mossa, che l'altro potrebbe non avere ricevuto.
+  Future<void> _onConnected() async {
+    if (_events.isClosed) return;
+    if (!_isHost) await announce();
+    await resendLast();
+  }
+
+  bool get _isHost => sync.mySide == invite.hostSide;
+
   bool _peerMissesOurMove(GameMessage m) =>
       m is MoveMessage && (sync.myLastMove?.seq ?? 0) > m.seq;
 
   Future<void> close() async {
     await _sub.cancel();
+    await _connSub.cancel();
     await _events.close();
     await transport.close();
   }

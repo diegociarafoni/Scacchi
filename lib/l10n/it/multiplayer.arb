@@ -1,0 +1,114 @@
+{
+  "multiplayerTitle": "Gioca con un amico",
+  "@multiplayerTitle": {
+    "description": "Titolo della schermata e voce di menu della partita su due telefoni"
+  },
+  "multiplayerEntrySubtitle": "Su due telefoni nella stessa Wi-Fi o hotspot",
+  "@multiplayerEntrySubtitle": {
+    "description": "Sottotitolo della voce di menu"
+  },
+  "multiplayerIntro": "Un telefono crea la partita e mostra un QR, l'altro lo inquadra. Poi le mosse viaggiano da sole sulla stessa Wi-Fi o sull'hotspot di uno dei due.",
+  "@multiplayerIntro": {
+    "description": "Spiegazione nella schermata iniziale"
+  },
+  "multiplayerYourColor": "Il tuo colore",
+  "@multiplayerYourColor": {
+    "description": "Etichetta della scelta del colore di chi crea la partita"
+  },
+  "multiplayerWhite": "Bianco",
+  "@multiplayerWhite": {
+    "description": "Colore bianco"
+  },
+  "multiplayerBlack": "Nero",
+  "@multiplayerBlack": {
+    "description": "Colore nero"
+  },
+  "multiplayerCreate": "Crea la partita",
+  "@multiplayerCreate": {
+    "description": "Pulsante che crea l'invito"
+  },
+  "multiplayerJoin": "Unisciti con il QR",
+  "@multiplayerJoin": {
+    "description": "Pulsante che apre la fotocamera per leggere l'invito"
+  },
+  "multiplayerNoNetwork": "Collegati a una Wi-Fi o accendi l'hotspot, poi riprova.",
+  "@multiplayerNoNetwork": {
+    "description": "Errore quando il telefono non è in una rete locale"
+  },
+  "multiplayerInviteHint": "Sull'altro telefono apri Tu › Gioca con un amico › Unisciti con il QR e inquadra questo codice.",
+  "@multiplayerInviteHint": {
+    "description": "Istruzioni sotto il QR dell'invito"
+  },
+  "multiplayerInviteQrLabel": "Codice QR dell'invito alla partita",
+  "@multiplayerInviteQrLabel": {
+    "description": "Descrizione del QR per il lettore di schermo"
+  },
+  "multiplayerWaiting": "In attesa dell'avversario…",
+  "@multiplayerWaiting": {
+    "description": "Stato mentre chi ospita aspetta l'altro telefono"
+  },
+  "multiplayerConnecting": "Collegamento all'altro telefono…",
+  "@multiplayerConnecting": {
+    "description": "Stato mentre l'invitato si collega"
+  },
+  "multiplayerYourTurn": "Tocca a te",
+  "@multiplayerYourTurn": {
+    "description": "Stato quando tocca a questo telefono"
+  },
+  "multiplayerPeerTurn": "Tocca all'avversario",
+  "@multiplayerPeerTurn": {
+    "description": "Stato quando tocca all'altro telefono"
+  },
+  "multiplayerPending": "Mossa non ancora consegnata: partirà appena l'altro telefono sarà raggiungibile.",
+  "@multiplayerPending": {
+    "description": "Avviso quando la mossa non ha trovato un canale"
+  },
+  "multiplayerWhiteWins": "Vince il Bianco",
+  "@multiplayerWhiteWins": {
+    "description": "Esito della partita"
+  },
+  "multiplayerBlackWins": "Vince il Nero",
+  "@multiplayerBlackWins": {
+    "description": "Esito della partita"
+  },
+  "multiplayerDraw": "Patta",
+  "@multiplayerDraw": {
+    "description": "Esito della partita"
+  },
+  "multiplayerScanTitle": "Inquadra l'invito",
+  "@multiplayerScanTitle": {
+    "description": "Titolo della schermata della fotocamera"
+  },
+  "multiplayerScanHint": "Inquadra il QR mostrato dall'altro telefono.",
+  "@multiplayerScanHint": {
+    "description": "Istruzioni sotto la fotocamera"
+  },
+  "multiplayerNotInvite": "Questo QR non è un invito a una partita.",
+  "@multiplayerNotInvite": {
+    "description": "Errore per un QR estraneo"
+  },
+  "multiplayerCameraError": "Fotocamera non disponibile.",
+  "@multiplayerCameraError": {
+    "description": "Errore della fotocamera"
+  },
+  "multiplayerLeaveTitle": "Lasciare la partita?",
+  "@multiplayerLeaveTitle": {
+    "description": "Titolo della conferma di uscita"
+  },
+  "multiplayerLeaveBody": "Il collegamento con l'altro telefono si chiude e la partita non viene salvata.",
+  "@multiplayerLeaveBody": {
+    "description": "Testo della conferma di uscita"
+  },
+  "multiplayerLeave": "Lascia",
+  "@multiplayerLeave": {
+    "description": "Conferma l'uscita"
+  },
+  "multiplayerStay": "Resta",
+  "@multiplayerStay": {
+    "description": "Annulla l'uscita"
+  },
+  "multiplayerStartError": "Non è stato possibile avviare la partita: riprova.",
+  "@multiplayerStartError": {
+    "description": "Errore generico all'avvio della partita in rete locale"
+  }
+}
