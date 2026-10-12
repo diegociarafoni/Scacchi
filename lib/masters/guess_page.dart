@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:dartchess/dartchess.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../training/training_board.dart';
@@ -97,7 +98,9 @@ class _GuessPageState extends State<GuessPage> {
         _clock.elapsed,
       );
     } on Object catch (e) {
-      if (kDebugMode) debugPrint('Risultato della partita non salvato: $e');
+      if (kDebugMode) {
+        debugPrint('Risultato della partita non salvato: $e');
+      }
     }
   }
 
