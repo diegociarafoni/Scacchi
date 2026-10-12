@@ -59,7 +59,8 @@ void main() {
       _app(PuzzleHubPage(trainer: Future.value(trainer))),
     );
     await tester.pumpAndSettle();
-    await tester.scrollUntilVisible(find.text('Sfida un amico'), 200);
+    await tester.ensureVisible(find.text('Sfida un amico'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Sfida un amico'));
     await tester.pumpAndSettle();
     expect(find.text('Prepara la sfida'), findsOneWidget);

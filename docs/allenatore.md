@@ -4,7 +4,7 @@ Partita con l'allenatore (requisiti RF-72…RF-75): si gioca contro il computer 
 
 ## In partita
 
-Nelle partite contro il computer o un bot la barra dei comandi ha il pulsante **Allenatore** (spento di default; da acceso l'icona si riempie e si colora, e un messaggio spiega a cosa serve; tenendolo premuto compare una descrizione). Da acceso:
+Nelle partite contro il computer o un bot il pannello «Partita» (pulsante «Altro») ha l'interruttore **Allenatore** (spento di default; da acceso un punto sul pulsante «Altro» e un messaggio spiegano a cosa serve). Da acceso:
 
 - dopo ogni mossa dell'utente, e prima della risposta del computer, l'allenatore la giudica; con orologio e computer fermi durante il giudizio;
 - se è un errore o un errore grave compare un riquadro con la spiegazione e due scelte: **Riprova** (la mossa viene annullata, anche per l'orologio) o **Continua** (la partita prosegue);

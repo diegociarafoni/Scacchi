@@ -371,5 +371,13 @@
         "type": "int"
       }
     }
-  }
+  },
+  "badgeChapterStrategyName": "Strategist's Mind",
+  "badgeChapterStrategyDesc": "Finish the strategy lessons.",
+  "badgeChapterCapablancaName": "The Master's Pupil",
+  "badgeChapterCapablancaDesc": "Finish the lessons of Capablanca's school.",
+  "badgeStoryPlainName": "The Right Plan",
+  "badgeStoryPlainDesc": "Beat Massimo in the chapter “The plain of plans”.",
+  "badgeStoryAcademyName": "Top of the Academy",
+  "badgeStoryAcademyDesc": "Beat Stella in the chapter “The master's academy”."
 }

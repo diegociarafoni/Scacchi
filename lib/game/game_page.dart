@@ -48,6 +48,7 @@ import '../share/position_image.dart';
 import '../share/position_image_page.dart';
 import '../storage/key_value_store.dart';
 import '../tablebase/shared_tablebase.dart';
+import '../theme/rokko_theme.dart';
 import 'board_swipe.dart';
 import 'challenge.dart';
 import 'chess_game.dart';
@@ -162,6 +163,11 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// Stima prima dell'esito della partita in corso, per ripristinarla se si annulla.
   AdaptiveOpponent _adaptiveBefore = const AdaptiveOpponent();
   Future<KeyValueStore>? _store;
+
+  /// Suggerimenti del primo uso già visti; [_tipsDone] li spegne per sempre.
+  int _tipsSeen = 0;
+  bool _tipsDone = false;
+  bool _reviewInviteDone = false;
 
   /// Livello della partita in corso contro il computer.
   int _gameLevel = defaultEngineLevel;
@@ -421,6 +427,63 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   ScaffoldFeatureController<SnackBar, SnackBarClosedReason>? _lineNotice;
 
+  Future<void> _saveTips(int value) async {
+    setState(() {
+      _tipsSeen = value;
+      _tipsDone = value >= _tipsDoneMark;
+    });
+    await (await _openStore()).write(_tipsKey, '$value');
+  }
+
+  Future<void> _dismissReviewInvite() async {
+    setState(() => _reviewInviteDone = true);
+    await (await _openStore()).write(_reviewInviteKey, '1');
+  }
+
+  /// Invito alla revisione a fine prima partita, altrimenti il suggerimento
+  /// del primo uso; `null` quando non serve niente.
+  Widget? _banner(BuildContext context) {
+    final l10n = _kidL10n(context);
+    if (_kid || _isChallenge || _zen) return null;
+    if (_game.isOver) {
+      if (_reviewInviteDone ||
+          !widget.computerAvailable ||
+          _game.variant != Variant.standard ||
+          _game.moves.length < 4) {
+        return null;
+      }
+      return _TipCard(
+        key: const ValueKey('reviewInvite'),
+        text: l10n.gameReviewInvite,
+        actionLabel: l10n.gameReviewInviteAction,
+        onAction: () {
+          unawaited(_dismissReviewInvite());
+          _openReview();
+        },
+        closeLabel: l10n.gameTipClose,
+        onClose: _dismissReviewInvite,
+      );
+    }
+    if (_tipsDone || _game.moves.isEmpty) return null;
+    // Il numero salvato è la posizione nell'elenco completo (aiuto, altro,
+    // menu): un suggerimento che non vale per questa partita non sposta gli altri.
+    final tips = <(int, String)>[
+      if (_computerSide != null && _engineGame) (0, l10n.gameTipHint),
+      (1, l10n.gameTipMore),
+      if (widget.computerAvailable) (2, l10n.gameTipMenu),
+    ].where((t) => t.$1 >= _tipsSeen).toList();
+    if (tips.isEmpty) return null;
+    final tip = tips.first;
+    return _TipCard(
+      key: const ValueKey('gameTip'),
+      text: tip.$2,
+      actionLabel: tips.length == 1 ? null : l10n.gameTipNext,
+      onAction: () => unawaited(_saveTips(tip.$1 + 1)),
+      closeLabel: l10n.gameTipClose,
+      onClose: () => unawaited(_saveTips(_tipsDoneMark)),
+    );
+  }
+
   Future<KeyValueStore> _openStore() => _store ??= () async {
     if (widget.store != null) return widget.store!;
     try {
@@ -436,8 +499,18 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         .catchError((_) => const AdaptiveOpponent());
     final collection = await BotCollection.load(store)
         .catchError((_) => const BotCollection());
+    final tips =
+        int.tryParse(
+          await store.read(_tipsKey).catchError((_) => null) ?? '',
+        ) ??
+        0;
+    final invited =
+        await store.read(_reviewInviteKey).catchError((_) => null) != null;
     if (!mounted) return;
     setState(() {
+      _tipsSeen = tips;
+      _tipsDone = tips >= _tipsDoneMark;
+      _reviewInviteDone = invited;
       if (!_resultRecorded && _adaptive.games == 0) _adaptive = adaptive;
       if (!_botResultRecorded && _collection.beaten.isEmpty) {
         _collection = collection;
@@ -1395,6 +1468,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     );
   }
 
+  /// Distanza dal fondo dei messaggi: sopra la scacchiera, che altrimenti
+  /// resterebbe coperta dalla fascia, sotto i comandi.
+  double _messageBottom = _actionsHeight + 8;
+
   /// Messaggio sopra la barra dei comandi, per non coprirla.
   ScaffoldFeatureController<SnackBar, SnackBarClosedReason> _showMessage(
     String text, {
@@ -1406,7 +1483,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       duration: duration,
       action: action,
       behavior: SnackBarBehavior.floating,
-      margin: const EdgeInsets.fromLTRB(16, 0, 16, _actionsHeight + 8),
+      margin: EdgeInsets.fromLTRB(16, 0, 16, _messageBottom),
     ),
   );
 
@@ -2003,9 +2080,11 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final evaluating = _task == _ComputerTask.draw;
     // Solo nel profilo bambino: fuori servono i delegati di localizzazione.
     final l = _kid ? _kidL10n(context) : null;
+    final l10n = _kidL10n(context);
     final actions = _GameActions(
+      kid: l != null,
       labels: l == null
-          ? const _ActionLabels()
+          ? _ActionLabels.adult(l10n)
           : _ActionLabels(
               newGame: l.kidGameNew,
               undo: l.kidGameUndo,
@@ -2014,6 +2093,12 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
               resign: l.kidGameResign,
               coach: l.kidGameCoach,
               hint: l.kidGameHint,
+              threat: l10n.gameActionThreat,
+              more: l10n.gameActionMore,
+              panelTitle: l10n.gamePanelTitle,
+              coachTip: l10n.gameCoachTip,
+              threatTip: l10n.gameThreatTip,
+              hintTip: l10n.gameHintTip,
             ),
       onNewGame: evaluating || _isChallenge ? null : _newGame,
       onUndo:
@@ -2050,6 +2135,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       onHint: _humanToMove && _pendingMove == null ? _giveHint : null,
       onThreat: _humanToMove && _pendingMove == null ? _showThreat : null,
     );
+    final keyboardInBar =
+        _isChallenge ||
+        l != null ||
+        MediaQuery.of(context).accessibleNavigation;
     // Il libro delle aperture vale solo per gli scacchi classici; ai bambini
     // i nomi delle aperture non dicono nulla, quelli delle varianti sì (una
     // variante iniziata prima del profilo mostra ancora il conteggio).
@@ -2063,7 +2152,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         ? Text(l.appTitle)
         : OpeningName(
             positions: [_game.initial, for (final m in _game.moves) m.after],
-            fallback: 'Scacchi',
+            fallback: 'Rokko',
+            fallbackWidget: const RokkoWordmark(),
           );
     return Scaffold(
       appBar: AppBar(
@@ -2100,6 +2190,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                 if (value == 'qrSend') unawaited(_sendQr());
                 if (value == 'qrReceive') unawaited(_receiveQr());
                 if (value == 'image') _exportImage();
+                if (value == 'editor') unawaited(_editPosition());
+                if (value == 'typing') unawaited(_typeMove());
               },
               itemBuilder: (context) {
                 final l10n = qrL10n(context);
@@ -2134,22 +2226,32 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                     enabled: !_thinking,
                     child: Text(l10n.qrReceiveTitle),
                   ),
+                  const PopupMenuDivider(),
+                  PopupMenuItem(
+                    value: 'editor',
+                    child: Text(_kidL10n(context).gameEditorAction),
+                  ),
+                  if (!keyboardInBar)
+                    PopupMenuItem(
+                      value: 'typing',
+                      enabled:
+                          _humanToMove &&
+                          _pendingMove == null &&
+                          _viewPly == null,
+                      child: Text(_kidL10n(context).gameKeyboardAction),
+                    ),
                 ];
               },
             ),
-          if (!_isChallenge && l == null)
+          if (keyboardInBar)
             IconButton(
-              tooltip: 'Editor di posizione',
-              icon: const Icon(Icons.edit_note),
-              onPressed: _editPosition,
+              tooltip: _kidL10n(context).gameKeyboardAction,
+              icon: const Icon(Icons.keyboard_outlined),
+              onPressed:
+                  !_humanToMove || _pendingMove != null || _viewPly != null
+                  ? null
+                  : _typeMove,
             ),
-          IconButton(
-            tooltip: 'Mossa da tastiera',
-            icon: const Icon(Icons.keyboard_outlined),
-            onPressed: !_humanToMove || _pendingMove != null || _viewPly != null
-                ? null
-                : _typeMove,
-          ),
           IconButton(
             key: const Key('zenToggle'),
             tooltip: qrL10n(context).settingsZenMode,
@@ -2201,6 +2303,19 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                       math.min(
                         constraints.maxWidth,
                         constraints.maxHeight - chromeHeight,
+                      ),
+                    );
+              _messageBottom = landscape
+                  ? _actionsHeight + 8
+                  : math.min(
+                      _actionsHeight +
+                          (showMaterial ? 2 * _materialHeight : 0) +
+                          boardSize +
+                          _statusHeight +
+                          8,
+                      math.max(
+                        _actionsHeight + 8,
+                        constraints.maxHeight - 2 * _moveStripHeight,
                       ),
                     );
               final boardSettings = _settings.board;
@@ -2295,22 +2410,40 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                   ],
                 );
               }
+              // Il blocco scacchiera sta contro i comandi; lo spazio che resta
+              // sopra serve alle mosse e, la prima volta, ai suggerimenti.
               return Column(
                 children: [
                   Expanded(
-                    child: Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SizedBox(height: _moveStripHeight, child: moves),
-                          status,
-                          topMaterial,
-                          board,
-                          bottomMaterial,
-                        ],
-                      ),
+                    child: LayoutBuilder(
+                      builder: (context, box) {
+                        final banner =
+                            box.maxHeight >= _moveStripHeight + _bannerHeight
+                            ? _banner(context)
+                            : null;
+                        return Column(
+                          children: [
+                            ?banner,
+                            Expanded(
+                              child: LayoutBuilder(
+                                builder: (context, area) => _MoveList(
+                                  game: _game,
+                                  horizontal:
+                                      area.maxHeight < 2 * _moveStripHeight,
+                                  selected: viewPly,
+                                  onSelect: _showPly,
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
                     ),
                   ),
+                  status,
+                  topMaterial,
+                  board,
+                  bottomMaterial,
                   actions,
                 ],
               );
@@ -2326,7 +2459,11 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 enum _ComputerTask { none, move, draw }
 
 const int _drawAcceptanceCp = 50;
+const String _tipsKey = 'gameTips';
+const String _reviewInviteKey = 'gameReviewInvite';
+const int _tipsDoneMark = 99;
 const double _moveStripHeight = 40;
+const double _bannerHeight = 112;
 const double _statusHeight = 48;
 const double _actionsHeight = 72;
 const double _materialHeight = 36;
@@ -2481,17 +2618,39 @@ class _MoveList extends StatelessWidget {
   }
 }
 
-/// Etichette dei comandi che cambiano nel profilo bambino.
+/// Etichette dei comandi; nel profilo bambino cambiano alcune parole.
 class _ActionLabels {
   const _ActionLabels({
-    this.newGame = 'Nuova',
-    this.undo = 'Annulla',
-    this.flip = 'Gira',
-    this.draw = 'Patta',
-    this.resign = 'Abbandona',
-    this.coach = 'Allenatore',
-    this.hint = 'Suggerisci',
+    required this.newGame,
+    required this.undo,
+    required this.flip,
+    required this.draw,
+    required this.resign,
+    required this.coach,
+    required this.hint,
+    required this.threat,
+    required this.more,
+    required this.panelTitle,
+    required this.coachTip,
+    required this.threatTip,
+    required this.hintTip,
   });
+
+  factory _ActionLabels.adult(AppLocalizations l) => _ActionLabels(
+    newGame: l.gameActionNew,
+    undo: l.gameActionUndo,
+    flip: l.gameActionFlip,
+    draw: l.gameActionDraw,
+    resign: l.gameActionResign,
+    coach: l.gameActionCoach,
+    hint: l.gameActionHint,
+    threat: l.gameActionThreat,
+    more: l.gameActionMore,
+    panelTitle: l.gamePanelTitle,
+    coachTip: l.gameCoachTip,
+    threatTip: l.gameThreatTip,
+    hintTip: l.gameHintTip,
+  );
 
   final String newGame;
   final String undo;
@@ -2500,10 +2659,18 @@ class _ActionLabels {
   final String resign;
   final String coach;
   final String hint;
+  final String threat;
+  final String more;
+  final String panelTitle;
+  final String coachTip;
+  final String threatTip;
+  final String hintTip;
 }
 
+/// Barra dei comandi frequenti; il resto sta nel pannello «Partita».
 class _GameActions extends StatelessWidget {
   const _GameActions({
+    required this.kid,
     required this.labels,
     required this.onNewGame,
     required this.onUndo,
@@ -2517,6 +2684,7 @@ class _GameActions extends StatelessWidget {
     required this.onThreat,
   });
 
+  final bool kid;
   final _ActionLabels labels;
   final VoidCallback? onNewGame;
   final VoidCallback? onUndo;
@@ -2535,64 +2703,169 @@ class _GameActions extends StatelessWidget {
   /// Solo con l'allenatore acceso.
   final VoidCallback? onThreat;
 
+  /// Nel profilo bambino «Gira» cede il posto al suggerimento.
+  bool get _flipInPanel => kid && hintAvailable;
+
+  void _openPanel(BuildContext context) {
+    final theme = Theme.of(context);
+    void pick(BuildContext sheet, VoidCallback? action) {
+      Navigator.of(sheet).pop();
+      action?.call();
+    }
+
+    unawaited(
+      showModalBottomSheet<void>(
+        context: context,
+        showDragHandle: true,
+        isScrollControlled: true,
+        builder: (sheet) => SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
+                  child: Semantics(
+                    header: true,
+                    child: Text(
+                      labels.panelTitle,
+                      style: theme.textTheme.titleLarge,
+                    ),
+                  ),
+                ),
+                _PanelTile(
+                  Icons.add,
+                  labels.newGame,
+                  onNewGame,
+                  kid: kid,
+                  pick: pick,
+                ),
+                if (_flipInPanel)
+                  _PanelTile(
+                    Icons.swap_vert,
+                    labels.flip,
+                    onFlip,
+                    kid: kid,
+                    pick: pick,
+                  ),
+                _PanelTile(
+                  Icons.handshake_outlined,
+                  labels.draw,
+                  onDraw,
+                  kid: kid,
+                  pick: pick,
+                ),
+                _PanelTile(
+                  Icons.flag_outlined,
+                  labels.resign,
+                  onResign,
+                  kid: kid,
+                  pick: pick,
+                ),
+                if (coachOn != null)
+                  SwitchListTile(
+                    secondary: const Icon(Icons.school_outlined),
+                    title: Text(labels.coach),
+                    subtitle: Text(labels.coachTip),
+                    value: coachOn!,
+                    onChanged: (_) => pick(sheet, onCoach),
+                  ),
+                if (coachOn ?? false)
+                  _PanelTile(
+                    Icons.warning_amber,
+                    labels.threat,
+                    onThreat,
+                    kid: kid,
+                    pick: pick,
+                    subtitle: labels.threatTip,
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: _actionsHeight,
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _ActionButton(Icons.add, labels.newGame, onNewGame),
-          _ActionButton(Icons.undo, labels.undo, onUndo),
-          _ActionButton(Icons.swap_vert, labels.flip, onFlip),
-          _ActionButton(Icons.handshake_outlined, labels.draw, onDraw),
-          _ActionButton(Icons.flag_outlined, labels.resign, onResign),
-          if (coachOn != null)
-            _ActionButton(
-              coachOn! ? Icons.school : Icons.school_outlined,
-              labels.coach,
-              onCoach,
-              highlighted: coachOn!,
-              tooltip: 'Ti avvisa quando sbagli una mossa e ti fa riprenderla',
-            ),
-          if (coachOn ?? false)
-            _ActionButton(
-              Icons.warning_amber,
-              'Minaccia',
-              onThreat,
-              tooltip:
-                  'Mostra con una freccia rossa la mossa che '
-                  'l\'avversario giocherebbe se toccasse a lui',
-            ),
           if (hintAvailable)
             _ActionButton(
+              'hint',
               Icons.lightbulb_outline,
               labels.hint,
               onHint,
-              tooltip:
-                  'Primo tocco: evidenzia il pezzo da muovere. '
-                  'Secondo tocco: mostra la freccia della mossa migliore',
+              tooltip: labels.hintTip,
             ),
+          _ActionButton('undo', Icons.undo, labels.undo, onUndo),
+          if (!_flipInPanel)
+            _ActionButton('flip', Icons.swap_vert, labels.flip, onFlip),
+          _ActionButton(
+            'more',
+            Icons.more_horiz,
+            labels.more,
+            () => _openPanel(context),
+            dot: coachOn ?? false,
+          ),
         ],
       ),
     );
   }
 }
 
-class _ActionButton extends StatelessWidget {
-  const _ActionButton(
+class _PanelTile extends StatelessWidget {
+  const _PanelTile(
     this.icon,
     this.label,
-    this.onPressed, {
-    this.highlighted = false,
-    this.tooltip,
+    this.onTap, {
+    required this.kid,
+    required this.pick,
+    this.subtitle,
   });
 
   final IconData icon;
   final String label;
-  final VoidCallback? onPressed;
+  final VoidCallback? onTap;
+  final bool kid;
+  final void Function(BuildContext, VoidCallback?) pick;
+  final String? subtitle;
 
-  /// Comando acceso, come l'allenatore.
-  final bool highlighted;
+  @override
+  Widget build(BuildContext context) {
+    final tokens = RokkoTokens.of(context);
+    return ListTile(
+      minTileHeight: kid ? tokens.kidTouch : tokens.minTouch,
+      leading: Icon(icon),
+      title: Text(label),
+      subtitle: subtitle == null ? null : Text(subtitle!),
+      enabled: onTap != null,
+      onTap: onTap == null ? null : () => pick(context, onTap),
+    );
+  }
+}
+
+class _ActionButton extends StatelessWidget {
+  const _ActionButton(
+    this.id,
+    this.icon,
+    this.label,
+    this.onPressed, {
+    this.tooltip,
+    this.dot = false,
+  });
+
+  /// Punto sull'icona: un comando del pannello è acceso, come l'allenatore.
+  final bool dot;
+  final String id;
+  final IconData icon;
+  final String label;
+  final VoidCallback? onPressed;
   final String? tooltip;
 
   @override
@@ -2600,22 +2873,23 @@ class _ActionButton extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     final color = onPressed == null
         ? Theme.of(context).disabledColor
-        : highlighted
-        ? scheme.primary
         : scheme.onSurface;
     // Senza Semantics il lettore di schermo non annuncia un pulsante né il suo stato.
     Widget button = Semantics(
       button: true,
       enabled: onPressed != null,
       child: InkWell(
+        key: ValueKey('gameAction-$id'),
         onTap: onPressed,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: color),
+            Badge(
+              smallSize: 8,
+              isLabelVisible: dot,
+              child: Icon(icon, color: color),
+            ),
             const SizedBox(height: 4),
-            // Con sette pulsanti le etichette lunghe si rimpiccioliscono, con
-            // un margine per non toccare quelle vicine.
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 2),
               child: FittedBox(
@@ -2635,6 +2909,63 @@ class _ActionButton extends StatelessWidget {
       button = Tooltip(message: tooltip, child: button);
     }
     return Expanded(child: button);
+  }
+}
+
+/// Suggerimento o invito sopra la scacchiera, sempre ignorabile.
+class _TipCard extends StatelessWidget {
+  const _TipCard({
+    super.key,
+    required this.text,
+    required this.closeLabel,
+    required this.onClose,
+    this.actionLabel,
+    this.onAction,
+  });
+
+  final String text;
+  final String closeLabel;
+  final VoidCallback onClose;
+  final String? actionLabel;
+  final VoidCallback? onAction;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+      child: Card(
+        margin: EdgeInsets.zero,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 4, 8, 4),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 8, right: 8),
+                child: Text(
+                  text,
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ),
+              Wrap(
+                alignment: WrapAlignment.end,
+                children: [
+                  if (actionLabel != null)
+                    TextButton(onPressed: onAction, child: Text(actionLabel!)),
+                  TextButton(
+                    key: const ValueKey('gameTipClose'),
+                    onPressed: onClose,
+                    child: Text(closeLabel),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 

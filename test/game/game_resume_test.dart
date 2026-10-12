@@ -10,6 +10,7 @@ import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/settings/settings.dart';
 
 import '../computer_fakes.dart';
+import '../game_actions.dart';
 
 Offset square(WidgetTester tester, String name) {
   final rect = tester.getRect(find.byType(Chessboard));
@@ -84,7 +85,7 @@ void main() {
     tester,
   ) async {
     await open(tester);
-    await tester.tap(find.text('Nuova'));
+    await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Senza tempo'));
     await tester.pumpAndSettle();
@@ -99,7 +100,7 @@ void main() {
 
   testWidgets('una partita senza mosse non si salva', (tester) async {
     await open(tester);
-    await tester.tap(find.text('Nuova'));
+    await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Senza tempo'));
     await tester.pumpAndSettle();

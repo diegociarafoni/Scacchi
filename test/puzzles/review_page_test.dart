@@ -8,6 +8,8 @@ import 'package:scacchi/puzzles/puzzle_page.dart';
 import 'package:scacchi/puzzles/puzzle_trainer.dart';
 import 'package:scacchi/storage/key_value_store.dart';
 
+import '../localized_app.dart';
+
 Puzzle p(String id) => Puzzle.parseCsv(
   '$id,7k/6pp/8/8/1n6/8/8/RR4K1 b - - 0 1,b4c2 a1a8,1500,mateIn1',
 );
@@ -28,7 +30,7 @@ void main() {
     await trainer.record(trainer.library.byId('a')!, solved: false);
     today = today.add(const Duration(days: 1));
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: PuzzlePage(trainer: trainer, feed: ReviewFeed(trainer)),
       ),
     );
@@ -49,7 +51,7 @@ void main() {
       MemoryStore(),
     );
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: PuzzlePage(trainer: trainer, feed: ReviewFeed(trainer)),
       ),
     );

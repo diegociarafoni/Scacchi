@@ -28,12 +28,17 @@ void main() {
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         locale: const Locale('it'),
-        home: SettingsPage(controller: settings),
+        home: SettingsPage(
+          controller: settings,
+          expanded: SettingsSection.values.toSet(),
+        ),
       ),
     );
     await tester.pumpAndSettle();
     final toggle = find.byKey(const Key('zenMode'));
     await tester.scrollUntilVisible(toggle, 200);
+    await tester.ensureVisible(toggle);
+    await tester.pumpAndSettle();
     expect(find.text('Modalità zen'), findsOneWidget);
     await tester.tap(toggle);
     await tester.pumpAndSettle();

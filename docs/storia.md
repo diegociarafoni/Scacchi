@@ -1,10 +1,10 @@
 # Percorso a storia
 
-Requisito RG-13: una trama a capitoli sopra il [percorso a tappe](percorso.md). Il codice è in `lib/story/`. Si apre dalla scheda Tu, voce **Storia**.
+Requisito RG-13: una trama a capitoli sopra il [percorso a tappe](percorso.md). Il codice è in `lib/story/`. Si apre dalla scheda Tu, voce **Storia**, ed è l'unico percorso di apprendimento dell'interfaccia: «Continua da dove eri» della scheda Tu porta qui (prossima tappa: `nextStoryStage`), e le stelle già ottenute nel [percorso](percorso.md) contano subito.
 
 ## Come funziona
 
-La storia accompagna il giocatore dal villaggio ai piedi della Rocca fino alla corona. Ogni capitolo ha un racconto breve, un elenco di passi da fare nell'ordine e un epilogo che compare a capitolo concluso. Il capitolo successivo si apre quando il precedente è concluso. Non ci sono vite, penalità né tempo: una sfida persa si riprova quando si vuole.
+La storia accompagna il giocatore dal villaggio ai piedi della Rocca fino alla corona e oltre, verso la pianura dei piani e l'accademia del maestro. Ogni capitolo ha un racconto breve, un elenco di passi da fare nell'ordine e un epilogo che compare a capitolo concluso. Il capitolo successivo si apre quando il precedente è concluso. Non ci sono vite, penalità né tempo: una sfida persa si riprova quando si vuole.
 
 | Capitolo | Lezioni e guardiano (percorso) | Puzzle | Sfida finale |
 |---|---|---|---|
@@ -14,6 +14,8 @@ La storia accompagna il giocatore dal villaggio ai piedi della Rocca fino alla c
 | Il bosco delle trappole | Tattiche, guardiano | 4 forchette | Marta |
 | Il castello dei finali | Finali, guardiano | 3 finali di pedoni | Duilio |
 | La corona | Aperture, guardiano | 3 aperture | Elena |
+| La pianura dei piani | La strategia, guardiano | 3 pedoni avanzati | Massimo |
+| L'accademia del maestro | La scuola di Capablanca, guardiano | 3 finali di torri | Stella |
 
 I bot sono quelli della scala (vedi [bot.md](bot.md)) in ordine di forza crescente: la sfida usa il loro livello del motore, senza orologio e con **Annulla** (come il guardiano). Lo stile e il libro d'aperture del bot non sono applicati alla sfida.
 
@@ -27,6 +29,14 @@ Dentro un capitolo ogni passo si apre quando quelli prima sono fatti:
 4. **Sfida finale**: battere il bot del capitolo. Uscire a partita in corso vale una sconfitta.
 
 Un passo già fatto non si riapre (lezioni, puzzle e partite restano raggiungibili dal resto dell'app). I passi che richiedono il motore (guardiano e sfida) mostrano un avviso dove Stockfish non c'è, come nel percorso. **Continua** apre il primo passo da fare del capitolo corrente.
+
+## Aspetto
+
+In cima una scheda mostra i capitoli conclusi con una barra. I capitoli sono lungo un binario verticale: ogni capitolo ha un badge con un anello di avanzamento (passi fatti su passi totali), il numero, la spunta a capitolo concluso o il lucchetto se è chiuso. Il capitolo corrente ha il bordo nel colore d'azione e la scritta «In corso»; quelli chiusi hanno il contorno tratteggiato e il testo che dice come aprirli. Lezioni e puzzle mostrano una barra con il conteggio, i passi fatti hanno la spunta e quelli bloccati il lucchetto, oltre al testo letto dai lettori di schermo. Contenuti e logica della storia non cambiano; i testi nuovi sono in `story.arb` (italiano e inglese).
+
+## Foglio di passaggio
+
+Quando un passo si conclude (lezioni, puzzle, guardiano o sfida), la schermata mostra un foglio dal basso che celebra il risultato e dice cosa viene dopo: dalle lezioni ai puzzle, dai puzzle alla sfida con il custode del capitolo (o al guardiano, dove c'è), e a capitolo concluso l'epilogo con l'apertura del capitolo successivo (o la fine della storia). L'icona compare con un breve rimbalzo, fermo se le animazioni sono disattivate. Il pulsante principale apre subito il passo successivo, «Più tardi» chiude il foglio. Una sfida persa resta un avviso, perché non c'è nulla da celebrare. La logica di avanzamento non cambia: il foglio legge lo stato dopo il passo, comparando con quello di prima. I testi sono `storyPassage*` in `story.arb`; in test `StoryPage.playLesson` sostituisce la schermata della lezione.
 
 ## Stato e salvataggio
 
@@ -48,4 +58,4 @@ Aggiungere un `StoryChapter` in `storyChapters` (capitolo del percorso, bot, tem
 | `story_controller.dart` | Caricamento e salvataggio |
 | `story_feed.dart` | Puzzle del tema fino all'obiettivo |
 | `story_l10n.dart` | Testi dei capitoli |
-| `story_page.dart` | Schermata della storia |
+| `story_page.dart` | Schermata della storia: riepilogo, binario dei capitoli, passi |

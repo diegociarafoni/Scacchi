@@ -53,7 +53,11 @@ void main() {
               .copyWith(textScaler: TextScaler.linear(textScale)),
           child: child!,
         ),
-        home: SettingsPage(controller: settings, progress: progress),
+        home: SettingsPage(
+          controller: settings,
+          progress: progress,
+          expanded: SettingsSection.values.toSet(),
+        ),
       ),
     );
     await tester.pumpAndSettle();
@@ -68,11 +72,13 @@ void main() {
       );
 
   Future<void> tapChip(WidgetTester tester, String label) async {
+    // Modalità, notazione e animazioni sono chip; temi e pezzi, tessere.
     final chip = find.widgetWithText(ChoiceChip, label);
-    await tester.scrollUntilVisible(chip, 200);
-    await tester.ensureVisible(chip);
+    final target = chip.evaluate().isNotEmpty ? chip : find.text(label);
+    if (target.evaluate().isEmpty) await tester.scrollUntilVisible(target, 200);
+    await tester.ensureVisible(target);
     await tester.pumpAndSettle();
-    await tester.tap(chip);
+    await tester.tap(target);
     await tester.pumpAndSettle();
   }
 
@@ -97,7 +103,10 @@ void main() {
     await show(tester);
     final s = settings.value;
     expect(board(tester).settings.colorScheme, same(s.boardTheme.colorScheme));
-    expect(board(tester).settings.pieceAssets, s.pieceSet.assets);
+    expect(
+      board(tester).settings.pieceAssets,
+      s.pieceSet.assetsOn(s.boardTheme),
+    );
     expect(board(tester).settings.enableCoordinates, isTrue);
     expect(
       board(tester).settings.animationDuration,
@@ -142,8 +151,7 @@ void main() {
   ) async {
     await show(tester);
     expect(find.byKey(const Key('preview-dots')), findsOneWidget);
-    await tester.tap(find.text('Mostra le mosse legali'));
-    await tester.pumpAndSettle();
+    await tapText(tester, 'Mostra le mosse legali');
     expect(find.byKey(const Key('preview-dots')), findsNothing);
   });
 
@@ -271,10 +279,9 @@ void main() {
           )
           .map((b) => b.color)
           .toList();
-      expect(colors, [
-        theme.colorScheme.lightSquare,
-        theme.colorScheme.darkSquare,
-      ]);
+      expect(colors, hasLength(16));
+      expect(colors.first, theme.colorScheme.lightSquare);
+      expect(colors[1], theme.colorScheme.darkSquare);
     }
     for (final style in PieceStyle.values) {
       final icon = find.byKey(Key('piece-icon-${style.name}'));
@@ -309,7 +316,10 @@ void main() {
       tester,
     ) async {
       await show(tester, logical: const Size(360, 780));
-      await tester.scrollUntilVisible(find.text('Pezzi'), 200);
+      await tester.scrollUntilVisible(
+        find.byKey(const Key('piece-tile-rokko')),
+        200,
+      );
       await tester.pumpAndSettle();
       await expectLater(
         find.byType(MaterialApp),

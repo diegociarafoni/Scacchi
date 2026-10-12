@@ -2,6 +2,7 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import 'board_frame.dart';
 import 'settings.dart';
 
@@ -57,8 +58,9 @@ class _BoardPreviewState extends State<BoardPreview> {
     final position = _played ? _after : _before;
     final size = widget.size;
     return Semantics(
-      label:
-          'Anteprima della scacchiera. Tocca per ${_played ? 'ripristinare' : 'giocare'} la mossa di prova',
+      label: _played
+          ? AppLocalizations.of(context).settingsPreviewReset
+          : AppLocalizations.of(context).settingsPreviewPlay,
       button: true,
       excludeSemantics: true,
       onTap: _toggle,

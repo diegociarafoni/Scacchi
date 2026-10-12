@@ -8,6 +8,7 @@ import 'package:scacchi/settings/settings.dart';
 import 'package:scacchi/storage/key_value_store.dart';
 
 import 'computer_fakes.dart';
+import 'game_actions.dart';
 
 void main() {
   Widget app(MemoryStore store) => MaterialApp(
@@ -22,7 +23,7 @@ void main() {
   );
 
   Future<void> openComputerSheet(WidgetTester tester) async {
-    await tester.tap(find.text('Nuova'));
+    await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Computer'));
     await tester.pumpAndSettle();
@@ -74,7 +75,7 @@ void main() {
   }
 
   Future<void> resign(WidgetTester tester) async {
-    await tester.tap(find.text('Abbandona'));
+    await tapGameAction(tester, 'Abbandona');
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(FilledButton, 'Abbandona'));
     await tester.pumpAndSettle();

@@ -83,7 +83,7 @@ void main() {
       );
       expect(find.text('pezzi lasciati in presa: 3 volte'), findsOneWidget);
       expect(
-        find.text('Ripassa la lezione «Pezzi indifesi» del Percorso.'),
+        find.text('Ripassa la lezione «Pezzi indifesi» della Storia.'),
         findsOneWidget,
       );
     });

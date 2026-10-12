@@ -76,6 +76,9 @@ void main() {
     await tester.tap(find.text('Puzzle').last);
     await tester.pumpAndSettle();
     await tester.scrollUntilVisible(find.text('Serie'), 200);
+    // La voce può restare sotto la barra di navigazione: la si porta su.
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, -300));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Serie'));
     await tester.pumpAndSettle();
     expect(find.text('Obiettivo'), findsOneWidget);

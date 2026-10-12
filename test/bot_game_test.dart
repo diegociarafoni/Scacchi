@@ -10,6 +10,7 @@ import 'package:scacchi/settings/settings.dart';
 import 'package:scacchi/storage/key_value_store.dart';
 
 import 'computer_fakes.dart';
+import 'game_actions.dart';
 
 void main() {
   Widget app(MemoryStore store, {List<String>? script}) => MaterialApp(
@@ -44,7 +45,7 @@ void main() {
   }
 
   Future<void> openBotSheet(WidgetTester tester) async {
-    await tester.tap(find.text('Nuova'));
+    await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Bot'));
     await tester.pumpAndSettle();
@@ -153,7 +154,7 @@ void main() {
     await chooseTime(tester, 'Senza tempo');
     await tester.pumpAndSettle(const Duration(seconds: 1));
     await tapMove(tester, 'a2a3');
-    await tester.tap(find.text('Abbandona'));
+    await tapGameAction(tester, 'Abbandona');
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(FilledButton, 'Abbandona'));
     await tester.pumpAndSettle();
@@ -186,7 +187,7 @@ void main() {
     final store = MemoryStore();
     await tester.pumpWidget(app(store));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Nuova'));
+    await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Computer'));
     await tester.pumpAndSettle();
@@ -201,7 +202,7 @@ void main() {
     await chooseTime(tester, 'Senza tempo');
     await tester.pumpAndSettle(const Duration(seconds: 1));
     await tapMove(tester, 'a2a3');
-    await tester.tap(find.text('Abbandona'));
+    await tapGameAction(tester, 'Abbandona');
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(FilledButton, 'Abbandona'));
     await tester.pumpAndSettle();

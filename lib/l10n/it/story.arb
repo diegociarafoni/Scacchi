@@ -232,7 +232,7 @@
   "@storyCrownTitle": {
     "description": "storyCrownTitle"
   },
-  "storyCrownIntro": "Ultima tappa: la sala della corona. Partire bene è mezza vittoria: il centro, lo sviluppo, l'arrocco.",
+  "storyCrownIntro": "La sala della corona. Partire bene è mezza vittoria: il centro, lo sviluppo, l'arrocco.",
   "@storyCrownIntro": {
     "description": "storyCrownIntro"
   },
@@ -245,8 +245,149 @@
       }
     }
   },
-  "storyCrownOutro": "La corona è tua. Il regno è in pace e ogni nuova partita è una nuova storia.",
+  "storyCrownOutro": "La corona è tua. Ma oltre le mura si apre una pianura ancora da esplorare.",
   "@storyCrownOutro": {
     "description": "storyCrownOutro"
+  },
+  "storyChapterCurrent": "In corso",
+  "@storyChapterCurrent": {
+    "description": "Etichetta del capitolo corrente nella storia"
+  },
+  "storyChapterSteps": "{done} passi su {total}",
+  "@storyChapterSteps": {
+    "description": "Passi conclusi di un capitolo, per la barra di avanzamento",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyPassageLessonsTitle": "Lezioni concluse!",
+  "@storyPassageLessonsTitle": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassagePuzzlesTitle": "Puzzle risolti!",
+  "@storyPassagePuzzlesTitle": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageGuardianTitle": "Guardiano battuto!",
+  "@storyPassageGuardianTitle": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageNextPuzzles": "Hai imparato quello che serve. Ora mettiti alla prova con i puzzle del capitolo.",
+  "@storyPassageNextPuzzles": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageNextGuardian": "Ora affronta il guardiano del capitolo.",
+  "@storyPassageNextGuardian": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageNextBoss": "Sei pronto: {name} ti aspetta per la sfida finale del capitolo.",
+  "@storyPassageNextBoss": {
+    "description": "Foglio di passaggio della storia",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPassageGoPuzzles": "Ai puzzle",
+  "@storyPassageGoPuzzles": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageGoGuardian": "Sfida il guardiano",
+  "@storyPassageGoGuardian": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageGoBoss": "Sfida {name}",
+  "@storyPassageGoBoss": {
+    "description": "Foglio di passaggio della storia",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPassageLater": "Più tardi",
+  "@storyPassageLater": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageChapterTitle": "Capitolo {n} concluso!",
+  "@storyPassageChapterTitle": {
+    "description": "Foglio di passaggio della storia",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "storyPassageChapterNext": "Si apre il capitolo {n}: {title}.",
+  "@storyPassageChapterNext": {
+    "description": "Foglio di passaggio della storia",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPassageGoChapter": "Al prossimo capitolo",
+  "@storyPassageGoChapter": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageStoryDone": "Hai concluso la storia!",
+  "@storyPassageStoryDone": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageClose": "Chiudi",
+  "@storyPassageClose": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPlainTitle": "La pianura dei piani",
+  "@storyPlainTitle": {
+    "description": "storyPlainTitle"
+  },
+  "storyPlainIntro": "Oltre la corona si apre una pianura silenziosa, dove le battaglie si vincono prima di cominciare: servono un piano, pezzi attivi e un po' di pazienza.",
+  "@storyPlainIntro": {
+    "description": "storyPlainIntro"
+  },
+  "storyPlainBoss": "{name}, il lupo della pianura, prepara ogni attacco con un gambetto e un piano preciso.",
+  "@storyPlainBoss": {
+    "description": "storyPlainBoss",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPlainOutro": "La pianura è tua. Ora sai che ogni pezzo ha un compito e ogni mossa ha un perché.",
+  "@storyPlainOutro": {
+    "description": "storyPlainOutro"
+  },
+  "storyAcademyTitle": "L'accademia del maestro",
+  "@storyAcademyTitle": {
+    "description": "storyAcademyTitle"
+  },
+  "storyAcademyIntro": "In cima alla collina vive un vecchio maestro che insegna con pochi principi: contare le mosse, trovare l'opposizione, non dimenticare le regole dell'apertura.",
+  "@storyAcademyIntro": {
+    "description": "storyAcademyIntro"
+  },
+  "storyAcademyBoss": "{name}, la stella dell'accademia, attacca senza sosta e non perdona un errore.",
+  "@storyAcademyBoss": {
+    "description": "storyAcademyBoss",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyAcademyOutro": "L'accademia ti saluta come uno dei suoi. La storia è finita, ma la partita continua.",
+  "@storyAcademyOutro": {
+    "description": "storyAcademyOutro"
   }
 }

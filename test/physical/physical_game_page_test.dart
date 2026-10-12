@@ -10,6 +10,7 @@ import 'package:scacchi/archive/saved_game.dart';
 import 'package:scacchi/physical/photo_source.dart';
 import 'package:scacchi/physical/physical_game_page.dart';
 
+import '../game_actions.dart';
 import '../localized_app.dart';
 import 'board_render.dart';
 
@@ -99,7 +100,7 @@ void main() {
   testWidgets('a partita finita viene salvata nell\'archivio', (tester) async {
     await open(tester);
     await type(tester, 'e4');
-    await tester.tap(find.text('Abbandona'));
+    await tapGameAction(tester, 'Abbandona');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Nero').last);
     await tester.pump();

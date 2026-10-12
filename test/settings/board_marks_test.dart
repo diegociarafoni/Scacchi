@@ -118,7 +118,7 @@ void main() {
     expect(night.hintColor, BoardMarks.of(BoardTheme.night).hint);
     expect(night.threatColor, BoardMarks.of(BoardTheme.night).threat);
     expect(
-      AppSettings(colorBlind: true).hintColor,
+      AppSettings(boardTheme: BoardTheme.green, colorBlind: true).hintColor,
       BoardMarks.of(BoardTheme.green, colorBlind: true).hint,
     );
   });
