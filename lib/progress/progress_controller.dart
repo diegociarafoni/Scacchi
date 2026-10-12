@@ -72,22 +72,31 @@ class ProgressController extends ChangeNotifier {
       _state = data.state;
       _settings = data.settings;
       _readOnly = false;
-      _weekLog = await _journal?.load() ?? const WeekLog();
     } on FileSystemException catch (e) {
       debugPrint('Lettura dei progressi non riuscita: $e');
       _readOnly = true;
     }
+    await _loadJournal();
     notifyListeners();
   }
 
+  /// Un diario illeggibile non deve fermare il salvataggio dei progressi.
+  Future<void> _loadJournal() async {
+    try {
+      _weekLog = await _journal?.load() ?? const WeekLog();
+    } on FileSystemException catch (e) {
+      debugPrint('Lettura del diario non riuscita: $e');
+    }
+  }
+
   Future<ProgressUpdate> record(Activity activity) async {
-    if (_settings.enabled) await _journalize(activity);
     final update = _tracker.record(_state, activity, _clock(), _settings);
     if (!identical(update.state, _state)) {
       _state = update.state;
       notifyListeners();
       await _save();
     }
+    if (_settings.enabled) await _journalize(activity);
     return update;
   }
 

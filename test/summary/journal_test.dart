@@ -45,4 +45,16 @@ void main() {
     await c.record(const PuzzleSolved());
     expect(c.weekLog.isEmpty, isTrue);
   });
+
+  test(
+    'un diario illeggibile non ferma il salvataggio dei progressi',
+    () async {
+      Directory(weekFile.path).createSync();
+      final c = controller();
+      await c.load();
+      expect(c.readOnly, isFalse);
+      await c.record(const PuzzleSolved());
+      expect(File('${dir.path}/p.json').existsSync(), isTrue);
+    },
+  );
 }

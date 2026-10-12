@@ -107,6 +107,12 @@ class YouPage extends StatelessWidget {
       }
     } on Object catch (e) {
       debugPrint('Lezione non disponibile: $e');
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('I dati salvati non si possono leggere: riprova.'),
+        ),
+      );
     }
   }
 

@@ -39,7 +39,7 @@ class WeeklySummaryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final kid = AppSettings.of(context).kidMode;
-    final summary = WeeklySummary.from(log, (now ?? DateTime.now)());
+    final summary = WeeklySummary.from(log, (now ?? DateTime.now)(), kid: kid);
     return Scaffold(
       appBar: AppBar(title: Text(l.weeklyEntryTitle)),
       body: summary.isEmpty
@@ -204,10 +204,7 @@ class _AdviceSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    // Il profilo bambino non ha la revisione delle partite.
-    final kind = kid && advice.kind == AdviceKind.reviewGame
-        ? AdviceKind.solvePuzzles
-        : advice.kind;
+    final kind = advice.kind;
     Stage? stage;
     if (kind == AdviceKind.lesson) {
       for (final chapter in curriculum) {

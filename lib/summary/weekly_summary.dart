@@ -78,11 +78,19 @@ const _fixes = <String, Advice>{
 
 /// Riepilogo degli ultimi sette giorni dal diario (RG-16).
 class WeeklySummary {
-  WeeklySummary._(this.week, this.previous, this.topError, this.topErrorCount) {
-    advice = _advise();
+  WeeklySummary._(
+    this.week,
+    this.previous,
+    this.topError,
+    this.topErrorCount, {
+    required bool kid,
+  }) {
+    advice = _advise(kid: kid);
   }
 
-  factory WeeklySummary.from(WeekLog log, DateTime now) {
+  /// Con [kid] (profilo bambino, senza revisione delle partite) non si consiglia
+  /// di rivederle.
+  factory WeeklySummary.from(WeekLog log, DateTime now, {bool kid = false}) {
     final week = _totals(log, now, 0);
     final top = week.errors.entries
         .where((e) => recurringErrors.contains(e.key))
@@ -98,6 +106,7 @@ class WeeklySummary {
       _totals(log, now, 7),
       top?.key,
       top?.value ?? 0,
+      kid: kid,
     );
   }
 
@@ -118,12 +127,12 @@ class WeeklySummary {
     return now == null || before == null ? null : now - before;
   }
 
-  Advice _advise() {
+  Advice _advise({required bool kid}) {
     final fix = _fixes[topError];
     if (fix != null) {
       return Advice(fix.kind, target: fix.target, error: topError);
     }
-    if (week.games > 0 && week.reviews == 0) {
+    if (!kid && week.games > 0 && week.reviews == 0) {
       return const Advice(AdviceKind.reviewGame);
     }
     if (week.puzzles == 0) return const Advice(AdviceKind.solvePuzzles);

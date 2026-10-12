@@ -21,19 +21,19 @@ class DayLog {
   });
 
   factory DayLog.fromJson(Map<String, Object?> json) => DayLog(
-    games: json['games'] as int? ?? 0,
-    wins: json['wins'] as int? ?? 0,
-    draws: json['draws'] as int? ?? 0,
-    losses: json['losses'] as int? ?? 0,
-    puzzles: json['puzzles'] as int? ?? 0,
-    lessons: json['lessons'] as int? ?? 0,
-    reviews: json['reviews'] as int? ?? 0,
-    seconds: json['seconds'] as int? ?? 0,
+    games: (json['games'] as num?)?.toInt() ?? 0,
+    wins: (json['wins'] as num?)?.toInt() ?? 0,
+    draws: (json['draws'] as num?)?.toInt() ?? 0,
+    losses: (json['losses'] as num?)?.toInt() ?? 0,
+    puzzles: (json['puzzles'] as num?)?.toInt() ?? 0,
+    lessons: (json['lessons'] as num?)?.toInt() ?? 0,
+    reviews: (json['reviews'] as num?)?.toInt() ?? 0,
+    seconds: (json['seconds'] as num?)?.toInt() ?? 0,
     accuracySum: (json['accuracySum'] as num?)?.toDouble() ?? 0,
-    accuracyCount: json['accuracyCount'] as int? ?? 0,
+    accuracyCount: (json['accuracyCount'] as num?)?.toInt() ?? 0,
     errors: {
       for (final e in ((json['errors'] as Map?) ?? const {}).entries)
-        e.key as String: e.value as int,
+        e.key as String: (e.value as num).toInt(),
     },
     reviewedGames: [
       for (final id in (json['reviewedGames'] as List?) ?? const [])

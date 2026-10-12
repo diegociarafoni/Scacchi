@@ -174,6 +174,18 @@ void main() {
       expect(s.advice.kind, AdviceKind.solvePuzzles);
     });
 
+    test('nel profilo bambino non si consiglia di rivedere le partite', () {
+      final s = WeeklySummary.from(
+        log([
+          (const GamePlayed(result: GameResult.win), 1),
+          (const PuzzleSolved(), 1),
+        ]),
+        now,
+        kid: true,
+      );
+      expect(s.advice.kind, AdviceKind.keepGoing);
+    });
+
     test('altrimenti si continua così', () {
       final s = WeeklySummary.from(
         log([

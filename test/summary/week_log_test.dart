@@ -84,6 +84,19 @@ void main() {
       expect(log.dayOf(now.subtract(const Duration(days: 13))), isNotNull);
     });
 
+    test('un contatore salvato come numero decimale si legge lo stesso', () {
+      final log = WeekLog.fromJson({
+        'days': {
+          '20261012': {
+            'puzzles': 3.0,
+            'errors': {'allowedPin': 2.0},
+          },
+        },
+      });
+      expect(log.dayOf(now)!.puzzles, 3);
+      expect(log.dayOf(now)!.errors, {'allowedPin': 2});
+    });
+
     test('il JSON non contiene nulla oltre ai conteggi e torna uguale', () {
       var log = const WeekLog();
       log = log.record(const GamePlayed(result: GameResult.win), now);
