@@ -8,6 +8,7 @@ import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
 
 import '../analysis/analysis_page.dart';
+import '../archive/pgn.dart';
 import '../archive/saved_game.dart';
 import '../coach/coach_session.dart';
 import '../coach/explain_why.dart';
@@ -80,6 +81,7 @@ class GamePage extends StatefulWidget {
     this.now,
     this.onActivity,
     this.onSave,
+    this.resume,
     this.progress,
     this.challenge,
     this.onFinished,
@@ -106,6 +108,10 @@ class GamePage extends StatefulWidget {
 
   /// Salva la partita finita nell'archivio; senza, nessun salvataggio.
   final Future<void> Function(SavedGame game)? onSave;
+
+  /// Partita non conclusa dell'archivio da riprendere: si rimette in campo
+  /// con lo stesso `id`, senza orologio, e il computer risponde se tocca a lui.
+  final SavedGame? resume;
 
   /// Partita già impostata da un'altra schermata: parte subito e non si può
   /// ricominciare né annullare.
@@ -324,7 +330,33 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     unawaited(_loadProfile());
     if (_isChallenge) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _startChallenge());
+    } else if (widget.resume != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _resumeSaved());
     }
+  }
+
+  /// Rimette in campo la partita salvata. Il livello del computer è quello più
+  /// vicino all'Elo registrato; i bot con personalità non si ripristinano.
+  void _resumeSaved() {
+    final saved = widget.resume;
+    if (!mounted || saved == null) return;
+    final game = importPgn(saved.pgn).games.firstOrNull?.game;
+    if (game == null || game.isOver) return;
+    final side = saved.playerSide;
+    final setup = _applySetup(
+      side == null
+          ? const GameSetup()
+          : GameSetup(
+              opponent: Opponent.computer,
+              sideChoice: side == Side.white
+                  ? SideChoice.white
+                  : SideChoice.black,
+              level: engineLevelForElo(saved.opponentElo ?? 1200).id,
+            ),
+    );
+    _beginGame(game, setup, null);
+    _gameId = saved.id;
+    _startedAt = saved.createdAt;
   }
 
   bool get _isChallenge => widget.challenge != null;
@@ -673,7 +705,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// assegnano una volta sola per partita.
   void _finishGame() {
     final game = _game;
-    if (!game.isOver) return;
+    if (!game.isOver) {
+      _saveInProgress(game);
+      return;
+    }
     final (side, elo) = _playerAndElo;
     final ending =
         '${identityHashCode(game)}:${game.endReason}:${game.moves.length}';
@@ -716,6 +751,18 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         ),
       ),
     );
+  }
+
+  /// A ogni mossa la partita in corso si salva nell'archivio (risultato `*`):
+  /// chiudere l'app non la perde e si può riprendere. Le partite senza mosse
+  /// non si salvano.
+  void _saveInProgress(ChessGame game) {
+    if (game.moves.isEmpty) return;
+    final key = '${identityHashCode(game)}:${game.moves.length}:open';
+    if (key == _archivedKey) return;
+    _archivedKey = key;
+    final (side, elo) = _playerAndElo;
+    _archive(game, side, _clockNow(), elo);
   }
 
   /// Salvataggio e progressi vanno avanti da soli: uno lento o fallito non
