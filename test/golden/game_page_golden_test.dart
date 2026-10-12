@@ -54,6 +54,40 @@ Future<void> _play(WidgetTester tester, List<String> uci) async {
 final _skip = Platform.isLinux ? null : 'riferimenti generati solo su Linux';
 
 void main() {
+  for (final device in Device.values) {
+    testWidgets('posizione iniziale su ${device.name}', skip: _skip != null, (
+      tester,
+    ) async {
+      await _pumpApp(tester, device);
+      await expectLater(
+        find.byType(ScacchiApp),
+        matchesGoldenFile('goldens/iniziale-${device.name}.png'),
+      );
+    });
+  }
+
+  testWidgets(
+    'scacco matto in tema scuro su telefono medio',
+    skip: _skip != null,
+    (tester) async {
+      await _pumpApp(tester, Device.phoneMedium, brightness: Brightness.dark);
+      await _play(tester, [
+        'e2e4',
+        'e7e5',
+        'f1c4',
+        'b8c6',
+        'd1h5',
+        'g8f6',
+        'h5f7',
+      ]);
+      await expectLater(
+        find.byType(ScacchiApp),
+        matchesGoldenFile('goldens/scacco-matto-scuro-telefono-medio.png'),
+      );
+    },
+  );
+
+  // In coda: le scacchiere dei golden precedenti dipendono dall'ordine delle prove.
   for (final (device, brightness) in [
     (Device.phoneSmall, Brightness.light),
     (Device.phoneMedium, Brightness.dark),
@@ -91,37 +125,4 @@ void main() {
       matchesGoldenFile('goldens/nuova-partita-amico-scuro-telefono-medio.png'),
     );
   });
-
-  for (final device in Device.values) {
-    testWidgets('posizione iniziale su ${device.name}', skip: _skip != null, (
-      tester,
-    ) async {
-      await _pumpApp(tester, device);
-      await expectLater(
-        find.byType(ScacchiApp),
-        matchesGoldenFile('goldens/iniziale-${device.name}.png'),
-      );
-    });
-  }
-
-  testWidgets(
-    'scacco matto in tema scuro su telefono medio',
-    skip: _skip != null,
-    (tester) async {
-      await _pumpApp(tester, Device.phoneMedium, brightness: Brightness.dark);
-      await _play(tester, [
-        'e2e4',
-        'e7e5',
-        'f1c4',
-        'b8c6',
-        'd1h5',
-        'g8f6',
-        'h5f7',
-      ]);
-      await expectLater(
-        find.byType(ScacchiApp),
-        matchesGoldenFile('goldens/scacco-matto-scuro-telefono-medio.png'),
-      );
-    },
-  );
 }
