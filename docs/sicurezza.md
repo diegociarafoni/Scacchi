@@ -31,7 +31,7 @@ Il riferimento è [OWASP MASVS v2](https://mas.owasp.org/MASVS/), con i casi di 
 | MASVS-CODE | Il manifest non forza `debuggable`; il rilascio usa la chiave dello store quando `ANDROID_KEYSTORE_PATH` c'è | test sorgenti | Attivo |
 | MASVS-CODE | Dipendenze senza vulnerabilità note | Trivy, OSV-Scanner | Attivo |
 | MASVS-PRIVACY | Nessun SDK di analisi, pubblicità o tracciamento (`privacy.forbiddenPackages`); un pacchetto vietato è ammesso solo come dipendenza indiretta, con il motivo in `privacy.transitiveAllowed` | test sorgenti | Attivo |
-| MASVS-PRIVACY | Solo i permessi Android elencati in `privacy.androidPermissions` con il motivo (oggi `RECEIVE_BOOT_COMPLETED` e `CAMERA`); iOS chiede solo fotocamera e libreria, con la spiegazione | test sorgenti | Attivo |
+| MASVS-PRIVACY | Solo i permessi Android elencati in `privacy.androidPermissions` con il motivo (oggi `RECEIVE_BOOT_COMPLETED`, `CAMERA` e `INTERNET`, quest'ultimo solo per la partita con un amico in rete locale); iOS chiede solo fotocamera, libreria e rete locale, con la spiegazione | test sorgenti | Attivo |
 | MASVS-AUTH | Non applicabile: niente account né login | | N/A |
 | MASVS-RESILIENCE | Anti-manomissione e rilevamento di root non previsti: l'app è open source e senza dati da proteggere | | Escluso per scelta |
 | MASVS-CRYPTO | La crittografia del multigiocatore ([multigiocatore.md](multigiocatore.md)) è oggi nel nucleo senza canali; la dichiarazione `ITSAppUsesNonExemptEncryption` per l'App Store va decisa con la prima versione che la usa | | Da fare |
