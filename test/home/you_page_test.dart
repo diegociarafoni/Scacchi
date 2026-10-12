@@ -40,7 +40,7 @@ void main() {
     ReminderScheduler? scheduler,
     SettingsController? settings,
   }) async {
-    tester.view.physicalSize = const Size(1170, 3400);
+    tester.view.physicalSize = const Size(1170, 3800);
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
