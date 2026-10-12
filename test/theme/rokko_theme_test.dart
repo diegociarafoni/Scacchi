@@ -23,6 +23,21 @@ void main() {
         );
         expect(_contrast(s.secondary, s.surface), greaterThanOrEqualTo(4.5));
         expect(_contrast(k.star, s.surface), greaterThanOrEqualTo(4.5));
+        expect(_contrast(k.success, s.surface), greaterThanOrEqualTo(4.5));
+        expect(_contrast(k.warning, s.surface), greaterThanOrEqualTo(4.5));
+        expect(_contrast(s.error, s.surface), greaterThanOrEqualTo(4.5));
+        expect(
+          _contrast(k.success, s.surfaceContainerHighest),
+          greaterThanOrEqualTo(4.5),
+        );
+        expect(
+          _contrast(k.warning, s.surfaceContainerHighest),
+          greaterThanOrEqualTo(4.5),
+        );
+        expect(
+          _contrast(s.error, s.surfaceContainerHighest),
+          greaterThanOrEqualTo(4.5),
+        );
       }
     },
   );

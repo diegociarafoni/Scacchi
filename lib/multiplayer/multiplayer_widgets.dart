@@ -63,13 +63,13 @@ class _ChannelChip extends StatelessWidget {
     final (icon, color, state, spoken) = switch (link.level) {
       LinkLevel.connected => (
         Icons.check_circle,
-        scheme.primary,
+        tokens.success,
         l10n.multiplayerUiLinkConnected,
         l10n.multiplayerUiLinkConnected.toLowerCase(),
       ),
       LinkLevel.connecting => (
         Icons.sync,
-        scheme.tertiary,
+        tokens.warning,
         l10n.multiplayerUiLinkConnecting,
         l10n.multiplayerUiLinkConnecting.toLowerCase(),
       ),

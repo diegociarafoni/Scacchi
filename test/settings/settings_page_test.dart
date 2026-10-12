@@ -106,7 +106,7 @@ void main() {
   testWidgets('RG-06 un tema bloccato dice come sbloccarlo', (tester) async {
     await show(tester);
     await tapChip(tester, 'Sabbia');
-    expect(settings.value.boardTheme, BoardTheme.green);
+    expect(settings.value.boardTheme, BoardTheme.spazio);
     expect(find.text('Sabbia si sblocca con: Livello 2'), findsOneWidget);
 
     await tapChip(tester, 'Legno');

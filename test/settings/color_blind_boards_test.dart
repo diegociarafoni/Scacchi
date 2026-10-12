@@ -26,7 +26,9 @@ Future<void> pumpColorBlind(WidgetTester tester, Widget home) async {
   tester.view.devicePixelRatio = 3;
   addTearDown(tester.view.reset);
   final settings = SettingsController.defaults();
-  await settings.update(AppSettings(colorBlind: true));
+  await settings.update(
+    AppSettings(boardTheme: BoardTheme.green, colorBlind: true),
+  );
   await tester.pumpWidget(
     SettingsScope(
       controller: settings,
@@ -47,7 +49,7 @@ Offset squareOn(WidgetTester tester, Finder board, Square square) {
 final safeHint = BoardMarks.of(BoardTheme.green, colorBlind: true).hint;
 
 void main() {
-  final safe = AppSettings(colorBlind: true);
+  final safe = AppSettings(boardTheme: BoardTheme.green, colorBlind: true);
 
   testWidgets('RNF-07 coordinate: esito in blu e arancio', (tester) async {
     await pumpColorBlind(

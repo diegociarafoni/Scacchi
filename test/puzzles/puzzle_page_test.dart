@@ -141,7 +141,7 @@ void main() {
           .having(
             (a) => a.color,
             'color',
-            BoardMarks.of(BoardTheme.green).threat,
+            BoardMarks.of(AppSettings().boardTheme).threat,
           ),
     );
     expect(haptics, ['HapticFeedbackType.heavyImpact']);
