@@ -39,7 +39,7 @@ xvfb-run -a flutter test integration_test/fluidita_perf.dart -d linux && dart ru
 
 ## End-to-end su emulatore
 
-Il workflow `E2E Android` compila l'app di debug per x86_64 e la prova su un emulatore (API 34, accelerato con KVM, senza finestra) con `flutter test integration_test/<file>.dart -d emulator-5554`, un file alla volta come su desktop. Sono inclusi solo i test che non dipendono dal desktop (non quelli che avviano il Stockfish di sistema né quelli con la fotocamera); l'elenco è nel passo «Test end-to-end». Per aggiungerne uno basta il nome del file nel ciclo. Serve a trovare problemi che il desktop non mostra: libreria nativa, permessi, dimensioni dello schermo e ciclo di vita Android.
+Il workflow `E2E Android` compila l'app di debug per x86_64 e la prova su un emulatore (API 34, accelerato con KVM, senza finestra) con `flutter test integration_test/<file>.dart -d emulator-5554`, un file alla volta come su desktop. Sono inclusi solo i test che non dipendono dal desktop (non quelli che avviano il Stockfish di sistema né quelli con la fotocamera); la suite lunga `app_test.dart` resta su desktop, perché su emulatore con rendering software supera i dieci minuti; l'elenco è nel passo «Test end-to-end». Per aggiungerne uno basta il nome del file nel ciclo. Serve a trovare problemi che il desktop non mostra: libreria nativa, permessi, dimensioni dello schermo e ciclo di vita Android.
 
 ## Golden test
 
