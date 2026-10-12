@@ -8,6 +8,7 @@ Ogni controllo ha un limite misurabile e blocca la CI se non è rispettato. I li
 | Analisi statica | `flutter analyze --fatal-infos` con [`analysis_options.yaml`](../analysis_options.yaml) | nessun avviso, nemmeno informativo | pre-commit, CI |
 | Test unitari, widget, accessibilità | `flutter test` | tutti verdi | pre-push (senza golden), CI |
 | Copertura della logica di gioco | `tool/check_coverage.dart` | almeno 80% | CI |
+| Sicurezza OWASP MASVS (sorgenti) | `test/security/` | permessi, log e SDK secondo `tool/policy.json` | pre-push, CI |
 | Golden test | `flutter test` con tag `golden` | nessuna differenza di pixel | CI (Linux) |
 | Accessibilità | linee guida di `flutter_test` | vedi sotto | pre-push, CI |
 
