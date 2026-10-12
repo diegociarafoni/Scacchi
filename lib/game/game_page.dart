@@ -45,6 +45,7 @@ import '../settings/settings_page.dart';
 import '../share/position_image.dart';
 import '../share/position_image_page.dart';
 import '../storage/key_value_store.dart';
+import '../tablebase/shared_tablebase.dart';
 import 'board_swipe.dart';
 import 'challenge.dart';
 import 'chess_game.dart';
@@ -1775,6 +1776,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           initial: position,
           analyse: _liveAnalysis(player),
           orientation: _orientation,
+          tablebase: sharedTablebase(),
         ),
       ),
     );
