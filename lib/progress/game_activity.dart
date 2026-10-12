@@ -48,6 +48,49 @@ GamePlayed gameActivity(
     checkmate: game.endReason == GameEndReason.checkmate,
     matedWith: matedWith,
     castledLong: castledLong,
+    highlights: player == null
+        ? const {}
+        : _highlights(game, player, result, matedWith, playerMoves),
     duration: duration,
   );
+}
+
+Set<GameHighlight> _highlights(
+  ChessGame game,
+  Side player,
+  GameResult result,
+  Role? matedWith,
+  int playerMoves,
+) {
+  final checkmate = game.endReason == GameEndReason.checkmate;
+  var enPassant = false;
+  var underpromotion = false;
+  var before = game.initial;
+  for (final played in game.moves) {
+    final move = played.move;
+    if (before.turn == player && move is NormalMove) {
+      final promotion = move.promotion;
+      if (promotion != null && promotion != Role.queen) underpromotion = true;
+      // Il pedone che cattura in diagonale su una casa vuota prende en passant.
+      if (before.board.roleAt(move.from) == Role.pawn &&
+          move.from.file != move.to.file &&
+          before.board.roleAt(move.to) == null) {
+        enPassant = true;
+      }
+    }
+    before = played.after;
+  }
+  return {
+    if (result == GameResult.win &&
+        checkmate &&
+        matedWith == Role.queen &&
+        playerMoves <= 4)
+      GameHighlight.scholarsMate,
+    if (result == GameResult.loss && checkmate && playerMoves <= 2)
+      GameHighlight.foolsMate,
+    if (enPassant) GameHighlight.enPassant,
+    if (underpromotion) GameHighlight.underpromotion,
+    if (game.endReason == GameEndReason.stalemate) GameHighlight.stalemate,
+    if (playerMoves >= GameHighlight.marathonMoves) GameHighlight.marathon,
+  };
 }

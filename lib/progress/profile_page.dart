@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 
@@ -9,6 +10,8 @@ import '../reminders/reminder_controller.dart';
 import '../settings/settings.dart';
 import 'achievements.dart';
 import 'avatar.dart';
+import 'avatar_art.dart';
+import 'avatar_photo.dart';
 import 'challenges.dart';
 import 'daily_goal.dart';
 import 'progress_controller.dart';
@@ -35,9 +38,17 @@ const _weekdays = [
 
 /// Profilo del giocatore: livello, serie, obiettivo, traguardi e preferenze.
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({super.key, required this.controller, this.reminders});
+  const ProfilePage({
+    super.key,
+    required this.controller,
+    this.reminders,
+    this.photoPicker = const SystemPhotoPicker(),
+  });
 
   final ProgressController controller;
+
+  /// Origine della foto del profilo (RP-09); nei test se ne passa uno finto.
+  final PhotoPicker photoPicker;
 
   /// Promemoria giornaliero; senza, l'opzione non compare (per esempio su
   /// desktop, dove le notifiche programmate non sono disponibili).
@@ -55,10 +66,21 @@ class ProfilePage extends StatelessWidget {
           // niente record personali, che sono tutti numeri.
           final kid = AppSettings.of(context).kidMode;
           return ListView(
-            padding: const EdgeInsets.all(16),
+            // In fondo spazio per la barra di sistema: l'ultima voce non resta
+            // tagliata né sotto i gesti.
+            padding: EdgeInsets.fromLTRB(
+              16,
+              16,
+              16,
+              32 + MediaQuery.paddingOf(context).bottom,
+            ),
             children: [
               if (enabled) ...[
-                _LevelCard(controller: controller, kid: kid),
+                _LevelCard(
+                  controller: controller,
+                  kid: kid,
+                  photoPicker: photoPicker,
+                ),
                 const SizedBox(height: 12),
                 _StreakCard(controller: controller, kid: kid),
                 const SizedBox(height: 24),
@@ -88,10 +110,15 @@ class ProfilePage extends StatelessWidget {
 }
 
 class _LevelCard extends StatelessWidget {
-  const _LevelCard({required this.controller, required this.kid});
+  const _LevelCard({
+    required this.controller,
+    required this.kid,
+    required this.photoPicker,
+  });
 
   final ProgressController controller;
   final bool kid;
+  final PhotoPicker photoPicker;
 
   @override
   Widget build(BuildContext context) {
@@ -116,11 +143,16 @@ class _LevelCard extends StatelessWidget {
                       context: context,
                       showDragHandle: true,
                       isScrollControlled: true,
-                      builder: (_) => _AvatarPicker(controller: controller),
+                      builder: (_) => _AvatarPicker(
+                        controller: controller,
+                        photoPicker: photoPicker,
+                      ),
                     ),
                     child: ProfileAvatar(
                       avatar: settings.avatar,
                       frame: settings.frame,
+                      // Profilo bambino: niente foto (RP-09).
+                      photo: kid ? null : controller.activePhoto,
                     ),
                   ),
                 ),
@@ -187,24 +219,33 @@ class ProfileAvatar extends StatelessWidget {
     required this.avatar,
     required this.frame,
     this.size = 56,
+    this.photo,
   });
 
   final Avatar avatar;
   final AvatarFrame frame;
   final double size;
 
+  /// Foto propria: prende il posto dell'avatar, dentro la stessa cornice.
+  final Uint8List? photo;
+
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final photo = this.photo;
+    final name = photo != null
+        ? AppLocalizations.of(context).avatarPhotoLabel
+        : avatar.label;
     return Semantics(
       label: frame.color == null
-          ? 'Avatar: ${avatar.label}'
-          : 'Avatar: ${avatar.label}, cornice ${frame.label}',
+          ? 'Avatar: $name'
+          : 'Avatar: $name, cornice ${frame.label}',
       excludeSemantics: true,
       child: Container(
         width: size,
         height: size,
         alignment: Alignment.center,
+        clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: scheme.secondaryContainer,
@@ -213,14 +254,28 @@ class ProfileAvatar extends StatelessWidget {
             width: frame.color == null ? 1 : size / 12,
           ),
         ),
-        child: Text(
-          avatar.glyph,
-          style: TextStyle(
-            fontSize: size * 0.5,
-            height: 1,
-            color: scheme.onSecondaryContainer,
-          ),
-        ),
+        child: photo != null
+            ? Image.memory(
+                photo,
+                key: const Key('avatar-photo'),
+                width: size,
+                height: size,
+                fit: BoxFit.cover,
+                cacheWidth: (size * MediaQuery.devicePixelRatioOf(context))
+                    .round(),
+                gaplessPlayback: true,
+                errorBuilder: (_, _, _) => const Icon(Icons.person),
+              )
+            : avatar.character != null
+            ? CharacterAvatar(character: avatar.character!, size: size)
+            : Text(
+                avatar.glyph!,
+                style: TextStyle(
+                  fontSize: size * 0.5,
+                  height: 1,
+                  color: scheme.onSecondaryContainer,
+                ),
+              ),
       ),
     );
   }
@@ -228,9 +283,58 @@ class ProfileAvatar extends StatelessWidget {
 
 /// Scelta di avatar e cornice; quelli ancora bloccati dicono come sbloccarli.
 class _AvatarPicker extends StatelessWidget {
-  const _AvatarPicker({required this.controller});
+  const _AvatarPicker({required this.controller, required this.photoPicker});
 
   final ProgressController controller;
+  final PhotoPicker photoPicker;
+
+  Future<void> _pick(BuildContext context, PhotoSource source) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final message = AppLocalizations.of(context).avatarPhotoError;
+    try {
+      final bytes = await photoPicker.pick(source);
+      if (bytes != null) await controller.setPhoto(bytes);
+    } on PhotoUnavailable {
+      messenger.showSnackBar(SnackBar(content: Text(message)));
+    }
+  }
+
+  /// Foto propria (RP-09): galleria o fotocamera, solo sul telefono.
+  List<Widget> _photoSection(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return [
+      const SizedBox(height: 16),
+      Text(l.avatarPhotoTitle, style: Theme.of(context).textTheme.titleMedium),
+      const SizedBox(height: 4),
+      Text(l.avatarPhotoHint, style: Theme.of(context).textTheme.bodySmall),
+      const SizedBox(height: 8),
+      Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: [
+          OutlinedButton.icon(
+            key: const Key('photo-gallery'),
+            onPressed: () => _pick(context, PhotoSource.gallery),
+            icon: const Icon(Icons.photo_library_outlined),
+            label: Text(l.avatarPhotoGallery),
+          ),
+          OutlinedButton.icon(
+            key: const Key('photo-camera'),
+            onPressed: () => _pick(context, PhotoSource.camera),
+            icon: const Icon(Icons.photo_camera_outlined),
+            label: Text(l.avatarPhotoCamera),
+          ),
+          if (controller.photo != null)
+            TextButton.icon(
+              key: const Key('photo-remove'),
+              onPressed: controller.removePhoto,
+              icon: const Icon(Icons.delete_outline),
+              label: Text(l.avatarPhotoRemove),
+            ),
+        ],
+      ),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -239,6 +343,7 @@ class _AvatarPicker extends StatelessWidget {
       builder: (context, _) {
         final s = controller.settings;
         final kid = AppSettings.of(context).kidMode;
+        final photoShown = !kid && controller.activePhoto != null;
         Widget option<T extends Enum>(
           T item,
           String label,
@@ -315,12 +420,13 @@ class _AvatarPicker extends StatelessWidget {
                       option(
                         a,
                         a.label,
-                        a == s.avatar,
+                        a == s.avatar && !photoShown,
                         ProfileAvatar(avatar: a, frame: s.frame, size: 48),
-                        () => s.copyWith(avatar: a),
+                        () => s.copyWith(avatar: a, usePhoto: false),
                       ),
                   ],
                 ),
+                if (!kid) ..._photoSection(context),
                 const SizedBox(height: 16),
                 Text('Cornice', style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 8),

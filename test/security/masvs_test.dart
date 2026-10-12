@@ -144,16 +144,29 @@ void main() {
       expect(allowed.difference(declared), isEmpty, reason: 'permesso inutile');
     });
 
-    test('iOS chiede solo fotocamera, libreria e rete locale, spiegandoli', () {
+    test('iOS chiede solo Bluetooth, fotocamera, libreria e rete locale', () {
       final keys = RegExp(r'<key>(NS\w+UsageDescription)</key>')
           .allMatches(infoPlist)
           .map((m) => m.group(1))
           .toSet();
       expect(keys, {
+        'NSBluetoothAlwaysUsageDescription',
         'NSCameraUsageDescription',
         'NSLocalNetworkUsageDescription',
         'NSPhotoLibraryUsageDescription',
       });
+    });
+
+    test('iOS annuncia solo il servizio mDNS della partita a due', () {
+      final block = RegExp(
+        r'<key>NSBonjourServices</key>\s*<array>(.*?)</array>',
+        dotAll: true,
+      ).firstMatch(infoPlist);
+      final services = RegExp(r'<string>(.*?)</string>')
+          .allMatches(block!.group(1)!)
+          .map((m) => m.group(1))
+          .toList();
+      expect(services, ['_rokko-chess._tcp']);
     });
   });
 }

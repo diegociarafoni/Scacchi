@@ -186,6 +186,8 @@ Il workflow `.github/workflows/ci.yml` gira su ogni pull request e su ogni push 
 
 e2e e android girano sempre su `main`; su una PR solo se la PR tocca i file che li riguardano (`integration_test/` o `linux/` per e2e, `android/` per android, `pubspec.*`, `ci.yml` e `ci-completa.yml` per entrambi) oppure se ha l'etichetta **`ci-completa`**: aggiungerla avvia subito tutta la CI con il workflow `ci-completa.yml`, senza bisogno di un nuovo push, e da lì in poi ogni push sulla PR la esegue per intero. L'etichetta si crea una volta in **Issues → Labels → New label**. I job avviati dall'etichetta compaiono come `ci / test`, `ci / e2e` e `ci / android` e devono essere verdi prima del merge. Conviene metterla sulle PR che cambiano molto l'interfaccia: senza, e2e gira solo dopo il merge su `main`.
 
+Fuori da `ci.yml`, alcuni controlli pesanti girano solo dove servono, descritti in [qualita.md](qualita.md): i test end-to-end su emulatore Android (workflow `E2E Android`, su `main` e a richiesta), la dimensione dell'APK nel workflow `Rilascio APK` (prima della pubblicazione) e la fluidità nel workflow `Prestazioni` (su `main`, sui tag e sulle PR che toccano la misura).
+
 ### Consumo di minuti
 
 Il repository è privato: ogni job si paga in minuti di Actions, arrotondati per eccesso al minuto, sul piano gratuito 2000 al mese. Per spenderne pochi:

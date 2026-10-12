@@ -4,6 +4,9 @@ import 'dart:typed_data';
 
 import 'transport.dart';
 
+/// Cerca dove si trova ora l'ospite (mDNS); `null` se non lo trova.
+typedef LanFinder = Future<(String, int)?> Function();
+
 /// Dimensione massima di un pacchetto: oltre si chiude il collegamento.
 const maxLanFrame = 4096;
 
@@ -37,8 +40,12 @@ class LanTransport implements MessageTransport, ConnectionAware {
       LanTransport._(null, host, port, 1);
 
   final ServerSocket? _server;
-  final String? _remoteHost;
-  final int? _remotePort;
+  String? _remoteHost;
+  int? _remotePort;
+
+  /// Ricerca dell'ospite, usata quando i tentativi all'indirizzo noto
+  /// falliscono: dopo un cambio di indirizzo il canale lo ritrova da solo.
+  LanFinder? finder;
   final int _max;
   StreamSubscription<Socket>? _serverSub;
 
@@ -108,12 +115,34 @@ class LanTransport implements MessageTransport, ConnectionAware {
       _redial = null;
       if (_closed || _sockets.isNotEmpty) return;
       await _dial(notify: true);
+      if (_sockets.isEmpty) await _rediscover();
       if (_sockets.isEmpty) {
         final next = _backoff * 2;
         _backoff = next > _maxBackoff ? _maxBackoff : next;
         _scheduleRedial();
       }
     });
+  }
+
+  Future<void> _rediscover() async {
+    final find = finder;
+    if (find == null || _closed) return;
+    try {
+      final found = await find().timeout(const Duration(seconds: 6));
+      if (found == null || _closed) return;
+      if (found.$1 == _remoteHost && found.$2 == _remotePort) return;
+      final (oldHost, oldPort) = (_remoteHost, _remotePort);
+      _remoteHost = found.$1;
+      _remotePort = found.$2;
+      await _dial(notify: true);
+      // Un annuncio sbagliato non sostituisce l'ultimo indirizzo buono.
+      if (_sockets.isEmpty) {
+        _remoteHost = oldHost;
+        _remotePort = oldPort;
+      }
+    } on Object {
+      // Senza ricerca si riprova più tardi all'indirizzo noto.
+    }
   }
 
   @override

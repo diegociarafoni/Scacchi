@@ -6,6 +6,11 @@ import 'package:dartchess/dartchess.dart';
 
 import '../game/clock.dart';
 
+/// Schema dei link d'invito; `scacchi` (il nome vecchio) si legge ancora, così
+/// i QR già in giro restano validi.
+const inviteScheme = 'rokko';
+const _legacyScheme = 'scacchi';
+
 /// Versione del formato dell'invito.
 const inviteVersion = 1;
 
@@ -50,6 +55,8 @@ class GameInvite {
     required this.hostSide,
     this.lanAddress,
     this.timeControl,
+    this.remote = false,
+    this.ble = false,
   });
 
   final String gameId;
@@ -65,8 +72,15 @@ class GameInvite {
   /// Cadenza scelta da chi crea la partita; `null` senza orologio.
   final TimeControl? timeControl;
 
+  /// La partita può giocarsi anche a distanza, su relay internet: chi
+  /// riceve l'invito apre quel canale oltre a quello locale, se c'è.
+  final bool remote;
+
+  /// L'ospite ascolta anche via Bluetooth LE (vicini, senza rete).
+  final bool ble;
+
   String toLink() => Uri(
-    scheme: 'scacchi',
+    scheme: inviteScheme,
     host: 'partita',
     queryParameters: {
       'v': '$inviteVersion',
@@ -76,6 +90,8 @@ class GameInvite {
       'c': hostSide == Side.white ? 'w' : 'b',
       'lan': ?lanAddress,
       'tc': ?timeControl?.label,
+      if (remote) 'r': '1',
+      if (ble) 'ble': '1',
     },
   ).toString();
 
@@ -84,7 +100,8 @@ class GameInvite {
     if (text.length > maxInviteLength) return null;
     final uri = Uri.tryParse(text.trim());
     if (uri == null) return null;
-    if (uri.scheme != 'scacchi' || uri.host != 'partita') return null;
+    if (uri.scheme != inviteScheme && uri.scheme != _legacyScheme) return null;
+    if (uri.host != 'partita') return null;
     final Map<String, String> q;
     try {
       q = uri.queryParameters;
@@ -113,6 +130,8 @@ class GameInvite {
             control.increment > maxInviteIncrement)) {
       return null;
     }
+    final remote = q['r'];
+    if (remote != null && remote != '1') return null;
     return GameInvite(
       gameId: gameId,
       secret: secret,
@@ -120,6 +139,8 @@ class GameInvite {
       hostSide: side,
       lanAddress: lan,
       timeControl: control,
+      remote: remote != null,
+      ble: q['ble'] == '1',
     );
   }
 }

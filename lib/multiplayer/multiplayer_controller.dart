@@ -5,13 +5,16 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/foundation.dart';
 
 import '../game/clock.dart';
+import 'channel_registry.dart';
 import 'game_invite.dart';
 import 'game_sync.dart';
+import 'lan_discovery.dart';
 import 'lan_transport.dart';
 import 'local_address.dart';
 import 'match_clock.dart';
 import 'multiplayer_session.dart';
 import 'player_identity.dart';
+import 'remote_watch.dart';
 import 'saved_game.dart';
 import 'transport.dart';
 
@@ -66,7 +69,8 @@ class MultiplayerController extends ChangeNotifier {
     this.session,
     this.inviteLink,
     this._store,
-    this._seedBytes, {
+    this._seedBytes,
+    this._discovery, {
     DateTime Function()? now,
     int? turnStartedAt,
   }) : _now = now ?? DateTime.now {
@@ -94,43 +98,72 @@ class MultiplayerController extends ChangeNotifier {
       _reached = true;
       _changed();
     });
+    addExtraChannels(session.transport, session.invite, isHost: isHost);
   }
 
-  /// Crea l'invito e attende l'avversario. [NoLocalNetwork] se il telefono
-  /// non è in una Wi-Fi o in un hotspot.
+  /// Crea l'invito e attende l'avversario. Con [remote] la partita si gioca
+  /// anche a distanza, e basta internet: senza Wi-Fi né hotspot l'invito
+  /// viaggia come link. Con [bluetooth] non serve la rete locale: l'invito
+  /// porta il Bluetooth (canale in `extraChannelFactories`). Altrimenti
+  /// [NoLocalNetwork] se il telefono non è in una rete locale.
   static Future<MultiplayerController> host({
     required Side side,
     TimeControl? timeControl,
+    bool bluetooth = false,
     OpenHost openHost = openLanHost,
+    bool remote = false,
     SavedGameStore? store,
     DateTime Function()? now,
+    LanDiscovery discovery = const BonsoirLanDiscovery(),
   }) async {
-    final channel = await openHost();
+    HostChannel? lan;
+    if (!bluetooth) {
+      try {
+        lan = await openHost();
+      } on Object {
+        // A distanza la rete locale è facoltativa: porta occupata, VPN o
+        // permesso negato non impediscono di giocare via internet.
+        if (!remote) rethrow;
+      }
+      if (!remote && lan?.lanAddress == null) {
+        await lan?.transport.close();
+        throw const NoLocalNetwork();
+      }
+    }
+    final opened = <MessageTransport>[?lan?.transport];
     try {
-      if (channel.lanAddress == null) throw const NoLocalNetwork();
       final identity = await PlayerIdentity.generate();
       final invite = GameInvite(
         gameId: newGameId(),
         secret: newSecret(),
         hostKey: identity.publicKey,
         hostSide: side,
-        lanAddress: channel.lanAddress,
-        timeControl: timeControl,
+        lanAddress: lan?.lanAddress,
+        remote: remote,
+        ble: bluetooth,
+        // A distanza le mosse possono arrivare ore dopo: niente orologio.
+        timeControl: remote ? null : timeControl,
       );
       final session = MultiplayerSession.host(
         invite,
         identity,
-        MultiTransport([channel.transport]),
+        MultiTransport(opened),
       );
-      return MultiplayerController._(
+      final controller = MultiplayerController._(
         session,
         invite.toLink(),
         store,
         await identity.seed(),
+        discovery,
         now: now,
-      );
+      ).._advertise(invite.gameId, lan?.lanAddress);
+      // A distanza l'amico può arrivare ore dopo: l'invito si salva subito.
+      if (remote) unawaited(controller._persist());
+      return controller;
     } catch (_) {
-      await channel.transport.close();
+      for (final t in opened) {
+        await t.close();
+      }
       rethrow;
     }
   }
@@ -144,6 +177,7 @@ class MultiplayerController extends ChangeNotifier {
     OpenGuest openGuest = openLanGuest,
     SavedGameStore? store,
     DateTime Function()? now,
+    LanDiscovery discovery = const BonsoirLanDiscovery(),
   }) async {
     final invite = saved.invite;
     final identity = await PlayerIdentity.fromSeed(saved.seed);
@@ -153,6 +187,7 @@ class MultiplayerController extends ChangeNotifier {
         identity,
         openGuest,
         store,
+        discovery,
         moves: saved.moves,
         times: saved.times,
         sealed: saved.sealed,
@@ -160,12 +195,23 @@ class MultiplayerController extends ChangeNotifier {
         now: now,
       );
     }
-    final lan = invite.lanAddress;
-    final port = lan == null ? null : _split(lan)?.$2;
+    final lanInvite = invite.lanAddress;
+    final port = lanInvite == null ? null : _split(lanInvite)?.$2;
     if (!listEquals(identity.publicKey, invite.hostKey)) {
       throw const FormatException('chiave non coerente con l\'invito');
     }
-    final channel = await openHost(port);
+    HostChannel? lan;
+    // Un invito solo a distanza o solo Bluetooth non ha un indirizzo da
+    // riaprire; uno misto riparte anche senza Wi-Fi.
+    final lanOptional = invite.remote || invite.ble;
+    if (lanInvite != null || !lanOptional) {
+      try {
+        lan = await openHost(port);
+      } on Object {
+        if (!lanOptional) rethrow;
+      }
+    }
+    final opened = <MessageTransport>[?lan?.transport];
     try {
       // Se la porta di prima era occupata l'indirizzo è cambiato.
       final current = GameInvite(
@@ -173,13 +219,15 @@ class MultiplayerController extends ChangeNotifier {
         secret: invite.secret,
         hostKey: invite.hostKey,
         hostSide: invite.hostSide,
-        lanAddress: channel.lanAddress ?? invite.lanAddress,
+        lanAddress: lan?.lanAddress ?? invite.lanAddress,
+        remote: invite.remote,
+        ble: invite.ble,
         timeControl: invite.timeControl,
       );
       final session = MultiplayerSession.host(
         current,
         identity,
-        MultiTransport([channel.transport]),
+        MultiTransport(opened),
         moves: saved.moves,
         times: saved.times,
         peerKey: saved.peerKey,
@@ -190,11 +238,14 @@ class MultiplayerController extends ChangeNotifier {
         current.toLink(),
         store,
         saved.seed,
+        discovery,
         now: now,
         turnStartedAt: saved.turnStartedAt,
-      );
+      ).._advertise(invite.gameId, lan?.lanAddress);
     } catch (_) {
-      await channel.transport.close();
+      for (final t in opened) {
+        await t.close();
+      }
       rethrow;
     }
   }
@@ -212,11 +263,13 @@ class MultiplayerController extends ChangeNotifier {
     OpenGuest openGuest = openLanGuest,
     SavedGameStore? store,
     DateTime Function()? now,
+    LanDiscovery discovery = const BonsoirLanDiscovery(),
   }) async => _joinAs(
     invite,
     await PlayerIdentity.generate(),
     openGuest,
     store,
+    discovery,
     now: now,
   );
 
@@ -224,7 +277,8 @@ class MultiplayerController extends ChangeNotifier {
     GameInvite invite,
     PlayerIdentity identity,
     OpenGuest openGuest,
-    SavedGameStore? store, {
+    SavedGameStore? store,
+    LanDiscovery discovery, {
     List<String> moves = const [],
     List<int?> times = const [],
     Map<int, Uint8List> sealed = const {},
@@ -233,13 +287,24 @@ class MultiplayerController extends ChangeNotifier {
   }) async {
     final lan = invite.lanAddress;
     final target = lan == null ? null : _split(lan);
-    if (target == null) throw const NoLocalNetwork();
-    final transport = MultiTransport([openGuest(target.$1, target.$2)]);
+    // Senza indirizzo il canale lo aprono il registro (Bluetooth) o i relay.
+    if (target == null && !invite.remote && !invite.ble) {
+      throw const NoLocalNetwork();
+    }
+    final opened = <MessageTransport>[];
+    if (target != null) {
+      final channel = openGuest(target.$1, target.$2);
+      if (channel is LanTransport) {
+        final name = lanServiceName(invite.gameId);
+        channel.finder = () => discovery.find(name);
+      }
+      opened.add(channel);
+    }
     try {
       final session = MultiplayerSession.join(
         invite,
         identity,
-        transport,
+        MultiTransport(opened),
         moves: moves,
         times: times,
         sealed: sealed,
@@ -249,6 +314,7 @@ class MultiplayerController extends ChangeNotifier {
         invite.toLink(),
         store,
         await identity.seed(),
+        discovery,
         now: now,
         turnStartedAt: turnStartedAt,
       );
@@ -256,7 +322,9 @@ class MultiplayerController extends ChangeNotifier {
       unawaited(controller._persist());
       return controller;
     } catch (_) {
-      await transport.close();
+      for (final t in opened) {
+        await t.close();
+      }
       rethrow;
     }
   }
@@ -264,6 +332,8 @@ class MultiplayerController extends ChangeNotifier {
   final MultiplayerSession session;
   final DateTime Function() _now;
   SavedGameStore? _store;
+  final LanDiscovery _discovery;
+  void Function()? _stopAdvert;
   final Uint8List _seedBytes;
   bool _finished = false;
   Future<void> _writes = Future.value();
@@ -398,7 +468,48 @@ class MultiplayerController extends ChangeNotifier {
     }
     if (_disposed) return;
     notifyListeners();
+    _syncWatch();
     unawaited(_persist());
+  }
+
+  RemoteWatch? _watch;
+  bool _watching = false;
+
+  /// Controllo in background delle partite a distanza: si accende finché la
+  /// partita è in corso e si spegne alla fine.
+  void useWatch(RemoteWatch? watch) {
+    _watch = watch;
+    _syncWatch();
+  }
+
+  void _syncWatch() {
+    final watch = _watch;
+    if (watch == null || !session.invite.remote || _disposed) return;
+    final wanted = !_sync.isGameOver;
+    if (wanted == _watching) return;
+    _watching = wanted;
+    unawaited(wanted ? watch.enable() : watch.disable());
+  }
+
+  // Annuncio mDNS: l'invitato ritrova l'ospite se il suo indirizzo cambia.
+  // Facoltativo, un errore non ferma la partita.
+  void _advertise(String gameId, String? lanAddress) {
+    final port = lanAddress == null ? null : _split(lanAddress)?.$2;
+    if (port == null) return;
+    unawaited(
+      _discovery
+          .advertise(lanServiceName(gameId), port)
+          .then((stop) {
+            if (_disposed) {
+              stop();
+            } else {
+              _stopAdvert = stop;
+            }
+          })
+          .catchError((Object e) {
+            if (kDebugMode) debugPrint('Annuncio mDNS non riuscito: $e');
+          }),
+    );
   }
 
   /// Archivio arrivato dopo la creazione del controller (se non ne ha già uno).
@@ -409,11 +520,15 @@ class MultiplayerController extends ChangeNotifier {
   }
 
   /// Salva la partita a ogni cambiamento; a partita finita la toglie. Chi
-  /// ospita non salva finché nessuno è entrato: l'invito non è ancora usato.
+  /// ospita in rete locale non salva finché nessuno è entrato: l'invito non è
+  /// ancora usato. A distanza sì, perché l'amico può arrivare molto dopo.
   Future<void> _persist() {
     final store = _store;
     if (store == null || _finished) return Future.value();
-    if (isHost && _sync.peerKey == null && _sync.moves.isEmpty) {
+    if (isHost &&
+        !session.invite.remote &&
+        _sync.peerKey == null &&
+        _sync.moves.isEmpty) {
       return Future.value();
     }
     final finished = _sync.isGameOver;
@@ -447,6 +562,7 @@ class MultiplayerController extends ChangeNotifier {
     _ticker = null;
     await _sub.cancel();
     await _connSub.cancel();
+    _stopAdvert?.call();
     await session.close();
   }
 

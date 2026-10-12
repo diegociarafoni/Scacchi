@@ -34,6 +34,17 @@ Future<void> _wait(WidgetTester tester) async {
   await tester.pump();
 }
 
+/// Attende (in tempo reale) che [finder] compaia: i salvataggi, le chiavi e i
+/// canali hanno tempi che su un runner carico superano un'attesa fissa.
+Future<void> _waitFor(WidgetTester tester, Finder finder) async {
+  for (var i = 0; i < 100 && finder.evaluate().isEmpty; i++) {
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 50)),
+    );
+    await tester.pump();
+  }
+}
+
 void main() {
   testWidgets('RMP-08 chi crea la partita mostra il QR, poi la scacchiera', (
     tester,
@@ -42,12 +53,18 @@ void main() {
     await tester.pumpWidget(
       localizedApp(
         home: MultiplayerPage(
+          remoteByDefault: false,
           openHost: () async => (transport: a, lanAddress: '10.0.0.2:4000'),
         ),
       ),
     );
     await tester.tap(find.text('Nero'));
     await tester.pump();
+    await tester.scrollUntilVisible(
+      find.text('Crea la partita'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.tap(find.text('Crea la partita'));
     await _wait(tester);
     await tester.pumpAndSettle();
@@ -80,9 +97,15 @@ void main() {
     await tester.pumpWidget(
       localizedApp(
         home: MultiplayerPage(
+          remoteByDefault: false,
           openHost: () async => throw const NoLocalNetwork(),
         ),
       ),
+    );
+    await tester.scrollUntilVisible(
+      find.text('Crea la partita'),
+      200,
+      scrollable: find.byType(Scrollable).first,
     );
     await tester.tap(find.text('Crea la partita'));
     await tester.pump();
@@ -96,9 +119,15 @@ void main() {
     await tester.pumpWidget(
       localizedApp(
         home: MultiplayerPage(
+          remoteByDefault: false,
           openHost: () async => throw const SocketException('porta occupata'),
         ),
       ),
+    );
+    await tester.scrollUntilVisible(
+      find.text('Crea la partita'),
+      200,
+      scrollable: find.byType(Scrollable).first,
     );
     await tester.tap(find.text('Crea la partita'));
     await tester.pump();
@@ -126,7 +155,11 @@ void main() {
     final scanner = _FakeScanner();
     await tester.pumpWidget(
       localizedApp(
-        home: MultiplayerPage(scanner: scanner.build, openGuest: (_, _) => b),
+        home: MultiplayerPage(
+          remoteByDefault: false,
+          scanner: scanner.build,
+          openGuest: (_, _) => b,
+        ),
       ),
     );
     await tester.tap(find.text('Unisciti con il QR'));
@@ -183,16 +216,30 @@ void main() {
         await Future<void>.delayed(const Duration(milliseconds: 50));
         await host.play(Move.parse('e2e4')!);
         await Future<void>.delayed(const Duration(milliseconds: 50));
+        // Il salvataggio è in coda: si aspetta che la mossa sia sul disco.
+        for (var i = 0; i < 100; i++) {
+          if (((await store.load())?.moves ?? []).isNotEmpty) break;
+          await Future<void>.delayed(const Duration(milliseconds: 50));
+        }
         await host.close();
         await guest.close();
       });
     }
 
     // La lettura del file avanza solo nella zona reale.
-    Future<void> openPage(WidgetTester tester, MultiplayerPage page) async {
+    Future<void> openPage(
+      WidgetTester tester,
+      MultiplayerPage page, {
+      bool saved = true,
+    }) async {
       await tester.runAsync(() async {
         await tester.pumpWidget(localizedApp(home: page));
-        await Future<void>.delayed(const Duration(milliseconds: 200));
+        // Con una partita salvata si attende che il riquadro compaia.
+        for (var i = 0; i < 100; i++) {
+          await Future<void>.delayed(const Duration(milliseconds: 50));
+          await tester.pump();
+          if (!saved || find.byType(Card).evaluate().isNotEmpty) break;
+        }
       });
       await tester.pump();
     }
@@ -200,7 +247,11 @@ void main() {
     testWidgets('RMP-09 senza partite salvate non c\'è il riquadro', (
       tester,
     ) async {
-      await openPage(tester, MultiplayerPage(store: store));
+      await openPage(
+        tester,
+        MultiplayerPage(remoteByDefault: false, store: store),
+        saved: false,
+      );
       expect(find.text('Riprendi la partita'), findsNothing);
     });
 
@@ -212,6 +263,7 @@ void main() {
       await openPage(
         tester,
         MultiplayerPage(
+          remoteByDefault: false,
           store: store,
           openResumeHost: (_) async =>
               (transport: a, lanAddress: '10.0.0.2:4000'),
@@ -219,7 +271,7 @@ void main() {
       );
       expect(find.text('Riprendi la partita'), findsOneWidget);
       await tester.tap(find.text('Riprendi la partita'));
-      await _wait(tester);
+      await _waitFor(tester, find.byType(Chessboard));
       await tester.pumpAndSettle();
       expect(find.byType(Chessboard), findsOneWidget);
       expect(find.text('Tocca all\'avversario'), findsOneWidget);
@@ -227,7 +279,10 @@ void main() {
 
     testWidgets('RMP-09 si può eliminare la partita salvata', (tester) async {
       await saveOne(tester);
-      await openPage(tester, MultiplayerPage(store: store));
+      await openPage(
+        tester,
+        MultiplayerPage(remoteByDefault: false, store: store),
+      );
       await tester.tap(find.text('Elimina'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Elimina').last);
@@ -246,6 +301,7 @@ void main() {
         await openPage(
           tester,
           MultiplayerPage(
+            remoteByDefault: false,
             store: store,
             openHost: () async {
               opened++;
@@ -253,8 +309,11 @@ void main() {
             },
           ),
         );
-        await tester.ensureVisible(find.text('Crea la partita'));
-        await tester.pumpAndSettle();
+        await tester.scrollUntilVisible(
+          find.text('Crea la partita'),
+          200,
+          scrollable: find.byType(Scrollable).first,
+        );
         await tester.tap(find.text('Crea la partita'));
         await tester.pumpAndSettle();
         await tester.tap(find.text('Resta'));
@@ -262,6 +321,11 @@ void main() {
         expect(opened, 0);
         expect(await tester.runAsync(store.load), isNotNull);
 
+        await tester.scrollUntilVisible(
+          find.text('Crea la partita'),
+          200,
+          scrollable: find.byType(Scrollable).first,
+        );
         await tester.tap(find.text('Crea la partita'));
         await tester.pumpAndSettle();
         await tester.tap(find.text('Elimina').last);

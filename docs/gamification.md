@@ -61,32 +61,53 @@ Serie più lunga, bot più forte battuto (Elo), matto con meno mosse (solo vitto
 
 37 traguardi in quattro categorie (gioco, tattica, costanza, curiosità), sbloccabili una sola volta e annunciati con una notifica in-app (`showProgressFeedback`). Alcuni esempi: prima vittoria, vittoria con il nero, miniatura (matto in meno di 20 mosse), bot da 1500 e 1850 Elo battuti, matto con il cavallo o con un pedone, vittoria con arrocco lungo, brillante trovata, 10 puzzle di forchetta o di matto, 20 punti in una modalità a tempo, giornata perfetta (tre sfide), 3, 7 e 30 giorni di fila, precisione del 90%, livello 5 e 10, 20 coordinate in una sessione, tutti i minigiochi provati, primo torneo concluso e primo torneo vinto. L'elenco completo è in `lib/progress/achievements.dart`.
 
+I traguardi sono distinti dai [badge](badge.md) (RG-17), una collezione tematica di 46 riconoscimenti che non sblocca ricompense.
+
 ## Ricompense estetiche (RG-06)
 
-Livelli e traguardi sbloccano temi della scacchiera, set di pezzi, avatar e cornici. Le scelte di sempre (temi Verde, Legno, Blu e Grigio; pezzi Classico, Merida, Chessnut, Fantasy e Spatial; avatar Pedone e Cavallo) restano disponibili da subito: le ricompense aggiungono, non tolgono.
+Livelli e traguardi sbloccano temi della scacchiera, set di pezzi, avatar e cornici. Le scelte di sempre (temi Verde, Legno, Blu e Grigio; pezzi Classico, Merida, Chessnut, Fantasy e Spatial; avatar Pedone, Cavallo, Pino e Rocco) restano disponibili da subito: le ricompense aggiungono, non tolgono.
 
 | Ricompensa | Si sblocca con |
 |---|---|
 | Tema Sabbia, avatar Alfiere | Livello 2 |
-| Pezzi Celtic, cornice Bronzo | Livello 3 |
+| Pezzi Celtic, cornice Bronzo, avatar Chiara | Livello 3 |
 | Tema Oceano, avatar Torre | Livello 4 |
-| Pezzi Firi | Livello 5 |
+| Pezzi Firi, avatar Marta | Livello 5 |
 | Tema Corallo, cornice Argento | Livello 6 |
 | Avatar Donna | Livello 7 |
-| Pezzi RhosGFX | Livello 8 |
-| Cornice Oro | Livello 10 |
+| Pezzi RhosGFX, avatar Gatto astronauta, cornice Fiamma | Livello 8 |
+| Avatar Coniglio lunare | Livello 9 |
+| Cornice Oro, avatar Duilio | Livello 10 |
+| Avatar Re, avatar Elena | Livello 11 |
+| Cornice Alloro, avatar Massimo | Livello 12 |
+| Avatar Stella | Livello 13 |
 | Tema Notte | 7 giorni di fila |
 | Pezzi Shapes | 10 puzzle risolti |
 | Pezzi Mpchess | Prima revisione |
 | Pezzi Kiwen-suwi | Tutti i minigiochi provati |
 | Pezzi Totoy | 10 vittorie |
-| Cornice Fiamma | 30 giorni di fila |
-| Cornice Alloro | Puzzle rating 1500 |
-| Tema Oro, avatar Re | Primo torneo vinto |
+| Tema Oro | Primo torneo vinto |
 
 La tabella completa è in `lib/progress/rewards.dart`. Una ricompensa appena meritata compare nella notifica dei progressi ("Sbloccato: tema Sabbia"). Nelle impostazioni i temi e i pezzi bloccati hanno un lucchetto e, toccati, dicono come si sbloccano; avatar e cornice si scelgono toccando l'avatar nel Profilo.
 
 Per rispetto di RV-01, l'interruttore "Sblocca tutto" (nelle impostazioni dell'app e del Profilo) rende tutto disponibile. Con la gamification spenta non c'è nulla da sbloccare. Il tema o il set già scelto resta applicato anche se torna bloccato, per esempio spegnendo "Sblocca tutto".
+
+## Avatar simpatici e foto propria (RP-08, RP-09)
+
+Oltre ai sei pezzi, dieci personaggi disegnati in codice (`avatar_art.dart`, nessuna immagine nell'app): Pino il pulcino, Rocco la volpe, Chiara il fiore, Marta il gufo, il drago Duilio, Elena l'aquila, Massimo il lupo, Stella (la stella), più il gatto astronauta e il coniglio lunare. Hanno testa tonda, occhioni e guance su uno sfondo spaziale indaco e viola, e gli stessi nomi dei bot. Pino e Rocco sono subito disponibili, gli altri si sbloccano salendo di livello, come da tabella. Cornici e avatar si sbloccano tutti per livello e non per traguardo (chi aveva già meritato Re, Fiamma o Alloro con il vecchio traguardo li tiene); i traguardi restano per temi e pezzi.
+
+### Custodi nella Storia
+
+Gli otto bot della scala sono i custodi della Storia, ognuno con il suo personaggio (`guardianCharacter(botId)`). `GuardianAvatar(bot: …, expression: …, size: …)` (`lib/progress/guardian_avatar.dart`, senza dipendenze dalla schermata Profilo) li disegna con una delle espressioni di `AvatarExpression`: `neutral`, `greeting` (saluto, con la zampa alzata), `happy` (contento), `encouraging` (incoraggiante, con scintille), `challenge` (sfida, sopracciglia decise e sorriso di sfida) e `surprised` (stupito). È decorativo e escluso dai lettori di schermo, quindi la battuta va in un testo a parte; con `background: false` si posa su qualunque superficie, e un bot senza personaggio mostra la sua emoji. Per un nuovo custode: un valore in `AvatarCharacter`, il suo disegno in `avatar_art.dart` e la riga in `guardianCharacter`.
+
+Nella scelta dell'avatar, la sezione «Foto» permette di usare una foto propria:
+
+- **Dalla galleria** o **Scatta una foto**, tramite il selettore di sistema (`image_picker`). La galleria non chiede permessi all'app; la fotocamera chiede il suo permesso solo quando si tocca «Scatta una foto». Se il permesso è negato o la fotocamera non c'è, compare un messaggio e non cambia nulla.
+- La foto è ridotta a 512 px al massimo, mostrata ritagliata in cerchio e circondata dalla cornice scelta. Prende il posto dell'avatar finché non si sceglie un altro avatar (la foto resta salvata, in `usePhoto` c'è la scelta) o non si tocca **Rimuovi la foto**, che cancella il file.
+- Resta solo sul telefono, in `avatar_photo.jpg` nella cartella privata dell'app: non è nel backup (che contiene `progress.json` ma non questo file), non viene inviata e non è condivisa con l'avversario nelle partite a due telefoni. Se il file non si può scrivere, la foto resta in memoria fino alla chiusura.
+- Nel profilo bambino la sezione non compare e un'eventuale foto già salvata non viene mostrata: per prudenza non si caricano immagini di bambini (RP-06).
+
+La pagina Profilo lascia in fondo 32 dp più la barra di sistema, così l'ultima impostazione non resta tagliata né sotto i gesti; il test controlla anche il testo al 130% senza overflow.
 
 ## Promemoria giornaliero (RG-11)
 
@@ -113,8 +134,12 @@ Spento di default. Nel Profilo, "Promemoria giornaliero" chiede il permesso per 
 | `progress_state.dart` | Stato dei progressi e impostazioni, serializzabili in JSON |
 | `progress_tracker.dart` | Regole: XP, obiettivo, serie, protezioni, traguardi. Funzioni pure, con l'ora passata come parametro |
 | `achievements.dart` | Elenco dei traguardi e condizioni di sblocco |
+| `lib/badges/` | Badge (RG-17), vedi [badge.md](badge.md); lo stato tiene `badges`, `tally` e `lastActiveDay` |
 | `rewards.dart` | Ricompense estetiche e condizioni di sblocco (livello o traguardo) |
-| `avatar.dart` | Avatar e cornici del profilo |
+| `avatar.dart` | Avatar (pezzi e personaggi) e cornici del profilo |
+| `avatar_art.dart` | Disegno in codice dei personaggi, con sei espressioni |
+| `guardian_avatar.dart` | `GuardianAvatar(bot, expression, size)`: il custode di un bot, riusabile nella Storia |
+| `avatar_photo.dart` | Scelta della foto del profilo da galleria o fotocamera |
 | `progress_store.dart` | Salvataggio su file JSON tramite `JsonFile` |
 | `progress_controller.dart` | `ChangeNotifier` per l'interfaccia: carica, registra, salva |
 | `progress_feedback.dart` | Notifica in-app di XP, livello, obiettivo e traguardi |
