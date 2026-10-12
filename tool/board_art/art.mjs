@@ -1,3 +1,5 @@
+import { pieceStaunton, pieceMorbido, pieceStampa } from "./staunton.mjs";
+
 // Disegni di pezzi e scacchiere di Rokko, condivisi con l'anteprima dell'Officina.
 // Ogni funzione restituisce SVG: i pezzi in un quadrato 45×45, le scacchiere in 400×400.
 
@@ -113,8 +115,6 @@ const THEMES = {
     over: () => `<defs><pattern id="pt" width="25" height="25" patternUnits="userSpaceOnUse"><path d="M12.5 4 15 10 21 12.5 15 15 12.5 21 10 15 4 12.5 10 10Z" fill="#fff" opacity=".13"/></pattern>${darkMask("mt")}</defs><rect width="400" height="400" fill="url(#pt)" mask="url(#mt)"/>`,
     desc: "Piastrelle mediterranee con un piccolo decoro a stella. Si lega al nostro arancio senza ripeterlo." }
 };
-
-import { pieceStaunton, pieceMorbido, pieceStampa } from "./staunton.mjs";
 
 export const PIECE_SETS = {
   staunton: (t, c) => pieceStaunton(t, c),

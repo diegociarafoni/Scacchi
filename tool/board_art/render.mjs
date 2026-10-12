@@ -89,6 +89,7 @@ async function piece(set, kind, src, glyph) {
 const GLYPH = { K: ["♔", "♚"], Q: ["♕", "♛"], R: ["♖", "♜"], B: ["♗", "♝"], N: ["♘", "♞"], P: ["♙", "♟"] };
 // SETS=staunton,morbido rigenera solo quei set di pezzi (e i loro aloni).
 const onlySets = process.env.SETS?.split(",");
+for (const name of onlySets ?? []) if (!(name in PIECE_SETS)) throw new Error(`SETS: set sconosciuto «${name}»`);
 for (const [set, draw] of Object.entries(PIECE_SETS).filter(([k]) => onlySets ? onlySets.includes(k) : !only)) {
   for (const kind of kinds) {
     if (set === "noto") {

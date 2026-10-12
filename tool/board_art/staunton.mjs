@@ -24,7 +24,7 @@ const DETAIL = {
 };
 
 // Un po' più grandi, ancorati alla base, per riempire la casa come gli altri set.
-const grow = (inner) => `<g transform="translate(22.5 43.5) scale(1.08) translate(-22.5 -43.5)">${inner}</g>`;
+const grow = (inner) => `<g transform="translate(22.5 43.5) scale(1.05) translate(-22.5 -43.5)">${inner}</g>`;
 
 const shadow = (id, opacity) =>
   `<defs><filter id="${id}" x="-30%" y="-80%" width="160%" height="260%"><feGaussianBlur stdDeviation="1.1"/></filter></defs><ellipse cx="23.5" cy="41.2" rx="12" ry="2.1" fill="#000" opacity="${opacity}" filter="url(#${id})"/>`;
@@ -33,14 +33,14 @@ const shadow = (id, opacity) =>
 export function pieceStaunton(t, c) {
   const w = c === "w";
   const [a, b, d] = w ? ["#F7E1B4", "#DDAE6A", "#A9712F"] : ["#7A5742", "#47301F", "#1E120B"];
-  const edge = w ? "#6B4A22" : "#0F0805", line = w ? "#8A5A24" : "#000";
+  const edge = w ? "#6B4A22" : "#0F0805";
   const id = `s${c}${t}`;
   return grow(shadow(`sh${id}`, w ? 0.38 : 0.5) +
     `<defs><linearGradient id="g${id}" gradientUnits="userSpaceOnUse" x1="10" y1="0" x2="35" y2="0"><stop offset="0" stop-color="${a}"/><stop offset=".5" stop-color="${b}"/><stop offset="1" stop-color="${d}"/></linearGradient>` +
     `<radialGradient id="h${id}" gradientUnits="userSpaceOnUse" cx="18" cy="16" r="20"><stop offset="0" stop-color="#fff" stop-opacity="${w ? 0.55 : 0.3}"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs>` +
     `<g fill="url(#g${id})" stroke="${edge}" stroke-width="0.9" stroke-linejoin="round">${SHAPES[t]}</g>` +
     `<g fill="url(#h${id})" stroke="none">${SHAPES[t]}</g>` +
-    `<g fill="${line}" stroke="${line}" stroke-opacity=".55" fill-opacity=".55" stroke-width="0.8" stroke-linecap="round" fill-rule="evenodd" style="fill:none">${DETAIL[t]}</g>`);
+    `<g stroke="${w ? "#6B4018" : "#FFF3DC"}" stroke-opacity="${w ? 0.55 : 0.4}" stroke-width="0.8" stroke-linecap="round" style="fill:none">${DETAIL[t]}</g>`);
 }
 
 /** Morbido: sfumature piatte e un'ombra delicata, contorno sottile. */
