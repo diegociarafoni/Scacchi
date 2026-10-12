@@ -50,7 +50,8 @@
       "android.permission.VIBRATE": "Aggiunto da flutter_local_notifications per la vibrazione della notifica",
       "android.permission.READ_EXTERNAL_STORAGE": "Aggiunto da una libreria del lettore QR (camera o image_picker) per scegliere un'immagine; nessun accesso senza azione dell'utente",
       "android.permission.ACCESS_NETWORK_STATE": "Aggiunto da una libreria (stato della rete, nessun dato inviato)",
-      "android.permission.WAKE_LOCK": "Aggiunto da WorkManager (workmanager): tiene sveglio il telefono per i pochi secondi del controllo delle partite a distanza"
+      "android.permission.WAKE_LOCK": "Aggiunto da WorkManager (workmanager): tiene sveglio il telefono per i pochi secondi del controllo delle partite a distanza",
+      "android.permission.CHANGE_WIFI_MULTICAST_STATE": "Aggiunto da bonsoir: l'annuncio mDNS con cui l'invitato ritrova l'ospite in rete locale (RMP-10), attivo solo durante una partita a due"
     }
   },
   "logging": {
@@ -79,6 +80,12 @@
       "minFrames": 50,
       "p90BuildMs": 33,
       "p99BuildMs": 100
+    }
+  },
+  "mobsf": {
+    "minSecurityScore": 45,
+    "acceptedHigh": {
+      "App can be installed on a vulnerable unpatched Android version": "minSdk è quello predefinito di Flutter (24, Android 7.0): alzarlo escluderebbe i telefoni più vecchi, usati spesso dai bambini. Da rivalutare a ogni aggiornamento di Flutter"
     }
   }
 }
