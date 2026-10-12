@@ -117,6 +117,14 @@ Future<void> chooseAdaptiveComputer(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
+/// Sceglie nel foglio della nuova partita la partita in due sullo stesso telefono.
+Future<void> chooseTwoPlayers(WidgetTester tester) async {
+  await tester.tap(find.text('Sfida un amico'));
+  await tester.pumpAndSettle();
+  await tester.tap(find.text('Sullo stesso telefono'));
+  await tester.pumpAndSettle();
+}
+
 /// Scorre il foglio della nuova partita fino a [finder]: la lista dei bot lo
 /// allunga e le parti in fondo non sono ancora costruite.
 Future<void> scrollSheetTo(WidgetTester tester, Finder finder) async {

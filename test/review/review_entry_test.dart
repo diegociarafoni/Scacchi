@@ -14,6 +14,7 @@ import 'package:scacchi/review/review_page.dart';
 import 'package:scacchi/settings/settings.dart';
 
 import '../game_actions.dart';
+import '../computer_fakes.dart' show chooseTwoPlayers;
 
 /// Motore finto che valuta ogni posizione in parità.
 class _EvenEngine implements UciTransport {
@@ -122,7 +123,7 @@ void main() {
     await tester.pumpWidget(app());
     await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Due giocatori'));
+    await chooseTwoPlayers(tester);
     await tester.pumpAndSettle();
     await tester.tap(find.text('Chess960'));
     await tester.pumpAndSettle();

@@ -48,6 +48,9 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Bot'));
     await tester.pumpAndSettle();
+    // Il foglio parte dall'adattivo: il bot si sceglie a mano.
+    await tester.tap(find.text('Pino'));
+    await tester.pumpAndSettle();
     await chooseTime(tester, 'Senza tempo');
     await tester.pumpAndSettle(const Duration(seconds: 1));
   }

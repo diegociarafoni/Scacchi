@@ -185,7 +185,7 @@ void main() {
     expect(engine.disposed, isFalse);
     await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Due giocatori'));
+    await chooseTwoPlayers(tester);
     await tester.pumpAndSettle();
     await chooseTime(tester, 'Senza tempo');
     await tester.pumpAndSettle();
@@ -304,6 +304,7 @@ void main() {
     await tester.pumpWidget(app());
     await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
+    await chooseTwoPlayers(tester);
     expect(find.text('Senza tempo'), findsOneWidget);
     await chooseTime(tester, '5+0');
     await tester.pump(const Duration(milliseconds: 500));
@@ -507,7 +508,7 @@ void main() {
     expect(orientation(), Side.black);
     await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Due giocatori'));
+    await chooseTwoPlayers(tester);
     await tester.pumpAndSettle();
     await chooseTime(tester, 'Senza tempo');
     await tester.pumpAndSettle();
