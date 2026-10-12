@@ -1,5 +1,6 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scacchi/engine/levels.dart';
 import 'package:scacchi/path/curriculum.dart';
 import 'package:scacchi/path/exercise.dart';
 
@@ -109,15 +110,25 @@ void main() {
     expect(strategy.stages.last.guardianElo, 1100);
   });
 
-  test('i guardiani diventano più forti capitolo dopo capitolo', () {
+  test('l\'Elo dei guardiani cresce capitolo dopo capitolo', () {
     final elos = [
       for (final c in curriculum)
-        for (final s in c.stages)
-          ?s.guardianElo,
+        for (final s in c.stages) ?s.guardianElo,
     ];
     expect(elos, [400, 800, 1000, 1100, 1200]);
     for (var i = 1; i < elos.length; i++) {
       expect(elos[i], greaterThan(elos[i - 1]));
+    }
+  });
+
+  test('il livello del motore dei guardiani non scende mai', () {
+    final levels = [
+      for (final c in curriculum)
+        for (final s in c.stages)
+          if (s.guardianElo case final elo?) engineLevelForElo(elo).id,
+    ];
+    for (var i = 1; i < levels.length; i++) {
+      expect(levels[i], greaterThanOrEqualTo(levels[i - 1]), reason: '$levels');
     }
   });
 

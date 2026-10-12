@@ -1581,10 +1581,10 @@ const List<Chapter> curriculum = [
           ),
           LineExercise(
             instructions:
-                'Fai il triangolo e3, d2, d3: prima il re in d2, poi in d3. '
-                'Così il re nero perde il suo posto.',
-            fen: '8/8/8/3p4/2kP4/2P1K3/8/8 w - - 0 1',
-            steps: ['e3d2', 'c4b5', 'd2d3'],
+                'Il re nero in b4 è nella casa giusta e vorresti che toccasse '
+                'a lui. Comincia il triangolo con il re: una sola mossa vince.',
+            fen: '8/8/8/2p5/1kP5/1P1K4/8/8 w - - 0 1',
+            steps: ['d3c2'],
             goal: LineGoal.line,
           ),
           LineExercise(
@@ -1723,8 +1723,10 @@ const List<Chapter> curriculum = [
           ),
           LineExercise(
             instructions:
-                'Sfida: il pedone g4 attacca la torre. Difendila con il re: '
-                'se il Nero la prende, gli resta l\'alfiere sbagliato.',
+                'Sfida: l\'alfiere ti dà scacco e il pedone g4 attacca la '
+                'torre. Re3 o Rf2 parano lo scacco ma perdono. Esci con il re '
+                'in g2, vicino alla torre: se il Nero la prende, gli resta '
+                'l\'alfiere sbagliato.',
             fen: '2k5/8/8/2b5/6pp/5R2/8/6K1 w - - 0 1',
             steps: ['g1g2'],
             goal: LineGoal.line,
@@ -1757,8 +1759,8 @@ const List<Chapter> curriculum = [
           ),
           LineExercise(
             instructions:
-                'Sei avanti di un cavallo. Cambia le torri per semplificare '
-                'la partita.',
+                'Hai un cavallo in più e il Nero solo un pedone in più. '
+                'Cambia le torri per semplificare la partita.',
             fen: '3r4/pp2kppp/2p5/8/8/2N5/PP3PPP/3R2K1 w - - 0 1',
             steps: ['d1d8'],
             goal: LineGoal.line,
@@ -1814,10 +1816,10 @@ const List<Chapter> curriculum = [
           ),
           LineExercise(
             instructions:
-                'Sfida: prima conquista la colonna aperta, poi entra in '
-                'settima traversa.',
-            fen: '4r1k1/pp3ppp/2p5/8/8/7P/PP3PP1/R5K1 w - - 0 1',
-            steps: ['a1d1', 'b7b5', 'd1d7'],
+                'Sfida: entra subito in settima traversa con una torre, poi '
+                'porta l\'altra sulla colonna aperta, dietro la prima.',
+            fen: '2r2rk1/pp3ppp/2p5/8/8/4P3/PP3PPP/2RR2K1 w - - 0 1',
+            steps: ['d1d7', 'c8b8', 'c1d1'],
             goal: LineGoal.line,
           ),
         ],
@@ -1876,9 +1878,9 @@ const List<Chapter> curriculum = [
           LineExercise(
             instructions:
                 'I tuoi pedoni sono su case nere, come il tuo alfiere: è '
-                'cattivo. Portalo davanti ai pedoni, dove ha spazio.',
-            fen: '5bk1/5p2/p3p1p1/1p1pP2p/1P1P4/P5P1/7P/2B3K1 w - - 0 1',
-            steps: ['c1g5'],
+                'cattivo. Fallo uscire da c1 prima che resti chiuso.',
+            fen: '2r3k1/pp1b1ppp/2p1p3/3pP3/3P4/2P5/PP3PPP/2B1R1K1 w - - 0 1',
+            steps: ['c1e3|c1g5|c1f4|c1d2'],
             goal: LineGoal.line,
           ),
           LineExercise(
@@ -1896,7 +1898,7 @@ const List<Chapter> curriculum = [
                 'Il tuo alfiere è buono: i pedoni neri sono fermi sulle case '
                 'bianche. Attacca con l\'alfiere un pedone senza difesa.',
             fen: '8/2k5/p1b1p1p1/1p1pP2p/1P1P1K1P/6P1/4B3/8 w - - 0 1',
-            steps: ['e2d3|e2d1'],
+            steps: ['e2d3'],
             goal: LineGoal.line,
           ),
           LineExercise(
@@ -1928,10 +1930,10 @@ const List<Chapter> curriculum = [
           ),
           LineExercise(
             instructions:
-                'Sul lato di donna hai due pedoni contro uno. Spingine uno e '
-                'crea un pedone passato.',
+                'Sul lato di donna hai due pedoni contro uno. Spingi quello '
+                'giusto: dopo i cambi ti resta un pedone passato.',
             fen: '6k1/2p2ppp/8/1PP5/8/8/5PPP/6K1 w - - 0 1',
-            steps: ['b5b6|c5c6'],
+            steps: ['b5b6'],
             goal: LineGoal.line,
           ),
           LineExercise(
@@ -1978,19 +1980,19 @@ const List<Chapter> curriculum = [
           ),
           LineExercise(
             instructions:
-                'La torre nera è attiva e attacca i tuoi pedoni. Non stare '
-                'solo a difendere: attacca anche tu i pedoni neri con la '
-                'torre.',
-            fen: '6k1/pp3pp1/7p/8/8/7P/Pr3PP1/2R3K1 w - - 0 1',
-            steps: ['c1c7|c1c8'],
+                'La torre nera è entrata in seconda traversa. Non stare a '
+                'difendere: porta anche tu la torre in settima, contro i '
+                'pedoni neri.',
+            fen: '8/pp3ppk/7p/8/8/7P/PP2rPP1/2R3K1 w - - 0 1',
+            steps: ['c1c7'],
             goal: LineGoal.line,
           ),
           LineExercise(
             instructions:
-                'Sfida: il cavallo nero in d4 è il pezzo più attivo della '
-                'scacchiera. Cambialo.',
-            fen: '5rk1/1p3ppp/3p4/2p1p3/2PnP3/4B3/PP3PPP/3R2K1 w - - 0 1',
-            steps: ['e3d4'],
+                'Sfida: trova il tuo pezzo peggiore e portalo in gioco con '
+                'la mossa migliore.',
+            fen: '8/pp3k2/4p3/3n4/8/4P3/PP2KP2/N7 w - - 0 1',
+            steps: ['a1b3'],
             goal: LineGoal.line,
           ),
         ],
