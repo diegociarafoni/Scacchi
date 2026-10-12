@@ -40,7 +40,7 @@ https://github.com/diegociarafoni/rokko/releases/download/nightly/rokko.apk
 
 - È firmata con la stessa chiave delle versioni numerate, quindi si installa sopra di esse e viceversa; il `versionCode` cresce con i commit di `main`, perciò Android accetta l'aggiornamento (le versioni numerate vanno pubblicate da `main`).
 - Parte solo dopo una CI riuscita su un evento `push` di `main` e non rifà analisi e test.
-- Più merge ravvicinati non si accodano: resta solo l'ultima esecuzione, e un nightly non sostituisce mai uno più recente (si pubblica solo se il commit è ancora la punta di `main`).
+- Più merge ravvicinati non si accodano: resta solo l'ultima esecuzione. Un nightly non torna mai indietro: non si pubblica un commit che sta indietro rispetto al nightly attuale o a una release numerata, così il `versionCode` cresce sempre e Android lo installa sopra la versione precedente.
 - La release è sempre la stessa: a ogni merge cambiano file, commit e note, non l'indirizzo, e non partono notifiche.
 - Non compare in `releases/latest`, che resta l'ultima versione numerata.
 - Se la CI di `main` è rossa non esce nessun nightly: l'ultimo resta disponibile.
