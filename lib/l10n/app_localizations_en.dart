@@ -825,4 +825,62 @@ class AppLocalizationsEn extends AppLocalizations {
   String botUnlockHint(String name) {
     return 'Unlocks by beating $name';
   }
+
+  @override
+  String get handicapTitle => 'Handicap';
+
+  @override
+  String get handicapGameTitle => 'Handicap game';
+
+  @override
+  String get handicapHint =>
+      'Whoever gives the advantage plays without a piece or with less time. The game does not count for the local rating.';
+
+  @override
+  String get handicapPieceTitle => 'Piece removed';
+
+  @override
+  String get handicapNone => 'None';
+
+  @override
+  String get handicapPieceFPawn => 'F pawn';
+
+  @override
+  String get handicapPieceKnight => 'Knight';
+
+  @override
+  String get handicapPieceRook => 'Rook';
+
+  @override
+  String get handicapPieceQueen => 'Queen';
+
+  @override
+  String get handicapTimeTitle => 'Time of the player giving odds';
+
+  @override
+  String get handicapTimeEqual => 'Equal';
+
+  @override
+  String get handicapTimeHint =>
+      'Applies only with a clock and when it is lower than the chosen time control.';
+
+  @override
+  String get handicapGiverTitle => 'Who gives the advantage';
+
+  @override
+  String get handicapGiverYou => 'You';
+
+  @override
+  String get handicapGiverOpponent => 'The opponent';
+
+  @override
+  String get handicapGiverWhite => 'White';
+
+  @override
+  String get handicapGiverBlack => 'Black';
+
+  @override
+  String handicapTimeMinutes(int n) {
+    return '$n min';
+  }
 }
