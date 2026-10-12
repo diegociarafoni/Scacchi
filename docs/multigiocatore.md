@@ -9,7 +9,8 @@ Partita tra due persone su due telefoni, pensata per funzionare in ogni situazio
 | 1 | Nucleo del protocollo: invito, identità, cifratura, registro delle mosse, canali multipli | Disponibile (senza interfaccia) |
 | 2a | Canale Wi-Fi locale su TCP con ricollegamento automatico | Disponibile (senza interfaccia) |
 | 2b | Abbinamento via QR, permessi di rete e schermata di gioco in rete locale | Disponibile da Tu › Gioca con un amico |
-| 2c | Ricerca mDNS dopo un cambio di indirizzo, salvataggio e ripresa della partita | Da fare |
+| 2c-1 | Salvataggio e ripresa della partita in rete locale | Disponibile da Tu › Gioca con un amico › Riprendi la partita |
+| 2c-2 | Ricerca mDNS dopo un cambio di indirizzo | Da fare |
 | 3 | Canale Bluetooth LE | Da fare |
 | 4 | Relay Nostr, link d'invito, notifiche in background, schermate | Da fare |
 
@@ -24,6 +25,7 @@ Partita tra due persone su due telefoni, pensata per funzionare in ogni situazio
 | RMP-05 | I canali disponibili si usano insieme: si invia su tutti, basta che uno consegni; si riceve da tutti in un solo flusso. |
 | RMP-07 | In rete locale (stessa Wi-Fi o hotspot) l'ospite ascolta su TCP e l'invitato si collega all'indirizzo dell'invito; l'invitato si ricollega da solo, anche se l'ospite apre la partita dopo di lui, e a ogni collegamento nuovo si ripete l'ultima mossa. Pacchetti oltre 4096 byte chiudono il collegamento; l'ospite tiene al massimo 4 collegamenti e oltre chiude il più vecchio. |
 | RMP-08 | Da Tu › Gioca con un amico un telefono sceglie il colore e crea la partita: mostra il QR dell'invito con l'indirizzo in rete locale; l'altro lo inquadra e si collega; se l'ospite non risponde il canale riprova da solo. Poi si gioca a turno sulla scacchiera, con lo stato (attesa, turno, esito) annunciato al lettore di schermo insieme alle mosse dell'avversario. Senza Wi-Fi o hotspot compare un avviso; un QR estraneo viene rifiutato; uscire chiede conferma. |
+| RMP-09 | La partita a due si salva a ogni mossa in `multiplayer.json` (invito, seme privato, registro, chiave dell'avversario, messaggi sigillati) e a partita finita il salvataggio sparisce. Chi ospita salva solo dopo l'ingresso dell'avversario. Uscire lascia la partita salvata; da Tu › Gioca con un amico compare «Riprendi la partita» (anche «Elimina»). Chi ospita riapre l'ascolto sulla porta di prima, se libera; l'invitato si ricollega all'indirizzo dell'invito e i registri si riallineano. Una nuova partita sostituisce quella salvata. |
 | RMP-06 | Cambiare canale non cambia la partita. Chi è rimasto indietro chiede le mosse mancanti e si rimette in pari; una mossa non partita si ripete quando un canale torna disponibile. |
 
 Questi requisiti sostituiscono, per il solo modulo multigiocatore, l'esclusione delle partite tra persone su più dispositivi e il vincolo "nessun permesso di rete" di RNF-01, che resta valido per il gioco da soli.
@@ -45,12 +47,13 @@ MultiplayerSession          lib/multiplayer/multiplayer_session.dart
 | File | Ruolo |
 |---|---|
 | `game_invite.dart` | `GameInvite`: link `scacchi://partita?v=1&g=<uuid>&s=<segreto>&k=<chiave>&c=w|b[&lan=host:porta]`, campi binari in Base64 URL senza padding. `newGameId`, `newSecret` usano `Random.secure`. |
-| `player_identity.dart` | `PlayerIdentity`: coppia di chiavi Ed25519; il seme di 32 byte andrà nel portachiavi di sistema (fase 2). |
+| `player_identity.dart` | `PlayerIdentity`: coppia di chiavi Ed25519; il seme di 32 byte è salvato con la partita (`saved_game.dart`). |
 | `game_message.dart` | Messaggi: `JoinMessage` (l'invitato si presenta), `MoveMessage` (semimossa, UCI, impronta), `SyncRequest` (rimandare da una semimossa). |
 | `message_codec.dart` | `MessageCodec`: sigillo dei messaggi. |
 | `game_sync.dart` | `GameSync`: registro e validazione. `positionHash`: SHA-256 del FEN, primi 128 bit in esadecimale. |
 | `transport.dart` | `MessageTransport`, `MultiTransport`, `LoopbackTransport` (in memoria, per i test), `ConnectionAware` per i canali che segnalano un collegamento nuovo. |
 | `lan_transport.dart` | `LanTransport`: canale Wi-Fi su TCP (vedi sotto). |
+| `saved_game.dart` | `SavedGame` e `SavedGameStore`: la partita in corso in `multiplayer.json`, nella cartella privata dell'app (`JsonFile`, scrittura atomica). |
 | `multiplayer_session.dart` | `MultiplayerSession`: collega registro, sigillo e canali e reagisce ai messaggi. |
 
 ### Formato del messaggio sigillato
@@ -99,8 +102,8 @@ In presenza si gioca con l'orologio; quando la partita passa a distanza l'orolog
 | MASVS-AUTH | Nessun account: l'identità è la chiave Ed25519; la chiave dell'avversario si fissa al primo ingresso. |
 | MASVS-PRIVACY | Nessun dato personale; il relay vedrà solo byte cifrati e chiavi casuali per partita. |
 
-Limiti noti: l'invito contiene il segreto, quindi chi lo intercetta prima dell'avversario può occupare la partita (l'ospite vedrà una chiave diversa da quella attesa). I messaggi sigillati restano per ora in memoria e la partita in rete locale non viene salvata: il salvataggio insieme alla partita, necessario per il recupero dopo un riavvio, arriva con la fase 2c.
+Limiti noti: l'invito contiene il segreto, quindi chi lo intercetta prima dell'avversario può occupare la partita (l'ospite vedrà una chiave diversa da quella attesa). Il salvataggio contiene il seme privato della partita: sta nella cartella privata dell'app, escluso dai backup di Android (`backup_rules.xml`, `data_extraction_rules.xml`); su iOS segue il backup del dispositivo, cifrato. Chi legge il file può firmare al posto del giocatore, ma solo in quella partita: l'identità è generata per ogni partita. Se l'indirizzo dell'ospite cambia dopo il riavvio, l'invitato non lo ritrova finché non arriva la ricerca mDNS (fase 2c-2).
 
 ## Test
 
-`flutter test test/multiplayer`: invito, sigillo, registro, canali e sessione completa con canali in memoria, compreso il passaggio Wi-Fi → relay → Wi-Fi e il recupero dopo un ripristino. `lan_transport_test.dart` usa socket TCP veri su 127.0.0.1: pacchetti spezzati, pacchetti troppo grandi, limite di collegamenti, ricollegamento senza invii, chiusura durante il collegamento, una partita completa e una mossa consegnata dopo la caduta del collegamento. `multiplayer_controller_test.dart` e `multiplayer_page_test.dart` provano stato e schermata con canali in memoria e un lettore QR finto: attesa, turni, matto, nuovi tentativi dell'invitato, assenza di Wi-Fi, QR estraneo e conferma d'uscita.
+`flutter test test/multiplayer`: salvataggio e ripresa (`saved_game_test.dart`), invito, sigillo, registro, canali e sessione completa con canali in memoria, compreso il passaggio Wi-Fi → relay → Wi-Fi e il recupero dopo un ripristino. `lan_transport_test.dart` usa socket TCP veri su 127.0.0.1: pacchetti spezzati, pacchetti troppo grandi, limite di collegamenti, ricollegamento senza invii, chiusura durante il collegamento, una partita completa e una mossa consegnata dopo la caduta del collegamento. `multiplayer_controller_test.dart` e `multiplayer_page_test.dart` provano stato e schermata con canali in memoria e un lettore QR finto: attesa, turni, matto, nuovi tentativi dell'invitato, assenza di Wi-Fi, QR estraneo e conferma d'uscita.

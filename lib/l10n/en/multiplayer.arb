@@ -23,8 +23,13 @@
   "multiplayerNotInvite": "This QR code is not a game invite.",
   "multiplayerCameraError": "Camera not available.",
   "multiplayerLeaveTitle": "Leave the game?",
-  "multiplayerLeaveBody": "The connection with the other phone closes and the game is not saved.",
+  "multiplayerLeaveBody": "The connection with the other phone closes, but the game stays saved: you can resume it from here.",
   "multiplayerLeave": "Leave",
   "multiplayerStay": "Stay",
-  "multiplayerStartError": "The game could not be started: try again."
+  "multiplayerStartError": "The game could not be started: try again.",
+  "multiplayerResume": "Resume the game",
+  "multiplayerResumeBody": "You have a game with a friend left unfinished. {moves, plural, =1{One move played} other{{moves} moves played}}.",
+  "multiplayerDiscard": "Delete",
+  "multiplayerDiscardTitle": "Delete the game?",
+  "multiplayerDiscardBody": "The game can no longer be resumed, even if the other phone is still waiting."
 }

@@ -13,6 +13,7 @@ import '../l10n/app_localizations.dart';
 import '../training/training_board.dart';
 import 'game_invite.dart';
 import 'multiplayer_controller.dart';
+import 'saved_game.dart';
 
 /// Testi del multigiocatore, in italiano anche senza i delegate.
 AppLocalizations multiplayerL10n(BuildContext context) =>
@@ -26,10 +27,16 @@ class MultiplayerPage extends StatefulWidget {
     super.key,
     this.openHost = openLanHost,
     this.openGuest = openLanGuest,
+    this.openResumeHost = openLanHostAt,
     this.scanner = zxingScanner,
+    this.store,
   });
 
   final OpenHost openHost;
+  final ResumeHost openResumeHost;
+
+  /// Dove sta la partita salvata; per default il file dell'app.
+  final SavedGameStore? store;
   final OpenGuest openGuest;
   final QrScannerBuilder scanner;
 
@@ -40,6 +47,57 @@ class MultiplayerPage extends StatefulWidget {
 class _MultiplayerPageState extends State<MultiplayerPage> {
   Side _side = Side.white;
   bool _busy = false;
+  SavedGameStore? _store;
+  SavedGame? _saved;
+
+  @override
+  void initState() {
+    super.initState();
+    unawaited(_loadSaved());
+  }
+
+  Future<void> _loadSaved() async {
+    try {
+      final store = _store = widget.store ?? await SavedGameStore.open();
+      final saved = await store.load();
+      if (mounted) setState(() => _saved = saved);
+    } on Object catch (e) {
+      if (kDebugMode) debugPrint('Partita salvata non letta: $e');
+    }
+  }
+
+  Future<void> _resume(SavedGame saved) => _start(
+    () => MultiplayerController.resume(
+      saved,
+      openHost: widget.openResumeHost,
+      openGuest: widget.openGuest,
+      store: _store,
+    ),
+  );
+
+  Future<void> _discard() async {
+    final l10n = multiplayerL10n(context);
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.multiplayerDiscardTitle),
+        content: Text(l10n.multiplayerDiscardBody),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(l10n.multiplayerStay),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(l10n.multiplayerDiscard),
+          ),
+        ],
+      ),
+    );
+    if (ok != true) return;
+    await _store?.clear();
+    if (mounted) setState(() => _saved = null);
+  }
 
   Future<void> _start(Future<MultiplayerController> Function() open) async {
     setState(() => _busy = true);
@@ -78,7 +136,11 @@ class _MultiplayerPageState extends State<MultiplayerPage> {
     );
     if (invite == null || !mounted) return;
     await _start(
-      () => MultiplayerController.join(invite, openGuest: widget.openGuest),
+      () => MultiplayerController.join(
+        invite,
+        openGuest: widget.openGuest,
+        store: _store,
+      ),
     );
   }
 
@@ -90,6 +152,34 @@ class _MultiplayerPageState extends State<MultiplayerPage> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
+          if (_saved case final saved?) ...[
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(l10n.multiplayerResumeBody(saved.moves.length)),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        FilledButton(
+                          onPressed: _busy ? null : () => _resume(saved),
+                          child: Text(l10n.multiplayerResume),
+                        ),
+                        const SizedBox(width: 8),
+                        TextButton(
+                          onPressed: _busy ? null : _discard,
+                          child: Text(l10n.multiplayerDiscard),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+          ],
           Text(l10n.multiplayerIntro),
           const SizedBox(height: 24),
           Text(
@@ -121,6 +211,7 @@ class _MultiplayerPageState extends State<MultiplayerPage> {
                     () => MultiplayerController.host(
                       side: _side,
                       openHost: widget.openHost,
+                      store: _store,
                     ),
                   ),
           ),

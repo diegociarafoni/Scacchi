@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android 11 e precedenti: la partita a due contiene la chiave privata, non va nei backup. -->
+<full-backup-content>
+    <exclude domain="file" path="multiplayer.json"/>
+</full-backup-content>
