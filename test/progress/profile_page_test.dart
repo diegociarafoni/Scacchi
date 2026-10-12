@@ -343,4 +343,38 @@ void main() {
     await again.load();
     expect(again.settings.goal, const DailyGoal(GoalKind.minutes, 10));
   });
+
+  testWidgets('le impostazioni a testo ingrandito non vanno in overflow', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1080, 2400);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: const Locale('it'),
+        builder: (context, child) => MediaQuery(
+          data: MediaQuery.of(context)
+              .copyWith(textScaler: const TextScaler.linear(1.3)),
+          child: child!,
+        ),
+        home: ProfilePage(
+          controller: controller,
+          reminders: ReminderController(controller, _Scheduler()),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(find.byKey(const Key('reminder')), 300);
+    await tester.drag(find.byType(Scrollable).first, const Offset(0, -2000));
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+    final last = tester.getRect(find.byKey(const Key('reminder')));
+    final screen = tester.view.physicalSize / tester.view.devicePixelRatio;
+    // Dopo l'ultima voce resta almeno uno spazio, e ogni voce è alta 48 dp.
+    expect(last.bottom, lessThanOrEqualTo(screen.height - 16));
+    expect(last.height, greaterThanOrEqualTo(48));
+  });
 }

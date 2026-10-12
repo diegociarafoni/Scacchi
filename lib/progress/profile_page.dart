@@ -66,7 +66,14 @@ class ProfilePage extends StatelessWidget {
           // niente record personali, che sono tutti numeri.
           final kid = AppSettings.of(context).kidMode;
           return ListView(
-            padding: const EdgeInsets.all(16),
+            // In fondo spazio per la barra di sistema: l'ultima voce non resta
+            // tagliata né sotto i gesti.
+            padding: EdgeInsets.fromLTRB(
+              16,
+              16,
+              16,
+              32 + MediaQuery.paddingOf(context).bottom,
+            ),
             children: [
               if (enabled) ...[
                 _LevelCard(

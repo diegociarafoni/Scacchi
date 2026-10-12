@@ -105,6 +105,8 @@ Nella scelta dell'avatar, la sezione «Foto» permette di usare una foto propria
 - Resta solo sul telefono, in `avatar_photo.jpg` nella cartella privata dell'app: non è nel backup (che contiene `progress.json` ma non questo file), non viene inviata e non è condivisa con l'avversario nelle partite a due telefoni. Se il file non si può scrivere, la foto resta in memoria fino alla chiusura.
 - Nel profilo bambino la sezione non compare e un'eventuale foto già salvata non viene mostrata: per prudenza non si caricano immagini di bambini (RP-06).
 
+La pagina Profilo lascia in fondo 32 dp più la barra di sistema, così l'ultima impostazione non resta tagliata né sotto i gesti; il test controlla anche il testo al 130% senza overflow.
+
 ## Promemoria giornaliero (RG-11)
 
 Spento di default. Nel Profilo, "Promemoria giornaliero" chiede il permesso per le notifiche e l'orario (24 ore, proposto alle 19:00); se il permesso è negato resta spento e lo dice. Le regole sono in `lib/reminders/reminder.dart` (`nextReminder`), in Dart puro:
