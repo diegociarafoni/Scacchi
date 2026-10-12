@@ -53,12 +53,12 @@ MultiplayerSession          lib/multiplayer/multiplayer_session.dart
   └─ MultiTransport         tutti i canali insieme
        ├─ Wi-Fi locale      LanTransport
        ├─ Bluetooth LE      BleTransport
-       └─ relay Nostr       (fase 4)
+       └─ relay Nostr       NostrTransport
 ```
 
 | File | Ruolo |
 |---|---|
-| `game_invite.dart` | `GameInvite`: link `rokko://partita?v=1&g=<uuid>&s=<segreto>&k=<chiave>&c=w|b[&lan=host:porta][&tc=minuti+incremento]`, campi binari in Base64 URL senza padding; i link col vecchio schema `scacchi://` si leggono ancora, si scrive sempre `rokko://`. `newGameId`, `newSecret` usano `Random.secure`. |
+| `game_invite.dart` | `GameInvite`: link `rokko://partita?v=1&g=<uuid>&s=<segreto>&k=<chiave>&c=w|b[&lan=host:porta][&tc=minuti+incremento][&r=1][&ble=1]`, campi binari in Base64 URL senza padding; i link col vecchio schema `scacchi://` si leggono ancora, si scrive sempre `rokko://`. `newGameId`, `newSecret` usano `Random.secure`. |
 | `player_identity.dart` | `PlayerIdentity`: coppia di chiavi Ed25519; il seme di 32 byte è salvato con la partita (`saved_game.dart`). |
 | `game_message.dart` | Messaggi: `JoinMessage` (l'invitato si presenta), `MoveMessage` (semimossa, UCI, impronta, tempo residuo facoltativo `c` in millisecondi), `FlagMessage` (tempo scaduto dopo N semimosse), `SyncRequest` (rimandare da una semimossa). |
 | `message_codec.dart` | `MessageCodec`: sigillo dei messaggi. |
@@ -99,7 +99,7 @@ Per giocare vicini senza Wi-Fi né rete (RMP-20). `GameInvite.ble` (`ble=1` nel 
 - **Pacchetti.** Ogni scrittura o notifica porta al più `MTU - 3` byte (20 finché la MTU non è nota). Intestazione di 4 byte: id del messaggio (2), indice (1), numero di frammenti (1). `BleReassembler` ricompone in qualunque ordine (l'id parte da un numero casuale), ignora i doppioni e tiene al massimo 4 messaggi incompleti e 2048 byte per messaggio; frammenti incoerenti si scartano in silenzio.
 - **Collegamenti.** L'ospite accetta scritture solo da telefoni iscritti alle sue risposte e tiene al massimo 3 telefoni iscritti e, oltre, scollega il più vecchio. Il Bluetooth non autentica nessuno: come per il Wi-Fi, chi non ha il segreto dell'invito non produce messaggi validi.
 - **Permessi.** Android 12 e successivi: `BLUETOOTH_SCAN` (`neverForLocation`), `BLUETOOTH_CONNECT`, `BLUETOOTH_ADVERTISE`, richiesti a runtime solo quando si sceglie il Bluetooth. Android 11 e precedenti: `BLUETOOTH`, `BLUETOOTH_ADMIN` e `ACCESS_FINE_LOCATION` con `maxSdkVersion="30"`; la posizione non viene letta né salvata (il sistema la pretende per cercare dispositivi BLE e il GPS deve essere acceso). iOS: `NSBluetoothAlwaysUsageDescription`. Tutti i motivi sono in `tool/policy.json`.
-- **Limiti noti.** Si gioca in primo piano: in background iOS limita annunci e ricerche e non c'è ancora il recupero in background (fase 4). La portata è quella del BLE (qualche metro). Un invio riuscito vuol dire consegnato al sistema operativo, come nel Wi-Fi; la mossa si ripete al ricollegamento. Se il Bluetooth si spegne o un permesso viene tolto dopo il controllo iniziale, il canale non parte e l'errore resta nel registro di debug: la schermata continua a mostrare l'attesa. Come ogni radio aperta, il BLE si può disturbare: chi è vicino e ha l'id del servizio può occupare uno dei 3 posti dell'ospite o interferire con i frammenti in arrivo, ma non può falsificare né leggere le mosse; i messaggi persi si richiedono con la sincronizzazione del registro. Verificato con una radio finta in memoria (`ble_link_test.dart`); la prova su due telefoni veri va fatta a mano prima di annunciarlo.
+- **Limiti noti.** Si gioca in primo piano: in background iOS limita annunci e ricerche; il controllo in background delle mosse passa solo dal relay, non dal Bluetooth. La portata è quella del BLE (qualche metro). Un invio riuscito vuol dire consegnato al sistema operativo, come nel Wi-Fi; la mossa si ripete al ricollegamento. Se il Bluetooth si spegne o un permesso viene tolto dopo il controllo iniziale, il canale non parte e l'errore resta nel registro di debug: la schermata continua a mostrare l'attesa. Come ogni radio aperta, il BLE si può disturbare: chi è vicino e ha l'id del servizio può occupare uno dei 3 posti dell'ospite o interferire con i frammenti in arrivo, ma non può falsificare né leggere le mosse; i messaggi persi si richiedono con la sincronizzazione del registro. Verificato con una radio finta in memoria (`ble_link_test.dart`); la prova su due telefoni veri va fatta a mano prima di annunciarlo.
 
 ### Schermata
 
