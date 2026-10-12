@@ -19,3 +19,12 @@ Future<void> openPositionEditor(WidgetTester tester) async {
   await tester.pumpAndSettle();
   await tester.tap(find.text('Editor di posizione'));
 }
+
+/// Dalla Home apre la scacchiera: «Nuova partita» mostra la scelta, che qui si
+/// chiude senza scegliere, come se si fosse arrivati sulla partita vuota.
+Future<void> openBoard(WidgetTester tester) async {
+  await tester.tap(find.byKey(const Key('home-play')));
+  await tester.pumpAndSettle();
+  await tester.tapAt(const Offset(8, 8));
+  await tester.pumpAndSettle();
+}

@@ -9,7 +9,6 @@ import 'package:scacchi/progress/progress_controller.dart';
 import 'package:scacchi/progress/progress_store.dart';
 import 'package:scacchi/settings/settings.dart';
 
-import '../game_actions.dart';
 import '../localized_app.dart';
 
 Offset square(WidgetTester tester, String name) {
@@ -38,7 +37,7 @@ void main() {
   });
   tearDown(() => dir.deleteSync(recursive: true));
 
-  testWidgets('finire una partita nella scheda Gioca assegna XP', (
+  testWidgets('finire una partita aperta dalla Home assegna XP', (
     tester,
   ) async {
     tester.view.physicalSize = const Size(1170, 2532);
@@ -54,7 +53,7 @@ void main() {
         ),
       ),
     );
-    await tapGameAction(tester, 'Nuova');
+    await tester.tap(find.byKey(const Key('home-play')));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Senza tempo'));
     await tester.pumpAndSettle();
