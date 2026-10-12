@@ -204,5 +204,9 @@
   "homeOpeningsSubtitle": "Esplora le aperture e il tuo repertorio",
   "@homeOpeningsSubtitle": {
     "description": "Sottotitolo nella scheda Impara"
+  },
+  "homeResumeNoEngine": "Per riprendere una partita contro il computer serve il motore: su Android e iOS è incluso, su Windows e Linux serve Stockfish installato.",
+  "@homeResumeNoEngine": {
+    "description": "Messaggio se la partita contro il computer non si può riprendere senza motore"
   }
 }

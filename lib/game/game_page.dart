@@ -355,8 +355,14 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     } else if (widget.resume != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _resumeSaved());
     } else if (widget.openSetup) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) unawaited(_newGame());
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        if (!mounted) return;
+        final before = _game;
+        await _newGame();
+        // Chiusa la scelta senza partita, si torna da dove si era partiti.
+        if (mounted && identical(before, _game)) {
+          unawaited(Navigator.of(context).maybePop());
+        }
       });
     }
   }

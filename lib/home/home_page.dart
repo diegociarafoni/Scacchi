@@ -132,6 +132,7 @@ class HomePage extends StatefulWidget {
     this.onPlayBot,
     this.onContinueStory,
     this.simple = false,
+    this.refresh,
   });
 
   /// Fonti dei dati, lette a ogni apertura: un errore si riprova.
@@ -166,6 +167,10 @@ class HomePage extends StatefulWidget {
   /// Profilo bambino: niente numeri, una scheda in testa e il gioco.
   final bool simple;
 
+  /// Notifica quando la Home torna in vista dopo altre schede: i dati si
+  /// rileggono.
+  final Listenable? refresh;
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -176,23 +181,35 @@ class _HomePageState extends State<HomePage> {
   var _data = const _Data();
   final _search = TextEditingController();
 
+  // Ogni lettura ha un numero: una risposta in ritardo di una lettura
+  // superata non cancella i dati più recenti.
+  var _generation = 0;
+
   @override
   void initState() {
     super.initState();
+    widget.refresh?.addListener(_load);
     _load();
   }
 
   @override
   void dispose() {
+    widget.refresh?.removeListener(_load);
     _search.dispose();
     super.dispose();
   }
 
-  void _fetch<T>(Future<T> source, _Data Function(_Data data, T value) apply) {
+  void _fetch<T>(
+    int generation,
+    Future<T> source,
+    _Data Function(_Data data, T value) apply,
+  ) {
     unawaited(
       source.then(
         (value) {
-          if (mounted) setState(() => _data = apply(_data, value));
+          if (mounted && generation == _generation) {
+            setState(() => _data = apply(_data, value));
+          }
         },
         onError: (Object e) {
           if (kDebugMode) debugPrint('Home: dato non disponibile: $e');
@@ -202,11 +219,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _load() {
-    _fetch(widget.progress(), (d, v) => d.copyWith(progress: v));
-    _fetch(widget.path(), (d, v) => d.copyWith(path: v));
-    _fetch(widget.story(), (d, v) => d.copyWith(story: v));
-    _fetch(widget.games(), (d, v) => d.copyWith(games: v));
+    final g = ++_generation;
+    _fetch(g, widget.progress(), (d, v) => d.copyWith(progress: v));
+    _fetch(g, widget.path(), (d, v) => d.copyWith(path: v));
+    _fetch(g, widget.story(), (d, v) => d.copyWith(story: v));
+    _fetch(g, widget.games(), (d, v) => d.copyWith(games: v));
     _fetch(
+      g,
       (widget.collection ??
           () async => BotCollection.load(await JsonFileStore.open()))(),
       (d, v) => d.copyWith(collection: v),
@@ -216,8 +235,11 @@ class _HomePageState extends State<HomePage> {
   /// Esegue [action] e poi rilegge i dati: tornando dalla schermata aperta
   /// la Home mostra già i cambiamenti.
   Future<void> _run(Future<void> Function() action) async {
-    await action();
-    if (mounted) _load();
+    try {
+      await action();
+    } finally {
+      if (mounted) _load();
+    }
   }
 
   @override

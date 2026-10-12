@@ -151,6 +151,9 @@ class _HomeShellState extends State<HomeShell> {
   /// Le schede Impara e Tu si costruiscono alla prima apertura, poi restano
   /// in memoria.
   var _learnVisited = false;
+
+  /// Avvisa la Home quando torna in vista, per rileggere partite e progressi.
+  final _homeRefresh = ValueNotifier<int>(0);
   var _youVisited = false;
 
   late bool _kidMode = widget.settings.value.kidMode;
@@ -188,6 +191,7 @@ class _HomeShellState extends State<HomeShell> {
       (source, listener) => source.removeListener(listener),
     );
     _reminders?.dispose();
+    _homeRefresh.dispose();
     super.dispose();
   }
 
@@ -721,12 +725,8 @@ class _HomeShellState extends State<HomeShell> {
   Future<void> _resumeGame(SavedGame saved) async {
     if (saved.mode == SavedGame.computer && !_computerAvailable) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Per riprendere una partita contro il computer serve il '
-            'motore: su Android e iOS è incluso, su Windows e Linux serve '
-            'Stockfish installato.',
-          ),
+        SnackBar(
+          content: Text(AppLocalizations.of(context).homeResumeNoEngine),
         ),
       );
       return;
@@ -860,6 +860,7 @@ class _HomeShellState extends State<HomeShell> {
             games: () async => (await _archive()).list(),
             features: features,
             simple: _kidMode,
+            refresh: _homeRefresh,
             onNewGame: _newGame,
             onSettings: _openSettings,
             onResume: _resumeGame,
@@ -904,7 +905,10 @@ class _HomeShellState extends State<HomeShell> {
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _tab,
-        onDestinationSelected: (i) => setState(() => _tab = i),
+        onDestinationSelected: (i) {
+          setState(() => _tab = i);
+          if (i == 0) _homeRefresh.value++;
+        },
         destinations: [
           NavigationDestination(
             icon: const Icon(Icons.home_outlined),
