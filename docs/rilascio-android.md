@@ -10,6 +10,11 @@ Il workflow `.github/workflows/apk-release.yml` compila un APK release per telef
 | v0.2.0 | Prima versione con firma stabile: gli aggiornamenti si installano sopra |
 | v0.3.0 | Backup e ripristino, scacchiera fisica, La tua settimana |
 | v0.4.0 | Profilo bambino, tornei dalla scheda Tu, guardiano nel percorso, XP e archivio a fine partita, puzzle dagli errori, anteprima della scacchiera |
+| v0.5.0 | Nome Rokko e nuova icona, file `rokko.apk`, scambio di partite con il QR, allenatore dei finali, notazione a scelta, tema chiaro o scuro, tempo per mossa nella revisione |
+| v0.6.0 | Pezzi e scacchiere di Rokko, livelli tarati sull'Elo misurato, note personali sulle mosse, obiettivo di ogni puzzle |
+| v0.7.0 | Percorso a storia, finali perfetti, le tue aperture, varianti contro il computer, partite a handicap, posizione come immagine, sfida a tempo tra amici, spiegami perché |
+| v0.8.0 | Partite dei grandi maestri, riepilogo settimanale, modalità zen, ripresa della partita interrotta, capitoli di strategia e di Capablanca |
+| v0.8.1 | Partita con un amico sulla stessa Wi-Fi, correzioni del percorso |
 
 L'elenco completo con le note è nella pagina delle Release; lo stato delle funzioni già in `main` è in `docs/README.md`. La tabella riassume solo le versioni principali e va aggiornata a ogni rilascio.
 
@@ -22,7 +27,7 @@ L'elenco completo con le note è nella pagina delle Release; lo stato delle funz
 | CI verde su `main` (evento `workflow_run`) | Pre-release `nightly` con `rokko.apk`, ricreata a ogni main: sostituisce la precedente |
 | Avvio manuale con **version** vuoto | Solo build: l'APK resta per 7 giorni come artefatto dell'esecuzione |
 
-La versione mostrata dall'app (`versionName`) è quella del tag senza la `v`; il `versionCode` è il numero di commit nella cronologia del tag, quindi cresce a ogni versione successiva su `main`. Il rilascio parte solo se `flutter analyze` e `flutter test` passano, e un tag già esistente deve puntare al commit compilato.
+La versione mostrata dall'app (`versionName`) è quella del tag senza la `v`; il `versionCode` è il numero di commit nella cronologia del tag, quindi cresce a ogni versione successiva su `main`. Il rilascio parte solo se `flutter analyze` e `flutter test` passano, e un tag già esistente deve puntare al commit compilato. Prima della pubblicazione l'APK deve superare i controlli MASVS sul manifest (`tool/check_apk.dart`, vedi [sicurezza.md](sicurezza.md)) e il budget di dimensione (`tool/check_size.dart`, vedi [qualita.md](qualita.md)): un APK che non li supera non esce.
 
 I tag con suffisso (`v1.2.0-beta.1`) diventano pre-release. Gli altri sono la "latest release", per cui questo link porta sempre all'ultima versione stabile:
 
@@ -59,7 +64,7 @@ https://github.com/diegociarafoni/rokko/releases/download/nightly/rokko.apk
 
 Il rilascio è pensato per consumare pochi minuti:
 
-- un solo job, perché ogni job viene conteggiato arrotondato al minuto;
+- la build è un solo job, perché ogni job viene conteggiato arrotondato al minuto; solo le versioni numerate aggiungono il breve job `attestazione` (vedi [sicurezza.md](sicurezza.md#scorecard-e-provenienza-dellapk));
 - nessuna esecuzione sulle pull request: la loro build Android è già nella CI;
 - `flutter analyze`, `flutter test` e i test di `tool/derive_keystore.py` girano solo se la CI non è già passata sullo stesso commit (il caso normale quando si rilascia da `main`);
 - cache di Flutter e di Gradle (`ccache` è usato solo dalla build di debug della CI, non dal rilascio);

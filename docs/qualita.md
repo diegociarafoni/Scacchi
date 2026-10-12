@@ -1,6 +1,6 @@
 # Qualità
 
-Ogni controllo ha un limite misurabile e blocca la CI se non è rispettato. I limiti numerici sono in [`tool/policy.json`](../tool/policy.json), così da cambiarli in un solo punto e con una revisione visibile. Questa pagina descrive i controlli oggi attivi; le prove sul telefono arriveranno in PR successive.
+Ogni controllo ha un limite misurabile e blocca la CI se non è rispettato. I limiti numerici sono in [`tool/policy.json`](../tool/policy.json), così da cambiarli in un solo punto e con una revisione visibile. Questa pagina descrive i controlli oggi attivi, compresa la prova su emulatore Android ([End-to-end su emulatore](#end-to-end-su-emulatore)); non ci sono prove automatiche su un telefono fisico.
 
 | Controllo | Strumento | Limite | Dove gira |
 |---|---|---|---|
