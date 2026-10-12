@@ -41,7 +41,7 @@ class BonsoirLanDiscovery implements LanDiscovery {
     final broadcast = BonsoirBroadcast(
       service: BonsoirService(name: name, type: lanServiceType, port: port),
     );
-    await broadcast.ready;
+    await broadcast.initialize();
     await broadcast.start();
     return () => unawaited(
       broadcast.stop().catchError((Object e) {
@@ -56,17 +56,29 @@ class BonsoirLanDiscovery implements LanDiscovery {
     Duration? timeout = const Duration(seconds: 5),
   }) async {
     final discovery = BonsoirDiscovery(type: lanServiceType);
-    await discovery.ready;
+    await discovery.initialize();
     final found = Completer<(String, int)?>();
     final sub = discovery.eventStream?.listen((event) {
       final service = event.service;
-      if (event.type != BonsoirDiscoveryEventType.discoveryServiceResolved ||
-          service is! ResolvedBonsoirService ||
-          service.name != name) {
-        return;
+      if (service == null || service.name != name) return;
+      switch (event) {
+        case BonsoirDiscoveryServiceFoundEvent():
+          // Senza risolverlo il servizio non ha indirizzi.
+          unawaited(
+            service.resolve(discovery.serviceResolver).catchError((Object e) {
+              if (kDebugMode) debugPrint('Servizio mDNS non risolto: $e');
+            }),
+          );
+        case BonsoirDiscoveryServiceResolvedEvent():
+          final ip = service.hostAddresses
+              .map(lanIpv4)
+              .firstWhere((a) => a != null, orElse: () => null);
+          if (ip != null && !found.isCompleted) {
+            found.complete((ip, service.port));
+          }
+        default:
+          break;
       }
-      final ip = lanIpv4(service.ip);
-      if (ip != null && !found.isCompleted) found.complete((ip, service.port));
     });
     try {
       await discovery.start();
