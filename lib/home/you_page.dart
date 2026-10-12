@@ -13,6 +13,7 @@ import '../path/path_controller.dart';
 import '../path/path_page.dart';
 import '../path/stage_page.dart';
 import '../physical/physical_game_page.dart';
+import '../physical/physical_l10n.dart';
 import '../progress/profile_page.dart';
 import '../progress/progress_controller.dart';
 import '../progress/xp.dart';
@@ -280,8 +281,8 @@ class YouPage extends StatelessWidget {
                 ),
                 _Entry(
                   icon: Icons.timer_outlined,
-                  title: 'Scacchiera fisica',
-                  subtitle: 'Orologio e registro per una partita dal vivo',
+                  title: physicalL10n(context).physicalTitle,
+                  subtitle: physicalL10n(context).physicalEntrySubtitle,
                   onTap: () =>
                       _push(context, PhysicalGamePage(archive: archive)),
                 ),
