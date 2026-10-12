@@ -85,7 +85,7 @@ class ProgressController extends ChangeNotifier {
     try {
       _weekLog = await _journal?.load() ?? const WeekLog();
     } on FileSystemException catch (e) {
-      debugPrint('Lettura del diario non riuscita: $e');
+      if (kDebugMode) debugPrint('Lettura del diario non riuscita: $e');
     }
   }
 
@@ -108,7 +108,7 @@ class ProgressController extends ChangeNotifier {
     try {
       await _journal?.save(next);
     } on FileSystemException catch (e) {
-      debugPrint('Salvataggio del diario non riuscito: $e');
+      if (kDebugMode) debugPrint('Salvataggio del diario non riuscito: $e');
     }
   }
 

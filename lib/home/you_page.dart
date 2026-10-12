@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../archive/archive_page.dart';
@@ -106,7 +107,7 @@ class YouPage extends StatelessWidget {
         );
       }
     } on Object catch (e) {
-      debugPrint('Lezione non disponibile: $e');
+      if (kDebugMode) debugPrint('Lezione non disponibile: $e');
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
