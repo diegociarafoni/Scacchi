@@ -1,6 +1,6 @@
 # Aperture
 
-Riconoscimento delle aperture, mosse di libro, Esplora aperture e repertorio con ripetizione dilazionata, partita da un'apertura (requisiti RF-90, RF-91, RF-92, RF-93, RF-94).
+Riconoscimento delle aperture, mosse di libro, Esplora aperture e repertorio con ripetizione dilazionata, partita da un'apertura, albero delle proprie aperture (requisiti RF-90, RF-91, RF-92, RF-93, RF-94, RF-96).
 
 ## Dati
 
@@ -64,6 +64,16 @@ Una partita contro il computer che parte da un'apertura, in due modi:
 
 Una finestra chiede colore (nell'explorer) e livello del computer. È una `GameChallenge` (vedi [architettura.md](architettura.md)) con le mosse iniziali (`startMoves`) e la linea da seguire (`line`); l'annullamento è consentito, la partita viene salvata in archivio come le altre. Senza motore (Windows e Linux senza Stockfish) le icone non compaiono.
 
+### Le tue aperture (RF-96)
+
+`lib/openings/personal_tree.dart` costruisce un albero delle aperture dalle partite dell'archivio locale (vedi [archivio.md](archivio.md)): per ogni posizione, quali mosse sono state giocate, quante volte e con che risultato, visto dal giocatore (vinte, patte, perse). Le posizioni si confrontano per EPD come nel libro, quindi le trasposizioni condividono le statistiche; una mossa conta una sola volta per partita.
+
+Entrano solo le partite concluse con un colore dell'utente (contro il computer o un bot), con regole standard e dalla posizione iniziale. Restano fuori le partite in corso, quelle importate o tra due persone sullo stesso dispositivo, le varianti, le posizioni personalizzate e i PGN senza mosse. Di ogni posizione si contano le mosse di entrambi i colori, così si vedono anche le risposte più frequenti degli avversari.
+
+La schermata `PersonalExplorerPage` ha la scacchiera con le mosse giocate dalla posizione corrente, ordinate per frequenza, con numero di partite, barra dei risultati (decorativa, esclusa dai lettori di schermo) e riepilogo `V · P · S` letto per esteso («3 vinte, 1 patte, 2 perse»). Si tocca una mossa o la si gioca sulla scacchiera per scendere nell'albero; **Indietro** e **Inizio** tornano sui propri passi. Due filtri restringono le partite: colore (Entrambi, Bianco, Nero; scegliere un colore orienta anche la scacchiera) e avversario (nomi dell'archivio, senza doppioni). Il titolo mostra il nome dell'apertura dal libro. Senza partite utili, o con filtri che non ne lasciano, o fuori dall'albero, un messaggio lo dice.
+
+Il collegamento con l'explorer del libro è nei due sensi, sempre sulla stessa posizione: dalla scheda Aperture la voce **Le tue aperture** apre l'albero, e le icone **Apri nell'explorer delle aperture** (nell'albero) e **Le tue partite da questa posizione** (nell'explorer) passano dall'uno all'altro portando con sé le mosse scelte. I testi sono nei file `.arb` (prefisso `personal`).
+
 ## Componenti
 
 | File | Ruolo |
@@ -72,6 +82,8 @@ Una finestra chiede colore (nell'explorer) e livello del computer. È una `GameC
 | `lib/openings/opening_assets.dart` | Caricamento del dataset incluso |
 | `lib/openings/opening_name.dart` | Nome dell'apertura per la schermata di gioco |
 | `lib/openings/explorer_page.dart` | Esplora aperture |
+| `lib/openings/personal_tree.dart` | Albero delle proprie aperture dall'archivio, con filtri |
+| `lib/openings/personal_explorer_page.dart` | Schermata Le tue aperture |
 | `lib/openings/opening_names_it.dart` | Nomi delle aperture in italiano |
 | `lib/openings/openings_hub_page.dart` | Scheda Aperture |
 | `lib/openings/repertoire.dart` | Linee, carte, ripasso, import PGN |

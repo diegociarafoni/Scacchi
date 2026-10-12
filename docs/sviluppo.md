@@ -168,6 +168,7 @@ I golden si rigenerano con `flutter test test/settings --update-goldens` dopo un
 | RF-91 mosse di libro | ✓ | |
 | RF-92 Esplora aperture | ✓ | ✓ |
 | RF-93 repertorio e ripasso dilazionato | ✓ | ✓ |
+| RF-96 albero delle proprie aperture dall'archivio | ✓ | ✓ |
 
 ## Integrazione continua
 
