@@ -883,4 +883,84 @@ class AppLocalizationsEn extends AppLocalizations {
   String handicapTimeMinutes(int n) {
     return '$n min';
   }
+
+  @override
+  String whyPiece(String role) {
+    String _temp0 = intl.Intl.selectLogic(role, {
+      'pawn': 'the pawn',
+      'knight': 'the knight',
+      'bishop': 'the bishop',
+      'rook': 'the rook',
+      'queen': 'the queen',
+      'other': 'the king',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get whyMate => 'Checkmate!';
+
+  @override
+  String get whyCastle => 'Castles: puts the king safe.';
+
+  @override
+  String whyPromote(String role) {
+    String _temp0 = intl.Intl.selectLogic(role, {
+      'queen': 'a queen',
+      'rook': 'a rook',
+      'bishop': 'a bishop',
+      'knight': 'a knight',
+      'other': 'a piece',
+    });
+    return 'Promotes the pawn to $_temp0.';
+  }
+
+  @override
+  String whyCapture(String victim, String attacker) {
+    return 'Captures $victim with $attacker.';
+  }
+
+  @override
+  String get whyCheck => 'Gives check to your king.';
+
+  @override
+  String whySafe(String piece) {
+    return 'Moves $piece to safety; it was under attack.';
+  }
+
+  @override
+  String whyThreatCapture(String victim, String square) {
+    return 'Threatens to capture $victim on $square.';
+  }
+
+  @override
+  String whyThreatCaptureKid(String victim) {
+    return 'Threatens to capture $victim.';
+  }
+
+  @override
+  String get whyThreatCheck => 'Prepares a check on your king.';
+
+  @override
+  String get whyThreatPromote => 'Prepares to promote a pawn.';
+
+  @override
+  String whyDevelop(String piece) {
+    return 'Develops $piece: it joins the game.';
+  }
+
+  @override
+  String get whyCenter => 'Takes space in the centre.';
+
+  @override
+  String whyImprove(String piece) {
+    return 'Moves $piece to a more useful square.';
+  }
+
+  @override
+  String get settingsExplainWhy => 'Explain why';
+
+  @override
+  String get settingsExplainWhyDescription =>
+      'After each computer move, one line on what it threatens or prepares';
 }
