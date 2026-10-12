@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../archive/game_archive.dart';
 import '../l10n/app_localizations.dart';
 import 'explorer_page.dart';
+import 'opening_assets.dart';
 import 'opening_game.dart';
 import 'personal_explorer_page.dart';
 import 'repertoire.dart';
@@ -51,10 +52,11 @@ class _OpeningsHubPageState extends State<OpeningsHubPage> {
                 leading: const Icon(Icons.account_tree_outlined),
                 title: const Text('Esplora aperture'),
                 subtitle: const Text(
-                  'Nomi e continuazioni di oltre 3.000 aperture',
+                  'Partite giocate e risultati per ogni mossa, con i nomi delle aperture',
                 ),
                 onTap: () => _open(
                   ExplorerPage(
+                    stats: openingStats(),
                     repertoire: trainer,
                     onPlay: widget.onPlay,
                     archive: widget.archive,
@@ -71,6 +73,7 @@ class _OpeningsHubPageState extends State<OpeningsHubPage> {
                   onTap: () => _open(
                     PersonalExplorerPage(
                       archive: widget.archive!(),
+                      stats: openingStats(),
                       repertoire: trainer,
                       onPlay: widget.onPlay,
                     ),

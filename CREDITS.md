@@ -40,3 +40,4 @@
 | [audioplayers](https://pub.dev/packages/audioplayers) | Riproduzione dei suoni | MIT |
 | [Database dei puzzle di Lichess](https://database.lichess.org/#puzzles) | Puzzle inclusi nell'app (sottoinsieme) | CC0 |
 | [chess-openings](https://github.com/lichess-org/chess-openings) (Lichess) | Nomi e codici ECO delle aperture | CC0 |
+| [Database delle partite di Lichess](https://database.lichess.org/) | Statistiche per mossa dell'esploratore delle aperture (conteggi aggregati) | CC0 |

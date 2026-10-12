@@ -15,7 +15,7 @@ jobs:
   build:
     if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -32,6 +32,19 @@ jobs:
             | zstd -dc | python3 tool/datasets/build_puzzles.py > assets/puzzles/puzzles.csv
       - name: Openings
         run: python3 tool/datasets/build_openings.py > assets/openings/openings.tsv
+      # Statistiche per mossa dalle partite pubbliche (CC0). Il dump è in ordine
+      # cronologico: si legge solo l'inizio e poi si chiude il flusso, quindi
+      # curl e zstd terminano per SIGPIPE e si controlla solo lo script.
+      - name: Opening statistics
+        shell: bash
+        run: |
+          python3 -m unittest discover -s tool/datasets -p 'test_*.py'
+          curl -sSfL https://database.lichess.org/standard/lichess_db_standard_rated_2025-01.pgn.zst \
+            | zstd -dc \
+            | python3 tool/datasets/build_opening_stats.py --max-games 6000000 --min-games 200 \
+            > assets/openings/opening_stats.tsv
+          status=("${PIPESTATUS[@]}")
+          [ "${status[2]}" -eq 0 ]
       - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
         with:
           channel: stable
@@ -40,7 +53,7 @@ jobs:
       # This commit does not trigger CI: validate the datasets here.
       - run: dart tool/l10n.dart --solo-unione
       - name: Validate
-        run: flutter test test/puzzles/puzzle_dataset_test.dart test/openings/opening_book_test.dart
+        run: flutter test test/puzzles/puzzle_dataset_test.dart test/openings/opening_book_test.dart test/openings/opening_stats_asset_test.dart
       # Il token si usa solo nel push, senza restare nella configurazione di git.
       - name: Commit
         env:

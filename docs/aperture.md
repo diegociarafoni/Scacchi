@@ -6,6 +6,8 @@ Riconoscimento delle aperture, mosse di libro, Esplora aperture e repertorio con
 
 `assets/openings/openings.tsv` deriva dal dataset [chess-openings](https://github.com/lichess-org/chess-openings) di Lichess (CC0): 3.865 righe `eco\tname\tuci`, circa 380 KB. Lo script `tool/datasets/build_openings.py` scarica i cinque file del dataset e converte le mosse da SAN a UCI, così l'app non deve interpretare la notazione algebrica all'avvio. Viene rigenerato dallo stesso workflow dei puzzle (`docs/puzzle.md`).
 
+`assets/openings/opening_stats.tsv` contiene le statistiche per mossa (vedi [Statistiche delle partite](#statistiche-delle-partite)); deriva dal [database delle partite di Lichess](https://database.lichess.org/) (CC0).
+
 I nomi del dataset sono in inglese; l'app li mostra in italiano (vedi [Nomi in italiano](#nomi-in-italiano)) e conserva l'originale nelle partite salvate e nei file esportati.
 
 ## Libro delle aperture
@@ -32,11 +34,21 @@ Il dataset Lichess è in inglese, quindi i nomi si traducono al momento di mostr
 
 La notazione delle mosse resta quella inglese (Nf3, Bb5) come nel resto dell'app.
 
+### Statistiche delle partite
+
+`assets/openings/opening_stats.tsv` dice, per le posizioni più giocate, quante partite hanno proseguito con ciascuna mossa e come sono finite. Un file di testo `chiave\tmosse`: la chiave è l'hash FNV-1a a 64 bit di pezzi, tratto e arrocchi (l'en passant è escluso perché i due lati lo scrivono in modo diverso), le mosse sono `san:partite:vittorie-bianco:vittorie-nero` dalla più giocata; le patte sono il resto. Le trasposizioni condividono la riga.
+
+`tool/datasets/build_opening_stats.py` lo genera da un mese del database di Lichess: legge solo l'inizio del dump (è in ordine cronologico), tiene le partite di giocatori da almeno 1800 Elo con cadenza da blitz in su, conta le mosse nelle prime 16 semimosse, scarta le mosse con meno di 200 partite e tiene al massimo 8 risposte per posizione. Lo lancia il workflow Dataset (che gira sulle PR che toccano `tool/datasets/`) insieme agli altri dataset; i test dello script sono in `tool/datasets/test_build_opening_stats.py` e il controllo del file incluso in `test/openings/opening_stats_asset_test.dart`. Il file pesa poche centinaia di KB, compresso ancora meno nel pacchetto.
+
+`lib/openings/opening_stats.dart` lo legge (`OpeningStats`, caricato in un isolate come il libro con `openingStats()`); `MoveStat.percents` dà tre percentuali intere che sommano sempre 100.
+
 ### Esplora aperture (RF-92)
 
-Dalla scheda **Aperture**, **Esplora aperture** mostra la posizione corrente con il nome dell'apertura, la sequenza delle mosse e le continuazioni del libro. Per ogni continuazione indica la mossa in SAN, il nome dell'apertura raggiunta e la quota delle varianti del libro che proseguono così.
+Dalla scheda **Aperture**, **Esplora aperture** mostra la posizione corrente con il nome dell'apertura, la sequenza delle mosse e le risposte possibili. Per ogni mossa indica la notazione scelta, quante partite l'hanno giocata (con il separatore delle migliaia della lingua), la barra bianco / patta / nero con le percentuali e, sotto, il nome dell'apertura raggiunta. La riga si legge per esteso ai lettori di schermo («e4: 1.000 partite, bianco 45%, patta 20%, nero 35%»); la barra è decorativa. I colori dei segmenti sono fissi, con testo a contrasto su ognuno.
 
-Le statistiche di vittoria dei database online non sono disponibili offline (sono escluse dai requisiti): la percentuale misura quanto è ricca di varianti con nome una continuazione, non quanto è giocata. Si può muovere anche fuori dal libro; la schermata lo segnala. In alto compaiono codice ECO e nome dell'apertura; **Indietro** toglie l'ultima mossa, **Inizio** torna alla posizione iniziale e l'icona **Gira la scacchiera** cambia il lato.
+Dove le statistiche non arrivano (posizioni rare o a più di 16 semimosse) la schermata ricade sul libro dei nomi: mostra le continuazioni con la quota delle varianti con nome che proseguono così, senza barra. Se anche il libro finisce lo dice («Fuori dal libro delle aperture»). Se il file delle statistiche non si legge si usa solo il libro. Si può muovere anche fuori dal libro.
+
+Sotto la scacchiera quattro comandi: **Ruota scacchiera**, **Ricomincia** (torna alla posizione iniziale), **Indietro** (toglie l'ultima mossa) e **Avanti** (rifà le mosse tolte, anche tutte dopo Ricomincia; una mossa diversa le dimentica). Le statistiche sono quelle del database pubblico e non comprendono le partite dell'utente: queste restano in [Le tue aperture](#le-tue-aperture-rf-96), raggiungibile dalla stessa posizione, così le percentuali non si falsano.
 
 ### Repertorio (RF-93)
 
@@ -79,9 +91,10 @@ Il collegamento con l'explorer del libro è nei due sensi, sempre sulla stessa p
 | File | Ruolo |
 |---|---|
 | `lib/openings/opening_book.dart` | Grafo delle posizioni, riconoscimento, mosse di libro, continuazioni |
-| `lib/openings/opening_assets.dart` | Caricamento del dataset incluso |
+| `lib/openings/opening_assets.dart` | Caricamento del dataset e delle statistiche inclusi |
 | `lib/openings/opening_name.dart` | Nome dell'apertura per la schermata di gioco |
-| `lib/openings/explorer_page.dart` | Esplora aperture |
+| `lib/openings/opening_stats.dart` | Statistiche per mossa: lettura, chiave della posizione, percentuali |
+| `lib/openings/explorer_page.dart` | Esplora aperture con barre dei risultati e comandi |
 | `lib/openings/personal_tree.dart` | Albero delle proprie aperture dall'archivio, con filtri |
 | `lib/openings/personal_explorer_page.dart` | Schermata Le tue aperture |
 | `lib/openings/opening_names_it.dart` | Nomi delle aperture in italiano |

@@ -118,5 +118,63 @@
   "personalFromHere": "Le tue partite da questa posizione",
   "@personalFromHere": {
     "description": "Tooltip nell'explorer delle aperture: apre l'albero personale"
+  },
+  "explorerTitle": "Esplora aperture",
+  "@explorerTitle": {
+    "description": "Titolo della schermata Esplora aperture"
+  },
+  "explorerLoadFailed": "Impossibile caricare le aperture.",
+  "@explorerLoadFailed": {
+    "description": "Errore di caricamento del libro delle aperture"
+  },
+  "explorerStartPosition": "Posizione iniziale",
+  "@explorerStartPosition": {
+    "description": "Nome mostrato prima della prima mossa"
+  },
+  "explorerNoName": "Apertura senza nome",
+  "@explorerNoName": {
+    "description": "La posizione non ha un nome nel libro"
+  },
+  "explorerOutOfBook": "Fuori dal libro delle aperture",
+  "@explorerOutOfBook": {
+    "description": "Nessuna continuazione nel libro"
+  },
+  "explorerFlip": "Ruota scacchiera",
+  "@explorerFlip": {
+    "description": "Comando che gira la scacchiera"
+  },
+  "explorerRestart": "Ricomincia",
+  "@explorerRestart": {
+    "description": "Comando che torna alla posizione iniziale"
+  },
+  "explorerBack": "Indietro",
+  "@explorerBack": {
+    "description": "Comando che toglie l'ultima mossa"
+  },
+  "explorerForward": "Avanti",
+  "@explorerForward": {
+    "description": "Comando che rifà la mossa tolta con Indietro"
+  },
+  "explorerMoveSemantics": "{move}: {games, plural, one{{games} partita} other{{games} partite}}, bianco {white}%, patta {draws}%, nero {black}%",
+  "@explorerMoveSemantics": {
+    "description": "Lettura per esteso di una mossa con le sue statistiche",
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "games": {
+        "type": "int",
+        "format": "decimalPattern"
+      },
+      "white": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      },
+      "black": {
+        "type": "int"
+      }
+    }
   }
 }
