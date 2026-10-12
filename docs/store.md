@@ -9,7 +9,7 @@ La configurazione di [Fastlane](https://fastlane.tools) è pronta ma **senza cre
 | `Gemfile`, `Gemfile.lock` | Fastlane con versione fissata; il file di blocco ha gli hash delle dipendenze |
 | `android/fastlane/Appfile` | Identificativo del pacchetto (`io.github.diegociarafoni.scacchi`) |
 | `android/fastlane/Fastfile` | Corsia `convalida` (controlla la chiave) e corsia `interna` (carica un bundle firmato sulla traccia interna di Google Play, come bozza) |
-| `.github/workflows/store.yml` | Avvio manuale: esegue `convalida`; senza segreti si ferma con un avviso |
+| `.github/workflows/store.yml` | Avvio manuale: esegue `convalida`; senza segreti fallisce con un messaggio |
 
 ## Segreti da inserire
 

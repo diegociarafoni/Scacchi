@@ -2,8 +2,8 @@ name: Store
 
 # Controllo manuale della chiave di Google Play con Fastlane (android/fastlane).
 # Non carica nulla: il caricamento (corsia «interna») si aggiunge quando i segreti
-# elencati in docs/store.md saranno inseriti. Senza segreti il workflow si ferma
-# con un avviso e non fallisce.
+# elencati in docs/store.md saranno inseriti. Senza segreti il workflow fallisce
+# subito, per non far sembrare convalidata una chiave che non c'è.
 on:
   workflow_dispatch:
 
@@ -19,25 +19,20 @@ jobs:
         with:
           persist-credentials: false
       - name: Segreti presenti
-        id: segreti
         env:
           PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
         run: |
           if [ -z "$PLAY_SERVICE_ACCOUNT_JSON" ]; then
-            echo "::warning::PLAY_SERVICE_ACCOUNT_JSON non è impostato: vedi docs/store.md"
-            echo "presente=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "presente=true" >> "$GITHUB_OUTPUT"
+            echo "::error::PLAY_SERVICE_ACCOUNT_JSON non è impostato: vedi docs/store.md"
+            exit 1
           fi
-      - if: steps.segreti.outputs.presente == 'true'
-        uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1.329.0
+      - uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1.329.0
         with:
           ruby-version: '3.3'
           bundler-cache: true
-      - if: steps.segreti.outputs.presente == 'true'
-        name: Convalida della chiave di Google Play
+      - name: Convalida della chiave di Google Play
         working-directory: android
         env:
           PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
           BUNDLE_GEMFILE: ${{ github.workspace }}/Gemfile
-        run: bundle exec fastlane convalida
+        run: bundle exec fastlane android convalida
