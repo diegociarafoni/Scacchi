@@ -59,12 +59,19 @@ class ChessClock {
     DateTime Function()? now,
     Map<Side, Duration>? startTimes,
   }) : _now = now ?? DateTime.now,
+       startTimes = {
+         for (final side in Side.values)
+           side: startTimes?[side] ?? Duration(minutes: control.minutes),
+       },
        _remaining = {
          for (final side in Side.values)
            side: startTimes?[side] ?? Duration(minutes: control.minutes),
        };
 
   final TimeControl control;
+
+  /// Tempo iniziale di ciascun lato.
+  final Map<Side, Duration> startTimes;
   final DateTime Function() _now;
   final Map<Side, Duration> _remaining;
   Side? _active;

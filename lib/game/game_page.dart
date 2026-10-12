@@ -1334,6 +1334,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     Handicap? handicap,
     Side? humanSide,
   }) {
+    assert(
+      handicap == null || humanSide != null,
+      'chi concede dipende dal colore di chi gioca',
+    );
     _cancelComputerMove();
     _clockBeforeSuspension = false;
     _coachOn = false;
@@ -1681,6 +1685,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           puzzlePlayers: players,
           clocks: [for (final m in _game.moves) m.clock],
           timeControl: _clock?.control,
+          startTimes: _clock?.startTimes,
         ),
       ),
     );
@@ -2760,7 +2765,11 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
                     ChoiceChip(
                       label: Text(v.label),
                       selected: v == _variant,
-                      onSelected: (_) => setState(() => _variant = v),
+                      onSelected: (_) => setState(() {
+                        _variant = v;
+                        // Il pezzo in meno vale solo negli scacchi classici.
+                        if (v != Variant.standard) _handicapPiece = null;
+                      }),
                     ),
                 ],
               ),

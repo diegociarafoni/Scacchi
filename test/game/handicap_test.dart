@@ -154,4 +154,41 @@ void main() {
       expect(both.usable(control: null, standard: false), isNull);
     });
   });
+
+  group('RF-27 tempi dall\'intestazione PGN', () {
+    const control = TimeControl(minutes: 10);
+
+    test('si ricostruiscono dal valore scritto in partita', () {
+      const h = Handicap(
+        piece: HandicapPiece.queen,
+        giverMinutes: 3,
+        giver: HandicapGiver.opponent,
+      );
+      expect(
+        Handicap.startTimesFromPgn(h.pgnValue(Side.white), control),
+        h.startTimes(control, Side.white),
+      );
+      expect(
+        Handicap.startTimesFromPgn(h.pgnValue(Side.black), control),
+        h.startTimes(control, Side.black),
+      );
+    });
+
+    test('senza tempo nell\'intestazione o senza intestazione: nulla', () {
+      expect(Handicap.startTimesFromPgn('White gives rook', control), isNull);
+      expect(Handicap.startTimesFromPgn(null, control), isNull);
+      expect(Handicap.startTimesFromPgn('White time 3 min', null), isNull);
+    });
+  });
+
+  test('ChessClock espone i tempi iniziali', () {
+    final clock = ChessClock(
+      const TimeControl(minutes: 10),
+      startTimes: {Side.white: const Duration(minutes: 3)},
+    );
+    expect(clock.startTimes, {
+      Side.white: const Duration(minutes: 3),
+      Side.black: const Duration(minutes: 10),
+    });
+  });
 }

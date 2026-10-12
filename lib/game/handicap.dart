@@ -129,6 +129,24 @@ class Handicap {
     };
   }
 
+  /// Tempi iniziali ricavati dall'intestazione PGN `Handicap` ([pgnValue]) di
+  /// una partita salvata; `null` senza handicap di tempo o senza cadenza.
+  static Map<Side, Duration>? startTimesFromPgn(
+    String? value,
+    TimeControl? control,
+  ) {
+    final match = RegExp(r'(White|Black) time (\d+) min')
+        .firstMatch(value ?? '');
+    if (match == null || control == null) return null;
+    final giver = match[1] == 'White' ? Side.white : Side.black;
+    return {
+      for (final side in Side.values)
+        side: side == giver
+            ? Duration(minutes: int.parse(match[2]!))
+            : Duration(minutes: control.minutes),
+    };
+  }
+
   /// Valore dell'intestazione PGN `Handicap`, per esempio
   /// `White gives queen; White time 3 min`.
   String pgnValue(Side human) {
