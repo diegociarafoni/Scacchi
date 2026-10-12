@@ -597,6 +597,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   void _botSay(BotEvent event) {
     final bot = _bot;
     if (bot == null || !mounted || _zen) return;
+    // Le battute di compagnia non meritano una fascia che copre la scacchiera.
+    if (event == BotEvent.chat && !_speechRoom) return;
     final text = bot.phrase(event, _random, friendly: _kidGame);
     _say(
       Speech(
