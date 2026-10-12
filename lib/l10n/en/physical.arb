@@ -1,0 +1,65 @@
+{
+  "physicalTitle": "Physical board",
+  "physicalEntrySubtitle": "Clock and scoresheet for a live game",
+  "physicalIntro": "Play on a real board: the app is the clock and records the game. After each move, type it or tap it among the legal ones.",
+  "physicalWhite": "White",
+  "physicalBlack": "Black",
+  "physicalUntimed": "Untimed",
+  "physicalStart": "Start the game",
+  "physicalInputWhite": "White's move (e.g. e4, Nf3)",
+  "physicalInputBlack": "Black's move (e.g. e5, Nc6)",
+  "physicalInvalidMove": "Invalid move: “{text}”",
+  "@physicalInvalidMove": {
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "physicalNoMoves": "No moves",
+  "physicalPause": "Pause",
+  "physicalResume": "Resume",
+  "physicalUndo": "Undo",
+  "physicalDraw": "Draw",
+  "physicalResign": "Resign",
+  "physicalDrawQuestion": "Draw agreed?",
+  "physicalYes": "Yes",
+  "physicalNo": "No",
+  "physicalWhoResigns": "Who resigns?",
+  "physicalSaved": "Game saved in the archive",
+  "physicalNothingToSave": "No moves to save",
+  "physicalSaveFailed": "Could not save the game",
+  "physicalNewGame": "New game",
+  "physicalEndCheckmate": "Checkmate",
+  "physicalEndResignation": "Resignation",
+  "physicalEndTimeout": "Time out",
+  "physicalEndAgreement": "Draw by agreement",
+  "physicalEndStalemate": "Stalemate",
+  "physicalEndInsufficient": "Insufficient material",
+  "physicalEndRepetition": "Threefold repetition",
+  "physicalEndFiftyMoves": "Fifty-move rule",
+  "physicalEndOther": "Game over",
+  "physicalResultLine": "{reason} · {result}",
+  "@physicalResultLine": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      },
+      "result": {
+        "type": "String"
+      }
+    }
+  },
+  "physicalPhoto": "Move from photo",
+  "physicalRealign": "Realign",
+  "physicalCameraUnavailable": "Camera not available",
+  "physicalImageUnreadable": "Unreadable image",
+  "physicalReferenceSaved": "Reference photo saved. After the next move, take another photo.",
+  "physicalNoMoveRecognized": "No move recognised: the board looks the same.",
+  "physicalGuessNote": "Most likely moves from the photo: confirm the right one.",
+  "physicalAlignTitle": "Align the board",
+  "physicalAlignHelp": "Drag the four circles onto the corners of the board. Keep the same framing for the next photos.",
+  "physicalAlignWhiteBottom": "White at the bottom",
+  "physicalAlignBlackBottom": "Black at the bottom",
+  "physicalAlignDone": "Done"
+}
