@@ -65,7 +65,7 @@ Ogni funzione nasce dai requisiti del progetto, nel documento dei requisiti, con
 | Archivio | `test/archive/` | PGN, salvataggio su file, schermata Partite | `flutter test test/archive` |
 | Scambio QR | `test/exchange/`, `test/game/game_qr_test.dart` | Fotogrammi QR, validazione dei dati letti, schermate Passa e Ricevi, partita continuata (vedi scambio-qr.md) | `flutter test test/exchange` |
 | Allenatore | `test/coach/` | Avvisi, Riprova e Continua, suggerimento a livelli, frasi in parole semplici | `flutter test test/coach` |
-| Puzzle | `test/puzzles/` | Dataset, Glicko-2, sessioni, Storm, Rush e Serie, ripasso, spiegazione delle modalità | `flutter test test/puzzles` |
+| Puzzle | `test/puzzles/` | Dataset, Glicko-2, sessioni, Storm, Rush e Serie, ripasso, spiegazione delle modalità, sfida a tempo tra amici (messaggi QR, stessi puzzle dallo stesso seme, lancio, ricezione, confronto) | `flutter test test/puzzles` |
 | Aperture | `test/openings/` | Libro, nomi italiani, Esplora aperture, repertorio | `flutter test test/openings` |
 | Regole | `test/regole/` | Partite di riferimento e perft | `flutter test test/regole` |
 | Editor, backup, scacchiera fisica, promemoria | `test/editor/`, `test/backup/`, `test/physical/`, `test/reminders/` | FEN e validazione, backup e ripristino, orologio e registro, promemoria | `flutter test test/editor test/backup test/physical test/reminders` |
@@ -158,6 +158,7 @@ I golden si rigenerano con `flutter test test/settings --update-goldens` dopo un
 | RF-84 puzzle del giorno | ✓ | ✓ |
 | RG-01 XP per i puzzle risolti | ✓ | |
 | RF-82 Combo a tempo, corsa, sopravvivenza, serie | ✓ | ✓ |
+| RF-95 sfida a tempo tra amici con QR | ✓ | ✓ |
 | RF-85 ripasso dei puzzle sbagliati | ✓ | |
 | RF-86 allenatore dei finali: esito, stelle, ripetizione, schermate | ✓ | |
 | RG-08 record personali delle serie | ✓ | ✓ |

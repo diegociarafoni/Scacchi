@@ -17,6 +17,8 @@ Una partita continuata con Ricevi con QR si salva nell'archivio a fine partita c
 
 Passa con QR è attivo appena c'è una mossa, oppure subito per una posizione preparata con l'editor. Una partita che supererebbe le 64 parti accettate da chi riceve non viene mostrata: la schermata dice che è troppo grande.
 
+Lo stesso trasporto serve per la **sfida a tempo tra amici** (lancio della sfida e punteggio finale, vedi [puzzle.md](puzzle.md)): `QrSendPage` e `QrReceivePage` accettano un titolo, un'istruzione e un avviso per QR estraneo propri, così le schermate parlano di sfida e non di partita.
+
 ## Formato dei fotogrammi
 
 `lib/exchange/qr_transfer.dart`, in Dart puro e testato senza interfaccia.
@@ -75,7 +77,7 @@ Perché flutter_zxing e non `mobile_scanner`, il pacchetto più diffuso: su Andr
 | Widget | `test/exchange/qr_pages_test.dart` | QR singolo e a fotogrammi, scorrimento, pausa e passi a mano, bianco e nero col tema scuro, partita oltre il limite di parti; ricezione in qualunque ordine, avanzamento, azzeramento dopo un errore finale, annuncio al lettore di schermo, QR estraneo, danneggiato, fotocamera negata |
 | Widget | `test/archive/archive_page_test.dart` | Passa con QR dall'archivio, ricezione e import, testo che non è una partita |
 | Widget | `test/game/game_qr_test.dart` | Passa la partita in corso; continua una partita ricevuta fino al matto; partita già conclusa rimandata all'archivio; testo non valido che lascia la partita com'era |
-| E2E | `integration_test/qr_exchange_test.dart` | Sull'app reale: il QR della partita in corso, catturato dallo schermo, viene letto da zxing-cpp (lo stesso decodificatore del telefono); ogni parte di una partita lunga si legge alla densità reale; senza fotocamera la schermata spiega cosa fare |
+| E2E | `integration_test/qr_exchange_test.dart` | Sull'app reale: il QR della partita in corso, catturato dallo schermo, viene letto da zxing-cpp (lo stesso decodificatore del telefono); ogni parte di una partita lunga si legge alla densità reale; senza fotocamera la schermata spiega cosa fare; il QR di lancio di una sfida tra amici si legge e porta il seme giusto |
 
 Nei test di widget il lettore è sostituito da uno finto tramite il parametro `scanner` (`qrScanner` in `GamePage`): la fotocamera non esiste in `flutter test`.
 
