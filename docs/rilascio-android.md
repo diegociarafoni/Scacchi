@@ -30,6 +30,19 @@ I tag con suffisso (`v1.2.0-beta.1`) diventano pre-release. Gli altri sono la "l
 https://github.com/diegociarafoni/rokko/releases/latest/download/rokko.apk
 ```
 
+## Changelog e proposta di versione
+
+Il workflow `.github/workflows/release-please.yml` (release-please) tiene aperta su `main` una PR **«chore(main): release X.Y.Z»**. Contiene l'aggiornamento di `CHANGELOG.md` con le modifiche dall'ultima versione, raggruppate in Novità (`feat`), Correzioni (`fix`), Prestazioni (`perf`) e Annullamenti (`revert`); gli altri tipi di commit non compaiono. La versione proposta segue i commit: prima della 1.0 una novità alza la seconda cifra, una correzione la terza.
+
+La PR non pubblica nulla. Quando la versione è pronta:
+
+1. si unisce la PR (squash), che fissa il changelog e aggiorna `.release-please-manifest.json`;
+2. si avvia **Rilascio APK** con **version** = `X.Y.Z` (o si crea il tag `vX.Y.Z`), come nella tabella sopra.
+
+Release-please non crea né tag né Release, per non avere due flussi che pubblicano la stessa versione. La base da cui conta le modifiche è la versione in `.release-please-manifest.json` (oggi 0.8.1).
+
+Con il solo token del workflow, GitHub non avvia la CI sulla PR creata da un workflow, e i controlli obbligatori restano in attesa. Due modi per sbloccarla: aggiungere il segreto `RELEASE_PLEASE_TOKEN` (token personale con permessi su contenuti e PR, usato in automatico se presente) oppure, a mano, aggiornare il ramo della PR dal pulsante «Update branch».
+
 ## Nightly a ogni merge
 
 Ogni volta che la CI passa su `main`, il workflow compila l'APK firmato e ricrea la pre-release **nightly** (nome `Rokko nightly <commit>`). Il link non cambia mai e porta sempre all'ultimo `main` verificato:
