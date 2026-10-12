@@ -28,6 +28,10 @@ Dentro un capitolo ogni passo si apre quando quelli prima sono fatti:
 
 Un passo già fatto non si riapre (lezioni, puzzle e partite restano raggiungibili dal resto dell'app). I passi che richiedono il motore (guardiano e sfida) mostrano un avviso dove Stockfish non c'è, come nel percorso. **Continua** apre il primo passo da fare del capitolo corrente.
 
+## Aspetto
+
+In cima una scheda mostra i capitoli conclusi con una barra. I capitoli sono lungo un binario verticale: ogni capitolo ha un badge con un anello di avanzamento (passi fatti su passi totali), il numero, la spunta a capitolo concluso o il lucchetto se è chiuso. Il capitolo corrente ha il bordo nel colore d'azione e la scritta «In corso»; quelli chiusi hanno il contorno tratteggiato e il testo che dice come aprirli. Lezioni e puzzle mostrano una barra con il conteggio, i passi fatti hanno la spunta e quelli bloccati il lucchetto, oltre al testo letto dai lettori di schermo. Contenuti e logica della storia non cambiano; i testi nuovi sono in `story.arb` (italiano e inglese).
+
 ## Stato e salvataggio
 
 Lo stato deriva dal percorso: le lezioni e i guardiani completati contano così come sono, comprese le lezioni aggiunte con un aggiornamento dei contenuti (per questo la storia non elenca le singole lezioni, ma il capitolo del percorso). Salva da sé, in `story.json` (`StoryController`, con `JsonFile`), solo i puzzle risolti per capitolo e i capitoli con il bot battuto. Capitoli sconosciuti o valori illeggibili sono ignorati alla lettura.
@@ -48,4 +52,4 @@ Aggiungere un `StoryChapter` in `storyChapters` (capitolo del percorso, bot, tem
 | `story_controller.dart` | Caricamento e salvataggio |
 | `story_feed.dart` | Puzzle del tema fino all'obiettivo |
 | `story_l10n.dart` | Testi dei capitoli |
-| `story_page.dart` | Schermata della storia |
+| `story_page.dart` | Schermata della storia: riepilogo, binario dei capitoli, passi |

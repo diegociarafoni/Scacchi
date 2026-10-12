@@ -288,7 +288,7 @@ void main() {
       MemoryStore(),
     );
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: PuzzlePage(trainer: trainer, puzzle: backRank),
       ),
     );

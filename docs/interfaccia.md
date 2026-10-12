@@ -4,7 +4,7 @@ L'app è progettata prima di tutto per il telefono in verticale.
 
 ## Navigazione
 
-La barra in basso ha quattro schede: Gioca, Puzzle, Aperture e Tu. La scheda Tu mostra avatar, livello e serie, e porta a Profilo, Percorso, Storia, Finali e Tornei (dove c'è il motore), Grandi maestri, Minigiochi, Statistiche, La tua settimana, Scacchiera fisica e Archivio. Se i dati salvati di una sezione non si possono leggere, un messaggio lo dice e si può riprovare. Nel profilo bambino le Aperture sono nascoste e la scheda Tu mostra solo Profilo, Percorso, Storia, Finali (dove c'è il motore), Grandi maestri e Minigiochi (vedi [profilo-bambino.md](profilo-bambino.md)). 
+La barra in basso ha quattro schede: Gioca, Puzzle, Aperture e Tu. La scheda Tu (`lib/home/you_page.dart`, testi in `lib/l10n/<lingua>/you.arb`) mostra avatar, livello e serie, poi la scheda in evidenza «Continua da dove eri», che apre la prossima tappa del Percorso (la lezione, o il Percorso per un guardiano), e tre gruppi con intestazione letta come tale dai lettori di schermo: **Impara** (Percorso, Storia, Finali dove c'è il motore, Grandi maestri), **Gioca** (Tornei dove c'è il motore, Multigiocatore, Scacchiera fisica, Minigiochi) e **I miei dati** (Profilo, Statistiche, La tua settimana, Archivio). «La tua settimana» è una sola voce e apre il riepilogo; gli adulti hanno a destra il pulsante «Condividi la settimana» per l'immagine. Le voci hanno un tocco di almeno 48 dp. Se i dati salvati di una sezione non si possono leggere, un messaggio lo dice e si può riprovare. Nel profilo bambino le Aperture sono nascoste e la scheda Tu mostra solo Percorso, Storia, Finali (dove c'è il motore), Grandi maestri, Minigiochi, Profilo e La tua settimana (vedi [profilo-bambino.md](profilo-bambino.md)). 
 
 ## Telefono in verticale
 
@@ -152,9 +152,15 @@ Sempre visibili: scacchiera, elenco delle mosse, comandi (nuova, annulla, gira, 
 
 A ogni mossa suona un solo effetto, scelto in quest'ordine di priorità: fine partita, scacco, promozione, arrocco, cattura (anche en passant), mossa semplice. Con l'orologio, un breve segnale avvisa quando il tempo di un giocatore scende sotto i 10 secondi, una volta per partita. I suoni sono generati dallo script `tool/generate_sounds.py`.
 
+## Puzzle
+
+La scheda Puzzle ha il punteggio in alto, il puzzle del giorno come scheda grande e colorata, poi due gruppi: «Allenati» (allenamento, per tema, ripasso) e «Modalità a tempo» (serie e sfida a un amico). Nel profilo bambino restano le stelle e le voci semplici, senza cifre né modalità a tempo.
+
+Nel puzzle l'obiettivo sta in una scheda sopra la scacchiera, con il colore che muove. Sotto, una fascia dice l'esito con icona, testo e colore insieme (da risolvere, giusto, errore, risolto, soluzione mostrata); è una regione viva per i lettori di schermo. I pulsanti hanno almeno 48 dp (56 nel profilo bambino). Nelle serie l'esito dell'ultimo puzzle ha icona e testo. Tutti i testi dell'interfaccia sono in `lib/l10n/<lingua>/puzzles.arb`; restano in italiano nel codice le regole delle modalità (`mode_guide.dart`) e i nomi dei temi (`themes.dart`). Golden con tema reale in `test/golden/puzzle_golden_test.dart`.
+
 ## Tema
 
-Il tema è in `lib/theme/rokko_theme.dart`: arancione `#F2994A` come colore d'azione (pulsanti, selezioni), verde `#769656` solo per la scacchiera, raggi di 12 dp (pulsanti) e 20 dp (schede, dialoghi), bersagli minimi di 48 dp (56 dp nel profilo bambino). Le schermate leggono questi valori con `RokkoTokens.of(context)` e mettono il marchio nella barra del titolo con `RokkoWordmark`; non scrivono colori e misure a mano.
+Il tema è in `lib/theme/rokko_theme.dart` e segue lo stile spaziale della scacchiera «Spazio»: indaco `#4A4F86`, notte `#1D1F45` e viola di nebulosa `#725692`. Nel tema scuro i comandi sono lavanda (`#B9B3FF`) su fondo `#12132B`, nel chiaro indaco su fondo `#F5F3FC`; le stelline (`star`, giallo) sono un accento raro. Il verde `#769656` resta solo della scacchiera. Raggi di 12 dp (pulsanti) e 20 dp (schede, dialoghi), bersagli minimi di 48 dp (56 dp nel profilo bambino). Un test verifica il contrasto minimo 4,5:1 di pulsanti, testi e accenti in entrambi i temi. Le schermate leggono i valori con `RokkoTokens.of(context)` (`action`, `onAction`, `star`, `boardGreen`, raggi, bersagli) e mettono il marchio nella barra del titolo con `RokkoWordmark`; non scrivono colori e misure a mano.
 
 L'app segue il tema chiaro o scuro del sistema, a meno che in Impostazioni, alla voce «Aspetto dell'app», si scelga Chiaro o Scuro; la scelta vale subito per tutte le schermate. Le Impostazioni sono tradotte in italiano e inglese.
 

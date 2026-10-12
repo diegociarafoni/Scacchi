@@ -76,6 +76,7 @@ void main() {
     await show(tester);
     expect(find.text('Il villaggio dei pezzi'), findsOneWidget);
     expect(find.textContaining('Arrivi al villaggio'), findsOneWidget);
+    await tester.scrollUntilVisible(find.text('Le porte della città'), 300);
     expect(find.text('Le porte della città'), findsOneWidget);
     expect(
       find.text('Si apre concludendo il capitolo precedente'),

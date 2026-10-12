@@ -1,5 +1,4 @@
 import 'package:dartchess/dartchess.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/game/game_page.dart';
 import 'package:scacchi/home/home_shell.dart';
@@ -11,6 +10,8 @@ import 'package:scacchi/puzzles/puzzle_trainer.dart';
 import 'package:scacchi/review/personal_puzzles.dart';
 import 'package:scacchi/settings/settings.dart';
 import 'package:scacchi/storage/key_value_store.dart';
+
+import '../localized_app.dart';
 
 void main() {
   testWidgets('RF-80 i puzzle dagli errori finiscono nel ripasso', (
@@ -25,7 +26,7 @@ void main() {
       MemoryStore(),
     );
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: HomeShell(
           settings: SettingsController.defaults(),
           puzzleTrainer: () async => trainer,

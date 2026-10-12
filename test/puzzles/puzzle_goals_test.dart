@@ -9,6 +9,8 @@ import 'package:scacchi/puzzles/puzzle_trainer.dart';
 import 'package:scacchi/puzzles/review_queue.dart';
 import 'package:scacchi/storage/key_value_store.dart';
 
+import '../localized_app.dart';
+
 import 'fixtures.dart';
 import 'puzzle_page_test.dart' show tapMove;
 import 'puzzle_run_page_test.dart' show begin, phone;
@@ -29,7 +31,7 @@ void main() {
       ) async {
         final trainer = await phone(tester);
         await tester.pumpWidget(
-          MaterialApp(
+          localizedApp(
             home: PuzzleRunPage(
               trainer: trainer,
               mode: mode,
@@ -53,7 +55,7 @@ void main() {
     testWidgets('il tempo non scorre durante la spiegazione', (tester) async {
       final trainer = await phone(tester);
       await tester.pumpWidget(
-        MaterialApp(
+        localizedApp(
           home: PuzzleRunPage(
             trainer: trainer,
             mode: PuzzleRunMode.storm,
@@ -73,7 +75,7 @@ void main() {
     ) async {
       final trainer = await phone(tester);
       await tester.pumpWidget(
-        MaterialApp(
+        localizedApp(
           home: PuzzleRunPage(trainer: trainer, mode: PuzzleRunMode.streak),
         ),
       );
@@ -95,7 +97,7 @@ void main() {
     ) async {
       final trainer = await phone(tester);
       await tester.pumpWidget(
-        MaterialApp(
+        localizedApp(
           home: PuzzleRunPage(trainer: trainer, mode: PuzzleRunMode.rush3),
         ),
       );
@@ -110,7 +112,7 @@ void main() {
     ) async {
       final trainer = await phone(tester);
       await tester.pumpWidget(
-        MaterialApp(
+        localizedApp(
           home: PuzzleRunPage(
             trainer: trainer,
             mode: PuzzleRunMode.storm,
@@ -128,7 +130,7 @@ void main() {
     ) async {
       final trainer = await phone(tester);
       await tester.pumpWidget(
-        MaterialApp(
+        localizedApp(
           home: PuzzleRunPage(trainer: trainer, mode: PuzzleRunMode.streak),
         ),
       );
@@ -142,7 +144,7 @@ void main() {
       final trainer = await phone(tester);
       tester.view.physicalSize = const Size(960, 900);
       await tester.pumpWidget(
-        MaterialApp(
+        localizedApp(
           home: PuzzleRunPage(
             trainer: trainer,
             mode: PuzzleRunMode.rush5,
@@ -158,7 +160,7 @@ void main() {
       final trainer = await phone(tester);
       var elapsed = Duration.zero;
       await tester.pumpWidget(
-        MaterialApp(
+        localizedApp(
           home: PuzzleRunPage(
             trainer: trainer,
             mode: PuzzleRunMode.storm,
@@ -179,7 +181,7 @@ void main() {
     testWidgets('il risultato dice com\'è finita la serie', (tester) async {
       final trainer = await phone(tester);
       await tester.pumpWidget(
-        MaterialApp(
+        localizedApp(
           home: PuzzleRunPage(trainer: trainer, mode: PuzzleRunMode.streak),
         ),
       );
@@ -204,7 +206,7 @@ void main() {
       tester.view.devicePixelRatio = 3;
       addTearDown(tester.view.reset);
       await tester.pumpWidget(
-        MaterialApp(
+        localizedApp(
           home: PuzzlePage(
             trainer: trainer,
             puzzle: hangingQueen,
@@ -226,7 +228,7 @@ void main() {
       expect(find.text(PuzzleGuide.daily.goal), findsNothing);
 
       // La seconda volta non si ripresenta, ma resta nella barra.
-      await tester.pumpWidget(const MaterialApp(home: SizedBox()));
+      await tester.pumpWidget(localizedApp(home: const SizedBox()));
       await open(tester, await load(store), PuzzleGuide.daily);
       expect(find.text(PuzzleGuide.daily.goal), findsNothing);
       await tester.tap(find.byTooltip('Come funziona'));
