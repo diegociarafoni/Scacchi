@@ -26,11 +26,21 @@ void main() {
 
   group('MASVS-PLATFORM', () {
     test('solo l\'attività principale è esportata', () {
-      final exported = RegExp(
-        r'<(activity|service|receiver|provider)[^>]*android:exported="true"',
-      ).allMatches(manifest);
-      expect(exported.length, 1);
-      expect(manifest, contains('android:name=".MainActivity"'));
+      final exported = _tags(manifest)
+          .where(
+            (t) =>
+                {
+                  'activity',
+                  'activity-alias',
+                  'service',
+                  'receiver',
+                  'provider',
+                }.contains(t.name) &&
+                t.attributes['android:exported'] == 'true',
+          )
+          .map((t) => t.attributes['android:name'])
+          .toList();
+      expect(exported, ['.MainActivity']);
     });
 
     test('nessun deep link o schema URL personalizzato', () {
@@ -94,7 +104,9 @@ void main() {
       final transitiveAllowed = (privacy['transitiveAllowed'] as Map).keys
           .cast<String>()
           .toSet();
-      final lock = File('pubspec.lock').readAsStringSync();
+      final lock = File('pubspec.lock')
+          .readAsStringSync()
+          .replaceAll('\r\n', '\n');
       final packages = <String, String>{
         for (final m in RegExp(
           r'^  (\w+):\n    dependency: "?([\w ]+)"?$',
@@ -102,6 +114,7 @@ void main() {
         ).allMatches(lock))
           m.group(1)!: m.group(2)!,
       };
+      expect(packages, isNotEmpty, reason: 'pubspec.lock non letto');
       final found = packages.keys.toSet().intersection(forbidden.toSet());
       // Un pacchetto vietato è ammesso solo come dipendenza indiretta e con
       // un motivo scritto in tool/policy.json.
@@ -115,9 +128,14 @@ void main() {
       final allowed = (privacy['androidPermissions'] as Map).keys
           .cast<String>()
           .toSet();
-      final declared = RegExp(
-        r'<uses-permission android:name="([\w.]+)"(?![^>]*tools:node="remove")',
-      ).allMatches(manifest).map((m) => m.group(1)!).toSet();
+      final declared = _tags(manifest)
+          .where(
+            (t) =>
+                t.name.startsWith('uses-permission') &&
+                t.attributes['tools:node'] != 'remove',
+          )
+          .map((t) => t.attributes['android:name']!)
+          .toSet();
       expect(
         declared.difference(allowed),
         isEmpty,
@@ -143,3 +161,21 @@ Iterable<File> _dartFiles(String dir) => Directory(dir)
     .listSync(recursive: true)
     .whereType<File>()
     .where((f) => f.path.endsWith('.dart') && !f.path.contains('generated'));
+
+class _Tag {
+  const _Tag(this.name, this.attributes);
+  final String name;
+  final Map<String, String> attributes;
+}
+
+/// Elementi XML con i loro attributi, in qualunque ordine e su più righe.
+Iterable<_Tag> _tags(String xml) sync* {
+  for (final m in RegExp(r'<([\w:-]+)((?:\s+[^<>]*?)?)/?>').allMatches(xml)) {
+    yield _Tag(m.group(1)!, {
+      for (final a in RegExp(
+        r'([\w:-]+)\s*=\s*"([^"]*)"',
+      ).allMatches(m.group(2)!))
+        a.group(1)!: a.group(2)!,
+    });
+  }
+}
