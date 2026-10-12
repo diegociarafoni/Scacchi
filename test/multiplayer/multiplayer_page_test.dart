@@ -8,6 +8,7 @@ import 'package:scacchi/exchange/qr_code_view.dart';
 import 'package:scacchi/multiplayer/game_invite.dart';
 import 'package:scacchi/multiplayer/multiplayer_controller.dart';
 import 'package:scacchi/multiplayer/multiplayer_page.dart';
+import 'package:scacchi/multiplayer/multiplayer_widgets.dart';
 import 'package:scacchi/multiplayer/saved_game.dart';
 import 'package:scacchi/multiplayer/transport.dart';
 
@@ -268,5 +269,64 @@ void main() {
         expect(opened, 1);
       },
     );
+  });
+
+  testWidgets('RMP-08 la schermata mostra lo stato del collegamento', (
+    tester,
+  ) async {
+    final (a, b) = LoopbackTransport.pair();
+    await tester.pumpWidget(
+      localizedApp(
+        home: MultiplayerPage(
+          openHost: () async => (transport: a, lanAddress: '10.0.0.2:4000'),
+        ),
+      ),
+    );
+    await tester.tap(find.text('Crea la partita'));
+    await _wait(tester);
+    await tester.pumpAndSettle();
+    expect(find.byType(ConnectionIndicator), findsOneWidget);
+    expect(find.text('In collegamento'), findsOneWidget);
+    expect(find.byType(InviteCard), findsOneWidget);
+
+    final view = tester.widget<QrCodeView>(find.byType(QrCodeView));
+    final guest = (await tester.runAsync(
+      () => MultiplayerController.join(
+        GameInvite.parse(view.data)!,
+        openGuest: (_, _) => b,
+      ),
+    ))!;
+    await _wait(tester);
+    expect(find.text('Collegato'), findsOneWidget);
+    await tester.runAsync(guest.close);
+  });
+
+  testWidgets('RMP-08 comandi da almeno 48 dp e testo al 130% senza overflow', (
+    tester,
+  ) async {
+    tester.view
+      ..physicalSize = const Size(360, 640) * 2
+      ..devicePixelRatio = 2;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      MediaQuery(
+        data: const MediaQueryData(textScaler: TextScaler.linear(1.3)),
+        child: localizedApp(home: const MultiplayerPage()),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+    for (final finder in [
+      find.byType(FilledButton),
+      find.byType(OutlinedButton),
+      find.byType(SegmentedButton<Side>),
+    ]) {
+      await tester.scrollUntilVisible(finder, 100);
+      expect(
+        tester.getSize(finder).height,
+        greaterThanOrEqualTo(48),
+        reason: finder.toString(),
+      );
+    }
   });
 }

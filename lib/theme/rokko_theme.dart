@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 class RokkoTokens extends ThemeExtension<RokkoTokens> {
   const RokkoTokens({
     required this.action,
+    required this.onAction,
+    required this.star,
     required this.boardGreen,
     this.radiusSmall = 12,
     this.radiusLarge = 20,
@@ -13,8 +15,14 @@ class RokkoTokens extends ThemeExtension<RokkoTokens> {
     this.kidTouch = 56,
   });
 
-  /// Arancione dell'icona: colore dei pulsanti principali.
+  /// Colore dei pulsanti principali (lavanda nel tema scuro, indaco nel chiaro).
   final Color action;
+
+  /// Colore di testo e icone sopra [action].
+  final Color onAction;
+
+  /// Giallo delle stelline: accenti rari (premi, serie, mascotte).
+  final Color star;
 
   /// Verde storico: solo per la scacchiera, mai per i comandi.
   final Color boardGreen;
@@ -27,14 +35,18 @@ class RokkoTokens extends ThemeExtension<RokkoTokens> {
 
   static RokkoTokens of(BuildContext context) =>
       Theme.of(context).extension<RokkoTokens>() ??
-      const RokkoTokens(
-        action: RokkoTheme.orange,
-        boardGreen: RokkoTheme.green,
-      );
+      RokkoTheme.light().extension<RokkoTokens>()!;
 
   @override
-  RokkoTokens copyWith({Color? action, Color? boardGreen}) => RokkoTokens(
+  RokkoTokens copyWith({
+    Color? action,
+    Color? onAction,
+    Color? star,
+    Color? boardGreen,
+  }) => RokkoTokens(
     action: action ?? this.action,
+    onAction: onAction ?? this.onAction,
+    star: star ?? this.star,
     boardGreen: boardGreen ?? this.boardGreen,
     radiusSmall: radiusSmall,
     radiusLarge: radiusLarge,
@@ -46,24 +58,51 @@ class RokkoTokens extends ThemeExtension<RokkoTokens> {
   RokkoTokens lerp(RokkoTokens? other, double t) => this;
 }
 
-/// Tema dell'app: arancione d'azione, forme a raggi 12/20 dp.
+/// Tema dell'app in stile spaziale, derivato dalla scacchiera «Spazio»: indaco e
+/// viola profondi con accenti di stella; forme a raggi 12/20 dp.
 abstract final class RokkoTheme {
-  static const orange = Color(0xFFF2994A);
+  /// Case chiare e scure della scacchiera Spazio e viola della nebulosa.
+  static const indigo = Color(0xFF4A4F86);
+  static const night = Color(0xFF1D1F45);
+  static const nebula = Color(0xFF725692);
   static const green = Color(0xFF769656);
 
   static ThemeData light() => _build(Brightness.light);
   static ThemeData dark() => _build(Brightness.dark);
 
   static ThemeData _build(Brightness brightness) {
-    const tokens = RokkoTokens(action: orange, boardGreen: green);
+    final dark = brightness == Brightness.dark;
+    final tokens = RokkoTokens(
+      action: dark ? const Color(0xFFB9B3FF) : indigo,
+      onAction: dark ? const Color(0xFF14152E) : const Color(0xFFFFFFFF),
+      star: dark ? const Color(0xFFFFE9A8) : const Color(0xFF8A6A00),
+      boardGreen: green,
+    );
+    final scheme =
+        ColorScheme.fromSeed(
+          seedColor: indigo,
+          brightness: brightness,
+        ).copyWith(
+          primary: tokens.action,
+          onPrimary: tokens.onAction,
+          secondary: dark ? const Color(0xFFD2B4F5) : nebula,
+          onSecondary: dark ? const Color(0xFF1D1033) : const Color(0xFFFFFFFF),
+          tertiary: tokens.star,
+          surface: dark ? const Color(0xFF12132B) : const Color(0xFFF5F3FC),
+          onSurface: dark ? const Color(0xFFE8E6F7) : const Color(0xFF1A1A33),
+          surfaceContainer: dark ? night : const Color(0xFFE9E6F6),
+          surfaceContainerHigh: dark
+              ? const Color(0xFF282B5A)
+              : const Color(0xFFDFDBF0),
+        );
     final shape = RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(tokens.radiusSmall),
     );
     final minSize = Size(tokens.minTouch, tokens.minTouch);
     return ThemeData(
-      colorSchemeSeed: orange,
-      brightness: brightness,
-      extensions: const [tokens],
+      colorScheme: scheme,
+      scaffoldBackgroundColor: scheme.surface,
+      extensions: [tokens],
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(shape: shape, minimumSize: minSize),
       ),
