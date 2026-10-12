@@ -1,0 +1,15 @@
+{
+  "multiplayerUiChannelWifi": "Wi-Fi",
+  "multiplayerUiChannelBluetooth": "Bluetooth",
+  "multiplayerUiChannelRemote": "Remote",
+  "multiplayerUiLinkConnected": "Connected",
+  "multiplayerUiLinkConnecting": "Connecting",
+  "multiplayerUiLinkOffline": "Unreachable",
+  "multiplayerUiLinkSemantics": "{channel}: {state}",
+  "multiplayerUiShowFriend": "Show this code to your friend",
+  "multiplayerUiStepsTitle": "How to play",
+  "multiplayerUiStepCreate": "One of you creates the game and shows the QR code.",
+  "multiplayerUiStepScan": "The other scans it with the camera.",
+  "multiplayerUiStepPlay": "Take turns: moves travel on their own.",
+  "multiplayerUiResumeTitle": "Game in progress"
+}
