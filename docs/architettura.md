@@ -56,6 +56,7 @@ lib/
   physical/               Orologio e registro per la scacchiera fisica (vedi scacchiera-fisica.md)
   kids/                   Stelle, fiamma e giudizi senza numeri del profilo bambino (vedi profilo-bambino.md)
   reminders/              Promemoria giornaliero con notifiche locali (vedi gamification.md)
+  multiplayer/            Partita tra due telefoni su più canali (vedi multigiocatore.md)
   storage/                File JSON locali con versione e scrittura atomica
   settings/
     settings.dart         Impostazioni, valori predefiniti e salvataggio locale
