@@ -1264,5 +1264,255 @@
         "type": "int"
       }
     }
+  },
+  "storyTitle": "Storia",
+  "@storyTitle": {
+    "description": "Titolo della schermata della storia"
+  },
+  "storyEntrySubtitle": "Un viaggio a capitoli: lezioni, puzzle e sfide",
+  "@storyEntrySubtitle": {
+    "description": "storyEntrySubtitle"
+  },
+  "storyChapterNumber": "Capitolo {n}",
+  "@storyChapterNumber": {
+    "description": "storyChapterNumber",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "storyProgress": "{done} capitoli su {total}",
+  "@storyProgress": {
+    "description": "storyProgress",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyChapterLocked": "Si apre concludendo il capitolo precedente",
+  "@storyChapterLocked": {
+    "description": "storyChapterLocked"
+  },
+  "storyChapterDone": "Capitolo concluso",
+  "@storyChapterDone": {
+    "description": "storyChapterDone"
+  },
+  "storyContinue": "Continua",
+  "@storyContinue": {
+    "description": "storyContinue"
+  },
+  "storyFinished": "La storia è finita. Lezioni, puzzle e partite restano disponibili nel resto dell'app.",
+  "@storyFinished": {
+    "description": "storyFinished"
+  },
+  "storyStepLessons": "Lezioni: {value} su {total}",
+  "@storyStepLessons": {
+    "description": "storyStepLessons",
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyStepPuzzles": "Puzzle del capitolo: {value} su {total}",
+  "@storyStepPuzzles": {
+    "description": "storyStepPuzzles",
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyStepGuardian": "Il guardiano del capitolo",
+  "@storyStepGuardian": {
+    "description": "storyStepGuardian"
+  },
+  "storyStepBoss": "Sfida a {name}",
+  "@storyStepBoss": {
+    "description": "storyStepBoss",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyStepDone": "fatto",
+  "@storyStepDone": {
+    "description": "storyStepDone"
+  },
+  "storyStepTodo": "da fare",
+  "@storyStepTodo": {
+    "description": "storyStepTodo"
+  },
+  "storyStepLocked": "bloccato",
+  "@storyStepLocked": {
+    "description": "storyStepLocked"
+  },
+  "storyStepLockedHint": "Prima concludi il passo precedente.",
+  "@storyStepLockedHint": {
+    "description": "storyStepLockedHint"
+  },
+  "storyEngineMissing": "Le sfide si giocano dove gira il computer: Android e iOS, o Windows e Linux con Stockfish installato.",
+  "@storyEngineMissing": {
+    "description": "storyEngineMissing"
+  },
+  "storyBossWon": "Hai battuto {name}!",
+  "@storyBossWon": {
+    "description": "storyBossWon",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyBossLost": "{name} resiste ancora: riprova quando vuoi.",
+  "@storyBossLost": {
+    "description": "storyBossLost",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPuzzlesNone": "I puzzle non si possono caricare: riprova.",
+  "@storyPuzzlesNone": {
+    "description": "storyPuzzlesNone"
+  },
+  "storyVillageTitle": "Il villaggio dei pezzi",
+  "@storyVillageTitle": {
+    "description": "storyVillageTitle"
+  },
+  "storyVillageIntro": "Arrivi al villaggio ai piedi della Rocca. Gli abitanti non ricordano più come si muovono i loro pezzi: aiutali con le lezioni, poi dimostra di accorgerti subito di un pezzo lasciato in presa.",
+  "@storyVillageIntro": {
+    "description": "storyVillageIntro"
+  },
+  "storyVillageBoss": "{name}, il custode del villaggio, ti sfida per vedere se hai imparato davvero.",
+  "@storyVillageBoss": {
+    "description": "storyVillageBoss",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyVillageOutro": "Il villaggio ti saluta con una festa. La strada per le porte della città è aperta.",
+  "@storyVillageOutro": {
+    "description": "storyVillageOutro"
+  },
+  "storyGatesTitle": "Le porte della città",
+  "@storyGatesTitle": {
+    "description": "storyGatesTitle"
+  },
+  "storyGatesIntro": "Le guardie ti fermano alle porte: per entrare devi conoscere le regole, dallo scacco all'arrocco. Una promozione ben vista apre anche il cancello più alto.",
+  "@storyGatesIntro": {
+    "description": "storyGatesIntro"
+  },
+  "storyGatesBoss": "{name}, capitana delle guardie, vuole una prova prima di lasciarti passare.",
+  "@storyGatesBoss": {
+    "description": "storyGatesBoss",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyGatesOutro": "Le porte si aprono. Davanti a te si alza la torre del re.",
+  "@storyGatesOutro": {
+    "description": "storyGatesOutro"
+  },
+  "storyTowerTitle": "La torre del re",
+  "@storyTowerTitle": {
+    "description": "storyTowerTitle"
+  },
+  "storyTowerIntro": "In cima alla torre vive il re, e sa difendersi. Impara i matti per metterlo alle strette, anche quando i suoi stessi pezzi gli fanno da muro.",
+  "@storyTowerIntro": {
+    "description": "storyTowerIntro"
+  },
+  "storyTowerBoss": "{name}, il cavaliere che ama i gambetti, ti aspetta in cima alle scale.",
+  "@storyTowerBoss": {
+    "description": "storyTowerBoss",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyTowerOutro": "Il re della torre è in scacco matto. Resta il bosco, e le sue trappole.",
+  "@storyTowerOutro": {
+    "description": "storyTowerOutro"
+  },
+  "storyForestTitle": "Il bosco delle trappole",
+  "@storyForestTitle": {
+    "description": "storyForestTitle"
+  },
+  "storyForestIntro": "Nel bosco ogni pezzo nasconde una trappola: forchette, inchiodature, infilate. Impara a vederle prima degli altri.",
+  "@storyForestIntro": {
+    "description": "storyForestIntro"
+  },
+  "storyForestBoss": "{name}, la guida del bosco, conosce ogni sentiero e ogni insidia.",
+  "@storyForestBoss": {
+    "description": "storyForestBoss",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyForestOutro": "Hai attraversato il bosco senza cadere in nessuna trappola. Il castello ti aspetta.",
+  "@storyForestOutro": {
+    "description": "storyForestOutro"
+  },
+  "storyCastleTitle": "Il castello dei finali",
+  "@storyCastleTitle": {
+    "description": "storyCastleTitle"
+  },
+  "storyCastleIntro": "Nel castello sulla scacchiera restano pochi pezzi e ogni mossa conta. Qui si decide chi sa chiudere una partita.",
+  "@storyCastleIntro": {
+    "description": "storyCastleIntro"
+  },
+  "storyCastleBoss": "{name}, il castellano, difende l'ingresso della sala della corona.",
+  "@storyCastleBoss": {
+    "description": "storyCastleBoss",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyCastleOutro": "Il portone si apre: la corona è vicina.",
+  "@storyCastleOutro": {
+    "description": "storyCastleOutro"
+  },
+  "storyCrownTitle": "La corona",
+  "@storyCrownTitle": {
+    "description": "storyCrownTitle"
+  },
+  "storyCrownIntro": "Ultima tappa: la sala della corona. Partire bene è mezza vittoria: il centro, lo sviluppo, l'arrocco.",
+  "@storyCrownIntro": {
+    "description": "storyCrownIntro"
+  },
+  "storyCrownBoss": "{name}, la guardiana della corona, gioca le aperture come nessun altro.",
+  "@storyCrownBoss": {
+    "description": "storyCrownBoss",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyCrownOutro": "La corona è tua. Il regno è in pace e ogni nuova partita è una nuova storia.",
+  "@storyCrownOutro": {
+    "description": "storyCrownOutro"
   }
 }

@@ -30,6 +30,7 @@ Ogni cartella di `lib/` ha qui il documento che descrive le sue funzioni. La tab
 | `lib/settings/` | [interfaccia.md](interfaccia.md), [pezzi-e-scacchiere.md](pezzi-e-scacchiere.md), [notazione.md](notazione.md), [profilo-bambino.md](profilo-bambino.md) | Impostazioni, temi e pezzi, coordinate esterne, colori per daltonici, controllo dell'adulto |
 | `lib/stats/` | [statistiche.md](statistiche.md), [ritratto-settimana.md](ritratto-settimana.md) | Statistiche, rating locale, la tua settimana |
 | `lib/storage/` | [architettura.md](architettura.md), [gamification.md](gamification.md) | File JSON locali con versione e scrittura atomica |
+| `lib/story/` | [storia.md](storia.md) | Percorso a storia: capitoli con racconto, lezioni, puzzle, guardiani e un bot da battere |
 | `lib/tournament/` | [tornei.md](tornei.md) | Tornei offline contro bot |
 | `lib/training/` | [puzzle.md](puzzle.md) | Scacchiera per esercizi condivisa |
 

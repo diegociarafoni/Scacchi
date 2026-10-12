@@ -20,6 +20,7 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | [puzzle.md](puzzle.md) | Puzzle: dati, punteggio, modalità, puzzle del giorno |
 | [aperture.md](aperture.md) | Nomi delle aperture, mosse di libro, Esplora aperture, repertorio |
 | [percorso.md](percorso.md) | Percorso a tappe con stelle e bot guardiani |
+| [storia.md](storia.md) | Percorso a storia: capitoli, puzzle e sfide a tema sopra il percorso |
 | [finali.md](finali.md) | Allenatore dei finali contro il motore: Lucena, Philidor, matti elementari |
 | [statistiche.md](statistiche.md) | Statistiche delle partite e rating locale stimato |
 | [minigiochi.md](minigiochi.md) | Coordinate a tempo, cattura tutto, visualizzazione alla cieca, conta del materiale |

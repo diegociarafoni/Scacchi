@@ -4,7 +4,7 @@ L'app è progettata prima di tutto per il telefono in verticale.
 
 ## Navigazione
 
-La barra in basso ha quattro schede: Gioca, Puzzle, Aperture e Tu. La scheda Tu mostra avatar, livello e serie, e porta a Profilo, Percorso, Finali e Tornei (dove c'è il motore), Minigiochi, Statistiche, La tua settimana, Scacchiera fisica e Archivio. Se i dati salvati di una sezione non si possono leggere, un messaggio lo dice e si può riprovare. Nel profilo bambino le Aperture sono nascoste e la scheda Tu mostra solo Profilo, Percorso, Finali (dove c'è il motore) e Minigiochi (vedi [profilo-bambino.md](profilo-bambino.md)). 
+La barra in basso ha quattro schede: Gioca, Puzzle, Aperture e Tu. La scheda Tu mostra avatar, livello e serie, e porta a Profilo, Percorso, Storia, Finali e Tornei (dove c'è il motore), Minigiochi, Statistiche, La tua settimana, Scacchiera fisica e Archivio. Se i dati salvati di una sezione non si possono leggere, un messaggio lo dice e si può riprovare. Nel profilo bambino le Aperture sono nascoste e la scheda Tu mostra solo Profilo, Percorso, Storia, Finali (dove c'è il motore) e Minigiochi (vedi [profilo-bambino.md](profilo-bambino.md)). 
 
 ## Telefono in verticale
 
