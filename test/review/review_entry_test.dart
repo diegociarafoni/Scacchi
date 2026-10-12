@@ -13,8 +13,8 @@ import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/review/review_page.dart';
 import 'package:scacchi/settings/settings.dart';
 
-import '../game_actions.dart';
 import '../computer_fakes.dart' show chooseTwoPlayers;
+import '../game_actions.dart';
 
 /// Motore finto che valuta ogni posizione in parità.
 class _EvenEngine implements UciTransport {
