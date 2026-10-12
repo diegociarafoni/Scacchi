@@ -34,6 +34,7 @@ class YouPage extends StatelessWidget {
     this.storyPage,
     this.tournamentPage,
     this.endgamesPage,
+    this.mastersPage,
     this.puzzlesPage,
     this.openGame,
   });
@@ -64,6 +65,9 @@ class YouPage extends StatelessWidget {
   /// Allenatore dei finali contro il motore (RF-86); senza, la voce non
   /// compare.
   final Future<Widget> Function()? endgamesPage;
+
+  /// Partite dei grandi maestri (RF-87); funziona senza motore.
+  final Future<Widget> Function()? mastersPage;
 
   /// Puzzle di un tema, per il consiglio del riepilogo settimanale; senza, il
   /// pulsante dei puzzle non compare.
@@ -208,6 +212,13 @@ class YouPage extends StatelessWidget {
                   subtitle:
                       'Lucena, Philidor e i matti elementari contro il motore',
                   onTap: () => _open(context, endgamesPage!(), (w) => w),
+                ),
+              if (mastersPage != null)
+                _Entry(
+                  icon: Icons.workspace_premium_outlined,
+                  title: 'Grandi maestri',
+                  subtitle: 'Partite celebri da sfogliare e da indovinare',
+                  onTap: () => _open(context, mastersPage!(), (w) => w),
                 ),
               // Classifica ed Elo dei bot: nel profilo bambino niente numeri.
               if (tournamentPage != null && !simple)
