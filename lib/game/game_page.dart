@@ -2089,9 +2089,13 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
             isSelected: _zen,
             icon: const Icon(Icons.self_improvement_outlined),
             selectedIcon: const Icon(Icons.self_improvement),
-            onPressed: () => unawaited(
-              widget.settings.update(_settings.copyWith(zenMode: !_zen)),
-            ),
+            onPressed: () {
+              // Entrando in zen sparisce anche il commento già a schermo.
+              if (!_zen) ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              unawaited(
+                widget.settings.update(_settings.copyWith(zenMode: !_zen)),
+              );
+            },
           ),
           IconButton(
             tooltip: 'Impostazioni',
