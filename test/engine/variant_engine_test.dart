@@ -158,5 +158,26 @@ void main() {
       e.stop();
       expect(await future, isNull);
     });
+
+    test('in posizione vinta non torna in una posizione già vista', () async {
+      final pos = fromFen(Rule.chess, '4k3/8/8/8/8/8/8/R3K3 w - - 0 1');
+      final level = fast(engineLevel(8), const Duration(milliseconds: 400));
+      final first = await engine().bestMove(pos, level);
+      final repeated = pos.play(first!.move);
+      final second = await engine().bestMove(pos, level, history: [repeated]);
+      expect(second!.move, isNot(first.move));
+    });
+
+    test('in posizione persa cerca la ripetizione che vale patta', () async {
+      final pos = fromFen(Rule.chess, '4k3/8/8/8/8/8/8/R3K3 b - - 0 1');
+      final drawn = pos.play(Move.parse('e8d8')!);
+      final reply = await engine().bestMove(
+        pos,
+        fast(engineLevel(8), const Duration(milliseconds: 400)),
+        history: [drawn],
+      );
+      expect(reply!.move.uci, 'e8d8');
+      expect(reply.score?.cp, 0);
+    });
   });
 }

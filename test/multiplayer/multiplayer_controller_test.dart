@@ -1,0 +1,224 @@
+import 'dart:async';
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:dartchess/dartchess.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:scacchi/multiplayer/game_invite.dart';
+import 'package:scacchi/multiplayer/local_address.dart';
+import 'package:scacchi/multiplayer/multiplayer_controller.dart';
+import 'package:scacchi/multiplayer/transport.dart';
+
+Future<void> settle() => Future<void>.delayed(const Duration(milliseconds: 50));
+
+/// Ospite e invitato collegati in memoria.
+Future<(MultiplayerController, MultiplayerController)> pair({
+  Side hostSide = Side.white,
+}) async {
+  final (a, b) = LoopbackTransport.pair();
+  final host = await MultiplayerController.host(
+    side: hostSide,
+    openHost: () async => (transport: a, lanAddress: '10.0.0.2:4000'),
+  );
+  final invite = GameInvite.parse(host.inviteLink)!;
+  final guest = await MultiplayerController.join(
+    invite,
+    openGuest: (h, p) {
+      expect((h, p), ('10.0.0.2', 4000));
+      return b;
+    },
+  );
+  await settle();
+  return (host, guest);
+}
+
+void main() {
+  group('indirizzo in rete locale', () {
+    (String, InternetAddress) ip(String name, String s) =>
+        (name, InternetAddress(s));
+
+    test('RMP-08 sceglie un indirizzo privato IPv4', () {
+      expect(
+        pickLanAddress([
+          ip('lo', '127.0.0.1'),
+          ip('eth9', '8.8.8.8'),
+          ip('wlan0', '192.168.1.7'),
+        ]),
+        '192.168.1.7',
+      );
+      expect(pickLanAddress([ip('ap0', '10.1.2.3')]), '10.1.2.3');
+      expect(pickLanAddress([ip('docker0', '172.20.0.5')]), '172.20.0.5');
+    });
+
+    test('RMP-08 preferisce la Wi-Fi ai dati mobili e alle VPN', () {
+      expect(
+        pickLanAddress([
+          ip('rmnet_data0', '10.12.34.56'),
+          ip('tun0', '10.8.0.2'),
+          ip('wlan0', '192.168.1.20'),
+        ]),
+        '192.168.1.20',
+      );
+      expect(
+        pickLanAddress([ip('docker0', '172.17.0.1'), ip('en0', '10.0.0.4')]),
+        '10.0.0.4',
+      );
+    });
+
+    test('RMP-08 senza rete locale non c\'è indirizzo', () {
+      expect(
+        pickLanAddress([ip('lo', '127.0.0.1'), ip('eth0', '172.32.0.1')]),
+        isNull,
+      );
+      // Solo dati mobili: l'altro telefono non lo raggiunge.
+      expect(pickLanAddress([ip('rmnet0', '10.12.34.56')]), isNull);
+      expect(pickLanAddress(const []), isNull);
+    });
+  });
+
+  test('RMP-08 l\'ospite attende, poi si gioca a turno', () async {
+    final (a, b) = LoopbackTransport.pair();
+    final host = await MultiplayerController.host(
+      side: Side.white,
+      openHost: () async => (transport: a, lanAddress: '10.0.0.2:4000'),
+    );
+    expect(host.status, MultiplayerStatus.waitingPeer);
+    expect(host.mySide, Side.white);
+    final invite = GameInvite.parse(host.inviteLink)!;
+    expect(invite.lanAddress, '10.0.0.2:4000');
+    final guest = await MultiplayerController.join(
+      invite,
+      openGuest: (_, _) => b,
+    );
+    await settle();
+    expect(guest.mySide, Side.black);
+    expect(host.status, MultiplayerStatus.myTurn);
+    expect(guest.status, MultiplayerStatus.peerTurn);
+    await host.play(Move.parse('e2e4')!);
+    await settle();
+    expect(guest.status, MultiplayerStatus.myTurn);
+    expect(guest.lastMove, Move.parse('e2e4'));
+    expect(guest.lastSan, 'e4');
+    await host.close();
+    await guest.close();
+  });
+
+  test('RMP-08 l\'ospite può scegliere il Nero', () async {
+    final (host, guest) = await pair(hostSide: Side.black);
+    expect(host.mySide, Side.black);
+    expect(guest.mySide, Side.white);
+    expect(guest.status, MultiplayerStatus.myTurn);
+    await host.close();
+    await guest.close();
+  });
+
+  test('RMP-08 fuori turno la mossa viene ignorata', () async {
+    final (host, guest) = await pair();
+    expect(await guest.play(Move.parse('e7e5')!), isFalse);
+    expect(guest.position, Chess.initial);
+    await host.close();
+    await guest.close();
+  });
+
+  test('RMP-08 matto: la partita finisce per entrambi', () async {
+    final (host, guest) = await pair();
+    for (final (side, uci) in [
+      (host, 'f2f3'),
+      (guest, 'e7e5'),
+      (host, 'g2g4'),
+      (guest, 'd8h4'),
+    ]) {
+      expect(await side.play(Move.parse(uci)!), isTrue);
+      await settle();
+    }
+    expect(host.status, MultiplayerStatus.finished);
+    expect(guest.status, MultiplayerStatus.finished);
+    expect(host.outcome, Outcome.blackWins);
+    await host.close();
+    await guest.close();
+  });
+
+  test('RMP-08 l\'invitato riprova finché l\'ospite non risponde', () async {
+    final (a, b) = LoopbackTransport.pair();
+    final host = await MultiplayerController.host(
+      side: Side.white,
+      openHost: () async => (transport: a, lanAddress: '10.0.0.2:4000'),
+    );
+    final down = _Unavailable(b);
+    final guest = await MultiplayerController.join(
+      GameInvite.parse(host.inviteLink)!,
+      openGuest: (_, _) => down,
+    );
+    await settle();
+    expect(guest.status, MultiplayerStatus.connecting);
+    // Il canale riprova da solo e avvisa quando si collega.
+    await down.comeUp();
+    await Future<void>.delayed(const Duration(milliseconds: 100));
+    expect(guest.status, MultiplayerStatus.peerTurn);
+    expect(host.status, MultiplayerStatus.myTurn);
+    await host.close();
+    await guest.close();
+  });
+
+  test('RMP-08 un invito senza indirizzo locale non si può usare', () async {
+    final (a, _) = LoopbackTransport.pair();
+    final host = await MultiplayerController.host(
+      side: Side.white,
+      openHost: () async => (transport: a, lanAddress: '10.0.0.2:4000'),
+    );
+    final invite = GameInvite.parse(host.inviteLink)!;
+    final noLan = GameInvite(
+      gameId: invite.gameId,
+      secret: invite.secret,
+      hostKey: invite.hostKey,
+      hostSide: invite.hostSide,
+    );
+    await expectLater(
+      MultiplayerController.join(noLan, openGuest: (_, _) => a),
+      throwsA(isA<NoLocalNetwork>()),
+    );
+    await host.close();
+  });
+
+  test('RMP-08 l\'ospite senza Wi-Fi riceve un errore chiaro', () async {
+    final (a, _) = LoopbackTransport.pair();
+    await expectLater(
+      MultiplayerController.host(
+        side: Side.white,
+        openHost: () async => (transport: a, lanAddress: null),
+      ),
+      throwsA(isA<NoLocalNetwork>()),
+    );
+  });
+}
+
+/// Canale che rifiuta gli invii finché non si collega con [comeUp].
+class _Unavailable implements MessageTransport, ConnectionAware {
+  _Unavailable(this._inner);
+  final MessageTransport _inner;
+  final _connected = StreamController<void>.broadcast();
+  bool up = false;
+
+  Future<void> comeUp() async {
+    up = true;
+    _connected.add(null);
+  }
+
+  @override
+  Stream<void> get connected => _connected.stream;
+
+  @override
+  String get name => 'giù';
+
+  @override
+  Stream<Uint8List> get incoming => _inner.incoming;
+
+  @override
+  Future<void> send(Uint8List data) async {
+    if (!up) throw TransportUnavailable(name);
+    await _inner.send(data);
+  }
+
+  @override
+  Future<void> close() => _inner.close();
+}

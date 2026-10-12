@@ -829,6 +829,98 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get multiplayerTitle => 'Play with a friend';
+
+  @override
+  String get multiplayerEntrySubtitle =>
+      'On two phones on the same Wi-Fi or hotspot';
+
+  @override
+  String get multiplayerIntro =>
+      'One phone creates the game and shows a QR code, the other scans it. Then moves travel on their own over the same Wi-Fi or one phone\'s hotspot.';
+
+  @override
+  String get multiplayerYourColor => 'Your colour';
+
+  @override
+  String get multiplayerWhite => 'White';
+
+  @override
+  String get multiplayerBlack => 'Black';
+
+  @override
+  String get multiplayerCreate => 'Create the game';
+
+  @override
+  String get multiplayerJoin => 'Join with QR code';
+
+  @override
+  String get multiplayerNoNetwork =>
+      'Connect to a Wi-Fi network or turn on the hotspot, then try again.';
+
+  @override
+  String get multiplayerInviteHint =>
+      'On the other phone open You › Play with a friend › Join with QR code and scan this code.';
+
+  @override
+  String get multiplayerInviteQrLabel => 'QR code of the game invite';
+
+  @override
+  String get multiplayerWaiting => 'Waiting for your opponent…';
+
+  @override
+  String get multiplayerConnecting => 'Connecting to the other phone…';
+
+  @override
+  String get multiplayerYourTurn => 'Your move';
+
+  @override
+  String get multiplayerPeerTurn => 'Opponent\'s move';
+
+  @override
+  String get multiplayerPending =>
+      'Move not delivered yet: it will be sent as soon as the other phone is reachable.';
+
+  @override
+  String get multiplayerWhiteWins => 'White wins';
+
+  @override
+  String get multiplayerBlackWins => 'Black wins';
+
+  @override
+  String get multiplayerDraw => 'Draw';
+
+  @override
+  String get multiplayerScanTitle => 'Scan the invite';
+
+  @override
+  String get multiplayerScanHint =>
+      'Point the camera at the QR code shown on the other phone.';
+
+  @override
+  String get multiplayerNotInvite => 'This QR code is not a game invite.';
+
+  @override
+  String get multiplayerCameraError => 'Camera not available.';
+
+  @override
+  String get multiplayerLeaveTitle => 'Leave the game?';
+
+  @override
+  String get multiplayerLeaveBody =>
+      'The connection with the other phone closes and the game is not saved.';
+
+  @override
+  String get multiplayerLeave => 'Leave';
+
+  @override
+  String get multiplayerStay => 'Stay';
+
+  @override
+  String get multiplayerStartError =>
+      'The game could not be started: try again.';
+
+  @override
   String get personalTitle => 'Your openings';
 
   @override
@@ -1120,6 +1212,153 @@ class AppLocalizationsEn extends AppLocalizations {
   String openingsErrorConflict(String san) {
     return 'In this position the repertoire already has $san.';
   }
+
+  @override
+  String get physicalTitle => 'Physical board';
+
+  @override
+  String get physicalEntrySubtitle => 'Clock and scoresheet for a live game';
+
+  @override
+  String get physicalIntro =>
+      'Play on a real board: the app is the clock and records the game. After each move, type it or tap it among the legal ones.';
+
+  @override
+  String get physicalWhite => 'White';
+
+  @override
+  String get physicalBlack => 'Black';
+
+  @override
+  String get physicalUntimed => 'Untimed';
+
+  @override
+  String get physicalStart => 'Start the game';
+
+  @override
+  String get physicalInputWhite => 'White\'s move (e.g. e4, Nf3)';
+
+  @override
+  String get physicalInputBlack => 'Black\'s move (e.g. e5, Nc6)';
+
+  @override
+  String physicalInvalidMove(String text) {
+    return 'Invalid move: “$text”';
+  }
+
+  @override
+  String get physicalNoMoves => 'No moves';
+
+  @override
+  String get physicalPause => 'Pause';
+
+  @override
+  String get physicalResume => 'Resume';
+
+  @override
+  String get physicalUndo => 'Undo';
+
+  @override
+  String get physicalDraw => 'Draw';
+
+  @override
+  String get physicalResign => 'Resign';
+
+  @override
+  String get physicalDrawQuestion => 'Draw agreed?';
+
+  @override
+  String get physicalYes => 'Yes';
+
+  @override
+  String get physicalNo => 'No';
+
+  @override
+  String get physicalWhoResigns => 'Who resigns?';
+
+  @override
+  String get physicalSaved => 'Game saved in the archive';
+
+  @override
+  String get physicalNothingToSave => 'No moves to save';
+
+  @override
+  String get physicalSaveFailed => 'Could not save the game';
+
+  @override
+  String get physicalNewGame => 'New game';
+
+  @override
+  String get physicalEndCheckmate => 'Checkmate';
+
+  @override
+  String get physicalEndResignation => 'Resignation';
+
+  @override
+  String get physicalEndTimeout => 'Time out';
+
+  @override
+  String get physicalEndAgreement => 'Draw by agreement';
+
+  @override
+  String get physicalEndStalemate => 'Stalemate';
+
+  @override
+  String get physicalEndInsufficient => 'Insufficient material';
+
+  @override
+  String get physicalEndRepetition => 'Threefold repetition';
+
+  @override
+  String get physicalEndFiftyMoves => 'Fifty-move rule';
+
+  @override
+  String get physicalEndOther => 'Game over';
+
+  @override
+  String physicalResultLine(String reason, String result) {
+    return '$reason · $result';
+  }
+
+  @override
+  String get physicalPhoto => 'Move from photo';
+
+  @override
+  String get physicalRealign => 'Realign';
+
+  @override
+  String get physicalCameraUnavailable => 'Camera not available';
+
+  @override
+  String get physicalImageUnreadable => 'Unreadable image';
+
+  @override
+  String get physicalReferenceSaved =>
+      'Reference photo saved. After the next move, take another photo.';
+
+  @override
+  String get physicalNoMoveRecognized =>
+      'No move recognised: the board looks the same.';
+
+  @override
+  String get physicalGuessNote =>
+      'Most likely moves from the photo: confirm the right one.';
+
+  @override
+  String get physicalAlignTitle => 'Align the board';
+
+  @override
+  String get physicalAlignHelp =>
+      'Drag the four circles onto the corners of the board. Keep the same framing for the next photos.';
+
+  @override
+  String get physicalAlignWhiteBottom => 'White at the bottom';
+
+  @override
+  String get physicalAlignBlackBottom => 'Black at the bottom';
+
+  @override
+  String get physicalAlignDone => 'Done';
 
   @override
   String puzzleGoal(String goal) {

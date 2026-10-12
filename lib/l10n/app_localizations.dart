@@ -1370,6 +1370,174 @@ abstract class AppLocalizations {
   /// **'Era: {answer}'**
   String minigamesQuizAnswer(String answer);
 
+  /// Titolo della schermata e voce di menu della partita su due telefoni
+  ///
+  /// In it, this message translates to:
+  /// **'Gioca con un amico'**
+  String get multiplayerTitle;
+
+  /// Sottotitolo della voce di menu
+  ///
+  /// In it, this message translates to:
+  /// **'Su due telefoni nella stessa Wi-Fi o hotspot'**
+  String get multiplayerEntrySubtitle;
+
+  /// Spiegazione nella schermata iniziale
+  ///
+  /// In it, this message translates to:
+  /// **'Un telefono crea la partita e mostra un QR, l\'altro lo inquadra. Poi le mosse viaggiano da sole sulla stessa Wi-Fi o sull\'hotspot di uno dei due.'**
+  String get multiplayerIntro;
+
+  /// Etichetta della scelta del colore di chi crea la partita
+  ///
+  /// In it, this message translates to:
+  /// **'Il tuo colore'**
+  String get multiplayerYourColor;
+
+  /// Colore bianco
+  ///
+  /// In it, this message translates to:
+  /// **'Bianco'**
+  String get multiplayerWhite;
+
+  /// Colore nero
+  ///
+  /// In it, this message translates to:
+  /// **'Nero'**
+  String get multiplayerBlack;
+
+  /// Pulsante che crea l'invito
+  ///
+  /// In it, this message translates to:
+  /// **'Crea la partita'**
+  String get multiplayerCreate;
+
+  /// Pulsante che apre la fotocamera per leggere l'invito
+  ///
+  /// In it, this message translates to:
+  /// **'Unisciti con il QR'**
+  String get multiplayerJoin;
+
+  /// Errore quando il telefono non è in una rete locale
+  ///
+  /// In it, this message translates to:
+  /// **'Collegati a una Wi-Fi o accendi l\'hotspot, poi riprova.'**
+  String get multiplayerNoNetwork;
+
+  /// Istruzioni sotto il QR dell'invito
+  ///
+  /// In it, this message translates to:
+  /// **'Sull\'altro telefono apri Tu › Gioca con un amico › Unisciti con il QR e inquadra questo codice.'**
+  String get multiplayerInviteHint;
+
+  /// Descrizione del QR per il lettore di schermo
+  ///
+  /// In it, this message translates to:
+  /// **'Codice QR dell\'invito alla partita'**
+  String get multiplayerInviteQrLabel;
+
+  /// Stato mentre chi ospita aspetta l'altro telefono
+  ///
+  /// In it, this message translates to:
+  /// **'In attesa dell\'avversario…'**
+  String get multiplayerWaiting;
+
+  /// Stato mentre l'invitato si collega
+  ///
+  /// In it, this message translates to:
+  /// **'Collegamento all\'altro telefono…'**
+  String get multiplayerConnecting;
+
+  /// Stato quando tocca a questo telefono
+  ///
+  /// In it, this message translates to:
+  /// **'Tocca a te'**
+  String get multiplayerYourTurn;
+
+  /// Stato quando tocca all'altro telefono
+  ///
+  /// In it, this message translates to:
+  /// **'Tocca all\'avversario'**
+  String get multiplayerPeerTurn;
+
+  /// Avviso quando la mossa non ha trovato un canale
+  ///
+  /// In it, this message translates to:
+  /// **'Mossa non ancora consegnata: partirà appena l\'altro telefono sarà raggiungibile.'**
+  String get multiplayerPending;
+
+  /// Esito della partita
+  ///
+  /// In it, this message translates to:
+  /// **'Vince il Bianco'**
+  String get multiplayerWhiteWins;
+
+  /// Esito della partita
+  ///
+  /// In it, this message translates to:
+  /// **'Vince il Nero'**
+  String get multiplayerBlackWins;
+
+  /// Esito della partita
+  ///
+  /// In it, this message translates to:
+  /// **'Patta'**
+  String get multiplayerDraw;
+
+  /// Titolo della schermata della fotocamera
+  ///
+  /// In it, this message translates to:
+  /// **'Inquadra l\'invito'**
+  String get multiplayerScanTitle;
+
+  /// Istruzioni sotto la fotocamera
+  ///
+  /// In it, this message translates to:
+  /// **'Inquadra il QR mostrato dall\'altro telefono.'**
+  String get multiplayerScanHint;
+
+  /// Errore per un QR estraneo
+  ///
+  /// In it, this message translates to:
+  /// **'Questo QR non è un invito a una partita.'**
+  String get multiplayerNotInvite;
+
+  /// Errore della fotocamera
+  ///
+  /// In it, this message translates to:
+  /// **'Fotocamera non disponibile.'**
+  String get multiplayerCameraError;
+
+  /// Titolo della conferma di uscita
+  ///
+  /// In it, this message translates to:
+  /// **'Lasciare la partita?'**
+  String get multiplayerLeaveTitle;
+
+  /// Testo della conferma di uscita
+  ///
+  /// In it, this message translates to:
+  /// **'Il collegamento con l\'altro telefono si chiude e la partita non viene salvata.'**
+  String get multiplayerLeaveBody;
+
+  /// Conferma l'uscita
+  ///
+  /// In it, this message translates to:
+  /// **'Lascia'**
+  String get multiplayerLeave;
+
+  /// Annulla l'uscita
+  ///
+  /// In it, this message translates to:
+  /// **'Resta'**
+  String get multiplayerStay;
+
+  /// Errore generico all'avvio della partita in rete locale
+  ///
+  /// In it, this message translates to:
+  /// **'Non è stato possibile avviare la partita: riprova.'**
+  String get multiplayerStartError;
+
   /// Titolo della schermata e della voce nella scheda Aperture
   ///
   /// In it, this message translates to:
@@ -1819,6 +1987,282 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'In questa posizione il repertorio prevede già {san}.'**
   String openingsErrorConflict(String san);
+
+  /// Titolo della schermata e della voce in «Tu»
+  ///
+  /// In it, this message translates to:
+  /// **'Scacchiera fisica'**
+  String get physicalTitle;
+
+  /// Sottotitolo della voce in «Tu»
+  ///
+  /// In it, this message translates to:
+  /// **'Orologio e registro per una partita dal vivo'**
+  String get physicalEntrySubtitle;
+
+  /// Spiegazione nella schermata iniziale
+  ///
+  /// In it, this message translates to:
+  /// **'Gioca su una scacchiera vera: l\'app fa da orologio e registra la partita. Dopo ogni mossa scrivila o toccala tra quelle legali.'**
+  String get physicalIntro;
+
+  /// Nome predefinito e lato del Bianco
+  ///
+  /// In it, this message translates to:
+  /// **'Bianco'**
+  String get physicalWhite;
+
+  /// Nome predefinito e lato del Nero
+  ///
+  /// In it, this message translates to:
+  /// **'Nero'**
+  String get physicalBlack;
+
+  /// Scelta della partita senza orologio
+  ///
+  /// In it, this message translates to:
+  /// **'Senza tempo'**
+  String get physicalUntimed;
+
+  /// Pulsante che avvia la partita
+  ///
+  /// In it, this message translates to:
+  /// **'Inizia la partita'**
+  String get physicalStart;
+
+  /// Etichetta del campo mossa quando muove il Bianco
+  ///
+  /// In it, this message translates to:
+  /// **'Mossa del Bianco (es. e4, Cf3)'**
+  String get physicalInputWhite;
+
+  /// Etichetta del campo mossa quando muove il Nero
+  ///
+  /// In it, this message translates to:
+  /// **'Mossa del Nero (es. e5, Cc6)'**
+  String get physicalInputBlack;
+
+  /// Avviso per una mossa illegale o ambigua
+  ///
+  /// In it, this message translates to:
+  /// **'Mossa non valida: «{text}»'**
+  String physicalInvalidMove(String text);
+
+  /// Registro vuoto
+  ///
+  /// In it, this message translates to:
+  /// **'Nessuna mossa'**
+  String get physicalNoMoves;
+
+  /// Ferma l'orologio
+  ///
+  /// In it, this message translates to:
+  /// **'Pausa'**
+  String get physicalPause;
+
+  /// Riavvia l'orologio
+  ///
+  /// In it, this message translates to:
+  /// **'Riprendi'**
+  String get physicalResume;
+
+  /// Toglie l'ultima mossa
+  ///
+  /// In it, this message translates to:
+  /// **'Annulla'**
+  String get physicalUndo;
+
+  /// Pulsante patta concordata
+  ///
+  /// In it, this message translates to:
+  /// **'Patta'**
+  String get physicalDraw;
+
+  /// Pulsante abbandono
+  ///
+  /// In it, this message translates to:
+  /// **'Abbandona'**
+  String get physicalResign;
+
+  /// Domanda di conferma della patta
+  ///
+  /// In it, this message translates to:
+  /// **'Patta concordata?'**
+  String get physicalDrawQuestion;
+
+  /// Conferma
+  ///
+  /// In it, this message translates to:
+  /// **'Sì'**
+  String get physicalYes;
+
+  /// Rifiuto
+  ///
+  /// In it, this message translates to:
+  /// **'No'**
+  String get physicalNo;
+
+  /// Titolo della scelta di chi abbandona
+  ///
+  /// In it, this message translates to:
+  /// **'Chi abbandona?'**
+  String get physicalWhoResigns;
+
+  /// Conferma di salvataggio
+  ///
+  /// In it, this message translates to:
+  /// **'Partita salvata nell\'archivio'**
+  String get physicalSaved;
+
+  /// Partita finita senza mosse
+  ///
+  /// In it, this message translates to:
+  /// **'Nessuna mossa da salvare'**
+  String get physicalNothingToSave;
+
+  /// Errore di salvataggio
+  ///
+  /// In it, this message translates to:
+  /// **'Salvataggio non riuscito'**
+  String get physicalSaveFailed;
+
+  /// Torna alla schermata iniziale
+  ///
+  /// In it, this message translates to:
+  /// **'Nuova partita'**
+  String get physicalNewGame;
+
+  /// Motivo di fine partita
+  ///
+  /// In it, this message translates to:
+  /// **'Scacco matto'**
+  String get physicalEndCheckmate;
+
+  /// Motivo di fine partita
+  ///
+  /// In it, this message translates to:
+  /// **'Abbandono'**
+  String get physicalEndResignation;
+
+  /// Motivo di fine partita
+  ///
+  /// In it, this message translates to:
+  /// **'Tempo scaduto'**
+  String get physicalEndTimeout;
+
+  /// Motivo di fine partita
+  ///
+  /// In it, this message translates to:
+  /// **'Patta concordata'**
+  String get physicalEndAgreement;
+
+  /// Motivo di fine partita
+  ///
+  /// In it, this message translates to:
+  /// **'Stallo'**
+  String get physicalEndStalemate;
+
+  /// Motivo di fine partita
+  ///
+  /// In it, this message translates to:
+  /// **'Materiale insufficiente'**
+  String get physicalEndInsufficient;
+
+  /// Motivo di fine partita
+  ///
+  /// In it, this message translates to:
+  /// **'Tripla ripetizione'**
+  String get physicalEndRepetition;
+
+  /// Motivo di fine partita
+  ///
+  /// In it, this message translates to:
+  /// **'Regola delle 50 mosse'**
+  String get physicalEndFiftyMoves;
+
+  /// Motivo di fine partita non previsto
+  ///
+  /// In it, this message translates to:
+  /// **'Partita finita'**
+  String get physicalEndOther;
+
+  /// Motivo e risultato (1-0, 0-1, 1/2-1/2)
+  ///
+  /// In it, this message translates to:
+  /// **'{reason} · {result}'**
+  String physicalResultLine(String reason, String result);
+
+  /// Pulsante che apre la fotocamera
+  ///
+  /// In it, this message translates to:
+  /// **'Mossa dalla foto'**
+  String get physicalPhoto;
+
+  /// Chiede di nuovo gli angoli della scacchiera
+  ///
+  /// In it, this message translates to:
+  /// **'Riallinea'**
+  String get physicalRealign;
+
+  /// Errore della fotocamera
+  ///
+  /// In it, this message translates to:
+  /// **'Fotocamera non disponibile'**
+  String get physicalCameraUnavailable;
+
+  /// Errore di decodifica della foto
+  ///
+  /// In it, this message translates to:
+  /// **'Immagine non leggibile'**
+  String get physicalImageUnreadable;
+
+  /// Dopo la prima foto
+  ///
+  /// In it, this message translates to:
+  /// **'Foto di riferimento salvata. Dopo la prossima mossa scatta un\'altra foto.'**
+  String get physicalReferenceSaved;
+
+  /// Due foto uguali
+  ///
+  /// In it, this message translates to:
+  /// **'Nessuna mossa riconosciuta: la scacchiera è uguale.'**
+  String get physicalNoMoveRecognized;
+
+  /// Sopra le mosse proposte
+  ///
+  /// In it, this message translates to:
+  /// **'Mosse più probabili dalla foto: conferma quella giusta.'**
+  String get physicalGuessNote;
+
+  /// Titolo della schermata di allineamento
+  ///
+  /// In it, this message translates to:
+  /// **'Allinea la scacchiera'**
+  String get physicalAlignTitle;
+
+  /// Istruzione di allineamento
+  ///
+  /// In it, this message translates to:
+  /// **'Trascina i quattro cerchi sugli angoli della scacchiera. Per le foto successive terrai la stessa inquadratura.'**
+  String get physicalAlignHelp;
+
+  /// Lato in basso nella foto
+  ///
+  /// In it, this message translates to:
+  /// **'Bianco in basso'**
+  String get physicalAlignWhiteBottom;
+
+  /// Lato in basso nella foto
+  ///
+  /// In it, this message translates to:
+  /// **'Nero in basso'**
+  String get physicalAlignBlackBottom;
+
+  /// Conferma l'allineamento
+  ///
+  /// In it, this message translates to:
+  /// **'Fatto'**
+  String get physicalAlignDone;
 
   /// Obiettivo del puzzle mostrato sopra la scacchiera e letto dai lettori di schermo
   ///

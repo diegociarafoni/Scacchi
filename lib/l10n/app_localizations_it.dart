@@ -848,6 +848,98 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
+  String get multiplayerTitle => 'Gioca con un amico';
+
+  @override
+  String get multiplayerEntrySubtitle =>
+      'Su due telefoni nella stessa Wi-Fi o hotspot';
+
+  @override
+  String get multiplayerIntro =>
+      'Un telefono crea la partita e mostra un QR, l\'altro lo inquadra. Poi le mosse viaggiano da sole sulla stessa Wi-Fi o sull\'hotspot di uno dei due.';
+
+  @override
+  String get multiplayerYourColor => 'Il tuo colore';
+
+  @override
+  String get multiplayerWhite => 'Bianco';
+
+  @override
+  String get multiplayerBlack => 'Nero';
+
+  @override
+  String get multiplayerCreate => 'Crea la partita';
+
+  @override
+  String get multiplayerJoin => 'Unisciti con il QR';
+
+  @override
+  String get multiplayerNoNetwork =>
+      'Collegati a una Wi-Fi o accendi l\'hotspot, poi riprova.';
+
+  @override
+  String get multiplayerInviteHint =>
+      'Sull\'altro telefono apri Tu › Gioca con un amico › Unisciti con il QR e inquadra questo codice.';
+
+  @override
+  String get multiplayerInviteQrLabel => 'Codice QR dell\'invito alla partita';
+
+  @override
+  String get multiplayerWaiting => 'In attesa dell\'avversario…';
+
+  @override
+  String get multiplayerConnecting => 'Collegamento all\'altro telefono…';
+
+  @override
+  String get multiplayerYourTurn => 'Tocca a te';
+
+  @override
+  String get multiplayerPeerTurn => 'Tocca all\'avversario';
+
+  @override
+  String get multiplayerPending =>
+      'Mossa non ancora consegnata: partirà appena l\'altro telefono sarà raggiungibile.';
+
+  @override
+  String get multiplayerWhiteWins => 'Vince il Bianco';
+
+  @override
+  String get multiplayerBlackWins => 'Vince il Nero';
+
+  @override
+  String get multiplayerDraw => 'Patta';
+
+  @override
+  String get multiplayerScanTitle => 'Inquadra l\'invito';
+
+  @override
+  String get multiplayerScanHint =>
+      'Inquadra il QR mostrato dall\'altro telefono.';
+
+  @override
+  String get multiplayerNotInvite => 'Questo QR non è un invito a una partita.';
+
+  @override
+  String get multiplayerCameraError => 'Fotocamera non disponibile.';
+
+  @override
+  String get multiplayerLeaveTitle => 'Lasciare la partita?';
+
+  @override
+  String get multiplayerLeaveBody =>
+      'Il collegamento con l\'altro telefono si chiude e la partita non viene salvata.';
+
+  @override
+  String get multiplayerLeave => 'Lascia';
+
+  @override
+  String get multiplayerStay => 'Resta';
+
+  @override
+  String get multiplayerStartError =>
+      'Non è stato possibile avviare la partita: riprova.';
+
+  @override
   String get personalTitle => 'Le tue aperture';
 
   @override
@@ -1142,6 +1234,154 @@ class AppLocalizationsIt extends AppLocalizations {
   String openingsErrorConflict(String san) {
     return 'In questa posizione il repertorio prevede già $san.';
   }
+
+  @override
+  String get physicalTitle => 'Scacchiera fisica';
+
+  @override
+  String get physicalEntrySubtitle =>
+      'Orologio e registro per una partita dal vivo';
+
+  @override
+  String get physicalIntro =>
+      'Gioca su una scacchiera vera: l\'app fa da orologio e registra la partita. Dopo ogni mossa scrivila o toccala tra quelle legali.';
+
+  @override
+  String get physicalWhite => 'Bianco';
+
+  @override
+  String get physicalBlack => 'Nero';
+
+  @override
+  String get physicalUntimed => 'Senza tempo';
+
+  @override
+  String get physicalStart => 'Inizia la partita';
+
+  @override
+  String get physicalInputWhite => 'Mossa del Bianco (es. e4, Cf3)';
+
+  @override
+  String get physicalInputBlack => 'Mossa del Nero (es. e5, Cc6)';
+
+  @override
+  String physicalInvalidMove(String text) {
+    return 'Mossa non valida: «$text»';
+  }
+
+  @override
+  String get physicalNoMoves => 'Nessuna mossa';
+
+  @override
+  String get physicalPause => 'Pausa';
+
+  @override
+  String get physicalResume => 'Riprendi';
+
+  @override
+  String get physicalUndo => 'Annulla';
+
+  @override
+  String get physicalDraw => 'Patta';
+
+  @override
+  String get physicalResign => 'Abbandona';
+
+  @override
+  String get physicalDrawQuestion => 'Patta concordata?';
+
+  @override
+  String get physicalYes => 'Sì';
+
+  @override
+  String get physicalNo => 'No';
+
+  @override
+  String get physicalWhoResigns => 'Chi abbandona?';
+
+  @override
+  String get physicalSaved => 'Partita salvata nell\'archivio';
+
+  @override
+  String get physicalNothingToSave => 'Nessuna mossa da salvare';
+
+  @override
+  String get physicalSaveFailed => 'Salvataggio non riuscito';
+
+  @override
+  String get physicalNewGame => 'Nuova partita';
+
+  @override
+  String get physicalEndCheckmate => 'Scacco matto';
+
+  @override
+  String get physicalEndResignation => 'Abbandono';
+
+  @override
+  String get physicalEndTimeout => 'Tempo scaduto';
+
+  @override
+  String get physicalEndAgreement => 'Patta concordata';
+
+  @override
+  String get physicalEndStalemate => 'Stallo';
+
+  @override
+  String get physicalEndInsufficient => 'Materiale insufficiente';
+
+  @override
+  String get physicalEndRepetition => 'Tripla ripetizione';
+
+  @override
+  String get physicalEndFiftyMoves => 'Regola delle 50 mosse';
+
+  @override
+  String get physicalEndOther => 'Partita finita';
+
+  @override
+  String physicalResultLine(String reason, String result) {
+    return '$reason · $result';
+  }
+
+  @override
+  String get physicalPhoto => 'Mossa dalla foto';
+
+  @override
+  String get physicalRealign => 'Riallinea';
+
+  @override
+  String get physicalCameraUnavailable => 'Fotocamera non disponibile';
+
+  @override
+  String get physicalImageUnreadable => 'Immagine non leggibile';
+
+  @override
+  String get physicalReferenceSaved =>
+      'Foto di riferimento salvata. Dopo la prossima mossa scatta un\'altra foto.';
+
+  @override
+  String get physicalNoMoveRecognized =>
+      'Nessuna mossa riconosciuta: la scacchiera è uguale.';
+
+  @override
+  String get physicalGuessNote =>
+      'Mosse più probabili dalla foto: conferma quella giusta.';
+
+  @override
+  String get physicalAlignTitle => 'Allinea la scacchiera';
+
+  @override
+  String get physicalAlignHelp =>
+      'Trascina i quattro cerchi sugli angoli della scacchiera. Per le foto successive terrai la stessa inquadratura.';
+
+  @override
+  String get physicalAlignWhiteBottom => 'Bianco in basso';
+
+  @override
+  String get physicalAlignBlackBottom => 'Nero in basso';
+
+  @override
+  String get physicalAlignDone => 'Fatto';
 
   @override
   String puzzleGoal(String goal) {

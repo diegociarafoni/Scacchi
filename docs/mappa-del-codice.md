@@ -20,7 +20,7 @@ Ogni cartella di `lib/` ha qui il documento che descrive le sue funzioni. La tab
 | `lib/l10n/` | [localizzazione.md](localizzazione.md) | Testi tradotti |
 | `lib/masters/` | [grandi-maestri.md](grandi-maestri.md) | Partite dei grandi maestri: raccolta, commento, «Indovina la mossa» |
 | `lib/minigames/` | [minigiochi.md](minigiochi.md) | Minigiochi di allenamento |
-| `lib/multiplayer/` | [multigiocatore.md](multigiocatore.md) | Partita tra due telefoni: invito, firma e cifratura, registro delle mosse, canali |
+| `lib/multiplayer/` | [multigiocatore.md](multigiocatore.md) | Partita tra due telefoni: invito, firma e cifratura, registro delle mosse, canali, schermata «Gioca con un amico» |
 | `lib/openings/` | [aperture.md](aperture.md) | Nomi delle aperture, explorer, repertorio |
 | `lib/path/` | [percorso.md](percorso.md) | Percorso a tappe con stelle e guardiani |
 | `lib/physical/` | [scacchiera-fisica.md](scacchiera-fisica.md) | Orologio e registro per la scacchiera reale |

@@ -1,0 +1,199 @@
+{
+  "physicalTitle": "Scacchiera fisica",
+  "@physicalTitle": {
+    "description": "Titolo della schermata e della voce in «Tu»"
+  },
+  "physicalEntrySubtitle": "Orologio e registro per una partita dal vivo",
+  "@physicalEntrySubtitle": {
+    "description": "Sottotitolo della voce in «Tu»"
+  },
+  "physicalIntro": "Gioca su una scacchiera vera: l'app fa da orologio e registra la partita. Dopo ogni mossa scrivila o toccala tra quelle legali.",
+  "@physicalIntro": {
+    "description": "Spiegazione nella schermata iniziale"
+  },
+  "physicalWhite": "Bianco",
+  "@physicalWhite": {
+    "description": "Nome predefinito e lato del Bianco"
+  },
+  "physicalBlack": "Nero",
+  "@physicalBlack": {
+    "description": "Nome predefinito e lato del Nero"
+  },
+  "physicalUntimed": "Senza tempo",
+  "@physicalUntimed": {
+    "description": "Scelta della partita senza orologio"
+  },
+  "physicalStart": "Inizia la partita",
+  "@physicalStart": {
+    "description": "Pulsante che avvia la partita"
+  },
+  "physicalInputWhite": "Mossa del Bianco (es. e4, Cf3)",
+  "@physicalInputWhite": {
+    "description": "Etichetta del campo mossa quando muove il Bianco"
+  },
+  "physicalInputBlack": "Mossa del Nero (es. e5, Cc6)",
+  "@physicalInputBlack": {
+    "description": "Etichetta del campo mossa quando muove il Nero"
+  },
+  "physicalInvalidMove": "Mossa non valida: «{text}»",
+  "@physicalInvalidMove": {
+    "description": "Avviso per una mossa illegale o ambigua",
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "physicalNoMoves": "Nessuna mossa",
+  "@physicalNoMoves": {
+    "description": "Registro vuoto"
+  },
+  "physicalPause": "Pausa",
+  "@physicalPause": {
+    "description": "Ferma l'orologio"
+  },
+  "physicalResume": "Riprendi",
+  "@physicalResume": {
+    "description": "Riavvia l'orologio"
+  },
+  "physicalUndo": "Annulla",
+  "@physicalUndo": {
+    "description": "Toglie l'ultima mossa"
+  },
+  "physicalDraw": "Patta",
+  "@physicalDraw": {
+    "description": "Pulsante patta concordata"
+  },
+  "physicalResign": "Abbandona",
+  "@physicalResign": {
+    "description": "Pulsante abbandono"
+  },
+  "physicalDrawQuestion": "Patta concordata?",
+  "@physicalDrawQuestion": {
+    "description": "Domanda di conferma della patta"
+  },
+  "physicalYes": "Sì",
+  "@physicalYes": {
+    "description": "Conferma"
+  },
+  "physicalNo": "No",
+  "@physicalNo": {
+    "description": "Rifiuto"
+  },
+  "physicalWhoResigns": "Chi abbandona?",
+  "@physicalWhoResigns": {
+    "description": "Titolo della scelta di chi abbandona"
+  },
+  "physicalSaved": "Partita salvata nell'archivio",
+  "@physicalSaved": {
+    "description": "Conferma di salvataggio"
+  },
+  "physicalNothingToSave": "Nessuna mossa da salvare",
+  "@physicalNothingToSave": {
+    "description": "Partita finita senza mosse"
+  },
+  "physicalSaveFailed": "Salvataggio non riuscito",
+  "@physicalSaveFailed": {
+    "description": "Errore di salvataggio"
+  },
+  "physicalNewGame": "Nuova partita",
+  "@physicalNewGame": {
+    "description": "Torna alla schermata iniziale"
+  },
+  "physicalEndCheckmate": "Scacco matto",
+  "@physicalEndCheckmate": {
+    "description": "Motivo di fine partita"
+  },
+  "physicalEndResignation": "Abbandono",
+  "@physicalEndResignation": {
+    "description": "Motivo di fine partita"
+  },
+  "physicalEndTimeout": "Tempo scaduto",
+  "@physicalEndTimeout": {
+    "description": "Motivo di fine partita"
+  },
+  "physicalEndAgreement": "Patta concordata",
+  "@physicalEndAgreement": {
+    "description": "Motivo di fine partita"
+  },
+  "physicalEndStalemate": "Stallo",
+  "@physicalEndStalemate": {
+    "description": "Motivo di fine partita"
+  },
+  "physicalEndInsufficient": "Materiale insufficiente",
+  "@physicalEndInsufficient": {
+    "description": "Motivo di fine partita"
+  },
+  "physicalEndRepetition": "Tripla ripetizione",
+  "@physicalEndRepetition": {
+    "description": "Motivo di fine partita"
+  },
+  "physicalEndFiftyMoves": "Regola delle 50 mosse",
+  "@physicalEndFiftyMoves": {
+    "description": "Motivo di fine partita"
+  },
+  "physicalEndOther": "Partita finita",
+  "@physicalEndOther": {
+    "description": "Motivo di fine partita non previsto"
+  },
+  "physicalResultLine": "{reason} · {result}",
+  "@physicalResultLine": {
+    "description": "Motivo e risultato (1-0, 0-1, 1/2-1/2)",
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      },
+      "result": {
+        "type": "String"
+      }
+    }
+  },
+  "physicalPhoto": "Mossa dalla foto",
+  "@physicalPhoto": {
+    "description": "Pulsante che apre la fotocamera"
+  },
+  "physicalRealign": "Riallinea",
+  "@physicalRealign": {
+    "description": "Chiede di nuovo gli angoli della scacchiera"
+  },
+  "physicalCameraUnavailable": "Fotocamera non disponibile",
+  "@physicalCameraUnavailable": {
+    "description": "Errore della fotocamera"
+  },
+  "physicalImageUnreadable": "Immagine non leggibile",
+  "@physicalImageUnreadable": {
+    "description": "Errore di decodifica della foto"
+  },
+  "physicalReferenceSaved": "Foto di riferimento salvata. Dopo la prossima mossa scatta un'altra foto.",
+  "@physicalReferenceSaved": {
+    "description": "Dopo la prima foto"
+  },
+  "physicalNoMoveRecognized": "Nessuna mossa riconosciuta: la scacchiera è uguale.",
+  "@physicalNoMoveRecognized": {
+    "description": "Due foto uguali"
+  },
+  "physicalGuessNote": "Mosse più probabili dalla foto: conferma quella giusta.",
+  "@physicalGuessNote": {
+    "description": "Sopra le mosse proposte"
+  },
+  "physicalAlignTitle": "Allinea la scacchiera",
+  "@physicalAlignTitle": {
+    "description": "Titolo della schermata di allineamento"
+  },
+  "physicalAlignHelp": "Trascina i quattro cerchi sugli angoli della scacchiera. Per le foto successive terrai la stessa inquadratura.",
+  "@physicalAlignHelp": {
+    "description": "Istruzione di allineamento"
+  },
+  "physicalAlignWhiteBottom": "Bianco in basso",
+  "@physicalAlignWhiteBottom": {
+    "description": "Lato in basso nella foto"
+  },
+  "physicalAlignBlackBottom": "Nero in basso",
+  "@physicalAlignBlackBottom": {
+    "description": "Lato in basso nella foto"
+  },
+  "physicalAlignDone": "Fatto",
+  "@physicalAlignDone": {
+    "description": "Conferma l'allineamento"
+  }
+}
