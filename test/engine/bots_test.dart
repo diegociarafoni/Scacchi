@@ -187,6 +187,16 @@ void main() {
   });
 
   group('frasi', () {
+    test('ogni stile ha battute di compagnia brevi', () {
+      for (final bot in bots) {
+        final chat = bot.phrases(BotEvent.chat);
+        expect(chat.length, greaterThanOrEqualTo(2), reason: bot.id);
+        for (final p in chat) {
+          expect(p.length, lessThanOrEqualTo(60), reason: p);
+        }
+      }
+    });
+
     test('RF-23 ogni bot ha frasi per ogni evento', () {
       for (final bot in bots) {
         for (final event in BotEvent.values) {
