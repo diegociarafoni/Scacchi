@@ -49,6 +49,7 @@ class GameInvite {
     required this.hostSide,
     this.lanAddress,
     this.remote = false,
+    this.ble = false,
   });
 
   final String gameId;
@@ -65,6 +66,9 @@ class GameInvite {
   /// riceve l'invito apre quel canale oltre a quello locale, se c'è.
   final bool remote;
 
+  /// L'ospite ascolta anche via Bluetooth LE (vicini, senza rete).
+  final bool ble;
+
   String toLink() => Uri(
     scheme: inviteScheme,
     host: 'partita',
@@ -76,6 +80,7 @@ class GameInvite {
       'c': hostSide == Side.white ? 'w' : 'b',
       'lan': ?lanAddress,
       if (remote) 'r': '1',
+      if (ble) 'ble': '1',
     },
   ).toString();
 
@@ -115,6 +120,7 @@ class GameInvite {
       hostSide: side,
       lanAddress: lan,
       remote: remote != null,
+      ble: q['ble'] == '1',
     );
   }
 }

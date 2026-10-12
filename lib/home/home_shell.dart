@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dartchess/dartchess.dart' show Side;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +7,10 @@ import 'package:flutter/material.dart';
 import '../archive/game_archive.dart';
 import '../archive/pgn.dart';
 import '../archive/saved_game.dart';
+import '../badges/badge_def.dart';
+import '../badges/badge_sources.dart';
+import '../badges/badges_l10n.dart';
+import '../badges/badges_page.dart';
 import '../endgames/endgame_controller.dart';
 import '../endgames/endgames_page.dart';
 import '../engine/bots.dart';
@@ -126,6 +132,8 @@ class _HomeShellState extends State<HomeShell> {
   Future<EndgameController>? _endgames;
   Future<MastersController>? _masters;
   Future<StoryController>? _story;
+  StreamSubscription<List<BadgeDef>>? _badgeSub;
+  final _badgeSources = <Listenable, VoidCallback>{};
 
   /// La scheda Tu si costruisce alla prima apertura, poi resta in memoria.
   var _youVisited = false;
@@ -160,6 +168,10 @@ class _HomeShellState extends State<HomeShell> {
   @override
   void dispose() {
     widget.settings.removeListener(_onSettings);
+    unawaited(_badgeSub?.cancel());
+    _badgeSources.forEach(
+      (source, listener) => source.removeListener(listener),
+    );
     _reminders?.dispose();
     super.dispose();
   }
@@ -171,6 +183,7 @@ class _HomeShellState extends State<HomeShell> {
           if (scheduler != null && _reminders == null && mounted) {
             setState(() => _reminders = ReminderController(p, scheduler));
           }
+          _watchBadges(p);
           return p;
         },
         onError: (Object e, StackTrace st) {
@@ -180,6 +193,80 @@ class _HomeShellState extends State<HomeShell> {
           Error.throwWithStackTrace(e, st);
         },
       );
+
+  /// Avvisa dei nuovi badge e li allinea ai salvataggi di Percorso, finali,
+  /// maestri e Storia, che ne conservano l'avanzamento.
+  void _watchBadges(ProgressController p) {
+    if (_badgeSub != null || !mounted) return;
+    _badgeSub = p.badgeUnlocks.listen(_announceBadges);
+    unawaited(_syncBadgeSources(p));
+  }
+
+  Future<void> _syncBadgeSources(ProgressController p) async {
+    Future<T?> quiet<T>(Future<T> source) => source.then<T?>(
+      (v) => v,
+      onError: (Object e) {
+        if (kDebugMode) debugPrint('Avanzamento dei badge non disponibile: $e');
+        return null;
+      },
+    );
+    final (path, endgames, masters, story) = await (
+      quiet(_pathController()),
+      quiet(_endgameController()),
+      quiet(_mastersController()),
+      quiet(_storyController()),
+    ).wait;
+    if (!mounted) return;
+    void push() => unawaited(
+      p
+          .updateBadgeSources(
+            BadgeSources.fromStores(
+              path: path?.progress,
+              endgames: endgames?.progress,
+              masters: masters?.progress,
+              story: story?.state,
+            ),
+          )
+          .onError((Object e, _) {
+            if (kDebugMode) debugPrint('Badge non aggiornati: $e');
+          }),
+    );
+    for (final source in <ChangeNotifier?>[path, endgames, masters, story]) {
+      if (source == null) continue;
+      _badgeSources[source] = push;
+      source.addListener(push);
+    }
+    push();
+  }
+
+  /// Nel profilo bambino i badge non compaiono, quindi nemmeno l'avviso.
+  void _announceBadges(List<BadgeDef> fresh) {
+    if (_kidMode || !mounted || fresh.isEmpty) return;
+    final l = badgesL10n(context);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          fresh.length > 3
+              ? l.badgesUnlockedMany(fresh.length)
+              : l.badgesUnlocked(
+                  [for (final b in fresh) badgeName(l, b)].join(', '),
+                ),
+        ),
+        action: SnackBarAction(
+          label: l.badgesSeeAction,
+          onPressed: _openBadges,
+        ),
+      ),
+    );
+  }
+
+  Future<void> _openBadges() async {
+    final p = await _progressController();
+    if (!mounted) return;
+    await Navigator.of(
+      context,
+    ).push(MaterialPageRoute<void>(builder: (_) => BadgesPage(controller: p)));
+  }
 
   /// Un solo percorso in memoria, per non sovrascrivere le stelle tra due
   /// schermate aperte insieme.

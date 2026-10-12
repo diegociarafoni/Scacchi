@@ -110,6 +110,11 @@ void main() {
           ),
         ),
       );
+      await tester.scrollUntilVisible(
+        find.text('Unisciti con il link'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
       await tester.tap(find.text('Unisciti con il link'));
       await tester.pumpAndSettle();
       await tester.tap(find.byTooltip('Incolla'));
@@ -127,6 +132,11 @@ void main() {
       localizedApp(
         home: MultiplayerPage(readClipboard: () async => 'ciao a tutti'),
       ),
+    );
+    await tester.scrollUntilVisible(
+      find.text('Unisciti con il link'),
+      200,
+      scrollable: find.byType(Scrollable).first,
     );
     await tester.tap(find.text('Unisciti con il link'));
     await tester.pumpAndSettle();

@@ -78,26 +78,30 @@ class MultiplayerController extends ChangeNotifier {
 
   /// Crea l'invito e attende l'avversario. Con [remote] la partita si gioca
   /// anche a distanza, e basta internet: senza Wi-Fi né hotspot l'invito
-  /// viaggia come link. Altrimenti [NoLocalNetwork] se il telefono non è in
-  /// una rete locale.
+  /// viaggia come link. Con [bluetooth] non serve la rete locale: l'invito
+  /// porta il Bluetooth (canale in `extraChannelFactories`). Altrimenti
+  /// [NoLocalNetwork] se il telefono non è in una rete locale.
   static Future<MultiplayerController> host({
     required Side side,
+    bool bluetooth = false,
     OpenHost openHost = openLanHost,
     bool remote = false,
     SavedGameStore? store,
     LanDiscovery discovery = const BonsoirLanDiscovery(),
   }) async {
     HostChannel? lan;
-    try {
-      lan = await openHost();
-    } on Object {
-      // A distanza la rete locale è facoltativa: porta occupata, VPN o
-      // permesso negato non impediscono di giocare via internet.
-      if (!remote) rethrow;
-    }
-    if (!remote && lan?.lanAddress == null) {
-      await lan?.transport.close();
-      throw const NoLocalNetwork();
+    if (!bluetooth) {
+      try {
+        lan = await openHost();
+      } on Object {
+        // A distanza la rete locale è facoltativa: porta occupata, VPN o
+        // permesso negato non impediscono di giocare via internet.
+        if (!remote) rethrow;
+      }
+      if (!remote && lan?.lanAddress == null) {
+        await lan?.transport.close();
+        throw const NoLocalNetwork();
+      }
     }
     final opened = <MessageTransport>[?lan?.transport];
     try {
@@ -109,6 +113,7 @@ class MultiplayerController extends ChangeNotifier {
         hostSide: side,
         lanAddress: lan?.lanAddress,
         remote: remote,
+        ble: bluetooth,
       );
       final session = MultiplayerSession.host(
         invite,
@@ -162,13 +167,14 @@ class MultiplayerController extends ChangeNotifier {
       throw const FormatException('chiave non coerente con l\'invito');
     }
     HostChannel? lan;
-    // Un invito solo a distanza non ha un indirizzo da riaprire; uno misto
-    // riparte anche senza Wi-Fi.
-    if (lanInvite != null || !invite.remote) {
+    // Un invito solo a distanza o solo Bluetooth non ha un indirizzo da
+    // riaprire; uno misto riparte anche senza Wi-Fi.
+    final lanOptional = invite.remote || invite.ble;
+    if (lanInvite != null || !lanOptional) {
       try {
         lan = await openHost(port);
       } on Object {
-        if (!invite.remote) rethrow;
+        if (!lanOptional) rethrow;
       }
     }
     final opened = <MessageTransport>[?lan?.transport];
@@ -181,6 +187,7 @@ class MultiplayerController extends ChangeNotifier {
         hostSide: invite.hostSide,
         lanAddress: lan?.lanAddress ?? invite.lanAddress,
         remote: invite.remote,
+        ble: invite.ble,
       );
       final session = MultiplayerSession.host(
         current,
@@ -237,7 +244,10 @@ class MultiplayerController extends ChangeNotifier {
   }) async {
     final lan = invite.lanAddress;
     final target = lan == null ? null : _split(lan);
-    if (target == null && !invite.remote) throw const NoLocalNetwork();
+    // Senza indirizzo il canale lo aprono il registro (Bluetooth) o i relay.
+    if (target == null && !invite.remote && !invite.ble) {
+      throw const NoLocalNetwork();
+    }
     final opened = <MessageTransport>[];
     if (target != null) {
       final channel = openGuest(target.$1, target.$2);

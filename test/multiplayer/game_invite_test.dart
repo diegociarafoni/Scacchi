@@ -6,12 +6,13 @@ import 'package:scacchi/multiplayer/game_invite.dart';
 
 Uint8List bytes(int n, int fill) => Uint8List.fromList(List.filled(n, fill));
 
-GameInvite sample({String? lan}) => GameInvite(
+GameInvite sample({String? lan, bool ble = false}) => GameInvite(
   gameId: '0f8e2c1a-3b4d-4e5f-8a9b-1c2d3e4f5a6b',
   secret: bytes(32, 7),
   hostKey: bytes(32, 9),
   hostSide: Side.white,
   lanAddress: lan,
+  ble: ble,
 );
 
 void main() {
@@ -86,6 +87,26 @@ void main() {
     ).toLink();
     expect(GameInvite.parse(good.replaceFirst('r=1', 'r=2')), isNull);
     expect(GameInvite.parse(good.replaceFirst('r=1', 'r=')), isNull);
+  });
+
+  test('RMP-20 l\'invito dice se si gioca anche via Bluetooth', () {
+    expect(GameInvite.parse(sample().toLink())!.ble, isFalse);
+    expect(sample().toLink(), isNot(contains('ble=')));
+    final back = GameInvite.parse(sample(ble: true).toLink())!;
+    expect(back.ble, isTrue);
+    expect(back.lanAddress, isNull);
+    final both = GameInvite.parse(
+      sample(lan: '10.0.0.2:4000', ble: true).toLink(),
+    )!;
+    expect(both.ble, isTrue);
+    expect(both.lanAddress, '10.0.0.2:4000');
+    // Valori sconosciuti non accendono il Bluetooth.
+    expect(
+      GameInvite.parse(
+        sample(ble: true).toLink().replaceFirst('ble=1', 'ble=2'),
+      )!.ble,
+      isFalse,
+    );
   });
 
   group('RMP-01 un invito non valido viene scartato', () {

@@ -13,6 +13,7 @@ import '../exchange/qr_receive_page.dart';
 import '../game/move_speech.dart';
 import '../l10n/app_localizations.dart';
 import '../training/training_board.dart';
+import 'ble_link.dart';
 import 'game_invite.dart';
 import 'multiplayer_controller.dart';
 import 'remote_watch.dart';
@@ -34,6 +35,9 @@ Future<void> shareInviteText(String subject, String text) async {
 Future<String?> clipboardText() async =>
     (await Clipboard.getData(Clipboard.kTextPlain))?.text;
 
+/// Come ci si collega all'altro telefono.
+enum _Channel { wifi, bluetooth }
+
 /// Partita con un amico su un altro telefono (RMP-08): chi crea mostra il QR
 /// dell'invito, l'altro lo inquadra, poi si gioca sulla stessa rete locale.
 class MultiplayerPage extends StatefulWidget {
@@ -41,6 +45,7 @@ class MultiplayerPage extends StatefulWidget {
     super.key,
     this.openHost = openLanHost,
     this.openGuest = openLanGuest,
+    this.bluetoothCheck = checkBluetooth,
     this.openResumeHost = openLanHostAt,
     this.scanner = zxingScanner,
     this.store,
@@ -65,6 +70,9 @@ class MultiplayerPage extends StatefulWidget {
   /// Dove sta la partita salvata; per default il file dell'app.
   final SavedGameStore? store;
   final OpenGuest openGuest;
+
+  /// Permessi e Bluetooth acceso, controllati prima di una partita Bluetooth.
+  final Future<void> Function({required bool isHost}) bluetoothCheck;
   final QrScannerBuilder scanner;
 
   @override
@@ -74,6 +82,7 @@ class MultiplayerPage extends StatefulWidget {
 class _MultiplayerPageState extends State<MultiplayerPage> {
   Side _side = Side.white;
   late bool _remote = widget.remoteByDefault;
+  _Channel _channel = _Channel.wifi;
   bool _busy = false;
   SavedGameStore? _store;
   SavedGame? _saved;
@@ -95,14 +104,18 @@ class _MultiplayerPageState extends State<MultiplayerPage> {
     }
   }
 
-  Future<void> _resume(SavedGame saved) => _start(
-    () => MultiplayerController.resume(
+  Future<void> _resume(SavedGame saved) => _start(() async {
+    // Con anche la rete locale la partita può comunque ripartire in Wi-Fi.
+    if (saved.invite.ble && saved.invite.lanAddress == null) {
+      await widget.bluetoothCheck(isHost: saved.isHost);
+    }
+    return MultiplayerController.resume(
       saved,
       openHost: widget.openResumeHost,
       openGuest: widget.openGuest,
       store: _store,
-    ),
-  );
+    );
+  });
 
   Future<bool> _confirmDiscard() async {
     final l10n = multiplayerL10n(context);
@@ -175,6 +188,17 @@ class _MultiplayerPageState extends State<MultiplayerPage> {
       messenger.showSnackBar(
         SnackBar(content: Text(l10n.multiplayerNoNetwork)),
       );
+    } on BluetoothUnavailable catch (e) {
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(switch (e.problem) {
+            BluetoothProblem.off => l10n.multiplayerBluetoothOff,
+            BluetoothProblem.denied => l10n.multiplayerBluetoothDenied,
+            BluetoothProblem.unsupported =>
+              l10n.multiplayerBluetoothUnsupported,
+          }),
+        ),
+      );
     } on Object catch (e) {
       // Porta occupata, rete locale negata su iOS e simili.
       if (kDebugMode) debugPrint('Partita con un amico non avviata: $e');
@@ -198,13 +222,16 @@ class _MultiplayerPageState extends State<MultiplayerPage> {
             ),
           );
     if (invite == null || !mounted) return;
-    await _startNew(
-      () => MultiplayerController.join(
+    await _startNew(() async {
+      if (invite.ble && invite.lanAddress == null) {
+        await widget.bluetoothCheck(isHost: false);
+      }
+      return MultiplayerController.join(
         invite,
         openGuest: widget.openGuest,
         store: _store,
-      ),
-    );
+      );
+    });
   }
 
   @override
@@ -266,6 +293,33 @@ class _MultiplayerPageState extends State<MultiplayerPage> {
             selected: {_side},
             onSelectionChanged: (s) => setState(() => _side = s.first),
           ),
+          const SizedBox(height: 16),
+          Text(
+            l10n.multiplayerChannelLabel,
+            style: Theme.of(context).textTheme.titleSmall,
+          ),
+          const SizedBox(height: 8),
+          SegmentedButton<_Channel>(
+            segments: [
+              ButtonSegment(
+                value: _Channel.wifi,
+                icon: const Icon(Icons.wifi),
+                label: Text(l10n.multiplayerChannelWifi),
+              ),
+              ButtonSegment(
+                value: _Channel.bluetooth,
+                icon: const Icon(Icons.bluetooth),
+                label: Text(l10n.multiplayerChannelBluetooth),
+              ),
+            ],
+            selected: {_channel},
+            onSelectionChanged: (s) => setState(() => _channel = s.first),
+          ),
+          if (_channel == _Channel.bluetooth) ...[
+            const SizedBox(height: 8),
+            Text(l10n.multiplayerBluetoothHint),
+          ],
+          const SizedBox(height: 8),
           SwitchListTile(
             contentPadding: EdgeInsets.zero,
             title: Text(l10n.multiplayerRemoteSwitch),
@@ -279,14 +333,17 @@ class _MultiplayerPageState extends State<MultiplayerPage> {
             label: Text(l10n.multiplayerCreate),
             onPressed: _busy
                 ? null
-                : () => _startNew(
-                    () => MultiplayerController.host(
+                : () => _startNew(() async {
+                    final bluetooth = _channel == _Channel.bluetooth;
+                    if (bluetooth) await widget.bluetoothCheck(isHost: true);
+                    return MultiplayerController.host(
                       side: _side,
+                      bluetooth: bluetooth,
                       openHost: widget.openHost,
                       remote: _remote,
                       store: _store,
-                    ),
-                  ),
+                    );
+                  }),
           ),
           const SizedBox(height: 8),
           OutlinedButton.icon(
@@ -585,6 +642,13 @@ class _MultiplayerGamePageState extends State<MultiplayerGamePage> {
                           : l10n.multiplayerInviteHint,
                       textAlign: TextAlign.center,
                     ),
+                    if (_c.session.invite.ble) ...[
+                      const SizedBox(height: 8),
+                      Text(
+                        l10n.multiplayerBluetoothInviteHint,
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
                     if (_c.session.invite.remote) ...[
                       const SizedBox(height: 12),
                       Center(

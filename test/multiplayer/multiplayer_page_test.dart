@@ -60,6 +60,11 @@ void main() {
     );
     await tester.tap(find.text('Nero'));
     await tester.pump();
+    await tester.scrollUntilVisible(
+      find.text('Crea la partita'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.tap(find.text('Crea la partita'));
     await _wait(tester);
     await tester.pumpAndSettle();
@@ -97,6 +102,11 @@ void main() {
         ),
       ),
     );
+    await tester.scrollUntilVisible(
+      find.text('Crea la partita'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.tap(find.text('Crea la partita'));
     await tester.pump();
     await tester.pump();
@@ -113,6 +123,11 @@ void main() {
           openHost: () async => throw const SocketException('porta occupata'),
         ),
       ),
+    );
+    await tester.scrollUntilVisible(
+      find.text('Crea la partita'),
+      200,
+      scrollable: find.byType(Scrollable).first,
     );
     await tester.tap(find.text('Crea la partita'));
     await tester.pump();
@@ -294,6 +309,11 @@ void main() {
             },
           ),
         );
+        await tester.scrollUntilVisible(
+          find.text('Crea la partita'),
+          200,
+          scrollable: find.byType(Scrollable).first,
+        );
         await tester.tap(find.text('Crea la partita'));
         await tester.pumpAndSettle();
         await tester.tap(find.text('Resta'));
@@ -301,6 +321,11 @@ void main() {
         expect(opened, 0);
         expect(await tester.runAsync(store.load), isNotNull);
 
+        await tester.scrollUntilVisible(
+          find.text('Crea la partita'),
+          200,
+          scrollable: find.byType(Scrollable).first,
+        );
         await tester.tap(find.text('Crea la partita'));
         await tester.pumpAndSettle();
         await tester.tap(find.text('Elimina').last);

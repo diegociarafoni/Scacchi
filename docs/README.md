@@ -9,6 +9,7 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | [architettura.md](architettura.md) | Stack, struttura delle cartelle, componenti e flusso di una mossa |
 | [regole-di-gioco.md](regole-di-gioco.md) | Regole implementate e condizioni di fine partita |
 | [interfaccia.md](interfaccia.md) | Schermata di gioco, layout su telefono e tablet, comandi |
+| [badge.md](badge.md) | Badge: collezione di 46 badge per ciò che si impara e si gioca, sblocco, scheda e testi |
 | [gamification.md](gamification.md) | XP, livelli, obiettivo giornaliero, serie, traguardi, ricompense estetiche, promemoria |
 | [esporta-immagine.md](esporta-immagine.md) | Esportare la posizione come immagine PNG da partita, analisi, puzzle ed editor |
 | [editor-posizione.md](editor-posizione.md) | Editor di posizione, FEN e validazione |
@@ -46,6 +47,7 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | [allenatore.md](allenatore.md) | Partita con l'allenatore: avvisi in tempo reale, ripresa della mossa, suggerimenti a livelli |
 | [analisi.md](analisi.md) | Analisi libera della posizione: linee del motore, barra, esplorazione |
 | [rilascio-android.md](rilascio-android.md) | Rilascio dell'APK, installazione sul telefono, chiave di firma |
+| [store.md](store.md) | Fastlane per Google Play senza credenziali, elenco dei segreti da inserire |
 | [licenza.md](licenza.md) | Licenza del progetto e componenti di terze parti |
 
 ## Stato del progetto
