@@ -267,7 +267,7 @@ class _Search {
   final int _budgetMs;
 
   /// Quante volte ogni posizione è già comparsa, nella partita e nella linea
-  /// in esame: una seconda comparsa vale patta, come nel gioco dal vivo.
+  /// in esame: una seconda comparsa vale patta: la regola dice tre, ma per un motore è la scelta usuale per non girare a vuoto.
   final _seen = <int, int>{};
 
   void seed(_Request request) {
@@ -309,10 +309,12 @@ class _Search {
     if (pos.isVariantEnd) return _variantEnd(pos, ply);
     if (pos.isInsufficientMaterial || pos.halfmoves >= 100) return 0;
     if (depth <= 0) return _quiesce(pos, alpha, beta, ply, 0);
+    final key = _key(pos);
+    // Una posizione già vista non era finita, quindi si può uscire prima di
+    // generare le mosse.
+    if (ply > 0 && (_seen[key] ?? 0) > 0) return 0;
     final moves = orderedMoves(pos);
     if (moves.isEmpty) return pos.isCheck ? ply - _mate : 0;
-    final key = _key(pos);
-    if (ply > 0 && (_seen[key] ?? 0) > 0) return 0;
     _seen[key] = (_seen[key] ?? 0) + 1;
     var best = -_inf;
     try {
