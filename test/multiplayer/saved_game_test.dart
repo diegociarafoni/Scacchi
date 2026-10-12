@@ -182,7 +182,19 @@ void main() {
         await c.play(Move.parse(uci)!);
         await settle();
       }
+      await until(
+        () =>
+            host.status == MultiplayerStatus.finished &&
+            guest.status == MultiplayerStatus.finished,
+      );
       expect(host.status, MultiplayerStatus.finished);
+      // Il file si cancella in coda alla scrittura: si attende su disco.
+      for (var i = 0; i < 200; i++) {
+        if (await store.load() == null && await guestStore.load() == null) {
+          break;
+        }
+        await Future<void>.delayed(const Duration(milliseconds: 10));
+      }
       expect(await store.load(), isNull);
       expect(await guestStore.load(), isNull);
       await host.close();
