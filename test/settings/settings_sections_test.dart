@@ -85,7 +85,7 @@ void main() {
   ) async {
     await show(tester);
     for (final s in SettingsSection.values) {
-      await tester.scrollUntilVisible(section(s), 200);
+      await tester.scrollUntilVisible(section(s), 100);
       expect(section(s), findsOneWidget, reason: s.name);
     }
     // Profilo bambino e aspetto sono aperti, il resto no: lista corta.
@@ -123,7 +123,7 @@ void main() {
   ) async {
     await show(tester);
     for (final s in SettingsSection.values) {
-      await tester.scrollUntilVisible(section(s), 200);
+      await tester.scrollUntilVisible(section(s), 100);
       expect(
         tester
             .getSize(

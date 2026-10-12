@@ -31,6 +31,7 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | [minigiochi.md](minigiochi.md) | Coordinate a tempo, cattura tutto, visualizzazione alla cieca, conta del materiale |
 | [tornei.md](tornei.md) | Tornei offline contro bot: girone, eliminazione diretta, bacheca |
 | [profilo-bambino.md](profilo-bambino.md) | Profilo bambino: interfaccia semplificata, bot amichevoli, niente numeri |
+| [stile.md](stile.md) | Schermata Stile: anteprima dal vivo, schede Scacchiera, Pezzi, Sfondo (anche una propria foto) e Suoni |
 | [pezzi-e-scacchiere.md](pezzi-e-scacchiere.md) | Set di pezzi e scacchiere di Rokko, alone sui temi scuri, coordinate esterne, rigenerazione delle immagini |
 | [identita-visiva.md](identita-visiva.md) | Nome, icona, schermata di avvio e come rigenerarli |
 | [localizzazione.md](localizzazione.md) | Lingua predefinita e come aggiungere testi e lingue |

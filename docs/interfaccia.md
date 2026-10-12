@@ -107,7 +107,7 @@ Dopo ogni mossa il lettore di schermo annuncia una frase in italiano, per esempi
 
 ## Impostazioni
 
-In cima alla pagina, sempre visibile mentre si scorre, c'è un'anteprima della scacchiera: mostra una posizione di prova con tema, pezzi, coordinate, mosse legali, colori per daltonici e velocità delle animazioni correnti, e si aggiorna a ogni scelta. Toccandola si gioca la mossa di prova (l'alfiere prende in c6), con l'animazione scelta; un secondo tocco la ripristina. Il pulsante a destra del titolo (48 dp) la comprime a una riga con tema e pezzi, per lasciare spazio alle impostazioni sui telefoni piccoli. L'anteprima ha un'etichetta per i lettori di schermo.
+In cima alla lista c'è la voce «Stile», che apre la schermata con anteprima e schede per scacchiera, pezzi, sfondo e suoni (vedi [stile.md](stile.md)). Qui sotto, in cima alla pagina, sempre visibile mentre si scorre, c'è un'anteprima della scacchiera: mostra una posizione di prova con tema, pezzi, coordinate, mosse legali, colori per daltonici e velocità delle animazioni correnti, e si aggiorna a ogni scelta. Toccandola si gioca la mossa di prova (l'alfiere prende in c6), con l'animazione scelta; un secondo tocco la ripristina. Il pulsante a destra del titolo (48 dp) la comprime a una riga con tema e pezzi, per lasciare spazio alle impostazioni sui telefoni piccoli. L'anteprima ha un'etichetta per i lettori di schermo.
 
 Sotto l'anteprima le impostazioni sono in sezioni comprimibili, ciascuna con icona, titolo e una riga che dice cosa contiene. All'apertura sono aperte solo «Profilo» e «Aspetto»; le altre si aprono con un tocco (l'intestazione è alta almeno 48 dp e i lettori di schermo la annunciano come comprimibile). Le sezioni, nell'ordine: Profilo (profilo bambino), Aspetto (aspetto dell'app, galleria dei temi, galleria dei pezzi, «Sblocca tutto», animazioni), Scacchiera (mosse legali, coordinate, frecce e cerchi, notazione), Gioco (promozione, spiegazioni, rotazione, modalità tavolo), Accessibilità (colori per daltonici, modalità zen, conferma della mossa), Suoni e vibrazione, Dati (backup).
 
@@ -131,9 +131,11 @@ Si aprono dall'icona a forma di ingranaggio nella barra del titolo. Ogni modific
 | Modalità tavolo | Capovolge i pezzi del giocatore in alto, per giocare uno di fronte all'altro con il telefono sul tavolo | Disattiva |
 | Colori per daltonici | Sostituisce le evidenziazioni (ultima mossa, casa selezionata, mosse legali, premosse) con colori della palette Okabe-Ito, leggibili con deuteranopia, protanopia e tritanopia; i colori delle case restano quelli del tema. Indizi dei problemi e frecce del ripasso passano dal verde al blu, gli esiti delle coordinate da verde e rosso a blu e arancio (requisito RNF-07) | Disattiva |
 | Suoni | Suoni per mossa, cattura, arrocco, scacco, promozione, fine partita e tempo sotto i 10 secondi | Attivi |
+| Set di suoni | Classico, Legno o Cristallo, dalla scheda Suoni di Stile | Classico |
+| Sfondo | Colore, sfumatura, spazio o una propria foto dietro la scacchiera, dalla scheda Sfondo di Stile | Standard |
 | Volume | Volume dei suoni, da 0 a 100% | 100% |
 | Vibrazione | Vibrazione breve a ogni mossa, più marcata per catture e fine partita | Attiva |
-| Tema della scacchiera | Verde, Legno, Blu, Grigio, Arancia, Crepuscolo, Pergamena, Castello, Bosco elfico, Noce, Spazio, Retrò, Giardino, Terracotta; sbloccabili Sabbia, Oceano, Corallo, Notte, Oro | Spazio (chi ha già scelto un altro tema lo mantiene) |
+| Tema della scacchiera | Verde, Legno, Blu, Grigio, Arancia, Crepuscolo, Pergamena, Castello, Bosco elfico, Noce, Spazio, Retrò, Giardino, Terracotta, Marmo, Metallo, Vetro, Menta, Cipria, Ardesia; sbloccabili Sabbia, Oceano, Corallo, Notte, Oro | Spazio (chi ha già scelto un altro tema lo mantiene) |
 | Pezzi | Classico, Merida, Chessnut, Fantasy, Spatial, Rokko, Pixel, Arcano, Papercut, Noto; sbloccabili Celtic, Shapes, Firi, Mpchess, Kiwen-suwi, Totoy, RhosGFX | Classico |
 | Sblocca tutto | Rende disponibili le ricompense estetiche senza sbloccarle (vedi [gamification.md](gamification.md)) | Disattiva |
 | Animazioni | Nessuna, Veloce, Normale, Lenta | Normale |

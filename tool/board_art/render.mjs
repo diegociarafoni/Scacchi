@@ -34,6 +34,9 @@ function write(file, dataUrl) {
   fs.writeFileSync(file, Buffer.from(dataUrl.split(",")[1], "base64"));
 }
 
+// BOARDS=marmo,vetro rigenera solo quelle scacchiere, senza toccare i pezzi.
+const only = process.env.BOARDS?.split(",");
+
 const browser = await chromium.launch();
 const page = await browser.newPage();
 await page.setContent(`<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Symbols+2&display=block"><span style="font-family:'Noto Sans Symbols 2'">♔♚</span>`);
@@ -84,7 +87,7 @@ async function piece(set, kind, src, glyph) {
 }
 
 const GLYPH = { K: ["♔", "♚"], Q: ["♕", "♛"], R: ["♖", "♜"], B: ["♗", "♝"], N: ["♘", "♞"], P: ["♙", "♟"] };
-for (const [set, draw] of Object.entries(PIECE_SETS)) {
+for (const [set, draw] of only ? [] : Object.entries(PIECE_SETS)) {
   for (const kind of kinds) {
     if (set === "noto") {
       const white = kind[0] === "w";
@@ -95,20 +98,20 @@ for (const [set, draw] of Object.entries(PIECE_SETS)) {
     }
   }
 }
-for (const kind of kinds) {
+for (const kind of only ? [] : kinds) {
   const svg = fs.readFileSync(path.join(root, "tool/board_art/papercut", `${kind}.svg`));
   await piece("papercut", kind, "data:image/svg+xml;base64," + svg.toString("base64"));
 }
 
 const cg = chessgroundDir();
-for (const [name, dir] of Object.entries(chessgroundSets)) {
+for (const [name, dir] of only ? [] : Object.entries(chessgroundSets)) {
   for (const kind of kinds.filter((k) => k[0] === "b")) {
     const src = "data:image/webp;base64," + fs.readFileSync(path.join(cg, dir, "4.0x", `${kind}.webp`)).toString("base64");
     for (const [d, size] of sizes) write(out("pieces", "halo", name, d, `${kind}.webp`), await page.evaluate((o) => window.render(o), { src, size, halo: true }));
   }
 }
 
-for (const key of Object.keys(THEMES)) {
+for (const key of Object.keys(THEMES).filter((k) => !only || only.includes(k))) {
   const src = "data:image/svg+xml;base64," + Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="${BOARD_PX}" height="${BOARD_PX}">${boardSvg(key)}</svg>`).toString("base64");
   write(out("boards", `${key}.webp`), await page.evaluate((o) => window.render(o), { src, size: BOARD_PX, quality: 0.85 }));
 }

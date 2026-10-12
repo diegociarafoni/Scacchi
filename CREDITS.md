@@ -36,7 +36,7 @@
 | [bip340](https://pub.dev/packages/bip340) (fiatjaf) | Firma Schnorr degli eventi Nostr della partita a distanza | MIT |
 | [workmanager](https://pub.dev/packages/workmanager) (Flutter Community) | Controllo in background delle partite a distanza su Android | MIT |
 | [crypto](https://pub.dev/packages/crypto) (Dart) | Impronta SHA-256 delle posizioni nel multigiocatore | BSD-3-Clause |
-| Suoni in `assets/sounds/`, generati da `tool/generate_sounds.py` | Effetti sonori | Opera originale del progetto, CC0 |
+| Suoni in `assets/sounds/`, `assets/sounds/legno/` e `assets/sounds/cristallo/`, generati da `tool/generate_sounds.py` | Effetti sonori e set di suoni | Opera originale del progetto, CC0 |
 | [audioplayers](https://pub.dev/packages/audioplayers) | Riproduzione dei suoni | MIT |
 | [Database dei puzzle di Lichess](https://database.lichess.org/#puzzles) | Puzzle inclusi nell'app (sottoinsieme) | CC0 |
 | [chess-openings](https://github.com/lichess-org/chess-openings) (Lichess) | Nomi e codici ECO delle aperture | CC0 |
