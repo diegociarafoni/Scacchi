@@ -404,6 +404,42 @@
     }
   },
   "storyCrownOutro": "The crown is yours. The kingdom is at peace and every new game is a new story.",
+  "shareImageTitle": "Export as image",
+  "@shareImageTitle": {
+    "description": "shareImageTitle"
+  },
+  "shareImageAction": "Share",
+  "@shareImageAction": {
+    "description": "shareImageAction"
+  },
+  "shareImageFlip": "Flip the board",
+  "@shareImageFlip": {
+    "description": "shareImageFlip"
+  },
+  "shareImageCoordinates": "Coordinates",
+  "@shareImageCoordinates": {
+    "description": "shareImageCoordinates"
+  },
+  "shareImageLastMove": "Last move",
+  "@shareImageLastMove": {
+    "description": "shareImageLastMove"
+  },
+  "shareImageCaption": "Caption (optional)",
+  "@shareImageCaption": {
+    "description": "shareImageCaption"
+  },
+  "shareImagePreview": "Board preview",
+  "@shareImagePreview": {
+    "description": "shareImagePreview"
+  },
+  "shareImageFailed": "Sharing failed",
+  "@shareImageFailed": {
+    "description": "shareImageFailed"
+  },
+  "shareImageSubject": "Chess position",
+  "@shareImageSubject": {
+    "description": "shareImageSubject"
+  },
   "personalTitle": "Your openings",
   "personalHubSubtitle": "The moves you have played, with results",
   "personalLoadFailed": "The game archive could not be read: try again later.",
@@ -465,41 +501,5 @@
   "personalStart": "Start",
   "personalFlip": "Flip the board",
   "personalOpenInBook": "Open in the openings explorer",
-  "personalFromHere": "Your games from this position",
-  "shareImageTitle": "Export as image",
-  "@shareImageTitle": {
-    "description": "shareImageTitle"
-  },
-  "shareImageAction": "Share",
-  "@shareImageAction": {
-    "description": "shareImageAction"
-  },
-  "shareImageFlip": "Flip the board",
-  "@shareImageFlip": {
-    "description": "shareImageFlip"
-  },
-  "shareImageCoordinates": "Coordinates",
-  "@shareImageCoordinates": {
-    "description": "shareImageCoordinates"
-  },
-  "shareImageLastMove": "Last move",
-  "@shareImageLastMove": {
-    "description": "shareImageLastMove"
-  },
-  "shareImageCaption": "Caption (optional)",
-  "@shareImageCaption": {
-    "description": "shareImageCaption"
-  },
-  "shareImagePreview": "Board preview",
-  "@shareImagePreview": {
-    "description": "shareImagePreview"
-  },
-  "shareImageFailed": "Sharing failed",
-  "@shareImageFailed": {
-    "description": "shareImageFailed"
-  },
-  "shareImageSubject": "Chess position",
-  "@shareImageSubject": {
-    "description": "shareImageSubject"
-  }
+  "personalFromHere": "Your games from this position"
 }

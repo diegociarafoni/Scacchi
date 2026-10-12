@@ -1515,6 +1515,42 @@
   "@storyCrownOutro": {
     "description": "storyCrownOutro"
   },
+  "shareImageTitle": "Esporta come immagine",
+  "@shareImageTitle": {
+    "description": "shareImageTitle"
+  },
+  "shareImageAction": "Condividi",
+  "@shareImageAction": {
+    "description": "shareImageAction"
+  },
+  "shareImageFlip": "Capovolgi la scacchiera",
+  "@shareImageFlip": {
+    "description": "shareImageFlip"
+  },
+  "shareImageCoordinates": "Coordinate",
+  "@shareImageCoordinates": {
+    "description": "shareImageCoordinates"
+  },
+  "shareImageLastMove": "Ultima mossa",
+  "@shareImageLastMove": {
+    "description": "shareImageLastMove"
+  },
+  "shareImageCaption": "Didascalia (facoltativa)",
+  "@shareImageCaption": {
+    "description": "shareImageCaption"
+  },
+  "shareImagePreview": "Anteprima della scacchiera",
+  "@shareImagePreview": {
+    "description": "shareImagePreview"
+  },
+  "shareImageFailed": "Condivisione non riuscita",
+  "@shareImageFailed": {
+    "description": "shareImageFailed"
+  },
+  "shareImageSubject": "Posizione di scacchi",
+  "@shareImageSubject": {
+    "description": "shareImageSubject"
+  },
   "personalTitle": "Le tue aperture",
   "@personalTitle": {
     "description": "Titolo della schermata e della voce nella scheda Aperture"
@@ -1633,41 +1669,6 @@
   },
   "personalFromHere": "Le tue partite da questa posizione",
   "@personalFromHere": {
-    "description": "Tooltip nell'explorer delle aperture: apre l'albero personale",
-  "shareImageTitle": "Esporta come immagine",
-  "@shareImageTitle": {
-    "description": "shareImageTitle"
-  },
-  "shareImageAction": "Condividi",
-  "@shareImageAction": {
-    "description": "shareImageAction"
-  },
-  "shareImageFlip": "Capovolgi la scacchiera",
-  "@shareImageFlip": {
-    "description": "shareImageFlip"
-  },
-  "shareImageCoordinates": "Coordinate",
-  "@shareImageCoordinates": {
-    "description": "shareImageCoordinates"
-  },
-  "shareImageLastMove": "Ultima mossa",
-  "@shareImageLastMove": {
-    "description": "shareImageLastMove"
-  },
-  "shareImageCaption": "Didascalia (facoltativa)",
-  "@shareImageCaption": {
-    "description": "shareImageCaption"
-  },
-  "shareImagePreview": "Anteprima della scacchiera",
-  "@shareImagePreview": {
-    "description": "shareImagePreview"
-  },
-  "shareImageFailed": "Condivisione non riuscita",
-  "@shareImageFailed": {
-    "description": "shareImageFailed"
-  },
-  "shareImageSubject": "Posizione di scacchi",
-  "@shareImageSubject": {
-    "description": "shareImageSubject"
+    "description": "Tooltip nell'explorer delle aperture: apre l'albero personale"
   }
 }

@@ -1981,6 +1981,138 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Posizione di scacchi'**
   String get shareImageSubject;
+
+  /// Titolo della schermata e della voce nella scheda Aperture
+  ///
+  /// In it, this message translates to:
+  /// **'Le tue aperture'**
+  String get personalTitle;
+
+  /// Sottotitolo della voce nella scheda Aperture
+  ///
+  /// In it, this message translates to:
+  /// **'Le mosse che hai giocato, con i risultati'**
+  String get personalHubSubtitle;
+
+  /// Errore di lettura dell'archivio
+  ///
+  /// In it, this message translates to:
+  /// **'L\'archivio delle partite non si è potuto leggere: riprova più tardi.'**
+  String get personalLoadFailed;
+
+  /// Archivio senza partite utili
+  ///
+  /// In it, this message translates to:
+  /// **'Gioca qualche partita contro il computer per costruire il tuo albero delle aperture.'**
+  String get personalEmpty;
+
+  /// Filtri senza partite
+  ///
+  /// In it, this message translates to:
+  /// **'Nessuna partita con questi filtri.'**
+  String get personalNoGamesFiltered;
+
+  /// Posizione fuori dall'albero
+  ///
+  /// In it, this message translates to:
+  /// **'Non hai mai giocato da questa posizione.'**
+  String get personalNoGamesHere;
+
+  /// Filtro colore: tutte le partite
+  ///
+  /// In it, this message translates to:
+  /// **'Entrambi'**
+  String get personalSideAll;
+
+  /// Filtro colore: partite con il bianco
+  ///
+  /// In it, this message translates to:
+  /// **'Bianco'**
+  String get personalSideWhite;
+
+  /// Filtro colore: partite con il nero
+  ///
+  /// In it, this message translates to:
+  /// **'Nero'**
+  String get personalSideBlack;
+
+  /// Etichetta del filtro per avversario
+  ///
+  /// In it, this message translates to:
+  /// **'Avversario'**
+  String get personalOpponent;
+
+  /// Filtro avversario senza restrizioni
+  ///
+  /// In it, this message translates to:
+  /// **'Tutti gli avversari'**
+  String get personalAllOpponents;
+
+  /// Partite in cui è stata giocata una mossa
+  ///
+  /// In it, this message translates to:
+  /// **'{count, plural, one{{count} partita} other{{count} partite}}'**
+  String personalGames(int count);
+
+  /// Partite che rispettano i filtri
+  ///
+  /// In it, this message translates to:
+  /// **'{count, plural, one{{count} partita considerata} other{{count} partite considerate}}'**
+  String personalGamesTotal(int count);
+
+  /// Vittorie, patte e sconfitte in breve
+  ///
+  /// In it, this message translates to:
+  /// **'{wins}V · {draws}P · {losses}S'**
+  String personalScore(int wins, int draws, int losses);
+
+  /// Vittorie, patte e sconfitte per i lettori di schermo
+  ///
+  /// In it, this message translates to:
+  /// **'{wins} vinte, {draws} patte, {losses} perse'**
+  String personalScoreSemantics(int wins, int draws, int losses);
+
+  /// Titolo senza mosse
+  ///
+  /// In it, this message translates to:
+  /// **'Posizione iniziale'**
+  String get personalStartPosition;
+
+  /// Titolo di una posizione senza nome nel libro
+  ///
+  /// In it, this message translates to:
+  /// **'Apertura senza nome'**
+  String get personalNoName;
+
+  /// Torna alla mossa precedente
+  ///
+  /// In it, this message translates to:
+  /// **'Indietro'**
+  String get personalBack;
+
+  /// Torna alla posizione iniziale
+  ///
+  /// In it, this message translates to:
+  /// **'Inizio'**
+  String get personalStart;
+
+  /// Tooltip del pulsante che gira la scacchiera
+  ///
+  /// In it, this message translates to:
+  /// **'Gira la scacchiera'**
+  String get personalFlip;
+
+  /// Tooltip: apre il libro delle aperture nella stessa posizione
+  ///
+  /// In it, this message translates to:
+  /// **'Apri nell\'explorer delle aperture'**
+  String get personalOpenInBook;
+
+  /// Tooltip nell'explorer delle aperture: apre l'albero personale
+  ///
+  /// In it, this message translates to:
+  /// **'Le tue partite da questa posizione'**
+  String get personalFromHere;
 }
 
 class _AppLocalizationsDelegate
