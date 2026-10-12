@@ -66,7 +66,6 @@ Future<double> play(
     final move = options[random.nextInt(options.length)];
     moves.add(move);
     position = position.play(move);
-    seen[key(position)] = (seen[key(position)] ?? 0) + 1;
   }
   await white.newGame();
   await black.newGame();
@@ -123,6 +122,7 @@ Future<void> run(String a, String b, int games) async {
       'games': games,
       'scoreA': score,
       'eloBminusA': (-elo).round(),
+      'saturated': score == 0 || score == games,
       'declaredDiff': parse(b).approxElo - parse(a).approxElo,
     }),
   );

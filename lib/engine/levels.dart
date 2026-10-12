@@ -178,7 +178,7 @@ const engineLevels = <EngineLevel>[
     approxElo: 2250,
     skill: 20,
     depth: 10,
-    movetime: Duration(milliseconds: 1200),
+    movetime: Duration(seconds: 3),
   ),
   EngineLevel(
     id: 8,

@@ -127,7 +127,7 @@ Ultima misura, differenza Elo di B su A (tra parentesi quella dichiarata):
 
 Due cose emerse dalla misura:
 
-- A tempo breve il limitatore di Stockfish rende meno del nominale oltre i 1600 Elo: `UCI_Elo` 2000 giocava come circa 1750 e 2400 come circa 2050. Per questo il livello 6 usa `UCI_Elo` 2300 per dichiarare 1850, e il livello 7 non usa il limitatore ma una profondità fissa (10), che rende uguale la forza su ogni dispositivo.
+- A tempo breve il limitatore di Stockfish rende meno del nominale oltre i 1600 Elo: `UCI_Elo` 2000 giocava come circa 1750 e 2400 come circa 2050. Per questo il livello 6 usa `UCI_Elo` 2300 per dichiarare 1850, e il livello 7 non usa il limitatore ma una profondità fissa (10) con 3 secondi di tolleranza: la forza non dipende dalla velocità del dispositivo finché la profondità si raggiunge entro quel tempo.
 - Il solo numero di candidate non basta a modulare la forza dei livelli bassi: a profondità 4 pesa soprattutto la temperatura, circa 2,5 Elo ogni centipedone.
 
 Oltre il livello 8 non si misura: la forza piena dipende dal dispositivo, e 2700 è un valore prudente.
