@@ -188,12 +188,18 @@ jobs:
           Istruzioni complete: docs/rilascio-android.md
           NOTES
           if [ "$TAG" = "nightly" ]; then
-            # Un CI più lento non deve sostituire un nightly più recente: si pubblica
-            # solo se il commit è ancora la punta di main.
-            tip="$(gh api "repos/$GH_REPO/commits/main" --jq .sha)"
-            if [ "$tip" != "$SHA" ]; then
-              echo "::notice::Nightly saltato: main è già avanzato a ${tip:0:7}"; exit 0
-            fi
+            # Un nightly non deve mai tornare indietro: Android rifiuta un APK con versionCode
+            # più basso («App non installata»). Si pubblica solo se il commit è avanti
+            # rispetto al nightly attuale e all'ultima release numerata.
+            for ref in "$(gh api "repos/$GH_REPO/git/ref/tags/nightly" --jq .object.sha 2>/dev/null || true)" \
+                       "$(gh api "repos/$GH_REPO/releases/latest" --jq .tag_name 2>/dev/null || true)"; do
+              [ -n "$ref" ] || continue
+              state="$(gh api "repos/$GH_REPO/compare/$ref...$SHA" --jq .status 2>/dev/null || echo ahead)"
+              case "$state" in
+                ahead|identical) ;;
+                *) echo "::notice::Nightly saltato: $SHA non è avanti rispetto a $ref ($state)"; exit 0 ;;
+              esac
+            done
             cat > notes.md <<NOTES
           Versione di prova aggiornata a ogni modifica di \`main\` che supera la CI (commit \`${SHA:0:7}\`). Si installa sopra qualunque versione firmata con la stessa chiave.
 
