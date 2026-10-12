@@ -7,6 +7,10 @@
     <!-- Partita con un amico in rete locale (RMP-07, RMP-08): solo socket verso l'altro
          telefono, aperti dopo aver creato o inquadrato un invito. -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Controllo in background delle partite a distanza (RMP-41): WorkManager non
+         ha bisogno di servizi in primo piano, che il suo manifest dichiara. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" tools:node="remove"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SHORT_SERVICE" tools:node="remove"/>
     <!-- Partita con un amico via Bluetooth LE (RMP-20): cerca, si collega e si annuncia
          solo dopo aver creato o inquadrato un invito Bluetooth. Il Bluetooth non serve
          a ricavare la posizione (neverForLocation); prima di Android 12 il sistema

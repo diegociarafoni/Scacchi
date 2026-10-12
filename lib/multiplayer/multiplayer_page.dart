@@ -5,6 +5,8 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
+import 'package:flutter/services.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../exchange/qr_code_view.dart';
 import '../exchange/qr_receive_page.dart';
@@ -14,12 +16,24 @@ import '../training/training_board.dart';
 import 'ble_link.dart';
 import 'game_invite.dart';
 import 'multiplayer_controller.dart';
+import 'remote_watch.dart';
 import 'saved_game.dart';
 
 /// Testi del multigiocatore, in italiano anche senza i delegate.
 AppLocalizations multiplayerL10n(BuildContext context) =>
     Localizations.of<AppLocalizations>(context, AppLocalizations) ??
     lookupAppLocalizations(const Locale('it'));
+
+/// Condivide il testo dell'invito con le app di messaggi.
+typedef ShareInvite = Future<void> Function(String subject, String text);
+
+Future<void> shareInviteText(String subject, String text) async {
+  await SharePlus.instance.share(ShareParams(text: text, subject: subject));
+}
+
+/// Testo negli appunti, se c'è.
+Future<String?> clipboardText() async =>
+    (await Clipboard.getData(Clipboard.kTextPlain))?.text;
 
 /// Come ci si collega all'altro telefono.
 enum _Channel { wifi, bluetooth }
@@ -35,9 +49,22 @@ class MultiplayerPage extends StatefulWidget {
     this.openResumeHost = openLanHostAt,
     this.scanner = zxingScanner,
     this.store,
+    this.shareInvite = shareInviteText,
+    this.readClipboard = clipboardText,
+    this.remoteByDefault = true,
+    this.remoteWatch,
   });
 
   final OpenHost openHost;
+  final ShareInvite shareInvite;
+  final Future<String?> Function() readClipboard;
+
+  /// Controllo in background delle partite a distanza; per default quello
+  /// di sistema.
+  final RemoteWatch? remoteWatch;
+
+  /// Stato iniziale dell'interruttore del gioco a distanza.
+  final bool remoteByDefault;
   final ResumeHost openResumeHost;
 
   /// Dove sta la partita salvata; per default il file dell'app.
@@ -54,6 +81,7 @@ class MultiplayerPage extends StatefulWidget {
 
 class _MultiplayerPageState extends State<MultiplayerPage> {
   Side _side = Side.white;
+  late bool _remote = widget.remoteByDefault;
   _Channel _channel = _Channel.wifi;
   bool _busy = false;
   SavedGameStore? _store;
@@ -111,18 +139,24 @@ class _MultiplayerPageState extends State<MultiplayerPage> {
     return ok ?? false;
   }
 
-  Future<void> _discard() async {
-    if (!await _confirmDiscard()) return;
+  // Tolta la partita salvata, il controllo in background non serve più.
+  Future<void> _clearSaved() async {
+    final watch = widget.remoteWatch ?? const BackgroundRemoteWatch();
+    if (_saved?.invite.remote ?? false) unawaited(watch.disable());
     await _store?.clear();
     if (mounted) setState(() => _saved = null);
+  }
+
+  Future<void> _discard() async {
+    if (!await _confirmDiscard()) return;
+    await _clearSaved();
   }
 
   // Una partita nuova prenderebbe il posto di quella salvata: si chiede prima.
   Future<void> _startNew(Future<MultiplayerController> Function() open) async {
     if (_saved != null) {
       if (!await _confirmDiscard()) return;
-      await _store?.clear();
-      if (mounted) setState(() => _saved = null);
+      await _clearSaved();
     }
     await _start(open);
   }
@@ -137,13 +171,17 @@ class _MultiplayerPageState extends State<MultiplayerPage> {
       final controller = await open();
       // Chi è partito prima che il file fosse pronto comincia a salvare ora.
       unawaited(_ready.then((_) => controller.useStore(_store)));
+      controller.useWatch(widget.remoteWatch ?? const BackgroundRemoteWatch());
       if (!mounted) {
         await controller.close();
         return;
       }
       await navigator.push(
         MaterialPageRoute<void>(
-          builder: (_) => MultiplayerGamePage(controller: controller),
+          builder: (_) => MultiplayerGamePage(
+            controller: controller,
+            shareInvite: widget.shareInvite,
+          ),
         ),
       );
     } on NoLocalNetwork {
@@ -172,10 +210,17 @@ class _MultiplayerPageState extends State<MultiplayerPage> {
     }
   }
 
-  Future<void> _join() async {
-    final invite = await Navigator.of(context).push<GameInvite>(
-      MaterialPageRoute(builder: (_) => _ScanPage(scanner: widget.scanner)),
-    );
+  Future<void> _join({bool byLink = false}) async {
+    final invite = byLink
+        ? await showDialog<GameInvite>(
+            context: context,
+            builder: (_) => _LinkDialog(readClipboard: widget.readClipboard),
+          )
+        : await Navigator.of(context).push<GameInvite>(
+            MaterialPageRoute(
+              builder: (_) => _ScanPage(scanner: widget.scanner),
+            ),
+          );
     if (invite == null || !mounted) return;
     await _startNew(() async {
       if (invite.ble && invite.lanAddress == null) {
@@ -226,6 +271,8 @@ class _MultiplayerPageState extends State<MultiplayerPage> {
             const SizedBox(height: 16),
           ],
           Text(l10n.multiplayerIntro),
+          const SizedBox(height: 8),
+          Text(l10n.multiplayerRemoteIntro),
           const SizedBox(height: 24),
           Text(
             l10n.multiplayerYourColor,
@@ -272,7 +319,15 @@ class _MultiplayerPageState extends State<MultiplayerPage> {
             const SizedBox(height: 8),
             Text(l10n.multiplayerBluetoothHint),
           ],
-          const SizedBox(height: 16),
+          const SizedBox(height: 8),
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(l10n.multiplayerRemoteSwitch),
+            subtitle: Text(l10n.multiplayerRemoteSwitchHint),
+            value: _remote,
+            onChanged: _busy ? null : (v) => setState(() => _remote = v),
+          ),
+          const SizedBox(height: 8),
           FilledButton.icon(
             icon: const Icon(Icons.qr_code_2),
             label: Text(l10n.multiplayerCreate),
@@ -285,6 +340,7 @@ class _MultiplayerPageState extends State<MultiplayerPage> {
                       side: _side,
                       bluetooth: bluetooth,
                       openHost: widget.openHost,
+                      remote: _remote,
                       store: _store,
                     );
                   }),
@@ -295,8 +351,91 @@ class _MultiplayerPageState extends State<MultiplayerPage> {
             label: Text(l10n.multiplayerJoin),
             onPressed: _busy ? null : _join,
           ),
+          const SizedBox(height: 8),
+          OutlinedButton.icon(
+            icon: const Icon(Icons.link),
+            label: Text(l10n.multiplayerRemoteJoinLink),
+            onPressed: _busy ? null : () => _join(byLink: true),
+          ),
         ],
       ),
+    );
+  }
+}
+
+/// Finestra dove si incolla il link d'invito ricevuto in un messaggio.
+class _LinkDialog extends StatefulWidget {
+  const _LinkDialog({required this.readClipboard});
+
+  final Future<String?> Function() readClipboard;
+
+  @override
+  State<_LinkDialog> createState() => _LinkDialogState();
+}
+
+class _LinkDialogState extends State<_LinkDialog> {
+  final _text = TextEditingController();
+  bool _invalid = false;
+
+  @override
+  void dispose() {
+    _text.dispose();
+    super.dispose();
+  }
+
+  Future<void> _paste() async {
+    final pasted = await widget.readClipboard();
+    if (pasted == null || !mounted) return;
+    setState(() {
+      _text.text = pasted.trim();
+      _invalid = false;
+    });
+  }
+
+  void _confirm() {
+    // Il messaggio con il link ha del testo intorno: si cerca l'invito.
+    final match = RegExp(r'(?:rokko|scacchi)://\S+').firstMatch(_text.text);
+    final invite = GameInvite.parse(match?.group(0) ?? _text.text);
+    if (invite == null) {
+      setState(() => _invalid = true);
+      return;
+    }
+    Navigator.of(context).pop(invite);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = multiplayerL10n(context);
+    return AlertDialog(
+      title: Text(l10n.multiplayerRemoteLinkTitle),
+      content: TextField(
+        controller: _text,
+        autofocus: true,
+        keyboardType: TextInputType.url,
+        decoration: InputDecoration(
+          labelText: l10n.multiplayerRemoteLinkField,
+          errorText: _invalid ? l10n.multiplayerRemoteLinkInvalid : null,
+          suffixIcon: IconButton(
+            icon: const Icon(Icons.content_paste),
+            tooltip: l10n.multiplayerRemotePaste,
+            onPressed: _paste,
+          ),
+        ),
+        onChanged: (_) {
+          if (_invalid) setState(() => _invalid = false);
+        },
+        onSubmitted: (_) => _confirm(),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(l10n.multiplayerStay),
+        ),
+        TextButton(
+          onPressed: _confirm,
+          child: Text(l10n.multiplayerRemoteLinkConfirm),
+        ),
+      ],
     );
   }
 }
@@ -360,9 +499,14 @@ class _ScanPageState extends State<_ScanPage> {
 /// Scacchiera della partita a due; finché l'avversario non arriva mostra il
 /// QR dell'invito.
 class MultiplayerGamePage extends StatefulWidget {
-  const MultiplayerGamePage({super.key, required this.controller});
+  const MultiplayerGamePage({
+    super.key,
+    required this.controller,
+    this.shareInvite = shareInviteText,
+  });
 
   final MultiplayerController controller;
+  final ShareInvite shareInvite;
 
   @override
   State<MultiplayerGamePage> createState() => _MultiplayerGamePageState();
@@ -418,9 +562,11 @@ class _MultiplayerGamePageState extends State<MultiplayerGamePage> {
       builder: (context) => AlertDialog(
         title: Text(l10n.multiplayerLeaveTitle),
         content: Text(
-          _c.status == MultiplayerStatus.waitingPeer
-              ? l10n.multiplayerLeaveBodyWaiting
-              : l10n.multiplayerLeaveBody,
+          _c.status != MultiplayerStatus.waitingPeer
+              ? l10n.multiplayerLeaveBody
+              : _c.session.invite.remote
+              ? l10n.multiplayerRemoteLeaveBodyWaiting
+              : l10n.multiplayerLeaveBodyWaiting,
         ),
         actions: [
           TextButton(
@@ -491,7 +637,9 @@ class _MultiplayerGamePageState extends State<MultiplayerGamePage> {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      l10n.multiplayerInviteHint,
+                      _c.session.invite.remote
+                          ? l10n.multiplayerRemoteWaitingHint
+                          : l10n.multiplayerInviteHint,
                       textAlign: TextAlign.center,
                     ),
                     if (_c.session.invite.ble) ...[
@@ -499,6 +647,19 @@ class _MultiplayerGamePageState extends State<MultiplayerGamePage> {
                       Text(
                         l10n.multiplayerBluetoothInviteHint,
                         textAlign: TextAlign.center,
+                      ),
+                    ],
+                    if (_c.session.invite.remote) ...[
+                      const SizedBox(height: 12),
+                      Center(
+                        child: OutlinedButton.icon(
+                          icon: const Icon(Icons.share),
+                          label: Text(l10n.multiplayerRemoteShare),
+                          onPressed: () => widget.shareInvite(
+                            l10n.multiplayerRemoteShareSubject,
+                            l10n.multiplayerRemoteShareText(_c.inviteLink),
+                          ),
+                        ),
                       ),
                     ],
                   ] else
