@@ -205,6 +205,16 @@ void main() {
       expect(solving.currentChapterIndex, 1);
     });
 
+    test('chi ha battuto il bot di un capitolo lo ritrova concluso', () {
+      final village = storyChapters[1];
+      final p = StoryProgress(
+        const PathProgress(),
+        const StoryState().withBossBeaten(village.id),
+      );
+      expect(p.isChapterDone(village), isTrue);
+      expect(p.isChapterUnlocked(2), isTrue);
+    });
+
     test('i puzzle risolti non superano l\'obiettivo', () {
       var state = const StoryState();
       for (var i = 0; i < 20; i++) {

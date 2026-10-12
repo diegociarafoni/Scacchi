@@ -60,7 +60,7 @@ const List<Chapter> curriculum = [
           ),
           StarsExercise(
             instructions:
-                'La torre va su a4, poi su d4, poi su d1: guarda le lettere '
+                'La torre va su h4, poi su d4, poi su d1: guarda le lettere '
                 'delle colonne e i numeri delle traverse.',
             role: Role.rook,
             start: Square.h1,
@@ -472,7 +472,7 @@ const List<Chapter> curriculum = [
             instructions:
                 'Il tuo cavallo è attaccato dall\'alfiere nero. Difendilo con '
                 'la torre.',
-            fen: '6k1/8/8/8/1b6/8/3N4/R3K3 w - - 0 1',
+            fen: '6k1/8/8/8/1b6/8/3N4/R5K1 w - - 0 1',
             steps: ['a1d1|a1a2'],
             goal: LineGoal.line,
           ),

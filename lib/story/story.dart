@@ -191,10 +191,11 @@ class StoryProgress {
     ];
   }
 
-  /// Concluso se ogni passo è fatto o se la storia è già andata oltre: chi
-  /// ha battuto un bot o risolto puzzle più avanti non rifà i capitoli
-  /// aggiunti prima.
+  /// Concluso se ogni passo è fatto, se il suo bot è battuto o se la storia
+  /// è già andata oltre: chi ha battuto un bot o risolto puzzle più avanti
+  /// non rifà le lezioni aggiunte o spostate prima.
   bool isChapterDone(StoryChapter chapter) {
+    if (state.isBossBeaten(chapter.id)) return true;
     if (steps(chapter).every((s) => s.done)) return true;
     final later = storyChapters.skip(storyChapters.indexOf(chapter) + 1);
     return later.any(
