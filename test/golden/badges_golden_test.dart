@@ -51,6 +51,8 @@ void main() {
               'italian',
               'french',
               'english',
+              'scotch',
+              'dutch',
             ][h.index],
           ),
         );
