@@ -63,14 +63,6 @@
   "@youProfileSubtitle": {
     "description": "Sottotitolo"
   },
-  "youPath": "Percorso",
-  "@youPath": {
-    "description": "Voce del gruppo «Impara»"
-  },
-  "youPathSubtitle": "Tappe con stelle, dalle basi al finale",
-  "@youPathSubtitle": {
-    "description": "Sottotitolo"
-  },
   "youEndgames": "Finali",
   "@youEndgames": {
     "description": "Voce del gruppo «Impara»"

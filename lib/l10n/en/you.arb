@@ -10,8 +10,6 @@
   "youStreak": "{days, plural, one{1 day in a row} other{{days} days in a row}}",
   "youProfile": "Profile",
   "youProfileSubtitle": "Level, streak, challenges, achievements and preferences",
-  "youPath": "Path",
-  "youPathSubtitle": "Stages with stars, from the basics to the endgame",
   "youEndgames": "Endgames",
   "youEndgamesSubtitle": "Lucena, Philidor and the basic mates against the engine",
   "youMasters": "Grandmasters",
