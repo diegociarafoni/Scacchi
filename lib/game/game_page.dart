@@ -2317,27 +2317,32 @@ class _ActionButton extends StatelessWidget {
         : highlighted
         ? scheme.primary
         : scheme.onSurface;
-    Widget button = InkWell(
-      onTap: onPressed,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, color: color),
-          const SizedBox(height: 4),
-          // Con sette pulsanti le etichette lunghe si rimpiccioliscono, con
-          // un margine per non toccare quelle vicine.
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 2),
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                label,
-                style: Theme.of(context).textTheme.labelMedium
-                    ?.copyWith(color: color),
+    // Senza Semantics il lettore di schermo non annuncia un pulsante né il suo stato.
+    Widget button = Semantics(
+      button: true,
+      enabled: onPressed != null,
+      child: InkWell(
+        onTap: onPressed,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: color),
+            const SizedBox(height: 4),
+            // Con sette pulsanti le etichette lunghe si rimpiccioliscono, con
+            // un margine per non toccare quelle vicine.
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 2),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  label,
+                  style: Theme.of(context).textTheme.labelMedium
+                      ?.copyWith(color: color),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
     if (tooltip != null && onPressed != null) {

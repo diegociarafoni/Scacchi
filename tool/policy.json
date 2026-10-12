@@ -14,5 +14,8 @@
       "GPL-3.0"
     ],
     "overrides": {}
+  },
+  "coverage": {
+    "gameLogicMinPercent": 80
   }
 }

@@ -29,6 +29,7 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | [localizzazione.md](localizzazione.md) | Lingua predefinita e come aggiungere testi e lingue |
 | [sviluppo.md](sviluppo.md) | Ambiente, comandi, test, CI e convenzioni |
 | [convenzioni-git.md](convenzioni-git.md) | Rami, commit Angular, hook locali, merge e protezione di `main` |
+| [qualita.md](qualita.md) | Copertura, golden test, accessibilità e relativi limiti |
 | [mappa-del-codice.md](mappa-del-codice.md) | Cartelle di `lib/` e documento che le descrive, controllo automatico della documentazione |
 | [sicurezza.md](sicurezza.md) | Scanner di sicurezza, SBOM e catena di fornitura |
 | [dipendenze-e-licenze.md](dipendenze-e-licenze.md) | Aggiornamenti automatici e licenze ammesse |
