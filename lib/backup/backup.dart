@@ -36,10 +36,18 @@ class BackupException implements FormatException {
 /// Copia completa dei dati locali: file JSON dell'app e preferenze, in un
 /// unico file leggibile (RF-103).
 class Backup {
-  Backup({required this.files, required this.preferences});
+  Backup({
+    required this.files,
+    required this.preferences,
+    this.binaries = const {},
+    this.version = _version,
+  });
 
   static const _app = 'scacchi';
-  static const _version = 1;
+
+  /// 2: aggiunti settimana, grandi maestri, finali, partita a due telefoni e
+  /// file binari (foto del profilo).
+  static const _version = 2;
 
   /// Unici file ripristinabili: impedisce di scrivere altrove.
   static const dataFiles = {
@@ -49,6 +57,23 @@ class Backup {
     'story.json',
     'tornei.json',
     'training.json',
+    'week.json',
+    'masters.json',
+    'endgames.json',
+    'multiplayer.json',
+  };
+
+  /// Unici file binari ripristinabili (nel backup in base64).
+  static const binaryFiles = {'avatar_photo.jpg'};
+
+  /// Dati che i backup di versione 1 non contenevano: la loro assenza non
+  /// significa «vuoto», quindi un ripristino vecchio li lascia intatti.
+  static const _sinceV2 = {
+    'week.json',
+    'masters.json',
+    'endgames.json',
+    'multiplayer.json',
+    'avatar_photo.jpg',
   };
 
   /// Backup in attesa di essere applicato all'avvio.
@@ -63,6 +88,12 @@ class Backup {
   /// Preferenze con valori semplici (bool, numeri, testo, elenchi di testo).
   final Map<String, Object> preferences;
 
+  /// Contenuto dei file binari, per nome.
+  final Map<String, List<int>> binaries;
+
+  /// Versione del formato del file di backup.
+  final int version;
+
   static Future<Backup> collect(
     Directory dir,
     Map<String, Object> preferences,
@@ -74,14 +105,26 @@ class Backup {
         files[name] = await file.readAsString();
       }
     }
-    return Backup(files: files, preferences: {...preferences});
+    final binaries = <String, List<int>>{};
+    for (final name in binaryFiles) {
+      final file = File('${dir.path}/$name');
+      if (file.existsSync()) binaries[name] = await file.readAsBytes();
+    }
+    return Backup(
+      files: files,
+      preferences: {...preferences},
+      binaries: binaries,
+    );
   }
 
   String encode() => jsonEncode({
     'app': _app,
-    'version': _version,
+    'version': version,
     'createdAt': DateTime.now().toUtc().toIso8601String(),
     'files': files,
+    'binaries': {
+      for (final e in binaries.entries) e.key: base64Encode(e.value),
+    },
     'preferences': preferences,
   });
 
@@ -96,7 +139,9 @@ class Backup {
         throw BackupException(BackupProblem.newerVersion);
       }
       final files = <String, String>{};
-      for (final e in ((json['files'] ?? {}) as Map<String, Object?>).entries) {
+      for (final e
+          in ((json['files'] ?? <String, Object?>{}) as Map<String, Object?>)
+              .entries) {
         if (!dataFiles.contains(e.key)) {
           throw BackupException(BackupProblem.unexpectedFile, e.key);
         }
@@ -108,9 +153,24 @@ class Backup {
         }
         files[e.key] = content;
       }
+      final binaries = <String, List<int>>{};
+      for (final e
+          in ((json['binaries'] ?? <String, Object?>{}) as Map<String, Object?>)
+              .entries) {
+        if (!binaryFiles.contains(e.key)) {
+          throw BackupException(BackupProblem.unexpectedFile, e.key);
+        }
+        try {
+          binaries[e.key] = base64Decode(e.value! as String);
+        } on Object {
+          throw BackupException(BackupProblem.invalidFile, e.key);
+        }
+      }
       final preferences = <String, Object>{};
       for (final e
-          in ((json['preferences'] ?? {}) as Map<String, Object?>).entries) {
+          in ((json['preferences'] ?? <String, Object?>{})
+                  as Map<String, Object?>)
+              .entries) {
         final v = e.value;
         final simple =
             v is bool ||
@@ -122,7 +182,12 @@ class Backup {
         }
         preferences[e.key] = v is List ? List<String>.from(v) : v!;
       }
-      return Backup(files: files, preferences: preferences);
+      return Backup(
+        files: files,
+        preferences: preferences,
+        binaries: binaries,
+        version: version,
+      );
     } on BackupException {
       rethrow;
     } on Object {
@@ -155,6 +220,7 @@ class Backup {
     final backup = decode(text);
     final stamp = DateTime.now().millisecondsSinceEpoch;
     for (final name in dataFiles) {
+      if (backup.version < 2 && _sinceV2.contains(name)) continue;
       final file = File('${dir.path}/$name');
       if (file.existsSync()) {
         await file.rename('${file.path}$previousSuffix-$stamp');
@@ -163,6 +229,18 @@ class Backup {
       if (content == null) continue;
       final tmp = File('${file.path}.tmp');
       await tmp.writeAsString(content, flush: true);
+      await tmp.rename(file.path);
+    }
+    for (final name in binaryFiles) {
+      if (backup.version < 2 && _sinceV2.contains(name)) continue;
+      final file = File('${dir.path}/$name');
+      if (file.existsSync()) {
+        await file.rename('${file.path}$previousSuffix-$stamp');
+      }
+      final bytes = backup.binaries[name];
+      if (bytes == null) continue;
+      final tmp = File('${file.path}.tmp');
+      await tmp.writeAsBytes(bytes, flush: true);
       await tmp.rename(file.path);
     }
     await applyPreferences(backup.preferences);
