@@ -844,4 +844,84 @@ class AppLocalizationsIt extends AppLocalizations {
   String botUnlockHint(String name) {
     return 'Si sblocca battendo $name';
   }
+
+  @override
+  String whyPiece(String role) {
+    String _temp0 = intl.Intl.selectLogic(role, {
+      'pawn': 'il pedone',
+      'knight': 'il cavallo',
+      'bishop': 'l\'alfiere',
+      'rook': 'la torre',
+      'queen': 'la donna',
+      'other': 'il re',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String get whyMate => 'Scacco matto!';
+
+  @override
+  String get whyCastle => 'Arrocca: mette il re al sicuro.';
+
+  @override
+  String whyPromote(String role) {
+    String _temp0 = intl.Intl.selectLogic(role, {
+      'queen': 'una donna',
+      'rook': 'una torre',
+      'bishop': 'un alfiere',
+      'knight': 'un cavallo',
+      'other': 'un pezzo',
+    });
+    return 'Promuove il pedone: diventa $_temp0.';
+  }
+
+  @override
+  String whyCapture(String victim, String attacker) {
+    return 'Cattura $victim con $attacker.';
+  }
+
+  @override
+  String get whyCheck => 'Dà scacco al tuo re.';
+
+  @override
+  String whySafe(String piece) {
+    return 'Mette al sicuro $piece, che era sotto attacco.';
+  }
+
+  @override
+  String whyThreatCapture(String victim, String square) {
+    return 'Minaccia di catturare $victim in $square.';
+  }
+
+  @override
+  String whyThreatCaptureKid(String victim) {
+    return 'Minaccia di catturare $victim.';
+  }
+
+  @override
+  String get whyThreatCheck => 'Prepara uno scacco al tuo re.';
+
+  @override
+  String get whyThreatPromote => 'Prepara la promozione di un pedone.';
+
+  @override
+  String whyDevelop(String piece) {
+    return 'Sviluppa $piece: entra in gioco.';
+  }
+
+  @override
+  String get whyCenter => 'Prende spazio al centro.';
+
+  @override
+  String whyImprove(String piece) {
+    return 'Sposta $piece su una casa più utile.';
+  }
+
+  @override
+  String get settingsExplainWhy => 'Spiegami perché';
+
+  @override
+  String get settingsExplainWhyDescription =>
+      'Dopo ogni mossa del computer, una riga su cosa minaccia o prepara';
 }

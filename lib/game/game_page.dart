@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import '../analysis/analysis_page.dart';
 import '../archive/saved_game.dart';
 import '../coach/coach_session.dart';
+import '../coach/explain_why.dart';
 import '../coach/hint_text.dart';
 import '../editor/position_editor_page.dart';
 import '../engine/adaptive.dart';
@@ -1049,6 +1050,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _task = _ComputerTask.none;
     final searchStart = _searchClock;
     _searchClock = null;
+    final before = _game.position;
     final played = reply != null && _apply(reply.move);
     if (reply == null ? !_game.isOver : !played && !_game.isOver) {
       error ??= reply ?? 'nessuna mossa';
@@ -1058,6 +1060,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _refresh();
     if (viewing != null) _showPly(viewing);
     if (played && !_game.isOver) _botReact();
+    if (played && !_game.isOver && _settings.explainWhy && !_isChallenge) {
+      unawaited(_explainReply(before, reply.move));
+    }
     if (error != null) {
       _showMessage(
         'Il computer non risponde.',
@@ -1065,6 +1070,28 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         action: SnackBarAction(label: 'Riprova', onPressed: _computerMove),
       );
     }
+  }
+
+  /// «Spiegami perché» (RF-122): una riga su cosa fa o minaccia la mossa del
+  /// computer, con la minaccia ricavata come per la freccia di RF-56.
+  Future<void> _explainReply(Position before, Move move) async {
+    final after = _game.position;
+    NormalMove? followUp;
+    try {
+      followUp = await _whileSuspended(() => _coach.threat(after));
+    } on Object {
+      followUp = null;
+    }
+    if (!mounted || !identical(after, _game.position)) return;
+    final text = explainComputerMove(
+      _kidL10n(context),
+      before,
+      move,
+      followUp: followUp,
+      showSquares: !_kid,
+    );
+    if (text == null) return;
+    _showMessage(text, duration: const Duration(seconds: 8));
   }
 
   /// Partita di scacchi classici dalla posizione iniziale: solo queste contano

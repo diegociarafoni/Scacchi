@@ -25,6 +25,7 @@ void main() {
     expect(settings.value.tableMode, isFalse);
     expect(settings.value.confirmMove, isFalse);
     expect(settings.value.colorBlind, isFalse);
+    expect(settings.value.explainWhy, isFalse);
     expect(settings.value.kidMode, isFalse);
     expect(settings.value.themeMode, ThemeMode.system);
     expect(settings.value.notation, MoveNotation.figurine);
@@ -67,6 +68,7 @@ void main() {
         tableMode: true,
         confirmMove: true,
         colorBlind: true,
+        explainWhy: true,
         kidMode: true,
         themeMode: ThemeMode.dark,
       ),

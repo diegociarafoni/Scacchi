@@ -201,5 +201,21 @@
   "opponentHintHuman": "Two players share the same device.",
   "opponentHintComputer": "Pick a level or let it adapt to you.",
   "opponentHintBot": "Opponents with a personality, unlocked one by one.",
-  "botUnlockHint": "Unlocks by beating {name}"
+  "botUnlockHint": "Unlocks by beating {name}",
+  "whyPiece": "{role, select, pawn{the pawn} knight{the knight} bishop{the bishop} rook{the rook} queen{the queen} other{the king}}",
+  "whyMate": "Checkmate!",
+  "whyCastle": "Castles: puts the king safe.",
+  "whyPromote": "Promotes the pawn to {role, select, queen{a queen} rook{a rook} bishop{a bishop} knight{a knight} other{a piece}}.",
+  "whyCapture": "Captures {victim} with {attacker}.",
+  "whyCheck": "Gives check to your king.",
+  "whySafe": "Moves {piece} to safety; it was under attack.",
+  "whyThreatCapture": "Threatens to capture {victim} on {square}.",
+  "whyThreatCaptureKid": "Threatens to capture {victim}.",
+  "whyThreatCheck": "Prepares a check on your king.",
+  "whyThreatPromote": "Prepares to promote a pawn.",
+  "whyDevelop": "Develops {piece}: it joins the game.",
+  "whyCenter": "Takes space in the centre.",
+  "whyImprove": "Moves {piece} to a more useful square.",
+  "settingsExplainWhy": "Explain why",
+  "settingsExplainWhyDescription": "After each computer move, one line on what it threatens or prepares"
 }
