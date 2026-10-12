@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:dartchess/dartchess.dart';
+import 'package:dartchess/dartchess.dart' hide File;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/openings/opening_stats.dart';
 
