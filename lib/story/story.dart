@@ -75,6 +75,20 @@ const storyChapters = <StoryChapter>[
     puzzleTheme: 'opening',
     puzzleCount: 3,
   ),
+  StoryChapter(
+    id: 'plain',
+    pathChapterId: 'strategy',
+    botId: 'massimo',
+    puzzleTheme: 'advancedPawn',
+    puzzleCount: 3,
+  ),
+  StoryChapter(
+    id: 'academy',
+    pathChapterId: 'capablanca',
+    botId: 'stella',
+    puzzleTheme: 'rookEndgame',
+    puzzleCount: 3,
+  ),
 ];
 
 /// Parte della storia che il percorso non conosce, salvata in `story.json`.

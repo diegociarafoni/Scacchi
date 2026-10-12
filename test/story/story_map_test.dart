@@ -60,7 +60,10 @@ void main() {
     final summary = find.byKey(const ValueKey('story-summary'));
     expect(summary, findsOneWidget);
     expect(
-      find.descendant(of: summary, matching: find.text('0 capitoli su 6')),
+      find.descendant(
+        of: summary,
+        matching: find.text('0 capitoli su ${storyChapters.length}'),
+      ),
       findsOneWidget,
     );
     final bar = find.descendant(
@@ -174,7 +177,10 @@ void main() {
 
   testWidgets('testi del riepilogo in inglese', (tester) async {
     await show(tester, locale: const Locale('en'));
-    expect(find.text('0 chapters out of 6'), findsOneWidget);
+    expect(
+      find.text('0 chapters out of ${storyChapters.length}'),
+      findsOneWidget,
+    );
     expect(find.text('In progress'), findsOneWidget);
   });
 }

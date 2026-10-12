@@ -4,7 +4,7 @@ Requisito RG-13: una trama a capitoli sopra il [percorso a tappe](percorso.md). 
 
 ## Come funziona
 
-La storia accompagna il giocatore dal villaggio ai piedi della Rocca fino alla corona. Ogni capitolo ha un racconto breve, un elenco di passi da fare nell'ordine e un epilogo che compare a capitolo concluso. Il capitolo successivo si apre quando il precedente è concluso. Non ci sono vite, penalità né tempo: una sfida persa si riprova quando si vuole.
+La storia accompagna il giocatore dal villaggio ai piedi della Rocca fino alla corona e oltre, verso la pianura dei piani e l'accademia del maestro. Ogni capitolo ha un racconto breve, un elenco di passi da fare nell'ordine e un epilogo che compare a capitolo concluso. Il capitolo successivo si apre quando il precedente è concluso. Non ci sono vite, penalità né tempo: una sfida persa si riprova quando si vuole.
 
 | Capitolo | Lezioni e guardiano (percorso) | Puzzle | Sfida finale |
 |---|---|---|---|
@@ -14,6 +14,8 @@ La storia accompagna il giocatore dal villaggio ai piedi della Rocca fino alla c
 | Il bosco delle trappole | Tattiche, guardiano | 4 forchette | Marta |
 | Il castello dei finali | Finali, guardiano | 3 finali di pedoni | Duilio |
 | La corona | Aperture, guardiano | 3 aperture | Elena |
+| La pianura dei piani | La strategia, guardiano | 3 pedoni avanzati | Massimo |
+| L'accademia del maestro | La scuola di Capablanca, guardiano | 3 finali di torri | Stella |
 
 I bot sono quelli della scala (vedi [bot.md](bot.md)) in ordine di forza crescente: la sfida usa il loro livello del motore, senza orologio e con **Annulla** (come il guardiano). Lo stile e il libro d'aperture del bot non sono applicati alla sfida.
 
