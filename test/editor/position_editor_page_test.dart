@@ -59,6 +59,13 @@ Future<Position?> openEditor(WidgetTester tester, {String? initialFen}) async {
 }
 
 Future<void> scrollTap(WidgetTester tester, Finder finder) async {
+  final sheet = find.descendant(
+    of: find.byType(BottomSheet),
+    matching: find.byType(Scrollable),
+  );
+  if (finder.evaluate().isEmpty && sheet.evaluate().isNotEmpty) {
+    await tester.scrollUntilVisible(finder, 300, scrollable: sheet.first);
+  }
   await tester.ensureVisible(finder);
   await tester.pumpAndSettle();
   await tester.tap(finder);

@@ -812,4 +812,20 @@ class AppLocalizationsIt extends AppLocalizations {
   ) {
     return '$label: da $first a $last, minimo $min, massimo $max';
   }
+
+  @override
+  String get opponentHintHuman => 'Si gioca in due sullo stesso dispositivo.';
+
+  @override
+  String get opponentHintComputer =>
+      'Scegli il livello o lascia che si adatti a te.';
+
+  @override
+  String get opponentHintBot =>
+      'Avversari con personalità da sbloccare uno a uno.';
+
+  @override
+  String botUnlockHint(String name) {
+    return 'Si sblocca battendo $name';
+  }
 }
