@@ -48,7 +48,8 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
   // Testi di avviso risolti in `build`, così seguono la lingua corrente.
   String Function(AppLocalizations)? _message;
   String Function(AppLocalizations)? _note;
-  bool _namesSet = false;
+  String? _defaultWhite;
+  String? _defaultBlack;
 
   // Foto di riferimento: vale solo finché la posizione è quella in cui è
   // stata scattata.
@@ -65,11 +66,16 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (_namesSet) return;
-    _namesSet = true;
     final l10n = physicalL10n(context);
-    _white.text = l10n.physicalWhite;
-    _black.text = l10n.physicalBlack;
+    // I nomi lasciati al valore predefinito seguono la lingua dell'app.
+    if (_white.text.isEmpty || _white.text == _defaultWhite) {
+      _white.text = l10n.physicalWhite;
+    }
+    if (_black.text.isEmpty || _black.text == _defaultBlack) {
+      _black.text = l10n.physicalBlack;
+    }
+    _defaultWhite = l10n.physicalWhite;
+    _defaultBlack = l10n.physicalBlack;
   }
 
   @override

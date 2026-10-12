@@ -135,6 +135,44 @@ void main() {
     expect(find.text('Draw agreed?'), findsOneWidget);
   });
 
+  testWidgets('in inglese anche abbandono, foto e allineamento', (
+    tester,
+  ) async {
+    final png = (await tester.runAsync(() => toPng(render(Chess.initial))))!;
+    await tester.pumpWidget(
+      localizedApp(
+        locale: const Locale('en'),
+        home: PhysicalGamePage(
+          archive: () async => archive,
+          photos: _Shots([png]),
+        ),
+      ),
+    );
+    await tester.tap(find.text('Untimed'));
+    await tester.tap(find.text('Start the game'));
+    await tester.pump();
+    await tester.tap(find.byKey(const Key('physical-photo')));
+    await tester.pump();
+    await tester.runAsync(
+      () => Future<void>.delayed(const Duration(milliseconds: 300)),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Align the board'), findsOneWidget);
+    expect(find.text('White at the bottom'), findsOneWidget);
+    await tester.tap(find.text('Done'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Reference photo saved'), findsOneWidget);
+    expect(find.text('Realign'), findsOneWidget);
+    await tester.tap(find.text('Resign'));
+    await tester.pumpAndSettle();
+    expect(find.text('Who resigns?'), findsOneWidget);
+    await tester.tap(find.text('Black').last);
+    await tester.pump();
+    expect(find.textContaining('Resignation'), findsOneWidget);
+    expect(find.textContaining('Resignation · 1-0'), findsOneWidget);
+    expect(find.text('New game'), findsOneWidget);
+  });
+
   group('mossa dalla foto', () {
     late List<Uint8List> shots;
 
