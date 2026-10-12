@@ -127,10 +127,18 @@ void main() {
         () => Backup.decode(jsonEncode(json({'../x.jpg': 'AAA='}))),
         throwsA(isA<BackupException>()),
       );
-      expect(
-        () => Backup.decode(jsonEncode(json({'avatar_photo.jpg': '%%%'}))),
-        throwsA(isA<BackupException>()),
-      );
+      for (final bad in ['%%%', null]) {
+        expect(
+          () => Backup.decode(jsonEncode(json({'avatar_photo.jpg': bad}))),
+          throwsA(
+            isA<BackupException>().having(
+              (e) => e.problem,
+              'problem',
+              BackupProblem.invalidFile,
+            ),
+          ),
+        );
+      }
     });
   });
 

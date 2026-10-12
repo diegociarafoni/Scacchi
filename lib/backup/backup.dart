@@ -162,7 +162,7 @@ class Backup {
         }
         try {
           binaries[e.key] = base64Decode(e.value! as String);
-        } on FormatException {
+        } on Object {
           throw BackupException(BackupProblem.invalidFile, e.key);
         }
       }
