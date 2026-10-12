@@ -13,4 +13,11 @@ void main() {
       expect(lanServiceName(id), isNot(contains(id.substring(0, 8))));
     },
   );
+
+  test('RMP-10 della ricerca si usa solo un indirizzo IPv4', () {
+    expect(lanIpv4('192.168.1.7'), '192.168.1.7');
+    expect(lanIpv4('fe80::1'), isNull);
+    expect(lanIpv4('non un indirizzo'), isNull);
+    expect(lanIpv4(null), isNull);
+  });
 }

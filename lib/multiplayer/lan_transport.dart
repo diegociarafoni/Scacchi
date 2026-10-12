@@ -131,9 +131,15 @@ class LanTransport implements MessageTransport, ConnectionAware {
       final found = await find().timeout(const Duration(seconds: 6));
       if (found == null || _closed) return;
       if (found.$1 == _remoteHost && found.$2 == _remotePort) return;
+      final (oldHost, oldPort) = (_remoteHost, _remotePort);
       _remoteHost = found.$1;
       _remotePort = found.$2;
       await _dial(notify: true);
+      // Un annuncio sbagliato non sostituisce l'ultimo indirizzo buono.
+      if (_sockets.isEmpty) {
+        _remoteHost = oldHost;
+        _remotePort = oldPort;
+      }
     } on Object {
       // Senza ricerca si riprova più tardi all'indirizzo noto.
     }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:bonsoir/bonsoir.dart';
 import 'package:crypto/crypto.dart';
@@ -11,6 +12,15 @@ const lanServiceType = '_rokko-chess._tcp';
 /// stessa rete non legge l'id e solo chi ha l'invito riconosce la partita.
 String lanServiceName(String gameId) =>
     sha256.convert(gameId.codeUnits).toString().substring(0, 16);
+
+/// [ip] se è un indirizzo IPv4 utilizzabile: l'ospite ascolta solo in IPv4 e
+/// un indirizzo IPv6 link-local non si raggiunge senza il suo ambito.
+String? lanIpv4(String? ip) {
+  final address = ip == null ? null : InternetAddress.tryParse(ip);
+  return address != null && address.type == InternetAddressType.IPv4
+      ? address.address
+      : null;
+}
 
 /// Annuncio e ricerca dell'ospite in rete locale (mDNS), per ritrovarlo
 /// quando il suo indirizzo cambia dopo l'invito.
@@ -33,7 +43,11 @@ class BonsoirLanDiscovery implements LanDiscovery {
     );
     await broadcast.ready;
     await broadcast.start();
-    return () => unawaited(broadcast.stop());
+    return () => unawaited(
+      broadcast.stop().catchError((Object e) {
+        if (kDebugMode) debugPrint('Annuncio mDNS non fermato: $e');
+      }),
+    );
   }
 
   @override
@@ -51,7 +65,7 @@ class BonsoirLanDiscovery implements LanDiscovery {
           service.name != name) {
         return;
       }
-      final ip = service.ip;
+      final ip = lanIpv4(service.ip);
       if (ip != null && !found.isCompleted) found.complete((ip, service.port));
     });
     try {

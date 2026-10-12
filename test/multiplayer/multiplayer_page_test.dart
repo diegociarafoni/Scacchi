@@ -189,10 +189,19 @@ void main() {
     }
 
     // La lettura del file avanza solo nella zona reale.
-    Future<void> openPage(WidgetTester tester, MultiplayerPage page) async {
+    Future<void> openPage(
+      WidgetTester tester,
+      MultiplayerPage page, {
+      bool saved = true,
+    }) async {
       await tester.runAsync(() async {
         await tester.pumpWidget(localizedApp(home: page));
-        await Future<void>.delayed(const Duration(milliseconds: 200));
+        // Con una partita salvata si attende che il riquadro compaia.
+        for (var i = 0; i < 100; i++) {
+          await Future<void>.delayed(const Duration(milliseconds: 50));
+          await tester.pump();
+          if (!saved || find.byType(Card).evaluate().isNotEmpty) break;
+        }
       });
       await tester.pump();
     }
@@ -200,7 +209,7 @@ void main() {
     testWidgets('RMP-09 senza partite salvate non c\'è il riquadro', (
       tester,
     ) async {
-      await openPage(tester, MultiplayerPage(store: store));
+      await openPage(tester, MultiplayerPage(store: store), saved: false);
       expect(find.text('Riprendi la partita'), findsNothing);
     });
 
