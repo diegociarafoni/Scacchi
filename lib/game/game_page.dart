@@ -3384,7 +3384,10 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
               computerAvailable: widget.computerAvailable,
               kidMode: widget.kidMode,
               onChanged: (setup) => setState(() => _setup = setup),
-              galleryOptions: GameOptions(variant: _variant),
+              galleryOptions: GameOptions(
+                variant: _variant,
+                handicap: _handicap,
+              ),
               onGalleryPlay: (result) => Navigator.pop(
                 context,
                 _TimeChoice(
@@ -3392,7 +3395,7 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
                   result.options.variant,
                   _white.text,
                   _black.text,
-                  result.applyTo(_setup),
+                  result.applyTo(widget.kidMode ? _setup.forKids() : _setup),
                   result.options.handicap,
                   coach: result.options.coach,
                 ),

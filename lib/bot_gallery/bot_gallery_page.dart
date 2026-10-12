@@ -105,7 +105,12 @@ class _BotGalleryPageState extends State<BotGalleryPage> {
   late String _selected = _firstChoice();
   late SideChoice _side = widget.initialSide;
   late StoryState _story = widget.story;
-  late TimeControl? _control = widget.initialOptions.control;
+
+  /// Il profilo bambino conosce solo «senza tempo» e la cadenza lenta.
+  late TimeControl? _control =
+      widget.kidMode && widget.initialOptions.control != _kidClock
+      ? null
+      : widget.initialOptions.control;
   late Variant _variant = widget.initialOptions.variant;
   late HandicapPiece? _handicapPiece = widget.initialOptions.handicap?.piece;
   late int? _handicapMinutes = widget.initialOptions.handicap?.giverMinutes;
@@ -477,7 +482,7 @@ class _Grid extends StatelessWidget {
                 borderRadius: BorderRadius.circular(6),
                 child: LinearProgressIndicator(
                   key: const Key('guardians-progress'),
-                  value: met / chapters.length,
+                  value: chapters.isEmpty ? 0 : met / chapters.length,
                   minHeight: 10,
                 ),
               ),

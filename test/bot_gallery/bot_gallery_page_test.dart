@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/bot_gallery/bot_gallery_page.dart';
+import 'package:scacchi/bot_gallery/game_options.dart';
 import 'package:scacchi/engine/bot_collection.dart';
 import 'package:scacchi/game/clock.dart';
 import 'package:scacchi/game/handicap.dart';
@@ -483,6 +484,72 @@ void main() {
           const TimeControl(minutes: 15, increment: 10),
         );
         expect(result.options.variant, Variant.standard);
+      });
+
+      testWidgets('un handicap già scelto resta nel pannello', (tester) async {
+        Device.phoneMedium.apply(tester);
+        BotGalleryResult? result;
+        await tester.pumpWidget(
+          localizedApp(
+            home: Builder(
+              builder: (context) => TextButton(
+                onPressed: () async => result = await Navigator.push(
+                  context,
+                  MaterialPageRoute<BotGalleryResult>(
+                    builder: (_) => const BotGalleryPage(
+                      collection: BotCollection(),
+                      initialBotId: 'pino',
+                      initialOptions: GameOptions(
+                        control: TimeControl(minutes: 5),
+                        handicap: Handicap(piece: HandicapPiece.queen),
+                      ),
+                    ),
+                  ),
+                ),
+                child: const Text('apri'),
+              ),
+            ),
+          ),
+        );
+        await tester.tap(find.text('apri'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const Key('gallery-play')));
+        await tester.pumpAndSettle();
+        expect(result!.options.handicap!.piece, HandicapPiece.queen);
+        expect(result!.options.control, const TimeControl(minutes: 5));
+      });
+
+      testWidgets('profilo bambino: una cadenza non adatta torna senza tempo', (
+        tester,
+      ) async {
+        Device.phoneMedium.apply(tester);
+        BotGalleryResult? result;
+        await tester.pumpWidget(
+          localizedApp(
+            home: Builder(
+              builder: (context) => TextButton(
+                onPressed: () async => result = await Navigator.push(
+                  context,
+                  MaterialPageRoute<BotGalleryResult>(
+                    builder: (_) => const BotGalleryPage(
+                      collection: BotCollection(),
+                      kidMode: true,
+                      initialOptions: GameOptions(
+                        control: TimeControl(minutes: 3, increment: 2),
+                      ),
+                    ),
+                  ),
+                ),
+                child: const Text('apri'),
+              ),
+            ),
+          ),
+        );
+        await tester.tap(find.text('apri'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const Key('gallery-play')));
+        await tester.pumpAndSettle();
+        expect(result!.options.control, isNull);
       });
 
       testWidgets('il pannello è in inglese con la lingua inglese', (
