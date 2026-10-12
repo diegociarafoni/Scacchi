@@ -71,6 +71,32 @@ void main() {
       );
     });
 
+    test('un pezzo ben difeso non è «messo al sicuro»', () {
+      expect(
+        why('7k/3r4/8/8/8/8/8/2KN4 w - - 0 1', 'd1c3'),
+        'Sviluppa il cavallo: entra in gioco.',
+      );
+    });
+
+    test('promozione con cattura e scacco li cita', () {
+      expect(
+        why('r6k/1P6/8/8/8/8/8/K7 w - - 0 1', 'b7a8q'),
+        'Promuove il pedone: diventa una donna. '
+        'Cattura la torre con il pedone. Dà scacco al tuo re.',
+      );
+    });
+
+    test('un pedone già oltre la quarta traversa non «prende il centro»', () {
+      expect(
+        why('4k3/8/8/8/3P4/8/8/4K3 w - - 0 1', 'd4d5'),
+        'Sposta il pedone su una casa più utile.',
+      );
+      expect(
+        why('4k3/8/8/4p3/8/8/8/4K3 b - - 0 1', 'e5e4'),
+        'Sposta il pedone su una casa più utile.',
+      );
+    });
+
     test('minaccia di cattura dalla mossa successiva, con la casa', () {
       const f = '7k/8/8/4r3/8/8/8/K5N1 w - - 0 1';
       expect(

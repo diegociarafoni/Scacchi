@@ -1077,8 +1077,12 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   Future<void> _explainReply(Position before, Move move) async {
     final after = _game.position;
     NormalMove? followUp;
+    // Con l'orologio acceso l'analisi della minaccia fermerebbe il tempo
+    // dell'utente: si spiega solo la mossa.
     try {
-      followUp = await _whileSuspended(() => _coach.threat(after));
+      followUp = _clock != null
+          ? null
+          : await _whileSuspended(() => _coach.threat(after));
     } on Object {
       followUp = null;
     }
@@ -1091,6 +1095,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       showSquares: !_kid,
     );
     if (text == null) return;
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     _showMessage(text, duration: const Duration(seconds: 8));
   }
 

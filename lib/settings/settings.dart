@@ -324,7 +324,7 @@ class AppSettings {
   final bool confirmMove;
   final bool colorBlind;
 
-  /// «Spiegami perché» (RF-96): dopo ogni mossa del computer una riga su cosa
+  /// «Spiegami perché» (RF-122): dopo ogni mossa del computer una riga su cosa
   /// minaccia o prepara.
   final bool explainWhy;
 

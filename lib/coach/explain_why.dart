@@ -41,22 +41,22 @@ String? explainComputerMove(
           (target?.role == Role.rook && target?.color == piece.color));
   if (castles) return l.whyCastle;
 
-  final promotion = move.promotion;
-  if (promotion != null) return l.whyPromote(promotion.name);
-
   final victim =
       target ??
       (piece.role == Role.pawn && move.from.file != move.to.file
           ? Piece(color: them, role: Role.pawn)
           : null);
-  if (victim != null) {
-    final text = l.whyCapture(name(victim.role), name(piece.role));
-    return after.isCheck ? '$text ${l.whyCheck}' : text;
-  }
+  final promotion = move.promotion;
+  final parts = [
+    if (promotion != null) l.whyPromote(promotion.name),
+    if (victim != null) l.whyCapture(name(victim.role), name(piece.role)),
+    if (after.isCheck && (promotion != null || victim != null)) l.whyCheck,
+  ];
+  if (parts.isNotEmpty) return parts.join(' ');
   if (after.isCheck) return l.whyCheck;
 
   if (piece.role != Role.king &&
-      before.board.attacksTo(move.from, them).isNotEmpty &&
+      _hanging(before.board, move.from, piece) &&
       after.board.attacksTo(move.to, them).isEmpty) {
     return l.whySafe(name(piece.role));
   }
@@ -72,10 +72,22 @@ String? explainComputerMove(
   final pushRank = piece.color == Side.white ? 3 : 4;
   if (piece.role == Role.pawn &&
       (move.to.file == File.d || move.to.file == File.e) &&
-      (move.to.rank == pushRank || move.to.rank == 7 - pushRank)) {
+      move.to.rank == pushRank) {
     return l.whyCenter;
   }
   return l.whyImprove(name(piece.role));
+}
+
+/// Il pezzo in [sq] è davvero minacciato: attaccato da un pezzo di valore
+/// minore o non difeso.
+bool _hanging(Board board, Square sq, Piece piece) {
+  final attackers = board.attacksTo(sq, piece.color.opposite);
+  if (attackers.isEmpty) return false;
+  final cheapest = attackers.squares
+      .map((a) => _value[board.pieceAt(a)!.role]!)
+      .reduce((a, b) => a < b ? a : b);
+  return cheapest < _value[piece.role]! ||
+      board.attacksTo(sq, piece.color).isEmpty;
 }
 
 /// Cosa farebbe il computer alla mossa seguente, se toccasse ancora a lui.
