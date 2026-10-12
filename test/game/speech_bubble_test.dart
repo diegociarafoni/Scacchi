@@ -1,0 +1,120 @@
+import 'package:chessground/chessground.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:scacchi/engine/bots.dart';
+import 'package:scacchi/engine/computer_player.dart';
+import 'package:scacchi/game/game_page.dart';
+import 'package:scacchi/l10n/app_localizations.dart';
+import 'package:scacchi/progress/avatar_art.dart';
+import 'package:scacchi/progress/guardian_avatar.dart';
+import 'package:scacchi/settings/settings.dart';
+import 'package:scacchi/storage/key_value_store.dart';
+import 'package:scacchi/theme/rokko_theme.dart';
+
+import '../computer_fakes.dart';
+import '../game_actions.dart';
+
+const _bubble = ValueKey('speechBubble');
+
+Future<void> pump(
+  WidgetTester tester, {
+  Size size = const Size(390, 900),
+}) async {
+  tester.view.physicalSize = size * 3;
+  tester.view.devicePixelRatio = 3;
+  addTearDown(tester.view.reset);
+  await tester.pumpWidget(
+    MaterialApp(
+      theme: RokkoTheme.light(),
+      locale: const Locale('it'),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: GamePage(
+        settings: SettingsController.defaults(),
+        computerAvailable: true,
+        store: MemoryStore(),
+        now: () => DateTime(2026, 10, 12, 12),
+        createComputer: () =>
+            ComputerPlayer(connect: () async => FirstLegalMoveEngine()),
+      ),
+    ),
+  );
+  await tester.pumpAndSettle();
+}
+
+Future<void> startBot(WidgetTester tester) async {
+  await tapGameAction(tester, 'Nuova');
+  await tester.pumpAndSettle();
+  await tester.tap(find.text('Bot'));
+  await tester.pumpAndSettle();
+  await chooseTime(tester, 'Senza tempo');
+  await tester.pumpAndSettle(const Duration(seconds: 1));
+}
+
+void main() {
+  testWidgets('il suggerimento è il fumetto dell\'allenatore, non una fascia', (
+    tester,
+  ) async {
+    await pump(tester);
+    await startBot(tester);
+    await tester.tap(find.byKey(const ValueKey('gameAction-hint')));
+    await tester.pumpAndSettle();
+    expect(find.byKey(_bubble), findsOneWidget);
+    expect(find.byType(SnackBar), findsNothing);
+    expect(find.byType(CharacterAvatar), findsOneWidget);
+    // Il fumetto sta sopra la scacchiera, nello spazio libero.
+    expect(
+      tester.getRect(find.byKey(_bubble)).bottom,
+      lessThanOrEqualTo(tester.getRect(find.byType(Chessboard)).top),
+    );
+  });
+
+  testWidgets('lo sfidante sta sopra la scacchiera e saluta in un fumetto', (
+    tester,
+  ) async {
+    await pump(tester);
+    await startBot(tester);
+    expect(find.byType(GuardianAvatar), findsOneWidget);
+    expect(find.byKey(_bubble), findsOneWidget);
+    expect(find.byType(SnackBar), findsNothing);
+    final bot = bots.first;
+    expect(
+      bot
+          .phrases(BotEvent.start)
+          .any((p) => find.text(p).evaluate().isNotEmpty),
+      isTrue,
+    );
+  });
+
+  testWidgets('il fumetto sparisce da solo, lo sfidante resta', (tester) async {
+    await pump(tester);
+    await startBot(tester);
+    await tester.pump(const Duration(seconds: 10));
+    await tester.pumpAndSettle();
+    expect(find.byKey(_bubble), findsNothing);
+    expect(find.byType(GuardianAvatar), findsOneWidget);
+  });
+
+  testWidgets('un tocco chiude il fumetto', (tester) async {
+    await pump(tester);
+    await startBot(tester);
+    await tester.tap(find.byKey(_bubble));
+    await tester.pumpAndSettle();
+    expect(find.byKey(_bubble), findsNothing);
+  });
+
+  testWidgets('senza spazio sopra la scacchiera il messaggio resta in fascia', (
+    tester,
+  ) async {
+    await pump(tester, size: const Size(360, 640));
+    await startBot(tester);
+    expect(find.byKey(_bubble), findsNothing);
+    expect(find.byType(SnackBar), findsOneWidget);
+  });
+
+  testWidgets('nessun overflow con il testo ingrandito', (tester) async {
+    await pump(tester, size: const Size(360, 780));
+    await startBot(tester);
+    expect(tester.takeException(), isNull);
+  });
+}

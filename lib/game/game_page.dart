@@ -29,6 +29,7 @@ import '../l10n/app_localizations.dart';
 import '../openings/opening_game.dart';
 import '../openings/opening_name.dart';
 import '../progress/activity.dart';
+import '../progress/avatar.dart';
 import '../progress/game_activity.dart';
 import '../progress/progress_controller.dart';
 import '../progress/progress_feedback.dart';
@@ -60,6 +61,7 @@ import 'move_label.dart';
 import 'move_speech.dart';
 import 'opponent_picker.dart';
 import 'sounds.dart';
+import 'speech_bubble.dart';
 import 'variant.dart';
 
 /// Semimosse minime perché una partita valga XP: abbandonare subito non deve
@@ -581,6 +583,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       _botSay(BotEvent.check);
     } else if (_game.moves.last.san.contains('x') && _random.nextInt(3) == 0) {
       _botSay(BotEvent.capture);
+    } else if (_game.moves.length >= 4 && _random.nextInt(6) == 0) {
+      _botSay(BotEvent.chat);
     }
   }
 
@@ -588,7 +592,49 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final bot = _bot;
     if (bot == null || !mounted || _zen) return;
     final text = bot.phrase(event, _random, friendly: _kidGame);
-    _showMessage('${bot.avatar} ${bot.name}: $text');
+    _say(
+      Speech(
+        text,
+        bot: bot,
+        expression: switch (event) {
+          BotEvent.start => AvatarExpression.greeting,
+          BotEvent.win || BotEvent.capture => AvatarExpression.happy,
+          BotEvent.loss => AvatarExpression.surprised,
+          BotEvent.check => AvatarExpression.challenge,
+          BotEvent.mistake => AvatarExpression.encouraging,
+          _ => AvatarExpression.neutral,
+        },
+      ),
+    );
+  }
+
+  Speech? _speech;
+  Timer? _speechTimer;
+
+  /// Dove c'è spazio sopra la scacchiera, impostato dal layout.
+  bool _speechRoom = false;
+
+  Widget _strip() =>
+      SpeechStrip(opponent: _bot, speech: _speech, onDismiss: _clearSpeech);
+
+  void _clearSpeech() {
+    _speechTimer?.cancel();
+    if (_speech != null && mounted) setState(() => _speech = null);
+  }
+
+  /// Fumetto sopra la scacchiera; senza spazio (schermo basso o orizzontale)
+  /// resta la fascia in basso.
+  void _say(Speech speech, {Duration duration = const Duration(seconds: 8)}) {
+    if (!_speechRoom) {
+      final bot = speech.bot;
+      _showMessage(
+        bot == null ? speech.text : '${bot.avatar} ${bot.name}: ${speech.text}',
+      );
+      return;
+    }
+    _speechTimer?.cancel();
+    setState(() => _speech = speech);
+    _speechTimer = Timer(duration, _clearSpeech);
   }
 
   void _saveAdaptive() {
@@ -676,6 +722,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _computer?.dispose().ignore();
     WidgetsBinding.instance.removeObserver(this);
     _ticker?.cancel();
+    _speechTimer?.cancel();
     _tick.dispose();
     _sounds.dispose();
     _board.dispose();
@@ -1115,7 +1162,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     }
     if (!mounted || !identical(position, _game.position)) return;
     if (threat == null) {
-      _showMessage('Nessuna minaccia da mostrare.');
+      _say(const Speech('Nessuna minaccia da mostrare.'));
       return;
     }
     final fen = threatFen(position);
@@ -1130,10 +1177,12 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         threat.to,
       );
     });
-    _showMessage(
-      san == null
-          ? 'La freccia rossa mostra la minaccia dell\'avversario.'
-          : 'Se toccasse all\'avversario giocherebbe ${formatSan(san, AppSettings.of(context).notation)}: la freccia rossa.',
+    _say(
+      Speech(
+        san == null
+            ? 'La freccia rossa mostra la minaccia dell\'avversario.'
+            : 'Se toccasse all\'avversario giocherebbe ${formatSan(san, AppSettings.of(context).notation)}: la freccia rossa.',
+      ),
     );
   }
 
@@ -1149,7 +1198,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     }
     if (!mounted || !identical(position, _game.position)) return;
     if (hint == null) {
-      _showMessage('Nessun suggerimento disponibile.');
+      _say(const Speech('Nessun suggerimento disponibile.'));
       return;
     }
     final marks = _settings.marks;
@@ -1173,7 +1222,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
               ...marks.circle(color, to),
             },
     );
-    _showMessage(text);
+    _say(Speech(text, expression: AvatarExpression.encouraging));
   }
 
   /// Gioca [move] con orologio, suono e annuncio; con il tempo scaduto chiude la partita.
@@ -1317,7 +1366,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     );
     if (text == null) return;
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    _showMessage(text, duration: const Duration(seconds: 8));
+    _say(Speech(text), duration: const Duration(seconds: 10));
   }
 
   /// Partita di scacchi classici dalla posizione iniziale: solo queste contano
@@ -1594,6 +1643,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _badge = null;
     _hintedFen = null;
     _threatFen = null;
+    _speechTimer?.cancel();
+    _speech = null;
     _coach = _newCoach();
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     _game = game;
@@ -2417,10 +2468,22 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                   Expanded(
                     child: LayoutBuilder(
                       builder: (context, box) {
-                        final banner =
+                        _speechRoom =
+                            !_zen &&
+                            box.maxHeight >=
+                                _moveStripHeight + speechStripHeight;
+                        final tip =
                             box.maxHeight >= _moveStripHeight + _bannerHeight
                             ? _banner(context)
                             : null;
+                        // Il fumetto ha la precedenza sul suggerimento; lo
+                        // sfidante resta in vista quando non c'è altro.
+                        final banner = _speechRoom && _speech != null
+                            ? _strip()
+                            : tip ??
+                                  (_speechRoom && _bot != null
+                                      ? _strip()
+                                      : null);
                         return Column(
                           children: [
                             ?banner,
