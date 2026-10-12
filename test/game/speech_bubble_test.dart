@@ -78,13 +78,9 @@ void main() {
     expect(find.byType(GuardianAvatar), findsOneWidget);
     expect(find.byKey(_bubble), findsOneWidget);
     expect(find.byType(SnackBar), findsNothing);
-    final bot = bots.first;
-    expect(
-      bot
-          .phrases(BotEvent.start)
-          .any((p) => find.text(p).evaluate().isNotEmpty),
-      isTrue,
-    );
+    // Il bot proposto dipende dal profilo: basta il saluto di uno qualsiasi.
+    final greetings = [for (final b in bots) ...b.phrases(BotEvent.start)];
+    expect(greetings.any((p) => find.text(p).evaluate().isNotEmpty), isTrue);
   });
 
   testWidgets('il fumetto sparisce da solo, lo sfidante resta', (tester) async {
