@@ -312,6 +312,22 @@ void main() {
     }
   });
 
+  /// Carica davvero le immagini visibili: senza, i golden dipendono da quanto
+  /// è veloce la decodifica e le icone dei pezzi risultano a volte vuote.
+  Future<void> loadImages(WidgetTester tester) async {
+    final context = tester.element(find.byType(Scaffold).last);
+    await tester.runAsync(() async {
+      for (final image in tester.widgetList<Image>(find.byType(Image))) {
+        await precacheImage(image.image, context);
+      }
+      // I pezzi dell'anteprima sono disegnati senza passare da un Image.
+      for (final piece in settings.value.board.pieceAssets.values) {
+        await precacheImage(piece, context);
+      }
+    });
+    await tester.pumpAndSettle();
+  }
+
   // I golden dipendono dal sistema operativo: in locale si escludono con
   // --exclude-tags golden, in CI girano su Linux.
   group('golden', () {
@@ -325,6 +341,7 @@ void main() {
         tester,
       ) async {
         await show(tester, logical: size);
+        await loadImages(tester);
         await expectLater(
           find.byType(MaterialApp),
           matchesGoldenFile('goldens/settings_board_$name.png'),
@@ -345,6 +362,7 @@ void main() {
         200,
       );
       await tester.pumpAndSettle();
+      await loadImages(tester);
       await expectLater(
         find.byType(MaterialApp),
         matchesGoldenFile('goldens/settings_chips.png'),
@@ -361,6 +379,7 @@ void main() {
         ),
       );
       await show(tester, logical: const Size(360, 780));
+      await loadImages(tester);
       await expectLater(
         find.byType(MaterialApp),
         matchesGoldenFile('goldens/settings_color_blind.png'),
