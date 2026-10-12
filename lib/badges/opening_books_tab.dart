@@ -173,7 +173,6 @@ class BookCoverBoard extends StatelessWidget {
         size: side,
         fen: volume.coverPosition.fen,
         orientation: Side.white,
-        settings: const StaticChessboardSettings(),
       );
       return ClipRRect(
         borderRadius: BorderRadius.circular(6),
