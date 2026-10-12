@@ -1,6 +1,6 @@
 # Qualità
 
-Ogni controllo ha un limite misurabile e blocca la CI se non è rispettato. I limiti numerici sono in [`tool/policy.json`](../tool/policy.json), così da cambiarli in un solo punto e con una revisione visibile. Questa pagina descrive i controlli oggi attivi; dimensioni, fluidità e prove sul telefono arriveranno in PR successive.
+Ogni controllo ha un limite misurabile e blocca la CI se non è rispettato. I limiti numerici sono in [`tool/policy.json`](../tool/policy.json), così da cambiarli in un solo punto e con una revisione visibile. Questa pagina descrive i controlli oggi attivi; le prove sul telefono arriveranno in PR successive.
 
 | Controllo | Strumento | Limite | Dove gira |
 |---|---|---|---|
@@ -10,6 +10,9 @@ Ogni controllo ha un limite misurabile e blocca la CI se non è rispettato. I li
 | Copertura della logica di gioco | `tool/check_coverage.dart` | almeno 80% | CI |
 | Sicurezza OWASP MASVS (sorgenti) | `test/security/` | permessi, log e SDK secondo `tool/policy.json` | pre-push, CI |
 | Manifest dell'APK (MASVS) | `tool/check_apk.dart` | permessi ed esportazioni secondo `tool/policy.json`, non debuggable in rilascio | CI (job android), rilascio |
+| Dimensione dell'APK | `tool/check_size.dart` | al massimo `budget.apkMaxMegabytes` (80 MB) | rilascio e nightly, prima della pubblicazione |
+| Fluidità | `integration_test/fluidita_perf.dart` e `tool/check_performance.dart` | tempi di costruzione dei fotogrammi entro `budget.frames` | main, tag e PR che toccano la misura (workflow `Prestazioni`) |
+| Analisi statica dell'APK (MobSF) | `.github/workflows/mobsf.yml`, `tool/check_mobsf.dart` | nessun avviso grave oltre a `mobsf.acceptedHigh`, punteggio almeno `mobsf.minSecurityScore` | settimanale su main e a richiesta (vedi [sicurezza.md](sicurezza.md)) |
 | Golden test | `flutter test` con tag `golden` | nessuna differenza di pixel | CI (Linux) |
 | Accessibilità | linee guida di `flutter_test` | vedi sotto | pre-push, CI |
 
@@ -19,6 +22,18 @@ La logica di gioco è definita in modo automatico: ogni file in `lib/` scritto a
 
 ```sh
 flutter test --coverage && dart run tool/check_coverage.dart
+```
+
+## Budget di dimensione e fluidità
+
+I due controlli sono pesanti, quindi girano solo dove serve: la dimensione sull'APK di rilascio che il workflow `Rilascio APK` costruisce comunque (un APK oltre il limite non viene pubblicato), la fluidità nel workflow `Prestazioni`, su `main`, sui tag e sulle PR che modificano la misura stessa.
+
+- **Dimensione.** L'APK arm64 firmato pesa oggi circa 63 MiB (Stockfish compreso); il limite di 80 MB lascia margine per una nuova funzione ma segnala un asset aggiunto per errore. Per cambiare il limite si modifica `budget.apkMaxMegabytes` in `tool/policy.json`, con una revisione visibile.
+- **Fluidità.** Il test sta in `integration_test/` perché solo lì `flutter test -d linux` avvia l'app; il suffisso `_perf` (non `_test`) lo esclude dal giro dei test end-to-end della CI. Gioca otto mosse sulla scacchiera e scorre la pagina del profilo su desktop Linux (Xvfb), registrando con `watchPerformance` i `FrameTiming` e scrivendo `build/performance.json`; `tool/check_performance.dart` confronta il 90° e il 99° percentile del tempo di costruzione con `budget.frames`. Si misura solo la costruzione: sul runner senza GPU la rasterizzazione non è significativa. Il test gira in modalità debug, quindi i limiti sono larghi: servono a intercettare una regressione grossolana, non a certificare i 60 fotogrammi al secondo su un telefono. Il rapporto è allegato al workflow (artefatto `prestazioni`).
+
+```sh
+dart run tool/check_size.dart build/app/outputs/flutter-apk/app-release.apk
+xvfb-run -a flutter test integration_test/fluidita_perf.dart -d linux && dart run tool/check_performance.dart
 ```
 
 ## Golden test

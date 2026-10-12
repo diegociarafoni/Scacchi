@@ -4,6 +4,7 @@ import 'dart:io' show SocketException;
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/foundation.dart';
 
+import 'channel_registry.dart';
 import 'game_invite.dart';
 import 'game_sync.dart';
 import 'lan_discovery.dart';
@@ -71,6 +72,7 @@ class MultiplayerController extends ChangeNotifier {
       _reached = true;
       _changed();
     });
+    addExtraChannels(session.transport, session.invite, isHost: isHost);
   }
 
   /// Crea l'invito e attende l'avversario. [NoLocalNetwork] se il telefono
