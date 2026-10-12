@@ -85,6 +85,7 @@ class GameSync {
   Uint8List? _peerKey;
 
   Position _position = Chess.initial;
+  String? _lastSan;
   final _moves = <String>[];
   final _hashes = <String>[];
 
@@ -93,6 +94,9 @@ class GameSync {
   Position get position => _position;
   Side get turn => _position.turn;
   bool get isGameOver => _position.isGameOver;
+
+  /// Ultima semimossa in notazione SAN, per annunciarla.
+  String? get lastSan => _lastSan;
 
   /// Ultima mossa di questo telefono, da ripetere quando un canale torna
   /// disponibile.
@@ -181,7 +185,9 @@ class GameSync {
   }
 
   void _apply(String uci, Move move) {
-    _position = _position.play(move);
+    final (next, san) = _position.makeSan(move);
+    _position = next;
+    _lastSan = san;
     _moves.add(uci);
     _hashes.add(positionHash(_position));
   }

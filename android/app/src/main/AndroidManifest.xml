@@ -4,6 +4,9 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <!-- Fotocamera: lettore QR delle partite e foto della scacchiera fisica, chiesta solo quando si usano. -->
     <uses-permission android:name="android.permission.CAMERA"/>
+    <!-- Partita con un amico in rete locale (RMP-07, RMP-08): solo socket verso l'altro
+         telefono, aperti dopo aver creato o inquadrato un invito. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <!-- L'app resta installabile su dispositivi senza fotocamera. -->
     <uses-feature android:name="android.hardware.camera.any" android:required="false"/>
     <!-- Minimo privilegio (MASVS-PLATFORM): il plugin della fotocamera dichiara
