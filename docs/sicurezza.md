@@ -38,6 +38,15 @@ Il riferimento è [OWASP MASVS v2](https://mas.owasp.org/MASVS/), con i casi di 
 
 `tool/check_apk.dart` legge con `aapt2` il manifest **finale** dell'APK, dopo l'unione con quelli delle librerie, dove compaiono permessi che nei sorgenti non ci sono. Verifica che l'APK non sia debuggable, che i permessi siano solo quelli di `privacy.androidPermissions` e `privacy.mergedPermissions` (aggiunti dalle librerie, ognuno con il motivo) e che l'unico componente esportato senza permesso sia `MainActivity`. Gira sull'APK di debug nel job `android` della CI (con `--debug`, che ammette INTERNET e salta il controllo sul debug) e sull'APK di rilascio nel workflow `Rilascio APK`, prima della pubblicazione: un APK non conforme non esce.
 
+### MobSF sull'APK di rilascio
+
+Il workflow `MobSF` (`.github/workflows/mobsf.yml`) esegue l'analisi statica di [MobSF](https://github.com/MobSF/Mobile-Security-Framework-MobSF) (OWASP MASVS) sull'APK del nightly, quindi sull'APK firmato che gli utenti installano. Parte ogni mercoledì su `main`, a richiesta (Actions → MobSF → Run workflow, con il tag di una release numerata oppure vuoto per il nightly) e sulle PR che toccano la scansione; non gira sulle altre PR perché è pesante. Analizza un APK già pubblicato: non ne costruisce uno. MobSF è un container fissato per digest (v4.5.3), avviato sul runner con una chiave API casuale: nessun APK né dato lascia il runner. `tool/check_mobsf.dart` applica al rapporto JSON la sezione `mobsf` di `tool/policy.json`:
+
+- `minSecurityScore`: punteggio di sicurezza minimo (0-100);
+- `acceptedHigh`: gli avvisi gravi (`appsec.high`) ammessi, inizio del titolo → motivo. Ogni altro avviso grave fa fallire il workflow. Un avviso accettato che il rapporto non contiene più viene segnalato come da togliere.
+
+Il rapporto completo è allegato al workflow (artefatto `mobsf-report`, 30 giorni).
+
 Aggiungere un permesso, per esempio `INTERNET` per il multigiocatore in rete, fa fallire il test finché il permesso non compare in `tool/policy.json` con il motivo: la scelta resta visibile in revisione.
 
 ## Catena di fornitura

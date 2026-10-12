@@ -71,5 +71,19 @@
       "lib/storage/key_value_store.dart": 1,
       "lib/tournament/tournament_controller.dart": 2
     }
+  },
+  "budget": {
+    "apkMaxMegabytes": 80,
+    "frames": {
+      "minFrames": 50,
+      "p90BuildMs": 33,
+      "p99BuildMs": 100
+    }
+  },
+  "mobsf": {
+    "minSecurityScore": 45,
+    "acceptedHigh": {
+      "App can be installed on a vulnerable unpatched Android version": "minSdk è quello predefinito di Flutter (24, Android 7.0): alzarlo escluderebbe i telefoni più vecchi, usati spesso dai bambini. Da rivalutare a ogni aggiornamento di Flutter"
+    }
   }
 }
