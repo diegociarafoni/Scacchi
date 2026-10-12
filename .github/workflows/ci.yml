@@ -78,7 +78,7 @@ jobs:
       # (e si controlla che le lingue coincidano) prima di pub get, che genera il codice.
       - run: dart tool/l10n.dart --solo-unione
       - run: flutter pub get
-      - run: dart format --output=none --set-exit-if-changed lib test integration_test tool
+      - run: dart format --output=none --set-exit-if-changed lib test integration_test performance_test tool
       # Regole rigorose in analysis_options.yaml: anche gli avvisi informativi bloccano.
       - run: flutter analyze --fatal-infos --fatal-warnings
       - run: flutter test --coverage

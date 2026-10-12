@@ -1,0 +1,50 @@
+name: Prestazioni
+
+# Misura della fluidità (tempi di costruzione dei fotogrammi) con il budget di
+# tool/policy.json. Gira su main e sui tag; sulle PR solo se toccano la misura.
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+    paths-ignore: ['docs/**', '**/*.md', 'LICENSE']
+  pull_request:
+    paths:
+      - 'performance_test/**'
+      - 'tool/check_performance.dart'
+      - 'tool/src/budget.dart'
+      - 'tool/policy.json'
+      - '.github/workflows/prestazioni.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  fluidita:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - run: sudo apt-get update && sudo apt-get install -y libgtk-3-dev ninja-build xvfb libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good stockfish
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with:
+          channel: stable
+          flutter-version: 3.47.7
+          cache: true
+      - run: dart tool/l10n.dart --solo-unione
+      - run: xvfb-run -a flutter test performance_test/fluidita_test.dart -d linux
+      - name: Budget dei fotogrammi
+        run: dart run tool/check_performance.dart
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: always()
+        with:
+          name: prestazioni
+          path: build/performance.json
+          if-no-files-found: ignore
+          retention-days: 14
