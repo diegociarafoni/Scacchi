@@ -162,7 +162,7 @@
   "@weeklyAdviceHeading": {
     "description": "Titolo della sezione consiglio"
   },
-  "weeklyAdviceLesson": "Ripassa la lezione «{title}» del Percorso.",
+  "weeklyAdviceLesson": "Ripassa la lezione «{title}» della Storia.",
   "@weeklyAdviceLesson": {
     "description": "Consiglio: lezione",
     "placeholders": {

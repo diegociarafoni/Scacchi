@@ -12,6 +12,8 @@ import 'package:scacchi/path/path_controller.dart';
 import 'package:scacchi/progress/progress_controller.dart';
 import 'package:scacchi/progress/progress_store.dart';
 import 'package:scacchi/settings/settings.dart';
+import 'package:scacchi/story/story.dart';
+import 'package:scacchi/story/story_controller.dart';
 
 import '../computer_fakes.dart';
 import '../game_actions.dart';
@@ -36,6 +38,7 @@ void main() {
   late Directory dir;
   late ProgressController progress;
   late PathController path;
+  late StoryController story;
 
   setUp(() async {
     dir = Directory.systemTemp.createTempSync('guardian');
@@ -43,6 +46,8 @@ void main() {
     await progress.load();
     path = PathController(File('${dir.path}/path.json'));
     await path.load();
+    story = StoryController(File('${dir.path}/story.json'));
+    await story.load();
   });
   tearDown(() => dir.deleteSync(recursive: true));
 
@@ -56,6 +61,7 @@ void main() {
           settings: SettingsController.defaults(),
           progress: () async => progress,
           path: () async => path,
+          story: () async => story,
           archive: () async => GameArchive(File('${dir.path}/games.json')),
           reminderScheduler: () => null,
           computerAvailable: computer,
@@ -66,9 +72,9 @@ void main() {
     );
     await tester.tap(find.text('Tu'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Percorso'));
+    await tester.tap(find.text('Storia'));
     await tester.pumpAndSettle();
-    final guardian = find.bySemanticsLabel(RegExp('^Il guardiano, da fare'));
+    final guardian = find.text('Il guardiano del capitolo');
     await tester.scrollUntilVisible(guardian, 200);
     await tester.ensureVisible(guardian.first);
     await tester.pumpAndSettle();
@@ -84,7 +90,17 @@ void main() {
         p = p.complete(s.id, 3);
       }
     }
-    await tester.runAsync(() => path.replace(p));
+    await tester.runAsync(() async {
+      await path.replace(p);
+      // Il guardiano è il terzo capitolo: prima vanno conclusi i due che lo
+      // precedono e i puzzle del suo.
+      for (final c in storyChapters.take(3)) {
+        await story.puzzlesSolved(c, c.puzzleCount);
+      }
+      for (final c in storyChapters.take(2)) {
+        await story.bossBeaten(c);
+      }
+    });
   }
 
   testWidgets('il guardiano apre una partita già impostata', (tester) async {
@@ -129,7 +145,7 @@ void main() {
     await openGuardian(tester, computer: false);
     expect(
       find.text(
-        'Il guardiano si sfida dove gioca il computer: Android e iOS, o Windows e Linux con Stockfish installato.',
+        'Le sfide si giocano dove gira il computer: Android e iOS, o Windows e Linux con Stockfish installato.',
       ),
       findsOneWidget,
     );

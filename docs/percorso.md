@@ -2,6 +2,8 @@
 
 Requisito RG-03: una mappa di capitoli e tappe con valutazione da 1 a 3 stelle. Il codice è in `lib/path/`. La trama a capitoli che lo usa è descritta in [storia.md](storia.md).
 
+**Navigazione**: la Storia è l'unico percorso di apprendimento raggiungibile dall'interfaccia; la voce «Percorso» della scheda Tu è stata tolta. `PathPage` (il sentiero descritto in «Aspetto») resta nel codice ma non è collegata a nessuna schermata: potrà tornare come vista «tutte le lezioni». Stelle e salvataggi (`path.json`) restano validi e alimentano la Storia. I capitoli «La strategia» e «La scuola di Capablanca» non fanno parte della Storia e per ora non hanno un ingresso.
+
 ## Capitoli
 
 | Capitolo | Tappe |

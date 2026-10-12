@@ -9,7 +9,6 @@ import 'package:scacchi/archive/game_archive.dart';
 import 'package:scacchi/home/home_shell.dart';
 import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/path/path_controller.dart';
-import 'package:scacchi/path/path_page.dart';
 import 'package:scacchi/progress/progress_controller.dart';
 import 'package:scacchi/progress/progress_store.dart';
 import 'package:scacchi/settings/settings.dart';
@@ -126,32 +125,6 @@ void main() {
   ) async {
     await tu(tester, Device.phoneMedium, kid: true);
     await _golden(tester, 'tu-bambino-telefono-medio');
-  });
-
-  for (final brightness in Brightness.values) {
-    testWidgets('Percorso ${brightness.name}', skip: _skip != null, (
-      tester,
-    ) async {
-      await _pump(
-        tester,
-        Device.phoneMedium,
-        PathPage(controller: path),
-        brightness: brightness,
-      );
-      await _golden(tester, 'percorso-${brightness.name}-telefono-medio');
-    });
-  }
-
-  testWidgets('Percorso col testo al 130%', skip: _skip != null, (
-    tester,
-  ) async {
-    await _pump(
-      tester,
-      Device.phoneSmall,
-      PathPage(controller: path),
-      textScale: 1.3,
-    );
-    await _golden(tester, 'percorso-testo-130-telefono-piccolo');
   });
 
   testWidgets('Storia', skip: _skip != null, (tester) async {

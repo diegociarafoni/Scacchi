@@ -9,6 +9,7 @@ import 'package:scacchi/progress/progress_controller.dart';
 import 'package:scacchi/progress/progress_store.dart';
 import 'package:scacchi/reminders/reminder.dart';
 import 'package:scacchi/settings/settings.dart';
+import 'package:scacchi/story/story_controller.dart';
 
 import '../localized_app.dart';
 
@@ -50,6 +51,7 @@ void main() {
           settings: settings ?? SettingsController.defaults(),
           progress: () async => progress,
           path: () async => PathController(File('${dir.path}/path.json')),
+          story: () async => StoryController(File('${dir.path}/story.json')),
           archive: () async => GameArchive(File('${dir.path}/games.json')),
           reminderScheduler: () => scheduler,
         ),
@@ -60,12 +62,12 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('la scheda Tu porta a profilo, percorso e altro', (tester) async {
+  testWidgets('la scheda Tu porta a profilo, storia e altro', (tester) async {
     await show(tester);
     expect(find.text('Livello 1'), findsOneWidget);
     for (final label in [
       'Profilo',
-      'Percorso',
+      'Storia',
       'Minigiochi',
       'Statistiche',
       'La tua settimana',
@@ -121,7 +123,7 @@ void main() {
     expect(find.text('Aperture'), findsNothing);
     for (final label in [
       'Profilo',
-      'Percorso',
+      'Storia',
       'Minigiochi',
       'La tua settimana',
     ]) {
@@ -167,8 +169,8 @@ void main() {
       for (final h in ['Impara', 'Gioca', 'I miei dati']) {
         expect(inList(h), findsOneWidget, reason: h);
       }
-      expect(top(tester, 'Impara'), lessThan(top(tester, 'Percorso')));
-      expect(top(tester, 'Percorso'), lessThan(top(tester, 'Gioca')));
+      expect(top(tester, 'Impara'), lessThan(top(tester, 'Storia')));
+      expect(top(tester, 'Storia'), lessThan(top(tester, 'Gioca')));
       expect(top(tester, 'Minigiochi'), lessThan(top(tester, 'I miei dati')));
       expect(top(tester, 'I miei dati'), lessThan(top(tester, 'Profilo')));
     });
@@ -204,7 +206,7 @@ void main() {
       tester.platformDispatcher.textScaleFactorTestValue = 1.3;
       addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
       await show(tester);
-      for (final label in ['Percorso', 'Minigiochi', 'Profilo']) {
+      for (final label in ['Storia', 'Minigiochi', 'Profilo']) {
         await tester.scrollUntilVisible(
           find.text(label),
           200,

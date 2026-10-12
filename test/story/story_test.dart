@@ -203,4 +203,34 @@ void main() {
       expect(junk.isBossBeaten('nessuno'), isFalse);
     });
   });
+
+  group('prossima tappa della storia', () {
+    test('parte dalla prima lezione del primo capitolo', () {
+      expect(
+        nextStoryStage(const PathProgress()),
+        storyChapters.first.pathChapter.stages.first,
+      );
+    });
+
+    test('salta le lezioni fatte e arriva al guardiano', () {
+      final chapter = storyChapters[2].pathChapter;
+      var p = const PathProgress();
+      for (final c in storyChapters.take(3)) {
+        for (final s in c.pathChapter.stages.where((s) => !s.isGuardian)) {
+          p = p.complete(s.id, 3);
+        }
+      }
+      expect(nextStoryStage(p), chapter.stages.firstWhere((s) => s.isGuardian));
+    });
+
+    test('ignora i capitoli del percorso che la storia non racconta', () {
+      var p = const PathProgress();
+      for (final c in storyChapters) {
+        for (final s in c.pathChapter.stages) {
+          p = p.complete(s.id, 3);
+        }
+      }
+      expect(nextStoryStage(p), isNull);
+    });
+  });
 }
