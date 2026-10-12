@@ -23,6 +23,10 @@ Entrambe le voci compaiono solo dove c'è il motore (Android, iOS e, con Stockfi
 | Freccia | RF-54 | Freccia verde della mossa migliore, attivabile dalla barra del titolo; l'arrocco punta alla casa del re |
 | Minaccia | RF-56 | Il pulsante con il triangolo di avviso nella barra del titolo mostra con una freccia rossa la mossa migliore che l'avversario giocherebbe se toccasse a lui. Sulla posizione con il turno passato (`threatFen`, mossa nulla, senza presa en passant) il motore fa prima una ricerca a una linea fino a profondità 14, perché ha una coda sola, poi riprende l'analisi principale; la freccia resta finché non si cambia posizione. Con l'analisi in pausa o l'app in secondo piano non parte nulla. Non è disponibile quando chi muove è sotto scacco o la partita è finita |
 
+## Finali perfetti
+
+Con al massimo quattro pezzi (senza pedoni contrapposti) e a partita non finita, sopra le linee del motore compare la scheda «Finale perfetto» (RF-97): chi vince e in quante mosse, oppure patta, e la mossa perfetta, che si gioca con un tocco. È esatta e non dipende dal motore. Vedi [finali-perfetti.md](finali-perfetti.md).
+
 ## Motore
 
 `ComputerPlayer.analyseLive(fen, multiPv:, maxDepth: 40)` restituisce un flusso di varianti ordinate. La ricerca usa la forza piena e si ferma alla profondità massima oppure quando chi ascolta annulla l'iscrizione: in quel caso il motore riceve `stop` e la coda delle richieste si libera. Se l'iscrizione viene annullata prima che la ricerca parta, la ricerca non viene inviata, e annullarla non ferma la ricerca di un'altra richiesta.

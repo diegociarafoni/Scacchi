@@ -4,7 +4,7 @@ L'app è progettata prima di tutto per il telefono in verticale.
 
 ## Navigazione
 
-La barra in basso ha quattro schede: Gioca, Puzzle, Aperture e Tu. La scheda Tu mostra avatar, livello e serie, e porta a Profilo, Percorso, Storia, Finali e Tornei (dove c'è il motore), Minigiochi, Statistiche, La tua settimana, Scacchiera fisica e Archivio. Se i dati salvati di una sezione non si possono leggere, un messaggio lo dice e si può riprovare. Nel profilo bambino le Aperture sono nascoste e la scheda Tu mostra solo Profilo, Percorso, Storia, Finali (dove c'è il motore) e Minigiochi (vedi [profilo-bambino.md](profilo-bambino.md)). 
+La barra in basso ha quattro schede: Gioca, Puzzle, Aperture e Tu. La scheda Tu mostra avatar, livello e serie, e porta a Profilo, Percorso, Storia, Finali e Tornei (dove c'è il motore), Grandi maestri, Minigiochi, Statistiche, La tua settimana, Scacchiera fisica e Archivio. Se i dati salvati di una sezione non si possono leggere, un messaggio lo dice e si può riprovare. Nel profilo bambino le Aperture sono nascoste e la scheda Tu mostra solo Profilo, Percorso, Storia, Finali (dove c'è il motore), Grandi maestri e Minigiochi (vedi [profilo-bambino.md](profilo-bambino.md)). 
 
 ## Telefono in verticale
 
@@ -158,6 +158,6 @@ Per ogni tema `lib/settings/color_blind.dart` sceglie, tra blu, azzurro, giallo,
 2. ogni evidenziazione deve avere, sia sulle case chiare sia sulle scure, un rapporto di contrasto WCAG almeno pari a quello dell'evidenziazione originale del tema e mai sotto 1,25, con trasparenza massima del 90%;
 3. tra le coppie valide vince quella con la trasparenza più bassa, così i pezzi restano ben visibili.
 
-I puntini delle mosse legali sono neri o bianchi, con contrasto almeno 1,6; le premosse usano il primo colore della palette non preso dalle altre evidenziazioni. Lo schema è calcolato una volta per tema e riusato, così la scacchiera non ridisegna lo sfondo.
+I puntini delle mosse legali sono neri o bianchi, con contrasto almeno 3:1 (tranne su Notte, Castello e Retrò, vedi docs/pezzi-e-scacchiere.md); le premosse usano il primo colore della palette non preso dalle altre evidenziazioni. Lo schema è calcolato una volta per tema e riusato, così la scacchiera non ridisegna lo sfondo.
 
 L'opzione vale per partita, problemi, aperture, repertorio, percorso e minigiochi. Restano invariati il bagliore rosso del re sotto scacco, disegnato da chessground con un colore fisso e riconoscibile anche dalla posizione sul re, e la casa gialla del quiz sul materiale, che non usa la coppia rosso-verde.

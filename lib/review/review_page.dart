@@ -13,6 +13,7 @@ import '../l10n/app_localizations.dart';
 import '../settings/board_marks.dart';
 import '../settings/notation.dart';
 import '../settings/settings.dart';
+import '../tablebase/shared_tablebase.dart';
 import 'board_utils.dart';
 import 'coach.dart';
 import 'eval_bar.dart';
@@ -415,7 +416,7 @@ class _ReviewPageState extends State<ReviewPage> {
       BoardTheme.green,
       colorBlind: AppSettings.of(context).colorBlind,
     );
-    return {Arrow(color: marks.hint, orig: shown.from, dest: shown.to)};
+    return marks.arrow(marks.hint, shown.from, shown.to);
   }
 
   Map<Square, Annotation> _annotations() {
@@ -441,8 +442,11 @@ class _ReviewPageState extends State<ReviewPage> {
               icon: const Icon(Icons.biotech_outlined),
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute<void>(
-                  builder: (_) =>
-                      AnalysisPage(initial: _boardPosition, analyse: analyse),
+                  builder: (_) => AnalysisPage(
+                    initial: _boardPosition,
+                    analyse: analyse,
+                    tablebase: sharedTablebase(),
+                  ),
                 ),
               ),
             ),

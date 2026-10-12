@@ -1,0 +1,73 @@
+{
+  "backupTitle": "Backup e ripristino",
+  "@backupTitle": {
+    "description": "Titolo della pagina di backup"
+  },
+  "backupIntro": "Il backup contiene partite, progressi, percorso, tornei, allenamento e impostazioni. Salvalo in un posto sicuro: senza rete non esiste una copia online.",
+  "backupShare": "Condividi il backup",
+  "@backupShare": {
+    "description": "Pulsante che esporta il backup con la condivisione di sistema"
+  },
+  "backupShareSubject": "Backup di Rokko",
+  "@backupShareSubject": {
+    "description": "Oggetto proposto dalla condivisione di sistema, per esempio nelle email"
+  },
+  "backupRestoreFromText": "Ripristina da testo",
+  "@backupRestoreFromText": {
+    "description": "Pulsante che apre la finestra per incollare un backup"
+  },
+  "backupExported": "Backup pronto da salvare",
+  "backupExportFailed": "Backup non riuscito: {error}",
+  "@backupExportFailed": {
+    "description": "Errore tecnico durante l'esportazione",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "backupRestoreStaged": "Backup pronto. Chiudi e riapri l'app per ripristinare i dati.",
+  "backupRestoreFailed": "Ripristino non riuscito: {error}",
+  "@backupRestoreFailed": {
+    "description": "Errore tecnico durante il ripristino",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "backupErrorNotApp": "Non è un backup di Rokko",
+  "backupErrorNewerVersion": "Backup creato da una versione più recente",
+  "backupErrorUnexpectedFile": "File inatteso nel backup: {file}",
+  "@backupErrorUnexpectedFile": {
+    "placeholders": {
+      "file": {
+        "type": "String"
+      }
+    }
+  },
+  "backupErrorInvalidFile": "File non valido nel backup: {file}",
+  "@backupErrorInvalidFile": {
+    "placeholders": {
+      "file": {
+        "type": "String"
+      }
+    }
+  },
+  "backupErrorInvalidPreference": "Preferenza non valida: {name}",
+  "@backupErrorInvalidPreference": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "backupErrorUnreadable": "Backup non leggibile",
+  "backupRestoreDialogTitle": "Ripristina il backup",
+  "backupRestoreDialogBody": "Incolla il contenuto del file di backup. I dati attuali vengono sostituiti.",
+  "backupCancel": "Annulla",
+  "backupRestore": "Ripristina",
+  "@backupRestore": {
+    "description": "Conferma del ripristino"
+  }
+}

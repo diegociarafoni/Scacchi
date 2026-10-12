@@ -24,7 +24,7 @@ La piattaforma web non è supportata: `dartchess` usa interi a 64 bit (bitboard)
 ```
 lib/
   main.dart               Avvio dell'app, tema chiaro e scuro
-  l10n/                   Testi tradotti (.arb) e codice generato (vedi localizzazione.md)
+  l10n/                   Testi tradotti, un .arb per funzione e lingua (vedi localizzazione.md)
   home/home_shell.dart    Barra di navigazione in basso (Gioca, Puzzle, Aperture, Tu)
   home/you_page.dart      Scheda Tu: profilo, percorso, tornei, minigiochi, statistiche, settimana, scacchiera fisica, archivio
   game/

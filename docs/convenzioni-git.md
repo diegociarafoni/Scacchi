@@ -89,7 +89,15 @@ Per un'emergenza `git commit --no-verify` salta gli hook, ma la CI esegue comunq
 1. Aprire la PR dal proprio ramo verso `main`, con titolo secondo la convenzione Angular (diventerà il commit su `main`). Il modello della PR contiene la lista di verifica.
 2. Attendere che tutti i controlli della PR siano verdi.
 3. Eseguire la skill `/code-review` di Claude Code sulla PR e risolvere i risultati.
-4. Unire con **Squash and merge**.
+4. Unire con **Squash and merge**. Con la coda di merge attiva il pulsante diventa **Merge when ready**: la PR entra in coda e GitHub la aggiorna con `main`, rilancia la CI sul risultato e la unisce in squash, una alla volta, senza bisogno di riallineare il ramo a mano.
+
+### Coda di merge
+
+Con più PR aperte in parallelo ogni merge su `main` rendeva obsolete le altre, che dovevano aggiornarsi e rifare la CI. La coda (merge queue) fa questo lavoro da sola. Perché funzioni:
+
+- i workflow dei controlli obbligatori hanno il trigger `merge_group`: `ci.yml` gira sul gruppo (e2e e build Android solo se il gruppo tocca i file che li riguardano, con la stessa regola delle PR), `conventions.yml` si salta perché titolo e commit sono già stati controllati sulla PR;
+- i testi tradotti sono in un file per funzione (vedi [localizzazione.md](localizzazione.md)), così le PR che aggiungono testi non vanno in conflitto tra loro;
+- ogni giro in coda esegue tutta la CI sul risultato dell'unione: un test instabile fa perdere il giro, quindi i test instabili si correggono, non si rilanciano.
 
 ## Protezione di `main` (impostazione su GitHub)
 
@@ -99,7 +107,8 @@ Da fare una volta, in **Settings** del repository:
 2. **Rules → Rulesets → New branch ruleset**: nome `main`, destinazione **Default branch**, stato **Active**, con queste regole:
    - **Restrict deletions** e **Block force pushes**;
    - **Require a pull request before merging**, metodo di merge consentito **Squash**, con **Require conversation resolution before merging**;
-   - **Require status checks to pass**, con **Require branches to be up to date** e i controlli `test`, `e2e`, `android` e `Ramo, titolo della PR e commit` (aggiungere quelli nuovi quando entrano in CI; vedi anche la nota sulle PR di sola documentazione in [sviluppo.md](sviluppo.md#consumo-di-minuti)).
+   - **Require merge queue**, metodo di merge **Squash**, dimensione del gruppo 1 (una PR alla volta, il titolo della PR resta il commit su `main`) e tempo massimo di attesa dei controlli di 45 minuti;
+   - **Require status checks to pass**, con i controlli `test`, `e2e`, `android` e `Ramo, titolo della PR e commit` (con la coda non serve Require branches to be up to date; aggiungere i controlli nuovi quando entrano in CI; vedi anche la nota sulle PR di sola documentazione in [sviluppo.md](sviluppo.md#consumo-di-minuti)).
 
 Su un account GitHub Free le regole dei rami sono applicate solo ai repository pubblici: per un repository privato serve GitHub Pro. Fino ad allora l'hook `pre-push` e la CI restano l'unica protezione.
 

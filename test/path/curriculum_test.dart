@@ -1,5 +1,6 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scacchi/engine/levels.dart';
 import 'package:scacchi/path/curriculum.dart';
 import 'package:scacchi/path/exercise.dart';
 
@@ -11,7 +12,17 @@ void main() {
       'Matti elementari',
       'Tattiche',
       'Finali',
+      'La strategia',
       'Aperture',
+    ]);
+    expect(curriculum.map((c) => c.id), [
+      'pieces',
+      'rules',
+      'mates',
+      'tactics',
+      'endgames',
+      'strategy',
+      'openings',
     ]);
   });
 
@@ -34,6 +45,7 @@ void main() {
       'mates.rooks',
       'mates.patterns',
       'mates.two',
+      'mates.patterns-2',
       'mates.guardian',
     ]);
   });
@@ -48,6 +60,12 @@ void main() {
       'tactics.discovered',
       'tactics.double-check',
       'tactics.defender',
+      'tactics.overload',
+      'tactics.decoy',
+      'tactics.interference',
+      'tactics.zwischenzug',
+      'tactics.trapped',
+      'tactics.xray',
       'tactics.guardian',
     ]);
   });
@@ -62,7 +80,11 @@ void main() {
       'endgames.rook',
       'endgames.square',
       'endgames.opposition',
+      'endgames.key-squares',
+      'endgames.triangulation',
       'endgames.breakthrough',
+      'endgames.rook-behind',
+      'endgames.wrong-bishop',
       'endgames.guardian',
     ]);
     expect(ids('openings'), [
@@ -72,6 +94,42 @@ void main() {
       'openings.scholar',
       'openings.guardian',
     ]);
+  });
+
+  test('RG-03 la strategia insegna i piani di base', () {
+    final strategy = curriculum.firstWhere((c) => c.id == 'strategy');
+    expect(strategy.stages.map((s) => s.id), [
+      'strategy.value',
+      'strategy.open-file',
+      'strategy.outpost',
+      'strategy.bishops',
+      'strategy.passed-pawn',
+      'strategy.active',
+      'strategy.guardian',
+    ]);
+    expect(strategy.stages.last.guardianElo, 1100);
+  });
+
+  test('l\'Elo dei guardiani cresce capitolo dopo capitolo', () {
+    final elos = [
+      for (final c in curriculum)
+        for (final s in c.stages) ?s.guardianElo,
+    ];
+    expect(elos, [400, 800, 1000, 1100, 1200]);
+    for (var i = 1; i < elos.length; i++) {
+      expect(elos[i], greaterThan(elos[i - 1]));
+    }
+  });
+
+  test('il livello del motore dei guardiani non scende mai', () {
+    final levels = [
+      for (final c in curriculum)
+        for (final s in c.stages)
+          if (s.guardianElo case final elo?) engineLevelForElo(elo).id,
+    ];
+    for (var i = 1; i < levels.length; i++) {
+      expect(levels[i], greaterThanOrEqualTo(levels[i - 1]), reason: '$levels');
+    }
   });
 
   test('identificativi unici e tappe non vuote', () {

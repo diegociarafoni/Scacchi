@@ -16,6 +16,8 @@ import '../settings/notation.dart';
 import '../settings/settings.dart';
 import '../share/position_image.dart';
 import '../share/position_image_page.dart';
+import '../tablebase/perfect_endgame_card.dart';
+import '../tablebase/tablebase_service.dart';
 import 'variation_tree.dart';
 
 /// Analisi continua di [fen] con [multiPv] varianti, interrotta annullando
@@ -30,10 +32,15 @@ class AnalysisPage extends StatefulWidget {
     required this.initial,
     required this.analyse,
     this.orientation = Side.white,
+    this.tablebase,
   });
 
   final Position initial;
   final LiveAnalysis analyse;
+
+  /// Finali perfetti (RF-97): se c'è, con al massimo quattro pezzi compare
+  /// il risultato esatto.
+  final TablebaseService? tablebase;
 
   /// Lato del giocatore, in basso sulla scacchiera.
   final Side orientation;
@@ -235,17 +242,22 @@ class _AnalysisPageState extends State<AnalysisPage>
       colorBlind: AppSettings.of(context).colorBlind,
     );
     return {
-      ..._arrowFor(_pos, _arrow ? _lines.firstOrNull : null, marks.hint),
-      ..._arrowFor(_threatPos, _threatLine, marks.threat),
+      ..._arrowFor(marks, _pos, _arrow ? _lines.firstOrNull : null, marks.hint),
+      ..._arrowFor(marks, _threatPos, _threatLine, marks.threat),
     };
   }
 
-  Set<Shape> _arrowFor(Position? pos, InfoLine? line, Color color) {
+  Set<Shape> _arrowFor(
+    BoardMarks marks,
+    Position? pos,
+    InfoLine? line,
+    Color color,
+  ) {
     if (pos == null) return const {};
     final move = parseEngineMove(pos, line?.pv.firstOrNull);
     if (move is! NormalMove) return const {};
     final shown = kingDestination(pos, move);
-    return {Arrow(color: color, orig: shown.from, dest: shown.to)};
+    return marks.arrow(color, shown.from, shown.to);
   }
 
   @override
@@ -350,6 +362,14 @@ class _AnalysisPageState extends State<AnalysisPage>
                             ],
                           ),
                         ),
+                        if (widget.tablebase != null)
+                          PerfectEndgameCard(
+                            service: widget.tablebase!,
+                            position: _pos,
+                            notation: AppSettings.of(context).notation,
+                            kid: AppSettings.of(context).kidMode,
+                            onBestMove: _play,
+                          ),
                         for (final line in _lines) _lineTile(line),
                         if (_tree.root.children.isNotEmpty) ...[
                           _treeActions(),

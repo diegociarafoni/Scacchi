@@ -88,4 +88,14 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('1. e4 c5'), findsWidgets);
   });
+
+  testWidgets('RF-96 le tue aperture partono vuote e si raggiungono dalla '
+      'scheda Aperture', (tester) async {
+    await _start(tester);
+    await tester.tap(find.text('Aperture').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Le tue aperture'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Gioca qualche partita'), findsOneWidget);
+  });
 }

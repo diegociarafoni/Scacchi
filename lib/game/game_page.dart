@@ -37,6 +37,7 @@ import '../review/engine_evaluator.dart';
 import '../review/game_review.dart';
 import '../review/move_classification.dart';
 import '../review/personal_puzzles.dart';
+import '../review/review_activity.dart';
 import '../review/review_page.dart';
 import '../settings/board_frame.dart';
 import '../settings/notation.dart';
@@ -45,6 +46,7 @@ import '../settings/settings_page.dart';
 import '../share/position_image.dart';
 import '../share/position_image_page.dart';
 import '../storage/key_value_store.dart';
+import '../tablebase/shared_tablebase.dart';
 import 'board_swipe.dart';
 import 'challenge.dart';
 import 'chess_game.dart';
@@ -991,13 +993,11 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final san = move == null ? null : flipped!.makeSan(move).$2;
     setState(() {
       _threatFen = position.fen;
-      _threatShapes = {
-        Arrow(
-          color: _settings.threatColor,
-          orig: threat!.from,
-          dest: threat.to,
-        ),
-      };
+      _threatShapes = _settings.marks.arrow(
+        _settings.threatColor,
+        threat!.from,
+        threat.to,
+      );
     });
     _showMessage(
       san == null
@@ -1021,7 +1021,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       _showMessage('Nessun suggerimento disponibile.');
       return;
     }
-    final color = _settings.hintColor;
+    final marks = _settings.marks;
+    final color = marks.hint;
     final to = hint.to;
     final text = to == null
         ? describeHintPiece(position, hint.from)
@@ -1033,11 +1034,12 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _hintedFen = position.fen;
     setState(
       () => _hintShapes = to == null
-          ? {Circle(color: color, orig: hint!.from)}
+          ? marks.circle(color, hint!.from)
           : {
-              Circle(color: color, orig: hint!.from),
-              Circle(color: color, orig: to),
-              Arrow(color: color, orig: hint.from, dest: to),
+              // Prima la freccia: il suo contorno non deve coprire i cerchi.
+              ...marks.arrow(color, hint!.from, to),
+              ...marks.circle(color, hint.from),
+              ...marks.circle(color, to),
             },
     );
     _showMessage(text);
@@ -1789,6 +1791,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           initial: position,
           analyse: _liveAnalysis(player),
           orientation: _orientation,
+          tablebase: sharedTablebase(),
         ),
       ),
     );
@@ -1811,7 +1814,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           evaluate: engineEvaluator(player),
           onCancel: player.stopAnalysis,
           analyseLive: _liveAnalysis(player),
-          onReviewed: (review) => _recordReview(review, players),
+          onReviewed: (review) => _recordReview(review, players, moves),
           onSavePuzzles: widget.onSavePuzzles,
           puzzlePlayers: players,
           clocks: [for (final m in _game.moves) m.clock],
@@ -1824,16 +1827,15 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   /// Una revisione nuova vale XP; con due giocatori la precisione non è di
   /// nessuno in particolare e non si registra.
-  Future<void> _recordReview(GameReview review, Set<Side> players) async {
+  Future<void> _recordReview(
+    GameReview review,
+    Set<Side> players,
+    List<Move> moves,
+  ) async {
     final record = widget.onActivity;
     if (record == null) return;
     final update = await record(
-      ReviewCompleted(
-        accuracy: players.length == 1 ? review.accuracy(players.single) : null,
-        brilliantMoves: [
-          for (final side in players) review.count(side, MoveClass.brilliant),
-        ].fold(0, (a, b) => a + b),
-      ),
+      reviewActivity(review, players, initial: _game.initial, moves: moves),
     );
     if (update != null && mounted) showProgressFeedback(context, update);
   }

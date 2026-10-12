@@ -14,6 +14,7 @@ import 'package:scacchi/settings/settings.dart';
 import 'package:scacchi/storage/key_value_store.dart';
 
 import '../computer_fakes.dart';
+import '../localized_app.dart';
 
 void main() {
   late Directory dir;
@@ -39,7 +40,7 @@ void main() {
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: HomeShell(
           settings: SettingsController.defaults(),
           progress: () async => progress,

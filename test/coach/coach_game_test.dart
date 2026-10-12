@@ -6,6 +6,7 @@ import 'package:scacchi/engine/computer_player.dart';
 import 'package:scacchi/game/game_page.dart';
 import 'package:scacchi/settings/settings.dart';
 
+import '../board_marks_helpers.dart';
 import '../computer_fakes.dart';
 import '../computer_game_test.dart' show tapMove;
 
@@ -103,7 +104,7 @@ void main() {
     await tester.tap(find.text('Minaccia'));
     await tester.pumpAndSettle();
     final shapes = tester.widget<Chessboard>(find.byType(Chessboard)).shapes;
-    expect(shapes.whereType<Arrow>(), hasLength(1));
+    expect(markArrows(shapes), hasLength(1));
     expect(find.textContaining('giocherebbe'), findsOneWidget);
     await tapMove(tester, 'e2e4');
     await tester.pumpAndSettle(const Duration(seconds: 1));
@@ -132,12 +133,12 @@ void main() {
     expect(shapes(), isEmpty);
     await tester.tap(find.text('Suggerisci'));
     await tester.pumpAndSettle();
-    expect(shapes().whereType<Circle>(), hasLength(1));
-    expect(shapes().whereType<Arrow>(), isEmpty);
+    expect(markCircles(shapes()), hasLength(1));
+    expect(markArrows(shapes()), isEmpty);
     await tester.tap(find.text('Suggerisci'));
     await tester.pumpAndSettle();
-    expect(shapes().whereType<Arrow>(), hasLength(1));
-    expect(shapes().whereType<Circle>(), hasLength(2));
+    expect(markArrows(shapes()), hasLength(1));
+    expect(markCircles(shapes()), hasLength(2));
     await tapMove(tester, 'e2e4');
     await tester.pumpAndSettle(const Duration(seconds: 1));
     expect(shapes(), isEmpty);

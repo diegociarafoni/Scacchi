@@ -3,7 +3,9 @@ import 'dart:math' as math;
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
+import '../archive/game_archive.dart';
 import '../game/chess_game.dart';
+import '../l10n/app_localizations.dart';
 import '../settings/notation.dart';
 import '../settings/settings.dart';
 import '../training/training_board.dart';
@@ -11,6 +13,7 @@ import 'opening_assets.dart';
 import 'opening_book.dart';
 import 'opening_game.dart';
 import 'opening_game_dialog.dart';
+import 'personal_explorer_page.dart';
 import 'repertoire.dart';
 
 /// Esplora aperture: continuazioni del libro dalla posizione corrente (RF-92).
@@ -21,6 +24,7 @@ class ExplorerPage extends StatefulWidget {
     this.initialMoves = const [],
     this.repertoire,
     this.onPlay,
+    this.archive,
   });
 
   /// Sostituibile nei test; di default il libro incluso nell'app.
@@ -32,6 +36,9 @@ class ExplorerPage extends StatefulWidget {
 
   /// Avvia la partita dall'apertura raggiunta; assente senza motore.
   final PlayOpening? onPlay;
+
+  /// Se presente, si apre l'albero delle proprie partite dalla stessa posizione.
+  final Future<GameArchive> Function()? archive;
 
   @override
   State<ExplorerPage> createState() => _ExplorerPageState();
@@ -79,6 +86,12 @@ class _ExplorerPageState extends State<ExplorerPage> {
       appBar: AppBar(
         title: const Text('Esplora aperture'),
         actions: [
+          if (widget.archive != null)
+            IconButton(
+              tooltip: AppLocalizations.of(context).personalFromHere,
+              icon: const Icon(Icons.history_edu_outlined),
+              onPressed: _openPersonal,
+            ),
           if (widget.repertoire != null)
             IconButton(
               tooltip: 'Aggiungi al repertorio',
@@ -193,6 +206,20 @@ class _ExplorerPageState extends State<ExplorerPage> {
               },
             );
           },
+        ),
+      ),
+    );
+  }
+
+  void _openPersonal() {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute<void>(
+        builder: (_) => PersonalExplorerPage(
+          archive: widget.archive!(),
+          book: _book,
+          initialMoves: [..._moves],
+          repertoire: widget.repertoire,
+          onPlay: widget.onPlay,
         ),
       ),
     );

@@ -160,12 +160,12 @@ const _selectedHues = [
   Color(0x80ffffff),
 ];
 
-const _dotHues = [
-  Color(0x4014551e),
-  Color(0x59000000),
-  Color(0x73000000),
-  Color(0x66ffffff),
-  Color(0x8cffffff),
+/// Punti delle mosse possibili: nero o bianco, dal più trasparente al più
+/// coprente.
+final _dotHues = [
+  for (var step = 5; step <= 18; step++)
+    for (final c in const [Color(0xff000000), Color(0xffffffff)])
+      c.withValues(alpha: step * 0.05),
 ];
 
 Color _visible(
@@ -267,13 +267,7 @@ ChessboardColorScheme _customScheme(
           ? _keepOrVisible(_selectedHues.first, _selectedHues, light, dark)
           : _visible(_selectedHues, light, dark),
     ),
-    validMoves: _keepOrVisible(
-      _dotHues.first,
-      _dotHues,
-      light,
-      dark,
-      minDotContrast,
-    ),
+    validMoves: _visible(_dotHues, light, dark, minDotContrast),
     validPremoves: const Color(0x40203085),
   );
 }
@@ -441,6 +435,10 @@ class AppSettings {
 
   /// Colori di frecce e cerchi sulla scacchiera del tema scelto.
   BoardMarks get marks => BoardMarks.of(boardTheme, colorBlind: colorBlind);
+
+  /// Frecce e cerchi sulla scacchiera degli esercizi ([exerciseScheme]).
+  BoardMarks get exerciseMarks =>
+      BoardMarks.of(BoardTheme.green, colorBlind: colorBlind);
 
   /// Colore di indizi e frecce di suggerimento.
   Color get hintColor => marks.hint;

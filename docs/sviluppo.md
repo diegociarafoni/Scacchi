@@ -13,7 +13,9 @@ Dopo il clone, una volta: `lefthook install`.
 ## Comandi
 
 ```sh
+dart tool/l10n.dart --solo-unione     # testi tradotti, solo in una copia nuova e prima del pub get
 flutter pub get                       # dipendenze
+dart tool/l10n.dart                   # testi tradotti: dopo ogni modifica ai .arb o cambio di ramo
 flutter run                           # avvio sul dispositivo o emulatore collegato
 flutter test                          # test unitari e di widget
 flutter test integration_test -d linux  # test e2e (su Linux senza schermo: xvfb-run -a ...)
@@ -67,6 +69,7 @@ Ogni funzione nasce dai requisiti del progetto, nel documento dei requisiti, con
 | Scambio QR | `test/exchange/`, `test/game/game_qr_test.dart` | Fotogrammi QR, validazione dei dati letti, schermate Passa e Ricevi, partita continuata (vedi scambio-qr.md) | `flutter test test/exchange` |
 | Allenatore | `test/coach/` | Avvisi, Riprova e Continua, suggerimento a livelli, frasi in parole semplici | `flutter test test/coach` |
 | Puzzle | `test/puzzles/` | Dataset, Glicko-2, sessioni, Storm, Rush e Serie, ripasso, spiegazione delle modalità, sfida a tempo tra amici (messaggi QR, stessi puzzle dallo stesso seme, lancio, ricezione, confronto) | `flutter test test/puzzles` |
+| Grandi maestri | `test/masters/` | Legalità e risultato di ogni partita della raccolta, «Indovina la mossa», progresso, schermate (vedi grandi-maestri.md) | `flutter test test/masters` |
 | Aperture | `test/openings/` | Libro, nomi italiani, Esplora aperture, repertorio | `flutter test test/openings` |
 | Regole | `test/regole/` | Partite di riferimento e perft | `flutter test test/regole` |
 | Editor, backup, scacchiera fisica, promemoria | `test/editor/`, `test/backup/`, `test/physical/`, `test/reminders/` | FEN e validazione, backup e ripristino, orologio e registro, promemoria | `flutter test test/editor test/backup test/physical test/reminders` |
@@ -155,6 +158,7 @@ I golden si rigenerano con `flutter test test/settings --update-goldens` dopo un
 | RG-10 minigiochi | ✓ | |
 | RG-09 tornei offline contro bot | ✓ | |
 | RG-12 gamification disattivabile | ✓ | |
+| RG-16 riepilogo settimanale: progressi, errore ricorrente, un consiglio | ✓ | ✓ |
 | RF-80 raccolta di puzzle inclusa e valida | ✓ | ✓ |
 | RF-81 risoluzione e punteggio Glicko-2 | ✓ | ✓ |
 | RF-83 suggerimento, soluzione, filtro per tema | ✓ | ✓ |
@@ -164,11 +168,13 @@ I golden si rigenerano con `flutter test test/settings --update-goldens` dopo un
 | RF-95 sfida a tempo tra amici con QR | ✓ | ✓ |
 | RF-85 ripasso dei puzzle sbagliati | ✓ | |
 | RF-86 allenatore dei finali: esito, stelle, ripetizione, schermate | ✓ | |
+| RF-87, RF-88 partite dei grandi maestri: legalità e risultato di ogni partita, «Indovina la mossa», schermate | ✓ | ✓ |
 | RG-08 record personali delle serie | ✓ | ✓ |
 | RF-90 nome dell'apertura in partita | ✓ | ✓ |
 | RF-91 mosse di libro | ✓ | |
 | RF-92 Esplora aperture | ✓ | ✓ |
 | RF-93 repertorio e ripasso dilazionato | ✓ | ✓ |
+| RF-96 albero delle proprie aperture dall'archivio | ✓ | ✓ |
 
 ## Integrazione continua
 
