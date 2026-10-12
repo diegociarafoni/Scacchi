@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart' hide File;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -52,7 +53,11 @@ void main() {
   });
   tearDown(() => dir.deleteSync(recursive: true));
 
-  Future<void> openArchive(WidgetTester tester, {bool computer = true}) async {
+  Future<void> openArchive(
+    WidgetTester tester, {
+    bool computer = true,
+    String row = 'Anna – Bruno',
+  }) async {
     tester.view.physicalSize = const Size(1170, 2532);
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
@@ -77,7 +82,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Archivio'));
     await settle(tester);
-    await tester.tap(find.text('Anna – Bruno'));
+    await tester.tap(find.text(row));
     await settle(tester);
   }
 
@@ -97,5 +102,57 @@ void main() {
       ),
       findsOneWidget,
     );
+  });
+
+  testWidgets('una partita in corso si può riprendere', (tester) async {
+    final game = ChessGame();
+    for (final m in ['e2e4', 'e7e5']) {
+      game.play(Move.parse(m)!);
+    }
+    final t = DateTime(2026, 10, 11, 18);
+    await tester.runAsync(
+      () => archive.save(
+        SavedGame.fromGame(
+          game,
+          id: 'sospesa',
+          white: 'Carla',
+          black: 'Dario',
+          mode: 'locale',
+          createdAt: t,
+          updatedAt: t,
+        ),
+      ),
+    );
+    await openArchive(tester, row: 'Carla – Dario');
+    expect(find.text('Partita in corso'), findsOneWidget);
+    await tester.tap(find.text('Riprendi la partita'));
+    await settle(tester);
+    expect(find.byType(Chessboard), findsOneWidget);
+    expect(find.text('Revisione della partita'), findsNothing);
+  });
+
+  testWidgets('una partita in corso si può anche rivedere', (tester) async {
+    final game = ChessGame();
+    for (final m in ['e2e4', 'e7e5']) {
+      game.play(Move.parse(m)!);
+    }
+    final t = DateTime(2026, 10, 11, 18);
+    await tester.runAsync(
+      () => archive.save(
+        SavedGame.fromGame(
+          game,
+          id: 'sospesa',
+          white: 'Carla',
+          black: 'Dario',
+          mode: 'locale',
+          createdAt: t,
+          updatedAt: t,
+        ),
+      ),
+    );
+    await openArchive(tester, row: 'Carla – Dario');
+    await tester.tap(find.text('Rivedi la partita'));
+    await settle(tester);
+    expect(find.text('Revisione della partita'), findsOneWidget);
   });
 }

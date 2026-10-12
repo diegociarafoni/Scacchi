@@ -88,7 +88,7 @@ void main() {
     expect(settings.value.whiteName, '');
     // Tocca al Nero: la partita prosegue da dove era arrivata.
     await tapMove(tester, 'd8h4');
-    expect(saved.single.pgn, contains('1. f3 e5 2. g4 Qh4# 0-1'));
+    expect(saved.last.pgn, contains('1. f3 e5 2. g4 Qh4# 0-1'));
   });
 
   testWidgets('Cap. 7 scambio QR: una partita già conclusa si riceve '
@@ -104,7 +104,7 @@ void main() {
       ),
       findsOneWidget,
     );
-    expect(saved, isEmpty);
+    expect(saved.where((g) => g.finished), isEmpty);
     await tapMove(tester, 'e7e5');
     expect(find.text('e5'), findsOneWidget);
   });
