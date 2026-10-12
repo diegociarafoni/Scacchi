@@ -2160,6 +2160,216 @@ const List<Chapter> curriculum = [
       Stage(id: 'openings.guardian', title: 'Il guardiano', guardianElo: 1200),
     ],
   ),
+  // Posizioni e idee adattate dalla Parte I di «Chess Fundamentals»
+  // (J. R. Capablanca, 1921, pubblico dominio): vedi docs/percorso.md.
+  Chapter(
+    id: 'capablanca',
+    title: 'La scuola di Capablanca',
+    stages: [
+      Stage(
+        id: 'capablanca.race',
+        title: 'Chi promuove per primo',
+        intro:
+            'Capablanca insegna a contare. Quando due pedoni corrono verso la '
+            'promozione, conta le mosse di ciascuno: vince chi arriva prima, '
+            'e ancora meglio se la sua nuova donna controlla la casa dove '
+            'promuove l\'altro.',
+        exercises: [
+          LineExercise(
+            instructions:
+                'Conta le mosse: il tuo pedone arriva prima di quello nero e '
+                'da a8 la donna controlla h1. Spingi!',
+            fen: '8/8/P2k4/8/7p/8/8/K7 w - - 0 1',
+            steps: ['a6a7'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Posizione di Capablanca: nessun re può fermare i pedoni, '
+                'quindi conta. Spingi di due passi il pedone a: quello in b5 '
+                'ti servirà dopo per sfondare.',
+            fen: '8/p5kp/8/1P6/8/1K6/P7/8 w - - 0 1',
+            steps: ['a2a4'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Il Nero corre con il pedone h. Non perdere tempo con il re: '
+                'ogni mossa conta, continua a spingere.',
+            fen: '8/p5k1/8/1P5p/P7/1K6/8/8 w - - 0 1',
+            steps: ['a4a5'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Sfida: sfonda con il pedone b. Poi non riprendere in b6: '
+                'spingi il pedone a, così la tua donna nasce in a8 e '
+                'controlla h1, dove promuove il Nero.',
+            fen: '8/p5k1/8/PP6/7p/1K6/8/8 w - - 0 1',
+            steps: ['b5b6', 'a7b6', 'a5a6'],
+            goal: LineGoal.line,
+          ),
+        ],
+      ),
+      Stage(
+        id: 'capablanca.distant-opposition',
+        title: 'L\'opposizione a distanza',
+        intro:
+            'L\'opposizione vale anche da lontano. Se i re sono sulla stessa '
+            'colonna e in mezzo c\'è un numero dispari di case, chi ha appena '
+            'mosso ha l\'opposizione; se il numero è pari, ce l\'ha chi deve '
+            'muovere. Capablanca la usava per attaccare e per difendersi.',
+        exercises: [
+          LineExercise(
+            instructions:
+                'Posizione di Capablanca: tra i re ci sono sei case, un '
+                'numero pari, e tocca a te. Avanza dritto verso il re nero.',
+            fen: '4k3/8/8/1p5p/1P5P/8/8/4K3 w - - 0 1',
+            steps: ['e1e2'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Se corri verso b5 è patta: conta le mosse. Resta di fronte '
+                'al re nero e non farlo passare verso h4.',
+            fen: '8/8/5k2/1p5p/1P2K2P/8/8/8 w - - 0 1',
+            steps: ['e4f4'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Il Nero ha fatto una mossa di attesa con il re. Non andare '
+                'dritto davanti a lui, ma riprendi l\'opposizione a '
+                'distanza: trova la mossa del re.',
+            fen: '3k4/8/8/1p5p/1P5P/8/4K3/8 w - - 0 1',
+            steps: ['e2f3|e2d2'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Sfida: hai un pedone in meno, ma l\'opposizione a distanza ti '
+                'salva. Re in f1 sembra naturale e perde: trova la casa '
+                'giusta per il re.',
+            fen: '8/8/8/4p1p1/8/5P2/6K1/3k4 w - - 0 1',
+            steps: ['g2h1'],
+            goal: LineGoal.line,
+          ),
+        ],
+      ),
+      Stage(
+        id: 'capablanca.combinations',
+        title: 'Le combinazioni di Capablanca',
+        intro:
+            'Spesso la minaccia vera è nascosta dietro un sacrificio. '
+            'Capablanca mostra come i pezzi, lavorando insieme contro un punto '
+            'debole vicino al re, danno matto o vincono materiale. Prima di '
+            'muovere guarda tutti gli scacchi.',
+        exercises: [
+          LineExercise(
+            instructions:
+                'Sacrifica il cavallo in f6 con scacco: si apre la colonna g. '
+                'Poi scacco di donna e l\'alfiere in b2 dà matto.',
+            fen: '5rk1/qb3ppp/pp6/2p5/2P1N3/PP1Q4/1B3PPP/7K w - - 0 1',
+            steps: ['e4f6', 'g7f6', 'd3g3', 'g8h8', 'b2f6'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Posizione di Capablanca: il Nero ha messo la torre in e8 per '
+                'attaccare in e1, ma la minaccia più forte è la tua. '
+                'Sacrifica la donna in h7, poi la torre scende sulla colonna '
+                'h: l\'alfiere in b2 la protegge.',
+            fen: '4r1k1/1b3p1p/ppq3p1/2p5/8/1P1P1R1Q/PBP3PP/7K w - - 0 1',
+            steps: ['h3h7', 'g8h7', 'f3h3', 'h7g8', 'h3h8'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Posizione di Capablanca: il cavallo in d7 difende f6. '
+                'Toglilo di mezzo con l\'alfiere: se la donna riprende, '
+                'cavallo in f6 con scacco vince.',
+            fen: '2q1rrk1/1bpn1ppp/pp1p4/1B6/4N3/1P1QR3/PBP2PPP/6K1 w - - 0 1',
+            steps: ['b5d7'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Sfida, posizione di Capablanca: hai un pezzo in meno. '
+                'Prendi il cavallo in c6, dai scacco in e7 e cambia i pezzi. '
+                'Alla fine porta la donna all\'attacco: da d7 colpisce i due '
+                'alfieri insieme.',
+            fen: '5rk1/1bq1bp1p/p1n3p1/1p6/3N4/1P1PR2Q/PBP3PP/7K w - - 0 1',
+            steps: [
+              'd4c6',
+              'e7g5',
+              'c6e7',
+              'c7e7',
+              'e3e7',
+              'g5e7',
+              'h3d7|h3e3|h3g3',
+            ],
+            goal: LineGoal.line,
+          ),
+        ],
+      ),
+      Stage(
+        id: 'capablanca.opening-rules',
+        title: 'Le regole dell\'apertura',
+        intro:
+            'I consigli di Capablanca: porta fuori i pezzi in fretta, prima i '
+            'cavalli e poi gli alfieri, e non muovere due volte lo stesso '
+            'pezzo se non per vincere materiale. Chi li dimentica cade nelle '
+            'trappole.',
+        exercises: [
+          LineExercise(
+            instructions:
+                'Il Nero ha mosso l\'alfiere prima dei cavalli e l\'ha '
+                'cambiato. Con la donna attacca insieme b7 e f7.',
+            fen: 'rn1qkb1r/ppp2ppp/5n2/4p3/2B1P3/5Q2/PPP2PPP/RNB1K2R w KQkq - 2 7',
+            steps: ['f3b3'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Il Nero ha ripreso in e5 con il cavallo invece che con il '
+                'pedone. Cattura il cavallo, anche se la tua donna resta '
+                'attaccata.',
+            fen:
+                'r2qkbnr/ppp2pp1/3p3p/4n3/2B1P1b1/2N2N2/PPP2PPP/'
+                'R1BQK2R w KQkq - 0 2',
+            steps: ['f3e5'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                '$_mateIn2 Il Nero ha preso la donna: ora alfiere e cavalli '
+                'danno matto.',
+            fen:
+                'r2qkbnr/ppp2pp1/3p3p/4N3/2B1P3/2N5/PPP2PPP/'
+                'R1BbK2R w KQkq - 0 3',
+            steps: ['c4f7', 'e8e7', 'c3d5'],
+            goal: LineGoal.mate,
+          ),
+          LineExercise(
+            instructions:
+                'Sfida: il Nero ha sviluppato l\'alfiere prima di un cavallo. '
+                'Sacrifica l\'alfiere in f7, dai scacco con il cavallo e '
+                'prendi l\'alfiere in g4.',
+            fen:
+                'rn1qkb1r/pppp1pp1/5n1p/8/2B3b1/2N2N2/PPPP1PPP/'
+                'R1BQK2R w KQkq - 0 1',
+            steps: ['c4f7', 'e8f7', 'f3e5', 'f7g8', 'e5g4'],
+            goal: LineGoal.line,
+          ),
+        ],
+      ),
+      Stage(
+        id: 'capablanca.guardian',
+        title: 'Il guardiano',
+        guardianElo: 1300,
+      ),
+    ],
+  ),
 ];
 
 Stage? stageById(String id) {
