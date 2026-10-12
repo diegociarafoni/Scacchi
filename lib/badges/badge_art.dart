@@ -10,7 +10,7 @@ import 'badge_def.dart';
   BadgeFamily.puzzles => (const Color(0xFFA855F7), const Color(0xFF581C87)),
   BadgeFamily.games => (const Color(0xFFFB7185), const Color(0xFF9F1239)),
   BadgeFamily.story => (const Color(0xFF2DD4BF), const Color(0xFF115E59)),
-  BadgeFamily.habit => (const Color(0xFFFBBF24), const Color(0xFF92400E)),
+  BadgeFamily.habit => (const Color(0xFFD97706), const Color(0xFF78350F)),
 };
 
 /// Contorno della medaglia: ogni famiglia ha la sua sagoma.

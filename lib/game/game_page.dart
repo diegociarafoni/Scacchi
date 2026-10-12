@@ -335,6 +335,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     widget.settings.addListener(_onSettingsChanged);
     WidgetsBinding.instance.addObserver(this);
     unawaited(_loadProfile());
+    // Il libro serve a fine partita per i libri delle aperture.
+    openingBook().ignore();
     if (_isChallenge) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _startChallenge());
     } else if (widget.resume != null) {

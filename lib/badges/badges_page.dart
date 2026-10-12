@@ -258,8 +258,6 @@ class BadgeTile extends StatelessWidget {
                 Text(
                   name,
                   textAlign: TextAlign.center,
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
                   style: theme.textTheme.labelLarge?.copyWith(
                     color: _earned ? null : scheme.onSurfaceVariant,
                   ),
@@ -289,24 +287,6 @@ class BadgeTile extends StatelessWidget {
       ),
     );
   }
-}
-
-/// Medaglia del badge, per chi la mostra fuori dalla galleria.
-class BadgeMedal extends StatelessWidget {
-  const BadgeMedal({
-    super.key,
-    required this.badge,
-    required this.earned,
-    required this.size,
-  });
-
-  final BadgeDef badge;
-  final bool earned;
-  final double size;
-
-  @override
-  Widget build(BuildContext context) =>
-      BadgeArt(badge: badge, earned: earned, size: size);
 }
 
 /// Scheda di un badge: come si ottiene, avanzamento o data.

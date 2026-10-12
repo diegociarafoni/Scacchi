@@ -18,9 +18,13 @@ const _covers = [
   Color(0xFF1D4ED8),
 ];
 
+/// Dorso (13) e margine destro (8) della copertina, tolti dalla larghezza
+/// della cella per ottenere il lato della scacchiera.
+const bookInset = 21.0;
+
 /// Colore della copertina di un libro, fisso per ogni libro.
 Color volumeColor(OpeningVolume v) =>
-    _covers[openingVolumes.indexOf(v) % _covers.length];
+    _covers[v.id.codeUnits.fold(0, (a, c) => a + c) % _covers.length];
 
 /// Collezione dei libri delle aperture: uno per ogni apertura giocata, con la
 /// posizione in copertina.
@@ -47,8 +51,7 @@ class OpeningBooksTab extends StatelessWidget {
           itemBuilder: (context, i, width) => BookCard(
             volume: openingVolumes[i],
             plays: state.tally[volumeKey(openingVolumes[i].id)] ?? 0,
-            // Dorso e margini della copertina tolgono 13 + 8 punti.
-            boardSize: width - 21,
+            boardSize: width - bookInset,
           ),
         ),
       ],
@@ -116,7 +119,7 @@ class BookCard extends StatelessWidget {
                 child: ColoredBox(color: Colors.black.withAlpha(60)),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(13, 8, 8, 8),
+                padding: const EdgeInsets.fromLTRB(bookInset - 8, 8, 8, 8),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -129,8 +132,6 @@ class BookCard extends StatelessWidget {
                     Text(
                       name,
                       textAlign: TextAlign.center,
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
                       style: theme.textTheme.labelMedium?.copyWith(
                         color: _unlocked
                             ? Colors.white
@@ -171,7 +172,7 @@ class BookCoverBoard extends StatelessWidget {
     Widget board(double side) {
       final b = StaticChessboard(
         size: side,
-        fen: volume.coverPosition.fen,
+        fen: volume.coverFen,
         orientation: Side.white,
       );
       return ClipRRect(

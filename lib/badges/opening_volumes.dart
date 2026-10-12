@@ -38,7 +38,12 @@ class OpeningVolume {
   }
 
   Position get coverPosition => coverPositions.last;
+
+  /// FEN della copertina, calcolata una volta sola per libro.
+  String get coverFen => _fens[id] ??= coverPosition.fen;
 }
+
+final _fens = <String, String>{};
 
 const openingVolumes = <OpeningVolume>[
   OpeningVolume('italian', 'Italian Game', [
