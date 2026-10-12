@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:dartchess/dartchess.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../archive/game_archive.dart';
@@ -131,7 +131,7 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
       try {
         bytes = await widget.photos.take();
       } on Object catch (e) {
-        debugPrint('Fotocamera non disponibile: $e');
+        if (kDebugMode) debugPrint('Fotocamera non disponibile: $e');
         if (mounted) _show(error: 'Fotocamera non disponibile');
         return;
       }
