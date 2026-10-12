@@ -175,6 +175,36 @@ void main() {
       expect(p.currentChapterIndex, isNull);
     });
 
+    test('il capitolo 0 è il primo, con Tino e puzzle facili', () {
+      expect(first.id, 'prologue');
+      expect(first.pathChapterId, 'moves');
+      expect(first.botId, 'tino');
+      expect(first.puzzleRating, lessThanOrEqualTo(600));
+      expect(storyChapters[1].puzzleRating, isNull);
+    });
+
+    test('chi è già oltre il capitolo 0 lo ritrova concluso', () {
+      final village = storyChapters[1];
+      const none = PathProgress();
+      expect(
+        const StoryProgress(none, StoryState()).isChapterDone(first),
+        isFalse,
+      );
+      final beaten = StoryProgress(
+        none,
+        const StoryState().withBossBeaten(village.id),
+      );
+      expect(beaten.isChapterDone(first), isTrue);
+      expect(beaten.isChapterUnlocked(1), isTrue);
+      final solving = StoryProgress(
+        none,
+        const StoryState().withPuzzleSolved(village.id, village.puzzleCount),
+      );
+      expect(solving.isChapterDone(first), isTrue);
+      expect(solving.isChapterDone(village), isFalse);
+      expect(solving.currentChapterIndex, 1);
+    });
+
     test('i puzzle risolti non superano l\'obiettivo', () {
       var state = const StoryState();
       for (var i = 0; i < 20; i++) {

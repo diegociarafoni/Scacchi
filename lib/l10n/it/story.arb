@@ -123,11 +123,32 @@
   "@storyPuzzlesNone": {
     "description": "storyPuzzlesNone"
   },
+  "storyPrologueTitle": "Il sentiero dei primi passi",
+  "@storyPrologueTitle": {
+    "description": "storyPrologueTitle"
+  },
+  "storyPrologueIntro": "Prima del villaggio c'è un sentiero, e sul sentiero un pulcino curioso. Impara con lui come si muove ogni pezzo: torre, alfiere, donna, re, cavallo e pedone.",
+  "@storyPrologueIntro": {
+    "description": "storyPrologueIntro"
+  },
+  "storyPrologueBoss": "{name}, il pulcino del sentiero, vuole una partita per provare i pezzi nuovi.",
+  "@storyPrologueBoss": {
+    "description": "storyPrologueBoss",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPrologueOutro": "Ora i pezzi non hanno più segreti. Il villaggio ai piedi della Rocca è a due passi.",
+  "@storyPrologueOutro": {
+    "description": "storyPrologueOutro"
+  },
   "storyVillageTitle": "Il villaggio dei pezzi",
   "@storyVillageTitle": {
     "description": "storyVillageTitle"
   },
-  "storyVillageIntro": "Arrivi al villaggio ai piedi della Rocca. Gli abitanti non ricordano più come si muovono i loro pezzi: aiutali con le lezioni, poi dimostra di accorgerti subito di un pezzo lasciato in presa.",
+  "storyVillageIntro": "Arrivi al villaggio ai piedi della Rocca. Gli abitanti giocano tutto il giorno ma lasciano i pezzi in presa: impara a catturare e a difendere, poi dimostra di accorgerti subito di un pezzo indifeso.",
   "@storyVillageIntro": {
     "description": "storyVillageIntro"
   },

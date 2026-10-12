@@ -74,9 +74,9 @@ void main() {
     tester,
   ) async {
     await show(tester);
+    expect(find.text('Il sentiero dei primi passi'), findsOneWidget);
+    expect(find.textContaining('Prima del villaggio'), findsOneWidget);
     expect(find.text('Il villaggio dei pezzi'), findsOneWidget);
-    expect(find.textContaining('Arrivi al villaggio'), findsOneWidget);
-    expect(find.text('Le porte della città'), findsOneWidget);
     expect(
       find.text('Si apre concludendo il capitolo precedente'),
       findsWidgets,
@@ -93,7 +93,7 @@ void main() {
 
   testWidgets('RG-13 i testi seguono la lingua', (tester) async {
     await show(tester, locale: const Locale('en'));
-    expect(find.text('The village of the pieces'), findsOneWidget);
+    expect(find.text('The path of first steps'), findsOneWidget);
     expect(find.text('Story'), findsOneWidget);
   });
 
@@ -121,7 +121,7 @@ void main() {
     expect(asked, 1);
     expect(story.state.puzzlesSolved(first.id), 3);
     expect(
-      find.bySemanticsLabel(RegExp('^Sfida a Pino, da fare')),
+      find.bySemanticsLabel(RegExp('^Sfida a Tino, da fare')),
       findsOneWidget,
     );
   });
@@ -156,11 +156,11 @@ void main() {
         () => story.puzzlesSolved(first, first.puzzleCount),
       );
       await tester.pumpAndSettle();
-      await tapAndSave(tester, find.textContaining('Sfida a Pino'));
-      expect(played?.id, 'pino');
+      await tapAndSave(tester, find.textContaining('Sfida a Tino'));
+      expect(played?.id, 'tino');
       expect(story.state.isBossBeaten(first.id), isTrue);
-      expect(find.text('Hai battuto Pino!'), findsOneWidget);
-      expect(find.textContaining('Il villaggio ti saluta'), findsOneWidget);
+      expect(find.text('Hai battuto Tino!'), findsOneWidget);
+      expect(find.textContaining('Ora i pezzi non hanno'), findsOneWidget);
     },
   );
 
@@ -171,10 +171,10 @@ void main() {
     await finishLessons(tester);
     await tester.runAsync(() => story.puzzlesSolved(first, first.puzzleCount));
     await tester.pumpAndSettle();
-    await tester.tap(find.textContaining('Sfida a Pino'));
+    await tester.tap(find.textContaining('Sfida a Tino'));
     await tester.pumpAndSettle();
     expect(story.state.isBossBeaten(first.id), isFalse);
-    expect(find.textContaining('Pino resiste ancora'), findsOneWidget);
+    expect(find.textContaining('Tino resiste ancora'), findsOneWidget);
   });
 
   testWidgets('RG-13 senza motore la sfida mostra un avviso', (tester) async {
@@ -182,7 +182,7 @@ void main() {
     await finishLessons(tester);
     await tester.runAsync(() => story.puzzlesSolved(first, first.puzzleCount));
     await tester.pumpAndSettle();
-    await tester.tap(find.textContaining('Sfida a Pino'));
+    await tester.tap(find.textContaining('Sfida a Tino'));
     await tester.pumpAndSettle();
     expect(
       find.textContaining('Le sfide si giocano dove gira'),

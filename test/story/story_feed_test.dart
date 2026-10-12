@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scacchi/puzzles/puzzle.dart';
 import 'package:scacchi/puzzles/puzzle_library.dart';
 import 'package:scacchi/puzzles/puzzle_trainer.dart';
 import 'package:scacchi/storage/key_value_store.dart';
@@ -39,4 +40,26 @@ void main() {
       await pending;
     },
   );
+
+  test('RG-13 con un tetto di punteggio propone puzzle più facili', () async {
+    final easy = Puzzle.parseCsv(
+      'easy,7k/6pp/8/8/1n6/8/8/RR4K1 b - - 0 1,b4c2 a1a8,600,mateIn1',
+    );
+    final hard = Puzzle.parseCsv(
+      'hard,7k/6pp/8/8/1n6/8/8/RR4K1 b - - 0 1,b4c2 a1a8,2200,mateIn1',
+    );
+    final t = await PuzzleTrainer.load(
+      PuzzleLibrary([easy, hard]),
+      MemoryStore(),
+    );
+    final free = StoryPuzzleFeed(t, theme: 'mateIn1', goal: 1);
+    expect(free.next()!.id, 'hard');
+    final capped = StoryPuzzleFeed(
+      t,
+      theme: 'mateIn1',
+      goal: 1,
+      maxRating: 700,
+    );
+    expect(capped.next()!.id, 'easy');
+  });
 }

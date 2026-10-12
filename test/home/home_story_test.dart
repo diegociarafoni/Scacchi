@@ -50,7 +50,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Storia'));
     await tester.pumpAndSettle();
-    expect(find.text('Il villaggio dei pezzi'), findsOneWidget);
+    expect(find.text('Il sentiero dei primi passi'), findsOneWidget);
     expect(find.text('Continua'), findsOneWidget);
   });
 }

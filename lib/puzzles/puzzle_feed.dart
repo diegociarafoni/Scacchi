@@ -25,13 +25,16 @@ Future<FeedOutcome> _rated(
 
 /// Puzzle scelti per punteggio, eventualmente di un solo tema.
 class RatedFeed implements PuzzleFeed {
-  RatedFeed(this.trainer, {this.theme});
+  RatedFeed(this.trainer, {this.theme, this.maxRating});
 
   final PuzzleTrainer trainer;
   final String? theme;
 
+  /// Tetto al punteggio con cui si sceglie il puzzle, se presente.
+  final double? maxRating;
+
   @override
-  Puzzle? next() => trainer.next(theme: theme);
+  Puzzle? next() => trainer.next(theme: theme, maxRating: maxRating);
 
   @override
   bool get hasNext => true;

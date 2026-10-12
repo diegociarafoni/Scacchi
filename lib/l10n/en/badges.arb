@@ -87,8 +87,10 @@
     }
   },
   "badgesClose": "Close",
-  "badgeChapterPiecesName": "On the March",
-  "badgeChapterPiecesDesc": "Finish the lessons on how the pieces move.",
+  "badgeChapterMovesName": "On the March",
+  "badgeChapterMovesDesc": "Finish the lessons on how the pieces move.",
+  "badgeChapterPiecesName": "Pieces Safe",
+  "badgeChapterPiecesDesc": "Finish the lessons on capturing and defending.",
   "badgeChapterRulesName": "Golden Rules",
   "badgeChapterRulesDesc": "Finish the lessons on the rules of the game.",
   "badgeChapterMatesName": "King Hunter",
@@ -259,6 +261,8 @@
       }
     }
   },
+  "badgeStoryPrologueName": "First Steps",
+  "badgeStoryPrologueDesc": "Beat Tino in “Chapter 0”.",
   "badgeStoryVillageName": "Village Hero",
   "badgeStoryVillageDesc": "Beat Pino in the chapter “The village of the pieces”.",
   "badgeStoryGatesName": "Through the Gates",

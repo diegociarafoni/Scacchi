@@ -176,7 +176,8 @@ const _matePieces = [
 /// Tutti i badge, nell'ordine mostrato.
 final List<BadgeDef> badges = [
   // Le lezioni si imparano nella Storia: un badge per ogni suo capitolo.
-  _chapter('pieces', Icons.open_with),
+  _chapter('moves', Icons.open_with),
+  _chapter('pieces', Icons.swap_horiz),
   _chapter('rules', Icons.gavel),
   _chapter('mates', Icons.my_location),
   _chapter('tactics', Icons.bolt),
@@ -316,6 +317,7 @@ final List<BadgeDef> badges = [
     5,
   ),
 
+  _story('prologue', Icons.directions_walk),
   _story('village', Icons.cottage),
   _story('gates', Icons.fence),
   _story('tower', Icons.castle),

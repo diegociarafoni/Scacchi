@@ -39,9 +39,50 @@ const _mateIn2 = 'Dai scacco matto in due mosse.';
 /// Percorso a tappe (RG-03).
 const List<Chapter> curriculum = [
   Chapter(
-    id: 'pieces',
-    title: 'Il movimento dei pezzi',
+    id: 'moves',
+    title: 'Come si muovono i pezzi',
     stages: [
+      Stage(
+        id: 'moves.board',
+        title: 'La scacchiera',
+        intro:
+            'La scacchiera ha 64 case: otto colonne, da a a h, e otto traverse, '
+            'da 1 a 8. Ogni casa ha un nome, come d4: colonna d, traversa 4. '
+            'Il Bianco parte in basso.',
+        exercises: [
+          StarsExercise(
+            instructions:
+                'Il re si muove di una casa in ogni direzione. Dalla casa d1 '
+                'vai su d2, poi e3, poi f4.',
+            role: Role.king,
+            start: Square.d1,
+            stars: [Square.d2, Square.e3, Square.f4],
+          ),
+          StarsExercise(
+            instructions:
+                'La torre va su a4, poi su d4, poi su d1: guarda le lettere '
+                'delle colonne e i numeri delle traverse.',
+            role: Role.rook,
+            start: Square.h1,
+            stars: [Square.h4, Square.d4, Square.d1],
+          ),
+          StarsExercise(
+            instructions:
+                'Il cavallo parte da c1. Raggiungi e2, poi g3, poi f5.',
+            role: Role.knight,
+            start: Square.c1,
+            stars: [Square.e2, Square.g3, Square.f5],
+          ),
+          StarsExercise(
+            instructions:
+                'Sfida: la donna parte da e1 e deve toccare a5, a8, h8 e h1, '
+                'gli angoli e i bordi della scacchiera.',
+            role: Role.queen,
+            start: Square.e1,
+            stars: [Square.a5, Square.a8, Square.h8, Square.h1],
+          ),
+        ],
+      ),
       Stage(
         id: 'pieces.rook',
         title: 'La torre',
@@ -258,6 +299,88 @@ const List<Chapter> curriculum = [
         ],
       ),
       Stage(
+        id: 'moves.pawn-capture',
+        title: 'Il pedone cattura di lato',
+        intro:
+            'Il pedone avanza dritto, ma cattura in diagonale, in avanti. '
+            'Se un pezzo gli sta davanti non può né avanzare né catturarlo.',
+        exercises: [
+          LineExercise(
+            instructions: 'Cattura il pedone nero con il tuo pedone.',
+            fen: '4k3/8/8/3p4/4P3/8/8/4K3 w - - 0 1',
+            steps: ['e4d5'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Il pedone e4 è bloccato da quello nero. Cattura con l\'altro '
+                'pedone, in diagonale.',
+            fen: '4k3/8/8/4p3/3PP3/8/8/4K3 w - - 0 1',
+            steps: ['d4e5'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Il pedone può catturare due pezzi. Scegli quello che vale di '
+                'più.',
+            fen: '4k3/8/8/2n1p3/3P4/8/8/4K3 w - - 0 1',
+            steps: ['d4c5'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Sfida: cattura la torre e arriva in fondo. Il pedone diventa '
+                'donna.',
+            fen: '3r2k1/4P3/8/8/8/8/8/4K3 w - - 0 1',
+            steps: ['e7d8q|e7d8r'],
+            goal: LineGoal.line,
+          ),
+        ],
+      ),
+      Stage(
+        id: 'moves.which-piece',
+        title: 'Quale pezzo?',
+        intro:
+            'Ogni pezzo arriva solo dove sa muoversi. Prima di muovere chiediti '
+            'quale dei tuoi pezzi può raggiungere la casa che ti serve.',
+        exercises: [
+          LineExercise(
+            instructions:
+                'Cattura il pedone nero e5: solo un pezzo bianco ci arriva.',
+            fen: '4k3/8/8/4p3/8/3N1B2/8/R3K3 w - - 0 1',
+            steps: ['d3e5'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions: 'Dai scacco al re nero con la torre.',
+            fen: '7k/8/8/8/8/8/1R6/4K3 w - - 0 1',
+            steps: ['b2b8|b2h2'],
+            goal: LineGoal.check,
+          ),
+          LineExercise(
+            instructions:
+                'Cattura il pedone f7: solo l\'alfiere ci arriva in diagonale.',
+            fen: '4k3/5p2/8/8/2B5/8/8/4K2R w - - 0 1',
+            steps: ['c4f7'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Sfida: la donna nera è in presa. Quale pezzo bianco può '
+                'catturarla?',
+            fen: '6k1/8/8/3q4/8/2N5/8/R3K3 w - - 0 1',
+            steps: ['c3d5'],
+            goal: LineGoal.line,
+          ),
+        ],
+      ),
+    ],
+  ),
+  Chapter(
+    id: 'pieces',
+    title: 'Catturare e difendere',
+    stages: [
+      Stage(
         id: 'pieces.capture',
         title: 'Catturare',
         intro:
@@ -293,6 +416,87 @@ const List<Chapter> curriculum = [
                 'la torre.',
             fen: '6k1/4p3/3n4/8/8/K7/8/3R3b w - - 0 1',
             steps: ['d1h1'],
+            goal: LineGoal.line,
+          ),
+        ],
+      ),
+      Stage(
+        id: 'pieces.hanging',
+        title: 'Il pezzo in presa',
+        intro:
+            'Un pezzo è in presa se un avversario può catturarlo e nessuno lo '
+            'difende. Prima di muovere guarda quali pezzi, tuoi e suoi, sono '
+            'senza difesa.',
+        exercises: [
+          LineExercise(
+            instructions: 'Cattura il cavallo nero: nessuno lo difende.',
+            fen: '6k1/5p2/8/3n4/8/8/8/3RK3 w - - 0 1',
+            steps: ['d1d5'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Due pezzi neri: il cavallo è difeso dal pedone, l\'alfiere no. '
+                'Prendi quello in presa.',
+            fen: '6k1/8/2p5/3n3b/8/8/8/3QK3 w - - 0 1',
+            steps: ['d1h5'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'La tua donna è attaccata dall\'alfiere, ma l\'alfiere è in '
+                'presa: cattura per primo.',
+            fen: '6k1/3b4/8/8/Q7/8/8/4K3 w - - 0 1',
+            steps: ['a4d7'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Sfida: prima di catturare guarda se il pezzo è difeso. Qui la '
+                'torre nera è sola.',
+            fen: '1k6/8/8/rn1b4/8/8/8/R3K3 w - - 0 1',
+            steps: ['a1a5'],
+            goal: LineGoal.line,
+          ),
+        ],
+      ),
+      Stage(
+        id: 'pieces.defend',
+        title: 'Difendere un pezzo',
+        intro:
+            'Difendere un pezzo vuol dire avere un altro pezzo che, se te lo '
+            'catturano, può riprendere. Un pezzo difeso è al sicuro da scambi '
+            'che non convengono.',
+        exercises: [
+          LineExercise(
+            instructions:
+                'Il tuo cavallo è attaccato dall\'alfiere nero. Difendilo con '
+                'la torre.',
+            fen: '6k1/8/8/8/1b6/8/3N4/R3K3 w - - 0 1',
+            steps: ['a1d1|a1a2'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Il pedone e4 è attaccato dall\'alfiere. Difendilo con il re.',
+            fen: '6k1/1b6/8/8/4P3/8/4K3/8 w - - 0 1',
+            steps: ['e2d3|e2e3|e2f3'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Il cavallo nero attacca il tuo alfiere. Difendilo con un '
+                'pedone.',
+            fen: '6k1/8/2n5/8/3B4/8/4P3/4K3 w - - 0 1',
+            steps: ['e2e3'],
+            goal: LineGoal.line,
+          ),
+          LineExercise(
+            instructions:
+                'Sfida: il cavallo nero attacca la tua torre. Difendila con la '
+                'donna, in uno dei due modi.',
+            fen: '6k1/8/8/8/3n4/5R2/8/Q3K3 w - - 0 1',
+            steps: ['a1a3|a1d1'],
             goal: LineGoal.line,
           ),
         ],

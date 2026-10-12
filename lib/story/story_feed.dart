@@ -5,8 +5,16 @@ import '../puzzles/puzzle_trainer.dart';
 /// Puzzle di un tema finché non ne sono stati risolti [goal] al primo
 /// tentativo. Si registrano come gli altri puzzle (punteggio e XP).
 class StoryPuzzleFeed implements PuzzleFeed {
-  StoryPuzzleFeed(this.trainer, {required this.theme, required this.goal})
-    : _inner = RatedFeed(trainer, theme: theme);
+  StoryPuzzleFeed(
+    this.trainer, {
+    required this.theme,
+    required this.goal,
+    int? maxRating,
+  }) : _inner = RatedFeed(
+         trainer,
+         theme: theme,
+         maxRating: maxRating?.toDouble(),
+       );
 
   final PuzzleTrainer trainer;
   final String theme;

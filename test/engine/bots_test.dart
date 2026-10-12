@@ -21,6 +21,25 @@ const _test = Bot(
 );
 
 void main() {
+  group('Tino, il custode del capitolo 0', () {
+    test('gioca a 400 Elo, sotto Pino, e non è nella scala', () {
+      final tino = botById('tino')!;
+      expect(tino.levelId, 0);
+      expect(tino.elo, 400);
+      expect(tino.elo, lessThan(botById('pino')!.elo));
+      expect(bots.map((b) => b.id), isNot(contains('tino')));
+      expect(storyOnlyBots, [tino]);
+    });
+
+    test('ha frasi e un libro d\'aperture come gli altri', () {
+      final tino = botById('tino')!;
+      expect(tino.book, isNotEmpty);
+      for (final event in BotEvent.values) {
+        expect(tino.phrases(event), isNotEmpty, reason: '$event');
+      }
+    });
+  });
+
   group('la scala dei bot', () {
     test('RG-04 ci sono 8 bot, dal più debole al più forte', () {
       expect(bots, hasLength(8));

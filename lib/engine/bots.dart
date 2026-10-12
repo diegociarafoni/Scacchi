@@ -196,7 +196,25 @@ const bots = <Bot>[
   ),
 ];
 
-Bot? botById(String id) => bots.where((b) => b.id == id).firstOrNull;
+/// Personaggi che giocano solo nella storia: non sono nella scala né nei
+/// tornei.
+const storyOnlyBots = <Bot>[
+  Bot(
+    id: 'tino',
+    name: 'Tino',
+    avatar: '🐥',
+    levelId: 0,
+    style: BotStyle.aggressive,
+    openingName: 'l\'apertura del pedone di re',
+    book: [
+      ['e2e4', 'e7e5', 'g1f3', 'b8c6'],
+      ['e2e4', 'e7e5', 'd2d4'],
+    ],
+  ),
+];
+
+Bot? botById(String id) =>
+    [...bots, ...storyOnlyBots].where((b) => b.id == id).firstOrNull;
 
 /// Bot del profilo bambino (RP-06): i più facili della scala.
 final friendlyBots = bots.take(3).toList(growable: false);

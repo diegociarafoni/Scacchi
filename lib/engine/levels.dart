@@ -189,12 +189,31 @@ const engineLevels = <EngineLevel>[
   ),
 ];
 
+/// Livello solo della storia (capitolo 0): 400 Elo, quasi casuale. Non è in
+/// [engineLevels], così non si sceglie dal pannello, non entra nel livello
+/// adattivo e [engineLevelForElo] non lo restituisce (il guardiano da 400 Elo
+/// continua a giocare al livello 1).
+const storyBeginnerLevel = EngineLevel(
+  id: 0,
+  name: 'Primi passi',
+  approxElo: 400,
+  skill: 0,
+  depth: 2,
+  movetime: Duration(milliseconds: 150),
+  multiPv: 8,
+  temperatureCp: 600,
+  minReply: Duration(milliseconds: 700),
+);
+
 const defaultEngineLevel = 3;
 
-EngineLevel engineLevel(int id) => engineLevels.firstWhere(
-  (l) => l.id == id,
-  orElse: () => throw RangeError.range(id, 1, engineLevels.length, 'livello'),
-);
+EngineLevel engineLevel(int id) => id == storyBeginnerLevel.id
+    ? storyBeginnerLevel
+    : engineLevels.firstWhere(
+        (l) => l.id == id,
+        orElse: () =>
+            throw RangeError.range(id, 1, engineLevels.length, 'livello'),
+      );
 
 /// Livello con l'Elo indicativo più vicino a [elo]; a pari distanza il più debole.
 EngineLevel engineLevelForElo(int elo) {

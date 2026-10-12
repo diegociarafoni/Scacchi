@@ -59,8 +59,11 @@ void main() {
       MaterialApp(home: PathPage(controller: controller)),
     );
     await tester.pumpAndSettle();
-    expect(find.text('Il movimento dei pezzi'), findsOneWidget);
-    expect(find.bySemanticsLabel(RegExp('^La torre, da fare')), findsOneWidget);
+    expect(find.text('Come si muovono i pezzi'), findsOneWidget);
+    expect(
+      find.bySemanticsLabel(RegExp('^La scacchiera, da fare')),
+      findsOneWidget,
+    );
     expect(
       find.bySemanticsLabel(RegExp('^L\'alfiere, bloccata')),
       findsOneWidget,
@@ -71,7 +74,7 @@ void main() {
     tester,
   ) async {
     phone(tester);
-    final stage = curriculum.first.stages.first;
+    final stage = curriculum.first.stages[1];
     int? result;
     await tester.pumpWidget(
       MaterialApp(

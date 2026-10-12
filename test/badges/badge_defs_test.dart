@@ -26,8 +26,8 @@ ProgressState withTally(Map<String, int> t) => ProgressState(tally: t);
 
 void main() {
   group('RG-17 catalogo', () {
-    test('46 badge con identificativi unici in cinque famiglie', () {
-      expect(badges, hasLength(46));
+    test('48 badge con identificativi unici in cinque famiglie', () {
+      expect(badges, hasLength(48));
       expect(badges.map((b) => b.id).toSet(), hasLength(badges.length));
       for (final f in BadgeFamily.values) {
         expect(badges.where((b) => b.family == f), isNotEmpty, reason: '$f');
@@ -95,11 +95,10 @@ void main() {
       final almost = BadgeSources(
         lessonsByChapter: {firstChapter.id: lessons.length - 1},
       );
-      expect(met('chapter_pieces', ProgressState.initial, all), isTrue);
-      expect(met('chapter_pieces', ProgressState.initial, almost), isFalse);
+      expect(met('chapter_moves', ProgressState.initial, all), isTrue);
+      expect(met('chapter_moves', ProgressState.initial, almost), isFalse);
       expect(
-        badge('chapter_pieces')
-            .value(BadgeFacts(ProgressState.initial, almost)),
+        badge('chapter_moves').value(BadgeFacts(ProgressState.initial, almost)),
         lessons.length - 1,
       );
     });

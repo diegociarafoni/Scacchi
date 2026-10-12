@@ -6,7 +6,8 @@ Requisito RG-03: una mappa di capitoli e tappe con valutazione da 1 a 3 stelle. 
 
 | Capitolo | Tappe |
 |---|---|
-| Il movimento dei pezzi | Torre, alfiere, donna, re, cavallo, pedone (con promozione), catturare (con il valore dei pezzi) |
+| Come si muovono i pezzi (il «Capitolo 0») | La scacchiera e le case, torre, alfiere, donna, re, cavallo, pedone (con promozione), il pedone che cattura, quale pezzo muovere; nessun guardiano |
+| Catturare e difendere | Catturare (con il valore dei pezzi), i pezzi in presa, difendere un pezzo |
 | Le regole | Lo scacco, via dallo scacco (spostare il re, catturare, mettere in mezzo), l'arrocco, la presa al varco, la promozione, lo stallo |
 | Matti elementari | Matto in una (primi esempi), il matto del corridoio (con la donna e attirando via il difensore), donna e re, le torri a scala in due mosse, matti famosi (Anastasia, arabo, Boden, Damiano), matto in due (anche il matto affogato con sacrificio di donna), altri matti famosi (spalline, Greco, Cozio, Opera), guardiano (400 Elo) |
 | Tattiche | Pezzi indifesi, forchetta (cavallo, pedone, forchetta reale, donna), inchiodatura, infilata (torre e alfiere), attacco di scoperta, scacco doppio, elimina il difensore, il pezzo sovraccarico, l'adescamento, l'interferenza, la mossa intermedia, il pezzo intrappolato, batteria e raggi X, guardiano (800) |
