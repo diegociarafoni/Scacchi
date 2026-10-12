@@ -6,14 +6,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 
+import '../exchange/qr_code_view.dart';
 import '../exchange/qr_receive_page.dart';
 import '../game/move_speech.dart';
 import '../l10n/app_localizations.dart';
-import '../theme/rokko_theme.dart';
 import '../training/training_board.dart';
 import 'game_invite.dart';
 import 'multiplayer_controller.dart';
-import 'multiplayer_widgets.dart';
 import 'saved_game.dart';
 
 /// Testi del multigiocatore, in italiano anche senza i delegate.
@@ -166,159 +165,81 @@ class _MultiplayerPageState extends State<MultiplayerPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = multiplayerL10n(context);
-    final tokens = RokkoTokens.of(context);
-    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(title: Text(l10n.multiplayerTitle)),
-      body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            if (_saved case final saved?) ...[
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Semantics(
-                        header: true,
-                        child: Text(
-                          l10n.multiplayerUiResumeTitle,
-                          style: theme.textTheme.titleMedium,
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          if (_saved case final saved?) ...[
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(l10n.multiplayerResumeBody(saved.moves.length)),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        FilledButton(
+                          onPressed: _busy ? null : () => _resume(saved),
+                          child: Text(l10n.multiplayerResume),
                         ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(l10n.multiplayerResumeBody(saved.moves.length)),
-                      const SizedBox(height: 12),
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: [
-                          FilledButton(
-                            onPressed: _busy ? null : () => _resume(saved),
-                            child: Text(l10n.multiplayerResume),
-                          ),
-                          TextButton(
-                            style: TextButton.styleFrom(
-                              minimumSize: Size(0, tokens.minTouch),
-                            ),
-                            onPressed: _busy ? null : _discard,
-                            child: Text(l10n.multiplayerDiscard),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                        const SizedBox(width: 8),
+                        TextButton(
+                          onPressed: _busy ? null : _discard,
+                          child: Text(l10n.multiplayerDiscard),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 16),
-            ],
-            _Steps(
-              steps: [
-                l10n.multiplayerUiStepCreate,
-                l10n.multiplayerUiStepScan,
-                l10n.multiplayerUiStepPlay,
-              ],
-            ),
-            const SizedBox(height: 24),
-            Semantics(
-              header: true,
-              child: Text(
-                l10n.multiplayerYourColor,
-                style: theme.textTheme.titleSmall,
-              ),
-            ),
-            const SizedBox(height: 8),
-            SegmentedButton<Side>(
-              style: SegmentedButton.styleFrom(
-                minimumSize: Size(0, tokens.minTouch),
-              ),
-              segments: [
-                ButtonSegment(
-                  value: Side.white,
-                  icon: const Icon(Icons.circle_outlined),
-                  label: Text(l10n.multiplayerWhite),
-                ),
-                ButtonSegment(
-                  value: Side.black,
-                  icon: const Icon(Icons.circle),
-                  label: Text(l10n.multiplayerBlack),
-                ),
-              ],
-              selected: {_side},
-              onSelectionChanged: (s) => setState(() => _side = s.first),
             ),
             const SizedBox(height: 16),
-            FilledButton.icon(
-              icon: const Icon(Icons.qr_code_2),
-              label: Text(l10n.multiplayerCreate),
-              onPressed: _busy
-                  ? null
-                  : () => _startNew(
-                      () => MultiplayerController.host(
-                        side: _side,
-                        openHost: widget.openHost,
-                        store: _store,
-                      ),
-                    ),
-            ),
-            const SizedBox(height: 8),
-            OutlinedButton.icon(
-              icon: const Icon(Icons.qr_code_scanner),
-              label: Text(l10n.multiplayerJoin),
-              onPressed: _busy ? null : _join,
-            ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-/// I passaggi della partita, numerati.
-class _Steps extends StatelessWidget {
-  const _Steps({required this.steps});
-
-  final List<String> steps;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = multiplayerL10n(context);
-    final theme = Theme.of(context);
-    final tokens = RokkoTokens.of(context);
-    return Card(
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Semantics(
-              header: true,
-              child: Text(
-                l10n.multiplayerUiStepsTitle,
-                style: theme.textTheme.titleMedium,
+          Text(l10n.multiplayerIntro),
+          const SizedBox(height: 24),
+          Text(
+            l10n.multiplayerYourColor,
+            style: Theme.of(context).textTheme.titleSmall,
+          ),
+          const SizedBox(height: 8),
+          SegmentedButton<Side>(
+            segments: [
+              ButtonSegment(
+                value: Side.white,
+                label: Text(l10n.multiplayerWhite),
               ),
-            ),
-            for (final (i, step) in steps.indexed) ...[
-              const SizedBox(height: 12),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CircleAvatar(
-                    radius: 14,
-                    backgroundColor: tokens.action,
-                    foregroundColor: theme.colorScheme.onPrimaryContainer,
-                    child: Text('${i + 1}'),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(child: Text(step)),
-                ],
+              ButtonSegment(
+                value: Side.black,
+                label: Text(l10n.multiplayerBlack),
               ),
             ],
-          ],
-        ),
+            selected: {_side},
+            onSelectionChanged: (s) => setState(() => _side = s.first),
+          ),
+          const SizedBox(height: 16),
+          FilledButton.icon(
+            icon: const Icon(Icons.qr_code_2),
+            label: Text(l10n.multiplayerCreate),
+            onPressed: _busy
+                ? null
+                : () => _startNew(
+                    () => MultiplayerController.host(
+                      side: _side,
+                      openHost: widget.openHost,
+                      store: _store,
+                    ),
+                  ),
+          ),
+          const SizedBox(height: 8),
+          OutlinedButton.icon(
+            icon: const Icon(Icons.qr_code_scanner),
+            label: Text(l10n.multiplayerJoin),
+            onPressed: _busy ? null : _join,
+          ),
+        ],
       ),
     );
   }
@@ -460,18 +381,6 @@ class _MultiplayerGamePageState extends State<MultiplayerGamePage> {
     return leave ?? false;
   }
 
-  // Un canale nuovo si aggiunge qui come voce della stessa lista.
-  List<ChannelLink> get _channels => [
-    ChannelLink(
-      channel: LinkChannel.wifi,
-      level: switch (_c.status) {
-        MultiplayerStatus.waitingPeer ||
-        MultiplayerStatus.connecting => LinkLevel.connecting,
-        _ => _c.pendingDelivery ? LinkLevel.offline : LinkLevel.connected,
-      },
-    ),
-  ];
-
   String _statusText(AppLocalizations l10n) => switch (_c.status) {
     MultiplayerStatus.waitingPeer => l10n.multiplayerWaiting,
     MultiplayerStatus.connecting => l10n.multiplayerConnecting,
@@ -513,12 +422,16 @@ class _MultiplayerGamePageState extends State<MultiplayerGamePage> {
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  ConnectionIndicator(channels: _channels),
                   const SizedBox(height: 12),
                   if (waiting) ...[
                     Center(
-                      child: InviteCard(data: _c.inviteLink, maxWidth: size),
+                      child: SizedBox(
+                        width: min(size, 320),
+                        child: QrCodeView(
+                          data: _c.inviteLink,
+                          label: l10n.multiplayerInviteQrLabel,
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 12),
                     Text(
