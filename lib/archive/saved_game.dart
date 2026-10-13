@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart' show listEquals;
 
 import '../analysis/variation_tree.dart';
 import '../game/chess_game.dart';
+import '../review/game_phase.dart';
+import '../review/game_review.dart';
 import 'pgn.dart';
 import 'tree_pgn.dart';
 
@@ -22,6 +24,7 @@ class SavedGame {
     this.opponentElo,
     this.accuracy,
     this.opening,
+    this.phaseAccuracy,
   });
 
   factory SavedGame.fromGame(
@@ -122,6 +125,10 @@ class SavedGame {
   /// Nome dell'apertura riconosciuta.
   final String? opening;
 
+  /// Precisione dell'utente in ciascuna fase, dalla revisione (RF-68); mancano
+  /// le fasi in cui non ha mosse.
+  final Map<GamePhase, double>? phaseAccuracy;
+
   bool get finished => result != '*';
 
   /// Partita giocata sull'app, non importata né salvata come analisi.
@@ -147,6 +154,7 @@ class SavedGame {
   SavedGame copyWith({
     double? Function()? accuracy,
     String? Function()? opening,
+    Map<GamePhase, double>? Function()? phaseAccuracy,
     String? pgn,
     DateTime? updatedAt,
   }) => SavedGame(
@@ -163,7 +171,20 @@ class SavedGame {
     opponentElo: opponentElo,
     accuracy: accuracy == null ? this.accuracy : accuracy(),
     opening: opening == null ? this.opening : opening(),
+    phaseAccuracy: phaseAccuracy == null ? this.phaseAccuracy : phaseAccuracy(),
   );
+
+  /// Copia con precisione e precisione per fase dell'utente dalla [review];
+  /// senza colore (partita tra due persone) non è di nessuno e resta com'è.
+  SavedGame withReview(GameReview review) {
+    final side = playerSide;
+    if (side == null) return this;
+    final byPhase = review.accuracyByPhase(side);
+    return copyWith(
+      accuracy: () => review.accuracy(side),
+      phaseAccuracy: () => {for (final e in byPhase.entries) e.key: ?e.value},
+    );
+  }
 
   /// Copia con le mosse, le varianti e le note di [tree], mantenendo
   /// intestazioni, tipo e risultato della voce.
@@ -183,6 +204,7 @@ class SavedGame {
       updatedAt: updatedAt,
       accuracy: changed ? () => null : null,
       opening: changed ? () => null : null,
+      phaseAccuracy: changed ? () => null : null,
     );
   }
 
@@ -210,6 +232,9 @@ class SavedGame {
     'opponentElo': opponentElo,
     'accuracy': accuracy,
     'opening': opening,
+    'phaseAccuracy': ?phaseAccuracy == null
+        ? null
+        : {for (final e in phaseAccuracy!.entries) e.key.name: e.value},
   };
 
   static SavedGame fromJson(Map<String, Object?> json) => SavedGame(
@@ -230,6 +255,14 @@ class SavedGame {
     opponentElo: json['opponentElo'] as int?,
     accuracy: (json['accuracy'] as num?)?.toDouble(),
     opening: json['opening'] as String?,
+    phaseAccuracy: switch (json['phaseAccuracy']) {
+      final Map<Object?, Object?> m => {
+        for (final e in m.entries)
+          for (final p in GamePhase.values)
+            if (p.name == e.key) p: (e.value as num).toDouble(),
+      },
+      _ => null,
+    },
   );
 }
 
