@@ -5,6 +5,7 @@ import 'package:integration_test/integration_test.dart';
 import 'package:scacchi/engine/computer_player.dart';
 import 'package:scacchi/engine/process_transport.dart';
 import 'package:scacchi/game/game_page.dart';
+import 'package:scacchi/l10n/content.dart';
 import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/settings/settings.dart';
 
@@ -71,6 +72,8 @@ Future<void> _startComputerGame(
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  // Le schermate sono montate senza l'app: i contenuti si caricano qui.
+  setUpAll(Content.ensureLoaded);
 
   group(
     'contro il computer',
