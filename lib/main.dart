@@ -77,6 +77,13 @@ class _ScacchiAppState extends State<ScacchiApp> {
       await Content.ensureLoaded(language: locale.languageCode);
     } on Object catch (e) {
       if (kDebugMode) debugPrint('Content not loaded: $e');
+      // Senza contenuti le schermate lanciano un errore: si ripiega sulla
+      // lingua di base.
+      try {
+        await Content.ensureLoaded();
+      } on Object catch (e) {
+        if (kDebugMode) debugPrint('Base content not loaded: $e');
+      }
     }
   }
 
