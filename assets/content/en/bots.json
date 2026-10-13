@@ -1,0 +1,156 @@
+{
+  "bot.start": [
+    "Hi, I'm {name}. Today we're playing {opening}!",
+    "{name} at the board: have a good game!"
+  ],
+  "bot.start.friendly": [
+    "Hi, I'm {name}!",
+    "I'm {name}, shall we play together?"
+  ],
+  "bot.friendly.check": [
+    "Check! Save your king.",
+    "Check! Where will the king go?"
+  ],
+  "bot.friendly.capture": [
+    "I took a piece!",
+    "Got it! Now it's your turn."
+  ],
+  "bot.friendly.mistake": [
+    "Take your time.",
+    "Look at the board carefully!"
+  ],
+  "bot.friendly.win": [
+    "Great game! Shall we play again?",
+    "I won this one, rematch?"
+  ],
+  "bot.friendly.loss": [
+    "You won, well done!",
+    "Hooray, you won!"
+  ],
+  "bot.friendly.draw": [
+    "A draw! Great game.",
+    "It's a tie! We both did well."
+  ],
+  "bot.friendly.chat": [
+    "What a great game!",
+    "We're having fun!",
+    "Your move!"
+  ],
+  "bot.aggressive.check": [
+    "Check! I won't let you breathe.",
+    "Check, attack!"
+  ],
+  "bot.aggressive.capture": [
+    "Got it! On the attack.",
+    "One piece fewer for you."
+  ],
+  "bot.aggressive.mistake": [
+    "Thanks for the gift, I'll take it.",
+    "Ouch, you slipped up there."
+  ],
+  "bot.aggressive.win": [
+    "Checkmate! Great battle.",
+    "Victory! Rematch?"
+  ],
+  "bot.aggressive.loss": [
+    "You beat me, well played!",
+    "Congratulations, I got burned."
+  ],
+  "bot.aggressive.draw": [
+    "A draw: I wanted more, but fine.",
+    "A draw, but next time I'll attack harder."
+  ],
+  "bot.aggressive.chat": [
+    "We attack, we don't wait!",
+    "I'm not afraid of anything.",
+    "Make your move, I'm right behind you."
+  ],
+  "bot.positional.check": [
+    "Check, no rush.",
+    "Check: the position allows it."
+  ],
+  "bot.positional.capture": [
+    "A trade that suits me.",
+    "A quiet capture, the structure holds."
+  ],
+  "bot.positional.mistake": [
+    "That move will cost you position.",
+    "A planning error, I'd say."
+  ],
+  "bot.positional.win": [
+    "Checkmate: the plan worked.",
+    "Victory, thanks for the game."
+  ],
+  "bot.positional.loss": [
+    "You played better, congratulations.",
+    "You outplayed me positionally, well done."
+  ],
+  "bot.positional.draw": [
+    "A balanced draw, that's fair.",
+    "An honest draw."
+  ],
+  "bot.positional.chat": [
+    "I'm taking my time: the position deserves it.",
+    "Structure matters here.",
+    "No hurry, I'm playing it calmly."
+  ],
+  "bot.gambitist.check": [
+    "Check! The sacrifice was worth it.",
+    "Check, and the best is yet to come."
+  ],
+  "bot.gambitist.capture": [
+    "I'm winning the material back with interest.",
+    "Got it: the gambit pays off."
+  ],
+  "bot.gambitist.mistake": [
+    "You accepted the gambit badly!",
+    "Careful, there was something better here."
+  ],
+  "bot.gambitist.win": [
+    "Checkmate! The sacrifice paid off.",
+    "Won, and what a show."
+  ],
+  "bot.gambitist.loss": [
+    "The gambit wasn't enough, well done.",
+    "You defended brilliantly, all credit to you."
+  ],
+  "bot.gambitist.draw": [
+    "A draw: all smoke and nothing more.",
+    "A draw, but what a lively game."
+  ],
+  "bot.gambitist.chat": [
+    "A pawn more or less, who cares?",
+    "The best is yet to come.",
+    "I like it when we take risks."
+  ],
+  "bot.opening.lia": "the King's Gambit",
+  "bot.opening.pino": "the Italian Game",
+  "bot.opening.nico": "the London System",
+  "bot.opening.chiara": "the Queen's Gambit",
+  "bot.opening.viola": "the Scotch Game",
+  "bot.opening.rocco": "the King's Gambit",
+  "bot.opening.ettore": "the Ruy Lopez Exchange",
+  "bot.opening.marta": "the English Opening",
+  "bot.opening.bruna": "the French Defense",
+  "bot.opening.duilio": "the Sicilian",
+  "bot.opening.carlo": "the Budapest Gambit",
+  "bot.opening.elena": "the Ruy Lopez",
+  "bot.opening.ada": "the English Opening",
+  "bot.opening.luna": "the Catalan",
+  "bot.opening.massimo": "the Evans Gambit",
+  "bot.opening.cosmo": "the Smith-Morra Gambit",
+  "bot.opening.stella": "the King's Indian Defense",
+  "bot.opening.tino": "the King's Pawn opening",
+  "level.1.name": "Beginner",
+  "level.2.name": "Novice",
+  "level.3.name": "Casual player",
+  "level.4.name": "Club player",
+  "level.5.name": "Competitor",
+  "level.6.name": "Expert",
+  "level.7.name": "Master",
+  "level.8.name": "Champion",
+  "level.0.name": "First steps",
+  "style.aggressive": "aggressive",
+  "style.positional": "positional",
+  "style.gambitist": "gambit player"
+}

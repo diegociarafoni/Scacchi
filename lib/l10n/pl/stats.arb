@@ -1,0 +1,83 @@
+{
+  "statsTitle": "Statystyki",
+  "statsLoadFailed": "Nie udało się odczytać archiwum partii: spróbuj później.",
+  "statsEmpty": "Zagraj kilka partii z komputerem, aby zobaczyć swoje statystyki.",
+  "statsRecord": "Wyniki",
+  "statsAllGames": "Wszystkie",
+  "statsWithWhite": "Białymi",
+  "statsWithBlack": "Czarnymi",
+  "statsLocalGames": "Partie dwuosobowe",
+  "statsByTimeControl": "Według tempa gry",
+  "statsTopOpenings": "Najczęściej grane debiuty",
+  "statsGames": "{count, plural, one{{count} partia} few{{count} partie} many{{count} partii} other{{count} partii}}",
+  "statsAccuracy": "Dokładność",
+  "statsAverage": "Średnia",
+  "statsAccuracyTrend": "Trend dokładności",
+  "statsRating": "Szacowany ranking {rating}",
+  "statsRatingProvisional": "wstępny: potrzeba partii z komputerem – {count}",
+  "statsRatingGames": "{count, plural, one{na podstawie {count} partii z komputerem} few{na podstawie {count} partii z komputerem} many{na podstawie {count} partii z komputerem} other{na podstawie {count} partii z komputerem}}",
+  "statsRatingTrend": "Trend rankingu",
+  "statsNoGames": "brak partii",
+  "statsScoreDetail": "{wins, plural, one{{wins} wygrana} few{{wins} wygrane} many{{wins} wygranych} other{{wins} wygranych}}, {draws, plural, one{{draws} remis} few{{draws} remisy} many{{draws} remisów} other{{draws} remisów}}, {losses, plural, one{{losses} porażka} few{{losses} porażki} many{{losses} porażek} other{{losses} porażek}}",
+  "statsTrend": "{label}: od {first} do {last}, minimum {min}, maksimum {max}",
+  "portraitShareSubject": "Mój tydzień",
+  "portraitTitle": "Twój tydzień",
+  "portraitUnreadable": "Nie udało się odczytać archiwum.",
+  "portraitEmpty": "Brak partii z ostatnich siedmiu dni. Zagraj z komputerem, a tu pojawi się twoje podsumowanie.",
+  "portraitShare": "Udostępnij jako obraz",
+  "portraitShareFailed": "Nie udało się udostępnić",
+  "portraitCardTitle": "Mój szachowy tydzień",
+  "portraitGames": "{count, plural, one{1 partia} few{{count} partie} many{{count} partii} other{{count} partii}}",
+  "@portraitGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "portraitScore": "wygranych: {wins} · remisów: {draws} · porażek: {losses}",
+  "@portraitScore": {
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      }
+    }
+  },
+  "portraitOpenings": "Ulubione debiuty",
+  "portraitAccuracy": "Średnia dokładność",
+  "portraitMate": "Ulubiony mat",
+  "portraitMateValue": "{role, select, king{królem} queen{hetmanem} rook{wieżą} bishop{gońcem} knight{skoczkiem} other{pionem}}, {count, plural, one{1 raz} few{{count} razy} many{{count} razy} other{{count} razy}}",
+  "@portraitMateValue": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "portraitStrongest": "Najsilniejszy pokonany przeciwnik",
+  "portraitStrongestValue": "Elo {elo}",
+  "@portraitStrongestValue": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "portraitBusiestDay": "Najbardziej pracowity dzień",
+  "portraitWeekdayMonday": "Poniedziałek",
+  "portraitWeekdayTuesday": "Wtorek",
+  "portraitWeekdayWednesday": "Środa",
+  "portraitWeekdayThursday": "Czwartek",
+  "portraitWeekdayFriday": "Piątek",
+  "portraitWeekdaySaturday": "Sobota",
+  "portraitWeekdaySunday": "Niedziela"
+}

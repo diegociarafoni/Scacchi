@@ -1,0 +1,21 @@
+{
+  "backupTitle": "Kopia zapasowa i przywracanie",
+  "backupIntro": "Kopia zawiera partie, postępy, ścieżkę nauki, turnieje, treningi i ustawienia. Przechowaj ją w bezpiecznym miejscu: aplikacja działa offline, więc nie ma kopii online.",
+  "backupShare": "Udostępnij kopię",
+  "backupShareSubject": "Kopia zapasowa Rokko",
+  "backupRestoreFromText": "Przywróć z tekstu",
+  "backupExported": "Kopia gotowa do zapisu",
+  "backupExportFailed": "Nie udało się utworzyć kopii: {error}",
+  "backupRestoreStaged": "Kopia gotowa. Zamknij i ponownie otwórz aplikację, aby przywrócić dane.",
+  "backupRestoreFailed": "Nie udało się przywrócić: {error}",
+  "backupErrorNotApp": "To nie jest kopia zapasowa Rokko",
+  "backupErrorNewerVersion": "Kopię utworzono w nowszej wersji",
+  "backupErrorUnexpectedFile": "Nieoczekiwany plik w kopii: {file}",
+  "backupErrorInvalidFile": "Nieprawidłowy plik w kopii: {file}",
+  "backupErrorInvalidPreference": "Nieprawidłowe ustawienie: {name}",
+  "backupErrorUnreadable": "Nie można odczytać kopii",
+  "backupRestoreDialogTitle": "Przywróć kopię zapasową",
+  "backupRestoreDialogBody": "Wklej zawartość pliku kopii. Twoje obecne dane zostaną zastąpione.",
+  "backupCancel": "Anuluj",
+  "backupRestore": "Przywróć"
+}

@@ -1,0 +1,369 @@
+{
+  "storyTitle": "Kisah",
+  "storyEntrySubtitle": "Perjalanan berbab: pelajaran, teka-teki, dan tantangan",
+  "storyChapterNumber": "Bab {n}",
+  "@storyChapterNumber": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "storyProgress": "{done} bab dari {total}",
+  "@storyProgress": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyChapterLocked": "Terbuka setelah kamu menyelesaikan bab sebelumnya",
+  "storyChapterDone": "Bab selesai",
+  "storyContinue": "Lanjut",
+  "storyFinished": "Kisahnya sudah selesai. Pelajaran, teka-teki, dan permainan tetap tersedia di bagian lain aplikasi.",
+  "storyStepLessons": "Pelajaran: {value} dari {total}",
+  "@storyStepLessons": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyStepPuzzles": "Teka-teki bab: {value} dari {total}",
+  "@storyStepPuzzles": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyStepGuardian": "Penjaga bab",
+  "storyStepBoss": "Tantangan {name}",
+  "@storyStepBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyStepDone": "selesai",
+  "storyStepTodo": "belum",
+  "storyStepLocked": "terkunci",
+  "storyStepLockedHint": "Selesaikan langkah sebelumnya dulu.",
+  "storyEngineMissing": "Tantangan dimainkan di perangkat yang bisa menjalankan lawan komputer: Android dan iOS, atau Windows dan Linux dengan Stockfish terpasang.",
+  "storyBossWon": "Kamu mengalahkan {name}!",
+  "@storyBossWon": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyBossLost": "{name} masih bertahan untuk saat ini: coba lagi kapan saja.",
+  "@storyBossLost": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPuzzlesNone": "Teka-teki tidak bisa dimuat: coba lagi.",
+  "storyPrologueTitle": "Jalan langkah pertama",
+  "storyPrologueIntro": "Sebelum desa, ada sebuah jalan, dan di jalan itu ada anak ayam yang penasaran. Belajarlah bersamanya bagaimana setiap buah catur bergerak: benteng, gajah, ratu, raja, kuda, dan pion.",
+  "storyPrologueBoss": "{name}, anak ayam di jalan, ingin bermain untuk mencoba buah catur yang baru.",
+  "@storyPrologueBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPrologueOutro": "Buah catur tak punya rahasia lagi bagimu. Desa di kaki benteng sudah dekat.",
+  "storyVillageTitle": "Desa buah catur",
+  "storyVillageIntro": "Kamu tiba di desa di kaki benteng Rokko. Penduduknya bermain seharian tapi sering membiarkan buah catur menggantung: belajarlah menangkap dan bertahan, lalu buktikan kamu bisa melihat buah catur yang tak terlindungi.",
+  "storyVillageBoss": "{name}, penjaga desa, menantangmu untuk melihat apakah kamu benar-benar sudah belajar.",
+  "@storyVillageBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyVillageOutro": "Desa mengadakan pesta untuk menghormatimu. Jalan menuju gerbang kota sudah terbuka.",
+  "storyGatesTitle": "Gerbang kota",
+  "storyGatesIntro": "Para penjaga menghentikanmu di gerbang: untuk masuk, kamu harus tahu aturannya, dari skak sampai rokade. Promosi yang terlihat tepat waktu bahkan membuka gerbang tertinggi.",
+  "storyGatesBoss": "{name}, kapten penjaga, ingin mengujimu sebelum membiarkanmu lewat.",
+  "@storyGatesBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyGatesOutro": "Gerbang terbuka lebar. Di depanmu menjulang menara raja.",
+  "storyTowerTitle": "Menara raja",
+  "storyTowerIntro": "Raja tinggal di puncak menara, dan dia tahu cara membela diri. Pelajari skakmat yang mengepungnya, bahkan saat buah catur miliknya sendiri membentuk tembok.",
+  "storyTowerBoss": "{name}, kuda yang menyukai gambit, menunggu di ujung tangga.",
+  "@storyTowerBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyTowerOutro": "Raja di menara sudah diskakmat. Tinggal hutan dengan jebakan-jebakannya.",
+  "storyForestTitle": "Hutan jebakan",
+  "storyForestIntro": "Di hutan, setiap buah catur menyembunyikan jebakan: garpu, pin, tusukan. Belajarlah melihatnya sebelum orang lain.",
+  "storyForestBoss": "{name}, pemandu hutan, tahu setiap jalan dan setiap jerat.",
+  "@storyForestBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyForestOutro": "Kamu melewati hutan tanpa jatuh ke satu jebakan pun. Kastil menantimu.",
+  "storyCastleTitle": "Kastil bagian akhir",
+  "storyCastleIntro": "Di kastil hanya tersisa sedikit buah catur di papan dan setiap langkah berarti. Di sinilah kita tahu siapa yang bisa menutup permainan.",
+  "storyCastleBoss": "{name}, penjaga kastil, menjaga pintu masuk ruang mahkota.",
+  "@storyCastleBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyCastleOutro": "Pintu besar terbuka: mahkota sudah dekat.",
+  "storyCrownTitle": "Mahkota",
+  "storyCrownIntro": "Ruang mahkota. Awal yang baik adalah separuh kemenangan: pusat, pengembangan, rokade.",
+  "storyCrownBoss": "{name}, penjaga mahkota, memainkan pembukaan seperti tak ada yang lain.",
+  "@storyCrownBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyCrownOutro": "Mahkota jadi milikmu. Tapi di luar tembok, sebuah dataran masih menunggu untuk dijelajahi.",
+  "storyChapterCurrent": "Sedang berjalan",
+  "@storyChapterCurrent": {
+    "description": "Etichetta del capitolo corrente nella storia"
+  },
+  "storyChapterSteps": "{done} langkah dari {total}",
+  "@storyChapterSteps": {
+    "description": "Passi conclusi di un capitolo, per la barra di avanzamento",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyPassageLessonsTitle": "Pelajaran selesai!",
+  "@storyPassageLessonsTitle": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassagePuzzlesTitle": "Teka-teki selesai!",
+  "@storyPassagePuzzlesTitle": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageGuardianTitle": "Penjaga terkalahkan!",
+  "@storyPassageGuardianTitle": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageNextPuzzles": "Kamu sudah belajar apa yang perlu. Sekarang uji dirimu dengan teka-teki bab ini.",
+  "@storyPassageNextPuzzles": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageNextGuardian": "Sekarang hadapi penjaga bab.",
+  "@storyPassageNextGuardian": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageNextBoss": "Kamu siap: {name} menunggu untuk tantangan akhir bab ini.",
+  "@storyPassageNextBoss": {
+    "description": "Foglio di passaggio della storia",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPassageGoPuzzles": "Ke teka-teki",
+  "@storyPassageGoPuzzles": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageGoGuardian": "Tantang penjaga",
+  "@storyPassageGoGuardian": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyChallengeTitle": "Tantangan {name}",
+  "@storyChallengeTitle": {
+    "description": "Foglio della sfida al custode",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPassageGoBoss": "Tantang {name}",
+  "@storyPassageGoBoss": {
+    "description": "Foglio di passaggio della storia",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPassageLater": "Nanti",
+  "@storyPassageLater": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageChapterTitle": "Bab {n} selesai!",
+  "@storyPassageChapterTitle": {
+    "description": "Foglio di passaggio della storia",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "storyPassageChapterNext": "Bab {n} terbuka: {title}.",
+  "@storyPassageChapterNext": {
+    "description": "Foglio di passaggio della storia",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPassageGoChapter": "Ke bab berikutnya",
+  "@storyPassageGoChapter": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageStoryDone": "Kamu sudah menamatkan kisahnya!",
+  "@storyPassageStoryDone": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageClose": "Tutup",
+  "@storyPassageClose": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPlainTitle": "Dataran rencana",
+  "@storyPlainTitle": {
+    "description": "storyPlainTitle"
+  },
+  "storyPlainIntro": "Di balik mahkota terbentang dataran yang tenang tempat pertempuran dimenangkan sebelum dimulai: kamu butuh rencana, buah catur yang aktif, dan sedikit kesabaran.",
+  "@storyPlainIntro": {
+    "description": "storyPlainIntro"
+  },
+  "storyPlainBoss": "{name}, serigala dataran, menyiapkan setiap serangan dengan gambit dan rencana yang tepat.",
+  "@storyPlainBoss": {
+    "description": "storyPlainBoss",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPlainOutro": "Dataran jadi milikmu. Sekarang kamu tahu bahwa setiap buah catur punya tugas dan setiap langkah punya alasan.",
+  "@storyPlainOutro": {
+    "description": "storyPlainOutro"
+  },
+  "storyAcademyTitle": "Akademi sang master",
+  "@storyAcademyTitle": {
+    "description": "storyAcademyTitle"
+  },
+  "storyAcademyIntro": "Di puncak bukit tinggal seorang master tua yang mengajar dengan beberapa prinsip: hitung langkahnya, temukan oposisi, jangan pernah lupa aturan pembukaan.",
+  "@storyAcademyIntro": {
+    "description": "storyAcademyIntro"
+  },
+  "storyAcademyBoss": "{name}, bintang akademi, menyerang tanpa henti dan tak memaafkan kesalahan.",
+  "@storyAcademyBoss": {
+    "description": "storyAcademyBoss",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyAcademyOutro": "Akademi menyambutmu sebagai bagian darinya. Kisahnya sudah selesai, tapi permainan terus berlanjut.",
+  "@storyAcademyOutro": {
+    "description": "storyAcademyOutro"
+  },
+  "@storyCrownIntro": {
+    "description": "storyCrownIntro"
+  },
+  "@storyCrownOutro": {
+    "description": "storyCrownOutro"
+  },
+  "storyGuardianPrologueWelcome": "Hai, aku Tino! Aku akan menunjukkan bagaimana setiap buah catur bergerak.",
+  "storyGuardianProloguePuzzleOk": "Kamu berhasil! Kamu sudah tahu cara buah catur bergerak.",
+  "storyGuardianProloguePuzzleRetry": "Hampir! Lihat ke mana setiap buah catur bisa pergi, lalu coba lagi.",
+  "storyGuardianPrologueBoss": "Main satu permainan, yuk? Aku mulai pelan-pelan, janji.",
+  "storyGuardianPrologueLessonDone": "Sekarang kamu tahu buah-buah catur. Ayo lihat kamu memakainya.",
+  "storyGuardianVillageWelcome": "Selamat datang di desa! Di sini aku akan mengajarimu agar tidak membiarkan buah catur menggantung.",
+  "storyGuardianVillagePuzzleOk": "Bagus, kamu langsung melihatnya!",
+  "storyGuardianVillagePuzzleRetry": "Hampir: cari buah catur yang tak terlindungi.",
+  "storyGuardianVillageBoss": "Sekarang giliran kita berdua. Aku suka Permainan Italia, awas!",
+  "storyGuardianVillageLessonDone": "Bagus, tidak ada buah catur yang terbengkalai. Saatnya mengujinya.",
+  "storyGuardianGatesWelcome": "Kamu hanya bisa lewat gerbang jika tahu aturannya. Ayo kita pelajari satu per satu.",
+  "storyGuardianGatesPuzzleOk": "Tepat: promosi di saat yang pas.",
+  "storyGuardianGatesPuzzleRetry": "Belum: periksa lagi aturannya dan coba sekali lagi.",
+  "storyGuardianGatesBoss": "Satu permainan untuk memeriksa: aku memainkan Gambit Ratu.",
+  "storyGuardianGatesLessonDone": "Kamu sudah belajar aturannya. Teka-teki menantimu.",
+  "storyGuardianTowerWelcome": "Menara ini didaki dengan skakmat. Ayo mulai.",
+  "storyGuardianTowerPuzzleOk": "Skakmat! Langsung ke sasaran.",
+  "storyGuardianTowerPuzzleRetry": "Bukan, lihat rajanya: ke mana dia tidak bisa kabur?",
+  "storyGuardianTowerBoss": "Cukup teorinya: ayo bermain. Aku menyerang dengan Gambit Raja.",
+  "storyGuardianTowerLessonDone": "Kamu sudah melihat cara memberi skakmat. Sekarang temukan yang tersembunyi.",
+  "storyGuardianForestWelcome": "Di hutan, setiap dahan menyembunyikan jebakan. Buka matamu!",
+  "storyGuardianForestPuzzleOk": "Ha, kamu tidak terjebak. Bagus!",
+  "storyGuardianForestPuzzleRetry": "Wah, jebakannya berhasil. Coba lagi!",
+  "storyGuardianForestBoss": "Ayo lihat apakah kamu bisa memasang jebakan sendiri. Aku memainkan Pembukaan Inggris.",
+  "storyGuardianForestLessonDone": "Jebakan tidak akan menipumu lagi. Berlatihlah memasangnya.",
+  "storyGuardianCastleWelcome": "Di bagian akhir, setiap langkah berarti. Tenang, selangkah demi selangkah.",
+  "storyGuardianCastlePuzzleOk": "Sabar dan tepat: begitulah cara memenangkan bagian akhir.",
+  "storyGuardianCastlePuzzleRetry": "Jangan buru-buru: hitung langkahnya dan coba lagi.",
+  "storyGuardianCastleBoss": "Permainan yang pelan menanti kita. Aku memainkan Sisilia.",
+  "storyGuardianCastleLessonDone": "Sedikit buah catur, setiap langkah berarti. Sekarang teka-teki.",
+  "storyGuardianCrownWelcome": "Mahkota dimenangkan sejak awal: pembukaan yang elegan adalah separuh permainan.",
+  "storyGuardianCrownPuzzleOk": "Elegan: itu langkah yang tepat.",
+  "storyGuardianCrownPuzzleRetry": "Hampir: pikirkan pengembangan buah catur dan coba lagi.",
+  "storyGuardianCrownBoss": "Boleh main satu permainan? Aku memilih Spanyol.",
+  "storyGuardianCrownLessonDone": "Pusat, pengembangan, rokade: semuanya milikmu. Sekarang teka-teki.",
+  "storyGuardianPlainWelcome": "Di dataran, kamu menang dengan rencana. Aku akan menunjukkan caranya.",
+  "storyGuardianPlainPuzzleOk": "Tepat. Rencana yang jelas mengalahkan ketergesaan.",
+  "storyGuardianPlainPuzzleRetry": "Hampir. Pikirkan apa yang diinginkan buah catur milikmu.",
+  "storyGuardianPlainBoss": "Main, yuk? Aku peringatkan: aku suka Gambit Evans.",
+  "storyGuardianPlainLessonDone": "Kamu punya rencana dan buah catur yang aktif. Sekarang teka-teki.",
+  "storyGuardianAcademyWelcome": "Di akademi kamu belajar dari para master. Ayo, tunjukkan apa yang kamu tahu!",
+  "storyGuardianAcademyPuzzleOk": "Hebat! Begitulah para master bermain.",
+  "storyGuardianAcademyPuzzleRetry": "Jangan menyerah: tarik napas dan coba lagi.",
+  "storyGuardianAcademyBoss": "Tantangan terakhir: aku memainkan Pertahanan India Raja. Tanpa keringanan!",
+  "storyGuardianAcademyLessonDone": "Pelajaran selesai, murid. Sekarang ujian di lapangan.",
+  "storyGuardianSays": "{name} berkata: {text}",
+  "@storyGuardianSays": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "text": {
+        "type": "String"
+      }
+    }
+  }
+}

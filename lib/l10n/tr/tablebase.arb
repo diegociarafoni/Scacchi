@@ -1,0 +1,12 @@
+{
+  "tablebaseTitle": "Kusursuz oyun sonu",
+  "tablebaseCalculating": "Kusursuz oyun sonu hesaplanıyor… bu sadece ilk seferde olur",
+  "tablebaseWhiteMates": "{moves, plural, one{{moves} hamlede mat, Beyaz kazanır} other{{moves} hamlede mat, Beyaz kazanır}}",
+  "tablebaseBlackMates": "{moves, plural, one{{moves} hamlede mat, Siyah kazanır} other{{moves} hamlede mat, Siyah kazanır}}",
+  "tablebaseWhiteWins": "Beyaz kazanır",
+  "tablebaseBlackWins": "Siyah kazanır",
+  "tablebaseDraw": "Kusursuz oyunla beraberlik",
+  "tablebaseBestMove": "Kusursuz hamle: {move}",
+  "tablebaseBestMoveHint": "Kusursuz hamleyi oyna",
+  "tablebaseShowMove": "Kusursuz hamleyi göster"
+}

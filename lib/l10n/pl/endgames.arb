@@ -1,0 +1,19 @@
+{
+  "endgamesTitle": "Końcówki",
+  "endgamesGoalMate": "Daj mata",
+  "endgamesGoalPromote": "Wypromuj piona",
+  "endgamesGoalHoldBlack": "Utrzymaj remis czarnymi",
+  "endgamesGoalHoldWhite": "Utrzymaj remis białymi",
+  "endgamesToRepeat": "Do powtórzenia",
+  "endgamesStars": "{stars, plural, one{{stars} gwiazdka z 3} few{{stars} gwiazdki z 3} many{{stars} gwiazdek z 3} other{{stars} gwiazdki z 3}}",
+  "endgamesMovesHold": "Ruchy: {moves} z {par}",
+  "endgamesMovesTarget": "Ruchy: {moves} · trzy gwiazdki w {par}",
+  "endgamesStart": "Start",
+  "endgamesThinking": "Silnik myśli…",
+  "endgamesEngineFailed": "Silnik nie odpowiada: spróbuj ponownie.",
+  "endgamesSuccess": "Cel osiągnięty",
+  "endgamesFailure": "Tym razem się nie udało",
+  "endgamesFailureHint": "Pozycja zostaje wśród tych do powtórzenia.",
+  "endgamesRetry": "Spróbuj ponownie",
+  "endgamesDone": "Gotowe"
+}

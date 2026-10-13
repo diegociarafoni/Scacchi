@@ -1,0 +1,21 @@
+{
+  "backupTitle": "Резервная копия",
+  "backupIntro": "В копии хранятся партии, прогресс, путь обучения, турниры, тренировки и настройки. Сохрани её в надёжном месте: приложение работает офлайн, поэтому копии в интернете нет.",
+  "backupShare": "Поделиться копией",
+  "backupShareSubject": "Резервная копия Rokko",
+  "backupRestoreFromText": "Восстановить из текста",
+  "backupExported": "Копия готова к сохранению",
+  "backupExportFailed": "Не удалось создать копию: {error}",
+  "backupRestoreStaged": "Копия готова. Закрой и снова открой приложение, чтобы восстановить данные.",
+  "backupRestoreFailed": "Не удалось восстановить: {error}",
+  "backupErrorNotApp": "Это не резервная копия Rokko",
+  "backupErrorNewerVersion": "Копия создана более новой версией",
+  "backupErrorUnexpectedFile": "Лишний файл в копии: {file}",
+  "backupErrorInvalidFile": "Неверный файл в копии: {file}",
+  "backupErrorInvalidPreference": "Неверная настройка: {name}",
+  "backupErrorUnreadable": "Копию не удалось прочитать",
+  "backupRestoreDialogTitle": "Восстановить копию",
+  "backupRestoreDialogBody": "Вставь содержимое файла копии. Текущие данные будут заменены.",
+  "backupCancel": "Отмена",
+  "backupRestore": "Восстановить"
+}

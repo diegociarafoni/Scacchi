@@ -1,0 +1,21 @@
+{
+  "backupTitle": "Cadangan dan pemulihan",
+  "backupIntro": "Cadangan berisi permainan, kemajuan, jalur belajar, turnamen, latihan, dan pengaturan. Simpan di tempat yang aman: aplikasi ini bekerja offline, jadi tidak ada salinan online.",
+  "backupShare": "Bagikan cadangan",
+  "backupShareSubject": "Cadangan Rokko",
+  "backupRestoreFromText": "Pulihkan dari teks",
+  "backupExported": "Cadangan siap disimpan",
+  "backupExportFailed": "Pencadangan gagal: {error}",
+  "backupRestoreStaged": "Cadangan siap. Tutup dan buka lagi aplikasi untuk memulihkan datamu.",
+  "backupRestoreFailed": "Pemulihan gagal: {error}",
+  "backupErrorNotApp": "Ini bukan cadangan Rokko",
+  "backupErrorNewerVersion": "Cadangan dibuat oleh versi yang lebih baru",
+  "backupErrorUnexpectedFile": "Berkas tak terduga di dalam cadangan: {file}",
+  "backupErrorInvalidFile": "Berkas tidak valid di dalam cadangan: {file}",
+  "backupErrorInvalidPreference": "Preferensi tidak valid: {name}",
+  "backupErrorUnreadable": "Cadangan tidak dapat dibaca",
+  "backupRestoreDialogTitle": "Pulihkan cadangan",
+  "backupRestoreDialogBody": "Tempel isi berkas cadangan. Datamu saat ini akan diganti.",
+  "backupCancel": "Batal",
+  "backupRestore": "Pulihkan"
+}

@@ -1,0 +1,83 @@
+{
+  "statsTitle": "Statistieken",
+  "statsLoadFailed": "Het partijarchief kon niet worden gelezen: probeer het later opnieuw.",
+  "statsEmpty": "Speel een paar partijen tegen de computer om je statistieken te zien.",
+  "statsRecord": "Resultaten",
+  "statsAllGames": "Alle",
+  "statsWithWhite": "Met wit",
+  "statsWithBlack": "Met zwart",
+  "statsLocalGames": "Partijen voor twee spelers",
+  "statsByTimeControl": "Per tempo",
+  "statsTopOpenings": "Meest gespeelde openingen",
+  "statsGames": "{count, plural, one{{count} partij} other{{count} partijen}}",
+  "statsAccuracy": "Nauwkeurigheid",
+  "statsAverage": "Gemiddeld",
+  "statsAccuracyTrend": "Verloop van de nauwkeurigheid",
+  "statsRating": "Geschatte rating {rating}",
+  "statsRatingProvisional": "voorlopig: er zijn {count} partijen tegen de computer nodig",
+  "statsRatingGames": "{count, plural, one{op basis van {count} partij tegen de computer} other{op basis van {count} partijen tegen de computer}}",
+  "statsRatingTrend": "Verloop van de rating",
+  "statsNoGames": "geen partijen",
+  "statsScoreDetail": "{wins, plural, one{{wins} winst} other{{wins} winsten}}, {draws, plural, one{{draws} remise} other{{draws} remises}}, {losses, plural, one{{losses} verlies} other{{losses} verliezen}}",
+  "statsTrend": "{label}: van {first} naar {last}, minimum {min}, maximum {max}",
+  "portraitShareSubject": "Mijn week",
+  "portraitTitle": "Jouw week",
+  "portraitUnreadable": "Het archief kon niet worden gelezen.",
+  "portraitEmpty": "Geen partijen in de afgelopen zeven dagen. Speel tegen de computer en je samenvatting verschijnt hier.",
+  "portraitShare": "Delen als afbeelding",
+  "portraitShareFailed": "Delen is mislukt",
+  "portraitCardTitle": "Mijn schaakweek",
+  "portraitGames": "{count, plural, one{1 partij} other{{count} partijen}}",
+  "@portraitGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "portraitScore": "{wins} gewonnen · {draws} remise · {losses} verloren",
+  "@portraitScore": {
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      }
+    }
+  },
+  "portraitOpenings": "Favoriete openingen",
+  "portraitAccuracy": "Gemiddelde nauwkeurigheid",
+  "portraitMate": "Favoriete schaakmat",
+  "portraitMateValue": "{role, select, king{met de koning} queen{met de dame} rook{met de toren} bishop{met de loper} knight{met het paard} other{met een pion}}, {count, plural, one{1 keer} other{{count} keer}}",
+  "@portraitMateValue": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "portraitStrongest": "Sterkste verslagen tegenstander",
+  "portraitStrongestValue": "Elo {elo}",
+  "@portraitStrongestValue": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "portraitBusiestDay": "Drukste dag",
+  "portraitWeekdayMonday": "Maandag",
+  "portraitWeekdayTuesday": "Dinsdag",
+  "portraitWeekdayWednesday": "Woensdag",
+  "portraitWeekdayThursday": "Donderdag",
+  "portraitWeekdayFriday": "Vrijdag",
+  "portraitWeekdaySaturday": "Zaterdag",
+  "portraitWeekdaySunday": "Zondag"
+}

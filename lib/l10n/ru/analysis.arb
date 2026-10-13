@@ -1,0 +1,42 @@
+{
+  "analysisTitle": "Анализ",
+  "analysisBestMoveArrow": "Стрелка лучшего хода",
+  "analysisThreatArrow": "Угроза соперника",
+  "analysisOneLine": "1 линия",
+  "analysisTwoLines": "2 линии",
+  "analysisThreeLines": "3 линии",
+  "analysisEngineUnavailable": "Движок недоступен",
+  "analysisPaused": "Анализ приостановлен",
+  "analysisGameOver": "Партия окончена",
+  "analysisThinking": "Анализирую…",
+  "analysisDepth": "Глубина {depth}",
+  "@analysisDepth": {
+    "placeholders": {
+      "depth": {
+        "type": "int"
+      }
+    }
+  },
+  "analysisPromote": "Сделать основной линией",
+  "analysisDelete": "Удалить этот ход и все после него",
+  "analysisBack": "Назад",
+  "analysisForward": "Вперёд",
+  "analysisResume": "Продолжить анализ",
+  "analysisPause": "Приостановить анализ",
+  "analysisMore": "Другие действия",
+  "analysisSave": "Сохранить в архив",
+  "analysisSharePgn": "Поделиться PGN",
+  "analysisSaveTitle": "Название анализа",
+  "analysisDefaultName": "Анализ от {date}",
+  "@analysisDefaultName": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "analysisSaved": "Анализ сохранён в архиве",
+  "analysisSaveFailed": "Не удалось сохранить",
+  "analysisSaveConfirm": "Сохранить",
+  "analysisCancel": "Отмена"
+}

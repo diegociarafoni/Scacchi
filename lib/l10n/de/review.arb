@@ -1,0 +1,452 @@
+{
+  "reviewCoachGeneric": "{move} war besser: Deine Stellung wird sonst schlechter.",
+  "@reviewCoachGeneric": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachBrilliant": "Brillanter Zug: Du gibst Material her, aber es ist die beste Wahl.",
+  "reviewCoachGreat": "Stark: Das war der einzige Zug, der die Stellung gehalten hat.",
+  "reviewCoachBest": "Das ist der beste Zug.",
+  "reviewCoachExcellent": "Ausgezeichneter Zug, fast so gut wie der beste.",
+  "reviewCoachGood": "Guter Zug.",
+  "reviewCoachBook": "Ein Zug aus der Eröffnungstheorie.",
+  "reviewCoachAllowedMate": "Nach {move} hat {side, select, white{Weiß} other{Schwarz}} mit {reply} Matt in {mate}.",
+  "@reviewCoachAllowedMate": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "side": {
+        "type": "String"
+      },
+      "mate": {
+        "type": "int"
+      },
+      "reply": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachMissedMate": "Du hattest mit {move} Matt in {mate}.",
+  "@reviewCoachMissedMate": {
+    "placeholders": {
+      "mate": {
+        "type": "int"
+      },
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachHanging": "Auf {square} steht {victim} ungedeckt: {attacker} kann dort schlagen. {victimRole, select, other{}}",
+  "@reviewCoachHanging": {
+    "placeholders": {
+      "victim": {
+        "type": "String"
+      },
+      "victimRole": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "attacker": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachAllowedFork": "Nach {move} greift {piece} gleichzeitig {targets} an: eine Gabel.",
+  "@reviewCoachAllowedFork": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "targets": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachAllowedPin": "Nach {move} fesselt {slider} {pinned} auf {square} am König.",
+  "@reviewCoachAllowedPin": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "slider": {
+        "type": "String"
+      },
+      "pinned": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachExposedKing": "Nach {move} steht dein König ungeschützt: {reply} ist Schach.",
+  "@reviewCoachExposedKing": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "reply": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachRecapture": "Du hättest die Figur zurückholen können: {move} schlägt {piece}.",
+  "@reviewCoachRecapture": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachWinMaterial": "Du hättest Material gewinnen können: {move} schlägt {piece}.",
+  "@reviewCoachWinMaterial": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachMissedFork": "Du hättest mit {move} eine Gabel spielen können: {piece} greift {targets} an.",
+  "@reviewCoachMissedFork": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "targets": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachMissedDiscovery": "Du hättest mit {move} einen Abzugsangriff spielen können: {piece} greift {target} an.",
+  "@reviewCoachMissedDiscovery": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachMaterialLoss": "Dieser Zug kostet Material: etwa {pawns, plural, one{1 Bauer} other{{pawns} Bauern}} in der erwarteten Variante.",
+  "@reviewCoachMaterialLoss": {
+    "placeholders": {
+      "pawns": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewCoachPieceColored": "{role, select, pawn{Bauer} knight{Springer} bishop{Läufer} rook{Turm} queen{Dame} other{König}} ({color, select, white{Weiß} other{Schwarz}})",
+  "@reviewCoachPieceColored": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      },
+      "color": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachListEnd": "{head} und {last}",
+  "@reviewCoachListEnd": {
+    "placeholders": {
+      "head": {
+        "type": "String"
+      },
+      "last": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewTitle": "Partieanalyse",
+  "reviewAnalysePosition": "Diese Stellung analysieren",
+  "reviewPuzzlesSaved": "Gespeicherte Aufgaben: {count}. Du findest sie unter Aufgaben › Fehler wiederholen.",
+  "@reviewPuzzlesSaved": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewPuzzlesAlready": "Diese Aufgaben sind schon gespeichert.",
+  "reviewPuzzlesFailed": "Speichern fehlgeschlagen. Versuche es noch einmal.",
+  "reviewSavePuzzles": "Fehler als Aufgaben speichern ({count})",
+  "@reviewSavePuzzles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewNoteNotSaved": "Notiz nicht gespeichert. Versuche es noch einmal.",
+  "reviewRetryCorrect": "Richtig: {move} ist der beste Zug.",
+  "@reviewRetryCorrect": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewRetryWrong": "{move} ist nicht der beste Zug. Versuche es noch einmal.",
+  "@reviewRetryWrong": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewAnalysing": "Analyse: {done} von {total}",
+  "@reviewAnalysing": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewStop": "Stopp",
+  "reviewCancelled": "Analyse abgebrochen.",
+  "reviewFailed": "Analyse fehlgeschlagen. Versuche es später noch einmal.",
+  "reviewRetryPrompt": "Finde einen besseren Zug als {move}",
+  "@reviewRetryPrompt": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewRetrySolution": "Der beste Zug war {move}.",
+  "@reviewRetrySolution": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewShowSolution": "Lösung",
+  "reviewExit": "Beenden",
+  "reviewStartPosition": "Grundstellung",
+  "reviewMoveVerdict": "{number} {move} ist {verdict, select, brilliant{ein brillanter Zug} great{ein starker Zug} best{der beste Zug} excellent{ein ausgezeichneter Zug} good{ein guter Zug} book{ein Eröffnungszug} inaccuracy{eine Ungenauigkeit} mistake{ein Fehler} miss{eine verpasste Chance} other{ein grober Fehler}}",
+  "@reviewMoveVerdict": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "move": {
+        "type": "String"
+      },
+      "verdict": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewBestMove": "Bester: {move}",
+  "@reviewBestMove": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewYourNote": "Deine Notiz: {note}",
+  "@reviewYourNote": {
+    "placeholders": {
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewTryAgain": "Nochmal",
+  "reviewAddNote": "Notiz hinzufügen",
+  "reviewEditNote": "Notiz bearbeiten",
+  "reviewNavStart": "Anfang",
+  "reviewNavPrevious": "Voriger Zug",
+  "reviewNavNext": "Nächster Zug",
+  "reviewNavEnd": "Ende",
+  "reviewSideWhite": "Weiß",
+  "reviewSideBlack": "Schwarz",
+  "reviewAccuracyUnavailable": "Genauigkeit von {side} nicht verfügbar",
+  "@reviewAccuracyUnavailable": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewAccuracyPercent": "Genauigkeit von {side}: {value} Prozent",
+  "@reviewAccuracyPercent": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewAccuracy": "Genauigkeit",
+  "reviewEstimatedElo": "Geschätzte Elo-Zahl ~{elo}",
+  "@reviewEstimatedElo": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewMovesByCategory": "Züge nach Kategorie",
+  "reviewCountsSemantics": "Weiß {white}, Schwarz {black}",
+  "@reviewCountsSemantics": {
+    "placeholders": {
+      "white": {
+        "type": "int"
+      },
+      "black": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewNoteTitle": "Notiz zu {move}",
+  "@reviewNoteTitle": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewNoteComment": "Kommentar",
+  "reviewNoteCancel": "Abbrechen",
+  "reviewNoteSave": "Speichern",
+  "reviewTimePerMove": "Zeit pro Zug",
+  "reviewTimeNoHasty": "Zeit pro Zug. Keine Fehler durch hastiges Spielen.",
+  "reviewTimeHastySemantics": "Zeit pro Zug. Fehler durch hastiges Spielen: {moves}.",
+  "@reviewTimeHastySemantics": {
+    "placeholders": {
+      "moves": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewHastyMistakes": "Fehler durch hastiges Spielen: {moves}",
+  "@reviewHastyMistakes": {
+    "placeholders": {
+      "moves": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewHastyAdvice": "Weniger als 40 % deiner durchschnittlichen Zeit pro Zug: Prüfe vor dem Ziehen, ob Drohungen bestehen.",
+  "reviewAccuracyByPhase": "Genauigkeit nach Phase",
+  "reviewPhaseOpening": "Eröffnung",
+  "reviewPhaseMiddlegame": "Mittelspiel",
+  "reviewPhaseEndgame": "Endspiel",
+  "reviewPhaseSemantics": "{phase}: Weiß {white}, Schwarz {black}",
+  "@reviewPhaseSemantics": {
+    "placeholders": {
+      "phase": {
+        "type": "String"
+      },
+      "white": {
+        "type": "String"
+      },
+      "black": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewPhaseValues": "Weiß {white} · Schwarz {black}",
+  "@reviewPhaseValues": {
+    "placeholders": {
+      "white": {
+        "type": "String"
+      },
+      "black": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewMoveSemantics": "{number} {move}, {verdict}{note, select, yes{, mit Notiz} other{}}",
+  "@reviewMoveSemantics": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "move": {
+        "type": "String"
+      },
+      "verdict": {
+        "type": "String"
+      },
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewEvalGraph": "Bewertungsverlauf",
+  "reviewClassBrilliant": "Brillant",
+  "reviewClassGreat": "Stark",
+  "reviewClassBest": "Bester",
+  "reviewClassExcellent": "Ausgezeichnet",
+  "reviewClassGood": "Gut",
+  "reviewClassBook": "Theorie",
+  "reviewClassInaccuracy": "Ungenauigkeit",
+  "reviewClassMistake": "Fehler",
+  "reviewClassMiss": "Verpasst",
+  "reviewClassBlunder": "Grober Fehler",
+  "reviewScoreUnavailable": "Bewertung nicht verfügbar",
+  "reviewScoreMated": "Schachmatt: {side, select, white{Weiß} other{Schwarz}} gewinnt",
+  "@reviewScoreMated": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewScoreCheckmate": "Schachmatt",
+  "reviewScoreMateIn": "{side, select, white{Weiß} other{Schwarz}} hat Matt in {moves}",
+  "@reviewScoreMateIn": {
+    "placeholders": {
+      "moves": {
+        "type": "int"
+      },
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewScoreEven": "Ausgeglichen",
+  "reviewScoreAhead": "{side, select, white{Weiß} other{Schwarz}} liegt um {pawns} vorn",
+  "@reviewScoreAhead": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      },
+      "pawns": {
+        "type": "String"
+      }
+    }
+  }
+}

@@ -17,6 +17,10 @@ void main() {
         const Locale('en'),
       );
       expect(
+        resolveAppLocale(const [Locale('fr', 'BE')], supported),
+        const Locale('fr'),
+      );
+      expect(
         resolveAppLocale(const [Locale('it', 'CH')], supported),
         const Locale('it'),
       );
@@ -24,7 +28,7 @@ void main() {
 
     test('salta le lingue non supportate e ripiega sull\'italiano', () {
       expect(
-        resolveAppLocale(const [Locale('fr'), Locale('en')], supported),
+        resolveAppLocale(const [Locale('ja'), Locale('en')], supported),
         const Locale('en'),
       );
       expect(
@@ -42,6 +46,7 @@ void main() {
       expect(AppLanguage.system.locale, isNull);
       expect(AppLanguage.italian.locale, const Locale('it'));
       expect(AppLanguage.english.locale, const Locale('en'));
+      expect(AppLanguage.french.locale, const Locale('fr'));
     });
 
     test('si salva e si ritrova', () async {

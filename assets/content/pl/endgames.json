@@ -1,0 +1,14 @@
+{
+  "queen-mate.title": "Król i hetman przeciw królowi",
+  "queen-mate.intro": "Cel: dać mata. Hetmanem zamykaj wrogiego króla w coraz mniejszej klatce, a potem zbliż własnego króla. Uważaj na pat!",
+  "rook-mate.title": "Król i wieża przeciw królowi",
+  "rook-mate.intro": "Cel: dać mata. Wieża odcina wiersze, a król jej pomaga: razem spychajcie wrogiego króla na brzeg szachownicy.",
+  "king-pawn.title": "Król i pion przeciw królowi",
+  "king-pawn.intro": "Cel: wypromować piona. Ustaw swojego króla przed pionem i zdobądź opozycję: pion dojdzie do końca tylko wtedy, gdy król otworzy mu drogę.",
+  "lucena.title": "Pozycja Luceny",
+  "lucena.intro": "Cel: wypromować piona. Twój król jest zamknięty przed pionem: odpędź wrogiego króla wieżą, a potem zbuduj „mostek”, który osłoni cię przed szachami.",
+  "philidor.title": "Obrona Philidora",
+  "philidor.intro": "Cel: nie przegraj przez {par} ruchów. Grasz czarnymi: trzymaj wieżę na szóstym wierszu, aż pion ruszy do przodu, a potem przenieś ją na koniec i dawaj szachy od tyłu.",
+  "bishop-knight.title": "Goniec i skoczek",
+  "bishop-knight.intro": "Cel: dać mata. To najtrudniejszy mat: zepchnij wrogiego króla w róg w kolorze twojego gońca. Masz 50 ruchów, potem partia kończy się remisem."
+}
