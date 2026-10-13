@@ -9,6 +9,13 @@ import '../../tool/src/content_parity.dart';
 /// francese si aggiungono qui quando passano a «pronta».
 const _checked = ['en'];
 
+/// File che una lingua non deve avere: in inglese i nomi delle aperture sono
+/// quelli del libro, quindi `opening_names.json` esiste solo per le lingue che
+/// li traducono.
+const _notNeeded = {
+  'en': {'opening_names.json'},
+};
+
 void main() {
   group('confronto dei contenuti', () {
     test('elenca gli id che mancano e quelli in più', () {
@@ -104,6 +111,7 @@ void main() {
 
     for (final lang in _checked) {
       for (final file in files) {
+        if (_notNeeded[lang]?.contains(file) ?? false) continue;
         test('$lang/$file ha gli stessi id e segnaposto di it', () {
           expect(
             File('${root.path}/$lang/$file').existsSync(),

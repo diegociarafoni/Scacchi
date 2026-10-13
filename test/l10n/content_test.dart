@@ -99,6 +99,30 @@ void main() {
       );
     });
 
+    test('own* legge solo la lingua scelta, senza ripiego', () {
+      final es = ContentText.fromMaps({
+        ...tables,
+        'es': {
+          'a.title': 'La torre (es)',
+          'lista': ['uno', 'dos'],
+        },
+      }, language: 'es');
+      expect(es.hasLanguage, isTrue);
+      expect(es.ownText('a.title'), 'La torre (es)');
+      expect(es.ownText('solo.en'), isNull);
+      expect(es.ownList('lista'), ['uno', 'dos']);
+      expect(es.ownList('a.title'), isNull);
+      expect(es.ownIds, {'a.title', 'lista'});
+    });
+
+    test('hasLanguage è falso se la lingua non ha un file', () {
+      final fr = ContentText.fromMaps(tables, language: 'fr');
+      expect(fr.hasLanguage, isFalse);
+      expect(fr.ownIds, isEmpty);
+      expect(fr.ownText('a.title'), isNull);
+      expect(fr.text('a.title'), 'The rook');
+    });
+
     test('parse rifiuta valori che non sono testi o liste di testi', () {
       expect(
         () => ContentText.parse('{"a": 3}', 'x.json'),

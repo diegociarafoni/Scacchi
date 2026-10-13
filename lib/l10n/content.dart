@@ -11,14 +11,14 @@ import 'package:flutter/services.dart';
 /// parte restituisce l'id stesso, così l'errore si vede e non blocca l'app.
 /// I segnaposto sono `{nome}`.
 class ContentText {
-  ContentText._(this.language, this._chain);
+  ContentText._(this.language, this._own, this._chain);
 
   /// Versione sincrona, per i test e per i contenuti già in memoria.
   /// [tables] associa a ogni lingua i suoi testi.
   factory ContentText.fromMaps(
     Map<String, Map<String, Object>> tables, {
     required String language,
-  }) => ContentText._(language, [
+  }) => ContentText._(language, tables[language], [
     for (final code in fallbackChain(language))
       if (tables[code] != null) tables[code]!,
   ]);
@@ -72,7 +72,27 @@ class ContentText {
   ];
 
   final String language;
+  final Map<String, Object>? _own;
   final List<Map<String, Object>> _chain;
+
+  /// Vero se esiste un file per la lingua scelta (non solo per il ripiego).
+  bool get hasLanguage => _own != null;
+
+  /// Id della sola lingua scelta.
+  Set<String> get ownIds => _own?.keys.toSet() ?? const {};
+
+  /// Testo di [id] nella sola lingua scelta, senza ripiego: serve a chi
+  /// compone testi (i nomi delle aperture) e deve sapere cosa manca.
+  String? ownText(String id) => switch (_own?[id]) {
+    final String s => s,
+    _ => null,
+  };
+
+  /// Come [ownText], per le liste.
+  List<String>? ownList(String id) => switch (_own?[id]) {
+    final List<String> l => l,
+    _ => null,
+  };
 
   /// Tutti gli id noti in almeno una lingua della catena.
   Set<String> get ids => {for (final t in _chain) ...t.keys};
