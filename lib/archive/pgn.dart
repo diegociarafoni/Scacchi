@@ -1,15 +1,38 @@
 import 'package:dartchess/dartchess.dart';
 
+import '../analysis/variation_tree.dart';
 import '../game/chess_game.dart';
 import '../game/move_note.dart';
 import '../game/variant.dart';
+import 'pgn_data.dart';
+import 'tree_pgn.dart';
 
 /// Partita letta da un PGN, con le sue intestazioni.
 class PgnRecord {
-  const PgnRecord(this.game, this.headers);
+  const PgnRecord(this.game, this.headers, {this.tree});
 
   final ChessGame game;
   final Map<String, String> headers;
+
+  /// Albero con le varianti (RF-52), solo se il PGN ne ha; [game] ha la sola
+  /// linea principale.
+  final VariationTree? tree;
+
+  /// Annota la mossa [ply] della linea principale, anche nell'albero.
+  void annotate(int ply, MoveNote? note) {
+    game.annotate(ply, note);
+    tree?.mainLine[ply].note = note;
+  }
+
+  /// PGN del record com'è ora, con le varianti se ci sono.
+  String toPgn() {
+    final tree = this.tree;
+    if (tree == null) return exportPgn(game, headers: headers);
+    return exportTreePgn(
+      tree,
+      headers: {...headers, 'Result': resultTag(game)},
+    );
+  }
 }
 
 /// Esito di [importPgn]: partite valide e numero di partite scartate.
@@ -50,18 +73,8 @@ String exportPgn(ChessGame game, {Map<String, String> headers = const {}}) {
   final root = PgnNode<PgnNodeData>();
   PgnNode<PgnNodeData> node = root;
   for (final m in game.moves) {
-    final clock = m.clock;
-    final note = m.note;
-    final text = note?.comment;
-    final symbol = note?.symbol;
     final child = PgnChildNode(
-      PgnNodeData(
-        san: m.san,
-        comments: clock == null && text == null
-            ? null
-            : [PgnComment(text: text, clock: clock).makeComment()],
-        nags: symbol == null ? null : [symbol.nag],
-      ),
+      pgnNodeData(m.san, clock: m.clock, note: m.note),
     );
     node.children.add(child);
     node = child;
@@ -73,7 +86,8 @@ String exportPgn(ChessGame game, {Map<String, String> headers = const {}}) {
   ).makePgn();
 }
 
-/// Legge una o più partite; le varianti si ignorano, il tempo `[%clk]`, il
+/// Legge una o più partite; la partita ha la sola linea principale e le
+/// varianti restano nell'albero del record, il tempo `[%clk]`, il
 /// commento e il simbolo (`!`, `?`…) di ogni mossa si conservano, una partita con
 /// mosse illegali, posizione non valida o variante non supportata viene
 /// scartata.
@@ -86,7 +100,14 @@ PgnImport importPgn(String text) {
     if (game == null) {
       skipped++;
     } else {
-      games.add(PgnRecord(game, Map.unmodifiable(pgn.headers)));
+      final tree = treeFromPgnGame(pgn);
+      games.add(
+        PgnRecord(
+          game,
+          Map.unmodifiable(pgn.headers),
+          tree: tree != null && tree.hasVariations ? tree : null,
+        ),
+      );
     }
   }
   return PgnImport(games, skipped);
@@ -110,8 +131,8 @@ ChessGame? _replay(PgnGame<PgnNodeData> pgn) {
     final move = pos.parseSan(data.san);
     if (move == null) return null;
     moves.add(move);
-    clocks.add(_clockOf(data.comments));
-    notes.add(_noteOf(data));
+    clocks.add(pgnClock(data.comments));
+    notes.add(pgnNote(data));
     pos = pos.play(move);
   }
   final game = ChessGame.replay(
@@ -134,28 +155,4 @@ ChessGame? _replay(PgnGame<PgnNodeData> pgn) {
     }
   }
   return game;
-}
-
-/// Tempo `[%clk]` nei commenti della mossa, se c'è.
-Duration? _clockOf(List<String>? comments) {
-  for (final c in comments ?? const <String>[]) {
-    final clock = PgnComment.fromPgn(c).clock;
-    if (clock != null) return clock;
-  }
-  return null;
-}
-
-/// Simbolo (primo NAG di giudizio) e commenti di testo della mossa, se ci sono.
-MoveNote? _noteOf(PgnNodeData data) {
-  MoveSymbol? symbol;
-  for (final nag in data.nags ?? const <int>[]) {
-    symbol = MoveSymbol.fromNag(nag);
-    if (symbol != null) break;
-  }
-  final texts = [
-    for (final c in data.comments ?? const <String>[])
-      ?PgnComment.fromPgn(c).text?.trim(),
-  ].where((t) => t.isNotEmpty);
-  final note = MoveNote.of(symbol: symbol, comment: texts.join(' '));
-  return note.isEmpty ? null : note;
 }

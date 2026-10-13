@@ -39,5 +39,7 @@
   "archiveModeLocal": "local",
   "archiveModeComputer": "computer",
   "archiveModeImported": "imported",
-  "archiveModePhysical": "physical board"
+  "archiveModePhysical": "physical board",
+  "archiveModeAnalysis": "Analysis",
+  "archiveOpenAnalysis": "Open in analysis"
 }

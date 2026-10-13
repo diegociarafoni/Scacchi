@@ -4,6 +4,7 @@ import 'package:dartchess/dartchess.dart' hide File;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scacchi/analysis/variation_tree.dart';
 import 'package:scacchi/archive/archive_page.dart';
 import 'package:scacchi/archive/game_archive.dart';
 import 'package:scacchi/archive/saved_game.dart';
@@ -35,6 +36,7 @@ void main() {
   late GameArchive archive;
   final shared = <String>[];
   final opened = <String>[];
+  final analysed = <String>[];
   ValueChanged<String>? scan;
 
   setUp(() async {
@@ -42,6 +44,7 @@ void main() {
     archive = GameArchive(File('${dir.path}/games.json'));
     shared.clear();
     opened.clear();
+    analysed.clear();
     final t = DateTime(2026, 10, 10, 9);
     await archive.save(
       SavedGame.fromGame(
@@ -81,6 +84,7 @@ void main() {
           archive: archive,
           share: (text) async => shared.add(text),
           onOpen: (g) => opened.add(g.id),
+          onAnalyse: (g) => analysed.add(g.id),
           scanner: (context, {required onCode, required onError}) {
             scan = onCode;
             return const SizedBox.expand();
@@ -111,6 +115,38 @@ void main() {
     await show(tester);
     await tester.tap(find.text('Anna – Bruno'));
     expect(opened, ['matto']);
+  });
+
+  testWidgets('RF-52 apre una partita nell\'analisi', (tester) async {
+    await show(tester);
+    await tester.tap(find.byTooltip('Azioni per Anna – Bruno'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Apri nell\'analisi'));
+    await tester.pumpAndSettle();
+    expect(analysed, ['matto']);
+  });
+
+  group('RF-52 analisi salvata', () {
+    setUp(() async {
+      final t = DateTime(2026, 10, 13, 9);
+      await archive.save(
+        SavedGame.fromTree(
+          VariationTree(Chess.initial)..play(Move.parse('d2d4')!),
+          id: 'an',
+          name: 'Gambetto',
+          createdAt: t,
+          updatedAt: t.add(const Duration(days: 1)),
+        ),
+      );
+    });
+
+    testWidgets('si riconosce dal tipo e si apre con un tocco', (tester) async {
+      await show(tester);
+      expect(find.text('Gambetto'), findsOneWidget);
+      expect(find.textContaining('Analisi'), findsOneWidget);
+      await tester.tap(find.text('Gambetto'));
+      expect(opened, ['an']);
+    });
   });
 
   testWidgets('RF-102 condivide il PGN di una partita', (tester) async {

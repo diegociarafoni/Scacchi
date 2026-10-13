@@ -22,6 +22,7 @@ class ArchivePage extends StatefulWidget {
     super.key,
     required this.archive,
     this.onOpen,
+    this.onAnalyse,
     this.share,
     this.scanner = zxingScanner,
   });
@@ -30,6 +31,10 @@ class ArchivePage extends StatefulWidget {
 
   /// Chiamata quando si tocca una partita per aprirla.
   final ValueChanged<SavedGame>? onOpen;
+
+  /// Chiamata quando si sceglie «Apri nell'analisi» (RF-52); senza, la voce
+  /// non compare.
+  final ValueChanged<SavedGame>? onAnalyse;
 
   /// Condivisione del testo; senza, si usa il foglio di condivisione del
   /// sistema.
@@ -158,6 +163,8 @@ class _ArchivePageState extends State<ArchivePage> {
 
   Future<void> _onAction(SavedGame game, _Action action) async {
     switch (action) {
+      case _Action.analyse:
+        widget.onAnalyse?.call(game);
       case _Action.share:
         await _share(game.pgn);
       case _Action.copy:
@@ -233,6 +240,7 @@ class _ArchivePageState extends State<ArchivePage> {
                             onTap: widget.onOpen == null
                                 ? null
                                 : () => widget.onOpen!(visible[i]),
+                            canAnalyse: widget.onAnalyse != null,
                             onAction: (a) => _onAction(visible[i], a),
                           ),
                         ),
@@ -243,7 +251,7 @@ class _ArchivePageState extends State<ArchivePage> {
   }
 }
 
-enum _Action { share, copy, qr, delete }
+enum _Action { analyse, share, copy, qr, delete }
 
 /// Tipo di partita in parole; un tipo sconosciuto si mostra com'è.
 String _modeLabel(AppLocalizations l, String mode) => switch (mode) {
@@ -251,6 +259,7 @@ String _modeLabel(AppLocalizations l, String mode) => switch (mode) {
   SavedGame.computer => l.archiveModeComputer,
   SavedGame.imported => l.archiveModeImported,
   SavedGame.physical => l.archiveModePhysical,
+  SavedGame.analysis => l.archiveModeAnalysis,
   _ => mode,
 };
 
@@ -262,11 +271,13 @@ class _GameTile extends StatelessWidget {
   const _GameTile({
     required this.game,
     required this.onTap,
+    required this.canAnalyse,
     required this.onAction,
   });
 
   final SavedGame game;
   final VoidCallback? onTap;
+  final bool canAnalyse;
   final ValueChanged<_Action> onAction;
 
   @override
@@ -283,6 +294,11 @@ class _GameTile extends StatelessWidget {
         tooltip: l.archiveActionsFor(game.title),
         onSelected: onAction,
         itemBuilder: (context) => [
+          if (canAnalyse)
+            PopupMenuItem(
+              value: _Action.analyse,
+              child: Text(l.archiveOpenAnalysis),
+            ),
           PopupMenuItem(value: _Action.share, child: Text(l.archiveSharePgn)),
           PopupMenuItem(value: _Action.copy, child: Text(l.archiveCopyPgn)),
           PopupMenuItem(

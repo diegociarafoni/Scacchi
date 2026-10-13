@@ -55,5 +55,7 @@
   "archiveModePhysical": "fisica",
   "@archiveModePhysical": {
     "description": "Tipo di partita: su una scacchiera reale"
-  }
+  },
+  "archiveModeAnalysis": "Analisi",
+  "archiveOpenAnalysis": "Apri nell'analisi"
 }
