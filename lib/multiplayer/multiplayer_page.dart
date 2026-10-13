@@ -211,6 +211,8 @@ class _FriendGamePanelState extends State<FriendGamePanel> {
           ),
         ),
       );
+      // La partita può essere cambiata o conclusa: la scheda si rilegge.
+      await _loadSaved();
       if (mounted) widget.onGameClosed?.call();
     } on NoLocalNetwork {
       messenger.showSnackBar(
