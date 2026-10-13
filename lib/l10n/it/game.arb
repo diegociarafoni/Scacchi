@@ -57,5 +57,9 @@
   "gameTipMore": "Patta e abbandono sono nella barra; dal menu ⋮ apri anche l'editor di posizione.",
   "gameTipMenu": "Dal menu ⋮ analizzi la posizione e rivedi la partita.",
   "gameReviewInvite": "Partita finita. Vuoi capire dove migliorare?",
-  "gameReviewInviteAction": "Rivedi la partita"
+  "gameReviewInviteAction": "Rivedi la partita",
+  "gameFirstMoveHint": "Tocca un pezzo, poi la casa dove vuoi muoverlo.",
+  "@gameFirstMoveHint": {
+    "description": "Sopra la scacchiera, finché nessuno ha mosso"
+  }
 }
