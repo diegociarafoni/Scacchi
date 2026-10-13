@@ -208,6 +208,14 @@
     "description": "Foglio di passaggio della storia"
   },
   "storyChallengeTitle": "{name}'s challenge",
+  "@storyChallengeTitle": {
+    "description": "Foglio della sfida al custode",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "storyPassageGoBoss": "Challenge {name}",
   "@storyPassageGoBoss": {
     "description": "Foglio di passaggio della storia",

@@ -94,14 +94,18 @@ class _StoryPageState extends State<StoryPage> {
         case StoryStepKind.guardian:
           await _guardian(chapter);
         case StoryStepKind.boss:
-          await _boss(chapter, announced: announced);
+          await _boss(chapter, announced: announced || wasDone);
       }
       if (!mounted || wasDone) return null;
       return _passage(chapter, kind);
     });
     // Il passo successivo si apre fuori dal blocco, che altrimenti lo rifiuta.
     if (follow != null && mounted) {
-      await _open(follow.$1, follow.$2, announced: true);
+      await _open(
+        follow.$1,
+        follow.$2,
+        announced: follow.$2 == StoryStepKind.boss,
+      );
     }
   }
 
