@@ -527,7 +527,7 @@
   "@storyGuardianCastleBoss": {
     "description": "storyGuardianCastleBoss"
   },
-  "storyGuardianCastleLessonDone": "Un castello solido si costruisce così. Ora si difende.",
+  "storyGuardianCastleLessonDone": "Pochi pezzi, ogni mossa conta. Ora i puzzle.",
   "@storyGuardianCastleLessonDone": {
     "description": "storyGuardianCastleLessonDone"
   },
@@ -547,7 +547,7 @@
   "@storyGuardianCrownBoss": {
     "description": "storyGuardianCrownBoss"
   },
-  "storyGuardianCrownLessonDone": "Le finali non hanno più segreti. Ora i puzzle.",
+  "storyGuardianCrownLessonDone": "Centro, sviluppo e arrocco sono tuoi. Ora i puzzle.",
   "@storyGuardianCrownLessonDone": {
     "description": "storyGuardianCrownLessonDone"
   },
@@ -567,7 +567,7 @@
   "@storyGuardianPlainBoss": {
     "description": "storyGuardianPlainBoss"
   },
-  "storyGuardianPlainLessonDone": "Sai usare lo spazio della pianura. Ora i puzzle.",
+  "storyGuardianPlainLessonDone": "Hai un piano e pezzi attivi. Ora i puzzle.",
   "@storyGuardianPlainLessonDone": {
     "description": "storyGuardianPlainLessonDone"
   },
