@@ -129,6 +129,7 @@ class OpponentPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = _l10n(context);
     final shown = kidMode ? setup.forKids() : setup;
     final level = engineLevel(adaptiveLevel);
     // «Adattivo» è un avversario senza volto che gioca col motore: lo si sceglie
@@ -141,15 +142,15 @@ class OpponentPicker extends StatelessWidget {
       children: [
         SegmentedButton<Opponent>(
           segments: [
-            const ButtonSegment(
+            ButtonSegment(
               value: Opponent.human,
-              icon: Icon(Icons.people_outline),
-              label: Text('Due giocatori'),
+              icon: const Icon(Icons.people_outline),
+              label: Text(l10n.opponentHuman),
             ),
             ButtonSegment(
               value: Opponent.bot,
               icon: const Icon(Icons.emoji_people_outlined),
-              label: const Text('Bot'),
+              label: Text(l10n.opponentBot),
               enabled: computerAvailable,
             ),
           ],
@@ -169,25 +170,34 @@ class OpponentPicker extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Text(switch (shown.opponent) {
-          Opponent.human => _l10n(context).opponentHintHuman,
-          Opponent.computer || Opponent.bot => _l10n(context).opponentHintBot,
+          Opponent.human => l10n.opponentHintHuman,
+          Opponent.computer || Opponent.bot => l10n.opponentHintBot,
         }, style: theme.textTheme.bodySmall),
         if (!computerAvailable) ...[
           const SizedBox(height: 8),
           Text(
-            kidMode ? AppLocalizations.of(context).kidBotUnavailable : 'Per giocare contro il computer qui serve Stockfish installato.',
+            kidMode ? l10n.kidBotUnavailable : l10n.opponentNoEngine,
             style: theme.textTheme.bodySmall,
           ),
         ],
         if (vsAdaptive || vsBot) ...[
           const SizedBox(height: 16),
-          Text('Giochi con', style: theme.textTheme.titleSmall),
+          Text(l10n.opponentPlayAs, style: theme.textTheme.titleSmall),
           const SizedBox(height: 4),
           SegmentedButton<SideChoice>(
-            segments: const [
-              ButtonSegment(value: SideChoice.white, label: Text('Bianco')),
-              ButtonSegment(value: SideChoice.random, label: Text('Caso')),
-              ButtonSegment(value: SideChoice.black, label: Text('Nero')),
+            segments: [
+              ButtonSegment(
+                value: SideChoice.white,
+                label: Text(l10n.opponentSideWhite),
+              ),
+              ButtonSegment(
+                value: SideChoice.random,
+                label: Text(l10n.opponentSideRandom),
+              ),
+              ButtonSegment(
+                value: SideChoice.black,
+                label: Text(l10n.opponentSideBlack),
+              ),
             ],
             selected: {shown.sideChoice},
             onSelectionChanged: (s) =>
@@ -200,19 +210,18 @@ class OpponentPicker extends StatelessWidget {
               contentPadding: EdgeInsets.zero,
               selected: vsAdaptive,
               leading: const Icon(Icons.trending_up, size: 28),
-              title: const Text('Adattivo'),
+              title: Text(l10n.opponentAdaptive),
               subtitle: Text(
-                'Livello ${level.id}, circa ${level.approxElo} Elo: si adegua '
-                'ai tuoi risultati, per vincere circa metà delle partite.',
+                l10n.opponentAdaptiveInfo(level.id, level.approxElo),
               ),
               onTap: () => onChanged(
                 shown.copyWith(opponent: Opponent.computer, adaptive: true),
               ),
             ),
           OutlinedButton.icon(
-            key: const Key('open-bot-gallery'),
+            key: const Key('open-bot-gallery'), // l10n-ok
             icon: const Icon(Icons.grid_view_rounded),
-            label: Text(_l10n(context).botGalleryOpen),
+            label: Text(l10n.botGalleryOpen),
             onPressed: () async {
               final result = await openBotGallery(
                 context,
@@ -263,18 +272,18 @@ class _BotTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = _l10n(context);
     final unlocked = collection.isUnlocked(bot);
     final beatenOn = collection.beatenOn(bot);
     final details = kidMode
-        ? friendlyBotDescriptions[bot.id]?.call(AppLocalizations.of(context)) ??
-              ''
+        ? friendlyBotDescriptions[bot.id]?.call(l10n) ?? ''
         : [
             '${bot.elo} Elo',
             styleLabel(bot.style),
             bot.openingName,
-            if (beatenOn != null) 'Battuto il ${_date(beatenOn)}',
+            if (beatenOn != null) l10n.opponentBeatenOn(_date(beatenOn)),
             if (!unlocked)
-              _l10n(context).botUnlockHint(
+              l10n.botUnlockHint(
                 BotCollection.unlockedBy(bot).map((b) => b.name).join(' / '),
               ),
           ].join(' · ');
@@ -286,12 +295,9 @@ class _BotTile extends StatelessWidget {
       title: Text(bot.name),
       subtitle: Text(details),
       trailing: !unlocked
-          ? const Icon(
-              Icons.lock_outline,
-              semanticLabel: 'Bloccato: batti un bot del gradino sotto',
-            )
+          ? Icon(Icons.lock_outline, semanticLabel: l10n.opponentLocked)
           : beatenOn != null
-          ? const Icon(Icons.check_circle_outline, semanticLabel: 'Battuto')
+          ? Icon(Icons.check_circle_outline, semanticLabel: l10n.opponentBeaten)
           : null,
       onTap: unlocked ? onTap : null,
     );
