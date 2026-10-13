@@ -11,6 +11,7 @@ import 'package:scacchi/settings/settings.dart';
 import '../test/computer_fakes.dart'
     show chooseAdaptiveComputer, scrollSheetTo, startComputerGame;
 import '../test/game_actions.dart';
+import '../test/support/italian_device.dart';
 
 Offset _square(WidgetTester tester, String name) {
   final rect = tester.getRect(find.byType(Chessboard));
@@ -55,6 +56,8 @@ Future<void> _startComputerGame(
   addTearDown(tester.view.reset);
   await tester.pumpWidget(
     MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: GamePage(
         settings: SettingsController.defaults(),
         computerAvailable: true,
@@ -71,6 +74,7 @@ Future<void> _startComputerGame(
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  useItalianDevice();
 
   group(
     'contro il computer',

@@ -5,9 +5,11 @@ import 'package:scacchi/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../test/game_actions.dart';
+import '../test/support/italian_device.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  useItalianDevice();
 
   testWidgets('RF-104 l\'editor apre l\'anteprima da condividere', (
     tester,

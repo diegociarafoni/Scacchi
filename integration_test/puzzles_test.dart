@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:scacchi/main.dart';
 
+import '../test/support/italian_device.dart';
+
 Future<void> _start(WidgetTester tester) async {
   tester.view.physicalSize = const Size(1170, 2532);
   tester.view.devicePixelRatio = 3;
@@ -26,6 +28,7 @@ Future<void> _dismissGuide(WidgetTester tester) async {
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  useItalianDevice();
 
   testWidgets('RF-80 RF-81 carica i puzzle inclusi e ne risolve uno', (
     tester,

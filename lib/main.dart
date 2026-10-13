@@ -8,6 +8,7 @@ import 'backup/backup.dart';
 import 'backup/backup_page.dart';
 import 'home/home_shell.dart';
 import 'l10n/app_localizations.dart';
+import 'settings/app_language.dart';
 import 'settings/settings.dart';
 import 'theme/rokko_theme.dart';
 
@@ -55,19 +56,26 @@ class _ScacchiAppState extends State<ScacchiApp> {
   @override
   Widget build(BuildContext context) {
     final settings = _settings;
-    if (settings == null) return _app(null, ThemeMode.system);
+    if (settings == null) return _app(null, ThemeMode.system, null);
     return ValueListenableBuilder(
       valueListenable: settings,
-      builder: (context, s, _) => _app(settings, s.themeMode),
+      builder: (context, s, _) =>
+          _app(settings, s.themeMode, s.language.locale),
     );
   }
 
-  Widget _app(SettingsController? settings, ThemeMode themeMode) {
+  Widget _app(
+    SettingsController? settings,
+    ThemeMode themeMode,
+    Locale? locale,
+  ) {
     return MaterialApp(
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
       debugShowCheckedModeBanner: false,
-      // Italiano predefinito finché non sono tradotti tutti i testi.
-      locale: const Locale('it'),
+      // Senza scelta si segue il telefono; una lingua non supportata ripiega
+      // sull'italiano.
+      locale: locale,
+      localeListResolutionCallback: resolveAppLocale,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       theme: RokkoTheme.light(),

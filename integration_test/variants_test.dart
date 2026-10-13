@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:scacchi/game/game_page.dart';
+import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/main.dart';
 import 'package:scacchi/settings/settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,9 +10,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../test/computer_fakes.dart'
     show chooseAdaptiveComputer, openCustomSheet, scrollSheetTo;
 import '../test/game_actions.dart';
+import '../test/support/italian_device.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  useItalianDevice();
 
   testWidgets('RF-120 una nuova partita Chess960 mescola la prima traversa', (
     tester,
@@ -72,6 +75,8 @@ void main() {
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
         home: GamePage(
           settings: SettingsController.defaults(),
           computerAvailable: true,

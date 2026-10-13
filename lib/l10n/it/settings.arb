@@ -428,5 +428,17 @@
   "settingsProgressEnabledDescription": "Spento, non si registra nulla",
   "@settingsProgressEnabledDescription": {
     "description": "Impostazioni: descrizione"
+  },
+  "settingsLanguage": "Lingua",
+  "@settingsLanguage": {
+    "description": "Impostazioni: titolo della scelta della lingua dell'app"
+  },
+  "settingsLanguageDescription": "Italiano, inglese o come il telefono",
+  "@settingsLanguageDescription": {
+    "description": "Impostazioni: descrizione della scelta della lingua"
+  },
+  "settingsLanguageSystem": "Come il telefono",
+  "@settingsLanguageSystem": {
+    "description": "Impostazioni: lingua uguale a quella del telefono"
   }
 }
