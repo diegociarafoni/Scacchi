@@ -4,6 +4,7 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../settings/settings.dart';
 import '../theme/rokko_theme.dart';
 import 'curriculum.dart';
@@ -131,14 +132,20 @@ class _StagePageState extends State<StagePage> {
         switch (verdict) {
           case MoveVerdict.wrong:
             _board.updatePosition(_gameData(), animate: false);
-            setState(() => _feedback = 'Non è la mossa giusta, riprova.');
+            setState(
+              () => _feedback = AppLocalizations.of(context).pathStageWrong,
+            );
           case MoveVerdict.correct:
             _board.updatePosition(_gameData(lastMove: run.lastReply));
-            setState(() => _feedback = 'Bene, continua.');
+            setState(
+              () => _feedback = AppLocalizations.of(context).pathStageGood,
+            );
           case MoveVerdict.solved:
             _board.updatePosition(_gameData(lastMove: move), animate: animate);
             _solved(run.stars);
-            setState(() => _feedback = 'Esatto!');
+            setState(
+              () => _feedback = AppLocalizations.of(context).pathStageSolved,
+            );
         }
     }
   }
@@ -183,6 +190,7 @@ class _StagePageState extends State<StagePage> {
   Widget build(BuildContext context) {
     final solved = _stars.length > _index;
     final text = Theme.of(context).textTheme;
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.stage.title),
@@ -190,7 +198,7 @@ class _StagePageState extends State<StagePage> {
           if (_started && !_finished)
             IconButton(
               icon: const Icon(Icons.restart_alt),
-              tooltip: 'Ricomincia',
+              tooltip: l10n.pathStageRestartTooltip,
               onPressed: _restart,
             ),
         ],
@@ -198,8 +206,10 @@ class _StagePageState extends State<StagePage> {
           preferredSize: const Size.fromHeight(4),
           child: LinearProgressIndicator(
             value: _stars.length / widget.stage.exercises.length,
-            semanticsLabel:
-                'Esercizio ${_index + 1} di ${widget.stage.exercises.length}',
+            semanticsLabel: l10n.pathStageExerciseOf(
+              _index + 1,
+              widget.stage.exercises.length,
+            ),
           ),
         ),
       ),
@@ -235,11 +245,14 @@ class _StagePageState extends State<StagePage> {
                         const SizedBox(height: 24),
                         FilledButton(
                           onPressed: _start,
-                          child: const Text('Inizia'),
+                          child: Text(l10n.pathStageStart),
                         ),
                       ]
                     : [
-                        Text(_exercise.instructions, style: text.titleMedium),
+                        Text(
+                          widget.stage.instructions(_index),
+                          style: text.titleMedium,
+                        ),
                         const SizedBox(height: 12),
                         if (_feedback != null)
                           Text(
@@ -253,12 +266,12 @@ class _StagePageState extends State<StagePage> {
                         else
                           FilledButton(
                             onPressed: solved ? _next : null,
-                            child: const Text('Avanti'),
+                            child: Text(l10n.pathStageNext),
                           ),
                         if (!_finished && !solved)
                           TextButton(
                             onPressed: _restart,
-                            child: const Text('Ricomincia l\'esercizio'),
+                            child: Text(l10n.pathStageRestartExercise),
                           ),
                       ],
               ),
@@ -295,19 +308,23 @@ class _Result extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text('Tappa completata', style: Theme.of(context).textTheme.titleLarge),
+        Text(
+          l10n.pathStageComplete,
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
         Text(
           '${'★' * stars}${'☆' * (3 - stars)}',
-          semanticsLabel: '$stars stelle su 3',
+          semanticsLabel: l10n.pathStageDone(stars),
           style: TextStyle(fontSize: 32, color: RokkoTokens.of(context).star),
         ),
         const SizedBox(height: 8),
         FilledButton(
           onPressed: () => Navigator.pop(context, stars),
-          child: const Text('Fine'),
+          child: Text(l10n.pathStageFinish),
         ),
       ],
     );

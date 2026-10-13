@@ -1,0 +1,156 @@
+{
+  "bot.start": [
+    "Cześć, jestem {name}. Dziś gramy {opening}!",
+    "{name} przy szachownicy: udanej partii!"
+  ],
+  "bot.start.friendly": [
+    "Cześć, jestem {name}!",
+    "Jestem {name}, zagramy razem?"
+  ],
+  "bot.friendly.check": [
+    "Szach! Ratuj króla.",
+    "Szach! Dokąd ucieknie król?"
+  ],
+  "bot.friendly.capture": [
+    "Zbiłem bierkę!",
+    "Mam! Teraz twoja kolej."
+  ],
+  "bot.friendly.mistake": [
+    "Nie spiesz się.",
+    "Przyjrzyj się dobrze szachownicy!"
+  ],
+  "bot.friendly.win": [
+    "Świetna partia! Zagramy jeszcze raz?",
+    "Ta partia jest moja, rewanż?"
+  ],
+  "bot.friendly.loss": [
+    "Wygrałeś, brawo!",
+    "Hurra, wygrana jest twoja!"
+  ],
+  "bot.friendly.draw": [
+    "Remis! Świetna partia.",
+    "Remis! Obu nam poszło dobrze."
+  ],
+  "bot.friendly.chat": [
+    "Cudowna partia!",
+    "Świetnie się bawimy!",
+    "Teraz twój ruch!"
+  ],
+  "bot.aggressive.check": [
+    "Szach! Nie dam ci złapać tchu.",
+    "Szach, do ataku!"
+  ],
+  "bot.aggressive.capture": [
+    "Mam! Atakuję dalej.",
+    "O jedną bierkę mniej."
+  ],
+  "bot.aggressive.mistake": [
+    "Dzięki za prezent, biorę.",
+    "Au, tu ci noga się powinęła."
+  ],
+  "bot.aggressive.win": [
+    "Mat! Świetna bitwa.",
+    "Zwycięstwo! Rewanż?"
+  ],
+  "bot.aggressive.loss": [
+    "Pokonałeś mnie, dobra gra!",
+    "Gratulacje, sparzyłem się."
+  ],
+  "bot.aggressive.draw": [
+    "Remis: chciałem więcej, ale niech będzie.",
+    "Remis, ale następnym razem zaatakuję mocniej."
+  ],
+  "bot.aggressive.chat": [
+    "Atakujemy, nie czekamy!",
+    "Niczego się nie boję.",
+    "Rusz się, jestem tuż za tobą."
+  ],
+  "bot.positional.check": [
+    "Szach, bez pośpiechu.",
+    "Szach: pozycja na to pozwala."
+  ],
+  "bot.positional.capture": [
+    "Wymiana, która mi odpowiada.",
+    "Spokojne bicie, struktura trzyma."
+  ],
+  "bot.positional.mistake": [
+    "Ten ruch kosztuje cię pozycję.",
+    "Błąd w planie, powiedziałbym."
+  ],
+  "bot.positional.win": [
+    "Mat: plan się powiódł.",
+    "Zwycięstwo, dziękuję za partię."
+  ],
+  "bot.positional.loss": [
+    "Zagrałeś lepiej, gratulacje.",
+    "Przeważyłeś w pozycji, brawo."
+  ],
+  "bot.positional.draw": [
+    "Wyrównany remis, to uczciwy wynik.",
+    "Uczciwy remis."
+  ],
+  "bot.positional.chat": [
+    "Nie spieszę się: pozycja na to zasługuje.",
+    "Struktura ma tu znaczenie.",
+    "Bez pośpiechu, gram spokojnie."
+  ],
+  "bot.gambitist.check": [
+    "Szach! Poświęcenie się opłaciło.",
+    "Szach, a najlepsze dopiero przed nami."
+  ],
+  "bot.gambitist.capture": [
+    "Odzyskuję materiał z nawiązką.",
+    "Mam: gambit się opłaca."
+  ],
+  "bot.gambitist.mistake": [
+    "Źle przyjąłeś gambit!",
+    "Uważaj, było tu coś lepszego."
+  ],
+  "bot.gambitist.win": [
+    "Mat! Poświęcenie się opłaciło.",
+    "Wygrana, i to jaki spektakl!"
+  ],
+  "bot.gambitist.loss": [
+    "Gambit nie wystarczył, brawo.",
+    "Świetnie się obroniłeś, chwała tobie."
+  ],
+  "bot.gambitist.draw": [
+    "Remis: dużo dymu i nic więcej.",
+    "Remis, ale co za żywa partia."
+  ],
+  "bot.gambitist.chat": [
+    "Pion w tę czy w tę, kogo to obchodzi?",
+    "Najlepsze dopiero przed nami.",
+    "Lubię, kiedy ryzykujemy."
+  ],
+  "bot.opening.lia": "gambit królewski",
+  "bot.opening.pino": "partię włoską",
+  "bot.opening.nico": "system londyński",
+  "bot.opening.chiara": "gambit hetmański",
+  "bot.opening.viola": "partię szkocką",
+  "bot.opening.rocco": "gambit królewski",
+  "bot.opening.ettore": "wariant wymienny partii hiszpańskiej",
+  "bot.opening.marta": "debiut angielski",
+  "bot.opening.bruna": "obronę francuską",
+  "bot.opening.duilio": "obronę sycylijską",
+  "bot.opening.carlo": "gambit budapeszteński",
+  "bot.opening.elena": "partię hiszpańską",
+  "bot.opening.ada": "debiut angielski",
+  "bot.opening.luna": "debiut kataloński",
+  "bot.opening.massimo": "gambit Evansa",
+  "bot.opening.cosmo": "gambit Smitha-Morry",
+  "bot.opening.stella": "obronę królewsko-indyjską",
+  "bot.opening.tino": "debiut pionka królewskiego",
+  "level.1.name": "Początkujący",
+  "level.2.name": "Nowicjusz",
+  "level.3.name": "Gracz amator",
+  "level.4.name": "Gracz klubowy",
+  "level.5.name": "Zawodnik",
+  "level.6.name": "Ekspert",
+  "level.7.name": "Mistrz",
+  "level.8.name": "Czempion",
+  "level.0.name": "Pierwsze kroki",
+  "style.aggressive": "agresywny",
+  "style.positional": "pozycyjny",
+  "style.gambitist": "gambitowy"
+}

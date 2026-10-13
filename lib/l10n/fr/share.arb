@@ -1,0 +1,38 @@
+{
+  "shareImageTitle": "Exporter en image",
+  "@shareImageTitle": {
+    "description": "shareImageTitle"
+  },
+  "shareImageAction": "Partager",
+  "@shareImageAction": {
+    "description": "shareImageAction"
+  },
+  "shareImageFlip": "Retourner l'échiquier",
+  "@shareImageFlip": {
+    "description": "shareImageFlip"
+  },
+  "shareImageCoordinates": "Coordonnées",
+  "@shareImageCoordinates": {
+    "description": "shareImageCoordinates"
+  },
+  "shareImageLastMove": "Dernier coup",
+  "@shareImageLastMove": {
+    "description": "shareImageLastMove"
+  },
+  "shareImageCaption": "Légende (facultative)",
+  "@shareImageCaption": {
+    "description": "shareImageCaption"
+  },
+  "shareImagePreview": "Aperçu de l'échiquier",
+  "@shareImagePreview": {
+    "description": "shareImagePreview"
+  },
+  "shareImageFailed": "Le partage a échoué",
+  "@shareImageFailed": {
+    "description": "shareImageFailed"
+  },
+  "shareImageSubject": "Position d'échecs",
+  "@shareImageSubject": {
+    "description": "shareImageSubject"
+  }
+}

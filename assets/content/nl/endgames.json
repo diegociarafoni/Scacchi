@@ -1,0 +1,14 @@
+{
+  "queen-mate.title": "Koning en dame tegen koning",
+  "queen-mate.intro": "Doel: schaakmat zetten. Gebruik de dame om de vijandelijke koning in een steeds kleinere kooi op te sluiten en breng dan je eigen koning dichterbij. Pas op voor pat!",
+  "rook-mate.title": "Koning en toren tegen koning",
+  "rook-mate.intro": "Doel: schaakmat zetten. De toren snijdt de rijen af en de koning helpt hem: duw de vijandelijke koning samen naar de rand.",
+  "king-pawn.title": "Koning en pion tegen koning",
+  "king-pawn.intro": "Doel: de pion promoveren. Breng je koning voor de pion en neem de oppositie: de pion komt pas aan het eind als je koning de weg vrijmaakt.",
+  "lucena.title": "De Lucena-stelling",
+  "lucena.intro": "Doel: de pion promoveren. Je koning zit opgesloten voor de pion: verdrijf de vijandelijke koning met de toren en bouw dan de “brug” om je tegen schaakjes af te schermen.",
+  "philidor.title": "De Philidor-verdediging",
+  "philidor.intro": "Doel: verlies niet gedurende {par} zetten. Jij speelt zwart: houd de toren op de zesde rij tot de pion oprukt, breng hem dan naar achteren en geef van achteren schaak.",
+  "bishop-knight.title": "Loper en paard",
+  "bishop-knight.intro": "Doel: schaakmat zetten. Het is de moeilijkste mat: drijf de vijandelijke koning naar een hoek met de kleur van je loper. Je hebt 50 zetten voordat de partij remise is."
+}

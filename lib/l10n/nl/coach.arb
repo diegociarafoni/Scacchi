@@ -1,0 +1,199 @@
+{
+  "whyPiece": "{role, select, pawn{de pion} knight{het paard} bishop{de loper} rook{de toren} queen{de dame} other{de koning}}",
+  "whyMate": "Schaakmat!",
+  "whyCastle": "Rokeert: brengt de koning in veiligheid.",
+  "whyPromote": "Promoveert de pion tot {role, select, queen{een dame} rook{een toren} bishop{een loper} knight{een paard} other{een stuk}}.",
+  "whyCapture": "Slaat {victim} met {attacker}.",
+  "whyCheck": "Geeft schaak aan je koning.",
+  "whySafe": "Brengt {piece} in veiligheid; die stond onder aanval.",
+  "whyThreatCapture": "Dreigt {victim} te slaan op {square}.",
+  "whyThreatCaptureKid": "Dreigt {victim} te slaan.",
+  "whyThreatCheck": "Bereidt schaak voor op je koning.",
+  "whyThreatPromote": "Bereidt een promotie van een pion voor.",
+  "whyDevelop": "Ontwikkelt {piece}: die doet mee in het spel.",
+  "whyCenter": "Neemt ruimte in het centrum.",
+  "whyImprove": "Zet {piece} op een nuttiger veld.",
+  "instructorInBookNamed": "We zitten in de {name}. Meest gespeelde zetten hier: {choices}.",
+  "@instructorInBookNamed": {
+    "description": "Istruttore: apertura raggiunta e mosse più giocate",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "name"
+      },
+      "choices": {
+        "type": "String",
+        "description": "choices"
+      }
+    }
+  },
+  "instructorInBook": "Meest gespeelde zetten hier: {choices}.",
+  "@instructorInBook": {
+    "description": "Istruttore: mosse più giocate, senza nome di apertura",
+    "placeholders": {
+      "choices": {
+        "type": "String",
+        "description": "choices"
+      }
+    }
+  },
+  "instructorInBookNameOnly": "We zitten in de {name}.",
+  "@instructorInBookNameOnly": {
+    "description": "Istruttore: apertura raggiunta, senza statistiche",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "name"
+      }
+    }
+  },
+  "instructorLeftYou": "{san} haalt je uit het openingsboek. De meest gespeelde zetten waren: {choices}.",
+  "@instructorLeftYou": {
+    "description": "Istruttore: l'utente esce dal libro",
+    "placeholders": {
+      "san": {
+        "type": "String",
+        "description": "san"
+      },
+      "choices": {
+        "type": "String",
+        "description": "choices"
+      }
+    }
+  },
+  "instructorLeftComputer": "De computer verlaat het boek met {san}. Vanaf hier telt de stelling, niet de theorie.",
+  "@instructorLeftComputer": {
+    "description": "Istruttore: il computer esce dal libro",
+    "placeholders": {
+      "san": {
+        "type": "String",
+        "description": "san"
+      }
+    }
+  },
+  "instructorLeftYouBare": "{san} haalt je uit het openingsboek.",
+  "@instructorLeftYouBare": {
+    "description": "Istruttore: l'utente esce dal libro, senza alternative",
+    "placeholders": {
+      "san": {
+        "type": "String",
+        "description": "san"
+      }
+    }
+  },
+  "instructorExplorer": "Openen in de verkenner",
+  "@instructorExplorer": {
+    "description": "Istruttore: pulsante per aprire la posizione nell'esploratore"
+  },
+  "instructorTitle": "Spelen met de instructeur",
+  "@instructorTitle": {
+    "description": "Titolo della partita con l'istruttore"
+  },
+  "instructorHubSubtitle": "De computer geeft commentaar op je opening, met de meest gespeelde zetten",
+  "@instructorHubSubtitle": {
+    "description": "Istruttore: sottotitolo nel menu delle aperture"
+  },
+  "coachHintMovePiece": "Zet {piece}.",
+  "@coachHintMovePiece": {
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintMoveSomePiece": "Zet een stuk.",
+  "coachHintPlayHighlighted": "Speel de gemarkeerde zet.",
+  "coachHintCastleShort": "Rokeer kort.",
+  "coachHintCastleLong": "Rokeer lang.",
+  "coachHintPieceAn": "{role, select, queen{een dame} rook{een toren} bishop{een loper} knight{een paard} pawn{een pion} other{de koning}}",
+  "@coachHintPieceAn": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintCheckEscape": "{promotion, select, yes{Promoveer} other{Zet}} {piece} {where, select, square{naar {square}} other{naar het omcirkelde veld}}{escape, select, king{ om uit het schaak te komen} other{ om het schaak te stoppen}}{check, select, none{.} check{, met schaak.} other{, met schaakmat.}}",
+  "@coachHintCheckEscape": {
+    "placeholders": {
+      "promotion": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "escape": {
+        "type": "String"
+      },
+      "check": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintPromote": "Promoveer {piece} {where, select, square{naar {square}} other{naar het omcirkelde veld}}{capture, select, yes{ en sla {victim}} other{}}: het wordt {promoted}.",
+  "@coachHintPromote": {
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "capture": {
+        "type": "String"
+      },
+      "victim": {
+        "type": "String"
+      },
+      "promoted": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintCapture": "Zet {piece} {where, select, square{naar {square}} other{naar het omcirkelde veld}} en sla {victim}{check, select, none{.} check{, met schaak.} other{, met schaakmat.}}",
+  "@coachHintCapture": {
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "victim": {
+        "type": "String"
+      },
+      "check": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintMove": "Zet {piece} {where, select, square{naar {square}} other{naar het omcirkelde veld}}{check, select, none{.} check{ en geef schaak.} other{ en geef schaakmat.}}",
+  "@coachHintMove": {
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "check": {
+        "type": "String"
+      }
+    }
+  }
+}

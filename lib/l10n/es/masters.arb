@@ -1,0 +1,118 @@
+{
+  "mastersTitle": "Grandes maestros",
+  "@mastersTitle": {
+    "description": "Titolo dell'elenco delle partite celebri"
+  },
+  "mastersStars": "{stars} estrellas de 3",
+  "@mastersStars": {
+    "description": "Etichetta per i lettori di schermo delle stelle di una partita",
+    "placeholders": {
+      "stars": {
+        "type": "int"
+      }
+    }
+  },
+  "mastersFlipBoard": "Girar el tablero",
+  "@mastersFlipBoard": {
+    "description": "Tooltip del pulsante che capovolge la scacchiera"
+  },
+  "mastersStartPosition": "Posición inicial",
+  "@mastersStartPosition": {
+    "description": "Titolo della partita prima della prima mossa"
+  },
+  "mastersWhiteWins": "Ganan las Blancas",
+  "@mastersWhiteWins": {
+    "description": "Esito di una partita vinta dal Bianco"
+  },
+  "mastersBlackWins": "Ganan las Negras",
+  "@mastersBlackWins": {
+    "description": "Esito di una partita vinta dal Nero"
+  },
+  "mastersDraw": "Tablas",
+  "@mastersDraw": {
+    "description": "Esito di una partita patta"
+  },
+  "mastersFirstMove": "Inicio",
+  "@mastersFirstMove": {
+    "description": "Tooltip del pulsante che torna alla posizione iniziale"
+  },
+  "mastersPreviousMove": "Jugada anterior",
+  "@mastersPreviousMove": {
+    "description": "Tooltip del pulsante che torna indietro di una mossa"
+  },
+  "mastersNextMove": "Jugada siguiente",
+  "@mastersNextMove": {
+    "description": "Tooltip del pulsante che avanza di una mossa"
+  },
+  "mastersLastMove": "Final",
+  "@mastersLastMove": {
+    "description": "Tooltip del pulsante che va all'ultima mossa"
+  },
+  "mastersGuessWhite": "Adivina la jugada con las Blancas",
+  "@mastersGuessWhite": {
+    "description": "Pulsante che avvia «Indovina la mossa» giocando con il Bianco"
+  },
+  "mastersGuessBlack": "Adivina la jugada con las Negras",
+  "@mastersGuessBlack": {
+    "description": "Pulsante che avvia «Indovina la mossa» giocando con il Nero"
+  },
+  "mastersYourTurnWhite": "Te toca con las Blancas: adivina la jugada del maestro.",
+  "@mastersYourTurnWhite": {
+    "description": "Invito durante «Indovina la mossa» quando si gioca con il Bianco"
+  },
+  "mastersYourTurnBlack": "Te toca con las Negras: adivina la jugada del maestro.",
+  "@mastersYourTurnBlack": {
+    "description": "Invito durante «Indovina la mossa» quando si gioca con il Nero"
+  },
+  "mastersGuessed": "Jugadas acertadas: {correct} de {attempts}",
+  "@mastersGuessed": {
+    "description": "Punteggio parziale di «Indovina la mossa»",
+    "placeholders": {
+      "correct": {
+        "type": "int"
+      },
+      "attempts": {
+        "type": "int"
+      }
+    }
+  },
+  "mastersSameAsMaster": "¡Igual que el maestro! {move}.",
+  "@mastersSameAsMaster": {
+    "description": "Esito di una mossa uguale a quella del maestro; {move} è la mossa con il numero",
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "mastersMasterPlayed": "El maestro jugó {move}.",
+  "@mastersMasterPlayed": {
+    "description": "Esito di una mossa diversa da quella del maestro; {move} è la mossa del maestro con il numero",
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "mastersReply": "Respuesta: {move}.",
+  "@mastersReply": {
+    "description": "Segue l'esito: la risposta dell'avversario nella partita storica",
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "mastersFinished": "Partida terminada",
+  "@mastersFinished": {
+    "description": "Titolo dell'esito a fine «Indovina la mossa»"
+  },
+  "mastersReplay": "Jugar otra vez",
+  "@mastersReplay": {
+    "description": "Pulsante che rifà «Indovina la mossa» dall'inizio"
+  },
+  "mastersDone": "Hecho",
+  "@mastersDone": {
+    "description": "Pulsante che chiude l'esito"
+  }
+}

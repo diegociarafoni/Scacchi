@@ -1,0 +1,14 @@
+{
+  "queen-mate.title": "Şah ve vezir şaha karşı",
+  "queen-mate.intro": "Hedef: şah mat yap. Vezirle rakip şahı gitgide daha küçük bir kafese kapat, sonra kendi şahını yaklaştır. Pat olmasına dikkat et!",
+  "rook-mate.title": "Şah ve kale şaha karşı",
+  "rook-mate.intro": "Hedef: şah mat yap. Kale sıraları keser, şah da ona yardım eder: rakip şahı birlikte kenara doğru it.",
+  "king-pawn.title": "Şah ve piyon şaha karşı",
+  "king-pawn.intro": "Hedef: piyonu terfi ettir. Şahını piyonun önüne getir ve karşıtlığı al: şahın yolu açarsa piyon sona ulaşır.",
+  "lucena.title": "Lucena konumu",
+  "lucena.intro": "Hedef: piyonu terfi ettir. Şahın piyonun önünde sıkışmış durumda: rakip şahı kaleyle uzaklaştır, sonra şahlardan korunmak için “köprü” kur.",
+  "philidor.title": "Philidor savunması",
+  "philidor.intro": "Hedef: {par} hamle boyunca kaybetme. Siyah ile oynuyorsun: piyon ilerleyene kadar kaleni altıncı sırada tut, sonra arkaya al ve arkadan şah çek.",
+  "bishop-knight.title": "Fil ve at",
+  "bishop-knight.intro": "Hedef: şah mat yap. En zor mattır: rakip şahı filinin renginde bir köşeye doğru sür. Oyun beraberlikle bitmeden önce 50 hamlen var."
+}

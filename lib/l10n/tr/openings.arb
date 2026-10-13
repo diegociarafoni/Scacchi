@@ -1,0 +1,114 @@
+{
+  "personalTitle": "Açılışların",
+  "personalHubSubtitle": "Oynadığın hamleler ve sonuçları",
+  "personalLoadFailed": "Oyun arşivi okunamadı: daha sonra tekrar dene.",
+  "personalEmpty": "Açılış ağacını oluşturmak için bilgisayara karşı birkaç oyun oyna.",
+  "personalNoGamesFiltered": "Bu filtrelere uyan oyun yok.",
+  "personalNoGamesHere": "Bu konumdan hiç oynamadın.",
+  "personalSideAll": "İkisi",
+  "personalSideWhite": "Beyaz",
+  "personalSideBlack": "Siyah",
+  "personalOpponent": "Rakip",
+  "personalAllOpponents": "Tüm rakipler",
+  "personalGames": "{count, plural, one{{count} oyun} other{{count} oyun}}",
+  "@personalGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "personalGamesTotal": "{count, plural, one{{count} oyun sayıldı} other{{count} oyun sayıldı}}",
+  "@personalGamesTotal": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "personalScore": "{wins}G · {draws}B · {losses}M",
+  "@personalScore": {
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      }
+    }
+  },
+  "personalScoreSemantics": "{wins} galibiyet, {draws} beraberlik, {losses} mağlubiyet",
+  "@personalScoreSemantics": {
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      }
+    }
+  },
+  "personalStartPosition": "Başlangıç konumu",
+  "personalNoName": "Adsız açılış",
+  "personalBack": "Geri",
+  "personalStart": "Başa dön",
+  "personalFlip": "Tahtayı çevir",
+  "personalOpenInBook": "Açılış gezgininde aç",
+  "personalFromHere": "Bu konumdan oyunların",
+  "explorerTitle": "Açılışları keşfet",
+  "explorerLoadFailed": "Açılışlar yüklenemedi.",
+  "explorerStartPosition": "Başlangıç konumu",
+  "explorerNoName": "Adsız açılış",
+  "explorerOutOfBook": "Açılış kitabının dışında",
+  "explorerFlip": "Tahtayı çevir",
+  "explorerRestart": "Yeniden başla",
+  "explorerBack": "Geri",
+  "explorerForward": "İleri",
+  "explorerMoveSemantics": "{move}: {games, plural, one{{games} oyun} other{{games} oyun}}, beyaz %{white}, beraberlik %{draws}, siyah %{black}",
+  "openingsHubTitle": "Açılışlar",
+  "openingsHubExplorerSubtitle": "Her hamle için oynanan oyunlar ve sonuçlar, açılış adlarıyla",
+  "openingsRepertoireTitle": "{side, select, white{Beyaz repertuvarı} other{Siyah repertuvarı}}",
+  "openingsRepertoireUnavailable": "Repertuvar kullanılamıyor",
+  "openingsRepertoireLoading": "Yükleniyor…",
+  "openingsRepertoireSummary": "{lines, plural, one{{lines} varyant} other{{lines} varyant}} · {due, plural, one{{due} hamle tekrarlanacak} other{{due} hamle tekrarlanacak}}",
+  "openingsGameTitle": "Bilgisayara karşı oyna",
+  "openingsLevel": "Seviye",
+  "openingsPlay": "Oyna",
+  "openingsCancel": "Vazgeç",
+  "openingsSideWhite": "Beyaz",
+  "openingsSideBlack": "Siyah",
+  "openingsNameSemantics": "Açılış: {name} ({eco})",
+  "openingsAddToRepertoire": "Repertuvara ekle",
+  "openingsPlayThisOpening": "Bu açılışı oyna",
+  "openingsFreeOpening": "Serbest açılış",
+  "openingsDefaultLineName": "Varyant",
+  "openingsLineName": "Ad",
+  "openingsAdd": "Ekle",
+  "openingsLineAdded": "{side, select, white{Varyant Beyaz repertuvarına eklendi.} other{Varyant Siyah repertuvarına eklendi.}}",
+  "openingsProblemEmpty": "Varyant boş.",
+  "openingsProblemIllegal": "Varyantta geçersiz bir hamle var.",
+  "openingsProblemNoOwnMoves": "Varyantta senin rengin için hamle yok.",
+  "openingsProblemConflict": "Bu konumda repertuvarında zaten {move} var.",
+  "openingsDrillTitle": "Repertuvar tekrarı",
+  "openingsDrillDone": "Tekrar tamamlandı: {count, plural, one{{count} hamle} other{{count} hamle}}.",
+  "openingsDrillNew": "Yeni hamle: okun gösterdiğini oyna.",
+  "openingsDrillPrompt": "“{name}” varyantı: hamlen ne?",
+  "openingsDrillWrong": "Bu repertuvardaki hamle değil: doğrusu şu.",
+  "openingsImportTitle": "PGN içe aktar",
+  "openingsImportHelper": "Her ayrım bir varyant olur.",
+  "openingsImport": "İçe aktar",
+  "openingsImportNone": "PGN'de geçerli varyant yok.",
+  "openingsImportAdded": "Eklenen varyant: {added}",
+  "openingsImportAddedSkipped": "Eklenen varyant: {added}. Atlanan: {skipped} ({reason})",
+  "openingsRepertoireEmpty": "Henüz varyant yok. Bunları Açılışları keşfet bölümünden “Repertuvara ekle” düğmesiyle ekle ya da bir PGN içe aktar.",
+  "openingsPlayLine": "Varyantı oyna",
+  "openingsDeleteLine": "Varyantı sil",
+  "openingsReviewNone": "Tekrarlanacak hamle yok",
+  "openingsReviewButton": "{count, plural, one{{count} hamleyi tekrarla} other{{count} hamleyi tekrarla}}"
+}

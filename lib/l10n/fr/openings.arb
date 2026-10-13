@@ -1,0 +1,114 @@
+{
+  "personalTitle": "Tes ouvertures",
+  "personalHubSubtitle": "Les coups que tu as joués, avec les résultats",
+  "personalLoadFailed": "Impossible de lire l'archive des parties : réessaie plus tard.",
+  "personalEmpty": "Joue quelques parties contre l'ordinateur pour construire ton arbre d'ouvertures.",
+  "personalNoGamesFiltered": "Aucune partie ne correspond à ces filtres.",
+  "personalNoGamesHere": "Tu n'as jamais joué à partir de cette position.",
+  "personalSideAll": "Les deux",
+  "personalSideWhite": "Blancs",
+  "personalSideBlack": "Noirs",
+  "personalOpponent": "Adversaire",
+  "personalAllOpponents": "Tous les adversaires",
+  "personalGames": "{count, plural, one{{count} partie} other{{count} parties}}",
+  "@personalGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "personalGamesTotal": "{count, plural, one{{count} partie comptée} other{{count} parties comptées}}",
+  "@personalGamesTotal": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "personalScore": "{wins}V · {draws}N · {losses}D",
+  "@personalScore": {
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      }
+    }
+  },
+  "personalScoreSemantics": "{wins} gagnées, {draws} nulles, {losses} perdues",
+  "@personalScoreSemantics": {
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      }
+    }
+  },
+  "personalStartPosition": "Position initiale",
+  "personalNoName": "Ouverture sans nom",
+  "personalBack": "Retour",
+  "personalStart": "Début",
+  "personalFlip": "Retourner l'échiquier",
+  "personalOpenInBook": "Ouvrir dans l'explorateur d'ouvertures",
+  "personalFromHere": "Tes parties depuis cette position",
+  "explorerTitle": "Explorer les ouvertures",
+  "explorerLoadFailed": "Impossible de charger les ouvertures.",
+  "explorerStartPosition": "Position initiale",
+  "explorerNoName": "Ouverture sans nom",
+  "explorerOutOfBook": "Hors du livre d'ouvertures",
+  "explorerFlip": "Retourner l'échiquier",
+  "explorerRestart": "Recommencer",
+  "explorerBack": "Reculer",
+  "explorerForward": "Avancer",
+  "explorerMoveSemantics": "{move} : {games, plural, one{{games} partie} other{{games} parties}}, Blancs {white} %, nulles {draws} %, Noirs {black} %",
+  "openingsHubTitle": "Ouvertures",
+  "openingsHubExplorerSubtitle": "Parties jouées et résultats pour chaque coup, avec le nom des ouvertures",
+  "openingsRepertoireTitle": "{side, select, white{Répertoire des Blancs} other{Répertoire des Noirs}}",
+  "openingsRepertoireUnavailable": "Répertoire indisponible",
+  "openingsRepertoireLoading": "Chargement…",
+  "openingsRepertoireSummary": "{lines, plural, one{{lines} ligne} other{{lines} lignes}} · {due, plural, one{{due} coup à revoir} other{{due} coups à revoir}}",
+  "openingsGameTitle": "Jouer contre l'ordinateur",
+  "openingsLevel": "Niveau",
+  "openingsPlay": "Jouer",
+  "openingsCancel": "Annuler",
+  "openingsSideWhite": "Blancs",
+  "openingsSideBlack": "Noirs",
+  "openingsNameSemantics": "Ouverture : {name} ({eco})",
+  "openingsAddToRepertoire": "Ajouter au répertoire",
+  "openingsPlayThisOpening": "Jouer cette ouverture",
+  "openingsFreeOpening": "Ouverture libre",
+  "openingsDefaultLineName": "Ligne",
+  "openingsLineName": "Nom",
+  "openingsAdd": "Ajouter",
+  "openingsLineAdded": "{side, select, white{Ligne ajoutée au répertoire des Blancs.} other{Ligne ajoutée au répertoire des Noirs.}}",
+  "openingsProblemEmpty": "La ligne est vide.",
+  "openingsProblemIllegal": "La ligne contient un coup illégal.",
+  "openingsProblemNoOwnMoves": "La ligne ne contient aucun coup pour ta couleur.",
+  "openingsProblemConflict": "Dans cette position, ton répertoire contient déjà {move}.",
+  "openingsDrillTitle": "Révision du répertoire",
+  "openingsDrillDone": "Révision terminée : {count, plural, one{{count} coup} other{{count} coups}}.",
+  "openingsDrillNew": "Nouveau coup : joue celui que montre la flèche.",
+  "openingsDrillPrompt": "Ligne « {name} » : quel est ton coup ?",
+  "openingsDrillWrong": "Ce n'est pas le coup du répertoire : voici le bon.",
+  "openingsImportTitle": "Importer un PGN",
+  "openingsImportHelper": "Chaque variante devient une ligne.",
+  "openingsImport": "Importer",
+  "openingsImportNone": "Aucune ligne valide dans le PGN.",
+  "openingsImportAdded": "Lignes ajoutées : {added}",
+  "openingsImportAddedSkipped": "Lignes ajoutées : {added}. Ignorées : {skipped} ({reason})",
+  "openingsRepertoireEmpty": "Aucune ligne pour l'instant. Ajoutes-en depuis Explorer les ouvertures avec le bouton « Ajouter au répertoire », ou importe un PGN.",
+  "openingsPlayLine": "Jouer la ligne",
+  "openingsDeleteLine": "Supprimer la ligne",
+  "openingsReviewNone": "Aucun coup à revoir",
+  "openingsReviewButton": "{count, plural, one{Revoir {count} coup} other{Revoir {count} coups}}"
+}

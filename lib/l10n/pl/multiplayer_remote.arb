@@ -1,0 +1,20 @@
+{
+  "multiplayerRemoteIntro": "Aby grać z daleka, wystarczy internet: wyślij przyjacielowi link i grajcie, kiedy chcecie, nawet w odstępie wielu godzin.",
+  "multiplayerRemoteSwitchHint": "Twój przyjaciel może dołączyć skądkolwiek przez link. Ruchy są szyfrowane i przechodzą przez publiczne przekaźniki: bez konta i bez naszego serwera.",
+  "multiplayerRemoteShare": "Udostępnij link z zaproszeniem",
+  "multiplayerRemoteShareSubject": "Zaproszenie do partii szachów",
+  "multiplayerRemoteShareText": "Zagrajmy w szachy w Rokko! Otwórz aplikację, wybierz Graj z przyjacielem, potem Dołącz linkiem i wklej ten link: {link}",
+  "multiplayerRemoteWaitingHint": "Wyślij link przyjacielowi lub pozwól mu zeskanować kod QR. Partia zostaje zapisana: możesz zamknąć aplikację i wznowić ją w Graj z przyjacielem.",
+  "multiplayerRemoteLeaveBodyWaiting": "Partia zostaje zapisana, a link nadal jest ważny: możesz ją wznowić w Graj z przyjacielem.",
+  "multiplayerRemoteJoinLink": "Dołącz linkiem",
+  "multiplayerRemoteLinkTitle": "Wklej link z zaproszeniem",
+  "multiplayerRemoteLinkField": "Link z zaproszeniem",
+  "multiplayerRemotePaste": "Wklej",
+  "multiplayerRemoteLinkInvalid": "Ten link nie jest zaproszeniem do partii.",
+  "multiplayerRemoteLinkConfirm": "Dołącz",
+  "multiplayerRemoteNotifyChannel": "Partie z daleka",
+  "multiplayerRemoteNotifyChannelDescription": "Powiadamia, gdy przyjaciel wykona ruch.",
+  "multiplayerRemoteNotifyTitle": "Twój ruch",
+  "multiplayerRemoteNotifyBody": "Przyjaciel zagrał {move}.",
+  "multiplayerRemoteNotifyOver": "Partia z przyjacielem dobiegła końca."
+}

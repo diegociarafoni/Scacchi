@@ -1,0 +1,65 @@
+{
+  "physicalTitle": "Fysiek bord",
+  "physicalEntrySubtitle": "Klok en notatieformulier voor een live partij",
+  "physicalIntro": "Speel op een echt bord: de app is de klok en noteert de partij. Typ elke zet na afloop in of tik hem aan tussen de geldige zetten.",
+  "physicalWhite": "Wit",
+  "physicalBlack": "Zwart",
+  "physicalUntimed": "Zonder tijd",
+  "physicalStart": "Partij starten",
+  "physicalInputWhite": "Zet van wit (bijv. e4, Pf3)",
+  "physicalInputBlack": "Zet van zwart (bijv. e5, Pc6)",
+  "physicalInvalidMove": "Ongeldige zet: “{text}”",
+  "@physicalInvalidMove": {
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "physicalNoMoves": "Geen zetten",
+  "physicalPause": "Pauze",
+  "physicalResume": "Hervatten",
+  "physicalUndo": "Zet terugnemen",
+  "physicalDraw": "Remise",
+  "physicalResign": "Opgeven",
+  "physicalDrawQuestion": "Remise overeengekomen?",
+  "physicalYes": "Ja",
+  "physicalNo": "Nee",
+  "physicalWhoResigns": "Wie geeft op?",
+  "physicalSaved": "Partij opgeslagen in het archief",
+  "physicalNothingToSave": "Geen zetten om op te slaan",
+  "physicalSaveFailed": "De partij kon niet worden opgeslagen",
+  "physicalNewGame": "Nieuwe partij",
+  "physicalEndCheckmate": "Schaakmat",
+  "physicalEndResignation": "Opgave",
+  "physicalEndTimeout": "Tijd verstreken",
+  "physicalEndAgreement": "Remise door overeenkomst",
+  "physicalEndStalemate": "Pat",
+  "physicalEndInsufficient": "Onvoldoende materiaal",
+  "physicalEndRepetition": "Drievoudige herhaling",
+  "physicalEndFiftyMoves": "Vijftigzettenregel",
+  "physicalEndOther": "Partij afgelopen",
+  "physicalResultLine": "{reason} · {result}",
+  "@physicalResultLine": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      },
+      "result": {
+        "type": "String"
+      }
+    }
+  },
+  "physicalPhoto": "Zet via foto",
+  "physicalRealign": "Opnieuw uitlijnen",
+  "physicalCameraUnavailable": "Camera niet beschikbaar",
+  "physicalImageUnreadable": "Afbeelding onleesbaar",
+  "physicalReferenceSaved": "Referentiefoto opgeslagen. Maak na de volgende zet nog een foto.",
+  "physicalNoMoveRecognized": "Geen zet herkend: het bord ziet er hetzelfde uit.",
+  "physicalGuessNote": "Meest waarschijnlijke zetten op de foto: bevestig de juiste.",
+  "physicalAlignTitle": "Lijn het bord uit",
+  "physicalAlignHelp": "Sleep de vier cirkels naar de hoeken van het bord. Houd bij de volgende foto's dezelfde positie aan.",
+  "physicalAlignWhiteBottom": "Wit onderaan",
+  "physicalAlignBlackBottom": "Zwart onderaan",
+  "physicalAlignDone": "Klaar"
+}

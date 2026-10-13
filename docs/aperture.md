@@ -30,7 +30,7 @@ Il libro si carica una volta sola (`openingBook()` in `opening_assets.dart`), in
 
 ### Nomi in italiano
 
-Il dataset è in inglese, quindi i nomi si traducono al momento di mostrarli, senza toccare il file: `openingNameIt` (`lib/openings/opening_names_it.dart`) usa una tabella con le famiglie del libro ("Sicilian Defense" diventa "Difesa siciliana", "Queen's Gambit Declined" diventa "Gambetto di donna rifiutato") e un piccolo glossario per le varianti. Il sostantivo (variante, attacco, gambetto, difesa, sistema, linea) viene messo davanti e gli aggettivi si accordano ("Open Variation" diventa "variante aperta"). I nomi propri restano invariati ("variante Najdorf") e ciò che non si sa tradurre resta in inglese, così l'informazione non si perde mai. Un test passa tutti i nomi del libro e controlla che non restino in inglese le parole del glossario e i sostantivi che reggono il nome. La traduzione vale per il titolo della partita, Esplora aperture, il nome proposto per il repertorio e le aperture delle statistiche e della scheda «La tua settimana»; le partite salvate conservano il nome inglese.
+Il dataset pubblico è in inglese, quindi i nomi si traducono al momento di mostrarli, senza toccare il file: `localOpeningName` (`lib/openings/opening_names.dart`) usa le tabelle di `assets/content/<lingua>/opening_names.json` con le famiglie del libro ("Sicilian Defense" diventa "Difesa siciliana", "Queen's Gambit Declined" diventa "Gambetto di donna rifiutato") e un piccolo glossario per le varianti. Il sostantivo (variante, attacco, gambetto, difesa, sistema, linea) viene messo davanti e gli aggettivi si accordano ("Open Variation" diventa "variante aperta"). I nomi propri restano invariati ("variante Najdorf") e ciò che non si sa tradurre resta in inglese, così l'informazione non si perde mai. Un test passa tutti i nomi del libro e controlla che non restino in inglese le parole del glossario e i sostantivi che reggono il nome. La traduzione vale per il titolo della partita, Esplora aperture, il nome proposto per il repertorio e le aperture delle statistiche e della scheda «La tua settimana»; le partite salvate conservano il nome inglese.
 
 La notazione delle mosse resta quella inglese (Nf3, Bb5) come nel resto dell'app.
 
@@ -108,7 +108,8 @@ Il collegamento con l'explorer del libro è nei due sensi, sempre sulla stessa p
 | `lib/coach/opening_coach.dart` | Nota dell'istruttore: apertura, mosse più giocate, uscita dal libro |
 | `lib/openings/personal_tree.dart` | Albero delle proprie aperture dall'archivio, con filtri |
 | `lib/openings/personal_explorer_page.dart` | Schermata Le tue aperture |
-| `lib/openings/opening_names_it.dart` | Nomi delle aperture in italiano |
+| `lib/openings/opening_names.dart` | Nomi delle aperture nella lingua attiva |
+| `assets/content/it/opening_names.json` | Famiglie e glossario italiani |
 | `lib/openings/openings_hub_page.dart` | Pagina Aperture |
 | `lib/openings/repertoire.dart` | Linee, carte, ripasso, import PGN |
 | `lib/openings/repertoire_page.dart` | Linee di un colore, import PGN |

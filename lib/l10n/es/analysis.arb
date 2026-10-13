@@ -1,0 +1,42 @@
+{
+  "analysisTitle": "Análisis",
+  "analysisBestMoveArrow": "Flecha de la mejor jugada",
+  "analysisThreatArrow": "Amenaza del rival",
+  "analysisOneLine": "1 línea",
+  "analysisTwoLines": "2 líneas",
+  "analysisThreeLines": "3 líneas",
+  "analysisEngineUnavailable": "Motor no disponible",
+  "analysisPaused": "Análisis en pausa",
+  "analysisGameOver": "Fin de la partida",
+  "analysisThinking": "Analizando…",
+  "analysisDepth": "Profundidad {depth}",
+  "@analysisDepth": {
+    "placeholders": {
+      "depth": {
+        "type": "int"
+      }
+    }
+  },
+  "analysisPromote": "Pasar a la línea principal",
+  "analysisDelete": "Eliminar esta jugada y las siguientes",
+  "analysisBack": "Atrás",
+  "analysisForward": "Adelante",
+  "analysisResume": "Reanudar el análisis",
+  "analysisPause": "Pausar el análisis",
+  "analysisMore": "Más acciones",
+  "analysisSave": "Guardar en el archivo",
+  "analysisSharePgn": "Compartir el PGN",
+  "analysisSaveTitle": "Nombre del análisis",
+  "analysisDefaultName": "Análisis del {date}",
+  "@analysisDefaultName": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "analysisSaved": "Análisis guardado en el archivo",
+  "analysisSaveFailed": "No se pudo guardar",
+  "analysisSaveConfirm": "Guardar",
+  "analysisCancel": "Cancelar"
+}

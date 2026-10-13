@@ -67,7 +67,7 @@ class GuessRun {
   /// Gioca la mossa dell'utente e poi quella del maestro. Una mossa illegale
   /// lancia [ArgumentError] e non conta.
   GuessResult submit(Move move) {
-    if (!userToMove) throw StateError('Non tocca all\'utente');
+    if (!userToMove) throw StateError('Non tocca all\'utente'); // l10n-ok
     if (!position.isLegal(move)) throw ArgumentError.value(move, 'move');
     final master = expected;
     final matched = _same(move, master);
@@ -79,7 +79,9 @@ class GuessRun {
 
   /// Gioca la mossa dell'avversario nella partita storica.
   Move playOpponent() {
-    if (finished || userToMove) throw StateError('Non tocca all\'avversario');
+    if (finished || userToMove) {
+      throw StateError('Non tocca all\'avversario'); // l10n-ok
+    }
     return _moves[_ply++];
   }
 

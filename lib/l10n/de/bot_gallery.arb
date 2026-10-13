@@ -1,0 +1,161 @@
+{
+  "botGalleryTitle": "Wähle einen Bot",
+  "botTierNovice": "Neuling",
+  "botTierBeginner": "Anfänger",
+  "botTierIntermediate": "Mittelstufe",
+  "botTierAdvanced": "Fortgeschritten",
+  "botTierMaster": "Meister",
+  "botTierFriends": "Deine Freunde",
+  "botTierAdaptive": "Adaptiv",
+  "botTierHeading": "{tier} · {count}",
+  "@botTierHeading": {
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "botGalleryElo": "{elo} Elo",
+  "@botGalleryElo": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "botGalleryStateLocked": "gesperrt",
+  "botGalleryStateBeaten": "besiegt",
+  "botGalleryStateOpen": "verfügbar",
+  "botGalleryCellLabel": "{name}, {elo} Elo, {state}",
+  "@botGalleryCellLabel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "elo": {
+        "type": "int"
+      },
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "botGalleryCellLabelKid": "{name}, {state}",
+  "@botGalleryCellLabelKid": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "botGalleryLockedTease": "Bis später, wenn du bereit bist!",
+  "botStyleAggressive": "aggressiv",
+  "botStyleGambitist": "Gambitspieler",
+  "botStylePositional": "positionell",
+  "botGalleryStyle": "Stil: {style}",
+  "@botGalleryStyle": {
+    "placeholders": {
+      "style": {
+        "type": "String"
+      }
+    }
+  },
+  "botAdaptiveName": "Adaptiv",
+  "botAdaptiveGreeting": "Ich passe mich an dich an: Gewinnst du, spiele ich besser, verlierst du, nehme ich Tempo raus.",
+  "botAdaptiveRematch": "Gutes Training. Noch eine Partie?",
+  "botAdaptiveHint": "Spielt gerade etwa {elo} Elo",
+  "@botAdaptiveHint": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "botGuardiansTitle": "Die Wächter der Geschichte",
+  "botGuardiansProgress": "{met} von {total} Wächtern getroffen",
+  "@botGuardiansProgress": {
+    "placeholders": {
+      "met": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "botGuardiansHint": "Du triffst sie, wenn du Kapitel der Geschichte abschließt.",
+  "botGuardianUnmet": "Wächter noch nicht getroffen",
+  "botSideWhite": "Mit Weiß spielen",
+  "botSideRandom": "Zufällige Farbe",
+  "botSideBlack": "Mit Schwarz spielen",
+  "botGalleryPlay": "Spielen",
+  "botGalleryLockedPlay": "Gesperrt",
+  "botGalleryBeatenBadge": "besiegt",
+  "botGreetingLia": "Hallo, ich bin Lia! Ich schiebe einen Bauern vor und wir schauen, was passiert.",
+  "botRematchLia": "Du hast mich geschlagen! Spielen wir noch eine?",
+  "botGreetingPino": "Piep piep! Ich bin Pino, spielen wir? Ich greife sofort an!",
+  "botRematchPino": "Du hast mich besiegt! Nächstes Mal greife ich noch stärker an.",
+  "botGreetingNico": "Schön langsam, keine Eile. Lust auf eine Partie?",
+  "botRematchNico": "Du hast in aller Ruhe gewonnen, gut gemacht. Noch eine?",
+  "botGreetingChiara": "Hallo, ich bin Chiara. Eine ruhige Partie, wie in einem Garten?",
+  "botRematchChiara": "Dein Spiel ist aufgeblüht! Spielen wir nochmal?",
+  "botGreetingViola": "Was für ein schöner Tag für eine Symphonie aus Zügen! Fangen wir an?",
+  "botRematchViola": "Du hast meine Melodie verstimmt! Zugabe?",
+  "botGreetingRocco": "Ein Bauer für dich, die Partie für mich. Abgemacht?",
+  "botRematchRocco": "Du hast mich durchschaut! Aber ich habe noch mehr Tricks.",
+  "botGreetingEttore": "Erst brülle ich, dann spiele ich. Mach dich bereit!",
+  "botRematchEttore": "Ein Brüllen für deinen Sieg. Revanche?",
+  "botGreetingMarta": "Ich habe die ganze Nacht über diese Partie nachgedacht. Setz dich.",
+  "botRematchMarta": "Gut gespielt. Ich muss einiges neu überdenken.",
+  "botGreetingBruna": "Ich bin gerade erst aufgewacht, aber das Brett macht mich sofort munter.",
+  "botRematchBruna": "Du hast mich besiegt! Zurück in den Winterschlaf … für eine Minute.",
+  "botGreetingDuilio": "Funken und Flammen: Ich liebe den Angriff. Bereit?",
+  "botRematchDuilio": "Du hast meine Flammen gelöscht! Zünden wir sie neu an.",
+  "botGreetingCarlo": "Gib mir eine Figur und ich gebe dir eine Show. Spielen wir?",
+  "botRematchCarlo": "Du hast dir alles zurückgeholt, gut gemacht!",
+  "botGreetingElena": "Ich überblicke das Brett von oben. Mal sehen, ob du fliegen kannst.",
+  "botRematchElena": "Du bist hoch geflogen. Das gefällt mir.",
+  "botGreetingAda": "Ich berechne jede Flugbahn. Wie gut kennst du dich mit den Sternen aus?",
+  "botRematchAda": "Dein Plan war besser als meiner. Rechnen wir nochmal nach?",
+  "botGreetingMassimo": "Das Rudel grüßt dich. Zum Anfang ein Gambit?",
+  "botRematchMassimo": "Du hast den Wolf gezähmt. Respekt.",
+  "botGreetingStella": "Ich bin der hellste Stern der Akademie. Traust du dich, mich anzusehen?",
+  "botRematchStella": "Du hast mein Licht ausgeblasen … vorerst.",
+  "botGreetingTino": "Hallo, ich bin Tino! Ich zeige dir, wie sich die Figuren bewegen.",
+  "botRematchTino": "Gut gemacht! Du ziehst die Figuren jetzt besser als ich.",
+  "botUnlockStory": "Wird freigeschaltet, wenn du das Kapitel der Geschichte mit diesem Wächter abschließt",
+  "botGalleryOpen": "Bot-Galerie öffnen",
+  "botOptions": "Optionen",
+  "botOptionsTime": "Bedenkzeit",
+  "botOptionsNoClock": "Ohne Uhr",
+  "botOptionsVariant": "Variante",
+  "botVariantStandard": "Standard",
+  "botVariantChess960": "Chess960",
+  "botVariantKingOfTheHill": "King of the Hill",
+  "botVariantThreeCheck": "Dreimal Schach",
+  "botOptionsHelp": "Hilfe",
+  "botOptionsCoach": "Trainer",
+  "botOptionsCoachHint": "Warnt dich, wenn du einen Fehler machst.",
+  "botOptionsSummary": "{time} · {variant}",
+  "@botOptionsSummary": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "variant": {
+        "type": "String"
+      }
+    }
+  },
+  "botOptionsKidSlow": "Mit Uhr, ganz entspannt",
+  "botGreetingLuna": "Nachts sehe ich das ganze Brett, auch die versteckten Züge. Spielen wir?",
+  "botRematchLuna": "Du hast mich im Sternenlicht besiegt! Noch eine?",
+  "botGreetingCosmo": "Start in drei, zwei, eins … los geht's! Greifen wir an?",
+  "botRematchCosmo": "Notlandung: Du hast mich besiegt. Revanche?"
+}

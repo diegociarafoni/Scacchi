@@ -1,43 +1,48 @@
 import 'package:dartchess/dartchess.dart';
 
+import '../l10n/content.dart';
+
 /// Partita storica di un grande maestro (RF-87), con commento sulle mosse
 /// chiave.
 class MasterGame {
   const MasterGame({
     required this.id,
-    required this.white,
-    required this.black,
-    required this.event,
     required this.year,
     required this.result,
-    required this.intro,
     required this.moves,
-    this.nickname,
-    this.notes = const {},
   });
 
   final String id;
-  final String white;
-  final String black;
-
-  /// Luogo e occasione della partita.
-  final String event;
   final int year;
 
   /// `1-0`, `0-1` o `1/2-1/2`.
   final String result;
 
+  /// Testi della partita (`assets/content/<lingua>/masters.json`), con id
+  /// `{partita}.white`, `.black`, `.event`, `.nickname`, `.intro` e
+  /// `.note{semimossa}`. I nomi dei giocatori seguono la forma usuale della
+  /// lingua.
+  ContentText get _texts => Content.of('masters');
+
+  String get white => _texts.text('$id.white');
+  String get black => _texts.text('$id.black');
+
+  /// Luogo e occasione della partita.
+  String get event => _texts.text('$id.event');
+
   /// Nome con cui la partita è nota, se ne ha uno.
-  final String? nickname;
+  String? get nickname =>
+      _texts.has('$id.nickname') ? _texts.text('$id.nickname') : null;
 
   /// Contesto della partita, mostrato prima della prima mossa.
-  final String intro;
+  String get intro => _texts.text('$id.intro');
 
   /// Linea principale in notazione algebrica (SAN), una mossa per semimossa.
   final List<String> moves;
 
-  /// Commento dopo la semimossa indicata (da 1, come [label]).
-  final Map<int, String> notes;
+  /// Commento dopo la semimossa [ply] (da 1, come [label]), se c'è.
+  String? noteAt(int ply) =>
+      _texts.has('$id.note$ply') ? _texts.text('$id.note$ply') : null;
 
   /// Il vincitore, se la partita non è patta.
   Side? get winner => switch (result) {
@@ -69,7 +74,9 @@ class MasterGame {
       final pos = positions.last;
       final move = pos.parseSan(moves[i]);
       if (move == null) {
-        throw FormatException('Mossa illegale in $id: ${moves[i]} (#${i + 1})');
+        throw FormatException(
+          'Mossa illegale in $id: ${moves[i]} (#${i + 1})', // l10n-ok
+        );
       }
       list.add(move);
       positions.add(pos.play(move));
