@@ -29,7 +29,7 @@ Dentro un capitolo ogni passo si apre quando quelli prima sono fatti:
 3. **Guardiano** (dove il capitolo del percorso ce l'ha): è la stessa partita del percorso, con le stesse stelle; battuto lì, conta anche qui.
 4. **Sfida finale**: battere il bot del capitolo. Uscire a partita in corso vale una sconfitta.
 
-Un passo già fatto non si riapre (lezioni, puzzle e partite restano raggiungibili dal resto dell'app). I passi che richiedono il motore (guardiano e sfida) mostrano un avviso dove Stockfish non c'è, come nel percorso. **Continua** apre il primo passo da fare del capitolo corrente.
+Un passo già fatto non si riapre (lezioni, puzzle e partite restano raggiungibili dal resto dell'app). I passi che richiedono il motore (guardiano e sfida) mostrano un avviso dove Stockfish non c'è, come nel percorso. **Continua** apre il primo passo da fare del capitolo corrente. È un pulsante in una barra fissa sotto l'elenco (non flottante), così non copre mai i capitoli, anche col testo ingrandito.
 
 ## Aspetto
 

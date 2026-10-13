@@ -224,6 +224,30 @@ void main() {
     expect(puzzlesOpened, isTrue);
   });
 
+  for (final scale in [1.0, 1.3]) {
+    testWidgets('RG-13 Continua non copre i capitoli (testo ×$scale)', (
+      tester,
+    ) async {
+      tester.platformDispatcher.textScaleFactorTestValue = scale;
+      addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+      await show(tester);
+      tester.view.physicalSize = const Size(720, 1280);
+      tester.view.devicePixelRatio = 2;
+      await tester.pumpAndSettle();
+      final button = tester.getRect(find.text('Continua'));
+      final list = tester.getRect(find.byType(ListView));
+      expect(button.top, greaterThanOrEqualTo(list.bottom));
+      // Anche a fine scorrimento l'ultimo capitolo resta tutto visibile.
+      await tester.drag(find.byType(ListView), const Offset(0, -5000));
+      await tester.pumpAndSettle();
+      final last = tester.getRect(find.byType(Card).last);
+      expect(
+        last.bottom,
+        lessThanOrEqualTo(tester.getRect(find.byType(ListView)).bottom),
+      );
+    });
+  }
+
   testWidgets('RG-13 un passo già fatto non si riapre', (tester) async {
     var called = false;
     await show(
