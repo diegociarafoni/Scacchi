@@ -2,7 +2,7 @@
 
 ## Requisiti
 
-- [Flutter](https://docs.flutter.dev/get-started/install), canale stable, versione 3.47 o successiva (la CI usa 3.47.7).
+- [Flutter](https://docs.flutter.dev/get-started/install), canale stable, versione 3.47.7, quella della CI.
 - Per Android: Android Studio o Android SDK, Java 17.
 - Per iOS e macOS: un Mac con Xcode, oppure un servizio di build in cloud.
 - Per Linux desktop: le librerie di sviluppo GTK 3 e GStreamer (`libgtk-3-dev`, `libgstreamer1.0-dev`, `libgstreamer-plugins-base1.0-dev`) e, per riprodurre i suoni, i plugin `gstreamer1.0-plugins-base` e `gstreamer1.0-plugins-good`: senza questi ultimi l'app si chiude al primo suono.
@@ -107,7 +107,7 @@ I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisic
 
 I messaggi a scomparsa (SnackBar) non vanno attesi con `pumpAndSettle`: le animazioni della partita fanno scorrere il tempo finto e il messaggio sparisce prima del controllo.
 
-I golden si rigenerano con `--update-goldens` dopo una modifica voluta dell'aspetto (`flutter test test/settings --update-goldens`, `flutter test --tags golden test/golden --update-goldens`); i test caricano Roboto e le icone Material dell'SDK (`test/support/golden_fonts.dart`), quindi le immagini non dipendono dai font del sistema. Vanno generati su Linux con la stessa versione di Flutter della CI (3.47.7) e riletti prima del commit.
+I golden si rigenerano con `--update-goldens` dopo una modifica voluta dell'aspetto (`flutter test test/settings --update-goldens`, `flutter test --tags golden test/golden test/style --update-goldens`); i test caricano Roboto e le icone Material dell'SDK (`test/support/golden_fonts.dart`), quindi le immagini non dipendono dai font del sistema. Vanno generati su Linux con la stessa versione di Flutter della CI (3.47.7) e riletti prima del commit.
 
 ### Copertura attuale dei requisiti
 
