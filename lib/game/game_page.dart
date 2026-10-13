@@ -2667,15 +2667,23 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                           children: [
                             ?banner,
                             Expanded(
-                              child: LayoutBuilder(
-                                builder: (context, area) => _MoveList(
-                                  game: _game,
-                                  horizontal:
-                                      area.maxHeight < 2 * _moveStripHeight,
-                                  selected: viewPly,
-                                  onSelect: _showPly,
-                                ),
-                              ),
+                              child:
+                                  _game.moves.isEmpty &&
+                                      !_game.isOver &&
+                                      !_computerToMove
+                                  ? _FirstMoveHint(
+                                      text: _kidL10n(context).gameFirstMoveHint,
+                                    )
+                                  : LayoutBuilder(
+                                      builder: (context, area) => _MoveList(
+                                        game: _game,
+                                        horizontal:
+                                            area.maxHeight <
+                                            2 * _moveStripHeight,
+                                        selected: viewPly,
+                                        onSelect: _showPly,
+                                      ),
+                                    ),
                             ),
                           ],
                         );
@@ -2790,6 +2798,33 @@ class _StatusLine extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Prima mossa: al posto della lista vuota dice cosa fare, vicino al pezzo.
+class _FirstMoveHint extends StatelessWidget {
+  const _FirstMoveHint({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, box) => box.maxHeight < _moveStripHeight
+        ? const SizedBox.shrink()
+        : Align(
+            alignment: Alignment.bottomLeft,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
+              child: Text(
+                text,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ),
+          ),
+  );
 }
 
 class _MoveList extends StatelessWidget {
