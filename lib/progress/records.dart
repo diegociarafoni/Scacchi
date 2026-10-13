@@ -1,18 +1,24 @@
 import 'package:flutter/foundation.dart';
 
+import '../l10n/app_localizations.dart';
 import 'activity.dart';
 
 enum RecordKind {
-  strongestBot('Bot più forte battuto'),
-  fastestWin('Matto più rapido'),
-  bestAccuracy('Precisione migliore'),
-  puzzleRating('Punteggio puzzle'),
-  puzzleRun('Punteggio a tempo'),
-  minigame('Punteggio nei minigiochi');
+  strongestBot,
+  fastestWin,
+  bestAccuracy,
+  puzzleRating,
+  puzzleRun,
+  minigame;
 
-  const RecordKind(this.label);
-
-  final String label;
+  String label(AppLocalizations l) => switch (this) {
+    strongestBot => l.progressRecordStrongestBot,
+    fastestWin => l.progressRecordFastestWin,
+    bestAccuracy => l.progressRecordBestAccuracy,
+    puzzleRating => l.progressRecordPuzzleRating,
+    puzzleRun => l.progressRecordPuzzleRun,
+    minigame => l.progressRecordMinigame,
+  };
 }
 
 /// Record personali (RG-08). La serie più lunga è in `ProgressState.bestStreak`.

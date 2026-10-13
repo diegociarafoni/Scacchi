@@ -8,6 +8,7 @@ import 'package:scacchi/main.dart';
 import 'package:scacchi/settings/settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../test/computer_fakes.dart' show openCustomSheet;
 import '../test/game_actions.dart';
 
 Offset _square(WidgetTester tester, String name) {
@@ -116,6 +117,7 @@ Future<void> _start(WidgetTester tester) async {
   addTearDown(tester.view.reset);
   await tester.pumpWidget(const ScacchiApp());
   await tester.pumpAndSettle();
+  await openBoard(tester);
 }
 
 const _scholarsMate = ['e2e4', 'e7e5', 'f1c4', 'b8c6', 'd1h5', 'g8f6', 'h5f7'];
@@ -321,6 +323,7 @@ void main() {
     expect(find.byKey(const ValueKey('clock-white')), findsNothing);
     await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
+    await openCustomSheet(tester, two: true);
     expect(find.text('Senza tempo'), findsOneWidget);
     await tester.tap(find.text('3+2'));
     await tester.pumpAndSettle();
@@ -343,6 +346,7 @@ void main() {
 
     await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
+    await openCustomSheet(tester, two: true);
     await tester.tap(find.text('Senza tempo'));
     await tester.pumpAndSettle();
     expect(find.byKey(const ValueKey('clock-white')), findsNothing);
@@ -555,6 +559,7 @@ void main() {
     await _start(tester);
     await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
+    await openCustomSheet(tester, two: true);
     await tester.enterText(
       find.widgetWithText(TextField, 'Nome del Bianco'),
       'Anna',
@@ -587,6 +592,7 @@ void main() {
 
     await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
+    await openCustomSheet(tester, two: true);
     expect(
       tester
           .widget<TextField>(find.widgetWithText(TextField, 'Nome del Nero'))

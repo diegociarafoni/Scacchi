@@ -162,7 +162,7 @@ final int _storyLessonTotal = storyChapters.fold(
 BadgeDef _chapter(String chapterId, IconData icon) {
   assert(
     storyChapters.any((c) => c.pathChapterId == chapterId),
-    'il capitolo $chapterId non fa parte della Storia',
+    'il capitolo $chapterId non fa parte della Storia', // l10n-ok
   );
   final chapter = curriculum.firstWhere((c) => c.id == chapterId);
   return BadgeDef.counter(

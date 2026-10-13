@@ -1,5 +1,6 @@
 import 'package:dartchess/dartchess.dart';
 
+import '../l10n/app_localizations.dart';
 import '../puzzles/puzzle.dart';
 import 'board_utils.dart';
 import 'coach.dart';
@@ -56,6 +57,7 @@ const _trainable = {MoveClass.mistake, MoveClass.blunder, MoveClass.miss};
 /// Gli errori alla prima semimossa non diventano puzzle: manca la mossa
 /// dell'avversario richiesta dal formato Lichess.
 List<MistakePuzzle> puzzlesFromReview(
+  AppLocalizations l,
   GameReview review, {
   required Set<Side> players,
   required String gameId,
@@ -98,7 +100,7 @@ List<MistakePuzzle> puzzlesFromReview(
             ...?(comment == null ? null : lichessThemes(comment.theme)),
           _phaseTheme(start),
         },
-        explanation: comment?.text,
+        explanation: comment?.text(l),
       ),
     );
   }

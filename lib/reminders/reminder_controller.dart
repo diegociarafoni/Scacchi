@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 
+import '../l10n/app_localizations.dart';
 import '../progress/progress_controller.dart';
 import 'reminder.dart';
 
@@ -10,7 +11,8 @@ import 'reminder.dart';
 class ReminderController {
   ReminderController(
     this._progress,
-    this._scheduler, {
+    this._scheduler,
+    this._l10n, {
     DateTime Function()? clock,
   }) : _clock = clock ?? DateTime.now {
     _progress.addListener(_onProgress);
@@ -21,6 +23,9 @@ class ReminderController {
 
   final ProgressController _progress;
   final ReminderScheduler _scheduler;
+
+  /// Lingua dell'app al momento della programmazione.
+  final AppLocalizations Function() _l10n;
   final DateTime Function() _clock;
   late final AppLifecycleListener _lifecycle;
 
@@ -59,6 +64,7 @@ class ReminderController {
       final s = _progress.settings;
       final next = s.enabled
           ? nextReminder(
+              _l10n(),
               now: _clock(),
               minutes: s.reminder,
               goal: s.goal,
@@ -77,7 +83,7 @@ class ReminderController {
       _synced = true;
     } on Object catch (e) {
       // Si riprova al prossimo cambiamento dei progressi.
-      debugPrint('Promemoria non programmato: $e');
+      debugPrint('Promemoria non programmato: $e'); // l10n-ok
     }
   }
 

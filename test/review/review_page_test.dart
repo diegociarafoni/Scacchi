@@ -13,6 +13,7 @@ import 'package:scacchi/review/personal_puzzles.dart';
 import 'package:scacchi/review/review_page.dart';
 
 import '../board_marks_helpers.dart';
+import '../localized_app.dart';
 import 'fake_engine.dart';
 
 Future<void> pumpReview(
@@ -29,7 +30,7 @@ Future<void> pumpReview(
   tester.view.devicePixelRatio = 3;
   addTearDown(tester.view.reset);
   await tester.pumpWidget(
-    MaterialApp(
+    localizedApp(
       home: ReviewPage(
         initial: Chess.initial,
         moves: moves(scholar),
@@ -56,7 +57,7 @@ void main() {
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: ReviewPage(
           initial: Chess.initial,
           moves: moves(scholar),
@@ -82,7 +83,7 @@ void main() {
   ) async {
     final pending = Completer<List<InfoLine>>();
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: ReviewPage(
           initial: Chess.initial,
           moves: moves(scholar),
@@ -104,7 +105,7 @@ void main() {
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: ReviewPage(
           initial: Chess.initial,
           moves: moves(scholar),
@@ -137,7 +138,7 @@ void main() {
       ),
     );
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: ReviewPage(
           initial: initial,
           moves: moves(['e7e5', 'g1f3']),
@@ -161,7 +162,7 @@ void main() {
       Setup.parseFen('4k3/8/8/8/8/8/5PPP/4K2R w K - 0 1'),
     );
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: ReviewPage(
           initial: initial,
           moves: moves(['h2h3']),
@@ -488,7 +489,7 @@ void main() {
       tester.view.devicePixelRatio = 3;
       addTearDown(tester.view.reset);
       await tester.pumpWidget(
-        MaterialApp(
+        localizedApp(
           home: ReviewPage(
             initial: Chess.initial,
             moves: moves(scholar),

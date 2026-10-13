@@ -51,7 +51,9 @@ class _LearnPageState extends State<LearnPage> {
           if (mounted) setState(() => _path = v);
         },
         onError: (Object e) {
-          if (kDebugMode) debugPrint('Impara: percorso non disponibile: $e');
+          if (kDebugMode) {
+            debugPrint('Impara: percorso non disponibile: $e'); // l10n-ok
+          }
         },
       ),
     );
@@ -61,7 +63,9 @@ class _LearnPageState extends State<LearnPage> {
           if (mounted) setState(() => _story = v);
         },
         onError: (Object e) {
-          if (kDebugMode) debugPrint('Impara: storia non disponibile: $e');
+          if (kDebugMode) {
+            debugPrint('Impara: storia non disponibile: $e'); // l10n-ok
+          }
         },
       ),
     );

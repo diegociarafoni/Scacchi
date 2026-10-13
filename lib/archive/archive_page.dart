@@ -9,14 +9,12 @@ import '../exchange/qr_l10n.dart';
 import '../exchange/qr_receive_page.dart';
 import '../exchange/qr_send_page.dart';
 import '../exchange/qr_transfer.dart';
+import '../l10n/app_localizations.dart';
 import 'game_archive.dart';
 import 'pgn.dart';
 import 'saved_game.dart';
 
 typedef ShareText = Future<void> Function(String text);
-
-Future<void> _shareWithSystem(String text) =>
-    SharePlus.instance.share(ShareParams(text: text, subject: 'Partite PGN'));
 
 /// Storico delle partite salvate con ricerca, import ed export PGN.
 class ArchivePage extends StatefulWidget {
@@ -24,7 +22,7 @@ class ArchivePage extends StatefulWidget {
     super.key,
     required this.archive,
     this.onOpen,
-    this.share = _shareWithSystem,
+    this.share,
     this.scanner = zxingScanner,
   });
 
@@ -32,7 +30,10 @@ class ArchivePage extends StatefulWidget {
 
   /// Chiamata quando si tocca una partita per aprirla.
   final ValueChanged<SavedGame>? onOpen;
-  final ShareText share;
+
+  /// Condivisione del testo; senza, si usa il foglio di condivisione del
+  /// sistema.
+  final ShareText? share;
 
   /// Lettore QR per ricevere una partita da un altro telefono.
   final QrScannerBuilder scanner;
@@ -63,17 +64,28 @@ class _ArchivePageState extends State<ArchivePage> {
 
   Iterable<SavedGame> get _visible {
     final q = _query.trim().toLowerCase();
+    final l = AppLocalizations.of(context);
     return (_games ?? const []).where(
       (g) =>
           q.isEmpty ||
           g.white.toLowerCase().contains(q) ||
           g.black.toLowerCase().contains(q) ||
-          g.mode.toLowerCase().contains(q),
+          _modeLabel(l, g.mode).toLowerCase().contains(q),
     );
   }
 
-  Future<void> _exportAll() async =>
-      widget.share(await widget.archive.exportPgn());
+  Future<void> _share(String text) {
+    final share = widget.share;
+    if (share != null) return share(text);
+    return SharePlus.instance.share(
+      ShareParams(
+        text: text,
+        subject: AppLocalizations.of(context).archiveShareSubject,
+      ),
+    );
+  }
+
+  Future<void> _exportAll() async => _share(await widget.archive.exportPgn());
 
   Future<void> _import() async {
     final text = await showDialog<String>(
@@ -88,14 +100,11 @@ class _ArchivePageState extends State<ArchivePage> {
     final result = await import;
     await _reload();
     if (!mounted) return;
-    final n = result.games.length;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          [
-            n == 1 ? '1 partita importata' : '$n partite importate',
-            if (result.skipped > 0) '${result.skipped} non valide',
-          ].join(', '),
+          AppLocalizations.of(context)
+              .archiveImportResult(result.games.length, result.skipped),
         ),
       ),
     );
@@ -128,16 +137,16 @@ class _ArchivePageState extends State<ArchivePage> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Eliminare la partita?'),
+        title: Text(AppLocalizations.of(context).archiveDeleteTitle),
         content: Text(game.title),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Annulla'),
+            child: Text(AppLocalizations.of(context).archiveCancel),
           ),
           FilledButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Elimina'),
+            child: Text(AppLocalizations.of(context).archiveDelete),
           ),
         ],
       ),
@@ -150,12 +159,15 @@ class _ArchivePageState extends State<ArchivePage> {
   Future<void> _onAction(SavedGame game, _Action action) async {
     switch (action) {
       case _Action.share:
-        await widget.share(game.pgn);
+        await _share(game.pgn);
       case _Action.copy:
         await Clipboard.setData(ClipboardData(text: game.pgn));
         if (mounted) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text('PGN copiato')));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(AppLocalizations.of(context).archivePgnCopied),
+            ),
+          );
         }
       case _Action.qr:
         await _sendQr(game);
@@ -168,9 +180,10 @@ class _ArchivePageState extends State<ArchivePage> {
   Widget build(BuildContext context) {
     final games = _games;
     final visible = _visible.toList();
+    final l = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Partite'),
+        title: Text(l.archiveTitle),
         actions: [
           IconButton(
             tooltip: qrL10n(context).qrReceiveTitle,
@@ -178,19 +191,19 @@ class _ArchivePageState extends State<ArchivePage> {
             onPressed: _receive,
           ),
           IconButton(
-            tooltip: 'Importa PGN',
+            tooltip: l.archiveImportPgn,
             icon: const Icon(Icons.file_download_outlined),
             onPressed: _import,
           ),
           IconButton(
-            tooltip: 'Esporta tutto in PGN',
+            tooltip: l.archiveExportAll,
             icon: const Icon(Icons.ios_share),
             onPressed: games == null || games.isEmpty ? null : _exportAll,
           ),
         ],
       ),
       body: _failed
-          ? const Center(child: Text('Impossibile leggere l\'archivio.'))
+          ? Center(child: Text(l.archiveUnreadable))
           : games == null
           ? const Center(child: CircularProgressIndicator())
           : Column(
@@ -198,10 +211,10 @@ class _ArchivePageState extends State<ArchivePage> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
                   child: TextField(
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.search),
-                      hintText: 'Cerca per giocatore o tipo',
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.search),
+                      hintText: l.archiveSearchHint,
+                      border: const OutlineInputBorder(),
                     ),
                     onChanged: (v) => setState(() => _query = v),
                   ),
@@ -210,9 +223,7 @@ class _ArchivePageState extends State<ArchivePage> {
                   child: visible.isEmpty
                       ? Center(
                           child: Text(
-                            games.isEmpty
-                                ? 'Nessuna partita salvata.'
-                                : 'Nessuna partita trovata.',
+                            games.isEmpty ? l.archiveEmpty : l.archiveNoMatch,
                           ),
                         )
                       : ListView.builder(
@@ -234,6 +245,15 @@ class _ArchivePageState extends State<ArchivePage> {
 
 enum _Action { share, copy, qr, delete }
 
+/// Tipo di partita in parole; un tipo sconosciuto si mostra com'è.
+String _modeLabel(AppLocalizations l, String mode) => switch (mode) {
+  SavedGame.local => l.archiveModeLocal,
+  SavedGame.computer => l.archiveModeComputer,
+  SavedGame.imported => l.archiveModeImported,
+  SavedGame.physical => l.archiveModePhysical,
+  _ => mode,
+};
+
 String _date(DateTime d) =>
     '${d.day.toString().padLeft(2, '0')}/'
     '${d.month.toString().padLeft(2, '0')}/${d.year}';
@@ -251,25 +271,25 @@ class _GameTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final result = game.finished ? game.result : 'In corso';
+    final l = AppLocalizations.of(context);
+    final result = game.finished ? game.result : l.archiveInProgress;
     return ListTile(
       title: Text(game.title),
-      subtitle: Text('${_date(game.updatedAt)} · ${game.mode} · $result'),
+      subtitle: Text(
+        '${_date(game.updatedAt)} · ${_modeLabel(l, game.mode)} · $result',
+      ),
       onTap: onTap,
       trailing: PopupMenuButton<_Action>(
-        tooltip: 'Azioni per ${game.title}',
+        tooltip: l.archiveActionsFor(game.title),
         onSelected: onAction,
         itemBuilder: (context) => [
-          const PopupMenuItem(
-            value: _Action.share,
-            child: Text('Condividi PGN'),
-          ),
-          const PopupMenuItem(value: _Action.copy, child: Text('Copia PGN')),
+          PopupMenuItem(value: _Action.share, child: Text(l.archiveSharePgn)),
+          PopupMenuItem(value: _Action.copy, child: Text(l.archiveCopyPgn)),
           PopupMenuItem(
             value: _Action.qr,
             child: Text(qrL10n(context).qrSendTitle),
           ),
-          const PopupMenuItem(value: _Action.delete, child: Text('Elimina')),
+          PopupMenuItem(value: _Action.delete, child: Text(l.archiveDelete)),
         ],
       ),
     );
@@ -299,18 +319,19 @@ class _ImportDialogState extends State<_ImportDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return AlertDialog(
-      title: const Text('Importa PGN'),
+      title: Text(l.archiveImportPgn),
       content: TextField(
         key: const Key('pgnInput'),
         controller: _text,
         minLines: 6,
         maxLines: 12,
         decoration: InputDecoration(
-          hintText: 'Incolla qui una o più partite in PGN',
+          hintText: l.archiveImportHint,
           border: const OutlineInputBorder(),
           suffixIcon: IconButton(
-            tooltip: 'Incolla',
+            tooltip: l.archivePaste,
             icon: const Icon(Icons.content_paste),
             onPressed: _paste,
           ),
@@ -319,11 +340,11 @@ class _ImportDialogState extends State<_ImportDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Annulla'),
+          child: Text(l.archiveCancel),
         ),
         FilledButton(
           onPressed: () => Navigator.pop(context, _text.text),
-          child: const Text('Importa'),
+          child: Text(l.archiveImport),
         ),
       ],
     );

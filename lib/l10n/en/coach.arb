@@ -92,5 +92,108 @@
   "instructorHubSubtitle": "The computer comments your opening, with the most played moves",
   "@instructorHubSubtitle": {
     "description": "Istruttore: sottotitolo nel menu delle aperture"
+  },
+  "coachHintMovePiece": "Move {piece}.",
+  "@coachHintMovePiece": {
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintMoveSomePiece": "Move a piece.",
+  "coachHintPlayHighlighted": "Play the highlighted move.",
+  "coachHintCastleShort": "Castle kingside.",
+  "coachHintCastleLong": "Castle queenside.",
+  "coachHintPieceAn": "{role, select, queen{a queen} rook{a rook} bishop{a bishop} knight{a knight} pawn{a pawn} other{the king}}",
+  "@coachHintPieceAn": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintCheckEscape": "{promotion, select, yes{Promote} other{Move}} {piece} {where, select, square{to {square}} other{to the circled square}}{escape, select, king{ to get out of check} other{ to stop the check}}{check, select, none{.} check{, giving check.} other{, giving checkmate.}}",
+  "@coachHintCheckEscape": {
+    "placeholders": {
+      "promotion": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "escape": {
+        "type": "String"
+      },
+      "check": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintPromote": "Promote {piece} {where, select, square{to {square}} other{to the circled square}}{capture, select, yes{ and capture {victim}} other{}}: it becomes {promoted}.",
+  "@coachHintPromote": {
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "capture": {
+        "type": "String"
+      },
+      "victim": {
+        "type": "String"
+      },
+      "promoted": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintCapture": "Move {piece} {where, select, square{to {square}} other{to the circled square}} and capture {victim}{check, select, none{.} check{, giving check.} other{, giving checkmate.}}",
+  "@coachHintCapture": {
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "victim": {
+        "type": "String"
+      },
+      "check": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintMove": "Move {piece} {where, select, square{to {square}} other{to the circled square}}{check, select, none{.} check{ and give check.} other{ and give checkmate.}}",
+  "@coachHintMove": {
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "check": {
+        "type": "String"
+      }
+    }
   }
 }

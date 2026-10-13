@@ -1,40 +1,54 @@
 import 'package:dartchess/dartchess.dart';
 
-const _pieces = {
-  'K': 're',
-  'Q': 'donna',
-  'R': 'torre',
-  'B': 'alfiere',
-  'N': 'cavallo',
+import '../l10n/app_localizations.dart';
+
+const _roles = {
+  'K': 'king',
+  'Q': 'queen',
+  'R': 'rook',
+  'B': 'bishop',
+  'N': 'knight',
 };
 
 final _sanPattern = RegExp(
   r'^([KQRBN])?([a-h]?[1-8]?)(x)?([a-h][1-8])(?:=([QRBN]))?([+#])?$',
 );
 
-/// Frase in italiano per annunciare una mossa SAN con il lettore di schermo;
-/// [name] sostituisce il colore.
-String describeSan(String san, Side side, {String? name}) {
-  final who = name ?? (side == Side.white ? 'Bianco' : 'Nero');
+/// Frase per annunciare una mossa SAN con il lettore di schermo, nella lingua
+/// di [l10n]; [name] sostituisce il colore.
+String describeSan(
+  AppLocalizations l10n,
+  String san,
+  Side side, {
+  String? name,
+}) {
+  final who = name ?? l10n.gameSideName(side.name);
   final check = san.endsWith('#')
-      ? ', scacco matto'
+      ? 'mate'
       : san.endsWith('+')
-      ? ', scacco'
-      : '';
-  if (san.startsWith('O-O-O')) return '$who: arrocco lungo$check';
-  if (san.startsWith('O-O')) return '$who: arrocco corto$check';
+      ? 'check'
+      : 'none';
+  if (san.startsWith('O-O-O')) return l10n.gameSpeechCastleLong(who, check);
+  if (san.startsWith('O-O')) return l10n.gameSpeechCastleShort(who, check);
   final m = _sanPattern.firstMatch(san);
   if (m == null) return '$who: $san';
-  final piece = m[1] == null ? 'pedone' : _pieces[m[1]]!;
+  String piece(String? letter) =>
+      l10n.gamePieceName(letter == null ? 'pawn' : _roles[letter]!);
   final origin = m[2]!;
   final from = switch (origin.length) {
-    0 => '',
-    2 => ' da $origin',
-    _ when origin.contains(RegExp('[a-h]')) => ' della colonna $origin',
-    _ => ' della traversa $origin',
+    0 => 'none',
+    2 => 'square',
+    _ when origin.contains(RegExp('[a-h]')) => 'file',
+    _ => 'rank',
   };
-  final capture = m[3] == null ? '' : ' prende';
-  final promotion = m[5] == null ? '' : ', promozione a ${_pieces[m[5]]}';
-  final to = capture.isEmpty && from.isNotEmpty ? ' in ${m[4]}' : ' ${m[4]}';
-  return '$who: $piece$from$capture$to$promotion$check';
+  return l10n.gameSpeechMove(
+    who,
+    piece(m[1]),
+    from,
+    origin,
+    m[3] == null ? 'no' : 'yes',
+    m[4]!,
+    m[5] == null ? 'none' : piece(m[5]),
+    check,
+  );
 }

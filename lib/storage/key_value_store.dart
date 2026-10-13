@@ -60,7 +60,7 @@ class JsonFileStore implements KeyValueStore {
       });
     } on FileSystemException catch (e) {
       // Senza spazio o permessi si continua con i dati in memoria.
-      debugPrint('Salvataggio non riuscito: $e');
+      debugPrint('Salvataggio non riuscito: $e'); // l10n-ok
     }
   }
 }

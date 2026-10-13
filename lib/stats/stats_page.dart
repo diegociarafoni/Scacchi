@@ -37,7 +37,7 @@ class _StatsPageState extends State<StatsPage> {
     try {
       games = await widget.archive.list();
     } on FileSystemException catch (e) {
-      debugPrint('Lettura dell\'archivio non riuscita: $e');
+      debugPrint('Lettura dell\'archivio non riuscita: $e'); // l10n-ok
       if (mounted) setState(() => _failed = true);
       return;
     }

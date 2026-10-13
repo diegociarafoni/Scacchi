@@ -741,7 +741,7 @@ class _MultiplayerGamePageState extends State<MultiplayerGamePage> {
         unawaited(
           SemanticsService.sendAnnouncement(
             View.of(context),
-            describeSan(san, mover),
+            describeSan(AppLocalizations.of(context), san, mover),
             Directionality.of(context),
           ),
         );

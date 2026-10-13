@@ -65,13 +65,13 @@ class LocalNotificationScheduler implements ReminderScheduler {
       scheduledDate: tz.TZDateTime.from(reminder.at, tz.UTC),
       title: reminder.title,
       body: reminder.body,
-      notificationDetails: const NotificationDetails(
+      notificationDetails: NotificationDetails(
         android: AndroidNotificationDetails(
           'promemoria',
-          'Promemoria giornaliero',
-          channelDescription: "Ricorda l'obiettivo del giorno, una volta.",
+          reminder.channelName,
+          channelDescription: reminder.channelDescription,
         ),
-        iOS: DarwinNotificationDetails(),
+        iOS: const DarwinNotificationDetails(),
       ),
       // Orario approssimato: non serve il permesso per le sveglie esatte.
       androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,

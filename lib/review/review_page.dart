@@ -21,6 +21,7 @@ import 'game_review.dart';
 import 'move_classification.dart';
 import 'move_time.dart';
 import 'personal_puzzles.dart';
+import 'review_l10n.dart';
 
 /// Revisioni già calcolate in questa sessione, per riaprirle all'istante.
 /// Tiene solo le più recenti per limitare la memoria.
@@ -52,20 +53,6 @@ Color moveClassColor(MoveClass c) => switch (c) {
   MoveClass.mistake => const Color(0xFFD2691E),
   MoveClass.miss => const Color(0xFFC0392B),
   MoveClass.blunder => const Color(0xFFB22222),
-};
-
-/// Frase "Nf6 è …" per ogni categoria.
-String moveClassPhrase(MoveClass c) => switch (c) {
-  MoveClass.brilliant => 'una mossa brillante',
-  MoveClass.great => 'una mossa ottima',
-  MoveClass.best => 'la mossa migliore',
-  MoveClass.excellent => 'una mossa eccellente',
-  MoveClass.good => 'una buona mossa',
-  MoveClass.book => 'una mossa di libro',
-  MoveClass.inaccuracy => 'un\'imprecisione',
-  MoveClass.mistake => 'un errore',
-  MoveClass.miss => 'un\'occasione mancata',
-  MoveClass.blunder => 'un errore grave',
 };
 
 /// Revisione della partita (RF-60…RF-66): analisi con avanzamento, riepilogo,
@@ -218,6 +205,7 @@ class _ReviewPageState extends State<ReviewPage> {
   /// partita, così salvare due volte non duplica.
   List<MistakePuzzle> _puzzlesOf(GameReview review) =>
       _puzzles ??= puzzlesFromReview(
+        AppLocalizations.of(context),
         review,
         players: widget.puzzlePlayers,
         gameId: gameIdOf(_cacheKey),
@@ -244,11 +232,11 @@ class _ReviewPageState extends State<ReviewPage> {
     final count = _puzzlesOf(review).length;
     if (count == 0) return null;
     final text = Theme.of(context).textTheme.bodyMedium;
+    final l = AppLocalizations.of(context);
     final message = switch (_save) {
-      _SaveState.saved =>
-        'Puzzle salvati: $_savedCount. Li trovi in Puzzle › Ripasso degli errori.',
-      _SaveState.already => 'Questi puzzle sono già salvati.',
-      _SaveState.failed => 'Salvataggio non riuscito. Riprova.',
+      _SaveState.saved => l.reviewPuzzlesSaved(_savedCount),
+      _SaveState.already => l.reviewPuzzlesAlready,
+      _SaveState.failed => l.reviewPuzzlesFailed,
       _ => null,
     };
     final done = _save == _SaveState.saved || _save == _SaveState.already;
@@ -265,7 +253,7 @@ class _ReviewPageState extends State<ReviewPage> {
               onPressed: _save == _SaveState.saving
                   ? null
                   : () => _savePuzzles(review),
-              label: Text('Salva gli errori come puzzle ($count)'),
+              label: Text(l.reviewSavePuzzles(count)),
             ),
           if (message != null)
             Text(message, style: text, semanticsLabel: message),
@@ -326,7 +314,9 @@ class _ReviewPageState extends State<ReviewPage> {
       if (!mounted) return;
       setState(() => _notes[ply] = previous);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Nota non salvata. Riprova.')),
+        SnackBar(
+          content: Text(AppLocalizations.of(context).reviewNoteNotSaved),
+        ),
       );
     }
   }
@@ -360,12 +350,13 @@ class _ReviewPageState extends State<ReviewPage> {
     if (!before.isLegal(move)) return;
     final san = before.makeSan(move).$2;
     final best = review.moves[ply].bestSan;
+    final l = AppLocalizations.of(context);
     setState(() {
       if (san == best) {
-        _retryMessage = 'Esatto: ${_n(san)} è la mossa migliore.';
+        _retryMessage = l.reviewRetryCorrect(_n(san));
         _retrySolved = move;
       } else {
-        _retryMessage = '${_n(san)} non è la mossa migliore. Riprova.';
+        _retryMessage = l.reviewRetryWrong(_n(san));
       }
     });
     // Dopo un tentativo sbagliato rimette la posizione di partenza.
@@ -391,9 +382,7 @@ class _ReviewPageState extends State<ReviewPage> {
         previous: m.ply > 0 ? review.moves[m.ply - 1] : null,
         notation: AppSettings.of(context).notation,
         // Profilo bambino (RP-06): spiegazioni senza «matto in N» e pedoni.
-        kid: AppSettings.of(context).kidMode
-            ? AppLocalizations.of(context)
-            : null,
+        kid: AppSettings.of(context).kidMode,
       ),
     );
   }
@@ -427,13 +416,14 @@ class _ReviewPageState extends State<ReviewPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Revisione della partita'),
+        title: Text(l.reviewTitle),
         actions: [
           if (widget.analyseLive case final analyse? when _phase == _Phase.done)
             IconButton(
-              tooltip: 'Analizza la posizione',
+              tooltip: l.reviewAnalysePosition,
               icon: const Icon(Icons.biotech_outlined),
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute<void>(
@@ -504,6 +494,7 @@ class _ReviewPageState extends State<ReviewPage> {
 
   List<Widget> _header() {
     final text = Theme.of(context).textTheme;
+    final l = AppLocalizations.of(context);
     switch (_phase) {
       case _Phase.analysing:
         return [
@@ -514,8 +505,8 @@ class _ReviewPageState extends State<ReviewPage> {
               children: [
                 Text(
                   AppSettings.of(context).kidMode
-                      ? AppLocalizations.of(context).kidReviewAnalysing
-                      : 'Analisi in corso: $_done di $_total',
+                      ? l.kidReviewAnalysing
+                      : l.reviewAnalysing(_done, _total),
                   style: text.titleMedium,
                 ),
                 const SizedBox(height: 8),
@@ -524,7 +515,7 @@ class _ReviewPageState extends State<ReviewPage> {
                   alignment: Alignment.centerRight,
                   child: TextButton(
                     onPressed: _cancel,
-                    child: const Text('Interrompi'),
+                    child: Text(l.reviewStop),
                   ),
                 ),
               ],
@@ -532,9 +523,9 @@ class _ReviewPageState extends State<ReviewPage> {
           ),
         ];
       case _Phase.cancelled:
-        return [_message('Revisione interrotta.')];
+        return [_message(l.reviewCancelled)];
       case _Phase.failed:
-        return [_message('Analisi non riuscita. Riprova più tardi.')];
+        return [_message(l.reviewFailed)];
       case _Phase.done:
         final review = _review!;
         return [
@@ -573,6 +564,7 @@ class _ReviewPageState extends State<ReviewPage> {
 
   List<Widget> _details(GameReview review) {
     final text = Theme.of(context).textTheme;
+    final l = AppLocalizations.of(context);
     final retry = _retryPly;
     if (retry != null) {
       final m = review.moves[retry];
@@ -582,10 +574,7 @@ class _ReviewPageState extends State<ReviewPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Trova una mossa migliore di ${_n(m.san)}',
-                style: text.titleMedium,
-              ),
+              Text(l.reviewRetryPrompt(_n(m.san)), style: text.titleMedium),
               if (_retryMessage != null)
                 Padding(
                   padding: const EdgeInsets.only(top: 8),
@@ -595,7 +584,7 @@ class _ReviewPageState extends State<ReviewPage> {
                 Padding(
                   padding: const EdgeInsets.only(top: 8),
                   child: Text(
-                    'La mossa migliore era ${_n(m.bestSan!)}.',
+                    l.reviewRetrySolution(_n(m.bestSan!)),
                     style: text.bodyLarge,
                   ),
                 ),
@@ -605,11 +594,11 @@ class _ReviewPageState extends State<ReviewPage> {
                 children: [
                   OutlinedButton(
                     onPressed: () => setState(() => _showSolution = true),
-                    child: const Text('Soluzione'),
+                    child: Text(l.reviewShowSolution),
                   ),
                   TextButton(
                     onPressed: () => _select(_index),
-                    child: const Text('Esci'),
+                    child: Text(l.reviewExit),
                   ),
                 ],
               ),
@@ -621,24 +610,24 @@ class _ReviewPageState extends State<ReviewPage> {
 
     final List<Widget> info;
     if (_index == 0) {
-      info = [Text('Posizione iniziale', style: text.titleMedium)];
+      info = [Text(l.reviewStartPosition, style: text.titleMedium)];
     } else {
       final m = review.moves[_index - 1];
       final c = m.classification;
       info = [
         Text(
-          '${moveNumber(_positions[m.ply])} ${_n(m.san)} è ${moveClassPhrase(c)}',
+          l.reviewMoveVerdict(moveNumber(_positions[m.ply]), _n(m.san), c.name),
           style: text.titleMedium,
         ),
         if (!m.playedBest && m.bestSan != null)
-          Text('Migliore: ${_n(m.bestSan!)}', style: text.bodyLarge),
+          Text(l.reviewBestMove(_n(m.bestSan!)), style: text.bodyLarge),
         if (_comment(review, m) case final comment?)
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 8,
             children: [
               const Icon(Icons.school_outlined, size: 20),
-              Expanded(child: Text(comment.text, style: text.bodyMedium)),
+              Expanded(child: Text(comment.text(l), style: text.bodyMedium)),
             ],
           ),
         if (_notes[m.ply] case final note?)
@@ -649,8 +638,9 @@ class _ReviewPageState extends State<ReviewPage> {
               const Icon(Icons.edit_note, size: 20),
               Expanded(
                 child: Text(
-                  'La tua nota: '
-                  '${[?note.symbol?.text, ?note.comment].join(' ')}',
+                  l.reviewYourNote(
+                    [?note.symbol?.text, ?note.comment].join(' '),
+                  ),
                   style: text.bodyMedium,
                 ),
               ),
@@ -662,13 +652,13 @@ class _ReviewPageState extends State<ReviewPage> {
             if (c.isError && m.bestSan != null)
               FilledButton.tonal(
                 onPressed: () => _startRetry(m.ply),
-                child: const Text('Riprova'),
+                child: Text(l.reviewTryAgain),
               ),
             if (widget.onNoteChanged != null)
               OutlinedButton(
                 onPressed: () => _editNote(m.ply),
                 child: Text(
-                  _notes[m.ply] == null ? 'Aggiungi nota' : 'Modifica nota',
+                  _notes[m.ply] == null ? l.reviewAddNote : l.reviewEditNote,
                 ),
               ),
           ],
@@ -700,30 +690,31 @@ class _ReviewPageState extends State<ReviewPage> {
   Widget _navigation() {
     final last = widget.moves.length;
     final retry = _retryPly != null;
+    final l = AppLocalizations.of(context);
     return SizedBox(
       height: 56,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           IconButton(
-            tooltip: 'Inizio',
+            tooltip: l.reviewNavStart,
             onPressed: retry || _index == 0 ? null : () => _select(0),
             icon: const Icon(Icons.first_page),
           ),
           IconButton(
-            tooltip: 'Mossa precedente',
+            tooltip: l.reviewNavPrevious,
             onPressed: retry || _index == 0 ? null : () => _select(_index - 1),
             icon: const Icon(Icons.chevron_left),
           ),
           IconButton(
-            tooltip: 'Mossa successiva',
+            tooltip: l.reviewNavNext,
             onPressed: retry || _index == last
                 ? null
                 : () => _select(_index + 1),
             icon: const Icon(Icons.chevron_right),
           ),
           IconButton(
-            tooltip: 'Fine',
+            tooltip: l.reviewNavEnd,
             onPressed: retry || _index == last ? null : () => _select(last),
             icon: const Icon(Icons.last_page),
           ),
@@ -744,8 +735,9 @@ class _Summary extends StatelessWidget {
     // Profilo bambino (RP-06): precisione a stelle e parole, niente Elo
     // stimato né conteggi per categoria.
     final kid = AppSettings.of(context).kidMode;
+    final l = AppLocalizations.of(context);
     Widget column(Side side) {
-      final name = side == Side.white ? 'Bianco' : 'Nero';
+      final name = side == Side.white ? l.reviewSideWhite : l.reviewSideBlack;
       final accuracy = review.accuracy(side);
       if (kid) {
         return Expanded(
@@ -770,11 +762,12 @@ class _Summary extends StatelessWidget {
               key: ValueKey('accuracy-${side.name}'),
               style: text.headlineMedium,
               semanticsLabel: accuracy == null
-                  ? 'Precisione del $name non disponibile'
-                  : 'Precisione del $name ${accuracy.toStringAsFixed(1)} per cento',
+                  ? l.reviewAccuracyUnavailable(name)
+                  : l.reviewAccuracyPercent(name, accuracy.toStringAsFixed(1)),
             ),
-            Text('Precisione', style: text.labelMedium),
-            if (elo != null) Text('Elo stimato ~$elo', style: text.labelMedium),
+            Text(l.reviewAccuracy, style: text.labelMedium),
+            if (elo != null)
+              Text(l.reviewEstimatedElo(elo), style: text.labelMedium),
           ],
         ),
       );
@@ -789,19 +782,20 @@ class _Summary extends StatelessWidget {
         if (!kid) _PhaseAccuracy(review: review),
         if (!kid)
           ExpansionTile(
-            title: const Text('Mosse per categoria'),
+            title: Text(l.reviewMovesByCategory),
             children: [
               for (final c in MoveClass.values)
                 ListTile(
                   dense: true,
                   leading: _Badge(c),
-                  title: Text(c.label),
+                  title: Text(moveClassLabel(l, c)),
                   trailing: Text(
                     '${review.count(Side.white, c)}   '
                     '${review.count(Side.black, c)}',
-                    semanticsLabel:
-                        'Bianco ${review.count(Side.white, c)}, '
-                        'Nero ${review.count(Side.black, c)}',
+                    semanticsLabel: l.reviewCountsSemantics(
+                      review.count(Side.white, c),
+                      review.count(Side.black, c),
+                    ),
                   ),
                 ),
             ],
@@ -837,8 +831,9 @@ class _NoteDialogState extends State<_NoteDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     return AlertDialog(
-      title: Text('Nota su ${widget.san}'),
+      title: Text(l.reviewNoteTitle(widget.san)),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -859,7 +854,7 @@ class _NoteDialogState extends State<_NoteDialog> {
             const SizedBox(height: 12),
             TextField(
               controller: _comment,
-              decoration: const InputDecoration(labelText: 'Commento'),
+              decoration: InputDecoration(labelText: l.reviewNoteComment),
               maxLines: 3,
               minLines: 1,
               textCapitalization: TextCapitalization.sentences,
@@ -870,14 +865,14 @@ class _NoteDialogState extends State<_NoteDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Annulla'),
+          child: Text(l.reviewNoteCancel),
         ),
         FilledButton(
           onPressed: () => Navigator.pop(
             context,
             MoveNote.of(symbol: _symbol, comment: _comment.text),
           ),
-          child: const Text('Salva'),
+          child: Text(l.reviewNoteSave),
         ),
       ],
     );
@@ -937,10 +932,16 @@ class _TimePerMove extends StatelessWidget {
     );
     final colors = Theme.of(context).colorScheme;
     final notation = AppSettings.of(context).notation;
-    final label =
-        'Tempo per mossa. ${hasty.isEmpty ? 'Nessun errore giocato in fretta.' : 'Errori giocati in fretta: ${hasty.map((p) => formatSan(review.moves[p].san, notation)).join(', ')}.'}';
+    final l = AppLocalizations.of(context);
+    final label = hasty.isEmpty
+        ? l.reviewTimeNoHasty
+        : l.reviewTimeHastySemantics(
+            hasty
+                .map((p) => formatSan(review.moves[p].san, notation))
+                .join(', '),
+          );
     return ExpansionTile(
-      title: const Text('Tempo per mossa'),
+      title: Text(l.reviewTimePerMove),
       children: [
         Semantics(
           label: label,
@@ -986,13 +987,16 @@ class _TimePerMove extends StatelessWidget {
           ListTile(
             dense: true,
             title: Text(
-              'Errori giocati in fretta: '
-              '${hasty.map((p) => '${moveNumber(Chess.fromSetup(Setup.parseFen(review.moves[p].fenBefore)))} ${formatSan(review.moves[p].san, notation)}').join(', ')}',
+              l.reviewHastyMistakes(
+                hasty
+                    .map(
+                      (p) =>
+                          '${moveNumber(Chess.fromSetup(Setup.parseFen(review.moves[p].fenBefore)))} ${formatSan(review.moves[p].san, notation)}',
+                    )
+                    .join(', '),
+              ),
             ),
-            subtitle: const Text(
-              'Meno del 40% del tuo tempo medio per mossa: prima di muovere, '
-              'controlla le minacce.',
-            ),
+            subtitle: Text(l.reviewHastyAdvice),
           ),
       ],
     );
@@ -1010,21 +1014,24 @@ class _PhaseAccuracy extends StatelessWidget {
   Widget build(BuildContext context) {
     final white = review.accuracyByPhase(Side.white);
     final black = review.accuracyByPhase(Side.black);
+    final l = AppLocalizations.of(context);
     String value(double? a) => a == null ? '—' : a.round().toString();
     return ExpansionTile(
-      title: const Text('Precisione per fase'),
+      title: Text(l.reviewAccuracyByPhase),
       children: [
         for (final phase in GamePhase.values)
           Semantics(
-            label:
-                '${phase.label}: Bianco ${value(white[phase])}, '
-                'Nero ${value(black[phase])}',
+            label: l.reviewPhaseSemantics(
+              phaseLabel(l, phase),
+              value(white[phase]),
+              value(black[phase]),
+            ),
             excludeSemantics: true,
             child: ListTile(
               dense: true,
-              title: Text(phase.label),
+              title: Text(phaseLabel(l, phase)),
               trailing: Text(
-                'Bianco ${value(white[phase])} · Nero ${value(black[phase])}',
+                l.reviewPhaseValues(value(white[phase]), value(black[phase])),
               ),
             ),
           ),
@@ -1101,6 +1108,7 @@ class _MoveList extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final notation = AppSettings.of(context).notation;
+    final l = AppLocalizations.of(context);
     return Wrap(
       spacing: 6,
       runSpacing: 6,
@@ -1112,10 +1120,12 @@ class _MoveList extends StatelessWidget {
           Semantics(
             button: true,
             selected: selected == m.ply + 1,
-            label:
-                '${moveNumber(positions[m.ply])} ${formatSan(m.san, notation)}, '
-                '${m.classification.label}'
-                '${notes[m.ply] == null ? '' : ', con una nota'}',
+            label: l.reviewMoveSemantics(
+              moveNumber(positions[m.ply]),
+              formatSan(m.san, notation),
+              moveClassLabel(l, m.classification),
+              notes[m.ply] == null ? 'no' : 'yes',
+            ),
             excludeSemantics: true,
             child: InkWell(
               onTap: () => onSelect(m.ply + 1),
@@ -1160,7 +1170,7 @@ class _EvalGraph extends StatelessWidget {
   Widget build(BuildContext context) {
     final n = review.whiteWinCurve.length;
     return Semantics(
-      label: 'Grafico della valutazione',
+      label: AppLocalizations.of(context).reviewEvalGraph,
       child: LayoutBuilder(
         builder: (context, constraints) => GestureDetector(
           behavior: HitTestBehavior.opaque,

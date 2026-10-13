@@ -1,5 +1,8 @@
+import '../l10n/app_localizations.dart';
 import '../settings/settings.dart';
+import '../settings/settings_labels.dart';
 import 'achievements.dart';
+import 'achievements_l10n.dart';
 import 'avatar.dart';
 import 'progress_state.dart';
 import 'xp.dart';
@@ -11,7 +14,7 @@ sealed class Requirement {
   bool isMet(ProgressState state);
 
   /// Testo breve per l'utente, per esempio "Livello 4".
-  String get label;
+  String label(AppLocalizations l);
 }
 
 class LevelRequirement extends Requirement {
@@ -28,7 +31,7 @@ class LevelRequirement extends Requirement {
       (keptAchievement != null && state.unlocked.contains(keptAchievement));
 
   @override
-  String get label => 'Livello $level';
+  String label(AppLocalizations l) => l.progressRequirementLevel(level);
 
   @override
   bool operator ==(Object other) =>
@@ -49,7 +52,9 @@ class AchievementRequirement extends Requirement {
   bool isMet(ProgressState state) => state.unlocked.contains(id);
 
   @override
-  String get label => 'Traguardo «${achievementById(id)!.title}»';
+  String label(AppLocalizations l) => l.progressRequirementAchievement(
+    achievementTitle(l, achievementById(id)!),
+  );
 
   @override
   bool operator ==(Object other) =>
@@ -58,11 +63,6 @@ class AchievementRequirement extends Requirement {
   @override
   int get hashCode => id.hashCode;
 }
-
-/// Testi dell'interruttore che rende disponibili tutte le ricompense (RV-01).
-const unlockAllTitle = 'Sblocca tutto';
-const unlockAllSubtitle =
-    'Temi, pezzi e avatar disponibili senza doverli sbloccare';
 
 /// Ricompense sbloccabili; tutto ciò che non è qui è disponibile da subito.
 const Map<Enum, Requirement> _requirements = {
@@ -119,10 +119,10 @@ List<Enum> newRewards(ProgressState before, ProgressState after) => [
 ];
 
 /// Nome della ricompensa con la sua categoria, per esempio "tema Sabbia".
-String rewardName(Enum item) => switch (item) {
-  BoardTheme(:final label) => 'tema $label',
-  PieceStyle(:final label) => 'pezzi $label',
-  Avatar(:final label) => 'avatar $label',
-  AvatarFrame(:final label) => 'cornice $label',
+String rewardName(AppLocalizations l, Enum item) => switch (item) {
+  BoardTheme() => l.progressRewardTheme(themeLabel(l, item)),
+  PieceStyle() => l.progressRewardPieces(pieceLabel(l, item)),
+  Avatar(:final label) => l.progressRewardAvatar(label),
+  AvatarFrame(:final label) => l.progressRewardFrame(label),
   _ => item.name,
 };

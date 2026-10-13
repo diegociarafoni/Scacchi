@@ -147,7 +147,7 @@ class PhysicalGame {
     _game,
     headers: {
       'Event': 'Scacchi',
-      'Site': 'Scacchiera fisica',
+      'Site': 'Scacchiera fisica', // l10n-ok
       'Date': _date(date),
       'White': white,
       'Black': black,
