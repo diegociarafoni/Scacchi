@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../about/about_page.dart';
 import '../l10n/app_localizations.dart';
 import '../progress/progress_controller.dart';
 import '../style/style_page.dart';
@@ -8,8 +9,8 @@ import 'section_pages.dart';
 import 'settings.dart';
 
 /// Voci del menu delle Impostazioni, nell'ordine in cui compaiono; il profilo
-/// bambino sta in fondo, separato.
-enum SettingsSection { profile, style, board, game, accessibility, kid }
+/// bambino e le informazioni stanno in fondo, separati.
+enum SettingsSection { profile, style, board, game, accessibility, kid, about }
 
 /// Menu di sezioni: icona, nome e una riga che dice cosa contiene. Le
 /// impostazioni stanno nelle pagine delle sezioni.
@@ -47,6 +48,7 @@ class SettingsPage extends StatelessWidget {
       controller: controller,
       progress: progress,
     ),
+    SettingsSection.about => const AboutPage(),
   };
 
   (IconData, String, String) _entry(
@@ -82,6 +84,11 @@ class SettingsPage extends StatelessWidget {
       Icons.child_care,
       l10n.kidProfile,
       l10n.kidProfileDescription,
+    ),
+    SettingsSection.about => (
+      Icons.info_outline,
+      l10n.aboutTitle,
+      l10n.aboutEntrySubtitle,
     ),
   };
 

@@ -39,8 +39,15 @@ Nel profilo bambino (RP-06) la barra di valutazione non ha cifre e le linee non 
 
 ## Albero delle varianti
 
-`VariationTree` tiene la posizione iniziale come radice e, per ogni mossa, i figli: il primo è la continuazione principale, gli altri sono varianti. `play` aggiunge o seleziona, `promote` porta in prima posizione la mossa e i suoi antenati, `delete` toglie il ramo (la radice no). Non è collegato al PGN: l'albero vive solo finché la pagina è aperta.
+`VariationTree` tiene la posizione iniziale come radice e, per ogni mossa, i figli: il primo è la continuazione principale, gli altri sono varianti. `play` aggiunge o seleziona, `add` aggiunge dopo un nodo qualsiasi, `promote` porta in prima posizione la mossa e i suoi antenati, `delete` toglie il ramo (la radice no). Ogni nodo può avere una nota (`MoveNote`, RF-55) e il tempo residuo.
 
-## Limiti attuali
+## Salvare e condividere (RF-52)
 
-- L'albero non si salva né si esporta in PGN.
+Il menu ⋮ della barra del titolo ha due voci:
+
+- **Salva nell'archivio**: chiede un nome (proposto «Analisi del gg/mm/aaaa») e salva l'albero con le varianti come voce di tipo `analisi` (`SavedGame.fromTree`). Salvando di nuovo dalla stessa pagina, o da un'analisi riaperta dall'archivio, si aggiorna la stessa voce senza chiedere il nome. Un errore di scrittura mostra un avviso.
+- **Condividi il PGN**: il PGN dell'albero com'è ora, con le varianti tra parentesi.
+
+Il PGN lo scrive `exportTreePgn` (`lib/archive/tree_pgn.dart`): linea principale, varianti annidate, note e tempi `[%clk]`, `FEN` e `SetUp` se la posizione di partenza non è quella iniziale. `treeFromPgn` fa il contrario: una variante con una mossa illegale si scarta da quel punto, una linea principale illegale rende illeggibile il PGN, una variante che ripete una mossa già presente si fonde con essa. Solo scacchi classici: le altre varianti di gioco non producono un albero.
+
+Dall'archivio, **Apri nell'analisi** (nel menu di ogni partita) e il tocco su un'analisi salvata aprono la pagina con l'albero ripristinato; aprire una partita giocata e salvare crea una nuova analisi.

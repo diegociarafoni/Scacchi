@@ -35,4 +35,28 @@ void main() {
       },
     );
   }
+
+  test(
+    'JsonFileStore: due letture iniziali concorrenti non perdono scritture',
+    () async {
+      final file = File('${dir.path}/training.json');
+      await JsonFileStore(file).write('a', '1');
+      final store = JsonFileStore(file);
+      final first = store.read('a');
+      final second = store.write('b', '2');
+      await Future.wait([first, second]);
+      await store.write('c', '3');
+      final again = JsonFileStore(file);
+      expect(await again.read('a'), '1');
+      expect(await again.read('b'), '2');
+      expect(await again.read('c'), '3');
+    },
+  );
+
+  test('JsonFileStore mette da parte un file con byte non UTF-8', () async {
+    final file = File('${dir.path}/training.json')
+      ..writeAsBytesSync([0xff, 0xfe, 0xfd]);
+    expect(await JsonFileStore(file).read('a'), isNull);
+    expect(dir.listSync().where((f) => f.path.contains('.bad-')), hasLength(1));
+  });
 }

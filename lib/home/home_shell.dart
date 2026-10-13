@@ -4,6 +4,7 @@ import 'package:dartchess/dartchess.dart' show Side;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../analysis/analysis_page.dart';
 import '../archive/archive_page.dart';
 import '../archive/game_archive.dart';
 import '../archive/pgn.dart';
@@ -585,8 +586,46 @@ class _HomeShellState extends State<HomeShell> {
         ),
       );
 
+  /// Apre nell'analisi una partita o un'analisi dell'archivio, con le sue
+  /// varianti (RF-52). Salvando da una partita nasce una nuova analisi.
+  Future<void> _openSavedAnalysis(BuildContext context, SavedGame saved) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
+    final l10n = AppLocalizations.of(context);
+    final tree = saved.toTree();
+    if (tree == null) {
+      messenger.showSnackBar(SnackBar(content: Text(l10n.homeGameCannotOpen)));
+      return;
+    }
+    if (!_computerAvailable) {
+      messenger.showSnackBar(SnackBar(content: Text(l10n.homeReviewNoEngine)));
+      return;
+    }
+    final player = widget.createComputer?.call() ?? ComputerPlayer();
+    try {
+      await navigator.push(
+        MaterialPageRoute<void>(
+          builder: (_) => AnalysisPage(
+            initial: tree.root.position,
+            tree: tree,
+            saved: saved.mode == SavedGame.analysis ? saved : null,
+            analyse: (fen, multiPv) =>
+                player.analyseLive(fen, multiPv: multiPv),
+            onSave: _saveGame,
+            tablebase: sharedTablebase(),
+          ),
+        ),
+      );
+    } finally {
+      player.dispose().ignore();
+    }
+  }
+
   /// Apre nella revisione una partita dell'archivio.
   Future<void> _openSavedGame(BuildContext context, SavedGame saved) async {
+    if (saved.mode == SavedGame.analysis) {
+      return _openSavedAnalysis(context, saved);
+    }
     final messenger = ScaffoldMessenger.of(context);
     final navigator = Navigator.of(context);
     final l10n = AppLocalizations.of(context);
@@ -668,12 +707,8 @@ class _HomeShellState extends State<HomeShell> {
             clocks: [for (final m in game.moves) m.clock],
             notes: [for (final m in game.moves) m.note],
             onNoteChanged: (ply, note) {
-              game.annotate(ply, note);
-              return _saveGame(
-                saved.copyWith(
-                  pgn: exportPgn(game, headers: imported.first.headers),
-                ),
-              );
+              imported.first.annotate(ply, note);
+              return _saveGame(saved.copyWith(pgn: imported.first.toPgn()));
             },
             timeControl: TimeControl.parse(saved.timeControl ?? ''),
             startTimes: Handicap.startTimesFromPgn(
@@ -874,6 +909,9 @@ class _HomeShellState extends State<HomeShell> {
           ArchivePage(
             archive: await _archive(),
             onOpen: (g) => unawaited(_openSavedGame(context, g)),
+            onAnalyse: _computerAvailable
+                ? (g) => unawaited(_openSavedAnalysis(context, g))
+                : null,
           ),
         ),
       },
@@ -951,6 +989,7 @@ class _HomeShellState extends State<HomeShell> {
               playGuardian: _computerAvailable ? _playGuardian : null,
               storyPage: _storyPage,
               openGame: _openSavedGame,
+              openAnalysis: _computerAvailable ? _openSavedAnalysis : null,
               puzzlesPage: _puzzlesPage,
             )
           else
