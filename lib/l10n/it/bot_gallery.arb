@@ -380,5 +380,21 @@
   "botOptionsKidSlow": "Con l'orologio, con calma",
   "@botOptionsKidSlow": {
     "description": "botOptionsKidSlow"
+  },
+  "botGreetingLuna": "Di notte vedo tutta la scacchiera, anche le mosse nascoste. Giochiamo?",
+  "@botGreetingLuna": {
+    "description": "botGreetingLuna"
+  },
+  "botRematchLuna": "Mi hai battuta alla luce delle stelle! Ancora una?",
+  "@botRematchLuna": {
+    "description": "botRematchLuna"
+  },
+  "botGreetingCosmo": "Decollo tra tre, due, uno… si gioca! Si attacca?",
+  "@botGreetingCosmo": {
+    "description": "botGreetingCosmo"
+  },
+  "botRematchCosmo": "Atterraggio d'emergenza: mi hai battuto. Rivincita?",
+  "@botRematchCosmo": {
+    "description": "botRematchCosmo"
   }
 }

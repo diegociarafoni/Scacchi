@@ -46,6 +46,7 @@ void main() {
     ]);
     expect(BotCollection.unlockedBy(bot('stella')).map((b) => b.id), [
       'massimo',
+      'cosmo',
     ]);
   });
 
