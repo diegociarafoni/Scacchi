@@ -44,7 +44,7 @@ Si rigenerano con `tool/generate_icons.py` e i due generatori Flutter, come desc
 
 ### Metodo: prima i test
 
-Ogni funzione nasce dai requisiti del progetto, nel documento dei requisiti, con questo ordine:
+Ogni funzione nasce dai requisiti del progetto, nel [backlog](backlog.md), con questo ordine:
 
 1. Si scrivono i test che descrivono il comportamento richiesto, citando nel nome l'identificativo del requisito (per esempio `RF-32 patta concordata`).
 2. Si eseguono e si verifica che falliscano per la ragione attesa.
