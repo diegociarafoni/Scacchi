@@ -63,5 +63,442 @@
     "description": "Sopra la scacchiera, finché nessuno ha mosso"
   },
   "gameActionRematch": "Rivincita",
-  "gameActionReview": "Rivedi"
+  "gameActionReview": "Rivedi",
+  "gameSideName": "{side, select, white{Bianco} other{Nero}}",
+  "@gameSideName": {
+    "description": "Colore di un giocatore; side è white o black",
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "gamePlayerSide": "{side, select, white{il Bianco} other{il Nero}}",
+  "@gamePlayerSide": {
+    "description": "Il giocatore di un colore dentro una frase, senza nome scelto",
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "gamePlayerNamed": "{name} ({side, select, white{Bianco} other{Nero}})",
+  "@gamePlayerNamed": {
+    "description": "Il giocatore con il nome scelto, affiancato al colore",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "gameStatusMove": "Muove {player}.",
+  "@gameStatusMove": {
+    "description": "Stato sotto la scacchiera: a chi tocca",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "gameStatusCheckNamed": "Scacco. Muove {player}.",
+  "@gameStatusCheckNamed": {
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "gameStatusCheckSide": "Scacco al {side, select, white{Bianco} other{Nero}}. Muove {player}.",
+  "@gameStatusCheckSide": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      },
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "gameStatusCheckmate": "Scacco matto. Vince {player}.",
+  "@gameStatusCheckmate": {
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "gameStatusResignation": "Abbandono. Vince {player}.",
+  "@gameStatusResignation": {
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "gameStatusStalemate": "Stallo. Patta.",
+  "gameStatusInsufficientMaterial": "Materiale insufficiente. Patta.",
+  "gameStatusRepetition": "Triplice ripetizione. Patta.",
+  "gameStatusFiftyMoves": "Regola delle 50 mosse. Patta.",
+  "gameStatusAgreedDraw": "Patta concordata.",
+  "gameStatusKingOfTheHill": "Re al centro. Vince il {side, select, white{Bianco} other{Nero}}.",
+  "@gameStatusKingOfTheHill": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "gameStatusThirdCheck": "Terzo scacco. Vince il {side, select, white{Bianco} other{Nero}}.",
+  "@gameStatusThirdCheck": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "gameStatusOver": "Partita finita.",
+  "gameStatusTimeoutDraw": "Tempo scaduto. Patta per materiale insufficiente.",
+  "gameStatusTimeout": "Tempo scaduto. Vince {player}.",
+  "@gameStatusTimeout": {
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "gameComputerThinking": "Il computer sta pensando…",
+  "gameComputerEvaluatingDraw": "Il computer valuta la patta…",
+  "gameComputerNoReply": "Il computer non risponde.",
+  "gameComputerAcceptsDraw": "Il computer accetta la patta.",
+  "gameComputerDeclinesDraw": "Il computer rifiuta la patta.",
+  "gameRetry": "Riprova",
+  "gameContinue": "Continua",
+  "gameCancel": "Annulla",
+  "gameResignTitle": "Abbandonare la partita?",
+  "gameResignBody": "Abbandona {player}.",
+  "@gameResignBody": {
+    "description": "Conferma di resa; player è il giocatore che abbandona",
+    "placeholders": {
+      "player": {
+        "type": "String"
+      }
+    }
+  },
+  "gameResignYes": "Abbandona",
+  "gameDrawOfferSide": "{side, select, white{Il Bianco} other{Il Nero}} accetta la patta?",
+  "@gameDrawOfferSide": {
+    "description": "Proposta di patta tra due persone, senza nomi scelti",
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "gameDrawOfferNamed": "{name} ({side, select, white{Bianco} other{Nero}}) accetta la patta?",
+  "@gameDrawOfferNamed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "gameDrawDecline": "Rifiuta",
+  "gameDrawAccept": "Accetta",
+  "gameLeaveChallengeTitle": "Lasciare la sfida?",
+  "gameLeaveChallengeBody": "La partita in corso conta come persa.",
+  "gameLeave": "Esci",
+  "gameLineLeftComputer": "Il computer è uscito dalla linea del repertorio.",
+  "gameLineLeftYou": "Sei uscito dalla linea del repertorio.",
+  "gameCoachChecking": "L'allenatore valuta la mossa…",
+  "gameCoachTitle": "Allenatore",
+  "gameCoachWorse": "Questa mossa peggiora la tua posizione.",
+  "gameCoachOn": "Allenatore attivo: ti avviso se sbagli una mossa.",
+  "gameCoachOff": "Allenatore disattivato.",
+  "gameThreatNone": "Nessuna minaccia da mostrare.",
+  "gameThreatArrow": "La freccia rossa mostra la minaccia dell'avversario.",
+  "gameThreatMove": "Se toccasse all'avversario giocherebbe {move}: la freccia rossa.",
+  "@gameThreatMove": {
+    "description": "move è la mossa nella notazione scelta",
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "gameHintNone": "Nessun suggerimento disponibile.",
+  "gameToConfirm": "Da confermare. {move}",
+  "@gameToConfirm": {
+    "description": "Annuncio per il lettore di schermo con la conferma delle mosse attiva; move è la mossa a voce",
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "gamePieceName": "{piece, select, pawn{pedone} knight{cavallo} bishop{alfiere} rook{torre} queen{donna} other{re}}",
+  "@gamePieceName": {
+    "description": "Nome di un pezzo in minuscolo, dentro una frase",
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      }
+    }
+  },
+  "gameSpeechMove": "{who}: {piece}{from, select, square{ da {origin}} file{ della colonna {origin}} rank{ della traversa {origin}} other{}}{capture, select, yes{ prende {target}} other{{from, select, none{ {target}} other{ in {target}}}}}{promotion, select, none{} other{, promozione a {promotion}}}{check, select, mate{, scacco matto} check{, scacco} other{}}",
+  "@gameSpeechMove": {
+    "description": "Mossa letta ad alta voce. who è il colore o il nome, piece il pezzo; from è none, square, file o rank e origin la casa, colonna o traversa di partenza; capture è yes o no; promotion è none o il pezzo; check è none, check o mate",
+    "placeholders": {
+      "who": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "from": {
+        "type": "String"
+      },
+      "origin": {
+        "type": "String"
+      },
+      "capture": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      },
+      "promotion": {
+        "type": "String"
+      },
+      "check": {
+        "type": "String"
+      }
+    }
+  },
+  "gameSpeechCastleShort": "{who}: arrocco corto{check, select, mate{, scacco matto} check{, scacco} other{}}",
+  "@gameSpeechCastleShort": {
+    "placeholders": {
+      "who": {
+        "type": "String"
+      }
+    }
+  },
+  "gameSpeechCastleLong": "{who}: arrocco lungo{check, select, mate{, scacco matto} check{, scacco} other{}}",
+  "@gameSpeechCastleLong": {
+    "placeholders": {
+      "who": {
+        "type": "String"
+      }
+    }
+  },
+  "gameTitleStandard": "Scacchi",
+  "gameTitleChess960": "Chess960",
+  "gameTitleChess960Id": "Chess960 n. {id}",
+  "@gameTitleChess960Id": {
+    "placeholders": {
+      "id": {
+        "type": "int"
+      }
+    }
+  },
+  "gameTitleThreeCheck": "Scacchi dati: Bianco {white}, Nero {black}",
+  "@gameTitleThreeCheck": {
+    "description": "Titolo della partita a Tre scacchi: non un risultato tipo 1-0, per non confonderlo",
+    "placeholders": {
+      "white": {
+        "type": "int"
+      },
+      "black": {
+        "type": "int"
+      }
+    }
+  },
+  "gameComputerLevel": "Computer, livello {level}: {name}",
+  "@gameComputerLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "gameVariantStandard": "Classica",
+  "gameVariantChess960": "Chess960",
+  "gameVariantKingOfTheHill": "Re della collina",
+  "gameVariantThreeCheck": "Tre scacchi",
+  "gameVariantChess960Hint": "Pezzi della prima traversa mescolati: re tra le torri, alfieri su colori opposti.",
+  "gameVariantKingOfTheHillHint": "Si vince anche portando il re in una delle quattro case centrali.",
+  "gameVariantThreeCheckHint": "Si vince anche dando scacco tre volte.",
+  "gameMaterialWho": "{name}, {side, select, white{Bianco} other{Nero}}",
+  "@gameMaterialWho": {
+    "description": "Giocatore con il nome scelto, per la descrizione a voce del materiale",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "gameMaterial": "{who}: {captured, select, none{nessun pezzo catturato} other{ha catturato {pieces}}}{advantage, plural, =0{} other{, vantaggio di {advantage}}}",
+  "@gameMaterial": {
+    "description": "Descrizione a voce dei pezzi catturati da un giocatore. who è il colore (o nome e colore); captured è none o some; pieces l'elenco dei pezzi",
+    "placeholders": {
+      "who": {
+        "type": "String"
+      },
+      "captured": {
+        "type": "String"
+      },
+      "pieces": {
+        "type": "String"
+      },
+      "advantage": {
+        "type": "int"
+      }
+    }
+  },
+  "gameClockOfSide": "Orologio del {side, select, white{Bianco} other{Nero}}: {minutes, plural, one{{minutes} minuto} other{{minutes} minuti}} e {seconds, plural, one{{seconds} secondo} other{{seconds} secondi}}",
+  "@gameClockOfSide": {
+    "description": "Etichetta a voce dell'orologio di un giocatore",
+    "placeholders": {
+      "side": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "int"
+      },
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "gameClockOfName": "Orologio di {name}: {minutes, plural, one{{minutes} minuto} other{{minutes} minuti}} e {seconds, plural, one{{seconds} secondo} other{{seconds} secondi}}",
+  "@gameClockOfName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "int"
+      },
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "gameMenuTooltip": "Altre azioni",
+  "gameMenuAnalysis": "Analisi della posizione",
+  "gameMenuReview": "Revisione della partita",
+  "gameSettings": "Impostazioni",
+  "gameViewStart": "Posizione iniziale",
+  "gameViewAfter": "Posizione dopo {move}",
+  "@gameViewAfter": {
+    "description": "Barra che mostra una posizione passata; move è l'ultima mossa giocata",
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "gameViewPrevious": "Mossa precedente",
+  "gameViewNext": "Mossa successiva",
+  "gameViewBack": "Torna alla partita",
+  "gameDiscard": "Scarta",
+  "gameConfirm": "Conferma",
+  "gameMoveInputLabel": "Mossa",
+  "gameMoveInputHint": "es. e4, Cf3, Nf3, O-O, e7e8q",
+  "gameMoveInputAmbiguous": "R è ambigua: usa K per il re, T per la torre",
+  "gameMoveInputInvalid": "Mossa non valida",
+  "gamePlay": "Gioca",
+  "gamePositionPlayTitle": "Gioca questa posizione",
+  "@gamePositionPlayTitle": {
+    "description": "Titolo del foglio per scegliere l'avversario dopo l'editor di posizione"
+  },
+  "gameBack": "Indietro",
+  "gameNewTitle": "Nuova partita",
+  "gameQuickClock": "Tempo di gioco",
+  "gameNoClock": "Senza tempo",
+  "gameQuickStart": "Inizia partita",
+  "gameQuickVsComputer": "Contro il computer del tuo livello ({level}, circa {elo} Elo)",
+  "@gameQuickVsComputer": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      },
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "gameQuickTwoPlayers": "In due sullo stesso telefono",
+  "gameMenuFriendTitle": "Sfida un amico",
+  "gameMenuFriendSubtitle": "Sullo stesso telefono o ognuno sul suo",
+  "gameMenuBotsTitle": "Scegli il bot",
+  "gameMenuBotsSubtitle": "Una galleria di avversari con una personalità",
+  "gameMenuInstructorTitle": "Gioca con l'istruttore",
+  "gameMenuInstructorSubtitle": "Il computer del tuo livello, con suggerimenti e spiegazioni",
+  "gameMenuTournamentsTitle": "Tornei",
+  "gameMenuTournamentsSubtitle": "Un tabellone da affrontare partita dopo partita",
+  "gameMenuMoreModes": "Altre modalità",
+  "gameMenuCustomTitle": "Partita personalizzata",
+  "gameMenuCustomSubtitle": "Variante, handicap, colore e tempo",
+  "gameMenuTwoTitle": "Due giocatori sullo stesso telefono",
+  "gameMenuTwoSubtitle": "Nomi, variante, handicap e tempo",
+  "gameMenuPhysicalTitle": "Scacchiera fisica",
+  "gameMenuPhysicalSubtitle": "Orologio e registro per la partita sulla scacchiera vera",
+  "gameFriendSameTitle": "Sullo stesso telefono",
+  "gameFriendSameSubtitle": "Vi passate il telefono: nomi, variante, handicap e tempo",
+  "gameFriendApartTitle": "Ognuno sul suo telefono",
+  "gameFriendApartSubtitle": "Vicini o lontani: Wi-Fi, Bluetooth o a distanza",
+  "gameCustomTwoPlayers": "Due giocatori",
+  "gameWhiteName": "Nome del Bianco",
+  "gameBlackName": "Nome del Nero",
+  "gameNameHint": "Facoltativo",
+  "gameVariantTitle": "Variante",
+  "gameTimeControlTitle": "Cadenza",
+  "opponentHuman": "Due giocatori",
+  "opponentBot": "Bot",
+  "opponentNoEngine": "Per giocare contro il computer qui serve Stockfish installato.",
+  "opponentPlayAs": "Giochi con",
+  "opponentSideWhite": "Bianco",
+  "opponentSideRandom": "Caso",
+  "opponentSideBlack": "Nero",
+  "opponentAdaptive": "Adattivo",
+  "opponentAdaptiveInfo": "Livello {level}, circa {elo} Elo: si adegua ai tuoi risultati, per vincere circa metà delle partite.",
+  "@opponentAdaptiveInfo": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      },
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "opponentBeatenOn": "Battuto il {date}",
+  "@opponentBeatenOn": {
+    "description": "Sotto un bot già battuto; date è la data come gg/mm/aaaa",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "opponentBeaten": "Battuto",
+  "@opponentBeaten": {
+    "description": "Descrizione a voce dell'icona su un bot già battuto"
+  },
+  "opponentLocked": "Bloccato: batti un bot del gradino sotto",
+  "@opponentLocked": {
+    "description": "Descrizione a voce dell'icona del lucchetto su un bot bloccato"
+  }
 }

@@ -42,5 +42,12 @@
   "homeRecentSemanticsNoAccuracy": "{result} against {opponent}",
   "homeKidPlay": "Let's play!",
   "homeOpeningsSubtitle": "Explore openings and your repertoire",
-  "homeResumeNoEngine": "Resuming a game against the computer needs the engine: it is included on Android and iOS, on Windows and Linux Stockfish must be installed."
+  "homeResumeNoEngine": "Resuming a game against the computer needs the engine: it is included on Android and iOS, on Windows and Linux Stockfish must be installed.",
+  "homeGuardianTitle": "The guardian",
+  "homeGameCannotOpen": "This game can't be opened.",
+  "homeGameInProgress": "Game in progress",
+  "homeGameResume": "Resume the game",
+  "homeGameReview": "Review the game",
+  "homeReviewNoEngine": "Review needs the engine: it's included on Android and iOS, on Windows and Linux Stockfish must be installed.",
+  "homeTournamentGameTitle": "Tournament · {opponent}"
 }

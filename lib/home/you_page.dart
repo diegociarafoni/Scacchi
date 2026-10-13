@@ -87,7 +87,7 @@ class _YouPageState extends State<YouPage> {
       final value = await source;
       if (context.mounted) _push(context, page(value));
     } on Object catch (e) {
-      debugPrint('Sezione non disponibile: $e');
+      debugPrint('Sezione non disponibile: $e'); // l10n-ok
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(AppLocalizations.of(context).youLoadError)),
@@ -110,7 +110,7 @@ class _YouPageState extends State<YouPage> {
         );
       }
     } on Object catch (e) {
-      if (kDebugMode) debugPrint('Lezione non disponibile: $e');
+      if (kDebugMode) debugPrint('Lezione non disponibile: $e'); // l10n-ok
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(AppLocalizations.of(context).youLoadError)),
