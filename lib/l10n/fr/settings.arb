@@ -130,5 +130,13 @@
   "settingsMarkColorYellow": "Jaune",
   "@settingsMarkColorYellow": {
     "description": "Impostazioni: colore giallo"
+  },
+  "settingsKeepAwake": "Garder l'écran allumé",
+  "@settingsKeepAwake": {
+    "description": "Impostazioni: schermo acceso durante la partita"
+  },
+  "settingsKeepAwakeDescription": "Le téléphone n'éteint pas l'écran pendant une partie",
+  "@settingsKeepAwakeDescription": {
+    "description": "Impostazioni: descrizione dello schermo sempre acceso"
   }
 }

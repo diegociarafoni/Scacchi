@@ -130,5 +130,13 @@
   "settingsMarkColorYellow": "Жёлтый",
   "@settingsMarkColorYellow": {
     "description": "Impostazioni: colore giallo"
+  },
+  "settingsKeepAwake": "Не гасить экран",
+  "@settingsKeepAwake": {
+    "description": "Impostazioni: schermo acceso durante la partita"
+  },
+  "settingsKeepAwakeDescription": "Телефон не выключает экран во время партии",
+  "@settingsKeepAwakeDescription": {
+    "description": "Impostazioni: descrizione dello schermo sempre acceso"
   }
 }

@@ -130,5 +130,13 @@
   "settingsPremoveDescription": "Ruszaj się, gdy myśli komputer; dotknięcie pustego pola anuluje ruch",
   "@settingsPremoveDescription": {
     "description": "Impostazioni: descrizione della premossa"
+  },
+  "settingsKeepAwake": "Nie wygaszaj ekranu",
+  "@settingsKeepAwake": {
+    "description": "Impostazioni: schermo acceso durante la partita"
+  },
+  "settingsKeepAwakeDescription": "Telefon nie wyłącza ekranu podczas partii",
+  "@settingsKeepAwakeDescription": {
+    "description": "Impostazioni: descrizione dello schermo sempre acceso"
   }
 }

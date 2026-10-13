@@ -130,5 +130,13 @@
   "settingsPremoveDescription": "Melangkahlah saat komputer berpikir; ketuk petak kosong untuk membatalkan",
   "@settingsPremoveDescription": {
     "description": "Impostazioni: descrizione della premossa"
+  },
+  "settingsKeepAwake": "Biarkan layar menyala",
+  "@settingsKeepAwake": {
+    "description": "Impostazioni: schermo acceso durante la partita"
+  },
+  "settingsKeepAwakeDescription": "Ponsel tidak mematikan layar selama permainan",
+  "@settingsKeepAwakeDescription": {
+    "description": "Impostazioni: descrizione dello schermo sempre acceso"
   }
 }

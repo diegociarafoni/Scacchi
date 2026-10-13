@@ -124,5 +124,13 @@
   "settingsMarkColorYellow": "Gelb",
   "@settingsMarkColorYellow": {
     "description": "Impostazioni: colore giallo"
+  },
+  "settingsKeepAwake": "Bildschirm eingeschaltet lassen",
+  "@settingsKeepAwake": {
+    "description": "Impostazioni: schermo acceso durante la partita"
+  },
+  "settingsKeepAwakeDescription": "Das Handy schaltet den Bildschirm während einer Partie nicht aus",
+  "@settingsKeepAwakeDescription": {
+    "description": "Impostazioni: descrizione dello schermo sempre acceso"
   }
 }
