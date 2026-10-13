@@ -11,6 +11,14 @@
   "@multiplayerChannelBluetooth": {
     "description": "Scelta del collegamento tramite Bluetooth, senza Wi-Fi"
   },
+  "multiplayerChannelRemote": "A distanza",
+  "@multiplayerChannelRemote": {
+    "description": "Scelta del collegamento via internet, per giocare da lontano"
+  },
+  "multiplayerWifiHint": "Con il Wi-Fi, o l'hotspot di uno dei due telefoni, vi collegate sulla stessa rete: non serve internet.",
+  "@multiplayerWifiHint": {
+    "description": "Spiegazione sotto la scelta Wi-Fi"
+  },
   "multiplayerBluetoothHint": "Con il Bluetooth i due telefoni devono stare vicini e non serve alcuna rete.",
   "@multiplayerBluetoothHint": {
     "description": "Spiegazione sotto la scelta Bluetooth"

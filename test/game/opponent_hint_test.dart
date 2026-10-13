@@ -31,16 +31,11 @@ void main() {
       find.text('Si gioca in due sullo stesso dispositivo.'),
       findsOneWidget,
     );
-    await tester.pumpWidget(
-      picker(const GameSetup(opponent: Opponent.computer)),
-    );
-    expect(
-      find.text('Scegli il livello o lascia che si adatti a te.'),
-      findsOneWidget,
-    );
     await tester.pumpWidget(picker(const GameSetup(opponent: Opponent.bot)));
     expect(
-      find.text('Avversari con personalità da sbloccare uno a uno.'),
+      find.text(
+        "Avversari con personalità da sbloccare uno a uno, o l'Adattivo che segue i tuoi risultati.",
+      ),
       findsOneWidget,
     );
   });
@@ -50,7 +45,9 @@ void main() {
       picker(const GameSetup(opponent: Opponent.bot), locale: 'en'),
     );
     expect(
-      find.text('Opponents with a personality, unlocked one by one.'),
+      find.text(
+        'Opponents with a personality, unlocked one by one, or the Adaptive one that follows your results.',
+      ),
       findsOneWidget,
     );
   });

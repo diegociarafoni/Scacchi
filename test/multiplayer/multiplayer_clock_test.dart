@@ -464,7 +464,6 @@ void main() {
       await tester.pumpWidget(
         localizedApp(
           home: MultiplayerPage(
-            remoteByDefault: false,
             openHost: () async => (transport: a, lanAddress: '10.0.0.2:4000'),
           ),
         ),

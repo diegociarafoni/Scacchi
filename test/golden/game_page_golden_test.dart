@@ -86,4 +86,43 @@ void main() {
       );
     },
   );
+
+  // In coda: le scacchiere dei golden precedenti dipendono dall'ordine delle prove.
+  for (final (device, brightness) in [
+    (Device.phoneSmall, Brightness.light),
+    (Device.phoneMedium, Brightness.dark),
+    (Device.phoneLarge, Brightness.light),
+  ]) {
+    testWidgets(
+      'nuova partita, il menu ${brightness.name} su ${device.name}',
+      skip: _skip != null,
+      (tester) async {
+        await _pumpApp(tester, device, brightness: brightness);
+        await tester.tap(find.text('Nuova'));
+        await tester.pumpAndSettle();
+        await expectLater(
+          find.byType(ScacchiApp),
+          matchesGoldenFile(
+            'goldens/nuova-partita-menu-${brightness.name}-${device.name}.png',
+          ),
+        );
+      },
+    );
+  }
+
+  testWidgets('nuova partita, ognuno sul suo telefono', skip: _skip != null, (
+    tester,
+  ) async {
+    await _pumpApp(tester, Device.phoneMedium, brightness: Brightness.dark);
+    await tester.tap(find.text('Nuova'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Sfida un amico'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Ognuno sul suo telefono'));
+    await tester.pumpAndSettle();
+    await expectLater(
+      find.byType(ScacchiApp),
+      matchesGoldenFile('goldens/nuova-partita-amico-scuro-telefono-medio.png'),
+    );
+  });
 }
