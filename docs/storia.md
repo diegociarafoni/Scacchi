@@ -1,6 +1,6 @@
 # Percorso a storia
 
-Requisito RG-13: una trama a capitoli sopra il [percorso a tappe](percorso.md). Il codice è in `lib/story/`. Si apre dalla Home e dalla scheda Impara, voce **Storia**, ed è l'unico percorso di apprendimento dell'interfaccia: «Continua da dove eri» della scheda Tu porta qui (prossima tappa: `nextStoryStage`), e le stelle già ottenute nel [percorso](percorso.md) contano subito.
+Requisito RG-13: una trama a capitoli sopra il [percorso a tappe](percorso.md). Il codice è in `lib/story/`. Si apre dalla Home (scheda in evidenza «Continua la Storia» e voce **Storia** del gruppo Impara) e dalla scheda Impara, ed è l'unico percorso di apprendimento dell'interfaccia: «Continua da dove eri» della scheda Tu porta qui (prossima tappa: `nextStoryStage`), e le stelle già ottenute nel [percorso](percorso.md) contano subito.
 
 ## Come funziona
 
@@ -18,7 +18,7 @@ La storia accompagna il giocatore dal villaggio ai piedi della Rocca fino alla c
 | La pianura dei piani | La strategia, guardiano | 3 pedoni avanzati | Massimo |
 | L'accademia del maestro | La scuola di Capablanca, guardiano | 3 finali di torri | Stella |
 
-I bot sono quelli della scala (vedi [bot.md](bot.md)) in ordine di forza crescente; Tino, il custode del Capitolo 0, gioca solo nella Storia, al livello 0 (400 Elo, fuori dai livelli scelti dall'utente): la sfida usa il loro livello del motore, senza orologio e con **Annulla** (come il guardiano). Lo stile e il libro d'aperture del bot non sono applicati alla sfida.
+I bot sono quelli della scala (vedi [bot.md](bot.md)) in ordine di forza crescente; Tino, il custode del Capitolo 0, gioca solo nella Storia (`storyOnlyBots`), al livello 0 (400 Elo, fuori dai livelli scelti dall'utente): la sfida usa il loro livello del motore, senza orologio e con **Annulla** (come il guardiano). Lo stile e il libro d'aperture del bot non sono applicati alla sfida.
 
 ## Passi
 
@@ -33,15 +33,15 @@ Un passo già fatto non si riapre (lezioni, puzzle e partite restano raggiungibi
 
 ## Aspetto
 
-In cima una scheda mostra i capitoli conclusi con una barra. I capitoli sono lungo un binario verticale: ogni capitolo ha un badge con un anello di avanzamento (passi fatti su passi totali), il numero, la spunta a capitolo concluso o il lucchetto se è chiuso. Il capitolo corrente ha il bordo nel colore d'azione e la scritta «In corso»; quelli chiusi hanno il contorno tratteggiato e il testo che dice come aprirli. Lezioni e puzzle mostrano una barra con il conteggio, i passi fatti hanno la spunta e quelli bloccati il lucchetto, oltre al testo letto dai lettori di schermo. Contenuti e logica della storia non cambiano; i testi nuovi sono in `story.arb` (italiano e inglese).
+In cima una scheda mostra i capitoli conclusi con una barra. I capitoli sono lungo un binario verticale: ogni capitolo ha un badge con un anello di avanzamento (passi fatti su passi totali), il numero, la spunta a capitolo concluso o il lucchetto se è chiuso. Il capitolo corrente ha il bordo nel colore d'azione e la scritta «In corso»; quelli chiusi hanno il contorno tratteggiato e il testo che dice come aprirli. Lezioni e puzzle mostrano una barra con il conteggio, i passi fatti hanno la spunta e quelli bloccati il lucchetto, oltre al testo letto dai lettori di schermo. I testi sono in `story.arb` (italiano e inglese).
 
 ## Foglio di passaggio
 
-Quando un passo si conclude (lezioni, puzzle, guardiano o sfida), la schermata mostra un foglio dal basso che celebra il risultato e dice cosa viene dopo: dalle lezioni ai puzzle, dai puzzle alla sfida con il custode del capitolo (o al guardiano, dove c'è), e a capitolo concluso l'epilogo con l'apertura del capitolo successivo (o la fine della storia). L'icona compare con un breve rimbalzo, fermo se le animazioni sono disattivate. Il pulsante principale apre subito il passo successivo, «Più tardi» chiude il foglio. Una sfida persa resta un avviso, perché non c'è nulla da celebrare. La logica di avanzamento non cambia: il foglio legge lo stato dopo il passo, comparando con quello di prima. I testi sono `storyPassage*` in `story.arb`; in test `StoryPage.playLesson` sostituisce la schermata della lezione.
+Quando un passo si conclude (lezioni, puzzle, guardiano o sfida), la schermata mostra un foglio dal basso che celebra il risultato e dice cosa viene dopo: dalle lezioni ai puzzle, dai puzzle alla sfida con il custode del capitolo (o al guardiano, dove c'è), e a capitolo concluso l'epilogo con l'apertura del capitolo successivo (o la fine della storia). L'icona compare con un breve rimbalzo, fermo se le animazioni sono disattivate. Il pulsante principale apre subito il passo successivo, «Più tardi» chiude il foglio. Una sfida persa resta un avviso, perché non c'è nulla da celebrare. Il foglio legge lo stato dopo il passo e lo confronta con quello di prima. I testi sono `storyPassage*` in `story.arb`; in test `StoryPage.playLesson` sostituisce la schermata della lezione.
 
 ## Stato e salvataggio
 
-Chi ha già battuto un bot o risolto dei puzzle in un capitolo successivo trova concluso anche il Capitolo 0 (`StoryProgress.isChapterDone`), così l'aggiunta del capitolo non toglie nulla a chi era più avanti. «Continua da dove eri» nella scheda Tu guarda solo il percorso, non la storia: a chi è oltre il Capitolo 0 senza averne fatto le lezioni nuove propone quelle lezioni. Lo stato deriva dal percorso: le lezioni e i guardiani completati contano così come sono, comprese le lezioni aggiunte con un aggiornamento dei contenuti (per questo la storia non elenca le singole lezioni, ma il capitolo del percorso). Salva da sé, in `story.json` (`StoryController`, con `JsonFile`), solo i puzzle risolti per capitolo e i capitoli con il bot battuto. Capitoli sconosciuti o valori illeggibili sono ignorati alla lettura.
+Chi ha già battuto un bot o risolto dei puzzle in un capitolo successivo trova concluso anche il Capitolo 0 (`StoryProgress.isChapterDone`), così l'aggiunta del capitolo non toglie nulla a chi era più avanti. «Continua da dove eri» nella scheda Tu propone la prima lezione, o il guardiano, ancora da fare nei capitoli della storia (`nextStoryStage`), anche se la storia è già oltre. Lo stato deriva dal percorso: le lezioni e i guardiani completati contano così come sono, comprese le lezioni aggiunte con un aggiornamento dei contenuti (per questo la storia non elenca le singole lezioni, ma il capitolo del percorso). Salva da sé, in `story.json` (`StoryController`, con `JsonFile`), solo i puzzle risolti per capitolo e i capitoli con il bot battuto. Capitoli sconosciuti o valori illeggibili sono ignorati alla lettura.
 
 ## Testi e accessibilità
 
