@@ -208,5 +208,22 @@
   "homeResumeNoEngine": "Per riprendere una partita contro il computer serve il motore: su Android e iOS è incluso, su Windows e Linux serve Stockfish installato.",
   "@homeResumeNoEngine": {
     "description": "Messaggio se la partita contro il computer non si può riprendere senza motore"
+  },
+  "homeGuardianTitle": "Il guardiano",
+  "@homeGuardianTitle": {
+    "description": "Titolo della partita contro il guardiano di una tappa del percorso"
+  },
+  "homeGameCannotOpen": "La partita non si può aprire.",
+  "homeGameInProgress": "Partita in corso",
+  "homeGameReview": "Rivedi la partita",
+  "homeReviewNoEngine": "La revisione richiede il motore: su Android e iOS è incluso, su Windows e Linux serve Stockfish installato.",
+  "homeTournamentGameTitle": "Torneo · {opponent}",
+  "@homeTournamentGameTitle": {
+    "description": "Titolo della partita di un torneo; opponent è il nome dell'avversario",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
   }
 }

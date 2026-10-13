@@ -210,7 +210,7 @@ class _HomeShellState extends State<HomeShell> {
         onError: (Object e, StackTrace st) {
           // Si riprova alla prossima richiesta invece di restare bloccati.
           _progress = null;
-          debugPrint('Progressi non disponibili: $e');
+          debugPrint('Progressi non disponibili: $e'); // l10n-ok
           Error.throwWithStackTrace(e, st);
         },
       );
@@ -227,7 +227,9 @@ class _HomeShellState extends State<HomeShell> {
     Future<T?> quiet<T>(Future<T> source) => source.then<T?>(
       (v) => v,
       onError: (Object e) {
-        if (kDebugMode) debugPrint('Avanzamento dei badge non disponibile: $e');
+        if (kDebugMode) {
+          debugPrint('Avanzamento dei badge non disponibile: $e'); // l10n-ok
+        }
         return null;
       },
     );
@@ -249,7 +251,7 @@ class _HomeShellState extends State<HomeShell> {
             ),
           )
           .onError((Object e, _) {
-            if (kDebugMode) debugPrint('Badge non aggiornati: $e');
+            if (kDebugMode) debugPrint('Badge non aggiornati: $e'); // l10n-ok
           }),
     );
     for (final source in <ChangeNotifier?>[path, endgames, masters, story]) {
@@ -390,7 +392,7 @@ class _HomeShellState extends State<HomeShell> {
     try {
       trainer = await (_trainer ??= _loadTrainer());
     } on Object catch (e) {
-      if (kDebugMode) debugPrint('Puzzle non disponibili: $e');
+      if (kDebugMode) debugPrint('Puzzle non disponibili: $e'); // l10n-ok
       return null;
     }
     if (!context.mounted) return 0;
@@ -472,7 +474,8 @@ class _HomeShellState extends State<HomeShell> {
           computerAvailable: true,
           createComputer: widget.createComputer,
           challenge: GameChallenge(
-            title: 'Torneo · ${game.opponent.name}',
+            title: AppLocalizations.of(context)
+                .homeTournamentGameTitle(game.opponent.name),
             levelId:
                 game.opponent.levelId ??
                 engineLevelForElo(game.opponent.elo).id,
@@ -504,7 +507,7 @@ class _HomeShellState extends State<HomeShell> {
           computerAvailable: true,
           createComputer: widget.createComputer,
           challenge: GameChallenge(
-            title: 'Il guardiano',
+            title: AppLocalizations.of(context).homeGuardianTitle,
             levelId: engineLevelForElo(stage.guardianElo!).id,
             side: Side.white,
             allowUndo: true,
@@ -551,26 +554,25 @@ class _HomeShellState extends State<HomeShell> {
   Future<void> _openSavedGame(BuildContext context, SavedGame saved) async {
     final messenger = ScaffoldMessenger.of(context);
     final navigator = Navigator.of(context);
+    final l10n = AppLocalizations.of(context);
     final imported = importPgn(saved.pgn).games;
     if (imported.isEmpty) {
-      messenger.showSnackBar(
-        const SnackBar(content: Text('La partita non si può aprire.')),
-      );
+      messenger.showSnackBar(SnackBar(content: Text(l10n.homeGameCannotOpen)));
       return;
     }
     if (!saved.finished && saved.mode != SavedGame.imported) {
       final choice = await showDialog<String>(
         context: context,
         builder: (context) => SimpleDialog(
-          title: const Text('Partita in corso'),
+          title: Text(l10n.homeGameInProgress),
           children: [
             SimpleDialogOption(
               onPressed: () => Navigator.pop(context, 'resume'),
-              child: const Text('Riprendi la partita'),
+              child: Text(l10n.homeResumeTitle),
             ),
             SimpleDialogOption(
               onPressed: () => Navigator.pop(context, 'review'),
-              child: const Text('Rivedi la partita'),
+              child: Text(l10n.homeGameReview),
             ),
           ],
         ),
@@ -579,13 +581,7 @@ class _HomeShellState extends State<HomeShell> {
       if (choice == 'resume') {
         if (saved.mode == SavedGame.computer && !_computerAvailable) {
           messenger.showSnackBar(
-            const SnackBar(
-              content: Text(
-                'Per riprendere una partita contro il computer serve il '
-                'motore: su Android e iOS è incluso, su Windows e Linux serve '
-                'Stockfish installato.',
-              ),
-            ),
+            SnackBar(content: Text(l10n.homeResumeNoEngine)),
           );
           return;
         }
@@ -607,14 +603,7 @@ class _HomeShellState extends State<HomeShell> {
       }
     }
     if (!_computerAvailable) {
-      messenger.showSnackBar(
-        const SnackBar(
-          content: Text(
-            'La revisione richiede il motore: su Android e iOS è incluso, '
-            'su Windows e Linux serve Stockfish installato.',
-          ),
-        ),
-      );
+      messenger.showSnackBar(SnackBar(content: Text(l10n.homeReviewNoEngine)));
       return;
     }
     final game = imported.first.game;
@@ -672,7 +661,7 @@ class _HomeShellState extends State<HomeShell> {
     try {
       return await (await _progressController()).record(activity);
     } on Object catch (e) {
-      debugPrint('Progressi non disponibili: $e');
+      debugPrint('Progressi non disponibili: $e'); // l10n-ok
       return null;
     }
   }
@@ -723,7 +712,7 @@ class _HomeShellState extends State<HomeShell> {
       final page = await build();
       if (mounted) await _push(page);
     } on Object catch (e) {
-      if (kDebugMode) debugPrint('Sezione non disponibile: $e');
+      if (kDebugMode) debugPrint('Sezione non disponibile: $e'); // l10n-ok
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(AppLocalizations.of(context).youLoadError)),
@@ -792,7 +781,9 @@ class _HomeShellState extends State<HomeShell> {
         ),
       );
     } on Object catch (e) {
-      if (kDebugMode) debugPrint('Puzzle del giorno non disponibile: $e');
+      if (kDebugMode) {
+        debugPrint('Puzzle del giorno non disponibile: $e'); // l10n-ok
+      }
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(AppLocalizations.of(context).youLoadError)),
@@ -969,7 +960,7 @@ class _HomeShellState extends State<HomeShell> {
       progress = await _progressController();
     } on Object catch (e) {
       // Senza progressi le impostazioni restano utilizzabili, senza i blocchi.
-      if (kDebugMode) debugPrint('Progressi non disponibili: $e');
+      if (kDebugMode) debugPrint('Progressi non disponibili: $e'); // l10n-ok
     }
     if (!mounted) return;
     await _push(SettingsPage(controller: widget.settings, progress: progress));

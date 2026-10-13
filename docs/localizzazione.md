@@ -62,6 +62,8 @@ Creare `lib/l10n/<codice>/` con tutti i file e le chiavi delle altre lingue e ri
 | Le tue aperture | `lib/openings/personal_explorer_page.dart`, voce nella scheda Aperture (`personal…`) | Nessuno; i nomi delle aperture arrivano dal libro e sono tradotti nel codice |
 | Scacchiera fisica (partita, foto e allineamento, voce in «Tu», prefisso `physical`) | `lib/physical/physical_game_page.dart`, `lib/physical/board_align_page.dart` | Nessuno; il nome del file PGN e l'intestazione `Site` restano in italiano |
 | Scheda Tu (intestazione del gruppo, voci, «Continua da dove eri», prefisso `you`) | `lib/home/you_page.dart` | Nessuno; titoli e sottotitoli di Storia, Multigiocatore e Scacchiera fisica restano nei loro file `.arb` |
+| Partita, barra e menu, foglio «Nuova partita», scelta dell'avversario, varianti, frasi lette dal lettore di schermo (`game.arb`) | `lib/game/game_page.dart`, `lib/game/opponent_picker.dart`, `lib/game/variant.dart`, `lib/game/move_speech.dart` | Nessuno; nomi dei giocatori, intestazioni PGN e messaggi di debug non sono tradotti. `describeSan` e `statusText` ricevono `AppLocalizations` dal chiamante |
+| Home (`home.arb`, `you.arb`) | `lib/home/*.dart` | Nessuno; i messaggi di debug (`// l10n-ok`) non sono mostrati |
 | Statistiche | `lib/stats/stats_page.dart` | Bilancio sintetico `+V =P -S` (`Score.toString` in `stats.dart`), nomi delle cadenze e delle aperture che arrivano dall'archivio |
 
 ## Testi da spostare
