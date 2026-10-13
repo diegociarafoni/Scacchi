@@ -31,12 +31,25 @@ class PositionEditorPage extends StatefulWidget {
   State<PositionEditorPage> createState() => _PositionEditorPageState();
 }
 
-const _castlingLabels = {
-  CastlingRight.whiteKingSide: 'O-O bianco',
-  CastlingRight.whiteQueenSide: 'O-O-O bianco',
-  CastlingRight.blackKingSide: 'O-O nero',
-  CastlingRight.blackQueenSide: 'O-O-O nero',
-};
+String _castlingLabel(AppLocalizations l10n, CastlingRight right) =>
+    switch (right) {
+      CastlingRight.whiteKingSide => l10n.editorCastleWhiteShort,
+      CastlingRight.whiteQueenSide => l10n.editorCastleWhiteLong,
+      CastlingRight.blackKingSide => l10n.editorCastleBlackShort,
+      CastlingRight.blackQueenSide => l10n.editorCastleBlackLong,
+    };
+
+/// Spiegazione del motivo per cui la posizione non si può giocare.
+String setupProblemText(AppLocalizations l10n, SetupProblem problem) =>
+    switch (problem) {
+      SetupProblem.empty => l10n.editorProblemEmpty,
+      SetupProblem.kings => l10n.editorProblemKings,
+      SetupProblem.pawnsOnBackrank => l10n.editorProblemPawnsOnBackrank,
+      SetupProblem.oppositeCheck => l10n.editorProblemOppositeCheck,
+      SetupProblem.impossibleCheck => l10n.editorProblemImpossibleCheck,
+      SetupProblem.invalid => l10n.editorProblemInvalid,
+      SetupProblem.gameOver => l10n.editorProblemGameOver,
+    };
 
 class _PositionEditorPageState extends State<PositionEditorPage> {
   late PositionDraft _draft;
@@ -71,8 +84,9 @@ class _PositionEditorPageState extends State<PositionEditorPage> {
     if (!mounted || text == null) return;
     final draft = PositionDraft.parseFen(text);
     if (draft == null) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('FEN non valido.')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context).editorFenInvalid)),
+      );
       return;
     }
     _set(draft);
@@ -80,8 +94,9 @@ class _PositionEditorPageState extends State<PositionEditorPage> {
 
   void _copy() {
     unawaited(Clipboard.setData(ClipboardData(text: _draft.fen)));
-    ScaffoldMessenger.of(context)
-        .showSnackBar(const SnackBar(content: Text('FEN copiato.')));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(AppLocalizations.of(context).editorFenCopied)),
+    );
   }
 
   Widget _paletteButton(Piece? piece) {
@@ -95,7 +110,9 @@ class _PositionEditorPageState extends State<PositionEditorPage> {
     return Semantics(
       selected: selected,
       button: true,
-      label: piece == null ? 'Gomma' : pieceLabel(piece),
+      label: piece == null
+          ? AppLocalizations.of(context).editorEraser
+          : pieceLabel(AppLocalizations.of(context), piece),
       child: ExcludeSemantics(
         child: InkWell(
           key: key,
@@ -126,16 +143,17 @@ class _PositionEditorPageState extends State<PositionEditorPage> {
   Widget build(BuildContext context) {
     final problem = _draft.problem;
     final colors = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Editor di posizione'),
+        title: Text(l10n.editorTitle),
         actions: [
           PositionImageButton(
             image: () =>
                 PositionImage(fen: _draft.fen, orientation: _orientation),
           ),
           IconButton(
-            tooltip: 'Capovolgi la scacchiera',
+            tooltip: l10n.editorFlipBoard,
             icon: const Icon(Icons.swap_vert),
             onPressed: () =>
                 setState(() => _orientation = _orientation.opposite),
@@ -164,9 +182,15 @@ class _PositionEditorPageState extends State<PositionEditorPage> {
               ),
             const SizedBox(height: 12),
             SegmentedButton<Side>(
-              segments: const [
-                ButtonSegment(value: Side.white, label: Text('Bianco')),
-                ButtonSegment(value: Side.black, label: Text('Nero')),
+              segments: [
+                ButtonSegment(
+                  value: Side.white,
+                  label: Text(l10n.editorTurnWhite),
+                ),
+                ButtonSegment(
+                  value: Side.black,
+                  label: Text(l10n.editorTurnBlack),
+                ),
               ],
               selected: {_draft.turn},
               onSelectionChanged: (s) => _set(_draft.withTurn(s.single)),
@@ -177,7 +201,7 @@ class _PositionEditorPageState extends State<PositionEditorPage> {
               children: [
                 for (final right in CastlingRight.values)
                   FilterChip(
-                    label: Text(_castlingLabels[right]!),
+                    label: Text(_castlingLabel(l10n, right)),
                     selected: _draft.castling.contains(right),
                     onSelected: _draft.isCastlingAvailable(right)
                         ? (on) => _set(_draft.withCastling(right, enabled: on))
@@ -191,23 +215,23 @@ class _PositionEditorPageState extends State<PositionEditorPage> {
               children: [
                 OutlinedButton(
                   onPressed: () => _set(PositionDraft.initial()),
-                  child: const Text('Iniziale'),
+                  child: Text(l10n.editorInitial),
                 ),
                 OutlinedButton(
                   onPressed: () => _set(PositionDraft.empty()),
-                  child: const Text('Svuota'),
+                  child: Text(l10n.editorClear),
                 ),
                 OutlinedButton(
                   onPressed: () => _set(_draft.flipped()),
-                  child: const Text('Inverti colori'),
+                  child: Text(l10n.editorSwapColors),
                 ),
                 OutlinedButton(
                   onPressed: _paste,
-                  child: const Text('Incolla FEN'),
+                  child: Text(l10n.editorPasteFen),
                 ),
                 OutlinedButton(
                   onPressed: _copy,
-                  child: const Text('Copia FEN'),
+                  child: Text(l10n.editorCopyFen),
                 ),
               ],
             ),
@@ -258,7 +282,7 @@ class _PositionEditorPageState extends State<PositionEditorPage> {
               Semantics(
                 liveRegion: true,
                 child: Text(
-                  problem.message,
+                  setupProblemText(l10n, problem),
                   style: TextStyle(color: colors.error),
                 ),
               ),
@@ -268,7 +292,7 @@ class _PositionEditorPageState extends State<PositionEditorPage> {
               onPressed: problem == null
                   ? () => Navigator.pop(context, _draft.toPosition())
                   : null,
-              child: const Text('Gioca da qui'),
+              child: Text(l10n.editorPlayFromHere),
             ),
           ],
         ),
@@ -294,23 +318,26 @@ class _FenDialogState extends State<_FenDialog> {
   }
 
   @override
-  Widget build(BuildContext context) => AlertDialog(
-    title: const Text('Incolla FEN'),
-    content: TextField(
-      controller: _controller,
-      autofocus: true,
-      decoration: const InputDecoration(labelText: 'FEN'),
-      onSubmitted: (text) => Navigator.pop(context, text),
-    ),
-    actions: [
-      TextButton(
-        onPressed: () => Navigator.pop(context),
-        child: const Text('Annulla'),
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    return AlertDialog(
+      title: Text(l10n.editorPasteFen),
+      content: TextField(
+        controller: _controller,
+        autofocus: true,
+        decoration: InputDecoration(labelText: l10n.editorFenField),
+        onSubmitted: (text) => Navigator.pop(context, text),
       ),
-      FilledButton(
-        onPressed: () => Navigator.pop(context, _controller.text),
-        child: const Text('Carica'),
-      ),
-    ],
-  );
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(l10n.editorCancel),
+        ),
+        FilledButton(
+          onPressed: () => Navigator.pop(context, _controller.text),
+          child: Text(l10n.editorLoad),
+        ),
+      ],
+    );
+  }
 }

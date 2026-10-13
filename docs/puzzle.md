@@ -55,9 +55,9 @@ Il test `test/puzzles/puzzle_dataset_test.dart` verifica che ogni soluzione sia 
 | `lib/puzzles/review_queue.dart` | Coda di ripasso a intervalli (Leitner) |
 | `lib/puzzles/personal_puzzles.dart` | Puzzle ricavati dagli errori delle proprie partite |
 | `lib/puzzles/puzzle_goal.dart` | Obiettivo del puzzle ricavato dai temi (`PuzzleGoal`) |
-| `lib/puzzles/themes.dart` | Nomi italiani dei temi offerti come filtro |
+| `lib/puzzles/themes.dart` | Elenco dei temi offerti come filtro e loro nome nella lingua dell'app |
 | `lib/puzzles/activity_recorder.dart` | Collegamento con i progressi (`PuzzleSolved`, `PuzzleRunFinished`) |
-| `lib/puzzles/mode_guide.dart` | Obiettivo e regole di ogni modalità, in italiano |
+| `lib/puzzles/mode_guide.dart` | Obiettivo e regole di ogni modalità, nella lingua dell'app |
 | `lib/puzzles/guide_view.dart` | Schermata e pannello con la spiegazione |
 | `lib/training/training_board.dart` | Scacchiera per esercizi, riusabile da puzzle e aperture; segue le impostazioni della scacchiera tramite `SettingsScope` |
 

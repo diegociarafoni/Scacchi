@@ -45,7 +45,7 @@ class BonsoirLanDiscovery implements LanDiscovery {
     await broadcast.start();
     return () => unawaited(
       broadcast.stop().catchError((Object e) {
-        if (kDebugMode) debugPrint('Annuncio mDNS non fermato: $e');
+        if (kDebugMode) debugPrint('Annuncio mDNS non fermato: $e'); // l10n-ok
       }),
     );
   }
@@ -66,7 +66,9 @@ class BonsoirLanDiscovery implements LanDiscovery {
           // Senza risolverlo il servizio non ha indirizzi.
           unawaited(
             service.resolve(discovery.serviceResolver).catchError((Object e) {
-              if (kDebugMode) debugPrint('Servizio mDNS non risolto: $e');
+              if (kDebugMode) {
+                debugPrint('Servizio mDNS non risolto: $e'); // l10n-ok
+              }
             }),
           );
         case BonsoirDiscoveryServiceResolvedEvent():
@@ -91,7 +93,7 @@ class BonsoirLanDiscovery implements LanDiscovery {
       try {
         await discovery.stop();
       } on Object catch (e) {
-        if (kDebugMode) debugPrint('Ricerca mDNS non fermata: $e');
+        if (kDebugMode) debugPrint('Ricerca mDNS non fermata: $e'); // l10n-ok
       }
     }
   }

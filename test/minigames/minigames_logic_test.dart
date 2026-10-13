@@ -1,19 +1,23 @@
 import 'dart:math';
 
 import 'package:dartchess/dartchess.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/minigames/blind.dart';
 import 'package:scacchi/minigames/capture_all.dart';
 import 'package:scacchi/minigames/coordinates.dart';
 import 'package:scacchi/minigames/material_quiz.dart';
 import 'package:scacchi/minigames/minigame.dart';
 
+final it = lookupAppLocalizations(const Locale('it'));
+
 void main() {
   test('RG-10 quattro minigiochi con identificativi stabili e unici', () {
     expect(Minigame.values.map((m) => m.id).toSet(), hasLength(4));
     for (final m in Minigame.values) {
-      expect(m.title, isNotEmpty);
-      expect(m.description, isNotEmpty);
+      expect(m.title(it), isNotEmpty);
+      expect(m.description(it), isNotEmpty);
     }
     expect(Minigame.byId('coordinate'), Minigame.coordinates);
     expect(Minigame.byId('sconosciuto'), isNull);
@@ -148,19 +152,19 @@ void main() {
       expect(q.sans, hasLength(4));
       expect(q.movesText, startsWith('1. '));
       expect(q.movesText, contains(' 2. '));
-      expect(q.prompt, contains(q.square.name));
+      expect(q.prompt(it), contains(q.square.name));
     });
 
     test('nomi dei pezzi in italiano', () {
       expect(
-        pieceLabel(const Piece(color: Side.white, role: Role.knight)),
+        pieceLabel(it, const Piece(color: Side.white, role: Role.knight)),
         'Cavallo bianco',
       );
       expect(
-        pieceLabel(const Piece(color: Side.black, role: Role.queen)),
+        pieceLabel(it, const Piece(color: Side.black, role: Role.queen)),
         'Donna nera',
       );
-      expect(pieceLabel(null), 'Casa vuota');
+      expect(pieceLabel(it, null), 'Casa vuota');
     });
   });
 
@@ -181,9 +185,9 @@ void main() {
     });
 
     test('etichette', () {
-      expect(balanceLabel(0), 'Pari');
-      expect(balanceLabel(3), 'Bianco +3');
-      expect(balanceLabel(-2), 'Nero +2');
+      expect(balanceLabel(it, 0), 'Pari');
+      expect(balanceLabel(it, 3), 'Bianco +3');
+      expect(balanceLabel(it, -2), 'Nero +2');
     });
 
     test('domande con quattro scelte diverse e risposta tra queste', () {

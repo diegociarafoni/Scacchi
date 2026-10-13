@@ -5,6 +5,7 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart' hide File;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/minigames/capture_all.dart';
 import 'package:scacchi/minigames/capture_all_page.dart';
 import 'package:scacchi/minigames/coordinates_page.dart';
@@ -38,6 +39,8 @@ Future<void> settle(WidgetTester tester) async {
     await tester.pumpAndSettle();
   }
 }
+
+final it = lookupAppLocalizations(const Locale('it'));
 
 void main() {
   testWidgets('RG-10 coordinate: punto, errore e fine dopo 30 secondi', (
@@ -146,7 +149,7 @@ void main() {
     );
     final mirror = Random(3);
     for (var i = 0; i < QuizPage.questions; i++) {
-      final item = materialItem(mirror);
+      final item = materialItem(mirror, it);
       expect(find.text('Domanda ${i + 1} di ${QuizPage.questions}'), findsOne);
       expect(find.byType(StaticChessboard), findsOneWidget);
       // Sbaglia solo la prima.
@@ -178,7 +181,7 @@ void main() {
         ),
       ),
     );
-    final item = blindItem(Random(4));
+    final item = blindItem(Random(4), it);
     expect(find.text(item.intro!), findsOneWidget);
     expect(find.byType(StaticChessboard), findsNothing);
     await tester.tap(find.byKey(Key('choice-${item.answer}')));

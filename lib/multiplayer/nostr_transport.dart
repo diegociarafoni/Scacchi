@@ -13,7 +13,7 @@ import 'transport.dart';
 /// Relay pubblici usati per la partita a distanza. Basta che uno risponda;
 /// vedono solo byte cifrati e una chiave casuale per partita.
 final defaultRelays = <Uri>[
-  Uri.parse('wss://relay.damus.io'),
+  Uri.parse('wss://relay.damus.io'), // l10n-ok
   Uri.parse('wss://nos.lol'),
   Uri.parse('wss://relay.primal.net'),
   Uri.parse('wss://offchain.pub'),
@@ -351,7 +351,9 @@ class NostrTransport implements MessageTransport, ConnectionAware {
       try {
         await r.socket?.close();
       } on Object catch (e) {
-        if (kDebugMode) debugPrint('Chiusura del relay ${r.url}: $e');
+        if (kDebugMode) {
+          debugPrint('Chiusura del relay ${r.url}: $e'); // l10n-ok
+        }
       }
       r.socket = null;
     }

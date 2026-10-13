@@ -151,7 +151,7 @@ class _CaptureAllPageState extends State<CaptureAllPage> {
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(run.board.instructions, style: text.titleMedium),
+                  Text(run.board.instructions(l10n), style: text.titleMedium),
                   Text(
                     l10n.minigamesCaptureAllMoves(run.moves, run.optimalMoves),
                     style: text.bodyMedium,

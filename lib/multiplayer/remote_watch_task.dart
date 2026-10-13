@@ -28,7 +28,9 @@ void remoteWatchDispatcher() {
       return true;
     } on Object catch (e) {
       // Si riprova al prossimo giro.
-      if (kDebugMode) debugPrint('Controllo in background fallito: $e');
+      if (kDebugMode) {
+        debugPrint('Controllo in background fallito: $e'); // l10n-ok
+      }
       return false;
     }
   });
@@ -92,7 +94,7 @@ class LocalTurnNotifier implements TurnNotifier {
       body: body,
       notificationDetails: NotificationDetails(
         android: AndroidNotificationDetails(
-          'partite-a-distanza',
+          'partite-a-distanza', // l10n-ok
           l10n.multiplayerRemoteNotifyChannel,
           channelDescription: l10n.multiplayerRemoteNotifyChannelDescription,
         ),

@@ -514,5 +514,128 @@
   "puzzleGuideGotIt": "Ho capito",
   "@puzzleGuideGotIt": {
     "description": "Chiude la spiegazione"
-  }
+  },
+  "puzzleThemeMateIn1": "Matto in 1",
+  "@puzzleThemeMateIn1": {
+    "description": "Nome di un tema dei puzzle, usato nei filtri e nei consigli"
+  },
+  "puzzleThemeMateIn2": "Matto in 2",
+  "puzzleThemeMateIn3": "Matto in 3",
+  "puzzleThemeMateIn4": "Matto in 4",
+  "puzzleThemeMateIn5": "Matto in 5 o più",
+  "puzzleThemeBackRankMate": "Matto sulla traversa",
+  "puzzleThemeSmotheredMate": "Matto affogato",
+  "puzzleThemeFork": "Forchetta",
+  "puzzleThemePin": "Inchiodatura",
+  "puzzleThemeSkewer": "Infilata",
+  "puzzleThemeDiscoveredAttack": "Attacco di scoperta",
+  "puzzleThemeDoubleCheck": "Scacco doppio",
+  "puzzleThemeHangingPiece": "Pezzo in presa",
+  "puzzleThemeTrappedPiece": "Pezzo intrappolato",
+  "puzzleThemeDeflection": "Deviazione",
+  "puzzleThemeAttraction": "Adescamento",
+  "puzzleThemeSacrifice": "Sacrificio",
+  "puzzleThemeCapturingDefender": "Eliminazione del difensore",
+  "puzzleThemeClearance": "Sgombero",
+  "puzzleThemeInterference": "Interferenza",
+  "puzzleThemeIntermezzo": "Mossa intermedia",
+  "puzzleThemeXRayAttack": "Attacco a raggi X",
+  "puzzleThemeQuietMove": "Mossa silenziosa",
+  "puzzleThemeDefensiveMove": "Mossa difensiva",
+  "puzzleThemeZugzwang": "Zugzwang",
+  "puzzleThemePromotion": "Promozione",
+  "puzzleThemeUnderPromotion": "Sottopromozione",
+  "puzzleThemeAdvancedPawn": "Pedone avanzato",
+  "puzzleThemeExposedKing": "Re esposto",
+  "puzzleThemeKingsideAttack": "Attacco sul lato di re",
+  "puzzleThemeQueensideAttack": "Attacco sul lato di donna",
+  "puzzleThemeEnPassant": "Presa en passant",
+  "puzzleThemeCastling": "Arrocco",
+  "puzzleThemeOpening": "Apertura",
+  "puzzleThemeMiddlegame": "Mediogioco",
+  "puzzleThemeEndgame": "Finale",
+  "puzzleThemePawnEndgame": "Finale di pedoni",
+  "puzzleThemeRookEndgame": "Finale di torri",
+  "puzzleThemeQueenEndgame": "Finale di donne",
+  "puzzleThemeKnightEndgame": "Finale di cavalli",
+  "puzzleThemeBishopEndgame": "Finale di alfieri",
+  "puzzleGuideThemeTitle": "Puzzle per tema",
+  "puzzleGuideTrainingGoal": "Trova la mossa giusta in ogni puzzle, uno dopo l'altro.",
+  "@puzzleGuideTrainingGoal": {
+    "description": "Spiegazione della modalità Allenamento: obiettivo"
+  },
+  "puzzleGuideTrainingRule1": "I puzzle sono scelti in base al tuo punteggio: se vai bene diventano più difficili.",
+  "puzzleGuideTrainingRule2": "Muovi il pezzo giusto: se la mossa è corretta l'avversario risponde e tocca a te, se è sbagliata viene annullata.",
+  "puzzleGuideTrainingRule3": "Su un puzzle nuovo, risolto al primo tentativo il punteggio sale; se sbagli o guardi la soluzione conta come fallito, il punteggio scende e il puzzle torna nel ripasso. I puzzle già visti non cambiano il punteggio.",
+  "puzzleGuideTrainingRule4": "Il suggerimento non toglie nulla: cerchia il pezzo da muovere.",
+  "puzzleGuideTrainingRule5": "Non c'è tempo né limite di errori: puoi fermarti quando vuoi.",
+  "puzzleGuideThemeGoal": "Allena un solo schema tattico: tutti i puzzle hanno lo stesso tema.",
+  "@puzzleGuideThemeGoal": {
+    "description": "Spiegazione della modalità Per tema: obiettivo"
+  },
+  "puzzleGuideThemeRule1": "Muovi il pezzo giusto: se la mossa è corretta l'avversario risponde, se è sbagliata viene annullata.",
+  "puzzleGuideThemeRule2": "Su un puzzle nuovo, risolto al primo tentativo il punteggio sale; con errori o soluzione mostrata conta come fallito, il punteggio scende e il puzzle torna nel ripasso.",
+  "puzzleGuideThemeRule3": "Non c'è tempo né limite di errori.",
+  "puzzleGuideDailyGoal": "Risolvi il puzzle di oggi: è lo stesso per tutta la giornata.",
+  "@puzzleGuideDailyGoal": {
+    "description": "Spiegazione del puzzle del giorno: obiettivo"
+  },
+  "puzzleGuideDailyRule1": "Trova la sequenza di mosse giusta: se sbagli la mossa viene annullata e puoi riprovare.",
+  "puzzleGuideDailyRule2": "Con \"Riprova\" ricominci dalla posizione iniziale, con \"Soluzione\" vedi le mosse.",
+  "puzzleGuideDailyRule3": "Conta come risolto solo se non sbagli e non guardi la soluzione; altrimenti conta come fallito.",
+  "puzzleGuideDailyRule4": "Domani ne arriva uno nuovo.",
+  "puzzleGuideReviewGoal": "Ritrova la soluzione dei puzzle che hai sbagliato.",
+  "@puzzleGuideReviewGoal": {
+    "description": "Spiegazione del ripasso degli errori: obiettivo"
+  },
+  "puzzleGuideReviewRule1": "Ogni puzzle torna a scadenze crescenti (1, 3, 7, 14 e 30 giorni): oggi trovi solo quelli in scadenza.",
+  "puzzleGuideReviewRule2": "Se lo risolvi senza errori l'intervallo si allunga, se sbagli ricomincia da un giorno.",
+  "puzzleGuideReviewRule3": "Il ripasso non cambia il punteggio dell'allenamento.",
+  "puzzleGuideReviewRule4": "Finiti i puzzle di oggi non c'è altro da fare.",
+  "puzzleGuideRunBase1": "I puzzle diventano via via più difficili.",
+  "@puzzleGuideRunBase1": {
+    "description": "Regola comune a tutte le modalità a serie"
+  },
+  "puzzleGuideRunBase2": "Ogni puzzle risolto vale 1 punto.",
+  "puzzleGuideRunTail1": "Il record personale è salvato per ogni modalità.",
+  "puzzleGuideRunTail2": "Puoi uscire quando vuoi: punti e XP guadagnati valgono comunque.",
+  "puzzleGuideStormGoal": "Risolvi più puzzle che puoi in {minutes} minuti.",
+  "@puzzleGuideStormGoal": {
+    "description": "Obiettivo della modalità Combo a tempo",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleGuideStormRule1": "Un errore costa {seconds} secondi, azzera la combo e passa al puzzle successivo.",
+  "@puzzleGuideStormRule1": {
+    "description": "Regola della modalità Combo a tempo",
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleGuideStormRule2": "Con 5, 12, 20 e 30 puzzle di fila guadagni 3, 5, 7 e 10 secondi (poi 10 ogni 10 puzzle).",
+  "puzzleGuideStormRule3": "Non ci sono vite: la serie finisce quando il tempo scade.",
+  "puzzleGuideRushGoal": "Risolvi più puzzle che puoi in {minutes} minuti, con tre vite.",
+  "@puzzleGuideRushGoal": {
+    "description": "Obiettivo delle modalità Corsa",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleGuideLivesRule1": "Un errore ti toglie una vita e passa al puzzle successivo.",
+  "@puzzleGuideLivesRule1": {
+    "description": "Regola delle modalità con le vite (Corsa e Sopravvivenza)"
+  },
+  "puzzleGuideRushRule2": "La serie finisce quando il tempo scade o quando perdi la terza vita.",
+  "puzzleGuideSurvivalGoal": "Risolvi più puzzle che puoi, con tre vite e senza limite di tempo.",
+  "puzzleGuideSurvivalRule2": "La serie finisce quando perdi la terza vita.",
+  "puzzleGuideStreakGoal": "Risolvi più puzzle di fila: il primo errore chiude la serie.",
+  "puzzleGuideStreakRule1": "Non c'è limite di tempo e non ci sono vite.",
+  "puzzleGuideStreakRule2": "Puoi saltare un solo puzzle per serie, con \"Salta\"."
 }

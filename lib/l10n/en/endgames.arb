@@ -1,0 +1,19 @@
+{
+  "endgamesTitle": "Endgames",
+  "endgamesGoalMate": "Give checkmate",
+  "endgamesGoalPromote": "Promote the pawn",
+  "endgamesGoalHoldBlack": "Hold on as Black",
+  "endgamesGoalHoldWhite": "Hold on as White",
+  "endgamesToRepeat": "To repeat",
+  "endgamesStars": "{stars, plural, one{{stars} star out of 3} other{{stars} stars out of 3}}",
+  "endgamesMovesHold": "Moves: {moves} of {par}",
+  "endgamesMovesTarget": "Moves: {moves} · three stars within {par}",
+  "endgamesStart": "Start",
+  "endgamesThinking": "The engine is thinking…",
+  "endgamesEngineFailed": "The engine isn't responding: try again.",
+  "endgamesSuccess": "Goal reached",
+  "endgamesFailure": "You didn't make it",
+  "endgamesFailureHint": "The position stays among those to repeat.",
+  "endgamesRetry": "Try again",
+  "endgamesDone": "Done"
+}

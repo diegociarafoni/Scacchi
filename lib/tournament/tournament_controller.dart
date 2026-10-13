@@ -100,7 +100,7 @@ class TournamentController extends ChangeNotifier {
       _current = data?.current;
       _trophies = data?.trophies ?? const [];
     } on FileSystemException catch (e) {
-      debugPrint('Lettura dei tornei non riuscita: $e');
+      debugPrint('Lettura dei tornei non riuscita: $e'); // l10n-ok
       _readOnly = true;
     }
     notifyListeners();
@@ -165,7 +165,7 @@ class TournamentController extends ChangeNotifier {
         'trophies': [for (final t in _trophies) t.toJson()],
       });
     } on FileSystemException catch (e) {
-      debugPrint('Salvataggio dei tornei non riuscito: $e');
+      debugPrint('Salvataggio dei tornei non riuscito: $e'); // l10n-ok
     }
   }
 }
