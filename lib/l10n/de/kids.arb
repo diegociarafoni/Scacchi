@@ -97,5 +97,8 @@
   "kidUnlockByPlaying": "Wird beim Spielen freigeschaltet",
   "kidCoachMaterialLoss": "Vorsicht: Mit diesem Zug verlierst du Figuren.",
   "kidCoachAllowedMate": "Nach {move} kann dein Gegner mit {reply} Matt setzen.",
-  "kidCoachMissedMate": "Du könntest mit {move} Matt setzen!"
+  "kidCoachMissedMate": "Du könntest mit {move} Matt setzen!",
+  "kidGameUndoOfferSide": "{side, select, white{Weiß, sollen wir den Zug noch einmal machen?} other{Schwarz, sollen wir den Zug noch einmal machen?}}",
+  "kidGameUndoOfferName": "{name}, sollen wir den Zug noch einmal machen?",
+  "kidGameUndoYes": "Ja, noch einmal"
 }
