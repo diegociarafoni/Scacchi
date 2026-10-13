@@ -98,5 +98,7 @@
   "settingsProgressEnabledDescription": "Desativado, nada é registrado",
   "settingsLanguage": "Idioma",
   "settingsLanguageDescription": "Italiano, inglês ou igual ao do celular",
-  "settingsLanguageSystem": "Igual ao do celular"
+  "settingsLanguageSystem": "Igual ao do celular",
+  "settingsPremove": "Pré-movimento",
+  "settingsPremoveDescription": "Jogue enquanto o computador pensa; toque numa casa vazia para cancelar"
 }
