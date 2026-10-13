@@ -1,7 +1,7 @@
 {
   "badgesTitle": "Badge",
   "badgesEntrySubtitle": "Quello che hai imparato e giocato, in una raccolta",
-  "badgesSummary": "{earned} di {total} badge",
+  "badgesSummary": "{earned} su {total} raggiunti",
   "@badgesSummary": {
     "description": "Totale dei badge ottenuti",
     "placeholders": {
@@ -125,7 +125,7 @@
   "badgeEndgamesAllDesc": "Completa tutte le posizioni dell'allenatore dei finali.",
   "badgeMastersAllName": "Occhio da maestro",
   "badgeMastersAllDesc": "Gioca fino in fondo tutte le partite di «Indovina la mossa».",
-  "badgeReviews25Name": "Analista",
+  "badgeReviews25Name": "Moviola",
   "badgeReviews25Desc": "Rivedi {count} partite.",
   "@badgeReviews25Desc": {
     "description": "Come si ottiene il badge «Analista»",
@@ -135,7 +135,7 @@
       }
     }
   },
-  "badgePuzzles500Name": "Collezionista di soluzioni",
+  "badgePuzzles500Name": "Cacciatore di soluzioni",
   "badgePuzzles500Desc": "Risolvi {count} puzzle.",
   "@badgePuzzles500Desc": {
     "description": "Come si ottiene il badge «Collezionista di soluzioni»",
@@ -145,7 +145,7 @@
       }
     }
   },
-  "badgeThemes10Name": "Esploratore di temi",
+  "badgeThemes10Name": "Giramondo dei temi",
   "badgeThemes10Desc": "Risolvi almeno un puzzle in {count} temi diversi.",
   "@badgeThemes10Desc": {
     "description": "Come si ottiene il badge «Esploratore di temi»",
@@ -277,7 +277,7 @@
   "badgeStoryCrownDesc": "Batti Elena nel capitolo «La corona».",
   "badgeStoryAllName": "Leggenda",
   "badgeStoryAllDesc": "Concludi tutti i capitoli della storia.",
-  "badgeStreak14Name": "Due settimane",
+  "badgeStreak14Name": "Due settimane filate",
   "badgeStreak14Desc": "Raggiungi l'obiettivo {count} giorni di fila.",
   "@badgeStreak14Desc": {
     "description": "Come si ottiene il badge «Due settimane»",
@@ -287,7 +287,7 @@
       }
     }
   },
-  "badgeStreak60Name": "Due mesi",
+  "badgeStreak60Name": "Due mesi di fuoco",
   "badgeStreak60Desc": "Raggiungi l'obiettivo {count} giorni di fila.",
   "@badgeStreak60Desc": {
     "description": "Come si ottiene il badge «Due mesi»",
@@ -297,7 +297,7 @@
       }
     }
   },
-  "badgeStreak100Name": "Cento giorni",
+  "badgeStreak100Name": "Cento e non sentirli",
   "badgeStreak100Desc": "Raggiungi l'obiettivo {count} giorni di fila.",
   "@badgeStreak100Desc": {
     "description": "Come si ottiene il badge «Cento giorni»",
@@ -307,7 +307,7 @@
       }
     }
   },
-  "badgeStreak365Name": "Un anno intero",
+  "badgeStreak365Name": "Giro intorno al Sole",
   "badgeStreak365Desc": "Raggiungi l'obiettivo {count} giorni di fila.",
   "@badgeStreak365Desc": {
     "description": "Come si ottiene il badge «Un anno intero»",
@@ -357,7 +357,7 @@
       }
     }
   },
-  "badgeMinigames25Name": "Allenatore instancabile",
+  "badgeMinigames25Name": "Ginnasta della mente",
   "badgeMinigames25Desc": "Concludi {count} sessioni di minigioco con almeno un punto.",
   "@badgeMinigames25Desc": {
     "description": "Come si ottiene il badge «Allenatore instancabile»",
@@ -388,7 +388,7 @@
   "badgeStoryStartDesc": "Completa la prima lezione della Storia.",
   "badgeStoryHalfName": "Metà del viaggio",
   "badgeStoryHalfDesc": "Completa metà delle lezioni della Storia.",
-  "badgeStoryChapters3Name": "Tre capitoli alle spalle",
+  "badgeStoryChapters3Name": "Tris di capitoli",
   "badgeStoryChapters3Desc": "Batti i bot di {count} capitoli della Storia.",
   "@badgeStoryChapters3Desc": {
     "description": "Come si ottiene il badge «Tre capitoli alle spalle»",
@@ -435,6 +435,46 @@
     "placeholders": {
       "count": {
         "type": "int"
+      }
+    }
+  },
+  "badgesTabBadges": "Badge",
+  "badgesTabBooks": "Libri",
+  "booksHint": "Ogni apertura che giochi in partita diventa un libro, con la sua posizione in copertina. Quanti ne trovi?",
+  "booksSemanticsUnlocked": "{name}, libro sbloccato",
+  "@booksSemanticsUnlocked": {
+    "description": "Libro delle aperture sbloccato",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "booksSemanticsLocked": "{name}, libro da sbloccare",
+  "@booksSemanticsLocked": {
+    "description": "Libro delle aperture ancora bloccato",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "booksPlayed": "{count, plural, one{L'hai giocata una volta: il libro è tuo.} other{L'hai giocata {count} volte: il libro è tuo.}}",
+  "@booksPlayed": {
+    "description": "Partite giocate in quell'apertura",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "booksHowTo": "Gioca una partita che segue questa apertura per sbloccare il libro.",
+  "badgesRecentSemantics": "Badge recenti: {names}",
+  "@badgesRecentSemantics": {
+    "description": "Badge recenti, per i lettori di schermo",
+    "placeholders": {
+      "names": {
+        "type": "String"
       }
     }
   }
