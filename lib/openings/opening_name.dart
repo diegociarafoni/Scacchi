@@ -38,8 +38,7 @@ class OpeningName extends StatelessWidget {
               .openingsNameSemantics(opening.localName, opening.eco),
           excludeSemantics: true,
           child: Text(
-            // Solo il nome italiano, su due righe: il codice ECO occupava lo
-            // spazio e il nome veniva troncato.
+            // Solo il nome italiano: il codice ECO toglierebbe spazio al nome.
             opening.localName,
             key: const Key('opening-name'),
             maxLines: 2,

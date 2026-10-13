@@ -23,7 +23,7 @@ class StoryChapter {
   final String pathChapterId;
   final String botId;
 
-  /// Tema Lichess dei puzzle del capitolo e quanti risolverne.
+  /// Tema dei puzzle del capitolo e quanti risolverne.
   final String puzzleTheme;
   final int puzzleCount;
 

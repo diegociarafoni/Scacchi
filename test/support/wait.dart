@@ -38,9 +38,8 @@ Future<void> untilMoves(MultiplayerController c, int moves) => until(
 );
 
 /// Per i canali in memoria (`LoopbackTransport`), non per disco, timer o relay:
-/// lascia girare il ciclo di eventi per [turns] giri. I canali in memoria
-/// consegnano a catena: conta il numero di giri, non il tempo, che sotto carico
-/// può scadere a metà della catena.
+/// lascia girare il ciclo di eventi per [turns] giri. Conta i giri e non il
+/// tempo, che sotto carico può scadere a metà della catena di consegne.
 Future<void> settleLoopback([int turns = 200]) async {
   for (var i = 0; i < turns; i++) {
     await Future<void>.delayed(Duration.zero);

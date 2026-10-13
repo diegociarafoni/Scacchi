@@ -15,7 +15,7 @@ Trivy, Gitleaks e OSV-Scanner si scaricano dai rilasci ufficiali con checksum SH
 
 CodeQL non supporta Dart, quindi non è usato.
 
-Le eccezioni di Gitleaks stanno in `.gitleaks.toml`, ognuna con il motivo. Oggi c'è solo `assets/puzzles/puzzles.csv`: alcuni identificativi dei puzzle Lichess (per esempio `MKEY8`) somigliano a chiavi API. Ogni nuova eccezione va verificata a mano e limitata al file che la richiede.
+Le eccezioni di Gitleaks stanno in `.gitleaks.toml`, ognuna con il motivo. Oggi c'è solo `assets/puzzles/puzzles.csv`: alcuni identificativi dei puzzle (per esempio `MKEY8`) somigliano a chiavi API. Ogni nuova eccezione va verificata a mano e limitata al file che la richiede.
 
 I report SARIF di ogni scanner sono nell'artefatto `security-reports` del workflow e vengono caricati nella scheda **Security → Code scanning** di GitHub. Il repository è pubblico, quindi il code scanning è disponibile senza costi. Il caricamento resta con `continue-on-error`: se fallisce (per esempio su un fork senza il permesso `security-events`) non blocca il workflow e i report restano consultabili negli artefatti.
 
@@ -43,7 +43,7 @@ Il riferimento è [OWASP MASVS v2](https://mas.owasp.org/MASVS/), con i casi di 
 | MASVS-CODE | Il manifest non forza `debuggable`; il rilascio usa la chiave dello store quando `ANDROID_KEYSTORE_PATH` c'è | test sorgenti | Attivo |
 | MASVS-CODE | Dipendenze senza vulnerabilità note | Trivy, OSV-Scanner | Attivo |
 | MASVS-PRIVACY | Nessun SDK di analisi, pubblicità o tracciamento (`privacy.forbiddenPackages`); un pacchetto vietato è ammesso solo come dipendenza indiretta, con il motivo in `privacy.transitiveAllowed` | test sorgenti | Attivo |
-| MASVS-PRIVACY | Solo i permessi Android elencati in `privacy.androidPermissions` con il motivo (oggi `RECEIVE_BOOT_COMPLETED`, `CAMERA`, `INTERNET` per la partita con un amico in rete locale e a distanza tramite relay Nostr, e i permessi Bluetooth per quella vicini senza Wi-Fi, chiesti solo scegliendo il Bluetooth); iOS chiede solo Bluetooth, fotocamera, libreria e rete locale, con la spiegazione | test sorgenti | Attivo |
+| MASVS-PRIVACY | Solo i permessi Android elencati in `privacy.androidPermissions` con il motivo (oggi `RECEIVE_BOOT_COMPLETED`, `CAMERA`, `INTERNET` per la partita con un amico in rete locale e a distanza tramite relay Nostr, e i permessi Bluetooth per quella vicini senza Wi-Fi, chiesti solo scegliendo il Bluetooth); iOS chiede solo Bluetooth, fotocamera, libreria e rete locale, con la spiegazione, e annuncia solo il servizio mDNS della partita a due | test sorgenti | Attivo |
 | MASVS-AUTH | Non applicabile: niente account né login | | N/A |
 | MASVS-RESILIENCE | Anti-manomissione e rilevamento di root non previsti: l'app è open source e senza dati da proteggere | | Escluso per scelta |
 | MASVS-CRYPTO | La crittografia del multigiocatore ([multigiocatore.md](multigiocatore.md)) è in uso sui canali Wi-Fi, Bluetooth e relay; la dichiarazione `ITSAppUsesNonExemptEncryption` per l'App Store non è ancora in `ios/Runner/Info.plist` e va decisa prima della prima pubblicazione su iOS | | Da fare |

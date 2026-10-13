@@ -4,7 +4,7 @@ Requisiti RF-87 (raccolta di partite storiche da sfogliare con commento) e RF-88
 
 ## La raccolta
 
-`masterGames` (`lib/masters/master_games.dart`) elenca le partite in ordine cronologico. Ogni `MasterGame` ha giocatori, luogo, anno, risultato, una breve introduzione, la linea principale in notazione algebrica (SAN) e un commento facoltativo per le mosse chiave, indicato per semimossa (da 1). `positions` e `moveList` rigiocano la partita con le regole di `dartchess`; una mossa illegale lancia `FormatException`, quindi un errore di trascrizione non arriva all'utente.
+`masterGames` (`lib/masters/master_games.dart`) elenca le partite in ordine cronologico. Ogni `MasterGame` ha giocatori, luogo o evento (`event`), anno, risultato, un soprannome facoltativo, una breve introduzione, la linea principale in notazione algebrica (SAN) e un commento facoltativo per le mosse chiave, indicato per semimossa (da 1). `positions` e `moveList` rigiocano la partita con le regole di `dartchess`; una mossa illegale lancia `FormatException`, quindi un errore di trascrizione non arriva all'utente.
 
 | Partita | Anno | Nome |
 |---|---|---|
@@ -40,7 +40,7 @@ Per aggiungere una partita basta una nuova voce in `masterGames`: il test la pre
 - Sia che coincida o no, in scacchiera si gioca la mossa del maestro e un messaggio dice «Come il maestro!» oppure «Il maestro ha giocato …», con il commento se c'è. Dopo una breve pausa si gioca la risposta storica dell'avversario.
 - A fine partita compaiono la percentuale di mosse uguali al maestro e le stelle (`guessStars`): tre da 70%, due da 50%, altrimenti una.
 
-`MastersProgress` tiene la migliore percentuale per partita, in `masters.json` (`JsonFile`, versione 1). `MastersController` registra un `LessonCompleted` (XP e obiettivo giornaliero) solo la prima volta che una partita è conclusa. Il profilo bambino non mostra percentuali né conteggi, solo le stelle.
+`MastersProgress` tiene la migliore percentuale per partita, in `masters.json` (`JsonFile`, versione 1). `MastersController` registra un `LessonCompleted` (XP e obiettivo giornaliero) solo la prima volta che una partita è conclusa. Il profilo bambino non mostra percentuali né conteggi, solo le stelle. Giocare fino in fondo tutte le partite sblocca il badge *Occhio da maestro*.
 
 ## Test
 

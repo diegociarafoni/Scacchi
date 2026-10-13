@@ -30,7 +30,7 @@ Il libro si carica una volta sola (`openingBook()` in `opening_assets.dart`), in
 
 ### Nomi in italiano
 
-Il dataset Lichess è in inglese, quindi i nomi si traducono al momento di mostrarli, senza toccare il file: `openingNameIt` (`lib/openings/opening_names_it.dart`) usa una tabella con le famiglie del libro ("Sicilian Defense" diventa "Difesa siciliana", "Queen's Gambit Declined" diventa "Gambetto di donna rifiutato") e un piccolo glossario per le varianti. Il sostantivo (variante, attacco, gambetto, difesa, sistema, linea) viene messo davanti e gli aggettivi si accordano ("Open Variation" diventa "variante aperta"). I nomi propri restano invariati ("variante Najdorf") e ciò che non si sa tradurre resta in inglese, così l'informazione non si perde mai. Un test passa tutti i nomi del libro e controlla che non restino in inglese le parole del glossario e i sostantivi che reggono il nome. La traduzione vale per il titolo della partita, Esplora aperture, il nome proposto per il repertorio e le aperture delle statistiche e della scheda «La tua settimana»; le partite salvate conservano il nome inglese.
+Il dataset è in inglese, quindi i nomi si traducono al momento di mostrarli, senza toccare il file: `openingNameIt` (`lib/openings/opening_names_it.dart`) usa una tabella con le famiglie del libro ("Sicilian Defense" diventa "Difesa siciliana", "Queen's Gambit Declined" diventa "Gambetto di donna rifiutato") e un piccolo glossario per le varianti. Il sostantivo (variante, attacco, gambetto, difesa, sistema, linea) viene messo davanti e gli aggettivi si accordano ("Open Variation" diventa "variante aperta"). I nomi propri restano invariati ("variante Najdorf") e ciò che non si sa tradurre resta in inglese, così l'informazione non si perde mai. Un test passa tutti i nomi del libro e controlla che non restino in inglese le parole del glossario e i sostantivi che reggono il nome. La traduzione vale per il titolo della partita, Esplora aperture, il nome proposto per il repertorio e le aperture delle statistiche e della scheda «La tua settimana»; le partite salvate conservano il nome inglese.
 
 La notazione delle mosse resta quella inglese (Nf3, Bb5) come nel resto dell'app.
 
@@ -44,7 +44,7 @@ La notazione delle mosse resta quella inglese (Nf3, Bb5) come nel resto dell'app
 
 ### Esplora aperture (RF-92)
 
-Dalla scheda **Aperture**, **Esplora aperture** mostra la posizione corrente con il nome dell'apertura, la sequenza delle mosse e le risposte possibili. Per ogni mossa indica la notazione scelta, quante partite l'hanno giocata (con il separatore delle migliaia della lingua), la barra bianco / patta / nero con le percentuali e, sotto, il nome dell'apertura raggiunta. La riga si legge per esteso ai lettori di schermo («e4: 1.000 partite, bianco 45%, patta 20%, nero 35%»); la barra è decorativa. I colori dei segmenti sono fissi, con testo a contrasto su ognuno.
+Dalla pagina **Aperture** (si apre da Impara e dalla Home), **Esplora aperture** mostra la posizione corrente con il nome dell'apertura, la sequenza delle mosse e le risposte possibili. Per ogni mossa indica la notazione scelta, quante partite l'hanno giocata (con il separatore delle migliaia della lingua), la barra bianco / patta / nero con le percentuali e, sotto, il nome dell'apertura raggiunta. La riga si legge per esteso ai lettori di schermo («e4: 1.000 partite, bianco 45%, patta 20%, nero 35%»); la barra è decorativa. I colori dei segmenti sono fissi, con testo a contrasto su ognuno.
 
 Dove le statistiche non arrivano (posizioni rare o a più di 16 semimosse) la schermata ricade sul libro dei nomi: mostra le continuazioni con la quota delle varianti con nome che proseguono così, senza barra. Se anche il libro finisce lo dice («Fuori dal libro delle aperture»). Se il file delle statistiche non si legge si usa solo il libro. Si può muovere anche fuori dal libro.
 
@@ -78,7 +78,7 @@ Una finestra chiede colore (nell'explorer) e livello del computer. È una `GameC
 
 ### Gioca con l'istruttore
 
-Dalla scheda Aperture la voce **Gioca con l'istruttore** (solo con il motore) chiede colore e livello e avvia una partita dalla posizione iniziale in cui l'allenatore resta acceso (avvisi sugli errori, **Suggerisci**, **Minaccia**) e commenta l'apertura nel fumetto sopra la scacchiera (`SpeechStrip`, vedi [interfaccia.md](interfaccia.md)). È una `GameChallenge` con `instructor: true`; la logica è in `lib/coach/opening_coach.dart` (`openingNote`), pura e testata.
+Dalla pagina Aperture la voce **Gioca con l'istruttore** (solo con il motore) chiede colore e livello e avvia una partita dalla posizione iniziale in cui l'allenatore resta acceso (avvisi sugli errori, **Suggerisci**, **Minaccia**) e commenta l'apertura nel fumetto sopra la scacchiera (`SpeechStrip`, vedi [interfaccia.md](interfaccia.md)). È una `GameChallenge` con `instructor: true`; la logica è in `lib/coach/opening_coach.dart` (`openingNote`), pura e testata.
 
 - Finché la partita è nel libro dice il nome dell'apertura raggiunta e le tre mosse più giocate dalla posizione con la percentuale, ricavate dalle statistiche per mossa (senza statistiche, dalle continuazioni del libro). Una posizione conta come nota se è nel libro o ha mosse nelle statistiche;
 - alla prima mossa che porta fuori dal libro avvisa chi è uscito e, per l'utente, elenca le mosse che si giocavano. Da lì in poi tace sull'apertura e resta l'allenatore;
@@ -94,7 +94,7 @@ Entrano solo le partite concluse con un colore dell'utente (contro il computer o
 
 La schermata `PersonalExplorerPage` ha la scacchiera con le mosse giocate dalla posizione corrente, ordinate per frequenza, con numero di partite, barra dei risultati (decorativa, esclusa dai lettori di schermo) e riepilogo `V · P · S` letto per esteso («3 vinte, 1 patte, 2 perse»). Si tocca una mossa o la si gioca sulla scacchiera per scendere nell'albero; **Indietro** e **Inizio** tornano sui propri passi. Due filtri restringono le partite: colore (Entrambi, Bianco, Nero; scegliere un colore orienta anche la scacchiera) e avversario (nomi dell'archivio, senza doppioni). Il titolo mostra il nome dell'apertura dal libro. Senza partite utili, o con filtri che non ne lasciano, o fuori dall'albero, un messaggio lo dice.
 
-Il collegamento con l'explorer del libro è nei due sensi, sempre sulla stessa posizione: dalla scheda Aperture la voce **Le tue aperture** apre l'albero, e le icone **Apri nell'explorer delle aperture** (nell'albero) e **Le tue partite da questa posizione** (nell'explorer) passano dall'uno all'altro portando con sé le mosse scelte. I testi sono nei file `.arb` (prefisso `personal`).
+Il collegamento con l'explorer del libro è nei due sensi, sempre sulla stessa posizione: dalla pagina Aperture la voce **Le tue aperture** apre l'albero, e le icone **Apri nell'explorer delle aperture** (nell'albero) e **Le tue partite da questa posizione** (nell'explorer) passano dall'uno all'altro portando con sé le mosse scelte. I testi sono nei file `.arb` (prefisso `personal`).
 
 ## Componenti
 
@@ -109,7 +109,7 @@ Il collegamento con l'explorer del libro è nei due sensi, sempre sulla stessa p
 | `lib/openings/personal_tree.dart` | Albero delle proprie aperture dall'archivio, con filtri |
 | `lib/openings/personal_explorer_page.dart` | Schermata Le tue aperture |
 | `lib/openings/opening_names_it.dart` | Nomi delle aperture in italiano |
-| `lib/openings/openings_hub_page.dart` | Scheda Aperture |
+| `lib/openings/openings_hub_page.dart` | Pagina Aperture |
 | `lib/openings/repertoire.dart` | Linee, carte, ripasso, import PGN |
 | `lib/openings/repertoire_page.dart` | Linee di un colore, import PGN |
 | `lib/openings/repertoire_drill_page.dart` | Ripasso sulla scacchiera |

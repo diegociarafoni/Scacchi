@@ -1,0 +1,199 @@
+{
+  "whyPiece": "{role, select, pawn{o peão} knight{o cavalo} bishop{o bispo} rook{a torre} queen{a dama} other{o rei}}",
+  "whyMate": "Xeque-mate!",
+  "whyCastle": "Faz o roque: deixa o rei em segurança.",
+  "whyPromote": "Promove o peão para {role, select, queen{uma dama} rook{uma torre} bishop{um bispo} knight{um cavalo} other{uma peça}}.",
+  "whyCapture": "Captura {victim} com {attacker}.",
+  "whyCheck": "Dá xeque no seu rei.",
+  "whySafe": "Leva {piece} para um lugar seguro, longe do ataque.",
+  "whyThreatCapture": "Ameaça capturar {victim} em {square}.",
+  "whyThreatCaptureKid": "Ameaça capturar {victim}.",
+  "whyThreatCheck": "Prepara um xeque no seu rei.",
+  "whyThreatPromote": "Prepara a promoção de um peão.",
+  "whyDevelop": "Desenvolve {piece}: mais uma peça entra no jogo.",
+  "whyCenter": "Ocupa espaço no centro.",
+  "whyImprove": "Leva {piece} para uma casa mais útil.",
+  "instructorInBookNamed": "Estamos em {name}. Lances mais jogados aqui: {choices}.",
+  "@instructorInBookNamed": {
+    "description": "Istruttore: apertura raggiunta e mosse più giocate",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "name"
+      },
+      "choices": {
+        "type": "String",
+        "description": "choices"
+      }
+    }
+  },
+  "instructorInBook": "Lances mais jogados aqui: {choices}.",
+  "@instructorInBook": {
+    "description": "Istruttore: mosse più giocate, senza nome di apertura",
+    "placeholders": {
+      "choices": {
+        "type": "String",
+        "description": "choices"
+      }
+    }
+  },
+  "instructorInBookNameOnly": "Estamos em {name}.",
+  "@instructorInBookNameOnly": {
+    "description": "Istruttore: apertura raggiunta, senza statistiche",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "name"
+      }
+    }
+  },
+  "instructorLeftYou": "{san} tira você do livro de aberturas. Os lances mais jogados eram: {choices}.",
+  "@instructorLeftYou": {
+    "description": "Istruttore: l'utente esce dal libro",
+    "placeholders": {
+      "san": {
+        "type": "String",
+        "description": "san"
+      },
+      "choices": {
+        "type": "String",
+        "description": "choices"
+      }
+    }
+  },
+  "instructorLeftComputer": "O computador sai do livro de aberturas com {san}. A partir daqui, o que vale é a posição, não a teoria.",
+  "@instructorLeftComputer": {
+    "description": "Istruttore: il computer esce dal libro",
+    "placeholders": {
+      "san": {
+        "type": "String",
+        "description": "san"
+      }
+    }
+  },
+  "instructorLeftYouBare": "{san} tira você do livro de aberturas.",
+  "@instructorLeftYouBare": {
+    "description": "Istruttore: l'utente esce dal libro, senza alternative",
+    "placeholders": {
+      "san": {
+        "type": "String",
+        "description": "san"
+      }
+    }
+  },
+  "instructorExplorer": "Abrir no explorador",
+  "@instructorExplorer": {
+    "description": "Istruttore: pulsante per aprire la posizione nell'esploratore"
+  },
+  "instructorTitle": "Jogar com o instrutor",
+  "@instructorTitle": {
+    "description": "Titolo della partita con l'istruttore"
+  },
+  "instructorHubSubtitle": "O computador comenta sua abertura, com os lances mais jogados",
+  "@instructorHubSubtitle": {
+    "description": "Istruttore: sottotitolo nel menu delle aperture"
+  },
+  "coachHintMovePiece": "Mova {piece}.",
+  "@coachHintMovePiece": {
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintMoveSomePiece": "Mova uma peça.",
+  "coachHintPlayHighlighted": "Jogue o lance destacado.",
+  "coachHintCastleShort": "Faça o roque pequeno.",
+  "coachHintCastleLong": "Faça o roque grande.",
+  "coachHintPieceAn": "{role, select, queen{uma dama} rook{uma torre} bishop{um bispo} knight{um cavalo} pawn{um peão} other{o rei}}",
+  "@coachHintPieceAn": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintCheckEscape": "{promotion, select, yes{Promova} other{Mova}} {piece} {where, select, square{para {square}} other{para a casa marcada}}{escape, select, king{ para sair do xeque} other{ para se defender do xeque}}{check, select, none{.} check{, dando xeque.} other{, dando xeque-mate.}}",
+  "@coachHintCheckEscape": {
+    "placeholders": {
+      "promotion": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "escape": {
+        "type": "String"
+      },
+      "check": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintPromote": "Promova {piece} {where, select, square{para {square}} other{para a casa marcada}}{capture, select, yes{ e capture {victim}} other{}}: vira {promoted}.",
+  "@coachHintPromote": {
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "capture": {
+        "type": "String"
+      },
+      "victim": {
+        "type": "String"
+      },
+      "promoted": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintCapture": "Mova {piece} {where, select, square{para {square}} other{para a casa marcada}} e capture {victim}{check, select, none{.} check{, dando xeque.} other{, dando xeque-mate.}}",
+  "@coachHintCapture": {
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "victim": {
+        "type": "String"
+      },
+      "check": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintMove": "Mova {piece} {where, select, square{para {square}} other{para a casa marcada}}{check, select, none{.} check{ e dê xeque.} other{ e dê xeque-mate.}}",
+  "@coachHintMove": {
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "check": {
+        "type": "String"
+      }
+    }
+  }
+}

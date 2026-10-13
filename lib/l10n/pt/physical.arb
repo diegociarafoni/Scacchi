@@ -1,0 +1,65 @@
+{
+  "physicalTitle": "Tabuleiro físico",
+  "physicalEntrySubtitle": "Relógio e súmula para uma partida ao vivo",
+  "physicalIntro": "Jogue em um tabuleiro de verdade: o app é o relógio e registra a partida. Depois de cada lance, digite-o ou toque nele entre os legais.",
+  "physicalWhite": "Brancas",
+  "physicalBlack": "Pretas",
+  "physicalUntimed": "Sem tempo",
+  "physicalStart": "Iniciar a partida",
+  "physicalInputWhite": "Lance das Brancas (ex.: e4, Cf3)",
+  "physicalInputBlack": "Lance das Pretas (ex.: e5, Cc6)",
+  "physicalInvalidMove": "Lance inválido: “{text}”",
+  "@physicalInvalidMove": {
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "physicalNoMoves": "Nenhum lance",
+  "physicalPause": "Pausar",
+  "physicalResume": "Retomar",
+  "physicalUndo": "Desfazer",
+  "physicalDraw": "Empate",
+  "physicalResign": "Desistir",
+  "physicalDrawQuestion": "Empate por acordo?",
+  "physicalYes": "Sim",
+  "physicalNo": "Não",
+  "physicalWhoResigns": "Quem desiste?",
+  "physicalSaved": "Partida salva no arquivo",
+  "physicalNothingToSave": "Nenhum lance para salvar",
+  "physicalSaveFailed": "Não foi possível salvar a partida",
+  "physicalNewGame": "Nova partida",
+  "physicalEndCheckmate": "Xeque-mate",
+  "physicalEndResignation": "Desistência",
+  "physicalEndTimeout": "Tempo esgotado",
+  "physicalEndAgreement": "Empate por acordo",
+  "physicalEndStalemate": "Afogamento",
+  "physicalEndInsufficient": "Material insuficiente",
+  "physicalEndRepetition": "Repetição tripla",
+  "physicalEndFiftyMoves": "Regra dos cinquenta lances",
+  "physicalEndOther": "Fim da partida",
+  "physicalResultLine": "{reason} · {result}",
+  "@physicalResultLine": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      },
+      "result": {
+        "type": "String"
+      }
+    }
+  },
+  "physicalPhoto": "Lance por foto",
+  "physicalRealign": "Realinhar",
+  "physicalCameraUnavailable": "Câmera indisponível",
+  "physicalImageUnreadable": "Imagem ilegível",
+  "physicalReferenceSaved": "Foto de referência salva. Depois do próximo lance, tire outra foto.",
+  "physicalNoMoveRecognized": "Nenhum lance reconhecido: o tabuleiro parece igual.",
+  "physicalGuessNote": "Lances mais prováveis a partir da foto: confirme o certo.",
+  "physicalAlignTitle": "Alinhe o tabuleiro",
+  "physicalAlignHelp": "Arraste os quatro círculos até os cantos do tabuleiro. Mantenha o mesmo enquadramento nas próximas fotos.",
+  "physicalAlignWhiteBottom": "Brancas embaixo",
+  "physicalAlignBlackBottom": "Pretas embaixo",
+  "physicalAlignDone": "Pronto"
+}

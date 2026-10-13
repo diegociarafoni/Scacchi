@@ -1,6 +1,6 @@
 # La tua settimana
 
-Scheda riassuntiva degli ultimi sette giorni (proposta del capitolo 7 dei requisiti, «ritratto del giocatore»). Si apre da **Tu → La tua settimana** e si condivide come immagine PNG: non serve alcun server.
+Scheda riassuntiva degli ultimi sette giorni («ritratto del giocatore»), intitolata «La tua settimana». Si apre dal pulsante «Condividi la settimana» accanto alla voce La tua settimana della scheda Tu (non nel profilo bambino) e si condivide come immagine PNG: non serve alcun server. Il riepilogo dei progressi è un'altra pagina, vedi [riepilogo-settimanale.md](riepilogo-settimanale.md).
 
 ## Cosa mostra
 

@@ -1,6 +1,6 @@
 # Scacchiera fisica
 
-Per giocare su una scacchiera vera l'app fa da orologio e da registro della partita (proposta del capitolo 7 dei requisiti). Si apre da **Tu → Scacchiera fisica**.
+Per giocare su una scacchiera vera l'app fa da orologio e da registro della partita. Si apre da **Scacchiera fisica** nel gruppo Gioca della Home e nel foglio Nuova partita (sotto «Altre modalità»); non c'è nel profilo bambino.
 
 ## Uso
 
