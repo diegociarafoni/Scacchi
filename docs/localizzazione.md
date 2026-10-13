@@ -58,7 +58,7 @@ Creare `lib/l10n/<codice>/` con tutti i file e le chiavi delle altre lingue e ri
 
 ## Turco
 
-Il turco (`tr`, «Türkçe») ha `lib/l10n/tr/*.arb`, gli stessi file e le stesse chiavi delle altre lingue; i contenuti lunghi (`assets/content/tr/*.json`) arrivano con la PR successiva. Stato in `tool/lingue.json`: `in lavorazione` finché la traduzione non è completa e riletta. È registrato in `AppLanguage`, `locales_config.xml`, `CFBundleLocalizations` (iOS e macOS) e `ios/Runner/tr.lproj/InfoPlist.strings`. Il turco non ha genere grammaticale: nei nomi delle aperture le forme maschile e femminile coincidono. `test/l10n_turkish_test.dart` verifica chiavi, segnaposto, testi vuoti e plurali. Termini e stile: [glossario](glossario-scacchistico.md#turco).
+Il turco (`tr`, «Türkçe») ha `lib/l10n/tr/*.arb` e `assets/content/tr/*.json`, gli stessi file e le stesse chiavi delle altre lingue. Stato in `tool/lingue.json`: `in lavorazione` finché la traduzione non è completa e riletta. È registrato in `AppLanguage`, `locales_config.xml`, `CFBundleLocalizations` (iOS e macOS) e `ios/Runner/tr.lproj/InfoPlist.strings`. Il turco non ha genere grammaticale: nei nomi delle aperture le forme maschile e femminile coincidono. `test/l10n_turkish_test.dart` verifica chiavi, segnaposto, testi vuoti e plurali. Termini e stile: [glossario](glossario-scacchistico.md#turco).
 
 ## Schermate migrate
 
