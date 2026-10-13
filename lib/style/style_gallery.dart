@@ -53,7 +53,7 @@ class StyleGallery<T extends Enum> extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     final l10n = AppLocalizations.of(context);
     String why(Requirement r) =>
-        kid ? kidRequirement(l10n) : l10n.settingsUnlockWith(r.label);
+        kid ? kidRequirement(l10n) : l10n.settingsUnlockWith(r.label(l10n));
     return LayoutBuilder(
       builder: (context, box) {
         const gap = 8.0;
@@ -139,7 +139,7 @@ class _Tile<T extends Enum> extends StatelessWidget {
                     option.label,
                     why(r).toLowerCase(),
                   )
-                : l10n.settingsLockedMessage(option.label, r.label),
+                : l10n.settingsLockedMessage(option.label, r.label(l10n)),
           ),
         ),
       );

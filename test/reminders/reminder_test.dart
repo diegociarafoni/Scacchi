@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/progress/activity.dart';
 import 'package:scacchi/progress/daily_goal.dart';
 import 'package:scacchi/progress/progress_controller.dart';
@@ -37,6 +39,7 @@ void main() {
     int streak = 0,
     int? restDay,
   }) => nextReminder(
+    lookupAppLocalizations(const Locale('it')),
     now: now,
     minutes: at,
     goal: goal,
@@ -127,7 +130,12 @@ void main() {
       );
       await progress.load();
       scheduler = FakeScheduler();
-      controller = ReminderController(progress, scheduler, clock: () => now);
+      controller = ReminderController(
+        progress,
+        scheduler,
+        () => lookupAppLocalizations(const Locale('it')),
+        clock: () => now,
+      );
     });
     tearDown(() {
       controller.dispose();
@@ -139,7 +147,12 @@ void main() {
       await progress.updateSettings(
         progress.settings.copyWith(reminder: () => seven),
       );
-      controller = ReminderController(progress, scheduler, clock: () => now);
+      controller = ReminderController(
+        progress,
+        scheduler,
+        () => lookupAppLocalizations(const Locale('it')),
+        clock: () => now,
+      );
       await controller.sync();
       expect(scheduler.scheduled.last.at, DateTime(2026, 10, 5, 19));
     });

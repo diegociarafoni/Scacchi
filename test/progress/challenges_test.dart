@@ -1,5 +1,7 @@
 import 'package:dartchess/dartchess.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/progress/activity.dart';
 import 'package:scacchi/progress/challenges.dart';
 import 'package:scacchi/progress/progress_state.dart';
@@ -71,7 +73,10 @@ void main() {
 
     test('ogni sfida ha un titolo leggibile', () {
       for (final kind in ChallengeKind.values) {
-        expect(Challenge(kind, 3).title, isNotEmpty);
+        expect(
+          Challenge(kind, 3).title(lookupAppLocalizations(const Locale('it'))),
+          isNotEmpty,
+        );
       }
     });
 

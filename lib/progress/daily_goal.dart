@@ -1,3 +1,5 @@
+import '../l10n/app_localizations.dart';
+
 enum GoalKind { games, puzzles, minutes }
 
 /// Obiettivo giornaliero scelto dall'utente, per esempio 5 puzzle.
@@ -32,8 +34,8 @@ class DailyGoal {
 }
 
 /// Obiettivo in parole, per esempio "3 partite".
-String goalLabel(DailyGoal goal) => switch (goal.kind) {
-  GoalKind.games => goal.target == 1 ? '1 partita' : '${goal.target} partite',
-  GoalKind.puzzles => '${goal.target} puzzle',
-  GoalKind.minutes => '${goal.target} minuti',
+String goalLabel(AppLocalizations l, DailyGoal goal) => switch (goal.kind) {
+  GoalKind.games => l.progressGoalGames(goal.target),
+  GoalKind.puzzles => l.progressGoalPuzzles(goal.target),
+  GoalKind.minutes => l.progressGoalMinutes(goal.target),
 };

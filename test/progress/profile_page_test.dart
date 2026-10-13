@@ -150,11 +150,12 @@ void main() {
   ) async {
     await show(tester);
     await tester.scrollUntilVisible(find.text('Sfide di oggi'), 200);
+    final l = lookupAppLocalizations(const Locale('it'));
     for (final (c, _) in controller.challenges) {
-      expect(find.text(c.title), findsOneWidget);
+      expect(find.text(c.title(l)), findsOneWidget);
     }
     await tester.scrollUntilVisible(find.text('Sfida della settimana'), 200);
-    expect(find.text(controller.weeklyChallenge.$1.title), findsOneWidget);
+    expect(find.text(controller.weeklyChallenge.$1.title(l)), findsOneWidget);
   });
 
   testWidgets('RG-08 mostra i record personali', (tester) async {
@@ -234,7 +235,11 @@ void main() {
   testWidgets('RG-11 attiva il promemoria scegliendo l\'orario', (
     tester,
   ) async {
-    final reminders = ReminderController(controller, _Scheduler());
+    final reminders = ReminderController(
+      controller,
+      _Scheduler(),
+      () => lookupAppLocalizations(const Locale('it')),
+    );
     addTearDown(reminders.dispose);
     await show(tester, reminders: reminders);
     final toggle = find.byKey(const Key('reminder'));
@@ -260,6 +265,7 @@ void main() {
     final reminders = ReminderController(
       controller,
       _Scheduler()..permission = false,
+      () => lookupAppLocalizations(const Locale('it')),
     );
     addTearDown(reminders.dispose);
     await show(tester, reminders: reminders);
@@ -299,6 +305,9 @@ void main() {
     late BuildContext context;
     await tester.pumpWidget(
       MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        locale: const Locale('it'),
         home: Scaffold(
           body: Builder(
             builder: (c) {
@@ -325,9 +334,10 @@ void main() {
     final update = await controller.record(
       const GamePlayed(result: GameResult.win, opponentElo: 1000),
     );
-    final message = progressMessage(update)!;
+    final l = lookupAppLocalizations(const Locale('it'));
+    final message = progressMessage(update, l)!;
     for (final c in update.challengesCompleted) {
-      expect(message, contains('Sfida completata: ${c.title}'));
+      expect(message, contains('Sfida completata: ${c.title(l)}'));
     }
     expect(message, contains('Nuovo record: bot più forte battuto'));
   });
@@ -362,7 +372,11 @@ void main() {
         ),
         home: ProfilePage(
           controller: controller,
-          reminders: ReminderController(controller, _Scheduler()),
+          reminders: ReminderController(
+            controller,
+            _Scheduler(),
+            () => lookupAppLocalizations(const Locale('it')),
+          ),
         ),
       ),
     );

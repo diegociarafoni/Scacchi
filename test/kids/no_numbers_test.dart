@@ -13,6 +13,7 @@ import 'package:scacchi/kids/kid_display.dart';
 import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/path/path_controller.dart';
 import 'package:scacchi/progress/achievements.dart';
+import 'package:scacchi/progress/achievements_l10n.dart';
 import 'package:scacchi/progress/activity.dart';
 import 'package:scacchi/progress/avatar.dart';
 import 'package:scacchi/progress/profile_page.dart';
@@ -133,7 +134,17 @@ void main() {
       final text = tester.widget<Text>(
         find.descendant(of: find.byType(SnackBar), matching: find.byType(Text)),
       );
-      expect(text.data, isNot(contains(rewardName(Avatar.bishop))));
+      expect(
+        text.data,
+        isNot(
+          contains(
+            rewardName(
+              lookupAppLocalizations(const Locale('it')),
+              Avatar.bishop,
+            ),
+          ),
+        ),
+      );
       expect(text.data, contains('reward'));
     });
 
@@ -193,10 +204,14 @@ void main() {
       expect(find.byKey(const Key('kid-streak')), findsOneWidget);
 
       // Fino in fondo: niente impostazioni degli XP né altri numeri.
-      await tester.scrollUntilVisible(find.text(achievements.last.title), 300);
+      final last = achievementTitle(
+        lookupAppLocalizations(const Locale('it')),
+        achievements.last,
+      );
+      await tester.scrollUntilVisible(find.text(last), 300);
       await tester.drag(find.byType(Scrollable).first, const Offset(0, -3000));
       await tester.pumpAndSettle();
-      expect(find.text(achievements.last.title), findsOneWidget);
+      expect(find.text(last), findsOneWidget);
       expect(find.byKey(const Key('enabled')), findsNothing);
       expect(find.textContaining('XP'), findsNothing);
       expect(find.text('Obiettivo giornaliero'), findsNothing);

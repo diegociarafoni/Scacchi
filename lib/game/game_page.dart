@@ -1149,7 +1149,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     try {
       final update = await widget.onActivity?.call(activity);
       if (update != null && mounted) {
-        final message = progressMessage(update);
+        final message = progressMessage(update, _kidL10n(context));
         if (message != null) _showMessage(message);
       }
     } on Object catch (e) {

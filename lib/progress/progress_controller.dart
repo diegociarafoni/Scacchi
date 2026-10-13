@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 
 import '../badges/badge_def.dart';
 import '../badges/badge_sources.dart';
+import '../l10n/app_localizations.dart';
 import '../summary/week_log.dart';
 import 'activity.dart';
 import 'challenges.dart';
@@ -83,7 +84,8 @@ class ProgressController extends ChangeNotifier {
   int get todayProgress => _tracker.todayProgress(_state, _clock(), _settings);
 
   /// Spiegazione della serie di oggi: obiettivo, stato, traguardo e rischi.
-  StreakInfo get streakInfo => describeStreak(
+  StreakInfo streakInfo(AppLocalizations l) => describeStreak(
+    l,
     streak: streak,
     bestStreak: _state.bestStreak,
     freezes: freezes,
@@ -109,7 +111,7 @@ class ProgressController extends ChangeNotifier {
       _settings = data.settings;
       _readOnly = false;
     } on FileSystemException catch (e) {
-      debugPrint('Lettura dei progressi non riuscita: $e');
+      debugPrint('Lettura dei progressi non riuscita: $e'); // l10n-ok
       _readOnly = true;
     }
     await _loadJournal();
@@ -124,7 +126,9 @@ class ProgressController extends ChangeNotifier {
           ? await file.readAsBytes()
           : null;
     } on FileSystemException catch (e) {
-      if (kDebugMode) debugPrint('Lettura della foto non riuscita: $e');
+      if (kDebugMode) {
+        debugPrint('Lettura della foto non riuscita: $e'); // l10n-ok
+      }
     }
   }
 
@@ -136,7 +140,9 @@ class ProgressController extends ChangeNotifier {
       try {
         await _photoFile?.writeAsBytes(bytes, flush: true);
       } on FileSystemException catch (e) {
-        if (kDebugMode) debugPrint('Salvataggio della foto non riuscito: $e');
+        if (kDebugMode) {
+          debugPrint('Salvataggio della foto non riuscito: $e'); // l10n-ok
+        }
       }
     });
   }
@@ -149,14 +155,16 @@ class ProgressController extends ChangeNotifier {
         final file = _photoFile;
         if (file != null && file.existsSync()) await file.delete();
       } on FileSystemException catch (e) {
-        if (kDebugMode) debugPrint('Rimozione della foto non riuscita: $e');
+        if (kDebugMode) {
+          debugPrint('Rimozione della foto non riuscita: $e'); // l10n-ok
+        }
       }
     });
   }
 
   Future<void> _queuePhotoWrite(Future<void> Function() job) =>
       _photoQueue = _photoQueue.then((_) => job()).onError((e, _) {
-        if (kDebugMode) debugPrint('Foto del profilo: $e');
+        if (kDebugMode) debugPrint('Foto del profilo: $e'); // l10n-ok
       });
 
   /// Un diario illeggibile non deve fermare il salvataggio dei progressi.
@@ -164,7 +172,9 @@ class ProgressController extends ChangeNotifier {
     try {
       _weekLog = await _journal?.load() ?? const WeekLog();
     } on FileSystemException catch (e) {
-      if (kDebugMode) debugPrint('Lettura del diario non riuscita: $e');
+      if (kDebugMode) {
+        debugPrint('Lettura del diario non riuscita: $e'); // l10n-ok
+      }
     }
   }
 
@@ -223,7 +233,9 @@ class ProgressController extends ChangeNotifier {
     try {
       await _journal?.save(next);
     } on FileSystemException catch (e) {
-      if (kDebugMode) debugPrint('Salvataggio del diario non riuscito: $e');
+      if (kDebugMode) {
+        debugPrint('Salvataggio del diario non riuscito: $e'); // l10n-ok
+      }
     }
   }
 
@@ -240,7 +252,7 @@ class ProgressController extends ChangeNotifier {
       await _store.save(ProgressData(_state, _settings));
     } on FileSystemException catch (e) {
       // Senza spazio o permessi si continua a giocare con i dati in memoria.
-      debugPrint('Salvataggio dei progressi non riuscito: $e');
+      debugPrint('Salvataggio dei progressi non riuscito: $e'); // l10n-ok
     }
   }
 }
