@@ -49,20 +49,18 @@ void main() {
   test('ogni obiettivo ha un testo, in italiano e in inglese', () {
     for (final locale in AppLocalizations.supportedLocales) {
       final l10n = lookupAppLocalizations(locale);
-      final prefix = locale.languageCode == 'it' ? 'Obiettivo: ' : 'Goal: ';
       for (final goal in PuzzleGoal.values) {
-        expect(l10n.puzzleGoal(goal.key), startsWith(prefix));
         // Una chiave mancante nei file ARB ricadrebbe sul testo generico.
         expect(l10n.puzzleGoal(goal.key), isNot(l10n.puzzleGoal('other')));
       }
     }
     expect(
       lookupAppLocalizations(const Locale('it')).puzzleGoal('mateIn2'),
-      'Obiettivo: matto in 2',
+      'Matto in 2',
     );
     expect(
       lookupAppLocalizations(const Locale('it')).puzzleGoal('advantage'),
-      'Obiettivo: ottieni il vantaggio',
+      'Ottieni il vantaggio',
     );
   });
 }
