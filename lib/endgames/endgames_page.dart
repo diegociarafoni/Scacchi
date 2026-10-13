@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../engine/computer_player.dart';
+import '../l10n/app_localizations.dart';
 import '../tablebase/tablebase_service.dart';
 import 'drill.dart';
 import 'drill_page.dart';
@@ -25,19 +26,21 @@ class EndgamesPage extends StatelessWidget {
   /// Finali perfetti (RF-97) per la mossa perfetta nelle posizioni coperte.
   final TablebaseService? tablebase;
 
-  static String _goal(EndgameDrill drill) => switch (drill.goal) {
-    DrillGoal.mate => 'Dai scacco matto',
-    DrillGoal.promote => 'Promuovi il pedone',
-    DrillGoal.hold =>
-      drill.fen.split(' ')[1] == 'b'
-          ? 'Resisti con il Nero'
-          : 'Resisti con il Bianco',
-  };
+  static String _goal(AppLocalizations l10n, EndgameDrill drill) =>
+      switch (drill.goal) {
+        DrillGoal.mate => l10n.endgamesGoalMate,
+        DrillGoal.promote => l10n.endgamesGoalPromote,
+        DrillGoal.hold =>
+          drill.fen.split(' ')[1] == 'b'
+              ? l10n.endgamesGoalHoldBlack
+              : l10n.endgamesGoalHoldWhite,
+      };
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Finali')),
+      appBar: AppBar(title: Text(l10n.endgamesTitle)),
       body: ListenableBuilder(
         listenable: controller,
         builder: (context, _) {
@@ -49,14 +52,15 @@ class EndgamesPage extends StatelessWidget {
                   title: Text(drill.title),
                   subtitle: Text(
                     progress.toRepeat.contains(drill.id)
-                        ? 'Da ripetere'
-                        : _goal(drill),
+                        ? l10n.endgamesToRepeat
+                        : _goal(l10n, drill),
                   ),
                   trailing: Text(
                     '${'★' * progress.starsFor(drill.id)}'
                     '${'☆' * (3 - progress.starsFor(drill.id))}',
-                    semanticsLabel:
-                        '${progress.starsFor(drill.id)} stelle su 3',
+                    semanticsLabel: l10n.endgamesStars(
+                      progress.starsFor(drill.id),
+                    ),
                     style: TextStyle(
                       fontSize: 20,
                       color: Theme.of(context).colorScheme.tertiary,

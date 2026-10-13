@@ -128,11 +128,7 @@ void main() {
           case AdviceKind.lesson:
             expect(stages, contains(advice.target), reason: theme.name);
           case AdviceKind.puzzles:
-            expect(
-              puzzleThemeLabels,
-              contains(advice.target),
-              reason: theme.name,
-            );
+            expect(puzzleThemeIds, contains(advice.target), reason: theme.name);
           default:
             fail('${theme.name}: consiglio senza collegamento');
         }

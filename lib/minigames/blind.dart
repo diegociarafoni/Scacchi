@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:dartchess/dartchess.dart';
 
+import '../l10n/app_localizations.dart';
+
 /// Domanda di visualizzazione alla cieca: dopo alcune mosse dalla posizione
 /// iniziale, quale pezzo si trova su una casa.
 class BlindQuestion {
@@ -55,7 +57,8 @@ class BlindQuestion {
       '${i ~/ 2 + 1}. ${sans.skip(i).take(2).join(' ')}',
   ].join(' ');
 
-  String get prompt => 'Cosa c\'è in ${square.name}?';
+  String prompt(AppLocalizations l10n) =>
+      l10n.minigamesBlindPrompt(square.name);
 }
 
 /// Mosse legali in un ordine stabile; le promozioni diventano donna.
@@ -76,15 +79,22 @@ List<NormalMove> legalMoves(Position pos) => [
         ),
 ];
 
-String pieceLabel(Piece? piece) {
-  if (piece == null) return 'Casa vuota';
+/// Nome del pezzo, o della casa vuota se [piece] è `null`.
+String pieceLabel(AppLocalizations l10n, Piece? piece) {
+  if (piece == null) return l10n.minigamesPieceEmpty;
   final white = piece.color == Side.white;
   return switch (piece.role) {
-    Role.pawn => white ? 'Pedone bianco' : 'Pedone nero',
-    Role.knight => white ? 'Cavallo bianco' : 'Cavallo nero',
-    Role.bishop => white ? 'Alfiere bianco' : 'Alfiere nero',
-    Role.rook => white ? 'Torre bianca' : 'Torre nera',
-    Role.queen => white ? 'Donna bianca' : 'Donna nera',
-    Role.king => white ? 'Re bianco' : 'Re nero',
+    Role.pawn =>
+      white ? l10n.minigamesPieceWhitePawn : l10n.minigamesPieceBlackPawn,
+    Role.knight =>
+      white ? l10n.minigamesPieceWhiteKnight : l10n.minigamesPieceBlackKnight,
+    Role.bishop =>
+      white ? l10n.minigamesPieceWhiteBishop : l10n.minigamesPieceBlackBishop,
+    Role.rook =>
+      white ? l10n.minigamesPieceWhiteRook : l10n.minigamesPieceBlackRook,
+    Role.queen =>
+      white ? l10n.minigamesPieceWhiteQueen : l10n.minigamesPieceBlackQueen,
+    Role.king =>
+      white ? l10n.minigamesPieceWhiteKing : l10n.minigamesPieceBlackKing,
   };
 }

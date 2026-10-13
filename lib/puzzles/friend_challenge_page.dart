@@ -54,7 +54,7 @@ class _FriendChallengePageState extends State<FriendChallengePage> {
     return Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (_) => QrSendPage(
-          title: l10n.challengeInviteTitle(c.mode.label),
+          title: l10n.challengeInviteTitle(l10n.puzzleRunLabel(c.mode.name)),
           frames: encodeChallenge(ChallengeInvite(c)),
           hint: l10n.challengeInviteHint,
         ),
@@ -117,7 +117,7 @@ class _FriendChallengePageState extends State<FriendChallengePage> {
               children: [
                 for (final mode in friendChallengeModes)
                   ChoiceChip(
-                    label: Text(mode.label),
+                    label: Text(l10n.puzzleRunLabel(mode.name)),
                     selected: mode == _mode,
                     onSelected: (_) => setState(() {
                       _mode = mode;
@@ -127,7 +127,7 @@ class _FriendChallengePageState extends State<FriendChallengePage> {
               ],
             ),
             const SizedBox(height: 8),
-            Text(_mode.description, style: text.bodyMedium),
+            Text(l10n.puzzleRunDescription(_mode.name), style: text.bodyMedium),
             const SizedBox(height: 16),
             if (challenge == null)
               FilledButton.icon(
@@ -139,7 +139,7 @@ class _FriendChallengePageState extends State<FriendChallengePage> {
               Semantics(
                 liveRegion: true,
                 child: Text(
-                  l10n.challengeReady(challenge.mode.label),
+                  l10n.challengeReady(l10n.puzzleRunLabel(challenge.mode.name)),
                   style: text.titleMedium,
                 ),
               ),
