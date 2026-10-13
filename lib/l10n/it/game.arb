@@ -61,5 +61,7 @@
   "gameFirstMoveHint": "Tocca un pezzo, poi la casa dove vuoi muoverlo.",
   "@gameFirstMoveHint": {
     "description": "Sopra la scacchiera, finché nessuno ha mosso"
-  }
+  },
+  "gameActionRematch": "Rivincita",
+  "gameActionReview": "Rivedi"
 }

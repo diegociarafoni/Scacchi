@@ -1793,6 +1793,46 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     );
   }
 
+  /// La rivincita ripete la partita appena finita: stesso avversario, stessa
+  /// cadenza e stessa variante, con i colori invertiti contro il computer.
+  /// Non c'è per sfide, vantaggi e posizioni scelte a mano.
+  bool get _canRematch =>
+      _game.isOver &&
+      !_isChallenge &&
+      _handicap == null &&
+      (_game.variant != Variant.standard ||
+          _game.initial.fen == Chess.initial.fen);
+
+  void _rematch() {
+    // L'avversario è quello della partita appena finita, non l'ultimo scelto.
+    final setup = _applySetup(
+      _computerSide == null
+          ? _setup.copyWith(opponent: Opponent.human)
+          : _setup,
+    );
+    final vsComputer = setup.opponent != Opponent.human;
+    // Il computer prende il colore che aveva chi ha giocato.
+    final human = _computerSide ?? Side.white;
+    final variant = _game.variant;
+    final control = _clock?.control;
+    final coach = _coachOn;
+    _beginGame(
+      ChessGame(
+        initial: initialPosition(
+          variant,
+          chess960Id: variant == Variant.chess960 ? widget.chess960Id() : null,
+        ),
+        variant: variant,
+      ),
+      setup,
+      control == null ? null : ChessClock(control, now: widget.now),
+      humanSide: human,
+    );
+    if (coach && vsComputer && _engineGame && !_zen) {
+      setState(() => _coachOn = true);
+    }
+  }
+
   /// Avvia [game] contro l'avversario di [setup]: azzera orologio e cronologia,
   /// dispone i lati e fa muovere subito chi tocca.
   void _beginGame(
@@ -2317,6 +2357,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
               resign: l.kidGameResign,
               coach: l.kidGameCoach,
               hint: l.kidGameHint,
+              rematch: l10n.gameActionRematch,
+              review: l10n.gameActionReview,
               threat: l10n.gameActionThreat,
               more: l10n.gameActionMore,
               panelTitle: l10n.gamePanelTitle,
@@ -2339,6 +2381,16 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       onResign: _game.isOver || _pendingMove != null || evaluating
           ? null
           : _resign,
+      over: _game.isOver,
+      onRematch: _canRematch ? _rematch : null,
+      onReview:
+          _game.isOver &&
+              !_isChallenge &&
+              widget.computerAvailable &&
+              _engineGame &&
+              !_kid
+          ? _openReview
+          : null,
       // Nelle sfide niente aiuti: né suggerimenti né ripetizione della mossa.
       coachOn: _computerSide == null || !_helpAllowed || _zen || !_engineGame
           ? null
@@ -2905,6 +2957,8 @@ class _ActionLabels {
     required this.resign,
     required this.coach,
     required this.hint,
+    required this.rematch,
+    required this.review,
     required this.threat,
     required this.more,
     required this.panelTitle,
@@ -2921,6 +2975,8 @@ class _ActionLabels {
     resign: l.gameActionResign,
     coach: l.gameActionCoach,
     hint: l.gameActionHint,
+    rematch: l.gameActionRematch,
+    review: l.gameActionReview,
     threat: l.gameActionThreat,
     more: l.gameActionMore,
     panelTitle: l.gamePanelTitle,
@@ -2938,6 +2994,8 @@ class _ActionLabels {
   final String hint;
   final String threat;
   final String more;
+  final String rematch;
+  final String review;
   final String panelTitle;
   final String coachTip;
   final String threatTip;
@@ -2957,6 +3015,9 @@ class _GameActions extends StatelessWidget {
     required this.onFlip,
     required this.onDraw,
     required this.onResign,
+    required this.over,
+    required this.onRematch,
+    required this.onReview,
     required this.coachOn,
     required this.onCoach,
     required this.hintAvailable,
@@ -2971,6 +3032,12 @@ class _GameActions extends StatelessWidget {
   final VoidCallback onFlip;
   final VoidCallback? onDraw;
   final VoidCallback? onResign;
+
+  /// A partita finita Patta e Abbandona non servono più: al loro posto
+  /// Rivincita e, dove c'è il motore, Rivedi.
+  final bool over;
+  final VoidCallback? onRematch;
+  final VoidCallback? onReview;
 
   /// `null` nella partita tra due persone, dove l'allenatore non c'è.
   final bool? coachOn;
@@ -3028,6 +3095,14 @@ class _GameActions extends StatelessWidget {
                     kid: kid,
                     pick: pick,
                   ),
+                if (!_gameInBar && over && onRematch != null)
+                  _PanelTile(
+                    Icons.replay,
+                    labels.rematch,
+                    onRematch,
+                    kid: kid,
+                    pick: pick,
+                  ),
                 if (flipInPanel)
                   _PanelTile(
                     Icons.swap_vert,
@@ -3036,7 +3111,7 @@ class _GameActions extends StatelessWidget {
                     kid: kid,
                     pick: pick,
                   ),
-                if (!_gameInBar) ...[
+                if (!_gameInBar && !over) ...[
                   _PanelTile(
                     Icons.handshake_outlined,
                     labels.draw,
@@ -3104,18 +3179,35 @@ class _GameActions extends StatelessWidget {
                 _ActionButton('flip', Icons.swap_vert, labels.flip, onFlip),
               if (_gameInBar) ...[
                 _ActionButton('new', Icons.add, labels.newGame, onNewGame),
-                _ActionButton(
-                  'draw',
-                  Icons.handshake_outlined,
-                  labels.draw,
-                  onDraw,
-                ),
-                _ActionButton(
-                  'resign',
-                  Icons.flag_outlined,
-                  labels.resign,
-                  onResign,
-                ),
+                if (over) ...[
+                  if (onRematch != null)
+                    _ActionButton(
+                      'rematch',
+                      Icons.replay,
+                      labels.rematch,
+                      onRematch,
+                    ),
+                  if (onReview != null)
+                    _ActionButton(
+                      'review',
+                      Icons.fact_check_outlined,
+                      labels.review,
+                      onReview,
+                    ),
+                ] else ...[
+                  _ActionButton(
+                    'draw',
+                    Icons.handshake_outlined,
+                    labels.draw,
+                    onDraw,
+                  ),
+                  _ActionButton(
+                    'resign',
+                    Icons.flag_outlined,
+                    labels.resign,
+                    onResign,
+                  ),
+                ],
               ],
               if (hasPanel)
                 _ActionButton(
