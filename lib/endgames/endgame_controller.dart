@@ -41,7 +41,7 @@ class EndgameController extends ChangeNotifier {
       _progress =
           await _file.read(EndgameProgress.fromJson) ?? const EndgameProgress();
     } on FileSystemException catch (e) {
-      debugPrint('Lettura dei finali non riuscita: $e');
+      debugPrint('Lettura dei finali non riuscita: $e'); // l10n-ok
       _readOnly = true;
     }
     notifyListeners();
@@ -62,7 +62,7 @@ class EndgameController extends ChangeNotifier {
     try {
       await _file.write(progress.toJson());
     } on FileSystemException catch (e) {
-      debugPrint('Salvataggio dei finali non riuscito: $e');
+      debugPrint('Salvataggio dei finali non riuscito: $e'); // l10n-ok
     }
   }
 }
