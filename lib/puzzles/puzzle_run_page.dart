@@ -269,7 +269,7 @@ class _PuzzleRunPageState extends State<PuzzleRunPage> {
                     child: Padding(
                       padding: const EdgeInsets.all(12),
                       child: Text(
-                        guide.goal,
+                        guide.goal(l),
                         key: const Key('run-goal'),
                         textAlign: TextAlign.center,
                         style: text.bodyMedium?.copyWith(

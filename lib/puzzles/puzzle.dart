@@ -16,11 +16,13 @@ class Puzzle {
   /// Riga CSV `id,fen,mosse uci,punteggio,temi`.
   factory Puzzle.parseCsv(String line) {
     final f = line.split(',');
-    if (f.length < 4) throw FormatException('Riga puzzle non valida', line);
+    if (f.length < 4) {
+      throw FormatException('Riga puzzle non valida', line); // l10n-ok
+    }
     final moves = f[2].split(' ').map(Move.parse).toList();
     final rating = int.tryParse(f[3]);
     if (moves.length < 2 || moves.contains(null) || rating == null) {
-      throw FormatException('Riga puzzle non valida', line);
+      throw FormatException('Riga puzzle non valida', line); // l10n-ok
     }
     return Puzzle(
       id: f[0],

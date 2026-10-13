@@ -1,13 +1,8 @@
 {
   "(radice)": 1,
-  "editor": 15,
-  "endgames": 36,
+  "endgames": 23,
   "engine": 73,
   "masters": 183,
-  "minigames": 25,
-  "multiplayer": 29,
-  "openings": 115,
-  "path": 622,
-  "puzzles": 65,
-  "tournament": 14
+  "openings": 89,
+  "path": 622
 }

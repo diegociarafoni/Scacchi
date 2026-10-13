@@ -22,7 +22,7 @@ class QuizPage extends StatefulWidget {
   static const questions = 10;
 
   final String title;
-  final QuizItem Function(Random random) next;
+  final QuizItem Function(Random random, AppLocalizations l10n) next;
   final Random random;
 
   /// Chiamata con il numero di risposte giuste a fine sessione.
@@ -33,7 +33,10 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
-  late QuizItem _item = widget.next(widget.random);
+  late QuizItem _item = widget.next(
+    widget.random,
+    AppLocalizations.of(context),
+  );
   int _index = 0;
   int _score = 0;
   int? _chosen;
@@ -57,7 +60,7 @@ class _QuizPageState extends State<QuizPage> {
     setState(() {
       _index++;
       _chosen = null;
-      _item = widget.next(widget.random);
+      _item = widget.next(widget.random, AppLocalizations.of(context));
     });
   }
 
@@ -67,7 +70,7 @@ class _QuizPageState extends State<QuizPage> {
       _score = 0;
       _chosen = null;
       _finished = false;
-      _item = widget.next(widget.random);
+      _item = widget.next(widget.random, AppLocalizations.of(context));
     });
     _clock.reset();
   }

@@ -2,6 +2,7 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
 import '../engine/levels.dart';
+import '../l10n/app_localizations.dart';
 
 /// Colore e livello scelti per giocare un'apertura.
 class OpeningGameChoice {
@@ -23,50 +24,59 @@ Future<OpeningGameChoice?> askOpeningGame(
   return showDialog<OpeningGameChoice>(
     context: context,
     builder: (context) => StatefulBuilder(
-      builder: (context, setDialog) => AlertDialog(
-        title: const Text('Gioca contro il computer'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SegmentedButton<Side>(
-              segments: const [
-                ButtonSegment(value: Side.white, label: Text('Bianco')),
-                ButtonSegment(value: Side.black, label: Text('Nero')),
-              ],
-              selected: {side},
-              onSelectionChanged: lockSide
-                  ? null
-                  : (s) => setDialog(() => side = s.first),
-            ),
-            const SizedBox(height: 16),
-            DropdownButtonFormField<int>(
-              initialValue: level,
-              isExpanded: true,
-              decoration: const InputDecoration(labelText: 'Livello'),
-              items: [
-                for (final l in engineLevels)
-                  DropdownMenuItem(
-                    value: l.id,
-                    child: Text('${l.name} · ${l.approxElo}'),
+      builder: (context, setDialog) {
+        final l10n = AppLocalizations.of(context);
+        return AlertDialog(
+          title: Text(l10n.openingsGameTitle),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SegmentedButton<Side>(
+                segments: [
+                  ButtonSegment(
+                    value: Side.white,
+                    label: Text(l10n.openingsSideWhite),
                   ),
-              ],
-              onChanged: (v) => setDialog(() => level = v ?? level),
+                  ButtonSegment(
+                    value: Side.black,
+                    label: Text(l10n.openingsSideBlack),
+                  ),
+                ],
+                selected: {side},
+                onSelectionChanged: lockSide
+                    ? null
+                    : (s) => setDialog(() => side = s.first),
+              ),
+              const SizedBox(height: 16),
+              DropdownButtonFormField<int>(
+                initialValue: level,
+                isExpanded: true,
+                decoration: InputDecoration(labelText: l10n.openingsLevel),
+                items: [
+                  for (final l in engineLevels)
+                    DropdownMenuItem(
+                      value: l.id,
+                      child: Text('${l.name} · ${l.approxElo}'),
+                    ),
+                ],
+                onChanged: (v) => setDialog(() => level = v ?? level),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(l10n.openingsCancel),
+            ),
+            FilledButton(
+              onPressed: () =>
+                  Navigator.pop(context, OpeningGameChoice(side, level)),
+              child: Text(l10n.openingsPlay),
             ),
           ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Annulla'),
-          ),
-          FilledButton(
-            onPressed: () =>
-                Navigator.pop(context, OpeningGameChoice(side, level)),
-            child: const Text('Gioca'),
-          ),
-        ],
-      ),
+        );
+      },
     ),
   );
 }

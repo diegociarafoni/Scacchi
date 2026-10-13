@@ -198,7 +198,9 @@ class MultiplayerController extends ChangeNotifier {
     final lanInvite = invite.lanAddress;
     final port = lanInvite == null ? null : _split(lanInvite)?.$2;
     if (!listEquals(identity.publicKey, invite.hostKey)) {
-      throw const FormatException('chiave non coerente con l\'invito');
+      throw const FormatException(
+        'chiave non coerente con l\'invito', // l10n-ok
+      );
     }
     HostChannel? lan;
     // Un invito solo a distanza o solo Bluetooth non ha un indirizzo da
@@ -458,7 +460,7 @@ class MultiplayerController extends ChangeNotifier {
       try {
         await session.flagSelf();
       } on Object catch (e) {
-        if (kDebugMode) debugPrint('Tempo scaduto non inviato: $e');
+        if (kDebugMode) debugPrint('Tempo scaduto non inviato: $e'); // l10n-ok
       }
       _changed();
     } finally {
@@ -518,7 +520,9 @@ class MultiplayerController extends ChangeNotifier {
             }
           })
           .catchError((Object e) {
-            if (kDebugMode) debugPrint('Annuncio mDNS non riuscito: $e');
+            if (kDebugMode) {
+              debugPrint('Annuncio mDNS non riuscito: $e'); // l10n-ok
+            }
           }),
     );
   }
@@ -560,7 +564,9 @@ class MultiplayerController extends ChangeNotifier {
       try {
         await (finished ? store.clear() : store.save(game));
       } on Object catch (e) {
-        if (kDebugMode) debugPrint('Salvataggio della partita fallito: $e');
+        if (kDebugMode) {
+          debugPrint('Salvataggio della partita fallito: $e'); // l10n-ok
+        }
       }
     });
   }

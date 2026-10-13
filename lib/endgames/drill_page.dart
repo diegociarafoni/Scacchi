@@ -5,6 +5,7 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
 import '../engine/computer_player.dart';
+import '../l10n/app_localizations.dart';
 import '../settings/board_marks.dart';
 import '../settings/settings.dart';
 import '../tablebase/perfect_endgame_card.dart';
@@ -112,7 +113,7 @@ class _DrillPageState extends State<DrillPage> {
         analysisLevel,
       );
     } on Object catch (e) {
-      debugPrint('Motore non disponibile: $e');
+      debugPrint('Motore non disponibile: $e'); // l10n-ok
     }
     if (!mounted || attempt != _attempt) return;
     if (reply == null || !_run.reply(reply.move)) {
@@ -137,7 +138,7 @@ class _DrillPageState extends State<DrillPage> {
     try {
       await widget.controller.finish(widget.drill, stars, _clock.elapsed);
     } on Object catch (e) {
-      debugPrint('Esito del finale non salvato: $e');
+      debugPrint('Esito del finale non salvato: $e'); // l10n-ok
     }
   }
 
@@ -161,14 +162,15 @@ class _DrillPageState extends State<DrillPage> {
     _ => const {},
   };
 
-  String get _counter => switch (widget.drill.goal) {
-    DrillGoal.hold => 'Mosse: ${_run.moves} di ${widget.drill.par}',
-    _ => 'Mosse: ${_run.moves} · tre stelle entro ${widget.drill.par}',
+  String _counter(AppLocalizations l10n) => switch (widget.drill.goal) {
+    DrillGoal.hold => l10n.endgamesMovesHold(_run.moves, widget.drill.par),
+    _ => l10n.endgamesMovesTarget(_run.moves, widget.drill.par),
   };
 
   @override
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(title: Text(widget.drill.title)),
       body: SafeArea(
@@ -201,10 +203,13 @@ class _DrillPageState extends State<DrillPage> {
                   Text(widget.drill.intro, style: text.titleMedium),
                   const SizedBox(height: 16),
                   if (!_started)
-                    FilledButton(onPressed: _start, child: const Text('Inizia'))
+                    FilledButton(
+                      onPressed: _start,
+                      child: Text(l10n.endgamesStart),
+                    )
                   else ...[
                     if (!widget.simple)
-                      Text(_counter, textAlign: TextAlign.center),
+                      Text(_counter(l10n), textAlign: TextAlign.center),
                     if (widget.tablebase != null &&
                         _run.userToMove &&
                         !_thinking)
@@ -217,16 +222,16 @@ class _DrillPageState extends State<DrillPage> {
                         onBestMove: (move) => setState(() => _hint = move),
                       ),
                     if (_thinking)
-                      const Padding(
-                        padding: EdgeInsets.all(8),
+                      Padding(
+                        padding: const EdgeInsets.all(8),
                         child: Text(
-                          'Il motore pensa…',
+                          l10n.endgamesThinking,
                           textAlign: TextAlign.center,
                         ),
                       ),
                     if (_engineFailed)
-                      const Text(
-                        'Il motore non risponde: riprova.',
+                      Text(
+                        l10n.endgamesEngineFailed,
                         textAlign: TextAlign.center,
                       ),
                     const SizedBox(height: 12),
@@ -279,35 +284,33 @@ class _Outcome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
+    final l10n = AppLocalizations.of(context);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         if (state == DrillState.success) ...[
-          Text('Obiettivo raggiunto', style: text.titleLarge),
+          Text(l10n.endgamesSuccess, style: text.titleLarge),
           Text(
             '${'★' * stars}${'☆' * (3 - stars)}',
-            semanticsLabel: '$stars stelle su 3',
+            semanticsLabel: l10n.endgamesStars(stars),
             style: TextStyle(
               fontSize: 32,
               color: Theme.of(context).colorScheme.tertiary,
             ),
           ),
         ] else if (state == DrillState.failure) ...[
-          Text('Non ci sei riuscito', style: text.titleLarge),
-          const Text(
-            'La posizione resta tra quelle da ripetere.',
-            textAlign: TextAlign.center,
-          ),
+          Text(l10n.endgamesFailure, style: text.titleLarge),
+          Text(l10n.endgamesFailureHint, textAlign: TextAlign.center),
         ],
         const SizedBox(height: 8),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            OutlinedButton(onPressed: onRetry, child: const Text('Riprova')),
+            OutlinedButton(onPressed: onRetry, child: Text(l10n.endgamesRetry)),
             const SizedBox(width: 12),
             FilledButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Fine'),
+              child: Text(l10n.endgamesDone),
             ),
           ],
         ),
