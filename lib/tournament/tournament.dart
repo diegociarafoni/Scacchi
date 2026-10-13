@@ -194,8 +194,8 @@ class Tournament {
         players.length != 4 &&
         players.length != 8) {
       throw ArgumentError(
-        'Eliminazione diretta con 4 o 8 giocatori',
-      ); // l10n-ok
+        'Eliminazione diretta con 4 o 8 giocatori', // l10n-ok
+      );
     }
     if (players.length < 3 || players.length > 8) {
       throw ArgumentError('Da 3 a 8 giocatori');

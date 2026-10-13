@@ -37,7 +37,9 @@ class BackgroundRemoteWatch implements RemoteWatch {
         existingWorkPolicy: ExistingPeriodicWorkPolicy.update,
       );
     } on Object catch (e) {
-      if (kDebugMode) debugPrint('Controllo in background non attivato: $e');
+      if (kDebugMode) {
+        debugPrint('Controllo in background non attivato: $e'); // l10n-ok
+      }
     }
   }
 
@@ -48,7 +50,9 @@ class BackgroundRemoteWatch implements RemoteWatch {
       await _init();
       await Workmanager().cancelByUniqueName(remoteTaskId);
     } on Object catch (e) {
-      if (kDebugMode) debugPrint('Controllo in background non spento: $e');
+      if (kDebugMode) {
+        debugPrint('Controllo in background non spento: $e'); // l10n-ok
+      }
     }
   }
 
