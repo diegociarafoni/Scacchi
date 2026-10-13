@@ -143,7 +143,7 @@ void main() {
     testWidgets('si riconosce dal tipo e si apre con un tocco', (tester) async {
       await show(tester);
       expect(find.text('Gambetto'), findsOneWidget);
-      expect(find.textContaining('Analisi'), findsOneWidget);
+      expect(find.textContaining('analisi'), findsOneWidget);
       await tester.tap(find.text('Gambetto'));
       expect(opened, ['an']);
     });
