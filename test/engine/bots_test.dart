@@ -6,13 +6,14 @@ import 'package:scacchi/engine/bots.dart';
 import 'package:scacchi/engine/levels.dart';
 import 'package:scacchi/engine/style.dart';
 
+import '../content_support.dart';
+
 const _test = Bot(
   id: 'prova',
   name: 'Prova',
   avatar: '🧪',
   levelId: 3,
   style: BotStyle.aggressive,
-  openingName: 'Italiana',
   book: [
     ['e2e4', 'e7e5', 'g1f3', 'b8c6'],
     ['e2e4', 'e7e5', 'f1c4'],
@@ -122,6 +123,57 @@ void main() {
     });
   });
 
+  group('frasi dei bot per lingua', () {
+    tearDown(useContent);
+
+    for (final language in ['it', 'en']) {
+      test('$language: ogni bot ha frasi per ogni evento e nomi in chiaro', () {
+        useContent(language);
+        for (final bot in [...bots, ...storyOnlyBots]) {
+          expect(bot.openingName, isNot(startsWith('bot.')), reason: bot.id);
+          for (final event in BotEvent.values) {
+            for (final friendly in [false, true]) {
+              final phrases = bot.phrases(event, friendly: friendly);
+              expect(phrases, isNotEmpty, reason: '${bot.id} $event');
+              for (final p in phrases) {
+                expect(p, isNot(contains('{')), reason: p);
+              }
+            }
+          }
+        }
+        for (final level in [...engineLevels, storyBeginnerLevel]) {
+          expect(
+            level.name,
+            isNot(startsWith('level.')),
+            reason: '${level.id}',
+          );
+        }
+        for (final style in BotStyle.values) {
+          expect(styleLabel(style), isNot(startsWith('style.')));
+        }
+      });
+    }
+
+    test('il saluto nomina il bot e la sua apertura', () {
+      useContent('en');
+      final lia = botById('lia')!;
+      expect(
+        lia.phrases(BotEvent.start),
+        contains("Hi, I'm Lia. Today we're playing the King's Gambit!"),
+      );
+      expect(
+        lia.phrases(BotEvent.start, friendly: true),
+        contains("Hi, I'm Lia!"),
+      );
+      useContent();
+      expect(
+        lia.phrases(BotEvent.start),
+        contains('Ciao, sono Lia. Oggi si gioca il Gambetto di Re!'),
+      );
+      expect(engineLevel(3).name, 'Dilettante');
+    });
+  });
+
   group('libro d\'apertura', () {
     test('RF-23 segue la linea finché la partita la rispetta', () {
       final random = math.Random(1);
@@ -143,7 +195,6 @@ void main() {
           avatar: '🏰',
           levelId: 3,
           style: BotStyle.positional,
-          openingName: 'Italiana',
           book: [
             ['e2e4', 'e7e5', 'g1f3', 'b8c6', 'f1c4', 'f8c5', 'e1g1', 'g8f6'],
           ],

@@ -1,6 +1,6 @@
 import 'package:dartchess/dartchess.dart';
 
-import 'opening_names_it.dart';
+import 'opening_names.dart';
 
 /// Apertura con codice ECO e nome (in inglese, come nel dataset pubblico).
 class Opening {
@@ -10,7 +10,7 @@ class Opening {
   final String name;
 
   /// Nome da mostrare: la traduzione italiana, o l'originale se manca.
-  String get localName => openingNameIt(name);
+  String get localName => localOpeningName(name);
 
   /// Famiglia, per esempio "Sicilian Defense".
   String get family => name.split(': ').first;

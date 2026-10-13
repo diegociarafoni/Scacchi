@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../training/training_board.dart';
 import 'guess_page.dart';
 import 'master_game.dart';
@@ -51,7 +52,8 @@ class _MasterGamePageState extends State<MasterGamePage> {
   Widget build(BuildContext context) {
     final game = widget.game;
     final text = Theme.of(context).textTheme;
-    final note = game.notes[_ply];
+    final l10n = AppLocalizations.of(context);
+    final note = game.noteAt(_ply);
     // Chi ha vinto per primo: è la parte più istruttiva da indovinare.
     final sides = game.winner == Side.black
         ? [Side.black, Side.white]
@@ -61,7 +63,7 @@ class _MasterGamePageState extends State<MasterGamePage> {
         title: Text('${game.white} – ${game.black}'),
         actions: [
           IconButton(
-            tooltip: 'Gira la scacchiera',
+            tooltip: l10n.mastersFlipBoard,
             icon: const Icon(Icons.swap_vert),
             onPressed: () => setState(() => _flipped = !_flipped),
           ),
@@ -95,7 +97,7 @@ class _MasterGamePageState extends State<MasterGamePage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    _ply == 0 ? 'Posizione iniziale' : game.label(_ply),
+                    _ply == 0 ? l10n.mastersStartPosition : game.label(_ply),
                     key: const Key('master-ply'),
                     style: text.titleLarge,
                   ),
@@ -105,7 +107,7 @@ class _MasterGamePageState extends State<MasterGamePage> {
                       [
                         if (game.nickname != null) game.nickname!,
                         '${game.event}, ${game.year}',
-                        _resultText(game),
+                        _resultText(l10n, game),
                       ].join(' · '),
                       style: text.bodySmall,
                     ),
@@ -119,19 +121,19 @@ class _MasterGamePageState extends State<MasterGamePage> {
                     children: [
                       IconButton(
                         key: const Key('master-first'),
-                        tooltip: 'Inizio',
+                        tooltip: l10n.mastersFirstMove,
                         icon: const Icon(Icons.first_page),
                         onPressed: _ply > 0 ? () => _go(0) : null,
                       ),
                       IconButton(
                         key: const Key('master-prev'),
-                        tooltip: 'Mossa precedente',
+                        tooltip: l10n.mastersPreviousMove,
                         icon: const Icon(Icons.chevron_left),
                         onPressed: _ply > 0 ? () => _go(_ply - 1) : null,
                       ),
                       IconButton(
                         key: const Key('master-next'),
-                        tooltip: 'Mossa successiva',
+                        tooltip: l10n.mastersNextMove,
                         icon: const Icon(Icons.chevron_right),
                         onPressed: _ply < game.moves.length
                             ? () => _go(_ply + 1)
@@ -139,7 +141,7 @@ class _MasterGamePageState extends State<MasterGamePage> {
                       ),
                       IconButton(
                         key: const Key('master-last'),
-                        tooltip: 'Fine',
+                        tooltip: l10n.mastersLastMove,
                         icon: const Icon(Icons.last_page),
                         onPressed: _ply < game.moves.length
                             ? () => _go(game.moves.length)
@@ -154,8 +156,9 @@ class _MasterGamePageState extends State<MasterGamePage> {
                       child: FilledButton.tonal(
                         onPressed: () => _guess(side),
                         child: Text(
-                          'Indovina la mossa con il '
-                          '${side == Side.white ? 'Bianco' : 'Nero'}',
+                          side == Side.white
+                              ? l10n.mastersGuessWhite
+                              : l10n.mastersGuessBlack,
                         ),
                       ),
                     ),
@@ -195,11 +198,12 @@ class _MasterGamePageState extends State<MasterGamePage> {
     );
   }
 
-  static String _resultText(MasterGame game) => switch (game.winner) {
-    Side.white => 'Vince il Bianco',
-    Side.black => 'Vince il Nero',
-    null => 'Patta',
-  };
+  static String _resultText(AppLocalizations l10n, MasterGame game) =>
+      switch (game.winner) {
+        Side.white => l10n.mastersWhiteWins,
+        Side.black => l10n.mastersBlackWins,
+        null => l10n.mastersDraw,
+      };
 }
 
 /// Spazio minimo sotto la scacchiera in verticale per testo e comandi.

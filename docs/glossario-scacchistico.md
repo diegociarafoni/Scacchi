@@ -1,6 +1,6 @@
 # Glossario scacchistico
 
-Termini di riferimento per tradurre Rokko. L'italiano è la lingua base; inglese, spagnolo e francese devono usare i termini di questa tabella in ogni testo (interfaccia, lezioni, commenti, frasi dei bot). Uno stesso concetto si traduce sempre con la stessa parola. Dove una forma è incerta c'è «(da verificare)»: la conferma o la correzione arriva da chi rilegge e si fa qui.
+Termini di riferimento per tradurre Rokko. L'italiano è la lingua base; inglese, spagnolo, francese e turco devono usare i termini di questa tabella in ogni testo (interfaccia, lezioni, commenti, frasi dei bot). Uno stesso concetto si traduce sempre con la stessa parola. Dove una forma è incerta c'è «(da verificare)»: la conferma o la correzione arriva da chi rilegge e si fa qui.
 
 ## Regole di stile
 
@@ -155,8 +155,170 @@ La notazione si sceglie nelle Impostazioni (predefinita la figurativa, vedi [not
 | Scacchiera fisica | Physical board | Tablero físico | Échiquier physique |
 | Multigiocatore | Multiplayer | Multijugador | Multijoueur |
 
+## Turco
+
+Stile: turco standard (Türkiye), si dà del «sen» (imperativo informale, anche nel profilo bambino), virgolette “…”, maiuscola solo sulla prima parola dei titoli (attenzione a İ e ı). Dopo un numero il sostantivo resta singolare. Non si attaccano suffissi ai segnaposto: si riformula la frase. Lettere della notazione: Ş (re), V (donna), K (torre), F (alfiere), A (cavallo), pedone nessuna. Colori: Beyaz, Siyah.
+
+| Italiano | Türkçe |
+|---|---|
+| re / donna / torre / alfiere / cavallo / pedone | şah / vezir / kale / fil / at / piyon |
+| scacchiera / casa / traversa / colonna | satranç tahtası / kare / sıra / hat |
+| mossa / cattura | hamle / alma |
+| scacco / scacco matto / stallo / patta | şah / şah mat / pat / beraberlik |
+| abbandono | pes etme |
+| arrocco corto / lungo | kısa rok / uzun rok |
+| presa en passant / promozione / sottopromozione | anpasan / terfi / düşük terfi |
+| proposta di patta | beraberlik teklifi |
+| tripla ripetizione / cinquanta mosse | üç kez tekrar / elli hamle kuralı |
+| materiale insufficiente / tempo scaduto | yetersiz materyal / süre doldu |
+| ripresa della mossa / mossa illegale | hamleyi geri alma / geçersiz hamle |
+| forchetta / inchiodatura / infilata | çatal / bağlama / şiş |
+| attacco di scoperta / scacco di scoperta / scacco doppio | açılan saldırı / açılan şah / çifte şah |
+| sacrificio | fedakârlık |
+| matto del barbiere / del pazzo | çoban matı / budala matı |
+| matto di corridoio / soffocato | son sıra matı / boğulma matı |
+| opposizione | karşıtlık |
+| pedone passato / isolato / doppiati | geçer piyon / yalnız piyon / katlanmış piyonlar |
+| struttura pedonale / coppia degli alfieri | piyon yapısı / fil çifti |
+| colonna aperta / centro / sviluppo / minaccia | açık hat / merkez / gelişim / tehdit |
+| apertura / mediogioco / finale | açılış / orta oyun / oyun sonu |
+| gambetto / difesa | gambit / savunma |
+| Siciliana / Francese / Spagnola | Sicilya savunması / Fransız savunması / İspanyol açılışı |
+| Gambetto di donna / Scandinava / Indiana di re | Vezir gambiti / İskandinav savunması / Şah Hint savunması |
+| mossa migliore / imprecisione / errore / svista | en iyi hamle / kusur / hata / büyük hata |
+| brillante / precisione | parlak / doğruluk |
+| Gioca / Puzzle / Aperture / Tu | Oyna / Bulmacalar / Açılışlar / Sen |
+| Impostazioni / Profilo / Archivio / Statistiche | Ayarlar / Profil / Arşiv / İstatistikler |
+| Allenatore / Lezione / Percorso / Storia | Koç / Ders / Yol / Hikâye |
+| Badge / Traguardo / Serie / Livello | Rozet / Başarı / Seri / Seviye |
+| Suggerimento / Orologio / Cadenza / Incremento | İpucu / Saat / Tempo / Ek süre |
+| Cornice / Punteggio Elo | Çerçeve / Elo puanı |
+| Grandi maestri / Scacchiera fisica / Multigiocatore | Büyük ustalar / Fiziksel tahta / Çok oyunculu |
+
 ## Come si usa
 
 1. Prima di tradurre un testo si cercano qui i termini che contiene.
 2. Un termine nuovo si aggiunge alla tabella insieme al testo che lo introduce, con le quattro lingue.
 3. Una correzione segnalata da chi rilegge si fa qui e poi si propaga ai file `.arb` e ai contenuti.
+
+## Indonesiano (id)
+
+Variante: indonesiano standard e naturale; si dà del «kamu» (mai «Anda»). Virgolette “…”, maiuscola solo sulla prima parola dei titoli, colori «Putih» e «Hitam». L'indonesiano non ha plurale grammaticale: nei plurali ICU i rami `one` e `other` hanno lo stesso testo. Nel testo la notazione usa le lettere inglesi (K, Q, R, B, N) (da verificare). Le forme meno diffuse (promosi rendah, lencana, rentetan) sono da verificare da chi rilegge.
+
+| English | Bahasa Indonesia |
+|---|---|
+| king / queen / rook / bishop / knight / pawn | raja / ratu / benteng / gajah / kuda / pion |
+| board / square / rank / file / diagonal | papan / petak / baris / kolom / diagonal |
+| White / Black (i giocatori) | Putih / Hitam ("Putih jalan" = chi muove) |
+| move (chess) / side to move | langkah / giliran |
+| capture | tangkap / penangkapan |
+| check / checkmate / stalemate | skak / skakmat / pat |
+| draw / draw offer | remis / tawaran remis |
+| resignation / resign | menyerah |
+| kingside / queenside castling | rokade pendek / rokade panjang |
+| en passant / promotion / underpromotion | en passant / promosi / promosi rendah |
+| threefold repetition | pengulangan tiga kali |
+| fifty-move rule | aturan lima puluh langkah |
+| insufficient material | materi tidak cukup |
+| time out | waktu habis |
+| takeback | tarik kembali langkah |
+| illegal move | langkah ilegal |
+| fork / pin / skewer | garpu / pin / tusukan |
+| discovered attack / discovered check / double check | serangan terbuka / skak terbuka / skak ganda |
+| sacrifice | pengorbanan |
+| Scholar's mate / Fool's mate | skakmat si pelajar / skakmat si bodoh |
+| back-rank mate / smothered mate | skakmat baris belakang / skakmat tercekik |
+| zugzwang / opposition | zugzwang / oposisi |
+| passed / isolated / doubled pawn | pion bebas / pion terisolasi / pion ganda |
+| pawn structure / bishop pair | struktur pion / sepasang gajah |
+| open file | kolom terbuka |
+| center / development / threat | pusat / pengembangan / ancaman |
+| opening / middlegame / endgame | pembukaan / permainan tengah / bagian akhir |
+| gambit / defense | gambit / pertahanan |
+| best move / inaccuracy / mistake / blunder / brilliant | langkah terbaik / ketidaktepatan / kesalahan / blunder / brilian |
+| accuracy | akurasi |
+| Play / Puzzles / Openings / You | Main / Teka-teki / Pembukaan / Kamu |
+| Settings / Profile / Archive / Statistics | Pengaturan / Profil / Arsip / Statistik |
+| Coach / Lesson / Path / Story | Pelatih / Pelajaran / Jalur / Kisah |
+| Badge / Achievement / Streak / Level | Lencana / Pencapaian / Rentetan / Level |
+| Hint | Petunjuk |
+| Clock / Time control / Increment | Jam / Pengaturan waktu / Tambahan waktu |
+| Bullet / Blitz / Rapid | Bullet / Blitz / Rapid |
+| Frame (avatar) | Bingkai |
+| Elo rating | Peringkat Elo |
+| Grandmasters | Grandmaster |
+| Physical board | Papan fisik |
+| Multiplayer | Multipemain |
+| game (a chess game) | permainan / partai |
+## Russo
+
+Per il russo (`ru`) le tabelle sopra non hanno una colonna: i termini sono qui. Le voci «(da verificare)» le conferma Diego.
+
+### Regole di stile
+
+- Russo standard, senza regionalismi; si dà del **ты** (imperativo in «ты»: «Сделай ход», «Выбери»), anche nel profilo bambino. Il nome dell'app e dei bot resta in caratteri latini (Rokko).
+- Virgolette «…» (annidate „…“). Il trattino lungo «—» si usa dove il russo lo richiede; la lettera «ё» si scrive solo dove evita ambiguità (tutto/всё), altrimenti «е».
+- Maiuscola solo sulla prima parola dei titoli. Colori: «белые», «чёрные»; chi muove: «Ход белых».
+- Plurali ICU a quattro forme: `one` (1, 21, 31…), `few` (2-4, 22-24…), `many` (0, 5-20, 25-30…), `other` (frazioni). Mai «1» scritto a mano nella forma `one`: usare `{count}`; per un valore esatto, `=1`.
+- Notazione: lettere russe (Кр, Ф, Л, С, К; pedone senza lettera), vedi sotto.
+
+### Notazione
+
+| Pezzo | Italiano | Русский |
+|---|---|---|
+| Re | R | Кр |
+| Donna | D | Ф |
+| Torre | T | Л |
+| Alfiere | A | С |
+| Cavallo | C | К |
+| Pedone | (nessuna) | (nessuna) |
+
+### Termini
+
+| Italiano | Русский |
+|---|---|
+| re / donna / torre / alfiere / cavallo / pedone | король / ферзь / ладья / слон / конь / пешка |
+| scacchiera / casa / traversa / colonna / diagonale | доска / поле / горизонталь / вертикаль / диагональ |
+| Bianco / Nero | белые / чёрные |
+| mossa / tratto | ход / очередь хода |
+| cattura | взятие |
+| scacco / scacco matto | шах / мат |
+| stallo / patta | пат / ничья |
+| abbandono | сдача |
+| arrocco corto / lungo | короткая / длинная рокировка |
+| presa en passant | взятие на проходе |
+| promozione / sottopromozione | превращение / превращение в слабую фигуру (da verificare) |
+| proposta di patta | предложение ничьей |
+| tripla ripetizione | троекратное повторение |
+| regola delle cinquanta mosse | правило пятидесяти ходов |
+| materiale insufficiente | недостаточный материал |
+| tempo scaduto | время вышло |
+| ripresa della mossa | возврат хода |
+| mossa illegale | недопустимый ход |
+| forchetta / inchiodatura / infilata | вилка / связка / линейный удар (da verificare) |
+| attacco / scacco di scoperta / scacco doppio | вскрытое нападение / вскрытый шах / двойной шах |
+| sacrificio | жертва |
+| matto del barbiere / del pazzo | детский мат / дурацкий мат |
+| matto di corridoio / soffocato | мат по последней горизонтали / удушающий мат |
+| zugzwang / opposizione | цугцванг / оппозиция |
+| pedone passato / isolato / doppiati | проходная пешка / изолированная пешка / сдвоенные пешки |
+| struttura pedonale | пешечная структура |
+| coppia degli alfieri | пара слонов |
+| colonna aperta | открытая вертикаль |
+| centro / sviluppo / minaccia | центр / развитие / угроза |
+| apertura / mediogioco / finale | дебют / миттельшпиль / эндшпиль |
+| gambetto / difesa | гамбит / защита |
+| Siciliana / Francese / Spagnola | Сицилианская защита / Французская защита / Испанская партия |
+| Gambetto di donna | Ферзевый гамбит |
+| Difesa Scandinava / Indiana di re | Скандинавская защита / Староиндийская защита |
+| mossa migliore / imprecisione / errore / svista / brillante / precisione | лучший ход / неточность / ошибка / зевок / блестящий ход / точность |
+| Gioca / Puzzle / Aperture / Tu / Impostazioni | Играть / Задачи / Дебюты / Ты / Настройки |
+| Profilo / Archivio / Statistiche / Allenatore | Профиль / Архив / Статистика / Тренер |
+| Lezione / Percorso / Storia | Урок / Путь / История |
+| Badge / Traguardo / Serie / Livello / Suggerimento | Значок / Достижение / Серия / Уровень / Подсказка |
+| Orologio / Cadenza / Incremento | Часы / Контроль времени / Добавление времени |
+| Bullet / Blitz / Rapid | Пуля / Блиц / Рапид (da verificare) |
+| Cornice (dell'avatar) | Рамка |
+| Punteggio Elo | Рейтинг Эло |
+| Grandi maestri | Великие мастера |
+| Scacchiera fisica / Multigiocatore | Реальная доска / Мультиплеер |

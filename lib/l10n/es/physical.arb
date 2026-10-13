@@ -1,0 +1,65 @@
+{
+  "physicalTitle": "Tablero físico",
+  "physicalEntrySubtitle": "Reloj y planilla para una partida en directo",
+  "physicalIntro": "Juega en un tablero de verdad: la app es el reloj y anota la partida. Después de cada jugada, escríbela o tócala entre las legales.",
+  "physicalWhite": "Blancas",
+  "physicalBlack": "Negras",
+  "physicalUntimed": "Sin reloj",
+  "physicalStart": "Empezar la partida",
+  "physicalInputWhite": "Jugada de las Blancas (p. ej. e4, Cf3)",
+  "physicalInputBlack": "Jugada de las Negras (p. ej. e5, Cc6)",
+  "physicalInvalidMove": "Jugada no válida: «{text}»",
+  "@physicalInvalidMove": {
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "physicalNoMoves": "Sin jugadas",
+  "physicalPause": "Pausa",
+  "physicalResume": "Reanudar",
+  "physicalUndo": "Deshacer",
+  "physicalDraw": "Tablas",
+  "physicalResign": "Abandonar",
+  "physicalDrawQuestion": "¿Tablas por acuerdo?",
+  "physicalYes": "Sí",
+  "physicalNo": "No",
+  "physicalWhoResigns": "¿Quién abandona?",
+  "physicalSaved": "Partida guardada en el archivo",
+  "physicalNothingToSave": "No hay jugadas que guardar",
+  "physicalSaveFailed": "No se pudo guardar la partida",
+  "physicalNewGame": "Nueva partida",
+  "physicalEndCheckmate": "Jaque mate",
+  "physicalEndResignation": "Abandono",
+  "physicalEndTimeout": "Tiempo agotado",
+  "physicalEndAgreement": "Tablas por acuerdo",
+  "physicalEndStalemate": "Rey ahogado",
+  "physicalEndInsufficient": "Material insuficiente",
+  "physicalEndRepetition": "Triple repetición",
+  "physicalEndFiftyMoves": "Regla de las cincuenta jugadas",
+  "physicalEndOther": "Fin de la partida",
+  "physicalResultLine": "{reason} · {result}",
+  "@physicalResultLine": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      },
+      "result": {
+        "type": "String"
+      }
+    }
+  },
+  "physicalPhoto": "Jugada desde foto",
+  "physicalRealign": "Realinear",
+  "physicalCameraUnavailable": "Cámara no disponible",
+  "physicalImageUnreadable": "Imagen ilegible",
+  "physicalReferenceSaved": "Foto de referencia guardada. Después de la próxima jugada, haz otra foto.",
+  "physicalNoMoveRecognized": "No se ha reconocido ninguna jugada: el tablero se ve igual.",
+  "physicalGuessNote": "Jugadas más probables según la foto: confirma la correcta.",
+  "physicalAlignTitle": "Alinea el tablero",
+  "physicalAlignHelp": "Arrastra los cuatro círculos a las esquinas del tablero. Mantén el mismo encuadre en las próximas fotos.",
+  "physicalAlignWhiteBottom": "Blancas abajo",
+  "physicalAlignBlackBottom": "Negras abajo",
+  "physicalAlignDone": "Listo"
+}

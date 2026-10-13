@@ -1,0 +1,452 @@
+{
+  "reviewCoachGeneric": "{move} lebih baik: posisimu jadi lebih buruk.",
+  "@reviewCoachGeneric": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachBrilliant": "Langkah brilian: kamu mengorbankan materi, tapi ini pilihan terbaik.",
+  "reviewCoachGreat": "Hebat: itu satu-satunya langkah yang menjaga posisi.",
+  "reviewCoachBest": "Itu langkah terbaik.",
+  "reviewCoachExcellent": "Langkah yang sangat bagus, hampir sebaik langkah terbaik.",
+  "reviewCoachGood": "Langkah yang bagus.",
+  "reviewCoachBook": "Langkah teori pembukaan.",
+  "reviewCoachAllowedMate": "Setelah {move}, {side, select, white{Putih} other{Hitam}} bisa memberi skakmat dalam {mate} langkah dengan {reply}.",
+  "@reviewCoachAllowedMate": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "side": {
+        "type": "String"
+      },
+      "mate": {
+        "type": "int"
+      },
+      "reply": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachMissedMate": "Kamu punya skakmat dalam {mate} langkah dengan {move}.",
+  "@reviewCoachMissedMate": {
+    "placeholders": {
+      "mate": {
+        "type": "int"
+      },
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachHanging": "Kamu membiarkan {victim} tanpa perlindungan di {square}: {attacker} bisa menangkap {victimRole, select, other{bidak itu}}.",
+  "@reviewCoachHanging": {
+    "placeholders": {
+      "victim": {
+        "type": "String"
+      },
+      "victimRole": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "attacker": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachAllowedFork": "Setelah {move}, {piece} menyerang {targets} sekaligus: itu garpu.",
+  "@reviewCoachAllowedFork": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "targets": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachAllowedPin": "Setelah {move}, {slider} mem-pin {pinned} di {square} terhadap raja.",
+  "@reviewCoachAllowedPin": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "slider": {
+        "type": "String"
+      },
+      "pinned": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachExposedKing": "Setelah {move}, rajamu jadi terbuka: {reply} adalah skak.",
+  "@reviewCoachExposedKing": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "reply": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachRecapture": "Kamu bisa merebut kembali bidak: {move} menangkap {piece}.",
+  "@reviewCoachRecapture": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachWinMaterial": "Kamu bisa memenangkan materi: {move} menangkap {piece}.",
+  "@reviewCoachWinMaterial": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachMissedFork": "Kamu bisa memainkan garpu dengan {move}: {piece} menyerang {targets}.",
+  "@reviewCoachMissedFork": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "targets": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachMissedDiscovery": "Kamu bisa memainkan serangan terbuka dengan {move}: {piece} menyerang {target}.",
+  "@reviewCoachMissedDiscovery": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachMaterialLoss": "Langkah ini kehilangan materi: sekitar {pawns, plural, one{{pawns} pion} other{{pawns} pion}} pada rangkaian langkah yang diperkirakan.",
+  "@reviewCoachMaterialLoss": {
+    "placeholders": {
+      "pawns": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewCoachPieceColored": "{role, select, pawn{pion} knight{kuda} bishop{gajah} rook{benteng} queen{ratu} other{raja}} {color, select, white{putih} other{hitam}}",
+  "@reviewCoachPieceColored": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      },
+      "color": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachListEnd": "{head} dan {last}",
+  "@reviewCoachListEnd": {
+    "placeholders": {
+      "head": {
+        "type": "String"
+      },
+      "last": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewTitle": "Tinjauan permainan",
+  "reviewAnalysePosition": "Analisis posisi ini",
+  "reviewPuzzlesSaved": "Teka-teki tersimpan: {count}. Kamu bisa menemukannya di Teka-teki › Tinjau kesalahanmu.",
+  "@reviewPuzzlesSaved": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewPuzzlesAlready": "Teka-teki ini sudah tersimpan.",
+  "reviewPuzzlesFailed": "Gagal menyimpan. Coba lagi.",
+  "reviewSavePuzzles": "Simpan kesalahan sebagai teka-teki ({count})",
+  "@reviewSavePuzzles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewNoteNotSaved": "Catatan tidak tersimpan. Coba lagi.",
+  "reviewRetryCorrect": "Benar: {move} adalah langkah terbaik.",
+  "@reviewRetryCorrect": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewRetryWrong": "{move} bukan langkah terbaik. Coba lagi.",
+  "@reviewRetryWrong": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewAnalysing": "Menganalisis: {done} dari {total}",
+  "@reviewAnalysing": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewStop": "Berhenti",
+  "reviewCancelled": "Tinjauan dihentikan.",
+  "reviewFailed": "Analisis gagal. Coba lagi nanti.",
+  "reviewRetryPrompt": "Cari langkah yang lebih baik dari {move}",
+  "@reviewRetryPrompt": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewRetrySolution": "Langkah terbaiknya adalah {move}.",
+  "@reviewRetrySolution": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewShowSolution": "Solusi",
+  "reviewExit": "Keluar",
+  "reviewStartPosition": "Posisi awal",
+  "reviewMoveVerdict": "{number} {move} adalah {verdict, select, brilliant{langkah brilian} great{langkah hebat} best{langkah terbaik} excellent{langkah yang sangat bagus} good{langkah yang bagus} book{langkah teori} inaccuracy{ketidaktepatan} mistake{kesalahan} miss{peluang yang terlewat} other{blunder}}",
+  "@reviewMoveVerdict": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "move": {
+        "type": "String"
+      },
+      "verdict": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewBestMove": "Terbaik: {move}",
+  "@reviewBestMove": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewYourNote": "Catatanmu: {note}",
+  "@reviewYourNote": {
+    "placeholders": {
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewTryAgain": "Coba lagi",
+  "reviewAddNote": "Tambah catatan",
+  "reviewEditNote": "Ubah catatan",
+  "reviewNavStart": "Awal",
+  "reviewNavPrevious": "Langkah sebelumnya",
+  "reviewNavNext": "Langkah berikutnya",
+  "reviewNavEnd": "Akhir",
+  "reviewSideWhite": "Putih",
+  "reviewSideBlack": "Hitam",
+  "reviewAccuracyUnavailable": "Akurasi {side} tidak tersedia",
+  "@reviewAccuracyUnavailable": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewAccuracyPercent": "Akurasi {side} {value} persen",
+  "@reviewAccuracyPercent": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewAccuracy": "Akurasi",
+  "reviewEstimatedElo": "Perkiraan Elo ~{elo}",
+  "@reviewEstimatedElo": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewMovesByCategory": "Langkah per kategori",
+  "reviewCountsSemantics": "Putih {white}, Hitam {black}",
+  "@reviewCountsSemantics": {
+    "placeholders": {
+      "white": {
+        "type": "int"
+      },
+      "black": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewNoteTitle": "Catatan untuk {move}",
+  "@reviewNoteTitle": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewNoteComment": "Komentar",
+  "reviewNoteCancel": "Batal",
+  "reviewNoteSave": "Simpan",
+  "reviewTimePerMove": "Waktu per langkah",
+  "reviewTimeNoHasty": "Waktu per langkah. Tidak ada kesalahan karena terburu-buru.",
+  "reviewTimeHastySemantics": "Waktu per langkah. Kesalahan karena terburu-buru: {moves}.",
+  "@reviewTimeHastySemantics": {
+    "placeholders": {
+      "moves": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewHastyMistakes": "Kesalahan karena terburu-buru: {moves}",
+  "@reviewHastyMistakes": {
+    "placeholders": {
+      "moves": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewHastyAdvice": "Kurang dari 40% dari rata-rata waktumu per langkah: sebelum melangkah, periksa ancaman.",
+  "reviewAccuracyByPhase": "Akurasi per fase",
+  "reviewPhaseOpening": "Pembukaan",
+  "reviewPhaseMiddlegame": "Permainan tengah",
+  "reviewPhaseEndgame": "Bagian akhir",
+  "reviewPhaseSemantics": "{phase}: Putih {white}, Hitam {black}",
+  "@reviewPhaseSemantics": {
+    "placeholders": {
+      "phase": {
+        "type": "String"
+      },
+      "white": {
+        "type": "String"
+      },
+      "black": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewPhaseValues": "Putih {white} · Hitam {black}",
+  "@reviewPhaseValues": {
+    "placeholders": {
+      "white": {
+        "type": "String"
+      },
+      "black": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewMoveSemantics": "{number} {move}, {verdict}{note, select, yes{, dengan catatan} other{}}",
+  "@reviewMoveSemantics": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "move": {
+        "type": "String"
+      },
+      "verdict": {
+        "type": "String"
+      },
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewEvalGraph": "Grafik evaluasi",
+  "reviewClassBrilliant": "Brilian",
+  "reviewClassGreat": "Hebat",
+  "reviewClassBest": "Terbaik",
+  "reviewClassExcellent": "Sangat bagus",
+  "reviewClassGood": "Bagus",
+  "reviewClassBook": "Teori",
+  "reviewClassInaccuracy": "Ketidaktepatan",
+  "reviewClassMistake": "Kesalahan",
+  "reviewClassMiss": "Peluang terlewat",
+  "reviewClassBlunder": "Blunder",
+  "reviewScoreUnavailable": "Evaluasi tidak tersedia",
+  "reviewScoreMated": "Skakmat: {side, select, white{Putih} other{Hitam}} menang",
+  "@reviewScoreMated": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewScoreCheckmate": "Skakmat",
+  "reviewScoreMateIn": "{side, select, white{Putih} other{Hitam}} punya skakmat dalam {moves} langkah",
+  "@reviewScoreMateIn": {
+    "placeholders": {
+      "moves": {
+        "type": "int"
+      },
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewScoreEven": "Seimbang",
+  "reviewScoreAhead": "{side, select, white{Putih} other{Hitam}} unggul {pawns}",
+  "@reviewScoreAhead": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      },
+      "pawns": {
+        "type": "String"
+      }
+    }
+  }
+}

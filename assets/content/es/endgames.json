@@ -1,0 +1,14 @@
+{
+  "queen-mate.title": "Rey y dama contra rey",
+  "queen-mate.intro": "Objetivo: dar jaque mate. Usa la dama para encerrar al rey rival en una jaula cada vez más pequeña y acerca después tu propio rey. ¡Cuidado con el rey ahogado!",
+  "rook-mate.title": "Rey y torre contra rey",
+  "rook-mate.intro": "Objetivo: dar jaque mate. La torre corta las filas y el rey la ayuda: empujad juntos al rey rival hacia el borde.",
+  "king-pawn.title": "Rey y peón contra rey",
+  "king-pawn.intro": "Objetivo: coronar el peón. Lleva tu rey delante del peón y toma la oposición: el peón solo llega al final si tu rey le abre el camino.",
+  "lucena.title": "La posición de Lucena",
+  "lucena.intro": "Objetivo: coronar el peón. Tu rey está encerrado delante del peón: aleja al rey rival con la torre y construye después el «puente» para protegerte de los jaques.",
+  "philidor.title": "La defensa Philidor",
+  "philidor.intro": "Objetivo: no perder durante {par} jugadas. Juegas con las Negras: mantén la torre en la sexta fila hasta que el peón avance; entonces llévala al fondo y da jaque desde atrás.",
+  "bishop-knight.title": "Alfil y caballo",
+  "bishop-knight.intro": "Objetivo: dar jaque mate. Es el mate más difícil: lleva al rey rival hacia una esquina del color de tu alfil. Tienes 50 jugadas antes de que la partida acabe en tablas."
+}

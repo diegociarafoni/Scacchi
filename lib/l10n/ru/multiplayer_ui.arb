@@ -1,0 +1,15 @@
+{
+  "multiplayerUiChannelWifi": "Wi-Fi",
+  "multiplayerUiChannelBluetooth": "Bluetooth",
+  "multiplayerUiChannelRemote": "Удалённо",
+  "multiplayerUiLinkConnected": "Подключено",
+  "multiplayerUiLinkConnecting": "Подключение",
+  "multiplayerUiLinkOffline": "Недоступно",
+  "multiplayerUiLinkSemantics": "{channel}: {state}",
+  "multiplayerUiShowFriend": "Покажи этот код другу",
+  "multiplayerUiStepsTitle": "Как играть",
+  "multiplayerUiStepCreate": "Один из вас создаёт партию и показывает QR-код или отправляет ссылку.",
+  "multiplayerUiStepScan": "Другой сканирует его камерой.",
+  "multiplayerUiStepPlay": "Ходите по очереди: ходы передаются сами.",
+  "multiplayerUiResumeTitle": "Партия идёт"
+}
