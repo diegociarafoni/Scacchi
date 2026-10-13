@@ -21,7 +21,7 @@ patta, orologio, abbandono) valgono anche qui, vedi [avversario-computer.md](avv
 
 ## La scala e la collezione
 
-I bot sono 15, in ordine di Elo non decrescente, e più bot possono avere lo stesso Elo (a parità l'ordine è quello dell'elenco). Si comincia con i bot dei due gradini più bassi (Lia a 400, Pino e Nico a 700): gli altri sono bloccati (lucchetto). Battere un bot qualunque di un gradino sblocca tutti i bot del gradino di Elo successivo (`BotCollection.isUnlocked`, `unlockedBy`); chi aveva già battuto Pino, Chiara e così via non perde l'accesso a nessun bot. Ogni vittoria aggiunge il bot alla **collezione**, dove nell'elenco compare con un segno di spunta e la data della prima
+I bot sono 17, in ordine di Elo non decrescente, e più bot possono avere lo stesso Elo (a parità l'ordine è quello dell'elenco). Si comincia con i bot dei due gradini più bassi (Lia a 400, Pino e Nico a 700): gli altri sono bloccati (lucchetto). Battere un bot qualunque di un gradino sblocca tutti i bot del gradino di Elo successivo (`BotCollection.isUnlocked`, `unlockedBy`); chi aveva già battuto Pino, Chiara e così via non perde l'accesso a nessun bot. Ogni vittoria aggiunge il bot alla **collezione**, dove nell'elenco compare con un segno di spunta e la data della prima
 vittoria ("Battuto il 11/10/2026"). Un bot già battuto si può rigiocare quando si vuole. Una partita
 conta solo se ha almeno una mossa ed è partita dalla posizione iniziale; perdere o pattare non cambia la collezione. La collezione è salvata
 sul dispositivo (chiave `botCollection`, `lib/engine/bot_collection.dart`).
@@ -32,7 +32,7 @@ Nella pagina «Partita personalizzata» del foglio Nuova partita una riga sotto 
 
 ## I bot
 
-I 15 bot sono in ordine di Elo e formano la scala da superare a gradini (RG-04).
+I 17 bot sono in ordine di Elo e formano la scala da superare a gradini (RG-04).
 
 | # | Bot | Livello | Elo indicativo | Stile | Apertura preferita |
 |---|-----|--------:|---------------:|-------|--------------------|
@@ -49,8 +49,10 @@ I 15 bot sono in ordine di Elo e formano la scala da superare a gradini (RG-04).
 | 11 | Carlo 🦝 | 5 | 1600 | gambettista | Gambetto Budapest |
 | 12 | Elena 🦅 | 6 | 1850 | posizionale | Spagnola |
 | 13 | Ada 🔭 | 6 | 1850 | posizionale | Inglese |
-| 14 | Massimo 🐺 | 7 | 2250 | gambettista | Gambetto Evans |
-| 15 | Stella ⭐ | 8 | 2700 | aggressivo | Difesa Est-Indiana |
+| 14 | Luna 🐇 | 6 | 1850 | posizionale | Catalana |
+| 15 | Massimo 🐺 | 7 | 2250 | gambettista | Gambetto Evans |
+| 16 | Cosmo 🐈 | 7 | 2250 | aggressivo | Gambetto Smith-Morra |
+| 17 | Stella ⭐ | 8 | 2700 | aggressivo | Difesa Est-Indiana |
 
 Lia gioca al livello 0 (400 Elo), lo stesso di Tino; gli altri nuovi bot riusano i livelli esistenti, quindi non servono nuove calibrazioni. Le frasi dipendono dallo stile, non dal bot: i nuovi bot non ne hanno di proprie.
 
@@ -71,7 +73,7 @@ Struttura, dall'alto:
 - **Colore** in basso: Bianco, a sorte (predefinito), Nero, sempre accanto a «Gioca».
 - **Opzioni**: il bottone «Opzioni» in basso apre un pannello a comparsa con le opzioni della partita, che si scelgono dopo aver scelto chi sfidare: cadenza (Nessun timer, Bullet, Blitz, Rapid), variante (classica, Chess960, Re della collina, Tre scacchi), handicap (pezzo in meno, tempo di chi concede e chi concede, come nel foglio «Nuova partita»; il pezzo in meno vale solo nella classica) e l'allenatore acceso dall'inizio. Le scelte sono in `GameOptions` (`lib/bot_gallery/game_options.dart`) dentro il `BotGalleryResult`. Nel profilo bambino il pannello ha solo «Nessun timer» e la cadenza lenta 15+10. Quando la galleria si apre dal foglio «Nuova partita» (`OpponentPicker.onGalleryPlay`), «Gioca» avvia direttamente la partita con queste opzioni: per i bot il foglio non le ripete. Aperta senza `onGalleryPlay` (per esempio dalla scelta dell'avversario di una posizione dell'editor) la galleria nasconde «Opzioni» e restituisce solo bot e colore (`showOptions: false`). Non esiste ancora una barra di valutazione: non c'è fra le opzioni.
 
-I saluti e le battute di rivincita di ogni bot, e tutti i testi della galleria, sono in `lib/l10n/<lingua>/bot_gallery.arb` (italiano e inglese); `lib/bot_gallery/bot_greetings.dart` li associa agli id. Ogni bot ha un personaggio disegnato in codice con le sei espressioni (`lib/progress/avatar_art.dart`, `guardianCharacter`): Lia farfalla, Nico tartaruga, Viola fiore viola con nota, Ettore leone, Bruna orsa, Carlo procione, Ada con gli occhiali, Tino pulcino nel guscio.
+I saluti e le battute di rivincita di ogni bot, e tutti i testi della galleria, sono in `lib/l10n/<lingua>/bot_gallery.arb` (italiano e inglese); `lib/bot_gallery/bot_greetings.dart` li associa agli id. Ogni bot ha un personaggio disegnato in codice con le sei espressioni (`lib/progress/avatar_art.dart`, `guardianCharacter`): Lia farfalla, Nico tartaruga, Viola fiore viola con nota, Ettore leone, Bruna orsa, Carlo procione, Ada con gli occhiali, Luna coniglio lunare, Cosmo gatto astronauta, Tino pulcino nel guscio.
 
 Profilo bambino: solo i tre bot amici in una fascia «I tuoi amici», senza Elo, Adattivo né custodi. Accessibilità: ogni cella è un bottone con nome, Elo e stato («bloccato», «battuto», «disponibile») letti dai lettori di schermo; bersagli da almeno 48 dp; nessun overflow col testo al 130%. Il layout orizzontale fa scorrere anche il bot in alto.
 
@@ -95,8 +97,8 @@ Come lo stile si combina con la forza dipende dal livello su cui è costruito il
 | Livelli | Come si ottiene la forza | Effetto dello stile |
 |---|---|---|
 | 0-4 (Lia, Pino, Nico, Chiara, Viola, Rocco, Ettore, Marta, Bruna) | scelta a caso tra le candidate con la temperatura del livello (80-320) | il bonus pesa sulla scelta; con temperature alte resta una tendenza più che una regola |
-| 5-6 (Duilio, Carlo, Elena, Ada) | limitatore Elo di Stockfish | nessuno sulla mossa, che resta quella del motore alla forza dichiarata; lo stile si vede nel libro e nelle frasi |
-| 7-8 (Massimo, Stella) | piena forza (profondità 10 e 2 secondi) | il bonus agisce solo tra candidate entro 30 cp dalla migliore, quindi la forza non cala |
+| 5-6 (Duilio, Carlo, Elena, Ada, Luna) | limitatore Elo di Stockfish | nessuno sulla mossa, che resta quella del motore alla forza dichiarata; lo stile si vede nel libro e nelle frasi |
+| 7-8 (Massimo, Cosmo, Stella) | piena forza (profondità 10 e 2 secondi) | il bonus agisce solo tra candidate entro 30 cp dalla migliore, quindi la forza non cala |
 
 ## Libro d'apertura
 

@@ -52,6 +52,18 @@ void main() {
       expect(tierOfElo(2700), BotTier.master);
     });
 
+    test('quanti bot in ogni fascia', () {
+      expect(
+        [for (final t in BotTier.values) botsInTier(t).length],
+        [3, 4, 4, 3, 3],
+      );
+    });
+
+    test('Luna è avanzata e Cosmo è maestro', () {
+      expect(tierOf(botById('luna')!), BotTier.advanced);
+      expect(tierOf(botById('cosmo')!), BotTier.master);
+    });
+
     test('Pino e Nico sono neofiti, Stella è maestra', () {
       expect(tierOf(botById('pino')!), BotTier.novice);
       expect(tierOf(botById('nico')!), BotTier.novice);
