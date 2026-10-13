@@ -11,7 +11,7 @@ Termini di riferimento per tradurre Rokko. L'italiano è la lingua base; inglese
 | Virgolette | «…» | “…” | «…» | « … » con spazio non separabile |
 | Segni | | | `¿…?` `¡…!` sempre aperti e chiusi | spazio sottile non separabile prima di `;` `:` `!` `?` |
 | Maiuscole nei titoli | solo la prima parola | solo la prima parola | solo la prima parola | solo la prima parola |
-| Colori dei giocatori | i Bianchi, il Nero | White, Black | las Blancas, las Negras | les Blancs, les Noirs |
+| Colori dei giocatori | i Bianchi, i Neri | White, Black | las Blancas, las Negras | les Blancs, les Noirs |
 
 - I nomi dei bot, dell'app e dei set di pezzi non si traducono. I nomi dei giocatori storici seguono la forma usuale nella lingua (per esempio Kasparov, Fischer, Morphy).
 - Le frasi dei bot si adattano, non si traducono alla lettera: contano il carattere e la naturalezza, non le parole.
@@ -53,7 +53,7 @@ La notazione predefinita è quella della lingua dell'app; restano a scelta l'ing
 | Italiano | English | Español | Français |
 |---|---|---|---|
 | mossa | move | jugada | coup |
-| tratto | turn to move | turno | trait |
+| tratto | side to move | turno | trait |
 | cattura | capture | captura | prise |
 | scacco | check | jaque | échec |
 | scacco matto | checkmate | jaque mate | échec et mat |
@@ -155,4 +155,4 @@ La notazione predefinita è quella della lingua dell'app; restano a scelta l'ing
 
 1. Prima di tradurre un testo si cercano qui i termini che contiene.
 2. Un termine nuovo si aggiunge alla tabella nella stessa PR che lo introduce, con le quattro lingue.
-3. Una correzione segnalata da chi rilegge si fa qui e poi si propaga ai file `.arb` e ai contenuti; i controlli automatici dei termini (vedi [localizzazione.md](localizzazione.md)) leggono questo documento.
+3. Una correzione segnalata da chi rilegge si fa qui e poi si propaga ai file `.arb` e ai contenuti; quando saranno introdotti i controlli automatici dei termini, leggeranno questo documento.

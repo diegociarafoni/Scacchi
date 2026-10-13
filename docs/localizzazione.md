@@ -12,11 +12,11 @@ Requisito RP-05: italiano come lingua predefinita, con la struttura pronta per a
 
 ## Lingue di destinazione
 
-L'italiano è la lingua base e il modello degli `.arb`. Inglese, spagnolo e francese vanno completati: ogni testo dell'app, compresi lezioni, commenti dei grandi maestri, frasi dei bot, spiegazioni dell'allenatore e nomi delle aperture, deve avere la sua traduzione. La documentazione in `docs/` resta in italiano. La notazione dei pezzi segue la lingua dell'app, con inglese e figurativa a scelta. Per un dispositivo in un'altra lingua l'app usa l'italiano.
+L'italiano è la lingua base e il modello degli `.arb`. Inglese, spagnolo e francese vanno completati: ogni testo dell'app, compresi lezioni, commenti dei grandi maestri, frasi dei bot, spiegazioni dell'allenatore e nomi delle aperture, deve avere la sua traduzione. La documentazione in `docs/` resta in italiano. La notazione dei pezzi segue la lingua dell'app, con inglese e figurativa a scelta. Per un dispositivo in un'altra lingua l'app userà l'italiano (obiettivo: oggi la lingua è ancora fissata a italiano in `lib/main.dart`).
 
 I termini scacchistici e le regole di stile di ogni lingua sono in [glossario-scacchistico.md](glossario-scacchistico.md). Chi traduce o rilegge parte da lì.
 
-Durante la migrazione italiano e inglese restano obbligatori in ogni PR; spagnolo e francese si aggiungono per funzione. Il piano a tappe è in `consegne/piano-multilingue.md` nei file del progetto.
+Stato attuale: sono dichiarati soltanto italiano e inglese (vedi sopra); spagnolo e francese si aggiungono per funzione. Durante la migrazione italiano e inglese restano obbligatori in ogni PR.
 
 ## File
 
