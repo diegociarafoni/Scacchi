@@ -1,0 +1,614 @@
+{
+  "achievementFirstGameTitle": "Eerste partij",
+  "achievementFirstGameDesc": "Speel je eerste partij.",
+  "achievementFirstWinTitle": "Eerste winst",
+  "achievementFirstWinDesc": "Win een partij.",
+  "achievementFirstDrawTitle": "Handdruk",
+  "achievementFirstDrawDesc": "Speel een partij remise.",
+  "achievementGames10Title": "Tien partijen",
+  "achievementGames10Desc": "Speel 10 partijen.",
+  "achievementGames100Title": "Honderd partijen",
+  "achievementGames100Desc": "Speel 100 partijen.",
+  "achievementKnightMateTitle": "Ridder in blinkend harnas",
+  "achievementKnightMateDesc": "Geef schaakmat met een paard.",
+  "achievementPawnMateTitle": "Bescheiden held",
+  "achievementPawnMateDesc": "Geef schaakmat met een pion.",
+  "achievementLongCastleWinTitle": "Damevleugel",
+  "achievementLongCastleWinDesc": "Win een partij waarin je lang hebt gerokeerd.",
+  "achievementPuzzles10Title": "Tactisch oog",
+  "achievementPuzzles10Desc": "Los 10 puzzels op.",
+  "achievementPuzzles100Title": "Tactiekjager",
+  "achievementPuzzles100Desc": "Los 100 puzzels op.",
+  "achievementStreak3Title": "Drie op rij",
+  "achievementStreak3Desc": "Haal je doel 3 dagen achter elkaar.",
+  "achievementStreak7Title": "Één week",
+  "achievementStreak7Desc": "Haal je doel 7 dagen achter elkaar.",
+  "achievementStreak30Title": "Één maand",
+  "achievementStreak30Desc": "Haal je doel 30 dagen achter elkaar.",
+  "achievementFirstLessonTitle": "Naar school",
+  "achievementFirstLessonDesc": "Rond een les af.",
+  "achievementFirstReviewTitle": "Spiegeltje, spiegeltje",
+  "achievementFirstReviewDesc": "Bekijk een partij terug.",
+  "achievementLevel5Title": "Niveau 5",
+  "achievementLevel5Desc": "Bereik niveau 5.",
+  "achievementLevel10Title": "Niveau 10",
+  "achievementLevel10Desc": "Bereik niveau 10.",
+  "achievementWins10Title": "Tien overwinningen",
+  "achievementWins10Desc": "Win 10 partijen.",
+  "achievementWins50Title": "Vijftig overwinningen",
+  "achievementWins50Desc": "Win 50 partijen.",
+  "achievementWinBlackTitle": "De donkere kant",
+  "achievementWinBlackDesc": "Win een partij met zwart.",
+  "achievementMiniatureTitle": "Miniatuur",
+  "achievementMiniatureDesc": "Geef schaakmat in minder dan 20 zetten.",
+  "achievementBeat1500Title": "Een serieuze uitdaging",
+  "achievementBeat1500Desc": "Versla een bot met een Elo-rating van 1500 of hoger.",
+  "achievementBeat2000Title": "Reuzendoder",
+  "achievementBeat2000Desc": "Versla een bot met een Elo-rating van 1850 of hoger.",
+  "achievementBrilliantTitle": "Briljant!",
+  "achievementBrilliantDesc": "Vind een briljante zet in een van je partijen.",
+  "achievementPuzzleFork10Title": "Vorkmeester",
+  "achievementPuzzleFork10Desc": "Los 10 vorkpuzzels op.",
+  "achievementPuzzleMate10Title": "Schaakmat!",
+  "achievementPuzzleMate10Desc": "Los 10 matpuzzels op.",
+  "achievementPuzzleRating1500Title": "Tacticus",
+  "achievementPuzzleRating1500Desc": "Bereik een puzzelrating van 1500.",
+  "achievementPuzzleRun20Title": "Op dreef",
+  "achievementPuzzleRun20Desc": "Haal 20 punten in een modus met tijd of reeks.",
+  "achievementChallengesAllTitle": "Perfecte dag",
+  "achievementChallengesAllDesc": "Voltooi alle drie de dagelijkse uitdagingen.",
+  "achievementChallenges10Title": "Uitdager",
+  "achievementChallenges10Desc": "Voltooi 10 dagelijkse uitdagingen.",
+  "achievementReviews10Title": "Zelfkritisch",
+  "achievementReviews10Desc": "Bekijk 10 partijen terug.",
+  "achievementAccuracy90Title": "Chirurgisch",
+  "achievementAccuracy90Desc": "Speel een partij met een nauwkeurigheid van 90% of hoger.",
+  "achievementLessons10Title": "Leerling",
+  "achievementLessons10Desc": "Rond 10 lessen af.",
+  "achievementCoordinates20Title": "Arendsoog",
+  "achievementCoordinates20Desc": "Vind 20 velden in een sessie met tijd.",
+  "achievementMinigamesAllTitle": "Jongleur",
+  "achievementMinigamesAllDesc": "Probeer elk minispel.",
+  "achievementTournamentDoneTitle": "Vaste toernooigast",
+  "achievementTournamentDoneDesc": "Speel een toernooi tegen de bots uit.",
+  "achievementTournamentWonTitle": "Trofeeënkast",
+  "achievementTournamentWonDesc": "Win een toernooi tegen de bots.",
+  "progressRequirementLevel": "Niveau {level}",
+  "@progressRequirementLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "progressRequirementAchievement": "Prestatie “{title}”",
+  "@progressRequirementAchievement": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "progressRewardTheme": "Thema {name}",
+  "@progressRewardTheme": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "progressRewardPieces": "Stukken {name}",
+  "@progressRewardPieces": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "progressRewardAvatar": "Avatar {name}",
+  "@progressRewardAvatar": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "progressRewardFrame": "Lijst {name}",
+  "@progressRewardFrame": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "progressGoalGames": "{count, plural, one{1 partij} other{{count} partijen}}",
+  "@progressGoalGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressGoalPuzzles": "{count, plural, one{1 puzzel} other{{count} puzzels}}",
+  "@progressGoalPuzzles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressGoalMinutes": "{count, plural, one{1 minuut} other{{count} minuten}}",
+  "@progressGoalMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDaysCount": "{count, plural, one{1 dag} other{{count} dagen}}",
+  "@progressDaysCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressStreakNeedGames": "Houd je reeks vol, elke dag: speel {goal}.",
+  "@progressStreakNeedGames": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "progressStreakNeedPuzzles": "Houd je reeks vol, elke dag: los {goal} op.",
+  "@progressStreakNeedPuzzles": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "progressStreakNeedMinutes": "Houd je reeks vol, elke dag: train {goal}.",
+  "@progressStreakNeedMinutes": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "progressStreakLeftGames": "{count, plural, one{nog 1 partij} other{nog {count} partijen}}",
+  "@progressStreakLeftGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressStreakLeftPuzzles": "{count, plural, one{nog 1 puzzel} other{nog {count} puzzels}}",
+  "@progressStreakLeftPuzzles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressStreakLeftMinutes": "{count, plural, one{nog 1 minuut} other{nog {count} minuten}}",
+  "@progressStreakLeftMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressStreakTodayDone": "Vandaag: klaar. Je reeks is veilig tot morgen.",
+  "progressStreakTodayRest": "Vandaag is je rustdag: je reeks breekt niet.",
+  "progressStreakTodayTodo": "Vandaag: nog te doen. {left}.",
+  "@progressStreakTodayTodo": {
+    "placeholders": {
+      "left": {
+        "type": "String"
+      }
+    }
+  },
+  "progressStreakSummaryDone": "Vandaag: klaar",
+  "progressStreakSummaryRest": "Vandaag: rustdag",
+  "progressStreakSummaryTodo": "Vandaag: nog te doen",
+  "progressStreakNext": "Volgende mijlpaal: {days} op rij ({missing, plural, one{nog 1} other{nog {missing}}}).",
+  "@progressStreakNext": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      },
+      "missing": {
+        "type": "int"
+      }
+    }
+  },
+  "progressStreakSkipNone": "Haal vandaag je doel om een reeks te starten.",
+  "progressStreakSkipFreeze": "Mis je een dag, dan vangt een reeksbescherming dat op (je hebt er {count}). Je verdient er elke 7 dagen een, tot maximaal 2.",
+  "@progressStreakSkipFreeze": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressStreakSkipReset": "Mis je een dag, dan begint je reeks opnieuw; je record van {days} blijft staan. Elke 7 dagen reeks verdien je een reeksbescherming.",
+  "@progressStreakSkipReset": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "progressChallengePlayGames": "{count, plural, one{Speel een partij} other{Speel {count} partijen}}",
+  "@progressChallengePlayGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeWinGames": "{count, plural, one{Win een partij} other{Win {count} partijen}}",
+  "@progressChallengeWinGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeWinWhite": "Win met wit",
+  "progressChallengeWinBlack": "Win met zwart",
+  "progressChallengeWinShort": "Geef schaakmat in maximaal {moves} zetten",
+  "@progressChallengeWinShort": {
+    "placeholders": {
+      "moves": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeSolvePuzzles": "{count, plural, one{Los een puzzel op} other{Los {count} puzzels op}}",
+  "@progressChallengeSolvePuzzles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeForkPuzzles": "{count, plural, one{Los 1 vorkpuzzel op} other{Los {count} vorkpuzzels op}}",
+  "@progressChallengeForkPuzzles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeMatePuzzles": "{count, plural, one{Los 1 matpuzzel op} other{Los {count} matpuzzels op}}",
+  "@progressChallengeMatePuzzles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeReviewGame": "{count, plural, one{Bekijk een partij terug} other{Bekijk {count} partijen terug}}",
+  "@progressChallengeReviewGame": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeCompleteLesson": "{count, plural, one{Rond een les af} other{Rond {count} lessen af}}",
+  "@progressChallengeCompleteLesson": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeGoalDays": "Haal je doel op {count} dagen",
+  "@progressChallengeGoalDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressRecordStrongestBot": "Sterkste bot verslagen",
+  "progressRecordFastestWin": "Snelste schaakmat",
+  "progressRecordBestAccuracy": "Beste nauwkeurigheid",
+  "progressRecordPuzzleRating": "Puzzelrating",
+  "progressRecordPuzzleRun": "Score met tijd",
+  "progressRecordMinigame": "Score minispel",
+  "progressRecordsTitle": "Persoonlijke records",
+  "progressRecordLongestStreak": "Langste reeks",
+  "progressRecordElo": "{elo} Elo",
+  "@progressRecordElo": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "progressRecordMoves": "{count, plural, one{{count} zet} other{{count} zetten}}",
+  "@progressRecordMoves": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressRecordPuzzleRunMode": "{record} ({mode})",
+  "@progressRecordPuzzleRunMode": {
+    "placeholders": {
+      "record": {
+        "type": "String"
+      },
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "progressFeedbackXp": "+{xp} XP",
+  "@progressFeedbackXp": {
+    "placeholders": {
+      "xp": {
+        "type": "int"
+      }
+    }
+  },
+  "progressFeedbackGoal": "Doel van vandaag gehaald",
+  "progressFeedbackLevel": "Niveau {level}!",
+  "@progressFeedbackLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "progressFeedbackFreeze": "Je hebt een reeksbescherming verdiend",
+  "progressFeedbackChallenge": "Uitdaging voltooid: {title}",
+  "@progressFeedbackChallenge": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "progressFeedbackWeekly": "Weekuitdaging voltooid",
+  "progressFeedbackRecord": "Nieuw record: {record}",
+  "@progressFeedbackRecord": {
+    "placeholders": {
+      "record": {
+        "type": "String"
+      }
+    }
+  },
+  "progressFeedbackAchievement": "Prestatie: {title}",
+  "@progressFeedbackAchievement": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "progressFeedbackReward": "Ontgrendeld: {reward}",
+  "@progressFeedbackReward": {
+    "placeholders": {
+      "reward": {
+        "type": "String"
+      }
+    }
+  },
+  "progressProfileTitle": "Profiel",
+  "progressLevel": "Niveau {level}",
+  "@progressLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChangeAvatar": "Avatar en lijst wijzigen",
+  "progressLevelSemantics": "Voortgang niveau: {xp} van {next} XP",
+  "@progressLevelSemantics": {
+    "placeholders": {
+      "xp": {
+        "type": "int"
+      },
+      "next": {
+        "type": "int"
+      }
+    }
+  },
+  "progressXpOf": "{xp} / {next} XP",
+  "@progressXpOf": {
+    "placeholders": {
+      "xp": {
+        "type": "int"
+      },
+      "next": {
+        "type": "int"
+      }
+    }
+  },
+  "progressAvatarSemantics": "Avatar: {name}",
+  "@progressAvatarSemantics": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "progressAvatarFrameSemantics": "Avatar: {name}, lijst {frame}",
+  "@progressAvatarFrameSemantics": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "frame": {
+        "type": "String"
+      }
+    }
+  },
+  "progressAvatarTitle": "Avatar",
+  "progressFrameTitle": "Lijst",
+  "progressLockedSemantics": "{label}, ontgrendel je met: {requirement}",
+  "@progressLockedSemantics": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "requirement": {
+        "type": "String"
+      }
+    }
+  },
+  "progressStreakIcon": "Reeks",
+  "progressStreakDays": "{count, plural, one{1 dag op rij} other{{count} dagen op rij}}",
+  "@progressStreakDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressBestStreak": "Beste: {count}",
+  "@progressBestStreak": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressFreezes": "{count, plural, one{1 reeksbescherming} other{{count} reeksbeschermingen}}",
+  "@progressFreezes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressGoalSemantics": "Doel van vandaag: {progress} van {target}",
+  "@progressGoalSemantics": {
+    "placeholders": {
+      "progress": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "progressGoalReachedLine": "Doel gehaald: {progress} / {target} {unit}",
+  "@progressGoalReachedLine": {
+    "placeholders": {
+      "progress": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "progressGoalTodayLine": "Doel van vandaag: {progress} / {target} {unit}",
+  "@progressGoalTodayLine": {
+    "placeholders": {
+      "progress": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "progressUnitGames": "partijen",
+  "progressUnitPuzzles": "puzzels",
+  "progressUnitMinutes": "minuten",
+  "progressAchievementsTitle": "Prestaties",
+  "progressAchievementEarned": "{title}, behaald. {description}",
+  "@progressAchievementEarned": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "description": {
+        "type": "String"
+      }
+    }
+  },
+  "progressAchievementLocked": "{title}, nog niet behaald. {description}",
+  "@progressAchievementLocked": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "description": {
+        "type": "String"
+      }
+    }
+  },
+  "progressChallengesToday": "Uitdagingen van vandaag",
+  "progressChallengesWeekly": "Weekuitdaging",
+  "progressChallengeDone": "Voltooid",
+  "progressChallengeTodo": "Nog niet voltooid",
+  "progressChallengeCount": "{done} van {target}",
+  "@progressChallengeCount": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "progressSettingsTitle": "Instellingen",
+  "progressTrackingTitle": "XP, reeksen en prestaties",
+  "progressTrackingOff": "Als dit uit staat, wordt er niets bijgehouden.",
+  "progressDailyGoal": "Dagelijks doel",
+  "progressRestDay": "Rustdag",
+  "progressRestDayHint": "Breekt je reeks niet.",
+  "progressRestDayNone": "Geen",
+  "progressWeekdayMonday": "Maandag",
+  "progressWeekdayTuesday": "Dinsdag",
+  "progressWeekdayWednesday": "Woensdag",
+  "progressWeekdayThursday": "Donderdag",
+  "progressWeekdayFriday": "Vrijdag",
+  "progressWeekdaySaturday": "Zaterdag",
+  "progressWeekdaySunday": "Zondag",
+  "progressReminder": "Dagelijkse herinnering",
+  "progressReminderHint": "Eén melding per dag, alleen als je je doel nog niet hebt gehaald.",
+  "progressReminderTime": "Tijd van de herinnering",
+  "progressReminderDenied": "Zonder toestemming voor meldingen blijft de herinnering uit.",
+  "progressCancel": "Annuleren",
+  "progressConfirm": "Bevestigen",
+  "progressReminderBodyStreak": "Reeks van {days}: {goal} is genoeg om hem vol te houden.",
+  "@progressReminderBodyStreak": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      },
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "progressReminderBodyGoal": "Doel van vandaag: {goal}.",
+  "@progressReminderBodyGoal": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "progressReminderChannelDescription": "Herinnert je één keer aan het doel van de dag."
+}

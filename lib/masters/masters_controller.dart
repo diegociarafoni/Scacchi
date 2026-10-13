@@ -41,7 +41,9 @@ class MastersController extends ChangeNotifier {
           await _file.read(MastersProgress.fromJson) ?? const MastersProgress();
     } on FileSystemException catch (e) {
       if (kDebugMode) {
-        debugPrint('Lettura delle partite dei maestri non riuscita: $e');
+        debugPrint(
+          'Lettura delle partite dei maestri non riuscita: $e', // l10n-ok
+        );
       }
       _readOnly = true;
     }
@@ -57,7 +59,9 @@ class MastersController extends ChangeNotifier {
         await _file.write(_progress.toJson());
       } on FileSystemException catch (e) {
         if (kDebugMode) {
-          debugPrint('Salvataggio delle partite dei maestri non riuscito: $e');
+          debugPrint(
+            'Salvataggio delle partite dei maestri non riuscito: $e', // l10n-ok
+          );
         }
       }
     }
@@ -67,7 +71,7 @@ class MastersController extends ChangeNotifier {
       await recordActivity?.call(LessonCompleted(duration: duration));
     } on Object catch (e) {
       if (kDebugMode) {
-        debugPrint('Attività non registrata: $e');
+        debugPrint('Attività non registrata: $e'); // l10n-ok
       }
     }
   }

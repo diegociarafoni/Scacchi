@@ -1,0 +1,114 @@
+{
+  "personalTitle": "Deine Eröffnungen",
+  "personalHubSubtitle": "Die Züge, die du gespielt hast, mit Ergebnissen",
+  "personalLoadFailed": "Das Partiearchiv konnte nicht gelesen werden: Versuche es später noch einmal.",
+  "personalEmpty": "Spiele ein paar Partien gegen den Computer, um deinen Eröffnungsbaum aufzubauen.",
+  "personalNoGamesFiltered": "Keine Partien passen zu diesen Filtern.",
+  "personalNoGamesHere": "Du hast diese Stellung noch nie gespielt.",
+  "personalSideAll": "Beide",
+  "personalSideWhite": "Weiß",
+  "personalSideBlack": "Schwarz",
+  "personalOpponent": "Gegner",
+  "personalAllOpponents": "Alle Gegner",
+  "personalGames": "{count, plural, one{{count} Partie} other{{count} Partien}}",
+  "@personalGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "personalGamesTotal": "{count, plural, one{{count} Partie gezählt} other{{count} Partien gezählt}}",
+  "@personalGamesTotal": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "personalScore": "{wins} S · {draws} R · {losses} N",
+  "@personalScore": {
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      }
+    }
+  },
+  "personalScoreSemantics": "{wins} gewonnen, {draws} remis, {losses} verloren",
+  "@personalScoreSemantics": {
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      }
+    }
+  },
+  "personalStartPosition": "Grundstellung",
+  "personalNoName": "Eröffnung ohne Namen",
+  "personalBack": "Zurück",
+  "personalStart": "Anfang",
+  "personalFlip": "Brett drehen",
+  "personalOpenInBook": "Im Eröffnungsexplorer öffnen",
+  "personalFromHere": "Deine Partien ab dieser Stellung",
+  "explorerTitle": "Eröffnungen erkunden",
+  "explorerLoadFailed": "Die Eröffnungen konnten nicht geladen werden.",
+  "explorerStartPosition": "Grundstellung",
+  "explorerNoName": "Eröffnung ohne Namen",
+  "explorerOutOfBook": "Außerhalb des Eröffnungsbuchs",
+  "explorerFlip": "Brett drehen",
+  "explorerRestart": "Neu beginnen",
+  "explorerBack": "Zurück",
+  "explorerForward": "Vor",
+  "explorerMoveSemantics": "{move}: {games, plural, one{{games} Partie} other{{games} Partien}}, Weiß {white} %, Remis {draws} %, Schwarz {black} %",
+  "openingsHubTitle": "Eröffnungen",
+  "openingsHubExplorerSubtitle": "Gespielte Partien und Ergebnisse zu jedem Zug, mit Eröffnungsnamen",
+  "openingsRepertoireTitle": "{side, select, white{Repertoire mit Weiß} other{Repertoire mit Schwarz}}",
+  "openingsRepertoireUnavailable": "Repertoire nicht verfügbar",
+  "openingsRepertoireLoading": "Wird geladen …",
+  "openingsRepertoireSummary": "{lines, plural, one{{lines} Variante} other{{lines} Varianten}} · {due, plural, one{{due} Zug zu wiederholen} other{{due} Züge zu wiederholen}}",
+  "openingsGameTitle": "Gegen den Computer spielen",
+  "openingsLevel": "Level",
+  "openingsPlay": "Spielen",
+  "openingsCancel": "Abbrechen",
+  "openingsSideWhite": "Weiß",
+  "openingsSideBlack": "Schwarz",
+  "openingsNameSemantics": "Eröffnung: {name} ({eco})",
+  "openingsAddToRepertoire": "Zum Repertoire hinzufügen",
+  "openingsPlayThisOpening": "Diese Eröffnung spielen",
+  "openingsFreeOpening": "Freie Eröffnung",
+  "openingsDefaultLineName": "Variante",
+  "openingsLineName": "Name",
+  "openingsAdd": "Hinzufügen",
+  "openingsLineAdded": "{side, select, white{Variante zum Repertoire mit Weiß hinzugefügt.} other{Variante zum Repertoire mit Schwarz hinzugefügt.}}",
+  "openingsProblemEmpty": "Die Variante ist leer.",
+  "openingsProblemIllegal": "Die Variante enthält einen ungültigen Zug.",
+  "openingsProblemNoOwnMoves": "Die Variante hat keine Züge für deine Farbe.",
+  "openingsProblemConflict": "In dieser Stellung hat dein Repertoire schon {move}.",
+  "openingsDrillTitle": "Repertoire wiederholen",
+  "openingsDrillDone": "Wiederholung abgeschlossen: {count, plural, one{{count} Zug} other{{count} Züge}}.",
+  "openingsDrillNew": "Neuer Zug: Spiele den, den der Pfeil zeigt.",
+  "openingsDrillPrompt": "Variante „{name}“: Welchen Zug spielst du?",
+  "openingsDrillWrong": "Das ist nicht der Repertoirezug: Hier ist der richtige.",
+  "openingsImportTitle": "PGN importieren",
+  "openingsImportHelper": "Jede Variante wird zu einer Linie.",
+  "openingsImport": "Importieren",
+  "openingsImportNone": "Keine gültigen Varianten im PGN.",
+  "openingsImportAdded": "Hinzugefügte Varianten: {added}",
+  "openingsImportAddedSkipped": "Hinzugefügte Varianten: {added}. Übersprungen: {skipped} ({reason})",
+  "openingsRepertoireEmpty": "Noch keine Varianten. Füge sie unter „Eröffnungen erkunden“ mit der Schaltfläche „Zum Repertoire hinzufügen“ hinzu oder importiere ein PGN.",
+  "openingsPlayLine": "Variante spielen",
+  "openingsDeleteLine": "Variante löschen",
+  "openingsReviewNone": "Keine Züge zu wiederholen",
+  "openingsReviewButton": "{count, plural, one{{count} Zug wiederholen} other{{count} Züge wiederholen}}"
+}

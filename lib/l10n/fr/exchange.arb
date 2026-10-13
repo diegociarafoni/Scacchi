@@ -1,0 +1,22 @@
+{
+  "qrSendTitle": "Envoyer par QR code",
+  "qrSendHint": "Sur l'autre téléphone, ouvre Toi › Archives › Recevoir par QR code et cadre le code.",
+  "qrPart": "Partie {current} sur {total}",
+  "qrPause": "Pause",
+  "qrResume": "Reprendre",
+  "qrNext": "Partie suivante",
+  "qrPrevious": "Partie précédente",
+  "qrCodeLabel": "QR code de la partie",
+  "qrReceiveTitle": "Recevoir par QR code",
+  "qrReceiveHint": "Cadre le QR code affiché sur l'autre téléphone.",
+  "qrReceived": "{received} parties sur {total} lues",
+  "qrForeign": "Ce QR code ne contient pas de partie.",
+  "qrCorrupted": "Le QR code est abîmé : recommence la lecture.",
+  "qrTooLarge": "La partie est trop volumineuse pour être reçue.",
+  "qrRestarted": "Nouvelle partie cadrée : lecture relancée.",
+  "qrCameraError": "La caméra n'est pas disponible. Autorise Rokko à utiliser la caméra dans les réglages du téléphone, puis réessaie.",
+  "qrRetry": "Réessayer",
+  "qrInvalidGame": "Le QR code ne contient pas de partie valide.",
+  "qrFinishedGame": "La partie est déjà terminée : reçois-la depuis Toi › Archives › Recevoir par QR code.",
+  "qrMalformed": "QR code non valide : ignoré."
+}

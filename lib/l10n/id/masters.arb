@@ -1,0 +1,118 @@
+{
+  "mastersTitle": "Para Maestro",
+  "@mastersTitle": {
+    "description": "Titolo dell'elenco delle partite celebri"
+  },
+  "mastersStars": "{stars} dari 3 bintang",
+  "@mastersStars": {
+    "description": "Etichetta per i lettori di schermo delle stelle di una partita",
+    "placeholders": {
+      "stars": {
+        "type": "int"
+      }
+    }
+  },
+  "mastersFlipBoard": "Putar papan",
+  "@mastersFlipBoard": {
+    "description": "Tooltip del pulsante che capovolge la scacchiera"
+  },
+  "mastersStartPosition": "Posisi awal",
+  "@mastersStartPosition": {
+    "description": "Titolo della partita prima della prima mossa"
+  },
+  "mastersWhiteWins": "Putih menang",
+  "@mastersWhiteWins": {
+    "description": "Esito di una partita vinta dal Bianco"
+  },
+  "mastersBlackWins": "Hitam menang",
+  "@mastersBlackWins": {
+    "description": "Esito di una partita vinta dal Nero"
+  },
+  "mastersDraw": "Remis",
+  "@mastersDraw": {
+    "description": "Esito di una partita patta"
+  },
+  "mastersFirstMove": "Awal",
+  "@mastersFirstMove": {
+    "description": "Tooltip del pulsante che torna alla posizione iniziale"
+  },
+  "mastersPreviousMove": "Langkah sebelumnya",
+  "@mastersPreviousMove": {
+    "description": "Tooltip del pulsante che torna indietro di una mossa"
+  },
+  "mastersNextMove": "Langkah berikutnya",
+  "@mastersNextMove": {
+    "description": "Tooltip del pulsante che avanza di una mossa"
+  },
+  "mastersLastMove": "Akhir",
+  "@mastersLastMove": {
+    "description": "Tooltip del pulsante che va all'ultima mossa"
+  },
+  "mastersGuessWhite": "Tebak langkah dengan Putih",
+  "@mastersGuessWhite": {
+    "description": "Pulsante che avvia «Indovina la mossa» giocando con il Bianco"
+  },
+  "mastersGuessBlack": "Tebak langkah dengan Hitam",
+  "@mastersGuessBlack": {
+    "description": "Pulsante che avvia «Indovina la mossa» giocando con il Nero"
+  },
+  "mastersYourTurnWhite": "Giliranmu dengan Putih: tebak langkah sang maestro.",
+  "@mastersYourTurnWhite": {
+    "description": "Invito durante «Indovina la mossa» quando si gioca con il Bianco"
+  },
+  "mastersYourTurnBlack": "Giliranmu dengan Hitam: tebak langkah sang maestro.",
+  "@mastersYourTurnBlack": {
+    "description": "Invito durante «Indovina la mossa» quando si gioca con il Nero"
+  },
+  "mastersGuessed": "Langkah tertebak: {correct} dari {attempts}",
+  "@mastersGuessed": {
+    "description": "Punteggio parziale di «Indovina la mossa»",
+    "placeholders": {
+      "correct": {
+        "type": "int"
+      },
+      "attempts": {
+        "type": "int"
+      }
+    }
+  },
+  "mastersSameAsMaster": "Sama seperti sang maestro! {move}.",
+  "@mastersSameAsMaster": {
+    "description": "Esito di una mossa uguale a quella del maestro; {move} è la mossa con il numero",
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "mastersMasterPlayed": "Sang maestro memainkan {move}.",
+  "@mastersMasterPlayed": {
+    "description": "Esito di una mossa diversa da quella del maestro; {move} è la mossa del maestro con il numero",
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "mastersReply": "Balasan: {move}.",
+  "@mastersReply": {
+    "description": "Segue l'esito: la risposta dell'avversario nella partita storica",
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "mastersFinished": "Partai selesai",
+  "@mastersFinished": {
+    "description": "Titolo dell'esito a fine «Indovina la mossa»"
+  },
+  "mastersReplay": "Main lagi",
+  "@mastersReplay": {
+    "description": "Pulsante che rifà «Indovina la mossa» dall'inizio"
+  },
+  "mastersDone": "Selesai",
+  "@mastersDone": {
+    "description": "Pulsante che chiude l'esito"
+  }
+}

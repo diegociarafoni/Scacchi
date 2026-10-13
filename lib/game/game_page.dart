@@ -64,6 +64,7 @@ import 'challenge.dart';
 import 'chess_game.dart';
 import 'clock.dart';
 import 'clock_l10n.dart';
+import 'custom_clock_dialog.dart';
 import 'handicap.dart';
 import 'material.dart';
 import 'move_input.dart';
@@ -1419,12 +1420,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final position = _game.position;
     // Tempo residuo di chi muove dopo la mossa, incremento compreso (RF-67);
     // la prima mossa avvia l'orologio e non lo incrementa.
-    final left = clock == null
-        ? null
-        : clock.remaining(position.turn) +
-              (clock.isRunning
-                  ? Duration(seconds: clock.control.increment)
-                  : Duration.zero);
+    final left = clock?.remainingAfterMove(position.turn);
     if (!_game.play(move, clock: left)) return false;
     final spoken = describeSan(
       _l10n(context),
@@ -1467,7 +1463,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     if (clock != null) {
       level = level.withinClock(
         clock.remaining(side),
-        Duration(seconds: clock.control.increment),
+        Duration(seconds: clock.control.increment + clock.control.delay),
       );
     }
     _refresh(animate: false);
@@ -3949,6 +3945,27 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
           Text(l10n.gameTimeControlTitle, style: theme.textTheme.titleSmall),
           const SizedBox(height: 4),
           chip(noClock, null),
+          const SizedBox(height: 8),
+          ActionChip(
+            key: const ValueKey('clock-custom'),
+            avatar: const Icon(Icons.tune, size: 18),
+            label: Text(l10n.gameClockCustom),
+            onPressed: () async {
+              final control = await showCustomClockDialog(context);
+              if (control == null || !context.mounted) return;
+              Navigator.pop(
+                context,
+                _TimeChoice(
+                  control,
+                  _variant,
+                  _white.text,
+                  _black.text,
+                  _setup,
+                  _handicap,
+                ),
+              );
+            },
+          ),
           for (final entry in groups.entries) ...[
             const SizedBox(height: 12),
             Text(

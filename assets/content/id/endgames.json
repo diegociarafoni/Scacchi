@@ -1,0 +1,14 @@
+{
+  "queen-mate.title": "Raja dan ratu melawan raja",
+  "queen-mate.intro": "Tujuan: skakmat. Gunakan ratu untuk mengurung raja lawan di ruang yang makin kecil, lalu dekatkan rajamu. Awas pat!",
+  "rook-mate.title": "Raja dan benteng melawan raja",
+  "rook-mate.intro": "Tujuan: skakmat. Benteng memotong baris-baris dan raja membantunya: dorong raja lawan ke tepi papan bersama-sama.",
+  "king-pawn.title": "Raja dan pion melawan raja",
+  "king-pawn.intro": "Tujuan: promosikan pion. Bawa rajamu ke depan pion dan ambil oposisi: pion baru sampai ujung jika rajamu membuka jalan.",
+  "lucena.title": "Posisi Lucena",
+  "lucena.intro": "Tujuan: promosikan pion. Rajamu terkurung di depan pion: usir raja lawan dengan benteng, lalu bangun “jembatan” untuk berlindung dari skak.",
+  "philidor.title": "Pertahanan Philidor",
+  "philidor.intro": "Tujuan: jangan kalah selama {par} langkah. Kamu memegang Hitam: jaga benteng di baris keenam sampai pion maju, lalu pindahkan ke belakang dan skak dari belakang.",
+  "bishop-knight.title": "Gajah dan kuda",
+  "bishop-knight.intro": "Tujuan: skakmat. Ini skakmat tersulit: dorong raja lawan ke sudut yang warnanya sama dengan gajahmu. Kamu punya 50 langkah sebelum permainan remis."
+}

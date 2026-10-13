@@ -1,0 +1,65 @@
+{
+  "physicalTitle": "Papan fisik",
+  "physicalEntrySubtitle": "Jam dan lembar skor untuk permainan langsung",
+  "physicalIntro": "Main di papan sungguhan: aplikasi menjadi jam dan mencatat permainan. Setelah tiap langkah, ketik langkahnya atau ketuk di antara langkah legal.",
+  "physicalWhite": "Putih",
+  "physicalBlack": "Hitam",
+  "physicalUntimed": "Tanpa waktu",
+  "physicalStart": "Mulai permainan",
+  "physicalInputWhite": "Langkah Putih (mis. e4, Nf3)",
+  "physicalInputBlack": "Langkah Hitam (mis. e5, Nc6)",
+  "physicalInvalidMove": "Langkah tidak valid: “{text}”",
+  "@physicalInvalidMove": {
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "physicalNoMoves": "Belum ada langkah",
+  "physicalPause": "Jeda",
+  "physicalResume": "Lanjutkan",
+  "physicalUndo": "Urungkan",
+  "physicalDraw": "Remis",
+  "physicalResign": "Menyerah",
+  "physicalDrawQuestion": "Remis disepakati?",
+  "physicalYes": "Ya",
+  "physicalNo": "Tidak",
+  "physicalWhoResigns": "Siapa yang menyerah?",
+  "physicalSaved": "Permainan disimpan di arsip",
+  "physicalNothingToSave": "Tidak ada langkah untuk disimpan",
+  "physicalSaveFailed": "Permainan tidak dapat disimpan",
+  "physicalNewGame": "Permainan baru",
+  "physicalEndCheckmate": "Skakmat",
+  "physicalEndResignation": "Menyerah",
+  "physicalEndTimeout": "Waktu habis",
+  "physicalEndAgreement": "Remis karena kesepakatan",
+  "physicalEndStalemate": "Pat",
+  "physicalEndInsufficient": "Materi tidak cukup",
+  "physicalEndRepetition": "Pengulangan tiga kali",
+  "physicalEndFiftyMoves": "Aturan lima puluh langkah",
+  "physicalEndOther": "Permainan selesai",
+  "physicalResultLine": "{reason} · {result}",
+  "@physicalResultLine": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      },
+      "result": {
+        "type": "String"
+      }
+    }
+  },
+  "physicalPhoto": "Langkah dari foto",
+  "physicalRealign": "Sejajarkan ulang",
+  "physicalCameraUnavailable": "Kamera tidak tersedia",
+  "physicalImageUnreadable": "Gambar tidak dapat dibaca",
+  "physicalReferenceSaved": "Foto acuan disimpan. Setelah langkah berikutnya, ambil foto lagi.",
+  "physicalNoMoveRecognized": "Tidak ada langkah yang dikenali: papan tampak sama.",
+  "physicalGuessNote": "Langkah paling mungkin dari foto: konfirmasi yang benar.",
+  "physicalAlignTitle": "Sejajarkan papan",
+  "physicalAlignHelp": "Seret keempat lingkaran ke sudut-sudut papan. Pertahankan bingkai yang sama untuk foto berikutnya.",
+  "physicalAlignWhiteBottom": "Putih di bawah",
+  "physicalAlignBlackBottom": "Hitam di bawah",
+  "physicalAlignDone": "Selesai"
+}
