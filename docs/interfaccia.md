@@ -4,13 +4,13 @@ L'app è progettata prima di tutto per il telefono in verticale.
 
 ## Navigazione
 
-La barra in basso ha quattro schede: Home, Puzzle, Impara e Tu. La scacchiera non è una scheda: si apre dal grande pulsante «Nuova partita» fisso in basso nella Home, con la scelta della partita già aperta. Home e Impara sono descritte in [home.md](home.md). La scheda Tu (`lib/home/you_page.dart`, testi in `lib/l10n/<lingua>/you.arb`) mostra avatar, livello e serie, poi la scheda in evidenza «Continua da dove eri», che apre la Storia (la prossima tappa è quella della Storia), e un solo gruppo, **I miei dati**, con intestazione letta come tale dai lettori di schermo: Profilo, Badge (vedi [badge.md](badge.md)), Statistiche, La tua settimana e Archivio. La scheda contiene solo i dati del giocatore: Storia, Finali, Grandi maestri, Tornei, Multigiocatore, Scacchiera fisica e Minigiochi si aprono dalla Home e dalla scheda Impara. «La tua settimana» è una sola voce e apre il riepilogo; gli adulti hanno a destra il pulsante «Condividi la settimana» per l'immagine. Le voci hanno un tocco di almeno 48 dp. Se i dati salvati di una sezione non si possono leggere, un messaggio lo dice e si può riprovare. Nel profilo bambino le Aperture sono nascoste e la scheda Tu mostra solo Profilo e La tua settimana (vedi [profilo-bambino.md](profilo-bambino.md)). 
+La barra in basso ha quattro schede: Home, Puzzle, Impara e Tu. La scacchiera non è una scheda: si apre dal grande pulsante «Nuova partita» fisso in basso nella Home, con la scelta della partita già aperta. Home e Impara sono descritte in [home.md](home.md). La scheda Tu (`lib/home/you_page.dart`, testi in `lib/l10n/<lingua>/you.arb`) mostra avatar, livello e serie, poi la scheda in evidenza «Continua da dove eri», che apre la Storia alla prossima tappa, e un solo gruppo, **I miei dati**, con intestazione letta come tale dai lettori di schermo: Profilo, Badge (vedi [badge.md](badge.md)), Statistiche, La tua settimana e Archivio. La scheda contiene solo i dati del giocatore: Storia, Finali, Grandi maestri, Tornei, Multigiocatore, Scacchiera fisica e Minigiochi si aprono dalla Home e dalla scheda Impara. «La tua settimana» è una sola voce e apre il riepilogo; gli adulti hanno a destra il pulsante «Condividi la settimana» per l'immagine. Le voci hanno un tocco di almeno 48 dp. Se i dati salvati di una sezione non si possono leggere, un messaggio lo dice e si può riprovare. Nel profilo bambino le Aperture sono nascoste e la scheda Tu mostra solo Profilo e La tua settimana (vedi [profilo-bambino.md](profilo-bambino.md)).
 
 ## Telefono in verticale
 
 Dall'alto verso il basso:
 
-1. **Barra del titolo** con il marchio Rokko (o il nome dell'apertura), il menu ⋮, la modalità zen e le impostazioni; la tastiera resta in barra solo con un lettore di schermo attivo, nelle sfide e nel profilo bambino.
+1. **Barra del titolo** con il marchio Rokko (o il nome dell'apertura), il menu ⋮, la modalità zen e le impostazioni (con l'istruttore anche l'esploratore delle aperture); la tastiera resta in barra solo con un lettore di schermo attivo, nelle sfide e nel profilo bambino.
 2. **Spazio delle mosse**: occupa lo spazio libero sopra la riga di stato. Lo schermo alto lo riempie con la lista delle mosse (l'ultima in basso, vicino alla scacchiera); quando lo spazio è poco diventa una striscia orizzontale. Contiene anche, una alla volta, le carte dei suggerimenti del primo uso e l'invito alla revisione. Finché nessuno ha mosso la lista sarebbe vuota: al suo posto, in basso contro la riga di stato, c'è la frase «Tocca un pezzo, poi la casa dove vuoi muoverlo.».
 3. **Riga di stato**: chi muove, scacco, oppure risultato e motivo della fine partita.
 4. **Materiale del giocatore in alto**: pezzi che ha catturato e vantaggio.
@@ -34,14 +34,14 @@ Per ciascun giocatore una riga mostra le icone dei pezzi avversari catturati, da
 - Puntini sulle case raggiungibili dal pezzo selezionato.
 - Evidenziazione dell'ultima mossa e del re sotto scacco.
 - Alla promozione compare un selettore con i quattro pezzi possibili.
-- Schema colori verde, set di pezzi "cburnett".
+- Tema Spazio e set di pezzi Classico (`cburnett`) per impostazione predefinita; si cambiano da Stile.
 
 ## Comandi
 
 | Comando | Effetto |
 |---|---|
 | Altro | Apre il pannello «Partita» con Allenatore e Minaccia (e «Gira» sugli schermi stretti); non c'è dove il pannello sarebbe vuoto |
-| Nuova | Apre la scelta dell'avversario (due giocatori o computer, con colore e livello), della variante (Classica, Chess960, Re della collina, Tre scacchi, anche contro il computer) e della cadenza; toccando la cadenza inizia la nuova partita |
+| Nuova | Apre il foglio «Nuova partita» descritto sopra: avvio rapido, amico, galleria dei bot, istruttore, tornei e, in «Altre modalità», la partita personalizzata (avversario, variante Classica, Chess960, Re della collina o Tre scacchi, handicap, nomi e cadenza; toccando la cadenza inizia la partita) |
 | Annulla | Annulla l'ultima mossa; disattivato se non ci sono mosse |
 | Gira | Capovolge la scacchiera |
 | Patta | Chiede all'avversario se accetta la patta; a partita conclusa cede il posto a Rivincita |
@@ -126,16 +126,17 @@ Le pagine che cambiano l'aspetto della scacchiera (Scacchiera e Accessibilità; 
 
 Il codice è diviso così: `settings_page.dart` è il menu (`SettingsSection`), `section_pages.dart` ha una pagina per sezione e `settings_widgets.dart` i pezzi condivisi (anteprima, scelte a chip, volume). Una sezione nuova si aggiunge a `SettingsSection`, alle voci del menu e a una pagina in `section_pages.dart`, solo se ha almeno due voci.
 
-**Non ancora disponibili** (richiedono lavoro vero, non solo una voce di menu): lingua scelta nell'app (oggi segue il telefono), impostazioni della Home (cosa mostrare nella dashboard), dei Problemi (difficoltà, punteggio, obiettivi, timer, feedback sugli errori) e dell'Analisi (analisi rapida, barra di valutazione, frecce, linee del motore, commenti), «Ingrandisci i pezzi», metodo di arrocco, schermata di fine partita e notifiche.
+**Non disponibili**: impostazioni della Home (cosa mostrare nella dashboard), dei Problemi (difficoltà, timer, feedback sugli errori) e dell'Analisi (barra di valutazione, frecce, linee del motore), «Ingrandisci i pezzi» e metodo di arrocco.
 
 I temi e i pezzi sono gallerie di tessere: ogni tema mostra una scacchiera 4×4 con le sue case chiare e scure, ogni set il suo cavallo, con il nome sotto. La scelta attiva ha bordo marcato e segno di spunta; una tessera ancora bloccata ha il lucchetto (non solo la tinta più spenta), e toccarla dice come sbloccarla; per i lettori di schermo è «selezionato» o «bloccato» con il requisito. Il profilo bambino non cita mai il livello.
 
 Tutti i testi e le descrizioni della pagina sono in italiano e inglese in `lib/l10n/<lingua>/settings.arb` (prefisso `settings`); i nomi dei set di pezzi sono nomi propri e restano uguali in ogni lingua, tranne «Classico». Un test (`test/settings/settings_sections_test.dart`) fallisce se in `settings_page.dart`, `section_pages.dart` o `settings_widgets.dart` compare di nuovo un testo scritto nel codice.
 
-Si aprono dall'icona a forma di ingranaggio nella barra del titolo. Ogni modifica si applica subito e viene salvata sul dispositivo.
+Si aprono dall'icona a forma di ingranaggio nella Home e nella barra del titolo della partita. Ogni modifica si applica subito e viene salvata sul dispositivo.
 
 | Impostazione | Effetto | Predefinito |
 |---|---|---|
+| Lingua | Come il telefono, Italiano o English (`AppLanguage`, in Accessibilità); vale subito per tutta l'app | Come il telefono |
 | Aspetto dell'app | Sistema, Chiaro o Scuro: tema chiaro o scuro di tutta l'app, oppure lo stesso del telefono (requisito RP-02) | Sistema |
 | Mostra le mosse legali | Puntini sulle case raggiungibili dal pezzo selezionato | Attiva |
 | Coordinate | Lettere e numeri sui bordi della scacchiera | Attiva |
@@ -145,7 +146,7 @@ Si aprono dall'icona a forma di ingranaggio nella barra del titolo. Ogni modific
 | Frecce e cerchi | Disegno di frecce e cerchi con due dita sulla scacchiera | Attiva |
 | Conferma la mossa | Dopo ogni mossa mostra la posizione risultante con i pulsanti Conferma e Scarta al posto della riga di stato; la mossa conta solo dopo Conferma, e l'orologio continua a scorrere. Durante l'attesa "Annulla" equivale a Scarta, mentre Patta e Abbandona sono disattivati | Disattiva |
 | Ruota a ogni turno | Orienta la scacchiera dal lato di chi deve muovere | Disattiva |
-| Modalità zen | In partita restano solo scacchiera, mosse ed eventuale orologio (sezione sotto) Si accende anche dall'icona nella barra della partita | Disattiva |
+| Modalità zen | In partita restano solo scacchiera, mosse ed eventuale orologio (sezione sotto); si accende anche dall'icona nella barra della partita | Disattiva |
 | Modalità tavolo | Capovolge i pezzi del giocatore in alto, per giocare uno di fronte all'altro con il telefono sul tavolo | Disattiva |
 | Colori per daltonici | Sostituisce le evidenziazioni (ultima mossa, casa selezionata, mosse legali, premosse) con colori della palette Okabe-Ito, leggibili con deuteranopia, protanopia e tritanopia; i colori delle case restano quelli del tema. Indizi dei problemi e frecce del ripasso passano dal verde al blu, gli esiti delle coordinate da verde e rosso a blu e arancio (requisito RNF-07) | Disattiva |
 | Suoni | Suoni per mossa, cattura, arrocco, scacco, promozione, fine partita e tempo sotto i 10 secondi | Attivi |
@@ -153,10 +154,12 @@ Si aprono dall'icona a forma di ingranaggio nella barra del titolo. Ogni modific
 | Sfondo | Colore, sfumatura, spazio o una propria foto dietro la scacchiera, dalla scheda Sfondo di Stile | Standard |
 | Volume | Volume dei suoni, da 0 a 100% | 100% |
 | Vibrazione | Vibrazione breve a ogni mossa, più marcata per catture e fine partita | Attiva |
-| Tema della scacchiera | Verde, Legno, Blu, Grigio, Arancia, Crepuscolo, Pergamena, Castello, Bosco elfico, Noce, Spazio, Retrò, Giardino, Terracotta, Marmo, Metallo, Vetro, Menta, Cipria, Ardesia; sbloccabili Sabbia, Oceano, Corallo, Notte, Oro | Spazio (chi ha già scelto un altro tema lo mantiene) |
+| Tema della scacchiera | Verde, Legno, Blu, Grigio, Arancia, Crepuscolo, Pergamena, Castello, Bosco elfico, Noce, Spazio, Retrò, Giardino, Terracotta, Marmo, Metallo, Vetro, Menta, Cipria, Ardesia; sbloccabili Sabbia, Oceano, Corallo, Notte, Oro | Spazio |
 | Pezzi | Classico, Merida, Chessnut, Fantasy, Spatial, Rokko, Pixel, Arcano, Staunton, Morbido, Stampa, Papercut, Noto; sbloccabili Celtic, Shapes, Firi, Mpchess, Kiwen-suwi, Totoy, RhosGFX | Classico |
 | Sblocca tutto | Rende disponibili le ricompense estetiche senza sbloccarle (vedi [gamification.md](gamification.md)) | Disattiva |
 | Animazioni | Nessuna, Veloce, Normale, Lenta | Normale |
+| Notazione | Figurativa (♞f3), Italiana (Cf3) o Inglese (Nf3) per le mosse mostrate (vedi [notazione.md](notazione.md)) | Figurativa |
+| «Spiegami perché» | Spiegazione dell'errore con l'allenatore (vedi [allenatore.md](allenatore.md)) | Disattiva |
 
 Tema, pezzi, coordinate, mosse legali, frecce e animazioni valgono anche per le scacchiere dei problemi, delle aperture e del repertorio, che si aggiornano subito quando cambiano. La modalità tavolo vale solo per la partita, perché negli esercizi si gioca sempre da un solo lato; anche la promozione automatica a donna vale solo per la partita, perché alcuni puzzle si risolvono promuovendo a un altro pezzo.
 

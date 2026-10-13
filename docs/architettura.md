@@ -4,18 +4,22 @@
 
 | Livello | Tecnologia | Ruolo |
 |---|---|---|
-| Linguaggio e framework | Dart, Flutter (canale stable, 3.47 o successivo) | Un solo codice per Android, iOS, Windows, macOS e Linux |
+| Linguaggio e framework | Dart (SDK 3.13 o successivo), Flutter (canale stable, 3.47) | Un solo codice per Android, iOS, Windows, macOS e Linux |
 | Regole degli scacchi | [dartchess](https://pub.dev/packages/dartchess) | Generazione delle mosse legali, notazione SAN, scacco, matto, stallo, materiale insufficiente |
 | Salvataggio impostazioni | [shared_preferences](https://pub.dev/packages/shared_preferences) | Memorizzazione locale delle impostazioni |
 | Audio | [audioplayers](https://pub.dev/packages/audioplayers) | Riproduzione dei suoni |
 | Scacchiera | [chessground](https://pub.dev/packages/chessground) | Disegno della scacchiera, trascinamento e tocco, animazioni, evidenziazioni, scelta della promozione |
-| Motore | [multistockfish](https://pub.dev/packages/multistockfish) (Stockfish 19 nativo) | Avversario computer su Android e iOS, in isolate separati |
+| Motore | [multistockfish](https://pub.dev/packages/multistockfish) (Stockfish 19 nativo) | Avversario computer su Android e iOS, in isolate separati; su Windows e Linux si usa lo Stockfish installato |
 | File locali | [path_provider](https://pub.dev/packages/path_provider) | Cartella dati dell'app per i salvataggi |
 | Condivisione | [share_plus](https://pub.dev/packages/share_plus) | Menu di condivisione del sistema per il PGN |
 | Promemoria | [flutter_local_notifications](https://pub.dev/packages/flutter_local_notifications) e [timezone](https://pub.dev/packages/timezone) | Notifiche locali programmate del promemoria giornaliero |
 | Codici QR | [qr](https://pub.dev/packages/qr) e [flutter_zxing](https://pub.dev/packages/flutter_zxing) (zxing-cpp) | Generazione dei QR in Dart e lettura con la fotocamera, tutto sul dispositivo (vedi scambio-qr.md) |
+| Foto | [image_picker](https://pub.dev/packages/image_picker) | Foto propria per l'avatar e lo sfondo, foto della scacchiera fisica |
+| Cifratura e firme | [cryptography](https://pub.dev/packages/cryptography), [crypto](https://pub.dev/packages/crypto), [bip340](https://pub.dev/packages/bip340) | Invito firmato e messaggi cifrati della partita tra due telefoni (vedi multigiocatore.md) |
+| Collegamenti locali | [bonsoir](https://pub.dev/packages/bonsoir), [bluetooth_low_energy](https://pub.dev/packages/bluetooth_low_energy) | Ricerca sulla rete locale e Bluetooth per la partita tra due telefoni |
+| Attività in secondo piano | [workmanager](https://pub.dev/packages/workmanager) | Controllo del turno nella partita a distanza |
 
-dartchess, chessground e multistockfish sono sviluppate da Lichess e sono usate dalla sua app mobile.
+La licenza di ogni dipendenza è in [dipendenze-e-licenze.md](dipendenze-e-licenze.md).
 
 La piattaforma web non è supportata: `dartchess` usa interi a 64 bit (bitboard) che il compilatore JavaScript di Flutter non può rappresentare.
 
@@ -25,8 +29,7 @@ La piattaforma web non è supportata: `dartchess` usa interi a 64 bit (bitboard)
 lib/
   main.dart               Avvio dell'app, tema chiaro e scuro
   l10n/                   Testi tradotti, un .arb per funzione e lingua (vedi localizzazione.md)
-  home/home_shell.dart    Barra di navigazione in basso (Gioca, Puzzle, Aperture, Tu)
-  home/you_page.dart      Scheda Tu, solo dati: profilo, badge, statistiche, settimana, archivio
+  home/                   Barra in basso (Home, Puzzle, Impara, Tu), Home a dashboard, schede Impara e Tu (vedi home.md)
   game/
     chess_game.dart       Stato della partita, senza dipendenze dall'interfaccia
     variant.dart          Varianti e posizioni iniziali Chess960 (vedi regole-di-gioco.md)
@@ -60,8 +63,12 @@ lib/
   storage/                File JSON locali con versione e scrittura atomica
   settings/
     settings.dart         Impostazioni, valori predefiniti e salvataggio locale
-    settings_page.dart    Menu delle impostazioni: una voce per sezione
-    section_pages.dart    Una pagina per sezione (scacchiera, partita, accessibilità, profilo e dati, bambino, stile)
+    settings_page.dart    Menu delle impostazioni: una voce per sezione (Profilo, Stile, Scacchiera, Partita, Accessibilità, Bambino)
+    section_pages.dart    Una pagina per sezione; la sezione Stile è in style/
+    app_language.dart     Lingua dell'app: sistema, italiano, inglese
+    board_frame.dart      Coordinate fuori dalla scacchiera e sfondo
+    board_marks.dart      Frecce e cerchi sulla scacchiera, con contrasto minimo
+    notation.dart         Notazione delle mosse: figurine, italiana, inglese
     settings_widgets.dart Anteprima, gallerie di temi e pezzi, scelte a chip, volume
     settings_labels.dart  Nomi tradotti di temi, pezzi, notazioni e animazioni
     board_preview.dart    Anteprima della scacchiera nelle Impostazioni
@@ -69,22 +76,33 @@ lib/
     adult_gate.dart       Domanda per l'adulto del profilo bambino
   puzzles/                Puzzle: modello, punteggio, schermate (vedi puzzle.md)
   openings/               Aperture: libro, nome in partita, Esplora aperture, repertorio (vedi aperture.md)
+  badges/                 Badge e libri delle aperture (vedi badge.md)
+  bot_gallery/            Galleria dei bot e opzioni della partita (vedi bot.md)
+  story/                  Storia a capitoli con lezioni, custodi e guardiani (vedi storia.md)
+  style/                  Schermata Stile: scacchiera, pezzi, sfondo, suoni (vedi stile.md)
+  summary/                Riepilogo settimanale (vedi riepilogo-settimanale.md)
+  masters/                Partite dei grandi maestri e «Indovina la mossa» (vedi grandi-maestri.md)
+  endgames/               Allenatore dei finali (vedi finali.md)
+  tablebase/              Finali perfetti con tabelle generate sul telefono (vedi finali-perfetti.md)
+  share/                  Esportazione della posizione come immagine (vedi esporta-immagine.md)
+  theme/                  Tema Rokko, chiaro e scuro (vedi interfaccia.md)
   training/               Scacchiera per esercizi condivisa
 assets/
-  puzzles/puzzles.csv     Puzzle Lichess inclusi (CC0)
-  openings/openings.tsv   Nomi delle aperture Lichess (CC0)
+  puzzles/puzzles.csv     Puzzle inclusi (dataset CC0 di Lichess)
+  openings/               Nomi delle aperture (openings.tsv, CC0) e statistiche delle mosse (opening_stats.tsv)
+  boards/ pieces/         Sfondi della scacchiera e set di pezzi
   sounds/                 Suoni dell'app (WAV), generati da tool/generate_sounds.py
   icon/                   Icona e schermata di avvio, generate da tool/generate_icons.py (vedi identita-visiva.md)
 tool/
   datasets/               Script che generano i dataset in assets/
   verifica.sh             Controlli veloci prima del push (vedi convenzioni-git.md)
-  check_*.dart            Controlli di rami, commit, documentazione e licenze
+  check_*.dart            Controlli di rami, commit, documentazione, licenze, copertura, dimensione e prestazioni
 test/                     Test unitari e di widget, una cartella per area di lib/ (vedi sviluppo.md)
 integration_test/         Test end-to-end sull'app reale, un file per area
 docs/                     Questa documentazione (mappa del codice in mappa-del-codice.md)
 android/ ios/ linux/ macos/ windows/
                           Progetti nativi generati da Flutter
-.github/workflows/        CI, convenzioni, sicurezza, dataset e rilascio dell'APK (vedi sviluppo.md)
+.github/workflows/        CI, convenzioni, sicurezza, dataset, rilascio dell'APK e altri controlli (vedi sviluppo.md)
 ```
 
 ## Componenti

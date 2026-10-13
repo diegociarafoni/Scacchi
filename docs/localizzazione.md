@@ -5,18 +5,18 @@ Requisito RP-05: italiano come lingua predefinita, con la struttura pronta per a
 ## Stato
 
 - L'app usa `flutter_localizations` e il generatore `gen-l10n` di Flutter.
-- La lingua dell'app si sceglie in **Impostazioni → Aspetto e accessibilità → Lingua**: «Come il telefono» (predefinita), Italiano o English (`AppLanguage` in `lib/settings/app_language.dart`, salvata come `language`). `MaterialApp.locale` in `lib/main.dart` è quella scelta, o `null` per seguire il telefono; `resolveAppLocale` (`localeListResolutionCallback`) prende la prima lingua del telefono tra quelle supportate e, se non ce n'è, usa l'italiano. `l10n.yaml` indica l'italiano come lingua preferita. I nomi delle lingue nella scelta restano nella lingua stessa.
+- La lingua dell'app si sceglie in **Impostazioni → Accessibilità → Lingua**: «Come il telefono» (predefinita), Italiano o English (`AppLanguage` in `lib/settings/app_language.dart`, salvata come `language`). `MaterialApp.locale` in `lib/main.dart` è quella scelta, o `null` per seguire il telefono; `resolveAppLocale` (`localeListResolutionCallback`) prende la prima lingua del telefono tra quelle supportate e, se non ce n'è, usa l'italiano. `l10n.yaml` indica l'italiano come lingua preferita. I nomi delle lingue nella scelta restano nella lingua stessa.
 - Su iOS e macOS la regione di sviluppo è l'italiano; le finestre native del sistema (condivisione, permessi) seguono la lingua del dispositivo se è italiano o inglese, altrimenti usano l'italiano. I testi dei permessi di iOS (`NSCameraUsageDescription` e simili) hanno una traduzione per lingua in `ios/Runner/<lingua>.lproj/InfoPlist.strings`; `Info.plist` conserva l'italiano come ripiego. Su Android 13+ `res/xml/locales_config.xml` elenca le lingue dell'app per la scelta lingua per app del sistema.
 - Il nome sotto l'icona non viene da `appTitle`: è `android:label` in `android/app/src/main/AndroidManifest.xml` e `CFBundleDisplayName` in `ios/Runner/Info.plist`.
-- Sono dichiarate italiano e inglese (`supportedLocales`, e `CFBundleLocalizations` su iOS). Sono tradotti il nome dell'app, i testi del profilo bambino (prefissi `kid`, `kidGame`, `kidBot`), quelli dello scambio QR (prefisso `qr`), quelli dei badge (prefissi `badge` e `badges`), quelli dell'esportazione come immagine (prefisso `shareImage`), quelli della scacchiera fisica (prefisso `physical`), il profilo con traguardi, sfide, serie e promemoria (prefisso `progress`), la revisione della partita e i commenti dell'allenatore (prefisso `review`), i suggerimenti (`coachHint`), l'analisi (`analysis`), l'archivio (`archive`), la scheda settimanale (`portrait`) e le schermate elencate in [Schermate migrate](#schermate-migrate); gli altri testi sono ancora scritti in italiano nel codice.
+- Sono dichiarate italiano e inglese (`supportedLocales`, e `CFBundleLocalizations` su iOS). Sono tradotti il nome dell'app, i testi del profilo bambino (prefissi `kid`, `kidGame`, `kidBot`), quelli dello scambio QR (prefisso `qr`), quelli dei badge (prefissi `badge` e `badges`), quelli dell'esportazione come immagine (prefisso `shareImage`), quelli della scacchiera fisica (prefisso `physical`), il profilo con traguardi, sfide, serie e promemoria (prefisso `progress`), la revisione della partita e i commenti dell'allenatore (prefisso `review`), i suggerimenti (`coachHint`), l'analisi (`analysis`), l'archivio (`archive`), la scheda settimanale (`portrait`) e le schermate elencate in [Schermate migrate](#schermate-migrate). Restano in italiano nel codice i testi elencati in [Testi da spostare](#testi-da-spostare).
 
 ## Lingue di destinazione
 
-L'italiano è la lingua base e il modello degli `.arb`. Inglese, spagnolo e francese vanno completati: ogni testo dell'app, compresi lezioni, commenti dei grandi maestri, frasi dei bot, spiegazioni dell'allenatore e nomi delle aperture, deve avere la sua traduzione. La documentazione in `docs/` resta in italiano. La notazione dei pezzi segue la lingua dell'app, con inglese e figurativa a scelta. Per un dispositivo in un'altra lingua l'app usa l'italiano.
+L'italiano è la lingua base e il modello degli `.arb`; l'inglese è pronto. Ogni testo dell'app, comprese lezioni, commenti dei grandi maestri, frasi dei bot, spiegazioni dell'allenatore e nomi delle aperture, deve avere la sua traduzione. La documentazione in `docs/` resta in italiano. La notazione dei pezzi si sceglie nelle Impostazioni e non dipende dalla lingua. Per un dispositivo in un'altra lingua l'app usa l'italiano.
 
 I termini scacchistici e le regole di stile di ogni lingua sono in [glossario-scacchistico.md](glossario-scacchistico.md). Chi traduce o rilegge parte da lì.
 
-Stato attuale: sono dichiarati soltanto italiano e inglese (vedi sopra); spagnolo e francese si aggiungono per funzione. Durante la migrazione italiano e inglese restano obbligatori in ogni PR.
+Sono dichiarati soltanto italiano e inglese (`tool/lingue.json`); italiano e inglese restano obbligatori in ogni modifica ai testi.
 
 ## File
 
@@ -54,7 +54,7 @@ Dopo un clone, e dopo ogni modifica ai `.arb` o un cambio di ramo, eseguire `dar
 
 ## Aggiungere una lingua
 
-Creare `lib/l10n/<codice>/` con tutti i file e le chiavi delle altre lingue e rigenerare con `dart tool/l10n.dart`. Per renderla selezionabile va tolto il `locale` fisso in `lib/main.dart`, lasciando che Flutter scelga la lingua del dispositivo, solo dopo che tutti i testi dell'interfaccia sono stati spostati nei file `.arb`.
+Creare `lib/l10n/<codice>/` con tutti i file e le chiavi delle altre lingue e rigenerare con `dart tool/l10n.dart`. Va poi dichiarata in `tool/lingue.json` e aggiunta a `AppLanguage` (`lib/settings/app_language.dart`), a `res/xml/locales_config.xml`, a `CFBundleLocalizations` in `ios/Runner/Info.plist` e con un `InfoPlist.strings` in `ios/Runner/<lingua>.lproj/`; la scelta compare nelle Impostazioni e `resolveAppLocale` la riconosce.
 
 ## Schermate migrate
 
@@ -83,13 +83,13 @@ Creare `lib/l10n/<codice>/` con tutti i file e le chiavi delle altre lingue e ri
 
 ## Testi da spostare
 
-Tutte le altre schermate. Sono già migrati anche repertorio, esploratore e hub delle aperture (`openings.arb`), allenatore dei finali (`endgames.arb`), tornei (`tournament.arb`), guida delle modalità e nomi dei temi dei puzzle (`puzzles.arb`). Restano da migrare i testi di `lib/endgames/drills.dart`.
+Sono già migrati anche repertorio, esploratore e hub delle aperture (`openings.arb`), allenatore dei finali (`endgames.arb`), tornei (`tournament.arb`), guida delle modalità e nomi dei temi dei puzzle (`puzzles.arb`). Restano in italiano nel codice, come indica `tool/stringhe_fisse_base.json`, i testi di `lib/path/` (lezioni ed esercizi), `lib/masters/` (partite dei maestri), `lib/engine/` (frasi e stili dei bot), `lib/openings/`, `lib/endgames/` (allenatore dei finali) e uno nella radice di `lib/`.
 
 Nei test e2e non si usa `tester.pageBack()`, che cerca il tooltip inglese "Back": si tocca il tooltip restituito da `MaterialLocalizations.of(context).backButtonTooltip`.
 
-I test dei widget che montano una singola schermata devono usare `localizedApp` di `test/localized_app.dart` (cioè `AppLocalizations.localizationsDelegates` e `locale: Locale('it')`), come l'app reale, prima che quella schermata passi ai file `.arb`.
+I test dei widget che montano una singola schermata devono usare `localizedApp` di `test/localized_app.dart` (cioè `AppLocalizations.localizationsDelegates` e `locale: Locale('it')`), come l'app reale.
 
-La migrazione dei testi esistenti verso i file `.arb` si fa una schermata alla volta, per non entrare in conflitto con il lavoro in corso sulle singole funzioni. Restano esclusi i nomi delle aperture: arrivano in inglese dal dataset di Lichess e sono tradotti in italiano nel codice (`lib/openings/opening_names_it.dart`).
+La migrazione dei testi verso i file `.arb` si fa una schermata alla volta. Restano fuori i nomi delle aperture: arrivano in inglese dal dataset e sono tradotti in italiano nel codice (`lib/openings/opening_names_it.dart`).
 
 ## Cambio di lingua
 

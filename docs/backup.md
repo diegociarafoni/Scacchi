@@ -16,7 +16,7 @@ Il formato è alla versione 2 (la 1 non aveva settimana, maestri, finali, partit
 
 ## Uso
 
-**Impostazioni → Backup e ripristino**
+**Impostazioni → Profilo → Backup e ripristino**
 
 - **Condividi il backup** crea `rokko-backup-AAAA-MM-GG.json` e apre il menu di condivisione del sistema.
 - **Ripristina da testo** chiede di incollare il contenuto del file e rifiuta i backup non validi. Il backup valido resta in attesa (`ripristino-in-attesa.json`) e viene applicato al prossimo avvio, prima che qualunque archivio sia caricato, così nessun dato in memoria lo sovrascrive. Chiudi e riapri l'app.
