@@ -67,7 +67,7 @@ Rokko è open source e gratuito. Questi vincoli valgono per ogni voce.
 |---|---|---|---|---|---|---|
 | A-15 / RV-03, RV-04 | **Schermata «Informazioni»** con licenza GPL, link ai sorgenti e crediti degli asset | da fare | P0 | piccola | 0.14.0 | nessuna schermata né `showLicensePage` in `lib/` |
 | A-16 / RV-05 | **Verifica scritta** della compatibilità dell'App Store con la GPL del motore | parziale | P0 | piccola | 0.14.0 | `docs/licenza.md`, `NOTICE.md` |
-| A-17 / RNF-10 | **Dichiarazioni «nessun dato raccolto»**: `PrivacyInfo.xcprivacy`, testi per le schede di sicurezza dei dati degli store, `ITSAppUsesNonExemptEncryption` | fatta | P0 | piccola | 0.14.0 | `ios/Runner/PrivacyInfo.xcprivacy` e `docs/privacy-store.md`; restano le schede nelle console, che richiedono l'account dello store |
+| A-17 / RNF-10 | **Dichiarazioni «nessun dato raccolto»**: `PrivacyInfo.xcprivacy`, testi per le schede di sicurezza dei dati degli store, `ITSAppUsesNonExemptEncryption` | parziale | P0 | piccola | 0.14.0 | fatti `ios/Runner/PrivacyInfo.xcprivacy`, la dichiarazione di crittografia e `docs/privacy-store.md`; restano le schede nelle console degli store e la conferma legale della crittografia, che richiedono l'account di Diego |
 | A-18 / RNF-03 | **Motore per tutte le architetture** (Android armv7 e x86_64 oltre ad arm64) | parziale | P0 | piccola | 0.14.0 | `docs/rilascio-android.md:71-74` |
 | A-19 / RNF-02 | **iOS e F-Droid**: build iOS in CI, Fastlane per TestFlight, metadati e ricetta per F-Droid | parziale | P0 | grande | 0.14.0 | `docs/store.md`: iOS «non ancora configurato»; nessun file F-Droid |
 | A-20 / RNF-04 | **Dimensione sotto i 60 MB**, con valutazione di una rete NNUE più piccola e misura dell'impatto sulla forza | parziale | P0 | media | 0.14.0 | circa 63 MiB e tetto a 80 MB in `tool/policy.json` (`docs/qualita.md:30-32`) |
@@ -338,7 +338,7 @@ Principi: motivare senza punire, funzionare offline, nessun elemento acquistabil
 | RNF-07 | Accessibilità: contrasti adeguati, supporto a TalkBack e VoiceOver con annuncio delle mosse e delle case, inserimento della mossa testuale o vocale tramite tastiera di sistema (es. "Cf3"), testi scalabili, colori per daltonici sulle evidenziazioni, opzione per ridurre le animazioni. | vedi A-22 |
 | RNF-08 | Persistenza: database locale SQLite (es. `drift`) per partite, puzzle, progressi e cache di analisi; migrazioni di schema versionate per non perdere i progressi agli aggiornamenti. | vedi A-23 |
 | RNF-09 | Licenze: nessun asset di altre app (pezzi, suoni, nomi e immagini dei bot); solo risorse con licenza libera o originali, nel rispetto di RV-03, RV-04 e RV-05. | fatta |
-| RNF-10 | Privacy: nessun SDK di analisi o di pubblicità; dichiarazioni "nessun dato raccolto" sugli store (sezione Data Safety di Google Play, Privacy Nutrition Label di Apple). | fatta |
+| RNF-10 | Privacy: nessun SDK di analisi o di pubblicità; dichiarazioni "nessun dato raccolto" sugli store (sezione Data Safety di Google Play, Privacy Nutrition Label di Apple). | vedi A-17 |
 
 ### Multigiocatore e proposte oltre i requisiti
 

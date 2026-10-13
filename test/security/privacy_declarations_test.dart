@@ -30,10 +30,21 @@ void main() {
 
   test('il manifest elenca le API a motivo obbligatorio che l\'app usa', () {
     final xml = manifest.readAsStringSync();
-    expect(xml, contains('NSPrivacyAccessedAPICategoryUserDefaults'));
-    expect(xml, contains('CA92.1'));
-    expect(xml, contains('NSPrivacyAccessedAPICategoryFileTimestamp'));
-    expect(xml, contains('C617.1'));
+    // Ogni categoria deve avere il proprio motivo subito dopo.
+    for (final (category, reason) in [
+      ('UserDefaults', 'CA92.1'),
+      ('FileTimestamp', 'C617.1'),
+    ]) {
+      expect(
+        RegExp(
+          'NSPrivacyAccessedAPICategory$category</string>\\s*'
+          '<key>NSPrivacyAccessedAPITypeReasons</key>\\s*'
+          '<array>\\s*<string>$reason</string>\\s*</array>',
+        ).hasMatch(xml),
+        isTrue,
+        reason: category,
+      );
+    }
   });
 
   test('il manifest è tra le risorse del bersaglio Runner', () {

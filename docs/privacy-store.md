@@ -18,7 +18,7 @@ Le mosse della partita a distanza passano da server di terzi (i relay), ma sono 
 
 - Risposta nella scheda «App Privacy»: **Data Not Collected**.
 - Nessun tracciamento: `NSPrivacyTracking` falso e nessun dominio in `NSPrivacyTrackingDomains`.
-- `ios/Runner/PrivacyInfo.xcprivacy` dichiara `NSPrivacyCollectedDataTypes` vuoto e le due API a motivo obbligatorio usate dall'app: `UserDefaults` (`CA92.1`, impostazioni salvate con `shared_preferences`) e le date dei file (`C617.1`, file dell'app nella sua cartella dati, letti con `path_provider`). I pacchetti Flutter portano i loro manifesti, che Xcode unisce a quello dell'app.
+- `ios/Runner/PrivacyInfo.xcprivacy` dichiara `NSPrivacyCollectedDataTypes` vuoto e le due API a motivo obbligatorio usate dall'app: `UserDefaults` (`CA92.1`, impostazioni salvate con `shared_preferences`) e le date dei file (`C617.1`, file dell'app nella sua cartella dati, letti con `path_provider`). Il codice dell'app non chiama direttamente altre API a motivo obbligatorio (nessun uso di date di file, spazio su disco o orologio di sistema fuori dai pacchetti); i pacchetti Flutter portano i loro manifesti, che Xcode unisce a quello dell'app. Quando la build iOS in CI produrrà un archivio, il rapporto di privacy di Xcode va riletto per confermare l'elenco.
 - URL dell'informativa: la pagina di questo repository con il testo qui sotto (`https://github.com/diegociarafoni/rokko/blob/main/docs/privacy-store.md`).
 
 ### Crittografia per l'esportazione
@@ -28,9 +28,10 @@ Le mosse della partita a distanza passano da server di terzi (i relay), ma sono 
 ## Google Play (Data safety)
 
 - «L'app raccoglie o condivide dati utente richiesti?»: **No**. Nessuna sezione di dati da compilare.
-- «Tutti i dati sono cifrati in transito?»: non applicabile; la partita a distanza è comunque cifrata da un capo all'altro.
+- «Tutti i dati sono cifrati in transito?»: **Sì**, perché l'unico traffico verso l'esterno (partita in rete, Bluetooth e a distanza) è cifrato da un capo all'altro.
+- Perché «nessun dato raccolto» regge: le mosse della partita a distanza passano da relay di terzi ma sono cifrate con chiavi che lo sviluppatore e i relay non hanno, e partono solo su azione dell'utente (esenzione «cifratura da un capo all'altro» e trasferimento avviato dall'utente delle regole di Google).
 - «Gli utenti possono chiedere la cancellazione dei dati?»: non applicabile, i dati restano sul telefono e si cancellano disinstallando l'app o dal backup nelle Impostazioni.
-- Permessi da dichiarare nel modulo dell'app: quelli di `privacy.androidPermissions` in `tool/policy.json` (avvio, fotocamera, internet, Bluetooth), tutti spiegati in [sicurezza.md](sicurezza.md).
+- Permessi da dichiarare nel modulo dell'app: quelli del manifest finale dell'APK, cioè `privacy.androidPermissions` più `privacy.mergedPermissions` in `tool/policy.json` (avvio, fotocamera, internet, Bluetooth e quelli aggiunti dalle librerie), tutti spiegati in [sicurezza.md](sicurezza.md).
 - Pubblico: l'app ha un profilo bambino, ma funziona senza account e senza raccogliere nulla; la scheda «Famiglie» di Google Play si compila quando si decide di includerla.
 
 ## Informativa sulla privacy (testo da pubblicare)
