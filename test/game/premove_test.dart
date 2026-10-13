@@ -20,9 +20,12 @@ Future<void> _tap(WidgetTester tester, String from, String to) async {
 Future<void> _thinkingAfterE4(
   WidgetTester tester, {
   bool premove = true,
+  bool confirm = false,
 }) async {
   final settings = SettingsController.defaults();
-  await settings.update(settings.value.copyWith(premove: premove));
+  await settings.update(
+    settings.value.copyWith(premove: premove, confirmMove: confirm),
+  );
   await tester.pumpWidget(
     MaterialApp(
       home: GamePage(
@@ -41,6 +44,7 @@ Future<void> _thinkingAfterE4(
   await startComputerGame(tester, side: 'Bianco');
   await tester.pumpAndSettle(const Duration(seconds: 1));
   await _tap(tester, 'e2', 'e4');
+  if (confirm) await tester.tap(find.text('Conferma'));
   await tester.pump(const Duration(milliseconds: 100));
   expect(find.text('Il computer sta pensando…'), findsOneWidget);
 }
@@ -97,6 +101,17 @@ void main() {
     tester,
   ) async {
     await _thinkingAfterE4(tester, premove: false);
+    await _tap(tester, 'g1', 'f3');
+    expect(_premove(tester), isNull);
+    await tester.pump(const Duration(seconds: 4));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('2. '), findsNothing);
+  });
+
+  testWidgets('RF-08 con «Conferma la mossa» non c\'è premossa', (
+    tester,
+  ) async {
+    await _thinkingAfterE4(tester, confirm: true);
     await _tap(tester, 'g1', 'f3');
     expect(_premove(tester), isNull);
     await tester.pump(const Duration(seconds: 4));

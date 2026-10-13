@@ -901,6 +901,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         _task == _ComputerTask.move &&
         _settings.premove &&
         !_settings.kidMode &&
+        !_settings.confirmMove &&
         _pendingMove == null;
     if (_game.isOver || (_thinking && !premoving) || _awaitingChallenge) {
       return PlayerSide.none;
@@ -1502,9 +1503,13 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final premove = played ? _board.premove : null;
     _refresh();
     if (viewing != null) _showPly(viewing);
-    if (premove != null && viewing == null) _playPremove(premove);
     if (played && !_game.isOver) _botReact();
+    // Una premossa giocata cambia la posizione: la spiegazione non sarebbe più
+    // attuale.
+    final premoved =
+        premove != null && viewing == null && _playPremove(premove);
     if (played &&
+        !premoved &&
         !_game.isOver &&
         _settings.explainWhy &&
         !_isChallenge &&
@@ -1522,19 +1527,23 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   }
 
   /// Gioca la premossa se nella nuova posizione è ancora legale (RF-08);
-  /// altrimenti la scarta.
-  void _playPremove(Move premove) {
-    if (_game.isOver || !_humanToMove) return;
+  /// altrimenti la scarta. Un pedone che arriva all'ultima traversa promuove a
+  /// donna, senza il selettore.
+  bool _playPremove(Move premove) {
+    if (_game.isOver || !_humanToMove) return false;
+    final position = _game.position;
     var move = premove;
     if (move is NormalMove && move.promotion == null) {
-      final position = _game.position;
       final lastRank = position.turn == Side.white ? Rank.eighth : Rank.first;
       if (position.board.roleAt(move.from) == Role.pawn &&
           move.to.rank == lastRank) {
         move = move.withPromotion(Role.queen);
       }
     }
-    if (_game.position.isLegal(move)) _commitMove(move, animate: true);
+    if (move is NormalMove) move = position.normalizeMove(move);
+    if (!position.isLegal(move)) return false;
+    _commitMove(move, animate: true);
+    return true;
   }
 
   /// «Spiegami perché» (RF-122): una riga su cosa fa o minaccia la mossa del
