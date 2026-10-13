@@ -32,6 +32,10 @@ I testi sono in un file per funzione (`kids.arb`, `story.arb`, `stats.arb`, `exc
 
 Dopo un clone, e dopo ogni modifica ai `.arb` o un cambio di ramo, eseguire `dart tool/l10n.dart`. Con una copia nuova `flutter pub get` fallisce finché i file unici non esistono: il comando va dato prima (in CI `dart tool/l10n.dart --solo-unione`, che non lancia `gen-l10n`). `tool/verifica.sh` e l'hook di pre-commit lo eseguono già.
 
+## Testi fissi nel codice
+
+`dart tool/stringhe_fisse.dart` cerca in `lib/` le frasi italiane scritte tra apici invece che nei `.arb` (almeno due parole, con parole italiane comuni o lettere accentate; commenti, `import` e identificativi sono ignorati). I conteggi per cartella stanno in `tool/stringhe_fisse_base.json` e **non possono salire**: la CI e `tool/verifica.sh` falliscono se una cartella ha più testi fissi della base, con l'indicazione di dove spostarli. Quando una cartella viene migrata la base si abbassa con `dart tool/stringhe_fisse.dart --aggiorna`. `--elenco` stampa ogni testo con file e riga. Un nome proprio o un dato dell'archivio che il controllo scambia per testo si esclude con il commento `// l10n-ok` sulla riga. Il controllo è euristico: trova i testi italiani, non quelli già in un'altra lingua.
+
 ## Aggiungere un testo
 
 1. Aggiungere la chiave nel file della funzione in `lib/l10n/it/` (uno nuovo, con lo stesso nome in `lib/l10n/en/`, se la funzione è nuova), con una voce `@chiave` che ne descrive il contesto quando il testo da solo non basta e che dichiara i segnaposto. Le chiavi sono in camelCase con il prefisso della schermata (`backup…`, `minigames…`, `stats…`).
