@@ -24,8 +24,8 @@ Map<String, String> _messages(String locale) {
 }
 
 /// Corpo di ogni `{variabile, plural, ...}` di un messaggio ICU.
-Iterable<String> _pluralBodies(String message) sync* {
-  final start = RegExp(r'\{\w+,\s*plural,');
+Iterable<(String, String)> _pluralBodies(String message) sync* {
+  final start = RegExp(r'\{(\w+),\s*plural,');
   for (final m in start.allMatches(message)) {
     var depth = 1;
     var i = m.end;
@@ -34,7 +34,7 @@ Iterable<String> _pluralBodies(String message) sync* {
       if (c == '{') depth++;
       if (c == '}') depth--;
     }
-    yield message.substring(m.end, i - 1);
+    yield (m.group(1)!, message.substring(m.end, i - 1));
   }
 }
 
@@ -63,8 +63,16 @@ void main() {
   test('ogni plurale polacco ha le forme one, few, many e other', () {
     var plurals = 0;
     for (final e in pl.entries) {
-      for (final body in _pluralBodies(e.value)) {
+      for (final (variable, body) in _pluralBodies(e.value)) {
         plurals++;
+        for (final form in ['few', 'many', 'other']) {
+          final start = RegExp('(^|\\s)$form\\{').firstMatch(body)!.end;
+          expect(
+            body.substring(start).contains('{$variable}'),
+            isTrue,
+            reason: '${e.key}: $form senza {$variable}',
+          );
+        }
         for (final form in ['one', 'few', 'many', 'other']) {
           expect(
             RegExp('(^|\\s)$form\\{').hasMatch(body),
