@@ -1,0 +1,19 @@
+{
+  "endgamesTitle": "Finais",
+  "endgamesGoalMate": "Dê xeque-mate",
+  "endgamesGoalPromote": "Promova o peão",
+  "endgamesGoalHoldBlack": "Resista com as Pretas",
+  "endgamesGoalHoldWhite": "Resista com as Brancas",
+  "endgamesToRepeat": "Para repetir",
+  "endgamesStars": "{stars, plural, one{{stars} estrela de 3} other{{stars} estrelas de 3}}",
+  "endgamesMovesHold": "Lances: {moves} de {par}",
+  "endgamesMovesTarget": "Lances: {moves} · três estrelas com até {par}",
+  "endgamesStart": "Começar",
+  "endgamesThinking": "O motor está pensando…",
+  "endgamesEngineFailed": "O motor não está respondendo: tente de novo.",
+  "endgamesSuccess": "Objetivo alcançado",
+  "endgamesFailure": "Não deu desta vez",
+  "endgamesFailureHint": "A posição continua entre as que você deve repetir.",
+  "endgamesRetry": "Tentar de novo",
+  "endgamesDone": "Concluir"
+}

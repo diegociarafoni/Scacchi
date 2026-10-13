@@ -1,0 +1,83 @@
+{
+  "statsTitle": "Estatísticas",
+  "statsLoadFailed": "Não foi possível ler o arquivo de partidas: tente de novo mais tarde.",
+  "statsEmpty": "Jogue algumas partidas contra o computador para ver suas estatísticas.",
+  "statsRecord": "Resultados",
+  "statsAllGames": "Todas",
+  "statsWithWhite": "De Brancas",
+  "statsWithBlack": "De Pretas",
+  "statsLocalGames": "Partidas de dois jogadores",
+  "statsByTimeControl": "Por ritmo de jogo",
+  "statsTopOpenings": "Aberturas mais jogadas",
+  "statsGames": "{count, plural, one{{count} partida} other{{count} partidas}}",
+  "statsAccuracy": "Precisão",
+  "statsAverage": "Média",
+  "statsAccuracyTrend": "Evolução da precisão",
+  "statsRating": "Pontuação estimada {rating}",
+  "statsRatingProvisional": "provisória: são necessárias {count} partidas contra o computador",
+  "statsRatingGames": "{count, plural, one{a partir de {count} partida contra o computador} other{a partir de {count} partidas contra o computador}}",
+  "statsRatingTrend": "Evolução da pontuação",
+  "statsNoGames": "nenhuma partida",
+  "statsScoreDetail": "{wins, plural, one{{wins} vitória} other{{wins} vitórias}}, {draws, plural, one{{draws} empate} other{{draws} empates}}, {losses, plural, one{{losses} derrota} other{{losses} derrotas}}",
+  "statsTrend": "{label}: de {first} a {last}, mínimo {min}, máximo {max}",
+  "portraitShareSubject": "Minha semana",
+  "portraitTitle": "Sua semana",
+  "portraitUnreadable": "Não foi possível ler o arquivo.",
+  "portraitEmpty": "Nenhuma partida nos últimos sete dias. Jogue contra o computador e o seu resumo aparecerá aqui.",
+  "portraitShare": "Compartilhar como imagem",
+  "portraitShareFailed": "Falha ao compartilhar",
+  "portraitCardTitle": "Minha semana de xadrez",
+  "portraitGames": "{count, plural, one{1 partida} other{{count} partidas}}",
+  "@portraitGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "portraitScore": "{wins} vitórias · {draws} empates · {losses} derrotas",
+  "@portraitScore": {
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      }
+    }
+  },
+  "portraitOpenings": "Aberturas favoritas",
+  "portraitAccuracy": "Precisão média",
+  "portraitMate": "Xeque-mate favorito",
+  "portraitMateValue": "{role, select, king{com o rei} queen{com a dama} rook{com a torre} bishop{com o bispo} knight{com o cavalo} other{com um peão}}, {count, plural, one{1 vez} other{{count} vezes}}",
+  "@portraitMateValue": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "portraitStrongest": "Oponente mais forte vencido",
+  "portraitStrongestValue": "Elo {elo}",
+  "@portraitStrongestValue": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "portraitBusiestDay": "Dia mais movimentado",
+  "portraitWeekdayMonday": "Segunda-feira",
+  "portraitWeekdayTuesday": "Terça-feira",
+  "portraitWeekdayWednesday": "Quarta-feira",
+  "portraitWeekdayThursday": "Quinta-feira",
+  "portraitWeekdayFriday": "Sexta-feira",
+  "portraitWeekdaySaturday": "Sábado",
+  "portraitWeekdaySunday": "Domingo"
+}

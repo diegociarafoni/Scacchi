@@ -1,0 +1,12 @@
+{
+  "tablebaseTitle": "Final perfeito",
+  "tablebaseCalculating": "Calculando o final perfeito… isso só acontece na primeira vez",
+  "tablebaseWhiteMates": "{moves, plural, one{As Brancas vencem: xeque-mate em {moves} lance} other{As Brancas vencem: xeque-mate em {moves} lances}}",
+  "tablebaseBlackMates": "{moves, plural, one{As Pretas vencem: xeque-mate em {moves} lance} other{As Pretas vencem: xeque-mate em {moves} lances}}",
+  "tablebaseWhiteWins": "As Brancas vencem",
+  "tablebaseBlackWins": "As Pretas vencem",
+  "tablebaseDraw": "Empate com jogo perfeito",
+  "tablebaseBestMove": "Lance perfeito: {move}",
+  "tablebaseBestMoveHint": "Jogue o lance perfeito",
+  "tablebaseShowMove": "Mostrar o lance perfeito"
+}

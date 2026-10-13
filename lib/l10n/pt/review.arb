@@ -1,0 +1,452 @@
+{
+  "reviewCoachGeneric": "{move} era melhor: sua posição piora.",
+  "@reviewCoachGeneric": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachBrilliant": "Lance brilhante: você cede material, mas é a melhor escolha.",
+  "reviewCoachGreat": "Ótimo: era o único lance que sustentava a posição.",
+  "reviewCoachBest": "É o melhor lance.",
+  "reviewCoachExcellent": "Lance excelente, quase tão bom quanto o melhor.",
+  "reviewCoachGood": "Bom lance.",
+  "reviewCoachBook": "Um lance da teoria de aberturas.",
+  "reviewCoachAllowedMate": "Depois de {move}, {side, select, white{as Brancas} other{as Pretas}} podem dar xeque-mate em {mate} com {reply}.",
+  "@reviewCoachAllowedMate": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "side": {
+        "type": "String"
+      },
+      "mate": {
+        "type": "int"
+      },
+      "reply": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachMissedMate": "Você tinha xeque-mate em {mate} com {move}.",
+  "@reviewCoachMissedMate": {
+    "placeholders": {
+      "mate": {
+        "type": "int"
+      },
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachHanging": "Você deixou {victim} sem proteção em {square}: {attacker} pode capturá-{victimRole, select, rook{la} queen{la} other{lo}}.",
+  "@reviewCoachHanging": {
+    "placeholders": {
+      "victim": {
+        "type": "String"
+      },
+      "victimRole": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "attacker": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachAllowedFork": "Depois de {move}, {piece} ataca {targets} ao mesmo tempo: é um garfo.",
+  "@reviewCoachAllowedFork": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "targets": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachAllowedPin": "Depois de {move}, {slider} crava {pinned} em {square} contra o rei.",
+  "@reviewCoachAllowedPin": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "slider": {
+        "type": "String"
+      },
+      "pinned": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachExposedKing": "Depois de {move}, seu rei fica exposto: {reply} é xeque.",
+  "@reviewCoachExposedKing": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "reply": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachRecapture": "Você podia recapturar a peça: {move} captura {piece}.",
+  "@reviewCoachRecapture": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachWinMaterial": "Você podia ganhar material: {move} captura {piece}.",
+  "@reviewCoachWinMaterial": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachMissedFork": "Você podia dar um garfo com {move}: {piece} ataca {targets}.",
+  "@reviewCoachMissedFork": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "targets": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachMissedDiscovery": "Você podia dar um ataque descoberto com {move}: {piece} ataca {target}.",
+  "@reviewCoachMissedDiscovery": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachMaterialLoss": "Este lance perde material: cerca de {pawns, plural, one{1 peão} other{{pawns} peões}} na linha esperada.",
+  "@reviewCoachMaterialLoss": {
+    "placeholders": {
+      "pawns": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewCoachPieceColored": "{role, select, pawn{o peão {color, select, white{branco} other{preto}}} knight{o cavalo {color, select, white{branco} other{preto}}} bishop{o bispo {color, select, white{branco} other{preto}}} rook{a torre {color, select, white{branca} other{preta}}} queen{a dama {color, select, white{branca} other{preta}}} other{o rei {color, select, white{branco} other{preto}}}}",
+  "@reviewCoachPieceColored": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      },
+      "color": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachListEnd": "{head} e {last}",
+  "@reviewCoachListEnd": {
+    "placeholders": {
+      "head": {
+        "type": "String"
+      },
+      "last": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewTitle": "Revisão da partida",
+  "reviewAnalysePosition": "Analisar esta posição",
+  "reviewPuzzlesSaved": "Quebra-cabeças salvos: {count}. Você os encontra em Quebra-cabeças › Revise seus erros.",
+  "@reviewPuzzlesSaved": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewPuzzlesAlready": "Esses quebra-cabeças já foram salvos.",
+  "reviewPuzzlesFailed": "Não foi possível salvar. Tente de novo.",
+  "reviewSavePuzzles": "Salvar erros como quebra-cabeças ({count})",
+  "@reviewSavePuzzles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewNoteNotSaved": "Nota não salva. Tente de novo.",
+  "reviewRetryCorrect": "Correto: {move} é o melhor lance.",
+  "@reviewRetryCorrect": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewRetryWrong": "{move} não é o melhor lance. Tente de novo.",
+  "@reviewRetryWrong": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewAnalysing": "Analisando: {done} de {total}",
+  "@reviewAnalysing": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewStop": "Parar",
+  "reviewCancelled": "Revisão interrompida.",
+  "reviewFailed": "A análise falhou. Tente de novo mais tarde.",
+  "reviewRetryPrompt": "Encontre um lance melhor que {move}",
+  "@reviewRetryPrompt": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewRetrySolution": "O melhor lance era {move}.",
+  "@reviewRetrySolution": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewShowSolution": "Solução",
+  "reviewExit": "Sair",
+  "reviewStartPosition": "Posição inicial",
+  "reviewMoveVerdict": "{number} {move} é {verdict, select, brilliant{um lance brilhante} great{um ótimo lance} best{o melhor lance} excellent{um lance excelente} good{um bom lance} book{um lance de teoria} inaccuracy{uma imprecisão} mistake{um erro} miss{uma chance perdida} other{um erro grave}}",
+  "@reviewMoveVerdict": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "move": {
+        "type": "String"
+      },
+      "verdict": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewBestMove": "Melhor: {move}",
+  "@reviewBestMove": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewYourNote": "Sua nota: {note}",
+  "@reviewYourNote": {
+    "placeholders": {
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewTryAgain": "Tentar de novo",
+  "reviewAddNote": "Adicionar nota",
+  "reviewEditNote": "Editar nota",
+  "reviewNavStart": "Início",
+  "reviewNavPrevious": "Lance anterior",
+  "reviewNavNext": "Próximo lance",
+  "reviewNavEnd": "Fim",
+  "reviewSideWhite": "Brancas",
+  "reviewSideBlack": "Pretas",
+  "reviewAccuracyUnavailable": "Precisão das {side} indisponível",
+  "@reviewAccuracyUnavailable": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewAccuracyPercent": "Precisão das {side}: {value} por cento",
+  "@reviewAccuracyPercent": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewAccuracy": "Precisão",
+  "reviewEstimatedElo": "Elo estimado ~{elo}",
+  "@reviewEstimatedElo": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewMovesByCategory": "Lances por categoria",
+  "reviewCountsSemantics": "Brancas {white}, Pretas {black}",
+  "@reviewCountsSemantics": {
+    "placeholders": {
+      "white": {
+        "type": "int"
+      },
+      "black": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewNoteTitle": "Nota sobre {move}",
+  "@reviewNoteTitle": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewNoteComment": "Comentário",
+  "reviewNoteCancel": "Cancelar",
+  "reviewNoteSave": "Salvar",
+  "reviewTimePerMove": "Tempo por lance",
+  "reviewTimeNoHasty": "Tempo por lance. Nenhum erro jogado com pressa.",
+  "reviewTimeHastySemantics": "Tempo por lance. Erros jogados com pressa: {moves}.",
+  "@reviewTimeHastySemantics": {
+    "placeholders": {
+      "moves": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewHastyMistakes": "Erros jogados com pressa: {moves}",
+  "@reviewHastyMistakes": {
+    "placeholders": {
+      "moves": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewHastyAdvice": "Menos de 40% do seu tempo médio por lance: antes de mover, procure ameaças.",
+  "reviewAccuracyByPhase": "Precisão por fase",
+  "reviewPhaseOpening": "Abertura",
+  "reviewPhaseMiddlegame": "Meio-jogo",
+  "reviewPhaseEndgame": "Final",
+  "reviewPhaseSemantics": "{phase}: Brancas {white}, Pretas {black}",
+  "@reviewPhaseSemantics": {
+    "placeholders": {
+      "phase": {
+        "type": "String"
+      },
+      "white": {
+        "type": "String"
+      },
+      "black": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewPhaseValues": "Brancas {white} · Pretas {black}",
+  "@reviewPhaseValues": {
+    "placeholders": {
+      "white": {
+        "type": "String"
+      },
+      "black": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewMoveSemantics": "{number} {move}, {verdict}{note, select, yes{, com uma nota} other{}}",
+  "@reviewMoveSemantics": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "move": {
+        "type": "String"
+      },
+      "verdict": {
+        "type": "String"
+      },
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewEvalGraph": "Gráfico de avaliação",
+  "reviewClassBrilliant": "Brilhante",
+  "reviewClassGreat": "Ótimo",
+  "reviewClassBest": "Melhor",
+  "reviewClassExcellent": "Excelente",
+  "reviewClassGood": "Bom",
+  "reviewClassBook": "Teoria",
+  "reviewClassInaccuracy": "Imprecisão",
+  "reviewClassMistake": "Erro",
+  "reviewClassMiss": "Chance perdida",
+  "reviewClassBlunder": "Erro grave",
+  "reviewScoreUnavailable": "Avaliação indisponível",
+  "reviewScoreMated": "Xeque-mate: {side, select, white{as Brancas} other{as Pretas}} vencem",
+  "@reviewScoreMated": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewScoreCheckmate": "Xeque-mate",
+  "reviewScoreMateIn": "{side, select, white{As Brancas} other{As Pretas}} têm xeque-mate em {moves}",
+  "@reviewScoreMateIn": {
+    "placeholders": {
+      "moves": {
+        "type": "int"
+      },
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewScoreEven": "Igual",
+  "reviewScoreAhead": "Vantagem {side, select, white{das Brancas} other{das Pretas}}: {pawns}",
+  "@reviewScoreAhead": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      },
+      "pawns": {
+        "type": "String"
+      }
+    }
+  }
+}

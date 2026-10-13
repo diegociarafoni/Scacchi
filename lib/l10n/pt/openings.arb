@@ -1,0 +1,114 @@
+{
+  "personalTitle": "Suas aberturas",
+  "personalHubSubtitle": "Os lances que você jogou, com os resultados",
+  "personalLoadFailed": "Não foi possível ler o arquivo de partidas: tente de novo mais tarde.",
+  "personalEmpty": "Jogue algumas partidas contra o computador para montar a sua árvore de aberturas.",
+  "personalNoGamesFiltered": "Nenhuma partida corresponde a estes filtros.",
+  "personalNoGamesHere": "Você nunca jogou a partir desta posição.",
+  "personalSideAll": "Ambas",
+  "personalSideWhite": "Brancas",
+  "personalSideBlack": "Pretas",
+  "personalOpponent": "Oponente",
+  "personalAllOpponents": "Todos os oponentes",
+  "personalGames": "{count, plural, one{{count} partida} other{{count} partidas}}",
+  "@personalGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "personalGamesTotal": "{count, plural, one{{count} partida contada} other{{count} partidas contadas}}",
+  "@personalGamesTotal": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "personalScore": "{wins}V · {draws}E · {losses}D",
+  "@personalScore": {
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      }
+    }
+  },
+  "personalScoreSemantics": "{wins} vitórias, {draws} empates, {losses} derrotas",
+  "@personalScoreSemantics": {
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      }
+    }
+  },
+  "personalStartPosition": "Posição inicial",
+  "personalNoName": "Abertura sem nome",
+  "personalBack": "Voltar",
+  "personalStart": "Início",
+  "personalFlip": "Girar o tabuleiro",
+  "personalOpenInBook": "Abrir no explorador de aberturas",
+  "personalFromHere": "Suas partidas a partir desta posição",
+  "explorerTitle": "Explorar aberturas",
+  "explorerLoadFailed": "Não foi possível carregar as aberturas.",
+  "explorerStartPosition": "Posição inicial",
+  "explorerNoName": "Abertura sem nome",
+  "explorerOutOfBook": "Fora do livro de aberturas",
+  "explorerFlip": "Girar tabuleiro",
+  "explorerRestart": "Recomeçar",
+  "explorerBack": "Voltar",
+  "explorerForward": "Avançar",
+  "explorerMoveSemantics": "{move}: {games, plural, one{{games} partida} other{{games} partidas}}, Brancas {white}%, empates {draws}%, Pretas {black}%",
+  "openingsHubTitle": "Aberturas",
+  "openingsHubExplorerSubtitle": "Partidas jogadas e resultados de cada lance, com os nomes das aberturas",
+  "openingsRepertoireTitle": "{side, select, white{Repertório das Brancas} other{Repertório das Pretas}}",
+  "openingsRepertoireUnavailable": "Repertório indisponível",
+  "openingsRepertoireLoading": "Carregando…",
+  "openingsRepertoireSummary": "{lines, plural, one{{lines} linha} other{{lines} linhas}} · {due, plural, one{{due} lance para revisar} other{{due} lances para revisar}}",
+  "openingsGameTitle": "Jogar contra o computador",
+  "openingsLevel": "Nível",
+  "openingsPlay": "Jogar",
+  "openingsCancel": "Cancelar",
+  "openingsSideWhite": "Brancas",
+  "openingsSideBlack": "Pretas",
+  "openingsNameSemantics": "Abertura: {name} ({eco})",
+  "openingsAddToRepertoire": "Adicionar ao repertório",
+  "openingsPlayThisOpening": "Jogar esta abertura",
+  "openingsFreeOpening": "Abertura livre",
+  "openingsDefaultLineName": "Linha",
+  "openingsLineName": "Nome",
+  "openingsAdd": "Adicionar",
+  "openingsLineAdded": "{side, select, white{Linha adicionada ao repertório das Brancas.} other{Linha adicionada ao repertório das Pretas.}}",
+  "openingsProblemEmpty": "A linha está vazia.",
+  "openingsProblemIllegal": "A linha contém um lance ilegal.",
+  "openingsProblemNoOwnMoves": "A linha não tem lances para a sua cor.",
+  "openingsProblemConflict": "Nesta posição o seu repertório já tem {move}.",
+  "openingsDrillTitle": "Revisão do repertório",
+  "openingsDrillDone": "Revisão concluída: {count, plural, one{{count} lance} other{{count} lances}}.",
+  "openingsDrillNew": "Lance novo: jogue o que a seta mostra.",
+  "openingsDrillPrompt": "Linha “{name}”: qual é o seu lance?",
+  "openingsDrillWrong": "Esse não é o lance do repertório: aqui está o certo.",
+  "openingsImportTitle": "Importar PGN",
+  "openingsImportHelper": "Cada variante vira uma linha.",
+  "openingsImport": "Importar",
+  "openingsImportNone": "Nenhuma linha válida no PGN.",
+  "openingsImportAdded": "Linhas adicionadas: {added}",
+  "openingsImportAddedSkipped": "Linhas adicionadas: {added}. Ignoradas: {skipped} ({reason})",
+  "openingsRepertoireEmpty": "Ainda não há linhas. Adicione-as em Explorar aberturas com o botão “Adicionar ao repertório” ou importe um PGN.",
+  "openingsPlayLine": "Jogar a linha",
+  "openingsDeleteLine": "Excluir a linha",
+  "openingsReviewNone": "Nenhum lance para revisar",
+  "openingsReviewButton": "{count, plural, one{Revisar {count} lance} other{Revisar {count} lances}}"
+}

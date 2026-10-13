@@ -1,0 +1,481 @@
+{
+  "badgesTitle": "Emblemas",
+  "badgesEntrySubtitle": "Tudo o que você aprendeu e jogou, em uma só coleção",
+  "badgesSummary": "{earned} de {total} conquistados",
+  "@badgesSummary": {
+    "description": "Totale dei badge ottenuti",
+    "placeholders": {
+      "earned": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "badgesFamilyLearn": "Aprender",
+  "badgesFamilyPuzzles": "Quebra-cabeças",
+  "badgesFamilyGames": "Partidas",
+  "badgesFamilyStory": "História",
+  "badgesFamilyHabit": "Constância",
+  "badgesTierBronze": "Bronze",
+  "badgesTierSilver": "Prata",
+  "badgesTierGold": "Ouro",
+  "badgesUnlocked": "Novo emblema: {name}",
+  "@badgesUnlocked": {
+    "description": "Avviso quando si ottiene un badge",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "badgesSeeAction": "Ver",
+  "badgesEarnedOn": "Conquistado em {date}",
+  "@badgesEarnedOn": {
+    "description": "Data in cui il badge è stato ottenuto",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "badgesNotYet": "Ainda não conquistado",
+  "badgesProgress": "{value} / {target}",
+  "@badgesProgress": {
+    "description": "Avanzamento verso un badge",
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "badgesSemanticsEarned": "{name}, conquistado",
+  "@badgesSemanticsEarned": {
+    "description": "Lettura del badge ottenuto",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "badgesSemanticsLocked": "{name}, ainda não conquistado",
+  "@badgesSemanticsLocked": {
+    "description": "Lettura del badge da ottenere",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "badgesSemanticsLockedProgress": "{name}, ainda não conquistado, {value} de {target}",
+  "@badgesSemanticsLockedProgress": {
+    "description": "Lettura del badge da ottenere con avanzamento",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "value": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "badgesClose": "Fechar",
+  "badgeChapterMovesName": "A caminho",
+  "badgeChapterMovesDesc": "Conclua as lições sobre como as peças se movem.",
+  "badgeChapterPiecesName": "Peças a salvo",
+  "badgeChapterPiecesDesc": "Conclua as lições sobre capturar e defender.",
+  "badgeChapterRulesName": "Regras de ouro",
+  "badgeChapterRulesDesc": "Conclua as lições sobre as regras do jogo.",
+  "badgeChapterMatesName": "Caçador de reis",
+  "badgeChapterMatesDesc": "Conclua as lições sobre os xeques-mates básicos.",
+  "badgeChapterTacticsName": "Mente tática",
+  "badgeChapterTacticsDesc": "Conclua as lições de tática.",
+  "badgeChapterEndgamesName": "Final de campeão",
+  "badgeChapterEndgamesDesc": "Conclua as lições de finais.",
+  "badgeChapterOpeningsName": "Aberturas a toda",
+  "badgeChapterOpeningsDesc": "Conclua as lições de aberturas.",
+  "badgeGuardians3Name": "Domador de guardiões",
+  "badgeGuardians3Desc": "Vença {count} guardiões da História.",
+  "@badgeGuardians3Desc": {
+    "description": "Come si ottiene il badge «Domatore di guardiani»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStoryPuzzlesAllName": "Mestre dos enigmas",
+  "badgeStoryPuzzlesAllDesc": "Resolva todos os {count} quebra-cabeças dos capítulos da História.",
+  "@badgeStoryPuzzlesAllDesc": {
+    "description": "Come si ottiene il badge «Enigmista»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeEndgamesAllName": "Rei dos finais",
+  "badgeEndgamesAllDesc": "Complete todas as posições do treino de finais.",
+  "badgeMastersAllName": "Olho de mestre",
+  "badgeMastersAllDesc": "Jogue até o fim todas as partidas de “Adivinhe o lance”.",
+  "badgeReviews25Name": "Replay na hora",
+  "badgeReviews25Desc": "Revise {count} partidas.",
+  "@badgeReviews25Desc": {
+    "description": "Come si ottiene il badge «Analista»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgePuzzles500Name": "Caçador de soluções",
+  "badgePuzzles500Desc": "Resolva {count} quebra-cabeças.",
+  "@badgePuzzles500Desc": {
+    "description": "Come si ottiene il badge «Collezionista di soluzioni»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeThemes10Name": "Viajante de temas",
+  "badgeThemes10Desc": "Resolva pelo menos um quebra-cabeça em {count} temas diferentes.",
+  "@badgeThemes10Desc": {
+    "description": "Come si ottiene il badge «Esploratore di temi»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgePin10Name": "Cravador",
+  "badgePin10Desc": "Resolva {count} quebra-cabeças de cravada.",
+  "@badgePin10Desc": {
+    "description": "Come si ottiene il badge «Inchiodatore»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeSkewer5Name": "No espeto",
+  "badgeSkewer5Desc": "Resolva {count} quebra-cabeças de espeto.",
+  "@badgeSkewer5Desc": {
+    "description": "Come si ottiene il badge «Spiedino»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeDiscovered5Name": "Virada de jogo",
+  "badgeDiscovered5Desc": "Resolva {count} quebra-cabeças de ataque descoberto.",
+  "@badgeDiscovered5Desc": {
+    "description": "Come si ottiene il badge «Colpo di scena»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeSacrifice10Name": "Coração de leão",
+  "badgeSacrifice10Desc": "Resolva {count} quebra-cabeças de sacrifício.",
+  "@badgeSacrifice10Desc": {
+    "description": "Come si ottiene il badge «Cuor di leone»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeSmothered1Name": "Sufocado!",
+  "badgeSmothered1Desc": "Resolva um quebra-cabeça de mate sufocado.",
+  "badgeRating1800Name": "Craque",
+  "badgeRating1800Desc": "Chegue a {count} de pontuação nos quebra-cabeças.",
+  "@badgeRating1800Desc": {
+    "description": "Come si ottiene il badge «Fuoriclasse»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStreakRun10Name": "Sequência de ouro",
+  "badgeStreakRun10Desc": "Faça {count} pontos no modo sequência.",
+  "@badgeStreakRun10Desc": {
+    "description": "Come si ottiene il badge «Serie d'oro»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeScholarsMateName": "Mate do pastor",
+  "badgeScholarsMateDesc": "Vença com um xeque-mate de dama em quatro lances ou menos.",
+  "badgeFoolsMateName": "Mate do louco",
+  "badgeFoolsMateDesc": "Caia no famoso xeque-mate em dois lances. Acontece com todo mundo: aqui vai uma medalha.",
+  "badgeAllPiecesMateName": "Peça por peça",
+  "badgeAllPiecesMateDesc": "Dê xeque-mate com uma dama, uma torre, um bispo, um cavalo e um peão.",
+  "badgeEnPassantName": "Au passage",
+  "badgeEnPassantDesc": "Faça uma captura en passant.",
+  "badgeUnderpromotionName": "Cavalinho promovido",
+  "badgeUnderpromotionDesc": "Promova um peão a qualquer peça que não seja a dama.",
+  "badgeStalemateName": "Rei encurralado",
+  "badgeStalemateDesc": "Termine uma partida empatada por afogamento.",
+  "badgeMarathonName": "Maratonista",
+  "badgeMarathonDesc": "Jogue uma partida com pelo menos {count} lances seus.",
+  "@badgeMarathonDesc": {
+    "description": "Come si ottiene il badge «Maratoneta»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeWins100Name": "Centurião",
+  "badgeWins100Desc": "Vença {count} partidas.",
+  "@badgeWins100Desc": {
+    "description": "Come si ottiene il badge «Centurione»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgePodiumName": "No pódio",
+  "badgePodiumDesc": "Termine um torneio entre os três primeiros (com pelo menos quatro jogadores).",
+  "badgeTournaments5Name": "Habitué dos torneios",
+  "badgeTournaments5Desc": "Termine {count} torneios.",
+  "@badgeTournaments5Desc": {
+    "description": "Come si ottiene il badge «Habitué dei tornei»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStoryPrologueName": "Primeiros passos",
+  "badgeStoryPrologueDesc": "Vença Tino no “Capítulo 0”.",
+  "badgeStoryVillageName": "Herói da vila",
+  "badgeStoryVillageDesc": "Vença Pino no capítulo “A vila das peças”.",
+  "badgeStoryGatesName": "Pelos portões",
+  "badgeStoryGatesDesc": "Vença Chiara no capítulo “Os portões da cidade”.",
+  "badgeStoryTowerName": "Senhor da torre",
+  "badgeStoryTowerDesc": "Vença Rocco no capítulo “A torre do rei”.",
+  "badgeStoryForestName": "Rei da floresta",
+  "badgeStoryForestDesc": "Vença Marta no capítulo “A floresta das armadilhas”.",
+  "badgeStoryCastleName": "Cerco vencido",
+  "badgeStoryCastleDesc": "Vença Duilio no capítulo “O castelo dos finais”.",
+  "badgeStoryCrownName": "A coroa é sua",
+  "badgeStoryCrownDesc": "Vença Elena no capítulo “A coroa”.",
+  "badgeStoryAllName": "Lenda",
+  "badgeStoryAllDesc": "Conclua todos os capítulos da História.",
+  "badgeStreak14Name": "Duas semanas seguidas",
+  "badgeStreak14Desc": "Cumpra sua meta por {count} dias seguidos.",
+  "@badgeStreak14Desc": {
+    "description": "Come si ottiene il badge «Due settimane»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStreak60Name": "Dois meses em chamas",
+  "badgeStreak60Desc": "Cumpra sua meta por {count} dias seguidos.",
+  "@badgeStreak60Desc": {
+    "description": "Come si ottiene il badge «Due mesi»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStreak100Name": "Cem e contando",
+  "badgeStreak100Desc": "Cumpra sua meta por {count} dias seguidos.",
+  "@badgeStreak100Desc": {
+    "description": "Come si ottiene il badge «Cento giorni»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStreak365Name": "Uma volta ao Sol",
+  "badgeStreak365Desc": "Cumpra sua meta por {count} dias seguidos.",
+  "@badgeStreak365Desc": {
+    "description": "Come si ottiene il badge «Un anno intero»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeDays30Name": "Criatura de hábitos",
+  "badgeDays30Desc": "Jogue ou treine em {count} dias diferentes, não necessariamente seguidos.",
+  "@badgeDays30Desc": {
+    "description": "Come si ottiene il badge «Abitudinario»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeDays100Name": "De casa",
+  "badgeDays100Desc": "Jogue ou treine em {count} dias diferentes, não necessariamente seguidos.",
+  "@badgeDays100Desc": {
+    "description": "Come si ottiene il badge «Di casa»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeComebackName": "Bem-vindo de volta!",
+  "badgeComebackDesc": "Volte depois de pelo menos {count} dias sem jogar.",
+  "@badgeComebackDesc": {
+    "description": "Come si ottiene il badge «Bentornato!»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgePerfect7Name": "Sete dias perfeitos",
+  "badgePerfect7Desc": "Complete os três desafios diários em {count} dias diferentes.",
+  "@badgePerfect7Desc": {
+    "description": "Come si ottiene il badge «Sette giornate perfette»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeMinigames25Name": "Ginasta da mente",
+  "badgeMinigames25Desc": "Termine {count} sessões de minijogos com pelo menos um ponto.",
+  "@badgeMinigames25Desc": {
+    "description": "Come si ottiene il badge «Allenatore instancabile»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgesUnlockedMany": "{count} novos emblemas",
+  "@badgesUnlockedMany": {
+    "description": "Avviso quando si ottengono molti badge insieme",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeChapterStrategyName": "Mente de estrategista",
+  "badgeChapterStrategyDesc": "Conclua as lições de estratégia.",
+  "badgeChapterCapablancaName": "Aluno do mestre",
+  "badgeChapterCapablancaDesc": "Conclua as lições da escola de Capablanca.",
+  "badgeStoryPlainName": "O plano certo",
+  "badgeStoryPlainDesc": "Vença Massimo no capítulo “A planície dos planos”.",
+  "badgeStoryAcademyName": "Primeiro da academia",
+  "badgeStoryAcademyDesc": "Vença Stella no capítulo “A academia do mestre”.",
+  "badgeStoryStartName": "Vamos lá!",
+  "badgeStoryStartDesc": "Conclua a primeira lição da História.",
+  "badgeStoryHalfName": "Na metade do caminho",
+  "badgeStoryHalfDesc": "Conclua metade das lições da História.",
+  "badgeStoryChapters3Name": "Três capítulos vencidos",
+  "badgeStoryChapters3Desc": "Vença os bots de {count} capítulos da História.",
+  "@badgeStoryChapters3Desc": {
+    "description": "Come si ottiene il badge «Tre capitoli alle spalle»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeLv3Name": "Aprendiz",
+  "badgeLv3Desc": "Chegue ao nível {count}.",
+  "@badgeLv3Desc": {
+    "description": "Come si ottiene il badge «Apprendista»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeLv8Name": "Enxadrista",
+  "badgeLv8Desc": "Chegue ao nível {count}.",
+  "@badgeLv8Desc": {
+    "description": "Come si ottiene il badge «Scacchista»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeLv15Name": "Veterano",
+  "badgeLv15Desc": "Chegue ao nível {count}.",
+  "@badgeLv15Desc": {
+    "description": "Come si ottiene il badge «Veterano»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeLv20Name": "Mestre de Rokko",
+  "badgeLv20Desc": "Chegue ao nível {count}.",
+  "@badgeLv20Desc": {
+    "description": "Come si ottiene il badge «Maestro della Rocca»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgesTabBadges": "Emblemas",
+  "badgesTabBooks": "Livros",
+  "booksHint": "Cada abertura que você joga em uma partida vira um livro, com a posição na capa. Quantos você consegue encontrar?",
+  "booksSemanticsUnlocked": "{name}, livro desbloqueado",
+  "@booksSemanticsUnlocked": {
+    "description": "Libro delle aperture sbloccato",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "booksSemanticsLocked": "{name}, livro ainda bloqueado",
+  "@booksSemanticsLocked": {
+    "description": "Libro delle aperture ancora bloccato",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "booksPlayed": "{count, plural, one{Você jogou uma vez: o livro é seu.} other{Você jogou {count} vezes: o livro é seu.}}",
+  "@booksPlayed": {
+    "description": "Partite giocate in quell'apertura",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "booksHowTo": "Jogue uma partida que siga esta abertura para desbloquear o livro.",
+  "badgesRecentSemantics": "Emblemas recentes: {names}",
+  "@badgesRecentSemantics": {
+    "description": "Badge recenti, per i lettori di schermo",
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  }
+}
