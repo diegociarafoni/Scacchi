@@ -83,7 +83,9 @@ Il puzzle successivo è quello non ancora visto con difficoltà più vicina al p
 
 ## Obiettivo del puzzle
 
-Sopra il messaggio di stato, per tutta la durata del puzzle, compare l'obiettivo («Obiettivo: matto in 2», «Obiettivo: ottieni il vantaggio»), così si capisce se la mossa giusta è un matto o un guadagno. `PuzzleGoal.of` lo ricava dai temi Lichess con questa precedenza: `mateIn1`–`mateIn4`, `mate`/`mateIn5` («dai matto»), `equality`, `crushing`, `advantage`; senza questi temi la riga non compare. Il testo è localizzato (`puzzleGoal` in `lib/l10n`, italiano e inglese), è un'intestazione per i lettori di schermo e nel profilo bambino «matto in N» diventa «dai matto», perché lì non ci sono cifre.
+In cima alla pagina c'è una sola scheda. All'inizio dice obiettivo e colore che muove («Matto in 2 · Muove il Bianco», «Ottieni il vantaggio · Muove il Nero»), così si capisce se la mossa giusta è un matto o un guadagno; dopo ogni mossa la stessa scheda mostra l'esito (giusta, sbagliata, risolto), così la scacchiera non si sposta. `PuzzleGoal.of` ricava l'obiettivo dai temi Lichess con questa precedenza: `mateIn1`–`mateIn4`, `mate`/`mateIn5` («dai matto»), `equality`, `crushing`, `advantage`; senza questi temi la scheda dice «Trova la mossa migliore». Il testo è localizzato (`puzzleGoal` e `puzzleGoalSide` in `lib/l10n`, italiano e inglese) e nel profilo bambino «matto in N» diventa «dai matto», perché lì non ci sono cifre.
+
+Sotto la scacchiera non c'è altro finché il puzzle è aperto: il punteggio compare solo nell'esito a puzzle finito, e difficoltà e temi (che sarebbero un indizio) solo a puzzle risolto. «Suggerimento» e «Soluzione» sono visibili finché il puzzle è aperto; «Riprova» dopo un errore; «Prossimo» solo quando c'è qualcosa da passare, cioè a puzzle risolto o dopo un errore.
 
 Il punteggio mostrato a fine puzzle (per esempio «Punteggio 1427 (-248)» dopo «Mosse trovate: 4 di 4») non è in contraddizione: «Mosse trovate» conta anche le mosse mostrate con «Soluzione», mentre il punteggio considera il puzzle fallito se è stata vista la soluzione o fatto un errore.
 
@@ -102,7 +104,7 @@ Durante il gioco l'avanzamento è sempre visibile:
 
 - nelle serie, i punti, il tempo rimasto (con una barra, che sale quando arrivano i secondi bonus della combo) e le vite come cuori con etichetta per i lettori di schermo ("Vite: 2 su 3"); l'icona **Come funziona** riapre le regole, ma il tempo continua a scorrere;
 - a fine serie, la schermata dice perché è finita (tempo scaduto, vite finite, primo errore o puzzle esauriti);
-- nei puzzle singoli, la barra delle **mosse trovate** ("Mosse trovate: 1 di 3"); nel profilo bambino resta solo la barra, senza cifre.
+- nei puzzle singoli con più di una mossa, la barra delle **mosse trovate** ("Mosse trovate: 1 di 3"); con una sola mossa non compare; nel profilo bambino resta solo la barra, senza cifre.
 
 I numeri citati nei testi (10 secondi, 3/5/7/10 secondi di bonus, intervalli del ripasso) hanno un test che li confronta con le regole del codice.
 

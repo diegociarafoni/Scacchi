@@ -44,8 +44,8 @@ String message(WidgetTester tester) =>
     tester.widget<Text>(find.byKey(const Key('puzzle-message'))).data!;
 
 /// Serve [first] e poi [second], come farebbe una sequenza di puzzle.
-class _TwoPuzzles implements PuzzleFeed {
-  _TwoPuzzles(this.trainer, this.first, this.second);
+class TwoPuzzles implements PuzzleFeed {
+  TwoPuzzles(this.trainer, this.first, this.second);
 
   final PuzzleTrainer trainer;
   final Puzzle first;
@@ -82,7 +82,7 @@ Future<PuzzleTrainer> pump(
       home: PuzzlePage(
         trainer: trainer,
         puzzle: twoPuzzles ? null : (puzzle ?? backRank),
-        feed: twoPuzzles ? _TwoPuzzles(trainer, backRank, castle) : null,
+        feed: twoPuzzles ? TwoPuzzles(trainer, backRank, castle) : null,
         onActivity: activities == null
             ? null
             : (a) async {
@@ -97,12 +97,6 @@ Future<PuzzleTrainer> pump(
   );
   return trainer;
 }
-
-String? goalText(WidgetTester tester) => find
-    .byKey(const Key('puzzle-goal'))
-    .evaluate()
-    .map((e) => (e.widget as Text).data)
-    .firstOrNull;
 
 Set<Shape> boardShapes(WidgetTester tester) =>
     tester.widget<Chessboard>(find.byType(Chessboard)).shapes;
@@ -152,41 +146,78 @@ void main() {
     expect(boardShapes(tester), isEmpty);
   });
 
-  testWidgets('l\'obiettivo è dichiarato sopra la scacchiera e resta', (
+  testWidgets('una sola scheda dice obiettivo e colore che muove', (
     tester,
   ) async {
     await pump(tester);
-    expect(goalText(tester), 'Obiettivo: matto in 1');
-    await tapMove(tester, 'a1a8');
-    expect(goalText(tester), 'Obiettivo: matto in 1');
+    expect(message(tester), 'Matto in 1 · Muove il Bianco');
+    expect(find.text('Trova la mossa migliore per il Bianco.'), findsNothing);
+    expect(find.textContaining('Obiettivo'), findsNothing);
   });
 
   testWidgets('puzzle di vantaggio: l\'obiettivo non è il matto', (
     tester,
   ) async {
     await pump(tester, puzzle: hangingQueen);
-    expect(goalText(tester), 'Obiettivo: ottieni un vantaggio decisivo');
+    expect(message(tester), 'Ottieni un vantaggio decisivo · Muove il Bianco');
   });
 
-  testWidgets('senza temi utili non compare nessun obiettivo', (tester) async {
+  testWidgets('senza temi utili la scheda chiede la mossa migliore', (
+    tester,
+  ) async {
     await pump(tester, puzzle: castle);
-    expect(goalText(tester), isNull);
+    expect(message(tester), startsWith('Trova la mossa migliore · Muove il'));
   });
 
-  testWidgets('l\'obiettivo è un\'intestazione per i lettori di schermo', (
+  testWidgets('la scheda è un\'intestazione viva per i lettori di schermo', (
     tester,
   ) async {
     final handle = tester.ensureSemantics();
     await pump(tester);
-    expect(find.bySemanticsLabel('Obiettivo: matto in 1'), findsOneWidget);
+    expect(
+      find.bySemanticsLabel('Matto in 1 · Muove il Bianco'),
+      findsOneWidget,
+    );
     handle.dispose();
   });
+
+  testWidgets('puzzle a una mossa: niente contatore, barra né punteggio', (
+    tester,
+  ) async {
+    await pump(tester);
+    expect(find.byKey(const Key('puzzle-progress')), findsNothing);
+    expect(find.byType(LinearProgressIndicator), findsNothing);
+    expect(find.textContaining('Il tuo punteggio'), findsNothing);
+  });
+
+  testWidgets('Prossimo compare solo a puzzle risolto o dopo un errore', (
+    tester,
+  ) async {
+    await pump(tester, twoPuzzles: true);
+    expect(find.text('Prossimo'), findsNothing);
+    expect(find.text('Suggerimento'), findsOneWidget);
+    expect(find.text('Soluzione'), findsOneWidget);
+    await tapMove(tester, 'a1a8');
+    expect(find.text('Prossimo'), findsOneWidget);
+    // A puzzle concluso non c'è più nulla da suggerire.
+    expect(find.text('Suggerimento'), findsNothing);
+    expect(find.text('Soluzione'), findsNothing);
+  });
+
+  testWidgets(
+    'l\'esito riporta il punteggio, non la riga sotto la scacchiera',
+    (tester) async {
+      await pump(tester);
+      await tapMove(tester, 'a1a8');
+      expect(message(tester), contains('Punteggio'));
+    },
+  );
 
   testWidgets('RF-81 una mossa sbagliata viene annullata, la giusta risolve', (
     tester,
   ) async {
     final trainer = await pump(tester);
-    expect(message(tester), 'Trova la mossa migliore per il Bianco.');
+    expect(message(tester), 'Matto in 1 · Muove il Bianco');
     await tapMove(tester, 'a1a7');
     expect(message(tester), startsWith('Non è la mossa giusta.'));
     await tapMove(tester, 'a1a8');
@@ -232,10 +263,6 @@ void main() {
     tester,
   ) async {
     final trainer = await pump(tester, twoPuzzles: true);
-    expect(
-      tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
-      isNull,
-    );
     await tapMove(tester, 'a1a7');
     await tester.tap(find.text('Prossimo'));
     await tester.pumpAndSettle();
@@ -300,7 +327,7 @@ void main() {
     testWidgets('le etichette dei pulsanti non vanno a capo ($width dp)', (
       tester,
     ) async {
-      await pump(tester, width: width);
+      await pump(tester, width: width, twoPuzzles: true);
       await tapMove(tester, 'a1a7');
       for (final label in [
         'Suggerimento',

@@ -455,10 +455,6 @@
   "@kidPuzzleReviewNone": {
     "description": "Ripasso senza puzzle in attesa"
   },
-  "kidPuzzleKeepGoing": "Forza, ce la puoi fare!",
-  "@kidPuzzleKeepGoing": {
-    "description": "Sotto la scacchiera del puzzle, al posto del punteggio"
-  },
   "kidAccuracy5": "Perfetto!",
   "@kidAccuracy5": {
     "description": "Giudizio della precisione con cinque stelle"

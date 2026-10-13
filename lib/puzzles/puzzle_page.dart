@@ -267,10 +267,21 @@ class _PuzzlePageState extends State<PuzzlePage> {
     if (next != null) setState(() => _start(next));
   }
 
+  String _sideName(AppLocalizations l) => l.puzzleSide(
+    _session.puzzle.playerSide == Side.white ? 'white' : 'black',
+  );
+
+  /// Obiettivo e colore che muove in una riga. Il profilo bambino non ha cifre:
+  /// «matto in N» diventa «dai matto».
+  String _goalLine(AppLocalizations l) {
+    final goal = PuzzleGoal.of(_session.puzzle);
+    final shown = goal != null && AppSettings.of(context).kidMode && goal.isMate
+        ? PuzzleGoal.mate
+        : goal;
+    return l.puzzleGoalSide(l.puzzleGoal(shown?.key ?? 'other'), _sideName(l));
+  }
+
   String _message(AppLocalizations l) {
-    final side = l.puzzleSide(
-      _session.puzzle.playerSide == Side.white ? 'white' : 'black',
-    );
     final rating = widget.trainer.rating.rating.round();
     final delta = _delta;
     // Profilo bambino (RP-06): l'esito non cita il punteggio.
@@ -282,9 +293,9 @@ class _PuzzlePageState extends State<PuzzlePage> {
         ? ''
         : ' ${l.puzzleOutcomeRating(rating, '${delta >= 0 ? '+' : ''}${delta.round()}')}';
     return switch (_feedback) {
-      _Feedback.find => l.puzzleFind(side),
+      _Feedback.find => _goalLine(l),
       _Feedback.correct => l.puzzleCorrect,
-      _Feedback.restarted => l.puzzleRestarted(side),
+      _Feedback.restarted => l.puzzleRestarted(_sideName(l)),
       _Feedback.wrong => l.puzzleWrong,
       _Feedback.solved => '${l.puzzleSolved}$outcome',
       _Feedback.revealed =>
@@ -313,11 +324,6 @@ class _PuzzlePageState extends State<PuzzlePage> {
         .take(3)
         .join(', ');
     final kid = AppSettings.of(context).kidMode;
-    // Il profilo bambino non ha cifre: «matto in N» diventa «dai matto».
-    final goal = PuzzleGoal.of(puzzle);
-    final goalText = goal == null
-        ? null
-        : l.puzzleGoal((kid && goal.isMate ? PuzzleGoal.mate : goal).key);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title ?? l.puzzleDefaultTitle),
@@ -356,17 +362,18 @@ class _PuzzlePageState extends State<PuzzlePage> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          if (goalText != null)
-                            _GoalCard(text: goalText, side: puzzle.playerSide),
                           _FeedbackBanner(
                             feedback: _feedback,
                             message: _message(l),
+                            side: puzzle.playerSide,
                           ),
-                          _Progress(
-                            done: _session.playerMovesDone,
-                            total: _session.playerMoves,
-                            showNumbers: !kid,
-                          ),
+                          // Con una sola mossa «0 di 1» non dice nulla.
+                          if (_session.playerMoves > 1)
+                            _Progress(
+                              done: _session.playerMovesDone,
+                              total: _session.playerMoves,
+                              showNumbers: !kid,
+                            ),
                           KeyedSubtree(
                             key: const Key('puzzle-board'),
                             child: TrainingBoard(
@@ -387,23 +394,21 @@ class _PuzzlePageState extends State<PuzzlePage> {
                               onMove: _onMove,
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Text(
-                              last
-                                  ? l.puzzleNoMore
-                                  : kid
-                                  // Restano i temi, senza difficoltà né punteggio.
-                                  ? (done ? themes : l.kidPuzzleKeepGoing)
-                                  : done
-                                  ? '${l.puzzleDifficulty(puzzle.rating)}'
-                                        '${themes.isEmpty ? '' : ' · $themes'}'
-                                  : l.puzzleYourRating(
-                                      widget.trainer.rating.rating.round(),
-                                    ),
-                              style: Theme.of(context).textTheme.bodyMedium,
+                          // Difficoltà e temi si rivelano a puzzle finito: prima
+                          // sarebbero un indizio.
+                          if (last || done)
+                            Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Text(
+                                last
+                                    ? l.puzzleNoMore
+                                    : kid
+                                    ? themes
+                                    : '${l.puzzleDifficulty(puzzle.rating)}'
+                                          '${themes.isEmpty ? '' : ' · $themes'}',
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
                             ),
-                          ),
                         ],
                       ),
                     ),
@@ -414,6 +419,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
             _PuzzleActions(
               onHint: done ? null : _showHint,
               onSolution: done ? null : _showSolution,
+              solving: !done,
               onRetry: _canRetry ? _retry : null,
               onNext: canSkip ? _next : null,
               kid: kid,
@@ -472,6 +478,7 @@ class _PuzzleActions extends StatelessWidget {
   const _PuzzleActions({
     required this.onHint,
     required this.onSolution,
+    required this.solving,
     required this.onRetry,
     required this.onNext,
     required this.kid,
@@ -479,6 +486,9 @@ class _PuzzleActions extends StatelessWidget {
 
   final VoidCallback? onHint;
   final VoidCallback? onSolution;
+
+  /// Suggerimento e soluzione servono solo finché il puzzle è aperto.
+  final bool solving;
 
   /// Nullo finché non c'è nulla da rifare: il pulsante compare solo dopo un errore.
   final VoidCallback? onRetry;
@@ -501,18 +511,20 @@ class _PuzzleActions extends StatelessWidget {
         spacing: 8,
         runSpacing: 4,
         children: [
-          TextButton.icon(
-            onPressed: onHint,
-            style: TextButton.styleFrom(minimumSize: size),
-            icon: const Icon(Icons.lightbulb_outline),
-            label: Text(l.puzzleHint, softWrap: false),
-          ),
-          TextButton.icon(
-            onPressed: onSolution,
-            style: TextButton.styleFrom(minimumSize: size),
-            icon: const Icon(Icons.visibility_outlined),
-            label: Text(l.puzzleSolution, softWrap: false),
-          ),
+          if (solving) ...[
+            OutlinedButton.icon(
+              onPressed: onHint,
+              style: OutlinedButton.styleFrom(minimumSize: size),
+              icon: const Icon(Icons.lightbulb_outline),
+              label: Text(l.puzzleHint, softWrap: false),
+            ),
+            OutlinedButton.icon(
+              onPressed: onSolution,
+              style: OutlinedButton.styleFrom(minimumSize: size),
+              icon: const Icon(Icons.visibility_outlined),
+              label: Text(l.puzzleSolution, softWrap: false),
+            ),
+          ],
           if (onRetry != null)
             OutlinedButton.icon(
               onPressed: onRetry,
@@ -520,84 +532,31 @@ class _PuzzleActions extends StatelessWidget {
               icon: const Icon(Icons.replay),
               label: Text(l.puzzleRetry, softWrap: false),
             ),
-          FilledButton.icon(
-            onPressed: onNext,
-            style: FilledButton.styleFrom(minimumSize: size),
-            icon: const Icon(Icons.arrow_forward),
-            label: Text(l.puzzleNext, softWrap: false),
-          ),
+          if (onNext != null)
+            FilledButton.icon(
+              onPressed: onNext,
+              style: FilledButton.styleFrom(minimumSize: size),
+              icon: const Icon(Icons.arrow_forward),
+              label: Text(l.puzzleNext, softWrap: false),
+            ),
         ],
       ),
     );
   }
 }
 
-/// Obiettivo del puzzle in una scheda sopra la scacchiera, con il colore che
-/// muove: è la prima cosa da leggere.
-class _GoalCard extends StatelessWidget {
-  const _GoalCard({required this.text, required this.side});
-
-  final String text;
-  final Side side;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final tokens = RokkoTokens.of(context);
-    final white = side == Side.white;
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 0),
-      child: DecoratedBox(
-        key: const Key('puzzle-goal-card'),
-        decoration: BoxDecoration(
-          color: scheme.secondaryContainer,
-          borderRadius: BorderRadius.circular(tokens.radiusSmall),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Il colore che muove è già nel testo dell'esito: qui è solo grafica.
-              ExcludeSemantics(
-                child: Container(
-                  width: 20,
-                  height: 20,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: white ? Colors.white : Colors.black,
-                    border: Border.all(color: scheme.onSecondaryContainer),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Flexible(
-                child: Semantics(
-                  header: true,
-                  child: Text(
-                    text,
-                    key: const Key('puzzle-goal'),
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: scheme.onSecondaryContainer,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Esito dell'ultima mossa: colore, icona e testo, mai il solo colore.
+/// Scheda unica sopra la scacchiera: all'inizio obiettivo e colore che muove,
+/// poi l'esito dell'ultima mossa; colore, icona e testo, mai il solo colore.
 class _FeedbackBanner extends StatelessWidget {
-  const _FeedbackBanner({required this.feedback, required this.message});
+  const _FeedbackBanner({
+    required this.feedback,
+    required this.message,
+    required this.side,
+  });
 
   final _Feedback feedback;
   final String message;
+  final Side side;
 
   @override
   Widget build(BuildContext context) {
@@ -629,9 +588,9 @@ class _FeedbackBanner extends StatelessWidget {
         const Key('puzzle-revealed-icon'),
       ),
       _ => (
-        scheme.surfaceContainerHighest,
-        scheme.onSurface,
-        Icons.touch_app_outlined,
+        scheme.secondaryContainer,
+        scheme.onSecondaryContainer,
+        null,
         const Key('puzzle-find-icon'),
       ),
     };
@@ -654,7 +613,21 @@ class _FeedbackBanner extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 ExcludeSemantics(
-                  child: Icon(icon, key: iconKey, color: iconColor),
+                  child: icon == null
+                      // Il colore che muove è già nel testo: qui è solo grafica.
+                      ? Container(
+                          key: iconKey,
+                          width: 20,
+                          height: 20,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: side == Side.white
+                                ? Colors.white
+                                : Colors.black,
+                            border: Border.all(color: foreground),
+                          ),
+                        )
+                      : Icon(icon, key: iconKey, color: iconColor),
                 ),
                 const SizedBox(width: 8),
                 Flexible(

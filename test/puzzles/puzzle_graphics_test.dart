@@ -12,7 +12,7 @@ import 'package:scacchi/storage/key_value_store.dart';
 import 'package:scacchi/theme/rokko_theme.dart';
 
 import 'fixtures.dart';
-import 'puzzle_page_test.dart' show tapMove;
+import 'puzzle_page_test.dart' show TwoPuzzles, tapMove;
 
 Future<PuzzleTrainer> _trainer() =>
     PuzzleTrainer.load(PuzzleLibrary([backRank, castle]), MemoryStore());
@@ -49,9 +49,9 @@ void main() {
       await tester.pumpWidget(
         _themed(PuzzlePage(trainer: trainer, puzzle: backRank)),
       );
-      final goal = find.byKey(const Key('puzzle-goal'));
+      final goal = find.byKey(const Key('puzzle-message'));
       expect(goal, findsOneWidget);
-      expect(find.byKey(const Key('puzzle-goal-card')), findsOneWidget);
+      expect(find.byKey(const Key('puzzle-feedback')), findsOneWidget);
       expect(
         tester.getTopLeft(goal).dy,
         lessThan(tester.getTopLeft(find.byKey(const Key('puzzle-board'))).dy),
@@ -69,10 +69,12 @@ void main() {
       Color banner() =>
           (tester
                       .widget<DecoratedBox>(
-                        find.descendant(
-                          of: find.byKey(const Key('puzzle-feedback')),
-                          matching: find.byType(DecoratedBox),
-                        ),
+                        find
+                            .descendant(
+                              of: find.byKey(const Key('puzzle-feedback')),
+                              matching: find.byType(DecoratedBox),
+                            )
+                            .first,
                       )
                       .decoration
                   as BoxDecoration)
@@ -104,7 +106,7 @@ void main() {
       expect(
         tester.getSemantics(find.byKey(const Key('puzzle-message'))),
         matchesSemantics(
-          label: 'Trova la mossa migliore per il Bianco.',
+          label: 'Matto in 1 · Muove il Bianco',
           isLiveRegion: true,
         ),
       );
@@ -121,11 +123,15 @@ void main() {
         final trainer = await _trainer();
         await tester.pumpWidget(
           _themed(
-            PuzzlePage(trainer: trainer, puzzle: backRank),
+            PuzzlePage(
+              trainer: trainer,
+              feed: TwoPuzzles(trainer, backRank, castle),
+            ),
             kid: kid,
           ),
         );
         final min = kid ? 56.0 : 48.0;
+        await tapMove(tester, 'a1a7');
         for (final label in ['Suggerimento', 'Soluzione', 'Prossimo']) {
           final size = tester.getSize(
             find.ancestor(
@@ -180,10 +186,14 @@ void main() {
       final trainer = await _trainer();
       await tester.pumpWidget(
         _themed(
-          PuzzlePage(trainer: trainer, puzzle: backRank),
+          PuzzlePage(
+            trainer: trainer,
+            feed: TwoPuzzles(trainer, backRank, castle),
+          ),
           locale: en,
         ),
       );
+      await tapMove(tester, 'a1a7');
       for (final it in ['Suggerimento', 'Soluzione', 'Prossimo', 'Trova']) {
         expect(find.textContaining(it), findsNothing, reason: it);
       }
