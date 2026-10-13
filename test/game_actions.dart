@@ -25,6 +25,15 @@ Future<void> openPositionEditor(WidgetTester tester) async {
 Future<void> openBoard(WidgetTester tester) async {
   await tester.tap(find.byKey(const Key('home-play')));
   await tester.pumpAndSettle();
-  await tester.tap(find.text('Senza tempo'));
+  final untimed = find.text('Senza tempo');
+  // In orizzontale la scelta è più alta dello schermo e scorre.
+  if (untimed.evaluate().isEmpty) {
+    await tester.dragUntilVisible(
+      untimed,
+      find.byType(Scrollable).last,
+      const Offset(0, -100),
+    );
+  }
+  await tester.tap(untimed);
   await tester.pumpAndSettle();
 }
