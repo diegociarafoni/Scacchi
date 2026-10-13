@@ -152,5 +152,59 @@
         "type": "String"
       }
     }
+  },
+  "minigamesPieceEmpty": "Casa vuota",
+  "@minigamesPieceEmpty": {
+    "description": "Nome della casa senza pezzi, tra le risposte del quiz alla cieca"
+  },
+  "minigamesPieceWhitePawn": "Pedone bianco",
+  "minigamesPieceBlackPawn": "Pedone nero",
+  "minigamesPieceWhiteKnight": "Cavallo bianco",
+  "minigamesPieceBlackKnight": "Cavallo nero",
+  "minigamesPieceWhiteBishop": "Alfiere bianco",
+  "minigamesPieceBlackBishop": "Alfiere nero",
+  "minigamesPieceWhiteRook": "Torre bianca",
+  "minigamesPieceBlackRook": "Torre nera",
+  "minigamesPieceWhiteQueen": "Donna bianca",
+  "minigamesPieceBlackQueen": "Donna nera",
+  "minigamesPieceWhiteKing": "Re bianco",
+  "minigamesPieceBlackKing": "Re nero",
+  "minigamesBlindPrompt": "Cosa c'è in {square}?",
+  "@minigamesBlindPrompt": {
+    "description": "Domanda del quiz alla cieca",
+    "placeholders": {
+      "square": {
+        "type": "String"
+      }
+    }
+  },
+  "minigamesMaterialPrompt": "Chi è in vantaggio di materiale, e di quanto?",
+  "minigamesMaterialEven": "Pari",
+  "minigamesMaterialWhiteAhead": "Bianco +{points}",
+  "@minigamesMaterialWhiteAhead": {
+    "description": "Vantaggio di materiale del Bianco, in punti",
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "minigamesMaterialBlackAhead": "Nero +{points}",
+  "@minigamesMaterialBlackAhead": {
+    "description": "Vantaggio di materiale del Nero, in punti",
+    "placeholders": {
+      "points": {
+        "type": "int"
+      }
+    }
+  },
+  "minigamesCaptureAllInstructions": "{role, select, rook{Cattura tutti i pedoni con la torre.} bishop{Cattura tutti i pedoni con l'alfiere.} knight{Cattura tutti i pedoni con il cavallo.} queen{Cattura tutti i pedoni con la donna.} other{Cattura tutti i pedoni con il re.}}",
+  "@minigamesCaptureAllInstructions": {
+    "description": "Istruzione di una scacchiera di Cattura tutto; role è il pezzo da muovere",
+    "placeholders": {
+      "role": {
+        "type": "String"
+      }
+    }
   }
 }

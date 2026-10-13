@@ -3,17 +3,18 @@ import 'dart:math';
 import 'package:dartchess/dartchess.dart';
 
 import '../game/material.dart';
+import '../l10n/app_localizations.dart';
 import 'blind.dart';
 
 /// Materiale del bianco meno quello del nero.
 int materialBalance(Board board) =>
     materialScore(board, Side.white) - materialScore(board, Side.black);
 
-String balanceLabel(int balance) => balance == 0
-    ? 'Pari'
+String balanceLabel(AppLocalizations l10n, int balance) => balance == 0
+    ? l10n.minigamesMaterialEven
     : balance > 0
-    ? 'Bianco +$balance'
-    : 'Nero +${-balance}';
+    ? l10n.minigamesMaterialWhiteAhead(balance)
+    : l10n.minigamesMaterialBlackAhead(-balance);
 
 /// Domanda di conta del materiale su una posizione nata da una partita
 /// casuale, con catture favorite per creare squilibri.

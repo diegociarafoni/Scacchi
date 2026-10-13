@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:dartchess/dartchess.dart';
 
+import '../l10n/app_localizations.dart';
 import '../path/exercise.dart' show starsForMoves;
 
 /// Pezzi dei turni, dal più semplice da guidare.
@@ -39,7 +40,8 @@ class CaptureAllBoard {
   final Square start;
   final List<Square> targets;
 
-  String get instructions => 'Cattura tutti i pedoni con ${_roleName(role)}.';
+  String instructions(AppLocalizations l10n) =>
+      l10n.minigamesCaptureAllInstructions(role.name);
 
   /// Minimo di mosse per catturare tutti i pedoni.
   int get optimalMoves => solution.length;
@@ -89,14 +91,6 @@ Set<Square> captureDests(Role role, Square from, SquareSet pawns) =>
     }.squares.toSet();
 
 bool _isLight(Square s) => (s.file + s.rank) % 2 == 1;
-
-String _roleName(Role role) => switch (role) {
-  Role.rook => 'la torre',
-  Role.bishop => 'l\'alfiere',
-  Role.knight => 'il cavallo',
-  Role.queen => 'la donna',
-  Role.king || Role.pawn => 'il re',
-};
 
 /// Svolgimento di una scacchiera.
 class CaptureAllRun {

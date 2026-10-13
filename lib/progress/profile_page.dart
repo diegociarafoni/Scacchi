@@ -780,7 +780,10 @@ class _Records extends StatelessWidget {
       for (final e in r.puzzleRuns.entries)
         ('${RecordKind.puzzleRun.label} (${e.key})', '${e.value}'),
       for (final e in r.minigames.entries)
-        (Minigame.byId(e.key)?.title ?? e.key, '${e.value}'),
+        (
+          Minigame.byId(e.key)?.title(AppLocalizations.of(context)) ?? e.key,
+          '${e.value}',
+        ),
     ];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
