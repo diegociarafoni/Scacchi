@@ -158,6 +158,9 @@ class _StoryPageState extends State<StoryPage> {
       if (next == StoryStepKind.boss) {
         expression = AvatarExpression.challenge;
         line = l10n.guardianLine(chapter, GuardianMoment.boss);
+      } else if (kind == StoryStepKind.lessons) {
+        expression = AvatarExpression.happy;
+        line = l10n.guardianLine(chapter, GuardianMoment.lessonDone);
       }
     }
     final go = await showModalBottomSheet<bool>(
