@@ -32,6 +32,10 @@ I testi sono in un file per funzione (`kids.arb`, `story.arb`, `stats.arb`, `exc
 
 Dopo un clone, e dopo ogni modifica ai `.arb` o un cambio di ramo, eseguire `dart tool/l10n.dart`. Con una copia nuova `flutter pub get` fallisce finché i file unici non esistono: il comando va dato prima (in CI `dart tool/l10n.dart --solo-unione`, che non lancia `gen-l10n`). `tool/verifica.sh` e l'hook di pre-commit lo eseguono già.
 
+## Testi fissi nel codice
+
+`dart tool/stringhe_fisse.dart` cerca in `lib/` le frasi italiane scritte tra apici invece che nei `.arb` (almeno due parole, con parole italiane comuni o lettere accentate; commenti, `import` e identificativi sono ignorati). I conteggi per cartella stanno in `tool/stringhe_fisse_base.json` e **non possono salire**: la CI e `tool/verifica.sh` falliscono se una cartella ha più testi fissi della base, con l'indicazione di dove spostarli. Quando una cartella viene migrata la base si abbassa con `dart tool/stringhe_fisse.dart --aggiorna`. `--elenco` stampa ogni testo con file e riga. Un nome proprio o un dato dell'archivio che il controllo scambia per testo si esclude con il commento `// l10n-ok` sulla riga. Il controllo è euristico: trova i testi italiani, non quelli già in un'altra lingua.
+
 ## Stato delle lingue e ripiego
 
 `tool/lingue.json` dichiara lo stato di ogni lingua: `base` (italiano), `pronta`, `beta` o `in lavorazione`. Le lingue base e pronte devono avere esattamente le stesse chiavi dell'italiano. Le lingue `beta` e `in lavorazione` possono averne meno: `tool/l10n.dart` riempie quelle che mancano con il testo inglese, così l'app compila e le PR sulle schermate non devono aspettare le traduzioni. Una chiave che esiste in una lingua incompleta ma non nelle altre resta un errore.

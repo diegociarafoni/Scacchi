@@ -36,6 +36,7 @@ fi
 
 dart tool/check_docs.dart
 dart tool/l10n.dart
+dart tool/stringhe_fisse.dart
 dart tool/l10n_stato.dart
 dart format --output=none --set-exit-if-changed lib test integration_test tool
 flutter analyze --fatal-infos --fatal-warnings
