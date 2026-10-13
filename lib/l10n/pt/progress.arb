@@ -121,7 +121,7 @@
       }
     }
   },
-  "progressGoalGames": "{count, plural, one{1 partida} other{{count} partidas}}",
+  "progressGoalGames": "{count, plural, =1{1 partida} other{{count} partidas}}",
   "@progressGoalGames": {
     "placeholders": {
       "count": {
@@ -129,7 +129,7 @@
       }
     }
   },
-  "progressGoalPuzzles": "{count, plural, one{1 quebra-cabeça} other{{count} quebra-cabeças}}",
+  "progressGoalPuzzles": "{count, plural, =1{1 quebra-cabeça} other{{count} quebra-cabeças}}",
   "@progressGoalPuzzles": {
     "placeholders": {
       "count": {
@@ -137,7 +137,7 @@
       }
     }
   },
-  "progressGoalMinutes": "{count, plural, one{1 minuto} other{{count} minutos}}",
+  "progressGoalMinutes": "{count, plural, =1{1 minuto} other{{count} minutos}}",
   "@progressGoalMinutes": {
     "placeholders": {
       "count": {
@@ -145,7 +145,7 @@
       }
     }
   },
-  "progressDaysCount": "{count, plural, one{1 dia} other{{count} dias}}",
+  "progressDaysCount": "{count, plural, =1{1 dia} other{{count} dias}}",
   "@progressDaysCount": {
     "placeholders": {
       "count": {
@@ -177,7 +177,7 @@
       }
     }
   },
-  "progressStreakLeftGames": "{count, plural, one{falta 1 partida} other{faltam {count} partidas}}",
+  "progressStreakLeftGames": "{count, plural, =1{falta 1 partida} other{faltam {count} partidas}}",
   "@progressStreakLeftGames": {
     "placeholders": {
       "count": {
@@ -185,7 +185,7 @@
       }
     }
   },
-  "progressStreakLeftPuzzles": "{count, plural, one{falta 1 quebra-cabeça} other{faltam {count} quebra-cabeças}}",
+  "progressStreakLeftPuzzles": "{count, plural, =1{falta 1 quebra-cabeça} other{faltam {count} quebra-cabeças}}",
   "@progressStreakLeftPuzzles": {
     "placeholders": {
       "count": {
@@ -193,7 +193,7 @@
       }
     }
   },
-  "progressStreakLeftMinutes": "{count, plural, one{falta 1 minuto} other{faltam {count} minutos}}",
+  "progressStreakLeftMinutes": "{count, plural, =1{falta 1 minuto} other{faltam {count} minutos}}",
   "@progressStreakLeftMinutes": {
     "placeholders": {
       "count": {
@@ -214,7 +214,7 @@
   "progressStreakSummaryDone": "Hoje: feito",
   "progressStreakSummaryRest": "Hoje: dia de descanso",
   "progressStreakSummaryTodo": "Hoje: a fazer",
-  "progressStreakNext": "Próxima marca: {days} seguidos ({missing, plural, one{falta 1} other{faltam {missing}}}).",
+  "progressStreakNext": "Próxima marca: {days} seguidos ({missing, plural, =1{falta 1} other{faltam {missing}}}).",
   "@progressStreakNext": {
     "placeholders": {
       "days": {
@@ -242,7 +242,7 @@
       }
     }
   },
-  "progressChallengePlayGames": "{count, plural, one{Jogue uma partida} other{Jogue {count} partidas}}",
+  "progressChallengePlayGames": "{count, plural, =1{Jogue uma partida} other{Jogue {count} partidas}}",
   "@progressChallengePlayGames": {
     "placeholders": {
       "count": {
@@ -250,7 +250,7 @@
       }
     }
   },
-  "progressChallengeWinGames": "{count, plural, one{Vença uma partida} other{Vença {count} partidas}}",
+  "progressChallengeWinGames": "{count, plural, =1{Vença uma partida} other{Vença {count} partidas}}",
   "@progressChallengeWinGames": {
     "placeholders": {
       "count": {
@@ -268,7 +268,7 @@
       }
     }
   },
-  "progressChallengeSolvePuzzles": "{count, plural, one{Resolva um quebra-cabeça} other{Resolva {count} quebra-cabeças}}",
+  "progressChallengeSolvePuzzles": "{count, plural, =1{Resolva um quebra-cabeça} other{Resolva {count} quebra-cabeças}}",
   "@progressChallengeSolvePuzzles": {
     "placeholders": {
       "count": {
@@ -276,7 +276,7 @@
       }
     }
   },
-  "progressChallengeForkPuzzles": "{count, plural, one{Resolva 1 quebra-cabeça de garfo} other{Resolva {count} quebra-cabeças de garfo}}",
+  "progressChallengeForkPuzzles": "{count, plural, =1{Resolva 1 quebra-cabeça de garfo} other{Resolva {count} quebra-cabeças de garfo}}",
   "@progressChallengeForkPuzzles": {
     "placeholders": {
       "count": {
@@ -284,7 +284,7 @@
       }
     }
   },
-  "progressChallengeMatePuzzles": "{count, plural, one{Resolva 1 quebra-cabeça de xeque-mate} other{Resolva {count} quebra-cabeças de xeque-mate}}",
+  "progressChallengeMatePuzzles": "{count, plural, =1{Resolva 1 quebra-cabeça de xeque-mate} other{Resolva {count} quebra-cabeças de xeque-mate}}",
   "@progressChallengeMatePuzzles": {
     "placeholders": {
       "count": {
@@ -292,7 +292,7 @@
       }
     }
   },
-  "progressChallengeReviewGame": "{count, plural, one{Revise uma partida} other{Revise {count} partidas}}",
+  "progressChallengeReviewGame": "{count, plural, =1{Revise uma partida} other{Revise {count} partidas}}",
   "@progressChallengeReviewGame": {
     "placeholders": {
       "count": {
@@ -300,7 +300,7 @@
       }
     }
   },
-  "progressChallengeCompleteLesson": "{count, plural, one{Conclua uma lição} other{Conclua {count} lições}}",
+  "progressChallengeCompleteLesson": "{count, plural, =1{Conclua uma lição} other{Conclua {count} lições}}",
   "@progressChallengeCompleteLesson": {
     "placeholders": {
       "count": {
@@ -332,7 +332,7 @@
       }
     }
   },
-  "progressRecordMoves": "{count, plural, one{{count} lance} other{{count} lances}}",
+  "progressRecordMoves": "{count, plural, =1{{count} lance} other{{count} lances}}",
   "@progressRecordMoves": {
     "placeholders": {
       "count": {
@@ -467,7 +467,7 @@
     }
   },
   "progressStreakIcon": "Sequência",
-  "progressStreakDays": "{count, plural, one{1 dia seguido} other{{count} dias seguidos}}",
+  "progressStreakDays": "{count, plural, =1{1 dia seguido} other{{count} dias seguidos}}",
   "@progressStreakDays": {
     "placeholders": {
       "count": {
@@ -483,7 +483,7 @@
       }
     }
   },
-  "progressFreezes": "{count, plural, one{1 congelamento de sequência} other{{count} congelamentos de sequência}}",
+  "progressFreezes": "{count, plural, =1{1 congelamento de sequência} other{{count} congelamentos de sequência}}",
   "@progressFreezes": {
     "placeholders": {
       "count": {

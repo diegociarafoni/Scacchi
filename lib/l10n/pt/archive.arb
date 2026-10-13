@@ -1,7 +1,7 @@
 {
   "archiveShareSubject": "Partidas em PGN",
   "archiveTitle": "Partidas",
-  "archiveImportResult": "{count, plural, one{1 partida importada} other{{count} partidas importadas}}{skipped, plural, =0{} other{, {skipped} inválidas}}",
+  "archiveImportResult": "{count, plural, =1{1 partida importada} other{{count} partidas importadas}}{skipped, plural, =0{} other{, {skipped} inválidas}}",
   "@archiveImportResult": {
     "placeholders": {
       "count": {

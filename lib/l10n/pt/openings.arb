@@ -10,7 +10,7 @@
   "personalSideBlack": "Pretas",
   "personalOpponent": "Oponente",
   "personalAllOpponents": "Todos os oponentes",
-  "personalGames": "{count, plural, one{{count} partida} other{{count} partidas}}",
+  "personalGames": "{count, plural, =1{{count} partida} other{{count} partidas}}",
   "@personalGames": {
     "placeholders": {
       "count": {
@@ -18,7 +18,7 @@
       }
     }
   },
-  "personalGamesTotal": "{count, plural, one{{count} partida contada} other{{count} partidas contadas}}",
+  "personalGamesTotal": "{count, plural, =1{{count} partida contada} other{{count} partidas contadas}}",
   "@personalGamesTotal": {
     "placeholders": {
       "count": {
@@ -70,13 +70,13 @@
   "explorerRestart": "Recomeçar",
   "explorerBack": "Voltar",
   "explorerForward": "Avançar",
-  "explorerMoveSemantics": "{move}: {games, plural, one{{games} partida} other{{games} partidas}}, Brancas {white}%, empates {draws}%, Pretas {black}%",
+  "explorerMoveSemantics": "{move}: {games, plural, =1{{games} partida} other{{games} partidas}}, Brancas {white}%, empates {draws}%, Pretas {black}%",
   "openingsHubTitle": "Aberturas",
   "openingsHubExplorerSubtitle": "Partidas jogadas e resultados de cada lance, com os nomes das aberturas",
   "openingsRepertoireTitle": "{side, select, white{Repertório das Brancas} other{Repertório das Pretas}}",
   "openingsRepertoireUnavailable": "Repertório indisponível",
   "openingsRepertoireLoading": "Carregando…",
-  "openingsRepertoireSummary": "{lines, plural, one{{lines} linha} other{{lines} linhas}} · {due, plural, one{{due} lance para revisar} other{{due} lances para revisar}}",
+  "openingsRepertoireSummary": "{lines, plural, =1{{lines} linha} other{{lines} linhas}} · {due, plural, =1{{due} lance para revisar} other{{due} lances para revisar}}",
   "openingsGameTitle": "Jogar contra o computador",
   "openingsLevel": "Nível",
   "openingsPlay": "Jogar",
@@ -96,7 +96,7 @@
   "openingsProblemNoOwnMoves": "A linha não tem lances para a sua cor.",
   "openingsProblemConflict": "Nesta posição o seu repertório já tem {move}.",
   "openingsDrillTitle": "Revisão do repertório",
-  "openingsDrillDone": "Revisão concluída: {count, plural, one{{count} lance} other{{count} lances}}.",
+  "openingsDrillDone": "Revisão concluída: {count, plural, =1{{count} lance} other{{count} lances}}.",
   "openingsDrillNew": "Lance novo: jogue o que a seta mostra.",
   "openingsDrillPrompt": "Linha “{name}”: qual é o seu lance?",
   "openingsDrillWrong": "Esse não é o lance do repertório: aqui está o certo.",
@@ -110,5 +110,5 @@
   "openingsPlayLine": "Jogar a linha",
   "openingsDeleteLine": "Excluir a linha",
   "openingsReviewNone": "Nenhum lance para revisar",
-  "openingsReviewButton": "{count, plural, one{Revisar {count} lance} other{Revisar {count} lances}}"
+  "openingsReviewButton": "{count, plural, =1{Revisar {count} lance} other{Revisar {count} lances}}"
 }

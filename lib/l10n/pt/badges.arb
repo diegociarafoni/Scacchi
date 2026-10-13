@@ -459,7 +459,7 @@
       }
     }
   },
-  "booksPlayed": "{count, plural, one{Você jogou uma vez: o livro é seu.} other{Você jogou {count} vezes: o livro é seu.}}",
+  "booksPlayed": "{count, plural, =1{Você jogou uma vez: o livro é seu.} other{Você jogou {count} vezes: o livro é seu.}}",
   "@booksPlayed": {
     "description": "Partite giocate in quell'apertura",
     "placeholders": {

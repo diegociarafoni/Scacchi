@@ -5,7 +5,7 @@
   "youContinueGuardian": "Desafie o guardião: {stage}",
   "youGroupData": "Seus dados",
   "youLevel": "Nível {level}",
-  "youStreak": "{days, plural, one{1 dia seguido} other{{days} dias seguidos}}",
+  "youStreak": "{days, plural, =1{1 dia seguido} other{{days} dias seguidos}}",
   "youProfile": "Perfil",
   "youProfileSubtitle": "Nível, sequência, desafios, conquistas e preferências",
   "youEndgames": "Finais",

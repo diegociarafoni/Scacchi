@@ -150,7 +150,7 @@
       }
     }
   },
-  "reviewCoachMaterialLoss": "Este lance perde material: cerca de {pawns, plural, one{1 peão} other{{pawns} peões}} na linha esperada.",
+  "reviewCoachMaterialLoss": "Este lance perde material: cerca de {pawns, plural, =1{1 peão} other{{pawns} peões}} na linha esperada.",
   "@reviewCoachMaterialLoss": {
     "placeholders": {
       "pawns": {

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/game/game_page.dart';
 import 'package:scacchi/l10n/app_localizations.dart';
+import 'package:scacchi/settings/app_language.dart';
 import 'package:scacchi/settings/settings.dart';
 import 'package:scacchi/storage/key_value_store.dart';
 
@@ -56,6 +57,12 @@ void main() {
         if (!e.value.contains(', plural,')) continue;
         plurals++;
         expect(e.value, contains('other{'), reason: e.key);
+        // `one` in portoghese comprende anche lo zero: l'1 si scrive `=1`.
+        expect(
+          e.value,
+          isNot(contains(RegExp(r'(?<![=\w])one\{'))),
+          reason: e.key,
+        );
         expect(en[e.key], contains(', plural,'), reason: e.key);
       }
       expect(plurals, greaterThan(40));
@@ -74,6 +81,16 @@ void main() {
       );
       expect(lookupAppLocalizations(const Locale('pt')).appTitle, 'Rokko');
     });
+  });
+
+  test('il telefono in portoghese, anche europeo, usa la traduzione pt', () {
+    const supported = AppLocalizations.supportedLocales;
+    expect(
+      resolveAppLocale(const [Locale('pt', 'PT')], supported),
+      const Locale('pt'),
+    );
+    expect(AppLanguage.portuguese.locale, const Locale('pt'));
+    expect(AppLanguage.portuguese.nativeName, 'Português');
   });
 
   group('schermate in portoghese', () {

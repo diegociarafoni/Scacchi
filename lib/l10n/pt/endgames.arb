@@ -5,7 +5,7 @@
   "endgamesGoalHoldBlack": "Resista com as Pretas",
   "endgamesGoalHoldWhite": "Resista com as Brancas",
   "endgamesToRepeat": "Para repetir",
-  "endgamesStars": "{stars, plural, one{{stars} estrela de 3} other{{stars} estrelas de 3}}",
+  "endgamesStars": "{stars, plural, =1{{stars} estrela de 3} other{{stars} estrelas de 3}}",
   "endgamesMovesHold": "Lances: {moves} de {par}",
   "endgamesMovesTarget": "Lances: {moves} · três estrelas com até {par}",
   "endgamesStart": "Começar",
