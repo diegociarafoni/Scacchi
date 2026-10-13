@@ -130,3 +130,8 @@ Nei test dei widget il telefono è simulato in italiano (`test/support/italian_d
 - Regole di stile e termini: [glossario-scacchistico.md](glossario-scacchistico.md), colonna Español: tú, virgolette «…», `¿…?` e `¡…!` sempre aperti e chiusi, notazione R D T A C.
 - Scelte da confermare nella rilettura: «insignia» (badge), «marco» (cornice dell'avatar), «Rápidas» (Rapid), «subpromoción», «puntuación» (rating), «etapa» (tappa), «protector de racha» (streak freeze), «Muy buena» (Great), «ventaja» (handicap) e «computadora» per il computer.
 - Test: `test/l10n/lingua_es_test.dart` (chiavi, argomenti, plurali, segni `¿¡` in coppia e schermate campione su tre dimensioni di telefono).
+## Polacco
+
+Lingua `pl`, registrata in `tool/lingue.json`, `AppLanguage.polish` («Polski»), `locales_config.xml`, `CFBundleLocalizations`, `ios/Runner/pl.lproj/InfoPlist.strings` e nel progetto Xcode. File: `lib/l10n/pl/*.arb` (stesse chiavi dell'italiano) e `assets/content/pl/*.json`. Termini e regole di stile in [glossario-polacco.md](glossario-polacco.md).
+
+Il polacco ha quattro forme di plurale: ogni `plural` ICU di `lib/l10n/pl/` deve avere `one`, `few`, `many` e `other` (senza clausole `=1` sovrapposte a `one`). `test/l10n_pl_test.dart` controlla chiavi, segnaposto, le quattro forme, la scelta della forma per 1, 2-4, 5-21 e 22-24, e monta partita e Impostazioni su tre dimensioni di telefono.
