@@ -1,0 +1,6 @@
+{
+  "storyHelpEasier": "Questo tema è duro: ti propongo un puzzle più facile. Puoi anche toccare Indizio.",
+  "@storyHelpEasier": {
+    "description": "Storia: avviso dopo due puzzle sbagliati di fila, prima di proporne uno più facile"
+  }
+}
