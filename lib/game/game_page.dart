@@ -422,9 +422,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
               level: engineLevelForElo(saved.opponentElo ?? 1200).id,
             ),
     );
-    _beginGame(game, setup, null);
-    _gameId = saved.id;
-    _startedAt = saved.createdAt;
+    _beginGame(game, setup, null, resumeOf: saved);
   }
 
   bool get _isChallenge => widget.challenge != null;
@@ -993,9 +991,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   /// Inizia una nuova partita per progressi e archivio. Una posizione
   /// preparata con l'editor si archivia ma non vale XP.
-  void _startRecording({bool fromEditor = false}) {
-    _startedAt = _clockNow();
-    _gameId = 'game-${_startedAt.microsecondsSinceEpoch}';
+  void _startRecording({bool fromEditor = false, SavedGame? resumeOf}) {
+    _startedAt = resumeOf?.createdAt ?? _clockNow();
+    _gameId = resumeOf?.id ?? 'game-${_startedAt.microsecondsSinceEpoch}';
     _fromEditor = fromEditor;
   }
 
@@ -1907,6 +1905,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     bool fromEditor = false,
     Handicap? handicap,
     Side? humanSide,
+    SavedGame? resumeOf,
   }) {
     assert(
       handicap == null || humanSide != null,
@@ -1928,7 +1927,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _clockHistory.clear();
     _lowTime.reset();
     _clearBoardInteraction();
-    _startRecording(fromEditor: fromEditor);
+    _startRecording(fromEditor: fromEditor, resumeOf: resumeOf);
     if (setup.opponent != Opponent.human) {
       final human = humanSide ?? setup.resolveHumanSide(_random);
       _handicapHuman = human;
@@ -2762,6 +2761,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                     : ChessGame.replay(
                             _game.initial,
                             _game.moves.take(viewPly + 1).map((m) => m.move),
+                            variant: _game.variant,
                           ) ??
                           _game,
               );
@@ -3535,7 +3535,7 @@ class _MaterialRow extends StatelessWidget {
           : l10n.gameMaterialWho(name!, side.name),
       captured.isEmpty ? 'none' : 'some',
       captured.map((r) => l10n.gamePieceName(r.name)).join(', '),
-      advantage,
+      math.max(0, advantage),
     );
     final material = Semantics(
       label: description,
