@@ -25,6 +25,7 @@ import 'move_classification.dart';
 import 'move_time.dart';
 import 'personal_puzzles.dart';
 import 'review_l10n.dart';
+import 'review_store.dart';
 
 /// Revisioni già calcolate in questa sessione, per riaprirle all'istante.
 /// Tiene solo le più recenti per limitare la memoria.
@@ -43,6 +44,10 @@ class ReviewCache {
   }
 
   static void clear() => _reviews.clear();
+
+  /// Copia su disco (RF-66), impostata dall'app all'avvio; senza, resta la
+  /// sola memoria.
+  static ReviewStore? store;
 }
 
 Color moveClassColor(MoveClass c) => switch (c) {
@@ -168,13 +173,42 @@ class _ReviewPageState extends State<ReviewPage> {
     _index = widget.moves.length;
     _total = _positions.length;
     _board = ChessboardController(game: _gameData());
+    // Libro e chiavi si fissano subito: restano gli stessi per tutta l'analisi.
     final cached = ReviewCache.get(_cacheKey);
+    _storeKey;
     if (cached != null) {
       _review = cached;
       _phase = _Phase.done;
     } else {
-      unawaited(_analyse());
+      unawaited(_openOrAnalyse());
     }
+  }
+
+  /// Chiave su disco: motore, profondità e uso del libro fanno parte della
+  /// revisione.
+  String get _storeKey =>
+      ReviewStore.key(widget.initial, widget.moves, book: _book != null);
+
+  /// Cerca la revisione su disco (RF-66); se manca o non si legge la fa.
+  Future<void> _openOrAnalyse() async {
+    final store = ReviewCache.store;
+    if (store != null) {
+      try {
+        final stored = await store.get(_storeKey);
+        if (!mounted || _cancelled) return;
+        if (stored != null) {
+          ReviewCache.put(_cacheKey, stored);
+          setState(() {
+            _review = stored;
+            _phase = _Phase.done;
+          });
+          return;
+        }
+      } on Object {
+        // Senza cache su disco si rifà la revisione.
+      }
+    }
+    await _analyse();
   }
 
   @override
@@ -186,10 +220,18 @@ class _ReviewPageState extends State<ReviewPage> {
 
   /// Libro da usare per le mosse «Libro»: serve solo partendo dalla posizione
   /// iniziale e solo se è già caricato (l'app lo carica all'avvio).
-  OpeningBook? get _book =>
+  late final OpeningBook? _book =
       OpeningBook.key(widget.initial) == OpeningBook.key(Chess.initial)
       ? widget.book ?? loadedOpeningBook
       : null;
+
+  Future<void> _store(GameReview review) async {
+    try {
+      await ReviewCache.store?.put(_storeKey, review);
+    } on Object {
+      // La cache su disco è un di più: un errore non toglie la revisione.
+    }
+  }
 
   Future<void> _analyse() async {
     try {
@@ -210,6 +252,7 @@ class _ReviewPageState extends State<ReviewPage> {
       );
       if (review == null) return;
       ReviewCache.put(_cacheKey, review);
+      unawaited(_store(review));
       widget.onReviewed?.call(review);
       if (!mounted) return;
       setState(() {

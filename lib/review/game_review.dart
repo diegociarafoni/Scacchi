@@ -66,6 +66,61 @@ class MoveReview {
 
   /// La mossa giocata è la prima scelta del motore.
   final bool playedBest;
+
+  Map<String, Object?> toJson() => {
+    'ply': ply,
+    'side': side.name,
+    'move': move.uci,
+    'san': san,
+    'fenBefore': fenBefore,
+    'class': classification.name,
+    'winBefore': winBefore,
+    'winAfter': winAfter,
+    'accuracy': accuracy,
+    'playedBest': playedBest,
+    'bestMove': bestMove?.uci,
+    'bestSan': bestSan,
+    'bestLine': bestLine,
+    'bestScore': _scoreToJson(bestScore),
+    'secondBestScore': _scoreToJson(secondBestScore),
+    'replyLine': replyLine,
+    'replyScore': _scoreToJson(replyScore),
+  };
+
+  static MoveReview fromJson(Map<String, Object?> json) => MoveReview(
+    ply: json['ply']! as int,
+    side: Side.values.byName(json['side']! as String),
+    move: Move.parse(json['move']! as String)!,
+    san: json['san']! as String,
+    fenBefore: json['fenBefore']! as String,
+    classification: MoveClass.values.byName(json['class']! as String),
+    winBefore: (json['winBefore']! as num).toDouble(),
+    winAfter: (json['winAfter']! as num).toDouble(),
+    accuracy: (json['accuracy']! as num).toDouble(),
+    playedBest: json['playedBest']! as bool,
+    bestMove: switch (json['bestMove']) {
+      final String uci => Move.parse(uci),
+      _ => null,
+    },
+    bestSan: json['bestSan'] as String?,
+    bestLine: [for (final m in json['bestLine']! as List) m as String],
+    bestScore: _scoreFromJson(json['bestScore']),
+    secondBestScore: _scoreFromJson(json['secondBestScore']),
+    replyLine: [for (final m in json['replyLine']! as List) m as String],
+    replyScore: _scoreFromJson(json['replyScore']),
+  );
+}
+
+Map<String, Object?>? _scoreToJson(EngineScore? s) => s == null
+    ? null
+    : {if (s.cp != null) 'cp': s.cp, if (s.mate != null) 'mate': s.mate};
+
+EngineScore? _scoreFromJson(Object? json) {
+  if (json is! Map) return null;
+  final mate = json['mate'] as int?;
+  return mate != null
+      ? EngineScore.mate(mate)
+      : EngineScore.cp(json['cp']! as int);
 }
 
 class GameReview {
@@ -82,6 +137,25 @@ class GameReview {
 
   /// Valutazione del motore per ogni posizione, dal punto di vista del Bianco.
   final List<EngineScore> whiteScores;
+
+  Map<String, Object?> toJson() => {
+    'moves': [for (final m in moves) m.toJson()],
+    'whiteWinCurve': whiteWinCurve,
+    'whiteScores': [for (final s in whiteScores) _scoreToJson(s)],
+  };
+
+  static GameReview fromJson(Map<String, Object?> json) => GameReview(
+    moves: [
+      for (final m in json['moves']! as List)
+        MoveReview.fromJson((m as Map).cast()),
+    ],
+    whiteWinCurve: [
+      for (final w in json['whiteWinCurve']! as List) (w as num).toDouble(),
+    ],
+    whiteScores: [
+      for (final s in json['whiteScores']! as List) _scoreFromJson(s)!,
+    ],
+  );
 
   Iterable<MoveReview> _of(Side side) => moves.where((m) => m.side == side);
 
