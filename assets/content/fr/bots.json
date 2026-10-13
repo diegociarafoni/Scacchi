@@ -1,0 +1,156 @@
+{
+  "bot.start": [
+    "Salut, moi, c'est {name}. Aujourd'hui, on joue {opening} !",
+    "{name} à l'échiquier : bonne partie !"
+  ],
+  "bot.start.friendly": [
+    "Salut, c'est {name} !",
+    "Moi, c'est {name}. On joue ensemble ?"
+  ],
+  "bot.friendly.check": [
+    "Échec ! Protège ton roi.",
+    "Échec ! Où va aller le roi ?"
+  ],
+  "bot.friendly.capture": [
+    "J'ai pris une pièce !",
+    "Pris ! À toi de jouer."
+  ],
+  "bot.friendly.mistake": [
+    "Prends ton temps.",
+    "Regarde bien l'échiquier !"
+  ],
+  "bot.friendly.win": [
+    "Belle partie ! On rejoue ?",
+    "J'ai gagné, revanche ?"
+  ],
+  "bot.friendly.loss": [
+    "Tu as gagné, bravo !",
+    "Youpi, tu as gagné !"
+  ],
+  "bot.friendly.draw": [
+    "Nulle ! Belle partie.",
+    "Égalité ! On est forts."
+  ],
+  "bot.friendly.chat": [
+    "Quelle belle partie !",
+    "On s'amuse bien !",
+    "À toi de jouer !"
+  ],
+  "bot.aggressive.check": [
+    "Échec ! Je ne te laisse pas respirer.",
+    "Échec, à l'attaque !"
+  ],
+  "bot.aggressive.capture": [
+    "Pris ! Et on fonce à l'attaque.",
+    "Une pièce de moins pour toi."
+  ],
+  "bot.aggressive.mistake": [
+    "Merci du cadeau, j'en profite.",
+    "Aïe, là, tu t'es trompé."
+  ],
+  "bot.aggressive.win": [
+    "Échec et mat ! Belle bataille.",
+    "Victoire ! Revanche ?"
+  ],
+  "bot.aggressive.loss": [
+    "Tu m'as battu, bien joué !",
+    "Bravo, je me suis brûlé les ailes."
+  ],
+  "bot.aggressive.draw": [
+    "Nulle : j'en voulais plus, mais ça va.",
+    "Égalité, mais la prochaine fois, j'attaque plus."
+  ],
+  "bot.aggressive.chat": [
+    "On attaque, on n'attend pas !",
+    "Je n'ai peur de rien.",
+    "Joue, je te rattrape."
+  ],
+  "bot.positional.check": [
+    "Échec, sans se presser.",
+    "Échec : la position le permet."
+  ],
+  "bot.positional.capture": [
+    "Un échange qui m'arrange.",
+    "Prise tranquille, la structure tient."
+  ],
+  "bot.positional.mistake": [
+    "Ce coup va te coûter en position.",
+    "Une erreur de plan, je dirais."
+  ],
+  "bot.positional.win": [
+    "Échec et mat : le plan a fonctionné.",
+    "Victoire, merci pour la partie."
+  ],
+  "bot.positional.loss": [
+    "Tu as mieux joué, félicitations.",
+    "Tu m'as dépassé en position, bravo."
+  ],
+  "bot.positional.draw": [
+    "Nulle équilibrée, c'est juste.",
+    "Une nulle honnête."
+  ],
+  "bot.positional.chat": [
+    "Je prends mon temps : la position le mérite.",
+    "Ici, c'est la structure qui compte.",
+    "Pas de précipitation, je joue calmement."
+  ],
+  "bot.gambitist.check": [
+    "Échec ! Le sacrifice en valait la peine.",
+    "Échec, et le meilleur reste à venir."
+  ],
+  "bot.gambitist.capture": [
+    "Je récupère le matériel avec les intérêts.",
+    "Pris : le gambit paie."
+  ],
+  "bot.gambitist.mistake": [
+    "Tu as mal accepté le gambit !",
+    "Attention, il y avait mieux ici."
+  ],
+  "bot.gambitist.win": [
+    "Échec et mat ! Le sacrifice a payé.",
+    "Gagné, et quel spectacle !"
+  ],
+  "bot.gambitist.loss": [
+    "Le gambit n'a pas suffi, bravo.",
+    "Tu t'es superbement défendu, chapeau."
+  ],
+  "bot.gambitist.draw": [
+    "Nulle : beaucoup de bruit pour rien.",
+    "Égalité, mais quelle partie animée !"
+  ],
+  "bot.gambitist.chat": [
+    "Un pion de plus ou de moins, qu'importe ?",
+    "Le meilleur reste à venir.",
+    "J'aime quand on prend des risques."
+  ],
+  "bot.opening.lia": "le gambit du roi",
+  "bot.opening.pino": "l'Italienne",
+  "bot.opening.nico": "le système de Londres",
+  "bot.opening.chiara": "le gambit dame",
+  "bot.opening.viola": "l'Écossaise",
+  "bot.opening.rocco": "le gambit du roi",
+  "bot.opening.ettore": "l'Espagnole d'échange",
+  "bot.opening.marta": "l'Anglaise",
+  "bot.opening.bruna": "la défense française",
+  "bot.opening.duilio": "la Sicilienne",
+  "bot.opening.carlo": "le gambit Budapest",
+  "bot.opening.elena": "l'Espagnole",
+  "bot.opening.ada": "l'Anglaise",
+  "bot.opening.luna": "la Catalane",
+  "bot.opening.massimo": "le gambit Evans",
+  "bot.opening.cosmo": "le gambit Smith-Morra",
+  "bot.opening.stella": "la défense est-indienne",
+  "bot.opening.tino": "l'ouverture du pion roi",
+  "level.1.name": "Débutant",
+  "level.2.name": "Novice",
+  "level.3.name": "Amateur",
+  "level.4.name": "Joueur de club",
+  "level.5.name": "Compétiteur",
+  "level.6.name": "Expert",
+  "level.7.name": "Maître",
+  "level.8.name": "Champion",
+  "level.0.name": "Premiers pas",
+  "style.aggressive": "agressif",
+  "style.positional": "positionnel",
+  "style.gambitist": "gambitiste"
+}

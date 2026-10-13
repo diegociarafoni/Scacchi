@@ -1,0 +1,475 @@
+{
+  "puzzleGoal": "{goal, select, mateIn1{Mat w 1 ruchu} mateIn2{Mat w 2 ruchach} mateIn3{Mat w 3 ruchach} mateIn4{Mat w 4 ruchach} mate{Zamatuj przeciwnika} crushing{Zdobądź decydującą przewagę} advantage{Zdobądź przewagę} equality{Wyrównaj grę} other{Znajdź najlepszy ruch}}",
+  "puzzleGoalSide": "{goal} · na ruchu {side}",
+  "@puzzleGoalSide": {
+    "description": "Puzzle header card: goal and side to move",
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      },
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "challengeTitle": "Wyzwij znajomego",
+  "challengeSubtitle": "Te same zadania na dwóch telefonach, bez internetu",
+  "challengeIntro": "Wybierz serię i pokaż znajomemu kod QR: oboje rozwiążecie te same zadania. Na końcu wymienicie się wynikami za pomocą drugiego kodu QR.",
+  "challengePrepare": "Przygotuj wyzwanie",
+  "challengeReady": "Wyzwanie gotowe: {mode}",
+  "challengeShowInvite": "Pokaż kod QR znajomemu",
+  "challengePlay": "Rozegraj swoją serię",
+  "challengeReceive": "Odbierz wyzwanie",
+  "challengeInviteTitle": "Wyzwanie: {mode}",
+  "challengeInviteHint": "Znajomy otwiera Zadania › Wyzwij znajomego › Odbierz wyzwanie i skanuje kod.",
+  "challengeReceiveHint": "Zeskanuj kod QR wyzwania, który pokazuje znajomy.",
+  "challengeNotInvite": "Ten kod QR nie jest wyzwaniem: poproś znajomego, by pokazał kod QR wyzwania.",
+  "challengeLibraryMismatch": "Telefony mają różne zadania: zaktualizujcie Rokko na obu.",
+  "challengeCompareTitle": "Wyzwanie ze znajomym",
+  "challengeShowResult": "Pokaż mój wynik",
+  "challengeResultTitle": "Mój wynik: {score}",
+  "challengeResultHint": "Znajomy skanuje ten kod, by zobaczyć Twój wynik.",
+  "challengeReadResult": "Odczytaj wynik znajomego",
+  "challengeReadResultHint": "Zeskanuj kod QR wyniku, który pokazuje znajomy.",
+  "challengeNotResult": "Ten kod QR nie jest wynikiem: poproś znajomego, by pokazał kod QR wyniku.",
+  "challengeOtherChallenge": "Ten wynik należy do innego wyzwania.",
+  "challengeWon": "Wygrana: {mine} do {theirs}",
+  "challengeLost": "Wygrał znajomy: {theirs} do {mine}",
+  "challengeDraw": "Remis: {mine} do {theirs}",
+  "puzzleHubTitle": "Zadania",
+  "@puzzleHubTitle": {
+    "description": "Titolo della scheda Puzzle"
+  },
+  "puzzleHubLoadError": "Nie udało się wczytać zadań.",
+  "@puzzleHubLoadError": {
+    "description": "Errore di caricamento dei puzzle"
+  },
+  "puzzleHubRating": "Ranking {rating}",
+  "@puzzleHubRating": {
+    "description": "Punteggio in cima alla scheda Puzzle",
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleHubStats": "Rozwiązane: {solved} · Nieudane: {failed} · Dostępne zadania: {total}",
+  "@puzzleHubStats": {
+    "description": "Riga sotto il punteggio",
+    "placeholders": {
+      "solved": {
+        "type": "int"
+      },
+      "failed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleTraining": "Trening",
+  "@puzzleTraining": {
+    "description": "Voce Allenamento"
+  },
+  "puzzleTrainingSubtitle": "Zadania dopasowane do Twojego rankingu",
+  "@puzzleTrainingSubtitle": {
+    "description": "Sottotitolo di Allenamento"
+  },
+  "puzzleDailyTitle": "Zadanie dnia",
+  "@puzzleDailyTitle": {
+    "description": "Puzzle del giorno: voce e titolo"
+  },
+  "puzzleDailySubtitle": "Trudność {rating}",
+  "@puzzleDailySubtitle": {
+    "description": "Sottotitolo del puzzle del giorno",
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleByTheme": "Według tematu",
+  "@puzzleByTheme": {
+    "description": "Voce Per tema"
+  },
+  "puzzleByThemeSubtitle": "Maty, widełki, końcówki i więcej",
+  "@puzzleByThemeSubtitle": {
+    "description": "Sottotitolo di Per tema"
+  },
+  "puzzleThemesTitle": "Tematy",
+  "@puzzleThemesTitle": {
+    "description": "Titolo dell'elenco dei temi"
+  },
+  "puzzleReview": "Powtórz błędy",
+  "@puzzleReview": {
+    "description": "Voce Ripasso degli errori"
+  },
+  "puzzleReviewTitle": "Powtórka",
+  "@puzzleReviewTitle": {
+    "description": "Titolo della schermata di ripasso"
+  },
+  "puzzleReviewNone": "Dziś nic do powtórzenia",
+  "@puzzleReviewNone": {
+    "description": "Nessun puzzle da ripassare"
+  },
+  "puzzleReviewDue": "Do powtórzenia dziś: {count}",
+  "@puzzleReviewDue": {
+    "description": "Puzzle da ripassare",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleSectionTimed": "Tryby na czas",
+  "@puzzleSectionTimed": {
+    "description": "Intestazione delle modalità a tempo"
+  },
+  "puzzleSectionPractice": "Ćwiczenia",
+  "@puzzleSectionPractice": {
+    "description": "Intestazione delle modalità libere"
+  },
+  "puzzleRecord": "Rekord {best}",
+  "@puzzleRecord": {
+    "description": "Record della modalità",
+    "placeholders": {
+      "best": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunLabel": "{mode, select, storm{Kombo na czas} rush3{Sprint 3 minuty} rush5{Sprint 5 minut} survival{Tryb przetrwania} other{Seria zadań}}",
+  "@puzzleRunLabel": {
+    "description": "Nome della modalità a serie",
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleRunDescription": "{mode, select, storm{3 minuty, dodatkowe sekundy za kombo} rush3{3 minuty, trzy błędy} rush5{5 minut, trzy błędy} survival{Bez zegara, trzy błędy} other{Bez zegara, koniec po pierwszym błędzie}}",
+  "@puzzleRunDescription": {
+    "description": "Descrizione della modalità a serie",
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleDefaultTitle": "Zadanie",
+  "@puzzleDefaultTitle": {
+    "description": "Titolo predefinito della schermata del puzzle"
+  },
+  "puzzleEmpty": "Brak zadań do zaproponowania.",
+  "@puzzleEmpty": {
+    "description": "Nessun puzzle disponibile"
+  },
+  "puzzleHelp": "Jak to działa",
+  "@puzzleHelp": {
+    "description": "Pulsante che riapre la spiegazione"
+  },
+  "puzzleSide": "{side, select, white{białe} other{czarne}}",
+  "@puzzleSide": {
+    "description": "Colore che muove",
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleRestarted": "Pozycja początkowa. Znajdź najlepszy ruch dla strony: {side}.",
+  "@puzzleRestarted": {
+    "description": "Dopo aver ricominciato",
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleCorrect": "Dobrze! Ruszaj dalej.",
+  "@puzzleCorrect": {
+    "description": "Mossa giusta"
+  },
+  "puzzleWrong": "To nie ten ruch. Naciśnij „Spróbuj ponownie”, by zacząć od nowa.",
+  "@puzzleWrong": {
+    "description": "Mossa sbagliata"
+  },
+  "puzzleSolved": "Rozwiązane!",
+  "@puzzleSolved": {
+    "description": "Puzzle risolto"
+  },
+  "puzzleDone": "Zadanie zakończone.",
+  "@puzzleDone": {
+    "description": "Puzzle concluso dopo errori o soluzione"
+  },
+  "puzzleRevealed": "Oto właściwy ruch.",
+  "@puzzleRevealed": {
+    "description": "Mossa mostrata"
+  },
+  "puzzleOutcomeRepeat": "Już widziane: ranking bez zmian.",
+  "@puzzleOutcomeRepeat": {
+    "description": "Puzzle già visto"
+  },
+  "puzzleOutcomeRating": "Ranking {rating} ({delta}).",
+  "@puzzleOutcomeRating": {
+    "description": "Punteggio dopo il puzzle",
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      },
+      "delta": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleNoMore": "Na razie nie ma więcej zadań.",
+  "@puzzleNoMore": {
+    "description": "Fine dei puzzle"
+  },
+  "puzzleDifficulty": "Zadanie {rating}",
+  "@puzzleDifficulty": {
+    "description": "Difficoltà del puzzle risolto",
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleProgress": "Znalezione ruchy: {done} z {total}",
+  "@puzzleProgress": {
+    "description": "Mosse trovate",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleProgressKid": "Postęp w zadaniu",
+  "@puzzleProgressKid": {
+    "description": "Avanzamento senza cifre"
+  },
+  "puzzleHint": "Podpowiedź",
+  "@puzzleHint": {
+    "description": "Pulsante suggerimento"
+  },
+  "puzzleSolution": "Rozwiązanie",
+  "@puzzleSolution": {
+    "description": "Pulsante soluzione"
+  },
+  "puzzleRetry": "Spróbuj ponownie",
+  "@puzzleRetry": {
+    "description": "Pulsante riprova"
+  },
+  "puzzleNext": "Dalej",
+  "@puzzleNext": {
+    "description": "Pulsante prossimo"
+  },
+  "puzzleSkip": "Pomiń",
+  "@puzzleSkip": {
+    "description": "Pulsante salta"
+  },
+  "puzzleRunStart": "Start",
+  "@puzzleRunStart": {
+    "description": "Pulsante che avvia la serie"
+  },
+  "puzzleRunRecordFooter": "Twój rekord: {best}.",
+  "@puzzleRunRecordFooter": {
+    "description": "Record sotto le regole",
+    "placeholders": {
+      "best": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunRight": "Dobrze!",
+  "@puzzleRunRight": {
+    "description": "Esito giusto"
+  },
+  "puzzleRunWrong": "Błąd",
+  "@puzzleRunWrong": {
+    "description": "Esito sbagliato"
+  },
+  "puzzleRunEndMistake": "Błąd w zadaniu: seria dobiegła końca.",
+  "@puzzleRunEndMistake": {
+    "description": "Fine per un errore"
+  },
+  "puzzleRunEndLives": "Straciłeś wszystkie trzy życia.",
+  "@puzzleRunEndLives": {
+    "description": "Fine per le vite"
+  },
+  "puzzleRunEndTime": "Koniec czasu.",
+  "@puzzleRunEndTime": {
+    "description": "Fine per il tempo"
+  },
+  "puzzleRunEndExhausted": "Rozwiązano wszystkie dostępne zadania.",
+  "@puzzleRunEndExhausted": {
+    "description": "Fine per esaurimento"
+  },
+  "puzzleRunScore": "Wynik {score}",
+  "@puzzleRunScore": {
+    "description": "Punti della serie",
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunTimeLeft": "Pozostały czas: {time}",
+  "@puzzleRunTimeLeft": {
+    "description": "Tempo rimasto, per i lettori di schermo",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleRunCombo": "Kombo {combo}",
+  "@puzzleRunCombo": {
+    "description": "Combo in corso",
+    "placeholders": {
+      "combo": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunLives": "Życia: {left} z {total}",
+  "@puzzleRunLives": {
+    "description": "Vite rimaste",
+    "placeholders": {
+      "left": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunOver": "Seria zakończona",
+  "@puzzleRunOver": {
+    "description": "Titolo del risultato"
+  },
+  "puzzleRunSolvedLabel": "rozwiązanych zadań",
+  "@puzzleRunSolvedLabel": {
+    "description": "Etichetta sotto il punteggio finale"
+  },
+  "puzzleRunNewRecord": "Nowy rekord osobisty!",
+  "@puzzleRunNewRecord": {
+    "description": "Nuovo record"
+  },
+  "puzzleRunBest": "Rekord: {best}",
+  "@puzzleRunBest": {
+    "description": "Record personale",
+    "placeholders": {
+      "best": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunBestCombo": "Najlepsze kombo: {combo}",
+  "@puzzleRunBestCombo": {
+    "description": "Combo migliore",
+    "placeholders": {
+      "combo": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunAgain": "Zagraj jeszcze raz",
+  "@puzzleRunAgain": {
+    "description": "Pulsante rigioca"
+  },
+  "puzzleGuideGoalHeading": "Cel",
+  "@puzzleGuideGoalHeading": {
+    "description": "Intestazione della spiegazione"
+  },
+  "puzzleGuideRulesHeading": "Jak grać",
+  "@puzzleGuideRulesHeading": {
+    "description": "Intestazione della spiegazione"
+  },
+  "puzzleGuideGotIt": "Jasne",
+  "@puzzleGuideGotIt": {
+    "description": "Chiude la spiegazione"
+  },
+  "puzzleThemeMateIn1": "Mat w 1 ruchu",
+  "puzzleThemeMateIn2": "Mat w 2 ruchach",
+  "puzzleThemeMateIn3": "Mat w 3 ruchach",
+  "puzzleThemeMateIn4": "Mat w 4 ruchach",
+  "puzzleThemeMateIn5": "Mat w 5 ruchach lub więcej",
+  "puzzleThemeBackRankMate": "Mat na ostatniej linii",
+  "puzzleThemeSmotheredMate": "Mat uduszony",
+  "puzzleThemeFork": "Widełki",
+  "puzzleThemePin": "Związanie",
+  "puzzleThemeSkewer": "Rentgen",
+  "puzzleThemeDiscoveredAttack": "Atak odkryty",
+  "puzzleThemeDoubleCheck": "Szach podwójny",
+  "puzzleThemeHangingPiece": "Niebroniona figura",
+  "puzzleThemeTrappedPiece": "Uwięziona figura",
+  "puzzleThemeDeflection": "Odciągnięcie",
+  "puzzleThemeAttraction": "Przyciągnięcie",
+  "puzzleThemeSacrifice": "Poświęcenie",
+  "puzzleThemeCapturingDefender": "Zbicie obrońcy",
+  "puzzleThemeClearance": "Oczyszczenie pola",
+  "puzzleThemeInterference": "Przecięcie linii",
+  "puzzleThemeIntermezzo": "Ruch pośredni",
+  "puzzleThemeXRayAttack": "Atak rentgenowski",
+  "puzzleThemeQuietMove": "Cichy ruch",
+  "puzzleThemeDefensiveMove": "Ruch obronny",
+  "puzzleThemeZugzwang": "Cugcwang",
+  "puzzleThemePromotion": "Promocja",
+  "puzzleThemeUnderPromotion": "Podpromocja",
+  "puzzleThemeAdvancedPawn": "Wysunięty pion",
+  "puzzleThemeExposedKing": "Odsłonięty król",
+  "puzzleThemeKingsideAttack": "Atak na skrzydle królewskim",
+  "puzzleThemeQueensideAttack": "Atak na skrzydle hetmańskim",
+  "puzzleThemeEnPassant": "Bicie w przelocie",
+  "puzzleThemeCastling": "Roszada",
+  "puzzleThemeOpening": "Debiut",
+  "puzzleThemeMiddlegame": "Gra środkowa",
+  "puzzleThemeEndgame": "Końcówka",
+  "puzzleThemePawnEndgame": "Końcówka pionkowa",
+  "puzzleThemeRookEndgame": "Końcówka wieżowa",
+  "puzzleThemeQueenEndgame": "Końcówka hetmańska",
+  "puzzleThemeKnightEndgame": "Końcówka skoczkowa",
+  "puzzleThemeBishopEndgame": "Końcówka gońcowa",
+  "puzzleGuideThemeTitle": "Zadania według tematu",
+  "puzzleGuideTrainingGoal": "Znajdź najlepszy ruch w każdym zadaniu, jedno po drugim.",
+  "puzzleGuideTrainingRule1": "Zadania są dobierane do Twojego rankingu: im lepiej Ci idzie, tym trudniejsze się stają.",
+  "puzzleGuideTrainingRule2": "Przesuń właściwą bierkę: jeśli ruch jest dobry, przeciwnik odpowiada i znów jest Twoja kolej; jeśli zły, zostaje cofnięty.",
+  "puzzleGuideTrainingRule3": "W nowym zadaniu rozwiązanie za pierwszym razem podnosi ranking; błąd lub zajrzenie do rozwiązania liczy się jako porażka, ranking spada, a zadanie wraca do powtórki. Zadania już widziane nie zmieniają rankingu.",
+  "puzzleGuideTrainingRule4": "Podpowiedź nic nie kosztuje: zakreśla bierkę, którą trzeba ruszyć.",
+  "puzzleGuideTrainingRule5": "Nie ma zegara ani limitu błędów: możesz skończyć, kiedy chcesz.",
+  "puzzleGuideThemeGoal": "Trenuj jeden motyw taktyczny: wszystkie zadania mają ten sam temat.",
+  "puzzleGuideThemeRule1": "Przesuń właściwą bierkę: jeśli ruch jest dobry, przeciwnik odpowiada; jeśli zły, zostaje cofnięty.",
+  "puzzleGuideThemeRule2": "W nowym zadaniu rozwiązanie za pierwszym razem podnosi ranking; przy błędach lub odsłoniętym rozwiązaniu liczy się to jako porażka, ranking spada, a zadanie wraca do powtórki.",
+  "puzzleGuideThemeRule3": "Nie ma zegara ani limitu błędów.",
+  "puzzleGuideDailyGoal": "Rozwiąż dzisiejsze zadanie: przez cały dzień jest to samo.",
+  "puzzleGuideDailyRule1": "Znajdź właściwy ciąg ruchów: jeśli któryś jest zły, zostaje cofnięty i możesz spróbować jeszcze raz.",
+  "puzzleGuideDailyRule2": "„Spróbuj ponownie” zaczyna od pozycji początkowej, „Rozwiązanie” pokazuje ruchy.",
+  "puzzleGuideDailyRule3": "Liczy się jako rozwiązane tylko wtedy, gdy nie ma błędów i nie zaglądasz do rozwiązania; w przeciwnym razie to porażka.",
+  "puzzleGuideDailyRule4": "Jutro pojawi się nowe.",
+  "puzzleGuideReviewGoal": "Znajdź rozwiązania zadań, w których popełniono błąd.",
+  "puzzleGuideReviewRule1": "Każde zadanie wraca w coraz dłuższych odstępach (1, 3, 7, 14 i 30 dni): dziś dostajesz tylko te, na które przyszedł czas.",
+  "puzzleGuideReviewRule2": "Jeśli rozwiążesz je bez błędów, odstęp się wydłuża; jeśli się pomylisz, zaczyna się od jednego dnia.",
+  "puzzleGuideReviewRule3": "Powtórka nie zmienia rankingu treningowego.",
+  "puzzleGuideReviewRule4": "Gdy dzisiejsze zadania są skończone, nie ma już nic do zrobienia.",
+  "puzzleGuideRunBase1": "Zadania stają się coraz trudniejsze.",
+  "puzzleGuideRunBase2": "Każde rozwiązane zadanie to 1 punkt.",
+  "puzzleGuideRunTail1": "Twój rekord osobisty jest zapisywany dla każdego trybu.",
+  "puzzleGuideRunTail2": "Możesz wyjść, kiedy chcesz: zdobyte punkty i XP nadal się liczą.",
+  "puzzleGuideStormGoal": "Rozwiąż jak najwięcej zadań w ciągu {minutes} min.",
+  "puzzleGuideStormRule1": "Błąd kosztuje {seconds} s, zeruje kombo i przechodzi do następnego zadania.",
+  "puzzleGuideStormRule2": "Przy 5, 12, 20 i 30 zadaniach z rzędu zyskujesz 3, 5, 7 i 10 s (potem 10 s za każde 10 zadań).",
+  "puzzleGuideStormRule3": "Nie ma żyć: seria kończy się, gdy skończy się czas.",
+  "puzzleGuideRushGoal": "Rozwiąż jak najwięcej zadań w ciągu {minutes} min, mając trzy życia.",
+  "puzzleGuideLivesRule1": "Błąd kosztuje jedno życie i przechodzi do następnego zadania.",
+  "puzzleGuideRushRule2": "Seria kończy się, gdy skończy się czas albo stracisz trzecie życie.",
+  "puzzleGuideSurvivalGoal": "Rozwiąż jak najwięcej zadań, mając trzy życia i bez limitu czasu.",
+  "puzzleGuideSurvivalRule2": "Seria kończy się, gdy stracisz trzecie życie.",
+  "puzzleGuideStreakGoal": "Rozwiąż jak najwięcej zadań z rzędu: pierwszy błąd kończy serię.",
+  "puzzleGuideStreakRule1": "Nie ma limitu czasu ani żyć.",
+  "puzzleGuideStreakRule2": "W jednej serii możesz pominąć tylko jedno zadanie przyciskiem „Pomiń”."
+}

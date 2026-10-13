@@ -4,7 +4,7 @@ Requisiti RF-87 (raccolta di partite storiche da sfogliare con commento) e RF-88
 
 ## La raccolta
 
-`masterGames` (`lib/masters/master_games.dart`) elenca le partite in ordine cronologico. Ogni `MasterGame` ha giocatori, luogo o evento (`event`), anno, risultato, un soprannome facoltativo, una breve introduzione, la linea principale in notazione algebrica (SAN) e un commento facoltativo per le mosse chiave, indicato per semimossa (da 1). `positions` e `moveList` rigiocano la partita con le regole di `dartchess`; una mossa illegale lancia `FormatException`, quindi un errore di trascrizione non arriva all'utente.
+`masterGames` (`lib/masters/master_games.dart`) elenca le partite in ordine cronologico. Ogni `MasterGame` ha anno, risultato e la linea principale in notazione algebrica (SAN); giocatori, luogo, soprannome, introduzione e commenti per le mosse chiave sono nel contenuto `masters` (`assets/content/<lingua>/masters.json`, italiano e inglese), con id `<partita>.white`, `.black`, `.event`, `.nickname`, `.intro` e `.note<semimossa>` (da 1). Nei commenti inglesi le mosse sono scritte con le lettere inglesi dei pezzi (Nf3), in quelli italiani con le italiane (Cf3). I nomi dei giocatori seguono la forma usuale della lingua. `positions` e `moveList` rigiocano la partita con le regole di `dartchess`; una mossa illegale lancia `FormatException`, quindi un errore di trascrizione non arriva all'utente.
 
 | Partita | Anno | Nome |
 |---|---|---|

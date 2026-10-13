@@ -1,0 +1,156 @@
+{
+  "bot.start": [
+    "Hoi, ik ben {name}. Vandaag spelen we {opening}!",
+    "{name} aan het bord: veel plezier met de partij!"
+  ],
+  "bot.start.friendly": [
+    "Hoi, ik ben {name}!",
+    "Ik ben {name}, zullen we samen spelen?"
+  ],
+  "bot.friendly.check": [
+    "Schaak! Red je koning.",
+    "Schaak! Waar gaat de koning heen?"
+  ],
+  "bot.friendly.capture": [
+    "Ik heb een stuk geslagen!",
+    "Gepakt! Nu ben jij aan de beurt."
+  ],
+  "bot.friendly.mistake": [
+    "Neem rustig de tijd.",
+    "Kijk goed naar het bord!"
+  ],
+  "bot.friendly.win": [
+    "Wat een mooie partij! Zullen we nog een keer spelen?",
+    "Deze heb ik gewonnen, revanche?"
+  ],
+  "bot.friendly.loss": [
+    "Jij hebt gewonnen, goed gedaan!",
+    "Hoera, je hebt gewonnen!"
+  ],
+  "bot.friendly.draw": [
+    "Remise! Mooie partij.",
+    "Gelijkspel! We hebben het allebei goed gedaan."
+  ],
+  "bot.friendly.chat": [
+    "Wat een leuke partij!",
+    "We hebben plezier!",
+    "Jij bent aan zet!"
+  ],
+  "bot.aggressive.check": [
+    "Schaak! Ik laat je geen adem halen.",
+    "Schaak, aanval!"
+  ],
+  "bot.aggressive.capture": [
+    "Gepakt! Door met de aanval.",
+    "Weer een stuk minder voor jou."
+  ],
+  "bot.aggressive.mistake": [
+    "Bedankt voor het cadeautje, ik neem het aan.",
+    "Au, daar liet je een steek vallen."
+  ],
+  "bot.aggressive.win": [
+    "Schaakmat! Mooie strijd.",
+    "Overwinning! Revanche?"
+  ],
+  "bot.aggressive.loss": [
+    "Je hebt me verslagen, goed gespeeld!",
+    "Gefeliciteerd, ik heb mijn vingers gebrand."
+  ],
+  "bot.aggressive.draw": [
+    "Remise: ik wilde meer, maar goed.",
+    "Remise, maar de volgende keer val ik harder aan."
+  ],
+  "bot.aggressive.chat": [
+    "We vallen aan, we wachten niet!",
+    "Ik ben nergens bang voor.",
+    "Doe je zet, ik zit je op de hielen."
+  ],
+  "bot.positional.check": [
+    "Schaak, geen haast.",
+    "Schaak: de stelling staat het toe."
+  ],
+  "bot.positional.capture": [
+    "Een ruil die mij goed uitkomt.",
+    "Een rustige slag, de structuur houdt stand."
+  ],
+  "bot.positional.mistake": [
+    "Die zet gaat je stelling kosten.",
+    "Een planfout, zou ik zeggen."
+  ],
+  "bot.positional.win": [
+    "Schaakmat: het plan werkte.",
+    "Overwinning, bedankt voor de partij."
+  ],
+  "bot.positional.loss": [
+    "Jij speelde beter, gefeliciteerd.",
+    "Je speelde me positioneel uit, goed gedaan."
+  ],
+  "bot.positional.draw": [
+    "Een evenwichtige remise, dat is eerlijk.",
+    "Een eerlijke remise."
+  ],
+  "bot.positional.chat": [
+    "Ik neem de tijd: de stelling verdient dat.",
+    "De structuur is hier belangrijk.",
+    "Geen haast, ik speel het rustig."
+  ],
+  "bot.gambitist.check": [
+    "Schaak! Het offer was het waard.",
+    "Schaak, en het beste moet nog komen."
+  ],
+  "bot.gambitist.capture": [
+    "Ik win het materiaal met rente terug.",
+    "Gepakt: het gambiet loont."
+  ],
+  "bot.gambitist.mistake": [
+    "Je hebt het gambiet slecht aangenomen!",
+    "Pas op, hier was iets beters."
+  ],
+  "bot.gambitist.win": [
+    "Schaakmat! Het offer heeft zich uitbetaald.",
+    "Gewonnen, en wat een show."
+  ],
+  "bot.gambitist.loss": [
+    "Het gambiet was niet genoeg, goed gedaan.",
+    "Je verdedigde briljant, alle eer aan jou."
+  ],
+  "bot.gambitist.draw": [
+    "Remise: veel vertoon en verder niets.",
+    "Remise, maar wat een levendige partij."
+  ],
+  "bot.gambitist.chat": [
+    "Een pion meer of minder, wat maakt het uit?",
+    "Het beste moet nog komen.",
+    "Ik vind het fijn als we risico's nemen."
+  ],
+  "bot.opening.lia": "het Koningsgambiet",
+  "bot.opening.pino": "het Italiaanse spel",
+  "bot.opening.nico": "het Londense systeem",
+  "bot.opening.chiara": "het Damegambiet",
+  "bot.opening.viola": "het Schotse spel",
+  "bot.opening.rocco": "het Koningsgambiet",
+  "bot.opening.ettore": "de Spaanse ruilvariant",
+  "bot.opening.marta": "de Engelse opening",
+  "bot.opening.bruna": "de Franse verdediging",
+  "bot.opening.duilio": "de Siciliaanse verdediging",
+  "bot.opening.carlo": "het Boedapestgambiet",
+  "bot.opening.elena": "de Spaanse opening",
+  "bot.opening.ada": "de Engelse opening",
+  "bot.opening.luna": "de Catalaanse opening",
+  "bot.opening.massimo": "het Evans-gambiet",
+  "bot.opening.cosmo": "het Smith-Morra-gambiet",
+  "bot.opening.stella": "de Koningsindische verdediging",
+  "bot.opening.tino": "de koningspionopening",
+  "level.1.name": "Beginner",
+  "level.2.name": "Nieuweling",
+  "level.3.name": "Hobbyspeler",
+  "level.4.name": "Clubspeler",
+  "level.5.name": "Wedstrijdspeler",
+  "level.6.name": "Expert",
+  "level.7.name": "Meester",
+  "level.8.name": "Kampioen",
+  "level.0.name": "Eerste stappen",
+  "style.aggressive": "agressief",
+  "style.positional": "positioneel",
+  "style.gambitist": "gambietspeler"
+}

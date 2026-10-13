@@ -1,0 +1,43 @@
+{
+  "archiveShareSubject": "Partie PGN",
+  "archiveTitle": "Partie",
+  "archiveImportResult": "{count, plural, one{Zaimportowano 1 partię} few{Zaimportowano {count} partie} many{Zaimportowano {count} partii} other{Zaimportowano {count} partii}}{skipped, plural, =0{} one{, {skipped} nieprawidłowa} few{, {skipped} nieprawidłowe} many{, {skipped} nieprawidłowych} other{, {skipped} nieprawidłowych}}",
+  "@archiveImportResult": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "skipped": {
+        "type": "int"
+      }
+    }
+  },
+  "archiveDeleteTitle": "Usunąć tę partię?",
+  "archiveCancel": "Anuluj",
+  "archiveDelete": "Usuń",
+  "archivePgnCopied": "Skopiowano PGN",
+  "archiveImportPgn": "Importuj PGN",
+  "archiveExportAll": "Eksportuj wszystko jako PGN",
+  "archiveUnreadable": "Nie udało się odczytać archiwum.",
+  "archiveSearchHint": "Szukaj według gracza lub rodzaju",
+  "archiveEmpty": "Brak zapisanych partii.",
+  "archiveNoMatch": "Nie znaleziono partii.",
+  "archiveInProgress": "W toku",
+  "archiveActionsFor": "Działania dla: {title}",
+  "@archiveActionsFor": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "archiveSharePgn": "Udostępnij PGN",
+  "archiveCopyPgn": "Kopiuj PGN",
+  "archiveImportHint": "Wklej tutaj jedną lub więcej partii PGN",
+  "archivePaste": "Wklej",
+  "archiveImport": "Importuj",
+  "archiveModeLocal": "lokalna",
+  "archiveModeComputer": "z komputerem",
+  "archiveModeImported": "zaimportowana",
+  "archiveModePhysical": "fizyczna szachownica"
+}

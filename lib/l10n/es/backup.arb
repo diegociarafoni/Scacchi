@@ -1,0 +1,21 @@
+{
+  "backupTitle": "Copia de seguridad y restauración",
+  "backupIntro": "La copia de seguridad contiene partidas, progreso, camino de aprendizaje, torneos, entrenamiento y ajustes. Guárdala en un lugar seguro: la app funciona sin conexión, así que no hay copia en línea.",
+  "backupShare": "Compartir la copia",
+  "backupShareSubject": "Copia de seguridad de Rokko",
+  "backupRestoreFromText": "Restaurar desde texto",
+  "backupExported": "Copia lista para guardar",
+  "backupExportFailed": "Error en la copia: {error}",
+  "backupRestoreStaged": "Copia lista. Cierra y vuelve a abrir la app para restaurar tus datos.",
+  "backupRestoreFailed": "Error al restaurar: {error}",
+  "backupErrorNotApp": "Esta no es una copia de seguridad de Rokko",
+  "backupErrorNewerVersion": "Copia creada por una versión más reciente",
+  "backupErrorUnexpectedFile": "Archivo inesperado en la copia: {file}",
+  "backupErrorInvalidFile": "Archivo no válido en la copia: {file}",
+  "backupErrorInvalidPreference": "Preferencia no válida: {name}",
+  "backupErrorUnreadable": "Copia ilegible",
+  "backupRestoreDialogTitle": "Restaurar la copia",
+  "backupRestoreDialogBody": "Pega el contenido del archivo de la copia. Tus datos actuales se sustituirán.",
+  "backupCancel": "Cancelar",
+  "backupRestore": "Restaurar"
+}

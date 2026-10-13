@@ -1,0 +1,501 @@
+{
+  "family.Sicilian Defense": "Obrona sycylijska",
+  "family.Ruy Lopez": "Partia hiszpańska",
+  "family.French Defense": "Obrona francuska",
+  "family.Queen's Gambit": "Gambit hetmański",
+  "family.Italian Game": "Partia włoska",
+  "family.English Opening": "Partia angielska",
+  "family.King's Gambit": "Gambit królewski",
+  "family.King's Indian Defense": "Obrona królewsko-indyjska",
+  "family.Caro-Kann Defense": "Obrona Caro-Kann",
+  "family.Nimzo-Indian Defense": "Obrona nimzoindyjska",
+  "family.Queen's Pawn Game": "Partia pionem hetmańskim",
+  "family.Semi-Slav Defense": "Obrona półsłowiańska",
+  "family.Dutch Defense": "Obrona holenderska",
+  "family.Benoni Defense": "Obrona Benoni",
+  "family.Grünfeld Defense": "Obrona Grünfelda",
+  "family.Queen's Indian Defense": "Obrona hetmańsko-indyjska",
+  "family.Alekhine Defense": "Obrona Alechina",
+  "family.Indian Defense": "Obrona indyjska",
+  "family.Scotch Game": "Partia szkocka",
+  "family.Slav Defense": "Obrona słowiańska",
+  "family.Petrov's Defense": "Obrona Pietrowa",
+  "family.Four Knights Game": "Partia czterech skoczków",
+  "family.Zukertort Opening": "Debiut Zukertorta",
+  "family.Scandinavian Defense": "Obrona skandynawska",
+  "family.Philidor Defense": "Obrona Philidora",
+  "family.Réti Opening": "Debiut Rétiego",
+  "family.Nimzowitsch Defense": "Obrona Nimzowitscha",
+  "family.Bishop's Opening": "Partia gońca",
+  "family.Vienna Game": "Partia wiedeńska",
+  "family.Modern Defense": "Obrona nowoczesna",
+  "family.King's Pawn Game": "Partia pionem królewskim",
+  "family.Van Geet Opening": "Debiut Van Geeta",
+  "family.Pterodactyl Defense": "Obrona Pterodaktyl",
+  "family.Catalan Opening": "Debiut kataloński",
+  "family.Bird Opening": "Debiut Birda",
+  "family.Pirc Defense": "Obrona Pirca",
+  "family.Tarrasch Defense": "Obrona Tarrascha",
+  "family.Polish Opening": "Debiut polski",
+  "family.Neo-Grünfeld Defense": "Obrona neo-Grünfelda",
+  "family.Blackmar-Diemer Gambit": "Gambit Blackmara-Diemera",
+  "family.Bogo-Indian Defense": "Obrona bogoindyjska",
+  "family.Grob Opening": "Debiut Groba",
+  "family.Hungarian Opening": "Debiut węgierski",
+  "family.King's Indian Attack": "Atak królewsko-indyjski",
+  "family.Nimzo-Larsen Attack": "Atak Nimzo-Larsena",
+  "family.Center Game": "Partia centralna",
+  "family.Latvian Gambit": "Gambit łotewski",
+  "family.Ponziani Opening": "Debiut Ponzianiego",
+  "family.Vienna Gambit": "Gambit wiedeński",
+  "family.Old Indian Defense": "Obrona staroindyjska",
+  "family.Rat Defense": "Obrona szczurza",
+  "family.Trompowsky Attack": "Atak Trompowskiego",
+  "family.Benko Gambit": "Gambit Benko",
+  "family.Kádas Opening": "Debiut Kádása",
+  "family.Englund Gambit": "Gambit Englunda",
+  "family.Owen Defense": "Obrona Owena",
+  "family.Richter-Veresov Attack": "Atak Richtera-Weresowa",
+  "family.Ware Opening": "Debiut Ware'a",
+  "family.English Defense": "Obrona angielska",
+  "family.Barnes Opening": "Debiut Barnesa",
+  "family.Torre Attack": "Atak Torre",
+  "family.Lion Defense": "Obrona lwia",
+  "family.Danish Gambit": "Gambit duński",
+  "family.Three Knights Opening": "Debiut trzech skoczków",
+  "family.Rubinstein Opening": "Debiut Rubinsteina",
+  "family.Van't Kruijs Opening": "Debiut Van't Kruijsa",
+  "family.Borg Defense": "Obrona Borga",
+  "family.Mieses Opening": "Debiut Miesesa",
+  "family.Sodium Attack": "Atak Sodium",
+  "family.Mikenas Defense": "Obrona Mikenasa",
+  "family.London System": "System londyński",
+  "family.St. George Defense": "Obrona Świętego Jerzego",
+  "family.Elephant Gambit": "Gambit słoniowy",
+  "family.Amar Opening": "Debiut Amara",
+  "family.Colle System": "System Colle'a",
+  "family.King's Pawn Opening": "Debiut pionem królewskim",
+  "family.Portuguese Opening": "Debiut portugalski",
+  "family.King's Knight Opening": "Debiut skoczka królewskiego",
+  "family.Rapport-Jobava System": "System Rapporta-Jobavy",
+  "family.Blumenfeld Countergambit": "Kontrgambit Blumenfelda",
+  "family.Anderssen's Opening": "Debiut Anderssena",
+  "family.Clemenz Opening": "Debiut Clemenza",
+  "family.Formation": "Formacja",
+  "family.Zukertort Defense": "Obrona Zukertorta",
+  "family.English Orangutan": "Orangutan angielski",
+  "family.Horwitz Defense": "Obrona Horwitza",
+  "family.Kangaroo Defense": "Obrona kangurza",
+  "family.Polish Defense": "Obrona polska",
+  "family.Slav Indian": "Słowiańsko-indyjska",
+  "family.Amazon Attack": "Atak Amazonki",
+  "family.Marienbad System": "System Marienbad",
+  "family.Pseudo Queen's Indian Defense": "Pseudoobrona hetmańsko-indyjska",
+  "family.Mexican Defense": "Obrona meksykańska",
+  "family.Carr Defense": "Obrona Carra",
+  "family.Goldsmith Defense": "Obrona Goldsmitha",
+  "family.Hippopotamus Defense": "Obrona hipopotama",
+  "family.Ware Defense": "Obrona Ware'a",
+  "family.Amsterdam Attack": "Atak Amsterdam",
+  "family.Creepy Crawly Formation": "Formacja Creepy Crawly",
+  "family.Global Opening": "Debiut Global",
+  "family.Lasker Simul Special": "Symultana Laskera",
+  "family.Saragossa Opening": "Debiut Saragossa",
+  "family.Valencia Opening": "Debiut Valencia",
+  "family.Australian Defense": "Obrona australijska",
+  "family.Montevideo Defense": "Obrona Montevideo",
+  "family.Zaire Defense": "Obrona Zaire",
+  "family.Robatsch Defense": "Obrona Robatscha",
+  "family.Wade Defense": "Obrona Wade'a",
+  "family.Basque Opening": "Debiut baskijski",
+  "family.Canard Opening": "Debiut Canard",
+  "family.Paleface Attack": "Atak Paleface",
+  "family.Döry Defense": "Obrona Dörya",
+  "family.Yusupov-Rubinstein System": "System Jusupowa-Rubinsteina",
+  "family.East Indian Defense": "Obrona wschodnioindyjska",
+  "family.Queen's Indian Accelerated": "Hetmańsko-indyjska przyspieszona",
+  "family.Vulture Defense": "Obrona sępa",
+  "family.Barnes Defense": "Obrona Barnesa",
+  "family.Fried Fox Defense": "Obrona Fried Fox",
+  "family.Lemming Defense": "Obrona lemingów",
+  "family.Czech Defense": "Obrona czeska",
+  "family.Bongcloud Attack": "Atak Bongcloud",
+  "family.Gunderam Defense": "Obrona Gunderama",
+  "family.Dresden Opening": "Debiut Drezno",
+  "family.Irish Gambit": "Gambit irlandzki",
+  "family.Duras Gambit": "Gambit Durasa",
+  "family.Queen's Pawn": "Pion hetmański",
+  "phrase.Two Knights": "dwóch skoczków",
+  "phrase.Three Knights": "trzech skoczków",
+  "phrase.Four Knights": "czterech skoczków",
+  "phrase.Two Pawns": "dwóch pionów",
+  "phrase.Three Pawns": "trzech pionów",
+  "phrase.Four Pawns": "czterech pionów",
+  "phrase.King's": "króla",
+  "phrase.Queen's": "hetmana",
+  "phrase.Bishop's": "gońca",
+  "phrase.Knight's": "skoczka",
+  "phrase.Queen's Knight": "skoczka hetmana",
+  "phrase.King's Knight": "skoczka króla",
+  "phrase.Early Deviations": "wczesne odejścia",
+  "phrase.Move Order": "kolejność ruchów",
+  "phrase.Kingside Move Order": "kolejność ruchów na skrzydle królewskim",
+  "phrase.Queenside Move Order": "kolejność ruchów na skrzydle hetmańskim",
+  "phrase.Pawn Push": "marsz piona",
+  "phrase.Double-Dutch": "podwójny holenderski",
+  "phrase.King's English": "angielski króla",
+  "noun.Variation": [
+    "wariant",
+    "m"
+  ],
+  "noun.Variations": [
+    "warianty",
+    "m"
+  ],
+  "noun.Attack": [
+    "atak",
+    "m"
+  ],
+  "noun.Gambit": [
+    "gambit",
+    "m"
+  ],
+  "noun.Countergambit": [
+    "kontrgambit",
+    "m"
+  ],
+  "noun.Defense": [
+    "obrona",
+    "f"
+  ],
+  "noun.System": [
+    "system",
+    "m"
+  ],
+  "noun.Line": [
+    "linia",
+    "f"
+  ],
+  "noun.Opening": [
+    "debiut",
+    "m"
+  ],
+  "noun.Game": [
+    "partia",
+    "f"
+  ],
+  "noun.Formation": [
+    "formacja",
+    "f"
+  ],
+  "noun.Trap": [
+    "pułapka",
+    "f"
+  ],
+  "noun.Sacrifice": [
+    "poświęcenie",
+    "m"
+  ],
+  "noun.Endgame": [
+    "końcówka",
+    "f"
+  ],
+  "noun.Counterattack": [
+    "kontratak",
+    "m"
+  ],
+  "noun.Retreat": [
+    "odwrót",
+    "m"
+  ],
+  "adjective.Classical": [
+    "klasyczny",
+    "klasyczna"
+  ],
+  "adjective.Modern": [
+    "nowoczesny",
+    "nowoczesna"
+  ],
+  "adjective.Closed": [
+    "zamknięty",
+    "zamknięta"
+  ],
+  "adjective.Open": [
+    "otwarty",
+    "otwarta"
+  ],
+  "adjective.Main": [
+    "główny",
+    "główna"
+  ],
+  "adjective.Normal": [
+    "normalny",
+    "normalna"
+  ],
+  "adjective.Orthodox": [
+    "ortodoksyjny",
+    "ortodoksyjna"
+  ],
+  "adjective.Accepted": [
+    "przyjęty",
+    "przyjęta"
+  ],
+  "adjective.Declined": [
+    "odrzucony",
+    "odrzucona"
+  ],
+  "adjective.Advance": [
+    "natarcia",
+    "natarcia"
+  ],
+  "adjective.Exchange": [
+    "wymienny",
+    "wymienna"
+  ],
+  "adjective.Symmetrical": [
+    "symetryczny",
+    "symetryczna"
+  ],
+  "adjective.Symmetric": [
+    "symetryczny",
+    "symetryczna"
+  ],
+  "adjective.Reversed": [
+    "odwrócony",
+    "odwrócona"
+  ],
+  "adjective.Accelerated": [
+    "przyspieszony",
+    "przyspieszona"
+  ],
+  "adjective.Hyperaccelerated": [
+    "hiperprzyspieszony",
+    "hiperprzyspieszona"
+  ],
+  "adjective.Delayed": [
+    "opóźniony",
+    "opóźniona"
+  ],
+  "adjective.Deferred": [
+    "odroczony",
+    "odroczona"
+  ],
+  "adjective.Quiet": [
+    "spokojny",
+    "spokojna"
+  ],
+  "adjective.Traditional": [
+    "tradycyjny",
+    "tradycyjna"
+  ],
+  "adjective.Positional": [
+    "pozycyjny",
+    "pozycyjna"
+  ],
+  "adjective.Double": [
+    "podwójny",
+    "podwójna"
+  ],
+  "adjective.Central": [
+    "centralny",
+    "centralna"
+  ],
+  "adjective.Old": [
+    "stary",
+    "stara"
+  ],
+  "adjective.Early": [
+    "wczesny",
+    "wczesna"
+  ],
+  "adjective.Long": [
+    "długi",
+    "długa"
+  ],
+  "adjective.Short": [
+    "krótki",
+    "krótka"
+  ],
+  "adjective.Improved": [
+    "ulepszony",
+    "ulepszona"
+  ],
+  "adjective.Original": [
+    "oryginalny",
+    "oryginalna"
+  ],
+  "adjective.Hybrid": [
+    "hybrydowy",
+    "hybrydowa"
+  ],
+  "adjective.Poisoned": [
+    "zatruty",
+    "zatruta"
+  ],
+  "adjective.Austrian": [
+    "austriacki",
+    "austriacka"
+  ],
+  "adjective.Russian": [
+    "rosyjski",
+    "rosyjska"
+  ],
+  "adjective.Italian": [
+    "włoski",
+    "włoska"
+  ],
+  "adjective.Spanish": [
+    "hiszpański",
+    "hiszpańska"
+  ],
+  "adjective.English": [
+    "angielski",
+    "angielska"
+  ],
+  "adjective.Dutch": [
+    "holenderski",
+    "holenderska"
+  ],
+  "adjective.French": [
+    "francuski",
+    "francuska"
+  ],
+  "adjective.Polish": [
+    "polski",
+    "polska"
+  ],
+  "adjective.Hungarian": [
+    "węgierski",
+    "węgierska"
+  ],
+  "adjective.Czech": [
+    "czeski",
+    "czeska"
+  ],
+  "adjective.Portuguese": [
+    "portugalski",
+    "portugalska"
+  ],
+  "adjective.Norwegian": [
+    "norweski",
+    "norweska"
+  ],
+  "adjective.Swiss": [
+    "szwajcarski",
+    "szwajcarska"
+  ],
+  "adjective.Swedish": [
+    "szwedzki",
+    "szwedzka"
+  ],
+  "adjective.Siberian": [
+    "syberyjski",
+    "syberyjska"
+  ],
+  "adjective.Eastern": [
+    "wschodni",
+    "wschodnia"
+  ],
+  "adjective.Western": [
+    "zachodni",
+    "zachodnia"
+  ],
+  "adjective.Chinese": [
+    "chiński",
+    "chińska"
+  ],
+  "adjective.Yugoslav": [
+    "jugosłowiański",
+    "jugosłowiańska"
+  ],
+  "adjective.Scandinavian": [
+    "skandynawski",
+    "skandynawska"
+  ],
+  "adjective.German": [
+    "niemiecki",
+    "niemiecka"
+  ],
+  "adjective.Ukrainian": [
+    "ukraiński",
+    "ukraińska"
+  ],
+  "adjective.Mexican": [
+    "meksykański",
+    "meksykańska"
+  ],
+  "adjective.American": [
+    "amerykański",
+    "amerykańska"
+  ],
+  "adjective.Argentine": [
+    "argentyński",
+    "argentyńska"
+  ],
+  "adjective.Baltic": [
+    "bałtycki",
+    "bałtycka"
+  ],
+  "adjective.Sicilian": [
+    "sycylijski",
+    "sycylijska"
+  ],
+  "adjective.Slav": [
+    "słowiański",
+    "słowiańska"
+  ],
+  "adjective.Indian": [
+    "indyjski",
+    "indyjska"
+  ],
+  "adjective.Wing": [
+    "skrzydłowy",
+    "skrzydłowa"
+  ],
+  "adjective.Center": [
+    "centralny",
+    "centralna"
+  ],
+  "adjective.Kingside": [
+    "królewskiego skrzydła",
+    "królewskiego skrzydła"
+  ],
+  "adjective.Queenside": [
+    "hetmańskiego skrzydła",
+    "hetmańskiego skrzydła"
+  ],
+  "adjective.Black": [
+    "czarnych",
+    "czarnych"
+  ],
+  "adjective.White": [
+    "białych",
+    "białych"
+  ],
+  "adjective.Check": [
+    "szachowy",
+    "szachowa"
+  ],
+  "adjective.Knight": [
+    "skoczka",
+    "skoczka"
+  ],
+  "adjective.Bishop": [
+    "gońca",
+    "gońca"
+  ],
+  "prefix.Neo": "neo",
+  "prefix.Anti": "anty",
+  "prefix.Semi": "pół",
+  "prefix.Pseudo": "pseudo",
+  "grammar.with": "z",
+  "grammar.feminine": [
+    "Obrona",
+    "Partia",
+    "Formacja",
+    "Pseudoobrona",
+    "Hetmańsko-indyjska",
+    "Słowiańsko-indyjska",
+    "Symultana"
+  ]
+}

@@ -1,0 +1,114 @@
+{
+  "personalTitle": "Твои дебюты",
+  "personalHubSubtitle": "Ходы, которые ты играл, и результаты",
+  "personalLoadFailed": "Не удалось прочитать архив партий: попробуй позже.",
+  "personalEmpty": "Сыграй несколько партий с компьютером, чтобы построить своё дерево дебютов.",
+  "personalNoGamesFiltered": "Нет партий, подходящих под эти фильтры.",
+  "personalNoGamesHere": "Из этой позиции ты ещё не играл.",
+  "personalSideAll": "Оба",
+  "personalSideWhite": "Белые",
+  "personalSideBlack": "Чёрные",
+  "personalOpponent": "Соперник",
+  "personalAllOpponents": "Все соперники",
+  "personalGames": "{count, plural, one{{count} партия} few{{count} партии} many{{count} партий} other{{count} партии}}",
+  "@personalGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "personalGamesTotal": "{count, plural, one{Учтена {count} партия} few{Учтено {count} партии} many{Учтено {count} партий} other{Учтено {count} партии}}",
+  "@personalGamesTotal": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "personalScore": "{wins}В · {draws}Н · {losses}П",
+  "@personalScore": {
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      }
+    }
+  },
+  "personalScoreSemantics": "Побед: {wins}, ничьих: {draws}, поражений: {losses}",
+  "@personalScoreSemantics": {
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      }
+    }
+  },
+  "personalStartPosition": "Начальная позиция",
+  "personalNoName": "Дебют без названия",
+  "personalBack": "Назад",
+  "personalStart": "Начало",
+  "personalFlip": "Перевернуть доску",
+  "personalOpenInBook": "Открыть в обозревателе дебютов",
+  "personalFromHere": "Твои партии из этой позиции",
+  "explorerTitle": "Обзор дебютов",
+  "explorerLoadFailed": "Не удалось загрузить дебюты.",
+  "explorerStartPosition": "Начальная позиция",
+  "explorerNoName": "Дебют без названия",
+  "explorerOutOfBook": "Вне книги дебютов",
+  "explorerFlip": "Перевернуть доску",
+  "explorerRestart": "Сначала",
+  "explorerBack": "Назад",
+  "explorerForward": "Вперёд",
+  "explorerMoveSemantics": "{move}: {games, plural, one{{games} партия} few{{games} партии} many{{games} партий} other{{games} партии}}, белые {white}%, ничьи {draws}%, чёрные {black}%",
+  "openingsHubTitle": "Дебюты",
+  "openingsHubExplorerSubtitle": "Сыгранные партии и результаты по каждому ходу, с названиями дебютов",
+  "openingsRepertoireTitle": "{side, select, white{Репертуар за белых} other{Репертуар за чёрных}}",
+  "openingsRepertoireUnavailable": "Репертуар недоступен",
+  "openingsRepertoireLoading": "Загрузка…",
+  "openingsRepertoireSummary": "{lines, plural, one{{lines} линия} few{{lines} линии} many{{lines} линий} other{{lines} линии}} · {due, plural, one{{due} ход на повторение} few{{due} хода на повторение} many{{due} ходов на повторение} other{{due} хода на повторение}}",
+  "openingsGameTitle": "Игра с компьютером",
+  "openingsLevel": "Уровень",
+  "openingsPlay": "Играть",
+  "openingsCancel": "Отмена",
+  "openingsSideWhite": "Белые",
+  "openingsSideBlack": "Чёрные",
+  "openingsNameSemantics": "Дебют: {name} ({eco})",
+  "openingsAddToRepertoire": "Добавить в репертуар",
+  "openingsPlayThisOpening": "Сыграть этот дебют",
+  "openingsFreeOpening": "Свободный дебют",
+  "openingsDefaultLineName": "Линия",
+  "openingsLineName": "Название",
+  "openingsAdd": "Добавить",
+  "openingsLineAdded": "{side, select, white{Линия добавлена в репертуар за белых.} other{Линия добавлена в репертуар за чёрных.}}",
+  "openingsProblemEmpty": "Линия пуста.",
+  "openingsProblemIllegal": "В линии есть недопустимый ход.",
+  "openingsProblemNoOwnMoves": "В линии нет ходов за твой цвет.",
+  "openingsProblemConflict": "В этой позиции в твоём репертуаре уже есть ход {move}.",
+  "openingsDrillTitle": "Повторение репертуара",
+  "openingsDrillDone": "Повторение завершено: {count, plural, one{{count} ход} few{{count} хода} many{{count} ходов} other{{count} хода}}.",
+  "openingsDrillNew": "Новый ход: сыграй тот, на который указывает стрелка.",
+  "openingsDrillPrompt": "Линия «{name}»: какой твой ход?",
+  "openingsDrillWrong": "Это не ход из репертуара: вот верный.",
+  "openingsImportTitle": "Импорт PGN",
+  "openingsImportHelper": "Каждый вариант становится линией.",
+  "openingsImport": "Импорт",
+  "openingsImportNone": "В PGN нет подходящих линий.",
+  "openingsImportAdded": "Добавлено линий: {added}",
+  "openingsImportAddedSkipped": "Добавлено линий: {added}. Пропущено: {skipped} ({reason})",
+  "openingsRepertoireEmpty": "Линий пока нет. Добавь их в разделе «Обзор дебютов» кнопкой «Добавить в репертуар» или импортируй PGN.",
+  "openingsPlayLine": "Сыграть линию",
+  "openingsDeleteLine": "Удалить линию",
+  "openingsReviewNone": "Нет ходов для повторения",
+  "openingsReviewButton": "{count, plural, one{Повторить {count} ход} few{Повторить {count} хода} many{Повторить {count} ходов} other{Повторить {count} хода}}"
+}

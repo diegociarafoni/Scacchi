@@ -1,0 +1,501 @@
+{
+  "family.Sicilian Defense": "Pertahanan Sisilia",
+  "family.Ruy Lopez": "Pembukaan Spanyol (Ruy López)",
+  "family.French Defense": "Pertahanan Prancis",
+  "family.Queen's Gambit": "Gambit Ratu",
+  "family.Italian Game": "Permainan Italia",
+  "family.English Opening": "Pembukaan Inggris",
+  "family.King's Gambit": "Gambit Raja",
+  "family.King's Indian Defense": "Pertahanan India Raja",
+  "family.Caro-Kann Defense": "Pertahanan Caro-Kann",
+  "family.Nimzo-Indian Defense": "Pertahanan Nimzo-India",
+  "family.Queen's Pawn Game": "Permainan Pion Ratu",
+  "family.Semi-Slav Defense": "Pertahanan Semi-Slav",
+  "family.Dutch Defense": "Pertahanan Belanda",
+  "family.Benoni Defense": "Pertahanan Benoni",
+  "family.Grünfeld Defense": "Pertahanan Grünfeld",
+  "family.Queen's Indian Defense": "Pertahanan India Ratu",
+  "family.Alekhine Defense": "Pertahanan Alekhine",
+  "family.Indian Defense": "Pertahanan India",
+  "family.Scotch Game": "Permainan Skotlandia",
+  "family.Slav Defense": "Pertahanan Slav",
+  "family.Petrov's Defense": "Pertahanan Petrov",
+  "family.Four Knights Game": "Permainan Empat Kuda",
+  "family.Zukertort Opening": "Pembukaan Zukertort",
+  "family.Scandinavian Defense": "Pertahanan Skandinavia",
+  "family.Philidor Defense": "Pertahanan Philidor",
+  "family.Réti Opening": "Pembukaan Réti",
+  "family.Nimzowitsch Defense": "Pertahanan Nimzowitsch",
+  "family.Bishop's Opening": "Pembukaan Gajah",
+  "family.Vienna Game": "Permainan Wina",
+  "family.Modern Defense": "Pertahanan Modern",
+  "family.King's Pawn Game": "Permainan Pion Raja",
+  "family.Van Geet Opening": "Pembukaan Van Geet",
+  "family.Pterodactyl Defense": "Pertahanan Pterodaktil",
+  "family.Catalan Opening": "Pembukaan Katalan",
+  "family.Bird Opening": "Pembukaan Bird",
+  "family.Pirc Defense": "Pertahanan Pirc",
+  "family.Tarrasch Defense": "Pertahanan Tarrasch",
+  "family.Polish Opening": "Pembukaan Polandia",
+  "family.Neo-Grünfeld Defense": "Pertahanan Neo-Grünfeld",
+  "family.Blackmar-Diemer Gambit": "Gambit Blackmar-Diemer",
+  "family.Bogo-Indian Defense": "Pertahanan Bogo-India",
+  "family.Grob Opening": "Pembukaan Grob",
+  "family.Hungarian Opening": "Pembukaan Hungaria",
+  "family.King's Indian Attack": "Serangan India Raja",
+  "family.Nimzo-Larsen Attack": "Serangan Nimzo-Larsen",
+  "family.Center Game": "Permainan Pusat",
+  "family.Latvian Gambit": "Gambit Latvia",
+  "family.Ponziani Opening": "Pembukaan Ponziani",
+  "family.Vienna Gambit": "Gambit Wina",
+  "family.Old Indian Defense": "Pertahanan India Lama",
+  "family.Rat Defense": "Pertahanan Tikus",
+  "family.Trompowsky Attack": "Serangan Trompowsky",
+  "family.Benko Gambit": "Gambit Benko",
+  "family.Kádas Opening": "Pembukaan Kádas",
+  "family.Englund Gambit": "Gambit Englund",
+  "family.Owen Defense": "Pertahanan Owen",
+  "family.Richter-Veresov Attack": "Serangan Richter-Veresov",
+  "family.Ware Opening": "Pembukaan Ware",
+  "family.English Defense": "Pertahanan Inggris",
+  "family.Barnes Opening": "Pembukaan Barnes",
+  "family.Torre Attack": "Serangan Torre",
+  "family.Lion Defense": "Pertahanan Singa",
+  "family.Danish Gambit": "Gambit Denmark",
+  "family.Three Knights Opening": "Pembukaan Tiga Kuda",
+  "family.Rubinstein Opening": "Pembukaan Rubinstein",
+  "family.Van't Kruijs Opening": "Pembukaan Van't Kruijs",
+  "family.Borg Defense": "Pertahanan Borg",
+  "family.Mieses Opening": "Pembukaan Mieses",
+  "family.Sodium Attack": "Serangan Sodium",
+  "family.Mikenas Defense": "Pertahanan Mikenas",
+  "family.London System": "Sistem London",
+  "family.St. George Defense": "Pertahanan St. George",
+  "family.Elephant Gambit": "Gambit Gajah",
+  "family.Amar Opening": "Pembukaan Amar",
+  "family.Colle System": "Sistem Colle",
+  "family.King's Pawn Opening": "Pembukaan Pion Raja",
+  "family.Portuguese Opening": "Pembukaan Portugal",
+  "family.King's Knight Opening": "Pembukaan Kuda Raja",
+  "family.Rapport-Jobava System": "Sistem Rapport-Jobava",
+  "family.Blumenfeld Countergambit": "Kontragambit Blumenfeld",
+  "family.Anderssen's Opening": "Pembukaan Anderssen",
+  "family.Clemenz Opening": "Pembukaan Clemenz",
+  "family.Formation": "Formasi",
+  "family.Zukertort Defense": "Pertahanan Zukertort",
+  "family.English Orangutan": "Orangutan Inggris",
+  "family.Horwitz Defense": "Pertahanan Horwitz",
+  "family.Kangaroo Defense": "Pertahanan Kanguru",
+  "family.Polish Defense": "Pertahanan Polandia",
+  "family.Slav Indian": "Slav-India",
+  "family.Amazon Attack": "Serangan Amazon",
+  "family.Marienbad System": "Sistem Marienbad",
+  "family.Pseudo Queen's Indian Defense": "Pertahanan Pseudo India Ratu",
+  "family.Mexican Defense": "Pertahanan Meksiko",
+  "family.Carr Defense": "Pertahanan Carr",
+  "family.Goldsmith Defense": "Pertahanan Goldsmith",
+  "family.Hippopotamus Defense": "Pertahanan Kuda Nil",
+  "family.Ware Defense": "Pertahanan Ware",
+  "family.Amsterdam Attack": "Serangan Amsterdam",
+  "family.Creepy Crawly Formation": "Formasi Creepy Crawly",
+  "family.Global Opening": "Pembukaan Global",
+  "family.Lasker Simul Special": "Simultan Spesial Lasker",
+  "family.Saragossa Opening": "Pembukaan Saragozza",
+  "family.Valencia Opening": "Pembukaan Valencia",
+  "family.Australian Defense": "Pertahanan Australia",
+  "family.Montevideo Defense": "Pertahanan Montevideo",
+  "family.Zaire Defense": "Pertahanan Zaire",
+  "family.Robatsch Defense": "Pertahanan Robatsch",
+  "family.Wade Defense": "Pertahanan Wade",
+  "family.Basque Opening": "Pembukaan Basque",
+  "family.Canard Opening": "Pembukaan Canard",
+  "family.Paleface Attack": "Serangan Paleface",
+  "family.Döry Defense": "Pertahanan Döry",
+  "family.Yusupov-Rubinstein System": "Sistem Yusupov-Rubinstein",
+  "family.East Indian Defense": "Pertahanan India Timur",
+  "family.Queen's Indian Accelerated": "India Ratu Dipercepat",
+  "family.Vulture Defense": "Pertahanan Burung Hering",
+  "family.Barnes Defense": "Pertahanan Barnes",
+  "family.Fried Fox Defense": "Pertahanan Fried Fox",
+  "family.Lemming Defense": "Pertahanan Lemming",
+  "family.Czech Defense": "Pertahanan Ceko",
+  "family.Bongcloud Attack": "Serangan Bongcloud",
+  "family.Gunderam Defense": "Pertahanan Gunderam",
+  "family.Dresden Opening": "Pembukaan Dresda",
+  "family.Irish Gambit": "Gambit Irlandia",
+  "family.Duras Gambit": "Gambit Duras",
+  "family.Queen's Pawn": "Pion Ratu",
+  "phrase.Two Knights": "dua kuda",
+  "phrase.Three Knights": "tiga kuda",
+  "phrase.Four Knights": "empat kuda",
+  "phrase.Two Pawns": "dua pion",
+  "phrase.Three Pawns": "tiga pion",
+  "phrase.Four Pawns": "empat pion",
+  "phrase.King's": "raja",
+  "phrase.Queen's": "ratu",
+  "phrase.Bishop's": "gajah",
+  "phrase.Knight's": "kuda",
+  "phrase.Queen's Knight": "kuda ratu",
+  "phrase.King's Knight": "kuda raja",
+  "phrase.Early Deviations": "penyimpangan awal",
+  "phrase.Move Order": "urutan langkah",
+  "phrase.Kingside Move Order": "urutan langkah sayap raja",
+  "phrase.Queenside Move Order": "urutan langkah sayap ratu",
+  "phrase.Pawn Push": "dorongan pion",
+  "phrase.Double-Dutch": "Belanda ganda",
+  "phrase.King's English": "Inggris raja",
+  "noun.Variation": [
+    "varian",
+    "f"
+  ],
+  "noun.Variations": [
+    "varian",
+    "f"
+  ],
+  "noun.Attack": [
+    "serangan",
+    "m"
+  ],
+  "noun.Gambit": [
+    "gambit",
+    "m"
+  ],
+  "noun.Countergambit": [
+    "kontragambit",
+    "m"
+  ],
+  "noun.Defense": [
+    "pertahanan",
+    "f"
+  ],
+  "noun.System": [
+    "sistem",
+    "m"
+  ],
+  "noun.Line": [
+    "jalur",
+    "f"
+  ],
+  "noun.Opening": [
+    "pembukaan",
+    "f"
+  ],
+  "noun.Game": [
+    "permainan",
+    "f"
+  ],
+  "noun.Formation": [
+    "formasi",
+    "f"
+  ],
+  "noun.Trap": [
+    "jebakan",
+    "f"
+  ],
+  "noun.Sacrifice": [
+    "pengorbanan",
+    "m"
+  ],
+  "noun.Endgame": [
+    "bagian akhir",
+    "m"
+  ],
+  "noun.Counterattack": [
+    "serangan balik",
+    "m"
+  ],
+  "noun.Retreat": [
+    "mundur",
+    "f"
+  ],
+  "adjective.Classical": [
+    "klasik",
+    "klasik"
+  ],
+  "adjective.Modern": [
+    "modern",
+    "modern"
+  ],
+  "adjective.Closed": [
+    "tertutup",
+    "tertutup"
+  ],
+  "adjective.Open": [
+    "terbuka",
+    "terbuka"
+  ],
+  "adjective.Main": [
+    "utama",
+    "utama"
+  ],
+  "adjective.Normal": [
+    "normal",
+    "normal"
+  ],
+  "adjective.Orthodox": [
+    "ortodoks",
+    "ortodoks"
+  ],
+  "adjective.Accepted": [
+    "diterima",
+    "diterima"
+  ],
+  "adjective.Declined": [
+    "ditolak",
+    "ditolak"
+  ],
+  "adjective.Advance": [
+    "maju",
+    "maju"
+  ],
+  "adjective.Exchange": [
+    "tukar",
+    "tukar"
+  ],
+  "adjective.Symmetrical": [
+    "simetris",
+    "simetris"
+  ],
+  "adjective.Symmetric": [
+    "simetris",
+    "simetris"
+  ],
+  "adjective.Reversed": [
+    "terbalik",
+    "terbalik"
+  ],
+  "adjective.Accelerated": [
+    "dipercepat",
+    "dipercepat"
+  ],
+  "adjective.Hyperaccelerated": [
+    "sangat dipercepat",
+    "sangat dipercepat"
+  ],
+  "adjective.Delayed": [
+    "tertunda",
+    "tertunda"
+  ],
+  "adjective.Deferred": [
+    "ditunda",
+    "ditunda"
+  ],
+  "adjective.Quiet": [
+    "tenang",
+    "tenang"
+  ],
+  "adjective.Traditional": [
+    "tradisional",
+    "tradisional"
+  ],
+  "adjective.Positional": [
+    "posisional",
+    "posisional"
+  ],
+  "adjective.Double": [
+    "ganda",
+    "ganda"
+  ],
+  "adjective.Central": [
+    "sentral",
+    "sentral"
+  ],
+  "adjective.Old": [
+    "lama",
+    "lama"
+  ],
+  "adjective.Early": [
+    "awal",
+    "awal"
+  ],
+  "adjective.Long": [
+    "panjang",
+    "panjang"
+  ],
+  "adjective.Short": [
+    "pendek",
+    "pendek"
+  ],
+  "adjective.Improved": [
+    "disempurnakan",
+    "disempurnakan"
+  ],
+  "adjective.Original": [
+    "asli",
+    "asli"
+  ],
+  "adjective.Hybrid": [
+    "hibrida",
+    "hibrida"
+  ],
+  "adjective.Poisoned": [
+    "beracun",
+    "beracun"
+  ],
+  "adjective.Austrian": [
+    "Austria",
+    "Austria"
+  ],
+  "adjective.Russian": [
+    "Rusia",
+    "Rusia"
+  ],
+  "adjective.Italian": [
+    "Italia",
+    "Italia"
+  ],
+  "adjective.Spanish": [
+    "Spanyol",
+    "Spanyol"
+  ],
+  "adjective.English": [
+    "Inggris",
+    "Inggris"
+  ],
+  "adjective.Dutch": [
+    "Belanda",
+    "Belanda"
+  ],
+  "adjective.French": [
+    "Prancis",
+    "Prancis"
+  ],
+  "adjective.Polish": [
+    "Polandia",
+    "Polandia"
+  ],
+  "adjective.Hungarian": [
+    "Hungaria",
+    "Hungaria"
+  ],
+  "adjective.Czech": [
+    "Ceko",
+    "Ceko"
+  ],
+  "adjective.Portuguese": [
+    "Portugal",
+    "Portugal"
+  ],
+  "adjective.Norwegian": [
+    "Norwegia",
+    "Norwegia"
+  ],
+  "adjective.Swiss": [
+    "Swiss",
+    "Swiss"
+  ],
+  "adjective.Swedish": [
+    "Swedia",
+    "Swedia"
+  ],
+  "adjective.Siberian": [
+    "Siberia",
+    "Siberia"
+  ],
+  "adjective.Eastern": [
+    "Timur",
+    "Timur"
+  ],
+  "adjective.Western": [
+    "Barat",
+    "Barat"
+  ],
+  "adjective.Chinese": [
+    "Tiongkok",
+    "Tiongkok"
+  ],
+  "adjective.Yugoslav": [
+    "Yugoslavia",
+    "Yugoslavia"
+  ],
+  "adjective.Scandinavian": [
+    "Skandinavia",
+    "Skandinavia"
+  ],
+  "adjective.German": [
+    "Jerman",
+    "Jerman"
+  ],
+  "adjective.Ukrainian": [
+    "Ukraina",
+    "Ukraina"
+  ],
+  "adjective.Mexican": [
+    "Meksiko",
+    "Meksiko"
+  ],
+  "adjective.American": [
+    "Amerika",
+    "Amerika"
+  ],
+  "adjective.Argentine": [
+    "Argentina",
+    "Argentina"
+  ],
+  "adjective.Baltic": [
+    "Baltik",
+    "Baltik"
+  ],
+  "adjective.Sicilian": [
+    "Sisilia",
+    "Sisilia"
+  ],
+  "adjective.Slav": [
+    "Slav",
+    "Slav"
+  ],
+  "adjective.Indian": [
+    "India",
+    "India"
+  ],
+  "adjective.Wing": [
+    "sayap",
+    "sayap"
+  ],
+  "adjective.Center": [
+    "pusat",
+    "pusat"
+  ],
+  "adjective.Kingside": [
+    "sayap raja",
+    "sayap raja"
+  ],
+  "adjective.Queenside": [
+    "sayap ratu",
+    "sayap ratu"
+  ],
+  "adjective.Black": [
+    "Hitam",
+    "Hitam"
+  ],
+  "adjective.White": [
+    "Putih",
+    "Putih"
+  ],
+  "adjective.Check": [
+    "skak",
+    "skak"
+  ],
+  "adjective.Knight": [
+    "kuda",
+    "kuda"
+  ],
+  "adjective.Bishop": [
+    "gajah",
+    "gajah"
+  ],
+  "prefix.Neo": "neo",
+  "prefix.Anti": "anti",
+  "prefix.Semi": "semi",
+  "prefix.Pseudo": "pseudo",
+  "grammar.with": "dengan",
+  "grammar.feminine": [
+    "Pertahanan",
+    "Pembukaan",
+    "Permainan",
+    "Formasi",
+    "Pertahanan Pseudo",
+    "India",
+    "Slav"
+  ]
+}
