@@ -41,5 +41,6 @@
   "gameTipMore": "Draw and resign are in the bar; the ⋮ menu also opens the position editor.",
   "gameTipMenu": "The ⋮ menu lets you analyse the position and review the game.",
   "gameReviewInvite": "Game over. Want to see where to improve?",
-  "gameReviewInviteAction": "Review the game"
+  "gameReviewInviteAction": "Review the game",
+  "gameFirstMoveHint": "Tap a piece, then the square you want to move it to."
 }

@@ -11,7 +11,7 @@ La barra in basso ha quattro schede: Home, Puzzle, Impara e Tu. La scacchiera no
 Dall'alto verso il basso:
 
 1. **Barra del titolo** con il marchio Rokko (o il nome dell'apertura), il menu ⋮, la modalità zen e le impostazioni; la tastiera resta in barra solo con un lettore di schermo attivo, nelle sfide e nel profilo bambino.
-2. **Spazio delle mosse**: occupa lo spazio libero sopra la riga di stato. Lo schermo alto lo riempie con la lista delle mosse (l'ultima in basso, vicino alla scacchiera); quando lo spazio è poco diventa una striscia orizzontale. Contiene anche, una alla volta, le carte dei suggerimenti del primo uso e l'invito alla revisione.
+2. **Spazio delle mosse**: occupa lo spazio libero sopra la riga di stato. Lo schermo alto lo riempie con la lista delle mosse (l'ultima in basso, vicino alla scacchiera); quando lo spazio è poco diventa una striscia orizzontale. Contiene anche, una alla volta, le carte dei suggerimenti del primo uso e l'invito alla revisione. Finché nessuno ha mosso la lista sarebbe vuota: al suo posto, in basso contro la riga di stato, c'è la frase «Tocca un pezzo, poi la casa dove vuoi muoverlo.».
 3. **Riga di stato**: chi muove, scacco, oppure risultato e motivo della fine partita.
 4. **Materiale del giocatore in alto**: pezzi che ha catturato e vantaggio.
 5. **Scacchiera** a tutta larghezza.
