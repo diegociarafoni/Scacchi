@@ -114,3 +114,10 @@ Nei test dei widget il telefono è simulato in italiano (`test/support/italian_d
 - Registrazione: `AppLanguage.portuguese`, `tool/lingue.json`, `android/app/src/main/res/xml/locales_config.xml`, `CFBundleLocalizations` e `ios/Runner/pt.lproj/InfoPlist.strings` (anche nel progetto Xcode).
 - Regole di stile e termini: [glossario-portoghese.md](glossario-portoghese.md): você, virgolette “…”, plurali `one`/`other`, notazione R D T B C.
 - Test: `test/l10n/lingua_pt_test.dart` (chiavi, argomenti, plurali e due schermate campione) e, per i contenuti, il test di parità dei contenuti per lingua.
+## Francese
+
+- Pacchetto: 38 file `.arb` in `lib/l10n/fr/` (1902 chiavi) e cinque contenuti in `assets/content/fr/`; `test/l10n/content_parity_test.dart` li confronta con l'italiano (`_checked`).
+- Registrazione: `AppLanguage.french`, `tool/lingue.json`, `locales_config.xml`, `CFBundleLocalizations` e `ios/Runner/fr.lproj/InfoPlist.strings` (anche in `project.pbxproj`), cartella nelle risorse di `pubspec.yaml`.
+- Stile: francese di Francia, «tu»; virgolette « … » con spazio non separabile, spazio sottile non separabile prima di `;` `!` `?`, spazio non separabile prima di `:`. Nei plurali `one` copre 0 e 1, per questo il ramo `one` usa `{count}`.
+- `test/l10n/french_screens_test.dart` monta partita, Impostazioni e una tappa del Percorso in francese.
+- Voci del glossario da confermare per il francese: «mat du fou», «Roi/Dame» dei gambetti (`Gambit roi`, `Gambit dame`), «Toi» per la scheda Tu, «bouclier/gel de série» e «Challenger».

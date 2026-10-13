@@ -1,0 +1,19 @@
+{
+  "endgamesTitle": "Finales",
+  "endgamesGoalMate": "Donne échec et mat",
+  "endgamesGoalPromote": "Promeus le pion",
+  "endgamesGoalHoldBlack": "Tiens bon avec les Noirs",
+  "endgamesGoalHoldWhite": "Tiens bon avec les Blancs",
+  "endgamesToRepeat": "À refaire",
+  "endgamesStars": "{stars, plural, one{{stars} étoile sur 3} other{{stars} étoiles sur 3}}",
+  "endgamesMovesHold": "Coups : {moves} sur {par}",
+  "endgamesMovesTarget": "Coups : {moves} · trois étoiles en {par} maximum",
+  "endgamesStart": "Démarrer",
+  "endgamesThinking": "Le moteur réfléchit…",
+  "endgamesEngineFailed": "Le moteur ne répond pas : réessaie.",
+  "endgamesSuccess": "Objectif atteint",
+  "endgamesFailure": "Raté cette fois",
+  "endgamesFailureHint": "La position reste parmi celles à refaire.",
+  "endgamesRetry": "Réessayer",
+  "endgamesDone": "Terminé"
+}

@@ -1,0 +1,4 @@
+"NSBluetoothAlwaysUsageDescription" = "Le Bluetooth sert uniquement à jouer avec un ami à proximité, sans Wi-Fi. Les coups voyagent chiffrés et seulement entre les deux téléphones.";
+"NSCameraUsageDescription" = "L'appareil photo sert à lire le code QR d'une partie transmise par un autre téléphone et à prendre ta photo de profil, qui reste uniquement sur ce téléphone.";
+"NSLocalNetworkUsageDescription" = "Le réseau local sert uniquement à jouer avec un ami sur l'autre téléphone, sur le même Wi-Fi ou le même point d'accès. Les coups voyagent chiffrés et seulement entre les deux téléphones.";
+"NSPhotoLibraryUsageDescription" = "Sert à lire le code QR d'une partie depuis une image que tu choisis et à choisir ta photo de profil, qui reste uniquement sur ce téléphone.";
