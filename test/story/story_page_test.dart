@@ -171,6 +171,7 @@ void main() {
       );
       await tester.pumpAndSettle();
       await tapAndSave(tester, find.textContaining('Sfida a Tino'));
+      await tapAndSave(tester, find.text('Sfida Tino'));
       expect(played?.id, 'tino');
       expect(story.state.isBossBeaten(first.id), isTrue);
       expect(find.text('Hai battuto Tino!'), findsOneWidget);
@@ -188,6 +189,8 @@ void main() {
     await tester.ensureVisible(find.textContaining('Sfida a Tino'));
     await tester.pumpAndSettle();
     await tester.tap(find.textContaining('Sfida a Tino'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Sfida Tino'));
     await tester.pumpAndSettle();
     expect(story.state.isBossBeaten(first.id), isFalse);
     expect(find.textContaining('Tino resiste ancora'), findsOneWidget);

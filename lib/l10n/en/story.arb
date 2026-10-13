@@ -207,6 +207,7 @@
   "@storyPassageGoGuardian": {
     "description": "Foglio di passaggio della storia"
   },
+  "storyChallengeTitle": "{name}'s challenge",
   "storyPassageGoBoss": "Challenge {name}",
   "@storyPassageGoBoss": {
     "description": "Foglio di passaggio della storia",

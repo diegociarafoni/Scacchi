@@ -49,14 +49,15 @@ I testi (racconto, passi, avvisi) sono nei file `.arb` in italiano e in inglese;
 
 ## I custodi
 
-Ogni capitolo ha il suo custode, il bot del capitolo, che accompagna il giocatore con battute brevi nel suo stile (`GuardianMoment`, chiavi `storyGuardian<Capitolo><Momento>` nei file `.arb`, in italiano e in inglese, senza cifre per il profilo bambino). Compaiono in quattro punti:
+Ogni capitolo ha il suo custode, il bot del capitolo, che accompagna il giocatore con battute brevi nel suo stile (`GuardianMoment`, chiavi `storyGuardian<Capitolo><Momento>` nei file `.arb`, in italiano e in inglese, senza cifre per il profilo bambino). Compaiono in cinque punti:
 
 - **Benvenuto**: nella scheda del capitolo aperto, con l'avatar «saluto» (`GuardianSays`).
 - **Puzzle**: a ogni puzzle concluso un avviso breve non bloccante con l'avatar «contento» o «incoraggiante» e la battuta di esito (`StoryPuzzleFeed.onOutcome`, mostrato da `HomeShell`).
 - **Lezioni concluse**: nel foglio di passaggio dopo le lezioni, con l'avatar «contento» e la battuta `LessonDone`.
+- **Apertura della sfida**: aprendo la sfida dalla mappa (senza passare dal foglio di passaggio) compare un foglio dedicato con l'avatar «sfida», la presentazione del bot e la sua battuta; «Sfida {nome}» avvia la partita, «Più tardi» la rimanda. Dopo il foglio di passaggio non compare, perché l'ha già annunciata (`announced`).
 - **Prima della sfida**: nel foglio di passaggio dopo i puzzle l'avatar «sfida» prende il posto dell'icona e dice la sua battuta; a capitolo concluso con la sfida vinta l'avatar è «stupito».
 
-L'avatar è decorativo (`GuardianAvatar`, escluso dalla lettura) e la battuta è letta come «{nome} dice: …». I bot senza personaggio disegnato mostrano la loro emoji. Il custode non salva nulla: dipende solo dal capitolo e dal momento. Resta da fare il foglio dedicato alla sfida.
+L'avatar è decorativo (`GuardianAvatar`, escluso dalla lettura) e la battuta è letta come «{nome} dice: …». I bot senza personaggio disegnato mostrano la loro emoji. Il custode non salva nulla: dipende solo dal capitolo e dal momento.
 
 ## Come aggiungere un capitolo
 
