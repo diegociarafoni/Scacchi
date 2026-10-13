@@ -8,7 +8,7 @@ Home, Puzzle, Impara, Tu. La scacchiera non è una scheda: il grande pulsante «
 
 ## Cosa mostra la Home
 
-1. **In alto**: avatar (porta al Profilo), serie e livello, impostazioni. Prima le impostazioni stavano solo nella barra della partita.
+1. **In alto**: avatar (porta al Profilo), serie e livello, impostazioni.
 2. **Ricerca** «Cerca una funzione»: filtra per nome e parole chiave, senza badare a maiuscole e accenti (`searchFeatures`).
 3. **Prossimo passo per te**: una sola scheda grande, scelta in quest'ordine (`chooseNextStep`): la partita lasciata a metà, la prossima lezione della Storia con il custode del capitolo e l'avanzamento, il puzzle del giorno.
 4. **Avversario consigliato**: il bot più forte, tra quelli sbloccati, che non supera di più di 100 Elo la valutazione locale (`recommendedBot`). Un tocco apre «Nuova partita» con quel bot già scelto, così la vittoria sblocca il successivo. Senza motore non compare.
@@ -20,11 +20,11 @@ I dati arrivano uno alla volta: la Home si disegna subito e si completa man mano
 
 ## Impara
 
-`lib/home/learn_page.dart`: in testa «Continua da dove eri» (la Storia), poi Storia, Aperture, Finali, Grandi maestri e Minigiochi. Aperture esce dalla barra e sta qui.
+`lib/home/learn_page.dart`: in testa «Continua da dove eri» (la Storia), poi Storia, Aperture, Finali, Grandi maestri e Minigiochi. Le Aperture si aprono da qui e dalla Home.
 
 ## Profilo bambino
 
-Niente ricerca, Elo del bot, statistiche e ultime partite; il pulsante dice «Giochiamo!». Mancano Aperture, tornei, amico e scacchiera fisica (vedi [profilo-bambino.md](profilo-bambino.md)).
+Niente ricerca, avversario consigliato, statistiche e ultime partite; il pulsante dice «Giochiamo!». Mancano contro un bot, amico, tornei, scacchiera fisica, Aperture, statistiche, badge e archivio (vedi [profilo-bambino.md](profilo-bambino.md)).
 
 ## Accessibilità e prove
 
