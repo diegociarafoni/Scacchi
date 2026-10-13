@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -57,7 +59,7 @@ void main() {
     await tester.tap(find.byKey(const Key('about-source')));
     await tester.pumpAndSettle();
     expect(copied, sourceCodeUrl);
-    expect(find.byType(SnackBar), findsOneWidget);
+    expect(find.text('Indirizzo copiato'), findsOneWidget);
   });
 
   testWidgets('apre la pagina delle licenze del sistema', (tester) async {
@@ -85,6 +87,22 @@ void main() {
       expect(c.license, isNotEmpty);
     }
     expect(credits.map((c) => c.name), contains(startsWith('Stockfish')));
+  });
+
+  test('i crediti con attribuzione obbligatoria sono quelli di CREDITS.md', () {
+    final rows = File('CREDITS.md')
+        .readAsLinesSync()
+        .where((l) => l.startsWith('|') && l.contains('CC BY'));
+    expect(rows, isNotEmpty);
+    for (final row in rows) {
+      final key = RegExp('"([^"]+)"').firstMatch(row)?.group(1);
+      expect(key, isNotNull, reason: row);
+      expect(
+        credits.any((c) => c.name.startsWith(key!)),
+        isTrue,
+        reason: '$key manca in lib/about/credits.dart',
+      );
+    }
   });
 
   testWidgets('si apre dal menu delle Impostazioni', (tester) async {

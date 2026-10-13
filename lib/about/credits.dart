@@ -12,6 +12,7 @@ class Credit {
 /// Crediti di motore, pezzi e caratteri (nomi propri, non tradotti); l'elenco
 /// completo è in `CREDITS.md` e nella pagina delle licenze del sistema.
 const credits = <Credit>[
+  Credit('Rokko', 'GPL-3.0 / CC0'),
   Credit('Stockfish 19', 'GPL-3.0'),
   Credit('dartchess (Lichess)', 'GPL-3.0'),
   Credit('chessground (Lichess)', 'GPL-3.0'),
@@ -25,7 +26,7 @@ const credits = <Credit>[
   Credit('kiwen-suwi, neverRare', 'CC BY 4.0'),
   Credit('totoy, Kosal Sen', 'CC BY 4.0'),
   Credit('rhosgfx, RhosGFX', 'CC0'),
-  Credit('papercut, Nikolay Anzarov', 'CC BY 4.0'),
+  Credit('papercut, Nikolay Anzarov (Lichess)', 'CC BY 4.0'),
   Credit('Noto Sans Symbols 2, Google', 'OFL-1.1'),
   Credit('Flutter', 'BSD-3-Clause'),
 ];

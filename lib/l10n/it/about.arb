@@ -15,7 +15,7 @@
   "@aboutPrivacy": {
     "description": "Informazioni: titolo della riga sulla privacy"
   },
-  "aboutPrivacyDescription": "Nessun dato raccolto, nessuna pubblicità, nessun tracciamento",
+  "aboutPrivacyDescription": "Nessun dato raccolto, nessuna pubblicità, nessun tracciamento. Giocando a distanza le mosse passano, cifrate, solo dai server scelti per la partita",
   "@aboutPrivacyDescription": {
     "description": "Informazioni: dichiarazione di privacy"
   },
@@ -42,6 +42,10 @@
   "aboutLicensesDescription": "Testi completi delle licenze dei componenti usati",
   "@aboutLicensesDescription": {
     "description": "Informazioni: descrizione della voce delle licenze"
+  },
+  "aboutCopy": "Copia",
+  "@aboutCopy": {
+    "description": "Informazioni: etichetta dell'icona che copia l'indirizzo dei sorgenti"
   },
   "aboutCredits": "Crediti",
   "@aboutCredits": {

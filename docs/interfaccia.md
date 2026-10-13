@@ -121,7 +121,7 @@ La pagina principale è un menu di sezioni: ogni voce ha icona, nome e una riga 
 | Profilo bambino | In fondo, sotto un separatore; per uscirne serve la domanda per adulti |
 | Informazioni | Ultima voce: licenza GPL-3.0 o successiva, indirizzo dei sorgenti (si copia, non si apre: l'app non usa la rete), dichiarazione di privacy, licenze di tutte le librerie (`showLicensePage`) e crediti di motore, pezzi e caratteri (`lib/about/`) |
 
-Poche sezioni, nessuna con meno di due voci (lo controlla un test): una sezione per ogni cosa che l'utente cerca, non una per ogni funzione.
+Poche sezioni, nessuna con meno di due voci (lo controlla un test; Stile, Profilo bambino e Informazioni sono le eccezioni): una sezione per ogni cosa che l'utente cerca, non una per ogni funzione.
 
 Le pagine che cambiano l'aspetto della scacchiera (Scacchiera e Accessibilità; Stile ha la sua) hanno in cima, fissa mentre si scorre, un'anteprima: mostra una posizione di prova con tema, pezzi, coordinate, mosse legali, ultima mossa, colori per daltonici e velocità delle animazioni correnti, e si aggiorna a ogni scelta. Toccandola si gioca la mossa di prova (l'alfiere prende in c6), con l'animazione scelta; un secondo tocco la ripristina. Il pulsante a destra del titolo (48 dp) la comprime a una riga con tema e pezzi, per lasciare spazio alle impostazioni sui telefoni piccoli. L'anteprima ha un'etichetta per i lettori di schermo.
 

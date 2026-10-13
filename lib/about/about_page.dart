@@ -5,8 +5,8 @@ import '../l10n/app_localizations.dart';
 import '../theme/rokko_theme.dart';
 import 'credits.dart';
 
-/// Informazioni sull'app: licenza, sorgenti, privacy e crediti. Non usa la
-/// rete: l'indirizzo dei sorgenti si copia invece di aprirsi nel browser.
+/// Informazioni sull'app: licenza, sorgenti, privacy e crediti. L'indirizzo
+/// dei sorgenti si copia invece di aprirsi nel browser, senza bisogno di rete.
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
 
@@ -56,7 +56,10 @@ class AboutPage extends StatelessWidget {
             leading: Icon(Icons.code, color: tokens.action),
             title: Text(l10n.aboutSource),
             subtitle: const Text(sourceCodeUrl),
-            trailing: const Icon(Icons.copy),
+            trailing: Tooltip(
+              message: l10n.aboutCopy,
+              child: const Icon(Icons.copy),
+            ),
             minTileHeight: tokens.minTouch,
             onTap: () => _copySource(context),
           ),
