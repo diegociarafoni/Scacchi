@@ -85,6 +85,15 @@ Su desktop i file e2e vanno eseguiti uno alla volta: avviandone più di uno nell
 
 I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisici, rapporto 3) e muovono i pezzi calcolando la posizione delle case sulla scacchiera.
 
+`ScacchiApp` si apre sulla Home a dashboard, non sulla scacchiera. Per questo i test e2e partono dalla Home e seguono gli stessi percorsi dell'utente con gli aiuti condivisi di `test/`:
+
+- `openBoard` (`test/game_actions.dart`) tocca «Nuova partita» e avvia una partita in due senza tempo;
+- `openCustomSheet` (`test/computer_fakes.dart`) apre dal foglio «Nuova partita» la scelta completa, per nomi, varianti e handicap, e `startComputerGame` avvia una partita contro il bot Adattivo;
+- una funzione della Home si apre con la chiave `home-feature-<id>` dopo averla portata in vista con `scrollUntilVisible`;
+- le Impostazioni sono un menu di sezioni: si entra in una pagina con la chiave `section-<nome>`.
+
+I messaggi a scomparsa (SnackBar) non vanno attesi con `pumpAndSettle`: le animazioni della partita fanno scorrere il tempo finto e il messaggio sparisce prima del controllo.
+
 I golden si rigenerano con `flutter test test/settings --update-goldens` dopo una modifica voluta dell'aspetto; il testo dei test è disegnato con il font Ahem, quindi le immagini non dipendono dai font del sistema. Vanno generati con la stessa versione di Flutter della CI (3.47.7) e riletti prima del commit.
 
 ### Copertura attuale dei requisiti

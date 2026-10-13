@@ -17,6 +17,8 @@ import 'package:scacchi/puzzles/puzzle_trainer.dart';
 import 'package:scacchi/storage/key_value_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../test/game_actions.dart';
+
 Offset _square(WidgetTester tester, String name) {
   final rect = tester.getRect(find.byType(Chessboard));
   final size = rect.width / 8;
@@ -72,6 +74,7 @@ void main() {
     addTearDown(tester.view.reset);
     await tester.pumpWidget(const ScacchiApp());
     await tester.pumpAndSettle();
+    await openBoard(tester);
 
     for (final uci in ['e2e4', 'e7e5', 'g1f3']) {
       await _tapMove(tester, uci);
