@@ -1,6 +1,6 @@
 # Scambio di partite tra telefoni con il QR
 
-Proposta del capitolo 7 dei requisiti: passare una partita in corso o un PGN da un telefono all'altro leggendo un codice QR, senza rete, senza account e senza server. Il codice è in `lib/exchange/`.
+Funzione del [backlog](backlog.md): passare una partita in corso o un PGN da un telefono all'altro leggendo un codice QR, senza rete, senza account e senza server. Il codice è in `lib/exchange/`.
 
 ## Uso
 

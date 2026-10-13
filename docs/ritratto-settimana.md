@@ -1,6 +1,6 @@
 # La tua settimana
 
-Scheda riassuntiva degli ultimi sette giorni (proposta del capitolo 7 dei requisiti, «ritratto del giocatore»). Si apre da **Tu → La tua settimana** e si condivide come immagine PNG: non serve alcun server.
+Scheda riassuntiva degli ultimi sette giorni («ritratto del giocatore», vedi [backlog](backlog.md)). Si apre da **Tu → La tua settimana** e si condivide come immagine PNG: non serve alcun server.
 
 ## Cosa mostra
 

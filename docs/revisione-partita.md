@@ -140,7 +140,7 @@ Il commento in tempo reale durante la partita (RF-72) è dell'allenatore: vedi [
 
 ## Puzzle dagli errori
 
-Proposta "Allenamento dagli errori" del capitolo 7 dei requisiti: `puzzlesFromReview` (`lib/review/personal_puzzles.dart`) trasforma gli errori, gli errori gravi e le occasioni mancate del giocatore in puzzle personali (`MistakePuzzle`) nello stesso formato dei puzzle Lichess usati dal modulo puzzle.
+Funzione «Allenamento dagli errori» del [backlog](backlog.md): `puzzlesFromReview` (`lib/review/personal_puzzles.dart`) trasforma gli errori, gli errori gravi e le occasioni mancate del giocatore in puzzle personali (`MistakePuzzle`) nello stesso formato dei puzzle Lichess usati dal modulo puzzle.
 
 - **Posizione**: quella prima della mossa precedente dell'avversario; la prima mossa del puzzle è quella dell'avversario, come nella raccolta di puzzle inclusa.
 - **Soluzione**: la variante del motore, fino a tre mosse del giocatore, oppure l'intero matto se il giocatore aveva il matto in 5 o meno. Si ferma alla prima mossa illegale e finisce sempre con una mossa del giocatore.
