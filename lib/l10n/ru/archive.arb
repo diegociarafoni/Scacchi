@@ -39,5 +39,7 @@
   "archiveModeLocal": "на одном устройстве",
   "archiveModeComputer": "с компьютером",
   "archiveModeImported": "импортирована",
-  "archiveModePhysical": "реальная доска"
+  "archiveModePhysical": "реальная доска",
+  "archiveModeAnalysis": "анализ",
+  "archiveOpenAnalysis": "Открыть в анализе"
 }

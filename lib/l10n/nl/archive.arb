@@ -39,5 +39,7 @@
   "archiveModeLocal": "lokaal",
   "archiveModeComputer": "computer",
   "archiveModeImported": "geïmporteerd",
-  "archiveModePhysical": "fysiek bord"
+  "archiveModePhysical": "fysiek bord",
+  "archiveModeAnalysis": "analyse",
+  "archiveOpenAnalysis": "Openen in analyse"
 }

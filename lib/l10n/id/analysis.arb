@@ -22,5 +22,21 @@
   "analysisBack": "Mundur",
   "analysisForward": "Maju",
   "analysisResume": "Lanjutkan analisis",
-  "analysisPause": "Jeda analisis"
+  "analysisPause": "Jeda analisis",
+  "analysisMore": "Tindakan lainnya",
+  "analysisSave": "Simpan ke arsip",
+  "analysisSharePgn": "Bagikan PGN",
+  "analysisSaveTitle": "Nama analisis",
+  "analysisDefaultName": "Analisis tanggal {date}",
+  "@analysisDefaultName": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "analysisSaved": "Analisis disimpan ke arsip",
+  "analysisSaveFailed": "Gagal menyimpan",
+  "analysisSaveConfirm": "Simpan",
+  "analysisCancel": "Batal"
 }

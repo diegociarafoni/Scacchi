@@ -55,7 +55,6 @@ Rokko è open source e gratuito. Questi vincoli valgono per ogni voce.
 
 | ID | Funzione | Stato | Pri | Dim | Versione | Evidenza |
 |---|---|---|---|---|---|---|
-| A-10 / RF-52 | **Varianti ad albero salvate**: salvataggio dell'analisi, esportazione e import in PGN con le varianti tra parentesi | parziale | P1 | media | 0.13.0 | `lib/analysis/variation_tree.dart` vive solo con la pagina (`docs/analisi.md`, «Limiti attuali»); `lib/archive/pgn.dart` tiene la sola linea principale |
 | A-11 / RF-55 | **Annotazioni** (commento e simbolo) modificabili anche nell'analisi, sulle varianti e dall'archivio | parziale | P1 | media | 0.13.0 | `lib/game/move_note.dart` e la revisione sì; `analysis_page.dart` e `archive_page.dart` non usano `MoveNote` |
 | A-12 / RF-91 | **Mosse «Libro»** nella revisione e nell'allenatore | parziale | P1 | piccola | 0.13.0 | `OpeningBook.bookPlies` (`lib/openings/opening_book.dart:131`) e `reviewGame(isBook:)` non sono collegati (`docs/revisione-partita.md:43`) |
 | A-13 / RF-66 | **Cache della revisione** nel database locale, con versione del motore e profondità nella chiave | parziale | P1 | media | 0.13.0 | `ReviewCache` (`lib/review/review_page.dart:28`) è una mappa in memoria di 20 voci |
@@ -188,7 +187,7 @@ Testo di ogni requisito, formulato come funzione di Rokko. La colonna Stato dice
 |---|---|---|
 | RF-50 | Schermata di analisi apribile da qualsiasi partita o posizione, con barra di valutazione verticale e valore numerico (centipedoni o matto in N). | fatta |
 | RF-51 | Linee principali del motore (MultiPV da 1 a 3), profondità visibile, analisi infinita interrompibile. | fatta |
-| RF-52 | Esplorazione libera con creazione di varianti ad albero; promozione di una variante a linea principale; eliminazione. | vedi A-10 |
+| RF-52 | Esplorazione libera con creazione di varianti ad albero; promozione di una variante a linea principale; eliminazione; salvataggio nell'archivio e PGN con le varianti. | fatta |
 | RF-53 | Editor di posizione: posizionamento libero dei pezzi, diritti di arrocco, tratto, import/export FEN, validazione della legalità. | fatta |
 | RF-54 | Frecce automatiche della mossa migliore (attivabili). | fatta |
 | RF-55 (P1) | Annotazioni personali: commento testuale e simbolo (`!!`, `!`, `!?`, `?!`, `?`, `??`) su ogni mossa e variante, modificabili nell'analisi e nell'archivio, conservati in import ed export PGN (commenti `{}` e NAG). | vedi A-11 |
