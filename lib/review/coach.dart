@@ -79,7 +79,11 @@ String _praise(AppLocalizations l, MoveClass c) => switch (c) {
   MoveClass.best => l.reviewCoachBest,
   MoveClass.excellent => l.reviewCoachExcellent,
   MoveClass.book => l.reviewCoachBook,
-  _ => l.reviewCoachGood,
+  MoveClass.good => l.reviewCoachGood,
+  MoveClass.inaccuracy ||
+  MoveClass.mistake ||
+  MoveClass.miss ||
+  MoveClass.blunder => throw StateError('$c non è una mossa da lodare'),
 };
 
 CoachComment? _allowedMate(
