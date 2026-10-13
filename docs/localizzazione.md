@@ -16,7 +16,7 @@ L'italiano è la lingua base e il modello degli `.arb`. Inglese, spagnolo e fran
 
 I termini scacchistici e le regole di stile di ogni lingua sono in [glossario-scacchistico.md](glossario-scacchistico.md). Chi traduce o rilegge parte da lì.
 
-Stato attuale: sono dichiarati soltanto italiano e inglese (vedi sopra); spagnolo e francese si aggiungono per funzione. Durante la migrazione italiano e inglese restano obbligatori in ogni PR.
+Stato attuale: italiano e inglese sono complete; il polacco (`pl`) è in `beta` con tutti i testi tradotti, da far rileggere a chi lo parla; spagnolo e francese si aggiungono per funzione. Durante la migrazione italiano e inglese restano obbligatori in ogni PR.
 
 ## File
 
@@ -96,3 +96,9 @@ La migrazione dei testi esistenti verso i file `.arb` si fa una schermata alla v
 La lingua si applica subito, senza riavviare. `HomeShell` ascolta il cambio di lingua (`didChangeDependencies`) e riprogramma il promemoria: titolo, testo e, su Android, nome e descrizione del canale di notifica (ricreato con lo stesso id) passano alla nuova lingua. La notazione delle mosse è indipendente dalla lingua (predefinita figurativa, vedi [notazione.md](notazione.md)); le sue etichette nelle Impostazioni sono tradotte.
 
 Nei test dei widget il telefono è simulato in italiano (`test/support/italian_device.dart`, collegato dai `flutter_test_config.dart` e dai test e2e), così non dipendono dalla lingua della macchina o dell'emulatore.
+
+## Polacco
+
+Lingua `pl`, registrata in `tool/lingue.json`, `AppLanguage.polish` («Polski»), `locales_config.xml`, `CFBundleLocalizations`, `ios/Runner/pl.lproj/InfoPlist.strings` e nel progetto Xcode. File: `lib/l10n/pl/*.arb` (stesse chiavi dell'italiano) e `assets/content/pl/*.json`. Termini e regole di stile in [glossario-polacco.md](glossario-polacco.md).
+
+Il polacco ha quattro forme di plurale: ogni `plural` ICU di `lib/l10n/pl/` deve avere `one`, `few`, `many` e `other` (senza clausole `=1` sovrapposte a `one`). `test/l10n_pl_test.dart` controlla chiavi, segnaposto, le quattro forme, la scelta della forma per 1, 2-4, 5-21 e 22-24, e monta partita e Impostazioni su tre dimensioni di telefono.

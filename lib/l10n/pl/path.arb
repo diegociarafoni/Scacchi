@@ -1,0 +1,85 @@
+{
+  "pathTitle": "Ścieżka",
+  "@pathTitle": {
+    "description": "Titolo della schermata del percorso"
+  },
+  "pathContinue": "Kontynuuj",
+  "@pathContinue": {
+    "description": "Pulsante che apre la prossima tappa del percorso"
+  },
+  "pathStars": "{done} z {total} gwiazdek",
+  "@pathStars": {
+    "description": "Etichetta per i lettori di schermo delle stelle totali o di capitolo",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pathSummaryTitle": "Twoja wędrówka",
+  "@pathSummaryTitle": {
+    "description": "Titolo della scheda di riepilogo in cima al percorso"
+  },
+  "pathNext": "Następny przystanek: {title}",
+  "@pathNext": {
+    "description": "Tappa proposta da Continua, nella scheda di riepilogo",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "pathAllDone": "Przeszedłeś całą ścieżkę. Każdy przystanek możesz odtworzyć.",
+  "@pathAllDone": {
+    "description": "Riepilogo quando ogni tappa è completata"
+  },
+  "pathChapterNumber": "Rozdział {n}",
+  "@pathChapterNumber": {
+    "description": "Numero del capitolo del percorso",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "pathChapterDone": "rozdział ukończony",
+  "@pathChapterDone": {
+    "description": "Stato di un capitolo con tutte le tappe completate"
+  },
+  "pathStageDone": "{stars} z 3 gwiazdek",
+  "@pathStageDone": {
+    "description": "Stato di una tappa completata",
+    "placeholders": {
+      "stars": {
+        "type": "int"
+      }
+    }
+  },
+  "pathStageTodo": "do zrobienia",
+  "@pathStageTodo": {
+    "description": "Stato di una tappa aperta non ancora completata"
+  },
+  "pathStageLocked": "zablokowane",
+  "@pathStageLocked": {
+    "description": "Stato di una tappa non ancora aperta"
+  },
+  "pathStageLockedHint": "Ukończ poprzednią lekcję, aby ją odblokować",
+  "@pathStageLockedHint": {
+    "description": "Suggerimento di una tappa bloccata per i lettori di schermo"
+  },
+  "pathStageHere": "Jesteś tutaj",
+  "@pathStageHere": {
+    "description": "Etichetta della tappa corrente"
+  },
+  "pathGuardian": "strażnik",
+  "@pathGuardian": {
+    "description": "Tipo di tappa: sfida contro un bot"
+  },
+  "pathGuardianUnavailable": "Strażnika wyzwiesz tam, gdzie gra komputer: na Androidzie i iOS albo w Windows i Linuksie z zainstalowanym Stockfishem.",
+  "@pathGuardianUnavailable": {
+    "description": "Avviso se il motore non è disponibile"
+  }
+}
