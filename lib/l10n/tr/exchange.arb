@@ -1,0 +1,22 @@
+{
+  "qrSendTitle": "QR ile aktar",
+  "qrSendHint": "Diğer telefonda Sen › Arşiv › QR ile al bölümünü aç ve kodu kameraya göster.",
+  "qrPart": "Parça {current} / {total}",
+  "qrPause": "Duraklat",
+  "qrResume": "Devam",
+  "qrNext": "Sonraki parça",
+  "qrPrevious": "Önceki parça",
+  "qrCodeLabel": "Oyun QR kodu",
+  "qrReceiveTitle": "QR ile al",
+  "qrReceiveHint": "Diğer telefonda görünen QR kodunu kameraya göster.",
+  "qrReceived": "{received} / {total} parça okundu",
+  "qrForeign": "Bu QR kodunda oyun yok.",
+  "qrCorrupted": "QR kodu hasarlı: okumaya baştan başla.",
+  "qrTooLarge": "Oyun alınamayacak kadar büyük.",
+  "qrRestarted": "Yeni oyun algılandı: okuma yeniden başladı.",
+  "qrCameraError": "Kamera kullanılamıyor. Telefon ayarlarında Rokko uygulamasına kamera izni ver ve tekrar dene.",
+  "qrRetry": "Tekrar dene",
+  "qrInvalidGame": "QR kodunda geçerli bir oyun yok.",
+  "qrFinishedGame": "Oyun zaten bitmiş: Sen › Arşiv › QR ile al bölümünden al.",
+  "qrMalformed": "Geçersiz QR kodu: yok sayıldı."
+}

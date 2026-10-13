@@ -1,0 +1,199 @@
+{
+  "whyPiece": "{role, select, pawn{Bauer} knight{Springer} bishop{Läufer} rook{Turm} queen{Dame} other{König}}",
+  "whyMate": "Schachmatt!",
+  "whyCastle": "Rochade: bringt den König in Sicherheit.",
+  "whyPromote": "Wandelt den Bauern in {role, select, queen{eine Dame} rook{einen Turm} bishop{einen Läufer} knight{einen Springer} other{eine Figur}} um.",
+  "whyCapture": "{attacker} schlägt {victim}.",
+  "whyCheck": "Gibt deinem König Schach.",
+  "whySafe": "{piece} weicht einem Angriff aus.",
+  "whyThreatCapture": "Droht, {victim} auf {square} zu schlagen.",
+  "whyThreatCaptureKid": "Droht, {victim} zu schlagen.",
+  "whyThreatCheck": "Bereitet ein Schach gegen deinen König vor.",
+  "whyThreatPromote": "Bereitet eine Umwandlung vor.",
+  "whyDevelop": "{piece} kommt ins Spiel.",
+  "whyCenter": "Nimmt Raum im Zentrum ein.",
+  "whyImprove": "{piece} geht auf ein besseres Feld.",
+  "instructorInBookNamed": "Wir sind in der Eröffnung {name}. Meistgespielte Züge hier: {choices}.",
+  "@instructorInBookNamed": {
+    "description": "Istruttore: apertura raggiunta e mosse più giocate",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "name"
+      },
+      "choices": {
+        "type": "String",
+        "description": "choices"
+      }
+    }
+  },
+  "instructorInBook": "Meistgespielte Züge hier: {choices}.",
+  "@instructorInBook": {
+    "description": "Istruttore: mosse più giocate, senza nome di apertura",
+    "placeholders": {
+      "choices": {
+        "type": "String",
+        "description": "choices"
+      }
+    }
+  },
+  "instructorInBookNameOnly": "Wir sind in der Eröffnung {name}.",
+  "@instructorInBookNameOnly": {
+    "description": "Istruttore: apertura raggiunta, senza statistiche",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "name"
+      }
+    }
+  },
+  "instructorLeftYou": "{san} führt dich aus dem Eröffnungsbuch heraus. Am häufigsten gespielt wurde: {choices}.",
+  "@instructorLeftYou": {
+    "description": "Istruttore: l'utente esce dal libro",
+    "placeholders": {
+      "san": {
+        "type": "String",
+        "description": "san"
+      },
+      "choices": {
+        "type": "String",
+        "description": "choices"
+      }
+    }
+  },
+  "instructorLeftComputer": "Der Computer verlässt das Buch mit {san}. Ab hier zählt die Stellung, nicht die Theorie.",
+  "@instructorLeftComputer": {
+    "description": "Istruttore: il computer esce dal libro",
+    "placeholders": {
+      "san": {
+        "type": "String",
+        "description": "san"
+      }
+    }
+  },
+  "instructorLeftYouBare": "{san} führt dich aus dem Eröffnungsbuch heraus.",
+  "@instructorLeftYouBare": {
+    "description": "Istruttore: l'utente esce dal libro, senza alternative",
+    "placeholders": {
+      "san": {
+        "type": "String",
+        "description": "san"
+      }
+    }
+  },
+  "instructorExplorer": "Im Explorer öffnen",
+  "@instructorExplorer": {
+    "description": "Istruttore: pulsante per aprire la posizione nell'esploratore"
+  },
+  "instructorTitle": "Mit dem Eröffnungslehrer spielen",
+  "@instructorTitle": {
+    "description": "Titolo della partita con l'istruttore"
+  },
+  "instructorHubSubtitle": "Der Computer kommentiert deine Eröffnung mit den meistgespielten Zügen",
+  "@instructorHubSubtitle": {
+    "description": "Istruttore: sottotitolo nel menu delle aperture"
+  },
+  "coachHintMovePiece": "Zug mit {piece}.",
+  "@coachHintMovePiece": {
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintMoveSomePiece": "Zieh eine Figur.",
+  "coachHintPlayHighlighted": "Spiel den markierten Zug.",
+  "coachHintCastleShort": "Rochiere kurz.",
+  "coachHintCastleLong": "Rochiere lang.",
+  "coachHintPieceAn": "{role, select, queen{eine Dame} rook{ein Turm} bishop{ein Läufer} knight{ein Springer} pawn{ein Bauer} other{der König}}",
+  "@coachHintPieceAn": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintCheckEscape": "{promotion, select, yes{Umwandlung} other{Zug}} mit {piece} {where, select, square{nach {square}} other{auf das eingekreiste Feld}}{escape, select, king{, um aus dem Schach zu kommen} other{, um das Schach zu stoppen}}{check, select, none{.} check{ – das gibt Schach.} other{ – das ist Matt.}}",
+  "@coachHintCheckEscape": {
+    "placeholders": {
+      "promotion": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "escape": {
+        "type": "String"
+      },
+      "check": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintPromote": "Umwandlung: {piece} {where, select, square{nach {square}} other{auf das eingekreiste Feld}}{capture, select, yes{, dabei schlägst du {victim}} other{}}. Daraus wird {promoted}.",
+  "@coachHintPromote": {
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "capture": {
+        "type": "String"
+      },
+      "victim": {
+        "type": "String"
+      },
+      "promoted": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintCapture": "Zug mit {piece} {where, select, square{nach {square}} other{auf das eingekreiste Feld}}, Beute: {victim}{check, select, none{.} check{ – das gibt Schach.} other{ – das ist Matt.}}",
+  "@coachHintCapture": {
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "victim": {
+        "type": "String"
+      },
+      "check": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintMove": "Zug mit {piece} {where, select, square{nach {square}} other{auf das eingekreiste Feld}}{check, select, none{.} check{ – das gibt Schach.} other{ – das ist Matt.}}",
+  "@coachHintMove": {
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "check": {
+        "type": "String"
+      }
+    }
+  }
+}

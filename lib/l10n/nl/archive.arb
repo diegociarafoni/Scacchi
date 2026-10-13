@@ -1,0 +1,45 @@
+{
+  "archiveShareSubject": "PGN-partijen",
+  "archiveTitle": "Partijen",
+  "archiveImportResult": "{count, plural, one{1 partij geïmporteerd} other{{count} partijen geïmporteerd}}{skipped, plural, =0{} other{, {skipped} ongeldig}}",
+  "@archiveImportResult": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "skipped": {
+        "type": "int"
+      }
+    }
+  },
+  "archiveDeleteTitle": "Deze partij verwijderen?",
+  "archiveCancel": "Annuleren",
+  "archiveDelete": "Verwijderen",
+  "archivePgnCopied": "PGN gekopieerd",
+  "archiveImportPgn": "PGN importeren",
+  "archiveExportAll": "Alles exporteren als PGN",
+  "archiveUnreadable": "Het archief kon niet worden gelezen.",
+  "archiveSearchHint": "Zoek op speler of soort",
+  "archiveEmpty": "Geen bewaarde partijen.",
+  "archiveNoMatch": "Geen partijen gevonden.",
+  "archiveInProgress": "Bezig",
+  "archiveActionsFor": "Acties voor {title}",
+  "@archiveActionsFor": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "archiveSharePgn": "PGN delen",
+  "archiveCopyPgn": "PGN kopiëren",
+  "archiveImportHint": "Plak hier een of meer PGN-partijen",
+  "archivePaste": "Plakken",
+  "archiveImport": "Importeren",
+  "archiveModeLocal": "lokaal",
+  "archiveModeComputer": "computer",
+  "archiveModeImported": "geïmporteerd",
+  "archiveModePhysical": "fysiek bord",
+  "archiveModeAnalysis": "analyse",
+  "archiveOpenAnalysis": "Openen in analyse"
+}

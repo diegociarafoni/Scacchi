@@ -1,0 +1,9 @@
+{
+  "avatarPhotoTitle": "Photo",
+  "avatarPhotoHint": "La photo reste uniquement sur ce téléphone : elle n'est jamais envoyée ni incluse dans la sauvegarde.",
+  "avatarPhotoGallery": "Depuis la galerie",
+  "avatarPhotoCamera": "Prendre une photo",
+  "avatarPhotoRemove": "Supprimer la photo",
+  "avatarPhotoError": "Je n'arrive pas à utiliser la photo. Vérifie les autorisations de l'appareil photo et des photos dans les réglages du téléphone.",
+  "avatarPhotoLabel": "Photo de profil"
+}

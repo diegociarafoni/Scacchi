@@ -81,5 +81,15 @@
   "pathGuardianUnavailable": "O guardião é desafiado onde o computador joga: Android e iOS, ou Windows e Linux com o Stockfish instalado.",
   "@pathGuardianUnavailable": {
     "description": "Avviso se il motore non è disponibile"
-  }
+  },
+  "pathStageWrong": "Esse não é o lance certo, tente de novo.",
+  "pathStageGood": "Muito bem, continue.",
+  "pathStageSolved": "Isso mesmo!",
+  "pathStageRestartTooltip": "Recomeçar",
+  "pathStageExerciseOf": "Exercício {n} de {total}",
+  "pathStageStart": "Começar",
+  "pathStageNext": "Próximo",
+  "pathStageRestartExercise": "Recomeçar o exercício",
+  "pathStageComplete": "Etapa concluída",
+  "pathStageFinish": "Concluir"
 }

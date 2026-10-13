@@ -1,0 +1,12 @@
+{
+  "tablebaseTitle": "Bagian akhir sempurna",
+  "tablebaseCalculating": "Menghitung bagian akhir sempurna… ini hanya terjadi saat pertama kali",
+  "tablebaseWhiteMates": "{moves, plural, one{Putih menang: skakmat dalam {moves} langkah} other{Putih menang: skakmat dalam {moves} langkah}}",
+  "tablebaseBlackMates": "{moves, plural, one{Hitam menang: skakmat dalam {moves} langkah} other{Hitam menang: skakmat dalam {moves} langkah}}",
+  "tablebaseWhiteWins": "Putih menang",
+  "tablebaseBlackWins": "Hitam menang",
+  "tablebaseDraw": "Remis dengan permainan sempurna",
+  "tablebaseBestMove": "Langkah sempurna: {move}",
+  "tablebaseBestMoveHint": "Mainkan langkah sempurna",
+  "tablebaseShowMove": "Tampilkan langkah sempurna"
+}

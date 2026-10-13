@@ -1,0 +1,199 @@
+{
+  "whyPiece": "{role, select, pawn{pion} knight{skoczek} bishop{goniec} rook{wieża} queen{hetman} other{król}}",
+  "whyMate": "Mat!",
+  "whyCastle": "Roszada: król jest bezpieczny.",
+  "whyPromote": "Promocja piona. Nowa figura: {role, select, queen{hetman} rook{wieża} bishop{goniec} knight{skoczek} other{figura}}.",
+  "whyCapture": "Bicie: {attacker} × {victim}.",
+  "whyCheck": "Szach Twojemu królowi.",
+  "whySafe": "Ucieczka spod ataku: {piece}.",
+  "whyThreatCapture": "Groźba bicia: {victim} na {square}.",
+  "whyThreatCaptureKid": "Groźba bicia: {victim}.",
+  "whyThreatCheck": "Przygotowuje szach Twojemu królowi.",
+  "whyThreatPromote": "Przygotowuje promocję piona.",
+  "whyDevelop": "Rozwój: {piece} wchodzi do gry.",
+  "whyCenter": "Zajmuje miejsce w centrum.",
+  "whyImprove": "Lepsze pole dla figury: {piece}.",
+  "instructorInBookNamed": "Jesteśmy w debiucie: {name}. Najczęściej grane ruchy: {choices}.",
+  "@instructorInBookNamed": {
+    "description": "Istruttore: apertura raggiunta e mosse più giocate",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "name"
+      },
+      "choices": {
+        "type": "String",
+        "description": "choices"
+      }
+    }
+  },
+  "instructorInBook": "Najczęściej grane ruchy: {choices}.",
+  "@instructorInBook": {
+    "description": "Istruttore: mosse più giocate, senza nome di apertura",
+    "placeholders": {
+      "choices": {
+        "type": "String",
+        "description": "choices"
+      }
+    }
+  },
+  "instructorInBookNameOnly": "Jesteśmy w debiucie: {name}.",
+  "@instructorInBookNameOnly": {
+    "description": "Istruttore: apertura raggiunta, senza statistiche",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "name"
+      }
+    }
+  },
+  "instructorLeftYou": "Ruch {san} wyprowadza Cię z księgi debiutowej. Najczęściej grane ruchy: {choices}.",
+  "@instructorLeftYou": {
+    "description": "Istruttore: l'utente esce dal libro",
+    "placeholders": {
+      "san": {
+        "type": "String",
+        "description": "san"
+      },
+      "choices": {
+        "type": "String",
+        "description": "choices"
+      }
+    }
+  },
+  "instructorLeftComputer": "Komputer opuszcza księgę ruchem {san}. Od teraz liczy się pozycja, nie teoria.",
+  "@instructorLeftComputer": {
+    "description": "Istruttore: il computer esce dal libro",
+    "placeholders": {
+      "san": {
+        "type": "String",
+        "description": "san"
+      }
+    }
+  },
+  "instructorLeftYouBare": "Ruch {san} wyprowadza Cię z księgi debiutowej.",
+  "@instructorLeftYouBare": {
+    "description": "Istruttore: l'utente esce dal libro, senza alternative",
+    "placeholders": {
+      "san": {
+        "type": "String",
+        "description": "san"
+      }
+    }
+  },
+  "instructorExplorer": "Otwórz w eksploratorze",
+  "@instructorExplorer": {
+    "description": "Istruttore: pulsante per aprire la posizione nell'esploratore"
+  },
+  "instructorTitle": "Graj z instruktorem",
+  "@instructorTitle": {
+    "description": "Titolo della partita con l'istruttore"
+  },
+  "instructorHubSubtitle": "Komputer komentuje Twój debiut, z najczęściej granymi ruchami",
+  "@instructorHubSubtitle": {
+    "description": "Istruttore: sottotitolo nel menu delle aperture"
+  },
+  "coachHintMovePiece": "Ruszaj: {piece}.",
+  "@coachHintMovePiece": {
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintMoveSomePiece": "Wykonaj ruch dowolną figurą.",
+  "coachHintPlayHighlighted": "Zagraj zaznaczony ruch.",
+  "coachHintCastleShort": "Zrób roszadę krótką.",
+  "coachHintCastleLong": "Zrób roszadę długą.",
+  "coachHintPieceAn": "{role, select, queen{hetman} rook{wieża} bishop{goniec} knight{skoczek} pawn{pion} other{król}}",
+  "@coachHintPieceAn": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintCheckEscape": "{promotion, select, yes{Promocja} other{Ruch}}: {piece} {where, select, square{na {square}} other{na zaznaczone pole}}{escape, select, king{, aby uciec przed szachem} other{, aby zatrzymać szach}}{check, select, none{.} check{, z szachem.} other{, z matem.}}",
+  "@coachHintCheckEscape": {
+    "placeholders": {
+      "promotion": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "escape": {
+        "type": "String"
+      },
+      "check": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintPromote": "Promocja: {piece} {where, select, square{na {square}} other{na zaznaczone pole}}{capture, select, yes{, z biciem: {victim}} other{}}. Nowa figura: {promoted}.",
+  "@coachHintPromote": {
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "capture": {
+        "type": "String"
+      },
+      "victim": {
+        "type": "String"
+      },
+      "promoted": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintCapture": "Ruch: {piece} {where, select, square{na {square}} other{na zaznaczone pole}}, z biciem: {victim}{check, select, none{.} check{, z szachem.} other{, z matem.}}",
+  "@coachHintCapture": {
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "victim": {
+        "type": "String"
+      },
+      "check": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintMove": "Ruch: {piece} {where, select, square{na {square}} other{na zaznaczone pole}}{check, select, none{.} check{, z szachem.} other{, z matem.}}",
+  "@coachHintMove": {
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "check": {
+        "type": "String"
+      }
+    }
+  }
+}

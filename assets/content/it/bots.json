@@ -1,0 +1,156 @@
+{
+  "bot.start": [
+    "Ciao, sono {name}. Oggi si gioca {opening}!",
+    "{name} al tavolo: buona partita!"
+  ],
+  "bot.start.friendly": [
+    "Ciao, sono {name}!",
+    "Sono {name}, giochiamo insieme?"
+  ],
+  "bot.friendly.check": [
+    "Scacco! Salva il tuo re.",
+    "Scacco! Dove va il re?"
+  ],
+  "bot.friendly.capture": [
+    "Ho preso un pezzo!",
+    "Preso! Ora tocca a te."
+  ],
+  "bot.friendly.mistake": [
+    "Pensaci con calma.",
+    "Guarda bene la scacchiera!"
+  ],
+  "bot.friendly.win": [
+    "Bella partita! Giochiamo ancora?",
+    "Ho vinto io, rivincita?"
+  ],
+  "bot.friendly.loss": [
+    "Hai vinto tu, bravissimo!",
+    "Evviva, hai vinto!"
+  ],
+  "bot.friendly.draw": [
+    "Pari! Bella partita.",
+    "Pareggio! Siamo bravi."
+  ],
+  "bot.friendly.chat": [
+    "Che bella partita!",
+    "Ci stiamo divertendo!",
+    "Tocca a te!"
+  ],
+  "bot.aggressive.check": [
+    "Scacco! Non ti lascio respirare.",
+    "Scacco, si attacca!"
+  ],
+  "bot.aggressive.capture": [
+    "Preso! Si va all'attacco.",
+    "Un pezzo in meno per te."
+  ],
+  "bot.aggressive.mistake": [
+    "Grazie del regalo, ne approfitto.",
+    "Ahi, qui hai sbagliato."
+  ],
+  "bot.aggressive.win": [
+    "Matto! Bella battaglia.",
+    "Vittoria! Rivincita?"
+  ],
+  "bot.aggressive.loss": [
+    "Mi hai battuto, ben giocata!",
+    "Complimenti, mi sono scottato."
+  ],
+  "bot.aggressive.draw": [
+    "Patta: volevo di più, ma va bene.",
+    "Pari, ma la prossima volta attacco di più."
+  ],
+  "bot.aggressive.chat": [
+    "Si attacca, non si aspetta!",
+    "Non ho paura di niente.",
+    "Muovi, che ti raggiungo."
+  ],
+  "bot.positional.check": [
+    "Scacco, con calma.",
+    "Scacco: la posizione lo permette."
+  ],
+  "bot.positional.capture": [
+    "Un cambio che mi conviene.",
+    "Presa tranquilla, la struttura regge."
+  ],
+  "bot.positional.mistake": [
+    "Questa mossa ti costerà posizione.",
+    "Un errore di pianificazione, direi."
+  ],
+  "bot.positional.win": [
+    "Matto: il piano ha funzionato.",
+    "Vittoria, grazie per la partita."
+  ],
+  "bot.positional.loss": [
+    "Hai giocato meglio, complimenti.",
+    "Mi hai superato in posizione, bravo."
+  ],
+  "bot.positional.draw": [
+    "Patta equilibrata, giusta così.",
+    "Una patta onesta."
+  ],
+  "bot.positional.chat": [
+    "Prendo tempo: la posizione lo merita.",
+    "Qui conta la struttura.",
+    "Niente fretta, gioco con calma."
+  ],
+  "bot.gambitist.check": [
+    "Scacco! Valeva il sacrificio.",
+    "Scacco, e il bello deve venire."
+  ],
+  "bot.gambitist.capture": [
+    "Mi riprendo il materiale con gli interessi.",
+    "Preso: il gambetto paga."
+  ],
+  "bot.gambitist.mistake": [
+    "Hai accettato il gambetto male!",
+    "Occhio, qui c'era di meglio."
+  ],
+  "bot.gambitist.win": [
+    "Matto! Il sacrificio ha pagato.",
+    "Vinto, e che spettacolo."
+  ],
+  "bot.gambitist.loss": [
+    "Il gambetto non è bastato, bravo.",
+    "Hai difeso benissimo, onore a te."
+  ],
+  "bot.gambitist.draw": [
+    "Patta: un po' di fumo e basta.",
+    "Pari, ma che partita movimentata."
+  ],
+  "bot.gambitist.chat": [
+    "Un pedone in più o in meno, che importa?",
+    "Il bello deve ancora venire.",
+    "Mi piace quando si rischia."
+  ],
+  "bot.opening.lia": "il Gambetto di Re",
+  "bot.opening.pino": "l'Italiana",
+  "bot.opening.nico": "il sistema Londra",
+  "bot.opening.chiara": "il Gambetto di Donna",
+  "bot.opening.viola": "la Scozzese",
+  "bot.opening.rocco": "il Gambetto di Re",
+  "bot.opening.ettore": "la Spagnola di cambio",
+  "bot.opening.marta": "l'Inglese",
+  "bot.opening.bruna": "la Difesa Francese",
+  "bot.opening.duilio": "la Siciliana",
+  "bot.opening.carlo": "il Gambetto Budapest",
+  "bot.opening.elena": "la Spagnola",
+  "bot.opening.ada": "l'Inglese",
+  "bot.opening.luna": "la Catalana",
+  "bot.opening.massimo": "il Gambetto Evans",
+  "bot.opening.cosmo": "il Gambetto Smith-Morra",
+  "bot.opening.stella": "la Difesa Est-Indiana",
+  "bot.opening.tino": "l'apertura del pedone di re",
+  "level.1.name": "Principiante",
+  "level.2.name": "Esordiente",
+  "level.3.name": "Dilettante",
+  "level.4.name": "Giocatore di circolo",
+  "level.5.name": "Agonista",
+  "level.6.name": "Esperto",
+  "level.7.name": "Maestro",
+  "level.8.name": "Campione",
+  "level.0.name": "Primi passi",
+  "style.aggressive": "aggressivo",
+  "style.positional": "posizionale",
+  "style.gambitist": "gambettista"
+}

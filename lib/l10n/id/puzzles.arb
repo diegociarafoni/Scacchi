@@ -1,0 +1,475 @@
+{
+  "puzzleGoal": "{goal, select, mateIn1{Skakmat dalam 1 langkah} mateIn2{Skakmat dalam 2 langkah} mateIn3{Skakmat dalam 3 langkah} mateIn4{Skakmat dalam 4 langkah} mate{Skakmat lawanmu} crushing{Raih keunggulan telak} advantage{Raih keunggulan} equality{Capai kesetaraan} other{Temukan langkah terbaik}}",
+  "puzzleGoalSide": "{goal} · {side} jalan",
+  "@puzzleGoalSide": {
+    "description": "Puzzle header card: goal and side to move",
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      },
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "challengeTitle": "Tantang teman",
+  "challengeSubtitle": "Teka-teki yang sama di dua ponsel, tanpa jaringan",
+  "challengeIntro": "Pilih permainannya dan tunjukkan kode QR ke temanmu: kalian berdua memainkan teka-teki yang sama. Di akhir, kalian bertukar skor lewat kode QR kedua.",
+  "challengePrepare": "Siapkan tantangan",
+  "challengeReady": "Tantangan siap: {mode}",
+  "challengeShowInvite": "Tunjukkan kode QR ke temanmu",
+  "challengePlay": "Mainkan permainanmu",
+  "challengeReceive": "Terima tantangan",
+  "challengeInviteTitle": "Tantangan: {mode}",
+  "challengeInviteHint": "Temanmu membuka Teka-teki › Tantang teman › Terima tantangan, lalu memindai kodenya.",
+  "challengeReceiveHint": "Pindai kode QR tantangan yang ditunjukkan temanmu.",
+  "challengeNotInvite": "Kode QR ini bukan tantangan: minta temanmu menunjukkan kode QR tantangan.",
+  "challengeLibraryMismatch": "Kedua ponsel punya teka-teki yang berbeda: perbarui Rokko di keduanya.",
+  "challengeCompareTitle": "Tantangan bersama temanmu",
+  "challengeShowResult": "Tunjukkan hasilku",
+  "challengeResultTitle": "Hasilku: {score}",
+  "challengeResultHint": "Temanmu memindai kode ini untuk melihat skormu.",
+  "challengeReadResult": "Baca hasil temanmu",
+  "challengeReadResultHint": "Pindai kode QR hasil yang ditunjukkan temanmu.",
+  "challengeNotResult": "Kode QR ini bukan hasil: minta temanmu menunjukkan kode QR hasil.",
+  "challengeOtherChallenge": "Hasil itu milik tantangan yang lain.",
+  "challengeWon": "Kamu menang: {mine} lawan {theirs}",
+  "challengeLost": "Temanmu menang: {theirs} lawan {mine}",
+  "challengeDraw": "Seri: {mine} lawan {theirs}",
+  "puzzleHubTitle": "Teka-teki",
+  "@puzzleHubTitle": {
+    "description": "Titolo della scheda Puzzle"
+  },
+  "puzzleHubLoadError": "Teka-teki tidak bisa dimuat.",
+  "@puzzleHubLoadError": {
+    "description": "Errore di caricamento dei puzzle"
+  },
+  "puzzleHubRating": "Peringkat {rating}",
+  "@puzzleHubRating": {
+    "description": "Punteggio in cima alla scheda Puzzle",
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleHubStats": "Selesai {solved} · Gagal {failed} · {total} teka-teki tersedia",
+  "@puzzleHubStats": {
+    "description": "Riga sotto il punteggio",
+    "placeholders": {
+      "solved": {
+        "type": "int"
+      },
+      "failed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleTraining": "Latihan",
+  "@puzzleTraining": {
+    "description": "Voce Allenamento"
+  },
+  "puzzleTrainingSubtitle": "Teka-teki yang sesuai dengan peringkatmu",
+  "@puzzleTrainingSubtitle": {
+    "description": "Sottotitolo di Allenamento"
+  },
+  "puzzleDailyTitle": "Teka-teki harian",
+  "@puzzleDailyTitle": {
+    "description": "Puzzle del giorno: voce e titolo"
+  },
+  "puzzleDailySubtitle": "Tingkat kesulitan {rating}",
+  "@puzzleDailySubtitle": {
+    "description": "Sottotitolo del puzzle del giorno",
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleByTheme": "Menurut tema",
+  "@puzzleByTheme": {
+    "description": "Voce Per tema"
+  },
+  "puzzleByThemeSubtitle": "Skakmat, garpu, bagian akhir, dan lainnya",
+  "@puzzleByThemeSubtitle": {
+    "description": "Sottotitolo di Per tema"
+  },
+  "puzzleThemesTitle": "Tema",
+  "@puzzleThemesTitle": {
+    "description": "Titolo dell'elenco dei temi"
+  },
+  "puzzleReview": "Ulangi kesalahanmu",
+  "@puzzleReview": {
+    "description": "Voce Ripasso degli errori"
+  },
+  "puzzleReviewTitle": "Ulasan",
+  "@puzzleReviewTitle": {
+    "description": "Titolo della schermata di ripasso"
+  },
+  "puzzleReviewNone": "Tidak ada yang perlu diulang hari ini",
+  "@puzzleReviewNone": {
+    "description": "Nessun puzzle da ripassare"
+  },
+  "puzzleReviewDue": "{count} untuk diulang hari ini",
+  "@puzzleReviewDue": {
+    "description": "Puzzle da ripassare",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleSectionTimed": "Mode berwaktu",
+  "@puzzleSectionTimed": {
+    "description": "Intestazione delle modalità a tempo"
+  },
+  "puzzleSectionPractice": "Latihan bebas",
+  "@puzzleSectionPractice": {
+    "description": "Intestazione delle modalità libere"
+  },
+  "puzzleRecord": "Terbaik {best}",
+  "@puzzleRecord": {
+    "description": "Record della modalità",
+    "placeholders": {
+      "best": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunLabel": "{mode, select, storm{Kombo berwaktu} rush3{Rush 3 menit} rush5{Rush 5 menit} survival{Bertahan} other{Rentetan}}",
+  "@puzzleRunLabel": {
+    "description": "Nome della modalità a serie",
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleRunDescription": "{mode, select, storm{3 menit, detik bonus dengan kombo} rush3{3 menit, tiga kesalahan} rush5{5 menit, tiga kesalahan} survival{Tanpa timer, tiga kesalahan} other{Tanpa timer, berakhir pada kesalahan pertama}}",
+  "@puzzleRunDescription": {
+    "description": "Descrizione della modalità a serie",
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleDefaultTitle": "Teka-teki",
+  "@puzzleDefaultTitle": {
+    "description": "Titolo predefinito della schermata del puzzle"
+  },
+  "puzzleEmpty": "Tidak ada teka-teki untuk ditawarkan.",
+  "@puzzleEmpty": {
+    "description": "Nessun puzzle disponibile"
+  },
+  "puzzleHelp": "Cara kerjanya",
+  "@puzzleHelp": {
+    "description": "Pulsante che riapre la spiegazione"
+  },
+  "puzzleSide": "{side, select, white{Putih} other{Hitam}}",
+  "@puzzleSide": {
+    "description": "Colore che muove",
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleRestarted": "Posisi awal. Temukan langkah terbaik untuk {side}.",
+  "@puzzleRestarted": {
+    "description": "Dopo aver ricominciato",
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleCorrect": "Benar! Lanjutkan.",
+  "@puzzleCorrect": {
+    "description": "Mossa giusta"
+  },
+  "puzzleWrong": "Itu bukan langkah yang tepat. Tekan “Coba lagi” untuk mengulang dari awal.",
+  "@puzzleWrong": {
+    "description": "Mossa sbagliata"
+  },
+  "puzzleSolved": "Selesai!",
+  "@puzzleSolved": {
+    "description": "Puzzle risolto"
+  },
+  "puzzleDone": "Teka-teki selesai.",
+  "@puzzleDone": {
+    "description": "Puzzle concluso dopo errori o soluzione"
+  },
+  "puzzleRevealed": "Ini langkah yang tepat.",
+  "@puzzleRevealed": {
+    "description": "Mossa mostrata"
+  },
+  "puzzleOutcomeRepeat": "Sudah pernah dilihat: peringkat tidak berubah.",
+  "@puzzleOutcomeRepeat": {
+    "description": "Puzzle già visto"
+  },
+  "puzzleOutcomeRating": "Peringkat {rating} ({delta}).",
+  "@puzzleOutcomeRating": {
+    "description": "Punteggio dopo il puzzle",
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      },
+      "delta": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleNoMore": "Untuk sekarang tidak ada teka-teki lagi.",
+  "@puzzleNoMore": {
+    "description": "Fine dei puzzle"
+  },
+  "puzzleDifficulty": "Teka-teki {rating}",
+  "@puzzleDifficulty": {
+    "description": "Difficoltà del puzzle risolto",
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleProgress": "Langkah ditemukan: {done} dari {total}",
+  "@puzzleProgress": {
+    "description": "Mosse trovate",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleProgressKid": "Kemajuan teka-teki",
+  "@puzzleProgressKid": {
+    "description": "Avanzamento senza cifre"
+  },
+  "puzzleHint": "Petunjuk",
+  "@puzzleHint": {
+    "description": "Pulsante suggerimento"
+  },
+  "puzzleSolution": "Solusi",
+  "@puzzleSolution": {
+    "description": "Pulsante soluzione"
+  },
+  "puzzleRetry": "Coba lagi",
+  "@puzzleRetry": {
+    "description": "Pulsante riprova"
+  },
+  "puzzleNext": "Lanjut",
+  "@puzzleNext": {
+    "description": "Pulsante prossimo"
+  },
+  "puzzleSkip": "Lewati",
+  "@puzzleSkip": {
+    "description": "Pulsante salta"
+  },
+  "puzzleRunStart": "Mulai",
+  "@puzzleRunStart": {
+    "description": "Pulsante che avvia la serie"
+  },
+  "puzzleRunRecordFooter": "Terbaikmu: {best} teka-teki.",
+  "@puzzleRunRecordFooter": {
+    "description": "Record sotto le regole",
+    "placeholders": {
+      "best": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunRight": "Benar!",
+  "@puzzleRunRight": {
+    "description": "Esito giusto"
+  },
+  "puzzleRunWrong": "Salah",
+  "@puzzleRunWrong": {
+    "description": "Esito sbagliato"
+  },
+  "puzzleRunEndMistake": "Kamu gagal di satu teka-teki: permainan berakhir.",
+  "@puzzleRunEndMistake": {
+    "description": "Fine per un errore"
+  },
+  "puzzleRunEndLives": "Kamu kehilangan ketiga nyawa.",
+  "@puzzleRunEndLives": {
+    "description": "Fine per le vite"
+  },
+  "puzzleRunEndTime": "Waktu habis.",
+  "@puzzleRunEndTime": {
+    "description": "Fine per il tempo"
+  },
+  "puzzleRunEndExhausted": "Kamu menyelesaikan semua teka-teki yang tersedia.",
+  "@puzzleRunEndExhausted": {
+    "description": "Fine per esaurimento"
+  },
+  "puzzleRunScore": "Skor {score}",
+  "@puzzleRunScore": {
+    "description": "Punti della serie",
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunTimeLeft": "Sisa waktu: {time}",
+  "@puzzleRunTimeLeft": {
+    "description": "Tempo rimasto, per i lettori di schermo",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleRunCombo": "Kombo {combo}",
+  "@puzzleRunCombo": {
+    "description": "Combo in corso",
+    "placeholders": {
+      "combo": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunLives": "Nyawa: {left} dari {total}",
+  "@puzzleRunLives": {
+    "description": "Vite rimaste",
+    "placeholders": {
+      "left": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunOver": "Permainan selesai",
+  "@puzzleRunOver": {
+    "description": "Titolo del risultato"
+  },
+  "puzzleRunSolvedLabel": "teka-teki selesai",
+  "@puzzleRunSolvedLabel": {
+    "description": "Etichetta sotto il punteggio finale"
+  },
+  "puzzleRunNewRecord": "Rekor pribadi baru!",
+  "@puzzleRunNewRecord": {
+    "description": "Nuovo record"
+  },
+  "puzzleRunBest": "Terbaik: {best}",
+  "@puzzleRunBest": {
+    "description": "Record personale",
+    "placeholders": {
+      "best": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunBestCombo": "Kombo terbaik: {combo}",
+  "@puzzleRunBestCombo": {
+    "description": "Combo migliore",
+    "placeholders": {
+      "combo": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunAgain": "Main lagi",
+  "@puzzleRunAgain": {
+    "description": "Pulsante rigioca"
+  },
+  "puzzleGuideGoalHeading": "Tujuan",
+  "@puzzleGuideGoalHeading": {
+    "description": "Intestazione della spiegazione"
+  },
+  "puzzleGuideRulesHeading": "Cara bermain",
+  "@puzzleGuideRulesHeading": {
+    "description": "Intestazione della spiegazione"
+  },
+  "puzzleGuideGotIt": "Mengerti",
+  "@puzzleGuideGotIt": {
+    "description": "Chiude la spiegazione"
+  },
+  "puzzleThemeMateIn1": "Skakmat dalam 1",
+  "puzzleThemeMateIn2": "Skakmat dalam 2",
+  "puzzleThemeMateIn3": "Skakmat dalam 3",
+  "puzzleThemeMateIn4": "Skakmat dalam 4",
+  "puzzleThemeMateIn5": "Skakmat dalam 5 atau lebih",
+  "puzzleThemeBackRankMate": "Skakmat baris belakang",
+  "puzzleThemeSmotheredMate": "Skakmat tercekik",
+  "puzzleThemeFork": "Garpu",
+  "puzzleThemePin": "Pin",
+  "puzzleThemeSkewer": "Tusukan",
+  "puzzleThemeDiscoveredAttack": "Serangan terbuka",
+  "puzzleThemeDoubleCheck": "Skak ganda",
+  "puzzleThemeHangingPiece": "Buah catur menggantung",
+  "puzzleThemeTrappedPiece": "Buah catur terjebak",
+  "puzzleThemeDeflection": "Pengalihan",
+  "puzzleThemeAttraction": "Penarikan",
+  "puzzleThemeSacrifice": "Pengorbanan",
+  "puzzleThemeCapturingDefender": "Menangkap pembela",
+  "puzzleThemeClearance": "Pengosongan jalur",
+  "puzzleThemeInterference": "Penghalangan",
+  "puzzleThemeIntermezzo": "Langkah sela",
+  "puzzleThemeXRayAttack": "Serangan sinar-X",
+  "puzzleThemeQuietMove": "Langkah tenang",
+  "puzzleThemeDefensiveMove": "Langkah bertahan",
+  "puzzleThemeZugzwang": "Zugzwang",
+  "puzzleThemePromotion": "Promosi",
+  "puzzleThemeUnderPromotion": "Promosi rendah",
+  "puzzleThemeAdvancedPawn": "Pion maju",
+  "puzzleThemeExposedKing": "Raja terbuka",
+  "puzzleThemeKingsideAttack": "Serangan sisi raja",
+  "puzzleThemeQueensideAttack": "Serangan sisi ratu",
+  "puzzleThemeEnPassant": "En passant",
+  "puzzleThemeCastling": "Rokade",
+  "puzzleThemeOpening": "Pembukaan",
+  "puzzleThemeMiddlegame": "Permainan tengah",
+  "puzzleThemeEndgame": "Bagian akhir",
+  "puzzleThemePawnEndgame": "Bagian akhir pion",
+  "puzzleThemeRookEndgame": "Bagian akhir benteng",
+  "puzzleThemeQueenEndgame": "Bagian akhir ratu",
+  "puzzleThemeKnightEndgame": "Bagian akhir kuda",
+  "puzzleThemeBishopEndgame": "Bagian akhir gajah",
+  "puzzleGuideThemeTitle": "Teka-teki menurut tema",
+  "puzzleGuideTrainingGoal": "Temukan langkah terbaik di setiap teka-teki, satu per satu.",
+  "puzzleGuideTrainingRule1": "Teka-teki dipilih sesuai peringkatmu: makin baik kamu bermain, makin sulit teka-tekinya.",
+  "puzzleGuideTrainingRule2": "Gerakkan buah catur yang tepat: jika langkahnya benar, lawan membalas dan giliranmu tiba lagi; jika salah, langkahnya ditarik kembali.",
+  "puzzleGuideTrainingRule3": "Pada teka-teki baru, jika selesai di percobaan pertama, peringkatmu naik; jika kamu salah atau melihat solusi, dihitung gagal, peringkatmu turun, dan teka-teki masuk ke ulasan. Teka-teki yang sudah pernah kamu lihat tidak mengubah peringkat.",
+  "puzzleGuideTrainingRule4": "Petunjuk tidak mengurangi apa pun: petunjuk melingkari buah catur yang harus digerakkan.",
+  "puzzleGuideTrainingRule5": "Tidak ada jam dan tidak ada batas kesalahan: kamu boleh berhenti kapan saja.",
+  "puzzleGuideThemeGoal": "Latih satu pola taktik: setiap teka-teki punya tema yang sama.",
+  "puzzleGuideThemeRule1": "Gerakkan buah catur yang tepat: jika langkahnya benar, lawan membalas; jika salah, langkahnya ditarik kembali.",
+  "puzzleGuideThemeRule2": "Pada teka-teki baru, jika selesai di percobaan pertama, peringkatmu naik; jika ada kesalahan atau solusi dilihat, dihitung gagal, peringkatmu turun, dan teka-teki masuk ke ulasan.",
+  "puzzleGuideThemeRule3": "Tidak ada jam dan tidak ada batas kesalahan.",
+  "puzzleGuideDailyGoal": "Selesaikan teka-teki hari ini: teka-tekinya sama sepanjang hari.",
+  "puzzleGuideDailyRule1": "Temukan urutan langkah yang tepat: jika ada yang salah, langkahnya ditarik kembali dan kamu bisa mencoba lagi.",
+  "puzzleGuideDailyRule2": "Dengan “Coba lagi” kamu mulai dari posisi awal, dengan “Solusi” kamu melihat langkah-langkahnya.",
+  "puzzleGuideDailyRule3": "Dihitung selesai hanya jika kamu tidak salah dan tidak melihat solusi; jika tidak, dihitung gagal.",
+  "puzzleGuideDailyRule4": "Yang baru datang besok.",
+  "puzzleGuideReviewGoal": "Temukan solusi teka-teki yang tadi kamu jawab salah.",
+  "puzzleGuideReviewRule1": "Setiap teka-teki kembali dengan jarak yang makin lama (1, 3, 7, 14, dan 30 hari): hari ini kamu hanya mendapat yang sudah waktunya.",
+  "puzzleGuideReviewRule2": "Jika kamu menyelesaikannya tanpa kesalahan, jaraknya makin lama; jika keliru, mulai lagi dari satu hari.",
+  "puzzleGuideReviewRule3": "Ulasan tidak mengubah peringkat latihanmu.",
+  "puzzleGuideReviewRule4": "Setelah teka-teki hari ini selesai, tidak ada lagi yang perlu dilakukan.",
+  "puzzleGuideRunBase1": "Teka-tekinya makin sulit seiring berjalannya permainan.",
+  "puzzleGuideRunBase2": "Setiap teka-teki yang selesai bernilai 1 poin.",
+  "puzzleGuideRunTail1": "Rekor pribadimu disimpan untuk setiap mode.",
+  "puzzleGuideRunTail2": "Kamu boleh keluar kapan saja: poin dan XP yang sudah kamu dapat tetap dihitung.",
+  "puzzleGuideStormGoal": "Selesaikan sebanyak mungkin teka-teki dalam {minutes} menit.",
+  "puzzleGuideStormRule1": "Satu kesalahan mengurangi {seconds} detik, mengatur ulang kombomu, dan pindah ke teka-teki berikutnya.",
+  "puzzleGuideStormRule2": "Dengan 5, 12, 20, dan 30 teka-teki berturut-turut kamu mendapat 3, 5, 7, dan 10 detik (lalu 10 detik untuk setiap 10 teka-teki).",
+  "puzzleGuideStormRule3": "Tidak ada nyawa: permainan berakhir saat waktu habis.",
+  "puzzleGuideRushGoal": "Selesaikan sebanyak mungkin teka-teki dalam {minutes} menit, dengan tiga nyawa.",
+  "puzzleGuideLivesRule1": "Satu kesalahan mengurangi satu nyawa dan pindah ke teka-teki berikutnya.",
+  "puzzleGuideRushRule2": "Permainan berakhir saat waktu habis atau saat nyawa ketigamu hilang.",
+  "puzzleGuideSurvivalGoal": "Selesaikan sebanyak mungkin teka-teki, dengan tiga nyawa dan tanpa batas waktu.",
+  "puzzleGuideSurvivalRule2": "Permainan berakhir saat nyawa ketigamu hilang.",
+  "puzzleGuideStreakGoal": "Selesaikan sebanyak mungkin teka-teki berturut-turut: kesalahan pertama mengakhiri permainan.",
+  "puzzleGuideStreakRule1": "Tidak ada batas waktu dan tidak ada nyawa.",
+  "puzzleGuideStreakRule2": "Kamu hanya boleh melewati satu teka-teki per permainan, dengan “Lewati”."
+}

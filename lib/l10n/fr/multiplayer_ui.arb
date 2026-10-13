@@ -1,0 +1,15 @@
+{
+  "multiplayerUiChannelWifi": "Wi-Fi",
+  "multiplayerUiChannelBluetooth": "Bluetooth",
+  "multiplayerUiChannelRemote": "À distance",
+  "multiplayerUiLinkConnected": "Connecté",
+  "multiplayerUiLinkConnecting": "Connexion",
+  "multiplayerUiLinkOffline": "Injoignable",
+  "multiplayerUiLinkSemantics": "{channel} : {state}",
+  "multiplayerUiShowFriend": "Montre ce code à ton ami",
+  "multiplayerUiStepsTitle": "Comment jouer",
+  "multiplayerUiStepCreate": "L'un de vous crée la partie et montre le QR code ou envoie le lien.",
+  "multiplayerUiStepScan": "L'autre le scanne avec la caméra.",
+  "multiplayerUiStepPlay": "Jouez chacun votre tour : les coups voyagent tout seuls.",
+  "multiplayerUiResumeTitle": "Partie en cours"
+}

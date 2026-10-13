@@ -1,0 +1,15 @@
+{
+  "multiplayerUiChannelWifi": "Wi-Fi",
+  "multiplayerUiChannelBluetooth": "Bluetooth",
+  "multiplayerUiChannelRemote": "Uzaktan",
+  "multiplayerUiLinkConnected": "Bağlı",
+  "multiplayerUiLinkConnecting": "Bağlanıyor",
+  "multiplayerUiLinkOffline": "Ulaşılamıyor",
+  "multiplayerUiLinkSemantics": "{channel}: {state}",
+  "multiplayerUiShowFriend": "Bu kodu arkadaşına göster",
+  "multiplayerUiStepsTitle": "Nasıl oynanır",
+  "multiplayerUiStepCreate": "İçinizden biri oyunu oluşturur ve QR kodu gösterir ya da bağlantıyı gönderir.",
+  "multiplayerUiStepScan": "Diğeri kamerayla okutur.",
+  "multiplayerUiStepPlay": "Sırayla oynayın: hamleler kendiliğinden gider.",
+  "multiplayerUiResumeTitle": "Devam eden oyun"
+}

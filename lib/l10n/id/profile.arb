@@ -1,0 +1,9 @@
+{
+  "avatarPhotoTitle": "Foto",
+  "avatarPhotoHint": "Foto hanya tersimpan di ponsel ini: tidak pernah dikirim dan tidak disertakan dalam cadangan.",
+  "avatarPhotoGallery": "Dari galeri",
+  "avatarPhotoCamera": "Ambil foto",
+  "avatarPhotoRemove": "Hapus foto",
+  "avatarPhotoError": "Aku tidak bisa memakai foto itu. Periksa izin kamera dan foto di pengaturan ponselmu.",
+  "avatarPhotoLabel": "Foto profil"
+}

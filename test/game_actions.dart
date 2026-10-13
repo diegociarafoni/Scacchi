@@ -25,6 +25,14 @@ Future<void> openPositionEditor(WidgetTester tester) async {
 /// Dalla Home apre la scacchiera: «Nuova partita» mostra la scelta e qui si
 /// parte senza tempo, come se si fosse arrivati su una partita vuota.
 Future<void> openBoard(WidgetTester tester) async {
+  // I contenuti si caricano da asset: si attende che la Home compaia.
+  for (
+    var i = 0;
+    i < 100 && find.byKey(const Key('home-play')).evaluate().isEmpty;
+    i++
+  ) {
+    await tester.pump(const Duration(milliseconds: 100));
+  }
   await tester.tap(find.byKey(const Key('home-play')));
   await tester.pumpAndSettle();
   await openCustomSheet(tester, two: true);
