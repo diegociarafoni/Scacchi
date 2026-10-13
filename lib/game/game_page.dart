@@ -63,6 +63,7 @@ import 'challenge.dart';
 import 'chess_game.dart';
 import 'clock.dart';
 import 'clock_l10n.dart';
+import 'custom_clock_dialog.dart';
 import 'handicap.dart';
 import 'material.dart';
 import 'move_input.dart';
@@ -3931,6 +3932,27 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
           Text(l10n.gameTimeControlTitle, style: theme.textTheme.titleSmall),
           const SizedBox(height: 4),
           chip(noClock, null),
+          const SizedBox(height: 8),
+          ActionChip(
+            key: const ValueKey('clock-custom'),
+            avatar: const Icon(Icons.tune, size: 18),
+            label: Text(l10n.gameClockCustom),
+            onPressed: () async {
+              final control = await showCustomClockDialog(context);
+              if (control == null || !context.mounted) return;
+              Navigator.pop(
+                context,
+                _TimeChoice(
+                  control,
+                  _variant,
+                  _white.text,
+                  _black.text,
+                  _setup,
+                  _handicap,
+                ),
+              );
+            },
+          ),
           for (final entry in groups.entries) ...[
             const SizedBox(height: 12),
             Text(
