@@ -18,8 +18,13 @@ class JsonFile {
     await _pending;
     final String text;
     try {
-      text = await file.readAsString();
+      text = utf8.decode(await file.readAsBytes());
     } on PathNotFoundException {
+      return null;
+    } on FormatException {
+      await file.rename(
+        '${file.path}.bad-${DateTime.now().millisecondsSinceEpoch}',
+      );
       return null;
     }
     try {
