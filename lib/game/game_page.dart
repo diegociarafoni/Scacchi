@@ -896,7 +896,13 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   }
 
   PlayerSide get _playerSide {
-    if (_game.isOver || _thinking || _awaitingChallenge) {
+    // Mentre il computer pensa la scacchiera resta aperta solo alla premossa.
+    final premoving =
+        _task == _ComputerTask.move &&
+        _settings.premove &&
+        !_settings.kidMode &&
+        _pendingMove == null;
+    if (_game.isOver || (_thinking && !premoving) || _awaitingChallenge) {
       return PlayerSide.none;
     }
     return switch (_computerSide) {
@@ -1493,8 +1499,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       if (searchStart != null) clock?.restore(searchStart, null);
     }
     final viewing = _viewPly;
+    final premove = played ? _board.premove : null;
     _refresh();
     if (viewing != null) _showPly(viewing);
+    if (premove != null && viewing == null) _playPremove(premove);
     if (played && !_game.isOver) _botReact();
     if (played &&
         !_game.isOver &&
@@ -1511,6 +1519,22 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         action: SnackBarAction(label: l10n.gameRetry, onPressed: _computerMove),
       );
     }
+  }
+
+  /// Gioca la premossa se nella nuova posizione è ancora legale (RF-08);
+  /// altrimenti la scarta.
+  void _playPremove(Move premove) {
+    if (_game.isOver || !_humanToMove) return;
+    var move = premove;
+    if (move is NormalMove && move.promotion == null) {
+      final position = _game.position;
+      final lastRank = position.turn == Side.white ? Rank.eighth : Rank.first;
+      if (position.board.roleAt(move.from) == Role.pawn &&
+          move.to.rank == lastRank) {
+        move = move.withPromotion(Role.queen);
+      }
+    }
+    if (_game.position.isLegal(move)) _commitMove(move, animate: true);
   }
 
   /// «Spiegami perché» (RF-122): una riga su cosa fa o minaccia la mossa del
