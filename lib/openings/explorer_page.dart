@@ -122,13 +122,13 @@ class _ExplorerPageState extends State<ExplorerPage> {
             ),
           if (widget.repertoire != null)
             IconButton(
-              tooltip: 'Aggiungi al repertorio',
+              tooltip: l10n.openingsAddToRepertoire,
               icon: const Icon(Icons.bookmark_add_outlined),
               onPressed: _moves.isEmpty ? null : _addToRepertoire,
             ),
           if (widget.onPlay != null)
             IconButton(
-              tooltip: 'Gioca questa apertura',
+              tooltip: l10n.openingsPlayThisOpening,
               icon: const Icon(Icons.play_arrow),
               onPressed: _moves.isEmpty || positions.last.isGameOver
                   ? null
@@ -291,7 +291,8 @@ class _ExplorerPageState extends State<ExplorerPage> {
     }
     if (!mounted) return;
     final title =
-        book?.classifyPositions(_positions)?.localName ?? 'Apertura libera';
+        book?.classifyPositions(_positions)?.localName ??
+        AppLocalizations.of(context).openingsFreeOpening;
     await widget.onPlay!(
       context,
       OpeningGameRequest.explorer(
@@ -313,56 +314,70 @@ class _ExplorerPageState extends State<ExplorerPage> {
     if (!mounted) return;
     // Niente dispose: il dialogo lo usa ancora durante l'animazione di uscita.
     final name = TextEditingController(
-      text: book?.classifyPositions(_positions)?.localName ?? 'Linea',
+      text:
+          book?.classifyPositions(_positions)?.localName ??
+          AppLocalizations.of(context).openingsDefaultLineName,
     );
     // Di norma la linea finisce con la mossa del proprio colore.
     var side = _moves.length.isOdd ? Side.white : Side.black;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => StatefulBuilder(
-        builder: (context, setDialog) => AlertDialog(
-          title: const Text('Aggiungi al repertorio'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: name,
-                decoration: const InputDecoration(labelText: 'Nome'),
+        builder: (context, setDialog) {
+          final l10n = AppLocalizations.of(context);
+          return AlertDialog(
+            title: Text(l10n.openingsAddToRepertoire),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: name,
+                  decoration: InputDecoration(labelText: l10n.openingsLineName),
+                ),
+                const SizedBox(height: 16),
+                SegmentedButton<Side>(
+                  segments: [
+                    ButtonSegment(
+                      value: Side.white,
+                      label: Text(l10n.openingsSideWhite),
+                    ),
+                    ButtonSegment(
+                      value: Side.black,
+                      label: Text(l10n.openingsSideBlack),
+                    ),
+                  ],
+                  selected: {side},
+                  onSelectionChanged: (s) => setDialog(() => side = s.first),
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: Text(l10n.openingsCancel),
               ),
-              const SizedBox(height: 16),
-              SegmentedButton<Side>(
-                segments: const [
-                  ButtonSegment(value: Side.white, label: Text('Bianco')),
-                  ButtonSegment(value: Side.black, label: Text('Nero')),
-                ],
-                selected: {side},
-                onSelectionChanged: (s) => setDialog(() => side = s.first),
+              FilledButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: Text(l10n.openingsAdd),
               ),
             ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: const Text('Annulla'),
-            ),
-            FilledButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: const Text('Aggiungi'),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
-    final label = name.text.trim().isEmpty ? 'Linea' : name.text.trim();
+    if (!mounted) return;
+    final label = name.text.trim().isEmpty
+        ? AppLocalizations.of(context).openingsDefaultLineName
+        : name.text.trim();
     if (confirmed != true || !mounted) return;
     final error = await widget.repertoire!.addLine(side, label, [
       ..._moves,
     ], notation: AppSettings.of(context).notation);
     if (!mounted) return;
-    final color = side == Side.white ? 'Bianco' : 'Nero';
+    final l10n = AppLocalizations.of(context);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(error ?? 'Linea aggiunta al repertorio del $color.'),
+        content: Text(error?.text(l10n) ?? l10n.openingsLineAdded(side.name)),
       ),
     );
   }

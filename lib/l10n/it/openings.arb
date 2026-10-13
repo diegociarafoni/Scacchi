@@ -176,5 +176,148 @@
         "type": "int"
       }
     }
+  },
+  "openingsHubTitle": "Aperture",
+  "openingsHubExplorerSubtitle": "Partite giocate e risultati per ogni mossa, con i nomi delle aperture",
+  "openingsRepertoireTitle": "{side, select, white{Repertorio con il Bianco} other{Repertorio con il Nero}}",
+  "@openingsRepertoireTitle": {
+    "description": "Titolo del repertorio di un colore; side vale white o black",
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "openingsRepertoireUnavailable": "Repertorio non disponibile",
+  "openingsRepertoireLoading": "Caricamento...",
+  "openingsRepertoireSummary": "{lines} linee · {due} mosse da ripassare",
+  "@openingsRepertoireSummary": {
+    "description": "Riepilogo del repertorio di un colore: linee salvate e mosse in scadenza",
+    "placeholders": {
+      "lines": {
+        "type": "int"
+      },
+      "due": {
+        "type": "int"
+      }
+    }
+  },
+  "openingsGameTitle": "Gioca contro il computer",
+  "@openingsGameTitle": {
+    "description": "Titolo della finestra che chiede colore e livello prima di una partita da un'apertura"
+  },
+  "openingsLevel": "Livello",
+  "openingsPlay": "Gioca",
+  "openingsCancel": "Annulla",
+  "openingsSideWhite": "Bianco",
+  "@openingsSideWhite": {
+    "description": "Segmento per scegliere il colore"
+  },
+  "openingsSideBlack": "Nero",
+  "@openingsSideBlack": {
+    "description": "Segmento per scegliere il colore"
+  },
+  "openingsNameSemantics": "Apertura: {name} ({eco})",
+  "@openingsNameSemantics": {
+    "description": "Etichetta per la lettura dello schermo del nome dell'apertura",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "eco": {
+        "type": "String"
+      }
+    }
+  },
+  "openingsAddToRepertoire": "Aggiungi al repertorio",
+  "openingsPlayThisOpening": "Gioca questa apertura",
+  "openingsFreeOpening": "Apertura libera",
+  "@openingsFreeOpening": {
+    "description": "Titolo di una partita iniziata da una posizione che il libro non conosce"
+  },
+  "openingsDefaultLineName": "Linea",
+  "@openingsDefaultLineName": {
+    "description": "Nome proposto per una nuova linea del repertorio"
+  },
+  "openingsLineName": "Nome",
+  "openingsAdd": "Aggiungi",
+  "openingsLineAdded": "{side, select, white{Linea aggiunta al repertorio del Bianco.} other{Linea aggiunta al repertorio del Nero.}}",
+  "@openingsLineAdded": {
+    "description": "side vale white o black",
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "openingsProblemEmpty": "La linea è vuota.",
+  "openingsProblemIllegal": "La linea contiene una mossa illegale.",
+  "openingsProblemNoOwnMoves": "La linea non contiene mosse del tuo colore.",
+  "openingsProblemConflict": "In questa posizione il repertorio prevede già {move}.",
+  "@openingsProblemConflict": {
+    "description": "move è la mossa già presente, in notazione algebrica",
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "openingsDrillTitle": "Ripasso del repertorio",
+  "openingsDrillDone": "Ripasso completato: {count} mosse.",
+  "@openingsDrillDone": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "openingsDrillNew": "Nuova mossa: gioca quella indicata dalla freccia.",
+  "openingsDrillPrompt": "Linea \"{name}\": qual è la tua mossa?",
+  "@openingsDrillPrompt": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "openingsDrillWrong": "Non è la mossa del repertorio: ecco quella giusta.",
+  "openingsImportTitle": "Importa PGN",
+  "openingsImportHelper": "Ogni variante diventa una linea.",
+  "openingsImport": "Importa",
+  "openingsImportNone": "Nessuna linea valida nel PGN.",
+  "openingsImportAdded": "Linee aggiunte: {added}",
+  "@openingsImportAdded": {
+    "placeholders": {
+      "added": {
+        "type": "int"
+      }
+    }
+  },
+  "openingsImportAddedSkipped": "Linee aggiunte: {added}. Scartate: {skipped} ({reason})",
+  "@openingsImportAddedSkipped": {
+    "description": "reason è il motivo della prima linea scartata",
+    "placeholders": {
+      "added": {
+        "type": "int"
+      },
+      "skipped": {
+        "type": "int"
+      },
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "openingsRepertoireEmpty": "Nessuna linea. Aggiungile da Esplora aperture con il pulsante \"Aggiungi al repertorio\" o importa un PGN.",
+  "openingsPlayLine": "Gioca la linea",
+  "openingsDeleteLine": "Elimina la linea",
+  "openingsReviewNone": "Nessuna mossa da ripassare",
+  "openingsReviewButton": "Ripassa {count} mosse",
+  "@openingsReviewButton": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

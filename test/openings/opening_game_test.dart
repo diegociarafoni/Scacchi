@@ -5,6 +5,8 @@ import 'package:scacchi/engine/levels.dart';
 import 'package:scacchi/openings/opening_game.dart';
 import 'package:scacchi/openings/opening_game_dialog.dart';
 
+import '../localized_app.dart';
+
 List<Move> uci(String moves) =>
     moves.isEmpty ? [] : moves.split(' ').map((m) => Move.parse(m)!).toList();
 
@@ -68,7 +70,7 @@ void main() {
     testWidgets('restituisce la scelta fatta', (tester) async {
       OpeningGameChoice? choice;
       await tester.pumpWidget(
-        MaterialApp(
+        localizedApp(
           home: Builder(
             builder: (context) => TextButton(
               onPressed: () async =>
@@ -90,7 +92,7 @@ void main() {
     testWidgets('annullando non restituisce nulla', (tester) async {
       OpeningGameChoice? choice = const OpeningGameChoice(Side.white, 1);
       await tester.pumpWidget(
-        MaterialApp(
+        localizedApp(
           home: Builder(
             builder: (context) => TextButton(
               onPressed: () async =>
