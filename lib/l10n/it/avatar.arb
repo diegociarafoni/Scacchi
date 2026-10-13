@@ -1,0 +1,27 @@
+{
+  "avatarNamePawn": "Pedone",
+  "avatarNameKnight": "Cavallo",
+  "avatarNameBishop": "Alfiere",
+  "avatarNameRook": "Torre",
+  "avatarNameQueen": "Donna",
+  "avatarNameKing": "Re",
+  "avatarNameChick": "Pino",
+  "@avatarNameChick": {
+    "description": "Nome del personaggio nel selettore dell'avatar; i nomi propri restano uguali in ogni lingua"
+  },
+  "avatarNameFox": "Rocco",
+  "avatarNameFlower": "Chiara",
+  "avatarNameOwl": "Marta",
+  "avatarNameAstroCat": "Gatto astronauta",
+  "avatarNameRabbit": "Coniglio lunare",
+  "avatarNameDragon": "Duilio",
+  "avatarNameEagle": "Elena",
+  "avatarNameWolf": "Massimo",
+  "avatarNameStar": "Stella",
+  "avatarFrameNone": "Nessuna",
+  "avatarFrameBronze": "Bronzo",
+  "avatarFrameSilver": "Argento",
+  "avatarFrameGold": "Oro",
+  "avatarFrameFlame": "Fiamma",
+  "avatarFrameLaurel": "Alloro"
+}
