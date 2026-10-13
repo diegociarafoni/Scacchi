@@ -43,7 +43,7 @@ Per ogni mossa `perdita = win% con la mossa migliore − win% con la mossa gioca
 |---|---|---|
 | Brillante | !! | Sacrificio (vedi sotto), mossa migliore o con perdita ≤ 2, dopo la mossa win% ≥ 50, prima < 97 |
 | Ottima | ! | Mossa migliore; la seconda scelta del motore vale almeno 20 punti in meno e sotto il 60%; non è la semplice punizione di un errore grave dell'avversario; dopo la mossa win% ≥ 30 |
-| Libro | 📖 | Mossa di apertura nota con perdita ≤ 10. Non ancora collegato: `reviewGame` accetta `isBook`, ma la schermata non lo passa, quindi oggi nessuna mossa risulta di libro |
+| Libro | 📖 | Mossa di apertura nota con perdita ≤ 10. `ReviewPage` passa a `reviewGame` `isBook`: sono di libro le prime `OpeningBook.bookPlies` semimosse, cioè finché la posizione resta nel libro delle aperture (RF-91). Vale solo partendo dalla posizione iniziale e con il libro già caricato (l'app lo carica all'avvio e alla prima partita); altrimenti nessuna mossa è di libro. Lo stesso commento dell'allenatore (`reviewCoachBook`) e il conteggio per categoria usano questa classe |
 | Migliore | ★ | Prima scelta del motore |
 | Eccellente | 👍 | Perdita ≤ 2 |
 | Buona | ✓ | Perdita ≤ 5 |

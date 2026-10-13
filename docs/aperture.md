@@ -26,7 +26,7 @@ Il libro si carica una volta sola (`openingBook()` in `opening_assets.dart`), in
 
 ### Mosse di libro (RF-91)
 
-`OpeningBook.bookPlies(mosse)` restituisce quante semimosse iniziali restano nel libro; dopo la prima uscita non si rientra. La revisione della partita può usarlo per marcare le mosse "Libro".
+`OpeningBook.bookPlies(mosse)` restituisce quante semimosse iniziali restano nel libro; dopo la prima uscita non si rientra. La revisione della partita lo usa per marcare le mosse "Libro" (RF-91, vedi [revisione-partita.md](revisione-partita.md)).
 
 ### Nomi in italiano
 
