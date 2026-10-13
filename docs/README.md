@@ -52,6 +52,7 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | [analisi.md](analisi.md) | Analisi libera della posizione: linee del motore, barra, esplorazione |
 | [rilascio-android.md](rilascio-android.md) | Rilascio dell'APK, changelog e proposta di versione, installazione sul telefono, chiave di firma |
 | [store.md](store.md) | Fastlane per Google Play senza credenziali, elenco dei segreti da inserire |
+| [privacy-store.md](privacy-store.md) | Risposte per le schede di privacy degli store, informativa e crittografia per l'esportazione |
 | [licenza.md](licenza.md) | Licenza del progetto e componenti di terze parti |
 
 ## Stato del progetto

@@ -71,6 +71,8 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<true/>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>Il Bluetooth serve solo a giocare con un amico vicino, senza Wi-Fi. Le mosse viaggiano cifrate e solo tra i due telefoni.</string>
 	<key>NSCameraUsageDescription</key>
