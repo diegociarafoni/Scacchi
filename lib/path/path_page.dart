@@ -51,10 +51,7 @@ class _PathPageState extends State<PathPage> {
       }
       stars = await play(context, stage);
     } else {
-      stars = await Navigator.push<int>(
-        context,
-        MaterialPageRoute(builder: (_) => StagePage(stage: stage)),
-      );
+      stars = await openStage(context, controller, stage);
     }
     if (stars != null && stars > 0) {
       await controller.complete(

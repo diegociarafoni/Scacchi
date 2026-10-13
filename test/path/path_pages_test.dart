@@ -242,4 +242,142 @@ void main() {
       findsOneWidget,
     );
   });
+
+  group('ripresa e ricomincia', () {
+    final stage = stageById('pieces.king')!;
+
+    Future<void> open(WidgetTester tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Builder(
+            builder: (context) => TextButton(
+              onPressed: () => openStage(context, controller, stage),
+              child: const Text('apri'),
+            ),
+          ),
+        ),
+      );
+      await tester.tap(find.text('apri'));
+      await tester.pumpAndSettle();
+    }
+
+    Future<void> firstExercise(WidgetTester tester) async {
+      for (final (from, to) in [
+        ('e1', 'e2'),
+        ('e2', 'e3'),
+        ('e3', 'f2'),
+        ('f2', 'g3'),
+        ('g3', 'g2'),
+        ('g2', 'g1'),
+      ]) {
+        await _tapMove(tester, from, to);
+      }
+    }
+
+    testWidgets('Ricomincia riporta l\'esercizio alla posizione iniziale', (
+      tester,
+    ) async {
+      phone(tester);
+      await open(tester);
+      await _start(tester);
+      await _tapMove(tester, 'e1', 'f2');
+      await _tapMove(tester, 'f2', 'g3');
+      await tester.tap(find.byTooltip('Ricomincia'));
+      await tester.pumpAndSettle();
+      // Dopo il riavvio il re è di nuovo in e1 e le stelle sono tre.
+      await firstExercise(tester);
+      expect(
+        tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
+        isNotNull,
+      );
+    });
+
+    testWidgets('Ricomincia sblocca un esercizio in cui il pezzo è bloccato', (
+      tester,
+    ) async {
+      phone(tester);
+      await open(tester);
+      await _start(tester);
+      await _tapMove(tester, 'e1', 'e2');
+      await _tapMove(tester, 'e2', 'e3');
+      await _tapMove(tester, 'e3', 'f4');
+      await _tapMove(tester, 'f4', 'g5');
+      expect(
+        tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
+        isNull,
+      );
+      await tester.tap(find.text('Ricomincia l\'esercizio'));
+      await tester.pumpAndSettle();
+      await firstExercise(tester);
+      expect(
+        tester
+            .widget<FilledButton>(find.widgetWithText(FilledButton, 'Avanti'))
+            .onPressed,
+        isNotNull,
+      );
+    });
+
+    testWidgets('uscendo e riaprendo si riparte dall\'esercizio in corso', (
+      tester,
+    ) async {
+      phone(tester);
+      await open(tester);
+      await _start(tester);
+      await firstExercise(tester);
+      await tester.tap(find.text('Avanti'));
+      await tester.pumpAndSettle();
+      await tester.pageBack();
+      await tester.pumpAndSettle();
+      expect(controller.progress.resumeFor(stage.id), hasLength(1));
+
+      await tester.tap(find.text('apri'));
+      await tester.pumpAndSettle();
+      expect(find.text(stage.intro!), findsNothing);
+      expect(find.text(stage.exercises[1].instructions), findsOneWidget);
+    });
+
+    testWidgets(
+      'l\'ultimo esercizio concluso resta completabile dopo l\'uscita',
+      (tester) async {
+        phone(tester);
+        final n = stage.exercises.length;
+        await tester.runAsync(
+          () => controller.saveResume(stage.id, List.filled(n, 3)),
+        );
+        int? result;
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Builder(
+              builder: (context) => TextButton(
+                onPressed: () async =>
+                    result = await openStage(context, controller, stage),
+                child: const Text('apri'),
+              ),
+            ),
+          ),
+        );
+        await tester.tap(find.text('apri'));
+        await tester.pumpAndSettle();
+        expect(find.text('Tappa completata'), findsOneWidget);
+        await tester.tap(find.text('Fine'));
+        await tester.pumpAndSettle();
+        expect(result, 3);
+        await tester.runAsync(
+          () => controller.complete(stage, result!, const Duration(minutes: 1)),
+        );
+        expect(controller.progress.starsFor(stage.id), 3);
+        expect(controller.progress.resumeFor(stage.id), isEmpty);
+      },
+    );
+
+    testWidgets('rigiocare una tappa completata riparte da capo', (
+      tester,
+    ) async {
+      phone(tester);
+      await tester.runAsync(() => controller.complete(stage, 3, Duration.zero));
+      await tester.runAsync(() => controller.saveResume(stage.id, [3, 3]));
+      await open(tester);
+      expect(find.text(stage.intro!), findsOneWidget);
+    });
+  });
 }

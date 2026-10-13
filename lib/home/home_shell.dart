@@ -806,9 +806,7 @@ class _HomeShellState extends State<HomeShell> {
       final controller = await _pathController();
       if (!context.mounted) return;
       final started = DateTime.now();
-      final stars = await Navigator.of(
-        context,
-      ).push<int>(MaterialPageRoute(builder: (_) => StagePage(stage: stage)));
+      final stars = await openStage(context, controller, stage);
       if (stars != null && stars > 0) {
         await controller.complete(
           stage,
