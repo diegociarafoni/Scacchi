@@ -1,6 +1,6 @@
 /// Nomi delle aperture in italiano.
 ///
-/// Il dataset Lichess è in inglese: qui le famiglie più comuni hanno la loro
+/// Il dataset pubblico è in inglese: qui le famiglie più comuni hanno la loro
 /// traduzione e le varianti si compongono da un piccolo glossario (sostantivi,
 /// aggettivi, nazionalità). I nomi propri restano invariati; ciò che non si sa
 /// tradurre resta com'è, così non si perde mai l'informazione.

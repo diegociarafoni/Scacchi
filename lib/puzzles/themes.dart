@@ -1,6 +1,6 @@
 import '../l10n/app_localizations.dart';
 
-/// Temi Lichess offerti come filtro, nell'ordine mostrato.
+/// Temi offerti come filtro, nell'ordine mostrato.
 const puzzleThemeIds = <String>[
   'mateIn1',
   'mateIn2',

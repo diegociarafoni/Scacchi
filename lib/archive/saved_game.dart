@@ -47,7 +47,7 @@ class SavedGame {
     pgn: exportPgn(
       game,
       headers: {
-        'Event': 'Scacchi',
+        'Event': 'Rokko',
         'Site': 'Offline',
         'Date': _pgnDate(createdAt),
         'TimeControl': ?_pgnTimeControl(timeControl),

@@ -23,7 +23,7 @@ class LevelRequirement extends Requirement {
 
   final int level;
 
-  /// Traguardo che un tempo sbloccava la ricompensa: chi lo ha già la tiene.
+  /// Traguardo che sblocca ancora la ricompensa a chi lo ha già.
   final String? keptAchievement;
 
   @override

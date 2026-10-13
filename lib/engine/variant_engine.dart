@@ -267,7 +267,8 @@ class _Search {
   final int _budgetMs;
 
   /// Quante volte ogni posizione è già comparsa, nella partita e nella linea
-  /// in esame: una seconda comparsa vale patta: la regola dice tre, ma per un motore è la scelta usuale per non girare a vuoto.
+  /// in esame. Già la seconda comparsa vale patta (la regola ne chiede tre)
+  /// per non far girare a vuoto la ricerca.
   final _seen = <int, int>{};
 
   void seed(_Request request) {
