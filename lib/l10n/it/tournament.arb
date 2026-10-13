@@ -1,0 +1,194 @@
+{
+  "tournamentTitle": "Tornei",
+  "tournamentYou": "Tu",
+  "@tournamentYou": {
+    "description": "Nome del giocatore (l'utente) nella classifica di un torneo"
+  },
+  "tournamentAbandonTitle": "Abbandonare il torneo?",
+  "tournamentAbandonBody": "Il torneo si chiude senza trofeo.",
+  "tournamentContinue": "Continua",
+  "tournamentAbandon": "Abbandona",
+  "tournamentAbandonTooltip": "Abbandona il torneo",
+  "tournamentFormatRoundRobin": "Girone all'italiana",
+  "tournamentFormatKnockout": "Eliminazione diretta",
+  "tournamentNew": "Nuovo torneo",
+  "tournamentIntro": "Partite vere contro il motore; tra i bot i risultati si simulano in base alla forza.",
+  "tournamentPlayers": "{count, plural, one{{count} giocatore} other{{count} giocatori}}",
+  "@tournamentPlayers": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tournamentOpponents": "Avversari",
+  "tournamentStart": "Inizia il torneo",
+  "tournamentTrophies": "Bacheca",
+  "tournamentTrophySubtitle": "{format} · {date}",
+  "@tournamentTrophySubtitle": {
+    "description": "Formula e data di un torneo passato",
+    "placeholders": {
+      "format": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "tournamentTrophySubtitleChampion": "{format} · {date} · vinto da {champion}",
+  "@tournamentTrophySubtitleChampion": {
+    "description": "Torneo passato in cui l'utente non ha vinto",
+    "placeholders": {
+      "format": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      },
+      "champion": {
+        "type": "String"
+      }
+    }
+  },
+  "tournamentHeader": "{format} · {count, plural, one{{count} giocatore} other{{count} giocatori}}",
+  "@tournamentHeader": {
+    "description": "Titolo del torneo in corso",
+    "placeholders": {
+      "format": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "tournamentWon": "Hai vinto il torneo!",
+  "tournamentChampion": "Vince {name}",
+  "@tournamentChampion": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "tournamentArmageddonVs": "Spareggio Armageddon contro {opponent}",
+  "@tournamentArmageddonVs": {
+    "description": "Il pareggio non basta: si gioca una partita di spareggio",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "tournamentRoundOfVs": "Turno {round} di {total}: contro {opponent}",
+  "@tournamentRoundOfVs": {
+    "placeholders": {
+      "round": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "tournamentRoundVs": "Turno {round}: contro {opponent}",
+  "@tournamentRoundVs": {
+    "description": "Turno del tabellone a eliminazione diretta, senza il totale dei turni",
+    "placeholders": {
+      "round": {
+        "type": "int"
+      },
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "tournamentGameSubtitle": "{elo} Elo · giochi con il {color, select, white{bianco} other{nero}}",
+  "@tournamentGameSubtitle": {
+    "description": "color vale white o black",
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      },
+      "color": {
+        "type": "String"
+      }
+    }
+  },
+  "tournamentGameSubtitleDraw": "{elo} Elo · giochi con il {color, select, white{bianco} other{nero}} · ti basta la patta",
+  "@tournamentGameSubtitleDraw": {
+    "description": "Spareggio Armageddon: al Nero basta la patta",
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      },
+      "color": {
+        "type": "String"
+      }
+    }
+  },
+  "tournamentGameSubtitleWin": "{elo} Elo · giochi con il {color, select, white{bianco} other{nero}} · devi vincere",
+  "@tournamentGameSubtitleWin": {
+    "description": "Spareggio Armageddon: al Bianco serve la vittoria",
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      },
+      "color": {
+        "type": "String"
+      }
+    }
+  },
+  "tournamentPlay": "Gioca",
+  "tournamentGamesUnavailable": "Le partite del torneo non sono disponibili su questo dispositivo.",
+  "tournamentStandings": "Classifica",
+  "tournamentStandingsPoints": "{points} pt · SB {tiebreak}",
+  "@tournamentStandingsPoints": {
+    "description": "Punti e spareggio Sonneborn-Berger di un giocatore",
+    "placeholders": {
+      "points": {
+        "type": "String"
+      },
+      "tiebreak": {
+        "type": "String"
+      }
+    }
+  },
+  "tournamentRoundFinal": "Finale",
+  "tournamentRoundSemifinals": "Semifinali",
+  "tournamentRoundQuarterfinals": "Quarti di finale",
+  "tournamentScoreArmageddon": "{score} (Armageddon)",
+  "@tournamentScoreArmageddon": {
+    "description": "Risultato di una partita decisa allo spareggio Armageddon",
+    "placeholders": {
+      "score": {
+        "type": "String"
+      }
+    }
+  },
+  "tournamentPlace": "{rank}° posto su {players}",
+  "@tournamentPlace": {
+    "description": "Piazzamento in un torneo passato; rank è il numero del posto come testo",
+    "placeholders": {
+      "rank": {
+        "type": "String"
+      },
+      "players": {
+        "type": "int"
+      }
+    }
+  },
+  "tournamentFinishedRank": "Hai chiuso al {rank}° posto",
+  "@tournamentFinishedRank": {
+    "description": "rank è il numero del posto come testo",
+    "placeholders": {
+      "rank": {
+        "type": "String"
+      }
+    }
+  }
+}
