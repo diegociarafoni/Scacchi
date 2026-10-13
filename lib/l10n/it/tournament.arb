@@ -1,5 +1,9 @@
 {
   "tournamentTitle": "Tornei",
+  "tournamentDatePattern": "dd/MM/yyyy",
+  "@tournamentDatePattern": {
+    "description": "Formato della data sul trofeo (modello di intl)"
+  },
   "tournamentYou": "Tu",
   "@tournamentYou": {
     "description": "Nome del giocatore (l'utente) nella classifica di un torneo"

@@ -1,5 +1,6 @@
 {
   "tournamentTitle": "Tournaments",
+  "tournamentDatePattern": "MM/dd/yyyy",
   "tournamentYou": "You",
   "tournamentAbandonTitle": "Quit the tournament?",
   "tournamentAbandonBody": "The tournament ends with no trophy.",

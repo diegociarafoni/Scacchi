@@ -220,7 +220,7 @@ String _formatLabel(AppLocalizations l10n, TournamentFormat format) =>
     };
 
 String _date(AppLocalizations l10n, DateTime d) =>
-    DateFormat.yMd(l10n.localeName).format(d);
+    DateFormat(l10n.tournamentDatePattern).format(d);
 
 class _Running extends StatefulWidget {
   const _Running({required this.page, required this.tournament});
