@@ -250,6 +250,8 @@ void main() {
     );
     await tester.tap(find.byTooltip('Impostazioni'));
     await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('section-profile')));
+    await tester.pumpAndSettle();
     await tester.scrollUntilVisible(find.byKey(const Key('unlockAll')), 300);
     expect(find.byKey(const Key('unlockAll')), findsOneWidget);
   });

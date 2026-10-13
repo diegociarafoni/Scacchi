@@ -60,7 +60,9 @@ lib/
   storage/                File JSON locali con versione e scrittura atomica
   settings/
     settings.dart         Impostazioni, valori predefiniti e salvataggio locale
-    settings_page.dart    Schermata delle impostazioni: sezioni comprimibili, gallerie di temi e pezzi
+    settings_page.dart    Menu delle impostazioni: una voce per sezione
+    section_pages.dart    Una pagina per sezione (scacchiera, partita, accessibilità, profilo e dati, bambino, stile)
+    settings_widgets.dart Anteprima, gallerie di temi e pezzi, scelte a chip, volume
     settings_labels.dart  Nomi tradotti di temi, pezzi, notazioni e animazioni
     board_preview.dart    Anteprima della scacchiera nelle Impostazioni
     color_blind.dart      Colori per daltonici (Okabe-Ito)

@@ -77,7 +77,7 @@ Ogni funzione nasce dai requisiti del progetto, nel documento dei requisiti, con
 | Strumenti | `test/tool/` | Controlli di rami, commit, documentazione e licenze | `flutter test test/tool` |
 | Multigiocatore | `test/multiplayer/` | Invito, firma e cifratura, registro delle mosse, canali multipli, sessione con passaggio tra canali (vedi multigiocatore.md) | `flutter test test/multiplayer` |
 | End-to-end | `integration_test/qr_exchange_test.dart` | QR disegnato dall'app letto da zxing-cpp, fotocamera assente | `flutter test integration_test/qr_exchange_test.dart -d linux` |
-| Golden | `test/settings/goldens/` | Schermata Impostazioni su telefono piccolo, medio e grande, con e senza colori per daltonici, e gallerie di temi e pezzi | `flutter test test/settings/board_preview_test.dart` |
+| Golden | `test/settings/goldens/` | Menu delle Impostazioni su telefono piccolo, medio e grande e in tema scuro, pagina Scacchiera su tre telefoni, con e senza colori per daltonici, e gallerie di temi e pezzi | `flutter test test/settings` |
 | End-to-end | `integration_test/*_test.dart` | L'app reale avviata su un dispositivo o desktop, con tocchi e trascinamenti sulla scacchiera | `flutter test integration_test -d <dispositivo>` |
 | End-to-end | `integration_test/computer_test.dart` | Partite contro un vero Stockfish (processo esterno, richiede `stockfish` installato) | `flutter test integration_test/computer_test.dart -d linux` |
 

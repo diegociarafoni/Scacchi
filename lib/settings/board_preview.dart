@@ -44,6 +44,7 @@ class _BoardPreviewState extends State<BoardPreview> {
     s.showCoordinates,
     s.coordinatesOutside,
     s.showLegalMoves,
+    s.showLastMove,
     s.colorBlind,
     s.animation,
     s.tableMode,

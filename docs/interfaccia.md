@@ -107,13 +107,28 @@ Dopo ogni mossa il lettore di schermo annuncia una frase in italiano, per esempi
 
 ## Impostazioni
 
-In cima alla lista c'è la voce «Stile», che apre la schermata con anteprima e schede per scacchiera, pezzi, sfondo e suoni (vedi [stile.md](stile.md)). Qui sotto, in cima alla pagina, sempre visibile mentre si scorre, c'è un'anteprima della scacchiera: mostra una posizione di prova con tema, pezzi, coordinate, mosse legali, colori per daltonici e velocità delle animazioni correnti, e si aggiorna a ogni scelta. Toccandola si gioca la mossa di prova (l'alfiere prende in c6), con l'animazione scelta; un secondo tocco la ripristina. Il pulsante a destra del titolo (48 dp) la comprime a una riga con tema e pezzi, per lasciare spazio alle impostazioni sui telefoni piccoli. L'anteprima ha un'etichetta per i lettori di schermo.
+La pagina principale è un menu di sezioni: ogni voce ha icona, nome e una riga che dice cosa contiene, ed è alta almeno 48 dp; i lettori di schermo la annunciano come pulsante. Ogni sezione si apre in una pagina propria, con le sue impostazioni; sotto ogni interruttore una riga spiega cosa cambia. Le voci, nell'ordine:
 
-Sotto l'anteprima le impostazioni sono in sezioni comprimibili, ciascuna con icona, titolo e una riga che dice cosa contiene. All'apertura sono aperte solo «Profilo» e «Aspetto»; le altre si aprono con un tocco (l'intestazione è alta almeno 48 dp e i lettori di schermo la annunciano come comprimibile). Le sezioni, nell'ordine: Profilo (profilo bambino), Aspetto (aspetto dell'app, galleria dei temi, galleria dei pezzi, «Sblocca tutto», animazioni), Scacchiera (mosse legali, coordinate, frecce e cerchi, notazione), Gioco (promozione, spiegazioni, rotazione, modalità tavolo), Accessibilità (colori per daltonici, modalità zen, conferma della mossa), Suoni e vibrazione, Dati (backup).
+| Sezione | Contenuto |
+|---|---|
+| Profilo e dati | Apre il profilo (avatar, foto, obiettivo giornaliero, promemoria), accende o spegne XP, serie e traguardi (non nel profilo bambino), «Sblocca tutto» e apre backup e ripristino; senza progressi resta solo il backup |
+| Stile | Apre la schermata Stile (`StylePage`, vedi [stile.md](stile.md)): anteprima dal vivo e schede per scacchiera, pezzi, sfondo e suoni |
+| Scacchiera | Suoni, volume, vibrazione, coordinate (anche fuori), evidenzia l'ultima mossa, mosse legali, frecce e cerchi, animazioni, notazione |
+| Partita | Promuovi sempre a donna, ruota a ogni turno, modalità tavolo, «Spiegami perché» |
+| Accessibilità | Aspetto dell'app (sistema, chiaro, scuro), colori per daltonici, modalità zen, conferma della mossa |
+| Profilo bambino | In fondo, sotto un separatore; per uscirne serve la domanda per adulti |
+
+Poche sezioni, nessuna con meno di due voci (lo controlla un test): una sezione per ogni cosa che l'utente cerca, non una per ogni funzione.
+
+Le pagine che cambiano l'aspetto della scacchiera (Scacchiera e Accessibilità; Stile ha la sua) hanno in cima, fissa mentre si scorre, un'anteprima: mostra una posizione di prova con tema, pezzi, coordinate, mosse legali, ultima mossa, colori per daltonici e velocità delle animazioni correnti, e si aggiorna a ogni scelta. Toccandola si gioca la mossa di prova (l'alfiere prende in c6), con l'animazione scelta; un secondo tocco la ripristina. Il pulsante a destra del titolo (48 dp) la comprime a una riga con tema e pezzi, per lasciare spazio alle impostazioni sui telefoni piccoli. L'anteprima ha un'etichetta per i lettori di schermo.
+
+Il codice è diviso così: `settings_page.dart` è il menu (`SettingsSection`), `section_pages.dart` ha una pagina per sezione e `settings_widgets.dart` i pezzi condivisi (anteprima, scelte a chip, volume). Una sezione nuova si aggiunge a `SettingsSection`, alle voci del menu e a una pagina in `section_pages.dart`, solo se ha almeno due voci.
+
+**Non ancora disponibili** (richiedono lavoro vero, non solo una voce di menu): lingua scelta nell'app (oggi segue il telefono), impostazioni della Home (cosa mostrare nella dashboard), dei Problemi (difficoltà, punteggio, obiettivi, timer, feedback sugli errori) e dell'Analisi (analisi rapida, barra di valutazione, frecce, linee del motore, commenti), «Ingrandisci i pezzi», metodo di arrocco, schermata di fine partita e notifiche.
 
 I temi e i pezzi sono gallerie di tessere: ogni tema mostra una scacchiera 4×4 con le sue case chiare e scure, ogni set il suo cavallo, con il nome sotto. La scelta attiva ha bordo marcato e segno di spunta; una tessera ancora bloccata ha il lucchetto (non solo la tinta più spenta), e toccarla dice come sbloccarla; per i lettori di schermo è «selezionato» o «bloccato» con il requisito. Il profilo bambino non cita mai il livello.
 
-Tutti i testi e le descrizioni della pagina sono in italiano e inglese in `lib/l10n/<lingua>/settings.arb` (prefisso `settings`); i nomi dei set di pezzi sono nomi propri e restano uguali in ogni lingua, tranne «Classico». Un test (`test/settings/settings_sections_test.dart`) fallisce se in `settings_page.dart` compare di nuovo un testo scritto nel codice.
+Tutti i testi e le descrizioni della pagina sono in italiano e inglese in `lib/l10n/<lingua>/settings.arb` (prefisso `settings`); i nomi dei set di pezzi sono nomi propri e restano uguali in ogni lingua, tranne «Classico». Un test (`test/settings/settings_sections_test.dart`) fallisce se in `settings_page.dart`, `section_pages.dart` o `settings_widgets.dart` compare di nuovo un testo scritto nel codice.
 
 Si aprono dall'icona a forma di ingranaggio nella barra del titolo. Ogni modifica si applica subito e viene salvata sul dispositivo.
 
@@ -122,6 +137,7 @@ Si aprono dall'icona a forma di ingranaggio nella barra del titolo. Ogni modific
 | Aspetto dell'app | Sistema, Chiaro o Scuro: tema chiaro o scuro di tutta l'app, oppure lo stesso del telefono (requisito RP-02) | Sistema |
 | Mostra le mosse legali | Puntini sulle case raggiungibili dal pezzo selezionato | Attiva |
 | Coordinate | Lettere e numeri sui bordi della scacchiera | Attiva |
+| Evidenzia l'ultima mossa | Colora la casa di partenza e quella di arrivo dell'ultima mossa, su tutte le scacchiere; spenta, il colore del tema diventa trasparente | Attiva |
 | Coordinate fuori dalla scacchiera | Sposta le coordinate su una cornice attorno alla scacchiera, così non coprono i pezzi; si sceglie solo con le coordinate attive (vedi [pezzi-e-scacchiere.md](pezzi-e-scacchiere.md)) | Disattiva |
 | Promuovi sempre a donna | Salta il selettore di promozione | Disattiva |
 | Frecce e cerchi | Disegno di frecce e cerchi con due dita sulla scacchiera | Attiva |
@@ -170,7 +186,7 @@ Nel puzzle l'obiettivo sta in una scheda sopra la scacchiera, con il colore che 
 
 Il tema è in `lib/theme/rokko_theme.dart` e segue lo stile spaziale della scacchiera «Spazio»: indaco `#4A4F86`, notte `#1D1F45` e viola di nebulosa `#725692`. Nel tema scuro i comandi sono lavanda (`#B9B3FF`) su fondo `#12132B`, nel chiaro indaco su fondo `#F5F3FC`; le stelline (`star`, giallo) sono un accento raro. Il verde `#769656` resta solo della scacchiera. Raggi di 12 dp (pulsanti) e 20 dp (schede, dialoghi), bersagli minimi di 48 dp (56 dp nel profilo bambino). Un test verifica il contrasto minimo 4,5:1 di pulsanti, testi e accenti in entrambi i temi. Le schermate leggono i valori con `RokkoTokens.of(context)` (`action`, `onAction`, `star`, `success`, `warning`, `boardGreen`, raggi, bersagli) e mettono il marchio nella barra del titolo con `RokkoWordmark`; non scrivono colori e misure a mano.
 
-L'app segue il tema chiaro o scuro del sistema, a meno che in Impostazioni, alla voce «Aspetto dell'app», si scelga Chiaro o Scuro; la scelta vale subito per tutte le schermate. Le Impostazioni sono tradotte in italiano e inglese.
+L'app segue il tema chiaro o scuro del sistema, a meno che in Impostazioni → Accessibilità, alla voce «Aspetto dell'app», si scelga Chiaro o Scuro; la scelta vale subito per tutte le schermate. Le Impostazioni sono tradotte in italiano e inglese.
 
 ### Colori per daltonici
 
