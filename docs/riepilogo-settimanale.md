@@ -1,6 +1,6 @@
 # Riepilogo settimanale
 
-Requisito RG-16: una scheda offline sugli ultimi sette giorni con i progressi, l'errore ricorrente più frequente e un solo consiglio con il collegamento alla lezione o ai puzzle adatti. Si apre da **Tu → Riepilogo settimanale**. Differisce da [La tua settimana](ritratto-settimana.md), che racconta le partite (aperture, matti) e si condivide come immagine: qui si guarda ai progressi e a cosa allenare.
+Requisito RG-16: una scheda offline sugli ultimi sette giorni con i progressi, l'errore ricorrente più frequente e un solo consiglio con il collegamento alla lezione o ai puzzle adatti. Si apre dalla voce **La tua settimana** della scheda Tu e del gruppo «I tuoi progressi» della Home; la pagina si intitola «Riepilogo settimanale». Differisce dalla [scheda da condividere](ritratto-settimana.md), che racconta le partite (aperture, matti) e si condivide come immagine: qui si guarda ai progressi e a cosa allenare.
 
 ## Cosa mostra
 

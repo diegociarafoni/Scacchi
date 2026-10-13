@@ -16,6 +16,9 @@ Revisione completa della partita (requisiti RF-60…RF-66): ogni mossa viene ana
 | `lib/review/game_phase.dart` | Fase della partita (apertura, mediogioco, finale) per la precisione per fase e i temi dei puzzle |
 | `lib/review/coach.dart` | Coach testuale: `explainMove` e temi degli errori |
 | `lib/review/personal_puzzles.dart` | Puzzle personali dagli errori (`puzzlesFromReview`) |
+| `lib/review/error_themes.dart` | Conteggio degli errori per tema del coach (`errorThemeCounts`) |
+| `lib/review/review_activity.dart` | Attività `ReviewCompleted` registrata a revisione finita (XP, errori ricorrenti) |
+| `lib/review/review_l10n.dart` | Nomi tradotti di categorie e temi |
 | `lib/review/board_utils.dart` | Utilità sulla scacchiera: mosse del motore, arrocco, `threatFen` per la minaccia |
 | `lib/review/eval_bar.dart`, `score_format.dart` | Barra di valutazione e formato dei punteggi |
 | `lib/review/review_page.dart` | Schermata di revisione, con le note personali sulle mosse |
@@ -62,7 +65,7 @@ Un pedone offerto non basta.
 
 - Precisione della mossa: `103.17 × e^(−0.04354 × perdita) − 3.17`, limitata a 0–100.
 - Precisione della partita: media tra media aritmetica e media armonica delle mosse del giocatore, così un errore grave isolato pesa più che nella media semplice.
-- Stima della forza (assente se il giocatore non ha mosse): interpolazione lineare indicativa (50% ≈ 400, 70% ≈ 1200, 80% ≈ 1700, 90% ≈ 2300, 95% ≈ 2700). È mostrata come stima, non come rating.
+- Stima della forza (assente se il giocatore non ha mosse): interpolazione lineare indicativa tra punti fissi (per esempio 50% ≈ 400, 70% ≈ 1200, 80% ≈ 1700, 90% ≈ 2300, 95% ≈ 2700, 100% ≈ 3200). È mostrata come stima, non come rating.
 
 ## Precisione per fase
 
@@ -91,7 +94,7 @@ Su ogni mossa si può scrivere una nota (RF-55): un simbolo (`!`, `?`, `!!`, `??
 
 ## Schermata di revisione
 
-Si apre dal menu della partita (⋮ → **Revisione della partita**: c'è il motore, c'è almeno una mossa e il computer non sta pensando; la voce manca nelle partite di tornei e percorso e nel profilo bambino) oppure toccando una partita nell'**Archivio** della scheda Tu. Il codice è in `lib/review/review_page.dart`.
+Si apre dal menu della partita (⋮ → **Revisione della partita**: c'è il motore, c'è almeno una mossa e il computer non sta pensando; la voce manca nelle partite di tornei e percorso e nel profilo bambino) oppure toccando una partita nell'**Archivio** della scheda Tu o tra le «Ultime partite» della Home. Il codice è in `lib/review/review_page.dart`.
 
 | Elemento | Requisito | Comportamento |
 |---|---|---|
@@ -140,7 +143,7 @@ Il commento in tempo reale durante la partita (RF-72) è dell'allenatore: vedi [
 
 ## Puzzle dagli errori
 
-Proposta "Allenamento dagli errori" del capitolo 7 dei requisiti: `puzzlesFromReview` (`lib/review/personal_puzzles.dart`) trasforma gli errori, gli errori gravi e le occasioni mancate del giocatore in puzzle personali (`MistakePuzzle`) nello stesso formato dei puzzle Lichess usati dal modulo puzzle.
+"Allenamento dagli errori": `puzzlesFromReview` (`lib/review/personal_puzzles.dart`) trasforma gli errori, gli errori gravi e le occasioni mancate del giocatore in puzzle personali (`MistakePuzzle`) nello stesso formato dei puzzle inclusi nell'app.
 
 - **Posizione**: quella prima della mossa precedente dell'avversario; la prima mossa del puzzle è quella dell'avversario, come nella raccolta di puzzle inclusa.
 - **Soluzione**: la variante del motore, fino a tre mosse del giocatore, oppure l'intero matto se il giocatore aveva il matto in 5 o meno. Si ferma alla prima mossa illegale e finisce sempre con una mossa del giocatore.
@@ -160,6 +163,6 @@ Nel riepilogo della revisione il pulsante **Salva gli errori come puzzle (N)** c
 - `PuzzleTrainer.addPersonal` salva i puzzle in `PersonalPuzzles` (`lib/puzzles/personal_puzzles.dart`, chiave `puzzles.personal.v1`, al massimo 200: i più vecchi vengono scartati) e li aggiunge alla coda di ripasso come carte nuove. Salvare di nuovo la stessa partita non duplica nulla e lo dice ("Questi puzzle sono già salvati.").
 - Si trovano in **Puzzle › Ripasso degli errori**, con gli intervalli del sistema di Leitner degli altri puzzle. Il punteggio dei puzzle non cambia: vale solo per quelli del database, quindi un puzzle personale (id `mio-…`) sbagliato o risolto agisce solo sul ripasso.
 - Se il salvataggio fallisce compare "Salvataggio non riuscito. Riprova." e il pulsante resta disponibile.
-- La spiegazione del coach non viene conservata: il puzzle è salvato come riga CSV Lichess. Mostrarla dopo la soluzione richiederebbe un campo dedicato.
+- La spiegazione del coach non viene conservata: il puzzle è salvato come riga CSV del dataset dei puzzle. Mostrarla dopo la soluzione richiederebbe un campo dedicato.
 - Se la scrittura su disco fallisce nulla viene aggiunto in memoria, così il salvataggio si può riprovare. Oltre 200 puzzle si scartano i più vecchi, anche dal ripasso.
 - L'identificativo della partita nell'id (`mio-<partita>-<semimossa>`) è un FNV-1a della chiave della revisione, uguale su tutte le piattaforme.

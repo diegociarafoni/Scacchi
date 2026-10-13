@@ -13,7 +13,7 @@ enum Variant {
 
   const Variant(this.pgnName, this.rule);
 
-  /// Valore dell'intestazione PGN `Variant`, come la scrive Lichess.
+  /// Valore dell'intestazione PGN `Variant`.
   final String pgnName;
   final Rule rule;
 

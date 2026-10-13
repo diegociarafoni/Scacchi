@@ -37,6 +37,9 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | [identita-visiva.md](identita-visiva.md) | Nome, icona, schermata di avvio e come rigenerarli |
 | [localizzazione.md](localizzazione.md) | Lingua predefinita e come aggiungere testi e lingue |
 | [glossario-scacchistico.md](glossario-scacchistico.md) | Termini scacchistici e regole di stile in italiano, inglese, spagnolo e francese |
+| [glossario-portoghese.md](glossario-portoghese.md) | Termini scacchistici e regole di stile in portoghese del Brasile |
+| [glossario-tedesco.md](glossario-tedesco.md) | Termini scacchistici e regole di stile in tedesco |
+| [backlog.md](backlog.md) | Backlog unico: requisiti, stato, priorità, dimensione e versione prevista |
 | [sviluppo.md](sviluppo.md) | Ambiente, comandi, test, CI e convenzioni |
 | [convenzioni-git.md](convenzioni-git.md) | Rami, commit Angular, hook locali, merge e protezione di `main` |
 | [qualita.md](qualita.md) | Copertura, golden test, accessibilità e relativi limiti |
@@ -91,17 +94,17 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | Partita con l'allenatore: avvisi, ripresa della mossa, suggerimenti in parole con cerchio e freccia | Disponibile dove c'è il motore |
 | Profilo bambino: schede semplificate, bot amichevoli, niente numeri | Disponibile dalle Impostazioni |
 | Tema dell'app chiaro, scuro o di sistema, colori per daltonici | Disponibile dalle Impostazioni |
-| Badge: traguardi da collezionare, con progresso (#188) | Disponibile dalla scheda Tu |
-| Riepilogo settimanale (#151) | Disponibile dalla scheda Tu |
-| Allenatore dei finali: Lucena, Philidor, matti elementari, finali perfetti (#119, #127, #165) | Disponibile dalla Home |
+| Badge: traguardi da collezionare, con progresso | Disponibile dalla scheda Tu |
+| Riepilogo settimanale | Disponibile dalla scheda Tu |
+| Allenatore dei finali: Lucena, Philidor, matti elementari, finali perfetti | Disponibile dalla Home |
 | Posizione come immagine PNG | Disponibile |
-| Partite a handicap (#143) | Disponibile |
-| Sfida a tempo tra amici con QR (#148) | Disponibile |
+| Partite a handicap | Disponibile |
+| Sfida a tempo tra amici con QR | Disponibile |
 | «Spiegami perché»: il commento dell'allenatore sulle mosse del computer | Disponibile dalle Impostazioni |
-| Varianti ad albero nell'analisi (#141) | Disponibile |
+| Varianti ad albero nell'analisi | Disponibile |
 | Aprire un'apertura contro il computer | Disponibile |
-| Note personali sulle mosse (#137) | Disponibile |
-| Avatar con foto propria (#189) | Disponibile |
+| Note personali sulle mosse | Disponibile |
+| Avatar con foto propria | Disponibile |
 | Nome Rokko, icona e schermata di avvio chiara e scura | Disponibile (vedi [identita-visiva.md](identita-visiva.md)) |
 
-I requisiti completi sono nel documento dei requisiti del progetto.
+Le funzioni ancora da fare, con stato, priorità, dimensione e versione prevista, sono nel [backlog](backlog.md).

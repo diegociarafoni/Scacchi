@@ -146,7 +146,7 @@ class PhysicalGame {
   }) => pgn.exportPgn(
     _game,
     headers: {
-      'Event': 'Scacchi',
+      'Event': 'Rokko',
       'Site': 'Scacchiera fisica', // l10n-ok
       'Date': _date(date),
       'White': white,

@@ -2,19 +2,18 @@
 
 Partita tra due persone su due telefoni, pensata per funzionare in ogni situazione: sulla stessa Wi-Fi o hotspot, vicini senza Wi-Fi (Bluetooth LE), a distanza tramite relay Nostr, tra Android e iOS. Una partita iniziata in presenza continua a distanza e torna in presenza senza azioni dell'utente. Il gioco da soli resta interamente offline: il multigiocatore è un modulo opzionale in `lib/multiplayer/`.
 
-## Stato
+## Come si accede
 
-| Fase | Contenuto | Stato |
-|---|---|---|
-| 1 | Nucleo del protocollo: invito, identità, cifratura, registro delle mosse, canali multipli | Disponibile (senza interfaccia) |
-| 2a | Canale Wi-Fi locale su TCP con ricollegamento automatico | Disponibile (senza interfaccia) |
-| 2b | Abbinamento via QR, permessi di rete e schermata di gioco in rete locale | Disponibile da Home › Gioca con un amico |
-| 2c-1 | Salvataggio e ripresa della partita in rete locale | Disponibile da Home › Gioca con un amico › Riprendi la partita |
-| 2d | Orologio: cadenza scelta alla creazione, tempo nella mossa, vittoria per tempo scaduto | Disponibile da Home › Gioca con un amico |
-| 2c-2 | Ricerca mDNS dopo un cambio di indirizzo | Disponibile |
-| 3 | Canale Bluetooth LE, scelta Wi-Fi o Bluetooth nella schermata | Disponibile da Home › Gioca con un amico › Come collegarvi |
-| 4 | Relay Nostr, link d'invito, avvisi in background (solo Android), schermate | Disponibile da Home › Gioca con un amico, scegliendo «A distanza» |
-| 5 | «Sfida un amico › Ognuno sul suo telefono» nel foglio Nuova partita, con gli stessi comandi della pagina | Disponibile da Nuova › Sfida un amico |
+| Canale o funzione | Dove |
+|---|---|
+| Wi-Fi locale (TCP), ricollegamento automatico, ricerca mDNS dopo un cambio di indirizzo | Home › Gioca con un amico, «Come collegarvi» › Wi-Fi |
+| Bluetooth LE | Home › Gioca con un amico, «Come collegarvi» › Bluetooth |
+| Relay Nostr, link d'invito, avvisi in background (solo Android) | Home › Gioca con un amico, «Come collegarvi» › A distanza |
+| Orologio con cadenza scelta alla creazione (solo Wi-Fi e Bluetooth) | stessa schermata, sezione «Cadenza» |
+| Salvataggio e ripresa della partita | «Riprendi la partita» nella stessa schermata |
+| Stessi comandi dal foglio Nuova partita | Nuova partita › Sfida un amico › Ognuno sul suo telefono |
+
+Il nucleo del protocollo (invito, identità, cifratura, registro delle mosse, canali multipli) è in Dart puro, senza interfaccia.
 
 ## Requisiti
 
@@ -100,7 +99,7 @@ Per giocare vicini senza Wi-Fi né rete (RMP-20). `GameInvite.ble` (`ble=1` nel 
 - **Pacchetti.** Ogni scrittura o notifica porta al più `MTU - 3` byte (20 finché la MTU non è nota). Intestazione di 4 byte: id del messaggio (2), indice (1), numero di frammenti (1). `BleReassembler` ricompone in qualunque ordine (l'id parte da un numero casuale), ignora i doppioni e tiene al massimo 4 messaggi incompleti e 2048 byte per messaggio; frammenti incoerenti si scartano in silenzio.
 - **Collegamenti.** L'ospite accetta scritture solo da telefoni iscritti alle sue risposte e tiene al massimo 3 telefoni iscritti e, oltre, scollega il più vecchio. Il Bluetooth non autentica nessuno: come per il Wi-Fi, chi non ha il segreto dell'invito non produce messaggi validi.
 - **Permessi.** Android 12 e successivi: `BLUETOOTH_SCAN` (`neverForLocation`), `BLUETOOTH_CONNECT`, `BLUETOOTH_ADVERTISE`, richiesti a runtime solo quando si sceglie il Bluetooth. Android 11 e precedenti: `BLUETOOTH`, `BLUETOOTH_ADMIN` e `ACCESS_FINE_LOCATION` con `maxSdkVersion="30"`; la posizione non viene letta né salvata (il sistema la pretende per cercare dispositivi BLE e il GPS deve essere acceso). iOS: `NSBluetoothAlwaysUsageDescription`. Tutti i motivi sono in `tool/policy.json`.
-- **Limiti noti.** Si gioca in primo piano: in background iOS limita annunci e ricerche; il controllo in background delle mosse passa solo dal relay, non dal Bluetooth. La portata è quella del BLE (qualche metro). Un invio riuscito vuol dire consegnato al sistema operativo, come nel Wi-Fi; la mossa si ripete al ricollegamento. Se il Bluetooth si spegne o un permesso viene tolto dopo il controllo iniziale, il canale non parte e l'errore resta nel registro di debug: la schermata continua a mostrare l'attesa. Come ogni radio aperta, il BLE si può disturbare: chi è vicino e ha l'id del servizio può occupare uno dei 3 posti dell'ospite o interferire con i frammenti in arrivo, ma non può falsificare né leggere le mosse; i messaggi persi si richiedono con la sincronizzazione del registro. Verificato con una radio finta in memoria (`ble_link_test.dart`); la prova su due telefoni veri va fatta a mano prima di annunciarlo.
+- **Limiti noti.** Si gioca in primo piano: in background iOS limita annunci e ricerche; il controllo in background delle mosse passa solo dal relay, non dal Bluetooth. La portata è quella del BLE (qualche metro). Un invio riuscito vuol dire consegnato al sistema operativo, come nel Wi-Fi; la mossa si ripete al ricollegamento. Se il Bluetooth si spegne o un permesso viene tolto dopo il controllo iniziale, il canale non parte e l'errore resta nel registro di debug: la schermata continua a mostrare l'attesa. Come ogni radio aperta, il BLE si può disturbare: chi è vicino e ha l'id del servizio può occupare uno dei 3 posti dell'ospite o interferire con i frammenti in arrivo, ma non può falsificare né leggere le mosse; i messaggi persi si richiedono con la sincronizzazione del registro. Verificato in automatico con una radio finta in memoria (`ble_link_test.dart`); la prova su due telefoni veri è manuale.
 
 ### Grafica della schermata
 
@@ -108,13 +107,13 @@ I componenti sono in `lib/multiplayer/multiplayer_widgets.dart`. `ConnectionIndi
 
 ### Dal foglio Nuova partita
 
-Il foglio **Nuova partita** (vedi [interfaccia.md](interfaccia.md)) è un menu: «Inizia partita» in testa e le voci grandi sotto. **Sfida un amico** non è più un avversario da scegliere in un selettore, ma una scelta a gradini: prima dove si gioca, **Sullo stesso telefono** (la partita a due di sempre, con nomi, variante, handicap e tempo) oppure **Ognuno sul suo telefono**; poi, per i due telefoni, come ci si raggiunge. La pagina dei due telefoni è `FriendGamePanel`: colore, «Come collegarvi» con tre scelte (**Wi-Fi** o hotspot, **Bluetooth**, **A distanza**) e una riga che spiega quella scelta, la sezione **Cadenza** e i comandi «Crea la partita», «Unisciti con il QR» e «Unisciti con il link». Non c'è più l'interruttore «Gioca anche a distanza»: la distanza è un canale come gli altri. La cadenza compare solo per Wi-Fi e Bluetooth; a distanza al suo posto una riga dice che l'orologio non c'è. Toccare una cadenza la sceglie senza avviare nulla: la partita parte dai comandi. «Sfida un amico» non c'è nel profilo bambino, che ha la scelta semplice di sempre.
+Il foglio **Nuova partita** (vedi [interfaccia.md](interfaccia.md)) è un menu: «Inizia partita» in testa e le voci grandi sotto. **Sfida un amico** è una scelta a gradini: prima dove si gioca, **Sullo stesso telefono** (la partita a due di sempre, con nomi, variante, handicap e tempo) oppure **Ognuno sul suo telefono**; poi, per i due telefoni, come ci si raggiunge. La pagina dei due telefoni è `FriendGamePanel`: colore, «Come collegarvi» con tre scelte (**Wi-Fi** o hotspot, **Bluetooth**, **A distanza**) e una riga che spiega quella scelta, la sezione **Cadenza** e i comandi «Crea la partita», «Unisciti con il QR» e «Unisciti con il link». La distanza è un canale come gli altri. La cadenza compare solo per Wi-Fi e Bluetooth; a distanza al suo posto una riga dice che l'orologio non c'è. Toccare una cadenza la sceglie senza avviare nulla: la partita parte dai comandi. «Sfida un amico» non c'è nel profilo bambino, che ha la scelta semplice di sempre.
 
-`FriendGamePanel` (in `lib/multiplayer/multiplayer_page.dart`) tiene lo stato della preparazione e la logica di avvio e ripresa; la pagina Home › Gioca con un amico è rimasta, come scorciatoia, e lo riusa dentro una scheda. La partita salvata si riprende da entrambi i punti d'ingresso.
+`FriendGamePanel` (in `lib/multiplayer/multiplayer_page.dart`) tiene lo stato della preparazione e la logica di avvio e ripresa; la pagina Home › Gioca con un amico lo riusa dentro una scheda. La partita salvata si riprende da entrambi i punti d'ingresso.
 
 ### Schermata
 
-`MultiplayerPage` (voce Home › Gioca con un amico) offre la scelta del colore, «Come collegarvi» (Wi-Fi o Bluetooth), la cadenza (tranne a distanza), «Crea la partita» e «Unisciti con il QR». `MultiplayerController` tiene lo stato per l'interfaccia: crea identità e invito per partita, apre il canale con `openLanHost` (indirizzo IPv4 privato scelto da `pickLanAddress` preferendo Wi-Fi e hotspot ed escludendo dati mobili e VPN, porta scelta dal sistema) o `openLanGuest`, e avvisa a ogni mossa. L'invito si mostra una sola volta come QR del link `rokko://`, non a ogni mossa; la fotocamera riusa il lettore dello scambio QR. `MultiplayerGamePage` mostra il QR finché l'avversario non arriva, poi la scacchiera orientata dal proprio lato, con le mosse permesse solo al proprio turno.
+`MultiplayerPage` (voce Home › Gioca con un amico) mostra i tre passi (crea, inquadra, gioca) e sotto lo stesso `FriendGamePanel`: scelta del colore, «Come collegarvi» (Wi-Fi, Bluetooth o A distanza), la cadenza (tranne a distanza), «Crea la partita», «Unisciti con il QR» e «Unisciti con il link». `MultiplayerController` tiene lo stato per l'interfaccia: crea identità e invito per partita, apre il canale con `openLanHost` (indirizzo IPv4 privato scelto da `pickLanAddress` preferendo Wi-Fi e hotspot ed escludendo dati mobili e VPN, porta scelta dal sistema) o `openLanGuest`, e avvisa a ogni mossa. L'invito si mostra una sola volta come QR del link `rokko://`, non a ogni mossa; la fotocamera riusa il lettore dello scambio QR. `MultiplayerGamePage` mostra il QR finché l'avversario non arriva, poi la scacchiera orientata dal proprio lato, con le mosse permesse solo al proprio turno.
 
 Su Android il permesso `INTERNET` è dichiarato con il motivo in `tool/policy.json`; su iOS `NSLocalNetworkUsageDescription` spiega l'uso della rete locale. Nessun socket si apre finché non si crea o si inquadra un invito. `NSBonjourServices` dichiara solo `_rokko-chess._tcp`; su Android `bonsoir` aggiunge `CHANGE_WIFI_MULTICAST_STATE` (in `tool/policy.json` tra i permessi aggiunti dalle librerie).
 
@@ -143,7 +142,7 @@ L'invito a distanza ha `r=1`. Il canale si apre dal registro dei canali solo con
 
 Controllo in background: `BackgroundRemoteWatch` registra un lavoro periodico di WorkManager (Android) che chiama `checkRemoteGame` in un isolate a parte: legge `multiplayer.json`, apre il canale, aspetta fino a 15 secondi e, se il registro cresce, mostra la notifica. Il registro degli avvisi (`PrefsNotifiedLog`) tiene in `shared_preferences` fino a quale mossa si è già avvisato. Il ritardo tipico è di 15 minuti, adeguato alla corrispondenza. Android 13 e successivi chiedono il permesso delle notifiche quando parte la prima partita a distanza.
 
-Limiti noti: i relay pubblici possono rifiutare o perdere eventi (per questo se ne usano più d'uno e si ripubblica a ogni ricollegamento); vedono l'indirizzo IP dei telefoni e l'ora delle mosse. Le prove su relay veri e su telefoni veri non sono state fatte dall'ambiente di sviluppo (rete bloccata): vanno fatte a mano. Il lavoro in background non è provato su un telefono, e su iOS manca. La schermata di gioco non ha ancora un orologio: una partita a distanza è per corrispondenza.
+Limiti noti: i relay pubblici possono rifiutare o perdere eventi (per questo se ne usano più d'uno e si ripubblica a ogni ricollegamento); vedono l'indirizzo IP dei telefoni e l'ora delle mosse. I test usano un relay finto e canali in memoria: la prova su relay e telefoni veri è manuale, come quella del lavoro in background, che su iOS non esiste. Una partita a distanza è per corrispondenza e non ha orologio.
 
 ### Orologio
 
@@ -152,7 +151,7 @@ Limiti noti: i relay pubblici possono rifiutare o perdere eventi (per questo se 
 - Ogni telefono è autorevole sul proprio tempo: dopo la propria mossa legge il residuo dal `MatchClock` e lo spedisce con la mossa; chi riceve lo adotta e fa partire l'orologio dell'avversario. Non si compensa la latenza: chi riceve parte con un ritardo di pochi millisecondi, a suo vantaggio, e un tempo dichiarato non può superare quello della mossa precedente più l'incremento (alla prima mossa, il tempo iniziale più l'incremento).
 - Un timer da 100 ms (`tick`) controlla il proprio orologio con l'ora di parete: a tempo scaduto il telefono dichiara la sconfitta, non accetta altre mosse e avvisa l'avversario; il messaggio si ripete a ogni nuovo collegamento.
 - Il telefono non dichiara mai la scadenza dell'altro: la stima locale è in anticipo della latenza. Solo se l'avversario resta a zero oltre `peerFlagGrace` (15 s) la vittoria si assegna senza suo messaggio, ad esempio perché ha chiuso l'app; una sua mossa valida arrivata prima vince sul tavolino e l'orologio riparte.
-- Una partita a distanza (`r=1`) non ha orologio: le mosse possono arrivare ore dopo, quindi la cadenza non si sceglie e l'invito non porta `tc`. L'orologio per corrispondenza resta da fare. Scelto «A distanza» il menu del tempo sparisce e una riga lo spiega: per l'orologio basta scegliere Wi-Fi o Bluetooth.
+- Una partita a distanza (`r=1`) non ha orologio: le mosse possono arrivare ore dopo, quindi la cadenza non si sceglie e l'invito non porta `tc`. Scelto «A distanza» il menu del tempo sparisce e una riga lo spiega: per l'orologio basta scegliere Wi-Fi o Bluetooth.
 
 ## Sicurezza (OWASP MASVS)
 
@@ -162,7 +161,7 @@ Limiti noti: i relay pubblici possono rifiutare o perdere eventi (per questo se 
 | MASVS-NETWORK | Cifratura end-to-end su ogni canale, anche locale; il relay non legge né falsifica le mosse. |
 | MASVS-CODE | Invito e messaggi sono input non fidato: limiti di lunghezza, validazione di ogni campo, scarto silenzioso. |
 | MASVS-AUTH | Nessun account: l'identità è la chiave Ed25519; la chiave dell'avversario si fissa al primo ingresso. |
-| MASVS-PRIVACY | Nessun dato personale; il relay vede solo byte cifrati, una chiave casuale per partita e l'indirizzo IP di chi si collega; il canale a distanza si apre solo se l'invito lo prevede e l'interruttore è acceso. |
+| MASVS-PRIVACY | Nessun dato personale; il relay vede solo byte cifrati, una chiave casuale per partita e l'indirizzo IP di chi si collega; il canale a distanza si apre solo se l'invito lo prevede (`r=1`). |
 | MASVS-PLATFORM | Nessun link profondo né schema URL registrato: il link d'invito si incolla da dentro l'app. Il lavoro in background non è esportato e WorkManager non usa servizi in primo piano. |
 
 Limiti noti: l'invito contiene il segreto, quindi chi lo intercetta prima dell'avversario può occupare la partita (l'ospite vedrà una chiave diversa da quella attesa). Il salvataggio contiene il seme privato della partita: sta nella cartella privata dell'app, escluso dai backup di Android (`backup_rules.xml`, `data_extraction_rules.xml`), ma incluso nel file di backup che l'utente crea da sé (vedi [backup.md](backup.md)); su iOS segue il backup del dispositivo, cifrato. Chi legge il file può firmare al posto del giocatore, ma solo in quella partita: l'identità è generata per ogni partita. Se l'indirizzo dell'ospite cambia dopo il riavvio, l'invitato lo ritrova con la ricerca mDNS (RMP-10), purché i due telefoni siano ancora nella stessa rete.

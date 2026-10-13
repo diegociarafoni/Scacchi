@@ -1,6 +1,6 @@
 import 'package:dartchess/dartchess.dart';
 
-/// Un problema tattico nel formato del database Lichess.
+/// Un problema tattico nel formato del database aperto dei puzzle.
 ///
 /// [fen] è la posizione prima della mossa dell'avversario: la prima mossa di
 /// [moves] la gioca l'avversario, le successive alternano giocatore e avversario.

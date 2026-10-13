@@ -274,7 +274,7 @@ void main() {
       final themes = {
         'mateIn1': 1, 'mateIn2': 1, 'fork': 1, 'pin': 1, 'skewer': 1,
         'sacrifice': 1, 'endgame': 1, 'opening': 1, 'promotion': 1,
-        // Etichette di durata e livello di Lichess: non sono temi.
+        // Etichette di durata e livello del database dei puzzle: non sono temi.
         'short': 4, 'crushing': 4, 'veryLong': 4,
       };
       expect(met('themes_10', ProgressState(puzzleThemes: themes)), isFalse);

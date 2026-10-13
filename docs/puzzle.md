@@ -15,7 +15,7 @@ id,fen,moves,rating,themes
 - `fen`: posizione **prima** della mossa dell'avversario.
 - `moves`: mosse in notazione UCI; la prima la gioca l'avversario, poi si alternano giocatore e avversario.
 - `rating`: difficoltà Glicko-2 calcolata da Lichess.
-- `themes`: temi Lichess separati da spazi (`fork`, `mateIn2`, `endgame`...).
+- `themes`: temi del database separati da spazi (`fork`, `mateIn2`, `endgame`...).
 
 ### Come viene generata
 
@@ -28,7 +28,7 @@ Lo script `tool/datasets/build_puzzles.py` sceglie i puzzle in modo deterministi
 
 L'ordine all'interno di una fascia è dato dall'hash SHA-1 dell'id, quindi è casuale ma riproducibile.
 
-Il workflow `.github/workflows/datasets.yml` scarica il database, esegue lo script, valida il risultato con `test/puzzles/puzzle_dataset_test.dart` (il commit del workflow non avvia la CI) e fa il commit del risultato sul branch della pull request quando gli script in `tool/datasets/` cambiano; si può avviare anche a mano. In locale:
+Il workflow `.github/workflows/datasets.yml` scarica il database, esegue lo script, valida il risultato con `test/puzzles/puzzle_dataset_test.dart` (il commit del workflow non avvia la CI) e fa il commit del risultato sul branch della pull request quando gli script in `tool/datasets/` cambiano; si può avviare anche a mano. Lo stesso workflow rigenera i dati delle aperture ([aperture.md](aperture.md)). In locale:
 
 ```sh
 curl -sS https://database.lichess.org/lichess_db_puzzle.csv.zst \
@@ -83,7 +83,7 @@ Il puzzle successivo è quello non ancora visto con difficoltà più vicina al p
 
 ## Obiettivo del puzzle
 
-In cima alla pagina c'è una sola scheda. All'inizio dice obiettivo e colore che muove («Matto in 2 · Muove il Bianco», «Ottieni il vantaggio · Muove il Nero»), così si capisce se la mossa giusta è un matto o un guadagno; dopo ogni mossa la stessa scheda mostra l'esito (giusta, sbagliata, risolto), così la scacchiera non si sposta. `PuzzleGoal.of` ricava l'obiettivo dai temi Lichess con questa precedenza: `mateIn1`–`mateIn4`, `mate`/`mateIn5` («dai matto»), `equality`, `crushing`, `advantage`; senza questi temi la scheda dice «Trova la mossa migliore». Il testo è localizzato (`puzzleGoal` e `puzzleGoalSide` in `lib/l10n`, italiano e inglese) e nel profilo bambino «matto in N» diventa «dai matto», perché lì non ci sono cifre.
+In cima alla pagina c'è una sola scheda. All'inizio dice obiettivo e colore che muove («Matto in 2 · Muove il Bianco», «Ottieni il vantaggio · Muove il Nero»), così si capisce se la mossa giusta è un matto o un guadagno; dopo ogni mossa la stessa scheda mostra l'esito (giusta, sbagliata, risolto), così la scacchiera non si sposta. `PuzzleGoal.of` ricava l'obiettivo dai temi del puzzle con questa precedenza: `mateIn1`–`mateIn4`, `mate`/`mateIn5` («dai matto»), `equality`, `crushing`, `advantage`; senza questi temi la scheda dice «Trova la mossa migliore». Il testo è localizzato (`puzzleGoal` e `puzzleGoalSide` in `lib/l10n`, italiano e inglese) e nel profilo bambino «matto in N» diventa «dai matto», perché lì non ci sono cifre.
 
 Sotto la scacchiera non c'è altro finché il puzzle è aperto: il punteggio compare solo nell'esito a puzzle finito, e difficoltà e temi (che sarebbero un indizio) solo a puzzle risolto. «Suggerimento» e «Soluzione» sono visibili finché il puzzle è aperto; «Riprova» dopo un errore; «Prossimo» solo quando c'è qualcosa da passare, cioè a puzzle risolto, dopo un errore o dopo la soluzione mostrata, e solo se c'è un puzzle successivo. La scheda mostra l'obiettivo solo all'inizio e dopo «Riprova»: negli esiti lascia il posto al messaggio, per non spostare la scacchiera.
 
@@ -175,7 +175,7 @@ Le schermate di risoluzione ricevono i puzzle da un `PuzzleFeed` (`lib/puzzles/p
 
 ## Salvataggio
 
-Punteggio, puzzle visti, contatori, spiegazioni delle modalità già lette (`puzzles.guides.v1`), coda di ripasso (`puzzles.review.v1`) e record delle serie (`puzzles.records.v1`) sono salvati nel file `training.json` della cartella dati dell'app (chiave `puzzles.trainer.v1` per il punteggio) tramite l'interfaccia `KeyValueStore` (`lib/storage/key_value_store.dart`). Il file passa da `JsonFile` (`lib/storage/json_file.dart`), lo stesso di progressi e archivio: scrittura atomica, salvataggi accodati, file non valido messo da parte come `training.json.bad-<ms>` invece di essere sovrascritto. Sarà importato nel database locale quando arriverà (RNF-08). Dati del punteggio illeggibili vengono ignorati e si riparte da 1500.
+Punteggio, puzzle visti, contatori, spiegazioni delle modalità già lette (`puzzles.guides.v1`), coda di ripasso (`puzzles.review.v1`), puzzle personali (`puzzles.personal.v1`) e record delle serie (`puzzles.records.v1`) sono salvati nel file `training.json` della cartella dati dell'app (chiave `puzzles.trainer.v1` per il punteggio) tramite l'interfaccia `KeyValueStore` (`lib/storage/key_value_store.dart`). Il file passa da `JsonFile` (`lib/storage/json_file.dart`), lo stesso di progressi e archivio: scrittura atomica, salvataggi accodati, file non valido messo da parte come `training.json.bad-<ms>` invece di essere sovrascritto. Dati del punteggio illeggibili vengono ignorati e si riparte da 1500.
 
 ## Integrazione con la gamification
 
@@ -185,4 +185,4 @@ Nel profilo bambino (RP-06) l'hub e la pagina del puzzle non mostrano punteggio,
 
 ## Navigazione
 
-L'app ha una barra di navigazione in basso (`lib/home/home_shell.dart`) con le schede **Gioca**, **Puzzle**, **Aperture** e **Tu**. I puzzle vengono caricati solo alla prima apertura della scheda, così l'avvio dell'app non rallenta.
+L'app ha una barra di navigazione in basso (`lib/home/home_shell.dart`) con le schede **Home**, **Puzzle**, **Impara** e **Tu**. La scheda Puzzle apre l'hub (`PuzzleHubPage`): puzzle del giorno, allenamento, per tema, ripasso e modalità a tempo. I puzzle vengono caricati solo alla prima apertura della scheda, così l'avvio dell'app non rallenta.

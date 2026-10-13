@@ -65,7 +65,7 @@ I traguardi sono distinti dai [badge](badge.md) (RG-17), una collezione tematica
 
 ## Ricompense estetiche (RG-06)
 
-Livelli e traguardi sbloccano temi della scacchiera, set di pezzi, avatar e cornici. Le scelte di sempre (temi Verde, Legno, Blu, Grigio e le dieci scacchiere di Rokko; pezzi Classico, Merida, Chessnut, Fantasy, Spatial e i cinque set di Rokko, vedi [pezzi-e-scacchiere.md](pezzi-e-scacchiere.md); avatar Pedone, Cavallo, Pino e Rocco) restano disponibili da subito: le ricompense aggiungono, non tolgono.
+Livelli e traguardi sbloccano temi della scacchiera, set di pezzi, avatar e cornici. Tutto ciò che non è nella tabella è disponibile da subito: venti scacchiere (le altre sono Sabbia, Oceano, Corallo, Notte e Oro), tredici set di pezzi (Classico, Merida, Chessnut, Fantasy, Spatial, Rokko, Pixel, Arcano, Staunton, Morbido, Stampa, Papercut e Noto, vedi [pezzi-e-scacchiere.md](pezzi-e-scacchiere.md)) e gli avatar Pedone, Cavallo, Pino e Rocco: le ricompense aggiungono, non tolgono.
 
 | Ricompensa | Si sblocca con |
 |---|---|
@@ -94,11 +94,11 @@ Per rispetto di RV-01, l'interruttore "Sblocca tutto" (nelle impostazioni dell'a
 
 ## Avatar simpatici e foto propria (RP-08, RP-09)
 
-Oltre ai sei pezzi, dieci personaggi disegnati in codice (`avatar_art.dart`, nessuna immagine nell'app): Pino il pulcino, Rocco la volpe, Chiara il fiore, Marta il gufo, il drago Duilio, Elena l'aquila, Massimo il lupo, Stella (la stella), più il gatto astronauta e il coniglio lunare. Hanno testa tonda, occhioni e guance su uno sfondo spaziale indaco e viola, e gli stessi nomi dei bot. Pino e Rocco sono subito disponibili, gli altri si sbloccano salendo di livello, come da tabella. Cornici e avatar si sbloccano tutti per livello e non per traguardo (chi aveva già meritato Re, Fiamma o Alloro con il vecchio traguardo li tiene); i traguardi restano per temi e pezzi.
+Oltre ai sei pezzi, dieci personaggi disegnati in codice (`avatar_art.dart`, nessuna immagine nell'app): Pino il pulcino, Rocco la volpe, Chiara il fiore, Marta il gufo, il drago Duilio, Elena l'aquila, Massimo il lupo, Stella (la stella), più il gatto astronauta e il coniglio lunare. Hanno testa tonda, occhioni e guance su uno sfondo spaziale indaco e viola, e gli stessi nomi dei bot. Pino e Rocco sono subito disponibili, gli altri si sbloccano salendo di livello, come da tabella. Cornici e avatar si sbloccano per livello; chi ha già meritato Re, Fiamma o Alloro con il traguardo corrispondente li tiene. I traguardi sbloccano temi e pezzi.
 
 ### Custodi nella Storia
 
-Gli otto bot della scala sono i custodi della Storia, ognuno con il suo personaggio (`guardianCharacter(botId)`). `GuardianAvatar(bot: …, expression: …, size: …)` (`lib/progress/guardian_avatar.dart`, senza dipendenze dalla schermata Profilo) li disegna con una delle espressioni di `AvatarExpression`: `neutral`, `greeting` (saluto, con la zampa alzata), `happy` (contento), `encouraging` (incoraggiante, con scintille), `challenge` (sfida, sopracciglia decise e sorriso di sfida) e `surprised` (stupito). È decorativo e escluso dai lettori di schermo, quindi la battuta va in un testo a parte; con `background: false` si posa su qualunque superficie, e un bot senza personaggio mostra la sua emoji. Per un nuovo custode: un valore in `AvatarCharacter`, il suo disegno in `avatar_art.dart` e la riga in `guardianCharacter`.
+Ogni bot ha il suo personaggio (`guardianCharacter(botId)`) e quelli dei capitoli sono i custodi della Storia. `GuardianAvatar(bot: …, expression: …, size: …)` (`lib/progress/guardian_avatar.dart`, senza dipendenze dalla schermata Profilo) li disegna con una delle espressioni di `AvatarExpression`: `neutral`, `greeting` (saluto, con la zampa alzata), `happy` (contento), `encouraging` (incoraggiante, con scintille), `challenge` (sfida, sopracciglia decise e sorriso di sfida) e `surprised` (stupito). È decorativo e escluso dai lettori di schermo, quindi la battuta va in un testo a parte; con `background: false` si posa su qualunque superficie, e un bot senza personaggio mostra la sua emoji. Per un nuovo custode: un valore in `AvatarCharacter`, il suo disegno in `avatar_art.dart` e la riga in `guardianCharacter`.
 
 Nella scelta dell'avatar, la sezione «Foto» permette di usare una foto propria:
 
@@ -137,6 +137,7 @@ Spento di default. Nel Profilo, "Promemoria giornaliero" chiede il permesso per 
 | `lib/badges/` | Badge (RG-17) e libri delle aperture, vedi [badge.md](badge.md); lo stato tiene `badges`, `tally` e `lastActiveDay` |
 | `rewards.dart` | Ricompense estetiche e condizioni di sblocco (livello o traguardo) |
 | `avatar.dart` | Avatar (pezzi e personaggi) e cornici del profilo |
+| `achievements_l10n.dart`, `avatar_l10n.dart` | Nomi e descrizioni tradotti di traguardi, avatar e cornici |
 | `avatar_art.dart` | Disegno in codice dei personaggi, con sei espressioni |
 | `guardian_avatar.dart` | `GuardianAvatar(bot, expression, size)`: il custode di un bot, riusabile nella Storia |
 | `avatar_photo.dart` | Scelta della foto del profilo da galleria o fotocamera |

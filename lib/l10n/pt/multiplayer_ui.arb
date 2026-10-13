@@ -1,0 +1,15 @@
+{
+  "multiplayerUiChannelWifi": "Wi-Fi",
+  "multiplayerUiChannelBluetooth": "Bluetooth",
+  "multiplayerUiChannelRemote": "À distância",
+  "multiplayerUiLinkConnected": "Conectado",
+  "multiplayerUiLinkConnecting": "Conectando",
+  "multiplayerUiLinkOffline": "Inacessível",
+  "multiplayerUiLinkSemantics": "{channel}: {state}",
+  "multiplayerUiShowFriend": "Mostre este código ao seu amigo",
+  "multiplayerUiStepsTitle": "Como jogar",
+  "multiplayerUiStepCreate": "Um de vocês cria a partida e mostra o QR code ou envia o link.",
+  "multiplayerUiStepScan": "O outro o escaneia com a câmera.",
+  "multiplayerUiStepPlay": "Joguem alternadamente: os lances viajam sozinhos.",
+  "multiplayerUiResumeTitle": "Partida em andamento"
+}

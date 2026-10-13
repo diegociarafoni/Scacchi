@@ -1,6 +1,6 @@
 # Glossario scacchistico
 
-Termini di riferimento per tradurre Rokko. L'italiano è la lingua base; inglese, spagnolo e francese devono usare i termini di questa tabella in ogni testo (interfaccia, lezioni, commenti, frasi dei bot). Uno stesso concetto si traduce sempre con la stessa parola. Dove una forma è incerta c'è «(da verificare)»: la conferma o la correzione arriva da chi rilegge e si fa qui, in una sola PR.
+Termini di riferimento per tradurre Rokko. L'italiano è la lingua base; inglese, spagnolo e francese devono usare i termini di questa tabella in ogni testo (interfaccia, lezioni, commenti, frasi dei bot). Uno stesso concetto si traduce sempre con la stessa parola. Dove una forma è incerta c'è «(da verificare)»: la conferma o la correzione arriva da chi rilegge e si fa qui.
 
 ## Regole di stile
 
@@ -46,7 +46,7 @@ Termini di riferimento per tradurre Rokko. L'italiano è la lingua base; inglese
 | Cavallo | C | N | C | C |
 | Pedone | (nessuna) | (nessuna) | (nessuna) | (nessuna) |
 
-La notazione predefinita è quella della lingua dell'app; restano a scelta l'inglese e la figurativa.
+La notazione si sceglie nelle Impostazioni (predefinita la figurativa, vedi [notazione.md](notazione.md)) e non dipende dalla lingua dell'app.
 
 ## Mosse e fine partita
 
@@ -155,40 +155,8 @@ La notazione predefinita è quella della lingua dell'app; restano a scelta l'ing
 | Scacchiera fisica | Physical board | Tablero físico | Échiquier physique |
 | Multigiocatore | Multiplayer | Multijugador | Multijoueur |
 
-## Tedesco
-
-Tedesco standard (Germania), si dà del **du** (imperativo: «Zieh», «Wähle»), anche nel profilo bambino. Virgolette „…“, maiuscole dei sostantivi come in tedesco. Colori: Weiß, Schwarz («Weiß ist am Zug»). Lettere della notazione: K (König), D (Dame), T (Turm), L (Läufer), S (Springer); il pedone non ha lettera.
-
-| Italiano | Deutsch |
-|---|---|
-| re / donna / torre / alfiere / cavallo / pedone | König / Dame / Turm / Läufer / Springer / Bauer |
-| scacchiera / casa / traversa / colonna | Brett / Feld / Reihe / Linie |
-| mossa / cattura | Zug / Schlagen |
-| scacco / scacco matto / stallo / patta | Schach / Schachmatt (Matt) / Patt / Remis |
-| abbandono / proposta di patta | Aufgabe / Remisangebot |
-| arrocco corto / lungo | kurze / lange Rochade |
-| promozione / sottopromozione | Umwandlung / Unterverwandlung |
-| tripla ripetizione / cinquanta mosse | dreifache Stellungswiederholung / 50-Züge-Regel |
-| tempo scaduto / ripresa della mossa / mossa illegale | Zeitüberschreitung / Zug zurücknehmen / ungültiger Zug |
-| forchetta / inchiodatura / infilata | Gabel / Fesselung / Spieß |
-| attacco di scoperta / scacco di scoperta / scacco doppio | Abzugsangriff / Abzugsschach / Doppelschach |
-| matto del barbiere / del pazzo / di corridoio / soffocato | Schäfermatt / Narrenmatt / Grundreihenmatt / Erstickungsmatt |
-| pedone passato / isolato / doppiati | Freibauer / isolierter Bauer / Doppelbauern |
-| coppia degli alfieri / colonna aperta | Läuferpaar / offene Linie |
-| apertura / mediogioco / finale / gambetto / difesa | Eröffnung / Mittelspiel / Endspiel / Gambit / Verteidigung |
-| mossa migliore / imprecisione / errore / svista | bester Zug / Ungenauigkeit / Fehler / grober Fehler |
-| Gioca / Puzzle / Aperture / Tu | Spielen / Aufgaben / Eröffnungen / Du |
-| Impostazioni / Profilo / Archivio / Statistiche | Einstellungen / Profil / Archiv / Statistiken |
-| Allenatore / Lezione / Percorso / Storia | Trainer / Lektion / Lernweg / Geschichte |
-| Badge / Traguardo / Serie / Livello / Suggerimento | Abzeichen / Erfolg / Serie / Level / Tipp |
-| Orologio / Cadenza / Incremento | Uhr / Bedenkzeit / Zeitbonus |
-| Rapid / Cornice / Punteggio Elo | Schnellschach / Rahmen / Elo-Zahl |
-| Grandi maestri / Scacchiera fisica / Multigiocatore | Großmeister / Echtes Brett / Mehrspieler |
-
-Nei bottoni si preferiscono forme corte: i composti lunghi del tedesco restano nelle frasi.
-
 ## Come si usa
 
 1. Prima di tradurre un testo si cercano qui i termini che contiene.
-2. Un termine nuovo si aggiunge alla tabella nella stessa PR che lo introduce, con le quattro lingue.
-3. Una correzione segnalata da chi rilegge si fa qui e poi si propaga ai file `.arb` e ai contenuti; quando saranno introdotti i controlli automatici dei termini, leggeranno questo documento.
+2. Un termine nuovo si aggiunge alla tabella insieme al testo che lo introduce, con le quattro lingue.
+3. Una correzione segnalata da chi rilegge si fa qui e poi si propaga ai file `.arb` e ai contenuti.

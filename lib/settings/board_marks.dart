@@ -32,11 +32,9 @@ const _onWhite = (
   colorBlindThreat: Color(0xffb34f00),
 );
 
-/// Frecce e cerchi su una scacchiera: un colore (suggerimento verde o blu,
-/// minaccia rossa o arancione) dentro un contorno nero o bianco che stacca
-/// dalle case. Dove nessuno dei due arriva a [minMarkContrast] con entrambe
-/// le case il contorno è doppio, bianco e nero: su ogni casa uno dei due
-/// stacca sempre.
+/// Frecce e cerchi (suggerimento verde o blu, minaccia rossa o arancione) con
+/// un contorno nero o bianco che li stacca dalle case. Se nessuno dei due
+/// arriva a [minMarkContrast] con entrambe le case, il contorno è doppio.
 class BoardMarks {
   BoardMarks._(this.outline, this.hint, this.threat);
 
