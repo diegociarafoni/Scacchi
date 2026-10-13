@@ -106,5 +106,29 @@
   "settingsPremoveDescription": "Joue pendant que l'ordinateur réfléchit ; touche une case vide pour annuler",
   "@settingsPremoveDescription": {
     "description": "Impostazioni: descrizione della premossa"
+  },
+  "settingsMarkColor": "Couleur des flèches et des cercles",
+  "@settingsMarkColor": {
+    "description": "Impostazioni: colore di base di frecce e cerchi"
+  },
+  "settingsMarkColorDescription": "Dessine en maintenant une case appuyée puis en glissant ; à la souris, clic droit avec Maj, Ctrl ou Alt pour les autres couleurs",
+  "@settingsMarkColorDescription": {
+    "description": "Impostazioni: come si disegnano frecce e cerchi"
+  },
+  "settingsMarkColorGreen": "Vert",
+  "@settingsMarkColorGreen": {
+    "description": "Impostazioni: colore verde"
+  },
+  "settingsMarkColorRed": "Rouge",
+  "@settingsMarkColorRed": {
+    "description": "Impostazioni: colore rosso"
+  },
+  "settingsMarkColorBlue": "Bleu",
+  "@settingsMarkColorBlue": {
+    "description": "Impostazioni: colore blu"
+  },
+  "settingsMarkColorYellow": "Jaune",
+  "@settingsMarkColorYellow": {
+    "description": "Impostazioni: colore giallo"
   }
 }

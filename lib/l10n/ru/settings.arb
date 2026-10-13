@@ -106,5 +106,29 @@
   "settingsPremoveDescription": "Ходи, пока думает компьютер; нажатие на пустое поле отменяет ход",
   "@settingsPremoveDescription": {
     "description": "Impostazioni: descrizione della premossa"
+  },
+  "settingsMarkColor": "Цвет стрелок и кругов",
+  "@settingsMarkColor": {
+    "description": "Impostazioni: colore di base di frecce e cerchi"
+  },
+  "settingsMarkColorDescription": "Рисуй, удерживая поле и проводя пальцем; мышью — правая кнопка с Shift, Ctrl или Alt для других цветов",
+  "@settingsMarkColorDescription": {
+    "description": "Impostazioni: come si disegnano frecce e cerchi"
+  },
+  "settingsMarkColorGreen": "Зелёный",
+  "@settingsMarkColorGreen": {
+    "description": "Impostazioni: colore verde"
+  },
+  "settingsMarkColorRed": "Красный",
+  "@settingsMarkColorRed": {
+    "description": "Impostazioni: colore rosso"
+  },
+  "settingsMarkColorBlue": "Синий",
+  "@settingsMarkColorBlue": {
+    "description": "Impostazioni: colore blu"
+  },
+  "settingsMarkColorYellow": "Жёлтый",
+  "@settingsMarkColorYellow": {
+    "description": "Impostazioni: colore giallo"
   }
 }

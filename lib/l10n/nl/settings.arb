@@ -106,5 +106,29 @@
   "settingsPremoveDescription": "Zet terwijl de computer nadenkt; tik op een leeg veld om te annuleren",
   "@settingsPremoveDescription": {
     "description": "Impostazioni: descrizione della premossa"
+  },
+  "settingsMarkColor": "Kleur van pijlen en cirkels",
+  "@settingsMarkColor": {
+    "description": "Impostazioni: colore di base di frecce e cerchi"
+  },
+  "settingsMarkColorDescription": "Teken door een veld ingedrukt te houden en te slepen; met de muis rechtermuisknop met Shift, Ctrl of Alt voor de andere kleuren",
+  "@settingsMarkColorDescription": {
+    "description": "Impostazioni: come si disegnano frecce e cerchi"
+  },
+  "settingsMarkColorGreen": "Groen",
+  "@settingsMarkColorGreen": {
+    "description": "Impostazioni: colore verde"
+  },
+  "settingsMarkColorRed": "Rood",
+  "@settingsMarkColorRed": {
+    "description": "Impostazioni: colore rosso"
+  },
+  "settingsMarkColorBlue": "Blauw",
+  "@settingsMarkColorBlue": {
+    "description": "Impostazioni: colore blu"
+  },
+  "settingsMarkColorYellow": "Geel",
+  "@settingsMarkColorYellow": {
+    "description": "Impostazioni: colore giallo"
   }
 }

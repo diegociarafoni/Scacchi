@@ -106,5 +106,29 @@
   "settingsPremoveDescription": "Mueve mientras piensa el ordenador; toca una casilla vacía para cancelar",
   "@settingsPremoveDescription": {
     "description": "Impostazioni: descrizione della premossa"
+  },
+  "settingsMarkColor": "Color de flechas y círculos",
+  "@settingsMarkColor": {
+    "description": "Impostazioni: colore di base di frecce e cerchi"
+  },
+  "settingsMarkColorDescription": "Se dibujan manteniendo pulsada una casilla y arrastrando; con el ratón, botón derecho con Mayús, Ctrl o Alt para los otros colores",
+  "@settingsMarkColorDescription": {
+    "description": "Impostazioni: come si disegnano frecce e cerchi"
+  },
+  "settingsMarkColorGreen": "Verde",
+  "@settingsMarkColorGreen": {
+    "description": "Impostazioni: colore verde"
+  },
+  "settingsMarkColorRed": "Rojo",
+  "@settingsMarkColorRed": {
+    "description": "Impostazioni: colore rosso"
+  },
+  "settingsMarkColorBlue": "Azul",
+  "@settingsMarkColorBlue": {
+    "description": "Impostazioni: colore blu"
+  },
+  "settingsMarkColorYellow": "Amarillo",
+  "@settingsMarkColorYellow": {
+    "description": "Impostazioni: colore giallo"
   }
 }

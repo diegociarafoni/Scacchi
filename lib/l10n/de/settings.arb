@@ -100,5 +100,29 @@
   "settingsLanguageDescription": "Die Sprache der App oder wie das Handy",
   "settingsLanguageSystem": "Wie das Handy",
   "settingsPremove": "Vorausziehen",
-  "settingsPremoveDescription": "Zieh, während der Computer nachdenkt; ein Tipp auf ein leeres Feld bricht ab"
+  "settingsPremoveDescription": "Zieh, während der Computer nachdenkt; ein Tipp auf ein leeres Feld bricht ab",
+  "settingsMarkColor": "Farbe von Pfeilen und Kreisen",
+  "@settingsMarkColor": {
+    "description": "Impostazioni: colore di base di frecce e cerchi"
+  },
+  "settingsMarkColorDescription": "Zeichne, indem du ein Feld gedrückt hältst und ziehst; mit der Maus rechte Taste mit Umschalt, Strg oder Alt für die anderen Farben",
+  "@settingsMarkColorDescription": {
+    "description": "Impostazioni: come si disegnano frecce e cerchi"
+  },
+  "settingsMarkColorGreen": "Grün",
+  "@settingsMarkColorGreen": {
+    "description": "Impostazioni: colore verde"
+  },
+  "settingsMarkColorRed": "Rot",
+  "@settingsMarkColorRed": {
+    "description": "Impostazioni: colore rosso"
+  },
+  "settingsMarkColorBlue": "Blau",
+  "@settingsMarkColorBlue": {
+    "description": "Impostazioni: colore blu"
+  },
+  "settingsMarkColorYellow": "Gelb",
+  "@settingsMarkColorYellow": {
+    "description": "Impostazioni: colore giallo"
+  }
 }

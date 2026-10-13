@@ -98,5 +98,29 @@
   "settingsProgressEnabledDescription": "Saat mati, tidak ada yang dicatat",
   "settingsLanguage": "Bahasa",
   "settingsLanguageDescription": "Italia, Inggris, atau sama dengan ponsel",
-  "settingsLanguageSystem": "Sama dengan ponsel"
+  "settingsLanguageSystem": "Sama dengan ponsel",
+  "settingsMarkColor": "Warna panah dan lingkaran",
+  "@settingsMarkColor": {
+    "description": "Impostazioni: colore di base di frecce e cerchi"
+  },
+  "settingsMarkColorDescription": "Gambar dengan menahan sebuah petak lalu menggeser; dengan mouse, klik kanan bersama Shift, Ctrl, atau Alt untuk warna lainnya",
+  "@settingsMarkColorDescription": {
+    "description": "Impostazioni: come si disegnano frecce e cerchi"
+  },
+  "settingsMarkColorGreen": "Hijau",
+  "@settingsMarkColorGreen": {
+    "description": "Impostazioni: colore verde"
+  },
+  "settingsMarkColorRed": "Merah",
+  "@settingsMarkColorRed": {
+    "description": "Impostazioni: colore rosso"
+  },
+  "settingsMarkColorBlue": "Biru",
+  "@settingsMarkColorBlue": {
+    "description": "Impostazioni: colore blu"
+  },
+  "settingsMarkColorYellow": "Kuning",
+  "@settingsMarkColorYellow": {
+    "description": "Impostazioni: colore giallo"
+  }
 }

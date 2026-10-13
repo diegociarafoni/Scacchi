@@ -98,5 +98,29 @@
   "settingsProgressEnabledDescription": "Po wyłączeniu nic nie jest zapisywane",
   "settingsLanguage": "Język",
   "settingsLanguageDescription": "Wybierz język aplikacji lub taki jak w telefonie",
-  "settingsLanguageSystem": "Jak w telefonie"
+  "settingsLanguageSystem": "Jak w telefonie",
+  "settingsMarkColor": "Kolor strzałek i kółek",
+  "@settingsMarkColor": {
+    "description": "Impostazioni: colore di base di frecce e cerchi"
+  },
+  "settingsMarkColorDescription": "Rysuje się, przytrzymując pole i przeciągając; myszą prawym przyciskiem z Shift, Ctrl lub Alt dla pozostałych kolorów",
+  "@settingsMarkColorDescription": {
+    "description": "Impostazioni: come si disegnano frecce e cerchi"
+  },
+  "settingsMarkColorGreen": "Zielony",
+  "@settingsMarkColorGreen": {
+    "description": "Impostazioni: colore verde"
+  },
+  "settingsMarkColorRed": "Czerwony",
+  "@settingsMarkColorRed": {
+    "description": "Impostazioni: colore rosso"
+  },
+  "settingsMarkColorBlue": "Niebieski",
+  "@settingsMarkColorBlue": {
+    "description": "Impostazioni: colore blu"
+  },
+  "settingsMarkColorYellow": "Żółty",
+  "@settingsMarkColorYellow": {
+    "description": "Impostazioni: colore giallo"
+  }
 }

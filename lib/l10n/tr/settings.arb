@@ -98,5 +98,29 @@
   "settingsProgressEnabledDescription": "Kapalıyken hiçbir şey kaydedilmez",
   "settingsLanguage": "Dil",
   "settingsLanguageDescription": "İtalyanca, İngilizce veya telefonla aynı",
-  "settingsLanguageSystem": "Telefonla aynı"
+  "settingsLanguageSystem": "Telefonla aynı",
+  "settingsMarkColor": "Ok ve daire rengi",
+  "@settingsMarkColor": {
+    "description": "Impostazioni: colore di base di frecce e cerchi"
+  },
+  "settingsMarkColorDescription": "Bir kareye basılı tutup sürükleyerek çizilir; fareyle diğer renkler için Shift, Ctrl veya Alt ile sağ tuş",
+  "@settingsMarkColorDescription": {
+    "description": "Impostazioni: come si disegnano frecce e cerchi"
+  },
+  "settingsMarkColorGreen": "Yeşil",
+  "@settingsMarkColorGreen": {
+    "description": "Impostazioni: colore verde"
+  },
+  "settingsMarkColorRed": "Kırmızı",
+  "@settingsMarkColorRed": {
+    "description": "Impostazioni: colore rosso"
+  },
+  "settingsMarkColorBlue": "Mavi",
+  "@settingsMarkColorBlue": {
+    "description": "Impostazioni: colore blu"
+  },
+  "settingsMarkColorYellow": "Sarı",
+  "@settingsMarkColorYellow": {
+    "description": "Impostazioni: colore giallo"
+  }
 }
