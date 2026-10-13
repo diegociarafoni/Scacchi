@@ -2683,7 +2683,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                   size: size,
                   orientation: _orientation,
                   enabled:
-                      _humanToMove && _viewPly == null && _pendingMove == null,
+                      boardSettings.pieceShiftMethod != PieceShiftMethod.drag &&
+                      _humanToMove &&
+                      _viewPly == null &&
+                      _pendingMove == null,
                   resetKey: _game.position.fen,
                   destinations: _tapTargets,
                   onMove: (from, to) => _onMove(NormalMove(from: from, to: to)),

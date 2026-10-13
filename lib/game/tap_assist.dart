@@ -38,6 +38,7 @@ class TapAssist extends StatefulWidget {
 }
 
 class _TapAssistState extends State<TapAssist> {
+  final _pointers = <int>{};
   int? _tracked;
   Offset _down = Offset.zero;
   Square? _selected;
@@ -47,7 +48,8 @@ class _TapAssistState extends State<TapAssist> {
     super.didUpdateWidget(old);
     if (old.resetKey != widget.resetKey ||
         old.size != widget.size ||
-        old.orientation != widget.orientation) {
+        old.orientation != widget.orientation ||
+        old.enabled != widget.enabled) {
       _selected = null;
       _tracked = null;
     }
@@ -64,12 +66,15 @@ class _TapAssistState extends State<TapAssist> {
   }
 
   void _pressed(PointerDownEvent event) {
-    _tracked = _tracked == null ? event.pointer : null;
+    _pointers.add(event.pointer);
+    // Con più dita giù non è un tocco.
+    _tracked = _pointers.length == 1 ? event.pointer : null;
     _down = event.localPosition;
   }
 
   void _up(PointerUpEvent event) {
     final tracked = _tracked == event.pointer;
+    _pointers.remove(event.pointer);
     _tracked = null;
     if (!tracked || !widget.enabled) return;
     if ((event.localPosition - _down).distance > kTouchSlop) return;
@@ -83,7 +88,8 @@ class _TapAssistState extends State<TapAssist> {
     final square = _squareAt(file, row);
     if (square == null) return;
     if (widget.destinations(square).isNotEmpty) {
-      _selected = square;
+      // Toccare di nuovo lo stesso pezzo lo deseleziona, come fa la scacchiera.
+      _selected = _selected == square ? null : square;
       return;
     }
     final from = _selected;
@@ -108,6 +114,7 @@ class _TapAssistState extends State<TapAssist> {
   }
 
   void _cancel(PointerCancelEvent event) {
+    _pointers.remove(event.pointer);
     if (_tracked == event.pointer) _tracked = null;
   }
 

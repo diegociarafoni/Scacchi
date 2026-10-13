@@ -113,4 +113,40 @@ void main() {
     await tester.tapAt(at(tester, 'e5', shift: const Offset(0, 23)));
     expect(moves, isEmpty);
   });
+
+  testWidgets('RM-02 toccare di nuovo lo stesso pezzo lo deseleziona', (
+    tester,
+  ) async {
+    await show(tester);
+    await tester.tapAt(at(tester, 'e2'));
+    await tester.tapAt(at(tester, 'e2'));
+    await tester.tapAt(at(tester, 'e5', shift: const Offset(0, 23)));
+    expect(moves, isEmpty);
+  });
+
+  testWidgets('RM-02 spegnere e riaccendere azzera il pezzo scelto', (
+    tester,
+  ) async {
+    await show(tester);
+    await tester.tapAt(at(tester, 'e2'));
+    await show(tester, enabled: false);
+    await show(tester);
+    await tester.tapAt(at(tester, 'e5', shift: const Offset(0, 23)));
+    expect(moves, isEmpty);
+  });
+
+  testWidgets('RM-02 con due dita giù il tocco non conta', (tester) async {
+    await show(tester);
+    await tester.tapAt(at(tester, 'e2'));
+    final a = await tester.startGesture(
+      at(tester, 'e5', shift: const Offset(0, 23)),
+    );
+    final b = await tester.startGesture(at(tester, 'a1'));
+    await a.up();
+    await b.up();
+    expect(moves, isEmpty);
+    // Il pezzo scelto resta e il tocco seguente si corregge.
+    await tester.tapAt(at(tester, 'e5', shift: const Offset(0, 23)));
+    expect(moves, [(e2, Square.parse('e4')!)]);
+  });
 }
