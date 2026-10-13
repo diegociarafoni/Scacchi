@@ -13,6 +13,10 @@ void main() {
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
     await tester.pumpWidget(const ScacchiApp());
+    // I contenuti si caricano da asset: si attende che la barra compaia.
+    for (var i = 0; i < 100 && find.text('Tu').evaluate().isEmpty; i++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('Tu'));
