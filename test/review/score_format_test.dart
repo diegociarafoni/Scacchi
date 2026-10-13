@@ -7,6 +7,19 @@ import 'package:scacchi/review/score_format.dart';
 final _it = lookupAppLocalizations(const Locale('it'));
 
 void main() {
+  test('la descrizione parla la lingua dell\'app', () {
+    final en = lookupAppLocalizations(const Locale('en'));
+    expect(
+      describeScore(en, const EngineScore.cp(150)),
+      'White is ahead by 1.5',
+    );
+    expect(
+      describeScore(en, const EngineScore.mate(-1)),
+      'Black has mate in 1',
+    );
+    expect(describeScore(en, const EngineScore.cp(4)), 'Equal');
+  });
+
   group('RF-50 valore numerico della valutazione', () {
     test('centipedoni in pedoni con segno', () {
       expect(formatScore(const EngineScore.cp(34)), '+0.3');

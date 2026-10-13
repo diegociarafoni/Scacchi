@@ -191,6 +191,19 @@ void main() {
       expect(c.text(_it), contains('la torre nera inchioda il cavallo in e2'));
     });
 
+    test('in inglese il colore e l\'articolo seguono la lingua', () async {
+      final m = await reviewOne(
+        'r6k/8/8/8/8/8/P3N2P/4K3 w - - 0 1',
+        'h2h3',
+        best: line(['a2a3'], const EngineScore.cp(150)),
+        reply: line(['a8e8'], const EngineScore.cp(0)),
+      );
+      expect(
+        explainMove(m)!.text(lookupAppLocalizations(const Locale('en'))),
+        'After Re8, the black rook pins the knight on e2 against the king.',
+      );
+    });
+
     test('un pedone inchiodato non conta', () async {
       final m = await reviewOne(
         'r6k/8/8/8/8/8/P3P2P/4K3 w - - 0 1',
@@ -329,6 +342,19 @@ void main() {
       final c = explainMove(m)!;
       expect(c.theme, CoachTheme.missedDiscovery);
       expect(c.text(_it), contains('l\'alfiere attacca la torre'));
+    });
+
+    test('matto concesso in inglese', () async {
+      final m = await reviewOne(
+        'r1bqkbnr/pppp1ppp/2n5/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 3 3',
+        'g8f6',
+        best: line(['g7g6'], const EngineScore.cp(-30)),
+        reply: line(['h5f7'], const EngineScore.mate(1)),
+      );
+      expect(
+        explainMove(m)!.text(lookupAppLocalizations(const Locale('en'))),
+        'After Nf6, White can deliver mate in 1 with Qxf7#.',
+      );
     });
 
     test('cattura netta mancata', () async {

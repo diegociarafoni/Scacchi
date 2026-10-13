@@ -45,6 +45,7 @@ void main() {
   Future<void> show(
     WidgetTester tester, {
     ReminderController? reminders,
+    Locale locale = const Locale('it'),
   }) async {
     tester.view.physicalSize = const Size(1170, 2532);
     tester.view.devicePixelRatio = 3;
@@ -53,12 +54,26 @@ void main() {
       MaterialApp(
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        locale: const Locale('it'),
+        locale: locale,
         home: ProfilePage(controller: controller, reminders: reminders),
       ),
     );
     await tester.pumpAndSettle();
   }
+
+  testWidgets('RP-05 il profilo si mostra in inglese', (tester) async {
+    await tester.runAsync(
+      () => controller.record(const GamePlayed(result: GameResult.win)),
+    );
+    await show(tester, locale: const Locale('en'));
+    expect(find.text('Profile'), findsOneWidget);
+    expect(find.textContaining('Level'), findsWidgets);
+    expect(find.text('Today\'s challenges'), findsOneWidget);
+    expect(find.textContaining('To keep your streak going'), findsOneWidget);
+    await tester.scrollUntilVisible(find.text('Achievements'), 300);
+    expect(find.text('First game'), findsOneWidget);
+    expect(find.text('Prima partita'), findsNothing);
+  });
 
   testWidgets('RG-01 mostra livello e XP', (tester) async {
     await tester.runAsync(

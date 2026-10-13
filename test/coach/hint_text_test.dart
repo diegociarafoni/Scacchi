@@ -74,6 +74,24 @@ void main() {
       );
     });
 
+    test('in inglese le frasi sono complete', () {
+      final en = lookupAppLocalizations(const Locale('en'));
+      String say(String f, String uci) =>
+          describeHintMove(en, fen(f), Move.parse(uci)!);
+      expect(
+        say('8/P7/8/8/8/8/8/k6K w - - 0 1', 'a7a8q'),
+        'Promote the pawn to a8: it becomes a queen.',
+      );
+      expect(
+        say('4r1k1/5ppp/8/8/Q7/8/8/4K3 w - - 0 1', 'a4e8'),
+        'Move the queen to e8 to stop the check, giving checkmate.',
+      );
+      expect(
+        describeHintPiece(en, Chess.initial, Square.c1),
+        'Move the bishop.',
+      );
+    });
+
     test('l\'arrocco e la promozione hanno frasi proprie', () {
       expect(
         move('4k3/8/8/8/8/8/8/R3K2R w KQ - 0 1', 'e1g1'),
