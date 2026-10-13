@@ -58,13 +58,13 @@ Future<(MultiplayerController, MultiplayerController)> pair(
     now: (guestNow ?? now).call,
     openGuest: (_, _) => b,
   );
-  await settle();
+  await settleLoopback();
   return (host, guest);
 }
 
 Future<void> play(MultiplayerController c, String uci) async {
   expect(await c.play(Move.parse(uci)!), isTrue);
-  await settle();
+  await settleLoopback();
 }
 
 void main() {
@@ -322,7 +322,7 @@ void main() {
       await play(host, 'e2e4');
       now.advance(const Duration(minutes: 3, seconds: 1));
       guest.tick();
-      await settle();
+      await settleLoopback();
       expect(guest.status, MultiplayerStatus.finished);
       expect(guest.outcome, Outcome.whiteWins);
       expect(guest.endedOnTime, isTrue);
@@ -402,7 +402,7 @@ void main() {
           now: now.call,
           openGuest: (_, _) => b,
         );
-        await settle();
+        await settleLoopback();
         await play(host, 'e2e4');
         now.advance(const Duration(seconds: 5));
         await play(guest, 'e7e5');
@@ -484,7 +484,7 @@ void main() {
       await tester.ensureVisible(find.text('Crea la partita'));
       await tester.pump();
       await tester.tap(find.text('Crea la partita'));
-      await tester.runAsync(settle);
+      await tester.runAsync(settleLoopback);
       await tester.pumpAndSettle();
       final qr = tester.widget<QrCodeView>(find.byType(QrCodeView));
       expect(GameInvite.parse(qr.data)!.timeControl, blitz);
@@ -511,7 +511,7 @@ void main() {
 
         now.advance(const Duration(minutes: 3, seconds: 1));
         guest.tick();
-        await tester.runAsync(settle);
+        await tester.runAsync(settleLoopback);
         await tester.pump();
         await tester.scrollUntilVisible(
           find.text('Tempo scaduto: vince il Bianco'),

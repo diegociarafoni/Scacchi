@@ -37,10 +37,11 @@ Future<void> untilMoves(MultiplayerController c, int moves) => until(
   what: '$moves mosse nella partita',
 );
 
-/// Lascia girare il ciclo di eventi per [turns] giri. I canali in memoria
+/// Per i canali in memoria (`LoopbackTransport`), non per disco, timer o relay:
+/// lascia girare il ciclo di eventi per [turns] giri. I canali in memoria
 /// consegnano a catena: conta il numero di giri, non il tempo, che sotto carico
 /// può scadere a metà della catena.
-Future<void> settle([int turns = 200]) async {
+Future<void> settleLoopback([int turns = 200]) async {
   for (var i = 0; i < turns; i++) {
     await Future<void>.delayed(Duration.zero);
   }
@@ -69,15 +70,16 @@ Future<void> pumpUntilFound(WidgetTester tester, Finder finder) => pumpUntil(
 );
 
 /// Toglie la cartella di prova. Un salvataggio ancora in coda può scrivere
-/// mentre si cancella ("Directory not empty"): si riprova.
-void removeDir(Directory dir) {
-  for (var i = 0; i < 50; i++) {
+/// mentre si cancella ("Directory not empty"): si riprova lasciando girare il
+/// ciclo di eventi, così la coda avanza.
+Future<void> removeDir(Directory dir) async {
+  for (var i = 0; i < 100; i++) {
     try {
-      dir.deleteSync(recursive: true);
+      await dir.delete(recursive: true);
       return;
     } on FileSystemException {
-      sleep(const Duration(milliseconds: 10));
+      await Future<void>.delayed(const Duration(milliseconds: 10));
     }
   }
-  dir.deleteSync(recursive: true);
+  await dir.delete(recursive: true);
 }

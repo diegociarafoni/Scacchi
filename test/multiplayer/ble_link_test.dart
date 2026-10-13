@@ -8,7 +8,7 @@ import 'package:scacchi/multiplayer/ble_link.dart';
 import 'package:scacchi/multiplayer/ble_transport.dart';
 import 'package:scacchi/multiplayer/transport.dart';
 
-import '../support/wait.dart' hide settle;
+import '../support/wait.dart';
 
 /// Radio in memoria tra un ospite (periferica) e un invitato (centrale).
 class _Peer implements Central, Peripheral {
@@ -480,6 +480,7 @@ void main() {
       ];
       for (final p in peers) {
         host.subscribe(p);
+        await settle(5);
       }
       await until(() => host.disconnected.isNotEmpty, what: 'ospite espulso');
       expect(host.disconnected, [peers.first]);

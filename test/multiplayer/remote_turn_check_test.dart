@@ -68,7 +68,7 @@ void main() {
       await t.close();
     }
     opened.clear();
-    removeDir(dir);
+    await removeDir(dir);
   });
 
   Future<MultiplayerController> startHost() => MultiplayerController.host(

@@ -61,7 +61,7 @@ void main() {
       await t.close();
     }
     opened.clear();
-    removeDir(dir);
+    await removeDir(dir);
   });
 
   SavedGameStore store() => SavedGameStore(File('${dir.path}/m.json'));
@@ -173,7 +173,7 @@ void main() {
       openHost: () async => (transport: a, lanAddress: '10.0.0.2:4000'),
       store: s,
     );
-    await settle();
+    await settleLoopback();
     expect(await s.load(), isNull);
     await host.close();
   });
