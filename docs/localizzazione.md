@@ -96,3 +96,7 @@ La migrazione dei testi verso i file `.arb` si fa una schermata alla volta. Rest
 La lingua si applica subito, senza riavviare. `HomeShell` ascolta il cambio di lingua (`didChangeDependencies`) e riprogramma il promemoria: titolo, testo e, su Android, nome e descrizione del canale di notifica (ricreato con lo stesso id) passano alla nuova lingua. La notazione delle mosse è indipendente dalla lingua (predefinita figurativa, vedi [notazione.md](notazione.md)); le sue etichette nelle Impostazioni sono tradotte.
 
 Nei test dei widget il telefono è simulato in italiano (`test/support/italian_device.dart`, collegato dai `flutter_test_config.dart` e dai test e2e), così non dipendono dalla lingua della macchina o dell'emulatore.
+
+## Indonesiano
+
+L'indonesiano (`id`, nome nella scelta «Bahasa Indonesia») ha tutti gli `.arb` in `lib/l10n/id/` (i contenuti lunghi di lezioni, maestri e bot seguiranno in una PR a parte). Regole di stile e termini sono nella sezione «Indonesiano» di [glossario-scacchistico.md](glossario-scacchistico.md). Lo stato in `tool/lingue.json` è `beta` finché un madrelingua non ha riletto i testi; poi passa a `pronta`. La lingua è registrata in `AppLanguage`, `locales_config.xml`, `CFBundleLocalizations` e `ios/Runner/id.lproj/InfoPlist.strings`. `test/l10n_indonesian_test.dart` controlla chiavi, segnaposto, plurali, testi vuoti e due schermate campione.
