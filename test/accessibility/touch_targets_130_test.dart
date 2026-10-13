@@ -98,17 +98,17 @@ void main() {
         handle.dispose();
       });
 
-      testWidgets('partita e pannello Altro', (tester) async {
+      testWidgets('partita e menu ⋮', (tester) async {
         final handle = tester.ensureSemantics();
         await _pumpApp(tester, device);
         await openBoard(tester);
         await _check(tester, 'Partita');
-        final more = find.byKey(const ValueKey('gameAction-more'));
-        if (more.evaluate().isNotEmpty) {
-          await tester.tap(more);
-          await tester.pumpAndSettle();
-          await _check(tester, 'Pannello Altro');
-        }
+        // Nella partita a due il pannello «Altro» non c'è: si apre il menu ⋮.
+        final menu = find.byTooltip('Altre azioni');
+        expect(menu, findsOneWidget);
+        await tester.tap(menu);
+        await tester.pumpAndSettle();
+        await _check(tester, 'Menu della partita');
         handle.dispose();
       });
     });
