@@ -5,10 +5,10 @@ Requisito RP-05: italiano come lingua predefinita, con la struttura pronta per a
 ## Stato
 
 - L'app usa `flutter_localizations` e il generatore `gen-l10n` di Flutter.
-- La lingua dell'app si sceglie in **Impostazioni → Aspetto e accessibilità → Lingua**: «Come il telefono» (predefinita), Italiano o English (`AppLanguage` in `lib/settings/app_language.dart`, salvata come `language`). `MaterialApp.locale` in `lib/main.dart` è quella scelta, o `null` per seguire il telefono; `resolveAppLocale` (`localeListResolutionCallback`) prende la prima lingua del telefono tra quelle supportate e, se non ce n'è, usa l'italiano. `l10n.yaml` indica l'italiano come lingua preferita. I nomi delle lingue nella scelta restano nella lingua stessa.
+- La lingua dell'app si sceglie in **Impostazioni → Aspetto e accessibilità → Lingua**: «Come il telefono» (predefinita), Italiano, English o Русский (`AppLanguage` in `lib/settings/app_language.dart`, salvata come `language`). `MaterialApp.locale` in `lib/main.dart` è quella scelta, o `null` per seguire il telefono; `resolveAppLocale` (`localeListResolutionCallback`) prende la prima lingua del telefono tra quelle supportate e, se non ce n'è, usa l'italiano. `l10n.yaml` indica l'italiano come lingua preferita. I nomi delle lingue nella scelta restano nella lingua stessa.
 - Su iOS e macOS la regione di sviluppo è l'italiano; le finestre native del sistema (condivisione, permessi) seguono la lingua del dispositivo se è italiano o inglese, altrimenti usano l'italiano. I testi dei permessi di iOS (`NSCameraUsageDescription` e simili) hanno una traduzione per lingua in `ios/Runner/<lingua>.lproj/InfoPlist.strings`; `Info.plist` conserva l'italiano come ripiego. Su Android 13+ `res/xml/locales_config.xml` elenca le lingue dell'app per la scelta lingua per app del sistema.
 - Il nome sotto l'icona non viene da `appTitle`: è `android:label` in `android/app/src/main/AndroidManifest.xml` e `CFBundleDisplayName` in `ios/Runner/Info.plist`.
-- Sono dichiarate italiano e inglese (`supportedLocales`, e `CFBundleLocalizations` su iOS). Sono tradotti il nome dell'app, i testi del profilo bambino (prefissi `kid`, `kidGame`, `kidBot`), quelli dello scambio QR (prefisso `qr`), quelli dei badge (prefissi `badge` e `badges`), quelli dell'esportazione come immagine (prefisso `shareImage`), quelli della scacchiera fisica (prefisso `physical`), il profilo con traguardi, sfide, serie e promemoria (prefisso `progress`), la revisione della partita e i commenti dell'allenatore (prefisso `review`), i suggerimenti (`coachHint`), l'analisi (`analysis`), l'archivio (`archive`), la scheda settimanale (`portrait`) e le schermate elencate in [Schermate migrate](#schermate-migrate); gli altri testi sono ancora scritti in italiano nel codice.
+- Sono dichiarate italiano, inglese e russo (`supportedLocales`, e `CFBundleLocalizations` su iOS). Sono tradotti il nome dell'app, i testi del profilo bambino (prefissi `kid`, `kidGame`, `kidBot`), quelli dello scambio QR (prefisso `qr`), quelli dei badge (prefissi `badge` e `badges`), quelli dell'esportazione come immagine (prefisso `shareImage`), quelli della scacchiera fisica (prefisso `physical`), il profilo con traguardi, sfide, serie e promemoria (prefisso `progress`), la revisione della partita e i commenti dell'allenatore (prefisso `review`), i suggerimenti (`coachHint`), l'analisi (`analysis`), l'archivio (`archive`), la scheda settimanale (`portrait`) e le schermate elencate in [Schermate migrate](#schermate-migrate); gli altri testi sono ancora scritti in italiano nel codice.
 
 ## Lingue di destinazione
 
@@ -16,7 +16,17 @@ L'italiano è la lingua base e il modello degli `.arb`. Inglese, spagnolo e fran
 
 I termini scacchistici e le regole di stile di ogni lingua sono in [glossario-scacchistico.md](glossario-scacchistico.md). Chi traduce o rilegge parte da lì.
 
-Stato attuale: sono dichiarati soltanto italiano e inglese (vedi sopra); spagnolo e francese si aggiungono per funzione. Durante la migrazione italiano e inglese restano obbligatori in ogni PR.
+Stato attuale: sono dichiarati italiano, inglese e russo (vedi sopra); le altre lingue si aggiungono per funzione. Durante la migrazione italiano e inglese restano obbligatori in ogni PR.
+
+## Russo
+
+Il russo (`ru`) è `pronta`: tutte le chiavi dei `.arb` (`lib/l10n/ru/`) e i contenuti lunghi (`assets/content/ru/*.json`) sono tradotti. Termini e regole di stile sono nella sezione «Russo» di [glossario-scacchistico.md](glossario-scacchistico.md): si dà del «ты», virgolette «…», notazione con le lettere russe (Кр, Ф, Л, С, К).
+
+- **Plurali a quattro forme.** Nei `.arb` russi ogni `plural` ha `one` (1, 21, 31…), `few` (2-4, 22-24…), `many` (0, 5-20, 25-30…) e `other` (frazioni). La forma `one` non scrive mai «1» a mano: usa il segnaposto, perché vale anche per 21. `test/l10n/russian_test.dart` controlla che le quattro forme ci siano dove l'inglese ha un plurale e che `one` non contenga un numero fisso.
+- **Concordanze.** Dove il russo richiederebbe un caso o un genere sul valore di un segnaposto (per esempio il nome di un pezzo, inserito dal codice sempre al nominativo), la frase è riformulata in modo neutro (due punti, etichetta) invece di aggiungere chiavi.
+- **Nomi delle aperture.** `assets/content/ru/opening_names.json` ha la stessa struttura di quello italiano (sostantivo + complemento al genitivo + coda); il codice che compone i nomi oggi è solo italiano, quindi per il russo i nomi composti si leggono come «sostantivo, poi aggettivo». Un motore dedicato è lavoro futuro; i nomi che non hanno una forma russa nota (Bongcloud, Creepy Crawly…) restano in inglese.
+- **Caratteri.** L'app usa i caratteri di sistema (Roboto su Android, San Francisco su iOS), che includono il cirillico: non serve incorporare font. Nei test grafici di Flutter il testo usa un font a blocchi, quindi `test/game/game_russian_test.dart` verifica il layout (nessun overflow su telefono piccolo e medio, i testi lunghi del russo), non le forme delle lettere.
+- **Sistema.** `ios/Runner/ru.lproj/InfoPlist.strings` per i permessi, `ru` in `CFBundleLocalizations`, `knownRegions` e `locales_config.xml`.
 
 ## File
 

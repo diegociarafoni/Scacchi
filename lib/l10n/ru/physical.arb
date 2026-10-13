@@ -1,0 +1,65 @@
+{
+  "physicalTitle": "Настоящая доска",
+  "physicalEntrySubtitle": "Часы и бланк для живой партии",
+  "physicalIntro": "Играй на настоящей доске: приложение работает как часы и записывает партию. После каждого хода введи его или выбери среди возможных.",
+  "physicalWhite": "Белые",
+  "physicalBlack": "Чёрные",
+  "physicalUntimed": "Без часов",
+  "physicalStart": "Начать партию",
+  "physicalInputWhite": "Ход белых (напр. e4, Kf3)",
+  "physicalInputBlack": "Ход чёрных (напр. e5, Kc6)",
+  "physicalInvalidMove": "Недопустимый ход: «{text}»",
+  "@physicalInvalidMove": {
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "physicalNoMoves": "Ходов нет",
+  "physicalPause": "Пауза",
+  "physicalResume": "Продолжить",
+  "physicalUndo": "Вернуть ход",
+  "physicalDraw": "Ничья",
+  "physicalResign": "Сдаться",
+  "physicalDrawQuestion": "Ничья по согласию?",
+  "physicalYes": "Да",
+  "physicalNo": "Нет",
+  "physicalWhoResigns": "Кто сдаётся?",
+  "physicalSaved": "Партия сохранена в архиве",
+  "physicalNothingToSave": "Нет ходов для сохранения",
+  "physicalSaveFailed": "Не удалось сохранить партию",
+  "physicalNewGame": "Новая партия",
+  "physicalEndCheckmate": "Мат",
+  "physicalEndResignation": "Сдача",
+  "physicalEndTimeout": "Время вышло",
+  "physicalEndAgreement": "Ничья по согласию",
+  "physicalEndStalemate": "Пат",
+  "physicalEndInsufficient": "Недостаточный материал",
+  "physicalEndRepetition": "Троекратное повторение",
+  "physicalEndFiftyMoves": "Правило пятидесяти ходов",
+  "physicalEndOther": "Партия окончена",
+  "physicalResultLine": "{reason} · {result}",
+  "@physicalResultLine": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      },
+      "result": {
+        "type": "String"
+      }
+    }
+  },
+  "physicalPhoto": "Ход по фото",
+  "physicalRealign": "Выровнять",
+  "physicalCameraUnavailable": "Камера недоступна",
+  "physicalImageUnreadable": "Не удалось прочитать изображение",
+  "physicalReferenceSaved": "Опорное фото сохранено. После следующего хода сделай ещё одно фото.",
+  "physicalNoMoveRecognized": "Ход не распознан: доска выглядит так же.",
+  "physicalGuessNote": "Самые вероятные ходы по фото: выбери верный.",
+  "physicalAlignTitle": "Выровняй доску",
+  "physicalAlignHelp": "Перетащи четыре круга на углы доски. Для следующих фото держи тот же кадр.",
+  "physicalAlignWhiteBottom": "Белые внизу",
+  "physicalAlignBlackBottom": "Чёрные внизу",
+  "physicalAlignDone": "Готово"
+}

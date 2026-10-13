@@ -1,0 +1,19 @@
+{
+  "endgamesTitle": "Эндшпили",
+  "endgamesGoalMate": "Поставь мат",
+  "endgamesGoalPromote": "Проведи пешку в ферзи",
+  "endgamesGoalHoldBlack": "Удержи позицию за чёрных",
+  "endgamesGoalHoldWhite": "Удержи позицию за белых",
+  "endgamesToRepeat": "Повторить",
+  "endgamesStars": "{stars, plural, one{{stars} звезда из 3} few{{stars} звезды из 3} many{{stars} звёзд из 3} other{{stars} звезды из 3}}",
+  "endgamesMovesHold": "Ходы: {moves} из {par}",
+  "endgamesMovesTarget": "Ходы: {moves} · три звезды за {par}",
+  "endgamesStart": "Начать",
+  "endgamesThinking": "Движок думает…",
+  "endgamesEngineFailed": "Движок не отвечает: попробуй ещё раз.",
+  "endgamesSuccess": "Цель достигнута",
+  "endgamesFailure": "Не получилось",
+  "endgamesFailureHint": "Позиция останется среди тех, что нужно повторить.",
+  "endgamesRetry": "Ещё раз",
+  "endgamesDone": "Готово"
+}

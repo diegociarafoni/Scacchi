@@ -160,3 +160,76 @@ La notazione predefinita è quella della lingua dell'app; restano a scelta l'ing
 1. Prima di tradurre un testo si cercano qui i termini che contiene.
 2. Un termine nuovo si aggiunge alla tabella nella stessa PR che lo introduce, con le quattro lingue.
 3. Una correzione segnalata da chi rilegge si fa qui e poi si propaga ai file `.arb` e ai contenuti; quando saranno introdotti i controlli automatici dei termini, leggeranno questo documento.
+
+## Russo
+
+Per il russo (`ru`) le tabelle sopra non hanno una colonna: i termini sono qui. Le voci «(da verificare)» le conferma Diego.
+
+### Regole di stile
+
+- Russo standard, senza regionalismi; si dà del **ты** (imperativo in «ты»: «Сделай ход», «Выбери»), anche nel profilo bambino. Il nome dell'app e dei bot resta in caratteri latini (Rokko).
+- Virgolette «…» (annidate „…“). Il trattino lungo «—» si usa dove il russo lo richiede; la lettera «ё» si scrive solo dove evita ambiguità (tutto/всё), altrimenti «е».
+- Maiuscola solo sulla prima parola dei titoli. Colori: «белые», «чёрные»; chi muove: «Ход белых».
+- Plurali ICU a quattro forme: `one` (1, 21, 31…), `few` (2-4, 22-24…), `many` (0, 5-20, 25-30…), `other` (frazioni). Mai «1» scritto a mano nella forma `one`: usare `{count}`; per un valore esatto, `=1`.
+- Notazione: lettere russe (Кр, Ф, Л, С, К; pedone senza lettera), vedi sotto.
+
+### Notazione
+
+| Pezzo | Italiano | Русский |
+|---|---|---|
+| Re | R | Кр |
+| Donna | D | Ф |
+| Torre | T | Л |
+| Alfiere | A | С |
+| Cavallo | C | К |
+| Pedone | (nessuna) | (nessuna) |
+
+### Termini
+
+| Italiano | Русский |
+|---|---|
+| re / donna / torre / alfiere / cavallo / pedone | король / ферзь / ладья / слон / конь / пешка |
+| scacchiera / casa / traversa / colonna / diagonale | доска / поле / горизонталь / вертикаль / диагональ |
+| Bianco / Nero | белые / чёрные |
+| mossa / tratto | ход / очередь хода |
+| cattura | взятие |
+| scacco / scacco matto | шах / мат |
+| stallo / patta | пат / ничья |
+| abbandono | сдача |
+| arrocco corto / lungo | короткая / длинная рокировка |
+| presa en passant | взятие на проходе |
+| promozione / sottopromozione | превращение / превращение в слабую фигуру (da verificare) |
+| proposta di patta | предложение ничьей |
+| tripla ripetizione | троекратное повторение |
+| regola delle cinquanta mosse | правило пятидесяти ходов |
+| materiale insufficiente | недостаточный материал |
+| tempo scaduto | время вышло |
+| ripresa della mossa | возврат хода |
+| mossa illegale | недопустимый ход |
+| forchetta / inchiodatura / infilata | вилка / связка / линейный удар (da verificare) |
+| attacco / scacco di scoperta / scacco doppio | вскрытое нападение / вскрытый шах / двойной шах |
+| sacrificio | жертва |
+| matto del barbiere / del pazzo | детский мат / дурацкий мат |
+| matto di corridoio / soffocato | мат по последней горизонтали / удушающий мат |
+| zugzwang / opposizione | цугцванг / оппозиция |
+| pedone passato / isolato / doppiati | проходная пешка / изолированная пешка / сдвоенные пешки |
+| struttura pedonale | пешечная структура |
+| coppia degli alfieri | пара слонов |
+| colonna aperta | открытая вертикаль |
+| centro / sviluppo / minaccia | центр / развитие / угроза |
+| apertura / mediogioco / finale | дебют / миттельшпиль / эндшпиль |
+| gambetto / difesa | гамбит / защита |
+| Siciliana / Francese / Spagnola | Сицилианская защита / Французская защита / Испанская партия |
+| Gambetto di donna | Ферзевый гамбит |
+| Difesa Scandinava / Indiana di re | Скандинавская защита / Староиндийская защита |
+| mossa migliore / imprecisione / errore / svista / brillante / precisione | лучший ход / неточность / ошибка / зевок / блестящий ход / точность |
+| Gioca / Puzzle / Aperture / Tu / Impostazioni | Играть / Задачи / Дебюты / Ты / Настройки |
+| Profilo / Archivio / Statistiche / Allenatore | Профиль / Архив / Статистика / Тренер |
+| Lezione / Percorso / Storia | Урок / Путь / История |
+| Badge / Traguardo / Serie / Livello / Suggerimento | Значок / Достижение / Серия / Уровень / Подсказка |
+| Orologio / Cadenza / Incremento | Часы / Контроль времени / Добавление времени |
+| Bullet / Blitz / Rapid | Пуля / Блиц / Рапид (da verificare) |
+| Cornice (dell'avatar) | Рамка |
+| Punteggio Elo | Рейтинг Эло |
+| Grandi maestri | Великие мастера |
+| Scacchiera fisica / Multigiocatore | Реальная доска / Мультиплеер |
