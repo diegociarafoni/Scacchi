@@ -137,6 +137,14 @@ void main() {
     );
     expect(find.text('Puzzle risolti!'), findsOneWidget);
     expect(find.textContaining('Tino ti aspetta'), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('story-passage-guardian')),
+      findsOneWidget,
+    );
+    expect(
+      find.textContaining('Tino dice: Giochiamo una partita'),
+      findsOneWidget,
+    );
     await save(tester, find.text('Sfida Tino'), until: () => boss == 1);
     expect(boss, 1);
   });

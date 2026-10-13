@@ -39,6 +39,8 @@ void main() {
 
   /// I salvataggi su file avvengono fuori dal tempo finto dei test.
   Future<void> tapAndSave(WidgetTester tester, Finder finder) async {
+    await tester.ensureVisible(finder);
+    await tester.pumpAndSettle();
     await tester.tap(finder);
     // Il salvataggio ha più passi su file: ognuno ha bisogno del tempo vero.
     for (var i = 0; i < 15; i++) {
@@ -76,6 +78,17 @@ void main() {
     await show(tester);
     expect(find.text('Il sentiero dei primi passi'), findsOneWidget);
     expect(find.textContaining('Prima del villaggio'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey('story-welcome-prologue')),
+        matching: find.textContaining('Ciao, sono Tino'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.bySemanticsLabel(RegExp('^Tino dice: Ciao, sono Tino')),
+      findsOneWidget,
+    );
     await tester.scrollUntilVisible(find.text('Il villaggio dei pezzi'), 300);
     expect(find.text('Il villaggio dei pezzi'), findsOneWidget);
     expect(
@@ -172,6 +185,8 @@ void main() {
     await finishLessons(tester);
     await tester.runAsync(() => story.puzzlesSolved(first, first.puzzleCount));
     await tester.pumpAndSettle();
+    await tester.ensureVisible(find.textContaining('Sfida a Tino'));
+    await tester.pumpAndSettle();
     await tester.tap(find.textContaining('Sfida a Tino'));
     await tester.pumpAndSettle();
     expect(story.state.isBossBeaten(first.id), isFalse);
@@ -182,6 +197,8 @@ void main() {
     await show(tester);
     await finishLessons(tester);
     await tester.runAsync(() => story.puzzlesSolved(first, first.puzzleCount));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.textContaining('Sfida a Tino'));
     await tester.pumpAndSettle();
     await tester.tap(find.textContaining('Sfida a Tino'));
     await tester.pumpAndSettle();

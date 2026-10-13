@@ -47,9 +47,19 @@ Chi ha già battuto un bot o risolto dei puzzle in un capitolo successivo trova 
 
 I testi (racconto, passi, avvisi) sono nei file `.arb` in italiano e in inglese; `story_l10n.dart` li associa ai capitoli. Il nome dei bot resta quello della scala. Ogni capitolo e ogni passo è un nodo per i lettori di schermo, con titolo e stato («da fare», «fatto», «bloccato»); l'avatar del bot è escluso dalla lettura.
 
+## I custodi
+
+Ogni capitolo ha il suo custode, il bot del capitolo, che accompagna il giocatore con battute brevi nel suo stile (`GuardianMoment`, chiavi `storyGuardian<Capitolo><Momento>` nei file `.arb`, in italiano e in inglese, senza cifre per il profilo bambino). Compaiono in tre punti:
+
+- **Benvenuto**: nella scheda del capitolo aperto, con l'avatar «saluto» (`GuardianSays`).
+- **Puzzle**: a ogni puzzle concluso un avviso breve non bloccante con l'avatar «contento» o «incoraggiante» e la battuta di esito (`StoryPuzzleFeed.onOutcome`, mostrato da `HomeShell`).
+- **Prima della sfida**: nel foglio di passaggio dopo i puzzle l'avatar «sfida» prende il posto dell'icona e dice la sua battuta; a capitolo concluso con la sfida vinta l'avatar è «stupito».
+
+L'avatar è decorativo (`GuardianAvatar`, escluso dalla lettura) e la battuta è letta come «{nome} dice: …». I bot senza personaggio disegnato mostrano la loro emoji. Il custode non salva nulla: dipende solo dal capitolo e dal momento. Restano da fare le battute di lezione conclusa e il foglio dedicato alla sfida.
+
 ## Come aggiungere un capitolo
 
-I puzzle di un capitolo possono avere un tetto di difficoltà (`StoryChapter.puzzleRating`): il Capitolo 0 pesca puzzle fino a 500 punti anche se il punteggio dell'utente è più alto. Aggiungere un `StoryChapter` in `storyChapters` (capitolo del percorso, bot, tema e numero di puzzle) e le quattro stringhe `story<Id>Title`, `Intro`, `Boss` (con `{name}`), `Outro` nei due `.arb`, poi il caso in `story_l10n.dart`. I test controllano che il capitolo punti a un capitolo del percorso e a un bot esistenti, che i bot siano in ordine di forza, che il tema abbia puzzle a sufficienza e che ogni testo esista nelle due lingue.
+I puzzle di un capitolo possono avere un tetto di difficoltà (`StoryChapter.puzzleRating`): il Capitolo 0 pesca puzzle fino a 500 punti anche se il punteggio dell'utente è più alto. Aggiungere un `StoryChapter` in `storyChapters` (capitolo del percorso, bot, tema e numero di puzzle) e le quattro stringhe `story<Id>Title`, `Intro`, `Boss` (con `{name}`), `Outro` e le quattro battute del custode (`storyGuardian<Id>Welcome`, `PuzzleOk`, `PuzzleRetry`, `Boss`) nei due `.arb`, poi i casi in `story_l10n.dart`. I test controllano che il capitolo punti a un capitolo del percorso e a un bot esistenti, che i bot siano in ordine di forza, che il tema abbia puzzle a sufficienza e che ogni testo esista nelle due lingue.
 
 ## Componenti
 
@@ -58,5 +68,6 @@ I puzzle di un capitolo possono avere un tetto di difficoltà (`StoryChapter.puz
 | `story.dart` | Capitoli, stato salvato e avanzamento |
 | `story_controller.dart` | Caricamento e salvataggio |
 | `story_feed.dart` | Puzzle del tema fino all'obiettivo |
-| `story_l10n.dart` | Testi dei capitoli |
+| `story_l10n.dart` | Testi dei capitoli e battute dei custodi |
+| `guardian_says.dart` | `GuardianSays`: il custode (avatar e battuta) |
 | `story_page.dart` | Schermata della storia: riepilogo, binario dei capitoli, passi |

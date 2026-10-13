@@ -6,7 +6,10 @@ import '../path/path_controller.dart';
 import '../path/path_page.dart';
 import '../path/path_widgets.dart';
 import '../path/stage_page.dart';
+import '../progress/avatar.dart';
+import '../progress/guardian_avatar.dart';
 import '../theme/rokko_theme.dart';
+import 'guardian_says.dart';
 import 'story.dart';
 import 'story_controller.dart';
 import 'story_l10n.dart';
@@ -113,6 +116,8 @@ class _StoryPageState extends State<StoryPage> {
     final String body;
     String? action;
     var icon = Icons.check;
+    AvatarExpression? expression;
+    String? line;
     if (progress.isChapterDone(chapter)) {
       final hasNext = index + 1 < storyChapters.length;
       final nextChapter = hasNext ? storyChapters[index + 1] : null;
@@ -122,6 +127,7 @@ class _StoryPageState extends State<StoryPage> {
           : l10n.storyPassageStoryDone;
       if (kind == StoryStepKind.boss) {
         subtitle = l10n.storyBossWon(chapter.bot.name);
+        expression = AvatarExpression.surprised;
       }
       body = nextChapter == null
           ? l10n.chapterOutro(chapter)
@@ -149,6 +155,10 @@ class _StoryPageState extends State<StoryPage> {
         StoryStepKind.guardian => l10n.storyPassageGoGuardian,
         _ => l10n.storyPassageGoBoss(chapter.bot.name),
       };
+      if (next == StoryStepKind.boss) {
+        expression = AvatarExpression.challenge;
+        line = l10n.guardianLine(chapter, GuardianMoment.boss);
+      }
     }
     final go = await showModalBottomSheet<bool>(
       context: context,
@@ -156,6 +166,16 @@ class _StoryPageState extends State<StoryPage> {
       showDragHandle: true,
       builder: (_) => _PassageSheet(
         icon: icon,
+        guardian: expression == null
+            ? null
+            : GuardianAvatar(
+                bot: chapter.bot,
+                expression: expression,
+                size: 88,
+              ),
+        guardianLine: line == null
+            ? null
+            : l10n.storyGuardianSays(chapter.bot.name, line),
         title: title,
         subtitle: subtitle,
         body: body,
@@ -495,6 +515,13 @@ class _ChapterCard extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(vertical: 8),
                               child: Text(l10n.chapterIntro(chapter)),
                             ),
+                            GuardianSays(
+                              key: ValueKey('story-welcome-${chapter.id}'),
+                              chapter: chapter,
+                              moment: GuardianMoment.welcome,
+                              expression: AvatarExpression.greeting,
+                            ),
+                            const SizedBox(height: 8),
                             for (final step in steps)
                               _StepTile(
                                 chapter: chapter,
@@ -736,10 +763,16 @@ class _PassageSheet extends StatelessWidget {
     required this.title,
     required this.body,
     required this.dismiss,
+    this.guardian,
+    this.guardianLine,
     this.subtitle,
     this.action,
   });
 
+  /// Avatar del custode al posto dell'icona e la sua battuta, già
+  /// nella forma «{nome} dice: …».
+  final Widget? guardian;
+  final String? guardianLine;
   final IconData icon;
   final String title;
   final String? subtitle;
@@ -771,15 +804,16 @@ class _PassageSheet extends StatelessWidget {
                   scale: t,
                   child: Column(
                     children: [
-                      Container(
-                        width: 72,
-                        height: 72,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: tokens.action,
-                        ),
-                        child: Icon(icon, size: 40, color: tokens.onAction),
-                      ),
+                      guardian ??
+                          Container(
+                            width: 72,
+                            height: 72,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: tokens.action,
+                            ),
+                            child: Icon(icon, size: 40, color: tokens.onAction),
+                          ),
                       const SizedBox(height: 8),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -818,6 +852,17 @@ class _PassageSheet extends StatelessWidget {
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyLarge,
             ),
+            if (guardianLine != null) ...[
+              const SizedBox(height: 12),
+              Text(
+                guardianLine!,
+                key: const ValueKey('story-passage-guardian'),
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ],
             const SizedBox(height: 24),
             if (action != null)
               FilledButton(
