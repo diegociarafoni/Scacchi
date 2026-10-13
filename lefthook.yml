@@ -31,6 +31,8 @@ pre-push:
         dart tool/check_commit_msg.dart --range "$(git merge-base origin/main HEAD)..HEAD"
     - name: documentazione
       run: dart tool/check_docs.dart
+    - name: commenti
+      run: dart tool/check_comments.dart
     - name: nessun sottomodulo nell'indice
       run: "! git ls-files -s | grep -q '^160000'"
     - name: test

@@ -315,7 +315,7 @@ Map<String, int> regressions(Map<String, int> current, Map<String, int> base) =>
         if (e.value > (base[e.key] ?? 0)) e.key: e.value,
     };
 
-/// Cartelle in cui i testi fissi sono scesi sotto la base (con il nuovo conteggio).
+/// Cartelle in cui i testi fissi sono scesi sotto la base.
 Map<String, int> improvements(
   Map<String, int> current,
   Map<String, int> base,

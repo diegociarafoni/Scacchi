@@ -31,7 +31,7 @@ class RokkoTokens extends ThemeExtension<RokkoTokens> {
   /// Giallo delle stelline: accenti rari (premi, serie, mascotte).
   final Color star;
 
-  /// Verde storico: solo per la scacchiera, mai per i comandi.
+  /// Verde classico: solo per la scacchiera, mai per i comandi.
   final Color boardGreen;
   final double radiusSmall;
   final double radiusLarge;

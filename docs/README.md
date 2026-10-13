@@ -38,6 +38,7 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | [localizzazione.md](localizzazione.md) | Lingua predefinita e come aggiungere testi e lingue |
 | [glossario-scacchistico.md](glossario-scacchistico.md) | Termini scacchistici e regole di stile in italiano, inglese, spagnolo e francese |
 | [glossario-portoghese.md](glossario-portoghese.md) | Termini scacchistici e regole di stile in portoghese del Brasile |
+| [backlog.md](backlog.md) | Backlog unico: requisiti, stato, priorità, dimensione e versione prevista |
 | [sviluppo.md](sviluppo.md) | Ambiente, comandi, test, CI e convenzioni |
 | [convenzioni-git.md](convenzioni-git.md) | Rami, commit Angular, hook locali, merge e protezione di `main` |
 | [qualita.md](qualita.md) | Copertura, golden test, accessibilità e relativi limiti |
@@ -105,4 +106,4 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | Avatar con foto propria | Disponibile |
 | Nome Rokko, icona e schermata di avvio chiara e scura | Disponibile (vedi [identita-visiva.md](identita-visiva.md)) |
 
-I requisiti completi sono nel documento dei requisiti del progetto.
+Le funzioni ancora da fare, con stato, priorità, dimensione e versione prevista, sono nel [backlog](backlog.md).

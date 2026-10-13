@@ -5,11 +5,9 @@ import 'package:flutter/widgets.dart';
 
 import 'settings.dart';
 
-/// Cornice con le coordinate fuori dalla scacchiera, come nei libri: le
-/// lettere sotto e i numeri a sinistra non coprono mai i pezzi. Senza
-/// [outside] passa a [builder] tutta la [size]. Con uno [backdrop] diverso da
-/// quello standard la scacchiera poggia su quello sfondo, in un margine che le
-/// toglie [backdropRatio] per lato.
+/// Cornice con le coordinate fuori dalla scacchiera, così non coprono i pezzi.
+/// Senza [outside] passa a [builder] tutta la [size]; con un [backdrop]
+/// diverso dallo standard toglie [backdropRatio] per lato come margine.
 class BoardFrame extends StatelessWidget {
   const BoardFrame({
     super.key,

@@ -23,6 +23,7 @@ flutter test integration_test/app_test.dart -d linux  # un file e2e (su Linux se
 flutter analyze --fatal-infos --fatal-warnings  # analisi statica, come in CI
 dart format lib test integration_test tool      # formattazione, come in CI
 dart tool/check_docs.dart             # link, percorsi, indice e mappa del codice
+dart tool/check_comments.dart         # commenti: concorrenti, PR, promemoria senza motivo
 dart tool/stringhe_fisse.dart         # i testi italiani scritti nel codice non possono aumentare
 dart tool/l10n_stato.dart             # copertura delle traduzioni per lingua
 tool/verifica.sh --test               # tutti i controlli veloci della CI prima del push
@@ -44,7 +45,7 @@ Si rigenerano con `tool/generate_icons.py` e i due generatori Flutter, come desc
 
 ### Metodo: prima i test
 
-Ogni funzione nasce dai requisiti del progetto, nel documento dei requisiti, con questo ordine:
+Ogni funzione nasce dai requisiti del progetto, nel [backlog](backlog.md), con questo ordine:
 
 1. Si scrivono i test che descrivono il comportamento richiesto, citando nel nome l'identificativo del requisito (per esempio `RF-32 patta concordata`).
 2. Si eseguono e si verifica che falliscano per la ragione attesa.

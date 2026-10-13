@@ -3,7 +3,7 @@
   "@avatarPhotoTitle": {
     "description": "Titolo della sezione per usare una foto propria come avatar (RP-09)"
   },
-  "avatarPhotoHint": "La foto resta solo su questo telefono: non viene inviata né salvata nel backup.",
+  "avatarPhotoHint": "La foto resta su questo telefono e non viene mai inviata: entra solo nel file di backup che crei tu.",
   "@avatarPhotoHint": {
     "description": "Rassicurazione sulla privacy della foto del profilo"
   },

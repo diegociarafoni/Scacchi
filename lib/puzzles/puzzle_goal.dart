@@ -1,6 +1,6 @@
 import 'puzzle.dart';
 
-/// Che cosa si deve ottenere in un puzzle, ricavato dai temi Lichess.
+/// Che cosa si deve ottenere in un puzzle, ricavato dai temi del database aperto dei puzzle.
 enum PuzzleGoal {
   mateIn1,
   mateIn2,

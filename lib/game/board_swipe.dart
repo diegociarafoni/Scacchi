@@ -2,10 +2,9 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/widgets.dart';
 
 /// Rileva lo scorrimento orizzontale su una scacchiera di lato [size] senza
-/// contendere i gesti alla scacchiera: se il dito parte da una casa in cui
-/// [canStartAt] è vero (un pezzo da muovere) il gesto è un trascinamento e viene
-/// ignorato. [onSwipe] riceve -1 per scorrere a destra (indietro) e 1 per
-/// scorrere a sinistra (avanti).
+/// contendere i gesti alla scacchiera: se parte da una casa con [canStartAt]
+/// vero (un pezzo da muovere) è un trascinamento e si ignora. [onSwipe]
+/// riceve -1 scorrendo a destra (indietro) e 1 a sinistra (avanti).
 class BoardSwipe extends StatefulWidget {
   const BoardSwipe({
     super.key,
