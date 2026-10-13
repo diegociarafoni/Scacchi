@@ -1,0 +1,369 @@
+{
+  "storyTitle": "Verhaal",
+  "storyEntrySubtitle": "Een reis in hoofdstukken: lessen, puzzels en uitdagingen",
+  "storyChapterNumber": "Hoofdstuk {n}",
+  "@storyChapterNumber": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "storyProgress": "{done} hoofdstukken van de {total}",
+  "@storyProgress": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyChapterLocked": "Gaat open als je het vorige hoofdstuk afrondt",
+  "storyChapterDone": "Hoofdstuk afgerond",
+  "storyContinue": "Verder",
+  "storyFinished": "Het verhaal is uit. Lessen, puzzels en partijen blijven beschikbaar in de rest van de app.",
+  "storyStepLessons": "Lessen: {value} van {total}",
+  "@storyStepLessons": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyStepPuzzles": "Hoofdstukpuzzels: {value} van {total}",
+  "@storyStepPuzzles": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyStepGuardian": "De bewaker van het hoofdstuk",
+  "storyStepBoss": "Daag {name} uit",
+  "@storyStepBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyStepDone": "klaar",
+  "storyStepTodo": "te doen",
+  "storyStepLocked": "vergrendeld",
+  "storyStepLockedHint": "Rond eerst de vorige stap af.",
+  "storyEngineMissing": "Uitdagingen speel je waar de computertegenstander draait: Android en iOS, of Windows en Linux met Stockfish geïnstalleerd.",
+  "storyBossWon": "Je hebt {name} verslagen!",
+  "@storyBossWon": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyBossLost": "{name} houdt voorlopig stand: probeer het opnieuw wanneer je wilt.",
+  "@storyBossLost": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPuzzlesNone": "De puzzels konden niet worden geladen: probeer het opnieuw.",
+  "storyPrologueTitle": "Het pad van de eerste stappen",
+  "storyPrologueIntro": "Voor het dorp ligt een pad, en op het pad wacht een nieuwsgierig kuiken. Leer samen met hem hoe elk stuk zet: toren, loper, dame, koning, paard en pion.",
+  "storyPrologueBoss": "{name}, het kuiken van het pad, wil een partijtje spelen om de nieuwe stukken uit te proberen.",
+  "@storyPrologueBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPrologueOutro": "De stukken hebben geen geheimen meer voor je. Het dorp aan de voet van de vesting is nog maar een paar stappen weg.",
+  "storyVillageTitle": "Het dorp van de stukken",
+  "storyVillageIntro": "Je bereikt het dorp aan de voet van de vesting van Rokko. De dorpelingen spelen de hele dag, maar laten stukken onbeschermd staan: leer slaan en verdedigen, en laat dan zien dat je een onbeschermd stuk kunt ontdekken.",
+  "storyVillageBoss": "{name}, de dorpswachter, daagt je uit om te zien of je het echt hebt geleerd.",
+  "@storyVillageBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyVillageOutro": "Het dorp geeft een feest ter ere van jou. De weg naar de stadspoorten ligt open.",
+  "storyGatesTitle": "De stadspoorten",
+  "storyGatesIntro": "De wachters houden je tegen bij de poorten: om binnen te komen moet je de regels kennen, van schaak tot rokade. Een tijdig opgemerkte promotie opent zelfs de hoogste poort.",
+  "storyGatesBoss": "{name}, de kapitein van de wachters, wil je eerst testen voordat hij je doorlaat.",
+  "@storyGatesBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyGatesOutro": "De poorten zwaaien open. Voor je rijst de toren van de koning op.",
+  "storyTowerTitle": "De toren van de koning",
+  "storyTowerIntro": "De koning woont boven in de toren, en hij weet zich te verdedigen. Leer de matzettingen die hem insluiten, ook als zijn eigen stukken een muur vormen.",
+  "storyTowerBoss": "{name}, het paard dat dol is op gambieten, wacht je boven aan de trap op.",
+  "@storyTowerBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyTowerOutro": "De koning van de toren is schaakmat. Het bos met zijn valstrikken wacht nog.",
+  "storyForestTitle": "Het bos vol valstrikken",
+  "storyForestIntro": "In het bos verbergt elk stuk een valstrik: vorken, penningen, spiesen. Leer ze te zien vóór iemand anders dat doet.",
+  "storyForestBoss": "{name}, de gids van het bos, kent elk pad en elke strik.",
+  "@storyForestBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyForestOutro": "Je bent het bos door gekomen zonder in één valstrik te trappen. Het kasteel wacht.",
+  "storyCastleTitle": "Het kasteel van de eindspelen",
+  "storyCastleIntro": "In het kasteel staan nog maar weinig stukken op het bord en telt elke zet. Hier ontdekken we wie een partij kan afmaken.",
+  "storyCastleBoss": "{name}, de kasteelheer, bewaakt de ingang van de kroonzaal.",
+  "@storyCastleBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyCastleOutro": "De grote deur gaat open: de kroon is dichtbij.",
+  "storyCrownTitle": "De kroon",
+  "storyCrownIntro": "De kroonzaal. Een goed begin is het halve werk: het centrum, de ontwikkeling, de rokade.",
+  "storyCrownBoss": "{name}, de bewaarder van de kroon, speelt openingen als geen ander.",
+  "@storyCrownBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyCrownOutro": "De kroon is van jou. Maar voorbij de muren ligt nog een vlakte die verkend wil worden.",
+  "storyChapterCurrent": "Bezig",
+  "@storyChapterCurrent": {
+    "description": "Etichetta del capitolo corrente nella storia"
+  },
+  "storyChapterSteps": "{done} stappen van de {total}",
+  "@storyChapterSteps": {
+    "description": "Passi conclusi di un capitolo, per la barra di avanzamento",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyPassageLessonsTitle": "Lessen klaar!",
+  "@storyPassageLessonsTitle": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassagePuzzlesTitle": "Puzzels opgelost!",
+  "@storyPassagePuzzlesTitle": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageGuardianTitle": "Bewaker verslagen!",
+  "@storyPassageGuardianTitle": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageNextPuzzles": "Je hebt geleerd wat nodig is. Test jezelf nu met de puzzels van het hoofdstuk.",
+  "@storyPassageNextPuzzles": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageNextGuardian": "Nu wacht de bewaker van het hoofdstuk.",
+  "@storyPassageNextGuardian": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageNextBoss": "Je bent klaar: {name} wacht op je voor de laatste uitdaging van het hoofdstuk.",
+  "@storyPassageNextBoss": {
+    "description": "Foglio di passaggio della storia",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPassageGoPuzzles": "Naar de puzzels",
+  "@storyPassageGoPuzzles": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageGoGuardian": "Daag de bewaker uit",
+  "@storyPassageGoGuardian": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyChallengeTitle": "De uitdaging van {name}",
+  "@storyChallengeTitle": {
+    "description": "Foglio della sfida al custode",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPassageGoBoss": "Daag {name} uit",
+  "@storyPassageGoBoss": {
+    "description": "Foglio di passaggio della storia",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPassageLater": "Later",
+  "@storyPassageLater": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageChapterTitle": "Hoofdstuk {n} klaar!",
+  "@storyPassageChapterTitle": {
+    "description": "Foglio di passaggio della storia",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "storyPassageChapterNext": "Hoofdstuk {n} gaat open: {title}.",
+  "@storyPassageChapterNext": {
+    "description": "Foglio di passaggio della storia",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPassageGoChapter": "Naar het volgende hoofdstuk",
+  "@storyPassageGoChapter": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageStoryDone": "Je hebt het verhaal uitgespeeld!",
+  "@storyPassageStoryDone": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageClose": "Sluiten",
+  "@storyPassageClose": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPlainTitle": "De vlakte van de plannen",
+  "@storyPlainTitle": {
+    "description": "storyPlainTitle"
+  },
+  "storyPlainIntro": "Voorbij de kroon ligt een rustige vlakte waar gevechten gewonnen worden voordat ze beginnen: je hebt een plan nodig, actieve stukken en een beetje geduld.",
+  "@storyPlainIntro": {
+    "description": "storyPlainIntro"
+  },
+  "storyPlainBoss": "{name}, de wolf van de vlakte, bereidt elke aanval voor met een gambiet en een nauwkeurig plan.",
+  "@storyPlainBoss": {
+    "description": "storyPlainBoss",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPlainOutro": "De vlakte is van jou. Nu weet je dat elk stuk een taak heeft en elke zet een reden.",
+  "@storyPlainOutro": {
+    "description": "storyPlainOutro"
+  },
+  "storyAcademyTitle": "De academie van de meester",
+  "@storyAcademyTitle": {
+    "description": "storyAcademyTitle"
+  },
+  "storyAcademyIntro": "Boven op de heuvel woont een oude meester die lesgeeft met een paar principes: tel de zetten, zoek de oppositie, vergeet nooit de openingsregels.",
+  "@storyAcademyIntro": {
+    "description": "storyAcademyIntro"
+  },
+  "storyAcademyBoss": "{name}, de ster van de academie, valt onophoudelijk aan en vergeeft geen enkele fout.",
+  "@storyAcademyBoss": {
+    "description": "storyAcademyBoss",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyAcademyOutro": "De academie verwelkomt je als een van haar eigen leerlingen. Het verhaal is uit, maar het spel gaat door.",
+  "@storyAcademyOutro": {
+    "description": "storyAcademyOutro"
+  },
+  "@storyCrownIntro": {
+    "description": "storyCrownIntro"
+  },
+  "@storyCrownOutro": {
+    "description": "storyCrownOutro"
+  },
+  "storyGuardianPrologueWelcome": "Hoi, ik ben Tino! Ik laat je zien hoe elk stuk zet.",
+  "storyGuardianProloguePuzzleOk": "Goed zo! Je weet nu al hoe de stukken zetten.",
+  "storyGuardianProloguePuzzleRetry": "Bijna! Kijk waar elk stuk heen kan en probeer het opnieuw.",
+  "storyGuardianPrologueBoss": "Zullen we een partijtje spelen? Ik begin rustig, dat beloof ik.",
+  "storyGuardianPrologueLessonDone": "Nu ken je de stukken. Laat maar zien hoe je ze gebruikt.",
+  "storyGuardianVillageWelcome": "Welkom in het dorp! Hier leer ik je geen stukken onbeschermd te laten staan.",
+  "storyGuardianVillagePuzzleOk": "Goed gedaan, je zag het meteen!",
+  "storyGuardianVillagePuzzleRetry": "Bijna: zoek het onbeschermde stuk.",
+  "storyGuardianVillageBoss": "Nu zijn wij aan de beurt. Ik ben dol op het Italiaans, pas op!",
+  "storyGuardianVillageLessonDone": "Knap, geen losse stukken. Tijd om te testen.",
+  "storyGuardianGatesWelcome": "Alleen wie de regels kent, komt door de poorten. We lopen ze op volgorde door.",
+  "storyGuardianGatesPuzzleOk": "Precies: een promotie op het juiste moment.",
+  "storyGuardianGatesPuzzleRetry": "Nog niet: bekijk de regels nog eens en probeer het opnieuw.",
+  "storyGuardianGatesBoss": "Een partij om het te controleren: ik speel het Damegambiet.",
+  "storyGuardianGatesLessonDone": "Je kent de regels. De puzzels wachten.",
+  "storyGuardianTowerWelcome": "Deze toren beklim je met matzettingen. Laten we beginnen.",
+  "storyGuardianTowerPuzzleOk": "Schaakmat! Recht op het doel af.",
+  "storyGuardianTowerPuzzleRetry": "Nee, kijk naar de koning: waar kan hij niet heen?",
+  "storyGuardianTowerBoss": "Genoeg theorie: laten we spelen. Ik val aan met het Koningsgambiet.",
+  "storyGuardianTowerLessonDone": "Je ziet hoe je mat zet. Zoek nu de verborgen matzetten.",
+  "storyGuardianForestWelcome": "In het bos verbergt elke tak een valstrik. Houd je ogen open!",
+  "storyGuardianForestPuzzleOk": "Ha, je trapte niet in de valstrik. Goed gedaan!",
+  "storyGuardianForestPuzzleRetry": "Oeps, de valstrik werkte. Probeer het opnieuw!",
+  "storyGuardianForestBoss": "Eens kijken of je er zelf een kunt zetten. Ik speel het Engels.",
+  "storyGuardianForestLessonDone": "Valstrikken foppen je niet meer. Oefen nu met ze zetten.",
+  "storyGuardianCastleWelcome": "In eindspelen telt elke zet. Rustig, stap voor stap.",
+  "storyGuardianCastlePuzzleOk": "Geduldig en nauwkeurig: zo win je een eindspel.",
+  "storyGuardianCastlePuzzleRetry": "Geen haast: tel de zetten en probeer het opnieuw.",
+  "storyGuardianCastleBoss": "Een rustige partij wacht ons. Ik speel het Siciliaans.",
+  "storyGuardianCastleLessonDone": "Weinig stukken, elke zet telt. Nu de puzzels.",
+  "storyGuardianCrownWelcome": "De kroon win je vanaf het begin: een elegante opening is een half spel.",
+  "storyGuardianCrownPuzzleOk": "Elegant: dat is de juiste zet.",
+  "storyGuardianCrownPuzzleRetry": "Bijna: denk aan het ontwikkelen van je stukken en probeer het opnieuw.",
+  "storyGuardianCrownBoss": "Mag ik een partijtje? Ik kies het Spaans.",
+  "storyGuardianCrownLessonDone": "Centrum, ontwikkeling, rokade: alles is van jou. Nu de puzzels.",
+  "storyGuardianPlainWelcome": "Op de vlakte win je met een plan. Ik laat je zien hoe.",
+  "storyGuardianPlainPuzzleOk": "Precies. Een helder plan wint van haast.",
+  "storyGuardianPlainPuzzleRetry": "Bijna. Bedenk wat je stuk wil.",
+  "storyGuardianPlainBoss": "Zullen we spelen? Let op: ik ben dol op het Evans-gambiet.",
+  "storyGuardianPlainLessonDone": "Je hebt een plan en actieve stukken. Nu de puzzels.",
+  "storyGuardianAcademyWelcome": "Op de academie leer je van de meesters. Kom op, laat zien wat je kunt!",
+  "storyGuardianAcademyPuzzleOk": "Geweldig! Zo spelen meesters.",
+  "storyGuardianAcademyPuzzleRetry": "Geef niet op: adem even in en probeer het opnieuw.",
+  "storyGuardianAcademyBoss": "De laatste uitdaging: ik speel het Koningsindisch. Geen kortingen!",
+  "storyGuardianAcademyLessonDone": "Lessen af, leerling. Nu de test in de praktijk.",
+  "storyGuardianSays": "{name} zegt: {text}",
+  "@storyGuardianSays": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "text": {
+        "type": "String"
+      }
+    }
+  }
+}
