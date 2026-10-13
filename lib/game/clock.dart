@@ -26,6 +26,15 @@ class TimeControl {
     TimeControl(minutes: 30),
   ];
 
+  /// Le cadenze predefinite raggruppate per famiglia, nell'ordine dell'elenco.
+  static Map<TimeCategory, List<TimeControl>> get presetsByCategory {
+    final groups = <TimeCategory, List<TimeControl>>{};
+    for (final t in presets) {
+      groups.putIfAbsent(t.category, () => []).add(t);
+    }
+    return groups;
+  }
+
   String get label => '$minutes+$increment';
 
   TimeCategory get category => switch (minutes) {

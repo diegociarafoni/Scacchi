@@ -331,6 +331,8 @@ enum PieceStyle {
   papercut('Papercut', 'Nikolay Anzarov', 'CC BY 4.0'),
   noto('Noto', 'Google (Noto Sans Symbols 2)', 'OFL-1.1');
 
+  /// [label] è il nome proprio del set; quello classico è tradotto da
+  /// `pieceLabel` in `settings_labels.dart`.
   const PieceStyle(this.label, this.author, this.license, [this.pieceSet]);
 
   final String label;

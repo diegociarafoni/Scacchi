@@ -897,10 +897,7 @@ class _OptionsSheetState extends State<_OptionsSheet> {
     final l10n = _l10n(context);
     final theme = Theme.of(context);
     final kid = _page.widget.kidMode;
-    final groups = <TimeCategory, List<TimeControl>>{};
-    for (final t in TimeControl.presets) {
-      groups.putIfAbsent(t.category, () => []).add(t);
-    }
+    final groups = TimeControl.presetsByCategory;
     Widget title(String text) => Padding(
       padding: const EdgeInsets.only(top: 16, bottom: 8),
       child: Semantics(

@@ -3785,10 +3785,7 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
     final l10n = _l10n(context);
     final l = widget.kid ? l10n : null;
     final noClock = l?.kidGameNoClock ?? l10n.gameNoClock;
-    final groups = <TimeCategory, List<TimeControl>>{};
-    for (final t in TimeControl.presets) {
-      groups.putIfAbsent(t.category, () => []).add(t);
-    }
+    final groups = TimeControl.presetsByCategory;
     Widget chip(String label, TimeControl? control) => ActionChip(
       label: Text(label),
       onPressed: () => Navigator.pop(
@@ -4205,10 +4202,7 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
       selected: control == value,
       onSelected: enabled ? (_) => onChanged(value) : null,
     );
-    final groups = <TimeCategory, List<TimeControl>>{};
-    for (final t in TimeControl.presets) {
-      groups.putIfAbsent(t.category, () => []).add(t);
-    }
+    final groups = TimeControl.presetsByCategory;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

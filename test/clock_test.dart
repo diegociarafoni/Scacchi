@@ -20,9 +20,16 @@ void main() {
       const TimeControl(minutes: 15, increment: 10).category,
       TimeCategory.rapid,
     );
-    for (final c in TimeCategory.values) {
-      expect(timeCategoryName(it, c), isNotEmpty);
-    }
+    final en = lookupAppLocalizations(const Locale('en'));
+    expect(TimeControl.presetsByCategory.keys, TimeCategory.values);
+    expect(
+      [for (final c in TimeCategory.values) timeCategoryName(it, c)],
+      ['Bullet', 'Blitz', 'Rapid'],
+    );
+    expect(
+      [for (final c in TimeCategory.values) timeCategoryName(en, c)],
+      ['Bullet', 'Blitz', 'Rapid'],
+    );
   });
 
   test('RF-40 cadenze predefinite', () {
