@@ -2,7 +2,7 @@
 
 ## Requisiti
 
-- [Flutter](https://docs.flutter.dev/get-started/install), canale stable, versione 3.47 o successiva (la CI usa 3.47.7).
+- [Flutter](https://docs.flutter.dev/get-started/install), canale stable, versione 3.47.7, quella della CI.
 - Per Android: Android Studio o Android SDK, Java 17.
 - Per iOS e macOS: un Mac con Xcode, oppure un servizio di build in cloud.
 - Per Linux desktop: le librerie di sviluppo GTK 3 e GStreamer (`libgtk-3-dev`, `libgstreamer1.0-dev`, `libgstreamer-plugins-base1.0-dev`) e, per riprodurre i suoni, i plugin `gstreamer1.0-plugins-base` e `gstreamer1.0-plugins-good`: senza questi ultimi l'app si chiude al primo suono.
@@ -18,13 +18,19 @@ flutter pub get                       # dipendenze
 dart tool/l10n.dart                   # testi tradotti: dopo ogni modifica ai .arb o cambio di ramo
 flutter run                           # avvio sul dispositivo o emulatore collegato
 flutter test                          # test unitari e di widget
-flutter test integration_test -d linux  # test e2e (su Linux senza schermo: xvfb-run -a ...)
+flutter test --exclude-tags golden    # senza i golden, come negli hook locali
+flutter test integration_test/app_test.dart -d linux  # un file e2e (su Linux senza schermo: xvfb-run -a ...)
 flutter analyze --fatal-infos --fatal-warnings  # analisi statica, come in CI
 dart format lib test integration_test tool      # formattazione, come in CI
 dart tool/check_docs.dart             # link, percorsi, indice e mappa del codice
+dart tool/stringhe_fisse.dart         # i testi italiani scritti nel codice non possono aumentare
+dart tool/l10n_stato.dart             # copertura delle traduzioni per lingua
+tool/verifica.sh --test               # tutti i controlli veloci della CI prima del push
 flutter build apk                     # APK Android
 flutter build ios                     # app iOS (su Mac)
 ```
+
+Gli altri script di `tool/`: `check_coverage.dart`, `check_licenses.dart`, `check_apk.dart`, `check_size.dart`, `check_performance.dart` e `check_mobsf.dart` sono i controlli della CI (vedi [qualita.md](qualita.md) e [sicurezza.md](sicurezza.md)); `check_branch_name.dart` e `check_commit_msg.dart` quelli di rami e commit ([convenzioni-git.md](convenzioni-git.md)); `derive_keystore.py` ricava la chiave di firma ([rilascio-android.md](rilascio-android.md)); `datasets/` rigenera puzzle e aperture ([puzzle.md](puzzle.md)); `board_art/` genera le immagini di pezzi e scacchiere ([pezzi-e-scacchiere.md](pezzi-e-scacchiere.md)); `calibrate_test.dart` misura la forza relativa dei livelli (`CAL_A=3 CAL_B=4 CAL_GAMES=10 flutter test tool/calibrate_test.dart`, vedi [avversario-computer.md](avversario-computer.md)). `policy.json` raccoglie i limiti numerici, `lingue.json` lo stato delle lingue ([localizzazione.md](localizzazione.md)).
 
 ## Suoni
 
@@ -53,31 +59,38 @@ Ogni funzione nasce dai requisiti del progetto, nel [backlog](backlog.md), con q
 | Unitari | `test/engine/` | Protocollo UCI, scelta delle mosse, `ComputerPlayer` con motore finto e con Stockfish reale (se installato), `VariantEngine` nelle varianti | `flutter test` |
 | Widget | `test/analysis/` | Schermata di analisi con motore finto: linee, MultiPV, esplorazione, albero delle varianti (promozione, eliminazione), pausa, freccia | `flutter test` |
 | Unitari e widget | `test/review/` | Probabilità di vittoria, classificazione, sacrifici, precisione, revisione con motore finto, schermata di revisione e accesso dal menu | `flutter test` |
-| Widget | `test/widget_test.dart`, `test/l10n_test.dart` | Avvio dell'app e stato iniziale; lingua italiana predefinita | `flutter test` |
+| Widget | `test/widget_test.dart`, `test/l10n_test.dart`, `test/l10n_ui_english_test.dart` | Avvio dell'app e stato iniziale; lingua italiana predefinita; interfaccia in inglese | `flutter test` |
 | Unitari | `test/branding_test.dart` | Nome Rokko su Android e iOS, identificativo invariato, icona monocromatica | `flutter test` |
-| Widget | `test/computer_game_test.dart` | Partita contro il computer con un motore finto | `flutter test` |
-| Gamification | `test/progress/` | Regole di XP, serie (anche la sua spiegazione in parole) e traguardi; salvataggio; schermata Profilo | `flutter test test/progress` |
+| Widget | `test/computer_game_test.dart`, `test/adaptive_game_test.dart`, `test/bot_game_test.dart`, `test/kid_bot_game_test.dart` | Partita contro il computer, l'avversario adattivo e i bot con un motore finto | `flutter test` |
+| Gamification | `test/progress/` | Regole di XP, serie (anche la sua spiegazione in parole) e traguardi; sfide, record, avatar; salvataggio; schermata Profilo | `flutter test test/progress` |
+| Badge | `test/badges/` | Catalogo, sblocco, schermata e accesso dalla scheda Tu, libri di aperture | `flutter test test/badges` |
+| Galleria dei bot | `test/bot_gallery/` | Galleria, fasce, frasi di saluto, avvio della partita dal foglio «Nuova partita» | `flutter test test/bot_gallery` |
 | Percorso | `test/path/` | Esercizi, contenuti, sblocco, mappa e tappe sulla scacchiera | `flutter test test/path` |
 | Storia | `test/story/`, `test/home/home_story_test.dart` | Capitoli e avanzamento, salvataggio, puzzle del tema, schermata e accesso dalla Home | `flutter test test/story test/home/home_story_test.dart` |
 | Statistiche | `test/stats/` | Bilancio, rating locale, schermata | `flutter test test/stats` |
 | Minigiochi | `test/minigames/` | Generazione risolvibile, risposte, schermate, registrazione dei punteggi | `flutter test test/minigames` |
-| Scheda Tu | `test/home/` | Scheda Tu (solo dati) e voci della Home: guardiani del percorso, tornei contro il motore finto, apertura di una partita dell'archivio nella revisione | `flutter test test/home` |
+| Home e scheda Tu | `test/home/` | Home a dashboard e scheda Tu (solo dati); voci della Home: guardiani del percorso, tornei contro il motore finto, apertura di una partita dell'archivio nella revisione | `flutter test test/home` |
+| Partita | `test/game/` | Controlli di gioco, ripresa, rivincita, handicap, varianti, istruttore, profilo bambino, immagine e QR della partita | `flutter test test/game` |
 | Tornei | `test/tournament/` | Abbinamenti, simulazione, spareggi, salvataggio, schermata | `flutter test test/tournament` |
 | Scacchiera per esercizi | `test/training/` | Tema, pezzi e coordinate presi dalle impostazioni, senza capovolgere i pezzi | `flutter test test/training` |
-| Sicurezza | `test/security/` | Controlli OWASP MASVS sui sorgenti: permessi, log, SDK vietati, esportazioni (vedi sicurezza.md) | `flutter test test/security` |
+| Sicurezza | `test/security/` | Controlli OWASP MASVS sui sorgenti: permessi, log, SDK vietati, esportazioni (vedi [sicurezza.md](sicurezza.md)) | `flutter test test/security` |
 | Archivio | `test/archive/` | PGN, salvataggio su file, schermata Partite | `flutter test test/archive` |
-| Scambio QR | `test/exchange/`, `test/game/game_qr_test.dart` | Fotogrammi QR, validazione dei dati letti, schermate Passa e Ricevi, partita continuata (vedi scambio-qr.md) | `flutter test test/exchange` |
+| Scambio QR | `test/exchange/`, `test/game/game_qr_test.dart` | Fotogrammi QR, validazione dei dati letti, schermate Passa e Ricevi, partita continuata (vedi [scambio-qr.md](scambio-qr.md)) | `flutter test test/exchange` |
 | Allenatore | `test/coach/` | Avvisi, Riprova e Continua, suggerimento a livelli, frasi in parole semplici | `flutter test test/coach` |
 | Puzzle | `test/puzzles/` | Dataset, Glicko-2, sessioni, Storm, Rush e Serie, ripasso, spiegazione delle modalità, sfida a tempo tra amici (messaggi QR, stessi puzzle dallo stesso seme, lancio, ricezione, confronto) | `flutter test test/puzzles` |
-| Grandi maestri | `test/masters/` | Legalità e risultato di ogni partita della raccolta, «Indovina la mossa», progresso, schermate (vedi grandi-maestri.md) | `flutter test test/masters` |
-| Aperture | `test/openings/` | Libro, nomi italiani, Esplora aperture, repertorio | `flutter test test/openings` |
+| Grandi maestri | `test/masters/` | Legalità e risultato di ogni partita della raccolta, «Indovina la mossa», progresso, schermate (vedi [grandi-maestri.md](grandi-maestri.md)) | `flutter test test/masters` |
+| Aperture | `test/openings/` | Libro, nomi italiani, Esplora aperture, statistiche, albero personale, repertorio | `flutter test test/openings` |
+| Finali | `test/endgames/`, `test/tablebase/` | Allenatore dei finali, progresso, tabelle dei finali perfetti | `flutter test test/endgames test/tablebase` |
 | Regole | `test/regole/` | Partite di riferimento e perft | `flutter test test/regole` |
-| Editor, backup, scacchiera fisica, promemoria | `test/editor/`, `test/backup/`, `test/physical/`, `test/reminders/` | FEN e validazione, backup e ripristino, orologio e registro, promemoria | `flutter test test/editor test/backup test/physical test/reminders` |
+| Editor, backup, scacchiera fisica, promemoria, immagine | `test/editor/`, `test/backup/`, `test/physical/`, `test/reminders/`, `test/share/` | FEN e validazione, backup e ripristino, orologio e registro, promemoria, posizione come immagine | `flutter test test/editor test/backup test/physical test/reminders test/share` |
+| Riepilogo e statistiche | `test/summary/`, `test/stats/` | Riepilogo settimanale, diario, ritratto della settimana, bilancio e rating | `flutter test test/summary test/stats` |
 | Profilo bambino | `test/kids/` | Niente numeri, scheda Tu semplificata | `flutter test test/kids` |
-| Strumenti | `test/tool/` | Controlli di rami, commit, documentazione e licenze | `flutter test test/tool` |
-| Multigiocatore | `test/multiplayer/` | Invito, firma e cifratura, registro delle mosse, canali multipli, sessione con passaggio tra canali (vedi multigiocatore.md) | `flutter test test/multiplayer` |
+| Strumenti | `test/tool/` | Controlli di rami, commit, documentazione, licenze, traduzioni, copertura, manifest e rapporto MobSF | `flutter test test/tool` |
+| Multigiocatore | `test/multiplayer/` | Invito, firma e cifratura, registro delle mosse, canali multipli, sessione con passaggio tra canali (vedi [multigiocatore.md](multigiocatore.md)) | `flutter test test/multiplayer` |
 | End-to-end | `integration_test/qr_exchange_test.dart` | QR disegnato dall'app letto da zxing-cpp, fotocamera assente | `flutter test integration_test/qr_exchange_test.dart -d linux` |
-| Golden | `test/settings/goldens/` | Menu delle Impostazioni su telefono piccolo, medio e grande e in tema scuro, pagina Scacchiera su tre telefoni, con e senza colori per daltonici, e gallerie di temi e pezzi | `flutter test test/settings` |
+| Impostazioni e Stile | `test/settings/`, `test/style/`, `test/theme/` | Menu a sezioni, anteprima della scacchiera, notazione, lingua dell'app, colori per daltonici, schermata Stile, tema; golden su telefono piccolo, medio e grande, in tema scuro e con colori per daltonici | `flutter test test/settings test/style test/theme` |
+| Accessibilità | `test/accessibility/` | Etichette, bersagli di tocco, contrasto, testo ingrandito (vedi [qualita.md](qualita.md)) | `flutter test test/accessibility` |
+| Golden | `test/golden/` | Partita, Home, galleria dei bot, badge, esploratore, puzzle, multigiocatore, istruttore su più schermi (vedi [qualita.md](qualita.md)) | `flutter test --tags golden test/golden` |
 | End-to-end | `integration_test/*_test.dart` | L'app reale avviata su un dispositivo o desktop, con tocchi e trascinamenti sulla scacchiera | `flutter test integration_test -d <dispositivo>` |
 | End-to-end | `integration_test/computer_test.dart` | Partite contro un vero Stockfish (processo esterno, richiede `stockfish` installato) | `flutter test integration_test/computer_test.dart -d linux` |
 
@@ -87,14 +100,14 @@ I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisic
 
 `ScacchiApp` si apre sulla Home a dashboard, non sulla scacchiera. Per questo i test e2e partono dalla Home e seguono gli stessi percorsi dell'utente con gli aiuti condivisi di `test/`:
 
-- `openBoard` (`test/game_actions.dart`) tocca «Nuova partita» e avvia una partita in due senza tempo;
-- `openCustomSheet` (`test/computer_fakes.dart`) apre dal foglio «Nuova partita» la scelta completa, per nomi, varianti e handicap, e `startComputerGame` avvia una partita contro il bot Adattivo;
+- `openBoard` (`test/game_actions.dart`) tocca «Nuova partita» (chiave `home-play`), apre da «Altre modalità» la scelta completa e avvia una partita in due senza tempo;
+- `openCustomSheet` (`test/computer_fakes.dart`) apre dal foglio «Nuova partita» la scelta completa, per nomi, varianti e handicap, `chooseAdaptiveComputer` sceglie il bot Adattivo e `startComputerGame` avvia la partita contro di lui;
 - una funzione della Home si apre con la chiave `home-feature-<id>` dopo averla portata in vista con `scrollUntilVisible`;
 - le Impostazioni sono un menu di sezioni: si entra in una pagina con la chiave `section-<nome>`.
 
 I messaggi a scomparsa (SnackBar) non vanno attesi con `pumpAndSettle`: le animazioni della partita fanno scorrere il tempo finto e il messaggio sparisce prima del controllo.
 
-I golden si rigenerano con `flutter test test/settings --update-goldens` dopo una modifica voluta dell'aspetto; il testo dei test è disegnato con il font Ahem, quindi le immagini non dipendono dai font del sistema. Vanno generati con la stessa versione di Flutter della CI (3.47.7) e riletti prima del commit.
+I golden si rigenerano con `--update-goldens` dopo una modifica voluta dell'aspetto (`flutter test test/settings --update-goldens`, `flutter test --tags golden test/golden test/style --update-goldens`); i test caricano Roboto e le icone Material dell'SDK (`test/support/golden_fonts.dart`), quindi le immagini non dipendono dai font del sistema. Vanno generati su Linux con la stessa versione di Flutter della CI (3.47.7) e riletti prima del commit.
 
 ### Copertura attuale dei requisiti
 
@@ -187,60 +200,50 @@ I golden si rigenerano con `flutter test test/settings --update-goldens` dopo un
 
 ## Integrazione continua
 
-Il workflow `.github/workflows/ci.yml` gira su ogni pull request, nella coda di merge e su ogni push su `main`, tranne quando cambiano solo `docs/`, file Markdown o `LICENSE`:
+Il workflow `.github/workflows/ci.yml` (chiamabile anche da altri workflow) gira su ogni pull request, nella coda di merge e su ogni push su `main`, tranne quando cambiano solo `docs/`, file Markdown o `LICENSE`:
 
-1. **test**, sempre: installa Stockfish (per i test d'integrazione del motore), verifica di localizzazione e formattazione, `flutter analyze`, `flutter test` con copertura (almeno 80% sulla logica di gioco, vedi [qualita.md](qualita.md)), licenze delle dipendenze. È il controllo bloccante di ogni PR.
-2. **e2e**, se i test passano: installa Stockfish ed esegue i test end-to-end sull'app Linux desktop con uno schermo virtuale (`xvfb`), un file alla volta perché avvii ravvicinati dell'app Linux nello stesso comando falliscono.
-3. **android**, se i test passano: libera spazio sul runner (la compilazione nativa di Stockfish con l'NDK lo esaurisce), compila un APK di debug solo arm64, ne controlla il manifest con `tool/check_apk.dart --debug` (permessi ed esportazioni, vedi [sicurezza.md](sicurezza.md)) e lo pubblica come artefatto `scacchi-debug-apk` per 7 giorni.
+1. **test**, sempre: installa Stockfish (per i test d'integrazione del motore), unisce i testi tradotti e ne controlla le lingue (`tool/l10n.dart --solo-unione`, `tool/stringhe_fisse.dart`, `tool/l10n_stato.dart`), formattazione, `flutter analyze --fatal-infos --fatal-warnings`, `flutter test` con copertura (almeno 80% sulla logica di gioco, vedi [qualita.md](qualita.md)), licenze delle dipendenze. È il controllo bloccante di ogni PR.
+2. **e2e**, se i test passano: installa Stockfish ed esegue i file `integration_test/*_test.dart` sull'app Linux desktop con uno schermo virtuale (`xvfb`), un file alla volta perché avvii ravvicinati dell'app Linux nello stesso comando falliscono.
+3. **android**, se i test passano: libera spazio sul runner (la compilazione nativa di Stockfish con l'NDK lo esaurisce), compila un APK di debug solo arm64 (con `ccache` per la parte nativa), ne controlla il manifest con `tool/check_apk.dart --debug` (permessi ed esportazioni, vedi [sicurezza.md](sicurezza.md)) e lo pubblica come artefatto `scacchi-debug-apk` per 7 giorni.
 
-e2e e android girano sempre su `main`; su una PR solo se la PR tocca i file che li riguardano (`integration_test/` o `linux/` per e2e, `android/` per android, `pubspec.*`, `ci.yml` e `ci-completa.yml` per entrambi) oppure se ha l'etichetta **`ci-completa`**: aggiungerla avvia subito tutta la CI con il workflow `ci-completa.yml`, senza bisogno di un nuovo push, e da lì in poi ogni push sulla PR la esegue per intero. L'etichetta si crea una volta in **Issues → Labels → New label**. I job avviati dall'etichetta compaiono come `ci / test`, `ci / e2e` e `ci / android` e devono essere verdi prima del merge. Conviene metterla sulle PR che cambiano molto l'interfaccia: senza, e2e gira solo dopo il merge su `main`.
+e2e e android girano sempre su `main`; su una PR (e nella coda di merge, sui file del gruppo) solo se tocca i file che li riguardano (`integration_test/` o `linux/` per e2e; `android/` e `tool/check_apk.dart`, `tool/policy.json`, `tool/src/` per android; `pubspec.*`, `ci.yml` e `ci-completa.yml` per entrambi) oppure se ha l'etichetta **`ci-completa`**: aggiungerla avvia subito tutta la CI con il workflow `ci-completa.yml`, senza bisogno di un nuovo push, e da lì in poi ogni push sulla PR la esegue per intero. L'etichetta si crea una volta in **Issues → Labels → New label**. I job avviati dall'etichetta compaiono come `ci / test`, `ci / e2e` e `ci / android` e devono essere verdi prima del merge. Conviene metterla sulle PR che cambiano molto l'interfaccia: senza, e2e gira solo dopo il merge su `main`.
 
 Fuori da `ci.yml`, alcuni controlli pesanti girano solo dove servono, descritti in [qualita.md](qualita.md): i test end-to-end su emulatore Android (workflow `E2E Android`, su `main`, a richiesta e sulle PR che toccano `integration_test/`, `android/`, `pubspec.*` o il workflow), la dimensione dell'APK nel workflow `Rilascio APK` (prima della pubblicazione) e la fluidità nel workflow `Prestazioni` (su `main`, sui tag e sulle PR che toccano la misura).
 
 ### Consumo di minuti
 
-Il repository è pubblico (vedi [sicurezza.md](sicurezza.md)): i runner standard non consumano minuti a pagamento, ma i job lunghi restano tempo di attesa per chi aspetta la CI. Le cifre sotto sono in minuti fatturati sul piano gratuito di un repository privato e servono come misura relativa. Per spenderne pochi:
+Il repository è pubblico (vedi [sicurezza.md](sicurezza.md)): i runner standard non consumano minuti a pagamento, ma i job lunghi restano tempo di attesa per chi aspetta la CI. Per ridurlo:
 
 - un nuovo push sulla stessa PR annulla il giro precedente ancora in corso (`concurrency`), su `main` invece ogni commit ha il suo giro completo;
 - e2e e build Android, i job lunghi, girano sulle PR solo quando servono (vedi sopra);
-- le modifiche alla sola documentazione non avviano la CI;
-- cache di Flutter e pub (`subosito/flutter-action`) e di Gradle (`setup-java`);
+- le modifiche alla sola documentazione non avviano la CI: resta il controllo della documentazione nel workflow `Convenzioni`;
+- cache di Flutter e pub (`subosito/flutter-action`), di Gradle (`setup-java`) e di `ccache` per la compilazione nativa;
 - APK di debug solo per arm64, come quello di rilascio;
 - solo runner Linux, che costano un decimo di quelli macOS;
 - ogni job ha un `timeout-minutes`, così un job bloccato non consuma le 6 ore predefinite.
-
-Durate misurate sulle esecuzioni dell'11 ottobre 2026, in minuti fatturati:
-
-| Evento | Prima | Dopo |
-|---|---|---|
-| Push su una PR che tocca solo `lib/` o `test/` | 23 (convenzioni 1, test 4, e2e 5, android 13) | 5 (convenzioni 1, test 4) |
-| Push su una PR che tocca `android/` o `pubspec.*` | 23 | circa 12 (android arm64 con cache di Gradle, stima) |
-| PR di sola documentazione | 23 | 1 (convenzioni) |
-| Merge su `main` | 22 | circa 16 |
-| PR tipica: 4 push e merge | 114 | circa 36 (−68%) |
-
-Con 2000 minuti al mese si passa da circa 17 a circa 55 PR tipiche. Per controllare il consumo: **Settings → Billing and plans → Usage** del proprio account GitHub.
 
 Con le regole di protezione di `main` attive (vedi [convenzioni-git.md](convenzioni-git.md)) un job saltato conta come superato, ma una PR di sola documentazione non avvia la CI e resterebbe in attesa dei controlli obbligatori: in quel caso va tolto `paths-ignore` dall'evento `pull_request`.
 
 Altri workflow:
 
-- **Convenzioni** (`conventions.yml`, su ogni PR aperta, meno di un minuto; su una PR già unita, per esempio dopo una modifica del titolo, il job si salta): nome del ramo, titolo della PR, messaggi dei commit, Gitleaks sui commit della PR e controllo della documentazione (anche sulle PR di sola documentazione), vedi [convenzioni-git.md](convenzioni-git.md) e [mappa-del-codice.md](mappa-del-codice.md).
+- **Convenzioni** (`conventions.yml`, su ogni PR aperta, meno di un minuto; su una PR già unita, per esempio dopo una modifica del titolo, il job si salta, e nella coda di merge non gira): nome del ramo, titolo della PR, messaggi dei commit, Gitleaks sui commit della PR e controllo della documentazione (anche sulle PR di sola documentazione), vedi [convenzioni-git.md](convenzioni-git.md) e [mappa-del-codice.md](mappa-del-codice.md).
+- **CI completa** (`ci-completa.yml`): all'aggiunta dell'etichetta `ci-completa` a una PR esegue tutta `ci.yml`.
 - **Sicurezza** (`security.yml`): Trivy, OSV-Scanner, Gitleaks su tutta la cronologia, zizmor e SBOM, su `main`, ogni lunedì, a mano e sulle PR che cambiano dipendenze, `.github/`, `android/`, `Gemfile*`, `tool/policy.json` o `.gitleaks.toml`, vedi [sicurezza.md](sicurezza.md).
-- **Changelog** (`release-please.yml`): changelog e proposta di versione con release-please.
+- **Changelog** (`release-please.yml`): changelog e proposta di versione con release-please, vedi [rilascio-android.md](rilascio-android.md).
 - **Scorecard** (`scorecard.yml`): valutazione OpenSSF Scorecard, vedi [sicurezza.md](sicurezza.md).
 - **MobSF** (`mobsf.yml`): analisi statica dell'APK con MobSF, vedi [sicurezza.md](sicurezza.md).
-- **Store** (`store.yml`, solo a mano): configurazione Fastlane per Google Play, vedi [rilascio-android.md](rilascio-android.md).
-- **Dataset** (`datasets.yml`, a mano o sulle PR che cambiano `tool/datasets/`): rigenera puzzle e aperture dai dati Lichess, vedi [puzzle.md](puzzle.md).
-
-Il workflow `.github/workflows/apk-release.yml` produce l'APK release installabile sul telefono e lo pubblica come GitHub Release: vedi [rilascio-android.md](rilascio-android.md).
+- **E2E Android** (`e2e-android.yml`): test end-to-end su emulatore, vedi [qualita.md](qualita.md).
+- **Prestazioni** (`prestazioni.yml`): budget dei tempi di costruzione dei fotogrammi, vedi [qualita.md](qualita.md).
+- **Rilascio APK** (`apk-release.yml`): APK firmato per le versioni numerate e il nightly, vedi [rilascio-android.md](rilascio-android.md).
+- **Store** (`store.yml`, solo a mano): configurazione Fastlane per Google Play, vedi [store.md](store.md).
+- **Dataset** (`datasets.yml`, a mano o sulle PR che cambiano `tool/datasets/`): rigenera puzzle, aperture e statistiche delle aperture dai dataset pubblici e fa il commit sul ramo della PR, vedi [puzzle.md](puzzle.md).
 
 ## Convenzioni
 
 - Nel codice solo commenti funzionali e brevi: cosa fa un elemento, non la sua storia o le motivazioni di progetto.
 - La documentazione completa sta in `docs/`, da aggiornare insieme al codice che descrive.
-- Testi dell'interfaccia in italiano.
+- Testi dell'interfaccia in italiano e inglese, nei file `.arb` per funzione di `lib/l10n/<lingua>/` (vedi [localizzazione.md](localizzazione.md)), non nel codice.
 - Logica di gioco separata dall'interfaccia (`ChessGame` non importa Flutter), così da poterla testare in isolamento.
 - Analisi statica rigorosa (`analysis_options.yaml`): tipi stretti, `Future` sempre attesi o marcati con `unawaited`, nessun avviso ammesso.
-- Prima del push: `tool/verifica.sh --test` (rami, commit, documentazione, formattazione, analisi, test), vedi [convenzioni-git.md](convenzioni-git.md#senza-hook-toolverificash).
+- Prima del push: `tool/verifica.sh --test` (rami, commit, documentazione, traduzioni, formattazione, analisi, test), vedi [convenzioni-git.md](convenzioni-git.md#senza-hook-toolverificash).
 - Rami, commit Angular, hook e merge: [convenzioni-git.md](convenzioni-git.md).

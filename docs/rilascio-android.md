@@ -1,22 +1,10 @@
 # Rilascio Android (APK)
 
-Il workflow `.github/workflows/apk-release.yml` compila un APK release per telefoni a 64 bit (arm64, cioè tutti i telefoni Android degli ultimi anni) e lo pubblica come allegato di una GitHub Release, scaricabile direttamente dal telefono. L'app installata si chiama **Rokko**; il file è `rokko.apk` (fino alla v0.4.0 si chiamava `scacchi.apk`). L'identificativo del pacchetto (`io.github.diegociarafoni.scacchi`) non cambia, altrimenti l'aggiornamento sopra le versioni già installate non sarebbe possibile.
+Il workflow `.github/workflows/apk-release.yml` compila un APK release per telefoni a 64 bit (arm64, cioè tutti i telefoni Android degli ultimi anni) e lo pubblica come allegato di una GitHub Release, scaricabile direttamente dal telefono. L'app installata si chiama **Rokko**; il file è `rokko.apk`. L'identificativo del pacchetto (`io.github.diegociarafoni.scacchi`) non cambia, altrimenti l'aggiornamento sopra le versioni già installate non sarebbe possibile.
 
 ## Versioni pubblicate
 
-| Versione | Novità principali |
-|---|---|
-| v0.1.x | Prime versioni, firmate con la chiave di debug: richiedono la disinstallazione prima dell'aggiornamento |
-| v0.2.0 | Prima versione con firma stabile: gli aggiornamenti si installano sopra |
-| v0.3.0 | Backup e ripristino, scacchiera fisica, La tua settimana |
-| v0.4.0 | Profilo bambino, tornei dalla scheda Tu, guardiano nel percorso, XP e archivio a fine partita, puzzle dagli errori, anteprima della scacchiera |
-| v0.5.0 | Nome Rokko e nuova icona, file `rokko.apk`, scambio di partite con il QR, allenatore dei finali, notazione a scelta, tema chiaro o scuro, tempo per mossa nella revisione |
-| v0.6.0 | Pezzi e scacchiere di Rokko, livelli tarati sull'Elo misurato, note personali sulle mosse, obiettivo di ogni puzzle |
-| v0.7.0 | Percorso a storia, finali perfetti, le tue aperture, varianti contro il computer, partite a handicap, posizione come immagine, sfida a tempo tra amici, spiegami perché |
-| v0.8.0 | Partite dei grandi maestri, riepilogo settimanale, modalità zen, ripresa della partita interrotta, capitoli di strategia e di Capablanca |
-| v0.8.1 | Partita con un amico sulla stessa Wi-Fi, correzioni del percorso |
-
-L'elenco completo con le note è nella pagina delle Release; lo stato delle funzioni già in `main` è in `docs/README.md`. La tabella riassume solo le versioni principali e va aggiornata a ogni rilascio.
+L'elenco delle versioni con le note è nella pagina delle Release e in `CHANGELOG.md`; lo stato delle funzioni già in `main` è in [README.md](README.md#stato-del-progetto). Le versioni firmate con la chiave stabile del progetto si installano una sopra l'altra (vedi [Firma](#firma)).
 
 ## Quando parte
 
@@ -24,10 +12,10 @@ L'elenco completo con le note è nella pagina delle Release; lo stato delle funz
 |---|---|
 | Push di un tag `vX.Y.Z` | Build e Release `vX.Y.Z` con `rokko.apk` e `rokko.apk.sha256` |
 | Avvio manuale (Actions → Rilascio APK → Run workflow) con **version** = `X.Y.Z` | Crea il tag `vX.Y.Z` sul commit del branch scelto e pubblica la Release; se il tag esiste già su un altro commit si ferma |
-| CI verde su `main` (evento `workflow_run`) | Pre-release `nightly` con `rokko.apk`, ricreata a ogni main: sostituisce la precedente |
+| CI verde su `main` (evento `workflow_run`) | Pre-release `nightly` con `rokko.apk`, aggiornata a ogni merge su `main` |
 | Avvio manuale con **version** vuoto | Solo build: l'APK resta per 7 giorni come artefatto dell'esecuzione |
 
-La versione mostrata dall'app (`versionName`) è quella del tag senza la `v`; il `versionCode` è il numero di commit nella cronologia del tag, quindi cresce a ogni versione successiva su `main`. Il rilascio parte solo se `flutter analyze` e `flutter test` passano, e un tag già esistente deve puntare al commit compilato. Prima della pubblicazione l'APK deve superare i controlli MASVS sul manifest (`tool/check_apk.dart`, vedi [sicurezza.md](sicurezza.md)) e il budget di dimensione (`tool/check_size.dart`, vedi [qualita.md](qualita.md)): un APK che non li supera non esce.
+La versione mostrata dall'app (`versionName`) è quella del tag senza la `v`; il `versionCode` è il numero di commit nella cronologia del tag, quindi cresce a ogni versione successiva su `main`. Se la CI non è già passata sul commit, il rilascio esegue prima `flutter analyze` e `flutter test`; un tag già esistente deve puntare al commit compilato. Prima della pubblicazione l'APK deve superare i controlli MASVS sul manifest (`tool/check_apk.dart`, vedi [sicurezza.md](sicurezza.md)) e il budget di dimensione (`tool/check_size.dart`, vedi [qualita.md](qualita.md)): un APK che non li supera non esce.
 
 I tag con suffisso (`v1.2.0-beta.1`) diventano pre-release. Gli altri sono la "latest release", per cui questo link porta sempre all'ultima versione stabile:
 
@@ -39,7 +27,7 @@ https://github.com/diegociarafoni/rokko/releases/latest/download/rokko.apk
 
 Il workflow `.github/workflows/release-please.yml` (release-please) tiene aperta su `main` una PR **«chore(main): release X.Y.Z»**. Contiene l'aggiornamento di `CHANGELOG.md` con le modifiche dall'ultima versione, raggruppate in Novità (`feat`), Correzioni (`fix`), Prestazioni (`perf`) e Annullamenti (`revert`); gli altri tipi di commit non compaiono. La versione proposta segue i commit: prima della 1.0 una novità alza la seconda cifra, una correzione la terza.
 
-**Unire la PR non pubblica nulla.** Release-please aggiorna `CHANGELOG.md`, `.release-please-manifest.json` e `version.txt`, crea il tag `vX.Y.Z` e una release **in bozza** con le note del changelog. Il tag è creato con il token del workflow, che non avvia altri workflow, quindi `Rilascio APK` non parte. La versione dell'app resta quella del tag: `pubspec.yaml` non viene toccato.
+**Unire la PR non pubblica nulla.** Release-please aggiorna `CHANGELOG.md` e `.release-please-manifest.json`, crea il tag `vX.Y.Z` e una release **in bozza** con le note del changelog. Il tag è creato con il token del workflow, che non avvia altri workflow, quindi `Rilascio APK` non parte. La versione dell'app resta quella del tag: `pubspec.yaml` non viene toccato.
 
 **La versione esce solo su richiesta.** Quando si decide di pubblicare: Actions → Rilascio APK → Run workflow, scegliendo come ramo il **tag** `vX.Y.Z` (non `main`, che nel frattempo può essere andato avanti) e **version** = `X.Y.Z`. Il workflow costruisce l'APK, lo allega alla bozza e la pubblica, mantenendo le note del changelog. Senza bozza (versioni fatte a mano, come nella tabella sopra) la Release si crea come prima.
 
@@ -79,22 +67,22 @@ Le versioni numerate escono a blocchi (il nightly copre l'uso quotidiano):
 
 - **Regola predefinita**: una nuova versione solo quando `main` ha accumulato almeno circa 5 PR di funzionalità dall'ultima, oppure quando il responsabile del progetto la chiede.
 - Le correzioni urgenti (un difetto che impedisce di usare l'app) possono uscire prima, come versione di correzione (`0.3.1`).
-- Prima di pubblicare si aspetta la CI verde sul commit di `main`: così il rilascio salta analisi e test già passati e costa circa 11 minuti invece di 16.
+- Prima di pubblicare si aspetta la CI verde sul commit di `main`: così il rilascio salta analisi e test già passati.
 - Le funzioni uscite tra due rilasci restano in `main`, installabili compilando o dal prossimo APK; `docs/README.md` indica lo stato di ciascuna.
 
 ## Pubblicare una versione
 
+Dall'interfaccia di GitHub con l'avvio manuale descritto sopra (consigliato, anche per le versioni proposte da release-please), oppure creando il tag da riga di comando:
+
 ```bash
 git checkout main && git pull
-git tag vX.Y.Z   # per esempio v0.5.0
+git tag vX.Y.Z   # per esempio v0.9.0
 git push origin vX.Y.Z
 ```
 
-In alternativa, dall'interfaccia di GitHub con l'avvio manuale descritto sopra.
-
 ## Installare sul telefono
 
-1. Dal browser del telefono aprire la pagina della Release (o il link qui sopra) e toccare **rokko.apk**. Se il repository è privato serve essere collegati a GitHub nel browser.
+1. Dal browser del telefono aprire la pagina della Release (o il link qui sopra) e toccare **rokko.apk**.
 2. Aprire il file scaricato. Android chiede di consentire l'installazione di app da questa origine (il browser o il gestore file): consentirla e tornare indietro.
 3. Toccare **Installa**. Google Play Protect può segnalare un'app di sviluppatore sconosciuto: scegliere **Installa comunque**.
 
@@ -110,7 +98,6 @@ La build sceglie la chiave in quest'ordine:
 2. **Frase segreta** nel segreto `ANDROID_SIGNING_SEED`: è il metodo consigliato.
 3. **Nessun segreto**: chiave di debug generata dal runner, diversa a ogni esecuzione; per passare a una nuova versione bisogna prima disinstallare l'app (e le partite salvate vanno perse).
 
-
 ### Metodo consigliato: frase segreta
 
 `tool/derive_keystore.py` ricava dalla frase, in modo deterministico, una chiave RSA a 3072 bit e un certificato sempre identico (scrypt sulla frase, numeri primi da un flusso SHAKE-256, campi del certificato fissi e firma PKCS#1 v1.5). Stessa frase, stesso certificato: non c'è nessun file da conservare o caricare, e la copia di sicurezza è la frase stessa.
@@ -123,7 +110,7 @@ L'impronta SHA-256 del certificato compare nel log del passo "Build APK release 
 
 ```bash
 export ANDROID_SIGNING_SEED='...'
-export ANDROID_KEYSTORE_PATH=/tmp/scacchi.p12
+export ANDROID_KEYSTORE_PATH=/tmp/rokko.p12
 export ANDROID_KEYSTORE_PASSWORD="$(python3 tool/derive_keystore.py "$ANDROID_KEYSTORE_PATH")"
 export ANDROID_KEY_PASSWORD="$ANDROID_KEYSTORE_PASSWORD" ANDROID_KEY_ALIAS=scacchi
 flutter build apk --release

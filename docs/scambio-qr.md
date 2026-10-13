@@ -1,13 +1,13 @@
 # Scambio di partite tra telefoni con il QR
 
-Funzione del [backlog](backlog.md): passare una partita in corso o un PGN da un telefono all'altro leggendo un codice QR, senza rete, senza account e senza server. Il codice è in `lib/exchange/`.
+Passare una partita in corso o un PGN da un telefono all'altro leggendo un codice QR, senza rete, senza account e senza server. Il codice è in `lib/exchange/`.
 
 ## Uso
 
 | Dove | Azione | Effetto |
 |---|---|---|
-| Gioca › menu ⋮ › **Passa con QR** | Mostra la partita sullo schermo come QR | La partita resta sospesa (orologio fermo) finché si torna indietro |
-| Gioca › menu ⋮ › **Ricevi con QR** | Apre la fotocamera | Una partita in corso continua su questo telefono, tra due persone e senza orologio; una già conclusa va ricevuta dall'archivio |
+| Partita › menu ⋮ › **Passa con QR** | Mostra la partita sullo schermo come QR | La partita resta sospesa (orologio fermo) finché si torna indietro |
+| Partita › menu ⋮ › **Ricevi con QR** | Apre la fotocamera | Una partita in corso continua su questo telefono, tra due persone e senza orologio; una già conclusa va ricevuta dall'archivio |
 | Tu › Archivio › menu di una partita › **Passa con QR** | Mostra la partita salvata come QR | |
 | Tu › Archivio › **Ricevi con QR** (icona in alto) | Apre la fotocamera | La partita ricevuta entra nell'archivio come `importata` |
 
@@ -57,14 +57,14 @@ Il testo ricomposto passa poi da `importPgn` (vedi [archivio.md](archivio.md)), 
 | [flutter_zxing](https://pub.dev/packages/flutter_zxing) | Lettore QR dalla fotocamera | MIT |
 | [zxing-cpp](https://github.com/zxing-cpp/zxing-cpp), incluso in flutter_zxing | Decodifica, in codice nativo sul dispositivo | Apache-2.0 |
 | [camera](https://pub.dev/packages/camera) (Flutter), dipendenza di flutter_zxing | Anteprima della fotocamera (CameraX su Android, AVFoundation su iOS) | BSD-3-Clause |
-| [image_picker](https://pub.dev/packages/image_picker) (Flutter) | Lettura di un QR da un'immagine scelta dall'utente e foto del profilo (RP-09); dipendenza diretta | BSD-3-Clause |
+| [image_picker](https://pub.dev/packages/image_picker) (Flutter) | Lettura di un QR da un'immagine scelta dall'utente; foto del profilo, dello sfondo e della scacchiera fisica; dipendenza diretta | BSD-3-Clause |
 | [qr](https://pub.dev/packages/qr) (Dart) | Generazione del QR | BSD-3-Clause |
 
 Perché flutter_zxing e non `mobile_scanner`, il pacchetto più diffuso: su Android `mobile_scanner` usa Google ML Kit, una libreria proprietaria distribuita con termini propri, che non si può combinare con il codice GPL senza ambiguità e che impedirebbe la pubblicazione su F-Droid. flutter_zxing usa zxing-cpp, open source e compilato dentro l'app: nessun servizio Google, nessun modello scaricato, tutto funziona offline. MIT, Apache-2.0 e BSD sono compatibili con la GPL-3.0 e con il permesso aggiuntivo per gli store descritto in [licenza.md](licenza.md). Lo stesso decodificatore gira anche su Linux, il che permette il test end-to-end descritto sotto.
 
 ## Permessi (MASVS-PLATFORM e MASVS-PRIVACY)
 
-- **Android** (`android/app/src/main/AndroidManifest.xml`): solo `CAMERA`, richiesto a runtime dal plugin alla prima apertura del lettore, non all'avvio dell'app. `android.hardware.camera.any` è `required="false"`, così l'app resta installabile su dispositivi senza fotocamera. Il plugin `camera` dichiara anche `RECORD_AUDIO` e `WRITE_EXTERNAL_STORAGE`, che il lettore non usa: il manifest dell'app li rimuove con `tools:node="remove"` (minimo privilegio). La scelta di un'immagine usa il selettore di foto del sistema, che non richiede permessi. La stessa fotocamera serve anche per la foto del profilo (RP-09), sempre e solo quando si tocca «Scatta una foto».
+- **Android** (`android/app/src/main/AndroidManifest.xml`): solo `CAMERA`, richiesto a runtime dal plugin alla prima apertura del lettore, non all'avvio dell'app. `android.hardware.camera.any` è `required="false"`, così l'app resta installabile su dispositivi senza fotocamera. Il plugin `camera` dichiara anche `RECORD_AUDIO` e `WRITE_EXTERNAL_STORAGE`, che il lettore non usa: il manifest dell'app li rimuove con `tools:node="remove"` (minimo privilegio). La scelta di un'immagine usa il selettore di foto del sistema, che non richiede permessi. La stessa fotocamera serve anche per la foto del profilo e per «Mossa dalla foto» (spenta nelle versioni di rilascio, vedi [scacchiera-fisica.md](scacchiera-fisica.md)), sempre e solo quando si tocca il relativo pulsante.
 - **iOS** (`ios/Runner/Info.plist`): `NSCameraUsageDescription` e `NSPhotoLibraryUsageDescription` spiegano in italiano che fotocamera e immagini servono a leggere il QR e a scegliere la foto del profilo. Il microfono non viene mai attivato (`enableAudio: false` nel lettore), quindi non serve la sua descrizione.
 - Le immagini della fotocamera restano in memoria, non vengono salvate né inviate; il lettore spegne la fotocamera quando l'app va in secondo piano e quando si esce dalla schermata.
 - Se il permesso viene negato o la fotocamera manca (anche su desktop), la schermata lo spiega con "Non riesco a usare la fotocamera. Consenti l'accesso alla fotocamera per Rokko nelle impostazioni del telefono e riprova." e un pulsante Riprova, senza bloccare il resto dell'app.

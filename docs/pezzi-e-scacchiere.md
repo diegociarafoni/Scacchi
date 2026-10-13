@@ -1,6 +1,6 @@
 # Pezzi e scacchiere
 
-Oltre ai set di chessground, Rokko ha otto set di pezzi e tredici scacchiere con texture propri, scelti tra le proposte dell'Officina di Rokko. Si scelgono nella schermata Stile (vedi [stile.md](stile.md)), da Impostazioni → Stile.
+Oltre ai set del pacchetto chessground, Rokko ha otto set di pezzi e tredici scacchiere con texture propri. Si scelgono nella schermata Stile (vedi [stile.md](stile.md)), da Impostazioni → Stile.
 
 ## Set di pezzi
 
@@ -59,6 +59,6 @@ node tool/board_art/render.mjs
 BOARDS=marmo,metallo,vetro node tool/board_art/render.mjs   # solo alcune scacchiere
 ```
 
-Staunton, Morbido e Stampa condividono la sagoma di `tool/board_art/staunton.mjs`; per rigenerare solo quelli: `SETS=staunton,morbido,stampa node tool/board_art/render.mjs`. Pesano circa 670 KB in tutto, aloni compresi. Altri set di Lichess (Alpha, Staunty, Cooke, Horsey e simili) non si possono usare: sono «freeware», per uso personale o CC BY-NC-SA, incompatibili con la distribuzione negli store. Il sorgente di Papercut è in `tool/board_art/papercut/`. Il carattere Noto si scarica da Google Fonts durante la generazione, quindi serve la rete. Gli aloni dei set di chessground partono dalle sue immagini da 512 px, lette dalla cache dei pacchetti dopo `flutter pub get`. Una nuova cartella di immagini va aggiunta anche alla sezione `assets` di `pubspec.yaml`.
+Staunton, Morbido e Stampa condividono la sagoma di `tool/board_art/staunton.mjs`; per rigenerare solo quelli: `SETS=staunton,morbido,stampa node tool/board_art/render.mjs`. Altri set molto diffusi (Alpha, Staunty, Cooke, Horsey e simili) non si possono usare: sono «freeware», per uso personale o CC BY-NC-SA, incompatibili con la distribuzione negli store. Il sorgente di Papercut è in `tool/board_art/papercut/`. Il carattere Noto si scarica da Google Fonts durante la generazione, quindi serve la rete. Gli aloni dei set di chessground partono dalle sue immagini da 512 px, lette dalla cache dei pacchetti dopo `flutter pub get`. Una nuova cartella di immagini va aggiunta anche alla sezione `assets` di `pubspec.yaml`.
 
 I test in `test/settings/board_art_test.dart` controllano che ogni set abbia i dodici pezzi e gli aloni, entrambe le risoluzioni, e che le texture siano solo nostre.
