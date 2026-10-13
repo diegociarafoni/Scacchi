@@ -26,7 +26,7 @@ lib/
   main.dart               Avvio dell'app, tema chiaro e scuro
   l10n/                   Testi tradotti, un .arb per funzione e lingua (vedi localizzazione.md)
   home/home_shell.dart    Barra di navigazione in basso (Gioca, Puzzle, Aperture, Tu)
-  home/you_page.dart      Scheda Tu: profilo, percorso, tornei, minigiochi, statistiche, settimana, scacchiera fisica, archivio
+  home/you_page.dart      Scheda Tu, solo dati: profilo, badge, statistiche, settimana, archivio
   game/
     chess_game.dart       Stato della partita, senza dipendenze dall'interfaccia
     variant.dart          Varianti e posizioni iniziali Chess960 (vedi regole-di-gioco.md)

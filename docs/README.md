@@ -70,18 +70,18 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | Le tue aperture: albero costruito dalle tue partite, con risultati e filtri per colore e avversario | Disponibile |
 | Gamification: XP, livelli, obiettivo giornaliero, serie, traguardi, ricompense estetiche, promemoria | Disponibile: XP a fine partita, Profilo e promemoria dalla scheda Tu |
 | La tua settimana: scheda condivisibile degli ultimi sette giorni | Disponibile dalla scheda Tu |
-| Scacchiera fisica: orologio e registro della partita dal vivo | Disponibile dalla scheda Tu |
+| Scacchiera fisica: orologio e registro della partita dal vivo | Disponibile dalla Home |
 | Scambio di partite tra telefoni con il QR, senza rete | Disponibile dal menu della partita e dall'archivio; lettura con la fotocamera su Android e iOS |
-| Multigiocatore tra due telefoni (Wi-Fi, Bluetooth, a distanza) | Disponibile da Tu › Gioca con un amico: stessa Wi-Fi o hotspot, Bluetooth LE vicini, a distanza con relay Nostr (avvisi in background solo su Android); abbinamento con QR o link |
+| Multigiocatore tra due telefoni (Wi-Fi, Bluetooth, a distanza) | Disponibile dalla Home › Gioca con un amico: stessa Wi-Fi o hotspot, Bluetooth LE vicini, a distanza con relay Nostr (avvisi in background solo su Android); abbinamento con QR o link |
 | Backup e ripristino dei dati locali in un file (con le esclusioni elencate in [backup.md](backup.md)) | Disponibile dalle Impostazioni |
 | Archivio partite, import ed export PGN | Disponibile dalla scheda Tu; le partite si salvano da sole a ogni mossa e quelle interrotte si possono riprendere |
-| Percorso a tappe con stelle e spiegazione di ogni tappa: pezzi, regole, matti elementari e famosi, tattiche, finali (di pedoni, di torre, alfiere sbagliato), strategia, aperture | Si segue dalla Storia (scheda Tu), con i guardiani dove c'è il motore |
-| Partite dei grandi maestri: sfoglia con commento e «indovina la mossa» | Disponibile dalla scheda Tu, anche senza motore |
+| Percorso a tappe con stelle e spiegazione di ogni tappa: pezzi, regole, matti elementari e famosi, tattiche, finali (di pedoni, di torre, alfiere sbagliato), strategia, aperture | Si segue dalla Storia (Home), con i guardiani dove c'è il motore |
+| Partite dei grandi maestri: sfoglia con commento e «indovina la mossa» | Disponibile dalla Home, anche senza motore |
 | Statistiche e rating locale | Disponibile dalla scheda Tu |
 | Editor di posizione con FEN e validazione | Disponibile |
 | Varianti: Chess960, Re della collina, Tre scacchi | Disponibile nella partita a due e contro il computer |
-| Minigiochi | Disponibile dalla scheda Tu, con record e XP |
-| Tornei contro bot | Formule, classifica, tabellone e bacheca; si giocano dalla scheda Tu contro il motore (Android e iOS; Windows e Linux con Stockfish installato) |
+| Minigiochi | Disponibile dalla Home, con record e XP |
+| Tornei contro bot | Formule, classifica, tabellone e bacheca; si giocano dalla Home contro il motore (Android e iOS; Windows e Linux con Stockfish installato) |
 | Orologio con cadenze e incremento | Disponibile |
 | Suoni, vibrazione, modalità tavolo | Disponibile |
 | Modalità zen: in partita solo scacchiera, mosse e orologio | Disponibile |
@@ -93,7 +93,7 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | Tema dell'app chiaro, scuro o di sistema, colori per daltonici | Disponibile dalle Impostazioni |
 | Badge: traguardi da collezionare, con progresso (#188) | Disponibile dalla scheda Tu |
 | Riepilogo settimanale (#151) | Disponibile dalla scheda Tu |
-| Allenatore dei finali: Lucena, Philidor, matti elementari, finali perfetti (#119, #127, #165) | Disponibile dalla scheda Tu |
+| Allenatore dei finali: Lucena, Philidor, matti elementari, finali perfetti (#119, #127, #165) | Disponibile dalla Home |
 | Posizione come immagine PNG | Disponibile |
 | Partite a handicap (#143) | Disponibile |
 | Sfida a tempo tra amici con QR (#148) | Disponibile |

@@ -58,10 +58,10 @@ Ogni funzione nasce dai requisiti del progetto, nel documento dei requisiti, con
 | Widget | `test/computer_game_test.dart` | Partita contro il computer con un motore finto | `flutter test` |
 | Gamification | `test/progress/` | Regole di XP, serie (anche la sua spiegazione in parole) e traguardi; salvataggio; schermata Profilo | `flutter test test/progress` |
 | Percorso | `test/path/` | Esercizi, contenuti, sblocco, mappa e tappe sulla scacchiera | `flutter test test/path` |
-| Storia | `test/story/`, `test/home/home_story_test.dart` | Capitoli e avanzamento, salvataggio, puzzle del tema, schermata e accesso dalla scheda Tu | `flutter test test/story test/home/home_story_test.dart` |
+| Storia | `test/story/`, `test/home/home_story_test.dart` | Capitoli e avanzamento, salvataggio, puzzle del tema, schermata e accesso dalla Home | `flutter test test/story test/home/home_story_test.dart` |
 | Statistiche | `test/stats/` | Bilancio, rating locale, schermata | `flutter test test/stats` |
 | Minigiochi | `test/minigames/` | Generazione risolvibile, risposte, schermate, registrazione dei punteggi | `flutter test test/minigames` |
-| Scheda Tu | `test/home/` | Voci della scheda Tu: guardiani del percorso, tornei contro il motore finto, apertura di una partita dell'archivio nella revisione | `flutter test test/home` |
+| Scheda Tu | `test/home/` | Scheda Tu (solo dati) e voci della Home: guardiani del percorso, tornei contro il motore finto, apertura di una partita dell'archivio nella revisione | `flutter test test/home` |
 | Tornei | `test/tournament/` | Abbinamenti, simulazione, spareggi, salvataggio, schermata | `flutter test test/tournament` |
 | Scacchiera per esercizi | `test/training/` | Tema, pezzi e coordinate presi dalle impostazioni, senza capovolgere i pezzi | `flutter test test/training` |
 | Sicurezza | `test/security/` | Controlli OWASP MASVS sui sorgenti: permessi, log, SDK vietati, esportazioni (vedi sicurezza.md) | `flutter test test/security` |
