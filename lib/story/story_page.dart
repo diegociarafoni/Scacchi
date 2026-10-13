@@ -76,7 +76,11 @@ class _StoryPageState extends State<StoryPage> {
   void _say(String text) =>
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
 
-  Future<void> _open(StoryChapter chapter, StoryStepKind kind) async {
+  Future<void> _open(
+    StoryChapter chapter,
+    StoryStepKind kind, {
+    bool announced = false,
+  }) async {
     final follow = await _run(() async {
       final wasDone = _progress
           .steps(chapter)
@@ -90,13 +94,19 @@ class _StoryPageState extends State<StoryPage> {
         case StoryStepKind.guardian:
           await _guardian(chapter);
         case StoryStepKind.boss:
-          await _boss(chapter);
+          await _boss(chapter, announced: announced || wasDone);
       }
       if (!mounted || wasDone) return null;
       return _passage(chapter, kind);
     });
     // Il passo successivo si apre fuori dal blocco, che altrimenti lo rifiuta.
-    if (follow != null && mounted) await _open(follow.$1, follow.$2);
+    if (follow != null && mounted) {
+      await _open(
+        follow.$1,
+        follow.$2,
+        announced: follow.$2 == StoryStepKind.boss,
+      );
+    }
   }
 
   /// Foglio di passaggio: celebra il passo appena concluso e propone il
@@ -237,9 +247,39 @@ class _StoryPageState extends State<StoryPage> {
     }
   }
 
-  Future<void> _boss(StoryChapter chapter) async {
+  /// Foglio che presenta la sfida al custode; salta se il foglio di
+  /// passaggio l'ha già annunciata.
+  Future<bool> _challengeAccepted(StoryChapter chapter) async {
+    final l10n = storyL10n(context);
+    final go = await showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (_) => _PassageSheet(
+        icon: Icons.sports_esports_outlined,
+        guardian: GuardianAvatar(
+          bot: chapter.bot,
+          expression: AvatarExpression.challenge,
+          size: 88,
+        ),
+        guardianLine: l10n.storyGuardianSays(
+          chapter.bot.name,
+          l10n.guardianLine(chapter, GuardianMoment.boss),
+        ),
+        title: l10n.storyChallengeTitle(chapter.bot.name),
+        body: l10n.chapterBoss(chapter),
+        action: l10n.storyPassageGoBoss(chapter.bot.name),
+        dismiss: l10n.storyPassageLater,
+      ),
+    );
+    return go == true;
+  }
+
+  Future<void> _boss(StoryChapter chapter, {bool announced = false}) async {
     final play = widget.playBoss;
     if (play == null) return _say(storyL10n(context).storyEngineMissing);
+    if (!announced && !await _challengeAccepted(chapter)) return;
+    if (!mounted) return;
     final won = await play(context, chapter.bot);
     if (!mounted) return;
     if (won) {
