@@ -156,7 +156,7 @@ void main() {
       final dir = Directory.systemTemp.createTempSync('es_path');
       addTearDown(() => dir.deleteSync(recursive: true));
       final path = PathController(File('${dir.path}/path.json'));
-      await path.load();
+      await tester.runAsync(path.load);
       final l10n = lookupAppLocalizations(const Locale('es'));
       for (final size in const [
         Size(320, 640),

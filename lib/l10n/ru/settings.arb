@@ -98,5 +98,13 @@
   "settingsProgressEnabledDescription": "Когда выключено, ничего не записывается",
   "settingsLanguage": "Язык",
   "settingsLanguageDescription": "Итальянский, английский или как на телефоне",
-  "settingsLanguageSystem": "Как на телефоне"
+  "settingsLanguageSystem": "Как на телефоне",
+  "settingsPremove": "Предварительный ход",
+  "@settingsPremove": {
+    "description": "Impostazioni: interruttore della premossa"
+  },
+  "settingsPremoveDescription": "Ходи, пока думает компьютер; нажатие на пустое поле отменяет ход",
+  "@settingsPremoveDescription": {
+    "description": "Impostazioni: descrizione della premossa"
+  }
 }

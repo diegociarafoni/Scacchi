@@ -39,6 +39,8 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | [glossario-scacchistico.md](glossario-scacchistico.md) | Termini scacchistici e regole di stile in italiano, inglese, spagnolo e francese |
 | [glossario-portoghese.md](glossario-portoghese.md) | Termini scacchistici e regole di stile in portoghese del Brasile |
 | [glossario-tedesco.md](glossario-tedesco.md) | Termini scacchistici e regole di stile in tedesco |
+| [glossario-nl.md](glossario-nl.md) | Termini scacchistici e regole di stile in olandese |
+| [glossario-polacco.md](glossario-polacco.md) | Termini scacchistici e regole di stile in polacco |
 | [backlog.md](backlog.md) | Backlog unico: requisiti, stato, priorità, dimensione e versione prevista |
 | [sviluppo.md](sviluppo.md) | Ambiente, comandi, test, CI e convenzioni |
 | [convenzioni-git.md](convenzioni-git.md) | Rami, commit Angular, hook locali, merge e protezione di `main` |

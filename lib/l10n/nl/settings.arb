@@ -98,5 +98,13 @@
   "settingsProgressEnabledDescription": "Als dit uit staat, wordt niets bijgehouden",
   "settingsLanguage": "Taal",
   "settingsLanguageDescription": "Italiaans, Engels of gelijk aan de telefoon",
-  "settingsLanguageSystem": "Gelijk aan de telefoon"
+  "settingsLanguageSystem": "Gelijk aan de telefoon",
+  "settingsPremove": "Voorzet",
+  "@settingsPremove": {
+    "description": "Impostazioni: interruttore della premossa"
+  },
+  "settingsPremoveDescription": "Zet terwijl de computer nadenkt; tik op een leeg veld om te annuleren",
+  "@settingsPremoveDescription": {
+    "description": "Impostazioni: descrizione della premossa"
+  }
 }

@@ -98,5 +98,13 @@
   "settingsProgressEnabledDescription": "Désactivé, rien n'est enregistré",
   "settingsLanguage": "Langue",
   "settingsLanguageDescription": "Choisis la langue de l'app ou garde celle du téléphone",
-  "settingsLanguageSystem": "Comme le téléphone"
+  "settingsLanguageSystem": "Comme le téléphone",
+  "settingsPremove": "Coup anticipé",
+  "@settingsPremove": {
+    "description": "Impostazioni: interruttore della premossa"
+  },
+  "settingsPremoveDescription": "Joue pendant que l'ordinateur réfléchit ; touche une case vide pour annuler",
+  "@settingsPremoveDescription": {
+    "description": "Impostazioni: descrizione della premossa"
+  }
 }

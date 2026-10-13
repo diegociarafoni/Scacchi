@@ -9,7 +9,6 @@ enum AppLanguage {
   french(Locale('fr')),
   spanish(Locale('es')),
   german(Locale('de')),
-  portuguese(Locale('pt')),
   polish(Locale('pl')),
   indonesian(Locale('id')),
   russian(Locale('ru')),

@@ -5,9 +5,9 @@ import 'package:scacchi/l10n/content.dart';
 
 import '../../tool/src/content_parity.dart';
 
-/// Lingue dei contenuti che devono coincidere con l'italiano. Spagnolo e
-/// francese si aggiungono qui quando passano a «pronta».
-const _checked = ['en', 'fr'];
+/// Lingue dei contenuti che devono coincidere con l'italiano; ogni lingua
+/// nuova si aggiunge qui.
+const _checked = ['en', 'pt', 'fr', 'es', 'de', 'pl', 'id', 'ru', 'nl', 'tr'];
 
 /// File che una lingua non deve avere: in inglese i nomi delle aperture sono
 /// quelli del libro, quindi `opening_names.json` esiste solo per le lingue che

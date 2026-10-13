@@ -98,5 +98,13 @@
   "settingsProgressEnabledDescription": "Si está desactivado, no se guarda nada",
   "settingsLanguage": "Idioma",
   "settingsLanguageDescription": "Elige un idioma o usa el del teléfono",
-  "settingsLanguageSystem": "Igual que el teléfono"
+  "settingsLanguageSystem": "Igual que el teléfono",
+  "settingsPremove": "Jugada anticipada",
+  "@settingsPremove": {
+    "description": "Impostazioni: interruttore della premossa"
+  },
+  "settingsPremoveDescription": "Mueve mientras piensa el ordenador; toca una casilla vacía para cancelar",
+  "@settingsPremoveDescription": {
+    "description": "Impostazioni: descrizione della premossa"
+  }
 }
