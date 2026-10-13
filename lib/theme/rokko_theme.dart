@@ -170,7 +170,15 @@ class RokkoWordmark extends StatelessWidget {
       children: [
         ExcludeSemantics(child: Icon(Icons.castle, color: tokens.action)),
         const SizedBox(width: 8),
-        const Text('Rokko', style: TextStyle(fontWeight: FontWeight.w800)),
+        // Con il testo grande il titolo cede spazio ai comandi della barra.
+        const Flexible(
+          child: Text(
+            'Rokko',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(fontWeight: FontWeight.w800),
+          ),
+        ),
       ],
     );
   }
