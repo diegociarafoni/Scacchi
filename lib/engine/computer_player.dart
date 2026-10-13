@@ -90,9 +90,16 @@ class ComputerPlayer {
         }
       },
       onError: _failPending,
-      onDone: () => _failPending(
-        StateError('Il motore si è chiuso'), // l10n-ok
-      ),
+      onDone: () {
+        // Un motore morto a riposo va riavviato alla ricerca successiva.
+        if (_transport == transport) {
+          _transport = null;
+          _ready = null;
+        }
+        _failPending(
+          StateError('Il motore si è chiuso'), // l10n-ok
+        );
+      },
     );
     await _command('uci', (l) => l == 'uciok', const Duration(seconds: 30));
     await _sync();
@@ -268,6 +275,7 @@ class ComputerPlayer {
     final infos = <int, InfoLine>{};
     final byDepth = <int, Map<int, InfoLine>>{};
     void onInfo(String line) {
+      if (line.contains(' lowerbound') || line.contains(' upperbound')) return;
       final info = parseInfo(line);
       if (info == null) return;
       infos[info.multipv] = info;

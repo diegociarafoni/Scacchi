@@ -36,16 +36,17 @@ class JsonFileStore implements KeyValueStore {
       );
 
   final JsonFile _file;
-  Map<String, String>? _data;
+  Future<Map<String, String>>? _data;
 
-  Future<Map<String, String>> _load() async => _data ??=
-      await _file.read(
+  // Il Future è memorizzato: letture concorrenti condividono la stessa mappa.
+  Future<Map<String, String>> _load() => _data ??= _file
+      .read(
         (json) => {
           for (final e in (json['values']! as Map).entries)
             e.key as String: e.value as String,
         },
-      ) ??
-      {};
+      )
+      .then((m) => m ?? <String, String>{});
 
   @override
   Future<String?> read(String key) async => (await _load())[key];

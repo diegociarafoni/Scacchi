@@ -190,7 +190,7 @@
   },
   "openingsRepertoireUnavailable": "Repertorio non disponibile",
   "openingsRepertoireLoading": "Caricamento...",
-  "openingsRepertoireSummary": "{lines} linee · {due} mosse da ripassare",
+  "openingsRepertoireSummary": "{lines, plural, one{{lines} linea} other{{lines} linee}} · {due, plural, one{{due} mossa da ripassare} other{{due} mosse da ripassare}}",
   "@openingsRepertoireSummary": {
     "description": "Riepilogo del repertorio di un colore: linee salvate e mosse in scadenza",
     "placeholders": {
@@ -263,7 +263,7 @@
     }
   },
   "openingsDrillTitle": "Ripasso del repertorio",
-  "openingsDrillDone": "Ripasso completato: {count} mosse.",
+  "openingsDrillDone": "{count, plural, one{Ripasso completato: {count} mossa.} other{Ripasso completato: {count} mosse.}}",
   "@openingsDrillDone": {
     "placeholders": {
       "count": {
@@ -312,7 +312,7 @@
   "openingsPlayLine": "Gioca la linea",
   "openingsDeleteLine": "Elimina la linea",
   "openingsReviewNone": "Nessuna mossa da ripassare",
-  "openingsReviewButton": "Ripassa {count} mosse",
+  "openingsReviewButton": "{count, plural, one{Ripassa {count} mossa} other{Ripassa {count} mosse}}",
   "@openingsReviewButton": {
     "placeholders": {
       "count": {
