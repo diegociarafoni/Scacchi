@@ -100,6 +100,7 @@ void main() {
     await archive.save(saved('b', ['d2d4', 'd7d5']));
     final pgn = await archive.exportPgn();
     expect('[Event'.allMatches(pgn), hasLength(2));
+    expect(pgn, contains('[Event "Rokko"]'));
 
     final other = GameArchive(File('${dir.path}/altro.json'));
     final result = await other.importPgn(pgn, now: t0);
