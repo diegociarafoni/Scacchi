@@ -8,6 +8,8 @@ import 'package:scacchi/game/game_page.dart';
 import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/settings/settings.dart';
 
+import '../test/computer_fakes.dart'
+    show chooseAdaptiveComputer, scrollSheetTo, startComputerGame;
 import '../test/game_actions.dart';
 
 Offset _square(WidgetTester tester, String name) {
@@ -26,21 +28,27 @@ Future<void> _tapMove(WidgetTester tester, String uci) async {
 }
 
 /// Attende un widget che dipende dalla risposta del processo Stockfish.
-Future<void> _waitFor(WidgetTester tester, Finder finder) async {
-  for (var i = 0; i < 100 && finder.evaluate().isEmpty; i++) {
+///
+/// Con [settle] a falso non si lascia scorrere altro tempo finto: serve per i
+/// messaggi a scomparsa, che le animazioni della partita farebbero sparire.
+Future<void> _waitFor(
+  WidgetTester tester,
+  Finder finder, {
+  bool settle = true,
+}) async {
+  for (var i = 0; i < 300 && finder.evaluate().isEmpty; i++) {
     await tester.runAsync(
       () => Future<void>.delayed(const Duration(milliseconds: 100)),
     );
     await tester.pump();
   }
-  await tester.pumpAndSettle();
+  if (settle) await tester.pumpAndSettle();
   expect(finder, findsOneWidget);
 }
 
 Future<void> _startComputerGame(
   WidgetTester tester, {
   required String side,
-  int level = 1,
 }) async {
   tester.view.physicalSize = const Size(1170, 2532);
   tester.view.devicePixelRatio = 3;
@@ -55,27 +63,10 @@ Future<void> _startComputerGame(
     ),
   );
   await tester.pumpAndSettle();
-  await tapGameAction(tester, 'Nuova');
-  await tester.pumpAndSettle();
-  await tester.tap(find.text('Computer'));
-  await tester.pumpAndSettle();
-  await tester.ensureVisible(find.text(side));
-  await tester.pumpAndSettle();
-  await tester.tap(find.text(side));
-  await tester.pumpAndSettle();
-  await tester.ensureVisible(find.byType(Slider));
-  await tester.pumpAndSettle();
-  final slider = tester.getRect(find.byType(Slider));
-  final step = (slider.width - 48) / 7;
-  await tester.tapAt(
-    Offset(slider.left + 24 + step * (level - 1), slider.center.dy),
-  );
-  await tester.pumpAndSettle();
-  expect(find.textContaining('Livello $level:'), findsOneWidget);
-  await tester.ensureVisible(find.text('Senza tempo'));
-  await tester.pumpAndSettle();
-  await tester.tap(find.text('Senza tempo'));
+  await startComputerGame(tester, side: side);
+  // Il foglio si chiude con una breve animazione e la partita parte.
   await tester.pump();
+  await tester.pump(const Duration(milliseconds: 400));
 }
 
 void main() {
@@ -91,7 +82,7 @@ void main() {
         tester,
       ) async {
         await _startComputerGame(tester, side: 'Bianco');
-        expect(find.textContaining('Computer, livello 1'), findsOneWidget);
+        expect(find.textContaining('Computer, livello 3'), findsOneWidget);
         await _tapMove(tester, 'e2e4');
         await _waitFor(tester, find.text('Muove il Bianco.'));
         expect(find.text('1. e4'), findsOneWidget);
@@ -108,7 +99,7 @@ void main() {
       testWidgets('RF-21 la scacchiera è bloccata mentre il computer pensa', (
         tester,
       ) async {
-        await _startComputerGame(tester, side: 'Bianco', level: 8);
+        await _startComputerGame(tester, side: 'Bianco');
         await _tapMove(tester, 'e2e4');
         expect(find.text('Il computer sta pensando…'), findsOneWidget);
         await _tapMove(tester, 'd2d4');
@@ -132,11 +123,15 @@ void main() {
       testWidgets('RF-25 il computer rifiuta la patta in posizione pari', (
         tester,
       ) async {
-        await _startComputerGame(tester, side: 'Bianco', level: 8);
-        await _tapMove(tester, 'e2e4');
-        await _waitFor(tester, find.text('Muove il Bianco.'));
+        // Dalla posizione iniziale: la risposta del bot di livello medio non
+        // sposta la valutazione, quindi l'esito non dipende dalla sua mossa.
+        await _startComputerGame(tester, side: 'Bianco');
         await tapGameAction(tester, 'Patta');
-        await _waitFor(tester, find.text('Il computer rifiuta la patta.'));
+        await _waitFor(
+          tester,
+          find.text('Il computer rifiuta la patta.'),
+          settle: false,
+        );
       });
 
       testWidgets('RF-24 dalla posizione creata il computer trova il matto', (
@@ -176,9 +171,13 @@ void main() {
         await tester.tap(find.text('Carica'));
         await tester.pumpAndSettle();
         await tapVisible(find.text('Gioca da qui'));
-        await tapVisible(find.text('Computer'));
+        await chooseAdaptiveComputer(tester);
         await tapVisible(find.text('Nero'));
-        await tapVisible(find.widgetWithText(FilledButton, 'Gioca'));
+        final play = find.widgetWithText(FilledButton, 'Gioca');
+        await scrollSheetTo(tester, play);
+        await tester.tap(play);
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 400));
         await _waitFor(tester, find.text('Scacco matto. Vince il Bianco.'));
       });
     },

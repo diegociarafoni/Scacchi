@@ -4,6 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:scacchi/main.dart';
 
+import '../test/game_actions.dart';
+
 Offset _square(WidgetTester tester, String name) {
   final rect = tester.getRect(find.byType(Chessboard));
   final size = rect.width / 8;
@@ -16,6 +18,19 @@ Future<void> _tapMove(WidgetTester tester, String uci) async {
   await tester.tapAt(_square(tester, uci.substring(0, 2)));
   await tester.pump();
   await tester.tapAt(_square(tester, uci.substring(2, 4)));
+  await tester.pumpAndSettle();
+}
+
+/// Apre dalla Home la funzione [id], portando in vista la sua scheda.
+Future<void> _openFeature(WidgetTester tester, String id) async {
+  final tile = find.byKey(Key('home-feature-$id'));
+  await tester.scrollUntilVisible(
+    tile,
+    200,
+    scrollable: find.byType(Scrollable).first,
+  );
+  await tester.pumpAndSettle();
+  await tester.tap(tile);
   await tester.pumpAndSettle();
 }
 
@@ -32,6 +47,7 @@ void main() {
 
   testWidgets('RF-90 la partita mostra il nome dell\'apertura', (tester) async {
     await _start(tester);
+    await openBoard(tester);
     await _tapMove(tester, 'e2e4');
     await _tapMove(tester, 'c7c5');
     // Il libro si carica in un isolate: si attende che il nome compaia.
@@ -47,8 +63,7 @@ void main() {
 
   testWidgets('RF-92 l\'explorer segue le mosse del libro', (tester) async {
     await _start(tester);
-    await tester.tap(find.text('Aperture').last);
-    await tester.pumpAndSettle();
+    await _openFeature(tester, 'openings');
     await tester.tap(find.text('Esplora aperture'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('e4'));
@@ -64,8 +79,7 @@ void main() {
     tester,
   ) async {
     await _start(tester);
-    await tester.tap(find.text('Aperture').last);
-    await tester.pumpAndSettle();
+    await _openFeature(tester, 'openings');
     await tester.tap(find.text('Esplora aperture'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('e4'));
@@ -92,8 +106,7 @@ void main() {
   testWidgets('RF-96 le tue aperture partono vuote e si raggiungono dalla '
       'scheda Aperture', (tester) async {
     await _start(tester);
-    await tester.tap(find.text('Aperture').last);
-    await tester.pumpAndSettle();
+    await _openFeature(tester, 'openings');
     await tester.tap(find.text('Le tue aperture'));
     await tester.pumpAndSettle();
     expect(find.textContaining('Gioca qualche partita'), findsOneWidget);

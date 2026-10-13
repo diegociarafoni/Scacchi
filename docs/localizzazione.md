@@ -36,6 +36,12 @@ Dopo un clone, e dopo ogni modifica ai `.arb` o un cambio di ramo, eseguire `dar
 
 `dart tool/stringhe_fisse.dart` cerca in `lib/` le frasi italiane scritte tra apici invece che nei `.arb` (almeno due parole, con parole italiane comuni o lettere accentate; commenti, `import` e identificativi sono ignorati). I conteggi per cartella stanno in `tool/stringhe_fisse_base.json` e **non possono salire**: la CI e `tool/verifica.sh` falliscono se una cartella ha più testi fissi della base, con l'indicazione di dove spostarli. Quando una cartella viene migrata la base si abbassa con `dart tool/stringhe_fisse.dart --aggiorna`. `--elenco` stampa ogni testo con file e riga. Un nome proprio o un dato dell'archivio che il controllo scambia per testo si esclude con il commento `// l10n-ok` sulla riga. Il controllo è euristico: trova i testi italiani, non quelli già in un'altra lingua.
 
+## Stato delle lingue e ripiego
+
+`tool/lingue.json` dichiara lo stato di ogni lingua: `base` (italiano), `pronta`, `beta` o `in lavorazione`. Le lingue base e pronte devono avere esattamente le stesse chiavi dell'italiano. Le lingue `beta` e `in lavorazione` possono averne meno: `tool/l10n.dart` riempie quelle che mancano con il testo inglese, così l'app compila e le PR sulle schermate non devono aspettare le traduzioni. Una chiave che esiste in una lingua incompleta ma non nelle altre resta un errore.
+
+`dart tool/l10n_stato.dart` stampa per ogni lingua le chiavi tradotte rispetto all'italiano; con `--manca` elenca quali mancano, per file. Esce con errore se una lingua `base` o `pronta` (o non dichiarata) è incompleta; la CI lo esegue. Una nuova cartella in `lib/l10n/<lingua>/` va dichiarata in `tool/lingue.json`, altrimenti viene trattata come lingua completa.
+
 ## Aggiungere un testo
 
 1. Aggiungere la chiave nel file della funzione in `lib/l10n/it/` (uno nuovo, con lo stesso nome in `lib/l10n/en/`, se la funzione è nuova), con una voce `@chiave` che ne descrive il contesto quando il testo da solo non basta e che dichiara i segnaposto. Le chiavi sono in camelCase con il prefisso della schermata (`backup…`, `minigames…`, `stats…`).
