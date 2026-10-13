@@ -16,6 +16,7 @@ import 'package:scacchi/multiplayer/saved_game.dart';
 import 'package:scacchi/multiplayer/transport.dart';
 
 import '../localized_app.dart';
+import '../support/wait.dart';
 
 const blitz = TimeControl(minutes: 3, increment: 2);
 
@@ -28,8 +29,6 @@ class FakeNow {
   DateTime call() => value;
   void advance(Duration d) => value = value.add(d);
 }
-
-Future<void> settle() => Future<void>.delayed(const Duration(milliseconds: 50));
 
 GameInvite invite({TimeControl? control}) => GameInvite(
   gameId: newGameId(),
@@ -387,7 +386,7 @@ void main() {
       'RMP-50 la partita riprende col tempo che passa mentre l\'app è chiusa',
       () async {
         final dir = Directory.systemTemp.createTempSync('rokko_clock');
-        addTearDown(() => dir.deleteSync(recursive: true));
+        addTearDown(() => removeDir(dir));
         final store = SavedGameStore(File('${dir.path}/multiplayer.json'));
         final now = FakeNow();
         final (a, b) = LoopbackTransport.pair();

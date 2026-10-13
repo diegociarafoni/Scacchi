@@ -13,6 +13,7 @@ import 'package:scacchi/multiplayer/saved_game.dart';
 import 'package:scacchi/multiplayer/transport.dart';
 
 import '../localized_app.dart';
+import '../support/wait.dart';
 
 /// Lettore finto: espone la callback che il lettore vero chiamerebbe.
 class _FakeScanner {
@@ -25,24 +26,6 @@ class _FakeScanner {
   }) {
     this.onCode = onCode;
     return const SizedBox(key: Key('fakeScanner'), width: 200, height: 200);
-  }
-}
-
-Future<void> _wait(WidgetTester tester) async {
-  await tester.runAsync(
-    () => Future<void>.delayed(const Duration(milliseconds: 100)),
-  );
-  await tester.pump();
-}
-
-/// Attende (in tempo reale) che [finder] compaia: i salvataggi, le chiavi e i
-/// canali hanno tempi che su un runner carico superano un'attesa fissa.
-Future<void> _waitFor(WidgetTester tester, Finder finder) async {
-  for (var i = 0; i < 100 && finder.evaluate().isEmpty; i++) {
-    await tester.runAsync(
-      () => Future<void>.delayed(const Duration(milliseconds: 50)),
-    );
-    await tester.pump();
   }
 }
 
@@ -68,7 +51,7 @@ void main() {
     await tester.ensureVisible(find.text('Crea la partita'));
     await tester.pump();
     await tester.tap(find.text('Crea la partita'));
-    await _wait(tester);
+    await pumpUntilFound(tester, find.byType(QrCodeView));
     await tester.pumpAndSettle();
     expect(find.byType(QrCodeView), findsOneWidget);
     expect(find.text('In attesa dell\'avversario…'), findsOneWidget);
@@ -84,13 +67,13 @@ void main() {
     final guest = (await tester.runAsync(
       () => MultiplayerController.join(invite, openGuest: (_, _) => b),
     ))!;
-    await _wait(tester);
+    await pumpUntilFound(tester, find.byType(Chessboard));
     expect(find.byType(QrCodeView), findsNothing);
     expect(find.byType(Chessboard), findsOneWidget);
     expect(find.text('Tocca all\'avversario'), findsOneWidget);
 
     await tester.runAsync(() => guest.play(Move.parse('e2e4')!));
-    await _wait(tester);
+    await pumpUntilFound(tester, find.text('Tocca a te'));
     expect(find.text('Tocca a te'), findsOneWidget);
     await tester.runAsync(guest.close);
   });
@@ -179,8 +162,7 @@ void main() {
       findsOneWidget,
     );
     scanner.onCode!(host.inviteLink);
-    await _wait(tester);
-    await _wait(tester);
+    await pumpUntilFound(tester, find.byType(Chessboard));
     await tester.pumpAndSettle();
     expect(find.byType(Chessboard), findsOneWidget);
     expect(find.text('Tocca all\'avversario'), findsOneWidget);
@@ -206,7 +188,7 @@ void main() {
       dir = Directory.systemTemp.createTempSync('rokko_resume_page');
       store = SavedGameStore(File('${dir.path}/multiplayer.json'));
     });
-    tearDown(() => dir.deleteSync(recursive: true));
+    tearDown(() => removeDir(dir));
 
     Future<void> saveOne(WidgetTester tester) async {
       final (a, b) = LoopbackTransport.pair();
@@ -220,14 +202,14 @@ void main() {
           GameInvite.parse(host.inviteLink)!,
           openGuest: (_, _) => b,
         );
-        await Future<void>.delayed(const Duration(milliseconds: 50));
+        await until(
+          () => host.status == MultiplayerStatus.myTurn,
+          what: 'invitato collegato',
+        );
         await host.play(Move.parse('e2e4')!);
-        await Future<void>.delayed(const Duration(milliseconds: 50));
+        await untilMoves(guest, 1);
         // Il salvataggio è in coda: si aspetta che la mossa sia sul disco.
-        for (var i = 0; i < 100; i++) {
-          if (((await store.load())?.moves ?? []).isNotEmpty) break;
-          await Future<void>.delayed(const Duration(milliseconds: 50));
-        }
+        await untilSaved(store, 1);
         await host.close();
         await guest.close();
       });
@@ -242,10 +224,13 @@ void main() {
       await tester.runAsync(() async {
         await tester.pumpWidget(localizedApp(home: page));
         // Con una partita salvata si attende che il riquadro compaia.
-        for (var i = 0; i < 100; i++) {
+        for (var i = 0; i < 600; i++) {
           await Future<void>.delayed(const Duration(milliseconds: 50));
           await tester.pump();
-          if (!saved || find.byType(Card).evaluate().isNotEmpty) break;
+          if (!saved ||
+              find.text('Riprendi la partita').evaluate().isNotEmpty) {
+            break;
+          }
         }
       });
       await tester.pump();
@@ -273,7 +258,7 @@ void main() {
       );
       expect(find.text('Riprendi la partita'), findsOneWidget);
       await tester.tap(find.text('Riprendi la partita'));
-      await _waitFor(tester, find.byType(Chessboard));
+      await pumpUntilFound(tester, find.byType(Chessboard));
       await tester.pumpAndSettle();
       expect(find.byType(Chessboard), findsOneWidget);
       expect(find.text('Tocca all\'avversario'), findsOneWidget);
@@ -285,9 +270,17 @@ void main() {
       await tester.tap(find.text('Elimina'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Elimina').last);
-      await _wait(tester);
+      await pumpUntil(
+        tester,
+        () => find.text('Riprendi la partita').evaluate().isEmpty,
+        what: 'riquadro tolto',
+      );
       await tester.pumpAndSettle();
       expect(find.text('Riprendi la partita'), findsNothing);
+      // Il file si cancella in coda: si attende su disco.
+      await tester.runAsync(
+        () => until(() async => await store.load() == null),
+      );
       expect(await tester.runAsync(store.load), isNull);
     });
 
@@ -315,6 +308,7 @@ void main() {
         await tester.ensureVisible(find.text('Crea la partita'));
         await tester.pump();
         await tester.tap(find.text('Crea la partita'));
+        await pumpUntilFound(tester, find.text('Resta'));
         await tester.pumpAndSettle();
         await tester.tap(find.text('Resta'));
         await tester.pumpAndSettle();
@@ -329,9 +323,14 @@ void main() {
         await tester.ensureVisible(find.text('Crea la partita'));
         await tester.pump();
         await tester.tap(find.text('Crea la partita'));
+        await pumpUntilFound(tester, find.text('Resta'));
         await tester.pumpAndSettle();
         await tester.tap(find.text('Elimina').last);
-        await _wait(tester);
+        await pumpUntil(
+          tester,
+          () => opened == 1,
+          what: 'nuova partita aperta',
+        );
         await tester.pumpAndSettle();
         expect(opened, 1);
       },
@@ -357,7 +356,7 @@ void main() {
     await tester.ensureVisible(find.text('Crea la partita'));
     await tester.pump();
     await tester.tap(find.text('Crea la partita'));
-    await _wait(tester);
+    await pumpUntilFound(tester, find.byType(QrCodeView));
     await tester.pumpAndSettle();
     expect(find.byType(ConnectionIndicator), findsOneWidget);
     expect(find.text('In collegamento'), findsWidgets);
@@ -370,7 +369,7 @@ void main() {
         openGuest: (_, _) => b,
       ),
     ))!;
-    await _wait(tester);
+    await pumpUntilFound(tester, find.text('Collegato'));
     expect(find.text('Collegato'), findsWidgets);
     await tester.runAsync(guest.close);
     await tester.runAsync(

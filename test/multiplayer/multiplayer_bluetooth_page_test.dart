@@ -11,13 +11,7 @@ import 'package:scacchi/multiplayer/multiplayer_page.dart';
 import 'package:scacchi/multiplayer/transport.dart';
 
 import '../localized_app.dart';
-
-Future<void> _wait(WidgetTester tester) async {
-  await tester.runAsync(
-    () => Future<void>.delayed(const Duration(milliseconds: 100)),
-  );
-  await tester.pump();
-}
+import '../support/wait.dart';
 
 void main() {
   setUp(extraChannelFactories.clear);
@@ -47,7 +41,7 @@ void main() {
     await tester.ensureVisible(find.text('Crea la partita'));
     await tester.pump();
     await tester.tap(find.text('Crea la partita'));
-    await _wait(tester);
+    await pumpUntilFound(tester, find.byType(QrCodeView));
     await tester.pumpAndSettle();
     final view = tester.widget<QrCodeView>(find.byType(QrCodeView));
     final invite = GameInvite.parse(view.data)!;
@@ -104,7 +98,7 @@ void main() {
     await tester.tap(find.text('Unisciti con il QR'));
     await tester.pumpAndSettle();
     scanned!(invite.toLink());
-    await _wait(tester);
+    await pumpUntilFound(tester, find.text('Tocca all\'avversario'));
     await tester.pumpAndSettle();
     expect(checks, [false]);
     expect(find.text('Tocca all\'avversario'), findsOneWidget);
@@ -146,7 +140,7 @@ void main() {
     await tester.tap(find.text('Unisciti con il QR'));
     await tester.pumpAndSettle();
     scanned!(invite.toLink());
-    await _wait(tester);
+    await pumpUntilFound(tester, find.text('Tocca all\'avversario'));
     await tester.pumpAndSettle();
     expect(checks, isEmpty);
     expect(find.text('Tocca all\'avversario'), findsOneWidget);

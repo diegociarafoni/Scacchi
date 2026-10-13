@@ -61,6 +61,16 @@ Per aggiornare i riferimenti dopo un cambio grafico voluto:
 flutter test --tags golden test/golden --update-goldens   # su Linux, oppure in un container Linux
 ```
 
+## Test deterministici
+
+Un test non deve dipendere dal tempo, dal carico del runner o dagli strumenti installati. Regole:
+
+- Niente attese fisse per disco, relay o Bluetooth: si aspetta la condizione con `until`, `untilSaved`, `untilMoves` o, nei widget test, `pumpUntil` (`test/support/wait.dart`). Scadono con un messaggio che dice cosa mancava.
+- Per i canali in memoria (`LoopbackTransport`) basta `settle()`, che conta i giri del ciclo di eventi invece dei millisecondi.
+- Un'attesa a tempo fisso resta solo per provare che qualcosa *non* succede.
+- I golden non dipendono dall'ambiente: `test/golden/flutter_test_config.dart` fissa il motore come disponibile (`StockfishTransport.debugSupported`), altrimenti la schermata cambia secondo che Stockfish sia installato.
+- Per cercare gli instabili si esegue la suite con la CPU satura (per esempio un ciclo vuoto per ogni core, più `--concurrency` pari ai core) e si ripete: un test corretto passa ogni volta.
+
 ## Accessibilità
 
 `test/accessibility/` verifica, in tema chiaro e scuro, sulla schermata principale:

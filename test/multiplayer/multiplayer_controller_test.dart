@@ -12,7 +12,7 @@ import 'package:scacchi/multiplayer/local_address.dart';
 import 'package:scacchi/multiplayer/multiplayer_controller.dart';
 import 'package:scacchi/multiplayer/transport.dart';
 
-Future<void> settle() => Future<void>.delayed(const Duration(milliseconds: 50));
+import '../support/wait.dart';
 
 /// Ospite e invitato collegati in memoria.
 Future<(MultiplayerController, MultiplayerController)> pair({
@@ -176,7 +176,10 @@ void main() {
     expect(guest.status, MultiplayerStatus.connecting);
     // Il canale riprova da solo e avvisa quando si collega.
     await down.comeUp();
-    await Future<void>.delayed(const Duration(milliseconds: 100));
+    await until(
+      () => guest.status == MultiplayerStatus.peerTurn,
+      what: 'canale ricollegato',
+    );
     expect(guest.status, MultiplayerStatus.peerTurn);
     expect(host.status, MultiplayerStatus.myTurn);
     await host.close();
