@@ -1,0 +1,369 @@
+{
+  "storyTitle": "História",
+  "storyEntrySubtitle": "Uma jornada em capítulos: lições, quebra-cabeças e desafios",
+  "storyChapterNumber": "Capítulo {n}",
+  "@storyChapterNumber": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "storyProgress": "{done} capítulos de {total}",
+  "@storyProgress": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyChapterLocked": "Abre quando você terminar o capítulo anterior",
+  "storyChapterDone": "Capítulo concluído",
+  "storyContinue": "Continuar",
+  "storyFinished": "A história acabou. Lições, quebra-cabeças e partidas continuam disponíveis no resto do app.",
+  "storyStepLessons": "Lições: {value} de {total}",
+  "@storyStepLessons": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyStepPuzzles": "Quebra-cabeças do capítulo: {value} de {total}",
+  "@storyStepPuzzles": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyStepGuardian": "O guardião do capítulo",
+  "storyStepBoss": "Desafie {name}",
+  "@storyStepBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyStepDone": "feito",
+  "storyStepTodo": "a fazer",
+  "storyStepLocked": "bloqueado",
+  "storyStepLockedHint": "Termine antes a etapa anterior.",
+  "storyEngineMissing": "Os desafios são jogados onde o adversário do computador funciona: Android e iOS, ou Windows e Linux com o Stockfish instalado.",
+  "storyBossWon": "Você venceu {name}!",
+  "@storyBossWon": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyBossLost": "{name} resiste por enquanto: tente de novo quando quiser.",
+  "@storyBossLost": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPuzzlesNone": "Não foi possível carregar os quebra-cabeças: tente de novo.",
+  "storyPrologueTitle": "A trilha dos primeiros passos",
+  "storyPrologueIntro": "Antes da vila há uma trilha, e nela um pintinho curioso. Aprenda com ele como cada peça se move: torre, bispo, dama, rei, cavalo e peão.",
+  "storyPrologueBoss": "{name}, o pintinho da trilha, quer uma partida para experimentar as peças novas.",
+  "@storyPrologueBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPrologueOutro": "As peças não têm mais segredos para você. A vila ao pé da fortaleza está a poucos passos.",
+  "storyVillageTitle": "A vila das peças",
+  "storyVillageIntro": "Você chega à vila ao pé da fortaleza de Rokko. Os aldeões jogam o dia todo, mas deixam peças soltas: aprenda a capturar e defender, e depois mostre que sabe achar uma peça sem defesa.",
+  "storyVillageBoss": "{name}, o guardião da vila, desafia você para ver se aprendeu de verdade.",
+  "@storyVillageBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyVillageOutro": "A vila faz uma festa em sua honra. O caminho até os portões da cidade está livre.",
+  "storyGatesTitle": "Os portões da cidade",
+  "storyGatesIntro": "Os guardas param você nos portões: para entrar é preciso conhecer as regras, do xeque ao roque. Uma promoção vista a tempo abre até o portão mais alto.",
+  "storyGatesBoss": "{name}, capitã da guarda, quer um teste antes de deixar você passar.",
+  "@storyGatesBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyGatesOutro": "Os portões se abrem. À sua frente se ergue a torre do rei.",
+  "storyTowerTitle": "A torre do rei",
+  "storyTowerIntro": "O rei mora no alto da torre e sabe se defender. Aprenda os xeques-mate que o encurralam, mesmo quando as próprias peças dele formam uma muralha.",
+  "storyTowerBoss": "{name}, o cavaleiro que adora gambitos, espera no alto da escada.",
+  "@storyTowerBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyTowerOutro": "O rei da torre levou xeque-mate. Restam a floresta e suas armadilhas.",
+  "storyForestTitle": "A floresta das armadilhas",
+  "storyForestIntro": "Na floresta cada peça esconde uma armadilha: garfos, cravadas, espetos. Aprenda a vê-las antes de todo mundo.",
+  "storyForestBoss": "{name}, o guia da floresta, conhece cada trilha e cada laço.",
+  "@storyForestBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyForestOutro": "Você atravessou a floresta sem cair em nenhuma armadilha. O castelo espera.",
+  "storyCastleTitle": "O castelo dos finais",
+  "storyCastleIntro": "No castelo restam poucas peças no tabuleiro e cada lance conta. Aqui descobrimos quem sabe fechar uma partida.",
+  "storyCastleBoss": "{name}, o castelão, guarda a entrada da sala da coroa.",
+  "@storyCastleBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyCastleOutro": "A grande porta se abre: a coroa está perto.",
+  "storyCrownTitle": "A coroa",
+  "storyCrownIntro": "A sala da coroa. Um bom começo é meia vitória: o centro, o desenvolvimento, o roque.",
+  "storyCrownBoss": "{name}, o guardião da coroa, joga aberturas como ninguém.",
+  "@storyCrownBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyCrownOutro": "A coroa é sua. Mas além das muralhas ainda há uma planície esperando para ser explorada.",
+  "storyChapterCurrent": "Em andamento",
+  "@storyChapterCurrent": {
+    "description": "Etichetta del capitolo corrente nella storia"
+  },
+  "storyChapterSteps": "{done} etapas de {total}",
+  "@storyChapterSteps": {
+    "description": "Passi conclusi di un capitolo, per la barra di avanzamento",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyPassageLessonsTitle": "Lições concluídas!",
+  "@storyPassageLessonsTitle": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassagePuzzlesTitle": "Quebra-cabeças resolvidos!",
+  "@storyPassagePuzzlesTitle": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageGuardianTitle": "Guardião vencido!",
+  "@storyPassageGuardianTitle": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageNextPuzzles": "Você aprendeu o que precisava. Agora teste-se com os quebra-cabeças do capítulo.",
+  "@storyPassageNextPuzzles": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageNextGuardian": "Agora enfrente o guardião do capítulo.",
+  "@storyPassageNextGuardian": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageNextBoss": "Você está pronto: {name} espera você para o desafio final do capítulo.",
+  "@storyPassageNextBoss": {
+    "description": "Foglio di passaggio della storia",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPassageGoPuzzles": "Ir aos quebra-cabeças",
+  "@storyPassageGoPuzzles": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageGoGuardian": "Desafiar o guardião",
+  "@storyPassageGoGuardian": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyChallengeTitle": "Desafio de {name}",
+  "@storyChallengeTitle": {
+    "description": "Foglio della sfida al custode",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPassageGoBoss": "Desafiar {name}",
+  "@storyPassageGoBoss": {
+    "description": "Foglio di passaggio della storia",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPassageLater": "Depois",
+  "@storyPassageLater": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageChapterTitle": "Capítulo {n} concluído!",
+  "@storyPassageChapterTitle": {
+    "description": "Foglio di passaggio della storia",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "storyPassageChapterNext": "O capítulo {n} abre: {title}.",
+  "@storyPassageChapterNext": {
+    "description": "Foglio di passaggio della storia",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPassageGoChapter": "Ir ao próximo capítulo",
+  "@storyPassageGoChapter": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageStoryDone": "Você terminou a história!",
+  "@storyPassageStoryDone": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageClose": "Fechar",
+  "@storyPassageClose": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPlainTitle": "A planície dos planos",
+  "@storyPlainTitle": {
+    "description": "storyPlainTitle"
+  },
+  "storyPlainIntro": "Depois da coroa existe uma planície tranquila onde as batalhas são vencidas antes de começar: é preciso ter um plano, peças ativas e um pouco de paciência.",
+  "@storyPlainIntro": {
+    "description": "storyPlainIntro"
+  },
+  "storyPlainBoss": "{name}, o lobo da planície, prepara cada ataque com um gambito e um plano preciso.",
+  "@storyPlainBoss": {
+    "description": "storyPlainBoss",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPlainOutro": "A planície é sua. Agora você sabe que cada peça tem uma tarefa e cada lance tem um motivo.",
+  "@storyPlainOutro": {
+    "description": "storyPlainOutro"
+  },
+  "storyAcademyTitle": "A academia do mestre",
+  "@storyAcademyTitle": {
+    "description": "storyAcademyTitle"
+  },
+  "storyAcademyIntro": "No alto da colina mora um velho mestre que ensina com poucos princípios: conte os lances, encontre a oposição, nunca esqueça as regras de abertura.",
+  "@storyAcademyIntro": {
+    "description": "storyAcademyIntro"
+  },
+  "storyAcademyBoss": "{name}, a estrela da academia, ataca sem descanso e não perdoa erros.",
+  "@storyAcademyBoss": {
+    "description": "storyAcademyBoss",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyAcademyOutro": "A academia recebe você como um dos seus. A história acabou, mas o jogo continua.",
+  "@storyAcademyOutro": {
+    "description": "storyAcademyOutro"
+  },
+  "@storyCrownIntro": {
+    "description": "storyCrownIntro"
+  },
+  "@storyCrownOutro": {
+    "description": "storyCrownOutro"
+  },
+  "storyGuardianPrologueWelcome": "Oi, eu sou o Tino! Vou mostrar como cada peça se move.",
+  "storyGuardianProloguePuzzleOk": "Você acertou! Já sabe como as peças se movem.",
+  "storyGuardianProloguePuzzleRetry": "Quase! Veja para onde cada peça pode ir e tente de novo.",
+  "storyGuardianPrologueBoss": "Vamos jogar uma partida? Prometo começar com calma.",
+  "storyGuardianPrologueLessonDone": "Agora você conhece as peças. Vamos ver você usá-las.",
+  "storyGuardianVillageWelcome": "Bem-vindo à vila! Aqui vou ensinar você a não deixar peças soltas.",
+  "storyGuardianVillagePuzzleOk": "Muito bem, você viu na hora!",
+  "storyGuardianVillagePuzzleRetry": "Quase lá: procure a peça sem defesa.",
+  "storyGuardianVillageBoss": "Agora somos você e eu. Eu adoro a Abertura Italiana, cuidado!",
+  "storyGuardianVillageLessonDone": "Muito bem, nenhuma peça solta. Hora de testar.",
+  "storyGuardianGatesWelcome": "Só se passa pelos portões conhecendo as regras. Vamos revê-las em ordem.",
+  "storyGuardianGatesPuzzleOk": "Isso mesmo: uma promoção na hora certa.",
+  "storyGuardianGatesPuzzleRetry": "Ainda não: revise as regras e tente mais uma vez.",
+  "storyGuardianGatesBoss": "Uma partida para conferir: vou jogar o Gambito da Dama.",
+  "storyGuardianGatesLessonDone": "Você aprendeu as regras. Os quebra-cabeças esperam.",
+  "storyGuardianTowerWelcome": "Esta torre se sobe com xeques-mate. Vamos começar.",
+  "storyGuardianTowerPuzzleOk": "Xeque-mate! Direto ao ponto.",
+  "storyGuardianTowerPuzzleRetry": "Não, olhe para o rei: por onde ele não consegue fugir?",
+  "storyGuardianTowerBoss": "Chega de teoria: vamos jogar. Eu ataco com o Gambito do Rei.",
+  "storyGuardianTowerLessonDone": "Você já sabe dar xeque-mate. Agora encontre os escondidos.",
+  "storyGuardianForestWelcome": "Na floresta cada galho esconde uma armadilha. Olhos abertos!",
+  "storyGuardianForestPuzzleOk": "Ha, você não caiu na armadilha. Muito bem!",
+  "storyGuardianForestPuzzleRetry": "Opa, a armadilha funcionou. Tente de novo!",
+  "storyGuardianForestBoss": "Vamos ver se você sabe armar as suas. Eu jogo a Inglesa.",
+  "storyGuardianForestLessonDone": "As armadilhas não enganam mais você. Treine armar as suas.",
+  "storyGuardianCastleWelcome": "Nos finais cada lance conta. Com calma, um passo de cada vez.",
+  "storyGuardianCastlePuzzleOk": "Paciente e preciso: é assim que se vence um final.",
+  "storyGuardianCastlePuzzleRetry": "Sem pressa: conte os lances e tente de novo.",
+  "storyGuardianCastleBoss": "Uma partida lenta nos espera. Eu jogo a Siciliana.",
+  "storyGuardianCastleLessonDone": "Poucas peças, cada lance conta. Agora os quebra-cabeças.",
+  "storyGuardianCrownWelcome": "A coroa se conquista desde o início: uma abertura elegante é meio jogo.",
+  "storyGuardianCrownPuzzleOk": "Elegante: esse é o lance certo.",
+  "storyGuardianCrownPuzzleRetry": "Perto: pense em desenvolver suas peças e tente de novo.",
+  "storyGuardianCrownBoss": "Posso jogar uma partida com você? Escolho a Espanhola.",
+  "storyGuardianCrownLessonDone": "Centro, desenvolvimento, roque: tudo seu. Agora os quebra-cabeças.",
+  "storyGuardianPlainWelcome": "Na planície se vence com um plano. Vou mostrar como.",
+  "storyGuardianPlainPuzzleOk": "Exato. Um plano claro vence a pressa.",
+  "storyGuardianPlainPuzzleRetry": "Perto. Pense no que a sua peça quer.",
+  "storyGuardianPlainBoss": "Vamos jogar? Aviso: eu adoro o Gambito Evans.",
+  "storyGuardianPlainLessonDone": "Você tem um plano e peças ativas. Agora os quebra-cabeças.",
+  "storyGuardianAcademyWelcome": "Na academia se aprende com os mestres. Vamos, mostre o que você sabe!",
+  "storyGuardianAcademyPuzzleOk": "Ótimo! É assim que os mestres jogam.",
+  "storyGuardianAcademyPuzzleRetry": "Não desista: respire e tente de novo.",
+  "storyGuardianAcademyBoss": "O desafio final: eu jogo a Defesa Índia do Rei. Sem facilidades!",
+  "storyGuardianAcademyLessonDone": "Lições concluídas, aluno. Agora o teste em campo.",
+  "storyGuardianSays": "{name} diz: {text}",
+  "@storyGuardianSays": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "text": {
+        "type": "String"
+      }
+    }
+  }
+}

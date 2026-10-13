@@ -1,0 +1,21 @@
+{
+  "backupTitle": "Backup e restauração",
+  "backupIntro": "O backup contém partidas, progresso, trilha de aprendizado, torneios, treinos e configurações. Guarde-o em um lugar seguro: o app funciona offline, então não existe cópia online.",
+  "backupShare": "Compartilhar o backup",
+  "backupShareSubject": "Backup do Rokko",
+  "backupRestoreFromText": "Restaurar a partir de texto",
+  "backupExported": "Backup pronto para salvar",
+  "backupExportFailed": "Falha no backup: {error}",
+  "backupRestoreStaged": "Backup pronto. Feche e abra o app novamente para restaurar seus dados.",
+  "backupRestoreFailed": "Falha na restauração: {error}",
+  "backupErrorNotApp": "Este não é um backup do Rokko",
+  "backupErrorNewerVersion": "Backup criado por uma versão mais recente",
+  "backupErrorUnexpectedFile": "Arquivo inesperado no backup: {file}",
+  "backupErrorInvalidFile": "Arquivo inválido no backup: {file}",
+  "backupErrorInvalidPreference": "Preferência inválida: {name}",
+  "backupErrorUnreadable": "Backup ilegível",
+  "backupRestoreDialogTitle": "Restaurar o backup",
+  "backupRestoreDialogBody": "Cole o conteúdo do arquivo de backup. Seus dados atuais serão substituídos.",
+  "backupCancel": "Cancelar",
+  "backupRestore": "Restaurar"
+}

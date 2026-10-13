@@ -1,0 +1,4 @@
+"NSBluetoothAlwaysUsageDescription" = "O Bluetooth é usado apenas para jogar com um amigo por perto, sem Wi-Fi. Os lances viajam criptografados e somente entre os dois celulares.";
+"NSCameraUsageDescription" = "A câmera lê o QR code de uma partida enviada por outro celular e tira a foto do seu perfil, que fica somente neste celular.";
+"NSLocalNetworkUsageDescription" = "A rede local é usada apenas para jogar com um amigo no outro celular, no mesmo Wi-Fi ou ponto de acesso. Os lances viajam criptografados e somente entre os dois celulares.";
+"NSPhotoLibraryUsageDescription" = "Usada para ler o QR code de uma partida a partir de uma imagem que você escolher e para escolher a foto do seu perfil, que fica somente neste celular.";
