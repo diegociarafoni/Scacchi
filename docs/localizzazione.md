@@ -16,7 +16,7 @@ L'italiano è la lingua base e il modello degli `.arb`; inglese e portoghese del
 
 I termini scacchistici e le regole di stile di ogni lingua sono in [glossario-scacchistico.md](glossario-scacchistico.md); per il portoghese del Brasile in [glossario-portoghese.md](glossario-portoghese.md). Chi traduce o rilegge parte da lì.
 
-Sono dichiarati italiano, inglese, portoghese e tedesco (`tool/lingue.json`); il tedesco (`de`, glossario in [glossario-tedesco.md](glossario-tedesco.md)) è «in lavorazione»: tutti i `.arb` sono tradotti, i contenuti lunghi (percorso, maestri, finali, bot, nomi delle aperture) arrivano con i file `assets/content/de/`; italiano e inglese restano obbligatori in ogni modifica ai testi.
+Sono dichiarati italiano, inglese, portoghese e tedesco (`tool/lingue.json`); il tedesco (`de`, glossario in [glossario-tedesco.md](glossario-tedesco.md)) è «in lavorazione»: tutti i `.arb` sono tradotti, i contenuti lunghi (percorso, maestri, finali, bot, nomi delle aperture) arrivano in una PR a parte; italiano e inglese restano obbligatori in ogni modifica ai testi.
 
 ## File
 
