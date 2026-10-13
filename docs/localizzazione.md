@@ -88,6 +88,10 @@ I testi lunghi o in lista (lezioni, grandi maestri, finali, frasi dei bot, nomi 
 
 Creare `lib/l10n/<codice>/` con tutti i file e le chiavi delle altre lingue e rigenerare con `dart tool/l10n.dart`. Va poi dichiarata in `tool/lingue.json` e aggiunta a `AppLanguage` (`lib/settings/app_language.dart`), a `res/xml/locales_config.xml`, a `CFBundleLocalizations` in `ios/Runner/Info.plist` e con un `InfoPlist.strings` in `ios/Runner/<lingua>.lproj/`; la scelta compare nelle Impostazioni e `resolveAppLocale` la riconosce.
 
+## Turco
+
+Il turco (`tr`, «Türkçe») ha `lib/l10n/tr/*.arb` e `assets/content/tr/*.json`, gli stessi file e le stesse chiavi delle altre lingue. Stato in `tool/lingue.json`: `in lavorazione` finché la traduzione non è completa e riletta. È registrato in `AppLanguage`, `locales_config.xml`, `CFBundleLocalizations` (iOS e macOS) e `ios/Runner/tr.lproj/InfoPlist.strings`. Il turco non ha genere grammaticale: nei nomi delle aperture le forme maschile e femminile coincidono. `test/l10n_turkish_test.dart` verifica chiavi, segnaposto, testi vuoti e plurali. Termini e stile: [glossario](glossario-scacchistico.md#turco).
+
 ## Schermate migrate
 
 | Schermata | File | Testi rimasti nel codice |

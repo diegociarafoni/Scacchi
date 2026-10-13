@@ -1,0 +1,475 @@
+{
+  "puzzleGoal": "{goal, select, mateIn1{1 hamlede mat} mateIn2{2 hamlede mat} mateIn3{3 hamlede mat} mateIn4{4 hamlede mat} mate{Rakibe şah mat çek} crushing{Kesin üstünlük sağla} advantage{Üstünlüğü ele geçir} equality{Beraberliği yakala} other{En iyi hamleyi bul}}",
+  "puzzleGoalSide": "{goal} · {side} oynuyor",
+  "@puzzleGoalSide": {
+    "description": "Puzzle header card: goal and side to move",
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      },
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "challengeTitle": "Bir arkadaşına meydan oku",
+  "challengeSubtitle": "İki telefonda aynı bulmacalar, internet yok",
+  "challengeIntro": "Seriyi seç ve QR kodunu arkadaşına göster: ikiniz de aynı bulmacaları oynarsınız. Sonunda ikinci bir QR kodla puanlarınızı paylaşırsınız.",
+  "challengePrepare": "Meydan okumayı hazırla",
+  "challengeReady": "Meydan okuma hazır: {mode}",
+  "challengeShowInvite": "QR kodunu arkadaşına göster",
+  "challengePlay": "Serini oyna",
+  "challengeReceive": "Meydan okuma al",
+  "challengeInviteTitle": "Meydan okuma: {mode}",
+  "challengeInviteHint": "Arkadaşın Bulmacalar › Bir arkadaşına meydan oku › Meydan okuma al seçeneğini açıp kodu taramalı.",
+  "challengeReceiveHint": "Arkadaşının gösterdiği meydan okuma QR kodunu tara.",
+  "challengeNotInvite": "Bu QR kod bir meydan okuma değil: arkadaşından meydan okuma QR kodunu göstermesini iste.",
+  "challengeLibraryMismatch": "İki telefonda farklı bulmacalar var: Rokko'yu ikisinde de güncelle.",
+  "challengeCompareTitle": "Arkadaşınla meydan okuma",
+  "challengeShowResult": "Sonucumu göster",
+  "challengeResultTitle": "Sonucum: {score}",
+  "challengeResultHint": "Arkadaşın puanını görmek için bu kodu tarasın.",
+  "challengeReadResult": "Arkadaşının sonucunu oku",
+  "challengeReadResultHint": "Arkadaşının gösterdiği sonuç QR kodunu tara.",
+  "challengeNotResult": "Bu QR kod bir sonuç değil: arkadaşından sonuç QR kodunu göstermesini iste.",
+  "challengeOtherChallenge": "Bu sonuç başka bir meydan okumaya ait.",
+  "challengeWon": "Kazandın: {mine} - {theirs}",
+  "challengeLost": "Arkadaşın kazandı: {theirs} - {mine}",
+  "challengeDraw": "Berabere: {mine} - {theirs}",
+  "puzzleHubTitle": "Bulmacalar",
+  "@puzzleHubTitle": {
+    "description": "Titolo della scheda Puzzle"
+  },
+  "puzzleHubLoadError": "Bulmacalar yüklenemedi.",
+  "@puzzleHubLoadError": {
+    "description": "Errore di caricamento dei puzzle"
+  },
+  "puzzleHubRating": "Puan {rating}",
+  "@puzzleHubRating": {
+    "description": "Punteggio in cima alla scheda Puzzle",
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleHubStats": "Çözülen {solved} · Başarısız {failed} · {total} bulmaca var",
+  "@puzzleHubStats": {
+    "description": "Riga sotto il punteggio",
+    "placeholders": {
+      "solved": {
+        "type": "int"
+      },
+      "failed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleTraining": "Antrenman",
+  "@puzzleTraining": {
+    "description": "Voce Allenamento"
+  },
+  "puzzleTrainingSubtitle": "Puanına uygun bulmacalar",
+  "@puzzleTrainingSubtitle": {
+    "description": "Sottotitolo di Allenamento"
+  },
+  "puzzleDailyTitle": "Günün bulmacası",
+  "@puzzleDailyTitle": {
+    "description": "Puzzle del giorno: voce e titolo"
+  },
+  "puzzleDailySubtitle": "Zorluk {rating}",
+  "@puzzleDailySubtitle": {
+    "description": "Sottotitolo del puzzle del giorno",
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleByTheme": "Temaya göre",
+  "@puzzleByTheme": {
+    "description": "Voce Per tema"
+  },
+  "puzzleByThemeSubtitle": "Matlar, çatallar, oyun sonları ve dahası",
+  "@puzzleByThemeSubtitle": {
+    "description": "Sottotitolo di Per tema"
+  },
+  "puzzleThemesTitle": "Temalar",
+  "@puzzleThemesTitle": {
+    "description": "Titolo dell'elenco dei temi"
+  },
+  "puzzleReview": "Hatalarını tekrar et",
+  "@puzzleReview": {
+    "description": "Voce Ripasso degli errori"
+  },
+  "puzzleReviewTitle": "Tekrar",
+  "@puzzleReviewTitle": {
+    "description": "Titolo della schermata di ripasso"
+  },
+  "puzzleReviewNone": "Bugün tekrar edilecek bir şey yok",
+  "@puzzleReviewNone": {
+    "description": "Nessun puzzle da ripassare"
+  },
+  "puzzleReviewDue": "Bugün tekrar edilecek: {count}",
+  "@puzzleReviewDue": {
+    "description": "Puzzle da ripassare",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleSectionTimed": "Süreli modlar",
+  "@puzzleSectionTimed": {
+    "description": "Intestazione delle modalità a tempo"
+  },
+  "puzzleSectionPractice": "Alıştırma",
+  "@puzzleSectionPractice": {
+    "description": "Intestazione delle modalità libere"
+  },
+  "puzzleRecord": "En iyi {best}",
+  "@puzzleRecord": {
+    "description": "Record della modalità",
+    "placeholders": {
+      "best": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunLabel": "{mode, select, storm{Süreli kombo} rush3{3 dakikalık koşu} rush5{5 dakikalık koşu} survival{Hayatta kalma} other{Seri}}",
+  "@puzzleRunLabel": {
+    "description": "Nome della modalità a serie",
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleRunDescription": "{mode, select, storm{3 dakika, kombolarla bonus saniyeler} rush3{3 dakika, üç hata hakkı} rush5{5 dakika, üç hata hakkı} survival{Süre yok, üç hata hakkı} other{Süre yok, ilk hatada biter}}",
+  "@puzzleRunDescription": {
+    "description": "Descrizione della modalità a serie",
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleDefaultTitle": "Bulmaca",
+  "@puzzleDefaultTitle": {
+    "description": "Titolo predefinito della schermata del puzzle"
+  },
+  "puzzleEmpty": "Sunulacak bulmaca yok.",
+  "@puzzleEmpty": {
+    "description": "Nessun puzzle disponibile"
+  },
+  "puzzleHelp": "Nasıl çalışır",
+  "@puzzleHelp": {
+    "description": "Pulsante che riapre la spiegazione"
+  },
+  "puzzleSide": "{side, select, white{Beyaz} other{Siyah}}",
+  "@puzzleSide": {
+    "description": "Colore che muove",
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleRestarted": "Başlangıç konumu. {side} için en iyi hamleyi bul.",
+  "@puzzleRestarted": {
+    "description": "Dopo aver ricominciato",
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleCorrect": "Doğru! Devam et.",
+  "@puzzleCorrect": {
+    "description": "Mossa giusta"
+  },
+  "puzzleWrong": "Bu doğru hamle değil. Baştan başlamak için “Tekrar dene”ye bas.",
+  "@puzzleWrong": {
+    "description": "Mossa sbagliata"
+  },
+  "puzzleSolved": "Çözüldü!",
+  "@puzzleSolved": {
+    "description": "Puzzle risolto"
+  },
+  "puzzleDone": "Bulmaca bitti.",
+  "@puzzleDone": {
+    "description": "Puzzle concluso dopo errori o soluzione"
+  },
+  "puzzleRevealed": "Doğru hamle şu.",
+  "@puzzleRevealed": {
+    "description": "Mossa mostrata"
+  },
+  "puzzleOutcomeRepeat": "Daha önce görüldü: puan değişmedi.",
+  "@puzzleOutcomeRepeat": {
+    "description": "Puzzle già visto"
+  },
+  "puzzleOutcomeRating": "Puan {rating} ({delta}).",
+  "@puzzleOutcomeRating": {
+    "description": "Punteggio dopo il puzzle",
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      },
+      "delta": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleNoMore": "Şimdilik başka bulmaca yok.",
+  "@puzzleNoMore": {
+    "description": "Fine dei puzzle"
+  },
+  "puzzleDifficulty": "Bulmaca {rating}",
+  "@puzzleDifficulty": {
+    "description": "Difficoltà del puzzle risolto",
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleProgress": "Bulunan hamleler: {done} / {total}",
+  "@puzzleProgress": {
+    "description": "Mosse trovate",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleProgressKid": "Bulmaca ilerlemesi",
+  "@puzzleProgressKid": {
+    "description": "Avanzamento senza cifre"
+  },
+  "puzzleHint": "İpucu",
+  "@puzzleHint": {
+    "description": "Pulsante suggerimento"
+  },
+  "puzzleSolution": "Çözüm",
+  "@puzzleSolution": {
+    "description": "Pulsante soluzione"
+  },
+  "puzzleRetry": "Tekrar dene",
+  "@puzzleRetry": {
+    "description": "Pulsante riprova"
+  },
+  "puzzleNext": "Sonraki",
+  "@puzzleNext": {
+    "description": "Pulsante prossimo"
+  },
+  "puzzleSkip": "Atla",
+  "@puzzleSkip": {
+    "description": "Pulsante salta"
+  },
+  "puzzleRunStart": "Başla",
+  "@puzzleRunStart": {
+    "description": "Pulsante che avvia la serie"
+  },
+  "puzzleRunRecordFooter": "En iyin: {best} bulmaca.",
+  "@puzzleRunRecordFooter": {
+    "description": "Record sotto le regole",
+    "placeholders": {
+      "best": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunRight": "Doğru!",
+  "@puzzleRunRight": {
+    "description": "Esito giusto"
+  },
+  "puzzleRunWrong": "Yanlış",
+  "@puzzleRunWrong": {
+    "description": "Esito sbagliato"
+  },
+  "puzzleRunEndMistake": "Bir bulmacayı kaçırdın: seri bitti.",
+  "@puzzleRunEndMistake": {
+    "description": "Fine per un errore"
+  },
+  "puzzleRunEndLives": "Üç hakkını da kaybettin.",
+  "@puzzleRunEndLives": {
+    "description": "Fine per le vite"
+  },
+  "puzzleRunEndTime": "Süre doldu.",
+  "@puzzleRunEndTime": {
+    "description": "Fine per il tempo"
+  },
+  "puzzleRunEndExhausted": "Mevcut tüm bulmacaları çözdün.",
+  "@puzzleRunEndExhausted": {
+    "description": "Fine per esaurimento"
+  },
+  "puzzleRunScore": "Skor {score}",
+  "@puzzleRunScore": {
+    "description": "Punti della serie",
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunTimeLeft": "Kalan süre: {time}",
+  "@puzzleRunTimeLeft": {
+    "description": "Tempo rimasto, per i lettori di schermo",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleRunCombo": "Kombo {combo}",
+  "@puzzleRunCombo": {
+    "description": "Combo in corso",
+    "placeholders": {
+      "combo": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunLives": "Haklar: {left} / {total}",
+  "@puzzleRunLives": {
+    "description": "Vite rimaste",
+    "placeholders": {
+      "left": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunOver": "Seri tamamlandı",
+  "@puzzleRunOver": {
+    "description": "Titolo del risultato"
+  },
+  "puzzleRunSolvedLabel": "bulmaca çözüldü",
+  "@puzzleRunSolvedLabel": {
+    "description": "Etichetta sotto il punteggio finale"
+  },
+  "puzzleRunNewRecord": "Yeni kişisel rekor!",
+  "@puzzleRunNewRecord": {
+    "description": "Nuovo record"
+  },
+  "puzzleRunBest": "En iyi: {best}",
+  "@puzzleRunBest": {
+    "description": "Record personale",
+    "placeholders": {
+      "best": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunBestCombo": "En iyi kombo: {combo}",
+  "@puzzleRunBestCombo": {
+    "description": "Combo migliore",
+    "placeholders": {
+      "combo": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunAgain": "Tekrar oyna",
+  "@puzzleRunAgain": {
+    "description": "Pulsante rigioca"
+  },
+  "puzzleGuideGoalHeading": "Amaç",
+  "@puzzleGuideGoalHeading": {
+    "description": "Intestazione della spiegazione"
+  },
+  "puzzleGuideRulesHeading": "Nasıl oynanır",
+  "@puzzleGuideRulesHeading": {
+    "description": "Intestazione della spiegazione"
+  },
+  "puzzleGuideGotIt": "Anladım",
+  "@puzzleGuideGotIt": {
+    "description": "Chiude la spiegazione"
+  },
+  "puzzleThemeMateIn1": "1 hamlede mat",
+  "puzzleThemeMateIn2": "2 hamlede mat",
+  "puzzleThemeMateIn3": "3 hamlede mat",
+  "puzzleThemeMateIn4": "4 hamlede mat",
+  "puzzleThemeMateIn5": "5 veya daha fazla hamlede mat",
+  "puzzleThemeBackRankMate": "Son sıra matı",
+  "puzzleThemeSmotheredMate": "Boğulma matı",
+  "puzzleThemeFork": "Çatal",
+  "puzzleThemePin": "Bağlama",
+  "puzzleThemeSkewer": "Şiş",
+  "puzzleThemeDiscoveredAttack": "Açılan saldırı",
+  "puzzleThemeDoubleCheck": "Çifte şah",
+  "puzzleThemeHangingPiece": "Korunmasız taş",
+  "puzzleThemeTrappedPiece": "Sıkışmış taş",
+  "puzzleThemeDeflection": "Saptırma",
+  "puzzleThemeAttraction": "Çekme",
+  "puzzleThemeSacrifice": "Fedakârlık",
+  "puzzleThemeCapturingDefender": "Savunanı alma",
+  "puzzleThemeClearance": "Yol açma",
+  "puzzleThemeInterference": "Araya girme",
+  "puzzleThemeIntermezzo": "Ara hamle",
+  "puzzleThemeXRayAttack": "X-ray saldırısı",
+  "puzzleThemeQuietMove": "Sessiz hamle",
+  "puzzleThemeDefensiveMove": "Savunma hamlesi",
+  "puzzleThemeZugzwang": "Zugzwang",
+  "puzzleThemePromotion": "Terfi",
+  "puzzleThemeUnderPromotion": "Düşük terfi",
+  "puzzleThemeAdvancedPawn": "İlerlemiş piyon",
+  "puzzleThemeExposedKing": "Açıkta kalan şah",
+  "puzzleThemeKingsideAttack": "Şah kanadı saldırısı",
+  "puzzleThemeQueensideAttack": "Vezir kanadı saldırısı",
+  "puzzleThemeEnPassant": "Anpasan",
+  "puzzleThemeCastling": "Rok",
+  "puzzleThemeOpening": "Açılış",
+  "puzzleThemeMiddlegame": "Orta oyun",
+  "puzzleThemeEndgame": "Oyun sonu",
+  "puzzleThemePawnEndgame": "Piyon oyun sonu",
+  "puzzleThemeRookEndgame": "Kale oyun sonu",
+  "puzzleThemeQueenEndgame": "Vezir oyun sonu",
+  "puzzleThemeKnightEndgame": "At oyun sonu",
+  "puzzleThemeBishopEndgame": "Fil oyun sonu",
+  "puzzleGuideThemeTitle": "Temaya göre bulmacalar",
+  "puzzleGuideTrainingGoal": "Her bulmacada en iyi hamleyi bul, birbiri ardına.",
+  "puzzleGuideTrainingRule1": "Bulmacalar puanına göre seçilir: ne kadar iyi yaparsan o kadar zorlaşır.",
+  "puzzleGuideTrainingRule2": "Doğru taşı oynat: hamle doğruysa rakibin karşılık verir ve sıra yine sende; yanlışsa hamle geri alınır.",
+  "puzzleGuideTrainingRule3": "Yeni bir bulmacayı ilk denemede çözersen puanın artar; hata yaparsan veya çözüme bakarsan başarısız sayılır, puanın düşer ve bulmaca tekrara girer. Daha önce gördüğün bulmacalar puanını değiştirmez.",
+  "puzzleGuideTrainingRule4": "İpucu sana hiçbir şeye mal olmaz: oynanacak taşın etrafına daire çizer.",
+  "puzzleGuideTrainingRule5": "Saat yok, hata sınırı yok: istediğin zaman bırakabilirsin.",
+  "puzzleGuideThemeGoal": "Tek bir taktik kalıbını çalış: her bulmacanın teması aynı.",
+  "puzzleGuideThemeRule1": "Doğru taşı oynat: hamle doğruysa rakibin karşılık verir; yanlışsa hamle geri alınır.",
+  "puzzleGuideThemeRule2": "Yeni bir bulmacayı ilk denemede çözersen puanın artar; hata yaparsan veya çözüm gösterilirse başarısız sayılır, puanın düşer ve bulmaca tekrara girer.",
+  "puzzleGuideThemeRule3": "Saat yok, hata sınırı yok.",
+  "puzzleGuideDailyGoal": "Bugünün bulmacasını çöz: gün boyunca aynı kalır.",
+  "puzzleGuideDailyRule1": "Doğru hamle dizisini bul: birini yanlış yaparsan geri alınır ve tekrar deneyebilirsin.",
+  "puzzleGuideDailyRule2": "“Tekrar dene” ile başlangıç konumundan yeniden başlarsın, “Çözüm” ile hamleleri görürsün.",
+  "puzzleGuideDailyRule3": "Hata yapmadan ve çözüme bakmadan çözersen çözülmüş sayılır; aksi halde başarısız sayılır.",
+  "puzzleGuideDailyRule4": "Yenisi yarın gelir.",
+  "puzzleGuideReviewGoal": "Yanlış yaptığın bulmacaların çözümlerini bul.",
+  "puzzleGuideReviewRule1": "Her bulmaca giderek artan aralıklarla geri gelir (1, 3, 7, 14 ve 30 gün): bugün yalnızca vakti gelenleri görürsün.",
+  "puzzleGuideReviewRule2": "Hatasız çözersen aralık uzar; hata yaparsan yeniden bir günden başlar.",
+  "puzzleGuideReviewRule3": "Tekrar, antrenman puanını değiştirmez.",
+  "puzzleGuideReviewRule4": "Bugünün bulmacaları bitince yapacak bir şey kalmaz.",
+  "puzzleGuideRunBase1": "Bulmacalar ilerledikçe zorlaşır.",
+  "puzzleGuideRunBase2": "Çözülen her bulmaca 1 puan eder.",
+  "puzzleGuideRunTail1": "Kişisel rekorun her mod için kaydedilir.",
+  "puzzleGuideRunTail2": "İstediğin zaman çıkabilirsin: kazandığın puanlar ve XP yine de sayılır.",
+  "puzzleGuideStormGoal": "{minutes} dakikada çözebildiğin kadar bulmaca çöz.",
+  "puzzleGuideStormRule1": "Bir hata {seconds} saniyeye mal olur, kombonu sıfırlar ve sonraki bulmacaya geçer.",
+  "puzzleGuideStormRule2": "Arka arkaya 5, 12, 20 ve 30 bulmacada 3, 5, 7 ve 10 saniye kazanırsın (sonra her 10 bulmacada 10).",
+  "puzzleGuideStormRule3": "Hak yok: süre bitince seri biter.",
+  "puzzleGuideRushGoal": "{minutes} dakikada, üç hakla, çözebildiğin kadar bulmaca çöz.",
+  "puzzleGuideLivesRule1": "Bir hata bir hakkına mal olur ve sonraki bulmacaya geçer.",
+  "puzzleGuideRushRule2": "Süre bitince ya da üçüncü hakkını kaybedince seri biter.",
+  "puzzleGuideSurvivalGoal": "Üç hakla ve süre sınırı olmadan çözebildiğin kadar bulmaca çöz.",
+  "puzzleGuideSurvivalRule2": "Üçüncü hakkını kaybedince seri biter.",
+  "puzzleGuideStreakGoal": "Arka arkaya çözebildiğin kadar bulmaca çöz: ilk hata seriyi bitirir.",
+  "puzzleGuideStreakRule1": "Süre sınırı yok, hak yok.",
+  "puzzleGuideStreakRule2": "Seri başına yalnızca bir bulmacayı “Atla” ile geçebilirsin."
+}

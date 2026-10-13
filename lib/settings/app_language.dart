@@ -13,7 +13,8 @@ enum AppLanguage {
   polish(Locale('pl')),
   indonesian(Locale('id')),
   russian(Locale('ru')),
-  dutch(Locale('nl'));
+  dutch(Locale('nl')),
+  turkish(Locale('tr'));
 
   const AppLanguage(this.locale);
 
@@ -34,6 +35,7 @@ enum AppLanguage {
     AppLanguage.indonesian => 'Bahasa Indonesia',
     AppLanguage.russian => 'Русский',
     AppLanguage.dutch => 'Nederlands',
+    AppLanguage.turkish => 'Türkçe',
   };
 }
 
