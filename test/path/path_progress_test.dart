@@ -117,4 +117,36 @@ void main() {
     expect(p.totalStars, 3);
     expect(maxStars, greaterThan(3));
   });
+
+  test('la ripresa di una tappa si salva e si legge', () {
+    final p = const PathProgress().withResume(second.id, [3, 2]);
+    expect(p.resumeFor(second.id), [3, 2]);
+    expect(p.resumeFor(first.id), isEmpty);
+    final again = PathProgress.fromJson(p.toJson());
+    expect(again.resumeFor(second.id), [3, 2]);
+  });
+
+  test('completare una tappa cancella la ripresa', () {
+    final p = const PathProgress()
+        .withResume(first.id, [3])
+        .withResume(second.id, [1])
+        .complete(first.id, 2);
+    expect(p.resumeFor(first.id), isEmpty);
+    expect(p.resumeFor(second.id), [1]);
+  });
+
+  test('una ripresa vuota o non valida viene scartata', () {
+    final p = const PathProgress()
+        .withResume(first.id, [1])
+        .withResume(first.id, const []);
+    expect(p.toJson()['resume'], isEmpty);
+    final bad = PathProgress.fromJson({
+      'resume': {
+        first.id: 'x',
+        second.id: [9, 0, 2],
+      },
+    });
+    expect(bad.resumeFor(first.id), isEmpty);
+    expect(bad.resumeFor(second.id), [2]);
+  });
 }
