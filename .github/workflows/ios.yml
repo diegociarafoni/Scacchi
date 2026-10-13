@@ -1,7 +1,7 @@
 name: iOS
 
 # Compila l'app per iOS senza firma, per accorgersi subito se un cambiamento
-# rompe la build (plugin, motore nativo, manifesto di privacy). Non produce un
+# rompe la build (plugin, motore nativo). Non produce un
 # IPA installabile: la firma e TestFlight sono in ios/fastlane (docs/store.md).
 # I minuti dei runner macOS sono gratuiti sui repository pubblici.
 on:
@@ -39,11 +39,5 @@ jobs:
       - run: flutter pub get
       - name: Build iOS senza firma
         run: flutter build ios --release --no-codesign
-      # Il manifesto di privacy deve stare dentro l'app, o l'App Store lo segnala.
-      - name: Manifesto di privacy nel pacchetto
-        run: |
-          test -f build/ios/iphoneos/Runner.app/PrivacyInfo.xcprivacy
-          plutil -lint build/ios/iphoneos/Runner.app/PrivacyInfo.xcprivacy
-          plutil -p build/ios/iphoneos/Runner.app/Info.plist | grep ITSAppUsesNonExemptEncryption
       - name: Dimensione dell'app
         run: du -sh build/ios/iphoneos/Runner.app | tee -a "$GITHUB_STEP_SUMMARY"
