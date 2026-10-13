@@ -1,0 +1,26 @@
+{
+  "analysisTitle": "Analyse",
+  "analysisBestMoveArrow": "Pijl voor de beste zet",
+  "analysisThreatArrow": "Dreiging van de tegenstander",
+  "analysisOneLine": "1 variant",
+  "analysisTwoLines": "2 varianten",
+  "analysisThreeLines": "3 varianten",
+  "analysisEngineUnavailable": "Engine niet beschikbaar",
+  "analysisPaused": "Analyse gepauzeerd",
+  "analysisGameOver": "Partij afgelopen",
+  "analysisThinking": "Analyseren…",
+  "analysisDepth": "Diepte {depth}",
+  "@analysisDepth": {
+    "placeholders": {
+      "depth": {
+        "type": "int"
+      }
+    }
+  },
+  "analysisPromote": "Tot hoofdvariant maken",
+  "analysisDelete": "Deze zet en de volgende verwijderen",
+  "analysisBack": "Terug",
+  "analysisForward": "Vooruit",
+  "analysisResume": "Analyse hervatten",
+  "analysisPause": "Analyse pauzeren"
+}

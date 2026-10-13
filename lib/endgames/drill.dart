@@ -1,5 +1,7 @@
 import 'package:dartchess/dartchess.dart';
 
+import '../l10n/content.dart';
+
 /// Cosa serve per completare una posizione dell'allenatore dei finali.
 enum DrillGoal {
   /// Dare scacco matto.
@@ -18,18 +20,17 @@ enum DrillGoal {
 class EndgameDrill {
   const EndgameDrill({
     required this.id,
-    required this.title,
-    required this.intro,
     required this.fen,
     required this.goal,
     required this.par,
   });
 
   final String id;
-  final String title;
+
+  String get title => Content.of('endgames').text('$id.title');
 
   /// Spiegazione breve mostrata prima di iniziare, con l'obiettivo dichiarato.
-  final String intro;
+  String get intro => Content.of('endgames').text('$id.intro', {'par': par});
 
   /// Posizione iniziale; l'utente gioca il colore che ha la mossa.
   final String fen;

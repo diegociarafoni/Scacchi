@@ -1,0 +1,614 @@
+{
+  "achievementFirstGameTitle": "İlk oyun",
+  "achievementFirstGameDesc": "İlk oyununu oyna.",
+  "achievementFirstWinTitle": "İlk galibiyet",
+  "achievementFirstWinDesc": "Bir oyun kazan.",
+  "achievementFirstDrawTitle": "El sıkışma",
+  "achievementFirstDrawDesc": "Bir oyunu beraberlikle bitir.",
+  "achievementGames10Title": "On oyun",
+  "achievementGames10Desc": "10 oyun oyna.",
+  "achievementGames100Title": "Yüz oyun",
+  "achievementGames100Desc": "100 oyun oyna.",
+  "achievementKnightMateTitle": "Zırhlı şövalye",
+  "achievementKnightMateDesc": "At ile şah mat yap.",
+  "achievementPawnMateTitle": "Mütevazı kahraman",
+  "achievementPawnMateDesc": "Piyon ile şah mat yap.",
+  "achievementLongCastleWinTitle": "Uzun rok",
+  "achievementLongCastleWinDesc": "Uzun rok yaptığın bir oyunu kazan.",
+  "achievementPuzzles10Title": "Taktik göz",
+  "achievementPuzzles10Desc": "10 bulmaca çöz.",
+  "achievementPuzzles100Title": "Taktik avcısı",
+  "achievementPuzzles100Desc": "100 bulmaca çöz.",
+  "achievementStreak3Title": "Üst üste üç",
+  "achievementStreak3Desc": "Art arda 3 gün hedefine ulaş.",
+  "achievementStreak7Title": "Bir hafta",
+  "achievementStreak7Desc": "Art arda 7 gün hedefine ulaş.",
+  "achievementStreak30Title": "Bir ay",
+  "achievementStreak30Desc": "Art arda 30 gün hedefine ulaş.",
+  "achievementFirstLessonTitle": "Derse başla",
+  "achievementFirstLessonDesc": "Bir ders tamamla.",
+  "achievementFirstReviewTitle": "Ayna ayna",
+  "achievementFirstReviewDesc": "Bir oyunu gözden geçir.",
+  "achievementLevel5Title": "Seviye 5",
+  "achievementLevel5Desc": "5. seviyeye ulaş.",
+  "achievementLevel10Title": "Seviye 10",
+  "achievementLevel10Desc": "10. seviyeye ulaş.",
+  "achievementWins10Title": "On galibiyet",
+  "achievementWins10Desc": "10 oyun kazan.",
+  "achievementWins50Title": "Elli galibiyet",
+  "achievementWins50Desc": "50 oyun kazan.",
+  "achievementWinBlackTitle": "Karanlık taraf",
+  "achievementWinBlackDesc": "Siyah ile bir oyun kazan.",
+  "achievementMiniatureTitle": "Minyatür",
+  "achievementMiniatureDesc": "20 hamleden kısa sürede şah mat yap.",
+  "achievementBeat1500Title": "Ciddi bir meydan okuma",
+  "achievementBeat1500Desc": "1500 Elo veya üzeri bir botu yen.",
+  "achievementBeat2000Title": "Dev avcısı",
+  "achievementBeat2000Desc": "1850 Elo veya üzeri bir botu yen.",
+  "achievementBrilliantTitle": "Parlak!",
+  "achievementBrilliantDesc": "Oyunlarından birinde parlak bir hamle bul.",
+  "achievementPuzzleFork10Title": "Çatal ustası",
+  "achievementPuzzleFork10Desc": "10 çatal bulmacası çöz.",
+  "achievementPuzzleMate10Title": "Şah mat!",
+  "achievementPuzzleMate10Desc": "10 şah mat bulmacası çöz.",
+  "achievementPuzzleRating1500Title": "Taktisyen",
+  "achievementPuzzleRating1500Desc": "1500 bulmaca puanına ulaş.",
+  "achievementPuzzleRun20Title": "Hız kesmiyor",
+  "achievementPuzzleRun20Desc": "Süreli veya seri modunda 20 puan yap.",
+  "achievementChallengesAllTitle": "Kusursuz gün",
+  "achievementChallengesAllDesc": "Üç günlük görevin hepsini tamamla.",
+  "achievementChallenges10Title": "Meydan okuyan",
+  "achievementChallenges10Desc": "10 günlük görev tamamla.",
+  "achievementReviews10Title": "Kendine eleştirmen",
+  "achievementReviews10Desc": "10 oyunu gözden geçir.",
+  "achievementAccuracy90Title": "Cerrah hassasiyeti",
+  "achievementAccuracy90Desc": "%90 veya daha yüksek doğrulukla bir oyun oyna.",
+  "achievementLessons10Title": "Öğrenci",
+  "achievementLessons10Desc": "10 ders tamamla.",
+  "achievementCoordinates20Title": "Kartal gözü",
+  "achievementCoordinates20Desc": "Süreli bir oturumda 20 kare bul.",
+  "achievementMinigamesAllTitle": "Hokkabaz",
+  "achievementMinigamesAllDesc": "Tüm mini oyunları dene.",
+  "achievementTournamentDoneTitle": "Turnuva müdavimi",
+  "achievementTournamentDoneDesc": "Botlara karşı bir turnuvayı bitir.",
+  "achievementTournamentWonTitle": "Kupa dolabı",
+  "achievementTournamentWonDesc": "Botlara karşı bir turnuva kazan.",
+  "progressRequirementLevel": "Seviye {level}",
+  "@progressRequirementLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "progressRequirementAchievement": "“{title}” başarısı",
+  "@progressRequirementAchievement": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "progressRewardTheme": "Tema: {name}",
+  "@progressRewardTheme": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "progressRewardPieces": "Taşlar: {name}",
+  "@progressRewardPieces": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "progressRewardAvatar": "Avatar: {name}",
+  "@progressRewardAvatar": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "progressRewardFrame": "Çerçeve: {name}",
+  "@progressRewardFrame": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "progressGoalGames": "{count, plural, one{1 oyun} other{{count} oyun}}",
+  "@progressGoalGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressGoalPuzzles": "{count, plural, one{1 bulmaca} other{{count} bulmaca}}",
+  "@progressGoalPuzzles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressGoalMinutes": "{count, plural, one{1 dakika} other{{count} dakika}}",
+  "@progressGoalMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDaysCount": "{count, plural, one{1 gün} other{{count} gün}}",
+  "@progressDaysCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressStreakNeedGames": "Serini sürdürmek için her gün: {goal} oyna.",
+  "@progressStreakNeedGames": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "progressStreakNeedPuzzles": "Serini sürdürmek için her gün: {goal} çöz.",
+  "@progressStreakNeedPuzzles": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "progressStreakNeedMinutes": "Serini sürdürmek için her gün: {goal} çalış.",
+  "@progressStreakNeedMinutes": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "progressStreakLeftGames": "{count, plural, one{1 oyun kaldı} other{{count} oyun kaldı}}",
+  "@progressStreakLeftGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressStreakLeftPuzzles": "{count, plural, one{1 bulmaca kaldı} other{{count} bulmaca kaldı}}",
+  "@progressStreakLeftPuzzles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressStreakLeftMinutes": "{count, plural, one{1 dakika kaldı} other{{count} dakika kaldı}}",
+  "@progressStreakLeftMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressStreakTodayDone": "Bugün: tamam. Serin yarına kadar güvende.",
+  "progressStreakTodayRest": "Bugün dinlenme günün: serin bozulmaz.",
+  "progressStreakTodayTodo": "Bugün: yapılacak. {left}.",
+  "@progressStreakTodayTodo": {
+    "placeholders": {
+      "left": {
+        "type": "String"
+      }
+    }
+  },
+  "progressStreakSummaryDone": "Bugün: tamam",
+  "progressStreakSummaryRest": "Bugün: dinlenme günü",
+  "progressStreakSummaryTodo": "Bugün: yapılacak",
+  "progressStreakNext": "Sonraki hedef: art arda {days} ({missing, plural, one{1 kaldı} other{{missing} kaldı}}).",
+  "@progressStreakNext": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      },
+      "missing": {
+        "type": "int"
+      }
+    }
+  },
+  "progressStreakSkipNone": "Seri başlatmak için bugün hedefine ulaş.",
+  "progressStreakSkipFreeze": "Bir günü kaçırırsan seri dondurma devreye girer (elinde {count} tane var). Her 7 günde bir tane kazanırsın, en fazla 2.",
+  "@progressStreakSkipFreeze": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressStreakSkipReset": "Bir günü kaçırırsan serin baştan başlar; {days} olan rekorun kalır. Her 7 günlük seride bir dondurma kazanırsın.",
+  "@progressStreakSkipReset": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "progressChallengePlayGames": "{count, plural, one{{count} oyun oyna} other{{count} oyun oyna}}",
+  "@progressChallengePlayGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeWinGames": "{count, plural, one{{count} oyun kazan} other{{count} oyun kazan}}",
+  "@progressChallengeWinGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeWinWhite": "Beyaz ile kazan",
+  "progressChallengeWinBlack": "Siyah ile kazan",
+  "progressChallengeWinShort": "En fazla {moves} hamlede şah mat",
+  "@progressChallengeWinShort": {
+    "placeholders": {
+      "moves": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeSolvePuzzles": "{count, plural, one{{count} bulmaca çöz} other{{count} bulmaca çöz}}",
+  "@progressChallengeSolvePuzzles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeForkPuzzles": "{count, plural, one{1 çatal bulmacası çöz} other{{count} çatal bulmacası çöz}}",
+  "@progressChallengeForkPuzzles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeMatePuzzles": "{count, plural, one{1 şah mat bulmacası çöz} other{{count} şah mat bulmacası çöz}}",
+  "@progressChallengeMatePuzzles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeReviewGame": "{count, plural, one{{count} oyunu gözden geçir} other{{count} oyunu gözden geçir}}",
+  "@progressChallengeReviewGame": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeCompleteLesson": "{count, plural, one{{count} ders tamamla} other{{count} ders tamamla}}",
+  "@progressChallengeCompleteLesson": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeGoalDays": "{count} gün hedefine ulaş",
+  "@progressChallengeGoalDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressRecordStrongestBot": "Yenilen en güçlü bot",
+  "progressRecordFastestWin": "En hızlı şah mat",
+  "progressRecordBestAccuracy": "En iyi doğruluk",
+  "progressRecordPuzzleRating": "Bulmaca puanı",
+  "progressRecordPuzzleRun": "Süreli skor",
+  "progressRecordMinigame": "Mini oyun skoru",
+  "progressRecordsTitle": "Kişisel rekorlar",
+  "progressRecordLongestStreak": "En uzun seri",
+  "progressRecordElo": "{elo} Elo",
+  "@progressRecordElo": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "progressRecordMoves": "{count, plural, one{{count} hamle} other{{count} hamle}}",
+  "@progressRecordMoves": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressRecordPuzzleRunMode": "{record} ({mode})",
+  "@progressRecordPuzzleRunMode": {
+    "placeholders": {
+      "record": {
+        "type": "String"
+      },
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "progressFeedbackXp": "+{xp} XP",
+  "@progressFeedbackXp": {
+    "placeholders": {
+      "xp": {
+        "type": "int"
+      }
+    }
+  },
+  "progressFeedbackGoal": "Bugünün hedefine ulaşıldı",
+  "progressFeedbackLevel": "Seviye {level}!",
+  "@progressFeedbackLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "progressFeedbackFreeze": "Bir seri dondurma kazandın",
+  "progressFeedbackChallenge": "Görev tamamlandı: {title}",
+  "@progressFeedbackChallenge": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "progressFeedbackWeekly": "Haftalık görev tamamlandı",
+  "progressFeedbackRecord": "Yeni rekor: {record}",
+  "@progressFeedbackRecord": {
+    "placeholders": {
+      "record": {
+        "type": "String"
+      }
+    }
+  },
+  "progressFeedbackAchievement": "Başarı: {title}",
+  "@progressFeedbackAchievement": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "progressFeedbackReward": "Açıldı: {reward}",
+  "@progressFeedbackReward": {
+    "placeholders": {
+      "reward": {
+        "type": "String"
+      }
+    }
+  },
+  "progressProfileTitle": "Profil",
+  "progressLevel": "Seviye {level}",
+  "@progressLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChangeAvatar": "Avatarı ve çerçeveyi değiştir",
+  "progressLevelSemantics": "Seviye ilerlemesi: {xp} / {next} XP",
+  "@progressLevelSemantics": {
+    "placeholders": {
+      "xp": {
+        "type": "int"
+      },
+      "next": {
+        "type": "int"
+      }
+    }
+  },
+  "progressXpOf": "{xp} / {next} XP",
+  "@progressXpOf": {
+    "placeholders": {
+      "xp": {
+        "type": "int"
+      },
+      "next": {
+        "type": "int"
+      }
+    }
+  },
+  "progressAvatarSemantics": "Avatar: {name}",
+  "@progressAvatarSemantics": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "progressAvatarFrameSemantics": "Avatar: {name}, çerçeve: {frame}",
+  "@progressAvatarFrameSemantics": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "frame": {
+        "type": "String"
+      }
+    }
+  },
+  "progressAvatarTitle": "Avatar",
+  "progressFrameTitle": "Çerçeve",
+  "progressLockedSemantics": "{label}, şununla açılır: {requirement}",
+  "@progressLockedSemantics": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "requirement": {
+        "type": "String"
+      }
+    }
+  },
+  "progressStreakIcon": "Seri",
+  "progressStreakDays": "{count, plural, one{1 gün art arda} other{{count} gün art arda}}",
+  "@progressStreakDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressBestStreak": "En iyi: {count}",
+  "@progressBestStreak": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressFreezes": "{count, plural, one{1 seri dondurma} other{{count} seri dondurma}}",
+  "@progressFreezes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressGoalSemantics": "Bugünün hedefi: {progress} / {target}",
+  "@progressGoalSemantics": {
+    "placeholders": {
+      "progress": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "progressGoalReachedLine": "Hedefe ulaşıldı: {progress} / {target} {unit}",
+  "@progressGoalReachedLine": {
+    "placeholders": {
+      "progress": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "progressGoalTodayLine": "Bugünün hedefi: {progress} / {target} {unit}",
+  "@progressGoalTodayLine": {
+    "placeholders": {
+      "progress": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "progressUnitGames": "oyun",
+  "progressUnitPuzzles": "bulmaca",
+  "progressUnitMinutes": "dakika",
+  "progressAchievementsTitle": "Başarılar",
+  "progressAchievementEarned": "{title}, kazanıldı. {description}",
+  "@progressAchievementEarned": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "description": {
+        "type": "String"
+      }
+    }
+  },
+  "progressAchievementLocked": "{title}, henüz kazanılmadı. {description}",
+  "@progressAchievementLocked": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "description": {
+        "type": "String"
+      }
+    }
+  },
+  "progressChallengesToday": "Bugünün görevleri",
+  "progressChallengesWeekly": "Haftalık görev",
+  "progressChallengeDone": "Tamamlandı",
+  "progressChallengeTodo": "Henüz tamamlanmadı",
+  "progressChallengeCount": "{done} / {target}",
+  "@progressChallengeCount": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "progressSettingsTitle": "Ayarlar",
+  "progressTrackingTitle": "XP, seriler ve başarılar",
+  "progressTrackingOff": "Kapalıyken hiçbir şey kaydedilmez.",
+  "progressDailyGoal": "Günlük hedef",
+  "progressRestDay": "Dinlenme günü",
+  "progressRestDayHint": "Serini bozmaz.",
+  "progressRestDayNone": "Yok",
+  "progressWeekdayMonday": "Pazartesi",
+  "progressWeekdayTuesday": "Salı",
+  "progressWeekdayWednesday": "Çarşamba",
+  "progressWeekdayThursday": "Perşembe",
+  "progressWeekdayFriday": "Cuma",
+  "progressWeekdaySaturday": "Cumartesi",
+  "progressWeekdaySunday": "Pazar",
+  "progressReminder": "Günlük hatırlatma",
+  "progressReminderHint": "Günde bir bildirim, yalnızca hedefine ulaşmadıysan.",
+  "progressReminderTime": "Hatırlatma saati",
+  "progressReminderDenied": "Bildirim izni olmadan hatırlatma kapalı kalır.",
+  "progressCancel": "İptal",
+  "progressConfirm": "Onayla",
+  "progressReminderBodyStreak": "Seri: {days}. Devam etmek için {goal} yeterli.",
+  "@progressReminderBodyStreak": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      },
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "progressReminderBodyGoal": "Bugünün hedefi: {goal}.",
+  "@progressReminderBodyGoal": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "progressReminderChannelDescription": "Günün hedefini bir kez hatırlatır."
+}

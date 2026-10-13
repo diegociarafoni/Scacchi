@@ -1,0 +1,199 @@
+{
+  "whyPiece": "{role, select, pawn{pion} knight{kuda} bishop{gajah} rook{benteng} queen{ratu} other{raja}}",
+  "whyMate": "Skakmat!",
+  "whyCastle": "Rokade: menempatkan raja di tempat aman.",
+  "whyPromote": "Mempromosikan pion menjadi {role, select, queen{ratu} rook{benteng} bishop{gajah} knight{kuda} other{bidak lain}}.",
+  "whyCapture": "Menangkap {victim} dengan {attacker}.",
+  "whyCheck": "Memberi skak pada rajamu.",
+  "whySafe": "Memindahkan {piece} ke tempat aman; tadi sedang diserang.",
+  "whyThreatCapture": "Mengancam akan menangkap {victim} di {square}.",
+  "whyThreatCaptureKid": "Mengancam akan menangkap {victim}.",
+  "whyThreatCheck": "Bersiap memberi skak pada rajamu.",
+  "whyThreatPromote": "Bersiap mempromosikan sebuah pion.",
+  "whyDevelop": "Mengembangkan {piece}: ikut bermain.",
+  "whyCenter": "Menguasai ruang di pusat.",
+  "whyImprove": "Memindahkan {piece} ke petak yang lebih berguna.",
+  "instructorInBookNamed": "Kita ada di {name}. Langkah yang paling sering dimainkan di sini: {choices}.",
+  "@instructorInBookNamed": {
+    "description": "Istruttore: apertura raggiunta e mosse più giocate",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "name"
+      },
+      "choices": {
+        "type": "String",
+        "description": "choices"
+      }
+    }
+  },
+  "instructorInBook": "Langkah yang paling sering dimainkan di sini: {choices}.",
+  "@instructorInBook": {
+    "description": "Istruttore: mosse più giocate, senza nome di apertura",
+    "placeholders": {
+      "choices": {
+        "type": "String",
+        "description": "choices"
+      }
+    }
+  },
+  "instructorInBookNameOnly": "Kita ada di {name}.",
+  "@instructorInBookNameOnly": {
+    "description": "Istruttore: apertura raggiunta, senza statistiche",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "name"
+      }
+    }
+  },
+  "instructorLeftYou": "{san} membawamu keluar dari buku pembukaan. Langkah yang paling sering dimainkan adalah: {choices}.",
+  "@instructorLeftYou": {
+    "description": "Istruttore: l'utente esce dal libro",
+    "placeholders": {
+      "san": {
+        "type": "String",
+        "description": "san"
+      },
+      "choices": {
+        "type": "String",
+        "description": "choices"
+      }
+    }
+  },
+  "instructorLeftComputer": "Komputer keluar dari buku dengan {san}. Mulai sekarang yang penting adalah posisinya, bukan teori.",
+  "@instructorLeftComputer": {
+    "description": "Istruttore: il computer esce dal libro",
+    "placeholders": {
+      "san": {
+        "type": "String",
+        "description": "san"
+      }
+    }
+  },
+  "instructorLeftYouBare": "{san} membawamu keluar dari buku pembukaan.",
+  "@instructorLeftYouBare": {
+    "description": "Istruttore: l'utente esce dal libro, senza alternative",
+    "placeholders": {
+      "san": {
+        "type": "String",
+        "description": "san"
+      }
+    }
+  },
+  "instructorExplorer": "Buka di penjelajah",
+  "@instructorExplorer": {
+    "description": "Istruttore: pulsante per aprire la posizione nell'esploratore"
+  },
+  "instructorTitle": "Main dengan instruktur",
+  "@instructorTitle": {
+    "description": "Titolo della partita con l'istruttore"
+  },
+  "instructorHubSubtitle": "Komputer mengomentari pembukaanmu, dengan langkah yang paling sering dimainkan",
+  "@instructorHubSubtitle": {
+    "description": "Istruttore: sottotitolo nel menu delle aperture"
+  },
+  "coachHintMovePiece": "Gerakkan {piece}.",
+  "@coachHintMovePiece": {
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintMoveSomePiece": "Gerakkan sebuah bidak.",
+  "coachHintPlayHighlighted": "Mainkan langkah yang disorot.",
+  "coachHintCastleShort": "Lakukan rokade pendek.",
+  "coachHintCastleLong": "Lakukan rokade panjang.",
+  "coachHintPieceAn": "{role, select, queen{ratu} rook{benteng} bishop{gajah} knight{kuda} pawn{pion} other{raja}}",
+  "@coachHintPieceAn": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintCheckEscape": "{promotion, select, yes{Promosikan} other{Gerakkan}} {piece} {where, select, square{ke {square}} other{ke petak yang dilingkari}}{escape, select, king{ untuk keluar dari skak} other{ untuk menghentikan skak}}{check, select, none{.} check{, sambil memberi skak.} other{, sambil memberi skakmat.}}",
+  "@coachHintCheckEscape": {
+    "placeholders": {
+      "promotion": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "escape": {
+        "type": "String"
+      },
+      "check": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintPromote": "Promosikan {piece} {where, select, square{ke {square}} other{ke petak yang dilingkari}}{capture, select, yes{ dan tangkap {victim}} other{}}: jadi {promoted}.",
+  "@coachHintPromote": {
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "capture": {
+        "type": "String"
+      },
+      "victim": {
+        "type": "String"
+      },
+      "promoted": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintCapture": "Gerakkan {piece} {where, select, square{ke {square}} other{ke petak yang dilingkari}} dan tangkap {victim}{check, select, none{.} check{, sambil memberi skak.} other{, sambil memberi skakmat.}}",
+  "@coachHintCapture": {
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "victim": {
+        "type": "String"
+      },
+      "check": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintMove": "Gerakkan {piece} {where, select, square{ke {square}} other{ke petak yang dilingkari}}{check, select, none{.} check{ dan beri skak.} other{ dan beri skakmat.}}",
+  "@coachHintMove": {
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "check": {
+        "type": "String"
+      }
+    }
+  }
+}

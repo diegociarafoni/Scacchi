@@ -68,7 +68,7 @@ class ProcessTransport implements UciTransport {
   static Future<UciTransport> start() async {
     final path = binary;
     if (path == null) {
-      throw const FileSystemException('Stockfish non trovato');
+      throw const FileSystemException('Stockfish non trovato'); // l10n-ok
     }
     return ProcessTransport._(await Process.start(path, const []));
   }

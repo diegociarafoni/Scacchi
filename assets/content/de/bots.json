@@ -1,0 +1,156 @@
+{
+  "bot.start": [
+    "Hallo, ich bin {name}. Heute spielen wir {opening}!",
+    "{name} am Brett: Viel Spaß bei der Partie!"
+  ],
+  "bot.start.friendly": [
+    "Hallo, ich bin {name}!",
+    "Ich bin {name}, spielen wir zusammen?"
+  ],
+  "bot.friendly.check": [
+    "Schach! Rette deinen König.",
+    "Schach! Wohin geht der König?"
+  ],
+  "bot.friendly.capture": [
+    "Ich habe eine Figur geschlagen!",
+    "Erwischt! Jetzt bist du dran."
+  ],
+  "bot.friendly.mistake": [
+    "Lass dir Zeit.",
+    "Schau dir das Brett genau an!"
+  ],
+  "bot.friendly.win": [
+    "Tolle Partie! Spielen wir noch eine?",
+    "Diese habe ich gewonnen, Revanche?"
+  ],
+  "bot.friendly.loss": [
+    "Du hast gewonnen, bravo!",
+    "Hurra, du hast gewonnen!"
+  ],
+  "bot.friendly.draw": [
+    "Remis! Tolle Partie.",
+    "Unentschieden! Wir waren beide gut."
+  ],
+  "bot.friendly.chat": [
+    "Was für eine tolle Partie!",
+    "Wir haben Spaß!",
+    "Du bist am Zug!"
+  ],
+  "bot.aggressive.check": [
+    "Schach! Ich lasse dir keine Luft.",
+    "Schach, Angriff!"
+  ],
+  "bot.aggressive.capture": [
+    "Erwischt! Weiter im Angriff.",
+    "Eine Figur weniger für dich."
+  ],
+  "bot.aggressive.mistake": [
+    "Danke für das Geschenk, ich nehme es.",
+    "Autsch, da hast du dich vertan."
+  ],
+  "bot.aggressive.win": [
+    "Schachmatt! Toller Kampf.",
+    "Sieg! Revanche?"
+  ],
+  "bot.aggressive.loss": [
+    "Du hast mich besiegt, gut gespielt!",
+    "Glückwunsch, ich habe mir die Finger verbrannt."
+  ],
+  "bot.aggressive.draw": [
+    "Remis: Ich wollte mehr, aber gut.",
+    "Remis, aber nächstes Mal greife ich härter an."
+  ],
+  "bot.aggressive.chat": [
+    "Wir greifen an, wir warten nicht!",
+    "Ich habe vor nichts Angst.",
+    "Zieh, ich sitze dir im Nacken."
+  ],
+  "bot.positional.check": [
+    "Schach, keine Eile.",
+    "Schach: Die Stellung erlaubt es."
+  ],
+  "bot.positional.capture": [
+    "Ein Tausch, der mir passt.",
+    "Ein stilles Schlagen, die Struktur hält."
+  ],
+  "bot.positional.mistake": [
+    "Dieser Zug wird dich Stellung kosten.",
+    "Ein Planfehler, würde ich sagen."
+  ],
+  "bot.positional.win": [
+    "Schachmatt: Der Plan ist aufgegangen.",
+    "Sieg, danke für die Partie."
+  ],
+  "bot.positional.loss": [
+    "Du hast besser gespielt, Glückwunsch.",
+    "Du hast mich positionell überspielt, gut gemacht."
+  ],
+  "bot.positional.draw": [
+    "Ein ausgeglichenes Remis, das ist fair.",
+    "Ein ehrliches Remis."
+  ],
+  "bot.positional.chat": [
+    "Ich nehme mir Zeit: Die Stellung verdient es.",
+    "Die Struktur ist hier wichtig.",
+    "Keine Eile, ich spiele in Ruhe."
+  ],
+  "bot.gambitist.check": [
+    "Schach! Das Opfer hat sich gelohnt.",
+    "Schach, und das Beste kommt noch."
+  ],
+  "bot.gambitist.capture": [
+    "Ich hole mir das Material mit Zinsen zurück.",
+    "Erwischt: Das Gambit zahlt sich aus."
+  ],
+  "bot.gambitist.mistake": [
+    "Das Gambit hast du schlecht angenommen!",
+    "Vorsicht, hier gab es etwas Besseres."
+  ],
+  "bot.gambitist.win": [
+    "Schachmatt! Das Opfer hat sich ausgezahlt.",
+    "Gewonnen, und was für eine Show."
+  ],
+  "bot.gambitist.loss": [
+    "Das Gambit hat nicht gereicht, gut gemacht.",
+    "Du hast brillant verteidigt, alle Achtung."
+  ],
+  "bot.gambitist.draw": [
+    "Remis: viel Rauch und sonst nichts.",
+    "Remis, aber was für eine lebhafte Partie."
+  ],
+  "bot.gambitist.chat": [
+    "Ein Bauer mehr oder weniger, wen kümmert's?",
+    "Das Beste kommt noch.",
+    "Ich mag es, wenn wir etwas riskieren."
+  ],
+  "bot.opening.lia": "das Königsgambit",
+  "bot.opening.pino": "die Italienische Partie",
+  "bot.opening.nico": "das London-System",
+  "bot.opening.chiara": "das Damengambit",
+  "bot.opening.viola": "die Schottische Partie",
+  "bot.opening.rocco": "das Königsgambit",
+  "bot.opening.ettore": "die Spanische Abtauschvariante",
+  "bot.opening.marta": "die Englische Eröffnung",
+  "bot.opening.bruna": "die Französische Verteidigung",
+  "bot.opening.duilio": "die Sizilianische Verteidigung",
+  "bot.opening.carlo": "das Budapester Gambit",
+  "bot.opening.elena": "die Spanische Partie",
+  "bot.opening.ada": "die Englische Eröffnung",
+  "bot.opening.luna": "das Katalanische",
+  "bot.opening.massimo": "das Evans-Gambit",
+  "bot.opening.cosmo": "das Smith-Morra-Gambit",
+  "bot.opening.stella": "die Königsindische Verteidigung",
+  "bot.opening.tino": "das Königsbauernspiel",
+  "level.1.name": "Anfänger",
+  "level.2.name": "Neuling",
+  "level.3.name": "Freizeitspieler",
+  "level.4.name": "Vereinsspieler",
+  "level.5.name": "Turnierspieler",
+  "level.6.name": "Experte",
+  "level.7.name": "Meister",
+  "level.8.name": "Champion",
+  "level.0.name": "Erste Schritte",
+  "style.aggressive": "aggressiv",
+  "style.positional": "positionell",
+  "style.gambitist": "Gambitspieler"
+}

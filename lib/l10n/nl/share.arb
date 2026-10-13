@@ -1,0 +1,38 @@
+{
+  "shareImageTitle": "Exporteren als afbeelding",
+  "@shareImageTitle": {
+    "description": "shareImageTitle"
+  },
+  "shareImageAction": "Delen",
+  "@shareImageAction": {
+    "description": "shareImageAction"
+  },
+  "shareImageFlip": "Bord draaien",
+  "@shareImageFlip": {
+    "description": "shareImageFlip"
+  },
+  "shareImageCoordinates": "Coördinaten",
+  "@shareImageCoordinates": {
+    "description": "shareImageCoordinates"
+  },
+  "shareImageLastMove": "Laatste zet",
+  "@shareImageLastMove": {
+    "description": "shareImageLastMove"
+  },
+  "shareImageCaption": "Onderschrift (optioneel)",
+  "@shareImageCaption": {
+    "description": "shareImageCaption"
+  },
+  "shareImagePreview": "Voorbeeld van het bord",
+  "@shareImagePreview": {
+    "description": "shareImagePreview"
+  },
+  "shareImageFailed": "Delen is mislukt",
+  "@shareImageFailed": {
+    "description": "shareImageFailed"
+  },
+  "shareImageSubject": "Schaakstelling",
+  "@shareImageSubject": {
+    "description": "shareImageSubject"
+  }
+}

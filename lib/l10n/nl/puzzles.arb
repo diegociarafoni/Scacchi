@@ -1,0 +1,475 @@
+{
+  "puzzleGoal": "{goal, select, mateIn1{Mat in 1} mateIn2{Mat in 2} mateIn3{Mat in 3} mateIn4{Mat in 4} mate{Zet de tegenstander schaakmat} crushing{Krijg een beslissend voordeel} advantage{Krijg een voordeel} equality{Kom op gelijke stand} other{Vind de beste zet}}",
+  "puzzleGoalSide": "{goal} · {side} is aan zet",
+  "@puzzleGoalSide": {
+    "description": "Puzzle header card: goal and side to move",
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      },
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "challengeTitle": "Daag een vriend uit",
+  "challengeSubtitle": "Dezelfde puzzels op twee telefoons, zonder netwerk",
+  "challengeIntro": "Kies de ronde en laat je vriend de QR-code zien: jullie spelen allebei dezelfde puzzels. Aan het einde wissel je de scores uit met een tweede QR-code.",
+  "challengePrepare": "Stel de uitdaging in",
+  "challengeReady": "Uitdaging klaar: {mode}",
+  "challengeShowInvite": "Laat de QR-code aan je vriend zien",
+  "challengePlay": "Speel je ronde",
+  "challengeReceive": "Ontvang een uitdaging",
+  "challengeInviteTitle": "Uitdaging: {mode}",
+  "challengeInviteHint": "Je vriend opent Puzzels › Daag een vriend uit › Ontvang een uitdaging en scant de code.",
+  "challengeReceiveHint": "Scan de QR-code van de uitdaging die je vriend laat zien.",
+  "challengeNotInvite": "Deze QR-code is geen uitdaging: vraag je vriend om de QR-code van de uitdaging te laten zien.",
+  "challengeLibraryMismatch": "De twee telefoons hebben verschillende puzzels: werk Rokko op beide bij.",
+  "challengeCompareTitle": "Uitdaging met je vriend",
+  "challengeShowResult": "Toon mijn resultaat",
+  "challengeResultTitle": "Mijn resultaat: {score}",
+  "challengeResultHint": "Je vriend scant deze code om je score te zien.",
+  "challengeReadResult": "Lees het resultaat van je vriend",
+  "challengeReadResultHint": "Scan de QR-code van het resultaat die je vriend laat zien.",
+  "challengeNotResult": "Deze QR-code is geen resultaat: vraag je vriend om de QR-code van het resultaat te laten zien.",
+  "challengeOtherChallenge": "Dat resultaat hoort bij een andere uitdaging.",
+  "challengeWon": "Jij hebt gewonnen: {mine} tegen {theirs}",
+  "challengeLost": "Je vriend heeft gewonnen: {theirs} tegen {mine}",
+  "challengeDraw": "Gelijkspel: {mine} tegen {theirs}",
+  "puzzleHubTitle": "Puzzels",
+  "@puzzleHubTitle": {
+    "description": "Titolo della scheda Puzzle"
+  },
+  "puzzleHubLoadError": "De puzzels konden niet worden geladen.",
+  "@puzzleHubLoadError": {
+    "description": "Errore di caricamento dei puzzle"
+  },
+  "puzzleHubRating": "Rating {rating}",
+  "@puzzleHubRating": {
+    "description": "Punteggio in cima alla scheda Puzzle",
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleHubStats": "Opgelost {solved} · Mislukt {failed} · {total} puzzels beschikbaar",
+  "@puzzleHubStats": {
+    "description": "Riga sotto il punteggio",
+    "placeholders": {
+      "solved": {
+        "type": "int"
+      },
+      "failed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleTraining": "Training",
+  "@puzzleTraining": {
+    "description": "Voce Allenamento"
+  },
+  "puzzleTrainingSubtitle": "Puzzels die bij je rating passen",
+  "@puzzleTrainingSubtitle": {
+    "description": "Sottotitolo di Allenamento"
+  },
+  "puzzleDailyTitle": "Puzzel van de dag",
+  "@puzzleDailyTitle": {
+    "description": "Puzzle del giorno: voce e titolo"
+  },
+  "puzzleDailySubtitle": "Moeilijkheid {rating}",
+  "@puzzleDailySubtitle": {
+    "description": "Sottotitolo del puzzle del giorno",
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleByTheme": "Per thema",
+  "@puzzleByTheme": {
+    "description": "Voce Per tema"
+  },
+  "puzzleByThemeSubtitle": "Matten, vorken, eindspelen en meer",
+  "@puzzleByThemeSubtitle": {
+    "description": "Sottotitolo di Per tema"
+  },
+  "puzzleThemesTitle": "Thema’s",
+  "@puzzleThemesTitle": {
+    "description": "Titolo dell'elenco dei temi"
+  },
+  "puzzleReview": "Herhaal je fouten",
+  "@puzzleReview": {
+    "description": "Voce Ripasso degli errori"
+  },
+  "puzzleReviewTitle": "Herhalen",
+  "@puzzleReviewTitle": {
+    "description": "Titolo della schermata di ripasso"
+  },
+  "puzzleReviewNone": "Vandaag niets te herhalen",
+  "@puzzleReviewNone": {
+    "description": "Nessun puzzle da ripassare"
+  },
+  "puzzleReviewDue": "{count} te herhalen vandaag",
+  "@puzzleReviewDue": {
+    "description": "Puzzle da ripassare",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleSectionTimed": "Spellen op tijd",
+  "@puzzleSectionTimed": {
+    "description": "Intestazione delle modalità a tempo"
+  },
+  "puzzleSectionPractice": "Oefenen",
+  "@puzzleSectionPractice": {
+    "description": "Intestazione delle modalità libere"
+  },
+  "puzzleRecord": "Beste {best}",
+  "@puzzleRecord": {
+    "description": "Record della modalità",
+    "placeholders": {
+      "best": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunLabel": "{mode, select, storm{Combo op tijd} rush3{3 minuten rush} rush5{5 minuten rush} survival{Overleven} other{Reeks}}",
+  "@puzzleRunLabel": {
+    "description": "Nome della modalità a serie",
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleRunDescription": "{mode, select, storm{3 minuten, bonusseconden met combo’s} rush3{3 minuten, drie fouten} rush5{5 minuten, drie fouten} survival{Zonder klok, drie fouten} other{Zonder klok, eindigt bij de eerste fout}}",
+  "@puzzleRunDescription": {
+    "description": "Descrizione della modalità a serie",
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleDefaultTitle": "Puzzel",
+  "@puzzleDefaultTitle": {
+    "description": "Titolo predefinito della schermata del puzzle"
+  },
+  "puzzleEmpty": "Geen puzzel beschikbaar.",
+  "@puzzleEmpty": {
+    "description": "Nessun puzzle disponibile"
+  },
+  "puzzleHelp": "Hoe werkt het?",
+  "@puzzleHelp": {
+    "description": "Pulsante che riapre la spiegazione"
+  },
+  "puzzleSide": "{side, select, white{Wit} other{Zwart}}",
+  "@puzzleSide": {
+    "description": "Colore che muove",
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleRestarted": "Beginstelling. Vind de beste zet voor {side}.",
+  "@puzzleRestarted": {
+    "description": "Dopo aver ricominciato",
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleCorrect": "Goed! Ga zo door.",
+  "@puzzleCorrect": {
+    "description": "Mossa giusta"
+  },
+  "puzzleWrong": "Dat is niet de juiste zet. Druk op “Probeer het opnieuw” om opnieuw te beginnen.",
+  "@puzzleWrong": {
+    "description": "Mossa sbagliata"
+  },
+  "puzzleSolved": "Opgelost!",
+  "@puzzleSolved": {
+    "description": "Puzzle risolto"
+  },
+  "puzzleDone": "Puzzel afgelopen.",
+  "@puzzleDone": {
+    "description": "Puzzle concluso dopo errori o soluzione"
+  },
+  "puzzleRevealed": "Dit is de juiste zet.",
+  "@puzzleRevealed": {
+    "description": "Mossa mostrata"
+  },
+  "puzzleOutcomeRepeat": "Al eerder gezien: rating ongewijzigd.",
+  "@puzzleOutcomeRepeat": {
+    "description": "Puzzle già visto"
+  },
+  "puzzleOutcomeRating": "Rating {rating} ({delta}).",
+  "@puzzleOutcomeRating": {
+    "description": "Punteggio dopo il puzzle",
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      },
+      "delta": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleNoMore": "Er zijn voorlopig geen puzzels meer.",
+  "@puzzleNoMore": {
+    "description": "Fine dei puzzle"
+  },
+  "puzzleDifficulty": "Puzzel {rating}",
+  "@puzzleDifficulty": {
+    "description": "Difficoltà del puzzle risolto",
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleProgress": "Gevonden zetten: {done} van {total}",
+  "@puzzleProgress": {
+    "description": "Mosse trovate",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleProgressKid": "Voortgang van de puzzel",
+  "@puzzleProgressKid": {
+    "description": "Avanzamento senza cifre"
+  },
+  "puzzleHint": "Hint",
+  "@puzzleHint": {
+    "description": "Pulsante suggerimento"
+  },
+  "puzzleSolution": "Oplossing",
+  "@puzzleSolution": {
+    "description": "Pulsante soluzione"
+  },
+  "puzzleRetry": "Probeer het opnieuw",
+  "@puzzleRetry": {
+    "description": "Pulsante riprova"
+  },
+  "puzzleNext": "Volgende",
+  "@puzzleNext": {
+    "description": "Pulsante prossimo"
+  },
+  "puzzleSkip": "Overslaan",
+  "@puzzleSkip": {
+    "description": "Pulsante salta"
+  },
+  "puzzleRunStart": "Start",
+  "@puzzleRunStart": {
+    "description": "Pulsante che avvia la serie"
+  },
+  "puzzleRunRecordFooter": "Jouw beste: {best} puzzels.",
+  "@puzzleRunRecordFooter": {
+    "description": "Record sotto le regole",
+    "placeholders": {
+      "best": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunRight": "Goed!",
+  "@puzzleRunRight": {
+    "description": "Esito giusto"
+  },
+  "puzzleRunWrong": "Fout",
+  "@puzzleRunWrong": {
+    "description": "Esito sbagliato"
+  },
+  "puzzleRunEndMistake": "Je hebt een puzzel gemist: de ronde is voorbij.",
+  "@puzzleRunEndMistake": {
+    "description": "Fine per un errore"
+  },
+  "puzzleRunEndLives": "Je bent alle drie je levens kwijt.",
+  "@puzzleRunEndLives": {
+    "description": "Fine per le vite"
+  },
+  "puzzleRunEndTime": "De tijd is om.",
+  "@puzzleRunEndTime": {
+    "description": "Fine per il tempo"
+  },
+  "puzzleRunEndExhausted": "Je hebt alle beschikbare puzzels opgelost.",
+  "@puzzleRunEndExhausted": {
+    "description": "Fine per esaurimento"
+  },
+  "puzzleRunScore": "Score {score}",
+  "@puzzleRunScore": {
+    "description": "Punti della serie",
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunTimeLeft": "Resterende tijd: {time}",
+  "@puzzleRunTimeLeft": {
+    "description": "Tempo rimasto, per i lettori di schermo",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleRunCombo": "Combo {combo}",
+  "@puzzleRunCombo": {
+    "description": "Combo in corso",
+    "placeholders": {
+      "combo": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunLives": "Levens: {left} van {total}",
+  "@puzzleRunLives": {
+    "description": "Vite rimaste",
+    "placeholders": {
+      "left": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunOver": "Ronde afgelopen",
+  "@puzzleRunOver": {
+    "description": "Titolo del risultato"
+  },
+  "puzzleRunSolvedLabel": "puzzels opgelost",
+  "@puzzleRunSolvedLabel": {
+    "description": "Etichetta sotto il punteggio finale"
+  },
+  "puzzleRunNewRecord": "Nieuw persoonlijk record!",
+  "@puzzleRunNewRecord": {
+    "description": "Nuovo record"
+  },
+  "puzzleRunBest": "Beste: {best}",
+  "@puzzleRunBest": {
+    "description": "Record personale",
+    "placeholders": {
+      "best": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunBestCombo": "Beste combo: {combo}",
+  "@puzzleRunBestCombo": {
+    "description": "Combo migliore",
+    "placeholders": {
+      "combo": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunAgain": "Nog een keer",
+  "@puzzleRunAgain": {
+    "description": "Pulsante rigioca"
+  },
+  "puzzleGuideGoalHeading": "Doel",
+  "@puzzleGuideGoalHeading": {
+    "description": "Intestazione della spiegazione"
+  },
+  "puzzleGuideRulesHeading": "Zo speel je",
+  "@puzzleGuideRulesHeading": {
+    "description": "Intestazione della spiegazione"
+  },
+  "puzzleGuideGotIt": "Begrepen",
+  "@puzzleGuideGotIt": {
+    "description": "Chiude la spiegazione"
+  },
+  "puzzleThemeMateIn1": "Mat in 1",
+  "puzzleThemeMateIn2": "Mat in 2",
+  "puzzleThemeMateIn3": "Mat in 3",
+  "puzzleThemeMateIn4": "Mat in 4",
+  "puzzleThemeMateIn5": "Mat in 5 of meer",
+  "puzzleThemeBackRankMate": "Mat op de achterste rij",
+  "puzzleThemeSmotheredMate": "Verstikkingsmat",
+  "puzzleThemeFork": "Vork",
+  "puzzleThemePin": "Penning",
+  "puzzleThemeSkewer": "Spies",
+  "puzzleThemeDiscoveredAttack": "Ontdekte aanval",
+  "puzzleThemeDoubleCheck": "Dubbel schaak",
+  "puzzleThemeHangingPiece": "Hangend stuk",
+  "puzzleThemeTrappedPiece": "Ingesloten stuk",
+  "puzzleThemeDeflection": "Afleiding",
+  "puzzleThemeAttraction": "Aantrekking",
+  "puzzleThemeSacrifice": "Offer",
+  "puzzleThemeCapturingDefender": "De verdediger slaan",
+  "puzzleThemeClearance": "Veld vrijmaken",
+  "puzzleThemeInterference": "Onderbreking",
+  "puzzleThemeIntermezzo": "Tussenzet",
+  "puzzleThemeXRayAttack": "Röntgenaanval",
+  "puzzleThemeQuietMove": "Stille zet",
+  "puzzleThemeDefensiveMove": "Verdedigende zet",
+  "puzzleThemeZugzwang": "Zugzwang",
+  "puzzleThemePromotion": "Promotie",
+  "puzzleThemeUnderPromotion": "Onderpromotie",
+  "puzzleThemeAdvancedPawn": "Vergevorderde pion",
+  "puzzleThemeExposedKing": "Onbeschutte koning",
+  "puzzleThemeKingsideAttack": "Aanval op de koningsvleugel",
+  "puzzleThemeQueensideAttack": "Aanval op de damevleugel",
+  "puzzleThemeEnPassant": "En passant",
+  "puzzleThemeCastling": "Rokade",
+  "puzzleThemeOpening": "Opening",
+  "puzzleThemeMiddlegame": "Middenspel",
+  "puzzleThemeEndgame": "Eindspel",
+  "puzzleThemePawnEndgame": "Pioneneindspel",
+  "puzzleThemeRookEndgame": "Toreneindspel",
+  "puzzleThemeQueenEndgame": "Dameneindspel",
+  "puzzleThemeKnightEndgame": "Paardeneindspel",
+  "puzzleThemeBishopEndgame": "Looperseindspel",
+  "puzzleGuideThemeTitle": "Puzzels per thema",
+  "puzzleGuideTrainingGoal": "Vind in elke puzzel de beste zet, de ene na de andere.",
+  "puzzleGuideTrainingRule1": "De puzzels worden gekozen op basis van je rating: hoe beter je het doet, hoe moeilijker ze worden.",
+  "puzzleGuideTrainingRule2": "Zet het juiste stuk: als de zet goed is, antwoordt je tegenstander en ben jij weer aan zet; als de zet fout is, wordt hij teruggenomen.",
+  "puzzleGuideTrainingRule3": "Bij een nieuwe puzzel gaat je rating omhoog als je hem de eerste keer goed oplost; als je een fout maakt of de oplossing bekijkt, telt hij als mislukt, daalt je rating en komt de puzzel terug bij het herhalen. Puzzels die je al eerder hebt gezien, veranderen je rating niet.",
+  "puzzleGuideTrainingRule4": "De hint kost niets: er komt een cirkel om het stuk dat moet zetten.",
+  "puzzleGuideTrainingRule5": "Er is geen klok en geen limiet op fouten: je kunt stoppen wanneer je wilt.",
+  "puzzleGuideThemeGoal": "Train één tactisch patroon: elke puzzel heeft hetzelfde thema.",
+  "puzzleGuideThemeRule1": "Zet het juiste stuk: als de zet goed is, antwoordt je tegenstander; als de zet fout is, wordt hij teruggenomen.",
+  "puzzleGuideThemeRule2": "Bij een nieuwe puzzel gaat je rating omhoog als je hem de eerste keer goed oplost; met fouten of een getoonde oplossing telt hij als mislukt, daalt je rating en komt de puzzel terug bij het herhalen.",
+  "puzzleGuideThemeRule3": "Er is geen klok en geen limiet op fouten.",
+  "puzzleGuideDailyGoal": "Los de puzzel van vandaag op: hij blijft de hele dag hetzelfde.",
+  "puzzleGuideDailyRule1": "Vind de juiste reeks zetten: als je er een fout doet, wordt die teruggenomen en kun je het opnieuw proberen.",
+  "puzzleGuideDailyRule2": "Met “Probeer het opnieuw” begin je weer vanaf de beginstelling, met “Oplossing” zie je de zetten.",
+  "puzzleGuideDailyRule3": "Hij telt alleen als opgelost als je geen fouten maakt en de oplossing niet bekijkt; anders telt hij als mislukt.",
+  "puzzleGuideDailyRule4": "Morgen komt er een nieuwe.",
+  "puzzleGuideReviewGoal": "Vind de oplossingen van de puzzels die je fout had.",
+  "puzzleGuideReviewRule1": "Elke puzzel komt terug met steeds grotere tussenpozen (1, 3, 7, 14 en 30 dagen): vandaag krijg je alleen de puzzels die aan de beurt zijn.",
+  "puzzleGuideReviewRule2": "Als je hem zonder fouten oplost, wordt de tussenpoos langer; als je een fout maakt, begint hij weer bij één dag.",
+  "puzzleGuideReviewRule3": "Herhalen verandert je trainingsrating niet.",
+  "puzzleGuideReviewRule4": "Als de puzzels van vandaag klaar zijn, is er niets meer te doen.",
+  "puzzleGuideRunBase1": "De puzzels worden moeilijker naarmate je verder komt.",
+  "puzzleGuideRunBase2": "Elke opgeloste puzzel levert 1 punt op.",
+  "puzzleGuideRunTail1": "Je persoonlijke record wordt per spelvorm bewaard.",
+  "puzzleGuideRunTail2": "Je kunt stoppen wanneer je wilt: de punten en XP die je hebt verdiend, tellen gewoon mee.",
+  "puzzleGuideStormGoal": "Los in {minutes} minuten zoveel mogelijk puzzels op.",
+  "puzzleGuideStormRule1": "Een fout kost {seconds} seconden, zet je combo op nul en gaat door naar de volgende puzzel.",
+  "puzzleGuideStormRule2": "Met 5, 12, 20 en 30 puzzels achter elkaar win je 3, 5, 7 en 10 seconden (daarna 10 voor elke 10 puzzels).",
+  "puzzleGuideStormRule3": "Er zijn geen levens: de ronde eindigt als de tijd om is.",
+  "puzzleGuideRushGoal": "Los in {minutes} minuten zoveel mogelijk puzzels op, met drie levens.",
+  "puzzleGuideLivesRule1": "Een fout kost je een leven en gaat door naar de volgende puzzel.",
+  "puzzleGuideRushRule2": "De ronde eindigt als de tijd om is of als je je derde leven kwijtraakt.",
+  "puzzleGuideSurvivalGoal": "Los zoveel mogelijk puzzels op, met drie levens en zonder tijdslimiet.",
+  "puzzleGuideSurvivalRule2": "De ronde eindigt als je je derde leven kwijtraakt.",
+  "puzzleGuideStreakGoal": "Los zoveel mogelijk puzzels achter elkaar op: de eerste fout maakt een einde aan de ronde.",
+  "puzzleGuideStreakRule1": "Er is geen tijdslimiet en er zijn geen levens.",
+  "puzzleGuideStreakRule2": "Je kunt per ronde maar één puzzel overslaan, met “Overslaan”."
+}

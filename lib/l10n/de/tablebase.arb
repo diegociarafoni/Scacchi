@@ -1,0 +1,12 @@
+{
+  "tablebaseTitle": "Perfektes Endspiel",
+  "tablebaseCalculating": "Das perfekte Endspiel wird berechnet… Das passiert nur beim ersten Mal",
+  "tablebaseWhiteMates": "{moves, plural, one{Weiß gewinnt: Matt in {moves} Zug} other{Weiß gewinnt: Matt in {moves} Zügen}}",
+  "tablebaseBlackMates": "{moves, plural, one{Schwarz gewinnt: Matt in {moves} Zug} other{Schwarz gewinnt: Matt in {moves} Zügen}}",
+  "tablebaseWhiteWins": "Weiß gewinnt",
+  "tablebaseBlackWins": "Schwarz gewinnt",
+  "tablebaseDraw": "Remis bei bestem Spiel",
+  "tablebaseBestMove": "Perfekter Zug: {move}",
+  "tablebaseBestMoveHint": "Den perfekten Zug spielen",
+  "tablebaseShowMove": "Perfekten Zug zeigen"
+}

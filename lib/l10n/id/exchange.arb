@@ -1,0 +1,22 @@
+{
+  "qrSendTitle": "Kirim lewat QR",
+  "qrSendHint": "Di ponsel lain buka Kamu › Arsip › Terima lewat QR dan arahkan kamera ke kodenya.",
+  "qrPart": "Bagian {current} dari {total}",
+  "qrPause": "Jeda",
+  "qrResume": "Lanjutkan",
+  "qrNext": "Bagian berikutnya",
+  "qrPrevious": "Bagian sebelumnya",
+  "qrCodeLabel": "Kode QR permainan",
+  "qrReceiveTitle": "Terima lewat QR",
+  "qrReceiveHint": "Arahkan kamera ke kode QR yang tampil di ponsel lain.",
+  "qrReceived": "{received} dari {total} bagian terbaca",
+  "qrForeign": "Kode QR ini tidak berisi permainan.",
+  "qrCorrupted": "Kode QR rusak: mulai membaca lagi.",
+  "qrTooLarge": "Permainan terlalu besar untuk diterima.",
+  "qrRestarted": "Permainan baru terdeteksi: pembacaan dimulai ulang.",
+  "qrCameraError": "Kamera tidak tersedia. Izinkan Rokko memakai kamera di pengaturan ponsel lalu coba lagi.",
+  "qrRetry": "Coba lagi",
+  "qrInvalidGame": "Kode QR tidak berisi permainan yang valid.",
+  "qrFinishedGame": "Permainan sudah selesai: terimalah dari Kamu › Arsip › Terima lewat QR.",
+  "qrMalformed": "Kode QR tidak valid: diabaikan."
+}

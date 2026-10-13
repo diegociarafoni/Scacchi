@@ -1,0 +1,133 @@
+{
+  "pathTitle": "Camino",
+  "@pathTitle": {
+    "description": "Titolo della schermata del percorso"
+  },
+  "pathContinue": "Continuar",
+  "@pathContinue": {
+    "description": "Pulsante che apre la prossima tappa del percorso"
+  },
+  "pathStars": "{done} estrellas de {total}",
+  "@pathStars": {
+    "description": "Etichetta per i lettori di schermo delle stelle totali o di capitolo",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pathSummaryTitle": "Tu viaje",
+  "@pathSummaryTitle": {
+    "description": "Titolo della scheda di riepilogo in cima al percorso"
+  },
+  "pathNext": "Próxima etapa: {title}",
+  "@pathNext": {
+    "description": "Tappa proposta da Continua, nella scheda di riepilogo",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "pathAllDone": "Has recorrido todo el camino. Puedes repetir cualquier etapa.",
+  "@pathAllDone": {
+    "description": "Riepilogo quando ogni tappa è completata"
+  },
+  "pathChapterNumber": "Capítulo {n}",
+  "@pathChapterNumber": {
+    "description": "Numero del capitolo del percorso",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "pathChapterDone": "capítulo completado",
+  "@pathChapterDone": {
+    "description": "Stato di un capitolo con tutte le tappe completate"
+  },
+  "pathStageDone": "{stars} estrellas de 3",
+  "@pathStageDone": {
+    "description": "Stato di una tappa completata",
+    "placeholders": {
+      "stars": {
+        "type": "int"
+      }
+    }
+  },
+  "pathStageTodo": "por hacer",
+  "@pathStageTodo": {
+    "description": "Stato di una tappa aperta non ancora completata"
+  },
+  "pathStageLocked": "bloqueada",
+  "@pathStageLocked": {
+    "description": "Stato di una tappa non ancora aperta"
+  },
+  "pathStageLockedHint": "Termina la lección anterior para desbloquearla",
+  "@pathStageLockedHint": {
+    "description": "Suggerimento di una tappa bloccata per i lettori di schermo"
+  },
+  "pathStageHere": "Estás aquí",
+  "@pathStageHere": {
+    "description": "Etichetta della tappa corrente"
+  },
+  "pathGuardian": "guardián",
+  "@pathGuardian": {
+    "description": "Tipo di tappa: sfida contro un bot"
+  },
+  "pathGuardianUnavailable": "Al guardián se le desafía donde juega el ordenador: Android e iOS, o Windows y Linux con Stockfish instalado.",
+  "@pathGuardianUnavailable": {
+    "description": "Avviso se il motore non è disponibile"
+  },
+  "pathStageWrong": "Esa no es la jugada correcta, inténtalo de nuevo.",
+  "@pathStageWrong": {
+    "description": "Avviso dopo una mossa sbagliata in un esercizio"
+  },
+  "pathStageGood": "Bien, sigue así.",
+  "@pathStageGood": {
+    "description": "Conferma dopo una mossa giusta, con altre mosse da trovare"
+  },
+  "pathStageSolved": "¡Exacto!",
+  "@pathStageSolved": {
+    "description": "Conferma a esercizio risolto"
+  },
+  "pathStageRestartTooltip": "Empezar de nuevo",
+  "@pathStageRestartTooltip": {
+    "description": "Tooltip del pulsante che rifà l'esercizio in corso"
+  },
+  "pathStageExerciseOf": "Ejercicio {n} de {total}",
+  "@pathStageExerciseOf": {
+    "description": "Etichetta per i lettori di schermo dell'avanzamento nella tappa",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pathStageStart": "Empezar",
+  "@pathStageStart": {
+    "description": "Pulsante che avvia gli esercizi dopo la spiegazione"
+  },
+  "pathStageNext": "Siguiente",
+  "@pathStageNext": {
+    "description": "Pulsante che passa all'esercizio successivo"
+  },
+  "pathStageRestartExercise": "Reiniciar el ejercicio",
+  "@pathStageRestartExercise": {
+    "description": "Pulsante che rifà l'esercizio senza vie d'uscita"
+  },
+  "pathStageComplete": "Etapa completada",
+  "@pathStageComplete": {
+    "description": "Titolo del risultato a fine tappa"
+  },
+  "pathStageFinish": "Hecho",
+  "@pathStageFinish": {
+    "description": "Pulsante che chiude il risultato di una tappa"
+  }
+}

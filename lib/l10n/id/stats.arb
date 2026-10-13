@@ -1,0 +1,83 @@
+{
+  "statsTitle": "Statistik",
+  "statsLoadFailed": "Arsip permainan tidak bisa dibaca: coba lagi nanti.",
+  "statsEmpty": "Mainkan beberapa permainan melawan komputer untuk melihat statistikmu.",
+  "statsRecord": "Hasil",
+  "statsAllGames": "Semua",
+  "statsWithWhite": "Sebagai putih",
+  "statsWithBlack": "Sebagai hitam",
+  "statsLocalGames": "Permainan dua pemain",
+  "statsByTimeControl": "Menurut pengaturan waktu",
+  "statsTopOpenings": "Pembukaan paling sering dimainkan",
+  "statsGames": "{count, plural, one{{count} permainan} other{{count} permainan}}",
+  "statsAccuracy": "Akurasi",
+  "statsAverage": "Rata-rata",
+  "statsAccuracyTrend": "Tren akurasi",
+  "statsRating": "Perkiraan peringkat {rating}",
+  "statsRatingProvisional": "sementara: dibutuhkan {count} permainan melawan komputer",
+  "statsRatingGames": "{count, plural, one{dari {count} permainan melawan komputer} other{dari {count} permainan melawan komputer}}",
+  "statsRatingTrend": "Tren peringkat",
+  "statsNoGames": "belum ada permainan",
+  "statsScoreDetail": "{wins, plural, one{{wins} menang} other{{wins} menang}}, {draws, plural, one{{draws} remis} other{{draws} remis}}, {losses, plural, one{{losses} kalah} other{{losses} kalah}}",
+  "statsTrend": "{label}: dari {first} ke {last}, minimum {min}, maksimum {max}",
+  "portraitShareSubject": "Mingguku",
+  "portraitTitle": "Minggumu",
+  "portraitUnreadable": "Arsip tidak bisa dibaca.",
+  "portraitEmpty": "Tidak ada permainan dalam tujuh hari terakhir. Main melawan komputer dan ringkasanmu akan muncul di sini.",
+  "portraitShare": "Bagikan sebagai gambar",
+  "portraitShareFailed": "Gagal membagikan",
+  "portraitCardTitle": "Minggu catur saya",
+  "portraitGames": "{count, plural, one{{count} permainan} other{{count} permainan}}",
+  "@portraitGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "portraitScore": "{wins} menang · {draws} remis · {losses} kalah",
+  "@portraitScore": {
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      }
+    }
+  },
+  "portraitOpenings": "Pembukaan favorit",
+  "portraitAccuracy": "Akurasi rata-rata",
+  "portraitMate": "Skakmat favorit",
+  "portraitMateValue": "{role, select, king{dengan raja} queen{dengan ratu} rook{dengan benteng} bishop{dengan gajah} knight{dengan kuda} other{dengan pion}}, {count, plural, one{{count} kali} other{{count} kali}}",
+  "@portraitMateValue": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "portraitStrongest": "Lawan terkuat yang dikalahkan",
+  "portraitStrongestValue": "Elo {elo}",
+  "@portraitStrongestValue": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "portraitBusiestDay": "Hari tersibuk",
+  "portraitWeekdayMonday": "Senin",
+  "portraitWeekdayTuesday": "Selasa",
+  "portraitWeekdayWednesday": "Rabu",
+  "portraitWeekdayThursday": "Kamis",
+  "portraitWeekdayFriday": "Jumat",
+  "portraitWeekdaySaturday": "Sabtu",
+  "portraitWeekdaySunday": "Minggu"
+}
