@@ -10,10 +10,8 @@ import 'package:scacchi/multiplayer/remote_watch.dart';
 import 'package:scacchi/multiplayer/saved_game.dart';
 import 'package:scacchi/multiplayer/transport.dart';
 
+import '../support/wait.dart';
 import 'fake_relay.dart';
-
-Future<void> settle([int ms = 120]) =>
-    Future<void>.delayed(Duration(milliseconds: ms));
 
 /// Canale a distanza sul relay finto, con attese brevi.
 ChannelFactory remoteOn(FakeRelay relay, List<NostrTransport> opened) =>
@@ -63,7 +61,7 @@ void main() {
       await t.close();
     }
     opened.clear();
-    dir.deleteSync(recursive: true);
+    await removeDir(dir);
   });
 
   SavedGameStore store() => SavedGameStore(File('${dir.path}/m.json'));
@@ -114,13 +112,15 @@ void main() {
       GameInvite.parse(host.inviteLink)!,
       openGuest: (_, _) => throw StateError('niente rete locale'),
     );
-    await settle();
-    expect(host.status, MultiplayerStatus.myTurn);
+    await until(
+      () => host.status == MultiplayerStatus.myTurn,
+      what: 'invitato',
+    );
     expect(await host.play(Move.parse('e2e4')!), isTrue);
-    await settle();
+    await untilMoves(guest, 1);
     expect(guest.status, MultiplayerStatus.myTurn);
     expect(await guest.play(Move.parse('e7e5')!), isTrue);
-    await settle();
+    await untilMoves(host, 2);
     expect(host.session.sync.moves, ['e2e4', 'e7e5']);
     expect(guest.session.sync.moves, ['e2e4', 'e7e5']);
     await host.close();
@@ -156,7 +156,7 @@ void main() {
         remote: true,
         store: s,
       );
-      await settle();
+      await until(() async => await s.load() != null, what: 'invito salvato');
       final saved = await s.load();
       expect(saved, isNotNull);
       expect(saved!.isHost, isTrue);
@@ -173,7 +173,7 @@ void main() {
       openHost: () async => (transport: a, lanAddress: '10.0.0.2:4000'),
       store: s,
     );
-    await settle();
+    await settleLoopback();
     expect(await s.load(), isNull);
     await host.close();
   });
@@ -189,7 +189,7 @@ void main() {
         store: s,
       );
       final link = first.inviteLink;
-      await settle();
+      await until(() async => await s.load() != null, what: 'invito salvato');
       await first.close();
       // L'app viene richiusa e riaperta: la partita è sul disco.
       final resumed = await MultiplayerController.resume(
@@ -199,10 +199,12 @@ void main() {
       );
       expect(resumed.inviteLink, link);
       final guest = await MultiplayerController.join(GameInvite.parse(link)!);
-      await settle();
-      expect(resumed.session.sync.peerKey, isNotNull);
+      await until(
+        () => resumed.session.sync.peerKey != null,
+        what: 'amico arrivato',
+      );
       expect(await resumed.play(Move.parse('d2d4')!), isTrue);
-      await settle();
+      await untilMoves(guest, 1);
       expect(guest.session.sync.moves, ['d2d4']);
       await resumed.close();
       await guest.close();
@@ -222,20 +224,23 @@ void main() {
         GameInvite.parse(host.inviteLink)!,
         store: s,
       );
-      await settle();
+      await until(
+        () => host.status == MultiplayerStatus.myTurn,
+        what: 'invitato',
+      );
       await host.play(Move.parse('e2e4')!);
-      await settle();
+      await untilMoves(guest, 1);
       await guest.play(Move.parse('e7e5')!);
-      await settle();
+      await untilMoves(host, 2);
+      await untilSaved(s, 2);
       await guest.close();
       // L'ospite muove mentre l'invitato è fuori.
       await host.play(Move.parse('g1f3')!);
-      await settle();
       final back = await MultiplayerController.resume(
         (await s.load())!,
         store: s,
       );
-      await settle();
+      await untilMoves(back, 3);
       expect(back.session.sync.moves, ['e2e4', 'e7e5', 'g1f3']);
       expect(back.status, MultiplayerStatus.myTurn);
       await host.close();
@@ -258,7 +263,10 @@ void main() {
       final guest = await MultiplayerController.join(
         GameInvite.parse(host.inviteLink)!,
       );
-      await settle();
+      await until(
+        () => host.status == MultiplayerStatus.myTurn,
+        what: 'invitato',
+      );
       await host.play(Move.parse('e2e4')!);
       expect(watch.calls, ['on']);
       await host.close();
@@ -279,7 +287,11 @@ void main() {
       final guest = await MultiplayerController.join(
         GameInvite.parse(host.inviteLink)!,
       );
-      await settle();
+      await until(
+        () => host.status == MultiplayerStatus.myTurn,
+        what: 'invitato',
+      );
+      var plies = 0;
       for (final (c, uci) in [
         (host, 'f2f3'),
         (guest, 'e7e5'),
@@ -287,8 +299,13 @@ void main() {
         (guest, 'd8h4'),
       ]) {
         expect(await c.play(Move.parse(uci)!), isTrue);
-        await settle(60);
+        await untilMoves(host, ++plies);
+        await untilMoves(guest, plies);
       }
+      await until(
+        () => host.status == MultiplayerStatus.finished,
+        what: 'partita finita',
+      );
       expect(host.status, MultiplayerStatus.finished);
       expect(watch.calls, ['on', 'off']);
       await host.close();

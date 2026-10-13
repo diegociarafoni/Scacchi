@@ -10,6 +10,8 @@ import 'package:scacchi/multiplayer/multiplayer_controller.dart';
 import 'package:scacchi/multiplayer/saved_game.dart';
 import 'package:scacchi/multiplayer/transport.dart';
 
+import '../support/wait.dart';
+
 Future<void> settle() => Future<void>.delayed(const Duration(milliseconds: 50));
 
 /// Registra un canale Bluetooth finto: l'ospite prende [a], l'invitato [b].
@@ -141,7 +143,7 @@ void main() {
 
   test('RMP-20 dopo un riavvio la partita Bluetooth riprende', () async {
     final dir = Directory.systemTemp.createTempSync('rokko_ble_resume');
-    addTearDown(() => dir.deleteSync(recursive: true));
+    addTearDown(() => removeDir(dir));
     final hostStore = SavedGameStore(File('${dir.path}/host.json'));
     final guestStore = SavedGameStore(File('${dir.path}/guest.json'));
     var (a, b) = LoopbackTransport.pair(name: 'bluetooth');

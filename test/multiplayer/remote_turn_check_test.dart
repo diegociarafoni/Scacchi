@@ -10,10 +10,8 @@ import 'package:scacchi/multiplayer/remote_turn_check.dart';
 import 'package:scacchi/multiplayer/saved_game.dart';
 import 'package:scacchi/multiplayer/transport.dart';
 
+import '../support/wait.dart';
 import 'fake_relay.dart';
-
-Future<void> settle([int ms = 120]) =>
-    Future<void>.delayed(Duration(milliseconds: ms));
 
 class _Notifier implements TurnNotifier {
   final turns = <RemoteTurn>[];
@@ -70,7 +68,7 @@ void main() {
       await t.close();
     }
     opened.clear();
-    dir.deleteSync(recursive: true);
+    await removeDir(dir);
   });
 
   Future<MultiplayerController> startHost() => MultiplayerController.host(
@@ -85,22 +83,31 @@ void main() {
       GameInvite.parse(host.inviteLink)!,
       store: store,
     );
-    await settle();
+    await until(
+      () => host.status == MultiplayerStatus.myTurn,
+      what: 'invitato',
+    );
     await host.play(Move.parse('e2e4')!);
-    await settle();
+    await untilMoves(guest, 1);
     await guest.play(Move.parse('e7e5')!);
-    await settle();
+    await untilMoves(host, 2);
+    await untilSaved(store, 2);
     await guest.close();
     return guest;
   }
 
-  Future<bool> check(_Notifier n, _Log log) => checkRemoteGame(
-    store: store,
-    notifier: n,
-    log: log,
-    openChannel: open,
-    wait: const Duration(milliseconds: 600),
-  );
+  // Con novità il controllo termina subito: l'attesa lunga serve solo sotto carico.
+  // Senza novità si aspetta tutta la finestra, quindi lì resta breve.
+  Future<bool> check(_Notifier n, _Log log, {bool news = true}) =>
+      checkRemoteGame(
+        store: store,
+        notifier: n,
+        log: log,
+        openChannel: open,
+        wait: news
+            ? const Duration(seconds: 30)
+            : const Duration(milliseconds: 600),
+      );
 
   test(
     'RMP-40 se l\'amico ha mosso, parte l\'avviso con la sua mossa',
@@ -108,7 +115,6 @@ void main() {
       final host = await startHost();
       await guestAway(host);
       await host.play(Move.parse('g1f3')!);
-      await settle();
       final n = _Notifier();
       await check(n, _Log());
       expect(n.turns, hasLength(1));
@@ -123,7 +129,7 @@ void main() {
     final host = await startHost();
     await guestAway(host);
     final n = _Notifier();
-    expect(await check(n, _Log()), isTrue);
+    expect(await check(n, _Log(), news: false), isTrue);
     expect(n.turns, isEmpty);
     await host.close();
   });
@@ -134,7 +140,6 @@ void main() {
       final host = await startHost();
       await guestAway(host);
       await host.play(Move.parse('g1f3')!);
-      await settle();
       final n = _Notifier();
       final log = _Log();
       await check(n, log);
@@ -162,9 +167,12 @@ void main() {
       openGuest: (_, _) => b,
       store: store,
     );
-    await settle();
+    await until(
+      () => host.status == MultiplayerStatus.myTurn,
+      what: 'invitato',
+    );
     await host.play(Move.parse('e2e4')!);
-    await settle();
+    await untilSaved(store, 1);
     expect(await check(n, _Log()), isFalse);
     expect(n.turns, isEmpty);
     await host.close();
@@ -177,7 +185,11 @@ void main() {
       GameInvite.parse(host.inviteLink)!,
       store: store,
     );
-    await settle();
+    await until(
+      () => host.status == MultiplayerStatus.myTurn,
+      what: 'invitato',
+    );
+    var plies = 0;
     // Matto del barbiere: bianco matta alla quarta mossa.
     for (final (c, uci) in [
       (host, 'e2e4'),
@@ -188,11 +200,12 @@ void main() {
       (guest, 'g8f6'),
     ]) {
       expect(await c.play(Move.parse(uci)!), isTrue);
-      await settle(60);
+      await untilMoves(host, ++plies);
+      await untilMoves(guest, plies);
     }
+    await untilSaved(store, 6);
     await guest.close();
     expect(await host.play(Move.parse('h5f7')!), isTrue);
-    await settle();
     final n = _Notifier();
     // Partita chiusa dall'amico: dopo l'avviso non c'è più nulla da seguire.
     expect(await check(n, _Log()), isFalse);
@@ -207,7 +220,6 @@ void main() {
       final host = await startHost();
       await guestAway(host);
       await host.play(Move.parse('g1f3')!);
-      await settle();
       final n = _Notifier();
       final log = _Log();
       await check(n, log);
@@ -216,12 +228,12 @@ void main() {
         (await store.load())!,
         store: store,
       );
-      await settle();
+      await untilMoves(guest, 3);
       await guest.play(Move.parse('b8c6')!);
-      await settle();
+      await untilMoves(host, 4);
+      await untilSaved(store, 4);
       await guest.close();
       await host.play(Move.parse('f1b5')!);
-      await settle();
       await check(n, log);
       expect(n.turns.map((t) => t.moves), [3, 5]);
       await host.close();

@@ -1,5 +1,7 @@
 import 'dart:io' show Platform;
 
+import 'package:flutter/foundation.dart' show visibleForTesting;
+
 import 'package:multistockfish/multistockfish.dart';
 
 import 'process_transport.dart';
@@ -20,12 +22,17 @@ class StockfishTransport implements UciTransport {
 
   static bool get _mobile => Platform.isAndroid || Platform.isIOS;
 
+  /// Solo per i test: rende l'esito indipendente dal motore installato.
+  @visibleForTesting
+  static bool? debugSupported;
+
   /// Sui computer serve lo Stockfish installato; su macOS la sandbox dell'app
   /// non permette di avviarlo.
   static bool get isSupported =>
+      debugSupported ??
       _mobile ||
-      ((Platform.isLinux || Platform.isWindows) &&
-          ProcessTransport.binary != null);
+          ((Platform.isLinux || Platform.isWindows) &&
+              ProcessTransport.binary != null);
 
   /// Sul telefono riprova se il motore precedente non ha ancora liberato il posto.
   static Future<UciTransport> start() async {
