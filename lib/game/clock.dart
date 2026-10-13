@@ -61,12 +61,14 @@ class TimeControl {
   static TimeControl? parse(String label) {
     final m = RegExp(r'^(\d+)\+(\d+)(?:/([db])(\d+))?$').firstMatch(label);
     if (m == null) return null;
-    final minutes = int.parse(m[1]!);
-    final delay = int.parse(m[4] ?? '0');
+    final minutes = int.tryParse(m[1]!);
+    final delay = int.tryParse(m[4] ?? '0');
+    final increment = int.tryParse(m[2]!);
+    if (minutes == null || delay == null || increment == null) return null;
     if (minutes <= 0 || (m[3] != null && delay <= 0)) return null;
     return TimeControl(
       minutes: minutes,
-      increment: int.parse(m[2]!),
+      increment: increment,
       delay: delay,
       delayType: m[3] == 'b' ? DelayType.bronstein : DelayType.simple,
     );

@@ -119,8 +119,9 @@ La pagina principale è un menu di sezioni: ogni voce ha icona, nome e una riga 
 | Partita | Promuovi sempre a donna, ruota a ogni turno, modalità tavolo, «Spiegami perché» |
 | Accessibilità | Aspetto dell'app (sistema, chiaro, scuro), colori per daltonici, modalità zen, conferma della mossa |
 | Profilo bambino | In fondo, sotto un separatore; per uscirne serve la domanda per adulti |
+| Informazioni | Ultima voce: licenza GPL-3.0 o successiva, indirizzo dei sorgenti (si copia, non si apre: l'app non usa la rete), dichiarazione di privacy, licenze di tutte le librerie (`showLicensePage`) e crediti di motore, pezzi e caratteri (`lib/about/`) |
 
-Poche sezioni, nessuna con meno di due voci (lo controlla un test): una sezione per ogni cosa che l'utente cerca, non una per ogni funzione.
+Poche sezioni, nessuna con meno di due voci (lo controlla un test; Stile, Profilo bambino e Informazioni sono le eccezioni): una sezione per ogni cosa che l'utente cerca, non una per ogni funzione.
 
 Le pagine che cambiano l'aspetto della scacchiera (Scacchiera e Accessibilità; Stile ha la sua) hanno in cima, fissa mentre si scorre, un'anteprima: mostra una posizione di prova con tema, pezzi, coordinate, mosse legali, ultima mossa, colori per daltonici e velocità delle animazioni correnti, e si aggiorna a ogni scelta. Toccandola si gioca la mossa di prova (l'alfiere prende in c6), con l'animazione scelta; un secondo tocco la ripristina. Il pulsante a destra del titolo (48 dp) la comprime a una riga con tema e pezzi, per lasciare spazio alle impostazioni sui telefoni piccoli. L'anteprima ha un'etichetta per i lettori di schermo.
 
@@ -142,6 +143,7 @@ Si aprono dall'icona a forma di ingranaggio nella Home e nella barra del titolo 
 | Coordinate | Lettere e numeri sui bordi della scacchiera | Attiva |
 | Evidenzia l'ultima mossa | Colora la casa di partenza e quella di arrivo dell'ultima mossa, su tutte le scacchiere; spenta, il colore del tema diventa trasparente | Attiva |
 | Coordinate fuori dalla scacchiera | Sposta le coordinate su una cornice attorno alla scacchiera, così non coprono i pezzi; si sceglie solo con le coordinate attive (vedi [pezzi-e-scacchiere.md](pezzi-e-scacchiere.md)) | Disattiva |
+| Come muovere i pezzi | Automatico (due tocchi sul telefono, tocchi e trascinamento sugli schermi con lato corto da 600 dp), Tocchi e trascinamento, Due tocchi o Trascinamento (requisito RM-02). Nei due tocchi, un secondo tocco sul bordo di una casa (il 20% esterno) che non è una destinazione gioca la mossa verso la casa vicina, se è l'unica possibile; le promozioni restano al selettore | Automatico |
 | Promuovi sempre a donna | Salta il selettore di promozione | Disattiva |
 | Frecce e cerchi | Disegno di frecce e cerchi: su touch si tiene premuto un dito fermo su una casa libera (o con un pezzo avversario) e si trascina, oppure si tiene un dito su una casa vuota e si disegna con un secondo; col mouse, tasto destro. Rilasciando sulla stessa casa è un cerchio; ripetere la stessa forma la toglie, un tocco le toglie tutte, e spariscono a ogni mossa (requisito RF-05) | Attiva |
 | Colore di frecce e cerchi | Verde, rosso, blu o giallo per le forme disegnate; col mouse Maiusc dà il rosso, Ctrl il blu, Alt il giallo | Verde |

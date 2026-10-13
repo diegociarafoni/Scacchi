@@ -7,6 +7,7 @@ Ogni cartella di `lib/` ha qui il documento che descrive le sue funzioni. La tab
 | Cartella | Documenti | Funzioni |
 |---|---|---|
 | `lib/analysis/` | [analisi.md](analisi.md) | Analisi libera della posizione con le linee del motore e l'albero delle varianti |
+| `lib/about/` | [licenza.md](licenza.md), [interfaccia.md](interfaccia.md) | Schermata «Informazioni»: licenza, sorgenti, privacy e crediti |
 | `lib/archive/` | [archivio.md](archivio.md) | Archivio delle partite, import ed export PGN |
 | `lib/badges/` | [badge.md](badge.md) | Badge (RG-17) e libri delle aperture: catalogo, regole di sblocco, medaglie, galleria, testi |
 | `lib/bot_gallery/` | [bot.md](bot.md) | Galleria dei bot (RG-18): fasce per Elo, saluti localizzati, scelta di colore e avversario |
