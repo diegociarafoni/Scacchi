@@ -1,0 +1,39 @@
+{
+  "multiplayerChannelLabel": "Hoe verbinden",
+  "@multiplayerChannelLabel": {
+    "description": "Label of the Wi-Fi or Bluetooth choice in the Play with a friend screen"
+  },
+  "multiplayerChannelWifi": "Wifi",
+  "@multiplayerChannelWifi": {
+    "description": "Connect over Wi-Fi or a hotspot"
+  },
+  "multiplayerChannelBluetooth": "Bluetooth",
+  "@multiplayerChannelBluetooth": {
+    "description": "Connect over Bluetooth, no Wi-Fi needed"
+  },
+  "multiplayerChannelRemote": "Op afstand",
+  "@multiplayerChannelRemote": {
+    "description": "Connect over the internet, to play from far away"
+  },
+  "multiplayerWifiHint": "Via wifi, of via de hotspot van één telefoon, verbind je over hetzelfde netwerk: internet is niet nodig.",
+  "multiplayerBluetoothHint": "Met Bluetooth moeten de twee telefoons dicht bij elkaar zijn en is geen netwerk nodig.",
+  "@multiplayerBluetoothHint": {
+    "description": "Explanation under the Bluetooth choice"
+  },
+  "multiplayerBluetoothInviteHint": "Houd de telefoons dicht bij elkaar: de zetten gaan via Bluetooth.",
+  "@multiplayerBluetoothInviteHint": {
+    "description": "Under the QR of a Bluetooth game, while waiting for the opponent"
+  },
+  "multiplayerBluetoothOff": "Zet Bluetooth aan en probeer het opnieuw.",
+  "@multiplayerBluetoothOff": {
+    "description": "Notice when Bluetooth is off"
+  },
+  "multiplayerBluetoothDenied": "Toestemming voor Bluetooth is nodig: sta die toe in de instellingen van de telefoon en probeer het opnieuw.",
+  "@multiplayerBluetoothDenied": {
+    "description": "Notice when the Bluetooth permission is denied"
+  },
+  "multiplayerBluetoothUnsupported": "Deze telefoon ondersteunt geen Bluetooth Low Energy.",
+  "@multiplayerBluetoothUnsupported": {
+    "description": "Notice when the phone has no Bluetooth LE"
+  }
+}

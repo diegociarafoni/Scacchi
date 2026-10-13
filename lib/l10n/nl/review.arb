@@ -1,0 +1,452 @@
+{
+  "reviewCoachGeneric": "{move} was beter: je stelling wordt slechter.",
+  "@reviewCoachGeneric": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachBrilliant": "Briljante zet: je geeft materiaal op, maar het is de beste keuze.",
+  "reviewCoachGreat": "Geweldig: het was de enige zet die de stelling hield.",
+  "reviewCoachBest": "Dit is de beste zet.",
+  "reviewCoachExcellent": "Uitstekende zet, bijna net zo goed als de beste.",
+  "reviewCoachGood": "Goede zet.",
+  "reviewCoachBook": "Een zet uit de openingstheorie.",
+  "reviewCoachAllowedMate": "Na {move} kan {side, select, white{wit} other{zwart}} mat geven in {mate} met {reply}.",
+  "@reviewCoachAllowedMate": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "side": {
+        "type": "String"
+      },
+      "mate": {
+        "type": "int"
+      },
+      "reply": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachMissedMate": "Je had mat in {mate} met {move}.",
+  "@reviewCoachMissedMate": {
+    "placeholders": {
+      "mate": {
+        "type": "int"
+      },
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachHanging": "Je liet {victim} onbeschermd op {square}: {attacker} kan {victimRole, select, knight{dat} other{die}} slaan.",
+  "@reviewCoachHanging": {
+    "placeholders": {
+      "victim": {
+        "type": "String"
+      },
+      "victimRole": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "attacker": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachAllowedFork": "Na {move} valt {piece} meteen {targets} aan: dat is een vork.",
+  "@reviewCoachAllowedFork": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "targets": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachAllowedPin": "Na {move} zet {slider} {pinned} op {square} vast tegen de koning.",
+  "@reviewCoachAllowedPin": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "slider": {
+        "type": "String"
+      },
+      "pinned": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachExposedKing": "Na {move} staat je koning bloot: {reply} is schaak.",
+  "@reviewCoachExposedKing": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "reply": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachRecapture": "Je kon het stuk terugslaan: {move} slaat {piece}.",
+  "@reviewCoachRecapture": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachWinMaterial": "Je kon materiaal winnen: {move} slaat {piece}.",
+  "@reviewCoachWinMaterial": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachMissedFork": "Je kon met {move} een vork spelen: {piece} valt {targets} aan.",
+  "@reviewCoachMissedFork": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "targets": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachMissedDiscovery": "Je kon met {move} een ontdekte aanval spelen: {piece} valt {target} aan.",
+  "@reviewCoachMissedDiscovery": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachMaterialLoss": "Deze zet kost materiaal: ongeveer {pawns, plural, one{1 pion} other{{pawns} pionnen}} in de verwachte variant.",
+  "@reviewCoachMaterialLoss": {
+    "placeholders": {
+      "pawns": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewCoachPieceColored": "{role, select, knight{het} other{de}} {color, select, white{witte} other{zwarte}} {role, select, pawn{pion} knight{paard} bishop{loper} rook{toren} queen{dame} other{koning}}",
+  "@reviewCoachPieceColored": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      },
+      "color": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachListEnd": "{head} en {last}",
+  "@reviewCoachListEnd": {
+    "placeholders": {
+      "head": {
+        "type": "String"
+      },
+      "last": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewTitle": "Partijanalyse",
+  "reviewAnalysePosition": "Analyseer deze stelling",
+  "reviewPuzzlesSaved": "Puzzels opgeslagen: {count}. Je vindt ze bij Puzzels › Herhaal je fouten.",
+  "@reviewPuzzlesSaved": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewPuzzlesAlready": "Deze puzzels zijn al opgeslagen.",
+  "reviewPuzzlesFailed": "Opslaan is niet gelukt. Probeer het opnieuw.",
+  "reviewSavePuzzles": "Fouten opslaan als puzzels ({count})",
+  "@reviewSavePuzzles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewNoteNotSaved": "Notitie niet opgeslagen. Probeer het opnieuw.",
+  "reviewRetryCorrect": "Goed: {move} is de beste zet.",
+  "@reviewRetryCorrect": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewRetryWrong": "{move} is niet de beste zet. Probeer het opnieuw.",
+  "@reviewRetryWrong": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewAnalysing": "Analyseren: {done} van {total}",
+  "@reviewAnalysing": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewStop": "Stoppen",
+  "reviewCancelled": "Analyse gestopt.",
+  "reviewFailed": "Analyse mislukt. Probeer het later opnieuw.",
+  "reviewRetryPrompt": "Zoek een betere zet dan {move}",
+  "@reviewRetryPrompt": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewRetrySolution": "De beste zet was {move}.",
+  "@reviewRetrySolution": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewShowSolution": "Oplossing",
+  "reviewExit": "Sluiten",
+  "reviewStartPosition": "Beginstelling",
+  "reviewMoveVerdict": "{number} {move} is {verdict, select, brilliant{een briljante zet} great{een geweldige zet} best{de beste zet} excellent{een uitstekende zet} good{een goede zet} book{een zet uit de theorie} inaccuracy{een onnauwkeurigheid} mistake{een fout} miss{een gemiste kans} other{een blunder}}",
+  "@reviewMoveVerdict": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "move": {
+        "type": "String"
+      },
+      "verdict": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewBestMove": "Beste: {move}",
+  "@reviewBestMove": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewYourNote": "Jouw notitie: {note}",
+  "@reviewYourNote": {
+    "placeholders": {
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewTryAgain": "Opnieuw proberen",
+  "reviewAddNote": "Notitie toevoegen",
+  "reviewEditNote": "Notitie bewerken",
+  "reviewNavStart": "Begin",
+  "reviewNavPrevious": "Vorige zet",
+  "reviewNavNext": "Volgende zet",
+  "reviewNavEnd": "Einde",
+  "reviewSideWhite": "Wit",
+  "reviewSideBlack": "Zwart",
+  "reviewAccuracyUnavailable": "Nauwkeurigheid van {side} niet beschikbaar",
+  "@reviewAccuracyUnavailable": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewAccuracyPercent": "Nauwkeurigheid van {side}: {value} procent",
+  "@reviewAccuracyPercent": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewAccuracy": "Nauwkeurigheid",
+  "reviewEstimatedElo": "Geschatte Elo ~{elo}",
+  "@reviewEstimatedElo": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewMovesByCategory": "Zetten per categorie",
+  "reviewCountsSemantics": "Wit {white}, zwart {black}",
+  "@reviewCountsSemantics": {
+    "placeholders": {
+      "white": {
+        "type": "int"
+      },
+      "black": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewNoteTitle": "Notitie bij {move}",
+  "@reviewNoteTitle": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewNoteComment": "Opmerking",
+  "reviewNoteCancel": "Annuleren",
+  "reviewNoteSave": "Opslaan",
+  "reviewTimePerMove": "Tijd per zet",
+  "reviewTimeNoHasty": "Tijd per zet. Geen fouten uit haast.",
+  "reviewTimeHastySemantics": "Tijd per zet. Fouten uit haast: {moves}.",
+  "@reviewTimeHastySemantics": {
+    "placeholders": {
+      "moves": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewHastyMistakes": "Fouten uit haast: {moves}",
+  "@reviewHastyMistakes": {
+    "placeholders": {
+      "moves": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewHastyAdvice": "Minder dan 40% van je gemiddelde tijd per zet: controleer op dreigingen voordat je zet.",
+  "reviewAccuracyByPhase": "Nauwkeurigheid per fase",
+  "reviewPhaseOpening": "Opening",
+  "reviewPhaseMiddlegame": "Middenspel",
+  "reviewPhaseEndgame": "Eindspel",
+  "reviewPhaseSemantics": "{phase}: wit {white}, zwart {black}",
+  "@reviewPhaseSemantics": {
+    "placeholders": {
+      "phase": {
+        "type": "String"
+      },
+      "white": {
+        "type": "String"
+      },
+      "black": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewPhaseValues": "Wit {white} · Zwart {black}",
+  "@reviewPhaseValues": {
+    "placeholders": {
+      "white": {
+        "type": "String"
+      },
+      "black": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewMoveSemantics": "{number} {move}, {verdict}{note, select, yes{, met notitie} other{}}",
+  "@reviewMoveSemantics": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "move": {
+        "type": "String"
+      },
+      "verdict": {
+        "type": "String"
+      },
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewEvalGraph": "Evaluatiegrafiek",
+  "reviewClassBrilliant": "Briljant",
+  "reviewClassGreat": "Geweldig",
+  "reviewClassBest": "Beste",
+  "reviewClassExcellent": "Uitstekend",
+  "reviewClassGood": "Goed",
+  "reviewClassBook": "Theorie",
+  "reviewClassInaccuracy": "Onnauwkeurigheid",
+  "reviewClassMistake": "Fout",
+  "reviewClassMiss": "Gemiste kans",
+  "reviewClassBlunder": "Blunder",
+  "reviewScoreUnavailable": "Evaluatie niet beschikbaar",
+  "reviewScoreMated": "Schaakmat: {side, select, white{wit} other{zwart}} wint",
+  "@reviewScoreMated": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewScoreCheckmate": "Schaakmat",
+  "reviewScoreMateIn": "{side, select, white{Wit} other{Zwart}} heeft mat in {moves}",
+  "@reviewScoreMateIn": {
+    "placeholders": {
+      "moves": {
+        "type": "int"
+      },
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewScoreEven": "Gelijk",
+  "reviewScoreAhead": "{side, select, white{Wit} other{Zwart}} staat {pawns} voor",
+  "@reviewScoreAhead": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      },
+      "pawns": {
+        "type": "String"
+      }
+    }
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "pathTitle": "Leerpad",
+  "@pathTitle": {
+    "description": "Titolo della schermata del percorso"
+  },
+  "pathContinue": "Doorgaan",
+  "@pathContinue": {
+    "description": "Pulsante che apre la prossima tappa del percorso"
+  },
+  "pathStars": "{done} sterren van {total}",
+  "@pathStars": {
+    "description": "Etichetta per i lettori di schermo delle stelle totali o di capitolo",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pathSummaryTitle": "Jouw reis",
+  "@pathSummaryTitle": {
+    "description": "Titolo della scheda di riepilogo in cima al percorso"
+  },
+  "pathNext": "Volgende halte: {title}",
+  "@pathNext": {
+    "description": "Tappa proposta da Continua, nella scheda di riepilogo",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "pathAllDone": "Je hebt het hele pad afgelegd. Elke halte kun je opnieuw spelen.",
+  "@pathAllDone": {
+    "description": "Riepilogo quando ogni tappa è completata"
+  },
+  "pathChapterNumber": "Hoofdstuk {n}",
+  "@pathChapterNumber": {
+    "description": "Numero del capitolo del percorso",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "pathChapterDone": "hoofdstuk voltooid",
+  "@pathChapterDone": {
+    "description": "Stato di un capitolo con tutte le tappe completate"
+  },
+  "pathStageDone": "{stars} sterren van 3",
+  "@pathStageDone": {
+    "description": "Stato di una tappa completata",
+    "placeholders": {
+      "stars": {
+        "type": "int"
+      }
+    }
+  },
+  "pathStageTodo": "te doen",
+  "@pathStageTodo": {
+    "description": "Stato di una tappa aperta non ancora completata"
+  },
+  "pathStageLocked": "vergrendeld",
+  "@pathStageLocked": {
+    "description": "Stato di una tappa non ancora aperta"
+  },
+  "pathStageLockedHint": "Rond de vorige les af om deze te ontgrendelen",
+  "@pathStageLockedHint": {
+    "description": "Suggerimento di una tappa bloccata per i lettori di schermo"
+  },
+  "pathStageHere": "Je bent hier",
+  "@pathStageHere": {
+    "description": "Etichetta della tappa corrente"
+  },
+  "pathGuardian": "bewaker",
+  "@pathGuardian": {
+    "description": "Tipo di tappa: sfida contro un bot"
+  },
+  "pathGuardianUnavailable": "De bewaker daag je uit waar de computer speelt: Android en iOS, of Windows en Linux met Stockfish geïnstalleerd.",
+  "@pathGuardianUnavailable": {
+    "description": "Avviso se il motore non è disponibile"
+  }
+}
