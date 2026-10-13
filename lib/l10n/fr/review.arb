@@ -150,7 +150,7 @@
       }
     }
   },
-  "reviewCoachMaterialLoss": "Ce coup fait perdre du matériel : environ {pawns, plural, one{1 pion} other{{pawns} pions}} dans la suite attendue.",
+  "reviewCoachMaterialLoss": "Ce coup fait perdre du matériel : environ {pawns, plural, one{{pawns} pion} other{{pawns} pions}} dans la suite attendue.",
   "@reviewCoachMaterialLoss": {
     "placeholders": {
       "pawns": {
