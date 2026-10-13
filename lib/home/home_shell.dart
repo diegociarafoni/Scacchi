@@ -568,7 +568,7 @@ class _HomeShellState extends State<HomeShell> {
           children: [
             SimpleDialogOption(
               onPressed: () => Navigator.pop(context, 'resume'),
-              child: Text(l10n.homeResumeTitle),
+              child: Text(l10n.homeGameResume),
             ),
             SimpleDialogOption(
               onPressed: () => Navigator.pop(context, 'review'),

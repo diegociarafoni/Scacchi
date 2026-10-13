@@ -215,6 +215,7 @@
   },
   "homeGameCannotOpen": "La partita non si può aprire.",
   "homeGameInProgress": "Partita in corso",
+  "homeGameResume": "Riprendi la partita",
   "homeGameReview": "Rivedi la partita",
   "homeReviewNoEngine": "La revisione richiede il motore: su Android e iOS è incluso, su Windows e Linux serve Stockfish installato.",
   "homeTournamentGameTitle": "Torneo · {opponent}",

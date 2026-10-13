@@ -46,6 +46,7 @@
   "homeGuardianTitle": "The guardian",
   "homeGameCannotOpen": "This game can't be opened.",
   "homeGameInProgress": "Game in progress",
+  "homeGameResume": "Resume the game",
   "homeGameReview": "Review the game",
   "homeReviewNoEngine": "Review needs the engine: it's included on Android and iOS, on Windows and Linux Stockfish must be installed.",
   "homeTournamentGameTitle": "Tournament · {opponent}"
