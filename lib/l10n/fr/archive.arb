@@ -39,5 +39,7 @@
   "archiveModeLocal": "local",
   "archiveModeComputer": "ordinateur",
   "archiveModeImported": "importée",
-  "archiveModePhysical": "échiquier physique"
+  "archiveModePhysical": "échiquier physique",
+  "archiveModeAnalysis": "analyse",
+  "archiveOpenAnalysis": "Ouvrir dans l'analyse"
 }

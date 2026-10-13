@@ -1,0 +1,15 @@
+{
+  "aboutTitle": "Acerca de",
+  "aboutEntrySubtitle": "Licencia, código fuente, privacidad y créditos",
+  "aboutTagline": "Ajedrez libre, también sin conexión",
+  "aboutPrivacy": "Privacidad",
+  "aboutPrivacyDescription": "No se recogen datos, sin anuncios, sin rastreo. En las partidas a distancia, las jugadas viajan cifradas y solo por los servidores elegidos para la partida",
+  "aboutLicense": "Licencia",
+  "aboutLicenseDescription": "Software libre, GPL-3.0 o posterior, con un permiso adicional para la distribución en las tiendas de aplicaciones",
+  "aboutSource": "Código fuente",
+  "aboutSourceCopied": "Dirección copiada",
+  "aboutLicenses": "Licencias de las bibliotecas",
+  "aboutLicensesDescription": "Textos completos de las licencias de los componentes utilizados",
+  "aboutCopy": "Copiar",
+  "aboutCredits": "Créditos"
+}

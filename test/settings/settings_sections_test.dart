@@ -89,6 +89,11 @@ void main() {
       'Profilo bambino',
       'Interfaccia e testi più semplici, bot amichevoli, niente numeri',
     ),
+    (
+      SettingsSection.about,
+      'Informazioni',
+      'Licenza, sorgenti, privacy e crediti',
+    ),
   ];
 
   testWidgets('la pagina principale è un menu di sezioni con icona, nome e '
@@ -122,19 +127,22 @@ void main() {
     expect(find.byKey(const Key('board-preview')), findsNothing);
   });
 
-  testWidgets('il profilo bambino è l\'ultima voce, sotto un separatore', (
-    tester,
-  ) async {
-    await show(tester, logical: const Size(390, 1200));
-    final kid = tester.getTopLeft(section(SettingsSection.kid)).dy;
-    for (final s in SettingsSection.values.where(
-      (s) => s != SettingsSection.kid,
-    )) {
-      if (section(s).evaluate().isEmpty) continue;
-      expect(tester.getTopLeft(section(s)).dy, lessThan(kid), reason: s.name);
-    }
-    expect(find.byType(Divider), findsOneWidget);
-  });
+  testWidgets(
+    'profilo bambino e Informazioni stanno in fondo, sotto un separatore',
+    (tester) async {
+      await show(tester, logical: const Size(390, 1200));
+      final kid = tester.getTopLeft(section(SettingsSection.kid)).dy;
+      final about = tester.getTopLeft(section(SettingsSection.about)).dy;
+      expect(about, greaterThan(kid));
+      for (final s in SettingsSection.values.where(
+        (s) => s != SettingsSection.kid && s != SettingsSection.about,
+      )) {
+        if (section(s).evaluate().isEmpty) continue;
+        expect(tester.getTopLeft(section(s)).dy, lessThan(kid), reason: s.name);
+      }
+      expect(find.byType(Divider), findsOneWidget);
+    },
+  );
 
   testWidgets('senza progressi il Profilo ha solo il backup', (tester) async {
     await show(tester, withProgress: false);
@@ -145,11 +153,14 @@ void main() {
   });
 
   testWidgets('poche sezioni, ciascuna con almeno due voci', (tester) async {
-    expect(SettingsSection.values.length, lessThanOrEqualTo(6));
+    expect(SettingsSection.values.length, lessThanOrEqualTo(7));
     await show(tester, logical: const Size(390, 3000));
-    // Il profilo bambino è una sola scelta in fondo; Stile ha schede proprie.
+    // Profilo bambino e Informazioni sono una sola scelta in fondo; Stile ha schede proprie.
     for (final (id, _, _) in order.where(
-      (e) => e.$1 != SettingsSection.kid && e.$1 != SettingsSection.style,
+      (e) =>
+          e.$1 != SettingsSection.kid &&
+          e.$1 != SettingsSection.about &&
+          e.$1 != SettingsSection.style,
     )) {
       await openSection(tester, id);
       final count =

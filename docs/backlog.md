@@ -20,8 +20,8 @@ Rokko è open source e gratuito. Questi vincoli valgono per ogni voce.
 |---|---|---|---|
 | RV-01 | Nessun livello a pagamento, abbonamento o acquisto: revisioni, puzzle e lezioni sono libere e senza limiti giornalieri | fatta | |
 | RV-02 | Nessuna pubblicità, nessun tracciamento, nessun account obbligatorio; nessun dato lascia il dispositivo senza un'azione esplicita | fatta | |
-| RV-03 | Codice sotto GPL-3.0 (o successiva); licenza e sorgenti visibili nella schermata «Informazioni» | parziale | manca la schermata (vedi A-15) |
-| RV-04 | Asset con licenza compatibile con la GPL, elencati con attribuzione in `CREDITS.md` e in «Informazioni» | parziale | `CREDITS.md` c'è, manca la schermata |
+| RV-03 | Codice sotto GPL-3.0 (o successiva); licenza e sorgenti visibili nella schermata «Informazioni» | fatta | `lib/about/about_page.dart` |
+| RV-04 | Asset con licenza compatibile con la GPL, elencati con attribuzione in `CREDITS.md` e in «Informazioni» | fatta | `CREDITS.md` e `lib/about/credits.dart` |
 | RV-05 | Il permesso per gli store vale solo per il codice del progetto; verifica scritta della compatibilità con la GPL del motore prima della pubblicazione su iOS | parziale | `docs/licenza.md` e `NOTICE.md` dichiarano il permesso, manca l'esito scritto |
 
 ## Piano di rilascio
@@ -55,9 +55,6 @@ Rokko è open source e gratuito. Questi vincoli valgono per ogni voce.
 
 | ID | Funzione | Stato | Pri | Dim | Versione | Evidenza |
 |---|---|---|---|---|---|---|
-| A-10 / RF-52 | **Varianti ad albero salvate**: salvataggio dell'analisi, esportazione e import in PGN con le varianti tra parentesi | parziale | P1 | media | 0.13.0 | `lib/analysis/variation_tree.dart` vive solo con la pagina (`docs/analisi.md`, «Limiti attuali»); `lib/archive/pgn.dart` tiene la sola linea principale |
-| A-11 / RF-55 | **Annotazioni** (commento e simbolo) modificabili anche nell'analisi, sulle varianti e dall'archivio | parziale | P1 | media | 0.13.0 | `lib/game/move_note.dart` e la revisione sì; `analysis_page.dart` e `archive_page.dart` non usano `MoveNote` |
-| A-12 / RF-91 | **Mosse «Libro»** nella revisione e nell'allenatore | parziale | P1 | piccola | 0.13.0 | `OpeningBook.bookPlies` (`lib/openings/opening_book.dart:131`) e `reviewGame(isBook:)` non sono collegati (`docs/revisione-partita.md:43`) |
 | A-13 / RF-66 | **Cache della revisione** nel database locale, con versione del motore e profondità nella chiave | parziale | P1 | media | 0.13.0 | `ReviewCache` (`lib/review/review_page.dart:28`) è una mappa in memoria di 20 voci |
 | A-14 / RF-68 | **Precisione per fase** nelle statistiche, con la media nel tempo | parziale | P1 | piccola | 0.13.0 | `GameReview.accuracyByPhase` c'è; `lib/stats/` non ha riferimenti alle fasi |
 
@@ -65,7 +62,7 @@ Rokko è open source e gratuito. Questi vincoli valgono per ogni voce.
 
 | ID | Funzione | Stato | Pri | Dim | Versione | Evidenza |
 |---|---|---|---|---|---|---|
-| A-15 / RV-03, RV-04 | **Schermata «Informazioni»** con licenza GPL, link ai sorgenti e crediti degli asset | da fare | P0 | piccola | 0.14.0 | nessuna schermata né `showLicensePage` in `lib/` |
+| A-15 / RV-03, RV-04 | **Schermata «Informazioni»** con licenza GPL, link ai sorgenti e crediti degli asset | fatta | P0 | piccola | 0.14.0 | `lib/about/about_page.dart`, aperta da Impostazioni → Informazioni |
 | A-16 / RV-05 | **Verifica scritta** della compatibilità dell'App Store con la GPL del motore | parziale | P0 | piccola | 0.14.0 | `docs/licenza.md`, `NOTICE.md` |
 | A-17 / RNF-10 | **Dichiarazioni «nessun dato raccolto»**: `PrivacyInfo.xcprivacy`, testi per le schede di sicurezza dei dati degli store, `ITSAppUsesNonExemptEncryption` | parziale | P0 | piccola | 0.14.0 | `docs/sicurezza.md`, «Da fare» |
 | A-18 / RNF-03 | **Motore per tutte le architetture** (Android armv7 e x86_64 oltre ad arm64) | parziale | P0 | piccola | 0.14.0 | `docs/rilascio-android.md:71-74` |
@@ -107,7 +104,7 @@ Il dettaglio di U1-U11 è in `consegne/analisi-ux-ui.md`; il comportamento attua
 | S3 | **Mappa del viaggio** con i sei luoghi, i progressi e «riprendi da dove eri» | da fare | da assegnare | media | 0.15.0 |
 | S4 | **Un bivio per capitolo** (tattica o finali) con puzzle diversi | da fare | da assegnare | media | 0.15.0 |
 | S5 | **Ricompense legate alla storia**: scacchiere e pezzi sbloccabili con nome a tema | da fare | da assegnare | piccola | 0.15.0 |
-| S6 | **Aiuto quando ci si blocca**: dopo due errori sullo stesso puzzle, un indizio o un puzzle più facile | da fare | da assegnare | piccola | 0.15.0 |
+| S6 | **Aiuto quando ci si blocca**: dopo due errori sullo stesso puzzle, un indizio o un puzzle più facile | fatta | da assegnare | piccola | 0.15.0 |
 | U1 | **Comandi di partita meno affollati**: 4 azioni in barra, Patta, Abbandona e Nuova in un pannello «Partita»; Allenatore e Minaccia come interruttori | da fare | da assegnare | media | 0.12.0 |
 | U2 | **Identità visiva di Rokko**: tema proprio, carattere con personalità, torre-mascotte negli stati vuoti e a fine partita | parziale | da assegnare | media | 0.14.0 |
 | U3 | **Layout della partita senza spazio morto** su schermate alte | da fare | da assegnare | media | 0.12.0 |
@@ -188,10 +185,10 @@ Testo di ogni requisito, formulato come funzione di Rokko. La colonna Stato dice
 |---|---|---|
 | RF-50 | Schermata di analisi apribile da qualsiasi partita o posizione, con barra di valutazione verticale e valore numerico (centipedoni o matto in N). | fatta |
 | RF-51 | Linee principali del motore (MultiPV da 1 a 3), profondità visibile, analisi infinita interrompibile. | fatta |
-| RF-52 | Esplorazione libera con creazione di varianti ad albero; promozione di una variante a linea principale; eliminazione. | vedi A-10 |
+| RF-52 | Esplorazione libera con creazione di varianti ad albero; promozione di una variante a linea principale; eliminazione; salvataggio nell'archivio e PGN con le varianti. | fatta |
 | RF-53 | Editor di posizione: posizionamento libero dei pezzi, diritti di arrocco, tratto, import/export FEN, validazione della legalità. | fatta |
 | RF-54 | Frecce automatiche della mossa migliore (attivabili). | fatta |
-| RF-55 (P1) | Annotazioni personali: commento testuale e simbolo (`!!`, `!`, `!?`, `?!`, `?`, `??`) su ogni mossa e variante, modificabili nell'analisi e nell'archivio, conservati in import ed export PGN (commenti `{}` e NAG). | vedi A-11 |
+| RF-55 (P1) | Annotazioni personali: commento testuale e simbolo (`!!`, `!`, `!?`, `?!`, `?`, `??`) su ogni mossa e variante, modificabili nell'analisi e nell'archivio, conservati in import ed export PGN (commenti `{}` e NAG). | fatta |
 | RF-56 (P1) | Minaccia dell'avversario: un comando mostra con una freccia la mossa migliore che l'avversario giocherebbe se fosse il suo turno (analisi a mossa nulla), nell'analisi e nella partita con l'allenatore. Non disponibile quando il proprio re è sotto scacco. | fatta |
 
 #### 3.6 Revisione della partita (P1)
@@ -243,7 +240,7 @@ Testo di ogni requisito, formulato come funzione di Rokko. La colonna Stato dice
 | ID | Specifica | Stato |
 |---|---|---|
 | RF-90 | Riconoscimento e visualizzazione del nome dell'apertura durante la partita (codice ECO e nome), usando un dataset aperto di aperture (CC0, vedi `CREDITS.md`), qualche centinaio di KB. | fatta |
-| RF-91 | Le mosse di libro sono marcate "Libro" nella revisione. | vedi A-12 |
+| RF-91 | Le mosse di libro sono marcate "Libro" nella revisione. | fatta |
 | RF-93 (P2) | Allenatore di repertorio: l'utente definisce le proprie linee (da PGN o dalla scacchiera) e l'app gliele fa ripetere con ripetizione dilazionata. | fatta |
 | RF-94 (P1) | Gioca un'apertura: dall'explorer o da una linea del repertorio si avvia una partita contro il computer o un bot che parte dopo le mosse scelte; se il bot esce dalla linea del repertorio l'app lo segnala. | fatta |
 | RF-92 (P2) | Explorer ridotto con le continuazioni principali e le percentuali da un piccolo libro precalcolato; le statistiche di un database globale sono escluse. | fatta |
