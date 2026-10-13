@@ -395,6 +395,7 @@ class AppSettings {
     this.haptics = true,
     this.tableMode = false,
     this.confirmMove = false,
+    this.premove = true,
     this.colorBlind = false,
     this.explainWhy = false,
     this.zenMode = false,
@@ -448,6 +449,9 @@ class AppSettings {
   final bool haptics;
   final bool tableMode;
   final bool confirmMove;
+
+  /// Premossa (RF-08): si muove mentre pensa il computer.
+  final bool premove;
   final bool colorBlind;
 
   /// «Spiegami perché» (RF-122): dopo ogni mossa del computer una riga su cosa
@@ -528,6 +532,7 @@ class AppSettings {
     bool? haptics,
     bool? tableMode,
     bool? confirmMove,
+    bool? premove,
     bool? colorBlind,
     bool? explainWhy,
     bool? zenMode,
@@ -556,6 +561,7 @@ class AppSettings {
     haptics: haptics ?? this.haptics,
     tableMode: tableMode ?? this.tableMode,
     confirmMove: confirmMove ?? this.confirmMove,
+    premove: premove ?? this.premove,
     colorBlind: colorBlind ?? this.colorBlind,
     explainWhy: explainWhy ?? this.explainWhy,
     zenMode: zenMode ?? this.zenMode,
@@ -587,6 +593,7 @@ class AppSettings {
     animationDuration: animation.duration,
     autoQueenPromotion: autoQueen,
     drawShape: DrawShapeOptions(enable: drawShapes),
+    enablePremoves: premove && !kidMode,
     pieceOrientationBehavior: tableMode
         ? PieceOrientationBehavior.opponentUpsideDown
         : PieceOrientationBehavior.facingUser,
@@ -621,6 +628,7 @@ class AppSettings {
       other.haptics == haptics &&
       other.tableMode == tableMode &&
       other.confirmMove == confirmMove &&
+      other.premove == premove &&
       other.colorBlind == colorBlind &&
       other.explainWhy == explainWhy &&
       other.zenMode == zenMode &&
@@ -651,6 +659,7 @@ class AppSettings {
     haptics,
     tableMode,
     confirmMove,
+    premove,
     colorBlind,
     explainWhy,
     zenMode,
@@ -716,6 +725,7 @@ class SettingsController extends ValueNotifier<AppSettings> {
         haptics: read('haptics', d.haptics),
         tableMode: read('tableMode', d.tableMode),
         confirmMove: read('confirmMove', d.confirmMove),
+        premove: read('premove', d.premove),
         colorBlind: read('colorBlind', d.colorBlind),
         explainWhy: read('explainWhy', d.explainWhy),
         zenMode: read('zenMode', d.zenMode),
@@ -778,6 +788,8 @@ class SettingsController extends ValueNotifier<AppSettings> {
         prefs.setBool('tableMode', settings.tableMode),
       if (old.confirmMove != settings.confirmMove)
         prefs.setBool('confirmMove', settings.confirmMove),
+      if (old.premove != settings.premove)
+        prefs.setBool('premove', settings.premove),
       if (old.colorBlind != settings.colorBlind)
         prefs.setBool('colorBlind', settings.colorBlind),
       if (old.explainWhy != settings.explainWhy)

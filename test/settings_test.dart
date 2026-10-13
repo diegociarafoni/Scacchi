@@ -25,6 +25,7 @@ void main() {
     expect(settings.value.haptics, isTrue);
     expect(settings.value.tableMode, isFalse);
     expect(settings.value.confirmMove, isFalse);
+    expect(settings.value.premove, isTrue);
     expect(settings.value.colorBlind, isFalse);
     expect(settings.value.explainWhy, isFalse);
     expect(settings.value.kidMode, isFalse);
