@@ -177,4 +177,32 @@ void main() {
     expect(back.pgn, contains('[Black "Dario"]'));
     expect(back.pgn, contains('1. d4 \$1'));
   });
+
+  test(
+    'RF-55 cambiando la linea principale precisione e apertura si azzerano',
+    () {
+      final game = ChessGame()
+        ..play(Move.parse('e2e4')!)
+        ..play(Move.parse('e7e5')!);
+      final saved = SavedGame.fromGame(
+        game,
+        id: 'y',
+        white: 'A',
+        black: 'B',
+        mode: SavedGame.local,
+        createdAt: DateTime(2026, 10, 10),
+        updatedAt: DateTime(2026, 10, 10),
+      ).copyWith(accuracy: () => 85, opening: () => 'Partita aperta');
+      final same = saved.toTree()!;
+      expect(saved.withTree(same).accuracy, 85);
+      final other = saved.toTree()!;
+      other
+        ..select(other.root.children.single)
+        ..play(Move.parse('c7c5')!)
+        ..promote(other.current);
+      final changed = saved.withTree(other);
+      expect(changed.accuracy, isNull);
+      expect(changed.opening, isNull);
+    },
+  );
 }

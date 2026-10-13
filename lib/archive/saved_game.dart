@@ -1,4 +1,5 @@
 import 'package:dartchess/dartchess.dart';
+import 'package:flutter/foundation.dart' show listEquals;
 
 import '../analysis/variation_tree.dart';
 import '../game/chess_game.dart';
@@ -168,12 +169,20 @@ class SavedGame {
   /// intestazioni, tipo e risultato della voce.
   SavedGame withTree(VariationTree tree, {DateTime? updatedAt}) {
     final games = PgnGame.parseMultiGamePgn(pgn);
+    // Precisione e apertura valgono per le mosse giocate: se la linea
+    // principale cambia non sono più quelle.
+    final before = [
+      for (final n in toTree()?.mainLine ?? const <VariationNode>[]) n.san,
+    ];
+    final changed = !listEquals(before, [for (final n in tree.mainLine) n.san]);
     return copyWith(
       pgn: exportTreePgn(
         tree,
         headers: games.isEmpty ? const {} : games.first.headers,
       ),
       updatedAt: updatedAt,
+      accuracy: changed ? () => null : null,
+      opening: changed ? () => null : null,
     );
   }
 

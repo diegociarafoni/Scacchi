@@ -283,7 +283,8 @@ class _AnalysisPageState extends State<AnalysisPage>
   Future<void> _saveNow() async {
     final previous = _saved;
     final name = previous == null ? await _askName() : null;
-    if (previous == null && (name == null || name.isEmpty) || !mounted) return;
+    if (!mounted) return;
+    if (previous == null && (name == null || name.isEmpty)) return;
     final messenger = ScaffoldMessenger.of(context);
     final l = AppLocalizations.of(context);
     final now = DateTime.now();
@@ -490,7 +491,11 @@ class _AnalysisPageState extends State<AnalysisPage>
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 16,
                               ),
-                              child: Text(c),
+                              child: Text(
+                                c,
+                                maxLines: 4,
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           Padding(
                             padding: const EdgeInsets.symmetric(
