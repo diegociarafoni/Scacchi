@@ -491,6 +491,7 @@ class _HomeShellState extends State<HomeShell> {
               allowUndo: true,
               startMoves: request.startMoves,
               line: request.line,
+              instructor: request.instructor,
             ),
             onActivity: _record,
             onSave: _saveGame,
@@ -707,6 +708,7 @@ class _HomeShellState extends State<HomeShell> {
             createComputer: widget.createComputer,
             tournamentPage: _computerAvailable ? _tournamentPage : null,
             physicalPage: () => PhysicalGamePage(archive: _archive),
+            openingGame: _computerAvailable ? _playOpening : null,
           ),
           if (_trainer != null)
             PuzzleHubPage(trainer: _trainer!, onActivity: _record)

@@ -14,6 +14,7 @@ import '../bot_gallery/game_options.dart';
 import '../coach/coach_session.dart';
 import '../coach/explain_why.dart';
 import '../coach/hint_text.dart';
+import '../coach/opening_coach.dart';
 import '../editor/position_editor_page.dart';
 import '../engine/adaptive.dart';
 import '../engine/bot_collection.dart';
@@ -28,8 +29,13 @@ import '../exchange/qr_send_page.dart';
 import '../exchange/qr_transfer.dart';
 import '../l10n/app_localizations.dart';
 import '../multiplayer/multiplayer_page.dart';
+import '../openings/explorer_page.dart';
+import '../openings/opening_assets.dart';
+import '../openings/opening_book.dart';
 import '../openings/opening_game.dart';
+import '../openings/opening_game_dialog.dart';
 import '../openings/opening_name.dart';
+import '../openings/opening_stats.dart';
 import '../progress/activity.dart';
 import '../progress/avatar.dart';
 import '../progress/game_activity.dart';
@@ -90,12 +96,15 @@ class GamePage extends StatefulWidget {
     this.resume,
     this.progress,
     this.challenge,
+    this.openingBook,
+    this.openingStats,
     this.onFinished,
     this.store,
     this.qrScanner = zxingScanner,
     this.onSavePuzzles,
     this.tournamentPage,
     this.physicalPage,
+    this.openingGame,
   }) : computerAvailable = computerAvailable ?? StockfishTransport.isSupported;
 
   final SettingsController settings;
@@ -105,6 +114,10 @@ class GamePage extends StatefulWidget {
   /// partita»; senza, quelle voci non ci sono.
   final Future<Widget> Function()? tournamentPage;
   final Widget Function()? physicalPage;
+
+  /// Avvia la partita con l'istruttore (come dal menu Aperture); senza, la voce
+  /// «Gioca con l'istruttore» del foglio accende l'allenatore nella partita.
+  final Future<void> Function(BuildContext, OpeningGameRequest)? openingGame;
   final ComputerPlayer Function()? createComputer;
 
   /// Avversario di Chess960, Re della collina e Tre scacchi (RF-123).
@@ -132,6 +145,11 @@ class GamePage extends StatefulWidget {
   /// Partita già impostata da un'altra schermata: parte subito e non si può
   /// ricominciare né annullare.
   final GameChallenge? challenge;
+
+  /// Libro e statistiche delle aperture per l'istruttore; di default quelli
+  /// inclusi nell'app.
+  final Future<OpeningBook>? openingBook;
+  final Future<OpeningStats?>? openingStats;
 
   /// Esito per l'utente e mosse complete giocate, a fine partita contro il
   /// computer, una volta per partita (sfide).
@@ -382,6 +400,95 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   bool get _isChallenge => widget.challenge != null;
 
+  /// Partita con l'istruttore: aiuti accesi e commento sull'apertura.
+  bool get _instructor => widget.challenge?.instructor ?? false;
+
+  /// Nelle sfide niente aiuti, tranne che con l'istruttore.
+  bool get _helpAllowed => !_isChallenge || _instructor;
+
+  OpeningBook? _instructorBook;
+  OpeningStats? _instructorStats;
+
+  Future<void> _loadInstructor() async {
+    final OpeningBook book;
+    final OpeningStats? stats;
+    try {
+      book = await (widget.openingBook ?? openingBook());
+      stats = await (widget.openingStats ?? openingStatsOrNull());
+    } on Object {
+      // Senza libro l'istruttore resta il solo allenatore.
+      return;
+    }
+    if (!mounted) return;
+    _instructorBook = book;
+    _instructorStats = stats;
+    _instructorSay();
+  }
+
+  /// Commento dell'istruttore sull'apertura: nome, mosse più giocate, uscita
+  /// dal libro.
+  void _instructorSay() {
+    final book = _instructorBook;
+    if (!_instructor ||
+        book == null ||
+        _zen ||
+        _game.variant != Variant.standard) {
+      return;
+    }
+    final note = openingNote(book, _instructorStats, [
+      for (final m in _game.moves) m.move,
+    ]);
+    if (note == null) return;
+    final l = _kidL10n(context);
+    String list(List<OpeningChoice> choices) =>
+        [for (final c in choices) '${c.san} (${c.percent}%)'].join(', ');
+    final text = switch (note) {
+      InBookNote(:final opening, :final choices) =>
+        opening != null && choices.isNotEmpty
+            ? l.instructorInBookNamed(opening.localName, list(choices))
+            : opening != null
+            ? l.instructorInBookNameOnly(opening.localName)
+            : choices.isNotEmpty
+            ? l.instructorInBook(list(choices))
+            : null,
+      LeftBookNote(:final playedSan, :final by, :final expected) =>
+        by == _computerSide
+            ? l.instructorLeftComputer(playedSan)
+            : expected.isEmpty
+            ? l.instructorLeftYouBare(playedSan)
+            : l.instructorLeftYou(playedSan, list(expected)),
+    };
+    if (text == null) return;
+    _say(
+      Speech(
+        text,
+        expression: note is LeftBookNote
+            ? AvatarExpression.surprised
+            : AvatarExpression.encouraging,
+      ),
+      duration: const Duration(seconds: 12),
+    );
+  }
+
+  /// Apre l'esploratore sulla posizione raggiunta.
+  void _openExplorer() {
+    final moves = [for (final m in _game.moves) m.move];
+    // Con l'esploratore aperto orologio e computer restano fermi.
+    unawaited(
+      _whileSuspended<void>(
+        () => Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => ExplorerPage(
+              book: widget.openingBook,
+              stats: widget.openingStats ?? openingStatsOrNull(),
+              initialMoves: moves,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   /// Una sfida non ha ancora iniziato la partita: fino ad allora la scacchiera
   /// non accetta mosse.
   late bool _awaitingChallenge = _isChallenge;
@@ -404,6 +511,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         ? null
         : ChessGame.replay(Chess.initial, challenge.startMoves);
     _beginGame(game ?? ChessGame(), setup, null);
+    if (_instructor && _engineGame && !_zen) {
+      setState(() => _coachOn = true);
+      unawaited(_loadInstructor());
+    }
   }
 
   int? _lineDeviationNow() {
@@ -1285,6 +1396,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       }
     }
     _checkLine();
+    _instructorSay();
     return true;
   }
 
@@ -1593,16 +1705,13 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           kidMode: _settings.kidMode,
           tournamentPage: widget.tournamentPage,
           physicalPage: widget.physicalPage,
+          openingGame: widget.openingGame,
         ),
       );
       // Tornei e scacchiera fisica prendono il posto della partita, che
       // resta ferma finché non si torna.
-      if (result is _SheetPush && mounted) {
-        final page = await result.build();
-        if (mounted) {
-          await Navigator.of(context)
-              .push<void>(MaterialPageRoute(builder: (_) => page));
-        }
+      if (result is _SheetRun && mounted) {
+        await result.run(context);
         return null;
       }
       return result as _TimeChoice?;
@@ -1817,6 +1926,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     // Dopo un annulla l'uscita già segnalata vale solo se resta nella partita.
     _reportedDeviation = _lineDeviationNow();
     _refresh(animate: false);
+    // Il commento sull'apertura segue la posizione tornata in campo.
+    _clearSpeech();
+    _instructorSay();
     unawaited(_computerMove());
   }
 
@@ -2206,7 +2318,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           ? null
           : _resign,
       // Nelle sfide niente aiuti: né suggerimenti né ripetizione della mossa.
-      coachOn: _computerSide == null || _isChallenge || _zen || !_engineGame
+      coachOn: _computerSide == null || !_helpAllowed || _zen || !_engineGame
           ? null
           : _coachOn,
       onCoach: () {
@@ -2221,7 +2333,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
               : 'Allenatore disattivato.',
         );
       },
-      hintAvailable: _computerSide != null && !_isChallenge && _engineGame,
+      hintAvailable: _computerSide != null && _helpAllowed && _engineGame,
       onHint: _humanToMove && _pendingMove == null ? _giveHint : null,
       onThreat: _humanToMove && _pendingMove == null ? _showThreat : null,
     );
@@ -2332,6 +2444,12 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                     ),
                 ];
               },
+            ),
+          if (_instructor)
+            IconButton(
+              tooltip: _kidL10n(context).instructorExplorer,
+              icon: const Icon(Icons.account_tree_outlined),
+              onPressed: _openExplorer,
             ),
           if (keyboardInBar)
             IconButton(
@@ -3372,10 +3490,10 @@ class _PositionSheetState extends State<_PositionSheet> {
 enum _SheetView { menu, friend, friendApart, custom }
 
 /// Voce del menu che apre un'altra pagina al posto della partita.
-class _SheetPush {
-  const _SheetPush(this.build);
+class _SheetRun {
+  const _SheetRun(this.run);
 
-  final Future<Widget> Function() build;
+  final Future<void> Function(BuildContext context) run;
 }
 
 /// Scelta di avversario, variante, nomi e cadenza: toccare una cadenza avvia
@@ -3393,6 +3511,7 @@ class _TimeControlSheet extends StatefulWidget {
     required this.kidMode,
     this.tournamentPage,
     this.physicalPage,
+    this.openingGame,
   });
 
   /// Profilo bambino: solo classica, senza tempo o con una cadenza lenta.
@@ -3409,6 +3528,10 @@ class _TimeControlSheet extends StatefulWidget {
   /// Pagine dei tornei e della scacchiera fisica, se la home le offre.
   final Future<Widget> Function()? tournamentPage;
   final Widget Function()? physicalPage;
+
+  /// Avvia la partita con l'istruttore (come dal menu Aperture); senza, la voce
+  /// «Gioca con l'istruttore» del foglio accende l'allenatore nella partita.
+  final Future<void> Function(BuildContext, OpeningGameRequest)? openingGame;
 
   @override
   State<_TimeControlSheet> createState() => _TimeControlSheetState();
@@ -3755,7 +3878,31 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
           Icons.school_outlined,
           "Gioca con l'istruttore",
           'Il computer del tuo livello, con suggerimenti e spiegazioni',
-          () => Navigator.pop(context, _quickChoice(coach: true)),
+          () {
+            final play = widget.openingGame;
+            if (play == null) {
+              Navigator.pop(context, _quickChoice(coach: true));
+              return;
+            }
+            final title = AppLocalizations.of(context).instructorTitle;
+            Navigator.pop(
+              context,
+              _SheetRun((context) async {
+                final choice = await askOpeningGame(context, Side.white);
+                if (choice == null || !context.mounted) return;
+                await play(
+                  context,
+                  OpeningGameRequest.explorer(
+                    title,
+                    const [],
+                    choice.side,
+                    levelId: choice.levelId,
+                    instructor: true,
+                  ),
+                );
+              }),
+            );
+          },
           key: const ValueKey('menu-coach'),
         ),
         if (tournaments != null)
@@ -3763,7 +3910,15 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
             Icons.emoji_events_outlined,
             'Tornei',
             'Un tabellone da affrontare partita dopo partita',
-            () => Navigator.pop(context, _SheetPush(tournaments)),
+            () => Navigator.pop(
+              context,
+              _SheetRun((context) async {
+                final page = await tournaments();
+                if (!context.mounted) return;
+                await Navigator.of(context)
+                    .push<void>(MaterialPageRoute(builder: (_) => page));
+              }),
+            ),
             key: const ValueKey('menu-tournaments'),
           ),
       ],
@@ -3796,7 +3951,14 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
               Icons.timer_outlined,
               'Scacchiera fisica',
               'Orologio e registro per la partita sulla scacchiera vera',
-              () => Navigator.pop(context, _SheetPush(() async => physical())),
+              () => Navigator.pop(
+                context,
+                _SheetRun(
+                  (context) => Navigator.of(
+                    context,
+                  ).push<void>(MaterialPageRoute(builder: (_) => physical())),
+                ),
+              ),
               key: const ValueKey('menu-physical'),
             ),
         ],

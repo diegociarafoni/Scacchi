@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/engine/computer_player.dart';
 import 'package:scacchi/game/game_page.dart';
 import 'package:scacchi/l10n/app_localizations.dart';
+import 'package:scacchi/openings/opening_game.dart';
 import 'package:scacchi/settings/settings.dart';
 import 'package:scacchi/storage/key_value_store.dart';
 
@@ -13,6 +14,7 @@ Future<void> _openSheet(
   WidgetTester tester, {
   bool kid = false,
   bool engine = false,
+  Future<void> Function(BuildContext, OpeningGameRequest)? openingGame,
   Size size = const Size(390, 1600),
 }) async {
   tester.view.physicalSize = size * 3;
@@ -36,6 +38,7 @@ Future<void> _openSheet(
             ? () async => const Scaffold(body: Text('Pagina dei tornei'))
             : null,
         physicalPage: () => const Scaffold(body: Text('Pagina fisica')),
+        openingGame: openingGame,
       ),
     ),
   );
@@ -79,6 +82,24 @@ void main() {
     await tester.pumpAndSettle(const Duration(seconds: 1));
     expect(find.text('Inizia partita'), findsNothing);
     expect(find.textContaining('Computer, livello'), findsOneWidget);
+  });
+
+  testWidgets('«Gioca con l\'istruttore» chiede colore e livello e avvia', (
+    tester,
+  ) async {
+    OpeningGameRequest? started;
+    await _openSheet(
+      tester,
+      engine: true,
+      openingGame: (context, request) async => started = request,
+    );
+    await tester.tap(find.text("Gioca con l'istruttore"));
+    await tester.pumpAndSettle();
+    expect(find.text('Gioca contro il computer'), findsOneWidget);
+    await tester.tap(find.text('Gioca'));
+    await tester.pumpAndSettle();
+    expect(started?.instructor, isTrue);
+    expect(find.text('Inizia partita'), findsNothing);
   });
 
   testWidgets('«Tornei» e «Scacchiera fisica» aprono la loro pagina', (

@@ -15,6 +15,8 @@ Nelle partite contro il computer o un bot il pannello «Partita» (pulsante «Al
 
 - **Spiegami perché** (RF-122): interruttore in Impostazioni, spento di default e indipendente dall'allenatore. Acceso, dopo ogni mossa del computer o di un bot (non nelle sfide) compare per 8 secondi una riga su cosa la mossa fa, minaccia o prepara. Le frasi sono generate da `lib/coach/explain_why.dart` (`explainComputerMove`), nell'ordine: scacco matto, arrocco, promozione, cattura (con lo scacco eventuale), scacco, pezzo messo al sicuro, minaccia della mossa successiva, sviluppo di un cavallo o alfiere, pedone al centro, frase generica. La minaccia viene dalla stessa analisi della freccia rossa (`CoachSession.threat`): cattura di un pezzo indifeso o di valore pari o maggiore, promozione o scacco. La riga è un messaggio a comparsa, quindi letto dai lettori di schermo; i testi sono localizzati in italiano e inglese. Nel profilo bambino la minaccia di cattura non cita la casa («Minaccia di catturare la torre.»). Se il motore non risponde si usano solo le regole sulla mossa, senza la minaccia.
 
+- **Gioca con l'istruttore**: una sfida delle aperture (vedi [aperture.md](aperture.md)) in cui l'allenatore è già acceso e, oltre ai suoi avvisi, commenta l'apertura con le mosse più giocate.
+
 Se il motore non risponde l'allenatore tace e la partita prosegue. Nella partita tra due persone il pulsante non c'è.
 
 ## `CoachSession`

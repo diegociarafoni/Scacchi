@@ -9,6 +9,7 @@ import 'package:scacchi/openings/repertoire.dart';
 import 'package:scacchi/openings/repertoire_page.dart';
 import 'package:scacchi/storage/key_value_store.dart';
 
+import '../localized_app.dart';
 import '../puzzles/puzzle_page_test.dart' show tapMove;
 
 final book = OpeningBook.parseTsv(
@@ -23,7 +24,7 @@ Future<void> phone(WidgetTester tester, Widget home) async {
   tester.view.physicalSize = const Size(1170, 2532);
   tester.view.devicePixelRatio = 3;
   addTearDown(tester.view.reset);
-  await tester.pumpWidget(MaterialApp(home: home));
+  await tester.pumpWidget(localizedApp(home: home));
   await tester.pumpAndSettle();
 }
 
@@ -53,7 +54,9 @@ void main() {
     await tapMove(tester, 'g1f3');
     expect(message(tester), 'Ripasso completato: 2 mosse.');
 
-    await tester.pageBack();
+    // pageBack cerca il tooltip inglese: con l'app in italiano è «Indietro».
+    await tester.tap(find.byTooltip('Indietro'));
+    await tester.pumpAndSettle();
     await tester.pumpAndSettle();
     expect(find.text('Nessuna mossa da ripassare'), findsOneWidget);
   });
@@ -113,6 +116,32 @@ void main() {
     expect(find.text('Explorer'), findsNothing);
     expect(find.text('1 linee · 1 mosse da ripassare'), findsOneWidget);
     expect(find.text('0 linee · 0 mosse da ripassare'), findsOneWidget);
+  });
+
+  testWidgets('l\'hub avvia la partita con l\'istruttore', (tester) async {
+    final t = await trainer();
+    OpeningGameRequest? request;
+    await phone(
+      tester,
+      OpeningsHubPage(
+        repertoire: Future.value(t),
+        onPlay: (context, r) async => request = r,
+      ),
+    );
+    await tester.tap(find.text('Gioca con l\'istruttore'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Gioca'));
+    await tester.pumpAndSettle();
+    expect(request?.instructor, isTrue);
+    expect(request?.side, Side.white);
+    expect(request?.startMoves, isEmpty);
+    expect(request?.line, isNull);
+  });
+
+  testWidgets('senza motore l\'hub non offre l\'istruttore', (tester) async {
+    final t = await trainer();
+    await phone(tester, OpeningsHubPage(repertoire: Future.value(t)));
+    expect(find.text('Gioca con l\'istruttore'), findsNothing);
   });
 
   testWidgets('RF-93 l\'hub segnala un repertorio non caricabile', (
