@@ -1,0 +1,14 @@
+{
+  "queen-mate.title": "King and queen against king",
+  "queen-mate.intro": "Goal: deliver checkmate. Use the queen to shut the enemy king into an ever smaller cage, then bring your own king closer. Watch out for stalemate!",
+  "rook-mate.title": "King and rook against king",
+  "rook-mate.intro": "Goal: deliver checkmate. The rook cuts off the ranks and the king helps it: push the enemy king toward the edge together.",
+  "king-pawn.title": "King and pawn against king",
+  "king-pawn.intro": "Goal: promote the pawn. Bring your king in front of the pawn and take the opposition: the pawn only gets to the end if your king opens the way.",
+  "lucena.title": "The Lucena position",
+  "lucena.intro": "Goal: promote the pawn. Your king is shut in front of the pawn: drive the enemy king away with the rook, then build the “bridge” to shield yourself from checks.",
+  "philidor.title": "The Philidor defense",
+  "philidor.intro": "Goal: don't lose for {par} moves. You play Black: keep the rook on the sixth rank until the pawn advances, then bring it to the back and check from behind.",
+  "bishop-knight.title": "Bishop and knight",
+  "bishop-knight.intro": "Goal: deliver checkmate. It's the hardest checkmate: drive the enemy king toward a corner of your bishop's color. You have 50 moves before the game is a draw."
+}

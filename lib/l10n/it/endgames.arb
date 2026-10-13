@@ -1,0 +1,91 @@
+{
+  "endgamesTitle": "Finali",
+  "@endgamesTitle": {
+    "description": "Titolo dell'elenco delle posizioni teoriche da giocare"
+  },
+  "endgamesGoalMate": "Dai scacco matto",
+  "@endgamesGoalMate": {
+    "description": "Obiettivo di una posizione: dare matto"
+  },
+  "endgamesGoalPromote": "Promuovi il pedone",
+  "@endgamesGoalPromote": {
+    "description": "Obiettivo di una posizione: far promuovere il pedone"
+  },
+  "endgamesGoalHoldBlack": "Resisti con il Nero",
+  "@endgamesGoalHoldBlack": {
+    "description": "Obiettivo di una posizione da difendere giocando con il Nero"
+  },
+  "endgamesGoalHoldWhite": "Resisti con il Bianco",
+  "@endgamesGoalHoldWhite": {
+    "description": "Obiettivo di una posizione da difendere giocando con il Bianco"
+  },
+  "endgamesToRepeat": "Da ripetere",
+  "@endgamesToRepeat": {
+    "description": "Stato di una posizione non riuscita, da rifare"
+  },
+  "endgamesStars": "{stars} stelle su 3",
+  "@endgamesStars": {
+    "description": "Etichetta per i lettori di schermo delle stelle di una posizione",
+    "placeholders": {
+      "stars": {
+        "type": "int"
+      }
+    }
+  },
+  "endgamesStart": "Inizia",
+  "@endgamesStart": {
+    "description": "Pulsante che avvia la posizione dopo la spiegazione"
+  },
+  "endgamesCounterHold": "Mosse: {moves} di {par}",
+  "@endgamesCounterHold": {
+    "description": "Contatore delle mosse in una posizione da difendere",
+    "placeholders": {
+      "moves": {
+        "type": "int"
+      },
+      "par": {
+        "type": "int"
+      }
+    }
+  },
+  "endgamesCounter": "Mosse: {moves} · tre stelle entro {par}",
+  "@endgamesCounter": {
+    "description": "Contatore delle mosse con la soglia per le tre stelle",
+    "placeholders": {
+      "moves": {
+        "type": "int"
+      },
+      "par": {
+        "type": "int"
+      }
+    }
+  },
+  "endgamesEngineThinking": "Il motore pensa…",
+  "@endgamesEngineThinking": {
+    "description": "Mostrato mentre il motore sceglie la risposta"
+  },
+  "endgamesEngineFailed": "Il motore non risponde: riprova.",
+  "@endgamesEngineFailed": {
+    "description": "Avviso se il motore non dà una mossa"
+  },
+  "endgamesSuccess": "Obiettivo raggiunto",
+  "@endgamesSuccess": {
+    "description": "Titolo dell'esito riuscito di una posizione"
+  },
+  "endgamesFailure": "Non ci sei riuscito",
+  "@endgamesFailure": {
+    "description": "Titolo dell'esito fallito di una posizione"
+  },
+  "endgamesFailureHint": "La posizione resta tra quelle da ripetere.",
+  "@endgamesFailureHint": {
+    "description": "Spiegazione dopo un esito fallito"
+  },
+  "endgamesRetry": "Riprova",
+  "@endgamesRetry": {
+    "description": "Pulsante che rifà la posizione"
+  },
+  "endgamesDone": "Fine",
+  "@endgamesDone": {
+    "description": "Pulsante che chiude la posizione"
+  }
+}

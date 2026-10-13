@@ -1,0 +1,14 @@
+{
+  "queen-mate.title": "Donna e re contro re",
+  "queen-mate.intro": "Obiettivo: dai scacco matto. Usa la donna per chiudere il re nemico in una gabbia sempre più piccola, poi avvicina il tuo re. Attento allo stallo!",
+  "rook-mate.title": "Torre e re contro re",
+  "rook-mate.intro": "Obiettivo: dai scacco matto. La torre taglia le righe, il re la aiuta: spingete insieme il re nemico verso il bordo.",
+  "king-pawn.title": "Re e pedone contro re",
+  "king-pawn.intro": "Obiettivo: promuovi il pedone. Porta il re davanti al pedone e conquista l'opposizione: il pedone arriva in fondo solo se il tuo re gli apre la strada.",
+  "lucena.title": "La posizione di Lucena",
+  "lucena.intro": "Obiettivo: promuovi il pedone. Il tuo re è chiuso davanti al pedone: allontana il re nemico con la torre, poi costruisci il \"ponte\" per ripararti dagli scacchi.",
+  "philidor.title": "La difesa di Philidor",
+  "philidor.intro": "Obiettivo: non perdere per {par} mosse. Giochi con il Nero: tieni la torre sulla sesta traversa finché il pedone non avanza, poi portala in fondo e dai scacco da dietro.",
+  "bishop-knight.title": "Alfiere e cavallo",
+  "bishop-knight.intro": "Obiettivo: dai scacco matto. È il matto più difficile: spingi il re nemico verso un angolo del colore del tuo alfiere. Hai 50 mosse prima che la partita sia patta."
+}

@@ -13,7 +13,7 @@ Requisito RF-86: posizioni teoriche da vincere o pattare contro il motore a forz
 | La difesa di Philidor | Nero | Resistere 15 mosse | 15 |
 | Alfiere e cavallo | Bianco | Matto | 35 |
 
-Le posizioni sono costruite per il progetto e sono di dominio pubblico come schemi teorici. Durante la stesura sono state controllate con Stockfish: le posizioni da vincere sono vinte (matto forzato o vantaggio decisivo), la Philidor con il Nero al tratto è patta. L'utente gioca il colore che ha la mossa nella FEN (`EndgameDrill.fen`); il motore risponde al livello più forte (`engineLevels.last`).
+Le posizioni sono costruite per il progetto e sono di dominio pubblico come schemi teorici. Durante la stesura sono state controllate con Stockfish: le posizioni da vincere sono vinte (matto forzato o vantaggio decisivo), la Philidor con il Nero al tratto è patta. L'utente gioca il colore che ha la mossa nella FEN (`EndgameDrill.fen`); il motore risponde al livello più forte (`engineLevels.last`). Titoli e spiegazioni sono nel contenuto `endgames` (`assets/content/<lingua>/endgames.json`, id `<posizione>.title` e `<posizione>.intro`, quest'ultimo con il segnaposto `{par}`); i testi dell'interfaccia sono in `lib/l10n/<lingua>/endgames.arb`.
 
 ## Regole della prova
 
