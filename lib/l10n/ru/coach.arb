@@ -1,0 +1,199 @@
+{
+  "whyPiece": "{role, select, pawn{пешка} knight{конь} bishop{слон} rook{ладья} queen{ферзь} other{король}}",
+  "whyMate": "Мат!",
+  "whyCastle": "Рокировка: король в безопасности.",
+  "whyPromote": "Превращение пешки: {role, select, queen{ферзь} rook{ладья} bishop{слон} knight{конь} other{фигура}}.",
+  "whyCapture": "Взятие: {attacker} → {victim}.",
+  "whyCheck": "Шах твоему королю.",
+  "whySafe": "Уходит из-под удара: {piece}.",
+  "whyThreatCapture": "Угроза взятия: {victim} на {square}.",
+  "whyThreatCaptureKid": "Угроза взятия: {victim}.",
+  "whyThreatCheck": "Готовит шах твоему королю.",
+  "whyThreatPromote": "Готовит превращение пешки.",
+  "whyDevelop": "Развитие: {piece} вступает в игру.",
+  "whyCenter": "Занимает место в центре.",
+  "whyImprove": "Фигура идёт на более полезное поле: {piece}.",
+  "instructorInBookNamed": "Мы в дебюте: {name}. Чаще всего здесь играют: {choices}.",
+  "@instructorInBookNamed": {
+    "description": "Istruttore: apertura raggiunta e mosse più giocate",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "name"
+      },
+      "choices": {
+        "type": "String",
+        "description": "choices"
+      }
+    }
+  },
+  "instructorInBook": "Чаще всего здесь играют: {choices}.",
+  "@instructorInBook": {
+    "description": "Istruttore: mosse più giocate, senza nome di apertura",
+    "placeholders": {
+      "choices": {
+        "type": "String",
+        "description": "choices"
+      }
+    }
+  },
+  "instructorInBookNameOnly": "Мы в дебюте: {name}.",
+  "@instructorInBookNameOnly": {
+    "description": "Istruttore: apertura raggiunta, senza statistiche",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "name"
+      }
+    }
+  },
+  "instructorLeftYou": "Ход {san} выводит тебя из книги дебютов. Чаще всего играли: {choices}.",
+  "@instructorLeftYou": {
+    "description": "Istruttore: l'utente esce dal libro",
+    "placeholders": {
+      "san": {
+        "type": "String",
+        "description": "san"
+      },
+      "choices": {
+        "type": "String",
+        "description": "choices"
+      }
+    }
+  },
+  "instructorLeftComputer": "Компьютер выходит из книги ходом {san}. Дальше важна позиция, а не теория.",
+  "@instructorLeftComputer": {
+    "description": "Istruttore: il computer esce dal libro",
+    "placeholders": {
+      "san": {
+        "type": "String",
+        "description": "san"
+      }
+    }
+  },
+  "instructorLeftYouBare": "Ход {san} выводит тебя из книги дебютов.",
+  "@instructorLeftYouBare": {
+    "description": "Istruttore: l'utente esce dal libro, senza alternative",
+    "placeholders": {
+      "san": {
+        "type": "String",
+        "description": "san"
+      }
+    }
+  },
+  "instructorExplorer": "Открыть в обозревателе",
+  "@instructorExplorer": {
+    "description": "Istruttore: pulsante per aprire la posizione nell'esploratore"
+  },
+  "instructorTitle": "Партия с тренером",
+  "@instructorTitle": {
+    "description": "Titolo della partita con l'istruttore"
+  },
+  "instructorHubSubtitle": "Компьютер комментирует твой дебют и показывает самые частые ходы",
+  "@instructorHubSubtitle": {
+    "description": "Istruttore: sottotitolo nel menu delle aperture"
+  },
+  "coachHintMovePiece": "Что двигать: {piece}.",
+  "@coachHintMovePiece": {
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintMoveSomePiece": "Сделай ход любой фигурой.",
+  "coachHintPlayHighlighted": "Сыграй выделенный ход.",
+  "coachHintCastleShort": "Сделай короткую рокировку.",
+  "coachHintCastleLong": "Сделай длинную рокировку.",
+  "coachHintPieceAn": "{role, select, queen{ферзь} rook{ладья} bishop{слон} knight{конь} pawn{пешка} other{король}}",
+  "@coachHintPieceAn": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintCheckEscape": "{promotion, select, yes{Превращение} other{Ход}}: {piece} {where, select, square{на {square}} other{на поле в кружке}}{escape, select, king{ — уйти из-под шаха} other{ — закрыться от шаха}}{check, select, none{.} check{, и это шах.} other{, и это мат.}}",
+  "@coachHintCheckEscape": {
+    "placeholders": {
+      "promotion": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "escape": {
+        "type": "String"
+      },
+      "check": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintPromote": "Превращение: {piece} {where, select, square{на {square}} other{на поле в кружке}}{capture, select, yes{, со взятием: {victim}} other{}}. Новая фигура: {promoted}.",
+  "@coachHintPromote": {
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "capture": {
+        "type": "String"
+      },
+      "victim": {
+        "type": "String"
+      },
+      "promoted": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintCapture": "Ход: {piece} {where, select, square{на {square}} other{на поле в кружке}}, взятие: {victim}{check, select, none{.} check{, с шахом.} other{, с матом.}}",
+  "@coachHintCapture": {
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "victim": {
+        "type": "String"
+      },
+      "check": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintMove": "Ход: {piece} {where, select, square{на {square}} other{на поле в кружке}}{check, select, none{.} check{, с шахом.} other{, с матом.}}",
+  "@coachHintMove": {
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "check": {
+        "type": "String"
+      }
+    }
+  }
+}

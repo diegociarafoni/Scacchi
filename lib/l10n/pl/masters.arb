@@ -1,0 +1,118 @@
+{
+  "mastersTitle": "Wielcy mistrzowie",
+  "@mastersTitle": {
+    "description": "Titolo dell'elenco delle partite celebri"
+  },
+  "mastersStars": "{stars, plural, one{{stars} gwiazdka} few{{stars} gwiazdki} many{{stars} gwiazdek} other{{stars} gwiazdki}} z 3",
+  "@mastersStars": {
+    "description": "Etichetta per i lettori di schermo delle stelle di una partita",
+    "placeholders": {
+      "stars": {
+        "type": "int"
+      }
+    }
+  },
+  "mastersFlipBoard": "Obróć szachownicę",
+  "@mastersFlipBoard": {
+    "description": "Tooltip del pulsante che capovolge la scacchiera"
+  },
+  "mastersStartPosition": "Pozycja początkowa",
+  "@mastersStartPosition": {
+    "description": "Titolo della partita prima della prima mossa"
+  },
+  "mastersWhiteWins": "Wygrywają białe",
+  "@mastersWhiteWins": {
+    "description": "Esito di una partita vinta dal Bianco"
+  },
+  "mastersBlackWins": "Wygrywają czarne",
+  "@mastersBlackWins": {
+    "description": "Esito di una partita vinta dal Nero"
+  },
+  "mastersDraw": "Remis",
+  "@mastersDraw": {
+    "description": "Esito di una partita patta"
+  },
+  "mastersFirstMove": "Początek",
+  "@mastersFirstMove": {
+    "description": "Tooltip del pulsante che torna alla posizione iniziale"
+  },
+  "mastersPreviousMove": "Poprzedni ruch",
+  "@mastersPreviousMove": {
+    "description": "Tooltip del pulsante che torna indietro di una mossa"
+  },
+  "mastersNextMove": "Następny ruch",
+  "@mastersNextMove": {
+    "description": "Tooltip del pulsante che avanza di una mossa"
+  },
+  "mastersLastMove": "Koniec",
+  "@mastersLastMove": {
+    "description": "Tooltip del pulsante che va all'ultima mossa"
+  },
+  "mastersGuessWhite": "Zgaduj ruchy białymi",
+  "@mastersGuessWhite": {
+    "description": "Pulsante che avvia «Indovina la mossa» giocando con il Bianco"
+  },
+  "mastersGuessBlack": "Zgaduj ruchy czarnymi",
+  "@mastersGuessBlack": {
+    "description": "Pulsante che avvia «Indovina la mossa» giocando con il Nero"
+  },
+  "mastersYourTurnWhite": "Twój ruch białymi: zgadnij ruch mistrza.",
+  "@mastersYourTurnWhite": {
+    "description": "Invito durante «Indovina la mossa» quando si gioca con il Bianco"
+  },
+  "mastersYourTurnBlack": "Twój ruch czarnymi: zgadnij ruch mistrza.",
+  "@mastersYourTurnBlack": {
+    "description": "Invito durante «Indovina la mossa» quando si gioca con il Nero"
+  },
+  "mastersGuessed": "Odgadnięte ruchy: {correct} z {attempts}",
+  "@mastersGuessed": {
+    "description": "Punteggio parziale di «Indovina la mossa»",
+    "placeholders": {
+      "correct": {
+        "type": "int"
+      },
+      "attempts": {
+        "type": "int"
+      }
+    }
+  },
+  "mastersSameAsMaster": "Jak u mistrza! {move}.",
+  "@mastersSameAsMaster": {
+    "description": "Esito di una mossa uguale a quella del maestro; {move} è la mossa con il numero",
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "mastersMasterPlayed": "Mistrz zagrał {move}.",
+  "@mastersMasterPlayed": {
+    "description": "Esito di una mossa diversa da quella del maestro; {move} è la mossa del maestro con il numero",
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "mastersReply": "Odpowiedź: {move}.",
+  "@mastersReply": {
+    "description": "Segue l'esito: la risposta dell'avversario nella partita storica",
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "mastersFinished": "Partia zakończona",
+  "@mastersFinished": {
+    "description": "Titolo dell'esito a fine «Indovina la mossa»"
+  },
+  "mastersReplay": "Zagraj ponownie",
+  "@mastersReplay": {
+    "description": "Pulsante che rifà «Indovina la mossa» dall'inizio"
+  },
+  "mastersDone": "Gotowe",
+  "@mastersDone": {
+    "description": "Pulsante che chiude l'esito"
+  }
+}

@@ -1,0 +1,614 @@
+{
+  "achievementFirstGameTitle": "Permainan pertama",
+  "achievementFirstGameDesc": "Mainkan permainan pertamamu.",
+  "achievementFirstWinTitle": "Kemenangan pertama",
+  "achievementFirstWinDesc": "Menangkan satu permainan.",
+  "achievementFirstDrawTitle": "Jabat tangan",
+  "achievementFirstDrawDesc": "Akhiri satu permainan dengan remis.",
+  "achievementGames10Title": "Sepuluh permainan",
+  "achievementGames10Desc": "Mainkan 10 permainan.",
+  "achievementGames100Title": "Seratus permainan",
+  "achievementGames100Desc": "Mainkan 100 permainan.",
+  "achievementKnightMateTitle": "Kuda penyelamat",
+  "achievementKnightMateDesc": "Skakmat dengan kuda.",
+  "achievementPawnMateTitle": "Pahlawan sederhana",
+  "achievementPawnMateDesc": "Skakmat dengan pion.",
+  "achievementLongCastleWinTitle": "Sisi ratu",
+  "achievementLongCastleWinDesc": "Menangkan permainan saat kamu melakukan rokade panjang.",
+  "achievementPuzzles10Title": "Mata taktik",
+  "achievementPuzzles10Desc": "Selesaikan 10 teka-teki.",
+  "achievementPuzzles100Title": "Pemburu taktik",
+  "achievementPuzzles100Desc": "Selesaikan 100 teka-teki.",
+  "achievementStreak3Title": "Tiga hari berturut-turut",
+  "achievementStreak3Desc": "Capai targetmu 3 hari berturut-turut.",
+  "achievementStreak7Title": "Satu minggu",
+  "achievementStreak7Desc": "Capai targetmu 7 hari berturut-turut.",
+  "achievementStreak30Title": "Satu bulan",
+  "achievementStreak30Desc": "Capai targetmu 30 hari berturut-turut.",
+  "achievementFirstLessonTitle": "Berangkat sekolah",
+  "achievementFirstLessonDesc": "Selesaikan satu pelajaran.",
+  "achievementFirstReviewTitle": "Cermin, cermin",
+  "achievementFirstReviewDesc": "Tinjau satu permainan.",
+  "achievementLevel5Title": "Level 5",
+  "achievementLevel5Desc": "Capai level 5.",
+  "achievementLevel10Title": "Level 10",
+  "achievementLevel10Desc": "Capai level 10.",
+  "achievementWins10Title": "Sepuluh kemenangan",
+  "achievementWins10Desc": "Menangkan 10 permainan.",
+  "achievementWins50Title": "Lima puluh kemenangan",
+  "achievementWins50Desc": "Menangkan 50 permainan.",
+  "achievementWinBlackTitle": "Sisi gelap",
+  "achievementWinBlackDesc": "Menangkan permainan sebagai Hitam.",
+  "achievementMiniatureTitle": "Miniatur",
+  "achievementMiniatureDesc": "Skakmat dalam kurang dari 20 langkah.",
+  "achievementBeat1500Title": "Tantangan serius",
+  "achievementBeat1500Desc": "Kalahkan bot dengan peringkat 1500 Elo atau lebih.",
+  "achievementBeat2000Title": "Pembunuh raksasa",
+  "achievementBeat2000Desc": "Kalahkan bot dengan peringkat 1850 Elo atau lebih.",
+  "achievementBrilliantTitle": "Brilian!",
+  "achievementBrilliantDesc": "Temukan langkah brilian di salah satu permainanmu.",
+  "achievementPuzzleFork10Title": "Ahli garpu",
+  "achievementPuzzleFork10Desc": "Selesaikan 10 teka-teki garpu.",
+  "achievementPuzzleMate10Title": "Skakmat!",
+  "achievementPuzzleMate10Desc": "Selesaikan 10 teka-teki skakmat.",
+  "achievementPuzzleRating1500Title": "Ahli taktik",
+  "achievementPuzzleRating1500Desc": "Capai peringkat teka-teki 1500.",
+  "achievementPuzzleRun20Title": "Lagi lancar",
+  "achievementPuzzleRun20Desc": "Raih 20 poin dalam mode waktu atau rentetan.",
+  "achievementChallengesAllTitle": "Hari sempurna",
+  "achievementChallengesAllDesc": "Selesaikan ketiga tantangan harian.",
+  "achievementChallenges10Title": "Penantang",
+  "achievementChallenges10Desc": "Selesaikan 10 tantangan harian.",
+  "achievementReviews10Title": "Kritikus diri",
+  "achievementReviews10Desc": "Tinjau 10 permainan.",
+  "achievementAccuracy90Title": "Setajam bedah",
+  "achievementAccuracy90Desc": "Mainkan permainan dengan akurasi 90% atau lebih.",
+  "achievementLessons10Title": "Murid",
+  "achievementLessons10Desc": "Selesaikan 10 pelajaran.",
+  "achievementCoordinates20Title": "Mata elang",
+  "achievementCoordinates20Desc": "Temukan 20 petak dalam satu sesi berwaktu.",
+  "achievementMinigamesAllTitle": "Pemain sulap",
+  "achievementMinigamesAllDesc": "Coba semua permainan mini.",
+  "achievementTournamentDoneTitle": "Langganan turnamen",
+  "achievementTournamentDoneDesc": "Selesaikan satu turnamen melawan bot.",
+  "achievementTournamentWonTitle": "Lemari piala",
+  "achievementTournamentWonDesc": "Menangkan satu turnamen melawan bot.",
+  "progressRequirementLevel": "Level {level}",
+  "@progressRequirementLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "progressRequirementAchievement": "Pencapaian “{title}”",
+  "@progressRequirementAchievement": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "progressRewardTheme": "Tema {name}",
+  "@progressRewardTheme": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "progressRewardPieces": "Bidak {name}",
+  "@progressRewardPieces": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "progressRewardAvatar": "Avatar {name}",
+  "@progressRewardAvatar": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "progressRewardFrame": "Bingkai {name}",
+  "@progressRewardFrame": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "progressGoalGames": "{count, plural, one{1 permainan} other{{count} permainan}}",
+  "@progressGoalGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressGoalPuzzles": "{count, plural, one{1 teka-teki} other{{count} teka-teki}}",
+  "@progressGoalPuzzles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressGoalMinutes": "{count, plural, one{1 menit} other{{count} menit}}",
+  "@progressGoalMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDaysCount": "{count, plural, one{1 hari} other{{count} hari}}",
+  "@progressDaysCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressStreakNeedGames": "Agar rentetanmu terus berlanjut, setiap hari: mainkan {goal}.",
+  "@progressStreakNeedGames": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "progressStreakNeedPuzzles": "Agar rentetanmu terus berlanjut, setiap hari: selesaikan {goal}.",
+  "@progressStreakNeedPuzzles": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "progressStreakNeedMinutes": "Agar rentetanmu terus berlanjut, setiap hari: berlatih selama {goal}.",
+  "@progressStreakNeedMinutes": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "progressStreakLeftGames": "{count, plural, one{{count} permainan lagi} other{{count} permainan lagi}}",
+  "@progressStreakLeftGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressStreakLeftPuzzles": "{count, plural, one{{count} teka-teki lagi} other{{count} teka-teki lagi}}",
+  "@progressStreakLeftPuzzles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressStreakLeftMinutes": "{count, plural, one{{count} menit lagi} other{{count} menit lagi}}",
+  "@progressStreakLeftMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressStreakTodayDone": "Hari ini: selesai. Rentetanmu aman sampai besok.",
+  "progressStreakTodayRest": "Hari ini hari istirahatmu: rentetanmu tidak akan putus.",
+  "progressStreakTodayTodo": "Hari ini: belum selesai. {left}.",
+  "@progressStreakTodayTodo": {
+    "placeholders": {
+      "left": {
+        "type": "String"
+      }
+    }
+  },
+  "progressStreakSummaryDone": "Hari ini: selesai",
+  "progressStreakSummaryRest": "Hari ini: hari istirahat",
+  "progressStreakSummaryTodo": "Hari ini: belum selesai",
+  "progressStreakNext": "Target berikutnya: {days} berturut-turut ({missing, plural, one{{missing} lagi} other{{missing} lagi}}).",
+  "@progressStreakNext": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      },
+      "missing": {
+        "type": "int"
+      }
+    }
+  },
+  "progressStreakSkipNone": "Capai targetmu hari ini untuk memulai rentetan.",
+  "progressStreakSkipFreeze": "Jika kamu melewatkan satu hari, pembeku rentetan akan melindunginya (kamu punya {count}). Kamu mendapat satu setiap 7 hari, maksimal 2.",
+  "@progressStreakSkipFreeze": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressStreakSkipReset": "Jika kamu melewatkan satu hari, rentetanmu mulai dari awal; rekormu {days} tetap tersimpan. Setiap 7 hari rentetan, kamu mendapat satu pembeku.",
+  "@progressStreakSkipReset": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "progressChallengePlayGames": "{count, plural, one{Mainkan {count} permainan} other{Mainkan {count} permainan}}",
+  "@progressChallengePlayGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeWinGames": "{count, plural, one{Menangkan {count} permainan} other{Menangkan {count} permainan}}",
+  "@progressChallengeWinGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeWinWhite": "Menang sebagai Putih",
+  "progressChallengeWinBlack": "Menang sebagai Hitam",
+  "progressChallengeWinShort": "Skakmat dalam {moves} langkah atau kurang",
+  "@progressChallengeWinShort": {
+    "placeholders": {
+      "moves": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeSolvePuzzles": "{count, plural, one{Selesaikan {count} teka-teki} other{Selesaikan {count} teka-teki}}",
+  "@progressChallengeSolvePuzzles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeForkPuzzles": "{count, plural, one{Selesaikan {count} teka-teki garpu} other{Selesaikan {count} teka-teki garpu}}",
+  "@progressChallengeForkPuzzles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeMatePuzzles": "{count, plural, one{Selesaikan {count} teka-teki skakmat} other{Selesaikan {count} teka-teki skakmat}}",
+  "@progressChallengeMatePuzzles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeReviewGame": "{count, plural, one{Tinjau {count} permainan} other{Tinjau {count} permainan}}",
+  "@progressChallengeReviewGame": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeCompleteLesson": "{count, plural, one{Selesaikan {count} pelajaran} other{Selesaikan {count} pelajaran}}",
+  "@progressChallengeCompleteLesson": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeGoalDays": "Capai targetmu selama {count} hari",
+  "@progressChallengeGoalDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressRecordStrongestBot": "Bot terkuat yang dikalahkan",
+  "progressRecordFastestWin": "Skakmat tercepat",
+  "progressRecordBestAccuracy": "Akurasi terbaik",
+  "progressRecordPuzzleRating": "Peringkat teka-teki",
+  "progressRecordPuzzleRun": "Skor berwaktu",
+  "progressRecordMinigame": "Skor permainan mini",
+  "progressRecordsTitle": "Rekor pribadi",
+  "progressRecordLongestStreak": "Rentetan terpanjang",
+  "progressRecordElo": "{elo} Elo",
+  "@progressRecordElo": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "progressRecordMoves": "{count, plural, one{{count} langkah} other{{count} langkah}}",
+  "@progressRecordMoves": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressRecordPuzzleRunMode": "{record} ({mode})",
+  "@progressRecordPuzzleRunMode": {
+    "placeholders": {
+      "record": {
+        "type": "String"
+      },
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "progressFeedbackXp": "+{xp} XP",
+  "@progressFeedbackXp": {
+    "placeholders": {
+      "xp": {
+        "type": "int"
+      }
+    }
+  },
+  "progressFeedbackGoal": "Target hari ini tercapai",
+  "progressFeedbackLevel": "Level {level}!",
+  "@progressFeedbackLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "progressFeedbackFreeze": "Kamu mendapat pembeku rentetan",
+  "progressFeedbackChallenge": "Tantangan selesai: {title}",
+  "@progressFeedbackChallenge": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "progressFeedbackWeekly": "Tantangan mingguan selesai",
+  "progressFeedbackRecord": "Rekor baru: {record}",
+  "@progressFeedbackRecord": {
+    "placeholders": {
+      "record": {
+        "type": "String"
+      }
+    }
+  },
+  "progressFeedbackAchievement": "Pencapaian: {title}",
+  "@progressFeedbackAchievement": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "progressFeedbackReward": "Terbuka: {reward}",
+  "@progressFeedbackReward": {
+    "placeholders": {
+      "reward": {
+        "type": "String"
+      }
+    }
+  },
+  "progressProfileTitle": "Profil",
+  "progressLevel": "Level {level}",
+  "@progressLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChangeAvatar": "Ganti avatar dan bingkai",
+  "progressLevelSemantics": "Kemajuan level: {xp} dari {next} XP",
+  "@progressLevelSemantics": {
+    "placeholders": {
+      "xp": {
+        "type": "int"
+      },
+      "next": {
+        "type": "int"
+      }
+    }
+  },
+  "progressXpOf": "{xp} / {next} XP",
+  "@progressXpOf": {
+    "placeholders": {
+      "xp": {
+        "type": "int"
+      },
+      "next": {
+        "type": "int"
+      }
+    }
+  },
+  "progressAvatarSemantics": "Avatar: {name}",
+  "@progressAvatarSemantics": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "progressAvatarFrameSemantics": "Avatar: {name}, bingkai {frame}",
+  "@progressAvatarFrameSemantics": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "frame": {
+        "type": "String"
+      }
+    }
+  },
+  "progressAvatarTitle": "Avatar",
+  "progressFrameTitle": "Bingkai",
+  "progressLockedSemantics": "{label}, terbuka dengan: {requirement}",
+  "@progressLockedSemantics": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "requirement": {
+        "type": "String"
+      }
+    }
+  },
+  "progressStreakIcon": "Rentetan",
+  "progressStreakDays": "{count, plural, one{{count} hari berturut-turut} other{{count} hari berturut-turut}}",
+  "@progressStreakDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressBestStreak": "Terbaik: {count}",
+  "@progressBestStreak": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressFreezes": "{count, plural, one{{count} pembeku rentetan} other{{count} pembeku rentetan}}",
+  "@progressFreezes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressGoalSemantics": "Target hari ini: {progress} dari {target}",
+  "@progressGoalSemantics": {
+    "placeholders": {
+      "progress": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "progressGoalReachedLine": "Target tercapai: {progress} / {target} {unit}",
+  "@progressGoalReachedLine": {
+    "placeholders": {
+      "progress": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "progressGoalTodayLine": "Target hari ini: {progress} / {target} {unit}",
+  "@progressGoalTodayLine": {
+    "placeholders": {
+      "progress": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "progressUnitGames": "permainan",
+  "progressUnitPuzzles": "teka-teki",
+  "progressUnitMinutes": "menit",
+  "progressAchievementsTitle": "Pencapaian",
+  "progressAchievementEarned": "{title}, diraih. {description}",
+  "@progressAchievementEarned": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "description": {
+        "type": "String"
+      }
+    }
+  },
+  "progressAchievementLocked": "{title}, belum diraih. {description}",
+  "@progressAchievementLocked": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "description": {
+        "type": "String"
+      }
+    }
+  },
+  "progressChallengesToday": "Tantangan hari ini",
+  "progressChallengesWeekly": "Tantangan mingguan",
+  "progressChallengeDone": "Selesai",
+  "progressChallengeTodo": "Belum selesai",
+  "progressChallengeCount": "{done} dari {target}",
+  "@progressChallengeCount": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "progressSettingsTitle": "Pengaturan",
+  "progressTrackingTitle": "XP, rentetan, dan pencapaian",
+  "progressTrackingOff": "Saat nonaktif, tidak ada yang dicatat.",
+  "progressDailyGoal": "Target harian",
+  "progressRestDay": "Hari istirahat",
+  "progressRestDayHint": "Tidak memutus rentetanmu.",
+  "progressRestDayNone": "Tidak ada",
+  "progressWeekdayMonday": "Senin",
+  "progressWeekdayTuesday": "Selasa",
+  "progressWeekdayWednesday": "Rabu",
+  "progressWeekdayThursday": "Kamis",
+  "progressWeekdayFriday": "Jumat",
+  "progressWeekdaySaturday": "Sabtu",
+  "progressWeekdaySunday": "Minggu",
+  "progressReminder": "Pengingat harian",
+  "progressReminderHint": "Satu notifikasi sehari, hanya jika kamu belum mencapai targetmu.",
+  "progressReminderTime": "Waktu pengingat",
+  "progressReminderDenied": "Tanpa izin notifikasi, pengingat tetap nonaktif.",
+  "progressCancel": "Batal",
+  "progressConfirm": "Konfirmasi",
+  "progressReminderBodyStreak": "Rentetan {days}: cukup {goal} untuk terus melanjutkannya.",
+  "@progressReminderBodyStreak": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      },
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "progressReminderBodyGoal": "Target hari ini: {goal}.",
+  "@progressReminderBodyGoal": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "progressReminderChannelDescription": "Mengingatkanmu tentang target hari itu, sekali saja."
+}

@@ -1,0 +1,21 @@
+{
+  "backupTitle": "Back-up en herstel",
+  "backupIntro": "De back-up bevat partijen, voortgang, leerpad, toernooien, training en instellingen. Bewaar hem op een veilige plek: de app werkt offline, dus er is geen online kopie.",
+  "backupShare": "Back-up delen",
+  "backupShareSubject": "Rokko-back-up",
+  "backupRestoreFromText": "Herstellen vanuit tekst",
+  "backupExported": "Back-up klaar om op te slaan",
+  "backupExportFailed": "Back-up mislukt: {error}",
+  "backupRestoreStaged": "Back-up klaar. Sluit de app en open hem opnieuw om je gegevens te herstellen.",
+  "backupRestoreFailed": "Herstellen mislukt: {error}",
+  "backupErrorNotApp": "Dit is geen Rokko-back-up",
+  "backupErrorNewerVersion": "Back-up gemaakt met een nieuwere versie",
+  "backupErrorUnexpectedFile": "Onverwacht bestand in de back-up: {file}",
+  "backupErrorInvalidFile": "Ongeldig bestand in de back-up: {file}",
+  "backupErrorInvalidPreference": "Ongeldige voorkeur: {name}",
+  "backupErrorUnreadable": "Onleesbare back-up",
+  "backupRestoreDialogTitle": "De back-up herstellen",
+  "backupRestoreDialogBody": "Plak de inhoud van het back-upbestand. Je huidige gegevens worden vervangen.",
+  "backupCancel": "Annuleren",
+  "backupRestore": "Herstellen"
+}

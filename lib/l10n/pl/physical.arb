@@ -1,0 +1,65 @@
+{
+  "physicalTitle": "Fizyczna szachownica",
+  "physicalEntrySubtitle": "Zegar i arkusz partii do gry na żywo",
+  "physicalIntro": "Graj na prawdziwej szachownicy: aplikacja jest zegarem i zapisuje partię. Po każdym ruchu wpisz go lub wybierz spośród dozwolonych.",
+  "physicalWhite": "Białe",
+  "physicalBlack": "Czarne",
+  "physicalUntimed": "Bez czasu",
+  "physicalStart": "Rozpocznij partię",
+  "physicalInputWhite": "Ruch białych (np. e4, Sf3)",
+  "physicalInputBlack": "Ruch czarnych (np. e5, Sc6)",
+  "physicalInvalidMove": "Niedozwolony ruch: „{text}”",
+  "@physicalInvalidMove": {
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "physicalNoMoves": "Brak ruchów",
+  "physicalPause": "Pauza",
+  "physicalResume": "Wznów",
+  "physicalUndo": "Cofnij",
+  "physicalDraw": "Remis",
+  "physicalResign": "Poddaj",
+  "physicalDrawQuestion": "Zgoda na remis?",
+  "physicalYes": "Tak",
+  "physicalNo": "Nie",
+  "physicalWhoResigns": "Kto się poddaje?",
+  "physicalSaved": "Partia zapisana w archiwum",
+  "physicalNothingToSave": "Brak ruchów do zapisania",
+  "physicalSaveFailed": "Nie udało się zapisać partii",
+  "physicalNewGame": "Nowa gra",
+  "physicalEndCheckmate": "Mat",
+  "physicalEndResignation": "Poddanie partii",
+  "physicalEndTimeout": "Koniec czasu",
+  "physicalEndAgreement": "Remis za zgodą",
+  "physicalEndStalemate": "Pat",
+  "physicalEndInsufficient": "Niewystarczający materiał",
+  "physicalEndRepetition": "Trzykrotne powtórzenie pozycji",
+  "physicalEndFiftyMoves": "Zasada 50 ruchów",
+  "physicalEndOther": "Koniec partii",
+  "physicalResultLine": "{reason} · {result}",
+  "@physicalResultLine": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      },
+      "result": {
+        "type": "String"
+      }
+    }
+  },
+  "physicalPhoto": "Ruch ze zdjęcia",
+  "physicalRealign": "Wyrównaj ponownie",
+  "physicalCameraUnavailable": "Aparat niedostępny",
+  "physicalImageUnreadable": "Nieczytelny obraz",
+  "physicalReferenceSaved": "Zdjęcie referencyjne zapisane. Po następnym ruchu zrób kolejne zdjęcie.",
+  "physicalNoMoveRecognized": "Nie rozpoznano ruchu: szachownica wygląda tak samo.",
+  "physicalGuessNote": "Najbardziej prawdopodobne ruchy ze zdjęcia: potwierdź właściwy.",
+  "physicalAlignTitle": "Wyrównaj szachownicę",
+  "physicalAlignHelp": "Przeciągnij cztery kółka na rogi szachownicy. Zachowaj to samo kadrowanie przy kolejnych zdjęciach.",
+  "physicalAlignWhiteBottom": "Białe na dole",
+  "physicalAlignBlackBottom": "Czarne na dole",
+  "physicalAlignDone": "Gotowe"
+}

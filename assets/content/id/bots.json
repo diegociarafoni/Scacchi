@@ -1,0 +1,156 @@
+{
+  "bot.start": [
+    "Hai, aku {name}. Hari ini kita main {opening}!",
+    "{name} sudah di papan: selamat bermain!"
+  ],
+  "bot.start.friendly": [
+    "Hai, aku {name}!",
+    "Aku {name}, main bareng yuk?"
+  ],
+  "bot.friendly.check": [
+    "Skak! Selamatkan rajamu.",
+    "Skak! Ke mana rajanya pergi?"
+  ],
+  "bot.friendly.capture": [
+    "Aku menangkap satu bidak!",
+    "Dapat! Sekarang giliranmu."
+  ],
+  "bot.friendly.mistake": [
+    "Pelan-pelan saja.",
+    "Lihat papan baik-baik ya!"
+  ],
+  "bot.friendly.win": [
+    "Permainan seru! Main lagi yuk?",
+    "Kali ini aku menang, mau main lagi?"
+  ],
+  "bot.friendly.loss": [
+    "Kamu menang, hebat!",
+    "Hore, kamu menang!"
+  ],
+  "bot.friendly.draw": [
+    "Remis! Permainan yang bagus.",
+    "Seri! Kita berdua hebat."
+  ],
+  "bot.friendly.chat": [
+    "Seru sekali permainannya!",
+    "Kita senang-senang!",
+    "Giliranmu!"
+  ],
+  "bot.aggressive.check": [
+    "Skak! Aku tidak akan memberimu napas.",
+    "Skak, serang!"
+  ],
+  "bot.aggressive.capture": [
+    "Dapat! Terus menyerang.",
+    "Satu bidakmu hilang."
+  ],
+  "bot.aggressive.mistake": [
+    "Terima kasih hadiahnya, kuambil.",
+    "Aduh, kamu terpeleset di situ."
+  ],
+  "bot.aggressive.win": [
+    "Skakmat! Pertarungan yang hebat.",
+    "Menang! Main lagi?"
+  ],
+  "bot.aggressive.loss": [
+    "Kamu mengalahkanku, mainnya bagus!",
+    "Selamat, aku terbakar."
+  ],
+  "bot.aggressive.draw": [
+    "Remis: aku maunya lebih, tapi ya sudahlah.",
+    "Remis, tapi lain kali aku menyerang lebih keras."
+  ],
+  "bot.aggressive.chat": [
+    "Kita menyerang, bukan menunggu!",
+    "Aku tidak takut apa pun.",
+    "Jalankan langkahmu, aku tepat di belakangmu."
+  ],
+  "bot.positional.check": [
+    "Skak, tidak usah terburu-buru.",
+    "Skak: posisinya memungkinkan."
+  ],
+  "bot.positional.capture": [
+    "Pertukaran yang cocok untukku.",
+    "Penangkapan tenang, strukturnya tetap kokoh."
+  ],
+  "bot.positional.mistake": [
+    "Langkah itu akan merugikan posisimu.",
+    "Kesalahan rencana, kurasa."
+  ],
+  "bot.positional.win": [
+    "Skakmat: rencananya berhasil.",
+    "Menang, terima kasih atas permainannya."
+  ],
+  "bot.positional.loss": [
+    "Kamu bermain lebih baik, selamat.",
+    "Posisimu lebih unggul dariku, bagus!"
+  ],
+  "bot.positional.draw": [
+    "Remis seimbang, itu adil.",
+    "Remis yang jujur."
+  ],
+  "bot.positional.chat": [
+    "Aku tidak buru-buru: posisi ini pantas dipikirkan.",
+    "Struktur itu penting di sini.",
+    "Tidak usah terburu-buru, aku bermain tenang."
+  ],
+  "bot.gambitist.check": [
+    "Skak! Pengorbanannya sepadan.",
+    "Skak, dan yang terbaik belum datang."
+  ],
+  "bot.gambitist.capture": [
+    "Materi kuambil kembali dengan bunga.",
+    "Dapat: gambitnya membuahkan hasil."
+  ],
+  "bot.gambitist.mistake": [
+    "Kamu menerima gambitnya dengan buruk!",
+    "Hati-hati, tadi ada yang lebih baik."
+  ],
+  "bot.gambitist.win": [
+    "Skakmat! Pengorbanannya terbayar.",
+    "Menang, dan pertunjukan yang seru."
+  ],
+  "bot.gambitist.loss": [
+    "Gambitnya tidak cukup, bagus sekali.",
+    "Pertahananmu brilian, pujian untukmu."
+  ],
+  "bot.gambitist.draw": [
+    "Remis: banyak asap, itu saja.",
+    "Remis, tapi permainan yang seru."
+  ],
+  "bot.gambitist.chat": [
+    "Lebih atau kurang satu pion, siapa peduli?",
+    "Yang terbaik belum datang.",
+    "Aku suka kalau kita berani ambil risiko."
+  ],
+  "bot.opening.lia": "Gambit Raja",
+  "bot.opening.pino": "Permainan Italia",
+  "bot.opening.nico": "Sistem London",
+  "bot.opening.chiara": "Gambit Ratu",
+  "bot.opening.viola": "Permainan Skotlandia",
+  "bot.opening.rocco": "Gambit Raja",
+  "bot.opening.ettore": "Variasi Tukar Ruy López",
+  "bot.opening.marta": "Pembukaan Inggris",
+  "bot.opening.bruna": "Pertahanan Prancis",
+  "bot.opening.duilio": "Pembukaan Sisilia",
+  "bot.opening.carlo": "Gambit Budapest",
+  "bot.opening.elena": "Ruy López",
+  "bot.opening.ada": "Pembukaan Inggris",
+  "bot.opening.luna": "Katalan",
+  "bot.opening.massimo": "Gambit Evans",
+  "bot.opening.cosmo": "Gambit Smith-Morra",
+  "bot.opening.stella": "Pertahanan India Raja",
+  "bot.opening.tino": "Pembukaan Pion Raja",
+  "level.1.name": "Pemula",
+  "level.2.name": "Baru belajar",
+  "level.3.name": "Pemain santai",
+  "level.4.name": "Pemain klub",
+  "level.5.name": "Kompetitor",
+  "level.6.name": "Ahli",
+  "level.7.name": "Master",
+  "level.8.name": "Juara",
+  "level.0.name": "Langkah pertama",
+  "style.aggressive": "agresif",
+  "style.positional": "posisional",
+  "style.gambitist": "pemain gambit"
+}

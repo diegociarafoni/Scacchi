@@ -1,0 +1,20 @@
+{
+  "multiplayerRemoteIntro": "Om op afstand te spelen heb je alleen internet nodig: stuur je vriend een link en speel wanneer je wilt, zelfs uren na elkaar.",
+  "multiplayerRemoteSwitchHint": "Je vriend kan van overal meedoen met een link. De zetten gaan versleuteld via openbare relays: geen account en geen eigen server.",
+  "multiplayerRemoteShare": "Uitnodigingslink delen",
+  "multiplayerRemoteShareSubject": "Uitnodiging voor een schaakpartij",
+  "multiplayerRemoteShareText": "Laten we schaken op Rokko! Open de app, kies Spelen met een vriend, dan Meedoen met de link, en plak deze link: {link}",
+  "multiplayerRemoteWaitingHint": "Stuur de link naar je vriend of laat hem de QR-code scannen. De partij blijft bewaard: je kunt de app sluiten en hervatten via Spelen met een vriend.",
+  "multiplayerRemoteLeaveBodyWaiting": "De partij blijft bewaard en de link is nog geldig: je kunt hervatten via Spelen met een vriend.",
+  "multiplayerRemoteJoinLink": "Meedoen met de link",
+  "multiplayerRemoteLinkTitle": "Plak de uitnodigingslink",
+  "multiplayerRemoteLinkField": "Uitnodigingslink",
+  "multiplayerRemotePaste": "Plakken",
+  "multiplayerRemoteLinkInvalid": "Deze link is geen uitnodiging voor een partij.",
+  "multiplayerRemoteLinkConfirm": "Meedoen",
+  "multiplayerRemoteNotifyChannel": "Partijen op afstand",
+  "multiplayerRemoteNotifyChannelDescription": "Laat je weten wanneer je vriend zijn zet heeft gedaan.",
+  "multiplayerRemoteNotifyTitle": "Jij bent aan zet",
+  "multiplayerRemoteNotifyBody": "Je vriend speelde {move}.",
+  "multiplayerRemoteNotifyOver": "De partij met je vriend is afgelopen."
+}

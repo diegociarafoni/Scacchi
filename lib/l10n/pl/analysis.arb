@@ -1,0 +1,26 @@
+{
+  "analysisTitle": "Analiza",
+  "analysisBestMoveArrow": "Strzałka najlepszego ruchu",
+  "analysisThreatArrow": "Groźba przeciwnika",
+  "analysisOneLine": "1 wariant",
+  "analysisTwoLines": "2 warianty",
+  "analysisThreeLines": "3 warianty",
+  "analysisEngineUnavailable": "Silnik jest niedostępny",
+  "analysisPaused": "Analiza wstrzymana",
+  "analysisGameOver": "Koniec partii",
+  "analysisThinking": "Analizuję…",
+  "analysisDepth": "Głębokość {depth}",
+  "@analysisDepth": {
+    "placeholders": {
+      "depth": {
+        "type": "int"
+      }
+    }
+  },
+  "analysisPromote": "Awansuj do głównego wariantu",
+  "analysisDelete": "Usuń ten ruch i kolejne",
+  "analysisBack": "Wstecz",
+  "analysisForward": "Dalej",
+  "analysisResume": "Wznów analizę",
+  "analysisPause": "Wstrzymaj analizę"
+}

@@ -1,0 +1,83 @@
+{
+  "statsTitle": "İstatistikler",
+  "statsLoadFailed": "Oyun arşivi okunamadı: daha sonra tekrar dene.",
+  "statsEmpty": "İstatistiklerini görmek için bilgisayara karşı birkaç oyun oyna.",
+  "statsRecord": "Sonuçlar",
+  "statsAllGames": "Hepsi",
+  "statsWithWhite": "Beyazla",
+  "statsWithBlack": "Siyahla",
+  "statsLocalGames": "İki kişilik oyunlar",
+  "statsByTimeControl": "Tempoya göre",
+  "statsTopOpenings": "En çok oynanan açılışlar",
+  "statsGames": "{count, plural, one{{count} oyun} other{{count} oyun}}",
+  "statsAccuracy": "Doğruluk",
+  "statsAverage": "Ortalama",
+  "statsAccuracyTrend": "Doğruluk eğilimi",
+  "statsRating": "Tahmini Elo puanı {rating}",
+  "statsRatingProvisional": "geçici: bilgisayara karşı {count} oyun gerekiyor",
+  "statsRatingGames": "{count, plural, one{{count} oyundan (bilgisayara karşı)} other{{count} oyundan (bilgisayara karşı)}}",
+  "statsRatingTrend": "Puan eğilimi",
+  "statsNoGames": "oyun yok",
+  "statsScoreDetail": "{wins, plural, one{{wins} galibiyet} other{{wins} galibiyet}}, {draws, plural, one{{draws} beraberlik} other{{draws} beraberlik}}, {losses, plural, one{{losses} mağlubiyet} other{{losses} mağlubiyet}}",
+  "statsTrend": "{label}: {first} değerinden {last} değerine, en düşük {min}, en yüksek {max}",
+  "portraitShareSubject": "Haftam",
+  "portraitTitle": "Haftan",
+  "portraitUnreadable": "Arşiv okunamadı.",
+  "portraitEmpty": "Son yedi günde oyun yok. Bilgisayara karşı oyna, özetin burada görünecek.",
+  "portraitShare": "Görsel olarak paylaş",
+  "portraitShareFailed": "Paylaşım başarısız oldu",
+  "portraitCardTitle": "Satranç haftam",
+  "portraitGames": "{count, plural, one{1 oyun} other{{count} oyun}}",
+  "@portraitGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "portraitScore": "{wins} galibiyet · {draws} beraberlik · {losses} mağlubiyet",
+  "@portraitScore": {
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      }
+    }
+  },
+  "portraitOpenings": "Favori açılışlar",
+  "portraitAccuracy": "Ortalama doğruluk",
+  "portraitMate": "Favori şah mat",
+  "portraitMateValue": "{role, select, king{şahla} queen{vezirle} rook{kaleyle} bishop{fille} knight{atla} other{piyonla}}, {count, plural, one{1 kez} other{{count} kez}}",
+  "@portraitMateValue": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "portraitStrongest": "Yenilen en güçlü rakip",
+  "portraitStrongestValue": "Elo {elo}",
+  "@portraitStrongestValue": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "portraitBusiestDay": "En yoğun gün",
+  "portraitWeekdayMonday": "Pazartesi",
+  "portraitWeekdayTuesday": "Salı",
+  "portraitWeekdayWednesday": "Çarşamba",
+  "portraitWeekdayThursday": "Perşembe",
+  "portraitWeekdayFriday": "Cuma",
+  "portraitWeekdaySaturday": "Cumartesi",
+  "portraitWeekdaySunday": "Pazar"
+}

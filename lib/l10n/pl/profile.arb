@@ -1,0 +1,9 @@
+{
+  "avatarPhotoTitle": "Zdjęcie",
+  "avatarPhotoHint": "Zdjęcie zostaje tylko na tym telefonie: nigdy nie jest wysyłane ani dołączane do kopii zapasowej.",
+  "avatarPhotoGallery": "Z galerii",
+  "avatarPhotoCamera": "Zrób zdjęcie",
+  "avatarPhotoRemove": "Usuń zdjęcie",
+  "avatarPhotoError": "Nie można użyć zdjęcia. Sprawdź uprawnienia do aparatu i zdjęć w ustawieniach telefonu.",
+  "avatarPhotoLabel": "Zdjęcie profilowe"
+}

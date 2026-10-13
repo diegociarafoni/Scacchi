@@ -1,14 +1,13 @@
 import 'package:dartchess/dartchess.dart';
 
+import '../l10n/content.dart';
+
 /// Stile di gioco dei bot (RF-23): sposta la scelta tra le prime candidate
 /// del motore senza cambiarne la forza di base. Vedi docs/bot.md.
 enum BotStyle { aggressive, positional, gambitist }
 
-String styleLabel(BotStyle style) => switch (style) {
-  BotStyle.aggressive => 'aggressivo',
-  BotStyle.positional => 'posizionale',
-  BotStyle.gambitist => 'gambettista',
-};
+String styleLabel(BotStyle style) =>
+    Content.of('bots').text('style.${style.name}');
 
 /// Bonus in centipedoni per [move] giocata da chi muove in [position].
 int styleBonus(Position position, Move move, BotStyle style) {
