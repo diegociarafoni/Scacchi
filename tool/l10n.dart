@@ -19,7 +19,11 @@ Future<void> main(List<String> args) async {
     stderr.writeln('✗ nessuna lingua in lib/l10n/<lingua>/');
     exit(1);
   }
-  final problems = checkLocales(sources);
+  final states = parseLanguageStates(
+    File('tool/lingue.json').readAsStringSync(),
+  );
+  final tolerant = tolerantLocales(states);
+  final problems = checkLocales(sources, tolerant: tolerant);
   if (problems.isNotEmpty) {
     stderr.writeln('✗ traduzioni incoerenti:\n  ${problems.join('\n  ')}');
     exit(1);
@@ -34,8 +38,14 @@ Future<void> main(List<String> args) async {
   }
   try {
     for (final MapEntry(key: locale, value: files) in sources.entries) {
-      File('lib/l10n/app_$locale.arb')
-          .writeAsStringSync(mergeArbs(locale, files));
+      // Le lingue incomplete ripiegano sull'inglese per le chiavi mancanti.
+      File('lib/l10n/app_$locale.arb').writeAsStringSync(
+        mergeArbs(
+          locale,
+          files,
+          fallback: tolerant.contains(locale) ? sources['en'] : null,
+        ),
+      );
     }
   } on FormatException catch (e) {
     stderr.writeln('✗ ${e.message}');

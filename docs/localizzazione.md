@@ -32,6 +32,12 @@ I testi sono in un file per funzione (`kids.arb`, `story.arb`, `stats.arb`, `exc
 
 Dopo un clone, e dopo ogni modifica ai `.arb` o un cambio di ramo, eseguire `dart tool/l10n.dart`. Con una copia nuova `flutter pub get` fallisce finché i file unici non esistono: il comando va dato prima (in CI `dart tool/l10n.dart --solo-unione`, che non lancia `gen-l10n`). `tool/verifica.sh` e l'hook di pre-commit lo eseguono già.
 
+## Stato delle lingue e ripiego
+
+`tool/lingue.json` dichiara lo stato di ogni lingua: `base` (italiano), `pronta`, `beta` o `in lavorazione`. Le lingue base e pronte devono avere esattamente le stesse chiavi dell'italiano. Le lingue `beta` e `in lavorazione` possono averne meno: `tool/l10n.dart` riempie quelle che mancano con il testo inglese, così l'app compila e le PR sulle schermate non devono aspettare le traduzioni. Una chiave che esiste in una lingua incompleta ma non nelle altre resta un errore.
+
+`dart tool/l10n_stato.dart` stampa per ogni lingua le chiavi tradotte rispetto all'italiano; con `--manca` elenca quali mancano, per file. Esce con errore se una lingua `base` o `pronta` (o non dichiarata) è incompleta; la CI lo esegue. Una nuova cartella in `lib/l10n/<lingua>/` va dichiarata in `tool/lingue.json`, altrimenti viene trattata come lingua completa.
+
 ## Aggiungere un testo
 
 1. Aggiungere la chiave nel file della funzione in `lib/l10n/it/` (uno nuovo, con lo stesso nome in `lib/l10n/en/`, se la funzione è nuova), con una voce `@chiave` che ne descrive il contesto quando il testo da solo non basta e che dichiara i segnaposto. Le chiavi sono in camelCase con il prefisso della schermata (`backup…`, `minigames…`, `stats…`).
