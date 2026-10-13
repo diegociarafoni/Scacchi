@@ -90,8 +90,11 @@ void main() {
         final cats = _categories(bodies[i]);
         // I plurali che servono solo a nascondere un testo (`=0{}`) non
         // hanno forme da declinare.
-        if (i < english.length ? !english[i].contains('one') : cats.length < 3)
+        if (i < english.length
+            ? !english[i].contains('one')
+            : cats.length < 3) {
           continue;
+        }
         expect(
           cats,
           containsAll(['one', 'few', 'many', 'other']),

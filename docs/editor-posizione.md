@@ -1,6 +1,6 @@
 # Editor di posizione
 
-Requisito RF-53. Si apre dalla partita con l'icona **Editor di posizione** nella barra in alto (non c'è nelle sfide contro guardiani e tornei né nel profilo bambino) e parte dalla posizione mostrata in quel momento, con il set di pezzi e i colori scelti nelle impostazioni. La partita che si avvia è sempre di scacchi classici, anche se si parte da una variante.
+Requisito RF-53. Si apre dalla partita con la voce **Editor di posizione** del menu ⋮ nella barra in alto (non c'è nelle sfide contro guardiani e tornei né nel profilo bambino) e parte dalla posizione mostrata in quel momento, con il set di pezzi e i colori scelti nelle impostazioni. La partita che si avvia è sempre di scacchi classici, anche se si parte da una variante.
 
 ## Comandi
 
@@ -43,4 +43,4 @@ La partita dalla posizione non ha orologio e resta di scacchi classici.
 
 Le partite da una posizione creata non aggiornano la stima dell'avversario adattivo né la collezione dei bot: contano solo quelle dalla posizione iniziale degli scacchi classici.
 
-Sopra la stringa FEN c'è il titolo **Posizione (FEN)** con l'icona di aiuto (?) che apre una breve spiegazione: cos'è il FEN e come copiarlo o incollarlo da altre app. Titolo e testi sono nei file di traduzione (`editorFen*`).
+Sopra la stringa FEN c'è il titolo **Posizione (FEN)** con l'icona di aiuto (?) che apre una breve spiegazione: cos'è il FEN e come copiarlo o incollarlo in altre app. Titolo e testi sono nei file di traduzione (`editorFen*`).
