@@ -6,8 +6,8 @@ import 'package:dartchess/dartchess.dart';
 
 import '../game/clock.dart';
 
-/// Schema dei link d'invito; `scacchi` (il nome vecchio) si legge ancora, così
-/// i QR già in giro restano validi.
+/// Schema dei link d'invito; `scacchi` (schema storico) si accetta in lettura,
+/// così i QR già emessi restano validi.
 const inviteScheme = 'rokko';
 const _legacyScheme = 'scacchi';
 

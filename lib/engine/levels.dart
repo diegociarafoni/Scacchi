@@ -75,12 +75,10 @@ class EngineLevel {
     styleWindowCp: styleWindowCp ?? this.styleWindowCp,
   );
 
-  /// Livello di un bot con lo stile [style] (RF-23). Dove la forza viene dalla
-  /// scelta tra più candidate (livelli 1-4) lo stile pesa su quella scelta;
-  /// a piena forza (livelli 7 e 8) entra solo tra candidate entro
-  /// [fullStrengthWindowCp] dalla migliore, quindi la forza non cala; dove la
-  /// forza viene dal limitatore Elo di Stockfish (livelli 5 e 6) la mossa resta
-  /// quella del motore e lo stile si esprime con libro e frasi.
+  /// Livello di un bot con lo stile [style] (RF-23): pesa sulla scelta tra
+  /// candidate (livelli 1-4); a piena forza (7 e 8) solo entro
+  /// [fullStrengthWindowCp] dalla migliore; con il limitatore Elo (5 e 6) la
+  /// mossa non cambia e lo stile passa da libro e frasi.
   EngineLevel withStyle(
     BotStyle style, {
     int temperatureCp = 0,
@@ -189,10 +187,9 @@ const engineLevels = <EngineLevel>[
   ),
 ];
 
-/// Livello solo della storia (capitolo 0): 400 Elo, quasi casuale. Non è in
-/// [engineLevels], così non si sceglie dal pannello, non entra nel livello
-/// adattivo e [engineLevelForElo] non lo restituisce (il guardiano da 400 Elo
-/// continua a giocare al livello 1).
+/// Livello solo della storia (capitolo 0): 400 Elo, quasi casuale. Resta fuori
+/// da [engineLevels]: non è scelta del pannello, né adattivo, né restituito da
+/// [engineLevelForElo].
 const storyBeginnerLevel = EngineLevel(
   id: 0,
   name: 'Primi passi',

@@ -35,6 +35,7 @@ if git ls-files -s | grep -q '^160000'; then
 fi
 
 dart tool/check_docs.dart
+dart tool/check_comments.dart
 dart tool/l10n.dart
 dart tool/stringhe_fisse.dart
 dart tool/l10n_stato.dart

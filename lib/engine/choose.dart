@@ -3,11 +3,10 @@ import 'dart:math' as math;
 import 'uci.dart';
 
 /// Sceglie una candidata con probabilità proporzionale a
-/// exp((score - migliore) / temperatureCp). Con temperatura 0, una sola
-/// candidata restituisce la migliore; un matto a favore vince sempre, il più
-/// breve. Il [bonus] (stile di un bot) si somma alla valutazione; con
-/// [windowCp] restano in gara solo le candidate entro quei centipedoni dalla
-/// migliore.
+/// exp((score - migliore) / temperatureCp); con temperatura 0 o una sola
+/// candidata, la migliore. Un matto a favore vince sempre, il più breve.
+/// [bonus] (stile di un bot) si somma alla valutazione; [windowCp] esclude le
+/// candidate più lontane dalla migliore.
 InfoLine? chooseCandidate(
   List<InfoLine> candidates,
   int temperatureCp,

@@ -12,12 +12,11 @@ const _value = {
   Role.king: 100,
 };
 
-/// Una riga su cosa fa, minaccia o prepara la mossa del computer (RF-122), con
-/// regole a modello come il resto dell'allenatore. [followUp] è la mossa che il
-/// computer giocherebbe subito dopo (`CoachSession.threat`, la stessa analisi
-/// della freccia di RF-56): da lì si ricavano le minacce. Con [showSquares]
-/// falso (profilo bambino) il testo non cita le case. `null` se la mossa non è
-/// giocabile dalla posizione [before].
+/// Una riga su cosa fa, minaccia o prepara la mossa del computer (RF-122).
+/// [followUp] è la mossa che il computer giocherebbe subito dopo
+/// (`CoachSession.threat`, come la freccia di RF-56): da lì le minacce. Con
+/// [showSquares] falso (profilo bambino) non cita le case. `null` se la mossa
+/// non è giocabile da [before].
 String? explainComputerMove(
   AppLocalizations l,
   Position before,
