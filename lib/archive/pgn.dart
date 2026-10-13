@@ -100,14 +100,9 @@ PgnImport importPgn(String text) {
     if (game == null) {
       skipped++;
     } else {
-      final tree = treeFromPgnGame(pgn);
-      games.add(
-        PgnRecord(
-          game,
-          Map.unmodifiable(pgn.headers),
-          tree: tree != null && tree.hasVariations ? tree : null,
-        ),
-      );
+      // Senza varianti l'albero non serve: si evita di rigiocare le mosse.
+      final tree = _hasVariations(pgn.moves) ? treeFromPgnGame(pgn) : null;
+      games.add(PgnRecord(game, Map.unmodifiable(pgn.headers), tree: tree));
     }
   }
   return PgnImport(games, skipped);
@@ -155,4 +150,14 @@ ChessGame? _replay(PgnGame<PgnNodeData> pgn) {
     }
   }
   return game;
+}
+
+bool _hasVariations(PgnNode<PgnNodeData> root) {
+  final pending = [root];
+  while (pending.isNotEmpty) {
+    final node = pending.removeLast();
+    if (node.children.length > 1) return true;
+    pending.addAll(node.children);
+  }
+  return false;
 }

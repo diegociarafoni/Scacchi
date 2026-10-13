@@ -891,7 +891,9 @@ class _HomeShellState extends State<HomeShell> {
           ArchivePage(
             archive: await _archive(),
             onOpen: (g) => unawaited(_openSavedGame(context, g)),
-            onAnalyse: (g) => unawaited(_openSavedAnalysis(context, g)),
+            onAnalyse: _computerAvailable
+                ? (g) => unawaited(_openSavedAnalysis(context, g))
+                : null,
           ),
         ),
       },
@@ -969,7 +971,7 @@ class _HomeShellState extends State<HomeShell> {
               playGuardian: _computerAvailable ? _playGuardian : null,
               storyPage: _storyPage,
               openGame: _openSavedGame,
-              openAnalysis: _openSavedAnalysis,
+              openAnalysis: _computerAvailable ? _openSavedAnalysis : null,
               puzzlesPage: _puzzlesPage,
             )
           else

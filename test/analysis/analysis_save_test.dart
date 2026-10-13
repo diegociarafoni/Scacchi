@@ -93,6 +93,26 @@ void main() {
       expect(saved.last.pgn, contains('e5'));
     });
 
+    testWidgets('un nome vuoto ripiega sul nome proposto', (tester) async {
+      final saved = <SavedGame>[];
+      await pump(tester, onSave: (g) async => saved.add(g));
+      await move(tester, 'e2e4');
+      await menu(tester, 'Salva nell\'archivio');
+      await tester.enterText(find.byType(TextField), '   ');
+      await tester.tap(find.text('Salva'));
+      await tester.pumpAndSettle();
+      expect(saved.single.title, startsWith('Analisi del '));
+    });
+
+    testWidgets('un errore di scrittura è segnalato', (tester) async {
+      await pump(tester, onSave: (g) async => throw const FormatException());
+      await move(tester, 'e2e4');
+      await menu(tester, 'Salva nell\'archivio');
+      await tester.tap(find.text('Salva'));
+      await tester.pumpAndSettle();
+      expect(find.text('Salvataggio non riuscito'), findsOneWidget);
+    });
+
     testWidgets('riaperta dall\'archivio mostra le varianti salvate', (
       tester,
     ) async {

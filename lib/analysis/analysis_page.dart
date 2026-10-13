@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:chessground/chessground.dart';
@@ -272,7 +271,19 @@ class _AnalysisPageState extends State<AnalysisPage>
     );
   }
 
+  bool _saving = false;
+
   Future<void> _save() async {
+    if (_saving) return;
+    _saving = true;
+    try {
+      await _saveNow();
+    } finally {
+      _saving = false;
+    }
+  }
+
+  Future<void> _saveNow() async {
     final previous = _saved;
     final name = previous?.white ?? await _askName();
     if (name == null || name.isEmpty || !mounted) return;
@@ -290,7 +301,7 @@ class _AnalysisPageState extends State<AnalysisPage>
       await widget.onSave(game);
       _saved = game;
       messenger.showSnackBar(SnackBar(content: Text(l.analysisSaved)));
-    } on FileSystemException {
+    } on Object {
       messenger.showSnackBar(SnackBar(content: Text(l.analysisSaveFailed)));
     }
   }
@@ -692,7 +703,10 @@ class _NameDialogState extends State<_NameDialog> {
           child: Text(l.analysisCancel),
         ),
         FilledButton(
-          onPressed: () => Navigator.pop(context, _text.text.trim()),
+          onPressed: () {
+            final name = _text.text.trim();
+            Navigator.pop(context, name.isEmpty ? widget.initial : name);
+          },
           child: Text(l.analysisSaveConfirm),
         ),
       ],
