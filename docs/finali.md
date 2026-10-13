@@ -13,7 +13,7 @@ Requisito RF-86: posizioni teoriche da vincere o pattare contro il motore a forz
 | La difesa di Philidor | Nero | Resistere 15 mosse | 15 |
 | Alfiere e cavallo | Bianco | Matto | 35 |
 
-Le posizioni sono costruite per il progetto e sono di dominio pubblico come schemi teorici. Durante la stesura sono state controllate con Stockfish: le posizioni da vincere sono vinte (matto forzato o vantaggio decisivo), la Philidor con il Nero al tratto è patta. L'utente gioca il colore che ha la mossa nella FEN (`EndgameDrill.fen`); il motore risponde al livello più forte (`engineLevels.last`).
+Le posizioni sono costruite per il progetto e sono di dominio pubblico come schemi teorici. Sono state controllate con Stockfish: le posizioni da vincere sono vinte (matto forzato o vantaggio decisivo), la Philidor con il Nero al tratto è patta. L'utente gioca il colore che ha la mossa nella FEN (`EndgameDrill.fen`); il motore risponde a forza piena (`analysisLevel`).
 
 ## Regole della prova
 
@@ -31,9 +31,9 @@ Stelle (`drillStars`): 3 entro il par, 2 fino a metà del par in più (arrotonda
 
 ## Schermate
 
-La voce **Finali** della Home compare solo dove gira il motore (Android e iOS, o Windows e Linux con Stockfish installato), come i Tornei; c'è anche nel profilo bambino. `EndgamesPage` elenca le posizioni: prima quelle da ripetere, con la scritta «Da ripetere», poi le altre con l'obiettivo; a destra le stelle migliori.
+La voce **Finali** della Home compare solo dove gira il motore (Android e iOS, o Windows e Linux con Stockfish installato), come i Tornei, ma a differenza di questi c'è anche nel profilo bambino. Si apre dal gruppo Impara della Home e dalla scheda Impara. `EndgamesPage` elenca le posizioni: prima quelle da ripetere, con la scritta «Da ripetere», poi le altre con l'obiettivo; a destra le stelle migliori.
 
-`DrillPage` mostra la spiegazione con l'obiettivo e il pulsante «Inizia»; la scacchiera è girata quando si gioca con il Nero. Dopo ogni mossa dell'utente il motore risponde a forza piena (`analysisLevel`, livello 20 a 300 ms per mossa) e intanto la scacchiera è bloccata. Sotto la scacchiera c'è il conteggio delle mosse rispetto al par (nascosto nel profilo bambino, che non mostra numeri). Il motore riceve la posizione iniziale e tutte le mosse giocate, così vede le ripetizioni. A fine prova compaiono l'esito, le stelle, «Riprova» e «Fine»; l'esito si salva subito. Uscire da una prova iniziata e non finita la conta come fallita, quindi torna da ripetere. Se il motore non risponde o dà una mossa illegale, un messaggio lo dice e «Riprova» riparte dalla posizione iniziale; in quel caso uscire non conta come fallimento. Il pedone promuove sempre a donna.
+`DrillPage` mostra la spiegazione con l'obiettivo e il pulsante «Inizia»; la scacchiera è girata quando si gioca con il Nero. Dopo ogni mossa dell'utente il motore risponde a forza piena (`analysisLevel`, Skill Level 20 a 300 ms per mossa) e intanto la scacchiera è bloccata. Sotto la scacchiera c'è il conteggio delle mosse rispetto al par (nascosto nel profilo bambino, che non mostra numeri). Il motore riceve la posizione iniziale e tutte le mosse giocate, così vede le ripetizioni. A fine prova compaiono l'esito, le stelle, «Riprova» e «Fine»; l'esito si salva subito. Uscire da una prova iniziata e non finita la conta come fallita, quindi torna da ripetere. Se il motore non risponde o dà una mossa illegale, un messaggio lo dice e «Riprova» riparte dalla posizione iniziale; in quel caso uscire non conta come fallimento. Il pedone promuove sempre a donna.
 
 ## Mossa perfetta
 

@@ -24,6 +24,7 @@ Pedoni e arrocchi (O-O, O-O-O) non cambiano. La partita, l'archivio e i PGN rest
 - Revisione: lista delle mosse, titolo della mossa, «Migliore», Riprova e spiegazioni del coach (`explainMove` riceve la notazione).
 - Analisi: storico e varianti del motore.
 - Aperture: continuazioni e mosse dell'esploratore, linee del repertorio.
+- Finali perfetti: la scheda con la mossa della tablebase.
 
 `formatSan` converte una mossa; `formatMoveText` un testo di mosse separate da spazi. I confronti interni (per esempio «è la mossa migliore?») restano sulla SAN inglese: la notazione è solo di visualizzazione.
 
