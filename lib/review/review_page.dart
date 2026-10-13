@@ -129,7 +129,10 @@ enum _SaveState { idle, saving, saved, already, failed }
 
 class _ReviewPageState extends State<ReviewPage> {
   late final List<Position> _positions = [widget.initial];
-  late final String _cacheKey = ReviewCache.key(widget.initial, widget.moves);
+
+  /// Chiave in cache: con il libro le mosse «Libro» cambiano la revisione.
+  late final String _cacheKey =
+      '${ReviewCache.key(widget.initial, widget.moves)}${_book == null ? '' : '|libro'}';
   late final ChessboardController _board;
 
   late final List<MoveNote?> _notes = [
@@ -181,18 +184,16 @@ class _ReviewPageState extends State<ReviewPage> {
     super.dispose();
   }
 
-  /// Semimosse iniziali ancora nel libro; 0 se il libro non è già caricato
-  /// (l'app lo carica all'avvio), se non si parte dalla posizione iniziale o
-  /// se le mosse non si rigiocano.
-  int _bookPlies() {
-    if (widget.initial.fen != Chess.initial.fen) return 0;
-    final book = widget.book ?? loadedOpeningBook;
-    return book?.bookPlies(widget.moves) ?? 0;
-  }
+  /// Libro da usare per le mosse «Libro»: serve solo partendo dalla posizione
+  /// iniziale e solo se è già caricato (l'app lo carica all'avvio).
+  OpeningBook? get _book =>
+      OpeningBook.key(widget.initial) == OpeningBook.key(Chess.initial)
+      ? widget.book ?? loadedOpeningBook
+      : null;
 
   Future<void> _analyse() async {
     try {
-      final bookPlies = _bookPlies();
+      final bookPlies = _book?.bookPlies(widget.moves) ?? 0;
       final review = await reviewGame(
         isBook: (ply) => ply < bookPlies,
         initial: widget.initial,

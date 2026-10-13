@@ -1,5 +1,5 @@
 import 'package:dartchess/dartchess.dart';
-import 'package:flutter/material.dart' show Size;
+import 'package:flutter/material.dart' show SizedBox, Size;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/engine/uci.dart';
 import 'package:scacchi/openings/opening_book.dart';
@@ -59,6 +59,16 @@ void main() {
       expect(r.moves[4].classification, isNot(MoveClass.book));
       expect(r.moves[5].classification, MoveClass.blunder);
     });
+
+    testWidgets(
+      'una revisione fatta senza libro non copre quella con il libro',
+      (tester) async {
+        await reviewed(tester);
+        await tester.pumpWidget(const SizedBox());
+        final again = await reviewed(tester, openingBook: book);
+        expect(again.moves.first.classification, MoveClass.book);
+      },
+    );
 
     testWidgets('senza libro non ci sono mosse Libro', (tester) async {
       final r = await reviewed(
