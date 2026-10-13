@@ -12,7 +12,7 @@ import 'package:scacchi/multiplayer/local_address.dart';
 import 'package:scacchi/multiplayer/multiplayer_controller.dart';
 import 'package:scacchi/multiplayer/transport.dart';
 
-Future<void> settle() => Future<void>.delayed(const Duration(milliseconds: 50));
+import '../support/wait.dart';
 
 /// Ospite e invitato collegati in memoria.
 Future<(MultiplayerController, MultiplayerController)> pair({
@@ -31,7 +31,7 @@ Future<(MultiplayerController, MultiplayerController)> pair({
       return b;
     },
   );
-  await settle();
+  await settleLoopback();
   return (host, guest);
 }
 
@@ -113,12 +113,12 @@ void main() {
       invite,
       openGuest: (_, _) => b,
     );
-    await settle();
+    await settleLoopback();
     expect(guest.mySide, Side.black);
     expect(host.status, MultiplayerStatus.myTurn);
     expect(guest.status, MultiplayerStatus.peerTurn);
     await host.play(Move.parse('e2e4')!);
-    await settle();
+    await settleLoopback();
     expect(guest.status, MultiplayerStatus.myTurn);
     expect(guest.lastMove, Move.parse('e2e4'));
     expect(guest.lastSan, 'e4');
@@ -152,7 +152,7 @@ void main() {
       (guest, 'd8h4'),
     ]) {
       expect(await side.play(Move.parse(uci)!), isTrue);
-      await settle();
+      await settleLoopback();
     }
     expect(host.status, MultiplayerStatus.finished);
     expect(guest.status, MultiplayerStatus.finished);
@@ -172,11 +172,14 @@ void main() {
       GameInvite.parse(host.inviteLink)!,
       openGuest: (_, _) => down,
     );
-    await settle();
+    await settleLoopback();
     expect(guest.status, MultiplayerStatus.connecting);
     // Il canale riprova da solo e avvisa quando si collega.
     await down.comeUp();
-    await Future<void>.delayed(const Duration(milliseconds: 100));
+    await until(
+      () => guest.status == MultiplayerStatus.peerTurn,
+      what: 'canale ricollegato',
+    );
     expect(guest.status, MultiplayerStatus.peerTurn);
     expect(host.status, MultiplayerStatus.myTurn);
     await host.close();
@@ -225,7 +228,7 @@ void main() {
           openHost: () async => (transport: a, lanAddress: '10.0.0.2:4000'),
           discovery: discovery,
         );
-        await settle();
+        await settleLoopback();
         final id = GameInvite.parse(host.inviteLink)!.gameId;
         expect(discovery.adverts, [(lanServiceName(id), 4000)]);
         await host.close();
@@ -240,7 +243,7 @@ void main() {
         openHost: () async => (transport: a, lanAddress: '10.0.0.2:4000'),
         discovery: _BrokenDiscovery(),
       );
-      await settle();
+      await settleLoopback();
       expect(host.status, MultiplayerStatus.waitingPeer);
       await host.close();
     });
@@ -291,11 +294,11 @@ void main() {
         GameInvite.parse(host.inviteLink)!,
         openGuest: (_, _) => lanB,
       );
-      await settle();
+      await settleLoopback();
       expect(seen.map((e) => e.$2), [true, false]);
       expect(host.session.transport.name, 'loop+extra');
       expect(await host.play(Move.parse('e2e4')!), isTrue);
-      await settle();
+      await settleLoopback();
       expect(guest.session.sync.moves, ['e2e4']);
       await host.close();
       await guest.close();

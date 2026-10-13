@@ -18,6 +18,7 @@ import 'package:scacchi/multiplayer/transport.dart';
 import 'package:scacchi/theme/rokko_theme.dart';
 
 import '../support/devices.dart';
+import '../support/wait.dart';
 
 /// Come l'app vera: tema Rokko e font reali (Roboto da `flutter_test_config`).
 Widget _app(Widget home, Brightness brightness) => MaterialApp(
@@ -35,19 +36,23 @@ Future<void> _settle(WidgetTester tester) async {
     await ChessgroundImages.instance.loadAll(
       const ChessboardSettings().pieceAssets,
     );
-    await Future<void>.delayed(const Duration(milliseconds: 100));
+    // Anche le immagini normali (sfondo della scacchiera) vanno decodificate.
+    for (final element in find.byType(Image).evaluate()) {
+      await precacheImage((element.widget as Image).image, element);
+    }
   });
   await tester.pump();
   await tester.pumpAndSettle();
 }
 
 /// La lettura del file avanza solo nella zona reale.
-Future<void> _open(WidgetTester tester, Widget app) async {
+Future<void> _open(WidgetTester tester, Widget app, {Finder? ready}) async {
   await tester.runAsync(() async {
     await tester.pumpWidget(app);
     await Future<void>.delayed(const Duration(milliseconds: 200));
     await tester.pump();
   });
+  if (ready != null) await pumpUntilFound(tester, ready);
   await _settle(tester);
 }
 
@@ -100,7 +105,11 @@ void main() {
           ),
         ),
       );
-      await _open(tester, _app(MultiplayerPage(store: store), Brightness.dark));
+      await _open(
+        tester,
+        _app(MultiplayerPage(store: store), Brightness.dark),
+        ready: find.text('Riprendi la partita'),
+      );
       await expectLater(
         find.byType(MultiplayerPage),
         matchesGoldenFile(
@@ -153,8 +162,10 @@ void main() {
             ),
             brightness,
           ),
+          ready: find.text('Riprendi la partita'),
         );
         await tester.tap(find.text('Riprendi la partita'));
+        await pumpUntilFound(tester, find.byType(MultiplayerGamePage));
         await _settle(tester);
         await expectLater(
           find.byType(MultiplayerGamePage),
@@ -185,6 +196,7 @@ void main() {
     await tester.ensureVisible(find.text('Crea la partita'));
     await tester.pump();
     await tester.tap(find.text('Crea la partita'));
+    await pumpUntilFound(tester, find.byType(MultiplayerGamePage));
     await _settle(tester);
     final host = tester
         .widget<MultiplayerGamePage>(find.byType(MultiplayerGamePage))
@@ -193,6 +205,11 @@ void main() {
     final guest = (await tester.runAsync(
       () => MultiplayerController.join(invite, openGuest: (_, _) => b),
     ))!;
+    await pumpUntil(
+      tester,
+      () => host.status == MultiplayerStatus.myTurn,
+      what: 'invitato collegato',
+    );
     await _settle(tester);
     await expectLater(
       find.byType(MultiplayerGamePage),

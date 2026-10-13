@@ -16,6 +16,7 @@ import 'package:scacchi/multiplayer/saved_game.dart';
 import 'package:scacchi/multiplayer/transport.dart';
 
 import '../localized_app.dart';
+import '../support/wait.dart';
 
 const blitz = TimeControl(minutes: 3, increment: 2);
 
@@ -28,8 +29,6 @@ class FakeNow {
   DateTime call() => value;
   void advance(Duration d) => value = value.add(d);
 }
-
-Future<void> settle() => Future<void>.delayed(const Duration(milliseconds: 50));
 
 GameInvite invite({TimeControl? control}) => GameInvite(
   gameId: newGameId(),
@@ -59,13 +58,13 @@ Future<(MultiplayerController, MultiplayerController)> pair(
     now: (guestNow ?? now).call,
     openGuest: (_, _) => b,
   );
-  await settle();
+  await settleLoopback();
   return (host, guest);
 }
 
 Future<void> play(MultiplayerController c, String uci) async {
   expect(await c.play(Move.parse(uci)!), isTrue);
-  await settle();
+  await settleLoopback();
 }
 
 void main() {
@@ -323,7 +322,7 @@ void main() {
       await play(host, 'e2e4');
       now.advance(const Duration(minutes: 3, seconds: 1));
       guest.tick();
-      await settle();
+      await settleLoopback();
       expect(guest.status, MultiplayerStatus.finished);
       expect(guest.outcome, Outcome.whiteWins);
       expect(guest.endedOnTime, isTrue);
@@ -387,7 +386,7 @@ void main() {
       'RMP-50 la partita riprende col tempo che passa mentre l\'app è chiusa',
       () async {
         final dir = Directory.systemTemp.createTempSync('rokko_clock');
-        addTearDown(() => dir.deleteSync(recursive: true));
+        addTearDown(() => removeDir(dir));
         final store = SavedGameStore(File('${dir.path}/multiplayer.json'));
         final now = FakeNow();
         final (a, b) = LoopbackTransport.pair();
@@ -403,7 +402,7 @@ void main() {
           now: now.call,
           openGuest: (_, _) => b,
         );
-        await settle();
+        await settleLoopback();
         await play(host, 'e2e4');
         now.advance(const Duration(seconds: 5));
         await play(guest, 'e7e5');
@@ -485,7 +484,7 @@ void main() {
       await tester.ensureVisible(find.text('Crea la partita'));
       await tester.pump();
       await tester.tap(find.text('Crea la partita'));
-      await tester.runAsync(settle);
+      await tester.runAsync(settleLoopback);
       await tester.pumpAndSettle();
       final qr = tester.widget<QrCodeView>(find.byType(QrCodeView));
       expect(GameInvite.parse(qr.data)!.timeControl, blitz);
@@ -512,7 +511,7 @@ void main() {
 
         now.advance(const Duration(minutes: 3, seconds: 1));
         guest.tick();
-        await tester.runAsync(settle);
+        await tester.runAsync(settleLoopback);
         await tester.pump();
         await tester.scrollUntilVisible(
           find.text('Tempo scaduto: vince il Bianco'),
