@@ -41,7 +41,7 @@ Rokko è open source e gratuito. Questi vincoli valgono per ogni voce.
 
 | ID | Funzione | Stato | Pri | Dim | Versione | Evidenza |
 |---|---|---|---|---|---|---|
-| A-1 / RF-08 | **Premossa**: muovere durante il turno dell'avversario, annullabile toccando una casa vuota, con opzione nelle impostazioni | da fare | P0 | media | 0.12.0 | `lib/game/game_page.dart:898-907` blocca la scacchiera mentre il computer pensa; esiste solo il colore `validPremoves` |
+| A-1 / RF-08 | **Premossa**: muovere durante il turno dell'avversario, annullabile toccando una casa vuota, con opzione nelle impostazioni | fatta | P0 | media | 0.12.0 | `_playerSide` e `_playPremove` in `lib/game/game_page.dart`; test in `test/game/premove_test.dart` |
 | A-2 / RF-05 | **Frecce e cerchi** con almeno tre colori, pressione prolungata e trascinamento su touch, rimossi al tocco successivo | fatta | P0 | piccola | 0.12.0 | `lib/game/board_drawing.dart`, scelta del colore in Impostazioni > Scacchiera; test in `test/game/board_drawing_test.dart` |
 | A-3 / RF-22 | **Allenamento e Sfida**: scelta esplicita della modalità e barra di valutazione durante la partita (oggi solo in analisi e revisione) | parziale | P0 | media | 0.12.0 | `EvalBar` usata in `lib/review/` e `lib/analysis/`; `docs/avversario-computer.md` dichiara «in parte» |
 | A-4 / RF-32 | **Annullamento con consenso** dell'altro giocatore nella partita a due | parziale | P0 | piccola | 0.12.0 | la patta chiede consenso (`game_page.dart:2158`), «Annulla» no |

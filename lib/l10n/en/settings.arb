@@ -104,5 +104,7 @@
   "settingsMarkColorGreen": "Green",
   "settingsMarkColorRed": "Red",
   "settingsMarkColorBlue": "Blue",
-  "settingsMarkColorYellow": "Yellow"
+  "settingsMarkColorYellow": "Yellow",
+  "settingsPremove": "Premove",
+  "settingsPremoveDescription": "Move while the computer is thinking; tap an empty square to cancel"
 }

@@ -464,5 +464,13 @@
   "settingsMarkColorYellow": "Giallo",
   "@settingsMarkColorYellow": {
     "description": "Impostazioni: colore giallo"
+  },
+  "settingsPremove": "Premossa",
+  "@settingsPremove": {
+    "description": "Impostazioni: interruttore della premossa"
+  },
+  "settingsPremoveDescription": "Muovi mentre pensa il computer; toccando una casa vuota la annulli",
+  "@settingsPremoveDescription": {
+    "description": "Impostazioni: descrizione della premossa"
   }
 }

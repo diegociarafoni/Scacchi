@@ -172,6 +172,13 @@ class GameSettingsPage extends _SectionPage {
             onChanged: (v) => _set((c) => c.copyWith(autoFlip: v)),
           ),
           SwitchListTile(
+            key: const Key('premove'),
+            title: Text(l10n.settingsPremove),
+            subtitle: Text(l10n.settingsPremoveDescription),
+            value: s.premove,
+            onChanged: (v) => _set((c) => c.copyWith(premove: v)),
+          ),
+          SwitchListTile(
             key: const Key('tableMode'),
             title: Text(l10n.settingsTableMode),
             subtitle: Text(l10n.settingsTableModeDescription),

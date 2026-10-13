@@ -1,0 +1,22 @@
+{
+  "qrSendTitle": "Enviar por QR",
+  "qrSendHint": "No outro celular, abra Você › Arquivo › Receber por QR e enquadre o código.",
+  "qrPart": "Parte {current} de {total}",
+  "qrPause": "Pausar",
+  "qrResume": "Retomar",
+  "qrNext": "Próxima parte",
+  "qrPrevious": "Parte anterior",
+  "qrCodeLabel": "QR code da partida",
+  "qrReceiveTitle": "Receber por QR",
+  "qrReceiveHint": "Enquadre o QR code mostrado no outro celular.",
+  "qrReceived": "{received} de {total} partes lidas",
+  "qrForeign": "Este QR code não contém uma partida.",
+  "qrCorrupted": "O QR code está danificado: comece a leitura de novo.",
+  "qrTooLarge": "A partida é grande demais para ser recebida.",
+  "qrRestarted": "Nova partida detectada: leitura reiniciada.",
+  "qrCameraError": "A câmera não está disponível. Permita que o Rokko use a câmera nas configurações do celular e tente de novo.",
+  "qrRetry": "Tentar de novo",
+  "qrInvalidGame": "O QR code não contém uma partida válida.",
+  "qrFinishedGame": "A partida já terminou: receba-a em Você › Arquivo › Receber por QR.",
+  "qrMalformed": "QR code inválido: ignorado."
+}
