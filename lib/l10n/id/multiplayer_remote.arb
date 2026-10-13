@@ -1,0 +1,20 @@
+{
+  "multiplayerRemoteIntro": "Untuk bermain jarak jauh kamu hanya perlu internet: kirim tautan ke temanmu dan main kapan saja, bahkan dengan jeda berjam-jam.",
+  "multiplayerRemoteSwitchHint": "Temanmu bisa bergabung dari mana saja lewat tautan. Langkah dikirim terenkripsi melalui relay publik: tanpa akun dan tanpa server kami.",
+  "multiplayerRemoteShare": "Bagikan tautan undangan",
+  "multiplayerRemoteShareSubject": "Undangan bermain catur",
+  "multiplayerRemoteShareText": "Ayo main catur di Rokko! Buka aplikasi, pilih Main dengan teman, lalu Gabung dengan tautan dan tempel tautan ini: {link}",
+  "multiplayerRemoteWaitingHint": "Kirim tautan ke temanmu atau biarkan dia memindai kode QR. Permainan tetap tersimpan: kamu bisa menutup aplikasi dan melanjutkannya dari Main dengan teman.",
+  "multiplayerRemoteLeaveBodyWaiting": "Permainan tetap tersimpan dan tautan masih berlaku: kamu bisa melanjutkannya dari Main dengan teman.",
+  "multiplayerRemoteJoinLink": "Gabung dengan tautan",
+  "multiplayerRemoteLinkTitle": "Tempel tautan undangan",
+  "multiplayerRemoteLinkField": "Tautan undangan",
+  "multiplayerRemotePaste": "Tempel",
+  "multiplayerRemoteLinkInvalid": "Tautan ini bukan undangan permainan.",
+  "multiplayerRemoteLinkConfirm": "Gabung",
+  "multiplayerRemoteNotifyChannel": "Permainan jarak jauh",
+  "multiplayerRemoteNotifyChannelDescription": "Memberi tahu kamu saat temanmu sudah melangkah.",
+  "multiplayerRemoteNotifyTitle": "Giliranmu",
+  "multiplayerRemoteNotifyBody": "Temanmu melangkah {move}.",
+  "multiplayerRemoteNotifyOver": "Permainan dengan temanmu sudah selesai."
+}

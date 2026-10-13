@@ -160,3 +160,53 @@ La notazione si sceglie nelle Impostazioni (predefinita la figurativa, vedi [not
 1. Prima di tradurre un testo si cercano qui i termini che contiene.
 2. Un termine nuovo si aggiunge alla tabella insieme al testo che lo introduce, con le quattro lingue.
 3. Una correzione segnalata da chi rilegge si fa qui e poi si propaga ai file `.arb` e ai contenuti.
+
+## Indonesiano (id)
+
+Variante: indonesiano standard e naturale; si dà del «kamu» (mai «Anda»). Virgolette “…”, maiuscola solo sulla prima parola dei titoli, colori «Putih» e «Hitam». L'indonesiano non ha plurale grammaticale: nei plurali ICU i rami `one` e `other` hanno lo stesso testo. Nel testo la notazione usa le lettere inglesi (K, Q, R, B, N) (da verificare). Le forme meno diffuse (promosi rendah, lencana, rentetan) sono da verificare da chi rilegge.
+
+| English | Bahasa Indonesia |
+|---|---|
+| king / queen / rook / bishop / knight / pawn | raja / ratu / benteng / gajah / kuda / pion |
+| board / square / rank / file / diagonal | papan / petak / baris / kolom / diagonal |
+| White / Black (i giocatori) | Putih / Hitam ("Putih jalan" = chi muove) |
+| move (chess) / side to move | langkah / giliran |
+| capture | tangkap / penangkapan |
+| check / checkmate / stalemate | skak / skakmat / pat |
+| draw / draw offer | remis / tawaran remis |
+| resignation / resign | menyerah |
+| kingside / queenside castling | rokade pendek / rokade panjang |
+| en passant / promotion / underpromotion | en passant / promosi / promosi rendah |
+| threefold repetition | pengulangan tiga kali |
+| fifty-move rule | aturan lima puluh langkah |
+| insufficient material | materi tidak cukup |
+| time out | waktu habis |
+| takeback | tarik kembali langkah |
+| illegal move | langkah ilegal |
+| fork / pin / skewer | garpu / pin / tusukan |
+| discovered attack / discovered check / double check | serangan terbuka / skak terbuka / skak ganda |
+| sacrifice | pengorbanan |
+| Scholar's mate / Fool's mate | skakmat si pelajar / skakmat si bodoh |
+| back-rank mate / smothered mate | skakmat baris belakang / skakmat tercekik |
+| zugzwang / opposition | zugzwang / oposisi |
+| passed / isolated / doubled pawn | pion bebas / pion terisolasi / pion ganda |
+| pawn structure / bishop pair | struktur pion / sepasang gajah |
+| open file | kolom terbuka |
+| center / development / threat | pusat / pengembangan / ancaman |
+| opening / middlegame / endgame | pembukaan / permainan tengah / bagian akhir |
+| gambit / defense | gambit / pertahanan |
+| best move / inaccuracy / mistake / blunder / brilliant | langkah terbaik / ketidaktepatan / kesalahan / blunder / brilian |
+| accuracy | akurasi |
+| Play / Puzzles / Openings / You | Main / Teka-teki / Pembukaan / Kamu |
+| Settings / Profile / Archive / Statistics | Pengaturan / Profil / Arsip / Statistik |
+| Coach / Lesson / Path / Story | Pelatih / Pelajaran / Jalur / Kisah |
+| Badge / Achievement / Streak / Level | Lencana / Pencapaian / Rentetan / Level |
+| Hint | Petunjuk |
+| Clock / Time control / Increment | Jam / Pengaturan waktu / Tambahan waktu |
+| Bullet / Blitz / Rapid | Bullet / Blitz / Rapid |
+| Frame (avatar) | Bingkai |
+| Elo rating | Peringkat Elo |
+| Grandmasters | Grandmaster |
+| Physical board | Papan fisik |
+| Multiplayer | Multipemain |
+| game (a chess game) | permainan / partai |
