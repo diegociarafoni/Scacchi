@@ -6,6 +6,7 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../analysis/analysis_page.dart';
 import '../archive/pgn.dart';
@@ -102,6 +103,7 @@ class GamePage extends StatefulWidget {
     this.onFinished,
     this.store,
     this.qrScanner = zxingScanner,
+    this.keepAwake,
     this.onSavePuzzles,
     this.openSetup = false,
     this.initialSetup,
@@ -176,6 +178,9 @@ class GamePage extends StatefulWidget {
 
   /// Lettore QR per continuare una partita passata da un altro telefono.
   final QrScannerBuilder qrScanner;
+
+  /// Tiene lo schermo acceso; di default il blocco dello schermo del sistema.
+  final Future<void> Function(bool awake)? keepAwake;
 
   @override
   State<GamePage> createState() => _GamePageState();
@@ -377,6 +382,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _autoFlip = _settings.autoFlip;
     widget.settings.addListener(_onSettingsChanged);
     WidgetsBinding.instance.addObserver(this);
+    _syncAwake();
     unawaited(_loadProfile());
     // Il libro serve a fine partita per i libri delle aperture.
     openingBook().ignore();
@@ -882,10 +888,26 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _tick.dispose();
     _sounds.dispose();
     _board.dispose();
+    _syncAwake(disposing: true);
     super.dispose();
   }
 
+  bool? _awake;
+
+  /// Schermo acceso finché la partita è in corso e l'impostazione è attiva.
+  void _syncAwake({bool disposing = false}) {
+    final want = !disposing && _settings.keepAwake && !_game.isOver;
+    if (want == _awake) return;
+    final first = _awake == null;
+    _awake = want;
+    if (first && !want) return;
+    final set = widget.keepAwake ?? ((on) => WakelockPlus.toggle(enable: on));
+    // Non è essenziale: senza il servizio lo schermo si spegne come di solito.
+    unawaited(set(want).catchError((_) {}));
+  }
+
   void _onSettingsChanged() {
+    _syncAwake();
     setState(() {
       final turnedOn = _settings.autoFlip && !_autoFlip;
       _autoFlip = _settings.autoFlip;
@@ -1173,6 +1195,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _syncClock();
     _finishGame();
     _board.updatePosition(_gameData(), animate: animate, resetPremove: true);
+    _syncAwake();
     _recordAdaptiveResult();
     _recordBotResult();
     setState(() {

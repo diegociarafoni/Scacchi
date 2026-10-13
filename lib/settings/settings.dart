@@ -395,6 +395,7 @@ class AppSettings {
     this.haptics = true,
     this.tableMode = false,
     this.confirmMove = false,
+    this.keepAwake = true,
     this.premove = true,
     this.colorBlind = false,
     this.explainWhy = false,
@@ -449,6 +450,9 @@ class AppSettings {
   final bool haptics;
   final bool tableMode;
   final bool confirmMove;
+
+  /// Schermo sempre acceso durante la partita (RM-06).
+  final bool keepAwake;
 
   /// Premossa (RF-08): si muove mentre pensa il computer.
   final bool premove;
@@ -532,6 +536,7 @@ class AppSettings {
     bool? haptics,
     bool? tableMode,
     bool? confirmMove,
+    bool? keepAwake,
     bool? premove,
     bool? colorBlind,
     bool? explainWhy,
@@ -561,6 +566,7 @@ class AppSettings {
     haptics: haptics ?? this.haptics,
     tableMode: tableMode ?? this.tableMode,
     confirmMove: confirmMove ?? this.confirmMove,
+    keepAwake: keepAwake ?? this.keepAwake,
     premove: premove ?? this.premove,
     colorBlind: colorBlind ?? this.colorBlind,
     explainWhy: explainWhy ?? this.explainWhy,
@@ -628,6 +634,7 @@ class AppSettings {
       other.haptics == haptics &&
       other.tableMode == tableMode &&
       other.confirmMove == confirmMove &&
+      other.keepAwake == keepAwake &&
       other.premove == premove &&
       other.colorBlind == colorBlind &&
       other.explainWhy == explainWhy &&
@@ -659,6 +666,7 @@ class AppSettings {
     haptics,
     tableMode,
     confirmMove,
+    keepAwake,
     premove,
     colorBlind,
     explainWhy,
@@ -725,6 +733,7 @@ class SettingsController extends ValueNotifier<AppSettings> {
         haptics: read('haptics', d.haptics),
         tableMode: read('tableMode', d.tableMode),
         confirmMove: read('confirmMove', d.confirmMove),
+        keepAwake: read('keepAwake', d.keepAwake),
         premove: read('premove', d.premove),
         colorBlind: read('colorBlind', d.colorBlind),
         explainWhy: read('explainWhy', d.explainWhy),
@@ -788,6 +797,8 @@ class SettingsController extends ValueNotifier<AppSettings> {
         prefs.setBool('tableMode', settings.tableMode),
       if (old.confirmMove != settings.confirmMove)
         prefs.setBool('confirmMove', settings.confirmMove),
+      if (old.keepAwake != settings.keepAwake)
+        prefs.setBool('keepAwake', settings.keepAwake),
       if (old.premove != settings.premove)
         prefs.setBool('premove', settings.premove),
       if (old.colorBlind != settings.colorBlind)

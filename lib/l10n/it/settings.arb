@@ -448,5 +448,13 @@
   "settingsPremoveDescription": "Muovi mentre pensa il computer; toccando una casa vuota la annulli",
   "@settingsPremoveDescription": {
     "description": "Impostazioni: descrizione della premossa"
+  },
+  "settingsKeepAwake": "Schermo sempre acceso",
+  "@settingsKeepAwake": {
+    "description": "Impostazioni: schermo acceso durante la partita"
+  },
+  "settingsKeepAwakeDescription": "Durante la partita il telefono non spegne lo schermo",
+  "@settingsKeepAwakeDescription": {
+    "description": "Impostazioni: descrizione dello schermo sempre acceso"
   }
 }

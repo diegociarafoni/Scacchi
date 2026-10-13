@@ -157,6 +157,13 @@ class GameSettingsPage extends _SectionPage {
             onChanged: (v) => _set((c) => c.copyWith(autoQueen: v)),
           ),
           SwitchListTile(
+            key: const Key('keepAwake'),
+            title: Text(l10n.settingsKeepAwake),
+            subtitle: Text(l10n.settingsKeepAwakeDescription),
+            value: s.keepAwake,
+            onChanged: (v) => _set((c) => c.copyWith(keepAwake: v)),
+          ),
+          SwitchListTile(
             key: const Key('autoFlip'),
             title: Text(l10n.settingsAutoFlip),
             subtitle: Text(l10n.settingsAutoFlipDescription),

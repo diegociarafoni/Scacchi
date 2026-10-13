@@ -146,6 +146,7 @@ Si aprono dall'icona a forma di ingranaggio nella Home e nella barra del titolo 
 | Frecce e cerchi | Disegno di frecce e cerchi con due dita sulla scacchiera | Attiva |
 | Conferma la mossa | Dopo ogni mossa mostra la posizione risultante con i pulsanti Conferma e Scarta al posto della riga di stato; la mossa conta solo dopo Conferma, e l'orologio continua a scorrere. Durante l'attesa "Annulla" equivale a Scarta, mentre Patta e Abbandona sono disattivati | Disattiva |
 | Premossa | Contro il computer, mentre pensa si può già muovere: la mossa scelta viene giocata appena risponde, se è ancora legale (altrimenti è scartata, anche se nel frattempo si sfogliano le mosse); toccando una casa vuota si annulla. Un pedone che arriva in fondo promuove a donna. Non c'è con «Conferma la mossa» né nel profilo bambino (requisito RF-08) | Attiva |
+| Schermo sempre acceso | Durante la partita il telefono non spegne lo schermo; torna normale a partita finita, uscendo dalla schermata e con l'opzione spenta (requisito RM-06, plugin `wakelock_plus`) | Attiva |
 | Ruota a ogni turno | Orienta la scacchiera dal lato di chi deve muovere | Disattiva |
 | Modalità zen | In partita restano solo scacchiera, mosse ed eventuale orologio (sezione sotto); si accende anche dall'icona nella barra della partita | Disattiva |
 | Modalità tavolo | Capovolge i pezzi del giocatore in alto, per giocare uno di fronte all'altro con il telefono sul tavolo | Disattiva |
