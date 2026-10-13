@@ -1,5 +1,8 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+import '../l10n/app_localizations.dart';
 
 import 'tournament.dart';
 import 'tournament_controller.dart';
@@ -19,7 +22,7 @@ class TournamentPage extends StatelessWidget {
     required this.controller,
     required this.bots,
     required this.userElo,
-    this.userName = 'Tu',
+    this.userName,
     this.play,
   });
 
@@ -30,7 +33,9 @@ class TournamentPage extends StatelessWidget {
 
   /// Forza stimata dell'utente, per scegliere avversari alla sua portata.
   final int userElo;
-  final String userName;
+
+  /// Nome dell'utente nella classifica; senza, «Tu» nella lingua dell'app.
+  final String? userName;
 
   /// Avvia la partita contro il motore; senza, le partite non partono.
   final PlayTournamentGame? play;
@@ -38,20 +43,23 @@ class TournamentPage extends StatelessWidget {
   Future<void> _abandon(BuildContext context) async {
     final ok = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Abbandonare il torneo?'),
-        content: const Text('Il torneo si chiude senza trofeo.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Continua'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Abbandona'),
-          ),
-        ],
-      ),
+      builder: (context) {
+        final l10n = AppLocalizations.of(context);
+        return AlertDialog(
+          title: Text(l10n.tournamentAbandonTitle),
+          content: Text(l10n.tournamentAbandonBody),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(l10n.tournamentContinue),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: Text(l10n.tournamentAbandon),
+            ),
+          ],
+        );
+      },
     );
     if (ok ?? false) await controller.dismiss();
   }
@@ -64,11 +72,12 @@ class TournamentPage extends StatelessWidget {
         final t = controller.current;
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Tornei'),
+            title: Text(AppLocalizations.of(context).tournamentTitle),
             actions: [
               if (t != null && !t.finished)
                 IconButton(
-                  tooltip: 'Abbandona il torneo',
+                  tooltip: AppLocalizations.of(context)
+                      .tournamentAbandonTooltip,
                   icon: const Icon(Icons.flag_outlined),
                   onPressed: () => _abandon(context),
                 ),
@@ -107,6 +116,7 @@ class _SetupState extends State<_Setup> {
   @override
   Widget build(BuildContext context) {
     final page = widget.page;
+    final l10n = AppLocalizations.of(context);
     final text = Theme.of(context).textTheme;
     final available = [
       for (final s in _sizes)
@@ -128,16 +138,13 @@ class _SetupState extends State<_Setup> {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        Text('Nuovo torneo', style: text.titleLarge),
-        const Text(
-          'Partite vere contro il motore; tra i bot i risultati si simulano '
-          'in base alla forza.',
-        ),
+        Text(l10n.tournamentNew, style: text.titleLarge),
+        Text(l10n.tournamentIntro),
         const SizedBox(height: 12),
         SegmentedButton<TournamentFormat>(
           segments: [
             for (final f in TournamentFormat.values)
-              ButtonSegment(value: f, label: Text(f.label)),
+              ButtonSegment(value: f, label: Text(_formatLabel(l10n, f))),
           ],
           selected: {_format},
           onSelectionChanged: (s) => setState(() => _format = s.first),
@@ -148,14 +155,14 @@ class _SetupState extends State<_Setup> {
           children: [
             for (final s in available)
               ChoiceChip(
-                label: Text('$s giocatori'),
+                label: Text(l10n.tournamentPlayers(s)),
                 selected: s == size,
                 onSelected: (_) => setState(() => _sizeByFormat[_format] = s),
               ),
           ],
         ),
         const SizedBox(height: 12),
-        Text('Avversari', style: text.titleMedium),
+        Text(l10n.tournamentOpponents, style: text.titleMedium),
         for (final b in opponents)
           ListTile(
             dense: true,
@@ -170,15 +177,15 @@ class _SetupState extends State<_Setup> {
               : () => page.controller.start(
                   format: _format,
                   size: size,
-                  userName: page.userName,
+                  userName: page.userName ?? l10n.tournamentYou,
                   userElo: page.userElo,
                   bots: page.bots,
                 ),
-          child: const Text('Inizia il torneo'),
+          child: Text(l10n.tournamentStart),
         ),
         if (trophies.isNotEmpty) ...[
           const SizedBox(height: 24),
-          Text('Bacheca', style: text.titleLarge),
+          Text(l10n.tournamentTrophies, style: text.titleLarge),
           for (final tr in trophies)
             ListTile(
               contentPadding: EdgeInsets.zero,
@@ -186,10 +193,18 @@ class _SetupState extends State<_Setup> {
                 tr.rank == 1 ? '🏆' : '🎖',
                 style: const TextStyle(fontSize: 24),
               ),
-              title: Text('${tr.rank}° posto su ${tr.players}'),
+              title: Text(l10n.tournamentPlace('${tr.rank}', tr.players)),
               subtitle: Text(
-                '${tr.format.label} · ${_date(tr.date)}'
-                '${tr.rank == 1 ? '' : ' · vinto da ${tr.champion}'}',
+                tr.rank == 1
+                    ? l10n.tournamentTrophySubtitle(
+                        _formatLabel(l10n, tr.format),
+                        _date(l10n, tr.date),
+                      )
+                    : l10n.tournamentTrophySubtitleChampion(
+                        _formatLabel(l10n, tr.format),
+                        _date(l10n, tr.date),
+                        tr.champion,
+                      ),
               ),
             ),
         ],
@@ -198,9 +213,14 @@ class _SetupState extends State<_Setup> {
   }
 }
 
-String _date(DateTime d) =>
-    '${d.day.toString().padLeft(2, '0')}/'
-    '${d.month.toString().padLeft(2, '0')}/${d.year}';
+String _formatLabel(AppLocalizations l10n, TournamentFormat format) =>
+    switch (format) {
+      TournamentFormat.roundRobin => l10n.tournamentFormatRoundRobin,
+      TournamentFormat.knockout => l10n.tournamentFormatKnockout,
+    };
+
+String _date(AppLocalizations l10n, DateTime d) =>
+    DateFormat(l10n.tournamentDatePattern).format(d);
 
 class _Running extends StatefulWidget {
   const _Running({required this.page, required this.tournament});
@@ -221,10 +241,9 @@ class _RunningState extends State<_Running> {
     final play = page.play;
     if (play == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
+        SnackBar(
           content: Text(
-            'Le partite del torneo non sono disponibili su '
-            'questo dispositivo.',
+            AppLocalizations.of(context).tournamentGamesUnavailable,
           ),
         ),
       );
@@ -246,6 +265,7 @@ class _RunningState extends State<_Running> {
   @override
   Widget build(BuildContext context) {
     final t = widget.tournament;
+    final l10n = AppLocalizations.of(context);
     final text = Theme.of(context).textTheme;
     final game = t.userGame;
     final totalRounds = t.format == TournamentFormat.roundRobin
@@ -255,7 +275,7 @@ class _RunningState extends State<_Running> {
       padding: const EdgeInsets.all(16),
       children: [
         Text(
-          '${t.format.label} · ${t.players.length} giocatori',
+          l10n.tournamentHeader(_formatLabel(l10n, t.format), t.players.length),
           style: text.titleLarge,
         ),
         const SizedBox(height: 12),
@@ -267,16 +287,16 @@ class _RunningState extends State<_Running> {
                 children: [
                   Text(
                     t.userRank == 1
-                        ? 'Hai vinto il torneo!'
-                        : 'Hai chiuso al ${t.userRank}° posto',
+                        ? l10n.tournamentWon
+                        : l10n.tournamentFinishedRank('${t.userRank}'),
                     style: text.titleLarge,
                   ),
                   if (t.userRank != 1)
-                    Text('Vince ${t.players[t.champion!].name}'),
+                    Text(l10n.tournamentChampion(t.players[t.champion!].name)),
                   const SizedBox(height: 8),
                   FilledButton(
                     onPressed: page.controller.dismiss,
-                    child: const Text('Nuovo torneo'),
+                    child: Text(l10n.tournamentNew),
                   ),
                 ],
               ),
@@ -287,19 +307,22 @@ class _RunningState extends State<_Running> {
             child: ListTile(
               title: Text(
                 game.armageddon
-                    ? 'Spareggio Armageddon contro ${game.opponent.name}'
-                    : 'Turno ${t.currentRound + 1}'
-                          '${totalRounds == null ? '' : ' di $totalRounds'}: '
-                          'contro ${game.opponent.name}',
+                    ? l10n.tournamentArmageddonVs(game.opponent.name)
+                    : totalRounds == null
+                    ? l10n.tournamentRoundVs(
+                        t.currentRound + 1,
+                        game.opponent.name,
+                      )
+                    : l10n.tournamentRoundOfVs(
+                        t.currentRound + 1,
+                        totalRounds,
+                        game.opponent.name,
+                      ),
               ),
-              subtitle: Text(
-                '${game.opponent.elo} Elo · '
-                'giochi con il ${game.color == Side.white ? 'bianco' : 'nero'}'
-                '${game.armageddon ? (game.color == Side.black ? ' · ti basta la patta' : ' · devi vincere') : ''}',
-              ),
+              subtitle: Text(_gameSubtitle(l10n, game)),
               trailing: FilledButton(
                 onPressed: _playing ? null : () => _play(context, game),
-                child: const Text('Gioca'),
+                child: Text(l10n.tournamentPlay),
               ),
             ),
           ),
@@ -313,6 +336,16 @@ class _RunningState extends State<_Running> {
   }
 }
 
+String _gameSubtitle(AppLocalizations l10n, UserGame game) {
+  final color = game.color.name;
+  if (!game.armageddon) {
+    return l10n.tournamentGameSubtitle(game.opponent.elo, color);
+  }
+  return game.color == Side.black
+      ? l10n.tournamentGameSubtitleDraw(game.opponent.elo, color)
+      : l10n.tournamentGameSubtitleWin(game.opponent.elo, color);
+}
+
 class _StandingsTable extends StatelessWidget {
   const _StandingsTable({required this.tournament});
 
@@ -321,11 +354,12 @@ class _StandingsTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final rows = tournament.standings();
+    final l10n = AppLocalizations.of(context);
     final text = Theme.of(context).textTheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Classifica', style: text.titleMedium),
+        Text(l10n.tournamentStandings, style: text.titleMedium),
         for (final (i, s) in rows.indexed)
           ListTile(
             dense: true,
@@ -338,7 +372,10 @@ class _StandingsTable extends StatelessWidget {
                   : null,
             ),
             trailing: Text(
-              '${_points(s.points)} pt · SB ${_points(s.sonnebornBerger)}',
+              l10n.tournamentStandingsPoints(
+                _points(s.points),
+                _points(s.sonnebornBerger),
+              ),
             ),
           ),
       ],
@@ -354,13 +391,14 @@ class _Bracket extends StatelessWidget {
 
   final Tournament tournament;
 
-  String _roundName(int round, int total) => switch (total - round) {
-    1 => 'Finale',
-    2 => 'Semifinali',
-    _ => 'Quarti di finale',
-  };
+  String _roundName(AppLocalizations l10n, int round, int total) =>
+      switch (total - round) {
+        1 => l10n.tournamentRoundFinal,
+        2 => l10n.tournamentRoundSemifinals,
+        _ => l10n.tournamentRoundQuarterfinals,
+      };
 
-  String _score(Pairing p) {
+  String _score(AppLocalizations l10n, Pairing p) {
     final r = p.result;
     if (r == null) return '–';
     final main = switch (r) {
@@ -368,13 +406,16 @@ class _Bracket extends StatelessWidget {
       0.0 => '0-1',
       _ => '½-½',
     };
-    if (r == 0.5 && p.tiebreak != null) return '$main (Armageddon)';
+    if (r == 0.5 && p.tiebreak != null) {
+      return l10n.tournamentScoreArmageddon(main);
+    }
     return main;
   }
 
   @override
   Widget build(BuildContext context) {
     final t = tournament;
+    final l10n = AppLocalizations.of(context);
     final text = Theme.of(context).textTheme;
     final total = t.totalRounds;
     return Column(
@@ -382,7 +423,7 @@ class _Bracket extends StatelessWidget {
       children: [
         for (var r = total - 1; r >= 0; r--)
           if (r < t.rounds.length) ...[
-            Text(_roundName(r, total), style: text.titleMedium),
+            Text(_roundName(l10n, r, total), style: text.titleMedium),
             for (final p in t.rounds[r])
               ListTile(
                 dense: true,
@@ -390,7 +431,7 @@ class _Bracket extends StatelessWidget {
                 title: Text(
                   '${t.players[p.white].name} – ${t.players[p.black!].name}',
                 ),
-                trailing: Text(_score(p)),
+                trailing: Text(_score(l10n, p)),
                 leading: Icon(
                   p.winner == null
                       ? Icons.hourglass_empty

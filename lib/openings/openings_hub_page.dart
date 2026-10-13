@@ -59,7 +59,9 @@ class _OpeningsHubPageState extends State<OpeningsHubPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Aperture')),
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context).openingsHubTitle),
+      ),
       body: FutureBuilder<RepertoireTrainer>(
         future: widget.repertoire,
         builder: (context, snapshot) {
@@ -77,9 +79,9 @@ class _OpeningsHubPageState extends State<OpeningsHubPage> {
                 ),
               ListTile(
                 leading: const Icon(Icons.account_tree_outlined),
-                title: const Text('Esplora aperture'),
-                subtitle: const Text(
-                  'Partite giocate e risultati per ogni mossa, con i nomi delle aperture',
+                title: Text(AppLocalizations.of(context).explorerTitle),
+                subtitle: Text(
+                  AppLocalizations.of(context).openingsHubExplorerSubtitle,
                 ),
                 onTap: () => _open(
                   ExplorerPage(
@@ -113,15 +115,20 @@ class _OpeningsHubPageState extends State<OpeningsHubPage> {
                     side == Side.white ? Icons.circle_outlined : Icons.circle,
                   ),
                   title: Text(
-                    'Repertorio con il ${side == Side.white ? 'Bianco' : 'Nero'}',
+                    AppLocalizations.of(context)
+                        .openingsRepertoireTitle(side.name),
                   ),
                   subtitle: Text(
                     snapshot.hasError
-                        ? 'Repertorio non disponibile'
+                        ? AppLocalizations.of(context)
+                              .openingsRepertoireUnavailable
                         : trainer == null
-                        ? 'Caricamento...'
-                        : '${trainer.lines(side).length} linee · '
-                              '${trainer.dueCount(side)} mosse da ripassare',
+                        ? AppLocalizations.of(context).openingsRepertoireLoading
+                        : AppLocalizations.of(context)
+                              .openingsRepertoireSummary(
+                                trainer.lines(side).length,
+                                trainer.dueCount(side),
+                              ),
                   ),
                   enabled: trainer != null,
                   onTap: () => _open(

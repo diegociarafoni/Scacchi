@@ -214,7 +214,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Endgames'), findsOneWidget);
     expect(find.text('King and queen against king'), findsOneWidget);
-    expect(find.text('Deliver checkmate'), findsWidgets);
+    expect(find.text('Give checkmate'), findsWidgets);
     expect(find.text('Hold on as Black'), findsOneWidget);
     await tester.tap(find.text('The Philidor defense'));
     await tester.pumpAndSettle();

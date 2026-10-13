@@ -32,7 +32,7 @@ class GuideBody extends StatelessWidget {
         children: [
           Semantics(
             header: true,
-            child: Text(guide.title, style: text.headlineSmall),
+            child: Text(guide.title(l), style: text.headlineSmall),
           ),
           const SizedBox(height: 16),
           Semantics(
@@ -45,7 +45,7 @@ class GuideBody extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 4),
-          Text(guide.goal, style: text.titleMedium),
+          Text(guide.goal(l), style: text.titleMedium),
           const SizedBox(height: 16),
           Semantics(
             header: true,
@@ -57,7 +57,7 @@ class GuideBody extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 4),
-          for (final rule in guide.rules)
+          for (final rule in guide.rules(l))
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 3),
               child: Row(

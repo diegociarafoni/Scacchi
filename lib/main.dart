@@ -21,7 +21,7 @@ Future<void> main() async {
       applyPreferencesToSystem,
     );
   } on Object catch (e) {
-    debugPrint('Ripristino del backup non riuscito: $e');
+    debugPrint('Backup restore failed: $e');
   }
   runApp(const ScacchiApp());
 }
@@ -47,7 +47,7 @@ class _ScacchiAppState extends State<ScacchiApp> {
     try {
       await Content.ensureLoaded();
     } on Object catch (e) {
-      if (kDebugMode) debugPrint('Contenuti non caricati: $e');
+      if (kDebugMode) debugPrint('Content not loaded: $e');
     }
     final settings = await SettingsController.load().catchError(
       (Object _) => SettingsController.defaults(),

@@ -319,7 +319,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
     final canSkip = (done || _canRetry) && _feed.hasNext;
     final puzzle = _session.puzzle;
     final themes = puzzle.themes
-        .map((t) => puzzleThemeLabels[t])
+        .map((t) => puzzleThemeLabel(l, t))
         .whereType<String>()
         .take(3)
         .join(', ');

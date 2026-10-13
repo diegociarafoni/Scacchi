@@ -163,8 +163,8 @@ class _DrillPageState extends State<DrillPage> {
   };
 
   String _counter(AppLocalizations l10n) => switch (widget.drill.goal) {
-    DrillGoal.hold => l10n.endgamesCounterHold(_run.moves, widget.drill.par),
-    _ => l10n.endgamesCounter(_run.moves, widget.drill.par),
+    DrillGoal.hold => l10n.endgamesMovesHold(_run.moves, widget.drill.par),
+    _ => l10n.endgamesMovesTarget(_run.moves, widget.drill.par),
   };
 
   @override
@@ -225,7 +225,7 @@ class _DrillPageState extends State<DrillPage> {
                       Padding(
                         padding: const EdgeInsets.all(8),
                         child: Text(
-                          l10n.endgamesEngineThinking,
+                          l10n.endgamesThinking,
                           textAlign: TextAlign.center,
                         ),
                       ),

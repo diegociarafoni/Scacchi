@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:dartchess/dartchess.dart';
 
+import '../l10n/app_localizations.dart';
 import 'blind.dart';
 import 'material_quiz.dart';
 
@@ -33,26 +34,26 @@ class QuizItem {
   final int answer;
 }
 
-QuizItem blindItem(Random random) {
+QuizItem blindItem(Random random, AppLocalizations l10n) {
   final q = BlindQuestion.generate(random);
   return QuizItem(
     intro: q.movesText,
-    prompt: q.prompt,
+    prompt: q.prompt(l10n),
     revealFen: q.position.board.fen,
     highlight: q.square,
-    choices: [for (final c in q.choices) pieceLabel(c)],
+    choices: [for (final c in q.choices) pieceLabel(l10n, c)],
     answer: q.choices.indexOf(q.answer),
   );
 }
 
-QuizItem materialItem(Random random) {
+QuizItem materialItem(Random random, AppLocalizations l10n) {
   final q = MaterialQuestion.generate(random);
   final fen = q.position.board.fen;
   return QuizItem(
-    prompt: 'Chi è in vantaggio di materiale, e di quanto?',
+    prompt: l10n.minigamesMaterialPrompt,
     fen: fen,
     revealFen: fen,
-    choices: [for (final c in q.choices) balanceLabel(c)],
+    choices: [for (final c in q.choices) balanceLabel(l10n, c)],
     answer: q.choices.indexOf(q.answer),
   );
 }

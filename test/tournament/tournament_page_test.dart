@@ -8,6 +8,7 @@ import 'package:scacchi/tournament/tournament.dart';
 import 'package:scacchi/tournament/tournament_controller.dart';
 import 'package:scacchi/tournament/tournament_page.dart';
 
+import '../localized_app.dart';
 import 'tournament_test.dart' show bots;
 
 Future<void> settle(WidgetTester tester) async {
@@ -39,7 +40,7 @@ void main() {
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: TournamentPage(
           controller: controller,
           bots: bots,

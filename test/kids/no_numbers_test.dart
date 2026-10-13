@@ -27,7 +27,6 @@ import 'package:scacchi/progress/xp.dart';
 import 'package:scacchi/puzzles/puzzle_hub_page.dart';
 import 'package:scacchi/puzzles/puzzle_library.dart';
 import 'package:scacchi/puzzles/puzzle_page.dart';
-import 'package:scacchi/puzzles/puzzle_run.dart';
 import 'package:scacchi/puzzles/puzzle_trainer.dart';
 import 'package:scacchi/review/coach.dart';
 import 'package:scacchi/review/review_page.dart';
@@ -391,7 +390,7 @@ void main() {
       await tester.pumpWidget(kidApp(PuzzleHubPage(trainer: Future.value(t))));
       await tester.pumpAndSettle();
       expect(find.text('Allenamento'), findsOneWidget);
-      expect(find.text(PuzzleRunMode.storm.label), findsNothing);
+      expect(find.text('Combo a tempo'), findsNothing);
       expect(digitTexts(tester), isEmpty);
 
       await tester.tap(find.text('Per tema'));

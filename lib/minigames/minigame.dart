@@ -1,35 +1,33 @@
+import '../l10n/app_localizations.dart';
+
 /// Punteggio e durata di una sessione di minigioco.
 typedef MinigameResult = ({int score, Duration duration});
 
 /// Minigiochi di allenamento (RG-10).
 enum Minigame {
-  coordinates(
-    'coordinate',
-    'Coordinate a tempo',
-    'Tocca la casa indicata: quante ne trovi in 30 secondi?',
-  ),
-  captureAll(
-    'cattura',
-    'Cattura tutto',
-    'Un solo pezzo cattura tutti i pedoni con meno mosse possibile.',
-  ),
-  blind(
-    'cieca',
-    'Alla cieca',
-    'Leggi le mosse senza scacchiera e indica cosa c\'è su una casa.',
-  ),
-  material(
-    'materiale',
-    'Conta del materiale',
-    'Chi è in vantaggio, e di quanto?',
-  );
+  coordinates('coordinate'),
+  captureAll('cattura'),
+  blind('cieca'),
+  material('materiale');
 
-  const Minigame(this.id, this.title, this.description);
+  const Minigame(this.id);
 
   /// Identificativo stabile, usato nei record.
   final String id;
-  final String title;
-  final String description;
+
+  String title(AppLocalizations l10n) => switch (this) {
+    coordinates => l10n.minigamesCoordinatesTitle,
+    captureAll => l10n.minigamesCaptureAllTitle,
+    blind => l10n.minigamesBlindTitle,
+    material => l10n.minigamesMaterialTitle,
+  };
+
+  String description(AppLocalizations l10n) => switch (this) {
+    coordinates => l10n.minigamesCoordinatesDescription,
+    captureAll => l10n.minigamesCaptureAllDescription,
+    blind => l10n.minigamesBlindDescription,
+    material => l10n.minigamesMaterialDescription,
+  };
 
   static Minigame? byId(String id) {
     for (final m in values) {

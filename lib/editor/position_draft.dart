@@ -16,17 +16,13 @@ enum CastlingRight {
 
 /// Motivo per cui la posizione non si può giocare.
 enum SetupProblem {
-  empty('La scacchiera è vuota.'),
-  kings('Serve esattamente un re per colore.'),
-  pawnsOnBackrank('I pedoni non possono stare in prima o in ottava traversa.'),
-  oppositeCheck('Il giocatore che non ha il tratto è sotto scacco.'),
-  impossibleCheck('Lo scacco al re non è raggiungibile con mosse legali.'),
-  invalid('La posizione non è valida.'),
-  gameOver('In questa posizione la partita è già finita.');
-
-  const SetupProblem(this.message);
-
-  final String message;
+  empty,
+  kings,
+  pawnsOnBackrank,
+  oppositeCheck,
+  impossibleCheck,
+  invalid,
+  gameOver,
 }
 
 /// Posizione in costruzione nell'editor: può essere illegale finché non si gioca.

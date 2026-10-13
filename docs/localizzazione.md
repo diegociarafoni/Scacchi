@@ -73,8 +73,8 @@ Creare `lib/l10n/<codice>/` con tutti i file e le chiavi delle altre lingue e ri
 | Impostazioni | `lib/settings/settings_page.dart`, `lib/settings/section_pages.dart`, `lib/settings/settings_widgets.dart`, `lib/settings/settings_labels.dart`, `lib/settings/board_preview.dart` (`settings.arb`) | Nessuno; i nomi dei set di pezzi sono nomi propri, e «Livello N» / «Traguardo …» dei requisiti di sblocco arrivano da `Requirement.label` (`lib/progress/rewards.dart`) |
 | Backup e ripristino | `lib/backup/backup_page.dart`, `lib/backup/backup.dart` | Nessuno; gli errori di `Backup.decode` sono codici (`BackupProblem`) tradotti dalla pagina |
 | Elenco dei minigiochi | `lib/minigames/minigames_page.dart` | Nessuno; titoli e descrizioni dei minigiochi sono nei file `.arb` |
-| Coordinate a tempo, Cattura tutto, Alla cieca, Conta del materiale | `lib/minigames/*_page.dart` | Domande e risposte dei quiz (`quiz.dart`, `blind.dart`, `material_quiz.dart`) e istruzioni delle scacchiere di Cattura tutto (`capture_all.dart`) |
-| Editor di posizione (solo titolo e aiuto sul FEN, `editorFen…`) | `lib/editor/position_editor_page.dart` | Pulsanti, avvisi e dialoghi dell'editor |
+| Coordinate a tempo, Cattura tutto, Alla cieca, Conta del materiale | `lib/minigames/*_page.dart` | Nessuno; domande, risposte e istruzioni dei quiz e di Cattura tutto sono in `minigames.arb` |
+| Editor di posizione (prefisso `editor`) | `lib/editor/position_editor_page.dart` | Nessuno; titolo, comandi, avvisi e motivi per cui la posizione non si gioca sono in `editor.arb` |
 | Le tue aperture | `lib/openings/personal_explorer_page.dart`, voce nella scheda Aperture (`personal…`) | Nessuno; i nomi delle aperture arrivano dal libro e sono tradotti nel codice |
 | Scacchiera fisica (partita, foto e allineamento, voce in «Tu», prefisso `physical`) | `lib/physical/physical_game_page.dart`, `lib/physical/board_align_page.dart` | Nessuno; il nome del file PGN e l'intestazione `Site` restano in italiano |
 | Scheda Tu (intestazione del gruppo, voci, «Continua da dove eri», prefisso `you`) | `lib/home/you_page.dart` | Nessuno; titoli e sottotitoli di Storia, Multigiocatore e Scacchiera fisica restano nei loro file `.arb` |
@@ -90,10 +90,10 @@ Creare `lib/l10n/<codice>/` con tutti i file e le chiavi delle altre lingue e ri
 
 ## Testi da spostare
 
-Tutte le altre schermate. In particolare `Minigame.title` in `lib/minigames/minigame.dart` resta in italiano perché è usato anche dal profilo (`lib/progress/profile_page.dart`): la pagina dei minigiochi usa le proprie chiavi.
+Tutte le altre schermate. Sono già migrati anche repertorio, esploratore e hub delle aperture (`openings.arb`), allenatore dei finali (`endgames.arb`), tornei (`tournament.arb`), guida delle modalità e nomi dei temi dei puzzle (`puzzles.arb`). Restano da migrare i testi di `lib/endgames/drills.dart`.
 
 Nei test e2e non si usa `tester.pageBack()`, che cerca il tooltip inglese "Back": si tocca il tooltip restituito da `MaterialLocalizations.of(context).backButtonTooltip`.
 
 I test dei widget che montano una singola schermata devono usare `localizedApp` di `test/localized_app.dart` (cioè `AppLocalizations.localizationsDelegates` e `locale: Locale('it')`), come l'app reale, prima che quella schermata passi ai file `.arb`.
 
-La migrazione dei testi esistenti verso i file `.arb` si fa una schermata alla volta, per non entrare in conflitto con il lavoro in corso sulle singole funzioni. I temi dei puzzle restano esclusi: arrivano in inglese dai dataset di Lichess e sono tradotti in italiano nel codice (`lib/puzzles/themes.dart`). I nomi delle aperture sono in `assets/content/<lingua>/opening_names.json` e li compone `localOpeningName` (`lib/openings/opening_names.dart`).
+La migrazione dei testi esistenti verso i file `.arb` si fa una schermata alla volta, per non entrare in conflitto con il lavoro in corso sulle singole funzioni. I nomi delle aperture sono in `assets/content/<lingua>/opening_names.json` e li compone `localOpeningName` (`lib/openings/opening_names.dart`).
