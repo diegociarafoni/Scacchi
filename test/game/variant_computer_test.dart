@@ -40,12 +40,11 @@ void main() {
     await tester.pumpWidget(app());
     await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Computer'));
-    await tester.pumpAndSettle();
-    await tester.ensureVisible(find.text('Nero'));
+    await chooseAdaptiveComputer(tester);
+    await scrollSheetTo(tester, find.text('Nero'));
     await tester.tap(find.text('Nero'));
     await tester.pumpAndSettle();
-    await tester.ensureVisible(find.text(variant));
+    await scrollSheetTo(tester, find.text(variant));
     await tester.tap(find.text(variant));
     await tester.pumpAndSettle();
     await chooseTime(tester, 'Senza tempo');

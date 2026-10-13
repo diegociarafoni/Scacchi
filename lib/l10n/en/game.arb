@@ -1,7 +1,6 @@
 {
   "opponentHintHuman": "Two players share the same device.",
-  "opponentHintComputer": "Pick a level or let it adapt to you.",
-  "opponentHintBot": "Opponents with a personality, unlocked one by one.",
+  "opponentHintBot": "Opponents with a personality, unlocked one by one, or the Adaptive one that follows your results.",
   "botUnlockHint": "Unlocks by beating {name}",
   "handicapTitle": "Handicap",
   "handicapGameTitle": "Handicap game",

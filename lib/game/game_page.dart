@@ -28,10 +28,12 @@ import '../exchange/qr_receive_page.dart';
 import '../exchange/qr_send_page.dart';
 import '../exchange/qr_transfer.dart';
 import '../l10n/app_localizations.dart';
+import '../multiplayer/multiplayer_page.dart';
 import '../openings/explorer_page.dart';
 import '../openings/opening_assets.dart';
 import '../openings/opening_book.dart';
 import '../openings/opening_game.dart';
+import '../openings/opening_game_dialog.dart';
 import '../openings/opening_name.dart';
 import '../openings/opening_stats.dart';
 import '../progress/activity.dart';
@@ -100,10 +102,22 @@ class GamePage extends StatefulWidget {
     this.store,
     this.qrScanner = zxingScanner,
     this.onSavePuzzles,
+    this.tournamentPage,
+    this.physicalPage,
+    this.openingGame,
   }) : computerAvailable = computerAvailable ?? StockfishTransport.isSupported;
 
   final SettingsController settings;
   final bool computerAvailable;
+
+  /// Pagine dei tornei e della scacchiera fisica, offerte dal foglio «Nuova
+  /// partita»; senza, quelle voci non ci sono.
+  final Future<Widget> Function()? tournamentPage;
+  final Widget Function()? physicalPage;
+
+  /// Avvia la partita con l'istruttore (come dal menu Aperture); senza, la voce
+  /// «Gioca con l'istruttore» del foglio accende l'allenatore nella partita.
+  final Future<void> Function(BuildContext, OpeningGameRequest)? openingGame;
   final ComputerPlayer Function()? createComputer;
 
   /// Avversario di Chess960, Re della collina e Tre scacchi (RF-123).
@@ -1675,8 +1689,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   }
 
   Future<void> _newGame() async {
-    final choice = await _whileSuspended(
-      () => showModalBottomSheet<_TimeChoice>(
+    final picked = await _whileSuspended<_TimeChoice>(() async {
+      final result = await showModalBottomSheet<Object>(
         context: context,
         isScrollControlled: true,
         builder: (context) => _TimeControlSheet(
@@ -1689,11 +1703,22 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           collection: _collection,
           computerAvailable: widget.computerAvailable,
           kidMode: _settings.kidMode,
+          tournamentPage: widget.tournamentPage,
+          physicalPage: widget.physicalPage,
+          openingGame: widget.openingGame,
         ),
-      ),
-      restart: (choice) => choice == null,
-    );
-    if (!mounted || choice == null) return;
+      );
+      // Tornei e scacchiera fisica prendono il posto della partita, che
+      // resta ferma finché non si torna.
+      if (result is _SheetRun && mounted) {
+        await result.run(context);
+        return null;
+      }
+      return result as _TimeChoice?;
+    }, restart: (choice) => choice == null);
+    if (!mounted || picked == null) return;
+    final choice = picked;
+
     final setup = _applySetup(choice.setup);
     final vsComputer = setup.opponent != Opponent.human;
     // Il profilo bambino gioca solo la classica: la variante scelta prima
@@ -3460,6 +3485,17 @@ class _PositionSheetState extends State<_PositionSheet> {
   );
 }
 
+/// Pagina del foglio «Nuova partita»: il menu, la sfida a un amico (dove si
+/// gioca, poi come ci si raggiunge) e la scelta completa.
+enum _SheetView { menu, friend, friendApart, custom }
+
+/// Voce del menu che apre un'altra pagina al posto della partita.
+class _SheetRun {
+  const _SheetRun(this.run);
+
+  final Future<void> Function(BuildContext context) run;
+}
+
 /// Scelta di avversario, variante, nomi e cadenza: toccare una cadenza avvia
 /// la partita.
 class _TimeControlSheet extends StatefulWidget {
@@ -3473,6 +3509,9 @@ class _TimeControlSheet extends StatefulWidget {
     required this.collection,
     required this.computerAvailable,
     required this.kidMode,
+    this.tournamentPage,
+    this.physicalPage,
+    this.openingGame,
   });
 
   /// Profilo bambino: solo classica, senza tempo o con una cadenza lenta.
@@ -3486,20 +3525,42 @@ class _TimeControlSheet extends StatefulWidget {
   final bool computerAvailable;
   final bool kidMode;
 
+  /// Pagine dei tornei e della scacchiera fisica, se la home le offre.
+  final Future<Widget> Function()? tournamentPage;
+  final Widget Function()? physicalPage;
+
+  /// Avvia la partita con l'istruttore (come dal menu Aperture); senza, la voce
+  /// «Gioca con l'istruttore» del foglio accende l'allenatore nella partita.
+  final Future<void> Function(BuildContext, OpeningGameRequest)? openingGame;
+
   @override
   State<_TimeControlSheet> createState() => _TimeControlSheetState();
 }
 
 class _TimeControlSheetState extends State<_TimeControlSheet> {
   late Variant _variant = widget.variant;
-  late GameSetup _setup = widget.computerAvailable
-      ? widget.setup
-      : widget.setup.copyWith(opponent: Opponent.human);
+  // Il profilo bambino ha subito la scelta completa; gli altri partono dal menu.
+  late _SheetView _view = widget.kid || widget.kidMode
+      ? _SheetView.custom
+      : _SheetView.menu;
+  TimeControl? _quickControl;
+  // Si parte dal bot adattivo, del livello del giocatore; il computer a livello
+  // fisso non ha più una scelta nel foglio e ripiega sul bot.
+  late GameSetup _setup = !widget.computerAvailable
+      ? widget.setup.copyWith(opponent: Opponent.human)
+      : widget.setup.opponent == Opponent.computer && !widget.setup.adaptive
+      ? widget.setup.copyWith(opponent: Opponent.bot)
+      : widget.setup.opponent == Opponent.human &&
+            !widget.kid &&
+            !widget.kidMode
+      ? widget.setup.copyWith(opponent: Opponent.computer, adaptive: true)
+      : widget.setup;
   late final _white = TextEditingController(text: widget.whiteName);
   late final _black = TextEditingController(text: widget.blackName);
   HandicapPiece? _handicapPiece;
   int? _handicapMinutes;
   var _handicapGiver = HandicapGiver.player;
+  bool get _fromMenu => !(widget.kid || widget.kidMode);
 
   Handicap? get _handicap => _handicapPiece == null && _handicapMinutes == null
       ? null
@@ -3517,7 +3578,25 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => SafeArea(
+    child: Padding(
+      padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
+      child: ListView(
+        // Ogni pagina riparte dall'alto.
+        key: ValueKey(_view),
+        shrinkWrap: true,
+        padding: const EdgeInsets.all(16),
+        children: switch (_view) {
+          _SheetView.menu => _menuChildren(context),
+          _SheetView.friend => _friendChildren(context),
+          _SheetView.friendApart => _friendApartChildren(context),
+          _SheetView.custom => _customChildren(context),
+        },
+      ),
+    ),
+  );
+
+  List<Widget> _customChildren(BuildContext context) {
     final theme = Theme.of(context);
     // Fuori dal profilo bambino i testi restano fissi: i test montano la
     // pagina anche senza delegati di localizzazione.
@@ -3554,112 +3633,408 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
             ),
           ),
         );
-    return SafeArea(
-      child: Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.viewInsetsOf(context).bottom,
+    return [
+      _header(
+        context,
+        l?.kidGameNew ??
+            (_setup.opponent == Opponent.human
+                ? 'Due giocatori'
+                : 'Partita personalizzata'),
+        back: _fromMenu ? _SheetView.menu : null,
+      ),
+      const SizedBox(height: 8),
+      OpponentPicker(
+        setup: _setup,
+        adaptiveLevel: widget.adaptiveLevel,
+        collection: widget.collection,
+        computerAvailable: widget.computerAvailable,
+        kidMode: widget.kidMode,
+        onChanged: (setup) => setState(() => _setup = setup),
+        galleryOptions: GameOptions(variant: _variant, handicap: _handicap),
+        onGalleryPlay: (result) => Navigator.pop(
+          context,
+          _TimeChoice(
+            result.options.control,
+            result.options.variant,
+            _white.text,
+            _black.text,
+            result.applyTo(widget.kidMode ? _setup.forKids() : _setup),
+            result.options.handicap,
+            coach: result.options.coach,
+          ),
         ),
-        child: ListView(
-          shrinkWrap: true,
-          padding: const EdgeInsets.all(16),
+      ),
+      if (_setup.opponent == Opponent.human) ...[
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            nameField(_white, l?.kidGameWhiteName ?? 'Nome del Bianco'),
+            const SizedBox(width: 12),
+            nameField(_black, l?.kidGameBlackName ?? 'Nome del Nero'),
+          ],
+        ),
+      ],
+      if (l == null) ...[
+        const SizedBox(height: 16),
+        Text('Variante', style: theme.textTheme.titleSmall),
+        const SizedBox(height: 4),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            for (final v in Variant.values)
+              ChoiceChip(
+                label: Text(v.label),
+                selected: v == _variant,
+                onSelected: (_) => setState(() {
+                  _variant = v;
+                  // Il pezzo in meno vale solo negli scacchi classici.
+                  if (v != Variant.standard) _handicapPiece = null;
+                }),
+              ),
+          ],
+        ),
+        if (_variant.description.isNotEmpty) ...[
+          const SizedBox(height: 4),
+          Text(_variant.description),
+        ],
+      ],
+      ...[
+        if (l == null) ..._handicapSection(context),
+        const SizedBox(height: 12),
+        if (l != null) ...[
+          Text(l.kidGameTimeTitle, style: theme.textTheme.titleSmall),
+          const SizedBox(height: 4),
+          // Bullet e Blitz mettono fretta: ai bambini solo tempi lunghi.
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              chip(noClock, null),
+              chip(l.kidGameSlowClock, _kidClock),
+            ],
+          ),
+        ] else ...[
+          Text('Cadenza', style: theme.textTheme.titleSmall),
+          const SizedBox(height: 4),
+          chip(noClock, null),
+          for (final entry in groups.entries) ...[
+            const SizedBox(height: 12),
+            Text(entry.key, style: theme.textTheme.titleSmall),
+            const SizedBox(height: 4),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [for (final t in entry.value) chip(t.label, t)],
+            ),
+          ],
+        ],
+      ],
+    ];
+  }
+
+  Widget _header(BuildContext context, String title, {_SheetView? back}) {
+    final text = Text(title, style: Theme.of(context).textTheme.titleLarge);
+    if (back == null) return text;
+    return Row(
+      children: [
+        IconButton(
+          tooltip: 'Indietro',
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => setState(() => _view = back),
+        ),
+        Expanded(child: text),
+      ],
+    );
+  }
+
+  Widget _tile(
+    IconData icon,
+    String title,
+    String subtitle,
+    VoidCallback onTap, {
+    Key? key,
+  }) => Padding(
+    padding: const EdgeInsets.only(top: 8),
+    child: Card(
+      key: key,
+      margin: EdgeInsets.zero,
+      child: ListTile(
+        minVerticalPadding: 12,
+        leading: Icon(icon, size: 32),
+        title: Text(title, style: Theme.of(context).textTheme.titleMedium),
+        subtitle: Text(subtitle),
+        trailing: const Icon(Icons.chevron_right),
+        onTap: onTap,
+      ),
+    ),
+  );
+
+  /// Partita contro il computer del livello del giocatore, o in due se manca
+  /// il motore.
+  GameSetup get _quickSetup => widget.computerAvailable
+      ? _setup.copyWith(opponent: Opponent.computer, adaptive: true)
+      : _setup.copyWith(opponent: Opponent.human);
+
+  _TimeChoice _quickChoice({bool coach = false}) => _TimeChoice(
+    _quickControl,
+    Variant.standard,
+    _white.text,
+    _black.text,
+    _quickSetup,
+    null,
+    coach: coach,
+  );
+
+  List<Widget> _menuChildren(BuildContext context) {
+    final theme = Theme.of(context);
+    final engine = widget.computerAvailable;
+    final level = engineLevel(widget.adaptiveLevel);
+    final tournaments = widget.tournamentPage;
+    final physical = widget.physicalPage;
+    return [
+      _header(context, 'Nuova partita'),
+      const SizedBox(height: 12),
+      DropdownButtonFormField<TimeControl?>(
+        key: const ValueKey('quick-clock'),
+        initialValue: _quickControl,
+        isExpanded: true,
+        decoration: const InputDecoration(labelText: 'Tempo di gioco'),
+        items: [
+          const DropdownMenuItem(child: Text('Senza tempo')),
+          for (final c in TimeControl.presets)
+            DropdownMenuItem(
+              value: c,
+              child: Text('${c.category} · ${c.label}'),
+            ),
+        ],
+        onChanged: (v) => setState(() => _quickControl = v),
+      ),
+      const SizedBox(height: 12),
+      FilledButton(
+        key: const ValueKey('quick-start'),
+        style: FilledButton.styleFrom(
+          minimumSize: const Size.fromHeight(76),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        ),
+        onPressed: () => Navigator.pop(context, _quickChoice()),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              l?.kidGameNew ?? 'Nuova partita',
-              style: theme.textTheme.titleLarge,
-            ),
-            const SizedBox(height: 8),
-            OpponentPicker(
-              setup: _setup,
-              adaptiveLevel: widget.adaptiveLevel,
-              collection: widget.collection,
-              computerAvailable: widget.computerAvailable,
-              kidMode: widget.kidMode,
-              onChanged: (setup) => setState(() => _setup = setup),
-              galleryOptions: GameOptions(
-                variant: _variant,
-                handicap: _handicap,
-              ),
-              onGalleryPlay: (result) => Navigator.pop(
-                context,
-                _TimeChoice(
-                  result.options.control,
-                  result.options.variant,
-                  _white.text,
-                  _black.text,
-                  result.applyTo(widget.kidMode ? _setup.forKids() : _setup),
-                  result.options.handicap,
-                  coach: result.options.coach,
-                ),
+              'Inizia partita',
+              style: theme.textTheme.titleLarge?.copyWith(
+                color: theme.colorScheme.onPrimary,
               ),
             ),
-            if (_setup.opponent == Opponent.human) ...[
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  nameField(_white, l?.kidGameWhiteName ?? 'Nome del Bianco'),
-                  const SizedBox(width: 12),
-                  nameField(_black, l?.kidGameBlackName ?? 'Nome del Nero'),
-                ],
-              ),
-            ],
-            if (l == null) ...[
-              const SizedBox(height: 16),
-              Text('Variante', style: theme.textTheme.titleSmall),
-              const SizedBox(height: 4),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  for (final v in Variant.values)
-                    ChoiceChip(
-                      label: Text(v.label),
-                      selected: v == _variant,
-                      onSelected: (_) => setState(() {
-                        _variant = v;
-                        // Il pezzo in meno vale solo negli scacchi classici.
-                        if (v != Variant.standard) _handicapPiece = null;
-                      }),
-                    ),
-                ],
-              ),
-              if (_variant.description.isNotEmpty) ...[
-                const SizedBox(height: 4),
-                Text(_variant.description),
-              ],
-            ],
-            if (l == null) ..._handicapSection(context),
-            const SizedBox(height: 12),
-            if (l != null) ...[
-              Text(l.kidGameTimeTitle, style: theme.textTheme.titleSmall),
-              const SizedBox(height: 4),
-              // Bullet e Blitz mettono fretta: ai bambini solo tempi lunghi.
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  chip(noClock, null),
-                  chip(l.kidGameSlowClock, _kidClock),
-                ],
-              ),
-            ] else ...[
-              Text('Cadenza', style: theme.textTheme.titleSmall),
-              const SizedBox(height: 4),
-              chip(noClock, null),
-            ],
-            if (l == null)
-              for (final entry in groups.entries) ...[
-                const SizedBox(height: 12),
-                Text(entry.key, style: theme.textTheme.titleSmall),
-                const SizedBox(height: 4),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: [for (final t in entry.value) chip(t.label, t)],
-                ),
-              ],
+            Text(
+              engine
+                  ? 'Contro il computer del tuo livello (${level.id}, circa ${level.approxElo} Elo)'
+                  : 'In due sullo stesso telefono',
+              textAlign: TextAlign.center,
+            ),
           ],
         ),
       ),
+      const SizedBox(height: 8),
+      _tile(
+        Icons.people_outline,
+        'Sfida un amico',
+        'Sullo stesso telefono o ognuno sul suo',
+        () => setState(() => _view = _SheetView.friend),
+        key: const ValueKey('menu-friend'),
+      ),
+      if (engine) ...[
+        _tile(
+          Icons.emoji_people_outlined,
+          'Scegli il bot',
+          'Una galleria di avversari con una personalità',
+          () async {
+            final result = await openBotGallery(
+              context,
+              collection: widget.collection,
+              setup: _setup,
+              adaptiveLevel: widget.adaptiveLevel,
+              kidMode: false,
+              options: GameOptions(control: _quickControl),
+            );
+            if (result == null || !context.mounted) return;
+            Navigator.pop(
+              context,
+              _TimeChoice(
+                result.options.control,
+                result.options.variant,
+                _white.text,
+                _black.text,
+                result.applyTo(_setup),
+                result.options.handicap,
+                coach: result.options.coach,
+              ),
+            );
+          },
+          key: const Key('open-bot-gallery'),
+        ),
+        _tile(
+          Icons.school_outlined,
+          "Gioca con l'istruttore",
+          'Il computer del tuo livello, con suggerimenti e spiegazioni',
+          () {
+            final play = widget.openingGame;
+            if (play == null) {
+              Navigator.pop(context, _quickChoice(coach: true));
+              return;
+            }
+            final title = AppLocalizations.of(context).instructorTitle;
+            Navigator.pop(
+              context,
+              _SheetRun((context) async {
+                final choice = await askOpeningGame(context, Side.white);
+                if (choice == null || !context.mounted) return;
+                await play(
+                  context,
+                  OpeningGameRequest.explorer(
+                    title,
+                    const [],
+                    choice.side,
+                    levelId: choice.levelId,
+                    instructor: true,
+                  ),
+                );
+              }),
+            );
+          },
+          key: const ValueKey('menu-coach'),
+        ),
+        if (tournaments != null)
+          _tile(
+            Icons.emoji_events_outlined,
+            'Tornei',
+            'Un tabellone da affrontare partita dopo partita',
+            () => Navigator.pop(
+              context,
+              _SheetRun((context) async {
+                final page = await tournaments();
+                if (!context.mounted) return;
+                await Navigator.of(context)
+                    .push<void>(MaterialPageRoute(builder: (_) => page));
+              }),
+            ),
+            key: const ValueKey('menu-tournaments'),
+          ),
+      ],
+      const SizedBox(height: 8),
+      ExpansionTile(
+        key: const ValueKey('menu-more'),
+        tilePadding: EdgeInsets.zero,
+        title: const Text('Altre modalità'),
+        children: [
+          if (engine)
+            _tile(
+              Icons.tune,
+              'Partita personalizzata',
+              'Variante, handicap, colore e tempo',
+              () => setState(() => _view = _SheetView.custom),
+              key: const ValueKey('menu-custom'),
+            ),
+          _tile(
+            Icons.phone_android,
+            'Due giocatori sullo stesso telefono',
+            'Nomi, variante, handicap e tempo',
+            () => setState(() {
+              _setup = _setup.copyWith(opponent: Opponent.human);
+              _view = _SheetView.custom;
+            }),
+            key: const ValueKey('menu-two'),
+          ),
+          if (physical != null)
+            _tile(
+              Icons.timer_outlined,
+              'Scacchiera fisica',
+              'Orologio e registro per la partita sulla scacchiera vera',
+              () => Navigator.pop(
+                context,
+                _SheetRun(
+                  (context) => Navigator.of(
+                    context,
+                  ).push<void>(MaterialPageRoute(builder: (_) => physical())),
+                ),
+              ),
+              key: const ValueKey('menu-physical'),
+            ),
+        ],
+      ),
+    ];
+  }
+
+  List<Widget> _friendChildren(BuildContext context) => [
+    _header(context, 'Sfida un amico', back: _SheetView.menu),
+    _tile(
+      Icons.phone_android,
+      'Sullo stesso telefono',
+      'Vi passate il telefono: nomi, variante, handicap e tempo',
+      () => setState(() {
+        _setup = _setup.copyWith(opponent: Opponent.human);
+        _view = _SheetView.custom;
+      }),
+      key: const ValueKey('friend-same'),
+    ),
+    _tile(
+      Icons.smartphone,
+      'Ognuno sul suo telefono',
+      'Vicini o lontani: Wi-Fi, Bluetooth o a distanza',
+      () => setState(() => _view = _SheetView.friendApart),
+      key: const ValueKey('friend-apart'),
+    ),
+  ];
+
+  List<Widget> _friendApartChildren(BuildContext context) => [
+    _header(context, 'Ognuno sul suo telefono', back: _SheetView.friend),
+    const SizedBox(height: 16),
+    FriendGamePanel(
+      inCard: false,
+      clockBuilder: _friendClock,
+      // La partita a due telefoni prende il posto del foglio.
+      onGameClosed: () {
+        if (ModalRoute.of(context)?.isCurrent ?? false) Navigator.pop(context);
+      },
+    ),
+  ];
+
+  /// Cadenza della partita con un amico in presenza: si sceglie qui e la
+  /// partita parte dai comandi, non toccando una cadenza.
+  Widget _friendClock(
+    BuildContext context, {
+    required bool enabled,
+    required TimeControl? control,
+    required ValueChanged<TimeControl?> onChanged,
+  }) {
+    final theme = Theme.of(context);
+    Widget chip(String label, TimeControl? value) => ChoiceChip(
+      label: Text(label),
+      selected: control == value,
+      onSelected: enabled ? (_) => onChanged(value) : null,
+    );
+    final groups = <String, List<TimeControl>>{};
+    for (final t in TimeControl.presets) {
+      groups.putIfAbsent(t.category, () => []).add(t);
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Cadenza', style: theme.textTheme.titleSmall),
+        const SizedBox(height: 4),
+        chip('Senza tempo', null),
+        for (final entry in groups.entries) ...[
+          const SizedBox(height: 12),
+          Text(entry.key, style: theme.textTheme.labelLarge),
+          const SizedBox(height: 4),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [for (final t in entry.value) chip(t.label, t)],
+          ),
+        ],
+      ],
     );
   }
 
