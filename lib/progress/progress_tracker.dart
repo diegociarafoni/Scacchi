@@ -1,5 +1,6 @@
 import '../badges/badge_def.dart';
 import '../badges/badge_sources.dart';
+import '../badges/opening_volumes.dart';
 import 'achievements.dart';
 import 'activity.dart';
 import 'challenges.dart';
@@ -314,7 +315,12 @@ class ProgressTracker {
   ProgressState _count(ProgressState s, Activity a) {
     s = s.copyWith(todaySeconds: s.todaySeconds + a.duration.inSeconds);
     return switch (a) {
-      GamePlayed(:final result, :final matedWith, :final highlights) =>
+      GamePlayed(
+        :final result,
+        :final matedWith,
+        :final highlights,
+        :final openingBook,
+      ) =>
         s.copyWith(
           gamesPlayed: s.gamesPlayed + 1,
           todayGames: s.todayGames + 1,
@@ -324,6 +330,7 @@ class ProgressTracker {
             for (final h in highlights) 'game:${h.name}',
             if (result == GameResult.win && matedWith != null)
               mateKey(matedWith),
+            if (openingBook != null) volumeKey(openingBook),
           ]),
         ),
       PuzzleSolved(:final themes) => s.copyWith(
