@@ -5,7 +5,15 @@ enum AppLanguage {
   system(null),
   italian(Locale('it')),
   english(Locale('en')),
-  portuguese(Locale('pt'));
+  portuguese(Locale('pt')),
+  french(Locale('fr')),
+  spanish(Locale('es')),
+  german(Locale('de')),
+  polish(Locale('pl')),
+  indonesian(Locale('id')),
+  russian(Locale('ru')),
+  dutch(Locale('nl')),
+  turkish(Locale('tr'));
 
   const AppLanguage(this.locale);
 
@@ -18,7 +26,15 @@ enum AppLanguage {
     AppLanguage.system => null,
     AppLanguage.italian => 'Italiano',
     AppLanguage.english => 'English',
+    AppLanguage.german => 'Deutsch',
     AppLanguage.portuguese => 'Português',
+    AppLanguage.french => 'Français',
+    AppLanguage.spanish => 'Español',
+    AppLanguage.polish => 'Polski',
+    AppLanguage.indonesian => 'Bahasa Indonesia',
+    AppLanguage.russian => 'Русский',
+    AppLanguage.dutch => 'Nederlands',
+    AppLanguage.turkish => 'Türkçe',
   };
 }
 

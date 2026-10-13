@@ -1,0 +1,199 @@
+{
+  "whyPiece": "{role, select, pawn{le pion} knight{le cavalier} bishop{le fou} rook{la tour} queen{la dame} other{le roi}}",
+  "whyMate": "Échec et mat !",
+  "whyCastle": "Roque : met le roi en sécurité.",
+  "whyPromote": "Promeut le pion en {role, select, queen{dame} rook{tour} bishop{fou} knight{cavalier} other{une autre pièce}}.",
+  "whyCapture": "Prend {victim} avec {attacker}.",
+  "whyCheck": "Met ton roi en échec.",
+  "whySafe": "Met {piece} à l'abri d'une attaque.",
+  "whyThreatCapture": "Menace de prendre {victim} en {square}.",
+  "whyThreatCaptureKid": "Menace de prendre {victim}.",
+  "whyThreatCheck": "Prépare un échec à ton roi.",
+  "whyThreatPromote": "Prépare la promotion d'un pion.",
+  "whyDevelop": "Développe {piece} : une pièce de plus entre en jeu.",
+  "whyCenter": "Prend de la place au centre.",
+  "whyImprove": "Place {piece} sur une meilleure case.",
+  "instructorInBookNamed": "Ouverture reconnue : {name}. Coups les plus joués ici : {choices}.",
+  "@instructorInBookNamed": {
+    "description": "Istruttore: apertura raggiunta e mosse più giocate",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "name"
+      },
+      "choices": {
+        "type": "String",
+        "description": "choices"
+      }
+    }
+  },
+  "instructorInBook": "Coups les plus joués ici : {choices}.",
+  "@instructorInBook": {
+    "description": "Istruttore: mosse più giocate, senza nome di apertura",
+    "placeholders": {
+      "choices": {
+        "type": "String",
+        "description": "choices"
+      }
+    }
+  },
+  "instructorInBookNameOnly": "Ouverture reconnue : {name}.",
+  "@instructorInBookNameOnly": {
+    "description": "Istruttore: apertura raggiunta, senza statistiche",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "name"
+      }
+    }
+  },
+  "instructorLeftYou": "{san} te fait sortir du livre d'ouvertures. Les coups les plus joués étaient : {choices}.",
+  "@instructorLeftYou": {
+    "description": "Istruttore: l'utente esce dal libro",
+    "placeholders": {
+      "san": {
+        "type": "String",
+        "description": "san"
+      },
+      "choices": {
+        "type": "String",
+        "description": "choices"
+      }
+    }
+  },
+  "instructorLeftComputer": "L'ordinateur sort du livre avec {san}. À partir d'ici, c'est la position qui compte, pas la théorie.",
+  "@instructorLeftComputer": {
+    "description": "Istruttore: il computer esce dal libro",
+    "placeholders": {
+      "san": {
+        "type": "String",
+        "description": "san"
+      }
+    }
+  },
+  "instructorLeftYouBare": "{san} te fait sortir du livre d'ouvertures.",
+  "@instructorLeftYouBare": {
+    "description": "Istruttore: l'utente esce dal libro, senza alternative",
+    "placeholders": {
+      "san": {
+        "type": "String",
+        "description": "san"
+      }
+    }
+  },
+  "instructorExplorer": "Ouvrir dans l'explorateur",
+  "@instructorExplorer": {
+    "description": "Istruttore: pulsante per aprire la posizione nell'esploratore"
+  },
+  "instructorTitle": "Jouer avec l'instructeur",
+  "@instructorTitle": {
+    "description": "Titolo della partita con l'istruttore"
+  },
+  "instructorHubSubtitle": "L'ordinateur commente ton ouverture, avec les coups les plus joués",
+  "@instructorHubSubtitle": {
+    "description": "Istruttore: sottotitolo nel menu delle aperture"
+  },
+  "coachHintMovePiece": "Déplace {piece}.",
+  "@coachHintMovePiece": {
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintMoveSomePiece": "Déplace une pièce.",
+  "coachHintPlayHighlighted": "Joue le coup en surbrillance.",
+  "coachHintCastleShort": "Fais le petit roque.",
+  "coachHintCastleLong": "Fais le grand roque.",
+  "coachHintPieceAn": "{role, select, queen{une dame} rook{une tour} bishop{un fou} knight{un cavalier} pawn{un pion} other{le roi}}",
+  "@coachHintPieceAn": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintCheckEscape": "{promotion, select, yes{Promeus} other{Déplace}} {piece} {where, select, square{en {square}} other{sur la case cerclée}}{escape, select, king{ pour sortir de l'échec} other{ pour parer l'échec}}{check, select, none{.} check{ en donnant échec.} other{ en donnant échec et mat.}}",
+  "@coachHintCheckEscape": {
+    "placeholders": {
+      "promotion": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "escape": {
+        "type": "String"
+      },
+      "check": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintPromote": "Promeus {piece} {where, select, square{en {square}} other{sur la case cerclée}}{capture, select, yes{ en prenant {victim}} other{}} : il devient {promoted}.",
+  "@coachHintPromote": {
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "capture": {
+        "type": "String"
+      },
+      "victim": {
+        "type": "String"
+      },
+      "promoted": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintCapture": "Déplace {piece} {where, select, square{en {square}} other{sur la case cerclée}} et prends {victim}{check, select, none{.} check{ en donnant échec.} other{ en donnant échec et mat.}}",
+  "@coachHintCapture": {
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "victim": {
+        "type": "String"
+      },
+      "check": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintMove": "Déplace {piece} {where, select, square{en {square}} other{sur la case cerclée}}{check, select, none{.} check{ et donne échec.} other{ et donne échec et mat.}}",
+  "@coachHintMove": {
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "check": {
+        "type": "String"
+      }
+    }
+  }
+}

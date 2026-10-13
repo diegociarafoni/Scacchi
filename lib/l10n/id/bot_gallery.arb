@@ -1,0 +1,161 @@
+{
+  "botGalleryTitle": "Pilih bot",
+  "botTierNovice": "Pemula dasar",
+  "botTierBeginner": "Pemula",
+  "botTierIntermediate": "Menengah",
+  "botTierAdvanced": "Mahir",
+  "botTierMaster": "Master",
+  "botTierFriends": "Teman-temanmu",
+  "botTierAdaptive": "Adaptif",
+  "botTierHeading": "{tier} · {count}",
+  "@botTierHeading": {
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "botGalleryElo": "{elo} Elo",
+  "@botGalleryElo": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "botGalleryStateLocked": "terkunci",
+  "botGalleryStateBeaten": "dikalahkan",
+  "botGalleryStateOpen": "tersedia",
+  "botGalleryCellLabel": "{name}, {elo} Elo, {state}",
+  "@botGalleryCellLabel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "elo": {
+        "type": "int"
+      },
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "botGalleryCellLabelKid": "{name}, {state}",
+  "@botGalleryCellLabelKid": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "botGalleryLockedTease": "Sampai jumpa nanti, kalau kamu sudah siap!",
+  "botStyleAggressive": "agresif",
+  "botStyleGambitist": "pemain gambit",
+  "botStylePositional": "posisional",
+  "botGalleryStyle": "Gaya: {style}",
+  "@botGalleryStyle": {
+    "placeholders": {
+      "style": {
+        "type": "String"
+      }
+    }
+  },
+  "botAdaptiveName": "Adaptif",
+  "botAdaptiveGreeting": "Aku menyesuaikan diri denganmu: kalau kamu menang, aku main lebih baik; kalau kalah, aku mengalah.",
+  "botAdaptiveRematch": "Latihan yang bagus. Sekali lagi?",
+  "botAdaptiveHint": "Sekarang bermain di sekitar {elo} Elo",
+  "@botAdaptiveHint": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "botGuardiansTitle": "Penjaga Kisah",
+  "botGuardiansProgress": "{met} dari {total} penjaga sudah ditemui",
+  "@botGuardiansProgress": {
+    "placeholders": {
+      "met": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "botGuardiansHint": "Kamu bertemu mereka dengan menyelesaikan bab Kisah.",
+  "botGuardianUnmet": "penjaga belum ditemui",
+  "botSideWhite": "Main sebagai Putih",
+  "botSideRandom": "Warna acak",
+  "botSideBlack": "Main sebagai Hitam",
+  "botGalleryPlay": "Main",
+  "botGalleryLockedPlay": "Terkunci",
+  "botGalleryBeatenBadge": "dikalahkan",
+  "botGreetingLia": "Hai, aku Lia! Aku maju satu pion, lalu kita lihat apa yang terjadi.",
+  "botRematchLia": "Kamu mengalahkanku! Main satu lagi?",
+  "botGreetingPino": "Cit cit! Aku Pino, main yuk? Aku langsung menyerang!",
+  "botRematchPino": "Kamu mengalahkanku! Lain kali aku menyerang lebih keras.",
+  "botGreetingNico": "Pelan-pelan saja, tidak perlu buru-buru. Mau main?",
+  "botRematchNico": "Kamu menang dengan tenang, hebat. Satu lagi?",
+  "botGreetingChiara": "Hai, aku Chiara. Main santai, seperti di taman?",
+  "botRematchChiara": "Permainanmu sudah mekar! Main lagi?",
+  "botGreetingViola": "Hari yang indah untuk simfoni langkah! Kita mulai?",
+  "botRematchViola": "Kamu membuat nadaku fals! Ulang lagi?",
+  "botGreetingRocco": "Satu pion untukmu, permainan untukku. Setuju?",
+  "botRematchRocco": "Kamu sudah membaca siasatku! Tapi aku masih punya banyak trik.",
+  "botGreetingEttore": "Aku mengaum sebelum bermain. Bersiaplah!",
+  "botRematchEttore": "Satu auman untuk kemenanganmu. Main lagi?",
+  "botGreetingMarta": "Semalaman aku memikirkan partai ini. Duduklah.",
+  "botRematchMarta": "Mainmu bagus. Aku harus berpikir ulang banyak hal.",
+  "botGreetingBruna": "Aku baru bangun, tapi papan ini langsung membuatku segar.",
+  "botRematchBruna": "Kamu mengalahkanku! Aku kembali hibernasi… semenit saja.",
+  "botGreetingDuilio": "Percikan dan api: aku suka menyerang. Siap?",
+  "botRematchDuilio": "Kamu memadamkan apiku! Ayo kita nyalakan lagi.",
+  "botGreetingCarlo": "Beri aku satu bidak dan aku beri kamu pertunjukan. Main yuk?",
+  "botRematchCarlo": "Kamu merebut semuanya kembali, hebat!",
+  "botGreetingElena": "Aku mengawasi papan dari atas. Mari lihat apakah kamu bisa terbang.",
+  "botRematchElena": "Kamu terbang tinggi. Aku suka itu.",
+  "botGreetingAda": "Aku menghitung setiap lintasan. Bagaimana kamu dengan bintang-bintang?",
+  "botRematchAda": "Rencanamu mengalahkan rencanaku. Kita hitung ulang?",
+  "botGreetingMassimo": "Kawanan menyapamu. Mulai dengan gambit?",
+  "botRematchMassimo": "Kamu menjinakkan serigala. Hormat.",
+  "botGreetingStella": "Aku bintang paling terang di Akademi. Bisakah kamu menatapku?",
+  "botRematchStella": "Kamu memadamkan cahayaku… untuk sekarang.",
+  "botGreetingTino": "Hai, aku Tino! Aku akan menunjukkan cara bidak bergerak.",
+  "botRematchTino": "Hebat! Sekarang kamu menggerakkan bidak lebih baik dariku.",
+  "botUnlockStory": "Terbuka setelah menyelesaikan bab Kisah bersama penjaga ini",
+  "botGalleryOpen": "Buka galeri bot",
+  "botOptions": "Opsi",
+  "botOptionsTime": "Pengaturan waktu",
+  "botOptionsNoClock": "Tanpa jam",
+  "botOptionsVariant": "Varian",
+  "botVariantStandard": "Standar",
+  "botVariantChess960": "Chess960",
+  "botVariantKingOfTheHill": "Raja di Puncak Bukit",
+  "botVariantThreeCheck": "Tiga skak",
+  "botOptionsHelp": "Bantuan",
+  "botOptionsCoach": "Pelatih",
+  "botOptionsCoachHint": "Memperingatkanmu saat kamu membuat kesalahan.",
+  "botOptionsSummary": "{time} · {variant}",
+  "@botOptionsSummary": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "variant": {
+        "type": "String"
+      }
+    }
+  },
+  "botOptionsKidSlow": "Dengan jam, santai saja",
+  "botGreetingLuna": "Di malam hari aku melihat seluruh papan, bahkan langkah tersembunyi. Main yuk?",
+  "botRematchLuna": "Kamu mengalahkanku di bawah cahaya bintang! Satu lagi?",
+  "botGreetingCosmo": "Lepas landas dalam tiga, dua, satu… ayo main! Kita menyerang?",
+  "botRematchCosmo": "Pendaratan darurat: kamu mengalahkanku. Main lagi?"
+}

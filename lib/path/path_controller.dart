@@ -39,7 +39,7 @@ class PathController extends ChangeNotifier {
       _progress =
           await _file.read(PathProgress.fromJson) ?? const PathProgress();
     } on FileSystemException catch (e) {
-      debugPrint('Lettura del percorso non riuscita: $e');
+      debugPrint('Lettura del percorso non riuscita: $e'); // l10n-ok
       _readOnly = true;
     }
     notifyListeners();
@@ -66,7 +66,7 @@ class PathController extends ChangeNotifier {
     try {
       await _file.write(progress.toJson());
     } on FileSystemException catch (e) {
-      debugPrint('Salvataggio del percorso non riuscito: $e');
+      debugPrint('Salvataggio del percorso non riuscito: $e'); // l10n-ok
     }
   }
 }

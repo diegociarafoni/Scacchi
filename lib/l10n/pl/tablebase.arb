@@ -1,0 +1,12 @@
+{
+  "tablebaseTitle": "Idealna końcówka",
+  "tablebaseCalculating": "Obliczam idealną końcówkę… dzieje się to tylko za pierwszym razem",
+  "tablebaseWhiteMates": "{moves, plural, one{Białe wygrywają: mat w {moves} ruchu} few{Białe wygrywają: mat w {moves} ruchach} many{Białe wygrywają: mat w {moves} ruchach} other{Białe wygrywają: mat w {moves} ruchach}}",
+  "tablebaseBlackMates": "{moves, plural, one{Czarne wygrywają: mat w {moves} ruchu} few{Czarne wygrywają: mat w {moves} ruchach} many{Czarne wygrywają: mat w {moves} ruchach} other{Czarne wygrywają: mat w {moves} ruchach}}",
+  "tablebaseWhiteWins": "Wygrywają białe",
+  "tablebaseBlackWins": "Wygrywają czarne",
+  "tablebaseDraw": "Remis przy idealnej grze",
+  "tablebaseBestMove": "Idealny ruch: {move}",
+  "tablebaseBestMoveHint": "Zagraj idealny ruch",
+  "tablebaseShowMove": "Pokaż idealny ruch"
+}

@@ -1,0 +1,20 @@
+{
+  "multiplayerRemoteIntro": "Pour jouer à distance, il te suffit d'internet : envoie un lien à ton ami et jouez quand vous voulez, même à plusieurs heures d'écart.",
+  "multiplayerRemoteSwitchHint": "Ton ami peut te rejoindre de n'importe où avec un lien. Les coups voyagent chiffrés par des relais publics : sans compte et sans serveur de notre part.",
+  "multiplayerRemoteShare": "Partager le lien d'invitation",
+  "multiplayerRemoteShareSubject": "Invitation à une partie d'échecs",
+  "multiplayerRemoteShareText": "On joue aux échecs sur Rokko ! Ouvre l'app, choisis Jouer avec un ami, puis Rejoindre avec le lien et colle ce lien : {link}",
+  "multiplayerRemoteWaitingHint": "Envoie le lien à ton ami ou fais-lui scanner le QR code. La partie reste enregistrée : tu peux fermer l'app et la reprendre depuis Jouer avec un ami.",
+  "multiplayerRemoteLeaveBodyWaiting": "La partie reste enregistrée et le lien est toujours valable : tu pourras la reprendre depuis Jouer avec un ami.",
+  "multiplayerRemoteJoinLink": "Rejoindre avec le lien",
+  "multiplayerRemoteLinkTitle": "Colle le lien d'invitation",
+  "multiplayerRemoteLinkField": "Lien d'invitation",
+  "multiplayerRemotePaste": "Coller",
+  "multiplayerRemoteLinkInvalid": "Ce lien n'est pas une invitation à une partie.",
+  "multiplayerRemoteLinkConfirm": "Rejoindre",
+  "multiplayerRemoteNotifyChannel": "Parties à distance",
+  "multiplayerRemoteNotifyChannelDescription": "Te prévient quand ton ami a joué son coup.",
+  "multiplayerRemoteNotifyTitle": "À toi de jouer",
+  "multiplayerRemoteNotifyBody": "Ton ami a joué {move}.",
+  "multiplayerRemoteNotifyOver": "La partie avec ton ami est terminée."
+}

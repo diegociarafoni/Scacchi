@@ -1,0 +1,9 @@
+{
+  "avatarPhotoTitle": "Foto",
+  "avatarPhotoHint": "De foto blijft alleen op deze telefoon: ze wordt nooit verstuurd en zit niet in de back-up.",
+  "avatarPhotoGallery": "Uit de galerij",
+  "avatarPhotoCamera": "Foto maken",
+  "avatarPhotoRemove": "Foto verwijderen",
+  "avatarPhotoError": "Ik kan de foto niet gebruiken. Controleer de rechten voor camera en foto’s in de instellingen van je telefoon.",
+  "avatarPhotoLabel": "Profielfoto"
+}

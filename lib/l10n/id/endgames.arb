@@ -1,0 +1,19 @@
+{
+  "endgamesTitle": "Bagian akhir",
+  "endgamesGoalMate": "Beri skakmat",
+  "endgamesGoalPromote": "Promosikan pion",
+  "endgamesGoalHoldBlack": "Bertahan sebagai Hitam",
+  "endgamesGoalHoldWhite": "Bertahan sebagai Putih",
+  "endgamesToRepeat": "Untuk diulang",
+  "endgamesStars": "{stars, plural, one{{stars} bintang dari 3} other{{stars} bintang dari 3}}",
+  "endgamesMovesHold": "Langkah: {moves} dari {par}",
+  "endgamesMovesTarget": "Langkah: {moves} · tiga bintang dalam {par}",
+  "endgamesStart": "Mulai",
+  "endgamesThinking": "Mesin sedang berpikir…",
+  "endgamesEngineFailed": "Mesin tidak merespons: coba lagi.",
+  "endgamesSuccess": "Tujuan tercapai",
+  "endgamesFailure": "Kamu belum berhasil",
+  "endgamesFailureHint": "Posisi ini tetap ada di antara yang perlu diulang.",
+  "endgamesRetry": "Coba lagi",
+  "endgamesDone": "Selesai"
+}

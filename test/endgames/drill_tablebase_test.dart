@@ -14,8 +14,6 @@ import '../localized_app.dart';
 
 const _mate = EndgameDrill(
   id: 'queen-mate',
-  title: 'Donna e re contro re',
-  intro: 'Obiettivo: dai scacco matto.',
   fen: '7k/8/5K2/8/8/1Q6/8/8 w - - 0 1',
   goal: DrillGoal.mate,
   par: 2,

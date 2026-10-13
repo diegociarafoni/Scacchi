@@ -1,0 +1,452 @@
+{
+  "reviewCoachGeneric": "{move} era mejor: tu posición empeora.",
+  "@reviewCoachGeneric": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachBrilliant": "Jugada brillante: cedes material, pero es la mejor opción.",
+  "reviewCoachGreat": "Muy bien: era la única jugada que mantenía la posición.",
+  "reviewCoachBest": "Es la mejor jugada.",
+  "reviewCoachExcellent": "Jugada excelente, casi tan buena como la mejor.",
+  "reviewCoachGood": "Buena jugada.",
+  "reviewCoachBook": "Una jugada de la teoría de aperturas.",
+  "reviewCoachAllowedMate": "Tras {move}, {side, select, white{las Blancas pueden dar} other{las Negras pueden dar}} mate en {mate} con {reply}.",
+  "@reviewCoachAllowedMate": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "side": {
+        "type": "String"
+      },
+      "mate": {
+        "type": "int"
+      },
+      "reply": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachMissedMate": "Tenías mate en {mate} con {move}.",
+  "@reviewCoachMissedMate": {
+    "placeholders": {
+      "mate": {
+        "type": "int"
+      },
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachHanging": "Dejaste {victim} sin protección en {square}: {attacker} puede capturar {victimRole, select, other{esa pieza}}.",
+  "@reviewCoachHanging": {
+    "placeholders": {
+      "victim": {
+        "type": "String"
+      },
+      "victimRole": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "attacker": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachAllowedFork": "Tras {move}, {piece} ataca {targets} a la vez: es una horquilla.",
+  "@reviewCoachAllowedFork": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "targets": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachAllowedPin": "Tras {move}, {slider} clava {pinned} en {square} contra el rey.",
+  "@reviewCoachAllowedPin": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "slider": {
+        "type": "String"
+      },
+      "pinned": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachExposedKing": "Tras {move}, tu rey queda expuesto: {reply} es jaque.",
+  "@reviewCoachExposedKing": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "reply": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachRecapture": "Podías recuperar la pieza: {move} captura {piece}.",
+  "@reviewCoachRecapture": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachWinMaterial": "Podías ganar material: {move} captura {piece}.",
+  "@reviewCoachWinMaterial": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachMissedFork": "Podías hacer una horquilla con {move}: {piece} ataca {targets}.",
+  "@reviewCoachMissedFork": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "targets": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachMissedDiscovery": "Podías hacer un ataque descubierto con {move}: {piece} ataca {target}.",
+  "@reviewCoachMissedDiscovery": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachMaterialLoss": "Esta jugada pierde material: unos {pawns, plural, one{1 peón} other{{pawns} peones}} en la línea esperada.",
+  "@reviewCoachMaterialLoss": {
+    "placeholders": {
+      "pawns": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewCoachPieceColored": "{role, select, pawn{el peón {color, select, white{blanco} other{negro}}} knight{el caballo {color, select, white{blanco} other{negro}}} bishop{el alfil {color, select, white{blanco} other{negro}}} rook{la torre {color, select, white{blanca} other{negra}}} queen{la dama {color, select, white{blanca} other{negra}}} other{el rey {color, select, white{blanco} other{negro}}}}",
+  "@reviewCoachPieceColored": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      },
+      "color": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachListEnd": "{head} y {last}",
+  "@reviewCoachListEnd": {
+    "placeholders": {
+      "head": {
+        "type": "String"
+      },
+      "last": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewTitle": "Revisión de la partida",
+  "reviewAnalysePosition": "Analizar esta posición",
+  "reviewPuzzlesSaved": "Problemas guardados: {count}. Los encontrarás en Problemas › Repasa tus errores.",
+  "@reviewPuzzlesSaved": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewPuzzlesAlready": "Estos problemas ya están guardados.",
+  "reviewPuzzlesFailed": "No se pudo guardar. Inténtalo de nuevo.",
+  "reviewSavePuzzles": "Guardar errores como problemas ({count})",
+  "@reviewSavePuzzles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewNoteNotSaved": "Nota no guardada. Inténtalo de nuevo.",
+  "reviewRetryCorrect": "Correcto: {move} es la mejor jugada.",
+  "@reviewRetryCorrect": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewRetryWrong": "{move} no es la mejor jugada. Inténtalo de nuevo.",
+  "@reviewRetryWrong": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewAnalysing": "Analizando: {done} de {total}",
+  "@reviewAnalysing": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewStop": "Detener",
+  "reviewCancelled": "Revisión detenida.",
+  "reviewFailed": "El análisis ha fallado. Inténtalo más tarde.",
+  "reviewRetryPrompt": "Encuentra una jugada mejor que {move}",
+  "@reviewRetryPrompt": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewRetrySolution": "La mejor jugada era {move}.",
+  "@reviewRetrySolution": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewShowSolution": "Solución",
+  "reviewExit": "Salir",
+  "reviewStartPosition": "Posición inicial",
+  "reviewMoveVerdict": "{number} {move} es {verdict, select, brilliant{una jugada brillante} great{una muy buena jugada} best{la mejor jugada} excellent{una jugada excelente} good{una buena jugada} book{una jugada de libro} inaccuracy{una imprecisión} mistake{un error} miss{una oportunidad perdida} other{un error grave}}",
+  "@reviewMoveVerdict": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "move": {
+        "type": "String"
+      },
+      "verdict": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewBestMove": "Mejor: {move}",
+  "@reviewBestMove": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewYourNote": "Tu nota: {note}",
+  "@reviewYourNote": {
+    "placeholders": {
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewTryAgain": "Reintentar",
+  "reviewAddNote": "Añadir nota",
+  "reviewEditNote": "Editar nota",
+  "reviewNavStart": "Inicio",
+  "reviewNavPrevious": "Jugada anterior",
+  "reviewNavNext": "Jugada siguiente",
+  "reviewNavEnd": "Final",
+  "reviewSideWhite": "Blancas",
+  "reviewSideBlack": "Negras",
+  "reviewAccuracyUnavailable": "Precisión de {side} no disponible",
+  "@reviewAccuracyUnavailable": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewAccuracyPercent": "Precisión de {side}: {value} por ciento",
+  "@reviewAccuracyPercent": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewAccuracy": "Precisión",
+  "reviewEstimatedElo": "Elo estimado ~{elo}",
+  "@reviewEstimatedElo": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewMovesByCategory": "Jugadas por categoría",
+  "reviewCountsSemantics": "Blancas {white}, Negras {black}",
+  "@reviewCountsSemantics": {
+    "placeholders": {
+      "white": {
+        "type": "int"
+      },
+      "black": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewNoteTitle": "Nota sobre {move}",
+  "@reviewNoteTitle": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewNoteComment": "Comentario",
+  "reviewNoteCancel": "Cancelar",
+  "reviewNoteSave": "Guardar",
+  "reviewTimePerMove": "Tiempo por jugada",
+  "reviewTimeNoHasty": "Tiempo por jugada. Ningún error cometido con prisa.",
+  "reviewTimeHastySemantics": "Tiempo por jugada. Errores cometidos con prisa: {moves}.",
+  "@reviewTimeHastySemantics": {
+    "placeholders": {
+      "moves": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewHastyMistakes": "Errores cometidos con prisa: {moves}",
+  "@reviewHastyMistakes": {
+    "placeholders": {
+      "moves": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewHastyAdvice": "Menos del 40 % de tu tiempo medio por jugada: antes de mover, busca amenazas.",
+  "reviewAccuracyByPhase": "Precisión por fase",
+  "reviewPhaseOpening": "Apertura",
+  "reviewPhaseMiddlegame": "Medio juego",
+  "reviewPhaseEndgame": "Final",
+  "reviewPhaseSemantics": "{phase}: Blancas {white}, Negras {black}",
+  "@reviewPhaseSemantics": {
+    "placeholders": {
+      "phase": {
+        "type": "String"
+      },
+      "white": {
+        "type": "String"
+      },
+      "black": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewPhaseValues": "Blancas {white} · Negras {black}",
+  "@reviewPhaseValues": {
+    "placeholders": {
+      "white": {
+        "type": "String"
+      },
+      "black": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewMoveSemantics": "{number} {move}, {verdict}{note, select, yes{, con una nota} other{}}",
+  "@reviewMoveSemantics": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "move": {
+        "type": "String"
+      },
+      "verdict": {
+        "type": "String"
+      },
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewEvalGraph": "Gráfico de evaluación",
+  "reviewClassBrilliant": "Brillante",
+  "reviewClassGreat": "Muy buena",
+  "reviewClassBest": "Mejor",
+  "reviewClassExcellent": "Excelente",
+  "reviewClassGood": "Buena",
+  "reviewClassBook": "Libro",
+  "reviewClassInaccuracy": "Imprecisión",
+  "reviewClassMistake": "Error",
+  "reviewClassMiss": "Oportunidad perdida",
+  "reviewClassBlunder": "Error grave",
+  "reviewScoreUnavailable": "Evaluación no disponible",
+  "reviewScoreMated": "Jaque mate: {side, select, white{ganan las Blancas} other{ganan las Negras}}",
+  "@reviewScoreMated": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewScoreCheckmate": "Jaque mate",
+  "reviewScoreMateIn": "{side, select, white{Las Blancas tienen} other{Las Negras tienen}} mate en {moves}",
+  "@reviewScoreMateIn": {
+    "placeholders": {
+      "moves": {
+        "type": "int"
+      },
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewScoreEven": "Igualada",
+  "reviewScoreAhead": "{side, select, white{Las Blancas van} other{Las Negras van}} por delante por {pawns}",
+  "@reviewScoreAhead": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      },
+      "pawns": {
+        "type": "String"
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "endgamesTitle": "Finales",
+  "endgamesGoalMate": "Da jaque mate",
+  "endgamesGoalPromote": "Corona el peón",
+  "endgamesGoalHoldBlack": "Resiste con las Negras",
+  "endgamesGoalHoldWhite": "Resiste con las Blancas",
+  "endgamesToRepeat": "Por repetir",
+  "endgamesStars": "{stars, plural, one{{stars} estrella de 3} other{{stars} estrellas de 3}}",
+  "endgamesMovesHold": "Jugadas: {moves} de {par}",
+  "endgamesMovesTarget": "Jugadas: {moves} · tres estrellas en {par}",
+  "endgamesStart": "Empezar",
+  "endgamesThinking": "El motor está pensando…",
+  "endgamesEngineFailed": "El motor no responde: inténtalo de nuevo.",
+  "endgamesSuccess": "Objetivo conseguido",
+  "endgamesFailure": "No lo has conseguido",
+  "endgamesFailureHint": "La posición se queda entre las que hay que repetir.",
+  "endgamesRetry": "Intentar de nuevo",
+  "endgamesDone": "Hecho"
+}
