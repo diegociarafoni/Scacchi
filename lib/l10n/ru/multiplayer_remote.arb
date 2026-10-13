@@ -1,0 +1,20 @@
+{
+  "multiplayerRemoteIntro": "Чтобы играть на расстоянии, нужен только интернет: отправь другу ссылку и играйте, когда удобно, даже с перерывами в несколько часов.",
+  "multiplayerRemoteSwitchHint": "Друг может присоединиться откуда угодно по ссылке. Ходы идут в зашифрованном виде через открытые ретрансляторы: ни аккаунта, ни нашего сервера.",
+  "multiplayerRemoteShare": "Поделиться ссылкой-приглашением",
+  "multiplayerRemoteShareSubject": "Приглашение сыграть в шахматы",
+  "multiplayerRemoteShareText": "Сыграем в шахматы в Rokko! Открой приложение, выбери «Игра с другом», затем «Войти по ссылке» и вставь эту ссылку: {link}",
+  "multiplayerRemoteWaitingHint": "Отправь ссылку другу или дай ему отсканировать QR-код. Партия сохраняется: можно закрыть приложение и продолжить её в разделе «Игра с другом».",
+  "multiplayerRemoteLeaveBodyWaiting": "Партия сохранится, а ссылка продолжит действовать: можно продолжить в разделе «Игра с другом».",
+  "multiplayerRemoteJoinLink": "Войти по ссылке",
+  "multiplayerRemoteLinkTitle": "Вставь ссылку-приглашение",
+  "multiplayerRemoteLinkField": "Ссылка-приглашение",
+  "multiplayerRemotePaste": "Вставить",
+  "multiplayerRemoteLinkInvalid": "Эта ссылка не является приглашением в партию.",
+  "multiplayerRemoteLinkConfirm": "Войти",
+  "multiplayerRemoteNotifyChannel": "Партии на расстоянии",
+  "multiplayerRemoteNotifyChannelDescription": "Сообщает, когда друг сделал ход.",
+  "multiplayerRemoteNotifyTitle": "Твой ход",
+  "multiplayerRemoteNotifyBody": "Друг сыграл {move}.",
+  "multiplayerRemoteNotifyOver": "Партия с другом окончена."
+}

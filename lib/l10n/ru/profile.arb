@@ -1,0 +1,9 @@
+{
+  "avatarPhotoTitle": "Фото",
+  "avatarPhotoHint": "Фото остаётся только на этом телефоне: оно не отправляется и не входит в резервную копию.",
+  "avatarPhotoGallery": "Из галереи",
+  "avatarPhotoCamera": "Сделать фото",
+  "avatarPhotoRemove": "Удалить фото",
+  "avatarPhotoError": "Не получается использовать фото. Проверь разрешения для камеры и фото в настройках телефона.",
+  "avatarPhotoLabel": "Фото профиля"
+}
