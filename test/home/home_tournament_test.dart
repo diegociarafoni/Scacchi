@@ -42,7 +42,7 @@ void main() {
   });
   tearDown(() => dir.deleteSync(recursive: true));
 
-  Future<void> openTu(WidgetTester tester, {bool computer = true}) async {
+  Future<void> openHome(WidgetTester tester, {bool computer = true}) async {
     tester.view.physicalSize = const Size(1170, 2532);
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
@@ -61,19 +61,18 @@ void main() {
         ),
       ),
     );
-    await tester.tap(find.text('Tu'));
     await tester.pumpAndSettle();
   }
 
   testWidgets('senza motore la voce Tornei non compare', (tester) async {
-    await openTu(tester, computer: false);
+    await openHome(tester, computer: false);
     expect(find.text('Tornei'), findsNothing);
   });
 
   testWidgets('la partita del torneo si gioca e l\'abbandono vale zero', (
     tester,
   ) async {
-    await openTu(tester);
+    await openHome(tester);
     await tester.tap(find.text('Tornei'));
     await settle(tester);
     await tester.tap(find.text('Inizia il torneo'));
@@ -91,7 +90,7 @@ void main() {
   });
 
   testWidgets('uscire prima di muovere vale una sconfitta', (tester) async {
-    await openTu(tester);
+    await openHome(tester);
     await tester.tap(find.text('Tornei'));
     await settle(tester);
     await tester.tap(find.text('Inizia il torneo'));

@@ -279,7 +279,7 @@ void main() {
       expect(find.byType(KidFlame), findsOneWidget);
     });
 
-    testWidgets('la scheda Tu non mostra i Tornei, che hanno Elo e punti', (
+    testWidgets('la scheda Tu non mostra badge, statistiche e archivio', (
       tester,
     ) async {
       setPhone(tester);
@@ -290,15 +290,15 @@ void main() {
             progress: () async => controller,
             path: () => Completer<PathController>().future,
             archive: () => Completer<GameArchive>().future,
-            tournamentPage: () async => const SizedBox(),
             storyPage: () async => const SizedBox(),
           ),
         ),
       );
       await tester.pumpAndSettle();
-      expect(find.text('Tornei'), findsNothing);
-      expect(find.text('Storia'), findsOneWidget);
-      expect(find.text('Percorso'), findsNothing);
+      for (final hidden in ['Badge', 'Statistiche', 'Archivio', 'Storia']) {
+        expect(find.text(hidden), findsNothing, reason: hidden);
+      }
+      expect(find.text('Profilo'), findsOneWidget);
     });
 
     testWidgets('le stelle si fermano a dieci', (tester) async {

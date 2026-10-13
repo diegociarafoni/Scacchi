@@ -37,6 +37,7 @@ import '../path/path_controller.dart';
 import '../path/stage_page.dart';
 import '../physical/physical_game_page.dart';
 import '../progress/activity.dart';
+import '../progress/avatar.dart';
 import '../progress/profile_page.dart';
 import '../progress/progress_controller.dart';
 import '../progress/progress_tracker.dart';
@@ -57,6 +58,7 @@ import '../settings/settings_page.dart';
 import '../stats/local_rating.dart';
 import '../stats/stats_page.dart';
 import '../storage/key_value_store.dart';
+import '../story/guardian_says.dart';
 import '../story/story.dart';
 import '../story/story_controller.dart';
 import '../story/story_feed.dart';
@@ -397,6 +399,7 @@ class _HomeShellState extends State<HomeShell> {
       theme: chapter.puzzleTheme,
       goal: remaining,
       maxRating: chapter.puzzleRating,
+      onOutcome: (solved) => _guardianSnack(context, chapter, solved),
     );
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
@@ -409,7 +412,33 @@ class _HomeShellState extends State<HomeShell> {
         ),
       ),
     );
+    // L'avviso dell'ultimo puzzle non resta sopra la Storia.
+    if (context.mounted) ScaffoldMessenger.of(context).hideCurrentSnackBar();
     return feed.solved;
+  }
+
+  /// Il custode commenta il puzzle appena concluso, senza bloccare.
+  void _guardianSnack(BuildContext context, StoryChapter chapter, bool solved) {
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 3),
+          content: GuardianSays(
+            chapter: chapter,
+            moment: solved
+                ? GuardianMoment.puzzleOk
+                : GuardianMoment.puzzleRetry,
+            expression: solved
+                ? AvatarExpression.happy
+                : AvatarExpression.encouraging,
+            size: 40,
+            style: const TextStyle(fontStyle: FontStyle.italic),
+          ),
+        ),
+      );
   }
 
   /// Bot del torneo: un avversario per ogni livello del motore.
@@ -777,9 +806,7 @@ class _HomeShellState extends State<HomeShell> {
       final controller = await _pathController();
       if (!context.mounted) return;
       final started = DateTime.now();
-      final stars = await Navigator.of(
-        context,
-      ).push<int>(MaterialPageRoute(builder: (_) => StagePage(stage: stage)));
+      final stars = await openStage(context, controller, stage);
       if (stars != null && stars > 0) {
         await controller.complete(
           stage,
@@ -898,9 +925,6 @@ class _HomeShellState extends State<HomeShell> {
               playGuardian: _computerAvailable ? _playGuardian : null,
               storyPage: _storyPage,
               openGame: _openSavedGame,
-              tournamentPage: _computerAvailable ? _tournamentPage : null,
-              endgamesPage: _computerAvailable ? _endgamesPage : null,
-              mastersPage: _mastersPage,
               puzzlesPage: _puzzlesPage,
             )
           else

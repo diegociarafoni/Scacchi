@@ -61,6 +61,16 @@ Per aggiornare i riferimenti dopo un cambio grafico voluto:
 flutter test --tags golden test/golden --update-goldens   # su Linux, oppure in un container Linux
 ```
 
+## Test deterministici
+
+Un test non deve dipendere dal tempo, dal carico del runner o dagli strumenti installati. Regole:
+
+- Niente attese fisse per disco, relay o Bluetooth: si aspetta la condizione con `until`, `untilSaved`, `untilMoves` o, nei widget test, `pumpUntil` (`test/support/wait.dart`). Scadono con un messaggio che dice cosa mancava.
+- Per i canali in memoria (`LoopbackTransport`) basta `settleLoopback()`, che conta i giri del ciclo di eventi invece dei millisecondi.
+- Un'attesa a tempo fisso resta solo per provare che qualcosa *non* succede.
+- I golden non dipendono dall'ambiente: `test/golden/flutter_test_config.dart` fissa il motore come disponibile (`StockfishTransport.debugSupported`), altrimenti la schermata cambia secondo che Stockfish sia installato.
+- Per cercare gli instabili si esegue la suite con la CPU satura (per esempio un ciclo vuoto per ogni core, più `--concurrency` pari ai core) e si ripete: un test corretto passa ogni volta.
+
 ## Accessibilità
 
 `test/accessibility/` verifica, in tema chiaro e scuro, sulla schermata principale:
@@ -69,6 +79,7 @@ flutter test --tags golden test/golden --update-goldens   # su Linux, oppure in 
 - dimensioni tattili minime di Android (48 × 48) e iOS (44 × 44);
 - contrasto del testo almeno 4,5:1 (WCAG AA);
 - i comandi della barra in basso sono annunciati come pulsanti, con il loro stato attivo o disattivo (questo test ha trovato che `_ActionButton` non lo era, ora corretto);
-- con il testo di sistema al 200% non ci sono sovrapposizioni su nessun telefono.
+- con il testo di sistema al 200% non ci sono sovrapposizioni su nessun telefono;
+- `touch_targets_130_test.dart`: con il testo al 130%, su telefono piccolo e medio, schede della barra, impostazioni (menu e ogni sezione), Storia, partita e pannello «Altro» non hanno overflow, hanno bersagli di tocco da 48 dp e comandi con etichetta (il test ha trovato l'overflow del logo nella barra, ora corretto).
 
 Restano da coprire, con il requisito RNF-07: annuncio delle case e delle mosse sulla scacchiera, inserimento testuale della mossa, opzione per ridurre le animazioni.

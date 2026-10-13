@@ -9,6 +9,9 @@ AppLocalizations storyL10n(BuildContext context) =>
     Localizations.of<AppLocalizations>(context, AppLocalizations) ??
     lookupAppLocalizations(const Locale('it'));
 
+/// Momenti in cui il custode del capitolo parla.
+enum GuardianMoment { welcome, puzzleOk, puzzleRetry, lessonDone, boss }
+
 /// Racconto di un capitolo: titolo, introduzione, presentazione del bot ed
 /// epilogo.
 extension StoryTexts on AppLocalizations {
@@ -59,4 +62,64 @@ extension StoryTexts on AppLocalizations {
     'plain' => storyPlainOutro,
     _ => storyAcademyOutro,
   };
+
+  /// Battuta del custode di [c] in [moment].
+  String guardianLine(StoryChapter c, GuardianMoment moment) =>
+      switch (moment) {
+        GuardianMoment.welcome => switch (c.id) {
+          'prologue' => storyGuardianPrologueWelcome,
+          'village' => storyGuardianVillageWelcome,
+          'gates' => storyGuardianGatesWelcome,
+          'tower' => storyGuardianTowerWelcome,
+          'forest' => storyGuardianForestWelcome,
+          'castle' => storyGuardianCastleWelcome,
+          'crown' => storyGuardianCrownWelcome,
+          'plain' => storyGuardianPlainWelcome,
+          _ => storyGuardianAcademyWelcome,
+        },
+        GuardianMoment.puzzleOk => switch (c.id) {
+          'prologue' => storyGuardianProloguePuzzleOk,
+          'village' => storyGuardianVillagePuzzleOk,
+          'gates' => storyGuardianGatesPuzzleOk,
+          'tower' => storyGuardianTowerPuzzleOk,
+          'forest' => storyGuardianForestPuzzleOk,
+          'castle' => storyGuardianCastlePuzzleOk,
+          'crown' => storyGuardianCrownPuzzleOk,
+          'plain' => storyGuardianPlainPuzzleOk,
+          _ => storyGuardianAcademyPuzzleOk,
+        },
+        GuardianMoment.puzzleRetry => switch (c.id) {
+          'prologue' => storyGuardianProloguePuzzleRetry,
+          'village' => storyGuardianVillagePuzzleRetry,
+          'gates' => storyGuardianGatesPuzzleRetry,
+          'tower' => storyGuardianTowerPuzzleRetry,
+          'forest' => storyGuardianForestPuzzleRetry,
+          'castle' => storyGuardianCastlePuzzleRetry,
+          'crown' => storyGuardianCrownPuzzleRetry,
+          'plain' => storyGuardianPlainPuzzleRetry,
+          _ => storyGuardianAcademyPuzzleRetry,
+        },
+        GuardianMoment.lessonDone => switch (c.id) {
+          'prologue' => storyGuardianPrologueLessonDone,
+          'village' => storyGuardianVillageLessonDone,
+          'gates' => storyGuardianGatesLessonDone,
+          'tower' => storyGuardianTowerLessonDone,
+          'forest' => storyGuardianForestLessonDone,
+          'castle' => storyGuardianCastleLessonDone,
+          'crown' => storyGuardianCrownLessonDone,
+          'plain' => storyGuardianPlainLessonDone,
+          _ => storyGuardianAcademyLessonDone,
+        },
+        GuardianMoment.boss => switch (c.id) {
+          'prologue' => storyGuardianPrologueBoss,
+          'village' => storyGuardianVillageBoss,
+          'gates' => storyGuardianGatesBoss,
+          'tower' => storyGuardianTowerBoss,
+          'forest' => storyGuardianForestBoss,
+          'castle' => storyGuardianCastleBoss,
+          'crown' => storyGuardianCrownBoss,
+          'plain' => storyGuardianPlainBoss,
+          _ => storyGuardianAcademyBoss,
+        },
+      };
 }

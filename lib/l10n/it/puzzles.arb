@@ -1,11 +1,24 @@
 {
-  "puzzleGoal": "{goal, select, mateIn1{Obiettivo: matto in 1} mateIn2{Obiettivo: matto in 2} mateIn3{Obiettivo: matto in 3} mateIn4{Obiettivo: matto in 4} mate{Obiettivo: dai matto} crushing{Obiettivo: ottieni un vantaggio decisivo} advantage{Obiettivo: ottieni il vantaggio} equality{Obiettivo: ottieni la parità} other{Obiettivo: trova la mossa migliore}}",
+  "puzzleGoal": "{goal, select, mateIn1{Matto in 1} mateIn2{Matto in 2} mateIn3{Matto in 3} mateIn4{Matto in 4} mate{Dai matto} crushing{Ottieni un vantaggio decisivo} advantage{Ottieni il vantaggio} equality{Ottieni la parità} other{Trova la mossa migliore}}",
   "@puzzleGoal": {
-    "description": "Obiettivo del puzzle mostrato sopra la scacchiera e letto dai lettori di schermo",
+    "description": "Obiettivo del puzzle, in testa alla scheda sopra la scacchiera",
     "placeholders": {
       "goal": {
         "type": "String",
         "description": "Obiettivo: mateIn1, mateIn2, mateIn3, mateIn4, mate, crushing, advantage o equality"
+      }
+    }
+  },
+  "puzzleGoalSide": "{goal} · Muove il {side}",
+  "@puzzleGoalSide": {
+    "description": "Scheda in testa al puzzle: obiettivo e colore che muove, letta dai lettori di schermo",
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      },
+      "side": {
+        "type": "String",
+        "description": "Bianco o Nero"
       }
     }
   },
@@ -286,15 +299,6 @@
       }
     }
   },
-  "puzzleFind": "Trova la mossa migliore per il {side}.",
-  "@puzzleFind": {
-    "description": "Invito a trovare la mossa",
-    "placeholders": {
-      "side": {
-        "type": "String"
-      }
-    }
-  },
   "puzzleRestarted": "Posizione iniziale. Trova la mossa migliore per il {side}.",
   "@puzzleRestarted": {
     "description": "Dopo aver ricominciato",
@@ -347,15 +351,6 @@
   "puzzleDifficulty": "Puzzle {rating}",
   "@puzzleDifficulty": {
     "description": "Difficoltà del puzzle risolto",
-    "placeholders": {
-      "rating": {
-        "type": "int"
-      }
-    }
-  },
-  "puzzleYourRating": "Il tuo punteggio: {rating}",
-  "@puzzleYourRating": {
-    "description": "Punteggio sotto la scacchiera",
     "placeholders": {
       "rating": {
         "type": "int"

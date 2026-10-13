@@ -13,7 +13,7 @@ Per disattivarlo serve un adulto: compare la domanda «Chiedi a un adulto» con 
 | Area | Profilo bambino | Stato |
 |---|---|---|
 | Barra in basso | Home, Puzzle, Impara, Tu. Nella Home niente ricerca, bot con Elo, statistiche e ultime partite; le Aperture sono nascoste anche in Impara (vedi [home.md](home.md)) | Disponibile |
-| Scheda Tu | Solo Profilo, Storia, Finali (senza conteggio delle mosse), Grandi maestri (senza percentuali), Minigiochi e La tua settimana (stelle e frasi, senza numeri); nascoste Statistiche, La tua settimana, Scacchiera fisica, Archivio e Tornei (classifica ed Elo dei bot) | Disponibile |
+| Scheda Tu | Solo Profilo e La tua settimana (stelle e frasi, senza numeri); nascosti Badge, Statistiche e Archivio. Storia, Finali, Grandi maestri e Minigiochi stanno nella Home e nella scheda Impara; Tornei (classifica ed Elo dei bot) e Scacchiera fisica restano nascosti | Disponibile |
 | Avversari | Nella nuova partita solo «Due giocatori» e «Bot» (niente «Adattivo» con livello ed Elo). I bot sono i tre più facili della scala, Pino, Chiara e Rocco, con avatar, nome e una breve descrizione al posto di Elo, stile e apertura; restano lucchetti e spunta, senza la data della vittoria. In partita il bot ha frasi brevi e incoraggianti e il titolo non mostra l'Elo. Se l'ultima scelta era il computer o un bot più forte, si ripiega su Pino. Senza motore compare «Su questo dispositivo i bot non sono disponibili.» | Disponibile |
 | Numeri | Niente rating, XP, precisione e punteggi del motore: stelle, fiamme e parole al loro posto (dettagli sotto) | Disponibile |
 | Testi | Frasi brevi e semplici in partita (vedi sotto) | Disponibile |

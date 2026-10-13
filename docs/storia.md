@@ -1,6 +1,6 @@
 # Percorso a storia
 
-Requisito RG-13: una trama a capitoli sopra il [percorso a tappe](percorso.md). Il codice è in `lib/story/`. Si apre dalla scheda Tu, voce **Storia**, ed è l'unico percorso di apprendimento dell'interfaccia: «Continua da dove eri» della scheda Tu porta qui (prossima tappa: `nextStoryStage`), e le stelle già ottenute nel [percorso](percorso.md) contano subito.
+Requisito RG-13: una trama a capitoli sopra il [percorso a tappe](percorso.md). Il codice è in `lib/story/`. Si apre dalla Home e dalla scheda Impara, voce **Storia**, ed è l'unico percorso di apprendimento dell'interfaccia: «Continua da dove eri» della scheda Tu porta qui (prossima tappa: `nextStoryStage`), e le stelle già ottenute nel [percorso](percorso.md) contano subito.
 
 ## Come funziona
 
@@ -29,7 +29,7 @@ Dentro un capitolo ogni passo si apre quando quelli prima sono fatti:
 3. **Guardiano** (dove il capitolo del percorso ce l'ha): è la stessa partita del percorso, con le stesse stelle; battuto lì, conta anche qui.
 4. **Sfida finale**: battere il bot del capitolo. Uscire a partita in corso vale una sconfitta.
 
-Un passo già fatto non si riapre (lezioni, puzzle e partite restano raggiungibili dal resto dell'app). I passi che richiedono il motore (guardiano e sfida) mostrano un avviso dove Stockfish non c'è, come nel percorso. **Continua** apre il primo passo da fare del capitolo corrente.
+Un passo già fatto non si riapre (lezioni, puzzle e partite restano raggiungibili dal resto dell'app). I passi che richiedono il motore (guardiano e sfida) mostrano un avviso dove Stockfish non c'è, come nel percorso. **Continua** apre il primo passo da fare del capitolo corrente. È un pulsante in una barra fissa sotto l'elenco (non flottante), così non copre mai i capitoli, anche col testo ingrandito.
 
 ## Aspetto
 
@@ -47,9 +47,21 @@ Chi ha già battuto un bot o risolto dei puzzle in un capitolo successivo trova 
 
 I testi (racconto, passi, avvisi) sono nei file `.arb` in italiano e in inglese; `story_l10n.dart` li associa ai capitoli. Il nome dei bot resta quello della scala. Ogni capitolo e ogni passo è un nodo per i lettori di schermo, con titolo e stato («da fare», «fatto», «bloccato»); l'avatar del bot è escluso dalla lettura.
 
+## I custodi
+
+Ogni capitolo ha il suo custode, il bot del capitolo, che accompagna il giocatore con battute brevi nel suo stile (`GuardianMoment`, chiavi `storyGuardian<Capitolo><Momento>` nei file `.arb`, in italiano e in inglese, senza cifre per il profilo bambino). Compaiono in cinque punti:
+
+- **Benvenuto**: nella scheda del capitolo aperto, con l'avatar «saluto» (`GuardianSays`).
+- **Puzzle**: a ogni puzzle concluso un avviso breve non bloccante con l'avatar «contento» o «incoraggiante» e la battuta di esito (`StoryPuzzleFeed.onOutcome`, mostrato da `HomeShell`).
+- **Lezioni concluse**: nel foglio di passaggio dopo le lezioni, con l'avatar «contento» e la battuta `LessonDone`.
+- **Apertura della sfida**: aprendo la sfida dalla mappa (senza passare dal foglio di passaggio) compare un foglio dedicato con l'avatar «sfida», la presentazione del bot e la sua battuta; «Sfida {nome}» avvia la partita, «Più tardi» la rimanda. Non compare dopo il foglio di passaggio, che l'ha già annunciata (`announced`), né quando la sfida è già vinta.
+- **Prima della sfida**: nel foglio di passaggio dopo i puzzle l'avatar «sfida» prende il posto dell'icona e dice la sua battuta; a capitolo concluso con la sfida vinta l'avatar è «stupito».
+
+L'avatar è decorativo (`GuardianAvatar`, escluso dalla lettura) e la battuta è letta come «{nome} dice: …». I bot senza personaggio disegnato mostrano la loro emoji. Il custode non salva nulla: dipende solo dal capitolo e dal momento.
+
 ## Come aggiungere un capitolo
 
-I puzzle di un capitolo possono avere un tetto di difficoltà (`StoryChapter.puzzleRating`): il Capitolo 0 pesca puzzle fino a 500 punti anche se il punteggio dell'utente è più alto. Aggiungere un `StoryChapter` in `storyChapters` (capitolo del percorso, bot, tema e numero di puzzle) e le quattro stringhe `story<Id>Title`, `Intro`, `Boss` (con `{name}`), `Outro` nei due `.arb`, poi il caso in `story_l10n.dart`. I test controllano che il capitolo punti a un capitolo del percorso e a un bot esistenti, che i bot siano in ordine di forza, che il tema abbia puzzle a sufficienza e che ogni testo esista nelle due lingue.
+I puzzle di un capitolo possono avere un tetto di difficoltà (`StoryChapter.puzzleRating`): il Capitolo 0 pesca puzzle fino a 500 punti anche se il punteggio dell'utente è più alto. Aggiungere un `StoryChapter` in `storyChapters` (capitolo del percorso, bot, tema e numero di puzzle) e le quattro stringhe `story<Id>Title`, `Intro`, `Boss` (con `{name}`), `Outro` e le cinque battute del custode (`storyGuardian<Id>Welcome`, `PuzzleOk`, `PuzzleRetry`, `LessonDone`, `Boss`) nei due `.arb`, poi i casi in `story_l10n.dart`. I test controllano che il capitolo punti a un capitolo del percorso e a un bot esistenti, che i bot siano in ordine di forza, che il tema abbia puzzle a sufficienza e che ogni testo esista nelle due lingue.
 
 ## Componenti
 
@@ -58,5 +70,6 @@ I puzzle di un capitolo possono avere un tetto di difficoltà (`StoryChapter.puz
 | `story.dart` | Capitoli, stato salvato e avanzamento |
 | `story_controller.dart` | Caricamento e salvataggio |
 | `story_feed.dart` | Puzzle del tema fino all'obiettivo |
-| `story_l10n.dart` | Testi dei capitoli |
+| `story_l10n.dart` | Testi dei capitoli e battute dei custodi |
+| `guardian_says.dart` | `GuardianSays`: il custode (avatar e battuta) |
 | `story_page.dart` | Schermata della storia: riepilogo, binario dei capitoli, passi |

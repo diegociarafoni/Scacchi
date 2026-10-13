@@ -96,6 +96,30 @@ void main() {
     }
   });
 
+  test('RG-13 ogni custode ha una battuta breve, senza cifre, per momento', () {
+    for (final code in ['it', 'en']) {
+      final l10n = lookupAppLocalizations(Locale(code));
+      for (final c in storyChapters) {
+        for (final m in GuardianMoment.values) {
+          final line = l10n.guardianLine(c, m);
+          final reason = '$code ${c.id} ${m.name}';
+          expect(line, isNotEmpty, reason: reason);
+          expect(line.length, lessThanOrEqualTo(90), reason: reason);
+          expect(line, isNot(matches(RegExp(r'\d'))), reason: reason);
+        }
+        for (final m in [GuardianMoment.welcome, GuardianMoment.lessonDone]) {
+          expect({
+            for (final o in storyChapters) l10n.guardianLine(o, m),
+          }, hasLength(storyChapters.length));
+        }
+        expect(
+          l10n.storyGuardianSays(c.bot.name, 'ciao'),
+          contains(c.bot.name),
+        );
+      }
+    }
+  });
+
   group('RG-13 avanzamento', () {
     test('all\'inizio è aperto solo il primo capitolo e solo le lezioni', () {
       const p = StoryProgress(PathProgress(), StoryState());

@@ -3,8 +3,6 @@
   "youContinueTitle": "Continue where you left off",
   "youContinueStage": "Next stage: {stage}",
   "youContinueGuardian": "Challenge the guardian: {stage}",
-  "youGroupLearn": "Learn",
-  "youGroupPlay": "Play",
   "youGroupData": "Your data",
   "youLevel": "Level {level}",
   "youStreak": "{days, plural, one{1 day in a row} other{{days} days in a row}}",

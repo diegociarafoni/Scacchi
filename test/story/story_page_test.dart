@@ -39,6 +39,8 @@ void main() {
 
   /// I salvataggi su file avvengono fuori dal tempo finto dei test.
   Future<void> tapAndSave(WidgetTester tester, Finder finder) async {
+    await tester.ensureVisible(finder);
+    await tester.pumpAndSettle();
     await tester.tap(finder);
     // Il salvataggio ha più passi su file: ognuno ha bisogno del tempo vero.
     for (var i = 0; i < 15; i++) {
@@ -76,6 +78,17 @@ void main() {
     await show(tester);
     expect(find.text('Il sentiero dei primi passi'), findsOneWidget);
     expect(find.textContaining('Prima del villaggio'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey('story-welcome-prologue')),
+        matching: find.textContaining('Ciao, sono Tino'),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.bySemanticsLabel(RegExp('^Tino dice: Ciao, sono Tino')),
+      findsOneWidget,
+    );
     await tester.scrollUntilVisible(find.text('Il villaggio dei pezzi'), 300);
     expect(find.text('Il villaggio dei pezzi'), findsOneWidget);
     expect(
@@ -158,6 +171,7 @@ void main() {
       );
       await tester.pumpAndSettle();
       await tapAndSave(tester, find.textContaining('Sfida a Tino'));
+      await tapAndSave(tester, find.text('Sfida Tino'));
       expect(played?.id, 'tino');
       expect(story.state.isBossBeaten(first.id), isTrue);
       expect(find.text('Hai battuto Tino!'), findsOneWidget);
@@ -172,7 +186,11 @@ void main() {
     await finishLessons(tester);
     await tester.runAsync(() => story.puzzlesSolved(first, first.puzzleCount));
     await tester.pumpAndSettle();
+    await tester.ensureVisible(find.textContaining('Sfida a Tino'));
+    await tester.pumpAndSettle();
     await tester.tap(find.textContaining('Sfida a Tino'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Sfida Tino'));
     await tester.pumpAndSettle();
     expect(story.state.isBossBeaten(first.id), isFalse);
     expect(find.textContaining('Tino resiste ancora'), findsOneWidget);
@@ -182,6 +200,8 @@ void main() {
     await show(tester);
     await finishLessons(tester);
     await tester.runAsync(() => story.puzzlesSolved(first, first.puzzleCount));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.textContaining('Sfida a Tino'));
     await tester.pumpAndSettle();
     await tester.tap(find.textContaining('Sfida a Tino'));
     await tester.pumpAndSettle();
@@ -206,6 +226,32 @@ void main() {
     await tester.pumpAndSettle();
     expect(puzzlesOpened, isTrue);
   });
+
+  for (final scale in [1.0, 1.3]) {
+    testWidgets('RG-13 Continua non copre i capitoli (testo ×$scale)', (
+      tester,
+    ) async {
+      tester.platformDispatcher.textScaleFactorTestValue = scale;
+      addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+      await show(tester);
+      tester.view.physicalSize = const Size(720, 1280);
+      tester.view.devicePixelRatio = 2;
+      await tester.pumpAndSettle();
+      final button = tester.getRect(find.text('Continua'));
+      final list = tester.getRect(find.byType(ListView));
+      expect(button.top, greaterThanOrEqualTo(list.bottom));
+      // Anche a fine scorrimento l'ultimo capitolo resta tutto visibile.
+      await tester.drag(find.byType(ListView), const Offset(0, -5000));
+      await tester.pumpAndSettle();
+      final last = tester.getRect(
+        find.byKey(ValueKey('story-chapter-${storyChapters.last.id}')),
+      );
+      expect(
+        last.bottom,
+        lessThanOrEqualTo(tester.getRect(find.byType(ListView)).bottom),
+      );
+    });
+  }
 
   testWidgets('RG-13 un passo già fatto non si riapre', (tester) async {
     var called = false;

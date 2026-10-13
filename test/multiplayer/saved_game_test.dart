@@ -8,15 +8,9 @@ import 'package:scacchi/multiplayer/multiplayer_controller.dart';
 import 'package:scacchi/multiplayer/saved_game.dart';
 import 'package:scacchi/multiplayer/transport.dart';
 
-Future<void> settle() => Future<void>.delayed(const Duration(milliseconds: 50));
+import '../support/wait.dart';
 
-// Attende una condizione invece di un tempo fisso: su un runner carico la
-// ripresa da disco può superare i 50 ms.
-Future<void> until(bool Function() ok) async {
-  for (var i = 0; i < 200 && !ok(); i++) {
-    await Future<void>.delayed(const Duration(milliseconds: 10));
-  }
-}
+Future<void> settle() => Future<void>.delayed(const Duration(milliseconds: 50));
 
 SavedGame sample() => SavedGame(
   inviteLink: GameInvite(
@@ -44,7 +38,7 @@ void main() {
     dir = Directory.systemTemp.createTempSync('rokko_saved_game');
     store = SavedGameStore(File('${dir.path}/multiplayer.json'));
   });
-  tearDown(() => dir.deleteSync(recursive: true));
+  tearDown(() => removeDir(dir));
 
   test('RMP-09 la partita salvata si rilegge uguale', () async {
     final saved = sample();
@@ -101,7 +95,12 @@ void main() {
         openGuest: (_, _) => b,
         store: guestStore,
       );
-      await settle();
+      await until(
+        () =>
+            host.status == MultiplayerStatus.myTurn &&
+            guest.status == MultiplayerStatus.peerTurn,
+        what: 'i due telefoni collegati',
+      );
       return (host, guest);
     }
 
@@ -121,9 +120,11 @@ void main() {
       final guestStore = SavedGameStore(File('${dir.path}/guest.json'));
       final (host, guest) = await started(store, guestStore);
       expect(await host.play(Move.parse('e2e4')!), isTrue);
-      await settle();
+      await untilMoves(guest, 1);
       await guest.play(Move.parse('e7e5')!);
-      await settle();
+      await untilMoves(host, 2);
+      await untilSaved(store, 2);
+      await untilSaved(guestStore, 2);
       final h = (await store.load())!;
       final g = (await guestStore.load())!;
       expect(h.moves, ['e2e4', 'e7e5']);
@@ -140,7 +141,9 @@ void main() {
       final guestStore = SavedGameStore(File('${dir.path}/guest.json'));
       final (host, guest) = await started(store, guestStore);
       await host.play(Move.parse('e2e4')!);
-      await settle();
+      await untilMoves(guest, 1);
+      await untilSaved(store, 1);
+      await untilSaved(guestStore, 1);
       await host.close();
       await guest.close();
 
@@ -156,14 +159,16 @@ void main() {
         openGuest: (_, _) => b,
         store: guestStore,
       );
-      await until(() => host2.session.sync.moves.isNotEmpty);
-      await settle();
+      await untilMoves(host2, 1);
+      await until(
+        () => guest2.status == MultiplayerStatus.myTurn,
+        what: 'turno dell\'invitato',
+      );
       expect(host2.session.sync.moves, ['e2e4']);
       expect(host2.status, MultiplayerStatus.peerTurn);
       expect(guest2.status, MultiplayerStatus.myTurn);
       expect(await guest2.play(Move.parse('c7c5')!), isTrue);
-      await until(() => host2.session.sync.moves.length == 2);
-      await settle();
+      await untilMoves(host2, 2);
       expect(host2.session.sync.moves, ['e2e4', 'c7c5']);
       expect(host2.status, MultiplayerStatus.myTurn);
       await host2.close();
@@ -173,6 +178,7 @@ void main() {
     test('RMP-09 a partita finita il salvataggio sparisce', () async {
       final guestStore = SavedGameStore(File('${dir.path}/guest.json'));
       final (host, guest) = await started(store, guestStore);
+      var n = 0;
       for (final (c, uci) in [
         (host, 'f2f3'),
         (guest, 'e7e5'),
@@ -180,21 +186,22 @@ void main() {
         (guest, 'd8h4'),
       ]) {
         await c.play(Move.parse(uci)!);
-        await settle();
+        await untilMoves(host, ++n);
+        await untilMoves(guest, n);
       }
       await until(
         () =>
             host.status == MultiplayerStatus.finished &&
             guest.status == MultiplayerStatus.finished,
+        what: 'partita finita',
       );
       expect(host.status, MultiplayerStatus.finished);
       // Il file si cancella in coda alla scrittura: si attende su disco.
-      for (var i = 0; i < 200; i++) {
-        if (await store.load() == null && await guestStore.load() == null) {
-          break;
-        }
-        await Future<void>.delayed(const Duration(milliseconds: 10));
-      }
+      await until(
+        () async =>
+            await store.load() == null && await guestStore.load() == null,
+        what: 'salvataggi cancellati',
+      );
       expect(await store.load(), isNull);
       expect(await guestStore.load(), isNull);
       await host.close();

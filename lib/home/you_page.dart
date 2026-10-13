@@ -8,14 +8,10 @@ import '../badges/badges_l10n.dart';
 import '../badges/badges_page.dart';
 import '../kids/kid_display.dart';
 import '../l10n/app_localizations.dart';
-import '../minigames/minigames_page.dart';
-import '../multiplayer/multiplayer_page.dart';
 import '../path/curriculum.dart';
 import '../path/path_controller.dart';
 import '../path/path_page.dart' show PlayGuardian;
 import '../path/stage_page.dart';
-import '../physical/physical_game_page.dart';
-import '../physical/physical_l10n.dart';
 import '../progress/profile_page.dart';
 import '../progress/progress_controller.dart';
 import '../progress/xp.dart';
@@ -23,11 +19,10 @@ import '../reminders/reminder_controller.dart';
 import '../stats/portrait_page.dart';
 import '../stats/stats_page.dart';
 import '../story/story.dart';
-import '../story/story_l10n.dart';
 import '../summary/weekly_summary_page.dart';
 import '../theme/rokko_theme.dart';
 
-/// Scheda "Tu": profilo e tutto ciò che riguarda i propri progressi.
+/// Scheda "Tu": solo i dati del giocatore; le funzioni stanno nella Home.
 class YouPage extends StatefulWidget {
   const YouPage({
     super.key,
@@ -38,9 +33,6 @@ class YouPage extends StatefulWidget {
     this.simple = false,
     this.playGuardian,
     this.storyPage,
-    this.tournamentPage,
-    this.endgamesPage,
-    this.mastersPage,
     this.puzzlesPage,
     this.openGame,
   });
@@ -54,26 +46,15 @@ class YouPage extends StatefulWidget {
   /// letto all'apertura del Profilo perché nasce dopo i progressi.
   final ReminderController? Function()? reminders;
 
-  /// Profilo bambino (RP-06): niente statistiche, archivio e strumenti per
-  /// adulti, solo profilo, percorso e minigiochi.
+  /// Profilo bambino (RP-06): niente statistiche, badge e archivio, solo
+  /// profilo e settimana.
   final bool simple;
 
   /// Partita contro il guardiano; la Storia la riceve da HomeShell.
   final PlayGuardian? playGuardian;
 
-  /// Percorso a storia (RG-13); senza, la voce non compare.
+  /// Percorso a storia (RG-13), per «Continua da dove eri».
   final Future<Widget> Function()? storyPage;
-
-  /// Schermata dei tornei; senza, la voce non compare (servono le partite
-  /// contro il computer).
-  final Future<Widget> Function()? tournamentPage;
-
-  /// Allenatore dei finali contro il motore (RF-86); senza, la voce non
-  /// compare.
-  final Future<Widget> Function()? endgamesPage;
-
-  /// Partite dei grandi maestri (RF-87); funziona senza motore.
-  final Future<Widget> Function()? mastersPage;
 
   /// Puzzle di un tema, per il consiglio del riepilogo settimanale; senza, il
   /// pulsante dei puzzle non compare.
@@ -120,9 +101,7 @@ class _YouPageState extends State<YouPage> {
       final controller = await _w.path();
       if (!context.mounted) return;
       final started = DateTime.now();
-      final stars = await Navigator.of(
-        context,
-      ).push<int>(MaterialPageRoute(builder: (_) => StagePage(stage: stage)));
+      final stars = await openStage(context, controller, stage);
       if (stars != null && stars > 0) {
         await controller.complete(
           stage,
@@ -158,64 +137,6 @@ class _YouPageState extends State<YouPage> {
         future: w.progress(),
         builder: (context, snapshot) {
           final controller = snapshot.data;
-          final learn = <Widget>[
-            if (w.storyPage != null)
-              _Entry(
-                icon: Icons.auto_stories_outlined,
-                title: storyL10n(context).storyTitle,
-                subtitle: storyL10n(context).storyEntrySubtitle,
-                onTap: () => _open(context, w.storyPage!(), (p) => p),
-              ),
-            if (w.endgamesPage != null)
-              _Entry(
-                icon: Icons.flag_outlined,
-                title: l10n.youEndgames,
-                subtitle: l10n.youEndgamesSubtitle,
-                onTap: () => _open(context, w.endgamesPage!(), (p) => p),
-              ),
-            if (w.mastersPage != null)
-              _Entry(
-                icon: Icons.workspace_premium_outlined,
-                title: l10n.youMasters,
-                subtitle: l10n.youMastersSubtitle,
-                onTap: () => _open(context, w.mastersPage!(), (p) => p),
-              ),
-          ];
-          final play = <Widget>[
-            // Classifica ed Elo dei bot: nel profilo bambino niente numeri.
-            if (w.tournamentPage != null && !w.simple)
-              _Entry(
-                icon: Icons.emoji_events_outlined,
-                title: l10n.youTournaments,
-                subtitle: l10n.youTournamentsSubtitle,
-                onTap: () => _open(context, w.tournamentPage!(), (p) => p),
-              ),
-            if (!w.simple) ...[
-              _Entry(
-                icon: Icons.people_outline,
-                title: multiplayerL10n(context).multiplayerTitle,
-                subtitle: multiplayerL10n(context).multiplayerEntrySubtitle,
-                onTap: () => _push(context, const MultiplayerPage()),
-              ),
-              _Entry(
-                icon: Icons.timer_outlined,
-                title: physicalL10n(context).physicalTitle,
-                subtitle: physicalL10n(context).physicalEntrySubtitle,
-                onTap: () =>
-                    _push(context, PhysicalGamePage(archive: w.archive)),
-              ),
-            ],
-            _Entry(
-              icon: Icons.videogame_asset_outlined,
-              title: l10n.youMinigames,
-              subtitle: l10n.youMinigamesSubtitle,
-              onTap: () => _open(
-                context,
-                w.progress(),
-                (p) => MinigamesPage(progress: p),
-              ),
-            ),
-          ];
           final data = <Widget>[
             _Entry(
               icon: Icons.person_outline,
@@ -302,8 +223,6 @@ class _YouPageState extends State<YouPage> {
                       : const SizedBox.shrink(),
                 ),
               _ContinueCard(path: _pathFuture, onOpen: _continue),
-              _Group(title: l10n.youGroupLearn, children: learn),
-              _Group(title: l10n.youGroupPlay, children: play),
               _Group(title: l10n.youGroupData, children: data),
             ],
           );

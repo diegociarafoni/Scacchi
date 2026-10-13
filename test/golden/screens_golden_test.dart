@@ -141,6 +141,16 @@ void main() {
     await _golden(tester, 'storia-scuro-telefono-medio');
   });
 
+  testWidgets('Storia col testo al 130%', skip: _skip != null, (tester) async {
+    await _pump(
+      tester,
+      Device.phoneSmall,
+      StoryPage(path: path, story: story),
+      textScale: 1.3,
+    );
+    await _golden(tester, 'storia-testo-130-telefono-piccolo');
+  });
+
   testWidgets('Storia: foglio di passaggio', skip: _skip != null, (
     tester,
   ) async {

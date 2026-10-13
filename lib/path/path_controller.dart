@@ -55,6 +55,10 @@ class PathController extends ChangeNotifier {
     }
   }
 
+  /// Ricorda gli esercizi risolti di una tappa lasciata a metà.
+  Future<void> saveResume(String stageId, List<int> solved) =>
+      replace(_progress.withResume(stageId, solved));
+
   Future<void> replace(PathProgress progress) async {
     _progress = progress;
     notifyListeners();

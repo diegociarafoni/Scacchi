@@ -113,6 +113,10 @@ void main() {
     expect(find.byKey(const ValueKey('story-passage')), findsOneWidget);
     expect(find.text('Lezioni concluse!'), findsOneWidget);
     expect(find.text('Ai puzzle'), findsOneWidget);
+    expect(
+      find.textContaining('Tino dice: Ora conosci i pezzi'),
+      findsOneWidget,
+    );
     await save(tester, find.text('Ai puzzle'), until: () => puzzlesOpened);
     expect(puzzlesOpened, isTrue);
   });
@@ -137,6 +141,14 @@ void main() {
     );
     expect(find.text('Puzzle risolti!'), findsOneWidget);
     expect(find.textContaining('Tino ti aspetta'), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('story-passage-guardian')),
+      findsOneWidget,
+    );
+    expect(
+      find.textContaining('Tino dice: Giochiamo una partita'),
+      findsOneWidget,
+    );
     await save(tester, find.text('Sfida Tino'), until: () => boss == 1);
     expect(boss, 1);
   });
@@ -177,12 +189,50 @@ void main() {
     await save(
       tester,
       find.textContaining('Sfida a Tino'),
+      until: () => shown(find.text('Sfida Tino')),
+    );
+    await save(
+      tester,
+      find.text('Sfida Tino'),
       until: () => shown(find.text('Hai battuto Tino!')),
     );
     expect(find.text('Hai battuto Tino!'), findsOneWidget);
     expect(find.text('Capitolo 0 concluso!'), findsOneWidget);
     expect(find.textContaining('Si apre il capitolo 1'), findsOneWidget);
     expect(find.text('Al prossimo capitolo'), findsOneWidget);
+  });
+
+  testWidgets('RG-13 dalla mappa la sfida si presenta prima di partire', (
+    tester,
+  ) async {
+    await tester.runAsync(() async {
+      await doneLessons();
+      for (final g in first.pathChapter.stages.where((s) => s.isGuardian)) {
+        await path.complete(g, 3, Duration.zero);
+      }
+      await story.puzzlesSolved(first, first.puzzleCount);
+    });
+    var played = 0;
+    await show(
+      tester,
+      boss: (c, bot) async {
+        played++;
+        return false;
+      },
+    );
+    await save(
+      tester,
+      find.textContaining('Sfida a Tino'),
+      until: () => shown(find.text('Sfida Tino')),
+    );
+    expect(played, 0);
+    expect(find.text('La sfida di Tino'), findsOneWidget);
+    expect(
+      find.textContaining('Tino dice: Giochiamo una partita'),
+      findsOneWidget,
+    );
+    await save(tester, find.text('Più tardi'), until: () => !shown(passage));
+    expect(played, 0);
   });
 
   testWidgets('una sfida persa resta un avviso, senza foglio', (tester) async {
@@ -197,6 +247,11 @@ void main() {
     await save(
       tester,
       find.textContaining('Sfida a Tino'),
+      until: () => shown(find.text('Sfida Tino')),
+    );
+    await save(
+      tester,
+      find.text('Sfida Tino'),
       until: () =>
           shown(find.text('Tino resiste ancora: riprova quando vuoi.')),
     );

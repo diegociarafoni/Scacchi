@@ -227,7 +227,10 @@ void main() {
     await tester.tap(find.text('Elimina'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Elimina').last);
-    await _wait(tester);
+    for (var i = 0; i < 20; i++) {
+      await _wait(tester);
+      if (find.text('Riprendi la partita').evaluate().isEmpty) break;
+    }
     expect(watch.calls, ['off']);
     expect(find.text('Riprendi la partita'), findsNothing);
   });

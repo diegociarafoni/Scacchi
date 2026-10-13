@@ -323,6 +323,15 @@
   "@storyPassageGoGuardian": {
     "description": "Foglio di passaggio della storia"
   },
+  "storyChallengeTitle": "La sfida di {name}",
+  "@storyChallengeTitle": {
+    "description": "Foglio della sfida al custode",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "storyPassageGoBoss": "Sfida {name}",
   "@storyPassageGoBoss": {
     "description": "Foglio di passaggio della storia",
@@ -410,5 +419,197 @@
   "storyAcademyOutro": "L'accademia ti saluta come uno dei suoi. La storia è finita, ma la partita continua.",
   "@storyAcademyOutro": {
     "description": "storyAcademyOutro"
+  },
+  "storyGuardianPrologueWelcome": "Ciao, sono Tino! Ti faccio vedere come si muove ogni pezzo.",
+  "@storyGuardianPrologueWelcome": {
+    "description": "storyGuardianPrologueWelcome"
+  },
+  "storyGuardianProloguePuzzleOk": "Visto! Hai già capito come muovere i pezzi.",
+  "@storyGuardianProloguePuzzleOk": {
+    "description": "storyGuardianProloguePuzzleOk"
+  },
+  "storyGuardianProloguePuzzleRetry": "Quasi! Guarda bene dove arriva ogni pezzo e riprova.",
+  "@storyGuardianProloguePuzzleRetry": {
+    "description": "storyGuardianProloguePuzzleRetry"
+  },
+  "storyGuardianPrologueBoss": "Giochiamo una partita? Io inizio piano, promesso.",
+  "@storyGuardianPrologueBoss": {
+    "description": "storyGuardianPrologueBoss"
+  },
+  "storyGuardianPrologueLessonDone": "Ora conosci i pezzi. Vediamo se li sai usare.",
+  "@storyGuardianPrologueLessonDone": {
+    "description": "storyGuardianPrologueLessonDone"
+  },
+  "storyGuardianVillageWelcome": "Benvenuto al villaggio! Qui ti insegno a non lasciare pezzi in presa.",
+  "@storyGuardianVillageWelcome": {
+    "description": "storyGuardianVillageWelcome"
+  },
+  "storyGuardianVillagePuzzleOk": "Bravo, l'hai visto subito!",
+  "@storyGuardianVillagePuzzleOk": {
+    "description": "storyGuardianVillagePuzzleOk"
+  },
+  "storyGuardianVillagePuzzleRetry": "Ci sei quasi: cerca il pezzo senza difesa.",
+  "@storyGuardianVillagePuzzleRetry": {
+    "description": "storyGuardianVillagePuzzleRetry"
+  },
+  "storyGuardianVillageBoss": "Ora giochiamo io e te. Amo l'Italiana, attento!",
+  "@storyGuardianVillageBoss": {
+    "description": "storyGuardianVillageBoss"
+  },
+  "storyGuardianVillageLessonDone": "Bravo, niente pezzi in presa. Ora mettiamoli alla prova.",
+  "@storyGuardianVillageLessonDone": {
+    "description": "storyGuardianVillageLessonDone"
+  },
+  "storyGuardianGatesWelcome": "Alle porte si entra solo conoscendo le regole. Le vediamo con ordine.",
+  "@storyGuardianGatesWelcome": {
+    "description": "storyGuardianGatesWelcome"
+  },
+  "storyGuardianGatesPuzzleOk": "Esatto: una promozione al momento giusto.",
+  "@storyGuardianGatesPuzzleOk": {
+    "description": "storyGuardianGatesPuzzleOk"
+  },
+  "storyGuardianGatesPuzzleRetry": "Non ancora: ricontrolla le regole e riprova.",
+  "@storyGuardianGatesPuzzleRetry": {
+    "description": "storyGuardianGatesPuzzleRetry"
+  },
+  "storyGuardianGatesBoss": "Una partita per verificare: gioco il Gambetto di Donna.",
+  "@storyGuardianGatesBoss": {
+    "description": "storyGuardianGatesBoss"
+  },
+  "storyGuardianGatesLessonDone": "Le regole le hai imparate. Ora i puzzle ti aspettano.",
+  "@storyGuardianGatesLessonDone": {
+    "description": "storyGuardianGatesLessonDone"
+  },
+  "storyGuardianTowerWelcome": "Questa torre si scala a colpi di matto. Si comincia.",
+  "@storyGuardianTowerWelcome": {
+    "description": "storyGuardianTowerWelcome"
+  },
+  "storyGuardianTowerPuzzleOk": "Matto! Dritto al punto.",
+  "@storyGuardianTowerPuzzleOk": {
+    "description": "storyGuardianTowerPuzzleOk"
+  },
+  "storyGuardianTowerPuzzleRetry": "No, guarda il re: dove non può scappare?",
+  "@storyGuardianTowerPuzzleRetry": {
+    "description": "storyGuardianTowerPuzzleRetry"
+  },
+  "storyGuardianTowerBoss": "Basta teoria: giochiamo. Io attacco col Gambetto di Re.",
+  "@storyGuardianTowerBoss": {
+    "description": "storyGuardianTowerBoss"
+  },
+  "storyGuardianTowerLessonDone": "Hai capito come si dà matto. Ora cerca quelli nascosti.",
+  "@storyGuardianTowerLessonDone": {
+    "description": "storyGuardianTowerLessonDone"
+  },
+  "storyGuardianForestWelcome": "Nel bosco ogni ramo nasconde una trappola. Occhi aperti!",
+  "@storyGuardianForestWelcome": {
+    "description": "storyGuardianForestWelcome"
+  },
+  "storyGuardianForestPuzzleOk": "Ah, non sei caduto nella trappola. Bravo!",
+  "@storyGuardianForestPuzzleOk": {
+    "description": "storyGuardianForestPuzzleOk"
+  },
+  "storyGuardianForestPuzzleRetry": "Ops, la trappola ha funzionato. Riprova!",
+  "@storyGuardianForestPuzzleRetry": {
+    "description": "storyGuardianForestPuzzleRetry"
+  },
+  "storyGuardianForestBoss": "Vediamo se sai tendere le tue. Io gioco l'Inglese.",
+  "@storyGuardianForestBoss": {
+    "description": "storyGuardianForestBoss"
+  },
+  "storyGuardianForestLessonDone": "Le trappole non ti sfuggono più. Allenati a tenderle.",
+  "@storyGuardianForestLessonDone": {
+    "description": "storyGuardianForestLessonDone"
+  },
+  "storyGuardianCastleWelcome": "Nei finali ogni mossa conta. Con calma, un passo alla volta.",
+  "@storyGuardianCastleWelcome": {
+    "description": "storyGuardianCastleWelcome"
+  },
+  "storyGuardianCastlePuzzleOk": "Paziente e preciso: così si vince un finale.",
+  "@storyGuardianCastlePuzzleOk": {
+    "description": "storyGuardianCastlePuzzleOk"
+  },
+  "storyGuardianCastlePuzzleRetry": "Niente fretta: conta le mosse e riprova.",
+  "@storyGuardianCastlePuzzleRetry": {
+    "description": "storyGuardianCastlePuzzleRetry"
+  },
+  "storyGuardianCastleBoss": "Una partita lenta ci aspetta. Io gioco la Siciliana.",
+  "@storyGuardianCastleBoss": {
+    "description": "storyGuardianCastleBoss"
+  },
+  "storyGuardianCastleLessonDone": "Pochi pezzi, ogni mossa conta. Ora i puzzle.",
+  "@storyGuardianCastleLessonDone": {
+    "description": "storyGuardianCastleLessonDone"
+  },
+  "storyGuardianCrownWelcome": "La corona si conquista dall'inizio: un'apertura elegante vale mezza partita.",
+  "@storyGuardianCrownWelcome": {
+    "description": "storyGuardianCrownWelcome"
+  },
+  "storyGuardianCrownPuzzleOk": "Elegante: ecco la mossa giusta.",
+  "@storyGuardianCrownPuzzleOk": {
+    "description": "storyGuardianCrownPuzzleOk"
+  },
+  "storyGuardianCrownPuzzleRetry": "Quasi: pensa a sviluppare i pezzi e riprova.",
+  "@storyGuardianCrownPuzzleRetry": {
+    "description": "storyGuardianCrownPuzzleRetry"
+  },
+  "storyGuardianCrownBoss": "Mi concedi una partita? Scelgo la Spagnola.",
+  "@storyGuardianCrownBoss": {
+    "description": "storyGuardianCrownBoss"
+  },
+  "storyGuardianCrownLessonDone": "Centro, sviluppo e arrocco sono tuoi. Ora i puzzle.",
+  "@storyGuardianCrownLessonDone": {
+    "description": "storyGuardianCrownLessonDone"
+  },
+  "storyGuardianPlainWelcome": "In pianura si vince con un piano. Ti mostro come.",
+  "@storyGuardianPlainWelcome": {
+    "description": "storyGuardianPlainWelcome"
+  },
+  "storyGuardianPlainPuzzleOk": "Esatto. Un piano chiaro batte la fretta.",
+  "@storyGuardianPlainPuzzleOk": {
+    "description": "storyGuardianPlainPuzzleOk"
+  },
+  "storyGuardianPlainPuzzleRetry": "Ci siamo vicini. Pensa a cosa vuole il tuo pezzo.",
+  "@storyGuardianPlainPuzzleRetry": {
+    "description": "storyGuardianPlainPuzzleRetry"
+  },
+  "storyGuardianPlainBoss": "Giochiamo? Ti avviso: amo il Gambetto Evans.",
+  "@storyGuardianPlainBoss": {
+    "description": "storyGuardianPlainBoss"
+  },
+  "storyGuardianPlainLessonDone": "Hai un piano e pezzi attivi. Ora i puzzle.",
+  "@storyGuardianPlainLessonDone": {
+    "description": "storyGuardianPlainLessonDone"
+  },
+  "storyGuardianAcademyWelcome": "All'accademia si impara dai maestri. Dai, mostrami cosa sai!",
+  "@storyGuardianAcademyWelcome": {
+    "description": "storyGuardianAcademyWelcome"
+  },
+  "storyGuardianAcademyPuzzleOk": "Grande! Così si gioca da maestri.",
+  "@storyGuardianAcademyPuzzleOk": {
+    "description": "storyGuardianAcademyPuzzleOk"
+  },
+  "storyGuardianAcademyPuzzleRetry": "Non mollare: respira e riprova.",
+  "@storyGuardianAcademyPuzzleRetry": {
+    "description": "storyGuardianAcademyPuzzleRetry"
+  },
+  "storyGuardianAcademyBoss": "L'ultima sfida: io gioco l'Est-Indiana. Non ti faccio sconti!",
+  "@storyGuardianAcademyBoss": {
+    "description": "storyGuardianAcademyBoss"
+  },
+  "storyGuardianAcademyLessonDone": "Lezioni finite, accademico. Ora la prova sul campo.",
+  "@storyGuardianAcademyLessonDone": {
+    "description": "storyGuardianAcademyLessonDone"
+  },
+  "storyGuardianSays": "{name} dice: {text}",
+  "@storyGuardianSays": {
+    "description": "storyGuardianSays",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "text": {
+        "type": "String"
+      }
+    }
   }
 }

@@ -27,7 +27,7 @@ void main() {
   });
   tearDown(() => dir.deleteSync(recursive: true));
 
-  Future<void> openTu(WidgetTester tester, {bool computer = false}) async {
+  Future<void> openHome(WidgetTester tester, {bool computer = false}) async {
     tester.view.physicalSize = const Size(1170, 2532);
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
@@ -44,14 +44,13 @@ void main() {
         ),
       ),
     );
-    await tester.tap(find.text('Tu'));
     await tester.pumpAndSettle();
   }
 
   testWidgets('RF-87 la voce Grandi maestri c\'è anche senza motore', (
     tester,
   ) async {
-    await openTu(tester);
+    await openHome(tester);
     await tester.tap(find.text('Grandi maestri'));
     await tester.pumpAndSettle();
     expect(find.byType(MastersPage), findsOneWidget);
