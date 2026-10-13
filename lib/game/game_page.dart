@@ -102,6 +102,8 @@ class GamePage extends StatefulWidget {
     this.store,
     this.qrScanner = zxingScanner,
     this.onSavePuzzles,
+    this.openSetup = false,
+    this.initialSetup,
     this.tournamentPage,
     this.physicalPage,
     this.openingGame,
@@ -161,6 +163,13 @@ class GamePage extends StatefulWidget {
   /// Salva i puzzle ricavati dagli errori della revisione.
   final Future<int> Function(List<MistakePuzzle> puzzles)? onSavePuzzles;
 
+  /// Apre subito la scelta di «Nuova partita», per chi arriva dal pulsante
+  /// «Nuova partita» della Home.
+  final bool openSetup;
+
+  /// Scelta dell'avversario già selezionata nel foglio di «Nuova partita».
+  final GameSetup? initialSetup;
+
   /// Sceglie la posizione Chess960; sostituibile nei test.
   final int Function() chess960Id;
 
@@ -190,7 +199,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   late DateTime _startedAt = _clockNow();
   late String _gameId = 'game-${_startedAt.microsecondsSinceEpoch}';
   var _fromEditor = false;
-  GameSetup _setup = const GameSetup();
+  late GameSetup _setup = widget.initialSetup ?? const GameSetup();
   AdaptiveOpponent _adaptive = const AdaptiveOpponent();
 
   /// Stima prima dell'esito della partita in corso, per ripristinarla se si annulla.
@@ -373,6 +382,16 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       WidgetsBinding.instance.addPostFrameCallback((_) => _startChallenge());
     } else if (widget.resume != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _resumeSaved());
+    } else if (widget.openSetup) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        if (!mounted) return;
+        final before = _game;
+        await _newGame();
+        // Chiusa la scelta senza partita, si torna da dove si era partiti.
+        if (mounted && identical(before, _game)) {
+          unawaited(Navigator.of(context).maybePop());
+        }
+      });
     }
   }
 

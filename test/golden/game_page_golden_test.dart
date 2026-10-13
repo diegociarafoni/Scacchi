@@ -9,6 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../game_actions.dart';
 import '../support/board.dart';
 import '../support/devices.dart';
 
@@ -27,6 +28,8 @@ Future<void> _pumpApp(
   SharedPreferences.setMockInitialValues({'sound': false});
   await tester.pumpWidget(const ScacchiApp());
   await tester.pumpAndSettle();
+  await openBoard(tester);
+  await _precacheImages(tester);
 }
 
 // I pezzi si disegnano solo dopo che chessground li ha decodificati nella sua

@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'game_actions.dart';
+
 void main() {
   testWidgets('avvia una nuova partita con il Bianco al tratto', (
     tester,
@@ -10,6 +12,7 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     await tester.pumpWidget(const ScacchiApp());
     await tester.pumpAndSettle();
+    await openBoard(tester);
     expect(find.text('Muove il Bianco.'), findsOneWidget);
     expect(find.text('Abbandona'), findsOneWidget);
   });
@@ -18,6 +21,7 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     await tester.pumpWidget(const ScacchiApp());
     await tester.pumpAndSettle();
+    await openBoard(tester);
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);
     await tester.sendKeyEvent(LogicalKeyboardKey.home);
     await tester.pumpAndSettle();

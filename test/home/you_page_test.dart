@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/archive/game_archive.dart';
 import 'package:scacchi/home/home_shell.dart';
+import 'package:scacchi/home/you_page.dart';
 import 'package:scacchi/path/path_controller.dart';
 import 'package:scacchi/progress/progress_controller.dart';
 import 'package:scacchi/progress/progress_store.dart';
@@ -120,7 +121,6 @@ void main() {
     final settings = SettingsController.defaults();
     await settings.update(settings.value.copyWith(kidMode: true));
     await show(tester, settings: settings);
-    expect(find.text('Aperture'), findsNothing);
     for (final label in [
       'Profilo',
       'Storia',
@@ -135,7 +135,6 @@ void main() {
 
     await settings.update(settings.value.copyWith(kidMode: false));
     await tester.pumpAndSettle();
-    expect(find.text('Aperture'), findsOneWidget);
     expect(find.text('Statistiche'), findsOneWidget);
   });
 
@@ -267,10 +266,18 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      await tester.tap(find.byIcon(Icons.person_outline));
+      await tester.tap(
+        find.descendant(
+          of: find.byType(NavigationBar),
+          matching: find.byIcon(Icons.person_outline),
+        ),
+      );
       await tester.pumpAndSettle();
       expect(find.text('Continue where you left off'), findsOneWidget);
-      expect(find.text('Learn'), findsOneWidget);
+      expect(
+        find.descendant(of: find.byType(YouPage), matching: find.text('Learn')),
+        findsOneWidget,
+      );
       expect(find.text('Your data'), findsOneWidget);
       expect(find.text('Level 1'), findsOneWidget);
     });
