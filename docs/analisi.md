@@ -41,6 +41,10 @@ Nel profilo bambino (RP-06) la barra di valutazione non ha cifre e le linee non 
 
 `VariationTree` tiene la posizione iniziale come radice e, per ogni mossa, i figli: il primo è la continuazione principale, gli altri sono varianti. `play` aggiunge o seleziona, `add` aggiunge dopo un nodo qualsiasi, `promote` porta in prima posizione la mossa e i suoi antenati, `delete` toglie il ramo (la radice no). Ogni nodo può avere una nota (`MoveNote`, RF-55) e il tempo residuo.
 
+## Note (RF-55)
+
+Con una mossa selezionata (non la posizione iniziale) la riga di comandi sotto le linee del motore ha **Aggiungi nota** / **Modifica nota**: stesso dialogo della revisione (`showMoveNoteDialog`, `lib/game/move_note_dialog.dart`) con simbolo (`!!`, `!`, `!?`, `?!`, `?`, `??`) e commento. Il simbolo compare sulla mossa nell'elenco (`1. e4!`), il commento sopra l'elenco quando la mossa è selezionata. Funziona anche sulle varianti; una nota vuota toglie quella esistente. Le note vivono nei nodi dell'albero (`VariationNode.note`) e finiscono nel PGN salvato o condiviso come NAG e `{ commento }`.
+
 ## Salvare e condividere (RF-52)
 
 Il menu ⋮ della barra del titolo ha due voci:
@@ -50,4 +54,4 @@ Il menu ⋮ della barra del titolo ha due voci:
 
 Il PGN lo scrive `exportTreePgn` (`lib/archive/tree_pgn.dart`): linea principale, varianti annidate, note e tempi `[%clk]`, `FEN` e `SetUp` se la posizione di partenza non è quella iniziale. `treeFromPgn` fa il contrario: una variante con una mossa illegale si scarta da quel punto, una linea principale illegale rende illeggibile il PGN, una variante che ripete una mossa già presente si fonde con essa. Solo scacchi classici: le altre varianti di gioco non producono un albero.
 
-Dall'archivio, **Apri nell'analisi** (nel menu di ogni partita) e il tocco su un'analisi salvata aprono la pagina con l'albero ripristinato; aprire una partita giocata e salvare crea una nuova analisi.
+Dall'archivio, **Apri nell'analisi** (nel menu di ogni partita, solo dove c'è il motore) e il tocco su un'analisi salvata aprono la pagina con l'albero ripristinato. Salvando da una partita dell'archivio si aggiorna quella voce (`SavedGame.withTree`): intestazioni, tipo e risultato restano, cambiano mosse, varianti e note; è così che si annota una partita dall'archivio.
