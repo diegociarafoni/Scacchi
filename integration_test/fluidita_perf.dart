@@ -8,6 +8,7 @@ import 'package:integration_test/integration_test.dart';
 import 'package:scacchi/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../test/game_actions.dart';
 import '../test/support/italian_device.dart';
 
 Offset _square(WidgetTester tester, String name) {
@@ -33,6 +34,7 @@ void main() {
     addTearDown(tester.view.reset);
     await tester.pumpWidget(const ScacchiApp());
     await tester.pumpAndSettle();
+    await openBoard(tester);
 
     // Un rapporto vecchio non deve passare per quello di questa esecuzione.
     final out = File('build/performance.json');
@@ -55,7 +57,9 @@ void main() {
       // Le mosse sono state giocate davvero (tocchi fuori dalla scacchiera non contano).
       expect(find.text('Muove il Bianco.'), findsOneWidget);
       expect(find.text('4. d3'), findsOneWidget);
-      expect(find.text('Tu'), findsOneWidget);
+      // Si torna alla Home per passare alla scheda Tu.
+      await tester.tap(find.byType(BackButton));
+      await tester.pumpAndSettle();
       await tester.tap(find.text('Tu'));
       await tester.pumpAndSettle();
       await tester.fling(
