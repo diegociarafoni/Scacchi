@@ -2,36 +2,36 @@ import 'dart:math' as math;
 
 import 'package:dartchess/dartchess.dart';
 
+import '../l10n/app_localizations.dart';
+
 /// Varianti giocabili (RF-120, RF-121): tutte gestite dalle regole di dartchess.
 enum Variant {
-  standard('Classica', 'Standard', Rule.chess),
-  chess960(
-    'Chess960',
-    'Chess960',
-    Rule.chess,
-    'Pezzi della prima traversa mescolati: re tra le torri, alfieri su colori opposti.',
-  ),
-  kingOfTheHill(
-    'Re della collina',
-    'King of the Hill',
-    Rule.kingofthehill,
-    'Si vince anche portando il re in una delle quattro case centrali.',
-  ),
-  threeCheck(
-    'Tre scacchi',
-    'Three-check',
-    Rule.threecheck,
-    'Si vince anche dando scacco tre volte.',
-  );
+  standard('Standard', Rule.chess),
+  chess960('Chess960', Rule.chess),
+  kingOfTheHill('King of the Hill', Rule.kingofthehill),
+  threeCheck('Three-check', Rule.threecheck);
 
-  const Variant(this.label, this.pgnName, this.rule, [this.description = '']);
-
-  final String label;
+  const Variant(this.pgnName, this.rule);
 
   /// Valore dell'intestazione PGN `Variant`, come la scrive Lichess.
   final String pgnName;
   final Rule rule;
-  final String description;
+
+  /// Nome della variante nella lingua dell'app.
+  String label(AppLocalizations l10n) => switch (this) {
+    standard => l10n.gameVariantStandard,
+    chess960 => l10n.gameVariantChess960,
+    kingOfTheHill => l10n.gameVariantKingOfTheHill,
+    threeCheck => l10n.gameVariantThreeCheck,
+  };
+
+  /// Regola in più rispetto alla classica; vuota per le varianti senza.
+  String description(AppLocalizations l10n) => switch (this) {
+    standard => '',
+    chess960 => l10n.gameVariantChess960Hint,
+    kingOfTheHill => l10n.gameVariantKingOfTheHillHint,
+    threeCheck => l10n.gameVariantThreeCheckHint,
+  };
 
   /// Variante di un PGN: Chess960 si riconosce dal nome, le altre dalla regola.
   static Variant? fromPgn(String? name) {

@@ -115,7 +115,7 @@ Nel profilo bambino (RP-06) la precisione diventa da una a cinque stelle con un 
 
 ## Coach testuale
 
-`explainMove` (`lib/review/coach.dart`) produce una frase breve per ogni mossa, con regole a modello e senza modelli linguistici (RF-70, RF-71). Sulla schermata di revisione compare sotto la mossa scelta quando è un errore; viene calcolata una sola volta per mossa. Ogni frase ha un tema (`CoachTheme`) che servirà a raggruppare gli errori ricorrenti.
+`explainMove` (`lib/review/coach.dart`) produce una frase breve per ogni mossa, con regole a modello e senza modelli linguistici (RF-70, RF-71). Sulla schermata di revisione compare sotto la mossa scelta quando è un errore; viene calcolata una sola volta per mossa. Ogni frase ha un tema (`CoachTheme`) che servirà a raggruppare gli errori ricorrenti. Il commento tiene il tema e compone il testo (`CoachComment.text(l)`) con la lingua dell'app: le frasi sono messaggi interi in `lib/l10n/<lingua>/review.arb`, con pezzi e colori scelti da `select` ICU perché articoli e generi cambiano da lingua a lingua.
 
 Le regole si applicano in quest'ordine, e vale la prima che riconosce qualcosa:
 

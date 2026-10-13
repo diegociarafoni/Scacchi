@@ -1,25 +1,39 @@
 import 'package:flutter/foundation.dart';
 
+import '../l10n/app_localizations.dart';
 import '../progress/daily_goal.dart';
 
 /// Notifica locale programmata per ricordare l'obiettivo giornaliero.
 @immutable
 class Reminder {
-  const Reminder({required this.at, required this.title, required this.body});
+  const Reminder({
+    required this.at,
+    required this.title,
+    required this.body,
+    required this.channelName,
+    required this.channelDescription,
+  });
 
   final DateTime at;
   final String title;
   final String body;
+
+  /// Nome e descrizione del canale di notifica su Android.
+  final String channelName;
+  final String channelDescription;
 
   @override
   bool operator ==(Object other) =>
       other is Reminder &&
       other.at == at &&
       other.title == title &&
-      other.body == body;
+      other.body == body &&
+      other.channelName == channelName &&
+      other.channelDescription == channelDescription;
 
   @override
-  int get hashCode => Object.hash(at, title, body);
+  int get hashCode =>
+      Object.hash(at, title, body, channelName, channelDescription);
 }
 
 /// Programma al massimo un promemoria alla volta (RG-11).
@@ -36,7 +50,8 @@ abstract interface class ReminderScheduler {
 /// Prossimo promemoria, `null` se spento. [minutes] è l'orario scelto in
 /// minuti dalla mezzanotte. Uno al giorno al massimo: oggi solo se
 /// l'obiettivo manca e l'orario non è passato, mai nel giorno di riposo.
-Reminder? nextReminder({
+Reminder? nextReminder(
+  AppLocalizations l, {
   required DateTime now,
   required int? minutes,
   required DailyGoal goal,
@@ -62,8 +77,12 @@ Reminder? nextReminder({
     // Un promemoria per un giorno futuro con l'obiettivo di oggi mancato
     // troverebbe la serie già interrotta.
     body: streak > 0 && (offset == 0 || goalReachedToday)
-        ? 'Serie di ${streak == 1 ? '1 giorno' : '$streak giorni'}: '
-              'basta ${goalLabel(goal)} per continuarla.'
-        : 'Obiettivo di oggi: ${goalLabel(goal)}.',
+        ? l.progressReminderBodyStreak(
+            l.progressDaysCount(streak),
+            goalLabel(l, goal),
+          )
+        : l.progressReminderBodyGoal(goalLabel(l, goal)),
+    channelName: l.progressReminder,
+    channelDescription: l.progressReminderChannelDescription,
   );
 }

@@ -77,10 +77,10 @@ class Backup {
   };
 
   /// Backup in attesa di essere applicato all'avvio.
-  static const pendingName = 'ripristino-in-attesa.json';
+  static const pendingName = 'ripristino-in-attesa.json'; // l10n-ok
 
   /// Suffisso dei dati sostituiti da un ripristino.
-  static const previousSuffix = '.prima-del-ripristino';
+  static const previousSuffix = '.prima-del-ripristino'; // l10n-ok
 
   /// Contenuto testuale dei file, per nome.
   final Map<String, String> files;

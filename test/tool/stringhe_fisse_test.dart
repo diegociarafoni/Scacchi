@@ -68,7 +68,83 @@ void main() {
     });
   });
 
+  group('sintassi delle stringhe Dart', () {
+    test('legge le sequenze di escape', () {
+      final hits = findFixedStrings(r"final a = 'Hai vinto\nla partita';");
+      expect(hits.single.text, 'Hai vinto\nla partita');
+      expect(
+        findFixedStrings(r"final a = 'perch\u00e9 non vai avanti';")
+            .single
+            .text,
+        'perché non vai avanti',
+      );
+    });
+
+    test('una stringa dentro un\'interpolazione non chiude il testo', () {
+      final hits = findFixedStrings(
+        r"final a = 'Hai ${n == 1 ? 'mossa' : 'mosse'} da giocare';",
+      );
+      expect(hits, hasLength(1));
+      expect(hits.single.text, contains('da giocare'));
+    });
+
+    test('stringhe su più righe e con tre apici', () {
+      final hits = findFixedStrings(
+        "final a = '''Hai vinto la partita\ned è finita.''';\n"
+        "final b = 'Pensaci con '\n    'calma e attenzione.';\n",
+      );
+      expect(hits.map((h) => h.line), [1, 3, 4]);
+    });
+
+    test('le stringhe raw non interpretano il backslash', () {
+      expect(
+        findFixedStrings(r"final a = r'Hai vinto la partita\';"),
+        hasLength(1),
+      );
+    });
+
+    test('ignora i blocchi di commento su più righe', () {
+      expect(
+        findFixedStrings(
+          "/*\n final a = 'Hai vinto la partita';\n*/\nfinal b = 1;\n",
+        ),
+        isEmpty,
+      );
+    });
+
+    test('lettere accentate in una frase senza parole note', () {
+      expect(
+        findFixedStrings(
+          "final a = 'Complimenti, trovato l\\'eleganza perfetta già';",
+        ),
+        hasLength(1),
+      );
+    });
+
+    test('parole che sono anche inglesi non bastano', () {
+      expect(
+        findFixedStrings("final a = 'Failed to parse move in game';"),
+        isEmpty,
+      );
+      expect(findFixedStrings("final a = 'Bot level';"), isEmpty);
+    });
+  });
+
   group('cricchetto sui testi fissi', () {
+    test('i file direttamente in lib/ contano', () {
+      expect(
+        countByFolder({'lib/main.dart': "final a = 'Hai vinto la partita';"}),
+        {'(radice)': 1},
+      );
+    });
+
+    test('improvements: cartelle scese sotto la base', () {
+      expect(
+        improvements({'path': 3, 'game': 2}, {'path': 5, 'game': 2, 'old': 1}),
+        {'path': 3, 'old': 0},
+      );
+    });
+
     test('countByFolder somma per cartella di lib/', () {
       final counts = countByFolder({
         'lib/path/a.dart': "final a = 'Dai scacco matto in una mossa.';",
@@ -96,7 +172,13 @@ void main() {
           if (f is File && f.path.endsWith('.dart'))
             f.path.replaceAll(r'\', '/'): f.readAsStringSync(),
       };
-      expect(regressions(countByFolder(sources), base), isEmpty);
+      final counts = countByFolder(sources);
+      expect(regressions(counts, base), isEmpty);
+      expect(
+        improvements(counts, base),
+        isEmpty,
+        reason: 'abbassa la base con: dart tool/stringhe_fisse.dart --aggiorna',
+      );
     });
   });
 }

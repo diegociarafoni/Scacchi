@@ -106,7 +106,7 @@ class _PositionImagePageState extends State<PositionImagePage> {
       }
     } on Object catch (e) {
       if (kDebugMode) {
-        debugPrint('Condivisione dell\'immagine non riuscita: $e');
+        debugPrint('Condivisione dell\'immagine non riuscita: $e'); // l10n-ok
       }
       _failed = true;
     } finally {

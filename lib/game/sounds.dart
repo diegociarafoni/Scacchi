@@ -79,7 +79,7 @@ class SoundPlayer {
         mode: PlayerMode.lowLatency,
       );
     } on Object catch (e) {
-      debugPrint('Suono non riprodotto: $e');
+      debugPrint('Suono non riprodotto: $e'); // l10n-ok
     }
   }
 

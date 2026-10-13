@@ -345,7 +345,7 @@ enum BoardBackdrop {
   ),
   cuoio('Cuoio', color: Color(0xff7a2a24)),
   spazio('Spazio', asset: 'assets/boards/spazio.webp'),
-  photo('La tua foto');
+  photo('La tua foto'); // l10n-ok: ripiego, il nome tradotto è in backdropLabel
 
   const BoardBackdrop(this.label, {this.color, this.gradient, this.asset});
 
@@ -859,7 +859,7 @@ class SettingsController extends ValueNotifier<AppSettings> {
           stack: st,
           library: 'impostazioni',
           context: ErrorDescription(
-            'durante il salvataggio delle impostazioni',
+            'durante il salvataggio delle impostazioni', // l10n-ok
           ),
         ),
       );

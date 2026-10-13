@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:dartchess/dartchess.dart';
 
 import '../engine/uci.dart';
-import '../l10n/app_localizations.dart';
 import '../review/board_utils.dart';
 import '../review/coach.dart';
 import '../review/game_review.dart';
@@ -56,7 +55,7 @@ class CoachSession {
   Future<MoveVerdict> judge(
     Position before,
     Move move, {
-    AppLocalizations? kid,
+    bool kid = false,
   }) async {
     final review = await reviewGame(
       initial: before,

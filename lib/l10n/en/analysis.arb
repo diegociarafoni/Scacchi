@@ -1,0 +1,26 @@
+{
+  "analysisTitle": "Analysis",
+  "analysisBestMoveArrow": "Best move arrow",
+  "analysisThreatArrow": "Opponent's threat",
+  "analysisOneLine": "1 line",
+  "analysisTwoLines": "2 lines",
+  "analysisThreeLines": "3 lines",
+  "analysisEngineUnavailable": "Engine not available",
+  "analysisPaused": "Analysis paused",
+  "analysisGameOver": "Game over",
+  "analysisThinking": "Analyzing…",
+  "analysisDepth": "Depth {depth}",
+  "@analysisDepth": {
+    "placeholders": {
+      "depth": {
+        "type": "int"
+      }
+    }
+  },
+  "analysisPromote": "Promote to main line",
+  "analysisDelete": "Delete this move and the ones after it",
+  "analysisBack": "Back",
+  "analysisForward": "Forward",
+  "analysisResume": "Resume analysis",
+  "analysisPause": "Pause analysis"
+}

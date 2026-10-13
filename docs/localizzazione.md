@@ -8,7 +8,7 @@ Requisito RP-05: italiano come lingua predefinita, con la struttura pronta per a
 - La lingua è fissata all'italiano (`locale: Locale('it')` in `lib/main.dart`), quindi anche i testi di Material (pulsante Indietro, selettori, campi di testo) sono in italiano su qualunque dispositivo. `l10n.yaml` indica l'italiano come lingua preferita, così resterà la lingua di ripiego anche quando il `locale` fisso verrà tolto.
 - Su iOS e macOS la regione di sviluppo è l'italiano; le finestre native del sistema (condivisione, permessi) seguono la lingua del dispositivo se è italiano o inglese, altrimenti usano l'italiano.
 - Il nome sotto l'icona non viene da `appTitle`: è `android:label` in `android/app/src/main/AndroidManifest.xml` e `CFBundleDisplayName` in `ios/Runner/Info.plist`.
-- Sono dichiarate italiano e inglese (`supportedLocales`, e `CFBundleLocalizations` su iOS). Sono tradotti il nome dell'app, i testi del profilo bambino (prefissi `kid`, `kidGame`, `kidBot`), quelli dello scambio QR (prefisso `qr`), quelli dei badge (prefissi `badge` e `badges`), quelli dell'esportazione come immagine (prefisso `shareImage`), quelli della scacchiera fisica (prefisso `physical`) e le schermate elencate in [Schermate migrate](#schermate-migrate); gli altri testi sono ancora scritti in italiano nel codice.
+- Sono dichiarate italiano e inglese (`supportedLocales`, e `CFBundleLocalizations` su iOS). Sono tradotti il nome dell'app, i testi del profilo bambino (prefissi `kid`, `kidGame`, `kidBot`), quelli dello scambio QR (prefisso `qr`), quelli dei badge (prefissi `badge` e `badges`), quelli dell'esportazione come immagine (prefisso `shareImage`), quelli della scacchiera fisica (prefisso `physical`), il profilo con traguardi, sfide, serie e promemoria (prefisso `progress`), la revisione della partita e i commenti dell'allenatore (prefisso `review`), i suggerimenti (`coachHint`), l'analisi (`analysis`), l'archivio (`archive`), la scheda settimanale (`portrait`) e le schermate elencate in [Schermate migrate](#schermate-migrate); gli altri testi sono ancora scritti in italiano nel codice.
 
 ## Lingue di destinazione
 
@@ -35,6 +35,12 @@ Dopo un clone, e dopo ogni modifica ai `.arb` o un cambio di ramo, eseguire `dar
 ## Testi fissi nel codice
 
 `dart tool/stringhe_fisse.dart` cerca in `lib/` le frasi italiane scritte tra apici invece che nei `.arb` (almeno due parole, con parole italiane comuni o lettere accentate; commenti, `import` e identificativi sono ignorati). I conteggi per cartella stanno in `tool/stringhe_fisse_base.json` e **non possono salire**: la CI e `tool/verifica.sh` falliscono se una cartella ha più testi fissi della base, con l'indicazione di dove spostarli. Quando una cartella viene migrata la base si abbassa con `dart tool/stringhe_fisse.dart --aggiorna`. `--elenco` stampa ogni testo con file e riga. Un nome proprio o un dato dell'archivio che il controllo scambia per testo si esclude con il commento `// l10n-ok` sulla riga. Il controllo è euristico: trova i testi italiani, non quelli già in un'altra lingua.
+
+## Stato delle lingue e ripiego
+
+`tool/lingue.json` dichiara lo stato di ogni lingua: `base` (italiano), `pronta`, `beta` o `in lavorazione`. Le lingue base e pronte devono avere esattamente le stesse chiavi dell'italiano. Le lingue `beta` e `in lavorazione` possono averne meno: `tool/l10n.dart` riempie quelle che mancano con il testo inglese, così l'app compila e le PR sulle schermate non devono aspettare le traduzioni. Una chiave che esiste in una lingua incompleta ma non nelle altre resta un errore.
+
+`dart tool/l10n_stato.dart` stampa per ogni lingua le chiavi tradotte rispetto all'italiano; con `--manca` elenca quali mancano, per file. Esce con errore se una lingua `base` o `pronta` (o non dichiarata) è incompleta; la CI lo esegue. Una nuova cartella in `lib/l10n/<lingua>/` va dichiarata in `tool/lingue.json`, altrimenti viene trattata come lingua completa.
 
 ## Aggiungere un testo
 
@@ -72,6 +78,14 @@ Creare `lib/l10n/<codice>/` con tutti i file e le chiavi delle altre lingue e ri
 | Le tue aperture | `lib/openings/personal_explorer_page.dart`, voce nella scheda Aperture (`personal…`) | Nessuno; i nomi delle aperture arrivano dal libro e sono tradotti nel codice |
 | Scacchiera fisica (partita, foto e allineamento, voce in «Tu», prefisso `physical`) | `lib/physical/physical_game_page.dart`, `lib/physical/board_align_page.dart` | Nessuno; il nome del file PGN e l'intestazione `Site` restano in italiano |
 | Scheda Tu (intestazione del gruppo, voci, «Continua da dove eri», prefisso `you`) | `lib/home/you_page.dart` | Nessuno; titoli e sottotitoli di Storia, Multigiocatore e Scacchiera fisica restano nei loro file `.arb` |
+| Partita, barra e menu, foglio «Nuova partita», scelta dell'avversario, varianti, frasi lette dal lettore di schermo (`game.arb`) | `lib/game/game_page.dart`, `lib/game/opponent_picker.dart`, `lib/game/variant.dart`, `lib/game/move_speech.dart` | Nessuno; nomi dei giocatori, intestazioni PGN e messaggi di debug non sono tradotti. `describeSan` e `statusText` ricevono `AppLocalizations` dal chiamante |
+| Home (`home.arb`, `you.arb`) | `lib/home/*.dart` | Nessuno; i messaggi di debug (`// l10n-ok`) non sono mostrati |
+| Profilo, traguardi, sfide, serie, record, promemoria | `lib/progress/profile_page.dart`, `lib/progress/achievements_l10n.dart`, `lib/progress/streak_info.dart`, `lib/reminders/reminder.dart` (`progress.arb`) | Nessuno; `Avatar.label` e `AvatarFrame.label` (nomi dei personaggi e delle cornici) e `Minigame.title` restano nei loro enum |
+| Revisione della partita, barra di valutazione, commenti dell'allenatore | `lib/review/review_page.dart`, `lib/review/review_l10n.dart`, `lib/review/coach.dart`, `lib/review/eval_bar.dart`, `lib/review/score_format.dart` (`review.arb`) | Nessuno; `CoachComment.text(l)` compone la frase quando serve, `MoveClass` e `GamePhase` non hanno più etichette |
+| Suggerimenti dell'allenatore | `lib/coach/hint_text.dart` (`coach.arb`, prefisso `coachHint`) | Nessuno |
+| Analisi | `lib/analysis/analysis_page.dart` (`analysis.arb`) | Nessuno |
+| Archivio delle partite | `lib/archive/archive_page.dart` (`archive.arb`) | Nessuno; il tipo di partita (`SavedGame.mode`) resta un identificativo, mostrato tradotto |
+| Scheda «La tua settimana» | `lib/stats/portrait_page.dart` (`stats.arb`, prefisso `portrait`) | Nessuno; il nome del file immagine resta in italiano |
 | Statistiche | `lib/stats/stats_page.dart` | Bilancio sintetico `+V =P -S` (`Score.toString` in `stats.dart`), nomi delle cadenze e delle aperture che arrivano dall'archivio |
 
 ## Testi da spostare

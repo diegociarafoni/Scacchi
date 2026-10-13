@@ -1,5 +1,10 @@
+import 'package:flutter/widgets.dart' show Locale;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/review/move_classification.dart';
+import 'package:scacchi/review/review_l10n.dart';
+
+final _it = lookupAppLocalizations(const Locale('it'));
 
 MoveClass classify({
   double before = 50,
@@ -145,7 +150,7 @@ void main() {
 
   test('ogni categoria ha nome italiano e simbolo', () {
     for (final c in MoveClass.values) {
-      expect(c.label, isNotEmpty);
+      expect(moveClassLabel(_it, c), isNotEmpty);
       expect(c.symbol, isNotEmpty);
     }
     expect(MoveClass.brilliant.symbol, '!!');

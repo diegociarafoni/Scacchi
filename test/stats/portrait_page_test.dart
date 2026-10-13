@@ -2,11 +2,12 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:dartchess/dartchess.dart' hide File;
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/archive/game_archive.dart';
 import 'package:scacchi/archive/saved_game.dart';
 import 'package:scacchi/stats/portrait_page.dart';
+
+import '../localized_app.dart';
 
 void main() {
   final now = DateTime(2026, 10, 11, 12);
@@ -44,7 +45,7 @@ void main() {
       }
     });
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: PortraitPage(
           archive: archive,
           now: () => now,

@@ -1,11 +1,15 @@
 import 'package:dartchess/dartchess.dart';
+import 'package:flutter/widgets.dart' show Locale;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/engine/uci.dart';
+import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/review/coach.dart';
 import 'package:scacchi/review/game_review.dart';
 import 'package:scacchi/review/personal_puzzles.dart';
 
 import 'fake_engine.dart';
+
+final _it = lookupAppLocalizations(const Locale('it'));
 
 /// Revisione del matto del barbiere; [bestBeforeNf6] sostituisce le
 /// varianti del motore prima dell'errore Cf6.
@@ -29,6 +33,7 @@ void main() {
     test('ogni errore grave del giocatore diventa un puzzle', () async {
       final review = await scholarReview();
       final puzzles = puzzlesFromReview(
+        _it,
         review,
         players: {Side.black},
         gameId: 'g1',
@@ -59,7 +64,7 @@ void main() {
     test('gli errori dell\'avversario non diventano puzzle', () async {
       final review = await scholarReview();
       expect(
-        puzzlesFromReview(review, players: {Side.white}, gameId: 'g1'),
+        puzzlesFromReview(_it, review, players: {Side.white}, gameId: 'g1'),
         isEmpty,
       );
     });
@@ -104,6 +109,7 @@ void main() {
         },
       ))!;
       final p = puzzlesFromReview(
+        _it,
         review,
         players: {Side.white},
         gameId: 'g2',
@@ -117,6 +123,7 @@ void main() {
         bestBeforeNf6: pv(['g7g6', 'h5f3', 'g8f6', 'f3f4']),
       );
       final p = puzzlesFromReview(
+        _it,
         review,
         players: {Side.black},
         gameId: 'g1',
@@ -129,7 +136,7 @@ void main() {
         bestBeforeNf6: pv(['g7g6'], second: const EngineScore.cp(-50)),
       );
       expect(
-        puzzlesFromReview(review, players: {Side.black}, gameId: 'g1'),
+        puzzlesFromReview(_it, review, players: {Side.black}, gameId: 'g1'),
         isEmpty,
       );
     });
@@ -139,13 +146,14 @@ void main() {
         bestBeforeNf6: pv(['g7g6'], second: const EngineScore.mate(-2)),
       );
       expect(
-        puzzlesFromReview(review, players: {Side.black}, gameId: 'g1'),
+        puzzlesFromReview(_it, review, players: {Side.black}, gameId: 'g1'),
         hasLength(1),
       );
     });
 
     test('l\'identificativo resta una sola colonna CSV', () async {
       final p = puzzlesFromReview(
+        _it,
         await scholarReview(),
         players: {Side.black},
         gameId: 'Partita, 12 ott',
@@ -156,6 +164,7 @@ void main() {
 
     test('esportazione nel formato CSV dei puzzle Lichess', () async {
       final p = puzzlesFromReview(
+        _it,
         await scholarReview(),
         players: {Side.black},
         gameId: 'g1',
@@ -171,6 +180,7 @@ void main() {
     test('le mosse illegali del motore troncano la soluzione', () async {
       final review = await scholarReview(bestBeforeNf6: pv(['g7g6', 'a1a8']));
       final p = puzzlesFromReview(
+        _it,
         review,
         players: {Side.black},
         gameId: 'g1',
@@ -201,6 +211,7 @@ void main() {
         ],
       ))!;
       final p = puzzlesFromReview(
+        _it,
         review,
         players: {Side.white},
         gameId: 'g3',

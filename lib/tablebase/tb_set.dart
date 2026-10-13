@@ -27,7 +27,9 @@ class TbSet implements TbLookup {
   }) {
     final canonical = material.canonical;
     if (!canonical.supported) {
-      throw ArgumentError('Materiale non gestito: ${canonical.name}');
+      throw ArgumentError(
+        'Materiale non gestito: ${canonical.name}', // l10n-ok
+      );
     }
     final existing = _tables[canonical.code];
     if (existing != null) return existing;

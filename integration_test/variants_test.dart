@@ -6,6 +6,8 @@ import 'package:scacchi/main.dart';
 import 'package:scacchi/settings/settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../test/computer_fakes.dart'
+    show chooseAdaptiveComputer, openCustomSheet, scrollSheetTo;
 import '../test/game_actions.dart';
 
 void main() {
@@ -20,9 +22,11 @@ void main() {
     addTearDown(tester.view.reset);
     await tester.pumpWidget(const ScacchiApp());
     await tester.pumpAndSettle();
+    await openBoard(tester);
 
     await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
+    await openCustomSheet(tester, two: true);
     await tester.tap(find.text('Chess960'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Senza tempo'));
@@ -40,9 +44,11 @@ void main() {
     addTearDown(tester.view.reset);
     await tester.pumpWidget(const ScacchiApp());
     await tester.pumpAndSettle();
+    await openBoard(tester);
 
     await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
+    await openCustomSheet(tester, two: true);
     await tester.tap(find.text('Handicap'));
     await tester.pumpAndSettle();
     final queen = find.byKey(const ValueKey('handicap-piece-queen'));
@@ -76,17 +82,17 @@ void main() {
 
     await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Computer'));
-    await tester.pumpAndSettle();
-    await tester.ensureVisible(find.text('Nero'));
+    await chooseAdaptiveComputer(tester);
+    await scrollSheetTo(tester, find.text('Nero'));
     await tester.tap(find.text('Nero'));
     await tester.pumpAndSettle();
-    await tester.ensureVisible(find.text('Re della collina'));
+    await scrollSheetTo(tester, find.text('Re della collina'));
     await tester.tap(find.text('Re della collina'));
     await tester.pumpAndSettle();
-    await tester.ensureVisible(find.text('Senza tempo'));
+    await scrollSheetTo(tester, find.text('Senza tempo'));
     await tester.tap(find.text('Senza tempo'));
     await tester.pump();
+    await tester.pump(const Duration(milliseconds: 400));
 
     // La ricerca gira in un isolate vero: si aspetta fuori dal tempo finto.
     final reply = find.text('Muove il Nero.');

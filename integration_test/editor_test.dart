@@ -34,6 +34,7 @@ void main() {
     addTearDown(tester.view.reset);
     await tester.pumpWidget(const ScacchiApp());
     await tester.pumpAndSettle();
+    await openBoard(tester);
 
     await openPositionEditor(tester);
     await tester.pumpAndSettle();

@@ -212,7 +212,9 @@ class _HomePageState extends State<HomePage> {
           }
         },
         onError: (Object e) {
-          if (kDebugMode) debugPrint('Home: dato non disponibile: $e');
+          if (kDebugMode) {
+            debugPrint('Home: dato non disponibile: $e'); // l10n-ok
+          }
         },
       ),
     );
