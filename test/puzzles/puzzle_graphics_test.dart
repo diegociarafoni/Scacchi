@@ -108,6 +108,7 @@ void main() {
         matchesSemantics(
           label: 'Matto in 1 · Muove il Bianco',
           isLiveRegion: true,
+          isHeader: true,
         ),
       );
       handle.dispose();

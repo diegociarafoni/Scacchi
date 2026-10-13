@@ -181,6 +181,16 @@ void main() {
     handle.dispose();
   });
 
+  testWidgets(
+    'a puzzle risolto senza puzzle successivo non resta una barra vuota',
+    (tester) async {
+      await pump(tester);
+      await tapMove(tester, 'a1a8');
+      expect(find.byType(OutlinedButton), findsNothing);
+      expect(find.byType(FilledButton), findsNothing);
+    },
+  );
+
   testWidgets('puzzle a una mossa: niente contatore, barra né punteggio', (
     tester,
   ) async {

@@ -416,14 +416,15 @@ class _PuzzlePageState extends State<PuzzlePage> {
                 },
               ),
             ),
-            _PuzzleActions(
-              onHint: done ? null : _showHint,
-              onSolution: done ? null : _showSolution,
-              solving: !done,
-              onRetry: _canRetry ? _retry : null,
-              onNext: canSkip ? _next : null,
-              kid: kid,
-            ),
+            if (!done || canSkip || _canRetry)
+              _PuzzleActions(
+                onHint: done ? null : _showHint,
+                onSolution: done ? null : _showSolution,
+                solving: !done,
+                onRetry: _canRetry ? _retry : null,
+                onNext: canSkip ? _next : null,
+                kid: kid,
+              ),
           ],
         ),
       ),
@@ -608,6 +609,8 @@ class _FeedbackBanner extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           child: Semantics(
+            // L'obiettivo iniziale è un'intestazione, l'esito no.
+            header: feedback == _Feedback.find,
             liveRegion: true,
             child: Row(
               mainAxisSize: MainAxisSize.min,
