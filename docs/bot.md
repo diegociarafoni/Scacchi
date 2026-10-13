@@ -7,9 +7,11 @@ la forza viene dal livello, la personalità dal resto. Sono in `lib/engine/bots.
 
 ## Come si gioca
 
-1. Toccare **Nuova** e scegliere **Bot**.
-2. Scegliere il colore e il bot dall'elenco: ogni riga mostra avatar, nome, Elo, stile e apertura preferita.
-3. Toccare la cadenza, "Senza tempo" o una cadenza: la partita inizia.
+1. Toccare **Nuova** e scegliere **Scegli il bot**: si apre la galleria (vedi sotto).
+2. Scegliere il bot, il colore ed, eventualmente, le **Opzioni** (cadenza, variante, handicap, allenatore).
+3. Toccare **Gioca**: la partita inizia.
+
+In alternativa, **Partita personalizzata** ha la stessa scelta in un elenco: ogni riga mostra avatar, nome, Elo, stile e apertura preferita, e la cadenza si sceglie toccando la cadenza voluta.
 
 Durante la partita la barra del titolo mostra avatar, nome ed Elo del bot, che saluta all'inizio.
 Il bot gioca le prime mosse dal proprio libro d'apertura finché l'avversario non devia (con una breve
@@ -28,7 +30,7 @@ sul dispositivo (chiave `botCollection`, `lib/engine/bot_collection.dart`).
 
 ## Computer o bot?
 
-Nella pagina «Partita personalizzata» del foglio Nuova partita una riga sotto la scelta spiega l'avversario selezionato (dal menu, **Scegli il bot** apre direttamente la galleria): **Bot** raccoglie due tipi di avversario: **Adattivo**, in cima alla lista, è il motore senza volto che segue i tuoi risultati (non c'è nel profilo bambino), e i bot, ciascuno un personaggio con nome, stile e apertura preferita, da sbloccare uno alla volta. Ogni bot bloccato dice quale bot battere per sbloccarlo («Si sblocca battendo Pino»). I testi sono localizzati (`opponentHint*`, `botUnlockHint` in `lib/l10n`).
+Nella pagina «Partita personalizzata» del foglio Nuova partita una riga sotto la scelta spiega l'avversario selezionato (**Scegli il bot** apre invece direttamente la galleria): **Bot** raccoglie due tipi di avversario: **Adattivo**, in cima alla lista, è il motore senza volto che segue i tuoi risultati (non c'è nel profilo bambino), e i bot, ciascuno un personaggio con nome, stile e apertura preferita, da sbloccare uno alla volta. Ogni bot bloccato dice quale bot battere per sbloccarlo («Si sblocca battendo Pino»). I testi sono localizzati (`opponentHint*`, `botUnlockHint` in `lib/l10n`).
 
 ## I bot
 
@@ -54,7 +56,7 @@ I 17 bot sono in ordine di Elo e formano la scala da superare a gradini (RG-04).
 | 16 | Cosmo 🐈 | 7 | 2250 | aggressivo | Gambetto Smith-Morra |
 | 17 | Stella ⭐ | 8 | 2700 | aggressivo | Difesa Est-Indiana |
 
-Lia gioca al livello 0 (400 Elo), lo stesso di Tino; gli altri nuovi bot riusano i livelli esistenti, quindi non servono nuove calibrazioni. Le frasi dipendono dallo stile, non dal bot: i nuovi bot non ne hanno di proprie.
+Lia gioca al livello 0 (400 Elo), lo stesso di Tino; gli altri bot riusano i livelli della scala. Le frasi dipendono dallo stile, non dal bot; solo il saluto è proprio di ciascuno.
 
 ### Tino, solo nella Storia
 
@@ -62,7 +64,7 @@ Tino 🐥 è il custode del Capitolo 0: livello 0, 400 Elo, scelta tra molte mos
 
 ## La galleria dei bot (RG-18)
 
-Dalla scelta dell'avversario, con **Bot** selezionato, il bottone «Apri la galleria dei bot» apre `BotGalleryPage` (`lib/bot_gallery/`), che restituisce con «Gioca» un `BotGalleryResult` (bot, colore, e se si è scelto il computer adattivo). `BotGalleryResult.applyTo(GameSetup)` lo riporta nella configurazione della partita; un'altra schermata può aprire la galleria con `Navigator.push<BotGalleryResult>` e il testo del bottone di conferma in `confirmLabel`.
+Dal foglio Nuova partita (**Scegli il bot**) o, nella Partita personalizzata, dal bottone «Apri la galleria dei bot», si apre `BotGalleryPage` (`lib/bot_gallery/`), che restituisce con «Gioca» un `BotGalleryResult` (bot, colore, e se si è scelto il computer adattivo). `BotGalleryResult.applyTo(GameSetup)` lo riporta nella configurazione della partita; un'altra schermata può aprire la galleria con `Navigator.push<BotGalleryResult>` e il testo del bottone di conferma in `confirmLabel`.
 
 Struttura, dall'alto:
 
@@ -71,9 +73,9 @@ Struttura, dall'alto:
 - **Adattivo**: la carta del computer che si adatta ai risultati (RF-26), con l'Elo del livello attuale.
 - **I custodi della Storia**: i nove custodi dei capitoli con una barra di avanzamento «n di 9 custodi incontrati»; un custode è incontrato quando il capitolo ha il bot battuto. Tino, che sta solo nella Storia, si può scegliere dopo il Capitolo 0 (`storyOnlyBots`). La galleria legge la Storia da sola (`loadStory`).
 - **Colore** in basso: Bianco, a sorte (predefinito), Nero, sempre accanto a «Gioca».
-- **Opzioni**: il bottone «Opzioni» in basso apre un pannello a comparsa con le opzioni della partita, che si scelgono dopo aver scelto chi sfidare: cadenza (Nessun timer, Bullet, Blitz, Rapid), variante (classica, Chess960, Re della collina, Tre scacchi), handicap (pezzo in meno, tempo di chi concede e chi concede, come nel foglio «Nuova partita»; il pezzo in meno vale solo nella classica) e l'allenatore acceso dall'inizio. Le scelte sono in `GameOptions` (`lib/bot_gallery/game_options.dart`) dentro il `BotGalleryResult`. Nel profilo bambino il pannello ha solo «Nessun timer» e la cadenza lenta 15+10. Quando la galleria si apre dal foglio «Nuova partita» (`OpponentPicker.onGalleryPlay`), «Gioca» avvia direttamente la partita con queste opzioni: per i bot il foglio non le ripete. Aperta senza `onGalleryPlay` (per esempio dalla scelta dell'avversario di una posizione dell'editor) la galleria nasconde «Opzioni» e restituisce solo bot e colore (`showOptions: false`). Non esiste ancora una barra di valutazione: non c'è fra le opzioni.
+- **Opzioni**: il bottone «Opzioni» in basso apre un pannello a comparsa con le opzioni della partita, che si scelgono dopo aver scelto chi sfidare: cadenza (Nessun timer, Bullet, Blitz, Rapid), variante (classica, Chess960, Re della collina, Tre scacchi), handicap (pezzo in meno, tempo di chi concede e chi concede, come nel foglio «Nuova partita»; il pezzo in meno vale solo nella classica) e l'allenatore acceso dall'inizio. Le scelte sono in `GameOptions` (`lib/bot_gallery/game_options.dart`) dentro il `BotGalleryResult`. Nel profilo bambino il pannello ha solo «Nessun timer» e la cadenza lenta 15+10. Quando la galleria si apre dal foglio «Nuova partita» (`OpponentPicker.onGalleryPlay`), «Gioca» avvia direttamente la partita con queste opzioni: per i bot il foglio non le ripete. Aperta senza `onGalleryPlay` (per esempio dalla scelta dell'avversario di una posizione dell'editor) la galleria nasconde «Opzioni» e restituisce solo bot e colore (`showOptions: false`).
 
-I saluti e le battute di rivincita di ogni bot, e tutti i testi della galleria, sono in `lib/l10n/<lingua>/bot_gallery.arb` (italiano e inglese); `lib/bot_gallery/bot_greetings.dart` li associa agli id. Ogni bot ha un personaggio disegnato in codice con le sei espressioni (`lib/progress/avatar_art.dart`, `guardianCharacter`): Lia farfalla, Nico tartaruga, Viola fiore viola con nota, Ettore leone, Bruna orsa, Carlo procione, Ada con gli occhiali, Luna coniglio lunare, Cosmo gatto astronauta, Tino pulcino nel guscio.
+I saluti e le battute di rivincita di ogni bot, e tutti i testi della galleria, sono in `lib/l10n/<lingua>/bot_gallery.arb` (italiano e inglese); `lib/bot_gallery/bot_greetings.dart` li associa agli id. Ogni bot ha un personaggio disegnato in codice con le sei espressioni (`lib/progress/avatar_art.dart`, associati ai bot da `guardianCharacter` in `lib/progress/guardian_avatar.dart`): Lia farfalla, Nico tartaruga, Viola fiore viola con nota, Ettore leone, Bruna orsa, Carlo procione, Ada con gli occhiali, Luna coniglio lunare, Cosmo gatto astronauta, Tino pulcino nel guscio; gli altri hanno un animale o una figura propria.
 
 Profilo bambino: solo i tre bot amici in una fascia «I tuoi amici», senza Elo, Adattivo né custodi. Accessibilità: ogni cella è un bottone con nome, Elo e stato («bloccato», «battuto», «disponibile») letti dai lettori di schermo; bersagli da almeno 48 dp; nessun overflow col testo al 130%. Il layout orizzontale fa scorrere anche il bot in alto.
 
@@ -133,7 +135,7 @@ l'apertura.
 
 - `test/engine/bots_test.dart`: scala, dati, linee del libro legali, frasi.
 - `test/engine/bot_collection_test.dart`: sblocco per gradino di Elo, compatibilità con le collezioni già salvate, data della prima vittoria, salvataggio.
-- `test/bot_game_test.dart`: la scelta del bot nel pannello, il libro in partita, saluto e frasi finali, vittoria e collezione.
+- `test/bot_game_test.dart`: la scelta del bot nel foglio Nuova partita, il libro in partita, saluto e frasi finali, vittoria e collezione.
 - `test/bot_gallery/`: fasce, saluti in italiano e inglese, la pagina della galleria (scelta, blocchi, corone, custodi, Adattivo, bambino, accessibilità) e l'entrata dalla scelta dell'avversario.
 - `test/engine/style_test.dart`: i bonus di stile.
 - `test/engine/kid_bots_test.dart`, `test/game/kid_opponent_picker_test.dart` e `test/kid_bot_game_test.dart`: i bot amichevoli del profilo bambino.

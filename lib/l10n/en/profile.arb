@@ -1,6 +1,6 @@
 {
   "avatarPhotoTitle": "Photo",
-  "avatarPhotoHint": "The photo stays on this phone only: it is never sent or included in the backup.",
+  "avatarPhotoHint": "The photo stays on this phone and is never sent anywhere: it only goes into the backup file you create yourself.",
   "avatarPhotoGallery": "From the gallery",
   "avatarPhotoCamera": "Take a photo",
   "avatarPhotoRemove": "Remove the photo",

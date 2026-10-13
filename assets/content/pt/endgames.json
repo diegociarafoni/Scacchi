@@ -1,0 +1,14 @@
+{
+  "queen-mate.title": "Rei e dama contra rei",
+  "queen-mate.intro": "Objetivo: dar xeque-mate. Use a dama para prender o rei inimigo em uma gaiola cada vez menor e depois aproxime o seu próprio rei. Cuidado com o afogamento!",
+  "rook-mate.title": "Rei e torre contra rei",
+  "rook-mate.intro": "Objetivo: dar xeque-mate. A torre corta as linhas e o rei a ajuda: empurrem juntos o rei inimigo para a borda.",
+  "king-pawn.title": "Rei e peão contra rei",
+  "king-pawn.intro": "Objetivo: promover o peão. Leve seu rei para a frente do peão e tome a oposição: o peão só chega ao fim se o seu rei abrir o caminho.",
+  "lucena.title": "A posição de Lucena",
+  "lucena.intro": "Objetivo: promover o peão. Seu rei está preso na frente do peão: afaste o rei inimigo com a torre e depois construa a “ponte” para se proteger dos xeques.",
+  "philidor.title": "A defesa de Philidor",
+  "philidor.intro": "Objetivo: não perder por {par} lances. Você joga com as Pretas: mantenha a torre na sexta linha até o peão avançar e depois leve-a para trás e dê xeque por trás.",
+  "bishop-knight.title": "Bispo e cavalo",
+  "bishop-knight.intro": "Objetivo: dar xeque-mate. É o xeque-mate mais difícil: leve o rei inimigo para um canto da cor do seu bispo. Você tem 50 lances antes de a partida ser declarada empatada."
+}

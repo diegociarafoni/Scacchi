@@ -6,7 +6,7 @@ nessuna connessione, nessun server, nessun dato che esce dal telefono.
 ## Come si gioca
 
 1. Toccare **Nuova**.
-2. Il foglio **Nuova partita** parte con **Inizia partita**, che avvia subito la partita contro il computer del tuo livello (l'avversario adattivo, con il tempo scelto nel menu in alto); **Scegli il bot** apre la galleria e **Gioca con l'istruttore** apre la stessa scelta di colore e livello del menu Aperture e avvia la partita con l'istruttore che commenta l'apertura (vedi [aperture.md](aperture.md)). Sotto «Altre modalità», **Partita personalizzata** ha tutto in una pagina: per giocare in due si sceglie **Due giocatori**, contro il computer in cima alla lista dei bot c'è **Adattivo**, il motore senza volto, seguito dai bot con personalità (vedi [bot.md](bot.md)). Non c'è più una scelta «Computer» a parte né il cursore del livello: i livelli fissi sono i bot, uno per gradino, da sbloccare battendo il precedente.
+2. Il foglio **Nuova partita** parte con **Inizia partita**, che avvia subito la partita contro il computer del tuo livello (l'avversario adattivo, con il tempo scelto nel menu in alto); **Scegli il bot** apre la galleria e **Gioca con l'istruttore** apre la stessa scelta di colore e livello del menu Aperture e avvia la partita con l'istruttore che commenta l'apertura (vedi [aperture.md](aperture.md)). Sotto «Altre modalità», **Partita personalizzata** ha tutto in una pagina: per giocare in due si sceglie **Due giocatori**; contro il computer in cima alla lista dei bot c'è **Adattivo**, il motore senza volto, seguito dai bot con personalità (vedi [bot.md](bot.md)). I livelli fissi sono i bot, uno per gradino, da sbloccare battendo il precedente; non c'è un cursore del livello.
 3. Scegliere il colore: Bianco, Nero o a caso. La scacchiera si orienta dal lato del giocatore.
 4. Toccare **Adattivo** per giocare col motore al livello scelto dall'app (vedi [Avversario adattivo](#avversario-adattivo)), oppure un bot.
 5. Toccare la cadenza, "Senza tempo" o una cadenza (vedi [interfaccia.md](interfaccia.md)): la partita inizia. Se il giocatore ha il Nero, il computer muove per primo.
@@ -40,7 +40,7 @@ Durante la riflessione del computer la scacchiera è bloccata e compare la scrit
 | macOS | Non ancora: la sandbox dell'app impedisce di avviare un programma esterno |
 
 Su Android e iOS il motore arriva dal plugin [multistockfish](https://github.com/lichess-org/dart-multistockfish)
-di Lichess (Stockfish 19 incluso nell'app). Su Windows e Linux l'app usa lo Stockfish installato,
+(Stockfish 19 incluso nell'app). Su Windows e Linux l'app usa lo Stockfish installato,
 avviato come processo esterno (`ProcessTransport`): lo cerca in `STOCKFISH_PATH`, poi nelle
 cartelle di `PATH` (`stockfish.exe` su Windows), poi in `/usr/games`, `/usr/bin`, `/usr/local/bin`
 e `/opt/homebrew/bin`. Per installarlo: `sudo apt install stockfish` su Debian e Ubuntu; su
@@ -76,9 +76,9 @@ Con **Adattivo** scelto il livello segue i risultati del giocatore, per far vinc
 | 7 | Maestro | 2250 | piena forza, profondità 10 |
 | 8 | Campione | 2700 | piena forza, 2 secondi a mossa |
 
-Il livello predefinito è il 3.
+Il livello predefinito è il 3 (`defaultEngineLevel`).
 
-La Storia usa anche un livello 0 (`storyBeginnerLevel`, 400 Elo, 8 candidate e temperatura 600), che non fa parte dei livelli scelti dall'utente né dell'adattivo e non cambia `engineLevelForElo`. Lo usano Tino (solo nella Storia) e Lia (bot della scala). La sua forza non è ancora stata misurata con `tool/calibrate_test.dart`.
+La Storia usa anche un livello 0 (`storyBeginnerLevel`, 400 Elo, profondità 2, 8 candidate e temperatura 600), che non fa parte dei livelli scelti dall'utente né dell'adattivo e non cambia `engineLevelForElo`. Lo usano Tino (solo nella Storia) e Lia (bot della scala). La sua forza non è stata misurata con `tool/calibrate_test.dart`.
 
 ### Perché i livelli bassi funzionano così
 
@@ -139,7 +139,7 @@ Stockfish non conosce Re della collina e Tre scacchi, e Chess960 richiede un'alt
 
 - **Ricerca**: alfa-beta con approfondimento iterativo e ricerca di quiescenza (catture, promozioni, risposte allo scacco). A Re della collina la quiescenza prova anche le mosse del re, a Tre scacchi gli scacchi, perché lì una mossa "silenziosa" può vincere la partita.
 - **Valutazione**: materiale, avanzamento dei pedoni, pezzi leggeri al centro, re al sicuro nel mediogioco e attivo nel finale. A Re della collina il re è attratto dalle case centrali, a Tre scacchi ogni scacco dato vale più del precedente. Un matto o la vittoria di variante pesano più di ogni materiale.
-- **Livelli**: gli stessi otto del pannello. La profondità dipende dall'Elo indicativo (1 mossa sotto 1000, 2 sotto 1500, 3 sotto 1900, 4 sotto 2300, 5 oltre) e i livelli bassi scelgono tra tutte le mosse con la stessa temperatura usata per le candidate di Stockfish (`chooseCandidate`). Il tempo di riflessione è quello del livello, con un massimo di 3 secondi e il limite dell'orologio di `withinClock`.
+- **Livelli**: gli stessi otto della scala. La profondità dipende dall'Elo indicativo (1 mossa sotto 1000, 2 sotto 1500, 3 sotto 1900, 4 sotto 2300, 5 oltre) e i livelli bassi scelgono tra tutte le mosse con la stessa temperatura usata per le candidate di Stockfish (`chooseCandidate`). Il tempo di riflessione è quello del livello, con un massimo di 3 secondi e il limite dell'orologio di `withinClock`.
 - **Ripetizioni**: la partita passa al motore le posizioni già comparse e la ricerca ne tiene il conto lungo la linea: una posizione già vista (la seconda comparsa, non la terza della regola, come fanno i motori per non girare a vuoto) vale patta. Così in vantaggio il computer non gira a vuoto e in svantaggio cerca la ripetizione. Vale anche la patta a 100 semimosse.
 - **Interfaccia**: la ricerca gira in un isolate, quindi la scacchiera resta fluida. `stop()` scarta la risposta di una ricerca superata (annulla, nuova partita).
 - **Patta**: il computer valuta la posizione con `VariantEngine.evaluate` e accetta alle stesse condizioni di RF-25.

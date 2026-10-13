@@ -1,0 +1,26 @@
+{
+  "analysisTitle": "Análise",
+  "analysisBestMoveArrow": "Seta do melhor lance",
+  "analysisThreatArrow": "Ameaça do adversário",
+  "analysisOneLine": "1 linha",
+  "analysisTwoLines": "2 linhas",
+  "analysisThreeLines": "3 linhas",
+  "analysisEngineUnavailable": "Motor indisponível",
+  "analysisPaused": "Análise em pausa",
+  "analysisGameOver": "Fim da partida",
+  "analysisThinking": "Analisando…",
+  "analysisDepth": "Profundidade {depth}",
+  "@analysisDepth": {
+    "placeholders": {
+      "depth": {
+        "type": "int"
+      }
+    }
+  },
+  "analysisPromote": "Promover à linha principal",
+  "analysisDelete": "Apagar este lance e os seguintes",
+  "analysisBack": "Voltar",
+  "analysisForward": "Avançar",
+  "analysisResume": "Retomar a análise",
+  "analysisPause": "Pausar a análise"
+}

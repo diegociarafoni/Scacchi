@@ -1,6 +1,6 @@
 # Stile
 
-La schermata «Stile» raccoglie in un posto solo l'aspetto della scacchiera. Si apre dalla voce «Stile» in cima a Impostazioni (`lib/style/style_page.dart`). In alto c'è l'anteprima della scacchiera dal vivo, la stessa di Impostazioni (`BoardPreview`), grande quasi quanto la larghezza dello schermo; sotto, quattro schede. Ogni scelta si applica subito e vale in partita, negli esercizi e nell'anteprima. In orizzontale l'anteprima sta a sinistra e le schede a destra.
+La schermata «Stile» raccoglie in un posto solo l'aspetto della scacchiera. Si apre dalla sezione «Stile» di Impostazioni, subito dopo Profilo (`lib/style/style_page.dart`). In alto c'è l'anteprima della scacchiera dal vivo, la stessa di Impostazioni (`BoardPreview`), grande quasi quanto la larghezza dello schermo; sotto, quattro schede. Ogni scelta si applica subito e vale in partita, negli esercizi e nell'anteprima. In orizzontale l'anteprima sta a sinistra e le schede a destra.
 
 ## Schede
 
@@ -27,13 +27,13 @@ Il percorso della foto è in `AppSettings.backdropPhoto`; la scelta dello sfondo
 
 ## Suoni
 
-Tre set, tutti generati da `tool/generate_sounds.py` e di nostra proprietà (CC0): Classico (quello di sempre, in `assets/sounds/`), Legno e Cristallo (in `assets/sounds/legno/` e `assets/sounds/cristallo/`). Ogni set ha gli stessi sette suoni di `GameSound`. I due set aggiunti pesano in tutto circa 130 KB. Toccando un set si sente una mossa e una cattura, a meno che i suoni siano spenti, nel qual caso la scheda lo dice.
+Tre set, tutti generati da `tool/generate_sounds.py` e di nostra proprietà (CC0): Classico (quello di sempre, in `assets/sounds/`), Legno e Cristallo (in `assets/sounds/legno/` e `assets/sounds/cristallo/`). Ogni set ha gli stessi sette suoni di `GameSound`. Toccando un set si sente una mossa e una cattura, a meno che i suoni siano spenti, nel qual caso la scheda lo dice.
 
 `SoundPlayer.activeSet` segue sempre la scelta: lo aggiorna `SettingsController` a ogni modifica, così la schermata di gioco usa il set scelto senza cambiare. Il lettore rilascia i suoi `AudioPlayer` dei set non più in uso.
 
 ## Peso
 
-Le tre scacchiere nuove (Marmo, Metallo, Vetro) sono WebP da 1024 px, circa 100 KB insieme, generate in SVG da `tool/board_art/art.mjs`; Menta, Cipria e Ardesia sono tinte unite. Sfondi e miniature non aggiungono immagini. In totale gli asset crescono di circa 230 KB su un limite di 80 MB per l'APK.
+Le tre scacchiere nuove (Marmo, Metallo, Vetro) sono WebP da 1024 px, generate in SVG da `tool/board_art/art.mjs`; Menta, Cipria e Ardesia sono tinte unite. Sfondi e miniature non aggiungono immagini.
 
 ## Test
 

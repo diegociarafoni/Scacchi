@@ -81,53 +81,5 @@
   "pathGuardianUnavailable": "Bekçiye meydan okumak için bilgisayarın oynadığı yerde olmalısın: Android ve iOS ya da Stockfish kurulu Windows ve Linux.",
   "@pathGuardianUnavailable": {
     "description": "Avviso se il motore non è disponibile"
-  },
-  "pathStageWrong": "Doğru hamle bu değil, tekrar dene.",
-  "@pathStageWrong": {
-    "description": "Avviso dopo una mossa sbagliata in un esercizio"
-  },
-  "pathStageGood": "Güzel, devam et.",
-  "@pathStageGood": {
-    "description": "Conferma dopo una mossa giusta, con altre mosse da trovare"
-  },
-  "pathStageSolved": "Tam öyle!",
-  "@pathStageSolved": {
-    "description": "Conferma a esercizio risolto"
-  },
-  "pathStageRestartTooltip": "Baştan başla",
-  "@pathStageRestartTooltip": {
-    "description": "Tooltip del pulsante che rifà l'esercizio in corso"
-  },
-  "pathStageExerciseOf": "Alıştırma {n} / {total}",
-  "@pathStageExerciseOf": {
-    "description": "Etichetta per i lettori di schermo dell'avanzamento nella tappa",
-    "placeholders": {
-      "n": {
-        "type": "int"
-      },
-      "total": {
-        "type": "int"
-      }
-    }
-  },
-  "pathStageStart": "Başla",
-  "@pathStageStart": {
-    "description": "Pulsante che avvia gli esercizi dopo la spiegazione"
-  },
-  "pathStageNext": "İleri",
-  "@pathStageNext": {
-    "description": "Pulsante che passa all'esercizio successivo"
-  },
-  "pathStageRestartExercise": "Alıştırmayı yeniden başlat",
-  "@pathStageRestartExercise": {
-    "description": "Pulsante che rifà l'esercizio senza vie d'uscita"
-  },
-  "pathStageComplete": "Durak tamamlandı",
-  "@pathStageComplete": {
-    "description": "Titolo del risultato a fine tappa"
-  },
-  "pathStageFinish": "Bitti",
-  "@pathStageFinish": {
-    "description": "Pulsante che chiude il risultato di una tappa"
   }
 }

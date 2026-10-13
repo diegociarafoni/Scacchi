@@ -16,7 +16,7 @@ L'app si chiama **Rokko**, da *arrocco* e da *rook* (la torre in inglese): breve
 
 `test/branding_test.dart` controlla che i nomi nativi siano Rokko e che l'identificativo non cambi.
 
-Su macOS il pacchetto si chiama ancora `scacchi.app`: rinominarlo tocca il progetto Xcode in più punti e va verificato su un Mac. Il tag `Event` delle partite in PGN resta «Scacchi», che descrive il gioco e non l'app.
+Su macOS il pacchetto si chiama ancora `scacchi.app`: rinominarlo tocca il progetto Xcode in più punti e va verificato su un Mac. Il tag `Event` delle partite in PGN è «Rokko».
 
 ## Icona
 

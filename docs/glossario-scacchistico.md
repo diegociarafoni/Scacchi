@@ -1,6 +1,6 @@
 # Glossario scacchistico
 
-Termini di riferimento per tradurre Rokko. L'italiano è la lingua base; inglese, spagnolo, francese e turco devono usare i termini di questa tabella in ogni testo (interfaccia, lezioni, commenti, frasi dei bot). Uno stesso concetto si traduce sempre con la stessa parola. Dove una forma è incerta c'è «(da verificare)»: la conferma o la correzione arriva da chi rilegge e si fa qui, in una sola PR.
+Termini di riferimento per tradurre Rokko. L'italiano è la lingua base; inglese, spagnolo, francese e turco devono usare i termini di questa tabella in ogni testo (interfaccia, lezioni, commenti, frasi dei bot). Uno stesso concetto si traduce sempre con la stessa parola. Dove una forma è incerta c'è «(da verificare)»: la conferma o la correzione arriva da chi rilegge e si fa qui.
 
 ## Regole di stile
 
@@ -46,7 +46,7 @@ Termini di riferimento per tradurre Rokko. L'italiano è la lingua base; inglese
 | Cavallo | C | N | C | C |
 | Pedone | (nessuna) | (nessuna) | (nessuna) | (nessuna) |
 
-La notazione predefinita è quella della lingua dell'app; restano a scelta l'inglese e la figurativa.
+La notazione si sceglie nelle Impostazioni (predefinita la figurativa, vedi [notazione.md](notazione.md)) e non dipende dalla lingua dell'app.
 
 ## Mosse e fine partita
 
@@ -198,5 +198,5 @@ Stile: turco standard (Türkiye), si dà del «sen» (imperativo informale, anch
 ## Come si usa
 
 1. Prima di tradurre un testo si cercano qui i termini che contiene.
-2. Un termine nuovo si aggiunge alla tabella nella stessa PR che lo introduce, con le quattro lingue.
-3. Una correzione segnalata da chi rilegge si fa qui e poi si propaga ai file `.arb` e ai contenuti; quando saranno introdotti i controlli automatici dei termini, leggeranno questo documento.
+2. Un termine nuovo si aggiunge alla tabella insieme al testo che lo introduce, con le quattro lingue.
+3. Una correzione segnalata da chi rilegge si fa qui e poi si propaga ai file `.arb` e ai contenuti.

@@ -1,0 +1,20 @@
+{
+  "multiplayerRemoteIntro": "Para jogar à distância você só precisa de internet: envie um link para o seu amigo e joguem quando quiserem, até com horas de diferença.",
+  "multiplayerRemoteSwitchHint": "Seu amigo pode entrar de qualquer lugar com um link. Os lances viajam criptografados por relés públicos: sem conta e sem servidor nosso.",
+  "multiplayerRemoteShare": "Compartilhar o link do convite",
+  "multiplayerRemoteShareSubject": "Convite para uma partida de xadrez",
+  "multiplayerRemoteShareText": "Vamos jogar xadrez no Rokko! Abra o app, escolha Jogar com um amigo, depois Entrar com o link e cole este link: {link}",
+  "multiplayerRemoteWaitingHint": "Envie o link para o seu amigo ou deixe que ele escaneie o QR code. A partida fica salva: você pode fechar o app e retomá-la em Jogar com um amigo.",
+  "multiplayerRemoteLeaveBodyWaiting": "A partida fica salva e o link continua válido: você pode retomá-la em Jogar com um amigo.",
+  "multiplayerRemoteJoinLink": "Entrar com o link",
+  "multiplayerRemoteLinkTitle": "Cole o link do convite",
+  "multiplayerRemoteLinkField": "Link do convite",
+  "multiplayerRemotePaste": "Colar",
+  "multiplayerRemoteLinkInvalid": "Este link não é um convite para uma partida.",
+  "multiplayerRemoteLinkConfirm": "Entrar",
+  "multiplayerRemoteNotifyChannel": "Partidas à distância",
+  "multiplayerRemoteNotifyChannelDescription": "Avisa quando o seu amigo fizer o lance dele.",
+  "multiplayerRemoteNotifyTitle": "Sua vez",
+  "multiplayerRemoteNotifyBody": "Seu amigo jogou {move}.",
+  "multiplayerRemoteNotifyOver": "A partida com o seu amigo terminou."
+}

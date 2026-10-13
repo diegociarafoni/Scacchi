@@ -5,6 +5,7 @@ enum AppLanguage {
   system(null),
   italian(Locale('it')),
   english(Locale('en')),
+  portuguese(Locale('pt')),
   turkish(Locale('tr'));
 
   const AppLanguage(this.locale);
@@ -18,6 +19,7 @@ enum AppLanguage {
     AppLanguage.system => null,
     AppLanguage.italian => 'Italiano',
     AppLanguage.english => 'English',
+    AppLanguage.portuguese => 'Português',
     AppLanguage.turkish => 'Türkçe',
   };
 }

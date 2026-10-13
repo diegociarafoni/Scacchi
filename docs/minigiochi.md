@@ -22,12 +22,12 @@ Solo le coordinate hanno un limite di tempo, perché è il senso dell'esercizio;
 
 ## Progressi
 
-A fine sessione la schermata registra `MinigameFinished(game: 'coordinate', score: n, duration: d)`:
+A fine sessione la schermata registra `MinigameFinished(game: <identificativo>, score: n, duration: d)`:
 
 - 5 XP, come un puzzle, se il punteggio è almeno 1: una sessione a vuoto non vale XP;
 - la durata, che conta per l'obiettivo giornaliero a minuti;
 - il record del minigioco in `PersonalRecords.minigames`, mostrato nell'elenco dei minigiochi e nel Profilo;
-- due traguardi: *Occhio di lince* (20 coordinate in una sessione) e *Giocoliere* (tutti i minigiochi provati).
+- tre traguardi: *Occhio di lince* (20 coordinate in una sessione), *Giocoliere* (tutti i minigiochi provati) e il badge *Ginnasta della mente* (25 sessioni con almeno un punto).
 
 Una sessione chiusa prima della fine (tasto indietro) è abbandonata e non si registra.
 
@@ -43,4 +43,4 @@ I minigiochi non contano come puzzle né come sessioni a tempo dei puzzle, così
 | `quiz_page.dart` | Dieci domande a scelta multipla, usata da Alla cieca e Conta del materiale |
 | `board_layout.dart` | Scacchiera e pannello affiancati in orizzontale, impilati in verticale |
 
-I minigiochi si aprono dalla Home e registrano punteggi e XP nei progressi.
+I minigiochi si aprono dal gruppo Allenati della Home e registrano punteggi e XP nei progressi.
