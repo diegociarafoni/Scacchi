@@ -46,6 +46,15 @@ Dopo un clone, e dopo ogni modifica ai `.arb` o un cambio di ramo, eseguire `dar
 
 `test/tool/l10n_merge_test.dart` verifica l'unione (nessuna chiave duplicata, stessi file e stesse chiavi per lingua). `test/l10n_test.dart` controlla che italiano e inglese abbiano le stesse chiavi e gli stessi segnaposto e che nessuna traduzione sia vuota, e monta alcune schermate migrate in inglese.
 
+## Contenuti per lingua
+
+I testi lunghi o in lista (lezioni, grandi maestri, finali, frasi dei bot, nomi delle aperture) non stanno negli `.arb`: sono in `assets/content/<lingua>/<nome>.json`, un file per contenuto e per lingua. Regola: una frase di interfaccia o una stringa singola va in `.arb`; un racconto, un commento per mossa o una lista di frasi va in JSON.
+
+- Il formato è piatto, pensato per essere tradotto da persone: `{"chiave.id": "testo"}`, oppure una lista di frasi `"bot.aggressive.check": ["...", "..."]`. I segnaposto sono `{nome}`. Il codice tiene la parte non testuale (mosse, posizioni, soglie) e un `id` stabile.
+- `lib/l10n/content.dart`: `ContentText` legge i testi per id con ripiego lingua scelta, inglese, italiano; un id sconosciuto restituisce l'id stesso. `Content` tiene i contenuti della lingua attiva, caricati all'avvio da `ScacchiApp`; i test li trovano già caricati (`test/flutter_test_config.dart`) e per provare un'altra lingua usano `useContent('en')` di `test/content_support.dart`.
+- Per aggiungere una lingua si copia la cartella italiana e si traducono i valori senza toccare le chiavi; le cartelle sono dichiarate in `pubspec.yaml`.
+- `test/l10n/content_parity_test.dart` verifica che, per ogni file dei contenuti italiani, le lingue elencate in `_checked` abbiano gli stessi id, gli stessi segnaposto, nessun testo vuoto e lo stesso tipo (testo o lista); l'elenco delle liste può avere un numero diverso di frasi, perché le frasi dei bot si adattano al carattere. Il messaggio d'errore dice quali id mancano (`tool/src/content_parity.dart`).
+
 ## Aggiungere una lingua
 
 Creare `lib/l10n/<codice>/` con tutti i file e le chiavi delle altre lingue e rigenerare con `dart tool/l10n.dart`. Per renderla selezionabile va tolto il `locale` fisso in `lib/main.dart`, lasciando che Flutter scelga la lingua del dispositivo, solo dopo che tutti i testi dell'interfaccia sono stati spostati nei file `.arb`.
