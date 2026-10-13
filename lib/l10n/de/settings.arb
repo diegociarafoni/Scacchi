@@ -98,5 +98,7 @@
   "settingsProgressEnabledDescription": "Wenn aus, wird nichts gespeichert",
   "settingsLanguage": "Sprache",
   "settingsLanguageDescription": "Die Sprache der App oder wie das Handy",
-  "settingsLanguageSystem": "Wie das Handy"
+  "settingsLanguageSystem": "Wie das Handy",
+  "settingsPremove": "Vorausziehen",
+  "settingsPremoveDescription": "Zieh, während der Computer nachdenkt; ein Tipp auf ein leeres Feld bricht ab"
 }
