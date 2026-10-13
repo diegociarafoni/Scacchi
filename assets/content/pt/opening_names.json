@@ -1,0 +1,501 @@
+{
+  "family.Sicilian Defense": "Defesa Siciliana",
+  "family.Ruy Lopez": "Partida Espanhola",
+  "family.French Defense": "Defesa Francesa",
+  "family.Queen's Gambit": "Gambito da Dama",
+  "family.Italian Game": "Partida Italiana",
+  "family.English Opening": "Abertura Inglesa",
+  "family.King's Gambit": "Gambito do Rei",
+  "family.King's Indian Defense": "Defesa Índia do Rei",
+  "family.Caro-Kann Defense": "Defesa Caro-Kann",
+  "family.Nimzo-Indian Defense": "Defesa Nimzo-Índia",
+  "family.Queen's Pawn Game": "Partida do Peão da Dama",
+  "family.Semi-Slav Defense": "Defesa Semieslava",
+  "family.Dutch Defense": "Defesa Holandesa",
+  "family.Benoni Defense": "Defesa Benoni",
+  "family.Grünfeld Defense": "Defesa Grünfeld",
+  "family.Queen's Indian Defense": "Defesa Índia da Dama",
+  "family.Alekhine Defense": "Defesa Alekhine",
+  "family.Indian Defense": "Defesa Índia",
+  "family.Scotch Game": "Partida Escocesa",
+  "family.Slav Defense": "Defesa Eslava",
+  "family.Petrov's Defense": "Defesa Petrov",
+  "family.Four Knights Game": "Partida dos Quatro Cavalos",
+  "family.Zukertort Opening": "Abertura Zukertort",
+  "family.Scandinavian Defense": "Defesa Escandinava",
+  "family.Philidor Defense": "Defesa Philidor",
+  "family.Réti Opening": "Abertura Réti",
+  "family.Nimzowitsch Defense": "Defesa Nimzowitsch",
+  "family.Bishop's Opening": "Abertura do Bispo",
+  "family.Vienna Game": "Partida Vienense",
+  "family.Modern Defense": "Defesa Moderna",
+  "family.King's Pawn Game": "Partida do Peão do Rei",
+  "family.Van Geet Opening": "Abertura Van Geet",
+  "family.Pterodactyl Defense": "Defesa Pterodáctilo",
+  "family.Catalan Opening": "Abertura Catalã",
+  "family.Bird Opening": "Abertura Bird",
+  "family.Pirc Defense": "Defesa Pirc",
+  "family.Tarrasch Defense": "Defesa Tarrasch",
+  "family.Polish Opening": "Abertura Polonesa",
+  "family.Neo-Grünfeld Defense": "Defesa Neo-Grünfeld",
+  "family.Blackmar-Diemer Gambit": "Gambito Blackmar-Diemer",
+  "family.Bogo-Indian Defense": "Defesa Bogo-Índia",
+  "family.Grob Opening": "Abertura Grob",
+  "family.Hungarian Opening": "Abertura Húngara",
+  "family.King's Indian Attack": "Ataque Índia do Rei",
+  "family.Nimzo-Larsen Attack": "Ataque Nimzo-Larsen",
+  "family.Center Game": "Partida do Centro",
+  "family.Latvian Gambit": "Gambito Letão",
+  "family.Ponziani Opening": "Abertura Ponziani",
+  "family.Vienna Gambit": "Gambito Vienense",
+  "family.Old Indian Defense": "Defesa Velha Índia",
+  "family.Rat Defense": "Defesa do Rato",
+  "family.Trompowsky Attack": "Ataque Trompowsky",
+  "family.Benko Gambit": "Gambito Benko",
+  "family.Kádas Opening": "Abertura Kádas",
+  "family.Englund Gambit": "Gambito Englund",
+  "family.Owen Defense": "Defesa Owen",
+  "family.Richter-Veresov Attack": "Ataque Richter-Veresov",
+  "family.Ware Opening": "Abertura Ware",
+  "family.English Defense": "Defesa Inglesa",
+  "family.Barnes Opening": "Abertura Barnes",
+  "family.Torre Attack": "Ataque Torre",
+  "family.Lion Defense": "Defesa do Leão",
+  "family.Danish Gambit": "Gambito Dinamarquês",
+  "family.Three Knights Opening": "Abertura dos Três Cavalos",
+  "family.Rubinstein Opening": "Abertura Rubinstein",
+  "family.Van't Kruijs Opening": "Abertura Van't Kruijs",
+  "family.Borg Defense": "Defesa Borg",
+  "family.Mieses Opening": "Abertura Mieses",
+  "family.Sodium Attack": "Ataque Sodium",
+  "family.Mikenas Defense": "Defesa Mikenas",
+  "family.London System": "Sistema Londres",
+  "family.St. George Defense": "Defesa São Jorge",
+  "family.Elephant Gambit": "Gambito do Elefante",
+  "family.Amar Opening": "Abertura Amar",
+  "family.Colle System": "Sistema Colle",
+  "family.King's Pawn Opening": "Abertura do Peão do Rei",
+  "family.Portuguese Opening": "Abertura Portuguesa",
+  "family.King's Knight Opening": "Abertura do Cavalo do Rei",
+  "family.Rapport-Jobava System": "Sistema Rapport-Jobava",
+  "family.Blumenfeld Countergambit": "Contragambito Blumenfeld",
+  "family.Anderssen's Opening": "Abertura Anderssen",
+  "family.Clemenz Opening": "Abertura Clemenz",
+  "family.Formation": "Formação",
+  "family.Zukertort Defense": "Defesa Zukertort",
+  "family.English Orangutan": "Orangotango Inglês",
+  "family.Horwitz Defense": "Defesa Horwitz",
+  "family.Kangaroo Defense": "Defesa do Canguru",
+  "family.Polish Defense": "Defesa Polonesa",
+  "family.Slav Indian": "Eslava-Índia",
+  "family.Amazon Attack": "Ataque Amazona",
+  "family.Marienbad System": "Sistema Marienbad",
+  "family.Pseudo Queen's Indian Defense": "Pseudo-defesa Índia da Dama",
+  "family.Mexican Defense": "Defesa Mexicana",
+  "family.Carr Defense": "Defesa Carr",
+  "family.Goldsmith Defense": "Defesa Goldsmith",
+  "family.Hippopotamus Defense": "Defesa do Hipopótamo",
+  "family.Ware Defense": "Defesa Ware",
+  "family.Amsterdam Attack": "Ataque Amsterdam",
+  "family.Creepy Crawly Formation": "Formação Creepy Crawly",
+  "family.Global Opening": "Abertura Global",
+  "family.Lasker Simul Special": "Especial Simultânea Lasker",
+  "family.Saragossa Opening": "Abertura Saragoça",
+  "family.Valencia Opening": "Abertura Valencia",
+  "family.Australian Defense": "Defesa Australiana",
+  "family.Montevideo Defense": "Defesa Montevideo",
+  "family.Zaire Defense": "Defesa Zaire",
+  "family.Robatsch Defense": "Defesa Robatsch",
+  "family.Wade Defense": "Defesa Wade",
+  "family.Basque Opening": "Abertura Basca",
+  "family.Canard Opening": "Abertura Canard",
+  "family.Paleface Attack": "Ataque Paleface",
+  "family.Döry Defense": "Defesa Döry",
+  "family.Yusupov-Rubinstein System": "Sistema Yusupov-Rubinstein",
+  "family.East Indian Defense": "Defesa Índia Oriental",
+  "family.Queen's Indian Accelerated": "Índia da Dama Acelerada",
+  "family.Vulture Defense": "Defesa do Abutre",
+  "family.Barnes Defense": "Defesa Barnes",
+  "family.Fried Fox Defense": "Defesa Fried Fox",
+  "family.Lemming Defense": "Defesa do Lemingue",
+  "family.Czech Defense": "Defesa Tcheca",
+  "family.Bongcloud Attack": "Ataque Bongcloud",
+  "family.Gunderam Defense": "Defesa Gunderam",
+  "family.Dresden Opening": "Abertura Dresden",
+  "family.Irish Gambit": "Gambito Irlandês",
+  "family.Duras Gambit": "Gambito Duras",
+  "family.Queen's Pawn": "Peão da Dama",
+  "phrase.Two Knights": "dos Dois Cavalos",
+  "phrase.Three Knights": "dos Três Cavalos",
+  "phrase.Four Knights": "dos Quatro Cavalos",
+  "phrase.Two Pawns": "dos Dois Peões",
+  "phrase.Three Pawns": "dos Três Peões",
+  "phrase.Four Pawns": "dos Quatro Peões",
+  "phrase.King's": "do Rei",
+  "phrase.Queen's": "da Dama",
+  "phrase.Bishop's": "do Bispo",
+  "phrase.Knight's": "do Cavalo",
+  "phrase.Queen's Knight": "do Cavalo da Dama",
+  "phrase.King's Knight": "do Cavalo do Rei",
+  "phrase.Early Deviations": "desvios precoces",
+  "phrase.Move Order": "ordem de lances",
+  "phrase.Kingside Move Order": "ordem de lances na ala do rei",
+  "phrase.Queenside Move Order": "ordem de lances na ala da dama",
+  "phrase.Pawn Push": "avanço de peão",
+  "phrase.Double-Dutch": "duplo holandês",
+  "phrase.King's English": "inglesa do Rei",
+  "noun.Variation": [
+    "variante",
+    "f"
+  ],
+  "noun.Variations": [
+    "variantes",
+    "f"
+  ],
+  "noun.Attack": [
+    "ataque",
+    "m"
+  ],
+  "noun.Gambit": [
+    "gambito",
+    "m"
+  ],
+  "noun.Countergambit": [
+    "contragambito",
+    "m"
+  ],
+  "noun.Defense": [
+    "defesa",
+    "f"
+  ],
+  "noun.System": [
+    "sistema",
+    "m"
+  ],
+  "noun.Line": [
+    "linha",
+    "f"
+  ],
+  "noun.Opening": [
+    "abertura",
+    "f"
+  ],
+  "noun.Game": [
+    "partida",
+    "f"
+  ],
+  "noun.Formation": [
+    "formação",
+    "f"
+  ],
+  "noun.Trap": [
+    "armadilha",
+    "f"
+  ],
+  "noun.Sacrifice": [
+    "sacrifício",
+    "m"
+  ],
+  "noun.Endgame": [
+    "final",
+    "m"
+  ],
+  "noun.Counterattack": [
+    "contra-ataque",
+    "m"
+  ],
+  "noun.Retreat": [
+    "retirada",
+    "f"
+  ],
+  "adjective.Classical": [
+    "clássico",
+    "clássica"
+  ],
+  "adjective.Modern": [
+    "moderno",
+    "moderna"
+  ],
+  "adjective.Closed": [
+    "fechado",
+    "fechada"
+  ],
+  "adjective.Open": [
+    "aberto",
+    "aberta"
+  ],
+  "adjective.Main": [
+    "principal",
+    "principal"
+  ],
+  "adjective.Normal": [
+    "normal",
+    "normal"
+  ],
+  "adjective.Orthodox": [
+    "ortodoxo",
+    "ortodoxa"
+  ],
+  "adjective.Accepted": [
+    "aceito",
+    "aceita"
+  ],
+  "adjective.Declined": [
+    "recusado",
+    "recusada"
+  ],
+  "adjective.Advance": [
+    "de avanço",
+    "de avanço"
+  ],
+  "adjective.Exchange": [
+    "da troca",
+    "da troca"
+  ],
+  "adjective.Symmetrical": [
+    "simétrico",
+    "simétrica"
+  ],
+  "adjective.Symmetric": [
+    "simétrico",
+    "simétrica"
+  ],
+  "adjective.Reversed": [
+    "invertido",
+    "invertida"
+  ],
+  "adjective.Accelerated": [
+    "acelerado",
+    "acelerada"
+  ],
+  "adjective.Hyperaccelerated": [
+    "hiperacelerado",
+    "hiperacelerada"
+  ],
+  "adjective.Delayed": [
+    "adiado",
+    "adiada"
+  ],
+  "adjective.Deferred": [
+    "adiado",
+    "adiada"
+  ],
+  "adjective.Quiet": [
+    "tranquilo",
+    "tranquila"
+  ],
+  "adjective.Traditional": [
+    "tradicional",
+    "tradicional"
+  ],
+  "adjective.Positional": [
+    "posicional",
+    "posicional"
+  ],
+  "adjective.Double": [
+    "duplo",
+    "dupla"
+  ],
+  "adjective.Central": [
+    "central",
+    "central"
+  ],
+  "adjective.Old": [
+    "velho",
+    "velha"
+  ],
+  "adjective.Early": [
+    "precoce",
+    "precoce"
+  ],
+  "adjective.Long": [
+    "longo",
+    "longa"
+  ],
+  "adjective.Short": [
+    "curto",
+    "curta"
+  ],
+  "adjective.Improved": [
+    "melhorado",
+    "melhorada"
+  ],
+  "adjective.Original": [
+    "original",
+    "original"
+  ],
+  "adjective.Hybrid": [
+    "híbrido",
+    "híbrida"
+  ],
+  "adjective.Poisoned": [
+    "envenenado",
+    "envenenada"
+  ],
+  "adjective.Austrian": [
+    "austríaco",
+    "austríaca"
+  ],
+  "adjective.Russian": [
+    "russo",
+    "russa"
+  ],
+  "adjective.Italian": [
+    "italiano",
+    "italiana"
+  ],
+  "adjective.Spanish": [
+    "espanhol",
+    "espanhola"
+  ],
+  "adjective.English": [
+    "inglês",
+    "inglesa"
+  ],
+  "adjective.Dutch": [
+    "holandês",
+    "holandesa"
+  ],
+  "adjective.French": [
+    "francês",
+    "francesa"
+  ],
+  "adjective.Polish": [
+    "polonês",
+    "polonesa"
+  ],
+  "adjective.Hungarian": [
+    "húngaro",
+    "húngara"
+  ],
+  "adjective.Czech": [
+    "tcheco",
+    "tcheca"
+  ],
+  "adjective.Portuguese": [
+    "português",
+    "portuguesa"
+  ],
+  "adjective.Norwegian": [
+    "norueguês",
+    "norueguesa"
+  ],
+  "adjective.Swiss": [
+    "suíço",
+    "suíça"
+  ],
+  "adjective.Swedish": [
+    "sueco",
+    "sueca"
+  ],
+  "adjective.Siberian": [
+    "siberiano",
+    "siberiana"
+  ],
+  "adjective.Eastern": [
+    "oriental",
+    "oriental"
+  ],
+  "adjective.Western": [
+    "ocidental",
+    "ocidental"
+  ],
+  "adjective.Chinese": [
+    "chinês",
+    "chinesa"
+  ],
+  "adjective.Yugoslav": [
+    "iugoslavo",
+    "iugoslava"
+  ],
+  "adjective.Scandinavian": [
+    "escandinavo",
+    "escandinava"
+  ],
+  "adjective.German": [
+    "alemão",
+    "alemã"
+  ],
+  "adjective.Ukrainian": [
+    "ucraniano",
+    "ucraniana"
+  ],
+  "adjective.Mexican": [
+    "mexicano",
+    "mexicana"
+  ],
+  "adjective.American": [
+    "americano",
+    "americana"
+  ],
+  "adjective.Argentine": [
+    "argentino",
+    "argentina"
+  ],
+  "adjective.Baltic": [
+    "báltico",
+    "báltica"
+  ],
+  "adjective.Sicilian": [
+    "siciliano",
+    "siciliana"
+  ],
+  "adjective.Slav": [
+    "eslavo",
+    "eslava"
+  ],
+  "adjective.Indian": [
+    "índio",
+    "índia"
+  ],
+  "adjective.Wing": [
+    "da ala",
+    "da ala"
+  ],
+  "adjective.Center": [
+    "do centro",
+    "do centro"
+  ],
+  "adjective.Kingside": [
+    "da ala do rei",
+    "da ala do rei"
+  ],
+  "adjective.Queenside": [
+    "da ala da dama",
+    "da ala da dama"
+  ],
+  "adjective.Black": [
+    "das Pretas",
+    "das Pretas"
+  ],
+  "adjective.White": [
+    "das Brancas",
+    "das Brancas"
+  ],
+  "adjective.Check": [
+    "do xeque",
+    "do xeque"
+  ],
+  "adjective.Knight": [
+    "do cavalo",
+    "do cavalo"
+  ],
+  "adjective.Bishop": [
+    "do bispo",
+    "do bispo"
+  ],
+  "prefix.Neo": "neo",
+  "prefix.Anti": "anti",
+  "prefix.Semi": "semi",
+  "prefix.Pseudo": "pseudo",
+  "grammar.with": "com",
+  "grammar.feminine": [
+    "Defesa",
+    "Abertura",
+    "Partida",
+    "Formação",
+    "Pseudo-defesa",
+    "Índia",
+    "Eslava"
+  ]
+}

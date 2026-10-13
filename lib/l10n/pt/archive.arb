@@ -1,0 +1,43 @@
+{
+  "archiveShareSubject": "Partidas em PGN",
+  "archiveTitle": "Partidas",
+  "archiveImportResult": "{count, plural, =1{1 partida importada} other{{count} partidas importadas}}{skipped, plural, =0{} other{, {skipped} inválidas}}",
+  "@archiveImportResult": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "skipped": {
+        "type": "int"
+      }
+    }
+  },
+  "archiveDeleteTitle": "Apagar esta partida?",
+  "archiveCancel": "Cancelar",
+  "archiveDelete": "Apagar",
+  "archivePgnCopied": "PGN copiado",
+  "archiveImportPgn": "Importar PGN",
+  "archiveExportAll": "Exportar tudo em PGN",
+  "archiveUnreadable": "Não foi possível ler o arquivo.",
+  "archiveSearchHint": "Buscar por jogador ou tipo",
+  "archiveEmpty": "Nenhuma partida salva.",
+  "archiveNoMatch": "Nenhuma partida encontrada.",
+  "archiveInProgress": "Em andamento",
+  "archiveActionsFor": "Ações para {title}",
+  "@archiveActionsFor": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "archiveSharePgn": "Compartilhar PGN",
+  "archiveCopyPgn": "Copiar PGN",
+  "archiveImportHint": "Cole aqui uma ou mais partidas em PGN",
+  "archivePaste": "Colar",
+  "archiveImport": "Importar",
+  "archiveModeLocal": "local",
+  "archiveModeComputer": "computador",
+  "archiveModeImported": "importada",
+  "archiveModePhysical": "tabuleiro físico"
+}

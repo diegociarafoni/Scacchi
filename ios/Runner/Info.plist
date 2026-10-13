@@ -10,6 +10,7 @@
 	<array>
 		<string>it</string>
 		<string>en</string>
+		<string>pt</string>
 		<string>ru</string>
 	</array>
 	<key>CFBundleDisplayName</key>
