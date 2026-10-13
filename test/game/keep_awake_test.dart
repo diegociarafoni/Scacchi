@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/game/game_page.dart';
 import 'package:scacchi/settings/settings.dart';
 
+import '../computer_fakes.dart';
 import '../game_actions.dart';
 
 void main() {
@@ -65,5 +66,21 @@ void main() {
     await settings.update(settings.value.copyWith(keepAwake: false));
     await tester.pump();
     expect(calls, [true, false]);
+  });
+
+  testWidgets('RM-06 una nuova partita riaccende lo schermo', (tester) async {
+    await start(tester);
+    await tapGameAction(tester, 'Abbandona');
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Abbandona').last);
+    await tester.pumpAndSettle();
+    expect(calls.last, isFalse);
+    await tapGameAction(tester, 'Nuova');
+    await tester.pumpAndSettle();
+    await chooseTwoPlayers(tester);
+    await tester.pumpAndSettle();
+    await chooseTime(tester, 'Senza tempo');
+    await tester.pumpAndSettle();
+    expect(calls.last, isTrue);
   });
 }

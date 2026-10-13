@@ -382,7 +382,6 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _autoFlip = _settings.autoFlip;
     widget.settings.addListener(_onSettingsChanged);
     WidgetsBinding.instance.addObserver(this);
-    _syncAwake();
     unawaited(_loadProfile());
     // Il libro serve a fine partita per i libri delle aperture.
     openingBook().ignore();
@@ -892,19 +891,22 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     super.dispose();
   }
 
-  bool? _awake;
+  bool _awake = false;
 
-  /// Schermo acceso finché la partita è in corso e l'impostazione è attiva.
+  /// Schermo acceso finché la partita è in corso e l'impostazione è attiva;
+  /// si controlla a ogni costruzione, così vale per qualunque modo in cui la
+  /// partita cambia o finisce.
   void _syncAwake({bool disposing = false}) {
     final want = !disposing && _settings.keepAwake && !_game.isOver;
     if (want == _awake) return;
-    final first = _awake == null;
     _awake = want;
-    if (first && !want) return;
-    final set = widget.keepAwake ?? ((on) => WakelockPlus.toggle(enable: on));
+    final set = widget.keepAwake ?? _systemKeepAwake;
     // Non è essenziale: senza il servizio lo schermo si spegne come di solito.
     unawaited(set(want).catchError((_) {}));
   }
+
+  static Future<void> _systemKeepAwake(bool on) =>
+      WakelockPlus.toggle(enable: on);
 
   void _onSettingsChanged() {
     _syncAwake();
@@ -1195,7 +1197,6 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _syncClock();
     _finishGame();
     _board.updatePosition(_gameData(), animate: animate, resetPremove: true);
-    _syncAwake();
     _recordAdaptiveResult();
     _recordBotResult();
     setState(() {
@@ -2408,6 +2409,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    _syncAwake();
     final inProgress = _isChallenge && !_game.isOver && _game.moves.isNotEmpty;
     return PopScope(
       canPop: !inProgress,
