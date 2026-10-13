@@ -1,6 +1,7 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../settings/notation.dart';
 import '../settings/settings.dart';
 import 'opening_game.dart';
@@ -29,40 +30,42 @@ class RepertoirePage extends StatefulWidget {
 
 class _RepertoirePageState extends State<RepertoirePage> {
   RepertoireTrainer get _t => widget.trainer;
-  String get _color => widget.side == Side.white ? 'Bianco' : 'Nero';
 
   Future<void> _importPgn() async {
     // Niente dispose: il dialogo lo usa ancora durante l'animazione di uscita.
     final controller = TextEditingController();
     final text = await showDialog<String>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Importa PGN'),
-        content: TextField(
-          controller: controller,
-          maxLines: 6,
-          decoration: const InputDecoration(
-            hintText: '1. e4 e5 2. Nf3 Nc6 (2... d6 3. d4) 3. Bc4',
-            helperText: 'Ogni variante diventa una linea.',
+      builder: (context) {
+        final l10n = AppLocalizations.of(context);
+        return AlertDialog(
+          title: Text(l10n.openingsImportTitle),
+          content: TextField(
+            controller: controller,
+            maxLines: 6,
+            decoration: InputDecoration(
+              hintText: '1. e4 e5 2. Nf3 Nc6 (2... d6 3. d4) 3. Bc4',
+              helperText: l10n.openingsImportHelper,
+            ),
           ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Annulla'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, controller.text),
-            child: const Text('Importa'),
-          ),
-        ],
-      ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(l10n.openingsCancel),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(context, controller.text),
+              child: Text(l10n.openingsImport),
+            ),
+          ],
+        );
+      },
     );
     if (text == null || !mounted) return;
     final lines = linesFromPgn(text);
     final notation = AppSettings.of(context).notation;
     var added = 0;
-    final errors = <String>[];
+    final errors = <LineProblem>[];
     for (final (i, moves) in lines.indexed) {
       final error = await _t.addLine(
         widget.side,
@@ -74,10 +77,16 @@ class _RepertoirePageState extends State<RepertoirePage> {
     }
     if (!mounted) return;
     setState(() {});
+    final l10n = AppLocalizations.of(context);
     final message = lines.isEmpty
-        ? 'Nessuna linea valida nel PGN.'
-        : 'Linee aggiunte: $added'
-              '${errors.isEmpty ? '' : '. Scartate: ${errors.length} (${errors.first})'}';
+        ? l10n.openingsImportNone
+        : errors.isEmpty
+        ? l10n.openingsImportAdded(added)
+        : l10n.openingsImportAddedSkipped(
+            added,
+            errors.length,
+            errors.first.text(l10n),
+          );
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(message)));
   }
@@ -109,24 +118,24 @@ class _RepertoirePageState extends State<RepertoirePage> {
   Widget build(BuildContext context) {
     final lines = _t.lines(widget.side);
     final due = _t.dueCount(widget.side);
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Repertorio con il $_color'),
+        title: Text(l10n.openingsRepertoireTitle(widget.side.name)),
         actions: [
           IconButton(
-            tooltip: 'Importa PGN',
+            tooltip: l10n.openingsImportTitle,
             icon: const Icon(Icons.file_download_outlined),
             onPressed: _importPgn,
           ),
         ],
       ),
       body: lines.isEmpty
-          ? const Center(
+          ? Center(
               child: Padding(
-                padding: EdgeInsets.all(24),
+                padding: const EdgeInsets.all(24),
                 child: Text(
-                  'Nessuna linea. Aggiungile da Esplora aperture con il pulsante '
-                  '"Aggiungi al repertorio" o importa un PGN.',
+                  l10n.openingsRepertoireEmpty,
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -146,12 +155,12 @@ class _RepertoirePageState extends State<RepertoirePage> {
                   children: [
                     if (widget.onPlay != null)
                       IconButton(
-                        tooltip: 'Gioca la linea',
+                        tooltip: l10n.openingsPlayLine,
                         icon: const Icon(Icons.play_arrow),
                         onPressed: () => _play(lines[i]),
                       ),
                     IconButton(
-                      tooltip: 'Elimina la linea',
+                      tooltip: l10n.openingsDeleteLine,
                       icon: const Icon(Icons.delete_outline),
                       onPressed: () async {
                         await _t.removeLine(widget.side, i);
@@ -169,7 +178,9 @@ class _RepertoirePageState extends State<RepertoirePage> {
             onPressed: due == 0 ? null : _drill,
             icon: const Icon(Icons.school_outlined),
             label: Text(
-              due == 0 ? 'Nessuna mossa da ripassare' : 'Ripassa $due mosse',
+              due == 0
+                  ? l10n.openingsReviewNone
+                  : l10n.openingsReviewButton(due),
             ),
           ),
         ),

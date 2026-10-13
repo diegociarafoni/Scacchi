@@ -39,14 +39,6 @@ String _weekday(AppLocalizations l, int day) => switch (day) {
   _ => l.progressWeekdaySunday,
 };
 
-/// Titolo di un minigioco; `Minigame.title` resta il ripiego italiano.
-String _minigameTitle(AppLocalizations l, Minigame m) => switch (m) {
-  Minigame.coordinates => l.minigamesCoordinatesTitle,
-  Minigame.captureAll => l.minigamesCaptureAllTitle,
-  Minigame.blind => l.minigamesBlindTitle,
-  Minigame.material => l.minigamesMaterialTitle,
-};
-
 /// Profilo del giocatore: livello, serie, obiettivo, traguardi e preferenze.
 class ProfilePage extends StatelessWidget {
   const ProfilePage({
@@ -813,13 +805,7 @@ class _Records extends StatelessWidget {
           '${e.value}',
         ),
       for (final e in r.minigames.entries)
-        (
-          switch (Minigame.byId(e.key)) {
-            final m? => _minigameTitle(l, m),
-            null => e.key,
-          },
-          '${e.value}',
-        ),
+        (Minigame.byId(e.key)?.title(l) ?? e.key, '${e.value}'),
     ];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,

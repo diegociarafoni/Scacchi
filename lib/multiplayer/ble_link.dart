@@ -454,7 +454,7 @@ class BleCentralLink implements BleLink {
       _chunkSize = defaultBleChunk;
     }
     if (_closed) return;
-    if (gone.isCompleted) throw StateError('collegamento perso');
+    if (gone.isCompleted) throw StateError('collegamento perso'); // l10n-ok
     _rx = rx;
     _peripheral = p;
     if (!_connected.isClosed) _connected.add(null);

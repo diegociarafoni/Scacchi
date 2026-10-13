@@ -127,7 +127,7 @@ class _FriendGamePanelState extends State<FriendGamePanel> {
       final saved = await store.load();
       if (mounted) setState(() => _saved = saved);
     } on Object catch (e) {
-      if (kDebugMode) debugPrint('Partita salvata non letta: $e');
+      if (kDebugMode) debugPrint('Partita salvata non letta: $e'); // l10n-ok
     }
   }
 
@@ -229,7 +229,9 @@ class _FriendGamePanelState extends State<FriendGamePanel> {
       );
     } on Object catch (e) {
       // Porta occupata, rete locale negata su iOS e simili.
-      if (kDebugMode) debugPrint('Partita con un amico non avviata: $e');
+      if (kDebugMode) {
+        debugPrint('Partita con un amico non avviata: $e'); // l10n-ok
+      }
       messenger.showSnackBar(
         SnackBar(content: Text(l10n.multiplayerStartError)),
       );

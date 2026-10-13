@@ -100,7 +100,7 @@ class MessageCodec {
 
   // La firma lega messaggio, partita e autore: non si riusa altrove.
   List<int> _signed(List<int> body, List<int> author) => [
-    ...utf8.encode('scacchi-mossa-v1|$gameId|'),
+    ...utf8.encode('scacchi-mossa-v1|$gameId|'), // l10n-ok
     ...author,
     ...body,
   ];

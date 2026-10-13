@@ -37,7 +37,7 @@ void addExtraChannels(
             if (channel != null) transport.add(channel);
           })
           .catchError((Object e) {
-            if (kDebugMode) debugPrint('Canale non disponibile: $e');
+            if (kDebugMode) debugPrint('Canale non disponibile: $e'); // l10n-ok
           }),
     );
   }

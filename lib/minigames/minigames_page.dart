@@ -12,20 +12,6 @@ import 'minigame.dart';
 import 'quiz.dart';
 import 'quiz_page.dart';
 
-String _title(AppLocalizations l10n, Minigame game) => switch (game) {
-  Minigame.coordinates => l10n.minigamesCoordinatesTitle,
-  Minigame.captureAll => l10n.minigamesCaptureAllTitle,
-  Minigame.blind => l10n.minigamesBlindTitle,
-  Minigame.material => l10n.minigamesMaterialTitle,
-};
-
-String _description(AppLocalizations l10n, Minigame game) => switch (game) {
-  Minigame.coordinates => l10n.minigamesCoordinatesDescription,
-  Minigame.captureAll => l10n.minigamesCaptureAllDescription,
-  Minigame.blind => l10n.minigamesBlindDescription,
-  Minigame.material => l10n.minigamesMaterialDescription,
-};
-
 /// Elenco dei minigiochi (RG-10) con il record di ciascuno.
 class MinigamesPage extends StatelessWidget {
   const MinigamesPage({super.key, this.progress});
@@ -59,13 +45,13 @@ class MinigamesPage extends StatelessWidget {
         onFinished: finished,
       ),
       Minigame.blind => QuizPage(
-        title: _title(l10n, game),
+        title: game.title(l10n),
         next: blindItem,
         random: random,
         onFinished: finished,
       ),
       Minigame.material => QuizPage(
-        title: _title(l10n, game),
+        title: game.title(l10n),
         next: materialItem,
         random: random,
         onFinished: finished,
@@ -89,8 +75,8 @@ class MinigamesPage extends StatelessWidget {
             children: [
               for (final game in Minigame.values)
                 ListTile(
-                  title: Text(_title(l10n, game)),
-                  subtitle: Text(_description(l10n, game)),
+                  title: Text(game.title(l10n)),
+                  subtitle: Text(game.description(l10n)),
                   trailing: switch (records[game.id]) {
                     final record? when showRecords => Text(
                       l10n.minigamesRecord(record),

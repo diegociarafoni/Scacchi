@@ -6,14 +6,7 @@ import '../progress/activity.dart' show GameResult;
 import '../progress/challenges.dart' show mix32;
 
 /// Formula del torneo (RG-09).
-enum TournamentFormat {
-  roundRobin('Girone all\'italiana'),
-  knockout('Eliminazione diretta');
-
-  const TournamentFormat(this.label);
-
-  final String label;
-}
+enum TournamentFormat { roundRobin, knockout }
 
 /// Partecipante: l'utente o un bot con il suo livello del motore.
 class Player {
@@ -200,7 +193,9 @@ class Tournament {
     if (format == TournamentFormat.knockout &&
         players.length != 4 &&
         players.length != 8) {
-      throw ArgumentError('Eliminazione diretta con 4 o 8 giocatori');
+      throw ArgumentError(
+        'Eliminazione diretta con 4 o 8 giocatori', // l10n-ok
+      );
     }
     if (players.length < 3 || players.length > 8) {
       throw ArgumentError('Da 3 a 8 giocatori');
@@ -273,7 +268,7 @@ class Tournament {
   /// partite tra bot e, se serve, il turno successivo.
   Tournament recordUserGame(double points) {
     final game = userGame;
-    if (game == null) throw StateError('Nessuna partita da giocare');
+    if (game == null) throw StateError('Nessuna partita da giocare'); // l10n-ok
     final round = currentRound;
     final updated = [
       for (final p in rounds[round])

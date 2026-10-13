@@ -148,7 +148,7 @@ void main() {
     tester,
   ) async {
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: OpeningName(
           positions: OpeningBook.replay([
             Move.parse('e2e4')!,

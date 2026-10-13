@@ -12,6 +12,7 @@ import 'package:scacchi/endgames/endgames_page.dart';
 import 'package:scacchi/engine/computer_player.dart';
 
 import '../computer_fakes.dart';
+import '../localized_app.dart';
 
 Offset _square(WidgetTester tester, String name) {
   final rect = tester.getRect(find.byType(Chessboard));
@@ -72,7 +73,7 @@ void main() {
   }) async {
     phone(tester);
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: DrillPage(
           drill: drill,
           controller: controller,
@@ -171,7 +172,7 @@ void main() {
       await controller.finish(endgameDrills.first, 2, Duration.zero);
     });
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: EndgamesPage(
           controller: controller,
           createComputer: () =>

@@ -4,6 +4,7 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../settings/settings.dart';
 import '../training/training_board.dart';
 import 'repertoire.dart';
@@ -28,7 +29,10 @@ class _RepertoireDrillPageState extends State<RepertoireDrillPage> {
   bool _showAnswer = false;
   int _revision = 0;
   int _reviewed = 0;
-  String _message = '';
+
+  /// Quale messaggio mostrare; il testo si compone a ogni build, nella lingua
+  /// dell'app.
+  _DrillMessage _message = _DrillMessage.prompt;
 
   @override
   void initState() {
@@ -39,14 +43,17 @@ class _RepertoireDrillPageState extends State<RepertoireDrillPage> {
   void _nextLine() {
     _drill = widget.trainer.nextDrill(widget.side);
     _showAnswer = false;
-    _message = _drill == null
-        ? 'Ripasso completato: $_reviewed mosse.'
-        : _prompt(_drill!);
+    _message = _drill == null ? _DrillMessage.done : _DrillMessage.prompt;
   }
 
-  String _prompt(RepertoireDrill d) => d.isNew
-      ? 'Nuova mossa: gioca quella indicata dalla freccia.'
-      : 'Linea "${d.line.name}": qual è la tua mossa?';
+  String _messageText(AppLocalizations l10n) => switch (_message) {
+    _DrillMessage.done => l10n.openingsDrillDone(_reviewed),
+    _DrillMessage.wrong => l10n.openingsDrillWrong,
+    _DrillMessage.prompt =>
+      _drill!.isNew
+          ? l10n.openingsDrillNew
+          : l10n.openingsDrillPrompt(_drill!.line.name),
+  };
 
   Future<void> _onMove(Move move) async {
     final drill = _drill;
@@ -60,11 +67,11 @@ class _RepertoireDrillPageState extends State<RepertoireDrillPage> {
         case DrillResult.wrong:
           _revision++;
           _showAnswer = true;
-          _message = 'Non è la mossa del repertorio: ecco quella giusta.';
+          _message = _DrillMessage.wrong;
         case DrillResult.correct:
           _reviewed++;
           _showAnswer = false;
-          _message = _prompt(drill);
+          _message = _DrillMessage.prompt;
         case DrillResult.finished:
           _reviewed++;
           _nextLine();
@@ -74,6 +81,7 @@ class _RepertoireDrillPageState extends State<RepertoireDrillPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     final drill = _drill;
     final expected = drill?.expected;
     final settings = AppSettings.of(context);
@@ -81,7 +89,7 @@ class _RepertoireDrillPageState extends State<RepertoireDrillPage> {
         ? settings.marks.arrow(settings.hintColor, expected.from, expected.to)
         : const <Shape>{};
     return Scaffold(
-      appBar: AppBar(title: const Text('Ripasso del repertorio')),
+      appBar: AppBar(title: Text(l10n.openingsDrillTitle)),
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, c) {
@@ -94,7 +102,7 @@ class _RepertoireDrillPageState extends State<RepertoireDrillPage> {
                   child: Semantics(
                     liveRegion: true,
                     child: Text(
-                      _message,
+                      _messageText(l10n),
                       key: const Key('drill-message'),
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.titleMedium,
@@ -119,3 +127,5 @@ class _RepertoireDrillPageState extends State<RepertoireDrillPage> {
     );
   }
 }
+
+enum _DrillMessage { prompt, wrong, done }

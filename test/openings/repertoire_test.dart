@@ -42,7 +42,8 @@ void main() {
           'Altra',
           uci('e2e4 e7e5 f2f4'),
         );
-        expect(error, contains('Nf3'));
+        expect(error?.kind, LineProblemKind.conflict);
+        expect(error?.move, 'Nf3');
         expect(t.lines(Side.white), hasLength(1));
       },
     );

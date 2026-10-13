@@ -91,7 +91,7 @@ class GameSync {
     for (final uci in moves) {
       final move = Move.parse(uci);
       if (move == null || !_position.isLegal(move)) {
-        throw ArgumentError.value(uci, 'moves', 'mossa non valida');
+        throw ArgumentError.value(uci, 'moves', 'mossa non valida'); // l10n-ok
       }
       _apply(uci, move, i < timeList.length ? timeList[i] : null);
       i++;
@@ -147,11 +147,11 @@ class GameSync {
 
   /// Gioca [uci] dal proprio telefono e restituisce il messaggio da inviare.
   MoveMessage playLocal(String uci, {int? timeMs}) {
-    if (isGameOver) throw StateError('partita finita');
-    if (turn != mySide) throw StateError('non è il tuo turno');
+    if (isGameOver) throw StateError('partita finita'); // l10n-ok
+    if (turn != mySide) throw StateError('non è il tuo turno'); // l10n-ok
     final move = Move.parse(uci);
     if (move == null || !_position.isLegal(move)) {
-      throw ArgumentError.value(uci, 'uci', 'mossa illegale');
+      throw ArgumentError.value(uci, 'uci', 'mossa illegale'); // l10n-ok
     }
     _apply(uci, move, timeMs);
     return _message(_moves.length);
@@ -160,8 +160,8 @@ class GameSync {
   /// Dichiara finito il tempo di questo telefono, di turno; restituisce il
   /// messaggio per l'avversario.
   FlagMessage flagSelf() {
-    if (isGameOver) throw StateError('partita finita');
-    if (turn != mySide) throw StateError('non è il tuo turno');
+    if (isGameOver) throw StateError('partita finita'); // l10n-ok
+    if (turn != mySide) throw StateError('non è il tuo turno'); // l10n-ok
     _flagged = mySide;
     return FlagMessage(plies: _moves.length);
   }
@@ -197,7 +197,7 @@ class GameSync {
     if (isGameOver ||
         m.plies < _moves.length ||
         _position.turn != mySide.opposite) {
-      return const Rejected('tempo scaduto non valido');
+      return const Rejected('tempo scaduto non valido'); // l10n-ok
     }
     _flagged = mySide.opposite;
     return Flagged(_flagged!);
@@ -212,7 +212,7 @@ class GameSync {
     }
     return _same(peer, author)
         ? const Duplicate()
-        : const Rejected('partita già occupata');
+        : const Rejected('partita già occupata'); // l10n-ok
   }
 
   SyncResult _receiveMove(MoveMessage m, List<int> author) {
@@ -226,7 +226,7 @@ class GameSync {
     if (m.seq <= known) {
       return _moves[m.seq - 1] == m.uci && _hashes[m.seq - 1] == m.positionHash
           ? const Duplicate()
-          : const Rejected('in contrasto con il registro');
+          : const Rejected('in contrasto con il registro'); // l10n-ok
     }
     // Semimosse dispari al Bianco, pari al Nero. Le proprie mosse arrivano
     // solo nel recupero, rimandate dall'avversario con la nostra firma.
@@ -235,7 +235,7 @@ class GameSync {
     if (m.seq > known + 1) return Gap(known + 1);
     final move = Move.parse(m.uci);
     if (move == null || isGameOver || !_position.isLegal(move)) {
-      return const Rejected('mossa illegale');
+      return const Rejected('mossa illegale'); // l10n-ok
     }
     final next = _position.play(move);
     if (positionHash(next) != m.positionHash) {

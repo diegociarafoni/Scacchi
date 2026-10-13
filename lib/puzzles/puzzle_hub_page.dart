@@ -366,28 +366,27 @@ class _ThemeListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final kid = AppSettings.of(context).kidMode;
+    final l10n = AppLocalizations.of(context);
     final themes = [
-      for (final e in puzzleThemeLabels.entries)
-        if (trainer.library.countFor(e.key) > 0) e,
+      for (final id in puzzleThemeIds)
+        if (trainer.library.countFor(id) > 0) (id, puzzleThemeLabel(l10n, id)!),
     ];
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context).puzzleThemesTitle),
-      ),
+      appBar: AppBar(title: Text(l10n.puzzleThemesTitle)),
       body: ListView.builder(
         itemCount: themes.length,
         itemBuilder: (context, i) {
           final t = themes[i];
           return ListTile(
-            title: Text(t.value),
-            trailing: kid ? null : Text('${trainer.library.countFor(t.key)}'),
+            title: Text(t.$2),
+            trailing: kid ? null : Text('${trainer.library.countFor(t.$1)}'),
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
                 builder: (_) => PuzzlePage(
                   trainer: trainer,
-                  theme: t.key,
+                  theme: t.$1,
                   guide: PuzzleGuide.theme,
-                  title: t.value,
+                  title: t.$2,
                   onActivity: onActivity,
                 ),
               ),

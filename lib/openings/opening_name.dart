@@ -1,6 +1,7 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import 'opening_assets.dart';
 import 'opening_book.dart';
 
@@ -33,7 +34,8 @@ class OpeningName extends StatelessWidget {
         final opening = snapshot.data?.classifyPositions(positions);
         if (opening == null) return fallbackWidget ?? Text(fallback);
         return Semantics(
-          label: 'Apertura: ${opening.localName} (${opening.eco})',
+          label: AppLocalizations.of(context)
+              .openingsNameSemantics(opening.localName, opening.eco),
           excludeSemantics: true,
           child: Text(
             // Solo il nome italiano, su due righe: il codice ECO occupava lo

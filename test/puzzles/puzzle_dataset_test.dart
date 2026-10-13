@@ -31,7 +31,7 @@ void main() {
     });
 
     test('ogni tema proposto ha almeno qualche puzzle', () {
-      for (final theme in puzzleThemeLabels.keys) {
+      for (final theme in puzzleThemeIds) {
         final n = puzzles.where((p) => p.themes.contains(theme)).length;
         expect(n, greaterThan(5), reason: theme);
       }

@@ -115,7 +115,9 @@ class SavedGameStore {
       await _file.write(game.toJson());
     } on FileSystemException catch (e) {
       // Senza spazio la partita continua, solo non si potrà riprendere.
-      if (kDebugMode) debugPrint('Salvataggio della partita non riuscito: $e');
+      if (kDebugMode) {
+        debugPrint('Salvataggio della partita non riuscito: $e'); // l10n-ok
+      }
     }
   }
 
@@ -123,7 +125,7 @@ class SavedGameStore {
     try {
       await _file.delete();
     } on FileSystemException catch (e) {
-      if (kDebugMode) debugPrint('Cancellazione non riuscita: $e');
+      if (kDebugMode) debugPrint('Cancellazione non riuscita: $e'); // l10n-ok
     }
   }
 }

@@ -14,5 +14,68 @@
   "editorFenHelpClose": "Ho capito",
   "@editorFenHelpClose": {
     "description": "Pulsante per chiudere la finestra di aiuto sul FEN"
-  }
+  },
+  "editorTitle": "Editor di posizione",
+  "editorFlipBoard": "Capovolgi la scacchiera",
+  "editorEraser": "Gomma",
+  "@editorEraser": {
+    "description": "Etichetta del pulsante che toglie i pezzi dalla scacchiera"
+  },
+  "editorTurnWhite": "Bianco",
+  "@editorTurnWhite": {
+    "description": "Segmento per scegliere a chi tocca muovere"
+  },
+  "editorTurnBlack": "Nero",
+  "@editorTurnBlack": {
+    "description": "Segmento per scegliere a chi tocca muovere"
+  },
+  "editorCastleWhiteShort": "O-O bianco",
+  "@editorCastleWhiteShort": {
+    "description": "Diritto di arrocco corto del Bianco"
+  },
+  "editorCastleWhiteLong": "O-O-O bianco",
+  "@editorCastleWhiteLong": {
+    "description": "Diritto di arrocco lungo del Bianco"
+  },
+  "editorCastleBlackShort": "O-O nero",
+  "@editorCastleBlackShort": {
+    "description": "Diritto di arrocco corto del Nero"
+  },
+  "editorCastleBlackLong": "O-O-O nero",
+  "@editorCastleBlackLong": {
+    "description": "Diritto di arrocco lungo del Nero"
+  },
+  "editorInitial": "Iniziale",
+  "@editorInitial": {
+    "description": "Pulsante che rimette la posizione iniziale"
+  },
+  "editorClear": "Svuota",
+  "@editorClear": {
+    "description": "Pulsante che toglie tutti i pezzi"
+  },
+  "editorSwapColors": "Inverti colori",
+  "@editorSwapColors": {
+    "description": "Pulsante che scambia i colori e capovolge la posizione"
+  },
+  "editorPasteFen": "Incolla FEN",
+  "editorCopyFen": "Copia FEN",
+  "editorFenCopied": "FEN copiato.",
+  "editorFenInvalid": "FEN non valido.",
+  "editorFenField": "FEN",
+  "@editorFenField": {
+    "description": "Etichetta del campo in cui incollare il FEN"
+  },
+  "editorCancel": "Annulla",
+  "editorLoad": "Carica",
+  "@editorLoad": {
+    "description": "Pulsante che carica il FEN incollato"
+  },
+  "editorPlayFromHere": "Gioca da qui",
+  "editorProblemEmpty": "La scacchiera è vuota.",
+  "editorProblemKings": "Serve esattamente un re per colore.",
+  "editorProblemPawnsOnBackrank": "I pedoni non possono stare in prima o in ottava traversa.",
+  "editorProblemOppositeCheck": "Il giocatore che non ha il tratto è sotto scacco.",
+  "editorProblemImpossibleCheck": "Lo scacco al re non è raggiungibile con mosse legali.",
+  "editorProblemInvalid": "La posizione non è valida.",
+  "editorProblemGameOver": "In questa posizione la partita è già finita."
 }

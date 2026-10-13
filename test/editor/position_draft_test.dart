@@ -1,6 +1,9 @@
 import 'package:dartchess/dartchess.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/editor/position_draft.dart';
+import 'package:scacchi/editor/position_editor_page.dart';
+import 'package:scacchi/l10n/app_localizations.dart';
 
 const _start = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
 const _wk = Piece(color: Side.white, role: Role.king);
@@ -12,6 +15,8 @@ Square sq(String name) => Square.parse(name)!;
 
 PositionDraft kings() =>
     PositionDraft.empty().put(sq('e1'), _wk).put(sq('e8'), _bk);
+
+final it = lookupAppLocalizations(const Locale('it'));
 
 void main() {
   test('la posizione iniziale ha il FEN standard ed è valida', () {
@@ -122,7 +127,7 @@ void main() {
 
   test('il messaggio di ogni problema è in italiano', () {
     for (final p in SetupProblem.values) {
-      expect(p.message, isNotEmpty);
+      expect(setupProblemText(it, p), isNotEmpty);
     }
   });
 

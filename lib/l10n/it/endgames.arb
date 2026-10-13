@@ -1,0 +1,64 @@
+{
+  "endgamesTitle": "Finali",
+  "endgamesGoalMate": "Dai scacco matto",
+  "@endgamesGoalMate": {
+    "description": "Obiettivo di una posizione dell'allenatore dei finali"
+  },
+  "endgamesGoalPromote": "Promuovi il pedone",
+  "@endgamesGoalPromote": {
+    "description": "Obiettivo di una posizione dell'allenatore dei finali"
+  },
+  "endgamesGoalHoldBlack": "Resisti con il Nero",
+  "@endgamesGoalHoldBlack": {
+    "description": "Obiettivo di una posizione dell'allenatore dei finali"
+  },
+  "endgamesGoalHoldWhite": "Resisti con il Bianco",
+  "@endgamesGoalHoldWhite": {
+    "description": "Obiettivo di una posizione dell'allenatore dei finali"
+  },
+  "endgamesToRepeat": "Da ripetere",
+  "@endgamesToRepeat": {
+    "description": "Sottotitolo di una posizione non riuscita, da riprovare"
+  },
+  "endgamesStars": "{stars, plural, one{{stars} stella su 3} other{{stars} stelle su 3}}",
+  "@endgamesStars": {
+    "description": "Etichetta per la lettura dello schermo delle stelle ottenute",
+    "placeholders": {
+      "stars": {
+        "type": "int"
+      }
+    }
+  },
+  "endgamesMovesHold": "Mosse: {moves} di {par}",
+  "@endgamesMovesHold": {
+    "description": "Contatore delle mosse nei finali da resistere",
+    "placeholders": {
+      "moves": {
+        "type": "int"
+      },
+      "par": {
+        "type": "int"
+      }
+    }
+  },
+  "endgamesMovesTarget": "Mosse: {moves} · tre stelle entro {par}",
+  "@endgamesMovesTarget": {
+    "description": "Contatore delle mosse con il limite per le tre stelle",
+    "placeholders": {
+      "moves": {
+        "type": "int"
+      },
+      "par": {
+        "type": "int"
+      }
+    }
+  },
+  "endgamesStart": "Inizia",
+  "endgamesThinking": "Il motore pensa…",
+  "endgamesEngineFailed": "Il motore non risponde: riprova.",
+  "endgamesSuccess": "Obiettivo raggiunto",
+  "endgamesFailure": "Non ci sei riuscito",
+  "endgamesFailureHint": "La posizione resta tra quelle da ripetere.",
+  "endgamesRetry": "Riprova",
+  "endgamesDone": "Fine"
+}
