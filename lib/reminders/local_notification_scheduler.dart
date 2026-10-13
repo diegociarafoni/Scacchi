@@ -59,6 +59,19 @@ class LocalNotificationScheduler implements ReminderScheduler {
   Future<void> schedule(Reminder reminder) async {
     await _init();
     await _plugin.cancel(id: _id);
+    // Il canale esiste già con il nome della lingua precedente: ricrearlo con
+    // lo stesso id ne aggiorna nome e descrizione.
+    await _plugin
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >()
+        ?.createNotificationChannel(
+          AndroidNotificationChannel(
+            'promemoria',
+            reminder.channelName,
+            description: reminder.channelDescription,
+          ),
+        );
     await _plugin.zonedSchedule(
       id: _id,
       // Istante assoluto: l'ora locale è già risolta in [Reminder.at].

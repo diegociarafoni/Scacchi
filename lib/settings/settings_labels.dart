@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart' show ThemeMode;
 
 import '../l10n/app_localizations.dart';
+import 'app_language.dart';
 import 'notation.dart';
 import 'settings.dart';
 
@@ -18,6 +19,11 @@ String animationLabel(AppLocalizations l, AnimationSpeed a) => switch (a) {
   AnimationSpeed.normal => l.settingsAnimationNormal,
   AnimationSpeed.slow => l.settingsAnimationSlow,
 };
+
+/// I nomi delle lingue restano nella lingua stessa, così si ritrovano anche
+/// quando l'app è in una lingua che non si capisce.
+String languageLabel(AppLocalizations l, AppLanguage a) =>
+    a.nativeName ?? l.settingsLanguageSystem;
 
 String notationLabel(AppLocalizations l, MoveNotation n) =>
     l.settingsNotationChoice(switch (n) {

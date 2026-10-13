@@ -5,6 +5,8 @@ import 'package:integration_test/integration_test.dart';
 import 'package:scacchi/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../test/support/italian_device.dart';
+
 Offset _square(WidgetTester tester, String name) {
   final rect = tester.getRect(find.byType(Chessboard));
   final size = rect.width / 8;
@@ -15,6 +17,7 @@ Offset _square(WidgetTester tester, String name) {
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  useItalianDevice();
 
   testWidgets(
     'RF-87 RF-88 si sfoglia una partita e si indovina la prima mossa',

@@ -7,6 +7,7 @@ import 'package:scacchi/main.dart';
 import 'package:scacchi/progress/progress_controller.dart';
 import 'package:scacchi/progress/progress_state.dart';
 import 'package:scacchi/progress/progress_store.dart';
+import 'package:scacchi/settings/app_language.dart';
 import 'package:scacchi/settings/notation.dart';
 import 'package:scacchi/settings/settings.dart';
 import 'package:scacchi/settings/settings_page.dart';
@@ -74,6 +75,17 @@ void main() {
     expect(settings.value.notation, MoveNotation.italian);
     await tapChip(tester, 'Inglese (Nf3)');
     expect(settings.value.notation, MoveNotation.english);
+  });
+
+  testWidgets('la lingua dell\'app si sceglie dall\'aspetto', (tester) async {
+    await show(tester, section: SettingsSection.accessibility);
+    expect(settings.value.language, AppLanguage.system);
+    await tapChip(tester, 'English');
+    expect(settings.value.language, AppLanguage.english);
+    await tapChip(tester, 'Italiano');
+    expect(settings.value.language, AppLanguage.italian);
+    await tapChip(tester, 'Come il telefono');
+    expect(settings.value.language, AppLanguage.system);
   });
 
   testWidgets('RP-04 coordinate fuori dalla scacchiera, solo se visibili', (

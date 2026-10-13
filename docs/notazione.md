@@ -28,3 +28,5 @@ Pedoni e arrocchi (O-O, O-O-O) non cambiano. La partita, l'archivio e i PGN rest
 `formatSan` converte una mossa; `formatMoveText` un testo di mosse separate da spazi. I confronti interni (per esempio «è la mossa migliore?») restano sulla SAN inglese: la notazione è solo di visualizzazione.
 
 I suggerimenti dell'allenatore non usano la notazione: dicono «Sposta il re in f1» (vedi [allenatore.md](allenatore.md)).
+
+La notazione non cambia con la lingua dell'app: resta quella scelta (predefinita figurativa, che si legge in ogni lingua). Cambiano solo le etichette della scelta nelle Impostazioni.

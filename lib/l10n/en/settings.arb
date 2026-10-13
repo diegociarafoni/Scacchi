@@ -95,5 +95,8 @@
   "settingsOpenProfile": "Your profile",
   "settingsOpenProfileDescription": "Avatar, photo, daily goal and reminder",
   "settingsProgressEnabled": "XP, streaks and milestones",
-  "settingsProgressEnabledDescription": "When off, nothing is recorded"
+  "settingsProgressEnabledDescription": "When off, nothing is recorded",
+  "settingsLanguage": "Language",
+  "settingsLanguageDescription": "Italian, English or same as the phone",
+  "settingsLanguageSystem": "Same as the phone"
 }

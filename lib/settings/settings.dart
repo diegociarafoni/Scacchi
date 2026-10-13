@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../game/sounds.dart' show GameSound, SoundPlayer;
+import 'app_language.dart';
 import 'board_marks.dart';
 import 'color_blind.dart';
 import 'notation.dart';
@@ -465,6 +466,7 @@ class AppSettings {
     this.kidMode = false,
     this.themeMode = ThemeMode.system,
     this.notation = MoveNotation.figurine,
+    this.language = AppLanguage.system,
     String whiteName = '',
     String blackName = '',
   }) : whiteName = _cleanName(whiteName),
@@ -529,6 +531,9 @@ class AppSettings {
 
   /// Come si scrivono i pezzi nelle mosse.
   final MoveNotation notation;
+
+  /// Lingua dell'app; di default quella del telefono.
+  final AppLanguage language;
   final String whiteName;
   final String blackName;
 
@@ -594,6 +599,7 @@ class AppSettings {
     bool? kidMode,
     ThemeMode? themeMode,
     MoveNotation? notation,
+    AppLanguage? language,
     String? whiteName,
     String? blackName,
   }) => AppSettings(
@@ -621,6 +627,7 @@ class AppSettings {
     kidMode: kidMode ?? this.kidMode,
     themeMode: themeMode ?? this.themeMode,
     notation: notation ?? this.notation,
+    language: language ?? this.language,
     whiteName: whiteName ?? this.whiteName,
     blackName: blackName ?? this.blackName,
   );
@@ -685,6 +692,7 @@ class AppSettings {
       other.kidMode == kidMode &&
       other.themeMode == themeMode &&
       other.notation == notation &&
+      other.language == language &&
       other.whiteName == whiteName &&
       other.blackName == blackName;
 
@@ -714,6 +722,7 @@ class AppSettings {
     kidMode,
     themeMode,
     notation,
+    language,
     whiteName,
     blackName,
   ]);
@@ -778,6 +787,7 @@ class SettingsController extends ValueNotifier<AppSettings> {
         kidMode: read('kidMode', d.kidMode),
         themeMode: byName(ThemeMode.values, 'themeMode', d.themeMode),
         notation: byName(MoveNotation.values, 'notation', d.notation),
+        language: byName(AppLanguage.values, 'language', d.language),
         whiteName: read('whiteName', d.whiteName),
         blackName: read('blackName', d.blackName),
       ),
@@ -845,6 +855,8 @@ class SettingsController extends ValueNotifier<AppSettings> {
         prefs.setString('themeMode', settings.themeMode.name),
       if (old.notation != settings.notation)
         prefs.setString('notation', settings.notation.name),
+      if (old.language != settings.language)
+        prefs.setString('language', settings.language.name),
       if (old.whiteName != settings.whiteName)
         prefs.setString('whiteName', settings.whiteName),
       if (old.blackName != settings.blackName)

@@ -4,8 +4,11 @@ import 'package:integration_test/integration_test.dart';
 import 'package:scacchi/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../test/support/italian_device.dart';
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  useItalianDevice();
 
   testWidgets('il riepilogo settimanale si apre dalla scheda Tu', (
     tester,

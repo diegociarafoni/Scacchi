@@ -1,0 +1,4 @@
+"NSBluetoothAlwaysUsageDescription" = "Il Bluetooth serve solo a giocare con un amico vicino, senza Wi-Fi. Le mosse viaggiano cifrate e solo tra i due telefoni.";
+"NSCameraUsageDescription" = "La fotocamera serve a leggere il codice QR di una partita passata da un altro telefono e a scattare la tua foto del profilo, che resta solo su questo telefono.";
+"NSLocalNetworkUsageDescription" = "La rete locale serve solo a giocare con un amico sull'altro telefono, nella stessa Wi-Fi o sull'hotspot. Le mosse viaggiano cifrate e solo tra i due telefoni.";
+"NSPhotoLibraryUsageDescription" = "Serve a leggere il codice QR di una partita da un'immagine che scegli tu e a scegliere la tua foto del profilo, che resta solo su questo telefono.";

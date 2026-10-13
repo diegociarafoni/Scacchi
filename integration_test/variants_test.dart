@@ -9,9 +9,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../test/computer_fakes.dart'
     show chooseAdaptiveComputer, openCustomSheet, scrollSheetTo;
 import '../test/game_actions.dart';
+import '../test/support/italian_device.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  useItalianDevice();
 
   testWidgets('RF-120 una nuova partita Chess960 mescola la prima traversa', (
     tester,

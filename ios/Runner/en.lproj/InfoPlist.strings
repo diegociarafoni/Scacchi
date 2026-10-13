@@ -1,0 +1,4 @@
+"NSBluetoothAlwaysUsageDescription" = "Bluetooth is only used to play with a friend nearby, without Wi-Fi. Moves travel encrypted and only between the two phones.";
+"NSCameraUsageDescription" = "The camera reads the QR code of a game passed from another phone and takes your profile photo, which stays only on this phone.";
+"NSLocalNetworkUsageDescription" = "The local network is only used to play with a friend on the other phone, on the same Wi-Fi or hotspot. Moves travel encrypted and only between the two phones.";
+"NSPhotoLibraryUsageDescription" = "Used to read the QR code of a game from an image you choose and to pick your profile photo, which stays only on this phone.";

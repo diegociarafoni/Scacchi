@@ -5,6 +5,7 @@ import 'package:integration_test/integration_test.dart';
 import 'package:scacchi/main.dart';
 
 import '../test/game_actions.dart';
+import '../test/support/italian_device.dart';
 
 Offset _square(WidgetTester tester, String name) {
   final rect = tester.getRect(find.byType(Chessboard));
@@ -44,6 +45,7 @@ Future<void> _start(WidgetTester tester) async {
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  useItalianDevice();
 
   testWidgets('RF-90 la partita mostra il nome dell\'apertura', (tester) async {
     await _start(tester);

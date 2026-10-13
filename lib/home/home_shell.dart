@@ -159,6 +159,17 @@ class _HomeShellState extends State<HomeShell> {
   var _youVisited = false;
 
   late bool _kidMode = widget.settings.value.kidMode;
+  String? _localeName;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Cambiata la lingua (dalle Impostazioni o dal telefono), il promemoria
+    // si riscrive nella nuova.
+    final name = AppLocalizations.of(context).localeName;
+    if (_localeName != null && name != _localeName) _reminders?.sync().ignore();
+    _localeName = name;
+  }
 
   Future<RepertoireTrainer> _loadRepertoire() =>
       (widget.repertoire ??
