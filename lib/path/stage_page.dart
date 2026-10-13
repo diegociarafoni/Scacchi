@@ -16,15 +16,21 @@ Future<int?> openStage(
   BuildContext context,
   PathController controller,
   Stage stage,
-) => Navigator.of(context).push<int>(
-  MaterialPageRoute(
-    builder: (_) => StagePage(
-      stage: stage,
-      resume: controller.progress.resumeFor(stage.id),
-      onProgress: (solved) => controller.saveResume(stage.id, solved),
+) {
+  final replay = controller.progress.isCompleted(stage.id);
+  return Navigator.of(context).push<int>(
+    MaterialPageRoute(
+      builder: (_) => StagePage(
+        stage: stage,
+        // Rigiocare una tappa già completata riparte sempre da capo.
+        resume: replay ? const [] : controller.progress.resumeFor(stage.id),
+        onProgress: replay
+            ? null
+            : (solved) => controller.saveResume(stage.id, solved),
+      ),
     ),
-  ),
-);
+  );
+}
 
 /// Svolge gli esercizi di una tappa e restituisce con `Navigator.pop` le
 /// stelle ottenute (media arrotondata per difetto).
@@ -49,9 +55,11 @@ class StagePage extends StatefulWidget {
 }
 
 class _StagePageState extends State<StagePage> {
-  late final List<int> _stars = [
-    ...widget.resume.take(widget.stage.exercises.length),
-  ];
+  // Una ripresa più lunga della tappa è di una versione precedente: si scarta.
+  late final List<int> _stars =
+      widget.resume.length > widget.stage.exercises.length
+      ? []
+      : [...widget.resume];
   late int _index = math.min(_stars.length, widget.stage.exercises.length - 1);
   late ExerciseRun _run = ExerciseRun.start(widget.stage.exercises[_index]);
   late final ChessboardController _board = ChessboardController(
@@ -143,8 +151,10 @@ class _StagePageState extends State<StagePage> {
   /// Rifà da capo l'esercizio in corso, anche se già risolto o senza più
   /// vie d'uscita.
   void _restart() {
-    if (_stars.length > _index) _stars.length = _index;
-    widget.onProgress?.call(List.of(_stars));
+    if (_stars.length > _index) {
+      _stars.length = _index;
+      widget.onProgress?.call(List.of(_stars));
+    }
     setState(() {
       _run = ExerciseRun.start(_exercise);
       _feedback = null;
@@ -248,7 +258,7 @@ class _StagePageState extends State<StagePage> {
                         if (!_finished && !solved)
                           TextButton(
                             onPressed: _restart,
-                            child: const Text('Ricomincia'),
+                            child: const Text('Ricomincia l\'esercizio'),
                           ),
                       ],
               ),

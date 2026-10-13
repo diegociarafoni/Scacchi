@@ -306,7 +306,7 @@ void main() {
         tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
         isNull,
       );
-      await tester.tap(find.text('Ricomincia'));
+      await tester.tap(find.text('Ricomincia l\'esercizio'));
       await tester.pumpAndSettle();
       await firstExercise(tester);
       expect(
@@ -369,5 +369,15 @@ void main() {
         expect(controller.progress.resumeFor(stage.id), isEmpty);
       },
     );
+
+    testWidgets('rigiocare una tappa completata riparte da capo', (
+      tester,
+    ) async {
+      phone(tester);
+      await tester.runAsync(() => controller.complete(stage, 3, Duration.zero));
+      await tester.runAsync(() => controller.saveResume(stage.id, [3, 3]));
+      await open(tester);
+      expect(find.text(stage.intro!), findsOneWidget);
+    });
   });
 }
