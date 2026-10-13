@@ -45,34 +45,48 @@ void main() {
 
   test('RP-05 struttura pronta per altre lingue', () {
     final codes = AppLocalizations.supportedLocales.map((l) => l.languageCode);
-    expect(codes, containsAll(['it', 'en']));
+    expect(codes, containsAll(['it', 'en', 'de']));
     expect(lookupAppLocalizations(const Locale('en')).appTitle, 'Rokko');
   });
 
   group('RP-05 file di traduzione', () {
     final it = _messages('it');
     final en = _messages('en');
+    final de = _messages('de');
 
-    test('stesse chiavi in italiano e in inglese', () {
+    test('stesse chiavi in italiano, inglese e tedesco', () {
       expect(en.keys.toSet(), it.keys.toSet());
+      expect(de.keys.toSet(), it.keys.toSet());
       expect(it.length, greaterThan(1));
     });
 
     test('nessuna traduzione vuota', () {
-      for (final messages in [it, en]) {
+      for (final messages in [it, en, de]) {
         for (final e in messages.entries) {
           expect(e.value.trim(), isNotEmpty, reason: e.key);
         }
       }
     });
 
-    test('stessi segnaposto in italiano e in inglese', () {
+    test('stessi segnaposto in italiano, inglese e tedesco', () {
       for (final key in it.keys) {
         expect(
           _placeholders(en[key] ?? ''),
           _placeholders(it[key]!),
           reason: key,
         );
+        expect(
+          _placeholders(de[key] ?? ''),
+          _placeholders(it[key]!),
+          reason: 'de $key',
+        );
+      }
+    });
+
+    test('i plurali tedeschi hanno one e other', () {
+      for (final e in de.entries.where((e) => e.value.contains('plural,'))) {
+        expect(e.value, matches(RegExp(r'(one|=1)\{')), reason: e.key);
+        expect(e.value, contains('other{'), reason: e.key);
       }
     });
   });

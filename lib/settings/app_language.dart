@@ -4,7 +4,8 @@ import 'dart:ui' show Locale;
 enum AppLanguage {
   system(null),
   italian(Locale('it')),
-  english(Locale('en'));
+  english(Locale('en')),
+  german(Locale('de'));
 
   const AppLanguage(this.locale);
 
@@ -17,6 +18,7 @@ enum AppLanguage {
     AppLanguage.system => null,
     AppLanguage.italian => 'Italiano',
     AppLanguage.english => 'English',
+    AppLanguage.german => 'Deutsch',
   };
 }
 

@@ -1,0 +1,4 @@
+"NSBluetoothAlwaysUsageDescription" = "Bluetooth wird nur verwendet, um mit einem Freund in der Nähe ohne WLAN zu spielen. Die Züge werden verschlüsselt und nur zwischen den beiden Handys übertragen.";
+"NSCameraUsageDescription" = "Die Kamera liest den QR-Code einer Partie von einem anderen Handy und nimmt dein Profilfoto auf, das nur auf diesem Handy bleibt.";
+"NSLocalNetworkUsageDescription" = "Das lokale Netzwerk wird nur verwendet, um mit einem Freund auf dem anderen Handy im selben WLAN oder Hotspot zu spielen. Die Züge werden verschlüsselt und nur zwischen den beiden Handys übertragen.";
+"NSPhotoLibraryUsageDescription" = "Wird verwendet, um den QR-Code einer Partie aus einem von dir gewählten Bild zu lesen und um dein Profilfoto auszuwählen, das nur auf diesem Handy bleibt.";

@@ -10,6 +10,7 @@
 	<array>
 		<string>it</string>
 		<string>en</string>
+		<string>de</string>
 	</array>
 	<key>CFBundleDisplayName</key>
 	<string>Rokko</string>
