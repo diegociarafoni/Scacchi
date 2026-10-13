@@ -118,6 +118,32 @@ void main() {
     expect(find.text('0 linee · 0 mosse da ripassare'), findsOneWidget);
   });
 
+  testWidgets('l\'hub avvia la partita con l\'istruttore', (tester) async {
+    final t = await trainer();
+    OpeningGameRequest? request;
+    await phone(
+      tester,
+      OpeningsHubPage(
+        repertoire: Future.value(t),
+        onPlay: (context, r) async => request = r,
+      ),
+    );
+    await tester.tap(find.text('Gioca con l\'istruttore'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Gioca'));
+    await tester.pumpAndSettle();
+    expect(request?.instructor, isTrue);
+    expect(request?.side, Side.white);
+    expect(request?.startMoves, isEmpty);
+    expect(request?.line, isNull);
+  });
+
+  testWidgets('senza motore l\'hub non offre l\'istruttore', (tester) async {
+    final t = await trainer();
+    await phone(tester, OpeningsHubPage(repertoire: Future.value(t)));
+    expect(find.text('Gioca con l\'istruttore'), findsNothing);
+  });
+
   testWidgets('RF-93 l\'hub segnala un repertorio non caricabile', (
     tester,
   ) async {

@@ -5,6 +5,8 @@ import 'package:scacchi/settings/settings.dart';
 import 'package:scacchi/settings/settings_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'settings_nav.dart';
+
 void main() {
   setUp(() => SharedPreferences.setMockInitialValues({}));
 
@@ -28,13 +30,11 @@ void main() {
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         locale: const Locale('it'),
-        home: SettingsPage(
-          controller: settings,
-          expanded: SettingsSection.values.toSet(),
-        ),
+        home: SettingsPage(controller: settings),
       ),
     );
     await tester.pumpAndSettle();
+    await openSection(tester, SettingsSection.accessibility);
     final toggle = find.byKey(const Key('zenMode'));
     await tester.scrollUntilVisible(toggle, 200);
     await tester.ensureVisible(toggle);

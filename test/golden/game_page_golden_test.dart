@@ -1,13 +1,10 @@
 @Tags(['golden'])
 library;
 
-import 'dart:convert';
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:chessground/chessground.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -86,20 +83,49 @@ void main() {
         'g8f6',
         'h5f7',
       ]);
-      // TEMP-DEBUG
-      await tester.runAsync(() async {
-        final boundary = tester.renderObject<RenderRepaintBoundary>(
-          find.byType(RepaintBoundary).first,
-        );
-        final img = await boundary.toImage(pixelRatio: 0.5);
-        final bytes = (await img.toByteData(format: ImageByteFormat.png))!;
-        // ignore: avoid_print
-        print('DBG64 ${base64Encode(bytes.buffer.asUint8List())} DBGEND');
-      });
       await expectLater(
         find.byType(ScacchiApp),
         matchesGoldenFile('goldens/scacco-matto-scuro-telefono-medio.png'),
       );
     },
   );
+
+  // In coda: le scacchiere dei golden precedenti dipendono dall'ordine delle prove.
+  for (final (device, brightness) in [
+    (Device.phoneSmall, Brightness.light),
+    (Device.phoneMedium, Brightness.dark),
+    (Device.phoneLarge, Brightness.light),
+  ]) {
+    testWidgets(
+      'nuova partita, il menu ${brightness.name} su ${device.name}',
+      skip: _skip != null,
+      (tester) async {
+        await _pumpApp(tester, device, brightness: brightness);
+        await tester.tap(find.text('Nuova'));
+        await tester.pumpAndSettle();
+        await expectLater(
+          find.byType(ScacchiApp),
+          matchesGoldenFile(
+            'goldens/nuova-partita-menu-${brightness.name}-${device.name}.png',
+          ),
+        );
+      },
+    );
+  }
+
+  testWidgets('nuova partita, ognuno sul suo telefono', skip: _skip != null, (
+    tester,
+  ) async {
+    await _pumpApp(tester, Device.phoneMedium, brightness: Brightness.dark);
+    await tester.tap(find.text('Nuova'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Sfida un amico'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Ognuno sul suo telefono'));
+    await tester.pumpAndSettle();
+    await expectLater(
+      find.byType(ScacchiApp),
+      matchesGoldenFile('goldens/nuova-partita-amico-scuro-telefono-medio.png'),
+    );
+  });
 }

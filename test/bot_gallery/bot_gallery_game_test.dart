@@ -27,8 +27,6 @@ void main() {
       await tester.pumpAndSettle();
       await tapGameAction(tester, 'Nuova');
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Bot'));
-      await tester.pumpAndSettle();
       await tester.ensureVisible(find.byKey(const Key('open-bot-gallery')));
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('open-bot-gallery')));

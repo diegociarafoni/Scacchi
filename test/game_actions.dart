@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'computer_fakes.dart';
+
 /// Tocca un comando della partita; se non è nella barra, apre prima il
 /// pannello «Partita» dal pulsante «Altro».
 Future<void> tapGameAction(WidgetTester tester, String label) async {
@@ -25,6 +27,7 @@ Future<void> openPositionEditor(WidgetTester tester) async {
 Future<void> openBoard(WidgetTester tester) async {
   await tester.tap(find.byKey(const Key('home-play')));
   await tester.pumpAndSettle();
+  await openCustomSheet(tester, two: true);
   final untimed = find.text('Senza tempo');
   // In orizzontale la scelta è più alta dello schermo e scorre.
   if (untimed.evaluate().isEmpty) {

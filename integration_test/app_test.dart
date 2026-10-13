@@ -55,18 +55,34 @@ Future<void> _reveal(WidgetTester tester, Finder finder) async {
   await tester.pumpAndSettle();
 }
 
+/// Pagina di sezione aperta nelle Impostazioni, `null` se si è nel menu.
+String? _page;
+
+/// Apre il menu delle Impostazioni.
 Future<void> _openSettings(WidgetTester tester) async {
+  _page = null;
   await tester.tap(find.byTooltip('Impostazioni'));
   await tester.pumpAndSettle();
-  // Le sezioni sotto profilo e aspetto partono chiuse: le apro tutte.
-  for (final name in ['board', 'game', 'accessibility', 'sound', 'data']) {
-    final section = find.byKey(Key('section-$name'));
-    await _reveal(tester, section);
-    await tester.tap(
-      find.descendant(of: section, matching: find.byType(ListTile)).first,
-    );
-    await tester.pumpAndSettle();
-  }
+}
+
+/// Porta nella pagina di [name] (`board`, `game`, `style`, `accessibility`...),
+/// tornando prima al menu se ne è aperta un'altra.
+Future<void> _section(WidgetTester tester, String name) async {
+  if (_page == name) return;
+  if (_page != null) await _pop(tester);
+  await tester.tap(find.byKey(Key('section-$name')));
+  await tester.pumpAndSettle();
+  _page = name;
+}
+
+/// Nella pagina Stile apre la scheda [tab] e sceglie la voce con chiave [key].
+Future<void> _styleChoose(WidgetTester tester, String tab, Key key) async {
+  await tester.tap(find.widgetWithText(Tab, tab));
+  await tester.pumpAndSettle();
+  await tester.ensureVisible(find.byKey(key));
+  await tester.pumpAndSettle();
+  await tester.tap(find.byKey(key));
+  await tester.pumpAndSettle();
 }
 
 Future<void> _tapSetting(WidgetTester tester, String label) async {
@@ -78,12 +94,19 @@ Future<void> _tapSetting(WidgetTester tester, String label) async {
   await tester.pumpAndSettle();
 }
 
-Future<void> _back(WidgetTester tester) async {
+Future<void> _pop(WidgetTester tester) async {
   final context = tester.element(find.byType(Scaffold).last);
   await tester.tap(
     find.byTooltip(MaterialLocalizations.of(context).backButtonTooltip),
   );
   await tester.pumpAndSettle();
+}
+
+/// Esce dalle Impostazioni, anche da una pagina di sezione.
+Future<void> _back(WidgetTester tester) async {
+  if (_page != null) await _pop(tester);
+  _page = null;
+  await _pop(tester);
 }
 
 Future<void> _start(WidgetTester tester) async {
@@ -166,6 +189,7 @@ void main() {
     await _start(tester);
     Chessboard board() => tester.widget<Chessboard>(find.byType(Chessboard));
     await _openSettings(tester);
+    await _section(tester, 'game');
     await _tapSetting(tester, 'Ruota a ogni turno');
     await _back(tester);
     await tester.pumpAndSettle();
@@ -219,17 +243,17 @@ void main() {
     expect(board().showValidMoves, isTrue);
 
     await _openSettings(tester);
+    await _section(tester, 'board');
     await _tapSetting(tester, 'Coordinate');
     await _tapSetting(tester, 'Mostra le mosse legali');
-    await _tapSetting(tester, 'Promuovi sempre a donna');
-    await tester.pumpAndSettle();
-    await _reveal(tester, find.text('Blu'));
-    await tester.tap(find.text('Blu'));
-    await _reveal(tester, find.text('Merida'));
-    await tester.tap(find.text('Merida'));
     await _reveal(tester, find.text('Nessuna'));
     await tester.tap(find.text('Nessuna'));
+    await _section(tester, 'game');
+    await _tapSetting(tester, 'Promuovi sempre a donna');
     await tester.pumpAndSettle();
+    await _section(tester, 'style');
+    await _styleChoose(tester, 'Scacchiera', const Key('theme-swatch-blue'));
+    await _styleChoose(tester, 'Pezzi', const Key('piece-tile-merida'));
     await _back(tester);
     await tester.pumpAndSettle();
 
@@ -248,6 +272,7 @@ void main() {
   testWidgets('RP-04 anteprima delle impostazioni', (tester) async {
     await _start(tester);
     await _openSettings(tester);
+    await _section(tester, 'style');
     final preview = find.byKey(const Key('board-preview'));
     StaticChessboard board() => tester.widget<StaticChessboard>(
       find.descendant(of: preview, matching: find.byType(StaticChessboard)),
@@ -255,13 +280,9 @@ void main() {
     expect(board().settings.colorScheme, BoardTheme.spazio.colorScheme);
     final top = tester.getTopLeft(preview);
 
-    await _reveal(tester, find.text('Blu'));
-    await tester.tap(find.text('Blu'));
-    await tester.pumpAndSettle();
+    await _styleChoose(tester, 'Scacchiera', const Key('theme-swatch-blue'));
     expect(board().settings.colorScheme, BoardTheme.blue.colorScheme);
-    await _reveal(tester, find.text('Merida'));
-    await tester.tap(find.text('Merida'));
-    await tester.pumpAndSettle();
+    await _styleChoose(tester, 'Pezzi', const Key('piece-tile-merida'));
     expect(board().settings.pieceAssets, PieceSet.meridaAssets);
     expect(tester.getTopLeft(preview), top);
 
@@ -280,6 +301,7 @@ void main() {
     await _start(tester);
     Chessboard board() => tester.widget<Chessboard>(find.byType(Chessboard));
     await _openSettings(tester);
+    await _section(tester, 'game');
     await _tapSetting(tester, 'Ruota a ogni turno');
     await _back(tester);
     await tester.pumpAndSettle();
@@ -287,9 +309,8 @@ void main() {
     await tester.pumpAndSettle();
     expect(board().orientation.name, 'black');
     await _openSettings(tester);
-    await _reveal(tester, find.text('Blu'));
-    await tester.tap(find.text('Blu'));
-    await tester.pumpAndSettle();
+    await _section(tester, 'style');
+    await _styleChoose(tester, 'Scacchiera', const Key('theme-swatch-blue'));
     await _back(tester);
     await tester.pumpAndSettle();
     expect(board().orientation.name, 'black');
@@ -338,7 +359,9 @@ void main() {
       PieceOrientationBehavior.facingUser,
     );
     await _openSettings(tester);
+    await _section(tester, 'game');
     await _tapSetting(tester, 'Modalità tavolo');
+    await _section(tester, 'board');
     await _reveal(tester, find.text('Suoni'));
     await tester.ensureVisible(find.text('Suoni'));
     await tester.pumpAndSettle();
@@ -365,6 +388,7 @@ void main() {
   testWidgets('RF-09 conferma della mossa', (tester) async {
     await _start(tester);
     await _openSettings(tester);
+    await _section(tester, 'accessibility');
     await _reveal(tester, find.text('Conferma la mossa'));
     await tester.tap(find.text('Conferma la mossa'));
     await tester.pumpAndSettle();
@@ -405,6 +429,7 @@ void main() {
     final safe = BoardTheme.spazio.colorBlindScheme;
     expect(scheme().lastMove, isNot(safe.lastMove));
     await _openSettings(tester);
+    await _section(tester, 'accessibility');
     await _reveal(tester, find.text('Colori per daltonici'));
     await tester.ensureVisible(find.text('Colori per daltonici'));
     await tester.pumpAndSettle();
@@ -587,10 +612,11 @@ void main() {
     expect(brightness(), Brightness.light);
 
     await _openSettings(tester);
+    await _section(tester, 'accessibility');
     await _tapSetting(tester, 'Scuro');
     await tester.pumpAndSettle();
     expect(
-      Theme.of(tester.element(find.text('Impostazioni').last)).brightness,
+      Theme.of(tester.element(find.text('Accessibilità').last)).brightness,
       Brightness.dark,
     );
     await _back(tester);

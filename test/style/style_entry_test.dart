@@ -24,7 +24,7 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.text('Scacchiera, pezzi, sfondo e suoni'), findsOneWidget);
-    await tester.tap(find.byKey(const Key('style-entry')));
+    await tester.tap(find.byKey(const Key('section-style')));
     await tester.pumpAndSettle();
     expect(find.byType(StylePage), findsOneWidget);
     await tester.tap(find.byType(BackButton));

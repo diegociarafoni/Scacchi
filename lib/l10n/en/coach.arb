@@ -12,5 +12,85 @@
   "whyThreatPromote": "Prepares to promote a pawn.",
   "whyDevelop": "Develops {piece}: it joins the game.",
   "whyCenter": "Takes space in the centre.",
-  "whyImprove": "Moves {piece} to a more useful square."
+  "whyImprove": "Moves {piece} to a more useful square.",
+  "instructorInBookNamed": "We are in the {name}. Most played moves here: {choices}.",
+  "@instructorInBookNamed": {
+    "description": "Istruttore: apertura raggiunta e mosse più giocate",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "name"
+      },
+      "choices": {
+        "type": "String",
+        "description": "choices"
+      }
+    }
+  },
+  "instructorInBook": "Most played moves here: {choices}.",
+  "@instructorInBook": {
+    "description": "Istruttore: mosse più giocate, senza nome di apertura",
+    "placeholders": {
+      "choices": {
+        "type": "String",
+        "description": "choices"
+      }
+    }
+  },
+  "instructorInBookNameOnly": "We are in the {name}.",
+  "@instructorInBookNameOnly": {
+    "description": "Istruttore: apertura raggiunta, senza statistiche",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "name"
+      }
+    }
+  },
+  "instructorLeftYou": "{san} takes you out of the opening book. The most played moves were: {choices}.",
+  "@instructorLeftYou": {
+    "description": "Istruttore: l'utente esce dal libro",
+    "placeholders": {
+      "san": {
+        "type": "String",
+        "description": "san"
+      },
+      "choices": {
+        "type": "String",
+        "description": "choices"
+      }
+    }
+  },
+  "instructorLeftComputer": "The computer leaves the book with {san}. From here it is the position that counts, not theory.",
+  "@instructorLeftComputer": {
+    "description": "Istruttore: il computer esce dal libro",
+    "placeholders": {
+      "san": {
+        "type": "String",
+        "description": "san"
+      }
+    }
+  },
+  "instructorLeftYouBare": "{san} takes you out of the opening book.",
+  "@instructorLeftYouBare": {
+    "description": "Istruttore: l'utente esce dal libro, senza alternative",
+    "placeholders": {
+      "san": {
+        "type": "String",
+        "description": "san"
+      }
+    }
+  },
+  "instructorExplorer": "Open in the explorer",
+  "@instructorExplorer": {
+    "description": "Istruttore: pulsante per aprire la posizione nell'esploratore"
+  },
+  "instructorTitle": "Play with the instructor",
+  "@instructorTitle": {
+    "description": "Titolo della partita con l'istruttore"
+  },
+  "instructorHubSubtitle": "The computer comments your opening, with the most played moves",
+  "@instructorHubSubtitle": {
+    "description": "Istruttore: sottotitolo nel menu delle aperture"
+  }
 }

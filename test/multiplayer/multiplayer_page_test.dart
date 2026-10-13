@@ -54,7 +54,6 @@ void main() {
     await tester.pumpWidget(
       localizedApp(
         home: MultiplayerPage(
-          remoteByDefault: false,
           openHost: () async => (transport: a, lanAddress: '10.0.0.2:4000'),
         ),
       ),
@@ -100,7 +99,6 @@ void main() {
     await tester.pumpWidget(
       localizedApp(
         home: MultiplayerPage(
-          remoteByDefault: false,
           openHost: () async => throw const NoLocalNetwork(),
         ),
       ),
@@ -124,7 +122,6 @@ void main() {
     await tester.pumpWidget(
       localizedApp(
         home: MultiplayerPage(
-          remoteByDefault: false,
           openHost: () async => throw const SocketException('porta occupata'),
         ),
       ),
@@ -162,11 +159,7 @@ void main() {
     final scanner = _FakeScanner();
     await tester.pumpWidget(
       localizedApp(
-        home: MultiplayerPage(
-          remoteByDefault: false,
-          scanner: scanner.build,
-          openGuest: (_, _) => b,
-        ),
+        home: MultiplayerPage(scanner: scanner.build, openGuest: (_, _) => b),
       ),
     );
     await tester.scrollUntilVisible(
@@ -261,11 +254,7 @@ void main() {
     testWidgets('RMP-09 senza partite salvate non c\'è il riquadro', (
       tester,
     ) async {
-      await openPage(
-        tester,
-        MultiplayerPage(remoteByDefault: false, store: store),
-        saved: false,
-      );
+      await openPage(tester, MultiplayerPage(store: store), saved: false);
       expect(find.text('Riprendi la partita'), findsNothing);
     });
 
@@ -277,7 +266,6 @@ void main() {
       await openPage(
         tester,
         MultiplayerPage(
-          remoteByDefault: false,
           store: store,
           openResumeHost: (_) async =>
               (transport: a, lanAddress: '10.0.0.2:4000'),
@@ -293,10 +281,7 @@ void main() {
 
     testWidgets('RMP-09 si può eliminare la partita salvata', (tester) async {
       await saveOne(tester);
-      await openPage(
-        tester,
-        MultiplayerPage(remoteByDefault: false, store: store),
-      );
+      await openPage(tester, MultiplayerPage(store: store));
       await tester.tap(find.text('Elimina'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Elimina').last);
@@ -315,7 +300,6 @@ void main() {
         await openPage(
           tester,
           MultiplayerPage(
-            remoteByDefault: false,
             store: store,
             openHost: () async {
               opened++;
@@ -370,6 +354,8 @@ void main() {
       100,
       scrollable: find.byType(Scrollable).first,
     );
+    await tester.ensureVisible(find.text('Crea la partita'));
+    await tester.pump();
     await tester.tap(find.text('Crea la partita'));
     await _wait(tester);
     await tester.pumpAndSettle();
@@ -460,9 +446,7 @@ void main() {
       ..physicalSize = const Size(360, 640) * 2
       ..devicePixelRatio = 2;
     addTearDown(tester.view.reset);
-    await tester.pumpWidget(
-      localizedApp(home: const MultiplayerPage(remoteByDefault: false)),
-    );
+    await tester.pumpWidget(localizedApp(home: const MultiplayerPage()));
     await tester.pumpAndSettle();
     final hint = find.textContaining('Lo decide chi crea');
     await tester.scrollUntilVisible(hint, 100);
@@ -472,20 +456,19 @@ void main() {
     expect(tester.getSize(hint).height, greaterThan(16));
   });
 
-  testWidgets(
-    'RMP-11 con la partita a distanza il tempo spiega perché è grigio',
-    (tester) async {
-      tester.view
-        ..physicalSize = const Size(360, 1400) * 2
-        ..devicePixelRatio = 2;
-      addTearDown(tester.view.reset);
-      await tester.pumpWidget(localizedApp(home: const MultiplayerPage()));
-      await tester.pumpAndSettle();
-      expect(find.textContaining('Lo decide chi crea'), findsNothing);
-      await tester.tap(find.byType(SwitchListTile));
-      await tester.pumpAndSettle();
-      expect(find.textContaining('Lo decide chi crea'), findsOneWidget);
-      expect(find.textContaining('a distanza non'), findsNothing);
-    },
-  );
+  testWidgets('RMP-11 a distanza il tempo non c\'è e il testo lo spiega', (
+    tester,
+  ) async {
+    tester.view
+      ..physicalSize = const Size(360, 1400) * 2
+      ..devicePixelRatio = 2;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(localizedApp(home: const MultiplayerPage()));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Lo decide chi crea'), findsOneWidget);
+    await tester.tap(find.text('A distanza'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Lo decide chi crea'), findsNothing);
+    expect(find.textContaining('A distanza non c'), findsOneWidget);
+  });
 }

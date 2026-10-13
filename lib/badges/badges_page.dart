@@ -1,14 +1,16 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../progress/progress_controller.dart';
+import 'badge_art.dart';
 import 'badge_def.dart';
 import 'badges_l10n.dart';
+import 'opening_books_tab.dart';
 
-/// Raccolta dei badge (RG-17), per famiglia, con avanzamento e data.
+/// Galleria dei badge (RG-17) e dei libri delle aperture: griglia a card con
+/// il contatore dei raggiunti, bloccati in grigio con il lucchetto.
 class BadgesPage extends StatelessWidget {
   const BadgesPage({super.key, required this.controller});
 
@@ -17,34 +19,139 @@ class BadgesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = badgesL10n(context);
-    return Scaffold(
-      appBar: AppBar(title: Text(l.badgesTitle)),
-      body: ListenableBuilder(
-        listenable: controller,
-        builder: (context, _) {
-          final facts = BadgeFacts(controller.state, controller.badgeSources);
-          final earned = badges
-              .where((b) => controller.badges.containsKey(b.id))
-              .length;
-          return ListView(
-            padding: const EdgeInsets.all(16),
-            children: [
-              Text(
-                l.badgesSummary(earned, badges.length),
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-              const SizedBox(height: 8),
-              LinearProgressIndicator(
-                value: earned / badges.length,
-                minHeight: 8,
-                semanticsLabel: l.badgesSummary(earned, badges.length),
-              ),
-              for (final family in BadgeFamily.values)
-                _Family(family: family, facts: facts, controller: controller),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(l.badgesTitle),
+          bottom: TabBar(
+            tabs: [
+              Tab(text: l.badgesTabBadges),
+              Tab(text: l.badgesTabBooks),
             ],
-          );
-        },
+          ),
+        ),
+        body: ListenableBuilder(
+          listenable: controller,
+          builder: (context, _) => TabBarView(
+            children: [
+              _BadgesTab(controller: controller),
+              OpeningBooksTab(state: controller.state),
+            ],
+          ),
+        ),
       ),
+    );
+  }
+}
+
+/// Totale «X su Y raggiunti» con la barra di avanzamento.
+class GalleryCounter extends StatelessWidget {
+  const GalleryCounter({
+    super.key,
+    required this.earned,
+    required this.total,
+    this.hint,
+  });
+
+  final int earned;
+  final int total;
+  final String? hint;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = badgesL10n(context);
+    final theme = Theme.of(context);
+    final label = l.badgesSummary(earned, total);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: theme.textTheme.titleLarge),
+        const SizedBox(height: 8),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: LinearProgressIndicator(
+            value: total == 0 ? 0 : earned / total,
+            minHeight: 10,
+            semanticsLabel: label,
+          ),
+        ),
+        if (hint != null) ...[
+          const SizedBox(height: 8),
+          Text(hint!, style: theme.textTheme.bodyMedium),
+        ],
+      ],
+    );
+  }
+}
+
+/// Righe di riquadri alla stessa altezza, per qualsiasi corpo del testo.
+/// [itemBuilder] riceve la larghezza di una cella.
+class GalleryGrid extends StatelessWidget {
+  const GalleryGrid({
+    super.key,
+    required this.count,
+    required this.itemBuilder,
+    this.gap = 10,
+  });
+
+  final int count;
+  final Widget Function(BuildContext context, int index, double width)
+  itemBuilder;
+  final double gap;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, box) {
+        final columns = (box.maxWidth / 120).floor().clamp(3, 8);
+        final width = (box.maxWidth - gap * (columns - 1)) / columns;
+        return Column(
+          children: [
+            for (var i = 0; i < count; i += columns) ...[
+              if (i > 0) SizedBox(height: gap),
+              IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    for (var c = 0; c < columns; c++) ...[
+                      if (c > 0) SizedBox(width: gap),
+                      SizedBox(
+                        width: width,
+                        child: i + c < count
+                            ? itemBuilder(context, i + c, width)
+                            : null,
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ],
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _BadgesTab extends StatelessWidget {
+  const _BadgesTab({required this.controller});
+
+  final ProgressController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    final facts = BadgeFacts(controller.state, controller.badgeSources);
+    final earned = badges
+        .where((b) => controller.badges.containsKey(b.id))
+        .length;
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        GalleryCounter(earned: earned, total: badges.length),
+        for (final family in BadgeFamily.values)
+          _Family(family: family, facts: facts, controller: controller),
+      ],
     );
   }
 }
@@ -75,38 +182,24 @@ class _Family extends StatelessWidget {
           header: true,
           child: Text(
             '${badgeFamilyTitle(l, family)} · $earned/${members.length}',
-            style: Theme.of(context).textTheme.titleLarge,
+            style: Theme.of(context).textTheme.titleMedium,
           ),
         ),
-        const SizedBox(height: 8),
-        LayoutBuilder(
-          builder: (context, box) {
-            const gap = 8.0;
-            final columns = max(2, (box.maxWidth / 150).floor());
-            final width = (box.maxWidth - gap * (columns - 1)) / columns;
-            return Wrap(
-              spacing: gap,
-              runSpacing: gap,
-              children: [
-                for (final b in members)
-                  SizedBox(
-                    width: width,
-                    child: BadgeTile(
-                      badge: b,
-                      facts: facts,
-                      earnedDay: controller.badges[b.id],
-                    ),
-                  ),
-              ],
-            );
-          },
+        const SizedBox(height: 10),
+        GalleryGrid(
+          count: members.length,
+          itemBuilder: (context, i, _) => BadgeTile(
+            badge: members[i],
+            facts: facts,
+            earnedDay: controller.badges[members[i].id],
+          ),
         ),
       ],
     );
   }
 }
 
-/// Riquadro di un badge; toccato, ne apre la scheda.
+/// Card di un badge; toccata, ne apre la scheda.
 class BadgeTile extends StatelessWidget {
   const BadgeTile({
     super.key,
@@ -126,6 +219,8 @@ class BadgeTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = badgesL10n(context);
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
     final name = badgeName(l, badge);
     final value = badge.value(facts);
     final progress = !_earned && badge.hasProgress && value > 0
@@ -137,43 +232,43 @@ class BadgeTile extends StatelessWidget {
         ? l.badgesSemanticsLocked(name)
         : l.badgesSemanticsLockedProgress(name, value, badge.target);
     final tier = badgeTierLabel(l, badge.tier);
+    final (tint, _) = badgePalette(badge.family);
     return Semantics(
       button: true,
       label: label,
       excludeSemantics: true,
-      child: Card(
-        margin: EdgeInsets.zero,
+      child: Material(
+        color: _earned
+            ? Color.alphaBlend(tint.withAlpha(36), scheme.surfaceContainerLow)
+            : scheme.surfaceContainerLow,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: BorderSide(color: scheme.outlineVariant),
+        ),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: () => _showDetail(context),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+            padding: const EdgeInsets.fromLTRB(6, 12, 6, 10),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                BadgeMedal(badge: badge, earned: _earned, size: 56),
+                BadgeArt(badge: badge, earned: _earned, size: 64),
                 const SizedBox(height: 8),
                 Text(
                   name,
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-                if (tier != null) ...[
-                  const SizedBox(height: 2),
-                  Text(
-                    tier,
-                    style: Theme.of(context).textTheme.labelSmall,
-                    textAlign: TextAlign.center,
+                  style: theme.textTheme.labelLarge?.copyWith(
+                    color: _earned ? null : scheme.onSurfaceVariant,
                   ),
-                ],
-                if (progress != null) ...[
-                  const SizedBox(height: 2),
+                ),
+                if (tier != null) Text(tier, style: theme.textTheme.labelSmall),
+                if (progress != null)
                   Text(
                     progress,
-                    style: Theme.of(context).textTheme.labelMedium,
+                    style: theme.textTheme.labelMedium,
                     textAlign: TextAlign.center,
                   ),
-                ],
               ],
             ),
           ),
@@ -189,47 +284,6 @@ class BadgeTile extends StatelessWidget {
         showDragHandle: true,
         isScrollControlled: true,
         builder: (_) => BadgeDetail(badge: badge, facts: facts, day: earnedDay),
-      ),
-    );
-  }
-}
-
-/// Medaglia rotonda con l'icona del badge; spenta finché non si ottiene.
-class BadgeMedal extends StatelessWidget {
-  const BadgeMedal({
-    super.key,
-    required this.badge,
-    required this.earned,
-    required this.size,
-  });
-
-  final BadgeDef badge;
-  final bool earned;
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final ring = switch (badge.tier) {
-      BadgeTier.none => scheme.outlineVariant,
-      BadgeTier.bronze => scheme.tertiary,
-      BadgeTier.silver => scheme.outline,
-      BadgeTier.gold => scheme.primary,
-    };
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: earned
-            ? scheme.primaryContainer
-            : scheme.surfaceContainerHighest,
-        border: Border.all(color: earned ? ring : scheme.outlineVariant),
-      ),
-      child: Icon(
-        earned ? badge.icon : Icons.lock_outline,
-        size: size * 0.5,
-        color: earned ? scheme.onPrimaryContainer : scheme.onSurfaceVariant,
       ),
     );
   }
@@ -256,20 +310,23 @@ class BadgeDetail extends StatelessWidget {
     final value = badge.value(facts);
     final tier = badgeTierLabel(l, badge.tier);
     return SafeArea(
-      child: Padding(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            BadgeMedal(badge: badge, earned: earnedDay != null, size: 96),
+            BadgeArt(badge: badge, earned: earnedDay != null, size: 120),
             const SizedBox(height: 16),
             Text(
               badgeName(l, badge),
               style: theme.textTheme.headlineSmall,
               textAlign: TextAlign.center,
             ),
-            if (tier != null) Text(tier, style: theme.textTheme.labelLarge),
-            const SizedBox(height: 8),
+            Text(
+              [badgeFamilyTitle(l, badge.family), ?tier].join(' · '),
+              style: theme.textTheme.labelLarge,
+            ),
+            const SizedBox(height: 12),
             Text(
               badgeDescription(l, badge),
               style: theme.textTheme.bodyLarge,

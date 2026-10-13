@@ -13,6 +13,7 @@ class GameChallenge {
     this.allowUndo = false,
     this.startMoves = const [],
     this.line,
+    this.instructor = false,
   });
 
   /// Titolo della schermata, per esempio "Il guardiano".
@@ -34,6 +35,10 @@ class GameChallenge {
   /// Linea del repertorio da seguire: se qualcuno ne esce, la partita lo
   /// segnala.
   final List<Move>? line;
+
+  /// Partita con l'istruttore: l'allenatore resta acceso e commenta l'apertura
+  /// con le mosse più giocate, avvisando quando si esce dal libro.
+  final bool instructor;
 }
 
 /// Stelle di una sfida vinta, in base alla lunghezza della partita: tre fino a

@@ -50,7 +50,11 @@ void main() {
   Future<void> openBotSheet(WidgetTester tester) async {
     await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
+    await openCustomSheet(tester);
     await tester.tap(find.text('Bot'));
+    await tester.pumpAndSettle();
+    // Il foglio parte dall'adattivo: il primo bot si sceglie a mano.
+    await tester.tap(find.text('Pino'));
     await tester.pumpAndSettle();
   }
 
@@ -196,18 +200,7 @@ void main() {
     final store = MemoryStore();
     await tester.pumpWidget(app(store));
     await tester.pumpAndSettle();
-    await tapGameAction(tester, 'Nuova');
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Computer'));
-    await tester.pumpAndSettle();
-    await tester.ensureVisible(find.text('Adattivo'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Adattivo'));
-    await tester.pumpAndSettle();
-    await tester.ensureVisible(find.text('Bot'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Bot'));
-    await tester.pumpAndSettle();
+    await openBotSheet(tester);
     await chooseTime(tester, 'Senza tempo');
     await tester.pumpAndSettle(const Duration(seconds: 1));
     await tapMove(tester, 'a2a3');

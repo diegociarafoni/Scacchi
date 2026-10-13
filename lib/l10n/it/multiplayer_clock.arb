@@ -11,7 +11,7 @@
   "@multiplayerClockHint": {
     "description": "Spiegazione della scelta della cadenza"
   },
-  "multiplayerClockRemoteHint": "Nelle partite a distanza non c'è l'orologio: spegni «Gioca anche a distanza» per sceglierlo.",
+  "multiplayerClockRemoteHint": "A distanza non c'è l'orologio: scegli Wi-Fi o Bluetooth per usarlo.",
   "@multiplayerClockRemoteHint": {
     "description": "Spiega perché la cadenza è disattivata con la partita a distanza"
   },

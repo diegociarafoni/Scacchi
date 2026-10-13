@@ -6,6 +6,7 @@ import '../l10n/app_localizations.dart';
 import 'explorer_page.dart';
 import 'opening_assets.dart';
 import 'opening_game.dart';
+import 'opening_game_dialog.dart';
 import 'personal_explorer_page.dart';
 import 'repertoire.dart';
 import 'repertoire_page.dart';
@@ -38,6 +39,23 @@ class _OpeningsHubPageState extends State<OpeningsHubPage> {
     if (mounted) setState(() {});
   }
 
+  Future<void> _playWithInstructor() async {
+    final play = widget.onPlay;
+    final l = AppLocalizations.of(context);
+    final choice = await askOpeningGame(context, Side.white);
+    if (choice == null || !mounted || play == null) return;
+    await play(
+      context,
+      OpeningGameRequest.explorer(
+        l.instructorTitle,
+        const [],
+        choice.side,
+        levelId: choice.levelId,
+        instructor: true,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,6 +66,15 @@ class _OpeningsHubPageState extends State<OpeningsHubPage> {
           final trainer = snapshot.data;
           return ListView(
             children: [
+              if (widget.onPlay != null)
+                ListTile(
+                  leading: const Icon(Icons.school_outlined),
+                  title: Text(AppLocalizations.of(context).instructorTitle),
+                  subtitle: Text(
+                    AppLocalizations.of(context).instructorHubSubtitle,
+                  ),
+                  onTap: _playWithInstructor,
+                ),
               ListTile(
                 leading: const Icon(Icons.account_tree_outlined),
                 title: const Text('Esplora aperture'),

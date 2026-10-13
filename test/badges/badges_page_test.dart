@@ -93,8 +93,8 @@ void main() {
   group('RG-17 scheda dei badge', () {
     testWidgets('mostra il totale e le famiglie', (tester) async {
       await show(tester);
-      expect(find.text('Badge'), findsOneWidget);
-      expect(find.text('0 di ${badges.length} badge'), findsOneWidget);
+      expect(find.text('Badge'), findsNWidgets(2)); // titolo e scheda
+      expect(find.text('0 su ${badges.length} raggiunti'), findsOneWidget);
       for (final title in [
         'Imparare',
         'Puzzle',
@@ -116,7 +116,7 @@ void main() {
         ),
       );
       await show(tester);
-      expect(find.text('1 di ${badges.length} badge'), findsOneWidget);
+      expect(find.text('1 su ${badges.length} raggiunti'), findsOneWidget);
       await tester.scrollUntilVisible(
         find.text('Alla francese', skipOffstage: false),
         300,
@@ -134,11 +134,11 @@ void main() {
         await tester.runAsync(() => progress.record(const PuzzleSolved()));
         await show(tester);
         await tester.scrollUntilVisible(
-          find.text('Collezionista di soluzioni'),
+          find.text('Cacciatore di soluzioni'),
           300,
           scrollable: find.byType(Scrollable).first,
         );
-        await tester.tap(find.text('Collezionista di soluzioni'));
+        await tester.tap(find.text('Cacciatore di soluzioni'));
         await tester.pumpAndSettle();
         expect(find.text('Risolvi 500 puzzle.'), findsOneWidget);
         expect(find.text('1 / 500'), findsWidgets);
@@ -168,8 +168,14 @@ void main() {
 
     testWidgets('in inglese', (tester) async {
       await show(tester, locale: const Locale('en'));
-      expect(find.text('0 of ${badges.length} badges'), findsOneWidget);
+      expect(find.text('0 of ${badges.length} reached'), findsOneWidget);
       expect(find.textContaining('Learn'), findsOneWidget);
+    });
+
+    testWidgets('la scheda ha le due schede Badge e Libri', (tester) async {
+      await show(tester);
+      expect(find.widgetWithText(Tab, 'Badge'), findsOneWidget);
+      expect(find.widgetWithText(Tab, 'Libri'), findsOneWidget);
     });
 
     testWidgets('i riquadri hanno un tocco di almeno 48 dp', (tester) async {

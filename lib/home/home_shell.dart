@@ -509,6 +509,7 @@ class _HomeShellState extends State<HomeShell> {
               allowUndo: true,
               startMoves: request.startMoves,
               line: request.line,
+              instructor: request.instructor,
             ),
             onActivity: _record,
             onSave: _saveGame,
@@ -716,6 +717,9 @@ class _HomeShellState extends State<HomeShell> {
     progress: _progressController,
     computerAvailable: widget.computerAvailable,
     createComputer: widget.createComputer,
+    tournamentPage: _computerAvailable ? _tournamentPage : null,
+    physicalPage: () => PhysicalGamePage(archive: _archive),
+    openingGame: _computerAvailable ? _playOpening : null,
   );
 
   /// «Nuova partita»: la scacchiera con la scelta già aperta.

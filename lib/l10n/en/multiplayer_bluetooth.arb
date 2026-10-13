@@ -11,6 +11,11 @@
   "@multiplayerChannelBluetooth": {
     "description": "Connect over Bluetooth, no Wi-Fi needed"
   },
+  "multiplayerChannelRemote": "From afar",
+  "@multiplayerChannelRemote": {
+    "description": "Connect over the internet, to play from far away"
+  },
+  "multiplayerWifiHint": "On Wi-Fi, or on one phone's hotspot, you connect over the same network: no internet needed.",
   "multiplayerBluetoothHint": "With Bluetooth the two phones must be close to each other and no network is needed.",
   "@multiplayerBluetoothHint": {
     "description": "Explanation under the Bluetooth choice"
