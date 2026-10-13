@@ -425,6 +425,7 @@ class _HomeShellState extends State<HomeShell> {
       goal: remaining,
       maxRating: chapter.puzzleRating,
       onOutcome: (solved) => _guardianSnack(context, chapter, solved),
+      onHelp: () => _helpSnack(context),
     );
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
@@ -440,6 +441,23 @@ class _HomeShellState extends State<HomeShell> {
     // L'avviso dell'ultimo puzzle non resta sopra la Storia.
     if (context.mounted) ScaffoldMessenger.of(context).hideCurrentSnackBar();
     return feed.solved;
+  }
+
+  /// Dopo due errori di fila: si passa a puzzle più facili (S6).
+  void _helpSnack(BuildContext context) {
+    if (!context.mounted) return;
+    // Dopo l'avviso del custode, che parte nello stesso istante.
+    Future<void>.delayed(const Duration(milliseconds: 200), () {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            behavior: SnackBarBehavior.floating,
+            content: Text(AppLocalizations.of(context).storyHelpEasier),
+          ),
+        );
+    });
   }
 
   /// Il custode commenta il puzzle appena concluso, senza bloccare.
