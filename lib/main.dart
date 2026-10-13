@@ -45,7 +45,12 @@ class _ScacchiAppState extends State<ScacchiApp> {
   Future<void> _start() async {
     // I contenuti (lezioni, grandi maestri…) servono prima delle schermate.
     try {
-      await Content.ensureLoaded();
+      await Content.ensureLoaded(
+        language: contentLanguage(
+          PlatformDispatcher.instance.locale,
+          AppLocalizations.supportedLocales,
+        ),
+      );
     } on Object catch (e) {
       if (kDebugMode) debugPrint('Content not loaded: $e');
     }
