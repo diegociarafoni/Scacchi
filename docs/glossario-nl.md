@@ -121,4 +121,4 @@ Complemento di [glossario-scacchistico.md](glossario-scacchistico.md) per l'olan
 
 ## Nomi delle aperture
 
-Le famiglie sono tradotte per intero («Siciliaanse verdediging»). La composizione di `lib/openings/opening_names.dart` pone il sostantivo prima del complemento (come nelle lingue romanze); in olandese il complemento precede di norma («Najdorf-variant»), quindi le varianti composte risultano meno naturali e sono un limite noto, da superare con un ordine configurabile per lingua.
+Le famiglie sono tradotte per intero («Siciliaanse verdediging»). La composizione di il codice che compone i nomi delle aperture pone il sostantivo prima del complemento (come nelle lingue romanze); in olandese il complemento precede di norma («Najdorf-variant»), quindi le varianti composte risultano meno naturali e sono un limite noto, da superare con un ordine configurabile per lingua.
