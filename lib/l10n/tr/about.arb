@@ -1,0 +1,15 @@
+{
+  "aboutTitle": "Hakkında",
+  "aboutEntrySubtitle": "Lisans, kaynak kod, gizlilik ve teşekkürler",
+  "aboutTagline": "Özgür satranç, bağlantı olmadan da",
+  "aboutPrivacy": "Gizlilik",
+  "aboutPrivacyDescription": "Veri toplanmaz, reklam yok, izleme yok. Uzaktan oyunlarda hamleler şifreli olarak ve yalnızca o oyun için seçilen sunucular üzerinden iletilir",
+  "aboutLicense": "Lisans",
+  "aboutLicenseDescription": "Özgür yazılım, GPL-3.0 veya üstü, uygulama mağazalarında dağıtım için ek izinle",
+  "aboutSource": "Kaynak kod",
+  "aboutSourceCopied": "Adres kopyalandı",
+  "aboutLicenses": "Kütüphane lisansları",
+  "aboutLicensesDescription": "Kullanılan bileşenlerin tam lisans metinleri",
+  "aboutCopy": "Kopyala",
+  "aboutCredits": "Teşekkürler"
+}
