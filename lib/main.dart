@@ -44,20 +44,45 @@ class _ScacchiAppState extends State<ScacchiApp> {
   }
 
   Future<void> _start() async {
-    // I contenuti (lezioni, grandi maestri…) servono prima delle schermate.
-    try {
-      await Content.ensureLoaded();
-    } on Object catch (e) {
-      if (kDebugMode) debugPrint('Content not loaded: $e');
-    }
     final settings = await SettingsController.load().catchError(
       (Object _) => SettingsController.defaults(),
     );
+    // I contenuti (lezioni, grandi maestri…) servono prima delle schermate.
+    await _loadContent(settings.value.language);
+    settings.addListener(_onSettings);
     if (mounted) setState(() => _settings = settings);
+  }
+
+  AppLanguage? _contentFor;
+
+  void _onSettings() {
+    final language = _settings?.value.language;
+    if (language == null || language == _contentFor) return;
+    unawaited(
+      _loadContent(language).then((_) {
+        if (mounted) setState(() {});
+      }),
+    );
+  }
+
+  Future<void> _loadContent(AppLanguage language) async {
+    _contentFor = language;
+    final locale =
+        language.locale ??
+        resolveAppLocale(
+          PlatformDispatcher.instance.locales,
+          AppLocalizations.supportedLocales,
+        );
+    try {
+      await Content.ensureLoaded(language: locale.languageCode);
+    } on Object catch (e) {
+      if (kDebugMode) debugPrint('Content not loaded: $e');
+    }
   }
 
   @override
   void dispose() {
+    _settings?.removeListener(_onSettings);
     _settings?.dispose();
     super.dispose();
   }
