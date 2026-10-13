@@ -7,9 +7,21 @@ final List<Stage> _stages = [for (final c in curriculum) ...c.stages];
 
 /// Migliori stelle (1-3) per tappa completata.
 class PathProgress {
-  const PathProgress([this.stars = const {}]);
+  const PathProgress([this.stars = const {}, this.resume = const {}]);
 
   final Map<String, int> stars;
+
+  /// Stelle degli esercizi già risolti in una tappa lasciata a metà, per
+  /// riprenderla da dove era.
+  final Map<String, List<int>> resume;
+
+  List<int> resumeFor(String stageId) => resume[stageId] ?? const [];
+
+  PathProgress withResume(String stageId, List<int> solved) {
+    final next = {...resume}..remove(stageId);
+    if (solved.isNotEmpty) next[stageId] = List.unmodifiable(solved);
+    return PathProgress(stars, next);
+  }
 
   int starsFor(String stageId) => stars[stageId] ?? 0;
 
@@ -48,12 +60,23 @@ class PathProgress {
 
   PathProgress complete(String stageId, int earned) {
     final best = earned > starsFor(stageId) ? earned : starsFor(stageId);
-    return PathProgress({...stars, stageId: best.clamp(1, 3)});
+    return PathProgress({
+      ...stars,
+      stageId: best.clamp(1, 3),
+    }, {...resume}..remove(stageId));
   }
 
-  Map<String, Object?> toJson() => {'stars': stars};
+  Map<String, Object?> toJson() => {'stars': stars, 'resume': resume};
 
-  static PathProgress fromJson(Map<String, Object?> json) => PathProgress({
-    ...(json['stars'] as Map? ?? const {}).cast<String, int>(),
-  });
+  static PathProgress fromJson(Map<String, Object?> json) => PathProgress(
+    {...(json['stars'] as Map? ?? const {}).cast<String, int>()},
+    {
+      for (final e in (json['resume'] as Map? ?? const {}).entries)
+        if (e.key is String && e.value is List)
+          e.key as String: [
+            for (final v in e.value as List)
+              if (v is int && v >= 1 && v <= 3) v,
+          ],
+    }..removeWhere((_, v) => v.isEmpty),
+  );
 }

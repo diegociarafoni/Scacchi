@@ -210,10 +210,7 @@ class _StoryPageState extends State<StoryPage> {
     final play = widget.playLesson;
     final stars = play != null
         ? await play(context, stage)
-        : await Navigator.push<int>(
-            context,
-            MaterialPageRoute(builder: (_) => StagePage(stage: stage)),
-          );
+        : await openStage(context, widget.path, stage);
     if (stars != null && stars > 0) {
       await widget.path.complete(
         stage,
