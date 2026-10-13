@@ -92,13 +92,10 @@ class ComputerPlayer {
       onError: _failPending,
       onDone: () {
         // Un motore morto a riposo va riavviato alla ricerca successiva.
-        if (_transport == transport) {
-          _transport = null;
-          _ready = null;
-        }
         _failPending(
           StateError('Il motore si è chiuso'), // l10n-ok
         );
+        if (_transport == transport) unawaited(_shutdown());
       },
     );
     await _command('uci', (l) => l == 'uciok', const Duration(seconds: 30));

@@ -46,7 +46,14 @@ class JsonFileStore implements KeyValueStore {
             e.key as String: e.value as String,
         },
       )
-      .then((m) => m ?? <String, String>{});
+      .then(
+        (m) => m ?? <String, String>{},
+        onError: (Object e, StackTrace st) {
+          // Un errore di lettura non va memorizzato: la chiamata dopo riprova.
+          _data = null;
+          Error.throwWithStackTrace(e, st);
+        },
+      );
 
   @override
   Future<String?> read(String key) async => (await _load())[key];
