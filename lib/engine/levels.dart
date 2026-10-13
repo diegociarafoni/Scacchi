@@ -1,12 +1,12 @@
 import 'dart:math' as math;
 
+import '../l10n/content.dart';
 import 'style.dart';
 
 /// Livello di difficoltà. Vedi docs/avversario-computer.md.
 class EngineLevel {
   const EngineLevel({
     required this.id,
-    required this.name,
     required this.approxElo,
     required this.skill,
     required this.movetime,
@@ -20,7 +20,9 @@ class EngineLevel {
   });
 
   final int id;
-  final String name;
+
+  /// Nome mostrato all'utente, dal contenuto `bots` (`level.<id>.name`).
+  String get name => Content.of('bots').text('level.$id.name');
 
   /// Elo indicativo mostrato all'utente.
   final int approxElo;
@@ -62,7 +64,6 @@ class EngineLevel {
     int? styleWindowCp,
   }) => EngineLevel(
     id: id,
-    name: name,
     approxElo: approxElo,
     skill: skill,
     movetime: movetime ?? this.movetime,
@@ -112,7 +113,6 @@ const _minClockMovetime = Duration(milliseconds: 50);
 const engineLevels = <EngineLevel>[
   EngineLevel(
     id: 1,
-    name: 'Principiante',
     approxElo: 700,
     skill: 0,
     depth: 4,
@@ -123,7 +123,6 @@ const engineLevels = <EngineLevel>[
   ),
   EngineLevel(
     id: 2,
-    name: 'Esordiente',
     approxElo: 900,
     skill: 0,
     depth: 4,
@@ -134,7 +133,6 @@ const engineLevels = <EngineLevel>[
   ),
   EngineLevel(
     id: 3,
-    name: 'Dilettante',
     approxElo: 1150,
     skill: 3,
     depth: 4,
@@ -145,7 +143,6 @@ const engineLevels = <EngineLevel>[
   ),
   EngineLevel(
     id: 4,
-    name: 'Giocatore di circolo',
     approxElo: 1400,
     skill: 6,
     depth: 4,
@@ -156,7 +153,6 @@ const engineLevels = <EngineLevel>[
   ),
   EngineLevel(
     id: 5,
-    name: 'Agonista',
     approxElo: 1600,
     skill: 20,
     uciElo: 1600,
@@ -165,7 +161,6 @@ const engineLevels = <EngineLevel>[
   ),
   EngineLevel(
     id: 6,
-    name: 'Esperto',
     approxElo: 1850,
     skill: 20,
     uciElo: 2300,
@@ -174,7 +169,6 @@ const engineLevels = <EngineLevel>[
   ),
   EngineLevel(
     id: 7,
-    name: 'Maestro',
     approxElo: 2250,
     skill: 20,
     depth: 10,
@@ -182,7 +176,6 @@ const engineLevels = <EngineLevel>[
   ),
   EngineLevel(
     id: 8,
-    name: 'Campione',
     approxElo: 2700,
     skill: 20,
     movetime: Duration(seconds: 2),
@@ -195,7 +188,6 @@ const engineLevels = <EngineLevel>[
 /// continua a giocare al livello 1).
 const storyBeginnerLevel = EngineLevel(
   id: 0,
-  name: 'Primi passi',
   approxElo: 400,
   skill: 0,
   depth: 2,
