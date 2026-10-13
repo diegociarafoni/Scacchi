@@ -151,7 +151,7 @@ I golden si rigenerano con `--update-goldens` dopo una modifica voluta dell'aspe
 | RF-54 freccia della mossa migliore | ✓ | |
 | RF-64 grafico della valutazione cliccabile con momenti chiave | ✓ | |
 | RF-65 Riprova sugli errori | ✓ | |
-| RF-66 cache della revisione (in memoria) | ✓ | |
+| RF-66 cache della revisione (in memoria e su disco, con motore e profondità nella chiave) | ✓ | |
 | RF-70 spiegazioni: matto concesso o mancato, pezzo in presa, forchetta, inchiodatura, re scoperto, perdita di materiale | ✓ | |
 | RF-72 giudizio con simbolo sulla casa della mossa (con l'allenatore acceso) | ✓ | ✓ |
 | RF-122 spiegami perché: frasi per cattura, scacco, arrocco, promozione, minacce, sviluppo; interruttore in Impostazioni | ✓ | |

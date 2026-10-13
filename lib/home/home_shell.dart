@@ -54,6 +54,7 @@ import '../review/engine_evaluator.dart';
 import '../review/personal_puzzles.dart';
 import '../review/review_activity.dart';
 import '../review/review_page.dart';
+import '../review/review_store.dart';
 import '../settings/settings.dart';
 import '../settings/settings_page.dart';
 import '../stats/local_rating.dart';
@@ -186,6 +187,10 @@ class _HomeShellState extends State<HomeShell> {
     widget.settings.addListener(_onSettings);
     // Caricamento anticipato in background, per il nome dell'apertura in partita.
     openingBook().ignore();
+    // Revisioni su disco (RF-66); se la cartella dati non c'è, solo memoria.
+    ReviewStore.openDefault()
+        .then((store) => ReviewCache.store ??= store)
+        .ignore();
     _scheduler =
         (widget.reminderScheduler ??
         () => LocalNotificationScheduler.supported
