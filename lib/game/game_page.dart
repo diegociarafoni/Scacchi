@@ -73,6 +73,7 @@ import 'move_speech.dart';
 import 'opponent_picker.dart';
 import 'sounds.dart';
 import 'speech_bubble.dart';
+import 'tap_assist.dart';
 import 'variant.dart';
 
 /// Semimosse minime perché una partita valga XP: abbandonare subito non deve
@@ -1634,6 +1635,21 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     return position.board.sideAt(square) == position.turn;
   }
 
+  /// Case dove può andare il pezzo su [from], senza le promozioni, che hanno
+  /// bisogno del selettore.
+  Set<Square> _tapTargets(Square from) {
+    final position = _game.position;
+    final moves = makeLegalMoves(position)[from];
+    if (moves == null || position.board.sideAt(from) != position.turn) {
+      return const {};
+    }
+    final pawn = position.board.roleAt(from) == Role.pawn;
+    return {
+      for (final to in moves)
+        if (!(pawn && (to.rank == Rank.first || to.rank == Rank.eighth))) to,
+    };
+  }
+
   /// Scorrimento sulla scacchiera: a sinistra avanti, a destra indietro.
   void _swipe(int direction) =>
       _showPly((_viewPly ?? _game.moves.length - 1) + direction);
@@ -2654,7 +2670,11 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                         constraints.maxHeight - 2 * _moveStripHeight,
                       ),
                     );
-              final boardSettings = _settings.board;
+              final boardSettings = _settings.boardFor(
+                phone:
+                    MediaQuery.sizeOf(context).shortestSide <
+                    MoveMethod.phoneWidth,
+              );
               final board = BoardFrame.of(
                 _settings,
                 size: boardSize,
@@ -2670,21 +2690,35 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                   shapeOf: (color, orig, dest) => dest == null
                       ? _settings.marks.circle(color, orig)
                       : _settings.marks.arrow(color, orig, dest),
-                  builder: (marks) => BoardSwipe(
-                    enabled: _pendingMove == null && _game.moves.isNotEmpty,
+                  builder: (marks) => TapAssist(
                     size: size,
                     orientation: _orientation,
-                    canStartAt: _canDragFrom,
-                    blocked: _drawing,
-                    onSwipe: _swipe,
-                    child: Chessboard(
+                    enabled:
+                        boardSettings.pieceShiftMethod !=
+                            PieceShiftMethod.drag &&
+                        _humanToMove &&
+                        _viewPly == null &&
+                        _pendingMove == null,
+                    resetKey: _game.position.fen,
+                    destinations: _tapTargets,
+                    onMove: (from, to) =>
+                        _onMove(NormalMove(from: from, to: to)),
+                    child: BoardSwipe(
+                      enabled: _pendingMove == null && _game.moves.isNotEmpty,
                       size: size,
-                      controller: _board,
                       orientation: _orientation,
-                      onMove: _onMove,
-                      settings: boardSettings,
-                      annotations: _badgeAnnotations(),
-                      shapes: {..._visibleHint(), ...marks},
+                      canStartAt: _canDragFrom,
+                      blocked: _drawing,
+                      onSwipe: _swipe,
+                      child: Chessboard(
+                        size: size,
+                        controller: _board,
+                        orientation: _orientation,
+                        onMove: _onMove,
+                        settings: boardSettings,
+                        annotations: _badgeAnnotations(),
+                        shapes: {..._visibleHint(), ...marks},
+                      ),
                     ),
                   ),
                 ),
