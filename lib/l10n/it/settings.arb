@@ -473,6 +473,30 @@
   "@settingsPremoveDescription": {
     "description": "Impostazioni: descrizione della premossa"
   },
+  "settingsMoveMethod": "Come muovere i pezzi",
+  "@settingsMoveMethod": {
+    "description": "Impostazioni: scelta del modo di muovere"
+  },
+  "settingsMoveMethodDescription": "Due tocchi sono più precisi sul telefono; un tocco sul bordo di una casa viene corretto se solo la casa vicina è possibile",
+  "@settingsMoveMethodDescription": {
+    "description": "Impostazioni: descrizione del modo di muovere"
+  },
+  "settingsMoveMethodAuto": "Automatico",
+  "@settingsMoveMethodAuto": {
+    "description": "Impostazioni: due tocchi sul telefono, entrambi sugli schermi grandi"
+  },
+  "settingsMoveMethodBoth": "Tocchi e trascinamento",
+  "@settingsMoveMethodBoth": {
+    "description": "Impostazioni: entrambi i modi"
+  },
+  "settingsMoveMethodTwoTaps": "Due tocchi",
+  "@settingsMoveMethodTwoTaps": {
+    "description": "Impostazioni: solo due tocchi"
+  },
+  "settingsMoveMethodDrag": "Trascinamento",
+  "@settingsMoveMethodDrag": {
+    "description": "Impostazioni: solo trascinamento"
+  },
   "settingsKeepAwake": "Schermo sempre acceso",
   "@settingsKeepAwake": {
     "description": "Impostazioni: schermo acceso durante la partita"

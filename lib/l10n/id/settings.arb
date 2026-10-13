@@ -131,6 +131,30 @@
   "@settingsPremoveDescription": {
     "description": "Impostazioni: descrizione della premossa"
   },
+  "settingsMoveMethod": "Cara menggerakkan bidak",
+  "@settingsMoveMethod": {
+    "description": "Impostazioni: scelta del modo di muovere"
+  },
+  "settingsMoveMethodDescription": "Dua ketukan lebih akurat di ponsel; ketukan di tepi petak dikoreksi jika hanya petak di sebelahnya yang mungkin",
+  "@settingsMoveMethodDescription": {
+    "description": "Impostazioni: descrizione del modo di muovere"
+  },
+  "settingsMoveMethodAuto": "Otomatis",
+  "@settingsMoveMethodAuto": {
+    "description": "Impostazioni: due tocchi sul telefono, entrambi sugli schermi grandi"
+  },
+  "settingsMoveMethodBoth": "Ketukan dan seret",
+  "@settingsMoveMethodBoth": {
+    "description": "Impostazioni: entrambi i modi"
+  },
+  "settingsMoveMethodTwoTaps": "Dua ketukan",
+  "@settingsMoveMethodTwoTaps": {
+    "description": "Impostazioni: solo due tocchi"
+  },
+  "settingsMoveMethodDrag": "Seret",
+  "@settingsMoveMethodDrag": {
+    "description": "Impostazioni: solo trascinamento"
+  },
   "settingsKeepAwake": "Biarkan layar menyala",
   "@settingsKeepAwake": {
     "description": "Impostazioni: schermo acceso durante la partita"

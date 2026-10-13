@@ -131,6 +131,30 @@
   "@settingsPremoveDescription": {
     "description": "Impostazioni: descrizione della premossa"
   },
+  "settingsMoveMethod": "Jak poruszać bierki",
+  "@settingsMoveMethod": {
+    "description": "Impostazioni: scelta del modo di muovere"
+  },
+  "settingsMoveMethodDescription": "Dwa dotknięcia są dokładniejsze na telefonie; dotknięcie przy krawędzi pola jest poprawiane, gdy możliwe jest tylko sąsiednie pole",
+  "@settingsMoveMethodDescription": {
+    "description": "Impostazioni: descrizione del modo di muovere"
+  },
+  "settingsMoveMethodAuto": "Automatycznie",
+  "@settingsMoveMethodAuto": {
+    "description": "Impostazioni: due tocchi sul telefono, entrambi sugli schermi grandi"
+  },
+  "settingsMoveMethodBoth": "Dotknięcia i przeciąganie",
+  "@settingsMoveMethodBoth": {
+    "description": "Impostazioni: entrambi i modi"
+  },
+  "settingsMoveMethodTwoTaps": "Dwa dotknięcia",
+  "@settingsMoveMethodTwoTaps": {
+    "description": "Impostazioni: solo due tocchi"
+  },
+  "settingsMoveMethodDrag": "Przeciąganie",
+  "@settingsMoveMethodDrag": {
+    "description": "Impostazioni: solo trascinamento"
+  },
   "settingsKeepAwake": "Nie wygaszaj ekranu",
   "@settingsKeepAwake": {
     "description": "Impostazioni: schermo acceso durante la partita"

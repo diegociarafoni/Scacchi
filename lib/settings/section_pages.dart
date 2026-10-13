@@ -157,6 +157,14 @@ class GameSettingsPage extends _SectionPage {
       builder: (context) {
         final s = _s;
         return [
+          SettingsChoiceTile<MoveMethod>(
+            title: l10n.settingsMoveMethod,
+            description: l10n.settingsMoveMethodDescription,
+            values: MoveMethod.values,
+            selected: s.moveMethod,
+            label: (m) => moveMethodLabel(l10n, m),
+            onSelected: (m) => _set((s) => s.copyWith(moveMethod: m)),
+          ),
           SwitchListTile(
             key: const Key('autoQueen'),
             title: Text(l10n.settingsAutoQueen),

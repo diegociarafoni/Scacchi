@@ -22,6 +22,28 @@ enum AnimationSpeed {
   final Duration duration;
 }
 
+/// Come si muovono i pezzi (RM-02): con due tocchi, trascinando o in entrambi i
+/// modi. `auto` sceglie i due tocchi sui telefoni e entrambi sugli schermi
+/// grandi.
+enum MoveMethod {
+  auto,
+  both,
+  twoTaps,
+  drag;
+
+  /// Metodo effettivo su un telefono o su uno schermo grande.
+  PieceShiftMethod resolve({required bool phone}) => switch (this) {
+    MoveMethod.auto =>
+      phone ? PieceShiftMethod.tapTwoSquares : PieceShiftMethod.either,
+    MoveMethod.both => PieceShiftMethod.either,
+    MoveMethod.twoTaps => PieceShiftMethod.tapTwoSquares,
+    MoveMethod.drag => PieceShiftMethod.drag,
+  };
+
+  /// Lato corto, in punti logici, sotto cui lo schermo conta come telefono.
+  static const phoneWidth = 600.0;
+}
+
 /// Colore delle frecce e dei cerchi disegnati sulla scacchiera (RF-05).
 enum MarkColor {
   green(Color(0xE615781B)),
@@ -393,6 +415,7 @@ class AppSettings {
     this.coordinatesOutside = false,
     this.showLastMove = true,
     this.autoQueen = false,
+    this.moveMethod = MoveMethod.auto,
     this.drawShapes = true,
     this.markColor = MarkColor.green,
     this.autoFlip = false,
@@ -445,6 +468,7 @@ class AppSettings {
   /// Colora la casa di partenza e di arrivo dell'ultima mossa.
   final bool showLastMove;
   final bool autoQueen;
+  final MoveMethod moveMethod;
   final bool drawShapes;
 
   /// Colore di base di frecce e cerchi; gli altri si scelgono coi tasti.
@@ -538,6 +562,7 @@ class AppSettings {
     bool? coordinatesOutside,
     bool? showLastMove,
     bool? autoQueen,
+    MoveMethod? moveMethod,
     bool? drawShapes,
     MarkColor? markColor,
     bool? autoFlip,
@@ -569,6 +594,7 @@ class AppSettings {
     coordinatesOutside: coordinatesOutside ?? this.coordinatesOutside,
     showLastMove: showLastMove ?? this.showLastMove,
     autoQueen: autoQueen ?? this.autoQueen,
+    moveMethod: moveMethod ?? this.moveMethod,
     drawShapes: drawShapes ?? this.drawShapes,
     markColor: markColor ?? this.markColor,
     autoFlip: autoFlip ?? this.autoFlip,
@@ -625,6 +651,10 @@ class AppSettings {
         : PieceOrientationBehavior.facingUser,
   );
 
+  /// La scacchiera con il modo di muovere adatto allo schermo.
+  ChessboardSettings boardFor({required bool phone}) =>
+      board.copyWith(pieceShiftMethod: moveMethod.resolve(phone: phone));
+
   /// Scacchiera degli esercizi a un solo lato: tema, pezzi e coordinate del
   /// giocatore, ma pezzi sempre rivolti verso di lui anche in modalità
   /// tavolo.
@@ -641,6 +671,7 @@ class AppSettings {
       other.coordinatesOutside == coordinatesOutside &&
       other.showLastMove == showLastMove &&
       other.autoQueen == autoQueen &&
+      other.moveMethod == moveMethod &&
       other.drawShapes == drawShapes &&
       other.markColor == markColor &&
       other.autoFlip == autoFlip &&
@@ -674,6 +705,7 @@ class AppSettings {
     coordinatesOutside,
     showLastMove,
     autoQueen,
+    moveMethod,
     drawShapes,
     markColor,
     autoFlip,
@@ -739,6 +771,7 @@ class SettingsController extends ValueNotifier<AppSettings> {
         coordinatesOutside: read('coordinatesOutside', d.coordinatesOutside),
         showLastMove: read('showLastMove', d.showLastMove),
         autoQueen: read('autoQueen', d.autoQueen),
+        moveMethod: byName(MoveMethod.values, 'moveMethod', d.moveMethod),
         drawShapes: read('drawShapes', d.drawShapes),
         markColor: byName(MarkColor.values, 'markColor', d.markColor),
         autoFlip: read('autoFlip', d.autoFlip),
@@ -795,6 +828,8 @@ class SettingsController extends ValueNotifier<AppSettings> {
         prefs.setBool('showLastMove', settings.showLastMove),
       if (old.autoQueen != settings.autoQueen)
         prefs.setBool('autoQueen', settings.autoQueen),
+      if (old.moveMethod != settings.moveMethod)
+        prefs.setString('moveMethod', settings.moveMethod.name),
       if (old.drawShapes != settings.drawShapes)
         prefs.setBool('drawShapes', settings.drawShapes),
       if (old.markColor != settings.markColor)
