@@ -9,6 +9,9 @@ import 'package:scacchi/path/path_page.dart';
 import 'package:scacchi/path/stage_page.dart';
 import 'package:scacchi/progress/activity.dart';
 
+import '../content_support.dart';
+import '../localized_app.dart';
+
 Offset _square(WidgetTester tester, String name) {
   final rect = tester.getRect(find.byType(Chessboard));
   final size = rect.width / 8;
@@ -56,7 +59,7 @@ void main() {
   ) async {
     phone(tester);
     await tester.pumpWidget(
-      MaterialApp(home: PathPage(controller: controller)),
+      localizedApp(home: PathPage(controller: controller)),
     );
     await tester.pumpAndSettle();
     expect(find.text('Come si muovono i pezzi'), findsOneWidget);
@@ -77,7 +80,7 @@ void main() {
     final stage = curriculum.first.stages[1];
     int? result;
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: Builder(
           builder: (context) => TextButton(
             onPressed: () async {
@@ -142,10 +145,32 @@ void main() {
     expect(result, 3);
   });
 
+  testWidgets('RG-03 una tappa si mostra in inglese', (tester) async {
+    phone(tester);
+    useContent('en');
+    addTearDown(useContent);
+    final stage = stageById('mates.one')!;
+    await tester.pumpWidget(
+      localizedApp(
+        locale: const Locale('en'),
+        home: StagePage(stage: stage),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Mate in one'), findsOneWidget);
+    expect(find.text(stage.intro!), findsOneWidget);
+    expect(stage.intro, startsWith('Checkmate means'));
+    await tester.tap(find.text('Start'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Checkmate in one move.'), findsOneWidget);
+    await _tapMove(tester, 'a1', 'a7');
+    expect(find.text("That's not the right move, try again."), findsOneWidget);
+  });
+
   testWidgets('RG-03 matto in una: errore e poi soluzione', (tester) async {
     phone(tester);
     final stage = stageById('mates.one')!;
-    await tester.pumpWidget(MaterialApp(home: StagePage(stage: stage)));
+    await tester.pumpWidget(localizedApp(home: StagePage(stage: stage)));
     await tester.pumpAndSettle();
     await _start(tester);
     await _tapMove(tester, 'a1', 'a7');
@@ -157,15 +182,15 @@ void main() {
   testWidgets('RG-03 la spiegazione precede gli esercizi', (tester) async {
     phone(tester);
     final stage = stageById('rules.check')!;
-    await tester.pumpWidget(MaterialApp(home: StagePage(stage: stage)));
+    await tester.pumpWidget(localizedApp(home: StagePage(stage: stage)));
     await tester.pumpAndSettle();
     expect(find.text(stage.intro!), findsOneWidget);
-    expect(find.text(stage.exercises.first.instructions), findsNothing);
+    expect(find.text(stage.instructions(0)), findsNothing);
     // Prima di "Inizia" la scacchiera non accetta mosse.
     await _tapMove(tester, 'a1', 'a8');
     expect(find.text('Esatto!'), findsNothing);
     await _start(tester);
-    expect(find.text(stage.exercises.first.instructions), findsOneWidget);
+    expect(find.text(stage.instructions(0)), findsOneWidget);
     await _tapMove(tester, 'a1', 'a8');
     expect(find.text('Esatto!'), findsOneWidget);
   });
@@ -194,7 +219,7 @@ void main() {
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
-      MaterialApp(home: StagePage(stage: stageById('pieces.king')!)),
+      localizedApp(home: StagePage(stage: stageById('pieces.king')!)),
     );
     await tester.pumpAndSettle();
     await _start(tester);
@@ -226,7 +251,7 @@ void main() {
     }
     await tester.runAsync(() => controller.replace(p));
     await tester.pumpWidget(
-      MaterialApp(home: PathPage(controller: controller)),
+      localizedApp(home: PathPage(controller: controller)),
     );
     await tester.pumpAndSettle();
     final guardian = find.bySemanticsLabel(RegExp('^Il guardiano, da fare'));
@@ -248,7 +273,7 @@ void main() {
 
     Future<void> open(WidgetTester tester) async {
       await tester.pumpWidget(
-        MaterialApp(
+        localizedApp(
           home: Builder(
             builder: (context) => TextButton(
               onPressed: () => openStage(context, controller, stage),
@@ -326,14 +351,14 @@ void main() {
       await firstExercise(tester);
       await tester.tap(find.text('Avanti'));
       await tester.pumpAndSettle();
-      await tester.pageBack();
+      await tester.tap(find.byTooltip('Indietro'));
       await tester.pumpAndSettle();
       expect(controller.progress.resumeFor(stage.id), hasLength(1));
 
       await tester.tap(find.text('apri'));
       await tester.pumpAndSettle();
       expect(find.text(stage.intro!), findsNothing);
-      expect(find.text(stage.exercises[1].instructions), findsOneWidget);
+      expect(find.text(stage.instructions(1)), findsOneWidget);
     });
 
     testWidgets(
@@ -346,7 +371,7 @@ void main() {
         );
         int? result;
         await tester.pumpWidget(
-          MaterialApp(
+          localizedApp(
             home: Builder(
               builder: (context) => TextButton(
                 onPressed: () async =>
