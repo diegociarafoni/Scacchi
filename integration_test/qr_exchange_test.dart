@@ -18,6 +18,7 @@ import 'package:scacchi/storage/key_value_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../test/game_actions.dart';
+import '../test/support/italian_device.dart';
 
 Offset _square(WidgetTester tester, String name) {
   final rect = tester.getRect(find.byType(Chessboard));
@@ -65,6 +66,7 @@ Future<String?> _scanShownQr(WidgetTester tester) async {
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  useItalianDevice();
 
   testWidgets('Cap. 7 scambio QR: il QR della partita in corso si legge e '
       'senza fotocamera si spiega cosa fare', (tester) async {
