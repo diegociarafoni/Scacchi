@@ -45,8 +45,8 @@ class Backup {
 
   static const _app = 'scacchi';
 
-  /// 2: aggiunti settimana, grandi maestri, finali, partita a due telefoni e
-  /// file binari (foto del profilo).
+  /// 2: comprende anche settimana, grandi maestri, finali, partita a due
+  /// telefoni e file binari (foto del profilo).
   static const _version = 2;
 
   /// Unici file ripristinabili: impedisce di scrivere altrove.

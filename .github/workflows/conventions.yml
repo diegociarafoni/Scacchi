@@ -61,3 +61,6 @@ jobs:
       - name: Documentazione (link, percorsi, indice, mappa del codice)
         if: '!cancelled()'
         run: dart tool/check_docs.dart
+      - name: Commenti nel codice (concorrenti, PR, promemoria senza motivo)
+        if: '!cancelled()'
+        run: dart tool/check_comments.dart

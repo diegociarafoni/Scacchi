@@ -28,7 +28,7 @@ Abbandono, patta concordata e tempo scaduto valgono per primi; poi la vittoria d
 
 Due posizioni sono considerate uguali quando coincidono disposizione dei pezzi, lato al tratto, diritti di arrocco e casa di presa en passant. Quest'ultima conta solo se la presa en passant è effettivamente legale, come previsto dal regolamento FIDE. Nel conteggio rientra anche la posizione iniziale. Si confrontano solo le posizioni successive all'ultima cattura o mossa di pedone, perché quelle precedenti non possono ripetersi.
 
-La patta viene dichiarata automaticamente alla terza occorrenza, senza richiesta del giocatore. Il regolamento FIDE prevede invece che la patta per triplice ripetizione e per 50 mosse vada reclamata dal giocatore, e diventi automatica solo alla quinta ripetizione e a 75 mosse; si è scelto il comportamento automatico indicato nei requisiti.
+La patta viene dichiarata automaticamente alla terza occorrenza, senza richiesta del giocatore. Il regolamento FIDE prevede invece che la patta per triplice ripetizione e per 50 mosse vada reclamata dal giocatore, e diventi automatica solo alla quinta ripetizione e a 75 mosse; Rokko adotta il comportamento automatico.
 
 ### Regola delle 50 mosse
 
@@ -43,7 +43,7 @@ Si usa il contatore di semimosse della posizione (`halfmoves`), che si azzera a 
 
 ## Varianti
 
-Nel pannello "Nuova" si sceglie anche la variante (RF-120, RF-121), in due sullo stesso telefono, contro il computer e contro i bot (RF-123, vedi [avversario-computer.md](avversario-computer.md#varianti)); nel profilo bambino si gioca solo a scacchi classici. Le regole sono quelle di `dartchess`; `lib/game/variant.dart` sceglie la posizione iniziale e `ChessGame` conosce la variante della partita.
+Nel foglio Nuova partita, con **Partita personalizzata**, si sceglie anche la variante (RF-120, RF-121), in due sullo stesso telefono, contro il computer e contro i bot (RF-123, vedi [avversario-computer.md](avversario-computer.md#varianti)); nel profilo bambino si gioca solo a scacchi classici. Le regole sono quelle di `dartchess`; `lib/game/variant.dart` sceglie la posizione iniziale e `ChessGame` conosce la variante della partita.
 
 | Variante | Differenze |
 |---|---|
@@ -58,7 +58,7 @@ Nel pannello "Nuova" si sceglie anche la variante (RF-120, RF-121), in due sullo
 
 ## Partite a handicap (RF-27)
 
-Nel pannello "Nuova" la sezione **Handicap** permette di concedere un vantaggio, contro il computer, contro i bot e nella partita a due:
+Nel foglio Nuova partita, in **Partita personalizzata**, la sezione **Handicap** permette di concedere un vantaggio, contro il computer, contro i bot e nella partita a due:
 
 - **Pezzo in meno**: pedone f, cavallo di donna, torre di donna o donna, tolto a chi concede. Con la torre di donna cade anche l'arrocco lungo di quel lato. Il Bianco muove sempre per primo. Vale solo negli scacchi classici.
 - **Tempo di chi concede**: 1, 2, 3 o 5 minuti contro la cadenza scelta per l'altro. Vale solo con un orologio e se è inferiore alla cadenza; altrimenti viene ignorato.

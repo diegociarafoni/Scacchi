@@ -160,7 +160,7 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    // Il codice ECO non compare nel titolo: tagliava il nome in inglese.
+    // Il codice ECO non compare nel titolo: toglierebbe spazio al nome.
     expect(find.text('Difesa siciliana'), findsOneWidget);
     expect(find.textContaining('B20'), findsNothing);
     expect(

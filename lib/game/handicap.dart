@@ -5,10 +5,7 @@ import 'clock.dart';
 
 /// Pezzo che chi dà il vantaggio toglie dalla posizione iniziale (RF-27).
 enum HandicapPiece {
-  /// Pedone di alfiere di re.
   fPawn('f'),
-
-  /// Cavallo di donna.
   knight('b'),
 
   /// Torre di donna: con lei cade anche l'arrocco lungo.

@@ -64,7 +64,7 @@ void main() {
     expect(find.text('Scegli il bot'), findsOneWidget);
     expect(find.text("Gioca con l'istruttore"), findsOneWidget);
     expect(find.text('Tornei'), findsOneWidget);
-    // Niente più selettore a segmenti, né l'interruttore a distanza.
+    // Nessun selettore a segmenti né interruttore a distanza.
     expect(find.byType(SegmentedButton<Object>), findsNothing);
     expect(find.text('Computer'), findsNothing);
     await tester.tap(find.text('Altre modalità'));

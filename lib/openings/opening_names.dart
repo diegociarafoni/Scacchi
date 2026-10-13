@@ -2,7 +2,7 @@ import '../l10n/content.dart';
 
 /// Nomi delle aperture nella lingua attiva.
 ///
-/// Il libro (Lichess) è in inglese, quindi in inglese il nome resta quello del
+/// Il libro è in inglese, quindi in inglese il nome resta quello del
 /// libro. Per le altre lingue le famiglie più comuni hanno la loro traduzione
 /// e le varianti si compongono da un piccolo glossario (sostantivi, aggettivi,
 /// nazionalità), tutto in `assets/content/<lingua>/opening_names.json`. I nomi

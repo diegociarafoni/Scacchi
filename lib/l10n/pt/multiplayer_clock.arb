@@ -1,0 +1,12 @@
+{
+  "multiplayerClockTitle": "Ritmo de jogo",
+  "multiplayerClockNone": "Sem relógio",
+  "multiplayerClockHint": "Quem cria a partida decide: o outro celular a recebe junto com o convite.",
+  "multiplayerClockRemoteHint": "À distância não há relógio: escolha Wi-Fi ou Bluetooth para usar um.",
+  "multiplayerClockYou": "Você",
+  "multiplayerClockPeer": "Adversário",
+  "multiplayerClockSemantics": "Relógio de {who}: {minutes} minutos e {seconds} segundos",
+  "multiplayerWhiteWinsOnTime": "Tempo esgotado: as Brancas vencem",
+  "multiplayerBlackWinsOnTime": "Tempo esgotado: as Pretas vencem",
+  "multiplayerDrawOnTime": "Tempo esgotado, mas sem material para o xeque-mate: empate"
+}

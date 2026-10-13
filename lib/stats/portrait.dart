@@ -6,7 +6,7 @@ import '../openings/opening_names.dart';
 import 'stats.dart';
 
 /// Riepilogo degli ultimi sette giorni dell'utente, calcolato dall'archivio
-/// senza alcun server (proposta del capitolo 7 dei requisiti).
+/// senza alcun server (vedi docs/backlog.md).
 class PlayerPortrait {
   const PlayerPortrait._({
     required this.from,

@@ -1,6 +1,6 @@
 # Badge
 
-Requisito RG-17. Una raccolta di 59 badge legati a ciò che si impara e si gioca, distinta dai [traguardi](gamification.md#traguardi-rg-05): i traguardi sono contatori che sbloccano temi, pezzi e cornici; i badge sono un riconoscimento tematico e non danno né XP né ricompense (RG-12). Il catalogo con le scelte di prodotto è in `badge.md` tra i file del progetto; qui c'è come funziona il codice, in `lib/badges/`.
+Requisito RG-17. Una raccolta di 59 badge legati a ciò che si impara e si gioca, distinta dai [traguardi](gamification.md#traguardi-rg-05): i traguardi sono contatori che sbloccano temi, pezzi e cornici; i badge sono un riconoscimento tematico e non danno né XP né ricompense (RG-12). Il codice è in `lib/badges/`.
 
 ## Famiglie
 
@@ -53,7 +53,7 @@ Ogni riquadro ha un'etichetta per i lettori di schermo («Alla francese, ottenut
 
 `BadgeArt` (`badge_art.dart`) disegna la medaglia in codice, senza immagini: ogni famiglia ha la sua sagoma (scudo per Imparare, esagono per Puzzle, rombo smussato per Partite, cerchio per Storia, rosetta per Costanza) e il suo colore (`badgePalette`), con gradiente, riflesso e bordo bronzo, argento o oro per i badge a gradini. Il simbolo al centro è un'icona di Material in bianco. Da ottenere la medaglia è grigia, con la stessa sagoma e il lucchetto.
 
-`RecentBadges` (`recent_badges.dart`) è una fascia riutilizzabile con gli ultimi badge ottenuti, per esempio per la home; è vuota se non ce n'è nessuno.
+`RecentBadges` (`recent_badges.dart`) è una fascia riutilizzabile con gli ultimi badge ottenuti, vuota se non ce n'è nessuno; nessuna schermata la usa ancora.
 
 ## Libri delle aperture
 
@@ -74,8 +74,8 @@ Golden su tre taglie di telefono, chiaro e scuro, in `test/golden/badges_golden_
 1. Aggiungere la riga in `badges` (`badge_def.dart`), con un identificativo nuovo e mai riusato.
 2. Se serve un dato nuovo, un contatore in `ProgressTracker._count` o un campo di `BadgeSources`.
 3. Aggiungere `badge<Id>Name` e `badge<Id>Desc` nei due `badges.arb` e il ramo corrispondente in `badges_l10n.dart`.
-4. Aggiungere il test in `test/badges/badge_defs_test.dart` e aggiornare il numero atteso nel test del catalogo e in questo documento.
+4. Aggiungere il test in `test/badges/badge_defs_test.dart` e aggiornare il numero atteso nel test del catalogo e i conteggi in questo documento.
 
 ## Non ancora attivi
 
-I badge del multigiocatore e quelli del ripasso del repertorio sono nel catalogo di prodotto ma non nel codice: richiedono che le partite in rete e il ripasso del repertorio registrino un'attività, e quelle schermate sono in corso di ridisegno.
+Non esistono badge del multigiocatore né del ripasso del repertorio: richiedono che le partite in rete e il ripasso registrino un'attività.
