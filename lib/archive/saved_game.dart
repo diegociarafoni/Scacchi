@@ -147,10 +147,11 @@ class SavedGame {
     double? Function()? accuracy,
     String? Function()? opening,
     String? pgn,
+    DateTime? updatedAt,
   }) => SavedGame(
     id: id,
     createdAt: createdAt,
-    updatedAt: updatedAt,
+    updatedAt: updatedAt ?? this.updatedAt,
     white: white,
     black: black,
     mode: mode,
@@ -162,6 +163,19 @@ class SavedGame {
     accuracy: accuracy == null ? this.accuracy : accuracy(),
     opening: opening == null ? this.opening : opening(),
   );
+
+  /// Copia con le mosse, le varianti e le note di [tree], mantenendo
+  /// intestazioni, tipo e risultato della voce.
+  SavedGame withTree(VariationTree tree, {DateTime? updatedAt}) {
+    final games = PgnGame.parseMultiGamePgn(pgn);
+    return copyWith(
+      pgn: exportTreePgn(
+        tree,
+        headers: games.isEmpty ? const {} : games.first.headers,
+      ),
+      updatedAt: updatedAt,
+    );
+  }
 
   /// Albero con le varianti salvate (RF-52); `null` se il PGN non è
   /// scacchi classici leggibili.

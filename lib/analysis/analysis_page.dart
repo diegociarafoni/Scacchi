@@ -10,6 +10,7 @@ import '../archive/game_archive.dart';
 import '../archive/saved_game.dart';
 import '../archive/tree_pgn.dart';
 import '../engine/uci.dart';
+import '../game/move_note_dialog.dart';
 import '../l10n/app_localizations.dart';
 import '../review/board_utils.dart';
 import '../review/eval_bar.dart';
@@ -243,14 +244,10 @@ class _AnalysisPageState extends State<AnalysisPage>
     _moved();
   }
 
-  /// PGN dell'albero com'è ora, con le varianti.
-  String _pgn() => exportTreePgn(
-    _tree,
-    headers: {
-      if (_saved case final saved?) 'Event': saved.white,
-      'Site': 'Offline',
-    },
-  );
+  /// PGN dell'albero com'è ora, con le varianti e le note.
+  String _pgn() =>
+      _saved?.withTree(_tree).pgn ??
+      exportTreePgn(_tree, headers: {'Site': 'Offline'});
 
   Future<void> _sharePgn() {
     final share = widget.share;
@@ -285,18 +282,20 @@ class _AnalysisPageState extends State<AnalysisPage>
 
   Future<void> _saveNow() async {
     final previous = _saved;
-    final name = previous?.white ?? await _askName();
-    if (name == null || name.isEmpty || !mounted) return;
+    final name = previous == null ? await _askName() : null;
+    if (previous == null && (name == null || name.isEmpty) || !mounted) return;
     final messenger = ScaffoldMessenger.of(context);
     final l = AppLocalizations.of(context);
     final now = DateTime.now();
-    final game = SavedGame.fromTree(
-      _tree,
-      id: previous?.id ?? 'analisi-${now.microsecondsSinceEpoch}',
-      name: name,
-      createdAt: previous?.createdAt ?? now,
-      updatedAt: now,
-    );
+    final game = previous == null
+        ? SavedGame.fromTree(
+            _tree,
+            id: 'analisi-${now.microsecondsSinceEpoch}',
+            name: name!,
+            createdAt: now,
+            updatedAt: now,
+          )
+        : previous.withTree(_tree, updatedAt: now);
     try {
       await widget.onSave(game);
       _saved = game;
@@ -304,6 +303,18 @@ class _AnalysisPageState extends State<AnalysisPage>
     } on Object {
       messenger.showSnackBar(SnackBar(content: Text(l.analysisSaveFailed)));
     }
+  }
+
+  Future<void> _editNote() async {
+    final node = _tree.current;
+    if (node.isRoot) return;
+    final note = await showMoveNoteDialog(
+      context,
+      san: formatSan(node.san, AppSettings.of(context).notation),
+      note: node.note,
+    );
+    if (note == null || !mounted) return;
+    setState(() => node.note = note.isEmpty ? null : note);
   }
 
   void _toggleThreat() {
@@ -474,6 +485,13 @@ class _AnalysisPageState extends State<AnalysisPage>
                         for (final line in _lines) _lineTile(line),
                         if (_tree.root.children.isNotEmpty) ...[
                           _treeActions(),
+                          if (_tree.current.note?.comment case final c?)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                              ),
+                              child: Text(c),
+                            ),
                           Padding(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 16,
@@ -554,6 +572,13 @@ class _AnalysisPageState extends State<AnalysisPage>
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         IconButton(
+          tooltip: node.note == null ? l.reviewAddNote : l.reviewEditNote,
+          onPressed: node.isRoot ? null : _editNote,
+          icon: Icon(
+            node.note == null ? Icons.edit_note : Icons.edit_note_outlined,
+          ),
+        ),
+        IconButton(
           tooltip: l.analysisPromote,
           onPressed: node.isRoot || _tree.isMainLine(node) ? null : _promote,
           icon: const Icon(Icons.upgrade),
@@ -615,9 +640,10 @@ class _AnalysisPageState extends State<AnalysisPage>
     final notation = AppSettings.of(context).notation;
     final before = node.parent!.position;
     final san = formatSan(node.san, notation);
+    final symbol = node.note?.symbol?.text ?? '';
     final label = before.turn == Side.white || withNumber
-        ? '${moveNumber(before)} $san'
-        : san;
+        ? '${moveNumber(before)} $san$symbol'
+        : '$san$symbol';
     final selected = node == _tree.current;
     final scheme = Theme.of(context).colorScheme;
     return Semantics(
