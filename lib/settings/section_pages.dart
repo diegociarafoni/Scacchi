@@ -111,6 +111,14 @@ class BoardSettingsPage extends _SectionPage {
             value: s.drawShapes,
             onChanged: (v) => _set((c) => c.copyWith(drawShapes: v)),
           ),
+          SettingsChoiceTile<MarkColor>(
+            title: l10n.settingsMarkColor,
+            description: l10n.settingsMarkColorDescription,
+            values: MarkColor.values,
+            selected: s.markColor,
+            label: (c) => markColorLabel(l10n, c),
+            onSelected: (c) => _set((s) => s.copyWith(markColor: c)),
+          ),
           SettingsChoiceTile<AnimationSpeed>(
             title: l10n.settingsAnimations,
             description: l10n.settingsAnimationsDescription,

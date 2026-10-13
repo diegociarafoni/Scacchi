@@ -59,11 +59,13 @@ import '../share/position_image_page.dart';
 import '../storage/key_value_store.dart';
 import '../tablebase/shared_tablebase.dart';
 import '../theme/rokko_theme.dart';
+import 'board_drawing.dart';
 import 'board_swipe.dart';
 import 'challenge.dart';
 import 'chess_game.dart';
 import 'clock.dart';
 import 'clock_l10n.dart';
+import 'custom_clock_dialog.dart';
 import 'handicap.dart';
 import 'material.dart';
 import 'move_input.dart';
@@ -188,6 +190,9 @@ class GamePage extends StatefulWidget {
 
 class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   ChessGame _game = ChessGame();
+
+  /// Vero mentre si disegna una freccia, per non scambiarla per uno scorrimento.
+  final _drawing = ValueNotifier(false);
   late final ChessboardController _board = ChessboardController(
     game: _gameData(),
   );
@@ -888,6 +893,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _sounds.dispose();
     _board.dispose();
     _syncAwake(disposing: true);
+    _drawing.dispose();
     super.dispose();
   }
 
@@ -1438,12 +1444,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final position = _game.position;
     // Tempo residuo di chi muove dopo la mossa, incremento compreso (RF-67);
     // la prima mossa avvia l'orologio e non lo incrementa.
-    final left = clock == null
-        ? null
-        : clock.remaining(position.turn) +
-              (clock.isRunning
-                  ? Duration(seconds: clock.control.increment)
-                  : Duration.zero);
+    final left = clock?.remainingAfterMove(position.turn);
     if (!_game.play(move, clock: left)) return false;
     final spoken = describeSan(
       _l10n(context),
@@ -1486,7 +1487,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     if (clock != null) {
       level = level.withinClock(
         clock.remaining(side),
-        Duration(seconds: clock.control.increment),
+        Duration(seconds: clock.control.increment + clock.control.delay),
       );
     }
     _refresh(animate: false);
@@ -2684,20 +2685,33 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                 _settings,
                 size: boardSize,
                 orientation: _orientation,
-                builder: (size) => BoardSwipe(
-                  enabled: _pendingMove == null && _game.moves.isNotEmpty,
+                builder: (size) => BoardDrawing(
                   size: size,
                   orientation: _orientation,
+                  color: _settings.markColor.color,
+                  enabled: _settings.drawShapes,
                   canStartAt: _canDragFrom,
-                  onSwipe: _swipe,
-                  child: Chessboard(
+                  resetKey: (_game.position.fen, _viewPly),
+                  drawing: _drawing,
+                  shapeOf: (color, orig, dest) => dest == null
+                      ? _settings.marks.circle(color, orig)
+                      : _settings.marks.arrow(color, orig, dest),
+                  builder: (marks) => BoardSwipe(
+                    enabled: _pendingMove == null && _game.moves.isNotEmpty,
                     size: size,
-                    controller: _board,
                     orientation: _orientation,
-                    onMove: _onMove,
-                    settings: boardSettings,
-                    annotations: _badgeAnnotations(),
-                    shapes: _visibleHint(),
+                    canStartAt: _canDragFrom,
+                    blocked: _drawing,
+                    onSwipe: _swipe,
+                    child: Chessboard(
+                      size: size,
+                      controller: _board,
+                      orientation: _orientation,
+                      onMove: _onMove,
+                      settings: boardSettings,
+                      annotations: _badgeAnnotations(),
+                      shapes: {..._visibleHint(), ...marks},
+                    ),
                   ),
                 ),
               );
@@ -3956,6 +3970,27 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
           Text(l10n.gameTimeControlTitle, style: theme.textTheme.titleSmall),
           const SizedBox(height: 4),
           chip(noClock, null),
+          const SizedBox(height: 8),
+          ActionChip(
+            key: const ValueKey('clock-custom'),
+            avatar: const Icon(Icons.tune, size: 18),
+            label: Text(l10n.gameClockCustom),
+            onPressed: () async {
+              final control = await showCustomClockDialog(context);
+              if (control == null || !context.mounted) return;
+              Navigator.pop(
+                context,
+                _TimeChoice(
+                  control,
+                  _variant,
+                  _white.text,
+                  _black.text,
+                  _setup,
+                  _handicap,
+                ),
+              );
+            },
+          ),
           for (final entry in groups.entries) ...[
             const SizedBox(height: 12),
             Text(
