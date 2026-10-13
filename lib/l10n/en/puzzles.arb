@@ -1,5 +1,17 @@
 {
-  "puzzleGoal": "{goal, select, mateIn1{Goal: mate in 1} mateIn2{Goal: mate in 2} mateIn3{Goal: mate in 3} mateIn4{Goal: mate in 4} mate{Goal: checkmate the opponent} crushing{Goal: get a decisive advantage} advantage{Goal: get the advantage} equality{Goal: reach equality} other{Goal: find the best move}}",
+  "puzzleGoal": "{goal, select, mateIn1{Mate in 1} mateIn2{Mate in 2} mateIn3{Mate in 3} mateIn4{Mate in 4} mate{Checkmate the opponent} crushing{Get a decisive advantage} advantage{Get the advantage} equality{Reach equality} other{Find the best move}}",
+  "puzzleGoalSide": "{goal} · {side} to move",
+  "@puzzleGoalSide": {
+    "description": "Puzzle header card: goal and side to move",
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      },
+      "side": {
+        "type": "String"
+      }
+    }
+  },
   "challengeTitle": "Challenge a friend",
   "challengeSubtitle": "The same puzzles on two phones, no network",
   "challengeIntro": "Pick the run and show the QR code to your friend: you both play the same puzzles. At the end you swap scores with a second QR code.",
@@ -166,15 +178,6 @@
       }
     }
   },
-  "puzzleFind": "Find the best move for {side}.",
-  "@puzzleFind": {
-    "description": "Invito a trovare la mossa",
-    "placeholders": {
-      "side": {
-        "type": "String"
-      }
-    }
-  },
   "puzzleRestarted": "Starting position. Find the best move for {side}.",
   "@puzzleRestarted": {
     "description": "Dopo aver ricominciato",
@@ -227,15 +230,6 @@
   "puzzleDifficulty": "Puzzle {rating}",
   "@puzzleDifficulty": {
     "description": "Difficoltà del puzzle risolto",
-    "placeholders": {
-      "rating": {
-        "type": "int"
-      }
-    }
-  },
-  "puzzleYourRating": "Your rating: {rating}",
-  "@puzzleYourRating": {
-    "description": "Punteggio sotto la scacchiera",
     "placeholders": {
       "rating": {
         "type": "int"
