@@ -22,5 +22,21 @@
   "analysisBack": "Terug",
   "analysisForward": "Vooruit",
   "analysisResume": "Analyse hervatten",
-  "analysisPause": "Analyse pauzeren"
+  "analysisPause": "Analyse pauzeren",
+  "analysisMore": "Meer acties",
+  "analysisSave": "Opslaan in het archief",
+  "analysisSharePgn": "PGN delen",
+  "analysisSaveTitle": "Naam van de analyse",
+  "analysisDefaultName": "Analyse van {date}",
+  "@analysisDefaultName": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "analysisSaved": "Analyse opgeslagen in het archief",
+  "analysisSaveFailed": "Opslaan mislukt",
+  "analysisSaveConfirm": "Opslaan",
+  "analysisCancel": "Annuleren"
 }

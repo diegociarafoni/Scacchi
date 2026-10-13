@@ -46,7 +46,7 @@ class GameArchive {
   /// Partita propria non conclusa aggiornata più di recente, da riprendere.
   Future<SavedGame?> unfinished() async {
     for (final g in await list()) {
-      if (!g.finished && g.mode != SavedGame.imported) return g;
+      if (!g.finished && g.isPlayed) return g;
     }
     return null;
   }
@@ -88,6 +88,7 @@ class GameArchive {
           white: r.headers['White'] ?? '?',
           black: r.headers['Black'] ?? '?',
           mode: SavedGame.imported,
+          tree: r.tree,
           createdAt: time,
           updatedAt: time,
           headers: {

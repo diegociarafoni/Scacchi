@@ -1,7 +1,9 @@
 import 'package:dartchess/dartchess.dart';
 
+import '../analysis/variation_tree.dart';
 import '../game/chess_game.dart';
 import 'pgn.dart';
+import 'tree_pgn.dart';
 
 /// Partita nell'archivio locale: metadati per lo storico e mosse in PGN.
 class SavedGame {
@@ -33,6 +35,7 @@ class SavedGame {
     Side? playerSide,
     String? timeControl,
     int? opponentElo,
+    VariationTree? tree,
   }) => SavedGame(
     playerSide: playerSide,
     timeControl: timeControl,
@@ -44,17 +47,35 @@ class SavedGame {
     black: black,
     mode: mode,
     result: resultTag(game),
-    pgn: exportPgn(
-      game,
-      headers: {
-        'Event': 'Rokko',
-        'Site': 'Offline',
-        'Date': _pgnDate(createdAt),
-        'TimeControl': ?_pgnTimeControl(timeControl),
-        ...headers,
-        'White': white,
-        'Black': black,
-      },
+    pgn: _pgn(game, tree, {
+      'Event': 'Rokko',
+      'Site': 'Offline',
+      'Date': _pgnDate(createdAt),
+      'TimeControl': ?_pgnTimeControl(timeControl),
+      ...headers,
+      'White': white,
+      'Black': black,
+    }),
+  );
+
+  /// Analisi con le sue varianti (RF-52), salvata con il nome [name].
+  factory SavedGame.fromTree(
+    VariationTree tree, {
+    required String id,
+    required String name,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+  }) => SavedGame(
+    id: id,
+    createdAt: createdAt,
+    updatedAt: updatedAt,
+    white: name,
+    black: '',
+    mode: analysis,
+    result: '*',
+    pgn: exportTreePgn(
+      tree,
+      headers: {'Event': name, 'Site': 'Offline', 'Date': _pgnDate(createdAt)},
     ),
   );
 
@@ -68,6 +89,9 @@ class SavedGame {
   final String mode;
 
   static const imported = 'importata';
+
+  /// Analisi con varianti, non una partita giocata.
+  static const analysis = 'analisi';
 
   /// Partita tra due persone sullo stesso dispositivo.
   static const local = 'locale';
@@ -99,8 +123,11 @@ class SavedGame {
 
   bool get finished => result != '*';
 
+  /// Partita giocata sull'app, non importata né salvata come analisi.
+  bool get isPlayed => mode != imported && mode != analysis;
+
   /// Giocatori, per titoli ed elenchi.
-  String get title => '$white – $black';
+  String get title => black.isEmpty ? white : '$white – $black';
 
   /// Punti dell'utente (1, ½, 0), o `null` se in corso o senza colore.
   double? get playerScore {
@@ -135,6 +162,10 @@ class SavedGame {
     accuracy: accuracy == null ? this.accuracy : accuracy(),
     opening: opening == null ? this.opening : opening(),
   );
+
+  /// Albero con le varianti salvate (RF-52); `null` se il PGN non è
+  /// scacchi classici leggibili.
+  VariationTree? toTree() => treeFromPgn(pgn);
 
   /// Ricostruisce la partita dalle mosse salvate.
   ChessGame toGame() {
@@ -178,6 +209,12 @@ class SavedGame {
     opening: json['opening'] as String?,
   );
 }
+
+/// PGN con le varianti di [tree] se c'è, altrimenti la sola linea principale.
+String _pgn(ChessGame game, VariationTree? tree, Map<String, String> headers) =>
+    tree == null
+    ? exportPgn(game, headers: headers)
+    : exportTreePgn(tree, headers: {...headers, 'Result': resultTag(game)});
 
 String _pgnDate(DateTime d) => '${d.year}.${_two(d.month)}.${_two(d.day)}';
 

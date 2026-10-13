@@ -35,6 +35,7 @@ class YouPage extends StatefulWidget {
     this.storyPage,
     this.puzzlesPage,
     this.openGame,
+    this.openAnalysis,
   });
 
   /// Fonti dei dati: chiamate a ogni apertura, così un errore si riprova.
@@ -62,6 +63,9 @@ class YouPage extends StatefulWidget {
 
   /// Apre una partita dell'archivio; senza, le righe non sono toccabili.
   final void Function(BuildContext context, SavedGame game)? openGame;
+
+  /// Apre una partita o un'analisi dell'archivio nell'analisi (RF-52).
+  final void Function(BuildContext context, SavedGame game)? openAnalysis;
 
   @override
   State<YouPage> createState() => _YouPageState();
@@ -208,6 +212,9 @@ class _YouPageState extends State<YouPage> {
                     onOpen: w.openGame == null
                         ? null
                         : (g) => w.openGame!(context, g),
+                    onAnalyse: w.openAnalysis == null
+                        ? null
+                        : (g) => w.openAnalysis!(context, g),
                   ),
                 ),
               ),
