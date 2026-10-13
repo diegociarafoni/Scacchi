@@ -58,6 +58,7 @@ import '../share/position_image_page.dart';
 import '../storage/key_value_store.dart';
 import '../tablebase/shared_tablebase.dart';
 import '../theme/rokko_theme.dart';
+import 'board_drawing.dart';
 import 'board_swipe.dart';
 import 'challenge.dart';
 import 'chess_game.dart';
@@ -183,6 +184,9 @@ class GamePage extends StatefulWidget {
 
 class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   ChessGame _game = ChessGame();
+
+  /// Vero mentre si disegna una freccia, per non scambiarla per uno scorrimento.
+  final _drawing = ValueNotifier(false);
   late final ChessboardController _board = ChessboardController(
     game: _gameData(),
   );
@@ -882,6 +886,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _tick.dispose();
     _sounds.dispose();
     _board.dispose();
+    _drawing.dispose();
     super.dispose();
   }
 
@@ -2659,20 +2664,33 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                 _settings,
                 size: boardSize,
                 orientation: _orientation,
-                builder: (size) => BoardSwipe(
-                  enabled: _pendingMove == null && _game.moves.isNotEmpty,
+                builder: (size) => BoardDrawing(
                   size: size,
                   orientation: _orientation,
+                  color: _settings.markColor.color,
+                  enabled: _settings.drawShapes,
                   canStartAt: _canDragFrom,
-                  onSwipe: _swipe,
-                  child: Chessboard(
+                  resetKey: (_game.position.fen, _viewPly),
+                  drawing: _drawing,
+                  shapeOf: (color, orig, dest) => dest == null
+                      ? _settings.marks.circle(color, orig)
+                      : _settings.marks.arrow(color, orig, dest),
+                  builder: (marks) => BoardSwipe(
+                    enabled: _pendingMove == null && _game.moves.isNotEmpty,
                     size: size,
-                    controller: _board,
                     orientation: _orientation,
-                    onMove: _onMove,
-                    settings: boardSettings,
-                    annotations: _badgeAnnotations(),
-                    shapes: _visibleHint(),
+                    canStartAt: _canDragFrom,
+                    blocked: _drawing,
+                    onSwipe: _swipe,
+                    child: Chessboard(
+                      size: size,
+                      controller: _board,
+                      orientation: _orientation,
+                      onMove: _onMove,
+                      settings: boardSettings,
+                      annotations: _badgeAnnotations(),
+                      shapes: {..._visibleHint(), ...marks},
+                    ),
                   ),
                 ),
               );
