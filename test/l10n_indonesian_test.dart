@@ -71,7 +71,10 @@ void main() {
   });
 
   testWidgets('RP-05 schermate campione in indonesiano', (tester) async {
-    final l10n = lookupAppLocalizations(const Locale('id'));
+    expect(
+      lookupAppLocalizations(const Locale('id')).minigamesTitle,
+      id['minigamesTitle'],
+    );
     await tester.pumpWidget(
       localizedApp(
         locale: const Locale('id'),
@@ -82,14 +85,15 @@ void main() {
         ),
       ),
     );
-    expect(find.text(en['backupTitle'] ?? ''), findsNothing);
-    expect(find.text(l10n.backupTitle), findsWidgets);
+    expect(find.text(id['backupTitle']!), findsWidgets);
+    expect(find.text(en['backupTitle']!), findsNothing);
     expect(tester.takeException(), isNull);
 
     await tester.pumpWidget(
       localizedApp(locale: const Locale('id'), home: const MinigamesPage()),
     );
-    expect(find.text(l10n.minigamesTitle), findsWidgets);
+    expect(find.text(id['minigamesTitle']!), findsWidgets);
+    expect(find.text(en['minigamesTitle']!), findsNothing);
     expect(tester.takeException(), isNull);
   });
 }
