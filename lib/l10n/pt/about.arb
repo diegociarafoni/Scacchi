@@ -1,0 +1,15 @@
+{
+  "aboutTitle": "Sobre",
+  "aboutEntrySubtitle": "Licença, código-fonte, privacidade e créditos",
+  "aboutTagline": "Xadrez livre e gratuito, também sem conexão",
+  "aboutPrivacy": "Privacidade",
+  "aboutPrivacyDescription": "Nenhum dado coletado, sem anúncios, sem rastreamento. Em partidas à distância, os lances passam criptografados apenas pelos servidores escolhidos para a partida",
+  "aboutLicense": "Licença",
+  "aboutLicenseDescription": "Software livre, licença GPL-3.0 ou posterior, com permissão adicional para distribuição nas lojas de aplicativos",
+  "aboutSource": "Código-fonte",
+  "aboutSourceCopied": "Endereço copiado",
+  "aboutLicenses": "Licenças das bibliotecas",
+  "aboutLicensesDescription": "Textos completos das licenças dos componentes usados",
+  "aboutCopy": "Copiar",
+  "aboutCredits": "Créditos"
+}
