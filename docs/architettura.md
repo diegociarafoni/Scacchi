@@ -40,6 +40,7 @@ lib/
     move_input.dart       Lettura di una mossa scritta (SAN inglese o italiana, UCI)
     move_speech.dart      Frase da annunciare al lettore di schermo per ogni mossa
     board_swipe.dart      Scorrimento orizzontale sulla scacchiera per rivedere le mosse
+    tap_assist.dart       Correzione del tocco caduto sul bordo di una casa
     game_page.dart        Schermata di gioco
     challenge.dart        Partita già impostata da un'altra schermata (guardiani, tornei)
     opponent_picker.dart  Scelta di avversario, colore e livello

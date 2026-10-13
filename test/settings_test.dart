@@ -59,6 +59,7 @@ void main() {
         showLegalMoves: false,
         showCoordinates: false,
         autoQueen: true,
+        moveMethod: MoveMethod.drag,
         drawShapes: false,
         autoFlip: true,
         animation: AnimationSpeed.none,
@@ -80,6 +81,7 @@ void main() {
     expect(reloaded.value.themeMode, ThemeMode.dark);
     expect(reloaded.value.boardTheme, BoardTheme.blue);
     expect(reloaded.value.animation, AnimationSpeed.none);
+    expect(reloaded.value.moveMethod, MoveMethod.drag);
   });
 
   test(

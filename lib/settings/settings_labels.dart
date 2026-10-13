@@ -12,6 +12,13 @@ String themeModeLabel(AppLocalizations l, ThemeMode m) => switch (m) {
   ThemeMode.dark => l.settingsModeDark,
 };
 
+String moveMethodLabel(AppLocalizations l, MoveMethod m) => switch (m) {
+  MoveMethod.auto => l.settingsMoveMethodAuto,
+  MoveMethod.both => l.settingsMoveMethodBoth,
+  MoveMethod.twoTaps => l.settingsMoveMethodTwoTaps,
+  MoveMethod.drag => l.settingsMoveMethodDrag,
+};
+
 String animationLabel(AppLocalizations l, AnimationSpeed a) => switch (a) {
   AnimationSpeed.none => l.settingsAnimationNone,
   AnimationSpeed.fast => l.settingsAnimationFast,

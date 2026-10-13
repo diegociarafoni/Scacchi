@@ -142,6 +142,7 @@ Si aprono dall'icona a forma di ingranaggio nella Home e nella barra del titolo 
 | Coordinate | Lettere e numeri sui bordi della scacchiera | Attiva |
 | Evidenzia l'ultima mossa | Colora la casa di partenza e quella di arrivo dell'ultima mossa, su tutte le scacchiere; spenta, il colore del tema diventa trasparente | Attiva |
 | Coordinate fuori dalla scacchiera | Sposta le coordinate su una cornice attorno alla scacchiera, così non coprono i pezzi; si sceglie solo con le coordinate attive (vedi [pezzi-e-scacchiere.md](pezzi-e-scacchiere.md)) | Disattiva |
+| Come muovere i pezzi | Automatico (due tocchi sul telefono, tocchi e trascinamento sugli schermi con lato corto da 600 dp), Tocchi e trascinamento, Due tocchi o Trascinamento (requisito RM-02). Nei due tocchi, un secondo tocco sul bordo di una casa (il 20% esterno) che non è una destinazione gioca la mossa verso la casa vicina, se è l'unica possibile; le promozioni restano al selettore | Automatico |
 | Promuovi sempre a donna | Salta il selettore di promozione | Disattiva |
 | Frecce e cerchi | Disegno di frecce e cerchi con due dita sulla scacchiera | Attiva |
 | Conferma la mossa | Dopo ogni mossa mostra la posizione risultante con i pulsanti Conferma e Scarta al posto della riga di stato; la mossa conta solo dopo Conferma, e l'orologio continua a scorrere. Durante l'attesa "Annulla" equivale a Scarta, mentre Patta e Abbandona sono disattivati | Disattiva |

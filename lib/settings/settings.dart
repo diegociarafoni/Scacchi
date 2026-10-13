@@ -22,6 +22,28 @@ enum AnimationSpeed {
   final Duration duration;
 }
 
+/// Come si muovono i pezzi (RM-02): con due tocchi, trascinando o in entrambi i
+/// modi. `auto` sceglie i due tocchi sui telefoni e entrambi sugli schermi
+/// grandi.
+enum MoveMethod {
+  auto,
+  both,
+  twoTaps,
+  drag;
+
+  /// Metodo effettivo su un telefono o su uno schermo grande.
+  PieceShiftMethod resolve({required bool phone}) => switch (this) {
+    MoveMethod.auto =>
+      phone ? PieceShiftMethod.tapTwoSquares : PieceShiftMethod.either,
+    MoveMethod.both => PieceShiftMethod.either,
+    MoveMethod.twoTaps => PieceShiftMethod.tapTwoSquares,
+    MoveMethod.drag => PieceShiftMethod.drag,
+  };
+
+  /// Lato corto, in punti logici, sotto cui lo schermo conta come telefono.
+  static const phoneWidth = 600.0;
+}
+
 /// Temi della scacchiera. Le immagini di chessground hanno licenza AGPL, quindi
 /// i temi con texture usano solo le nostre in `assets/boards/`, generate da
 /// `tool/board_art/`. Alcuni si sbloccano con i progressi
@@ -382,6 +404,7 @@ class AppSettings {
     this.coordinatesOutside = false,
     this.showLastMove = true,
     this.autoQueen = false,
+    this.moveMethod = MoveMethod.auto,
     this.drawShapes = true,
     this.autoFlip = false,
     this.animation = AnimationSpeed.normal,
@@ -432,6 +455,7 @@ class AppSettings {
   /// Colora la casa di partenza e di arrivo dell'ultima mossa.
   final bool showLastMove;
   final bool autoQueen;
+  final MoveMethod moveMethod;
   final bool drawShapes;
   final bool autoFlip;
   final AnimationSpeed animation;
@@ -519,6 +543,7 @@ class AppSettings {
     bool? coordinatesOutside,
     bool? showLastMove,
     bool? autoQueen,
+    MoveMethod? moveMethod,
     bool? drawShapes,
     bool? autoFlip,
     AnimationSpeed? animation,
@@ -548,6 +573,7 @@ class AppSettings {
     coordinatesOutside: coordinatesOutside ?? this.coordinatesOutside,
     showLastMove: showLastMove ?? this.showLastMove,
     autoQueen: autoQueen ?? this.autoQueen,
+    moveMethod: moveMethod ?? this.moveMethod,
     drawShapes: drawShapes ?? this.drawShapes,
     autoFlip: autoFlip ?? this.autoFlip,
     animation: animation ?? this.animation,
@@ -599,6 +625,10 @@ class AppSettings {
         : PieceOrientationBehavior.facingUser,
   );
 
+  /// La scacchiera con il modo di muovere adatto allo schermo.
+  ChessboardSettings boardFor({required bool phone}) =>
+      board.copyWith(pieceShiftMethod: moveMethod.resolve(phone: phone));
+
   /// Scacchiera degli esercizi a un solo lato: tema, pezzi e coordinate del
   /// giocatore, ma pezzi sempre rivolti verso di lui anche in modalità
   /// tavolo.
@@ -615,6 +645,7 @@ class AppSettings {
       other.coordinatesOutside == coordinatesOutside &&
       other.showLastMove == showLastMove &&
       other.autoQueen == autoQueen &&
+      other.moveMethod == moveMethod &&
       other.drawShapes == drawShapes &&
       other.autoFlip == autoFlip &&
       other.animation == animation &&
@@ -646,6 +677,7 @@ class AppSettings {
     coordinatesOutside,
     showLastMove,
     autoQueen,
+    moveMethod,
     drawShapes,
     autoFlip,
     animation,
@@ -709,6 +741,7 @@ class SettingsController extends ValueNotifier<AppSettings> {
         coordinatesOutside: read('coordinatesOutside', d.coordinatesOutside),
         showLastMove: read('showLastMove', d.showLastMove),
         autoQueen: read('autoQueen', d.autoQueen),
+        moveMethod: byName(MoveMethod.values, 'moveMethod', d.moveMethod),
         drawShapes: read('drawShapes', d.drawShapes),
         autoFlip: read('autoFlip', d.autoFlip),
         animation: byName(AnimationSpeed.values, 'animation', d.animation),
@@ -763,6 +796,8 @@ class SettingsController extends ValueNotifier<AppSettings> {
         prefs.setBool('showLastMove', settings.showLastMove),
       if (old.autoQueen != settings.autoQueen)
         prefs.setBool('autoQueen', settings.autoQueen),
+      if (old.moveMethod != settings.moveMethod)
+        prefs.setString('moveMethod', settings.moveMethod.name),
       if (old.drawShapes != settings.drawShapes)
         prefs.setBool('drawShapes', settings.drawShapes),
       if (old.autoFlip != settings.autoFlip)

@@ -100,5 +100,11 @@
   "settingsLanguageDescription": "Italiano, inglês ou igual ao do celular",
   "settingsLanguageSystem": "Igual ao do celular",
   "settingsPremove": "Pré-movimento",
-  "settingsPremoveDescription": "Jogue enquanto o computador pensa; toque numa casa vazia para cancelar"
+  "settingsPremoveDescription": "Jogue enquanto o computador pensa; toque numa casa vazia para cancelar",
+  "settingsMoveMethod": "Como mover as peças",
+  "settingsMoveMethodDescription": "Dois toques são mais precisos no celular; um toque na borda de uma casa é corrigido quando só a casa vizinha é possível",
+  "settingsMoveMethodAuto": "Automático",
+  "settingsMoveMethodBoth": "Toques e arrastar",
+  "settingsMoveMethodTwoTaps": "Dois toques",
+  "settingsMoveMethodDrag": "Arrastar"
 }
