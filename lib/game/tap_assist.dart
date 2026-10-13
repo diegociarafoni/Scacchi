@@ -41,6 +41,7 @@ class _TapAssistState extends State<TapAssist> {
   final _pointers = <int>{};
   int? _tracked;
   Offset _down = Offset.zero;
+  Duration _downAt = Duration.zero;
   Square? _selected;
 
   @override
@@ -70,6 +71,7 @@ class _TapAssistState extends State<TapAssist> {
     // Con più dita giù non è un tocco.
     _tracked = _pointers.length == 1 ? event.pointer : null;
     _down = event.localPosition;
+    _downAt = event.timeStamp;
   }
 
   void _up(PointerUpEvent event) {
@@ -78,6 +80,8 @@ class _TapAssistState extends State<TapAssist> {
     _tracked = null;
     if (!tracked || !widget.enabled) return;
     if ((event.localPosition - _down).distance > kTouchSlop) return;
+    // Una pressione lunga è il disegno di una forma, non un tocco.
+    if (event.timeStamp - _downAt > kLongPressTimeout) return;
     _tap(event.localPosition);
   }
 

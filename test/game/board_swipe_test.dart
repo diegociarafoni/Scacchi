@@ -12,6 +12,7 @@ void main() {
     Side orientation = Side.white,
     bool Function(Square)? canStartAt,
     bool enabled = true,
+    ValueNotifier<bool>? blocked,
   }) async {
     swipes.clear();
     await tester.pumpWidget(
@@ -21,6 +22,7 @@ void main() {
             size: size,
             orientation: orientation,
             enabled: enabled,
+            blocked: blocked,
             canStartAt: canStartAt ?? (_) => false,
             onSwipe: swipes.add,
             child: const SizedBox(key: Key('board'), width: size, height: size),
@@ -133,5 +135,17 @@ void main() {
     await show(tester);
     await tester.dragFrom(square(tester, 'd5'), const Offset(120, 0));
     expect(swipes, [-1]);
+  });
+
+  testWidgets('RF-05 mentre si disegna lo scorrimento è sospeso', (
+    tester,
+  ) async {
+    final blocked = ValueNotifier(true);
+    await show(tester, blocked: blocked);
+    await tester.dragFrom(square(tester, 'd5'), const Offset(-120, 0));
+    expect(swipes, isEmpty);
+    blocked.value = false;
+    await tester.dragFrom(square(tester, 'd5'), const Offset(-120, 0));
+    expect(swipes, [1]);
   });
 }

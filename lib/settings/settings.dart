@@ -44,6 +44,17 @@ enum MoveMethod {
   static const phoneWidth = 600.0;
 }
 
+/// Colore delle frecce e dei cerchi disegnati sulla scacchiera (RF-05).
+enum MarkColor {
+  green(Color(0xE615781B)),
+  red(Color(0xE6B3261E)),
+  blue(Color(0xE61A5FB4)),
+  yellow(Color(0xE6C9A100));
+
+  const MarkColor(this.color);
+  final Color color;
+}
+
 /// Temi della scacchiera. Le immagini di chessground hanno licenza AGPL, quindi
 /// i temi con texture usano solo le nostre in `assets/boards/`, generate da
 /// `tool/board_art/`. Alcuni si sbloccano con i progressi
@@ -406,6 +417,7 @@ class AppSettings {
     this.autoQueen = false,
     this.moveMethod = MoveMethod.auto,
     this.drawShapes = true,
+    this.markColor = MarkColor.green,
     this.autoFlip = false,
     this.animation = AnimationSpeed.normal,
     this.boardTheme = BoardTheme.spazio,
@@ -457,6 +469,9 @@ class AppSettings {
   final bool autoQueen;
   final MoveMethod moveMethod;
   final bool drawShapes;
+
+  /// Colore di base di frecce e cerchi; gli altri si scelgono coi tasti.
+  final MarkColor markColor;
   final bool autoFlip;
   final AnimationSpeed animation;
   final BoardTheme boardTheme;
@@ -545,6 +560,7 @@ class AppSettings {
     bool? autoQueen,
     MoveMethod? moveMethod,
     bool? drawShapes,
+    MarkColor? markColor,
     bool? autoFlip,
     AnimationSpeed? animation,
     BoardTheme? boardTheme,
@@ -575,6 +591,7 @@ class AppSettings {
     autoQueen: autoQueen ?? this.autoQueen,
     moveMethod: moveMethod ?? this.moveMethod,
     drawShapes: drawShapes ?? this.drawShapes,
+    markColor: markColor ?? this.markColor,
     autoFlip: autoFlip ?? this.autoFlip,
     animation: animation ?? this.animation,
     boardTheme: boardTheme ?? this.boardTheme,
@@ -618,7 +635,10 @@ class AppSettings {
     showValidMoves: showLegalMoves,
     animationDuration: animation.duration,
     autoQueenPromotion: autoQueen,
-    drawShape: DrawShapeOptions(enable: drawShapes),
+    drawShape: DrawShapeOptions(
+      enable: drawShapes,
+      newShapeColor: markColor.color,
+    ),
     enablePremoves: premove && !kidMode,
     pieceOrientationBehavior: tableMode
         ? PieceOrientationBehavior.opponentUpsideDown
@@ -647,6 +667,7 @@ class AppSettings {
       other.autoQueen == autoQueen &&
       other.moveMethod == moveMethod &&
       other.drawShapes == drawShapes &&
+      other.markColor == markColor &&
       other.autoFlip == autoFlip &&
       other.animation == animation &&
       other.boardTheme == boardTheme &&
@@ -679,6 +700,7 @@ class AppSettings {
     autoQueen,
     moveMethod,
     drawShapes,
+    markColor,
     autoFlip,
     animation,
     boardTheme,
@@ -743,6 +765,7 @@ class SettingsController extends ValueNotifier<AppSettings> {
         autoQueen: read('autoQueen', d.autoQueen),
         moveMethod: byName(MoveMethod.values, 'moveMethod', d.moveMethod),
         drawShapes: read('drawShapes', d.drawShapes),
+        markColor: byName(MarkColor.values, 'markColor', d.markColor),
         autoFlip: read('autoFlip', d.autoFlip),
         animation: byName(AnimationSpeed.values, 'animation', d.animation),
         boardTheme: byName(BoardTheme.values, 'boardTheme', d.boardTheme),
@@ -800,6 +823,8 @@ class SettingsController extends ValueNotifier<AppSettings> {
         prefs.setString('moveMethod', settings.moveMethod.name),
       if (old.drawShapes != settings.drawShapes)
         prefs.setBool('drawShapes', settings.drawShapes),
+      if (old.markColor != settings.markColor)
+        prefs.setString('markColor', settings.markColor.name),
       if (old.autoFlip != settings.autoFlip)
         prefs.setBool('autoFlip', settings.autoFlip),
       if (old.animation != settings.animation)
