@@ -173,5 +173,49 @@
   "opponentAdaptiveInfo": "Level {level}, sekitar {elo} Elo: menyesuaikan dengan hasilmu agar kamu menang sekitar separuh dari permainanmu.",
   "opponentBeatenOn": "Dikalahkan pada {date}",
   "opponentBeaten": "Dikalahkan",
-  "opponentLocked": "Terkunci: kalahkan bot dari langkah di bawah"
+  "opponentLocked": "Terkunci: kalahkan bot dari langkah di bawah",
+  "gameClockCustom": "Kustom",
+  "@gameClockCustom": {
+    "description": "Partita: voce per scegliere una cadenza libera"
+  },
+  "gameClockCustomTitle": "Kontrol waktu kustom",
+  "@gameClockCustomTitle": {
+    "description": "Partita: titolo della scelta di una cadenza libera"
+  },
+  "gameClockMinutes": "Menit per pemain",
+  "@gameClockMinutes": {
+    "description": "Cadenza libera: campo dei minuti"
+  },
+  "gameClockIncrement": "Tambahan (detik per langkah)",
+  "@gameClockIncrement": {
+    "description": "Cadenza libera: campo dell'incremento"
+  },
+  "gameClockDelay": "Jeda (detik per langkah)",
+  "@gameClockDelay": {
+    "description": "Cadenza libera: campo del ritardo"
+  },
+  "gameClockDelaySimple": "Sederhana",
+  "@gameClockDelaySimple": {
+    "description": "Cadenza libera: ritardo semplice, il tempo parte dopo il ritardo"
+  },
+  "gameClockDelayBronstein": "Bronstein",
+  "@gameClockDelayBronstein": {
+    "description": "Cadenza libera: ritardo di Bronstein, si restituisce il tempo usato"
+  },
+  "gameClockStart": "Mulai",
+  "@gameClockStart": {
+    "description": "Cadenza libera: conferma"
+  },
+  "gameClockRange": "Dari {min} hingga {max}",
+  "@gameClockRange": {
+    "description": "Cadenza libera: errore di un valore fuori limite",
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  }
 }

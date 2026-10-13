@@ -173,5 +173,49 @@
   "opponentAdaptiveInfo": "Seviye {level}, yaklaşık {elo} Elo: sonuçlarına uyum sağlar, böylece oyunların yaklaşık yarısını kazanırsın.",
   "opponentBeatenOn": "Yenildi: {date}",
   "opponentBeaten": "Yenildi",
-  "opponentLocked": "Kilitli: aşağıdaki basamaktan bir botu yen"
+  "opponentLocked": "Kilitli: aşağıdaki basamaktan bir botu yen",
+  "gameClockCustom": "Özel",
+  "@gameClockCustom": {
+    "description": "Partita: voce per scegliere una cadenza libera"
+  },
+  "gameClockCustomTitle": "Özel süre ayarı",
+  "@gameClockCustomTitle": {
+    "description": "Partita: titolo della scelta di una cadenza libera"
+  },
+  "gameClockMinutes": "Oyuncu başına dakika",
+  "@gameClockMinutes": {
+    "description": "Cadenza libera: campo dei minuti"
+  },
+  "gameClockIncrement": "Artış (hamle başına saniye)",
+  "@gameClockIncrement": {
+    "description": "Cadenza libera: campo dell'incremento"
+  },
+  "gameClockDelay": "Gecikme (hamle başına saniye)",
+  "@gameClockDelay": {
+    "description": "Cadenza libera: campo del ritardo"
+  },
+  "gameClockDelaySimple": "Basit",
+  "@gameClockDelaySimple": {
+    "description": "Cadenza libera: ritardo semplice, il tempo parte dopo il ritardo"
+  },
+  "gameClockDelayBronstein": "Bronstein",
+  "@gameClockDelayBronstein": {
+    "description": "Cadenza libera: ritardo di Bronstein, si restituisce il tempo usato"
+  },
+  "gameClockStart": "Başlat",
+  "@gameClockStart": {
+    "description": "Cadenza libera: conferma"
+  },
+  "gameClockRange": "{min} ile {max} arası",
+  "@gameClockRange": {
+    "description": "Cadenza libera: errore di un valore fuori limite",
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  }
 }

@@ -173,5 +173,49 @@
   "opponentAdaptiveInfo": "Niveau {level}, ongeveer {elo} Elo: past zich aan je resultaten aan, zodat je ongeveer de helft van je partijen wint.",
   "opponentBeatenOn": "Verslagen op {date}",
   "opponentBeaten": "Verslagen",
-  "opponentLocked": "Vergrendeld: versla eerst een bot van de stap hieronder"
+  "opponentLocked": "Vergrendeld: versla eerst een bot van de stap hieronder",
+  "gameClockCustom": "Aangepast",
+  "@gameClockCustom": {
+    "description": "Partita: voce per scegliere una cadenza libera"
+  },
+  "gameClockCustomTitle": "Aangepaste bedenktijd",
+  "@gameClockCustomTitle": {
+    "description": "Partita: titolo della scelta di una cadenza libera"
+  },
+  "gameClockMinutes": "Minuten per speler",
+  "@gameClockMinutes": {
+    "description": "Cadenza libera: campo dei minuti"
+  },
+  "gameClockIncrement": "Increment (seconden per zet)",
+  "@gameClockIncrement": {
+    "description": "Cadenza libera: campo dell'incremento"
+  },
+  "gameClockDelay": "Vertraging (seconden per zet)",
+  "@gameClockDelay": {
+    "description": "Cadenza libera: campo del ritardo"
+  },
+  "gameClockDelaySimple": "Simpel",
+  "@gameClockDelaySimple": {
+    "description": "Cadenza libera: ritardo semplice, il tempo parte dopo il ritardo"
+  },
+  "gameClockDelayBronstein": "Bronstein",
+  "@gameClockDelayBronstein": {
+    "description": "Cadenza libera: ritardo di Bronstein, si restituisce il tempo usato"
+  },
+  "gameClockStart": "Starten",
+  "@gameClockStart": {
+    "description": "Cadenza libera: conferma"
+  },
+  "gameClockRange": "Van {min} tot {max}",
+  "@gameClockRange": {
+    "description": "Cadenza libera: errore di un valore fuori limite",
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  }
 }

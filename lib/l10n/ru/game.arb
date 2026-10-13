@@ -173,5 +173,49 @@
   "opponentAdaptiveInfo": "Уровень {level}, около {elo} Эло: подстраивается под твои результаты, чтобы ты выигрывал примерно половину партий.",
   "opponentBeatenOn": "Побеждён {date}",
   "opponentBeaten": "Побеждён",
-  "opponentLocked": "Закрыт: победи бота на ступень ниже"
+  "opponentLocked": "Закрыт: победи бота на ступень ниже",
+  "gameClockCustom": "Своя",
+  "@gameClockCustom": {
+    "description": "Partita: voce per scegliere una cadenza libera"
+  },
+  "gameClockCustomTitle": "Свой контроль времени",
+  "@gameClockCustomTitle": {
+    "description": "Partita: titolo della scelta di una cadenza libera"
+  },
+  "gameClockMinutes": "Минут на игрока",
+  "@gameClockMinutes": {
+    "description": "Cadenza libera: campo dei minuti"
+  },
+  "gameClockIncrement": "Добавка (секунд за ход)",
+  "@gameClockIncrement": {
+    "description": "Cadenza libera: campo dell'incremento"
+  },
+  "gameClockDelay": "Задержка (секунд за ход)",
+  "@gameClockDelay": {
+    "description": "Cadenza libera: campo del ritardo"
+  },
+  "gameClockDelaySimple": "Простая",
+  "@gameClockDelaySimple": {
+    "description": "Cadenza libera: ritardo semplice, il tempo parte dopo il ritardo"
+  },
+  "gameClockDelayBronstein": "Бронштейн",
+  "@gameClockDelayBronstein": {
+    "description": "Cadenza libera: ritardo di Bronstein, si restituisce il tempo usato"
+  },
+  "gameClockStart": "Начать",
+  "@gameClockStart": {
+    "description": "Cadenza libera: conferma"
+  },
+  "gameClockRange": "От {min} до {max}",
+  "@gameClockRange": {
+    "description": "Cadenza libera: errore di un valore fuori limite",
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  }
 }

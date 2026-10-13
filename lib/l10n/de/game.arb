@@ -173,5 +173,49 @@
   "opponentAdaptiveInfo": "Level {level}, etwa {elo} Elo: Er passt sich deinen Ergebnissen an, sodass du etwa die Hälfte deiner Partien gewinnst.",
   "opponentBeatenOn": "Besiegt am {date}",
   "opponentBeaten": "Besiegt",
-  "opponentLocked": "Gesperrt: Besiege einen Bot von der Stufe darunter"
+  "opponentLocked": "Gesperrt: Besiege einen Bot von der Stufe darunter",
+  "gameClockCustom": "Eigene",
+  "@gameClockCustom": {
+    "description": "Partita: voce per scegliere una cadenza libera"
+  },
+  "gameClockCustomTitle": "Eigene Bedenkzeit",
+  "@gameClockCustomTitle": {
+    "description": "Partita: titolo della scelta di una cadenza libera"
+  },
+  "gameClockMinutes": "Minuten pro Spieler",
+  "@gameClockMinutes": {
+    "description": "Cadenza libera: campo dei minuti"
+  },
+  "gameClockIncrement": "Zeitzuschlag (Sekunden pro Zug)",
+  "@gameClockIncrement": {
+    "description": "Cadenza libera: campo dell'incremento"
+  },
+  "gameClockDelay": "Verzögerung (Sekunden pro Zug)",
+  "@gameClockDelay": {
+    "description": "Cadenza libera: campo del ritardo"
+  },
+  "gameClockDelaySimple": "Einfach",
+  "@gameClockDelaySimple": {
+    "description": "Cadenza libera: ritardo semplice, il tempo parte dopo il ritardo"
+  },
+  "gameClockDelayBronstein": "Bronstein",
+  "@gameClockDelayBronstein": {
+    "description": "Cadenza libera: ritardo di Bronstein, si restituisce il tempo usato"
+  },
+  "gameClockStart": "Starten",
+  "@gameClockStart": {
+    "description": "Cadenza libera: conferma"
+  },
+  "gameClockRange": "Von {min} bis {max}",
+  "@gameClockRange": {
+    "description": "Cadenza libera: errore di un valore fuori limite",
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  }
 }

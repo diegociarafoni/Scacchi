@@ -173,5 +173,49 @@
   "opponentAdaptiveInfo": "Nivel {level}, unos {elo} Elo: se adapta a tus resultados para que ganes más o menos la mitad de tus partidas.",
   "opponentBeatenOn": "Vencido el {date}",
   "opponentBeaten": "Vencido",
-  "opponentLocked": "Bloqueado: vence a un bot del escalón de abajo"
+  "opponentLocked": "Bloqueado: vence a un bot del escalón de abajo",
+  "gameClockCustom": "Personalizado",
+  "@gameClockCustom": {
+    "description": "Partita: voce per scegliere una cadenza libera"
+  },
+  "gameClockCustomTitle": "Ritmo personalizado",
+  "@gameClockCustomTitle": {
+    "description": "Partita: titolo della scelta di una cadenza libera"
+  },
+  "gameClockMinutes": "Minutos por jugador",
+  "@gameClockMinutes": {
+    "description": "Cadenza libera: campo dei minuti"
+  },
+  "gameClockIncrement": "Incremento (segundos por jugada)",
+  "@gameClockIncrement": {
+    "description": "Cadenza libera: campo dell'incremento"
+  },
+  "gameClockDelay": "Retardo (segundos por jugada)",
+  "@gameClockDelay": {
+    "description": "Cadenza libera: campo del ritardo"
+  },
+  "gameClockDelaySimple": "Simple",
+  "@gameClockDelaySimple": {
+    "description": "Cadenza libera: ritardo semplice, il tempo parte dopo il ritardo"
+  },
+  "gameClockDelayBronstein": "Bronstein",
+  "@gameClockDelayBronstein": {
+    "description": "Cadenza libera: ritardo di Bronstein, si restituisce il tempo usato"
+  },
+  "gameClockStart": "Iniciar",
+  "@gameClockStart": {
+    "description": "Cadenza libera: conferma"
+  },
+  "gameClockRange": "De {min} a {max}",
+  "@gameClockRange": {
+    "description": "Cadenza libera: errore di un valore fuori limite",
+    "placeholders": {
+      "min": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  }
 }
