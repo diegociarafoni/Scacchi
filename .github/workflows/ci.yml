@@ -77,6 +77,8 @@ jobs:
       # I testi tradotti non sono nel repository: si uniscono i file per funzione
       # (e si controlla che le lingue coincidano) prima di pub get, che genera il codice.
       - run: dart tool/l10n.dart --solo-unione
+      # I testi italiani scritti nel codice non possono aumentare (tool/stringhe_fisse_base.json).
+      - run: dart tool/stringhe_fisse.dart
       # Una lingua «pronta» in tool/lingue.json deve avere tutte le chiavi.
       - run: dart tool/l10n_stato.dart
       - run: flutter pub get
