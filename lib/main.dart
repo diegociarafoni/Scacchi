@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:path_provider/path_provider.dart';
@@ -8,6 +9,7 @@ import 'backup/backup.dart';
 import 'backup/backup_page.dart';
 import 'home/home_shell.dart';
 import 'l10n/app_localizations.dart';
+import 'l10n/content.dart';
 import 'settings/app_language.dart';
 import 'settings/settings.dart';
 import 'theme/rokko_theme.dart';
@@ -20,7 +22,7 @@ Future<void> main() async {
       applyPreferencesToSystem,
     );
   } on Object catch (e) {
-    debugPrint('Ripristino del backup non riuscito: $e');
+    debugPrint('Backup restore failed: $e');
   }
   runApp(const ScacchiApp());
 }
@@ -38,13 +40,20 @@ class _ScacchiAppState extends State<ScacchiApp> {
   @override
   void initState() {
     super.initState();
-    unawaited(
-      SettingsController.load()
-          .catchError((Object _) => SettingsController.defaults())
-          .then((s) {
-            if (mounted) setState(() => _settings = s);
-          }),
+    unawaited(_start());
+  }
+
+  Future<void> _start() async {
+    // I contenuti (lezioni, grandi maestri…) servono prima delle schermate.
+    try {
+      await Content.ensureLoaded();
+    } on Object catch (e) {
+      if (kDebugMode) debugPrint('Content not loaded: $e');
+    }
+    final settings = await SettingsController.load().catchError(
+      (Object _) => SettingsController.defaults(),
     );
+    if (mounted) setState(() => _settings = settings);
   }
 
   @override

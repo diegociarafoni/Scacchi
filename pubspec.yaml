@@ -54,6 +54,8 @@ flutter:
     - assets/sounds/cristallo/
     - assets/puzzles/
     - assets/openings/
+    - assets/content/it/
+    - assets/content/en/
     - assets/boards/
     - assets/pieces/arcano/
     - assets/pieces/staunton/

@@ -1,5 +1,6 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scacchi/l10n/content.dart';
 import 'package:scacchi/masters/master_game.dart';
 import 'package:scacchi/masters/master_games.dart';
 
@@ -67,8 +68,15 @@ void main() {
       });
 
       test('i commenti puntano a mosse esistenti', () {
-        for (final ply in game.notes.keys) {
+        final plies = [
+          for (final id in Content.of('masters').ids)
+            if (id.startsWith('${game.id}.note'))
+              int.parse(id.substring('${game.id}.note'.length)),
+        ];
+        expect(plies, isNotEmpty);
+        for (final ply in plies) {
           expect(ply, inInclusiveRange(1, game.moves.length));
+          expect(game.noteAt(ply), isNotEmpty);
         }
       });
     });
@@ -84,12 +92,8 @@ void main() {
   test('RF-87 una mossa illegale nel catalogo è rifiutata', () {
     const bad = MasterGame(
       id: 'x',
-      white: 'A',
-      black: 'B',
-      event: 'E',
       year: 1900,
       result: '1-0',
-      intro: 'i',
       moves: ['e4', 'e4'],
     );
     expect(() => bad.positions, throwsFormatException);

@@ -52,6 +52,16 @@ Dopo un clone, e dopo ogni modifica ai `.arb` o un cambio di ramo, eseguire `dar
 
 `test/tool/l10n_merge_test.dart` verifica l'unione (nessuna chiave duplicata, stessi file e stesse chiavi per lingua). `test/l10n_test.dart` controlla che italiano e inglese abbiano le stesse chiavi e gli stessi segnaposto e che nessuna traduzione sia vuota, e monta alcune schermate migrate in inglese.
 
+## Contenuti per lingua
+
+I testi lunghi o in lista (lezioni, grandi maestri, finali, frasi dei bot, nomi delle aperture) non stanno negli `.arb`: sono in `assets/content/<lingua>/<nome>.json`, un file per contenuto e per lingua. Regola: una frase di interfaccia o una stringa singola va in `.arb`; un racconto, un commento per mossa o una lista di frasi va in JSON.
+
+- Il formato è piatto, pensato per essere tradotto da persone: `{"chiave.id": "testo"}`, oppure una lista di frasi `"bot.aggressive.check": ["...", "..."]`. I segnaposto sono `{nome}`. Il codice tiene la parte non testuale (mosse, posizioni, soglie) e un `id` stabile.
+- `lib/l10n/content.dart`: `ContentText` legge i testi per id con ripiego lingua scelta, inglese, italiano; un id sconosciuto restituisce l'id stesso. `Content` tiene i contenuti della lingua attiva, caricati all'avvio da `ScacchiApp`; i test li trovano già caricati (`test/flutter_test_config.dart`) e per provare un'altra lingua usano `useContent('en')` di `test/content_support.dart`.
+- Per aggiungere una lingua si copia la cartella italiana e si traducono i valori senza toccare le chiavi; le cartelle sono dichiarate in `pubspec.yaml`.
+- Contenuti attuali: `path`, `endgames`, `masters`, `bots` (frasi per stile ed evento, descrizioni, nomi delle aperture dei bot) e `opening_names`. Quest'ultimo è fatto di famiglie (`family.<nome inglese>`), gruppi di parole (`phrase.`), sostantivi con genere (`noun.`), aggettivi maschile e femminile (`adjective.`), prefissi (`prefix.`) e `grammar.with` / `grammar.feminine`; ogni lingua aggiunge le sue famiglie e le sue parole in `assets/content/<lingua>/opening_names.json`. In inglese il file non esiste: il nome resta quello del libro (`localOpeningName`). Per spagnolo e francese basta creare il file con gli stessi id; ciò che manca resta in inglese.
+- `test/l10n/content_parity_test.dart` verifica che, per ogni file dei contenuti italiani, le lingue elencate in `_checked` abbiano gli stessi id, gli stessi segnaposto, nessun testo vuoto e lo stesso tipo (testo o lista); l'elenco delle liste può avere un numero diverso di frasi, perché le frasi dei bot si adattano al carattere. Il messaggio d'errore dice quali id mancano (`tool/src/content_parity.dart`). `opening_names.json` è escluso per l'inglese (`_notNeeded`).
+
 ## Aggiungere una lingua
 
 Creare `lib/l10n/<codice>/` con tutti i file e le chiavi delle altre lingue e rigenerare con `dart tool/l10n.dart`. Va poi dichiarata in `tool/lingue.json` e aggiunta a `AppLanguage` (`lib/settings/app_language.dart`), a `res/xml/locales_config.xml`, a `CFBundleLocalizations` in `ios/Runner/Info.plist` e con un `InfoPlist.strings` in `ios/Runner/<lingua>.lproj/`; la scelta compare nelle Impostazioni e `resolveAppLocale` la riconosce.
@@ -89,7 +99,7 @@ Nei test e2e non si usa `tester.pageBack()`, che cerca il tooltip inglese "Back"
 
 I test dei widget che montano una singola schermata devono usare `localizedApp` di `test/localized_app.dart` (cioè `AppLocalizations.localizationsDelegates` e `locale: Locale('it')`), come l'app reale.
 
-La migrazione dei testi verso i file `.arb` si fa una schermata alla volta. Restano fuori i nomi delle aperture: arrivano in inglese dal dataset e sono tradotti in italiano nel codice (`lib/openings/opening_names_it.dart`).
+La migrazione dei testi verso i file `.arb` si fa una schermata alla volta. I nomi delle aperture sono in `assets/content/<lingua>/opening_names.json` e li compone `localOpeningName` (`lib/openings/opening_names.dart`).
 
 ## Cambio di lingua
 
