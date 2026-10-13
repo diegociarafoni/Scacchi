@@ -1,4 +1,6 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/progress/activity.dart';
 import 'package:scacchi/progress/avatar.dart';
 import 'package:scacchi/progress/progress_feedback.dart';
@@ -45,14 +47,20 @@ void main() {
 
     test('un livello sblocca le ricompense fino a quel livello', () {
       const req = LevelRequirement(4);
-      expect(req.label, 'Livello 4');
+      expect(
+        req.label(lookupAppLocalizations(const Locale('it'))),
+        'Livello 4',
+      );
       expect(req.isMet(ProgressState(xp: xpForLevel(4) - 1)), isFalse);
       expect(req.isMet(ProgressState(xp: xpForLevel(4))), isTrue);
     });
 
     test('un traguardo sblocca la ricompensa collegata', () {
       const req = AchievementRequirement('tournament_won');
-      expect(req.label, 'Traguardo «Coppa in bacheca»');
+      expect(
+        req.label(lookupAppLocalizations(const Locale('it'))),
+        'Traguardo «Coppa in bacheca»',
+      );
       expect(req.isMet(ProgressState.initial), isFalse);
       expect(
         req.isMet(const ProgressState(unlocked: ['tournament_won'])),
@@ -64,7 +72,11 @@ void main() {
       for (final item in rewardItems) {
         final req = requirementOf(item);
         if (req is AchievementRequirement) {
-          expect(() => req.label, returnsNormally, reason: '$item');
+          expect(
+            () => req.label(lookupAppLocalizations(const Locale('it'))),
+            returnsNormally,
+            reason: '$item',
+          );
         }
       }
     });
@@ -95,10 +107,11 @@ void main() {
     });
 
     test('il nome della ricompensa dice di che cosa si tratta', () {
-      expect(rewardName(BoardTheme.sand), 'tema Sabbia');
-      expect(rewardName(PieceStyle.celtic), 'pezzi Celtic');
-      expect(rewardName(Avatar.rook), 'avatar Torre');
-      expect(rewardName(AvatarFrame.gold), 'cornice Oro');
+      final l = lookupAppLocalizations(const Locale('it'));
+      expect(rewardName(l, BoardTheme.sand), 'tema Sabbia');
+      expect(rewardName(l, PieceStyle.celtic), 'pezzi Celtic');
+      expect(rewardName(l, Avatar.rook), 'avatar Torre');
+      expect(rewardName(l, AvatarFrame.gold), 'cornice Oro');
     });
 
     test('il passaggio di livello annuncia le ricompense sbloccate', () {
@@ -114,7 +127,10 @@ void main() {
         newRewards(ProgressState(xp: xpForLevel(2) - 1), update.state),
       );
       expect(update.rewards, isNotEmpty);
-      expect(progressMessage(update), contains('Sbloccato: tema Sabbia'));
+      expect(
+        progressMessage(update, lookupAppLocalizations(const Locale('it'))),
+        contains('Sbloccato: tema Sabbia'),
+      );
     });
   });
 

@@ -1,0 +1,59 @@
+{
+  "archiveShareSubject": "Partite PGN",
+  "@archiveShareSubject": {
+    "description": "Oggetto del messaggio quando si condividono le partite"
+  },
+  "archiveTitle": "Partite",
+  "archiveImportResult": "{count, plural, one{1 partita importata} other{{count} partite importate}}{skipped, plural, =0{} other{, {skipped} non valide}}",
+  "@archiveImportResult": {
+    "description": "Esito dell'importazione; skipped sono le partite scartate",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "skipped": {
+        "type": "int"
+      }
+    }
+  },
+  "archiveDeleteTitle": "Eliminare la partita?",
+  "archiveCancel": "Annulla",
+  "archiveDelete": "Elimina",
+  "archivePgnCopied": "PGN copiato",
+  "archiveImportPgn": "Importa PGN",
+  "archiveExportAll": "Esporta tutto in PGN",
+  "archiveUnreadable": "Impossibile leggere l'archivio.",
+  "archiveSearchHint": "Cerca per giocatore o tipo",
+  "archiveEmpty": "Nessuna partita salvata.",
+  "archiveNoMatch": "Nessuna partita trovata.",
+  "archiveInProgress": "In corso",
+  "archiveActionsFor": "Azioni per {title}",
+  "@archiveActionsFor": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "archiveSharePgn": "Condividi PGN",
+  "archiveCopyPgn": "Copia PGN",
+  "archiveImportHint": "Incolla qui una o più partite in PGN",
+  "archivePaste": "Incolla",
+  "archiveImport": "Importa",
+  "archiveModeLocal": "locale",
+  "@archiveModeLocal": {
+    "description": "Tipo di partita: due persone sullo stesso dispositivo"
+  },
+  "archiveModeComputer": "computer",
+  "@archiveModeComputer": {
+    "description": "Tipo di partita: contro il computer"
+  },
+  "archiveModeImported": "importata",
+  "@archiveModeImported": {
+    "description": "Tipo di partita: importata da un PGN"
+  },
+  "archiveModePhysical": "fisica",
+  "@archiveModePhysical": {
+    "description": "Tipo di partita: su una scacchiera reale"
+  }
+}

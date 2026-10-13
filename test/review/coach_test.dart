@@ -1,9 +1,13 @@
 import 'package:dartchess/dartchess.dart';
+import 'package:flutter/widgets.dart' show Locale;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/engine/uci.dart';
+import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/review/coach.dart';
 import 'package:scacchi/review/game_review.dart';
 import 'package:scacchi/settings/notation.dart';
+
+final _it = lookupAppLocalizations(const Locale('it'));
 
 /// Revisione di una sola mossa con le varianti date prima e dopo.
 Future<MoveReview> reviewOne(
@@ -34,11 +38,11 @@ void main() {
         reply: line(['h5f7'], const EngineScore.mate(1)),
       );
       expect(
-        explainMove(m, notation: MoveNotation.italian)!.text,
+        explainMove(m, notation: MoveNotation.italian)!.text(_it),
         'Dopo Cf6 il Bianco dà matto in 1 con Dxf7#.',
       );
       expect(
-        explainMove(m, notation: MoveNotation.figurine)!.text,
+        explainMove(m, notation: MoveNotation.figurine)!.text(_it),
         'Dopo ♞f6 il Bianco dà matto in 1 con ♛xf7#.',
       );
     });
@@ -53,7 +57,7 @@ void main() {
       final c = explainMove(m)!;
       expect(c.theme, CoachTheme.hangingPiece);
       expect(
-        c.text,
+        c.text(_it),
         'Hai lasciato l\'alfiere in presa in e5: la donna nera lo cattura.',
       );
     });
@@ -67,7 +71,7 @@ void main() {
       );
       final c = explainMove(m)!;
       expect(c.theme, CoachTheme.allowedMate);
-      expect(c.text, 'Dopo Nf6 il Bianco dà matto in 1 con Qxf7#.');
+      expect(c.text(_it), 'Dopo Nf6 il Bianco dà matto in 1 con Qxf7#.');
     });
 
     test('matto mancato', () async {
@@ -79,7 +83,7 @@ void main() {
       );
       final c = explainMove(m)!;
       expect(c.theme, CoachTheme.missedMate);
-      expect(c.text, 'Avevi il matto in 1 con Qxf7#.');
+      expect(c.text(_it), 'Avevi il matto in 1 con Qxf7#.');
     });
 
     test('forchetta concessa', () async {
@@ -92,7 +96,7 @@ void main() {
       final c = explainMove(m)!;
       expect(c.theme, CoachTheme.allowedFork);
       expect(
-        c.text,
+        c.text(_it),
         'Dopo Nc2+ il cavallo nero attacca insieme il re e la torre: '
         'è una forchetta.',
       );
@@ -108,7 +112,7 @@ void main() {
       final c = explainMove(m)!;
       expect(c.theme, CoachTheme.materialLoss);
       expect(
-        c.text,
+        c.text(_it),
         'Questa mossa perde materiale: circa 5 pedoni nella variante prevista.',
       );
     });
@@ -146,8 +150,8 @@ void main() {
       );
       final c = explainMove(m)!;
       expect(c.theme, CoachTheme.allowedPin);
-      expect(c.text, contains('inchioda il cavallo in d2'));
-      expect(c.text, contains('re'));
+      expect(c.text(_it), contains('inchioda il cavallo in d2'));
+      expect(c.text(_it), contains('re'));
     });
 
     test(
@@ -184,7 +188,20 @@ void main() {
       );
       final c = explainMove(m)!;
       expect(c.theme, CoachTheme.allowedPin);
-      expect(c.text, contains('la torre nera inchioda il cavallo in e2'));
+      expect(c.text(_it), contains('la torre nera inchioda il cavallo in e2'));
+    });
+
+    test('in inglese il colore e l\'articolo seguono la lingua', () async {
+      final m = await reviewOne(
+        'r6k/8/8/8/8/8/P3N2P/4K3 w - - 0 1',
+        'h2h3',
+        best: line(['a2a3'], const EngineScore.cp(150)),
+        reply: line(['a8e8'], const EngineScore.cp(0)),
+      );
+      expect(
+        explainMove(m)!.text(lookupAppLocalizations(const Locale('en'))),
+        'After Re8, the black rook pins the knight on e2 against the king.',
+      );
     });
 
     test('un pedone inchiodato non conta', () async {
@@ -206,8 +223,8 @@ void main() {
       );
       final c = explainMove(m)!;
       expect(c.theme, CoachTheme.exposedKing);
-      expect(c.text, contains('Dopo f3 il tuo re resta scoperto'));
-      expect(c.text, contains('Qd4+'));
+      expect(c.text(_it), contains('Dopo f3 il tuo re resta scoperto'));
+      expect(c.text(_it), contains('Qd4+'));
     });
 
     test('re scoperto dopo una mossa del re', () async {
@@ -281,7 +298,10 @@ void main() {
       ))!;
       final c = explainMove(review.moves[1], previous: review.moves[0])!;
       expect(c.theme, CoachTheme.missedCapture);
-      expect(c.text, 'Potevi riprendere il pezzo: bxc6 cattura l\'alfiere.');
+      expect(
+        c.text(_it),
+        'Potevi riprendere il pezzo: bxc6 cattura l\'alfiere.',
+      );
     });
 
     test('mossa che peggiora senza motivo tattico evidente', () async {
@@ -293,7 +313,7 @@ void main() {
       );
       final c = explainMove(m)!;
       expect(c.theme, CoachTheme.generic);
-      expect(c.text, 'Meglio e4: la tua posizione peggiora.');
+      expect(c.text(_it), 'Meglio e4: la tua posizione peggiora.');
     });
   });
 
@@ -321,7 +341,20 @@ void main() {
       );
       final c = explainMove(m)!;
       expect(c.theme, CoachTheme.missedDiscovery);
-      expect(c.text, contains('l\'alfiere attacca la torre'));
+      expect(c.text(_it), contains('l\'alfiere attacca la torre'));
+    });
+
+    test('matto concesso in inglese', () async {
+      final m = await reviewOne(
+        'r1bqkbnr/pppp1ppp/2n5/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 3 3',
+        'g8f6',
+        best: line(['g7g6'], const EngineScore.cp(-30)),
+        reply: line(['h5f7'], const EngineScore.mate(1)),
+      );
+      expect(
+        explainMove(m)!.text(lookupAppLocalizations(const Locale('en'))),
+        'After Nf6, White can deliver mate in 1 with Qxf7#.',
+      );
     });
 
     test('cattura netta mancata', () async {
@@ -333,7 +366,7 @@ void main() {
       );
       final c = explainMove(m)!;
       expect(c.theme, CoachTheme.missedCapture);
-      expect(c.text, 'Potevi vincere materiale: Qxd5 cattura la torre.');
+      expect(c.text(_it), 'Potevi vincere materiale: Qxd5 cattura la torre.');
     });
 
     test('doppio attacco mancato', () async {
@@ -346,7 +379,7 @@ void main() {
       final c = explainMove(m)!;
       expect(c.theme, CoachTheme.missedFork);
       expect(
-        c.text,
+        c.text(_it),
         'Potevi fare un doppio attacco con Nc7+: il cavallo attacca il re '
         'e la torre.',
       );
@@ -363,7 +396,7 @@ void main() {
       final c = explainMove(m)!;
       expect(c.theme, CoachTheme.missedDiscovery);
       expect(
-        c.text,
+        c.text(_it),
         'Potevi fare un attacco di scoperta con Nc6+: l\'alfiere attacca '
         'la donna.',
       );
@@ -379,7 +412,7 @@ void main() {
         reply: line(['e8e7'], const EngineScore.cp(-300)),
       );
       expect(explainMove(m)?.theme, CoachTheme.praise);
-      expect(explainMove(m)!.text, 'È la mossa migliore.');
+      expect(explainMove(m)!.text(_it), 'È la mossa migliore.');
     });
   });
 }

@@ -102,14 +102,20 @@ void main() {
       );
       // Le case (f7) restano: spariscono solo i numeri del motore.
       final engineNumbers = RegExp(r'matto in \d|\d+ pedon');
-      expect(adult.comment!.text, contains(engineNumbers));
+      expect(
+        adult.comment!.text(lookupAppLocalizations(const Locale('it'))),
+        contains(engineNumbers),
+      );
       final kid = await session().judge(
         scholarBeforeBlack(),
         Move.parse('g8f6')!,
-        kid: lookupAppLocalizations(const Locale('it')),
+        kid: true,
       );
       expect(kid.comment!.theme, CoachTheme.allowedMate);
-      expect(kid.comment!.text, isNot(contains(engineNumbers)));
+      expect(
+        kid.comment!.text(lookupAppLocalizations(const Locale('it'))),
+        isNot(contains(engineNumbers)),
+      );
     });
 
     test('la mossa migliore non avverte', () async {

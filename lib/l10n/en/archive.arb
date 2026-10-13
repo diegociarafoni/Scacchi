@@ -1,0 +1,43 @@
+{
+  "archiveShareSubject": "PGN games",
+  "archiveTitle": "Games",
+  "archiveImportResult": "{count, plural, one{1 game imported} other{{count} games imported}}{skipped, plural, =0{} other{, {skipped} invalid}}",
+  "@archiveImportResult": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "skipped": {
+        "type": "int"
+      }
+    }
+  },
+  "archiveDeleteTitle": "Delete this game?",
+  "archiveCancel": "Cancel",
+  "archiveDelete": "Delete",
+  "archivePgnCopied": "PGN copied",
+  "archiveImportPgn": "Import PGN",
+  "archiveExportAll": "Export all as PGN",
+  "archiveUnreadable": "The archive couldn't be read.",
+  "archiveSearchHint": "Search by player or type",
+  "archiveEmpty": "No saved games.",
+  "archiveNoMatch": "No games found.",
+  "archiveInProgress": "In progress",
+  "archiveActionsFor": "Actions for {title}",
+  "@archiveActionsFor": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "archiveSharePgn": "Share PGN",
+  "archiveCopyPgn": "Copy PGN",
+  "archiveImportHint": "Paste one or more PGN games here",
+  "archivePaste": "Paste",
+  "archiveImport": "Import",
+  "archiveModeLocal": "local",
+  "archiveModeComputer": "computer",
+  "archiveModeImported": "imported",
+  "archiveModePhysical": "physical board"
+}

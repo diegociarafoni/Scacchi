@@ -1,6 +1,9 @@
 import 'package:dartchess/dartchess.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/progress/achievements.dart';
+import 'package:scacchi/progress/achievements_l10n.dart';
 import 'package:scacchi/progress/activity.dart';
 import 'package:scacchi/progress/daily_goal.dart';
 import 'package:scacchi/progress/progress_state.dart';
@@ -261,9 +264,10 @@ void main() {
     test('identificativi unici e testi presenti', () {
       final ids = achievements.map((a) => a.id).toSet();
       expect(ids.length, achievements.length);
+      final l = lookupAppLocalizations(const Locale('it'));
       for (final a in achievements) {
-        expect(a.title, isNotEmpty);
-        expect(a.description, isNotEmpty);
+        expect(achievementTitle(l, a), isNotEmpty);
+        expect(achievementDescription(l, a), isNotEmpty);
       }
     });
   });

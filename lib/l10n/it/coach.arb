@@ -190,5 +190,114 @@
   "instructorHubSubtitle": "Il computer ti commenta l'apertura, con le mosse più giocate",
   "@instructorHubSubtitle": {
     "description": "Istruttore: sottotitolo nel menu delle aperture"
+  },
+  "coachHintMovePiece": "Muovi {piece}.",
+  "@coachHintMovePiece": {
+    "description": "Primo livello del suggerimento; {piece} è per esempio «il cavallo»",
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintMoveSomePiece": "Muovi un pezzo.",
+  "coachHintPlayHighlighted": "Gioca la mossa evidenziata.",
+  "coachHintCastleShort": "Arrocca corto.",
+  "coachHintCastleLong": "Arrocca lungo.",
+  "coachHintPieceAn": "{role, select, queen{una donna} rook{una torre} bishop{un alfiere} knight{un cavallo} pawn{un pedone} other{il re}}",
+  "@coachHintPieceAn": {
+    "description": "Pezzo con l'articolo indeterminativo, per la promozione",
+    "placeholders": {
+      "role": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintCheckEscape": "{promotion, select, yes{Promuovi} other{Sposta}} {piece} {where, select, square{in {square}} other{sul cerchio}}{escape, select, king{: lo togli dallo scacco} other{: pari lo scacco}}{check, select, none{.} check{, dando scacco.} other{, dando scacco matto.}}",
+  "@coachHintCheckEscape": {
+    "description": "Suggerimento quando il re è sotto scacco; promotion è yes/no, where è square/circle, escape è king/other, check è none/check/mate",
+    "placeholders": {
+      "promotion": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "escape": {
+        "type": "String"
+      },
+      "check": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintPromote": "Promuovi {piece} {where, select, square{in {square}} other{sul cerchio}}{capture, select, yes{ e cattura {victim}} other{}}: diventa {promoted}.",
+  "@coachHintPromote": {
+    "description": "Suggerimento di promozione; capture è yes/no",
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "capture": {
+        "type": "String"
+      },
+      "victim": {
+        "type": "String"
+      },
+      "promoted": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintCapture": "Sposta {piece} {where, select, square{in {square}} other{sul cerchio}} e cattura {victim}{check, select, none{.} check{, dando scacco.} other{, dando scacco matto.}}",
+  "@coachHintCapture": {
+    "description": "Suggerimento di cattura",
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "victim": {
+        "type": "String"
+      },
+      "check": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintMove": "Sposta {piece} {where, select, square{in {square}} other{sul cerchio}}{check, select, none{.} check{ e dai scacco.} other{ e dai scacco matto.}}",
+  "@coachHintMove": {
+    "description": "Suggerimento di mossa semplice",
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "check": {
+        "type": "String"
+      }
+    }
   }
 }

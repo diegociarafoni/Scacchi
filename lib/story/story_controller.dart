@@ -28,7 +28,9 @@ class StoryController extends ChangeNotifier {
     try {
       _state = await _file.read(StoryState.fromJson) ?? const StoryState();
     } on FileSystemException catch (e) {
-      if (kDebugMode) debugPrint('Lettura della storia non riuscita: $e');
+      if (kDebugMode) {
+        debugPrint('Lettura della storia non riuscita: $e'); // l10n-ok
+      }
       _readOnly = true;
     }
     notifyListeners();
@@ -53,7 +55,9 @@ class StoryController extends ChangeNotifier {
     try {
       await _file.write(state.toJson());
     } on FileSystemException catch (e) {
-      if (kDebugMode) debugPrint('Salvataggio della storia non riuscito: $e');
+      if (kDebugMode) {
+        debugPrint('Salvataggio della storia non riuscito: $e'); // l10n-ok
+      }
     }
   }
 }
