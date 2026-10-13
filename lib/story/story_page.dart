@@ -268,15 +268,21 @@ class _StoryPageState extends State<StoryPage> {
         final next = _next;
         return Scaffold(
           appBar: AppBar(title: Text(l10n.storyTitle)),
-          floatingActionButton: next == null
+          // Barra fissa e non pulsante flottante: così non copre i capitoli.
+          bottomNavigationBar: next == null
               ? null
-              : FloatingActionButton.extended(
-                  onPressed: () => _open(next.$1, next.$2),
-                  icon: const Icon(Icons.play_arrow),
-                  label: Text(l10n.storyContinue),
+              : SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
+                    child: FilledButton.icon(
+                      onPressed: () => _open(next.$1, next.$2),
+                      icon: const Icon(Icons.play_arrow),
+                      label: Text(l10n.storyContinue),
+                    ),
+                  ),
                 ),
           body: ListView(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 96),
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
             children: [
               _Summary(progress: progress),
               const SizedBox(height: 12),
