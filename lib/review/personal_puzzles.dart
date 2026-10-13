@@ -9,7 +9,7 @@ import 'game_review.dart';
 import 'move_classification.dart';
 import 'win_probability.dart';
 
-/// Puzzle ricavato da un errore del giocatore, nel formato dei puzzle Lichess:
+/// Puzzle ricavato da un errore del giocatore, nel formato standard dei puzzle:
 /// [fen] è la posizione prima della mossa dell'avversario, la prima di
 /// [moves] è quella mossa e le successive sono la soluzione.
 class MistakePuzzle {
@@ -34,7 +34,7 @@ class MistakePuzzle {
   /// Il puzzle nel modello del modulo puzzle, con l'arrocco standard.
   Puzzle toPuzzle() => Puzzle.parseCsv(toCsv());
 
-  /// Riga `id,fen,mosse uci,punteggio,temi` del database Lichess, con
+  /// Riga `id,fen,mosse uci,punteggio,temi` del database aperto dei puzzle, con
   /// l'arrocco nella forma standard (e1g1).
   String toCsv() {
     Position pos = Chess.fromSetup(Setup.parseFen(fen));
@@ -55,7 +55,7 @@ const _trainable = {MoveClass.mistake, MoveClass.blunder, MoveClass.miss};
 /// con una mossa del giocatore. Si salta l'errore se la seconda scelta del
 /// motore vale quasi quanto la prima: il puzzle avrebbe più soluzioni.
 /// Gli errori alla prima semimossa non diventano puzzle: manca la mossa
-/// dell'avversario richiesta dal formato Lichess.
+/// dell'avversario richiesta dal formato standard.
 List<MistakePuzzle> puzzlesFromReview(
   AppLocalizations l,
   GameReview review, {
@@ -133,7 +133,7 @@ List<Move> _solution(
   return moves;
 }
 
-/// Temi Lichess del puzzle nato da un errore con questo tema del coach.
+/// Temi del puzzle nato da un errore con questo tema del coach.
 Set<String> lichessThemes(CoachTheme theme) => _themes[theme] ?? const {};
 
 const _themes = {
@@ -148,7 +148,7 @@ const _themes = {
   CoachTheme.missedDiscovery: {'discoveredAttack'},
 };
 
-/// Fase della partita con i nomi dei temi Lichess.
+/// Fase della partita con i nomi dei temi.
 String _phaseTheme(Position pos) => phaseOf(pos).name;
 
 /// Identificativo stabile di una partita per i puzzle: lo stesso valore a ogni

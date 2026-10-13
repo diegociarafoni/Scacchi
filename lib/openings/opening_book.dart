@@ -2,7 +2,7 @@ import 'package:dartchess/dartchess.dart';
 
 import 'opening_names_it.dart';
 
-/// Apertura con codice ECO e nome (in inglese, come nel dataset Lichess).
+/// Apertura con codice ECO e nome (in inglese, come nel dataset pubblico).
 class Opening {
   const Opening(this.eco, this.name);
 

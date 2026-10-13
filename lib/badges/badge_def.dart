@@ -267,7 +267,7 @@ final List<BadgeDef> badges = [
     BadgeFamily.puzzles,
     Icons.explore,
     target: 10,
-    // Le etichette di durata e livello di Lichess non sono temi.
+    // Le etichette di durata e livello del database dei puzzle non sono temi.
     value: (f) => f.state.puzzleThemes.entries
         .where((e) => e.value > 0 && puzzleThemeIds.contains(e.key))
         .length,

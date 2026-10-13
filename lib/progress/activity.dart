@@ -80,7 +80,7 @@ class GamePlayed extends Activity {
 class PuzzleSolved extends Activity {
   const PuzzleSolved({this.themes = const {}, this.rating, super.duration});
 
-  /// Temi del puzzle con i nomi del database Lichess (`fork`, `mateIn2`...).
+  /// Temi del puzzle con i nomi del database aperto dei puzzle (`fork`, `mateIn2`...).
   final Set<String> themes;
 
   /// Punteggio puzzle del giocatore dopo la soluzione.

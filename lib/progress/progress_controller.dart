@@ -198,7 +198,7 @@ class ProgressController extends ChangeNotifier {
   }
 
   /// Gli avanzamenti letti dai salvataggi degli altri archivi; sblocca i badge
-  /// già meritati, anche prima dell'introduzione dei badge.
+  /// già meritati.
   Future<void> updateBadgeSources(BadgeSources sources) async {
     if (sources == _badgeSources) return;
     _badgeSources = sources;
