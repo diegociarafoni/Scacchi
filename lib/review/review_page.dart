@@ -11,6 +11,8 @@ import '../game/move_note.dart';
 import '../game/move_note_dialog.dart';
 import '../kids/kid_display.dart';
 import '../l10n/app_localizations.dart';
+import '../openings/opening_assets.dart';
+import '../openings/opening_book.dart';
 import '../settings/notation.dart';
 import '../settings/settings.dart';
 import '../tablebase/shared_tablebase.dart';
@@ -74,6 +76,7 @@ class ReviewPage extends StatefulWidget {
     this.startTimes,
     this.notes = const [],
     this.onNoteChanged,
+    this.book,
   });
 
   final Position initial;
@@ -112,6 +115,10 @@ class ReviewPage extends StatefulWidget {
   /// se assente la revisione mostra le note ma non le modifica.
   final Future<void> Function(int ply, MoveNote? note)? onNoteChanged;
 
+  /// Libro delle aperture per le mosse «Libro» (RF-91); senza, si usa quello
+  /// incluso nell'app.
+  final OpeningBook? book;
+
   @override
   State<ReviewPage> createState() => _ReviewPageState();
 }
@@ -122,7 +129,10 @@ enum _SaveState { idle, saving, saved, already, failed }
 
 class _ReviewPageState extends State<ReviewPage> {
   late final List<Position> _positions = [widget.initial];
-  late final String _cacheKey = ReviewCache.key(widget.initial, widget.moves);
+
+  /// Chiave in cache: con il libro le mosse «Libro» cambiano la revisione.
+  late final String _cacheKey =
+      '${ReviewCache.key(widget.initial, widget.moves)}${_book == null ? '' : '|libro'}';
   late final ChessboardController _board;
 
   late final List<MoveNote?> _notes = [
@@ -174,9 +184,18 @@ class _ReviewPageState extends State<ReviewPage> {
     super.dispose();
   }
 
+  /// Libro da usare per le mosse «Libro»: serve solo partendo dalla posizione
+  /// iniziale e solo se è già caricato (l'app lo carica all'avvio).
+  OpeningBook? get _book =>
+      OpeningBook.key(widget.initial) == OpeningBook.key(Chess.initial)
+      ? widget.book ?? loadedOpeningBook
+      : null;
+
   Future<void> _analyse() async {
     try {
+      final bookPlies = _book?.bookPlies(widget.moves) ?? 0;
       final review = await reviewGame(
+        isBook: (ply) => ply < bookPlies,
         initial: widget.initial,
         moves: widget.moves,
         evaluate: widget.evaluate,

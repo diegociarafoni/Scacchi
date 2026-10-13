@@ -55,7 +55,6 @@ Rokko è open source e gratuito. Questi vincoli valgono per ogni voce.
 
 | ID | Funzione | Stato | Pri | Dim | Versione | Evidenza |
 |---|---|---|---|---|---|---|
-| A-12 / RF-91 | **Mosse «Libro»** nella revisione e nell'allenatore | parziale | P1 | piccola | 0.13.0 | `OpeningBook.bookPlies` (`lib/openings/opening_book.dart:131`) e `reviewGame(isBook:)` non sono collegati (`docs/revisione-partita.md:43`) |
 | A-13 / RF-66 | **Cache della revisione** nel database locale, con versione del motore e profondità nella chiave | parziale | P1 | media | 0.13.0 | `ReviewCache` (`lib/review/review_page.dart:28`) è una mappa in memoria di 20 voci |
 | A-14 / RF-68 | **Precisione per fase** nelle statistiche, con la media nel tempo | parziale | P1 | piccola | 0.13.0 | `GameReview.accuracyByPhase` c'è; `lib/stats/` non ha riferimenti alle fasi |
 
@@ -241,7 +240,7 @@ Testo di ogni requisito, formulato come funzione di Rokko. La colonna Stato dice
 | ID | Specifica | Stato |
 |---|---|---|
 | RF-90 | Riconoscimento e visualizzazione del nome dell'apertura durante la partita (codice ECO e nome), usando un dataset aperto di aperture (CC0, vedi `CREDITS.md`), qualche centinaio di KB. | fatta |
-| RF-91 | Le mosse di libro sono marcate "Libro" nella revisione. | vedi A-12 |
+| RF-91 | Le mosse di libro sono marcate "Libro" nella revisione. | fatta |
 | RF-93 (P2) | Allenatore di repertorio: l'utente definisce le proprie linee (da PGN o dalla scacchiera) e l'app gliele fa ripetere con ripetizione dilazionata. | fatta |
 | RF-94 (P1) | Gioca un'apertura: dall'explorer o da una linea del repertorio si avvia una partita contro il computer o un bot che parte dopo le mosse scelte; se il bot esce dalla linea del repertorio l'app lo segnala. | fatta |
 | RF-92 (P2) | Explorer ridotto con le continuazioni principali e le percentuali da un piccolo libro precalcolato; le statistiche di un database globale sono escluse. | fatta |
