@@ -98,5 +98,11 @@
   "settingsProgressEnabledDescription": "When off, nothing is recorded",
   "settingsLanguage": "Language",
   "settingsLanguageDescription": "Italian, English or same as the phone",
-  "settingsLanguageSystem": "Same as the phone"
+  "settingsLanguageSystem": "Same as the phone",
+  "settingsMarkColor": "Arrow and circle colour",
+  "settingsMarkColorDescription": "Draw by holding a square and dragging; with a mouse, right button with Shift, Ctrl or Alt for the other colours",
+  "settingsMarkColorGreen": "Green",
+  "settingsMarkColorRed": "Red",
+  "settingsMarkColorBlue": "Blue",
+  "settingsMarkColorYellow": "Yellow"
 }

@@ -59,6 +59,7 @@ void main() {
         showCoordinates: false,
         autoQueen: true,
         drawShapes: false,
+        markColor: MarkColor.blue,
         autoFlip: true,
         animation: AnimationSpeed.none,
         boardTheme: BoardTheme.blue,
@@ -79,6 +80,7 @@ void main() {
     expect(reloaded.value.themeMode, ThemeMode.dark);
     expect(reloaded.value.boardTheme, BoardTheme.blue);
     expect(reloaded.value.animation, AnimationSpeed.none);
+    expect(reloaded.value.markColor, MarkColor.blue);
   });
 
   test(

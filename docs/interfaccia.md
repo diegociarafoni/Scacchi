@@ -143,7 +143,8 @@ Si aprono dall'icona a forma di ingranaggio nella Home e nella barra del titolo 
 | Evidenzia l'ultima mossa | Colora la casa di partenza e quella di arrivo dell'ultima mossa, su tutte le scacchiere; spenta, il colore del tema diventa trasparente | Attiva |
 | Coordinate fuori dalla scacchiera | Sposta le coordinate su una cornice attorno alla scacchiera, così non coprono i pezzi; si sceglie solo con le coordinate attive (vedi [pezzi-e-scacchiere.md](pezzi-e-scacchiere.md)) | Disattiva |
 | Promuovi sempre a donna | Salta il selettore di promozione | Disattiva |
-| Frecce e cerchi | Disegno di frecce e cerchi con due dita sulla scacchiera | Attiva |
+| Frecce e cerchi | Disegno di frecce e cerchi: su touch si tiene premuto un dito fermo su una casa libera (o con un pezzo avversario) e si trascina, oppure si tiene un dito su una casa vuota e si disegna con un secondo; col mouse, tasto destro. Rilasciando sulla stessa casa è un cerchio; ripetere la stessa forma la toglie, un tocco le toglie tutte, e spariscono a ogni mossa (requisito RF-05) | Attiva |
+| Colore di frecce e cerchi | Verde, rosso, blu o giallo per le forme disegnate; col mouse Maiusc dà il rosso, Ctrl il blu, Alt il giallo | Verde |
 | Conferma la mossa | Dopo ogni mossa mostra la posizione risultante con i pulsanti Conferma e Scarta al posto della riga di stato; la mossa conta solo dopo Conferma, e l'orologio continua a scorrere. Durante l'attesa "Annulla" equivale a Scarta, mentre Patta e Abbandona sono disattivati | Disattiva |
 | Ruota a ogni turno | Orienta la scacchiera dal lato di chi deve muovere | Disattiva |
 | Modalità zen | In partita restano solo scacchiera, mosse ed eventuale orologio (sezione sotto); si accende anche dall'icona nella barra della partita | Disattiva |
