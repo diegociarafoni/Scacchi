@@ -112,11 +112,11 @@ void main() {
       await _open(tester);
       expect(find.text('Neofita · 3'), findsOneWidget);
       await tester.scrollUntilVisible(
-        find.text('Maestro · 2'),
+        find.text('Maestro · 3'),
         300,
         scrollable: find.byType(Scrollable).first,
       );
-      expect(find.text('Maestro · 2'), findsOneWidget);
+      expect(find.text('Maestro · 3'), findsOneWidget);
     });
 
     testWidgets('toccare un bot sbloccato cambia il bot in alto', (

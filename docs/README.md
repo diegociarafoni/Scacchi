@@ -36,6 +36,7 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | [pezzi-e-scacchiere.md](pezzi-e-scacchiere.md) | Set di pezzi e scacchiere di Rokko, alone sui temi scuri, coordinate esterne, rigenerazione delle immagini |
 | [identita-visiva.md](identita-visiva.md) | Nome, icona, schermata di avvio e come rigenerarli |
 | [localizzazione.md](localizzazione.md) | Lingua predefinita e come aggiungere testi e lingue |
+| [glossario-scacchistico.md](glossario-scacchistico.md) | Termini scacchistici e regole di stile in italiano, inglese, spagnolo e francese |
 | [sviluppo.md](sviluppo.md) | Ambiente, comandi, test, CI e convenzioni |
 | [convenzioni-git.md](convenzioni-git.md) | Rami, commit Angular, hook locali, merge e protezione di `main` |
 | [qualita.md](qualita.md) | Copertura, golden test, accessibilità e relativi limiti |
