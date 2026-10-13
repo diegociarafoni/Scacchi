@@ -682,8 +682,14 @@ class _HomeShellState extends State<HomeShell> {
             moves: [for (final m in game.moves) m.move],
             onResult: (review) {
               if (side == null) return;
-              current = current.withReview(review);
-              return unawaited(_saveGame(current));
+              final next = current.withReview(review);
+              // Una revisione già salvata (cache) non riscrive l'archivio.
+              if (next.accuracy == current.accuracy &&
+                  mapEquals(next.phaseAccuracy, current.phaseAccuracy)) {
+                return;
+              }
+              current = next;
+              unawaited(_saveGame(current).catchError((Object _) {}));
             },
             evaluate: engineEvaluator(player),
             onCancel: player.stopAnalysis,

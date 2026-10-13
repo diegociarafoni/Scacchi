@@ -182,7 +182,10 @@ class SavedGame {
     final byPhase = review.accuracyByPhase(side);
     return copyWith(
       accuracy: () => review.accuracy(side),
-      phaseAccuracy: () => {for (final e in byPhase.entries) e.key: ?e.value},
+      phaseAccuracy: () {
+        final m = {for (final e in byPhase.entries) e.key: ?e.value};
+        return m.isEmpty ? null : m;
+      },
     );
   }
 
