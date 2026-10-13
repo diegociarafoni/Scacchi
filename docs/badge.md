@@ -42,7 +42,7 @@ Gli eventi di partita li calcola `gameActivity` (`lib/progress/game_activity.dar
 
 ## Interfaccia
 
-La scheda Tu ha la voce **Badge** (accanto a Profilo e Statistiche; con la scheda Tu a gruppi sta in «I miei dati»). `BadgesPage` ha due schede, **Badge** e **Libri**, ciascuna con il contatore «X su Y raggiunti» e la barra di avanzamento.
+La scheda Tu ha la voce **Badge** (accanto a Profilo e Statistiche, nel gruppo «I miei dati»). `BadgesPage` ha due schede, **Badge** e **Libri**, ciascuna con il contatore «X su Y raggiunti» e la barra di avanzamento.
 
 - **Badge**: card a griglia (almeno 3 colonne, di più su schermi larghi) raggruppate per famiglia, righe alla stessa altezza anche con il testo ingrandito. Una card ottenuta ha la medaglia colorata e lo sfondo tinto con il colore della famiglia; una da ottenere è grigia con il lucchetto, mostra comunque il nome (è la caccia al tesoro) e l'avanzamento «3 / 10». Toccata apre la scheda con medaglia grande, famiglia, gradino, come si ottiene e data o avanzamento.
 - **Libri**: vedi sotto.

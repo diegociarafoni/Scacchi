@@ -70,8 +70,12 @@ void main() {
         ),
       ),
     );
-    await tester.tap(find.text('Tu'));
     await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(
+      find.text('Storia'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.tap(find.text('Storia'));
     await tester.pumpAndSettle();
     final guardian = find.text('Il guardiano del capitolo');

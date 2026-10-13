@@ -927,9 +927,6 @@ class _HomeShellState extends State<HomeShell> {
               playGuardian: _computerAvailable ? _playGuardian : null,
               storyPage: _storyPage,
               openGame: _openSavedGame,
-              tournamentPage: _computerAvailable ? _tournamentPage : null,
-              endgamesPage: _computerAvailable ? _endgamesPage : null,
-              mastersPage: _mastersPage,
               puzzlesPage: _puzzlesPage,
             )
           else

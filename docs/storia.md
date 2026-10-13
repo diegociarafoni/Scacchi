@@ -1,6 +1,6 @@
 # Percorso a storia
 
-Requisito RG-13: una trama a capitoli sopra il [percorso a tappe](percorso.md). Il codice è in `lib/story/`. Si apre dalla scheda Tu, voce **Storia**, ed è l'unico percorso di apprendimento dell'interfaccia: «Continua da dove eri» della scheda Tu porta qui (prossima tappa: `nextStoryStage`), e le stelle già ottenute nel [percorso](percorso.md) contano subito.
+Requisito RG-13: una trama a capitoli sopra il [percorso a tappe](percorso.md). Il codice è in `lib/story/`. Si apre dalla Home e dalla scheda Impara, voce **Storia**, ed è l'unico percorso di apprendimento dell'interfaccia: «Continua da dove eri» della scheda Tu porta qui (prossima tappa: `nextStoryStage`), e le stelle già ottenute nel [percorso](percorso.md) contano subito.
 
 ## Come funziona
 
