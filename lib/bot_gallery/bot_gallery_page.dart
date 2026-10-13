@@ -470,7 +470,7 @@ class _Grid extends StatelessWidget {
               _Heading(l10n.botTierHeading(l10n.botTierAdaptive, 1)),
               cells([
                 _AdaptiveCell(
-                  key: const Key('bot-adaptive'),
+                  key: const Key('bot-adaptive'), // l10n-ok
                   size: cell,
                   selected: page._adaptive,
                   label: l10n.botAdaptiveName,

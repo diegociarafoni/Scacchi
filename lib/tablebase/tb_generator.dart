@@ -354,7 +354,7 @@ class TbGenerator {
 
   void _push(int ply, int index) {
     if (ply > TbValue.maxPlies) {
-      throw StateError('Distanza dal matto oltre il limite');
+      throw StateError('Distanza dal matto oltre il limite'); // l10n-ok
     }
     (_buckets[ply] ??= <int>[]).add(index);
   }

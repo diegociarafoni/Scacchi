@@ -155,7 +155,9 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
       try {
         bytes = await widget.photos.take();
       } on Object catch (e) {
-        if (kDebugMode) debugPrint('Fotocamera non disponibile: $e');
+        if (kDebugMode) {
+          debugPrint('Fotocamera non disponibile: $e'); // l10n-ok
+        }
         if (mounted) _show(error: (l) => l.physicalCameraUnavailable);
         return;
       }
@@ -271,7 +273,7 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
       await (await widget.archive()).save(saved);
       if (mounted) setState(() => _saved = true);
     } on Object catch (e) {
-      debugPrint('Salvataggio non riuscito: $e');
+      debugPrint('Salvataggio non riuscito: $e'); // l10n-ok
       if (mounted) setState(() => _message = (l) => l.physicalSaveFailed);
     }
   }
