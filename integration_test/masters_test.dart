@@ -26,15 +26,15 @@ void main() {
       await tester.pumpWidget(const ScacchiApp());
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Tu'));
-      await tester.pumpAndSettle();
+      // Dalla Home: la scheda Tu non ha più le funzioni di studio.
+      final tile = find.byKey(const Key('home-feature-masters'));
       await tester.scrollUntilVisible(
-        find.text('Grandi maestri'),
+        tile,
         200,
         scrollable: find.byType(Scrollable).first,
       );
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Grandi maestri'));
+      await tester.tap(tile);
       await tester.pumpAndSettle();
 
       await tester.tap(find.text('Légal – Saint-Brie'));
