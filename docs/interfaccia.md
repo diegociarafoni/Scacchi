@@ -119,6 +119,7 @@ La pagina principale è un menu di sezioni: ogni voce ha icona, nome e una riga 
 | Partita | Promuovi sempre a donna, ruota a ogni turno, modalità tavolo, «Spiegami perché» |
 | Accessibilità | Aspetto dell'app (sistema, chiaro, scuro), colori per daltonici, modalità zen, conferma della mossa |
 | Profilo bambino | In fondo, sotto un separatore; per uscirne serve la domanda per adulti |
+| Informazioni | Ultima voce: licenza GPL-3.0 o successiva, indirizzo dei sorgenti (si copia, non si apre: l'app non usa la rete), dichiarazione di privacy, licenze di tutte le librerie (`showLicensePage`) e crediti di motore, pezzi e caratteri (`lib/about/`) |
 
 Poche sezioni, nessuna con meno di due voci (lo controlla un test): una sezione per ogni cosa che l'utente cerca, non una per ogni funzione.
 

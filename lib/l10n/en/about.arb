@@ -1,0 +1,14 @@
+{
+  "aboutTitle": "About",
+  "aboutEntrySubtitle": "License, source code, privacy and credits",
+  "aboutTagline": "Free chess that works offline",
+  "aboutPrivacy": "Privacy",
+  "aboutPrivacyDescription": "No data collected, no ads, no tracking",
+  "aboutLicense": "License",
+  "aboutLicenseDescription": "Free software, GPL-3.0 or later, with an additional permission for store distribution",
+  "aboutSource": "Source code",
+  "aboutSourceCopied": "Address copied",
+  "aboutLicenses": "Library licenses",
+  "aboutLicensesDescription": "Full license texts of the components used",
+  "aboutCredits": "Credits"
+}
