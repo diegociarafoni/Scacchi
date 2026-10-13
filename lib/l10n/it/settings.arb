@@ -441,6 +441,30 @@
   "@settingsLanguageSystem": {
     "description": "Impostazioni: lingua uguale a quella del telefono"
   },
+  "settingsMarkColor": "Colore di frecce e cerchi",
+  "@settingsMarkColor": {
+    "description": "Impostazioni: colore di base di frecce e cerchi"
+  },
+  "settingsMarkColorDescription": "Si disegnano tenendo premuto su una casa e trascinando; col mouse, tasto destro con Maiusc, Ctrl o Alt per gli altri colori",
+  "@settingsMarkColorDescription": {
+    "description": "Impostazioni: come si disegnano frecce e cerchi"
+  },
+  "settingsMarkColorGreen": "Verde",
+  "@settingsMarkColorGreen": {
+    "description": "Impostazioni: colore verde"
+  },
+  "settingsMarkColorRed": "Rosso",
+  "@settingsMarkColorRed": {
+    "description": "Impostazioni: colore rosso"
+  },
+  "settingsMarkColorBlue": "Blu",
+  "@settingsMarkColorBlue": {
+    "description": "Impostazioni: colore blu"
+  },
+  "settingsMarkColorYellow": "Giallo",
+  "@settingsMarkColorYellow": {
+    "description": "Impostazioni: colore giallo"
+  },
   "settingsPremove": "Premossa",
   "@settingsPremove": {
     "description": "Impostazioni: interruttore della premossa"
