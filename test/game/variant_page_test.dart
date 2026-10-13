@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/game/game_page.dart';
 import 'package:scacchi/settings/settings.dart';
 
+import '../computer_fakes.dart' show chooseTwoPlayers;
 import '../game_actions.dart';
 
 Offset square(WidgetTester tester, String name) {
@@ -35,6 +36,7 @@ Future<void> start(WidgetTester tester, String variant) async {
   );
   await tapGameAction(tester, 'Nuova');
   await tester.pumpAndSettle();
+  await chooseTwoPlayers(tester);
   await tester.tap(find.text(variant));
   await tester.pumpAndSettle();
   await tester.tap(find.text('Senza tempo'));

@@ -271,6 +271,8 @@ void main() {
     await pumpGame(tester, settings);
     await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
+    await openCustomSheet(tester, two: true);
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Tre scacchi'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Senza tempo'));

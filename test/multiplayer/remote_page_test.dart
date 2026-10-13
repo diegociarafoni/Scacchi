@@ -59,7 +59,8 @@ void main() {
         ),
       ),
     );
-    expect(find.text('Gioca anche a distanza'), findsOneWidget);
+    await tester.tap(find.text('A distanza'));
+    await tester.pump();
     await tester.scrollUntilVisible(
       find.text('Crea la partita'),
       200,
@@ -87,16 +88,10 @@ void main() {
     expect(shared.single, contains('Unisciti con il link'));
   });
 
-  testWidgets('RMP-32 con l\'interruttore spento serve la rete locale', (
-    tester,
-  ) async {
+  testWidgets('RMP-32 col Wi-Fi serve la rete locale', (tester) async {
     await tester.pumpWidget(
       localizedApp(home: const MultiplayerPage(openHost: _noWifi)),
     );
-    await tester.ensureVisible(find.byType(Switch));
-    await tester.pump();
-    await tester.tap(find.byType(Switch));
-    await tester.pump();
     await tester.scrollUntilVisible(
       find.text('Crea la partita'),
       200,
@@ -136,6 +131,8 @@ void main() {
         200,
         scrollable: find.byType(Scrollable).first,
       );
+      await tester.ensureVisible(find.text('Unisciti con il link'));
+      await tester.pump();
       await tester.tap(find.text('Unisciti con il link'));
       await tester.pumpAndSettle();
       await tester.tap(find.byTooltip('Incolla'));
@@ -159,6 +156,8 @@ void main() {
       200,
       scrollable: find.byType(Scrollable).first,
     );
+    await tester.ensureVisible(find.text('Unisciti con il link'));
+    await tester.pump();
     await tester.tap(find.text('Unisciti con il link'));
     await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('Incolla'));
@@ -180,6 +179,8 @@ void main() {
     await tester.pumpWidget(
       localizedApp(home: const MultiplayerPage(openHost: _noWifi)),
     );
+    await tester.tap(find.text('A distanza'));
+    await tester.pump();
     await tester.scrollUntilVisible(
       find.text('Crea la partita'),
       200,

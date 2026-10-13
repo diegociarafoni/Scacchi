@@ -9,6 +9,7 @@ class OpeningGameRequest {
     required this.line,
     required this.side,
     required this.levelId,
+    this.instructor = false,
   });
 
   /// Dall'explorer: le mosse scelte sono già giocate e non c'è una linea da
@@ -18,12 +19,14 @@ class OpeningGameRequest {
     List<Move> moves,
     Side side, {
     required int levelId,
+    bool instructor = false,
   }) : this._(
          title: title,
          startMoves: moves,
          line: null,
          side: side,
          levelId: levelId,
+         instructor: instructor,
        );
 
   /// Da una linea del repertorio: si parte dalla posizione iniziale, perché
@@ -48,6 +51,9 @@ class OpeningGameRequest {
   /// Colore dell'utente.
   final Side side;
   final int levelId;
+
+  /// Con l'istruttore che commenta l'apertura (vedi `GameChallenge`).
+  final bool instructor;
 }
 
 /// Avvia la partita di [OpeningGameRequest]; assente se manca il motore.

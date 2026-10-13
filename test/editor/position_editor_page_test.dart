@@ -273,7 +273,7 @@ void main() {
     ) async {
       await editPosition(tester);
       expect(find.text('Gioca questa posizione'), findsOneWidget);
-      expect(find.text('Computer'), findsOneWidget);
+      expect(find.text('Due giocatori'), findsOneWidget);
       expect(find.text('Bot'), findsOneWidget);
     });
 
@@ -281,11 +281,12 @@ void main() {
       tester,
     ) async {
       await editPosition(tester);
-      await scrollTap(tester, find.text('Computer'));
+      await scrollTap(tester, find.text('Bot'));
+      await scrollTap(tester, find.byKey(const ValueKey('adaptive-opponent')));
       await scrollTap(tester, find.text('Nero'));
       await scrollTap(tester, find.widgetWithText(FilledButton, 'Gioca'));
       await tester.pumpAndSettle(const Duration(seconds: 1));
-      expect(find.textContaining('Computer, livello 3'), findsOneWidget);
+      expect(find.textContaining('Computer, livello'), findsOneWidget);
       expect(find.text('Scacco al Nero. Muove il Nero.'), findsOneWidget);
       expect(
         tester.widget<Chessboard>(find.byType(Chessboard)).orientation,
@@ -297,11 +298,12 @@ void main() {
       tester,
     ) async {
       await editPosition(tester);
-      await scrollTap(tester, find.text('Computer'));
+      await scrollTap(tester, find.text('Bot'));
+      await scrollTap(tester, find.byKey(const ValueKey('adaptive-opponent')));
       await scrollTap(tester, find.text('Bianco'));
       await scrollTap(tester, find.widgetWithText(FilledButton, 'Gioca'));
       await tester.pumpAndSettle(const Duration(seconds: 1));
-      expect(find.textContaining('Computer, livello 3'), findsOneWidget);
+      expect(find.textContaining('Computer, livello'), findsOneWidget);
       expect(find.text('Muove il Bianco.'), findsOneWidget);
     });
 
@@ -310,6 +312,7 @@ void main() {
     ) async {
       await editPosition(tester);
       await scrollTap(tester, find.text('Bot'));
+      await scrollTap(tester, find.text('Pino'));
       await scrollTap(tester, find.text('Nero'));
       await scrollTap(tester, find.widgetWithText(FilledButton, 'Gioca'));
       await tester.pumpAndSettle(const Duration(seconds: 1));
@@ -337,6 +340,7 @@ void main() {
         fen: 'r5k1/5ppp/8/8/8/8/5PPP/6K1 b - - 0 1',
       );
       await scrollTap(tester, find.text('Bot'));
+      await scrollTap(tester, find.text('Pino'));
       await scrollTap(tester, find.text('Nero'));
       await scrollTap(tester, find.widgetWithText(FilledButton, 'Gioca'));
       await tester.pumpAndSettle(const Duration(seconds: 1));

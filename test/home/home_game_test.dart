@@ -9,6 +9,7 @@ import 'package:scacchi/progress/progress_controller.dart';
 import 'package:scacchi/progress/progress_store.dart';
 import 'package:scacchi/settings/settings.dart';
 
+import '../computer_fakes.dart';
 import '../game_actions.dart';
 import '../localized_app.dart';
 
@@ -55,6 +56,8 @@ void main() {
       ),
     );
     await tapGameAction(tester, 'Nuova');
+    await tester.pumpAndSettle();
+    await openCustomSheet(tester, two: true);
     await tester.pumpAndSettle();
     await tester.tap(find.text('Senza tempo'));
     await tester.pumpAndSettle();

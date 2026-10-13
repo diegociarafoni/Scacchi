@@ -16,7 +16,7 @@
 | Set di pezzi "rhosgfx" di RhosGFX, incluso in chessground | Pezzi "RhosGFX" | CC0 |
 | Set di pezzi "papercut" di Nikolay Anzarov, dall'elenco di [Lichess](https://github.com/lichess-org/lila/blob/master/COPYING.md); sorgente in `tool/board_art/papercut/` | Pezzi "Papercut" | CC BY 4.0 |
 | Simboli degli scacchi del carattere [Noto Sans Symbols 2](https://fonts.google.com/noto/specimen/Noto+Sans+Symbols+2) (Google), resi come immagini | Pezzi "Noto" | OFL-1.1 |
-| Pezzi "Rokko", "Pixel" e "Arcano", scacchiere con texture in `assets/boards/` e aloni dei pezzi in `assets/pieces/halo/`, generati da `tool/board_art/` | Pezzi e temi della scacchiera | Opera originale del progetto, GPL-3.0; gli aloni dei set di terzi seguono la licenza del set |
+| Pezzi "Rokko", "Pixel", "Arcano", "Staunton", "Morbido" e "Stampa", scacchiere con texture in `assets/boards/` e aloni dei pezzi in `assets/pieces/halo/`, generati da `tool/board_art/` | Pezzi e temi della scacchiera | Opera originale del progetto, GPL-3.0; gli aloni dei set di terzi seguono la licenza del set |
 | [shared_preferences](https://pub.dev/packages/shared_preferences) | Salvataggio delle impostazioni | BSD-3-Clause |
 | [Stockfish](https://stockfishchess.org) 19, tramite [multistockfish](https://github.com/lichess-org/dart-multistockfish) (Lichess) | Avversario computer | GPL-3.0 |
 | [Flutter](https://flutter.dev) | Framework dell'interfaccia | BSD-3-Clause |
@@ -36,7 +36,8 @@
 | [bip340](https://pub.dev/packages/bip340) (fiatjaf) | Firma Schnorr degli eventi Nostr della partita a distanza | MIT |
 | [workmanager](https://pub.dev/packages/workmanager) (Flutter Community) | Controllo in background delle partite a distanza su Android | MIT |
 | [crypto](https://pub.dev/packages/crypto) (Dart) | Impronta SHA-256 delle posizioni nel multigiocatore | BSD-3-Clause |
-| Suoni in `assets/sounds/`, generati da `tool/generate_sounds.py` | Effetti sonori | Opera originale del progetto, CC0 |
+| Suoni in `assets/sounds/`, `assets/sounds/legno/` e `assets/sounds/cristallo/`, generati da `tool/generate_sounds.py` | Effetti sonori e set di suoni | Opera originale del progetto, CC0 |
 | [audioplayers](https://pub.dev/packages/audioplayers) | Riproduzione dei suoni | MIT |
 | [Database dei puzzle di Lichess](https://database.lichess.org/#puzzles) | Puzzle inclusi nell'app (sottoinsieme) | CC0 |
 | [chess-openings](https://github.com/lichess-org/chess-openings) (Lichess) | Nomi e codici ECO delle aperture | CC0 |
+| [Database delle partite di Lichess](https://database.lichess.org/) | Statistiche per mossa dell'esploratore delle aperture (conteggi aggregati) | CC0 |

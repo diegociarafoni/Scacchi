@@ -29,6 +29,7 @@ import '../openings/openings_hub_page.dart';
 import '../openings/repertoire.dart';
 import '../path/curriculum.dart';
 import '../path/path_controller.dart';
+import '../physical/physical_game_page.dart';
 import '../progress/activity.dart';
 import '../progress/progress_controller.dart';
 import '../progress/progress_tracker.dart';
@@ -490,6 +491,7 @@ class _HomeShellState extends State<HomeShell> {
               allowUndo: true,
               startMoves: request.startMoves,
               line: request.line,
+              instructor: request.instructor,
             ),
             onActivity: _record,
             onSave: _saveGame,
@@ -704,6 +706,9 @@ class _HomeShellState extends State<HomeShell> {
             progress: _progressController,
             computerAvailable: widget.computerAvailable,
             createComputer: widget.createComputer,
+            tournamentPage: _computerAvailable ? _tournamentPage : null,
+            physicalPage: () => PhysicalGamePage(archive: _archive),
+            openingGame: _computerAvailable ? _playOpening : null,
           ),
           if (_trainer != null)
             PuzzleHubPage(trainer: _trainer!, onActivity: _record)

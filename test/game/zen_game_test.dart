@@ -46,7 +46,11 @@ void main() {
   Future<void> startBotGame(WidgetTester tester) async {
     await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
+    await openCustomSheet(tester);
     await tester.tap(find.text('Bot'));
+    await tester.pumpAndSettle();
+    // Il foglio parte dall'adattivo: il bot si sceglie a mano.
+    await tester.tap(find.text('Pino'));
     await tester.pumpAndSettle();
     await chooseTime(tester, 'Senza tempo');
     await tester.pumpAndSettle(const Duration(seconds: 1));

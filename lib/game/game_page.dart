@@ -10,9 +10,11 @@ import 'package:flutter/services.dart';
 import '../analysis/analysis_page.dart';
 import '../archive/pgn.dart';
 import '../archive/saved_game.dart';
+import '../bot_gallery/game_options.dart';
 import '../coach/coach_session.dart';
 import '../coach/explain_why.dart';
 import '../coach/hint_text.dart';
+import '../coach/opening_coach.dart';
 import '../editor/position_editor_page.dart';
 import '../engine/adaptive.dart';
 import '../engine/bot_collection.dart';
@@ -26,10 +28,16 @@ import '../exchange/qr_receive_page.dart';
 import '../exchange/qr_send_page.dart';
 import '../exchange/qr_transfer.dart';
 import '../l10n/app_localizations.dart';
+import '../multiplayer/multiplayer_page.dart';
+import '../openings/explorer_page.dart';
 import '../openings/opening_assets.dart';
+import '../openings/opening_book.dart';
 import '../openings/opening_game.dart';
+import '../openings/opening_game_dialog.dart';
 import '../openings/opening_name.dart';
+import '../openings/opening_stats.dart';
 import '../progress/activity.dart';
+import '../progress/avatar.dart';
 import '../progress/game_activity.dart';
 import '../progress/progress_controller.dart';
 import '../progress/progress_feedback.dart';
@@ -61,6 +69,7 @@ import 'move_label.dart';
 import 'move_speech.dart';
 import 'opponent_picker.dart';
 import 'sounds.dart';
+import 'speech_bubble.dart';
 import 'variant.dart';
 
 /// Semimosse minime perché una partita valga XP: abbandonare subito non deve
@@ -81,19 +90,34 @@ class GamePage extends StatefulWidget {
     this.createComputer,
     this.createVariantEngine,
     this.now,
+    this.random,
     this.onActivity,
     this.onSave,
     this.resume,
     this.progress,
     this.challenge,
+    this.openingBook,
+    this.openingStats,
     this.onFinished,
     this.store,
     this.qrScanner = zxingScanner,
     this.onSavePuzzles,
+    this.tournamentPage,
+    this.physicalPage,
+    this.openingGame,
   }) : computerAvailable = computerAvailable ?? StockfishTransport.isSupported;
 
   final SettingsController settings;
   final bool computerAvailable;
+
+  /// Pagine dei tornei e della scacchiera fisica, offerte dal foglio «Nuova
+  /// partita»; senza, quelle voci non ci sono.
+  final Future<Widget> Function()? tournamentPage;
+  final Widget Function()? physicalPage;
+
+  /// Avvia la partita con l'istruttore (come dal menu Aperture); senza, la voce
+  /// «Gioca con l'istruttore» del foglio accende l'allenatore nella partita.
+  final Future<void> Function(BuildContext, OpeningGameRequest)? openingGame;
   final ComputerPlayer Function()? createComputer;
 
   /// Avversario di Chess960, Re della collina e Tre scacchi (RF-123).
@@ -104,6 +128,9 @@ class GamePage extends StatefulWidget {
 
   /// Ora corrente per l'orologio; quella di sistema se assente.
   final DateTime Function()? now;
+
+  /// Fonte del caso per le battute del bot; fissa nei golden.
+  final math.Random? random;
 
   /// Registra la partita finita nei progressi; senza, nessun XP.
   final ActivityRecorder? onActivity;
@@ -118,6 +145,11 @@ class GamePage extends StatefulWidget {
   /// Partita già impostata da un'altra schermata: parte subito e non si può
   /// ricominciare né annullare.
   final GameChallenge? challenge;
+
+  /// Libro e statistiche delle aperture per l'istruttore; di default quelli
+  /// inclusi nell'app.
+  final Future<OpeningBook>? openingBook;
+  final Future<OpeningStats?>? openingStats;
 
   /// Esito per l'utente e mosse complete giocate, a fine partita contro il
   /// computer, una volta per partita (sfide).
@@ -191,7 +223,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   /// Ultima variante scelta nel pannello Nuova, con persone o contro il computer.
   Variant _chosenVariant = Variant.standard;
-  final _random = math.Random();
+  late final math.Random _random = widget.random ?? math.Random();
 
   /// Lato giocato dal computer; `null` nella partita tra due persone.
   Side? _computerSide;
@@ -370,6 +402,95 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   bool get _isChallenge => widget.challenge != null;
 
+  /// Partita con l'istruttore: aiuti accesi e commento sull'apertura.
+  bool get _instructor => widget.challenge?.instructor ?? false;
+
+  /// Nelle sfide niente aiuti, tranne che con l'istruttore.
+  bool get _helpAllowed => !_isChallenge || _instructor;
+
+  OpeningBook? _instructorBook;
+  OpeningStats? _instructorStats;
+
+  Future<void> _loadInstructor() async {
+    final OpeningBook book;
+    final OpeningStats? stats;
+    try {
+      book = await (widget.openingBook ?? openingBook());
+      stats = await (widget.openingStats ?? openingStatsOrNull());
+    } on Object {
+      // Senza libro l'istruttore resta il solo allenatore.
+      return;
+    }
+    if (!mounted) return;
+    _instructorBook = book;
+    _instructorStats = stats;
+    _instructorSay();
+  }
+
+  /// Commento dell'istruttore sull'apertura: nome, mosse più giocate, uscita
+  /// dal libro.
+  void _instructorSay() {
+    final book = _instructorBook;
+    if (!_instructor ||
+        book == null ||
+        _zen ||
+        _game.variant != Variant.standard) {
+      return;
+    }
+    final note = openingNote(book, _instructorStats, [
+      for (final m in _game.moves) m.move,
+    ]);
+    if (note == null) return;
+    final l = _kidL10n(context);
+    String list(List<OpeningChoice> choices) =>
+        [for (final c in choices) '${c.san} (${c.percent}%)'].join(', ');
+    final text = switch (note) {
+      InBookNote(:final opening, :final choices) =>
+        opening != null && choices.isNotEmpty
+            ? l.instructorInBookNamed(opening.localName, list(choices))
+            : opening != null
+            ? l.instructorInBookNameOnly(opening.localName)
+            : choices.isNotEmpty
+            ? l.instructorInBook(list(choices))
+            : null,
+      LeftBookNote(:final playedSan, :final by, :final expected) =>
+        by == _computerSide
+            ? l.instructorLeftComputer(playedSan)
+            : expected.isEmpty
+            ? l.instructorLeftYouBare(playedSan)
+            : l.instructorLeftYou(playedSan, list(expected)),
+    };
+    if (text == null) return;
+    _say(
+      Speech(
+        text,
+        expression: note is LeftBookNote
+            ? AvatarExpression.surprised
+            : AvatarExpression.encouraging,
+      ),
+      duration: const Duration(seconds: 12),
+    );
+  }
+
+  /// Apre l'esploratore sulla posizione raggiunta.
+  void _openExplorer() {
+    final moves = [for (final m in _game.moves) m.move];
+    // Con l'esploratore aperto orologio e computer restano fermi.
+    unawaited(
+      _whileSuspended<void>(
+        () => Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => ExplorerPage(
+              book: widget.openingBook,
+              stats: widget.openingStats ?? openingStatsOrNull(),
+              initialMoves: moves,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   /// Una sfida non ha ancora iniziato la partita: fino ad allora la scacchiera
   /// non accetta mosse.
   late bool _awaitingChallenge = _isChallenge;
@@ -392,6 +513,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         ? null
         : ChessGame.replay(Chess.initial, challenge.startMoves);
     _beginGame(game ?? ChessGame(), setup, null);
+    if (_instructor && _engineGame && !_zen) {
+      setState(() => _coachOn = true);
+      unawaited(_loadInstructor());
+    }
   }
 
   int? _lineDeviationNow() {
@@ -584,14 +709,67 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       _botSay(BotEvent.check);
     } else if (_game.moves.last.san.contains('x') && _random.nextInt(3) == 0) {
       _botSay(BotEvent.capture);
+    } else if (_speech == null &&
+        _game.moves.length >= 4 &&
+        _random.nextInt(6) == 0) {
+      _botSay(BotEvent.chat);
     }
   }
 
   void _botSay(BotEvent event) {
     final bot = _bot;
     if (bot == null || !mounted || _zen) return;
+    // Le battute di compagnia non meritano una fascia che copre la scacchiera.
+    if (event == BotEvent.chat && !_speechRoom) return;
     final text = bot.phrase(event, _random, friendly: _kidGame);
-    _showMessage('${bot.avatar} ${bot.name}: $text');
+    _say(
+      Speech(
+        text,
+        bot: bot,
+        expression: switch (event) {
+          BotEvent.start => AvatarExpression.greeting,
+          BotEvent.win || BotEvent.capture => AvatarExpression.happy,
+          BotEvent.loss => AvatarExpression.surprised,
+          BotEvent.check => AvatarExpression.challenge,
+          BotEvent.mistake => AvatarExpression.encouraging,
+          _ => AvatarExpression.neutral,
+        },
+      ),
+    );
+  }
+
+  Speech? _speech;
+  Timer? _speechTimer;
+
+  /// Dove c'è spazio sopra la scacchiera, impostato dal layout.
+  bool _speechRoom = false;
+
+  Widget _strip() =>
+      SpeechStrip(opponent: _bot, speech: _speech, onDismiss: _clearSpeech);
+
+  void _clearSpeech() {
+    _speechTimer?.cancel();
+    if (_speech != null && mounted) setState(() => _speech = null);
+  }
+
+  /// Fumetto sopra la scacchiera; senza spazio (schermo basso o orizzontale)
+  /// resta la fascia in basso.
+  void _say(Speech speech, {Duration? duration}) {
+    if (!_speechRoom) {
+      final bot = speech.bot;
+      final text = bot == null
+          ? speech.text
+          : '${bot.avatar} ${bot.name}: ${speech.text}';
+      if (duration == null) {
+        _showMessage(text);
+      } else {
+        _showMessage(text, duration: duration);
+      }
+      return;
+    }
+    _speechTimer?.cancel();
+    setState(() => _speech = speech);
+    _speechTimer = Timer(duration ?? const Duration(seconds: 8), _clearSpeech);
   }
 
   void _saveAdaptive() {
@@ -679,6 +857,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _computer?.dispose().ignore();
     WidgetsBinding.instance.removeObserver(this);
     _ticker?.cancel();
+    _speechTimer?.cancel();
     _tick.dispose();
     _sounds.dispose();
     _board.dispose();
@@ -1119,7 +1298,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     }
     if (!mounted || !identical(position, _game.position)) return;
     if (threat == null) {
-      _showMessage('Nessuna minaccia da mostrare.');
+      _say(const Speech('Nessuna minaccia da mostrare.'));
       return;
     }
     final fen = threatFen(position);
@@ -1134,10 +1313,12 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         threat.to,
       );
     });
-    _showMessage(
-      san == null
-          ? 'La freccia rossa mostra la minaccia dell\'avversario.'
-          : 'Se toccasse all\'avversario giocherebbe ${formatSan(san, AppSettings.of(context).notation)}: la freccia rossa.',
+    _say(
+      Speech(
+        san == null
+            ? 'La freccia rossa mostra la minaccia dell\'avversario.'
+            : 'Se toccasse all\'avversario giocherebbe ${formatSan(san, AppSettings.of(context).notation)}: la freccia rossa.',
+      ),
     );
   }
 
@@ -1153,7 +1334,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     }
     if (!mounted || !identical(position, _game.position)) return;
     if (hint == null) {
-      _showMessage('Nessun suggerimento disponibile.');
+      _say(const Speech('Nessun suggerimento disponibile.'));
       return;
     }
     final marks = _settings.marks;
@@ -1177,7 +1358,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
               ...marks.circle(color, to),
             },
     );
-    _showMessage(text);
+    _say(Speech(text, expression: AvatarExpression.encouraging));
   }
 
   /// Gioca [move] con orologio, suono e annuncio; con il tempo scaduto chiude la partita.
@@ -1218,6 +1399,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       }
     }
     _checkLine();
+    _instructorSay();
     return true;
   }
 
@@ -1321,7 +1503,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     );
     if (text == null) return;
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    _showMessage(text, duration: const Duration(seconds: 8));
+    _say(Speech(text), duration: const Duration(seconds: 8));
   }
 
   /// Partita di scacchi classici dalla posizione iniziale: solo queste contano
@@ -1510,8 +1692,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   }
 
   Future<void> _newGame() async {
-    final choice = await _whileSuspended(
-      () => showModalBottomSheet<_TimeChoice>(
+    final picked = await _whileSuspended<_TimeChoice>(() async {
+      final result = await showModalBottomSheet<Object>(
         context: context,
         isScrollControlled: true,
         builder: (context) => _TimeControlSheet(
@@ -1524,11 +1706,22 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           collection: _collection,
           computerAvailable: widget.computerAvailable,
           kidMode: _settings.kidMode,
+          tournamentPage: widget.tournamentPage,
+          physicalPage: widget.physicalPage,
+          openingGame: widget.openingGame,
         ),
-      ),
-      restart: (choice) => choice == null,
-    );
-    if (!mounted || choice == null) return;
+      );
+      // Tornei e scacchiera fisica prendono il posto della partita, che
+      // resta ferma finché non si torna.
+      if (result is _SheetRun && mounted) {
+        await result.run(context);
+        return null;
+      }
+      return result as _TimeChoice?;
+    }, restart: (choice) => choice == null);
+    if (!mounted || picked == null) return;
+    final choice = picked;
+
     final setup = _applySetup(choice.setup);
     final vsComputer = setup.opponent != Opponent.human;
     // Il profilo bambino gioca solo la classica: la variante scelta prima
@@ -1567,6 +1760,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       handicap: handicap,
       humanSide: human,
     );
+    if (choice.coach && vsComputer && _engineGame && !_zen) {
+      setState(() => _coachOn = true);
+    }
     if (vsComputer) return;
     unawaited(
       widget.settings.update(
@@ -1598,6 +1794,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _badge = null;
     _hintedFen = null;
     _threatFen = null;
+    _speechTimer?.cancel();
+    _speech = null;
     _coach = _newCoach();
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     _game = game;
@@ -1731,6 +1929,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     // Dopo un annulla l'uscita già segnalata vale solo se resta nella partita.
     _reportedDeviation = _lineDeviationNow();
     _refresh(animate: false);
+    // Il commento sull'apertura segue la posizione tornata in campo.
+    _clearSpeech();
+    _instructorSay();
     unawaited(_computerMove());
   }
 
@@ -2120,7 +2321,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           ? null
           : _resign,
       // Nelle sfide niente aiuti: né suggerimenti né ripetizione della mossa.
-      coachOn: _computerSide == null || _isChallenge || _zen || !_engineGame
+      coachOn: _computerSide == null || !_helpAllowed || _zen || !_engineGame
           ? null
           : _coachOn,
       onCoach: () {
@@ -2135,7 +2336,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
               : 'Allenatore disattivato.',
         );
       },
-      hintAvailable: _computerSide != null && !_isChallenge && _engineGame,
+      hintAvailable: _computerSide != null && _helpAllowed && _engineGame,
       onHint: _humanToMove && _pendingMove == null ? _giveHint : null,
       onThreat: _humanToMove && _pendingMove == null ? _showThreat : null,
     );
@@ -2246,6 +2447,12 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                     ),
                 ];
               },
+            ),
+          if (_instructor)
+            IconButton(
+              tooltip: _kidL10n(context).instructorExplorer,
+              icon: const Icon(Icons.account_tree_outlined),
+              onPressed: _openExplorer,
             ),
           if (keyboardInBar)
             IconButton(
@@ -2421,10 +2628,22 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                   Expanded(
                     child: LayoutBuilder(
                       builder: (context, box) {
-                        final banner =
+                        _speechRoom =
+                            !_zen &&
+                            box.maxHeight >=
+                                _moveStripHeight + speechStripHeight;
+                        final tip =
                             box.maxHeight >= _moveStripHeight + _bannerHeight
                             ? _banner(context)
                             : null;
+                        // Il fumetto ha la precedenza sul suggerimento; lo
+                        // sfidante resta in vista quando non c'è altro.
+                        final banner = _speechRoom && _speech != null
+                            ? _strip()
+                            : tip ??
+                                  (_speechRoom && _bot != null
+                                      ? _strip()
+                                      : null);
                         return Column(
                           children: [
                             ?banner,
@@ -3192,8 +3411,9 @@ class _TimeChoice {
     this.whiteName,
     this.blackName,
     this.setup,
-    this.handicap,
-  );
+    this.handicap, {
+    this.coach = false,
+  });
 
   final TimeControl? control;
   final Variant variant;
@@ -3201,6 +3421,9 @@ class _TimeChoice {
   final String blackName;
   final GameSetup setup;
   final Handicap? handicap;
+
+  /// Allenatore acceso dall'inizio, scelto nella galleria dei bot.
+  final bool coach;
 }
 
 /// Testi del profilo bambino; in italiano se la pagina è montata senza i
@@ -3265,6 +3488,17 @@ class _PositionSheetState extends State<_PositionSheet> {
   );
 }
 
+/// Pagina del foglio «Nuova partita»: il menu, la sfida a un amico (dove si
+/// gioca, poi come ci si raggiunge) e la scelta completa.
+enum _SheetView { menu, friend, friendApart, custom }
+
+/// Voce del menu che apre un'altra pagina al posto della partita.
+class _SheetRun {
+  const _SheetRun(this.run);
+
+  final Future<void> Function(BuildContext context) run;
+}
+
 /// Scelta di avversario, variante, nomi e cadenza: toccare una cadenza avvia
 /// la partita.
 class _TimeControlSheet extends StatefulWidget {
@@ -3278,6 +3512,9 @@ class _TimeControlSheet extends StatefulWidget {
     required this.collection,
     required this.computerAvailable,
     required this.kidMode,
+    this.tournamentPage,
+    this.physicalPage,
+    this.openingGame,
   });
 
   /// Profilo bambino: solo classica, senza tempo o con una cadenza lenta.
@@ -3291,20 +3528,42 @@ class _TimeControlSheet extends StatefulWidget {
   final bool computerAvailable;
   final bool kidMode;
 
+  /// Pagine dei tornei e della scacchiera fisica, se la home le offre.
+  final Future<Widget> Function()? tournamentPage;
+  final Widget Function()? physicalPage;
+
+  /// Avvia la partita con l'istruttore (come dal menu Aperture); senza, la voce
+  /// «Gioca con l'istruttore» del foglio accende l'allenatore nella partita.
+  final Future<void> Function(BuildContext, OpeningGameRequest)? openingGame;
+
   @override
   State<_TimeControlSheet> createState() => _TimeControlSheetState();
 }
 
 class _TimeControlSheetState extends State<_TimeControlSheet> {
   late Variant _variant = widget.variant;
-  late GameSetup _setup = widget.computerAvailable
-      ? widget.setup
-      : widget.setup.copyWith(opponent: Opponent.human);
+  // Il profilo bambino ha subito la scelta completa; gli altri partono dal menu.
+  late _SheetView _view = widget.kid || widget.kidMode
+      ? _SheetView.custom
+      : _SheetView.menu;
+  TimeControl? _quickControl;
+  // Si parte dal bot adattivo, del livello del giocatore; il computer a livello
+  // fisso non ha più una scelta nel foglio e ripiega sul bot.
+  late GameSetup _setup = !widget.computerAvailable
+      ? widget.setup.copyWith(opponent: Opponent.human)
+      : widget.setup.opponent == Opponent.computer && !widget.setup.adaptive
+      ? widget.setup.copyWith(opponent: Opponent.bot)
+      : widget.setup.opponent == Opponent.human &&
+            !widget.kid &&
+            !widget.kidMode
+      ? widget.setup.copyWith(opponent: Opponent.computer, adaptive: true)
+      : widget.setup;
   late final _white = TextEditingController(text: widget.whiteName);
   late final _black = TextEditingController(text: widget.blackName);
   HandicapPiece? _handicapPiece;
   int? _handicapMinutes;
   var _handicapGiver = HandicapGiver.player;
+  bool get _fromMenu => !(widget.kid || widget.kidMode);
 
   Handicap? get _handicap => _handicapPiece == null && _handicapMinutes == null
       ? null
@@ -3322,7 +3581,25 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => SafeArea(
+    child: Padding(
+      padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
+      child: ListView(
+        // Ogni pagina riparte dall'alto.
+        key: ValueKey(_view),
+        shrinkWrap: true,
+        padding: const EdgeInsets.all(16),
+        children: switch (_view) {
+          _SheetView.menu => _menuChildren(context),
+          _SheetView.friend => _friendChildren(context),
+          _SheetView.friendApart => _friendApartChildren(context),
+          _SheetView.custom => _customChildren(context),
+        },
+      ),
+    ),
+  );
+
+  List<Widget> _customChildren(BuildContext context) {
     final theme = Theme.of(context);
     // Fuori dal profilo bambino i testi restano fissi: i test montano la
     // pagina anche senza delegati di localizzazione.
@@ -3359,96 +3636,408 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
             ),
           ),
         );
-    return SafeArea(
-      child: Padding(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.viewInsetsOf(context).bottom,
+    return [
+      _header(
+        context,
+        l?.kidGameNew ??
+            (_setup.opponent == Opponent.human
+                ? 'Due giocatori'
+                : 'Partita personalizzata'),
+        back: _fromMenu ? _SheetView.menu : null,
+      ),
+      const SizedBox(height: 8),
+      OpponentPicker(
+        setup: _setup,
+        adaptiveLevel: widget.adaptiveLevel,
+        collection: widget.collection,
+        computerAvailable: widget.computerAvailable,
+        kidMode: widget.kidMode,
+        onChanged: (setup) => setState(() => _setup = setup),
+        galleryOptions: GameOptions(variant: _variant, handicap: _handicap),
+        onGalleryPlay: (result) => Navigator.pop(
+          context,
+          _TimeChoice(
+            result.options.control,
+            result.options.variant,
+            _white.text,
+            _black.text,
+            result.applyTo(widget.kidMode ? _setup.forKids() : _setup),
+            result.options.handicap,
+            coach: result.options.coach,
+          ),
         ),
-        child: ListView(
-          shrinkWrap: true,
-          padding: const EdgeInsets.all(16),
+      ),
+      if (_setup.opponent == Opponent.human) ...[
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            nameField(_white, l?.kidGameWhiteName ?? 'Nome del Bianco'),
+            const SizedBox(width: 12),
+            nameField(_black, l?.kidGameBlackName ?? 'Nome del Nero'),
+          ],
+        ),
+      ],
+      if (l == null) ...[
+        const SizedBox(height: 16),
+        Text('Variante', style: theme.textTheme.titleSmall),
+        const SizedBox(height: 4),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            for (final v in Variant.values)
+              ChoiceChip(
+                label: Text(v.label),
+                selected: v == _variant,
+                onSelected: (_) => setState(() {
+                  _variant = v;
+                  // Il pezzo in meno vale solo negli scacchi classici.
+                  if (v != Variant.standard) _handicapPiece = null;
+                }),
+              ),
+          ],
+        ),
+        if (_variant.description.isNotEmpty) ...[
+          const SizedBox(height: 4),
+          Text(_variant.description),
+        ],
+      ],
+      ...[
+        if (l == null) ..._handicapSection(context),
+        const SizedBox(height: 12),
+        if (l != null) ...[
+          Text(l.kidGameTimeTitle, style: theme.textTheme.titleSmall),
+          const SizedBox(height: 4),
+          // Bullet e Blitz mettono fretta: ai bambini solo tempi lunghi.
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              chip(noClock, null),
+              chip(l.kidGameSlowClock, _kidClock),
+            ],
+          ),
+        ] else ...[
+          Text('Cadenza', style: theme.textTheme.titleSmall),
+          const SizedBox(height: 4),
+          chip(noClock, null),
+          for (final entry in groups.entries) ...[
+            const SizedBox(height: 12),
+            Text(entry.key, style: theme.textTheme.titleSmall),
+            const SizedBox(height: 4),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [for (final t in entry.value) chip(t.label, t)],
+            ),
+          ],
+        ],
+      ],
+    ];
+  }
+
+  Widget _header(BuildContext context, String title, {_SheetView? back}) {
+    final text = Text(title, style: Theme.of(context).textTheme.titleLarge);
+    if (back == null) return text;
+    return Row(
+      children: [
+        IconButton(
+          tooltip: 'Indietro',
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => setState(() => _view = back),
+        ),
+        Expanded(child: text),
+      ],
+    );
+  }
+
+  Widget _tile(
+    IconData icon,
+    String title,
+    String subtitle,
+    VoidCallback onTap, {
+    Key? key,
+  }) => Padding(
+    padding: const EdgeInsets.only(top: 8),
+    child: Card(
+      key: key,
+      margin: EdgeInsets.zero,
+      child: ListTile(
+        minVerticalPadding: 12,
+        leading: Icon(icon, size: 32),
+        title: Text(title, style: Theme.of(context).textTheme.titleMedium),
+        subtitle: Text(subtitle),
+        trailing: const Icon(Icons.chevron_right),
+        onTap: onTap,
+      ),
+    ),
+  );
+
+  /// Partita contro il computer del livello del giocatore, o in due se manca
+  /// il motore.
+  GameSetup get _quickSetup => widget.computerAvailable
+      ? _setup.copyWith(opponent: Opponent.computer, adaptive: true)
+      : _setup.copyWith(opponent: Opponent.human);
+
+  _TimeChoice _quickChoice({bool coach = false}) => _TimeChoice(
+    _quickControl,
+    Variant.standard,
+    _white.text,
+    _black.text,
+    _quickSetup,
+    null,
+    coach: coach,
+  );
+
+  List<Widget> _menuChildren(BuildContext context) {
+    final theme = Theme.of(context);
+    final engine = widget.computerAvailable;
+    final level = engineLevel(widget.adaptiveLevel);
+    final tournaments = widget.tournamentPage;
+    final physical = widget.physicalPage;
+    return [
+      _header(context, 'Nuova partita'),
+      const SizedBox(height: 12),
+      DropdownButtonFormField<TimeControl?>(
+        key: const ValueKey('quick-clock'),
+        initialValue: _quickControl,
+        isExpanded: true,
+        decoration: const InputDecoration(labelText: 'Tempo di gioco'),
+        items: [
+          const DropdownMenuItem(child: Text('Senza tempo')),
+          for (final c in TimeControl.presets)
+            DropdownMenuItem(
+              value: c,
+              child: Text('${c.category} · ${c.label}'),
+            ),
+        ],
+        onChanged: (v) => setState(() => _quickControl = v),
+      ),
+      const SizedBox(height: 12),
+      FilledButton(
+        key: const ValueKey('quick-start'),
+        style: FilledButton.styleFrom(
+          minimumSize: const Size.fromHeight(76),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        ),
+        onPressed: () => Navigator.pop(context, _quickChoice()),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              l?.kidGameNew ?? 'Nuova partita',
-              style: theme.textTheme.titleLarge,
+              'Inizia partita',
+              style: theme.textTheme.titleLarge?.copyWith(
+                color: theme.colorScheme.onPrimary,
+              ),
             ),
-            const SizedBox(height: 8),
-            OpponentPicker(
-              setup: _setup,
-              adaptiveLevel: widget.adaptiveLevel,
-              collection: widget.collection,
-              computerAvailable: widget.computerAvailable,
-              kidMode: widget.kidMode,
-              onChanged: (setup) => setState(() => _setup = setup),
+            Text(
+              engine
+                  ? 'Contro il computer del tuo livello (${level.id}, circa ${level.approxElo} Elo)'
+                  : 'In due sullo stesso telefono',
+              textAlign: TextAlign.center,
             ),
-            if (_setup.opponent == Opponent.human) ...[
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  nameField(_white, l?.kidGameWhiteName ?? 'Nome del Bianco'),
-                  const SizedBox(width: 12),
-                  nameField(_black, l?.kidGameBlackName ?? 'Nome del Nero'),
-                ],
-              ),
-            ],
-            if (l == null) ...[
-              const SizedBox(height: 16),
-              Text('Variante', style: theme.textTheme.titleSmall),
-              const SizedBox(height: 4),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  for (final v in Variant.values)
-                    ChoiceChip(
-                      label: Text(v.label),
-                      selected: v == _variant,
-                      onSelected: (_) => setState(() {
-                        _variant = v;
-                        // Il pezzo in meno vale solo negli scacchi classici.
-                        if (v != Variant.standard) _handicapPiece = null;
-                      }),
-                    ),
-                ],
-              ),
-              if (_variant.description.isNotEmpty) ...[
-                const SizedBox(height: 4),
-                Text(_variant.description),
-              ],
-            ],
-            if (l == null) ..._handicapSection(context),
-            const SizedBox(height: 12),
-            if (l != null) ...[
-              Text(l.kidGameTimeTitle, style: theme.textTheme.titleSmall),
-              const SizedBox(height: 4),
-              // Bullet e Blitz mettono fretta: ai bambini solo tempi lunghi.
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  chip(noClock, null),
-                  chip(l.kidGameSlowClock, _kidClock),
-                ],
-              ),
-            ] else ...[
-              Text('Cadenza', style: theme.textTheme.titleSmall),
-              const SizedBox(height: 4),
-              chip(noClock, null),
-            ],
-            if (l == null)
-              for (final entry in groups.entries) ...[
-                const SizedBox(height: 12),
-                Text(entry.key, style: theme.textTheme.titleSmall),
-                const SizedBox(height: 4),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: [for (final t in entry.value) chip(t.label, t)],
-                ),
-              ],
           ],
         ),
       ),
+      const SizedBox(height: 8),
+      _tile(
+        Icons.people_outline,
+        'Sfida un amico',
+        'Sullo stesso telefono o ognuno sul suo',
+        () => setState(() => _view = _SheetView.friend),
+        key: const ValueKey('menu-friend'),
+      ),
+      if (engine) ...[
+        _tile(
+          Icons.emoji_people_outlined,
+          'Scegli il bot',
+          'Una galleria di avversari con una personalità',
+          () async {
+            final result = await openBotGallery(
+              context,
+              collection: widget.collection,
+              setup: _setup,
+              adaptiveLevel: widget.adaptiveLevel,
+              kidMode: false,
+              options: GameOptions(control: _quickControl),
+            );
+            if (result == null || !context.mounted) return;
+            Navigator.pop(
+              context,
+              _TimeChoice(
+                result.options.control,
+                result.options.variant,
+                _white.text,
+                _black.text,
+                result.applyTo(_setup),
+                result.options.handicap,
+                coach: result.options.coach,
+              ),
+            );
+          },
+          key: const Key('open-bot-gallery'),
+        ),
+        _tile(
+          Icons.school_outlined,
+          "Gioca con l'istruttore",
+          'Il computer del tuo livello, con suggerimenti e spiegazioni',
+          () {
+            final play = widget.openingGame;
+            if (play == null) {
+              Navigator.pop(context, _quickChoice(coach: true));
+              return;
+            }
+            final title = AppLocalizations.of(context).instructorTitle;
+            Navigator.pop(
+              context,
+              _SheetRun((context) async {
+                final choice = await askOpeningGame(context, Side.white);
+                if (choice == null || !context.mounted) return;
+                await play(
+                  context,
+                  OpeningGameRequest.explorer(
+                    title,
+                    const [],
+                    choice.side,
+                    levelId: choice.levelId,
+                    instructor: true,
+                  ),
+                );
+              }),
+            );
+          },
+          key: const ValueKey('menu-coach'),
+        ),
+        if (tournaments != null)
+          _tile(
+            Icons.emoji_events_outlined,
+            'Tornei',
+            'Un tabellone da affrontare partita dopo partita',
+            () => Navigator.pop(
+              context,
+              _SheetRun((context) async {
+                final page = await tournaments();
+                if (!context.mounted) return;
+                await Navigator.of(context)
+                    .push<void>(MaterialPageRoute(builder: (_) => page));
+              }),
+            ),
+            key: const ValueKey('menu-tournaments'),
+          ),
+      ],
+      const SizedBox(height: 8),
+      ExpansionTile(
+        key: const ValueKey('menu-more'),
+        tilePadding: EdgeInsets.zero,
+        title: const Text('Altre modalità'),
+        children: [
+          if (engine)
+            _tile(
+              Icons.tune,
+              'Partita personalizzata',
+              'Variante, handicap, colore e tempo',
+              () => setState(() => _view = _SheetView.custom),
+              key: const ValueKey('menu-custom'),
+            ),
+          _tile(
+            Icons.phone_android,
+            'Due giocatori sullo stesso telefono',
+            'Nomi, variante, handicap e tempo',
+            () => setState(() {
+              _setup = _setup.copyWith(opponent: Opponent.human);
+              _view = _SheetView.custom;
+            }),
+            key: const ValueKey('menu-two'),
+          ),
+          if (physical != null)
+            _tile(
+              Icons.timer_outlined,
+              'Scacchiera fisica',
+              'Orologio e registro per la partita sulla scacchiera vera',
+              () => Navigator.pop(
+                context,
+                _SheetRun(
+                  (context) => Navigator.of(
+                    context,
+                  ).push<void>(MaterialPageRoute(builder: (_) => physical())),
+                ),
+              ),
+              key: const ValueKey('menu-physical'),
+            ),
+        ],
+      ),
+    ];
+  }
+
+  List<Widget> _friendChildren(BuildContext context) => [
+    _header(context, 'Sfida un amico', back: _SheetView.menu),
+    _tile(
+      Icons.phone_android,
+      'Sullo stesso telefono',
+      'Vi passate il telefono: nomi, variante, handicap e tempo',
+      () => setState(() {
+        _setup = _setup.copyWith(opponent: Opponent.human);
+        _view = _SheetView.custom;
+      }),
+      key: const ValueKey('friend-same'),
+    ),
+    _tile(
+      Icons.smartphone,
+      'Ognuno sul suo telefono',
+      'Vicini o lontani: Wi-Fi, Bluetooth o a distanza',
+      () => setState(() => _view = _SheetView.friendApart),
+      key: const ValueKey('friend-apart'),
+    ),
+  ];
+
+  List<Widget> _friendApartChildren(BuildContext context) => [
+    _header(context, 'Ognuno sul suo telefono', back: _SheetView.friend),
+    const SizedBox(height: 16),
+    FriendGamePanel(
+      inCard: false,
+      clockBuilder: _friendClock,
+      // La partita a due telefoni prende il posto del foglio.
+      onGameClosed: () {
+        if (ModalRoute.of(context)?.isCurrent ?? false) Navigator.pop(context);
+      },
+    ),
+  ];
+
+  /// Cadenza della partita con un amico in presenza: si sceglie qui e la
+  /// partita parte dai comandi, non toccando una cadenza.
+  Widget _friendClock(
+    BuildContext context, {
+    required bool enabled,
+    required TimeControl? control,
+    required ValueChanged<TimeControl?> onChanged,
+  }) {
+    final theme = Theme.of(context);
+    Widget chip(String label, TimeControl? value) => ChoiceChip(
+      label: Text(label),
+      selected: control == value,
+      onSelected: enabled ? (_) => onChanged(value) : null,
+    );
+    final groups = <String, List<TimeControl>>{};
+    for (final t in TimeControl.presets) {
+      groups.putIfAbsent(t.category, () => []).add(t);
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Cadenza', style: theme.textTheme.titleSmall),
+        const SizedBox(height: 4),
+        chip('Senza tempo', null),
+        for (final entry in groups.entries) ...[
+          const SizedBox(height: 12),
+          Text(entry.key, style: theme.textTheme.labelLarge),
+          const SizedBox(height: 4),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [for (final t in entry.value) chip(t.label, t)],
+          ),
+        ],
+      ],
     );
   }
 

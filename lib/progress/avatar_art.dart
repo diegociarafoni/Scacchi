@@ -83,6 +83,22 @@ class _CharacterPainter extends CustomPainter {
         _wolf(canvas);
       case AvatarCharacter.star:
         _starFace(canvas);
+      case AvatarCharacter.butterfly:
+        _butterfly(canvas);
+      case AvatarCharacter.turtle:
+        _turtle(canvas);
+      case AvatarCharacter.violet:
+        _violet(canvas);
+      case AvatarCharacter.lion:
+        _lion(canvas);
+      case AvatarCharacter.bear:
+        _bear(canvas);
+      case AvatarCharacter.raccoon:
+        _raccoon(canvas);
+      case AvatarCharacter.astronomer:
+        _astronomer(canvas);
+      case AvatarCharacter.hatchling:
+        _hatchling(canvas);
     }
     _extras(canvas);
   }
@@ -502,6 +518,229 @@ class _CharacterPainter extends CustomPainter {
     _smile(c, y: 61);
   }
 
+  void _ring(Canvas c, Offset center, double r, Color color, double width) =>
+      c.drawCircle(
+        center,
+        r,
+        Paint()
+          ..color = color
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = width,
+      );
+
+  void _butterfly(Canvas c) {
+    const wing = Color(0xff4dd0e1);
+    const wingLow = Color(0xffba68c8);
+    for (final s in [-1.0, 1.0]) {
+      c.drawOval(
+        Rect.fromCenter(center: Offset(50 + s * 27, 44), width: 38, height: 44),
+        _fill(wing),
+      );
+      c.drawOval(
+        Rect.fromCenter(center: Offset(50 + s * 22, 72), width: 28, height: 28),
+        _fill(wingLow),
+      );
+      c.drawCircle(Offset(50 + s * 30, 42), 5, _fill(Colors.white54));
+      final p = Paint()
+        ..color = _ink
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.8
+        ..strokeCap = StrokeCap.round;
+      c.drawLine(Offset(50 + s * 8, 34), Offset(50 + s * 14, 18), p);
+      c.drawCircle(Offset(50 + s * 14, 18), 2.4, _fill(_star));
+    }
+    _head(c, const Color(0xffffccbc), r: 23, cy: 58);
+    _eyes(c, y: 55, gap: 9, r: 4.2);
+    _cheeks(c, y: 64, gap: 15);
+    _smile(c);
+  }
+
+  void _turtle(Canvas c) {
+    const shell = Color(0xff558b2f);
+    const skin = Color(0xff9ccc65);
+    c.drawOval(
+      Rect.fromCenter(center: const Offset(50, 80), width: 76, height: 40),
+      _fill(shell),
+    );
+    for (final x in [30.0, 50.0, 70.0]) {
+      c.drawOval(
+        Rect.fromCenter(center: Offset(x, 82), width: 14, height: 9),
+        _fill(const Color(0xff7cb342)),
+      );
+    }
+    _head(c, skin, r: 28, cy: 52);
+    _eyes(c, y: 49, gap: 11, r: 4.6);
+    _cheeks(c, y: 59, gap: 18);
+    _smile(c, y: 58);
+  }
+
+  void _violet(Canvas c) {
+    const petal = Color(0xff5e35b1);
+    for (var i = 0; i < 5; i++) {
+      final a = math.pi + (i + 0.5) * math.pi / 5;
+      c.drawCircle(
+        Offset(50 + 26 * math.cos(a), 56 + 26 * math.sin(a)),
+        10,
+        _fill(petal),
+      );
+    }
+    _head(c, const Color(0xffede7f6), r: 27, cy: 58);
+    _eyes(c, y: 56, gap: 10, r: 4.6);
+    _cheeks(c, y: 66, gap: 17);
+    _smile(c, y: 65);
+    // Nota musicale.
+    c.drawOval(
+      Rect.fromCenter(center: const Offset(85, 30), width: 9, height: 7),
+      _fill(_star),
+    );
+    c.drawLine(
+      const Offset(89, 30),
+      const Offset(89, 14),
+      Paint()
+        ..color = _star
+        ..strokeWidth = 2.4
+        ..strokeCap = StrokeCap.round,
+    );
+  }
+
+  void _lion(Canvas c) {
+    const mane = Color(0xffa1632a);
+    for (var i = 0; i < 12; i++) {
+      final a = i * math.pi / 6;
+      c.drawCircle(
+        Offset(50 + 31 * math.cos(a), 54 + 31 * math.sin(a)),
+        12,
+        _fill(mane),
+      );
+    }
+    _head(c, const Color(0xffffb74d), r: 26, cy: 55);
+    for (final s in [-1.0, 1.0]) {
+      c.drawCircle(Offset(50 + s * 20, 33), 6, _fill(const Color(0xffffb74d)));
+    }
+    _eyes(c, y: 51, gap: 10, r: 4.4);
+    c.drawPath(
+      _triangle(
+        const Offset(45, 59),
+        const Offset(55, 59),
+        const Offset(50, 65),
+      ),
+      _fill(const Color(0xff6d4c41)),
+    );
+    _smile(c, y: 67);
+  }
+
+  void _bear(Canvas c) {
+    const fur = Color(0xff6d4c41);
+    for (final s in [-1.0, 1.0]) {
+      c.drawCircle(Offset(50 + s * 25, 28), 11, _fill(fur));
+      c.drawCircle(
+        Offset(50 + s * 25, 28),
+        5.5,
+        _fill(const Color(0xffbcaaa4)),
+      );
+    }
+    _head(c, fur, r: 32);
+    c.drawOval(
+      Rect.fromCenter(center: const Offset(50, 68), width: 28, height: 21),
+      _fill(const Color(0xffd7ccc8)),
+    );
+    _eyes(c, y: 50, r: 4.6);
+    c.drawOval(
+      Rect.fromCenter(center: const Offset(50, 63), width: 10, height: 7),
+      _fill(_ink),
+    );
+    _smile(c, y: 69);
+  }
+
+  void _raccoon(Canvas c) {
+    const grey = Color(0xff90a4ae);
+    const mask = Color(0xff37474f);
+    for (final s in [-1.0, 1.0]) {
+      c.drawPath(
+        _triangle(
+          Offset(50 + s * 13, 34),
+          Offset(50 + s * 30, 16),
+          Offset(50 + s * 31, 44),
+        ),
+        _fill(grey),
+      );
+    }
+    _head(c, grey);
+    c.drawOval(
+      Rect.fromCenter(center: const Offset(50, 38), width: 9, height: 16),
+      _fill(Colors.white),
+    );
+    for (final s in [-1.0, 1.0]) {
+      c.drawOval(
+        Rect.fromCenter(center: Offset(50 + s * 14, 53), width: 24, height: 17),
+        _fill(mask),
+      );
+      c.drawCircle(Offset(50 + s * 13, 52), 6.5, _fill(Colors.white));
+    }
+    _eyes(c, r: 3.6);
+    c.drawOval(
+      Rect.fromCenter(center: const Offset(50, 65), width: 9, height: 6),
+      _fill(_ink),
+    );
+    _smile(c, y: 70);
+  }
+
+  void _astronomer(Canvas c) {
+    const hair = Color(0xff4e342e);
+    c.drawCircle(const Offset(50, 22), 11, _fill(hair));
+    _head(c, const Color(0xffffccbc), r: 30, cy: 58);
+    c.drawPath(
+      Path()
+        ..moveTo(20, 54)
+        ..arcToPoint(const Offset(80, 54), radius: const Radius.circular(30))
+        ..quadraticBezierTo(50, 40, 20, 54),
+      _fill(hair),
+    );
+    _eyes(c, y: 56, gap: 12, r: 3.6);
+    for (final s in [-1.0, 1.0]) {
+      _ring(c, Offset(50 + s * 12, 56), 9.5, _ink, 2);
+    }
+    c.drawLine(
+      const Offset(47, 55),
+      const Offset(53, 55),
+      Paint()
+        ..color = _ink
+        ..strokeWidth = 2,
+    );
+    _cheeks(c, y: 68, gap: 19);
+    _smile(c, y: 68);
+    c.drawCircle(const Offset(72, 36), 4, _fill(_star));
+  }
+
+  void _hatchling(Canvas c) {
+    _head(c, _star, r: 27, cy: 54);
+    _eyes(c, y: 51, gap: 10, r: 4.6);
+    _cheeks(c, y: 61, gap: 17);
+    c.drawPath(
+      _triangle(
+        const Offset(45, 57),
+        const Offset(55, 57),
+        const Offset(50, 65),
+      ),
+      _fill(const Color(0xffff9800)),
+    );
+    // Guscio: la base a zig zag, il pulcino è appena nato.
+    final shell = Path()..moveTo(14, 68);
+    for (var i = 0; i < 6; i++) {
+      shell
+        ..lineTo(14 + i * 14.4 + 7.2, 78)
+        ..lineTo(14 + (i + 1) * 14.4, 68);
+    }
+    shell
+      ..lineTo(86, 100)
+      ..lineTo(14, 100)
+      ..close();
+    c.drawPath(shell, _fill(const Color(0xfffff3e0)));
+  }
+
   @override
-  bool shouldRepaint(_CharacterPainter old) => old.character != character;
+  bool shouldRepaint(_CharacterPainter old) =>
+      old.character != character ||
+      old.expression != expression ||
+      old.background != background;
 }
