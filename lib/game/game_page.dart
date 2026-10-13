@@ -1531,6 +1531,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// donna, senza il selettore.
   bool _playPremove(Move premove) {
     if (_game.isOver || !_humanToMove) return false;
+    // Le impostazioni possono cambiare mentre il computer pensa.
+    if (!_settings.premove || _settings.kidMode || _settings.confirmMove) {
+      return false;
+    }
     final position = _game.position;
     var move = premove;
     if (move is NormalMove && move.promotion == null) {

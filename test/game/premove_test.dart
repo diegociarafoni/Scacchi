@@ -21,8 +21,9 @@ Future<void> _thinkingAfterE4(
   WidgetTester tester, {
   bool premove = true,
   bool confirm = false,
+  SettingsController? controller,
 }) async {
-  final settings = SettingsController.defaults();
+  final settings = controller ?? SettingsController.defaults();
   await settings.update(
     settings.value.copyWith(premove: premove, confirmMove: confirm),
   );
@@ -112,6 +113,31 @@ void main() {
     tester,
   ) async {
     await _thinkingAfterE4(tester, confirm: true);
+    await _tap(tester, 'g1', 'f3');
+    expect(_premove(tester), isNull);
+    await tester.pump(const Duration(seconds: 4));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('2. '), findsNothing);
+  });
+
+  testWidgets('RF-08 trascinare un proprio pezzo non scorre le mosse', (
+    tester,
+  ) async {
+    await _thinkingAfterE4(tester);
+    await tester.dragFrom(square(tester, 'b1'), const Offset(-150, 0));
+    await tester.pump();
+    expect(find.textContaining('Posizione dopo'), findsNothing);
+    expect(find.text('Posizione iniziale'), findsNothing);
+    await tester.pump(const Duration(seconds: 4));
+    await tester.pumpAndSettle();
+  });
+
+  testWidgets('RF-08 spegnendo la premossa mentre pensa non si può più '
+      'premuovere', (tester) async {
+    final settings = SettingsController.defaults();
+    await _thinkingAfterE4(tester, controller: settings);
+    await settings.update(settings.value.copyWith(premove: false));
+    await tester.pump();
     await _tap(tester, 'g1', 'f3');
     expect(_premove(tester), isNull);
     await tester.pump(const Duration(seconds: 4));
