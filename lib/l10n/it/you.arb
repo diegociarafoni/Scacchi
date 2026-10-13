@@ -25,14 +25,6 @@
       }
     }
   },
-  "youGroupLearn": "Impara",
-  "@youGroupLearn": {
-    "description": "Intestazione del gruppo"
-  },
-  "youGroupPlay": "Gioca",
-  "@youGroupPlay": {
-    "description": "Intestazione del gruppo"
-  },
   "youGroupData": "I miei dati",
   "@youGroupData": {
     "description": "Intestazione del gruppo"

@@ -29,7 +29,7 @@ void main() {
   });
   tearDown(() => dir.deleteSync(recursive: true));
 
-  Future<void> openTu(WidgetTester tester, {required bool computer}) async {
+  Future<void> openHome(WidgetTester tester, {required bool computer}) async {
     tester.view.physicalSize = const Size(1170, 2532);
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
@@ -48,17 +48,21 @@ void main() {
         ),
       ),
     );
-    await tester.tap(find.text('Tu'));
     await tester.pumpAndSettle();
   }
 
   testWidgets('RF-86 senza motore la voce Finali non compare', (tester) async {
-    await openTu(tester, computer: false);
+    await openHome(tester, computer: false);
     expect(find.text('Finali'), findsNothing);
   });
 
-  testWidgets('RF-86 dalla scheda Tu si aprono i finali', (tester) async {
-    await openTu(tester, computer: true);
+  testWidgets('RF-86 dalla Home si aprono i finali', (tester) async {
+    await openHome(tester, computer: true);
+    await tester.scrollUntilVisible(
+      find.text('Finali'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.tap(find.text('Finali'));
     await tester.pumpAndSettle();
     expect(find.byType(EndgamesPage), findsOneWidget);

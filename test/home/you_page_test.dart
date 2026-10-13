@@ -63,16 +63,16 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  testWidgets('la scheda Tu porta a profilo, storia e altro', (tester) async {
+  testWidgets('la scheda Tu porta a profilo, badge, statistiche e archivio', (
+    tester,
+  ) async {
     await show(tester);
     expect(find.text('Livello 1'), findsOneWidget);
     for (final label in [
       'Profilo',
-      'Storia',
-      'Minigiochi',
+      'Badge',
       'Statistiche',
       'La tua settimana',
-      'Scacchiera fisica',
       'Archivio',
     ]) {
       // La lista è lunga: con caratteri più larghi le ultime voci stanno fuori.
@@ -84,12 +84,6 @@ void main() {
       expect(find.text(label), findsOneWidget, reason: label);
     }
     await tester.drag(find.byType(Scrollable).first, const Offset(0, 5000));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.text('Minigiochi'));
-    await tester.pumpAndSettle();
-    expect(find.widgetWithText(AppBar, 'Minigiochi'), findsOneWidget);
-    await tester.tap(find.byTooltip('Indietro'));
     await tester.pumpAndSettle();
 
     await tester.tap(find.text('Profilo'));
@@ -121,15 +115,10 @@ void main() {
     final settings = SettingsController.defaults();
     await settings.update(settings.value.copyWith(kidMode: true));
     await show(tester, settings: settings);
-    for (final label in [
-      'Profilo',
-      'Storia',
-      'Minigiochi',
-      'La tua settimana',
-    ]) {
+    for (final label in ['Profilo', 'La tua settimana']) {
       expect(find.text(label), findsOneWidget, reason: label);
     }
-    for (final label in ['Statistiche', 'Scacchiera fisica', 'Archivio']) {
+    for (final label in ['Badge', 'Statistiche', 'Archivio']) {
       expect(find.text(label), findsNothing, reason: label);
     }
 
@@ -158,32 +147,39 @@ void main() {
     );
   });
 
-  group('U5 scheda a gruppi', () {
+  group('scheda Tu solo dati', () {
     // «Gioca» è anche l'etichetta della barra di navigazione.
     Finder inList(String text) =>
         find.descendant(of: find.byType(ListView), matching: find.text(text));
     double top(WidgetTester tester, String text) =>
         tester.getTopLeft(inList(text)).dy;
 
-    testWidgets('tre gruppi con intestazione, nell\'ordine Impara-Gioca-Dati', (
+    testWidgets('un solo gruppo di dati, senza Impara né Gioca', (
       tester,
     ) async {
       await show(tester);
-      for (final h in ['Impara', 'Gioca', 'I miei dati']) {
-        expect(inList(h), findsOneWidget, reason: h);
-      }
-      expect(top(tester, 'Impara'), lessThan(top(tester, 'Storia')));
-      expect(top(tester, 'Storia'), lessThan(top(tester, 'Gioca')));
-      expect(top(tester, 'Minigiochi'), lessThan(top(tester, 'I miei dati')));
+      expect(inList('I miei dati'), findsOneWidget);
       expect(top(tester, 'I miei dati'), lessThan(top(tester, 'Profilo')));
+      expect(inList('Impara'), findsNothing);
+      for (final moved in [
+        'Storia',
+        'Finali',
+        'Grandi maestri',
+        'Tornei',
+        'Minigiochi',
+        'Scacchiera fisica',
+        'Gioca con un amico',
+      ]) {
+        expect(inList(moved), findsNothing, reason: moved);
+      }
     });
 
-    testWidgets('le intestazioni sono annunciate come tali', (tester) async {
+    testWidgets('l\'intestazione è annunciata come tale', (tester) async {
       final handle = tester.ensureSemantics();
       await show(tester);
       expect(
-        tester.getSemantics(inList('Impara')),
-        matchesSemantics(label: 'Impara', isHeader: true),
+        tester.getSemantics(inList('I miei dati')),
+        matchesSemantics(label: 'I miei dati', isHeader: true),
       );
       handle.dispose();
     });
@@ -195,7 +191,7 @@ void main() {
       expect(find.text('Continua da dove eri'), findsOneWidget);
       expect(
         top(tester, 'Continua da dove eri'),
-        lessThan(top(tester, 'Impara')),
+        lessThan(top(tester, 'I miei dati')),
       );
       await tester.tap(find.text('Continua da dove eri'));
       await tester.pumpAndSettle();
@@ -209,7 +205,7 @@ void main() {
       tester.platformDispatcher.textScaleFactorTestValue = 1.3;
       addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
       await show(tester);
-      for (final label in ['Storia', 'Minigiochi', 'Profilo']) {
+      for (final label in ['Badge', 'Statistiche', 'Profilo']) {
         await tester.scrollUntilVisible(
           find.text(label),
           200,
@@ -228,16 +224,14 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('profilo bambino: gruppi ridotti, senza voci per adulti', (
+    testWidgets('profilo bambino: solo i dati, senza voci per adulti', (
       tester,
     ) async {
       final settings = SettingsController.defaults();
       await settings.update(settings.value.copyWith(kidMode: true));
       await show(tester, settings: settings);
-      for (final h in ['Impara', 'Gioca', 'I miei dati']) {
-        expect(inList(h), findsOneWidget, reason: h);
-      }
-      for (final hidden in ['Statistiche', 'Archivio', 'Tornei']) {
+      expect(inList('I miei dati'), findsOneWidget);
+      for (final hidden in ['Badge', 'Statistiche', 'Archivio', 'Tornei']) {
         expect(find.text(hidden), findsNothing, reason: hidden);
       }
     });
@@ -276,7 +270,7 @@ void main() {
       expect(find.text('Continue where you left off'), findsOneWidget);
       expect(
         find.descendant(of: find.byType(YouPage), matching: find.text('Learn')),
-        findsOneWidget,
+        findsNothing,
       );
       expect(find.text('Your data'), findsOneWidget);
       expect(find.text('Level 1'), findsOneWidget);

@@ -29,7 +29,7 @@ void main() {
   });
   tearDown(() => dir.deleteSync(recursive: true));
 
-  testWidgets('RG-13 dalla scheda Tu si apre la storia', (tester) async {
+  testWidgets('RG-13 dalla Home si apre la storia', (tester) async {
     tester.view.physicalSize = const Size(1170, 2532);
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
@@ -46,7 +46,6 @@ void main() {
         ),
       ),
     );
-    await tester.tap(find.text('Tu'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Storia'));
     await tester.pumpAndSettle();

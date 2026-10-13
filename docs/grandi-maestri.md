@@ -1,6 +1,6 @@
 # Partite dei grandi maestri
 
-Requisiti RF-87 (raccolta di partite storiche da sfogliare con commento) e RF-88 («Indovina la mossa»). Il codice è in `lib/masters/`. Funziona senza rete e senza motore, quindi la voce **Grandi maestri** della scheda Tu c'è su ogni piattaforma e anche nel profilo bambino.
+Requisiti RF-87 (raccolta di partite storiche da sfogliare con commento) e RF-88 («Indovina la mossa»). Il codice è in `lib/masters/`. Funziona senza rete e senza motore, quindi la voce **Grandi maestri** si apre dalla Home e c'è su ogni piattaforma e anche nel profilo bambino.
 
 ## La raccolta
 
@@ -44,4 +44,4 @@ Per aggiungere una partita basta una nuova voce in `masterGames`: il test la pre
 
 ## Test
 
-`test/masters/` (vedi [sviluppo.md](sviluppo.md)): legalità e risultato di ogni partita, `GuessRun`, progresso e controller, schermate; `test/home/home_masters_test.dart` per la voce della scheda Tu e `integration_test/masters_test.dart` per il percorso completo sull'app reale.
+`test/masters/` (vedi [sviluppo.md](sviluppo.md)): legalità e risultato di ogni partita, `GuessRun`, progresso e controller, schermate; `test/home/home_masters_test.dart` per la voce della Home e `integration_test/masters_test.dart` per il percorso completo sull'app reale.
