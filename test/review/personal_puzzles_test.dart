@@ -41,7 +41,7 @@ void main() {
       expect(puzzles, hasLength(1));
       final p = puzzles.single;
       expect(p.id, 'mio-g1-5');
-      // Formato Lichess: si parte dalla mossa precedente dell'avversario.
+      // Formato standard: si parte dalla mossa precedente dell'avversario.
       expect(p.fen, review.moves[4].fenBefore);
       expect(p.moves.map((m) => m.uci), ['d1h5', 'g7g6']);
       expect(p.themes, containsAll(['defensiveMove', 'opening']));

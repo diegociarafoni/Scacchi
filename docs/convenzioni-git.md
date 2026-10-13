@@ -61,7 +61,7 @@ Il controllo è in `tool/check_commit_msg.dart` e gira in locale (hook `commit-m
 |---|---|
 | `pre-commit` | formattazione dei file Dart in commit, `dart tool/l10n.dart` e `flutter analyze --fatal-infos --fatal-warnings`, Gitleaks sui file in commit |
 | `commit-msg` | messaggio secondo la convenzione Angular |
-| `pre-push` | nome dei rami di destinazione, che blocca anche `git push origin main` da qualsiasi ramo; messaggi di tutti i commit del ramo (gli stessi della CI); documentazione (`tool/check_docs.dart`); nessun sottomodulo nell'indice; test senza golden (i golden dipendono dal sistema operativo e girano in CI su Linux) |
+| `pre-push` | nome dei rami di destinazione, che blocca anche `git push origin main` da qualsiasi ramo; messaggi di tutti i commit del ramo (gli stessi della CI); documentazione (`tool/check_docs.dart`); commenti (`tool/check_comments.dart`); nessun sottomodulo nell'indice; test senza golden (i golden dipendono dal sistema operativo e girano in CI su Linux) |
 
 Installazione, una volta per clone:
 
@@ -80,9 +80,13 @@ Dove gli hook non sono installati (per esempio le sessioni di Claude Code) si la
 tool/verifica.sh --titolo "feat(game): titolo della PR" --test
 ```
 
-Controlla nome del ramo, messaggi dei commit dal punto in cui il ramo si stacca da `main`, titolo della PR (facoltativo), documentazione (`tool/check_docs.dart`: link, percorsi citati, indice e [mappa del codice](mappa-del-codice.md)), testi tradotti (`tool/l10n.dart`, `tool/stringhe_fisse.dart`, `tool/l10n_stato.dart`), formattazione e analisi; con `--test` anche i test senza golden, cioè senza l'etichetta `golden` dichiarata in `dart_test.yaml`. Segnala inoltre un sottomodulo nell'indice, di solito una copia di lavoro di Claude Code (`.claude/worktrees/…`) aggiunta per errore, che in CI fa fallire il checkout con «No url found for submodule path»: la cartella è in `.gitignore`, e un errore già commesso si toglie con `git rm --cached <percorso>`.
+Controlla nome del ramo, messaggi dei commit dal punto in cui il ramo si stacca da `main`, titolo della PR (facoltativo), documentazione (`tool/check_docs.dart`: link, percorsi citati, indice e [mappa del codice](mappa-del-codice.md)), commenti (`tool/check_comments.dart`), testi tradotti (`tool/l10n.dart`, `tool/stringhe_fisse.dart`, `tool/l10n_stato.dart`), formattazione e analisi; con `--test` anche i test senza golden, cioè senza l'etichetta `golden` dichiarata in `dart_test.yaml`. Segnala inoltre un sottomodulo nell'indice, di solito una copia di lavoro di Claude Code (`.claude/worktrees/…`) aggiunta per errore, che in CI fa fallire il checkout con «No url found for submodule path»: la cartella è in `.gitignore`, e un errore già commesso si toglie con `git rm --cached <percorso>`.
 
 Per un'emergenza `git commit --no-verify` salta gli hook, ma la CI esegue comunque gli stessi controlli.
+
+## Commenti nel codice
+
+I commenti sono solo funzionali, brevi e sul perché: niente cronaca, riferimenti a PR o thread, descrizioni di ciò che il codice dice già. `tool/check_comments.dart` blocca in automatico i commenti che nominano app concorrenti, rimandano a una PR o a un'issue (`PR #12`, `(#240)`) o contengono `TODO`, `FIXME`, `XXX`, `HACK` senza la forma `TODO: motivo` di almeno una frase; un commento con un indirizzo web è una fonte e non si controlla. Il resto lo giudica la revisione.
 
 ## Processo di merge
 
