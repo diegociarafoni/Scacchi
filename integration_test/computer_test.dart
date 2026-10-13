@@ -56,6 +56,8 @@ Future<void> _startComputerGame(
   addTearDown(tester.view.reset);
   await tester.pumpWidget(
     MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: GamePage(
         settings: SettingsController.defaults(),
         computerAvailable: true,
