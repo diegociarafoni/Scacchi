@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'dart:ui' show Locale;
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -188,19 +186,6 @@ void main() {
       expect(Content.of('uno').text('a'), 'AA');
       expect(Content.of('due').text('b'), 'B');
       expect(Content.isLoaded, isTrue);
-    });
-  });
-
-  group('contentLanguage', () {
-    const supported = [Locale('it'), Locale('en')];
-
-    test('segue la lingua del dispositivo se è supportata', () {
-      expect(contentLanguage(const Locale('en', 'US'), supported), 'en');
-      expect(contentLanguage(const Locale('it'), supported), 'it');
-    });
-
-    test('una lingua non supportata ripiega sull\'italiano', () {
-      expect(contentLanguage(const Locale('ja'), supported), 'it');
     });
   });
 }

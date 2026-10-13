@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ui' show Locale;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -184,10 +183,3 @@ abstract final class Content {
     ];
   }
 }
-
-/// Lingua dei contenuti per il dispositivo: la sua se l'app la supporta,
-/// altrimenti l'italiano.
-String contentLanguage(Locale device, Iterable<Locale> supported) =>
-    supported.any((l) => l.languageCode == device.languageCode)
-    ? device.languageCode
-    : 'it';
