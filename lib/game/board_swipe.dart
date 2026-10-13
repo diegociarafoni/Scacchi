@@ -1,4 +1,5 @@
 import 'package:dartchess/dartchess.dart';
+import 'package:flutter/foundation.dart' show ValueListenable;
 import 'package:flutter/widgets.dart';
 
 /// Rileva lo scorrimento orizzontale su una scacchiera di lato [size] senza
@@ -14,6 +15,7 @@ class BoardSwipe extends StatefulWidget {
     required this.onSwipe,
     required this.child,
     this.enabled = true,
+    this.blocked,
   });
 
   final double size;
@@ -22,6 +24,9 @@ class BoardSwipe extends StatefulWidget {
   final ValueChanged<int> onSwipe;
   final Widget child;
   final bool enabled;
+
+  /// Vero mentre un altro gesto (il disegno di una freccia) usa il dito.
+  final ValueListenable<bool>? blocked;
 
   /// Spostamento minimo, in casa, perché il gesto conti come scorrimento.
   static const minTravel = 1.5;
@@ -67,7 +72,10 @@ class _BoardSwipeState extends State<BoardSwipe> {
   }
 
   void _up(PointerUpEvent event) {
-    final tracked = _tracked == event.pointer && _pointers.length == 1;
+    final tracked =
+        _tracked == event.pointer &&
+        _pointers.length == 1 &&
+        widget.blocked?.value != true;
     _pointers.remove(event.pointer);
     if (!tracked) return;
     _tracked = null;
