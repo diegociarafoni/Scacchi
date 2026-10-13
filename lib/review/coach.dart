@@ -83,7 +83,7 @@ String _praise(AppLocalizations l, MoveClass c) => switch (c) {
   MoveClass.inaccuracy ||
   MoveClass.mistake ||
   MoveClass.miss ||
-  MoveClass.blunder => throw StateError('$c non è una mossa da lodare'),
+  MoveClass.blunder => throw StateError('$c is not praiseworthy'),
 };
 
 CoachComment? _allowedMate(
