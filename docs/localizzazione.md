@@ -8,7 +8,7 @@ Requisito RP-05: italiano come lingua predefinita, con la struttura pronta per a
 - La lingua dell'app si sceglie in **Impostazioni → Accessibilità → Lingua**: «Come il telefono» (predefinita), Italiano, English o Português (`AppLanguage` in `lib/settings/app_language.dart`, salvata come `language`). `MaterialApp.locale` in `lib/main.dart` è quella scelta, o `null` per seguire il telefono; `resolveAppLocale` (`localeListResolutionCallback`) prende la prima lingua del telefono tra quelle supportate e, se non ce n'è, usa l'italiano. `l10n.yaml` indica l'italiano come lingua preferita. I nomi delle lingue nella scelta restano nella lingua stessa.
 - Su iOS e macOS la regione di sviluppo è l'italiano; le finestre native del sistema (condivisione, permessi) seguono la lingua del dispositivo se è italiano o inglese, altrimenti usano l'italiano. I testi dei permessi di iOS (`NSCameraUsageDescription` e simili) hanno una traduzione per lingua in `ios/Runner/<lingua>.lproj/InfoPlist.strings`; `Info.plist` conserva l'italiano come ripiego. Su Android 13+ `res/xml/locales_config.xml` elenca le lingue dell'app per la scelta lingua per app del sistema.
 - Il nome sotto l'icona non viene da `appTitle`: è `android:label` in `android/app/src/main/AndroidManifest.xml` e `CFBundleDisplayName` in `ios/Runner/Info.plist`.
-- Sono dichiarate italiano, inglese e portoghese (`supportedLocales`, e `CFBundleLocalizations` su iOS e macOS). Sono tradotti il nome dell'app, i testi del profilo bambino (prefissi `kid`, `kidGame`, `kidBot`), quelli dello scambio QR (prefisso `qr`), quelli dei badge (prefissi `badge` e `badges`), quelli dell'esportazione come immagine (prefisso `shareImage`), quelli della scacchiera fisica (prefisso `physical`), il profilo con traguardi, sfide, serie e promemoria (prefisso `progress`), la revisione della partita e i commenti dell'allenatore (prefisso `review`), i suggerimenti (`coachHint`), l'analisi (`analysis`), l'archivio (`archive`), la scheda settimanale (`portrait`) e le schermate elencate in [Schermate migrate](#schermate-migrate). Restano in italiano nel codice i testi elencati in [Testi da spostare](#testi-da-spostare).
+- Sono dichiarate italiano, inglese, portoghese e spagnolo (`supportedLocales`, e `CFBundleLocalizations` su iOS e macOS). Sono tradotti il nome dell'app, i testi del profilo bambino (prefissi `kid`, `kidGame`, `kidBot`), quelli dello scambio QR (prefisso `qr`), quelli dei badge (prefissi `badge` e `badges`), quelli dell'esportazione come immagine (prefisso `shareImage`), quelli della scacchiera fisica (prefisso `physical`), il profilo con traguardi, sfide, serie e promemoria (prefisso `progress`), la revisione della partita e i commenti dell'allenatore (prefisso `review`), i suggerimenti (`coachHint`), l'analisi (`analysis`), l'archivio (`archive`), la scheda settimanale (`portrait`) e le schermate elencate in [Schermate migrate](#schermate-migrate). Restano in italiano nel codice i testi elencati in [Testi da spostare](#testi-da-spostare).
 
 ## Lingue di destinazione
 
@@ -16,7 +16,7 @@ L'italiano è la lingua base e il modello degli `.arb`; inglese e portoghese del
 
 I termini scacchistici e le regole di stile di ogni lingua sono in [glossario-scacchistico.md](glossario-scacchistico.md); per il portoghese del Brasile in [glossario-portoghese.md](glossario-portoghese.md). Chi traduce o rilegge parte da lì.
 
-Sono dichiarati italiano, inglese e portoghese (`tool/lingue.json`); italiano e inglese restano obbligatori in ogni modifica ai testi.
+Sono dichiarati italiano, inglese, portoghese e spagnolo (`tool/lingue.json`); italiano e inglese restano obbligatori in ogni modifica ai testi.
 
 ## File
 
@@ -121,3 +121,12 @@ Nei test dei widget il telefono è simulato in italiano (`test/support/italian_d
 - Stile: francese di Francia, «tu»; virgolette « … » con spazio non separabile, spazio sottile non separabile prima di `;` `!` `?`, spazio non separabile prima di `:`. Nei plurali `one` copre 0 e 1, per questo il ramo `one` usa `{count}`.
 - `test/l10n/french_screens_test.dart` monta partita, Impostazioni e una tappa del Percorso in francese.
 - Voci del glossario da confermare per il francese: «mat du fou», «Roi/Dame» dei gambetti (`Gambit roi`, `Gambit dame`), «Toi» per la scheda Tu, «bouclier/gel de série» e «Challenger».
+
+## Spagnolo
+
+- Codice `es`: spagnolo neutro, senza regionalismi; un telefono in qualunque variante dello spagnolo riceve questa traduzione.
+- Testi in `lib/l10n/es/*.arb` (stesse chiavi dell'italiano, plurali `one`/`other`). Stato `beta` in `tool/lingue.json`: passa a `pronta` quando arrivano anche i contenuti in `assets/content/es/*.json` (percorso, finali, maestri, bot, nomi delle aperture).
+- Registrazione: `AppLanguage.spanish`, `tool/lingue.json`, `android/app/src/main/res/xml/locales_config.xml`, `CFBundleLocalizations` (iOS e macOS) e `ios/Runner/es.lproj/InfoPlist.strings` (anche nel progetto Xcode).
+- Regole di stile e termini: [glossario-scacchistico.md](glossario-scacchistico.md), colonna Español: tú, virgolette «…», `¿…?` e `¡…!` sempre aperti e chiusi, notazione R D T A C.
+- Scelte da confermare nella rilettura: «insignia» (badge), «marco» (cornice dell'avatar), «Rápidas» (Rapid), «subpromoción», «puntuación» (rating), «etapa» (tappa), «protector de racha» (streak freeze), «Muy buena» (Great), «ventaja» (handicap) e «computadora» per il computer.
+- Test: `test/l10n/lingua_es_test.dart` (chiavi, argomenti, plurali, segni `¿¡` in coppia e schermate campione su tre dimensioni di telefono).

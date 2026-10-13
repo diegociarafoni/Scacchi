@@ -1,0 +1,156 @@
+{
+  "bot.start": [
+    "¡Hola, soy {name}! Hoy jugamos {opening}.",
+    "{name} ya está en el tablero: ¡que disfrutes de la partida!"
+  ],
+  "bot.start.friendly": [
+    "¡Hola, soy {name}!",
+    "Soy {name}, ¿jugamos juntos?"
+  ],
+  "bot.friendly.check": [
+    "¡Jaque! Pon a salvo a tu rey.",
+    "¡Jaque! ¿Adónde irá el rey?"
+  ],
+  "bot.friendly.capture": [
+    "¡Me he comido una pieza!",
+    "¡Ya la tengo! Ahora te toca a ti."
+  ],
+  "bot.friendly.mistake": [
+    "Tómate tu tiempo.",
+    "¡Mira bien el tablero!"
+  ],
+  "bot.friendly.win": [
+    "¡Qué buena partida! ¿Jugamos otra?",
+    "Esta la he ganado yo, ¿revancha?"
+  ],
+  "bot.friendly.loss": [
+    "¡Has ganado, enhorabuena!",
+    "¡Hurra, has ganado!"
+  ],
+  "bot.friendly.draw": [
+    "¡Tablas! Una gran partida.",
+    "¡Empate! Los dos lo hemos hecho muy bien."
+  ],
+  "bot.friendly.chat": [
+    "¡Qué partida más buena!",
+    "¡Nos estamos divirtiendo!",
+    "¡Te toca!"
+  ],
+  "bot.aggressive.check": [
+    "¡Jaque! No te dejo ni respirar.",
+    "¡Jaque, al ataque!"
+  ],
+  "bot.aggressive.capture": [
+    "¡Mía! Seguimos al ataque.",
+    "Una pieza menos para ti."
+  ],
+  "bot.aggressive.mistake": [
+    "Gracias por el regalo, me lo quedo.",
+    "Uy, ahí has patinado."
+  ],
+  "bot.aggressive.win": [
+    "¡Jaque mate! Qué batalla.",
+    "¡Victoria! ¿Revancha?"
+  ],
+  "bot.aggressive.loss": [
+    "Me has ganado, ¡bien jugado!",
+    "Enhorabuena, me has chamuscado."
+  ],
+  "bot.aggressive.draw": [
+    "Tablas: yo quería más, pero vale.",
+    "Tablas, pero la próxima vez ataco más fuerte."
+  ],
+  "bot.aggressive.chat": [
+    "¡Atacamos, no esperamos!",
+    "No le tengo miedo a nada.",
+    "Mueve, que estoy pisándote los talones."
+  ],
+  "bot.positional.check": [
+    "Jaque, sin prisa.",
+    "Jaque: la posición lo permite."
+  ],
+  "bot.positional.capture": [
+    "Un cambio que me conviene.",
+    "Una captura tranquila, la estructura aguanta."
+  ],
+  "bot.positional.mistake": [
+    "Esa jugada te costará posición.",
+    "Un error de plan, diría yo."
+  ],
+  "bot.positional.win": [
+    "Jaque mate: el plan ha funcionado.",
+    "Victoria, gracias por la partida."
+  ],
+  "bot.positional.loss": [
+    "Has jugado mejor, enhorabuena.",
+    "Me has superado posicionalmente, bien hecho."
+  ],
+  "bot.positional.draw": [
+    "Unas tablas equilibradas, es justo.",
+    "Unas tablas honestas."
+  ],
+  "bot.positional.chat": [
+    "Me tomo mi tiempo: la posición lo merece.",
+    "Aquí la estructura importa.",
+    "Sin prisa, lo juego con calma."
+  ],
+  "bot.gambitist.check": [
+    "¡Jaque! El sacrificio ha merecido la pena.",
+    "Jaque, y lo mejor aún está por llegar."
+  ],
+  "bot.gambitist.capture": [
+    "Recupero el material con intereses.",
+    "¡Mía! El gambito da sus frutos."
+  ],
+  "bot.gambitist.mistake": [
+    "¡Has aceptado mal el gambito!",
+    "Cuidado, aquí había algo mejor."
+  ],
+  "bot.gambitist.win": [
+    "¡Jaque mate! El sacrificio ha dado fruto.",
+    "Ganada, y qué espectáculo."
+  ],
+  "bot.gambitist.loss": [
+    "El gambito no ha bastado, bien hecho.",
+    "Te has defendido de maravilla, todo el mérito es tuyo."
+  ],
+  "bot.gambitist.draw": [
+    "Tablas: mucho humo y nada más.",
+    "Tablas, pero qué partida tan animada."
+  ],
+  "bot.gambitist.chat": [
+    "¿Un peón más o menos? ¡Qué más da!",
+    "Lo mejor aún está por llegar.",
+    "Me gusta cuando nos arriesgamos."
+  ],
+  "bot.opening.lia": "el gambito de rey",
+  "bot.opening.pino": "la apertura italiana",
+  "bot.opening.nico": "el sistema Londres",
+  "bot.opening.chiara": "el gambito de dama",
+  "bot.opening.viola": "la apertura escocesa",
+  "bot.opening.rocco": "el gambito de rey",
+  "bot.opening.ettore": "la variante de cambios de la Española",
+  "bot.opening.marta": "la apertura inglesa",
+  "bot.opening.bruna": "la defensa francesa",
+  "bot.opening.duilio": "la Siciliana",
+  "bot.opening.carlo": "el gambito Budapest",
+  "bot.opening.elena": "la Española (Ruy López)",
+  "bot.opening.ada": "la apertura inglesa",
+  "bot.opening.luna": "la Catalana",
+  "bot.opening.massimo": "el gambito Evans",
+  "bot.opening.cosmo": "el gambito Smith-Morra",
+  "bot.opening.stella": "la defensa india de rey",
+  "bot.opening.tino": "la apertura de peón de rey",
+  "level.1.name": "Principiante",
+  "level.2.name": "Novato",
+  "level.3.name": "Aficionado",
+  "level.4.name": "Jugador de club",
+  "level.5.name": "Competidor",
+  "level.6.name": "Experto",
+  "level.7.name": "Maestro",
+  "level.8.name": "Campeón",
+  "level.0.name": "Primeros pasos",
+  "style.aggressive": "agresivo",
+  "style.positional": "posicional",
+  "style.gambitist": "jugador de gambitos"
+}

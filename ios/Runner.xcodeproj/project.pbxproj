@@ -45,6 +45,7 @@
 /* Begin PBXFileReference section */
 		A1B2C3D41E8F000100AB0001 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		A1B2C3D41E8F000100AB0002 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		A1B2C3D41E8F000100AB0071 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		A1B2C3D41E8F000100AB0070 /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		A1B2C3D41E8F000100AB0005 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
@@ -206,6 +207,7 @@
 				it,
 				pt,
 				fr,
+				es,
 				Base,
 			);
 			mainGroup = 97C146E51CF9000F007C117D;
@@ -331,6 +333,7 @@
 				A1B2C3D41E8F000100AB0002 /* it */,
 				A1B2C3D41E8F000100AB0070 /* pt */,
 				A1B2C3D41E8F000100AB0005 /* fr */,
+				A1B2C3D41E8F000100AB0071 /* es */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
