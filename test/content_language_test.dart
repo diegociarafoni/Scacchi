@@ -8,7 +8,7 @@ import 'content_support.dart';
 void main() {
   testWidgets('i contenuti si caricano nella lingua scelta', (tester) async {
     SharedPreferences.setMockInitialValues({'language': 'french'});
-    addTearDown(() => useContent());
+    addTearDown(useContent);
     Content.reset();
     await tester.pumpWidget(const ScacchiApp());
     await tester.runAsync(() async {
