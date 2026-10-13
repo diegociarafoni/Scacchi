@@ -1,7 +1,10 @@
 import 'package:dartchess/dartchess.dart';
+import 'package:flutter/widgets.dart' show Locale;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/game/chess_game.dart';
 import 'package:scacchi/game/clock.dart';
+import 'package:scacchi/game/clock_l10n.dart';
+import 'package:scacchi/l10n/app_localizations.dart';
 
 class FakeTime {
   DateTime now = DateTime(2026);
@@ -9,6 +12,19 @@ class FakeTime {
 }
 
 void main() {
+  test('le cadenze sono raggruppate per famiglia con nome tradotto', () {
+    final it = lookupAppLocalizations(const Locale('it'));
+    expect(TimeControl.presets.first.category, TimeCategory.bullet);
+    expect(const TimeControl(minutes: 5).category, TimeCategory.blitz);
+    expect(
+      const TimeControl(minutes: 15, increment: 10).category,
+      TimeCategory.rapid,
+    );
+    for (final c in TimeCategory.values) {
+      expect(timeCategoryName(it, c), isNotEmpty);
+    }
+  });
+
   test('RF-40 cadenze predefinite', () {
     final names = TimeControl.presets.map((t) => t.label).toList();
     expect(

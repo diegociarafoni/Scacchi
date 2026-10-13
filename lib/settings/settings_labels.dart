@@ -4,8 +4,7 @@ import '../l10n/app_localizations.dart';
 import 'notation.dart';
 import 'settings.dart';
 
-/// Nomi tradotti delle scelte; le etichette delle enum restano il ripiego
-/// italiano per chi non ha un contesto di traduzione.
+/// Nomi tradotti delle scelte.
 String themeModeLabel(AppLocalizations l, ThemeMode m) => switch (m) {
   ThemeMode.system => l.settingsModeSystem,
   ThemeMode.light => l.settingsModeLight,

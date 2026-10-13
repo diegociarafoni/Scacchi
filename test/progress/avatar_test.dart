@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/progress/avatar.dart';
+import 'package:scacchi/progress/avatar_l10n.dart';
 import 'package:scacchi/progress/profile_page.dart';
 import 'package:scacchi/progress/progress_state.dart';
 import 'package:scacchi/progress/rewards.dart';
@@ -9,6 +10,25 @@ import 'package:scacchi/progress/rewards.dart';
 void main() {
   group('RP-08 avatar simpatici', () {
     const settings = ProgressSettings();
+    final it = lookupAppLocalizations(const Locale('it'));
+    final en = lookupAppLocalizations(const Locale('en'));
+
+    test('ogni avatar e ogni cornice ha un nome in italiano e in inglese', () {
+      for (final l in [it, en]) {
+        for (final a in Avatar.values) {
+          expect(avatarName(l, a), isNotEmpty, reason: '$a');
+        }
+        for (final f in AvatarFrame.values) {
+          expect(avatarFrameName(l, f), isNotEmpty, reason: '$f');
+        }
+      }
+      expect(avatarName(it, Avatar.astroCat), 'Gatto astronauta');
+      expect(avatarName(en, Avatar.astroCat), 'Astronaut cat');
+      expect(avatarName(en, Avatar.knight), 'Knight');
+      expect(avatarName(en, Avatar.fox), 'Rocco');
+      expect(avatarFrameName(it, AvatarFrame.laurel), 'Alloro');
+      expect(avatarFrameName(en, AvatarFrame.laurel), 'Laurel');
+    });
 
     test('i sei pezzi restano e i personaggi si aggiungono', () {
       for (final a in [
@@ -25,7 +45,7 @@ void main() {
       final characters = Avatar.values.where((a) => a.character != null);
       expect(characters, hasLength(10));
       expect(
-        characters.map((a) => a.label),
+        characters.map((a) => avatarName(it, a)),
         containsAll([
           'Pino',
           'Rocco',
@@ -115,7 +135,7 @@ void main() {
           );
           expect(tester.takeException(), isNull, reason: '$a $size');
           expect(
-            find.bySemanticsLabel('Avatar: ${a.label}, cornice Oro'),
+            find.bySemanticsLabel('Avatar: ${avatarName(it, a)}, cornice Oro'),
             findsOneWidget,
           );
         }

@@ -62,6 +62,7 @@ import 'board_swipe.dart';
 import 'challenge.dart';
 import 'chess_game.dart';
 import 'clock.dart';
+import 'clock_l10n.dart';
 import 'handicap.dart';
 import 'material.dart';
 import 'move_input.dart';
@@ -3784,7 +3785,7 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
     final l10n = _l10n(context);
     final l = widget.kid ? l10n : null;
     final noClock = l?.kidGameNoClock ?? l10n.gameNoClock;
-    final groups = <String, List<TimeControl>>{};
+    final groups = <TimeCategory, List<TimeControl>>{};
     for (final t in TimeControl.presets) {
       groups.putIfAbsent(t.category, () => []).add(t);
     }
@@ -3902,7 +3903,10 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
           chip(noClock, null),
           for (final entry in groups.entries) ...[
             const SizedBox(height: 12),
-            Text(entry.key, style: theme.textTheme.titleSmall),
+            Text(
+              timeCategoryName(l10n, entry.key),
+              style: theme.textTheme.titleSmall,
+            ),
             const SizedBox(height: 4),
             Wrap(
               spacing: 8,
@@ -3988,7 +3992,7 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
           for (final c in TimeControl.presets)
             DropdownMenuItem(
               value: c,
-              child: Text('${c.category} · ${c.label}'),
+              child: Text('${timeCategoryName(l10n, c.category)} · ${c.label}'),
             ),
         ],
         onChanged: (v) => setState(() => _quickControl = v),
@@ -4201,7 +4205,7 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
       selected: control == value,
       onSelected: enabled ? (_) => onChanged(value) : null,
     );
-    final groups = <String, List<TimeControl>>{};
+    final groups = <TimeCategory, List<TimeControl>>{};
     for (final t in TimeControl.presets) {
       groups.putIfAbsent(t.category, () => []).add(t);
     }
@@ -4216,7 +4220,10 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
         chip(_l10n(context).gameNoClock, null),
         for (final entry in groups.entries) ...[
           const SizedBox(height: 12),
-          Text(entry.key, style: theme.textTheme.labelLarge),
+          Text(
+            timeCategoryName(_l10n(context), entry.key),
+            style: theme.textTheme.labelLarge,
+          ),
           const SizedBox(height: 4),
           Wrap(
             spacing: 8,
