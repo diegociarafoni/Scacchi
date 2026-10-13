@@ -69,6 +69,7 @@ flutter test --tags golden test/golden --update-goldens   # su Linux, oppure in 
 - dimensioni tattili minime di Android (48 × 48) e iOS (44 × 44);
 - contrasto del testo almeno 4,5:1 (WCAG AA);
 - i comandi della barra in basso sono annunciati come pulsanti, con il loro stato attivo o disattivo (questo test ha trovato che `_ActionButton` non lo era, ora corretto);
-- con il testo di sistema al 200% non ci sono sovrapposizioni su nessun telefono.
+- con il testo di sistema al 200% non ci sono sovrapposizioni su nessun telefono;
+- `touch_targets_130_test.dart`: con il testo al 130%, su telefono piccolo e medio, schede della barra, impostazioni (menu e ogni sezione), Storia, partita e pannello «Altro» non hanno overflow, hanno bersagli di tocco da 48 dp e comandi con etichetta (il test ha trovato l'overflow del logo nella barra, ora corretto).
 
 Restano da coprire, con il requisito RNF-07: annuncio delle case e delle mosse sulla scacchiera, inserimento testuale della mossa, opzione per ridurre le animazioni.
