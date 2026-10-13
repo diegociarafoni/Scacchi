@@ -1,0 +1,26 @@
+{
+  "analysisTitle": "Analisi",
+  "analysisBestMoveArrow": "Freccia della mossa migliore",
+  "analysisThreatArrow": "Minaccia dell'avversario",
+  "analysisOneLine": "1 linea",
+  "analysisTwoLines": "2 linee",
+  "analysisThreeLines": "3 linee",
+  "analysisEngineUnavailable": "Motore non disponibile",
+  "analysisPaused": "Analisi in pausa",
+  "analysisGameOver": "Partita finita",
+  "analysisThinking": "Analisi…",
+  "analysisDepth": "Profondità {depth}",
+  "@analysisDepth": {
+    "placeholders": {
+      "depth": {
+        "type": "int"
+      }
+    }
+  },
+  "analysisPromote": "Promuovi a linea principale",
+  "analysisDelete": "Elimina la mossa e il seguito",
+  "analysisBack": "Indietro",
+  "analysisForward": "Avanti",
+  "analysisResume": "Riprendi l'analisi",
+  "analysisPause": "Ferma l'analisi"
+}
