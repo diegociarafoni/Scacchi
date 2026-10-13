@@ -8,6 +8,8 @@ import 'package:scacchi/multiplayer/ble_link.dart';
 import 'package:scacchi/multiplayer/ble_transport.dart';
 import 'package:scacchi/multiplayer/transport.dart';
 
+import '../support/wait.dart';
+
 /// Radio in memoria tra un ospite (periferica) e un invitato (centrale).
 class _Peer implements Central, Peripheral {
   _Peer(this.uuid);
@@ -255,15 +257,6 @@ class FakeCentralManager implements CentralManager {
 
 const gameId = '3f2b8c1e-5d4a-4f6b-9a7c-1e2d3c4b5a69';
 
-/// Attende la condizione (al massimo 8 secondi): i tempi dei ricollegamenti
-/// variano con il carico della macchina.
-Future<void> until(bool Function() ok) async {
-  final end = DateTime.now().add(const Duration(seconds: 8));
-  while (!ok() && DateTime.now().isBefore(end)) {
-    await Future<void>.delayed(const Duration(milliseconds: 20));
-  }
-}
-
 Future<void> settle([int ms = 50]) =>
     Future<void>.delayed(Duration(milliseconds: ms));
 
@@ -304,13 +297,19 @@ void main() {
       final atGuest = <Uint8List>[];
       h.incoming.listen(atHost.add);
       g.incoming.listen(atGuest.add);
-      await settle();
+      await until(
+        () => hostConnected >= 1 && guestConnected >= 1,
+        what: 'collegamento',
+      );
       expect(hostConnected, 1);
       expect(guestConnected, 1);
 
       await g.send(bytes(700));
       await h.send(bytes(500));
-      await settle();
+      await until(
+        () => atHost.isNotEmpty && atGuest.isNotEmpty,
+        what: 'messaggi nei due versi',
+      );
       expect(atHost, [bytes(700)]);
       expect(atGuest, [bytes(500)]);
       // I pacchetti rispettano la lunghezza massima di ciascun verso.
@@ -323,7 +322,7 @@ void main() {
       final (h, g, _, guestMgr) = await open();
       var guestConnected = 0;
       g.connected.listen((_) => guestConnected++);
-      await settle();
+      await until(() => guestConnected >= 1, what: 'primo collegamento');
       expect(guestConnected, 1);
       guestMgr.drop();
       await until(() => guestConnected >= 2);
@@ -332,7 +331,7 @@ void main() {
       final got = <Uint8List>[];
       h.incoming.listen(got.add);
       await g.send(bytes(40));
-      await settle();
+      await until(() => got.isNotEmpty, what: 'messaggio ricevuto');
       expect(got, [bytes(40)]);
       await h.close();
       await g.close();
@@ -416,7 +415,7 @@ void main() {
       final host = FakePeripheralManager(notifyLength: 1000);
       final link = await BlePeripheralLink.open(gameId, manager: host);
       host.subscribe(_Peer(UUID.short(1)));
-      await settle();
+      await until(() => link.chunkSize == 512, what: 'lunghezza letta');
       expect(link.chunkSize, 512);
       await link.close();
     });
@@ -437,10 +436,9 @@ void main() {
       final host = FakePeripheralManager();
       final link = await BlePeripheralLink.open(gameId, manager: host);
       host.subscribe(_Peer(UUID.short(1)));
-      await settle();
-      expect(link.isLinked, isTrue);
+      await until(() => link.isLinked, what: 'ospite collegato');
       host.powerOff();
-      await settle();
+      await until(() => !link.isLinked, what: 'ospite scollegato');
       expect(link.isLinked, isFalse);
       await link.close();
     });
@@ -463,6 +461,7 @@ void main() {
         host.write(stranger, Uint8List.fromList([0, 1, 0, 1, 7]), index: 1);
         host.write(stranger, Uint8List(600));
         host.write(stranger, Uint8List.fromList([0, 1, 0, 1, 7]));
+        await until(() => got.isNotEmpty, what: 'scrittura valida ricevuta');
         await settle();
         expect(got, [
           Uint8List.fromList([7]),
@@ -483,6 +482,7 @@ void main() {
         host.subscribe(p);
         await settle(5);
       }
+      await until(() => host.disconnected.isNotEmpty, what: 'ospite espulso');
       expect(host.disconnected, [peers.first]);
       expect(link.isLinked, isTrue);
       await link.close();
@@ -493,7 +493,7 @@ void main() {
       final link = await BlePeripheralLink.open(gameId, manager: host);
       expect(link.chunkSize, 20);
       host.subscribe(_Peer(UUID.short(1)));
-      await settle();
+      await until(() => link.chunkSize == 60, what: 'lunghezza letta');
       expect(link.chunkSize, 60);
       await link.close();
     });
@@ -503,16 +503,19 @@ void main() {
       final link = await BlePeripheralLink.open(gameId, manager: host);
       final p = _Peer(UUID.short(1));
       host.subscribe(p);
-      await settle();
+      await until(() => link.isLinked, what: 'ospite collegato');
       host.advertised = null;
       host.drop(p);
-      await settle();
+      await until(() => host.advertised != null, what: 'annuncio ripreso');
       expect(host.advertised, isNotNull);
       expect(link.isLinked, isFalse);
       host.service = null;
       host.advertised = null;
       host.powerCycle();
-      await settle();
+      await until(
+        () => host.service != null && host.advertised != null,
+        what: 'servizio e annuncio ripresi',
+      );
       expect(host.service, isNotNull);
       expect(host.advertised, isNotNull);
       await link.close();
