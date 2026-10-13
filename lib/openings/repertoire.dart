@@ -235,8 +235,11 @@ class RepertoireTrainer {
     }
     for (final MapEntry(key: id, value: move) in cards.entries) {
       final other = known[id];
-      if (other != null && other != move) {
-        final pos = replayed.firstWhere((p) => _cardId(side, p) == id);
+      if (other == null) continue;
+      final pos = replayed.firstWhere((p) => _cardId(side, p) == id);
+      // L'arrocco ha due forme (re sulla torre o re in g1/c1): stessa mossa.
+      if (pos.normalizeMove(other as NormalMove) !=
+          pos.normalizeMove(move as NormalMove)) {
         return LineProblem(
           LineProblemKind.conflict,
           move: formatSan(pos.makeSan(other).$2, notation),
