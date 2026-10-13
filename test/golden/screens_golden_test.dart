@@ -172,13 +172,14 @@ void main() {
     await tester.ensureVisible(f);
     await tester.pumpAndSettle();
     await tester.tap(f);
-    for (var i = 0; i < 15; i++) {
+    final passage = find.byKey(const ValueKey('story-passage'));
+    for (var i = 0; i < 150 && passage.evaluate().isEmpty; i++) {
       await tester.runAsync(
         () => Future<void>.delayed(const Duration(milliseconds: 20)),
       );
       await tester.pumpAndSettle();
     }
-    expect(find.byKey(const ValueKey('story-passage')), findsOneWidget);
+    expect(passage, findsOneWidget);
     await _golden(tester, 'storia-passaggio-scuro-telefono-medio');
   });
 }

@@ -1,3 +1,5 @@
+import { pieceStaunton, pieceMorbido, pieceStampa } from "./staunton.mjs";
+
 // Disegni di pezzi e scacchiere di Rokko, condivisi con l'anteprima dell'Officina.
 // Ogni funzione restituisce SVG: i pezzi in un quadrato 45×45, le scacchiere in 400×400.
 
@@ -115,6 +117,9 @@ const THEMES = {
 };
 
 export const PIECE_SETS = {
+  staunton: (t, c) => pieceStaunton(t, c),
+  morbido: (t, c) => pieceMorbido(t, c),
+  stampa: (t, c) => pieceStampa(t, c),
   rokko: (t, c) => pieceRokko(t, c, { faces: false }),
   pixel: (t, c) => piecePixel(t, c),
   arcano: (t, c) => pieceArcano(t, c),

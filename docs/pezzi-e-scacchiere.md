@@ -1,6 +1,6 @@
 # Pezzi e scacchiere
 
-Oltre ai set di chessground, Rokko ha cinque set di pezzi e tredici scacchiere con texture propri, scelti tra le proposte dell'Officina di Rokko. Si scelgono nella schermata Stile (vedi [stile.md](stile.md)) (Impostazioni → Stile).
+Oltre ai set di chessground, Rokko ha otto set di pezzi e tredici scacchiere con texture propri, scelti tra le proposte dell'Officina di Rokko. Si scelgono nella schermata Stile (vedi [stile.md](stile.md)), da Impostazioni → Stile.
 
 ## Set di pezzi
 
@@ -9,6 +9,9 @@ Oltre ai set di chessground, Rokko ha cinque set di pezzi e tredici scacchiere c
 | Rokko | Pezzi classici, morbidi e arrotondati, crema e marrone come l'icona; la torre sorride | Progetto, GPL-3.0+ |
 | Pixel | Sprite 12×12 in stile 8 bit | Progetto, GPL-3.0+ |
 | Arcano | Mondo di maghi: pedoni apprendisti, alfiere stregone, donna maga, re con corona stellata, cavallo unicorno | Progetto, GPL-3.0+ |
+| Staunton | Pezzi Staunton in legno, con luce da sinistra e ombra sotto: un 3D leggero, che sta bene su Noce | Progetto, GPL-3.0+ |
+| Morbido | Stessa sagoma con sfumature piatte, contorno sottile e ombra delicata | Progetto, GPL-3.0+ |
+| Stampa | Stessa sagoma in bianco e nero netto, con tratti interni come in un'incisione | Progetto, GPL-3.0+ |
 | Papercut | Carta ritagliata con ombre morbide | Nikolay Anzarov, CC BY 4.0 |
 | Noto | Simboli Unicode del carattere Noto Sans Symbols 2 | Google, OFL-1.1 |
 
@@ -56,6 +59,6 @@ node tool/board_art/render.mjs
 BOARDS=marmo,metallo,vetro node tool/board_art/render.mjs   # solo alcune scacchiere
 ```
 
-Il sorgente di Papercut è in `tool/board_art/papercut/`. Il carattere Noto si scarica da Google Fonts durante la generazione, quindi serve la rete. Gli aloni dei set di chessground partono dalle sue immagini da 512 px, lette dalla cache dei pacchetti dopo `flutter pub get`. Una nuova cartella di immagini va aggiunta anche alla sezione `assets` di `pubspec.yaml`.
+Staunton, Morbido e Stampa condividono la sagoma di `tool/board_art/staunton.mjs`; per rigenerare solo quelli: `SETS=staunton,morbido,stampa node tool/board_art/render.mjs`. Pesano circa 670 KB in tutto, aloni compresi. Altri set di Lichess (Alpha, Staunty, Cooke, Horsey e simili) non si possono usare: sono «freeware», per uso personale o CC BY-NC-SA, incompatibili con la distribuzione negli store. Il sorgente di Papercut è in `tool/board_art/papercut/`. Il carattere Noto si scarica da Google Fonts durante la generazione, quindi serve la rete. Gli aloni dei set di chessground partono dalle sue immagini da 512 px, lette dalla cache dei pacchetti dopo `flutter pub get`. Una nuova cartella di immagini va aggiunta anche alla sezione `assets` di `pubspec.yaml`.
 
 I test in `test/settings/board_art_test.dart` controllano che ogni set abbia i dodici pezzi e gli aloni, entrambe le risoluzioni, e che le texture siano solo nostre.
