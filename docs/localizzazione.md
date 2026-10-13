@@ -5,14 +5,14 @@ Requisito RP-05: italiano come lingua predefinita, con la struttura pronta per a
 ## Stato
 
 - L'app usa `flutter_localizations` e il generatore `gen-l10n` di Flutter.
-- La lingua dell'app si sceglie in **Impostazioni → Aspetto e accessibilità → Lingua**: «Come il telefono» (predefinita), Italiano o English (`AppLanguage` in `lib/settings/app_language.dart`, salvata come `language`). `MaterialApp.locale` in `lib/main.dart` è quella scelta, o `null` per seguire il telefono; `resolveAppLocale` (`localeListResolutionCallback`) prende la prima lingua del telefono tra quelle supportate e, se non ce n'è, usa l'italiano. `l10n.yaml` indica l'italiano come lingua preferita. I nomi delle lingue nella scelta restano nella lingua stessa.
+- La lingua dell'app si sceglie in **Impostazioni → Aspetto e accessibilità → Lingua**: «Come il telefono» (predefinita), Italiano, English o Türkçe (`AppLanguage` in `lib/settings/app_language.dart`, salvata come `language`). `MaterialApp.locale` in `lib/main.dart` è quella scelta, o `null` per seguire il telefono; `resolveAppLocale` (`localeListResolutionCallback`) prende la prima lingua del telefono tra quelle supportate e, se non ce n'è, usa l'italiano. `l10n.yaml` indica l'italiano come lingua preferita. I nomi delle lingue nella scelta restano nella lingua stessa.
 - Su iOS e macOS la regione di sviluppo è l'italiano; le finestre native del sistema (condivisione, permessi) seguono la lingua del dispositivo se è italiano o inglese, altrimenti usano l'italiano. I testi dei permessi di iOS (`NSCameraUsageDescription` e simili) hanno una traduzione per lingua in `ios/Runner/<lingua>.lproj/InfoPlist.strings`; `Info.plist` conserva l'italiano come ripiego. Su Android 13+ `res/xml/locales_config.xml` elenca le lingue dell'app per la scelta lingua per app del sistema.
 - Il nome sotto l'icona non viene da `appTitle`: è `android:label` in `android/app/src/main/AndroidManifest.xml` e `CFBundleDisplayName` in `ios/Runner/Info.plist`.
 - Sono dichiarate italiano e inglese (`supportedLocales`, e `CFBundleLocalizations` su iOS). Sono tradotti il nome dell'app, i testi del profilo bambino (prefissi `kid`, `kidGame`, `kidBot`), quelli dello scambio QR (prefisso `qr`), quelli dei badge (prefissi `badge` e `badges`), quelli dell'esportazione come immagine (prefisso `shareImage`), quelli della scacchiera fisica (prefisso `physical`), il profilo con traguardi, sfide, serie e promemoria (prefisso `progress`), la revisione della partita e i commenti dell'allenatore (prefisso `review`), i suggerimenti (`coachHint`), l'analisi (`analysis`), l'archivio (`archive`), la scheda settimanale (`portrait`) e le schermate elencate in [Schermate migrate](#schermate-migrate); gli altri testi sono ancora scritti in italiano nel codice.
 
 ## Lingue di destinazione
 
-L'italiano è la lingua base e il modello degli `.arb`. Inglese, spagnolo e francese vanno completati: ogni testo dell'app, compresi lezioni, commenti dei grandi maestri, frasi dei bot, spiegazioni dell'allenatore e nomi delle aperture, deve avere la sua traduzione. La documentazione in `docs/` resta in italiano. La notazione dei pezzi segue la lingua dell'app, con inglese e figurativa a scelta. Per un dispositivo in un'altra lingua l'app usa l'italiano.
+L'italiano è la lingua base e il modello degli `.arb`. Inglese, spagnolo, francese e turco vanno completati: ogni testo dell'app, compresi lezioni, commenti dei grandi maestri, frasi dei bot, spiegazioni dell'allenatore e nomi delle aperture, deve avere la sua traduzione. La documentazione in `docs/` resta in italiano. La notazione dei pezzi segue la lingua dell'app, con inglese e figurativa a scelta. Per un dispositivo in un'altra lingua l'app usa l'italiano.
 
 I termini scacchistici e le regole di stile di ogni lingua sono in [glossario-scacchistico.md](glossario-scacchistico.md). Chi traduce o rilegge parte da lì.
 
@@ -55,6 +55,10 @@ Dopo un clone, e dopo ogni modifica ai `.arb` o un cambio di ramo, eseguire `dar
 ## Aggiungere una lingua
 
 Creare `lib/l10n/<codice>/` con tutti i file e le chiavi delle altre lingue e rigenerare con `dart tool/l10n.dart`. Per renderla selezionabile va tolto il `locale` fisso in `lib/main.dart`, lasciando che Flutter scelga la lingua del dispositivo, solo dopo che tutti i testi dell'interfaccia sono stati spostati nei file `.arb`.
+
+## Turco
+
+Il turco (`tr`, «Türkçe») ha `lib/l10n/tr/*.arb` e `assets/content/tr/*.json`, gli stessi file e le stesse chiavi delle altre lingue. Stato in `tool/lingue.json`: `in lavorazione` finché la traduzione non è completa e riletta. È registrato in `AppLanguage`, `locales_config.xml`, `CFBundleLocalizations` (iOS e macOS) e `ios/Runner/tr.lproj/InfoPlist.strings`. Il turco non ha genere grammaticale: nei nomi delle aperture le forme maschile e femminile coincidono. `test/l10n_turkish_test.dart` verifica chiavi, segnaposto, testi vuoti e plurali. Termini e stile: [glossario](glossario-scacchistico.md#turco).
 
 ## Schermate migrate
 

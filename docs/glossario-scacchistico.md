@@ -1,6 +1,6 @@
 # Glossario scacchistico
 
-Termini di riferimento per tradurre Rokko. L'italiano è la lingua base; inglese, spagnolo e francese devono usare i termini di questa tabella in ogni testo (interfaccia, lezioni, commenti, frasi dei bot). Uno stesso concetto si traduce sempre con la stessa parola. Dove una forma è incerta c'è «(da verificare)»: la conferma o la correzione arriva da chi rilegge e si fa qui, in una sola PR.
+Termini di riferimento per tradurre Rokko. L'italiano è la lingua base; inglese, spagnolo, francese e turco devono usare i termini di questa tabella in ogni testo (interfaccia, lezioni, commenti, frasi dei bot). Uno stesso concetto si traduce sempre con la stessa parola. Dove una forma è incerta c'è «(da verificare)»: la conferma o la correzione arriva da chi rilegge e si fa qui, in una sola PR.
 
 ## Regole di stile
 
@@ -154,6 +154,46 @@ La notazione predefinita è quella della lingua dell'app; restano a scelta l'ing
 | Grandi maestri | Grandmasters | Grandes maestros | Grands maîtres |
 | Scacchiera fisica | Physical board | Tablero físico | Échiquier physique |
 | Multigiocatore | Multiplayer | Multijugador | Multijoueur |
+
+## Turco
+
+Stile: turco standard (Türkiye), si dà del «sen» (imperativo informale, anche nel profilo bambino), virgolette “…”, maiuscola solo sulla prima parola dei titoli (attenzione a İ e ı). Dopo un numero il sostantivo resta singolare. Non si attaccano suffissi ai segnaposto: si riformula la frase. Lettere della notazione: Ş (re), V (donna), K (torre), F (alfiere), A (cavallo), pedone nessuna. Colori: Beyaz, Siyah.
+
+| Italiano | Türkçe |
+|---|---|
+| re / donna / torre / alfiere / cavallo / pedone | şah / vezir / kale / fil / at / piyon |
+| scacchiera / casa / traversa / colonna | satranç tahtası / kare / sıra / hat |
+| mossa / cattura | hamle / alma |
+| scacco / scacco matto / stallo / patta | şah / şah mat / pat / beraberlik |
+| abbandono | pes etme |
+| arrocco corto / lungo | kısa rok / uzun rok |
+| presa en passant / promozione / sottopromozione | anpasan / terfi / düşük terfi |
+| proposta di patta | beraberlik teklifi |
+| tripla ripetizione / cinquanta mosse | üç kez tekrar / elli hamle kuralı |
+| materiale insufficiente / tempo scaduto | yetersiz materyal / süre doldu |
+| ripresa della mossa / mossa illegale | hamleyi geri alma / geçersiz hamle |
+| forchetta / inchiodatura / infilata | çatal / bağlama / şiş |
+| attacco di scoperta / scacco di scoperta / scacco doppio | açılan saldırı / açılan şah / çifte şah |
+| sacrificio | fedakârlık |
+| matto del barbiere / del pazzo | çoban matı / budala matı |
+| matto di corridoio / soffocato | son sıra matı / boğulma matı |
+| opposizione | karşıtlık |
+| pedone passato / isolato / doppiati | geçer piyon / yalnız piyon / katlanmış piyonlar |
+| struttura pedonale / coppia degli alfieri | piyon yapısı / fil çifti |
+| colonna aperta / centro / sviluppo / minaccia | açık hat / merkez / gelişim / tehdit |
+| apertura / mediogioco / finale | açılış / orta oyun / oyun sonu |
+| gambetto / difesa | gambit / savunma |
+| Siciliana / Francese / Spagnola | Sicilya savunması / Fransız savunması / İspanyol açılışı |
+| Gambetto di donna / Scandinava / Indiana di re | Vezir gambiti / İskandinav savunması / Şah Hint savunması |
+| mossa migliore / imprecisione / errore / svista | en iyi hamle / kusur / hata / büyük hata |
+| brillante / precisione | parlak / doğruluk |
+| Gioca / Puzzle / Aperture / Tu | Oyna / Bulmacalar / Açılışlar / Sen |
+| Impostazioni / Profilo / Archivio / Statistiche | Ayarlar / Profil / Arşiv / İstatistikler |
+| Allenatore / Lezione / Percorso / Storia | Koç / Ders / Yol / Hikâye |
+| Badge / Traguardo / Serie / Livello | Rozet / Başarı / Seri / Seviye |
+| Suggerimento / Orologio / Cadenza / Incremento | İpucu / Saat / Tempo / Ek süre |
+| Cornice / Punteggio Elo | Çerçeve / Elo puanı |
+| Grandi maestri / Scacchiera fisica / Multigiocatore | Büyük ustalar / Fiziksel tahta / Çok oyunculu |
 
 ## Come si usa
 

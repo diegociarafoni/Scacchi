@@ -1,0 +1,369 @@
+{
+  "storyTitle": "Hikâye",
+  "storyEntrySubtitle": "Bölümlerle bir yolculuk: dersler, bulmacalar ve meydan okumalar",
+  "storyChapterNumber": "Bölüm {n}",
+  "@storyChapterNumber": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "storyProgress": "{total} bölümden {done}",
+  "@storyProgress": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyChapterLocked": "Önceki bölümü bitirince açılır",
+  "storyChapterDone": "Bölüm bitti",
+  "storyContinue": "Devam",
+  "storyFinished": "Hikâye bitti. Dersler, bulmacalar ve oyunlar uygulamanın geri kalanında seni bekliyor.",
+  "storyStepLessons": "Dersler: {value} / {total}",
+  "@storyStepLessons": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyStepPuzzles": "Bölüm bulmacaları: {value} / {total}",
+  "@storyStepPuzzles": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyStepGuardian": "Bölümün bekçisi",
+  "storyStepBoss": "Meydan okuma: {name}",
+  "@storyStepBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyStepDone": "tamam",
+  "storyStepTodo": "yapılacak",
+  "storyStepLocked": "kilitli",
+  "storyStepLockedHint": "Önce önceki adımı bitir.",
+  "storyEngineMissing": "Meydan okumalar bilgisayar rakibin çalıştığı yerlerde oynanır: Android ve iOS ya da Stockfish kurulu Windows ve Linux.",
+  "storyBossWon": "{name} yenildi, tebrikler!",
+  "@storyBossWon": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyBossLost": "{name} şimdilik dayanıyor: istediğin zaman tekrar dene.",
+  "@storyBossLost": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPuzzlesNone": "Bulmacalar yüklenemedi: tekrar dene.",
+  "storyPrologueTitle": "İlk adımların yolu",
+  "storyPrologueIntro": "Köyün önünde bir yol var, yolda da meraklı bir civciv. Onunla her taşın nasıl hareket ettiğini öğren: kale, fil, vezir, şah, at ve piyon.",
+  "storyPrologueBoss": "Yolun civcivi {name}, yeni taşları denemek için bir oyun istiyor.",
+  "@storyPrologueBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPrologueOutro": "Taşların senden saklayacağı sır kalmadı. Kalenin eteğindeki köy birkaç adım ötede.",
+  "storyVillageTitle": "Taşların köyü",
+  "storyVillageIntro": "Rokko kalesinin eteğindeki köye varıyorsun. Köylüler bütün gün oynuyor ama taşlarını korumasız bırakıyor: alma ve savunmayı öğren, sonra korumasız bir taşı fark edebildiğini göster.",
+  "storyVillageBoss": "Köyün bekçisi {name}, gerçekten öğrenip öğrenmediğini görmek için sana meydan okuyor.",
+  "@storyVillageBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyVillageOutro": "Köy, şerefine bir şenlik yapıyor. Şehir kapılarına giden yol açık.",
+  "storyGatesTitle": "Şehir kapıları",
+  "storyGatesIntro": "Muhafızlar seni kapıda durduruyor: girmek için kuralları bilmelisin, şahtan rok'a kadar. Zamanında fark edilen bir terfi en yüksek kapıyı bile açar.",
+  "storyGatesBoss": "Muhafızların kaptanı {name}, seni geçirmeden önce bir sınav istiyor.",
+  "@storyGatesBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyGatesOutro": "Kapılar ardına kadar açılıyor. Önünde şahın kulesi yükseliyor.",
+  "storyTowerTitle": "Şahın kulesi",
+  "storyTowerIntro": "Şah kulenin tepesinde yaşıyor ve kendini savunmayı biliyor. Onu köşeye sıkıştıran şah matları öğren, kendi taşları bir duvar örse bile.",
+  "storyTowerBoss": "Gambitleri seven at {name}, merdivenlerin başında seni bekliyor.",
+  "@storyTowerBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyTowerOutro": "Kulenin şahı mat oldu. Orman ve tuzakları kaldı.",
+  "storyForestTitle": "Tuzaklar ormanı",
+  "storyForestIntro": "Ormanda her taş bir tuzak saklıyor: çatallar, bağlamalar, şişler. Onları herkesten önce görmeyi öğren.",
+  "storyForestBoss": "Orman rehberi {name}, her patikayı ve her tuzağı bilir.",
+  "@storyForestBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyForestOutro": "Ormanı tek bir tuzağa düşmeden geçtin. Şato seni bekliyor.",
+  "storyCastleTitle": "Oyun sonları şatosu",
+  "storyCastleIntro": "Şatoda tahtada yalnızca birkaç taş kaldı ve her hamle önemli. Burada bir oyunu kimin bitirebildiği ortaya çıkar.",
+  "storyCastleBoss": "Şatonun muhafızı {name}, taç odasının girişini koruyor.",
+  "@storyCastleBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyCastleOutro": "Büyük kapı açılıyor: taç yakın.",
+  "storyCrownTitle": "Taç",
+  "storyCrownIntro": "Taç odası. İyi bir başlangıç zaferin yarısıdır: merkez, gelişim, rok.",
+  "storyCrownBoss": "Tacın bekçisi {name}, açılışları kimsenin oynayamadığı gibi oynar.",
+  "@storyCrownBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyCrownOutro": "Taç senin. Ama surların ötesinde keşfedilmeyi bekleyen bir ova daha var.",
+  "storyChapterCurrent": "Devam ediyor",
+  "@storyChapterCurrent": {
+    "description": "Etichetta del capitolo corrente nella storia"
+  },
+  "storyChapterSteps": "{total} adımdan {done}",
+  "@storyChapterSteps": {
+    "description": "Passi conclusi di un capitolo, per la barra di avanzamento",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyPassageLessonsTitle": "Dersler tamam!",
+  "@storyPassageLessonsTitle": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassagePuzzlesTitle": "Bulmacalar çözüldü!",
+  "@storyPassagePuzzlesTitle": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageGuardianTitle": "Bekçi yenildi!",
+  "@storyPassageGuardianTitle": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageNextPuzzles": "Gerekeni öğrendin. Şimdi bölümün bulmacalarıyla kendini sına.",
+  "@storyPassageNextPuzzles": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageNextGuardian": "Şimdi bölümün bekçisiyle karşılaş.",
+  "@storyPassageNextGuardian": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageNextBoss": "Hazırsın: {name} seni bölümün son meydan okumasında bekliyor.",
+  "@storyPassageNextBoss": {
+    "description": "Foglio di passaggio della storia",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPassageGoPuzzles": "Bulmacalara git",
+  "@storyPassageGoPuzzles": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageGoGuardian": "Bekçiye meydan oku",
+  "@storyPassageGoGuardian": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyChallengeTitle": "Meydan okuma: {name}",
+  "@storyChallengeTitle": {
+    "description": "Foglio della sfida al custode",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPassageGoBoss": "Meydan oku: {name}",
+  "@storyPassageGoBoss": {
+    "description": "Foglio di passaggio della storia",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPassageLater": "Sonra",
+  "@storyPassageLater": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageChapterTitle": "Bölüm {n} tamam!",
+  "@storyPassageChapterTitle": {
+    "description": "Foglio di passaggio della storia",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "storyPassageChapterNext": "Bölüm {n} açıldı: {title}.",
+  "@storyPassageChapterNext": {
+    "description": "Foglio di passaggio della storia",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPassageGoChapter": "Sonraki bölüme",
+  "@storyPassageGoChapter": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageStoryDone": "Hikâyeyi bitirdin!",
+  "@storyPassageStoryDone": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageClose": "Kapat",
+  "@storyPassageClose": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPlainTitle": "Planlar ovası",
+  "@storyPlainTitle": {
+    "description": "storyPlainTitle"
+  },
+  "storyPlainIntro": "Tacın ötesinde savaşların başlamadan kazanıldığı sakin bir ova var: bir plana, etkin taşlara ve biraz sabra ihtiyacın var.",
+  "@storyPlainIntro": {
+    "description": "storyPlainIntro"
+  },
+  "storyPlainBoss": "Ovanın kurdu {name}, her saldırıyı bir gambit ve kesin bir planla hazırlar.",
+  "@storyPlainBoss": {
+    "description": "storyPlainBoss",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPlainOutro": "Ova senin. Artık her taşın bir görevi, her hamlenin bir nedeni olduğunu biliyorsun.",
+  "@storyPlainOutro": {
+    "description": "storyPlainOutro"
+  },
+  "storyAcademyTitle": "Ustanın akademisi",
+  "@storyAcademyTitle": {
+    "description": "storyAcademyTitle"
+  },
+  "storyAcademyIntro": "Tepenin üstünde, birkaç ilkeyle öğreten yaşlı bir usta yaşıyor: hamleleri say, karşıtlığı bul, açılış kurallarını asla unutma.",
+  "@storyAcademyIntro": {
+    "description": "storyAcademyIntro"
+  },
+  "storyAcademyBoss": "Akademinin yıldızı {name}, durmadan saldırır ve hiçbir hatayı affetmez.",
+  "@storyAcademyBoss": {
+    "description": "storyAcademyBoss",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyAcademyOutro": "Akademi seni kendinden biri olarak karşılıyor. Hikâye bitti ama oyun sürüyor.",
+  "@storyAcademyOutro": {
+    "description": "storyAcademyOutro"
+  },
+  "@storyCrownIntro": {
+    "description": "storyCrownIntro"
+  },
+  "@storyCrownOutro": {
+    "description": "storyCrownOutro"
+  },
+  "storyGuardianPrologueWelcome": "Merhaba, ben Tino! Her taşın nasıl hareket ettiğini sana göstereceğim.",
+  "storyGuardianProloguePuzzleOk": "Başardın! Taşların nasıl hareket ettiğini artık biliyorsun.",
+  "storyGuardianProloguePuzzleRetry": "Az kaldı! Her taşın nereye gidebileceğine bak ve tekrar dene.",
+  "storyGuardianPrologueBoss": "Bir oyun oynayalım mı? Söz, yavaş başlayacağım.",
+  "storyGuardianPrologueLessonDone": "Artık taşları biliyorsun. Bakalım nasıl kullanacaksın.",
+  "storyGuardianVillageWelcome": "Köye hoş geldin! Burada sana taşlarını korumasız bırakmamayı öğreteceğim.",
+  "storyGuardianVillagePuzzleOk": "Aferin, hemen fark ettin!",
+  "storyGuardianVillagePuzzleRetry": "Neredeyse oldu: korumasız taşı ara.",
+  "storyGuardianVillageBoss": "Şimdi sıra sende ve bende. İtalyan Açılışı'nı çok severim, dikkat et!",
+  "storyGuardianVillageLessonDone": "Aferin, korumasız taş kalmadı. Şimdi sınama zamanı.",
+  "storyGuardianGatesWelcome": "Kapılardan ancak kuralları bilenler geçer. Sırayla bakalım.",
+  "storyGuardianGatesPuzzleOk": "Tam öyle: doğru anda yapılan bir terfi.",
+  "storyGuardianGatesPuzzleRetry": "Henüz değil: kurallara bir daha bak ve yine dene.",
+  "storyGuardianGatesBoss": "Sınav için bir oyun: Vezir gambiti oynayacağım.",
+  "storyGuardianGatesLessonDone": "Kuralları öğrendin. Bulmacalar seni bekliyor.",
+  "storyGuardianTowerWelcome": "Bu kuleye şah matlarla çıkılır. Başlayalım.",
+  "storyGuardianTowerPuzzleOk": "Şah mat! Doğrudan hedefe.",
+  "storyGuardianTowerPuzzleRetry": "Hayır, şaha bak: nereye kaçamaz?",
+  "storyGuardianTowerBoss": "Teori yeter: oynayalım. Şah gambiti ile saldırıyorum.",
+  "storyGuardianTowerLessonDone": "Mat etmeyi görüyorsun. Şimdi gizli olanları bul.",
+  "storyGuardianForestWelcome": "Ormanda her dal bir tuzak saklar. Gözlerini aç!",
+  "storyGuardianForestPuzzleOk": "Ha, tuzağa düşmedin. Aferin!",
+  "storyGuardianForestPuzzleRetry": "Eyvah, tuzak işe yaradı. Tekrar dene!",
+  "storyGuardianForestBoss": "Bakalım sen de kurabilecek misin. Ben İngiliz açılışını oynuyorum.",
+  "storyGuardianForestLessonDone": "Tuzaklar artık seni kandırmaz. Şimdi kurmayı dene.",
+  "storyGuardianCastleWelcome": "Oyun sonunda her hamle önemli. Sakin ol, adım adım.",
+  "storyGuardianCastlePuzzleOk": "Sabırlı ve kesin: oyun sonu böyle kazanılır.",
+  "storyGuardianCastlePuzzleRetry": "Acele yok: hamleleri say ve tekrar dene.",
+  "storyGuardianCastleBoss": "Yavaş bir oyun bizi bekliyor. Ben Sicilya savunmasını oynuyorum.",
+  "storyGuardianCastleLessonDone": "Az taş, her hamle önemli. Şimdi bulmacalar.",
+  "storyGuardianCrownWelcome": "Taç baştan kazanılır: şık bir açılış oyunun yarısıdır.",
+  "storyGuardianCrownPuzzleOk": "Şık: doğru hamle bu.",
+  "storyGuardianCrownPuzzleRetry": "Yaklaştın: taşlarını geliştirmeyi düşün ve tekrar dene.",
+  "storyGuardianCrownBoss": "Bir oyun oynayabilir miyiz? Ben İspanyol açılışını seçiyorum.",
+  "storyGuardianCrownLessonDone": "Merkez, gelişim, rok: hepsi senin. Şimdi bulmacalar.",
+  "storyGuardianPlainWelcome": "Ovada plan yapanlar kazanır. Nasıl olduğunu göstereyim.",
+  "storyGuardianPlainPuzzleOk": "Tam öyle. Net bir plan acelenin önüne geçer.",
+  "storyGuardianPlainPuzzleRetry": "Yaklaştın. Taşının ne istediğini düşün.",
+  "storyGuardianPlainBoss": "Oynayalım mı? Uyarayım: Evans gambitini çok severim.",
+  "storyGuardianPlainLessonDone": "Bir planın ve etkin taşların var. Şimdi bulmacalar.",
+  "storyGuardianAcademyWelcome": "Akademide ustalardan öğrenirsin. Hadi, ne bildiğini göster!",
+  "storyGuardianAcademyPuzzleOk": "Harika! Ustalar böyle oynar.",
+  "storyGuardianAcademyPuzzleRetry": "Pes etme: nefes al ve tekrar dene.",
+  "storyGuardianAcademyBoss": "Son meydan okuma: Şah Hint savunmasını oynuyorum. İndirim yok!",
+  "storyGuardianAcademyLessonDone": "Dersler tamam, öğrenci. Şimdi sahada sınav.",
+  "storyGuardianSays": "{name} diyor ki: {text}",
+  "@storyGuardianSays": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "text": {
+        "type": "String"
+      }
+    }
+  }
+}

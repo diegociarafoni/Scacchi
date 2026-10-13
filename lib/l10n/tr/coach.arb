@@ -1,0 +1,199 @@
+{
+  "whyPiece": "{role, select, pawn{piyon} knight{at} bishop{fil} rook{kale} queen{vezir} other{şah}}",
+  "whyMate": "Şah mat!",
+  "whyCastle": "Rok yapar: şahı güvene alır.",
+  "whyPromote": "Piyonu {role, select, queen{bir vezir} rook{bir kale} bishop{bir fil} knight{bir at} other{bir taş}} olarak terfi ettirir.",
+  "whyCapture": "{attacker} ile {victim} alınır.",
+  "whyCheck": "Şahına şah çeker.",
+  "whySafe": "{piece} güvene alınır; saldırı altındaydı.",
+  "whyThreatCapture": "Tehdit: {square} karesinde {victim} alınabilir.",
+  "whyThreatCaptureKid": "Tehdit: {victim} alınabilir.",
+  "whyThreatCheck": "Şahına şah çekmeye hazırlanır.",
+  "whyThreatPromote": "Bir piyonu terfi ettirmeye hazırlanır.",
+  "whyDevelop": "{piece} gelişir: oyuna katılır.",
+  "whyCenter": "Merkezde yer kazanır.",
+  "whyImprove": "{piece} daha yararlı bir kareye gider.",
+  "instructorInBookNamed": "Açılış: {name}. Burada en çok oynanan hamleler: {choices}.",
+  "@instructorInBookNamed": {
+    "description": "Istruttore: apertura raggiunta e mosse più giocate",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "name"
+      },
+      "choices": {
+        "type": "String",
+        "description": "choices"
+      }
+    }
+  },
+  "instructorInBook": "Burada en çok oynanan hamleler: {choices}.",
+  "@instructorInBook": {
+    "description": "Istruttore: mosse più giocate, senza nome di apertura",
+    "placeholders": {
+      "choices": {
+        "type": "String",
+        "description": "choices"
+      }
+    }
+  },
+  "instructorInBookNameOnly": "Açılış: {name}.",
+  "@instructorInBookNameOnly": {
+    "description": "Istruttore: apertura raggiunta, senza statistiche",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "name"
+      }
+    }
+  },
+  "instructorLeftYou": "{san} seni açılış kitabından çıkarır. En çok oynanan hamleler şunlardı: {choices}.",
+  "@instructorLeftYou": {
+    "description": "Istruttore: l'utente esce dal libro",
+    "placeholders": {
+      "san": {
+        "type": "String",
+        "description": "san"
+      },
+      "choices": {
+        "type": "String",
+        "description": "choices"
+      }
+    }
+  },
+  "instructorLeftComputer": "Bilgisayar {san} ile kitaptan çıkıyor. Bundan sonra teori değil, konum belirleyici.",
+  "@instructorLeftComputer": {
+    "description": "Istruttore: il computer esce dal libro",
+    "placeholders": {
+      "san": {
+        "type": "String",
+        "description": "san"
+      }
+    }
+  },
+  "instructorLeftYouBare": "{san} seni açılış kitabından çıkarır.",
+  "@instructorLeftYouBare": {
+    "description": "Istruttore: l'utente esce dal libro, senza alternative",
+    "placeholders": {
+      "san": {
+        "type": "String",
+        "description": "san"
+      }
+    }
+  },
+  "instructorExplorer": "Gezginde aç",
+  "@instructorExplorer": {
+    "description": "Istruttore: pulsante per aprire la posizione nell'esploratore"
+  },
+  "instructorTitle": "Eğitmenle oyna",
+  "@instructorTitle": {
+    "description": "Titolo della partita con l'istruttore"
+  },
+  "instructorHubSubtitle": "Bilgisayar açılışını, en çok oynanan hamlelerle yorumlar",
+  "@instructorHubSubtitle": {
+    "description": "Istruttore: sottotitolo nel menu delle aperture"
+  },
+  "coachHintMovePiece": "{piece} taşını oyna.",
+  "@coachHintMovePiece": {
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintMoveSomePiece": "Bir taş oyna.",
+  "coachHintPlayHighlighted": "Vurgulanan hamleyi yap.",
+  "coachHintCastleShort": "Kısa rok yap.",
+  "coachHintCastleLong": "Uzun rok yap.",
+  "coachHintPieceAn": "{role, select, queen{bir vezir} rook{bir kale} bishop{bir fil} knight{bir at} pawn{bir piyon} other{şah}}",
+  "@coachHintPieceAn": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintCheckEscape": "{escape, select, king{Şahtan kurtulmak için} other{Şahı durdurmak için}} {piece} taşını {where, select, square{{square} karesine} other{daire içindeki kareye}} {promotion, select, yes{terfi ettir} other{götür}}{check, select, none{.} check{ ve şah çek.} other{ ve şah mat et.}}",
+  "@coachHintCheckEscape": {
+    "placeholders": {
+      "promotion": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "escape": {
+        "type": "String"
+      },
+      "check": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintPromote": "{piece} taşını {where, select, square{{square} karesine} other{daire içindeki kareye}} ilerlet{capture, select, yes{, {victim} al} other{}} ve terfi ettir: {promoted} olur.",
+  "@coachHintPromote": {
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "capture": {
+        "type": "String"
+      },
+      "victim": {
+        "type": "String"
+      },
+      "promoted": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintCapture": "{piece} taşını {where, select, square{{square} karesine} other{daire içindeki kareye}} götür ve {victim} al{check, select, none{.} check{; şah çekersin.} other{; şah mat edersin.}}",
+  "@coachHintCapture": {
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "victim": {
+        "type": "String"
+      },
+      "check": {
+        "type": "String"
+      }
+    }
+  },
+  "coachHintMove": "{piece} taşını {where, select, square{{square} karesine} other{daire içindeki kareye}} götür{check, select, none{.} check{ ve şah çek.} other{ ve şah mat et.}}",
+  "@coachHintMove": {
+    "placeholders": {
+      "piece": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "check": {
+        "type": "String"
+      }
+    }
+  }
+}
