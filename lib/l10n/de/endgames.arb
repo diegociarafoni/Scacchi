@@ -1,0 +1,19 @@
+{
+  "endgamesTitle": "Endspiele",
+  "endgamesGoalMate": "Setze matt",
+  "endgamesGoalPromote": "Wandle den Bauern um",
+  "endgamesGoalHoldBlack": "Halte als Schwarz durch",
+  "endgamesGoalHoldWhite": "Halte als Weiß durch",
+  "endgamesToRepeat": "Zum Wiederholen",
+  "endgamesStars": "{stars, plural, one{{stars} Stern von 3} other{{stars} Sterne von 3}}",
+  "endgamesMovesHold": "Züge: {moves} von {par}",
+  "endgamesMovesTarget": "Züge: {moves} · drei Sterne mit höchstens {par}",
+  "endgamesStart": "Start",
+  "endgamesThinking": "Die Engine denkt nach…",
+  "endgamesEngineFailed": "Die Engine antwortet nicht: Versuche es noch einmal.",
+  "endgamesSuccess": "Ziel erreicht",
+  "endgamesFailure": "Das hat nicht geklappt",
+  "endgamesFailureHint": "Die Stellung bleibt bei denen zum Wiederholen.",
+  "endgamesRetry": "Nochmal",
+  "endgamesDone": "Fertig"
+}
