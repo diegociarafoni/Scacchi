@@ -11,6 +11,7 @@ import 'package:scacchi/progress/progress_controller.dart';
 import 'package:scacchi/progress/progress_state.dart';
 import 'package:scacchi/progress/progress_store.dart';
 
+import '../content_support.dart';
 import '../localized_app.dart';
 
 void main() {
@@ -87,6 +88,8 @@ void main() {
     });
 
     testWidgets('in inglese i nomi restano quelli originali', (tester) async {
+      useContent('en');
+      addTearDown(useContent);
       await show(
         tester,
         Scaffold(body: OpeningBooksTab(state: progress.state)),
@@ -97,6 +100,20 @@ void main() {
         findsOneWidget,
       );
       expect(find.text('Sicilian Defense'), findsOneWidget);
+    });
+
+    testWidgets('in portoghese i nomi sono quelli della lingua', (
+      tester,
+    ) async {
+      useContent('pt');
+      addTearDown(useContent);
+      await show(
+        tester,
+        Scaffold(body: OpeningBooksTab(state: progress.state)),
+        locale: const Locale('pt'),
+      );
+      expect(find.text('Defesa Siciliana'), findsOneWidget);
+      expect(find.text('Sicilian Defense'), findsNothing);
     });
   });
 
