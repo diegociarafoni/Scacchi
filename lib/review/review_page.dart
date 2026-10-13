@@ -11,6 +11,8 @@ import '../game/move_note.dart';
 import '../game/move_note_dialog.dart';
 import '../kids/kid_display.dart';
 import '../l10n/app_localizations.dart';
+import '../openings/opening_assets.dart';
+import '../openings/opening_book.dart';
 import '../settings/notation.dart';
 import '../settings/settings.dart';
 import '../tablebase/shared_tablebase.dart';
@@ -74,6 +76,7 @@ class ReviewPage extends StatefulWidget {
     this.startTimes,
     this.notes = const [],
     this.onNoteChanged,
+    this.book,
   });
 
   final Position initial;
@@ -111,6 +114,10 @@ class ReviewPage extends StatefulWidget {
   /// Chiamata quando l'utente scrive, cambia o toglie la nota di una mossa;
   /// se assente la revisione mostra le note ma non le modifica.
   final Future<void> Function(int ply, MoveNote? note)? onNoteChanged;
+
+  /// Libro delle aperture per le mosse «Libro» (RF-91); senza, si usa quello
+  /// incluso nell'app.
+  final OpeningBook? book;
 
   @override
   State<ReviewPage> createState() => _ReviewPageState();
@@ -174,9 +181,20 @@ class _ReviewPageState extends State<ReviewPage> {
     super.dispose();
   }
 
+  /// Semimosse iniziali ancora nel libro; 0 se il libro non è già caricato
+  /// (l'app lo carica all'avvio), se non si parte dalla posizione iniziale o
+  /// se le mosse non si rigiocano.
+  int _bookPlies() {
+    if (widget.initial.fen != Chess.initial.fen) return 0;
+    final book = widget.book ?? loadedOpeningBook;
+    return book?.bookPlies(widget.moves) ?? 0;
+  }
+
   Future<void> _analyse() async {
     try {
+      final bookPlies = _bookPlies();
       final review = await reviewGame(
+        isBook: (ply) => ply < bookPlies,
         initial: widget.initial,
         moves: widget.moves,
         evaluate: widget.evaluate,
