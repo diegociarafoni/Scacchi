@@ -4,15 +4,28 @@ import 'package:flutter/foundation.dart';
 /// Famiglia di una cadenza; il nome mostrato è in `clock_l10n.dart`.
 enum TimeCategory { bullet, blitz, rapid }
 
+/// Come si usa il ritardo: semplice (il tempo parte dopo [TimeControl.delay]
+/// secondi) o di Bronstein (si restituisce il tempo usato, fino al ritardo).
+enum DelayType { simple, bronstein }
+
 @immutable
 class TimeControl {
-  const TimeControl({required this.minutes, this.increment = 0});
+  const TimeControl({
+    required this.minutes,
+    this.increment = 0,
+    this.delay = 0,
+    this.delayType = DelayType.simple,
+  });
 
   /// Minuti iniziali per giocatore.
   final int minutes;
 
   /// Secondi aggiunti dopo ogni mossa.
   final int increment;
+
+  /// Secondi di ritardo a ogni mossa; 0 se non c'è.
+  final int delay;
+  final DelayType delayType;
 
   static const presets = [
     TimeControl(minutes: 1),
@@ -35,7 +48,9 @@ class TimeControl {
     return groups;
   }
 
-  String get label => '$minutes+$increment';
+  /// `10+5`, con il ritardo `10+0/d5` (semplice) o `10+0/b5` (Bronstein).
+  String get label =>
+      '$minutes+$increment${delay > 0 ? '/${delayType == DelayType.bronstein ? 'b' : 'd'}$delay' : ''}';
 
   TimeCategory get category => switch (minutes) {
     < 3 => TimeCategory.bullet,
@@ -44,22 +59,29 @@ class TimeControl {
   };
 
   static TimeControl? parse(String label) {
-    final parts = label.split('+');
-    if (parts.length != 2) return null;
-    final m = int.tryParse(parts[0]);
-    final i = int.tryParse(parts[1]);
-    if (m == null || i == null || m <= 0 || i < 0) return null;
-    return TimeControl(minutes: m, increment: i);
+    final m = RegExp(r'^(\d+)\+(\d+)(?:/([db])(\d+))?$').firstMatch(label);
+    if (m == null) return null;
+    final minutes = int.parse(m[1]!);
+    final delay = int.parse(m[4] ?? '0');
+    if (minutes <= 0 || (m[3] != null && delay <= 0)) return null;
+    return TimeControl(
+      minutes: minutes,
+      increment: int.parse(m[2]!),
+      delay: delay,
+      delayType: m[3] == 'b' ? DelayType.bronstein : DelayType.simple,
+    );
   }
 
   @override
   bool operator ==(Object other) =>
       other is TimeControl &&
       other.minutes == minutes &&
-      other.increment == increment;
+      other.increment == increment &&
+      other.delay == delay &&
+      other.delayType == delayType;
 
   @override
-  int get hashCode => Object.hash(minutes, increment);
+  int get hashCode => Object.hash(minutes, increment, delay, delayType);
 }
 
 /// Orologio a due lati; il tempo scorre solo per il lato attivo.
@@ -89,14 +111,31 @@ class ChessClock {
   Side? _active;
   DateTime? _since;
 
+  /// Ritardo semplice ancora da consumare nella mossa in corso.
+  final Map<Side, Duration> _graceLeft = {};
+
+  /// Tempo già usato nella mossa in corso, per il ritardo di Bronstein.
+  final Map<Side, Duration> _turnSpent = {
+    for (final side in Side.values) side: Duration.zero,
+  };
+
+  Duration get _delay => Duration(seconds: control.delay);
+
+  Duration _grace(Side side) => control.delayType == DelayType.simple
+      ? _graceLeft[side] ?? _delay
+      : Duration.zero;
+
   Side? get active => _active;
 
   bool get isRunning => _active != null;
 
+  Duration _elapsed() => _now().difference(_since!);
+
   Duration remaining(Side side) {
     final base = _remaining[side]!;
     if (side != _active || _since == null) return base;
-    final left = base - _now().difference(_since!);
+    final counted = _elapsed() - _grace(side);
+    final left = counted.isNegative ? base : base - counted;
     return left.isNegative ? Duration.zero : left;
   }
 
@@ -117,8 +156,18 @@ class ChessClock {
     final side = _active;
     if (side == null) return;
     _remaining[side] = remaining(side);
+    _settle(side);
     _active = null;
     _since = null;
+  }
+
+  /// Registra ritardo consumato e tempo usato nella mossa in corso di [side].
+  void _settle(Side side) {
+    final elapsed = _elapsed();
+    _graceLeft[side] = _grace(side) > elapsed
+        ? _grace(side) - elapsed
+        : Duration.zero;
+    _turnSpent[side] = _turnSpent[side]! + elapsed;
   }
 
   /// Tempi residui correnti, da passare a [restore].
@@ -128,18 +177,52 @@ class ChessClock {
 
   /// Ripristina i tempi di [snapshot] e avvia [active], se indicato.
   void restore(Map<Side, Duration> snapshot, Side? active) {
+    // Rimettere i tempi nel mezzo di una mossa non rinnova il ritardo.
+    final running = _active;
+    if (running != null && running == active) {
+      _settle(running);
+    } else {
+      _newTurn();
+    }
     _remaining.addAll(snapshot);
     _active = null;
     _since = null;
     if (active != null) start(active);
   }
 
-  /// Ferma il lato che ha mosso, aggiunge l'incremento e avvia l'avversario.
+  void _newTurn() {
+    for (final side in Side.values) {
+      _graceLeft[side] = _delay;
+      _turnSpent[side] = Duration.zero;
+    }
+  }
+
+  /// Tempo che [side] avrà se muove adesso: l'incremento (e, con Bronstein, il
+  /// tempo usato fino al ritardo) si aggiungono al residuo; senza orologio in
+  /// corsa è il residuo.
+  Duration remainingAfterMove(Side side) =>
+      remaining(side) + (isRunning ? _bonus(side) : Duration.zero);
+
+  Duration _bonus(Side side) {
+    var bonus = Duration(seconds: control.increment);
+    if (control.delayType == DelayType.bronstein) {
+      final spent =
+          _turnSpent[side]! + (side == _active ? _elapsed() : Duration.zero);
+      bonus += spent < _delay ? spent : _delay;
+    }
+    return bonus;
+  }
+
+  /// Ferma il lato che ha mosso, aggiunge l'incremento (e, con Bronstein, il
+  /// tempo usato fino al ritardo) e avvia l'avversario.
   void switchAfterMove() {
     final side = _active;
     if (side == null) return;
+    final bonus = _bonus(side);
     pause();
-    _remaining[side] = _remaining[side]! + Duration(seconds: control.increment);
+    _remaining[side] = _remaining[side]! + bonus;
+    _graceLeft[side] = _delay;
+    _turnSpent[side] = Duration.zero;
     start(side.opposite);
   }
 }
