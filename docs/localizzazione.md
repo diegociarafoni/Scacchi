@@ -24,9 +24,11 @@ Il russo (`ru`) è `pronta`: tutte le chiavi dei `.arb` (`lib/l10n/ru/`) e i con
 
 - **Plurali a quattro forme.** Nei `.arb` russi ogni `plural` ha `one` (1, 21, 31…), `few` (2-4, 22-24…), `many` (0, 5-20, 25-30…) e `other` (frazioni). La forma `one` non scrive mai «1» a mano: usa il segnaposto, perché vale anche per 21. `test/l10n/russian_test.dart` controlla che le quattro forme ci siano dove l'inglese ha un plurale e che `one` non contenga un numero fisso.
 - **Concordanze.** Dove il russo richiederebbe un caso o un genere sul valore di un segnaposto (per esempio il nome di un pezzo, inserito dal codice sempre al nominativo), la frase è riformulata in modo neutro (due punti, etichetta) invece di aggiungere chiavi.
-- **Nomi delle aperture.** `assets/content/ru/opening_names.json` ha la stessa struttura di quello italiano (sostantivo + complemento al genitivo + coda); il codice che compone i nomi oggi è solo italiano, quindi per il russo i nomi composti si leggono come «sostantivo, poi aggettivo». Un motore dedicato è lavoro futuro; i nomi che non hanno una forma russa nota (Bongcloud, Creepy Crawly…) restano in inglese.
+- **Nomi delle aperture.** `assets/content/ru/opening_names.json` ha la stessa struttura di quello italiano (sostantivo + complemento al genitivo + coda); il codice che compone i nomi oggi è solo italiano (come i titoli dei volumi in `lib/badges/opening_books_tab.dart`, che per le altre lingue usano l'inglese), quindi per il russo i nomi composti si leggono come «sostantivo, poi aggettivo». Un motore dedicato è lavoro futuro; i nomi che non hanno una forma russa nota (Bongcloud, Creepy Crawly…) restano in inglese.
 - **Caratteri.** L'app usa i caratteri di sistema (Roboto su Android, San Francisco su iOS), che includono il cirillico: non serve incorporare font. Nei test grafici di Flutter il testo usa un font a blocchi, quindi `test/game/game_russian_test.dart` verifica il layout (nessun overflow su telefono piccolo e medio, i testi lunghi del russo), non le forme delle lettere.
-- **Sistema.** `ios/Runner/ru.lproj/InfoPlist.strings` per i permessi, `ru` in `CFBundleLocalizations`, `knownRegions` e `locales_config.xml`.
+- **Notazione.** I testi che citano mosse usano le lettere russe (Кр, Ф, Л, С, К); le opzioni di notazione dell'app (figurina, italiana, inglese) non includono ancora quella russa, che richiederà codice dedicato.
+- **Contenuti lunghi.** I `.json` sono letti dall'app tramite `ContentText` (vedi il refactoring dei contenuti per lingua); finché quel meccanismo non è su `main`, i file sono solo in attesa.
+- **Sistema.** `ios/Runner/ru.lproj/InfoPlist.strings` per i permessi, `ru` in `CFBundleLocalizations` (iOS e macOS), `knownRegions` e `locales_config.xml`.
 
 ## File
 

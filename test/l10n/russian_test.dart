@@ -31,23 +31,32 @@ List<String> _pluralBodies(String message) {
   return bodies;
 }
 
-/// Categorie dichiarate al primo livello di un corpo di plurale.
-Set<String> _categories(String body) {
-  final found = <String>{};
+/// Categoria → testo di ogni forma al primo livello di un corpo di plurale.
+Map<String, String> _forms(String body) {
+  final forms = <String, String>{};
   var depth = 0;
   final word = StringBuffer();
+  final text = StringBuffer();
   for (final c in body.split('')) {
     if (c == '{') {
-      if (depth == 0) found.add(word.toString().trim());
+      if (depth > 0) text.write(c);
       depth++;
-      word.clear();
     } else if (c == '}') {
       depth--;
-    } else if (depth == 0) {
+      if (depth > 0) {
+        text.write(c);
+      } else {
+        forms[word.toString().trim()] = text.toString();
+        word.clear();
+        text.clear();
+      }
+    } else if (depth > 0) {
+      text.write(c);
+    } else {
       word.write(c);
     }
   }
-  return found;
+  return forms;
 }
 
 void main() {
@@ -78,25 +87,14 @@ void main() {
   test('russo: ogni plurale ha one, few, many e other', () {
     var plurals = 0;
     for (final e in ru.entries) {
-      final english = _pluralBodies(en[e.key]!).map(_categories).toList();
-      final bodies = _pluralBodies(e.value);
-      expect(
-        bodies.length,
-        greaterThanOrEqualTo(english.length),
-        reason: e.key,
-      );
-      for (var i = 0; i < bodies.length; i++) {
+      for (final body in _pluralBodies(e.value)) {
+        final forms = _forms(body);
+        // Un plurale che serve solo a nascondere un testo (`other{}` o `=0{}`) non
+        // ha forme da declinare.
+        if (forms['other']!.isEmpty || forms['=0'] == '') continue;
         plurals++;
-        final cats = _categories(bodies[i]);
-        // I plurali che servono solo a nascondere un testo (`=0{}`) non
-        // hanno forme da declinare.
-        if (i < english.length
-            ? !english[i].contains('one')
-            : cats.length < 3) {
-          continue;
-        }
         expect(
-          cats,
+          forms.keys,
           containsAll(['one', 'few', 'many', 'other']),
           reason: e.key,
         );
@@ -107,9 +105,17 @@ void main() {
 
   test('russo: la forma one non scrive il numero a mano', () {
     // `one` vale anche per 21, 31… quindi «1» fisso darebbe testi sbagliati.
-    final fixedOne = RegExp(r'\bone\{[^{}]*\b1\b[^{}]*\}');
     for (final e in ru.entries) {
-      expect(fixedOne.hasMatch(e.value), isFalse, reason: e.key);
+      for (final body in _pluralBodies(e.value)) {
+        final one = _forms(body)['one'];
+        if (one == null) continue;
+        final text = one.replaceAll(RegExp(r'\{[^{}]*\}'), '');
+        expect(
+          RegExp(r'(?<![\d/])1(?![\d/])').hasMatch(text),
+          isFalse,
+          reason: e.key,
+        );
+      }
     }
   });
 
