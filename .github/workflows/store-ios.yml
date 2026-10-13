@@ -1,0 +1,79 @@
+name: Store iOS
+
+# Controllo della chiave di App Store Connect e caricamento su TestFlight con
+# Fastlane (ios/fastlane). Solo a richiesta: senza i segreti elencati in
+# docs/store.md fallisce subito con un messaggio, per non far sembrare
+# pubblicata una build che non c'è.
+on:
+  workflow_dispatch:
+    inputs:
+      corsia:
+        description: 'convalida controlla la chiave; beta firma, costruisce e carica su TestFlight'
+        type: choice
+        options: [convalida, beta]
+        default: convalida
+
+permissions:
+  contents: read
+
+jobs:
+  ios:
+    runs-on: macos-latest
+    timeout-minutes: 60
+    env:
+      APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+      APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+      APP_STORE_CONNECT_KEY_P8: ${{ secrets.APP_STORE_CONNECT_KEY_P8 }}
+      IOS_DISTRIBUTION_CERT_BASE64: ${{ secrets.IOS_DISTRIBUTION_CERT_BASE64 }}
+      IOS_CERT_PASSWORD: ${{ secrets.IOS_CERT_PASSWORD }}
+      IOS_PROVISIONING_PROFILE_BASE64: ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      CORSIA: ${{ inputs.corsia }}
+      BUNDLE_GEMFILE: ${{ github.workspace }}/Gemfile
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Segreti presenti
+        run: |
+          missing=""
+          for name in APP_STORE_CONNECT_KEY_ID APP_STORE_CONNECT_ISSUER_ID APP_STORE_CONNECT_KEY_P8; do
+            [ -n "${!name}" ] || missing="$missing $name"
+          done
+          if [ "$CORSIA" = "beta" ]; then
+            for name in IOS_DISTRIBUTION_CERT_BASE64 IOS_CERT_PASSWORD IOS_PROVISIONING_PROFILE_BASE64 APPLE_TEAM_ID; do
+              [ -n "${!name}" ] || missing="$missing $name"
+            done
+          fi
+          if [ -n "$missing" ]; then
+            echo "::error::Segreti mancanti:$missing. Vedi docs/store.md"
+            exit 1
+          fi
+      - uses: ruby/setup-ruby@651ff0d62c5c79bed6d53ec518387aae20e72c1a # v1.329.0
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+      - name: Convalida della chiave di App Store Connect
+        if: inputs.corsia == 'convalida'
+        working-directory: ios
+        run: bundle exec fastlane ios convalida
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        if: inputs.corsia == 'beta'
+        with:
+          channel: stable
+          flutter-version: 3.47.7
+          cache: true
+      - name: Build firmata e TestFlight
+        if: inputs.corsia == 'beta'
+        run: |
+          dart tool/l10n.dart --solo-unione
+          flutter pub get
+          # Numero di build crescente con la cronologia, come per l'APK.
+          flutter build ios --config-only --release --no-codesign \
+            --build-number="$(git rev-list --count HEAD)"
+          export CERT_PATH="$RUNNER_TEMP/distribuzione.p12" PROFILE_PATH="$RUNNER_TEMP/profilo.mobileprovision"
+          trap 'rm -f "$CERT_PATH" "$PROFILE_PATH"' EXIT
+          echo "$IOS_DISTRIBUTION_CERT_BASE64" | base64 --decode > "$CERT_PATH"
+          echo "$IOS_PROVISIONING_PROFILE_BASE64" | base64 --decode > "$PROFILE_PATH"
+          cd ios && bundle exec fastlane ios beta

@@ -1,0 +1,55 @@
+# Pubblicazione su TestFlight. Nessuna credenziale nel repository: arrivano
+# dalle variabili d'ambiente impostate da .github/workflows/store-ios.yml
+# (segreti di GitHub Actions), vedi docs/store.md.
+default_platform(:ios)
+
+platform :ios do
+  def chiave_api
+    app_store_connect_api_key(
+      key_id: ENV.fetch("APP_STORE_CONNECT_KEY_ID"),
+      issuer_id: ENV.fetch("APP_STORE_CONNECT_ISSUER_ID"),
+      key_content: ENV.fetch("APP_STORE_CONNECT_KEY_P8"),
+      is_key_content_base64: false,
+    )
+  end
+
+  desc "Controlla che la chiave API di App Store Connect sia valida"
+  lane :convalida do
+    latest_testflight_build_number(
+      api_key: chiave_api,
+      app_identifier: CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier),
+    )
+  end
+
+  desc "Firma, costruisce e carica su TestFlight (serve prima flutter build ios --config-only)"
+  lane :beta do
+    api_key = chiave_api
+    setup_ci
+    import_certificate(
+      certificate_path: ENV.fetch("CERT_PATH"),
+      certificate_password: ENV.fetch("IOS_CERT_PASSWORD"),
+      keychain_name: ENV.fetch("MATCH_KEYCHAIN_NAME", "fastlane_tmp_keychain"),
+      keychain_password: ENV.fetch("MATCH_KEYCHAIN_PASSWORD", ""),
+    )
+    profilo = install_provisioning_profile(path: ENV.fetch("PROFILE_PATH"))
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path: "Runner.xcodeproj",
+      team_id: ENV.fetch("APPLE_TEAM_ID"),
+      targets: ["Runner"],
+      code_sign_identity: "Apple Distribution",
+      profile_name: profilo,
+    )
+    build_app(
+      workspace: "Runner.xcworkspace",
+      scheme: "Runner",
+      configuration: "Release",
+      export_method: "app-store",
+      output_directory: "../build/ios/ipa",
+    )
+    upload_to_testflight(
+      api_key: api_key,
+      skip_waiting_for_build_processing: true,
+    )
+  end
+end

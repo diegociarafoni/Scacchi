@@ -1,0 +1,46 @@
+# Ricetta per F-Droid (https://gitlab.com/fdroid/fdroiddata, cartella metadata/).
+# Qui è la copia di riferimento: per pubblicare si apre una richiesta di unione
+# su fdroiddata con questo file. Procedura e punti aperti: docs/store.md.
+Categories:
+  - Games
+License: GPL-3.0-or-later
+AuthorName: Diego Ciarafoni
+WebSite: https://github.com/diegociarafoni/rokko
+SourceCode: https://github.com/diegociarafoni/rokko
+IssueTracker: https://github.com/diegociarafoni/rokko/issues
+Changelog: https://github.com/diegociarafoni/rokko/blob/main/CHANGELOG.md
+
+AutoName: Rokko
+
+RepoType: git
+Repo: https://github.com/diegociarafoni/rokko.git
+
+# Da attivare al primo rilascio numerato che contiene i metadati di android/fastlane:
+# togliere il cancelletto e mettere versionName, versionCode (numero di commit del tag,
+# come per l'APK) e commit del tag.
+# Builds:
+#   - versionName: X.Y.Z
+#     versionCode: N
+#     commit: vX.Y.Z
+#     # L'APK per F-Droid è universale e lo firma F-Droid: niente --split-per-abi.
+#     output: build/app/outputs/flutter-apk/app-release.apk
+#     srclibs:
+#       - flutter@3.47.7
+#     rm:
+#       - ios
+#       - linux
+#       - macos
+#       - windows
+#     prebuild:
+#       - $$flutter$$/bin/flutter config --no-analytics
+#       - $$flutter$$/bin/dart tool/l10n.dart --solo-unione
+#       - $$flutter$$/bin/flutter pub get
+#     build:
+#       - $$flutter$$/bin/flutter build apk --release --build-name=$$VERSION$$ --build-number=$$VERCODE$$
+#     ndk: r28c
+#
+
+Builds: []
+
+AutoUpdateMode: Version
+UpdateCheckMode: Tags ^v[0-9.]+$

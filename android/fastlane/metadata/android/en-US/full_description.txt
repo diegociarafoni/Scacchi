@@ -1,0 +1,18 @@
+Rokko is a free and open source chess app that also works offline. No ads, no accounts, no subscriptions and no data collected.
+
+Play
+• against the computer (Stockfish on your phone) with 8 levels, bots with personality, a coach and variants;
+• against a friend on the same phone, over Wi-Fi, Bluetooth or remotely, with encrypted moves;
+• with a clock, zen mode, a physical board mode and handicap games.
+
+Learn
+• puzzles of every kind, an openings explorer and repertoire, endgames and master games;
+• a stepped, story-driven path, also made for children, with a dedicated profile;
+• review and analysis of your own games, with coach comments.
+
+Make it yours
+• piece sets, boards, backgrounds and sounds to choose from, light or dark theme, colors for color-blind players;
+• a game archive with PGN import and export, backup and restore;
+• Italian and English, with screen reader support and adjustable text.
+
+Rokko is free software (GPL-3.0 or later): the code is at https://github.com/diegociarafoni/rokko. Your data stays on your phone.

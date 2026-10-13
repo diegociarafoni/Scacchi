@@ -1,0 +1,18 @@
+Rokko è un'app di scacchi libera e completamente gratuita, che funziona anche senza connessione. Nessuna pubblicità, nessun account, nessun abbonamento e nessun dato raccolto.
+
+Gioca
+• contro il computer (Stockfish sul telefono) con 8 livelli, bot con personalità, allenatore e varianti;
+• contro un amico sullo stesso telefono, in Wi-Fi, con il Bluetooth o a distanza, con le mosse cifrate;
+• con l'orologio, la modalità zen, la scacchiera fisica e le partite a handicap.
+
+Impara
+• puzzle di ogni tipo, aperture con esploratore e repertorio, finali e partite dei grandi maestri;
+• un percorso a tappe e a storia, pensato anche per i bambini, con un profilo dedicato;
+• la revisione e l'analisi delle tue partite, con commenti dell'allenatore.
+
+Su misura
+• pezzi, scacchiere, sfondi e suoni da scegliere, tema chiaro o scuro, colori per daltonici;
+• archivio delle partite con import ed export PGN, backup e ripristino dei dati;
+• italiano e inglese, con lettori di schermo e testi regolabili.
+
+Rokko è software libero (GPL-3.0 o successiva): il codice è su https://github.com/diegociarafoni/rokko. I dati restano sul tuo telefono.
