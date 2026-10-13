@@ -9,46 +9,14 @@ import 'puzzle_session.dart';
 /// Modalità a serie: combo e corsa a tempo, sopravvivenza e serie senza tempo.
 /// I nomi dei valori sono identificativi salvati nei record: non cambiarli.
 enum PuzzleRunMode {
-  storm(
-    'Combo a tempo',
-    '3 minuti, secondi bonus con le combo',
-    limit: Duration(minutes: 3),
-    maxMistakes: null,
-  ),
-  rush3(
-    'Corsa 3 minuti',
-    '3 minuti, tre errori',
-    limit: Duration(minutes: 3),
-    maxMistakes: 3,
-  ),
-  rush5(
-    'Corsa 5 minuti',
-    '5 minuti, tre errori',
-    limit: Duration(minutes: 5),
-    maxMistakes: 3,
-  ),
-  survival(
-    'Sopravvivenza',
-    'Senza tempo, tre errori',
-    limit: null,
-    maxMistakes: 3,
-  ),
-  streak(
-    'Serie',
-    'Senza tempo, finisce al primo errore',
-    limit: null,
-    maxMistakes: 1,
-  );
+  storm(limit: Duration(minutes: 3), maxMistakes: null),
+  rush3(limit: Duration(minutes: 3), maxMistakes: 3),
+  rush5(limit: Duration(minutes: 5), maxMistakes: 3),
+  survival(limit: null, maxMistakes: 3),
+  streak(limit: null, maxMistakes: 1);
 
-  const PuzzleRunMode(
-    this.label,
-    this.description, {
-    required this.limit,
-    required this.maxMistakes,
-  });
+  const PuzzleRunMode({required this.limit, required this.maxMistakes});
 
-  final String label;
-  final String description;
   final Duration? limit;
   final int? maxMistakes;
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/puzzles/mode_guide.dart';
 import 'package:scacchi/puzzles/puzzle_library.dart';
 import 'package:scacchi/puzzles/puzzle_page.dart';
@@ -18,15 +19,20 @@ import 'puzzle_run_page_test.dart' show begin, phone;
 Future<PuzzleTrainer> load(KeyValueStore store) =>
     PuzzleTrainer.load(PuzzleLibrary([backRank, castle, hangingQueen]), store);
 
+final it = lookupAppLocalizations(const Locale('it'));
+
 void main() {
   test('il testo del ripasso cita gli intervalli veri', () {
     expect(ReviewQueue.intervals, [1, 3, 7, 14, 30]);
-    expect(PuzzleGuide.review.rules.join(' '), contains('1, 3, 7, 14 e 30'));
+    expect(
+      PuzzleGuide.review.rules(it).join(' '),
+      contains('1, 3, 7, 14 e 30'),
+    );
   });
 
   group('serie: spiegazione prima di iniziare', () {
     for (final mode in PuzzleRunMode.values) {
-      testWidgets('${mode.label} mostra obiettivo e regole, poi parte', (
+      testWidgets('${mode.name} mostra obiettivo e regole, poi parte', (
         tester,
       ) async {
         final trainer = await phone(tester);
@@ -41,8 +47,8 @@ void main() {
         );
         final guide = PuzzleGuide.forRun(mode);
         expect(find.text('Obiettivo'), findsOneWidget);
-        expect(find.text(guide.goal), findsOneWidget);
-        expect(find.text(guide.rules.first), findsOneWidget);
+        expect(find.text(guide.goal(it)), findsOneWidget);
+        expect(find.text(guide.rules(it).first), findsOneWidget);
         expect(find.byKey(const Key('run-score')), findsNothing);
         await begin(tester);
         expect(find.text('Obiettivo'), findsNothing);
@@ -222,18 +228,18 @@ void main() {
     ) async {
       final store = MemoryStore();
       await open(tester, await load(store), PuzzleGuide.daily);
-      expect(find.text(PuzzleGuide.daily.goal), findsOneWidget);
+      expect(find.text(PuzzleGuide.daily.goal(it)), findsOneWidget);
       await tester.tap(find.text('Ho capito'));
       await tester.pumpAndSettle();
-      expect(find.text(PuzzleGuide.daily.goal), findsNothing);
+      expect(find.text(PuzzleGuide.daily.goal(it)), findsNothing);
 
       // La seconda volta non si ripresenta, ma resta nella barra.
       await tester.pumpWidget(localizedApp(home: const SizedBox()));
       await open(tester, await load(store), PuzzleGuide.daily);
-      expect(find.text(PuzzleGuide.daily.goal), findsNothing);
+      expect(find.text(PuzzleGuide.daily.goal(it)), findsNothing);
       await tester.tap(find.byTooltip('Come funziona'));
       await tester.pumpAndSettle();
-      expect(find.text(PuzzleGuide.daily.goal), findsOneWidget);
+      expect(find.text(PuzzleGuide.daily.goal(it)), findsOneWidget);
     });
 
     testWidgets('senza guida non compare nulla di nuovo', (tester) async {

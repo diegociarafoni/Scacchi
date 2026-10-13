@@ -213,7 +213,8 @@ class _AdviceSection extends StatelessWidget {
         }
       }
     }
-    final themeTitle = puzzleThemeLabels[advice.target];
+    final target = advice.target;
+    final themeTitle = target == null ? null : puzzleThemeLabel(l, target);
     final text = switch (kind) {
       AdviceKind.lesson when stage != null => l.weeklyAdviceLesson(stage.title),
       AdviceKind.puzzles when themeTitle != null => l.weeklyAdvicePuzzles(

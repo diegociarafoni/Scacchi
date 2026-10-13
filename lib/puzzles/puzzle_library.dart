@@ -41,7 +41,9 @@ class PuzzleLibrary {
     final pool = theme == null
         ? puzzles
         : puzzles.where((p) => p.themes.contains(theme)).toList();
-    if (pool.isEmpty) throw StateError('Nessun puzzle per il tema $theme');
+    if (pool.isEmpty) {
+      throw StateError('Nessun puzzle per il tema $theme'); // l10n-ok
+    }
     final fresh = pool.where((p) => !seen.contains(p.id));
     if (fresh.isEmpty) {
       final order = {for (final (i, id) in seen.indexed) id: i};

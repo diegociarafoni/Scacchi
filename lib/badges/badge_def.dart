@@ -269,7 +269,7 @@ final List<BadgeDef> badges = [
     target: 10,
     // Le etichette di durata e livello di Lichess non sono temi.
     value: (f) => f.state.puzzleThemes.entries
-        .where((e) => e.value > 0 && puzzleThemeLabels.containsKey(e.key))
+        .where((e) => e.value > 0 && puzzleThemeIds.contains(e.key))
         .length,
   ),
   _theme('pin_10', Icons.push_pin, 'pin', 10),
