@@ -60,7 +60,12 @@ void main() {
       // Si torna alla Home per passare alla scheda Tu.
       await tester.tap(find.byType(BackButton));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Tu'));
+      await tester.tap(
+        find.descendant(
+          of: find.byType(NavigationBar),
+          matching: find.text('Tu'),
+        ),
+      );
       await tester.pumpAndSettle();
       await tester.fling(
         find.byType(Scrollable).first,
