@@ -1,0 +1,475 @@
+{
+  "puzzleGoal": "{goal, select, mateIn1{Mate em 1} mateIn2{Mate em 2} mateIn3{Mate em 3} mateIn4{Mate em 4} mate{Dê xeque-mate no adversário} crushing{Consiga uma vantagem decisiva} advantage{Consiga a vantagem} equality{Alcance a igualdade} other{Encontre o melhor lance}}",
+  "puzzleGoalSide": "{goal} · Vez das {side}",
+  "@puzzleGoalSide": {
+    "description": "Puzzle header card: goal and side to move",
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      },
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "challengeTitle": "Desafie um amigo",
+  "challengeSubtitle": "Os mesmos quebra-cabeças em dois celulares, sem internet",
+  "challengeIntro": "Escolha a rodada e mostre o QR code ao seu amigo: vocês dois jogam os mesmos quebra-cabeças. No fim, vocês trocam as pontuações com um segundo QR code.",
+  "challengePrepare": "Preparar o desafio",
+  "challengeReady": "Desafio pronto: {mode}",
+  "challengeShowInvite": "Mostre o QR code ao seu amigo",
+  "challengePlay": "Jogar sua rodada",
+  "challengeReceive": "Receber um desafio",
+  "challengeInviteTitle": "Desafio: {mode}",
+  "challengeInviteHint": "Seu amigo abre Quebra-cabeças › Desafie um amigo › Receber um desafio e escaneia o código.",
+  "challengeReceiveHint": "Escaneie o QR code do desafio que seu amigo está mostrando.",
+  "challengeNotInvite": "Este QR code não é um desafio: peça ao seu amigo para mostrar o QR code do desafio.",
+  "challengeLibraryMismatch": "Os dois celulares têm quebra-cabeças diferentes: atualize o Rokko nos dois.",
+  "challengeCompareTitle": "Desafio com seu amigo",
+  "challengeShowResult": "Mostrar meu resultado",
+  "challengeResultTitle": "Meu resultado: {score}",
+  "challengeResultHint": "Seu amigo escaneia este código para ver sua pontuação.",
+  "challengeReadResult": "Ler o resultado do seu amigo",
+  "challengeReadResultHint": "Escaneie o QR code do resultado que seu amigo está mostrando.",
+  "challengeNotResult": "Este QR code não é um resultado: peça ao seu amigo para mostrar o QR code do resultado.",
+  "challengeOtherChallenge": "Esse resultado pertence a outro desafio.",
+  "challengeWon": "Você ganhou: {mine} a {theirs}",
+  "challengeLost": "Seu amigo ganhou: {theirs} a {mine}",
+  "challengeDraw": "Empate: {mine} a {theirs}",
+  "puzzleHubTitle": "Quebra-cabeças",
+  "@puzzleHubTitle": {
+    "description": "Titolo della scheda Puzzle"
+  },
+  "puzzleHubLoadError": "Não foi possível carregar os quebra-cabeças.",
+  "@puzzleHubLoadError": {
+    "description": "Errore di caricamento dei puzzle"
+  },
+  "puzzleHubRating": "Pontuação {rating}",
+  "@puzzleHubRating": {
+    "description": "Punteggio in cima alla scheda Puzzle",
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleHubStats": "Resolvidos {solved} · Errados {failed} · {total} quebra-cabeças disponíveis",
+  "@puzzleHubStats": {
+    "description": "Riga sotto il punteggio",
+    "placeholders": {
+      "solved": {
+        "type": "int"
+      },
+      "failed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleTraining": "Treino",
+  "@puzzleTraining": {
+    "description": "Voce Allenamento"
+  },
+  "puzzleTrainingSubtitle": "Quebra-cabeças do seu nível",
+  "@puzzleTrainingSubtitle": {
+    "description": "Sottotitolo di Allenamento"
+  },
+  "puzzleDailyTitle": "Quebra-cabeça do dia",
+  "@puzzleDailyTitle": {
+    "description": "Puzzle del giorno: voce e titolo"
+  },
+  "puzzleDailySubtitle": "Dificuldade {rating}",
+  "@puzzleDailySubtitle": {
+    "description": "Sottotitolo del puzzle del giorno",
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleByTheme": "Por tema",
+  "@puzzleByTheme": {
+    "description": "Voce Per tema"
+  },
+  "puzzleByThemeSubtitle": "Xeque-mates, garfos, finais e mais",
+  "@puzzleByThemeSubtitle": {
+    "description": "Sottotitolo di Per tema"
+  },
+  "puzzleThemesTitle": "Temas",
+  "@puzzleThemesTitle": {
+    "description": "Titolo dell'elenco dei temi"
+  },
+  "puzzleReview": "Revisar seus erros",
+  "@puzzleReview": {
+    "description": "Voce Ripasso degli errori"
+  },
+  "puzzleReviewTitle": "Revisão",
+  "@puzzleReviewTitle": {
+    "description": "Titolo della schermata di ripasso"
+  },
+  "puzzleReviewNone": "Nada para revisar hoje",
+  "@puzzleReviewNone": {
+    "description": "Nessun puzzle da ripassare"
+  },
+  "puzzleReviewDue": "{count} para revisar hoje",
+  "@puzzleReviewDue": {
+    "description": "Puzzle da ripassare",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleSectionTimed": "Modos cronometrados",
+  "@puzzleSectionTimed": {
+    "description": "Intestazione delle modalità a tempo"
+  },
+  "puzzleSectionPractice": "Prática",
+  "@puzzleSectionPractice": {
+    "description": "Intestazione delle modalità libere"
+  },
+  "puzzleRecord": "Melhor {best}",
+  "@puzzleRecord": {
+    "description": "Record della modalità",
+    "placeholders": {
+      "best": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunLabel": "{mode, select, storm{Combo cronometrado} rush3{Corrida de 3 minutos} rush5{Corrida de 5 minutos} survival{Sobrevivência} other{Sequência}}",
+  "@puzzleRunLabel": {
+    "description": "Nome della modalità a serie",
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleRunDescription": "{mode, select, storm{3 minutos, segundos extras com combos} rush3{3 minutos, três erros} rush5{5 minutos, três erros} survival{Sem cronômetro, três erros} other{Sem cronômetro, termina no primeiro erro}}",
+  "@puzzleRunDescription": {
+    "description": "Descrizione della modalità a serie",
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleDefaultTitle": "Quebra-cabeça",
+  "@puzzleDefaultTitle": {
+    "description": "Titolo predefinito della schermata del puzzle"
+  },
+  "puzzleEmpty": "Nenhum quebra-cabeça para oferecer.",
+  "@puzzleEmpty": {
+    "description": "Nessun puzzle disponibile"
+  },
+  "puzzleHelp": "Como funciona",
+  "@puzzleHelp": {
+    "description": "Pulsante che riapre la spiegazione"
+  },
+  "puzzleSide": "{side, select, white{Brancas} other{Pretas}}",
+  "@puzzleSide": {
+    "description": "Colore che muove",
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleRestarted": "Posição inicial. Encontre o melhor lance para as {side}.",
+  "@puzzleRestarted": {
+    "description": "Dopo aver ricominciato",
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleCorrect": "Certo! Continue.",
+  "@puzzleCorrect": {
+    "description": "Mossa giusta"
+  },
+  "puzzleWrong": "Esse não é o lance certo. Toque em “Tentar de novo” para recomeçar.",
+  "@puzzleWrong": {
+    "description": "Mossa sbagliata"
+  },
+  "puzzleSolved": "Resolvido!",
+  "@puzzleSolved": {
+    "description": "Puzzle risolto"
+  },
+  "puzzleDone": "Quebra-cabeça concluído.",
+  "@puzzleDone": {
+    "description": "Puzzle concluso dopo errori o soluzione"
+  },
+  "puzzleRevealed": "Aqui está o lance certo.",
+  "@puzzleRevealed": {
+    "description": "Mossa mostrata"
+  },
+  "puzzleOutcomeRepeat": "Já visto: pontuação inalterada.",
+  "@puzzleOutcomeRepeat": {
+    "description": "Puzzle già visto"
+  },
+  "puzzleOutcomeRating": "Pontuação {rating} ({delta}).",
+  "@puzzleOutcomeRating": {
+    "description": "Punteggio dopo il puzzle",
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      },
+      "delta": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleNoMore": "Não há mais quebra-cabeças por enquanto.",
+  "@puzzleNoMore": {
+    "description": "Fine dei puzzle"
+  },
+  "puzzleDifficulty": "Quebra-cabeça {rating}",
+  "@puzzleDifficulty": {
+    "description": "Difficoltà del puzzle risolto",
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleProgress": "Lances encontrados: {done} de {total}",
+  "@puzzleProgress": {
+    "description": "Mosse trovate",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleProgressKid": "Progresso do quebra-cabeça",
+  "@puzzleProgressKid": {
+    "description": "Avanzamento senza cifre"
+  },
+  "puzzleHint": "Dica",
+  "@puzzleHint": {
+    "description": "Pulsante suggerimento"
+  },
+  "puzzleSolution": "Solução",
+  "@puzzleSolution": {
+    "description": "Pulsante soluzione"
+  },
+  "puzzleRetry": "Tentar de novo",
+  "@puzzleRetry": {
+    "description": "Pulsante riprova"
+  },
+  "puzzleNext": "Próximo",
+  "@puzzleNext": {
+    "description": "Pulsante prossimo"
+  },
+  "puzzleSkip": "Pular",
+  "@puzzleSkip": {
+    "description": "Pulsante salta"
+  },
+  "puzzleRunStart": "Começar",
+  "@puzzleRunStart": {
+    "description": "Pulsante che avvia la serie"
+  },
+  "puzzleRunRecordFooter": "Seu melhor: {best} quebra-cabeças.",
+  "@puzzleRunRecordFooter": {
+    "description": "Record sotto le regole",
+    "placeholders": {
+      "best": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunRight": "Certo!",
+  "@puzzleRunRight": {
+    "description": "Esito giusto"
+  },
+  "puzzleRunWrong": "Errado",
+  "@puzzleRunWrong": {
+    "description": "Esito sbagliato"
+  },
+  "puzzleRunEndMistake": "Você errou um quebra-cabeça: a rodada acabou.",
+  "@puzzleRunEndMistake": {
+    "description": "Fine per un errore"
+  },
+  "puzzleRunEndLives": "Você perdeu as três vidas.",
+  "@puzzleRunEndLives": {
+    "description": "Fine per le vite"
+  },
+  "puzzleRunEndTime": "O tempo acabou.",
+  "@puzzleRunEndTime": {
+    "description": "Fine per il tempo"
+  },
+  "puzzleRunEndExhausted": "Você resolveu todos os quebra-cabeças disponíveis.",
+  "@puzzleRunEndExhausted": {
+    "description": "Fine per esaurimento"
+  },
+  "puzzleRunScore": "Pontos {score}",
+  "@puzzleRunScore": {
+    "description": "Punti della serie",
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunTimeLeft": "Tempo restante: {time}",
+  "@puzzleRunTimeLeft": {
+    "description": "Tempo rimasto, per i lettori di schermo",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleRunCombo": "Combo {combo}",
+  "@puzzleRunCombo": {
+    "description": "Combo in corso",
+    "placeholders": {
+      "combo": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunLives": "Vidas: {left} de {total}",
+  "@puzzleRunLives": {
+    "description": "Vite rimaste",
+    "placeholders": {
+      "left": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunOver": "Rodada concluída",
+  "@puzzleRunOver": {
+    "description": "Titolo del risultato"
+  },
+  "puzzleRunSolvedLabel": "quebra-cabeças resolvidos",
+  "@puzzleRunSolvedLabel": {
+    "description": "Etichetta sotto il punteggio finale"
+  },
+  "puzzleRunNewRecord": "Novo recorde pessoal!",
+  "@puzzleRunNewRecord": {
+    "description": "Nuovo record"
+  },
+  "puzzleRunBest": "Melhor: {best}",
+  "@puzzleRunBest": {
+    "description": "Record personale",
+    "placeholders": {
+      "best": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunBestCombo": "Melhor combo: {combo}",
+  "@puzzleRunBestCombo": {
+    "description": "Combo migliore",
+    "placeholders": {
+      "combo": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunAgain": "Jogar de novo",
+  "@puzzleRunAgain": {
+    "description": "Pulsante rigioca"
+  },
+  "puzzleGuideGoalHeading": "Objetivo",
+  "@puzzleGuideGoalHeading": {
+    "description": "Intestazione della spiegazione"
+  },
+  "puzzleGuideRulesHeading": "Como jogar",
+  "@puzzleGuideRulesHeading": {
+    "description": "Intestazione della spiegazione"
+  },
+  "puzzleGuideGotIt": "Entendi",
+  "@puzzleGuideGotIt": {
+    "description": "Chiude la spiegazione"
+  },
+  "puzzleThemeMateIn1": "Mate em 1",
+  "puzzleThemeMateIn2": "Mate em 2",
+  "puzzleThemeMateIn3": "Mate em 3",
+  "puzzleThemeMateIn4": "Mate em 4",
+  "puzzleThemeMateIn5": "Mate em 5 ou mais",
+  "puzzleThemeBackRankMate": "Mate do corredor",
+  "puzzleThemeSmotheredMate": "Mate sufocado",
+  "puzzleThemeFork": "Garfo",
+  "puzzleThemePin": "Cravada",
+  "puzzleThemeSkewer": "Espeto",
+  "puzzleThemeDiscoveredAttack": "Ataque descoberto",
+  "puzzleThemeDoubleCheck": "Xeque duplo",
+  "puzzleThemeHangingPiece": "Peça pendurada",
+  "puzzleThemeTrappedPiece": "Peça presa",
+  "puzzleThemeDeflection": "Desvio",
+  "puzzleThemeAttraction": "Atração",
+  "puzzleThemeSacrifice": "Sacrifício",
+  "puzzleThemeCapturingDefender": "Captura do defensor",
+  "puzzleThemeClearance": "Desobstrução",
+  "puzzleThemeInterference": "Interferência",
+  "puzzleThemeIntermezzo": "Lance intermediário",
+  "puzzleThemeXRayAttack": "Ataque de raio-X",
+  "puzzleThemeQuietMove": "Lance silencioso",
+  "puzzleThemeDefensiveMove": "Lance defensivo",
+  "puzzleThemeZugzwang": "Zugzwang",
+  "puzzleThemePromotion": "Promoção",
+  "puzzleThemeUnderPromotion": "Subpromoção",
+  "puzzleThemeAdvancedPawn": "Peão avançado",
+  "puzzleThemeExposedKing": "Rei exposto",
+  "puzzleThemeKingsideAttack": "Ataque no lado do rei",
+  "puzzleThemeQueensideAttack": "Ataque no lado da dama",
+  "puzzleThemeEnPassant": "En passant",
+  "puzzleThemeCastling": "Roque",
+  "puzzleThemeOpening": "Abertura",
+  "puzzleThemeMiddlegame": "Meio-jogo",
+  "puzzleThemeEndgame": "Final",
+  "puzzleThemePawnEndgame": "Final de peões",
+  "puzzleThemeRookEndgame": "Final de torres",
+  "puzzleThemeQueenEndgame": "Final de damas",
+  "puzzleThemeKnightEndgame": "Final de cavalos",
+  "puzzleThemeBishopEndgame": "Final de bispos",
+  "puzzleGuideThemeTitle": "Quebra-cabeças por tema",
+  "puzzleGuideTrainingGoal": "Encontre o melhor lance em cada quebra-cabeça, um depois do outro.",
+  "puzzleGuideTrainingRule1": "Os quebra-cabeças são escolhidos conforme sua pontuação: quanto melhor você for, mais difíceis eles ficam.",
+  "puzzleGuideTrainingRule2": "Mova a peça certa: se o lance estiver certo, seu adversário responde e é sua vez de novo; se estiver errado, ele é desfeito.",
+  "puzzleGuideTrainingRule3": "Em um quebra-cabeça novo, resolvê-lo de primeira aumenta sua pontuação; se você errar ou ver a solução, conta como errado, sua pontuação cai e o quebra-cabeça volta para a revisão. Quebra-cabeças que você já viu não mudam sua pontuação.",
+  "puzzleGuideTrainingRule4": "A dica não custa nada: ela circula a peça que deve se mover.",
+  "puzzleGuideTrainingRule5": "Não há relógio nem limite de erros: você pode parar quando quiser.",
+  "puzzleGuideThemeGoal": "Treine um único padrão tático: todos os quebra-cabeças têm o mesmo tema.",
+  "puzzleGuideThemeRule1": "Mova a peça certa: se o lance estiver certo, seu adversário responde; se estiver errado, ele é desfeito.",
+  "puzzleGuideThemeRule2": "Em um quebra-cabeça novo, resolvê-lo de primeira aumenta sua pontuação; com erros ou solução revelada, conta como errado, sua pontuação cai e o quebra-cabeça volta para a revisão.",
+  "puzzleGuideThemeRule3": "Não há relógio nem limite de erros.",
+  "puzzleGuideDailyGoal": "Resolva o quebra-cabeça de hoje: ele é o mesmo o dia todo.",
+  "puzzleGuideDailyRule1": "Encontre a sequência certa de lances: se errar um, ele é desfeito e você pode tentar de novo.",
+  "puzzleGuideDailyRule2": "Com “Tentar de novo” você recomeça da posição inicial; com “Solução” você vê os lances.",
+  "puzzleGuideDailyRule3": "Só conta como resolvido se você não errar e não olhar a solução; caso contrário, conta como errado.",
+  "puzzleGuideDailyRule4": "Um novo chega amanhã.",
+  "puzzleGuideReviewGoal": "Encontre as soluções dos quebra-cabeças em que você errou.",
+  "puzzleGuideReviewRule1": "Cada quebra-cabeça volta em intervalos crescentes (1, 3, 7, 14 e 30 dias): hoje você recebe só os que estão na data.",
+  "puzzleGuideReviewRule2": "Se você resolver sem erros, o intervalo fica maior; se escorregar, volta a começar de um dia.",
+  "puzzleGuideReviewRule3": "A revisão não muda sua pontuação de treino.",
+  "puzzleGuideReviewRule4": "Quando os quebra-cabeças de hoje acabarem, não há mais nada a fazer.",
+  "puzzleGuideRunBase1": "Os quebra-cabeças ficam mais difíceis ao longo da rodada.",
+  "puzzleGuideRunBase2": "Cada quebra-cabeça resolvido vale 1 ponto.",
+  "puzzleGuideRunTail1": "Seu melhor resultado é salvo para cada modo.",
+  "puzzleGuideRunTail2": "Você pode sair quando quiser: os pontos e o XP que ganhou continuam valendo.",
+  "puzzleGuideStormGoal": "Resolva o máximo de quebra-cabeças que puder em {minutes} minutos.",
+  "puzzleGuideStormRule1": "Um erro custa {seconds} segundos, zera seu combo e passa para o próximo quebra-cabeça.",
+  "puzzleGuideStormRule2": "Com 5, 12, 20 e 30 quebra-cabeças seguidos você ganha 3, 5, 7 e 10 segundos (depois, 10 a cada 10 quebra-cabeças).",
+  "puzzleGuideStormRule3": "Não há vidas: a rodada termina quando o tempo acaba.",
+  "puzzleGuideRushGoal": "Resolva o máximo de quebra-cabeças que puder em {minutes} minutos, com três vidas.",
+  "puzzleGuideLivesRule1": "Um erro custa uma vida e passa para o próximo quebra-cabeça.",
+  "puzzleGuideRushRule2": "A rodada termina quando o tempo acaba ou quando você perde a terceira vida.",
+  "puzzleGuideSurvivalGoal": "Resolva o máximo de quebra-cabeças que puder, com três vidas e sem limite de tempo.",
+  "puzzleGuideSurvivalRule2": "A rodada termina quando você perde a terceira vida.",
+  "puzzleGuideStreakGoal": "Resolva o máximo de quebra-cabeças seguidos que puder: o primeiro erro encerra a rodada.",
+  "puzzleGuideStreakRule1": "Não há limite de tempo nem vidas.",
+  "puzzleGuideStreakRule2": "Você só pode pular um quebra-cabeça por rodada, com “Pular”."
+}

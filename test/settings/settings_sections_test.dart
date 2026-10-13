@@ -238,6 +238,7 @@ void main() {
       SettingsSection.game: [
         'autoQueen',
         'autoFlip',
+        'premove',
         'tableMode',
         'explainWhy',
       ],
