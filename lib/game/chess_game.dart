@@ -65,7 +65,11 @@ class ChessGame {
           initial ?? initialPosition(variant, chess960Id: standardChess960Id) {
     // Le regole vengono dalla posizione: devono essere quelle della variante.
     if (this.initial.rule != variant.rule) {
-      throw ArgumentError.value(variant, 'variant', 'diversa dalla posizione');
+      throw ArgumentError.value(
+        variant,
+        'variant',
+        'diversa dalla posizione', // l10n-ok
+      );
     }
   }
 
@@ -83,11 +87,11 @@ class ChessGame {
     final list = moves.toList();
     assert(
       clocks.isEmpty || clocks.length == list.length,
-      'un tempo per ogni mossa, o nessuno',
+      'un tempo per ogni mossa, o nessuno', // l10n-ok
     );
     assert(
       notes.isEmpty || notes.length == list.length,
-      'una nota per ogni mossa, o nessuna',
+      'una nota per ogni mossa, o nessuna', // l10n-ok
     );
     var i = 0;
     for (final move in list) {

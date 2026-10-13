@@ -44,7 +44,7 @@ class Handicap {
     this.giver = HandicapGiver.player,
   }) : assert(
          piece != null || giverMinutes != null,
-         'un handicap ha un pezzo o un tempo',
+         'un handicap ha un pezzo o un tempo', // l10n-ok
        );
 
   final HandicapPiece? piece;
