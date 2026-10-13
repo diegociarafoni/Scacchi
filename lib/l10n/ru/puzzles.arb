@@ -1,0 +1,475 @@
+{
+  "puzzleGoal": "{goal, select, mateIn1{Мат в 1 ход} mateIn2{Мат в 2 хода} mateIn3{Мат в 3 хода} mateIn4{Мат в 4 хода} mate{Поставь мат сопернику} crushing{Получи решающее преимущество} advantage{Получи преимущество} equality{Добейся равенства} other{Найди лучший ход}}",
+  "puzzleGoalSide": "{goal} · ход {side}",
+  "@puzzleGoalSide": {
+    "description": "Puzzle header card: goal and side to move",
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      },
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "challengeTitle": "Вызов другу",
+  "challengeSubtitle": "Одни и те же задачи на двух телефонах, без сети",
+  "challengeIntro": "Выбери серию и покажи QR-код другу: вы оба решаете одни и те же задачи. В конце вы обменяетесь результатами с помощью второго QR-кода.",
+  "challengePrepare": "Подготовить вызов",
+  "challengeReady": "Вызов готов: {mode}",
+  "challengeShowInvite": "Покажи QR-код другу",
+  "challengePlay": "Пройти свою серию",
+  "challengeReceive": "Принять вызов",
+  "challengeInviteTitle": "Вызов: {mode}",
+  "challengeInviteHint": "Друг открывает «Задачи» › «Вызов другу» › «Принять вызов» и сканирует код.",
+  "challengeReceiveHint": "Отсканируй QR-код вызова, который показывает друг.",
+  "challengeNotInvite": "Это не QR-код вызова: попроси друга показать QR-код вызова.",
+  "challengeLibraryMismatch": "На двух телефонах разные задачи: обнови Rokko на обоих.",
+  "challengeCompareTitle": "Вызов с другом",
+  "challengeShowResult": "Показать мой результат",
+  "challengeResultTitle": "Мой результат: {score}",
+  "challengeResultHint": "Друг сканирует этот код, чтобы увидеть твой результат.",
+  "challengeReadResult": "Считать результат друга",
+  "challengeReadResultHint": "Отсканируй QR-код с результатом, который показывает друг.",
+  "challengeNotResult": "Это не QR-код результата: попроси друга показать QR-код результата.",
+  "challengeOtherChallenge": "Этот результат относится к другому вызову.",
+  "challengeWon": "Ты выиграл: {mine}:{theirs}",
+  "challengeLost": "Выиграл друг: {theirs}:{mine}",
+  "challengeDraw": "Ничья: {mine}:{theirs}",
+  "puzzleHubTitle": "Задачи",
+  "@puzzleHubTitle": {
+    "description": "Titolo della scheda Puzzle"
+  },
+  "puzzleHubLoadError": "Не удалось загрузить задачи.",
+  "@puzzleHubLoadError": {
+    "description": "Errore di caricamento dei puzzle"
+  },
+  "puzzleHubRating": "Рейтинг {rating}",
+  "@puzzleHubRating": {
+    "description": "Punteggio in cima alla scheda Puzzle",
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleHubStats": "Решено: {solved} · Не решено: {failed} · Доступно задач: {total}",
+  "@puzzleHubStats": {
+    "description": "Riga sotto il punteggio",
+    "placeholders": {
+      "solved": {
+        "type": "int"
+      },
+      "failed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleTraining": "Тренировка",
+  "@puzzleTraining": {
+    "description": "Voce Allenamento"
+  },
+  "puzzleTrainingSubtitle": "Задачи по твоему рейтингу",
+  "@puzzleTrainingSubtitle": {
+    "description": "Sottotitolo di Allenamento"
+  },
+  "puzzleDailyTitle": "Задача дня",
+  "@puzzleDailyTitle": {
+    "description": "Puzzle del giorno: voce e titolo"
+  },
+  "puzzleDailySubtitle": "Сложность {rating}",
+  "@puzzleDailySubtitle": {
+    "description": "Sottotitolo del puzzle del giorno",
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleByTheme": "По темам",
+  "@puzzleByTheme": {
+    "description": "Voce Per tema"
+  },
+  "puzzleByThemeSubtitle": "Маты, вилки, эндшпили и не только",
+  "@puzzleByThemeSubtitle": {
+    "description": "Sottotitolo di Per tema"
+  },
+  "puzzleThemesTitle": "Темы",
+  "@puzzleThemesTitle": {
+    "description": "Titolo dell'elenco dei temi"
+  },
+  "puzzleReview": "Разбор ошибок",
+  "@puzzleReview": {
+    "description": "Voce Ripasso degli errori"
+  },
+  "puzzleReviewTitle": "Повторение",
+  "@puzzleReviewTitle": {
+    "description": "Titolo della schermata di ripasso"
+  },
+  "puzzleReviewNone": "Сегодня повторять нечего",
+  "@puzzleReviewNone": {
+    "description": "Nessun puzzle da ripassare"
+  },
+  "puzzleReviewDue": "К повторению сегодня: {count}",
+  "@puzzleReviewDue": {
+    "description": "Puzzle da ripassare",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleSectionTimed": "Режимы на время",
+  "@puzzleSectionTimed": {
+    "description": "Intestazione delle modalità a tempo"
+  },
+  "puzzleSectionPractice": "Практика",
+  "@puzzleSectionPractice": {
+    "description": "Intestazione delle modalità libere"
+  },
+  "puzzleRecord": "Рекорд {best}",
+  "@puzzleRecord": {
+    "description": "Record della modalità",
+    "placeholders": {
+      "best": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunLabel": "{mode, select, storm{Комбо на время} rush3{Блиц на 3 минуты} rush5{Блиц на 5 минут} survival{Выживание} other{Серия}}",
+  "@puzzleRunLabel": {
+    "description": "Nome della modalità a serie",
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleRunDescription": "{mode, select, storm{3 минуты, бонусные секунды за комбо} rush3{3 минуты, три ошибки} rush5{5 минут, три ошибки} survival{Без таймера, три ошибки} other{Без таймера, до первой ошибки}}",
+  "@puzzleRunDescription": {
+    "description": "Descrizione della modalità a serie",
+    "placeholders": {
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleDefaultTitle": "Задача",
+  "@puzzleDefaultTitle": {
+    "description": "Titolo predefinito della schermata del puzzle"
+  },
+  "puzzleEmpty": "Подходящих задач нет.",
+  "@puzzleEmpty": {
+    "description": "Nessun puzzle disponibile"
+  },
+  "puzzleHelp": "Как это работает",
+  "@puzzleHelp": {
+    "description": "Pulsante che riapre la spiegazione"
+  },
+  "puzzleSide": "{side, select, white{белых} other{чёрных}}",
+  "@puzzleSide": {
+    "description": "Colore che muove",
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleRestarted": "Начальная позиция. Найди лучший ход за {side}.",
+  "@puzzleRestarted": {
+    "description": "Dopo aver ricominciato",
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleCorrect": "Верно! Продолжай.",
+  "@puzzleCorrect": {
+    "description": "Mossa giusta"
+  },
+  "puzzleWrong": "Это неверный ход. Нажми «Ещё раз», чтобы начать сначала.",
+  "@puzzleWrong": {
+    "description": "Mossa sbagliata"
+  },
+  "puzzleSolved": "Решено!",
+  "@puzzleSolved": {
+    "description": "Puzzle risolto"
+  },
+  "puzzleDone": "Задача окончена.",
+  "@puzzleDone": {
+    "description": "Puzzle concluso dopo errori o soluzione"
+  },
+  "puzzleRevealed": "Вот правильный ход.",
+  "@puzzleRevealed": {
+    "description": "Mossa mostrata"
+  },
+  "puzzleOutcomeRepeat": "Уже была: рейтинг не изменился.",
+  "@puzzleOutcomeRepeat": {
+    "description": "Puzzle già visto"
+  },
+  "puzzleOutcomeRating": "Рейтинг {rating} ({delta}).",
+  "@puzzleOutcomeRating": {
+    "description": "Punteggio dopo il puzzle",
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      },
+      "delta": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleNoMore": "Пока задач больше нет.",
+  "@puzzleNoMore": {
+    "description": "Fine dei puzzle"
+  },
+  "puzzleDifficulty": "Задача {rating}",
+  "@puzzleDifficulty": {
+    "description": "Difficoltà del puzzle risolto",
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleProgress": "Найдено ходов: {done} из {total}",
+  "@puzzleProgress": {
+    "description": "Mosse trovate",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleProgressKid": "Прогресс в задаче",
+  "@puzzleProgressKid": {
+    "description": "Avanzamento senza cifre"
+  },
+  "puzzleHint": "Подсказка",
+  "@puzzleHint": {
+    "description": "Pulsante suggerimento"
+  },
+  "puzzleSolution": "Решение",
+  "@puzzleSolution": {
+    "description": "Pulsante soluzione"
+  },
+  "puzzleRetry": "Ещё раз",
+  "@puzzleRetry": {
+    "description": "Pulsante riprova"
+  },
+  "puzzleNext": "Дальше",
+  "@puzzleNext": {
+    "description": "Pulsante prossimo"
+  },
+  "puzzleSkip": "Пропустить",
+  "@puzzleSkip": {
+    "description": "Pulsante salta"
+  },
+  "puzzleRunStart": "Начать",
+  "@puzzleRunStart": {
+    "description": "Pulsante che avvia la serie"
+  },
+  "puzzleRunRecordFooter": "Твой рекорд: {best}.",
+  "@puzzleRunRecordFooter": {
+    "description": "Record sotto le regole",
+    "placeholders": {
+      "best": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunRight": "Верно!",
+  "@puzzleRunRight": {
+    "description": "Esito giusto"
+  },
+  "puzzleRunWrong": "Неверно",
+  "@puzzleRunWrong": {
+    "description": "Esito sbagliato"
+  },
+  "puzzleRunEndMistake": "Ты ошибся в задаче: серия окончена.",
+  "@puzzleRunEndMistake": {
+    "description": "Fine per un errore"
+  },
+  "puzzleRunEndLives": "Ты потерял все три жизни.",
+  "@puzzleRunEndLives": {
+    "description": "Fine per le vite"
+  },
+  "puzzleRunEndTime": "Время вышло.",
+  "@puzzleRunEndTime": {
+    "description": "Fine per il tempo"
+  },
+  "puzzleRunEndExhausted": "Ты решил все доступные задачи.",
+  "@puzzleRunEndExhausted": {
+    "description": "Fine per esaurimento"
+  },
+  "puzzleRunScore": "Очки: {score}",
+  "@puzzleRunScore": {
+    "description": "Punti della serie",
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunTimeLeft": "Осталось времени: {time}",
+  "@puzzleRunTimeLeft": {
+    "description": "Tempo rimasto, per i lettori di schermo",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleRunCombo": "Комбо {combo}",
+  "@puzzleRunCombo": {
+    "description": "Combo in corso",
+    "placeholders": {
+      "combo": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunLives": "Жизни: {left} из {total}",
+  "@puzzleRunLives": {
+    "description": "Vite rimaste",
+    "placeholders": {
+      "left": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunOver": "Серия окончена",
+  "@puzzleRunOver": {
+    "description": "Titolo del risultato"
+  },
+  "puzzleRunSolvedLabel": "решено задач",
+  "@puzzleRunSolvedLabel": {
+    "description": "Etichetta sotto il punteggio finale"
+  },
+  "puzzleRunNewRecord": "Новый личный рекорд!",
+  "@puzzleRunNewRecord": {
+    "description": "Nuovo record"
+  },
+  "puzzleRunBest": "Рекорд: {best}",
+  "@puzzleRunBest": {
+    "description": "Record personale",
+    "placeholders": {
+      "best": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunBestCombo": "Лучшее комбо: {combo}",
+  "@puzzleRunBestCombo": {
+    "description": "Combo migliore",
+    "placeholders": {
+      "combo": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleRunAgain": "Сыграть ещё",
+  "@puzzleRunAgain": {
+    "description": "Pulsante rigioca"
+  },
+  "puzzleGuideGoalHeading": "Цель",
+  "@puzzleGuideGoalHeading": {
+    "description": "Intestazione della spiegazione"
+  },
+  "puzzleGuideRulesHeading": "Как играть",
+  "@puzzleGuideRulesHeading": {
+    "description": "Intestazione della spiegazione"
+  },
+  "puzzleGuideGotIt": "Понятно",
+  "@puzzleGuideGotIt": {
+    "description": "Chiude la spiegazione"
+  },
+  "puzzleThemeMateIn1": "Мат в 1 ход",
+  "puzzleThemeMateIn2": "Мат в 2 хода",
+  "puzzleThemeMateIn3": "Мат в 3 хода",
+  "puzzleThemeMateIn4": "Мат в 4 хода",
+  "puzzleThemeMateIn5": "Мат в 5 и более ходов",
+  "puzzleThemeBackRankMate": "Мат по последней горизонтали",
+  "puzzleThemeSmotheredMate": "Удушающий мат",
+  "puzzleThemeFork": "Вилка",
+  "puzzleThemePin": "Связка",
+  "puzzleThemeSkewer": "Линейный удар",
+  "puzzleThemeDiscoveredAttack": "Вскрытое нападение",
+  "puzzleThemeDoubleCheck": "Двойной шах",
+  "puzzleThemeHangingPiece": "Незащищённая фигура",
+  "puzzleThemeTrappedPiece": "Пойманная фигура",
+  "puzzleThemeDeflection": "Отвлечение",
+  "puzzleThemeAttraction": "Завлечение",
+  "puzzleThemeSacrifice": "Жертва",
+  "puzzleThemeCapturingDefender": "Уничтожение защитника",
+  "puzzleThemeClearance": "Освобождение поля",
+  "puzzleThemeInterference": "Перекрытие",
+  "puzzleThemeIntermezzo": "Промежуточный ход",
+  "puzzleThemeXRayAttack": "Рентген",
+  "puzzleThemeQuietMove": "Тихий ход",
+  "puzzleThemeDefensiveMove": "Защитный ход",
+  "puzzleThemeZugzwang": "Цугцванг",
+  "puzzleThemePromotion": "Превращение",
+  "puzzleThemeUnderPromotion": "Превращение в слабую фигуру",
+  "puzzleThemeAdvancedPawn": "Продвинутая пешка",
+  "puzzleThemeExposedKing": "Открытый король",
+  "puzzleThemeKingsideAttack": "Атака на королевском фланге",
+  "puzzleThemeQueensideAttack": "Атака на ферзевом фланге",
+  "puzzleThemeEnPassant": "Взятие на проходе",
+  "puzzleThemeCastling": "Рокировка",
+  "puzzleThemeOpening": "Дебют",
+  "puzzleThemeMiddlegame": "Миттельшпиль",
+  "puzzleThemeEndgame": "Эндшпиль",
+  "puzzleThemePawnEndgame": "Пешечный эндшпиль",
+  "puzzleThemeRookEndgame": "Ладейный эндшпиль",
+  "puzzleThemeQueenEndgame": "Ферзевый эндшпиль",
+  "puzzleThemeKnightEndgame": "Коневой эндшпиль",
+  "puzzleThemeBishopEndgame": "Слоновый эндшпиль",
+  "puzzleGuideThemeTitle": "Задачи по темам",
+  "puzzleGuideTrainingGoal": "Находи лучший ход в каждой задаче, одну за другой.",
+  "puzzleGuideTrainingRule1": "Задачи подбираются по твоему рейтингу: чем лучше у тебя получается, тем они сложнее.",
+  "puzzleGuideTrainingRule2": "Сделай ход нужной фигурой: если ход верный, соперник отвечает и снова твоя очередь; если неверный, ход возвращается.",
+  "puzzleGuideTrainingRule3": "Если новую задачу решить с первой попытки, рейтинг растёт; если ошибиться или посмотреть решение, задача считается проваленной, рейтинг падает, а задача попадает на повторение. Задачи, которые ты уже видел, рейтинг не меняют.",
+  "puzzleGuideTrainingRule4": "Подсказка ничего не стоит: она обводит фигуру, которой нужно ходить.",
+  "puzzleGuideTrainingRule5": "Часов нет, и число ошибок не ограничено: можно закончить, когда захочешь.",
+  "puzzleGuideThemeGoal": "Тренируй один тактический приём: во всех задачах тема одна и та же.",
+  "puzzleGuideThemeRule1": "Сделай ход нужной фигурой: если ход верный, соперник отвечает; если неверный, ход возвращается.",
+  "puzzleGuideThemeRule2": "Если новую задачу решить с первой попытки, рейтинг растёт; с ошибками или после показа решения задача считается проваленной, рейтинг падает, а задача попадает на повторение.",
+  "puzzleGuideThemeRule3": "Часов нет, и число ошибок не ограничено.",
+  "puzzleGuideDailyGoal": "Реши сегодняшнюю задачу: она одна и та же весь день.",
+  "puzzleGuideDailyRule1": "Найди верную последовательность ходов: если ошибёшься, ход вернётся и можно попробовать снова.",
+  "puzzleGuideDailyRule2": "Кнопка «Ещё раз» начинает с исходной позиции, кнопка «Решение» показывает ходы.",
+  "puzzleGuideDailyRule3": "Задача засчитывается решённой, только если ты не ошибся и не смотрел решение; иначе она считается проваленной.",
+  "puzzleGuideDailyRule4": "Новая появится завтра.",
+  "puzzleGuideReviewGoal": "Найди решения задач, в которых ты ошибся.",
+  "puzzleGuideReviewRule1": "Каждая задача возвращается через всё большие промежутки (1, 3, 7, 14 и 30 дней): сегодня тебе попадутся только те, чей срок подошёл.",
+  "puzzleGuideReviewRule2": "Если решить без ошибок, промежуток станет длиннее; если оступиться, отсчёт начнётся с одного дня.",
+  "puzzleGuideReviewRule3": "Повторение не меняет твой тренировочный рейтинг.",
+  "puzzleGuideReviewRule4": "Когда сегодняшние задачи решены, делать больше нечего.",
+  "puzzleGuideRunBase1": "Задачи становятся всё сложнее.",
+  "puzzleGuideRunBase2": "Каждая решённая задача приносит 1 очко.",
+  "puzzleGuideRunTail1": "Личный рекорд сохраняется для каждого режима.",
+  "puzzleGuideRunTail2": "Выйти можно в любой момент: заработанные очки и опыт сохранятся.",
+  "puzzleGuideStormGoal": "Реши как можно больше задач за {minutes} мин.",
+  "puzzleGuideStormRule1": "Ошибка: минус {seconds} с, комбо сбрасывается, и ты переходишь к следующей задаче.",
+  "puzzleGuideStormRule2": "За 5, 12, 20 и 30 задач подряд ты получаешь 3, 5, 7 и 10 секунд (потом по 10 за каждые 10 задач).",
+  "puzzleGuideStormRule3": "Жизней нет: серия заканчивается, когда выходит время.",
+  "puzzleGuideRushGoal": "Реши как можно больше задач за {minutes} мин. У тебя три жизни.",
+  "puzzleGuideLivesRule1": "Ошибка отнимает жизнь, и ты переходишь к следующей задаче.",
+  "puzzleGuideRushRule2": "Серия заканчивается, когда выходит время или когда ты теряешь третью жизнь.",
+  "puzzleGuideSurvivalGoal": "Реши как можно больше задач. Есть три жизни, времени без ограничений.",
+  "puzzleGuideSurvivalRule2": "Серия заканчивается, когда ты теряешь третью жизнь.",
+  "puzzleGuideStreakGoal": "Реши подряд как можно больше задач: первая же ошибка завершает серию.",
+  "puzzleGuideStreakRule1": "Ни ограничения по времени, ни жизней нет.",
+  "puzzleGuideStreakRule2": "За серию можно пропустить только одну задачу кнопкой «Пропустить»."
+}

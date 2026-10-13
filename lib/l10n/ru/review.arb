@@ -1,0 +1,452 @@
+{
+  "reviewCoachGeneric": "Лучше был ход {move}: сейчас твоя позиция ухудшается.",
+  "@reviewCoachGeneric": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachBrilliant": "Блестящий ход: ты жертвуешь материал, но это лучший выбор.",
+  "reviewCoachGreat": "Отлично: это был единственный ход, удержавший позицию.",
+  "reviewCoachBest": "Это лучший ход.",
+  "reviewCoachExcellent": "Отличный ход, почти как лучший.",
+  "reviewCoachGood": "Хороший ход.",
+  "reviewCoachBook": "Ход из теории дебюта.",
+  "reviewCoachAllowedMate": "После {move} {side, select, white{белые} other{чёрные}} могут поставить {mate, plural, one{мат в {mate} ход} few{мат в {mate} хода} many{мат в {mate} ходов} other{мат в {mate} хода}} ходом {reply}.",
+  "@reviewCoachAllowedMate": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "side": {
+        "type": "String"
+      },
+      "mate": {
+        "type": "int"
+      },
+      "reply": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachMissedMate": "У тебя был {mate, plural, one{мат в {mate} ход} few{мат в {mate} хода} many{мат в {mate} ходов} other{мат в {mate} хода}}: {move}.",
+  "@reviewCoachMissedMate": {
+    "placeholders": {
+      "mate": {
+        "type": "int"
+      },
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachHanging": "Без защиты осталась фигура: {victim} на {square}. {attacker} может {victimRole, select, other{её}} взять.",
+  "@reviewCoachHanging": {
+    "placeholders": {
+      "victim": {
+        "type": "String"
+      },
+      "victimRole": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "attacker": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachAllowedFork": "После {move} {piece} нападает сразу на несколько фигур: {targets}. Это вилка.",
+  "@reviewCoachAllowedFork": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "targets": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachAllowedPin": "После {move} {slider} связывает фигуру на {square} с королём: {pinned}.",
+  "@reviewCoachAllowedPin": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "slider": {
+        "type": "String"
+      },
+      "pinned": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachExposedKing": "После {move} твой король остался открытым: {reply} — шах.",
+  "@reviewCoachExposedKing": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "reply": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachRecapture": "Ты мог вернуть фигуру ходом {move}. Цель: {piece}.",
+  "@reviewCoachRecapture": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachWinMaterial": "Ты мог выиграть материал ходом {move}. Цель: {piece}.",
+  "@reviewCoachWinMaterial": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachMissedFork": "Ты мог поставить вилку ходом {move}: {piece} нападает на несколько фигур — {targets}.",
+  "@reviewCoachMissedFork": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "targets": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachMissedDiscovery": "Ты мог сыграть вскрытое нападение ходом {move}: {piece} нападает на новую цель — {target}.",
+  "@reviewCoachMissedDiscovery": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachMaterialLoss": "Этот ход теряет материал: в ожидаемом варианте ты отдаёшь примерно {pawns, plural, one{{pawns} пешку} few{{pawns} пешки} many{{pawns} пешек} other{{pawns} пешки}}.",
+  "@reviewCoachMaterialLoss": {
+    "placeholders": {
+      "pawns": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewCoachPieceColored": "{role, select, pawn{{color, select, white{белая пешка} other{чёрная пешка}}} knight{{color, select, white{белый конь} other{чёрный конь}}} bishop{{color, select, white{белый слон} other{чёрный слон}}} rook{{color, select, white{белая ладья} other{чёрная ладья}}} queen{{color, select, white{белый ферзь} other{чёрный ферзь}}} other{{color, select, white{белый король} other{чёрный король}}}}",
+  "@reviewCoachPieceColored": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      },
+      "color": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachListEnd": "{head} и {last}",
+  "@reviewCoachListEnd": {
+    "placeholders": {
+      "head": {
+        "type": "String"
+      },
+      "last": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewTitle": "Разбор партии",
+  "reviewAnalysePosition": "Проанализировать позицию",
+  "reviewPuzzlesSaved": "Задач сохранено: {count}. Они в разделе «Задачи» › «Работа над ошибками».",
+  "@reviewPuzzlesSaved": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewPuzzlesAlready": "Эти задачи уже сохранены.",
+  "reviewPuzzlesFailed": "Не удалось сохранить. Попробуй ещё раз.",
+  "reviewSavePuzzles": "Сохранить ошибки как задачи ({count})",
+  "@reviewSavePuzzles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewNoteNotSaved": "Заметка не сохранена. Попробуй ещё раз.",
+  "reviewRetryCorrect": "Верно: {move} — лучший ход.",
+  "@reviewRetryCorrect": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewRetryWrong": "{move} — не лучший ход. Попробуй ещё раз.",
+  "@reviewRetryWrong": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewAnalysing": "Анализ: {done} из {total}",
+  "@reviewAnalysing": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewStop": "Стоп",
+  "reviewCancelled": "Разбор остановлен.",
+  "reviewFailed": "Не удалось проанализировать. Попробуй позже.",
+  "reviewRetryPrompt": "Найди ход лучше, чем {move}",
+  "@reviewRetryPrompt": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewRetrySolution": "Лучшим ходом был {move}.",
+  "@reviewRetrySolution": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewShowSolution": "Решение",
+  "reviewExit": "Выйти",
+  "reviewStartPosition": "Начальная позиция",
+  "reviewMoveVerdict": "{number} {move} — {verdict, select, brilliant{блестящий ход} great{отличный ход} best{лучший ход} excellent{очень хороший ход} good{хороший ход} book{ход из теории} inaccuracy{неточность} mistake{ошибка} miss{упущенная возможность} other{зевок}}",
+  "@reviewMoveVerdict": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "move": {
+        "type": "String"
+      },
+      "verdict": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewBestMove": "Лучший: {move}",
+  "@reviewBestMove": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewYourNote": "Твоя заметка: {note}",
+  "@reviewYourNote": {
+    "placeholders": {
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewTryAgain": "Ещё раз",
+  "reviewAddNote": "Добавить заметку",
+  "reviewEditNote": "Изменить заметку",
+  "reviewNavStart": "В начало",
+  "reviewNavPrevious": "Предыдущий ход",
+  "reviewNavNext": "Следующий ход",
+  "reviewNavEnd": "В конец",
+  "reviewSideWhite": "Белые",
+  "reviewSideBlack": "Чёрные",
+  "reviewAccuracyUnavailable": "Точность ({side}) недоступна",
+  "@reviewAccuracyUnavailable": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewAccuracyPercent": "Точность ({side}): {value} процентов",
+  "@reviewAccuracyPercent": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewAccuracy": "Точность",
+  "reviewEstimatedElo": "Оценка Эло ~{elo}",
+  "@reviewEstimatedElo": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewMovesByCategory": "Ходы по категориям",
+  "reviewCountsSemantics": "Белые {white}, чёрные {black}",
+  "@reviewCountsSemantics": {
+    "placeholders": {
+      "white": {
+        "type": "int"
+      },
+      "black": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewNoteTitle": "Заметка к {move}",
+  "@reviewNoteTitle": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewNoteComment": "Комментарий",
+  "reviewNoteCancel": "Отмена",
+  "reviewNoteSave": "Сохранить",
+  "reviewTimePerMove": "Время на ход",
+  "reviewTimeNoHasty": "Время на ход. Поспешных ошибок нет.",
+  "reviewTimeHastySemantics": "Время на ход. Ошибки, сделанные второпях: {moves}.",
+  "@reviewTimeHastySemantics": {
+    "placeholders": {
+      "moves": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewHastyMistakes": "Ошибки второпях: {moves}",
+  "@reviewHastyMistakes": {
+    "placeholders": {
+      "moves": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewHastyAdvice": "Меньше 40% твоего среднего времени на ход: перед ходом проверь, нет ли угроз.",
+  "reviewAccuracyByPhase": "Точность по стадиям",
+  "reviewPhaseOpening": "Дебют",
+  "reviewPhaseMiddlegame": "Миттельшпиль",
+  "reviewPhaseEndgame": "Эндшпиль",
+  "reviewPhaseSemantics": "{phase}: белые {white}, чёрные {black}",
+  "@reviewPhaseSemantics": {
+    "placeholders": {
+      "phase": {
+        "type": "String"
+      },
+      "white": {
+        "type": "String"
+      },
+      "black": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewPhaseValues": "Белые {white} · Чёрные {black}",
+  "@reviewPhaseValues": {
+    "placeholders": {
+      "white": {
+        "type": "String"
+      },
+      "black": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewMoveSemantics": "{number} {move}, {verdict}{note, select, yes{, с заметкой} other{}}",
+  "@reviewMoveSemantics": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "move": {
+        "type": "String"
+      },
+      "verdict": {
+        "type": "String"
+      },
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewEvalGraph": "График оценки",
+  "reviewClassBrilliant": "Блестящий",
+  "reviewClassGreat": "Отличный",
+  "reviewClassBest": "Лучший",
+  "reviewClassExcellent": "Очень хороший",
+  "reviewClassGood": "Хороший",
+  "reviewClassBook": "Теория",
+  "reviewClassInaccuracy": "Неточность",
+  "reviewClassMistake": "Ошибка",
+  "reviewClassMiss": "Упущено",
+  "reviewClassBlunder": "Зевок",
+  "reviewScoreUnavailable": "Оценка недоступна",
+  "reviewScoreMated": "Мат: победа {side, select, white{белых} other{чёрных}}",
+  "@reviewScoreMated": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewScoreCheckmate": "Мат",
+  "reviewScoreMateIn": "У {side, select, white{белых} other{чёрных}} {moves, plural, one{мат в {moves} ход} few{мат в {moves} хода} many{мат в {moves} ходов} other{мат в {moves} хода}}",
+  "@reviewScoreMateIn": {
+    "placeholders": {
+      "moves": {
+        "type": "int"
+      },
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewScoreEven": "Равенство",
+  "reviewScoreAhead": "Преимущество {side, select, white{белых} other{чёрных}}: {pawns}",
+  "@reviewScoreAhead": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      },
+      "pawns": {
+        "type": "String"
+      }
+    }
+  }
+}

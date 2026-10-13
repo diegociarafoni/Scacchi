@@ -1,0 +1,4 @@
+"NSBluetoothAlwaysUsageDescription" = "Bluetooth służy tylko do gry ze znajomym w pobliżu, bez Wi-Fi. Ruchy są przesyłane w postaci zaszyfrowanej i tylko między dwoma telefonami.";
+"NSCameraUsageDescription" = "Aparat odczytuje kod QR partii przekazanej z innego telefonu i robi zdjęcie profilowe, które zostaje tylko na tym telefonie.";
+"NSLocalNetworkUsageDescription" = "Sieć lokalna służy tylko do gry ze znajomym na drugim telefonie, w tej samej sieci Wi-Fi lub przez hotspot. Ruchy są przesyłane w postaci zaszyfrowanej i tylko między dwoma telefonami.";
+"NSPhotoLibraryUsageDescription" = "Służy do odczytania kodu QR partii ze zdjęcia, które wybierzesz, oraz do wyboru zdjęcia profilowego, które zostaje tylko na tym telefonie.";

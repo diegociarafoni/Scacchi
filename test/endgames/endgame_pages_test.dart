@@ -12,6 +12,7 @@ import 'package:scacchi/endgames/endgames_page.dart';
 import 'package:scacchi/engine/computer_player.dart';
 
 import '../computer_fakes.dart';
+import '../content_support.dart';
 import '../localized_app.dart';
 
 Offset _square(WidgetTester tester, String name) {
@@ -41,8 +42,6 @@ Future<void> _tapMove(WidgetTester tester, String from, String to) async {
 
 const _mateIn2 = EndgameDrill(
   id: 'queen-mate',
-  title: 'Donna e re contro re',
-  intro: 'Obiettivo: dai scacco matto.',
   fen: '7k/8/5K2/8/8/1Q6/8/8 w - - 0 1',
   goal: DrillGoal.mate,
   par: 2,
@@ -89,7 +88,7 @@ void main() {
 
   testWidgets('RF-86 l\'obiettivo si legge prima di iniziare', (tester) async {
     await openDrill(tester, _mateIn2);
-    expect(find.text('Obiettivo: dai scacco matto.'), findsOneWidget);
+    expect(find.text(_mateIn2.intro), findsOneWidget);
     await tester.tap(find.text('Inizia'));
     await tester.pumpAndSettle();
     expect(find.textContaining('Mosse: 0'), findsOneWidget);
@@ -119,6 +118,7 @@ void main() {
     await _tapMove(tester, 'b3', 'f7');
     expect(find.text('Non ci sei riuscito'), findsOneWidget);
     expect(controller.progress.toRepeat, {'queen-mate'});
+    await tester.ensureVisible(find.text('Riprova'));
     await tester.tap(find.text('Riprova'));
     await tester.pumpAndSettle();
     expect(find.textContaining('Mosse: 0'), findsOneWidget);
@@ -142,6 +142,7 @@ void main() {
     await tester.pumpAndSettle();
     await _tapMove(tester, 'b3', 'g3');
     expect(find.text('Il motore non risponde: riprova.'), findsOneWidget);
+    await tester.ensureVisible(find.text('Riprova'));
     await tester.tap(find.text('Riprova'));
     await tester.pumpAndSettle();
     expect(find.textContaining('Mosse: 0'), findsOneWidget);
@@ -192,5 +193,31 @@ void main() {
     await tester.tap(find.text(endgameDrills.first.title));
     await tester.pumpAndSettle();
     expect(find.byType(DrillPage), findsOneWidget);
+  });
+
+  testWidgets('RF-86 l\'elenco dei finali si mostra in inglese', (
+    tester,
+  ) async {
+    phone(tester);
+    useContent('en');
+    addTearDown(useContent);
+    await tester.pumpWidget(
+      localizedApp(
+        locale: const Locale('en'),
+        home: EndgamesPage(
+          controller: controller,
+          createComputer: () =>
+              ComputerPlayer(connect: () async => FirstLegalMoveEngine()),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Endgames'), findsOneWidget);
+    expect(find.text('King and queen against king'), findsOneWidget);
+    expect(find.text('Give checkmate'), findsWidgets);
+    expect(find.text('Hold on as Black'), findsOneWidget);
+    await tester.tap(find.text('The Philidor defense'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining("don't lose for 15 moves"), findsOneWidget);
   });
 }

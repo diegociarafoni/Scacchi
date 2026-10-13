@@ -12,6 +12,13 @@ String themeModeLabel(AppLocalizations l, ThemeMode m) => switch (m) {
   ThemeMode.dark => l.settingsModeDark,
 };
 
+String markColorLabel(AppLocalizations l, MarkColor c) => switch (c) {
+  MarkColor.green => l.settingsMarkColorGreen,
+  MarkColor.red => l.settingsMarkColorRed,
+  MarkColor.blue => l.settingsMarkColorBlue,
+  MarkColor.yellow => l.settingsMarkColorYellow,
+};
+
 String animationLabel(AppLocalizations l, AnimationSpeed a) => switch (a) {
   AnimationSpeed.none => l.settingsAnimationNone,
   AnimationSpeed.fast => l.settingsAnimationFast,

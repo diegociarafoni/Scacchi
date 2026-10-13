@@ -1,0 +1,161 @@
+{
+  "botGalleryTitle": "Bir bot seç",
+  "botTierNovice": "Acemi",
+  "botTierBeginner": "Başlangıç",
+  "botTierIntermediate": "Orta",
+  "botTierAdvanced": "İleri",
+  "botTierMaster": "Usta",
+  "botTierFriends": "Arkadaşların",
+  "botTierAdaptive": "Uyarlanabilir",
+  "botTierHeading": "{tier} · {count}",
+  "@botTierHeading": {
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "botGalleryElo": "{elo} Elo",
+  "@botGalleryElo": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "botGalleryStateLocked": "kilitli",
+  "botGalleryStateBeaten": "yenildi",
+  "botGalleryStateOpen": "açık",
+  "botGalleryCellLabel": "{name}, {elo} Elo, {state}",
+  "@botGalleryCellLabel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "elo": {
+        "type": "int"
+      },
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "botGalleryCellLabelKid": "{name}, {state}",
+  "@botGalleryCellLabelKid": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "botGalleryLockedTease": "Hazır olunca görüşürüz!",
+  "botStyleAggressive": "saldırgan",
+  "botStyleGambitist": "gambit oyuncusu",
+  "botStylePositional": "pozisyonel",
+  "botGalleryStyle": "Stil: {style}",
+  "@botGalleryStyle": {
+    "placeholders": {
+      "style": {
+        "type": "String"
+      }
+    }
+  },
+  "botAdaptiveName": "Uyarlanabilir",
+  "botAdaptiveGreeting": "Sana uyum sağlarım: kazanırsan daha iyi oynarım, kaybedersen yavaşlarım.",
+  "botAdaptiveRematch": "İyi bir antrenman. Bir tane daha?",
+  "botAdaptiveHint": "Şu an yaklaşık {elo} Elo ile oynuyor",
+  "@botAdaptiveHint": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "botGuardiansTitle": "Hikâye koruyucuları",
+  "botGuardiansProgress": "{total} koruyucudan {met} tanesiyle tanıştın",
+  "@botGuardiansProgress": {
+    "placeholders": {
+      "met": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "botGuardiansHint": "Onlarla Hikâye bölümlerini bitirince tanışırsın.",
+  "botGuardianUnmet": "koruyucuyla henüz tanışılmadı",
+  "botSideWhite": "Beyaz oyna",
+  "botSideRandom": "Rastgele renk",
+  "botSideBlack": "Siyah oyna",
+  "botGalleryPlay": "Oyna",
+  "botGalleryLockedPlay": "Kilitli",
+  "botGalleryBeatenBadge": "yenildi",
+  "botGreetingLia": "Selam, ben Lia! Bir piyon süreceğim, bakalım ne olacak.",
+  "botRematchLia": "Beni yendin! Bir tane daha oynayalım mı?",
+  "botGreetingPino": "Cik cik! Ben Pino, oynayalım mı? Hemen saldırırım!",
+  "botRematchPino": "Beni yendin! Bir dahaki sefere daha sert saldıracağım.",
+  "botGreetingNico": "Yavaş yavaş, acele yok. Bir oyun ister misin?",
+  "botRematchNico": "Sakince kazandın, aferin. Bir tane daha?",
+  "botGreetingChiara": "Selam, ben Chiara. Bahçedeki gibi sakin bir oyun?",
+  "botRematchChiara": "Oyunun çiçek açtı! Tekrar oynayalım mı?",
+  "botGreetingViola": "Hamlelerden bir senfoni için ne güzel bir gün! Başlayalım mı?",
+  "botRematchViola": "Melodimi bozdun! Bir tane daha?",
+  "botGreetingRocco": "Sana bir piyon, bana oyun. Anlaştık mı?",
+  "botRematchRocco": "Beni çözdün! Ama daha çok numaram var.",
+  "botGreetingEttore": "Oynamadan önce kükrerim. Hazır ol!",
+  "botRematchEttore": "Zaferin için bir kükreme. Rövanş?",
+  "botGreetingMarta": "Bu oyunu bütün gece düşündüm. Otur.",
+  "botRematchMarta": "İyi oynadın. Yeniden düşünecek çok şeyim var.",
+  "botGreetingBruna": "Yeni uyandım ama tahta beni hemen kendime getiriyor.",
+  "botRematchBruna": "Beni yendin! Kış uykusuna dönüyorum… bir dakikalığına.",
+  "botGreetingDuilio": "Kıvılcımlar ve alevler: saldırmaya bayılırım. Hazır mısın?",
+  "botRematchDuilio": "Alevlerimi söndürdün! Yeniden yakalım.",
+  "botGreetingCarlo": "Bana bir taş ver, sana bir gösteri sunayım. Oynayalım mı?",
+  "botRematchCarlo": "Hepsini geri aldın, aferin!",
+  "botGreetingElena": "Tahtaya yukarıdan bakarım. Bakalım uçabilecek misin.",
+  "botRematchElena": "Yükseklere uçtun. Bunu sevdim.",
+  "botGreetingAda": "Her yörüngeyi hesaplarım. Yıldızlarla aran nasıl?",
+  "botRematchAda": "Planın benimkini yendi. Hesapları yeniden yapalım mı?",
+  "botGreetingMassimo": "Sürü selam söylüyor. Başlangıç için bir gambit?",
+  "botRematchMassimo": "Kurdu evcilleştirdin. Saygı duydum.",
+  "botGreetingStella": "Akademinin en parlak yıldızıyım. Bana bakabilir misin?",
+  "botRematchStella": "Işığımı söndürdün… şimdilik.",
+  "botGreetingTino": "Selam, ben Tino! Sana taşların nasıl gittiğini göstereceğim.",
+  "botRematchTino": "Aferin! Artık taşları benden iyi oynatıyorsun.",
+  "botUnlockStory": "Bu koruyucuyla Hikâye bölümünü bitirince açılır",
+  "botGalleryOpen": "Bot galerisini aç",
+  "botOptions": "Seçenekler",
+  "botOptionsTime": "Tempo",
+  "botOptionsNoClock": "Saatsiz",
+  "botOptionsVariant": "Varyant",
+  "botVariantStandard": "Standart",
+  "botVariantChess960": "Chess960",
+  "botVariantKingOfTheHill": "Tepenin şahı",
+  "botVariantThreeCheck": "Üç şah",
+  "botOptionsHelp": "Yardım",
+  "botOptionsCoach": "Koç",
+  "botOptionsCoachHint": "Hata yaptığında seni uyarır.",
+  "botOptionsSummary": "{time} · {variant}",
+  "@botOptionsSummary": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "variant": {
+        "type": "String"
+      }
+    }
+  },
+  "botOptionsKidSlow": "Saatli ama acelesiz",
+  "botGreetingLuna": "Geceleri bütün tahtayı görürüm, gizli hamleleri bile. Oynayalım mı?",
+  "botRematchLuna": "Beni yıldız ışığında yendin! Bir tane daha?",
+  "botGreetingCosmo": "Kalkışa üç, iki, bir… oynayalım! Saldıralım mı?",
+  "botRematchCosmo": "Acil iniş: beni yendin. Rövanş?"
+}

@@ -5,12 +5,8 @@ import 'package:scacchi/masters/master_game.dart';
 
 const _game = MasterGame(
   id: 'legal',
-  white: 'Légal',
-  black: 'Saint-Brie',
-  event: 'Parigi',
   year: 1750,
   result: '1-0',
-  intro: 'Il matto di Légal.',
   moves: [
     'e4',
     'e5',
@@ -126,12 +122,8 @@ void main() {
   test('RF-88 l\'arrocco dell\'utente vale come quello del maestro', () {
     const g = MasterGame(
       id: 'c',
-      white: 'A',
-      black: 'B',
-      event: 'E',
       year: 1900,
       result: '1-0',
-      intro: 'i',
       moves: ['e4', 'e5', 'Nf3', 'Nc6', 'Bc4', 'Bc5', 'O-O', 'Nf6', 'Re1'],
     );
     final run = GuessRun(g, Side.white);

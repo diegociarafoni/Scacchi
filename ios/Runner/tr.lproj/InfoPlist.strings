@@ -1,0 +1,4 @@
+"NSBluetoothAlwaysUsageDescription" = "Bluetooth yalnızca yakındaki bir arkadaşınla Wi-Fi olmadan oynamak için kullanılır. Hamleler şifreli olarak ve yalnızca iki telefon arasında iletilir.";
+"NSCameraUsageDescription" = "Kamera, başka bir telefondan aktarılan bir oyunun QR kodunu okur ve profil fotoğrafını çeker; fotoğraf yalnızca bu telefonda kalır.";
+"NSLocalNetworkUsageDescription" = "Yerel ağ yalnızca diğer telefondaki bir arkadaşınla, aynı Wi-Fi veya erişim noktasında oynamak için kullanılır. Hamleler şifreli olarak ve yalnızca iki telefon arasında iletilir.";
+"NSPhotoLibraryUsageDescription" = "Seçtiğin bir görüntüden oyunun QR kodunu okumak ve profil fotoğrafını seçmek için kullanılır; fotoğraf yalnızca bu telefonda kalır.";

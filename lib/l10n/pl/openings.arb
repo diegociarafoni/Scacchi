@@ -1,0 +1,114 @@
+{
+  "personalTitle": "Twoje debiuty",
+  "personalHubSubtitle": "Ruchy, które zagrałeś, z wynikami",
+  "personalLoadFailed": "Nie udało się odczytać archiwum partii: spróbuj później.",
+  "personalEmpty": "Rozegraj kilka partii z komputerem, aby zbudować drzewo debiutów.",
+  "personalNoGamesFiltered": "Żadna partia nie pasuje do tych filtrów.",
+  "personalNoGamesHere": "Nigdy nie grałeś z tej pozycji.",
+  "personalSideAll": "Oba",
+  "personalSideWhite": "Białe",
+  "personalSideBlack": "Czarne",
+  "personalOpponent": "Przeciwnik",
+  "personalAllOpponents": "Wszyscy przeciwnicy",
+  "personalGames": "{count, plural, one{{count} partia} few{{count} partie} many{{count} partii} other{{count} partie}}",
+  "@personalGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "personalGamesTotal": "Łącznie: {count, plural, one{{count} partia} few{{count} partie} many{{count} partii} other{{count} partie}}",
+  "@personalGamesTotal": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "personalScore": "{wins}W · {draws}R · {losses}P",
+  "@personalScore": {
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      }
+    }
+  },
+  "personalScoreSemantics": "{wins} wygranych, {draws} remisów, {losses} porażek",
+  "@personalScoreSemantics": {
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      }
+    }
+  },
+  "personalStartPosition": "Pozycja początkowa",
+  "personalNoName": "Debiut bez nazwy",
+  "personalBack": "Wstecz",
+  "personalStart": "Początek",
+  "personalFlip": "Obróć szachownicę",
+  "personalOpenInBook": "Otwórz w eksploratorze debiutów",
+  "personalFromHere": "Twoje partie z tej pozycji",
+  "explorerTitle": "Eksploruj debiuty",
+  "explorerLoadFailed": "Nie udało się wczytać debiutów.",
+  "explorerStartPosition": "Pozycja początkowa",
+  "explorerNoName": "Debiut bez nazwy",
+  "explorerOutOfBook": "Poza księgą debiutową",
+  "explorerFlip": "Obróć szachownicę",
+  "explorerRestart": "Od początku",
+  "explorerBack": "Wstecz",
+  "explorerForward": "Dalej",
+  "explorerMoveSemantics": "{move}: {games, plural, one{{games} partia} few{{games} partie} many{{games} partii} other{{games} partie}}, białe {white}%, remisy {draws}%, czarne {black}%",
+  "openingsHubTitle": "Debiuty",
+  "openingsHubExplorerSubtitle": "Rozegrane partie i wyniki dla każdego ruchu, z nazwami debiutów",
+  "openingsRepertoireTitle": "Repertuar {side, select, white{białych} other{czarnych}}",
+  "openingsRepertoireUnavailable": "Repertuar niedostępny",
+  "openingsRepertoireLoading": "Wczytywanie…",
+  "openingsRepertoireSummary": "{lines, plural, one{{lines} linia} few{{lines} linie} many{{lines} linii} other{{lines} linie}} · {due, plural, one{{due} ruch do powtórki} few{{due} ruchy do powtórki} many{{due} ruchów do powtórki} other{{due} ruchy do powtórki}}",
+  "openingsGameTitle": "Graj z komputerem",
+  "openingsLevel": "Poziom",
+  "openingsPlay": "Graj",
+  "openingsCancel": "Anuluj",
+  "openingsSideWhite": "Białe",
+  "openingsSideBlack": "Czarne",
+  "openingsNameSemantics": "Debiut: {name} ({eco})",
+  "openingsAddToRepertoire": "Dodaj do repertuaru",
+  "openingsPlayThisOpening": "Zagraj ten debiut",
+  "openingsFreeOpening": "Dowolny debiut",
+  "openingsDefaultLineName": "Linia",
+  "openingsLineName": "Nazwa",
+  "openingsAdd": "Dodaj",
+  "openingsLineAdded": "{side, select, white{Dodano linię do repertuaru białych.} other{Dodano linię do repertuaru czarnych.}}",
+  "openingsProblemEmpty": "Linia jest pusta.",
+  "openingsProblemIllegal": "Linia zawiera niedozwolony ruch.",
+  "openingsProblemNoOwnMoves": "W linii nie ma ruchów Twojego koloru.",
+  "openingsProblemConflict": "W tej pozycji Twój repertuar ma już ruch {move}.",
+  "openingsDrillTitle": "Powtórka repertuaru",
+  "openingsDrillDone": "Powtórka zakończona: {count, plural, one{{count} ruch} few{{count} ruchy} many{{count} ruchów} other{{count} ruchy}}.",
+  "openingsDrillNew": "Nowy ruch: zagraj ten, który pokazuje strzałka.",
+  "openingsDrillPrompt": "Linia „{name}”: jaki jest Twój ruch?",
+  "openingsDrillWrong": "To nie ruch z repertuaru: oto właściwy.",
+  "openingsImportTitle": "Importuj PGN",
+  "openingsImportHelper": "Każdy wariant staje się linią.",
+  "openingsImport": "Importuj",
+  "openingsImportNone": "Brak prawidłowych linii w PGN.",
+  "openingsImportAdded": "Dodane linie: {added}",
+  "openingsImportAddedSkipped": "Dodane linie: {added}. Pominięte: {skipped} ({reason})",
+  "openingsRepertoireEmpty": "Brak linii. Dodaj je w Eksploruj debiuty przyciskiem „Dodaj do repertuaru” albo zaimportuj PGN.",
+  "openingsPlayLine": "Zagraj linię",
+  "openingsDeleteLine": "Usuń linię",
+  "openingsReviewNone": "Brak ruchów do powtórki",
+  "openingsReviewButton": "{count, plural, one{Powtórz {count} ruch} few{Powtórz {count} ruchy} many{Powtórz {count} ruchów} other{Powtórz {count} ruchy}}"
+}

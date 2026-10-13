@@ -127,7 +127,8 @@ class GameInvite {
     if (tcText != null &&
         (control == null ||
             control.minutes > maxInviteMinutes ||
-            control.increment > maxInviteIncrement)) {
+            control.increment > maxInviteIncrement ||
+            control.delay > 0)) {
       return null;
     }
     final remote = q['r'];

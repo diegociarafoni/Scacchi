@@ -23,7 +23,6 @@ EngineLevel parse(String spec) {
     final ms = parts.length > 1 ? int.parse(parts[1]) : 500;
     return EngineLevel(
       id: 99,
-      name: spec,
       approxElo: elo,
       skill: 20,
       uciElo: elo,
@@ -34,7 +33,6 @@ EngineLevel parse(String spec) {
   if (custom != null) {
     return EngineLevel(
       id: 98,
-      name: spec,
       approxElo: 0,
       skill: int.parse(custom[4]!),
       depth: int.parse(custom[1]!),

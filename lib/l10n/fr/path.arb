@@ -1,0 +1,133 @@
+{
+  "pathTitle": "Parcours",
+  "@pathTitle": {
+    "description": "Titolo della schermata del percorso"
+  },
+  "pathContinue": "Continuer",
+  "@pathContinue": {
+    "description": "Pulsante che apre la prossima tappa del percorso"
+  },
+  "pathStars": "Étoiles : {done} sur {total}",
+  "@pathStars": {
+    "description": "Etichetta per i lettori di schermo delle stelle totali o di capitolo",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pathSummaryTitle": "Ton voyage",
+  "@pathSummaryTitle": {
+    "description": "Titolo della scheda di riepilogo in cima al percorso"
+  },
+  "pathNext": "Prochaine étape : {title}",
+  "@pathNext": {
+    "description": "Tappa proposta da Continua, nella scheda di riepilogo",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "pathAllDone": "Tu as parcouru tout le chemin. Chaque étape peut être rejouée.",
+  "@pathAllDone": {
+    "description": "Riepilogo quando ogni tappa è completata"
+  },
+  "pathChapterNumber": "Chapitre {n}",
+  "@pathChapterNumber": {
+    "description": "Numero del capitolo del percorso",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "pathChapterDone": "chapitre terminé",
+  "@pathChapterDone": {
+    "description": "Stato di un capitolo con tutte le tappe completate"
+  },
+  "pathStageDone": "Étoiles : {stars} sur 3",
+  "@pathStageDone": {
+    "description": "Stato di una tappa completata",
+    "placeholders": {
+      "stars": {
+        "type": "int"
+      }
+    }
+  },
+  "pathStageTodo": "à faire",
+  "@pathStageTodo": {
+    "description": "Stato di una tappa aperta non ancora completata"
+  },
+  "pathStageLocked": "verrouillée",
+  "@pathStageLocked": {
+    "description": "Stato di una tappa non ancora aperta"
+  },
+  "pathStageLockedHint": "Termine la leçon précédente pour la débloquer",
+  "@pathStageLockedHint": {
+    "description": "Suggerimento di una tappa bloccata per i lettori di schermo"
+  },
+  "pathStageHere": "Tu es ici",
+  "@pathStageHere": {
+    "description": "Etichetta della tappa corrente"
+  },
+  "pathGuardian": "gardien",
+  "@pathGuardian": {
+    "description": "Tipo di tappa: sfida contro un bot"
+  },
+  "pathGuardianUnavailable": "Le gardien se défie là où l'ordinateur peut jouer : Android et iOS, ou Windows et Linux avec Stockfish installé.",
+  "@pathGuardianUnavailable": {
+    "description": "Avviso se il motore non è disponibile"
+  },
+  "pathStageWrong": "Ce n'est pas le bon coup, réessaie.",
+  "@pathStageWrong": {
+    "description": "Avviso dopo una mossa sbagliata in un esercizio"
+  },
+  "pathStageGood": "Bien, continue.",
+  "@pathStageGood": {
+    "description": "Conferma dopo una mossa giusta, con altre mosse da trovare"
+  },
+  "pathStageSolved": "Exactement !",
+  "@pathStageSolved": {
+    "description": "Conferma a esercizio risolto"
+  },
+  "pathStageRestartTooltip": "Recommencer",
+  "@pathStageRestartTooltip": {
+    "description": "Tooltip del pulsante che rifà l'esercizio in corso"
+  },
+  "pathStageExerciseOf": "Exercice {n} sur {total}",
+  "@pathStageExerciseOf": {
+    "description": "Etichetta per i lettori di schermo dell'avanzamento nella tappa",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pathStageStart": "Démarrer",
+  "@pathStageStart": {
+    "description": "Pulsante che avvia gli esercizi dopo la spiegazione"
+  },
+  "pathStageNext": "Suivant",
+  "@pathStageNext": {
+    "description": "Pulsante che passa all'esercizio successivo"
+  },
+  "pathStageRestartExercise": "Refaire l'exercice",
+  "@pathStageRestartExercise": {
+    "description": "Pulsante che rifà l'esercizio senza vie d'uscita"
+  },
+  "pathStageComplete": "Étape terminée",
+  "@pathStageComplete": {
+    "description": "Titolo del risultato a fine tappa"
+  },
+  "pathStageFinish": "Terminé",
+  "@pathStageFinish": {
+    "description": "Pulsante che chiude il risultato di una tappa"
+  }
+}

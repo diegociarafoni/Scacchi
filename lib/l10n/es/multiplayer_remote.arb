@@ -1,0 +1,20 @@
+{
+  "multiplayerRemoteIntro": "Para jugar a distancia solo necesitas internet: envía un enlace a tu amigo y jugad cuando queráis, incluso con horas de diferencia.",
+  "multiplayerRemoteSwitchHint": "Tu amigo puede unirse desde cualquier lugar con un enlace. Las jugadas viajan cifradas por relés públicos: sin cuenta y sin servidor nuestro.",
+  "multiplayerRemoteShare": "Compartir el enlace de invitación",
+  "multiplayerRemoteShareSubject": "Invitación a una partida de ajedrez",
+  "multiplayerRemoteShareText": "¡Juguemos al ajedrez en Rokko! Abre la app, elige Jugar con un amigo, luego Unirse con el enlace y pega este enlace: {link}",
+  "multiplayerRemoteWaitingHint": "Envía el enlace a tu amigo o deja que escanee el código QR. La partida queda guardada: puedes cerrar la app y retomarla desde Jugar con un amigo.",
+  "multiplayerRemoteLeaveBodyWaiting": "La partida queda guardada y el enlace sigue siendo válido: puedes retomarla desde Jugar con un amigo.",
+  "multiplayerRemoteJoinLink": "Unirse con el enlace",
+  "multiplayerRemoteLinkTitle": "Pega el enlace de invitación",
+  "multiplayerRemoteLinkField": "Enlace de invitación",
+  "multiplayerRemotePaste": "Pegar",
+  "multiplayerRemoteLinkInvalid": "Este enlace no es una invitación a una partida.",
+  "multiplayerRemoteLinkConfirm": "Unirse",
+  "multiplayerRemoteNotifyChannel": "Partidas a distancia",
+  "multiplayerRemoteNotifyChannelDescription": "Te avisa cuando tu amigo ha hecho su jugada.",
+  "multiplayerRemoteNotifyTitle": "Es tu turno",
+  "multiplayerRemoteNotifyBody": "Tu amigo ha jugado {move}.",
+  "multiplayerRemoteNotifyOver": "La partida con tu amigo ha terminado."
+}

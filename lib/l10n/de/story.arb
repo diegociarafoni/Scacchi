@@ -1,0 +1,369 @@
+{
+  "storyTitle": "Geschichte",
+  "storyEntrySubtitle": "Eine Reise in Kapiteln: Lektionen, Aufgaben und Herausforderungen",
+  "storyChapterNumber": "Kapitel {n}",
+  "@storyChapterNumber": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "storyProgress": "{done} von {total} Kapiteln",
+  "@storyProgress": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyChapterLocked": "Wird freigeschaltet, wenn du das vorherige Kapitel beendest",
+  "storyChapterDone": "Kapitel geschafft",
+  "storyContinue": "Weiter",
+  "storyFinished": "Die Geschichte ist zu Ende. Lektionen, Aufgaben und Partien findest du weiterhin im Rest der App.",
+  "storyStepLessons": "Lektionen: {value} von {total}",
+  "@storyStepLessons": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyStepPuzzles": "Kapitelaufgaben: {value} von {total}",
+  "@storyStepPuzzles": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyStepGuardian": "Der Kapitelwächter",
+  "storyStepBoss": "Herausforderung: {name}",
+  "@storyStepBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyStepDone": "erledigt",
+  "storyStepTodo": "offen",
+  "storyStepLocked": "gesperrt",
+  "storyStepLockedHint": "Schließe zuerst den vorherigen Schritt ab.",
+  "storyEngineMissing": "Herausforderungen werden dort gespielt, wo der Computergegner läuft: auf Android und iOS oder unter Windows und Linux mit installiertem Stockfish.",
+  "storyBossWon": "Du hast {name} besiegt!",
+  "@storyBossWon": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyBossLost": "{name} hält vorerst stand: Versuch es noch einmal, wann immer du magst.",
+  "@storyBossLost": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPuzzlesNone": "Die Aufgaben konnten nicht geladen werden: Versuch es noch einmal.",
+  "storyPrologueTitle": "Der Weg der ersten Schritte",
+  "storyPrologueIntro": "Vor dem Dorf liegt ein Weg, und auf dem Weg wartet ein neugieriges Küken. Lerne mit ihm, wie sich jede Figur bewegt: Turm, Läufer, Dame, König, Springer und Bauer.",
+  "storyPrologueBoss": "{name}, das Küken vom Weg, möchte eine Partie spielen, um die neuen Figuren auszuprobieren.",
+  "@storyPrologueBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPrologueOutro": "Die Figuren haben keine Geheimnisse mehr vor dir. Das Dorf am Fuß der Festung ist nur noch ein paar Schritte entfernt.",
+  "storyVillageTitle": "Das Dorf der Figuren",
+  "storyVillageIntro": "Du erreichst das Dorf am Fuß der Festung Rokko. Die Dorfbewohner spielen den ganzen Tag, lassen dabei aber Figuren ungedeckt stehen: Lerne zu schlagen und zu decken, und zeig dann, dass du eine ungedeckte Figur erkennst.",
+  "storyVillageBoss": "{name}, Hüter des Dorfs, fordert dich heraus, um zu sehen, ob du wirklich etwas gelernt hast.",
+  "@storyVillageBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyVillageOutro": "Das Dorf feiert ein Fest zu deinen Ehren. Der Weg zu den Stadttoren ist frei.",
+  "storyGatesTitle": "Die Stadttore",
+  "storyGatesIntro": "Die Wachen halten dich am Tor an: Um hineinzukommen, musst du die Regeln kennen, vom Schach bis zur Rochade. Eine rechtzeitig erkannte Umwandlung öffnet sogar das höchste Tor.",
+  "storyGatesBoss": "{name}, Hauptmann der Wache, will dich auf die Probe stellen, bevor er dich durchlässt.",
+  "@storyGatesBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyGatesOutro": "Die Tore schwingen auf. Vor dir erhebt sich der Turm des Königs.",
+  "storyTowerTitle": "Der Turm des Königs",
+  "storyTowerIntro": "Oben im Turm wohnt der König, und er weiß sich zu verteidigen. Lerne die Mattbilder, die ihn in die Enge treiben, auch wenn seine eigenen Figuren eine Mauer bilden.",
+  "storyTowerBoss": "{name}, Ritter mit einer Vorliebe für Gambits, wartet oben an der Treppe.",
+  "@storyTowerBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyTowerOutro": "Der König des Turms ist schachmatt. Bleiben noch der Wald und seine Fallen.",
+  "storyForestTitle": "Der Wald der Fallen",
+  "storyForestIntro": "Im Wald versteckt jede Figur eine Falle: Gabeln, Fesselungen, Spieße. Lerne, sie zu sehen, bevor es jemand anders tut.",
+  "storyForestBoss": "{name}, Führer durch den Wald, kennt jeden Pfad und jede Schlinge.",
+  "@storyForestBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyForestOutro": "Du hast den Wald durchquert, ohne in eine einzige Falle zu tappen. Das Schloss wartet.",
+  "storyCastleTitle": "Das Schloss der Endspiele",
+  "storyCastleIntro": "Im Schloss sind nur noch wenige Figuren auf dem Brett, und jeder Zug zählt. Hier zeigt sich, wer eine Partie zu Ende bringen kann.",
+  "storyCastleBoss": "{name}, Schlossverwalter, bewacht den Eingang zum Kronsaal.",
+  "@storyCastleBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyCastleOutro": "Das große Tor öffnet sich: Die Krone ist nah.",
+  "storyCrownTitle": "Die Krone",
+  "storyCrownIntro": "Der Kronsaal. Ein guter Start ist die halbe Miete: das Zentrum, die Entwicklung, die Rochade.",
+  "storyCrownBoss": "{name}, Hüter der Krone, spielt Eröffnungen wie kein anderer.",
+  "@storyCrownBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyCrownOutro": "Die Krone gehört dir. Doch hinter den Mauern wartet noch eine Ebene darauf, erkundet zu werden.",
+  "storyChapterCurrent": "Läuft gerade",
+  "@storyChapterCurrent": {
+    "description": "Etichetta del capitolo corrente nella storia"
+  },
+  "storyChapterSteps": "{done} von {total} Schritten",
+  "@storyChapterSteps": {
+    "description": "Passi conclusi di un capitolo, per la barra di avanzamento",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyPassageLessonsTitle": "Lektionen geschafft!",
+  "@storyPassageLessonsTitle": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassagePuzzlesTitle": "Aufgaben gelöst!",
+  "@storyPassagePuzzlesTitle": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageGuardianTitle": "Wächter besiegt!",
+  "@storyPassageGuardianTitle": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageNextPuzzles": "Du hast gelernt, was du brauchst. Jetzt teste dich mit den Aufgaben des Kapitels.",
+  "@storyPassageNextPuzzles": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageNextGuardian": "Stell dich jetzt dem Wächter des Kapitels.",
+  "@storyPassageNextGuardian": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageNextBoss": "Du bist bereit: {name} wartet auf die letzte Herausforderung des Kapitels.",
+  "@storyPassageNextBoss": {
+    "description": "Foglio di passaggio della storia",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPassageGoPuzzles": "Zu den Aufgaben",
+  "@storyPassageGoPuzzles": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageGoGuardian": "Wächter herausfordern",
+  "@storyPassageGoGuardian": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyChallengeTitle": "Duell mit {name}",
+  "@storyChallengeTitle": {
+    "description": "Foglio della sfida al custode",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPassageGoBoss": "{name} herausfordern",
+  "@storyPassageGoBoss": {
+    "description": "Foglio di passaggio della storia",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPassageLater": "Später",
+  "@storyPassageLater": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageChapterTitle": "Kapitel {n} geschafft!",
+  "@storyPassageChapterTitle": {
+    "description": "Foglio di passaggio della storia",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "storyPassageChapterNext": "Kapitel {n} wird freigeschaltet: {title}.",
+  "@storyPassageChapterNext": {
+    "description": "Foglio di passaggio della storia",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPassageGoChapter": "Zum nächsten Kapitel",
+  "@storyPassageGoChapter": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageStoryDone": "Du hast die Geschichte beendet!",
+  "@storyPassageStoryDone": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageClose": "Schließen",
+  "@storyPassageClose": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPlainTitle": "Die Ebene der Pläne",
+  "@storyPlainTitle": {
+    "description": "storyPlainTitle"
+  },
+  "storyPlainIntro": "Hinter der Krone liegt eine stille Ebene, auf der Schlachten gewonnen werden, bevor sie beginnen: Du brauchst einen Plan, aktive Figuren und ein wenig Geduld.",
+  "@storyPlainIntro": {
+    "description": "storyPlainIntro"
+  },
+  "storyPlainBoss": "{name}, der Wolf der Ebene, bereitet jeden Angriff mit einem Gambit und einem genauen Plan vor.",
+  "@storyPlainBoss": {
+    "description": "storyPlainBoss",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPlainOutro": "Die Ebene gehört dir. Jetzt weißt du: Jede Figur hat eine Aufgabe und jeder Zug einen Grund.",
+  "@storyPlainOutro": {
+    "description": "storyPlainOutro"
+  },
+  "storyAcademyTitle": "Die Akademie des Meisters",
+  "@storyAcademyTitle": {
+    "description": "storyAcademyTitle"
+  },
+  "storyAcademyIntro": "Oben auf dem Hügel lebt ein alter Meister, der mit wenigen Grundsätzen unterrichtet: Zähle die Züge, finde die Opposition, vergiss nie die Eröffnungsregeln.",
+  "@storyAcademyIntro": {
+    "description": "storyAcademyIntro"
+  },
+  "storyAcademyBoss": "{name}, der Stern der Akademie, greift unermüdlich an und verzeiht keinen Fehler.",
+  "@storyAcademyBoss": {
+    "description": "storyAcademyBoss",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyAcademyOutro": "Die Akademie nimmt dich als eine der Ihren auf. Die Geschichte ist zu Ende, aber das Spiel geht weiter.",
+  "@storyAcademyOutro": {
+    "description": "storyAcademyOutro"
+  },
+  "@storyCrownIntro": {
+    "description": "storyCrownIntro"
+  },
+  "@storyCrownOutro": {
+    "description": "storyCrownOutro"
+  },
+  "storyGuardianPrologueWelcome": "Hallo, ich bin Tino! Ich zeige dir, wie sich jede Figur bewegt.",
+  "storyGuardianProloguePuzzleOk": "Geschafft! Du weißt schon, wie sich die Figuren bewegen.",
+  "storyGuardianProloguePuzzleRetry": "Fast! Schau, wohin jede Figur ziehen kann, und versuch es noch einmal.",
+  "storyGuardianPrologueBoss": "Spielen wir eine Partie? Ich fange ganz sanft an, versprochen.",
+  "storyGuardianPrologueLessonDone": "Jetzt kennst du die Figuren. Mal sehen, wie du sie einsetzt.",
+  "storyGuardianVillageWelcome": "Willkommen im Dorf! Hier zeige ich dir, wie du keine Figuren ungedeckt stehen lässt.",
+  "storyGuardianVillagePuzzleOk": "Gut gemacht, du hast es sofort gesehen!",
+  "storyGuardianVillagePuzzleRetry": "Fast geschafft: Such die ungedeckte Figur.",
+  "storyGuardianVillageBoss": "Jetzt sind wir beide dran. Ich liebe die Italienische Partie, pass auf!",
+  "storyGuardianVillageLessonDone": "Gut gemacht, keine losen Figuren. Zeit, sie auf die Probe zu stellen.",
+  "storyGuardianGatesWelcome": "Durch die Tore kommst du nur, wenn du die Regeln kennst. Gehen wir sie der Reihe nach durch.",
+  "storyGuardianGatesPuzzleOk": "Genau: eine Umwandlung im richtigen Moment.",
+  "storyGuardianGatesPuzzleRetry": "Noch nicht: Schau dir die Regeln noch einmal an und versuch es erneut.",
+  "storyGuardianGatesBoss": "Eine Partie zur Prüfung: Ich spiele das Damengambit.",
+  "storyGuardianGatesLessonDone": "Du hast die Regeln gelernt. Die Aufgaben warten.",
+  "storyGuardianTowerWelcome": "Diesen Turm erklimmt man mit Mattbildern. Fangen wir an.",
+  "storyGuardianTowerPuzzleOk": "Matt! Direkt auf den Punkt.",
+  "storyGuardianTowerPuzzleRetry": "Nein, schau auf den König: Wohin kann er nicht fliehen?",
+  "storyGuardianTowerBoss": "Genug der Theorie: Lass uns spielen. Ich greife mit dem Königsgambit an.",
+  "storyGuardianTowerLessonDone": "Du siehst, wie man Matt setzt. Jetzt finde die versteckten Mattbilder.",
+  "storyGuardianForestWelcome": "Im Wald versteckt jeder Ast eine Falle. Augen auf!",
+  "storyGuardianForestPuzzleOk": "Ha, du bist nicht auf die Falle hereingefallen. Gut gemacht!",
+  "storyGuardianForestPuzzleRetry": "Hoppla, die Falle hat funktioniert. Versuch es noch einmal!",
+  "storyGuardianForestBoss": "Mal sehen, ob du selbst eine stellen kannst. Ich spiele Englisch.",
+  "storyGuardianForestLessonDone": "Fallen können dich nicht mehr täuschen. Übe jetzt, selbst welche zu stellen.",
+  "storyGuardianCastleWelcome": "Im Endspiel zählt jeder Zug. Ganz ruhig, Schritt für Schritt.",
+  "storyGuardianCastlePuzzleOk": "Geduldig und genau: So gewinnt man ein Endspiel.",
+  "storyGuardianCastlePuzzleRetry": "Keine Eile: Zähle die Züge und versuch es noch einmal.",
+  "storyGuardianCastleBoss": "Eine langsame Partie erwartet uns. Ich spiele Sizilianisch.",
+  "storyGuardianCastleLessonDone": "Wenige Figuren, jeder Zug zählt. Jetzt die Aufgaben.",
+  "storyGuardianCrownWelcome": "Die Krone gewinnt man schon am Anfang: Eine elegante Eröffnung ist die halbe Partie.",
+  "storyGuardianCrownPuzzleOk": "Elegant: Das ist der richtige Zug.",
+  "storyGuardianCrownPuzzleRetry": "Fast: Denk an die Entwicklung deiner Figuren und versuch es noch einmal.",
+  "storyGuardianCrownBoss": "Darf ich um eine Partie bitten? Ich wähle Spanisch.",
+  "storyGuardianCrownLessonDone": "Zentrum, Entwicklung, Rochade: alles deins. Jetzt die Aufgaben.",
+  "storyGuardianPlainWelcome": "Auf der Ebene gewinnt man mit einem Plan. Ich zeige dir, wie.",
+  "storyGuardianPlainPuzzleOk": "Genau. Ein klarer Plan schlägt Hast.",
+  "storyGuardianPlainPuzzleRetry": "Fast. Überleg, was deine Figur will.",
+  "storyGuardianPlainBoss": "Spielen wir? Fairerweise sei gewarnt: Ich liebe das Evans-Gambit.",
+  "storyGuardianPlainLessonDone": "Du hast einen Plan und aktive Figuren. Jetzt die Aufgaben.",
+  "storyGuardianAcademyWelcome": "In der Akademie lernst du von den Meistern. Los, zeig mir, was du kannst!",
+  "storyGuardianAcademyPuzzleOk": "Super! So spielen Meister.",
+  "storyGuardianAcademyPuzzleRetry": "Gib nicht auf: Atme durch und versuch es noch einmal.",
+  "storyGuardianAcademyBoss": "Die letzte Herausforderung: Ich spiele Königsindisch. Ohne Rabatt!",
+  "storyGuardianAcademyLessonDone": "Lektionen geschafft, Schüler. Jetzt die Prüfung auf dem Brett.",
+  "storyGuardianSays": "{name} sagt: {text}",
+  "@storyGuardianSays": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "text": {
+        "type": "String"
+      }
+    }
+  }
+}

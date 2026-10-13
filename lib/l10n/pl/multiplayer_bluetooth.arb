@@ -1,0 +1,39 @@
+{
+  "multiplayerChannelLabel": "Jak się połączyć",
+  "@multiplayerChannelLabel": {
+    "description": "Label of the Wi-Fi or Bluetooth choice in the Play with a friend screen"
+  },
+  "multiplayerChannelWifi": "Wi-Fi",
+  "@multiplayerChannelWifi": {
+    "description": "Connect over Wi-Fi or a hotspot"
+  },
+  "multiplayerChannelBluetooth": "Bluetooth",
+  "@multiplayerChannelBluetooth": {
+    "description": "Connect over Bluetooth, no Wi-Fi needed"
+  },
+  "multiplayerChannelRemote": "Z daleka",
+  "@multiplayerChannelRemote": {
+    "description": "Connect over the internet, to play from far away"
+  },
+  "multiplayerWifiHint": "Przez Wi-Fi lub hotspot jednego z telefonów łączycie się w tej samej sieci: internet nie jest potrzebny.",
+  "multiplayerBluetoothHint": "Przy Bluetooth oba telefony muszą być blisko siebie, a sieć nie jest potrzebna.",
+  "@multiplayerBluetoothHint": {
+    "description": "Explanation under the Bluetooth choice"
+  },
+  "multiplayerBluetoothInviteHint": "Trzymajcie telefony blisko siebie: ruchy przesyłają się przez Bluetooth.",
+  "@multiplayerBluetoothInviteHint": {
+    "description": "Under the QR of a Bluetooth game, while waiting for the opponent"
+  },
+  "multiplayerBluetoothOff": "Włącz Bluetooth, a potem spróbuj ponownie.",
+  "@multiplayerBluetoothOff": {
+    "description": "Notice when Bluetooth is off"
+  },
+  "multiplayerBluetoothDenied": "Potrzebne jest zezwolenie na Bluetooth: włącz je w ustawieniach telefonu, a potem spróbuj ponownie.",
+  "@multiplayerBluetoothDenied": {
+    "description": "Notice when the Bluetooth permission is denied"
+  },
+  "multiplayerBluetoothUnsupported": "Ten telefon nie obsługuje Bluetooth Low Energy.",
+  "@multiplayerBluetoothUnsupported": {
+    "description": "Notice when the phone has no Bluetooth LE"
+  }
+}

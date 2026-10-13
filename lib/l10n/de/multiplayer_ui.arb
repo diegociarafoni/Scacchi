@@ -1,0 +1,15 @@
+{
+  "multiplayerUiChannelWifi": "WLAN",
+  "multiplayerUiChannelBluetooth": "Bluetooth",
+  "multiplayerUiChannelRemote": "Online",
+  "multiplayerUiLinkConnected": "Verbunden",
+  "multiplayerUiLinkConnecting": "Verbindet",
+  "multiplayerUiLinkOffline": "Nicht erreichbar",
+  "multiplayerUiLinkSemantics": "{channel}: {state}",
+  "multiplayerUiShowFriend": "Zeig diesen Code deinem Freund",
+  "multiplayerUiStepsTitle": "So wird gespielt",
+  "multiplayerUiStepCreate": "Einer von euch erstellt die Partie und zeigt den QR-Code oder schickt den Link.",
+  "multiplayerUiStepScan": "Der andere scannt ihn mit der Kamera.",
+  "multiplayerUiStepPlay": "Zieht abwechselnd: Die Züge werden automatisch übertragen.",
+  "multiplayerUiResumeTitle": "Laufende Partie"
+}
