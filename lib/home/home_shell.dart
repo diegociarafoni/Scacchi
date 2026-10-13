@@ -490,6 +490,7 @@ class _HomeShellState extends State<HomeShell> {
               allowUndo: true,
               startMoves: request.startMoves,
               line: request.line,
+              instructor: request.instructor,
             ),
             onActivity: _record,
             onSave: _saveGame,
