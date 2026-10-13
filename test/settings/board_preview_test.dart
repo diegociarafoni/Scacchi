@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:chessground/chessground.dart';
-import 'package:dartchess/dartchess.dart' show PieceKind;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -10,6 +9,8 @@ import 'package:scacchi/progress/progress_controller.dart';
 import 'package:scacchi/progress/progress_store.dart';
 import 'package:scacchi/settings/settings.dart';
 import 'package:scacchi/settings/settings_page.dart';
+
+import 'settings_nav.dart';
 
 void main() {
   late Directory dir;
@@ -31,10 +32,12 @@ void main() {
     Size logical = const Size(390, 844),
     bool unlocked = true,
     double textScale = 1,
+    SettingsSection section = SettingsSection.board,
   }) async {
     tester.view.physicalSize = logical * 3;
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
+    await tester.pumpWidget(const SizedBox.shrink());
     await tester.runAsync(() async {
       await progress.load();
       if (unlocked) {
@@ -53,14 +56,11 @@ void main() {
               .copyWith(textScaler: TextScaler.linear(textScale)),
           child: child!,
         ),
-        home: SettingsPage(
-          controller: settings,
-          progress: progress,
-          expanded: SettingsSection.values.toSet(),
-        ),
+        home: SettingsPage(controller: settings, progress: progress),
       ),
     );
     await tester.pumpAndSettle();
+    await openSection(tester, section);
   }
 
   StaticChessboard board(WidgetTester tester) =>
@@ -116,25 +116,32 @@ void main() {
 
   testWidgets('RP-04 ogni scelta aggiorna subito l\'anteprima', (tester) async {
     await show(tester);
-    await tapChip(tester, 'Oceano');
+    await settings.update(
+      settings.value.copyWith(
+        boardTheme: BoardTheme.ocean,
+        pieceSet: PieceStyle.merida,
+      ),
+    );
+    await tester.pumpAndSettle();
     expect(
       board(tester).settings.colorScheme,
       same(BoardTheme.ocean.colorScheme),
     );
-    await tapChip(tester, 'Merida');
     expect(board(tester).settings.pieceAssets, PieceStyle.merida.assets);
     await tapChip(tester, 'Lenta');
     expect(
       board(tester).settings.animationDuration,
       AnimationSpeed.slow.duration,
     );
+    await tapText(tester, 'Coordinate');
+    expect(board(tester).settings.enableCoordinates, isFalse);
+    await backToMenu(tester);
+    await openSection(tester, SettingsSection.accessibility);
     await tapText(tester, 'Colori per daltonici');
     expect(
       board(tester).settings.colorScheme,
       same(BoardTheme.ocean.colorBlindScheme),
     );
-    await tapText(tester, 'Coordinate');
-    expect(board(tester).settings.enableCoordinates, isFalse);
   });
 
   testWidgets('RP-04 l\'anteprima resta visibile scorrendo le impostazioni', (
@@ -142,7 +149,7 @@ void main() {
   ) async {
     await show(tester);
     final before = tester.getRect(find.byKey(const Key('board-preview')));
-    await tester.scrollUntilVisible(find.text('Backup e ripristino'), 300);
+    await tester.scrollUntilVisible(find.text('Notazione delle mosse'), 300);
     expect(tester.getRect(find.byKey(const Key('board-preview'))), before);
   });
 
@@ -199,7 +206,7 @@ void main() {
       await tester.tap(find.byKey(const Key('board-preview')));
       await tester.pumpAndSettle();
       expect(board(tester).fen, isNot(start));
-      await tapChip(tester, 'Oceano');
+      await tapChip(tester, 'Veloce');
       expect(board(tester).fen, start);
       expect(find.byKey(const Key('preview-dots')), findsOneWidget);
     },
@@ -216,6 +223,19 @@ void main() {
     await tapText(tester, 'Suoni');
     await tapText(tester, 'Vibrazione');
     expect(board(tester).fen, played);
+  });
+
+  testWidgets('RP-04 l\'ultima mossa si spegne anche nell\'anteprima', (
+    tester,
+  ) async {
+    await show(tester);
+    final start = board(tester).fen;
+    await tester.tap(find.byKey(const Key('board-preview')));
+    await tester.pumpAndSettle();
+    expect(board(tester).fen, isNot(start));
+    await tapText(tester, 'Evidenzia l\'ultima mossa');
+    expect(board(tester).fen, start);
+    expect(board(tester).settings.colorScheme.lastMove.solidColor!.a, 0);
   });
 
   testWidgets('RNF-07 l\'anteprima si può raggiungere con la tastiera', (
@@ -250,7 +270,7 @@ void main() {
     final bar = tester.getRect(find.byKey(const Key('preview-bar')));
     expect(bar.height, lessThanOrEqualTo(844 * 0.3));
     await tester.scrollUntilVisible(
-      find.text('Backup e ripristino'),
+      find.text('Notazione delle mosse'),
       300,
       maxScrolls: 100,
     );
@@ -266,33 +286,17 @@ void main() {
     );
   });
 
-  testWidgets('RP-04 i temi mostrano i colori delle case, i pezzi il cavallo', (
-    tester,
-  ) async {
-    await show(tester);
-    for (final theme in BoardTheme.values) {
-      final swatch = find.byKey(Key('theme-swatch-${theme.name}'));
-      await tester.scrollUntilVisible(swatch, 200);
-      final colors = tester
-          .widgetList<ColoredBox>(
-            find.descendant(of: swatch, matching: find.byType(ColoredBox)),
-          )
-          .map((b) => b.color)
-          .toList();
-      expect(colors, hasLength(16));
-      expect(colors.first, theme.colorScheme.lightSquare);
-      expect(colors[1], theme.colorScheme.darkSquare);
-    }
-    for (final style in PieceStyle.values) {
-      final icon = find.byKey(Key('piece-icon-${style.name}'));
-      await tester.scrollUntilVisible(icon, 200);
-      final image = tester.widget<Image>(icon);
-      expect(
-        (image.image as AssetImage).assetName,
-        style.assets[PieceKind.whiteKnight]!.assetName,
-      );
-    }
-  });
+  /// Carica davvero le immagini dei pezzi dell'anteprima: senza, i golden
+  /// dipendono da quanto è veloce la decodifica.
+  Future<void> loadImages(WidgetTester tester) async {
+    final context = tester.element(find.byType(Scaffold).last);
+    await tester.runAsync(() async {
+      for (final piece in settings.value.board.pieceAssets.values) {
+        await precacheImage(piece, context);
+      }
+    });
+    await tester.pumpAndSettle();
+  }
 
   // I golden dipendono dal sistema operativo: in locale si escludono con
   // --exclude-tags golden, in CI girano su Linux.
@@ -303,29 +307,17 @@ void main() {
       'large': Size(412, 915),
     };
     for (final MapEntry(key: name, value: size) in phones.entries) {
-      testWidgets('RNF-07 impostazioni su telefono $name', (tester) async {
+      testWidgets('RNF-07 impostazioni, scacchiera su telefono $name', (
+        tester,
+      ) async {
         await show(tester, logical: size);
+        await loadImages(tester);
         await expectLater(
           find.byType(MaterialApp),
-          matchesGoldenFile('goldens/settings_$name.png'),
+          matchesGoldenFile('goldens/settings_board_$name.png'),
         );
       }, tags: 'golden');
     }
-
-    testWidgets('RNF-07 chip di temi e pezzi con colori e cavallo', (
-      tester,
-    ) async {
-      await show(tester, logical: const Size(360, 780));
-      await tester.scrollUntilVisible(
-        find.byKey(const Key('piece-tile-rokko')),
-        200,
-      );
-      await tester.pumpAndSettle();
-      await expectLater(
-        find.byType(MaterialApp),
-        matchesGoldenFile('goldens/settings_chips.png'),
-      );
-    }, tags: 'golden');
 
     testWidgets('RNF-07 impostazioni con colori per daltonici', (tester) async {
       settings = SettingsController.defaults();
@@ -337,6 +329,7 @@ void main() {
         ),
       );
       await show(tester, logical: const Size(360, 780));
+      await loadImages(tester);
       await expectLater(
         find.byType(MaterialApp),
         matchesGoldenFile('goldens/settings_color_blind.png'),

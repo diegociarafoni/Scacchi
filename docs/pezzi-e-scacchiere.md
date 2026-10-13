@@ -1,6 +1,6 @@
 # Pezzi e scacchiere
 
-Oltre ai set di chessground, Rokko ha otto set di pezzi e tredici scacchiere con texture propri, scelti tra le proposte dell'Officina di Rokko. Si scelgono nella schermata Stile (vedi [stile.md](stile.md)) o in Impostazioni, alle voci «Tema della scacchiera» e «Pezzi» (vedi [interfaccia.md](interfaccia.md)).
+Oltre ai set di chessground, Rokko ha otto set di pezzi e tredici scacchiere con texture propri, scelti tra le proposte dell'Officina di Rokko. Si scelgono nella schermata Stile (vedi [stile.md](stile.md)), da Impostazioni → Stile.
 
 ## Set di pezzi
 
