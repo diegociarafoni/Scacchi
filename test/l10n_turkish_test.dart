@@ -45,16 +45,11 @@ void main() {
       }
     });
 
-    test(
-      'ogni plurale ha il ramo other e gli stessi selettori di conteggio',
-      () {
-        for (final e in it.entries.where((e) => e.value.contains('plural,'))) {
-          final value = tr[e.key]!;
-          expect(value, contains('plural,'), reason: e.key);
-          expect(value, contains('other{'), reason: e.key);
-        }
-      },
-    );
+    test('ogni plurale ha il ramo other (in turco il singolare basta)', () {
+      for (final e in tr.entries.where((e) => e.value.contains('plural,'))) {
+        expect(e.value, contains('other{'), reason: e.key);
+      }
+    });
   });
 
   testWidgets('turco: una schermata si mostra senza testi italiani', (

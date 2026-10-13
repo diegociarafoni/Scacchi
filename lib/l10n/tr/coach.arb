@@ -136,7 +136,7 @@
       }
     }
   },
-  "coachHintPromote": "{piece} taşını {where, select, square{{square} karesine} other{daire içindeki kareye}} ilerlet{capture, select, yes{, {victim} al} other{}} ve terfi ettir: {promoted} olur.",
+  "coachHintPromote": "{piece} taşını {where, select, square{{square} karesine} other{daire içindeki kareye}} {capture, select, yes{ilerlet, {victim} al ve} other{ilerlet ve}} terfi ettir: {promoted} olur.",
   "@coachHintPromote": {
     "placeholders": {
       "piece": {
@@ -159,7 +159,7 @@
       }
     }
   },
-  "coachHintCapture": "{piece} taşını {where, select, square{{square} karesine} other{daire içindeki kareye}} götür ve {victim} al{check, select, none{.} check{; şah çekersin.} other{; şah mat edersin.}}",
+  "coachHintCapture": "{check, select, none{} check{Şah çekmek için } other{Şah mat etmek için }}{piece} taşını {where, select, square{{square} karesine} other{daire içindeki kareye}} götür ve {victim} al.",
   "@coachHintCapture": {
     "placeholders": {
       "piece": {
@@ -179,7 +179,7 @@
       }
     }
   },
-  "coachHintMove": "{piece} taşını {where, select, square{{square} karesine} other{daire içindeki kareye}} götür{check, select, none{.} check{ ve şah çek.} other{ ve şah mat et.}}",
+  "coachHintMove": "{check, select, none{} check{Şah çekmek için } other{Şah mat etmek için }}{piece} taşını {where, select, square{{square} karesine} other{daire içindeki kareye}} götür.",
   "@coachHintMove": {
     "placeholders": {
       "piece": {
