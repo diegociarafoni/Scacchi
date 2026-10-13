@@ -103,4 +103,4 @@ Nei test dei widget il telefono è simulato in italiano (`test/support/italian_d
 - Testi in `lib/l10n/pt/*.arb` (stesse chiavi dell'italiano) e contenuti in `assets/content/pt/*.json` (percorso, finali, maestri, bot, nomi delle aperture, questi ultimi composti con i generi e gli aggettivi portoghesi).
 - Registrazione: `AppLanguage.portuguese`, `tool/lingue.json`, `android/app/src/main/res/xml/locales_config.xml`, `CFBundleLocalizations` e `ios/Runner/pt.lproj/InfoPlist.strings` (anche nel progetto Xcode).
 - Regole di stile e termini: [glossario-portoghese.md](glossario-portoghese.md): você, virgolette “…”, plurali `one`/`other`, notazione R D T B C.
-- Test: `test/l10n/lingua_pt_test.dart` (chiavi, argomenti, plurali e due schermate campione) e, per i contenuti, `test/l10n/content_parity_test.dart`.
+- Test: `test/l10n/lingua_pt_test.dart` (chiavi, argomenti, plurali e due schermate campione) e, per i contenuti, il test di parità dei contenuti per lingua.
