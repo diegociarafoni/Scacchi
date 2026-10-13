@@ -427,6 +427,10 @@
   "@storyGuardianPrologueBoss": {
     "description": "storyGuardianPrologueBoss"
   },
+  "storyGuardianPrologueLessonDone": "Ora conosci i pezzi. Vediamo se li sai usare.",
+  "@storyGuardianPrologueLessonDone": {
+    "description": "storyGuardianPrologueLessonDone"
+  },
   "storyGuardianVillageWelcome": "Benvenuto al villaggio! Qui ti insegno a non lasciare pezzi in presa.",
   "@storyGuardianVillageWelcome": {
     "description": "storyGuardianVillageWelcome"
@@ -442,6 +446,10 @@
   "storyGuardianVillageBoss": "Ora giochiamo io e te. Amo l'Italiana, attento!",
   "@storyGuardianVillageBoss": {
     "description": "storyGuardianVillageBoss"
+  },
+  "storyGuardianVillageLessonDone": "Bravo, niente pezzi in presa. Ora mettiamoli alla prova.",
+  "@storyGuardianVillageLessonDone": {
+    "description": "storyGuardianVillageLessonDone"
   },
   "storyGuardianGatesWelcome": "Alle porte si entra solo conoscendo le regole. Le vediamo con ordine.",
   "@storyGuardianGatesWelcome": {
@@ -459,6 +467,10 @@
   "@storyGuardianGatesBoss": {
     "description": "storyGuardianGatesBoss"
   },
+  "storyGuardianGatesLessonDone": "Le regole le hai imparate. Ora i puzzle ti aspettano.",
+  "@storyGuardianGatesLessonDone": {
+    "description": "storyGuardianGatesLessonDone"
+  },
   "storyGuardianTowerWelcome": "Questa torre si scala a colpi di matto. Si comincia.",
   "@storyGuardianTowerWelcome": {
     "description": "storyGuardianTowerWelcome"
@@ -474,6 +486,10 @@
   "storyGuardianTowerBoss": "Basta teoria: giochiamo. Io attacco col Gambetto di Re.",
   "@storyGuardianTowerBoss": {
     "description": "storyGuardianTowerBoss"
+  },
+  "storyGuardianTowerLessonDone": "Hai capito come si dà matto. Ora cerca quelli nascosti.",
+  "@storyGuardianTowerLessonDone": {
+    "description": "storyGuardianTowerLessonDone"
   },
   "storyGuardianForestWelcome": "Nel bosco ogni ramo nasconde una trappola. Occhi aperti!",
   "@storyGuardianForestWelcome": {
@@ -491,6 +507,10 @@
   "@storyGuardianForestBoss": {
     "description": "storyGuardianForestBoss"
   },
+  "storyGuardianForestLessonDone": "Le trappole non ti sfuggono più. Allenati a tenderle.",
+  "@storyGuardianForestLessonDone": {
+    "description": "storyGuardianForestLessonDone"
+  },
   "storyGuardianCastleWelcome": "Nei finali ogni mossa conta. Con calma, un passo alla volta.",
   "@storyGuardianCastleWelcome": {
     "description": "storyGuardianCastleWelcome"
@@ -506,6 +526,10 @@
   "storyGuardianCastleBoss": "Una partita lenta ci aspetta. Io gioco la Siciliana.",
   "@storyGuardianCastleBoss": {
     "description": "storyGuardianCastleBoss"
+  },
+  "storyGuardianCastleLessonDone": "Pochi pezzi, ogni mossa conta. Ora i puzzle.",
+  "@storyGuardianCastleLessonDone": {
+    "description": "storyGuardianCastleLessonDone"
   },
   "storyGuardianCrownWelcome": "La corona si conquista dall'inizio: un'apertura elegante vale mezza partita.",
   "@storyGuardianCrownWelcome": {
@@ -523,6 +547,10 @@
   "@storyGuardianCrownBoss": {
     "description": "storyGuardianCrownBoss"
   },
+  "storyGuardianCrownLessonDone": "Centro, sviluppo e arrocco sono tuoi. Ora i puzzle.",
+  "@storyGuardianCrownLessonDone": {
+    "description": "storyGuardianCrownLessonDone"
+  },
   "storyGuardianPlainWelcome": "In pianura si vince con un piano. Ti mostro come.",
   "@storyGuardianPlainWelcome": {
     "description": "storyGuardianPlainWelcome"
@@ -539,6 +567,10 @@
   "@storyGuardianPlainBoss": {
     "description": "storyGuardianPlainBoss"
   },
+  "storyGuardianPlainLessonDone": "Hai un piano e pezzi attivi. Ora i puzzle.",
+  "@storyGuardianPlainLessonDone": {
+    "description": "storyGuardianPlainLessonDone"
+  },
   "storyGuardianAcademyWelcome": "All'accademia si impara dai maestri. Dai, mostrami cosa sai!",
   "@storyGuardianAcademyWelcome": {
     "description": "storyGuardianAcademyWelcome"
@@ -554,6 +586,10 @@
   "storyGuardianAcademyBoss": "L'ultima sfida: io gioco l'Est-Indiana. Non ti faccio sconti!",
   "@storyGuardianAcademyBoss": {
     "description": "storyGuardianAcademyBoss"
+  },
+  "storyGuardianAcademyLessonDone": "Lezioni finite, accademico. Ora la prova sul campo.",
+  "@storyGuardianAcademyLessonDone": {
+    "description": "storyGuardianAcademyLessonDone"
   },
   "storyGuardianSays": "{name} dice: {text}",
   "@storyGuardianSays": {

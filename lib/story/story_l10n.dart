@@ -10,7 +10,7 @@ AppLocalizations storyL10n(BuildContext context) =>
     lookupAppLocalizations(const Locale('it'));
 
 /// Momenti in cui il custode del capitolo parla.
-enum GuardianMoment { welcome, puzzleOk, puzzleRetry, boss }
+enum GuardianMoment { welcome, puzzleOk, puzzleRetry, lessonDone, boss }
 
 /// Racconto di un capitolo: titolo, introduzione, presentazione del bot ed
 /// epilogo.
@@ -98,6 +98,17 @@ extension StoryTexts on AppLocalizations {
           'crown' => storyGuardianCrownPuzzleRetry,
           'plain' => storyGuardianPlainPuzzleRetry,
           _ => storyGuardianAcademyPuzzleRetry,
+        },
+        GuardianMoment.lessonDone => switch (c.id) {
+          'prologue' => storyGuardianPrologueLessonDone,
+          'village' => storyGuardianVillageLessonDone,
+          'gates' => storyGuardianGatesLessonDone,
+          'tower' => storyGuardianTowerLessonDone,
+          'forest' => storyGuardianForestLessonDone,
+          'castle' => storyGuardianCastleLessonDone,
+          'crown' => storyGuardianCrownLessonDone,
+          'plain' => storyGuardianPlainLessonDone,
+          _ => storyGuardianAcademyLessonDone,
         },
         GuardianMoment.boss => switch (c.id) {
           'prologue' => storyGuardianPrologueBoss,
