@@ -1,4 +1,5 @@
 import 'package:dartchess/dartchess.dart';
+import 'package:flutter/widgets.dart' show Key;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/game/game_page.dart';
 import 'package:scacchi/home/home_shell.dart';
@@ -35,6 +36,8 @@ void main() {
       ),
     );
     await tester.pump();
+    await tester.tap(find.byKey(const Key('home-play')));
+    await tester.pumpAndSettle();
     final game = tester.widget<GamePage>(find.byType(GamePage));
     final mistake = MistakePuzzle(
       id: 'mio-x-5',

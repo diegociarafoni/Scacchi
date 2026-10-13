@@ -4,6 +4,7 @@ import 'package:dartchess/dartchess.dart' show Side;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../archive/archive_page.dart';
 import '../archive/game_archive.dart';
 import '../archive/pgn.dart';
 import '../archive/saved_game.dart';
@@ -21,16 +22,22 @@ import '../game/challenge.dart';
 import '../game/clock.dart';
 import '../game/game_page.dart';
 import '../game/handicap.dart';
+import '../game/opponent_picker.dart';
+import '../l10n/app_localizations.dart';
 import '../masters/masters_controller.dart';
 import '../masters/masters_page.dart';
+import '../minigames/minigames_page.dart';
+import '../multiplayer/multiplayer_page.dart';
 import '../openings/opening_assets.dart';
 import '../openings/opening_game.dart';
 import '../openings/openings_hub_page.dart';
 import '../openings/repertoire.dart';
 import '../path/curriculum.dart';
 import '../path/path_controller.dart';
+import '../path/stage_page.dart';
 import '../physical/physical_game_page.dart';
 import '../progress/activity.dart';
+import '../progress/profile_page.dart';
 import '../progress/progress_controller.dart';
 import '../progress/progress_tracker.dart';
 import '../puzzles/mode_guide.dart';
@@ -46,17 +53,22 @@ import '../review/personal_puzzles.dart';
 import '../review/review_activity.dart';
 import '../review/review_page.dart';
 import '../settings/settings.dart';
+import '../settings/settings_page.dart';
 import '../stats/local_rating.dart';
+import '../stats/stats_page.dart';
 import '../storage/key_value_store.dart';
 import '../story/story.dart';
 import '../story/story_controller.dart';
 import '../story/story_feed.dart';
 import '../story/story_l10n.dart';
 import '../story/story_page.dart';
+import '../summary/weekly_summary_page.dart';
 import '../tablebase/shared_tablebase.dart';
 import '../tournament/tournament.dart';
 import '../tournament/tournament_controller.dart';
 import '../tournament/tournament_page.dart';
+import 'home_page.dart';
+import 'learn_page.dart';
 import 'you_page.dart';
 
 /// Navigazione principale con la barra in basso, nella zona del pollice.
@@ -136,7 +148,12 @@ class _HomeShellState extends State<HomeShell> {
   StreamSubscription<List<BadgeDef>>? _badgeSub;
   final _badgeSources = <Listenable, VoidCallback>{};
 
-  /// La scheda Tu si costruisce alla prima apertura, poi resta in memoria.
+  /// Le schede Impara e Tu si costruiscono alla prima apertura, poi restano
+  /// in memoria.
+  var _learnVisited = false;
+
+  /// Avvisa la Home quando torna in vista, per rileggere partite e progressi.
+  final _homeRefresh = ValueNotifier<int>(0);
   var _youVisited = false;
 
   late bool _kidMode = widget.settings.value.kidMode;
@@ -174,6 +191,7 @@ class _HomeShellState extends State<HomeShell> {
       (source, listener) => source.removeListener(listener),
     );
     _reminders?.dispose();
+    _homeRefresh.dispose();
     super.dispose();
   }
 
@@ -664,61 +682,209 @@ class _HomeShellState extends State<HomeShell> {
   void _onSettings() {
     final kidMode = widget.settings.value.kidMode;
     if (kidMode == _kidMode) return;
-    setState(() {
-      _kidMode = kidMode;
-      // Le aperture spariscono: se erano aperte si torna a Gioca (RP-06).
-      if (kidMode && _tab == 2) _tab = 0;
-    });
+    setState(() => _kidMode = kidMode);
   }
+
+  Future<void> _push(Widget page) =>
+      Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => page));
+
+  /// Apre [build] quando è pronta, con un messaggio se non si carica.
+  Future<void> _openPage(Future<Widget> Function() build) async {
+    try {
+      final page = await build();
+      if (mounted) await _push(page);
+    } on Object catch (e) {
+      if (kDebugMode) debugPrint('Sezione non disponibile: $e');
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context).youLoadError)),
+      );
+    }
+  }
+
+  GamePage _gamePage({
+    bool openSetup = false,
+    GameSetup? initialSetup,
+    SavedGame? resume,
+  }) => GamePage(
+    settings: widget.settings,
+    openSetup: openSetup,
+    initialSetup: initialSetup,
+    resume: resume,
+    onActivity: _record,
+    onSavePuzzles: _savePersonalPuzzles,
+    onSave: _saveGame,
+    progress: _progressController,
+    computerAvailable: widget.computerAvailable,
+    createComputer: widget.createComputer,
+    tournamentPage: _computerAvailable ? _tournamentPage : null,
+    physicalPage: () => PhysicalGamePage(archive: _archive),
+    openingGame: _computerAvailable ? _playOpening : null,
+  );
+
+  /// «Nuova partita»: la scacchiera con la scelta già aperta.
+  Future<void> _newGame([GameSetup? setup]) =>
+      _push(_gamePage(openSetup: true, initialSetup: setup));
+
+  Future<void> _resumeGame(SavedGame saved) async {
+    if (saved.mode == SavedGame.computer && !_computerAvailable) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context).homeResumeNoEngine),
+        ),
+      );
+      return;
+    }
+    await _push(_gamePage(resume: saved));
+  }
+
+  Future<void> _openOpenings() async {
+    final repertoire = _repertoire ??= _loadRepertoire();
+    await _push(
+      OpeningsHubPage(
+        repertoire: repertoire,
+        onPlay: _computerAvailable ? _playOpening : null,
+        archive: _archive,
+      ),
+    );
+  }
+
+  Future<void> _openDaily() async {
+    try {
+      final trainer = await (_trainer ??= _loadTrainer());
+      if (!mounted) return;
+      await _push(
+        PuzzlePage(
+          trainer: trainer,
+          puzzle: trainer.library.daily(DateTime.now()),
+          guide: PuzzleGuide.daily,
+          title: AppLocalizations.of(context).puzzleDailyTitle,
+          onActivity: _record,
+        ),
+      );
+    } on Object catch (e) {
+      if (kDebugMode) debugPrint('Puzzle del giorno non disponibile: $e');
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context).youLoadError)),
+      );
+    }
+  }
+
+  /// Svolge una lezione consigliata e ne salva le stelle come nel Percorso.
+  void _playLesson(BuildContext context, Stage stage) {
+    unawaited(() async {
+      final controller = await _pathController();
+      if (!context.mounted) return;
+      final started = DateTime.now();
+      final stars = await Navigator.of(
+        context,
+      ).push<int>(MaterialPageRoute(builder: (_) => StagePage(stage: stage)));
+      if (stars != null && stars > 0) {
+        await controller.complete(
+          stage,
+          stars,
+          DateTime.now().difference(started),
+        );
+      }
+    }());
+  }
+
+  void _openThemePuzzles(BuildContext context, String theme, String title) {
+    unawaited(_openPage(() => _puzzlesPage(theme, title)));
+  }
+
+  /// Le funzioni raggiungibili dalla Home e da Impara, per id. Quelle che
+  /// non servono al profilo o non funzionano senza motore mancano.
+  Map<String, HomeAction> _features() {
+    final adult = !_kidMode;
+    return {
+      if (adult && _computerAvailable)
+        'bots': () => _newGame(const GameSetup(opponent: Opponent.bot)),
+      if (adult) 'friend': () => _push(const MultiplayerPage()),
+      if (adult && _computerAvailable)
+        'tournaments': () => _openPage(_tournamentPage),
+      if (adult) 'physical': () => _push(PhysicalGamePage(archive: _archive)),
+      'story': () => _openPage(_storyPage),
+      if (adult) 'openings': _openOpenings,
+      if (_computerAvailable) 'endgames': () => _openPage(_endgamesPage),
+      'masters': () => _openPage(_mastersPage),
+      'daily': _openDaily,
+      'puzzles': () async => setState(() => _tab = 1),
+      'minigames': () async =>
+          _push(MinigamesPage(progress: await _progressController())),
+      if (adult) ...{
+        'stats': () async => _push(StatsPage(archive: await _archive())),
+        'badges': () async =>
+            _push(BadgesPage(controller: await _progressController())),
+        'archive': () async => _push(
+          ArchivePage(
+            archive: await _archive(),
+            onOpen: (g) => unawaited(_openSavedGame(context, g)),
+          ),
+        ),
+      },
+      'week': () async {
+        final p = await _progressController();
+        await _push(
+          WeeklySummaryPage(
+            log: p.weekLog,
+            openLesson: _playLesson,
+            openPuzzles: _openThemePuzzles,
+          ),
+        );
+      },
+      'profile': () async => _push(
+        ProfilePage(
+          controller: await _progressController(),
+          reminders: _reminders,
+        ),
+      ),
+    };
+  }
+
+  /// Riprende dalla Storia, che propone il passo giusto.
+  Future<void> _continueStory(Stage stage) => _openPage(_storyPage);
 
   @override
   Widget build(BuildContext context) {
-    final tabs = [0, 1, if (!_kidMode) 2, 3];
-    if (_tab == 1) {
-      _trainer ??= _loadTrainer();
-    }
-    if (_tab == 2) _repertoire ??= _loadRepertoire();
+    final l = AppLocalizations.of(context);
+    if (_tab == 1) _trainer ??= _loadTrainer();
+    if (_tab == 2) _learnVisited = true;
     if (_tab == 3) _youVisited = true;
-    const destinations = [
-      NavigationDestination(
-        icon: Icon(Icons.sports_esports_outlined),
-        label: 'Gioca',
-      ),
-      NavigationDestination(
-        icon: Icon(Icons.extension_outlined),
-        label: 'Puzzle',
-      ),
-      NavigationDestination(
-        icon: Icon(Icons.menu_book_outlined),
-        label: 'Aperture',
-      ),
-      NavigationDestination(icon: Icon(Icons.person_outline), label: 'Tu'),
-    ];
+    final features = _features();
     return Scaffold(
       body: IndexedStack(
         index: _tab,
         children: [
-          GamePage(
-            settings: widget.settings,
-            onActivity: _record,
-            onSavePuzzles: _savePersonalPuzzles,
-            onSave: _saveGame,
+          HomePage(
             progress: _progressController,
-            computerAvailable: widget.computerAvailable,
-            createComputer: widget.createComputer,
-            tournamentPage: _computerAvailable ? _tournamentPage : null,
-            physicalPage: () => PhysicalGamePage(archive: _archive),
-            openingGame: _computerAvailable ? _playOpening : null,
+            path: _pathController,
+            story: _storyController,
+            games: () async => (await _archive()).list(),
+            features: features,
+            simple: _kidMode,
+            refresh: _homeRefresh,
+            onNewGame: _newGame,
+            onSettings: _openSettings,
+            onResume: _resumeGame,
+            onOpenGame: (g) => _openSavedGame(context, g),
+            onContinueStory: _continueStory,
+            onPlayBot: _computerAvailable
+                ? (bot) =>
+                      _newGame(GameSetup(opponent: Opponent.bot, botId: bot.id))
+                : null,
           ),
           if (_trainer != null)
             PuzzleHubPage(trainer: _trainer!, onActivity: _record)
           else
             const SizedBox.shrink(),
-          if (_repertoire != null)
-            OpeningsHubPage(
-              repertoire: _repertoire!,
-              onPlay: _computerAvailable ? _playOpening : null,
-              archive: _archive,
+          if (_learnVisited)
+            LearnPage(
+              path: _pathController,
+              story: _storyController,
+              features: features,
+              onContinueStory: _continueStory,
             )
           else
             const SizedBox.shrink(),
@@ -742,10 +908,46 @@ class _HomeShellState extends State<HomeShell> {
         ],
       ),
       bottomNavigationBar: NavigationBar(
-        selectedIndex: tabs.indexOf(_tab),
-        onDestinationSelected: (i) => setState(() => _tab = tabs[i]),
-        destinations: [for (final t in tabs) destinations[t]],
+        selectedIndex: _tab,
+        onDestinationSelected: (i) {
+          setState(() => _tab = i);
+          if (i == 0) _homeRefresh.value++;
+        },
+        destinations: [
+          NavigationDestination(
+            icon: const Icon(Icons.home_outlined),
+            selectedIcon: const Icon(Icons.home),
+            label: l.homeNavHome,
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.extension_outlined),
+            selectedIcon: const Icon(Icons.extension),
+            label: l.homeNavPuzzles,
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.school_outlined),
+            selectedIcon: const Icon(Icons.school),
+            label: l.homeNavLearn,
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.person_outline),
+            selectedIcon: const Icon(Icons.person),
+            label: l.youTitle,
+          ),
+        ],
       ),
     );
+  }
+
+  Future<void> _openSettings() async {
+    ProgressController? progress;
+    try {
+      progress = await _progressController();
+    } on Object catch (e) {
+      // Senza progressi le impostazioni restano utilizzabili, senza i blocchi.
+      if (kDebugMode) debugPrint('Progressi non disponibili: $e');
+    }
+    if (!mounted) return;
+    await _push(SettingsPage(controller: widget.settings, progress: progress));
   }
 }
