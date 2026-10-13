@@ -896,7 +896,14 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   }
 
   PlayerSide get _playerSide {
-    if (_game.isOver || _thinking || _awaitingChallenge) {
+    // Mentre il computer pensa la scacchiera resta aperta solo alla premossa.
+    final premoving =
+        _task == _ComputerTask.move &&
+        _settings.premove &&
+        !_settings.kidMode &&
+        !_settings.confirmMove &&
+        _pendingMove == null;
+    if (_game.isOver || (_thinking && !premoving) || _awaitingChallenge) {
       return PlayerSide.none;
     }
     return switch (_computerSide) {
@@ -1493,10 +1500,16 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       if (searchStart != null) clock?.restore(searchStart, null);
     }
     final viewing = _viewPly;
+    final premove = played ? _board.premove : null;
     _refresh();
     if (viewing != null) _showPly(viewing);
     if (played && !_game.isOver) _botReact();
+    // Una premossa giocata cambia la posizione: la spiegazione non sarebbe più
+    // attuale.
+    final premoved =
+        premove != null && viewing == null && _playPremove(premove);
     if (played &&
+        !premoved &&
         !_game.isOver &&
         _settings.explainWhy &&
         !_isChallenge &&
@@ -1511,6 +1524,26 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         action: SnackBarAction(label: l10n.gameRetry, onPressed: _computerMove),
       );
     }
+  }
+
+  /// Gioca la premossa se nella nuova posizione è ancora legale (RF-08);
+  /// altrimenti la scarta. Un pedone che arriva all'ultima traversa promuove a
+  /// donna, senza il selettore.
+  bool _playPremove(Move premove) {
+    if (_game.isOver || !_humanToMove) return false;
+    final position = _game.position;
+    var move = premove;
+    if (move is NormalMove && move.promotion == null) {
+      final lastRank = position.turn == Side.white ? Rank.eighth : Rank.first;
+      if (position.board.roleAt(move.from) == Role.pawn &&
+          move.to.rank == lastRank) {
+        move = move.withPromotion(Role.queen);
+      }
+    }
+    if (move is NormalMove) move = position.normalizeMove(move);
+    if (!position.isLegal(move)) return false;
+    _commitMove(move, animate: true);
+    return true;
   }
 
   /// «Spiegami perché» (RF-122): una riga su cosa fa o minaccia la mossa del

@@ -440,5 +440,13 @@
   "settingsLanguageSystem": "Come il telefono",
   "@settingsLanguageSystem": {
     "description": "Impostazioni: lingua uguale a quella del telefono"
+  },
+  "settingsPremove": "Premossa",
+  "@settingsPremove": {
+    "description": "Impostazioni: interruttore della premossa"
+  },
+  "settingsPremoveDescription": "Muovi mentre pensa il computer; toccando una casa vuota la annulli",
+  "@settingsPremoveDescription": {
+    "description": "Impostazioni: descrizione della premossa"
   }
 }
