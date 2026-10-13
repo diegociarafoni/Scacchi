@@ -133,7 +133,7 @@ const _italianWords = {
   'poi',
 };
 
-final _word = RegExp(r"[A-Za-zÀ-ÿ]+");
+final _word = RegExp(r'[A-Za-zÀ-ÿ]+');
 final _accent = RegExp('[àèéìòùÀÈÉÌÒÙ]');
 
 bool _isItalianProse(String text) {
