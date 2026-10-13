@@ -16,6 +16,11 @@ on:
         description: 'Versione da pubblicare (es. 0.1.0): crea il tag v<versione> sul commit scelto. Vuoto = solo artefatto.'
         required: false
         default: ''
+      architetture:
+        description: 'Architetture dell''APK. Le versioni numerate le compilano sempre tutte; il nightly solo arm64.'
+        type: choice
+        options: [arm64, tutte]
+        default: arm64
 
 permissions:
   contents: read
@@ -31,7 +36,7 @@ jobs:
   release:
     if: github.event_name != 'workflow_run' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && github.event.workflow_run.head_repository.full_name == github.repository)
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     permissions:
       contents: write
       # Per leggere l'esito della CI sullo stesso commit.
@@ -128,8 +133,9 @@ jobs:
         run: python -m unittest discover -s tool -p 'test_*keystore*.py'
 
       # Firma e build nello stesso passo: password e chiave non restano
-      # nell'ambiente dei passi successivi. Solo arm64: tutti i telefoni Android
-      # recenti, metà del tempo di build e un APK molto più piccolo.
+      # nell'ambiente dei passi successivi. Il nightly è solo arm64 (tutti i telefoni
+      # Android recenti, metà del tempo di build e un APK molto più piccolo); le versioni
+      # numerate e la scelta «tutte» producono anche armeabi-v7a (32 bit) e x86_64.
       - name: Build APK release firmato
         env:
           BUILD_NAME: ${{ steps.version.outputs.name }}
@@ -139,6 +145,8 @@ jobs:
           KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          TAG: ${{ steps.version.outputs.tag }}
+          ARCHITETTURE: ${{ inputs.architetture }}
         run: |
           keystore="$RUNNER_TEMP/release.p12"
           trap 'rm -f "$keystore"' EXIT
@@ -158,17 +166,28 @@ jobs:
             echo "::warning::Nessun segreto di firma: APK firmato con la chiave di debug del runner."
           fi
           if [ -s "$keystore" ]; then export ANDROID_KEYSTORE_PATH="$keystore"; fi
-          flutter build apk --release --target-platform android-arm64 \
-            --build-name="$BUILD_NAME" --build-number="$BUILD_NUMBER"
           mkdir -p dist
-          cp build/app/outputs/flutter-apk/app-release.apk dist/rokko.apk
-          (cd dist && sha256sum rokko.apk > rokko.apk.sha256)
+          if [ "$ARCHITETTURE" = "tutte" ] || { [ -n "$TAG" ] && [ "$TAG" != "nightly" ]; }; then
+            # Un APK per architettura: ogni telefono scarica solo il proprio.
+            flutter build apk --release --split-per-abi \
+              --build-name="$BUILD_NAME" --build-number="$BUILD_NUMBER"
+            out=build/app/outputs/flutter-apk
+            cp "$out/app-arm64-v8a-release.apk" dist/rokko.apk
+            cp "$out/app-armeabi-v7a-release.apk" dist/rokko-armeabi-v7a.apk
+            cp "$out/app-x86_64-release.apk" dist/rokko-x86_64.apk
+          else
+            flutter build apk --release --target-platform android-arm64 \
+              --build-name="$BUILD_NAME" --build-number="$BUILD_NUMBER"
+            cp build/app/outputs/flutter-apk/app-release.apk dist/rokko.apk
+          fi
+          (cd dist && sha256sum *.apk > rokko.apk.sha256)
 
-      - name: Controlli MASVS sul manifest dell'APK
-        run: dart run tool/check_apk.dart build/app/outputs/flutter-apk/app-release.apk
+      - name: Controlli MASVS sul manifest degli APK
+        run: for apk in dist/*.apk; do dart run tool/check_apk.dart "$apk"; done
 
+      # Il limite vale per l'APK arm64, quello che si installa quasi ovunque.
       - name: Budget di dimensione dell'APK
-        run: dart run tool/check_size.dart build/app/outputs/flutter-apk/app-release.apk
+        run: dart run tool/check_size.dart dist/rokko.apk
 
       # Anche per le versioni numerate: il job di attestazione scarica da qui il file da attestare.
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -192,7 +211,7 @@ jobs:
             signing="Firmato con una chiave di debug generata dalla build: per installare una versione successiva bisogna prima disinstallare questa."
           fi
           cat > notes.md <<NOTES
-          Installazione su Android (telefoni a 64 bit): aprire dal telefono il file **rokko.apk** qui sotto, consentire l'installazione da questa origine e confermare.
+          Installazione su Android: aprire dal telefono il file **rokko.apk** qui sotto (telefoni a 64 bit, quasi tutti), consentire l'installazione da questa origine e confermare. Per i telefoni a 32 bit c'è **rokko-armeabi-v7a.apk**, per emulatori e Chromebook **rokko-x86_64.apk** (solo nelle versioni numerate).
 
           $signing
 
@@ -270,4 +289,4 @@ jobs:
       # gh attestation verify rokko.apk --repo diegociarafoni/rokko
       - uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
         with:
-          subject-path: dist/rokko.apk
+          subject-path: dist/*.apk

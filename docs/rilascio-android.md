@@ -10,10 +10,10 @@ L'elenco delle versioni con le note è nella pagina delle Release e in `CHANGELO
 
 | Evento | Risultato |
 |---|---|
-| Push di un tag `vX.Y.Z` | Build e Release `vX.Y.Z` con `rokko.apk` e `rokko.apk.sha256` |
+| Push di un tag `vX.Y.Z` | Build e Release `vX.Y.Z` con `rokko.apk` (arm64), `rokko-armeabi-v7a.apk` (32 bit), `rokko-x86_64.apk` (emulatori) e `rokko.apk.sha256` |
 | Avvio manuale (Actions → Rilascio APK → Run workflow) con **version** = `X.Y.Z` | Crea il tag `vX.Y.Z` sul commit del branch scelto e pubblica la Release; se il tag esiste già su un altro commit si ferma |
 | CI verde su `main` (evento `workflow_run`) | Pre-release `nightly` con `rokko.apk`, aggiornata a ogni merge su `main` |
-| Avvio manuale con **version** vuoto | Solo build: l'APK resta per 7 giorni come artefatto dell'esecuzione |
+| Avvio manuale con **version** vuoto | Solo build: gli APK restano per 7 giorni come artefatto dell'esecuzione; con **architetture** = `tutte` si compilano anche armeabi-v7a e x86_64 senza pubblicare |
 
 La versione mostrata dall'app (`versionName`) è quella del tag senza la `v`; il `versionCode` è il numero di commit nella cronologia del tag, quindi cresce a ogni versione successiva su `main`. Se la CI non è già passata sul commit, il rilascio esegue prima `flutter analyze` e `flutter test`; un tag già esistente deve puntare al commit compilato. Prima della pubblicazione l'APK deve superare i controlli MASVS sul manifest (`tool/check_apk.dart`, vedi [sicurezza.md](sicurezza.md)) e il budget di dimensione (`tool/check_size.dart`, vedi [qualita.md](qualita.md)): un APK che non li supera non esce.
 
@@ -56,10 +56,10 @@ Il rilascio è pensato per consumare pochi minuti:
 - nessuna esecuzione sulle pull request: la loro build Android è già nella CI;
 - `flutter analyze`, `flutter test` e i test di `tool/derive_keystore.py` girano solo se la CI non è già passata sullo stesso commit (il caso normale quando si rilascia da `main`);
 - cache di Flutter e di Gradle (`ccache` è usato solo dalla build di debug della CI, non dal rilascio);
-- build della sola architettura arm64, che dimezza circa il tempo di compilazione e riduce molto l'APK;
+- il nightly compila la sola architettura arm64, che dimezza circa il tempo di compilazione e riduce molto l'APK; le versioni numerate compilano arm64, armeabi-v7a e x86_64 con `--split-per-abi` (un APK per architettura, ognuno controllato da `check_apk.dart`; il budget di dimensione vale per quello arm64) e il timeout è di 60 minuti;
 - `timeout-minutes: 30` contro le esecuzioni bloccate.
 
-Per un telefono a 32 bit si può compilare a mano un APK universale togliendo `--target-platform android-arm64` dal workflow.
+Il nightly non ha l'APK a 32 bit: chi ne ha bisogno prima di una versione numerata avvia a mano il workflow con **architetture** = `tutte` e scarica l'artefatto. Per Google Play, che riceve un bundle (`.aab`) con tutte le architetture, vedi [store.md](store.md).
 
 ## Frequenza dei rilasci
 
@@ -86,7 +86,7 @@ git push origin vX.Y.Z
 2. Aprire il file scaricato. Android chiede di consentire l'installazione di app da questa origine (il browser o il gestore file): consentirla e tornare indietro.
 3. Toccare **Installa**. Google Play Protect può segnalare un'app di sviluppatore sconosciuto: scegliere **Installa comunque**.
 
-Per verificare l'integrità del file: `sha256sum -c rokko.apk.sha256`.
+Per verificare l'integrità del file: `sha256sum -c --ignore-missing rokko.apk.sha256` (il file elenca tutti gli APK della release, ma si controllano quelli scaricati).
 
 ## Firma
 
