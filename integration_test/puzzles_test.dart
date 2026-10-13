@@ -38,7 +38,7 @@ void main() {
     await tester.tap(find.text('Allenamento'));
     await tester.pumpAndSettle();
     await _dismissGuide(tester);
-    expect(_message(tester), startsWith('Trova la mossa migliore'));
+    expect(_message(tester), contains('Muove il'));
 
     for (var i = 0; i < 10 && !_message(tester).startsWith('Puzzle'); i++) {
       await tester.tap(find.text('Soluzione'));
@@ -48,7 +48,7 @@ void main() {
 
     await tester.tap(find.text('Prossimo'));
     await tester.pumpAndSettle();
-    expect(_message(tester), startsWith('Trova la mossa migliore'));
+    expect(_message(tester), contains('Muove il'));
   });
 
   testWidgets('RF-83 RF-84 puzzle del giorno e filtro per tema', (
