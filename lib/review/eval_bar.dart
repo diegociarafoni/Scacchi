@@ -21,7 +21,7 @@ class EvalBar extends StatelessWidget {
     final s = score;
     // Il matto avvenuto non ha segno: il vincitore si ricava dalla probabilità.
     final mated = s?.mate == 0;
-    final winner = win >= 50 ? 'Bianco' : 'Nero';
+    final l = AppLocalizations.of(context);
     // Profilo bambino (RP-06): la barra resta, senza cifre; a voce si dice
     // solo chi è avanti.
     final kid = AppSettings.of(context).kidMode;
@@ -31,12 +31,12 @@ class EvalBar extends StatelessWidget {
         ? (win >= 50 ? '1-0' : '0-1')
         : formatScore(s);
     final description = s == null
-        ? 'Valutazione non disponibile'
+        ? l.reviewScoreUnavailable
         : mated
-        ? 'Scacco matto: vince il $winner'
+        ? l.reviewScoreMated(win >= 50 ? 'white' : 'black')
         : kid
-        ? _kidDescription(AppLocalizations.of(context), win)
-        : describeScore(s);
+        ? _kidDescription(l, win)
+        : describeScore(l, s);
     return Semantics(
       label: description,
       excludeSemantics: true,

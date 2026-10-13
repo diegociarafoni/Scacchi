@@ -17,7 +17,7 @@ GamePlayed gameActivity(
 }) {
   final outcome = game.outcome;
   if (outcome == null) {
-    throw ArgumentError.value(game, 'game', 'partita non conclusa');
+    throw ArgumentError.value(game, 'game', 'partita non conclusa'); // l10n-ok
   }
   final result = player == null
       ? GameResult.local

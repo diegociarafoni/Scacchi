@@ -1,14 +1,6 @@
 import 'package:dartchess/dartchess.dart';
 
-enum GamePhase {
-  opening('Apertura'),
-  middlegame('Mediogioco'),
-  endgame('Finale');
-
-  const GamePhase(this.label);
-
-  final String label;
-}
+enum GamePhase { opening, middlegame, endgame }
 
 /// Fase della posizione: apertura fino alla decima mossa, finale con al
 /// massimo quattro pezzi oltre a re e pedoni, altrimenti mediogioco.

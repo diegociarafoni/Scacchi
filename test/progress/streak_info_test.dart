@@ -1,4 +1,6 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/progress/daily_goal.dart';
 import 'package:scacchi/progress/streak_info.dart';
 
@@ -10,6 +12,7 @@ StreakInfo info({
   int progress = 0,
   bool restDayToday = false,
 }) => describeStreak(
+  lookupAppLocalizations(const Locale('it')),
   streak: streak,
   bestStreak: best,
   freezes: freezes,

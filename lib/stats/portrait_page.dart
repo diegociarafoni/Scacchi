@@ -1,49 +1,33 @@
 import 'dart:async';
 
-import 'package:dartchess/dartchess.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../archive/game_archive.dart';
+import '../l10n/app_localizations.dart';
 import '../share/image_sharing.dart';
 import 'portrait.dart';
 
 export '../share/image_sharing.dart' show ShareImage;
 
-Future<void> _shareWithSystem(Uint8List png, String fileName) =>
-    shareImageWithSystem(png, fileName, subject: 'La mia settimana');
-
-const _weekdays = {
-  DateTime.monday: 'lunedì',
-  DateTime.tuesday: 'martedì',
-  DateTime.wednesday: 'mercoledì',
-  DateTime.thursday: 'giovedì',
-  DateTime.friday: 'venerdì',
-  DateTime.saturday: 'sabato',
-  DateTime.sunday: 'domenica',
-};
-
-const _roles = {
-  Role.king: 'con il re',
-  Role.queen: 'con la donna',
-  Role.rook: 'con la torre',
-  Role.bishop: 'con l\'alfiere',
-  Role.knight: 'con il cavallo',
-  Role.pawn: 'con il pedone',
+String _weekday(AppLocalizations l, int day) => switch (day) {
+  DateTime.monday => l.portraitWeekdayMonday,
+  DateTime.tuesday => l.portraitWeekdayTuesday,
+  DateTime.wednesday => l.portraitWeekdayWednesday,
+  DateTime.thursday => l.portraitWeekdayThursday,
+  DateTime.friday => l.portraitWeekdayFriday,
+  DateTime.saturday => l.portraitWeekdaySaturday,
+  _ => l.portraitWeekdaySunday,
 };
 
 /// Scheda degli ultimi sette giorni, condivisibile come immagine.
 class PortraitPage extends StatefulWidget {
-  const PortraitPage({
-    super.key,
-    required this.archive,
-    this.now,
-    this.share = _shareWithSystem,
-  });
+  const PortraitPage({super.key, required this.archive, this.now, this.share});
 
   final GameArchive archive;
   final DateTime Function()? now;
-  final ShareImage share;
+
+  /// Consegna dell'immagine; senza, si usa il menu di condivisione del sistema.
+  final ShareImage? share;
 
   @override
   State<PortraitPage> createState() => _PortraitPageState();
@@ -70,7 +54,7 @@ class _PortraitPageState extends State<PortraitPage> {
         setState(() => _portrait = PlayerPortrait.from(games, now: now));
       }
     } on Object catch (e) {
-      debugPrint('Lettura dell\'archivio non riuscita: $e');
+      debugPrint('Lettura dell\'archivio non riuscita: $e'); // l10n-ok
       if (mounted) setState(() => _failed = true);
     }
   }
@@ -83,14 +67,25 @@ class _PortraitPageState extends State<PortraitPage> {
       if (png == null) return;
       final to = _portrait!.to;
       String two(int n) => n.toString().padLeft(2, '0');
-      await widget.share(
-        png,
-        'rokko-settimana-${to.year}-${two(to.month)}-${two(to.day)}.png',
-      );
+      final fileName =
+          'rokko-settimana-${to.year}-${two(to.month)}-${two(to.day)}.png'; // l10n-ok
+      if (widget.share case final share?) {
+        await share(png, fileName);
+      } else if (mounted) {
+        await shareImageWithSystem(
+          png,
+          fileName,
+          subject: AppLocalizations.of(context).portraitShareSubject,
+        );
+      }
       if (mounted) setState(() => _message = null);
     } on Object catch (e) {
-      debugPrint('Condivisione non riuscita: $e');
-      if (mounted) setState(() => _message = 'Condivisione non riuscita');
+      debugPrint('Condivisione non riuscita: $e'); // l10n-ok
+      if (mounted) {
+        setState(
+          () => _message = AppLocalizations.of(context).portraitShareFailed,
+        );
+      }
     } finally {
       _sharing = false;
     }
@@ -99,21 +94,18 @@ class _PortraitPageState extends State<PortraitPage> {
   @override
   Widget build(BuildContext context) {
     final portrait = _portrait;
+    final l = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('La tua settimana')),
+      appBar: AppBar(title: Text(l.portraitTitle)),
       body: _failed
-          ? const Center(child: Text('L\'archivio non si è potuto leggere.'))
+          ? Center(child: Text(l.portraitUnreadable))
           : portrait == null
           ? const Center(child: CircularProgressIndicator())
           : portrait.isEmpty
-          ? const Padding(
-              padding: EdgeInsets.all(24),
+          ? Padding(
+              padding: const EdgeInsets.all(24),
               child: Center(
-                child: Text(
-                  'Nessuna partita negli ultimi sette giorni. Gioca contro il '
-                  'computer e qui comparirà il riepilogo.',
-                  textAlign: TextAlign.center,
-                ),
+                child: Text(l.portraitEmpty, textAlign: TextAlign.center),
               ),
             )
           : ListView(
@@ -127,7 +119,7 @@ class _PortraitPageState extends State<PortraitPage> {
                 FilledButton.icon(
                   onPressed: _share,
                   icon: const Icon(Icons.ios_share),
-                  label: const Text('Condividi come immagine'),
+                  label: Text(l.portraitShare),
                 ),
                 if (_message != null) Text(_message!),
               ],
@@ -147,22 +139,20 @@ class _Card extends StatelessWidget {
     final text = Theme.of(context).textTheme;
     final p = portrait;
     final s = p.score;
+    final l = AppLocalizations.of(context);
     final rows = <(String, String)>[
       if (p.openings.isNotEmpty)
         (
-          'Aperture preferite',
+          l.portraitOpenings,
           p.openings.map((o) => '${o.name} (${o.games})').join(', '),
         ),
-      if (p.accuracy case final a?) ('Precisione media', '${a.round()}%'),
+      if (p.accuracy case final a?) (l.portraitAccuracy, '${a.round()}%'),
       if (p.matingPiece case final r?)
-        (
-          'Matto preferito',
-          '${_roles[r]}, ${p.matingGames} '
-              '${p.matingGames == 1 ? 'volta' : 'volte'}',
-        ),
+        (l.portraitMate, l.portraitMateValue(r.name, p.matingGames)),
       if (p.strongestBeaten case final e?)
-        ('Avversario più forte battuto', 'Elo $e'),
-      if (p.busiestWeekday case final d?) ('Giorno più attivo', _weekdays[d]!),
+        (l.portraitStrongest, l.portraitStrongestValue(e)),
+      if (p.busiestWeekday case final d?)
+        (l.portraitBusiestDay, _weekday(l, d)),
     ];
     return Container(
       padding: const EdgeInsets.all(20),
@@ -173,16 +163,16 @@ class _Card extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('La mia settimana a scacchi', style: text.titleLarge),
+          Text(l.portraitCardTitle, style: text.titleLarge),
           Text('${_date(p.from)} – ${_date(p.to)}', style: text.bodySmall),
           const SizedBox(height: 12),
           Text(
-            '${s.games} ${s.games == 1 ? 'partita' : 'partite'}',
+            l.portraitGames(s.games),
             key: const Key('portrait-games'),
             style: text.displaySmall,
           ),
           Text(
-            '${s.wins} vinte · ${s.draws} patte · ${s.losses} perse',
+            l.portraitScore(s.wins, s.draws, s.losses),
             key: const Key('portrait-score'),
             style: text.titleMedium,
           ),

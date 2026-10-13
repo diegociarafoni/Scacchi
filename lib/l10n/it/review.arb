@@ -1,0 +1,460 @@
+{
+  "reviewCoachGeneric": "Meglio {move}: la tua posizione peggiora.",
+  "@reviewCoachGeneric": {
+    "description": "Commento sull'errore quando non si riconosce un tema; {move} è la mossa migliore",
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachBrilliant": "Mossa brillante: sacrifichi materiale ma è la scelta migliore.",
+  "reviewCoachGreat": "Ottima: era l'unica mossa che teneva la posizione.",
+  "reviewCoachBest": "È la mossa migliore.",
+  "reviewCoachExcellent": "Mossa eccellente, quasi come la migliore.",
+  "reviewCoachGood": "Buona mossa.",
+  "reviewCoachBook": "Mossa della teoria delle aperture.",
+  "reviewCoachAllowedMate": "Dopo {move} {side, select, white{il Bianco} other{il Nero}} dà matto in {mate} con {reply}.",
+  "@reviewCoachAllowedMate": {
+    "description": "L'avversario ha un matto forzato; {side} è white o black",
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "side": {
+        "type": "String"
+      },
+      "mate": {
+        "type": "int"
+      },
+      "reply": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachMissedMate": "Avevi il matto in {mate} con {move}.",
+  "@reviewCoachMissedMate": {
+    "placeholders": {
+      "mate": {
+        "type": "int"
+      },
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachHanging": "Hai lasciato {victim} in presa in {square}: {attacker} {victimRole, select, rook{la} queen{la} other{lo}} cattura.",
+  "@reviewCoachHanging": {
+    "description": "{victimRole} è il tipo di pezzo (pawn, knight…) perché in italiano il pronome dipende dal genere",
+    "placeholders": {
+      "victim": {
+        "type": "String"
+      },
+      "victimRole": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "attacker": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachAllowedFork": "Dopo {move} {piece} attacca insieme {targets}: è una forchetta.",
+  "@reviewCoachAllowedFork": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "targets": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachAllowedPin": "Dopo {move} {slider} inchioda {pinned} in {square} contro il re.",
+  "@reviewCoachAllowedPin": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "slider": {
+        "type": "String"
+      },
+      "pinned": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachExposedKing": "Dopo {move} il tuo re resta scoperto: {reply} è scacco.",
+  "@reviewCoachExposedKing": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "reply": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachRecapture": "Potevi riprendere il pezzo: {move} cattura {piece}.",
+  "@reviewCoachRecapture": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachWinMaterial": "Potevi vincere materiale: {move} cattura {piece}.",
+  "@reviewCoachWinMaterial": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachMissedFork": "Potevi fare un doppio attacco con {move}: {piece} attacca {targets}.",
+  "@reviewCoachMissedFork": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "targets": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachMissedDiscovery": "Potevi fare un attacco di scoperta con {move}: {piece} attacca {target}.",
+  "@reviewCoachMissedDiscovery": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachMaterialLoss": "Questa mossa perde materiale: circa {pawns} pedoni nella variante prevista.",
+  "@reviewCoachMaterialLoss": {
+    "placeholders": {
+      "pawns": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewCoachPieceColored": "{role, select, pawn{{color, select, white{il pedone bianco} other{il pedone nero}}} knight{{color, select, white{il cavallo bianco} other{il cavallo nero}}} bishop{{color, select, white{l'alfiere bianco} other{l'alfiere nero}}} rook{{color, select, white{la torre bianca} other{la torre nera}}} queen{{color, select, white{la donna bianca} other{la donna nera}}} other{{color, select, white{il re bianco} other{il re nero}}}}",
+  "@reviewCoachPieceColored": {
+    "description": "Pezzo con articolo e colore, per esempio «il cavallo nero»",
+    "placeholders": {
+      "role": {
+        "type": "String"
+      },
+      "color": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachListEnd": "{head} e {last}",
+  "@reviewCoachListEnd": {
+    "description": "Elenco di pezzi: gli ultimi due si uniscono con la congiunzione",
+    "placeholders": {
+      "head": {
+        "type": "String"
+      },
+      "last": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewTitle": "Revisione della partita",
+  "reviewAnalysePosition": "Analizza la posizione",
+  "reviewPuzzlesSaved": "Puzzle salvati: {count}. Li trovi in Puzzle › Ripasso degli errori.",
+  "@reviewPuzzlesSaved": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewPuzzlesAlready": "Questi puzzle sono già salvati.",
+  "reviewPuzzlesFailed": "Salvataggio non riuscito. Riprova.",
+  "reviewSavePuzzles": "Salva gli errori come puzzle ({count})",
+  "@reviewSavePuzzles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewNoteNotSaved": "Nota non salvata. Riprova.",
+  "reviewRetryCorrect": "Esatto: {move} è la mossa migliore.",
+  "@reviewRetryCorrect": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewRetryWrong": "{move} non è la mossa migliore. Riprova.",
+  "@reviewRetryWrong": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewAnalysing": "Analisi in corso: {done} di {total}",
+  "@reviewAnalysing": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewStop": "Interrompi",
+  "reviewCancelled": "Revisione interrotta.",
+  "reviewFailed": "Analisi non riuscita. Riprova più tardi.",
+  "reviewRetryPrompt": "Trova una mossa migliore di {move}",
+  "@reviewRetryPrompt": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewRetrySolution": "La mossa migliore era {move}.",
+  "@reviewRetrySolution": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewShowSolution": "Soluzione",
+  "reviewExit": "Esci",
+  "reviewStartPosition": "Posizione iniziale",
+  "reviewMoveVerdict": "{number} {move} è {verdict, select, brilliant{una mossa brillante} great{una mossa ottima} best{la mossa migliore} excellent{una mossa eccellente} good{una buona mossa} book{una mossa di libro} inaccuracy{un'imprecisione} mistake{un errore} miss{un'occasione mancata} other{un errore grave}}",
+  "@reviewMoveVerdict": {
+    "description": "Titolo della mossa selezionata; verdict è la categoria (brilliant, great, best…)",
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "move": {
+        "type": "String"
+      },
+      "verdict": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewBestMove": "Migliore: {move}",
+  "@reviewBestMove": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewYourNote": "La tua nota: {note}",
+  "@reviewYourNote": {
+    "placeholders": {
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewTryAgain": "Riprova",
+  "reviewAddNote": "Aggiungi nota",
+  "reviewEditNote": "Modifica nota",
+  "reviewNavStart": "Inizio",
+  "reviewNavPrevious": "Mossa precedente",
+  "reviewNavNext": "Mossa successiva",
+  "reviewNavEnd": "Fine",
+  "reviewSideWhite": "Bianco",
+  "reviewSideBlack": "Nero",
+  "reviewAccuracyUnavailable": "Precisione del {side} non disponibile",
+  "@reviewAccuracyUnavailable": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewAccuracyPercent": "Precisione del {side} {value} per cento",
+  "@reviewAccuracyPercent": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewAccuracy": "Precisione",
+  "reviewEstimatedElo": "Elo stimato ~{elo}",
+  "@reviewEstimatedElo": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewMovesByCategory": "Mosse per categoria",
+  "reviewCountsSemantics": "Bianco {white}, Nero {black}",
+  "@reviewCountsSemantics": {
+    "placeholders": {
+      "white": {
+        "type": "int"
+      },
+      "black": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewNoteTitle": "Nota su {move}",
+  "@reviewNoteTitle": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewNoteComment": "Commento",
+  "reviewNoteCancel": "Annulla",
+  "reviewNoteSave": "Salva",
+  "reviewTimePerMove": "Tempo per mossa",
+  "reviewTimeNoHasty": "Tempo per mossa. Nessun errore giocato in fretta.",
+  "reviewTimeHastySemantics": "Tempo per mossa. Errori giocati in fretta: {moves}.",
+  "@reviewTimeHastySemantics": {
+    "placeholders": {
+      "moves": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewHastyMistakes": "Errori giocati in fretta: {moves}",
+  "@reviewHastyMistakes": {
+    "placeholders": {
+      "moves": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewHastyAdvice": "Meno del 40% del tuo tempo medio per mossa: prima di muovere, controlla le minacce.",
+  "reviewAccuracyByPhase": "Precisione per fase",
+  "reviewPhaseOpening": "Apertura",
+  "reviewPhaseMiddlegame": "Mediogioco",
+  "reviewPhaseEndgame": "Finale",
+  "reviewPhaseSemantics": "{phase}: Bianco {white}, Nero {black}",
+  "@reviewPhaseSemantics": {
+    "placeholders": {
+      "phase": {
+        "type": "String"
+      },
+      "white": {
+        "type": "String"
+      },
+      "black": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewPhaseValues": "Bianco {white} · Nero {black}",
+  "@reviewPhaseValues": {
+    "placeholders": {
+      "white": {
+        "type": "String"
+      },
+      "black": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewMoveSemantics": "{number} {move}, {verdict}{note, select, yes{, con una nota} other{}}",
+  "@reviewMoveSemantics": {
+    "description": "Mossa nell'elenco della revisione; note è yes/no",
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "move": {
+        "type": "String"
+      },
+      "verdict": {
+        "type": "String"
+      },
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewEvalGraph": "Grafico della valutazione",
+  "reviewClassBrilliant": "Brillante",
+  "reviewClassGreat": "Ottima",
+  "reviewClassBest": "Migliore",
+  "reviewClassExcellent": "Eccellente",
+  "reviewClassGood": "Buona",
+  "reviewClassBook": "Libro",
+  "reviewClassInaccuracy": "Imprecisione",
+  "reviewClassMistake": "Errore",
+  "reviewClassMiss": "Occasione mancata",
+  "reviewClassBlunder": "Errore grave",
+  "reviewScoreUnavailable": "Valutazione non disponibile",
+  "reviewScoreMated": "Scacco matto: vince il {side, select, white{Bianco} other{Nero}}",
+  "@reviewScoreMated": {
+    "description": "Descrizione della barra di valutazione a partita finita; side è white o black",
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewScoreCheckmate": "Scacco matto",
+  "reviewScoreMateIn": "Matto in {moves} per il {side, select, white{Bianco} other{Nero}}",
+  "@reviewScoreMateIn": {
+    "placeholders": {
+      "moves": {
+        "type": "int"
+      },
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewScoreEven": "Parità",
+  "reviewScoreAhead": "{side, select, white{Bianco} other{Nero}} avanti di {pawns}",
+  "@reviewScoreAhead": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      },
+      "pawns": {
+        "type": "String"
+      }
+    }
+  }
+}

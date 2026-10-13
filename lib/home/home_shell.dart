@@ -202,7 +202,13 @@ class _HomeShellState extends State<HomeShell> {
         (p) {
           final scheduler = _scheduler;
           if (scheduler != null && _reminders == null && mounted) {
-            setState(() => _reminders = ReminderController(p, scheduler));
+            setState(
+              () => _reminders = ReminderController(
+                p,
+                scheduler,
+                () => AppLocalizations.of(context),
+              ),
+            );
           }
           _watchBadges(p);
           return p;

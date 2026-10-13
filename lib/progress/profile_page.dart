@@ -9,6 +9,7 @@ import '../minigames/minigame.dart';
 import '../reminders/reminder_controller.dart';
 import '../settings/settings.dart';
 import 'achievements.dart';
+import 'achievements_l10n.dart';
 import 'avatar.dart';
 import 'avatar_art.dart';
 import 'avatar_photo.dart';
@@ -20,21 +21,30 @@ import 'records.dart';
 import 'rewards.dart';
 import 'xp.dart';
 
-String _unit(GoalKind kind) => switch (kind) {
-  GoalKind.games => 'partite',
-  GoalKind.puzzles => 'puzzle',
-  GoalKind.minutes => 'minuti',
+String _unit(AppLocalizations l, GoalKind kind) => switch (kind) {
+  GoalKind.games => l.progressUnitGames,
+  GoalKind.puzzles => l.progressUnitPuzzles,
+  GoalKind.minutes => l.progressUnitMinutes,
 };
 
-const _weekdays = [
-  'Lunedì',
-  'Martedì',
-  'Mercoledì',
-  'Giovedì',
-  'Venerdì',
-  'Sabato',
-  'Domenica',
-];
+/// Nome del giorno della settimana, con lunedì = 1 come in [DateTime].
+String _weekday(AppLocalizations l, int day) => switch (day) {
+  DateTime.monday => l.progressWeekdayMonday,
+  DateTime.tuesday => l.progressWeekdayTuesday,
+  DateTime.wednesday => l.progressWeekdayWednesday,
+  DateTime.thursday => l.progressWeekdayThursday,
+  DateTime.friday => l.progressWeekdayFriday,
+  DateTime.saturday => l.progressWeekdaySaturday,
+  _ => l.progressWeekdaySunday,
+};
+
+/// Titolo di un minigioco; `Minigame.title` resta il ripiego italiano.
+String _minigameTitle(AppLocalizations l, Minigame m) => switch (m) {
+  Minigame.coordinates => l.minigamesCoordinatesTitle,
+  Minigame.captureAll => l.minigamesCaptureAllTitle,
+  Minigame.blind => l.minigamesBlindTitle,
+  Minigame.material => l.minigamesMaterialTitle,
+};
 
 /// Profilo del giocatore: livello, serie, obiettivo, traguardi e preferenze.
 class ProfilePage extends StatelessWidget {
@@ -57,7 +67,9 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Profilo')),
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context).progressProfileTitle),
+      ),
       body: ListenableBuilder(
         listenable: controller,
         builder: (context, _) {
@@ -91,7 +103,7 @@ class ProfilePage extends StatelessWidget {
                   const SizedBox(height: 24),
                 ],
                 Text(
-                  'Traguardi',
+                  AppLocalizations.of(context).progressAchievementsTitle,
                   style: Theme.of(context).textTheme.titleLarge,
                 ),
                 const SizedBox(height: 8),
@@ -126,6 +138,7 @@ class _LevelCard extends StatelessWidget {
     final level = levelForXp(xp);
     final next = xpForLevel(level + 1);
     final settings = controller.settings;
+    final l = AppLocalizations.of(context);
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -135,7 +148,7 @@ class _LevelCard extends StatelessWidget {
             Row(
               children: [
                 Tooltip(
-                  message: 'Cambia avatar e cornice',
+                  message: l.progressChangeAvatar,
                   child: InkWell(
                     key: const Key('avatar'),
                     customBorder: const CircleBorder(),
@@ -161,7 +174,7 @@ class _LevelCard extends StatelessWidget {
                   child: kid
                       ? _KidStars(level: level)
                       : Text(
-                          'Livello $level',
+                          l.progressLevel(level),
                           style: Theme.of(context).textTheme.headlineSmall,
                         ),
                 ),
@@ -172,15 +185,11 @@ class _LevelCard extends StatelessWidget {
               value: levelProgress(xp),
               minHeight: 8,
               semanticsLabel: kid
-                  ? AppLocalizations.of(context).kidLevelProgressLabel
-                  : 'Avanzamento del livello: $xp su $next XP',
+                  ? l.kidLevelProgressLabel
+                  : l.progressLevelSemantics(xp, next),
             ),
             const SizedBox(height: 4),
-            Text(
-              kid
-                  ? AppLocalizations.of(context).kidLevelProgress
-                  : '$xp / $next XP',
-            ),
+            Text(kid ? l.kidLevelProgress : l.progressXpOf(xp, next)),
           ],
         ),
       ),
@@ -233,13 +242,12 @@ class ProfileAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final photo = this.photo;
-    final name = photo != null
-        ? AppLocalizations.of(context).avatarPhotoLabel
-        : avatar.label;
+    final l = AppLocalizations.of(context);
+    final name = photo != null ? l.avatarPhotoLabel : avatar.label;
     return Semantics(
       label: frame.color == null
-          ? 'Avatar: $name'
-          : 'Avatar: $name, cornice ${frame.label}',
+          ? l.progressAvatarSemantics(name)
+          : l.progressAvatarFrameSemantics(name, frame.label),
       excludeSemantics: true,
       child: Container(
         width: size,
@@ -342,6 +350,7 @@ class _AvatarPicker extends StatelessWidget {
       listenable: controller,
       builder: (context, _) {
         final s = controller.settings;
+        final l = AppLocalizations.of(context);
         final kid = AppSettings.of(context).kidMode;
         final photoShown = !kid && controller.activePhoto != null;
         Widget option<T extends Enum>(
@@ -355,8 +364,8 @@ class _AvatarPicker extends StatelessWidget {
           final requirement = unlocked
               ? null
               : kid
-              ? kidRequirement(AppLocalizations.of(context))
-              : requirementOf(item)!.label;
+              ? kidRequirement(l)
+              : requirementOf(item)!.label(l);
           return Semantics(
             button: true,
             selected: selected,
@@ -364,7 +373,7 @@ class _AvatarPicker extends StatelessWidget {
                 ? label
                 : kid
                 ? '$label, ${requirement.toLowerCase()}'
-                : '$label, si sblocca con: $requirement',
+                : l.progressLockedSemantics(label, requirement),
             excludeSemantics: true,
             child: InkWell(
               borderRadius: BorderRadius.circular(12),
@@ -410,7 +419,10 @@ class _AvatarPicker extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Avatar', style: Theme.of(context).textTheme.titleMedium),
+                Text(
+                  l.progressAvatarTitle,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
                 const SizedBox(height: 8),
                 Wrap(
                   spacing: 8,
@@ -428,7 +440,10 @@ class _AvatarPicker extends StatelessWidget {
                 ),
                 if (!kid) ..._photoSection(context),
                 const SizedBox(height: 16),
-                Text('Cornice', style: Theme.of(context).textTheme.titleMedium),
+                Text(
+                  l.progressFrameTitle,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
                 const SizedBox(height: 8),
                 Wrap(
                   spacing: 8,
@@ -462,6 +477,7 @@ class _StreakCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (kid) return _kid(context);
+    final l = AppLocalizations.of(context);
     final streak = controller.streak;
     final goal = controller.settings.goal;
     final progress = controller.todayProgress;
@@ -475,37 +491,38 @@ class _StreakCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Icon(Icons.local_fire_department, semanticLabel: 'Serie'),
+                Icon(
+                  Icons.local_fire_department,
+                  semanticLabel: l.progressStreakIcon,
+                ),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    streak == 1 ? '1 giorno di fila' : '$streak giorni di fila',
+                    l.progressStreakDays(streak),
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 4),
-            Text('Record: ${controller.state.bestStreak}'),
-            Text(
-              freezes == 1
-                  ? '1 protezione della serie'
-                  : '$freezes protezioni della serie',
-            ),
+            Text(l.progressBestStreak(controller.state.bestStreak)),
+            Text(l.progressFreezes(freezes)),
             const SizedBox(height: 12),
             LinearProgressIndicator(
               value: (progress / goal.target).clamp(0, 1).toDouble(),
               minHeight: 8,
-              semanticsLabel: 'Obiettivo di oggi: $progress su ${goal.target}',
+              semanticsLabel: l.progressGoalSemantics(progress, goal.target),
             ),
             const SizedBox(height: 4),
             Text(
-              '${reached ? 'Obiettivo raggiunto' : 'Obiettivo di oggi'}: '
-              '${progress.clamp(0, goal.target)} / ${goal.target} '
-              '${_unit(goal.kind)}',
+              (reached ? l.progressGoalReachedLine : l.progressGoalTodayLine)(
+                progress.clamp(0, goal.target),
+                goal.target,
+                _unit(l, goal.kind),
+              ),
             ),
             const SizedBox(height: 12),
-            for (final line in controller.streakInfo.lines)
+            for (final line in controller.streakInfo(l).lines)
               Padding(
                 padding: const EdgeInsets.only(bottom: 4),
                 child: Text(line),
@@ -555,25 +572,28 @@ class _Achievements extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final l = AppLocalizations.of(context);
     return Column(
       children: [
         for (final a in achievements)
           Builder(
             builder: (context) {
               final done = unlocked.contains(a.id);
+              final title = achievementTitle(l, a);
+              final description = achievementDescription(l, a);
               return MergeSemantics(
                 child: Semantics(
-                  label:
-                      '${a.title}, ${done ? 'ottenuto' : 'da ottenere'}. '
-                      '${a.description}',
+                  label: (done
+                      ? l.progressAchievementEarned
+                      : l.progressAchievementLocked)(title, description),
                   excludeSemantics: true,
                   child: ListTile(
                     leading: Icon(
                       done ? Icons.emoji_events : Icons.lock_outline,
                       color: done ? scheme.primary : scheme.outline,
                     ),
-                    title: Text(a.title),
-                    subtitle: Text(a.description),
+                    title: Text(title),
+                    subtitle: Text(description),
                     enabled: done,
                   ),
                 ),
@@ -593,13 +613,14 @@ class _Settings extends StatelessWidget {
 
   Future<void> _pickReminder(BuildContext context, int? current) async {
     final reminders = this.reminders!;
+    final l = AppLocalizations.of(context);
     final minutes = current ?? 19 * 60;
     final time = await showTimePicker(
       context: context,
       initialTime: TimeOfDay(hour: minutes ~/ 60, minute: minutes % 60),
-      helpText: 'Orario del promemoria',
-      cancelText: 'Annulla',
-      confirmText: 'Conferma',
+      helpText: l.progressReminderTime,
+      cancelText: l.progressCancel,
+      confirmText: l.progressConfirm,
       builder: (context, child) => MediaQuery(
         data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
         child: child!,
@@ -608,13 +629,8 @@ class _Settings extends StatelessWidget {
     if (time == null) return;
     if (await reminders.enable(time.hour * 60 + time.minute)) return;
     if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Senza il permesso per le notifiche il promemoria resta spento.',
-          ),
-        ),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(l.progressReminderDenied)));
     }
     // Permesso revocato dopo l'attivazione: il promemoria si spegne davvero.
     await reminders.disable();
@@ -623,33 +639,37 @@ class _Settings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = controller.settings;
+    final l = AppLocalizations.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Impostazioni', style: Theme.of(context).textTheme.titleLarge),
+        Text(
+          l.progressSettingsTitle,
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
         SwitchListTile(
           key: const Key('enabled'),
-          title: const Text('XP, serie e traguardi'),
-          subtitle: const Text('Spento, non si registra nulla.'),
+          title: Text(l.progressTrackingTitle),
+          subtitle: Text(l.progressTrackingOff),
           value: s.enabled,
           onChanged: (v) => controller.updateSettings(s.copyWith(enabled: v)),
         ),
         if (s.enabled) ...[
           SwitchListTile(
-            title: const Text(unlockAllTitle),
-            subtitle: const Text(unlockAllSubtitle),
+            title: Text(l.settingsUnlockAll),
+            subtitle: Text(l.settingsUnlockAllDescription),
             value: s.unlockAll,
             onChanged: (v) =>
                 controller.updateSettings(s.copyWith(unlockAll: v)),
           ),
           ListTile(
-            title: const Text('Obiettivo giornaliero'),
+            title: Text(l.progressDailyGoal),
             trailing: DropdownButton<DailyGoal>(
               key: const Key('goal'),
               value: s.goal,
               items: [
                 for (final g in {s.goal, ...DailyGoal.presets})
-                  DropdownMenuItem(value: g, child: Text(goalLabel(g))),
+                  DropdownMenuItem(value: g, child: Text(goalLabel(l, g))),
               ],
               onChanged: (g) {
                 if (g != null) {
@@ -659,15 +679,15 @@ class _Settings extends StatelessWidget {
             ),
           ),
           ListTile(
-            title: const Text('Giorno di riposo'),
-            subtitle: const Text('Non interrompe la serie.'),
+            title: Text(l.progressRestDay),
+            subtitle: Text(l.progressRestDayHint),
             trailing: DropdownButton<int?>(
               key: const Key('restDay'),
               value: s.restDay,
               items: [
-                const DropdownMenuItem(child: Text('Nessuno')),
+                DropdownMenuItem(child: Text(l.progressRestDayNone)),
                 for (var d = DateTime.monday; d <= DateTime.sunday; d++)
-                  DropdownMenuItem(value: d, child: Text(_weekdays[d - 1])),
+                  DropdownMenuItem(value: d, child: Text(_weekday(l, d))),
               ],
               onChanged: (d) =>
                   controller.updateSettings(s.copyWith(restDay: () => d)),
@@ -676,10 +696,8 @@ class _Settings extends StatelessWidget {
           if (reminders case final reminders?) ...[
             SwitchListTile(
               key: const Key('reminder'),
-              title: const Text('Promemoria giornaliero'),
-              subtitle: const Text(
-                "Una notifica al giorno, solo se l'obiettivo manca.",
-              ),
+              title: Text(l.progressReminder),
+              subtitle: Text(l.progressReminderHint),
               value: s.reminder != null,
               onChanged: (on) =>
                   on ? _pickReminder(context, s.reminder) : reminders.disable(),
@@ -687,7 +705,7 @@ class _Settings extends StatelessWidget {
             if (s.reminder case final minutes?)
               ListTile(
                 key: const Key('reminderTime'),
-                title: const Text('Orario del promemoria'),
+                title: Text(l.progressReminderTime),
                 trailing: Text(_clock(minutes)),
                 onTap: () => _pickReminder(context, minutes),
               ),
@@ -707,14 +725,15 @@ class _Challenges extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final title = Theme.of(context).textTheme.titleLarge;
+    final l = AppLocalizations.of(context);
     final (weekly, weeklyProgress) = controller.weeklyChallenge;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Sfide di oggi', style: title),
+        Text(l.progressChallengesToday, style: title),
         for (final (c, p) in controller.challenges) _ChallengeTile(c, p, kid),
         const SizedBox(height: 12),
-        Text('Sfida della settimana', style: title),
+        Text(l.progressChallengesWeekly, style: title),
         _ChallengeTile(weekly, weeklyProgress, kid),
       ],
     );
@@ -732,6 +751,7 @@ class _ChallengeTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
     final done = progress >= challenge.target;
     final shown = progress.clamp(0, challenge.target);
     final scheme = Theme.of(context).colorScheme;
@@ -741,14 +761,16 @@ class _ChallengeTile extends StatelessWidget {
         leading: Icon(
           done ? Icons.check_circle : Icons.radio_button_unchecked,
           color: done ? scheme.primary : scheme.outline,
-          semanticLabel: done ? 'Completata' : 'Da completare',
+          semanticLabel: done
+              ? l.progressChallengeDone
+              : l.progressChallengeTodo,
         ),
-        title: Text(challenge.title),
+        title: Text(challenge.title(l)),
         subtitle: LinearProgressIndicator(
           value: shown / challenge.target,
           semanticsLabel: kid
-              ? AppLocalizations.of(context).kidChallengeProgress
-              : '$shown su ${challenge.target}',
+              ? l.kidChallengeProgress
+              : l.progressChallengeCount(shown, challenge.target),
         ),
         trailing: kid ? null : Text('$shown/${challenge.target}'),
       ),
@@ -764,28 +786,47 @@ class _Records extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final r = controller.state.records;
+    final l = AppLocalizations.of(context);
     final rows = [
-      ('Serie più lunga', '${controller.state.bestStreak} giorni'),
+      (
+        l.progressRecordLongestStreak,
+        l.progressDaysCount(controller.state.bestStreak),
+      ),
       if (r.strongestBot != null)
-        (RecordKind.strongestBot.label, '${r.strongestBot} Elo'),
+        (
+          RecordKind.strongestBot.label(l),
+          l.progressRecordElo(r.strongestBot!),
+        ),
       if (r.fastestWin != null)
-        (RecordKind.fastestWin.label, '${r.fastestWin} mosse'),
+        (RecordKind.fastestWin.label(l), l.progressRecordMoves(r.fastestWin!)),
       if (r.bestAccuracy != null)
         (
-          RecordKind.bestAccuracy.label,
+          RecordKind.bestAccuracy.label(l),
           '${r.bestAccuracy!.toStringAsFixed(1)}%',
         ),
       if (r.puzzleRating != null)
-        (RecordKind.puzzleRating.label, '${r.puzzleRating}'),
+        (RecordKind.puzzleRating.label(l), '${r.puzzleRating}'),
       for (final e in r.puzzleRuns.entries)
-        ('${RecordKind.puzzleRun.label} (${e.key})', '${e.value}'),
+        (
+          l.progressRecordPuzzleRunMode(RecordKind.puzzleRun.label(l), e.key),
+          '${e.value}',
+        ),
       for (final e in r.minigames.entries)
-        (Minigame.byId(e.key)?.title ?? e.key, '${e.value}'),
+        (
+          switch (Minigame.byId(e.key)) {
+            final m? => _minigameTitle(l, m),
+            null => e.key,
+          },
+          '${e.value}',
+        ),
     ];
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Record personali', style: Theme.of(context).textTheme.titleLarge),
+        Text(
+          l.progressRecordsTitle,
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
         for (final (label, value) in rows)
           ListTile(
             contentPadding: EdgeInsets.zero,

@@ -260,9 +260,10 @@ class _AnalysisPageState extends State<AnalysisPage>
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
     final white = _whiteScore;
+    final l = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Analisi'),
+        title: Text(l.analysisTitle),
         actions: [
           PositionImageButton(
             image: () => PositionImage(
@@ -273,13 +274,13 @@ class _AnalysisPageState extends State<AnalysisPage>
             ),
           ),
           IconButton(
-            tooltip: 'Freccia della mossa migliore',
+            tooltip: l.analysisBestMoveArrow,
             isSelected: _arrow,
             onPressed: () => setState(() => _arrow = !_arrow),
             icon: const Icon(Icons.north_east),
           ),
           IconButton(
-            tooltip: 'Minaccia dell\'avversario',
+            tooltip: l.analysisThreatArrow,
             isSelected: _threat,
             // Sotto scacco o a partita finita la mossa nulla non esiste.
             onPressed: threatFen(_pos) == null ? null : _toggleThreat,
@@ -336,18 +337,18 @@ class _AnalysisPageState extends State<AnalysisPage>
                               Text(_status(), style: text.labelLarge),
                               SegmentedButton<int>(
                                 showSelectedIcon: false,
-                                segments: const [
+                                segments: [
                                   ButtonSegment(
                                     value: 1,
-                                    label: Text('1 linea'),
+                                    label: Text(l.analysisOneLine),
                                   ),
                                   ButtonSegment(
                                     value: 2,
-                                    label: Text('2 linee'),
+                                    label: Text(l.analysisTwoLines),
                                   ),
                                   ButtonSegment(
                                     value: 3,
-                                    label: Text('3 linee'),
+                                    label: Text(l.analysisThreeLines),
                                   ),
                                 ],
                                 selected: {_multiPv},
@@ -389,15 +390,14 @@ class _AnalysisPageState extends State<AnalysisPage>
   }
 
   String _status() {
-    if (_failed) return 'Motore non disponibile';
-    if (_paused) return 'Analisi in pausa';
-    if (_pos.isGameOver) return 'Partita finita';
+    final l = AppLocalizations.of(context);
+    if (_failed) return l.analysisEngineUnavailable;
+    if (_paused) return l.analysisPaused;
+    if (_pos.isGameOver) return l.analysisGameOver;
     // Profilo bambino (RP-06): niente profondità del motore.
-    if (AppSettings.of(context).kidMode) {
-      return AppLocalizations.of(context).kidAnalysisThinking;
-    }
+    if (AppSettings.of(context).kidMode) return l.kidAnalysisThinking;
     final depth = _lines.firstOrNull?.depth;
-    return depth == null ? 'Analisi…' : 'Profondità $depth';
+    return depth == null ? l.analysisThinking : l.analysisDepth(depth);
   }
 
   Widget _lineTile(InfoLine line) {
@@ -442,17 +442,18 @@ class _AnalysisPageState extends State<AnalysisPage>
 
   /// Comandi sulla mossa corrente: promuovere la variante o eliminarla.
   Widget _treeActions() {
+    final l = AppLocalizations.of(context);
     final node = _tree.current;
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         IconButton(
-          tooltip: 'Promuovi a linea principale',
+          tooltip: l.analysisPromote,
           onPressed: node.isRoot || _tree.isMainLine(node) ? null : _promote,
           icon: const Icon(Icons.upgrade),
         ),
         IconButton(
-          tooltip: 'Elimina la mossa e il seguito',
+          tooltip: l.analysisDelete,
           onPressed: node.isRoot ? null : _delete,
           icon: const Icon(Icons.delete_outline),
         ),
@@ -535,27 +536,30 @@ class _AnalysisPageState extends State<AnalysisPage>
     );
   }
 
-  Widget _navigation() => SizedBox(
-    height: 56,
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        IconButton(
-          tooltip: 'Indietro',
-          onPressed: _tree.canBack ? _back : null,
-          icon: const Icon(Icons.chevron_left),
-        ),
-        IconButton(
-          tooltip: _paused ? 'Riprendi l\'analisi' : 'Ferma l\'analisi',
-          onPressed: _togglePause,
-          icon: Icon(_paused ? Icons.play_arrow : Icons.pause),
-        ),
-        IconButton(
-          tooltip: 'Avanti',
-          onPressed: _tree.canForward ? _forward : null,
-          icon: const Icon(Icons.chevron_right),
-        ),
-      ],
-    ),
-  );
+  Widget _navigation() {
+    final l = AppLocalizations.of(context);
+    return SizedBox(
+      height: 56,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          IconButton(
+            tooltip: l.analysisBack,
+            onPressed: _tree.canBack ? _back : null,
+            icon: const Icon(Icons.chevron_left),
+          ),
+          IconButton(
+            tooltip: _paused ? l.analysisResume : l.analysisPause,
+            onPressed: _togglePause,
+            icon: Icon(_paused ? Icons.play_arrow : Icons.pause),
+          ),
+          IconButton(
+            tooltip: l.analysisForward,
+            onPressed: _tree.canForward ? _forward : null,
+            icon: const Icon(Icons.chevron_right),
+          ),
+        ],
+      ),
+    );
+  }
 }

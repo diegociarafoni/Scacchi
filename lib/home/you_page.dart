@@ -271,7 +271,7 @@ class _Header extends StatelessWidget {
           ? KidFlame(lit: controller.streak > 0)
           : Text(
               '${l10n.youStreak(controller.streak)}'
-              ' · ${controller.streakInfo.summary}',
+              ' · ${controller.streakInfo(l10n).summary}',
             ),
     );
   }

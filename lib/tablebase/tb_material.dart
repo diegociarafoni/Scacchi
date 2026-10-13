@@ -27,14 +27,14 @@ class TbMaterial {
     if (parts.length != 2 ||
         !parts[0].startsWith('K') ||
         !parts[1].startsWith('K')) {
-      throw FormatException('Materiale non valido: $name');
+      throw FormatException('Materiale non valido: $name'); // l10n-ok
     }
     List<int> roles(String s) {
       final result = <int>[];
       for (final c in s.substring(1).split('')) {
         final role = TbRole.letters.indexOf(c);
         if (role < 0 || role > TbRole.queen) {
-          throw FormatException('Pezzo non valido: $c');
+          throw FormatException('Pezzo non valido: $c'); // l10n-ok
         }
         result.add(role);
       }

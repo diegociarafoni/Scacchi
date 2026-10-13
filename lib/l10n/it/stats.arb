@@ -90,5 +90,69 @@
         "type": "String"
       }
     }
-  }
+  },
+  "portraitShareSubject": "La mia settimana",
+  "@portraitShareSubject": {
+    "description": "Oggetto del messaggio quando si condivide la scheda della settimana"
+  },
+  "portraitTitle": "La tua settimana",
+  "portraitUnreadable": "L'archivio non si è potuto leggere.",
+  "portraitEmpty": "Nessuna partita negli ultimi sette giorni. Gioca contro il computer e qui comparirà il riepilogo.",
+  "portraitShare": "Condividi come immagine",
+  "portraitShareFailed": "Condivisione non riuscita",
+  "portraitCardTitle": "La mia settimana a scacchi",
+  "portraitGames": "{count, plural, one{1 partita} other{{count} partite}}",
+  "@portraitGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "portraitScore": "{wins} vinte · {draws} patte · {losses} perse",
+  "@portraitScore": {
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      }
+    }
+  },
+  "portraitOpenings": "Aperture preferite",
+  "portraitAccuracy": "Precisione media",
+  "portraitMate": "Matto preferito",
+  "portraitMateValue": "{role, select, king{con il re} queen{con la donna} rook{con la torre} bishop{con l'alfiere} knight{con il cavallo} other{con il pedone}}, {count, plural, one{1 volta} other{{count} volte}}",
+  "@portraitMateValue": {
+    "description": "Pezzo con cui si dà matto più spesso e quante volte",
+    "placeholders": {
+      "role": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "portraitStrongest": "Avversario più forte battuto",
+  "portraitStrongestValue": "Elo {elo}",
+  "@portraitStrongestValue": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "portraitBusiestDay": "Giorno più attivo",
+  "portraitWeekdayMonday": "lunedì",
+  "portraitWeekdayTuesday": "martedì",
+  "portraitWeekdayWednesday": "mercoledì",
+  "portraitWeekdayThursday": "giovedì",
+  "portraitWeekdayFriday": "venerdì",
+  "portraitWeekdaySaturday": "sabato",
+  "portraitWeekdaySunday": "domenica"
 }

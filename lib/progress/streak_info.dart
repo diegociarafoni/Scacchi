@@ -1,3 +1,4 @@
+import '../l10n/app_localizations.dart';
 import 'daily_goal.dart';
 
 /// Giorni di serie che sbloccano un traguardo (vedi `achievements.dart`).
@@ -33,11 +34,10 @@ class StreakInfo {
   List<String> get lines => [requirement, today, ?milestone, ifSkipped];
 }
 
-String _days(int n) => n == 1 ? '1 giorno' : '$n giorni';
-
 /// Descrive la serie. [streak] è la serie mostrata, [progress] l'avanzamento di
 /// oggi nell'unità dell'obiettivo.
-StreakInfo describeStreak({
+StreakInfo describeStreak(
+  AppLocalizations l, {
   required int streak,
   required int bestStreak,
   required int freezes,
@@ -48,50 +48,40 @@ StreakInfo describeStreak({
   final target = goal.target;
   final reached = progress >= target;
   final missing = target - progress;
-  final requirement =
-      'Per tenere accesa la serie, ogni giorno: '
-      '${switch (goal.kind) {
-        GoalKind.games => 'gioca ${goalLabel(goal)}',
-        GoalKind.puzzles => 'risolvi ${goalLabel(goal)}',
-        GoalKind.minutes => 'allenati per ${goalLabel(goal)}',
-      }}.';
+  final label = goalLabel(l, goal);
+  final requirement = switch (goal.kind) {
+    GoalKind.games => l.progressStreakNeedGames(label),
+    GoalKind.puzzles => l.progressStreakNeedPuzzles(label),
+    GoalKind.minutes => l.progressStreakNeedMinutes(label),
+  };
   final left = switch (goal.kind) {
-    GoalKind.games =>
-      missing == 1 ? 'Manca 1 partita' : 'Mancano $missing partite',
-    GoalKind.puzzles =>
-      missing == 1 ? 'Manca 1 puzzle' : 'Mancano $missing puzzle',
-    GoalKind.minutes =>
-      missing == 1 ? 'Manca 1 minuto' : 'Mancano $missing minuti',
+    GoalKind.games => l.progressStreakLeftGames(missing),
+    GoalKind.puzzles => l.progressStreakLeftPuzzles(missing),
+    GoalKind.minutes => l.progressStreakLeftMinutes(missing),
   };
   final String today;
   final String summary;
   if (reached) {
-    today = 'Oggi: fatto. La serie è al sicuro fino a domani.';
-    summary = 'Oggi: fatto';
+    today = l.progressStreakTodayDone;
+    summary = l.progressStreakSummaryDone;
   } else if (restDayToday) {
-    today = 'Oggi è il tuo giorno di riposo: la serie non si interrompe.';
-    summary = 'Oggi: riposo';
+    today = l.progressStreakTodayRest;
+    summary = l.progressStreakSummaryRest;
   } else {
-    today = 'Oggi: da fare. $left.';
-    summary = 'Oggi: da fare';
+    today = l.progressStreakTodayTodo(left);
+    summary = l.progressStreakSummaryTodo;
   }
   final next = streakMilestones.where((m) => m > streak).firstOrNull;
   final milestone = next == null
       ? null
-      : 'Prossimo traguardo: ${_days(next)} di fila '
-            '(${next - streak == 1 ? 'ne manca 1' : 'ne mancano ${next - streak}'}).';
+      : l.progressStreakNext(l.progressDaysCount(next), next - streak);
   final String ifSkipped;
   if (streak == 0) {
-    ifSkipped = 'Raggiungi l\'obiettivo oggi per iniziare una serie.';
+    ifSkipped = l.progressStreakSkipNone;
   } else if (freezes > 0) {
-    ifSkipped =
-        'Se salti un giorno, una protezione lo copre '
-        '(ne hai $freezes). Ne guadagni una ogni 7 giorni, al massimo 2.';
+    ifSkipped = l.progressStreakSkipFreeze(freezes);
   } else {
-    ifSkipped =
-        'Se salti un giorno, la serie riparte da zero; il record di '
-        '${_days(bestStreak)} resta. Ogni 7 giorni di serie guadagni una '
-        'protezione.';
+    ifSkipped = l.progressStreakSkipReset(l.progressDaysCount(bestStreak));
   }
   return StreakInfo(
     requirement: requirement,

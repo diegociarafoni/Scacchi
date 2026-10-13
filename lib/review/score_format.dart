@@ -1,4 +1,5 @@
 import '../engine/uci.dart';
+import '../l10n/app_localizations.dart';
 
 const _minus = '−';
 
@@ -18,14 +19,14 @@ String formatScore(EngineScore score) {
 String _pawns(int cp) => (cp.abs() / 100).toStringAsFixed(1);
 
 /// Valutazione dal punto di vista del Bianco per i lettori di schermo.
-String describeScore(EngineScore score) {
+String describeScore(AppLocalizations l, EngineScore score) {
   final mate = score.mate;
   if (mate != null) {
-    if (mate == 0) return 'Scacco matto';
-    return 'Matto in ${mate.abs()} per il ${mate > 0 ? 'Bianco' : 'Nero'}';
+    if (mate == 0) return l.reviewScoreCheckmate;
+    return l.reviewScoreMateIn(mate.abs(), mate > 0 ? 'white' : 'black');
   }
   final cp = score.cp!;
   final pawns = _pawns(cp);
-  if (pawns == '0.0') return 'Parità';
-  return '${cp > 0 ? 'Bianco' : 'Nero'} avanti di $pawns';
+  if (pawns == '0.0') return l.reviewScoreEven;
+  return l.reviewScoreAhead(cp > 0 ? 'white' : 'black', pawns);
 }

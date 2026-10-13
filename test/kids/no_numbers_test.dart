@@ -13,6 +13,7 @@ import 'package:scacchi/kids/kid_display.dart';
 import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/path/path_controller.dart';
 import 'package:scacchi/progress/achievements.dart';
+import 'package:scacchi/progress/achievements_l10n.dart';
 import 'package:scacchi/progress/activity.dart';
 import 'package:scacchi/progress/avatar.dart';
 import 'package:scacchi/progress/profile_page.dart';
@@ -133,7 +134,17 @@ void main() {
       final text = tester.widget<Text>(
         find.descendant(of: find.byType(SnackBar), matching: find.byType(Text)),
       );
-      expect(text.data, isNot(contains(rewardName(Avatar.bishop))));
+      expect(
+        text.data,
+        isNot(
+          contains(
+            rewardName(
+              lookupAppLocalizations(const Locale('it')),
+              Avatar.bishop,
+            ),
+          ),
+        ),
+      );
       expect(text.data, contains('reward'));
     });
 
@@ -193,10 +204,14 @@ void main() {
       expect(find.byKey(const Key('kid-streak')), findsOneWidget);
 
       // Fino in fondo: niente impostazioni degli XP né altri numeri.
-      await tester.scrollUntilVisible(find.text(achievements.last.title), 300);
+      final last = achievementTitle(
+        lookupAppLocalizations(const Locale('it')),
+        achievements.last,
+      );
+      await tester.scrollUntilVisible(find.text(last), 300);
       await tester.drag(find.byType(Scrollable).first, const Offset(0, -3000));
       await tester.pumpAndSettle();
-      expect(find.text(achievements.last.title), findsOneWidget);
+      expect(find.text(last), findsOneWidget);
       expect(find.byKey(const Key('enabled')), findsNothing);
       expect(find.textContaining('XP'), findsNothing);
       expect(find.text('Obiettivo giornaliero'), findsNothing);
@@ -333,10 +348,10 @@ void main() {
         best: line(['h1h8'], const EngineScore.cp(0)),
         reply: line(['e8f7', 'h1d1', 'd8d1'], const EngineScore.cp(500)),
       );
-      final c = explainMove(m, kid: l)!;
+      final c = explainMove(m, kid: true)!;
       expect(c.theme, CoachTheme.materialLoss);
-      expect(c.text, isNot(matches(_digit)));
-      expect(c.text, isNot(contains('pedoni')));
+      expect(c.text(l), isNot(matches(_digit)));
+      expect(c.text(l), isNot(contains('pedoni')));
     });
 
     test('matto concesso e mancato senza «matto in N»', () async {
@@ -346,10 +361,10 @@ void main() {
         best: line(['g7g6'], const EngineScore.cp(-30)),
         reply: line(['h5f7'], const EngineScore.mate(1)),
       );
-      final a = explainMove(allowed, kid: l)!;
+      final a = explainMove(allowed, kid: true)!;
       expect(a.theme, CoachTheme.allowedMate);
-      expect(a.text, contains('Qxf7#'));
-      expect(a.text, isNot(contains('matto in')));
+      expect(a.text(l), contains('Qxf7#'));
+      expect(a.text(l), isNot(contains('matto in')));
 
       final missed = await reviewOne(
         'r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5Q2/PPPP1PPP/RNB1K1NR w KQkq - 4 4',
@@ -357,10 +372,10 @@ void main() {
         best: line(['f3f7'], const EngineScore.mate(1)),
         reply: line(['g8f6'], const EngineScore.cp(-20)),
       );
-      final b = explainMove(missed, kid: l)!;
+      final b = explainMove(missed, kid: true)!;
       expect(b.theme, CoachTheme.missedMate);
-      expect(b.text, contains('Qxf7#'));
-      expect(b.text, isNot(contains('matto in')));
+      expect(b.text(l), contains('Qxf7#'));
+      expect(b.text(l), isNot(contains('matto in')));
     });
   });
 

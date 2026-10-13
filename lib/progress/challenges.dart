@@ -1,5 +1,6 @@
 import 'package:dartchess/dartchess.dart';
 
+import '../l10n/app_localizations.dart';
 import 'activity.dart';
 
 /// Tipi di sfida. [isGame] indica le sfide che si completano giocando.
@@ -59,24 +60,20 @@ class Challenge {
   final ChallengeKind kind;
   final int target;
 
-  String get title => switch (kind) {
-    ChallengeKind.playGames =>
-      target == 1 ? 'Gioca una partita' : 'Gioca $target partite',
-    ChallengeKind.winGames =>
-      target == 1 ? 'Vinci una partita' : 'Vinci $target partite',
-    ChallengeKind.winWithWhite => 'Vinci con il bianco',
-    ChallengeKind.winWithBlack => 'Vinci con il nero',
-    ChallengeKind.winShort =>
-      'Dai matto in al massimo ${ChallengeKind.shortWinMoves} mosse',
-    ChallengeKind.solvePuzzles =>
-      target == 1 ? 'Risolvi un puzzle' : 'Risolvi $target puzzle',
-    ChallengeKind.forkPuzzles => 'Risolvi $target puzzle di forchetta',
-    ChallengeKind.matePuzzles => 'Risolvi $target puzzle di matto',
-    ChallengeKind.reviewGame =>
-      target == 1 ? 'Rivedi una partita' : 'Rivedi $target partite',
-    ChallengeKind.completeLesson =>
-      target == 1 ? 'Completa una lezione' : 'Completa $target lezioni',
-    ChallengeKind.goalDays => 'Raggiungi l\'obiettivo $target giorni',
+  String title(AppLocalizations l) => switch (kind) {
+    ChallengeKind.playGames => l.progressChallengePlayGames(target),
+    ChallengeKind.winGames => l.progressChallengeWinGames(target),
+    ChallengeKind.winWithWhite => l.progressChallengeWinWhite,
+    ChallengeKind.winWithBlack => l.progressChallengeWinBlack,
+    ChallengeKind.winShort => l.progressChallengeWinShort(
+      ChallengeKind.shortWinMoves,
+    ),
+    ChallengeKind.solvePuzzles => l.progressChallengeSolvePuzzles(target),
+    ChallengeKind.forkPuzzles => l.progressChallengeForkPuzzles(target),
+    ChallengeKind.matePuzzles => l.progressChallengeMatePuzzles(target),
+    ChallengeKind.reviewGame => l.progressChallengeReviewGame(target),
+    ChallengeKind.completeLesson => l.progressChallengeCompleteLesson(target),
+    ChallengeKind.goalDays => l.progressChallengeGoalDays(target),
   };
 
   @override
@@ -87,7 +84,7 @@ class Challenge {
   int get hashCode => Object.hash(kind, target);
 
   @override
-  String toString() => title;
+  String toString() => 'Challenge(${kind.name}, $target)';
 }
 
 const _dailyGame = [

@@ -11,6 +11,7 @@ import 'package:scacchi/settings/settings.dart';
 import 'package:scacchi/share/position_image_page.dart';
 
 import '../board_marks_helpers.dart';
+import '../localized_app.dart';
 
 /// Motore finto: ogni richiesta apre un flusso controllato dal test.
 class FakeLive {
@@ -51,7 +52,7 @@ Future<FakeLive> pumpAnalysis(
   addTearDown(tester.view.reset);
   final live = FakeLive();
   await tester.pumpWidget(
-    MaterialApp(
+    localizedApp(
       home: AnalysisPage(
         initial: initial ?? Chess.initial,
         analyse: live.call,

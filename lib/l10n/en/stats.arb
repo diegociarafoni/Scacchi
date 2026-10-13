@@ -19,5 +19,65 @@
   "statsRatingTrend": "Rating trend",
   "statsNoGames": "no games",
   "statsScoreDetail": "{wins, plural, one{{wins} win} other{{wins} wins}}, {draws, plural, one{{draws} draw} other{{draws} draws}}, {losses, plural, one{{losses} loss} other{{losses} losses}}",
-  "statsTrend": "{label}: from {first} to {last}, minimum {min}, maximum {max}"
+  "statsTrend": "{label}: from {first} to {last}, minimum {min}, maximum {max}",
+  "portraitShareSubject": "My week",
+  "portraitTitle": "Your week",
+  "portraitUnreadable": "The archive couldn't be read.",
+  "portraitEmpty": "No games in the last seven days. Play against the computer and your summary will show up here.",
+  "portraitShare": "Share as image",
+  "portraitShareFailed": "Sharing failed",
+  "portraitCardTitle": "My chess week",
+  "portraitGames": "{count, plural, one{1 game} other{{count} games}}",
+  "@portraitGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "portraitScore": "{wins} won · {draws} drawn · {losses} lost",
+  "@portraitScore": {
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      }
+    }
+  },
+  "portraitOpenings": "Favorite openings",
+  "portraitAccuracy": "Average accuracy",
+  "portraitMate": "Favorite checkmate",
+  "portraitMateValue": "{role, select, king{with the king} queen{with the queen} rook{with the rook} bishop{with the bishop} knight{with the knight} other{with a pawn}}, {count, plural, one{1 time} other{{count} times}}",
+  "@portraitMateValue": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "portraitStrongest": "Strongest opponent beaten",
+  "portraitStrongestValue": "Elo {elo}",
+  "@portraitStrongestValue": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "portraitBusiestDay": "Busiest day",
+  "portraitWeekdayMonday": "Monday",
+  "portraitWeekdayTuesday": "Tuesday",
+  "portraitWeekdayWednesday": "Wednesday",
+  "portraitWeekdayThursday": "Thursday",
+  "portraitWeekdayFriday": "Friday",
+  "portraitWeekdaySaturday": "Saturday",
+  "portraitWeekdaySunday": "Sunday"
 }

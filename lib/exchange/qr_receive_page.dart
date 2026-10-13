@@ -116,7 +116,7 @@ class _QrReceivePageState extends State<QrReceivePage> {
   }
 
   void _onError(Object error) {
-    debugPrint('Fotocamera non disponibile: $error');
+    debugPrint('Fotocamera non disponibile: $error'); // l10n-ok
     if (mounted) setState(() => _cameraFailed = true);
   }
 
