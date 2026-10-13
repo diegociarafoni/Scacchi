@@ -240,7 +240,9 @@ void main() {
       // Anche a fine scorrimento l'ultimo capitolo resta tutto visibile.
       await tester.drag(find.byType(ListView), const Offset(0, -5000));
       await tester.pumpAndSettle();
-      final last = tester.getRect(find.byType(Card).last);
+      final last = tester.getRect(
+        find.byKey(ValueKey('story-chapter-${storyChapters.last.id}')),
+      );
       expect(
         last.bottom,
         lessThanOrEqualTo(tester.getRect(find.byType(ListView)).bottom),
