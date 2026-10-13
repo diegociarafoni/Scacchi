@@ -146,6 +146,10 @@ La notazione predefinita è quella della lingua dell'app; restano a scelta l'ing
 | Orologio | Clock | Reloj | Pendule |
 | Cadenza | Time control | Ritmo de juego | Cadence |
 | Incremento | Increment | Incremento | Incrément |
+| Bullet (cadenza sotto i 3 minuti) | Bullet | Bullet | Bullet |
+| Blitz (da 3 a 9 minuti) | Blitz | Blitz | Blitz |
+| Rapid (da 10 minuti) | Rapid | Rápidas (da verificare) | Rapide |
+| Cornice (dell'avatar) | Frame | Marco (da verificare) | Cadre |
 | Punteggio Elo | Elo rating | Puntuación Elo | Classement Elo |
 | Grandi maestri | Grandmasters | Grandes maestros | Grands maîtres |
 | Scacchiera fisica | Physical board | Tablero físico | Échiquier physique |

@@ -34,26 +34,24 @@ enum AvatarExpression {
 
 /// Avatar del profilo: il simbolo di un pezzo o un personaggio.
 enum Avatar {
-  pawn('Pedone', glyph: '♟'),
-  knight('Cavallo', glyph: '♞'),
-  bishop('Alfiere', glyph: '♝'),
-  rook('Torre', glyph: '♜'),
-  queen('Donna', glyph: '♛'),
-  king('Re', glyph: '♚'),
-  chick('Pino', character: AvatarCharacter.chick),
-  fox('Rocco', character: AvatarCharacter.fox),
-  flower('Chiara', character: AvatarCharacter.flower),
-  owl('Marta', character: AvatarCharacter.owl),
-  astroCat('Gatto astronauta', character: AvatarCharacter.astroCat),
-  rabbit('Coniglio lunare', character: AvatarCharacter.rabbit),
-  dragon('Duilio', character: AvatarCharacter.dragon),
-  eagle('Elena', character: AvatarCharacter.eagle),
-  wolf('Massimo', character: AvatarCharacter.wolf),
-  star('Stella', character: AvatarCharacter.star);
+  pawn(glyph: '♟'),
+  knight(glyph: '♞'),
+  bishop(glyph: '♝'),
+  rook(glyph: '♜'),
+  queen(glyph: '♛'),
+  king(glyph: '♚'),
+  chick(character: AvatarCharacter.chick),
+  fox(character: AvatarCharacter.fox),
+  flower(character: AvatarCharacter.flower),
+  owl(character: AvatarCharacter.owl),
+  astroCat(character: AvatarCharacter.astroCat),
+  rabbit(character: AvatarCharacter.rabbit),
+  dragon(character: AvatarCharacter.dragon),
+  eagle(character: AvatarCharacter.eagle),
+  wolf(character: AvatarCharacter.wolf),
+  star(character: AvatarCharacter.star);
 
-  const Avatar(this.label, {this.glyph, this.character});
-
-  final String label;
+  const Avatar({this.glyph, this.character});
 
   /// Simbolo del pezzo; `null` per i personaggi.
   final String? glyph;
@@ -62,15 +60,13 @@ enum Avatar {
 
 /// Cornice attorno all'avatar; `null` è l'assenza di cornice.
 enum AvatarFrame {
-  none('Nessuna', null),
-  bronze('Bronzo', Color(0xffcd7f32)),
-  silver('Argento', Color(0xffa8a9ad)),
-  gold('Oro', Color(0xffd4af37)),
-  flame('Fiamma', Color(0xffe8590c)),
-  laurel('Alloro', Color(0xff2f9e44));
+  none(null),
+  bronze(Color(0xffcd7f32)),
+  silver(Color(0xffa8a9ad)),
+  gold(Color(0xffd4af37)),
+  flame(Color(0xffe8590c)),
+  laurel(Color(0xff2f9e44));
 
-  const AvatarFrame(this.label, this.color);
-
-  final String label;
+  const AvatarFrame(this.color);
   final Color? color;
 }

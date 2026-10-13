@@ -12,6 +12,7 @@ import 'achievements.dart';
 import 'achievements_l10n.dart';
 import 'avatar.dart';
 import 'avatar_art.dart';
+import 'avatar_l10n.dart';
 import 'avatar_photo.dart';
 import 'challenges.dart';
 import 'daily_goal.dart';
@@ -235,11 +236,11 @@ class ProfileAvatar extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     final photo = this.photo;
     final l = AppLocalizations.of(context);
-    final name = photo != null ? l.avatarPhotoLabel : avatar.label;
+    final name = photo != null ? l.avatarPhotoLabel : avatarName(l, avatar);
     return Semantics(
       label: frame.color == null
           ? l.progressAvatarSemantics(name)
-          : l.progressAvatarFrameSemantics(name, frame.label),
+          : l.progressAvatarFrameSemantics(name, avatarFrameName(l, frame)),
       excludeSemantics: true,
       child: Container(
         width: size,
@@ -423,7 +424,7 @@ class _AvatarPicker extends StatelessWidget {
                     for (final a in Avatar.values)
                       option(
                         a,
-                        a.label,
+                        avatarName(l, a),
                         a == s.avatar && !photoShown,
                         ProfileAvatar(avatar: a, frame: s.frame, size: 48),
                         () => s.copyWith(avatar: a, usePhoto: false),
@@ -444,7 +445,7 @@ class _AvatarPicker extends StatelessWidget {
                     for (final f in AvatarFrame.values)
                       option(
                         f,
-                        f.label,
+                        avatarFrameName(l, f),
                         f == s.frame,
                         ProfileAvatar(avatar: s.avatar, frame: f, size: 48),
                         () => s.copyWith(frame: f),

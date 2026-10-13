@@ -8,6 +8,7 @@ import '../engine/bots.dart';
 import '../engine/levels.dart';
 import '../engine/style.dart';
 import '../game/clock.dart';
+import '../game/clock_l10n.dart';
 import '../game/handicap.dart';
 import '../game/opponent_picker.dart';
 import '../game/variant.dart';
@@ -896,10 +897,7 @@ class _OptionsSheetState extends State<_OptionsSheet> {
     final l10n = _l10n(context);
     final theme = Theme.of(context);
     final kid = _page.widget.kidMode;
-    final groups = <String, List<TimeControl>>{};
-    for (final t in TimeControl.presets) {
-      groups.putIfAbsent(t.category, () => []).add(t);
-    }
+    final groups = TimeControl.presetsByCategory;
     Widget title(String text) => Padding(
       padding: const EdgeInsets.only(top: 16, bottom: 8),
       child: Semantics(
@@ -954,7 +952,7 @@ class _OptionsSheetState extends State<_OptionsSheet> {
                     ]),
                     if (!kid)
                       for (final entry in groups.entries) ...[
-                        title(entry.key),
+                        title(timeCategoryName(l10n, entry.key)),
                         chips([
                           for (final t in entry.value)
                             timeChip(t.label, t, Key('option-time-${t.label}')),

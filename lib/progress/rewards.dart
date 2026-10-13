@@ -4,6 +4,7 @@ import '../settings/settings_labels.dart';
 import 'achievements.dart';
 import 'achievements_l10n.dart';
 import 'avatar.dart';
+import 'avatar_l10n.dart';
 import 'progress_state.dart';
 import 'xp.dart';
 
@@ -122,7 +123,7 @@ List<Enum> newRewards(ProgressState before, ProgressState after) => [
 String rewardName(AppLocalizations l, Enum item) => switch (item) {
   BoardTheme() => l.progressRewardTheme(themeLabel(l, item)),
   PieceStyle() => l.progressRewardPieces(pieceLabel(l, item)),
-  Avatar(:final label) => l.progressRewardAvatar(label),
-  AvatarFrame(:final label) => l.progressRewardFrame(label),
+  Avatar() => l.progressRewardAvatar(avatarName(l, item)),
+  AvatarFrame() => l.progressRewardFrame(avatarFrameName(l, item)),
   _ => item.name,
 };
