@@ -122,5 +122,13 @@
   "settingsMarkColorYellow": "Żółty",
   "@settingsMarkColorYellow": {
     "description": "Impostazioni: colore giallo"
+  },
+  "settingsPremove": "Ruch wyprzedzający",
+  "@settingsPremove": {
+    "description": "Impostazioni: interruttore della premossa"
+  },
+  "settingsPremoveDescription": "Ruszaj się, gdy myśli komputer; dotknięcie pustego pola anuluje ruch",
+  "@settingsPremoveDescription": {
+    "description": "Impostazioni: descrizione della premossa"
   }
 }

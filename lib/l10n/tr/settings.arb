@@ -122,5 +122,13 @@
   "settingsMarkColorYellow": "Sarı",
   "@settingsMarkColorYellow": {
     "description": "Impostazioni: colore giallo"
+  },
+  "settingsPremove": "Ön hamle",
+  "@settingsPremove": {
+    "description": "Impostazioni: interruttore della premossa"
+  },
+  "settingsPremoveDescription": "Bilgisayar düşünürken hamleni yap; boş bir kareye dokunarak iptal edebilirsin",
+  "@settingsPremoveDescription": {
+    "description": "Impostazioni: descrizione della premossa"
   }
 }
