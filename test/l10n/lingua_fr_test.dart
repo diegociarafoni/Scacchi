@@ -53,6 +53,8 @@ void main() {
         plurals++;
         expect(e.value, contains('other{'), reason: e.key);
         expect(e.value, contains('one{'), reason: e.key);
+        // `one` copre anche lo zero: il numero va scritto con il segnaposto.
+        expect(e.value, isNot(contains(RegExp(r'one\{1[ }]'))), reason: e.key);
       }
       expect(plurals, greaterThan(40));
     });

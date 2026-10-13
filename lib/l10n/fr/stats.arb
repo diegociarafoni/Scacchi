@@ -27,7 +27,7 @@
   "portraitShare": "Partager en image",
   "portraitShareFailed": "Échec du partage",
   "portraitCardTitle": "Ma semaine d'échecs",
-  "portraitGames": "{count, plural, one{1 partie} other{{count} parties}}",
+  "portraitGames": "{count, plural, one{{count} partie} other{{count} parties}}",
   "@portraitGames": {
     "placeholders": {
       "count": {
@@ -52,7 +52,7 @@
   "portraitOpenings": "Ouvertures préférées",
   "portraitAccuracy": "Précision moyenne",
   "portraitMate": "Mat préféré",
-  "portraitMateValue": "{role, select, king{avec le roi} queen{avec la dame} rook{avec la tour} bishop{avec le fou} knight{avec le cavalier} other{avec un pion}}, {count, plural, one{1 fois} other{{count} fois}}",
+  "portraitMateValue": "{role, select, king{avec le roi} queen{avec la dame} rook{avec la tour} bishop{avec le fou} knight{avec le cavalier} other{avec un pion}}, {count, plural, one{{count} fois} other{{count} fois}}",
   "@portraitMateValue": {
     "placeholders": {
       "role": {
