@@ -1,0 +1,8 @@
+{
+  "clockCategoryBullet": "Bullet",
+  "clockCategoryBlitz": "Blitz",
+  "clockCategoryRapid": "Rapid",
+  "@clockCategoryBullet": {
+    "description": "Famiglia di cadenze di gioco, sotto i 3 minuti; il termine è quello usato dai giocatori"
+  }
+}

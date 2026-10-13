@@ -7,19 +7,18 @@ import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../game/sounds.dart' show GameSound, SoundPlayer;
+import 'app_language.dart';
 import 'board_marks.dart';
 import 'color_blind.dart';
 import 'notation.dart';
 
 enum AnimationSpeed {
-  none('Nessuna', Duration.zero),
-  fast('Veloce', Duration(milliseconds: 120)),
-  normal('Normale', Duration(milliseconds: 250)),
-  slow('Lenta', Duration(milliseconds: 450));
+  none(Duration.zero),
+  fast(Duration(milliseconds: 120)),
+  normal(Duration(milliseconds: 250)),
+  slow(Duration(milliseconds: 450));
 
-  const AnimationSpeed(this.label, this.duration);
-
-  final String label;
+  const AnimationSpeed(this.duration);
   final Duration duration;
 }
 
@@ -28,110 +27,54 @@ enum AnimationSpeed {
 /// `tool/board_art/`. Alcuni si sbloccano con i progressi
 /// (`progress/rewards.dart`).
 enum BoardTheme {
-  green('Verde', scheme: ChessboardColorScheme.green),
-  brown('Legno', scheme: ChessboardColorScheme.brown),
-  blue('Blu', scheme: ChessboardColorScheme.blue),
-  grey('Grigio', light: Color(0xffb8b8b8), dark: Color(0xff7d7d7d)),
-  sand('Sabbia', light: Color(0xfff3e5c0), dark: Color(0xffc8a26b)),
-  ocean('Oceano', light: Color(0xffd6ecf0), dark: Color(0xff3f7f93)),
-  coral('Corallo', light: Color(0xfffbe3d6), dark: Color(0xffd9776a)),
-  night('Notte', light: Color(0xff9aa5b8), dark: Color(0xff3b4459), dim: true),
-  gold('Oro', light: Color(0xfffaf0c8), dark: Color(0xffc9a227)),
-  arancia(
-    'Arancia',
-    light: Color(0xfffcebd5),
-    dark: Color(0xffee9b55),
-    textured: true,
-  ),
+  green(scheme: ChessboardColorScheme.green),
+  brown(scheme: ChessboardColorScheme.brown),
+  blue(scheme: ChessboardColorScheme.blue),
+  grey(light: Color(0xffb8b8b8), dark: Color(0xff7d7d7d)),
+  sand(light: Color(0xfff3e5c0), dark: Color(0xffc8a26b)),
+  ocean(light: Color(0xffd6ecf0), dark: Color(0xff3f7f93)),
+  coral(light: Color(0xfffbe3d6), dark: Color(0xffd9776a)),
+  night(light: Color(0xff9aa5b8), dark: Color(0xff3b4459), dim: true),
+  gold(light: Color(0xfffaf0c8), dark: Color(0xffc9a227)),
+  arancia(light: Color(0xfffcebd5), dark: Color(0xffee9b55), textured: true),
   crepuscolo(
-    'Crepuscolo',
     light: Color(0xffd5c7e3),
     dark: Color(0xff6e5b8f),
     textured: true,
     dim: true,
   ),
-  pergamena(
-    'Pergamena',
-    light: Color(0xfff1e2bc),
-    dark: Color(0xffb48a55),
-    textured: true,
-  ),
+  pergamena(light: Color(0xfff1e2bc), dark: Color(0xffb48a55), textured: true),
   castello(
-    'Castello',
     light: Color(0xffa49c90),
     dark: Color(0xff5a544d),
     textured: true,
     dim: true,
   ),
-  bosco(
-    'Bosco elfico',
-    light: Color(0xffece6d0),
-    dark: Color(0xff5e7f5a),
-    textured: true,
-  ),
-  noce(
-    'Noce',
-    light: Color(0xffe6c597),
-    dark: Color(0xff93603a),
-    textured: true,
-  ),
+  bosco(light: Color(0xffece6d0), dark: Color(0xff5e7f5a), textured: true),
+  noce(light: Color(0xffe6c597), dark: Color(0xff93603a), textured: true),
   spazio(
-    'Spazio',
     light: Color(0xff4a4f86),
     dark: Color(0xff1d1f45),
     textured: true,
     dim: true,
   ),
-  retro(
-    'Retrò',
-    light: Color(0xff9bbc0f),
-    dark: Color(0xff306230),
-    textured: true,
-  ),
-  giardino(
-    'Giardino',
-    light: Color(0xffdcebb4),
-    dark: Color(0xff6e9a4c),
-    textured: true,
-  ),
-  terracotta(
-    'Terracotta',
-    light: Color(0xfff3dfc6),
-    dark: Color(0xffc4643c),
-    textured: true,
-  ),
-  marmo(
-    'Marmo',
-    light: Color(0xffe0e0dc),
-    dark: Color(0xff79837f),
-    textured: true,
-  ),
-  metallo(
-    'Metallo',
-    light: Color(0xffc5c9ce),
-    dark: Color(0xff7d848c),
-    textured: true,
-  ),
-  vetro(
-    'Vetro',
-    light: Color(0xffd6ecf0),
-    dark: Color(0xff5da0b0),
-    textured: true,
-  ),
-  menta('Menta', light: Color(0xffe6f4ec), dark: Color(0xff5fa88a)),
-  cipria('Cipria', light: Color(0xfff7e6e8), dark: Color(0xffb8707e)),
-  ardesia('Ardesia', light: Color(0xffc9d1d9), dark: Color(0xff6b7a8b));
+  retro(light: Color(0xff9bbc0f), dark: Color(0xff306230), textured: true),
+  giardino(light: Color(0xffdcebb4), dark: Color(0xff6e9a4c), textured: true),
+  terracotta(light: Color(0xfff3dfc6), dark: Color(0xffc4643c), textured: true),
+  marmo(light: Color(0xffe0e0dc), dark: Color(0xff79837f), textured: true),
+  metallo(light: Color(0xffc5c9ce), dark: Color(0xff7d848c), textured: true),
+  vetro(light: Color(0xffd6ecf0), dark: Color(0xff5da0b0), textured: true),
+  menta(light: Color(0xffe6f4ec), dark: Color(0xff5fa88a)),
+  cipria(light: Color(0xfff7e6e8), dark: Color(0xffb8707e)),
+  ardesia(light: Color(0xffc9d1d9), dark: Color(0xff6b7a8b));
 
-  const BoardTheme(
-    this.label, {
+  const BoardTheme({
     this.scheme,
     this.light,
     this.dark,
     this.textured = false,
     this.dim = false,
   }) : assert(scheme != null || (light != null && dark != null));
-
-  final String label;
 
   /// Con texture in `assets/boards/` invece della tinta unita.
   final bool textured;
@@ -300,27 +243,24 @@ ChessboardColorScheme _customScheme(
 /// senza peso nell'app, lo spazio già in `assets/boards/` e una foto scelta
 /// dall'utente, che resta solo sul telefono.
 enum BoardBackdrop {
-  standard('Standard'),
-  graphite('Grafite', color: Color(0xff2b2a28)),
-  feltro('Feltro', color: Color(0xff2f6b3c)),
+  standard,
+  graphite(color: Color(0xff2b2a28)),
+  feltro(color: Color(0xff2f6b3c)),
   ardesia(
-    'Ardesia',
     gradient: LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
       colors: [Color(0xff5a5d63), Color(0xff2e3035)],
     ),
   ),
-  perla('Perla', color: Color(0xffd5d6d8)),
+  perla(color: Color(0xffd5d6d8)),
   notte(
-    'Notte',
     gradient: RadialGradient(
       radius: 0.9,
       colors: [Color(0xff26346b), Color(0xff0a0d24)],
     ),
   ),
   tramonto(
-    'Tramonto',
     gradient: LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
@@ -328,7 +268,6 @@ enum BoardBackdrop {
     ),
   ),
   oceano(
-    'Oceano',
     gradient: LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
@@ -336,20 +275,17 @@ enum BoardBackdrop {
     ),
   ),
   foresta(
-    'Foresta',
     gradient: LinearGradient(
       begin: Alignment.topLeft,
       end: Alignment.bottomRight,
       colors: [Color(0xff6b9a4a), Color(0xff1f4a2b)],
     ),
   ),
-  cuoio('Cuoio', color: Color(0xff7a2a24)),
-  spazio('Spazio', asset: 'assets/boards/spazio.webp'),
-  photo('La tua foto'); // l10n-ok: ripiego, il nome tradotto è in backdropLabel
+  cuoio(color: Color(0xff7a2a24)),
+  spazio(asset: 'assets/boards/spazio.webp'),
+  photo;
 
-  const BoardBackdrop(this.label, {this.color, this.gradient, this.asset});
-
-  final String label;
+  const BoardBackdrop({this.color, this.gradient, this.asset});
   final Color? color;
   final Gradient? gradient;
 
@@ -360,13 +296,11 @@ enum BoardBackdrop {
 /// Set di suoni delle mosse. Quello classico sta in `assets/sounds/`, gli altri
 /// in una cartella con il loro nome; tutti generati da `tool/generate_sounds.py`.
 enum SoundSet {
-  classico('Classico'),
-  legno('Legno'),
-  cristallo('Cristallo');
+  classico,
+  legno,
+  cristallo;
 
-  const SoundSet(this.label);
-
-  final String label;
+  const SoundSet();
 
   /// Percorso del suono sotto `assets/`.
   String assetOf(GameSound sound) =>
@@ -377,7 +311,7 @@ enum SoundSet {
 /// a codice GPL-3.0 (vedi CREDITS.md). Esclusi i set CC BY-NC-SA. Quelli
 /// senza [pieceSet] sono in `assets/pieces/`, generati da `tool/board_art/`.
 enum PieceStyle {
-  cburnett('Classico', 'Colin M.L. Burnett', 'GPL-2.0+', PieceSet.cburnett),
+  cburnett('Cburnett', 'Colin M.L. Burnett', 'GPL-2.0+', PieceSet.cburnett),
   merida('Merida', 'Armando Hernández Marroquín', 'GPL-2.0+', PieceSet.merida),
   chessnut('Chessnut', 'Alexis Luengas', 'Apache-2.0', PieceSet.chessnut),
   fantasy('Fantasy', 'Maurizio Monge', 'MIT', PieceSet.fantasy),
@@ -398,6 +332,8 @@ enum PieceStyle {
   papercut('Papercut', 'Nikolay Anzarov', 'CC BY 4.0'),
   noto('Noto', 'Google (Noto Sans Symbols 2)', 'OFL-1.1');
 
+  /// [label] è il nome proprio del set; quello classico è tradotto da
+  /// `pieceLabel` in `settings_labels.dart`.
   const PieceStyle(this.label, this.author, this.license, [this.pieceSet]);
 
   final String label;
@@ -465,6 +401,7 @@ class AppSettings {
     this.kidMode = false,
     this.themeMode = ThemeMode.system,
     this.notation = MoveNotation.figurine,
+    this.language = AppLanguage.system,
     String whiteName = '',
     String blackName = '',
   }) : whiteName = _cleanName(whiteName),
@@ -529,6 +466,9 @@ class AppSettings {
 
   /// Come si scrivono i pezzi nelle mosse.
   final MoveNotation notation;
+
+  /// Lingua dell'app; di default quella del telefono.
+  final AppLanguage language;
   final String whiteName;
   final String blackName;
 
@@ -594,6 +534,7 @@ class AppSettings {
     bool? kidMode,
     ThemeMode? themeMode,
     MoveNotation? notation,
+    AppLanguage? language,
     String? whiteName,
     String? blackName,
   }) => AppSettings(
@@ -621,6 +562,7 @@ class AppSettings {
     kidMode: kidMode ?? this.kidMode,
     themeMode: themeMode ?? this.themeMode,
     notation: notation ?? this.notation,
+    language: language ?? this.language,
     whiteName: whiteName ?? this.whiteName,
     blackName: blackName ?? this.blackName,
   );
@@ -685,6 +627,7 @@ class AppSettings {
       other.kidMode == kidMode &&
       other.themeMode == themeMode &&
       other.notation == notation &&
+      other.language == language &&
       other.whiteName == whiteName &&
       other.blackName == blackName;
 
@@ -714,6 +657,7 @@ class AppSettings {
     kidMode,
     themeMode,
     notation,
+    language,
     whiteName,
     blackName,
   ]);
@@ -778,6 +722,7 @@ class SettingsController extends ValueNotifier<AppSettings> {
         kidMode: read('kidMode', d.kidMode),
         themeMode: byName(ThemeMode.values, 'themeMode', d.themeMode),
         notation: byName(MoveNotation.values, 'notation', d.notation),
+        language: byName(AppLanguage.values, 'language', d.language),
         whiteName: read('whiteName', d.whiteName),
         blackName: read('blackName', d.blackName),
       ),
@@ -845,6 +790,8 @@ class SettingsController extends ValueNotifier<AppSettings> {
         prefs.setString('themeMode', settings.themeMode.name),
       if (old.notation != settings.notation)
         prefs.setString('notation', settings.notation.name),
+      if (old.language != settings.language)
+        prefs.setString('language', settings.language.name),
       if (old.whiteName != settings.whiteName)
         prefs.setString('whiteName', settings.whiteName),
       if (old.blackName != settings.blackName)

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart' show ThemeMode;
 
 import '../l10n/app_localizations.dart';
+import 'app_language.dart';
 import 'notation.dart';
 import 'settings.dart';
 
-/// Nomi tradotti delle scelte; le etichette delle enum restano il ripiego
-/// italiano per chi non ha un contesto di traduzione.
+/// Nomi tradotti delle scelte.
 String themeModeLabel(AppLocalizations l, ThemeMode m) => switch (m) {
   ThemeMode.system => l.settingsModeSystem,
   ThemeMode.light => l.settingsModeLight,
@@ -18,6 +18,11 @@ String animationLabel(AppLocalizations l, AnimationSpeed a) => switch (a) {
   AnimationSpeed.normal => l.settingsAnimationNormal,
   AnimationSpeed.slow => l.settingsAnimationSlow,
 };
+
+/// I nomi delle lingue restano nella lingua stessa, così si ritrovano anche
+/// quando l'app è in una lingua che non si capisce.
+String languageLabel(AppLocalizations l, AppLanguage a) =>
+    a.nativeName ?? l.settingsLanguageSystem;
 
 String notationLabel(AppLocalizations l, MoveNotation n) =>
     l.settingsNotationChoice(switch (n) {

@@ -1,6 +1,9 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/foundation.dart';
 
+/// Famiglia di una cadenza; il nome mostrato è in `clock_l10n.dart`.
+enum TimeCategory { bullet, blitz, rapid }
+
 @immutable
 class TimeControl {
   const TimeControl({required this.minutes, this.increment = 0});
@@ -23,12 +26,21 @@ class TimeControl {
     TimeControl(minutes: 30),
   ];
 
+  /// Le cadenze predefinite raggruppate per famiglia, nell'ordine dell'elenco.
+  static Map<TimeCategory, List<TimeControl>> get presetsByCategory {
+    final groups = <TimeCategory, List<TimeControl>>{};
+    for (final t in presets) {
+      groups.putIfAbsent(t.category, () => []).add(t);
+    }
+    return groups;
+  }
+
   String get label => '$minutes+$increment';
 
-  String get category => switch (minutes) {
-    < 3 => 'Bullet',
-    < 10 => 'Blitz',
-    _ => 'Rapid',
+  TimeCategory get category => switch (minutes) {
+    < 3 => TimeCategory.bullet,
+    < 10 => TimeCategory.blitz,
+    _ => TimeCategory.rapid,
   };
 
   static TimeControl? parse(String label) {

@@ -5,6 +5,7 @@ import '../l10n/app_localizations.dart';
 import '../progress/profile_page.dart';
 import '../progress/progress_controller.dart';
 import 'adult_gate.dart';
+import 'app_language.dart';
 import 'notation.dart';
 import 'settings.dart';
 import 'settings_labels.dart';
@@ -199,6 +200,14 @@ class AccessibilitySettingsPage extends _SectionPage {
       builder: (context) {
         final s = _s;
         return [
+          SettingsChoiceTile<AppLanguage>(
+            title: l10n.settingsLanguage,
+            description: l10n.settingsLanguageDescription,
+            values: AppLanguage.values,
+            selected: s.language,
+            label: (a) => languageLabel(l10n, a),
+            onSelected: (a) => _set((c) => c.copyWith(language: a)),
+          ),
           SettingsChoiceTile<ThemeMode>(
             title: l10n.settingsAppTheme,
             description: l10n.settingsAppThemeDescription,

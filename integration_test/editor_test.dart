@@ -6,6 +6,7 @@ import 'package:scacchi/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../test/game_actions.dart';
+import '../test/support/italian_device.dart';
 
 Offset _square(WidgetTester tester, Type board, String name) {
   final rect = tester.getRect(find.byType(board));
@@ -24,6 +25,7 @@ Future<void> _tap(WidgetTester tester, Finder finder) async {
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  useItalianDevice();
 
   testWidgets('RF-53 si costruisce un finale e lo si gioca fino al matto', (
     tester,

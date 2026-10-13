@@ -8,6 +8,8 @@ import 'package:integration_test/integration_test.dart';
 import 'package:scacchi/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../test/support/italian_device.dart';
+
 Offset _square(WidgetTester tester, String name) {
   final rect = tester.getRect(find.byType(Chessboard));
   final size = rect.width / 8;
@@ -22,6 +24,7 @@ const _moves = ['e2e4', 'e7e5', 'g1f3', 'b8c6', 'f1c4', 'g8f6', 'd2d3', 'f8c5'];
 /// il rapporto va in build/performance.json per `tool/check_performance.dart`.
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  useItalianDevice();
 
   testWidgets('fluidità: partita e navigazione', (tester) async {
     SharedPreferences.setMockInitialValues({});

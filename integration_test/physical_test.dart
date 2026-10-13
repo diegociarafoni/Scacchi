@@ -5,6 +5,8 @@ import 'package:scacchi/main.dart';
 import 'package:scacchi/physical/photo_source.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../test/support/italian_device.dart';
+
 Future<void> _type(WidgetTester tester, String move) async {
   await tester.enterText(find.byKey(const Key('physical-input')), move);
   await tester.testTextInput.receiveAction(TextInputAction.done);
@@ -13,6 +15,7 @@ Future<void> _type(WidgetTester tester, String move) async {
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  useItalianDevice();
 
   testWidgets('la partita su scacchiera fisica si registra fino al matto', (
     tester,
