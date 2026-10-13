@@ -1,0 +1,15 @@
+{
+  "multiplayerUiChannelWifi": "Wi-Fi",
+  "multiplayerUiChannelBluetooth": "Bluetooth",
+  "multiplayerUiChannelRemote": "Jarak jauh",
+  "multiplayerUiLinkConnected": "Tersambung",
+  "multiplayerUiLinkConnecting": "Menyambung",
+  "multiplayerUiLinkOffline": "Tidak terjangkau",
+  "multiplayerUiLinkSemantics": "{channel}: {state}",
+  "multiplayerUiShowFriend": "Tunjukkan kode ini ke temanmu",
+  "multiplayerUiStepsTitle": "Cara bermain",
+  "multiplayerUiStepCreate": "Salah satu dari kalian membuat permainan lalu menampilkan kode QR atau mengirim tautan.",
+  "multiplayerUiStepScan": "Yang lain memindainya dengan kamera.",
+  "multiplayerUiStepPlay": "Bergiliran melangkah: langkah dikirim otomatis.",
+  "multiplayerUiResumeTitle": "Permainan sedang berlangsung"
+}

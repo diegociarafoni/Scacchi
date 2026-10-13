@@ -1,0 +1,42 @@
+{
+  "analysisTitle": "Analiz",
+  "analysisBestMoveArrow": "En iyi hamle oku",
+  "analysisThreatArrow": "Rakibin tehdidi",
+  "analysisOneLine": "1 varyant",
+  "analysisTwoLines": "2 varyant",
+  "analysisThreeLines": "3 varyant",
+  "analysisEngineUnavailable": "Motor kullanılamıyor",
+  "analysisPaused": "Analiz duraklatıldı",
+  "analysisGameOver": "Oyun bitti",
+  "analysisThinking": "Analiz ediliyor…",
+  "analysisDepth": "Derinlik {depth}",
+  "@analysisDepth": {
+    "placeholders": {
+      "depth": {
+        "type": "int"
+      }
+    }
+  },
+  "analysisPromote": "Ana varyant yap",
+  "analysisDelete": "Bu hamleyi ve sonrakileri sil",
+  "analysisBack": "Geri",
+  "analysisForward": "İleri",
+  "analysisResume": "Analizi sürdür",
+  "analysisPause": "Analizi duraklat",
+  "analysisMore": "Diğer işlemler",
+  "analysisSave": "Arşive kaydet",
+  "analysisSharePgn": "PGN'yi paylaş",
+  "analysisSaveTitle": "Analiz adı",
+  "analysisDefaultName": "{date} tarihli analiz",
+  "@analysisDefaultName": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "analysisSaved": "Analiz arşive kaydedildi",
+  "analysisSaveFailed": "Kaydedilemedi",
+  "analysisSaveConfirm": "Kaydet",
+  "analysisCancel": "İptal"
+}

@@ -1,0 +1,495 @@
+{
+  "family.Sicilian Defense": "Siciliaanse verdediging",
+  "family.Ruy Lopez": "Spaanse opening",
+  "family.French Defense": "Franse verdediging",
+  "family.Queen's Gambit": "Damegambiet",
+  "family.Italian Game": "Italiaans spel",
+  "family.English Opening": "Engelse opening",
+  "family.King's Gambit": "Koningsgambiet",
+  "family.King's Indian Defense": "Koningsindische verdediging",
+  "family.Caro-Kann Defense": "Caro-Kann-verdediging",
+  "family.Nimzo-Indian Defense": "Nimzo-Indische verdediging",
+  "family.Queen's Pawn Game": "Damepionspel",
+  "family.Semi-Slav Defense": "Semi-Slavische verdediging",
+  "family.Dutch Defense": "Hollandse verdediging",
+  "family.Benoni Defense": "Benoni-verdediging",
+  "family.Grünfeld Defense": "Grünfeld-verdediging",
+  "family.Queen's Indian Defense": "Damesindische verdediging",
+  "family.Alekhine Defense": "Aljechin-verdediging",
+  "family.Indian Defense": "Indische verdediging",
+  "family.Scotch Game": "Schots spel",
+  "family.Slav Defense": "Slavische verdediging",
+  "family.Petrov's Defense": "Russische verdediging",
+  "family.Four Knights Game": "Vierpaardenspel",
+  "family.Zukertort Opening": "Zukertort-opening",
+  "family.Scandinavian Defense": "Scandinavische verdediging",
+  "family.Philidor Defense": "Philidor-verdediging",
+  "family.Réti Opening": "Réti-opening",
+  "family.Nimzowitsch Defense": "Nimzowitsch-verdediging",
+  "family.Bishop's Opening": "Looperopening",
+  "family.Vienna Game": "Weens spel",
+  "family.Modern Defense": "Moderne verdediging",
+  "family.King's Pawn Game": "Koningspionspel",
+  "family.Van Geet Opening": "Van Geet-opening",
+  "family.Pterodactyl Defense": "Pterodactylus-verdediging",
+  "family.Catalan Opening": "Catalaanse opening",
+  "family.Bird Opening": "Bird-opening",
+  "family.Pirc Defense": "Pirc-verdediging",
+  "family.Tarrasch Defense": "Tarrasch-verdediging",
+  "family.Polish Opening": "Poolse opening",
+  "family.Neo-Grünfeld Defense": "Neo-Grünfeld-verdediging",
+  "family.Blackmar-Diemer Gambit": "Blackmar-Diemer-gambiet",
+  "family.Bogo-Indian Defense": "Bogo-Indische verdediging",
+  "family.Grob Opening": "Grob-opening",
+  "family.Hungarian Opening": "Hongaarse opening",
+  "family.King's Indian Attack": "Koningsindische aanval",
+  "family.Nimzo-Larsen Attack": "Nimzo-Larsen-aanval",
+  "family.Center Game": "Centrumspel",
+  "family.Latvian Gambit": "Lets gambiet",
+  "family.Ponziani Opening": "Ponziani-opening",
+  "family.Vienna Gambit": "Weens gambiet",
+  "family.Old Indian Defense": "Oud-Indische verdediging",
+  "family.Rat Defense": "Ratverdediging",
+  "family.Trompowsky Attack": "Trompowsky-aanval",
+  "family.Benko Gambit": "Benko-gambiet",
+  "family.Kádas Opening": "Kádas-opening",
+  "family.Englund Gambit": "Englund-gambiet",
+  "family.Owen Defense": "Owen-verdediging",
+  "family.Richter-Veresov Attack": "Richter-Veresov-aanval",
+  "family.Ware Opening": "Ware-opening",
+  "family.English Defense": "Engelse verdediging",
+  "family.Barnes Opening": "Barnes-opening",
+  "family.Torre Attack": "Torre-aanval",
+  "family.Lion Defense": "Leeuwverdediging",
+  "family.Danish Gambit": "Deens gambiet",
+  "family.Three Knights Opening": "Driepaardenopening",
+  "family.Rubinstein Opening": "Rubinstein-opening",
+  "family.Van't Kruijs Opening": "Van 't Kruijs-opening",
+  "family.Borg Defense": "Borg-verdediging",
+  "family.Mieses Opening": "Mieses-opening",
+  "family.Sodium Attack": "Sodium-aanval",
+  "family.Mikenas Defense": "Mikenas-verdediging",
+  "family.London System": "Londens systeem",
+  "family.St. George Defense": "Sint-joris-verdediging",
+  "family.Elephant Gambit": "Olifantgambiet",
+  "family.Amar Opening": "Amar-opening",
+  "family.Colle System": "Colle-systeem",
+  "family.King's Pawn Opening": "Koningspionopening",
+  "family.Portuguese Opening": "Portugese opening",
+  "family.King's Knight Opening": "Koningspaardopening",
+  "family.Rapport-Jobava System": "Rapport-Jobava-systeem",
+  "family.Blumenfeld Countergambit": "Blumenfeld-tegengambiet",
+  "family.Anderssen's Opening": "Anderssen-opening",
+  "family.Clemenz Opening": "Clemenz-opening",
+  "family.Formation": "Formatie",
+  "family.Zukertort Defense": "Zukertort-verdediging",
+  "family.English Orangutan": "Engelse orang-oetan",
+  "family.Horwitz Defense": "Horwitz-verdediging",
+  "family.Kangaroo Defense": "Kangoeroeverdediging",
+  "family.Polish Defense": "Poolse verdediging",
+  "family.Slav Indian": "Slavisch-Indisch",
+  "family.Amazon Attack": "Amazone-aanval",
+  "family.Marienbad System": "Marienbad-systeem",
+  "family.Pseudo Queen's Indian Defense": "Pseudo-damesindische verdediging",
+  "family.Mexican Defense": "Mexicaanse verdediging",
+  "family.Carr Defense": "Carr-verdediging",
+  "family.Goldsmith Defense": "Goldsmith-verdediging",
+  "family.Hippopotamus Defense": "Nijlpaardverdediging",
+  "family.Ware Defense": "Ware-verdediging",
+  "family.Amsterdam Attack": "Amsterdam-aanval",
+  "family.Creepy Crawly Formation": "Creepy Crawly-formatie",
+  "family.Global Opening": "Global-opening",
+  "family.Lasker Simul Special": "Lasker-simultaanspecial",
+  "family.Saragossa Opening": "Saragossa-opening",
+  "family.Valencia Opening": "Valencia-opening",
+  "family.Australian Defense": "Australische verdediging",
+  "family.Montevideo Defense": "Montevideo-verdediging",
+  "family.Zaire Defense": "Zaire-verdediging",
+  "family.Robatsch Defense": "Robatsch-verdediging",
+  "family.Wade Defense": "Wade-verdediging",
+  "family.Basque Opening": "Baskische opening",
+  "family.Canard Opening": "Canard-opening",
+  "family.Paleface Attack": "Paleface-aanval",
+  "family.Döry Defense": "Döry-verdediging",
+  "family.Yusupov-Rubinstein System": "Joesoepov-Rubinstein-systeem",
+  "family.East Indian Defense": "Oost-Indische verdediging",
+  "family.Queen's Indian Accelerated": "Versnelde damesindische verdediging",
+  "family.Vulture Defense": "Gierverdediging",
+  "family.Barnes Defense": "Barnes-verdediging",
+  "family.Fried Fox Defense": "Fried Fox-verdediging",
+  "family.Lemming Defense": "Lemmingverdediging",
+  "family.Czech Defense": "Tsjechische verdediging",
+  "family.Bongcloud Attack": "Bongcloud-aanval",
+  "family.Gunderam Defense": "Gunderam-verdediging",
+  "family.Dresden Opening": "Dresden-opening",
+  "family.Irish Gambit": "Iers gambiet",
+  "family.Duras Gambit": "Duras-gambiet",
+  "family.Queen's Pawn": "Damepion",
+  "phrase.Two Knights": "van de twee paarden",
+  "phrase.Three Knights": "van de drie paarden",
+  "phrase.Four Knights": "van de vier paarden",
+  "phrase.Two Pawns": "van de twee pionnen",
+  "phrase.Three Pawns": "van de drie pionnen",
+  "phrase.Four Pawns": "van de vier pionnen",
+  "phrase.King's": "van de koning",
+  "phrase.Queen's": "van de dame",
+  "phrase.Bishop's": "van de loper",
+  "phrase.Knight's": "van het paard",
+  "phrase.Queen's Knight": "van het paard van de dame",
+  "phrase.King's Knight": "van het paard van de koning",
+  "phrase.Early Deviations": "vroege afwijkingen",
+  "phrase.Move Order": "zettenvolgorde",
+  "phrase.Kingside Move Order": "zettenvolgorde op de koningsvleugel",
+  "phrase.Queenside Move Order": "zettenvolgorde op de damevleugel",
+  "phrase.Pawn Push": "pionzet",
+  "phrase.Double-Dutch": "dubbel Hollands",
+  "phrase.King's English": "koningsengels",
+  "noun.Variation": [
+    "variant",
+    "m"
+  ],
+  "noun.Variations": [
+    "varianten",
+    "m"
+  ],
+  "noun.Attack": [
+    "aanval",
+    "m"
+  ],
+  "noun.Gambit": [
+    "gambiet",
+    "m"
+  ],
+  "noun.Countergambit": [
+    "tegengambiet",
+    "m"
+  ],
+  "noun.Defense": [
+    "verdediging",
+    "m"
+  ],
+  "noun.System": [
+    "systeem",
+    "m"
+  ],
+  "noun.Line": [
+    "lijn",
+    "m"
+  ],
+  "noun.Opening": [
+    "opening",
+    "m"
+  ],
+  "noun.Game": [
+    "spel",
+    "m"
+  ],
+  "noun.Formation": [
+    "formatie",
+    "m"
+  ],
+  "noun.Trap": [
+    "valstrik",
+    "m"
+  ],
+  "noun.Sacrifice": [
+    "offer",
+    "m"
+  ],
+  "noun.Endgame": [
+    "eindspel",
+    "m"
+  ],
+  "noun.Counterattack": [
+    "tegenaanval",
+    "m"
+  ],
+  "noun.Retreat": [
+    "terugtocht",
+    "m"
+  ],
+  "adjective.Classical": [
+    "klassiek",
+    "klassiek"
+  ],
+  "adjective.Modern": [
+    "modern",
+    "modern"
+  ],
+  "adjective.Closed": [
+    "gesloten",
+    "gesloten"
+  ],
+  "adjective.Open": [
+    "open",
+    "open"
+  ],
+  "adjective.Main": [
+    "hoofd",
+    "hoofd"
+  ],
+  "adjective.Normal": [
+    "normaal",
+    "normaal"
+  ],
+  "adjective.Orthodox": [
+    "orthodox",
+    "orthodox"
+  ],
+  "adjective.Accepted": [
+    "aangenomen",
+    "aangenomen"
+  ],
+  "adjective.Declined": [
+    "afgeslagen",
+    "afgeslagen"
+  ],
+  "adjective.Advance": [
+    "vooruitgeschoven",
+    "vooruitgeschoven"
+  ],
+  "adjective.Exchange": [
+    "ruil",
+    "ruil"
+  ],
+  "adjective.Symmetrical": [
+    "symmetrisch",
+    "symmetrisch"
+  ],
+  "adjective.Symmetric": [
+    "symmetrisch",
+    "symmetrisch"
+  ],
+  "adjective.Reversed": [
+    "omgekeerd",
+    "omgekeerd"
+  ],
+  "adjective.Accelerated": [
+    "versneld",
+    "versneld"
+  ],
+  "adjective.Hyperaccelerated": [
+    "hyperversneld",
+    "hyperversneld"
+  ],
+  "adjective.Delayed": [
+    "uitgesteld",
+    "uitgesteld"
+  ],
+  "adjective.Deferred": [
+    "uitgesteld",
+    "uitgesteld"
+  ],
+  "adjective.Quiet": [
+    "rustig",
+    "rustig"
+  ],
+  "adjective.Traditional": [
+    "traditioneel",
+    "traditioneel"
+  ],
+  "adjective.Positional": [
+    "positioneel",
+    "positioneel"
+  ],
+  "adjective.Double": [
+    "dubbel",
+    "dubbel"
+  ],
+  "adjective.Central": [
+    "centraal",
+    "centraal"
+  ],
+  "adjective.Old": [
+    "oud",
+    "oud"
+  ],
+  "adjective.Early": [
+    "vroeg",
+    "vroeg"
+  ],
+  "adjective.Long": [
+    "lang",
+    "lang"
+  ],
+  "adjective.Short": [
+    "kort",
+    "kort"
+  ],
+  "adjective.Improved": [
+    "verbeterd",
+    "verbeterd"
+  ],
+  "adjective.Original": [
+    "origineel",
+    "origineel"
+  ],
+  "adjective.Hybrid": [
+    "hybride",
+    "hybride"
+  ],
+  "adjective.Poisoned": [
+    "vergiftigd",
+    "vergiftigd"
+  ],
+  "adjective.Austrian": [
+    "Oostenrijks",
+    "Oostenrijks"
+  ],
+  "adjective.Russian": [
+    "Russisch",
+    "Russisch"
+  ],
+  "adjective.Italian": [
+    "Italiaans",
+    "Italiaans"
+  ],
+  "adjective.Spanish": [
+    "Spaans",
+    "Spaans"
+  ],
+  "adjective.English": [
+    "Engels",
+    "Engels"
+  ],
+  "adjective.Dutch": [
+    "Hollands",
+    "Hollands"
+  ],
+  "adjective.French": [
+    "Frans",
+    "Frans"
+  ],
+  "adjective.Polish": [
+    "Pools",
+    "Pools"
+  ],
+  "adjective.Hungarian": [
+    "Hongaars",
+    "Hongaars"
+  ],
+  "adjective.Czech": [
+    "Tsjechisch",
+    "Tsjechisch"
+  ],
+  "adjective.Portuguese": [
+    "Portugees",
+    "Portugees"
+  ],
+  "adjective.Norwegian": [
+    "Noors",
+    "Noors"
+  ],
+  "adjective.Swiss": [
+    "Zwitsers",
+    "Zwitsers"
+  ],
+  "adjective.Swedish": [
+    "Zweeds",
+    "Zweeds"
+  ],
+  "adjective.Siberian": [
+    "Siberisch",
+    "Siberisch"
+  ],
+  "adjective.Eastern": [
+    "oostelijk",
+    "oostelijk"
+  ],
+  "adjective.Western": [
+    "westelijk",
+    "westelijk"
+  ],
+  "adjective.Chinese": [
+    "Chinees",
+    "Chinees"
+  ],
+  "adjective.Yugoslav": [
+    "Joegoslavisch",
+    "Joegoslavisch"
+  ],
+  "adjective.Scandinavian": [
+    "Scandinavisch",
+    "Scandinavisch"
+  ],
+  "adjective.German": [
+    "Duits",
+    "Duits"
+  ],
+  "adjective.Ukrainian": [
+    "Oekraïens",
+    "Oekraïens"
+  ],
+  "adjective.Mexican": [
+    "Mexicaans",
+    "Mexicaans"
+  ],
+  "adjective.American": [
+    "Amerikaans",
+    "Amerikaans"
+  ],
+  "adjective.Argentine": [
+    "Argentijns",
+    "Argentijns"
+  ],
+  "adjective.Baltic": [
+    "Baltisch",
+    "Baltisch"
+  ],
+  "adjective.Sicilian": [
+    "Siciliaans",
+    "Siciliaans"
+  ],
+  "adjective.Slav": [
+    "Slavisch",
+    "Slavisch"
+  ],
+  "adjective.Indian": [
+    "Indisch",
+    "Indisch"
+  ],
+  "adjective.Wing": [
+    "flank",
+    "flank"
+  ],
+  "adjective.Center": [
+    "centrum",
+    "centrum"
+  ],
+  "adjective.Kingside": [
+    "koningsvleugel",
+    "koningsvleugel"
+  ],
+  "adjective.Queenside": [
+    "damevleugel",
+    "damevleugel"
+  ],
+  "adjective.Black": [
+    "zwart",
+    "zwart"
+  ],
+  "adjective.White": [
+    "wit",
+    "wit"
+  ],
+  "adjective.Check": [
+    "schaak",
+    "schaak"
+  ],
+  "adjective.Knight": [
+    "paard",
+    "paard"
+  ],
+  "adjective.Bishop": [
+    "loper",
+    "loper"
+  ],
+  "prefix.Neo": "neo",
+  "prefix.Anti": "anti",
+  "prefix.Semi": "semi",
+  "prefix.Pseudo": "pseudo",
+  "grammar.with": "met",
+  "grammar.feminine": [
+    "-"
+  ]
+}

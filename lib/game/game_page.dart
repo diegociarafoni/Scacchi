@@ -64,6 +64,7 @@ import 'challenge.dart';
 import 'chess_game.dart';
 import 'clock.dart';
 import 'clock_l10n.dart';
+import 'custom_clock_dialog.dart';
 import 'handicap.dart';
 import 'material.dart';
 import 'move_input.dart';
@@ -72,6 +73,7 @@ import 'move_speech.dart';
 import 'opponent_picker.dart';
 import 'sounds.dart';
 import 'speech_bubble.dart';
+import 'tap_assist.dart';
 import 'variant.dart';
 
 /// Semimosse minime perché una partita valga XP: abbandonare subito non deve
@@ -420,9 +422,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
               level: engineLevelForElo(saved.opponentElo ?? 1200).id,
             ),
     );
-    _beginGame(game, setup, null);
-    _gameId = saved.id;
-    _startedAt = saved.createdAt;
+    _beginGame(game, setup, null, resumeOf: saved);
   }
 
   bool get _isChallenge => widget.challenge != null;
@@ -991,9 +991,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   /// Inizia una nuova partita per progressi e archivio. Una posizione
   /// preparata con l'editor si archivia ma non vale XP.
-  void _startRecording({bool fromEditor = false}) {
-    _startedAt = _clockNow();
-    _gameId = 'game-${_startedAt.microsecondsSinceEpoch}';
+  void _startRecording({bool fromEditor = false, SavedGame? resumeOf}) {
+    _startedAt = resumeOf?.createdAt ?? _clockNow();
+    _gameId = resumeOf?.id ?? 'game-${_startedAt.microsecondsSinceEpoch}';
     _fromEditor = fromEditor;
   }
 
@@ -1419,12 +1419,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final position = _game.position;
     // Tempo residuo di chi muove dopo la mossa, incremento compreso (RF-67);
     // la prima mossa avvia l'orologio e non lo incrementa.
-    final left = clock == null
-        ? null
-        : clock.remaining(position.turn) +
-              (clock.isRunning
-                  ? Duration(seconds: clock.control.increment)
-                  : Duration.zero);
+    final left = clock?.remainingAfterMove(position.turn);
     if (!_game.play(move, clock: left)) return false;
     final spoken = describeSan(
       _l10n(context),
@@ -1467,7 +1462,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     if (clock != null) {
       level = level.withinClock(
         clock.remaining(side),
-        Duration(seconds: clock.control.increment),
+        Duration(seconds: clock.control.increment + clock.control.delay),
       );
     }
     _refresh(animate: false);
@@ -1638,6 +1633,21 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     if (_viewPly != null || _game.isOver || !_humanToMove) return false;
     final position = _game.position;
     return position.board.sideAt(square) == position.turn;
+  }
+
+  /// Case dove può andare il pezzo su [from], senza le promozioni, che hanno
+  /// bisogno del selettore.
+  Set<Square> _tapTargets(Square from) {
+    final position = _game.position;
+    final moves = makeLegalMoves(position)[from];
+    if (moves == null || position.board.sideAt(from) != position.turn) {
+      return const {};
+    }
+    final pawn = position.board.roleAt(from) == Role.pawn;
+    return {
+      for (final to in moves)
+        if (!(pawn && (to.rank == Rank.first || to.rank == Rank.eighth))) to,
+    };
   }
 
   /// Scorrimento sulla scacchiera: a sinistra avanti, a destra indietro.
@@ -1895,6 +1905,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     bool fromEditor = false,
     Handicap? handicap,
     Side? humanSide,
+    SavedGame? resumeOf,
   }) {
     assert(
       handicap == null || humanSide != null,
@@ -1916,7 +1927,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _clockHistory.clear();
     _lowTime.reset();
     _clearBoardInteraction();
-    _startRecording(fromEditor: fromEditor);
+    _startRecording(fromEditor: fromEditor, resumeOf: resumeOf);
     if (setup.opponent != Opponent.human) {
       final human = humanSide ?? setup.resolveHumanSide(_random);
       _handicapHuman = human;
@@ -2659,7 +2670,11 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                         constraints.maxHeight - 2 * _moveStripHeight,
                       ),
                     );
-              final boardSettings = _settings.board;
+              final boardSettings = _settings.boardFor(
+                phone:
+                    MediaQuery.sizeOf(context).shortestSide <
+                    MoveMethod.phoneWidth,
+              );
               final board = BoardFrame.of(
                 _settings,
                 size: boardSize,
@@ -2675,21 +2690,35 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                   shapeOf: (color, orig, dest) => dest == null
                       ? _settings.marks.circle(color, orig)
                       : _settings.marks.arrow(color, orig, dest),
-                  builder: (marks) => BoardSwipe(
-                    enabled: _pendingMove == null && _game.moves.isNotEmpty,
+                  builder: (marks) => TapAssist(
                     size: size,
                     orientation: _orientation,
-                    canStartAt: _canDragFrom,
-                    blocked: _drawing,
-                    onSwipe: _swipe,
-                    child: Chessboard(
+                    enabled:
+                        boardSettings.pieceShiftMethod !=
+                            PieceShiftMethod.drag &&
+                        _humanToMove &&
+                        _viewPly == null &&
+                        _pendingMove == null,
+                    resetKey: _game.position.fen,
+                    destinations: _tapTargets,
+                    onMove: (from, to) =>
+                        _onMove(NormalMove(from: from, to: to)),
+                    child: BoardSwipe(
+                      enabled: _pendingMove == null && _game.moves.isNotEmpty,
                       size: size,
-                      controller: _board,
                       orientation: _orientation,
-                      onMove: _onMove,
-                      settings: boardSettings,
-                      annotations: _badgeAnnotations(),
-                      shapes: {..._visibleHint(), ...marks},
+                      canStartAt: _canDragFrom,
+                      blocked: _drawing,
+                      onSwipe: _swipe,
+                      child: Chessboard(
+                        size: size,
+                        controller: _board,
+                        orientation: _orientation,
+                        onMove: _onMove,
+                        settings: boardSettings,
+                        annotations: _badgeAnnotations(),
+                        shapes: {..._visibleHint(), ...marks},
+                      ),
                     ),
                   ),
                 ),
@@ -2732,6 +2761,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                     : ChessGame.replay(
                             _game.initial,
                             _game.moves.take(viewPly + 1).map((m) => m.move),
+                            variant: _game.variant,
                           ) ??
                           _game,
               );
@@ -3505,7 +3535,7 @@ class _MaterialRow extends StatelessWidget {
           : l10n.gameMaterialWho(name!, side.name),
       captured.isEmpty ? 'none' : 'some',
       captured.map((r) => l10n.gamePieceName(r.name)).join(', '),
-      advantage,
+      math.max(0, advantage),
     );
     final material = Semantics(
       label: description,
@@ -3949,6 +3979,27 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
           Text(l10n.gameTimeControlTitle, style: theme.textTheme.titleSmall),
           const SizedBox(height: 4),
           chip(noClock, null),
+          const SizedBox(height: 8),
+          ActionChip(
+            key: const ValueKey('clock-custom'),
+            avatar: const Icon(Icons.tune, size: 18),
+            label: Text(l10n.gameClockCustom),
+            onPressed: () async {
+              final control = await showCustomClockDialog(context);
+              if (control == null || !context.mounted) return;
+              Navigator.pop(
+                context,
+                _TimeChoice(
+                  control,
+                  _variant,
+                  _white.text,
+                  _black.text,
+                  _setup,
+                  _handicap,
+                ),
+              );
+            },
+          ),
           for (final entry in groups.entries) ...[
             const SizedBox(height: 12),
             Text(

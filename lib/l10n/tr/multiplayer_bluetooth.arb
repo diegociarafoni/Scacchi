@@ -1,0 +1,39 @@
+{
+  "multiplayerChannelLabel": "Nasıl bağlanılsın",
+  "@multiplayerChannelLabel": {
+    "description": "Label of the Wi-Fi or Bluetooth choice in the Play with a friend screen"
+  },
+  "multiplayerChannelWifi": "Wi-Fi",
+  "@multiplayerChannelWifi": {
+    "description": "Connect over Wi-Fi or a hotspot"
+  },
+  "multiplayerChannelBluetooth": "Bluetooth",
+  "@multiplayerChannelBluetooth": {
+    "description": "Connect over Bluetooth, no Wi-Fi needed"
+  },
+  "multiplayerChannelRemote": "Uzaktan",
+  "@multiplayerChannelRemote": {
+    "description": "Connect over the internet, to play from far away"
+  },
+  "multiplayerWifiHint": "Wi-Fi'da ya da bir telefonun hotspot'unda aynı ağ üzerinden bağlanırsınız: internet gerekmez.",
+  "multiplayerBluetoothHint": "Bluetooth ile iki telefon birbirine yakın olmalıdır ve ağ gerekmez.",
+  "@multiplayerBluetoothHint": {
+    "description": "Explanation under the Bluetooth choice"
+  },
+  "multiplayerBluetoothInviteHint": "Telefonları yakın tut: hamleler Bluetooth ile gider.",
+  "@multiplayerBluetoothInviteHint": {
+    "description": "Under the QR of a Bluetooth game, while waiting for the opponent"
+  },
+  "multiplayerBluetoothOff": "Bluetooth'u aç, sonra tekrar dene.",
+  "@multiplayerBluetoothOff": {
+    "description": "Notice when Bluetooth is off"
+  },
+  "multiplayerBluetoothDenied": "Bluetooth izni gerekiyor: telefon ayarlarından izin ver, sonra tekrar dene.",
+  "@multiplayerBluetoothDenied": {
+    "description": "Notice when the Bluetooth permission is denied"
+  },
+  "multiplayerBluetoothUnsupported": "Bu telefon Bluetooth Low Energy desteklemiyor.",
+  "@multiplayerBluetoothUnsupported": {
+    "description": "Notice when the phone has no Bluetooth LE"
+  }
+}

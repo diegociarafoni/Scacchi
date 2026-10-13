@@ -1,0 +1,14 @@
+{
+  "queen-mate.title": "König und Dame gegen König",
+  "queen-mate.intro": "Ziel: Schachmatt setzen. Sperre den gegnerischen König mit der Dame in einen immer kleineren Käfig ein und hole dann deinen eigenen König heran. Vorsicht vor Patt!",
+  "rook-mate.title": "König und Turm gegen König",
+  "rook-mate.intro": "Ziel: Schachmatt setzen. Der Turm schneidet die Reihen ab und der König hilft ihm: Treibt den gegnerischen König gemeinsam an den Rand.",
+  "king-pawn.title": "König und Bauer gegen König",
+  "king-pawn.intro": "Ziel: den Bauern umwandeln. Bring deinen König vor den Bauern und nimm die Opposition ein: Der Bauer kommt nur ans Ende, wenn dein König den Weg freimacht.",
+  "lucena.title": "Die Lucena-Stellung",
+  "lucena.intro": "Ziel: den Bauern umwandeln. Dein König ist vor dem Bauern eingesperrt: Vertreibe den gegnerischen König mit dem Turm und baue dann die „Brücke“, die dich vor Schachs schützt.",
+  "philidor.title": "Die Philidor-Stellung",
+  "philidor.intro": "Ziel: {par} Züge lang nicht verlieren. Du spielst Schwarz: Halte den Turm auf der sechsten Reihe, bis der Bauer vorrückt, dann bring ihn nach hinten und gib von hinten Schach.",
+  "bishop-knight.title": "Läufer und Springer",
+  "bishop-knight.intro": "Ziel: Schachmatt setzen. Es ist das schwerste Matt: Treibe den gegnerischen König in eine Ecke von der Farbe deines Läufers. Du hast 50 Züge, danach ist die Partie Remis."
+}

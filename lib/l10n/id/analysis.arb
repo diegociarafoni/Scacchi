@@ -1,0 +1,42 @@
+{
+  "analysisTitle": "Analisis",
+  "analysisBestMoveArrow": "Panah langkah terbaik",
+  "analysisThreatArrow": "Ancaman lawan",
+  "analysisOneLine": "1 jalur",
+  "analysisTwoLines": "2 jalur",
+  "analysisThreeLines": "3 jalur",
+  "analysisEngineUnavailable": "Mesin tidak tersedia",
+  "analysisPaused": "Analisis dijeda",
+  "analysisGameOver": "Permainan selesai",
+  "analysisThinking": "Menganalisis…",
+  "analysisDepth": "Kedalaman {depth}",
+  "@analysisDepth": {
+    "placeholders": {
+      "depth": {
+        "type": "int"
+      }
+    }
+  },
+  "analysisPromote": "Jadikan jalur utama",
+  "analysisDelete": "Hapus langkah ini dan semua langkah sesudahnya",
+  "analysisBack": "Mundur",
+  "analysisForward": "Maju",
+  "analysisResume": "Lanjutkan analisis",
+  "analysisPause": "Jeda analisis",
+  "analysisMore": "Tindakan lainnya",
+  "analysisSave": "Simpan ke arsip",
+  "analysisSharePgn": "Bagikan PGN",
+  "analysisSaveTitle": "Nama analisis",
+  "analysisDefaultName": "Analisis tanggal {date}",
+  "@analysisDefaultName": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "analysisSaved": "Analisis disimpan ke arsip",
+  "analysisSaveFailed": "Gagal menyimpan",
+  "analysisSaveConfirm": "Simpan",
+  "analysisCancel": "Batal"
+}

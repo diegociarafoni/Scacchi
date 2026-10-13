@@ -1,0 +1,118 @@
+{
+  "mastersTitle": "Великие мастера",
+  "@mastersTitle": {
+    "description": "Titolo dell'elenco delle partite celebri"
+  },
+  "mastersStars": "{stars, plural, one{{stars} звезда} few{{stars} звезды} many{{stars} звёзд} other{{stars} звезды}} из 3",
+  "@mastersStars": {
+    "description": "Etichetta per i lettori di schermo delle stelle di una partita",
+    "placeholders": {
+      "stars": {
+        "type": "int"
+      }
+    }
+  },
+  "mastersFlipBoard": "Перевернуть доску",
+  "@mastersFlipBoard": {
+    "description": "Tooltip del pulsante che capovolge la scacchiera"
+  },
+  "mastersStartPosition": "Начальная позиция",
+  "@mastersStartPosition": {
+    "description": "Titolo della partita prima della prima mossa"
+  },
+  "mastersWhiteWins": "Белые выигрывают",
+  "@mastersWhiteWins": {
+    "description": "Esito di una partita vinta dal Bianco"
+  },
+  "mastersBlackWins": "Чёрные выигрывают",
+  "@mastersBlackWins": {
+    "description": "Esito di una partita vinta dal Nero"
+  },
+  "mastersDraw": "Ничья",
+  "@mastersDraw": {
+    "description": "Esito di una partita patta"
+  },
+  "mastersFirstMove": "В начало",
+  "@mastersFirstMove": {
+    "description": "Tooltip del pulsante che torna alla posizione iniziale"
+  },
+  "mastersPreviousMove": "Предыдущий ход",
+  "@mastersPreviousMove": {
+    "description": "Tooltip del pulsante che torna indietro di una mossa"
+  },
+  "mastersNextMove": "Следующий ход",
+  "@mastersNextMove": {
+    "description": "Tooltip del pulsante che avanza di una mossa"
+  },
+  "mastersLastMove": "В конец",
+  "@mastersLastMove": {
+    "description": "Tooltip del pulsante che va all'ultima mossa"
+  },
+  "mastersGuessWhite": "Угадывать ходы за белых",
+  "@mastersGuessWhite": {
+    "description": "Pulsante che avvia «Indovina la mossa» giocando con il Bianco"
+  },
+  "mastersGuessBlack": "Угадывать ходы за чёрных",
+  "@mastersGuessBlack": {
+    "description": "Pulsante che avvia «Indovina la mossa» giocando con il Nero"
+  },
+  "mastersYourTurnWhite": "Твой ход за белых: угадай ход мастера.",
+  "@mastersYourTurnWhite": {
+    "description": "Invito durante «Indovina la mossa» quando si gioca con il Bianco"
+  },
+  "mastersYourTurnBlack": "Твой ход за чёрных: угадай ход мастера.",
+  "@mastersYourTurnBlack": {
+    "description": "Invito durante «Indovina la mossa» quando si gioca con il Nero"
+  },
+  "mastersGuessed": "Угадано ходов: {correct} из {attempts}",
+  "@mastersGuessed": {
+    "description": "Punteggio parziale di «Indovina la mossa»",
+    "placeholders": {
+      "correct": {
+        "type": "int"
+      },
+      "attempts": {
+        "type": "int"
+      }
+    }
+  },
+  "mastersSameAsMaster": "Как у мастера! {move}.",
+  "@mastersSameAsMaster": {
+    "description": "Esito di una mossa uguale a quella del maestro; {move} è la mossa con il numero",
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "mastersMasterPlayed": "Мастер сыграл {move}.",
+  "@mastersMasterPlayed": {
+    "description": "Esito di una mossa diversa da quella del maestro; {move} è la mossa del maestro con il numero",
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "mastersReply": "Ответ: {move}.",
+  "@mastersReply": {
+    "description": "Segue l'esito: la risposta dell'avversario nella partita storica",
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "mastersFinished": "Партия окончена",
+  "@mastersFinished": {
+    "description": "Titolo dell'esito a fine «Indovina la mossa»"
+  },
+  "mastersReplay": "Сыграть снова",
+  "@mastersReplay": {
+    "description": "Pulsante che rifà «Indovina la mossa» dall'inizio"
+  },
+  "mastersDone": "Готово",
+  "@mastersDone": {
+    "description": "Pulsante che chiude l'esito"
+  }
+}

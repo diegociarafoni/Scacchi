@@ -22,5 +22,21 @@
   "analysisBack": "Back",
   "analysisForward": "Forward",
   "analysisResume": "Resume analysis",
-  "analysisPause": "Pause analysis"
+  "analysisPause": "Pause analysis",
+  "analysisMore": "More actions",
+  "analysisSave": "Save to the archive",
+  "analysisSharePgn": "Share the PGN",
+  "analysisSaveTitle": "Analysis name",
+  "analysisDefaultName": "Analysis of {date}",
+  "@analysisDefaultName": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "analysisSaved": "Analysis saved to the archive",
+  "analysisSaveFailed": "Could not save",
+  "analysisSaveConfirm": "Save",
+  "analysisCancel": "Cancel"
 }

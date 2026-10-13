@@ -1,0 +1,614 @@
+{
+  "achievementFirstGameTitle": "Первая партия",
+  "achievementFirstGameDesc": "Сыграй свою первую партию.",
+  "achievementFirstWinTitle": "Первая победа",
+  "achievementFirstWinDesc": "Выиграй партию.",
+  "achievementFirstDrawTitle": "Рукопожатие",
+  "achievementFirstDrawDesc": "Сыграй партию вничью.",
+  "achievementGames10Title": "Десять партий",
+  "achievementGames10Desc": "Сыграй 10 партий.",
+  "achievementGames100Title": "Сто партий",
+  "achievementGames100Desc": "Сыграй 100 партий.",
+  "achievementKnightMateTitle": "Рыцарь в сияющих доспехах",
+  "achievementKnightMateDesc": "Поставь мат конём.",
+  "achievementPawnMateTitle": "Скромный герой",
+  "achievementPawnMateDesc": "Поставь мат пешкой.",
+  "achievementLongCastleWinTitle": "Длинная рокировка",
+  "achievementLongCastleWinDesc": "Выиграй партию, в которой ты сделал длинную рокировку.",
+  "achievementPuzzles10Title": "Тактический глаз",
+  "achievementPuzzles10Desc": "Реши 10 задач.",
+  "achievementPuzzles100Title": "Охотник за тактикой",
+  "achievementPuzzles100Desc": "Реши 100 задач.",
+  "achievementStreak3Title": "Три дня подряд",
+  "achievementStreak3Desc": "Выполни цель 3 дня подряд.",
+  "achievementStreak7Title": "Неделя",
+  "achievementStreak7Desc": "Выполни цель 7 дней подряд.",
+  "achievementStreak30Title": "Месяц",
+  "achievementStreak30Desc": "Выполни цель 30 дней подряд.",
+  "achievementFirstLessonTitle": "Первый урок",
+  "achievementFirstLessonDesc": "Пройди урок.",
+  "achievementFirstReviewTitle": "Свет мой, зеркальце",
+  "achievementFirstReviewDesc": "Разбери свою партию.",
+  "achievementLevel5Title": "Уровень 5",
+  "achievementLevel5Desc": "Достигни 5-го уровня.",
+  "achievementLevel10Title": "Уровень 10",
+  "achievementLevel10Desc": "Достигни 10-го уровня.",
+  "achievementWins10Title": "Десять побед",
+  "achievementWins10Desc": "Выиграй 10 партий.",
+  "achievementWins50Title": "Пятьдесят побед",
+  "achievementWins50Desc": "Выиграй 50 партий.",
+  "achievementWinBlackTitle": "Тёмная сторона",
+  "achievementWinBlackDesc": "Выиграй партию за чёрных.",
+  "achievementMiniatureTitle": "Миниатюра",
+  "achievementMiniatureDesc": "Поставь мат быстрее чем за 20 ходов.",
+  "achievementBeat1500Title": "Серьёзный соперник",
+  "achievementBeat1500Desc": "Победи бота с рейтингом Elo 1500 или выше.",
+  "achievementBeat2000Title": "Победитель великанов",
+  "achievementBeat2000Desc": "Победи бота с рейтингом Elo 1850 или выше.",
+  "achievementBrilliantTitle": "Блестяще!",
+  "achievementBrilliantDesc": "Найди блестящий ход в одной из своих партий.",
+  "achievementPuzzleFork10Title": "Мастер вилок",
+  "achievementPuzzleFork10Desc": "Реши 10 задач на вилку.",
+  "achievementPuzzleMate10Title": "Мат!",
+  "achievementPuzzleMate10Desc": "Реши 10 задач на мат.",
+  "achievementPuzzleRating1500Title": "Тактик",
+  "achievementPuzzleRating1500Desc": "Достигни рейтинга 1500 в задачах.",
+  "achievementPuzzleRun20Title": "В ударе",
+  "achievementPuzzleRun20Desc": "Набери 20 очков в режиме на время или на серию.",
+  "achievementChallengesAllTitle": "Идеальный день",
+  "achievementChallengesAllDesc": "Выполни все три ежедневных задания.",
+  "achievementChallenges10Title": "Любитель вызовов",
+  "achievementChallenges10Desc": "Выполни 10 ежедневных заданий.",
+  "achievementReviews10Title": "Строгий к себе",
+  "achievementReviews10Desc": "Разбери 10 партий.",
+  "achievementAccuracy90Title": "Хирургическая точность",
+  "achievementAccuracy90Desc": "Сыграй партию с точностью 90% или выше.",
+  "achievementLessons10Title": "Ученик",
+  "achievementLessons10Desc": "Пройди 10 уроков.",
+  "achievementCoordinates20Title": "Орлиный глаз",
+  "achievementCoordinates20Desc": "Найди 20 полей за один заход на время.",
+  "achievementMinigamesAllTitle": "Жонглёр",
+  "achievementMinigamesAllDesc": "Попробуй все мини-игры.",
+  "achievementTournamentDoneTitle": "Турнирный боец",
+  "achievementTournamentDoneDesc": "Доиграй турнир против ботов до конца.",
+  "achievementTournamentWonTitle": "Полка с кубками",
+  "achievementTournamentWonDesc": "Выиграй турнир против ботов.",
+  "progressRequirementLevel": "Уровень {level}",
+  "@progressRequirementLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "progressRequirementAchievement": "Достижение «{title}»",
+  "@progressRequirementAchievement": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "progressRewardTheme": "Тема «{name}»",
+  "@progressRewardTheme": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "progressRewardPieces": "Фигуры «{name}»",
+  "@progressRewardPieces": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "progressRewardAvatar": "Аватар «{name}»",
+  "@progressRewardAvatar": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "progressRewardFrame": "Рамка «{name}»",
+  "@progressRewardFrame": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "progressGoalGames": "{count, plural, one{{count} партия} few{{count} партии} many{{count} партий} other{{count} партии}}",
+  "@progressGoalGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressGoalPuzzles": "{count, plural, one{{count} задача} few{{count} задачи} many{{count} задач} other{{count} задачи}}",
+  "@progressGoalPuzzles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressGoalMinutes": "{count, plural, one{{count} минута} few{{count} минуты} many{{count} минут} other{{count} минуты}}",
+  "@progressGoalMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDaysCount": "{count, plural, one{{count} день} few{{count} дня} many{{count} дней} other{{count} дня}}",
+  "@progressDaysCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressStreakNeedGames": "Чтобы серия не прервалась, каждый день: {goal}.",
+  "@progressStreakNeedGames": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "progressStreakNeedPuzzles": "Чтобы серия не прервалась, каждый день: {goal}.",
+  "@progressStreakNeedPuzzles": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "progressStreakNeedMinutes": "Чтобы серия не прервалась, каждый день: {goal}.",
+  "@progressStreakNeedMinutes": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "progressStreakLeftGames": "{count, plural, one{Осталась {count} партия} few{Осталось {count} партии} many{Осталось {count} партий} other{Осталось {count} партии}}",
+  "@progressStreakLeftGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressStreakLeftPuzzles": "{count, plural, one{Осталась {count} задача} few{Осталось {count} задачи} many{Осталось {count} задач} other{Осталось {count} задачи}}",
+  "@progressStreakLeftPuzzles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressStreakLeftMinutes": "{count, plural, one{Осталась {count} минута} few{Осталось {count} минуты} many{Осталось {count} минут} other{Осталось {count} минуты}}",
+  "@progressStreakLeftMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressStreakTodayDone": "Сегодня всё готово. Серия в безопасности до завтра.",
+  "progressStreakTodayRest": "Сегодня твой день отдыха: серия не прервётся.",
+  "progressStreakTodayTodo": "Сегодня ещё не выполнено. {left}.",
+  "@progressStreakTodayTodo": {
+    "placeholders": {
+      "left": {
+        "type": "String"
+      }
+    }
+  },
+  "progressStreakSummaryDone": "Сегодня: готово",
+  "progressStreakSummaryRest": "Сегодня: день отдыха",
+  "progressStreakSummaryTodo": "Сегодня: ещё нет",
+  "progressStreakNext": "Следующая веха: {days} подряд ({missing, plural, one{остался {missing}} few{осталось {missing}} many{осталось {missing}} other{осталось {missing}}}).",
+  "@progressStreakNext": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      },
+      "missing": {
+        "type": "int"
+      }
+    }
+  },
+  "progressStreakSkipNone": "Выполни цель сегодня, чтобы начать серию.",
+  "progressStreakSkipFreeze": "Если пропустишь день, его прикроет заморозка серии (у тебя их: {count}). Одну ты получаешь за каждые 7 дней, максимум 2.",
+  "@progressStreakSkipFreeze": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressStreakSkipReset": "Если пропустишь день, серия начнётся заново; твой рекорд в {days} останется. За каждые 7 дней серии ты получаешь заморозку.",
+  "@progressStreakSkipReset": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "progressChallengePlayGames": "{count, plural, one{Сыграй {count} партию} few{Сыграй {count} партии} many{Сыграй {count} партий} other{Сыграй {count} партии}}",
+  "@progressChallengePlayGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeWinGames": "{count, plural, one{Выиграй {count} партию} few{Выиграй {count} партии} many{Выиграй {count} партий} other{Выиграй {count} партии}}",
+  "@progressChallengeWinGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeWinWhite": "Выиграй за белых",
+  "progressChallengeWinBlack": "Выиграй за чёрных",
+  "progressChallengeWinShort": "Поставь мат не более чем за {moves} ходов",
+  "@progressChallengeWinShort": {
+    "placeholders": {
+      "moves": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeSolvePuzzles": "{count, plural, one{Реши {count} задачу} few{Реши {count} задачи} many{Реши {count} задач} other{Реши {count} задачи}}",
+  "@progressChallengeSolvePuzzles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeForkPuzzles": "{count, plural, one{Реши {count} задачу на вилку} few{Реши {count} задачи на вилку} many{Реши {count} задач на вилку} other{Реши {count} задачи на вилку}}",
+  "@progressChallengeForkPuzzles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeMatePuzzles": "{count, plural, one{Реши {count} задачу на мат} few{Реши {count} задачи на мат} many{Реши {count} задач на мат} other{Реши {count} задачи на мат}}",
+  "@progressChallengeMatePuzzles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeReviewGame": "{count, plural, one{Разбери {count} партию} few{Разбери {count} партии} many{Разбери {count} партий} other{Разбери {count} партии}}",
+  "@progressChallengeReviewGame": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeCompleteLesson": "{count, plural, one{Пройди {count} урок} few{Пройди {count} урока} many{Пройди {count} уроков} other{Пройди {count} урока}}",
+  "@progressChallengeCompleteLesson": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeGoalDays": "Дней с выполненной целью: {count}",
+  "@progressChallengeGoalDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressRecordStrongestBot": "Самый сильный побеждённый бот",
+  "progressRecordFastestWin": "Самый быстрый мат",
+  "progressRecordBestAccuracy": "Лучшая точность",
+  "progressRecordPuzzleRating": "Рейтинг в задачах",
+  "progressRecordPuzzleRun": "Очки на время",
+  "progressRecordMinigame": "Очки в мини-игре",
+  "progressRecordsTitle": "Личные рекорды",
+  "progressRecordLongestStreak": "Самая длинная серия",
+  "progressRecordElo": "{elo} Elo",
+  "@progressRecordElo": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "progressRecordMoves": "{count, plural, one{{count} ход} few{{count} хода} many{{count} ходов} other{{count} хода}}",
+  "@progressRecordMoves": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressRecordPuzzleRunMode": "{record} ({mode})",
+  "@progressRecordPuzzleRunMode": {
+    "placeholders": {
+      "record": {
+        "type": "String"
+      },
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "progressFeedbackXp": "+{xp} XP",
+  "@progressFeedbackXp": {
+    "placeholders": {
+      "xp": {
+        "type": "int"
+      }
+    }
+  },
+  "progressFeedbackGoal": "Цель на сегодня выполнена",
+  "progressFeedbackLevel": "Уровень {level}!",
+  "@progressFeedbackLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "progressFeedbackFreeze": "Ты получил заморозку серии",
+  "progressFeedbackChallenge": "Задание выполнено: {title}",
+  "@progressFeedbackChallenge": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "progressFeedbackWeekly": "Задание недели выполнено",
+  "progressFeedbackRecord": "Новый рекорд: {record}",
+  "@progressFeedbackRecord": {
+    "placeholders": {
+      "record": {
+        "type": "String"
+      }
+    }
+  },
+  "progressFeedbackAchievement": "Достижение: {title}",
+  "@progressFeedbackAchievement": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "progressFeedbackReward": "Открыто: {reward}",
+  "@progressFeedbackReward": {
+    "placeholders": {
+      "reward": {
+        "type": "String"
+      }
+    }
+  },
+  "progressProfileTitle": "Профиль",
+  "progressLevel": "Уровень {level}",
+  "@progressLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChangeAvatar": "Сменить аватар и рамку",
+  "progressLevelSemantics": "Прогресс уровня: {xp} из {next} XP",
+  "@progressLevelSemantics": {
+    "placeholders": {
+      "xp": {
+        "type": "int"
+      },
+      "next": {
+        "type": "int"
+      }
+    }
+  },
+  "progressXpOf": "{xp} / {next} XP",
+  "@progressXpOf": {
+    "placeholders": {
+      "xp": {
+        "type": "int"
+      },
+      "next": {
+        "type": "int"
+      }
+    }
+  },
+  "progressAvatarSemantics": "Аватар: {name}",
+  "@progressAvatarSemantics": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "progressAvatarFrameSemantics": "Аватар: {name}, рамка «{frame}»",
+  "@progressAvatarFrameSemantics": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "frame": {
+        "type": "String"
+      }
+    }
+  },
+  "progressAvatarTitle": "Аватар",
+  "progressFrameTitle": "Рамка",
+  "progressLockedSemantics": "{label}, откроется: {requirement}",
+  "@progressLockedSemantics": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "requirement": {
+        "type": "String"
+      }
+    }
+  },
+  "progressStreakIcon": "Серия",
+  "progressStreakDays": "{count, plural, one{{count} день подряд} few{{count} дня подряд} many{{count} дней подряд} other{{count} дня подряд}}",
+  "@progressStreakDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressBestStreak": "Рекорд: {count}",
+  "@progressBestStreak": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressFreezes": "{count, plural, one{{count} заморозка серии} few{{count} заморозки серии} many{{count} заморозок серии} other{{count} заморозки серии}}",
+  "@progressFreezes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressGoalSemantics": "Цель на сегодня: {progress} из {target}",
+  "@progressGoalSemantics": {
+    "placeholders": {
+      "progress": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "progressGoalReachedLine": "Цель выполнена: {progress} / {target} {unit}",
+  "@progressGoalReachedLine": {
+    "placeholders": {
+      "progress": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "progressGoalTodayLine": "Цель на сегодня: {progress} / {target} {unit}",
+  "@progressGoalTodayLine": {
+    "placeholders": {
+      "progress": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "progressUnitGames": "партий",
+  "progressUnitPuzzles": "задач",
+  "progressUnitMinutes": "минут",
+  "progressAchievementsTitle": "Достижения",
+  "progressAchievementEarned": "{title}, получено. {description}",
+  "@progressAchievementEarned": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "description": {
+        "type": "String"
+      }
+    }
+  },
+  "progressAchievementLocked": "{title}, ещё не получено. {description}",
+  "@progressAchievementLocked": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "description": {
+        "type": "String"
+      }
+    }
+  },
+  "progressChallengesToday": "Задания на сегодня",
+  "progressChallengesWeekly": "Задание недели",
+  "progressChallengeDone": "Выполнено",
+  "progressChallengeTodo": "Ещё не выполнено",
+  "progressChallengeCount": "{done} из {target}",
+  "@progressChallengeCount": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "progressSettingsTitle": "Настройки",
+  "progressTrackingTitle": "XP, серии и достижения",
+  "progressTrackingOff": "Когда выключено, ничего не записывается.",
+  "progressDailyGoal": "Цель на день",
+  "progressRestDay": "День отдыха",
+  "progressRestDayHint": "Серия не прерывается.",
+  "progressRestDayNone": "Нет",
+  "progressWeekdayMonday": "Понедельник",
+  "progressWeekdayTuesday": "Вторник",
+  "progressWeekdayWednesday": "Среда",
+  "progressWeekdayThursday": "Четверг",
+  "progressWeekdayFriday": "Пятница",
+  "progressWeekdaySaturday": "Суббота",
+  "progressWeekdaySunday": "Воскресенье",
+  "progressReminder": "Ежедневное напоминание",
+  "progressReminderHint": "Одно уведомление в день, только если цель ещё не выполнена.",
+  "progressReminderTime": "Время напоминания",
+  "progressReminderDenied": "Без разрешения на уведомления напоминание остаётся выключенным.",
+  "progressCancel": "Отмена",
+  "progressConfirm": "Подтвердить",
+  "progressReminderBodyStreak": "Серия: {days}. Чтобы её продолжить, достаточно: {goal}.",
+  "@progressReminderBodyStreak": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      },
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "progressReminderBodyGoal": "Цель на сегодня: {goal}.",
+  "@progressReminderBodyGoal": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "progressReminderChannelDescription": "Один раз напоминает о цели дня."
+}

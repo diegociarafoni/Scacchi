@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import 'master_game.dart';
 import 'master_game_page.dart';
 import 'master_games.dart';
@@ -20,8 +21,9 @@ class MastersPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Grandi maestri')),
+      appBar: AppBar(title: Text(l10n.mastersTitle)),
       body: ListenableBuilder(
         listenable: controller,
         builder: (context, _) {
@@ -35,7 +37,9 @@ class MastersPage extends StatelessWidget {
                   trailing: Text(
                     '${'★' * progress.starsFor(game.id)}'
                     '${'☆' * (3 - progress.starsFor(game.id))}',
-                    semanticsLabel: '${progress.starsFor(game.id)} stelle su 3',
+                    semanticsLabel: l10n.mastersStars(
+                      progress.starsFor(game.id),
+                    ),
                     style: TextStyle(
                       fontSize: 20,
                       color: Theme.of(context).colorScheme.tertiary,

@@ -1,0 +1,45 @@
+{
+  "archiveShareSubject": "PGN-Partien",
+  "archiveTitle": "Partien",
+  "archiveImportResult": "{count, plural, one{1 Partie importiert} other{{count} Partien importiert}}{skipped, plural, =0{} other{, {skipped} ungültig}}",
+  "@archiveImportResult": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "skipped": {
+        "type": "int"
+      }
+    }
+  },
+  "archiveDeleteTitle": "Diese Partie löschen?",
+  "archiveCancel": "Abbrechen",
+  "archiveDelete": "Löschen",
+  "archivePgnCopied": "PGN kopiert",
+  "archiveImportPgn": "PGN importieren",
+  "archiveExportAll": "Alle als PGN exportieren",
+  "archiveUnreadable": "Das Archiv konnte nicht gelesen werden.",
+  "archiveSearchHint": "Nach Spieler oder Art suchen",
+  "archiveEmpty": "Keine gespeicherten Partien.",
+  "archiveNoMatch": "Keine Partien gefunden.",
+  "archiveInProgress": "Läuft",
+  "archiveActionsFor": "Aktionen für {title}",
+  "@archiveActionsFor": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "archiveSharePgn": "PGN teilen",
+  "archiveCopyPgn": "PGN kopieren",
+  "archiveImportHint": "Füge hier eine oder mehrere PGN-Partien ein",
+  "archivePaste": "Einfügen",
+  "archiveImport": "Importieren",
+  "archiveModeLocal": "lokal",
+  "archiveModeComputer": "Computer",
+  "archiveModeImported": "importiert",
+  "archiveModePhysical": "echtes Brett",
+  "archiveModeAnalysis": "Analyse",
+  "archiveOpenAnalysis": "In der Analyse öffnen"
+}

@@ -1,0 +1,15 @@
+{
+  "aboutTitle": "Info",
+  "aboutEntrySubtitle": "Lizenz, Quellcode, Datenschutz und Danksagungen",
+  "aboutTagline": "Freies Schach, auch ohne Verbindung",
+  "aboutPrivacy": "Datenschutz",
+  "aboutPrivacyDescription": "Keine Daten erhoben, keine Werbung, kein Tracking. Bei Fernpartien laufen die Züge verschlüsselt und nur über die für die Partie gewählten Server",
+  "aboutLicense": "Lizenz",
+  "aboutLicenseDescription": "Freie Software, GPL-3.0 oder neuer, mit einer zusätzlichen Erlaubnis für die Verbreitung in App-Stores",
+  "aboutSource": "Quellcode",
+  "aboutSourceCopied": "Adresse kopiert",
+  "aboutLicenses": "Lizenzen der Bibliotheken",
+  "aboutLicensesDescription": "Vollständige Lizenztexte der verwendeten Komponenten",
+  "aboutCopy": "Kopieren",
+  "aboutCredits": "Danksagungen"
+}

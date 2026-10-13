@@ -1,0 +1,481 @@
+{
+  "badgesTitle": "Badges",
+  "badgesEntrySubtitle": "Alles wat je hebt geleerd en gespeeld, in één verzameling",
+  "badgesSummary": "{earned} van {total} behaald",
+  "@badgesSummary": {
+    "description": "Totale dei badge ottenuti",
+    "placeholders": {
+      "earned": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "badgesFamilyLearn": "Leren",
+  "badgesFamilyPuzzles": "Puzzels",
+  "badgesFamilyGames": "Partijen",
+  "badgesFamilyStory": "Verhaal",
+  "badgesFamilyHabit": "Regelmaat",
+  "badgesTierBronze": "Brons",
+  "badgesTierSilver": "Zilver",
+  "badgesTierGold": "Goud",
+  "badgesUnlocked": "Nieuwe badge: {name}",
+  "@badgesUnlocked": {
+    "description": "Avviso quando si ottiene un badge",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "badgesSeeAction": "Bekijk",
+  "badgesEarnedOn": "Behaald op {date}",
+  "@badgesEarnedOn": {
+    "description": "Data in cui il badge è stato ottenuto",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "badgesNotYet": "Nog niet behaald",
+  "badgesProgress": "{value} / {target}",
+  "@badgesProgress": {
+    "description": "Avanzamento verso un badge",
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "badgesSemanticsEarned": "{name}, behaald",
+  "@badgesSemanticsEarned": {
+    "description": "Lettura del badge ottenuto",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "badgesSemanticsLocked": "{name}, nog niet behaald",
+  "@badgesSemanticsLocked": {
+    "description": "Lettura del badge da ottenere",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "badgesSemanticsLockedProgress": "{name}, nog niet behaald, {value} van {target}",
+  "@badgesSemanticsLockedProgress": {
+    "description": "Lettura del badge da ottenere con avanzamento",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "value": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "badgesClose": "Sluiten",
+  "badgeChapterMovesName": "Op mars",
+  "badgeChapterMovesDesc": "Rond de lessen over hoe de stukken zetten af.",
+  "badgeChapterPiecesName": "Stukken veilig",
+  "badgeChapterPiecesDesc": "Rond de lessen over slaan en verdedigen af.",
+  "badgeChapterRulesName": "Gouden regels",
+  "badgeChapterRulesDesc": "Rond de lessen over de spelregels af.",
+  "badgeChapterMatesName": "Koningsjager",
+  "badgeChapterMatesDesc": "Rond de lessen over de basismatzetten af.",
+  "badgeChapterTacticsName": "Tactisch brein",
+  "badgeChapterTacticsDesc": "Rond de tacticalessen af.",
+  "badgeChapterEndgamesName": "Eindspel van een kampioen",
+  "badgeChapterEndgamesDesc": "Rond de eindspellessen af.",
+  "badgeChapterOpeningsName": "Wijd open openingen",
+  "badgeChapterOpeningsDesc": "Rond de openingslessen af.",
+  "badgeGuardians3Name": "Bewakerstemmer",
+  "badgeGuardians3Desc": "Versla {count} bewakers van het Verhaal.",
+  "@badgeGuardians3Desc": {
+    "description": "Come si ottiene il badge «Domatore di guardiani»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStoryPuzzlesAllName": "Raadselmeester",
+  "badgeStoryPuzzlesAllDesc": "Los alle {count} puzzels in de hoofdstukken van het Verhaal op.",
+  "@badgeStoryPuzzlesAllDesc": {
+    "description": "Come si ottiene il badge «Enigmista»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeEndgamesAllName": "Koning van de eindspelen",
+  "badgeEndgamesAllDesc": "Voltooi elke stelling in de eindspeltrainer.",
+  "badgeMastersAllName": "Oog van de meester",
+  "badgeMastersAllDesc": "Speel elke partij van “Raad de zet” helemaal uit.",
+  "badgeReviews25Name": "Meteen terugkijken",
+  "badgeReviews25Desc": "Analyseer {count} partijen.",
+  "@badgeReviews25Desc": {
+    "description": "Come si ottiene il badge «Analista»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgePuzzles500Name": "Oplossingenjager",
+  "badgePuzzles500Desc": "Los {count} puzzels op.",
+  "@badgePuzzles500Desc": {
+    "description": "Come si ottiene il badge «Collezionista di soluzioni»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeThemes10Name": "Thema-wereldreiziger",
+  "badgeThemes10Desc": "Los minstens één puzzel op in {count} verschillende thema’s.",
+  "@badgeThemes10Desc": {
+    "description": "Come si ottiene il badge «Esploratore di temi»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgePin10Name": "Penningspecialist",
+  "badgePin10Desc": "Los {count} penningpuzzels op.",
+  "@badgePin10Desc": {
+    "description": "Come si ottiene il badge «Inchiodatore»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeSkewer5Name": "Aan het spit",
+  "badgeSkewer5Desc": "Los {count} spiespuzzels op.",
+  "@badgeSkewer5Desc": {
+    "description": "Come si ottiene il badge «Spiedino»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeDiscovered5Name": "Plotwending",
+  "badgeDiscovered5Desc": "Los {count} puzzels over ontdekte aanvallen op.",
+  "@badgeDiscovered5Desc": {
+    "description": "Come si ottiene il badge «Colpo di scena»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeSacrifice10Name": "Leeuwenhart",
+  "badgeSacrifice10Desc": "Los {count} offerpuzzels op.",
+  "@badgeSacrifice10Desc": {
+    "description": "Come si ottiene il badge «Cuor di leone»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeSmothered1Name": "Verstikt!",
+  "badgeSmothered1Desc": "Los een puzzel over verstikkingsmat op.",
+  "badgeRating1800Name": "Uitblinker",
+  "badgeRating1800Desc": "Bereik een puzzelrating van {count}.",
+  "@badgeRating1800Desc": {
+    "description": "Come si ottiene il badge «Fuoriclasse»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStreakRun10Name": "Gouden reeks",
+  "badgeStreakRun10Desc": "Scoor {count} in de reeksmodus.",
+  "@badgeStreakRun10Desc": {
+    "description": "Come si ottiene il badge «Serie d'oro»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeScholarsMateName": "Herdersmat",
+  "badgeScholarsMateDesc": "Win met een damemat in vier zetten of minder.",
+  "badgeFoolsMateName": "Dwaasmat",
+  "badgeFoolsMateDesc": "Trap in het beroemde mat in twee zetten. Dat overkomt iedereen: hier is een medaille.",
+  "badgeAllPiecesMateName": "Stuk voor stuk",
+  "badgeAllPiecesMateDesc": "Zet mat met een dame, een toren, een loper, een paard en een pion.",
+  "badgeEnPassantName": "En passant",
+  "badgeEnPassantDesc": "Sla en passant.",
+  "badgeUnderpromotionName": "Paardje gepromoveerd",
+  "badgeUnderpromotionDesc": "Promoveer een pion tot iets anders dan een dame.",
+  "badgeStalemateName": "Vastgelopen koning",
+  "badgeStalemateDesc": "Eindig een partij in remise door pat.",
+  "badgeMarathonName": "Marathonloper",
+  "badgeMarathonDesc": "Speel een partij van minstens {count} eigen zetten.",
+  "@badgeMarathonDesc": {
+    "description": "Come si ottiene il badge «Maratoneta»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeWins100Name": "Centurion",
+  "badgeWins100Desc": "Win {count} partijen.",
+  "@badgeWins100Desc": {
+    "description": "Come si ottiene il badge «Centurione»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgePodiumName": "Op het podium",
+  "badgePodiumDesc": "Eindig een toernooi bij de beste drie (met minstens vier spelers).",
+  "badgeTournaments5Name": "Vaste toernooigast",
+  "badgeTournaments5Desc": "Speel {count} toernooien uit.",
+  "@badgeTournaments5Desc": {
+    "description": "Come si ottiene il badge «Habitué dei tornei»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStoryPrologueName": "Eerste stappen",
+  "badgeStoryPrologueDesc": "Versla Tino in “Hoofdstuk 0”.",
+  "badgeStoryVillageName": "Dorpsheld",
+  "badgeStoryVillageDesc": "Versla Pino in het hoofdstuk “Het dorp van de stukken”.",
+  "badgeStoryGatesName": "Door de poorten",
+  "badgeStoryGatesDesc": "Versla Chiara in het hoofdstuk “De stadspoorten”.",
+  "badgeStoryTowerName": "Heer van de toren",
+  "badgeStoryTowerDesc": "Versla Rocco in het hoofdstuk “De toren van de koning”.",
+  "badgeStoryForestName": "Koning van het bos",
+  "badgeStoryForestDesc": "Versla Marta in het hoofdstuk “Het bos vol valstrikken”.",
+  "badgeStoryCastleName": "Beleg gewonnen",
+  "badgeStoryCastleDesc": "Versla Duilio in het hoofdstuk “Het kasteel van de eindspelen”.",
+  "badgeStoryCrownName": "De kroon is van jou",
+  "badgeStoryCrownDesc": "Versla Elena in het hoofdstuk “De kroon”.",
+  "badgeStoryAllName": "Legende",
+  "badgeStoryAllDesc": "Rond elk hoofdstuk van het verhaal af.",
+  "badgeStreak14Name": "Twee weken op rij",
+  "badgeStreak14Desc": "Haal je doel {count} dagen achter elkaar.",
+  "@badgeStreak14Desc": {
+    "description": "Come si ottiene il badge «Due settimane»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStreak60Name": "Twee maanden vuur",
+  "badgeStreak60Desc": "Haal je doel {count} dagen achter elkaar.",
+  "@badgeStreak60Desc": {
+    "description": "Come si ottiene il badge «Due mesi»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStreak100Name": "Honderd en tellen",
+  "badgeStreak100Desc": "Haal je doel {count} dagen achter elkaar.",
+  "@badgeStreak100Desc": {
+    "description": "Come si ottiene il badge «Cento giorni»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStreak365Name": "Een rondje om de zon",
+  "badgeStreak365Desc": "Haal je doel {count} dagen achter elkaar.",
+  "@badgeStreak365Desc": {
+    "description": "Come si ottiene il badge «Un anno intero»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeDays30Name": "Gewoontedier",
+  "badgeDays30Desc": "Speel of train op {count} verschillende dagen, niet per se achter elkaar.",
+  "@badgeDays30Desc": {
+    "description": "Come si ottiene il badge «Abitudinario»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeDays100Name": "Thuis",
+  "badgeDays100Desc": "Speel of train op {count} verschillende dagen, niet per se achter elkaar.",
+  "@badgeDays100Desc": {
+    "description": "Come si ottiene il badge «Di casa»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeComebackName": "Welkom terug!",
+  "badgeComebackDesc": "Kom terug na minstens {count} dagen weg te zijn geweest.",
+  "@badgeComebackDesc": {
+    "description": "Come si ottiene il badge «Bentornato!»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgePerfect7Name": "Zeven perfecte dagen",
+  "badgePerfect7Desc": "Voltooi alle drie de dagelijkse uitdagingen op {count} verschillende dagen.",
+  "@badgePerfect7Desc": {
+    "description": "Come si ottiene il badge «Sette giornate perfette»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeMinigames25Name": "Breingymnast",
+  "badgeMinigames25Desc": "Rond {count} minigamesessies af met minstens één punt.",
+  "@badgeMinigames25Desc": {
+    "description": "Come si ottiene il badge «Allenatore instancabile»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgesUnlockedMany": "{count} nieuwe badges",
+  "@badgesUnlockedMany": {
+    "description": "Avviso quando si ottengono molti badge insieme",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeChapterStrategyName": "Geest van een strateeg",
+  "badgeChapterStrategyDesc": "Rond de strategielessen af.",
+  "badgeChapterCapablancaName": "De leerling van de meester",
+  "badgeChapterCapablancaDesc": "Rond de lessen van Capablanca’s school af.",
+  "badgeStoryPlainName": "Het juiste plan",
+  "badgeStoryPlainDesc": "Versla Massimo in het hoofdstuk “De vlakte van de plannen”.",
+  "badgeStoryAcademyName": "Top van de academie",
+  "badgeStoryAcademyDesc": "Versla Stella in het hoofdstuk “De academie van de meester”.",
+  "badgeStoryStartName": "Daar gaan we!",
+  "badgeStoryStartDesc": "Rond de eerste les van het Verhaal af.",
+  "badgeStoryHalfName": "Halverwege",
+  "badgeStoryHalfDesc": "Rond de helft van de lessen in het Verhaal af.",
+  "badgeStoryChapters3Name": "Hoofdstukkentrio",
+  "badgeStoryChapters3Desc": "Versla de bots van {count} hoofdstukken van het Verhaal.",
+  "@badgeStoryChapters3Desc": {
+    "description": "Come si ottiene il badge «Tre capitoli alle spalle»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeLv3Name": "Leerling",
+  "badgeLv3Desc": "Bereik niveau {count}.",
+  "@badgeLv3Desc": {
+    "description": "Come si ottiene il badge «Apprendista»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeLv8Name": "Schaker",
+  "badgeLv8Desc": "Bereik niveau {count}.",
+  "@badgeLv8Desc": {
+    "description": "Come si ottiene il badge «Scacchista»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeLv15Name": "Veteraan",
+  "badgeLv15Desc": "Bereik niveau {count}.",
+  "@badgeLv15Desc": {
+    "description": "Come si ottiene il badge «Veterano»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeLv20Name": "Meester van Rokko",
+  "badgeLv20Desc": "Bereik niveau {count}.",
+  "@badgeLv20Desc": {
+    "description": "Come si ottiene il badge «Maestro della Rocca»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgesTabBadges": "Badges",
+  "badgesTabBooks": "Boeken",
+  "booksHint": "Elke opening die je in een partij speelt, wordt een boek, met de stelling op de kaft. Hoeveel vind je er?",
+  "booksSemanticsUnlocked": "{name}, boek ontgrendeld",
+  "@booksSemanticsUnlocked": {
+    "description": "Libro delle aperture sbloccato",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "booksSemanticsLocked": "{name}, boek nog vergrendeld",
+  "@booksSemanticsLocked": {
+    "description": "Libro delle aperture ancora bloccato",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "booksPlayed": "{count, plural, one{Je hebt hem één keer gespeeld: het boek is van jou.} other{Je hebt hem {count} keer gespeeld: het boek is van jou.}}",
+  "@booksPlayed": {
+    "description": "Partite giocate in quell'apertura",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "booksHowTo": "Speel een partij met deze opening om het boek te ontgrendelen.",
+  "badgesRecentSemantics": "Recente badges: {names}",
+  "@badgesRecentSemantics": {
+    "description": "Badge recenti, per i lettori di schermo",
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  }
+}

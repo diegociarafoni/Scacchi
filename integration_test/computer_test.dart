@@ -6,6 +6,7 @@ import 'package:scacchi/engine/computer_player.dart';
 import 'package:scacchi/engine/process_transport.dart';
 import 'package:scacchi/game/game_page.dart';
 import 'package:scacchi/l10n/app_localizations.dart';
+import 'package:scacchi/l10n/content.dart';
 import 'package:scacchi/settings/settings.dart';
 
 import '../test/computer_fakes.dart'
@@ -74,6 +75,8 @@ Future<void> _startComputerGame(
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  // Le schermate sono montate senza l'app: i contenuti si caricano qui.
+  setUpAll(Content.ensureLoaded);
   useItalianDevice();
 
   group(
@@ -100,16 +103,17 @@ void main() {
         expect(find.textContaining('1. '), findsOneWidget);
       });
 
-      testWidgets('RF-21 la scacchiera è bloccata mentre il computer pensa', (
+      testWidgets('RF-21 mentre il computer pensa la mossa è solo in coda', (
         tester,
       ) async {
         await _startComputerGame(tester, side: 'Bianco');
         await _tapMove(tester, 'e2e4');
         expect(find.text('Il computer sta pensando…'), findsOneWidget);
+        // Con la premossa attiva è accodata, non giocata subito.
         await _tapMove(tester, 'd2d4');
-        await _waitFor(tester, find.text('Muove il Bianco.'));
-        expect(find.text('1. e4'), findsOneWidget);
+        expect(find.text('Il computer sta pensando…'), findsOneWidget);
         expect(find.textContaining('d4'), findsNothing);
+        await _waitFor(tester, find.textContaining('d4'));
       });
 
       testWidgets('annullare ritira la mossa e la risposta del computer', (

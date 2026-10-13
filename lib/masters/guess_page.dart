@@ -4,6 +4,7 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../training/training_board.dart';
 import 'guess_run.dart';
 import 'master_game.dart';
@@ -66,12 +67,13 @@ class _GuessPageState extends State<GuessPage> {
     }
     final ply = _run.ply;
     final label = widget.game.label(ply);
+    final l10n = AppLocalizations.of(context);
     setState(() {
       _busy = !_run.finished;
       _feedback = result.matched
-          ? 'Come il maestro! $label.'
-          : 'Il maestro ha giocato $label.';
-      _note = widget.game.notes[ply];
+          ? l10n.mastersSameAsMaster(label)
+          : l10n.mastersMasterPlayed(label);
+      _note = widget.game.noteAt(ply);
     });
     if (_run.finished) return _finish();
     final attempt = _attempt;
@@ -79,10 +81,12 @@ class _GuessPageState extends State<GuessPage> {
     if (!mounted || attempt != _attempt) return;
     _run.playOpponent();
     final opponentPly = _run.ply;
-    final reply = widget.game.notes[opponentPly];
+    final reply = widget.game.noteAt(opponentPly);
+    final answer = AppLocalizations.of(context)
+        .mastersReply(widget.game.label(opponentPly));
     setState(() {
       _busy = false;
-      _feedback = '$_feedback Risposta: ${widget.game.label(opponentPly)}.';
+      _feedback = '$_feedback $answer';
       if (reply != null) _note = [?_note, reply].join('\n\n');
     });
     if (_run.finished) await _finish();
@@ -99,7 +103,7 @@ class _GuessPageState extends State<GuessPage> {
       );
     } on Object catch (e) {
       if (kDebugMode) {
-        debugPrint('Risultato della partita non salvato: $e');
+        debugPrint('Risultato della partita non salvato: $e'); // l10n-ok
       }
     }
   }
@@ -114,11 +118,10 @@ class _GuessPageState extends State<GuessPage> {
       ..start();
   }
 
-  String get _sideName => widget.side == Side.white ? 'Bianco' : 'Nero';
-
   @override
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
+    final l10n = AppLocalizations.of(context);
     final game = widget.game;
     return Scaffold(
       appBar: AppBar(title: Text('${game.white} – ${game.black}')),
@@ -153,15 +156,13 @@ class _GuessPageState extends State<GuessPage> {
                     _Outcome(run: _run, simple: widget.simple, onRetry: _retry)
                   else ...[
                     Text(
-                      'Tocca a te con il $_sideName: indovina la mossa del '
-                      'maestro.',
+                      widget.side == Side.white
+                          ? l10n.mastersYourTurnWhite
+                          : l10n.mastersYourTurnBlack,
                       style: text.titleMedium,
                     ),
                     if (!widget.simple && _run.attempts > 0)
-                      Text(
-                        'Mosse indovinate: ${_run.correct} di '
-                        '${_run.attempts}',
-                      ),
+                      Text(l10n.mastersGuessed(_run.correct, _run.attempts)),
                   ],
                   if (_feedback != null) ...[
                     const SizedBox(height: 12),
@@ -213,15 +214,16 @@ class _Outcome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
+    final l10n = AppLocalizations.of(context);
     final stars = run.stars;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text('Partita conclusa', style: text.titleLarge),
+        Text(l10n.mastersFinished, style: text.titleLarge),
         if (!simple) Text('${run.percent}%', style: text.headlineSmall),
         Text(
           '${'★' * stars}${'☆' * (3 - stars)}',
-          semanticsLabel: '$stars stelle su 3',
+          semanticsLabel: l10n.mastersStars(stars),
           style: TextStyle(
             fontSize: 32,
             color: Theme.of(context).colorScheme.tertiary,
@@ -231,11 +233,11 @@ class _Outcome extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            OutlinedButton(onPressed: onRetry, child: const Text('Rigioca')),
+            OutlinedButton(onPressed: onRetry, child: Text(l10n.mastersReplay)),
             const SizedBox(width: 12),
             FilledButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('Fine'),
+              child: Text(l10n.mastersDone),
             ),
           ],
         ),

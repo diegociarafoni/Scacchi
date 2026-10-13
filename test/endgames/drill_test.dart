@@ -2,6 +2,7 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/endgames/drill.dart';
 import 'package:scacchi/endgames/drills.dart';
+import 'package:scacchi/l10n/content.dart';
 
 Move _m(String uci) => Move.parse(uci)!;
 
@@ -17,8 +18,6 @@ void main() {
   group('obiettivo matto', () {
     const drill = EndgameDrill(
       id: 'prova.matto',
-      title: 'Prova',
-      intro: 'Dai matto.',
       fen: '7k/8/6K1/8/8/1Q6/8/8 w - - 0 1',
       goal: DrillGoal.mate,
       par: 1,
@@ -60,8 +59,6 @@ void main() {
   group('obiettivo promozione', () {
     const drill = EndgameDrill(
       id: 'prova.promozione',
-      title: 'Prova',
-      intro: 'Promuovi.',
       fen: '8/4P3/8/8/8/8/k7/4K3 w - - 0 1',
       goal: DrillGoal.promote,
       par: 1,
@@ -78,8 +75,6 @@ void main() {
     test('una promozione che si fa catturare non basta', () {
       const near = EndgameDrill(
         id: 'prova.vicino',
-        title: 'Prova',
-        intro: 'Promuovi.',
         fen: '8/4Pk2/8/8/8/8/8/K7 w - - 0 1',
         goal: DrillGoal.promote,
         par: 1,
@@ -98,8 +93,6 @@ void main() {
     test('una torre lasciata vicino al re nemico non basta', () {
       const drill = EndgameDrill(
         id: 'prova.indifesa',
-        title: 'Prova',
-        intro: 'Promuovi.',
         fen: '7r/1kP5/8/8/8/8/8/2R1K3 w - - 0 1',
         goal: DrillGoal.promote,
         par: 5,
@@ -117,8 +110,6 @@ void main() {
     test('una donna infilata da uno scacco non basta', () {
       const drill = EndgameDrill(
         id: 'prova.infilata',
-        title: 'Prova',
-        intro: 'Promuovi.',
         fen: '8/3P4/8/8/4k3/r7/8/3K4 w - - 0 1',
         goal: DrillGoal.promote,
         par: 5,
@@ -156,8 +147,6 @@ void main() {
     test('la ripetizione della posizione fa fallire il matto', () {
       const drill = EndgameDrill(
         id: 'prova.ripetizione',
-        title: 'Prova',
-        intro: 'Dai matto.',
         fen: '7k/8/8/8/8/8/8/K3Q3 w - - 0 1',
         goal: DrillGoal.mate,
         par: 20,
@@ -175,8 +164,6 @@ void main() {
     test('superare il triplo del par fa fallire', () {
       const drill = EndgameDrill(
         id: 'prova.limite',
-        title: 'Prova',
-        intro: 'Dai matto.',
         fen: '7k/8/8/8/8/8/8/K3Q3 w - - 0 1',
         goal: DrillGoal.mate,
         par: 1,
@@ -195,8 +182,6 @@ void main() {
   test('perdere l\'ultimo pedone fa fallire la promozione', () {
     const drill = EndgameDrill(
       id: 'prova.pedone',
-      title: 'Prova',
-      intro: 'Promuovi.',
       fen: '7k/8/8/8/8/r7/7P/K7 w - - 0 1',
       goal: DrillGoal.promote,
       par: 5,
@@ -212,8 +197,6 @@ void main() {
   group('obiettivo patta', () {
     const drill = EndgameDrill(
       id: 'prova.patta',
-      title: 'Prova',
-      intro: 'Resisti.',
       fen: '4k3/8/8/8/8/r7/3PK3/8 b - - 0 1',
       goal: DrillGoal.hold,
       par: 2,
@@ -235,8 +218,6 @@ void main() {
     test('restare con il re solo fa fallire', () {
       const rook = EndgameDrill(
         id: 'prova.torre',
-        title: 'Prova',
-        intro: 'Resisti.',
         fen: '7k/8/8/8/8/8/1r6/R3K3 b - - 0 1',
         goal: DrillGoal.hold,
         par: 5,
@@ -250,8 +231,6 @@ void main() {
     test('una donna nuova catturata subito non fa perdere', () {
       const pawn = EndgameDrill(
         id: 'prova.ripresa',
-        title: 'Prova',
-        intro: 'Resisti.',
         fen: 'k7/8/8/8/8/8/7p/1R2K3 w - - 0 1',
         goal: DrillGoal.hold,
         par: 5,
@@ -269,8 +248,6 @@ void main() {
     test('se l\'avversario promuove la patta è persa', () {
       const pawn = EndgameDrill(
         id: 'prova.persa',
-        title: 'Prova',
-        intro: 'Resisti.',
         fen: 'k7/8/8/8/8/8/3PK2p/8 w - - 0 1',
         goal: DrillGoal.hold,
         par: 5,
@@ -306,12 +283,18 @@ void main() {
       );
     });
 
+    test('la spiegazione della difesa riporta le mosse da resistere', () {
+      final philidor = endgameDrills.firstWhere((d) => d.id == 'philidor');
+      expect(philidor.intro, contains('non perdere per ${philidor.par} mosse'));
+    });
+
     for (final d in endgameDrills) {
       test('posizione valida: ${d.id}', () {
         final pos = Chess.fromSetup(Setup.parseFen(d.fen));
         expect(pos.isGameOver, isFalse);
-        expect(d.title, isNotEmpty);
-        expect(d.intro, isNotEmpty);
+        final texts = Content.of('endgames');
+        expect(texts.has('${d.id}.title'), isTrue);
+        expect(texts.has('${d.id}.intro'), isTrue);
         expect(d.par, greaterThan(0));
       });
     }

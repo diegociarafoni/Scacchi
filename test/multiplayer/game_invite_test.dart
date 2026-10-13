@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scacchi/game/clock.dart';
 import 'package:scacchi/multiplayer/game_invite.dart';
 
 Uint8List bytes(int n, int fill) => Uint8List.fromList(List.filled(n, fill));
@@ -129,5 +130,19 @@ void main() {
     cases.forEach((name, text) {
       test(name, () => expect(GameInvite.parse(text), isNull));
     });
+  });
+
+  test('RF-40 un invito con ritardo non si accetta, quello senza sì', () {
+    GameInvite withClock(TimeControl control) => GameInvite(
+      gameId: '0f8e2c1a-3b4d-4e5f-8a9b-1c2d3e4f5a6b',
+      secret: bytes(32, 7),
+      hostKey: bytes(32, 9),
+      hostSide: Side.white,
+      timeControl: control,
+    );
+    final plain = withClock(const TimeControl(minutes: 5, increment: 3));
+    expect(GameInvite.parse(plain.toLink())?.timeControl, plain.timeControl);
+    final delayed = withClock(const TimeControl(minutes: 5, delay: 3));
+    expect(GameInvite.parse(delayed.toLink()), isNull);
   });
 }

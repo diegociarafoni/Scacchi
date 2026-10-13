@@ -1,0 +1,9 @@
+{
+  "avatarPhotoTitle": "Fotoğraf",
+  "avatarPhotoHint": "Fotoğraf yalnızca bu telefonda kalır: asla gönderilmez, yedeğe de eklenmez.",
+  "avatarPhotoGallery": "Galeriden",
+  "avatarPhotoCamera": "Fotoğraf çek",
+  "avatarPhotoRemove": "Fotoğrafı kaldır",
+  "avatarPhotoError": "Fotoğrafı kullanamıyorum. Telefon ayarlarında kamera ve fotoğraf izinlerini kontrol et.",
+  "avatarPhotoLabel": "Profil fotoğrafı"
+}

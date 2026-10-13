@@ -1,0 +1,12 @@
+{
+  "tablebaseTitle": "Final perfecto",
+  "tablebaseCalculating": "Calculando el final perfecto… esto solo ocurre la primera vez",
+  "tablebaseWhiteMates": "{moves, plural, one{Ganan las Blancas: jaque mate en {moves} jugada} other{Ganan las Blancas: jaque mate en {moves} jugadas}}",
+  "tablebaseBlackMates": "{moves, plural, one{Ganan las Negras: jaque mate en {moves} jugada} other{Ganan las Negras: jaque mate en {moves} jugadas}}",
+  "tablebaseWhiteWins": "Ganan las Blancas",
+  "tablebaseBlackWins": "Ganan las Negras",
+  "tablebaseDraw": "Tablas con juego perfecto",
+  "tablebaseBestMove": "Jugada perfecta: {move}",
+  "tablebaseBestMoveHint": "Haz la jugada perfecta",
+  "tablebaseShowMove": "Mostrar la jugada perfecta"
+}

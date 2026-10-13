@@ -1,0 +1,369 @@
+{
+  "storyTitle": "История",
+  "storyEntrySubtitle": "Путешествие по главам: уроки, задачи и испытания",
+  "storyChapterNumber": "Глава {n}",
+  "@storyChapterNumber": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "storyProgress": "Глав: {done} из {total}",
+  "@storyProgress": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyChapterLocked": "Откроется, когда ты закончишь предыдущую главу",
+  "storyChapterDone": "Глава пройдена",
+  "storyContinue": "Продолжить",
+  "storyFinished": "История окончена. Уроки, задачи и партии остаются доступными в других разделах приложения.",
+  "storyStepLessons": "Уроки: {value} из {total}",
+  "@storyStepLessons": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyStepPuzzles": "Задачи главы: {value} из {total}",
+  "@storyStepPuzzles": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyStepGuardian": "Хранитель главы",
+  "storyStepBoss": "Вызов: {name}",
+  "@storyStepBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyStepDone": "готово",
+  "storyStepTodo": "впереди",
+  "storyStepLocked": "закрыто",
+  "storyStepLockedHint": "Сначала пройди предыдущий шаг.",
+  "storyEngineMissing": "Испытания проходят там, где работает компьютерный соперник: на Android и iOS или на Windows и Linux с установленным Stockfish.",
+  "storyBossWon": "Победа над {name}!",
+  "@storyBossWon": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyBossLost": "{name} пока держится: попробуй снова, когда захочешь.",
+  "@storyBossLost": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPuzzlesNone": "Не удалось загрузить задачи: попробуй ещё раз.",
+  "storyPrologueTitle": "Тропа первых шагов",
+  "storyPrologueIntro": "Перед деревней есть тропа, а на тропе — любопытный цыплёнок. Вместе с ним узнай, как ходит каждая фигура: ладья, слон, ферзь, король, конь и пешка.",
+  "storyPrologueBoss": "{name}, цыплёнок с тропы, хочет сыграть партию и попробовать новые фигуры.",
+  "@storyPrologueBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPrologueOutro": "У фигур не осталось секретов. Деревня у подножия крепости совсем близко.",
+  "storyVillageTitle": "Деревня фигур",
+  "storyVillageIntro": "Ты приходишь в деревню у подножия крепости Rokko. Жители играют целыми днями, но оставляют фигуры без защиты: научись брать и защищать, а потом покажи, что замечаешь незащищённую фигуру.",
+  "storyVillageBoss": "{name}, хранитель деревни, зовёт тебя на партию: проверим твои знания.",
+  "@storyVillageBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyVillageOutro": "Деревня устраивает праздник в твою честь. Дорога к городским воротам открыта.",
+  "storyGatesTitle": "Городские ворота",
+  "storyGatesIntro": "Стража останавливает тебя у ворот: чтобы войти, нужно знать правила — от шаха до рокировки. А вовремя замеченное превращение откроет даже самые высокие ворота.",
+  "storyGatesBoss": "{name}, капитан стражи, хочет устроить проверку, прежде чем тебя пропустить.",
+  "@storyGatesBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyGatesOutro": "Ворота распахиваются. Впереди поднимается башня короля.",
+  "storyTowerTitle": "Башня короля",
+  "storyTowerIntro": "На вершине башни живёт король, и он умеет защищаться. Выучи маты, которые загоняют его в угол, даже когда его собственные фигуры стоят стеной.",
+  "storyTowerBoss": "{name}, рыцарь, который любит гамбиты, ждёт тебя на верху лестницы.",
+  "@storyTowerBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyTowerOutro": "Король башни получил мат. Остались лес и его ловушки.",
+  "storyForestTitle": "Лес ловушек",
+  "storyForestIntro": "В лесу у каждой фигуры своя ловушка: вилки, связки, линейные удары. Научись замечать их раньше всех.",
+  "storyForestBoss": "{name}, проводник по лесу, знает каждую тропинку и каждый капкан.",
+  "@storyForestBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyForestOutro": "Лес пройден, и ни одна ловушка не сработала. Впереди замок.",
+  "storyCastleTitle": "Замок эндшпилей",
+  "storyCastleIntro": "В замке на доске остаётся всего несколько фигур, и важен каждый ход. Здесь выясняется, кто умеет доводить партию до конца.",
+  "storyCastleBoss": "{name}, кастелян, стережёт вход в зал с короной.",
+  "@storyCastleBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyCastleOutro": "Огромная дверь открывается: корона совсем рядом.",
+  "storyCrownTitle": "Корона",
+  "storyCrownIntro": "Зал с короной. Хорошее начало — половина победы: центр, развитие, рокировка.",
+  "storyCrownBoss": "{name}, хранитель короны, играет дебюты лучше всех.",
+  "@storyCrownBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyCrownOutro": "Корона твоя. Но за стенами ещё ждёт открытия целая равнина.",
+  "storyChapterCurrent": "В процессе",
+  "@storyChapterCurrent": {
+    "description": "Etichetta del capitolo corrente nella storia"
+  },
+  "storyChapterSteps": "Шагов: {done} из {total}",
+  "@storyChapterSteps": {
+    "description": "Passi conclusi di un capitolo, per la barra di avanzamento",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyPassageLessonsTitle": "Уроки пройдены!",
+  "@storyPassageLessonsTitle": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassagePuzzlesTitle": "Задачи решены!",
+  "@storyPassagePuzzlesTitle": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageGuardianTitle": "Хранитель побеждён!",
+  "@storyPassageGuardianTitle": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageNextPuzzles": "Теперь ты знаешь всё нужное. Проверь себя на задачах главы.",
+  "@storyPassageNextPuzzles": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageNextGuardian": "Теперь встреться с хранителем главы.",
+  "@storyPassageNextGuardian": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageNextBoss": "Всё готово: {name} ждёт тебя на финальное испытание главы.",
+  "@storyPassageNextBoss": {
+    "description": "Foglio di passaggio della storia",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPassageGoPuzzles": "К задачам",
+  "@storyPassageGoPuzzles": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageGoGuardian": "Бросить вызов хранителю",
+  "@storyPassageGoGuardian": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyChallengeTitle": "Вызов от {name}",
+  "@storyChallengeTitle": {
+    "description": "Foglio della sfida al custode",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPassageGoBoss": "Вызов: {name}",
+  "@storyPassageGoBoss": {
+    "description": "Foglio di passaggio della storia",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPassageLater": "Позже",
+  "@storyPassageLater": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageChapterTitle": "Глава {n} пройдена!",
+  "@storyPassageChapterTitle": {
+    "description": "Foglio di passaggio della storia",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "storyPassageChapterNext": "Открывается глава {n}: {title}.",
+  "@storyPassageChapterNext": {
+    "description": "Foglio di passaggio della storia",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPassageGoChapter": "К следующей главе",
+  "@storyPassageGoChapter": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageStoryDone": "История пройдена!",
+  "@storyPassageStoryDone": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageClose": "Закрыть",
+  "@storyPassageClose": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPlainTitle": "Равнина планов",
+  "@storyPlainTitle": {
+    "description": "storyPlainTitle"
+  },
+  "storyPlainIntro": "За короной лежит тихая равнина, где сражения выигрывают ещё до начала: нужны план, активные фигуры и немного терпения.",
+  "@storyPlainIntro": {
+    "description": "storyPlainIntro"
+  },
+  "storyPlainBoss": "{name}, волк равнины, готовит каждую атаку с помощью гамбита и точного плана.",
+  "@storyPlainBoss": {
+    "description": "storyPlainBoss",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPlainOutro": "Равнина твоя. Теперь ты знаешь: у каждой фигуры своя работа, а у каждого хода — своя причина.",
+  "@storyPlainOutro": {
+    "description": "storyPlainOutro"
+  },
+  "storyAcademyTitle": "Академия мастера",
+  "@storyAcademyTitle": {
+    "description": "storyAcademyTitle"
+  },
+  "storyAcademyIntro": "На вершине холма живёт старый мастер, который учит нескольким простым принципам: считай ходы, находи оппозицию, не забывай правила дебюта.",
+  "@storyAcademyIntro": {
+    "description": "storyAcademyIntro"
+  },
+  "storyAcademyBoss": "{name}, звезда академии, атакует без передышки и не прощает ошибок.",
+  "@storyAcademyBoss": {
+    "description": "storyAcademyBoss",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyAcademyOutro": "Академия принимает тебя как своего. История окончена, но игра продолжается.",
+  "@storyAcademyOutro": {
+    "description": "storyAcademyOutro"
+  },
+  "@storyCrownIntro": {
+    "description": "storyCrownIntro"
+  },
+  "@storyCrownOutro": {
+    "description": "storyCrownOutro"
+  },
+  "storyGuardianPrologueWelcome": "Привет, я Tino! Покажу тебе, как ходит каждая фигура.",
+  "storyGuardianProloguePuzzleOk": "Верно! Ты уже знаешь, как ходят фигуры.",
+  "storyGuardianProloguePuzzleRetry": "Почти! Посмотри, куда может пойти каждая фигура, и попробуй ещё раз.",
+  "storyGuardianPrologueBoss": "Сыграем партию? Обещаю, начну осторожно.",
+  "storyGuardianPrologueLessonDone": "Теперь ты знаешь фигуры. Посмотрим, как ты ими пользуешься.",
+  "storyGuardianVillageWelcome": "Добро пожаловать в деревню! Здесь я научу тебя не оставлять фигуры без защиты.",
+  "storyGuardianVillagePuzzleOk": "Молодец, глаз у тебя острый!",
+  "storyGuardianVillagePuzzleRetry": "Почти получилось: поищи незащищённую фигуру.",
+  "storyGuardianVillageBoss": "Теперь ты и я. Я люблю Итальянскую партию, берегись!",
+  "storyGuardianVillageLessonDone": "Отлично, ни одной забытой фигуры. Пора проверить себя.",
+  "storyGuardianGatesWelcome": "Через ворота проходит только тот, кто знает правила. Давай повторим их по порядку.",
+  "storyGuardianGatesPuzzleOk": "Точно: превращение в нужный момент.",
+  "storyGuardianGatesPuzzleRetry": "Пока нет: проверь правила ещё раз и попробуй снова.",
+  "storyGuardianGatesBoss": "Проверим партией: я сыграю Ферзевый гамбит.",
+  "storyGuardianGatesLessonDone": "Правила выучены. Впереди задачи.",
+  "storyGuardianTowerWelcome": "На эту башню поднимаются с помощью матов. Начнём.",
+  "storyGuardianTowerPuzzleOk": "Мат! Прямо в цель.",
+  "storyGuardianTowerPuzzleRetry": "Нет, посмотри на короля: куда ему не уйти?",
+  "storyGuardianTowerBoss": "Хватит теории: сыграем! Я атакую Королевским гамбитом.",
+  "storyGuardianTowerLessonDone": "Ты видишь, как ставить мат. Теперь найди спрятанные.",
+  "storyGuardianForestWelcome": "В лесу за каждой веткой ловушка. Смотри в оба!",
+  "storyGuardianForestPuzzleOk": "Ха, ловушка не сработала. Молодец!",
+  "storyGuardianForestPuzzleRetry": "Ой, ловушка сработала. Попробуй ещё раз!",
+  "storyGuardianForestBoss": "Посмотрим, получится ли у тебя поставить свою. Я играю Английское начало.",
+  "storyGuardianForestLessonDone": "Ловушки тебя больше не обманут. Потренируйся ставить их сам.",
+  "storyGuardianCastleWelcome": "В эндшпиле важен каждый ход. Спокойно, шаг за шагом.",
+  "storyGuardianCastlePuzzleOk": "Терпение и точность: так выигрывают эндшпили.",
+  "storyGuardianCastlePuzzleRetry": "Не спеши: сосчитай ходы и попробуй снова.",
+  "storyGuardianCastleBoss": "Нас ждёт неспешная партия. Я играю Сицилианскую защиту.",
+  "storyGuardianCastleLessonDone": "Фигур мало, важен каждый ход. Теперь задачи.",
+  "storyGuardianCrownWelcome": "Корона завоёвывается с самого начала: красивый дебют — половина партии.",
+  "storyGuardianCrownPuzzleOk": "Изящно: это верный ход.",
+  "storyGuardianCrownPuzzleRetry": "Близко: подумай о развитии фигур и попробуй снова.",
+  "storyGuardianCrownBoss": "Можно с тобой сыграть? Я выбираю Испанскую партию.",
+  "storyGuardianCrownLessonDone": "Центр, развитие, рокировка — всё твоё. Теперь задачи.",
+  "storyGuardianPlainWelcome": "На равнине побеждает тот, у кого есть план. Сейчас покажу, как это делается.",
+  "storyGuardianPlainPuzzleOk": "Верно. Ясный план сильнее спешки.",
+  "storyGuardianPlainPuzzleRetry": "Близко. Подумай, чего хочет твоя фигура.",
+  "storyGuardianPlainBoss": "Сыграем? Предупреждаю: я люблю Гамбит Эванса.",
+  "storyGuardianPlainLessonDone": "У тебя есть план и активные фигуры. Теперь задачи.",
+  "storyGuardianAcademyWelcome": "В академии учатся у мастеров. Давай, покажи, что ты умеешь!",
+  "storyGuardianAcademyPuzzleOk": "Отлично! Так играют мастера.",
+  "storyGuardianAcademyPuzzleRetry": "Не сдавайся: вдохни и попробуй ещё раз.",
+  "storyGuardianAcademyBoss": "Последнее испытание: я играю Староиндийскую защиту. Без скидок!",
+  "storyGuardianAcademyLessonDone": "Уроки позади. Теперь проверка на деле.",
+  "storyGuardianSays": "{name} говорит: {text}",
+  "@storyGuardianSays": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "text": {
+        "type": "String"
+      }
+    }
+  }
+}

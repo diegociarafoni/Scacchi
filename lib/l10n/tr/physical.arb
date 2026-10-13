@@ -1,0 +1,65 @@
+{
+  "physicalTitle": "Fiziksel tahta",
+  "physicalEntrySubtitle": "Canlı oyun için saat ve skor kâğıdı",
+  "physicalIntro": "Gerçek bir tahtada oyna: uygulama saat olur ve oyunu kaydeder. Her hamleden sonra hamleyi yaz veya geçerli hamleler arasından dokun.",
+  "physicalWhite": "Beyaz",
+  "physicalBlack": "Siyah",
+  "physicalUntimed": "Süresiz",
+  "physicalStart": "Oyunu başlat",
+  "physicalInputWhite": "Beyazın hamlesi (örn. e4, Af3)",
+  "physicalInputBlack": "Siyahın hamlesi (örn. e5, Ac6)",
+  "physicalInvalidMove": "Geçersiz hamle: “{text}”",
+  "@physicalInvalidMove": {
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "physicalNoMoves": "Hamle yok",
+  "physicalPause": "Duraklat",
+  "physicalResume": "Devam",
+  "physicalUndo": "Geri al",
+  "physicalDraw": "Beraberlik",
+  "physicalResign": "Pes et",
+  "physicalDrawQuestion": "Beraberlik kabul edildi mi?",
+  "physicalYes": "Evet",
+  "physicalNo": "Hayır",
+  "physicalWhoResigns": "Kim pes ediyor?",
+  "physicalSaved": "Oyun arşive kaydedildi",
+  "physicalNothingToSave": "Kaydedilecek hamle yok",
+  "physicalSaveFailed": "Oyun kaydedilemedi",
+  "physicalNewGame": "Yeni oyun",
+  "physicalEndCheckmate": "Şah mat",
+  "physicalEndResignation": "Terk etme",
+  "physicalEndTimeout": "Süre doldu",
+  "physicalEndAgreement": "Anlaşmayla beraberlik",
+  "physicalEndStalemate": "Pat",
+  "physicalEndInsufficient": "Yetersiz materyal",
+  "physicalEndRepetition": "Üç kez tekrar",
+  "physicalEndFiftyMoves": "Elli hamle kuralı",
+  "physicalEndOther": "Oyun bitti",
+  "physicalResultLine": "{reason} · {result}",
+  "@physicalResultLine": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      },
+      "result": {
+        "type": "String"
+      }
+    }
+  },
+  "physicalPhoto": "Fotoğraftan hamle",
+  "physicalRealign": "Yeniden hizala",
+  "physicalCameraUnavailable": "Kamera kullanılamıyor",
+  "physicalImageUnreadable": "Okunamayan görüntü",
+  "physicalReferenceSaved": "Referans fotoğraf kaydedildi. Sonraki hamleden sonra bir fotoğraf daha çek.",
+  "physicalNoMoveRecognized": "Hamle algılanmadı: tahta aynı görünüyor.",
+  "physicalGuessNote": "Fotoğraftan en olası hamleler: doğru olanı onayla.",
+  "physicalAlignTitle": "Tahtayı hizala",
+  "physicalAlignHelp": "Dört daireyi tahtanın köşelerine sürükle. Sonraki fotoğraflarda aynı kadrajı koru.",
+  "physicalAlignWhiteBottom": "Beyaz altta",
+  "physicalAlignBlackBottom": "Siyah altta",
+  "physicalAlignDone": "Bitti"
+}

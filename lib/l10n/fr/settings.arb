@@ -1,0 +1,158 @@
+{
+  "settingsExplainWhy": "Explique pourquoi",
+  "settingsExplainWhyDescription": "Après chaque coup de l'ordinateur, une ligne sur ce qu'il menace ou prépare",
+  "settingsZenMode": "Mode zen",
+  "settingsZenModeDescription": "Pendant une partie, il ne reste que l'échiquier et les coups : pas d'Elo, de matériel, d'état, d'alertes ni de commentaires du coach",
+  "settingsTitle": "Réglages",
+  "settingsSectionBoard": "Échiquier",
+  "settingsSectionBoardHint": "Sons, vibrations, coordonnées, coups légaux et notation",
+  "settingsSectionGame": "Partie",
+  "settingsSectionGameHint": "Promotion, rotation, mode table et explications",
+  "settingsSectionAccessibility": "Accessibilité",
+  "settingsSectionAccessibilityHint": "Couleurs pour daltoniens, mode zen et confirmation du coup",
+  "settingsPreview": "Aperçu",
+  "settingsPreviewHint": "Touche pour essayer le coup.",
+  "settingsPreviewCollapse": "Réduire l'aperçu",
+  "settingsPreviewExpand": "Agrandir l'aperçu",
+  "settingsPreviewPlay": "Aperçu de l'échiquier. Touche pour jouer le coup d'exemple",
+  "settingsPreviewReset": "Aperçu de l'échiquier. Touche pour annuler le coup d'exemple",
+  "settingsAppTheme": "Apparence de l'app",
+  "settingsModeSystem": "Système",
+  "settingsModeLight": "Clair",
+  "settingsModeDark": "Sombre",
+  "settingsBoardTheme": "Thème de l'échiquier",
+  "settingsPieces": "Pièces",
+  "settingsAnimations": "Animations",
+  "settingsAnimationNone": "Aucune",
+  "settingsAnimationFast": "Rapide",
+  "settingsAnimationNormal": "Normale",
+  "settingsAnimationSlow": "Lente",
+  "settingsNotation": "Notation des coups",
+  "settingsNotationFigurine": "Figurine",
+  "settingsNotationItalian": "Italienne",
+  "settingsNotationEnglish": "Anglaise",
+  "settingsNotationChoice": "{name} ({example})",
+  "settingsPieceClassic": "Classique",
+  "settingsLegalMoves": "Afficher les coups légaux",
+  "settingsCoordinates": "Coordonnées",
+  "settingsCoordinatesOutside": "Coordonnées hors de l'échiquier",
+  "settingsCoordinatesOutsideDescription": "Lettres et chiffres sur le bord, sans masquer les pièces",
+  "settingsDrawShapes": "Flèches et cercles",
+  "settingsDrawShapesDescription": "Dessine avec deux doigts sur l'échiquier",
+  "settingsAutoQueen": "Toujours promouvoir en dame",
+  "settingsAutoFlip": "Retourner à chaque coup",
+  "settingsAutoFlipDescription": "Pour les parties à deux",
+  "settingsTableMode": "Mode table",
+  "settingsTableModeDescription": "Pièces du haut à l'envers, pour jouer face à face",
+  "settingsColorBlind": "Couleurs pour daltoniens",
+  "settingsColorBlindDescription": "Surbrillances sans rouge ni vert, bien contrastées sur tous les thèmes",
+  "settingsConfirmMove": "Confirmer le coup",
+  "settingsConfirmMoveDescription": "Demande confirmation avant de jouer chaque coup",
+  "settingsSound": "Sons",
+  "settingsVolume": "Volume",
+  "settingsVolumeValue": "{percent} %",
+  "settingsHaptics": "Vibrations",
+  "settingsBackup": "Sauvegarde et restauration",
+  "settingsBackupDescription": "Enregistre ou récupère toutes les données locales",
+  "settingsUnlockAll": "Tout débloquer",
+  "settingsUnlockAllDescription": "Thèmes, pièces et avatars disponibles sans les débloquer",
+  "settingsUnlockWith": "Se débloque avec : {requirement}",
+  "settingsLockedMessage": "{name} se débloque avec : {requirement}",
+  "settingsLockedKidMessage": "{name} : {reason}",
+  "settingsLockedSemantics": "{name}, verrouillé. {reason}",
+  "settingsThemeGreen": "Vert",
+  "settingsThemeBrown": "Bois",
+  "settingsThemeBlue": "Bleu",
+  "settingsThemeGrey": "Gris",
+  "settingsThemeSand": "Sable",
+  "settingsThemeOcean": "Océan",
+  "settingsThemeCoral": "Corail",
+  "settingsThemeNight": "Nuit",
+  "settingsThemeGold": "Or",
+  "settingsThemeArancia": "Orange",
+  "settingsThemeCrepuscolo": "Crépuscule",
+  "settingsThemePergamena": "Parchemin",
+  "settingsThemeCastello": "Château",
+  "settingsThemeBosco": "Forêt elfique",
+  "settingsThemeNoce": "Noyer",
+  "settingsThemeSpazio": "Espace",
+  "settingsThemeRetro": "Rétro",
+  "settingsThemeGiardino": "Jardin",
+  "settingsThemeTerracotta": "Terracotta",
+  "settingsSectionProfile": "Profil et données",
+  "settingsSectionProfileHint": "Avatar, progression et sauvegardes",
+  "settingsLegalMovesDescription": "Des points sur les cases que la pièce choisie peut atteindre",
+  "settingsCoordinatesDescription": "Lettres et chiffres pour repérer les cases",
+  "settingsLastMove": "Surligner le dernier coup",
+  "settingsLastMoveDescription": "Colore les cases de départ et d'arrivée du dernier coup",
+  "settingsSoundDescription": "Un son pour les coups, les prises, l'échec et la fin de partie",
+  "settingsVolumeDescription": "Règle la force des sons",
+  "settingsHapticsDescription": "Une courte vibration quand tu joues ou prends une pièce",
+  "settingsAutoQueenDescription": "Un pion qui atteint la dernière rangée devient une dame sans rien demander",
+  "settingsAnimationsDescription": "La vitesse de déplacement des pièces",
+  "settingsNotationDescription": "La façon d'écrire les coups dans la liste",
+  "settingsAppThemeDescription": "Clair, sombre ou comme le téléphone",
+  "settingsOpenProfile": "Ton profil",
+  "settingsOpenProfileDescription": "Avatar, photo, objectif du jour et rappel",
+  "settingsProgressEnabled": "XP, séries et réussites",
+  "settingsProgressEnabledDescription": "Désactivé, rien n'est enregistré",
+  "settingsLanguage": "Langue",
+  "settingsLanguageDescription": "Choisis la langue de l'app ou garde celle du téléphone",
+  "settingsLanguageSystem": "Comme le téléphone",
+  "settingsPremove": "Coup anticipé",
+  "@settingsPremove": {
+    "description": "Impostazioni: interruttore della premossa"
+  },
+  "settingsPremoveDescription": "Joue pendant que l'ordinateur réfléchit ; touche une case vide pour annuler",
+  "@settingsPremoveDescription": {
+    "description": "Impostazioni: descrizione della premossa"
+  },
+  "settingsMarkColor": "Couleur des flèches et des cercles",
+  "@settingsMarkColor": {
+    "description": "Impostazioni: colore di base di frecce e cerchi"
+  },
+  "settingsMarkColorDescription": "Dessine en maintenant une case appuyée puis en glissant ; à la souris, clic droit avec Maj, Ctrl ou Alt pour les autres couleurs",
+  "@settingsMarkColorDescription": {
+    "description": "Impostazioni: come si disegnano frecce e cerchi"
+  },
+  "settingsMarkColorGreen": "Vert",
+  "@settingsMarkColorGreen": {
+    "description": "Impostazioni: colore verde"
+  },
+  "settingsMarkColorRed": "Rouge",
+  "@settingsMarkColorRed": {
+    "description": "Impostazioni: colore rosso"
+  },
+  "settingsMarkColorBlue": "Bleu",
+  "@settingsMarkColorBlue": {
+    "description": "Impostazioni: colore blu"
+  },
+  "settingsMarkColorYellow": "Jaune",
+  "@settingsMarkColorYellow": {
+    "description": "Impostazioni: colore giallo"
+  },
+  "settingsMoveMethod": "Comment déplacer les pièces",
+  "@settingsMoveMethod": {
+    "description": "Impostazioni: scelta del modo di muovere"
+  },
+  "settingsMoveMethodDescription": "Deux touchers sont plus précis sur un téléphone ; un toucher au bord d'une case est corrigé quand seule la case voisine est possible",
+  "@settingsMoveMethodDescription": {
+    "description": "Impostazioni: descrizione del modo di muovere"
+  },
+  "settingsMoveMethodAuto": "Automatique",
+  "@settingsMoveMethodAuto": {
+    "description": "Impostazioni: due tocchi sul telefono, entrambi sugli schermi grandi"
+  },
+  "settingsMoveMethodBoth": "Touchers et glissement",
+  "@settingsMoveMethodBoth": {
+    "description": "Impostazioni: entrambi i modi"
+  },
+  "settingsMoveMethodTwoTaps": "Deux touchers",
+  "@settingsMoveMethodTwoTaps": {
+    "description": "Impostazioni: solo due tocchi"
+  },
+  "settingsMoveMethodDrag": "Glissement",
+  "@settingsMoveMethodDrag": {
+    "description": "Impostazioni: solo trascinamento"
+  }
+}

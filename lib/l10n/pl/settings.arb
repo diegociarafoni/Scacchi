@@ -1,0 +1,158 @@
+{
+  "settingsExplainWhy": "Wyjaśnij dlaczego",
+  "settingsExplainWhyDescription": "Po każdym ruchu komputera jedno zdanie o tym, co zagraża lub co przygotowuje",
+  "settingsZenMode": "Tryb zen",
+  "settingsZenModeDescription": "Podczas partii zostają tylko szachownica i ruchy: bez Elo, materiału, statusu, ostrzeżeń trenera i komentarzy",
+  "settingsTitle": "Ustawienia",
+  "settingsSectionBoard": "Szachownica",
+  "settingsSectionBoardHint": "Dźwięki, wibracje, współrzędne, dozwolone ruchy i notacja",
+  "settingsSectionGame": "Gra",
+  "settingsSectionGameHint": "Promocja, obracanie, tryb stołowy i wyjaśnienia",
+  "settingsSectionAccessibility": "Dostępność",
+  "settingsSectionAccessibilityHint": "Kolory dla daltonistów, tryb zen i potwierdzanie ruchu",
+  "settingsPreview": "Podgląd",
+  "settingsPreviewHint": "Dotknij, aby wypróbować ruch.",
+  "settingsPreviewCollapse": "Zwiń podgląd",
+  "settingsPreviewExpand": "Rozwiń podgląd",
+  "settingsPreviewPlay": "Podgląd szachownicy. Dotknij, aby zagrać przykładowy ruch",
+  "settingsPreviewReset": "Podgląd szachownicy. Dotknij, aby cofnąć przykładowy ruch",
+  "settingsAppTheme": "Wygląd aplikacji",
+  "settingsModeSystem": "Systemowy",
+  "settingsModeLight": "Jasny",
+  "settingsModeDark": "Ciemny",
+  "settingsBoardTheme": "Motyw szachownicy",
+  "settingsPieces": "Bierki",
+  "settingsAnimations": "Animacje",
+  "settingsAnimationNone": "Brak",
+  "settingsAnimationFast": "Szybkie",
+  "settingsAnimationNormal": "Normalne",
+  "settingsAnimationSlow": "Wolne",
+  "settingsNotation": "Notacja ruchów",
+  "settingsNotationFigurine": "Figurkowa",
+  "settingsNotationItalian": "Włoska",
+  "settingsNotationEnglish": "Angielska",
+  "settingsNotationChoice": "{name} ({example})",
+  "settingsPieceClassic": "Klasyczne",
+  "settingsLegalMoves": "Pokazuj dozwolone ruchy",
+  "settingsCoordinates": "Współrzędne",
+  "settingsCoordinatesOutside": "Współrzędne poza szachownicą",
+  "settingsCoordinatesOutsideDescription": "Litery i cyfry na brzegu, bez zasłaniania bierek",
+  "settingsDrawShapes": "Strzałki i kółka",
+  "settingsDrawShapesDescription": "Rysuj dwoma palcami na szachownicy",
+  "settingsAutoQueen": "Zawsze promuj na hetmana",
+  "settingsAutoFlip": "Obracaj co ruch",
+  "settingsAutoFlipDescription": "W partiach dwuosobowych",
+  "settingsTableMode": "Tryb stołowy",
+  "settingsTableModeDescription": "Górne bierki do góry nogami, by grać twarzą w twarz",
+  "settingsColorBlind": "Kolory dla daltonistów",
+  "settingsColorBlindDescription": "Wyróżnienia bez czerwieni i zieleni, z dobrym kontrastem w każdym motywie",
+  "settingsConfirmMove": "Potwierdzaj ruch",
+  "settingsConfirmMoveDescription": "Prosi o potwierdzenie przed każdym ruchem",
+  "settingsSound": "Dźwięki",
+  "settingsVolume": "Głośność",
+  "settingsVolumeValue": "{percent}%",
+  "settingsHaptics": "Wibracje",
+  "settingsBackup": "Kopia zapasowa i przywracanie",
+  "settingsBackupDescription": "Zapisz lub odzyskaj wszystkie dane lokalne",
+  "settingsUnlockAll": "Odblokuj wszystko",
+  "settingsUnlockAllDescription": "Motywy, bierki i awatary dostępne bez odblokowywania",
+  "settingsUnlockWith": "Odblokowanie: {requirement}",
+  "settingsLockedMessage": "{name} – odblokowanie: {requirement}",
+  "settingsLockedKidMessage": "{name}: {reason}",
+  "settingsLockedSemantics": "{name}, zablokowane. {reason}",
+  "settingsThemeGreen": "Zielony",
+  "settingsThemeBrown": "Drewno",
+  "settingsThemeBlue": "Niebieski",
+  "settingsThemeGrey": "Szary",
+  "settingsThemeSand": "Piasek",
+  "settingsThemeOcean": "Ocean",
+  "settingsThemeCoral": "Koral",
+  "settingsThemeNight": "Noc",
+  "settingsThemeGold": "Złoty",
+  "settingsThemeArancia": "Pomarańczowy",
+  "settingsThemeCrepuscolo": "Zmierzch",
+  "settingsThemePergamena": "Pergamin",
+  "settingsThemeCastello": "Zamek",
+  "settingsThemeBosco": "Elfi las",
+  "settingsThemeNoce": "Orzech",
+  "settingsThemeSpazio": "Kosmos",
+  "settingsThemeRetro": "Retro",
+  "settingsThemeGiardino": "Ogród",
+  "settingsThemeTerracotta": "Terakota",
+  "settingsSectionProfile": "Profil i dane",
+  "settingsSectionProfileHint": "Awatar, postępy i kopie zapasowe",
+  "settingsLegalMovesDescription": "Kropki na polach, na które może pójść wybrana bierka",
+  "settingsCoordinatesDescription": "Litery i cyfry ułatwiające rozpoznawanie pól",
+  "settingsLastMove": "Wyróżniaj ostatni ruch",
+  "settingsLastMoveDescription": "Koloruje pole, z którego ruszył ostatni ruch, i pole docelowe",
+  "settingsSoundDescription": "Dźwięk dla ruchów, bić, szacha i końca partii",
+  "settingsVolumeDescription": "Ustawia głośność dźwięków",
+  "settingsHapticsDescription": "Krótka wibracja przy ruchu lub biciu",
+  "settingsAutoQueenDescription": "Pion, który dojdzie do ostatniego wiersza, zamienia się w hetmana bez pytania",
+  "settingsAnimationsDescription": "Jak szybko poruszają się bierki",
+  "settingsNotationDescription": "Jak ruchy są zapisane na liście",
+  "settingsAppThemeDescription": "Jasny, ciemny lub taki jak w telefonie",
+  "settingsOpenProfile": "Twój profil",
+  "settingsOpenProfileDescription": "Awatar, zdjęcie, cel dzienny i przypomnienie",
+  "settingsProgressEnabled": "XP, serie i osiągnięcia",
+  "settingsProgressEnabledDescription": "Po wyłączeniu nic nie jest zapisywane",
+  "settingsLanguage": "Język",
+  "settingsLanguageDescription": "Wybierz język aplikacji lub taki jak w telefonie",
+  "settingsLanguageSystem": "Jak w telefonie",
+  "settingsMarkColor": "Kolor strzałek i kółek",
+  "@settingsMarkColor": {
+    "description": "Impostazioni: colore di base di frecce e cerchi"
+  },
+  "settingsMarkColorDescription": "Rysuje się, przytrzymując pole i przeciągając; myszą prawym przyciskiem z Shift, Ctrl lub Alt dla pozostałych kolorów",
+  "@settingsMarkColorDescription": {
+    "description": "Impostazioni: come si disegnano frecce e cerchi"
+  },
+  "settingsMarkColorGreen": "Zielony",
+  "@settingsMarkColorGreen": {
+    "description": "Impostazioni: colore verde"
+  },
+  "settingsMarkColorRed": "Czerwony",
+  "@settingsMarkColorRed": {
+    "description": "Impostazioni: colore rosso"
+  },
+  "settingsMarkColorBlue": "Niebieski",
+  "@settingsMarkColorBlue": {
+    "description": "Impostazioni: colore blu"
+  },
+  "settingsMarkColorYellow": "Żółty",
+  "@settingsMarkColorYellow": {
+    "description": "Impostazioni: colore giallo"
+  },
+  "settingsPremove": "Ruch wyprzedzający",
+  "@settingsPremove": {
+    "description": "Impostazioni: interruttore della premossa"
+  },
+  "settingsPremoveDescription": "Ruszaj się, gdy myśli komputer; dotknięcie pustego pola anuluje ruch",
+  "@settingsPremoveDescription": {
+    "description": "Impostazioni: descrizione della premossa"
+  },
+  "settingsMoveMethod": "Jak poruszać bierki",
+  "@settingsMoveMethod": {
+    "description": "Impostazioni: scelta del modo di muovere"
+  },
+  "settingsMoveMethodDescription": "Dwa dotknięcia są dokładniejsze na telefonie; dotknięcie przy krawędzi pola jest poprawiane, gdy możliwe jest tylko sąsiednie pole",
+  "@settingsMoveMethodDescription": {
+    "description": "Impostazioni: descrizione del modo di muovere"
+  },
+  "settingsMoveMethodAuto": "Automatycznie",
+  "@settingsMoveMethodAuto": {
+    "description": "Impostazioni: due tocchi sul telefono, entrambi sugli schermi grandi"
+  },
+  "settingsMoveMethodBoth": "Dotknięcia i przeciąganie",
+  "@settingsMoveMethodBoth": {
+    "description": "Impostazioni: entrambi i modi"
+  },
+  "settingsMoveMethodTwoTaps": "Dwa dotknięcia",
+  "@settingsMoveMethodTwoTaps": {
+    "description": "Impostazioni: solo due tocchi"
+  },
+  "settingsMoveMethodDrag": "Przeciąganie",
+  "@settingsMoveMethodDrag": {
+    "description": "Impostazioni: solo trascinamento"
+  }
+}

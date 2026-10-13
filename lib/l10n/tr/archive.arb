@@ -1,0 +1,45 @@
+{
+  "archiveShareSubject": "PGN oyunları",
+  "archiveTitle": "Oyunlar",
+  "archiveImportResult": "{count, plural, one{1 oyun içe aktarıldı} other{{count} oyun içe aktarıldı}}{skipped, plural, =0{} other{, {skipped} geçersiz}}",
+  "@archiveImportResult": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "skipped": {
+        "type": "int"
+      }
+    }
+  },
+  "archiveDeleteTitle": "Bu oyun silinsin mi?",
+  "archiveCancel": "Vazgeç",
+  "archiveDelete": "Sil",
+  "archivePgnCopied": "PGN kopyalandı",
+  "archiveImportPgn": "PGN içe aktar",
+  "archiveExportAll": "Tümünü PGN olarak dışa aktar",
+  "archiveUnreadable": "Arşiv okunamadı.",
+  "archiveSearchHint": "Oyuncuya veya türe göre ara",
+  "archiveEmpty": "Kayıtlı oyun yok.",
+  "archiveNoMatch": "Oyun bulunamadı.",
+  "archiveInProgress": "Devam ediyor",
+  "archiveActionsFor": "{title} için işlemler",
+  "@archiveActionsFor": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "archiveSharePgn": "PGN paylaş",
+  "archiveCopyPgn": "PGN kopyala",
+  "archiveImportHint": "Bir veya daha fazla PGN oyununu buraya yapıştır",
+  "archivePaste": "Yapıştır",
+  "archiveImport": "İçe aktar",
+  "archiveModeLocal": "yerel",
+  "archiveModeComputer": "bilgisayar",
+  "archiveModeImported": "içe aktarılmış",
+  "archiveModePhysical": "fiziksel tahta",
+  "archiveModeAnalysis": "analiz",
+  "archiveOpenAnalysis": "Analizde aç"
+}

@@ -11,14 +11,12 @@ import '../path/curriculum.dart';
 /// sfida alla portata, non una scalata.
 const recommendedBotMargin = 100;
 
-/// Partita non conclusa più recente, quella da riprendere. Le importate e
+/// Partita non conclusa più recente, quella da riprendere. Le importate, le analisi e
 /// quelle su scacchiera fisica non si riprendono nell'app.
 SavedGame? unfinishedGame(Iterable<SavedGame> games) {
   SavedGame? best;
   for (final g in games) {
-    if (g.finished ||
-        g.mode == SavedGame.imported ||
-        g.mode == SavedGame.physical) {
+    if (g.finished || !g.isPlayed || g.mode == SavedGame.physical) {
       continue;
     }
     if (best == null || g.updatedAt.isAfter(best.updatedAt)) best = g;

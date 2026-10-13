@@ -1,0 +1,452 @@
+{
+  "reviewCoachGeneric": "{move} daha iyiydi: pozisyonun kötüleşiyor.",
+  "@reviewCoachGeneric": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachBrilliant": "Parlak hamle: materyal feda ediyorsun ama en iyi seçim bu.",
+  "reviewCoachGreat": "Harika: pozisyonu koruyan tek hamle buydu.",
+  "reviewCoachBest": "En iyi hamle bu.",
+  "reviewCoachExcellent": "Mükemmel hamle, en iyisine çok yakın.",
+  "reviewCoachGood": "İyi hamle.",
+  "reviewCoachBook": "Bir açılış teorisi hamlesi.",
+  "reviewCoachAllowedMate": "{move} sonrası {side, select, white{Beyaz} other{Siyah}}, {reply} ile {mate} hamlede şah mat yapabilir.",
+  "@reviewCoachAllowedMate": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "side": {
+        "type": "String"
+      },
+      "mate": {
+        "type": "int"
+      },
+      "reply": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachMissedMate": "{move} ile {mate} hamlede şah mat vardı.",
+  "@reviewCoachMissedMate": {
+    "placeholders": {
+      "mate": {
+        "type": "int"
+      },
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachHanging": "{victim} {square} karesinde korumasız kaldı: {attacker} {victimRole, select, other{onu}} alabilir.",
+  "@reviewCoachHanging": {
+    "placeholders": {
+      "victim": {
+        "type": "String"
+      },
+      "victimRole": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "attacker": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachAllowedFork": "{move} sonrası {piece} aynı anda {targets} taşlarına saldırıyor: bu bir çatal.",
+  "@reviewCoachAllowedFork": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "targets": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachAllowedPin": "{move} sonrası {slider}, {square} karesindeki {pinned} taşını şaha karşı bağlıyor.",
+  "@reviewCoachAllowedPin": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "slider": {
+        "type": "String"
+      },
+      "pinned": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachExposedKing": "{move} sonrası şahın açıkta kaldı: {reply} şah çeker.",
+  "@reviewCoachExposedKing": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "reply": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachRecapture": "Taşı geri alabilirdin: {move} ile {piece} alınır.",
+  "@reviewCoachRecapture": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachWinMaterial": "Materyal kazanabilirdin: {move} ile {piece} alınır.",
+  "@reviewCoachWinMaterial": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachMissedFork": "{move} ile çatal yapabilirdin: {piece} şunlara saldırır: {targets}.",
+  "@reviewCoachMissedFork": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "targets": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachMissedDiscovery": "{move} ile açılan saldırı yapabilirdin: {piece} şuna saldırır: {target}.",
+  "@reviewCoachMissedDiscovery": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachMaterialLoss": "Bu hamle materyal kaybettiriyor: beklenen devamda yaklaşık {pawns, plural, one{1 piyon} other{{pawns} piyon}}.",
+  "@reviewCoachMaterialLoss": {
+    "placeholders": {
+      "pawns": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewCoachPieceColored": "{color, select, white{beyaz} other{siyah}} {role, select, pawn{piyon} knight{at} bishop{fil} rook{kale} queen{vezir} other{şah}}",
+  "@reviewCoachPieceColored": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      },
+      "color": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachListEnd": "{head} ve {last}",
+  "@reviewCoachListEnd": {
+    "placeholders": {
+      "head": {
+        "type": "String"
+      },
+      "last": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewTitle": "Oyun incelemesi",
+  "reviewAnalysePosition": "Bu pozisyonu analiz et",
+  "reviewPuzzlesSaved": "Kaydedilen bulmaca: {count}. Bulmacalar › Hatalarını gözden geçir bölümünde bulursun.",
+  "@reviewPuzzlesSaved": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewPuzzlesAlready": "Bu bulmacalar zaten kayıtlı.",
+  "reviewPuzzlesFailed": "Kaydedilemedi. Tekrar dene.",
+  "reviewSavePuzzles": "Hataları bulmaca olarak kaydet ({count})",
+  "@reviewSavePuzzles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewNoteNotSaved": "Not kaydedilemedi. Tekrar dene.",
+  "reviewRetryCorrect": "Doğru: {move} en iyi hamle.",
+  "@reviewRetryCorrect": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewRetryWrong": "{move} en iyi hamle değil. Tekrar dene.",
+  "@reviewRetryWrong": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewAnalysing": "Analiz ediliyor: {done} / {total}",
+  "@reviewAnalysing": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewStop": "Durdur",
+  "reviewCancelled": "İnceleme durduruldu.",
+  "reviewFailed": "Analiz başarısız oldu. Daha sonra tekrar dene.",
+  "reviewRetryPrompt": "{move} hamlesinden daha iyisini bul",
+  "@reviewRetryPrompt": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewRetrySolution": "En iyi hamle {move} idi.",
+  "@reviewRetrySolution": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewShowSolution": "Çözüm",
+  "reviewExit": "Çık",
+  "reviewStartPosition": "Başlangıç pozisyonu",
+  "reviewMoveVerdict": "{number} {move}: {verdict, select, brilliant{parlak hamle} great{harika hamle} best{en iyi hamle} excellent{mükemmel hamle} good{iyi hamle} book{açılış teorisi hamlesi} inaccuracy{kusur} mistake{hata} miss{kaçırılan fırsat} other{büyük hata}}",
+  "@reviewMoveVerdict": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "move": {
+        "type": "String"
+      },
+      "verdict": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewBestMove": "En iyi: {move}",
+  "@reviewBestMove": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewYourNote": "Notun: {note}",
+  "@reviewYourNote": {
+    "placeholders": {
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewTryAgain": "Tekrar dene",
+  "reviewAddNote": "Not ekle",
+  "reviewEditNote": "Notu düzenle",
+  "reviewNavStart": "Başa",
+  "reviewNavPrevious": "Önceki hamle",
+  "reviewNavNext": "Sonraki hamle",
+  "reviewNavEnd": "Sona",
+  "reviewSideWhite": "Beyaz",
+  "reviewSideBlack": "Siyah",
+  "reviewAccuracyUnavailable": "{side} doğruluğu mevcut değil",
+  "@reviewAccuracyUnavailable": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewAccuracyPercent": "{side} doğruluğu yüzde {value}",
+  "@reviewAccuracyPercent": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewAccuracy": "Doğruluk",
+  "reviewEstimatedElo": "Tahmini Elo ~{elo}",
+  "@reviewEstimatedElo": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewMovesByCategory": "Kategoriye göre hamleler",
+  "reviewCountsSemantics": "Beyaz {white}, Siyah {black}",
+  "@reviewCountsSemantics": {
+    "placeholders": {
+      "white": {
+        "type": "int"
+      },
+      "black": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewNoteTitle": "{move} için not",
+  "@reviewNoteTitle": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewNoteComment": "Yorum",
+  "reviewNoteCancel": "Vazgeç",
+  "reviewNoteSave": "Kaydet",
+  "reviewTimePerMove": "Hamle başına süre",
+  "reviewTimeNoHasty": "Hamle başına süre. Aceleyle yapılmış hata yok.",
+  "reviewTimeHastySemantics": "Hamle başına süre. Aceleyle yapılan hatalar: {moves}.",
+  "@reviewTimeHastySemantics": {
+    "placeholders": {
+      "moves": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewHastyMistakes": "Aceleyle yapılan hatalar: {moves}",
+  "@reviewHastyMistakes": {
+    "placeholders": {
+      "moves": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewHastyAdvice": "Hamle başına ortalama sürenin %40’ından az: oynamadan önce tehditlere bak.",
+  "reviewAccuracyByPhase": "Evreye göre doğruluk",
+  "reviewPhaseOpening": "Açılış",
+  "reviewPhaseMiddlegame": "Orta oyun",
+  "reviewPhaseEndgame": "Oyun sonu",
+  "reviewPhaseSemantics": "{phase}: Beyaz {white}, Siyah {black}",
+  "@reviewPhaseSemantics": {
+    "placeholders": {
+      "phase": {
+        "type": "String"
+      },
+      "white": {
+        "type": "String"
+      },
+      "black": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewPhaseValues": "Beyaz {white} · Siyah {black}",
+  "@reviewPhaseValues": {
+    "placeholders": {
+      "white": {
+        "type": "String"
+      },
+      "black": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewMoveSemantics": "{number} {move}, {verdict}{note, select, yes{, notlu} other{}}",
+  "@reviewMoveSemantics": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "move": {
+        "type": "String"
+      },
+      "verdict": {
+        "type": "String"
+      },
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewEvalGraph": "Değerlendirme grafiği",
+  "reviewClassBrilliant": "Parlak",
+  "reviewClassGreat": "Harika",
+  "reviewClassBest": "En iyi",
+  "reviewClassExcellent": "Mükemmel",
+  "reviewClassGood": "İyi",
+  "reviewClassBook": "Açılış",
+  "reviewClassInaccuracy": "Kusur",
+  "reviewClassMistake": "Hata",
+  "reviewClassMiss": "Kaçırılan fırsat",
+  "reviewClassBlunder": "Büyük hata",
+  "reviewScoreUnavailable": "Değerlendirme mevcut değil",
+  "reviewScoreMated": "Şah mat: {side, select, white{Beyaz} other{Siyah}} kazanır",
+  "@reviewScoreMated": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewScoreCheckmate": "Şah mat",
+  "reviewScoreMateIn": "{side, select, white{Beyaz} other{Siyah}}, {moves} hamlede mat yapar",
+  "@reviewScoreMateIn": {
+    "placeholders": {
+      "moves": {
+        "type": "int"
+      },
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewScoreEven": "Eşit",
+  "reviewScoreAhead": "{side, select, white{Beyaz} other{Siyah}} önde: {pawns}",
+  "@reviewScoreAhead": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      },
+      "pawns": {
+        "type": "String"
+      }
+    }
+  }
+}

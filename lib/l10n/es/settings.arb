@@ -1,0 +1,158 @@
+{
+  "settingsExplainWhy": "Explicar el porqué",
+  "settingsExplainWhyDescription": "Tras cada jugada del ordenador, una línea sobre lo que amenaza o prepara",
+  "settingsZenMode": "Modo zen",
+  "settingsZenModeDescription": "Durante la partida solo quedan el tablero y las jugadas: sin Elo, material, estado, avisos del entrenador ni comentarios",
+  "settingsTitle": "Ajustes",
+  "settingsSectionBoard": "Tablero",
+  "settingsSectionBoardHint": "Sonidos, vibración, coordenadas, jugadas legales y notación",
+  "settingsSectionGame": "Partida",
+  "settingsSectionGameHint": "Coronación, giro, modo mesa y explicaciones",
+  "settingsSectionAccessibility": "Accesibilidad",
+  "settingsSectionAccessibilityHint": "Colores para daltonismo, modo zen y confirmación de jugadas",
+  "settingsPreview": "Vista previa",
+  "settingsPreviewHint": "Toca para probar la jugada.",
+  "settingsPreviewCollapse": "Contraer la vista previa",
+  "settingsPreviewExpand": "Expandir la vista previa",
+  "settingsPreviewPlay": "Vista previa del tablero. Toca para hacer la jugada de ejemplo",
+  "settingsPreviewReset": "Vista previa del tablero. Toca para deshacer la jugada de ejemplo",
+  "settingsAppTheme": "Aspecto de la app",
+  "settingsModeSystem": "Sistema",
+  "settingsModeLight": "Claro",
+  "settingsModeDark": "Oscuro",
+  "settingsBoardTheme": "Tema del tablero",
+  "settingsPieces": "Piezas",
+  "settingsAnimations": "Animaciones",
+  "settingsAnimationNone": "Ninguna",
+  "settingsAnimationFast": "Rápida",
+  "settingsAnimationNormal": "Normal",
+  "settingsAnimationSlow": "Lenta",
+  "settingsNotation": "Notación de jugadas",
+  "settingsNotationFigurine": "Figurada",
+  "settingsNotationItalian": "Española",
+  "settingsNotationEnglish": "Inglesa",
+  "settingsNotationChoice": "{name} ({example})",
+  "settingsPieceClassic": "Clásico",
+  "settingsLegalMoves": "Mostrar jugadas legales",
+  "settingsCoordinates": "Coordenadas",
+  "settingsCoordinatesOutside": "Coordenadas fuera del tablero",
+  "settingsCoordinatesOutsideDescription": "Letras y números en el borde, sin tapar las piezas",
+  "settingsDrawShapes": "Flechas y círculos",
+  "settingsDrawShapesDescription": "Dibuja con dos dedos sobre el tablero",
+  "settingsAutoQueen": "Coronar siempre a dama",
+  "settingsAutoFlip": "Girar en cada turno",
+  "settingsAutoFlipDescription": "En partidas entre dos personas",
+  "settingsTableMode": "Modo mesa",
+  "settingsTableModeDescription": "Las piezas de arriba boca abajo, para jugar cara a cara",
+  "settingsColorBlind": "Colores para daltonismo",
+  "settingsColorBlindDescription": "Resaltados sin rojo ni verde, con buen contraste en todos los temas",
+  "settingsConfirmMove": "Confirmar la jugada",
+  "settingsConfirmMoveDescription": "Pide confirmación antes de hacer cada jugada",
+  "settingsSound": "Sonidos",
+  "settingsVolume": "Volumen",
+  "settingsVolumeValue": "{percent}%",
+  "settingsHaptics": "Vibración",
+  "settingsBackup": "Copia de seguridad y restauración",
+  "settingsBackupDescription": "Guarda o recupera todos los datos locales",
+  "settingsUnlockAll": "Desbloquear todo",
+  "settingsUnlockAllDescription": "Temas, piezas y avatares disponibles sin desbloquearlos",
+  "settingsUnlockWith": "Se desbloquea con: {requirement}",
+  "settingsLockedMessage": "{name} se desbloquea con: {requirement}",
+  "settingsLockedKidMessage": "{name}: {reason}",
+  "settingsLockedSemantics": "{name}, bloqueado. {reason}",
+  "settingsThemeGreen": "Verde",
+  "settingsThemeBrown": "Madera",
+  "settingsThemeBlue": "Azul",
+  "settingsThemeGrey": "Gris",
+  "settingsThemeSand": "Arena",
+  "settingsThemeOcean": "Océano",
+  "settingsThemeCoral": "Coral",
+  "settingsThemeNight": "Noche",
+  "settingsThemeGold": "Oro",
+  "settingsThemeArancia": "Naranja",
+  "settingsThemeCrepuscolo": "Crepúsculo",
+  "settingsThemePergamena": "Pergamino",
+  "settingsThemeCastello": "Castillo",
+  "settingsThemeBosco": "Bosque élfico",
+  "settingsThemeNoce": "Nogal",
+  "settingsThemeSpazio": "Espacio",
+  "settingsThemeRetro": "Retro",
+  "settingsThemeGiardino": "Jardín",
+  "settingsThemeTerracotta": "Terracota",
+  "settingsSectionProfile": "Perfil y datos",
+  "settingsSectionProfileHint": "Avatar, progreso y copias de seguridad",
+  "settingsLegalMovesDescription": "Puntos en las casillas a las que puede ir la pieza seleccionada",
+  "settingsCoordinatesDescription": "Letras y números para reconocer las casillas",
+  "settingsLastMove": "Resaltar la última jugada",
+  "settingsLastMoveDescription": "Colorea las casillas de origen y de destino de la última jugada",
+  "settingsSoundDescription": "Un sonido para las jugadas, las capturas, el jaque y el final de la partida",
+  "settingsVolumeDescription": "Ajusta lo fuertes que suenan los sonidos",
+  "settingsHapticsDescription": "Una vibración breve al mover o capturar",
+  "settingsAutoQueenDescription": "Un peón que llega a la última fila se convierte en dama sin preguntar",
+  "settingsAnimationsDescription": "La velocidad con que se mueven las piezas",
+  "settingsNotationDescription": "Cómo se escriben las jugadas en la lista",
+  "settingsAppThemeDescription": "Claro, oscuro o igual que el teléfono",
+  "settingsOpenProfile": "Tu perfil",
+  "settingsOpenProfileDescription": "Avatar, foto, objetivo diario y recordatorio",
+  "settingsProgressEnabled": "XP, rachas y logros",
+  "settingsProgressEnabledDescription": "Si está desactivado, no se guarda nada",
+  "settingsLanguage": "Idioma",
+  "settingsLanguageDescription": "Elige un idioma o usa el del teléfono",
+  "settingsLanguageSystem": "Igual que el teléfono",
+  "settingsPremove": "Jugada anticipada",
+  "@settingsPremove": {
+    "description": "Impostazioni: interruttore della premossa"
+  },
+  "settingsPremoveDescription": "Mueve mientras piensa el ordenador; toca una casilla vacía para cancelar",
+  "@settingsPremoveDescription": {
+    "description": "Impostazioni: descrizione della premossa"
+  },
+  "settingsMarkColor": "Color de flechas y círculos",
+  "@settingsMarkColor": {
+    "description": "Impostazioni: colore di base di frecce e cerchi"
+  },
+  "settingsMarkColorDescription": "Se dibujan manteniendo pulsada una casilla y arrastrando; con el ratón, botón derecho con Mayús, Ctrl o Alt para los otros colores",
+  "@settingsMarkColorDescription": {
+    "description": "Impostazioni: come si disegnano frecce e cerchi"
+  },
+  "settingsMarkColorGreen": "Verde",
+  "@settingsMarkColorGreen": {
+    "description": "Impostazioni: colore verde"
+  },
+  "settingsMarkColorRed": "Rojo",
+  "@settingsMarkColorRed": {
+    "description": "Impostazioni: colore rosso"
+  },
+  "settingsMarkColorBlue": "Azul",
+  "@settingsMarkColorBlue": {
+    "description": "Impostazioni: colore blu"
+  },
+  "settingsMarkColorYellow": "Amarillo",
+  "@settingsMarkColorYellow": {
+    "description": "Impostazioni: colore giallo"
+  },
+  "settingsMoveMethod": "Cómo mover las piezas",
+  "@settingsMoveMethod": {
+    "description": "Impostazioni: scelta del modo di muovere"
+  },
+  "settingsMoveMethodDescription": "Dos toques son más precisos en un teléfono; un toque en el borde de una casilla se corrige cuando solo es posible la casilla contigua",
+  "@settingsMoveMethodDescription": {
+    "description": "Impostazioni: descrizione del modo di muovere"
+  },
+  "settingsMoveMethodAuto": "Automático",
+  "@settingsMoveMethodAuto": {
+    "description": "Impostazioni: due tocchi sul telefono, entrambi sugli schermi grandi"
+  },
+  "settingsMoveMethodBoth": "Toques y arrastre",
+  "@settingsMoveMethodBoth": {
+    "description": "Impostazioni: entrambi i modi"
+  },
+  "settingsMoveMethodTwoTaps": "Dos toques",
+  "@settingsMoveMethodTwoTaps": {
+    "description": "Impostazioni: solo due tocchi"
+  },
+  "settingsMoveMethodDrag": "Arrastre",
+  "@settingsMoveMethodDrag": {
+    "description": "Impostazioni: solo trascinamento"
+  }
+}

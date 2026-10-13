@@ -1,0 +1,12 @@
+{
+  "tablebaseTitle": "Perfect eindspel",
+  "tablebaseCalculating": "Het perfecte eindspel wordt uitgerekend… dit gebeurt alleen de eerste keer",
+  "tablebaseWhiteMates": "{moves, plural, one{Wit wint: mat in {moves} zet} other{Wit wint: mat in {moves} zetten}}",
+  "tablebaseBlackMates": "{moves, plural, one{Zwart wint: mat in {moves} zet} other{Zwart wint: mat in {moves} zetten}}",
+  "tablebaseWhiteWins": "Wit wint",
+  "tablebaseBlackWins": "Zwart wint",
+  "tablebaseDraw": "Remise bij perfect spel",
+  "tablebaseBestMove": "Perfecte zet: {move}",
+  "tablebaseBestMoveHint": "Speel de perfecte zet",
+  "tablebaseShowMove": "Toon de perfecte zet"
+}

@@ -22,5 +22,21 @@
   "analysisBack": "Indietro",
   "analysisForward": "Avanti",
   "analysisResume": "Riprendi l'analisi",
-  "analysisPause": "Ferma l'analisi"
+  "analysisPause": "Ferma l'analisi",
+  "analysisMore": "Altre azioni",
+  "analysisSave": "Salva nell'archivio",
+  "analysisSharePgn": "Condividi il PGN",
+  "analysisSaveTitle": "Nome dell'analisi",
+  "analysisDefaultName": "Analisi del {date}",
+  "@analysisDefaultName": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "analysisSaved": "Analisi salvata nell'archivio",
+  "analysisSaveFailed": "Salvataggio non riuscito",
+  "analysisSaveConfirm": "Salva",
+  "analysisCancel": "Annulla"
 }
