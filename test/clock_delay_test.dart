@@ -107,4 +107,37 @@ void main() {
       expect(c.flagged, Side.white);
     });
   });
+
+  test('RF-40 il tempo dopo la mossa conta incremento e Bronstein', () {
+    final time = FakeTime();
+    final c = ChessClock(
+      const TimeControl(
+        minutes: 5,
+        increment: 1,
+        delay: 5,
+        delayType: DelayType.bronstein,
+      ),
+      now: () => time.now,
+    )..start(Side.white);
+    time.advance(const Duration(seconds: 4));
+    expect(
+      c.remainingAfterMove(Side.white),
+      const Duration(minutes: 5, seconds: 1),
+    );
+    c.switchAfterMove();
+    expect(c.remaining(Side.white), const Duration(minutes: 5, seconds: 1));
+  });
+
+  test('RF-40 rimettere i tempi a metà mossa non rinnova il ritardo', () {
+    final time = FakeTime();
+    final c = ChessClock(
+      const TimeControl(minutes: 5, delay: 5),
+      now: () => time.now,
+    )..start(Side.white);
+    time.advance(const Duration(seconds: 4));
+    final snap = c.snapshot();
+    c.restore(snap, Side.white);
+    time.advance(const Duration(seconds: 3));
+    expect(c.remaining(Side.white), const Duration(minutes: 5, seconds: -2));
+  });
 }

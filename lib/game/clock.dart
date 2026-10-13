@@ -155,14 +155,19 @@ class ChessClock {
   void pause() {
     final side = _active;
     if (side == null) return;
-    final elapsed = _elapsed();
     _remaining[side] = remaining(side);
+    _settle(side);
+    _active = null;
+    _since = null;
+  }
+
+  /// Registra ritardo consumato e tempo usato nella mossa in corso di [side].
+  void _settle(Side side) {
+    final elapsed = _elapsed();
     _graceLeft[side] = _grace(side) > elapsed
         ? _grace(side) - elapsed
         : Duration.zero;
     _turnSpent[side] = _turnSpent[side]! + elapsed;
-    _active = null;
-    _since = null;
   }
 
   /// Tempi residui correnti, da passare a [restore].
@@ -172,10 +177,16 @@ class ChessClock {
 
   /// Ripristina i tempi di [snapshot] e avvia [active], se indicato.
   void restore(Map<Side, Duration> snapshot, Side? active) {
+    // Rimettere i tempi nel mezzo di una mossa non rinnova il ritardo.
+    final running = _active;
+    if (running != null && running == active) {
+      _settle(running);
+    } else {
+      _newTurn();
+    }
     _remaining.addAll(snapshot);
     _active = null;
     _since = null;
-    _newTurn();
     if (active != null) start(active);
   }
 
@@ -186,17 +197,29 @@ class ChessClock {
     }
   }
 
+  /// Tempo che [side] avrà se muove adesso: l'incremento (e, con Bronstein, il
+  /// tempo usato fino al ritardo) si aggiungono al residuo; senza orologio in
+  /// corsa è il residuo.
+  Duration remainingAfterMove(Side side) =>
+      remaining(side) + (isRunning ? _bonus(side) : Duration.zero);
+
+  Duration _bonus(Side side) {
+    var bonus = Duration(seconds: control.increment);
+    if (control.delayType == DelayType.bronstein) {
+      final spent =
+          _turnSpent[side]! + (side == _active ? _elapsed() : Duration.zero);
+      bonus += spent < _delay ? spent : _delay;
+    }
+    return bonus;
+  }
+
   /// Ferma il lato che ha mosso, aggiunge l'incremento (e, con Bronstein, il
   /// tempo usato fino al ritardo) e avvia l'avversario.
   void switchAfterMove() {
     final side = _active;
     if (side == null) return;
+    final bonus = _bonus(side);
     pause();
-    var bonus = Duration(seconds: control.increment);
-    if (control.delayType == DelayType.bronstein) {
-      final spent = _turnSpent[side]!;
-      bonus += spent < _delay ? spent : _delay;
-    }
     _remaining[side] = _remaining[side]! + bonus;
     _graceLeft[side] = _delay;
     _turnSpent[side] = Duration.zero;

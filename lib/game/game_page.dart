@@ -1415,12 +1415,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final position = _game.position;
     // Tempo residuo di chi muove dopo la mossa, incremento compreso (RF-67);
     // la prima mossa avvia l'orologio e non lo incrementa.
-    final left = clock == null
-        ? null
-        : clock.remaining(position.turn) +
-              (clock.isRunning
-                  ? Duration(seconds: clock.control.increment)
-                  : Duration.zero);
+    final left = clock?.remainingAfterMove(position.turn);
     if (!_game.play(move, clock: left)) return false;
     final spoken = describeSan(
       _l10n(context),
@@ -1463,7 +1458,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     if (clock != null) {
       level = level.withinClock(
         clock.remaining(side),
-        Duration(seconds: clock.control.increment),
+        Duration(seconds: clock.control.increment + clock.control.delay),
       );
     }
     _refresh(animate: false);

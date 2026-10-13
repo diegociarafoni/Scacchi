@@ -57,7 +57,7 @@ class _CustomClockDialogState extends State<_CustomClockDialog> {
         minutes: minutes,
         increment: increment,
         delay: delay,
-        delayType: _type,
+        delayType: delay == 0 ? DelayType.simple : _type,
       ),
     );
   }
