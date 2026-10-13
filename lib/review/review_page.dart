@@ -173,7 +173,9 @@ class _ReviewPageState extends State<ReviewPage> {
     _index = widget.moves.length;
     _total = _positions.length;
     _board = ChessboardController(game: _gameData());
+    // Libro e chiavi si fissano subito: restano gli stessi per tutta l'analisi.
     final cached = ReviewCache.get(_cacheKey);
+    _storeKey;
     if (cached != null) {
       _review = cached;
       _phase = _Phase.done;
@@ -218,7 +220,7 @@ class _ReviewPageState extends State<ReviewPage> {
 
   /// Libro da usare per le mosse «Libro»: serve solo partendo dalla posizione
   /// iniziale e solo se è già caricato (l'app lo carica all'avvio).
-  OpeningBook? get _book =>
+  late final OpeningBook? _book =
       OpeningBook.key(widget.initial) == OpeningBook.key(Chess.initial)
       ? widget.book ?? loadedOpeningBook
       : null;

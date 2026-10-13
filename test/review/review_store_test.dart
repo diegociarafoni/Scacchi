@@ -92,6 +92,28 @@ void main() {
       expect(await store.get('k2'), isNotNull);
     });
 
+    test('una voce non valida si salta e le altre restano', () async {
+      final store = ReviewStore(file);
+      await store.put('buona', await scholarReview());
+      final json = jsonDecode(file.readAsStringSync()) as Map<String, Object?>;
+      (json['reviews']! as Map)['rotta'] = {'moves': 3};
+      file.writeAsStringSync(jsonEncode(json));
+      final again = ReviewStore(file);
+      expect(await again.get('rotta'), isNull);
+      expect(await again.get('buona'), isNotNull);
+    });
+
+    test('rileggere una revisione la salva dall\'eliminazione', () async {
+      final review = await scholarReview();
+      final store = ReviewStore(file, capacity: 2);
+      await store.put('a', review);
+      await store.put('b', review);
+      await store.get('a');
+      await store.put('c', review);
+      expect(await store.get('b'), isNull);
+      expect(await store.get('a'), isNotNull);
+    });
+
     test('un file illeggibile non blocca: si riparte vuoti', () async {
       file.writeAsStringSync('non è json');
       final store = ReviewStore(file);

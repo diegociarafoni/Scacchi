@@ -46,9 +46,14 @@ class ReviewStore {
       return await _file.read((json) {
             final map = <String, GameReview>{};
             for (final e in (json['reviews']! as Map).entries) {
-              map[e.key as String] = GameReview.fromJson(
-                (e.value as Map).cast(),
-              );
+              // Una voce non valida si salta senza perdere le altre.
+              try {
+                map[e.key as String] = GameReview.fromJson(
+                  (e.value as Map).cast(),
+                );
+              } on Object {
+                continue;
+              }
             }
             return map;
           }) ??
@@ -58,7 +63,13 @@ class ReviewStore {
     }
   }
 
-  Future<GameReview?> get(String key) async => (await _load())[key];
+  /// La revisione salvata; leggerla la rende la più recente.
+  Future<GameReview?> get(String key) async {
+    final reviews = await _load();
+    final review = reviews.remove(key);
+    if (review != null) reviews[key] = review;
+    return review;
+  }
 
   Future<void> put(String key, GameReview review) async {
     final reviews = await _load();
