@@ -29,7 +29,14 @@ void main() {
     });
 
     test('le etichette non valide non si leggono', () {
-      for (final bad in ['10+0/x5', '10+0/d', '10+0/d-1', '0+0/d5', '10/d5']) {
+      for (final bad in [
+        '10+0/x5',
+        '10+0/d',
+        '10+0/d-1',
+        '0+0/d5',
+        '10/d5',
+        '99999999999999999999+0',
+      ]) {
         expect(TimeControl.parse(bad), isNull, reason: bad);
       }
     });
