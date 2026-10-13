@@ -76,6 +76,16 @@ Una partita contro il computer che parte da un'apertura, in due modi:
 
 Una finestra chiede colore (nell'explorer) e livello del computer. È una `GameChallenge` (vedi [architettura.md](architettura.md)) con le mosse iniziali (`startMoves`) e la linea da seguire (`line`); l'annullamento è consentito, la partita viene salvata in archivio come le altre. Senza motore (Windows e Linux senza Stockfish) le icone non compaiono.
 
+### Gioca con l'istruttore
+
+Dalla scheda Aperture la voce **Gioca con l'istruttore** (solo con il motore) chiede colore e livello e avvia una partita dalla posizione iniziale in cui l'allenatore resta acceso (avvisi sugli errori, **Suggerisci**, **Minaccia**) e commenta l'apertura nel fumetto sopra la scacchiera (`SpeechStrip`, vedi [interfaccia.md](interfaccia.md)). È una `GameChallenge` con `instructor: true`; la logica è in `lib/coach/opening_coach.dart` (`openingNote`), pura e testata.
+
+- Finché la partita è nel libro dice il nome dell'apertura raggiunta e le tre mosse più giocate dalla posizione con la percentuale, ricavate dalle statistiche per mossa (senza statistiche, dalle continuazioni del libro). Una posizione conta come nota se è nel libro o ha mosse nelle statistiche;
+- alla prima mossa che porta fuori dal libro avvisa chi è uscito e, per l'utente, elenca le mosse che si giocavano. Da lì in poi tace sull'apertura e resta l'allenatore;
+- l'icona **Apri nell'esploratore** nella barra del titolo apre l'esploratore sulla posizione corrente.
+
+In modalità zen e nelle varianti il commento non compare. I testi sono in `lib/l10n/<lingua>/coach.arb` (prefisso `instructor`).
+
 ### Le tue aperture (RF-96)
 
 `lib/openings/personal_tree.dart` costruisce un albero delle aperture dalle partite dell'archivio locale (vedi [archivio.md](archivio.md)): per ogni posizione, quali mosse sono state giocate, quante volte e con che risultato, visto dal giocatore (vinte, patte, perse). Le posizioni si confrontano per EPD come nel libro, quindi le trasposizioni condividono le statistiche; una mossa conta una sola volta per partita.
@@ -95,6 +105,7 @@ Il collegamento con l'explorer del libro è nei due sensi, sempre sulla stessa p
 | `lib/openings/opening_name.dart` | Nome dell'apertura per la schermata di gioco |
 | `lib/openings/opening_stats.dart` | Statistiche per mossa: lettura, chiave della posizione, percentuali |
 | `lib/openings/explorer_page.dart` | Esplora aperture con barre dei risultati e comandi |
+| `lib/coach/opening_coach.dart` | Nota dell'istruttore: apertura, mosse più giocate, uscita dal libro |
 | `lib/openings/personal_tree.dart` | Albero delle proprie aperture dall'archivio, con filtri |
 | `lib/openings/personal_explorer_page.dart` | Schermata Le tue aperture |
 | `lib/openings/opening_names_it.dart` | Nomi delle aperture in italiano |

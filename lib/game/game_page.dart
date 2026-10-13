@@ -14,6 +14,7 @@ import '../bot_gallery/game_options.dart';
 import '../coach/coach_session.dart';
 import '../coach/explain_why.dart';
 import '../coach/hint_text.dart';
+import '../coach/opening_coach.dart';
 import '../editor/position_editor_page.dart';
 import '../engine/adaptive.dart';
 import '../engine/bot_collection.dart';
@@ -27,8 +28,12 @@ import '../exchange/qr_receive_page.dart';
 import '../exchange/qr_send_page.dart';
 import '../exchange/qr_transfer.dart';
 import '../l10n/app_localizations.dart';
+import '../openings/explorer_page.dart';
+import '../openings/opening_assets.dart';
+import '../openings/opening_book.dart';
 import '../openings/opening_game.dart';
 import '../openings/opening_name.dart';
+import '../openings/opening_stats.dart';
 import '../progress/activity.dart';
 import '../progress/avatar.dart';
 import '../progress/game_activity.dart';
@@ -89,6 +94,8 @@ class GamePage extends StatefulWidget {
     this.resume,
     this.progress,
     this.challenge,
+    this.openingBook,
+    this.openingStats,
     this.onFinished,
     this.store,
     this.qrScanner = zxingScanner,
@@ -124,6 +131,11 @@ class GamePage extends StatefulWidget {
   /// Partita già impostata da un'altra schermata: parte subito e non si può
   /// ricominciare né annullare.
   final GameChallenge? challenge;
+
+  /// Libro e statistiche delle aperture per l'istruttore; di default quelli
+  /// inclusi nell'app.
+  final Future<OpeningBook>? openingBook;
+  final Future<OpeningStats?>? openingStats;
 
   /// Esito per l'utente e mosse complete giocate, a fine partita contro il
   /// computer, una volta per partita (sfide).
@@ -374,6 +386,95 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   bool get _isChallenge => widget.challenge != null;
 
+  /// Partita con l'istruttore: aiuti accesi e commento sull'apertura.
+  bool get _instructor => widget.challenge?.instructor ?? false;
+
+  /// Nelle sfide niente aiuti, tranne che con l'istruttore.
+  bool get _helpAllowed => !_isChallenge || _instructor;
+
+  OpeningBook? _instructorBook;
+  OpeningStats? _instructorStats;
+
+  Future<void> _loadInstructor() async {
+    final OpeningBook book;
+    final OpeningStats? stats;
+    try {
+      book = await (widget.openingBook ?? openingBook());
+      stats = await (widget.openingStats ?? openingStatsOrNull());
+    } on Object {
+      // Senza libro l'istruttore resta il solo allenatore.
+      return;
+    }
+    if (!mounted) return;
+    _instructorBook = book;
+    _instructorStats = stats;
+    _instructorSay();
+  }
+
+  /// Commento dell'istruttore sull'apertura: nome, mosse più giocate, uscita
+  /// dal libro.
+  void _instructorSay() {
+    final book = _instructorBook;
+    if (!_instructor ||
+        book == null ||
+        _zen ||
+        _game.variant != Variant.standard) {
+      return;
+    }
+    final note = openingNote(book, _instructorStats, [
+      for (final m in _game.moves) m.move,
+    ]);
+    if (note == null) return;
+    final l = _kidL10n(context);
+    String list(List<OpeningChoice> choices) =>
+        [for (final c in choices) '${c.san} (${c.percent}%)'].join(', ');
+    final text = switch (note) {
+      InBookNote(:final opening, :final choices) =>
+        opening != null && choices.isNotEmpty
+            ? l.instructorInBookNamed(opening.localName, list(choices))
+            : opening != null
+            ? l.instructorInBookNameOnly(opening.localName)
+            : choices.isNotEmpty
+            ? l.instructorInBook(list(choices))
+            : null,
+      LeftBookNote(:final playedSan, :final by, :final expected) =>
+        by == _computerSide
+            ? l.instructorLeftComputer(playedSan)
+            : expected.isEmpty
+            ? l.instructorLeftYouBare(playedSan)
+            : l.instructorLeftYou(playedSan, list(expected)),
+    };
+    if (text == null) return;
+    _say(
+      Speech(
+        text,
+        expression: note is LeftBookNote
+            ? AvatarExpression.surprised
+            : AvatarExpression.encouraging,
+      ),
+      duration: const Duration(seconds: 12),
+    );
+  }
+
+  /// Apre l'esploratore sulla posizione raggiunta.
+  void _openExplorer() {
+    final moves = [for (final m in _game.moves) m.move];
+    // Con l'esploratore aperto orologio e computer restano fermi.
+    unawaited(
+      _whileSuspended<void>(
+        () => Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => ExplorerPage(
+              book: widget.openingBook,
+              stats: widget.openingStats ?? openingStatsOrNull(),
+              initialMoves: moves,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   /// Una sfida non ha ancora iniziato la partita: fino ad allora la scacchiera
   /// non accetta mosse.
   late bool _awaitingChallenge = _isChallenge;
@@ -396,6 +497,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         ? null
         : ChessGame.replay(Chess.initial, challenge.startMoves);
     _beginGame(game ?? ChessGame(), setup, null);
+    if (_instructor && _engineGame && !_zen) {
+      setState(() => _coachOn = true);
+      unawaited(_loadInstructor());
+    }
   }
 
   int? _lineDeviationNow() {
@@ -1277,6 +1382,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       }
     }
     _checkLine();
+    _instructorSay();
     return true;
   }
 
@@ -1795,6 +1901,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     // Dopo un annulla l'uscita già segnalata vale solo se resta nella partita.
     _reportedDeviation = _lineDeviationNow();
     _refresh(animate: false);
+    // Il commento sull'apertura segue la posizione tornata in campo.
+    _clearSpeech();
+    _instructorSay();
     unawaited(_computerMove());
   }
 
@@ -2184,7 +2293,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           ? null
           : _resign,
       // Nelle sfide niente aiuti: né suggerimenti né ripetizione della mossa.
-      coachOn: _computerSide == null || _isChallenge || _zen || !_engineGame
+      coachOn: _computerSide == null || !_helpAllowed || _zen || !_engineGame
           ? null
           : _coachOn,
       onCoach: () {
@@ -2199,7 +2308,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
               : 'Allenatore disattivato.',
         );
       },
-      hintAvailable: _computerSide != null && !_isChallenge && _engineGame,
+      hintAvailable: _computerSide != null && _helpAllowed && _engineGame,
       onHint: _humanToMove && _pendingMove == null ? _giveHint : null,
       onThreat: _humanToMove && _pendingMove == null ? _showThreat : null,
     );
@@ -2310,6 +2419,12 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                     ),
                 ];
               },
+            ),
+          if (_instructor)
+            IconButton(
+              tooltip: _kidL10n(context).instructorExplorer,
+              icon: const Icon(Icons.account_tree_outlined),
+              onPressed: _openExplorer,
             ),
           if (keyboardInBar)
             IconButton(
