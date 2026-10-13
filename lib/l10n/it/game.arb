@@ -464,5 +464,41 @@
   "gameBlackName": "Nome del Nero",
   "gameNameHint": "Facoltativo",
   "gameVariantTitle": "Variante",
-  "gameTimeControlTitle": "Cadenza"
+  "gameTimeControlTitle": "Cadenza",
+  "opponentHuman": "Due giocatori",
+  "opponentBot": "Bot",
+  "opponentNoEngine": "Per giocare contro il computer qui serve Stockfish installato.",
+  "opponentPlayAs": "Giochi con",
+  "opponentSideWhite": "Bianco",
+  "opponentSideRandom": "Caso",
+  "opponentSideBlack": "Nero",
+  "opponentAdaptive": "Adattivo",
+  "opponentAdaptiveInfo": "Livello {level}, circa {elo} Elo: si adegua ai tuoi risultati, per vincere circa metà delle partite.",
+  "@opponentAdaptiveInfo": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      },
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "opponentBeatenOn": "Battuto il {date}",
+  "@opponentBeatenOn": {
+    "description": "Sotto un bot già battuto; date è la data come gg/mm/aaaa",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "opponentBeaten": "Battuto",
+  "@opponentBeaten": {
+    "description": "Descrizione a voce dell'icona su un bot già battuto"
+  },
+  "opponentLocked": "Bloccato: batti un bot del gradino sotto",
+  "@opponentLocked": {
+    "description": "Descrizione a voce dell'icona del lucchetto su un bot bloccato"
+  }
 }

@@ -161,5 +161,17 @@
   "gameBlackName": "Black's name",
   "gameNameHint": "Optional",
   "gameVariantTitle": "Variant",
-  "gameTimeControlTitle": "Time control"
+  "gameTimeControlTitle": "Time control",
+  "opponentHuman": "Two players",
+  "opponentBot": "Bot",
+  "opponentNoEngine": "To play against the computer here, Stockfish needs to be installed.",
+  "opponentPlayAs": "You play",
+  "opponentSideWhite": "White",
+  "opponentSideRandom": "Random",
+  "opponentSideBlack": "Black",
+  "opponentAdaptive": "Adaptive",
+  "opponentAdaptiveInfo": "Level {level}, about {elo} Elo: it adapts to your results so you win about half of your games.",
+  "opponentBeatenOn": "Beaten on {date}",
+  "opponentBeaten": "Beaten",
+  "opponentLocked": "Locked: beat a bot from the step below"
 }
