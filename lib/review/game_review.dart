@@ -153,7 +153,9 @@ Future<GameReview?> reviewGame({
     if (cancelled()) return null;
     final score = terminal ?? l.firstOrNull?.score;
     if (score == null) {
-      throw StateError('Nessuna valutazione del motore per ${pos.fen}');
+      throw StateError(
+        'Nessuna valutazione del motore per ${pos.fen}', // l10n-ok
+      );
     }
     lines.add(l);
     scores.add(score);

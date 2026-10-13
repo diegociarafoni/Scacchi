@@ -23,11 +23,15 @@ enum CoachTheme {
   praise,
 }
 
+/// Commento dell'allenatore: il tema si ricava subito, il testo si compone
+/// con la lingua di chi lo legge solo quando serve.
 class CoachComment {
-  const CoachComment(this.theme, this.text);
+  const CoachComment(this.theme, this._text);
 
   final CoachTheme theme;
-  final String text;
+  final String Function(AppLocalizations l) _text;
+
+  String text(AppLocalizations l) => _text(l);
 }
 
 /// Spiegazione breve della mossa, generata localmente con regole a modello
@@ -39,12 +43,14 @@ class CoachComment {
 CoachComment? explainMove(
   MoveReview m, {
   MoveReview? previous,
-  AppLocalizations? kid,
+  bool kid = false,
   MoveNotation notation = MoveNotation.english,
 }) {
   String fmt(String san) => formatSan(san, notation);
   final c = m.classification;
-  if (!c.isError) return CoachComment(CoachTheme.praise, _praise[c]!);
+  if (!c.isError) {
+    return CoachComment(CoachTheme.praise, (l) => _praise(l, c));
+  }
 
   final before = Chess.fromSetup(Setup.parseFen(m.fenBefore));
   final after = before.play(m.move);
@@ -62,43 +68,40 @@ CoachComment? explainMove(
           ? null
           : CoachComment(
               CoachTheme.generic,
-              'Meglio ${fmt(m.bestSan!)}: la tua posizione peggiora.',
+              (l) => l.reviewCoachGeneric(fmt(m.bestSan!)),
             ));
 }
 
-const _praise = {
-  MoveClass.brilliant:
-      'Mossa brillante: sacrifichi materiale ma è la scelta migliore.',
-  MoveClass.great: 'Ottima: era l\'unica mossa che teneva la posizione.',
-  MoveClass.best: 'È la mossa migliore.',
-  MoveClass.excellent: 'Mossa eccellente, quasi come la migliore.',
-  MoveClass.good: 'Buona mossa.',
-  MoveClass.book: 'Mossa della teoria delle aperture.',
+/// Lode per una mossa non errata; le classi di errore non arrivano qui.
+String _praise(AppLocalizations l, MoveClass c) => switch (c) {
+  MoveClass.brilliant => l.reviewCoachBrilliant,
+  MoveClass.great => l.reviewCoachGreat,
+  MoveClass.best => l.reviewCoachBest,
+  MoveClass.excellent => l.reviewCoachExcellent,
+  MoveClass.book => l.reviewCoachBook,
+  _ => l.reviewCoachGood,
 };
 
 CoachComment? _allowedMate(
   MoveReview m,
   Position after,
-  AppLocalizations? kid,
+  bool kid,
   String Function(String) fmt,
 ) {
   final mate = m.replyScore?.mate;
   final reply = parseEngineMove(after, m.replyLine.firstOrNull);
   if (mate == null || mate <= 0 || reply == null) return null;
   final replySan = after.makeSan(reply).$2;
+  final side = after.turn.name;
   return CoachComment(
     CoachTheme.allowedMate,
-    kid?.kidCoachAllowedMate(fmt(m.san), fmt(replySan)) ??
-        'Dopo ${fmt(m.san)} il ${_sideName(after.turn)} dà matto in $mate '
-            'con ${fmt(replySan)}.',
+    (l) => kid
+        ? l.kidCoachAllowedMate(fmt(m.san), fmt(replySan))
+        : l.reviewCoachAllowedMate(fmt(m.san), side, mate, fmt(replySan)),
   );
 }
 
-CoachComment? _missedMate(
-  MoveReview m,
-  AppLocalizations? kid,
-  String Function(String) fmt,
-) {
+CoachComment? _missedMate(MoveReview m, bool kid, String Function(String) fmt) {
   final mate = m.bestScore?.mate;
   if (mate == null || mate <= 0 || m.bestSan == null) return null;
   // Ha ancora il matto, solo più lungo: non è un matto mancato.
@@ -106,8 +109,9 @@ CoachComment? _missedMate(
   if (replyMate != null && replyMate < 0) return null;
   return CoachComment(
     CoachTheme.missedMate,
-    kid?.kidCoachMissedMate(fmt(m.bestSan!)) ??
-        'Avevi il matto in $mate con ${fmt(m.bestSan!)}.',
+    (l) => kid
+        ? l.kidCoachMissedMate(fmt(m.bestSan!))
+        : l.reviewCoachMissedMate(mate, fmt(m.bestSan!)),
   );
 }
 
@@ -131,9 +135,12 @@ CoachComment? _hanging(Position before, Position after, List<String> reply) {
   if (lost < 2) return null;
   return CoachComment(
     CoachTheme.hangingPiece,
-    'Hai lasciato ${_the(victim.role)} in presa in ${first.to.name}: '
-    '${_the(attacker.role)} ${_colorAdj(attacker)} '
-    '${_pronoun(victim.role)} cattura.',
+    (l) => l.reviewCoachHanging(
+      _the(l, victim.role),
+      victim.role.name,
+      first.to.name,
+      _colored(l, attacker),
+    ),
   );
 }
 
@@ -149,10 +156,10 @@ CoachComment? _allowedFork(
   final next = after.play(first);
   final targets = _forkTargets(next, first.to);
   if (targets.length < 2) return null;
+  final san = fmt(after.makeSan(first).$2);
   return CoachComment(
     CoachTheme.allowedFork,
-    'Dopo ${fmt(after.makeSan(first).$2)} ${_the(mover.role)} ${_colorAdj(mover)} '
-    'attacca insieme ${_list(targets)}: è una forchetta.',
+    (l) => l.reviewCoachAllowedFork(san, _colored(l, mover), _list(l, targets)),
   );
 }
 
@@ -175,11 +182,15 @@ CoachComment? _allowedPin(
   if (_pinnedPiece(after, first.from, slider, me) == pinned) return null;
   if (next.board.attacksTo(first.to, me).isNotEmpty) return null;
   final role = next.board.pieceAt(pinned)!.role;
+  final san = fmt(after.makeSan(first).$2);
   return CoachComment(
     CoachTheme.allowedPin,
-    'Dopo ${fmt(after.makeSan(first).$2)} ${_the(slider.role)} '
-    '${_colorAdj(slider)} inchioda ${_the(role)} in ${pinned.name} contro '
-    'il re.',
+    (l) => l.reviewCoachAllowedPin(
+      san,
+      _colored(l, slider),
+      _the(l, role),
+      pinned.name,
+    ),
   );
 }
 
@@ -214,10 +225,10 @@ CoachComment? _exposedKing(
   final reply = parseEngineMove(after, m.replyLine.firstOrNull);
   if (reply == null || !after.play(reply).isCheck) return null;
   if (_couldCheckBefore(before, reply)) return null;
+  final replySan = fmt(after.makeSan(reply).$2);
   return CoachComment(
     CoachTheme.exposedKing,
-    'Dopo ${fmt(m.san)} il tuo re resta scoperto: '
-    '${fmt(after.makeSan(reply).$2)} è scacco.',
+    (l) => l.reviewCoachExposedKing(fmt(m.san), replySan),
   );
 }
 
@@ -273,7 +284,7 @@ CoachComment? _missedTactic(
     if (_recaptures(previous, best.to)) {
       return CoachComment(
         CoachTheme.missedCapture,
-        'Potevi riprendere il pezzo: $san cattura ${_the(captured.role)}.',
+        (l) => l.reviewCoachRecapture(san, _the(l, captured.role)),
       );
     }
     final defended = next.board.attacksTo(best.to, me.opposite).isNotEmpty;
@@ -282,7 +293,7 @@ CoachComment? _missedTactic(
     if (gain >= 2) {
       return CoachComment(
         CoachTheme.missedCapture,
-        'Potevi vincere materiale: $san cattura ${_the(captured.role)}.',
+        (l) => l.reviewCoachWinMaterial(san, _the(l, captured.role)),
       );
     }
   }
@@ -291,8 +302,8 @@ CoachComment? _missedTactic(
   if (targets.length >= 2) {
     return CoachComment(
       CoachTheme.missedFork,
-      'Potevi fare un doppio attacco con $san: ${_the(mover.role)} attacca '
-      '${_list(targets)}.',
+      (l) =>
+          l.reviewCoachMissedFork(san, _the(l, mover.role), _list(l, targets)),
     );
   }
 
@@ -311,8 +322,11 @@ CoachComment? _missedTactic(
       if (role == Role.king) continue;
       return CoachComment(
         CoachTheme.missedDiscovery,
-        'Potevi fare un attacco di scoperta con $san: ${_the(piece.role)} '
-        'attacca ${_the(role)}.',
+        (l) => l.reviewCoachMissedDiscovery(
+          san,
+          _the(l, piece.role),
+          _the(l, role),
+        ),
       );
     }
   }
@@ -333,7 +347,7 @@ CoachComment? _materialLoss(
   Position before,
   Position after,
   List<String> reply,
-  AppLocalizations? kid,
+  bool kid,
 ) {
   final me = before.turn;
   var pos = after;
@@ -346,9 +360,7 @@ CoachComment? _materialLoss(
   if (lost < 2) return null;
   return CoachComment(
     CoachTheme.materialLoss,
-    kid?.kidCoachMaterialLoss ??
-        'Questa mossa perde materiale: circa $lost pedoni nella variante '
-            'prevista.',
+    (l) => kid ? l.kidCoachMaterialLoss : l.reviewCoachMaterialLoss(lost),
   );
 }
 
@@ -392,34 +404,18 @@ List<Role> _forkTargets(Position pos, Square from) {
   return roles;
 }
 
-String _sideName(Side side) => side == Side.white ? 'Bianco' : 'Nero';
+/// «il cavallo», con l'articolo della lingua.
+String _the(AppLocalizations l, Role role) => l.whyPiece(role.name);
 
-const _names = {
-  Role.pawn: ('il', 'pedone', 'lo', false),
-  Role.knight: ('il', 'cavallo', 'lo', false),
-  Role.bishop: ('l\'', 'alfiere', 'lo', false),
-  Role.rook: ('la', 'torre', 'la', true),
-  Role.queen: ('la', 'donna', 'la', true),
-  Role.king: ('il', 're', 'lo', false),
-};
+/// «il cavallo nero»: colore e genere concordano nella lingua.
+String _colored(AppLocalizations l, Piece piece) =>
+    l.reviewCoachPieceColored(piece.role.name, piece.color.name);
 
-String _the(Role role) {
-  final (article, name, _, _) = _names[role]!;
-  return article.endsWith('\'') ? '$article$name' : '$article $name';
-}
-
-String _pronoun(Role role) => _names[role]!.$3;
-
-String _colorAdj(Piece piece) {
-  final feminine = _names[piece.role]!.$4;
-  final white = piece.color == Side.white;
-  return white
-      ? (feminine ? 'bianca' : 'bianco')
-      : (feminine ? 'nera' : 'nero');
-}
-
-String _list(List<Role> roles) {
-  final names = roles.map(_the).toList();
+String _list(AppLocalizations l, List<Role> roles) {
+  final names = [for (final r in roles) _the(l, r)];
   if (names.length == 1) return names.single;
-  return '${names.sublist(0, names.length - 1).join(', ')} e ${names.last}';
+  return l.reviewCoachListEnd(
+    names.sublist(0, names.length - 1).join(', '),
+    names.last,
+  );
 }

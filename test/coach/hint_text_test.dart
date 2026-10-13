@@ -1,17 +1,31 @@
 import 'package:dartchess/dartchess.dart';
+import 'package:flutter/widgets.dart' show Locale;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/coach/hint_text.dart';
+import 'package:scacchi/l10n/app_localizations.dart';
+
+final _it = lookupAppLocalizations(const Locale('it'));
 
 Position fen(String f) => Chess.fromSetup(Setup.parseFen(f));
 
-String move(String f, String uci) => describeHintMove(fen(f), Move.parse(uci)!);
+String move(String f, String uci) =>
+    describeHintMove(_it, fen(f), Move.parse(uci)!);
 
 void main() {
   group('RF-74 suggerimento in parole semplici', () {
     test('il primo livello nomina solo il pezzo', () {
-      expect(describeHintPiece(Chess.initial, Square.g1), 'Muovi il cavallo.');
-      expect(describeHintPiece(Chess.initial, Square.c1), 'Muovi l\'alfiere.');
-      expect(describeHintPiece(Chess.initial, Square.d1), 'Muovi la donna.');
+      expect(
+        describeHintPiece(_it, Chess.initial, Square.g1),
+        'Muovi il cavallo.',
+      );
+      expect(
+        describeHintPiece(_it, Chess.initial, Square.c1),
+        'Muovi l\'alfiere.',
+      );
+      expect(
+        describeHintPiece(_it, Chess.initial, Square.d1),
+        'Muovi la donna.',
+      );
     });
 
     test('una mossa semplice dice pezzo e casa', () {
@@ -77,7 +91,7 @@ void main() {
 
     test('negli scacchi960 il re sulla torre è un arrocco', () {
       final pos = fen('4k3/8/8/8/8/8/8/1K5R w H - 0 1');
-      expect(describeHintMove(pos, Move.parse('b1h1')!), 'Arrocca corto.');
+      expect(describeHintMove(_it, pos, Move.parse('b1h1')!), 'Arrocca corto.');
     });
 
     test('con il re sotto scacco si dice anche lo scacco matto dato', () {
@@ -97,7 +111,7 @@ void main() {
     test('senza numeri rimanda al cerchio sulla scacchiera', () {
       final pos = fen('4k3/8/8/3p4/8/8/8/3RK3 w - - 0 1');
       expect(
-        describeHintMove(pos, Move.parse('d1d5')!, showSquare: false),
+        describeHintMove(_it, pos, Move.parse('d1d5')!, showSquare: false),
         'Sposta la torre sul cerchio e cattura il pedone.',
       );
     });

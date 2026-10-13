@@ -1,19 +1,18 @@
 /// Categorie della revisione della partita (RF-61).
 enum MoveClass {
-  brilliant('Brillante', '!!'),
-  great('Ottima', '!'),
-  best('Migliore', '★'),
-  excellent('Eccellente', '👍'),
-  good('Buona', '✓'),
-  book('Libro', '📖'),
-  inaccuracy('Imprecisione', '?!'),
-  mistake('Errore', '?'),
-  miss('Occasione mancata', '✗'),
-  blunder('Errore grave', '??');
+  brilliant('!!'),
+  great('!'),
+  best('★'),
+  excellent('👍'),
+  good('✓'),
+  book('📖'),
+  inaccuracy('?!'),
+  mistake('?'),
+  miss('✗'),
+  blunder('??');
 
-  const MoveClass(this.label, this.symbol);
+  const MoveClass(this.symbol);
 
-  final String label;
   final String symbol;
 
   bool get isError => index >= MoveClass.inaccuracy.index;

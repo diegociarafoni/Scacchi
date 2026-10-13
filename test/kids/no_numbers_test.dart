@@ -348,10 +348,10 @@ void main() {
         best: line(['h1h8'], const EngineScore.cp(0)),
         reply: line(['e8f7', 'h1d1', 'd8d1'], const EngineScore.cp(500)),
       );
-      final c = explainMove(m, kid: l)!;
+      final c = explainMove(m, kid: true)!;
       expect(c.theme, CoachTheme.materialLoss);
-      expect(c.text, isNot(matches(_digit)));
-      expect(c.text, isNot(contains('pedoni')));
+      expect(c.text(l), isNot(matches(_digit)));
+      expect(c.text(l), isNot(contains('pedoni')));
     });
 
     test('matto concesso e mancato senza «matto in N»', () async {
@@ -361,10 +361,10 @@ void main() {
         best: line(['g7g6'], const EngineScore.cp(-30)),
         reply: line(['h5f7'], const EngineScore.mate(1)),
       );
-      final a = explainMove(allowed, kid: l)!;
+      final a = explainMove(allowed, kid: true)!;
       expect(a.theme, CoachTheme.allowedMate);
-      expect(a.text, contains('Qxf7#'));
-      expect(a.text, isNot(contains('matto in')));
+      expect(a.text(l), contains('Qxf7#'));
+      expect(a.text(l), isNot(contains('matto in')));
 
       final missed = await reviewOne(
         'r1bqkbnr/pppp1ppp/2n5/4p3/2B1P3/5Q2/PPPP1PPP/RNB1K1NR w KQkq - 4 4',
@@ -372,10 +372,10 @@ void main() {
         best: line(['f3f7'], const EngineScore.mate(1)),
         reply: line(['g8f6'], const EngineScore.cp(-20)),
       );
-      final b = explainMove(missed, kid: l)!;
+      final b = explainMove(missed, kid: true)!;
       expect(b.theme, CoachTheme.missedMate);
-      expect(b.text, contains('Qxf7#'));
-      expect(b.text, isNot(contains('matto in')));
+      expect(b.text(l), contains('Qxf7#'));
+      expect(b.text(l), isNot(contains('matto in')));
     });
   });
 

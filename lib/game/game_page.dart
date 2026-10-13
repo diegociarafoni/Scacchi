@@ -1254,7 +1254,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       'L\'allenatore valuta la mossa…',
       duration: const Duration(seconds: 2),
     );
-    final kid = _kid ? _kidL10n(context) : null;
+    final kid = _kid;
     final retry = await _whileSuspended<bool>(() async {
       final MoveVerdict verdict;
       try {
@@ -1268,7 +1268,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           !_coaching) {
         return false;
       }
-      final text = verdict.comment?.text;
+      final text = verdict.comment?.text(_kidL10n(context));
       final played = verdict.review.move;
       // Se nel frattempo l'allenatore è stato spento, il giudizio non serve.
       if (played is NormalMove && _coaching) {
@@ -1360,8 +1360,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final color = marks.hint;
     final to = hint.to;
     final text = to == null
-        ? describeHintPiece(position, hint.from)
+        ? describeHintPiece(_kidL10n(context), position, hint.from)
         : describeHintMove(
+            _kidL10n(context),
             position,
             NormalMove(from: hint.from, to: to, promotion: hint.promotion),
             showSquare: !_kid,
