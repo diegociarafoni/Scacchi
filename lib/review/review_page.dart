@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import '../analysis/analysis_page.dart';
 import '../game/clock.dart';
 import '../game/move_note.dart';
+import '../game/move_note_dialog.dart';
 import '../kids/kid_display.dart';
 import '../l10n/app_localizations.dart';
 import '../settings/notation.dart';
@@ -299,10 +300,10 @@ class _ReviewPageState extends State<ReviewPage> {
   void _refreshBoard() => _board.updatePosition(_gameData());
 
   Future<void> _editNote(int ply) async {
-    final note = await showDialog<MoveNote>(
-      context: context,
-      builder: (_) =>
-          _NoteDialog(san: _n(_review!.moves[ply].san), note: _notes[ply]),
+    final note = await showMoveNoteDialog(
+      context,
+      san: _n(_review!.moves[ply].san),
+      note: _notes[ply],
     );
     if (note == null || !mounted) return;
     final saved = note.isEmpty ? null : note;
@@ -800,80 +801,6 @@ class _Summary extends StatelessWidget {
                 ),
             ],
           ),
-      ],
-    );
-  }
-}
-
-/// Scelta di simbolo e commento personali per una mossa (RF-55). Restituisce
-/// la nota (anche vuota, per toglierla) o niente se si annulla.
-class _NoteDialog extends StatefulWidget {
-  const _NoteDialog({required this.san, required this.note});
-
-  final String san;
-  final MoveNote? note;
-
-  @override
-  State<_NoteDialog> createState() => _NoteDialogState();
-}
-
-class _NoteDialogState extends State<_NoteDialog> {
-  late MoveSymbol? _symbol = widget.note?.symbol;
-  late final TextEditingController _comment = TextEditingController(
-    text: widget.note?.comment,
-  );
-
-  @override
-  void dispose() {
-    _comment.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    return AlertDialog(
-      title: Text(l.reviewNoteTitle(widget.san)),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Wrap(
-              spacing: 8,
-              children: [
-                for (final symbol in MoveSymbol.values)
-                  ChoiceChip(
-                    label: Text(symbol.text),
-                    selected: _symbol == symbol,
-                    onSelected: (on) =>
-                        setState(() => _symbol = on ? symbol : null),
-                  ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _comment,
-              decoration: InputDecoration(labelText: l.reviewNoteComment),
-              maxLines: 3,
-              minLines: 1,
-              textCapitalization: TextCapitalization.sentences,
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text(l.reviewNoteCancel),
-        ),
-        FilledButton(
-          onPressed: () => Navigator.pop(
-            context,
-            MoveNote.of(symbol: _symbol, comment: _comment.text),
-          ),
-          child: Text(l.reviewNoteSave),
-        ),
       ],
     );
   }

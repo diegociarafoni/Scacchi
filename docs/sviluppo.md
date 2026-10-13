@@ -142,7 +142,7 @@ I golden si rigenerano con `--update-goldens` dopo una modifica voluta dell'aspe
 | RF-52 esplorazione con avanti e indietro, varianti ad albero, salvataggio dell'analisi e PGN con varianti | ✓ | |
 | RF-60 revisione completa con avanzamento e interruzione | ✓ | |
 | RF-61, RF-62 classificazione delle mosse, Brillante e Ottima | ✓ | |
-| RF-55 annotazioni (simbolo e commento) sulle mosse, conservate in import ed export PGN (modifica dalla revisione di una partita dell'archivio; nella partita in corso e nell'analisi: da fare) | ✓ | ✓ |
+| RF-55 annotazioni (simbolo e commento) sulle mosse, conservate in import ed export PGN (modifica dalla revisione e dall'analisi, anche sulle varianti e su una partita dell'archivio; nella partita in corso: da fare) | ✓ | ✓ |
 | RF-56 minaccia dell'avversario nell'analisi e nella partita con l'allenatore | ✓ | ✓ |
 | RF-63 precisione, conteggi e stima della forza | ✓ | |
 | RF-67 tempo residuo a ogni mossa nel PGN (`[%clk]`, import ed export), registrato in partita, tempo per mossa ed errori in fretta nella revisione | ✓ | |
