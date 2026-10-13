@@ -1,0 +1,452 @@
+{
+  "reviewCoachGeneric": "Mieux valait jouer {move} : ta position se dégrade.",
+  "@reviewCoachGeneric": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachBrilliant": "Coup brillant : tu sacrifies du matériel, mais c'est le meilleur choix.",
+  "reviewCoachGreat": "Très bien : c'était le seul coup qui tenait la position.",
+  "reviewCoachBest": "C'est le meilleur coup.",
+  "reviewCoachExcellent": "Excellent coup, presque aussi bon que le meilleur.",
+  "reviewCoachGood": "Bon coup.",
+  "reviewCoachBook": "Un coup de théorie d'ouverture.",
+  "reviewCoachAllowedMate": "Après {move}, {side, select, white{les Blancs} other{les Noirs}} peuvent donner échec et mat en {mate} avec {reply}.",
+  "@reviewCoachAllowedMate": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "side": {
+        "type": "String"
+      },
+      "mate": {
+        "type": "int"
+      },
+      "reply": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachMissedMate": "Tu avais un échec et mat en {mate} avec {move}.",
+  "@reviewCoachMissedMate": {
+    "placeholders": {
+      "mate": {
+        "type": "int"
+      },
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachHanging": "Tu as laissé {victim} en prise sur {square} : {attacker} peut {victimRole, select, queen{la} rook{la} other{le}} prendre.",
+  "@reviewCoachHanging": {
+    "placeholders": {
+      "victim": {
+        "type": "String"
+      },
+      "victimRole": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      },
+      "attacker": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachAllowedFork": "Après {move}, {piece} attaque {targets} en même temps : c'est une fourchette.",
+  "@reviewCoachAllowedFork": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "targets": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachAllowedPin": "Après {move}, {slider} cloue {pinned} sur {square} contre le roi.",
+  "@reviewCoachAllowedPin": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "slider": {
+        "type": "String"
+      },
+      "pinned": {
+        "type": "String"
+      },
+      "square": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachExposedKing": "Après {move}, ton roi reste exposé : {reply} donne échec.",
+  "@reviewCoachExposedKing": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "reply": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachRecapture": "Tu pouvais reprendre la pièce : {move} prend {piece}.",
+  "@reviewCoachRecapture": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachWinMaterial": "Tu pouvais gagner du matériel : {move} prend {piece}.",
+  "@reviewCoachWinMaterial": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachMissedFork": "Tu pouvais faire une fourchette avec {move} : {piece} attaque {targets}.",
+  "@reviewCoachMissedFork": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "targets": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachMissedDiscovery": "Tu pouvais jouer une attaque à la découverte avec {move} : {piece} attaque {target}.",
+  "@reviewCoachMissedDiscovery": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      },
+      "piece": {
+        "type": "String"
+      },
+      "target": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachMaterialLoss": "Ce coup fait perdre du matériel : environ {pawns, plural, one{1 pion} other{{pawns} pions}} dans la suite attendue.",
+  "@reviewCoachMaterialLoss": {
+    "placeholders": {
+      "pawns": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewCoachPieceColored": "{role, select, pawn{le pion {color, select, white{blanc} other{noir}}} knight{le cavalier {color, select, white{blanc} other{noir}}} bishop{le fou {color, select, white{blanc} other{noir}}} rook{la tour {color, select, white{blanche} other{noire}}} queen{la dame {color, select, white{blanche} other{noire}}} other{le roi {color, select, white{blanc} other{noir}}}}",
+  "@reviewCoachPieceColored": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      },
+      "color": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewCoachListEnd": "{head} et {last}",
+  "@reviewCoachListEnd": {
+    "placeholders": {
+      "head": {
+        "type": "String"
+      },
+      "last": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewTitle": "Analyse de la partie",
+  "reviewAnalysePosition": "Analyser cette position",
+  "reviewPuzzlesSaved": "Problèmes enregistrés : {count}. Tu les trouveras dans Problèmes › Revoir tes erreurs.",
+  "@reviewPuzzlesSaved": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewPuzzlesAlready": "Ces problèmes sont déjà enregistrés.",
+  "reviewPuzzlesFailed": "Enregistrement impossible. Réessaie.",
+  "reviewSavePuzzles": "Enregistrer mes erreurs en problèmes ({count})",
+  "@reviewSavePuzzles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewNoteNotSaved": "Note non enregistrée. Réessaie.",
+  "reviewRetryCorrect": "Correct : {move} est le meilleur coup.",
+  "@reviewRetryCorrect": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewRetryWrong": "{move} n'est pas le meilleur coup. Réessaie.",
+  "@reviewRetryWrong": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewAnalysing": "Analyse : {done} sur {total}",
+  "@reviewAnalysing": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewStop": "Arrêter",
+  "reviewCancelled": "Analyse arrêtée.",
+  "reviewFailed": "L'analyse a échoué. Réessaie plus tard.",
+  "reviewRetryPrompt": "Trouve un meilleur coup que {move}",
+  "@reviewRetryPrompt": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewRetrySolution": "Le meilleur coup était {move}.",
+  "@reviewRetrySolution": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewShowSolution": "Solution",
+  "reviewExit": "Quitter",
+  "reviewStartPosition": "Position de départ",
+  "reviewMoveVerdict": "{number} {move} est {verdict, select, brilliant{un coup brillant} great{un très bon coup} best{le meilleur coup} excellent{un excellent coup} good{un bon coup} book{un coup de théorie} inaccuracy{une imprécision} mistake{une erreur} miss{une occasion manquée} other{une gaffe}}",
+  "@reviewMoveVerdict": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "move": {
+        "type": "String"
+      },
+      "verdict": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewBestMove": "Meilleur : {move}",
+  "@reviewBestMove": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewYourNote": "Ta note : {note}",
+  "@reviewYourNote": {
+    "placeholders": {
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewTryAgain": "Réessayer",
+  "reviewAddNote": "Ajouter une note",
+  "reviewEditNote": "Modifier la note",
+  "reviewNavStart": "Début",
+  "reviewNavPrevious": "Coup précédent",
+  "reviewNavNext": "Coup suivant",
+  "reviewNavEnd": "Fin",
+  "reviewSideWhite": "Blancs",
+  "reviewSideBlack": "Noirs",
+  "reviewAccuracyUnavailable": "{side} : précision indisponible",
+  "@reviewAccuracyUnavailable": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewAccuracyPercent": "{side} : précision {value} pour cent",
+  "@reviewAccuracyPercent": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewAccuracy": "Précision",
+  "reviewEstimatedElo": "Elo estimé ~{elo}",
+  "@reviewEstimatedElo": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewMovesByCategory": "Coups par catégorie",
+  "reviewCountsSemantics": "Blancs {white}, Noirs {black}",
+  "@reviewCountsSemantics": {
+    "placeholders": {
+      "white": {
+        "type": "int"
+      },
+      "black": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewNoteTitle": "Note sur {move}",
+  "@reviewNoteTitle": {
+    "placeholders": {
+      "move": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewNoteComment": "Commentaire",
+  "reviewNoteCancel": "Annuler",
+  "reviewNoteSave": "Enregistrer",
+  "reviewTimePerMove": "Temps par coup",
+  "reviewTimeNoHasty": "Temps par coup. Aucune erreur jouée trop vite.",
+  "reviewTimeHastySemantics": "Temps par coup. Erreurs jouées trop vite : {moves}.",
+  "@reviewTimeHastySemantics": {
+    "placeholders": {
+      "moves": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewHastyMistakes": "Erreurs jouées trop vite : {moves}",
+  "@reviewHastyMistakes": {
+    "placeholders": {
+      "moves": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewHastyAdvice": "Moins de 40 % de ton temps moyen par coup : avant de jouer, cherche les menaces.",
+  "reviewAccuracyByPhase": "Précision par phase",
+  "reviewPhaseOpening": "Ouverture",
+  "reviewPhaseMiddlegame": "Milieu de partie",
+  "reviewPhaseEndgame": "Finale",
+  "reviewPhaseSemantics": "{phase} : Blancs {white}, Noirs {black}",
+  "@reviewPhaseSemantics": {
+    "placeholders": {
+      "phase": {
+        "type": "String"
+      },
+      "white": {
+        "type": "String"
+      },
+      "black": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewPhaseValues": "Blancs {white} · Noirs {black}",
+  "@reviewPhaseValues": {
+    "placeholders": {
+      "white": {
+        "type": "String"
+      },
+      "black": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewMoveSemantics": "{number} {move}, {verdict}{note, select, yes{, avec une note} other{}}",
+  "@reviewMoveSemantics": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      },
+      "move": {
+        "type": "String"
+      },
+      "verdict": {
+        "type": "String"
+      },
+      "note": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewEvalGraph": "Graphique d'évaluation",
+  "reviewClassBrilliant": "Brillant",
+  "reviewClassGreat": "Très bon",
+  "reviewClassBest": "Meilleur",
+  "reviewClassExcellent": "Excellent",
+  "reviewClassGood": "Bon",
+  "reviewClassBook": "Théorie",
+  "reviewClassInaccuracy": "Imprécision",
+  "reviewClassMistake": "Erreur",
+  "reviewClassMiss": "Occasion manquée",
+  "reviewClassBlunder": "Gaffe",
+  "reviewScoreUnavailable": "Évaluation indisponible",
+  "reviewScoreMated": "Échec et mat : {side, select, white{les Blancs gagnent} other{les Noirs gagnent}}",
+  "@reviewScoreMated": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewScoreCheckmate": "Échec et mat",
+  "reviewScoreMateIn": "{side, select, white{Les Blancs ont} other{Les Noirs ont}} échec et mat en {moves}",
+  "@reviewScoreMateIn": {
+    "placeholders": {
+      "moves": {
+        "type": "int"
+      },
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewScoreEven": "Égalité",
+  "reviewScoreAhead": "{side, select, white{Les Blancs mènent} other{Les Noirs mènent}} de {pawns}",
+  "@reviewScoreAhead": {
+    "placeholders": {
+      "side": {
+        "type": "String"
+      },
+      "pawns": {
+        "type": "String"
+      }
+    }
+  }
+}

@@ -7,7 +7,7 @@ import '../../tool/src/content_parity.dart';
 
 /// Lingue dei contenuti che devono coincidere con l'italiano. Spagnolo e
 /// francese si aggiungono qui quando passano a «pronta».
-const _checked = ['en'];
+const _checked = ['en', 'fr'];
 
 /// File che una lingua non deve avere: in inglese i nomi delle aperture sono
 /// quelli del libro, quindi `opening_names.json` esiste solo per le lingue che

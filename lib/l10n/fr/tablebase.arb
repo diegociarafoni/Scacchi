@@ -1,0 +1,12 @@
+{
+  "tablebaseTitle": "Finale parfaite",
+  "tablebaseCalculating": "Calcul de la finale parfaite… cela n'arrive qu'à la première fois",
+  "tablebaseWhiteMates": "Les Blancs gagnent : mat en {moves, plural, one{{moves} coup} other{{moves} coups}}",
+  "tablebaseBlackMates": "Les Noirs gagnent : mat en {moves, plural, one{{moves} coup} other{{moves} coups}}",
+  "tablebaseWhiteWins": "Les Blancs gagnent",
+  "tablebaseBlackWins": "Les Noirs gagnent",
+  "tablebaseDraw": "Nulle avec un jeu parfait",
+  "tablebaseBestMove": "Coup parfait : {move}",
+  "tablebaseBestMoveHint": "Jouer le coup parfait",
+  "tablebaseShowMove": "Voir le coup parfait"
+}

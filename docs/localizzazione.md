@@ -5,10 +5,10 @@ Requisito RP-05: italiano come lingua predefinita, con la struttura pronta per a
 ## Stato
 
 - L'app usa `flutter_localizations` e il generatore `gen-l10n` di Flutter.
-- La lingua dell'app si sceglie in **Impostazioni → Aspetto e accessibilità → Lingua**: «Come il telefono» (predefinita), Italiano o English (`AppLanguage` in `lib/settings/app_language.dart`, salvata come `language`). `MaterialApp.locale` in `lib/main.dart` è quella scelta, o `null` per seguire il telefono; `resolveAppLocale` (`localeListResolutionCallback`) prende la prima lingua del telefono tra quelle supportate e, se non ce n'è, usa l'italiano. `l10n.yaml` indica l'italiano come lingua preferita. I nomi delle lingue nella scelta restano nella lingua stessa.
+- La lingua dell'app si sceglie in **Impostazioni → Aspetto e accessibilità → Lingua**: «Come il telefono» (predefinita), Italiano, English o Français (`AppLanguage` in `lib/settings/app_language.dart`, salvata come `language`). `MaterialApp.locale` in `lib/main.dart` è quella scelta, o `null` per seguire il telefono; `resolveAppLocale` (`localeListResolutionCallback`) prende la prima lingua del telefono tra quelle supportate e, se non ce n'è, usa l'italiano. `l10n.yaml` indica l'italiano come lingua preferita. I nomi delle lingue nella scelta restano nella lingua stessa.
 - Su iOS e macOS la regione di sviluppo è l'italiano; le finestre native del sistema (condivisione, permessi) seguono la lingua del dispositivo se è italiano o inglese, altrimenti usano l'italiano. I testi dei permessi di iOS (`NSCameraUsageDescription` e simili) hanno una traduzione per lingua in `ios/Runner/<lingua>.lproj/InfoPlist.strings`; `Info.plist` conserva l'italiano come ripiego. Su Android 13+ `res/xml/locales_config.xml` elenca le lingue dell'app per la scelta lingua per app del sistema.
 - Il nome sotto l'icona non viene da `appTitle`: è `android:label` in `android/app/src/main/AndroidManifest.xml` e `CFBundleDisplayName` in `ios/Runner/Info.plist`.
-- Sono dichiarate italiano e inglese (`supportedLocales`, e `CFBundleLocalizations` su iOS). Sono tradotti il nome dell'app, i testi del profilo bambino (prefissi `kid`, `kidGame`, `kidBot`), quelli dello scambio QR (prefisso `qr`), quelli dei badge (prefissi `badge` e `badges`), quelli dell'esportazione come immagine (prefisso `shareImage`), quelli della scacchiera fisica (prefisso `physical`), il profilo con traguardi, sfide, serie e promemoria (prefisso `progress`), la revisione della partita e i commenti dell'allenatore (prefisso `review`), i suggerimenti (`coachHint`), l'analisi (`analysis`), l'archivio (`archive`), la scheda settimanale (`portrait`) e le schermate elencate in [Schermate migrate](#schermate-migrate); gli altri testi sono ancora scritti in italiano nel codice.
+- Sono dichiarate italiano, inglese e francese (`supportedLocales`, e `CFBundleLocalizations` su iOS). Sono tradotti il nome dell'app, i testi del profilo bambino (prefissi `kid`, `kidGame`, `kidBot`), quelli dello scambio QR (prefisso `qr`), quelli dei badge (prefissi `badge` e `badges`), quelli dell'esportazione come immagine (prefisso `shareImage`), quelli della scacchiera fisica (prefisso `physical`), il profilo con traguardi, sfide, serie e promemoria (prefisso `progress`), la revisione della partita e i commenti dell'allenatore (prefisso `review`), i suggerimenti (`coachHint`), l'analisi (`analysis`), l'archivio (`archive`), la scheda settimanale (`portrait`) e le schermate elencate in [Schermate migrate](#schermate-migrate); gli altri testi sono ancora scritti in italiano nel codice.
 
 ## Lingue di destinazione
 
@@ -16,7 +16,7 @@ L'italiano è la lingua base e il modello degli `.arb`. Inglese, spagnolo e fran
 
 I termini scacchistici e le regole di stile di ogni lingua sono in [glossario-scacchistico.md](glossario-scacchistico.md). Chi traduce o rilegge parte da lì.
 
-Stato attuale: sono dichiarati soltanto italiano e inglese (vedi sopra); spagnolo e francese si aggiungono per funzione. Durante la migrazione italiano e inglese restano obbligatori in ogni PR.
+Stato attuale: sono dichiarati italiano, inglese e francese (vedi sopra, il francese è «pronta» in `tool/lingue.json` con tutti i file `.arb` e i contenuti in `assets/content/fr/`); lo spagnolo si aggiunge allo stesso modo. Durante la migrazione italiano e inglese restano obbligatori in ogni PR.
 
 ## File
 
@@ -106,3 +106,11 @@ La migrazione dei testi esistenti verso i file `.arb` si fa una schermata alla v
 La lingua si applica subito, senza riavviare. `HomeShell` ascolta il cambio di lingua (`didChangeDependencies`) e riprogramma il promemoria: titolo, testo e, su Android, nome e descrizione del canale di notifica (ricreato con lo stesso id) passano alla nuova lingua. La notazione delle mosse è indipendente dalla lingua (predefinita figurativa, vedi [notazione.md](notazione.md)); le sue etichette nelle Impostazioni sono tradotte.
 
 Nei test dei widget il telefono è simulato in italiano (`test/support/italian_device.dart`, collegato dai `flutter_test_config.dart` e dai test e2e), così non dipendono dalla lingua della macchina o dell'emulatore.
+
+## Francese
+
+- Pacchetto: 38 file `.arb` in `lib/l10n/fr/` (1902 chiavi) e cinque contenuti in `assets/content/fr/`; `test/l10n/content_parity_test.dart` li confronta con l'italiano (`_checked`).
+- Registrazione: `AppLanguage.french`, `tool/lingue.json`, `locales_config.xml`, `CFBundleLocalizations` e `ios/Runner/fr.lproj/InfoPlist.strings` (anche in `project.pbxproj`), cartella nelle risorse di `pubspec.yaml`.
+- Stile: francese di Francia, «tu»; virgolette « … » con spazio non separabile, spazio sottile non separabile prima di `;` `!` `?`, spazio non separabile prima di `:`. Nei plurali `one` copre 0 e 1, per questo il ramo `one` usa `{count}`.
+- `test/l10n/french_screens_test.dart` monta partita, Impostazioni e una tappa del Percorso in francese.
+- Voci del glossario da confermare per il francese: «mat du fou», «Roi/Dame» dei gambetti (`Gambit roi`, `Gambit dame`), «Toi» per la scheda Tu, «bouclier/gel de série» e «Challenger».
