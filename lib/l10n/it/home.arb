@@ -1,0 +1,212 @@
+{
+  "homeNavHome": "Home",
+  "@homeNavHome": {
+    "description": "Scheda Home nella barra"
+  },
+  "homeNavPuzzles": "Puzzle",
+  "@homeNavPuzzles": {
+    "description": "Scheda Puzzle nella barra"
+  },
+  "homeNavLearn": "Impara",
+  "@homeNavLearn": {
+    "description": "Scheda Impara nella barra"
+  },
+  "homePlay": "Nuova partita",
+  "@homePlay": {
+    "description": "Grande pulsante fisso in basso: apre la scelta della partita"
+  },
+  "homeSettings": "Impostazioni",
+  "@homeSettings": {
+    "description": "Descrizione dell'icona delle impostazioni"
+  },
+  "homeSearchHint": "Cerca una funzione: finali, badge, tornei…",
+  "@homeSearchHint": {
+    "description": "Campo di ricerca in cima alla Home"
+  },
+  "homeSearchEmpty": "Nessuna funzione con questo nome",
+  "@homeSearchEmpty": {
+    "description": "Ricerca senza risultati"
+  },
+  "homeSearchClear": "Cancella la ricerca",
+  "@homeSearchClear": {
+    "description": "Descrizione del pulsante che svuota la ricerca"
+  },
+  "homeNextLabel": "Prossimo passo per te",
+  "@homeNextLabel": {
+    "description": "Etichetta sopra la proposta principale"
+  },
+  "homeResumeTitle": "Riprendi la partita",
+  "@homeResumeTitle": {
+    "description": "Proposta: partita lasciata a metà"
+  },
+  "homeResumeSubtitle": "Contro {opponent}",
+  "@homeResumeSubtitle": {
+    "description": "Avversario della partita da riprendere",
+    "placeholders": {
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "homeResumeAction": "Riprendi",
+  "@homeResumeAction": {
+    "description": "Pulsante della proposta"
+  },
+  "homeStoryTitle": "Continua la Storia",
+  "@homeStoryTitle": {
+    "description": "Proposta: prossima lezione della Storia"
+  },
+  "homeStoryAction": "Continua",
+  "@homeStoryAction": {
+    "description": "Pulsante della proposta"
+  },
+  "homeDailyTitle": "Puzzle del giorno",
+  "@homeDailyTitle": {
+    "description": "Proposta: puzzle quotidiano"
+  },
+  "homeDailySubtitle": "Un puzzle nuovo ogni giorno",
+  "@homeDailySubtitle": {
+    "description": "Sottotitolo del puzzle del giorno"
+  },
+  "homeDailyAction": "Risolvi",
+  "@homeDailyAction": {
+    "description": "Pulsante della proposta"
+  },
+  "homeGroupPlay": "Gioca",
+  "@homeGroupPlay": {
+    "description": "Gruppo di funzioni"
+  },
+  "homeGroupLearn": "Impara",
+  "@homeGroupLearn": {
+    "description": "Gruppo di funzioni"
+  },
+  "homeGroupTrain": "Allenati",
+  "@homeGroupTrain": {
+    "description": "Gruppo di funzioni"
+  },
+  "homeGroupProgress": "I tuoi progressi",
+  "@homeGroupProgress": {
+    "description": "Gruppo di funzioni"
+  },
+  "homeFeatureBots": "Contro un bot",
+  "@homeFeatureBots": {
+    "description": "Funzione: partita contro un bot"
+  },
+  "homeFeatureOpenings": "Aperture",
+  "@homeFeatureOpenings": {
+    "description": "Funzione: esplora le aperture"
+  },
+  "homeFeatureDaily": "Puzzle del giorno",
+  "@homeFeatureDaily": {
+    "description": "Funzione: puzzle quotidiano"
+  },
+  "homeFeaturePuzzles": "Tutti i puzzle",
+  "@homeFeaturePuzzles": {
+    "description": "Funzione: scheda Puzzle"
+  },
+  "homeRecommendedTitle": "Avversario consigliato",
+  "@homeRecommendedTitle": {
+    "description": "Sezione con il bot adatto al proprio livello"
+  },
+  "homeRecommendedElo": "Circa {elo} Elo, alla tua portata",
+  "@homeRecommendedElo": {
+    "description": "Forza del bot consigliato",
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "homeRecommendedAction": "Gioca contro {name}",
+  "@homeRecommendedAction": {
+    "description": "Descrizione del pulsante che avvia la partita",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "homeStatsTitle": "Statistiche",
+  "@homeStatsTitle": {
+    "description": "Sezione dei numeri"
+  },
+  "homeStatsRating": "Valutazione",
+  "@homeStatsRating": {
+    "description": "Valutazione locale stimata"
+  },
+  "homeStatsStreak": "Serie",
+  "@homeStatsStreak": {
+    "description": "Giorni di fila"
+  },
+  "homeStatsBadges": "Badge",
+  "@homeStatsBadges": {
+    "description": "Badge sbloccati"
+  },
+  "homeSeeAll": "Mostra tutto",
+  "@homeSeeAll": {
+    "description": "Link alla pagina completa"
+  },
+  "homeRecentTitle": "Ultime partite",
+  "@homeRecentTitle": {
+    "description": "Sezione dell'archivio"
+  },
+  "homeRecentAccuracy": "Precisione",
+  "@homeRecentAccuracy": {
+    "description": "Intestazione della colonna con la precisione"
+  },
+  "homeRecentEmpty": "Le partite concluse compaiono qui.",
+  "@homeRecentEmpty": {
+    "description": "Nessuna partita giocata"
+  },
+  "homeResultWin": "Vittoria",
+  "@homeResultWin": {
+    "description": "Esito di una partita"
+  },
+  "homeResultDraw": "Patta",
+  "@homeResultDraw": {
+    "description": "Esito di una partita"
+  },
+  "homeResultLoss": "Sconfitta",
+  "@homeResultLoss": {
+    "description": "Esito di una partita"
+  },
+  "homeRecentSemantics": "{result} contro {opponent}, precisione {accuracy}",
+  "@homeRecentSemantics": {
+    "description": "Lettura di una riga dell'archivio con la precisione",
+    "placeholders": {
+      "result": {
+        "type": "String"
+      },
+      "opponent": {
+        "type": "String"
+      },
+      "accuracy": {
+        "type": "String"
+      }
+    }
+  },
+  "homeRecentSemanticsNoAccuracy": "{result} contro {opponent}",
+  "@homeRecentSemanticsNoAccuracy": {
+    "description": "Lettura di una riga dell'archivio",
+    "placeholders": {
+      "result": {
+        "type": "String"
+      },
+      "opponent": {
+        "type": "String"
+      }
+    }
+  },
+  "homeKidPlay": "Giochiamo!",
+  "@homeKidPlay": {
+    "description": "Pulsante grande del profilo bambino"
+  },
+  "homeOpeningsSubtitle": "Esplora le aperture e il tuo repertorio",
+  "@homeOpeningsSubtitle": {
+    "description": "Sottotitolo nella scheda Impara"
+  },
+  "homeResumeNoEngine": "Per riprendere una partita contro il computer serve il motore: su Android e iOS è incluso, su Windows e Linux serve Stockfish installato.",
+  "@homeResumeNoEngine": {
+    "description": "Messaggio se la partita contro il computer non si può riprendere senza motore"
+  }
+}

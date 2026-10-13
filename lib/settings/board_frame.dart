@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dartchess/dartchess.dart' show Side;
 import 'package:flutter/widgets.dart';
 
@@ -5,7 +7,9 @@ import 'settings.dart';
 
 /// Cornice con le coordinate fuori dalla scacchiera, come nei libri: le
 /// lettere sotto e i numeri a sinistra non coprono mai i pezzi. Senza
-/// [outside] passa a [builder] tutta la [size].
+/// [outside] passa a [builder] tutta la [size]. Con uno [backdrop] diverso da
+/// quello standard la scacchiera poggia su quello sfondo, in un margine che le
+/// toglie [backdropRatio] per lato.
 class BoardFrame extends StatelessWidget {
   const BoardFrame({
     super.key,
@@ -14,6 +18,8 @@ class BoardFrame extends StatelessWidget {
     required this.orientation,
     required this.theme,
     required this.builder,
+    this.backdrop = BoardBackdrop.standard,
+    this.backdropPhoto = '',
   });
 
   /// Cornice e coordinate secondo le impostazioni correnti.
@@ -30,12 +36,16 @@ class BoardFrame extends StatelessWidget {
     orientation: orientation,
     theme: settings.boardTheme,
     builder: builder,
+    backdrop: settings.backdrop,
+    backdropPhoto: settings.backdropPhoto,
   );
 
   final double size;
   final bool outside;
   final Side orientation;
   final BoardTheme theme;
+  final BoardBackdrop backdrop;
+  final String backdropPhoto;
 
   /// Disegna la scacchiera nel lato che le resta.
   final Widget Function(double size) builder;
@@ -43,8 +53,53 @@ class BoardFrame extends StatelessWidget {
   /// Spessore della cornice rispetto al lato.
   static const marginRatio = 0.05;
 
+  /// Margine di sfondo rispetto al lato, per ciascun bordo.
+  static const backdropRatio = 0.04;
+
   @override
   Widget build(BuildContext context) {
+    if (backdrop == BoardBackdrop.standard) return _frame(size);
+    final margin = size * backdropRatio;
+    return SizedBox.square(
+      dimension: size,
+      child: DecoratedBox(
+        key: const Key('board-backdrop'),
+        decoration: _backdropDecoration(),
+        child: Center(child: _frame(size - margin * 2)),
+      ),
+    );
+  }
+
+  /// La foto che manca o non si legge lascia un colore sobrio, mai un buco.
+  BoxDecoration _backdropDecoration() {
+    const fallback = Color(0xff2b2a28);
+    if (backdrop == BoardBackdrop.photo) {
+      return BoxDecoration(
+        color: fallback,
+        image: backdropPhoto.isEmpty
+            ? null
+            : DecorationImage(
+                image: ResizeImage(
+                  FileImage(File(backdropPhoto)),
+                  width: 1024,
+                  policy: ResizeImagePolicy.fit,
+                ),
+                fit: BoxFit.cover,
+                onError: (_, _) {},
+              ),
+      );
+    }
+    final asset = backdrop.asset;
+    return BoxDecoration(
+      color: backdrop.color ?? fallback,
+      gradient: backdrop.gradient,
+      image: asset == null
+          ? null
+          : DecorationImage(image: AssetImage(asset), fit: BoxFit.cover),
+    );
+  }
+
+  Widget _frame(double size) {
     if (!outside) return builder(size);
     final margin = size * marginRatio;
     final inner = size - margin * 2;

@@ -6,11 +6,10 @@ nessuna connessione, nessun server, nessun dato che esce dal telefono.
 ## Come si gioca
 
 1. Toccare **Nuova**.
-2. Scegliere **Computer** (oppure **Bot**, vedi [bot.md](bot.md)).
+2. Il foglio **Nuova partita** parte con **Inizia partita**, che avvia subito la partita contro il computer del tuo livello (l'avversario adattivo, con il tempo scelto nel menu in alto); **Scegli il bot** apre la galleria e **Gioca con l'istruttore** apre la stessa scelta di colore e livello del menu Aperture e avvia la partita con l'istruttore che commenta l'apertura (vedi [aperture.md](aperture.md)). Sotto «Altre modalità», **Partita personalizzata** ha tutto in una pagina: per giocare in due si sceglie **Due giocatori**, contro il computer in cima alla lista dei bot c'è **Adattivo**, il motore senza volto, seguito dai bot con personalità (vedi [bot.md](bot.md)). Non c'è più una scelta «Computer» a parte né il cursore del livello: i livelli fissi sono i bot, uno per gradino, da sbloccare battendo il precedente.
 3. Scegliere il colore: Bianco, Nero o a caso. La scacchiera si orienta dal lato del giocatore.
-4. Scegliere il livello con il cursore (da 1 a 8).
-5. In alternativa al cursore, attivare **Adattivo**: il livello lo sceglie l'app (vedi [Avversario adattivo](#avversario-adattivo)).
-6. Toccare la cadenza, "Senza tempo" o una cadenza (vedi [interfaccia.md](interfaccia.md)): la partita inizia. Se il giocatore ha il Nero, il computer muove per primo.
+4. Toccare **Adattivo** per giocare col motore al livello scelto dall'app (vedi [Avversario adattivo](#avversario-adattivo)), oppure un bot.
+5. Toccare la cadenza, "Senza tempo" o una cadenza (vedi [interfaccia.md](interfaccia.md)): la partita inizia. Se il giocatore ha il Nero, il computer muove per primo.
 
 Contro il computer e i bot si può giocare anche una variante (Chess960, Re della collina, Tre scacchi, vedi [Varianti](#varianti)); i nomi dei giocatori compaiono nel pannello solo scegliendo **Due giocatori**. Una posizione creata con l'editor (vedi [editor-posizione.md](editor-posizione.md)) si può giocare anche contro il computer o un bot (RF-24): aprire l'editor durante una partita la sostituisce con la posizione scelta, in due o contro il computer a seconda della scelta nel pannello **Gioca questa posizione**.
 
@@ -53,10 +52,10 @@ va riavviata. Se il processo termina durante la partita compare "Il computer non
 
 ## Avversario adattivo
 
-Con **Adattivo** attivo il livello segue i risultati del giocatore, per far vincere circa metà delle partite (requisito RF-26).
+Con **Adattivo** scelto il livello segue i risultati del giocatore, per far vincere circa metà delle partite (requisito RF-26).
 
 - L'app tiene una stima Elo del giocatore, che parte da 1150, l'Elo del livello predefinito.
-- Il livello usato è quello con l'Elo indicativo più vicino alla stima; il pannello mostra "Livello N" e nasconde il cursore.
+- Il livello usato è quello con l'Elo indicativo più vicino alla stima; la riga «Adattivo» mostra "Livello N" e l'Elo indicativo.
 - A fine partita (matto, abbandono, tempo, patta) la stima si aggiorna con la formula Elo: vittoria 1, patta 0,5, sconfitta 0. Il fattore K è 64 nelle prime 10 partite e 32 dopo.
 - Ogni partita conta una sola volta, e solo se ha almeno una mossa ed è partita dalla posizione iniziale: le partite avviate dall'editor di posizione non cambiano la stima. **Annulla** dopo la fine della partita ripristina la stima precedente.
 - Il risultato si registra alla fine: lasciare una partita a metà per aprirne un'altra non la conta.

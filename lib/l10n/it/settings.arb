@@ -19,23 +19,15 @@
   "@settingsTitle": {
     "description": "Impostazioni: titolo della schermata"
   },
-  "settingsSectionAppearance": "Aspetto",
-  "@settingsSectionAppearance": {
-    "description": "Impostazioni: titolo della sezione"
-  },
-  "settingsSectionAppearanceHint": "Tema dell'app, scacchiera, pezzi e animazioni",
-  "@settingsSectionAppearanceHint": {
-    "description": "Impostazioni: riga sotto il titolo della sezione Aspetto"
-  },
   "settingsSectionBoard": "Scacchiera",
   "@settingsSectionBoard": {
     "description": "Impostazioni: titolo della sezione"
   },
-  "settingsSectionBoardHint": "Mosse legali, coordinate, frecce e notazione",
+  "settingsSectionBoardHint": "Suoni, vibrazione, coordinate, mosse legali e notazione",
   "@settingsSectionBoardHint": {
     "description": "Impostazioni: riga sotto il titolo della sezione Scacchiera"
   },
-  "settingsSectionGame": "Gioco",
+  "settingsSectionGame": "Partita",
   "@settingsSectionGame": {
     "description": "Impostazioni: titolo della sezione"
   },
@@ -50,22 +42,6 @@
   "settingsSectionAccessibilityHint": "Colori per daltonici, modalità zen e conferma della mossa",
   "@settingsSectionAccessibilityHint": {
     "description": "Impostazioni: riga sotto il titolo della sezione Accessibilità"
-  },
-  "settingsSectionSound": "Suoni e vibrazione",
-  "@settingsSectionSound": {
-    "description": "Impostazioni: titolo della sezione"
-  },
-  "settingsSectionSoundHint": "Suoni, volume e vibrazione",
-  "@settingsSectionSoundHint": {
-    "description": "Impostazioni: riga sotto il titolo della sezione Suoni"
-  },
-  "settingsSectionData": "Dati",
-  "@settingsSectionData": {
-    "description": "Impostazioni: titolo della sezione"
-  },
-  "settingsSectionDataHint": "Copie di sicurezza dei dati locali",
-  "@settingsSectionDataHint": {
-    "description": "Impostazioni: riga sotto il titolo della sezione Dati"
   },
   "settingsPreview": "Anteprima",
   "@settingsPreview": {
@@ -384,5 +360,73 @@
   "settingsThemeTerracotta": "Terracotta",
   "@settingsThemeTerracotta": {
     "description": "Impostazioni: nome del tema della scacchiera"
+  },
+  "settingsSectionProfile": "Profilo e dati",
+  "@settingsSectionProfile": {
+    "description": "Impostazioni: titolo della sezione Profilo"
+  },
+  "settingsSectionProfileHint": "Avatar, progressi e copie di sicurezza",
+  "@settingsSectionProfileHint": {
+    "description": "Impostazioni: riga sotto il titolo della sezione Profilo"
+  },
+  "settingsLegalMovesDescription": "Punti sulle case dove può andare il pezzo scelto",
+  "@settingsLegalMovesDescription": {
+    "description": "Impostazioni: descrizione"
+  },
+  "settingsCoordinatesDescription": "Lettere e numeri per riconoscere le case",
+  "@settingsCoordinatesDescription": {
+    "description": "Impostazioni: descrizione"
+  },
+  "settingsLastMove": "Evidenzia l'ultima mossa",
+  "@settingsLastMove": {
+    "description": "Impostazioni: titolo dell'interruttore"
+  },
+  "settingsLastMoveDescription": "Colora la casa di partenza e quella di arrivo",
+  "@settingsLastMoveDescription": {
+    "description": "Impostazioni: descrizione"
+  },
+  "settingsSoundDescription": "Un suono per mosse, catture, scacco e fine partita",
+  "@settingsSoundDescription": {
+    "description": "Impostazioni: descrizione"
+  },
+  "settingsVolumeDescription": "Regola il volume dei suoni",
+  "@settingsVolumeDescription": {
+    "description": "Impostazioni: descrizione"
+  },
+  "settingsHapticsDescription": "Una breve vibrazione quando muovi o catturi",
+  "@settingsHapticsDescription": {
+    "description": "Impostazioni: descrizione"
+  },
+  "settingsAutoQueenDescription": "Il pedone che arriva in fondo diventa donna, senza chiedere",
+  "@settingsAutoQueenDescription": {
+    "description": "Impostazioni: descrizione"
+  },
+  "settingsAnimationsDescription": "Quanto è veloce il movimento dei pezzi",
+  "@settingsAnimationsDescription": {
+    "description": "Impostazioni: descrizione"
+  },
+  "settingsNotationDescription": "Come si scrivono le mosse nell'elenco",
+  "@settingsNotationDescription": {
+    "description": "Impostazioni: descrizione"
+  },
+  "settingsAppThemeDescription": "Chiaro, scuro o come il telefono",
+  "@settingsAppThemeDescription": {
+    "description": "Impostazioni: descrizione"
+  },
+  "settingsOpenProfile": "Il tuo profilo",
+  "@settingsOpenProfile": {
+    "description": "Impostazioni: voce che apre il profilo"
+  },
+  "settingsOpenProfileDescription": "Avatar, foto, obiettivo giornaliero e promemoria",
+  "@settingsOpenProfileDescription": {
+    "description": "Impostazioni: descrizione"
+  },
+  "settingsProgressEnabled": "XP, serie e traguardi",
+  "@settingsProgressEnabled": {
+    "description": "Impostazioni: titolo dell'interruttore"
+  },
+  "settingsProgressEnabledDescription": "Spento, non si registra nulla",
+  "@settingsProgressEnabledDescription": {
+    "description": "Impostazioni: descrizione"
   }
 }

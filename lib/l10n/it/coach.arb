@@ -110,5 +110,85 @@
         "description": "piece"
       }
     }
+  },
+  "instructorInBookNamed": "Siamo nella {name}. Le mosse più giocate qui: {choices}.",
+  "@instructorInBookNamed": {
+    "description": "Istruttore: apertura raggiunta e mosse più giocate",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "name"
+      },
+      "choices": {
+        "type": "String",
+        "description": "choices"
+      }
+    }
+  },
+  "instructorInBook": "Le mosse più giocate qui: {choices}.",
+  "@instructorInBook": {
+    "description": "Istruttore: mosse più giocate, senza nome di apertura",
+    "placeholders": {
+      "choices": {
+        "type": "String",
+        "description": "choices"
+      }
+    }
+  },
+  "instructorInBookNameOnly": "Siamo nella {name}.",
+  "@instructorInBookNameOnly": {
+    "description": "Istruttore: apertura raggiunta, senza statistiche",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "name"
+      }
+    }
+  },
+  "instructorLeftYou": "{san} ti porta fuori dal libro delle aperture. Le mosse più giocate erano: {choices}.",
+  "@instructorLeftYou": {
+    "description": "Istruttore: l'utente esce dal libro",
+    "placeholders": {
+      "san": {
+        "type": "String",
+        "description": "san"
+      },
+      "choices": {
+        "type": "String",
+        "description": "choices"
+      }
+    }
+  },
+  "instructorLeftComputer": "Il computer esce dal libro con {san}. Da qui si ragiona con la posizione, non con la teoria.",
+  "@instructorLeftComputer": {
+    "description": "Istruttore: il computer esce dal libro",
+    "placeholders": {
+      "san": {
+        "type": "String",
+        "description": "san"
+      }
+    }
+  },
+  "instructorLeftYouBare": "{san} ti porta fuori dal libro delle aperture.",
+  "@instructorLeftYouBare": {
+    "description": "Istruttore: l'utente esce dal libro, senza alternative",
+    "placeholders": {
+      "san": {
+        "type": "String",
+        "description": "san"
+      }
+    }
+  },
+  "instructorExplorer": "Apri nell'esploratore",
+  "@instructorExplorer": {
+    "description": "Istruttore: pulsante per aprire la posizione nell'esploratore"
+  },
+  "instructorTitle": "Gioca con l'istruttore",
+  "@instructorTitle": {
+    "description": "Titolo della partita con l'istruttore"
+  },
+  "instructorHubSubtitle": "Il computer ti commenta l'apertura, con le mosse più giocate",
+  "@instructorHubSubtitle": {
+    "description": "Istruttore: sottotitolo nel menu delle aperture"
   }
 }

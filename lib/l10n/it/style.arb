@@ -1,0 +1,130 @@
+{
+  "styleTitle": "Stile",
+  "@styleTitle": {
+    "description": "Stile: titolo della schermata e della voce in Impostazioni"
+  },
+  "styleEntrySubtitle": "Scacchiera, pezzi, sfondo e suoni",
+  "@styleEntrySubtitle": {
+    "description": "Impostazioni: riga sotto la voce Stile"
+  },
+  "styleTabBoard": "Scacchiera",
+  "@styleTabBoard": {
+    "description": "Stile: scheda dei temi della scacchiera"
+  },
+  "styleTabPieces": "Pezzi",
+  "@styleTabPieces": {
+    "description": "Stile: scheda dei set di pezzi"
+  },
+  "styleTabBackdrop": "Sfondo",
+  "@styleTabBackdrop": {
+    "description": "Stile: scheda degli sfondi dietro la scacchiera"
+  },
+  "styleTabSounds": "Suoni",
+  "@styleTabSounds": {
+    "description": "Stile: scheda dei set di suoni"
+  },
+  "styleBackdropStandard": "Standard",
+  "@styleBackdropStandard": {
+    "description": "Stile: nessuno sfondo dietro la scacchiera"
+  },
+  "styleBackdropGraphite": "Grafite",
+  "@styleBackdropGraphite": {
+    "description": "Stile: nome dello sfondo"
+  },
+  "styleBackdropFeltro": "Feltro",
+  "@styleBackdropFeltro": {
+    "description": "Stile: nome dello sfondo"
+  },
+  "styleBackdropArdesia": "Ardesia",
+  "@styleBackdropArdesia": {
+    "description": "Stile: nome dello sfondo"
+  },
+  "styleBackdropPerla": "Perla",
+  "@styleBackdropPerla": {
+    "description": "Stile: nome dello sfondo"
+  },
+  "styleBackdropNotte": "Notte",
+  "@styleBackdropNotte": {
+    "description": "Stile: nome dello sfondo"
+  },
+  "styleBackdropTramonto": "Tramonto",
+  "@styleBackdropTramonto": {
+    "description": "Stile: nome dello sfondo"
+  },
+  "styleBackdropOceano": "Oceano",
+  "@styleBackdropOceano": {
+    "description": "Stile: nome dello sfondo"
+  },
+  "styleBackdropForesta": "Foresta",
+  "@styleBackdropForesta": {
+    "description": "Stile: nome dello sfondo"
+  },
+  "styleBackdropCuoio": "Cuoio",
+  "@styleBackdropCuoio": {
+    "description": "Stile: nome dello sfondo"
+  },
+  "styleBackdropSpazio": "Spazio",
+  "@styleBackdropSpazio": {
+    "description": "Stile: nome dello sfondo"
+  },
+  "styleBackdropPhoto": "La tua foto",
+  "@styleBackdropPhoto": {
+    "description": "Stile: nome dello sfondo con la foto scelta"
+  },
+  "styleBackdropPhotoAdd": "Scegli una foto",
+  "@styleBackdropPhotoAdd": {
+    "description": "Stile: pulsante che apre la galleria del telefono"
+  },
+  "styleBackdropPhotoNote": "La foto resta solo sul tuo telefono.",
+  "@styleBackdropPhotoNote": {
+    "description": "Stile: nota sotto gli sfondi, sulla privacy della foto"
+  },
+  "styleBackdropPhotoError": "Non riesco a usare la foto scelta.",
+  "@styleBackdropPhotoError": {
+    "description": "Stile: avviso se la foto non si può salvare"
+  },
+  "styleSoundClassico": "Classico",
+  "@styleSoundClassico": {
+    "description": "Stile: nome del set di suoni"
+  },
+  "styleSoundLegno": "Legno",
+  "@styleSoundLegno": {
+    "description": "Stile: nome del set di suoni"
+  },
+  "styleSoundCristallo": "Cristallo",
+  "@styleSoundCristallo": {
+    "description": "Stile: nome del set di suoni"
+  },
+  "styleSoundsHint": "Tocca un set per sentire una mossa e una cattura.",
+  "@styleSoundsHint": {
+    "description": "Stile: nota sopra i set di suoni"
+  },
+  "styleSoundsOff": "I suoni sono spenti: riaccendili in Impostazioni.",
+  "@styleSoundsOff": {
+    "description": "Stile: avviso se i suoni sono disattivati"
+  },
+  "styleThemeMarmo": "Marmo",
+  "@styleThemeMarmo": {
+    "description": "Stile: nome del tema della scacchiera"
+  },
+  "styleThemeMetallo": "Metallo",
+  "@styleThemeMetallo": {
+    "description": "Stile: nome del tema della scacchiera"
+  },
+  "styleThemeVetro": "Vetro",
+  "@styleThemeVetro": {
+    "description": "Stile: nome del tema della scacchiera"
+  },
+  "styleThemeMenta": "Menta",
+  "@styleThemeMenta": {
+    "description": "Stile: nome del tema della scacchiera"
+  },
+  "styleThemeCipria": "Cipria",
+  "@styleThemeCipria": {
+    "description": "Stile: nome del tema della scacchiera"
+  },
+  "styleThemeArdesia": "Ardesia",
+  "@styleThemeArdesia": {
+    "description": "Stile: nome del tema della scacchiera"
+  }
+}

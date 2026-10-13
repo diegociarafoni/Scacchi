@@ -13,6 +13,7 @@ void main() {
     final settings = await SettingsController.load();
     expect(settings.value.showLegalMoves, isTrue);
     expect(settings.value.showCoordinates, isTrue);
+    expect(settings.value.showLastMove, isTrue);
     expect(settings.value.autoQueen, isFalse);
     expect(settings.value.drawShapes, isTrue);
     expect(settings.value.autoFlip, isFalse);
@@ -148,6 +149,25 @@ void main() {
       PieceOrientationBehavior.opponentUpsideDown,
     );
   });
+
+  test(
+    'RP-04 l\'evidenziazione dell\'ultima mossa si spegne e si salva',
+    () async {
+      final settings = await SettingsController.load();
+      final theme = settings.value.boardTheme.colorScheme;
+      expect(settings.value.board.colorScheme.lastMove, theme.lastMove);
+      await settings.update(settings.value.copyWith(showLastMove: false));
+      final off = settings.value.board.colorScheme;
+      expect(off.lastMove.solidColor!.a, 0);
+      expect(off.lightSquare, theme.lightSquare);
+      expect(off.darkSquare, theme.darkSquare);
+      expect((await SettingsController.load()).value.showLastMove, isFalse);
+      expect(
+        settings.value.copyWith(showLastMove: true),
+        isNot(settings.value),
+      );
+    },
+  );
 
   test('RF-30 nomi dei giocatori salvati, senza spazi superflui', () async {
     final settings = await SettingsController.load();

@@ -38,6 +38,7 @@ import '../puzzles/fixtures.dart';
 import '../puzzles/puzzle_page_test.dart' show tapMove;
 import '../review/coach_test.dart' show line, reviewOne;
 import '../review/fake_engine.dart';
+import '../settings/settings_nav.dart';
 
 final _digit = RegExp(r'\d');
 
@@ -239,16 +240,16 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      await tester.scrollUntilVisible(find.text('Sabbia'), 200);
+      await openSection(tester, SettingsSection.style);
       final semantics = tester.ensureSemantics();
       expect(
         find.bySemanticsLabel(RegExp('Sabbia, bloccato. Si sblocca giocando')),
         findsOneWidget,
       );
       semantics.dispose();
-      await tester.ensureVisible(find.text('Sabbia'));
+      await tester.ensureVisible(find.text('Sabbia').first);
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Sabbia'));
+      await tester.tap(find.text('Sabbia').first);
       await tester.pump();
       expect(find.textContaining('Livello'), findsNothing);
       expect(find.text('Sabbia: si sblocca giocando'), findsOneWidget);

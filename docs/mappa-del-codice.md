@@ -8,7 +8,8 @@ Ogni cartella di `lib/` ha qui il documento che descrive le sue funzioni. La tab
 |---|---|---|
 | `lib/analysis/` | [analisi.md](analisi.md) | Analisi libera della posizione con le linee del motore e l'albero delle varianti |
 | `lib/archive/` | [archivio.md](archivio.md) | Archivio delle partite, import ed export PGN |
-| `lib/badges/` | [badge.md](badge.md) | Badge (RG-17): catalogo, regole di sblocco, scheda della raccolta, testi |
+| `lib/badges/` | [badge.md](badge.md) | Badge (RG-17) e libri delle aperture: catalogo, regole di sblocco, medaglie, galleria, testi |
+| `lib/bot_gallery/` | [bot.md](bot.md) | Galleria dei bot (RG-18): fasce per Elo, saluti localizzati, scelta di colore e avversario |
 | `lib/backup/` | [backup.md](backup.md) | Backup e ripristino dei dati locali |
 | `lib/coach/` | [allenatore.md](allenatore.md) | Partita con l'allenatore: avvisi, ripresa della mossa, suggerimenti |
 | `lib/editor/` | [editor-posizione.md](editor-posizione.md) | Editor di posizione e FEN |
@@ -16,7 +17,7 @@ Ogni cartella di `lib/` ha qui il documento che descrive le sue funzioni. La tab
 | `lib/engine/` | [avversario-computer.md](avversario-computer.md), [bot.md](bot.md) | Motore Stockfish, livelli, bot con personalità |
 | `lib/exchange/` | [scambio-qr.md](scambio-qr.md) | Scambio di partite tra telefoni con il QR, senza rete |
 | `lib/game/` | [regole-di-gioco.md](regole-di-gioco.md), [interfaccia.md](interfaccia.md), [avversario-computer.md](avversario-computer.md) | Stato della partita, varianti, orologio, suoni, schermata di gioco |
-| `lib/home/` | [interfaccia.md](interfaccia.md), [architettura.md](architettura.md) | Barra di navigazione e scheda Tu |
+| `lib/home/` | [home.md](home.md), [interfaccia.md](interfaccia.md), [architettura.md](architettura.md) | Barra di navigazione, Home, scheda Impara e scheda Tu |
 | `lib/kids/` | [profilo-bambino.md](profilo-bambino.md) | Profilo bambino senza numeri |
 | `lib/l10n/` | [localizzazione.md](localizzazione.md) | Testi tradotti |
 | `lib/masters/` | [grandi-maestri.md](grandi-maestri.md) | Partite dei grandi maestri: raccolta, commento, «Indovina la mossa» |
@@ -36,6 +37,7 @@ Ogni cartella di `lib/` ha qui il documento che descrive le sue funzioni. La tab
 | `lib/storage/` | [architettura.md](architettura.md), [gamification.md](gamification.md) | File JSON locali con versione e scrittura atomica |
 | `lib/story/` | [storia.md](storia.md) | Percorso a storia: capitoli con racconto, lezioni, puzzle, guardiani e un bot da battere |
 | `lib/tablebase/` | [finali-perfetti.md](finali-perfetti.md) | Finali perfetti: tabelle del matto esatto fino a quattro pezzi, generate sul telefono, scheda con risultato e mossa perfetta |
+| `lib/style/` | [stile.md](stile.md) | Schermata Stile: anteprima dal vivo e schede Scacchiera, Pezzi, Sfondo (con foto propria) e Suoni |
 | `lib/summary/` | [riepilogo-settimanale.md](riepilogo-settimanale.md) | Riepilogo settimanale: progressi, errore ricorrente, un consiglio |
 | `lib/tournament/` | [tornei.md](tornei.md) | Tornei offline contro bot |
 | `lib/training/` | [puzzle.md](puzzle.md) | Scacchiera per esercizi condivisa |

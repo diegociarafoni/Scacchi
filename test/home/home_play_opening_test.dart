@@ -54,7 +54,14 @@ void main() {
         ),
       ),
     );
-    await tester.tap(find.text('Aperture'));
+    await tester.tap(
+      find.descendant(
+        of: find.byType(NavigationBar),
+        matching: find.text('Impara'),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('learn-openings')));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Repertorio con il Nero'));
     await tester.pumpAndSettle();

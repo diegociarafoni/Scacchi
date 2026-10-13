@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../game_actions.dart';
 import '../support/board.dart';
 import '../support/devices.dart';
 
@@ -63,6 +64,7 @@ void main() {
   ) async {
     final handle = tester.ensureSemantics();
     await _pumpApp(tester);
+    await openBoard(tester);
     expect(
       tester.getSemantics(find.text('Gira')),
       matchesSemantics(
@@ -90,6 +92,7 @@ void main() {
     tester,
   ) async {
     await _pumpApp(tester, brightness: Brightness.dark);
+    await openBoard(tester);
     await playByTaps(tester, ['e2e4', 'd7d5', 'e4d5']);
 
     // Il pedone nero catturato dal Bianco: nero su sfondo scuro sparirebbe.

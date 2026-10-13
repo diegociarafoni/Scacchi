@@ -105,7 +105,12 @@ void main() {
     await tester.pumpAndSettle();
     await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
+    await openCustomSheet(tester);
     await tester.tap(find.text('Bot'));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text(botById('pino')!.name));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(botById('pino')!.name));
     await tester.pumpAndSettle();
     await chooseTime(tester, 'Senza tempo');
     await tester.pumpAndSettle(const Duration(seconds: 1));
@@ -123,8 +128,7 @@ void main() {
     await tester.pumpAndSettle();
     await tapGameAction(tester, 'Nuova');
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Computer'));
-    await tester.pumpAndSettle();
+    await chooseAdaptiveComputer(tester);
     await chooseTime(tester, 'Senza tempo');
     await tester.pumpAndSettle(const Duration(seconds: 1));
     await settings.update(settings.value.copyWith(kidMode: true));

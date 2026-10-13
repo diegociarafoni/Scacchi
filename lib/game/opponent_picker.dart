@@ -3,11 +3,14 @@ import 'dart:math' as math;
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
+import '../bot_gallery/bot_gallery_page.dart';
+import '../bot_gallery/game_options.dart';
 import '../engine/bot_collection.dart';
 import '../engine/bots.dart';
 import '../engine/levels.dart';
 import '../engine/style.dart';
 import '../l10n/app_localizations.dart';
+import '../story/story_controller.dart';
 
 enum Opponent { human, computer, bot }
 
@@ -69,6 +72,31 @@ AppLocalizations _l10n(BuildContext context) =>
     Localizations.of<AppLocalizations>(context, AppLocalizations) ??
     lookupAppLocalizations(const Locale('it'));
 
+/// Apre la galleria dei bot; con [options] mostra anche il pannello Opzioni e
+/// «Gioca» restituisce la partita già configurata.
+Future<BotGalleryResult?> openBotGallery(
+  BuildContext context, {
+  required BotCollection collection,
+  required GameSetup setup,
+  required int adaptiveLevel,
+  required bool kidMode,
+  GameOptions? options,
+}) => Navigator.push<BotGalleryResult>(
+  context,
+  MaterialPageRoute(
+    builder: (_) => BotGalleryPage(
+      collection: collection,
+      loadStory: () async => (await StoryController.open()).state,
+      initialBotId: setup.botId,
+      initialSide: setup.sideChoice,
+      adaptiveLevel: adaptiveLevel,
+      kidMode: kidMode,
+      showOptions: options != null,
+      initialOptions: options ?? const GameOptions(),
+    ),
+  ),
+);
+
 /// Scelta dell'avversario e, contro il computer, di colore e livello.
 class OpponentPicker extends StatelessWidget {
   const OpponentPicker({
@@ -79,6 +107,8 @@ class OpponentPicker extends StatelessWidget {
     required this.collection,
     required this.onChanged,
     this.kidMode = false,
+    this.onGalleryPlay,
+    this.galleryOptions = const GameOptions(),
   });
 
   final GameSetup setup;
@@ -90,13 +120,21 @@ class OpponentPicker extends StatelessWidget {
   final BotCollection collection;
   final ValueChanged<GameSetup> onChanged;
 
+  /// Se c'è, «Gioca» nella galleria avvia la partita con le opzioni scelte
+  /// lì (cadenza, variante, handicap, allenatore); senza, la galleria mostra
+  /// solo la scelta del bot e il colore, e restituisce la configurazione.
+  final ValueChanged<BotGalleryResult>? onGalleryPlay;
+  final GameOptions galleryOptions;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final shown = kidMode ? setup.forKids() : setup;
-    final level = engineLevel(shown.adaptive ? adaptiveLevel : shown.level);
+    final level = engineLevel(adaptiveLevel);
+    // «Adattivo» è un avversario senza volto che gioca col motore: lo si sceglie
+    // tra i bot, dove stanno anche i livelli fissi.
+    final vsAdaptive = shown.opponent == Opponent.computer && shown.adaptive;
     final vsBot = shown.opponent == Opponent.bot;
-    final vsComputer = shown.opponent == Opponent.computer;
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -108,13 +146,6 @@ class OpponentPicker extends StatelessWidget {
               icon: Icon(Icons.people_outline),
               label: Text('Due giocatori'),
             ),
-            if (!kidMode)
-              ButtonSegment(
-                value: Opponent.computer,
-                icon: const Icon(Icons.memory),
-                label: const Text('Computer'),
-                enabled: computerAvailable,
-              ),
             ButtonSegment(
               value: Opponent.bot,
               icon: const Icon(Icons.emoji_people_outlined),
@@ -122,15 +153,24 @@ class OpponentPicker extends StatelessWidget {
               enabled: computerAvailable,
             ),
           ],
-          selected: {shown.opponent},
-          onSelectionChanged: (s) =>
-              onChanged(shown.copyWith(opponent: s.first)),
+          selected: {
+            shown.opponent == Opponent.computer ? Opponent.bot : shown.opponent,
+          },
+          // Contro un bot si riparte dall'adattivo, del livello del giocatore.
+          onSelectionChanged: (s) => onChanged(
+            s.first != Opponent.bot
+                ? shown.copyWith(opponent: s.first)
+                : vsAdaptive || vsBot
+                ? shown
+                : kidMode
+                ? shown.copyWith(opponent: Opponent.bot)
+                : shown.copyWith(opponent: Opponent.computer, adaptive: true),
+          ),
         ),
         const SizedBox(height: 8),
         Text(switch (shown.opponent) {
           Opponent.human => _l10n(context).opponentHintHuman,
-          Opponent.computer => _l10n(context).opponentHintComputer,
-          Opponent.bot => _l10n(context).opponentHintBot,
+          Opponent.computer || Opponent.bot => _l10n(context).opponentHintBot,
         }, style: theme.textTheme.bodySmall),
         if (!computerAvailable) ...[
           const SizedBox(height: 8),
@@ -139,7 +179,7 @@ class OpponentPicker extends StatelessWidget {
             style: theme.textTheme.bodySmall,
           ),
         ],
-        if (vsComputer || vsBot) ...[
+        if (vsAdaptive || vsBot) ...[
           const SizedBox(height: 16),
           Text('Giochi con', style: theme.textTheme.titleSmall),
           const SizedBox(height: 4),
@@ -153,45 +193,52 @@ class OpponentPicker extends StatelessWidget {
             onSelectionChanged: (s) =>
                 onChanged(shown.copyWith(sideChoice: s.first)),
           ),
-          if (vsBot) ...[
-            const SizedBox(height: 8),
-            for (final bot in kidMode ? friendlyBots : bots)
-              _BotTile(
-                bot: bot,
-                collection: collection,
-                kidMode: kidMode,
-                selected: bot.id == shown.botId,
-                onTap: () => onChanged(shown.copyWith(botId: bot.id)),
+          const SizedBox(height: 8),
+          if (!kidMode)
+            ListTile(
+              key: const ValueKey('adaptive-opponent'),
+              contentPadding: EdgeInsets.zero,
+              selected: vsAdaptive,
+              leading: const Icon(Icons.trending_up, size: 28),
+              title: const Text('Adattivo'),
+              subtitle: Text(
+                'Livello ${level.id}, circa ${level.approxElo} Elo: si adegua '
+                'ai tuoi risultati, per vincere circa metà delle partite.',
               ),
-          ],
-        ],
-        if (vsComputer) ...[
-          const SizedBox(height: 16),
-          Text(
-            'Livello ${level.id}: ${level.name}',
-            style: theme.textTheme.titleSmall,
-          ),
-          Text(
-            'Circa ${level.approxElo} Elo',
-            style: theme.textTheme.bodySmall,
-          ),
-          SwitchListTile(
-            contentPadding: EdgeInsets.zero,
-            title: const Text('Adattivo'),
-            subtitle: const Text(
-              'Il livello si adegua ai tuoi risultati, per vincere circa metà delle partite.',
+              onTap: () => onChanged(
+                shown.copyWith(opponent: Opponent.computer, adaptive: true),
+              ),
             ),
-            value: setup.adaptive,
-            onChanged: (v) => onChanged(setup.copyWith(adaptive: v)),
+          OutlinedButton.icon(
+            key: const Key('open-bot-gallery'),
+            icon: const Icon(Icons.grid_view_rounded),
+            label: Text(_l10n(context).botGalleryOpen),
+            onPressed: () async {
+              final result = await openBotGallery(
+                context,
+                collection: collection,
+                setup: shown,
+                adaptiveLevel: adaptiveLevel,
+                kidMode: kidMode,
+                options: onGalleryPlay == null ? null : galleryOptions,
+              );
+              if (result == null) return;
+              if (onGalleryPlay != null) {
+                onGalleryPlay!(result);
+              } else {
+                onChanged(result.applyTo(shown));
+              }
+            },
           ),
-          if (!setup.adaptive)
-            Slider(
-              value: setup.level.toDouble(),
-              min: 1,
-              max: engineLevels.length.toDouble(),
-              divisions: engineLevels.length - 1,
-              label: level.name,
-              onChanged: (v) => onChanged(setup.copyWith(level: v.round())),
+          for (final bot in kidMode ? friendlyBots : bots)
+            _BotTile(
+              bot: bot,
+              collection: collection,
+              kidMode: kidMode,
+              selected: vsBot && bot.id == shown.botId,
+              onTap: () => onChanged(
+                shown.copyWith(opponent: Opponent.bot, botId: bot.id),
+              ),
             ),
         ],
       ],

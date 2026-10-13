@@ -1,6 +1,6 @@
 # Pezzi e scacchiere
 
-Oltre ai set di chessground, Rokko ha cinque set di pezzi e dieci scacchiere con texture propri, scelti tra le proposte dell'Officina di Rokko. Si scelgono in Impostazioni, alle voci «Tema della scacchiera» e «Pezzi» (vedi [interfaccia.md](interfaccia.md)).
+Oltre ai set di chessground, Rokko ha otto set di pezzi e tredici scacchiere con texture propri, scelti tra le proposte dell'Officina di Rokko. Si scelgono nella schermata Stile (vedi [stile.md](stile.md)), da Impostazioni → Stile.
 
 ## Set di pezzi
 
@@ -9,6 +9,9 @@ Oltre ai set di chessground, Rokko ha cinque set di pezzi e dieci scacchiere con
 | Rokko | Pezzi classici, morbidi e arrotondati, crema e marrone come l'icona; la torre sorride | Progetto, GPL-3.0+ |
 | Pixel | Sprite 12×12 in stile 8 bit | Progetto, GPL-3.0+ |
 | Arcano | Mondo di maghi: pedoni apprendisti, alfiere stregone, donna maga, re con corona stellata, cavallo unicorno | Progetto, GPL-3.0+ |
+| Staunton | Pezzi Staunton in legno, con luce da sinistra e ombra sotto: un 3D leggero, che sta bene su Noce | Progetto, GPL-3.0+ |
+| Morbido | Stessa sagoma con sfumature piatte, contorno sottile e ombra delicata | Progetto, GPL-3.0+ |
+| Stampa | Stessa sagoma in bianco e nero netto, con tratti interni come in un'incisione | Progetto, GPL-3.0+ |
 | Papercut | Carta ritagliata con ombre morbide | Nikolay Anzarov, CC BY 4.0 |
 | Noto | Simboli Unicode del carattere Noto Sans Symbols 2 | Google, OFL-1.1 |
 
@@ -28,8 +31,11 @@ I set del progetto non richiamano personaggi, nomi o simboli di opere esistenti,
 | Retrò | Quattro verdi e retinatura a pixel, da console portatile | |
 | Giardino | Prato con fili d'erba | |
 | Terracotta | Piastrelle con decoro a stella | |
+| Marmo | Marmo bianco venato di grigio e marmo verde scuro, con un riflesso diagonale | |
+| Metallo | Acciaio satinato con striature orizzontali e bordi smussati tra le case | |
+| Vetro | Lastre di vetro azzurro con bordi luminosi e riflessi | |
 
-Le texture sono in `assets/boards/`, in WebP da 1024 px. Per ogni tema con texture l'ultima mossa e la casa selezionata prendono, tra alcuni colori candidati, il più discreto che abbia contrasto almeno 1,25 sia sulle case chiare sia sulle scure (per esempio sul tema Retrò il verde lime si perderebbe); gli altri temi tengono i colori di sempre se raggiungono quella soglia, altrimenti prendono il candidato più discreto che la raggiunge (sul Verde l'ultima mossa diventa ambra). I punti delle mosse possibili devono avere contrasto 3:1 (WCAG 1.4.11) su entrambe le case: i temi di chessground tengono il colore originale se ci arriva, gli altri usano nero o bianco semitrasparente con la trasparenza minima che basta. Su Notte, Castello e Retrò le case chiare e scure hanno luminosità troppo vicina perché un solo colore arrivi a 3:1 su tutte e due: lì si prende il punto che stacca di più (circa 2,3 su Notte, 2,7 su Castello, 2,8 su Retrò). L'ultima mossa e la casa selezionata restano invece a 1,25: sono riempimenti di tutta la casa, e a 3:1 coprirebbero i pezzi che ci stanno sopra togliendo loro contrasto; la stessa informazione è comunque nella lista delle mosse e negli annunci per i lettori di schermo. Le immagini delle scacchiere di chessground hanno licenza AGPL e non si usano. I colori delle case chiare e scure di ogni tema restano in `lib/settings/settings.dart`: servono alle coordinate, ai colori per daltonici e ai chip delle Impostazioni.
+Alle tredici con texture si aggiungono le tinte unite di sempre (Verde, Legno, Blu, Grigio, Sabbia, Oceano, Corallo, Notte, Oro) e tre nuove: Menta, Cipria e Ardesia. Le case di Ardesia sono abbastanza vicine nella luminosità da dare ai punti delle mosse possibili il contrasto 3:1 su entrambe, come controlla `test/settings/board_marks_test.dart`. Le texture sono in `assets/boards/`, in WebP da 1024 px. Per ogni tema con texture l'ultima mossa e la casa selezionata prendono, tra alcuni colori candidati, il più discreto che abbia contrasto almeno 1,25 sia sulle case chiare sia sulle scure (per esempio sul tema Retrò il verde lime si perderebbe); gli altri temi tengono i colori di sempre se raggiungono quella soglia, altrimenti prendono il candidato più discreto che la raggiunge (sul Verde l'ultima mossa diventa ambra). I punti delle mosse possibili devono avere contrasto 3:1 (WCAG 1.4.11) su entrambe le case: i temi di chessground tengono il colore originale se ci arriva, gli altri usano nero o bianco semitrasparente con la trasparenza minima che basta. Su Notte, Castello e Retrò le case chiare e scure hanno luminosità troppo vicina perché un solo colore arrivi a 3:1 su tutte e due: lì si prende il punto che stacca di più (circa 2,3 su Notte, 2,7 su Castello, 2,8 su Retrò). L'ultima mossa e la casa selezionata restano invece a 1,25: sono riempimenti di tutta la casa, e a 3:1 coprirebbero i pezzi che ci stanno sopra togliendo loro contrasto; la stessa informazione è comunque nella lista delle mosse e negli annunci per i lettori di schermo. Le immagini delle scacchiere di chessground hanno licenza AGPL e non si usano. I colori delle case chiare e scure di ogni tema restano in `lib/settings/settings.dart`: servono alle coordinate, ai colori per daltonici e ai chip delle Impostazioni.
 
 ## Frecce e cerchi
 
@@ -50,8 +56,9 @@ Pezzi, aloni e texture si disegnano in SVG in `tool/board_art/art.mjs` e si conv
 ```sh
 npm install --no-save playwright
 node tool/board_art/render.mjs
+BOARDS=marmo,metallo,vetro node tool/board_art/render.mjs   # solo alcune scacchiere
 ```
 
-Il sorgente di Papercut è in `tool/board_art/papercut/`. Il carattere Noto si scarica da Google Fonts durante la generazione, quindi serve la rete. Gli aloni dei set di chessground partono dalle sue immagini da 512 px, lette dalla cache dei pacchetti dopo `flutter pub get`. Una nuova cartella di immagini va aggiunta anche alla sezione `assets` di `pubspec.yaml`.
+Staunton, Morbido e Stampa condividono la sagoma di `tool/board_art/staunton.mjs`; per rigenerare solo quelli: `SETS=staunton,morbido,stampa node tool/board_art/render.mjs`. Pesano circa 670 KB in tutto, aloni compresi. Altri set di Lichess (Alpha, Staunty, Cooke, Horsey e simili) non si possono usare: sono «freeware», per uso personale o CC BY-NC-SA, incompatibili con la distribuzione negli store. Il sorgente di Papercut è in `tool/board_art/papercut/`. Il carattere Noto si scarica da Google Fonts durante la generazione, quindi serve la rete. Gli aloni dei set di chessground partono dalle sue immagini da 512 px, lette dalla cache dei pacchetti dopo `flutter pub get`. Una nuova cartella di immagini va aggiunta anche alla sezione `assets` di `pubspec.yaml`.
 
 I test in `test/settings/board_art_test.dart` controllano che ogni set abbia i dodici pezzi e gli aloni, entrambe le risoluzioni, e che le texture siano solo nostre.

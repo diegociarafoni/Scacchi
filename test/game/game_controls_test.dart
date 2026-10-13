@@ -61,8 +61,7 @@ void main() {
       await pump(tester, size: size, computer: true);
       await tapGameAction(tester, 'Nuova');
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Computer'));
-      await tester.pumpAndSettle();
+      await chooseAdaptiveComputer(tester);
       await chooseTime(tester, 'Senza tempo');
       await tester.pumpAndSettle(const Duration(seconds: 1));
       for (final id in ['new', 'draw', 'resign', 'undo']) {
@@ -99,8 +98,7 @@ void main() {
       await pump(tester, computer: true);
       await tapGameAction(tester, 'Nuova');
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Computer'));
-      await tester.pumpAndSettle();
+      await chooseAdaptiveComputer(tester);
       await chooseTime(tester, 'Senza tempo');
       await tester.pumpAndSettle(const Duration(seconds: 1));
       await tester.tap(action('more'));

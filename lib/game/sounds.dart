@@ -5,6 +5,7 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
+import '../settings/settings.dart' show SoundSet;
 import 'chess_game.dart';
 
 enum GameSound {
@@ -47,13 +48,17 @@ GameSound? soundForLastMove(ChessGame game, Position before) {
 
 /// Riproduce suoni e vibrazioni secondo le impostazioni.
 class SoundPlayer {
-  final Map<GameSound, AudioPlayer> _players = {};
+  /// Set scelto in Impostazioni, aggiornato da `SettingsController`.
+  static SoundSet activeSet = SoundSet.classico;
+
+  final Map<(SoundSet, GameSound), AudioPlayer> _players = {};
 
   Future<void> play(
     GameSound sound, {
     required bool enabled,
     required double volume,
     required bool haptics,
+    SoundSet? set,
   }) async {
     if (haptics) {
       unawaited(
@@ -64,15 +69,25 @@ class SoundPlayer {
     }
     if (!enabled || volume <= 0) return;
     try {
-      final player = _players.putIfAbsent(sound, AudioPlayer.new);
+      final chosen = set ?? activeSet;
+      _releaseOtherSets(chosen);
+      final player = _players.putIfAbsent((chosen, sound), AudioPlayer.new);
       await player.stop();
       await player.play(
-        AssetSource('sounds/${sound.file}'),
+        AssetSource(chosen.assetOf(sound)),
         volume: volume,
         mode: PlayerMode.lowLatency,
       );
     } on Object catch (e) {
       debugPrint('Suono non riprodotto: $e');
+    }
+  }
+
+  /// I lettori dei set non più in uso non restano in memoria.
+  void _releaseOtherSets(SoundSet current) {
+    final stale = _players.keys.where((k) => k.$1 != current).toList();
+    for (final key in stale) {
+      unawaited(_players.remove(key)!.dispose());
     }
   }
 

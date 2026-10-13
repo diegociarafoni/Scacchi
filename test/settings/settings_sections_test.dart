@@ -1,14 +1,17 @@
 import 'dart:io';
-import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/l10n/app_localizations.dart';
+import 'package:scacchi/progress/profile_page.dart';
 import 'package:scacchi/progress/progress_controller.dart';
 import 'package:scacchi/progress/progress_store.dart';
 import 'package:scacchi/settings/settings.dart';
 import 'package:scacchi/settings/settings_page.dart';
+import 'package:scacchi/settings/settings_widgets.dart';
 import 'package:scacchi/theme/rokko_theme.dart';
+
+import 'settings_nav.dart';
 
 void main() {
   late Directory dir;
@@ -31,14 +34,15 @@ void main() {
     Size logical = const Size(390, 844),
     double textScale = 1,
     String locale = 'it',
-    Set<SettingsSection>? expanded,
+    bool withProgress = true,
+    ThemeData? theme,
   }) async {
     tester.view.physicalSize = logical * 3;
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
       MaterialApp(
-        theme: RokkoTheme.light(),
+        theme: theme ?? RokkoTheme.light(),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         locale: Locale(locale),
@@ -49,8 +53,7 @@ void main() {
         ),
         home: SettingsPage(
           controller: settings,
-          progress: progress,
-          expanded: expanded,
+          progress: withProgress ? progress : null,
         ),
       ),
     );
@@ -59,87 +62,288 @@ void main() {
 
   Finder section(SettingsSection s) => find.byKey(Key('section-${s.name}'));
 
-  Finder header(SettingsSection s) =>
-      find.descendant(of: section(s), matching: find.byType(ListTile)).first;
+  const order = [
+    (
+      SettingsSection.profile,
+      'Profilo e dati',
+      'Avatar, progressi e copie di sicurezza',
+    ),
+    (SettingsSection.style, 'Stile', 'Scacchiera, pezzi, sfondo e suoni'),
+    (
+      SettingsSection.board,
+      'Scacchiera',
+      'Suoni, vibrazione, coordinate, mosse legali e notazione',
+    ),
+    (
+      SettingsSection.game,
+      'Partita',
+      'Promozione, rotazione, modalità tavolo e spiegazioni',
+    ),
+    (
+      SettingsSection.accessibility,
+      'Accessibilità',
+      'Colori per daltonici, modalità zen e conferma della mossa',
+    ),
+    (
+      SettingsSection.kid,
+      'Profilo bambino',
+      'Interfaccia e testi più semplici, bot amichevoli, niente numeri',
+    ),
+  ];
 
-  testWidgets('U6 una sezione aperta resta aperta scorrendo via e tornando', (
-    tester,
-  ) async {
-    await show(tester);
-    await tester.scrollUntilVisible(section(SettingsSection.board), 200);
-    await tester.tap(header(SettingsSection.board));
-    await tester.pumpAndSettle();
-    final legal = find.byKey(
-      const Key('coordinatesOutside'),
-      skipOffstage: false,
-    );
-    expect(legal, findsOneWidget);
-    await tester.scrollUntilVisible(section(SettingsSection.data), 200);
-    await tester.drag(find.byType(ListView).first, const Offset(0, 10000));
-    await tester.pumpAndSettle();
-    expect(legal, findsOneWidget);
-  });
-
-  testWidgets('U6 le impostazioni sono in sezioni comprimibili', (
-    tester,
-  ) async {
-    await show(tester);
-    for (final s in SettingsSection.values) {
-      await tester.scrollUntilVisible(section(s), 200);
-      expect(section(s), findsOneWidget, reason: s.name);
-    }
-    // Profilo bambino e aspetto sono aperti, il resto no: lista corta.
-    final zen = find.byKey(const Key('zenMode')).hitTestable();
-    expect(zen, findsNothing);
-    await tester.ensureVisible(section(SettingsSection.accessibility));
-    await tester.tap(header(SettingsSection.accessibility));
-    await tester.pumpAndSettle();
-    await tester.ensureVisible(find.byKey(const Key('zenMode')));
-    await tester.pumpAndSettle();
-    expect(zen, findsOneWidget);
-    await tester.ensureVisible(header(SettingsSection.accessibility));
-    await tester.pumpAndSettle();
-    await tester.tap(header(SettingsSection.accessibility));
-    await tester.pumpAndSettle();
-    expect(zen, findsNothing);
-  });
-
-  testWidgets('U6 l\'accessibilità ha una sezione propria', (tester) async {
-    await show(tester, expanded: SettingsSection.values.toSet());
-    final acc = find.byKey(const Key('section-accessibility'));
-    for (final key in ['colorBlind', 'zenMode', 'confirmMove']) {
-      final tile = find.byKey(Key(key));
-      await tester.scrollUntilVisible(tile, 200);
+  testWidgets('la pagina principale è un menu di sezioni con icona, nome e '
+      'una riga di spiegazione', (tester) async {
+    await show(tester, logical: const Size(390, 1200));
+    var lastTop = 0.0;
+    for (final (id, title, hint) in order) {
+      final tile = section(id);
+      expect(tile, findsOneWidget, reason: id.name);
       expect(
-        find.descendant(of: acc, matching: tile),
+        find.descendant(of: tile, matching: find.text(title)),
         findsOneWidget,
-        reason: '$key nella sezione Accessibilità',
       );
+      expect(
+        find.descendant(of: tile, matching: find.text(hint)),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(of: tile, matching: find.byType(Icon)),
+        findsWidgets,
+      );
+      final top = tester.getTopLeft(tile).dy;
+      expect(top, greaterThan(lastTop), reason: 'ordine di ${id.name}');
+      lastTop = top;
     }
   });
 
-  testWidgets('U6 le intestazioni di sezione hanno un tocco da 48 dp', (
+  testWidgets('il menu non ha interruttori né anteprima', (tester) async {
+    await show(tester, logical: const Size(390, 1200));
+    expect(find.byType(SwitchListTile), findsNothing);
+    expect(find.byKey(const Key('board-preview')), findsNothing);
+  });
+
+  testWidgets('il profilo bambino è l\'ultima voce, sotto un separatore', (
+    tester,
+  ) async {
+    await show(tester, logical: const Size(390, 1200));
+    final kid = tester.getTopLeft(section(SettingsSection.kid)).dy;
+    for (final s in SettingsSection.values.where(
+      (s) => s != SettingsSection.kid,
+    )) {
+      if (section(s).evaluate().isEmpty) continue;
+      expect(tester.getTopLeft(section(s)).dy, lessThan(kid), reason: s.name);
+    }
+    expect(find.byType(Divider), findsOneWidget);
+  });
+
+  testWidgets('senza progressi il Profilo ha solo il backup', (tester) async {
+    await show(tester, withProgress: false);
+    await openSection(tester, SettingsSection.profile);
+    expect(find.byKey(const Key('backup')), findsOneWidget);
+    expect(find.byKey(const Key('openProfile')), findsNothing);
+    expect(find.byKey(const Key('progressEnabled')), findsNothing);
+  });
+
+  testWidgets('poche sezioni, ciascuna con almeno due voci', (tester) async {
+    expect(SettingsSection.values.length, lessThanOrEqualTo(6));
+    await show(tester, logical: const Size(390, 3000));
+    // Il profilo bambino è una sola scelta in fondo; Stile ha schede proprie.
+    for (final (id, _, _) in order.where(
+      (e) => e.$1 != SettingsSection.kid && e.$1 != SettingsSection.style,
+    )) {
+      await openSection(tester, id);
+      final count =
+          find.byType(SwitchListTile).evaluate().length +
+          find
+              .descendant(
+                of: find.byType(ListView),
+                matching: find.byType(ListTile),
+              )
+              .evaluate()
+              .length +
+          find.byType(SettingsChoiceTile<AnimationSpeed>).evaluate().length;
+      expect(count, greaterThanOrEqualTo(2), reason: id.name);
+      await backToMenu(tester);
+    }
+  });
+
+  testWidgets('ogni sezione si apre in una pagina propria e si torna al menu', (
+    tester,
+  ) async {
+    await show(tester, logical: const Size(390, 1200));
+    for (final (id, title, _) in order) {
+      await openSection(tester, id);
+      expect(section(id), findsNothing, reason: 'il menu è coperto');
+      expect(
+        find.descendant(of: find.byType(AppBar), matching: find.text(title)),
+        findsOneWidget,
+        reason: id.name,
+      );
+      await backToMenu(tester);
+      expect(section(id), findsOneWidget);
+    }
+  });
+
+  testWidgets('ogni interruttore ha sotto una riga di spiegazione', (
+    tester,
+  ) async {
+    await show(tester, logical: const Size(390, 3000));
+    for (final (id, title, _) in order.where(
+      (e) => e.$1 != SettingsSection.style,
+    )) {
+      await openSection(tester, id);
+      for (final tile in tester.widgetList<SwitchListTile>(
+        find.byType(SwitchListTile),
+      )) {
+        expect(
+          tile.subtitle,
+          isNotNull,
+          reason: '${(tile.title as Text).data} in $title',
+        );
+      }
+      await backToMenu(tester);
+    }
+  });
+
+  testWidgets('le impostazioni sono nelle sezioni giuste', (tester) async {
+    await show(tester, logical: const Size(390, 3000));
+    const keys = {
+      SettingsSection.profile: [
+        'openProfile',
+        'progressEnabled',
+        'unlockAll',
+        'backup',
+      ],
+      SettingsSection.style: ['theme-tile-spazio'],
+      SettingsSection.board: [
+        'sound',
+        'haptics',
+        'coordinates',
+        'coordinatesOutside',
+        'lastMove',
+        'legalMoves',
+        'drawShapes',
+      ],
+      SettingsSection.game: [
+        'autoQueen',
+        'autoFlip',
+        'tableMode',
+        'explainWhy',
+      ],
+      SettingsSection.accessibility: ['colorBlind', 'zenMode', 'confirmMove'],
+      SettingsSection.kid: ['kidMode'],
+    };
+    for (final MapEntry(key: id, value: ids) in keys.entries) {
+      await openSection(tester, id);
+      for (final key in ids) {
+        expect(
+          find.byKey(Key(key)),
+          findsOneWidget,
+          reason: '$key in ${id.name}',
+        );
+      }
+      await backToMenu(tester);
+    }
+  });
+
+  testWidgets('la scacchiera ha suoni, volume e vibrazione e li salva', (
     tester,
   ) async {
     await show(tester);
-    for (final s in SettingsSection.values) {
-      await tester.scrollUntilVisible(section(s), 200);
+    await openSection(tester, SettingsSection.board);
+    await tester.tap(find.byKey(const Key('sound')));
+    await tester.pumpAndSettle();
+    expect(settings.value.sound, isFalse);
+    expect(
+      tester.widget<Slider>(find.byType(Slider)).onChanged,
+      isNull,
+      reason: 'senza suoni il volume non ha effetto',
+    );
+    await tester.tap(find.byKey(const Key('haptics')));
+    await tester.pumpAndSettle();
+    expect(settings.value.haptics, isFalse);
+  });
+
+  testWidgets('«Evidenzia l\'ultima mossa» è accesa e si spegne', (
+    tester,
+  ) async {
+    await show(tester);
+    expect(settings.value.showLastMove, isTrue);
+    await openSection(tester, SettingsSection.board);
+    final tile = find.byKey(const Key('lastMove'));
+    expect(tester.widget<SwitchListTile>(tile).value, isTrue);
+    expect(
+      find.text('Colora la casa di partenza e quella di arrivo'),
+      findsOne,
+    );
+    await tester.tap(tile);
+    await tester.pumpAndSettle();
+    expect(settings.value.showLastMove, isFalse);
+    expect(
+      settings.value.board.colorScheme.lastMove.solidColor!.a,
+      0,
+      reason: 'nessuna evidenziazione',
+    );
+    await tester.tap(tile);
+    await tester.pumpAndSettle();
+    expect(
+      settings.value.board.colorScheme.lastMove,
+      settings.value.boardTheme.colorScheme.lastMove,
+    );
+  });
+
+  testWidgets('dal Profilo si apre la pagina del profilo', (tester) async {
+    await show(tester);
+    await openSection(tester, SettingsSection.profile);
+    await tester.tap(find.byKey(const Key('openProfile')));
+    await tester.pumpAndSettle();
+    expect(find.byType(ProfilePage), findsOneWidget);
+  });
+
+  testWidgets('il Profilo spegne XP, serie e traguardi', (tester) async {
+    await show(tester);
+    await openSection(tester, SettingsSection.profile);
+    expect(progress.settings.enabled, isTrue);
+    await tester.tap(find.byKey(const Key('progressEnabled')));
+    await tester.pumpAndSettle();
+    expect(progress.settings.enabled, isFalse);
+  });
+
+  testWidgets('nel profilo bambino XP, serie e traguardi non si cambiano', (
+    tester,
+  ) async {
+    await settings.update(settings.value.copyWith(kidMode: true));
+    await show(tester);
+    await openSection(tester, SettingsSection.profile);
+    expect(find.byKey(const Key('openProfile')), findsOneWidget);
+    expect(find.byKey(const Key('progressEnabled')), findsNothing);
+  });
+
+  testWidgets('il menu e le pagine hanno tocchi da 48 dp', (tester) async {
+    await show(tester, logical: const Size(390, 1200));
+    for (final (id, _, _) in order) {
       expect(
-        tester
-            .getSize(
-              find
-                  .descendant(of: section(s), matching: find.byType(ListTile))
-                  .first,
-            )
-            .height,
+        tester.getSize(section(id)).height,
         greaterThanOrEqualTo(48),
-        reason: s.name,
+        reason: id.name,
       );
     }
   });
 
-  testWidgets('U6 l\'anteprima si comprime e si riapre', (tester) async {
+  testWidgets('le voci del menu sono pulsanti per i lettori di schermo', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    await show(tester, logical: const Size(390, 1200));
+    final node = tester.getSemantics(section(SettingsSection.board));
+    expect(node.flagsCollection.isButton, isTrue);
+    expect(node.label, allOf(contains('Scacchiera'), contains('Suoni')));
+    semantics.dispose();
+  });
+
+  testWidgets('l\'anteprima si comprime e si riapre', (tester) async {
     await show(tester);
+    await openSection(tester, SettingsSection.board);
     expect(find.byKey(const Key('board-preview')), findsOneWidget);
     await tester.tap(find.byTooltip('Comprimi l\'anteprima'));
     await tester.pumpAndSettle();
@@ -152,80 +356,101 @@ void main() {
     expect(find.byKey(const Key('board-preview')), findsOneWidget);
   });
 
-  testWidgets('U6 i temi sono una galleria con le case e la scelta', (
-    tester,
-  ) async {
-    await show(tester);
-    for (final theme in BoardTheme.values) {
-      final tile = find.byKey(Key('theme-tile-${theme.name}'));
-      await tester.scrollUntilVisible(tile, 200);
-      expect(tester.getSize(tile).shortestSide, greaterThanOrEqualTo(48));
-    }
-    final selected = tester.getSemantics(
-      find.byKey(const Key('theme-tile-spazio')),
-    );
-    expect(selected.flagsCollection.isSelected, ui.Tristate.isTrue);
-    expect(selected.label, contains('Spazio'));
-  });
-
-  testWidgets('U6 una scelta bloccata non è solo più chiara: ha il lucchetto '
-      'e dice come sbloccarla', (tester) async {
-    await show(tester);
-    final tile = find.byKey(const Key('theme-tile-sand'));
-    await tester.scrollUntilVisible(tile, 200);
-    expect(
-      find.descendant(of: tile, matching: find.byIcon(Icons.lock_outline)),
-      findsOneWidget,
-    );
-    expect(
-      tester.getSemantics(tile).label,
-      allOf(contains('Sabbia'), contains('bloccato'), contains('Livello 2')),
-    );
-  });
-
   testWidgets('RNF-07 testo al 130% su telefono stretto senza overflow', (
     tester,
   ) async {
-    await show(
-      tester,
-      logical: const Size(320, 568),
-      textScale: 1.3,
-      expanded: SettingsSection.values.toSet(),
-    );
-    final list = find.byType(Scrollable).first;
-    for (var i = 0; i < 40; i++) {
-      await tester.drag(list, const Offset(0, -400));
-      await tester.pump();
+    await show(tester, logical: const Size(320, 568), textScale: 1.3);
+    for (final (id, _, _) in order) {
+      await openSection(tester, id);
+      final list = find.byType(Scrollable).first;
+      for (var i = 0; i < 40; i++) {
+        await tester.drag(list, const Offset(0, -400));
+        await tester.pump();
+      }
+      expect(tester.takeException(), isNull, reason: id.name);
+      await backToMenu(tester);
     }
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('U4 la pagina è tradotta in inglese', (tester) async {
-    await show(tester, locale: 'en', expanded: SettingsSection.values.toSet());
+  testWidgets('U4 il menu e le pagine sono tradotti in inglese', (
+    tester,
+  ) async {
+    await show(tester, locale: 'en', logical: const Size(390, 1200));
     expect(find.text('Settings'), findsOneWidget);
-    expect(find.text('Appearance'), findsWidgets);
-    await tester.scrollUntilVisible(
-      find.byKey(const Key('theme-tile-brown')),
-      200,
-    );
-    expect(find.text('Wood'), findsOneWidget);
+    for (final title in [
+      'Profile and data',
+      'Style',
+      'Board',
+      'Game',
+      'Accessibility',
+      'Kid profile',
+    ]) {
+      expect(find.text(title), findsOneWidget, reason: title);
+    }
     expect(find.text('Impostazioni'), findsNothing);
+    await openSection(tester, SettingsSection.board);
+    expect(find.text('Highlight the last move'), findsOneWidget);
+    expect(
+      find.text('Colours the squares the last move started from and ended on'),
+      findsOneWidget,
+    );
+    await backToMenu(tester);
+    await openSection(tester, SettingsSection.accessibility);
+    expect(find.text('App appearance'), findsOneWidget);
   });
 
-  test('U4 nella pagina non restano testi o tooltip scritti nel codice', () {
-    final source = File('lib/settings/settings_page.dart').readAsStringSync();
+  test('U4 nelle pagine non restano testi o tooltip scritti nel codice', () {
     final literal = RegExp(
       "(Text\\(|tooltip:|label:|title:|subtitle:)\\s*(const\\s+Text\\()?\\s*'([^']*)'",
     );
-    final hits = [
-      for (final m in literal.allMatches(source))
-        // Le interpolazioni non sono testo.
-        if (m
-            .group(3)!
-            .replaceAll(RegExp(r'\$\{[^}]*\}|\$\w+'), '')
-            .contains(RegExp('[A-Za-zÀ-ÿ]')))
-          m.group(0),
-    ];
-    expect(hits, isEmpty);
+    for (final file in [
+      'lib/settings/settings_page.dart',
+      'lib/settings/section_pages.dart',
+      'lib/settings/settings_widgets.dart',
+    ]) {
+      final source = File(file).readAsStringSync();
+      final hits = [
+        for (final m in literal.allMatches(source))
+          // Le interpolazioni non sono testo.
+          if (m
+              .group(3)!
+              .replaceAll(RegExp(r'\$\{[^}]*\}|\$\w+'), '')
+              .contains(RegExp('[A-Za-zÀ-ÿ]')))
+            m.group(0),
+      ];
+      expect(hits, isEmpty, reason: file);
+    }
+  });
+
+  group('golden', () {
+    const phones = {
+      'small': Size(320, 568),
+      'medium': Size(360, 780),
+      'large': Size(412, 915),
+    };
+    for (final MapEntry(key: name, value: size) in phones.entries) {
+      testWidgets('RNF-07 menu delle impostazioni su telefono $name', (
+        tester,
+      ) async {
+        await show(tester, logical: size);
+        await expectLater(
+          find.byType(MaterialApp),
+          matchesGoldenFile('goldens/settings_menu_$name.png'),
+        );
+      }, tags: 'golden');
+    }
+
+    testWidgets('RNF-07 menu in tema scuro', (tester) async {
+      await show(
+        tester,
+        logical: const Size(360, 780),
+        theme: RokkoTheme.dark(),
+      );
+      await expectLater(
+        find.byType(MaterialApp),
+        matchesGoldenFile('goldens/settings_menu_dark.png'),
+      );
+    }, tags: 'golden');
   });
 }

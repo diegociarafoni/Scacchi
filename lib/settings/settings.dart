@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart' show PieceKind, Side;
 import 'package:flutter/material.dart' show ThemeMode;
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../game/sounds.dart' show GameSound, SoundPlayer;
 import 'board_marks.dart';
 import 'color_blind.dart';
 import 'notation.dart';
@@ -96,7 +99,28 @@ enum BoardTheme {
     light: Color(0xfff3dfc6),
     dark: Color(0xffc4643c),
     textured: true,
-  );
+  ),
+  marmo(
+    'Marmo',
+    light: Color(0xffe0e0dc),
+    dark: Color(0xff79837f),
+    textured: true,
+  ),
+  metallo(
+    'Metallo',
+    light: Color(0xffc5c9ce),
+    dark: Color(0xff7d848c),
+    textured: true,
+  ),
+  vetro(
+    'Vetro',
+    light: Color(0xffd6ecf0),
+    dark: Color(0xff5da0b0),
+    textured: true,
+  ),
+  menta('Menta', light: Color(0xffe6f4ec), dark: Color(0xff5fa88a)),
+  cipria('Cipria', light: Color(0xfff7e6e8), dark: Color(0xffb8707e)),
+  ardesia('Ardesia', light: Color(0xffc9d1d9), dark: Color(0xff6b7a8b));
 
   const BoardTheme(
     this.label, {
@@ -272,6 +296,83 @@ ChessboardColorScheme _customScheme(
   );
 }
 
+/// Sfondo dietro la scacchiera: tinte e sfumature disegnate in codice, quindi
+/// senza peso nell'app, lo spazio già in `assets/boards/` e una foto scelta
+/// dall'utente, che resta solo sul telefono.
+enum BoardBackdrop {
+  standard('Standard'),
+  graphite('Grafite', color: Color(0xff2b2a28)),
+  feltro('Feltro', color: Color(0xff2f6b3c)),
+  ardesia(
+    'Ardesia',
+    gradient: LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [Color(0xff5a5d63), Color(0xff2e3035)],
+    ),
+  ),
+  perla('Perla', color: Color(0xffd5d6d8)),
+  notte(
+    'Notte',
+    gradient: RadialGradient(
+      radius: 0.9,
+      colors: [Color(0xff26346b), Color(0xff0a0d24)],
+    ),
+  ),
+  tramonto(
+    'Tramonto',
+    gradient: LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [Color(0xff6a3d8f), Color(0xffe0693f), Color(0xfff0b04a)],
+    ),
+  ),
+  oceano(
+    'Oceano',
+    gradient: LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [Color(0xff3aa0c4), Color(0xff0b3d66)],
+    ),
+  ),
+  foresta(
+    'Foresta',
+    gradient: LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [Color(0xff6b9a4a), Color(0xff1f4a2b)],
+    ),
+  ),
+  cuoio('Cuoio', color: Color(0xff7a2a24)),
+  spazio('Spazio', asset: 'assets/boards/spazio.webp'),
+  photo('La tua foto');
+
+  const BoardBackdrop(this.label, {this.color, this.gradient, this.asset});
+
+  final String label;
+  final Color? color;
+  final Gradient? gradient;
+
+  /// Immagine in `assets/`, per gli sfondi che non si disegnano in codice.
+  final String? asset;
+}
+
+/// Set di suoni delle mosse. Quello classico sta in `assets/sounds/`, gli altri
+/// in una cartella con il loro nome; tutti generati da `tool/generate_sounds.py`.
+enum SoundSet {
+  classico('Classico'),
+  legno('Legno'),
+  cristallo('Cristallo');
+
+  const SoundSet(this.label);
+
+  final String label;
+
+  /// Percorso del suono sotto `assets/`.
+  String assetOf(GameSound sound) =>
+      this == classico ? 'sounds/${sound.file}' : 'sounds/$name/${sound.file}';
+}
+
 /// Set di pezzi la cui licenza permette la distribuzione negli store insieme
 /// a codice GPL-3.0 (vedi CREDITS.md). Esclusi i set CC BY-NC-SA. Quelli
 /// senza [pieceSet] sono in `assets/pieces/`, generati da `tool/board_art/`.
@@ -291,6 +392,9 @@ enum PieceStyle {
   rokko('Rokko', 'Progetto Rokko', 'GPL-3.0+'),
   pixel('Pixel', 'Progetto Rokko', 'GPL-3.0+'),
   arcano('Arcano', 'Progetto Rokko', 'GPL-3.0+'),
+  staunton('Staunton', 'Progetto Rokko', 'GPL-3.0+'),
+  morbido('Morbido', 'Progetto Rokko', 'GPL-3.0+'),
+  stampa('Stampa', 'Progetto Rokko', 'GPL-3.0+'),
   papercut('Papercut', 'Nikolay Anzarov', 'CC BY 4.0'),
   noto('Noto', 'Google (Noto Sans Symbols 2)', 'OFL-1.1');
 
@@ -340,12 +444,16 @@ class AppSettings {
     this.showLegalMoves = true,
     this.showCoordinates = true,
     this.coordinatesOutside = false,
+    this.showLastMove = true,
     this.autoQueen = false,
     this.drawShapes = true,
     this.autoFlip = false,
     this.animation = AnimationSpeed.normal,
     this.boardTheme = BoardTheme.spazio,
     this.pieceSet = PieceStyle.cburnett,
+    this.backdrop = BoardBackdrop.standard,
+    this.backdropPhoto = '',
+    this.soundSet = SoundSet.classico,
     this.sound = true,
     this.volume = 1.0,
     this.haptics = true,
@@ -382,12 +490,22 @@ class AppSettings {
 
   /// Coordinate attorno alla scacchiera invece che sulle case.
   final bool coordinatesOutside;
+
+  /// Colora la casa di partenza e di arrivo dell'ultima mossa.
+  final bool showLastMove;
   final bool autoQueen;
   final bool drawShapes;
   final bool autoFlip;
   final AnimationSpeed animation;
   final BoardTheme boardTheme;
   final PieceStyle pieceSet;
+
+  /// Sfondo dietro la scacchiera.
+  final BoardBackdrop backdrop;
+
+  /// Percorso della foto di [BoardBackdrop.photo], salvata nella cartella dati.
+  final String backdropPhoto;
+  final SoundSet soundSet;
   final bool sound;
   final double volume;
   final bool haptics;
@@ -455,12 +573,16 @@ class AppSettings {
     bool? showLegalMoves,
     bool? showCoordinates,
     bool? coordinatesOutside,
+    bool? showLastMove,
     bool? autoQueen,
     bool? drawShapes,
     bool? autoFlip,
     AnimationSpeed? animation,
     BoardTheme? boardTheme,
     PieceStyle? pieceSet,
+    BoardBackdrop? backdrop,
+    String? backdropPhoto,
+    SoundSet? soundSet,
     bool? sound,
     double? volume,
     bool? haptics,
@@ -478,12 +600,16 @@ class AppSettings {
     showLegalMoves: showLegalMoves ?? this.showLegalMoves,
     showCoordinates: showCoordinates ?? this.showCoordinates,
     coordinatesOutside: coordinatesOutside ?? this.coordinatesOutside,
+    showLastMove: showLastMove ?? this.showLastMove,
     autoQueen: autoQueen ?? this.autoQueen,
     drawShapes: drawShapes ?? this.drawShapes,
     autoFlip: autoFlip ?? this.autoFlip,
     animation: animation ?? this.animation,
     boardTheme: boardTheme ?? this.boardTheme,
     pieceSet: pieceSet ?? this.pieceSet,
+    backdrop: backdrop ?? this.backdrop,
+    backdropPhoto: backdropPhoto ?? this.backdropPhoto,
+    soundSet: soundSet ?? this.soundSet,
     sound: sound ?? this.sound,
     volume: volume ?? this.volume,
     haptics: haptics ?? this.haptics,
@@ -499,10 +625,20 @@ class AppSettings {
     blackName: blackName ?? this.blackName,
   );
 
-  late final ChessboardSettings board = ChessboardSettings(
-    colorScheme: colorBlind
+  /// Schema del tema, senza l'evidenziazione dell'ultima mossa se spenta.
+  ChessboardColorScheme get _scheme {
+    final scheme = colorBlind
         ? boardTheme.colorBlindScheme
-        : boardTheme.colorScheme,
+        : boardTheme.colorScheme;
+    return showLastMove
+        ? scheme
+        : scheme.copyWith(
+            lastMove: const HighlightDetails(solidColor: Color(0x00000000)),
+          );
+  }
+
+  late final ChessboardSettings board = ChessboardSettings(
+    colorScheme: _scheme,
     pieceAssets: pieceSet.assetsOn(boardTheme),
     enableCoordinates: showCoordinates && !coordinatesOutside,
     showValidMoves: showLegalMoves,
@@ -528,12 +664,16 @@ class AppSettings {
       other.showLegalMoves == showLegalMoves &&
       other.showCoordinates == showCoordinates &&
       other.coordinatesOutside == coordinatesOutside &&
+      other.showLastMove == showLastMove &&
       other.autoQueen == autoQueen &&
       other.drawShapes == drawShapes &&
       other.autoFlip == autoFlip &&
       other.animation == animation &&
       other.boardTheme == boardTheme &&
       other.pieceSet == pieceSet &&
+      other.backdrop == backdrop &&
+      other.backdropPhoto == backdropPhoto &&
+      other.soundSet == soundSet &&
       other.sound == sound &&
       other.volume == volume &&
       other.haptics == haptics &&
@@ -553,12 +693,16 @@ class AppSettings {
     showLegalMoves,
     showCoordinates,
     coordinatesOutside,
+    showLastMove,
     autoQueen,
     drawShapes,
     autoFlip,
     animation,
     boardTheme,
     pieceSet,
+    backdrop,
+    backdropPhoto,
+    soundSet,
     sound,
     volume,
     haptics,
@@ -577,12 +721,22 @@ class AppSettings {
 
 /// Impostazioni correnti, salvate in locale a ogni modifica.
 class SettingsController extends ValueNotifier<AppSettings> {
-  SettingsController._(this._prefs, super.value);
+  SettingsController._(this._prefs, super.value) {
+    SoundPlayer.activeSet = value.soundSet;
+  }
 
   /// Impostazioni predefinite non salvate, se la memoria locale non è disponibile.
   SettingsController.defaults() : this._(null, AppSettings());
 
   final SharedPreferences? _prefs;
+
+  /// Il lettore dei suoni segue sempre il set scelto, anche dalle schermate
+  /// che non ricevono le impostazioni.
+  @override
+  set value(AppSettings v) {
+    SoundPlayer.activeSet = v.soundSet;
+    super.value = v;
+  }
 
   static Future<SettingsController> load() async {
     final prefs = await SharedPreferences.getInstance();
@@ -600,12 +754,19 @@ class SettingsController extends ValueNotifier<AppSettings> {
         showLegalMoves: read('showLegalMoves', d.showLegalMoves),
         showCoordinates: read('showCoordinates', d.showCoordinates),
         coordinatesOutside: read('coordinatesOutside', d.coordinatesOutside),
+        showLastMove: read('showLastMove', d.showLastMove),
         autoQueen: read('autoQueen', d.autoQueen),
         drawShapes: read('drawShapes', d.drawShapes),
         autoFlip: read('autoFlip', d.autoFlip),
         animation: byName(AnimationSpeed.values, 'animation', d.animation),
         boardTheme: byName(BoardTheme.values, 'boardTheme', d.boardTheme),
         pieceSet: byName(PieceStyle.values, 'pieceSet', d.pieceSet),
+        backdrop: _backdropAtLoad(
+          byName(BoardBackdrop.values, 'backdrop', d.backdrop),
+          read('backdropPhoto', d.backdropPhoto),
+        ),
+        backdropPhoto: read('backdropPhoto', d.backdropPhoto),
+        soundSet: byName(SoundSet.values, 'soundSet', d.soundSet),
         sound: read('sound', d.sound),
         volume: read<double>('volume', d.volume).clamp(0.0, 1.0),
         haptics: read('haptics', d.haptics),
@@ -623,6 +784,13 @@ class SettingsController extends ValueNotifier<AppSettings> {
     );
   }
 
+  /// Una foto sparita (dati cancellati, app ripristinata altrove) non lascia lo
+  /// sfondo su un file che non c'è.
+  static BoardBackdrop _backdropAtLoad(BoardBackdrop b, String photo) =>
+      b == BoardBackdrop.photo && !File(photo).existsSync()
+      ? BoardBackdrop.standard
+      : b;
+
   /// Applica subito [settings] e salva solo i valori cambiati.
   Future<void> update(AppSettings settings) async {
     final old = value;
@@ -636,6 +804,8 @@ class SettingsController extends ValueNotifier<AppSettings> {
         prefs.setBool('showCoordinates', settings.showCoordinates),
       if (old.coordinatesOutside != settings.coordinatesOutside)
         prefs.setBool('coordinatesOutside', settings.coordinatesOutside),
+      if (old.showLastMove != settings.showLastMove)
+        prefs.setBool('showLastMove', settings.showLastMove),
       if (old.autoQueen != settings.autoQueen)
         prefs.setBool('autoQueen', settings.autoQueen),
       if (old.drawShapes != settings.drawShapes)
@@ -648,6 +818,12 @@ class SettingsController extends ValueNotifier<AppSettings> {
         prefs.setString('boardTheme', settings.boardTheme.name),
       if (old.pieceSet != settings.pieceSet)
         prefs.setString('pieceSet', settings.pieceSet.name),
+      if (old.backdrop != settings.backdrop)
+        prefs.setString('backdrop', settings.backdrop.name),
+      if (old.backdropPhoto != settings.backdropPhoto)
+        prefs.setString('backdropPhoto', settings.backdropPhoto),
+      if (old.soundSet != settings.soundSet)
+        prefs.setString('soundSet', settings.soundSet.name),
       if (old.sound != settings.sound) prefs.setBool('sound', settings.sound),
       if (old.volume != settings.volume)
         prefs.setDouble('volume', settings.volume),

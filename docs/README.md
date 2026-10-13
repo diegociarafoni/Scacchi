@@ -9,6 +9,7 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | [architettura.md](architettura.md) | Stack, struttura delle cartelle, componenti e flusso di una mossa |
 | [regole-di-gioco.md](regole-di-gioco.md) | Regole implementate e condizioni di fine partita |
 | [interfaccia.md](interfaccia.md) | Schermata di gioco, layout su telefono e tablet, comandi |
+| [home.md](home.md) | Home a schede e scheda Impara: prossimo passo, ricerca, funzioni a un tocco |
 | [badge.md](badge.md) | Badge: collezione di 59 badge per ciò che si impara e si gioca, sblocco, scheda e testi |
 | [gamification.md](gamification.md) | XP, livelli, obiettivo giornaliero, serie, traguardi, ricompense estetiche, promemoria |
 | [esporta-immagine.md](esporta-immagine.md) | Esportare la posizione come immagine PNG da partita, analisi, puzzle ed editor |
@@ -31,6 +32,7 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | [minigiochi.md](minigiochi.md) | Coordinate a tempo, cattura tutto, visualizzazione alla cieca, conta del materiale |
 | [tornei.md](tornei.md) | Tornei offline contro bot: girone, eliminazione diretta, bacheca |
 | [profilo-bambino.md](profilo-bambino.md) | Profilo bambino: interfaccia semplificata, bot amichevoli, niente numeri |
+| [stile.md](stile.md) | Schermata Stile: anteprima dal vivo, schede Scacchiera, Pezzi, Sfondo (anche una propria foto) e Suoni |
 | [pezzi-e-scacchiere.md](pezzi-e-scacchiere.md) | Set di pezzi e scacchiere di Rokko, alone sui temi scuri, coordinate esterne, rigenerazione delle immagini |
 | [identita-visiva.md](identita-visiva.md) | Nome, icona, schermata di avvio e come rigenerarli |
 | [localizzazione.md](localizzazione.md) | Lingua predefinita e come aggiungere testi e lingue |

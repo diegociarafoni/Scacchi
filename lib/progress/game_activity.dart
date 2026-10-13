@@ -1,6 +1,8 @@
 import 'package:dartchess/dartchess.dart';
 
+import '../badges/opening_volumes.dart';
 import '../game/chess_game.dart';
+import '../openings/opening_book.dart';
 import 'activity.dart';
 
 /// Converte una partita conclusa in un'attività, dal punto di vista di
@@ -11,6 +13,7 @@ GamePlayed gameActivity(
   Side? player,
   int? opponentElo,
   Duration duration = Duration.zero,
+  OpeningBook? book,
 }) {
   final outcome = game.outcome;
   if (outcome == null) {
@@ -51,8 +54,18 @@ GamePlayed gameActivity(
     highlights: player == null
         ? const {}
         : _highlights(game, player, result, matedWith, playerMoves),
+    openingBook: book == null ? null : _volume(game, book),
     duration: duration,
   );
+}
+
+/// Libro a cui porta l'ultima apertura con nome attraversata dalla partita.
+String? _volume(ChessGame game, OpeningBook book) {
+  final opening = book.classifyPositions([
+    game.initial,
+    for (final m in game.moves) m.after,
+  ]);
+  return opening == null ? null : volumeForFamily(opening.family)?.id;
 }
 
 Set<GameHighlight> _highlights(

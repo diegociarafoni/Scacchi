@@ -15,6 +15,7 @@ import 'explorer_page.dart';
 import 'opening_assets.dart';
 import 'opening_book.dart';
 import 'opening_game.dart';
+import 'opening_stats.dart';
 import 'personal_tree.dart';
 import 'repertoire.dart';
 
@@ -25,6 +26,7 @@ class PersonalExplorerPage extends StatefulWidget {
     super.key,
     required this.archive,
     this.book,
+    this.stats,
     this.initialMoves = const [],
     this.repertoire,
     this.onPlay,
@@ -34,6 +36,9 @@ class PersonalExplorerPage extends StatefulWidget {
 
   /// Sostituibile nei test; di default il libro incluso nell'app.
   final Future<OpeningBook>? book;
+
+  /// Passate all'explorer delle aperture quando lo si apre da qui.
+  final Future<OpeningStats?>? stats;
   final List<Move> initialMoves;
 
   /// Passati all'explorer delle aperture quando lo si apre da qui.
@@ -122,6 +127,7 @@ class _PersonalExplorerPageState extends State<PersonalExplorerPage> {
       MaterialPageRoute<void>(
         builder: (_) => ExplorerPage(
           book: _book,
+          stats: widget.stats,
           initialMoves: [..._moves],
           repertoire: widget.repertoire,
           onPlay: widget.onPlay,

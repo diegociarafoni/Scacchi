@@ -50,10 +50,15 @@ flutter:
   uses-material-design: true
   assets:
     - assets/sounds/
+    - assets/sounds/legno/
+    - assets/sounds/cristallo/
     - assets/puzzles/
     - assets/openings/
     - assets/boards/
     - assets/pieces/arcano/
+    - assets/pieces/staunton/
+    - assets/pieces/morbido/
+    - assets/pieces/stampa/
     - assets/pieces/noto/
     - assets/pieces/papercut/
     - assets/pieces/pixel/
@@ -74,4 +79,7 @@ flutter:
     - assets/pieces/halo/rokko/
     - assets/pieces/halo/shapes/
     - assets/pieces/halo/spatial/
+    - assets/pieces/halo/staunton/
+    - assets/pieces/halo/morbido/
+    - assets/pieces/halo/stampa/
     - assets/pieces/halo/totoy/
