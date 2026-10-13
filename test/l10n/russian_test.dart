@@ -61,7 +61,6 @@ Map<String, String> _forms(String body) {
 
 void main() {
   final it = _messages('it');
-  final en = _messages('en');
   final ru = _messages('ru');
 
   test('russo: stesse chiavi dell\'italiano, nessun testo vuoto', () {
