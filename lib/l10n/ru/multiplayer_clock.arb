@@ -1,0 +1,12 @@
+{
+  "multiplayerClockTitle": "Контроль времени",
+  "multiplayerClockNone": "Без часов",
+  "multiplayerClockHint": "Решает тот, кто создаёт партию: другой телефон получит настройку вместе с приглашением.",
+  "multiplayerClockRemoteHint": "На расстоянии часов нет: выбери Wi-Fi или Bluetooth, чтобы играть с часами.",
+  "multiplayerClockYou": "Ты",
+  "multiplayerClockPeer": "Соперник",
+  "multiplayerClockSemantics": "Часы, {who}: {minutes} мин {seconds} с",
+  "multiplayerWhiteWinsOnTime": "Время вышло: выиграли белые",
+  "multiplayerBlackWinsOnTime": "Время вышло: выиграли чёрные",
+  "multiplayerDrawOnTime": "Время вышло, но у соперника недостаточно материала для мата: ничья"
+}

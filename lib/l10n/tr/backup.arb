@@ -1,0 +1,21 @@
+{
+  "backupTitle": "Yedekle ve geri yükle",
+  "backupIntro": "Yedek; oyunları, ilerlemeni, öğrenme yolunu, turnuvaları, antrenmanı ve ayarları içerir. Güvenli bir yerde sakla: uygulama çevrimdışı çalışır, çevrimiçi bir kopya yoktur.",
+  "backupShare": "Yedeği paylaş",
+  "backupShareSubject": "Rokko yedeği",
+  "backupRestoreFromText": "Metinden geri yükle",
+  "backupExported": "Yedek kaydetmeye hazır",
+  "backupExportFailed": "Yedekleme başarısız: {error}",
+  "backupRestoreStaged": "Yedek hazır. Verilerini geri yüklemek için uygulamayı kapatıp yeniden aç.",
+  "backupRestoreFailed": "Geri yükleme başarısız: {error}",
+  "backupErrorNotApp": "Bu bir Rokko yedeği değil",
+  "backupErrorNewerVersion": "Yedek daha yeni bir sürümle oluşturulmuş",
+  "backupErrorUnexpectedFile": "Yedekte beklenmeyen dosya: {file}",
+  "backupErrorInvalidFile": "Yedekte geçersiz dosya: {file}",
+  "backupErrorInvalidPreference": "Geçersiz tercih: {name}",
+  "backupErrorUnreadable": "Okunamayan yedek",
+  "backupRestoreDialogTitle": "Yedeği geri yükle",
+  "backupRestoreDialogBody": "Yedek dosyasının içeriğini yapıştır. Mevcut verilerin değiştirilecek.",
+  "backupCancel": "İptal",
+  "backupRestore": "Geri yükle"
+}

@@ -1,0 +1,20 @@
+{
+  "multiplayerRemoteIntro": "Um aus der Ferne zu spielen, brauchst du nur Internet: Schick deinem Freund einen Link und spielt, wann ihr wollt, auch Stunden versetzt.",
+  "multiplayerRemoteSwitchHint": "Dein Freund kann von überall per Link beitreten. Die Züge werden verschlüsselt über öffentliche Relays übertragen: ohne Konto und ohne eigenen Server von uns.",
+  "multiplayerRemoteShare": "Einladungslink teilen",
+  "multiplayerRemoteShareSubject": "Einladung zu einer Schachpartie",
+  "multiplayerRemoteShareText": "Lass uns Schach auf Rokko spielen! Öffne die App, wähle „Mit einem Freund spielen“, dann „Per Link beitreten“ und füge diesen Link ein: {link}",
+  "multiplayerRemoteWaitingHint": "Schick den Link an deinen Freund oder lass ihn den QR-Code scannen. Die Partie bleibt gespeichert: Du kannst die App schließen und sie unter „Mit einem Freund spielen“ fortsetzen.",
+  "multiplayerRemoteLeaveBodyWaiting": "Die Partie bleibt gespeichert und der Link ist weiterhin gültig: Du kannst sie unter „Mit einem Freund spielen“ fortsetzen.",
+  "multiplayerRemoteJoinLink": "Per Link beitreten",
+  "multiplayerRemoteLinkTitle": "Einladungslink einfügen",
+  "multiplayerRemoteLinkField": "Einladungslink",
+  "multiplayerRemotePaste": "Einfügen",
+  "multiplayerRemoteLinkInvalid": "Dieser Link ist keine Einladung zu einer Partie.",
+  "multiplayerRemoteLinkConfirm": "Beitreten",
+  "multiplayerRemoteNotifyChannel": "Partien aus der Ferne",
+  "multiplayerRemoteNotifyChannelDescription": "Sagt dir Bescheid, wenn dein Freund gezogen hat.",
+  "multiplayerRemoteNotifyTitle": "Du bist am Zug",
+  "multiplayerRemoteNotifyBody": "Dein Freund hat {move} gespielt.",
+  "multiplayerRemoteNotifyOver": "Die Partie mit deinem Freund ist beendet."
+}

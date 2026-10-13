@@ -1,0 +1,114 @@
+{
+  "personalTitle": "Pembukaanmu",
+  "personalHubSubtitle": "Langkah yang pernah kamu mainkan, beserta hasilnya",
+  "personalLoadFailed": "Arsip permainan tidak bisa dibaca: coba lagi nanti.",
+  "personalEmpty": "Mainkan beberapa permainan melawan komputer untuk membangun pohon pembukaanmu.",
+  "personalNoGamesFiltered": "Tidak ada permainan yang cocok dengan filter ini.",
+  "personalNoGamesHere": "Kamu belum pernah bermain dari posisi ini.",
+  "personalSideAll": "Keduanya",
+  "personalSideWhite": "Putih",
+  "personalSideBlack": "Hitam",
+  "personalOpponent": "Lawan",
+  "personalAllOpponents": "Semua lawan",
+  "personalGames": "{count, plural, one{{count} permainan} other{{count} permainan}}",
+  "@personalGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "personalGamesTotal": "{count, plural, one{{count} permainan dihitung} other{{count} permainan dihitung}}",
+  "@personalGamesTotal": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "personalScore": "{wins}M · {draws}R · {losses}K",
+  "@personalScore": {
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      }
+    }
+  },
+  "personalScoreSemantics": "{wins} menang, {draws} remis, {losses} kalah",
+  "@personalScoreSemantics": {
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      }
+    }
+  },
+  "personalStartPosition": "Posisi awal",
+  "personalNoName": "Pembukaan tanpa nama",
+  "personalBack": "Kembali",
+  "personalStart": "Awal",
+  "personalFlip": "Putar papan",
+  "personalOpenInBook": "Buka di penjelajah pembukaan",
+  "personalFromHere": "Permainanmu dari posisi ini",
+  "explorerTitle": "Jelajahi pembukaan",
+  "explorerLoadFailed": "Pembukaan tidak bisa dimuat.",
+  "explorerStartPosition": "Posisi awal",
+  "explorerNoName": "Pembukaan tanpa nama",
+  "explorerOutOfBook": "Di luar buku pembukaan",
+  "explorerFlip": "Putar papan",
+  "explorerRestart": "Mulai ulang",
+  "explorerBack": "Kembali",
+  "explorerForward": "Maju",
+  "explorerMoveSemantics": "{move}: {games, plural, one{{games} permainan} other{{games} permainan}}, putih {white}%, remis {draws}%, hitam {black}%",
+  "openingsHubTitle": "Pembukaan",
+  "openingsHubExplorerSubtitle": "Permainan yang dimainkan dan hasil untuk setiap langkah, lengkap dengan nama pembukaan",
+  "openingsRepertoireTitle": "{side, select, white{Repertoar Putih} other{Repertoar Hitam}}",
+  "openingsRepertoireUnavailable": "Repertoar tidak tersedia",
+  "openingsRepertoireLoading": "Memuat…",
+  "openingsRepertoireSummary": "{lines, plural, one{{lines} alur} other{{lines} alur}} · {due, plural, one{{due} langkah untuk ditinjau} other{{due} langkah untuk ditinjau}}",
+  "openingsGameTitle": "Main melawan komputer",
+  "openingsLevel": "Level",
+  "openingsPlay": "Main",
+  "openingsCancel": "Batal",
+  "openingsSideWhite": "Putih",
+  "openingsSideBlack": "Hitam",
+  "openingsNameSemantics": "Pembukaan: {name} ({eco})",
+  "openingsAddToRepertoire": "Tambahkan ke repertoar",
+  "openingsPlayThisOpening": "Mainkan pembukaan ini",
+  "openingsFreeOpening": "Pembukaan bebas",
+  "openingsDefaultLineName": "Alur",
+  "openingsLineName": "Nama",
+  "openingsAdd": "Tambah",
+  "openingsLineAdded": "{side, select, white{Alur ditambahkan ke repertoar Putih.} other{Alur ditambahkan ke repertoar Hitam.}}",
+  "openingsProblemEmpty": "Alurnya kosong.",
+  "openingsProblemIllegal": "Alur berisi langkah ilegal.",
+  "openingsProblemNoOwnMoves": "Alur tidak punya langkah untuk warnamu.",
+  "openingsProblemConflict": "Di posisi ini repertoarmu sudah punya {move}.",
+  "openingsDrillTitle": "Tinjauan repertoar",
+  "openingsDrillDone": "Tinjauan selesai: {count, plural, one{{count} langkah} other{{count} langkah}}.",
+  "openingsDrillNew": "Langkah baru: mainkan yang ditunjukkan panah.",
+  "openingsDrillPrompt": "Alur “{name}”: apa langkahmu?",
+  "openingsDrillWrong": "Itu bukan langkah repertoar: ini yang benar.",
+  "openingsImportTitle": "Impor PGN",
+  "openingsImportHelper": "Setiap variasi menjadi satu alur.",
+  "openingsImport": "Impor",
+  "openingsImportNone": "Tidak ada alur valid di PGN.",
+  "openingsImportAdded": "Alur ditambahkan: {added}",
+  "openingsImportAddedSkipped": "Alur ditambahkan: {added}. Dilewati: {skipped} ({reason})",
+  "openingsRepertoireEmpty": "Belum ada alur. Tambahkan dari Jelajahi pembukaan dengan tombol “Tambahkan ke repertoar”, atau impor PGN.",
+  "openingsPlayLine": "Mainkan alur",
+  "openingsDeleteLine": "Hapus alur",
+  "openingsReviewNone": "Tidak ada langkah untuk ditinjau",
+  "openingsReviewButton": "{count, plural, one{Tinjau {count} langkah} other{Tinjau {count} langkah}}"
+}

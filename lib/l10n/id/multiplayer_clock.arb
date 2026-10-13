@@ -1,0 +1,12 @@
+{
+  "multiplayerClockTitle": "Pengaturan waktu",
+  "multiplayerClockNone": "Tanpa jam",
+  "multiplayerClockHint": "Yang membuat permainan yang menentukan: ponsel lain menerimanya bersama undangan.",
+  "multiplayerClockRemoteHint": "Tidak ada jam untuk permainan jarak jauh: pilih Wi-Fi atau Bluetooth untuk memakainya.",
+  "multiplayerClockYou": "Kamu",
+  "multiplayerClockPeer": "Lawan",
+  "multiplayerClockSemantics": "Jam {who}: {minutes} menit {seconds} detik",
+  "multiplayerWhiteWinsOnTime": "Waktu habis: Putih menang",
+  "multiplayerBlackWinsOnTime": "Waktu habis: Hitam menang",
+  "multiplayerDrawOnTime": "Waktu habis, tetapi materi tidak cukup untuk skakmat: remis"
+}

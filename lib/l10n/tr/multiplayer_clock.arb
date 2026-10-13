@@ -1,0 +1,12 @@
+{
+  "multiplayerClockTitle": "Süre ayarı",
+  "multiplayerClockNone": "Saat yok",
+  "multiplayerClockHint": "Oyunu kuran karar verir: diğer telefon bunu davetle alır.",
+  "multiplayerClockRemoteHint": "Uzaktan oyunda saat yoktur: saat kullanmak için Wi-Fi veya Bluetooth seç.",
+  "multiplayerClockYou": "Sen",
+  "multiplayerClockPeer": "Rakip",
+  "multiplayerClockSemantics": "Saat, {who}: {minutes} dakika {seconds} saniye",
+  "multiplayerWhiteWinsOnTime": "Süre doldu: Beyaz kazandı",
+  "multiplayerBlackWinsOnTime": "Süre doldu: Siyah kazandı",
+  "multiplayerDrawOnTime": "Süre doldu ama mat yapacak materyal yok: beraberlik"
+}

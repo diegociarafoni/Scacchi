@@ -1,0 +1,21 @@
+{
+  "backupTitle": "Sauvegarde et restauration",
+  "backupIntro": "La sauvegarde contient les parties, la progression, le parcours d'apprentissage, les tournois, l'entraînement et les réglages. Garde-la en lieu sûr : l'appli fonctionne hors ligne, il n'existe donc aucune copie en ligne.",
+  "backupShare": "Partager la sauvegarde",
+  "backupShareSubject": "Sauvegarde Rokko",
+  "backupRestoreFromText": "Restaurer depuis un texte",
+  "backupExported": "Sauvegarde prête à enregistrer",
+  "backupExportFailed": "Échec de la sauvegarde : {error}",
+  "backupRestoreStaged": "Sauvegarde prête. Ferme et rouvre l'appli pour restaurer tes données.",
+  "backupRestoreFailed": "Échec de la restauration : {error}",
+  "backupErrorNotApp": "Ce n'est pas une sauvegarde Rokko",
+  "backupErrorNewerVersion": "Sauvegarde créée par une version plus récente",
+  "backupErrorUnexpectedFile": "Fichier inattendu dans la sauvegarde : {file}",
+  "backupErrorInvalidFile": "Fichier non valide dans la sauvegarde : {file}",
+  "backupErrorInvalidPreference": "Préférence non valide : {name}",
+  "backupErrorUnreadable": "Sauvegarde illisible",
+  "backupRestoreDialogTitle": "Restaurer la sauvegarde",
+  "backupRestoreDialogBody": "Colle le contenu du fichier de sauvegarde. Tes données actuelles seront remplacées.",
+  "backupCancel": "Annuler",
+  "backupRestore": "Restaurer"
+}

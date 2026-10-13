@@ -1,0 +1,12 @@
+{
+  "tablebaseTitle": "Идеальный эндшпиль",
+  "tablebaseCalculating": "Считаем идеальный эндшпиль… это только в первый раз",
+  "tablebaseWhiteMates": "{moves, plural, one{Белые выигрывают: мат в {moves} ход} few{Белые выигрывают: мат в {moves} хода} many{Белые выигрывают: мат в {moves} ходов} other{Белые выигрывают: мат в {moves} хода}}",
+  "tablebaseBlackMates": "{moves, plural, one{Чёрные выигрывают: мат в {moves} ход} few{Чёрные выигрывают: мат в {moves} хода} many{Чёрные выигрывают: мат в {moves} ходов} other{Чёрные выигрывают: мат в {moves} хода}}",
+  "tablebaseWhiteWins": "Белые выигрывают",
+  "tablebaseBlackWins": "Чёрные выигрывают",
+  "tablebaseDraw": "Ничья при безошибочной игре",
+  "tablebaseBestMove": "Идеальный ход: {move}",
+  "tablebaseBestMoveHint": "Сыграть идеальный ход",
+  "tablebaseShowMove": "Показать идеальный ход"
+}

@@ -1,0 +1,39 @@
+{
+  "multiplayerChannelLabel": "Как подключиться",
+  "@multiplayerChannelLabel": {
+    "description": "Label of the Wi-Fi or Bluetooth choice in the Play with a friend screen"
+  },
+  "multiplayerChannelWifi": "Wi-Fi",
+  "@multiplayerChannelWifi": {
+    "description": "Connect over Wi-Fi or a hotspot"
+  },
+  "multiplayerChannelBluetooth": "Bluetooth",
+  "@multiplayerChannelBluetooth": {
+    "description": "Connect over Bluetooth, no Wi-Fi needed"
+  },
+  "multiplayerChannelRemote": "На расстоянии",
+  "@multiplayerChannelRemote": {
+    "description": "Connect over the internet, to play from far away"
+  },
+  "multiplayerWifiHint": "По Wi-Fi или через точку доступа одного телефона вы подключаетесь по общей сети: интернет не нужен.",
+  "multiplayerBluetoothHint": "По Bluetooth телефоны должны быть рядом, а сеть не нужна.",
+  "@multiplayerBluetoothHint": {
+    "description": "Explanation under the Bluetooth choice"
+  },
+  "multiplayerBluetoothInviteHint": "Держите телефоны рядом: ходы передаются по Bluetooth.",
+  "@multiplayerBluetoothInviteHint": {
+    "description": "Under the QR of a Bluetooth game, while waiting for the opponent"
+  },
+  "multiplayerBluetoothOff": "Включи Bluetooth и попробуй снова.",
+  "@multiplayerBluetoothOff": {
+    "description": "Notice when Bluetooth is off"
+  },
+  "multiplayerBluetoothDenied": "Нужно разрешение для Bluetooth: включи его в настройках телефона и попробуй снова.",
+  "@multiplayerBluetoothDenied": {
+    "description": "Notice when the Bluetooth permission is denied"
+  },
+  "multiplayerBluetoothUnsupported": "Этот телефон не поддерживает Bluetooth Low Energy.",
+  "@multiplayerBluetoothUnsupported": {
+    "description": "Notice when the phone has no Bluetooth LE"
+  }
+}
