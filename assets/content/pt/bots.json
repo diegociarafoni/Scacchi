@@ -1,0 +1,156 @@
+{
+  "bot.start": [
+    "Oi, eu sou {name}. Hoje vamos jogar {opening}!",
+    "{name} no tabuleiro: boa partida!"
+  ],
+  "bot.start.friendly": [
+    "Oi, eu sou {name}!",
+    "Eu sou {name}, vamos jogar juntos?"
+  ],
+  "bot.friendly.check": [
+    "Xeque! Salve o seu rei.",
+    "Xeque! Para onde o rei vai?"
+  ],
+  "bot.friendly.capture": [
+    "Capturei uma peça!",
+    "Peguei! Agora é a sua vez."
+  ],
+  "bot.friendly.mistake": [
+    "Sem pressa.",
+    "Olhe o tabuleiro com atenção!"
+  ],
+  "bot.friendly.win": [
+    "Que partida legal! Vamos jogar de novo?",
+    "Ganhei esta, revanche?"
+  ],
+  "bot.friendly.loss": [
+    "Você ganhou, parabéns!",
+    "Oba, você venceu!"
+  ],
+  "bot.friendly.draw": [
+    "Empate! Ótima partida.",
+    "Empatamos! Nós dois jogamos bem."
+  ],
+  "bot.friendly.chat": [
+    "Que partida legal!",
+    "Estamos nos divertindo!",
+    "Sua vez!"
+  ],
+  "bot.aggressive.check": [
+    "Xeque! Não vou deixar você respirar.",
+    "Xeque, ao ataque!"
+  ],
+  "bot.aggressive.capture": [
+    "Peguei! Seguimos no ataque.",
+    "Uma peça a menos para você."
+  ],
+  "bot.aggressive.mistake": [
+    "Obrigado pelo presente, eu aceito.",
+    "Ai, você escorregou aí."
+  ],
+  "bot.aggressive.win": [
+    "Xeque-mate! Que batalha.",
+    "Vitória! Revanche?"
+  ],
+  "bot.aggressive.loss": [
+    "Você me venceu, muito bem!",
+    "Parabéns, eu me queimei."
+  ],
+  "bot.aggressive.draw": [
+    "Empate: eu queria mais, mas tudo bem.",
+    "Empate, mas da próxima vez eu ataco com mais força."
+  ],
+  "bot.aggressive.chat": [
+    "Atacamos, não esperamos!",
+    "Não tenho medo de nada.",
+    "Faça o seu lance, estou logo atrás de você."
+  ],
+  "bot.positional.check": [
+    "Xeque, sem pressa.",
+    "Xeque: a posição permite."
+  ],
+  "bot.positional.capture": [
+    "Uma troca que me convém.",
+    "Uma captura tranquila, a estrutura se mantém."
+  ],
+  "bot.positional.mistake": [
+    "Esse lance vai custar posição a você.",
+    "Um erro de planejamento, eu diria."
+  ],
+  "bot.positional.win": [
+    "Xeque-mate: o plano funcionou.",
+    "Vitória, obrigado pela partida."
+  ],
+  "bot.positional.loss": [
+    "Você jogou melhor, parabéns.",
+    "Você me superou posicionalmente, muito bem."
+  ],
+  "bot.positional.draw": [
+    "Um empate equilibrado, é justo.",
+    "Um empate honesto."
+  ],
+  "bot.positional.chat": [
+    "Vou com calma: a posição merece.",
+    "A estrutura é importante aqui.",
+    "Sem pressa, estou jogando com tranquilidade."
+  ],
+  "bot.gambitist.check": [
+    "Xeque! O sacrifício valeu a pena.",
+    "Xeque, e o melhor ainda está por vir."
+  ],
+  "bot.gambitist.capture": [
+    "Estou recuperando o material com juros.",
+    "Peguei: o gambito compensa."
+  ],
+  "bot.gambitist.mistake": [
+    "Você aceitou mal o gambito!",
+    "Cuidado, havia algo melhor aqui."
+  ],
+  "bot.gambitist.win": [
+    "Xeque-mate! O sacrifício deu certo.",
+    "Venci, e que espetáculo."
+  ],
+  "bot.gambitist.loss": [
+    "O gambito não bastou, parabéns.",
+    "Você defendeu de forma brilhante, todo o mérito é seu."
+  ],
+  "bot.gambitist.draw": [
+    "Empate: muito barulho por nada.",
+    "Empate, mas que partida animada."
+  ],
+  "bot.gambitist.chat": [
+    "Um peão a mais ou a menos, quem se importa?",
+    "O melhor ainda está por vir.",
+    "Eu gosto quando arriscamos."
+  ],
+  "bot.opening.lia": "o Gambito do Rei",
+  "bot.opening.pino": "a Partida Italiana",
+  "bot.opening.nico": "o Sistema Londres",
+  "bot.opening.chiara": "o Gambito da Dama",
+  "bot.opening.viola": "a Partida Escocesa",
+  "bot.opening.rocco": "o Gambito do Rei",
+  "bot.opening.ettore": "a Variante da Troca da Espanhola",
+  "bot.opening.marta": "a Abertura Inglesa",
+  "bot.opening.bruna": "a Defesa Francesa",
+  "bot.opening.duilio": "a Siciliana",
+  "bot.opening.carlo": "o Gambito Budapeste",
+  "bot.opening.elena": "a Espanhola (Ruy López)",
+  "bot.opening.ada": "a Abertura Inglesa",
+  "bot.opening.luna": "a Catalã",
+  "bot.opening.massimo": "o Gambito Evans",
+  "bot.opening.cosmo": "o Gambito Smith-Morra",
+  "bot.opening.stella": "a Defesa Índia do Rei",
+  "bot.opening.tino": "a abertura do peão do rei",
+  "level.1.name": "Iniciante",
+  "level.2.name": "Novato",
+  "level.3.name": "Jogador casual",
+  "level.4.name": "Jogador de clube",
+  "level.5.name": "Competidor",
+  "level.6.name": "Experiente",
+  "level.7.name": "Mestre",
+  "level.8.name": "Campeão",
+  "level.0.name": "Primeiros passos",
+  "style.aggressive": "agressivo",
+  "style.positional": "posicional",
+  "style.gambitist": "gambitista"
+}

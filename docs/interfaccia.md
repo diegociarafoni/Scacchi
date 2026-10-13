@@ -136,7 +136,7 @@ Si aprono dall'icona a forma di ingranaggio nella Home e nella barra del titolo 
 
 | Impostazione | Effetto | Predefinito |
 |---|---|---|
-| Lingua | Come il telefono, Italiano o English (`AppLanguage`, in Accessibilità); vale subito per tutta l'app | Come il telefono |
+| Lingua | Come il telefono, Italiano, English o Português (`AppLanguage`, in Accessibilità); vale subito per tutta l'app | Come il telefono |
 | Aspetto dell'app | Sistema, Chiaro o Scuro: tema chiaro o scuro di tutta l'app, oppure lo stesso del telefono (requisito RP-02) | Sistema |
 | Mostra le mosse legali | Puntini sulle case raggiungibili dal pezzo selezionato | Attiva |
 | Coordinate | Lettere e numeri sui bordi della scacchiera | Attiva |

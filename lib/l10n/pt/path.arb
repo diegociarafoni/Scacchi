@@ -1,0 +1,85 @@
+{
+  "pathTitle": "Trilha",
+  "@pathTitle": {
+    "description": "Titolo della schermata del percorso"
+  },
+  "pathContinue": "Continuar",
+  "@pathContinue": {
+    "description": "Pulsante che apre la prossima tappa del percorso"
+  },
+  "pathStars": "{done} estrelas de {total}",
+  "@pathStars": {
+    "description": "Etichetta per i lettori di schermo delle stelle totali o di capitolo",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pathSummaryTitle": "Sua jornada",
+  "@pathSummaryTitle": {
+    "description": "Titolo della scheda di riepilogo in cima al percorso"
+  },
+  "pathNext": "Próxima parada: {title}",
+  "@pathNext": {
+    "description": "Tappa proposta da Continua, nella scheda di riepilogo",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "pathAllDone": "Você percorreu a trilha toda. Qualquer parada pode ser jogada de novo.",
+  "@pathAllDone": {
+    "description": "Riepilogo quando ogni tappa è completata"
+  },
+  "pathChapterNumber": "Capítulo {n}",
+  "@pathChapterNumber": {
+    "description": "Numero del capitolo del percorso",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "pathChapterDone": "capítulo completo",
+  "@pathChapterDone": {
+    "description": "Stato di un capitolo con tutte le tappe completate"
+  },
+  "pathStageDone": "{stars} estrelas de 3",
+  "@pathStageDone": {
+    "description": "Stato di una tappa completata",
+    "placeholders": {
+      "stars": {
+        "type": "int"
+      }
+    }
+  },
+  "pathStageTodo": "a fazer",
+  "@pathStageTodo": {
+    "description": "Stato di una tappa aperta non ancora completata"
+  },
+  "pathStageLocked": "bloqueada",
+  "@pathStageLocked": {
+    "description": "Stato di una tappa non ancora aperta"
+  },
+  "pathStageLockedHint": "Termine a lição anterior para desbloquear",
+  "@pathStageLockedHint": {
+    "description": "Suggerimento di una tappa bloccata per i lettori di schermo"
+  },
+  "pathStageHere": "Você está aqui",
+  "@pathStageHere": {
+    "description": "Etichetta della tappa corrente"
+  },
+  "pathGuardian": "guardião",
+  "@pathGuardian": {
+    "description": "Tipo di tappa: sfida contro un bot"
+  },
+  "pathGuardianUnavailable": "O guardião é desafiado onde o computador joga: Android e iOS, ou Windows e Linux com o Stockfish instalado.",
+  "@pathGuardianUnavailable": {
+    "description": "Avviso se il motore non è disponibile"
+  }
+}
