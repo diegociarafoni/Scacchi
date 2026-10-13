@@ -44,6 +44,14 @@ void main() {
       expect(problems.join('\n'), contains('"extra"'));
     });
 
+    test('la chiave in più di una lingua incompleta non accusa le altre', () {
+      final sources = _sources();
+      sources['es']!['a.arb'] = _arb({'x': 'uno', 'extra': 'no'});
+      final problems = checkLocales(sources, tolerant: {'es'});
+      expect(problems, hasLength(1));
+      expect(problems.single, contains('es/a.arb'));
+    });
+
     test('la deroga non vale per le lingue complete', () {
       final sources = _sources();
       sources['en']!.remove('b.arb');
@@ -74,6 +82,21 @@ void main() {
         expect(json['@y'], isA<Map<String, Object?>>());
       },
     );
+
+    test('un @chiave orfano non impedisce il ripiego del testo', () {
+      final merged = mergeArbs(
+        'es',
+        {
+          'a.arb': _arb({
+            '@y': {'description': 'solo meta'},
+          }),
+        },
+        fallback: {
+          'a.arb': _arb({'y': 'two'}),
+        },
+      );
+      expect((jsonDecode(merged) as Map)['y'], 'two');
+    });
 
     test('senza ripiego l\'unione non cambia', () {
       final merged = mergeArbs('es', _sources()['es']!);
@@ -122,6 +145,44 @@ void main() {
       );
       expect(stati['it'], LanguageState.base);
       expect(stati['en'], LanguageState.ready);
+    });
+
+    test('checkStates: una sola base, "it"', () {
+      final src = _sources();
+      expect(
+        checkStates({
+          'it': LanguageState.base,
+          'en': LanguageState.ready,
+          'es': LanguageState.inProgress,
+        }, src),
+        isEmpty,
+      );
+      expect(
+        checkStates({
+          'it': LanguageState.ready,
+          'en': LanguageState.ready,
+          'es': LanguageState.inProgress,
+        }, src),
+        isNotEmpty,
+      );
+    });
+
+    test('checkStates: l\'inglese non può essere incompleto', () {
+      final problems = checkStates({
+        'it': LanguageState.base,
+        'en': LanguageState.beta,
+        'es': LanguageState.inProgress,
+      }, _sources());
+      expect(problems.join(), contains('"en"'));
+    });
+
+    test('checkStates: lingue dichiarate e cartelle coincidono', () {
+      final problems = checkStates({
+        'it': LanguageState.base,
+        'en': LanguageState.ready,
+        'fr': LanguageState.inProgress,
+      }, _sources());
+      expect(problems.join('\n'), allOf(contains('"fr"'), contains('es')));
     });
 
     test('le lingue in lib/l10n sono dichiarate in tool/lingue.json', () {

@@ -35,7 +35,10 @@ String mergeArbs(
     }
   }
   if (fallback != null) {
-    final own = {...merged.keys};
+    final own = {
+      for (final k in merged.keys)
+        if (!k.startsWith('@')) k,
+    };
     for (final name in fallback.keys.toList()..sort()) {
       for (final entry in _parse('ripiego/$name', fallback[name]!).entries) {
         if (entry.key == '@@locale') continue;
@@ -64,10 +67,7 @@ List<String> checkLocales(
         if (!tolerant.contains(locale)) problems.add('$name manca in $locale');
         continue;
       }
-      keys[locale] = {
-        for (final k in _parse('$locale/$name', text).keys)
-          if (!k.startsWith('@')) k,
-      };
+      keys[locale] = _messageKeys('$locale/$name', text);
     }
     final complete = {
       for (final e in keys.entries)
@@ -76,8 +76,7 @@ List<String> checkLocales(
     for (final MapEntry(key: locale, value: set) in keys.entries) {
       final isTolerant = tolerant.contains(locale);
       if (!isTolerant) {
-        final all = {for (final set in keys.values) ...set};
-        for (final k in all.difference(set).toList()..sort()) {
+        for (final k in complete.difference(set).toList()..sort()) {
           problems.add('$locale/$name: manca la chiave "$k"');
         }
       } else {
@@ -105,6 +104,12 @@ Map<String, Map<String, String>> readSources(Directory root) {
   sources.removeWhere((_, files) => files.isEmpty);
   return sources;
 }
+
+/// Chiavi dei messaggi di un file, senza i metadati `@chiave`.
+Set<String> _messageKeys(String name, String text) => {
+  for (final k in _parse(name, text).keys)
+    if (!k.startsWith('@')) k,
+};
 
 Map<String, Object?> _parse(String name, String text) {
   try {
@@ -176,11 +181,7 @@ Map<String, Coverage> coverage(
 }) {
   Set<String> keysOf(String locale, String name) {
     final text = sources[locale]?[name];
-    if (text == null) return {};
-    return {
-      for (final k in _parse('$locale/$name', text).keys)
-        if (!k.startsWith('@')) k,
-    };
+    return text == null ? {} : _messageKeys('$locale/$name', text);
   }
 
   final baseFiles = sources[base] ?? const {};
@@ -200,4 +201,40 @@ Map<String, Coverage> coverage(
     result[locale] = Coverage(total, translated, missing);
   }
   return result;
+}
+
+/// Incoerenze fra `tool/lingue.json` e le cartelle di `lib/l10n`: una sola
+/// lingua base (l'italiano), l'inglese completo perché è il ripiego, e ogni
+/// lingua dichiarata con i suoi file.
+List<String> checkStates(
+  Map<String, LanguageState> states,
+  Map<String, Map<String, String>> sources,
+) {
+  final problems = <String>[];
+  final bases = [
+    for (final e in states.entries)
+      if (e.value == LanguageState.base) e.key,
+  ];
+  if (bases.length != 1 || bases.single != 'it') {
+    problems.add('tool/lingue.json: l\'unica lingua base deve essere "it"');
+  }
+  if (tolerantLocales(states).contains('en')) {
+    problems.add(
+      'tool/lingue.json: "en" è il ripiego delle altre lingue e deve essere '
+      '"pronta"',
+    );
+  }
+  for (final locale in states.keys) {
+    if (!sources.containsKey(locale)) {
+      problems.add(
+        'tool/lingue.json: "$locale" non ha file in lib/l10n/$locale/',
+      );
+    }
+  }
+  for (final locale in sources.keys) {
+    if (!states.containsKey(locale)) {
+      problems.add('lib/l10n/$locale/ non è dichiarata in tool/lingue.json');
+    }
+  }
+  return problems;
 }
