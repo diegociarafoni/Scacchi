@@ -1,0 +1,20 @@
+{
+  "multiplayerRemoteIntro": "Uzaktan oynamak için sadece internet yeter: arkadaşına bir bağlantı gönder ve saatler arayla bile istediğin zaman oyna.",
+  "multiplayerRemoteSwitchHint": "Arkadaşın bir bağlantıyla her yerden katılabilir. Hamleler herkese açık röleler üzerinden şifreli gider: hesap yok, bizim sunucumuz yok.",
+  "multiplayerRemoteShare": "Davet bağlantısını paylaş",
+  "multiplayerRemoteShareSubject": "Satranç oyunu daveti",
+  "multiplayerRemoteShareText": "Rokko'da satranç oynayalım! Uygulamayı aç, Arkadaşınla oyna'yı seç, sonra Bağlantıyla katıl'a bu bağlantıyı yapıştır: {link}",
+  "multiplayerRemoteWaitingHint": "Bağlantıyı arkadaşına gönder ya da QR kodu okutmasını sağla. Oyun kayıtlı kalır: uygulamayı kapatıp Arkadaşınla oyna bölümünden devam edebilirsin.",
+  "multiplayerRemoteLeaveBodyWaiting": "Oyun kayıtlı kalır ve bağlantı hâlâ geçerlidir: Arkadaşınla oyna bölümünden devam edebilirsin.",
+  "multiplayerRemoteJoinLink": "Bağlantıyla katıl",
+  "multiplayerRemoteLinkTitle": "Davet bağlantısını yapıştır",
+  "multiplayerRemoteLinkField": "Davet bağlantısı",
+  "multiplayerRemotePaste": "Yapıştır",
+  "multiplayerRemoteLinkInvalid": "Bu bağlantı bir oyun daveti değil.",
+  "multiplayerRemoteLinkConfirm": "Katıl",
+  "multiplayerRemoteNotifyChannel": "Uzaktan oyunlar",
+  "multiplayerRemoteNotifyChannelDescription": "Arkadaşın hamlesini yaptığında sana haber verir.",
+  "multiplayerRemoteNotifyTitle": "Sıra sende",
+  "multiplayerRemoteNotifyBody": "Arkadaşın {move} oynadı.",
+  "multiplayerRemoteNotifyOver": "Arkadaşınla oyun bitti."
+}

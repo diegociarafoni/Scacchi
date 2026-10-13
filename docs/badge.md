@@ -65,7 +65,7 @@ Nella scheda **Libri** un libro sbloccato ha la copertina colorata con la scacch
 
 ## Testi e icone
 
-I testi sono in `lib/l10n/it/badges.arb` e `lib/l10n/en/badges.arb`, con chiavi `badge<Id>Name` e `badge<Id>Desc` e il prefisso `badges…` e `books…` per la schermata. Le soglie delle descrizioni sono segnaposto riempiti dalla definizione, così testo e regola non divergono. `badges_l10n.dart` collega gli identificativi ai testi; un test verifica che ogni badge abbia nome e descrizione in tutte le lingue. I nomi dei libri sono quelli delle aperture (`opening_names_it.dart`), in inglese quelli originali. Le icone al centro delle medaglie sono quelle di Material; sagome e colori sono disegnati in codice.
+I testi sono in `lib/l10n/it/badges.arb` e `lib/l10n/en/badges.arb`, con chiavi `badge<Id>Name` e `badge<Id>Desc` e il prefisso `badges…` e `books…` per la schermata. Le soglie delle descrizioni sono segnaposto riempiti dalla definizione, così testo e regola non divergono. `badges_l10n.dart` collega gli identificativi ai testi; un test verifica che ogni badge abbia nome e descrizione in tutte le lingue. I nomi dei libri sono quelli delle aperture (`opening_names.dart`), in inglese quelli originali. Le icone al centro delle medaglie sono quelle di Material; sagome e colori sono disegnati in codice.
 
 Golden su tre taglie di telefono, chiaro e scuro, in `test/golden/badges_golden_test.dart`.
 

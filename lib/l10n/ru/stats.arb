@@ -1,0 +1,83 @@
+{
+  "statsTitle": "Статистика",
+  "statsLoadFailed": "Не удалось прочитать архив партий. Попробуй позже.",
+  "statsEmpty": "Сыграй несколько партий против компьютера, и здесь появится твоя статистика.",
+  "statsRecord": "Результаты",
+  "statsAllGames": "Все",
+  "statsWithWhite": "Белыми",
+  "statsWithBlack": "Чёрными",
+  "statsLocalGames": "Партии вдвоём",
+  "statsByTimeControl": "По контролю времени",
+  "statsTopOpenings": "Самые частые дебюты",
+  "statsGames": "{count, plural, one{{count} партия} few{{count} партии} many{{count} партий} other{{count} партии}}",
+  "statsAccuracy": "Точность",
+  "statsAverage": "В среднем",
+  "statsAccuracyTrend": "Динамика точности",
+  "statsRating": "Примерный рейтинг {rating}",
+  "statsRatingProvisional": "предварительно: нужно партий против компьютера: {count}",
+  "statsRatingGames": "{count, plural, one{по {count} партии против компьютера} few{по {count} партиям против компьютера} many{по {count} партиям против компьютера} other{по {count} партии против компьютера}}",
+  "statsRatingTrend": "Динамика рейтинга",
+  "statsNoGames": "нет партий",
+  "statsScoreDetail": "{wins, plural, one{{wins} победа} few{{wins} победы} many{{wins} побед} other{{wins} победы}}, {draws, plural, one{{draws} ничья} few{{draws} ничьи} many{{draws} ничьих} other{{draws} ничьи}}, {losses, plural, one{{losses} поражение} few{{losses} поражения} many{{losses} поражений} other{{losses} поражения}}",
+  "statsTrend": "{label}: от {first} до {last}, минимум {min}, максимум {max}",
+  "portraitShareSubject": "Моя неделя",
+  "portraitTitle": "Твоя неделя",
+  "portraitUnreadable": "Не удалось прочитать архив.",
+  "portraitEmpty": "За последние семь дней партий нет. Сыграй против компьютера, и здесь появится твой итог.",
+  "portraitShare": "Поделиться картинкой",
+  "portraitShareFailed": "Не удалось поделиться",
+  "portraitCardTitle": "Моя шахматная неделя",
+  "portraitGames": "{count, plural, one{{count} партия} few{{count} партии} many{{count} партий} other{{count} партии}}",
+  "@portraitGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "portraitScore": "Побед: {wins} · Ничьих: {draws} · Поражений: {losses}",
+  "@portraitScore": {
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      }
+    }
+  },
+  "portraitOpenings": "Любимые дебюты",
+  "portraitAccuracy": "Средняя точность",
+  "portraitMate": "Любимый мат",
+  "portraitMateValue": "{role, select, king{королём} queen{ферзём} rook{ладьёй} bishop{слоном} knight{конём} other{пешкой}}, {count, plural, one{{count} раз} few{{count} раза} many{{count} раз} other{{count} раза}}",
+  "@portraitMateValue": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "portraitStrongest": "Сильнейший побеждённый соперник",
+  "portraitStrongestValue": "Эло {elo}",
+  "@portraitStrongestValue": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "portraitBusiestDay": "Самый активный день",
+  "portraitWeekdayMonday": "Понедельник",
+  "portraitWeekdayTuesday": "Вторник",
+  "portraitWeekdayWednesday": "Среда",
+  "portraitWeekdayThursday": "Четверг",
+  "portraitWeekdayFriday": "Пятница",
+  "portraitWeekdaySaturday": "Суббота",
+  "portraitWeekdaySunday": "Воскресенье"
+}

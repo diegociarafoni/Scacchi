@@ -117,6 +117,8 @@ restituisce `null` e si torna al motore.
 `mistake`, `win`, `loss`, `draw`, `chat` (battute di compagnia, ogni tanto dopo una mossa del bot). Il saluto è proprio del bot e riporta il suo nome; le altre frasi
 dipendono dallo stile.
 
+Le frasi, i nomi delle aperture dei bot (con l'articolo, per la frase del saluto) e i nomi dei livelli sono nel contenuto `bots` (`assets/content/<lingua>/bots.json`): `bot.start` (segnaposto `{name}` e `{opening}`), `bot.start.friendly`, `bot.friendly.<evento>`, `bot.<stile>.<evento>`, `bot.opening.<bot>`, `level.<livello>.name` e `style.<stile>`. Sono liste che ogni lingua adatta al carattere dello stile, senza obbligo di avere lo stesso numero di frasi; i nomi dei bot restano uguali in tutte le lingue.
+
 ## Profilo bambino
 
 Con il profilo bambino attivo (RP-06, vedi [profilo-bambino.md](profilo-bambino.md)) si gioca solo contro

@@ -1,0 +1,614 @@
+{
+  "achievementFirstGameTitle": "Pierwsza partia",
+  "achievementFirstGameDesc": "Rozegraj swoją pierwszą partię.",
+  "achievementFirstWinTitle": "Pierwsze zwycięstwo",
+  "achievementFirstWinDesc": "Wygraj partię.",
+  "achievementFirstDrawTitle": "Uścisk dłoni",
+  "achievementFirstDrawDesc": "Zremisuj partię.",
+  "achievementGames10Title": "Dziesięć partii",
+  "achievementGames10Desc": "Rozegraj 10 partii.",
+  "achievementGames100Title": "Sto partii",
+  "achievementGames100Desc": "Rozegraj 100 partii.",
+  "achievementKnightMateTitle": "Rycerz w lśniącej zbroi",
+  "achievementKnightMateDesc": "Zadaj mata skoczkiem.",
+  "achievementPawnMateTitle": "Skromny bohater",
+  "achievementPawnMateDesc": "Zadaj mata pionem.",
+  "achievementLongCastleWinTitle": "Skrzydło hetmańskie",
+  "achievementLongCastleWinDesc": "Wygraj partię z długą roszadą.",
+  "achievementPuzzles10Title": "Taktyczne oko",
+  "achievementPuzzles10Desc": "Rozwiąż 10 zadań.",
+  "achievementPuzzles100Title": "Łowca taktyki",
+  "achievementPuzzles100Desc": "Rozwiąż 100 zadań.",
+  "achievementStreak3Title": "Trzy z rzędu",
+  "achievementStreak3Desc": "Osiągnij cel 3 dni z rzędu.",
+  "achievementStreak7Title": "Tydzień",
+  "achievementStreak7Desc": "Osiągnij cel 7 dni z rzędu.",
+  "achievementStreak30Title": "Miesiąc",
+  "achievementStreak30Desc": "Osiągnij cel 30 dni z rzędu.",
+  "achievementFirstLessonTitle": "Do szkoły",
+  "achievementFirstLessonDesc": "Ukończ lekcję.",
+  "achievementFirstReviewTitle": "Lustereczko, powiedz przecie",
+  "achievementFirstReviewDesc": "Przeanalizuj partię.",
+  "achievementLevel5Title": "Poziom 5",
+  "achievementLevel5Desc": "Osiągnij poziom 5.",
+  "achievementLevel10Title": "Poziom 10",
+  "achievementLevel10Desc": "Osiągnij poziom 10.",
+  "achievementWins10Title": "Dziesięć zwycięstw",
+  "achievementWins10Desc": "Wygraj 10 partii.",
+  "achievementWins50Title": "Pięćdziesiąt zwycięstw",
+  "achievementWins50Desc": "Wygraj 50 partii.",
+  "achievementWinBlackTitle": "Ciemna strona",
+  "achievementWinBlackDesc": "Wygraj partię czarnymi.",
+  "achievementMiniatureTitle": "Miniatura",
+  "achievementMiniatureDesc": "Zadaj mata w mniej niż 20 ruchach.",
+  "achievementBeat1500Title": "Poważne wyzwanie",
+  "achievementBeat1500Desc": "Pokonaj bota z rankingiem Elo 1500 lub wyższym.",
+  "achievementBeat2000Title": "Pogromca gigantów",
+  "achievementBeat2000Desc": "Pokonaj bota z rankingiem Elo 1850 lub wyższym.",
+  "achievementBrilliantTitle": "Genialnie!",
+  "achievementBrilliantDesc": "Znajdź genialny ruch w jednej ze swoich partii.",
+  "achievementPuzzleFork10Title": "Mistrz widełek",
+  "achievementPuzzleFork10Desc": "Rozwiąż 10 zadań na widełki.",
+  "achievementPuzzleMate10Title": "Mat!",
+  "achievementPuzzleMate10Desc": "Rozwiąż 10 zadań na mata.",
+  "achievementPuzzleRating1500Title": "Taktyk",
+  "achievementPuzzleRating1500Desc": "Osiągnij ranking zadań 1500.",
+  "achievementPuzzleRun20Title": "Dobra passa",
+  "achievementPuzzleRun20Desc": "Zdobądź 20 punktów w trybie na czas lub w trybie serii.",
+  "achievementChallengesAllTitle": "Idealny dzień",
+  "achievementChallengesAllDesc": "Ukończ wszystkie trzy codzienne wyzwania.",
+  "achievementChallenges10Title": "Śmiałek",
+  "achievementChallenges10Desc": "Ukończ 10 codziennych wyzwań.",
+  "achievementReviews10Title": "Surowy krytyk",
+  "achievementReviews10Desc": "Przeanalizuj 10 partii.",
+  "achievementAccuracy90Title": "Chirurgiczna precyzja",
+  "achievementAccuracy90Desc": "Rozegraj partię z dokładnością co najmniej 90%.",
+  "achievementLessons10Title": "Uczeń",
+  "achievementLessons10Desc": "Ukończ 10 lekcji.",
+  "achievementCoordinates20Title": "Orle oko",
+  "achievementCoordinates20Desc": "Znajdź 20 pól w sesji na czas.",
+  "achievementMinigamesAllTitle": "Żongler",
+  "achievementMinigamesAllDesc": "Wypróbuj każdą minigrę.",
+  "achievementTournamentDoneTitle": "Stały bywalec turniejów",
+  "achievementTournamentDoneDesc": "Ukończ turniej z botami.",
+  "achievementTournamentWonTitle": "Gablota z trofeami",
+  "achievementTournamentWonDesc": "Wygraj turniej z botami.",
+  "progressRequirementLevel": "Poziom {level}",
+  "@progressRequirementLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "progressRequirementAchievement": "Osiągnięcie „{title}”",
+  "@progressRequirementAchievement": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "progressRewardTheme": "Motyw {name}",
+  "@progressRewardTheme": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "progressRewardPieces": "Bierki {name}",
+  "@progressRewardPieces": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "progressRewardAvatar": "Awatar {name}",
+  "@progressRewardAvatar": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "progressRewardFrame": "Ramka {name}",
+  "@progressRewardFrame": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "progressGoalGames": "{count, plural, one{1 partia} few{{count} partie} many{{count} partii} other{{count} partie}}",
+  "@progressGoalGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressGoalPuzzles": "{count, plural, one{1 zadanie} few{{count} zadania} many{{count} zadań} other{{count} zadania}}",
+  "@progressGoalPuzzles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressGoalMinutes": "{count, plural, one{1 minuta} few{{count} minuty} many{{count} minut} other{{count} minuty}}",
+  "@progressGoalMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressDaysCount": "{count, plural, one{1 dzień} few{{count} dni} many{{count} dni} other{{count} dni}}",
+  "@progressDaysCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressStreakNeedGames": "Aby utrzymać serię, codziennie rozegraj partie: {goal}.",
+  "@progressStreakNeedGames": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "progressStreakNeedPuzzles": "Aby utrzymać serię, codziennie rozwiąż zadania: {goal}.",
+  "@progressStreakNeedPuzzles": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "progressStreakNeedMinutes": "Aby utrzymać serię, codziennie trenuj: {goal}.",
+  "@progressStreakNeedMinutes": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "progressStreakLeftGames": "{count, plural, one{Została 1 partia} few{Zostały {count} partie} many{Zostało {count} partii} other{Zostały {count} partie}}",
+  "@progressStreakLeftGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressStreakLeftPuzzles": "{count, plural, one{Zostało 1 zadanie} few{Zostały {count} zadania} many{Zostało {count} zadań} other{Zostały {count} zadania}}",
+  "@progressStreakLeftPuzzles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressStreakLeftMinutes": "{count, plural, one{Została 1 minuta} few{Zostały {count} minuty} many{Zostało {count} minut} other{Zostały {count} minuty}}",
+  "@progressStreakLeftMinutes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressStreakTodayDone": "Dziś: zrobione. Twoja seria jest bezpieczna do jutra.",
+  "progressStreakTodayRest": "Dziś masz dzień odpoczynku: seria się nie przerwie.",
+  "progressStreakTodayTodo": "Dziś: do zrobienia. {left}.",
+  "@progressStreakTodayTodo": {
+    "placeholders": {
+      "left": {
+        "type": "String"
+      }
+    }
+  },
+  "progressStreakSummaryDone": "Dziś: zrobione",
+  "progressStreakSummaryRest": "Dziś: dzień odpoczynku",
+  "progressStreakSummaryTodo": "Dziś: do zrobienia",
+  "progressStreakNext": "Następny etap: {days} z rzędu ({missing, plural, one{brakuje 1} few{brakuje {missing}} many{brakuje {missing}} other{brakuje {missing}}}).",
+  "@progressStreakNext": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      },
+      "missing": {
+        "type": "int"
+      }
+    }
+  },
+  "progressStreakSkipNone": "Osiągnij dziś cel, aby zacząć serię.",
+  "progressStreakSkipFreeze": "Jeśli pominiesz dzień, zamrożenie serii go uratuje (masz ich: {count}). Dostajesz jedno co 7 dni, maksymalnie 2.",
+  "@progressStreakSkipFreeze": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressStreakSkipReset": "Jeśli pominiesz dzień, seria zacznie się od nowa; Twój rekord ({days}) zostanie. Co 7 dni serii zdobywasz zamrożenie.",
+  "@progressStreakSkipReset": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      }
+    }
+  },
+  "progressChallengePlayGames": "{count, plural, one{Rozegraj partię} few{Rozegraj {count} partie} many{Rozegraj {count} partii} other{Rozegraj {count} partie}}",
+  "@progressChallengePlayGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeWinGames": "{count, plural, one{Wygraj partię} few{Wygraj {count} partie} many{Wygraj {count} partii} other{Wygraj {count} partie}}",
+  "@progressChallengeWinGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeWinWhite": "Wygraj białymi",
+  "progressChallengeWinBlack": "Wygraj czarnymi",
+  "progressChallengeWinShort": "Mat w maksymalnej liczbie ruchów: {moves}",
+  "@progressChallengeWinShort": {
+    "placeholders": {
+      "moves": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeSolvePuzzles": "{count, plural, one{Rozwiąż zadanie} few{Rozwiąż {count} zadania} many{Rozwiąż {count} zadań} other{Rozwiąż {count} zadania}}",
+  "@progressChallengeSolvePuzzles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeForkPuzzles": "{count, plural, one{Rozwiąż 1 zadanie na widełki} few{Rozwiąż {count} zadania na widełki} many{Rozwiąż {count} zadań na widełki} other{Rozwiąż {count} zadania na widełki}}",
+  "@progressChallengeForkPuzzles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeMatePuzzles": "{count, plural, one{Rozwiąż 1 zadanie na mata} few{Rozwiąż {count} zadania na mata} many{Rozwiąż {count} zadań na mata} other{Rozwiąż {count} zadania na mata}}",
+  "@progressChallengeMatePuzzles": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeReviewGame": "{count, plural, one{Przeanalizuj partię} few{Przeanalizuj {count} partie} many{Przeanalizuj {count} partii} other{Przeanalizuj {count} partie}}",
+  "@progressChallengeReviewGame": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeCompleteLesson": "{count, plural, one{Ukończ lekcję} few{Ukończ {count} lekcje} many{Ukończ {count} lekcji} other{Ukończ {count} lekcje}}",
+  "@progressChallengeCompleteLesson": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChallengeGoalDays": "Osiągnij cel w dniach: {count}",
+  "@progressChallengeGoalDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressRecordStrongestBot": "Najsilniejszy pokonany bot",
+  "progressRecordFastestWin": "Najszybszy mat",
+  "progressRecordBestAccuracy": "Najlepsza dokładność",
+  "progressRecordPuzzleRating": "Ranking zadań",
+  "progressRecordPuzzleRun": "Wynik na czas",
+  "progressRecordMinigame": "Wynik w minigrze",
+  "progressRecordsTitle": "Rekordy osobiste",
+  "progressRecordLongestStreak": "Najdłuższa seria",
+  "progressRecordElo": "Elo {elo}",
+  "@progressRecordElo": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "progressRecordMoves": "{count, plural, one{{count} ruch} few{{count} ruchy} many{{count} ruchów} other{{count} ruchy}}",
+  "@progressRecordMoves": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressRecordPuzzleRunMode": "{record} ({mode})",
+  "@progressRecordPuzzleRunMode": {
+    "placeholders": {
+      "record": {
+        "type": "String"
+      },
+      "mode": {
+        "type": "String"
+      }
+    }
+  },
+  "progressFeedbackXp": "+{xp} XP",
+  "@progressFeedbackXp": {
+    "placeholders": {
+      "xp": {
+        "type": "int"
+      }
+    }
+  },
+  "progressFeedbackGoal": "Dzisiejszy cel osiągnięty",
+  "progressFeedbackLevel": "Poziom {level}!",
+  "@progressFeedbackLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "progressFeedbackFreeze": "Zdobyto zamrożenie serii",
+  "progressFeedbackChallenge": "Wyzwanie ukończone: {title}",
+  "@progressFeedbackChallenge": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "progressFeedbackWeekly": "Wyzwanie tygodnia ukończone",
+  "progressFeedbackRecord": "Nowy rekord: {record}",
+  "@progressFeedbackRecord": {
+    "placeholders": {
+      "record": {
+        "type": "String"
+      }
+    }
+  },
+  "progressFeedbackAchievement": "Osiągnięcie: {title}",
+  "@progressFeedbackAchievement": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "progressFeedbackReward": "Odblokowano: {reward}",
+  "@progressFeedbackReward": {
+    "placeholders": {
+      "reward": {
+        "type": "String"
+      }
+    }
+  },
+  "progressProfileTitle": "Profil",
+  "progressLevel": "Poziom {level}",
+  "@progressLevel": {
+    "placeholders": {
+      "level": {
+        "type": "int"
+      }
+    }
+  },
+  "progressChangeAvatar": "Zmień awatar i ramkę",
+  "progressLevelSemantics": "Postęp poziomu: {xp} z {next} XP",
+  "@progressLevelSemantics": {
+    "placeholders": {
+      "xp": {
+        "type": "int"
+      },
+      "next": {
+        "type": "int"
+      }
+    }
+  },
+  "progressXpOf": "{xp} / {next} XP",
+  "@progressXpOf": {
+    "placeholders": {
+      "xp": {
+        "type": "int"
+      },
+      "next": {
+        "type": "int"
+      }
+    }
+  },
+  "progressAvatarSemantics": "Awatar: {name}",
+  "@progressAvatarSemantics": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "progressAvatarFrameSemantics": "Awatar: {name}, ramka: {frame}",
+  "@progressAvatarFrameSemantics": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "frame": {
+        "type": "String"
+      }
+    }
+  },
+  "progressAvatarTitle": "Awatar",
+  "progressFrameTitle": "Ramka",
+  "progressLockedSemantics": "{label}, odblokuje się dzięki: {requirement}",
+  "@progressLockedSemantics": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "requirement": {
+        "type": "String"
+      }
+    }
+  },
+  "progressStreakIcon": "Seria",
+  "progressStreakDays": "{count, plural, one{1 dzień z rzędu} few{{count} dni z rzędu} many{{count} dni z rzędu} other{{count} dni z rzędu}}",
+  "@progressStreakDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressBestStreak": "Rekord: {count}",
+  "@progressBestStreak": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressFreezes": "{count, plural, one{1 zamrożenie serii} few{{count} zamrożenia serii} many{{count} zamrożeń serii} other{{count} zamrożenia serii}}",
+  "@progressFreezes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "progressGoalSemantics": "Dzisiejszy cel: {progress} z {target}",
+  "@progressGoalSemantics": {
+    "placeholders": {
+      "progress": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "progressGoalReachedLine": "Cel osiągnięty: {progress} / {target} {unit}",
+  "@progressGoalReachedLine": {
+    "placeholders": {
+      "progress": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "progressGoalTodayLine": "Dzisiejszy cel: {progress} / {target} {unit}",
+  "@progressGoalTodayLine": {
+    "placeholders": {
+      "progress": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      },
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "progressUnitGames": "partii",
+  "progressUnitPuzzles": "zadań",
+  "progressUnitMinutes": "minut",
+  "progressAchievementsTitle": "Osiągnięcia",
+  "progressAchievementEarned": "{title}, zdobyte. {description}",
+  "@progressAchievementEarned": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "description": {
+        "type": "String"
+      }
+    }
+  },
+  "progressAchievementLocked": "{title}, jeszcze niezdobyte. {description}",
+  "@progressAchievementLocked": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "description": {
+        "type": "String"
+      }
+    }
+  },
+  "progressChallengesToday": "Dzisiejsze wyzwania",
+  "progressChallengesWeekly": "Wyzwanie tygodnia",
+  "progressChallengeDone": "Ukończone",
+  "progressChallengeTodo": "Jeszcze nieukończone",
+  "progressChallengeCount": "{done} z {target}",
+  "@progressChallengeCount": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "progressSettingsTitle": "Ustawienia",
+  "progressTrackingTitle": "XP, serie i osiągnięcia",
+  "progressTrackingOff": "Gdy wyłączone, nic nie jest zapisywane.",
+  "progressDailyGoal": "Cel dzienny",
+  "progressRestDay": "Dzień odpoczynku",
+  "progressRestDayHint": "Nie przerywa serii.",
+  "progressRestDayNone": "Brak",
+  "progressWeekdayMonday": "Poniedziałek",
+  "progressWeekdayTuesday": "Wtorek",
+  "progressWeekdayWednesday": "Środa",
+  "progressWeekdayThursday": "Czwartek",
+  "progressWeekdayFriday": "Piątek",
+  "progressWeekdaySaturday": "Sobota",
+  "progressWeekdaySunday": "Niedziela",
+  "progressReminder": "Codzienne przypomnienie",
+  "progressReminderHint": "Jedno powiadomienie dziennie, tylko jeśli cel nie został osiągnięty.",
+  "progressReminderTime": "Godzina przypomnienia",
+  "progressReminderDenied": "Bez zgody na powiadomienia przypomnienie pozostaje wyłączone.",
+  "progressCancel": "Anuluj",
+  "progressConfirm": "Potwierdź",
+  "progressReminderBodyStreak": "Seria: {days}. Wystarczy: {goal}, by trwała dalej.",
+  "@progressReminderBodyStreak": {
+    "placeholders": {
+      "days": {
+        "type": "String"
+      },
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "progressReminderBodyGoal": "Dzisiejszy cel: {goal}.",
+  "@progressReminderBodyGoal": {
+    "placeholders": {
+      "goal": {
+        "type": "String"
+      }
+    }
+  },
+  "progressReminderChannelDescription": "Raz dziennie przypomina o celu dnia."
+}

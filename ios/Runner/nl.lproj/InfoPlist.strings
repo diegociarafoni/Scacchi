@@ -1,0 +1,4 @@
+"NSBluetoothAlwaysUsageDescription" = "Bluetooth wordt alleen gebruikt om met een vriend in de buurt te spelen, zonder wifi. De zetten gaan versleuteld en alleen tussen de twee telefoons.";
+"NSCameraUsageDescription" = "De camera leest de QR-code van een partij die je van een andere telefoon doorgeeft en maakt je profielfoto, die alleen op deze telefoon blijft.";
+"NSLocalNetworkUsageDescription" = "Het lokale netwerk wordt alleen gebruikt om met een vriend op de andere telefoon te spelen, via hetzelfde wifi-netwerk of dezelfde hotspot. De zetten gaan versleuteld en alleen tussen de twee telefoons.";
+"NSPhotoLibraryUsageDescription" = "Wordt gebruikt om de QR-code van een partij te lezen uit een afbeelding die je kiest en om je profielfoto te kiezen, die alleen op deze telefoon blijft.";

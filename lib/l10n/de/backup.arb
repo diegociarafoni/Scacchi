@@ -1,0 +1,21 @@
+{
+  "backupTitle": "Sicherung und Wiederherstellung",
+  "backupIntro": "Die Sicherung enthält Partien, Fortschritt, Lernweg, Turniere, Training und Einstellungen. Bewahre sie an einem sicheren Ort auf: Die App funktioniert offline, deshalb gibt es keine Online-Kopie.",
+  "backupShare": "Sicherung teilen",
+  "backupShareSubject": "Rokko-Sicherung",
+  "backupRestoreFromText": "Aus Text wiederherstellen",
+  "backupExported": "Sicherung bereit zum Speichern",
+  "backupExportFailed": "Sicherung fehlgeschlagen: {error}",
+  "backupRestoreStaged": "Sicherung bereit. Schließe die App und öffne sie neu, um deine Daten wiederherzustellen.",
+  "backupRestoreFailed": "Wiederherstellung fehlgeschlagen: {error}",
+  "backupErrorNotApp": "Das ist keine Rokko-Sicherung",
+  "backupErrorNewerVersion": "Sicherung von einer neueren Version erstellt",
+  "backupErrorUnexpectedFile": "Unerwartete Datei in der Sicherung: {file}",
+  "backupErrorInvalidFile": "Ungültige Datei in der Sicherung: {file}",
+  "backupErrorInvalidPreference": "Ungültige Einstellung: {name}",
+  "backupErrorUnreadable": "Sicherung nicht lesbar",
+  "backupRestoreDialogTitle": "Sicherung wiederherstellen",
+  "backupRestoreDialogBody": "Füge den Inhalt der Sicherungsdatei ein. Deine aktuellen Daten werden ersetzt.",
+  "backupCancel": "Abbrechen",
+  "backupRestore": "Wiederherstellen"
+}

@@ -1,0 +1,19 @@
+{
+  "endgamesTitle": "Oyun sonları",
+  "endgamesGoalMate": "Şah mat yap",
+  "endgamesGoalPromote": "Piyonu terfi ettir",
+  "endgamesGoalHoldBlack": "Siyah olarak dayan",
+  "endgamesGoalHoldWhite": "Beyaz olarak dayan",
+  "endgamesToRepeat": "Tekrar edilecekler",
+  "endgamesStars": "{stars, plural, one{{stars}/3 yıldız} other{{stars}/3 yıldız}}",
+  "endgamesMovesHold": "Hamle: {moves} / {par}",
+  "endgamesMovesTarget": "Hamle: {moves} · üç yıldız için en fazla {par}",
+  "endgamesStart": "Başla",
+  "endgamesThinking": "Motor düşünüyor…",
+  "endgamesEngineFailed": "Motor yanıt vermiyor: tekrar dene.",
+  "endgamesSuccess": "Hedefe ulaştın",
+  "endgamesFailure": "Olmadı",
+  "endgamesFailureHint": "Konum, tekrar edilecekler arasında kalır.",
+  "endgamesRetry": "Tekrar dene",
+  "endgamesDone": "Bitti"
+}

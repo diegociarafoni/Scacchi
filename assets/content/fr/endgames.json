@@ -1,0 +1,14 @@
+{
+  "queen-mate.title": "Dame et roi contre roi",
+  "queen-mate.intro": "Objectif : donne échec et mat. Utilise la dame pour enfermer le roi adverse dans une cage de plus en plus petite, puis rapproche ton roi. Attention au pat !",
+  "rook-mate.title": "Tour et roi contre roi",
+  "rook-mate.intro": "Objectif : donne échec et mat. La tour coupe les rangées, le roi l'aide : poussez ensemble le roi adverse vers le bord.",
+  "king-pawn.title": "Roi et pion contre roi",
+  "king-pawn.intro": "Objectif : promeus le pion. Amène ton roi devant le pion et prends l'opposition : le pion n'arrive au bout que si ton roi lui ouvre le chemin.",
+  "lucena.title": "La position de Lucena",
+  "lucena.intro": "Objectif : promeus le pion. Ton roi est bloqué devant le pion : éloigne le roi adverse avec la tour, puis construis le « pont » pour te protéger des échecs.",
+  "philidor.title": "La défense de Philidor",
+  "philidor.intro": "Objectif : ne pas perdre pendant {par} coups. Tu joues avec les Noirs : garde la tour sur la sixième rangée jusqu'à ce que le pion avance, puis envoie-la tout au fond et donne échec par derrière.",
+  "bishop-knight.title": "Fou et cavalier",
+  "bishop-knight.intro": "Objectif : donne échec et mat. C'est le mat le plus difficile : pousse le roi adverse vers un coin de la couleur de ton fou. Tu as 50 coups avant que la partie soit nulle."
+}

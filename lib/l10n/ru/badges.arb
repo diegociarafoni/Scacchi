@@ -1,0 +1,481 @@
+{
+  "badgesTitle": "Значки",
+  "badgesEntrySubtitle": "Всё, чему ты научился и что сыграл, — в одной коллекции",
+  "badgesSummary": "Получено: {earned} из {total}",
+  "@badgesSummary": {
+    "description": "Totale dei badge ottenuti",
+    "placeholders": {
+      "earned": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "badgesFamilyLearn": "Учёба",
+  "badgesFamilyPuzzles": "Задачи",
+  "badgesFamilyGames": "Партии",
+  "badgesFamilyStory": "История",
+  "badgesFamilyHabit": "Постоянство",
+  "badgesTierBronze": "Бронза",
+  "badgesTierSilver": "Серебро",
+  "badgesTierGold": "Золото",
+  "badgesUnlocked": "Новый значок: {name}",
+  "@badgesUnlocked": {
+    "description": "Avviso quando si ottiene un badge",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "badgesSeeAction": "Смотреть",
+  "badgesEarnedOn": "Получен {date}",
+  "@badgesEarnedOn": {
+    "description": "Data in cui il badge è stato ottenuto",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "badgesNotYet": "Ещё не получен",
+  "badgesProgress": "{value} / {target}",
+  "@badgesProgress": {
+    "description": "Avanzamento verso un badge",
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "badgesSemanticsEarned": "{name}, получен",
+  "@badgesSemanticsEarned": {
+    "description": "Lettura del badge ottenuto",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "badgesSemanticsLocked": "{name}, ещё не получен",
+  "@badgesSemanticsLocked": {
+    "description": "Lettura del badge da ottenere",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "badgesSemanticsLockedProgress": "{name}, ещё не получен, {value} из {target}",
+  "@badgesSemanticsLockedProgress": {
+    "description": "Lettura del badge da ottenere con avanzamento",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "value": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "badgesClose": "Закрыть",
+  "badgeChapterMovesName": "В поход",
+  "badgeChapterMovesDesc": "Пройди уроки о том, как ходят фигуры.",
+  "badgeChapterPiecesName": "Фигуры в безопасности",
+  "badgeChapterPiecesDesc": "Пройди уроки о взятии и защите.",
+  "badgeChapterRulesName": "Золотые правила",
+  "badgeChapterRulesDesc": "Пройди уроки о правилах игры.",
+  "badgeChapterMatesName": "Охотник за королями",
+  "badgeChapterMatesDesc": "Пройди уроки об основных матах.",
+  "badgeChapterTacticsName": "Тактический ум",
+  "badgeChapterTacticsDesc": "Пройди уроки по тактике.",
+  "badgeChapterEndgamesName": "Эндшпиль чемпиона",
+  "badgeChapterEndgamesDesc": "Пройди уроки по эндшпилю.",
+  "badgeChapterOpeningsName": "Дебюты нараспашку",
+  "badgeChapterOpeningsDesc": "Пройди уроки по дебютам.",
+  "badgeGuardians3Name": "Укротитель стражей",
+  "badgeGuardians3Desc": "Победи стражей Истории: {count}.",
+  "@badgeGuardians3Desc": {
+    "description": "Come si ottiene il badge «Domatore di guardiani»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStoryPuzzlesAllName": "Мастер загадок",
+  "badgeStoryPuzzlesAllDesc": "Реши все задачи в главах Истории: {count}.",
+  "@badgeStoryPuzzlesAllDesc": {
+    "description": "Come si ottiene il badge «Enigmista»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeEndgamesAllName": "Король эндшпиля",
+  "badgeEndgamesAllDesc": "Пройди все позиции тренажёра эндшпилей.",
+  "badgeMastersAllName": "Глаз мастера",
+  "badgeMastersAllDesc": "Доиграй до конца все партии в «Угадай ход».",
+  "badgeReviews25Name": "Повторим!",
+  "badgeReviews25Desc": "Разбери партии: {count}.",
+  "@badgeReviews25Desc": {
+    "description": "Come si ottiene il badge «Analista»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgePuzzles500Name": "Охотник за решениями",
+  "badgePuzzles500Desc": "Реши задачи: {count}.",
+  "@badgePuzzles500Desc": {
+    "description": "Come si ottiene il badge «Collezionista di soluzioni»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeThemes10Name": "Путешественник по темам",
+  "badgeThemes10Desc": "Реши хотя бы одну задачу в разных темах: {count}.",
+  "@badgeThemes10Desc": {
+    "description": "Come si ottiene il badge «Esploratore di temi»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgePin10Name": "Мастер связки",
+  "badgePin10Desc": "Реши задачи на связку: {count}.",
+  "@badgePin10Desc": {
+    "description": "Come si ottiene il badge «Inchiodatore»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeSkewer5Name": "Нанизано!",
+  "badgeSkewer5Desc": "Реши задачи на линейный удар: {count}.",
+  "@badgeSkewer5Desc": {
+    "description": "Come si ottiene il badge «Spiedino»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeDiscovered5Name": "Неожиданный поворот",
+  "badgeDiscovered5Desc": "Реши задачи на вскрытое нападение: {count}.",
+  "@badgeDiscovered5Desc": {
+    "description": "Come si ottiene il badge «Colpo di scena»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeSacrifice10Name": "Львиное сердце",
+  "badgeSacrifice10Desc": "Реши задачи на жертву: {count}.",
+  "@badgeSacrifice10Desc": {
+    "description": "Come si ottiene il badge «Cuor di leone»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeSmothered1Name": "Удушье!",
+  "badgeSmothered1Desc": "Реши задачу на удушающий мат.",
+  "badgeRating1800Name": "Ас",
+  "badgeRating1800Desc": "Достигни рейтинга в задачах: {count}.",
+  "@badgeRating1800Desc": {
+    "description": "Come si ottiene il badge «Fuoriclasse»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStreakRun10Name": "Золотая серия",
+  "badgeStreakRun10Desc": "Набери очков в режиме серии: {count}.",
+  "@badgeStreakRun10Desc": {
+    "description": "Come si ottiene il badge «Serie d'oro»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeScholarsMateName": "Детский мат",
+  "badgeScholarsMateDesc": "Выиграй, поставив мат ферзём за четыре хода или меньше.",
+  "badgeFoolsMateName": "Дурацкий мат",
+  "badgeFoolsMateDesc": "Попадись на знаменитый мат в два хода. Такое бывает со всеми: держи медаль.",
+  "badgeAllPiecesMateName": "Фигура за фигурой",
+  "badgeAllPiecesMateDesc": "Поставь мат ферзём, ладьёй, слоном, конём и пешкой.",
+  "badgeEnPassantName": "На проходе",
+  "badgeEnPassantDesc": "Сделай взятие на проходе.",
+  "badgeUnderpromotionName": "Маленький конь",
+  "badgeUnderpromotionDesc": "Преврати пешку в любую фигуру, кроме ферзя.",
+  "badgeStalemateName": "Король в ловушке",
+  "badgeStalemateDesc": "Закончи партию вничью из-за пата.",
+  "badgeMarathonName": "Марафонец",
+  "badgeMarathonDesc": "Сыграй партию минимум в столько своих ходов: {count}.",
+  "@badgeMarathonDesc": {
+    "description": "Come si ottiene il badge «Maratoneta»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeWins100Name": "Центурион",
+  "badgeWins100Desc": "Выиграй партии: {count}.",
+  "@badgeWins100Desc": {
+    "description": "Come si ottiene il badge «Centurione»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgePodiumName": "На пьедестале",
+  "badgePodiumDesc": "Войди в тройку лучших на турнире (минимум из четырёх игроков).",
+  "badgeTournaments5Name": "Завсегдатай турниров",
+  "badgeTournaments5Desc": "Доиграй турниры до конца: {count}.",
+  "@badgeTournaments5Desc": {
+    "description": "Come si ottiene il badge «Habitué dei tornei»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStoryPrologueName": "Первые шаги",
+  "badgeStoryPrologueDesc": "Победи Tino в «Главе 0».",
+  "badgeStoryVillageName": "Герой деревни",
+  "badgeStoryVillageDesc": "Победи Pino в главе «Деревня фигур».",
+  "badgeStoryGatesName": "Через ворота",
+  "badgeStoryGatesDesc": "Победи Chiara в главе «Городские ворота».",
+  "badgeStoryTowerName": "Повелитель башни",
+  "badgeStoryTowerDesc": "Победи Rocco в главе «Башня короля».",
+  "badgeStoryForestName": "Король леса",
+  "badgeStoryForestDesc": "Победи Marta в главе «Лес ловушек».",
+  "badgeStoryCastleName": "Осада выиграна",
+  "badgeStoryCastleDesc": "Победи Duilio в главе «Замок эндшпилей».",
+  "badgeStoryCrownName": "Корона твоя",
+  "badgeStoryCrownDesc": "Победи Elena в главе «Корона».",
+  "badgeStoryAllName": "Легенда",
+  "badgeStoryAllDesc": "Пройди все главы Истории.",
+  "badgeStreak14Name": "Две недели подряд",
+  "badgeStreak14Desc": "Выполняй цель дня подряд, дней: {count}.",
+  "@badgeStreak14Desc": {
+    "description": "Come si ottiene il badge «Due settimane»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStreak60Name": "Два месяца в огне",
+  "badgeStreak60Desc": "Выполняй цель дня подряд, дней: {count}.",
+  "@badgeStreak60Desc": {
+    "description": "Come si ottiene il badge «Due mesi»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStreak100Name": "Сто и дальше",
+  "badgeStreak100Desc": "Выполняй цель дня подряд, дней: {count}.",
+  "@badgeStreak100Desc": {
+    "description": "Come si ottiene il badge «Cento giorni»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStreak365Name": "Круг вокруг Солнца",
+  "badgeStreak365Desc": "Выполняй цель дня подряд, дней: {count}.",
+  "@badgeStreak365Desc": {
+    "description": "Come si ottiene il badge «Un anno intero»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeDays30Name": "Человек привычки",
+  "badgeDays30Desc": "Играй или тренируйся в разные дни (необязательно подряд), всего дней: {count}.",
+  "@badgeDays30Desc": {
+    "description": "Come si ottiene il badge «Abitudinario»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeDays100Name": "Как дома",
+  "badgeDays100Desc": "Играй или тренируйся в разные дни (необязательно подряд), всего дней: {count}.",
+  "@badgeDays100Desc": {
+    "description": "Come si ottiene il badge «Di casa»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeComebackName": "С возвращением!",
+  "badgeComebackDesc": "Вернись после перерыва минимум в днях: {count}.",
+  "@badgeComebackDesc": {
+    "description": "Come si ottiene il badge «Bentornato!»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgePerfect7Name": "Семь идеальных дней",
+  "badgePerfect7Desc": "Выполни все три задания дня в разные дни, всего дней: {count}.",
+  "@badgePerfect7Desc": {
+    "description": "Come si ottiene il badge «Sette giornate perfette»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeMinigames25Name": "Гимнаст ума",
+  "badgeMinigames25Desc": "Заверши сессии мини-игр хотя бы с одним очком: {count}.",
+  "@badgeMinigames25Desc": {
+    "description": "Come si ottiene il badge «Allenatore instancabile»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgesUnlockedMany": "Новых значков: {count}",
+  "@badgesUnlockedMany": {
+    "description": "Avviso quando si ottengono molti badge insieme",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeChapterStrategyName": "Ум стратега",
+  "badgeChapterStrategyDesc": "Пройди уроки по стратегии.",
+  "badgeChapterCapablancaName": "Ученик мастера",
+  "badgeChapterCapablancaDesc": "Пройди уроки школы Капабланки.",
+  "badgeStoryPlainName": "Верный план",
+  "badgeStoryPlainDesc": "Победи Massimo в главе «Равнина планов».",
+  "badgeStoryAcademyName": "Лучший в академии",
+  "badgeStoryAcademyDesc": "Победи Stella в главе «Академия мастера».",
+  "badgeStoryStartName": "Поехали!",
+  "badgeStoryStartDesc": "Пройди первый урок Истории.",
+  "badgeStoryHalfName": "Полпути позади",
+  "badgeStoryHalfDesc": "Пройди половину уроков Истории.",
+  "badgeStoryChapters3Name": "Хет-трик глав",
+  "badgeStoryChapters3Desc": "Победи ботов в главах Истории: {count}.",
+  "@badgeStoryChapters3Desc": {
+    "description": "Come si ottiene il badge «Tre capitoli alle spalle»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeLv3Name": "Ученик",
+  "badgeLv3Desc": "Достигни уровня {count}.",
+  "@badgeLv3Desc": {
+    "description": "Come si ottiene il badge «Apprendista»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeLv8Name": "Шахматист",
+  "badgeLv8Desc": "Достигни уровня {count}.",
+  "@badgeLv8Desc": {
+    "description": "Come si ottiene il badge «Scacchista»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeLv15Name": "Ветеран",
+  "badgeLv15Desc": "Достигни уровня {count}.",
+  "@badgeLv15Desc": {
+    "description": "Come si ottiene il badge «Veterano»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeLv20Name": "Мастер Rokko",
+  "badgeLv20Desc": "Достигни уровня {count}.",
+  "@badgeLv20Desc": {
+    "description": "Come si ottiene il badge «Maestro della Rocca»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgesTabBadges": "Значки",
+  "badgesTabBooks": "Книги",
+  "booksHint": "Каждый дебют, который ты сыграешь в партии, становится книгой с позицией на обложке. Сколько книг ты найдёшь?",
+  "booksSemanticsUnlocked": "{name}, книга открыта",
+  "@booksSemanticsUnlocked": {
+    "description": "Libro delle aperture sbloccato",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "booksSemanticsLocked": "{name}, книга ещё закрыта",
+  "@booksSemanticsLocked": {
+    "description": "Libro delle aperture ancora bloccato",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "booksPlayed": "{count, plural, one{Ты сыграл его {count} раз: книга твоя.} few{Ты сыграл его {count} раза: книга твоя.} many{Ты сыграл его {count} раз: книга твоя.} other{Ты сыграл его {count} раза: книга твоя.}}",
+  "@booksPlayed": {
+    "description": "Partite giocate in quell'apertura",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "booksHowTo": "Сыграй партию с этим дебютом, чтобы открыть книгу.",
+  "badgesRecentSemantics": "Недавние значки: {names}",
+  "@badgesRecentSemantics": {
+    "description": "Badge recenti, per i lettori di schermo",
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  }
+}

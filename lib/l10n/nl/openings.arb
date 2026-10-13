@@ -1,0 +1,114 @@
+{
+  "personalTitle": "Jouw openingen",
+  "personalHubSubtitle": "De zetten die je hebt gespeeld, met resultaten",
+  "personalLoadFailed": "Het partijarchief kon niet worden gelezen: probeer het later opnieuw.",
+  "personalEmpty": "Speel een paar partijen tegen de computer om je openingsboom op te bouwen.",
+  "personalNoGamesFiltered": "Geen partijen die bij deze filters passen.",
+  "personalNoGamesHere": "Je hebt nog nooit vanuit deze stelling gespeeld.",
+  "personalSideAll": "Beide",
+  "personalSideWhite": "Wit",
+  "personalSideBlack": "Zwart",
+  "personalOpponent": "Tegenstander",
+  "personalAllOpponents": "Alle tegenstanders",
+  "personalGames": "{count, plural, one{{count} partij} other{{count} partijen}}",
+  "@personalGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "personalGamesTotal": "{count, plural, one{{count} partij geteld} other{{count} partijen geteld}}",
+  "@personalGamesTotal": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "personalScore": "{wins}W · {draws}R · {losses}V",
+  "@personalScore": {
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      }
+    }
+  },
+  "personalScoreSemantics": "{wins} gewonnen, {draws} remise, {losses} verloren",
+  "@personalScoreSemantics": {
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      }
+    }
+  },
+  "personalStartPosition": "Beginstelling",
+  "personalNoName": "Opening zonder naam",
+  "personalBack": "Terug",
+  "personalStart": "Begin",
+  "personalFlip": "Draai het bord om",
+  "personalOpenInBook": "Open in de openingsverkenner",
+  "personalFromHere": "Je partijen vanuit deze stelling",
+  "explorerTitle": "Openingen verkennen",
+  "explorerLoadFailed": "De openingen konden niet worden geladen.",
+  "explorerStartPosition": "Beginstelling",
+  "explorerNoName": "Opening zonder naam",
+  "explorerOutOfBook": "Buiten het openingsboek",
+  "explorerFlip": "Bord omdraaien",
+  "explorerRestart": "Opnieuw beginnen",
+  "explorerBack": "Terug",
+  "explorerForward": "Vooruit",
+  "explorerMoveSemantics": "{move}: {games, plural, one{{games} partij} other{{games} partijen}}, wit {white}%, remise {draws}%, zwart {black}%",
+  "openingsHubTitle": "Openingen",
+  "openingsHubExplorerSubtitle": "Gespeelde partijen en resultaten per zet, met openingsnamen",
+  "openingsRepertoireTitle": "{side, select, white{Witrepertoire} other{Zwartrepertoire}}",
+  "openingsRepertoireUnavailable": "Repertoire niet beschikbaar",
+  "openingsRepertoireLoading": "Laden…",
+  "openingsRepertoireSummary": "{lines, plural, one{{lines} variant} other{{lines} varianten}} · {due, plural, one{{due} zet om te herhalen} other{{due} zetten om te herhalen}}",
+  "openingsGameTitle": "Speel tegen de computer",
+  "openingsLevel": "Niveau",
+  "openingsPlay": "Spelen",
+  "openingsCancel": "Annuleren",
+  "openingsSideWhite": "Wit",
+  "openingsSideBlack": "Zwart",
+  "openingsNameSemantics": "Opening: {name} ({eco})",
+  "openingsAddToRepertoire": "Toevoegen aan repertoire",
+  "openingsPlayThisOpening": "Speel deze opening",
+  "openingsFreeOpening": "Vrije opening",
+  "openingsDefaultLineName": "Variant",
+  "openingsLineName": "Naam",
+  "openingsAdd": "Toevoegen",
+  "openingsLineAdded": "{side, select, white{Variant toegevoegd aan het witrepertoire.} other{Variant toegevoegd aan het zwartrepertoire.}}",
+  "openingsProblemEmpty": "De variant is leeg.",
+  "openingsProblemIllegal": "De variant bevat een ongeldige zet.",
+  "openingsProblemNoOwnMoves": "De variant heeft geen zetten voor jouw kleur.",
+  "openingsProblemConflict": "In deze stelling heeft je repertoire al {move}.",
+  "openingsDrillTitle": "Repertoire herhalen",
+  "openingsDrillDone": "Herhaling voltooid: {count, plural, one{{count} zet} other{{count} zetten}}.",
+  "openingsDrillNew": "Nieuwe zet: speel de zet die de pijl aanwijst.",
+  "openingsDrillPrompt": "Variant “{name}”: wat is jouw zet?",
+  "openingsDrillWrong": "Dat is niet de zet uit je repertoire: hier is de juiste.",
+  "openingsImportTitle": "PGN importeren",
+  "openingsImportHelper": "Elke variant wordt een lijn.",
+  "openingsImport": "Importeren",
+  "openingsImportNone": "Geen geldige lijnen in de PGN.",
+  "openingsImportAdded": "Lijnen toegevoegd: {added}",
+  "openingsImportAddedSkipped": "Lijnen toegevoegd: {added}. Overgeslagen: {skipped} ({reason})",
+  "openingsRepertoireEmpty": "Nog geen lijnen. Voeg ze toe via Openingen verkennen met de knop “Toevoegen aan repertoire”, of importeer een PGN.",
+  "openingsPlayLine": "Speel de lijn",
+  "openingsDeleteLine": "Verwijder de lijn",
+  "openingsReviewNone": "Geen zetten om te herhalen",
+  "openingsReviewButton": "{count, plural, one{Herhaal {count} zet} other{Herhaal {count} zetten}}"
+}

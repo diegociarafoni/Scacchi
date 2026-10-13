@@ -81,5 +81,53 @@
   "pathGuardianUnavailable": "The guardian is challenged where the computer plays: Android and iOS, or Windows and Linux with Stockfish installed.",
   "@pathGuardianUnavailable": {
     "description": "Avviso se il motore non è disponibile"
+  },
+  "pathStageWrong": "That's not the right move, try again.",
+  "@pathStageWrong": {
+    "description": "Avviso dopo una mossa sbagliata in un esercizio"
+  },
+  "pathStageGood": "Good, keep going.",
+  "@pathStageGood": {
+    "description": "Conferma dopo una mossa giusta, con altre mosse da trovare"
+  },
+  "pathStageSolved": "Exactly!",
+  "@pathStageSolved": {
+    "description": "Conferma a esercizio risolto"
+  },
+  "pathStageRestartTooltip": "Start over",
+  "@pathStageRestartTooltip": {
+    "description": "Tooltip del pulsante che rifà l'esercizio in corso"
+  },
+  "pathStageExerciseOf": "Exercise {n} of {total}",
+  "@pathStageExerciseOf": {
+    "description": "Etichetta per i lettori di schermo dell'avanzamento nella tappa",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pathStageStart": "Start",
+  "@pathStageStart": {
+    "description": "Pulsante che avvia gli esercizi dopo la spiegazione"
+  },
+  "pathStageNext": "Next",
+  "@pathStageNext": {
+    "description": "Pulsante che passa all'esercizio successivo"
+  },
+  "pathStageRestartExercise": "Restart the exercise",
+  "@pathStageRestartExercise": {
+    "description": "Pulsante che rifà l'esercizio senza vie d'uscita"
+  },
+  "pathStageComplete": "Stage complete",
+  "@pathStageComplete": {
+    "description": "Titolo del risultato a fine tappa"
+  },
+  "pathStageFinish": "Done",
+  "@pathStageFinish": {
+    "description": "Pulsante che chiude il risultato di una tappa"
   }
 }

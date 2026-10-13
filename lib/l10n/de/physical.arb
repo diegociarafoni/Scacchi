@@ -1,0 +1,65 @@
+{
+  "physicalTitle": "Echtes Brett",
+  "physicalEntrySubtitle": "Uhr und Notation für eine Partie am Brett",
+  "physicalIntro": "Spiel auf einem echten Brett: Die App ist die Uhr und schreibt die Partie mit. Gib nach jedem Zug den Zug ein oder tippe ihn unter den erlaubten an.",
+  "physicalWhite": "Weiß",
+  "physicalBlack": "Schwarz",
+  "physicalUntimed": "Ohne Zeit",
+  "physicalStart": "Partie starten",
+  "physicalInputWhite": "Zug von Weiß (z. B. e4, Sf3)",
+  "physicalInputBlack": "Zug von Schwarz (z. B. e5, Sc6)",
+  "physicalInvalidMove": "Ungültiger Zug: „{text}“",
+  "@physicalInvalidMove": {
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "physicalNoMoves": "Keine Züge",
+  "physicalPause": "Pause",
+  "physicalResume": "Weiter",
+  "physicalUndo": "Zurück",
+  "physicalDraw": "Remis",
+  "physicalResign": "Aufgeben",
+  "physicalDrawQuestion": "Remis vereinbart?",
+  "physicalYes": "Ja",
+  "physicalNo": "Nein",
+  "physicalWhoResigns": "Wer gibt auf?",
+  "physicalSaved": "Partie im Archiv gespeichert",
+  "physicalNothingToSave": "Keine Züge zum Speichern",
+  "physicalSaveFailed": "Die Partie konnte nicht gespeichert werden",
+  "physicalNewGame": "Neue Partie",
+  "physicalEndCheckmate": "Schachmatt",
+  "physicalEndResignation": "Aufgabe",
+  "physicalEndTimeout": "Zeit abgelaufen",
+  "physicalEndAgreement": "Remis durch Einigung",
+  "physicalEndStalemate": "Patt",
+  "physicalEndInsufficient": "Ungenügendes Material",
+  "physicalEndRepetition": "Dreifache Stellungswiederholung",
+  "physicalEndFiftyMoves": "50-Züge-Regel",
+  "physicalEndOther": "Partie beendet",
+  "physicalResultLine": "{reason} · {result}",
+  "@physicalResultLine": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      },
+      "result": {
+        "type": "String"
+      }
+    }
+  },
+  "physicalPhoto": "Zug per Foto",
+  "physicalRealign": "Neu ausrichten",
+  "physicalCameraUnavailable": "Kamera nicht verfügbar",
+  "physicalImageUnreadable": "Bild nicht lesbar",
+  "physicalReferenceSaved": "Referenzfoto gespeichert. Mach nach dem nächsten Zug ein neues Foto.",
+  "physicalNoMoveRecognized": "Kein Zug erkannt: Das Brett sieht gleich aus.",
+  "physicalGuessNote": "Wahrscheinlichste Züge laut Foto: Bestätige den richtigen.",
+  "physicalAlignTitle": "Brett ausrichten",
+  "physicalAlignHelp": "Zieh die vier Kreise auf die Ecken des Bretts. Behalte für die nächsten Fotos denselben Bildausschnitt bei.",
+  "physicalAlignWhiteBottom": "Weiß unten",
+  "physicalAlignBlackBottom": "Schwarz unten",
+  "physicalAlignDone": "Fertig"
+}

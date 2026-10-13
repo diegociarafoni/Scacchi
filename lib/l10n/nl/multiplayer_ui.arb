@@ -1,0 +1,15 @@
+{
+  "multiplayerUiChannelWifi": "Wifi",
+  "multiplayerUiChannelBluetooth": "Bluetooth",
+  "multiplayerUiChannelRemote": "Op afstand",
+  "multiplayerUiLinkConnected": "Verbonden",
+  "multiplayerUiLinkConnecting": "Verbinden",
+  "multiplayerUiLinkOffline": "Onbereikbaar",
+  "multiplayerUiLinkSemantics": "{channel}: {state}",
+  "multiplayerUiShowFriend": "Toon deze code aan je vriend",
+  "multiplayerUiStepsTitle": "Zo speel je",
+  "multiplayerUiStepCreate": "Eén van jullie maakt de partij en toont de QR-code of stuurt de link.",
+  "multiplayerUiStepScan": "De ander scant de code met de camera.",
+  "multiplayerUiStepPlay": "Doe om de beurt een zet: de zetten gaan vanzelf.",
+  "multiplayerUiResumeTitle": "Partij bezig"
+}

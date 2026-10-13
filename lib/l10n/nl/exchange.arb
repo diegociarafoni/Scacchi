@@ -1,0 +1,22 @@
+{
+  "qrSendTitle": "Doorgeven via QR",
+  "qrSendHint": "Open op de andere telefoon Jij › Archief › Ontvangen via QR en houd de code in beeld.",
+  "qrPart": "Deel {current} van {total}",
+  "qrPause": "Pauzeren",
+  "qrResume": "Hervatten",
+  "qrNext": "Volgend deel",
+  "qrPrevious": "Vorig deel",
+  "qrCodeLabel": "QR-code van de partij",
+  "qrReceiveTitle": "Ontvangen via QR",
+  "qrReceiveHint": "Houd de QR-code van de andere telefoon in beeld.",
+  "qrReceived": "{received} van {total} delen gelezen",
+  "qrForeign": "Deze QR-code bevat geen partij.",
+  "qrCorrupted": "De QR-code is beschadigd: begin opnieuw met lezen.",
+  "qrTooLarge": "De partij is te groot om te ontvangen.",
+  "qrRestarted": "Nieuwe partij in beeld: lezen opnieuw gestart.",
+  "qrCameraError": "De camera is niet beschikbaar. Geef Rokko toestemming om de camera te gebruiken in de instellingen van de telefoon en probeer het opnieuw.",
+  "qrRetry": "Opnieuw proberen",
+  "qrInvalidGame": "De QR-code bevat geen geldige partij.",
+  "qrFinishedGame": "De partij is al afgelopen: ontvang hem via Jij › Archief › Ontvangen via QR.",
+  "qrMalformed": "Ongeldige QR-code: genegeerd."
+}
