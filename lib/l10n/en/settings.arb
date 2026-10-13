@@ -106,5 +106,7 @@
   "settingsMarkColorBlue": "Blue",
   "settingsMarkColorYellow": "Yellow",
   "settingsPremove": "Premove",
-  "settingsPremoveDescription": "Move while the computer is thinking; tap an empty square to cancel"
+  "settingsPremoveDescription": "Move while the computer is thinking; tap an empty square to cancel",
+  "settingsEvalBar": "Evaluation bar",
+  "settingsEvalBarDescription": "Shows who is ahead next to the board; off in challenges without helpers"
 }

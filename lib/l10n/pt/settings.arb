@@ -106,5 +106,7 @@
   "settingsMarkColorBlue": "Azul",
   "settingsMarkColorYellow": "Amarelo",
   "settingsPremove": "Pré-movimento",
-  "settingsPremoveDescription": "Jogue enquanto o computador pensa; toque numa casa vazia para cancelar"
+  "settingsPremoveDescription": "Jogue enquanto o computador pensa; toque numa casa vazia para cancelar",
+  "settingsEvalBar": "Barra de avaliação",
+  "settingsEvalBarDescription": "Mostra quem está melhor ao lado do tabuleiro; desligada nos desafios sem ajudas"
 }

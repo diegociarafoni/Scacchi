@@ -130,5 +130,7 @@
   "settingsPremoveDescription": "Bilgisayar düşünürken hamleni yap; boş bir kareye dokunarak iptal edebilirsin",
   "@settingsPremoveDescription": {
     "description": "Impostazioni: descrizione della premossa"
-  }
+  },
+  "settingsEvalBar": "Değerlendirme çubuğu",
+  "settingsEvalBarDescription": "Tahtanın yanında kimin daha iyi olduğunu gösterir; yardımsız meydan okumalarda kapalıdır"
 }

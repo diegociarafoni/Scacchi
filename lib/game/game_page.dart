@@ -21,6 +21,7 @@ import '../engine/bot_collection.dart';
 import '../engine/bots.dart';
 import '../engine/computer_player.dart';
 import '../engine/levels.dart';
+import '../engine/uci.dart';
 import '../engine/uci_transport.dart';
 import '../engine/variant_engine.dart';
 import '../exchange/qr_l10n.dart';
@@ -44,11 +45,13 @@ import '../progress/progress_feedback.dart';
 import '../puzzles/activity_recorder.dart';
 import '../review/board_utils.dart';
 import '../review/engine_evaluator.dart';
+import '../review/eval_bar.dart';
 import '../review/game_review.dart';
 import '../review/move_classification.dart';
 import '../review/personal_puzzles.dart';
 import '../review/review_activity.dart';
 import '../review/review_page.dart';
+import '../review/win_probability.dart';
 import '../settings/board_frame.dart';
 import '../settings/notation.dart';
 import '../settings/settings.dart';
@@ -917,6 +920,61 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       Side.white => PlayerSide.black,
       Side.black => PlayerSide.white,
     };
+  }
+
+  /// Valutazione della posizione per la barra, dal punto di vista del Bianco.
+  EngineScore? _evalScore;
+  double? _evalWhiteWin;
+  String? _evalFen;
+  bool _evalBusy = false;
+
+  bool get _showEvalBar =>
+      _settings.evalBar &&
+      _helpAllowed &&
+      _engineGame &&
+      widget.computerAvailable;
+
+  void _scheduleEval() {
+    if (!_showEvalBar || _evalBusy || _evalFen == _game.position.fen) return;
+    _evalBusy = true;
+    unawaited(_refreshEval());
+  }
+
+  Future<void> _refreshEval() async {
+    final position = _game.position;
+    EngineScore? score;
+    double? win;
+    if (_game.isOver) {
+      final outcome = _game.outcome;
+      win = switch (outcome) {
+        Outcome(winner: Side.white) => 100.0,
+        Outcome(winner: Side.black) => 0.0,
+        _ => 50.0,
+      };
+      score = position.isCheckmate
+          ? const EngineScore.mate(0)
+          : const EngineScore.cp(0);
+    } else {
+      try {
+        final lines = await _computerPlayer.analyse(position.fen, depth: 10);
+        final raw = lines.firstOrNull?.score;
+        if (raw != null) {
+          score = position.turn == Side.white ? raw : raw.negated;
+          win = position.turn == Side.white
+              ? winPercent(raw)
+              : 100 - winPercent(raw);
+        }
+      } on Object {
+        // Senza valutazione la barra resta com'era.
+      }
+    }
+    _evalBusy = false;
+    if (!mounted) return;
+    setState(() {
+      _evalFen = position.fen;
+      _evalScore = score ?? _evalScore;
+      _evalWhiteWin = win ?? _evalWhiteWin;
+    });
   }
 
   bool get _humanToMove => _playerSide != PlayerSide.none && !_computerToMove;
@@ -2633,12 +2691,22 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                   _statusHeight +
                   _actionsHeight +
                   (showMaterial ? 2 * _materialHeight : 0);
+              final showEval = _showEvalBar;
+              if (showEval && _evalFen != _game.position.fen) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (mounted) _scheduleEval();
+                });
+              }
+              final barSpace = showEval ? evalBarWidth + 8 : 0.0;
               final boardSize = landscape
-                  ? math.min(constraints.maxHeight, constraints.maxWidth * 0.6)
+                  ? math.min(
+                      constraints.maxHeight,
+                      constraints.maxWidth * 0.6 - barSpace,
+                    )
                   : math.max(
                       0.0,
                       math.min(
-                        constraints.maxWidth,
+                        constraints.maxWidth - barSpace,
                         constraints.maxHeight - chromeHeight,
                       ),
                     );
@@ -2690,6 +2758,20 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                   ),
                 ),
               );
+              final Widget boardArea = !showEval
+                  ? board
+                  : Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        EvalBar(
+                          height: boardSize,
+                          score: _evalScore,
+                          whiteWin: _evalWhiteWin,
+                        ),
+                        const SizedBox(width: 8),
+                        board,
+                      ],
+                    );
               final Widget status = !showStatus
                   ? const SizedBox(height: _statusHeight)
                   : viewPly != null
@@ -2751,7 +2833,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                 return Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    board,
+                    boardArea,
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -2819,7 +2901,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                   ),
                   status,
                   topMaterial,
-                  board,
+                  boardArea,
                   bottomMaterial,
                   actions,
                 ],

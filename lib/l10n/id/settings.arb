@@ -130,5 +130,7 @@
   "settingsPremoveDescription": "Melangkahlah saat komputer berpikir; ketuk petak kosong untuk membatalkan",
   "@settingsPremoveDescription": {
     "description": "Impostazioni: descrizione della premossa"
-  }
+  },
+  "settingsEvalBar": "Bilah evaluasi",
+  "settingsEvalBarDescription": "Menampilkan siapa yang unggul di samping papan; mati pada tantangan tanpa bantuan"
 }

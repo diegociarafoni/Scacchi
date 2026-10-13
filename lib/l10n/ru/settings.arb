@@ -130,5 +130,7 @@
   "settingsMarkColorYellow": "Жёлтый",
   "@settingsMarkColorYellow": {
     "description": "Impostazioni: colore giallo"
-  }
+  },
+  "settingsEvalBar": "Шкала оценки",
+  "settingsEvalBarDescription": "Показывает, кто стоит лучше, рядом с доской; в вызовах без подсказок её нет"
 }

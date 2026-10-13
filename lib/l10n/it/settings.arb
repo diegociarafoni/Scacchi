@@ -472,5 +472,13 @@
   "settingsPremoveDescription": "Muovi mentre pensa il computer; toccando una casa vuota la annulli",
   "@settingsPremoveDescription": {
     "description": "Impostazioni: descrizione della premossa"
+  },
+  "settingsEvalBar": "Barra di valutazione",
+  "@settingsEvalBar": {
+    "description": "Impostazioni: interruttore della barra di valutazione in partita"
+  },
+  "settingsEvalBarDescription": "Mostra chi è in vantaggio accanto alla scacchiera; spenta nelle sfide senza aiuti",
+  "@settingsEvalBarDescription": {
+    "description": "Impostazioni: descrizione della barra di valutazione in partita"
   }
 }

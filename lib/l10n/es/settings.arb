@@ -130,5 +130,7 @@
   "settingsMarkColorYellow": "Amarillo",
   "@settingsMarkColorYellow": {
     "description": "Impostazioni: colore giallo"
-  }
+  },
+  "settingsEvalBar": "Barra de evaluación",
+  "settingsEvalBarDescription": "Muestra quién va mejor junto al tablero; no aparece en los retos sin ayudas"
 }

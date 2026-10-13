@@ -130,5 +130,7 @@
   "settingsMarkColorYellow": "Geel",
   "@settingsMarkColorYellow": {
     "description": "Impostazioni: colore giallo"
-  }
+  },
+  "settingsEvalBar": "Evaluatiebalk",
+  "settingsEvalBarDescription": "Toont naast het bord wie er beter staat; uit in uitdagingen zonder hulp"
 }

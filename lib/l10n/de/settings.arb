@@ -124,5 +124,7 @@
   "settingsMarkColorYellow": "Gelb",
   "@settingsMarkColorYellow": {
     "description": "Impostazioni: colore giallo"
-  }
+  },
+  "settingsEvalBar": "Bewertungsleiste",
+  "settingsEvalBarDescription": "Zeigt neben dem Brett, wer besser steht; in Herausforderungen ohne Hilfen ausgeblendet"
 }

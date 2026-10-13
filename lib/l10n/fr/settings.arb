@@ -130,5 +130,7 @@
   "settingsMarkColorYellow": "Jaune",
   "@settingsMarkColorYellow": {
     "description": "Impostazioni: colore giallo"
-  }
+  },
+  "settingsEvalBar": "Barre d'évaluation",
+  "settingsEvalBarDescription": "Montre qui est meilleur à côté de l'échiquier ; absente dans les défis sans aides"
 }

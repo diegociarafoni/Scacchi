@@ -228,6 +228,7 @@ void main() {
         'autoQueen',
         'autoFlip',
         'premove',
+        'evalBar',
         'tableMode',
         'explainWhy',
       ],

@@ -130,5 +130,7 @@
   "settingsPremoveDescription": "Ruszaj się, gdy myśli komputer; dotknięcie pustego pola anuluje ruch",
   "@settingsPremoveDescription": {
     "description": "Impostazioni: descrizione della premossa"
-  }
+  },
+  "settingsEvalBar": "Pasek oceny",
+  "settingsEvalBarDescription": "Pokazuje obok szachownicy, kto stoi lepiej; w wyzwaniach bez pomocy jest wyłączony"
 }
