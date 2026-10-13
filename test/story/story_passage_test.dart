@@ -113,6 +113,10 @@ void main() {
     expect(find.byKey(const ValueKey('story-passage')), findsOneWidget);
     expect(find.text('Lezioni concluse!'), findsOneWidget);
     expect(find.text('Ai puzzle'), findsOneWidget);
+    expect(
+      find.textContaining('Tino dice: Ora conosci i pezzi'),
+      findsOneWidget,
+    );
     await save(tester, find.text('Ai puzzle'), until: () => puzzlesOpened);
     expect(puzzlesOpened, isTrue);
   });
