@@ -34,6 +34,8 @@ Future<void> openBoard(WidgetTester tester) async {
       const Offset(0, -100),
     );
   }
+  await tester.ensureVisible(untimed);
+  await tester.pumpAndSettle();
   await tester.tap(untimed);
   await tester.pumpAndSettle();
 }
