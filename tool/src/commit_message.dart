@@ -30,6 +30,23 @@ final _acronym = RegExp(r'^[A-Z][A-Z0-9]+(?![A-Za-z])');
 // Commit da unire con rebase --autosquash: spariscono con lo squash merge.
 final _autosquash = RegExp(r'^(fixup|squash|amend)! ');
 
+// L'attribuzione a Claude è vietata nei commit, nei messaggi di squash e nelle PR.
+final _attribution = RegExp(
+  r'^\s*(co-authored-by:.*(claude|anthropic)|claude-session:)|claude\.ai/code/session_|generated with .*claude',
+  caseSensitive: false,
+  multiLine: true,
+);
+final _claudeEmail = RegExp(r'@anthropic\.com$', caseSensitive: false);
+
+/// Vero se nome o email di un autore sono quelli di Claude: l'indirizzo
+/// @anthropic.com o il nome «Claude» da solo, senza colpire persone omonime.
+bool isClaudeIdentity(String name, String email) =>
+    _claudeEmail.hasMatch(email.trim()) ||
+    name.trim().toLowerCase() == 'claude';
+
+/// Vero se un testo libero (descrizione di una PR) attribuisce il lavoro a Claude.
+bool hasClaudeAttribution(String text) => _attribution.hasMatch(text);
+
 /// Da dove arriva il messaggio da controllare.
 enum MessageSource {
   /// File del hook commit-msg: le righe che iniziano con # sono commenti di git.
@@ -56,6 +73,12 @@ List<String> validateCommitMessage(
     lines.removeLast();
   }
   if (lines.isEmpty) return ['messaggio vuoto'];
+
+  if (hasClaudeAttribution(lines.join('\n'))) {
+    return const [
+      'attribuzione a Claude non ammessa (Co-authored-by, Claude-Session, link alla sessione, «Generated with»)',
+    ];
+  }
 
   var header = lines.first;
   if (_releaseCommit.hasMatch(header) || _gitRevert.hasMatch(header)) {
