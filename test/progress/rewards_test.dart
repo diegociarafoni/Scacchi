@@ -94,6 +94,22 @@ void main() {
       expect(xpFor(const StoryChapterDone()), greaterThan(0));
     });
 
+    test('il conteggio dei capitoli non scende e non somma le ripetizioni', () {
+      final tracker = ProgressTracker();
+      var state = ProgressState.initial;
+      for (final n in [3, 3, 2]) {
+        state = tracker
+            .record(
+              state,
+              StoryChapterDone(chapters: n),
+              DateTime(2026, 10, 5, 12),
+              settings,
+            )
+            .state;
+      }
+      expect(state.tally['story'], 3);
+    });
+
     test('il secondo capitolo concluso annuncia la scacchiera Villaggio', () {
       const before = ProgressState(tally: {'story': 1});
       const after = ProgressState(tally: {'story': 2});

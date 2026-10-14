@@ -7,7 +7,7 @@
       }
     }
   },
-  "storyThemeVillaggio": "Desa",
-  "storyThemeTorre": "Menara",
-  "storyThemeCorona": "Mahkota"
+  "settingsThemeVillaggio": "Desa",
+  "settingsThemeTorre": "Menara",
+  "settingsThemeCorona": "Mahkota"
 }

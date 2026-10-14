@@ -7,7 +7,7 @@
       }
     }
   },
-  "storyThemeVillaggio": "Köy",
-  "storyThemeTorre": "Kule",
-  "storyThemeCorona": "Taç"
+  "settingsThemeVillaggio": "Köy",
+  "settingsThemeTorre": "Kule",
+  "settingsThemeCorona": "Taç"
 }

@@ -7,7 +7,7 @@
       }
     }
   },
-  "storyThemeVillaggio": "Aldea",
-  "storyThemeTorre": "Torre",
-  "storyThemeCorona": "Corona"
+  "settingsThemeVillaggio": "Aldea",
+  "settingsThemeTorre": "Torre",
+  "settingsThemeCorona": "Corona"
 }

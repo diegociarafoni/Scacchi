@@ -130,9 +130,11 @@ class LessonCompleted extends Activity {
   const LessonCompleted({super.duration});
 }
 
-/// Un capitolo della Storia concluso, battuto il suo bot (RG-13).
+/// Capitoli della Storia conclusi (RG-13): [chapters] è il totale, non l'ultimo.
 class StoryChapterDone extends Activity {
-  const StoryChapterDone({super.duration});
+  const StoryChapterDone({this.chapters = 1, super.duration});
+
+  final int chapters;
 }
 
 class ReviewCompleted extends Activity {

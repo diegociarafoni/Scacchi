@@ -7,7 +7,7 @@
       }
     }
   },
-  "storyThemeVillaggio": "Wioska",
-  "storyThemeTorre": "Wieża",
-  "storyThemeCorona": "Korona"
+  "settingsThemeVillaggio": "Wioska",
+  "settingsThemeTorre": "Wieża",
+  "settingsThemeCorona": "Korona"
 }

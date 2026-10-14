@@ -7,7 +7,7 @@
       }
     }
   },
-  "storyThemeVillaggio": "Деревня",
-  "storyThemeTorre": "Башня",
-  "storyThemeCorona": "Корона"
+  "settingsThemeVillaggio": "Деревня",
+  "settingsThemeTorre": "Башня",
+  "settingsThemeCorona": "Корона"
 }

@@ -7,7 +7,7 @@
       }
     }
   },
-  "storyThemeVillaggio": "Village",
-  "storyThemeTorre": "Tour",
-  "storyThemeCorona": "Couronne"
+  "settingsThemeVillaggio": "Village",
+  "settingsThemeTorre": "Tour",
+  "settingsThemeCorona": "Couronne"
 }

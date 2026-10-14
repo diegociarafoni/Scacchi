@@ -7,7 +7,7 @@
       }
     }
   },
-  "storyThemeVillaggio": "Dorf",
-  "storyThemeTorre": "Turm",
-  "storyThemeCorona": "Krone"
+  "settingsThemeVillaggio": "Dorf",
+  "settingsThemeTorre": "Turm",
+  "settingsThemeCorona": "Krone"
 }

@@ -75,9 +75,9 @@ String themeLabel(AppLocalizations l, BoardTheme t) => switch (t) {
   BoardTheme.menta => l.styleThemeMenta,
   BoardTheme.cipria => l.styleThemeCipria,
   BoardTheme.ardesia => l.styleThemeArdesia,
-  BoardTheme.villaggio => l.storyThemeVillaggio,
-  BoardTheme.torre => l.storyThemeTorre,
-  BoardTheme.corona => l.storyThemeCorona,
+  BoardTheme.villaggio => l.settingsThemeVillaggio,
+  BoardTheme.torre => l.settingsThemeTorre,
+  BoardTheme.corona => l.settingsThemeCorona,
 };
 
 String backdropLabel(AppLocalizations l, BoardBackdrop b) => switch (b) {

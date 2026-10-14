@@ -41,7 +41,7 @@ class StoryPage extends StatefulWidget {
     required this.story,
     this.playGuardian,
     this.playBoss,
-    this.onChapterDone,
+    this.onChaptersDone,
     this.playPuzzles,
     this.playLesson,
   });
@@ -51,8 +51,9 @@ class StoryPage extends StatefulWidget {
   final PlayGuardian? playGuardian;
   final PlayStoryBoss? playBoss;
 
-  /// Chiamata quando battere il bot conclude il capitolo.
-  final void Function(StoryChapter chapter)? onChapterDone;
+  /// Chiamata con il totale dei capitoli conclusi, all'apertura e quando
+  /// battere il bot ne conclude uno.
+  final void Function(int chapters)? onChaptersDone;
   final PlayStoryPuzzles? playPuzzles;
   final PlayStoryLesson? playLesson;
 
@@ -66,6 +67,22 @@ class _StoryPageState extends State<StoryPage> {
 
   StoryProgress get _progress =>
       StoryProgress(widget.path.progress, widget.story.state);
+
+  @override
+  void initState() {
+    super.initState();
+    // Chi aveva già dei capitoli conclusi li vede riconosciuti subito.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _reportChapters();
+    });
+  }
+
+  /// Dice quanti capitoli sono conclusi, se almeno uno.
+  void _reportChapters() {
+    final progress = _progress;
+    final done = storyChapters.where(progress.isChapterDone).length;
+    if (done > 0) widget.onChaptersDone?.call(done);
+  }
 
   Future<T?> _run<T>(Future<T> Function() action) async {
     if (_busy) return null;
@@ -291,7 +308,7 @@ class _StoryPageState extends State<StoryPage> {
     if (!mounted) return;
     if (won) {
       await widget.story.bossBeaten(chapter);
-      if (_progress.isChapterDone(chapter)) widget.onChapterDone?.call(chapter);
+      if (mounted) _reportChapters();
     } else {
       final l10n = storyL10n(context);
       final line = l10n.guardianLine(chapter, GuardianMoment.bossLost);
