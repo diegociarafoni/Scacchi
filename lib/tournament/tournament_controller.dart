@@ -65,11 +65,13 @@ class TournamentController extends ChangeNotifier {
 
   static Future<TournamentController> open({
     RecordActivity? recordActivity,
+    BotGameRunner? playBotGame,
   }) async {
     final dir = await getApplicationSupportDirectory();
     final controller = TournamentController(
       File('${dir.path}/tornei.json'),
       recordActivity: recordActivity,
+      playBotGame: playBotGame,
     );
     await controller.load();
     return controller;
@@ -166,6 +168,7 @@ class TournamentController extends ChangeNotifier {
     final runner = playBotGame;
     if (runner != null && !_playingBots) {
       _playingBots = true;
+      notifyListeners();
       var available = true;
       try {
         while (true) {

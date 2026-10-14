@@ -68,6 +68,7 @@ import '../story/story_l10n.dart';
 import '../story/story_page.dart';
 import '../summary/weekly_summary_page.dart';
 import '../tablebase/shared_tablebase.dart';
+import '../tournament/bot_game.dart';
 import '../tournament/tournament.dart';
 import '../tournament/tournament_controller.dart';
 import '../tournament/tournament_page.dart';
@@ -211,6 +212,7 @@ class _HomeShellState extends State<HomeShell> {
     );
     _reminders?.dispose();
     _homeRefresh.dispose();
+    _botGamePlayer?.dispose().ignore();
     super.dispose();
   }
 
@@ -326,7 +328,10 @@ class _HomeShellState extends State<HomeShell> {
   /// Un solo torneo in memoria, salvato a ogni partita.
   Future<TournamentController> _tournamentController() => _tournaments ??=
       (widget.tournaments ??
-              () => TournamentController.open(recordActivity: _record))()
+              () => TournamentController.open(
+                recordActivity: _record,
+                playBotGame: _playBotGame,
+              ))()
           .catchError((Object e, StackTrace st) {
             _tournaments = null;
             Error.throwWithStackTrace(e, st);
@@ -492,6 +497,8 @@ class _HomeShellState extends State<HomeShell> {
 
   Future<Widget> _tournamentPage() async {
     final controller = await _tournamentController();
+    // Riprende le partite tra bot rimaste a metà alla chiusura dell'app.
+    unawaited(controller.resumeBots());
     final games = await (await _archive()).list();
     return TournamentPage(
       controller: controller,
@@ -500,6 +507,32 @@ class _HomeShellState extends State<HomeShell> {
       play: _playTournamentGame,
     );
   }
+
+  ComputerPlayer? _botGamePlayer;
+
+  /// Fa giocare al motore una partita tra due bot del torneo; `null` dove il
+  /// motore non c'è o non risponde: la partita si simula.
+  Future<double?> _playBotGame(Player white, Player black, int seed) async {
+    if (!_computerAvailable) return null;
+    try {
+      final engine = _botGamePlayer ??=
+          widget.createComputer?.call() ?? ComputerPlayer();
+      await engine.newGame();
+      return await playBotGame(
+        white: _botLevel(white),
+        black: _botLevel(black),
+        move: (fen, moves, level) async =>
+            (await engine.bestMove(fen, moves, level))?.move,
+      );
+    } on Object catch (e) {
+      debugPrint('Partita tra bot non riuscita: $e'); // l10n-ok
+      return null;
+    }
+  }
+
+  EngineLevel _botLevel(Player bot) => bot.levelId != null
+      ? engineLevel(bot.levelId!)
+      : engineLevelForElo(bot.elo);
 
   /// Gioca la partita del torneo e restituisce i punti, o `null` se non si è
   /// conclusa. L'uscita dalla partita vale una sconfitta.

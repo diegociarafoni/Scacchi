@@ -1,6 +1,6 @@
 # Tornei offline contro bot
 
-Requisito RG-09: tornei da 4 a 8 giocatori (l'utente e da 3 a 7 bot; la schermata offre 4, 5, 6 o 8) senza servizi online. Le partite dell'utente sono vere; quelle tra i bot sono simulate (vedi sotto). Il codice è in `lib/tournament/`.
+Requisito RG-09: tornei da 4 a 8 giocatori (l'utente e da 3 a 7 bot; la schermata offre 4, 5, 6 o 8) senza servizi online, con partite vere. Il codice è in `lib/tournament/`.
 
 ## Formule
 
@@ -15,17 +15,24 @@ Requisito RG-09: tornei da 4 a 8 giocatori (l'utente e da 3 a 7 bot; la schermat
 
 ## Partite vere e partite simulate
 
-L'utente è sempre il giocatore 0 e gioca partite vere contro il motore, anche l'Armageddon. Le partite tra bot si simulano con la formula Elo:
+L'utente è sempre il giocatore 0 e gioca partite vere contro il motore, anche l'Armageddon. Anche le partite tra bot si giocano davvero, dove il motore c'è: dopo la partita dell'utente, `TournamentController` fa giocare le altre del turno una alla volta (`Tournament.pendingBotGames`) con `playBotGame` (`bot_game.dart`), che usa lo stesso motore con il livello di ciascun bot.
+
+- **Tempo per mossa**: 80 ms al massimo e nessuna attesa artificiale (`botGameLevel`), per chiudere un girone da otto in pochi minuti; la forza resta quella del livello (`Skill Level`, limite Elo), ma con meno tempo i livelli alti giocano un po' sotto il loro Elo nominale.
+- **Fine della partita**: matto, stallo, materiale insufficiente, triplice ripetizione e regola delle 50 mosse come nelle altre partite; oltre 240 semimosse è patta.
+- **Avviso**: mentre giocano i bot la schermata mostra «Si giocano le partite tra i bot…» con una barra e il pulsante **Gioca** resta spento.
+- **Spareggio**: dopo una patta nell'eliminazione diretta il motore gioca l'Armageddon a colori invertiti, come per l'utente.
+- **Ripresa**: ogni partita si salva appena finita. Se l'app si chiude a metà, all'apertura della schermata (`resumeBots`) si riprendono solo le partite rimaste.
+- **Ripiego**: dove manca il motore o una partita non riesce (errore, mossa illegale), quella partita si simula con la formula Elo.
+
+La formula di ripiego:
 
 - punteggio atteso `1 / (1 + 10^((Elo nero − Elo bianco) / 400))`;
 - probabilità di patta `0,3 × (1 − |2 × atteso − 1|)`, più alta tra giocatori vicini;
 - estrazione con `mix32` sul seme del torneo, sul turno e sulla scacchiera: lo stesso torneo dà sempre gli stessi risultati, anche dopo un riavvio.
 
-Se l'utente esce nell'eliminazione diretta, i turni rimanenti si simulano subito e il torneo si chiude.
+Con il motore le partite tra bot non sono ripetibili (il motore non usa il seme), ma ogni risultato giocato resta salvato.
 
-### Perché le partite tra i bot sono simulate
-
-Scelta dichiarata per il requisito RG-09: con otto giocatori il girone ha 28 partite, di cui 24 tra bot. Giocarle con il motore vorrebbe dire far girare due istanze di Stockfish per decine di minuti a ogni torneo, con batteria e riscaldamento del telefono a carico dell'utente e senza che nessuno guardi quelle partite. La formula Elo dà lo stesso tipo di risultati (più forte vince più spesso, patte più frequenti tra forze vicine), è istantanea e ripetibile con lo stesso seme. Si rivaluta se un giorno le partite tra bot diventano un contenuto da mostrare (per esempio da rivedere dopo il torneo).
+Se l'utente è eliminato nell'eliminazione diretta, i turni rimanenti si giocano subito tra i bot e il torneo si chiude.
 
 ## Salvataggio e bacheca
 
