@@ -55,6 +55,7 @@ Rokko è open source e gratuito. Questi vincoli valgono per ogni voce.
 
 | ID | Funzione | Stato | Pri | Dim | Versione | Evidenza |
 |---|---|---|---|---|---|---|
+| A-35 | **Riproduzione nella revisione**: un pulsante «play» fa avanzare la partita da sola fino alla prossima mossa con un commento (errore, imprecisione, mossa brillante od ottima, ingresso nel «Libro», nota personale) e lì si ferma; con le animazioni ridotte salta direttamente alla mossa | fatta | P2 | piccola | 0.15.0 | `lib/review/autoplay.dart` e comando in `review_page.dart`; test in `test/review/autoplay_test.dart` e `review_autoplay_test.dart`; vedi `docs/revisione-partita.md` |
 
 ### A.3 Piattaforma, rilascio, qualità
 

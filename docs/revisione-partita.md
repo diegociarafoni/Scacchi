@@ -106,7 +106,10 @@ Si apre dal menu della partita (⋮ → **Revisione della partita**: c'è il mot
 | Mossa scelta | RF-61 | "3… Cf6 è un errore grave" e "Migliore: g6" |
 | Riprova | RF-65 | Sugli errori (imprecisione, errore, occasione mancata, errore grave) si rigioca la posizione critica finché si trova la mossa del motore; **Soluzione** mostra la freccia |
 | Lista mosse | RF-61 | Ogni mossa con il simbolo della categoria, bordo del colore della categoria |
-| Navigazione | RM-01 | Barra in basso: inizio, precedente, successiva, fine |
+| Navigazione | RM-01 | Barra in basso: inizio, precedente, riproduzione, successiva, fine |
+| Riproduzione | A-35 | **Play** fa avanzare la partita di una mossa ogni 0,9 secondi (`playbackStep`) e si ferma alla prossima mossa con un commento; se non ce ne sono più va alla fine. Il pulsante diventa **Pausa**; scegliere una mossa a mano, riprovare o la pausa interrompono. Con le animazioni ridotte (impostazione dell'app o del telefono) salta direttamente alla mossa, senza passi intermedi |
+
+**Mosse con un commento** (`nextCommentedIndex` in `lib/review/autoplay.dart`): imprecisioni, errori, occasioni mancate ed errori gravi, mosse brillanti e ottime, note personali e l'ingresso nel libro (delle mosse Libro consecutive conta solo la prima).
 
 **Cache** (RF-66): le ultime 20 revisioni restano in memoria per la sessione (`ReviewCache`) e le ultime 50 anche su disco (`ReviewStore`, `reviews.json` nella cartella dati, scritto con `JsonFile`), quindi riaprirle è immediato anche dopo il riavvio. La chiave (`ReviewStore.key`) contiene la versione dello schema di classificazione, il motore (`reviewEngine`, oggi `stockfish-19`), la profondità (`reviewDepth`), l'uso del libro delle aperture, la posizione iniziale e le mosse: cambiando una di queste cose la revisione si rifà. Un file illeggibile viene messo da parte (`.bad-<ms>`) e si riparte vuoti; un errore di lettura o scrittura non impedisce la revisione. Quando cambiano le regole di classificazione si aumenta `ReviewStore.schema`. Il file di backup non include le revisioni: si rigenerano.
 

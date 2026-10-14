@@ -287,6 +287,8 @@
   "reviewNavPrevious": "Lance anterior",
   "reviewNavNext": "Próximo lance",
   "reviewNavEnd": "Fim",
+  "reviewNavPlay": "Reproduzir até ao próximo comentário",
+  "reviewNavPause": "Pausa",
   "reviewSideWhite": "Brancas",
   "reviewSideBlack": "Pretas",
   "reviewAccuracyUnavailable": "Precisão das {side} indisponível",

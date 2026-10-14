@@ -16,6 +16,8 @@ import '../openings/opening_book.dart';
 import '../settings/notation.dart';
 import '../settings/settings.dart';
 import '../tablebase/shared_tablebase.dart';
+import '../theme/motion.dart';
+import 'autoplay.dart';
 import 'board_utils.dart';
 import 'coach.dart';
 import 'eval_bar.dart';
@@ -220,6 +222,7 @@ class _ReviewPageState extends State<ReviewPage> {
 
   @override
   void dispose() {
+    _playTimer?.cancel();
     if (_phase == _Phase.analysing) _cancel(notify: false);
     _board.dispose();
     super.dispose();
@@ -370,6 +373,7 @@ class _ReviewPageState extends State<ReviewPage> {
   void _refreshBoard() => _board.updatePosition(_gameData());
 
   Future<void> _editNote(int ply) async {
+    setState(_stopPlayback);
     final note = await showMoveNoteDialog(
       context,
       san: _n(_review!.moves[ply].san),
@@ -392,7 +396,60 @@ class _ReviewPageState extends State<ReviewPage> {
     }
   }
 
+  Timer? _playTimer;
+
+  bool get _playing => _playTimer != null;
+
+  /// Prossima posizione con un commento, o `null` a fine partita.
+  int? get _nextCommented {
+    final review = _review;
+    if (review == null) return null;
+    return nextCommentedIndex(
+      classes: [for (final m in review.moves) m.classification],
+      hasNote: [for (final n in _notes) n != null],
+      from: _index,
+    );
+  }
+
+  void _stopPlayback() {
+    _playTimer?.cancel();
+    _playTimer = null;
+  }
+
+  /// Avanza da sola fino alla prossima mossa con un commento; con le
+  /// animazioni ridotte salta direttamente lì senza passi intermedi.
+  void _togglePlayback() {
+    if (_playing) {
+      setState(_stopPlayback);
+      return;
+    }
+    final target = _nextCommented;
+    if (target == null) return;
+    if (reduceMotionOf(context)) {
+      _select(target);
+      return;
+    }
+    setState(() {
+      _playTimer = Timer.periodic(playbackStep, (_) {
+        // Il bersaglio si ricalcola a ogni passo: una nota aggiunta o tolta
+        // nel frattempo cambia dove fermarsi.
+        final next = _nextCommented;
+        if (next == null) {
+          setState(_stopPlayback);
+          return;
+        }
+        if (_index + 1 >= next) _stopPlayback();
+        _showIndex(_index + 1);
+      });
+    });
+  }
+
   void _select(int index) {
+    _stopPlayback();
+    _showIndex(index);
+  }
+
+  void _showIndex(int index) {
     setState(() {
       _index = index.clamp(0, widget.moves.length);
       _retryPly = null;
@@ -404,6 +461,7 @@ class _ReviewPageState extends State<ReviewPage> {
   }
 
   void _startRetry(int ply) {
+    _stopPlayback();
     setState(() {
       _retryPly = ply;
       _retryMessage = null;
@@ -776,6 +834,13 @@ class _ReviewPageState extends State<ReviewPage> {
             tooltip: l.reviewNavPrevious,
             onPressed: retry || _index == 0 ? null : () => _select(_index - 1),
             icon: const Icon(Icons.chevron_left),
+          ),
+          IconButton(
+            tooltip: _playing ? l.reviewNavPause : l.reviewNavPlay,
+            onPressed: retry || (!_playing && _nextCommented == null)
+                ? null
+                : _togglePlayback,
+            icon: Icon(_playing ? Icons.pause : Icons.play_arrow),
           ),
           IconButton(
             tooltip: l.reviewNavNext,
