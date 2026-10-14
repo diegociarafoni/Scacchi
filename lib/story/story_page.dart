@@ -130,6 +130,8 @@ class _StoryPageState extends State<StoryPage> {
           await _lesson(chapter);
         case StoryStepKind.puzzles:
           await _puzzles(chapter);
+          // Una richiesta non consumata dal passaggio non resta in sospeso.
+          if (wasDone) widget.challengeRequest?.value = false;
         case StoryStepKind.guardian:
           await _guardian(chapter);
         case StoryStepKind.boss:

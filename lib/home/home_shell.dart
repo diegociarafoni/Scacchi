@@ -217,6 +217,7 @@ class _HomeShellState extends State<HomeShell> {
     );
     _reminders?.dispose();
     _homeRefresh.dispose();
+    _challengeRequest.dispose();
     _botEngineIdle?.cancel();
     _closeBotEngine();
     super.dispose();
@@ -452,6 +453,7 @@ class _HomeShellState extends State<HomeShell> {
       return null;
     }
     if (!context.mounted) return 0;
+    _challengeRequest.value = false;
     final path = await _pathController();
     final theme = (await _storyController()).state.themeFor(chapter);
     if (!context.mounted) return 0;
@@ -472,13 +474,17 @@ class _HomeShellState extends State<HomeShell> {
           onActivity: _record,
           companionBuilder: (_, {required solved}) =>
               _guardianLine(chapter, solved),
-          endAction: PuzzleEndAction(
-            label: _challengeLabel(chapter, path),
-            onPressed: (pageContext) {
-              _challengeRequest.value = true;
-              Navigator.of(pageContext).pop();
-            },
-          ),
+          // Senza motore la sfida non si apre: niente pulsante che prometta il
+          // contrario.
+          endAction: _computerAvailable
+              ? PuzzleEndAction(
+                  label: _challengeLabel(chapter, path),
+                  onPressed: (pageContext) {
+                    _challengeRequest.value = true;
+                    Navigator.of(pageContext).pop();
+                  },
+                )
+              : null,
         ),
       ),
     );

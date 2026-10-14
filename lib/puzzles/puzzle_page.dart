@@ -298,6 +298,15 @@ class _PuzzlePageState extends State<PuzzlePage> {
     if (next != null) setState(() => _start(next));
   }
 
+  /// Altezza in più della scheda dell'esito oltre al solo messaggio: punti in
+  /// linea o, con il commento del personaggio, punti e commento nella scheda.
+  double _resultExtra(BuildContext context, bool companion) {
+    final scale = math.max(1.0, MediaQuery.textScalerOf(context).scale(1));
+    final note = _progressNote != null;
+    if (!companion) return note ? 56 : 0;
+    return (note ? 92 : 60) * scale;
+  }
+
   String _sideName(AppLocalizations l) => l.puzzleSide(
     _session.puzzle.playerSide == Side.white ? 'white' : 'black',
   );
@@ -394,8 +403,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
                       c.maxWidth,
                       c.maxHeight -
                           190 -
-                          (_progressNote == null ? 0 : 56) -
-                          (companion == null ? 0 : 48),
+                          _resultExtra(context, companion != null),
                     ),
                   );
                   // Scorrevole come ultima difesa su schermi molto bassi.
