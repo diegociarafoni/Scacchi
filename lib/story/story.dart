@@ -13,6 +13,7 @@ class StoryChapter {
     required this.pathChapterId,
     required this.botId,
     required this.puzzleTheme,
+    required this.forkTheme,
     required this.puzzleCount,
     this.puzzleRating,
   });
@@ -25,6 +26,9 @@ class StoryChapter {
 
   /// Tema dei puzzle del capitolo e quanti risolverne.
   final String puzzleTheme;
+
+  /// Tema alternativo del bivio: si sceglie prima del primo puzzle.
+  final String forkTheme;
   final int puzzleCount;
 
   /// Difficoltà massima dei puzzle, se il capitolo parte più in basso di
@@ -43,6 +47,7 @@ const storyChapters = <StoryChapter>[
     pathChapterId: 'moves',
     botId: 'tino',
     puzzleTheme: 'mateIn1',
+    forkTheme: 'endgame',
     puzzleCount: 3,
     puzzleRating: 500,
   ),
@@ -51,6 +56,7 @@ const storyChapters = <StoryChapter>[
     pathChapterId: 'pieces',
     botId: 'pino',
     puzzleTheme: 'hangingPiece',
+    forkTheme: 'fork',
     puzzleCount: 3,
   ),
   StoryChapter(
@@ -58,6 +64,7 @@ const storyChapters = <StoryChapter>[
     pathChapterId: 'rules',
     botId: 'chiara',
     puzzleTheme: 'promotion',
+    forkTheme: 'pawnEndgame',
     puzzleCount: 3,
   ),
   StoryChapter(
@@ -65,6 +72,7 @@ const storyChapters = <StoryChapter>[
     pathChapterId: 'mates',
     botId: 'rocco',
     puzzleTheme: 'backRankMate',
+    forkTheme: 'mateIn2',
     puzzleCount: 3,
   ),
   StoryChapter(
@@ -72,6 +80,7 @@ const storyChapters = <StoryChapter>[
     pathChapterId: 'tactics',
     botId: 'marta',
     puzzleTheme: 'fork',
+    forkTheme: 'pin',
     puzzleCount: 4,
   ),
   StoryChapter(
@@ -79,6 +88,7 @@ const storyChapters = <StoryChapter>[
     pathChapterId: 'endgames',
     botId: 'duilio',
     puzzleTheme: 'pawnEndgame',
+    forkTheme: 'rookEndgame',
     puzzleCount: 3,
   ),
   StoryChapter(
@@ -86,6 +96,7 @@ const storyChapters = <StoryChapter>[
     pathChapterId: 'openings',
     botId: 'elena',
     puzzleTheme: 'opening',
+    forkTheme: 'middlegame',
     puzzleCount: 3,
   ),
   StoryChapter(
@@ -93,6 +104,7 @@ const storyChapters = <StoryChapter>[
     pathChapterId: 'strategy',
     botId: 'massimo',
     puzzleTheme: 'advancedPawn',
+    forkTheme: 'quietMove',
     puzzleCount: 3,
   ),
   StoryChapter(
@@ -100,17 +112,41 @@ const storyChapters = <StoryChapter>[
     pathChapterId: 'capablanca',
     botId: 'stella',
     puzzleTheme: 'rookEndgame',
+    forkTheme: 'bishopEndgame',
     puzzleCount: 3,
   ),
 ];
 
 /// Parte della storia che il percorso non conosce, salvata in `story.json`.
 class StoryState {
-  const StoryState({this.puzzles = const {}, this.beaten = const {}});
+  const StoryState({
+    this.puzzles = const {},
+    this.beaten = const {},
+    this.fork = const {},
+  });
 
   /// Puzzle risolti per capitolo e capitoli con il bot battuto.
   final Map<String, int> puzzles;
   final Set<String> beaten;
+
+  /// Tema scelto al bivio, per i capitoli in cui non è quello di base.
+  final Map<String, String> fork;
+
+  /// Tema dei puzzle di [chapter]: la via scelta al bivio, o quella di base.
+  String themeFor(StoryChapter chapter) =>
+      fork[chapter.id] ?? chapter.puzzleTheme;
+
+  /// Sceglie la via del bivio; un tema che non è del capitolo si ignora.
+  StoryState withFork(StoryChapter chapter, String theme) {
+    if (theme != chapter.puzzleTheme && theme != chapter.forkTheme) return this;
+    final next = {...fork};
+    if (theme == chapter.puzzleTheme) {
+      next.remove(chapter.id);
+    } else {
+      next[chapter.id] = theme;
+    }
+    return StoryState(puzzles: puzzles, beaten: beaten, fork: next);
+  }
 
   int puzzlesSolved(String chapterId) => puzzles[chapterId] ?? 0;
 
@@ -122,14 +158,16 @@ class StoryState {
       chapterId: (puzzlesSolved(chapterId) + 1).clamp(0, goal),
     },
     beaten: beaten,
+    fork: fork,
   );
 
   StoryState withBossBeaten(String chapterId) =>
-      StoryState(puzzles: puzzles, beaten: {...beaten, chapterId});
+      StoryState(puzzles: puzzles, beaten: {...beaten, chapterId}, fork: fork);
 
   Map<String, Object?> toJson() => {
     'puzzles': puzzles,
     'beaten': [...beaten],
+    'fork': fork,
   };
 
   /// Ignora capitoli sconosciuti e valori illeggibili: si riparte da zero
@@ -152,7 +190,17 @@ class StoryState {
     if (list is List) {
       beaten.addAll(list.whereType<String>().where(ids.containsKey));
     }
-    return StoryState(puzzles: puzzles, beaten: beaten);
+    final fork = <String, String>{};
+    final rawFork = json['fork'];
+    if (rawFork is Map) {
+      for (final e in rawFork.entries) {
+        final chapter = ids[e.key];
+        if (chapter != null && e.value == chapter.forkTheme) {
+          fork[chapter.id] = chapter.forkTheme;
+        }
+      }
+    }
+    return StoryState(puzzles: puzzles, beaten: beaten, fork: fork);
   }
 }
 

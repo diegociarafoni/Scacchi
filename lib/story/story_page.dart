@@ -8,6 +8,7 @@ import '../path/path_widgets.dart';
 import '../path/stage_page.dart';
 import '../progress/avatar.dart';
 import '../progress/guardian_avatar.dart';
+import '../puzzles/themes.dart';
 import '../theme/rokko_theme.dart';
 import 'guardian_says.dart';
 import 'story.dart';
@@ -343,6 +344,7 @@ class _StoryPageState extends State<StoryPage> {
                   current: next?.$1.id == chapter.id,
                   last: i == storyChapters.length - 1,
                   onOpen: (kind) => _open(chapter, kind),
+                  onFork: (theme) => widget.story.chooseFork(chapter, theme),
                 ),
               if (next == null)
                 Padding(
@@ -444,6 +446,7 @@ class _ChapterCard extends StatelessWidget {
     required this.current,
     required this.last,
     required this.onOpen,
+    required this.onFork,
   });
 
   final int index;
@@ -452,6 +455,7 @@ class _ChapterCard extends StatelessWidget {
   final bool current;
   final bool last;
   final void Function(StoryStepKind kind) onOpen;
+  final void Function(String theme) onFork;
 
   static const _badge = 48.0;
 
@@ -580,7 +584,7 @@ class _ChapterCard extends StatelessWidget {
                               expression: AvatarExpression.greeting,
                             ),
                             const SizedBox(height: 8),
-                            for (final step in steps)
+                            for (final step in steps) ...[
                               _StepTile(
                                 chapter: chapter,
                                 step: step,
@@ -590,6 +594,16 @@ class _ChapterCard extends StatelessWidget {
                                 ),
                                 onTap: () => onOpen(step.kind),
                               ),
+                              if (step.kind == StoryStepKind.puzzles &&
+                                  !step.done &&
+                                  step.value == 0 &&
+                                  progress.isStepUnlocked(chapter, step.kind))
+                                _ForkChoice(
+                                  chapter: chapter,
+                                  selected: progress.state.themeFor(chapter),
+                                  onChoose: onFork,
+                                ),
+                            ],
                             if (done)
                               Padding(
                                 padding: const EdgeInsets.only(top: 8),
@@ -682,6 +696,51 @@ class _Badge extends StatelessWidget {
               ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// Bivio del capitolo: due temi per i puzzle, da scegliere prima del primo.
+class _ForkChoice extends StatelessWidget {
+  const _ForkChoice({
+    required this.chapter,
+    required this.selected,
+    required this.onChoose,
+  });
+
+  final StoryChapter chapter;
+  final String selected;
+  final void Function(String theme) onChoose;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = storyL10n(context);
+    return Padding(
+      padding: const EdgeInsets.only(left: 40, bottom: 8),
+      key: ValueKey('story-fork-${chapter.id}'),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l10n.storyForkTitle,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+          const SizedBox(height: 4),
+          Wrap(
+            spacing: 8,
+            runSpacing: 4,
+            children: [
+              for (final id in [chapter.puzzleTheme, chapter.forkTheme])
+                ChoiceChip(
+                  key: ValueKey('story-fork-${chapter.id}-$id'),
+                  label: Text(puzzleThemeLabel(l10n, id) ?? id),
+                  selected: selected == id,
+                  onSelected: (_) => onChoose(id),
+                ),
+            ],
+          ),
+        ],
       ),
     );
   }
