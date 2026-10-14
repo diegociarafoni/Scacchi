@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show ScrollCacheExtent;
 
 import '../engine/bots.dart';
 import '../path/curriculum.dart';
@@ -13,6 +14,7 @@ import '../settings/settings.dart';
 import '../theme/rokko_theme.dart';
 import '../theme/sheets.dart';
 import 'guardian_says.dart';
+import 'journey_map.dart';
 import 'story.dart';
 import 'story_controller.dart';
 import 'story_l10n.dart';
@@ -67,6 +69,9 @@ class StoryPage extends StatefulWidget {
 class _StoryPageState extends State<StoryPage> {
   /// Evita di aprire due passi con un doppio tocco.
   bool _busy = false;
+
+  /// Un riferimento per capitolo, per portarci la lista dalla mappa.
+  final _cardKeys = [for (final _ in storyChapters) GlobalKey()];
 
   StoryProgress get _progress =>
       StoryProgress(widget.path.progress, widget.story.state);
@@ -330,6 +335,22 @@ class _StoryPageState extends State<StoryPage> {
     return (chapter, step.kind);
   }
 
+  /// Porta in vista il capitolo [index].
+  void _goTo(int index) {
+    final target = _cardKeys[index].currentContext;
+    if (target == null) return;
+    Scrollable.ensureVisible(
+      target,
+      alignment: 0.05,
+      duration:
+          AppSettings.of(context).reduceMotion ||
+              MediaQuery.disableAnimationsOf(context)
+          ? Duration.zero
+          : const Duration(milliseconds: 350),
+      curve: Curves.easeInOut,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = storyL10n(context);
@@ -354,6 +375,9 @@ class _StoryPageState extends State<StoryPage> {
                   ),
                 ),
           body: ListView(
+            // I nove capitoli sono pochi: tutti costruiti, così la mappa può
+            // portare a ciascuno.
+            scrollCacheExtent: const ScrollCacheExtent.pixels(20000),
             // Con la barra «Continua» l'ingombro è già assorbito da lei.
             padding: next == null
                 ? context.withSystemBottom(
@@ -361,10 +385,15 @@ class _StoryPageState extends State<StoryPage> {
                   )
                 : const EdgeInsets.fromLTRB(16, 8, 16, 16),
             children: [
-              _Summary(progress: progress),
+              _Summary(
+                progress: progress,
+                current: _progress.currentChapterIndex,
+                onSelect: _goTo,
+              ),
               const SizedBox(height: 12),
               for (final (i, chapter) in storyChapters.indexed)
                 _ChapterCard(
+                  key: _cardKeys[i],
                   index: i,
                   chapter: chapter,
                   progress: progress,
@@ -391,9 +420,15 @@ class _StoryPageState extends State<StoryPage> {
 
 /// Capitoli conclusi, in cima alla storia.
 class _Summary extends StatelessWidget {
-  const _Summary({required this.progress});
+  const _Summary({
+    required this.progress,
+    required this.current,
+    required this.onSelect,
+  });
 
   final StoryProgress progress;
+  final int? current;
+  final ValueChanged<int> onSelect;
 
   @override
   Widget build(BuildContext context) {
@@ -428,6 +463,20 @@ class _Summary extends StatelessWidget {
                   minHeight: 10,
                 ),
               ),
+            ),
+            const SizedBox(height: 16),
+            Semantics(
+              header: true,
+              child: Text(
+                l10n.storyMapTitle,
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
+            ),
+            const SizedBox(height: 8),
+            JourneyMap(
+              progress: progress,
+              current: current,
+              onSelect: onSelect,
             ),
           ],
         ),
@@ -475,6 +524,7 @@ class _RailPainter extends CustomPainter {
 
 class _ChapterCard extends StatelessWidget {
   const _ChapterCard({
+    super.key,
     required this.index,
     required this.chapter,
     required this.progress,
