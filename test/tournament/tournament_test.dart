@@ -35,6 +35,7 @@ Tournament playAll(Tournament t, double points) {
 }
 
 void main() {
+  realGames();
   group('scelta dei bot', () {
     test('i più vicini al livello dell\'utente, in ordine di forza', () {
       final chosen = chooseBots(bots, userElo: 1000, count: 3);
@@ -256,6 +257,141 @@ void main() {
       expect(tournamentPoints(GameResult.draw, armageddonWhite), 0);
       expect(tournamentPoints(GameResult.win, armageddonWhite), 1);
       expect(tournamentPoints(GameResult.loss, armageddonBlack), 0);
+    });
+  });
+}
+
+/// Risolve con [whitePoints] ogni partita tra bot in attesa e dà all'utente
+/// sempre [user] punti, senza mai simulare.
+Tournament playAllReal(
+  Tournament t, {
+  required double user,
+  required double Function(BotGame game) whitePoints,
+}) {
+  var guard = 0;
+  while (!t.finished && guard++ < 200) {
+    if (t.userGame != null) {
+      t = t.recordUserGame(user, simulateBots: false);
+    } else {
+      final pending = t.pendingBotGames;
+      expect(pending, isNotEmpty, reason: 'il torneo non deve restare fermo');
+      t = t.withBotGame(pending.first, whitePoints(pending.first));
+    }
+  }
+  return t;
+}
+
+Tournament createReal(TournamentFormat format, int size, {int seed = 1}) =>
+    Tournament.create(
+      format: format,
+      user: me,
+      bots: chooseBots(bots, userElo: me.elo, count: size - 1),
+      seed: seed,
+      createdAt: DateTime(2026, 10, 11),
+      simulateBots: false,
+    );
+
+void realGames() {
+  group('RG-09 partite tra bot giocate davvero', () {
+    test('senza simulazione le partite tra bot restano in attesa', () {
+      final t = createReal(TournamentFormat.roundRobin, 4);
+      expect(t.userGame, isNotNull);
+      expect(t.pendingBotGames, isEmpty, reason: 'si gioca prima l\'utente');
+      final after = t.recordUserGame(1, simulateBots: false);
+      expect(after.pendingBotGames, hasLength(1));
+      expect(after.finished, isFalse);
+      expect(after.currentRound, 0);
+    });
+
+    test('un risultato reale chiude il turno e apre il successivo', () {
+      var t = createReal(
+        TournamentFormat.roundRobin,
+        4,
+      ).recordUserGame(1, simulateBots: false);
+      final game = t.pendingBotGames.single;
+      t = t.withBotGame(game, 1);
+      expect(t.currentRound, 1);
+      expect(t.userGame, isNotNull);
+      final p = t.rounds[0].firstWhere((p) => !p.includes(0));
+      expect(p.white, game.white);
+      expect(p.result, 1);
+    });
+
+    for (final size in [4, 5, 6, 8]) {
+      test('girone da $size: si arriva in fondo solo con partite reali', () {
+        final t = playAllReal(
+          createReal(TournamentFormat.roundRobin, size),
+          user: 0.5,
+          whitePoints: (_) => 0.5,
+        );
+        expect(t.finished, isTrue);
+        expect(t.userRank, isNotNull);
+        expect(
+          t.rounds.expand((r) => r).where((p) => !p.isBye),
+          everyElement(
+            isA<Pairing>().having((p) => p.result, 'risultato', 0.5),
+          ),
+        );
+      });
+    }
+
+    test('eliminazione diretta: i turni successivi nascono dai reali', () {
+      final t = playAllReal(
+        createReal(TournamentFormat.knockout, 8),
+        user: 1,
+        whitePoints: (_) => 1,
+      );
+      expect(t.finished, isTrue);
+      expect(t.champion, 0);
+      expect(t.userRank, 1);
+    });
+
+    test('la patta tra bot chiede lo spareggio a colori invertiti', () {
+      var t = createReal(
+        TournamentFormat.knockout,
+        4,
+      ).recordUserGame(1, simulateBots: false);
+      final first = t.pendingBotGames.single;
+      expect(first.tiebreak, isFalse);
+      t = t.withBotGame(first, 0.5);
+      final tie = t.pendingBotGames.single;
+      expect(tie.tiebreak, isTrue);
+      expect(tie.white, first.black, reason: 'colori invertiti');
+      expect(tie.black, first.white);
+      // Il nero dello spareggio (chi aveva il bianco) passa pattando.
+      final settled = t.withBotGame(tie, 0.5);
+      final pairing = settled.rounds[0].firstWhere((p) => !p.includes(0));
+      expect(pairing.winner, first.white);
+      // Se il bianco dello spareggio vince, passa lui.
+      final other = t.withBotGame(tie, 1);
+      expect(
+        other.rounds[0].firstWhere((p) => !p.includes(0)).winner,
+        first.black,
+      );
+    });
+
+    test('la simulazione di una partita è la stessa di prima', () {
+      final a = create(TournamentFormat.knockout, 8, seed: 5);
+      var b = createReal(TournamentFormat.knockout, 8, seed: 5);
+      b = b.recordUserGame(1, simulateBots: false);
+      for (final g in b.pendingBotGames) {
+        b = b.simulateBotGame(g);
+      }
+      b = b.settle();
+      final a1 = a.recordUserGame(1);
+      expect(b.toJson(), a1.toJson());
+    });
+
+    test('il torneo con partite in attesa si salva e si rilegge', () {
+      final t = createReal(
+        TournamentFormat.roundRobin,
+        4,
+      ).recordUserGame(1, simulateBots: false);
+      final again = Tournament.fromJson(t.toJson());
+      expect(
+        again.pendingBotGames.single.board,
+        t.pendingBotGames.single.board,
+      );
     });
   });
 }
