@@ -18,7 +18,7 @@ flutter pub get                       # dipendenze
 dart tool/l10n.dart                   # testi tradotti: dopo ogni modifica ai .arb o cambio di ramo
 flutter run                           # avvio sul dispositivo o emulatore collegato
 flutter test                          # test unitari e di widget
-flutter test --exclude-tags golden    # senza i golden, come negli hook locali
+tool/test_veloci.sh                   # i soli test dei file modificati, come nel pre-push
 flutter test integration_test/app_test.dart -d linux  # un file e2e (su Linux senza schermo: xvfb-run -a ...)
 flutter analyze --fatal-infos --fatal-warnings  # analisi statica, come in CI
 dart format lib test integration_test tool      # formattazione, come in CI

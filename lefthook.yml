@@ -18,7 +18,7 @@ commit-msg:
     - name: messaggio secondo la convenzione Angular
       run: dart tool/check_commit_msg.dart {1}
 
-# Prima del push i test, troppo lenti per ogni commit.
+# Prima del push i soli test collegati ai file modificati: la suite completa è in CI.
 pre-push:
   parallel: true
   jobs:
@@ -36,6 +36,6 @@ pre-push:
       run: dart tool/check_comments.dart
     - name: nessun sottomodulo nell'indice
       run: "! git ls-files -s | grep -q '^160000'"
-    - name: test
-      # I golden dipendono dal sistema operativo: girano solo in CI su Linux.
-      run: flutter test --exclude-tags golden
+    - name: test dei file modificati
+      # La suite completa e i golden (dipendono dal sistema operativo) girano in CI.
+      run: tool/test_veloci.sh
