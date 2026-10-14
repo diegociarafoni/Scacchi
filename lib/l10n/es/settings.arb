@@ -154,5 +154,13 @@
   "settingsMoveMethodDrag": "Arrastre",
   "@settingsMoveMethodDrag": {
     "description": "Impostazioni: solo trascinamento"
+  },
+  "settingsKeepAwake": "Mantener la pantalla encendida",
+  "@settingsKeepAwake": {
+    "description": "Impostazioni: schermo acceso durante la partita"
+  },
+  "settingsKeepAwakeDescription": "El teléfono no apaga la pantalla durante una partida",
+  "@settingsKeepAwakeDescription": {
+    "description": "Impostazioni: descrizione dello schermo sempre acceso"
   }
 }

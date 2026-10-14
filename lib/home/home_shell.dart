@@ -54,6 +54,7 @@ import '../review/engine_evaluator.dart';
 import '../review/personal_puzzles.dart';
 import '../review/review_activity.dart';
 import '../review/review_page.dart';
+import '../review/review_store.dart';
 import '../settings/settings.dart';
 import '../settings/settings_page.dart';
 import '../stats/local_rating.dart';
@@ -186,6 +187,10 @@ class _HomeShellState extends State<HomeShell> {
     widget.settings.addListener(_onSettings);
     // Caricamento anticipato in background, per il nome dell'apertura in partita.
     openingBook().ignore();
+    // Revisioni su disco (RF-66); se la cartella dati non c'è, solo memoria.
+    ReviewStore.openDefault()
+        .then((store) => ReviewCache.store ??= store)
+        .ignore();
     _scheduler =
         (widget.reminderScheduler ??
         () => LocalNotificationScheduler.supported
@@ -684,12 +689,26 @@ class _HomeShellState extends State<HomeShell> {
     final player = widget.createComputer?.call() ?? ComputerPlayer();
     final side = saved.playerSide;
     final players = side == null ? {Side.white, Side.black} : {side};
+    // Le note e la precisione si salvano sulla voce più recente, non su quella
+    // letta all'apertura.
+    var current = saved;
     try {
       await navigator.push(
         MaterialPageRoute<void>(
           builder: (_) => ReviewPage(
             initial: game.initial,
             moves: [for (final m in game.moves) m.move],
+            onResult: (review) {
+              if (side == null) return;
+              final next = current.withReview(review);
+              // Una revisione già salvata (cache) non riscrive l'archivio.
+              if (next.accuracy == current.accuracy &&
+                  mapEquals(next.phaseAccuracy, current.phaseAccuracy)) {
+                return;
+              }
+              current = next;
+              unawaited(_saveGame(current).catchError((Object _) {}));
+            },
             evaluate: engineEvaluator(player),
             onCancel: player.stopAnalysis,
             analyseLive: (fen, multiPv) =>
@@ -708,7 +727,8 @@ class _HomeShellState extends State<HomeShell> {
             notes: [for (final m in game.moves) m.note],
             onNoteChanged: (ply, note) {
               imported.first.annotate(ply, note);
-              return _saveGame(saved.copyWith(pgn: imported.first.toPgn()));
+              current = current.copyWith(pgn: imported.first.toPgn());
+              return _saveGame(current);
             },
             timeControl: TimeControl.parse(saved.timeControl ?? ''),
             startTimes: Handicap.startTimesFromPgn(

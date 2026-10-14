@@ -12,7 +12,10 @@ Ogni `SavedGame` può indicare, oltre a giocatori e risultato:
 | `timeControl` | Cadenza in minuti più incremento (`5+0`, `15+10`); salvata anche nel PGN come `TimeControl` in secondi (`0.5+0` diventa `30+0`) |
 | `opponentElo` | Elo indicativo del bot avversario |
 | `accuracy` | Precisione dell'utente dalla revisione, aggiornabile con `copyWith(accuracy: () => 82.5)`; `() => null` la azzera |
+| `phaseAccuracy` | Precisione dell'utente in apertura, mediogioco e finale (RF-68), con la stessa regola di fase della revisione; mancano le fasi senza mosse. `SavedGame.withReview(review)` imposta insieme `accuracy` e `phaseAccuracy` per il colore dell'utente |
 | `opening` | Nome dell'apertura riconosciuta |
+
+I dati di precisione si salvano quando si apre la revisione di una partita dell'archivio (ReviewPage `onResult`, anche se la revisione era già in cache); non cambiano per le partite senza colore. Cambiando la linea principale dall'analisi, precisione e fasi si azzerano.
 
 Le partite salvate prima di questi campi si leggono ancora: i campi mancanti valgono `null`.
 
@@ -24,7 +27,8 @@ Le partite salvate prima di questi campi si leggono ancora: i campi mancanti val
 - bilancio per cadenza, dalla più giocata, con "Senza tempo" per le partite senza orologio;
 - numero di partite tra due persone (tipo `SavedGame.local`), mostrato a parte anche quando sono le sole giocate;
 - aperture più giocate, con il nome italiano (`localOpeningName`), a pari merito in ordine alfabetico;
-- precisione media e andamento nel tempo.
+- precisione media e andamento nel tempo;
+- precisione per fase (RF-68): media e andamento di apertura, mediogioco e finale (`phaseAverage`, `phaseTrend`), dalle sole partite che hanno il dato.
 
 ## Rating locale (RF-110)
 
@@ -32,4 +36,4 @@ Le partite salvate prima di questi campi si leggono ancora: i campi mancanti val
 
 ## Schermata
 
-`StatsPage` mostra il rating con il suo andamento, il bilancio, le cadenze, le aperture e la precisione. I grafici sono linee compatte con una descrizione per i lettori di schermo (valore iniziale, finale, minimo e massimo). Se l'archivio non si può leggere, la schermata lo dice invece di restare in attesa.
+`StatsPage` mostra il rating con il suo andamento, il bilancio, le cadenze, le aperture, la precisione e la precisione per fase (la sezione compare solo se c'è almeno un dato). I grafici sono linee compatte con una descrizione per i lettori di schermo (valore iniziale, finale, minimo e massimo). Se l'archivio non si può leggere, la schermata lo dice invece di restare in attesa.

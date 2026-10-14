@@ -47,7 +47,7 @@ Rokko è open source e gratuito. Questi vincoli valgono per ogni voce.
 | A-4 / RF-32 | **Annullamento con consenso** dell'altro giocatore nella partita a due | parziale | P0 | piccola | 0.12.0 | la patta chiede consenso (`game_page.dart:2158`), «Annulla» no |
 | A-5 / RF-40 | **Cadenza personalizzata** con minuti e incremento liberi, e **ritardo** (semplice e Bronstein); in seguito cadenze a più fasi (per esempio 40 mosse in 90 minuti più 30) anche per la scacchiera fisica | parziale | P0 | media | 0.12.0 | fatti minuti e incremento liberi e ritardo semplice e di Bronstein (`lib/game/clock.dart`, `custom_clock_dialog.dart`); restano le cadenze a più fasi e la scacchiera fisica |
 | A-6 / RM-02 | **Tocco**: correzione quando il dito cade sul bordo di una casa; due tocchi come modo predefinito su telefono | fatta | P0 | piccola | 0.12.0 | `lib/game/tap_assist.dart`, `MoveMethod` in `lib/settings/settings.dart`; test in `test/game/tap_assist_test.dart` e `move_method_test.dart` |
-| A-7 / RM-06 | **Schermo sempre acceso** durante la partita | da fare | P0 | piccola | 0.12.0 | nessun wakelock in `lib/`, `pubspec.yaml`, `android/`, `ios/` |
+| A-7 / RM-06 | **Schermo sempre acceso** durante la partita | fatta | P0 | piccola | 0.12.0 | `_syncAwake` in `lib/game/game_page.dart` con `wakelock_plus`; test in `test/game/keep_awake_test.dart` |
 | A-8 / RM-07 | **Avvio rapido**: pronta a giocare in meno di 2 secondi su un telefono di fascia media, con misura e budget in CI | parziale | P0 | piccola | 0.14.0 | `integration_test/fluidita_perf.dart` misura la fluidità, non l'avvio |
 | A-9 / RF-31 | **Modalità tavolo**: ruotare di 180° tutti i pezzi del lato superiore, non solo quelli del giocatore in alto | parziale | P0 | piccola | 0.12.0 | `tableMode` in `lib/settings/settings.dart`; da confermare se la differenza conta |
 
@@ -55,10 +55,6 @@ Rokko è open source e gratuito. Questi vincoli valgono per ogni voce.
 
 | ID | Funzione | Stato | Pri | Dim | Versione | Evidenza |
 |---|---|---|---|---|---|---|
-| A-11 / RF-55 | **Annotazioni** (commento e simbolo) modificabili anche nell'analisi, sulle varianti e dall'archivio | parziale | P1 | media | 0.13.0 | `lib/game/move_note.dart` e la revisione sì; `analysis_page.dart` e `archive_page.dart` non usano `MoveNote` |
-| A-12 / RF-91 | **Mosse «Libro»** nella revisione e nell'allenatore | parziale | P1 | piccola | 0.13.0 | `OpeningBook.bookPlies` (`lib/openings/opening_book.dart:131`) e `reviewGame(isBook:)` non sono collegati (`docs/revisione-partita.md:43`) |
-| A-13 / RF-66 | **Cache della revisione** nel database locale, con versione del motore e profondità nella chiave | parziale | P1 | media | 0.13.0 | `ReviewCache` (`lib/review/review_page.dart:28`) è una mappa in memoria di 20 voci |
-| A-14 / RF-68 | **Precisione per fase** nelle statistiche, con la media nel tempo | parziale | P1 | piccola | 0.13.0 | `GameReview.accuracyByPhase` c'è; `lib/stats/` non ha riferimenti alle fasi |
 
 ### A.3 Piattaforma, rilascio, qualità
 
@@ -190,7 +186,7 @@ Testo di ogni requisito, formulato come funzione di Rokko. La colonna Stato dice
 | RF-52 | Esplorazione libera con creazione di varianti ad albero; promozione di una variante a linea principale; eliminazione; salvataggio nell'archivio e PGN con le varianti. | fatta |
 | RF-53 | Editor di posizione: posizionamento libero dei pezzi, diritti di arrocco, tratto, import/export FEN, validazione della legalità. | fatta |
 | RF-54 | Frecce automatiche della mossa migliore (attivabili). | fatta |
-| RF-55 (P1) | Annotazioni personali: commento testuale e simbolo (`!!`, `!`, `!?`, `?!`, `?`, `??`) su ogni mossa e variante, modificabili nell'analisi e nell'archivio, conservati in import ed export PGN (commenti `{}` e NAG). | vedi A-11 |
+| RF-55 (P1) | Annotazioni personali: commento testuale e simbolo (`!!`, `!`, `!?`, `?!`, `?`, `??`) su ogni mossa e variante, modificabili nell'analisi e nell'archivio, conservati in import ed export PGN (commenti `{}` e NAG). | fatta |
 | RF-56 (P1) | Minaccia dell'avversario: un comando mostra con una freccia la mossa migliore che l'avversario giocherebbe se fosse il suo turno (analisi a mossa nulla), nell'analisi e nella partita con l'allenatore. Non disponibile quando il proprio re è sotto scacco. | fatta |
 
 #### 3.6 Revisione della partita (P1)
@@ -203,9 +199,9 @@ Testo di ogni requisito, formulato come funzione di Rokko. La colonna Stato dice
 | RF-63 | Precisione percentuale per giocatore e conteggio per categoria, con stima indicativa della forza della prestazione. | fatta |
 | RF-64 | Grafico dell'andamento della valutazione cliccabile, con i momenti chiave in evidenza. | fatta |
 | RF-65 | "Riprova" su ogni errore: l'utente cerca la mossa migliore dalla posizione critica. | fatta |
-| RF-66 | Cache dei risultati per partita nel database locale, così la revisione si apre all'istante le volte successive. | vedi A-13 |
+| RF-66 | Cache dei risultati per partita nel database locale, così la revisione si apre all'istante le volte successive. | fatta |
 | RF-67 (P1) | Tempo per mossa: nelle partite con orologio il tempo residuo è registrato a ogni mossa (`[%clk]` nel PGN, conservato in import ed export); la revisione mostra il grafico del tempo speso per mossa e segnala gli errori commessi giocando molto più in fretta della propria media. | fatta |
-| RF-68 (P1) | Precisione per fase: la revisione mostra la precisione separata per apertura, mediogioco e finale, con la stessa regola di fase dei puzzle personali; le statistiche (RF-111) ne mostrano la media nel tempo. | vedi A-14 |
+| RF-68 (P1) | Precisione per fase: la revisione mostra la precisione separata per apertura, mediogioco e finale, con la stessa regola di fase dei puzzle personali; le statistiche (RF-111) ne mostrano la media nel tempo. | fatta |
 
 #### 3.7 Coach e spiegazioni (P2)
 
@@ -242,7 +238,7 @@ Testo di ogni requisito, formulato come funzione di Rokko. La colonna Stato dice
 | ID | Specifica | Stato |
 |---|---|---|
 | RF-90 | Riconoscimento e visualizzazione del nome dell'apertura durante la partita (codice ECO e nome), usando un dataset aperto di aperture (CC0, vedi `CREDITS.md`), qualche centinaio di KB. | fatta |
-| RF-91 | Le mosse di libro sono marcate "Libro" nella revisione. | vedi A-12 |
+| RF-91 | Le mosse di libro sono marcate "Libro" nella revisione. | fatta |
 | RF-93 (P2) | Allenatore di repertorio: l'utente definisce le proprie linee (da PGN o dalla scacchiera) e l'app gliele fa ripetere con ripetizione dilazionata. | fatta |
 | RF-94 (P1) | Gioca un'apertura: dall'explorer o da una linea del repertorio si avvia una partita contro il computer o un bot che parte dopo le mosse scelte; se il bot esce dalla linea del repertorio l'app lo segnala. | fatta |
 | RF-92 (P2) | Explorer ridotto con le continuazioni principali e le percentuali da un piccolo libro precalcolato; le statistiche di un database globale sono escluse. | fatta |
