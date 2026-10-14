@@ -8,6 +8,7 @@ import '../theme/rokko_theme.dart';
 import '../theme/sheets.dart';
 import 'activity_recorder.dart';
 import 'friend_challenge_page.dart';
+import 'mistake_path_page.dart';
 import 'mode_guide.dart';
 import 'puzzle_feed.dart';
 import 'puzzle_page.dart';
@@ -138,6 +139,20 @@ class _PuzzleHubPageState extends State<PuzzleHubPage> {
                       ),
                     ),
                   ),
+                  // Gli errori e i temi sbagliati sono una misura del giocatore:
+                  // il profilo bambino non li mostra.
+                  if (!kid)
+                    _HubTile(
+                      icon: Icons.route_outlined,
+                      title: l.puzzleMistakePath,
+                      subtitle: l.puzzleMistakePathSubtitle,
+                      onTap: () => _open(
+                        MistakePathPage(
+                          trainer: trainer,
+                          onActivity: widget.onActivity,
+                        ),
+                      ),
+                    ),
                   _HubTile(
                     icon: Icons.replay_outlined,
                     title: l.puzzleReview,

@@ -122,6 +122,44 @@
       }
     }
   },
+  "puzzleMistakePath": "Uit mijn fouten",
+  "puzzleMistakePathSubtitle": "Hoofdstukken over de thema's waar je het vaakst op mist",
+  "puzzleMistakePathIntro": "Elk hoofdstuk bundelt de puzzels uit je eigen fouten over één thema, te beginnen met het meest voorkomende.",
+  "puzzleMistakePathEmpty": "Nog geen hoofdstukken. Bekijk een paar partijen terug en bewaar je fouten als puzzels: een thema wordt een hoofdstuk als je het minstens twee keer mist.",
+  "puzzleMistakeChapterNumber": "Hoofdstuk {n}",
+  "@puzzleMistakeChapterNumber": {
+    "description": "Numero del capitolo personale",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleMistakeChapterPuzzles": "{count, plural, one{{count} puzzel uit je fouten} other{{count} puzzels uit je fouten}}",
+  "@puzzleMistakeChapterPuzzles": {
+    "description": "Puzzle di un capitolo personale",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleMistakeChapterProgress": "{done} van {total} geprobeerd",
+  "@puzzleMistakeChapterProgress": {
+    "description": "Puzzle provati su quelli del capitolo",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleMistakeChapterNew": "Nog niet begonnen",
+  "puzzleMistakeChapterInProgress": "Bezig",
+  "puzzleMistakeChapterRested": "Klaar voor vandaag",
+  "puzzleMistakeChapterDone": "Geleerd",
   "puzzleSectionTimed": "Spellen op tijd",
   "@puzzleSectionTimed": {
     "description": "Intestazione delle modalità a tempo"

@@ -122,6 +122,44 @@
       }
     }
   },
+  "puzzleMistakePath": "Z moich błędów",
+  "puzzleMistakePathSubtitle": "Rozdziały o tematach, w których mylisz się najczęściej",
+  "puzzleMistakePathIntro": "Każdy rozdział zbiera zadania powstałe z twoich błędów w jednym temacie, od najczęstszego.",
+  "puzzleMistakePathEmpty": "Na razie brak rozdziałów. Obejrzyj kilka partii i zapisz swoje błędy jako zadania: temat staje się rozdziałem, gdy pomylisz się w nim co najmniej dwa razy.",
+  "puzzleMistakeChapterNumber": "Rozdział {n}",
+  "@puzzleMistakeChapterNumber": {
+    "description": "Numero del capitolo personale",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleMistakeChapterPuzzles": "{count, plural, one{{count} zadanie z twoich błędów} few{{count} zadania z twoich błędów} many{{count} zadań z twoich błędów} other{{count} zadania z twoich błędów}}",
+  "@puzzleMistakeChapterPuzzles": {
+    "description": "Puzzle di un capitolo personale",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleMistakeChapterProgress": "Próby: {done} z {total}",
+  "@puzzleMistakeChapterProgress": {
+    "description": "Puzzle provati su quelli del capitolo",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleMistakeChapterNew": "Do rozpoczęcia",
+  "puzzleMistakeChapterInProgress": "W toku",
+  "puzzleMistakeChapterRested": "Na dziś gotowe",
+  "puzzleMistakeChapterDone": "Opanowany",
   "puzzleSectionTimed": "Tryby na czas",
   "@puzzleSectionTimed": {
     "description": "Intestazione delle modalità a tempo"
