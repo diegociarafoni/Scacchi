@@ -30,9 +30,9 @@ Rokko è open source e gratuito. Questi vincoli valgono per ogni voce.
 |---|---|---|
 | 0.11.0 | Multilingue | Solo la traduzione dei testi (U4), già in corso |
 | 0.12.0 | Giocare meglio | Premossa, frecce e cerchi, schermo acceso, tocco, cadenze libere e ritardo, annullamento con consenso, barra di valutazione in partita, comandi di partita (U1, U3, U7), icone più curate (U12) |
-| 0.13.0 | Studiare meglio | Varianti salvate in PGN, note ovunque, mosse «Libro» nella revisione, cache persistente, precisione per fase nelle statistiche, scheda Tu e impostazioni in sezioni (U5, U6), funzioni scopribili (U10) |
+| 0.13.0 | Studiare meglio | Varianti salvate in PGN, note ovunque, mosse «Libro» nella revisione, cache persistente, precisione per fase nelle statistiche, scheda Tu e impostazioni in sezioni (U5, U6) e funzioni scopribili (U10), già consegnate; anticipati dalla 0.15.0 l'orologio nelle partite a distanza (A-26) e il profilo bambino coerente (U9) |
 | 0.14.0 | Pronta per gli store | Schermata «Informazioni», dichiarazioni sulla privacy, architetture del motore, iOS e F-Droid, dimensione, riduzione animazioni, schermo diviso e pieghevoli, persistenza e migrazioni, avvio rapido, identità visiva e golden (U2, U8) |
-| 0.15.0 | Storia, tornei e progressi | Evolutive della storia (S1-S6), percorso «dai miei errori», tornei con partite reali, orologio nelle partite a distanza, profilo bambino e multigiocatore coerenti |
+| 0.15.0 | Storia, tornei e progressi | Evolutive della storia (S1-S6), percorso «dai miei errori», tornei con partite reali |
 | Dopo | Da valutare | Bot «ombra», lettura della posizione da fotocamera, altre varianti, modalità alla cieca in partita, widget della Home, scacchiere Bluetooth e le idee in fondo al documento |
 
 ## A. Da fare o parziali
