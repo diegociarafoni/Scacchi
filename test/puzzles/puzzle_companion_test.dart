@@ -48,7 +48,7 @@ Future<void> _pump(
     trainer: trainer,
     puzzle: single ? backRank : null,
     feed: single ? null : TwoPuzzles(trainer, backRank, castle),
-    leaveWhenFinished: leave,
+    continueWhenFinished: leave,
     companionBuilder: (context, {required solved}) =>
         Text(solved ? 'Bravo, l\'hai visto subito!' : 'Riproviamo', key: _line),
     onActivity: (_) async =>
@@ -85,33 +85,51 @@ void main() {
   });
 
   group('uscita a fine sequenza', () {
-    testWidgets('la pagina si chiude da sola dopo l\'ultimo puzzle', (
+    testWidgets('«Continua» compare dopo l\'ultimo puzzle e chiude la pagina', (
       tester,
     ) async {
       await _pump(tester, Device.phoneMedium, single: true, leave: true);
-      expect(find.byType(PuzzlePage), findsOneWidget);
+      expect(find.text('Continua'), findsNothing);
       await tapMove(tester, 'a1a8');
-      // Resta il tempo di leggere l'esito e il commento.
-      await tester.pump(const Duration(seconds: 1));
       expect(find.byType(PuzzlePage), findsOneWidget);
-      await tester.pumpAndSettle(const Duration(seconds: 3));
+      expect(find.text('Continua'), findsOneWidget);
+      await tester.tap(find.text('Continua'));
+      await tester.pumpAndSettle();
       expect(find.byType(PuzzlePage), findsNothing);
     });
 
-    testWidgets('con altri puzzle da fare resta aperta', (tester) async {
+    testWidgets('con altri puzzle da fare c\'è «Prossimo», non «Continua»', (
+      tester,
+    ) async {
       await _pump(tester, Device.phoneMedium, leave: true);
       await tapMove(tester, 'a1a8');
-      await tester.pump(const Duration(seconds: 5));
-      expect(find.byType(PuzzlePage), findsOneWidget);
+      expect(find.text('Continua'), findsNothing);
       expect(find.text('Prossimo'), findsOneWidget);
     });
 
-    testWidgets('senza l\'opzione non si chiude', (tester) async {
+    testWidgets('senza l\'opzione non compare', (tester) async {
       await _pump(tester, Device.phoneMedium, single: true);
       await tapMove(tester, 'a1a8');
-      await tester.pump(const Duration(seconds: 5));
-      expect(find.byType(PuzzlePage), findsOneWidget);
+      expect(find.text('Continua'), findsNothing);
     });
+
+    for (final scale in [1.0, 1.3]) {
+      testWidgets(
+        '«Continua» raggiungibile sul telefono piccolo, testo $scale',
+        (tester) async {
+          await _pump(
+            tester,
+            Device.phoneSmall,
+            single: true,
+            leave: true,
+            textScale: scale,
+          );
+          await tapMove(tester, 'a1a8');
+          expect(tester.takeException(), isNull);
+          expect(find.text('Continua').hitTestable(), findsOneWidget);
+        },
+      );
+    }
   });
 
   for (final device in Device.phones) {

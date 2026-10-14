@@ -39,8 +39,7 @@ class PuzzlePage extends StatefulWidget {
     this.guide,
     this.onActivity,
     this.companionBuilder,
-    this.leaveWhenFinished = false,
-    this.leaveDelay = const Duration(milliseconds: 2200),
+    this.continueWhenFinished = false,
     this.replyDelay = const Duration(milliseconds: 400),
   });
 
@@ -67,10 +66,9 @@ class PuzzlePage extends StatefulWidget {
   final Widget Function(BuildContext context, {required bool solved})?
   companionBuilder;
 
-  /// Chiude la pagina da sola, dopo [leaveDelay], quando la sequenza è finita
-  /// (per esempio i puzzle di un capitolo): chi ha chiamato prosegue da lì.
-  final bool leaveWhenFinished;
-  final Duration leaveDelay;
+  /// A sequenza finita (per esempio i puzzle di un capitolo) mostra «Continua»,
+  /// che chiude la pagina: chi ha chiamato prosegue da lì.
+  final bool continueWhenFinished;
   final Duration replyDelay;
 
   @override
@@ -105,7 +103,6 @@ class _PuzzlePageState extends State<PuzzlePage> {
   /// Cambia a ogni puzzle: un esito in ritardo non tocca il puzzle successivo.
   int _epoch = 0;
   Timer? _replyTimer;
-  Timer? _leaveTimer;
   final _stopwatch = Stopwatch();
 
   @override
@@ -141,14 +138,12 @@ class _PuzzlePageState extends State<PuzzlePage> {
   @override
   void dispose() {
     _replyTimer?.cancel();
-    _leaveTimer?.cancel();
     super.dispose();
   }
 
   void _start(Puzzle puzzle) {
     _session = PuzzleSession(puzzle);
     _feedback = _Feedback.find;
-    _leaveTimer?.cancel();
     _progressNote = null;
     _delta = null;
     _companionSolved = null;
@@ -200,21 +195,12 @@ class _PuzzlePageState extends State<PuzzlePage> {
     _recorded = true;
     _companionSolved = _session.firstTry;
     _stopwatch.stop();
-    final epoch = _epoch;
     unawaited(
       _record(
         _session.puzzle,
         solved: _session.firstTry,
         awardXp: !_session.revealed,
-        // Si esce quando punti e XP sono già in vista.
-      ).then((_) {
-        if (widget.leaveWhenFinished &&
-            mounted &&
-            epoch == _epoch &&
-            !_feed.hasNext) {
-          _scheduleLeave();
-        }
-      }),
+      ),
     );
   }
 
@@ -248,17 +234,6 @@ class _PuzzlePageState extends State<PuzzlePage> {
     if (!mounted || update == null) return;
     final note = progressText(context, update);
     if (note != null) setState(() => _progressNote = note);
-  }
-
-  void _scheduleLeave() {
-    _leaveTimer?.cancel();
-    _leaveTimer = Timer(widget.leaveDelay, () {
-      // Solo se questa pagina è ancora in cima: non chiude un foglio aperto
-      // nel frattempo.
-      if (mounted && (ModalRoute.of(context)?.isCurrent ?? false)) {
-        unawaited(Navigator.of(context).maybePop());
-      }
-    });
   }
 
   void _showHint() => setState(() => _hint = _session.hint());
@@ -490,13 +465,19 @@ class _PuzzlePageState extends State<PuzzlePage> {
                 },
               ),
             ),
-            if (!done || canSkip || _canRetry)
+            if (!done ||
+                canSkip ||
+                _canRetry ||
+                (last && widget.continueWhenFinished))
               _PuzzleActions(
                 onHint: done ? null : _showHint,
                 onSolution: done ? null : _showSolution,
                 solving: !done,
                 onRetry: _canRetry ? _retry : null,
                 onNext: canSkip ? _next : null,
+                onContinue: last && widget.continueWhenFinished
+                    ? () => unawaited(Navigator.of(context).maybePop())
+                    : null,
                 kid: kid,
               ),
           ],
@@ -556,6 +537,7 @@ class _PuzzleActions extends StatelessWidget {
     required this.solving,
     required this.onRetry,
     required this.onNext,
+    required this.onContinue,
     required this.kid,
   });
 
@@ -568,6 +550,7 @@ class _PuzzleActions extends StatelessWidget {
   /// Nullo finché non c'è nulla da rifare: il pulsante compare solo dopo un errore.
   final VoidCallback? onRetry;
   final VoidCallback? onNext;
+  final VoidCallback? onContinue;
   final bool kid;
 
   @override
@@ -613,6 +596,13 @@ class _PuzzleActions extends StatelessWidget {
               style: FilledButton.styleFrom(minimumSize: size),
               icon: const Icon(Icons.arrow_forward),
               label: Text(l.puzzleNext, softWrap: false),
+            ),
+          if (onContinue != null)
+            FilledButton.icon(
+              onPressed: onContinue,
+              style: FilledButton.styleFrom(minimumSize: size),
+              icon: const Icon(Icons.arrow_forward),
+              label: Text(l.storyContinue, softWrap: false),
             ),
         ],
       ),

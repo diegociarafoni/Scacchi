@@ -161,6 +161,7 @@ void main() {
               child: PuzzlePage(
                 trainer: trainer,
                 puzzle: backRank,
+                continueWhenFinished: true,
                 companionBuilder: (_, {required solved}) =>
                     const Text('Bravo, l\'hai visto subito!'),
                 onActivity: (_) async => const ProgressUpdate(
@@ -177,7 +178,7 @@ void main() {
           await expectLater(
             find.byType(MaterialApp),
             matchesGoldenFile(
-              'goldens/puzzle-commento-custode-${device.name}-$scale.png',
+              'goldens/puzzle-commento-continua-${device.name}-$scale.png',
             ),
           );
         },

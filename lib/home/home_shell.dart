@@ -455,7 +455,7 @@ class _HomeShellState extends State<HomeShell> {
           onActivity: _record,
           companionBuilder: (_, {required solved}) =>
               _guardianLine(chapter, solved),
-          leaveWhenFinished: true,
+          continueWhenFinished: true,
         ),
       ),
     );
