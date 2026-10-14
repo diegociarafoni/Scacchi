@@ -2,9 +2,9 @@ import 'dart:math' as math;
 
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/engine/bots.dart';
-import 'package:scacchi/engine/levels.dart';
-import 'package:scacchi/engine/style.dart';
+import 'package:rokko/engine/bots.dart';
+import 'package:rokko/engine/levels.dart';
+import 'package:rokko/engine/style.dart';
 
 import '../content_support.dart';
 

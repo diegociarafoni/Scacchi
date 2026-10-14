@@ -1,6 +1,6 @@
 import 'package:dartchess/dartchess.dart';
-import 'package:scacchi/engine/uci.dart';
-import 'package:scacchi/review/game_review.dart';
+import 'package:rokko/engine/uci.dart';
+import 'package:rokko/review/game_review.dart';
 
 // 1.e4 e5 2.Ac4 Cc6 3.Dh5 Cf6?? 4.Dxf7#
 const scholar = ['e2e4', 'e7e5', 'f1c4', 'b8c6', 'd1h5', 'g8f6', 'h5f7'];

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../l10n/app_localizations.dart';
 import '../theme/rokko_theme.dart';
+import '../theme/sheets.dart';
 import 'credits.dart';
 
 /// Informazioni sull'app: licenza, sorgenti, privacy e crediti. L'indirizzo
@@ -25,7 +26,7 @@ class AboutPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.aboutTitle)),
       body: ListView(
-        padding: const EdgeInsets.only(bottom: 24),
+        padding: context.withSystemBottom(const EdgeInsets.only(bottom: 24)),
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),

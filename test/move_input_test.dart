@@ -1,6 +1,6 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/game/move_input.dart';
+import 'package:rokko/game/move_input.dart';
 
 Position _fen(String fen) => Chess.fromSetup(Setup.parseFen(fen));
 

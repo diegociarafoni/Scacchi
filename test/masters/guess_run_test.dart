@@ -1,7 +1,7 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/masters/guess_run.dart';
-import 'package:scacchi/masters/master_game.dart';
+import 'package:rokko/masters/guess_run.dart';
+import 'package:rokko/masters/master_game.dart';
 
 const _game = MasterGame(
   id: 'legal',

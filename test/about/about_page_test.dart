@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/about/about_page.dart';
-import 'package:scacchi/about/credits.dart';
-import 'package:scacchi/settings/settings.dart';
-import 'package:scacchi/settings/settings_page.dart';
+import 'package:rokko/about/about_page.dart';
+import 'package:rokko/about/credits.dart';
+import 'package:rokko/settings/settings.dart';
+import 'package:rokko/settings/settings_page.dart';
 
 import '../localized_app.dart';
 import '../settings/settings_nav.dart';

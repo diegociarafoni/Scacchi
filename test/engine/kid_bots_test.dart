@@ -2,9 +2,9 @@ import 'dart:math' as math;
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/engine/bots.dart';
-import 'package:scacchi/game/opponent_picker.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
+import 'package:rokko/engine/bots.dart';
+import 'package:rokko/game/opponent_picker.dart';
+import 'package:rokko/l10n/app_localizations.dart';
 
 void main() {
   group('RP-06 bot amichevoli', () {

@@ -9,6 +9,7 @@ import '../archive/saved_game.dart';
 import '../game/chess_game.dart';
 import '../game/clock.dart';
 import '../l10n/app_localizations.dart';
+import '../theme/sheets.dart';
 import 'board_align_page.dart';
 import 'board_photo.dart';
 import 'photo_source.dart';
@@ -352,7 +353,7 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
   Widget _setup() {
     final l10n = physicalL10n(context);
     return ListView(
-      padding: const EdgeInsets.all(16),
+      padding: context.withSystemBottom(const EdgeInsets.all(16)),
       children: [
         Text(l10n.physicalIntro),
         const SizedBox(height: 16),

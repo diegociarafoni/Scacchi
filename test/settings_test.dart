@@ -2,8 +2,8 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart' show Color, ThemeMode;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/settings/notation.dart';
-import 'package:scacchi/settings/settings.dart';
+import 'package:rokko/settings/notation.dart';
+import 'package:rokko/settings/settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {

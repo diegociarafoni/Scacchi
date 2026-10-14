@@ -1,15 +1,15 @@
 import 'package:chessground/chessground.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/engine/bots.dart';
-import 'package:scacchi/engine/computer_player.dart';
-import 'package:scacchi/game/game_page.dart';
-import 'package:scacchi/game/speech_bubble.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/progress/avatar_art.dart';
-import 'package:scacchi/progress/guardian_avatar.dart';
-import 'package:scacchi/storage/key_value_store.dart';
-import 'package:scacchi/theme/rokko_theme.dart';
+import 'package:rokko/engine/bots.dart';
+import 'package:rokko/engine/computer_player.dart';
+import 'package:rokko/game/game_page.dart';
+import 'package:rokko/game/speech_bubble.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/progress/avatar_art.dart';
+import 'package:rokko/progress/guardian_avatar.dart';
+import 'package:rokko/storage/key_value_store.dart';
+import 'package:rokko/theme/rokko_theme.dart';
 
 import '../computer_fakes.dart';
 import '../game_actions.dart';

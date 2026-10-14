@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/path/curriculum.dart';
-import 'package:scacchi/progress/activity.dart';
-import 'package:scacchi/settings/settings.dart';
-import 'package:scacchi/summary/week_log.dart';
-import 'package:scacchi/summary/weekly_summary_page.dart';
+import 'package:rokko/path/curriculum.dart';
+import 'package:rokko/progress/activity.dart';
+import 'package:rokko/settings/settings.dart';
+import 'package:rokko/summary/week_log.dart';
+import 'package:rokko/summary/weekly_summary_page.dart';
 
 import '../localized_app.dart';
 

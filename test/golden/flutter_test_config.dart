@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:scacchi/engine/uci_transport.dart';
+import 'package:rokko/engine/uci_transport.dart';
 
 import '../content_support.dart';
 import '../support/golden_fonts.dart';

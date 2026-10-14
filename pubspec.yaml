@@ -1,5 +1,5 @@
-name: scacchi
-description: "Scacchi offline, open source e gratuito"
+name: rokko
+description: "Rokko offline, open source e gratuito"
 publish_to: 'none'
 
 version: 1.0.0+1

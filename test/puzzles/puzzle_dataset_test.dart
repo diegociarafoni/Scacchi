@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/puzzles/puzzle.dart';
-import 'package:scacchi/puzzles/themes.dart';
+import 'package:rokko/puzzles/puzzle.dart';
+import 'package:rokko/puzzles/themes.dart';
 
 void main() {
   final puzzles = Puzzle.parseCsvFile(

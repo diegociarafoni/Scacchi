@@ -2,11 +2,11 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart' show Side;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/engine/computer_player.dart';
-import 'package:scacchi/game/challenge.dart';
-import 'package:scacchi/game/game_page.dart';
-import 'package:scacchi/progress/activity.dart';
-import 'package:scacchi/settings/settings.dart';
+import 'package:rokko/engine/computer_player.dart';
+import 'package:rokko/game/challenge.dart';
+import 'package:rokko/game/game_page.dart';
+import 'package:rokko/progress/activity.dart';
+import 'package:rokko/settings/settings.dart';
 
 import '../computer_fakes.dart';
 import '../game_actions.dart';

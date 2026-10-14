@@ -1,9 +1,9 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/engine/levels.dart';
-import 'package:scacchi/openings/opening_game.dart';
-import 'package:scacchi/openings/opening_game_dialog.dart';
+import 'package:rokko/engine/levels.dart';
+import 'package:rokko/openings/opening_game.dart';
+import 'package:rokko/openings/opening_game_dialog.dart';
 
 import '../localized_app.dart';
 

@@ -10,6 +10,7 @@ import '../archive/saved_game.dart';
 import '../l10n/app_localizations.dart';
 import '../review/game_phase.dart';
 import '../review/review_l10n.dart';
+import '../theme/sheets.dart';
 import 'local_rating.dart';
 import 'stats.dart';
 
@@ -66,7 +67,7 @@ class _StatsPageState extends State<StatsPage> {
                 stats.localGames == 0
           ? _Message(l10n.statsEmpty)
           : ListView(
-              padding: const EdgeInsets.all(16),
+              padding: context.withSystemBottom(const EdgeInsets.all(16)),
               children: [
                 _RatingCard(rating: rating),
                 const SizedBox(height: 16),

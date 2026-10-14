@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
+import 'package:rokko/l10n/app_localizations.dart';
 
 void main() {
   test('la data del trofeo in italiano resta gg/mm/aaaa', () {

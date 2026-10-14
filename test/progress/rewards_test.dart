@@ -1,14 +1,14 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/progress/activity.dart';
-import 'package:scacchi/progress/avatar.dart';
-import 'package:scacchi/progress/progress_feedback.dart';
-import 'package:scacchi/progress/progress_state.dart';
-import 'package:scacchi/progress/progress_tracker.dart';
-import 'package:scacchi/progress/rewards.dart';
-import 'package:scacchi/progress/xp.dart';
-import 'package:scacchi/settings/settings.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/progress/activity.dart';
+import 'package:rokko/progress/avatar.dart';
+import 'package:rokko/progress/progress_feedback.dart';
+import 'package:rokko/progress/progress_state.dart';
+import 'package:rokko/progress/progress_tracker.dart';
+import 'package:rokko/progress/rewards.dart';
+import 'package:rokko/progress/xp.dart';
+import 'package:rokko/settings/settings.dart';
 
 void main() {
   const settings = ProgressSettings();

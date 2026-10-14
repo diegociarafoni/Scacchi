@@ -1,11 +1,11 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart' show SizedBox, Size;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/engine/uci.dart';
-import 'package:scacchi/openings/opening_book.dart';
-import 'package:scacchi/review/game_review.dart';
-import 'package:scacchi/review/move_classification.dart';
-import 'package:scacchi/review/review_page.dart';
+import 'package:rokko/engine/uci.dart';
+import 'package:rokko/openings/opening_book.dart';
+import 'package:rokko/review/game_review.dart';
+import 'package:rokko/review/move_classification.dart';
+import 'package:rokko/review/review_page.dart';
 
 import '../localized_app.dart';
 import 'fake_engine.dart';

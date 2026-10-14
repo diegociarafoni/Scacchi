@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/puzzles/glicko2.dart';
+import 'package:rokko/puzzles/glicko2.dart';
 
 void main() {
   group('RF-81 punteggio Glicko-2', () {

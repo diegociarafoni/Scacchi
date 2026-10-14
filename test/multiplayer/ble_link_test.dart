@@ -4,9 +4,9 @@ import 'dart:typed_data';
 
 import 'package:bluetooth_low_energy/bluetooth_low_energy.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/multiplayer/ble_link.dart';
-import 'package:scacchi/multiplayer/ble_transport.dart';
-import 'package:scacchi/multiplayer/transport.dart';
+import 'package:rokko/multiplayer/ble_link.dart';
+import 'package:rokko/multiplayer/ble_transport.dart';
+import 'package:rokko/multiplayer/transport.dart';
 
 import '../support/wait.dart';
 

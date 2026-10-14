@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart' show Locale;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
+import 'package:rokko/l10n/app_localizations.dart';
 
 AppLocalizations _l(String code) => lookupAppLocalizations(Locale(code));
 

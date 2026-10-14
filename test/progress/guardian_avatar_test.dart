@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/engine/bots.dart';
-import 'package:scacchi/progress/avatar.dart';
-import 'package:scacchi/progress/guardian_avatar.dart';
-import 'package:scacchi/story/story.dart';
+import 'package:rokko/engine/bots.dart';
+import 'package:rokko/progress/avatar.dart';
+import 'package:rokko/progress/guardian_avatar.dart';
+import 'package:rokko/story/story.dart';
 
 void main() {
   group('RP-08 custodi della Storia', () {

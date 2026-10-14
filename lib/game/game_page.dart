@@ -63,6 +63,7 @@ import '../storage/key_value_store.dart';
 import '../tablebase/shared_tablebase.dart';
 import '../theme/rokko_icons.dart';
 import '../theme/rokko_theme.dart';
+import '../theme/sheets.dart';
 import 'board_drawing.dart';
 import 'board_swipe.dart';
 import 'challenge.dart';
@@ -1909,9 +1910,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   Future<void> _newGame() async {
     final picked = await _whileSuspended<_TimeChoice>(() async {
-      final result = await showModalBottomSheet<Object>(
+      final result = await showRokkoSheet<Object>(
         context: context,
-        isScrollControlled: true,
         builder: (context) => _TimeControlSheet(
           kid: _kid,
           variant: _kid ? Variant.standard : _chosenVariant,
@@ -2110,9 +2110,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       if (position == null || !mounted) return null;
       var chosen = _setup.copyWith(opponent: Opponent.human);
       if (widget.computerAvailable) {
-        final picked = await showModalBottomSheet<GameSetup>(
+        final picked = await showRokkoSheet<GameSetup>(
           context: context,
-          isScrollControlled: true,
           builder: (context) => _PositionSheet(
             setup: chosen,
             adaptiveLevel: _adaptive.level,
@@ -3429,10 +3428,9 @@ class _GameActions extends StatelessWidget {
     }
 
     unawaited(
-      showModalBottomSheet<void>(
+      showRokkoSheet<void>(
         context: context,
         showDragHandle: true,
-        isScrollControlled: true,
         builder: (sheet) => SafeArea(
           child: SingleChildScrollView(
             child: Column(

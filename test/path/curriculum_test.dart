@@ -1,8 +1,8 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/engine/levels.dart';
-import 'package:scacchi/path/curriculum.dart';
-import 'package:scacchi/path/exercise.dart';
+import 'package:rokko/engine/levels.dart';
+import 'package:rokko/path/curriculum.dart';
+import 'package:rokko/path/exercise.dart';
 
 void main() {
   test('RG-03 capitoli richiesti nell\'ordine del percorso', () {

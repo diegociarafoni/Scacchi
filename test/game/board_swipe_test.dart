@@ -1,7 +1,7 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/game/board_swipe.dart';
+import 'package:rokko/game/board_swipe.dart';
 
 void main() {
   const size = 400.0;

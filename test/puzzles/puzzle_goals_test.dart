@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/puzzles/mode_guide.dart';
-import 'package:scacchi/puzzles/puzzle_library.dart';
-import 'package:scacchi/puzzles/puzzle_page.dart';
-import 'package:scacchi/puzzles/puzzle_run.dart';
-import 'package:scacchi/puzzles/puzzle_run_page.dart';
-import 'package:scacchi/puzzles/puzzle_trainer.dart';
-import 'package:scacchi/puzzles/review_queue.dart';
-import 'package:scacchi/storage/key_value_store.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/puzzles/mode_guide.dart';
+import 'package:rokko/puzzles/puzzle_library.dart';
+import 'package:rokko/puzzles/puzzle_page.dart';
+import 'package:rokko/puzzles/puzzle_run.dart';
+import 'package:rokko/puzzles/puzzle_run_page.dart';
+import 'package:rokko/puzzles/puzzle_trainer.dart';
+import 'package:rokko/puzzles/review_queue.dart';
+import 'package:rokko/storage/key_value_store.dart';
 
 import '../localized_app.dart';
 
