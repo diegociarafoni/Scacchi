@@ -64,8 +64,15 @@ class _ScacchiAppState extends State<ScacchiApp> with WidgetsBindingObserver {
     await _loadContent(settings.value.language);
     settings.addListener(_onSettings);
     if (!mounted) return;
+    // Prima del primo disegno, così nemmeno il primo fotogramma si anima.
+    settings.setReduceMotion(
+      WidgetsBinding
+          .instance
+          .platformDispatcher
+          .accessibilityFeatures
+          .disableAnimations,
+    );
     setState(() => _settings = settings);
-    _syncReduceMotion();
   }
 
   AppLanguage? _contentFor;

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/main.dart';
@@ -65,9 +66,12 @@ void main() {
       );
       await tester.pumpAndSettle();
       expect(SettingsScope.maybeOf(context())!.reduceMotion, isTrue);
+      final builders = Theme.of(context()).pageTransitionsTheme.builders;
+      expect(builders[TargetPlatform.android], isA<NoTransitionsBuilder>());
+      // Su iOS resta il gesto per tornare indietro dal bordo.
       expect(
-        Theme.of(context()).pageTransitionsTheme.builders.values,
-        everyElement(isA<NoTransitionsBuilder>()),
+        builders[TargetPlatform.iOS],
+        isA<CupertinoPageTransitionsBuilder>(),
       );
 
       tester.platformDispatcher.clearAccessibilityFeaturesTestValue();

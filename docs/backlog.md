@@ -67,7 +67,7 @@ Rokko è open source e gratuito. Questi vincoli valgono per ogni voce.
 | A-19 / RNF-02 | **iOS e F-Droid**: build iOS in CI, Fastlane per TestFlight, metadati e ricetta per F-Droid | parziale | P0 | grande | 0.14.0 | `docs/store.md`: iOS «non ancora configurato»; nessun file F-Droid |
 | A-20 / RNF-04 | **Dimensione sotto i 60 MB**, con valutazione di una rete NNUE più piccola e misura dell'impatto sulla forza | fatta | P0 | media | 0.14.0 | `tool/policy.json` a 60 MB; filtro delle architetture nel rilascio e `third_party/chessground`; misura in `docs/qualita.md` |
 | A-21 / RNF-06 | **Layout adattivo** con schermo diviso e pieghevoli, e test sulle due colonne | parziale | P0 | media | 0.14.0 | due colonne in `game_page.dart:2586` e poche altre schermate |
-| A-22 / RNF-07 | **Ridurre le animazioni** anche dall'impostazione di sistema, con test | fatta | P0 | piccola | 0.14.0 | `AppSettings.reduceMotion` azzera i pezzi e le transizioni; la barra di valutazione della revisione non lo legge ancora |
+| A-22 / RNF-07 | **Ridurre le animazioni** anche dall'impostazione di sistema, con test | parziale | P0 | piccola | 0.14.0 | `AppSettings.reduceMotion` azzera i pezzi e le transizioni (su iOS resta il gesto di ritorno); restano le animazioni di dialoghi, fogli e della barra di valutazione della revisione |
 | A-23 / RNF-08 | **Persistenza**: oggi file JSON versionati (`lib/storage/json_file.dart`). Decidere per iscritto se restare su JSON e aggiungere la catena di migrazioni (piccola), o passare a un database locale (grande). Proposta: restare su JSON | da fare | P0 | piccola | 0.14.0 | `JsonFile` rifiuta tutto ciò che non è tra 1 e la versione corrente |
 
 ### A.4 Progressi, tornei, multigiocatore
