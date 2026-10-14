@@ -31,9 +31,9 @@ Rokko è open source e gratuito. Questi vincoli valgono per ogni voce.
 | 0.11.0 | Multilingue | Solo la traduzione dei testi, consegnata in parte: il completamento (U4) passa alla 0.14.0 |
 | 0.12.0 | Giocare meglio | Premossa, frecce e cerchi, schermo acceso, tocco, cadenze libere e ritardo, annullamento con consenso, barra di valutazione in partita, barra del titolo più semplice (U7); cadenze a più fasi (A-5), comandi di partita (U1), layout (U3) e icone (U12) passano alla 0.14.0 |
 | 0.13.0 | Studiare meglio | Varianti salvate in PGN, note ovunque, mosse «Libro» nella revisione, cache persistente, precisione per fase nelle statistiche, scheda Tu e impostazioni in sezioni (U5, U6) e funzioni scopribili (U10), già consegnate; anticipati dalla 0.15.0 l'orologio nelle partite a distanza (A-26) e il profilo bambino coerente (U9) |
-| 0.14.0 | Pronta per gli store | Schermata «Informazioni», dichiarazioni sulla privacy, architetture del motore, iOS e F-Droid, dimensione, riduzione animazioni, schermo diviso e pieghevoli, persistenza e migrazioni, avvio rapido, identità visiva e golden (U2, U8); in più testi tutti localizzati (U4), cadenze a più fasi (A-5), comandi di partita meno affollati (U1), layout senza spazio morto (U3), icone più curate (U12), percorso «dai miei errori» (A-27), mappa del viaggio (S3) e pezzi sbloccabili (S5) |
+| 0.14.0 | Pronta per gli store | Schermata «Informazioni», dichiarazioni sulla privacy, architetture del motore, iOS e F-Droid (questi quattro: da decidere, vedi A-16…A-19), dimensione, riduzione animazioni, schermo diviso e pieghevoli, persistenza e migrazioni, avvio rapido, identità visiva e golden (U2, U8); in più testi tutti localizzati (U4), cadenze a più fasi (A-5), comandi di partita meno affollati (U1), layout senza spazio morto (U3), icone più curate (U12), percorso «dai miei errori» (A-27), mappa del viaggio (S3) e pezzi sbloccabili (S5) |
 | 0.15.0 | Storia, tornei e progressi | Evolutive della storia (S1, S2, S4, S6) e tornei con partite reali |
-| Dopo | Da valutare | Bot «ombra», lettura della posizione da fotocamera, altre varianti, widget della Home, scacchiere Bluetooth e le idee in fondo al documento |
+| 0.15.0 o dopo | Da decidere con Diego | Bot «ombra», lettura della posizione da fotocamera, altre varianti, widget della Home, scacchiere Bluetooth e le idee in fondo al documento |
 
 ## A. Da fare o parziali
 
@@ -61,10 +61,10 @@ Rokko è open source e gratuito. Questi vincoli valgono per ogni voce.
 | ID | Funzione | Stato | Pri | Dim | Versione | Evidenza |
 |---|---|---|---|---|---|---|
 | A-15 / RV-03, RV-04 | **Schermata «Informazioni»** con licenza GPL, link ai sorgenti e crediti degli asset | fatta | P0 | piccola | 0.14.0 | `lib/about/about_page.dart` e `credits.dart`, aperta dall'ultima sezione delle Impostazioni (`settings_page.dart`) |
-| A-16 / RV-05 | **Verifica scritta** della compatibilità dell'App Store con la GPL del motore | rinviata da Diego | P0 | piccola | 0.14.0 | `docs/licenza.md`, `NOTICE.md` |
-| A-17 / RNF-10 | **Dichiarazioni «nessun dato raccolto»**: `PrivacyInfo.xcprivacy`, testi per le schede di sicurezza dei dati degli store, `ITSAppUsesNonExemptEncryption` | rinviata da Diego | P0 | piccola | 0.14.0 | `docs/sicurezza.md`, «Da fare» |
-| A-18 / RNF-03 | **Motore per tutte le architetture** (Android armv7 e x86_64 oltre ad arm64) | rinviata da Diego | P0 | piccola | 0.14.0 | `docs/rilascio-android.md:71-74` |
-| A-19 / RNF-02 | **iOS e F-Droid**: build iOS in CI, Fastlane per TestFlight, metadati e ricetta per F-Droid | rinviata da Diego | P0 | grande | 0.14.0 | `docs/store.md`: iOS «non ancora configurato»; nessun file F-Droid |
+| A-16 / RV-05 | **Verifica scritta** della compatibilità dell'App Store con la GPL del motore | rinviata da Diego | P0 | piccola | 0.15.0, da decidere | `docs/licenza.md`, `NOTICE.md` |
+| A-17 / RNF-10 | **Dichiarazioni «nessun dato raccolto»**: `PrivacyInfo.xcprivacy`, testi per le schede di sicurezza dei dati degli store, `ITSAppUsesNonExemptEncryption` | rinviata da Diego | P0 | piccola | 0.15.0, da decidere | `docs/sicurezza.md`, «Da fare» |
+| A-18 / RNF-03 | **Motore per tutte le architetture** (Android armv7 e x86_64 oltre ad arm64) | rinviata da Diego | P0 | piccola | 0.15.0, da decidere | `docs/rilascio-android.md:71-74` |
+| A-19 / RNF-02 | **iOS e F-Droid**: build iOS in CI, Fastlane per TestFlight, metadati e ricetta per F-Droid | rinviata da Diego | P0 | grande | 0.15.0, da decidere | `docs/store.md`: iOS «non ancora configurato»; nessun file F-Droid |
 | A-20 / RNF-04 | **Dimensione sotto i 60 MB**, con valutazione di una rete NNUE più piccola e misura dell'impatto sulla forza | fatta | P0 | media | 0.14.0 | `apkMaxMegabytes` a 60 in `tool/policy.json`, controllato da `tool/check_size.dart`; `ROKKO_NATIVE_ABIS=arm64-v8a` nel rilascio e `third_party/chessground` ridotta; misura e valutazione della rete NNUE (già la piccola, circa 1 MB) in `docs/qualita.md` |
 | A-21 / RNF-06 | **Layout adattivo** con schermo diviso e pieghevoli, e test sulle due colonne | fatta | P0 | media | 0.14.0 | Home con colonna laterale da 840 dp e larghezza massima (#301); partita a due colonne in orizzontale (`game_page.dart`); test/layout/wide_screens_test.dart (nella PR di A-21) prova Home, Impostazioni e partita (a due colonne da tablet) su tablet, desktop, schermo diviso e pieghevole |
 | A-22 / RNF-07 | **Ridurre le animazioni** anche dall'impostazione di sistema, con test | fatta | P0 | piccola | 0.14.0 | `AppSettings.reduceMotion` e l'impostazione di sistema azzerano pezzi, pagine (su iOS resta il gesto di ritorno), dialoghi e fogli (`lib/theme/motion.dart`) e la barra di valutazione; `test/theme/motion_test.dart` |
@@ -82,12 +82,12 @@ Rokko è open source e gratuito. Questi vincoli valgono per ogni voce.
 
 | ID | Funzione | Stato | Pri | Dim | Note |
 |---|---|---|---|---|---|
-| A-28 | **Bot «ombra»** che imita lo stile personale (aperture e tempi di riflessione dall'archivio) | da fare | P2 | grande | ingredienti in `lib/openings/personal_tree.dart` e `lib/engine/style.dart` |
-| A-29 | **Lettura della posizione con la fotocamera** (diagramma o scacchiera reale) | da fare | P2 | grande | richiede un modello locale; «Mossa dalla foto» è spenta nelle release dal flag `ROKKO_PHOTO_MOVE` |
-| A-30 | **Altre varianti** (Crazyhouse, Atomica, Antichess, Orda, Corsa dei re) | da fare | P2 | media | le regole sono supportate da `dartchess`; per giocarle contro il computer serve il motore in Dart di RF-123 |
-| A-32 | **Widget della schermata home** con il puzzle del giorno e la serie | da fare | P2 | media | |
-| A-33 | **Scacchiere elettroniche Bluetooth** | da fare | P2 | grande | permessi e protocolli diversi per marca |
-| A-34 | **Test più solidi** per le funzioni già fatte: rendering di mosse legali, ultima mossa e coordinate (RF-02, RF-03, RF-07), selettore di promozione (RF-04), conferma della mossa (RF-09), velocità animazioni (RF-12), suono e grafica sotto i 10 secondi (RF-41), vibrazione (RM-03), sospensione del motore in background (RNF-05), promemoria locali (RG-11), tetto di dimensione a 60 MB (RNF-04); ID nei test di RF-68, RF-91, RF-100, RF-103, RF-112 | parziale | P1 | media | verificato per elenco dei test, non eseguendoli |
+| A-28 | **Bot «ombra»** che imita lo stile personale (aperture e tempi di riflessione dall'archivio) | da fare | P2 | grande | ingredienti in `lib/openings/personal_tree.dart` e `lib/engine/style.dart`. Da decidere con Diego se farla, e se nella 0.15.0. |
+| A-29 | **Lettura della posizione con la fotocamera** (diagramma o scacchiera reale) | da fare | P2 | grande | richiede un modello locale; «Mossa dalla foto» è spenta nelle release dal flag `ROKKO_PHOTO_MOVE`. Da decidere con Diego se farla, e se nella 0.15.0. |
+| A-30 | **Altre varianti** (Crazyhouse, Atomica, Antichess, Orda, Corsa dei re) | da fare | P2 | media | le regole sono supportate da `dartchess`; per giocarle contro il computer serve il motore in Dart di RF-123. Da decidere con Diego se farla, e se nella 0.15.0. |
+| A-32 | **Widget della schermata home** con il puzzle del giorno e la serie | da fare | P2 | media | Da decidere con Diego se farla, e se nella 0.15.0. |
+| A-33 | **Scacchiere elettroniche Bluetooth** | da fare | P2 | grande | permessi e protocolli diversi per marca. Da decidere con Diego se farla, e se nella 0.15.0. |
+| A-34 | **Test più solidi** per le funzioni già fatte: rendering di mosse legali, ultima mossa e coordinate (RF-02, RF-03, RF-07), selettore di promozione (RF-04), conferma della mossa (RF-09), velocità animazioni (RF-12), suono e grafica sotto i 10 secondi (RF-41), vibrazione (RM-03), sospensione del motore in background (RNF-05), promemoria locali (RG-11), tetto di dimensione a 60 MB (RNF-04); ID nei test di RF-68, RF-91, RF-100, RF-103, RF-112 | parziale | P1 | media | verificato per elenco dei test, non eseguendoli. Da decidere con Diego se farla, e se nella 0.15.0. |
 
 ### A.6 Storia (S) e interfaccia (U)
 
@@ -113,10 +113,10 @@ Gli «interventi rapidi» (marchio nel titolo, arancione d'azione, gruppi nella 
 
 ### A.7 Idee oltre i requisiti, da valutare
 
-- **Ripasso a cicli** dello stesso insieme di puzzle, sempre più veloci. Piccola, riusa i puzzle esistenti.
-- **Revisione vocale a mani libere** con la sintesi vocale del sistema, per rigiocare sulla scacchiera fisica. Media.
-- **Simultanea contro i bot**: 3-5 partite contemporanee con passaggio rapido tra le scacchiere. Grande.
-- **Esporta GIF** della partita, oltre all'immagine della posizione (RF-104). Media.
+- **Ripasso a cicli** dello stesso insieme di puzzle, sempre più veloci. Piccola, riusa i puzzle esistenti. Da decidere con Diego se farla, e se nella 0.15.0.
+- **Revisione vocale a mani libere** con la sintesi vocale del sistema, per rigiocare sulla scacchiera fisica. Media. Da decidere con Diego se farla, e se nella 0.15.0.
+- **Simultanea contro i bot**: 3-5 partite contemporanee con passaggio rapido tra le scacchiere. Grande. Da decidere con Diego se farla, e se nella 0.15.0.
+- **Esporta GIF** della partita, oltre all'immagine della posizione (RF-104). Media. Da decidere con Diego se farla, e se nella 0.15.0.
 
 ## B. Specifiche complete
 
