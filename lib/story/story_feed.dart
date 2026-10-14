@@ -12,7 +12,6 @@ class StoryPuzzleFeed implements PuzzleFeed {
     required this.theme,
     required this.goal,
     int? maxRating,
-    this.onOutcome,
     this.onHelp,
   }) : _cap = maxRating?.toDouble(),
        _inner = RatedFeed(
@@ -26,9 +25,6 @@ class StoryPuzzleFeed implements PuzzleFeed {
   final int goal;
   final RatedFeed _inner;
   final double? _cap;
-
-  /// Chiamata a ogni puzzle concluso, con l'esito.
-  final void Function(bool solved)? onOutcome;
 
   /// Chiamata una volta, quando dopo due errori di fila si passa a puzzle più
   /// facili.
@@ -68,7 +64,6 @@ class StoryPuzzleFeed implements PuzzleFeed {
       if (_failedInRow == 2) onHelp?.call();
     }
     final outcome = await _inner.finished(puzzle, solved: solved);
-    onOutcome?.call(solved);
     return outcome;
   }
 }

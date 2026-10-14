@@ -443,7 +443,6 @@ class _HomeShellState extends State<HomeShell> {
       theme: theme,
       goal: remaining,
       maxRating: chapter.puzzleRating,
-      onOutcome: (solved) => _guardianSnack(context, chapter, solved),
       onHelp: () => _helpSnack(context),
     );
     await Navigator.of(context).push(
@@ -454,6 +453,9 @@ class _HomeShellState extends State<HomeShell> {
           feed: feed,
           title: storyL10n(context).chapterTitle(chapter),
           onActivity: _record,
+          companionBuilder: (_, {required solved}) =>
+              _guardianLine(chapter, solved),
+          continueWhenFinished: true,
         ),
       ),
     );
@@ -479,29 +481,15 @@ class _HomeShellState extends State<HomeShell> {
     });
   }
 
-  /// Il custode commenta il puzzle appena concluso, senza bloccare.
-  void _guardianSnack(BuildContext context, StoryChapter chapter, bool solved) {
-    if (!context.mounted) return;
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          behavior: SnackBarBehavior.floating,
-          duration: const Duration(seconds: 3),
-          content: GuardianSays(
-            chapter: chapter,
-            moment: solved
-                ? GuardianMoment.puzzleOk
-                : GuardianMoment.puzzleRetry,
-            expression: solved
-                ? AvatarExpression.happy
-                : AvatarExpression.encouraging,
-            size: 40,
-            style: const TextStyle(fontStyle: FontStyle.italic),
-          ),
-        ),
-      );
-  }
+  /// Il custode commenta il puzzle appena concluso, dentro la scheda
+  /// dell'esito: un fumetto a parte coprirebbe i pulsanti.
+  Widget _guardianLine(StoryChapter chapter, bool solved) => GuardianSays(
+    chapter: chapter,
+    moment: solved ? GuardianMoment.puzzleOk : GuardianMoment.puzzleRetry,
+    expression: solved ? AvatarExpression.happy : AvatarExpression.encouraging,
+    size: 36,
+    style: const TextStyle(fontStyle: FontStyle.italic),
+  );
 
   /// Bot del torneo: un avversario per ogni livello del motore.
   static final _bots = [

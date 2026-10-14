@@ -101,3 +101,7 @@ I puzzle di un capitolo possono avere un tetto di difficoltà (`StoryChapter.puz
 | `story_l10n.dart` | Testi dei capitoli e battute dei custodi |
 | `guardian_says.dart` | `GuardianSays`: il custode (avatar e battuta) |
 | `story_page.dart` | Schermata della storia: riepilogo, binario dei capitoli, passi |
+
+## Puzzle del capitolo: esito e uscita
+
+A puzzle concluso il commento del custode («Bravo, l'hai visto subito!») non è più un avviso flottante, che copriva i pulsanti: entra nella scheda dell'esito, sotto punteggio e XP (`PuzzlePage.companionBuilder`). Quando i puzzle del capitolo sono finiti, al posto di «Prossimo» compare «Continua» (`PuzzlePage.continueWhenFinished`): riporta al menu della Storia, dove si apre subito il foglio «Puzzle risolti!» con «Sfida {nome}» e «Più tardi», come per le lezioni. Verificato su telefono piccolo, medio e grande, con testo al 130% e in tema scuro.
