@@ -22,7 +22,7 @@ Stato, righe del materiale e scacchiera stanno attaccati ai comandi; l'avanzo di
 
 ## Tablet e orizzontale
 
-La Home usa le classi di larghezza di Material (`WindowSize` in `lib/theme/adaptive.dart`): sotto 840 dp, compresi schermo diviso e pieghevoli chiusi, resta la barra in basso; da 840 dp la barra diventa una colonna laterale (`NavigationRail`) e il contenuto si ferma a 840 dp di larghezza, centrato in alto.
+La Home usa le classi di larghezza di Material (`WindowSize` in `lib/theme/adaptive.dart`): sotto 840 dp, compresi schermo diviso e pieghevoli chiusi, resta la barra in basso; da 840 dp la barra diventa una colonna laterale (`NavigationRail`) e il contenuto si ferma a 840 dp di larghezza, centrato in alto. `test/layout/wide_screens_test.dart` apre la Home con le sue schede, le Impostazioni e la partita su tablet, desktop, schermo diviso (stretto e basso) e pieghevole aperto, e controlla che niente sfori.
 
 Quando la larghezza supera di oltre il 20% l'altezza, la scacchiera sta a sinistra e un pannello a destra contiene, dall'alto: materiale del giocatore in alto, stato, lista delle mosse, materiale del giocatore in basso e comandi.
 
@@ -169,7 +169,7 @@ Si aprono dall'icona a forma di ingranaggio nella Home e nella barra del titolo 
 | Notazione | Figurativa (♞f3), Italiana (Cf3) o Inglese (Nf3) per le mosse mostrate (vedi [notazione.md](notazione.md)) | Figurativa |
 | «Spiegami perché» | Spiegazione dell'errore con l'allenatore (vedi [allenatore.md](allenatore.md)) | Disattiva |
 
-Se il telefono chiede di ridurre le animazioni (Android «Rimuovi animazioni», iOS «Riduci movimento»), l'app lo segue da sola: i pezzi si muovono senza animazione, qualunque sia la velocità scelta, e le pagine si aprono senza transizione (su iOS e macOS resta quella di sistema, che porta il gesto per tornare indietro). Anche dialoghi e fogli compaiono subito (`motionStyle` in `lib/theme/motion.dart`, passato a ogni `showDialog` e a `showRokkoSheet`). Resta animata la barra di valutazione della revisione. Il valore non si salva (`AppSettings.reduceMotion`, letto da `RokkoApp` e aggiornato quando cambia) e vale subito. Le animazioni delle singole schermate (per esempio il foglio di passaggio della Storia) lo leggono già da `MediaQuery.disableAnimationsOf`.
+Se il telefono chiede di ridurre le animazioni (Android «Rimuovi animazioni», iOS «Riduci movimento»), l'app lo segue da sola: i pezzi si muovono senza animazione, qualunque sia la velocità scelta, e le pagine si aprono senza transizione (su iOS e macOS resta quella di sistema, che porta il gesto per tornare indietro). Anche dialoghi e fogli compaiono subito (`motionStyle` in `lib/theme/motion.dart`, passato a ogni `showDialog` e a `showRokkoSheet`). Anche la barra di valutazione salta al nuovo valore. Il valore non si salva (`AppSettings.reduceMotion`, letto da `RokkoApp` e aggiornato quando cambia) e vale subito. Le animazioni delle singole schermate (per esempio il foglio di passaggio della Storia) lo leggono già da `MediaQuery.disableAnimationsOf`.
 
 Tema, pezzi, coordinate, mosse legali, frecce e animazioni valgono anche per le scacchiere dei problemi, delle aperture e del repertorio, che si aggiornano subito quando cambiano. La modalità tavolo vale solo per la partita, perché negli esercizi si gioca sempre da un solo lato; anche la promozione automatica a donna vale solo per la partita, perché alcuni puzzle si risolvono promuovendo a un altro pezzo.
 
