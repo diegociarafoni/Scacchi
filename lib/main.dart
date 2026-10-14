@@ -12,6 +12,7 @@ import 'l10n/app_localizations.dart';
 import 'l10n/content.dart';
 import 'settings/app_language.dart';
 import 'settings/settings.dart';
+import 'theme/no_transitions.dart';
 import 'theme/rokko_theme.dart';
 
 Future<void> main() async {
@@ -34,14 +35,26 @@ class ScacchiApp extends StatefulWidget {
   State<ScacchiApp> createState() => _ScacchiAppState();
 }
 
-class _ScacchiAppState extends State<ScacchiApp> {
+class _ScacchiAppState extends State<ScacchiApp> with WidgetsBindingObserver {
   SettingsController? _settings;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     unawaited(_start());
   }
+
+  @override
+  void didChangeAccessibilityFeatures() => _syncReduceMotion();
+
+  void _syncReduceMotion() => _settings?.setReduceMotion(
+    WidgetsBinding
+        .instance
+        .platformDispatcher
+        .accessibilityFeatures
+        .disableAnimations,
+  );
 
   Future<void> _start() async {
     final settings = await SettingsController.load().catchError(
@@ -50,7 +63,16 @@ class _ScacchiAppState extends State<ScacchiApp> {
     // I contenuti (lezioni, grandi maestri…) servono prima delle schermate.
     await _loadContent(settings.value.language);
     settings.addListener(_onSettings);
-    if (mounted) setState(() => _settings = settings);
+    if (!mounted) return;
+    // Prima del primo disegno, così nemmeno il primo fotogramma si anima.
+    settings.setReduceMotion(
+      WidgetsBinding
+          .instance
+          .platformDispatcher
+          .accessibilityFeatures
+          .disableAnimations,
+    );
+    setState(() => _settings = settings);
   }
 
   AppLanguage? _contentFor;
@@ -89,6 +111,7 @@ class _ScacchiAppState extends State<ScacchiApp> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _settings?.removeListener(_onSettings);
     _settings?.dispose();
     super.dispose();
@@ -97,11 +120,11 @@ class _ScacchiAppState extends State<ScacchiApp> {
   @override
   Widget build(BuildContext context) {
     final settings = _settings;
-    if (settings == null) return _app(null, ThemeMode.system, null);
+    if (settings == null) return _app(null, ThemeMode.system, null, false);
     return ValueListenableBuilder(
       valueListenable: settings,
       builder: (context, s, _) =>
-          _app(settings, s.themeMode, s.language.locale),
+          _app(settings, s.themeMode, s.language.locale, s.reduceMotion),
     );
   }
 
@@ -109,6 +132,7 @@ class _ScacchiAppState extends State<ScacchiApp> {
     SettingsController? settings,
     ThemeMode themeMode,
     Locale? locale,
+    bool still,
   ) {
     return MaterialApp(
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
@@ -119,8 +143,8 @@ class _ScacchiAppState extends State<ScacchiApp> {
       localeListResolutionCallback: resolveAppLocale,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      theme: RokkoTheme.light(),
-      darkTheme: RokkoTheme.dark(),
+      theme: _still(RokkoTheme.light(), still),
+      darkTheme: _still(RokkoTheme.dark(), still),
       themeMode: themeMode,
       // Sopra il Navigator, così anche le pagine aperte con push lo vedono.
       builder: (context, child) => settings == null
@@ -130,3 +154,7 @@ class _ScacchiAppState extends State<ScacchiApp> {
     );
   }
 }
+
+/// Con le animazioni ridotte le pagine si aprono senza transizione.
+ThemeData _still(ThemeData theme, bool still) =>
+    still ? theme.copyWith(pageTransitionsTheme: stillTransitions) : theme;
