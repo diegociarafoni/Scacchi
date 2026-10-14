@@ -168,6 +168,28 @@ void main() {
       expect(scheduler.scheduled.last.at, DateTime(2026, 10, 5, 19));
     });
 
+    test(
+      'al cambio lingua il promemoria si riprogramma col nuovo testo',
+      () async {
+        controller.dispose();
+        var locale = const Locale('it');
+        await progress.updateSettings(
+          progress.settings.copyWith(reminder: () => seven),
+        );
+        controller = ReminderController(
+          progress,
+          scheduler,
+          () => lookupAppLocalizations(locale),
+          clock: () => now,
+        );
+        await controller.sync();
+        final before = scheduler.scheduled.last;
+        locale = const Locale('en');
+        await ReminderController.languageChanged();
+        expect(scheduler.scheduled.last.body, isNot(before.body));
+      },
+    );
+
     test('senza permesso resta spento', () async {
       scheduler.permission = false;
       expect(await controller.enable(seven), isFalse);

@@ -21,7 +21,7 @@ L'anteprima mostra ciò che finirà nel file, con il tema della scacchiera e il 
 - **Coordinate**: lettere e numeri nella cornice intorno alla scacchiera, dove non coprono mai i pezzi. Il valore iniziale segue «Mostra le coordinate» delle impostazioni.
 - **Ultima mossa**: l'interruttore compare solo se la posizione ha un'ultima mossa.
 - **Didascalia**: testo facoltativo fino a 80 caratteri, sotto la scacchiera su fondo scuro; righe e spazi in eccesso vengono ripuliti.
-- **Condividi**: disegna il PNG e apre il menu di condivisione. Il file temporaneo viene eliminato dopo l'invio; se la condivisione fallisce compare un avviso.
+- **Condividi**: disegna il PNG e apre il menu di condivisione. Il file temporaneo (cartella `condivisione`) non si elimina subito, perché il sistema può leggerlo dopo l'invio: lo ripulisce la condivisione successiva o l'avvio dell'app; se la condivisione fallisce compare un avviso.
 
 ## File prodotto
 
@@ -36,5 +36,6 @@ Pulsanti alti almeno 48 px, anteprima descritta come «Anteprima della scacchier
 - `lib/share/position_image.dart`: contenuto dell'immagine (`PositionImage`), pulizia della didascalia, larghezza di esportazione.
 - `lib/share/position_image_page.dart`: schermata, pulsante `PositionImageButton` e `openPositionImage`.
 - `lib/share/image_sharing.dart`: cattura di un `RepaintBoundary` in PNG e consegna al menu di condivisione, condivisi con [ritratto-settimana.md](ritratto-settimana.md).
+- `lib/share/share_temp.dart`: cartella dei file temporanei di condivisione (anche del backup), ripulita alla condivisione successiva e all'avvio.
 
 Test in `test/share/`, `test/game/game_image_test.dart`, nei test di analisi, puzzle ed editor e in `integration_test/position_image_test.dart`.

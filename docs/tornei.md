@@ -36,7 +36,7 @@ Se l'utente è eliminato nell'eliminazione diretta, i turni rimanenti si giocano
 
 ## Salvataggio e bacheca
 
-`TournamentController` salva in `tornei.json` (`JsonFile`, scrittura atomica) il torneo in corso dopo ogni partita e la bacheca dei tornei conclusi: data, formula, giocatori, posizione e vincitore. Abbandonare un torneo lo chiude senza trofeo. Un file non valido va in quarantena (`.bad-<ms>`) e si riparte da zero; un risultato che arriva quando il torneo è stato chiuso o è cambiato si ignora.
+`TournamentController` salva in `tornei.json` (`JsonFile`, scrittura atomica) il torneo in corso dopo ogni partita e la bacheca dei tornei conclusi: data, formula, giocatori, posizione e vincitore. Abbandonare un torneo lo chiude senza trofeo. Un file illeggibile va in quarantena (`.bad-<ms>`) e si riparte da zero; un torneo in corso o un trofeo non valido si scarta da solo, gli altri restano; un risultato che arriva quando il torneo è stato chiuso o è cambiato si ignora.
 
 ## Progressi
 

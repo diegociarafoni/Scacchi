@@ -23,7 +23,7 @@
   "@multiplayerClockPeer": {
     "description": "Etichetta dell'orologio dell'avversario"
   },
-  "multiplayerClockSemantics": "Orologio di {who}: {minutes} minuti e {seconds} secondi",
+  "multiplayerClockSemantics": "Orologio di {who}: {minutes, plural, one{{minutes} minuto} other{{minutes} minuti}} e {seconds, plural, one{{seconds} secondo} other{{seconds} secondi}}",
   "@multiplayerClockSemantics": {
     "description": "Descrizione per i lettori di schermo di un orologio",
     "placeholders": {

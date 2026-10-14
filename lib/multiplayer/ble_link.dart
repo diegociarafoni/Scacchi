@@ -133,13 +133,15 @@ class BlePeripheralLink implements BleLink {
       ..add(
         _manager.characteristicWriteRequested.listen((e) async {
           if (!_sameUuid(e.characteristic.uuid, _rxUuid)) return;
-          // Chi non si è iscritto alle risposte non fa parte della partita.
-          if (!_listening.containsKey(e.central)) return;
+          // Si risponde sempre: una richiesta senza risposta blocca la
+          // scrittura dell'altro telefono (spesso arriva prima dell'iscrizione).
           try {
             await _manager.respondWriteRequest(e.request);
           } on Object catch (err) {
             _log('risposta alla scrittura', err);
           }
+          // Chi non si è iscritto alle risposte non fa parte della partita.
+          if (!_listening.containsKey(e.central)) return;
           final value = e.request.value;
           if (value.length <= _maxIncomingChunk && !_chunks.isClosed) {
             _chunks.add(value);

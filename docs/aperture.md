@@ -55,7 +55,7 @@ Sotto la scacchiera quattro comandi: **Ruota scacchiera**, **Ricomincia** (torna
 Ogni colore ha il suo repertorio: un elenco di linee con nome (es. "Italiana: 1. e4 e5 2. Nf3 Nc6 3. Bc4"). Le linee si aggiungono:
 
 - da Esplora aperture, con il pulsante **Aggiungi al repertorio**: nome proposto dall'apertura raggiunta, colore proposto in base a chi ha giocato l'ultima mossa;
-- incollando un PGN nella schermata del repertorio: ogni variante diventa una linea, i rami illegali si scartano dal punto dell'errore.
+- incollando un PGN nella schermata del repertorio: ogni variante diventa una linea, un ramo con una mossa illegale si interrompe lì e conserva la parte legale prima; un PGN con intestazione FEN diversa dalla posizione iniziale non è una linea e si ignora. Nel repertorio salvato una linea con mosse illegali o malformate si scarta da sola, le altre restano.
 
 Ogni linea si cancella con l'icona **Elimina la linea**.
 

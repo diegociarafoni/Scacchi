@@ -55,6 +55,12 @@ void main() {
       expect(stats.byTimeControl['10+0'], const Score(wins: 1, draws: 1));
     });
 
+    test('senza orologio: chiave neutra, in fondo a pari partite', () {
+      final s = GameStats.from([game('1-0'), game('1-0', tc: '3+2')]);
+      expect(s.byTimeControl.keys, ['3+2', noClock]);
+      expect(noClock, isNot(contains('Senza')));
+    });
+
     test('partite locali contate a parte, importate escluse', () {
       expect(stats.localGames, 1);
     });

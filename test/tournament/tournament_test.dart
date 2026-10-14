@@ -42,6 +42,11 @@ void main() {
       expect(chosen.map((b) => b.elo), [900, 1100, 1350]);
     });
 
+    test('senza posti per bot non ne sceglie nessuno', () {
+      expect(chooseBots(bots, userElo: 1000, count: -1), isEmpty);
+      expect(chooseBots(bots, userElo: 1000, count: 0), isEmpty);
+    });
+
     test('non più di quelli disponibili', () {
       expect(chooseBots(bots, userElo: 1000, count: 20), hasLength(8));
     });

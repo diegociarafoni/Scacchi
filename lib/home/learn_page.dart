@@ -72,8 +72,11 @@ class _LearnPageState extends State<LearnPage> {
   }
 
   Future<void> _run(HomeAction action) async {
-    await action();
-    if (mounted) _load();
+    try {
+      await action();
+    } finally {
+      if (mounted) _load();
+    }
   }
 
   @override

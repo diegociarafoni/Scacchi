@@ -10,6 +10,9 @@ import 'message_codec.dart';
 import 'player_identity.dart';
 import 'transport.dart';
 
+/// Ogni quanto si riprova a consegnare una mossa rimasta in attesa.
+const pendingRetryInterval = Duration(seconds: 15);
+
 /// Partita a due su uno o più canali: unisce registro, sigillo e canali.
 /// Cambiare canale non cambia la partita, che continua su quello che c'è.
 class MultiplayerSession {
@@ -100,6 +103,43 @@ class MultiplayerSession {
   /// L'ultima mossa non è partita su nessun canale.
   bool get pendingDelivery => _pending;
   bool _pending = false;
+  Timer? _retry;
+
+  /// Intervallo dei tentativi; modificabile per i test.
+  Duration retryInterval = pendingRetryInterval;
+  bool _retrying = false;
+
+  final _deliveryChanges = StreamController<void>.broadcast();
+
+  /// Avvisa quando [pendingDelivery] cambia senza un messaggio ricevuto.
+  Stream<void> get deliveryChanges => _deliveryChanges.stream;
+
+  // Finché una mossa non è partita la si riprova, senza attendere un
+  // collegamento nuovo: su Nostr e BLE il canale può tornare senza avvisare.
+  void _setPending(bool value) {
+    if (_events.isClosed) return;
+    final changed = _pending != value;
+    _pending = value;
+    if (value) {
+      _retry ??= Timer.periodic(retryInterval, (_) => _retryPending());
+    } else {
+      _retry?.cancel();
+      _retry = null;
+    }
+    if (changed && !_deliveryChanges.isClosed) _deliveryChanges.add(null);
+  }
+
+  Future<void> _retryPending() async {
+    if (_retrying || !_pending || _events.isClosed) return;
+    _retrying = true;
+    try {
+      await resendLast();
+    } on Object {
+      // Resta in attesa: si riprova al prossimo giro.
+    } finally {
+      _retrying = false;
+    }
+  }
 
   /// L'invitato si presenta all'ospite; `false` se nessun canale è
   /// disponibile. Facoltativo: anche la prima mossa lo presenta.
@@ -109,7 +149,7 @@ class MultiplayerSession {
   /// e parte con [resendLast].
   Future<void> play(String uci, {int? timeMs}) async {
     final message = sync.playLocal(uci, timeMs: timeMs);
-    _pending = !await _sendSealed(await _seal(message));
+    _setPending(!await _sendSealed(await _seal(message)));
   }
 
   /// Ripete l'ultima mossa: da chiamare quando un canale torna disponibile.
@@ -118,7 +158,7 @@ class MultiplayerSession {
     if (flag != null) await _sendSealed(flag);
     final last = sync.myLastMove;
     if (last == null) return;
-    _pending = !await _sendSealed(_sealed[last.seq] ?? await _seal(last));
+    _setPending(!await _sendSealed(_sealed[last.seq] ?? await _seal(last)));
   }
 
   Uint8List? _flagSealed;
@@ -146,7 +186,17 @@ class MultiplayerSession {
     }
   }
 
+  // Gli errori si gestiscono qui dentro: un'eccezione nella catena della coda
+  // la bloccherebbe per sempre, e un `catchError` in coda aggiungerebbe tick.
   Future<void> _onData(Uint8List data) async {
+    try {
+      await _handleData(data);
+    } on Object {
+      // Messaggio scartato: la coda prosegue.
+    }
+  }
+
+  Future<void> _handleData(Uint8List data) async {
     final opened = await _codec.open(data);
     if (opened == null || _events.isClosed) return;
     final result = sync.receive(opened.message, opened.author);
@@ -176,9 +226,13 @@ class MultiplayerSession {
   // Collegamento nuovo: l'invitato si ripresenta e ciascuno ripete la sua
   // ultima mossa, che l'altro potrebbe non avere ricevuto.
   Future<void> _onConnected() async {
-    if (_events.isClosed) return;
-    if (!_isHost) await announce();
-    await resendLast();
+    try {
+      if (_events.isClosed) return;
+      if (!_isHost) await announce();
+      await resendLast();
+    } on Object {
+      // Si riproverà al prossimo collegamento o al giro periodico.
+    }
   }
 
   bool get _isHost => sync.mySide == invite.hostSide;
@@ -187,9 +241,12 @@ class MultiplayerSession {
       m is MoveMessage && (sync.myLastMove?.seq ?? 0) > m.seq;
 
   Future<void> close() async {
+    _retry?.cancel();
+    _retry = null;
     await _sub.cancel();
     await _connSub.cancel();
     await _events.close();
+    await _deliveryChanges.close();
     await transport.close();
   }
 }

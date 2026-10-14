@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart' show listEquals;
 
 import '../analysis/variation_tree.dart';
 import '../game/chess_game.dart';
+import '../l10n/app_localizations.dart';
 import '../review/game_phase.dart';
 import '../review/game_review.dart';
 import 'pgn.dart';
@@ -134,8 +135,36 @@ class SavedGame {
   /// Partita giocata sull'app, non importata né salvata come analisi.
   bool get isPlayed => mode != imported && mode != analysis;
 
+  /// Nomi neutri scritti nel PGN delle partite giocate nell'app: si traducono
+  /// quando si mostrano, così il PGN condiviso non è in una lingua sola.
+  static const nameYou = 'You';
+  static const nameWhite = 'White';
+  static const nameBlack = 'Black';
+  static const nameComputer = 'Computer';
+
   /// Giocatori, per titoli ed elenchi.
   String get title => black.isEmpty ? white : '$white – $black';
+
+  /// Come [title], con i nomi neutri (e quelli italiani dei salvataggi
+  /// vecchi) nella lingua di [l]. Le partite importate restano com'erano.
+  String titleIn(AppLocalizations l) {
+    final w = playerNameIn(l, white);
+    final b = playerNameIn(l, black);
+    return black.isEmpty ? w : '$w – $b';
+  }
+
+  /// Traduce [name] se è uno dei nomi neutri di una partita giocata
+  /// nell'app (o il suo equivalente italiano dei salvataggi precedenti).
+  String playerNameIn(AppLocalizations l, String name) {
+    if (mode != computer && mode != local) return name;
+    return switch (name) {
+      nameYou || 'Tu' => l.tournamentYou,
+      nameWhite || 'Bianco' => l.multiplayerWhite,
+      nameBlack || 'Nero' => l.multiplayerBlack,
+      nameComputer => l.archivePlayerComputer,
+      _ => name,
+    };
+  }
 
   /// Punti dell'utente (1, ½, 0), o `null` se in corso o senza colore.
   double? get playerScore {

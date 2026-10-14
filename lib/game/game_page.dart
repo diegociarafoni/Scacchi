@@ -1181,8 +1181,11 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   SavedGame _savedGame(ChessGame game, Side? side, DateTime now, int? elo) {
     String name(Side s) => side == null
-        ? (_settings.nameOf(s) ?? (s == Side.white ? 'Bianco' : 'Nero'))
-        : (s == side ? 'Tu' : (_bot?.name ?? 'Computer'));
+        ? (_settings.nameOf(s) ??
+              (s == Side.white ? SavedGame.nameWhite : SavedGame.nameBlack))
+        : (s == side
+              ? SavedGame.nameYou
+              : (_bot?.name ?? SavedGame.nameComputer));
     final reviewed = _reviewed;
     final saved = SavedGame.fromGame(
       game,
@@ -1224,7 +1227,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     await _whileSuspended(
       () => Navigator.of(context).push<void>(
         MaterialPageRoute(
-          builder: (_) => QrSendPage(title: saved.title, frames: frames),
+          builder: (_) => QrSendPage(
+            title: saved.titleIn(AppLocalizations.of(context)),
+            frames: frames,
+          ),
         ),
       ),
     );

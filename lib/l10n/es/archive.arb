@@ -38,6 +38,7 @@
   "archiveImport": "Importar",
   "archiveModeLocal": "local",
   "archiveModeComputer": "máquina",
+  "archivePlayerComputer": "Ordenador",
   "archiveModeImported": "importada",
   "archiveModePhysical": "tablero físico",
   "archiveModeAnalysis": "análisis",

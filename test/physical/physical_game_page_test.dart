@@ -118,6 +118,38 @@ void main() {
     expect(games.single.result, '1-0');
   });
 
+  testWidgets(
+    'ogni mossa viene salvata e dopo annulla l\'archivio si aggiorna',
+    (tester) async {
+      Future<List<SavedGame>> stored() async {
+        for (var i = 0; i < 10; i++) {
+          await tester.runAsync(
+            () => Future<void>.delayed(const Duration(milliseconds: 20)),
+          );
+          await tester.pump();
+        }
+        return (await tester.runAsync(archive.list))!;
+      }
+
+      await open(tester);
+      await type(tester, 'e4');
+      var games = await stored();
+      expect(games.single.result, '*');
+      await tapGameAction(tester, 'Abbandona');
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Nero').last);
+      await tester.pump();
+      expect((await stored()).single.result, '1-0');
+      await tapGameAction(tester, 'Annulla');
+      await tester.pump();
+      games = await stored();
+      expect(games.single.result, '*');
+      await tapGameAction(tester, 'Annulla');
+      await tester.pump();
+      expect(await stored(), isEmpty);
+    },
+  );
+
   testWidgets('in inglese i testi della schermata sono tradotti', (
     tester,
   ) async {

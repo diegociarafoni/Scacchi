@@ -5,7 +5,7 @@
   "multiplayerClockRemoteHint": "Op afstand is er geen klok: kies wifi of Bluetooth om er een te gebruiken.",
   "multiplayerClockYou": "Jij",
   "multiplayerClockPeer": "Tegenstander",
-  "multiplayerClockSemantics": "Klok van {who}: {minutes} minuten en {seconds} seconden",
+  "multiplayerClockSemantics": "Klok van {who}: {minutes, plural, one{{minutes} minuut} other{{minutes} minuten}} en {seconds, plural, one{{seconds} seconde} other{{seconds} seconden}}",
   "multiplayerWhiteWinsOnTime": "Tijd verstreken: wit wint",
   "multiplayerBlackWinsOnTime": "Tijd verstreken: zwart wint",
   "multiplayerDrawOnTime": "Tijd verstreken, maar onvoldoende materiaal om mat te zetten: remise"

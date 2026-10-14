@@ -98,6 +98,7 @@ class MultiplayerController extends ChangeNotifier {
       _reached = true;
       _changed();
     });
+    _deliverySub = session.deliveryChanges.listen((_) => _changed());
     addExtraChannels(session.transport, session.invite, isHost: isHost);
   }
 
@@ -345,6 +346,7 @@ class MultiplayerController extends ChangeNotifier {
 
   late final StreamSubscription<SyncResult> _sub;
   late final StreamSubscription<void> _connSub;
+  late final StreamSubscription<void> _deliverySub;
   bool _reached = false;
   bool _disposed = false;
 
@@ -410,8 +412,15 @@ class MultiplayerController extends ChangeNotifier {
     final left = clock?.moved(_sync.moves.length + 1);
     _turnStartedAt = _now().millisecondsSinceEpoch;
     _peerZeroSince = null;
-    await session.play(move.uci, timeMs: left?.inMilliseconds);
+    // La mossa è già nel registro: orologio, interfaccia e salvataggio si
+    // aggiornano prima dell'invio in rete, che può durare.
+    final sending = session.play(move.uci, timeMs: left?.inMilliseconds);
     _changed();
+    try {
+      await sending;
+    } finally {
+      _changed();
+    }
     return true;
   }
 
@@ -579,6 +588,7 @@ class MultiplayerController extends ChangeNotifier {
     _ticker = null;
     await _sub.cancel();
     await _connSub.cancel();
+    await _deliverySub.cancel();
     _stopAdvert?.call();
     await session.close();
   }
