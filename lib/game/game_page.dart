@@ -1093,10 +1093,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// Salvataggio e progressi vanno avanti da soli: uno lento o fallito non
   /// ferma l'altro.
   void _archive(ChessGame game, Side? side, DateTime now, int? elo) {
-    _store(_savedGame(game, side, now, elo));
+    _persist(_savedGame(game, side, now, elo));
   }
 
-  void _store(SavedGame saved) {
+  void _persist(SavedGame saved) {
     final save = widget.onSave;
     if (save == null) return;
     unawaited(
@@ -2339,7 +2339,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final next = game.withReview(review);
     if (identical(next, game) || next.accuracy == _reviewedAccuracy) return;
     _reviewedAccuracy = next.accuracy;
-    _store(next);
+    _persist(next);
   }
 
   /// Una revisione nuova vale XP; con due giocatori la precisione non è di
