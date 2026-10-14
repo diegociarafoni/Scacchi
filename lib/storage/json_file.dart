@@ -1,17 +1,28 @@
 import 'dart:convert';
 import 'dart:io';
 
-/// File JSON locale con versione dello schema, scrittura atomica e
-/// salvataggi accodati.
+/// Porta il contenuto dalla versione `n` alla `n + 1` dello schema.
+typedef JsonMigration = Map<String, Object?> Function(
+  Map<String, Object?> json,
+);
+
+/// File JSON locale con versione dello schema, migrazioni, scrittura atomica
+/// e salvataggi accodati.
 class JsonFile {
-  JsonFile(this.file, {required this.version});
+  JsonFile(this.file, {required this.version, this.migrations = const {}});
 
   final File file;
   final int version;
+
+  /// Passi per aggiornare un file vecchio: la chiave `n` porta dalla versione
+  /// `n` alla `n + 1`. Prima di migrare si tiene una copia in `.v<n>.bak`.
+  final Map<int, JsonMigration> migrations;
   Future<void> _pending = Future.value();
 
   /// Contenuto decodificato con [decode], o `null` se il file manca. Un file
-  /// non valido (JSON, versione futura, o [decode] che fallisce) viene
+  /// vecchio passa prima dalle [migrations] (la lettura non lo riscrive: lo fa
+  /// il primo salvataggio). Un file non valido (JSON, versione futura, passo
+  /// di migrazione mancante o fallito, o [decode] che fallisce) viene
   /// rinominato in `.bad-<ms>` invece di essere sovrascritto, e il risultato è
   /// `null`. Gli errori di lettura del disco si propagano senza toccare il file.
   Future<T?> read<T>(T Function(Map<String, Object?> json) decode) async {
@@ -28,10 +39,16 @@ class JsonFile {
       return null;
     }
     try {
-      final json = jsonDecode(text) as Map<String, Object?>;
+      var json = jsonDecode(text) as Map<String, Object?>;
       final found = json['version'] as int? ?? 0;
       if (found < 1 || found > version) {
         throw FormatException('versione dello schema $found');
+      }
+      if (found < version) await _keepCopy(found, text);
+      for (var v = found; v < version; v++) {
+        final step = migrations[v];
+        if (step == null) throw FormatException('manca la migrazione da $v');
+        json = {...step(json), 'version': v + 1};
       }
       return decode(json);
     } on Object {
@@ -40,6 +57,12 @@ class JsonFile {
       );
       return null;
     }
+  }
+
+  /// Copia del file com'era prima di migrare, una sola volta per versione.
+  Future<void> _keepCopy(int found, String text) async {
+    final copy = File('${file.path}.v$found.bak');
+    if (!copy.existsSync()) await copy.writeAsString(text, flush: true);
   }
 
   /// Salva [data] con la versione; vince sempre l'ultimo salvataggio.

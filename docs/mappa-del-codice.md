@@ -35,7 +35,7 @@ Ogni cartella di `lib/` ha qui il documento che descrive le sue funzioni. La tab
 | `lib/share/` | [esporta-immagine.md](esporta-immagine.md) | Esportazione della posizione come immagine PNG e condivisione con il menu di sistema |
 | `lib/stats/` | [statistiche.md](statistiche.md), [ritratto-settimana.md](ritratto-settimana.md) | Statistiche, rating locale, la tua settimana |
 | `lib/theme/` | [interfaccia.md](interfaccia.md) | Tema Rokko spaziale: indaco e viola, token di stile, marchio nella barra del titolo |
-| `lib/storage/` | [architettura.md](architettura.md), [gamification.md](gamification.md) | File JSON locali con versione e scrittura atomica |
+| `lib/storage/` | [persistenza.md](persistenza.md), [architettura.md](architettura.md), [gamification.md](gamification.md) | File JSON locali con versione, migrazioni e scrittura atomica |
 | `lib/story/` | [storia.md](storia.md) | Percorso a storia: capitoli con racconto, lezioni, puzzle, guardiani e un bot da battere |
 | `lib/tablebase/` | [finali-perfetti.md](finali-perfetti.md) | Finali perfetti: tabelle del matto esatto fino a quattro pezzi, generate sul telefono, scheda con risultato e mossa perfetta |
 | `lib/style/` | [stile.md](stile.md) | Schermata Stile: anteprima dal vivo e schede Scacchiera, Pezzi, Sfondo (con foto propria) e Suoni |
