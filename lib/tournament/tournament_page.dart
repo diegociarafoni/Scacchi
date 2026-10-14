@@ -279,7 +279,21 @@ class _RunningState extends State<_Running> {
           style: text.titleLarge,
         ),
         const SizedBox(height: 12),
-        if (t.finished)
+        if (page.controller.playingBots)
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(l10n.tournamentBotsPlaying),
+                  const SizedBox(height: 12),
+                  const LinearProgressIndicator(),
+                ],
+              ),
+            ),
+          )
+        else if (t.finished)
           Card(
             child: Padding(
               padding: const EdgeInsets.all(16),
@@ -321,7 +335,9 @@ class _RunningState extends State<_Running> {
               ),
               subtitle: Text(_gameSubtitle(l10n, game)),
               trailing: FilledButton(
-                onPressed: _playing ? null : () => _play(context, game),
+                onPressed: _playing || page.controller.playingBots
+                    ? null
+                    : () => _play(context, game),
                 child: Text(l10n.tournamentPlay),
               ),
             ),
