@@ -23,7 +23,7 @@ class OpeningVolume {
 
   Set<String> get families => _families.isEmpty ? {name} : _families;
 
-  /// Nome in italiano; l'originale se la famiglia non ha traduzione.
+  /// Nome nella lingua dei contenuti caricati; l'originale se non ha traduzione.
   String get localName => localOpeningName(name);
 
   /// Posizioni dalla iniziale a quella della copertina.
