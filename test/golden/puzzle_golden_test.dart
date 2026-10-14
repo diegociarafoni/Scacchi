@@ -7,6 +7,9 @@ import 'package:chessground/chessground.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/progress/progress_state.dart';
+import 'package:rokko/progress/progress_tracker.dart';
+import 'package:rokko/puzzles/mode_guide.dart';
 import 'package:rokko/puzzles/puzzle_hub_page.dart';
 import 'package:rokko/puzzles/puzzle_library.dart';
 import 'package:rokko/puzzles/puzzle_page.dart';
@@ -32,8 +35,9 @@ Future<void> _pump(
   Widget home, {
   Brightness brightness = Brightness.light,
   bool kid = false,
+  double navBar = 0,
 }) async {
-  device.apply(tester);
+  device.apply(tester, navBar: navBar);
   await tester.runAsync(
     () => ChessgroundImages.instance.loadAll(
       const ChessboardSettings().pieceAssets,
@@ -103,6 +107,56 @@ void main() {
     await expectLater(
       find.byType(MaterialApp),
       matchesGoldenFile('goldens/puzzle-risolto-scuro-telefono-medio.png'),
+    );
+  });
+
+  for (final brightness in Brightness.values) {
+    testWidgets(
+      'puzzle risolto con i punti in linea e i tre tasti (${brightness.name})',
+      skip: _skip != null,
+      (tester) async {
+        final trainer = await _trainer();
+        await _pump(
+          tester,
+          Device.phoneMedium,
+          PuzzlePage(
+            trainer: trainer,
+            puzzle: backRank,
+            onActivity: (_) async => const ProgressUpdate(
+              state: ProgressState.initial,
+              xpGained: 25,
+            ),
+          ),
+          brightness: brightness,
+          navBar: Device.threeButtonBar,
+        );
+        await tapMove(tester, 'a1a8');
+        await tester.pump();
+        await expectLater(
+          find.byType(MaterialApp),
+          matchesGoldenFile(
+            'goldens/puzzle-punti-tre-tasti-${brightness.name}-telefono-medio.png',
+          ),
+        );
+      },
+    );
+  }
+
+  testWidgets('puzzle per tema: guida sopra i tre tasti', skip: _skip != null, (
+    tester,
+  ) async {
+    final trainer = await _trainer();
+    await _pump(
+      tester,
+      Device.phoneMedium,
+      PuzzlePage(trainer: trainer, puzzle: backRank, guide: PuzzleGuide.theme),
+      brightness: Brightness.dark,
+      navBar: Device.threeButtonBar,
+    );
+    // La guida si apre da sola alla prima visita.
+    await expectLater(
+      find.byType(MaterialApp),
+      matchesGoldenFile('goldens/puzzle-guida-tre-tasti-telefono-medio.png'),
     );
   });
 

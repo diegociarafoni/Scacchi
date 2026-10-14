@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
 import '../theme/rokko_theme.dart';
+import '../theme/sheets.dart';
 import 'board_preview.dart';
 import 'settings.dart';
 import 'settings_labels.dart';
@@ -262,7 +263,9 @@ class SettingsSectionScaffold extends StatelessWidget {
             if (pinned != null) pinned!(context),
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.only(bottom: 24),
+                padding: context.withSystemBottom(
+                  const EdgeInsets.only(bottom: 24),
+                ),
                 children: builder(context),
               ),
             ),

@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../l10n/app_localizations.dart';
 import '../share/share_temp.dart';
+import '../theme/sheets.dart';
 import 'backup.dart';
 
 typedef ShareBackup = Future<void> Function(String text, String fileName);
@@ -136,7 +137,7 @@ class _BackupPageState extends State<BackupPage> {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.backupTitle)),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: context.withSystemBottom(const EdgeInsets.all(16)),
         children: [
           Text(l10n.backupIntro),
           const SizedBox(height: 16),

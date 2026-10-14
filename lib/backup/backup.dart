@@ -134,7 +134,7 @@ class Backup {
   static Backup decode(String text) {
     try {
       final json = jsonDecode(text) as Map<String, Object?>;
-      if (json['app'] != _app && json['app'] != _appVecchio) {
+      if (json['app'] != _app && json['app'] != _appVecchio && json['app'] != _appVecchio && json['app'] != _appVecchio) {
         throw BackupException(BackupProblem.notApp);
       }
       final version = json['version'];
