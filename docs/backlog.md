@@ -75,7 +75,7 @@ Rokko è open source e gratuito. Questi vincoli valgono per ogni voce.
 | ID | Funzione | Stato | Pri | Dim | Versione | Evidenza |
 |---|---|---|---|---|---|---|
 | A-25 / RG-09 | **Tornei con partite vere** tra i bot e gironi da 4 a 8 giocatori | fatto | P2 | grande | 0.15.0 | partite vere tra i bot (#275); la simulazione Elo resta come ripiego (`docs/tornei.md`) |
-| A-26 / RMP | **Orologio nelle partite a distanza**: chi crea sceglie tra lampo con orologio dal vivo e partita lenta con 1, 3 o 7 giorni per mossa, con reclamo della vittoria a scadenza. Resta manuale la prova su telefoni veri con un `integration_test` | fatta (orologio); prova su telefoni veri manuale | P1 | media | 0.15.0 | `docs/multigiocatore.md` (Orologio) |
+| A-26 / RMP | **Orologio nelle partite a distanza**: chi crea sceglie tra lampo con orologio dal vivo e partita lenta con 1, 3 o 7 giorni per mossa, con reclamo della vittoria a scadenza. Resta manuale la prova su telefoni veri con un `integration_test` | fatta (orologio); prova su telefoni veri manuale | P1 | media | 0.13.0 | `docs/multigiocatore.md` (Orologio) |
 | A-27 | **Percorso «dai miei errori»**: capitoli personali generati dai temi tattici sbagliati più spesso | da fare | P2 | media | 0.14.0 | esistono i puzzle personali (`lib/review/personal_puzzles.dart`) e la coda di ripasso, non agganciati al percorso |
 
 ### A.5 Da valutare dopo
@@ -97,7 +97,7 @@ Il dettaglio di U1-U11 è in `consegne/analisi-ux-ui.md`; il comportamento attua
 |---|---|---|---|---|---|
 | S1 | **Un antagonista per capitolo**: carattere, stile di gioco, aperture e due battute prima e dopo la partita | fatto (#277) | Claude | media | 0.15.0 |
 | S2 | **Racconto tra un passo e l'altro**: una riga tra lezione e puzzle che richiama ciò che si è imparato | fatta | da assegnare | piccola | 0.15.0 |
-| S3 | **Mappa del viaggio** con i sei luoghi, i progressi e «riprendi da dove eri» | da fare | da assegnare | media | 0.14.0 |
+| S3 | **Mappa del viaggio** con i nove luoghi, i progressi e «riprendi da dove eri» | fatta | da assegnare | media | 0.14.0 | `lib/story/journey_map.dart`: nove luoghi su un sentiero a serpentina; vedi `docs/storia.md` |
 | S4 | **Un bivio per capitolo** (tattica o finali) con puzzle diversi | fatto (#281) | Claude | media | 0.15.0 |
 | S5 | **Ricompense legate alla storia**: scacchiere e pezzi sbloccabili con nome a tema | fatta | Claude | piccola | 0.14.0 |
 | S6 | **Aiuto quando ci si blocca**: dopo due errori sullo stesso puzzle, un indizio o un puzzle più facile | fatta | da assegnare | piccola | 0.15.0 |

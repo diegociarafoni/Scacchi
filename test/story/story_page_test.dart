@@ -76,7 +76,13 @@ void main() {
     tester,
   ) async {
     await show(tester);
-    expect(find.text('Il sentiero dei primi passi'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey('story-chapter-prologue')),
+        matching: find.text('Il sentiero dei primi passi'),
+      ),
+      findsOneWidget,
+    );
     expect(find.textContaining('Prima del villaggio'), findsOneWidget);
     expect(
       find.descendant(
@@ -89,8 +95,15 @@ void main() {
       find.bySemanticsLabel(RegExp('^Tino dice: Ciao, sono Tino')),
       findsOneWidget,
     );
-    await tester.scrollUntilVisible(find.text('Il villaggio dei pezzi'), 300);
-    expect(find.text('Il villaggio dei pezzi'), findsOneWidget);
+    final village = find.byKey(const ValueKey('story-chapter-village'));
+    await tester.scrollUntilVisible(village, 300);
+    expect(
+      find.descendant(
+        of: village,
+        matching: find.text('Il villaggio dei pezzi'),
+      ),
+      findsOneWidget,
+    );
     expect(
       find.text('Si apre concludendo il capitolo precedente'),
       findsWidgets,
@@ -107,7 +120,13 @@ void main() {
 
   testWidgets('RG-13 i testi seguono la lingua', (tester) async {
     await show(tester, locale: const Locale('en'));
-    expect(find.text('The path of first steps'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey('story-chapter-prologue')),
+        matching: find.text('The path of first steps'),
+      ),
+      findsOneWidget,
+    );
     expect(find.text('Story'), findsOneWidget);
   });
 
