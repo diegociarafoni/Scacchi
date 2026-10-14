@@ -45,6 +45,12 @@ class StoryController extends ChangeNotifier {
     return _replace(next);
   }
 
+  /// Sceglie la via del bivio: solo prima del primo puzzle del capitolo.
+  Future<void> chooseFork(StoryChapter chapter, String theme) {
+    if (_state.puzzlesSolved(chapter.id) > 0) return Future.value();
+    return _replace(_state.withFork(chapter, theme));
+  }
+
   Future<void> bossBeaten(StoryChapter chapter) =>
       _replace(_state.withBossBeaten(chapter.id));
 

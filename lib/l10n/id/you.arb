@@ -23,5 +23,9 @@
   "youStatsSubtitle": "Hasil, pembukaan, pengaturan waktu, dan peringkat lokal",
   "youArchive": "Arsip",
   "youArchiveSubtitle": "Permainan tersimpan, impor dan ekspor PGN",
-  "youLoadError": "Data tersimpan tidak dapat dibaca: coba lagi."
+  "youLoadError": "Data tersimpan tidak dapat dibaca: coba lagi.",
+  "reviewInviteTitle": "Tinjau partai pertamamu",
+  "reviewInviteBody": "Partai “{game}” sudah selesai: komputer menunjukkan kesalahan dan langkah terbaikmu.",
+  "reviewInviteAction": "Tinjau",
+  "reviewInviteDismiss": "Nanti saja"
 }

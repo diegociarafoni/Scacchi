@@ -23,5 +23,9 @@
   "youStatsSubtitle": "Resultados, aperturas, ritmos de juego y puntuación local",
   "youArchive": "Archivo",
   "youArchiveSubtitle": "Partidas guardadas, importación y exportación de PGN",
-  "youLoadError": "No se pueden leer los datos guardados: inténtalo de nuevo."
+  "youLoadError": "No se pueden leer los datos guardados: inténtalo de nuevo.",
+  "reviewInviteTitle": "Revisa tu primera partida",
+  "reviewInviteBody": "La partida «{game}» ha terminado: el ordenador te muestra tus errores y las mejores jugadas.",
+  "reviewInviteAction": "Revisar",
+  "reviewInviteDismiss": "Ahora no"
 }

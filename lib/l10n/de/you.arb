@@ -23,5 +23,9 @@
   "youStatsSubtitle": "Ergebnisse, Eröffnungen, Bedenkzeiten und lokale Wertung",
   "youArchive": "Archiv",
   "youArchiveSubtitle": "Gespeicherte Partien, PGN-Import und -Export",
-  "youLoadError": "Die gespeicherten Daten können nicht gelesen werden: Versuche es noch einmal."
+  "youLoadError": "Die gespeicherten Daten können nicht gelesen werden: Versuche es noch einmal.",
+  "reviewInviteTitle": "Sieh dir deine erste Partie an",
+  "reviewInviteBody": "Die Partie „{game}“ ist zu Ende: Der Computer zeigt dir deine Fehler und die besten Züge.",
+  "reviewInviteAction": "Ansehen",
+  "reviewInviteDismiss": "Jetzt nicht"
 }

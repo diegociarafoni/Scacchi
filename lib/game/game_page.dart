@@ -61,6 +61,7 @@ import '../share/position_image.dart';
 import '../share/position_image_page.dart';
 import '../storage/key_value_store.dart';
 import '../tablebase/shared_tablebase.dart';
+import '../theme/rokko_icons.dart';
 import '../theme/rokko_theme.dart';
 import 'board_drawing.dart';
 import 'board_swipe.dart';
@@ -2766,13 +2767,13 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           if (_instructor)
             IconButton(
               tooltip: _l10n(context).instructorExplorer,
-              icon: const Icon(Icons.account_tree_outlined),
+              icon: const Icon(RokkoIcons.explorer),
               onPressed: _openExplorer,
             ),
           if (keyboardInBar)
             IconButton(
               tooltip: _l10n(context).gameKeyboardAction,
-              icon: const Icon(Icons.keyboard_outlined),
+              icon: const Icon(RokkoIcons.keyboard),
               onPressed:
                   !_humanToMove || _pendingMove != null || _viewPly != null
                   ? null
@@ -2782,8 +2783,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
             key: const Key('zenToggle'),
             tooltip: qrL10n(context).settingsZenMode,
             isSelected: _zen,
-            icon: const Icon(Icons.self_improvement_outlined),
-            selectedIcon: const Icon(Icons.self_improvement),
+            icon: const Icon(RokkoIcons.zen),
+            selectedIcon: const Icon(RokkoIcons.zenOn),
             onPressed: () {
               // Entrando in zen sparisce anche il commento già a schermo.
               if (!_zen) ScaffoldMessenger.of(context).hideCurrentSnackBar();
@@ -2794,7 +2795,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           ),
           IconButton(
             tooltip: l10n.gameSettings,
-            icon: const Icon(Icons.settings_outlined),
+            icon: const Icon(RokkoIcons.settings),
             onPressed: _openSettings,
           ),
         ],
@@ -3408,7 +3409,7 @@ class _GameActions extends StatelessWidget {
                 ),
                 if (!_gameInBar)
                   _PanelTile(
-                    Icons.add,
+                    RokkoIcons.newGame,
                     labels.newGame,
                     onNewGame,
                     kid: kid,
@@ -3416,7 +3417,7 @@ class _GameActions extends StatelessWidget {
                   ),
                 if (!_gameInBar && over && onRematch != null)
                   _PanelTile(
-                    Icons.replay,
+                    RokkoIcons.rematch,
                     labels.rematch,
                     onRematch,
                     kid: kid,
@@ -3424,7 +3425,7 @@ class _GameActions extends StatelessWidget {
                   ),
                 if (flipInPanel)
                   _PanelTile(
-                    Icons.swap_vert,
+                    RokkoIcons.flip,
                     labels.flip,
                     onFlip,
                     kid: kid,
@@ -3432,14 +3433,14 @@ class _GameActions extends StatelessWidget {
                   ),
                 if (!_gameInBar && !over) ...[
                   _PanelTile(
-                    Icons.handshake_outlined,
+                    RokkoIcons.draw,
                     labels.draw,
                     onDraw,
                     kid: kid,
                     pick: pick,
                   ),
                   _PanelTile(
-                    Icons.flag_outlined,
+                    RokkoIcons.resign,
                     labels.resign,
                     onResign,
                     kid: kid,
@@ -3448,7 +3449,7 @@ class _GameActions extends StatelessWidget {
                 ],
                 if (coachOn != null)
                   SwitchListTile(
-                    secondary: const Icon(Icons.school_outlined),
+                    secondary: const Icon(RokkoIcons.coach),
                     title: Text(labels.coach),
                     subtitle: Text(labels.coachTip),
                     value: coachOn!,
@@ -3456,7 +3457,7 @@ class _GameActions extends StatelessWidget {
                   ),
                 if (coachOn ?? false)
                   _PanelTile(
-                    Icons.warning_amber,
+                    RokkoIcons.threat,
                     labels.threat,
                     onThreat,
                     kid: kid,
@@ -3488,41 +3489,41 @@ class _GameActions extends StatelessWidget {
               if (hintAvailable)
                 _ActionButton(
                   'hint',
-                  Icons.lightbulb_outline,
+                  RokkoIcons.hint,
                   labels.hint,
                   onHint,
                   tooltip: labels.hintTip,
                 ),
-              _ActionButton('undo', Icons.undo, labels.undo, onUndo),
+              _ActionButton('undo', RokkoIcons.undo, labels.undo, onUndo),
               if (!flipInPanel)
-                _ActionButton('flip', Icons.swap_vert, labels.flip, onFlip),
+                _ActionButton('flip', RokkoIcons.flip, labels.flip, onFlip),
               if (_gameInBar) ...[
-                _ActionButton('new', Icons.add, labels.newGame, onNewGame),
+                _ActionButton(
+                  'new',
+                  RokkoIcons.newGame,
+                  labels.newGame,
+                  onNewGame,
+                ),
                 if (over) ...[
                   if (onRematch != null)
                     _ActionButton(
                       'rematch',
-                      Icons.replay,
+                      RokkoIcons.rematch,
                       labels.rematch,
                       onRematch,
                     ),
                   if (onReview != null)
                     _ActionButton(
                       'review',
-                      Icons.fact_check_outlined,
+                      RokkoIcons.review,
                       labels.review,
                       onReview,
                     ),
                 ] else ...[
-                  _ActionButton(
-                    'draw',
-                    Icons.handshake_outlined,
-                    labels.draw,
-                    onDraw,
-                  ),
+                  _ActionButton('draw', RokkoIcons.draw, labels.draw, onDraw),
                   _ActionButton(
                     'resign',
-                    Icons.flag_outlined,
+                    RokkoIcons.resign,
                     labels.resign,
                     onResign,
                   ),
@@ -3531,7 +3532,7 @@ class _GameActions extends StatelessWidget {
               if (hasPanel)
                 _ActionButton(
                   'more',
-                  Icons.more_horiz,
+                  RokkoIcons.more,
                   labels.more,
                   () => _openPanel(context, flipInPanel: flipInPanel),
                   dot: coachOn ?? false,
