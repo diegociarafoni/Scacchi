@@ -114,7 +114,7 @@ Il dettaglio di U1-U11 è in `consegne/analisi-ux-ui.md`; il comportamento attua
 | U9 | **Profilo bambino coerente** in tutte le schermate, con un test che cerca le cifre nei testi | da fare | da assegnare | media | 0.15.0 |
 | U10 | **Funzioni scopribili**: suggerimenti al primo uso e invito a rivedere la prima partita conclusa | da fare | da assegnare | media | 0.13.0 |
 | U11 | **Multigiocatore e Percorso più leggibili**: indicatore di connessione, QR con margine e contrasto fissi, tappe bloccate non solo in colore | da fare | da assegnare | piccola | 0.15.0 |
-| U12 | **Icone più curate** dopo le traduzioni (richiesta di Diego, 13 ottobre 2026) | da fare | dopo la 0.11.0 | media | 0.12.0 |
+| U12 | **Icone più curate** dopo le traduzioni (richiesta di Diego, 13 ottobre 2026) | parziale | dopo la 0.11.0 | media | 0.12.0 | `RokkoIcons` in `lib/theme/rokko_icons.dart`: stesso set a contorno per barra, pannello e barra del titolo della partita; le altre schermate restano da uniformare |
 
 Gli «interventi rapidi» (marchio nel titolo, arancione d'azione, gruppi nella scheda Tu, icone nel menu, anteprima comprimibile, font reale nei golden, test sui testi fissi) si possono fare prima delle voci grandi; sono elencati in `consegne/analisi-ux-ui.md`.
 
