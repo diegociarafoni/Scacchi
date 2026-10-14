@@ -4,7 +4,7 @@ Il workflow `.github/workflows/apk-release.yml` compila un APK release per telef
 
 ## Versioni pubblicate
 
-L'elenco delle versioni con le note è nella pagina delle Release e in `CHANGELOG.md`; lo stato delle funzioni già in `main` è in [README.md](README.md#stato-del-progetto). Le versioni firmate con la chiave stabile del progetto si installano una sopra l'altra (vedi [Firma](#firma)).
+L'elenco delle versioni con le note è nella pagina delle Release e in `CHANGELOG.md`; lo stato delle funzioni già in `main` è in [README.md](README.md#stato-del-progetto). Le versioni firmate con la chiave stabile del progetto si installano una sopra l'altra (vedi [Firma](#firma)). Dalla 0.12.0 l'identificativo dell'app è cambiato (`io.github.diegociarafoni.rokko`): la prima installazione non sostituisce le versioni precedenti, che restano come app separata e si disinstallano a mano; da lì in poi gli aggiornamenti si installano sopra.
 
 ## Quando parte
 
