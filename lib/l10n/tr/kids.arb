@@ -97,5 +97,8 @@
   "kidUnlockByPlaying": "Oynadıkça açılır",
   "kidCoachMaterialLoss": "Dikkat: bu hamle taş kaybettiriyor.",
   "kidCoachAllowedMate": "{move} sonrasında rakibin {reply} ile şah mat edebilir.",
-  "kidCoachMissedMate": "{move} ile şah mat edebilirdin!"
+  "kidCoachMissedMate": "{move} ile şah mat edebilirdin!",
+  "kidGameUndoOfferSide": "{side, select, white{Beyaz, hamleyi tekrar yapalım mı?} other{Siyah, hamleyi tekrar yapalım mı?}}",
+  "kidGameUndoOfferName": "{name}, hamleyi tekrar yapalım mı?",
+  "kidGameUndoYes": "Evet, tekrar yapalım"
 }

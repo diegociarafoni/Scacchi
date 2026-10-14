@@ -2065,6 +2065,55 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _onMove(move);
   }
 
+  /// Tra due persone annullare una mossa chiede il consenso di chi non l'ha
+  /// giocata (RF-32). Contro il computer, nelle sfide, per le azioni locali
+  /// (uscire dalla revisione, scartare una mossa da confermare) e per
+  /// revocare un abbandono o una patta, che non toglie mosse, basta il tocco.
+  Future<void> _requestUndo() async {
+    final needsConsent =
+        _computerSide == null &&
+        !_isChallenge &&
+        _viewPly == null &&
+        _pendingMove == null &&
+        !_endedByChoice &&
+        _game.moves.isNotEmpty;
+    if (!needsConsent) return _undo();
+    final game = _game;
+    final plies = game.moves.length;
+    final consenting = game.position.turn;
+    final accepted = await _suspendedDialog<bool>((context) {
+      final l10n = _l10n(context);
+      if (_kid) {
+        return _yesNoDialog(
+          context,
+          title: switch (_nameOf(consenting)) {
+            null => l10n.kidGameUndoOfferSide(consenting.name),
+            final name => l10n.kidGameUndoOfferName(name),
+          },
+          no: l10n.kidGameDrawNo,
+          yes: l10n.kidGameUndoYes,
+        );
+      }
+      return _yesNoDialog(
+        context,
+        title: switch (_nameOf(consenting)) {
+          null => l10n.gameUndoOfferSide(consenting.name),
+          final name => l10n.gameUndoOfferNamed(name, consenting.name),
+        },
+        no: l10n.gameDrawDecline,
+        yes: l10n.gameDrawAccept,
+      );
+    }, restart: (accepted) => accepted != true);
+    if (!mounted || !identical(game, _game) || game.moves.length != plies) {
+      return;
+    }
+    if (accepted == true) {
+      _undo();
+    } else {
+      _showMessage(_l10n(context).gameUndoRefused);
+    }
+  }
+
   void _undo() {
     if (_viewPly != null) {
       _showPly(null);
@@ -2499,7 +2548,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           !evaluating &&
               (!_isChallenge || widget.challenge!.allowUndo) &&
               (_canUndo || _pendingMove != null || _viewPly != null)
-          ? _undo
+          ? _requestUndo
           : null,
       onFlip: () => setState(() => _orientation = _orientation.opposite),
       onDraw:

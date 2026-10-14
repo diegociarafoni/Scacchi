@@ -523,5 +523,28 @@
         "type": "String"
       }
     }
+  },
+  "kidGameUndoOfferSide": "{side, select, white{Bianco, vuoi rifare la mossa?} other{Nero, vuoi rifare la mossa?}}",
+  "@kidGameUndoOfferSide": {
+    "description": "Titolo del dialogo per annullare una mossa tra due persone, profilo bambino",
+    "placeholders": {
+      "side": {
+        "type": "String",
+        "description": "Colore: white o black"
+      }
+    }
+  },
+  "kidGameUndoOfferName": "{name}, vuoi rifare la mossa?",
+  "@kidGameUndoOfferName": {
+    "description": "Titolo del dialogo per annullare una mossa tra due persone, profilo bambino, con il nome",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "kidGameUndoYes": "Sì, rifacciamola",
+  "@kidGameUndoYes": {
+    "description": "Risposta affermativa al dialogo per annullare una mossa, profilo bambino"
   }
 }

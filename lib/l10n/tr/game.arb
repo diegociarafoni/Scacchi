@@ -217,5 +217,30 @@
         "type": "int"
       }
     }
+  },
+  "gameUndoOfferSide": "{side, select, white{Beyaz} other{Siyah}} hamlenin geri alınmasını kabul ediyor mu?",
+  "@gameUndoOfferSide": {
+    "description": "Richiesta di annullare l'ultima mossa tra due persone, senza nomi scelti",
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "gameUndoOfferNamed": "{name} ({side, select, white{Beyaz} other{Siyah}}) hamlenin geri alınmasını kabul ediyor mu?",
+  "@gameUndoOfferNamed": {
+    "description": "Richiesta di annullare l'ultima mossa tra due persone, con il nome del giocatore",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "gameUndoRefused": "Hamleyi geri alma isteği reddedildi.",
+  "@gameUndoRefused": {
+    "description": "Messaggio quando l'altro giocatore non accetta di annullare la mossa"
   }
 }

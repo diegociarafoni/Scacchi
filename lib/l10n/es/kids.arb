@@ -97,5 +97,8 @@
   "kidUnlockByPlaying": "Se desbloquea jugando",
   "kidCoachMaterialLoss": "Cuidado: esta jugada pierde piezas.",
   "kidCoachAllowedMate": "Después de {move}, tu rival puede dar jaque mate con {reply}.",
-  "kidCoachMissedMate": "¡Podías dar jaque mate con {move}!"
+  "kidCoachMissedMate": "¡Podías dar jaque mate con {move}!",
+  "kidGameUndoOfferSide": "{side, select, white{Blancas, ¿repetimos la jugada?} other{Negras, ¿repetimos la jugada?}}",
+  "kidGameUndoOfferName": "{name}, ¿repetimos la jugada?",
+  "kidGameUndoYes": "Sí, repitámosla"
 }
