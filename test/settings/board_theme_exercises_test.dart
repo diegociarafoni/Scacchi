@@ -3,10 +3,10 @@ import 'dart:math';
 import 'package:chessground/chessground.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/minigames/capture_all_page.dart';
-import 'package:scacchi/path/curriculum.dart';
-import 'package:scacchi/path/stage_page.dart';
-import 'package:scacchi/settings/settings.dart';
+import 'package:rokko/minigames/capture_all_page.dart';
+import 'package:rokko/path/curriculum.dart';
+import 'package:rokko/path/stage_page.dart';
+import 'package:rokko/settings/settings.dart';
 
 import '../localized_app.dart';
 

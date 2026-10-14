@@ -43,7 +43,8 @@ class Backup {
     this.version = _version,
   });
 
-  static const _app = 'scacchi';
+  static const _app = 'rokko';
+  static const _appVecchio = 'scacchi';
 
   /// 2: comprende anche settimana, grandi maestri, finali, partita a due
   /// telefoni e file binari (foto del profilo).
@@ -133,7 +134,7 @@ class Backup {
   static Backup decode(String text) {
     try {
       final json = jsonDecode(text) as Map<String, Object?>;
-      if (json['app'] != _app) {
+      if (json['app'] != _app && json['app'] != _appVecchio) {
         throw BackupException(BackupProblem.notApp);
       }
       final version = json['version'];

@@ -5,7 +5,7 @@ import 'package:chessground/chessground.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:scacchi/main.dart';
+import 'package:rokko/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../test/game_actions.dart';
@@ -34,7 +34,7 @@ void main() {
     addTearDown(tester.view.reset);
     // Avvio: dal lancio alla Home con la barra di navigazione, pronta a giocare.
     final startup = Stopwatch()..start();
-    await tester.pumpWidget(const ScacchiApp());
+    await tester.pumpWidget(const RokkoApp());
     while (find.byType(NavigationBar).evaluate().isEmpty) {
       await tester.pump(const Duration(milliseconds: 16));
     }

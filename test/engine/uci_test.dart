@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/engine/uci.dart';
+import 'package:rokko/engine/uci.dart';
 
 void main() {
   test('legge bestmove, anche a partita finita', () {

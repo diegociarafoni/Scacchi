@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/main.dart';
-import 'package:scacchi/settings/settings.dart';
-import 'package:scacchi/theme/no_transitions.dart';
+import 'package:rokko/main.dart';
+import 'package:rokko/settings/settings.dart';
+import 'package:rokko/theme/no_transitions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -50,7 +50,7 @@ void main() {
     testWidgets('l\'app segue l\'impostazione di sistema e toglie le '
         'transizioni tra le pagine', (tester) async {
       SharedPreferences.setMockInitialValues({});
-      await tester.pumpWidget(const ScacchiApp());
+      await tester.pumpWidget(const RokkoApp());
       await tester.pumpAndSettle();
       BuildContext context() => tester.element(find.byType(Scaffold).first);
       expect(SettingsScope.maybeOf(context())!.reduceMotion, isFalse);

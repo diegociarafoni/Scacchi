@@ -1,8 +1,8 @@
 import 'package:dartchess/dartchess.dart' show Side;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/settings/board_frame.dart';
-import 'package:scacchi/settings/settings.dart';
+import 'package:rokko/settings/board_frame.dart';
+import 'package:rokko/settings/settings.dart';
 
 Future<double> _boardSide(WidgetTester tester, AppSettings s) async {
   await tester.pumpWidget(

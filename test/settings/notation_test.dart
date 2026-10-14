@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/settings/notation.dart';
+import 'package:rokko/settings/notation.dart';
 
 void main() {
   group('RF-76 notazione delle mosse', () {

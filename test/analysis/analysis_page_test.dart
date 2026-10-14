@@ -4,11 +4,11 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/analysis/analysis_page.dart';
-import 'package:scacchi/engine/uci.dart';
-import 'package:scacchi/settings/board_marks.dart';
-import 'package:scacchi/settings/settings.dart';
-import 'package:scacchi/share/position_image_page.dart';
+import 'package:rokko/analysis/analysis_page.dart';
+import 'package:rokko/engine/uci.dart';
+import 'package:rokko/settings/board_marks.dart';
+import 'package:rokko/settings/settings.dart';
+import 'package:rokko/share/position_image_page.dart';
 
 import '../board_marks_helpers.dart';
 import '../localized_app.dart';

@@ -2,10 +2,10 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/game/game_page.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/settings/settings.dart';
-import 'package:scacchi/share/position_image_page.dart';
+import 'package:rokko/game/game_page.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/settings/settings.dart';
+import 'package:rokko/share/position_image_page.dart';
 
 Offset square(WidgetTester tester, String name) {
   final rect = tester.getRect(find.byType(Chessboard));

@@ -2,8 +2,8 @@ import 'dart:typed_data';
 
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/game/clock.dart';
-import 'package:scacchi/multiplayer/game_invite.dart';
+import 'package:rokko/game/clock.dart';
+import 'package:rokko/multiplayer/game_invite.dart';
 
 Uint8List bytes(int n, int fill) => Uint8List.fromList(List.filled(n, fill));
 

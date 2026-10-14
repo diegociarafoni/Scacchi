@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/path/curriculum.dart';
-import 'package:scacchi/path/path_progress.dart';
+import 'package:rokko/path/curriculum.dart';
+import 'package:rokko/path/path_progress.dart';
 
 void main() {
   final first = curriculum.first.stages.first;

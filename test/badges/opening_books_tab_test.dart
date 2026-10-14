@@ -2,14 +2,14 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/badges/badges_page.dart';
-import 'package:scacchi/badges/opening_books_tab.dart';
-import 'package:scacchi/badges/opening_volumes.dart';
-import 'package:scacchi/badges/recent_badges.dart';
-import 'package:scacchi/progress/activity.dart';
-import 'package:scacchi/progress/progress_controller.dart';
-import 'package:scacchi/progress/progress_state.dart';
-import 'package:scacchi/progress/progress_store.dart';
+import 'package:rokko/badges/badges_page.dart';
+import 'package:rokko/badges/opening_books_tab.dart';
+import 'package:rokko/badges/opening_volumes.dart';
+import 'package:rokko/badges/recent_badges.dart';
+import 'package:rokko/progress/activity.dart';
+import 'package:rokko/progress/progress_controller.dart';
+import 'package:rokko/progress/progress_state.dart';
+import 'package:rokko/progress/progress_store.dart';
 
 import '../content_support.dart';
 import '../localized_app.dart';

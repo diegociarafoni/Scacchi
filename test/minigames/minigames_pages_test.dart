@@ -5,16 +5,16 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart' hide File;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/minigames/capture_all.dart';
-import 'package:scacchi/minigames/capture_all_page.dart';
-import 'package:scacchi/minigames/coordinates_page.dart';
-import 'package:scacchi/minigames/minigames_page.dart';
-import 'package:scacchi/minigames/quiz.dart';
-import 'package:scacchi/minigames/quiz_page.dart';
-import 'package:scacchi/progress/activity.dart';
-import 'package:scacchi/progress/progress_controller.dart';
-import 'package:scacchi/progress/progress_store.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/minigames/capture_all.dart';
+import 'package:rokko/minigames/capture_all_page.dart';
+import 'package:rokko/minigames/coordinates_page.dart';
+import 'package:rokko/minigames/minigames_page.dart';
+import 'package:rokko/minigames/quiz.dart';
+import 'package:rokko/minigames/quiz_page.dart';
+import 'package:rokko/progress/activity.dart';
+import 'package:rokko/progress/progress_controller.dart';
+import 'package:rokko/progress/progress_store.dart';
 
 import '../localized_app.dart';
 

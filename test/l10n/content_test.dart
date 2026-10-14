@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/l10n/content.dart';
+import 'package:rokko/l10n/content.dart';
 
 /// Contenitore di file in memoria, per provare il caricamento senza asset.
 class _Bundle extends CachingAssetBundle {

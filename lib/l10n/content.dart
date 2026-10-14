@@ -129,7 +129,7 @@ class ContentText {
 
 /// Contenuti della lingua attiva, caricati una volta all'avvio.
 ///
-/// L'app li carica prima di mostrare le schermate (`ScacchiApp`), i test dal
+/// L'app li carica prima di mostrare le schermate (`RokkoApp`), i test dal
 /// disco (`test/flutter_test_config.dart`).
 abstract final class Content {
   static final Map<String, ContentText> _byName = {};

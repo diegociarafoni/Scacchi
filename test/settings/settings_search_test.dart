@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/settings/settings.dart';
-import 'package:scacchi/settings/settings_page.dart';
-import 'package:scacchi/settings/settings_search.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/settings/settings.dart';
+import 'package:rokko/settings/settings_page.dart';
+import 'package:rokko/settings/settings_search.dart';
 
 import '../localized_app.dart';
 import 'settings_nav.dart';

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/game/game_page.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/path/curriculum.dart';
-import 'package:scacchi/path/stage_page.dart';
-import 'package:scacchi/settings/settings.dart';
-import 'package:scacchi/settings/settings_page.dart';
-import 'package:scacchi/storage/key_value_store.dart';
+import 'package:rokko/game/game_page.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/path/curriculum.dart';
+import 'package:rokko/path/stage_page.dart';
+import 'package:rokko/settings/settings.dart';
+import 'package:rokko/settings/settings_page.dart';
+import 'package:rokko/storage/key_value_store.dart';
 
 import '../content_support.dart';
 import '../game/game_qr_test.dart' show tapMove;

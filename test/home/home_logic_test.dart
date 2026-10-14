@@ -1,10 +1,10 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/archive/saved_game.dart';
-import 'package:scacchi/engine/bot_collection.dart';
-import 'package:scacchi/engine/bots.dart';
-import 'package:scacchi/home/home_logic.dart';
-import 'package:scacchi/path/curriculum.dart';
+import 'package:rokko/archive/saved_game.dart';
+import 'package:rokko/engine/bot_collection.dart';
+import 'package:rokko/engine/bots.dart';
+import 'package:rokko/home/home_logic.dart';
+import 'package:rokko/path/curriculum.dart';
 
 SavedGame game(
   String id, {

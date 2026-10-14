@@ -5,11 +5,11 @@ import 'dart:typed_data';
 import 'package:dartchess/dartchess.dart' hide File;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/analysis/analysis_page.dart';
-import 'package:scacchi/engine/uci.dart';
-import 'package:scacchi/settings/notation.dart';
-import 'package:scacchi/tablebase/perfect_endgame_card.dart';
-import 'package:scacchi/tablebase/tablebase_service.dart';
+import 'package:rokko/analysis/analysis_page.dart';
+import 'package:rokko/engine/uci.dart';
+import 'package:rokko/settings/notation.dart';
+import 'package:rokko/tablebase/perfect_endgame_card.dart';
+import 'package:rokko/tablebase/tablebase_service.dart';
 
 import '../localized_app.dart';
 

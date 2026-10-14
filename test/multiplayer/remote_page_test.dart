@@ -4,14 +4,14 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart' hide File;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/exchange/qr_code_view.dart';
-import 'package:scacchi/multiplayer/channel_registry.dart';
-import 'package:scacchi/multiplayer/game_invite.dart';
-import 'package:scacchi/multiplayer/multiplayer_controller.dart';
-import 'package:scacchi/multiplayer/multiplayer_page.dart';
-import 'package:scacchi/multiplayer/remote_watch.dart';
-import 'package:scacchi/multiplayer/saved_game.dart';
-import 'package:scacchi/multiplayer/transport.dart';
+import 'package:rokko/exchange/qr_code_view.dart';
+import 'package:rokko/multiplayer/channel_registry.dart';
+import 'package:rokko/multiplayer/game_invite.dart';
+import 'package:rokko/multiplayer/multiplayer_controller.dart';
+import 'package:rokko/multiplayer/multiplayer_page.dart';
+import 'package:rokko/multiplayer/remote_watch.dart';
+import 'package:rokko/multiplayer/saved_game.dart';
+import 'package:rokko/multiplayer/transport.dart';
 
 import '../localized_app.dart';
 

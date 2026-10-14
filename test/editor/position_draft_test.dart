@@ -1,9 +1,9 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/editor/position_draft.dart';
-import 'package:scacchi/editor/position_editor_page.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
+import 'package:rokko/editor/position_draft.dart';
+import 'package:rokko/editor/position_editor_page.dart';
+import 'package:rokko/l10n/app_localizations.dart';
 
 const _start = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
 const _wk = Piece(color: Side.white, role: Role.king);

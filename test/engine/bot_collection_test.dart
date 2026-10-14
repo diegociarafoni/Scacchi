@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/engine/bot_collection.dart';
-import 'package:scacchi/engine/bots.dart';
-import 'package:scacchi/storage/key_value_store.dart';
+import 'package:rokko/engine/bot_collection.dart';
+import 'package:rokko/engine/bots.dart';
+import 'package:rokko/storage/key_value_store.dart';
 
 void main() {
   final day = DateTime.utc(2026, 10, 11);

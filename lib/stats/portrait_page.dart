@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../archive/game_archive.dart';
 import '../l10n/app_localizations.dart';
 import '../share/image_sharing.dart';
+import '../theme/sheets.dart';
 import 'portrait.dart';
 
 export '../share/image_sharing.dart' show ShareImage;
@@ -109,7 +110,7 @@ class _PortraitPageState extends State<PortraitPage> {
               ),
             )
           : ListView(
-              padding: const EdgeInsets.all(16),
+              padding: context.withSystemBottom(const EdgeInsets.all(16)),
               children: [
                 RepaintBoundary(
                   key: _card,

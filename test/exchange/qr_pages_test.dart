@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/exchange/qr_code_view.dart';
-import 'package:scacchi/exchange/qr_receive_page.dart';
-import 'package:scacchi/exchange/qr_send_page.dart';
-import 'package:scacchi/exchange/qr_transfer.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
+import 'package:rokko/exchange/qr_code_view.dart';
+import 'package:rokko/exchange/qr_receive_page.dart';
+import 'package:rokko/exchange/qr_send_page.dart';
+import 'package:rokko/exchange/qr_transfer.dart';
+import 'package:rokko/l10n/app_localizations.dart';
 
 const _pgn = '[White "Anna"]\n[Black "Bruno"]\n\n1. f3 e5 2. g4 Qh4# 0-1\n';
 
