@@ -230,4 +230,40 @@ void main() {
     );
     await _golden(tester, 'percorso-bambino-telefono-medio');
   });
+
+  testWidgets(
+    'Home su tablet in orizzontale: colonna laterale',
+    skip: _skip != null,
+    (tester) async {
+      tester.view
+        ..physicalSize = const Size(1180, 820) * 2
+        ..devicePixelRatio = 2;
+      addTearDown(tester.view.reset);
+      final progress = ProgressController(
+        ProgressStore(File('${dir.path}/p.json')),
+        clock: () => DateTime(2026, 10, 5, 12),
+      );
+      await tester.runAsync(progress.load);
+      await tester.pumpWidget(
+        SettingsScope(
+          controller: SettingsController.defaults(),
+          child: MaterialApp(
+            theme: RokkoTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            locale: const Locale('it'),
+            home: HomeShell(
+              settings: SettingsController.defaults(),
+              computerAvailable: true,
+              progress: () async => progress,
+              path: () async => path,
+              archive: () async => GameArchive(File('${dir.path}/games.json')),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await _golden(tester, 'home-tablet-orizzontale');
+    },
+  );
 }
