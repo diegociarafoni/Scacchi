@@ -103,7 +103,7 @@ Il dettaglio di U1-U11 è in `consegne/analisi-ux-ui.md`; il comportamento attua
 | S5 | **Ricompense legate alla storia**: scacchiere e pezzi sbloccabili con nome a tema | parziale | Claude | piccola | 0.15.0 | scacchiere a tema sbloccate dai capitoli (Villaggio, Torre, Corona); per i pezzi servono immagini nuove, rinviati |
 | S6 | **Aiuto quando ci si blocca**: dopo due errori sullo stesso puzzle, un indizio o un puzzle più facile | fatta | da assegnare | piccola | 0.15.0 |
 | U1 | **Comandi di partita meno affollati**: 4 azioni in barra, Patta, Abbandona e Nuova in un pannello «Partita»; Allenatore e Minaccia come interruttori — fatto nel profilo bambino (pannello «Partita»); per gli adulti Nuova, Patta e Abbandona restano in barra (scelta di #225) | parziale | da assegnare | media | 0.12.0 |
-| U2 | **Identità visiva di Rokko**: tema proprio, carattere con personalità, torre-mascotte negli stati vuoti e a fine partita | parziale | da assegnare | media | 0.14.0 |
+| U2 | **Identità visiva di Rokko**: tema proprio, carattere con personalità, torre-mascotte negli stati vuoti e a fine partita | parziale: torre negli stati vuoti dell'archivio e delle aperture personali, resta a fine partita | da assegnare | media | 0.14.0 |
 | U3 | **Layout della partita senza spazio morto** su schermate alte — in verticale lo spazio sopra la scacchiera è della lista mosse e dei suggerimenti; da verificare su schermate molto alte | parziale | da assegnare | media | 0.12.0 |
 | U4 | **Testi tutti localizzati** nei file `.arb` | parziale | P1 | grande | 0.11.0 |
 | U7 | **Barra del titolo della partita più semplice**: editor e tastiera nel menu ⋮; tastiera visibile con un lettore di schermo | fatta | da assegnare | piccola | 0.12.0 |

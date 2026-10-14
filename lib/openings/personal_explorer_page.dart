@@ -10,6 +10,7 @@ import '../game/chess_game.dart';
 import '../l10n/app_localizations.dart';
 import '../settings/notation.dart';
 import '../settings/settings.dart';
+import '../theme/rokko_mascot.dart';
 import '../training/training_board.dart';
 import 'explorer_page.dart';
 import 'opening_assets.dart';
@@ -171,7 +172,7 @@ class _PersonalExplorerPageState extends State<PersonalExplorerPage> {
     final tree = _tree!;
     final text = Theme.of(context).textTheme;
     final notation = AppSettings.of(context).notation;
-    if (_games!.isEmpty) return _Message(l10n.personalEmpty);
+    if (_games!.isEmpty) return EmptyState(l10n.personalEmpty);
     final next = tree.continuationsAt(_positions.last);
     return LayoutBuilder(
       builder: (context, c) {
