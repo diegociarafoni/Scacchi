@@ -423,6 +423,7 @@ class AppSettings {
     this.markColor = MarkColor.green,
     this.autoFlip = false,
     this.animation = AnimationSpeed.normal,
+    this.reduceMotion = false,
     this.boardTheme = BoardTheme.spazio,
     this.pieceSet = PieceStyle.cburnett,
     this.backdrop = BoardBackdrop.standard,
@@ -479,6 +480,10 @@ class AppSettings {
   final MarkColor markColor;
   final bool autoFlip;
   final AnimationSpeed animation;
+
+  /// Il sistema chiede di ridurre le animazioni (RNF-07): vince su [animation].
+  /// Non si salva: lo decide il telefono.
+  final bool reduceMotion;
   final BoardTheme boardTheme;
   final PieceStyle pieceSet;
 
@@ -574,6 +579,7 @@ class AppSettings {
     MarkColor? markColor,
     bool? autoFlip,
     AnimationSpeed? animation,
+    bool? reduceMotion,
     BoardTheme? boardTheme,
     PieceStyle? pieceSet,
     BoardBackdrop? backdrop,
@@ -607,6 +613,7 @@ class AppSettings {
     markColor: markColor ?? this.markColor,
     autoFlip: autoFlip ?? this.autoFlip,
     animation: animation ?? this.animation,
+    reduceMotion: reduceMotion ?? this.reduceMotion,
     boardTheme: boardTheme ?? this.boardTheme,
     pieceSet: pieceSet ?? this.pieceSet,
     backdrop: backdrop ?? this.backdrop,
@@ -648,7 +655,7 @@ class AppSettings {
     pieceAssets: pieceSet.assetsOn(boardTheme),
     enableCoordinates: showCoordinates && !coordinatesOutside,
     showValidMoves: showLegalMoves,
-    animationDuration: animation.duration,
+    animationDuration: reduceMotion ? Duration.zero : animation.duration,
     autoQueenPromotion: autoQueen,
     drawShape: DrawShapeOptions(
       enable: drawShapes,
@@ -685,6 +692,7 @@ class AppSettings {
       other.markColor == markColor &&
       other.autoFlip == autoFlip &&
       other.animation == animation &&
+      other.reduceMotion == reduceMotion &&
       other.boardTheme == boardTheme &&
       other.pieceSet == pieceSet &&
       other.backdrop == backdrop &&
@@ -720,6 +728,7 @@ class AppSettings {
     markColor,
     autoFlip,
     animation,
+    reduceMotion,
     boardTheme,
     pieceSet,
     backdrop,
@@ -762,6 +771,12 @@ class SettingsController extends ValueNotifier<AppSettings> {
   set value(AppSettings v) {
     SoundPlayer.activeSet = v.soundSet;
     super.value = v;
+  }
+
+  /// Segue la richiesta del sistema di ridurre le animazioni (RNF-07).
+  void setReduceMotion(bool reduce) {
+    if (value.reduceMotion == reduce) return;
+    value = value.copyWith(reduceMotion: reduce);
   }
 
   static Future<SettingsController> load() async {
