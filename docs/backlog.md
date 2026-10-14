@@ -49,7 +49,7 @@ Rokko è open source e gratuito. Questi vincoli valgono per ogni voce.
 | A-6 / RM-02 | **Tocco**: correzione quando il dito cade sul bordo di una casa; due tocchi come modo predefinito su telefono | fatta | P0 | piccola | 0.12.0 | `lib/game/tap_assist.dart`, `MoveMethod` in `lib/settings/settings.dart`; test in `test/game/tap_assist_test.dart` e `move_method_test.dart` |
 | A-7 / RM-06 | **Schermo sempre acceso** durante la partita | fatta | P0 | piccola | 0.12.0 | `_syncAwake` in `lib/game/game_page.dart` con `wakelock_plus`; test in `test/game/keep_awake_test.dart` |
 | A-8 / RM-07 | **Avvio rapido**: pronta a giocare in meno di 2 secondi su un telefono di fascia media, con misura e budget in CI | parziale | P0 | piccola | 0.14.0 | `integration_test/fluidita_perf.dart` misura la fluidità, non l'avvio |
-| A-9 / RF-31 | **Modalità tavolo**: ruotare di 180° tutti i pezzi del lato superiore, non solo quelli del giocatore in alto | parziale | P0 | piccola | 0.12.0 | `tableMode` in `lib/settings/settings.dart`; da confermare se la differenza conta |
+| A-9 / RF-31 | **Modalità tavolo**: ruotare di 180° tutti i pezzi del lato superiore, non solo quelli del giocatore in alto | fatta | P0 | piccola | 0.12.0 | `tableMode` in `lib/settings/settings.dart`: `opponentUpsideDown` di chessground capovolge tutti i pezzi del lato superiore |
 
 ### A.2 Analisi, revisione, archivio
 
@@ -103,13 +103,13 @@ Il dettaglio di U1-U11 è in `consegne/analisi-ux-ui.md`; il comportamento attua
 | S4 | **Un bivio per capitolo** (tattica o finali) con puzzle diversi | da fare | da assegnare | media | 0.15.0 |
 | S5 | **Ricompense legate alla storia**: scacchiere e pezzi sbloccabili con nome a tema | da fare | da assegnare | piccola | 0.15.0 |
 | S6 | **Aiuto quando ci si blocca**: dopo due errori sullo stesso puzzle, un indizio o un puzzle più facile | fatta | da assegnare | piccola | 0.15.0 |
-| U1 | **Comandi di partita meno affollati**: 4 azioni in barra, Patta, Abbandona e Nuova in un pannello «Partita»; Allenatore e Minaccia come interruttori | da fare | da assegnare | media | 0.12.0 |
+| U1 | **Comandi di partita meno affollati**: 4 azioni in barra, Patta, Abbandona e Nuova in un pannello «Partita»; Allenatore e Minaccia come interruttori | parziale | da assegnare | media | 0.12.0 | fatto nel profilo bambino (pannello «Partita»); per gli adulti Nuova, Patta e Abbandona restano in barra (scelta di #225) |
 | U2 | **Identità visiva di Rokko**: tema proprio, carattere con personalità, torre-mascotte negli stati vuoti e a fine partita | parziale | da assegnare | media | 0.14.0 |
-| U3 | **Layout della partita senza spazio morto** su schermate alte | da fare | da assegnare | media | 0.12.0 |
+| U3 | **Layout della partita senza spazio morto** su schermate alte | parziale | da assegnare | media | 0.12.0 | in verticale lo spazio sopra la scacchiera è della lista mosse e dei suggerimenti; da verificare su schermate molto alte |
 | U4 | **Testi tutti localizzati** nei file `.arb` | parziale | P1 | grande | 0.11.0 |
 | U5 | **Scheda Tu raggruppata** (Impara, Gioca, I miei dati) con «Continua da dove eri» in testa | da fare | da assegnare | media | 0.13.0 |
 | U6 | **Impostazioni in sezioni** comprimibili, con ricerca e galleria dei temi | parziale | da assegnare | media | 0.13.0 |
-| U7 | **Barra del titolo della partita più semplice**: editor e tastiera nel menu ⋮; tastiera visibile con un lettore di schermo | da fare | da assegnare | piccola | 0.12.0 |
+| U7 | **Barra del titolo della partita più semplice**: editor e tastiera nel menu ⋮; tastiera visibile con un lettore di schermo | fatta | da assegnare | piccola | 0.12.0 |
 | U8 | **Golden fedeli all'app reale**: tema predefinito e font veri; aggiungere Puzzle, Percorso, Storia, Multigiocatore, Tu e profilo bambino | da fare | da assegnare | media | 0.14.0 |
 | U9 | **Profilo bambino coerente** in tutte le schermate, con un test che cerca le cifre nei testi | da fare | da assegnare | media | 0.15.0 |
 | U10 | **Funzioni scopribili**: suggerimenti al primo uso e invito a rivedere la prima partita conclusa | da fare | da assegnare | media | 0.13.0 |
