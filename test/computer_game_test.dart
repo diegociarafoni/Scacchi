@@ -34,7 +34,7 @@ void main() {
     SettingsController? settings,
   }) => MaterialApp(
     home: GamePage(
-      settings: settings ?? SettingsController.defaults(),
+      settings: settings ?? trainingSettings(),
       computerAvailable: true,
       now: () => TestWidgetsFlutterBinding.instance.clock.now(),
       createComputer: () => ComputerPlayer(
