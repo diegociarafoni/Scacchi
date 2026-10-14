@@ -75,7 +75,7 @@ Rokko è open source e gratuito. Questi vincoli valgono per ogni voce.
 | ID | Funzione | Stato | Pri | Dim | Versione | Evidenza |
 |---|---|---|---|---|---|---|
 | A-24 / RG-17 (estensione) | **Badge** del multigiocatore e del ripasso del repertorio | da fare | P1 | media | 0.15.0 | `docs/badge.md`, «Non ancora attivi»; nessun aggancio ai progressi in `lib/multiplayer/` |
-| A-25 / RG-09 | **Tornei con partite vere** tra i bot e gironi da 4 a 8 giocatori | parziale | P2 | grande | 0.15.0 | le partite tra bot sono simulate con una formula Elo (`docs/tornei.md`); in alternativa dichiarare la scelta (piccola) |
+| A-25 / RG-09 | **Tornei con partite vere** tra i bot e gironi da 4 a 8 giocatori | fatta | P2 | grande | 0.15.0 | le partite dell'utente sono vere; quelle tra bot restano simulate con la formula Elo, scelta dichiarata in `docs/tornei.md` |
 | A-26 / RMP | **Orologio nelle partite a distanza** e prova su telefoni veri con un `integration_test` | parziale | P1 | media | 0.15.0 | `docs/multigiocatore.md` (limiti noti) |
 | A-27 | **Percorso «dai miei errori»**: capitoli personali generati dai temi tattici sbagliati più spesso | da fare | P2 | media | 0.15.0 | esistono i puzzle personali (`lib/review/personal_puzzles.dart`) e la coda di ripasso, non agganciati al percorso |
 

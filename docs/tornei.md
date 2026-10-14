@@ -1,6 +1,6 @@
 # Tornei offline contro bot
 
-Requisito RG-09: tornei da 4 a 8 giocatori (l'utente e da 3 a 7 bot; la schermata offre 4, 5, 6 o 8) senza servizi online, con partite vere. Il codice è in `lib/tournament/`.
+Requisito RG-09: tornei da 4 a 8 giocatori (l'utente e da 3 a 7 bot; la schermata offre 4, 5, 6 o 8) senza servizi online. Le partite dell'utente sono vere; quelle tra i bot sono simulate (vedi sotto). Il codice è in `lib/tournament/`.
 
 ## Formule
 
@@ -22,6 +22,10 @@ L'utente è sempre il giocatore 0 e gioca partite vere contro il motore, anche l
 - estrazione con `mix32` sul seme del torneo, sul turno e sulla scacchiera: lo stesso torneo dà sempre gli stessi risultati, anche dopo un riavvio.
 
 Se l'utente esce nell'eliminazione diretta, i turni rimanenti si simulano subito e il torneo si chiude.
+
+### Perché le partite tra i bot sono simulate
+
+Scelta dichiarata per il requisito RG-09: con otto giocatori il girone ha 28 partite, di cui 24 tra bot. Giocarle con il motore vorrebbe dire far girare due istanze di Stockfish per decine di minuti a ogni torneo, con batteria e riscaldamento del telefono a carico dell'utente e senza che nessuno guardi quelle partite. La formula Elo dà lo stesso tipo di risultati (più forte vince più spesso, patte più frequenti tra forze vicine), è istantanea e ripetibile con lo stesso seme. Si rivaluta se un giorno le partite tra bot diventano un contenuto da mostrare (per esempio da rivedere dopo il torneo).
 
 ## Salvataggio e bacheca
 
