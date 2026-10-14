@@ -86,6 +86,10 @@
   "@pathStageWrong": {
     "description": "Avviso dopo una mossa sbagliata in un esercizio"
   },
+  "pathStageSaved": "La pièce est sauvée, mais cet exercice demande de la défendre.",
+  "@pathStageSaved": {
+    "description": "Avviso dopo una mossa che mette in salvo il pezzo senza difenderlo, in un esercizio che chiede di difenderlo"
+  },
   "pathStageGood": "Bien, continue.",
   "@pathStageGood": {
     "description": "Conferma dopo una mossa giusta, con altre mosse da trovare"

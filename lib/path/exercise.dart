@@ -128,6 +128,10 @@ enum LineGoal {
 
   /// Basta dare scacco: qualunque mossa che dà scacco all'ultimo passo vale.
   check,
+
+  /// Vale ogni mossa dopo cui il pezzo in [LineExercise.guard] è difeso, anche
+  /// se l'esercizio ne indica una sola: le alternative sono equivalenti.
+  defend,
 }
 
 /// Posizione da cui trovare una sequenza di mosse. I passi pari sono del
@@ -138,11 +142,15 @@ class LineExercise extends Exercise {
     required this.fen,
     required this.steps,
     required this.goal,
-  });
+    this.guard,
+  }) : assert(goal != LineGoal.defend || guard != null);
 
   final String fen;
   final List<String> steps;
   final LineGoal goal;
+
+  /// Casa del pezzo da difendere, per [LineGoal.defend] (un solo passo).
+  final Square? guard;
 }
 
 enum MoveVerdict { wrong, correct, solved }
@@ -160,10 +168,15 @@ class LineRun extends ExerciseRun {
   /// Ultima risposta automatica dell'avversario.
   Move? lastReply;
 
+  /// Dopo l'ultima mossa sbagliata il pezzo da difendere non è più attaccato
+  /// (si è spostato o l'attaccante è stato preso), ma non è difeso.
+  bool savedWithoutDefending = false;
+
   @override
   bool get done => step >= exercise.steps.length;
 
   MoveVerdict play(Move move) {
+    savedWithoutDefending = false;
     if (done || !position.isLegal(move)) return MoveVerdict.wrong;
     final san = position.makeSan(move).$2;
     final last = step == exercise.steps.length - 1;
@@ -184,9 +197,13 @@ class LineRun extends ExerciseRun {
               LineGoal.check =>
                 after.isCheck && expected.any((m) => _role(m) == _role(move)),
               LineGoal.line => false,
+              LineGoal.defend => _defends(move, after),
             });
     if (!ok) {
       mistakes++;
+      if (exercise.goal == LineGoal.defend) {
+        savedWithoutDefending = _isSafe(move, after);
+      }
       return MoveVerdict.wrong;
     }
     position = after;
@@ -198,6 +215,29 @@ class LineRun extends ExerciseRun {
       step++;
     }
     return done ? MoveVerdict.solved : MoveVerdict.correct;
+  }
+
+  /// Il pezzo da difendere, dopo [move], è su questa casa.
+  Square _guardAfter(Move move) => switch (move) {
+    NormalMove(:final from, :final to) when from == exercise.guard => to,
+    _ => exercise.guard!,
+  };
+
+  /// Il pezzo resta al suo posto e un altro pezzo del giocatore lo difende.
+  bool _defends(Move move, Position after) =>
+      _guardAfter(move) == exercise.guard &&
+      after.board.attacksTo(exercise.guard!, position.turn).isNotEmpty;
+
+  /// Nessun pezzo avversario attacca più il pezzo da difendere né quello che
+  /// è appena stato mosso (altrimenti si è solo cambiato il pezzo perso).
+  bool _isSafe(Move move, Position after) {
+    final opponent = position.turn.opposite;
+    final moved = switch (move) {
+      NormalMove(:final to) => to,
+      DropMove(:final to) => to,
+    };
+    return after.board.attacksTo(_guardAfter(move), opponent).isEmpty &&
+        after.board.attacksTo(moved, opponent).isEmpty;
   }
 
   Role? _role(Move move) => switch (move) {

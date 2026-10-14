@@ -151,4 +151,62 @@ void main() {
       expect(run.stars, 1);
     });
   });
+
+  group('obiettivo difendere', () {
+    // Cavallo d2 attaccato dall'alfiere b4: lo difendono Td1 e Ta2, non Tf1.
+    const defend = LineExercise(
+      fen: '6k1/8/8/8/1b6/8/3N4/R5K1 w - - 0 1',
+      steps: ['a1d1'],
+      goal: LineGoal.defend,
+      guard: Square.d2,
+    );
+
+    test('vale ogni mossa che difende il pezzo', () {
+      expect(LineRun(defend).play(Move.parse('a1d1')!), MoveVerdict.solved);
+      expect(LineRun(defend).play(Move.parse('a1a2')!), MoveVerdict.solved);
+    });
+
+    test('una mossa di torre che non difende è sbagliata', () {
+      final run = LineRun(defend);
+      expect(run.play(Move.parse('a1f1')!), MoveVerdict.wrong);
+      expect(run.savedWithoutDefending, isFalse);
+      expect(run.play(Move.parse('a1a8')!), MoveVerdict.wrong);
+      expect(run.savedWithoutDefending, isFalse);
+    });
+
+    test('mettere in salvo il pezzo senza difenderlo ha un esito a parte', () {
+      for (final uci in ['d2f3', 'd2b3', 'd2e4', 'd2f1', 'd2b1']) {
+        final run = LineRun(defend);
+        expect(run.play(Move.parse(uci)!), MoveVerdict.wrong, reason: uci);
+        expect(run.savedWithoutDefending, isTrue, reason: uci);
+      }
+    });
+
+    test('l\'esito a parte si azzera alla mossa seguente', () {
+      final run = LineRun(defend);
+      run.play(Move.parse('d2f3')!);
+      run.play(Move.parse('a1f1')!);
+      expect(run.savedWithoutDefending, isFalse);
+    });
+
+    test('dopo la cattura di un cavallo difeso il pezzo non è in salvo', () {
+      const capture = LineExercise(
+        fen: '6k1/8/8/4p3/3n4/5R2/8/Q3K3 w - - 0 1',
+        steps: ['a1a3'],
+        goal: LineGoal.defend,
+        guard: Square.f3,
+      );
+      final run = LineRun(capture);
+      // Il cavallo è difeso dal pedone: Dxd4 perde la donna, non salva nulla.
+      expect(run.play(Move.parse('a1d4')!), MoveVerdict.wrong);
+      expect(run.savedWithoutDefending, isFalse);
+      for (final uci in ['a1a3', 'a1c3', 'a1d1', 'a1a8', 'e1f2']) {
+        expect(
+          LineRun(capture).play(Move.parse(uci)!),
+          MoveVerdict.solved,
+          reason: uci,
+        );
+      }
+    });
+  });
 }
