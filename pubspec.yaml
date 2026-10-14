@@ -74,6 +74,8 @@ flutter:
     - assets/pieces/stampa/
     - assets/pieces/noto/
     - assets/pieces/papercut/
+    - assets/pieces/pirouetti/
+    - assets/pieces/letter/
     - assets/pieces/pixel/
     - assets/pieces/rokko/
     - assets/pieces/halo/arcano/
@@ -87,6 +89,8 @@ flutter:
     - assets/pieces/halo/mpchess/
     - assets/pieces/halo/noto/
     - assets/pieces/halo/papercut/
+    - assets/pieces/halo/pirouetti/
+    - assets/pieces/halo/letter/
     - assets/pieces/halo/pixel/
     - assets/pieces/halo/rhosgfx/
     - assets/pieces/halo/rokko/
