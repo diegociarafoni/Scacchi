@@ -70,3 +70,15 @@ num budgetValue(Map<String, dynamic> policy, List<String> path) {
   }
   return node;
 }
+
+/// Violazioni del tempo di avvio (dal lancio alla Home pronta a giocare) in un
+/// rapporto con il campo `startup_ms`; vuota se è entro [maxMs].
+List<String> startupViolations(
+  Map<String, dynamic> report, {
+  required num maxMs,
+}) {
+  final ms = report['startup_ms'];
+  if (ms is! num) return ['rapporto incompleto: manca il tempo di avvio'];
+  if (ms > maxMs) return ['avvio in $ms ms (massimo $maxMs ms)'];
+  return [];
+}
