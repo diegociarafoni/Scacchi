@@ -61,6 +61,7 @@ import '../share/position_image.dart';
 import '../share/position_image_page.dart';
 import '../storage/key_value_store.dart';
 import '../tablebase/shared_tablebase.dart';
+import '../theme/motion.dart';
 import '../theme/rokko_icons.dart';
 import '../theme/rokko_theme.dart';
 import '../theme/sheets.dart';
@@ -895,7 +896,11 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     WidgetBuilder builder, {
     bool Function(T? result)? restart,
   }) => _whileSuspended(
-    () => showDialog<T>(context: context, builder: builder),
+    () => showDialog<T>(
+      context: context,
+      animationStyle: motionStyle(context),
+      builder: builder,
+    ),
     restart: restart,
   );
 
@@ -1439,6 +1444,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       }
       return showDialog<bool>(
         context: context,
+        animationStyle: motionStyle(context),
         builder: (context) {
           final l10n = _l10n(context);
           return AlertDialog(
@@ -2166,6 +2172,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final position = _game.position;
     final move = await showDialog<Move>(
       context: context,
+      animationStyle: motionStyle(context),
       builder: (_) => _MoveInputDialog(position: position),
     );
     if (move == null || !mounted || _viewPly != null || _game.isOver) return;

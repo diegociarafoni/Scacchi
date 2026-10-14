@@ -13,6 +13,7 @@ import '../game/clock.dart';
 import '../game/move_speech.dart';
 import '../l10n/app_localizations.dart';
 import '../progress/activity.dart';
+import '../theme/motion.dart';
 import '../theme/rokko_theme.dart';
 import '../training/training_board.dart';
 import 'ble_link.dart';
@@ -153,6 +154,7 @@ class _FriendGamePanelState extends State<FriendGamePanel> {
     final l10n = multiplayerL10n(context);
     final ok = await showDialog<bool>(
       context: context,
+      animationStyle: motionStyle(context),
       builder: (context) => AlertDialog(
         title: Text(l10n.multiplayerDiscardTitle),
         content: Text(l10n.multiplayerDiscardBody),
@@ -252,6 +254,7 @@ class _FriendGamePanelState extends State<FriendGamePanel> {
     final invite = byLink
         ? await showDialog<GameInvite>(
             context: context,
+            animationStyle: motionStyle(context),
             builder: (_) => _LinkDialog(readClipboard: widget.readClipboard),
           )
         : await Navigator.of(context).push<GameInvite>(
@@ -800,6 +803,7 @@ class _MultiplayerGamePageState extends State<MultiplayerGamePage> {
     final l10n = multiplayerL10n(context);
     final leave = await showDialog<bool>(
       context: context,
+      animationStyle: motionStyle(context),
       builder: (context) => AlertDialog(
         title: Text(l10n.multiplayerLeaveTitle),
         content: Text(

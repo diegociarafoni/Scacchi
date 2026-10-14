@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../l10n/app_localizations.dart';
+import '../theme/motion.dart';
 import '../theme/sheets.dart';
-
 import 'tournament.dart';
 import 'tournament_controller.dart';
 
@@ -44,6 +44,7 @@ class TournamentPage extends StatelessWidget {
   Future<void> _abandon(BuildContext context) async {
     final ok = await showDialog<bool>(
       context: context,
+      animationStyle: motionStyle(context),
       builder: (context) {
         final l10n = AppLocalizations.of(context);
         return AlertDialog(

@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../l10n/app_localizations.dart';
 import '../share/share_temp.dart';
+import '../theme/motion.dart';
 import '../theme/sheets.dart';
 import 'backup.dart';
 
@@ -100,6 +101,7 @@ class _BackupPageState extends State<BackupPage> {
   Future<void> _restore() async {
     final text = await showDialog<String>(
       context: context,
+      animationStyle: motionStyle(context),
       builder: (_) => const _PasteDialog(),
     );
     if (text == null) return;

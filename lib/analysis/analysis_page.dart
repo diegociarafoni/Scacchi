@@ -23,6 +23,7 @@ import '../share/position_image.dart';
 import '../share/position_image_page.dart';
 import '../tablebase/perfect_endgame_card.dart';
 import '../tablebase/tablebase_service.dart';
+import '../theme/motion.dart';
 import 'variation_tree.dart';
 
 /// Analisi continua di [fen] con [multiPv] varianti, interrotta annullando
@@ -262,6 +263,7 @@ class _AnalysisPageState extends State<AnalysisPage>
         '${now.month.toString().padLeft(2, '0')}/${now.year}';
     return showDialog<String>(
       context: context,
+      animationStyle: motionStyle(context),
       builder: (context) => _NameDialog(
         initial: AppLocalizations.of(context).analysisDefaultName(date),
       ),

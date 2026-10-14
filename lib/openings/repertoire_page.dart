@@ -5,6 +5,7 @@ import '../l10n/app_localizations.dart';
 import '../progress/activity.dart';
 import '../settings/notation.dart';
 import '../settings/settings.dart';
+import '../theme/motion.dart';
 import 'opening_game.dart';
 import 'opening_game_dialog.dart';
 import 'repertoire.dart';
@@ -39,6 +40,7 @@ class _RepertoirePageState extends State<RepertoirePage> {
     final controller = TextEditingController();
     final text = await showDialog<String>(
       context: context,
+      animationStyle: motionStyle(context),
       builder: (context) {
         final l10n = AppLocalizations.of(context);
         return AlertDialog(
