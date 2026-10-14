@@ -97,7 +97,7 @@ Il dettaglio di U1-U11 è in `consegne/analisi-ux-ui.md`; il comportamento attua
 |---|---|---|---|---|---|
 | S1 | **Un antagonista per capitolo**: carattere, stile di gioco, aperture e due battute prima e dopo la partita | fatto (#277) | Claude | media | 0.15.0 |
 | S2 | **Racconto tra un passo e l'altro**: una riga tra lezione e puzzle che richiama ciò che si è imparato | fatta | da assegnare | piccola | 0.15.0 |
-| S3 | **Mappa del viaggio** con i nove luoghi, i progressi e «riprendi da dove eri» | fatta | da assegnare | media | 0.15.0 | `lib/story/journey_map.dart`: nove luoghi su un sentiero a serpentina; vedi `docs/storia.md` |
+| S3 | **Mappa del viaggio** con i nove luoghi, i progressi e «riprendi da dove eri» | fatta | da assegnare | media | 0.14.0 | `lib/story/journey_map.dart`: nove luoghi su un sentiero a serpentina; vedi `docs/storia.md` |
 | S4 | **Un bivio per capitolo** (tattica o finali) con puzzle diversi | fatto (#281) | Claude | media | 0.15.0 |
 | S5 | **Ricompense legate alla storia**: scacchiere e pezzi sbloccabili con nome a tema | fatta | Claude | piccola | 0.14.0 |
 | S6 | **Aiuto quando ci si blocca**: dopo due errori sullo stesso puzzle, un indizio o un puzzle più facile | fatta | da assegnare | piccola | 0.15.0 |
