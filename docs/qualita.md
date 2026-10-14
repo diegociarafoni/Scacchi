@@ -7,7 +7,7 @@ Ogni controllo ha un limite misurabile e blocca la CI se non è rispettato. I li
 | Formattazione | `dart format` | nessuna differenza | pre-commit, CI |
 | Analisi statica | `flutter analyze --fatal-infos --fatal-warnings` con [`analysis_options.yaml`](../analysis_options.yaml) | nessun avviso, nemmeno informativo | pre-commit, CI |
 | Testi tradotti | `tool/l10n.dart`, `tool/stringhe_fisse.dart`, `tool/l10n_stato.dart` | lingue con le stesse chiavi; i testi italiani scritti nel codice non aumentano (base in `tool/stringhe_fisse_base.json`); le lingue «pronte» di `tool/lingue.json` complete | pre-commit (solo `l10n.dart`), `tool/verifica.sh`, CI |
-| Test unitari, widget, accessibilità | `flutter test` | tutti verdi | pre-push (senza golden), CI |
+| Test unitari, widget, accessibilità | `flutter test` | tutti verdi | pre-push (solo i test dei file modificati), CI |
 | Copertura della logica di gioco | `tool/check_coverage.dart` | almeno 80% | CI |
 | Sicurezza OWASP MASVS (sorgenti) | `test/security/` | permessi, log e SDK secondo `tool/policy.json` | pre-push, CI |
 | Manifest dell'APK (MASVS) | `tool/check_apk.dart` | permessi ed esportazioni secondo `tool/policy.json`, non debuggable in rilascio | CI (job android), rilascio |
@@ -16,7 +16,7 @@ Ogni controllo ha un limite misurabile e blocca la CI se non è rispettato. I li
 | Analisi statica dell'APK (MobSF) | `.github/workflows/mobsf.yml`, `tool/check_mobsf.dart` | nessun avviso grave oltre a `mobsf.acceptedHigh`, punteggio almeno `mobsf.minSecurityScore` | settimanale su main e a richiesta (vedi [sicurezza.md](sicurezza.md)) |
 | End-to-end su emulatore Android | `.github/workflows/e2e-android.yml` | i test di `integration_test/` indicati nel workflow passano su Android x86_64 (KVM) | main, a richiesta e PR che toccano il workflow, `integration_test/`, `android/` o `pubspec.*` |
 | Golden test | `flutter test` con tag `golden` (più i golden di `test/settings/` e `test/style/`) | nessuna differenza di pixel | CI (Linux) |
-| Accessibilità | linee guida di `flutter_test` | vedi sotto | pre-push, CI |
+| Accessibilità | linee guida di `flutter_test` | vedi sotto | CI |
 
 ## Copertura della logica di gioco
 

@@ -61,7 +61,7 @@ Il controllo è in `tool/check_commit_msg.dart` e gira in locale (hook `commit-m
 |---|---|
 | `pre-commit` | formattazione dei file Dart in commit, `dart tool/l10n.dart` e `flutter analyze --fatal-infos --fatal-warnings`, Gitleaks sui file in commit |
 | `commit-msg` | messaggio secondo la convenzione Angular |
-| `pre-push` | nome dei rami di destinazione, che blocca anche `git push origin main` da qualsiasi ramo; messaggi di tutti i commit del ramo (gli stessi della CI); documentazione (`tool/check_docs.dart`); commenti (`tool/check_comments.dart`); nessun sottomodulo nell'indice; test senza golden (i golden dipendono dal sistema operativo e girano in CI su Linux) |
+| `pre-push` | nome dei rami di destinazione, che blocca anche `git push origin main` da qualsiasi ramo; messaggi di tutti i commit del ramo (gli stessi della CI); documentazione (`tool/check_docs.dart`); commenti (`tool/check_comments.dart`); nessun sottomodulo nell'indice; test dei soli file modificati (`tool/test_veloci.sh`: i test toccati dal ramo, quelli che hanno lo stesso percorso dei sorgenti toccati, con `_test` prima di `.dart`, e sempre `test/security`). La suite completa e i golden girano in CI su Linux; in locale si lancia con `tool/verifica.sh --test` |
 
 Installazione, una volta per clone:
 
