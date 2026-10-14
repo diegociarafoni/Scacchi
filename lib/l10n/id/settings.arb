@@ -162,5 +162,7 @@
   "settingsKeepAwakeDescription": "Ponsel tidak mematikan layar selama permainan",
   "@settingsKeepAwakeDescription": {
     "description": "Impostazioni: descrizione dello schermo sempre acceso"
-  }
+  },
+  "settingsEvalBar": "Bilah evaluasi",
+  "settingsEvalBarDescription": "Menampilkan siapa yang unggul di samping papan; mati pada tantangan tanpa bantuan"
 }

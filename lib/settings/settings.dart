@@ -432,6 +432,7 @@ class AppSettings {
     this.confirmMove = false,
     this.keepAwake = true,
     this.premove = true,
+    this.evalBar = false,
     this.colorBlind = false,
     this.explainWhy = false,
     this.zenMode = false,
@@ -495,6 +496,9 @@ class AppSettings {
 
   /// Premossa (RF-08): si muove mentre pensa il computer.
   final bool premove;
+
+  /// Barra di valutazione accanto alla scacchiera, dove gli aiuti sono ammessi.
+  final bool evalBar;
   final bool colorBlind;
 
   /// «Spiegami perché» (RF-122): dopo ogni mossa del computer una riga su cosa
@@ -579,6 +583,7 @@ class AppSettings {
     bool? confirmMove,
     bool? keepAwake,
     bool? premove,
+    bool? evalBar,
     bool? colorBlind,
     bool? explainWhy,
     bool? zenMode,
@@ -611,6 +616,7 @@ class AppSettings {
     confirmMove: confirmMove ?? this.confirmMove,
     keepAwake: keepAwake ?? this.keepAwake,
     premove: premove ?? this.premove,
+    evalBar: evalBar ?? this.evalBar,
     colorBlind: colorBlind ?? this.colorBlind,
     explainWhy: explainWhy ?? this.explainWhy,
     zenMode: zenMode ?? this.zenMode,
@@ -688,6 +694,7 @@ class AppSettings {
       other.confirmMove == confirmMove &&
       other.keepAwake == keepAwake &&
       other.premove == premove &&
+      other.evalBar == evalBar &&
       other.colorBlind == colorBlind &&
       other.explainWhy == explainWhy &&
       other.zenMode == zenMode &&
@@ -722,6 +729,7 @@ class AppSettings {
     confirmMove,
     keepAwake,
     premove,
+    evalBar,
     colorBlind,
     explainWhy,
     zenMode,
@@ -791,6 +799,7 @@ class SettingsController extends ValueNotifier<AppSettings> {
         confirmMove: read('confirmMove', d.confirmMove),
         keepAwake: read('keepAwake', d.keepAwake),
         premove: read('premove', d.premove),
+        evalBar: read('evalBar', d.evalBar),
         colorBlind: read('colorBlind', d.colorBlind),
         explainWhy: read('explainWhy', d.explainWhy),
         zenMode: read('zenMode', d.zenMode),
@@ -861,6 +870,8 @@ class SettingsController extends ValueNotifier<AppSettings> {
         prefs.setBool('keepAwake', settings.keepAwake),
       if (old.premove != settings.premove)
         prefs.setBool('premove', settings.premove),
+      if (old.evalBar != settings.evalBar)
+        prefs.setBool('evalBar', settings.evalBar),
       if (old.colorBlind != settings.colorBlind)
         prefs.setBool('colorBlind', settings.colorBlind),
       if (old.explainWhy != settings.explainWhy)

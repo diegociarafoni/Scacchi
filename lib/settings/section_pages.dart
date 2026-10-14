@@ -194,6 +194,13 @@ class GameSettingsPage extends _SectionPage {
             onChanged: (v) => _set((c) => c.copyWith(premove: v)),
           ),
           SwitchListTile(
+            key: const Key('evalBar'),
+            title: Text(l10n.settingsEvalBar),
+            subtitle: Text(l10n.settingsEvalBarDescription),
+            value: s.evalBar,
+            onChanged: (v) => _set((c) => c.copyWith(evalBar: v)),
+          ),
+          SwitchListTile(
             key: const Key('tableMode'),
             title: Text(l10n.settingsTableMode),
             subtitle: Text(l10n.settingsTableModeDescription),

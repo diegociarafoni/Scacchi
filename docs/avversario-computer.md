@@ -208,7 +208,7 @@ Nuove funzioni del computer si sviluppano partendo dai test, con nel nome il req
 | RF-21 motore in isolate separato, ritardo artificiale ai livelli bassi | ✓ |
 | RF-25 patta accettata dal bot in base alla valutazione | ✓ |
 | RNF-03 Stockfish nativo via FFI in isolate, 1 thread | ✓ (Android, iOS) |
-| RF-22 modalità Allenamento (suggerimento, barra di valutazione) | In parte: suggerimento con il pulsante **Suggerisci** (vedi [allenatore.md](allenatore.md)); barra di valutazione in analisi e revisione, non ancora in partita |
+| RF-22 modalità Allenamento (suggerimento, barra di valutazione) | In parte: suggerimento con il pulsante **Suggerisci** (vedi [allenatore.md](allenatore.md)); barra di valutazione in partita (impostazione **Barra di valutazione**, spenta di default), in analisi e in revisione; manca la scelta esplicita tra Allenamento e Sfida |
 | RF-23 bot con personalità | ✓ (vedi [bot.md](bot.md)) |
 | RF-24 partenza da una posizione personalizzata | ✓ dall'editor (vedi [editor-posizione.md](editor-posizione.md)) |
 | RF-26 avversario adattivo | ✓ |

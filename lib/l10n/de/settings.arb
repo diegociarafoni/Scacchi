@@ -156,5 +156,7 @@
   "settingsKeepAwakeDescription": "Das Handy schaltet den Bildschirm während einer Partie nicht aus",
   "@settingsKeepAwakeDescription": {
     "description": "Impostazioni: descrizione dello schermo sempre acceso"
-  }
+  },
+  "settingsEvalBar": "Bewertungsleiste",
+  "settingsEvalBarDescription": "Zeigt neben dem Brett, wer besser steht; in Herausforderungen ohne Hilfen ausgeblendet"
 }
