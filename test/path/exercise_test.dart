@@ -189,16 +189,17 @@ void main() {
       expect(run.savedWithoutDefending, isFalse);
     });
 
-    test('la cattura dell\'attaccante mette in salvo senza difendere', () {
+    test('dopo la cattura di un cavallo difeso il pezzo non è in salvo', () {
       const capture = LineExercise(
-        fen: '6k1/8/8/8/3n4/5R2/8/Q3K3 w - - 0 1',
+        fen: '6k1/8/8/4p3/3n4/5R2/8/Q3K3 w - - 0 1',
         steps: ['a1a3'],
         goal: LineGoal.defend,
         guard: Square.f3,
       );
       final run = LineRun(capture);
+      // Il cavallo è difeso dal pedone: Dxd4 perde la donna, non salva nulla.
       expect(run.play(Move.parse('a1d4')!), MoveVerdict.wrong);
-      expect(run.savedWithoutDefending, isTrue);
+      expect(run.savedWithoutDefending, isFalse);
       for (final uci in ['a1a3', 'a1c3', 'a1d1', 'a1a8', 'e1f2']) {
         expect(
           LineRun(capture).play(Move.parse(uci)!),

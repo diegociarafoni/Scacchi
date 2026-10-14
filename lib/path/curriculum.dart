@@ -346,7 +346,7 @@ const List<Chapter> curriculum = [
             guard: Square.d4,
           ),
           LineExercise(
-            fen: '6k1/8/8/8/3n4/5R2/8/Q3K3 w - - 0 1',
+            fen: '6k1/8/8/4p3/3n4/5R2/8/Q3K3 w - - 0 1',
             steps: ['a1a3'],
             goal: LineGoal.defend,
             guard: Square.f3,

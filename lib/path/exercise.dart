@@ -149,7 +149,7 @@ class LineExercise extends Exercise {
   final List<String> steps;
   final LineGoal goal;
 
-  /// Casa del pezzo da difendere, per [LineGoal.defend].
+  /// Casa del pezzo da difendere, per [LineGoal.defend] (un solo passo).
   final Square? guard;
 }
 
@@ -197,7 +197,7 @@ class LineRun extends ExerciseRun {
               LineGoal.check =>
                 after.isCheck && expected.any((m) => _role(m) == _role(move)),
               LineGoal.line => false,
-              LineGoal.defend => last && _defends(move, after),
+              LineGoal.defend => _defends(move, after),
             });
     if (!ok) {
       mistakes++;
@@ -228,9 +228,17 @@ class LineRun extends ExerciseRun {
       _guardAfter(move) == exercise.guard &&
       after.board.attacksTo(exercise.guard!, position.turn).isNotEmpty;
 
-  /// Nessun pezzo avversario attacca più il pezzo da difendere.
-  bool _isSafe(Move move, Position after) =>
-      after.board.attacksTo(_guardAfter(move), position.turn.opposite).isEmpty;
+  /// Nessun pezzo avversario attacca più il pezzo da difendere né quello che
+  /// è appena stato mosso (altrimenti si è solo cambiato il pezzo perso).
+  bool _isSafe(Move move, Position after) {
+    final opponent = position.turn.opposite;
+    final moved = switch (move) {
+      NormalMove(:final to) => to,
+      DropMove(:final to) => to,
+    };
+    return after.board.attacksTo(_guardAfter(move), opponent).isEmpty &&
+        after.board.attacksTo(moved, opponent).isEmpty;
+  }
 
   Role? _role(Move move) => switch (move) {
     NormalMove(:final from) => position.board.roleAt(from),

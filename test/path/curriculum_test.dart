@@ -243,6 +243,55 @@ void main() {
     }
   });
 
+  test(
+    'gli esercizi «difendi» hanno un solo passo e un pezzo del giocatore',
+    () {
+      for (final s in curriculum.expand((c) => c.stages)) {
+        for (final e in s.exercises.whereType<LineExercise>()) {
+          if (e.goal != LineGoal.defend) continue;
+          final pos = Chess.fromSetup(Setup.parseFen(e.fen));
+          expect(e.steps, hasLength(1), reason: s.id);
+          expect(pos.board.sideAt(e.guard!), pos.turn, reason: s.id);
+        }
+      }
+    },
+  );
+
+  test('negli esercizi «difendi» non ci sono catture gratuite', () {
+    const value = {
+      Role.pawn: 1,
+      Role.knight: 3,
+      Role.bishop: 3,
+      Role.rook: 5,
+      Role.queen: 9,
+      Role.king: 100,
+    };
+    for (final s in curriculum.expand((c) => c.stages)) {
+      for (final e in s.exercises.whereType<LineExercise>()) {
+        if (e.goal != LineGoal.defend) continue;
+        final pos = Chess.fromSetup(Setup.parseFen(e.fen));
+        for (final m in pos.legalMoves.entries) {
+          for (final to in m.value.squares) {
+            final victim = pos.board.roleAt(to);
+            if (victim == null) continue;
+            final after = pos.play(NormalMove(from: m.key, to: to));
+            final recaptured = after.board
+                .attacksTo(to, pos.turn.opposite)
+                .isNotEmpty;
+            final mover = pos.board.roleAt(m.key)!;
+            expect(
+              recaptured && value[victim]! < value[mover]!,
+              isTrue,
+              reason:
+                  '${s.id}: ${Move.parse('${m.key.name}${to.name}')} è '
+                  'una cattura che conviene in ${e.fen}',
+            );
+          }
+        }
+      }
+    }
+  });
+
   test('la lezione «Difendere un pezzo» accetta ogni difesa del pezzo', () {
     final stage = stageById('pieces.defend')!;
     final accepted = [
