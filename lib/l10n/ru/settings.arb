@@ -162,5 +162,7 @@
   "settingsKeepAwakeDescription": "Телефон не выключает экран во время партии",
   "@settingsKeepAwakeDescription": {
     "description": "Impostazioni: descrizione dello schermo sempre acceso"
-  }
+  },
+  "settingsEvalBar": "Шкала оценки",
+  "settingsEvalBarDescription": "Показывает, кто стоит лучше, рядом с доской; в вызовах без подсказок её нет"
 }

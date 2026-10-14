@@ -114,5 +114,7 @@
   "settingsMoveMethodTwoTaps": "Two taps",
   "settingsMoveMethodDrag": "Dragging",
   "settingsKeepAwake": "Keep the screen on",
-  "settingsKeepAwakeDescription": "The phone does not turn the screen off during a game"
+  "settingsKeepAwakeDescription": "The phone does not turn the screen off during a game",
+  "settingsEvalBar": "Evaluation bar",
+  "settingsEvalBarDescription": "Shows who is ahead next to the board; off in challenges without helpers"
 }

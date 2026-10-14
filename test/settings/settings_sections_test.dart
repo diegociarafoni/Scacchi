@@ -240,6 +240,7 @@ void main() {
         'autoFlip',
         'keepAwake',
         'premove',
+        'evalBar',
         'tableMode',
         'explainWhy',
       ],

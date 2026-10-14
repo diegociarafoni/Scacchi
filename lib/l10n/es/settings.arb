@@ -162,5 +162,7 @@
   "settingsKeepAwakeDescription": "El teléfono no apaga la pantalla durante una partida",
   "@settingsKeepAwakeDescription": {
     "description": "Impostazioni: descrizione dello schermo sempre acceso"
-  }
+  },
+  "settingsEvalBar": "Barra de evaluación",
+  "settingsEvalBarDescription": "Muestra quién va mejor junto al tablero; no aparece en los retos sin ayudas"
 }

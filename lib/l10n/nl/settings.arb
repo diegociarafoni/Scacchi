@@ -162,5 +162,7 @@
   "settingsKeepAwakeDescription": "De telefoon zet het scherm niet uit tijdens een partij",
   "@settingsKeepAwakeDescription": {
     "description": "Impostazioni: descrizione dello schermo sempre acceso"
-  }
+  },
+  "settingsEvalBar": "Evaluatiebalk",
+  "settingsEvalBarDescription": "Toont naast het bord wie er beter staat; uit in uitdagingen zonder hulp"
 }

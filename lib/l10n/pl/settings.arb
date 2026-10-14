@@ -162,5 +162,7 @@
   "settingsKeepAwakeDescription": "Telefon nie wyłącza ekranu podczas partii",
   "@settingsKeepAwakeDescription": {
     "description": "Impostazioni: descrizione dello schermo sempre acceso"
-  }
+  },
+  "settingsEvalBar": "Pasek oceny",
+  "settingsEvalBarDescription": "Pokazuje obok szachownicy, kto stoi lepiej; w wyzwaniach bez pomocy jest wyłączony"
 }

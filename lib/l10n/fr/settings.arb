@@ -162,5 +162,7 @@
   "settingsKeepAwakeDescription": "Le téléphone n'éteint pas l'écran pendant une partie",
   "@settingsKeepAwakeDescription": {
     "description": "Impostazioni: descrizione dello schermo sempre acceso"
-  }
+  },
+  "settingsEvalBar": "Barre d'évaluation",
+  "settingsEvalBarDescription": "Montre qui est meilleur à côté de l'échiquier ; absente dans les défis sans aides"
 }
