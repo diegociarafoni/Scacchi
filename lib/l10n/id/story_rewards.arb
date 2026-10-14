@@ -1,0 +1,13 @@
+{
+  "progressRequirementStory": "Cerita: {chapters} bab selesai",
+  "@progressRequirementStory": {
+    "placeholders": {
+      "chapters": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsThemeVillaggio": "Desa",
+  "settingsThemeTorre": "Menara",
+  "settingsThemeCorona": "Mahkota"
+}

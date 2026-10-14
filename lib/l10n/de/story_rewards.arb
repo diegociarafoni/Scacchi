@@ -1,0 +1,13 @@
+{
+  "progressRequirementStory": "Geschichte: {chapters} Kapitel abgeschlossen",
+  "@progressRequirementStory": {
+    "placeholders": {
+      "chapters": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsThemeVillaggio": "Dorf",
+  "settingsThemeTorre": "Turm",
+  "settingsThemeCorona": "Krone"
+}

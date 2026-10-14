@@ -51,6 +51,10 @@ Prima del primo puzzle di un capitolo il passo dei puzzle offre due vie (`StoryC
 | La pianura dei piani | Pedone avanzato | Mossa tranquilla |
 | L'accademia del maestro | Finali di torri | Finali di alfiere |
 
+## Ricompense
+
+Concludere un capitolo (battuto il suo bot) vale 30 XP e sblocca, al secondo, al quinto e al nono capitolo, le scacchiere Villaggio, Torre e Corona (`StoryRequirement`, vedi [gamification.md](gamification.md#ricompense-estetiche-rg-06)). Chi non vuole giocare per sbloccare usa «Sblocca tutto».
+
 ## Aiuto quando ci si blocca
 
 Dopo due puzzle sbagliati di fila (`StoryPuzzleFeed.helping`) un avviso dice che si passa a un puzzle più facile e ricorda il pulsante **Indizio**; i puzzle successivi hanno un punteggio di 300 punti sotto il livello del capitolo (mai sotto 400) finché non se ne risolve uno, poi si torna alla difficoltà normale. L'avviso compare una sola volta per serie di errori (`onHelp`, testo `storyHelpEasier`).

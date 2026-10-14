@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import '../badges/badge_def.dart';
 import '../badges/badge_sources.dart';
 import '../badges/opening_volumes.dart';
@@ -351,6 +353,9 @@ class ProgressTracker {
         ]),
       ),
       LessonCompleted() => s.copyWith(lessonsCompleted: s.lessonsCompleted + 1),
+      StoryChapterDone(:final chapters) => s.copyWith(
+        tally: {...s.tally, 'story': math.max(s.tally['story'] ?? 0, chapters)},
+      ),
       ReviewCompleted(:final brilliantMoves) => s.copyWith(
         reviewsCompleted: s.reviewsCompleted + 1,
         brilliantFound: s.brilliantFound + brilliantMoves,

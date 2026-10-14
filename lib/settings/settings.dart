@@ -99,7 +99,10 @@ enum BoardTheme {
   vetro(light: Color(0xffd6ecf0), dark: Color(0xff5da0b0), textured: true),
   menta(light: Color(0xffe6f4ec), dark: Color(0xff5fa88a)),
   cipria(light: Color(0xfff7e6e8), dark: Color(0xffb8707e)),
-  ardesia(light: Color(0xffc9d1d9), dark: Color(0xff6b7a8b));
+  ardesia(light: Color(0xffc9d1d9), dark: Color(0xff6b7a8b)),
+  villaggio(light: Color(0xfff0dcc8), dark: Color(0xffb5805a)),
+  torre(light: Color(0xffd9dbe8), dark: Color(0xff5d6396)),
+  corona(light: Color(0xffe9dcf3), dark: Color(0xff7b4fa0));
 
   const BoardTheme({
     this.scheme,
