@@ -31,6 +31,7 @@ void main() {
     PlayStoryPuzzles? puzzles,
     PlayStoryLesson? lesson,
     void Function(int chapters)? onChaptersDone,
+    ValueNotifier<bool>? challengeRequest,
     Locale locale = const Locale('it'),
     double textScale = 1,
   }) async {
@@ -51,6 +52,7 @@ void main() {
             playBoss: boss,
             playPuzzles: puzzles,
             playLesson: lesson,
+            challengeRequest: challengeRequest,
             onChaptersDone: onChaptersDone,
           ),
         ),
@@ -153,6 +155,34 @@ void main() {
     );
     await save(tester, find.text('Sfida Tino'), until: () => boss == 1);
     expect(boss, 1);
+  });
+
+  testWidgets('il pulsante di fine puzzle apre subito la sfida, senza foglio', (
+    tester,
+  ) async {
+    await tester.runAsync(doneLessons);
+    final request = ValueNotifier<bool>(false);
+    var boss = 0;
+    await show(
+      tester,
+      challengeRequest: request,
+      puzzles: (c, ch, r) async {
+        request.value = true;
+        return r;
+      },
+      boss: (c, bot) async {
+        boss++;
+        return false;
+      },
+    );
+    await save(
+      tester,
+      find.textContaining('Puzzle del capitolo'),
+      until: () => boss == 1,
+    );
+    expect(boss, 1);
+    expect(request.value, isFalse);
+    expect(find.text('Puzzle risolti!'), findsNothing);
   });
 
   testWidgets('«Più tardi» chiude il foglio senza aprire altro', (

@@ -381,12 +381,28 @@ class _HomeShellState extends State<HomeShell> {
         Error.throwWithStackTrace(e, st);
       });
 
+  /// Il pulsante di fine puzzle chiede di aprire subito la sfida del capitolo.
+  final _challengeRequest = ValueNotifier<bool>(false);
+
+  /// Etichetta del passo che segue i puzzle: il guardiano, se c'è e non è
+  /// battuto, altrimenti il bot del capitolo.
+  String _challengeLabel(StoryChapter chapter, PathController path) {
+    final l10n = storyL10n(context);
+    final guardian = chapter.pathChapter.stages
+        .where((s) => s.isGuardian)
+        .firstOrNull;
+    return guardian != null && !path.progress.isCompleted(guardian.id)
+        ? l10n.storyPassageGoGuardian
+        : l10n.storyPassageGoBoss(chapter.bot.name);
+  }
+
   Future<Widget> _storyPage() async => StoryPage(
     path: await _pathController(),
     story: await _storyController(),
     playGuardian: _computerAvailable ? _playGuardian : null,
     playBoss: _computerAvailable ? _playStoryBoss : null,
     playPuzzles: _playStoryPuzzles,
+    challengeRequest: _challengeRequest,
     onChaptersDone: (n) async {
       final progress = await _progressController();
       if (n > (progress.state.tally['story'] ?? 0)) {
@@ -436,6 +452,7 @@ class _HomeShellState extends State<HomeShell> {
       return null;
     }
     if (!context.mounted) return 0;
+    final path = await _pathController();
     final theme = (await _storyController()).state.themeFor(chapter);
     if (!context.mounted) return 0;
     final feed = StoryPuzzleFeed(
@@ -443,7 +460,6 @@ class _HomeShellState extends State<HomeShell> {
       theme: theme,
       goal: remaining,
       maxRating: chapter.puzzleRating,
-      onOutcome: (solved) => _guardianSnack(context, chapter, solved),
       onHelp: () => _helpSnack(context),
     );
     await Navigator.of(context).push(
@@ -454,6 +470,15 @@ class _HomeShellState extends State<HomeShell> {
           feed: feed,
           title: storyL10n(context).chapterTitle(chapter),
           onActivity: _record,
+          companionBuilder: (_, {required solved}) =>
+              _guardianLine(chapter, solved),
+          endAction: PuzzleEndAction(
+            label: _challengeLabel(chapter, path),
+            onPressed: (pageContext) {
+              _challengeRequest.value = true;
+              Navigator.of(pageContext).pop();
+            },
+          ),
         ),
       ),
     );
@@ -479,29 +504,14 @@ class _HomeShellState extends State<HomeShell> {
     });
   }
 
-  /// Il custode commenta il puzzle appena concluso, senza bloccare.
-  void _guardianSnack(BuildContext context, StoryChapter chapter, bool solved) {
-    if (!context.mounted) return;
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          behavior: SnackBarBehavior.floating,
-          duration: const Duration(seconds: 3),
-          content: GuardianSays(
-            chapter: chapter,
-            moment: solved
-                ? GuardianMoment.puzzleOk
-                : GuardianMoment.puzzleRetry,
-            expression: solved
-                ? AvatarExpression.happy
-                : AvatarExpression.encouraging,
-            size: 40,
-            style: const TextStyle(fontStyle: FontStyle.italic),
-          ),
-        ),
-      );
-  }
+  /// Il custode commenta il puzzle appena concluso, dentro la scheda
+  /// dell'esito: un fumetto a parte coprirebbe i pulsanti.
+  Widget _guardianLine(StoryChapter chapter, bool solved) => GuardianSays(
+    chapter: chapter,
+    moment: solved ? GuardianMoment.puzzleOk : GuardianMoment.puzzleRetry,
+    expression: solved ? AvatarExpression.happy : AvatarExpression.encouraging,
+    size: 36,
+  );
 
   /// Bot del torneo: un avversario per ogni livello del motore.
   static final _bots = [

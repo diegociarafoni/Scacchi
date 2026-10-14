@@ -48,6 +48,7 @@ class StoryPage extends StatefulWidget {
     this.playBoss,
     this.onChaptersDone,
     this.playPuzzles,
+    this.challengeRequest,
     this.playLesson,
   });
 
@@ -60,6 +61,10 @@ class StoryPage extends StatefulWidget {
   /// battere il bot ne conclude uno.
   final void Function(int chapters)? onChaptersDone;
   final PlayStoryPuzzles? playPuzzles;
+
+  /// Acceso dal pulsante di fine puzzle: il passo successivo si apre subito,
+  /// senza il foglio di passaggio.
+  final ValueNotifier<bool>? challengeRequest;
   final PlayStoryLesson? playLesson;
 
   @override
@@ -207,6 +212,11 @@ class _StoryPageState extends State<StoryPage> {
         expression = AvatarExpression.happy;
         line = l10n.guardianLine(chapter, GuardianMoment.lessonDone);
       }
+    }
+    final request = widget.challengeRequest;
+    if (kind == StoryStepKind.puzzles && request != null && request.value) {
+      request.value = false;
+      if (target != null && action != null) return target;
     }
     final go = await showRokkoSheet<bool>(
       context: context,

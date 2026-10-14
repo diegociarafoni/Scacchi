@@ -25,6 +25,15 @@ import 'puzzle_session.dart';
 import 'puzzle_trainer.dart';
 import 'themes.dart';
 
+/// Azione a fine sequenza, al posto di «Prossimo»: per esempio andare alla
+/// sfida del capitolo.
+class PuzzleEndAction {
+  const PuzzleEndAction({required this.label, required this.onPressed});
+
+  final String label;
+  final void Function(BuildContext context) onPressed;
+}
+
 enum _Feedback { find, restarted, correct, wrong, solved, revealed }
 
 /// Risoluzione di puzzle uno dopo l'altro, con punteggio.
@@ -38,6 +47,8 @@ class PuzzlePage extends StatefulWidget {
     this.title,
     this.guide,
     this.onActivity,
+    this.companionBuilder,
+    this.endAction,
     this.replyDelay = const Duration(milliseconds: 400),
   });
 
@@ -58,6 +69,14 @@ class PuzzlePage extends StatefulWidget {
 
   /// Riceve un `PuzzleSolved` per ogni puzzle risolto, per XP e obiettivi.
   final ActivityRecorder? onActivity;
+
+  /// Commento di un personaggio a puzzle concluso: entra nella scheda
+  /// dell'esito, così non copre i pulsanti come farebbe un fumetto a parte.
+  final Widget Function(BuildContext context, {required bool solved})?
+  companionBuilder;
+
+  /// Se presente, a puzzle finiti compare questo pulsante.
+  final PuzzleEndAction? endAction;
   final Duration replyDelay;
 
   @override
@@ -78,6 +97,9 @@ class _PuzzlePageState extends State<PuzzlePage> {
   /// coprirebbe i pulsanti.
   String? _progressNote;
   double? _delta;
+
+  /// Esito del puzzle concluso, per il commento del personaggio.
+  bool? _companionSolved;
   Square? _hint;
 
   /// Mossa sbagliata appena tentata, mostrata in rosso finché non si riprova.
@@ -132,6 +154,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
     _feedback = _Feedback.find;
     _progressNote = null;
     _delta = null;
+    _companionSolved = null;
     _hint = null;
     _wrongMove = null;
     _recorded = false;
@@ -178,6 +201,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
     _feedback = _session.firstTry ? _Feedback.solved : _Feedback.revealed;
     if (_recorded) return;
     _recorded = true;
+    _companionSolved = _session.firstTry;
     _stopwatch.stop();
     unawaited(
       _record(
@@ -331,6 +355,11 @@ class _PuzzlePageState extends State<PuzzlePage> {
         .take(3)
         .join(', ');
     final kid = AppSettings.of(context).kidMode;
+    final builder = widget.companionBuilder;
+    final solvedNow = _companionSolved;
+    final companion = builder != null && done && solvedNow != null
+        ? builder(context, solved: solvedNow)
+        : null;
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title ?? l.puzzleDefaultTitle),
@@ -363,7 +392,10 @@ class _PuzzlePageState extends State<PuzzlePage> {
                     0.0,
                     math.min(
                       c.maxWidth,
-                      c.maxHeight - 190 - (_progressNote == null ? 0 : 56),
+                      c.maxHeight -
+                          190 -
+                          (_progressNote == null ? 0 : 56) -
+                          (companion == null ? 0 : 48),
                     ),
                   );
                   // Scorrevole come ultima difesa su schermi molto bassi.
@@ -376,8 +408,10 @@ class _PuzzlePageState extends State<PuzzlePage> {
                             feedback: _feedback,
                             message: _message(l),
                             side: puzzle.playerSide,
+                            note: companion == null ? null : _progressNote,
+                            companion: companion,
                           ),
-                          if (_progressNote != null)
+                          if (_progressNote != null && companion == null)
                             ProgressNote(
                               key: const Key('puzzle-progress-note'),
                               message: _progressNote!,
@@ -431,13 +465,17 @@ class _PuzzlePageState extends State<PuzzlePage> {
                 },
               ),
             ),
-            if (!done || canSkip || _canRetry)
+            if (!done ||
+                canSkip ||
+                _canRetry ||
+                (last && widget.endAction != null))
               _PuzzleActions(
                 onHint: done ? null : _showHint,
                 onSolution: done ? null : _showSolution,
                 solving: !done,
                 onRetry: _canRetry ? _retry : null,
                 onNext: canSkip ? _next : null,
+                endAction: last ? widget.endAction : null,
                 kid: kid,
               ),
           ],
@@ -497,6 +535,7 @@ class _PuzzleActions extends StatelessWidget {
     required this.solving,
     required this.onRetry,
     required this.onNext,
+    required this.endAction,
     required this.kid,
   });
 
@@ -509,6 +548,7 @@ class _PuzzleActions extends StatelessWidget {
   /// Nullo finché non c'è nulla da rifare: il pulsante compare solo dopo un errore.
   final VoidCallback? onRetry;
   final VoidCallback? onNext;
+  final PuzzleEndAction? endAction;
   final bool kid;
 
   @override
@@ -555,6 +595,13 @@ class _PuzzleActions extends StatelessWidget {
               icon: const Icon(Icons.arrow_forward),
               label: Text(l.puzzleNext, softWrap: false),
             ),
+          if (endAction != null)
+            FilledButton.icon(
+              onPressed: () => endAction!.onPressed(context),
+              style: FilledButton.styleFrom(minimumSize: size),
+              icon: const Icon(Icons.flag_outlined),
+              label: Text(endAction!.label),
+            ),
         ],
       ),
     );
@@ -568,11 +615,18 @@ class _FeedbackBanner extends StatelessWidget {
     required this.feedback,
     required this.message,
     required this.side,
+    this.note,
+    this.companion,
   });
 
   final _Feedback feedback;
   final String message;
   final Side side;
+
+  /// Punti guadagnati e commento del personaggio, uniti all'esito in un'unica
+  /// scheda compatta.
+  final String? note;
+  final Widget? companion;
 
   @override
   Widget build(BuildContext context) {
@@ -627,35 +681,57 @@ class _FeedbackBanner extends StatelessWidget {
             // L'obiettivo iniziale è un'intestazione, l'esito no.
             header: feedback == _Feedback.find,
             liveRegion: true,
-            child: Row(
+            child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                ExcludeSemantics(
-                  child: icon == null
-                      // Il colore che muove è già nel testo: qui è solo grafica.
-                      ? Container(
-                          key: iconKey,
-                          width: 20,
-                          height: 20,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: side == Side.white
-                                ? Colors.white
-                                : Colors.black,
-                            border: Border.all(color: foreground),
-                          ),
-                        )
-                      : Icon(icon, key: iconKey, color: iconColor),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ExcludeSemantics(
+                      child: icon == null
+                          // Il colore che muove è già nel testo: qui è solo grafica.
+                          ? Container(
+                              key: iconKey,
+                              width: 20,
+                              height: 20,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: side == Side.white
+                                    ? Colors.white
+                                    : Colors.black,
+                                border: Border.all(color: foreground),
+                              ),
+                            )
+                          : Icon(icon, key: iconKey, color: iconColor),
+                    ),
+                    const SizedBox(width: 8),
+                    Flexible(
+                      child: Text(
+                        message,
+                        key: const Key('puzzle-message'),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(color: foreground),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 8),
-                Flexible(
-                  child: Text(
-                    message,
-                    key: const Key('puzzle-message'),
-                    style: Theme.of(context).textTheme.titleMedium
-                        ?.copyWith(color: foreground),
+                if (note != null)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 6),
+                    child: Text(
+                      note!,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.titleSmall
+                          ?.copyWith(color: foreground),
+                    ),
                   ),
-                ),
+                if (companion != null) ...[
+                  Divider(height: 16, color: foreground.withValues(alpha: 0.3)),
+                  DefaultTextStyle.merge(
+                    style: TextStyle(color: foreground),
+                    child: companion!,
+                  ),
+                ],
               ],
             ),
           ),

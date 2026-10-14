@@ -144,6 +144,51 @@ void main() {
     );
   }
 
+  // Commento del custode dentro la scheda dell'esito, sopra i pulsanti.
+  for (final device in Device.phones) {
+    for (final scale in [1.0, 1.3]) {
+      testWidgets(
+        'puzzle risolto con commento nella scheda e sfida a fine puzzle '
+        '(${device.name}, testo $scale)',
+        skip: _skip != null,
+        (tester) async {
+          final trainer = await _trainer();
+          await _pump(
+            tester,
+            device,
+            MediaQuery(
+              data: MediaQueryData(textScaler: TextScaler.linear(scale)),
+              child: PuzzlePage(
+                trainer: trainer,
+                puzzle: backRank,
+                companionBuilder: (_, {required solved}) =>
+                    const Text('Bravo, l\'hai visto subito!'),
+                endAction: PuzzleEndAction(
+                  label: 'Sfida Pino',
+                  onPressed: (_) {},
+                ),
+                onActivity: (_) async => const ProgressUpdate(
+                  state: ProgressState.initial,
+                  xpGained: 5,
+                ),
+              ),
+            ),
+            brightness: Brightness.dark,
+            navBar: Device.threeButtonBar,
+          );
+          await tapMove(tester, 'a1a8');
+          await tester.pump();
+          await expectLater(
+            find.byType(MaterialApp),
+            matchesGoldenFile(
+              'goldens/puzzle-commento-sfida-${device.name}-$scale.png',
+            ),
+          );
+        },
+      );
+    }
+  }
+
   testWidgets('puzzle per tema: guida sopra i tre tasti', skip: _skip != null, (
     tester,
   ) async {
