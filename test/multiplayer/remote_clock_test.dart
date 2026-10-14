@@ -3,13 +3,13 @@ import 'dart:typed_data';
 
 import 'package:dartchess/dartchess.dart' hide File;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/game/clock.dart';
-import 'package:scacchi/multiplayer/channel_registry.dart';
-import 'package:scacchi/multiplayer/game_invite.dart';
-import 'package:scacchi/multiplayer/game_message.dart';
-import 'package:scacchi/multiplayer/multiplayer_controller.dart';
-import 'package:scacchi/multiplayer/saved_game.dart';
-import 'package:scacchi/multiplayer/transport.dart';
+import 'package:rokko/game/clock.dart';
+import 'package:rokko/multiplayer/channel_registry.dart';
+import 'package:rokko/multiplayer/game_invite.dart';
+import 'package:rokko/multiplayer/game_message.dart';
+import 'package:rokko/multiplayer/multiplayer_controller.dart';
+import 'package:rokko/multiplayer/saved_game.dart';
+import 'package:rokko/multiplayer/transport.dart';
 
 import '../support/wait.dart';
 
