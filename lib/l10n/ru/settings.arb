@@ -164,5 +164,8 @@
     "description": "Impostazioni: descrizione dello schermo sempre acceso"
   },
   "settingsEvalBar": "Шкала оценки",
-  "settingsEvalBarDescription": "Показывает, кто стоит лучше, рядом с доской; в вызовах без подсказок её нет"
+  "settingsEvalBarDescription": "Показывает, кто стоит лучше, рядом с доской; в вызовах без подсказок её нет",
+  "settingsSearchHint": "Поиск в настройках",
+  "settingsSearchEmpty": "Настройки не найдены",
+  "settingsSearchClear": "Очистить поиск"
 }

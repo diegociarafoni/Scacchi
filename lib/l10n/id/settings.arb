@@ -164,5 +164,8 @@
     "description": "Impostazioni: descrizione dello schermo sempre acceso"
   },
   "settingsEvalBar": "Bilah evaluasi",
-  "settingsEvalBarDescription": "Menampilkan siapa yang unggul di samping papan; mati pada tantangan tanpa bantuan"
+  "settingsEvalBarDescription": "Menampilkan siapa yang unggul di samping papan; mati pada tantangan tanpa bantuan",
+  "settingsSearchHint": "Cari di pengaturan",
+  "settingsSearchEmpty": "Pengaturan tidak ditemukan",
+  "settingsSearchClear": "Hapus pencarian"
 }

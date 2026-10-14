@@ -116,5 +116,8 @@
   "settingsKeepAwake": "Keep the screen on",
   "settingsKeepAwakeDescription": "The phone does not turn the screen off during a game",
   "settingsEvalBar": "Evaluation bar",
-  "settingsEvalBarDescription": "Shows who is ahead next to the board; off in challenges without helpers"
+  "settingsEvalBarDescription": "Shows who is ahead next to the board; off in challenges without helpers",
+  "settingsSearchHint": "Search settings",
+  "settingsSearchEmpty": "No settings found",
+  "settingsSearchClear": "Clear the search"
 }

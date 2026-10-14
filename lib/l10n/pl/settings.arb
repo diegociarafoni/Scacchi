@@ -164,5 +164,8 @@
     "description": "Impostazioni: descrizione dello schermo sempre acceso"
   },
   "settingsEvalBar": "Pasek oceny",
-  "settingsEvalBarDescription": "Pokazuje obok szachownicy, kto stoi lepiej; w wyzwaniach bez pomocy jest wyłączony"
+  "settingsEvalBarDescription": "Pokazuje obok szachownicy, kto stoi lepiej; w wyzwaniach bez pomocy jest wyłączony",
+  "settingsSearchHint": "Szukaj w ustawieniach",
+  "settingsSearchEmpty": "Nie znaleziono ustawień",
+  "settingsSearchClear": "Wyczyść wyszukiwanie"
 }
