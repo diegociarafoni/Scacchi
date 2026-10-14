@@ -26,6 +26,22 @@ void main() {
 
   Map<String, Object?> v3(Map<String, Object?> j) => {...j, 'extra': 1};
 
+  test(
+    'file rovinati in sequenza veloce non si sovrascrivono tra loro',
+    () async {
+      final json = JsonFile(
+        file,
+        version: 1,
+        clock: () => DateTime.fromMillisecondsSinceEpoch(1000),
+      );
+      for (var i = 0; i < 30; i++) {
+        file.writeAsStringSync('non json $i');
+        expect(await json.read((j) => j), isNull);
+      }
+      expect(aside(), hasLength(30));
+    },
+  );
+
   group('RNF-08 migrazioni dello schema', () {
     test(
       'un file vecchio passa dalla catena fino alla versione corrente',

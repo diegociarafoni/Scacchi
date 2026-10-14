@@ -86,7 +86,8 @@
       "minFrames": 50,
       "p90BuildMs": 33,
       "p99BuildMs": 100
-    }
+    },
+    "startupMaxMs": 2000
   },
   "mobsf": {
     "minSecurityScore": 45,
