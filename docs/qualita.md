@@ -44,7 +44,7 @@ Il workflow `E2E Android` compila l'app di debug per x86_64 e la prova su un emu
 
 ## Golden test
 
-`test/golden/` confronta schermate di Rokko con immagini di riferimento in `test/golden/goldens/`: la partita (anche a fine partita, in tema scuro), la Home, la galleria dei bot, i badge, l'esploratore delle aperture, i puzzle, il multigiocatore, l'istruttore e i fumetti dei personaggi. Le schermate usano gli schermi definiti in `test/support/devices.dart`:
+`test/golden/` confronta schermate di Rokko con immagini di riferimento in `test/golden/goldens/`: la partita (anche a fine partita, in tema scuro), la Home, la galleria dei bot, i badge, l'esploratore delle aperture, i puzzle, il Percorso (chiaro, scuro, testo al 130% e profilo bambino), la Storia, la scheda Tu, il multigiocatore, l'istruttore e i fumetti dei personaggi. Le schermate usano gli schermi definiti in `test/support/devices.dart`:
 
 | Nome | Dimensione logica | Esempio |
 |---|---|---|
