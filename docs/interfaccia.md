@@ -109,7 +109,7 @@ Dopo ogni mossa il lettore di schermo annuncia una frase in italiano, per esempi
 
 ## Impostazioni
 
-La pagina principale è un menu di sezioni: ogni voce ha icona, nome e una riga che dice cosa contiene, ed è alta almeno 48 dp; i lettori di schermo la annunciano come pulsante. Ogni sezione si apre in una pagina propria, con le sue impostazioni; sotto ogni interruttore una riga spiega cosa cambia. Le voci, nell'ordine:
+La pagina principale è un menu di sezioni: ogni voce ha icona, nome e una riga che dice cosa contiene, ed è alta almeno 48 dp; i lettori di schermo la annunciano come pulsante. In cima c'è il campo **Cerca nelle impostazioni** (`lib/settings/settings_search.dart`): digitando, il menu lascia il posto alle singole voci che contengono tutte le parole scritte, cercate nel titolo e nella descrizione senza badare a maiuscole e accenti; ogni risultato dice in quale sezione sta e, toccato, apre quella sezione. Senza risultati compare un messaggio, e la croce svuota il campo e riporta il menu. Senza i progressi non si trovano le voci del profilo che li riguardano. L'indice (`settingsHits`) elenca le voci a mano: chi aggiunge un'impostazione a una sezione la aggiunge anche lì. Ogni sezione si apre in una pagina propria, con le sue impostazioni; sotto ogni interruttore una riga spiega cosa cambia. Le voci, nell'ordine:
 
 | Sezione | Contenuto |
 |---|---|

@@ -164,5 +164,8 @@
     "description": "Impostazioni: descrizione dello schermo sempre acceso"
   },
   "settingsEvalBar": "Barre d'évaluation",
-  "settingsEvalBarDescription": "Montre qui est meilleur à côté de l'échiquier ; absente dans les défis sans aides"
+  "settingsEvalBarDescription": "Montre qui est meilleur à côté de l'échiquier ; absente dans les défis sans aides",
+  "settingsSearchHint": "Rechercher dans les réglages",
+  "settingsSearchEmpty": "Aucun réglage trouvé",
+  "settingsSearchClear": "Effacer la recherche"
 }
