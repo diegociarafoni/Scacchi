@@ -161,6 +161,8 @@ class _HomeShellState extends State<HomeShell> {
 
   /// Avvisa la Home quando torna in vista, per rileggere partite e progressi.
   final _homeRefresh = ValueNotifier<int>(0);
+  // Conserva lo stato delle schede quando la barra diventa colonna e viceversa.
+  final _stackKey = GlobalKey();
   var _youVisited = false;
 
   late bool _kidMode = widget.settings.value.kidMode;
@@ -1037,56 +1039,59 @@ class _HomeShellState extends State<HomeShell> {
     if (_tab == 2) _learnVisited = true;
     if (_tab == 3) _youVisited = true;
     final features = _features();
-    final stack = IndexedStack(
-      index: _tab,
-      children: [
-        HomePage(
-          progress: _progressController,
-          path: _pathController,
-          story: _storyController,
-          games: () async => (await _archive()).list(),
-          features: features,
-          simple: _kidMode,
-          refresh: _homeRefresh,
-          onNewGame: _newGame,
-          onSettings: _openSettings,
-          onResume: _resumeGame,
-          onOpenGame: (g) => _openSavedGame(context, g),
-          onContinueStory: _continueStory,
-          onPlayBot: _computerAvailable
-              ? (bot) =>
-                    _newGame(GameSetup(opponent: Opponent.bot, botId: bot.id))
-              : null,
-        ),
-        if (_trainer != null)
-          PuzzleHubPage(trainer: _trainer!, onActivity: _record)
-        else
-          const SizedBox.shrink(),
-        if (_learnVisited)
-          LearnPage(
-            path: _pathController,
-            story: _storyController,
-            features: features,
-            onContinueStory: _continueStory,
-          )
-        else
-          const SizedBox.shrink(),
-        if (_tab == 3 || _youVisited)
-          YouPage(
+    final stack = KeyedSubtree(
+      key: _stackKey,
+      child: IndexedStack(
+        index: _tab,
+        children: [
+          HomePage(
             progress: _progressController,
             path: _pathController,
-            archive: _archive,
-            reminders: () => _reminders,
+            story: _storyController,
+            games: () async => (await _archive()).list(),
+            features: features,
             simple: _kidMode,
-            playGuardian: _computerAvailable ? _playGuardian : null,
-            storyPage: _storyPage,
-            openGame: _openSavedGame,
-            openAnalysis: _computerAvailable ? _openSavedAnalysis : null,
-            puzzlesPage: _puzzlesPage,
-          )
-        else
-          const SizedBox.shrink(),
-      ],
+            refresh: _homeRefresh,
+            onNewGame: _newGame,
+            onSettings: _openSettings,
+            onResume: _resumeGame,
+            onOpenGame: (g) => _openSavedGame(context, g),
+            onContinueStory: _continueStory,
+            onPlayBot: _computerAvailable
+                ? (bot) =>
+                      _newGame(GameSetup(opponent: Opponent.bot, botId: bot.id))
+                : null,
+          ),
+          if (_trainer != null)
+            PuzzleHubPage(trainer: _trainer!, onActivity: _record)
+          else
+            const SizedBox.shrink(),
+          if (_learnVisited)
+            LearnPage(
+              path: _pathController,
+              story: _storyController,
+              features: features,
+              onContinueStory: _continueStory,
+            )
+          else
+            const SizedBox.shrink(),
+          if (_tab == 3 || _youVisited)
+            YouPage(
+              progress: _progressController,
+              path: _pathController,
+              archive: _archive,
+              reminders: () => _reminders,
+              simple: _kidMode,
+              playGuardian: _computerAvailable ? _playGuardian : null,
+              storyPage: _storyPage,
+              openGame: _openSavedGame,
+              openAnalysis: _computerAvailable ? _openSavedAnalysis : null,
+              puzzlesPage: _puzzlesPage,
+            )
+          else
+            const SizedBox.shrink(),
+        ],
+      ),
     );
     final destinations = [
       NavigationDestination(
@@ -1116,22 +1121,26 @@ class _HomeShellState extends State<HomeShell> {
     }
 
     // Su schermi larghi la barra passa a lato e il contenuto resta stretto.
-    if (WindowSize.of(context) == WindowSize.expanded) {
+    if (WindowSize.of(context) == WindowSize.expanded &&
+        MediaQuery.sizeOf(context).height >= 480) {
       return Scaffold(
         body: Row(
           children: [
-            NavigationRail(
-              selectedIndex: _tab,
-              onDestinationSelected: select,
-              labelType: NavigationRailLabelType.all,
-              destinations: [
-                for (final d in destinations)
-                  NavigationRailDestination(
-                    icon: d.icon,
-                    selectedIcon: d.selectedIcon,
-                    label: Text(d.label),
-                  ),
-              ],
+            SafeArea(
+              right: false,
+              child: NavigationRail(
+                selectedIndex: _tab,
+                onDestinationSelected: select,
+                labelType: NavigationRailLabelType.all,
+                destinations: [
+                  for (final d in destinations)
+                    NavigationRailDestination(
+                      icon: d.icon,
+                      selectedIcon: d.selectedIcon,
+                      label: Text(d.label),
+                    ),
+                ],
+              ),
             ),
             const VerticalDivider(width: 1),
             Expanded(
