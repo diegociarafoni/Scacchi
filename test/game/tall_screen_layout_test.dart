@@ -76,6 +76,22 @@ void main() {
     ];
     await playByTaps(tester, moves);
     expect(tester.takeException(), isNull);
-    expect(find.byKey(const ValueKey('move-15')), findsOneWidget);
+    final board = tester.getRect(find.byType(Chessboard));
+    final appBar = tester.getRect(find.byType(AppBar));
+    final last = tester.getRect(find.byKey(const ValueKey('move-15')));
+    // L'ultima mossa resta in vista, subito sopra la scacchiera.
+    expect(last.bottom, lessThanOrEqualTo(board.top));
+    expect(board.top - last.bottom, lessThan(120));
+    expect(last.top, greaterThan(appBar.bottom));
+  });
+
+  testWidgets('con il testo al 130% su uno schermo alto non va in overflow', (
+    tester,
+  ) async {
+    tester.platformDispatcher.textScaleFactorTestValue = 1.3;
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+    await _open(tester, const Size(360, 1000));
+    await playByTaps(tester, ['e2e4', 'e7e5', 'g1f3']);
+    expect(tester.takeException(), isNull);
   });
 }
