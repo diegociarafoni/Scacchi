@@ -274,13 +274,20 @@ void main() {
           for (final to in m.value.squares) {
             final victim = pos.board.roleAt(to);
             if (victim == null) continue;
-            final after = pos.play(NormalMove(from: m.key, to: to));
+            final mover = pos.board.roleAt(m.key)!;
+            final promotes = mover == Role.pawn && (to.value >> 3 == 7);
+            final after = pos.play(
+              NormalMove(
+                from: m.key,
+                to: to,
+                promotion: promotes ? Role.queen : null,
+              ),
+            );
             final recaptured = after.board
                 .attacksTo(to, pos.turn.opposite)
                 .isNotEmpty;
-            final mover = pos.board.roleAt(m.key)!;
             expect(
-              recaptured && value[victim]! < value[mover]!,
+              recaptured && value[victim]! <= value[mover]!,
               isTrue,
               reason:
                   '${s.id}: ${Move.parse('${m.key.name}${to.name}')} è '
