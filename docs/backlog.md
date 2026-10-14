@@ -97,7 +97,7 @@ Il dettaglio di U1-U11 è in `consegne/analisi-ux-ui.md`; il comportamento attua
 
 | ID | Funzione | Stato | Pri | Dim | Versione |
 |---|---|---|---|---|---|
-| S1 | **Un antagonista per capitolo**: carattere, stile di gioco, aperture e due battute prima e dopo la partita | da fare | da assegnare | media | 0.15.0 |
+| S1 | **Un antagonista per capitolo**: carattere, stile di gioco, aperture e due battute prima e dopo la partita | fatto | Claude | media | 0.15.0 |
 | S2 | **Racconto tra un passo e l'altro**: una riga tra lezione e puzzle che richiama ciò che si è imparato | da fare | da assegnare | piccola | 0.15.0 |
 | S3 | **Mappa del viaggio** con i sei luoghi, i progressi e «riprendi da dove eri» | da fare | da assegnare | media | 0.15.0 |
 | S4 | **Un bivio per capitolo** (tattica o finali) con puzzle diversi | da fare | da assegnare | media | 0.15.0 |

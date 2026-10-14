@@ -73,8 +73,13 @@ class _StoryPageState extends State<StoryPage> {
     }
   }
 
-  void _say(String text) =>
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
+  void _say(String text, {Duration? duration}) => ScaffoldMessenger.of(context)
+      .showSnackBar(
+        SnackBar(
+          content: Text(text),
+          duration: duration ?? const Duration(seconds: 4),
+        ),
+      );
 
   Future<void> _open(
     StoryChapter chapter,
@@ -138,6 +143,7 @@ class _StoryPageState extends State<StoryPage> {
       if (kind == StoryStepKind.boss) {
         subtitle = l10n.storyBossWon(chapter.bot.name);
         expression = AvatarExpression.surprised;
+        line = l10n.guardianLine(chapter, GuardianMoment.bossWon);
       }
       body = nextChapter == null
           ? l10n.chapterOutro(chapter)
@@ -282,7 +288,13 @@ class _StoryPageState extends State<StoryPage> {
     if (won) {
       await widget.story.bossBeaten(chapter);
     } else {
-      _say(storyL10n(context).storyBossLost(chapter.bot.name));
+      final l10n = storyL10n(context);
+      final line = l10n.guardianLine(chapter, GuardianMoment.bossLost);
+      _say(
+        '${l10n.storyBossLost(chapter.bot.name)}\n'
+        '${l10n.storyGuardianSays(chapter.bot.name, line)}',
+        duration: const Duration(seconds: 8),
+      );
     }
   }
 

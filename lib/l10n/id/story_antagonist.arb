@@ -1,0 +1,20 @@
+{
+  "storyGuardianPrologueBossWon": "Permainan yang bagus! Kamu bermain sangat baik, aku jadi belajar sesuatu.",
+  "storyGuardianVillageBossWon": "Selamat! Kamu menang tanpa membiarkan satu bidak pun tanpa pertahanan.",
+  "storyGuardianGatesBossWon": "Kamu paham aturan dengan baik. Gerbang ini milikmu, silakan masuk.",
+  "storyGuardianTowerBossWon": "Skakmat yang indah. Menara ini sekarang milikmu.",
+  "storyGuardianForestBossWon": "Jebakanmu berhasil. Selamat!",
+  "storyGuardianCastleBossWon": "Akhir permainan yang dimainkan dengan sabar. Kujabat tanganmu.",
+  "storyGuardianCrownBossWon": "Pembukaan yang elegan dan kemenangan yang pantas. Menuju mahkota!",
+  "storyGuardianPlainBossWon": "Rencanamu berhasil. Gambit Evans pun tidak cukup.",
+  "storyGuardianAcademyBossWon": "Kamu menang. Sekarang para master menunggumu!",
+  "storyGuardianPrologueBossLost": "Jangan khawatir, aku juga bisa salah. Ayo coba lagi bersama!",
+  "storyGuardianVillageBossLost": "Nyaris! Hati-hati dengan bidak tanpa pertahanan, lalu coba lagi.",
+  "storyGuardianGatesBossLost": "Pelajari lagi aturannya dan kembalilah: aku menunggu di gerbang.",
+  "storyGuardianTowerBossLost": "Rajanya lolos. Pikirkan skakmatnya dan coba lagi.",
+  "storyGuardianForestBossLost": "Kamu lihat jebakannya? Lain kali kamu bisa menghindarinya.",
+  "storyGuardianCastleBossLost": "Di akhir permainan butuh kesabaran. Ulangi, pelan-pelan.",
+  "storyGuardianCrownBossLost": "Jaga pembukaanmu, sisanya akan mengikuti. Coba lagi!",
+  "storyGuardianPlainBossLost": "Kurang rencana. Pikirkan dulu, lalu coba lagi.",
+  "storyGuardianAcademyBossLost": "Aku tidak memberi diskon, kamu tahu itu. Tapi kamu akan belajar: segera kembali!"
+}
