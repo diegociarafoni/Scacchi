@@ -14,6 +14,7 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | [gamification.md](gamification.md) | XP, livelli, obiettivo giornaliero, serie, traguardi, ricompense estetiche, promemoria |
 | [esporta-immagine.md](esporta-immagine.md) | Esportare la posizione come immagine PNG da partita, analisi, puzzle ed editor |
 | [editor-posizione.md](editor-posizione.md) | Editor di posizione, FEN e validazione |
+| [persistenza.md](persistenza.md) | Perché i dati restano su file JSON e come si migrano le versioni dello schema |
 | [archivio.md](archivio.md) | Salvataggio delle partite, storico, import ed export PGN |
 | [ritratto-settimana.md](ritratto-settimana.md) | Scheda degli ultimi sette giorni, condivisibile come immagine |
 | [riepilogo-settimanale.md](riepilogo-settimanale.md) | Progressi della settimana, errore ricorrente e un consiglio |
