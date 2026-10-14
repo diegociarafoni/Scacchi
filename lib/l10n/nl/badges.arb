@@ -477,5 +477,29 @@
         "type": "String"
       }
     }
+  },
+  "badgeOnlineFirstName": "Partij met z’n tweeën",
+  "badgeOnlineFirstDesc": "Speel een partij tegen een vriend op een andere telefoon.",
+  "badgeOnline10Name": "Altijd in gezelschap",
+  "badgeOnline10Desc": "Speel {count} partijen tegen een vriend.",
+  "@badgeOnline10Desc": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeOnlineWinName": "Winst onder vrienden",
+  "badgeOnlineWinDesc": "Win een partij van een vriend op een andere telefoon.",
+  "badgeRepertoireFirstName": "Geheugen in training",
+  "badgeRepertoireFirstDesc": "Herhaal je repertoire voor het eerst.",
+  "badgeRepertoire10Name": "Repertoire uit het hoofd",
+  "badgeRepertoire10Desc": "Herhaal je repertoire in {count} sessies.",
+  "@badgeRepertoire10Desc": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

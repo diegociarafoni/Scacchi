@@ -1,14 +1,14 @@
 # Badge
 
-Requisito RG-17. Una raccolta di 59 badge legati a ciò che si impara e si gioca, distinta dai [traguardi](gamification.md#traguardi-rg-05): i traguardi sono contatori che sbloccano temi, pezzi e cornici; i badge sono un riconoscimento tematico e non danno né XP né ricompense (RG-12). Il codice è in `lib/badges/`.
+Requisito RG-17. Una raccolta di 64 badge legati a ciò che si impara e si gioca, distinta dai [traguardi](gamification.md#traguardi-rg-05): i traguardi sono contatori che sbloccano temi, pezzi e cornici; i badge sono un riconoscimento tematico e non danno né XP né ricompense (RG-12). Il codice è in `lib/badges/`.
 
 ## Famiglie
 
 | Famiglia | Badge | Da dove vengono i dati |
 |---|---|---|
-| Imparare (14) | un badge per ogni capitolo della Storia (le sue lezioni), tre guardiani battuti, tutti i puzzle della Storia, tutte le posizioni dei finali, tutte le partite dei maestri, 25 revisioni | Salvataggi di Percorso (le lezioni sono quelle della Storia), finali, maestri e Storia; `reviewsCompleted` |
+| Imparare (16) | un badge per ogni capitolo della Storia (le sue lezioni), tre guardiani battuti, tutti i puzzle della Storia, tutte le posizioni dei finali, tutte le partite dei maestri, 25 revisioni, il primo ripasso del repertorio e 10 sessioni di ripasso | Salvataggi di Percorso (le lezioni sono quelle della Storia), finali, maestri e Storia; `reviewsCompleted`; contatore `repertoire` |
 | Puzzle (9) | 500 puzzle, 10 temi diversi, cinque temi singoli, punteggio 1800, 10 punti nella modalità a serie | `puzzleThemes`, `puzzlesSolved`, record |
-| Partite (10) | matto del barbiere, matto del pazzo, matto con tutti i pezzi, en passant, sottopromozione, stallo, maratona, 100 vittorie, podio, 5 tornei | Contatori degli eventi (`tally`), `wins` |
+| Partite (13) | matto del barbiere, matto del pazzo, matto con tutti i pezzi, en passant, sottopromozione, stallo, maratona, 100 vittorie, podio, 5 tornei, la prima partita con un amico su un altro telefono, 10 partite e la prima vittoria | Contatori degli eventi (`tally`), `wins`; contatori `online` e `online:win` |
 | Storia (13) | un badge per capitolo con il bot battuto, uno per la storia intera, «Si parte!», «Metà del viaggio» e tre capitoli completati | Salvataggi di Storia e Percorso (lezioni) |
 | Costanza (13) | livelli 3, 8, 15 e 20, serie di 14, 60, 100 e 365 giorni, 30 e 100 giorni di gioco, ritorno dopo una pausa, 7 giornate perfette, 25 sessioni di minigioco | `xp` (livello), `bestStreak`, `perfectDays`, `tally` |
 
@@ -76,6 +76,11 @@ Golden su tre taglie di telefono, chiaro e scuro, in `test/golden/badges_golden_
 3. Aggiungere `badge<Id>Name` e `badge<Id>Desc` nei due `badges.arb` e il ramo corrispondente in `badges_l10n.dart`.
 4. Aggiungere il test in `test/badges/badge_defs_test.dart` e aggiornare il numero atteso nel test del catalogo e i conteggi in questo documento.
 
-## Non ancora attivi
+## Partite in rete e ripasso
 
-Non esistono badge del multigiocatore né del ripasso del repertorio: richiedono che le partite in rete e il ripasso registrino un'attività.
+Due attività dei progressi alimentano i badge nuovi (A-24):
+
+- `OnlineGameFinished(result)`: la partita a due telefoni (`MultiplayerGamePage`, anche dal foglio «Nuova partita») la registra una sola volta, nel momento in cui passa a «finita»; una partita già conclusa che si riapre non conta di nuovo. L'esito è dal punto di vista di chi gioca: vittoria, patta o sconfitta. Non incrementa `gamesPlayed`, `wins` né l'obiettivo giornaliero «partite», per non cambiare le statistiche già raccolte. Vale XP come una partita normale (15, 12, 10).
+- `RepertoireReviewed()`: la sessione di ripasso (`RepertoireDrillPage`) la registra quando si esce, se si è risposto ad almeno una mossa. Vale 10 XP.
+
+Tutti i badge di questa sezione contano dal momento dell'aggiornamento: le partite passate non sono state registrate e non si recuperano.

@@ -8,6 +8,7 @@ import 'package:scacchi/openings/openings_hub_page.dart';
 import 'package:scacchi/openings/repertoire.dart';
 import 'package:scacchi/openings/repertoire_drill_page.dart';
 import 'package:scacchi/openings/repertoire_page.dart';
+import 'package:scacchi/progress/activity.dart';
 import 'package:scacchi/storage/key_value_store.dart';
 
 import '../localized_app.dart';
@@ -60,6 +61,48 @@ void main() {
     await tester.pumpAndSettle();
     await tester.pumpAndSettle();
     expect(find.text('Nessuna mossa da ripassare'), findsOneWidget);
+  });
+
+  testWidgets('A-24 uscendo dal ripasso si registra una sessione', (
+    tester,
+  ) async {
+    final t = await trainer();
+    await t.addLine(Side.white, 'Italiana', uci('e2e4 e7e5 g1f3'));
+    final recorded = <Activity>[];
+    await phone(
+      tester,
+      RepertoirePage(
+        trainer: t,
+        side: Side.white,
+        onActivity: (a) async => recorded.add(a),
+      ),
+    );
+    await tester.tap(find.text('Ripassa 2 mosse'));
+    await tester.pumpAndSettle();
+    await tapMove(tester, 'e2e4');
+    expect(recorded, isEmpty);
+    await tester.tap(find.byTooltip('Indietro'));
+    await tester.pumpAndSettle();
+    expect(recorded.single, isA<RepertoireReviewed>());
+  });
+
+  testWidgets('A-24 un ripasso senza risposte non conta', (tester) async {
+    final t = await trainer();
+    await t.addLine(Side.white, 'Italiana', uci('e2e4 e7e5 g1f3'));
+    final recorded = <Activity>[];
+    await phone(
+      tester,
+      RepertoirePage(
+        trainer: t,
+        side: Side.white,
+        onActivity: (a) async => recorded.add(a),
+      ),
+    );
+    await tester.tap(find.text('Ripassa 2 mosse'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Indietro'));
+    await tester.pumpAndSettle();
+    expect(recorded, isEmpty);
   });
 
   testWidgets('il ripasso non va in errore con poco spazio in altezza', (

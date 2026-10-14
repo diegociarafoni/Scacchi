@@ -477,5 +477,29 @@
         "type": "String"
       }
     }
+  },
+  "badgeOnlineFirstName": "Partia we dwoje",
+  "badgeOnlineFirstDesc": "Zagraj partię z przyjacielem na innym telefonie.",
+  "badgeOnline10Name": "Zawsze w towarzystwie",
+  "badgeOnline10Desc": "Zagraj {count} partii z przyjacielem.",
+  "@badgeOnline10Desc": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeOnlineWinName": "Zwycięstwo wśród przyjaciół",
+  "badgeOnlineWinDesc": "Wygraj partię z przyjacielem na innym telefonie.",
+  "badgeRepertoireFirstName": "Pamięć w treningu",
+  "badgeRepertoireFirstDesc": "Powtórz swój repertuar po raz pierwszy.",
+  "badgeRepertoire10Name": "Repertuar na pamięć",
+  "badgeRepertoire10Desc": "Powtórz swój repertuar w {count} sesjach.",
+  "@badgeRepertoire10Desc": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

@@ -12,6 +12,7 @@ import '../exchange/qr_receive_page.dart';
 import '../game/clock.dart';
 import '../game/move_speech.dart';
 import '../l10n/app_localizations.dart';
+import '../progress/activity.dart';
 import '../theme/rokko_theme.dart';
 import '../training/training_board.dart';
 import 'ble_link.dart';
@@ -68,7 +69,11 @@ class FriendGamePanel extends StatefulWidget {
     this.clockBuilder,
     this.inCard = true,
     this.onGameClosed,
+    this.onActivity,
   });
+
+  /// Registra la partita conclusa nei progressi.
+  final RecordActivity? onActivity;
 
   final OpenHost openHost;
   final ShareInvite shareInvite;
@@ -208,6 +213,7 @@ class _FriendGamePanelState extends State<FriendGamePanel> {
           builder: (_) => MultiplayerGamePage(
             controller: controller,
             shareInvite: widget.shareInvite,
+            onActivity: widget.onActivity,
           ),
         ),
       );
@@ -467,8 +473,11 @@ class MultiplayerPage extends StatelessWidget {
     this.readClipboard = clipboardText,
     this.remoteByDefault = false,
     this.remoteWatch,
+    this.onActivity,
   });
 
+  /// Registra la partita conclusa nei progressi.
+  final RecordActivity? onActivity;
   final OpenHost openHost;
   final ShareInvite shareInvite;
   final Future<String?> Function() readClipboard;
@@ -530,6 +539,7 @@ class MultiplayerPage extends StatelessWidget {
             readClipboard: readClipboard,
             remoteByDefault: remoteByDefault,
             remoteWatch: remoteWatch,
+            onActivity: onActivity,
           ),
         ],
       ),
@@ -713,8 +723,10 @@ class MultiplayerGamePage extends StatefulWidget {
     super.key,
     required this.controller,
     this.shareInvite = shareInviteText,
+    this.onActivity,
   });
 
+  final RecordActivity? onActivity;
   final MultiplayerController controller;
   final ShareInvite shareInvite;
 
@@ -726,10 +738,12 @@ class _MultiplayerGamePageState extends State<MultiplayerGamePage> {
   MultiplayerController get _c => widget.controller;
   int _moves = 0;
   int _revision = 0;
+  late bool _wasFinished;
 
   @override
   void initState() {
     super.initState();
+    _wasFinished = _c.status == MultiplayerStatus.finished;
     _moves = _c.session.sync.moves.length;
     _c.addListener(_onChange);
   }
@@ -750,6 +764,23 @@ class _MultiplayerGamePageState extends State<MultiplayerGamePage> {
       }
       _moves = moves;
     }
+    // Una partita già finita al ritorno non si conta una seconda volta.
+    final finished = _c.status == MultiplayerStatus.finished;
+    if (finished && !_wasFinished) {
+      final winner = _c.outcome?.winner;
+      unawaited(
+        widget.onActivity?.call(
+          OnlineGameFinished(
+            result: winner == null
+                ? GameResult.draw
+                : winner == _c.mySide
+                ? GameResult.win
+                : GameResult.loss,
+          ),
+        ),
+      );
+    }
+    _wasFinished = finished;
     setState(() {});
   }
 
