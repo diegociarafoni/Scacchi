@@ -48,6 +48,15 @@ void main() {
       expect((await reviewInviteGame(archive))?.id, 'a');
     });
 
+    test('la prima è quella iniziata prima, anche se risalvata dopo', () async {
+      await archive.save(_game('a', 3));
+      await archive.save(_game('b', 5));
+      await archive.save(
+        _game('a', 3).copyWith(updatedAt: DateTime(2026, 10, 9)),
+      );
+      expect((await reviewInviteGame(archive))?.id, 'a');
+    });
+
     test('non propone partite in corso, importate o di analisi', () async {
       await archive.save(_game('live', 1, result: '*'));
       await archive.save(_game('imp', 2, mode: SavedGame.imported));

@@ -21,8 +21,8 @@ Future<SavedGame?> reviewInviteGame(GameArchive archive) async {
       .where((g) => g.isPlayed && g.finished)
       .toList();
   if (played.isEmpty || played.any((g) => g.accuracy != null)) return null;
-  // L'archivio è dal più recente: la prima conclusa è l'ultima della lista.
-  return played.last;
+  // La prima per data di inizio, non per ultimo salvataggio.
+  return played.reduce((a, b) => b.createdAt.isBefore(a.createdAt) ? b : a);
 }
 
 /// L'invito non si ripresenta.

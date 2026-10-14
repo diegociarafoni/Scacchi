@@ -83,6 +83,14 @@ class _YouPageState extends State<YouPage> {
   // partita e fuori dal profilo bambino.
   late Future<SavedGame?> _invite = _loadInvite();
 
+  @override
+  void didUpdateWidget(YouPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // La scheda resta viva tra un cambio di scheda e l'altro: l'invito si
+    // rilegge ogni volta che la Home si ricostruisce.
+    _invite = _loadInvite();
+  }
+
   Future<SavedGame?> _loadInvite() async {
     if (widget.simple || widget.openGame == null) return null;
     try {
@@ -250,7 +258,9 @@ class _YouPageState extends State<YouPage> {
                 future: _invite,
                 builder: (context, snapshot) {
                   final game = snapshot.data;
-                  if (game == null || w.simple) return const SizedBox.shrink();
+                  if (game == null || w.simple || w.openGame == null) {
+                    return const SizedBox.shrink();
+                  }
                   return ReviewInviteCard(
                     game: game,
                     onReview: (g) {
@@ -259,7 +269,7 @@ class _YouPageState extends State<YouPage> {
                       setState(() {
                         _invite = Future<SavedGame?>.value();
                       });
-                      w.openGame!(context, g);
+                      w.openGame?.call(context, g);
                     },
                     onDismiss: () {
                       unawaited(dismissReviewInvite());
