@@ -39,4 +39,4 @@ fi
 
 # Il backup scrive «rokko» e legge anche «scacchi» dei file già esistenti.
 perl -0pi -e "s/  static const _app = 'scacchi';/  static const _app = 'rokko';\n  static const _appVecchio = 'scacchi';/;
-  s/json\['app'\] != _app/json['app'] != _app \&\& json['app'] != _appVecchio/" lib/backup/backup.dart
+  s/json\['app'\] != _app\b(?! \&\&)/json['app'] != _app \&\& json['app'] != _appVecchio/" lib/backup/backup.dart
