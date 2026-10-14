@@ -83,6 +83,7 @@
     "description": "Avviso se il motore non è disponibile"
   },
   "pathStageWrong": "Esse não é o lance certo, tente de novo.",
+  "pathStageSaved": "Assim a peça se salva, mas este exercício pede que você a defenda.",
   "pathStageGood": "Muito bem, continue.",
   "pathStageSolved": "Isso mesmo!",
   "pathStageRestartTooltip": "Recomeçar",

@@ -86,6 +86,10 @@
   "@pathStageWrong": {
     "description": "Avviso dopo una mossa sbagliata in un esercizio"
   },
+  "pathStageSaved": "Taş kurtuldu, ama bu alıştırma onu savunmanı istiyor.",
+  "@pathStageSaved": {
+    "description": "Avviso dopo una mossa che mette in salvo il pezzo senza difenderlo, in un esercizio che chiede di difenderlo"
+  },
   "pathStageGood": "Güzel, devam et.",
   "@pathStageGood": {
     "description": "Conferma dopo una mossa giusta, con altre mosse da trovare"

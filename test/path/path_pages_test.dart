@@ -179,6 +179,28 @@ void main() {
     expect(find.text('Esatto!'), findsOneWidget);
   });
 
+  testWidgets('«Difendere un pezzo» distingue il pezzo in salvo da quello non '
+      'difeso', (tester) async {
+    phone(tester);
+    await tester.pumpWidget(
+      localizedApp(home: StagePage(stage: stageById('pieces.defend')!)),
+    );
+    await tester.pumpAndSettle();
+    await _start(tester);
+    await _tapMove(tester, 'd2', 'f3');
+    expect(
+      find.text(
+        'Così il pezzo è salvo, ma qui l\'esercizio chiede di '
+        'difenderlo.',
+      ),
+      findsOneWidget,
+    );
+    await _tapMove(tester, 'a1', 'f1');
+    expect(find.text('Non è la mossa giusta, riprova.'), findsOneWidget);
+    await _tapMove(tester, 'a1', 'a2');
+    expect(find.text('Esatto!'), findsOneWidget);
+  });
+
   testWidgets('RG-03 la spiegazione precede gli esercizi', (tester) async {
     phone(tester);
     final stage = stageById('rules.check')!;

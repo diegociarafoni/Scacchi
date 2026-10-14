@@ -129,8 +129,11 @@ class _StagePageState extends State<StagePage> {
         switch (verdict) {
           case MoveVerdict.wrong:
             _board.updatePosition(_gameData(), animate: false);
+            final l = AppLocalizations.of(context);
             setState(
-              () => _feedback = AppLocalizations.of(context).pathStageWrong,
+              () => _feedback = run.savedWithoutDefending
+                  ? l.pathStageSaved
+                  : l.pathStageWrong,
             );
           case MoveVerdict.correct:
             _board.updatePosition(_gameData(lastMove: run.lastReply));

@@ -86,6 +86,10 @@
   "@pathStageWrong": {
     "description": "Avviso dopo una mossa sbagliata in un esercizio"
   },
+  "pathStageSaved": "Figura jest uratowana, ale to ćwiczenie wymaga jej obrony.",
+  "@pathStageSaved": {
+    "description": "Avviso dopo una mossa che mette in salvo il pezzo senza difenderlo, in un esercizio che chiede di difenderlo"
+  },
   "pathStageGood": "Dobrze, tak trzymaj.",
   "@pathStageGood": {
     "description": "Conferma dopo una mossa giusta, con altre mosse da trovare"
