@@ -23,5 +23,9 @@
   "youStatsSubtitle": "Résultats, ouvertures, cadences et classement local",
   "youArchive": "Archives",
   "youArchiveSubtitle": "Parties enregistrées, import et export PGN",
-  "youLoadError": "Impossible de lire les données enregistrées : réessaie."
+  "youLoadError": "Impossible de lire les données enregistrées : réessaie.",
+  "reviewInviteTitle": "Revoyez votre première partie",
+  "reviewInviteBody": "La partie « {game} » est terminée : l'ordinateur vous montre vos erreurs et les meilleurs coups.",
+  "reviewInviteAction": "Revoir",
+  "reviewInviteDismiss": "Pas maintenant"
 }

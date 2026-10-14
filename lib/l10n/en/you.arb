@@ -23,5 +23,9 @@
   "youStatsSubtitle": "Results, openings, time controls and local rating",
   "youArchive": "Archive",
   "youArchiveSubtitle": "Saved games, PGN import and export",
-  "youLoadError": "The saved data cannot be read: try again."
+  "youLoadError": "The saved data cannot be read: try again.",
+  "reviewInviteTitle": "Review your first game",
+  "reviewInviteBody": "The game “{game}” is over: the computer shows your mistakes and the best moves.",
+  "reviewInviteAction": "Review",
+  "reviewInviteDismiss": "Not now"
 }

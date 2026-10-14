@@ -23,5 +23,9 @@
   "youStatsSubtitle": "Resultaten, openingen, tempo's en lokale rating",
   "youArchive": "Archief",
   "youArchiveSubtitle": "Opgeslagen partijen, PGN importeren en exporteren",
-  "youLoadError": "De opgeslagen gegevens kunnen niet worden gelezen: probeer het opnieuw."
+  "youLoadError": "De opgeslagen gegevens kunnen niet worden gelezen: probeer het opnieuw.",
+  "reviewInviteTitle": "Bekijk je eerste partij terug",
+  "reviewInviteBody": "De partij ‘{game}’ is afgelopen: de computer toont je fouten en de beste zetten.",
+  "reviewInviteAction": "Bekijken",
+  "reviewInviteDismiss": "Niet nu"
 }
