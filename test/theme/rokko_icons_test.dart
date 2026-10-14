@@ -38,6 +38,8 @@ void main() {
     expect(iconOf('new'), RokkoIcons.newGame);
     expect(iconOf('draw'), RokkoIcons.draw);
     expect(iconOf('resign'), RokkoIcons.resign);
+    expect(find.byIcon(RokkoIcons.zen), findsOneWidget);
+    expect(find.byIcon(RokkoIcons.settings), findsOneWidget);
   });
 
   testWidgets(

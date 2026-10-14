@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/engine/bots.dart';
 import 'package:scacchi/engine/computer_player.dart';
 import 'package:scacchi/game/game_page.dart';
+import 'package:scacchi/theme/rokko_icons.dart';
 import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/settings/settings.dart';
 import 'package:scacchi/storage/key_value_store.dart';
@@ -127,7 +128,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.textContaining('Elo'), findsNothing);
     expect(await coachSwitches(), 0);
-    expect(find.byIcon(Icons.warning_amber), findsNothing);
+    expect(find.byIcon(RokkoIcons.threat), findsNothing);
   });
 
   testWidgets('RP-07 in zen i commenti del bot non compaiono', (tester) async {

@@ -4363,7 +4363,7 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
           key: const Key('open-bot-gallery'), // l10n-ok
         ),
         _tile(
-          RokkoIcons.coach,
+          Icons.school_outlined,
           l10n.gameMenuInstructorTitle,
           l10n.gameMenuInstructorSubtitle,
           () {
