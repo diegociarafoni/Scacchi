@@ -125,6 +125,20 @@ void main() {
     }
   });
 
+  test('RG-13 le battute di esito esistono, senza cifre, in ogni lingua', () {
+    for (final locale in AppLocalizations.supportedLocales) {
+      final l10n = lookupAppLocalizations(locale);
+      for (final c in storyChapters) {
+        for (final m in [GuardianMoment.bossWon, GuardianMoment.bossLost]) {
+          final line = l10n.guardianLine(c, m);
+          final reason = '${locale.languageCode} ${c.id} ${m.name}';
+          expect(line, isNotEmpty, reason: reason);
+          expect(line, isNot(matches(RegExp(r'\d'))), reason: reason);
+        }
+      }
+    }
+  });
+
   group('RG-13 avanzamento', () {
     test('all\'inizio è aperto solo il primo capitolo e solo le lezioni', () {
       const p = StoryProgress(PathProgress(), StoryState());

@@ -73,8 +73,13 @@ class _StoryPageState extends State<StoryPage> {
     }
   }
 
-  void _say(String text) =>
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
+  void _say(String text, {Duration? duration}) => ScaffoldMessenger.of(context)
+      .showSnackBar(
+        SnackBar(
+          content: Text(text),
+          duration: duration ?? const Duration(seconds: 4),
+        ),
+      );
 
   Future<void> _open(
     StoryChapter chapter,
@@ -288,6 +293,7 @@ class _StoryPageState extends State<StoryPage> {
       _say(
         '${l10n.storyBossLost(chapter.bot.name)}\n'
         '${l10n.storyGuardianSays(chapter.bot.name, line)}',
+        duration: const Duration(seconds: 8),
       );
     }
   }
