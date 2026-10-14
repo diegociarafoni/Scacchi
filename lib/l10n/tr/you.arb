@@ -23,5 +23,9 @@
   "youStatsSubtitle": "Sonuçlar, açılışlar, tempolar ve yerel puan",
   "youArchive": "Arşiv",
   "youArchiveSubtitle": "Kayıtlı oyunlar, PGN içe ve dışa aktarma",
-  "youLoadError": "Kayıtlı veriler okunamıyor: tekrar dene."
+  "youLoadError": "Kayıtlı veriler okunamıyor: tekrar dene.",
+  "reviewInviteTitle": "İlk oyununu gözden geçir",
+  "reviewInviteBody": "“{game}” oyunu bitti: bilgisayar hatalarını ve en iyi hamleleri gösterir.",
+  "reviewInviteAction": "Gözden geçir",
+  "reviewInviteDismiss": "Şimdi değil"
 }
