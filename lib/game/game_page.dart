@@ -6,6 +6,7 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../analysis/analysis_page.dart';
 import '../archive/pgn.dart';
@@ -105,6 +106,7 @@ class GamePage extends StatefulWidget {
     this.onFinished,
     this.store,
     this.qrScanner = zxingScanner,
+    this.keepAwake,
     this.onSavePuzzles,
     this.openSetup = false,
     this.initialSetup,
@@ -180,6 +182,9 @@ class GamePage extends StatefulWidget {
   /// Lettore QR per continuare una partita passata da un altro telefono.
   final QrScannerBuilder qrScanner;
 
+  /// Tiene lo schermo acceso; di default il blocco dello schermo del sistema.
+  final Future<void> Function(bool awake)? keepAwake;
+
   @override
   State<GamePage> createState() => _GamePageState();
 }
@@ -203,6 +208,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   /// Ultimo stato salvato nell'archivio (partita, esito, mosse).
   String? _archivedKey;
+
+  /// Ultima revisione, legata alla partita e al numero di semimosse: i
+  /// salvataggi successivi della stessa partita non perdono la precisione.
+  ({String id, int plies, GameReview review})? _reviewed;
   late DateTime _startedAt = _clockNow();
   late String _gameId = 'game-${_startedAt.microsecondsSinceEpoch}';
   var _fromEditor = false;
@@ -886,11 +895,30 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _tick.dispose();
     _sounds.dispose();
     _board.dispose();
+    _syncAwake(disposing: true);
     _drawing.dispose();
     super.dispose();
   }
 
+  bool _awake = false;
+
+  /// Schermo acceso finché la partita è in corso e l'impostazione è attiva;
+  /// si controlla a ogni costruzione, così vale per qualunque modo in cui la
+  /// partita cambia o finisce.
+  void _syncAwake({bool disposing = false}) {
+    final want = !disposing && _settings.keepAwake && !_game.isOver;
+    if (want == _awake) return;
+    _awake = want;
+    final set = widget.keepAwake ?? _systemKeepAwake;
+    // Non è essenziale: senza il servizio lo schermo si spegne come di solito.
+    unawaited(set(want).catchError((_) {}));
+  }
+
+  static Future<void> _systemKeepAwake(bool on) =>
+      WakelockPlus.toggle(enable: on);
+
   void _onSettingsChanged() {
+    _syncAwake();
     setState(() {
       final turnedOn = _settings.autoFlip && !_autoFlip;
       _autoFlip = _settings.autoFlip;
@@ -1068,9 +1096,12 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// Salvataggio e progressi vanno avanti da soli: uno lento o fallito non
   /// ferma l'altro.
   void _archive(ChessGame game, Side? side, DateTime now, int? elo) {
+    _persist(_savedGame(game, side, now, elo));
+  }
+
+  void _persist(SavedGame saved) {
     final save = widget.onSave;
     if (save == null) return;
-    final saved = _savedGame(game, side, now, elo);
     unawaited(
       save(saved).onError(
         (Object e, _) => debugPrint('Partita non salvata: $e'), // l10n-ok
@@ -1082,7 +1113,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     String name(Side s) => side == null
         ? (_settings.nameOf(s) ?? (s == Side.white ? 'Bianco' : 'Nero'))
         : (s == side ? 'Tu' : (_bot?.name ?? 'Computer'));
-    return SavedGame.fromGame(
+    final reviewed = _reviewed;
+    final saved = SavedGame.fromGame(
       game,
       id: _gameId,
       white: name(Side.white),
@@ -1095,6 +1127,11 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       opponentElo: elo,
       headers: {'Handicap': ?_handicap?.pgnValue(_handicapHuman)},
     );
+    return reviewed != null &&
+            reviewed.id == _gameId &&
+            reviewed.plies == game.moves.length
+        ? saved.withReview(reviewed.review)
+        : saved;
   }
 
   /// Colore dell'utente ed Elo dell'avversario; `null` tra due persone.
@@ -2028,6 +2065,55 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _onMove(move);
   }
 
+  /// Tra due persone annullare una mossa chiede il consenso di chi non l'ha
+  /// giocata (RF-32). Contro il computer, nelle sfide, per le azioni locali
+  /// (uscire dalla revisione, scartare una mossa da confermare) e per
+  /// revocare un abbandono o una patta, che non toglie mosse, basta il tocco.
+  Future<void> _requestUndo() async {
+    final needsConsent =
+        _computerSide == null &&
+        !_isChallenge &&
+        _viewPly == null &&
+        _pendingMove == null &&
+        !_endedByChoice &&
+        _game.moves.isNotEmpty;
+    if (!needsConsent) return _undo();
+    final game = _game;
+    final plies = game.moves.length;
+    final consenting = game.position.turn;
+    final accepted = await _suspendedDialog<bool>((context) {
+      final l10n = _l10n(context);
+      if (_kid) {
+        return _yesNoDialog(
+          context,
+          title: switch (_nameOf(consenting)) {
+            null => l10n.kidGameUndoOfferSide(consenting.name),
+            final name => l10n.kidGameUndoOfferName(name),
+          },
+          no: l10n.kidGameDrawNo,
+          yes: l10n.kidGameUndoYes,
+        );
+      }
+      return _yesNoDialog(
+        context,
+        title: switch (_nameOf(consenting)) {
+          null => l10n.gameUndoOfferSide(consenting.name),
+          final name => l10n.gameUndoOfferNamed(name, consenting.name),
+        },
+        no: l10n.gameDrawDecline,
+        yes: l10n.gameDrawAccept,
+      );
+    }, restart: (accepted) => accepted != true);
+    if (!mounted || !identical(game, _game) || game.moves.length != plies) {
+      return;
+    }
+    if (accepted == true) {
+      _undo();
+    } else {
+      _showMessage(_l10n(context).gameUndoRefused);
+    }
+  }
+
   void _undo() {
     if (_viewPly != null) {
       _showPly(null);
@@ -2292,6 +2378,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           onCancel: player.stopAnalysis,
           analyseLive: _liveAnalysis(player),
           onReviewed: (review) => _recordReview(review, players, moves),
+          onResult: _saveAccuracy,
           onSavePuzzles: widget.onSavePuzzles,
           puzzlePlayers: players,
           clocks: [for (final m in _game.moves) m.clock],
@@ -2300,6 +2387,23 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         ),
       ),
     );
+  }
+
+  /// La precisione della revisione entra nella partita archiviata, così la
+  /// scheda delle fasi la trova senza riaprire la partita dall'archivio.
+  void _saveAccuracy(GameReview review) {
+    final (side, elo) = _playerAndElo;
+    final plies = _game.moves.length;
+    final known = _reviewed;
+    if (side == null || plies == 0) return;
+    if (known != null &&
+        known.id == _gameId &&
+        known.plies == plies &&
+        known.review.accuracy(side) == review.accuracy(side)) {
+      return;
+    }
+    _reviewed = (id: _gameId, plies: plies, review: review);
+    _archive(_game, side, _clockNow(), elo);
   }
 
   /// Una revisione nuova vale XP; con due giocatori la precisione non è di
@@ -2401,6 +2505,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    _syncAwake();
     final inProgress = _isChallenge && !_game.isOver && _game.moves.isNotEmpty;
     return PopScope(
       canPop: !inProgress,
@@ -2443,7 +2548,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           !evaluating &&
               (!_isChallenge || widget.challenge!.allowUndo) &&
               (_canUndo || _pendingMove != null || _viewPly != null)
-          ? _undo
+          ? _requestUndo
           : null,
       onFlip: () => setState(() => _orientation = _orientation.opposite),
       onDraw:

@@ -81,7 +81,7 @@
     }
   },
   "budget": {
-    "apkMaxMegabytes": 80,
+    "apkMaxMegabytes": 60,
     "frames": {
       "minFrames": 50,
       "p90BuildMs": 33,

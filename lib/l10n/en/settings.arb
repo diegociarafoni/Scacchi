@@ -113,6 +113,8 @@
   "settingsMoveMethodBoth": "Taps and dragging",
   "settingsMoveMethodTwoTaps": "Two taps",
   "settingsMoveMethodDrag": "Dragging",
+  "settingsKeepAwake": "Keep the screen on",
+  "settingsKeepAwakeDescription": "The phone does not turn the screen off during a game",
   "settingsSearchHint": "Search settings",
   "settingsSearchEmpty": "No settings found",
   "settingsSearchClear": "Clear the search"

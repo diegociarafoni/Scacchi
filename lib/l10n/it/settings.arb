@@ -497,6 +497,14 @@
   "@settingsMoveMethodDrag": {
     "description": "Impostazioni: solo trascinamento"
   },
+  "settingsKeepAwake": "Schermo sempre acceso",
+  "@settingsKeepAwake": {
+    "description": "Impostazioni: schermo acceso durante la partita"
+  },
+  "settingsKeepAwakeDescription": "Durante la partita il telefono non spegne lo schermo",
+  "@settingsKeepAwakeDescription": {
+    "description": "Impostazioni: descrizione dello schermo sempre acceso"
+  },
   "settingsSearchHint": "Cerca nelle impostazioni",
   "@settingsSearchHint": {
     "description": "Impostazioni: testo del campo di ricerca"

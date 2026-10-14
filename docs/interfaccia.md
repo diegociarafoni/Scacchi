@@ -42,7 +42,7 @@ Per ciascun giocatore una riga mostra le icone dei pezzi avversari catturati, da
 |---|---|
 | Altro | Apre il pannello «Partita» con Allenatore e Minaccia (e «Gira» sugli schermi stretti); non c'è dove il pannello sarebbe vuoto |
 | Nuova | Apre il foglio «Nuova partita» descritto sopra: avvio rapido, amico, galleria dei bot, istruttore, tornei e, in «Altre modalità», la partita personalizzata (avversario, variante Classica, Chess960, Re della collina o Tre scacchi, handicap, nomi e cadenza; toccando la cadenza inizia la partita) |
-| Annulla | Annulla l'ultima mossa; disattivato se non ci sono mosse |
+| Annulla | Annulla l'ultima mossa (tra due persone sullo stesso telefono serve il consenso di chi non l'ha giocata); disattivato se non ci sono mosse |
 | Gira | Capovolge la scacchiera |
 | Patta | Chiede all'avversario se accetta la patta; a partita conclusa cede il posto a Rivincita |
 | Abbandona | Chiede conferma e fa abbandonare il lato al tratto; a partita conclusa cede il posto a Rivedi |
@@ -149,6 +149,7 @@ Si aprono dall'icona a forma di ingranaggio nella Home e nella barra del titolo 
 | Colore di frecce e cerchi | Verde, rosso, blu o giallo per le forme disegnate; col mouse Maiusc dà il rosso, Ctrl il blu, Alt il giallo | Verde |
 | Conferma la mossa | Dopo ogni mossa mostra la posizione risultante con i pulsanti Conferma e Scarta al posto della riga di stato; la mossa conta solo dopo Conferma, e l'orologio continua a scorrere. Durante l'attesa "Annulla" equivale a Scarta, mentre Patta e Abbandona sono disattivati | Disattiva |
 | Premossa | Contro il computer, mentre pensa si può già muovere: la mossa scelta viene giocata appena risponde, se è ancora legale (altrimenti è scartata, anche se nel frattempo si sfogliano le mosse); toccando una casa vuota si annulla. Un pedone che arriva in fondo promuove a donna. Non c'è con «Conferma la mossa» né nel profilo bambino (requisito RF-08) | Attiva |
+| Schermo sempre acceso | Durante la partita il telefono non spegne lo schermo; torna normale a partita finita, uscendo dalla schermata e con l'opzione spenta (requisito RM-06, plugin `wakelock_plus`) | Attiva |
 | Ruota a ogni turno | Orienta la scacchiera dal lato di chi deve muovere | Disattiva |
 | Modalità zen | In partita restano solo scacchiera, mosse ed eventuale orologio (sezione sotto); si accende anche dall'icona nella barra della partita | Disattiva |
 | Modalità tavolo | Capovolge i pezzi del giocatore in alto, per giocare uno di fronte all'altro con il telefono sul tavolo | Disattiva |

@@ -155,6 +155,14 @@
   "@settingsMoveMethodDrag": {
     "description": "Impostazioni: solo trascinamento"
   },
+  "settingsKeepAwake": "Scherm aanhouden",
+  "@settingsKeepAwake": {
+    "description": "Impostazioni: schermo acceso durante la partita"
+  },
+  "settingsKeepAwakeDescription": "De telefoon zet het scherm niet uit tijdens een partij",
+  "@settingsKeepAwakeDescription": {
+    "description": "Impostazioni: descrizione dello schermo sempre acceso"
+  },
   "settingsSearchHint": "Zoeken in instellingen",
   "settingsSearchEmpty": "Geen instellingen gevonden",
   "settingsSearchClear": "Zoekopdracht wissen"

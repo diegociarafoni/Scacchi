@@ -154,6 +154,7 @@ List<SettingsHit> _index(
     hit(b, board, l10n.settingsAnimations, l10n.settingsAnimationsDescription),
     hit(b, board, l10n.settingsNotation, l10n.settingsNotationDescription),
     hit(g, game, l10n.settingsAutoQueen, l10n.settingsAutoQueenDescription),
+    hit(g, game, l10n.settingsKeepAwake, l10n.settingsKeepAwakeDescription),
     hit(g, game, l10n.settingsAutoFlip, l10n.settingsAutoFlipDescription),
     hit(g, game, l10n.settingsTableMode, l10n.settingsTableModeDescription),
     hit(g, game, l10n.settingsExplainWhy, l10n.settingsExplainWhyDescription),

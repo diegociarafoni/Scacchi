@@ -224,6 +224,28 @@ void main() {
     expect(saved.last.opponentElo, activity.opponentElo);
   });
 
+  testWidgets(
+    'la revisione dopo una partita col computer salva la precisione',
+    (tester) async {
+      await open(tester, computer: true);
+      await startComputerGame(tester, side: 'Bianco');
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+      await tapMove(tester, 'e2e4');
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+      await tapMove(tester, 'd2d4');
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+      await tapGameAction(tester, 'Abbandona');
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Abbandona').last);
+      await tester.pumpAndSettle();
+      expect(saved.last.accuracy, isNull);
+      await tapGameAction(tester, 'Rivedi');
+      await tester.pumpAndSettle(const Duration(seconds: 5));
+      expect(saved.last.accuracy, isNotNull);
+      expect(saved.last.phaseAccuracy, isNotNull);
+    },
+  );
+
   testWidgets('le impostazioni mostrano i progressi quando sono disponibili', (
     tester,
   ) async {
