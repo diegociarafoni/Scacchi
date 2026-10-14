@@ -105,7 +105,7 @@ Il turco (`tr`, «Türkçe») ha `lib/l10n/tr/*.arb` e `assets/content/tr/*.json
 | Analisi | `lib/analysis/analysis_page.dart` (`analysis.arb`) | Nessuno |
 | Archivio delle partite | `lib/archive/archive_page.dart` (`archive.arb`) | Nessuno; il tipo di partita (`SavedGame.mode`) resta un identificativo, mostrato tradotto |
 | Scheda «La tua settimana» | `lib/stats/portrait_page.dart` (`stats.arb`, prefisso `portrait`) | Nessuno; il nome del file immagine resta in italiano |
-| Statistiche | `lib/stats/stats_page.dart` | Bilancio sintetico `+V =P -S` (`Score.toString` in `stats.dart`), nomi delle cadenze e delle aperture che arrivano dall'archivio |
+| Statistiche | `lib/stats/stats_page.dart` | Nessuno; il bilancio `+V =P -S` (`Score.toString` in `stats.dart`) è un simbolo e i nomi delle cadenze e delle aperture sono dati dell'archivio, non frasi |
 
 ## Testi da spostare
 
