@@ -1,8 +1,8 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/coach/opening_coach.dart';
-import 'package:scacchi/openings/opening_book.dart';
-import 'package:scacchi/openings/opening_stats.dart';
+import 'package:rokko/coach/opening_coach.dart';
+import 'package:rokko/openings/opening_book.dart';
+import 'package:rokko/openings/opening_stats.dart';
 
 final book = OpeningBook.parseTsv(
   'eco\tname\tuci\n'

@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/progress/activity.dart';
-import 'package:scacchi/progress/daily_goal.dart';
-import 'package:scacchi/progress/progress_state.dart';
-import 'package:scacchi/progress/progress_store.dart';
-import 'package:scacchi/progress/progress_tracker.dart';
+import 'package:rokko/progress/activity.dart';
+import 'package:rokko/progress/daily_goal.dart';
+import 'package:rokko/progress/progress_state.dart';
+import 'package:rokko/progress/progress_store.dart';
+import 'package:rokko/progress/progress_tracker.dart';
 
 void main() {
   late Directory dir;

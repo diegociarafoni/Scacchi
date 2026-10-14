@@ -1,15 +1,15 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/openings/explorer_page.dart';
-import 'package:scacchi/openings/opening_book.dart';
-import 'package:scacchi/openings/opening_game.dart';
-import 'package:scacchi/openings/openings_hub_page.dart';
-import 'package:scacchi/openings/repertoire.dart';
-import 'package:scacchi/openings/repertoire_drill_page.dart';
-import 'package:scacchi/openings/repertoire_page.dart';
-import 'package:scacchi/progress/activity.dart';
-import 'package:scacchi/storage/key_value_store.dart';
+import 'package:rokko/openings/explorer_page.dart';
+import 'package:rokko/openings/opening_book.dart';
+import 'package:rokko/openings/opening_game.dart';
+import 'package:rokko/openings/openings_hub_page.dart';
+import 'package:rokko/openings/repertoire.dart';
+import 'package:rokko/openings/repertoire_drill_page.dart';
+import 'package:rokko/openings/repertoire_page.dart';
+import 'package:rokko/progress/activity.dart';
+import 'package:rokko/storage/key_value_store.dart';
 
 import '../localized_app.dart';
 import '../puzzles/puzzle_page_test.dart' show tapMove;

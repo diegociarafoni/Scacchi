@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/puzzles/puzzle_run.dart';
-import 'package:scacchi/puzzles/run_records.dart';
-import 'package:scacchi/storage/key_value_store.dart';
+import 'package:rokko/puzzles/puzzle_run.dart';
+import 'package:rokko/puzzles/run_records.dart';
+import 'package:rokko/storage/key_value_store.dart';
 
 void main() {
   test('RG-08 salva il record per modalità e segnala quelli nuovi', () async {

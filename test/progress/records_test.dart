@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/progress/activity.dart';
-import 'package:scacchi/progress/progress_state.dart';
-import 'package:scacchi/progress/progress_tracker.dart';
-import 'package:scacchi/progress/records.dart';
+import 'package:rokko/progress/activity.dart';
+import 'package:rokko/progress/progress_state.dart';
+import 'package:rokko/progress/progress_tracker.dart';
+import 'package:rokko/progress/records.dart';
 
 void main() {
   final tracker = ProgressTracker();

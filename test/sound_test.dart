@@ -1,7 +1,7 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/game/chess_game.dart';
-import 'package:scacchi/game/sounds.dart';
+import 'package:rokko/game/chess_game.dart';
+import 'package:rokko/game/sounds.dart';
 
 GameSound? _last(List<String> uci, {String? fen}) {
   final game = ChessGame(

@@ -1,4 +1,4 @@
-import 'package:scacchi/puzzles/puzzle.dart';
+import 'package:rokko/puzzles/puzzle.dart';
 
 /// Puzzle 00008 del database aperto dei puzzle.
 final hangingQueen = Puzzle.parseCsv(

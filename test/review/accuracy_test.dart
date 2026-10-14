@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/review/accuracy.dart';
+import 'package:rokko/review/accuracy.dart';
 
 void main() {
   group('RF-63 precisione', () {

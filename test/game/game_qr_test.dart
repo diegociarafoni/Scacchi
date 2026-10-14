@@ -1,12 +1,12 @@
 import 'package:chessground/chessground.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/archive/saved_game.dart';
-import 'package:scacchi/exchange/qr_send_page.dart';
-import 'package:scacchi/exchange/qr_transfer.dart';
-import 'package:scacchi/game/game_page.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/settings/settings.dart';
+import 'package:rokko/archive/saved_game.dart';
+import 'package:rokko/exchange/qr_send_page.dart';
+import 'package:rokko/exchange/qr_transfer.dart';
+import 'package:rokko/game/game_page.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/settings/settings.dart';
 
 Offset square(WidgetTester tester, String name) {
   final rect = tester.getRect(find.byType(Chessboard));

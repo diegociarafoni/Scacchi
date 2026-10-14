@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/puzzles/puzzle.dart';
-import 'package:scacchi/puzzles/puzzle_library.dart';
+import 'package:rokko/puzzles/puzzle.dart';
+import 'package:rokko/puzzles/puzzle_library.dart';
 
 Puzzle p(String id, int rating, String themes) => Puzzle.parseCsv(
   '$id,7k/6pp/8/8/1n6/8/8/RR4K1 b - - 0 1,b4c2 a1a8,$rating,$themes',

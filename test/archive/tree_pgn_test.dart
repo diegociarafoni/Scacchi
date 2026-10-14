@@ -1,8 +1,8 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/analysis/variation_tree.dart';
-import 'package:scacchi/archive/tree_pgn.dart';
-import 'package:scacchi/game/move_note.dart';
+import 'package:rokko/analysis/variation_tree.dart';
+import 'package:rokko/archive/tree_pgn.dart';
+import 'package:rokko/game/move_note.dart';
 
 Move m(String uci) => Move.parse(uci)!;
 

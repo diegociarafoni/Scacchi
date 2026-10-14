@@ -17,6 +17,7 @@ import '../progress/avatar.dart';
 import '../progress/guardian_avatar.dart';
 import '../story/story.dart';
 import '../theme/rokko_theme.dart';
+import '../theme/sheets.dart';
 import 'bot_greetings.dart';
 import 'bot_tiers.dart';
 import 'game_options.dart';
@@ -202,9 +203,8 @@ class _BotGalleryPageState extends State<BotGalleryPage> {
     ),
   );
 
-  void _openOptions() => showModalBottomSheet<void>(
+  void _openOptions() => showRokkoSheet<void>(
     context: context,
-    isScrollControlled: true,
     builder: (_) => _OptionsSheet(page: this),
   );
 

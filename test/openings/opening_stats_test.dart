@@ -1,6 +1,6 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/openings/opening_stats.dart';
+import 'package:rokko/openings/opening_stats.dart';
 
 String keyAfter(String uci) {
   Position pos = Chess.initial;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/multiplayer/multiplayer_widgets.dart';
-import 'package:scacchi/theme/rokko_theme.dart';
+import 'package:rokko/multiplayer/multiplayer_widgets.dart';
+import 'package:rokko/theme/rokko_theme.dart';
 
 import '../localized_app.dart';
 

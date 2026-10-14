@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../progress/progress_controller.dart';
+import '../theme/sheets.dart';
 import 'badge_art.dart';
 import 'badge_def.dart';
 import 'badges_l10n.dart';
@@ -146,7 +147,7 @@ class _BadgesTab extends StatelessWidget {
         .where((b) => controller.badges.containsKey(b.id))
         .length;
     return ListView(
-      padding: const EdgeInsets.all(16),
+      padding: context.withSystemBottom(const EdgeInsets.all(16)),
       children: [
         GalleryCounter(earned: earned, total: badges.length),
         for (final family in BadgeFamily.values)
@@ -279,10 +280,9 @@ class BadgeTile extends StatelessWidget {
 
   void _showDetail(BuildContext context) {
     unawaited(
-      showModalBottomSheet<void>(
+      showRokkoSheet<void>(
         context: context,
         showDragHandle: true,
-        isScrollControlled: true,
         builder: (_) => BadgeDetail(badge: badge, facts: facts, day: earnedDay),
       ),
     );

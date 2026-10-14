@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/main.dart';
+import 'package:rokko/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'game_actions.dart';
@@ -10,7 +10,7 @@ void main() {
     tester,
   ) async {
     SharedPreferences.setMockInitialValues({});
-    await tester.pumpWidget(const ScacchiApp());
+    await tester.pumpWidget(const RokkoApp());
     await tester.pumpAndSettle();
     await openBoard(tester);
     expect(find.text('Muove il Bianco.'), findsOneWidget);
@@ -19,7 +19,7 @@ void main() {
 
   testWidgets('le frecce non aprono la revisione senza mosse', (tester) async {
     SharedPreferences.setMockInitialValues({});
-    await tester.pumpWidget(const ScacchiApp());
+    await tester.pumpWidget(const RokkoApp());
     await tester.pumpAndSettle();
     await openBoard(tester);
     await tester.sendKeyEvent(LogicalKeyboardKey.arrowLeft);

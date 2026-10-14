@@ -23,6 +23,7 @@ import '../stats/stats_page.dart';
 import '../story/story.dart';
 import '../summary/weekly_summary_page.dart';
 import '../theme/rokko_theme.dart';
+import '../theme/sheets.dart';
 import 'review_invite.dart';
 
 /// Scheda "Tu": solo i dati del giocatore; le funzioni stanno nella Home.
@@ -244,7 +245,9 @@ class _YouPageState extends State<YouPage> {
               ),
           ];
           return ListView(
-            padding: const EdgeInsets.only(bottom: 24),
+            padding: context.withSystemBottom(
+              const EdgeInsets.only(bottom: 24),
+            ),
             children: [
               if (controller != null)
                 ListenableBuilder(

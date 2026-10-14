@@ -2,7 +2,7 @@ import 'dart:io' as io;
 
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/openings/opening_book.dart';
+import 'package:rokko/openings/opening_book.dart';
 
 List<Move> uci(String moves) =>
     moves.split(' ').map((m) => Move.parse(m)!).toList();

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/engine/process_transport.dart';
+import 'package:rokko/engine/process_transport.dart';
 
 void main() {
   test('STOCKFISH_PATH ha la precedenza', () {

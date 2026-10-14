@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../settings/settings.dart';
 import '../theme/rokko_theme.dart';
+import '../theme/sheets.dart';
 import 'curriculum.dart';
 import 'path_controller.dart';
 import 'path_progress.dart';
@@ -81,7 +82,9 @@ class _PathPageState extends State<PathPage> {
                   label: Text(l10n.pathContinue),
                 ),
           body: ListView(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 96),
+            padding: context.withSystemBottom(
+              const EdgeInsets.fromLTRB(16, 8, 16, 96),
+            ),
             children: [
               _Summary(progress: progress, next: next),
               for (final (n, chapter) in curriculum.indexed) ...[
