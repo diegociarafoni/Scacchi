@@ -8,7 +8,6 @@ import 'package:rokko/game/speech_bubble.dart';
 import 'package:rokko/l10n/app_localizations.dart';
 import 'package:rokko/progress/avatar_art.dart';
 import 'package:rokko/progress/guardian_avatar.dart';
-import 'package:rokko/settings/settings.dart';
 import 'package:rokko/storage/key_value_store.dart';
 import 'package:rokko/theme/rokko_theme.dart';
 
@@ -31,7 +30,7 @@ Future<void> pump(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: GamePage(
-        settings: SettingsController.defaults(),
+        settings: trainingSettings(),
         computerAvailable: true,
         store: MemoryStore(),
         now: () => DateTime(2026, 10, 12, 12),

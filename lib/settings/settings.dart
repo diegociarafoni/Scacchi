@@ -439,6 +439,7 @@ class AppSettings {
     this.keepAwake = true,
     this.premove = true,
     this.evalBar = false,
+    this.trainingMode = false,
     this.colorBlind = false,
     this.explainWhy = false,
     this.zenMode = false,
@@ -507,6 +508,11 @@ class AppSettings {
 
   /// Barra di valutazione accanto alla scacchiera, dove gli aiuti sono ammessi.
   final bool evalBar;
+
+  /// Allenamento contro i bot (RF-22): annullamento, suggerimenti, barra e
+  /// minacce, ma senza Elo né vittorie nei progressi. Spento è la Sfida; il
+  /// profilo bambino gioca sempre in allenamento.
+  final bool trainingMode;
   final bool colorBlind;
 
   /// «Spiegami perché» (RF-122): dopo ogni mossa del computer una riga su cosa
@@ -593,6 +599,7 @@ class AppSettings {
     bool? keepAwake,
     bool? premove,
     bool? evalBar,
+    bool? trainingMode,
     bool? colorBlind,
     bool? explainWhy,
     bool? zenMode,
@@ -627,6 +634,7 @@ class AppSettings {
     keepAwake: keepAwake ?? this.keepAwake,
     premove: premove ?? this.premove,
     evalBar: evalBar ?? this.evalBar,
+    trainingMode: trainingMode ?? this.trainingMode,
     colorBlind: colorBlind ?? this.colorBlind,
     explainWhy: explainWhy ?? this.explainWhy,
     zenMode: zenMode ?? this.zenMode,
@@ -706,6 +714,7 @@ class AppSettings {
       other.keepAwake == keepAwake &&
       other.premove == premove &&
       other.evalBar == evalBar &&
+      other.trainingMode == trainingMode &&
       other.colorBlind == colorBlind &&
       other.explainWhy == explainWhy &&
       other.zenMode == zenMode &&
@@ -742,6 +751,7 @@ class AppSettings {
     keepAwake,
     premove,
     evalBar,
+    trainingMode,
     colorBlind,
     explainWhy,
     zenMode,
@@ -823,6 +833,7 @@ class SettingsController extends ValueNotifier<AppSettings> {
         keepAwake: read('keepAwake', d.keepAwake),
         premove: read('premove', d.premove),
         evalBar: read('evalBar', d.evalBar),
+        trainingMode: read('trainingMode', d.trainingMode),
         colorBlind: read('colorBlind', d.colorBlind),
         explainWhy: read('explainWhy', d.explainWhy),
         zenMode: read('zenMode', d.zenMode),
@@ -922,6 +933,8 @@ class SettingsController extends ValueNotifier<AppSettings> {
         prefs.setBool('premove', settings.premove),
       if (old.evalBar != settings.evalBar)
         prefs.setBool('evalBar', settings.evalBar),
+      if (old.trainingMode != settings.trainingMode)
+        prefs.setBool('trainingMode', settings.trainingMode),
       if (old.colorBlind != settings.colorBlind)
         prefs.setBool('colorBlind', settings.colorBlind),
       if (old.explainWhy != settings.explainWhy)
