@@ -112,15 +112,16 @@ void main() {
 
     test('il backup si chiama rokko e legge anche il vecchio nome', () async {
       final backup = await Backup.collect(dir, {});
-      expect(jsonDecode(backup.encode())['app'], 'rokko');
+      final json = jsonDecode(backup.encode()) as Map<String, Object?>;
+      expect(json['app'], 'rokko');
       for (final app in ['rokko', 'scacchi']) {
-        final json = jsonEncode({
+        final text = jsonEncode({
           'app': app,
           'version': 1,
           'files': <String, Object?>{},
           'preferences': <String, Object?>{},
         });
-        expect(() => Backup.decode(json), returnsNormally);
+        expect(() => Backup.decode(text), returnsNormally);
       }
     });
 
