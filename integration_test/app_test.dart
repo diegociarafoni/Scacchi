@@ -206,7 +206,9 @@ void main() {
     expect(board().orientation.name, 'black');
   });
 
-  testWidgets('Annulla chiude il selettore di promozione', (tester) async {
+  testWidgets('un tocco fuori chiude il selettore di promozione', (
+    tester,
+  ) async {
     await _start(tester);
     for (final m in [
       'b2b4',
@@ -225,10 +227,8 @@ void main() {
     );
     await _tapMove(tester, 'b7a8');
     expect(selector, findsOneWidget);
-    // «Annulla» è anche il nome del comando di annullamento: si cerca nel selettore.
-    await tester.tap(
-      find.descendant(of: selector, matching: find.text('Annulla')),
-    );
+    // Il selettore si chiude toccando fuori dai pezzi proposti.
+    await tester.tapAt(_square(tester, 'h1'));
     await tester.pumpAndSettle();
     expect(selector, findsNothing);
   });
