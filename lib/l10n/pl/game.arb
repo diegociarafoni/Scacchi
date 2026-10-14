@@ -194,6 +194,14 @@
   "@gameClockDelay": {
     "description": "Cadenza libera: campo del ritardo"
   },
+  "gameClockPhaseMoves": "Ruchy do dodania czasu (0 = brak)",
+  "@gameClockPhaseMoves": {
+    "description": "Cadenza libera: dopo quante mosse di ciascun lato si aggiunge il tempo della seconda fase"
+  },
+  "gameClockPhaseMinutes": "Dodane minuty",
+  "@gameClockPhaseMinutes": {
+    "description": "Cadenza libera: minuti aggiunti all'orologio di chi completa le mosse della prima fase"
+  },
   "gameClockDelaySimple": "Proste",
   "@gameClockDelaySimple": {
     "description": "Cadenza libera: ritardo semplice, il tempo parte dopo il ritardo"

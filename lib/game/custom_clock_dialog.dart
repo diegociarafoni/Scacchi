@@ -8,6 +8,9 @@ import 'clock.dart';
 const _maxMinutes = 180;
 const _maxIncrement = 120;
 const _maxDelay = 60;
+const _minPhaseMoves = 5;
+const _maxPhaseMoves = 100;
+const _maxPhaseMinutes = 180;
 
 /// Chiede minuti, incremento e ritardo di una cadenza libera (RF-40); `null`
 /// se si annulla.
@@ -29,6 +32,8 @@ class _CustomClockDialogState extends State<_CustomClockDialog> {
   final _minutes = TextEditingController(text: '10');
   final _increment = TextEditingController(text: '0');
   final _delay = TextEditingController(text: '0');
+  final _phaseMoves = TextEditingController(text: '0');
+  final _phaseMinutes = TextEditingController(text: '0');
   var _type = DelayType.simple;
   var _submitted = false;
 
@@ -37,6 +42,8 @@ class _CustomClockDialogState extends State<_CustomClockDialog> {
     _minutes.dispose();
     _increment.dispose();
     _delay.dispose();
+    _phaseMoves.dispose();
+    _phaseMinutes.dispose();
     super.dispose();
   }
 
@@ -45,11 +52,40 @@ class _CustomClockDialogState extends State<_CustomClockDialog> {
     return v == null || v < min || v > max ? null : v;
   }
 
+  // Un campo della fase lasciato vuoto vale 0, cioè nessuna fase.
+  int? _blankAsZero(TextEditingController c) =>
+      c.text.trim().isEmpty ? 0 : int.tryParse(c.text.trim());
+
+  // La fase aggiunta è facoltativa: mosse e minuti sono entrambi 0, oppure
+  // entrambi indicati, con almeno 5 mosse.
+  int? _phaseMovesValue() {
+    final moves = _blankAsZero(_phaseMoves);
+    final minutes = _blankAsZero(_phaseMinutes);
+    if (moves == null || minutes == null || moves > _maxPhaseMoves) {
+      return null;
+    }
+    if (moves == 0) return minutes == 0 ? 0 : null;
+    return moves < _minPhaseMoves || minutes == 0 ? null : moves;
+  }
+
+  int? _phaseMinutesValue() {
+    final minutes = _blankAsZero(_phaseMinutes);
+    if (minutes == null || minutes > _maxPhaseMinutes) return null;
+    final moves = _blankAsZero(_phaseMoves) ?? 0;
+    return (moves == 0) == (minutes == 0) ? minutes : null;
+  }
+
   void _start() {
     final minutes = _value(_minutes, 1, _maxMinutes);
     final increment = _value(_increment, 0, _maxIncrement);
     final delay = _value(_delay, 0, _maxDelay);
-    if (minutes == null || increment == null || delay == null) {
+    final phaseMoves = _phaseMovesValue();
+    final phaseMinutes = _phaseMinutesValue();
+    if (minutes == null ||
+        increment == null ||
+        delay == null ||
+        phaseMoves == null ||
+        phaseMinutes == null) {
       setState(() => _submitted = true);
       return;
     }
@@ -60,6 +96,8 @@ class _CustomClockDialogState extends State<_CustomClockDialog> {
         increment: increment,
         delay: delay,
         delayType: delay == 0 ? DelayType.simple : _type,
+        phaseMoves: phaseMoves,
+        phaseMinutes: phaseMinutes,
       ),
     );
   }
@@ -70,8 +108,9 @@ class _CustomClockDialogState extends State<_CustomClockDialog> {
     String label,
     int min,
     int max,
-    AppLocalizations l10n,
-  ) => TextField(
+    AppLocalizations l10n, {
+    bool? valid,
+  }) => TextField(
     key: ValueKey(key),
     controller: controller,
     keyboardType: TextInputType.number,
@@ -80,7 +119,7 @@ class _CustomClockDialogState extends State<_CustomClockDialog> {
     decoration: InputDecoration(
       labelText: label,
       counterText: '',
-      errorText: _submitted && _value(controller, min, max) == null
+      errorText: _submitted && !(valid ?? _value(controller, min, max) != null)
           ? l10n.gameClockRange(min, max)
           : null,
     ),
@@ -120,6 +159,24 @@ class _CustomClockDialogState extends State<_CustomClockDialog> {
               0,
               _maxDelay,
               l10n,
+            ),
+            _field(
+              'clock-phase-moves',
+              _phaseMoves,
+              l10n.gameClockPhaseMoves,
+              _minPhaseMoves,
+              _maxPhaseMoves,
+              l10n,
+              valid: _phaseMovesValue() != null,
+            ),
+            _field(
+              'clock-phase-minutes',
+              _phaseMinutes,
+              l10n.gameClockPhaseMinutes,
+              1,
+              _maxPhaseMinutes,
+              l10n,
+              valid: _phaseMinutesValue() != null,
             ),
             if (hasDelay) ...[
               const SizedBox(height: 12),

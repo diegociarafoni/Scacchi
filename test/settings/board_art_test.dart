@@ -39,6 +39,10 @@ void main() {
       expect(byName['papercut']!.author, 'Nikolay Anzarov');
       expect(byName['papercut']!.license, 'CC BY 4.0');
       expect(byName['noto']!.license, 'OFL-1.1');
+      expect(byName['pirouetti']!.author, 'pirouetti');
+      expect(byName['pirouetti']!.license, 'AGPL-3.0+');
+      expect(byName['letter']!.author, 'usolando');
+      expect(byName['letter']!.license, 'AGPL-3.0+');
     });
 
     test('ogni set nostro ha i dodici pezzi in assets/pieces', () {

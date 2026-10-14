@@ -33,7 +33,7 @@ Un passo già fatto non si riapre (lezioni, puzzle e partite restano raggiungibi
 
 ## Aspetto
 
-In cima una scheda mostra i capitoli conclusi con una barra. I capitoli sono lungo un binario verticale: ogni capitolo ha un badge con un anello di avanzamento (passi fatti su passi totali), il numero, la spunta a capitolo concluso o il lucchetto se è chiuso. Il capitolo corrente ha il bordo nel colore d'azione e la scritta «In corso»; quelli chiusi hanno il contorno tratteggiato e il testo che dice come aprirli. Lezioni e puzzle mostrano una barra con il conteggio, i passi fatti hanno la spunta e quelli bloccati il lucchetto, oltre al testo letto dai lettori di schermo. I testi sono in `story.arb` (italiano e inglese).
+In cima una scheda mostra i capitoli conclusi con una barra e, sotto, la **mappa del viaggio** (`JourneyMap`, `lib/story/journey_map.dart`): i nove luoghi della Storia su un sentiero a serpentina, tre per riga (le righe dispari si percorrono da destra), ciascuno con il nome del capitolo. Un luogo concluso ha la spunta, quello dove ci si è fermati ha la torre-mascotte con il bordo nel colore d'azione (è il «riprendi da dove eri»: il pulsante **Continua** sotto la lista apre il suo primo passo) e gli altri il lucchetto; il sentiero è pieno fino all'ultimo capitolo concluso e tratteggiato oltre. Un tocco su un luogo porta la lista al suo capitolo (senza scorrimento animato con «Riduci movimento»); i lettori di schermo sentono nome e stato. La mappa non ha cifre, quindi vale anche per il profilo bambino. I capitoli sono lungo un binario verticale: ogni capitolo ha un badge con un anello di avanzamento (passi fatti su passi totali), il numero, la spunta a capitolo concluso o il lucchetto se è chiuso. Il capitolo corrente ha il bordo nel colore d'azione e la scritta «In corso»; quelli chiusi hanno il contorno tratteggiato e il testo che dice come aprirli. Lezioni e puzzle mostrano una barra con il conteggio, i passi fatti hanno la spunta e quelli bloccati il lucchetto, oltre al testo letto dai lettori di schermo. I testi sono in `story.arb` (in tutte le lingue); il titolo della mappa è in `story_map.arb`.
 
 ## Il bivio
 
@@ -53,7 +53,7 @@ Prima del primo puzzle di un capitolo il passo dei puzzle offre due vie (`StoryC
 
 ## Ricompense
 
-Concludere un capitolo (battuto il suo bot) vale 30 XP e sblocca, al secondo, al quinto e al nono capitolo, le scacchiere Villaggio, Torre e Corona (`StoryRequirement`, vedi [gamification.md](gamification.md#ricompense-estetiche-rg-06)). Chi non vuole giocare per sbloccare usa «Sblocca tutto».
+Concludere un capitolo (battuto il suo bot) vale 30 XP e sblocca, al secondo, al quinto e al nono capitolo, le scacchiere Villaggio, Torre e Corona e, al quarto e al settimo, i pezzi Pirouetti e Letter (`StoryRequirement`, vedi [gamification.md](gamification.md#ricompense-estetiche-rg-06)). Chi non vuole giocare per sbloccare usa «Sblocca tutto».
 
 ## Aiuto quando ci si blocca
 

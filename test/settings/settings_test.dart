@@ -17,6 +17,7 @@ void main() {
       'CC BY-SA 4.0',
       'CC0',
       'OFL-1.1',
+      'AGPL-3.0+',
     };
 
     test('ogni set ha autore e licenza compatibile', () {

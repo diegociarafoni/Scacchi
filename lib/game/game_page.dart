@@ -1561,7 +1561,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final position = _game.position;
     // Tempo residuo di chi muove dopo la mossa, incremento compreso (RF-67);
     // la prima mossa avvia l'orologio e non lo incrementa.
-    final left = clock?.remainingAfterMove(position.turn);
+    final left = clock?.remainingAfterMove(
+      position.turn,
+      moves: _movesOf(_game.moves.length + 1),
+    );
     if (!_game.play(move, clock: left)) return false;
     final spoken = describeSan(
       _l10n(context),
@@ -1575,7 +1578,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     if (clock != null) {
       _clockHistory.add(before!);
       if (clock.isRunning) {
-        clock.switchAfterMove();
+        clock.switchAfterMove(moves: _movesOf(_game.moves.length));
       } else {
         clock.start(_game.position.turn);
       }
@@ -1584,6 +1587,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _instructorSay();
     return true;
   }
+
+  /// Mosse fatte da chi gioca la semimossa [ply] (da 1), questa compresa.
+  int _movesOf(int ply) => (ply + 1) ~/ 2;
 
   Future<void> _computerMove() async {
     final side = _computerSide;
@@ -4526,7 +4532,7 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
               key: const ValueKey('menu-custom'),
             ),
           _tile(
-            Icons.phone_android,
+            Icons.phone_android_outlined,
             l10n.gameMenuTwoTitle,
             l10n.gameMenuTwoSubtitle,
             () => setState(() {
@@ -4558,7 +4564,7 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
   List<Widget> _friendChildren(BuildContext context) => [
     _header(context, _l10n(context).gameMenuFriendTitle, back: _SheetView.menu),
     _tile(
-      Icons.phone_android,
+      Icons.phone_android_outlined,
       _l10n(context).gameFriendSameTitle,
       _l10n(context).gameFriendSameSubtitle,
       () => setState(() {
@@ -4568,7 +4574,7 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
       key: const ValueKey('friend-same'),
     ),
     _tile(
-      Icons.smartphone,
+      Icons.smartphone_outlined,
       _l10n(context).gameFriendApartTitle,
       _l10n(context).gameFriendApartSubtitle,
       () => setState(() => _view = _SheetView.friendApart),

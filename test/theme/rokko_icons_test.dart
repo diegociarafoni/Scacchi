@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rokko/game/game_page.dart';
@@ -65,4 +67,30 @@ void main() {
       expect(find.byIcon(RokkoIcons.flip), findsOneWidget);
     },
   );
+
+  test('i comandi usano le icone a contorno, non quelle piene', () {
+    // Le piene restano per gli stati (stella, spunta, lucchetto, corona) e per
+    // i badge; un comando che ha la variante a contorno la usa.
+    const filled = ['phone_android', 'smartphone', 'share', 'edit_note'];
+    final pattern = RegExp('Icons\\.(${filled.join('|')})\\b');
+    final offenders = <String>[];
+    for (final file in Directory('lib').listSync(recursive: true)) {
+      if (file is! File || !file.path.endsWith('.dart')) continue;
+      // Stati e arte: la nota presente nell'analisi e i badge restano pieni.
+      final path = file.path.replaceAll('\\', '/');
+      if (path.endsWith('analysis_page.dart') ||
+          path.endsWith('badges/badge_def.dart')) {
+        continue;
+      }
+      final text = file.readAsLinesSync();
+      for (var i = 0; i < text.length; i++) {
+        final line = text[i].trim();
+        // Le righe di commento citano le icone senza usarle; l'icona
+        // selezionata della barra di navigazione è uno stato.
+        if (line.startsWith('//') || line.contains('selectedIcon:')) continue;
+        if (pattern.hasMatch(line)) offenders.add('$path:${i + 1}');
+      }
+    }
+    expect(offenders, isEmpty);
+  });
 }

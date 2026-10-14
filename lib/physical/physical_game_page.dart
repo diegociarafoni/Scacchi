@@ -8,6 +8,7 @@ import '../archive/game_archive.dart';
 import '../archive/saved_game.dart';
 import '../game/chess_game.dart';
 import '../game/clock.dart';
+import '../game/custom_clock_dialog.dart';
 import '../l10n/app_localizations.dart';
 import '../theme/motion.dart';
 import '../theme/sheets.dart';
@@ -383,6 +384,24 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
                 selected: _control == c,
                 onSelected: (_) => setState(() => _control = c),
               ),
+            // Una cadenza libera, anche a più fasi; la scelta resta in vista.
+            if (_control != null && !TimeControl.presets.contains(_control))
+              ChoiceChip(
+                label: Text(_control!.label),
+                selected: true,
+                onSelected: (_) {},
+              ),
+            ActionChip(
+              key: const ValueKey('physical-clock-custom'),
+              avatar: const Icon(Icons.tune, size: 18),
+              label: Text(AppLocalizations.of(context).gameClockCustom),
+              onPressed: () async {
+                final control = await showCustomClockDialog(context);
+                if (control != null && mounted) {
+                  setState(() => _control = control);
+                }
+              },
+            ),
           ],
         ),
         const SizedBox(height: 24),

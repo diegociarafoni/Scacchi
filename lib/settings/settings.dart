@@ -368,6 +368,8 @@ enum PieceStyle {
   morbido('Morbido', 'Progetto Rokko', 'GPL-3.0+'),
   stampa('Stampa', 'Progetto Rokko', 'GPL-3.0+'),
   papercut('Papercut', 'Nikolay Anzarov', 'CC BY 4.0'),
+  pirouetti('Pirouetti', 'pirouetti', 'AGPL-3.0+'),
+  letter('Letter', 'usolando', 'AGPL-3.0+'),
   noto('Noto', 'Google (Noto Sans Symbols 2)', 'OFL-1.1');
 
   /// [label] è il nome proprio del set; quello classico è tradotto da

@@ -15,7 +15,11 @@ class TimeControl {
     this.increment = 0,
     this.delay = 0,
     this.delayType = DelayType.simple,
-  });
+    this.phaseMoves = 0,
+    this.phaseMinutes = 0,
+  }) : assert(
+         (phaseMoves == 0) == (phaseMinutes == 0),
+       ); // mosse e minuti insieme
 
   /// Minuti iniziali per giocatore.
   final int minutes;
@@ -26,6 +30,19 @@ class TimeControl {
   /// Secondi di ritardo a ogni mossa; 0 se non c'è.
   final int delay;
   final DelayType delayType;
+
+  /// Seconda fase: quando un lato ha fatto [phaseMoves] mosse si aggiungono
+  /// [phaseMinutes] minuti al suo orologio (per esempio 40 mosse in 90 minuti
+  /// e poi 30 minuti in più). 0 se non c'è.
+  final int phaseMoves;
+  final int phaseMinutes;
+
+  bool get hasPhase => phaseMoves > 0 && phaseMinutes > 0;
+
+  /// Tempo che si aggiunge a chi completa la sua mossa numero [moves].
+  Duration phaseBonus(int moves) => hasPhase && moves == phaseMoves
+      ? Duration(minutes: phaseMinutes)
+      : Duration.zero;
 
   static const presets = [
     TimeControl(minutes: 1),
@@ -48,9 +65,11 @@ class TimeControl {
     return groups;
   }
 
-  /// `10+5`, con il ritardo `10+0/d5` (semplice) o `10+0/b5` (Bronstein).
+  /// `10+5`, con il ritardo `10+0/d5` (semplice) o `10+0/b5` (Bronstein), con
+  /// la fase aggiunta `90+30@40:30` (dopo 40 mosse, 30 minuti in più).
   String get label =>
-      '$minutes+$increment${delay > 0 ? '/${delayType == DelayType.bronstein ? 'b' : 'd'}$delay' : ''}';
+      '$minutes+$increment${delay > 0 ? '/${delayType == DelayType.bronstein ? 'b' : 'd'}$delay' : ''}'
+      '${hasPhase ? '@$phaseMoves:$phaseMinutes' : ''}';
 
   TimeCategory get category => switch (minutes) {
     < 3 => TimeCategory.bullet,
@@ -59,18 +78,25 @@ class TimeControl {
   };
 
   static TimeControl? parse(String label) {
-    final m = RegExp(r'^(\d+)\+(\d+)(?:/([db])(\d+))?$').firstMatch(label);
+    final m = RegExp(r'^(\d+)\+(\d+)(?:/([db])(\d+))?(?:@(\d+):(\d+))?$')
+        .firstMatch(label);
     if (m == null) return null;
     final minutes = int.tryParse(m[1]!);
     final delay = int.tryParse(m[4] ?? '0');
     final increment = int.tryParse(m[2]!);
+    final phaseMoves = int.tryParse(m[5] ?? '0');
+    final phaseMinutes = int.tryParse(m[6] ?? '0');
     if (minutes == null || delay == null || increment == null) return null;
+    if (phaseMoves == null || phaseMinutes == null) return null;
     if (minutes <= 0 || (m[3] != null && delay <= 0)) return null;
+    if (m[5] != null && (phaseMoves <= 0 || phaseMinutes <= 0)) return null;
     return TimeControl(
       minutes: minutes,
       increment: increment,
       delay: delay,
       delayType: m[3] == 'b' ? DelayType.bronstein : DelayType.simple,
+      phaseMoves: phaseMoves,
+      phaseMinutes: phaseMinutes,
     );
   }
 
@@ -80,10 +106,19 @@ class TimeControl {
       other.minutes == minutes &&
       other.increment == increment &&
       other.delay == delay &&
-      other.delayType == delayType;
+      other.delayType == delayType &&
+      other.phaseMoves == phaseMoves &&
+      other.phaseMinutes == phaseMinutes;
 
   @override
-  int get hashCode => Object.hash(minutes, increment, delay, delayType);
+  int get hashCode => Object.hash(
+    minutes,
+    increment,
+    delay,
+    delayType,
+    phaseMoves,
+    phaseMinutes,
+  );
 }
 
 /// Orologio a due lati; il tempo scorre solo per il lato attivo.
@@ -201,12 +236,14 @@ class ChessClock {
 
   /// Tempo che [side] avrà se muove adesso: l'incremento (e, con Bronstein, il
   /// tempo usato fino al ritardo) si aggiungono al residuo; senza orologio in
-  /// corsa è il residuo.
-  Duration remainingAfterMove(Side side) =>
-      remaining(side) + (isRunning ? _bonus(side) : Duration.zero);
+  /// corsa è il residuo. [moves] è il numero di mosse di [side] con quella che
+  /// sta per fare, per la fase aggiunta.
+  Duration remainingAfterMove(Side side, {int moves = 0}) =>
+      remaining(side) + (isRunning ? _bonus(side, moves) : Duration.zero);
 
-  Duration _bonus(Side side) {
-    var bonus = Duration(seconds: control.increment);
+  Duration _bonus(Side side, int moves) {
+    var bonus =
+        Duration(seconds: control.increment) + control.phaseBonus(moves);
     if (control.delayType == DelayType.bronstein) {
       final spent =
           _turnSpent[side]! + (side == _active ? _elapsed() : Duration.zero);
@@ -216,11 +253,13 @@ class ChessClock {
   }
 
   /// Ferma il lato che ha mosso, aggiunge l'incremento (e, con Bronstein, il
-  /// tempo usato fino al ritardo) e avvia l'avversario.
-  void switchAfterMove() {
+  /// tempo usato fino al ritardo) e avvia l'avversario. [moves] è il numero di
+  /// mosse fatte da chi ha mosso, questa compresa: a quella della fase
+  /// aggiunta si aggiungono i minuti della fase.
+  void switchAfterMove({int moves = 0}) {
     final side = _active;
     if (side == null) return;
-    final bonus = _bonus(side);
+    final bonus = _bonus(side, moves);
     pause();
     _remaining[side] = _remaining[side]! + bonus;
     _graceLeft[side] = _delay;

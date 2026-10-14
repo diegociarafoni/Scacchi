@@ -194,6 +194,14 @@
   "@gameClockDelay": {
     "description": "Cadenza libera: campo del ritardo"
   },
+  "gameClockPhaseMoves": "Ходов до добавления времени (0 = нет)",
+  "@gameClockPhaseMoves": {
+    "description": "Cadenza libera: dopo quante mosse di ciascun lato si aggiunge il tempo della seconda fase"
+  },
+  "gameClockPhaseMinutes": "Добавленные минуты",
+  "@gameClockPhaseMinutes": {
+    "description": "Cadenza libera: minuti aggiunti all'orologio di chi completa le mosse della prima fase"
+  },
   "gameClockDelaySimple": "Простая",
   "@gameClockDelaySimple": {
     "description": "Cadenza libera: ritardo semplice, il tempo parte dopo il ritardo"

@@ -148,5 +148,9 @@ void main() {
     expect(GameInvite.parse(plain.toLink())?.timeControl, plain.timeControl);
     final delayed = withClock(const TimeControl(minutes: 5, delay: 3));
     expect(GameInvite.parse(delayed.toLink()), isNull);
+    final phased = withClock(
+      const TimeControl(minutes: 5, phaseMoves: 40, phaseMinutes: 30),
+    );
+    expect(GameInvite.parse(phased.toLink()), isNull);
   });
 }

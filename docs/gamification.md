@@ -88,10 +88,12 @@ Livelli e traguardi sbloccano temi della scacchiera, set di pezzi, avatar e corn
 | Pezzi Totoy | 10 vittorie |
 | Tema Oro | Primo torneo vinto |
 | Tema Villaggio | 2 capitoli della Storia conclusi |
+| Pezzi Pirouetti | 4 capitoli della Storia conclusi |
 | Tema Torre | 5 capitoli della Storia conclusi |
+| Pezzi Letter | 7 capitoli della Storia conclusi |
 | Tema Corona | 9 capitoli della Storia conclusi |
 
-I capitoli della Storia (RG-13) contano da `StoryChapterDone`, registrata quando battere il bot conclude un capitolo e all'apertura della Storia (`StoryPage.onChaptersDone`, solo se il totale cresce): vale 30 XP e porta il contatore `story` al totale dei capitoli conclusi; all'apertura della Storia il totale si ricalcola, così chi era già avanti sblocca subito le scacchiere. Le scacchiere Villaggio, Torre e Corona sono tinte unite senza texture; per i pezzi non ci sono ancora set a tema Storia, perché mancano le immagini.
+I capitoli della Storia (RG-13) contano da `StoryChapterDone`, registrata quando battere il bot conclude un capitolo e all'apertura della Storia (`StoryPage.onChaptersDone`, solo se il totale cresce): vale 30 XP e porta il contatore `story` al totale dei capitoli conclusi; all'apertura della Storia il totale si ricalcola, così chi era già avanti sblocca subito le scacchiere. Le scacchiere Villaggio, Torre e Corona sono tinte unite senza texture; i pezzi Pirouetti e Letter sono set di terzi (AGPL-3.0+, vedi [pezzi-e-scacchiere.md](pezzi-e-scacchiere.md)) e si sbloccano al quarto e al settimo capitolo.
 
 La tabella completa è in `lib/progress/rewards.dart`. Una ricompensa appena meritata compare nella notifica dei progressi ("Sbloccato: tema Sabbia"). Nelle impostazioni i temi e i pezzi bloccati hanno un lucchetto e, toccati, dicono come si sbloccano; avatar e cornice si scelgono toccando l'avatar nel Profilo.
 
