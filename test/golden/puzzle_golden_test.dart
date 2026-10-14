@@ -7,6 +7,8 @@ import 'package:chessground/chessground.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/progress/avatar.dart';
+import 'package:rokko/progress/guardian_avatar.dart';
 import 'package:rokko/progress/progress_state.dart';
 import 'package:rokko/progress/progress_tracker.dart';
 import 'package:rokko/puzzles/mistake_path_page.dart';
@@ -18,6 +20,8 @@ import 'package:rokko/puzzles/puzzle_page.dart';
 import 'package:rokko/puzzles/puzzle_trainer.dart';
 import 'package:rokko/settings/settings.dart';
 import 'package:rokko/storage/key_value_store.dart';
+import 'package:rokko/story/story.dart';
+import 'package:rokko/story/story_passage.dart';
 import 'package:rokko/theme/rokko_theme.dart';
 
 import '../puzzles/fixtures.dart';
@@ -163,9 +167,21 @@ void main() {
                 puzzle: backRank,
                 companionBuilder: (_, {required solved}) =>
                     const Text('Bravo, l\'hai visto subito!'),
-                endAction: PuzzleEndAction(
-                  label: 'Sfida Pino',
-                  onPressed: (_) {},
+                endBuilder: (_) => StoryPassageSheet(
+                  card: true,
+                  icon: Icons.check,
+                  guardian: GuardianAvatar(
+                    bot: storyChapters.first.bot,
+                    expression: AvatarExpression.challenge,
+                    size: 88,
+                  ),
+                  guardianLine: 'Pino dice: Ora giochiamo io e te.',
+                  title: 'Puzzle risolti!',
+                  body: 'Sei pronto: Pino ti aspetta per la sfida finale del capitolo.',
+                  action: 'Sfida Pino',
+                  dismiss: 'Più tardi',
+                  onAction: () {},
+                  onDismiss: () {},
                 ),
                 onActivity: (_) async => const ProgressUpdate(
                   state: ProgressState.initial,

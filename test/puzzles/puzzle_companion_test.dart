@@ -21,7 +21,8 @@ Future<void> _pump(
   double textScale = 1,
   Brightness brightness = Brightness.light,
   bool single = false,
-  PuzzleEndAction? endAction,
+  String? endLabel,
+  VoidCallback? onEnd,
 }) async {
   device.apply(tester);
   final trainer = await PuzzleTrainer.load(
@@ -45,7 +46,17 @@ Future<void> _pump(
         trainer: trainer,
         puzzle: single ? backRank : null,
         feed: single ? null : TwoPuzzles(trainer, backRank, castle),
-        endAction: endAction,
+        endBuilder: endLabel == null
+            ? null
+            : (_) => Column(
+                children: [
+                  Text(endLabel, key: const Key('test-end')),
+                  FilledButton(
+                    onPressed: onEnd,
+                    child: const Text('Sfida Pino'),
+                  ),
+                ],
+              ),
         companionBuilder: (context, {required solved}) => Text(
           solved ? 'Bravo, l\'hai visto subito!' : 'Riproviamo',
           key: _line,
@@ -83,28 +94,30 @@ void main() {
   });
 
   group('fine dei puzzle', () {
-    testWidgets('il bottone compare solo all\'ultimo puzzle e agisce', (
-      tester,
-    ) async {
+    testWidgets('il riquadro compare solo all\'ultimo puzzle, al posto del '
+        'testo', (tester) async {
       var taps = 0;
-      final action = PuzzleEndAction(
-        label: 'Sfida Pino',
-        onPressed: (_) => taps++,
+      await _pump(
+        tester,
+        Device.phoneMedium,
+        endLabel: 'Puzzle risolti!',
+        onEnd: () => taps++,
       );
-      await _pump(tester, Device.phoneMedium, endAction: action);
       await tapMove(tester, 'a1a8');
-      expect(find.text('Sfida Pino'), findsNothing);
+      expect(find.byKey(const Key('test-end')), findsNothing);
       await tester.tap(find.text('Prossimo'));
       await tester.pumpAndSettle();
       await tapMove(tester, 'e1g1');
-      expect(find.text('Sfida Pino'), findsOneWidget);
+      expect(find.byKey(const Key('test-end')), findsOneWidget);
+      expect(find.text('Non ci sono altri puzzle per ora.'), findsNothing);
       expect(find.text('Prossimo'), findsNothing);
+      await tester.ensureVisible(find.text('Sfida Pino'));
       await tester.tap(find.text('Sfida Pino'));
       expect(taps, 1);
     });
 
     for (final scale in [1.0, 1.3]) {
-      testWidgets('bottone raggiungibile sul telefono piccolo, testo $scale', (
+      testWidgets('riquadro raggiungibile sul telefono piccolo, testo $scale', (
         tester,
       ) async {
         await _pump(
@@ -112,18 +125,12 @@ void main() {
           Device.phoneSmall,
           single: true,
           textScale: scale,
-          endAction: PuzzleEndAction(label: 'Sfida Pino', onPressed: (_) {}),
+          endLabel: 'Puzzle risolti!',
         );
         await tapMove(tester, 'a1a8');
         expect(tester.takeException(), isNull);
-        final button = find.text('Sfida Pino');
-        expect(button.hitTestable(), findsOneWidget);
-        expect(
-          (Offset.zero & Device.phoneSmall.logicalSize).contains(
-            tester.getRect(button).bottomRight,
-          ),
-          isTrue,
-        );
+        await tester.ensureVisible(find.text('Sfida Pino'));
+        expect(find.text('Sfida Pino').hitTestable(), findsOneWidget);
       });
     }
   });

@@ -67,6 +67,7 @@ import '../story/story_controller.dart';
 import '../story/story_feed.dart';
 import '../story/story_l10n.dart';
 import '../story/story_page.dart';
+import '../story/story_passage.dart';
 import '../summary/weekly_summary_page.dart';
 import '../tablebase/shared_tablebase.dart';
 import '../theme/adaptive.dart';
@@ -383,18 +384,45 @@ class _HomeShellState extends State<HomeShell> {
       });
 
   /// Il pulsante di fine puzzle chiede di aprire subito la sfida del capitolo.
-  final _challengeRequest = ValueNotifier<bool>(false);
+  final _challengeRequest = ValueNotifier(PassageChoice.none);
 
-  /// Etichetta del passo che segue i puzzle: il guardiano, se c'è e non è
-  /// battuto, altrimenti il bot del capitolo.
-  String _challengeLabel(StoryChapter chapter, PathController path) {
-    final l10n = storyL10n(context);
-    final guardian = chapter.pathChapter.stages
-        .where((s) => s.isGuardian)
-        .firstOrNull;
-    return guardian != null && !path.progress.isCompleted(guardian.id)
-        ? l10n.storyPassageGoGuardian
-        : l10n.storyPassageGoBoss(chapter.bot.name);
+  /// Riquadro di passaggio mostrato nella pagina dei puzzle quando quelli del
+  /// capitolo sono finiti: lo stesso contenuto del foglio della Storia.
+  /// `null` se i puzzle del capitolo erano già fatti.
+  WidgetBuilder? _passageCard(
+    BuildContext context,
+    StoryChapter chapter,
+    PathController path,
+    StoryController story,
+  ) {
+    final progress = StoryProgress(path.progress, story.state);
+    final done = progress
+        .steps(chapter)
+        .firstWhere((s) => s.kind == StoryStepKind.puzzles)
+        .done;
+    if (done) return null;
+    final passage = storyPassage(
+      context,
+      progress,
+      chapter,
+      StoryStepKind.puzzles,
+      assumeDone: true,
+    );
+    if (passage == null) return null;
+    return (pageContext) {
+      void leave(PassageChoice choice) {
+        _challengeRequest.value = choice;
+        Navigator.of(pageContext).pop();
+      }
+
+      return passage.sheet(
+        card: true,
+        // Senza motore la sfida non si apre: niente pulsante che prometta il
+        // contrario.
+        onAction: _computerAvailable ? () => leave(PassageChoice.go) : null,
+        onDismiss: () => leave(PassageChoice.later),
+      );
+    };
   }
 
   Future<Widget> _storyPage() async => StoryPage(
@@ -453,9 +481,10 @@ class _HomeShellState extends State<HomeShell> {
       return null;
     }
     if (!context.mounted) return 0;
-    _challengeRequest.value = false;
+    _challengeRequest.value = PassageChoice.none;
     final path = await _pathController();
-    final theme = (await _storyController()).state.themeFor(chapter);
+    final story = await _storyController();
+    final theme = story.state.themeFor(chapter);
     if (!context.mounted) return 0;
     final feed = StoryPuzzleFeed(
       trainer,
@@ -464,6 +493,7 @@ class _HomeShellState extends State<HomeShell> {
       maxRating: chapter.puzzleRating,
       onHelp: () => _helpSnack(context),
     );
+    final endCard = _passageCard(context, chapter, path, story);
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (_) => PuzzlePage(
@@ -474,17 +504,7 @@ class _HomeShellState extends State<HomeShell> {
           onActivity: _record,
           companionBuilder: (_, {required solved}) =>
               _guardianLine(chapter, solved),
-          // Senza motore la sfida non si apre: niente pulsante che prometta il
-          // contrario.
-          endAction: _computerAvailable
-              ? PuzzleEndAction(
-                  label: _challengeLabel(chapter, path),
-                  onPressed: (pageContext) {
-                    _challengeRequest.value = true;
-                    Navigator.of(pageContext).pop();
-                  },
-                )
-              : null,
+          endBuilder: endCard,
         ),
       ),
     );

@@ -25,15 +25,6 @@ import 'puzzle_session.dart';
 import 'puzzle_trainer.dart';
 import 'themes.dart';
 
-/// Azione a fine sequenza, al posto di «Prossimo»: per esempio andare alla
-/// sfida del capitolo.
-class PuzzleEndAction {
-  const PuzzleEndAction({required this.label, required this.onPressed});
-
-  final String label;
-  final void Function(BuildContext context) onPressed;
-}
-
 enum _Feedback { find, restarted, correct, wrong, solved, revealed }
 
 /// Risoluzione di puzzle uno dopo l'altro, con punteggio.
@@ -48,7 +39,7 @@ class PuzzlePage extends StatefulWidget {
     this.guide,
     this.onActivity,
     this.companionBuilder,
-    this.endAction,
+    this.endBuilder,
     this.replyDelay = const Duration(milliseconds: 400),
   });
 
@@ -75,8 +66,9 @@ class PuzzlePage extends StatefulWidget {
   final Widget Function(BuildContext context, {required bool solved})?
   companionBuilder;
 
-  /// Se presente, a puzzle finiti compare questo pulsante.
-  final PuzzleEndAction? endAction;
+  /// Se presente, a puzzle finiti questo riquadro prende il posto del testo
+  /// «non ci sono altri puzzle» (per esempio il passaggio alla sfida).
+  final WidgetBuilder? endBuilder;
   final Duration replyDelay;
 
   @override
@@ -298,13 +290,20 @@ class _PuzzlePageState extends State<PuzzlePage> {
     if (next != null) setState(() => _start(next));
   }
 
+  bool get _endCardShown =>
+      widget.endBuilder != null &&
+      _session.state == PuzzleState.solved &&
+      !_feed.hasNext;
+
   /// Altezza in più della scheda dell'esito oltre al solo messaggio: punti in
   /// linea o, con il commento del personaggio, punti e commento nella scheda.
   double _resultExtra(BuildContext context, bool companion) {
     final scale = math.max(1.0, MediaQuery.textScalerOf(context).scale(1));
     final note = _progressNote != null;
-    if (!companion) return note ? 56 : 0;
-    return (note ? 92 : 60) * scale;
+    // Il riquadro di fine puzzle è alto: la scacchiera cede spazio.
+    final end = _endCardShown ? 250 * scale : 0.0;
+    if (!companion) return (note ? 56 : 0) + end;
+    return (note ? 92 : 60) * scale + end;
   }
 
   String _sideName(AppLocalizations l) => l.puzzleSide(
@@ -398,7 +397,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
                   // Il lato segue lo spazio rimasto sopra i pulsanti, che
                   // salgono a due righe sugli schermi stretti.
                   final size = math.max(
-                    0.0,
+                    _endCardShown ? 160.0 : 0.0,
                     math.min(
                       c.maxWidth,
                       c.maxHeight -
@@ -453,7 +452,9 @@ class _PuzzlePageState extends State<PuzzlePage> {
                           ),
                           // Difficoltà e temi si rivelano a puzzle finito: prima
                           // sarebbero un indizio.
-                          if (last || done)
+                          if (last && widget.endBuilder != null)
+                            widget.endBuilder!(context)
+                          else if (last || done)
                             Padding(
                               padding: const EdgeInsets.all(8),
                               child: Text(
@@ -473,17 +474,13 @@ class _PuzzlePageState extends State<PuzzlePage> {
                 },
               ),
             ),
-            if (!done ||
-                canSkip ||
-                _canRetry ||
-                (last && widget.endAction != null))
+            if (!done || canSkip || _canRetry)
               _PuzzleActions(
                 onHint: done ? null : _showHint,
                 onSolution: done ? null : _showSolution,
                 solving: !done,
                 onRetry: _canRetry ? _retry : null,
                 onNext: canSkip ? _next : null,
-                endAction: last ? widget.endAction : null,
                 kid: kid,
               ),
           ],
@@ -543,7 +540,6 @@ class _PuzzleActions extends StatelessWidget {
     required this.solving,
     required this.onRetry,
     required this.onNext,
-    required this.endAction,
     required this.kid,
   });
 
@@ -556,7 +552,6 @@ class _PuzzleActions extends StatelessWidget {
   /// Nullo finché non c'è nulla da rifare: il pulsante compare solo dopo un errore.
   final VoidCallback? onRetry;
   final VoidCallback? onNext;
-  final PuzzleEndAction? endAction;
   final bool kid;
 
   @override
@@ -602,13 +597,6 @@ class _PuzzleActions extends StatelessWidget {
               style: FilledButton.styleFrom(minimumSize: size),
               icon: const Icon(Icons.arrow_forward),
               label: Text(l.puzzleNext, softWrap: false),
-            ),
-          if (endAction != null)
-            FilledButton.icon(
-              onPressed: () => endAction!.onPressed(context),
-              style: FilledButton.styleFrom(minimumSize: size),
-              icon: const Icon(Icons.flag_outlined),
-              label: Text(endAction!.label),
             ),
         ],
       ),
