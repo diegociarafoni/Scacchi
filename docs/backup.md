@@ -12,7 +12,7 @@ Offline non esiste una copia online dei dati: il backup (RF-103) li raccoglie in
 
 ## Backup automatico di Android
 
-È disattivato (`android:allowBackup="false"` nel manifest): disinstallando Rokko i progressi spariscono e una nuova installazione parte da zero, senza ripristinare dati dal cloud o da un altro telefono. L'unica copia è il file di backup creato dall'utente.
+È disattivato (`android:allowBackup="false"` nel manifest): disinstallando Rokko i progressi spariscono e una nuova installazione parte da zero, senza ripristinare dati dal cloud o da un altro telefono. L'unica copia è il file di backup creato dall'utente. Se un giorno lo si riattiva, vanno prima escluse `multiplayer.json` (contiene la chiave privata della partita) e `stile/` con le regole `fullBackupContent` e `dataExtractionRules`.
 
 ## Compatibilità
 
