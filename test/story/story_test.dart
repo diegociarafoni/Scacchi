@@ -107,7 +107,12 @@ void main() {
           expect(line.length, lessThanOrEqualTo(90), reason: reason);
           expect(line, isNot(matches(RegExp(r'\d'))), reason: reason);
         }
-        for (final m in [GuardianMoment.welcome, GuardianMoment.lessonDone]) {
+        for (final m in [
+          GuardianMoment.welcome,
+          GuardianMoment.lessonDone,
+          GuardianMoment.bossWon,
+          GuardianMoment.bossLost,
+        ]) {
           expect({
             for (final o in storyChapters) l10n.guardianLine(o, m),
           }, hasLength(storyChapters.length));
@@ -116,6 +121,20 @@ void main() {
           l10n.storyGuardianSays(c.bot.name, 'ciao'),
           contains(c.bot.name),
         );
+      }
+    }
+  });
+
+  test('RG-13 le battute di esito esistono, senza cifre, in ogni lingua', () {
+    for (final locale in AppLocalizations.supportedLocales) {
+      final l10n = lookupAppLocalizations(locale);
+      for (final c in storyChapters) {
+        for (final m in [GuardianMoment.bossWon, GuardianMoment.bossLost]) {
+          final line = l10n.guardianLine(c, m);
+          final reason = '${locale.languageCode} ${c.id} ${m.name}';
+          expect(line, isNotEmpty, reason: reason);
+          expect(line, isNot(matches(RegExp(r'\d'))), reason: reason);
+        }
       }
     }
   });

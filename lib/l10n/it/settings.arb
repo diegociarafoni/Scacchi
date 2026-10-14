@@ -512,5 +512,17 @@
   "settingsEvalBarDescription": "Mostra chi è in vantaggio accanto alla scacchiera; spenta nelle sfide senza aiuti",
   "@settingsEvalBarDescription": {
     "description": "Impostazioni: descrizione della barra di valutazione in partita"
+  },
+  "settingsSearchHint": "Cerca nelle impostazioni",
+  "@settingsSearchHint": {
+    "description": "Impostazioni: testo del campo di ricerca"
+  },
+  "settingsSearchEmpty": "Nessuna impostazione trovata",
+  "@settingsSearchEmpty": {
+    "description": "Impostazioni: ricerca senza risultati"
+  },
+  "settingsSearchClear": "Cancella la ricerca",
+  "@settingsSearchClear": {
+    "description": "Impostazioni: pulsante che svuota la ricerca"
   }
 }

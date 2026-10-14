@@ -197,6 +197,11 @@ void main() {
       until: () => shown(find.text('Hai battuto Tino!')),
     );
     expect(find.text('Hai battuto Tino!'), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('story-passage-guardian')),
+      findsOneWidget,
+    );
+    expect(find.textContaining('Tino dice: Che bella partita'), findsOneWidget);
     expect(find.text('Capitolo 0 concluso!'), findsOneWidget);
     expect(find.textContaining('Si apre il capitolo 1'), findsOneWidget);
     expect(find.text('Al prossimo capitolo'), findsOneWidget);
@@ -252,12 +257,15 @@ void main() {
     await save(
       tester,
       find.text('Sfida Tino'),
-      until: () =>
-          shown(find.text('Tino resiste ancora: riprova quando vuoi.')),
+      until: () => shown(find.textContaining('Tino resiste ancora')),
     );
     expect(find.byKey(const ValueKey('story-passage')), findsNothing);
     expect(
-      find.text('Tino resiste ancora: riprova quando vuoi.'),
+      find.textContaining('Tino resiste ancora: riprova quando vuoi.'),
+      findsOneWidget,
+    );
+    expect(
+      find.textContaining('Tino dice: Non ti preoccupare'),
       findsOneWidget,
     );
   });

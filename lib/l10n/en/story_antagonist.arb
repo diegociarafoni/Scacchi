@@ -1,0 +1,20 @@
+{
+  "storyGuardianPrologueBossWon": "What a great game! You play really well, and I learned something.",
+  "storyGuardianVillageBossWon": "Well done! You won without leaving a single piece hanging.",
+  "storyGuardianGatesBossWon": "You know the rules well. The gates are yours, go on through.",
+  "storyGuardianTowerBossWon": "Nice checkmate. The tower is yours now.",
+  "storyGuardianForestBossWon": "Your trap worked. Congratulations!",
+  "storyGuardianCastleBossWon": "A finish played with patience. I shake your hand.",
+  "storyGuardianCrownBossWon": "An elegant opening and a deserved win. On to the crown!",
+  "storyGuardianPlainBossWon": "Your plan worked. Not even the Evans Gambit was enough.",
+  "storyGuardianAcademyBossWon": "You won. Now the masters are waiting for you!",
+  "storyGuardianPrologueBossLost": "Don't worry, I make mistakes too. Let's try again together!",
+  "storyGuardianVillageBossLost": "So close! Watch out for hanging pieces and try again.",
+  "storyGuardianGatesBossLost": "Review the rules and come back: I will wait at the gates.",
+  "storyGuardianTowerBossLost": "The king got away. Think about the mate and try again.",
+  "storyGuardianForestBossLost": "Did you see the trap? Next time you will dodge it.",
+  "storyGuardianCastleBossLost": "Endgames need patience. Let's go again, slowly.",
+  "storyGuardianCrownBossLost": "Take care of the opening and the rest will follow. Try again!",
+  "storyGuardianPlainBossLost": "You were missing a plan. Think it over and try again.",
+  "storyGuardianAcademyBossLost": "I give no discounts, you knew that. But you will learn: come back soon!"
+}
