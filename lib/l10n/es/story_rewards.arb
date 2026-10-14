@@ -1,0 +1,13 @@
+{
+  "progressRequirementStory": "Historia: {chapters} capítulos completados",
+  "@progressRequirementStory": {
+    "placeholders": {
+      "chapters": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsThemeVillaggio": "Aldea",
+  "settingsThemeTorre": "Torre",
+  "settingsThemeCorona": "Corona"
+}

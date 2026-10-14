@@ -65,6 +65,26 @@ class AchievementRequirement extends Requirement {
   int get hashCode => id.hashCode;
 }
 
+/// Capitoli della Storia conclusi (RG-13), contati in `tally['story']`.
+class StoryRequirement extends Requirement {
+  const StoryRequirement(this.chapters);
+
+  final int chapters;
+
+  @override
+  bool isMet(ProgressState state) => (state.tally['story'] ?? 0) >= chapters;
+
+  @override
+  String label(AppLocalizations l) => l.progressRequirementStory(chapters);
+
+  @override
+  bool operator ==(Object other) =>
+      other is StoryRequirement && other.chapters == chapters;
+
+  @override
+  int get hashCode => chapters.hashCode;
+}
+
 /// Ricompense sbloccabili; tutto ciò che non è qui è disponibile da subito.
 const Map<Enum, Requirement> _requirements = {
   BoardTheme.sand: LevelRequirement(2),
@@ -72,6 +92,9 @@ const Map<Enum, Requirement> _requirements = {
   BoardTheme.coral: LevelRequirement(6),
   BoardTheme.night: AchievementRequirement('streak_7'),
   BoardTheme.gold: AchievementRequirement('tournament_won'),
+  BoardTheme.villaggio: StoryRequirement(2),
+  BoardTheme.torre: StoryRequirement(5),
+  BoardTheme.corona: StoryRequirement(9),
   PieceStyle.celtic: LevelRequirement(3),
   PieceStyle.shapes: AchievementRequirement('puzzles_10'),
   PieceStyle.firi: LevelRequirement(5),

@@ -382,6 +382,12 @@ class _HomeShellState extends State<HomeShell> {
     playGuardian: _computerAvailable ? _playGuardian : null,
     playBoss: _computerAvailable ? _playStoryBoss : null,
     playPuzzles: _playStoryPuzzles,
+    onChaptersDone: (n) async {
+      final progress = await _progressController();
+      if (n > (progress.state.tally['story'] ?? 0)) {
+        await _record(StoryChapterDone(chapters: n));
+      }
+    },
   );
 
   /// Sfida del capitolo contro [bot]: vale come allenamento, con Annulla.
