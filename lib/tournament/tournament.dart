@@ -174,7 +174,7 @@ class BotGame {
   final int black;
   final bool tiebreak;
 
-  /// Seme ripetibile per scegliere le mosse della partita.
+  /// Seme della formula Elo, se la partita si simula.
   final int seed;
 }
 

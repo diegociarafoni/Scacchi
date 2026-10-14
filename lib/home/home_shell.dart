@@ -212,7 +212,8 @@ class _HomeShellState extends State<HomeShell> {
     );
     _reminders?.dispose();
     _homeRefresh.dispose();
-    _botGamePlayer?.dispose().ignore();
+    _botEngineIdle?.cancel();
+    _closeBotEngine();
     super.dispose();
   }
 
@@ -498,7 +499,11 @@ class _HomeShellState extends State<HomeShell> {
   Future<Widget> _tournamentPage() async {
     final controller = await _tournamentController();
     // Riprende le partite tra bot rimaste a metà alla chiusura dell'app.
-    unawaited(controller.resumeBots());
+    unawaited(
+      controller.resumeBots().catchError((Object e) {
+        debugPrint('Ripresa delle partite tra bot non riuscita: $e'); // l10n-ok
+      }),
+    );
     final games = await (await _archive()).list();
     return TournamentPage(
       controller: controller,
@@ -509,11 +514,14 @@ class _HomeShellState extends State<HomeShell> {
   }
 
   ComputerPlayer? _botGamePlayer;
+  Timer? _botEngineIdle;
 
   /// Fa giocare al motore una partita tra due bot del torneo; `null` dove il
-  /// motore non c'è o non risponde: la partita si simula.
+  /// motore non c'è o non risponde: la partita si simula. Il motore si chiude
+  /// dopo qualche secondo senza partite, per non restare in memoria.
   Future<double?> _playBotGame(Player white, Player black, int seed) async {
     if (!_computerAvailable) return null;
+    _botEngineIdle?.cancel();
     try {
       final engine = _botGamePlayer ??=
           widget.createComputer?.call() ?? ComputerPlayer();
@@ -527,7 +535,14 @@ class _HomeShellState extends State<HomeShell> {
     } on Object catch (e) {
       debugPrint('Partita tra bot non riuscita: $e'); // l10n-ok
       return null;
+    } finally {
+      _botEngineIdle = Timer(const Duration(seconds: 20), _closeBotEngine);
     }
+  }
+
+  void _closeBotEngine() {
+    _botGamePlayer?.dispose().ignore();
+    _botGamePlayer = null;
   }
 
   EngineLevel _botLevel(Player bot) => bot.levelId != null

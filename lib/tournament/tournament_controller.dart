@@ -131,16 +131,17 @@ class TournamentController extends ChangeNotifier {
     required int userElo,
     required List<Player> bots,
   }) async {
-    _current = Tournament.create(
-      format: format,
-      user: Player(name: userName, elo: userElo),
-      bots: chooseBots(bots, userElo: userElo, count: size - 1),
-      seed: _random.nextInt(1 << 31),
-      createdAt: _clock(),
-      simulateBots: playBotGame == null,
+    await _set(
+      Tournament.create(
+        format: format,
+        user: Player(name: userName, elo: userElo),
+        bots: chooseBots(bots, userElo: userElo, count: size - 1),
+        seed: _random.nextInt(1 << 31),
+        createdAt: _clock(),
+        simulateBots: playBotGame == null,
+      ),
     );
-    await _save();
-    await _finishRound(wasFinished: false);
+    await resumeBots();
   }
 
   /// Registra la partita dell'utente, fa giocare le altre del turno e, a fine
@@ -148,23 +149,15 @@ class TournamentController extends ChangeNotifier {
   Future<void> recordUserGame(double points) async {
     final current = _current;
     if (current == null || current.userGame == null) return;
-    _current = current.recordUserGame(
-      points,
-      simulateBots: playBotGame == null,
+    await _set(
+      current.recordUserGame(points, simulateBots: playBotGame == null),
     );
-    await _save();
-    await _finishRound(wasFinished: false);
+    await resumeBots();
   }
 
-  /// Riprende le partite tra bot rimaste in sospeso, ad esempio dopo la
-  /// chiusura dell'app.
-  Future<void> resumeBots() =>
-      _finishRound(wasFinished: _current?.finished ?? true);
-
-  /// Gioca le partite tra bot fino alla prossima dell'utente o alla fine, poi
-  /// chiude il torneo se è finito. Il trofeo si assegna solo se il torneo
-  /// finisce adesso ([wasFinished] falso), non a ogni riapertura.
-  Future<void> _finishRound({required bool wasFinished}) async {
+  /// Gioca le partite tra bot rimaste fino alla prossima dell'utente o alla
+  /// fine del torneo, ad esempio dopo la chiusura dell'app a metà turno.
+  Future<void> resumeBots() async {
     final runner = playBotGame;
     if (runner != null && !_playingBots) {
       _playingBots = true;
@@ -192,10 +185,11 @@ class TournamentController extends ChangeNotifier {
           }
           // Il torneo può essere stato chiuso o cambiato nel frattempo.
           if (!identical(_current, t)) return;
-          _current = points == null
-              ? t.simulateBotGame(game)
-              : t.withBotGame(game, points);
-          await _save();
+          await _set(
+            points == null
+                ? t.simulateBotGame(game)
+                : t.withBotGame(game, points),
+          );
         }
       } finally {
         _playingBots = false;
@@ -203,30 +197,34 @@ class TournamentController extends ChangeNotifier {
       }
     }
     final t = _current;
-    if (t == null) return;
-    if (!t.finished && t.userGame == null && t.pendingBotGames.isEmpty) {
-      _current = t.settle();
-      await _save();
+    if (t != null && !t.finished && t.userGame == null) {
+      await _set(t.settle());
     }
-    if (!wasFinished && t.finished) await _conclude(t);
   }
 
-  /// Assegna il trofeo e registra l'attività del torneo appena concluso.
-  Future<void> _conclude(Tournament t) async {
-    _trophies = [
-      Trophy(
-        date: _clock(),
-        format: t.format,
-        players: t.players.length,
-        rank: t.userRank!,
-        champion: t.players[t.champion!].name,
-      ),
-      ..._trophies,
-    ];
+  /// Imposta [next] come torneo corrente e lo salva. Se è appena finito, il
+  /// trofeo entra nello stesso salvataggio: non si perde se l'app si chiude.
+  Future<void> _set(Tournament next) async {
+    final justFinished = next.finished && !(_current?.finished ?? false);
+    _current = next;
+    if (justFinished) {
+      _trophies = [
+        Trophy(
+          date: _clock(),
+          format: next.format,
+          players: next.players.length,
+          rank: next.userRank!,
+          champion: next.players[next.champion!].name,
+        ),
+        ..._trophies,
+      ];
+    }
     await _save();
-    await recordActivity?.call(
-      TournamentFinished(rank: t.userRank!, players: t.players.length),
-    );
+    if (justFinished) {
+      await recordActivity?.call(
+        TournamentFinished(rank: next.userRank!, players: next.players.length),
+      );
+    }
   }
 
   /// Chiude il torneo: abbandonato se in corso, archiviato se finito.
