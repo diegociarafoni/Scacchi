@@ -30,6 +30,21 @@ bool _wonWith(Activity? a, bool Function(GamePlayed g) check) =>
 
 final List<Achievement> achievements = [..._base, ..._more];
 
+/// Traguardi che misurano il giocatore (livello, Elo, punteggi, precisione,
+/// serie): nel profilo bambino non si elencano, ma si sbloccano comunque.
+const kidHiddenAchievements = {
+  'level_5',
+  'level_10',
+  'beat_1500',
+  'beat_2000',
+  'puzzle_rating_1500',
+  'puzzle_run_20',
+  'accuracy_90',
+  'streak_3',
+  'streak_7',
+  'streak_30',
+};
+
 final List<Achievement> _base = [
   Achievement(
     id: 'first_game',
