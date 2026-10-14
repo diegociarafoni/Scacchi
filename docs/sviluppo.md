@@ -146,7 +146,7 @@ I golden si rigenerano con `--update-goldens` dopo una modifica voluta dell'aspe
 | RF-56 minaccia dell'avversario nell'analisi e nella partita con l'allenatore | ✓ | ✓ |
 | RF-63 precisione, conteggi e stima della forza | ✓ | |
 | RF-67 tempo residuo a ogni mossa nel PGN (`[%clk]`, import ed export), registrato in partita, tempo per mossa ed errori in fretta nella revisione | ✓ | |
-| RF-68 precisione per fase (apertura, mediogioco, finale) nella revisione | ✓ | ✓ |
+| RF-68 precisione per fase (apertura, mediogioco, finale) nella revisione e nelle statistiche | ✓ | ✓ |
 | RF-50 barra di valutazione con valore numerico | ✓ | |
 | RF-54 freccia della mossa migliore | ✓ | |
 | RF-64 grafico della valutazione cliccabile con momenti chiave | ✓ | |

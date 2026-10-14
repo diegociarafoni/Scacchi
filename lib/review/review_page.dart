@@ -82,6 +82,7 @@ class ReviewPage extends StatefulWidget {
     this.notes = const [],
     this.onNoteChanged,
     this.book,
+    this.onResult,
   });
 
   final Position initial;
@@ -123,6 +124,10 @@ class ReviewPage extends StatefulWidget {
   /// Libro delle aperture per le mosse «Libro» (RF-91); senza, si usa quello
   /// incluso nell'app.
   final OpeningBook? book;
+
+  /// Chiamata con la revisione ogni volta che è pronta, nuova o già
+  /// calcolata (a differenza di [onReviewed], che vale XP una volta).
+  final ValueChanged<GameReview>? onResult;
 
   @override
   State<ReviewPage> createState() => _ReviewPageState();
@@ -179,6 +184,7 @@ class _ReviewPageState extends State<ReviewPage> {
     if (cached != null) {
       _review = cached;
       _phase = _Phase.done;
+      widget.onResult?.call(cached);
     } else {
       unawaited(_openOrAnalyse());
     }
@@ -198,6 +204,7 @@ class _ReviewPageState extends State<ReviewPage> {
         if (!mounted || _cancelled) return;
         if (stored != null) {
           ReviewCache.put(_cacheKey, stored);
+          widget.onResult?.call(stored);
           setState(() {
             _review = stored;
             _phase = _Phase.done;
@@ -254,6 +261,7 @@ class _ReviewPageState extends State<ReviewPage> {
       ReviewCache.put(_cacheKey, review);
       unawaited(_store(review));
       widget.onReviewed?.call(review);
+      widget.onResult?.call(review);
       if (!mounted) return;
       setState(() {
         _review = review;

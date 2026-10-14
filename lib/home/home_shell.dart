@@ -689,12 +689,26 @@ class _HomeShellState extends State<HomeShell> {
     final player = widget.createComputer?.call() ?? ComputerPlayer();
     final side = saved.playerSide;
     final players = side == null ? {Side.white, Side.black} : {side};
+    // Le note e la precisione si salvano sulla voce più recente, non su quella
+    // letta all'apertura.
+    var current = saved;
     try {
       await navigator.push(
         MaterialPageRoute<void>(
           builder: (_) => ReviewPage(
             initial: game.initial,
             moves: [for (final m in game.moves) m.move],
+            onResult: (review) {
+              if (side == null) return;
+              final next = current.withReview(review);
+              // Una revisione già salvata (cache) non riscrive l'archivio.
+              if (next.accuracy == current.accuracy &&
+                  mapEquals(next.phaseAccuracy, current.phaseAccuracy)) {
+                return;
+              }
+              current = next;
+              unawaited(_saveGame(current).catchError((Object _) {}));
+            },
             evaluate: engineEvaluator(player),
             onCancel: player.stopAnalysis,
             analyseLive: (fen, multiPv) =>
@@ -713,7 +727,8 @@ class _HomeShellState extends State<HomeShell> {
             notes: [for (final m in game.moves) m.note],
             onNoteChanged: (ply, note) {
               imported.first.annotate(ply, note);
-              return _saveGame(saved.copyWith(pgn: imported.first.toPgn()));
+              current = current.copyWith(pgn: imported.first.toPgn());
+              return _saveGame(current);
             },
             timeControl: TimeControl.parse(saved.timeControl ?? ''),
             startTimes: Handicap.startTimesFromPgn(
