@@ -1,7 +1,9 @@
 import 'package:dartchess/dartchess.dart';
+import 'package:flutter/widgets.dart' show Locale;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/archive/saved_game.dart';
 import 'package:scacchi/game/chess_game.dart';
+import 'package:scacchi/l10n/app_localizations.dart';
 
 void main() {
   final t = DateTime(2026, 10, 10, 9);
@@ -97,5 +99,53 @@ void main() {
       timeControl: '0.5+0',
     ).pgn;
     expect(pgn, contains('[TimeControl "30+0"]'));
+  });
+
+  group('nomi dei giocatori', () {
+    SavedGame played(String white, String black, {String? mode}) =>
+        SavedGame.fromGame(
+          ChessGame(),
+          id: 'n',
+          white: white,
+          black: black,
+          mode: mode ?? SavedGame.computer,
+          createdAt: t,
+          updatedAt: t,
+          playerSide: Side.white,
+        );
+
+    test('il PGN salvato ha nomi neutri, non italiani', () {
+      final g = played(SavedGame.nameYou, SavedGame.nameComputer);
+      expect(g.pgn, contains('[White "You"]'));
+      expect(g.pgn, contains('[Black "Computer"]'));
+    });
+
+    test('in visualizzazione seguono la lingua', () {
+      final en = lookupAppLocalizations(const Locale('en'));
+      final it = lookupAppLocalizations(const Locale('it'));
+      final g = played(SavedGame.nameYou, SavedGame.nameComputer);
+      expect(g.titleIn(en), 'You – Computer');
+      expect(g.titleIn(it), 'Tu – Computer');
+      final local = played(
+        SavedGame.nameWhite,
+        SavedGame.nameBlack,
+        mode: SavedGame.local,
+      );
+      expect(local.titleIn(en), 'White – Black');
+      expect(local.titleIn(it), 'Bianco – Nero');
+    });
+
+    test('i salvataggi con i nomi italiani si leggono ancora', () {
+      final en = lookupAppLocalizations(const Locale('en'));
+      final old = played('Tu', 'Nero');
+      expect(old.titleIn(en), 'You – Black');
+    });
+
+    test('nomi di bot e partite importate restano com\'erano', () {
+      final en = lookupAppLocalizations(const Locale('en'));
+      expect(played('Tu', 'Pino').titleIn(en), 'You – Pino');
+      final imported = played('Tu', 'Nero', mode: SavedGame.imported);
+      expect(imported.titleIn(en), 'Tu – Nero');
+    });
   });
 }

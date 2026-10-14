@@ -3,6 +3,16 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
+/// Cartella delle foto di sfondo, dentro quella dei dati dell'app.
+Future<Directory> backdropPhotoDirectory() async {
+  final root = await getApplicationSupportDirectory();
+  return Directory('${root.path}/stile');
+}
+
+/// Nome del file di un percorso di foto: è l'unica parte che si salva nelle
+/// impostazioni.
+String backdropPhotoName(String path) => path.split(RegExp(r'[\\/]')).last;
+
 /// Sceglie una foto dalla galleria e la copia nella cartella dati dell'app,
 /// ridotta: non esce mai dal telefono e Android la esclude dai backup. Restituisce il
 /// percorso, o null se si annulla; una foto illeggibile solleva un errore.
@@ -14,8 +24,8 @@ Future<String?> pickBackdropPhoto() async {
     imageQuality: 80,
   );
   if (picked == null) return null;
-  final root = await getApplicationSupportDirectory();
-  final dir = Directory('${root.path}/stile')..createSync(recursive: true);
+  final dir = await backdropPhotoDirectory()
+    ..createSync(recursive: true);
   // Un nome nuovo a ogni scelta: la cache delle immagini non serve la vecchia.
   final target = File(
     '${dir.path}/sfondo-${DateTime.now().millisecondsSinceEpoch}.jpg',

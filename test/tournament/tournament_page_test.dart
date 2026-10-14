@@ -22,6 +22,14 @@ Future<void> settle(WidgetTester tester) async {
 }
 
 void main() {
+  test('punteggi del girone col separatore della lingua', () {
+    expect(standingsPoints(2.5, 'it'), '2,5');
+    expect(standingsPoints(2.5, 'en'), '2.5');
+    expect(standingsPoints(3, 'it'), '3');
+    expect(standingsPoints(0.5, 'de'), '0,5');
+    expect(standingsPoints(12.25, 'ru'), '12,3');
+  });
+
   late Directory dir;
   late TournamentController controller;
 

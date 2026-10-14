@@ -9,7 +9,7 @@
       }
     }
   },
-  "storyProgress": "{done} hoofdstukken van de {total}",
+  "storyProgress": "{done, plural, one{{done} hoofdstuk van de {total}} other{{done} hoofdstukken van de {total}}}",
   "@storyProgress": {
     "placeholders": {
       "done": {
@@ -158,7 +158,7 @@
   "@storyChapterCurrent": {
     "description": "Etichetta del capitolo corrente nella storia"
   },
-  "storyChapterSteps": "{done} stappen van de {total}",
+  "storyChapterSteps": "{done, plural, one{{done} stap van de {total}} other{{done} stappen van de {total}}}",
   "@storyChapterSteps": {
     "description": "Passi conclusi di un capitolo, per la barra di avanzamento",
     "placeholders": {

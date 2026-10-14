@@ -911,7 +911,11 @@ class _OptionsSheetState extends State<_OptionsSheet> {
       key: key,
       label: Text(label),
       selected: _page._control == control,
-      onSelected: (_) => _change(() => _page._control = control),
+      onSelected: (_) => _change(() {
+        _page._control = control;
+        // Il tempo di handicap vale solo con un orologio.
+        if (control == null) _page._handicapMinutes = null;
+      }),
     );
     final standard = _page._variant == Variant.standard;
     final pieces = {
@@ -1011,8 +1015,10 @@ class _OptionsSheetState extends State<_OptionsSheet> {
                             key: Key('option-handicap-time-$m'),
                             label: Text(l10n.handicapTimeMinutes(m)),
                             selected: _page._handicapMinutes == m,
-                            onSelected: (_) =>
-                                _change(() => _page._handicapMinutes = m),
+                            onSelected: _page._control == null
+                                ? null
+                                : (_) =>
+                                      _change(() => _page._handicapMinutes = m),
                           ),
                       ]),
                       Text(

@@ -3,6 +3,11 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../tool/src/licenses.dart';
 
 void main() {
+  test('jsonFromOutput salta gli avvisi e rifiuta un output senza JSON', () {
+    expect(jsonFromOutput('Resolving...\n{"a": 1}'), '{"a": 1}');
+    expect(() => jsonFromOutput('nessun json'), throwsFormatException);
+  });
+
   group('riconoscimento delle licenze', () {
     test('MIT', () {
       expect(

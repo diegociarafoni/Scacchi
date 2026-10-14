@@ -456,6 +456,8 @@ void main() {
         host.write(stranger, Uint8List.fromList([0, 1, 0, 1, 9]));
         await settle();
         expect(got, isEmpty);
+        // Ma la richiesta riceve comunque risposta, altrimenti resta appesa.
+        expect(host.responses, hasLength(1));
         host.subscribe(stranger);
         await settle();
         host.write(stranger, Uint8List.fromList([0, 1, 0, 1, 7]), index: 1);
@@ -466,7 +468,7 @@ void main() {
         expect(got, [
           Uint8List.fromList([7]),
         ]);
-        expect(host.responses, hasLength(2));
+        expect(host.responses, hasLength(3));
         await t.close();
       },
     );

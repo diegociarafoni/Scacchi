@@ -17,6 +17,7 @@ import 'avatar_photo.dart';
 import 'challenges.dart';
 import 'daily_goal.dart';
 import 'progress_controller.dart';
+import 'progress_feedback.dart';
 import 'progress_state.dart';
 import 'records.dart';
 import 'rewards.dart';
@@ -630,6 +631,16 @@ class _Settings extends StatelessWidget {
     await reminders.disable();
   }
 
+  /// Abbassare l'obiettivo può far scattare il bonus di oggi: va annunciato.
+  Future<void> _changeGoal(
+    BuildContext context,
+    ProgressSettings s,
+    DailyGoal goal,
+  ) async {
+    final update = await controller.updateSettings(s.copyWith(goal: goal));
+    if (context.mounted) showProgressFeedback(context, update);
+  }
+
   @override
   Widget build(BuildContext context) {
     final s = controller.settings;
@@ -666,9 +677,7 @@ class _Settings extends StatelessWidget {
                   DropdownMenuItem(value: g, child: Text(goalLabel(l, g))),
               ],
               onChanged: (g) {
-                if (g != null) {
-                  unawaited(controller.updateSettings(s.copyWith(goal: g)));
-                }
+                if (g != null) unawaited(_changeGoal(context, s, g));
               },
             ),
           ),

@@ -7,7 +7,7 @@
   "@pathContinue": {
     "description": "Pulsante che apre la prossima tappa del percorso"
   },
-  "pathStars": "{done} z {total} gwiazdek",
+  "pathStars": "{done, plural, one{{done} gwiazdka z {total}} few{{done} gwiazdki z {total}} many{{done} gwiazdek z {total}} other{{done} gwiazdki z {total}}}",
   "@pathStars": {
     "description": "Etichetta per i lettori di schermo delle stelle totali o di capitolo",
     "placeholders": {
@@ -49,7 +49,7 @@
   "@pathChapterDone": {
     "description": "Stato di un capitolo con tutte le tappe completate"
   },
-  "pathStageDone": "{stars} z 3 gwiazdek",
+  "pathStageDone": "{stars, plural, one{{stars} gwiazdka z 3} few{{stars} gwiazdki z 3} many{{stars} gwiazdek z 3} other{{stars} gwiazdki z 3}}",
   "@pathStageDone": {
     "description": "Stato di una tappa completata",
     "placeholders": {

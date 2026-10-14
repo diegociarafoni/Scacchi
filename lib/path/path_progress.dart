@@ -69,7 +69,12 @@ class PathProgress {
   Map<String, Object?> toJson() => {'stars': stars, 'resume': resume};
 
   static PathProgress fromJson(Map<String, Object?> json) => PathProgress(
-    {...(json['stars'] as Map? ?? const {}).cast<String, int>()},
+    {
+      for (final e in (json['stars'] as Map? ?? const {}).entries)
+        if ((e.key, e.value) case (final String k, final int v)
+            when v >= 1 && v <= 3)
+          k: v,
+    },
     {
       for (final e in (json['resume'] as Map? ?? const {}).entries)
         if (e.key is String && e.value is List)

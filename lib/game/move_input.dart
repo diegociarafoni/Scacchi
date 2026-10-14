@@ -36,7 +36,10 @@ MoveInputResult parseMoveInput(Position pos, String text) {
 
   final lower = t.toLowerCase();
   if (_uci.hasMatch(lower)) {
-    final move = Move.parse(lower)!;
+    // dartchess accetta anche e1g1, ma l'arrocco si registra re-su-torre (e1h1)
+    // come nelle mosse generate dalla scacchiera.
+    final parsed = Move.parse(lower)!;
+    final move = parsed is NormalMove ? pos.normalizeMove(parsed) : parsed;
     return isPlayableMove(pos, move)
         ? MoveInputOk(move)
         : const MoveInputInvalid();

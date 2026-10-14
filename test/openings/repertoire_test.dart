@@ -78,9 +78,33 @@ void main() {
       final t = await trainer();
       await t.addLine(Side.white, 'e5', uci('e2e4 e7e5 g1f3'));
       await t.addLine(Side.white, 'c5', uci('e2e4 c7c5 g1f3'));
-      await t.removeLine(Side.white, 0);
+      await t.removeLine(Side.white, t.lines(Side.white).first);
       expect(t.lines(Side.white).single.name, 'c5');
       expect(t.cardCount(Side.white), 2);
+    });
+
+    test('una linea rovinata nel salvataggio non azzera le altre', () async {
+      final store = MemoryStore();
+      await store.write(
+        RepertoireTrainer.storageKey,
+        '{"white":[{"n":"ok","m":"e2e4 e7e5 g1f3"},'
+        '{"n":"illegale","m":"e2e4 e7e5 e1e8"},'
+        '{"n":"rotta","m":"zz"},{"n":"vuota","m":""},5],'
+        '"black":"no"}',
+      );
+      final t = await trainer(store: store);
+      expect(t.lines(Side.white).map((l) => l.name), ['ok']);
+      expect(t.lines(Side.black), isEmpty);
+    });
+
+    test('rimuovere per riferimento ignora una linea già tolta', () async {
+      final t = await trainer();
+      await t.addLine(Side.white, 'e5', uci('e2e4 e7e5 g1f3'));
+      await t.addLine(Side.white, 'c5', uci('e2e4 c7c5 g1f3'));
+      final first = t.lines(Side.white).first;
+      await t.removeLine(Side.white, first);
+      await t.removeLine(Side.white, first);
+      expect(t.lines(Side.white).single.name, 'c5');
     });
 
     test('sopravvive al riavvio', () async {
@@ -98,6 +122,24 @@ void main() {
       final lines = linesFromPgn('1. e4 e5 (1... c5 2. Nf3) 2. Nf3 Nc6 *');
       expect(lines.map((l) => l.length), [4, 3]);
       expect(lines.last, uci('e2e4 c7c5 g1f3'));
+    });
+
+    test('la parte legale prima di una mossa illegale si conserva', () {
+      final lines = linesFromPgn('1. e4 e5 2. Nf3 Nc6 3. Qa8 *');
+      expect(lines, [uci('e2e4 e7e5 g1f3 b8c6')]);
+      expect(linesFromPgn('1. e4 e5 (1... c5 2. Nf3 Ke4) 2. Nf3 *'), [
+        uci('e2e4 e7e5 g1f3'),
+        uci('e2e4 c7c5 g1f3'),
+      ]);
+    });
+
+    test('un PGN da un\'altra posizione non è una linea', () {
+      const fen = '4k3/8/8/8/8/8/4P3/4K3 w - - 0 1';
+      expect(linesFromPgn('[SetUp "1"]\n[FEN "$fen"]\n\n1. e4 *'), isEmpty);
+      const start = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+      expect(linesFromPgn('[SetUp "1"]\n[FEN "$start"]\n\n1. e4 *'), [
+        uci('e2e4'),
+      ]);
     });
 
     test('un PGN illegale non produce linee', () {
@@ -147,6 +189,19 @@ void main() {
         expect(t.dueCount(Side.white), 2);
       },
     );
+
+    test('due tocchi insieme sulla stessa carta contano una volta', () async {
+      final t = await trainer();
+      await t.addLine(Side.white, 'Italiana', uci('e2e4 e7e5 g1f3'));
+      final drill = t.nextDrill(Side.white)!;
+      final move = Move.parse('e2e4')!;
+      final results = await Future.wait([
+        drill.tryMove(move),
+        drill.tryMove(move),
+      ]);
+      expect(results, [DrillResult.correct, DrillResult.illegal]);
+      expect(drill.expected, Move.parse('g1f3'));
+    });
 
     test('le carte senza linea non contano come da ripassare', () async {
       final store = MemoryStore();

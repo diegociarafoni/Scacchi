@@ -70,7 +70,7 @@ void main() {
       SharedPreferences.setMockInitialValues({});
       tester.platformDispatcher.localesTestValue = const [Locale('en', 'US')];
       addTearDown(tester.platformDispatcher.clearLocalesTestValue);
-      await tester.pumpWidget(const ScacchiApp());
+      await tester.pumpWidget(ScacchiApp(contentLoader: (_) async {}));
       await tester.pumpAndSettle();
       expect(find.text('Learn'), findsWidgets);
       expect(find.text('Impara'), findsNothing);
@@ -82,7 +82,7 @@ void main() {
       SharedPreferences.setMockInitialValues({});
       tester.platformDispatcher.localesTestValue = const [Locale('ja', 'JP')];
       addTearDown(tester.platformDispatcher.clearLocalesTestValue);
-      await tester.pumpWidget(const ScacchiApp());
+      await tester.pumpWidget(ScacchiApp(contentLoader: (_) async {}));
       await tester.pumpAndSettle();
       expect(find.text('Impara'), findsWidgets);
     });
@@ -93,7 +93,7 @@ void main() {
       SharedPreferences.setMockInitialValues({'language': 'english'});
       tester.platformDispatcher.localesTestValue = const [Locale('it', 'IT')];
       addTearDown(tester.platformDispatcher.clearLocalesTestValue);
-      await tester.pumpWidget(const ScacchiApp());
+      await tester.pumpWidget(ScacchiApp(contentLoader: (_) async {}));
       await tester.pumpAndSettle();
       expect(find.text('Impara'), findsNothing);
       expect(find.text('Learn'), findsWidgets);

@@ -163,7 +163,7 @@ class _RepertoirePageState extends State<RepertoirePage> {
                       tooltip: l10n.openingsDeleteLine,
                       icon: const Icon(Icons.delete_outline),
                       onPressed: () async {
-                        await _t.removeLine(widget.side, i);
+                        await _t.removeLine(widget.side, lines[i]);
                         if (mounted) setState(() {});
                       },
                     ),

@@ -194,6 +194,13 @@ void main() {
     expect(AppSettings(whiteName: 'x' * 40).whiteName.length, 24);
   });
 
+  test('il nome lungo non spezza una coppia surrogata', () {
+    final name = AppSettings(whiteName: '${'x' * 23}😀😀').whiteName;
+    expect(name, '${'x' * 23}😀');
+    // Una stringa tagliata male non sarebbe UTF-16 valido.
+    expect(name.codeUnits.last, isNot(inInclusiveRange(0xd800, 0xdbff)));
+  });
+
   test('la mossa sbagliata è rossa, arancione con i colori per daltonici', () {
     expect(AppSettings().wrongColor, const Color(0xffd32f2f));
     expect(

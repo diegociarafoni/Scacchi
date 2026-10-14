@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:scacchi/backup/backup_page.dart';
 import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/progress/profile_page.dart';
 import 'package:scacchi/progress/progress_controller.dart';
@@ -332,6 +333,29 @@ void main() {
     expect(find.byKey(const Key('openProfile')), findsOneWidget);
     expect(find.byKey(const Key('progressEnabled')), findsNothing);
   });
+
+  testWidgets(
+    'nel profilo bambino sblocca tutto e il backup chiedono un adulto',
+    (tester) async {
+      await settings.update(settings.value.copyWith(kidMode: true));
+      await show(tester);
+      await openSection(tester, SettingsSection.profile);
+      final unlocked = progress.settings.unlockAll;
+      await tester.tap(find.byKey(const Key('unlockAll')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('adultGate')), findsOneWidget);
+      await tester.tap(find.text('Annulla'));
+      await tester.pumpAndSettle();
+      expect(progress.settings.unlockAll, unlocked);
+
+      await tester.tap(find.byKey(const Key('backup')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('adultGate')), findsOneWidget);
+      await tester.tap(find.text('Annulla'));
+      await tester.pumpAndSettle();
+      expect(find.byType(BackupPage), findsNothing);
+    },
+  );
 
   testWidgets('il menu e le pagine hanno tocchi da 48 dp', (tester) async {
     await show(tester, logical: const Size(390, 1200));

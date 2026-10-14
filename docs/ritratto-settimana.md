@@ -19,7 +19,7 @@ Partite concluse, con un colore dell'utente, create negli ultimi sette giorni (e
 
 ## Condivisione
 
-«Condividi come immagine» disegna la scheda in un PNG e apre il menu di condivisione del sistema; il file temporaneo viene eliminato dopo l'invio.
+«Condividi come immagine» disegna la scheda in un PNG e apre il menu di condivisione del sistema; il file temporaneo non si elimina subito (il sistema può leggerlo dopo l'invio) e lo ripulisce la condivisione successiva o l'avvio dell'app.
 
 ## Codice
 

@@ -70,7 +70,7 @@ void main() {
     final assembler = TransferAssembler();
     final done = page.frames.map(assembler.add).last as TransferComplete;
     expect(done.text, contains('1. e4 e5 *'));
-    expect(done.text, contains('[White "Bianco"]'));
+    expect(done.text, contains('[White "White"]'));
   });
 
   testWidgets('Cap. 7 scambio QR: continua qui una partita ricevuta', (

@@ -48,6 +48,10 @@
   "@archiveModeComputer": {
     "description": "Tipo di partita: contro il computer"
   },
+  "archivePlayerComputer": "Computer",
+  "@archivePlayerComputer": {
+    "description": "Nome del computer come avversario nel titolo di una partita salvata"
+  },
   "archiveModeImported": "importata",
   "@archiveModeImported": {
     "description": "Tipo di partita: importata da un PGN"
