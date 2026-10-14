@@ -107,7 +107,7 @@ Il dettaglio di U1-U11 è in `consegne/analisi-ux-ui.md`; il comportamento attua
 | U4 | **Testi tutti localizzati** nei file `.arb` | parziale | P1 | grande | 0.14.0 |
 | U7 | **Barra del titolo della partita più semplice**: editor e tastiera nel menu ⋮; tastiera visibile con un lettore di schermo | fatta | da assegnare | piccola | 0.12.0 |
 | U8 | **Golden fedeli all'app reale**: tema predefinito e font veri; aggiungere Puzzle, Percorso, Storia, Multigiocatore, Tu e profilo bambino | fatta (golden del Percorso aggiunti) | da assegnare | media | 0.14.0 |
-| U12 | **Icone più curate** dopo le traduzioni (richiesta di Diego, 13 ottobre 2026) — `RokkoIcons` in `lib/theme/rokko_icons.dart`: stesso set a contorno per barra, pannello e barra del titolo della partita; le altre schermate restano da uniformare | parziale | dopo la 0.11.0 | media | 0.14.0 |
+| U12 | **Icone più curate** dopo le traduzioni (richiesta di Diego, 13 ottobre 2026) — `RokkoIcons` in `lib/theme/rokko_icons.dart`: stesso set a contorno per barra, pannello e barra del titolo della partita; nelle altre schermate i comandi usano le varianti a contorno e restano piene solo le icone di stato (stella, spunta, lucchetto, corona), l'arte dei badge e l'icona selezionata della barra di navigazione; un test lo verifica | fatta | dopo la 0.11.0 | media | 0.14.0 |
 
 Gli «interventi rapidi» (marchio nel titolo, arancione d'azione, gruppi nella scheda Tu, icone nel menu, anteprima comprimibile, font reale nei golden, test sui testi fissi) si possono fare prima delle voci grandi; sono elencati in `consegne/analisi-ux-ui.md`.
 

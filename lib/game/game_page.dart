@@ -4526,7 +4526,7 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
               key: const ValueKey('menu-custom'),
             ),
           _tile(
-            Icons.phone_android,
+            Icons.phone_android_outlined,
             l10n.gameMenuTwoTitle,
             l10n.gameMenuTwoSubtitle,
             () => setState(() {
@@ -4558,7 +4558,7 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
   List<Widget> _friendChildren(BuildContext context) => [
     _header(context, _l10n(context).gameMenuFriendTitle, back: _SheetView.menu),
     _tile(
-      Icons.phone_android,
+      Icons.phone_android_outlined,
       _l10n(context).gameFriendSameTitle,
       _l10n(context).gameFriendSameSubtitle,
       () => setState(() {
@@ -4568,7 +4568,7 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
       key: const ValueKey('friend-same'),
     ),
     _tile(
-      Icons.smartphone,
+      Icons.smartphone_outlined,
       _l10n(context).gameFriendApartTitle,
       _l10n(context).gameFriendApartSubtitle,
       () => setState(() => _view = _SheetView.friendApart),

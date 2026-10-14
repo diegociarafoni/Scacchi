@@ -142,7 +142,7 @@ class InviteCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ExcludeSemantics(
-                  child: Icon(Icons.smartphone, color: tokens.action),
+                  child: Icon(Icons.smartphone_outlined, color: tokens.action),
                 ),
                 const SizedBox(width: 8),
                 Flexible(
