@@ -365,5 +365,8 @@
         "type": "String"
       }
     }
-  }
+  },
+  "storyKidProgress": "Your journey",
+  "storyKidStepLessons": "Lessons",
+  "storyKidStepPuzzles": "Chapter puzzles"
 }

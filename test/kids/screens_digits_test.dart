@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/archive/game_archive.dart';
 import 'package:scacchi/home/home_shell.dart';
@@ -8,16 +9,35 @@ import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/masters/masters_controller.dart';
 import 'package:scacchi/masters/masters_page.dart';
 import 'package:scacchi/minigames/minigames_page.dart';
+import 'package:scacchi/multiplayer/multiplayer_page.dart';
 import 'package:scacchi/path/path_controller.dart';
+import 'package:scacchi/path/path_page.dart';
 import 'package:scacchi/progress/achievements.dart';
 import 'package:scacchi/progress/achievements_l10n.dart';
 import 'package:scacchi/progress/profile_page.dart';
 import 'package:scacchi/progress/progress_controller.dart';
 import 'package:scacchi/progress/progress_store.dart';
 import 'package:scacchi/story/story_controller.dart';
+import 'package:scacchi/story/story_page.dart';
 import 'package:scacchi/summary/weekly_summary_page.dart';
 
 import 'no_numbers_test.dart' show digitTexts, kidApp, kidSettings, setPhone;
+
+/// Etichette e valori che un lettore di schermo leggerebbe, di tutta la pagina.
+List<String> spokenTexts(WidgetTester tester) {
+  final out = <String>[];
+  void walk(SemanticsNode node) {
+    final data = node.getSemanticsData();
+    out.add('${data.label} ${data.value}');
+    node.visitChildren((child) {
+      walk(child);
+      return true;
+    });
+  }
+
+  walk(tester.getSemantics(find.byType(Scaffold).first));
+  return out;
+}
 
 /// U9: nel profilo bambino nessuna schermata raggiungibile dalle schede
 /// mostra numeri che misurano il bambino. Restano le cifre che descrivono un
@@ -26,6 +46,8 @@ void main() {
   late Directory dir;
   late ProgressController progress;
   late MastersController masters;
+  late PathController path;
+  late StoryController story;
 
   setUp(() async {
     dir = Directory.systemTemp.createTempSync('kidscreens');
@@ -33,6 +55,10 @@ void main() {
     await progress.load();
     masters = MastersController(File('${dir.path}/m.json'));
     await masters.load();
+    path = PathController(File('${dir.path}/path2.json'));
+    story = StoryController(File('${dir.path}/story2.json'));
+    await path.load();
+    await story.load();
   });
   tearDown(() => dir.deleteSync(recursive: true));
 
@@ -78,7 +104,7 @@ void main() {
   // Parole che nominano una misura del giocatore.
   final measure = RegExp(
     r'Elo|punteggio|%|livello|giorni di fila|punti|\bXP\b|serie|record|'
-    r'precisione|vittorie|\d\s*su\s*\d|\d\s*/\s*\d',
+    r'precisione|vittorie|\d+\s*%|\d\s*su\s*\d|\d\s*/\s*\d|capitol[oi]\s+su|passi?\s+su',
     caseSensitive: false,
   );
 
@@ -94,6 +120,61 @@ void main() {
       expect(texts.where(measure.hasMatch), isEmpty);
     });
   }
+
+  testWidgets('la mappa della Storia non conta capitoli, lezioni e puzzle', (
+    tester,
+  ) async {
+    setPhone(tester);
+    final semantics = tester.ensureSemantics();
+    await tester.pumpWidget(
+      kidApp(
+        StoryPage(path: path, story: story),
+        settings: kidSettings(),
+      ),
+    );
+    await tester.pump(const Duration(seconds: 1));
+    expect(
+      spokenTexts(tester).where(measure.hasMatch),
+      isEmpty,
+      reason: 'anche per il lettore di schermo',
+    );
+    final texts = digitTexts(tester);
+    expect(texts.where(measure.hasMatch), isEmpty, reason: '$texts');
+    semantics.dispose();
+    // Resta la barra del viaggio, senza il conteggio.
+    expect(find.byKey(const ValueKey('story-summary')), findsOneWidget);
+  });
+
+  testWidgets('la mappa del Percorso non cita misure del giocatore', (
+    tester,
+  ) async {
+    setPhone(tester);
+    final semantics = tester.ensureSemantics();
+    await tester.pumpWidget(
+      kidApp(PathPage(controller: path), settings: kidSettings()),
+    );
+    await tester.pump(const Duration(seconds: 1));
+    expect(
+      spokenTexts(tester).where(measure.hasMatch),
+      isEmpty,
+      reason: 'anche per il lettore di schermo',
+    );
+    final texts = digitTexts(tester);
+    expect(texts.where(measure.hasMatch), isEmpty, reason: '$texts');
+    semantics.dispose();
+  });
+
+  testWidgets('Gioca con un amico non cita misure del giocatore', (
+    tester,
+  ) async {
+    setPhone(tester);
+    await tester.pumpWidget(
+      kidApp(const MultiplayerPage(), settings: kidSettings()),
+    );
+    await tester.pump(const Duration(seconds: 1));
+    final texts = digitTexts(tester);
+    expect(texts.where(measure.hasMatch), isEmpty, reason: '$texts');
+  });
 
   test('ogni traguardo che cita una misura è nascosto ai bambini', () {
     final it = lookupAppLocalizations(const Locale('it'));

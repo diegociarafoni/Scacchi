@@ -32,7 +32,7 @@ Rokko è open source e gratuito. Questi vincoli valgono per ogni voce.
 | 0.12.0 | Giocare meglio | Premossa, frecce e cerchi, schermo acceso, tocco, cadenze libere e ritardo, annullamento con consenso, barra di valutazione in partita, comandi di partita (U1, U3, U7), icone più curate (U12) |
 | 0.13.0 | Studiare meglio | Varianti salvate in PGN, note ovunque, mosse «Libro» nella revisione, cache persistente, precisione per fase nelle statistiche, scheda Tu e impostazioni in sezioni (U5, U6), funzioni scopribili (U10) |
 | 0.14.0 | Pronta per gli store | Schermata «Informazioni», dichiarazioni sulla privacy, architetture del motore, iOS e F-Droid, dimensione, riduzione animazioni, schermo diviso e pieghevoli, persistenza e migrazioni, avvio rapido, identità visiva e golden (U2, U8) |
-| 0.15.0 | Storia, tornei e progressi | Evolutive della storia (S1-S6), percorso «dai miei errori», tornei con partite reali, orologio nelle partite a distanza, profilo bambino e multigiocatore coerenti (U9) |
+| 0.15.0 | Storia, tornei e progressi | Evolutive della storia (S1-S6), percorso «dai miei errori», tornei con partite reali, orologio nelle partite a distanza, profilo bambino e multigiocatore coerenti |
 | Dopo | Da valutare | Bot «ombra», lettura della posizione da fotocamera, altre varianti, modalità alla cieca in partita, widget della Home, scacchiere Bluetooth e le idee in fondo al documento |
 
 ## A. Da fare o parziali
@@ -108,7 +108,6 @@ Il dettaglio di U1-U11 è in `consegne/analisi-ux-ui.md`; il comportamento attua
 | U4 | **Testi tutti localizzati** nei file `.arb` | parziale | P1 | grande | 0.11.0 |
 | U7 | **Barra del titolo della partita più semplice**: editor e tastiera nel menu ⋮; tastiera visibile con un lettore di schermo | fatta | da assegnare | piccola | 0.12.0 |
 | U8 | **Golden fedeli all'app reale**: tema predefinito e font veri; aggiungere Puzzle, Percorso, Storia, Multigiocatore, Tu e profilo bambino | da fare | da assegnare | media | 0.14.0 |
-| U9 | **Profilo bambino coerente** in tutte le schermate, con un test che cerca le cifre nei testi — fatti il test su quattro schermate raggiunte dalle schede Home, Impara e Tu e i traguardi senza livello, Elo, punteggi, precisione e serie; restano Percorso, Multigiocatore, Storia e le pagine dei puzzle, con la Storia («0 capitoli su 9», «Lezioni: 0 su 9») | parziale | da assegnare | media | 0.15.0 |
 | U12 | **Icone più curate** dopo le traduzioni (richiesta di Diego, 13 ottobre 2026) — `RokkoIcons` in `lib/theme/rokko_icons.dart`: stesso set a contorno per barra, pannello e barra del titolo della partita; le altre schermate restano da uniformare | parziale | dopo la 0.11.0 | media | 0.12.0 |
 
 Gli «interventi rapidi» (marchio nel titolo, arancione d'azione, gruppi nella scheda Tu, icone nel menu, anteprima comprimibile, font reale nei golden, test sui testi fissi) si possono fare prima delle voci grandi; sono elencati in `consegne/analisi-ux-ui.md`.

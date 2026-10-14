@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../settings/settings.dart';
 import '../theme/rokko_theme.dart';
 import 'curriculum.dart';
 import 'path_controller.dart';
@@ -129,6 +130,7 @@ class _Summary extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = pathL10n(context);
     final theme = Theme.of(context);
+    final kid = AppSettings.of(context).kidMode;
     final stars = progress.totalStars;
     return Card(
       key: const ValueKey('path-summary'),
@@ -146,19 +148,28 @@ class _Summary extends StatelessWidget {
                     style: theme.textTheme.titleMedium,
                   ),
                 ),
-                Semantics(
-                  container: true,
-                  label: l10n.pathStars(stars, maxStars),
-                  excludeSemantics: true,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.star, color: RokkoTokens.of(context).star),
-                      const SizedBox(width: 4),
-                      Text('$stars/$maxStars'),
-                    ],
+                // Il profilo bambino non conta le stelle: resta la barra.
+                if (kid)
+                  ExcludeSemantics(
+                    child: Icon(
+                      Icons.star,
+                      color: RokkoTokens.of(context).star,
+                    ),
+                  )
+                else
+                  Semantics(
+                    container: true,
+                    label: l10n.pathStars(stars, maxStars),
+                    excludeSemantics: true,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.star, color: RokkoTokens.of(context).star),
+                        const SizedBox(width: 4),
+                        Text('$stars/$maxStars'),
+                      ],
+                    ),
                   ),
-                ),
               ],
             ),
             const SizedBox(height: 12),
@@ -200,16 +211,18 @@ class _ChapterHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = pathL10n(context);
     final theme = Theme.of(context);
+    final kid = AppSettings.of(context).kidMode;
     final max = chapter.stages.length * 3;
     final stars = progress.chapterStars(chapter);
     final done = chapter.stages.every((s) => progress.isCompleted(s.id));
     return Semantics(
       container: true,
       header: true,
-      label:
-          '${l10n.pathChapterNumber(number)}: ${chapter.title}, '
-          '${l10n.pathStars(stars, max)}'
-          '${done ? ', ${l10n.pathChapterDone}' : ''}',
+      label: [
+        '${l10n.pathChapterNumber(number)}: ${chapter.title}',
+        if (!kid) l10n.pathStars(stars, max),
+        if (done) l10n.pathChapterDone,
+      ].join(', '),
       excludeSemantics: true,
       child: Padding(
         padding: const EdgeInsets.only(top: 28, bottom: 4),
@@ -236,8 +249,7 @@ class _ChapterHeader extends StatelessWidget {
                   Icon(Icons.check_circle, color: theme.colorScheme.primary),
                 const SizedBox(width: 8),
                 Icon(Icons.star, size: 18, color: RokkoTokens.of(context).star),
-                const SizedBox(width: 2),
-                Text('$stars/$max'),
+                if (!kid) ...[const SizedBox(width: 2), Text('$stars/$max')],
               ],
             ),
             const SizedBox(height: 8),
