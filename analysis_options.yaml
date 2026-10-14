@@ -17,6 +17,7 @@ analyzer:
     - macos/**
     - linux/**
     - lib/l10n/app_localizations*.dart
+    - third_party/**
 
 linter:
   rules:

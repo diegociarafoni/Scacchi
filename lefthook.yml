@@ -5,6 +5,7 @@ pre-commit:
   jobs:
     - name: formattazione
       glob: "*.dart"
+      exclude: "third_party/*"
       run: dart format --output=none --set-exit-if-changed {staged_files}
     - name: analisi statica
       glob: "*.{dart,yaml,arb}"
