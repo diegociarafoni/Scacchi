@@ -22,16 +22,16 @@ Rokko è open source e gratuito. Questi vincoli valgono per ogni voce.
 | RV-02 | Nessuna pubblicità, nessun tracciamento, nessun account obbligatorio; nessun dato lascia il dispositivo senza un'azione esplicita | fatta | |
 | RV-03 | Codice sotto GPL-3.0 (o successiva); licenza e sorgenti visibili nella schermata «Informazioni» | fatta | schermata «Informazioni» presente (A-15) |
 | RV-04 | Asset con licenza compatibile con la GPL, elencati con attribuzione in `CREDITS.md` e in «Informazioni» | fatta | `CREDITS.md` e `lib/about/credits.dart` |
-| RV-05 | Il permesso per gli store vale solo per il codice del progetto; verifica scritta della compatibilità con la GPL del motore prima della pubblicazione su iOS | parziale | `docs/licenza.md` e `NOTICE.md` dichiarano il permesso, manca l'esito scritto |
+| RV-05 | Il permesso per gli store vale solo per il codice del progetto; verifica scritta della compatibilità con la GPL del motore prima della pubblicazione su iOS | fatta | esito scritto in `docs/licenza.md`: compatibilità non dimostrata, quindi nessuna pubblicazione sull'App Store finché non c'è un parere legale (iOS non è libero da vincoli) |
 
 ## Piano di rilascio
 
 | Versione | Tema | Contenuto |
 |---|---|---|
-| 0.11.0 | Multilingue | Solo la traduzione dei testi (U4), consegnata; resta la rilettura madrelingua di alcune lingue |
-| 0.12.0 | Giocare meglio | Premossa, frecce e cerchi, schermo acceso, tocco, cadenze libere, ritardo e a più fasi, annullamento con consenso, barra di valutazione in partita, barra del titolo più semplice (U7); layout (U3) e icone (U12) passano alla 0.14.0 |
+| 0.11.0 | Multilingue | Solo la traduzione dei testi, consegnata in parte: il completamento (U4) passa alla 0.14.0 |
+| 0.12.0 | Giocare meglio | Premossa, frecce e cerchi, schermo acceso, tocco, cadenze libere e ritardo, annullamento con consenso, barra di valutazione in partita, barra del titolo più semplice (U7); cadenze a più fasi (A-5), comandi di partita (U1), layout (U3) e icone (U12) passano alla 0.14.0 |
 | 0.13.0 | Studiare meglio | Varianti salvate in PGN, note ovunque, mosse «Libro» nella revisione, cache persistente, precisione per fase nelle statistiche, scheda Tu e impostazioni in sezioni (U5, U6) e funzioni scopribili (U10), già consegnate; anticipati dalla 0.15.0 l'orologio nelle partite a distanza (A-26) e il profilo bambino coerente (U9) |
-| 0.14.0 | Pronta per gli store | Schermata «Informazioni», dichiarazioni sulla privacy, architetture del motore, iOS e F-Droid (questi quattro: da decidere, vedi A-16…A-19), dimensione, riduzione animazioni, schermo diviso e pieghevoli, persistenza e migrazioni, avvio rapido, identità visiva e golden (U2, U8); in più layout senza spazio morto (U3), icone più curate (U12), percorso «dai miei errori» (A-27), mappa del viaggio (S3) e pezzi sbloccabili (S5) |
+| 0.14.0 | Pronta per gli store | Schermata «Informazioni», dichiarazioni sulla privacy, architetture del motore, iOS e F-Droid (questi quattro: da decidere, vedi A-16…A-19), dimensione, riduzione animazioni, schermo diviso e pieghevoli, persistenza e migrazioni, avvio rapido, identità visiva e golden (U2, U8); in più testi tutti localizzati (U4), cadenze a più fasi (A-5), comandi di partita meno affollati (U1), layout senza spazio morto (U3), icone più curate (U12), percorso «dai miei errori» (A-27), mappa del viaggio (S3) e pezzi sbloccabili (S5) |
 | 0.15.0 | Storia, tornei e progressi | Evolutive della storia (S1, S2, S4, S6) e tornei con partite reali |
 | 0.15.0 o dopo | Da decidere con Diego | Bot «ombra», lettura della posizione da fotocamera, altre varianti, widget della Home, scacchiere Bluetooth e le idee in fondo al documento |
 
@@ -61,12 +61,12 @@ Rokko è open source e gratuito. Questi vincoli valgono per ogni voce.
 | ID | Funzione | Stato | Pri | Dim | Versione | Evidenza |
 |---|---|---|---|---|---|---|
 | A-15 / RV-03, RV-04 | **Schermata «Informazioni»** con licenza GPL, link ai sorgenti e crediti degli asset | fatta | P0 | piccola | 0.14.0 | `lib/about/about_page.dart` e `credits.dart`, aperta dall'ultima sezione delle Impostazioni (`settings_page.dart`) |
-| A-16 / RV-05 | **Verifica scritta** della compatibilità dell'App Store con la GPL del motore | rinviata da Diego | P0 | piccola | 0.15.0, da decidere | `docs/licenza.md`, `NOTICE.md` |
+| A-16 / RV-05 | **Verifica scritta** della compatibilità dell'App Store con la GPL del motore | fatta | P0 | piccola | 0.14.0 | analisi e decisione di Diego (14 ottobre 2026) in `docs/licenza.md`: compatibilità non dimostrata, quindi nessuna pubblicazione sull'App Store finché non c'è un parere legale (iOS non è libero da vincoli) |
 | A-17 / RNF-10 | **Dichiarazioni «nessun dato raccolto»**: `PrivacyInfo.xcprivacy`, testi per le schede di sicurezza dei dati degli store, `ITSAppUsesNonExemptEncryption` | rinviata da Diego | P0 | piccola | 0.15.0, da decidere | `docs/sicurezza.md`, «Da fare» |
 | A-18 / RNF-03 | **Motore per tutte le architetture** (Android armv7 e x86_64 oltre ad arm64) | rinviata da Diego | P0 | piccola | 0.15.0, da decidere | `docs/rilascio-android.md:71-74` |
-| A-19 / RNF-02 | **iOS e F-Droid**: build iOS in CI, Fastlane per TestFlight, metadati e ricetta per F-Droid | rinviata da Diego | P0 | grande | 0.15.0, da decidere | `docs/store.md`: iOS «non ancora configurato»; nessun file F-Droid |
+| A-19 / RNF-02 | **iOS e F-Droid**: build iOS in CI, Fastlane per TestFlight, metadati e ricetta per F-Droid | rinviata da Diego | P0 | grande | 0.15.0, da decidere | iOS sospeso per decisione di Diego (14 ottobre 2026, vedi A-16); resta da decidere F-Droid; `docs/store.md`, nessun file F-Droid |
 | A-20 / RNF-04 | **Dimensione sotto i 60 MB**, con valutazione di una rete NNUE più piccola e misura dell'impatto sulla forza | fatta | P0 | media | 0.14.0 | `apkMaxMegabytes` a 60 in `tool/policy.json`, controllato da `tool/check_size.dart`; `ROKKO_NATIVE_ABIS=arm64-v8a` nel rilascio e `third_party/chessground` ridotta; misura e valutazione della rete NNUE (già la piccola, circa 1 MB) in `docs/qualita.md` |
-| A-21 / RNF-06 | **Layout adattivo** con schermo diviso e pieghevoli, e test sulle due colonne | fatta | P0 | media | 0.14.0 | Home con colonna laterale da 840 dp e larghezza massima (#301); partita a due colonne in orizzontale (`game_page.dart`); `test/layout/wide_screens_test.dart` prova Home, Impostazioni e partita (a due colonne da tablet) su tablet, desktop, schermo diviso e pieghevole |
+| A-21 / RNF-06 | **Layout adattivo** con schermo diviso e pieghevoli, e test sulle due colonne | fatta | P0 | media | 0.14.0 | Home con colonna laterale da 840 dp e larghezza massima (#301); partita a due colonne in orizzontale (`game_page.dart`); test/layout/wide_screens_test.dart (nella PR di A-21) prova Home, Impostazioni e partita (a due colonne da tablet) su tablet, desktop, schermo diviso e pieghevole |
 | A-22 / RNF-07 | **Ridurre le animazioni** anche dall'impostazione di sistema, con test | fatta | P0 | piccola | 0.14.0 | `AppSettings.reduceMotion` e l'impostazione di sistema azzerano pezzi, pagine (su iOS resta il gesto di ritorno), dialoghi e fogli (`lib/theme/motion.dart`) e la barra di valutazione; `test/theme/motion_test.dart` |
 | A-23 / RNF-08 | **Persistenza**: oggi file JSON versionati (`lib/storage/json_file.dart`). Decidere per iscritto se restare su JSON e aggiungere la catena di migrazioni (piccola), o passare a un database locale (grande). Proposta: restare su JSON | fatta (#288) | P0 | piccola | 0.14.0 | `JsonFile` rifiuta tutto ciò che non è tra 1 e la versione corrente |
 
@@ -99,7 +99,7 @@ Il dettaglio di U1-U11 è in `consegne/analisi-ux-ui.md`; il comportamento attua
 | S2 | **Racconto tra un passo e l'altro**: una riga tra lezione e puzzle che richiama ciò che si è imparato | fatta | da assegnare | piccola | 0.15.0 |
 | S3 | **Mappa del viaggio** con i nove luoghi, i progressi e «riprendi da dove eri» | fatta | da assegnare | media | 0.14.0 | `lib/story/journey_map.dart`: nove luoghi su un sentiero a serpentina; vedi `docs/storia.md` |
 | S4 | **Un bivio per capitolo** (tattica o finali) con puzzle diversi | fatto (#281) | Claude | media | 0.15.0 |
-| S5 | **Ricompense legate alla storia**: scacchiere e pezzi sbloccabili con nome a tema | fatta | Claude | piccola | 0.14.0 | scacchiere a tema sbloccate dai capitoli (Villaggio, Torre, Corona, #283) e due set di pezzi liberi (AGPL-3.0+): Pirouetti al 4° capitolo, Letter al 7° |
+| S5 | **Ricompense legate alla storia**: scacchiere e pezzi sbloccabili con nome a tema | fatta | Claude | piccola | 0.14.0 |
 | S6 | **Aiuto quando ci si blocca**: dopo due errori sullo stesso puzzle, un indizio o un puzzle più facile | fatta | da assegnare | piccola | 0.15.0 |
 | U1 | **Comandi di partita meno affollati**: 4 azioni in barra, Patta, Abbandona e Nuova in un pannello «Partita»; Allenatore e Minaccia come interruttori — fatto nel profilo bambino (pannello «Partita»); per gli adulti Nuova, Patta e Abbandona restano in barra (scelta di #225), con Allenatore e Minaccia nel pannello «Partita» (aperto da «Altro»); l'obiettivo è stato ridotto per gli adulti, descritto in `docs/interfaccia.md` | fatta | da assegnare | media | 0.14.0 |
 | U2 | **Identità visiva di Rokko**: tema proprio, carattere con personalità, torre-mascotte negli stati vuoti e a fine partita | fatta: torre negli stati vuoti dell'archivio e delle aperture personali e a fine partita | da assegnare | media | 0.14.0 |
@@ -166,7 +166,7 @@ Testo di ogni requisito, formulato come funzione di Rokko. La colonna Stato dice
 
 | ID | Specifica | Stato |
 |---|---|---|
-| RF-40 | Cadenze predefinite: bullet (1+0, 1+1, 2+1), blitz (3+0, 3+2, 5+0), rapid (10+0, 15+10, 30+0) e senza tempo; cadenza personalizzata con incremento, ritardo o seconda fase. | vedi A-5 |
+| RF-40 | Cadenze predefinite: bullet (1+0, 1+1, 2+1), blitz (3+0, 3+2, 5+0), rapid (10+0, 15+10, 30+0) e senza tempo; cadenza personalizzata con incremento o ritardo. | vedi A-5 |
 | RF-41 | Avviso visivo e sonoro sotto i 10 secondi; decimi di secondo sotto i 20. | fatta |
 | RF-42 | Pausa automatica quando l'app va in background (solo contro il computer e senza tempo competitivo). | fatta |
 
