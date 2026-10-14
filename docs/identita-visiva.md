@@ -36,7 +36,7 @@ Varianti generate:
 
 ## Torre-mascotte
 
-`RokkoMascot` (`lib/theme/rokko_mascot.dart`) ridisegna la torre dell'icona con un `CustomPainter`, sulle stesse coordinate di `tool/generate_icons.py`: arancione con occhi e sorriso marroni, uguale nei temi chiaro e scuro. È solo decorativa e non ha testo per i lettori di schermo. `EmptyState` la mette sopra una frase breve negli stati vuoti: oggi nell'archivio senza partite e nell'albero delle aperture personali senza partite. La torre a fine partita resta da fare, perché tocca la schermata di gioco.
+`RokkoMascot` (`lib/theme/rokko_mascot.dart`) ridisegna la torre dell'icona con un `CustomPainter`, sulle stesse coordinate di `tool/generate_icons.py`: arancione con occhi e sorriso marroni, uguale nei temi chiaro e scuro. È solo decorativa e non ha testo per i lettori di schermo. `EmptyState` la mette sopra una frase breve negli stati vuoti: oggi nell'archivio senza partite e nell'albero delle aperture personali senza partite. A fine partita la torre compare a sinistra dell'esito sotto la scacchiera, tranne quando perdi contro il computer e in modalità zen (che toglie ogni decorazione).
 
 ## Schermata di avvio
 
