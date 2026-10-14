@@ -122,6 +122,43 @@
       }
     }
   },
+  "puzzleMistakePath": "De mis errores",
+  "puzzleMistakePathSubtitle": "Capítulos sobre los temas que más fallas",
+  "puzzleMistakePathIntro": "Cada capítulo reúne los problemas creados a partir de tus errores en un mismo tema, del más frecuente al menos frecuente.",
+  "puzzleMistakePathEmpty": "Aún no hay capítulos. Revisa algunas partidas y guarda tus errores como problemas: un tema se convierte en capítulo cuando lo fallas al menos dos veces.",
+  "puzzleMistakeChapterNumber": "Capítulo {n}",
+  "@puzzleMistakeChapterNumber": {
+    "description": "Numero del capitolo personale",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleMistakeChapterPuzzles": "{count, plural, one{{count} problema de tus errores} other{{count} problemas de tus errores}}",
+  "@puzzleMistakeChapterPuzzles": {
+    "description": "Puzzle di un capitolo personale",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleMistakeChapterProgress": "{done} de {total} probados",
+  "@puzzleMistakeChapterProgress": {
+    "description": "Puzzle provati su quelli del capitolo",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleMistakeChapterNew": "Sin empezar",
+  "puzzleMistakeChapterInProgress": "En curso",
+  "puzzleMistakeChapterDone": "Aprendido",
   "puzzleSectionTimed": "Modos con tiempo",
   "@puzzleSectionTimed": {
     "description": "Intestazione delle modalità a tempo"

@@ -54,6 +54,7 @@ Il test `test/puzzles/puzzle_dataset_test.dart` verifica che ogni soluzione sia 
 | `lib/puzzles/run_records.dart` | Record personali delle serie |
 | `lib/puzzles/review_queue.dart` | Coda di ripasso a intervalli (Leitner) |
 | `lib/puzzles/personal_puzzles.dart` | Puzzle ricavati dagli errori delle proprie partite |
+| `lib/puzzles/mistake_path.dart`, `lib/puzzles/mistake_path_page.dart` | Percorso «dai miei errori» (A-27): capitoli personali e schermata |
 | `lib/puzzles/puzzle_goal.dart` | Obiettivo del puzzle ricavato dai temi (`PuzzleGoal`) |
 | `lib/puzzles/themes.dart` | Elenco dei temi offerti come filtro e loro nome nella lingua dell'app |
 | `lib/puzzles/activity_recorder.dart` | Collegamento con i progressi (`PuzzleSolved`, `PuzzleRunFinished`) |
@@ -171,7 +172,16 @@ Ogni puzzle sbagliato nell'allenamento, anche se già visto, entra in una coda d
 
 Un ripasso riuscito fa salire di livello; superato l'ultimo, il puzzle è considerato imparato ed esce dalla coda. Un nuovo errore lo riporta al livello 0. Le scadenze sono calcolate a giorni di calendario (dalla mezzanotte), così un errore della sera torna disponibile dal mattino dopo. La voce "Ripasso degli errori" mostra quanti puzzle sono in scadenza oggi, dal più in ritardo, ignorando quelli non più presenti nella raccolta dopo un aggiornamento; vi entrano anche i puzzle personali ricavati dagli errori delle proprie partite (vedi [revisione-partita.md](revisione-partita.md)); il ripasso non modifica il punteggio e, finiti i puzzle in scadenza, lo segnala.
 
-Le schermate di risoluzione ricevono i puzzle da un `PuzzleFeed` (`lib/puzzles/puzzle_feed.dart`): `RatedFeed` per l'allenamento e i temi, `SingleFeed` per il puzzle del giorno, `ReviewFeed` per il ripasso.
+Le schermate di risoluzione ricevono i puzzle da un `PuzzleFeed` (`lib/puzzles/puzzle_feed.dart`): `RatedFeed` per l'allenamento e i temi, `SingleFeed` per il puzzle del giorno, `ReviewFeed` per il ripasso, `MistakeChapterFeed` per un capitolo del percorso «dai miei errori».
+
+## Percorso «dai miei errori» (A-27)
+
+Un percorso personale sopra i puzzle nati dagli errori (`PersonalPuzzles`): per ogni tema tattico sbagliato più spesso c'è un capitolo. È la voce «Dai miei errori» della sezione «Allenati» dell'hub, nascosta nel profilo bambino (gli errori e i temi sbagliati sono una misura del giocatore).
+
+- **Capitoli** (`mistakeChapters`): i puzzle personali si raggruppano per tema, escluse le fasi della partita (`opening`, `middlegame`, `endgame`); un tema è un capitolo con almeno 2 puzzle (`mistakeChapterMinPuzzles`), si mostrano al massimo 5 capitoli (`mistakeChaptersMax`), dal tema con più puzzle; a parità vale l'ordine di `puzzleThemeIds`, così l'elenco non cambia da solo. Nulla si salva a parte: i capitoli si ricalcolano dai puzzle personali e dalla coda di ripasso, quindi crescono e spariscono con loro (la raccolta tiene gli ultimi 200 puzzle).
+- **Avanzamento**: «provati» sono i puzzle che non sono più carte nuove nella coda di ripasso (compresi quelli imparati), «imparati» quelli usciti dalla coda. Lo stato del capitolo è «Da iniziare» (nessun puzzle provato), «In corso» o «Imparato» (tutti usciti dalla coda); la barra mostra i provati.
+- **Svolgimento** (`MistakeChapterFeed`): i puzzle del capitolo ancora in coda, prima i nuovi, poi quelli in ritardo da più tempo, ognuno una volta per sessione. L'esito va nel ripasso (`ReviewQueue.reviewed`) e dà XP come il ripasso degli errori, senza spostare il punteggio.
+- Test: `test/puzzles/mistake_path_test.dart`; golden `puzzle-dai-miei-errori-telefono-medio.png`.
 
 ## Salvataggio
 
@@ -185,4 +195,4 @@ Nel profilo bambino (RP-06) l'hub e la pagina del puzzle non mostrano punteggio,
 
 ## Navigazione
 
-L'app ha una barra di navigazione in basso (`lib/home/home_shell.dart`) con le schede **Home**, **Puzzle**, **Impara** e **Tu**. La scheda Puzzle apre l'hub (`PuzzleHubPage`): puzzle del giorno, allenamento, per tema, ripasso e modalità a tempo. I puzzle vengono caricati solo alla prima apertura della scheda, così l'avvio dell'app non rallenta.
+L'app ha una barra di navigazione in basso (`lib/home/home_shell.dart`) con le schede **Home**, **Puzzle**, **Impara** e **Tu**. La scheda Puzzle apre l'hub (`PuzzleHubPage`): puzzle del giorno, allenamento, per tema, «Dai miei errori», ripasso e modalità a tempo. I puzzle vengono caricati solo alla prima apertura della scheda, così l'avvio dell'app non rallenta.

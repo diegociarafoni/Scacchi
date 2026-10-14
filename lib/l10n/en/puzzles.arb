@@ -122,6 +122,43 @@
       }
     }
   },
+  "puzzleMistakePath": "From my mistakes",
+  "puzzleMistakePathSubtitle": "Chapters on the themes you miss most often",
+  "puzzleMistakePathIntro": "Each chapter gathers the puzzles made from your own mistakes on one theme, starting with the most frequent.",
+  "puzzleMistakePathEmpty": "No chapters yet. Review a few games and save your mistakes as puzzles: a theme becomes a chapter once you miss it at least twice.",
+  "puzzleMistakeChapterNumber": "Chapter {n}",
+  "@puzzleMistakeChapterNumber": {
+    "description": "Numero del capitolo personale",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleMistakeChapterPuzzles": "{count, plural, one{{count} puzzle from your mistakes} other{{count} puzzles from your mistakes}}",
+  "@puzzleMistakeChapterPuzzles": {
+    "description": "Puzzle di un capitolo personale",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleMistakeChapterProgress": "{done} of {total} tried",
+  "@puzzleMistakeChapterProgress": {
+    "description": "Puzzle provati su quelli del capitolo",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleMistakeChapterNew": "Not started",
+  "puzzleMistakeChapterInProgress": "In progress",
+  "puzzleMistakeChapterDone": "Learned",
   "puzzleSectionTimed": "Timed modes",
   "@puzzleSectionTimed": {
     "description": "Intestazione delle modalità a tempo"

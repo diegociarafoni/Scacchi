@@ -122,6 +122,43 @@
       }
     }
   },
+  "puzzleMistakePath": "Mes erreurs",
+  "puzzleMistakePathSubtitle": "Des chapitres sur les thèmes que tu rates le plus souvent",
+  "puzzleMistakePathIntro": "Chaque chapitre rassemble les problèmes tirés de tes erreurs sur un même thème, du plus fréquent au moins fréquent.",
+  "puzzleMistakePathEmpty": "Aucun chapitre pour l'instant. Revois quelques parties et enregistre tes erreurs comme problèmes : un thème devient un chapitre quand tu le rates au moins deux fois.",
+  "puzzleMistakeChapterNumber": "Chapitre {n}",
+  "@puzzleMistakeChapterNumber": {
+    "description": "Numero del capitolo personale",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleMistakeChapterPuzzles": "{count, plural, one{{count} problème tiré de tes erreurs} other{{count} problèmes tirés de tes erreurs}}",
+  "@puzzleMistakeChapterPuzzles": {
+    "description": "Puzzle di un capitolo personale",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleMistakeChapterProgress": "{done} sur {total} essayés",
+  "@puzzleMistakeChapterProgress": {
+    "description": "Puzzle provati su quelli del capitolo",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleMistakeChapterNew": "À commencer",
+  "puzzleMistakeChapterInProgress": "En cours",
+  "puzzleMistakeChapterDone": "Appris",
   "puzzleSectionTimed": "Modes chronométrés",
   "@puzzleSectionTimed": {
     "description": "Intestazione delle modalità a tempo"

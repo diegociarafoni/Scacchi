@@ -243,6 +243,64 @@
       }
     }
   },
+  "puzzleMistakePath": "Dai miei errori",
+  "@puzzleMistakePath": {
+    "description": "Voce Dai miei errori nel menu dei puzzle"
+  },
+  "puzzleMistakePathSubtitle": "Capitoli sui temi che sbagli più spesso",
+  "@puzzleMistakePathSubtitle": {
+    "description": "Sottotitolo della voce Dai miei errori"
+  },
+  "puzzleMistakePathIntro": "Ogni capitolo raccoglie i puzzle nati dai tuoi errori su uno stesso tema, dal più frequente.",
+  "@puzzleMistakePathIntro": {
+    "description": "Introduzione dell'elenco dei capitoli personali"
+  },
+  "puzzleMistakePathEmpty": "Ancora nessun capitolo. Rivedi qualche partita e salva i tuoi errori come puzzle: un tema diventa capitolo quando lo sbagli almeno due volte.",
+  "@puzzleMistakePathEmpty": {
+    "description": "Spiega come nascono i capitoli quando non ce ne sono"
+  },
+  "puzzleMistakeChapterNumber": "Capitolo {n}",
+  "@puzzleMistakeChapterNumber": {
+    "description": "Numero del capitolo personale",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleMistakeChapterPuzzles": "{count, plural, one{{count} puzzle dai tuoi errori} other{{count} puzzle dai tuoi errori}}",
+  "@puzzleMistakeChapterPuzzles": {
+    "description": "Puzzle di un capitolo personale",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleMistakeChapterProgress": "{done} di {total} provati",
+  "@puzzleMistakeChapterProgress": {
+    "description": "Puzzle provati su quelli del capitolo",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleMistakeChapterNew": "Da iniziare",
+  "@puzzleMistakeChapterNew": {
+    "description": "Capitolo non ancora iniziato"
+  },
+  "puzzleMistakeChapterInProgress": "In corso",
+  "@puzzleMistakeChapterInProgress": {
+    "description": "Capitolo iniziato"
+  },
+  "puzzleMistakeChapterDone": "Imparato",
+  "@puzzleMistakeChapterDone": {
+    "description": "Capitolo con tutti i puzzle imparati"
+  },
   "puzzleSectionTimed": "Modalità a tempo",
   "@puzzleSectionTimed": {
     "description": "Intestazione delle modalità a tempo"

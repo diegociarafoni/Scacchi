@@ -122,6 +122,43 @@
       }
     }
   },
+  "puzzleMistakePath": "Dos meus erros",
+  "puzzleMistakePathSubtitle": "Capítulos sobre os temas que você mais erra",
+  "puzzleMistakePathIntro": "Cada capítulo reúne os quebra-cabeças criados a partir dos seus erros em um mesmo tema, do mais frequente.",
+  "puzzleMistakePathEmpty": "Nenhum capítulo ainda. Revise algumas partidas e salve seus erros como quebra-cabeças: um tema vira capítulo quando você erra pelo menos duas vezes.",
+  "puzzleMistakeChapterNumber": "Capítulo {n}",
+  "@puzzleMistakeChapterNumber": {
+    "description": "Numero del capitolo personale",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleMistakeChapterPuzzles": "{count, plural, =1{{count} quebra-cabeça dos seus erros} other{{count} quebra-cabeças dos seus erros}}",
+  "@puzzleMistakeChapterPuzzles": {
+    "description": "Puzzle di un capitolo personale",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleMistakeChapterProgress": "{done} de {total} tentados",
+  "@puzzleMistakeChapterProgress": {
+    "description": "Puzzle provati su quelli del capitolo",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleMistakeChapterNew": "Para começar",
+  "puzzleMistakeChapterInProgress": "Em andamento",
+  "puzzleMistakeChapterDone": "Aprendido",
   "puzzleSectionTimed": "Modos cronometrados",
   "@puzzleSectionTimed": {
     "description": "Intestazione delle modalità a tempo"

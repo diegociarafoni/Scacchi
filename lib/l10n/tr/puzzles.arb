@@ -122,6 +122,43 @@
       }
     }
   },
+  "puzzleMistakePath": "Hatalarımdan",
+  "puzzleMistakePathSubtitle": "En sık yanlış yaptığın temalara göre bölümler",
+  "puzzleMistakePathIntro": "Her bölüm, tek bir temadaki kendi hatalarından üretilen bulmacaları, en sık yapılandan başlayarak toplar.",
+  "puzzleMistakePathEmpty": "Henüz bölüm yok. Birkaç partiyi gözden geçir ve hatalarını bulmaca olarak kaydet: bir temayı en az iki kez yanlış yaparsan bölüm olur.",
+  "puzzleMistakeChapterNumber": "Bölüm {n}",
+  "@puzzleMistakeChapterNumber": {
+    "description": "Numero del capitolo personale",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleMistakeChapterPuzzles": "{count, plural, other{Hatalarından {count} bulmaca}}",
+  "@puzzleMistakeChapterPuzzles": {
+    "description": "Puzzle di un capitolo personale",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleMistakeChapterProgress": "{done}/{total} denendi",
+  "@puzzleMistakeChapterProgress": {
+    "description": "Puzzle provati su quelli del capitolo",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleMistakeChapterNew": "Başlanmadı",
+  "puzzleMistakeChapterInProgress": "Devam ediyor",
+  "puzzleMistakeChapterDone": "Öğrenildi",
   "puzzleSectionTimed": "Süreli modlar",
   "@puzzleSectionTimed": {
     "description": "Intestazione delle modalità a tempo"
