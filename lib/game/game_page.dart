@@ -208,6 +208,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   /// Ultimo stato salvato nell'archivio (partita, esito, mosse).
   String? _archivedKey;
+
+  /// Ultima revisione, legata alla partita e al numero di semimosse: i
+  /// salvataggi successivi della stessa partita non perdono la precisione.
+  ({String id, int plies, GameReview review})? _reviewed;
   late DateTime _startedAt = _clockNow();
   late String _gameId = 'game-${_startedAt.microsecondsSinceEpoch}';
   var _fromEditor = false;
@@ -1092,9 +1096,12 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// Salvataggio e progressi vanno avanti da soli: uno lento o fallito non
   /// ferma l'altro.
   void _archive(ChessGame game, Side? side, DateTime now, int? elo) {
+    _persist(_savedGame(game, side, now, elo));
+  }
+
+  void _persist(SavedGame saved) {
     final save = widget.onSave;
     if (save == null) return;
-    final saved = _savedGame(game, side, now, elo);
     unawaited(
       save(saved).onError(
         (Object e, _) => debugPrint('Partita non salvata: $e'), // l10n-ok
@@ -1106,7 +1113,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     String name(Side s) => side == null
         ? (_settings.nameOf(s) ?? (s == Side.white ? 'Bianco' : 'Nero'))
         : (s == side ? 'Tu' : (_bot?.name ?? 'Computer'));
-    return SavedGame.fromGame(
+    final reviewed = _reviewed;
+    final saved = SavedGame.fromGame(
       game,
       id: _gameId,
       white: name(Side.white),
@@ -1119,6 +1127,11 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       opponentElo: elo,
       headers: {'Handicap': ?_handicap?.pgnValue(_handicapHuman)},
     );
+    return reviewed != null &&
+            reviewed.id == _gameId &&
+            reviewed.plies == game.moves.length
+        ? saved.withReview(reviewed.review)
+        : saved;
   }
 
   /// Colore dell'utente ed Elo dell'avversario; `null` tra due persone.
@@ -2365,6 +2378,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           onCancel: player.stopAnalysis,
           analyseLive: _liveAnalysis(player),
           onReviewed: (review) => _recordReview(review, players, moves),
+          onResult: _saveAccuracy,
           onSavePuzzles: widget.onSavePuzzles,
           puzzlePlayers: players,
           clocks: [for (final m in _game.moves) m.clock],
@@ -2373,6 +2387,23 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         ),
       ),
     );
+  }
+
+  /// La precisione della revisione entra nella partita archiviata, così la
+  /// scheda delle fasi la trova senza riaprire la partita dall'archivio.
+  void _saveAccuracy(GameReview review) {
+    final (side, elo) = _playerAndElo;
+    final plies = _game.moves.length;
+    final known = _reviewed;
+    if (side == null || plies == 0) return;
+    if (known != null &&
+        known.id == _gameId &&
+        known.plies == plies &&
+        known.review.accuracy(side) == review.accuracy(side)) {
+      return;
+    }
+    _reviewed = (id: _gameId, plies: plies, review: review);
+    _archive(_game, side, _clockNow(), elo);
   }
 
   /// Una revisione nuova vale XP; con due giocatori la precisione non è di
