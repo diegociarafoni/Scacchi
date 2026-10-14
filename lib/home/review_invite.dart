@@ -72,7 +72,7 @@ class ReviewInviteCard extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                l10n.reviewInviteBody(game.title),
+                l10n.reviewInviteBody(game.titleIn(l10n)),
                 style: Theme.of(context).textTheme.bodyMedium
                     ?.copyWith(color: scheme.onSecondaryContainer),
               ),
