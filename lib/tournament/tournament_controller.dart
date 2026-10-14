@@ -179,7 +179,9 @@ class TournamentController extends ChangeNotifier {
                 game.seed,
               );
             } on Object catch (e) {
-              debugPrint('Partita tra bot non riuscita: $e'); // l10n-ok
+              if (kDebugMode) {
+                debugPrint('Partita tra bot non riuscita: $e'); // l10n-ok
+              }
             }
             available = points != null;
           }

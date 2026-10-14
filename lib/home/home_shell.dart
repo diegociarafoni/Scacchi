@@ -501,7 +501,11 @@ class _HomeShellState extends State<HomeShell> {
     // Riprende le partite tra bot rimaste a metà alla chiusura dell'app.
     unawaited(
       controller.resumeBots().catchError((Object e) {
-        debugPrint('Ripresa delle partite tra bot non riuscita: $e'); // l10n-ok
+        if (kDebugMode) {
+          debugPrint(
+            'Ripresa delle partite tra bot non riuscita: $e', // l10n-ok
+          );
+        }
       }),
     );
     final games = await (await _archive()).list();
@@ -533,7 +537,9 @@ class _HomeShellState extends State<HomeShell> {
             (await engine.bestMove(fen, moves, level))?.move,
       );
     } on Object catch (e) {
-      debugPrint('Partita tra bot non riuscita: $e'); // l10n-ok
+      if (kDebugMode) {
+        debugPrint('Partita tra bot non riuscita: $e'); // l10n-ok
+      }
       return null;
     } finally {
       _botEngineIdle = Timer(const Duration(seconds: 20), _closeBotEngine);
