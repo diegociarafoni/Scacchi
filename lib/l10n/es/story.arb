@@ -365,5 +365,8 @@
         "type": "String"
       }
     }
-  }
+  },
+  "storyKidProgress": "Tu viaje",
+  "storyKidStepLessons": "Lecciones",
+  "storyKidStepPuzzles": "Problemas del capítulo"
 }

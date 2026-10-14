@@ -365,5 +365,8 @@
         "type": "String"
       }
     }
-  }
+  },
+  "storyKidProgress": "Yolculuğun",
+  "storyKidStepLessons": "Dersler",
+  "storyKidStepPuzzles": "Bölüm bulmacaları"
 }

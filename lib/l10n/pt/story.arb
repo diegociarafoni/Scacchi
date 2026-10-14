@@ -365,5 +365,8 @@
         "type": "String"
       }
     }
-  }
+  },
+  "storyKidProgress": "Sua jornada",
+  "storyKidStepLessons": "Lições",
+  "storyKidStepPuzzles": "Quebra-cabeças do capítulo"
 }

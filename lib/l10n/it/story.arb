@@ -611,5 +611,17 @@
         "type": "String"
       }
     }
+  },
+  "storyKidProgress": "Il tuo viaggio",
+  "@storyKidProgress": {
+    "description": "storyKidProgress"
+  },
+  "storyKidStepLessons": "Lezioni",
+  "@storyKidStepLessons": {
+    "description": "storyKidStepLessons"
+  },
+  "storyKidStepPuzzles": "Puzzle del capitolo",
+  "@storyKidStepPuzzles": {
+    "description": "storyKidStepPuzzles"
   }
 }
