@@ -9,7 +9,7 @@
       }
     }
   },
-  "storyProgress": "{done} chapitres sur {total}",
+  "storyProgress": "{done, plural, one{{done} chapitre sur {total}} other{{done} chapitres sur {total}}}",
   "@storyProgress": {
     "placeholders": {
       "done": {
@@ -158,7 +158,7 @@
   "@storyChapterCurrent": {
     "description": "Etichetta del capitolo corrente nella storia"
   },
-  "storyChapterSteps": "{done} étapes sur {total}",
+  "storyChapterSteps": "{done, plural, one{{done} étape sur {total}} other{{done} étapes sur {total}}}",
   "@storyChapterSteps": {
     "description": "Passi conclusi di un capitolo, per la barra di avanzamento",
     "placeholders": {

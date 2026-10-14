@@ -5,7 +5,7 @@
   "multiplayerClockRemoteHint": "Aus der Ferne gibt es keine Uhr: Wähle WLAN oder Bluetooth, um eine zu nutzen.",
   "multiplayerClockYou": "Du",
   "multiplayerClockPeer": "Gegner",
-  "multiplayerClockSemantics": "Uhr ({who}): {minutes} Minuten und {seconds} Sekunden",
+  "multiplayerClockSemantics": "Uhr ({who}): {minutes, plural, one{{minutes} Minute} other{{minutes} Minuten}} und {seconds, plural, one{{seconds} Sekunde} other{{seconds} Sekunden}}",
   "multiplayerWhiteWinsOnTime": "Zeit abgelaufen: Weiß gewinnt",
   "multiplayerBlackWinsOnTime": "Zeit abgelaufen: Schwarz gewinnt",
   "multiplayerDrawOnTime": "Zeit abgelaufen, aber kein Mattmaterial: Remis"

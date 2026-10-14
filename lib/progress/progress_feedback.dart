@@ -18,8 +18,7 @@ String? progressMessage(ProgressUpdate update, AppLocalizations l) {
     for (final c in update.challengesCompleted)
       l.progressFeedbackChallenge(c.title(l)),
     if (update.weeklyCompleted) l.progressFeedbackWeekly,
-    for (final r in update.newRecords)
-      l.progressFeedbackRecord(r.label(l).toLowerCase()),
+    for (final r in update.newRecords) l.progressFeedbackRecord(r.label(l)),
     for (final a in update.unlocked)
       l.progressFeedbackAchievement(achievementTitle(l, a)),
     for (final r in update.rewards) l.progressFeedbackReward(rewardName(l, r)),

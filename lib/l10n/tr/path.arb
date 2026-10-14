@@ -7,7 +7,7 @@
   "@pathContinue": {
     "description": "Pulsante che apre la prossima tappa del percorso"
   },
-  "pathStars": "{total} yıldızdan {done} yıldız",
+  "pathStars": "{done, plural, one{{total} yıldızdan {done} yıldız} other{{total} yıldızdan {done} yıldız}}",
   "@pathStars": {
     "description": "Etichetta per i lettori di schermo delle stelle totali o di capitolo",
     "placeholders": {
@@ -49,7 +49,7 @@
   "@pathChapterDone": {
     "description": "Stato di un capitolo con tutte le tappe completate"
   },
-  "pathStageDone": "3 yıldızdan {stars} yıldız",
+  "pathStageDone": "{stars, plural, one{3 yıldızdan {stars} yıldız} other{3 yıldızdan {stars} yıldız}}",
   "@pathStageDone": {
     "description": "Stato di una tappa completata",
     "placeholders": {

@@ -7,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/analysis/variation_tree.dart';
 import 'package:scacchi/archive/archive_page.dart';
 import 'package:scacchi/archive/game_archive.dart';
+import 'package:scacchi/archive/pgn.dart';
 import 'package:scacchi/archive/saved_game.dart';
 import 'package:scacchi/exchange/qr_send_page.dart';
 import 'package:scacchi/exchange/qr_transfer.dart';
@@ -71,17 +72,21 @@ void main() {
   });
   tearDown(() => dir.deleteSync(recursive: true));
 
-  Future<void> show(WidgetTester tester) async {
+  Future<void> show(
+    WidgetTester tester, {
+    GameArchive? using,
+    String locale = 'it',
+  }) async {
     tester.view.physicalSize = const Size(1170, 2532);
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
       MaterialApp(
-        locale: const Locale('it'),
+        locale: Locale(locale),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: ArchivePage(
-          archive: archive,
+          archive: using ?? archive,
           share: (text) async => shared.add(text),
           onOpen: (g) => opened.add(g.id),
           onAnalyse: (g) => analysed.add(g.id),
@@ -101,6 +106,38 @@ void main() {
     expect(find.text('Anna – Bruno'), findsOneWidget);
     expect(find.textContaining('0-1'), findsOneWidget);
     expect(find.textContaining('In corso'), findsOneWidget);
+  });
+
+  testWidgets('la data segue la lingua dell\'app', (tester) async {
+    await show(tester, locale: 'de');
+    expect(find.textContaining('10.10.2026'), findsWidgets);
+  });
+
+  testWidgets('disco pieno su importazione ed eliminazione: avviso', (
+    tester,
+  ) async {
+    final full = _FullDisk(File('${dir.path}/games.json'));
+    // Lettura anticipata: l'I/O reale non avanza dentro pumpAndSettle.
+    await tester.runAsync(full.list);
+    await show(tester, using: full);
+    await tester.tap(find.byTooltip('Importa PGN'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byKey(const Key('pgnInput')), '1. d4 d5 *');
+    await tester.tap(find.text('Importa'));
+    await settle(tester);
+    expect(find.textContaining('non si possono leggere'), findsOneWidget);
+
+    ScaffoldMessenger.of(tester.element(find.byType(Scaffold)))
+        .clearSnackBars();
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Azioni per Anna – Bruno'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Elimina'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilledButton, 'Elimina'));
+    await settle(tester);
+    expect(find.textContaining('non si possono leggere'), findsOneWidget);
+    expect(find.text('Anna – Bruno'), findsOneWidget);
   });
 
   testWidgets('RF-101 ricerca per nome', (tester) async {
@@ -244,4 +281,17 @@ void main() {
     expect(find.text('Il QR non contiene una partita valida.'), findsOneWidget);
     expect(await tester.runAsync(archive.list), hasLength(2));
   });
+}
+
+/// Archivio il cui disco rifiuta ogni scrittura.
+class _FullDisk extends GameArchive {
+  _FullDisk(super.file);
+
+  @override
+  Future<PgnImport> importPgn(String text, {DateTime? now}) =>
+      throw const FileSystemException('No space left on device');
+
+  @override
+  Future<void> delete(String id) =>
+      throw const FileSystemException('No space left on device');
 }

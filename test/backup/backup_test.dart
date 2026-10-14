@@ -48,12 +48,7 @@ void main() {
   });
 
   group('dati aggiunti dopo la prima versione', () {
-    const extra = [
-      'week.json',
-      'masters.json',
-      'endgames.json',
-      'multiplayer.json',
-    ];
+    const extra = ['week.json', 'masters.json', 'endgames.json'];
 
     test('settimana, maestri, finali e partita a due telefoni', () async {
       for (final n in extra) {
@@ -168,10 +163,33 @@ void main() {
       expect(File('${dir.path}/${Backup.pendingName}').existsSync(), isFalse);
     });
 
-    test('due ripristini conservano entrambe le copie', () async {
+    test(
+      'multiplayer.json non entra nel backup ne viene ripristinato',
+      () async {
+        data('multiplayer.json', '{"version":1,"seed":"segreto"}');
+        data('games.json', '{"version":1,"games":[1]}');
+        final backup = await Backup.collect(dir, {});
+        expect(backup.files.keys, isNot(contains('multiplayer.json')));
+        expect(backup.encode(), isNot(contains('segreto')));
+
+        final old = jsonEncode({
+          'app': 'scacchi',
+          'version': 2,
+          'files': {'multiplayer.json': '{"version":1,"seed":"altrui"}'},
+          'preferences': <String, Object?>{},
+        });
+        final decoded = Backup.decode(old);
+        expect(decoded.files, isEmpty);
+        await decoded.stage(dir);
+        await Backup.applyPending(dir, (_) async {});
+        expect(file('multiplayer.json'), '{"version":1,"seed":"segreto"}');
+      },
+    );
+
+    test('un ripristino riuscito toglie le copie dei precedenti', () async {
       data('games.json', '{"version":1,"games":[1]}');
       final backup = await Backup.collect(dir, {});
-      for (var i = 0; i < 2; i++) {
+      for (var i = 0; i < 3; i++) {
         await backup.stage(dir);
         await Backup.applyPending(dir, (_) async {});
         await Future<void>.delayed(const Duration(milliseconds: 2));
@@ -179,7 +197,8 @@ void main() {
       final copies = dir.listSync().where(
         (e) => e.path.contains(Backup.previousSuffix),
       );
-      expect(copies, hasLength(2));
+      // Solo le copie dell'ultimo ripristino (games.json sostituito).
+      expect(copies, hasLength(1));
     });
 
     test('senza backup in attesa non fa nulla', () async {

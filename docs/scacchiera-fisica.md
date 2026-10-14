@@ -27,7 +27,7 @@ Il riconoscimento dei pezzi da una foto singola, per analizzare una posizione qu
 
 ## Fine e archivio
 
-La partita finisce con matto, stallo, materiale insufficiente, ripetizione, 50 mosse, abbandono, patta concordata o tempo scaduto. Quando finisce viene salvata nell'archivio con modo `fisica`; se dopo un annullamento finisce di nuovo, la nuova versione sostituisce la precedente, mentre un annullamento da solo non cambia l'archivio. La partita si può aprire, esportare in PGN e rivedere come le altre. Non entra nelle statistiche né nel rating, perché non ha un lato dell'utente.
+La partita finisce con matto, stallo, materiale insufficiente, ripetizione, 50 mosse, abbandono, patta concordata o tempo scaduto. La partita viene salvata nell'archivio con modo `fisica` a ogni mossa (risultato `*` finché è aperta) e di nuovo dopo ogni annullamento, così uscendo a metà non si perde nulla e un risultato revocato non resta in archivio; annullate tutte le mosse, il record sparisce. La partita si può aprire, esportare in PGN e rivedere come le altre. Non entra nelle statistiche né nel rating, perché non ha un lato dell'utente.
 
 ## Lingue
 

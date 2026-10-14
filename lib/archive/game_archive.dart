@@ -121,11 +121,19 @@ class GameArchive {
   Future<List<SavedGame>> _read() async =>
       await _file.read(
         (json) => [
-          for (final g in json['games']! as List)
-            SavedGame.fromJson((g as Map).cast()),
+          // Una partita rovinata non deve far perdere tutte le altre.
+          for (final g in json['games']! as List) ?_tryGame(g),
         ],
       ) ??
       [];
+
+  static SavedGame? _tryGame(Object? g) {
+    try {
+      return SavedGame.fromJson((g! as Map).cast());
+    } on Object {
+      return null;
+    }
+  }
 
   Future<void> _write(List<SavedGame> games) => _file.write({
     'games': [for (final g in games) g.toJson()],

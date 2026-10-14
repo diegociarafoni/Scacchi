@@ -3,7 +3,7 @@
   "@mastersTitle": {
     "description": "Titolo dell'elenco delle partite celebri"
   },
-  "mastersStars": "{stars} dari 3 bintang",
+  "mastersStars": "{stars, plural, one{{stars} dari 3 bintang} other{{stars} dari 3 bintang}}",
   "@mastersStars": {
     "description": "Etichetta per i lettori di schermo delle stelle di una partita",
     "placeholders": {

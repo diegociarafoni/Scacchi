@@ -38,6 +38,7 @@
   "archiveImport": "Importer",
   "archiveModeLocal": "local",
   "archiveModeComputer": "ordinateur",
+  "archivePlayerComputer": "Ordinateur",
   "archiveModeImported": "importée",
   "archiveModePhysical": "échiquier physique",
   "archiveModeAnalysis": "analyse",

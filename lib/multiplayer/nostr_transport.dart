@@ -191,7 +191,6 @@ class NostrTransport implements MessageTransport, ConnectionAware {
     }
     final wasDown = connectedRelays == 0;
     relay.socket = socket;
-    relay.backoff = _minBackoff;
     relay.sub = socket.messages.listen(
       (text) => _onMessage(relay, text),
       onDone: () => _lost(relay),
@@ -255,6 +254,11 @@ class NostrTransport implements MessageTransport, ConnectionAware {
       return;
     }
     if (msg is! List || msg.isEmpty) return;
+    // Il relay risponde davvero: solo ora l'attesa tra i tentativi riparte da
+    // capo (un relay che accetta il collegamento e poi chiude non conta).
+    if (msg[0] == 'EOSE' || msg[0] == 'EVENT' || msg[0] == 'OK') {
+      relay.backoff = _minBackoff;
+    }
     switch (msg[0]) {
       // Il relay rifiuta la sottoscrizione (accesso riservato, limiti): da
       // qui non arriverebbe nulla, anche se accetta le pubblicazioni.

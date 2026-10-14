@@ -371,6 +371,7 @@ class _StandingsTable extends StatelessWidget {
   Widget build(BuildContext context) {
     final rows = tournament.standings();
     final l10n = AppLocalizations.of(context);
+    final locale = Localizations.localeOf(context).toString();
     final text = Theme.of(context).textTheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -389,8 +390,8 @@ class _StandingsTable extends StatelessWidget {
             ),
             trailing: Text(
               l10n.tournamentStandingsPoints(
-                _points(s.points),
-                _points(s.sonnebornBerger),
+                standingsPoints(s.points, locale),
+                standingsPoints(s.sonnebornBerger, locale),
               ),
             ),
           ),
@@ -399,8 +400,14 @@ class _StandingsTable extends StatelessWidget {
   }
 }
 
-String _points(double p) =>
-    p == p.truncateToDouble() ? p.toInt().toString() : p.toStringAsFixed(1);
+/// Punti con al più un decimale e il separatore della lingua ("2,5" in
+/// italiano).
+@visibleForTesting
+String standingsPoints(double p, String locale) =>
+    (NumberFormat.decimalPattern(locale)
+          ..minimumFractionDigits = 0
+          ..maximumFractionDigits = 1)
+        .format(p);
 
 class _Bracket extends StatelessWidget {
   const _Bracket({required this.tournament});

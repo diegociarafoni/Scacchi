@@ -193,4 +193,71 @@ void main() {
     await guest.close();
     await a.close();
   });
+
+  test('RMP-06 una mossa in attesa viene riprovata da sola', () async {
+    final inv = invite();
+    final (a, z) = LoopbackTransport.pair();
+    final host = MultiplayerSession.host(inv, hostId, MultiTransport([a]))
+      ..retryInterval = const Duration(milliseconds: 20);
+    final guest = MultiplayerSession.join(inv, guestId, MultiTransport([z]));
+    await guest.announce();
+    await pumpEventQueue();
+    a.online = false;
+    await host.play('e2e4');
+    expect(host.pendingDelivery, isTrue);
+    final changes = host.deliveryChanges.first;
+    a.online = true;
+    await changes.timeout(const Duration(seconds: 2));
+    await pumpEventQueue();
+    expect(host.pendingDelivery, isFalse);
+    expect(guest.sync.moves, ['e2e4']);
+    await host.close();
+    await guest.close();
+  });
+
+  test('la coda dei messaggi prosegue dopo un\'eccezione', () async {
+    final inv = invite();
+    final (a, z) = LoopbackTransport.pair();
+    final failing = _FailingOnce(a);
+    final host = MultiplayerSession.host(
+      inv,
+      hostId,
+      MultiTransport([failing]),
+    );
+    final guest = MultiplayerSession.join(inv, guestId, MultiTransport([z]));
+    await host.play('e2e4');
+    // L'ingresso dell'invitato fa rimandare la mossa: il primo invio esplode.
+    failing.fail = true;
+    await guest.announce();
+    await pumpEventQueue();
+    expect(failing.fail, isFalse);
+    await guest.play('e7e5');
+    await pumpEventQueue();
+    expect(host.sync.moves, ['e2e4', 'e7e5']);
+    await host.close();
+    await guest.close();
+  });
+}
+
+class _FailingOnce implements MessageTransport {
+  _FailingOnce(this.inner);
+
+  final LoopbackTransport inner;
+  bool fail = false;
+
+  @override
+  String get name => inner.name;
+  @override
+  Stream<Uint8List> get incoming => inner.incoming;
+  @override
+  Future<void> send(Uint8List data) async {
+    if (fail) {
+      fail = false;
+      throw StateError('guasto');
+    }
+    return inner.send(data);
+  }
+
+  @override
+  Future<void> close() => inner.close();
 }

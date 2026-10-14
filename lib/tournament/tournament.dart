@@ -41,12 +41,14 @@ class Player {
   int get hashCode => Object.hash(name, elo, levelId);
 }
 
-/// I [count] bot più vicini a [userElo], dal più debole.
+/// I [count] bot più vicini a [userElo], dal più debole. Un [count] negativo
+/// (nessun torneo possibile) non ne sceglie nessuno.
 List<Player> chooseBots(
   List<Player> bots, {
   required int userElo,
   required int count,
 }) {
+  if (count <= 0) return [];
   final byDistance = [...bots]
     ..sort((a, b) {
       final d = (a.elo - userElo).abs().compareTo((b.elo - userElo).abs());

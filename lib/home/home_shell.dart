@@ -24,6 +24,7 @@ import '../game/clock.dart';
 import '../game/game_page.dart';
 import '../game/handicap.dart';
 import '../game/opponent_picker.dart';
+import '../game/variant.dart';
 import '../l10n/app_localizations.dart';
 import '../masters/masters_controller.dart';
 import '../masters/masters_page.dart';
@@ -664,7 +665,10 @@ class _HomeShellState extends State<HomeShell> {
       messenger.showSnackBar(SnackBar(content: Text(l10n.homeGameCannotOpen)));
       return;
     }
-    if (!_computerAvailable) {
+    // Il motore conosce solo le regole classiche.
+    final variant = importPgn(saved.pgn).games.firstOrNull?.game.variant;
+    if (!_computerAvailable ||
+        (variant != null && variant != Variant.standard)) {
       messenger.showSnackBar(SnackBar(content: Text(l10n.homeReviewNoEngine)));
       return;
     }
@@ -701,7 +705,10 @@ class _HomeShellState extends State<HomeShell> {
       messenger.showSnackBar(SnackBar(content: Text(l10n.homeGameCannotOpen)));
       return;
     }
-    if (!saved.finished && saved.mode != SavedGame.imported) {
+    // Una partita sulla scacchiera fisica non si riprende sull'app.
+    if (!saved.finished &&
+        saved.mode != SavedGame.imported &&
+        saved.mode != SavedGame.physical) {
       final choice = await showDialog<String>(
         context: context,
         builder: (context) => SimpleDialog(
@@ -743,11 +750,12 @@ class _HomeShellState extends State<HomeShell> {
         return;
       }
     }
-    if (!_computerAvailable) {
+    final game = imported.first.game;
+    // Stockfish non conosce le varianti: niente revisione con regole classiche.
+    if (!_computerAvailable || game.variant != Variant.standard) {
       messenger.showSnackBar(SnackBar(content: Text(l10n.homeReviewNoEngine)));
       return;
     }
-    final game = imported.first.game;
     final player = widget.createComputer?.call() ?? ComputerPlayer();
     final side = saved.playerSide;
     final players = side == null ? {Side.white, Side.black} : {side};
@@ -981,14 +989,17 @@ class _HomeShellState extends State<HomeShell> {
       'masters': () => _openPage(_mastersPage),
       'daily': _openDaily,
       'puzzles': () async => setState(() => _tab = 1),
-      'minigames': () async =>
-          _push(MinigamesPage(progress: await _progressController())),
+      'minigames': () => _openPage(
+        () async => MinigamesPage(progress: await _progressController()),
+      ),
       if (adult) ...{
-        'stats': () async => _push(StatsPage(archive: await _archive())),
-        'badges': () async =>
-            _push(BadgesPage(controller: await _progressController())),
-        'archive': () async => _push(
-          ArchivePage(
+        'stats': () =>
+            _openPage(() async => StatsPage(archive: await _archive())),
+        'badges': () => _openPage(
+          () async => BadgesPage(controller: await _progressController()),
+        ),
+        'archive': () => _openPage(
+          () async => ArchivePage(
             archive: await _archive(),
             onOpen: (g) => unawaited(_openSavedGame(context, g)),
             onAnalyse: _computerAvailable
@@ -997,18 +1008,16 @@ class _HomeShellState extends State<HomeShell> {
           ),
         ),
       },
-      'week': () async {
+      'week': () => _openPage(() async {
         final p = await _progressController();
-        await _push(
-          WeeklySummaryPage(
-            log: p.weekLog,
-            openLesson: _playLesson,
-            openPuzzles: _openThemePuzzles,
-          ),
+        return WeeklySummaryPage(
+          log: p.weekLog,
+          openLesson: _playLesson,
+          openPuzzles: _openThemePuzzles,
         );
-      },
-      'profile': () async => _push(
-        ProfilePage(
+      }),
+      'profile': () => _openPage(
+        () async => ProfilePage(
           controller: await _progressController(),
           reminders: _reminders,
         ),

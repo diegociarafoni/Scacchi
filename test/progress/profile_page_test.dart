@@ -121,6 +121,34 @@ void main() {
     expect(find.textContaining('Se salti un giorno'), findsOneWidget);
   });
 
+  testWidgets('abbassare l\'obiettivo sotto il progresso annuncia il bonus', (
+    tester,
+  ) async {
+    await tester.runAsync(() async {
+      await controller.updateSettings(
+        controller.settings.copyWith(goal: const DailyGoal(GoalKind.games, 3)),
+      );
+      await controller.record(const GamePlayed(result: GameResult.loss));
+    });
+    await show(tester);
+    final xp = controller.state.xp;
+    await tester.scrollUntilVisible(find.byKey(const Key('goal')), 200);
+    await tester.ensureVisible(find.byKey(const Key('goal')));
+    await tester.pumpAndSettle();
+    final l = lookupAppLocalizations(const Locale('it'));
+    final dropdown = tester.widget<DropdownButton<DailyGoal>>(
+      find.byKey(const Key('goal')),
+    );
+    // Il salvataggio su file avviene fuori dal tempo simulato.
+    await tester.runAsync(() async {
+      dropdown.onChanged!(const DailyGoal(GoalKind.games, 1));
+      await Future<void>.delayed(const Duration(milliseconds: 300));
+    });
+    await tester.pump();
+    expect(controller.state.xp, greaterThan(xp));
+    expect(find.textContaining(l.progressFeedbackGoal), findsOneWidget);
+  });
+
   testWidgets('RG-02 cambia obiettivo e giorno di riposo', (tester) async {
     await show(tester);
     await tester.scrollUntilVisible(find.byKey(const Key('goal')), 200);
@@ -354,7 +382,14 @@ void main() {
     for (final c in update.challengesCompleted) {
       expect(message, contains('Sfida completata: ${c.title(l)}'));
     }
-    expect(message, contains('Nuovo record: bot più forte battuto'));
+    expect(message, contains('Nuovo record: Bot più forte battuto'));
+    // In tedesco i nomi restano maiuscoli: non si abbassa la lettera.
+    final de = lookupAppLocalizations(const Locale('de'));
+    final deMessage = progressMessage(update, de)!;
+    for (final r in update.newRecords) {
+      expect(deMessage, contains('Neuer Rekord: ${r.label(de)}'));
+    }
+    expect(update.newRecords, isNotEmpty);
   });
 
   test('le impostazioni sopravvivono al riavvio', () async {
