@@ -10,6 +10,10 @@ Offline non esiste una copia online dei dati: il backup (RF-103) li raccoglie in
 - Foto del profilo (`avatar_photo.jpg`), nel campo `binaries` in base64. Resta solo sul telefono e non va online: entra soltanto nel file di backup che crei tu.
 - Impostazioni e preferenze (`SharedPreferences`): bool, numeri, testo ed elenchi di testo.
 
+## Backup automatico di Android
+
+È disattivato (`android:allowBackup="false"` nel manifest): disinstallando Rokko i progressi spariscono e una nuova installazione parte da zero, senza ripristinare dati dal cloud o da un altro telefono. L'unica copia è il file di backup creato dall'utente.
+
 ## Compatibilità
 
 Il formato è alla versione 2 (la 1 non aveva settimana, maestri, finali, partita a due telefoni e foto). Un backup di versione 1 si ripristina ancora: i dati che non conteneva restano come sono sul telefono. Con un backup di versione 2 i dati assenti (per esempio nessuna foto) vengono invece tolti, con copia di sicurezza. Un backup più recente della 2 è rifiutato.
