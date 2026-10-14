@@ -406,6 +406,8 @@ void main() {
         await play(host, 'e2e4');
         now.advance(const Duration(seconds: 5));
         await play(guest, 'e7e5');
+        // Il salvataggio è in coda su disco: si attende, non si indovina.
+        await untilSaved(store, 2);
         await guest.close();
         await host.close();
 

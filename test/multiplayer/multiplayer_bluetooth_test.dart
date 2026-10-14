@@ -161,6 +161,8 @@ void main() {
     await host.play(Move.parse('e2e4')!);
     await settle();
     final gameId = GameInvite.parse(host.inviteLink)!.gameId;
+    await untilSaved(hostStore, 1);
+    await untilSaved(guestStore, 1);
     await host.close();
     await guest.close();
 
