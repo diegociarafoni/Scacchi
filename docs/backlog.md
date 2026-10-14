@@ -110,7 +110,7 @@ Il dettaglio di U1-U11 è in `consegne/analisi-ux-ui.md`; il comportamento attua
 | U7 | **Barra del titolo della partita più semplice**: editor e tastiera nel menu ⋮; tastiera visibile con un lettore di schermo | fatta | da assegnare | piccola | 0.12.0 |
 | U8 | **Golden fedeli all'app reale**: tema predefinito e font veri; aggiungere Puzzle, Percorso, Storia, Multigiocatore, Tu e profilo bambino | da fare | da assegnare | media | 0.14.0 |
 | U9 | **Profilo bambino coerente** in tutte le schermate, con un test che cerca le cifre nei testi | da fare | da assegnare | media | 0.15.0 |
-| U10 | **Funzioni scopribili**: suggerimenti al primo uso e invito a rivedere la prima partita conclusa | da fare | da assegnare | media | 0.13.0 |
+| U10 | **Funzioni scopribili, resto**: suggerimenti al primo uso dentro la partita (l'invito a rivedere la prima partita è fatto, nella scheda Tu) | parziale | da assegnare | piccola | 0.13.0 |
 | U11 | **Multigiocatore e Percorso più leggibili**: indicatore di connessione, QR con margine e contrasto fissi, tappe bloccate non solo in colore | da fare | da assegnare | piccola | 0.15.0 |
 | U12 | **Icone più curate** dopo le traduzioni (richiesta di Diego, 13 ottobre 2026) | da fare | dopo la 0.11.0 | media | 0.12.0 |
 

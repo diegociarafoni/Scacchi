@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -21,6 +23,7 @@ import '../stats/stats_page.dart';
 import '../story/story.dart';
 import '../summary/weekly_summary_page.dart';
 import '../theme/rokko_theme.dart';
+import 'review_invite.dart';
 
 /// Scheda "Tu": solo i dati del giocatore; le funzioni stanno nella Home.
 class YouPage extends StatefulWidget {
@@ -75,6 +78,19 @@ class _YouPageState extends State<YouPage> {
   // Un'unica lettura per apertura della scheda: la voce «Continua» non
   // ricarica il percorso a ogni ricostruzione.
   late final Future<PathController> _pathFuture = widget.path();
+
+  // Invito a rivedere la prima partita (U10): solo se si può aprire una
+  // partita e fuori dal profilo bambino.
+  late Future<SavedGame?> _invite = _loadInvite();
+
+  Future<SavedGame?> _loadInvite() async {
+    if (widget.simple || widget.openGame == null) return null;
+    try {
+      return await reviewInviteGame(await widget.archive());
+    } on Object {
+      return null;
+    }
+  }
 
   YouPage get _w => widget;
 
@@ -230,6 +246,30 @@ class _YouPageState extends State<YouPage> {
                       : const SizedBox.shrink(),
                 ),
               _ContinueCard(path: _pathFuture, onOpen: _continue),
+              FutureBuilder<SavedGame?>(
+                future: _invite,
+                builder: (context, snapshot) {
+                  final game = snapshot.data;
+                  if (game == null || w.simple) return const SizedBox.shrink();
+                  return ReviewInviteCard(
+                    game: game,
+                    onReview: (g) {
+                      // Aperta la revisione l'invito ha fatto il suo.
+                      unawaited(dismissReviewInvite());
+                      setState(() {
+                        _invite = Future<SavedGame?>.value();
+                      });
+                      w.openGame!(context, g);
+                    },
+                    onDismiss: () {
+                      unawaited(dismissReviewInvite());
+                      setState(() {
+                        _invite = Future<SavedGame?>.value();
+                      });
+                    },
+                  );
+                },
+              ),
               _Group(title: l10n.youGroupData, children: data),
             ],
           );

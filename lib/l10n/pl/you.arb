@@ -23,5 +23,9 @@
   "youStatsSubtitle": "Wyniki, debiuty, tempo gry i lokalny ranking",
   "youArchive": "Archiwum",
   "youArchiveSubtitle": "Zapisane partie, import i eksport PGN",
-  "youLoadError": "Nie można odczytać zapisanych danych: spróbuj ponownie."
+  "youLoadError": "Nie można odczytać zapisanych danych: spróbuj ponownie.",
+  "reviewInviteTitle": "Przejrzyj swoją pierwszą partię",
+  "reviewInviteBody": "Partia „{game}” dobiegła końca: komputer pokaże Ci błędy i najlepsze posunięcia.",
+  "reviewInviteAction": "Przejrzyj",
+  "reviewInviteDismiss": "Nie teraz"
 }
