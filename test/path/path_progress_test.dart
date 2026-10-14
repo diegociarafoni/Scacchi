@@ -149,4 +149,13 @@ void main() {
     expect(bad.resumeFor(first.id), isEmpty);
     expect(bad.resumeFor(second.id), [2]);
   });
+
+  test('una stella non valida si scarta senza perdere le altre', () {
+    final p = PathProgress.fromJson({
+      'stars': {first.id: 2, second.id: 'x', 'altra': 7, 'zero': 0},
+    });
+    expect(p.starsFor(first.id), 2);
+    expect(p.starsFor(second.id), 0);
+    expect(p.stars.keys, [first.id]);
+  });
 }

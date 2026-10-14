@@ -18,8 +18,16 @@ class ReminderController {
     _progress.addListener(_onProgress);
     // Al ritorno nell'app il giorno può essere cambiato.
     _lifecycle = AppLifecycleListener(onResume: _onProgress);
+    _live.add(this);
     unawaited(sync());
   }
+
+  static final _live = <ReminderController>{};
+
+  /// Dopo un cambio di lingua il testo programmato è quello vecchio: lo si
+  /// ricalcola. Chiamarlo quando la nuova lingua è già applicata.
+  static Future<void> languageChanged() =>
+      Future.wait([for (final c in _live.toList()) c.sync()]);
 
   final ProgressController _progress;
   final ReminderScheduler _scheduler;
@@ -88,6 +96,7 @@ class ReminderController {
   }
 
   void dispose() {
+    _live.remove(this);
     _progress.removeListener(_onProgress);
     _lifecycle.dispose();
   }

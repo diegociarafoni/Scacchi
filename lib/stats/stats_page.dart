@@ -90,7 +90,10 @@ class _StatsPageState extends State<StatsPage> {
                 if (stats.byTimeControl.isNotEmpty)
                   _Section(l10n.statsByTimeControl, [
                     for (final e in stats.byTimeControl.entries)
-                      _ScoreRow(e.key, e.value),
+                      _ScoreRow(
+                        e.key == noClock ? l10n.gameNoClock : e.key,
+                        e.value,
+                      ),
                   ]),
                 if (stats.openings.isNotEmpty)
                   _Section(l10n.statsTopOpenings, [

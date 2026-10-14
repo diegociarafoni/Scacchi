@@ -213,4 +213,21 @@ void main() {
     final after = Chess.initial.play(Move.parse('e2e4')!);
     expect(positionHash(after), isNot(a));
   });
+
+  test('la triplice ripetizione chiude la partita in patta su entrambi', () {
+    final h = host()..receive(const JoinMessage(), guestKey);
+    final g = guest();
+    const cycle = ['g1f3', 'g8f6', 'f3g1', 'f6g8'];
+    for (var i = 0; i < 8; i++) {
+      expect(h.isGameOver, isFalse);
+      expect(
+        relay(i.isEven ? h : g, i.isEven ? g : h, cycle[i % 4]),
+        isA<MoveAccepted>(),
+      );
+    }
+    expect(h.isGameOver, isTrue);
+    expect(g.isGameOver, isTrue);
+    expect(h.outcome, Outcome.draw);
+    expect(g.outcome, Outcome.draw);
+  });
 }

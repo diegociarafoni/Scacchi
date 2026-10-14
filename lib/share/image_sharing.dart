@@ -1,17 +1,18 @@
-import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+
+import 'share_temp.dart';
 
 /// Consegna un PNG al menu di condivisione; nei test si sostituisce.
 typedef ShareImage = Future<void> Function(Uint8List png, String fileName);
 
-/// Scrive [png] in un file temporaneo, apre il menu di condivisione del
-/// sistema e poi elimina il file.
+/// Scrive [png] in un file temporaneo e apre il menu di condivisione del
+/// sistema. Il file non si elimina subito (il sistema può leggerlo dopo il
+/// ritorno di `share()`): lo ripulisce [clearShareTemp].
 ///
 /// Su iPad il menu si ancora a [origin], che di solito è il pulsante premuto.
 Future<void> shareImageWithSystem(
@@ -20,25 +21,15 @@ Future<void> shareImageWithSystem(
   String? subject,
   Rect? origin,
 }) async {
-  final tmp = await getTemporaryDirectory();
-  final file = File('${tmp.path}/$fileName');
-  try {
-    await file.writeAsBytes(png, flush: true);
-    await SharePlus.instance.share(
-      ShareParams(
-        files: [XFile(file.path)],
-        subject: subject,
-        sharePositionOrigin: origin,
-      ),
-    );
-  } finally {
-    // Un file rimasto non deve nascondere l'errore della condivisione.
-    try {
-      if (file.existsSync()) await file.delete();
-    } on FileSystemException {
-      // Lo toglie il sistema con la cartella temporanea.
-    }
-  }
+  final file = await newShareTempFile(fileName);
+  await file.writeAsBytes(png, flush: true);
+  await SharePlus.instance.share(
+    ShareParams(
+      files: [XFile(file.path)],
+      subject: subject,
+      sharePositionOrigin: origin,
+    ),
+  );
 }
 
 /// Disegna in un PNG il [RepaintBoundary] che sta sotto [key], o `null` se non

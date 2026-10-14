@@ -10,8 +10,10 @@ import 'backup/backup_page.dart';
 import 'home/home_shell.dart';
 import 'l10n/app_localizations.dart';
 import 'l10n/content.dart';
+import 'reminders/reminder_controller.dart';
 import 'settings/app_language.dart';
 import 'settings/settings.dart';
+import 'share/share_temp.dart';
 import 'theme/no_transitions.dart';
 import 'theme/rokko_theme.dart';
 
@@ -25,11 +27,15 @@ Future<void> main() async {
   } on Object catch (e) {
     debugPrint('Backup restore failed: $e');
   }
+  unawaited(clearShareTemp());
   runApp(const ScacchiApp());
 }
 
 class ScacchiApp extends StatefulWidget {
-  const ScacchiApp({super.key});
+  const ScacchiApp({super.key, @visibleForTesting this.contentLoader});
+
+  /// Carica i contenuti nella lingua data; di norma [Content.ensureLoaded].
+  final Future<void> Function(String languageCode)? contentLoader;
 
   @override
   State<ScacchiApp> createState() => _ScacchiAppState();
@@ -75,38 +81,78 @@ class _ScacchiAppState extends State<ScacchiApp> with WidgetsBindingObserver {
     setState(() => _settings = settings);
   }
 
-  AppLanguage? _contentFor;
+  /// Lingua dei contenuti richiesta per ultima.
+  String? _contentCode;
+
+  /// Cresce a ogni richiesta: un caricamento superato non deve scrivere.
+  int _generation = 0;
+
+  /// Caricamenti in fila: uno lento non può finire dopo uno più recente e
+  /// rimettere la lingua vecchia.
+  Future<void> _queue = Future.value();
 
   void _onSettings() {
     final language = _settings?.value.language;
-    if (language == null || language == _contentFor) return;
+    if (language != null) _refreshContent(language);
+  }
+
+  /// Con lingua Automatica il telefono può cambiarla a app aperta.
+  @override
+  void didChangeLocales(List<Locale>? locales) {
+    final language = _settings?.value.language;
+    if (language != null) _refreshContent(language);
+  }
+
+  void _refreshContent(AppLanguage language) {
+    if (_codeFor(language) == _contentCode) return;
     unawaited(
-      _loadContent(language).then((_) {
-        if (mounted) setState(() {});
+      _loadContent(language).then((latest) {
+        if (!mounted || !latest) return;
+        setState(() {});
+        // Il promemoria programmato ha ancora il testo della lingua vecchia.
+        WidgetsBinding.instance.addPostFrameCallback(
+          (_) => unawaited(ReminderController.languageChanged()),
+        );
       }),
     );
   }
 
-  Future<void> _loadContent(AppLanguage language) async {
-    _contentFor = language;
-    final locale =
-        language.locale ??
-        resolveAppLocale(
-          PlatformDispatcher.instance.locales,
-          AppLocalizations.supportedLocales,
-        );
-    try {
-      await Content.ensureLoaded(language: locale.languageCode);
-    } on Object catch (e) {
-      if (kDebugMode) debugPrint('Content not loaded: $e');
-      // Senza contenuti le schermate lanciano un errore: si ripiega sulla
-      // lingua di base.
+  String _codeFor(AppLanguage language) =>
+      (language.locale ??
+              resolveAppLocale(
+                WidgetsBinding.instance.platformDispatcher.locales,
+                AppLocalizations.supportedLocales,
+              ))
+          .languageCode;
+
+  /// `false` se nel frattempo è arrivata una richiesta più recente.
+  Future<bool> _loadContent(AppLanguage language) {
+    final code = _codeFor(language);
+    _contentCode = code;
+    final generation = ++_generation;
+    final run = _queue.then<bool>((_) async {
+      if (generation != _generation) return false;
+      final load =
+          widget.contentLoader ??
+          (String c) => Content.ensureLoaded(language: c);
       try {
-        await Content.ensureLoaded();
+        await load(code);
       } on Object catch (e) {
-        if (kDebugMode) debugPrint('Base content not loaded: $e');
+        if (kDebugMode) debugPrint('Content not loaded: $e');
+        // Una richiesta uguale successiva deve poter riprovare.
+        if (generation == _generation) _contentCode = null;
+        // Senza contenuti le schermate lanciano un errore: si ripiega sulla
+        // lingua di base.
+        try {
+          await load('it');
+        } on Object catch (e) {
+          if (kDebugMode) debugPrint('Base content not loaded: $e');
+        }
       }
-    }
+      return generation == _generation;
+    });
+    _queue = run;
+    return run;
   }
 
   @override

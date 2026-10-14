@@ -239,11 +239,17 @@ class ProgressController extends ChangeNotifier {
     }
   }
 
-  Future<void> updateSettings(ProgressSettings settings) async {
+  /// Applica le impostazioni; se l'obiettivo di oggi risulta già raggiunto
+  /// l'esito porta XP e traguardi, da annunciare come per ogni registrazione.
+  Future<ProgressUpdate> updateSettings(ProgressSettings settings) async {
     _settings = settings;
-    _state = _tracker.refreshGoal(_state, _clock(), settings).state;
+    final update = _tracker.refreshGoal(_state, _clock(), settings);
+    final before = _state.badges;
+    _state = update.state;
+    _announceBadges(before);
     notifyListeners();
     await _save();
+    return update;
   }
 
   Future<void> _save() async {

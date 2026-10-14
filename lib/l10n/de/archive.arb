@@ -38,6 +38,7 @@
   "archiveImport": "Importieren",
   "archiveModeLocal": "lokal",
   "archiveModeComputer": "Computer",
+  "archivePlayerComputer": "Computer",
   "archiveModeImported": "importiert",
   "archiveModePhysical": "echtes Brett",
   "archiveModeAnalysis": "Analyse",

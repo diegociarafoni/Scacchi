@@ -245,6 +245,23 @@ void main() {
       expect(run.state, DrillState.playing);
     });
 
+    test('una promozione nell\'ultima risposta non dà il successo', () {
+      const pawn = EndgameDrill(
+        id: 'prova.ultima',
+        fen: 'k7/8/8/8/8/8/3PK2p/8 w - - 0 1',
+        goal: DrillGoal.hold,
+        par: 1,
+      );
+      final run = DrillRun(pawn);
+      run.play(_m('d2d3'));
+      run.reply(
+        const NormalMove(from: Square.h2, to: Square.h1, promotion: Role.queen),
+      );
+      expect(run.state, DrillState.playing);
+      run.play(_m('d3d4'));
+      expect(run.state, DrillState.failure);
+    });
+
     test('se l\'avversario promuove la patta è persa', () {
       const pawn = EndgameDrill(
         id: 'prova.persa',

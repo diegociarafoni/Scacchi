@@ -100,18 +100,29 @@ class TournamentController extends ChangeNotifier {
   /// Tornei conclusi, dal più recente.
   List<Trophy> get trophies => _trophies;
 
+  static T? _tryDecode<T>(
+    Object? raw,
+    T Function(Map<String, Object?> json) decode,
+  ) {
+    try {
+      return raw == null ? null : decode((raw as Map).cast());
+    } on Object {
+      return null;
+    }
+  }
+
   Future<void> load() async {
     try {
       // Decodifica dentro `read`: un contenuto non valido finisce in
       // quarantena invece di bloccare la schermata.
       final data = await _file.read(
+        // Il torneo in corso e ogni trofeo si leggono a parte: una voce
+        // rovinata si scarta senza perdere le altre.
         (json) => (
-          current: json['current'] == null
-              ? null
-              : Tournament.fromJson((json['current']! as Map).cast()),
+          current: _tryDecode(json['current'], Tournament.fromJson),
           trophies: [
             for (final t in json['trophies'] as List? ?? const [])
-              Trophy.fromJson((t as Map).cast()),
+              ?_tryDecode(t, Trophy.fromJson),
           ],
         ),
       );

@@ -5,7 +5,7 @@
   "multiplayerClockRemoteHint": "There is no clock from afar: choose Wi-Fi or Bluetooth to use one.",
   "multiplayerClockYou": "You",
   "multiplayerClockPeer": "Opponent",
-  "multiplayerClockSemantics": "{who}'s clock: {minutes} minutes and {seconds} seconds",
+  "multiplayerClockSemantics": "{who}'s clock: {minutes, plural, one{{minutes} minute} other{{minutes} minutes}} and {seconds, plural, one{{seconds} second} other{{seconds} seconds}}",
   "multiplayerWhiteWinsOnTime": "Time out: White wins",
   "multiplayerBlackWinsOnTime": "Time out: Black wins",
   "multiplayerDrawOnTime": "Time out, but no mating material: draw"

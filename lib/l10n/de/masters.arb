@@ -3,7 +3,7 @@
   "@mastersTitle": {
     "description": "Titolo dell'elenco delle partite celebri"
   },
-  "mastersStars": "{stars} von 3 Sternen",
+  "mastersStars": "{stars, plural, one{{stars} von 3 Sternen} other{{stars} von 3 Sternen}}",
   "@mastersStars": {
     "description": "Etichetta per i lettori di schermo delle stelle di una partita",
     "placeholders": {

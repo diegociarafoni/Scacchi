@@ -37,8 +37,8 @@ class Score {
   String toString() => '+$wins =$draws -$losses';
 }
 
-/// Cadenza usata per le partite senza orologio.
-const noClock = 'Senza tempo';
+/// Chiave neutra delle partite senza orologio: la pagina la traduce.
+const noClock = '';
 
 /// Statistiche calcolate dall'archivio (RF-111).
 class GameStats {
@@ -96,7 +96,12 @@ class GameStats {
     final sortedTc = byTc.entries.toList()
       ..sort((a, b) {
         final byGames = b.value.games.compareTo(a.value.games);
-        return byGames != 0 ? byGames : a.key.compareTo(b.key);
+        if (byGames != 0) return byGames;
+        // Senza orologio in fondo, a pari partite.
+        if (a.key == noClock || b.key == noClock) {
+          return a.key == noClock ? 1 : -1;
+        }
+        return a.key.compareTo(b.key);
       });
     return GameStats(
       all: all,

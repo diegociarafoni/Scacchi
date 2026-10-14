@@ -65,3 +65,11 @@ String? detectLicense(String text) {
 
 bool isAllowed(String? spdx, Set<String> allowed) =>
     spdx != null && allowed.contains(spdx);
+
+/// Parte JSON di un output che può avere righe di avviso prima; solleva
+/// [FormatException] se non c'è alcun oggetto.
+String jsonFromOutput(String output) {
+  final start = output.indexOf('{');
+  if (start < 0) throw const FormatException("l'output non contiene JSON");
+  return output.substring(start);
+}

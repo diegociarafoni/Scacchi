@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
@@ -106,6 +107,7 @@ class GameSync {
   String? _lastSan;
   final _moves = <String>[];
   final _hashes = <String>[];
+  late final _keys = <String>[_repetitionKey(Chess.initial)];
   final _times = <int?>[];
   Side? _flagged;
 
@@ -117,14 +119,35 @@ class GameSync {
   List<int?> get times => List.unmodifiable(_times);
   Position get position => _position;
   Side get turn => _position.turn;
-  bool get isGameOver => _flagged != null || _position.isGameOver;
+  bool get isGameOver => _flagged != null || _position.isGameOver || _drawn;
+
+  /// Triplice ripetizione o 50 mosse: come in `ChessGame.endReason`, la
+  /// partita finisce da sola in patta, uguale sui due telefoni.
+  bool get _drawn => _position.halfmoves >= 100 || _isThreefoldRepetition;
+
+  bool get _isThreefoldRepetition {
+    final last = _keys.length - 1;
+    final first = math.max(0, last - _position.halfmoves);
+    if (last - first < 8) return false;
+    var count = 0;
+    for (var i = first; i <= last; i++) {
+      if (_keys[i] == _keys[last]) count++;
+    }
+    return count >= 3;
+  }
+
+  static String _repetitionKey(Position pos) {
+    final fields = pos.fen.split(' ');
+    return fields.take(fields.length - 2).join(' ');
+  }
 
   /// Lato che ha perso per tempo scaduto, se è successo.
   Side? get flagged => _flagged;
 
   Outcome? get outcome {
     final side = _flagged;
-    return side == null ? _position.outcome : timeoutOutcome(_position, side);
+    if (side != null) return timeoutOutcome(_position, side);
+    return _position.outcome ?? (_drawn ? Outcome.draw : null);
   }
 
   /// Ultima semimossa in notazione SAN, per annunciarla.
@@ -256,6 +279,7 @@ class GameSync {
     _lastSan = san;
     _moves.add(uci);
     _hashes.add(positionHash(_position));
+    _keys.add(_repetitionKey(_position));
     _times.add(timeMs);
   }
 

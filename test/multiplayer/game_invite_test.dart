@@ -125,6 +125,10 @@ void main() {
       'chiave non Base64': good.replaceFirst(RegExp('k=[^&]+'), 'k=%%%'),
       'colore sconosciuto': good.replaceFirst('c=w', 'c=x'),
       'indirizzo non valido': sample(lan: 'host:99999').toLink(),
+      'indirizzo pubblico': sample(lan: '8.8.8.8:4000').toLink(),
+      'nome di dominio': sample(lan: 'esempio.it:4000').toLink(),
+      'indirizzo IPv6': sample(lan: '[::1]:4000').toLink(),
+      '172.32 non è privato': sample(lan: '172.32.0.1:4000').toLink(),
       'troppo lungo': '$good&x=${'a' * 3000}',
     };
     cases.forEach((name, text) {

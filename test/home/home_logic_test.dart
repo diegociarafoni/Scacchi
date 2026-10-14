@@ -159,6 +159,28 @@ void main() {
       expect(searchFeatures(entries, 'FINÀLI').single.id, 'endgames');
     });
 
+    test('copre le lettere di altre lingue', () {
+      const other = [
+        HomeFeature(id: 'tr', label: 'Işık İstanbul'),
+        HomeFeature(id: 'pl', label: 'Łódź Żółć'),
+        HomeFeature(id: 'de', label: 'Straße'),
+        HomeFeature(id: 'ru', label: 'Ёлка'),
+        HomeFeature(id: 'pt', label: 'Coração'),
+      ];
+      expect(searchFeatures(other, 'isik').single.id, 'tr');
+      expect(searchFeatures(other, 'istanbul').single.id, 'tr');
+      expect(searchFeatures(other, 'lodz').single.id, 'pl');
+      expect(searchFeatures(other, 'zolc').single.id, 'pl');
+      expect(searchFeatures(other, 'strasse').single.id, 'de');
+      expect(searchFeatures(other, 'елка').single.id, 'ru');
+      expect(searchFeatures(other, 'coracao').single.id, 'pt');
+    });
+
+    test('toglie anche gli accenti staccati dalla lettera', () {
+      const one = [HomeFeature(id: 'x', label: 'Finali')];
+      expect(searchFeatures(one, 'fina\u0300li'), one);
+    });
+
     test('cerca anche nelle parole chiave', () {
       expect(searchFeatures(entries, 'premi').single.id, 'badges');
     });
