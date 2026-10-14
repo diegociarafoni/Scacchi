@@ -131,6 +131,38 @@
   "@settingsMarkColorYellow": {
     "description": "Impostazioni: colore giallo"
   },
+  "settingsMoveMethod": "Как ходить фигурами",
+  "@settingsMoveMethod": {
+    "description": "Impostazioni: scelta del modo di muovere"
+  },
+  "settingsMoveMethodDescription": "Два касания точнее на телефоне; касание у края клетки исправляется, если возможна только соседняя клетка",
+  "@settingsMoveMethodDescription": {
+    "description": "Impostazioni: descrizione del modo di muovere"
+  },
+  "settingsMoveMethodAuto": "Автоматически",
+  "@settingsMoveMethodAuto": {
+    "description": "Impostazioni: due tocchi sul telefono, entrambi sugli schermi grandi"
+  },
+  "settingsMoveMethodBoth": "Касания и перетаскивание",
+  "@settingsMoveMethodBoth": {
+    "description": "Impostazioni: entrambi i modi"
+  },
+  "settingsMoveMethodTwoTaps": "Два касания",
+  "@settingsMoveMethodTwoTaps": {
+    "description": "Impostazioni: solo due tocchi"
+  },
+  "settingsMoveMethodDrag": "Перетаскивание",
+  "@settingsMoveMethodDrag": {
+    "description": "Impostazioni: solo trascinamento"
+  },
+  "settingsKeepAwake": "Не гасить экран",
+  "@settingsKeepAwake": {
+    "description": "Impostazioni: schermo acceso durante la partita"
+  },
+  "settingsKeepAwakeDescription": "Телефон не выключает экран во время партии",
+  "@settingsKeepAwakeDescription": {
+    "description": "Impostazioni: descrizione dello schermo sempre acceso"
+  },
   "settingsEvalBar": "Шкала оценки",
   "settingsEvalBarDescription": "Показывает, кто стоит лучше, рядом с доской; в вызовах без подсказок её нет"
 }

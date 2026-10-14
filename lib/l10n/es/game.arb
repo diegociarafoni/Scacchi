@@ -217,5 +217,30 @@
         "type": "int"
       }
     }
+  },
+  "gameUndoOfferSide": "¿{side, select, white{Las Blancas aceptan} other{Las Negras aceptan}} deshacer la jugada?",
+  "@gameUndoOfferSide": {
+    "description": "Richiesta di annullare l'ultima mossa tra due persone, senza nomi scelti",
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "gameUndoOfferNamed": "¿{name} ({side, select, white{Blancas} other{Negras}}) acepta deshacer la jugada?",
+  "@gameUndoOfferNamed": {
+    "description": "Richiesta di annullare l'ultima mossa tra due persone, con il nome del giocatore",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "gameUndoRefused": "Se rechazó deshacer la jugada.",
+  "@gameUndoRefused": {
+    "description": "Messaggio quando l'altro giocatore non accetta di annullare la mossa"
   }
 }

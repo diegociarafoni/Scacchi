@@ -131,6 +131,38 @@
   "@settingsMarkColorYellow": {
     "description": "Impostazioni: colore giallo"
   },
+  "settingsMoveMethod": "Comment déplacer les pièces",
+  "@settingsMoveMethod": {
+    "description": "Impostazioni: scelta del modo di muovere"
+  },
+  "settingsMoveMethodDescription": "Deux touchers sont plus précis sur un téléphone ; un toucher au bord d'une case est corrigé quand seule la case voisine est possible",
+  "@settingsMoveMethodDescription": {
+    "description": "Impostazioni: descrizione del modo di muovere"
+  },
+  "settingsMoveMethodAuto": "Automatique",
+  "@settingsMoveMethodAuto": {
+    "description": "Impostazioni: due tocchi sul telefono, entrambi sugli schermi grandi"
+  },
+  "settingsMoveMethodBoth": "Touchers et glissement",
+  "@settingsMoveMethodBoth": {
+    "description": "Impostazioni: entrambi i modi"
+  },
+  "settingsMoveMethodTwoTaps": "Deux touchers",
+  "@settingsMoveMethodTwoTaps": {
+    "description": "Impostazioni: solo due tocchi"
+  },
+  "settingsMoveMethodDrag": "Glissement",
+  "@settingsMoveMethodDrag": {
+    "description": "Impostazioni: solo trascinamento"
+  },
+  "settingsKeepAwake": "Garder l'écran allumé",
+  "@settingsKeepAwake": {
+    "description": "Impostazioni: schermo acceso durante la partita"
+  },
+  "settingsKeepAwakeDescription": "Le téléphone n'éteint pas l'écran pendant une partie",
+  "@settingsKeepAwakeDescription": {
+    "description": "Impostazioni: descrizione dello schermo sempre acceso"
+  },
   "settingsEvalBar": "Barre d'évaluation",
   "settingsEvalBarDescription": "Montre qui est meilleur à côté de l'échiquier ; absente dans les défis sans aides"
 }

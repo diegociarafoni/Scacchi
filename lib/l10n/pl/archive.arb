@@ -39,5 +39,7 @@
   "archiveModeLocal": "lokalna",
   "archiveModeComputer": "z komputerem",
   "archiveModeImported": "zaimportowana",
-  "archiveModePhysical": "fizyczna szachownica"
+  "archiveModePhysical": "fizyczna szachownica",
+  "archiveModeAnalysis": "analiza",
+  "archiveOpenAnalysis": "Otwórz w analizie"
 }

@@ -8,8 +8,11 @@ import 'package:flutter/material.dart';
 import '../analysis/analysis_page.dart';
 import '../game/clock.dart';
 import '../game/move_note.dart';
+import '../game/move_note_dialog.dart';
 import '../kids/kid_display.dart';
 import '../l10n/app_localizations.dart';
+import '../openings/opening_assets.dart';
+import '../openings/opening_book.dart';
 import '../settings/notation.dart';
 import '../settings/settings.dart';
 import '../tablebase/shared_tablebase.dart';
@@ -22,6 +25,7 @@ import 'move_classification.dart';
 import 'move_time.dart';
 import 'personal_puzzles.dart';
 import 'review_l10n.dart';
+import 'review_store.dart';
 
 /// Revisioni già calcolate in questa sessione, per riaprirle all'istante.
 /// Tiene solo le più recenti per limitare la memoria.
@@ -40,6 +44,10 @@ class ReviewCache {
   }
 
   static void clear() => _reviews.clear();
+
+  /// Copia su disco (RF-66), impostata dall'app all'avvio; senza, resta la
+  /// sola memoria.
+  static ReviewStore? store;
 }
 
 Color moveClassColor(MoveClass c) => switch (c) {
@@ -73,6 +81,8 @@ class ReviewPage extends StatefulWidget {
     this.startTimes,
     this.notes = const [],
     this.onNoteChanged,
+    this.book,
+    this.onResult,
   });
 
   final Position initial;
@@ -111,6 +121,14 @@ class ReviewPage extends StatefulWidget {
   /// se assente la revisione mostra le note ma non le modifica.
   final Future<void> Function(int ply, MoveNote? note)? onNoteChanged;
 
+  /// Libro delle aperture per le mosse «Libro» (RF-91); senza, si usa quello
+  /// incluso nell'app.
+  final OpeningBook? book;
+
+  /// Chiamata con la revisione ogni volta che è pronta, nuova o già
+  /// calcolata (a differenza di [onReviewed], che vale XP una volta).
+  final ValueChanged<GameReview>? onResult;
+
   @override
   State<ReviewPage> createState() => _ReviewPageState();
 }
@@ -121,7 +139,10 @@ enum _SaveState { idle, saving, saved, already, failed }
 
 class _ReviewPageState extends State<ReviewPage> {
   late final List<Position> _positions = [widget.initial];
-  late final String _cacheKey = ReviewCache.key(widget.initial, widget.moves);
+
+  /// Chiave in cache: con il libro le mosse «Libro» cambiano la revisione.
+  late final String _cacheKey =
+      '${ReviewCache.key(widget.initial, widget.moves)}${_book == null ? '' : '|libro'}';
   late final ChessboardController _board;
 
   late final List<MoveNote?> _notes = [
@@ -157,13 +178,44 @@ class _ReviewPageState extends State<ReviewPage> {
     _index = widget.moves.length;
     _total = _positions.length;
     _board = ChessboardController(game: _gameData());
+    // Libro e chiavi si fissano subito: restano gli stessi per tutta l'analisi.
     final cached = ReviewCache.get(_cacheKey);
+    _storeKey;
     if (cached != null) {
       _review = cached;
       _phase = _Phase.done;
+      widget.onResult?.call(cached);
     } else {
-      unawaited(_analyse());
+      unawaited(_openOrAnalyse());
     }
+  }
+
+  /// Chiave su disco: motore, profondità e uso del libro fanno parte della
+  /// revisione.
+  String get _storeKey =>
+      ReviewStore.key(widget.initial, widget.moves, book: _book != null);
+
+  /// Cerca la revisione su disco (RF-66); se manca o non si legge la fa.
+  Future<void> _openOrAnalyse() async {
+    final store = ReviewCache.store;
+    if (store != null) {
+      try {
+        final stored = await store.get(_storeKey);
+        if (!mounted || _cancelled) return;
+        if (stored != null) {
+          ReviewCache.put(_cacheKey, stored);
+          widget.onResult?.call(stored);
+          setState(() {
+            _review = stored;
+            _phase = _Phase.done;
+          });
+          return;
+        }
+      } on Object {
+        // Senza cache su disco si rifà la revisione.
+      }
+    }
+    await _analyse();
   }
 
   @override
@@ -173,9 +225,26 @@ class _ReviewPageState extends State<ReviewPage> {
     super.dispose();
   }
 
+  /// Libro da usare per le mosse «Libro»: serve solo partendo dalla posizione
+  /// iniziale e solo se è già caricato (l'app lo carica all'avvio).
+  late final OpeningBook? _book =
+      OpeningBook.key(widget.initial) == OpeningBook.key(Chess.initial)
+      ? widget.book ?? loadedOpeningBook
+      : null;
+
+  Future<void> _store(GameReview review) async {
+    try {
+      await ReviewCache.store?.put(_storeKey, review);
+    } on Object {
+      // La cache su disco è un di più: un errore non toglie la revisione.
+    }
+  }
+
   Future<void> _analyse() async {
     try {
+      final bookPlies = _book?.bookPlies(widget.moves) ?? 0;
       final review = await reviewGame(
+        isBook: (ply) => ply < bookPlies,
         initial: widget.initial,
         moves: widget.moves,
         evaluate: widget.evaluate,
@@ -190,7 +259,9 @@ class _ReviewPageState extends State<ReviewPage> {
       );
       if (review == null) return;
       ReviewCache.put(_cacheKey, review);
+      unawaited(_store(review));
       widget.onReviewed?.call(review);
+      widget.onResult?.call(review);
       if (!mounted) return;
       setState(() {
         _review = review;
@@ -299,10 +370,10 @@ class _ReviewPageState extends State<ReviewPage> {
   void _refreshBoard() => _board.updatePosition(_gameData());
 
   Future<void> _editNote(int ply) async {
-    final note = await showDialog<MoveNote>(
-      context: context,
-      builder: (_) =>
-          _NoteDialog(san: _n(_review!.moves[ply].san), note: _notes[ply]),
+    final note = await showMoveNoteDialog(
+      context,
+      san: _n(_review!.moves[ply].san),
+      note: _notes[ply],
     );
     if (note == null || !mounted) return;
     final saved = note.isEmpty ? null : note;
@@ -800,80 +871,6 @@ class _Summary extends StatelessWidget {
                 ),
             ],
           ),
-      ],
-    );
-  }
-}
-
-/// Scelta di simbolo e commento personali per una mossa (RF-55). Restituisce
-/// la nota (anche vuota, per toglierla) o niente se si annulla.
-class _NoteDialog extends StatefulWidget {
-  const _NoteDialog({required this.san, required this.note});
-
-  final String san;
-  final MoveNote? note;
-
-  @override
-  State<_NoteDialog> createState() => _NoteDialogState();
-}
-
-class _NoteDialogState extends State<_NoteDialog> {
-  late MoveSymbol? _symbol = widget.note?.symbol;
-  late final TextEditingController _comment = TextEditingController(
-    text: widget.note?.comment,
-  );
-
-  @override
-  void dispose() {
-    _comment.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    return AlertDialog(
-      title: Text(l.reviewNoteTitle(widget.san)),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Wrap(
-              spacing: 8,
-              children: [
-                for (final symbol in MoveSymbol.values)
-                  ChoiceChip(
-                    label: Text(symbol.text),
-                    selected: _symbol == symbol,
-                    onSelected: (on) =>
-                        setState(() => _symbol = on ? symbol : null),
-                  ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _comment,
-              decoration: InputDecoration(labelText: l.reviewNoteComment),
-              maxLines: 3,
-              minLines: 1,
-              textCapitalization: TextCapitalization.sentences,
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: Text(l.reviewNoteCancel),
-        ),
-        FilledButton(
-          onPressed: () => Navigator.pop(
-            context,
-            MoveNote.of(symbol: _symbol, comment: _comment.text),
-          ),
-          child: Text(l.reviewNoteSave),
-        ),
       ],
     );
   }

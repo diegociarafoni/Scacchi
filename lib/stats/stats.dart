@@ -2,6 +2,7 @@ import 'package:dartchess/dartchess.dart';
 
 import '../archive/saved_game.dart';
 import '../openings/opening_names.dart';
+import '../review/game_phase.dart';
 
 /// Vittorie, patte e sconfitte.
 class Score {
@@ -48,6 +49,7 @@ class GameStats {
     required this.localGames,
     required this.openings,
     required this.accuracyTrend,
+    this.phaseTrends = const {},
   });
 
   /// Considera le partite concluse con un colore dell'utente; le importate
@@ -58,6 +60,9 @@ class GameStats {
     final byTc = <String, Score>{};
     final openings = <String, int>{};
     final trend = <(DateTime, double)>[];
+    final phases = {
+      for (final p in GamePhase.values) p: <(DateTime, double)>[],
+    };
     var local = 0;
     for (final g in games) {
       if (g.mode == SavedGame.imported || !g.finished) continue;
@@ -78,8 +83,15 @@ class GameStats {
         openings[name] = (openings[name] ?? 0) + 1;
       }
       if (g.accuracy case final a?) trend.add((g.createdAt, a));
+      for (final e
+          in (g.phaseAccuracy ?? const <GamePhase, double>{}).entries) {
+        phases[e.key]!.add((g.createdAt, e.value));
+      }
     }
     trend.sort((a, b) => a.$1.compareTo(b.$1));
+    for (final list in phases.values) {
+      list.sort((a, b) => a.$1.compareTo(b.$1));
+    }
     final sortedOpenings = openings.entries.toList()..sort(_byCountThenName);
     final sortedTc = byTc.entries.toList()
       ..sort((a, b) {
@@ -93,6 +105,7 @@ class GameStats {
       localGames: local,
       openings: [for (final e in sortedOpenings) (name: e.key, games: e.value)],
       accuracyTrend: trend,
+      phaseTrends: phases,
     );
   }
 
@@ -110,6 +123,20 @@ class GameStats {
 
   /// Precisione per partita in ordine di data.
   final List<(DateTime, double)> accuracyTrend;
+
+  /// Precisione per partita in ciascuna fase (RF-68), in ordine di data.
+  final Map<GamePhase, List<(DateTime, double)>> phaseTrends;
+
+  List<(DateTime, double)> phaseTrend(GamePhase phase) =>
+      phaseTrends[phase] ?? const [];
+
+  /// Media della precisione nella fase, o `null` senza dati.
+  double? phaseAverage(GamePhase phase) {
+    final trend = phaseTrend(phase);
+    return trend.isEmpty
+        ? null
+        : trend.fold(0.0, (s, p) => s + p.$2) / trend.length;
+  }
 
   double? get averageAccuracy => accuracyTrend.isEmpty
       ? null

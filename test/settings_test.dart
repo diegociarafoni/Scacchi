@@ -60,6 +60,7 @@ void main() {
         showLegalMoves: false,
         showCoordinates: false,
         autoQueen: true,
+        moveMethod: MoveMethod.drag,
         drawShapes: false,
         markColor: MarkColor.blue,
         autoFlip: true,
@@ -83,6 +84,7 @@ void main() {
     expect(reloaded.value.themeMode, ThemeMode.dark);
     expect(reloaded.value.boardTheme, BoardTheme.blue);
     expect(reloaded.value.animation, AnimationSpeed.none);
+    expect(reloaded.value.moveMethod, MoveMethod.drag);
     expect(reloaded.value.markColor, MarkColor.blue);
     expect(reloaded.value.evalBar, isTrue);
   });

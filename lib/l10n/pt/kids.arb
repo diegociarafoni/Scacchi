@@ -97,5 +97,8 @@
   "kidUnlockByPlaying": "Desbloqueia enquanto você joga",
   "kidCoachMaterialLoss": "Cuidado: esse lance perde peças.",
   "kidCoachAllowedMate": "Depois de {move}, seu oponente pode dar xeque-mate com {reply}.",
-  "kidCoachMissedMate": "Você podia dar xeque-mate com {move}!"
+  "kidCoachMissedMate": "Você podia dar xeque-mate com {move}!",
+  "kidGameUndoOfferSide": "{side, select, white{Brancas, vamos refazer o lance?} other{Pretas, vamos refazer o lance?}}",
+  "kidGameUndoOfferName": "{name}, vamos refazer o lance?",
+  "kidGameUndoYes": "Sim, vamos refazer"
 }

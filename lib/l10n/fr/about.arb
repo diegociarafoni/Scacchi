@@ -1,0 +1,15 @@
+{
+  "aboutTitle": "À propos",
+  "aboutEntrySubtitle": "Licence, code source, confidentialité et crédits",
+  "aboutTagline": "Des échecs libres, même sans connexion",
+  "aboutPrivacy": "Confidentialité",
+  "aboutPrivacyDescription": "Aucune donnée collectée, aucune publicité, aucun suivi. Dans les parties à distance, les coups circulent chiffrés, uniquement par les serveurs choisis pour la partie",
+  "aboutLicense": "Licence",
+  "aboutLicenseDescription": "Logiciel libre, GPL-3.0 ou ultérieure, avec une permission supplémentaire pour la distribution dans les boutiques d'applications",
+  "aboutSource": "Code source",
+  "aboutSourceCopied": "Adresse copiée",
+  "aboutLicenses": "Licences des bibliothèques",
+  "aboutLicensesDescription": "Textes complets des licences des composants utilisés",
+  "aboutCopy": "Copier",
+  "aboutCredits": "Crédits"
+}
