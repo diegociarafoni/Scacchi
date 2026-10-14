@@ -1,0 +1,20 @@
+{
+  "storyGuardianPrologueBossWon": "Wat een mooie partij! Je speelt echt goed, ik heb er iets van geleerd.",
+  "storyGuardianVillageBossWon": "Gefeliciteerd! Gewonnen zonder één stuk te laten hangen.",
+  "storyGuardianGatesBossWon": "Je kent de regels goed. De poorten zijn van jou, ga maar door.",
+  "storyGuardianTowerBossWon": "Mooi mat. De toren is nu van jou.",
+  "storyGuardianForestBossWon": "Je val werkte. Gefeliciteerd!",
+  "storyGuardianCastleBossWon": "Een eindspel met geduld gespeeld. Ik geef je een hand.",
+  "storyGuardianCrownBossWon": "Een elegante opening en een verdiende winst. Op naar de kroon!",
+  "storyGuardianPlainBossWon": "Je plan werkte. Zelfs het Evans-gambiet was niet genoeg.",
+  "storyGuardianAcademyBossWon": "Je hebt gewonnen. Nu wachten de meesters op je!",
+  "storyGuardianPrologueBossLost": "Maak je geen zorgen, ik maak ook fouten. Laten we het samen nog eens proberen!",
+  "storyGuardianVillageBossLost": "Net niet! Let op stukken die hangen en probeer het nog eens.",
+  "storyGuardianGatesBossLost": "Herhaal de regels en kom terug: ik wacht bij de poorten.",
+  "storyGuardianTowerBossLost": "De koning is ontsnapt. Denk aan het mat en probeer het nog eens.",
+  "storyGuardianForestBossLost": "Zag je de val? De volgende keer ontwijk je hem.",
+  "storyGuardianCastleBossLost": "In het eindspel heb je geduld nodig. Nog een keer, rustig.",
+  "storyGuardianCrownBossLost": "Zorg voor de opening, de rest volgt vanzelf. Probeer het nog eens!",
+  "storyGuardianPlainBossLost": "Er ontbrak een plan. Denk erover na en probeer het nog eens.",
+  "storyGuardianAcademyBossLost": "Ik geef geen korting, dat wist je. Maar je leert: kom snel terug!"
+}

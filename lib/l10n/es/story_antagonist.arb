@@ -1,0 +1,20 @@
+{
+  "storyGuardianPrologueBossWon": "¡Qué buena partida! Juegas muy bien y yo he aprendido algo.",
+  "storyGuardianVillageBossWon": "¡Enhorabuena! Has ganado sin dejar ninguna pieza desprotegida.",
+  "storyGuardianGatesBossWon": "Conoces bien las reglas. Las puertas son tuyas, pasa.",
+  "storyGuardianTowerBossWon": "Bonito mate. La torre es tuya ahora.",
+  "storyGuardianForestBossWon": "Tu trampa funcionó. ¡Enhorabuena!",
+  "storyGuardianCastleBossWon": "Un final jugado con paciencia. Te doy la mano.",
+  "storyGuardianCrownBossWon": "Una apertura elegante y una victoria merecida. ¡A la corona!",
+  "storyGuardianPlainBossWon": "Tu plan funcionó. Ni el Gambito Evans bastó.",
+  "storyGuardianAcademyBossWon": "Has ganado. ¡Ahora te esperan los maestros!",
+  "storyGuardianPrologueBossLost": "No te preocupes, yo también me equivoco. ¡Probemos juntos otra vez!",
+  "storyGuardianVillageBossLost": "¡Por poco! Cuidado con las piezas desprotegidas e inténtalo de nuevo.",
+  "storyGuardianGatesBossLost": "Repasa las reglas y vuelve: te espero en las puertas.",
+  "storyGuardianTowerBossLost": "El rey escapó. Piensa en el mate e inténtalo otra vez.",
+  "storyGuardianForestBossLost": "¿Viste la trampa? La próxima vez la esquivas.",
+  "storyGuardianCastleBossLost": "En los finales hace falta paciencia. Otra vez, con calma.",
+  "storyGuardianCrownBossLost": "Cuida la apertura y lo demás vendrá solo. ¡Inténtalo otra vez!",
+  "storyGuardianPlainBossLost": "Faltaba un plan. Piénsalo e inténtalo de nuevo.",
+  "storyGuardianAcademyBossLost": "No hago rebajas, lo sabías. Pero aprenderás: ¡vuelve pronto!"
+}

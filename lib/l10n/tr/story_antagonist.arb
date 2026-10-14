@@ -1,0 +1,20 @@
+{
+  "storyGuardianPrologueBossWon": "Ne güzel bir oyun! Çok iyi oynuyorsun, ben de bir şey öğrendim.",
+  "storyGuardianVillageBossWon": "Tebrikler! Tek bir taşı korumasız bırakmadan kazandın.",
+  "storyGuardianGatesBossWon": "Kuralları iyi biliyorsun. Kapılar senin, geç.",
+  "storyGuardianTowerBossWon": "Güzel bir mat. Kule artık senin.",
+  "storyGuardianForestBossWon": "Tuzağın işe yaradı. Tebrikler!",
+  "storyGuardianCastleBossWon": "Sabırla oynanmış bir oyun sonu. Elini sıkıyorum.",
+  "storyGuardianCrownBossWon": "Zarif bir açılış ve hak edilmiş bir zafer. Tacın yolunda!",
+  "storyGuardianPlainBossWon": "Planın işe yaradı. Evans Gambiti bile yetmedi.",
+  "storyGuardianAcademyBossWon": "Kazandın. Şimdi ustalar seni bekliyor!",
+  "storyGuardianPrologueBossLost": "Merak etme, ben de hata yaparım. Birlikte tekrar deneyelim!",
+  "storyGuardianVillageBossLost": "Çok az kaldı! Korumasız taşlara dikkat et ve tekrar dene.",
+  "storyGuardianGatesBossLost": "Kuralları tekrar et ve dön: kapılarda bekliyorum.",
+  "storyGuardianTowerBossLost": "Şah kaçtı. Mat'ı düşün ve tekrar dene.",
+  "storyGuardianForestBossLost": "Tuzağı gördün mü? Bir dahaki sefere kaçınırsın.",
+  "storyGuardianCastleBossLost": "Oyun sonunda sabır gerekir. Bir daha, acele etmeden.",
+  "storyGuardianCrownBossLost": "Açılışına özen göster, gerisi gelir. Tekrar dene!",
+  "storyGuardianPlainBossLost": "Bir plan eksikti. Düşün ve tekrar dene.",
+  "storyGuardianAcademyBossLost": "İndirim yapmam, bunu biliyordun. Ama yakında öğreneceksin: dön!"
+}
