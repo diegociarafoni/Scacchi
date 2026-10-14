@@ -9,7 +9,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:rokko/l10n/app_localizations.dart';
 import 'package:rokko/progress/progress_state.dart';
 import 'package:rokko/progress/progress_tracker.dart';
+import 'package:rokko/puzzles/mistake_path_page.dart';
 import 'package:rokko/puzzles/mode_guide.dart';
+import 'package:rokko/puzzles/puzzle.dart';
 import 'package:rokko/puzzles/puzzle_hub_page.dart';
 import 'package:rokko/puzzles/puzzle_library.dart';
 import 'package:rokko/puzzles/puzzle_page.dart';
@@ -180,4 +182,29 @@ void main() {
       },
     );
   }
+
+  testWidgets('percorso dai miei errori', skip: _skip != null, (tester) async {
+    final trainer = await _trainer();
+    Puzzle mine(String id, String themes) => Puzzle.parseCsv(
+      'mio-$id,7k/6pp/8/8/1n6/8/8/RR4K1 b - - 0 1,b4c2 a1a8,900,$themes',
+    );
+    await trainer.addPersonal([
+      mine('a', 'fork middlegame'),
+      mine('b', 'fork endgame'),
+      mine('c', 'fork middlegame'),
+      mine('d', 'hangingPiece opening'),
+      mine('e', 'hangingPiece middlegame'),
+      mine('f', 'mateIn2'),
+      mine('g', 'mateIn2'),
+    ]);
+    await trainer.reviews.reviewed('mio-a', solved: true, now: trainer.now());
+    await trainer.reviews.remove(['mio-f', 'mio-g']);
+    await trainer.reviews.reviewed('mio-d', solved: true, now: trainer.now());
+    await trainer.reviews.reviewed('mio-e', solved: true, now: trainer.now());
+    await _pump(tester, Device.phoneMedium, MistakePathPage(trainer: trainer));
+    await expectLater(
+      find.byType(MaterialApp),
+      matchesGoldenFile('goldens/puzzle-dai-miei-errori-telefono-medio.png'),
+    );
+  });
 }

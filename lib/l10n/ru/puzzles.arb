@@ -122,6 +122,44 @@
       }
     }
   },
+  "puzzleMistakePath": "Из моих ошибок",
+  "puzzleMistakePathSubtitle": "Главы по темам, в которых ты ошибаешься чаще всего",
+  "puzzleMistakePathIntro": "Каждая глава собирает задачи, созданные из твоих ошибок по одной теме, начиная с самой частой.",
+  "puzzleMistakePathEmpty": "Глав пока нет. Разбери несколько партий и сохрани свои ошибки как задачи: тема становится главой, когда ты ошибаешься в ней минимум два раза.",
+  "puzzleMistakeChapterNumber": "Глава {n}",
+  "@puzzleMistakeChapterNumber": {
+    "description": "Numero del capitolo personale",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleMistakeChapterPuzzles": "{count, plural, one{{count} задача из твоих ошибок} few{{count} задачи из твоих ошибок} many{{count} задач из твоих ошибок} other{{count} задачи из твоих ошибок}}",
+  "@puzzleMistakeChapterPuzzles": {
+    "description": "Puzzle di un capitolo personale",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleMistakeChapterProgress": "Опробовано: {done} из {total}",
+  "@puzzleMistakeChapterProgress": {
+    "description": "Puzzle provati su quelli del capitolo",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleMistakeChapterNew": "Не начата",
+  "puzzleMistakeChapterInProgress": "В процессе",
+  "puzzleMistakeChapterRested": "На сегодня всё",
+  "puzzleMistakeChapterDone": "Выучена",
   "puzzleSectionTimed": "Режимы на время",
   "@puzzleSectionTimed": {
     "description": "Intestazione delle modalità a tempo"

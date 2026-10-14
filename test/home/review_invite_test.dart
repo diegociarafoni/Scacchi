@@ -17,12 +17,14 @@ SavedGame _game(
   String result = '1-0',
   String mode = SavedGame.computer,
   double? accuracy,
+  String white = 'Tu',
+  String black = 'Bot',
 }) => SavedGame(
   id: id,
   createdAt: DateTime(2026, 10, day),
   updatedAt: DateTime(2026, 10, day),
-  white: 'Tu',
-  black: 'Bot',
+  white: white,
+  black: black,
   mode: mode,
   result: result,
   pgn: '1. e4 e5 *',
@@ -96,6 +98,29 @@ void main() {
       expect(find.text(it.reviewInviteTitle), findsOneWidget);
       await tester.tap(find.text(it.reviewInviteAction));
       expect(opened?.id, 'a');
+    });
+
+    testWidgets('i nomi neutri del PGN sono tradotti nel testo', (
+      tester,
+    ) async {
+      await show(
+        tester,
+        ReviewInviteCard(
+          game: _game(
+            'a',
+            3,
+            white: SavedGame.nameYou,
+            black: SavedGame.nameComputer,
+          ),
+          onReview: (_) {},
+          onDismiss: () {},
+        ),
+      );
+      final shown = it.reviewInviteBody(
+        '${it.tournamentYou} – ${it.archivePlayerComputer}',
+      );
+      expect(find.text(shown), findsOneWidget);
+      expect(find.textContaining('You'), findsNothing);
     });
 
     testWidgets('«Non ora» chiude l\'invito', (tester) async {

@@ -45,6 +45,9 @@ class PersonalPuzzles {
 
   Puzzle? byId(String id) => _puzzles[id];
 
+  /// Tutti i puzzle salvati, dal più vecchio.
+  Iterable<Puzzle> get all => _puzzles.values;
+
   /// Aggiunge i puzzle che non ci sono già. Restituisce gli id aggiunti e
   /// quelli scartati per far posto (i più vecchi). In memoria cambia solo se
   /// la scrittura riesce, così un errore si può riprovare.

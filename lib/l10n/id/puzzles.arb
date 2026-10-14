@@ -122,6 +122,44 @@
       }
     }
   },
+  "puzzleMistakePath": "Dari kesalahanku",
+  "puzzleMistakePathSubtitle": "Bab tentang tema yang paling sering kamu salah",
+  "puzzleMistakePathIntro": "Setiap bab mengumpulkan teka-teki dari kesalahanmu pada satu tema, mulai dari yang paling sering.",
+  "puzzleMistakePathEmpty": "Belum ada bab. Tinjau beberapa partai dan simpan kesalahanmu sebagai teka-teki: sebuah tema menjadi bab jika kamu salah di dalamnya setidaknya dua kali.",
+  "puzzleMistakeChapterNumber": "Bab {n}",
+  "@puzzleMistakeChapterNumber": {
+    "description": "Numero del capitolo personale",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleMistakeChapterPuzzles": "{count, plural, one{{count} teka-teki dari kesalahanmu} other{{count} teka-teki dari kesalahanmu}}",
+  "@puzzleMistakeChapterPuzzles": {
+    "description": "Puzzle di un capitolo personale",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleMistakeChapterProgress": "{done} dari {total} dicoba",
+  "@puzzleMistakeChapterProgress": {
+    "description": "Puzzle provati su quelli del capitolo",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "puzzleMistakeChapterNew": "Belum dimulai",
+  "puzzleMistakeChapterInProgress": "Sedang berjalan",
+  "puzzleMistakeChapterRested": "Selesai untuk hari ini",
+  "puzzleMistakeChapterDone": "Sudah dikuasai",
   "puzzleSectionTimed": "Mode berwaktu",
   "@puzzleSectionTimed": {
     "description": "Intestazione delle modalità a tempo"
