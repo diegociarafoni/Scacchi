@@ -477,5 +477,29 @@
         "type": "String"
       }
     }
+  },
+  "badgeOnlineFirstName": "Партия вдвоём",
+  "badgeOnlineFirstDesc": "Сыграй партию с другом на другом телефоне.",
+  "badgeOnline10Name": "Всегда в компании",
+  "badgeOnline10Desc": "Сыграй {count} партий с другом.",
+  "@badgeOnline10Desc": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeOnlineWinName": "Победа среди друзей",
+  "badgeOnlineWinDesc": "Выиграй партию у друга на другом телефоне.",
+  "badgeRepertoireFirstName": "Память в тренировке",
+  "badgeRepertoireFirstDesc": "Повтори свой репертуар в первый раз.",
+  "badgeRepertoire10Name": "Репертуар наизусть",
+  "badgeRepertoire10Desc": "Повтори свой репертуар за {count} занятий.",
+  "@badgeRepertoire10Desc": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

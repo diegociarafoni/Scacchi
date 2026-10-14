@@ -477,5 +477,29 @@
         "type": "String"
       }
     }
+  },
+  "badgeOnlineFirstName": "Game for Two",
+  "badgeOnlineFirstDesc": "Play a game against a friend on another phone.",
+  "badgeOnline10Name": "Always in Company",
+  "badgeOnline10Desc": "Play {count} games against a friend.",
+  "@badgeOnline10Desc": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeOnlineWinName": "Victory Among Friends",
+  "badgeOnlineWinDesc": "Win a game against a friend on another phone.",
+  "badgeRepertoireFirstName": "Memory at Work",
+  "badgeRepertoireFirstDesc": "Review your repertoire for the first time.",
+  "badgeRepertoire10Name": "Repertoire by Heart",
+  "badgeRepertoire10Desc": "Review your repertoire in {count} sessions.",
+  "@badgeRepertoire10Desc": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

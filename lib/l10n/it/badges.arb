@@ -477,5 +477,29 @@
         "type": "String"
       }
     }
+  },
+  "badgeOnlineFirstName": "Partita in due",
+  "badgeOnlineFirstDesc": "Gioca una partita contro un amico su un altro telefono.",
+  "badgeOnline10Name": "Sempre in compagnia",
+  "badgeOnline10Desc": "Gioca {count} partite contro un amico.",
+  "@badgeOnline10Desc": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeOnlineWinName": "Vittoria tra amici",
+  "badgeOnlineWinDesc": "Vinci una partita contro un amico su un altro telefono.",
+  "badgeRepertoireFirstName": "Memoria in allenamento",
+  "badgeRepertoireFirstDesc": "Ripassa il tuo repertorio per la prima volta.",
+  "badgeRepertoire10Name": "Repertorio a memoria",
+  "badgeRepertoire10Desc": "Ripassa il tuo repertorio in {count} sessioni.",
+  "@badgeRepertoire10Desc": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }
