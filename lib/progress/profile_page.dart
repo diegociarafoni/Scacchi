@@ -566,9 +566,10 @@ class _Achievements extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final l = AppLocalizations.of(context);
+    final kid = AppSettings.of(context).kidMode;
     return Column(
       children: [
-        for (final a in achievements)
+        for (final a in achievementsFor(kid: kid))
           Builder(
             builder: (context) {
               final done = unlocked.contains(a.id);
