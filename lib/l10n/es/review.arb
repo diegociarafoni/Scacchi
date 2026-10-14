@@ -287,6 +287,8 @@
   "reviewNavPrevious": "Jugada anterior",
   "reviewNavNext": "Jugada siguiente",
   "reviewNavEnd": "Final",
+  "reviewNavPlay": "Reproducir hasta el siguiente comentario",
+  "reviewNavPause": "Pausa",
   "reviewSideWhite": "Blancas",
   "reviewSideBlack": "Negras",
   "reviewAccuracyUnavailable": "Precisión de {side} no disponible",

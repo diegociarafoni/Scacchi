@@ -287,6 +287,8 @@
   "reviewNavPrevious": "Langkah sebelumnya",
   "reviewNavNext": "Langkah berikutnya",
   "reviewNavEnd": "Akhir",
+  "reviewNavPlay": "Putar sampai komentar berikutnya",
+  "reviewNavPause": "Jeda",
   "reviewSideWhite": "Putih",
   "reviewSideBlack": "Hitam",
   "reviewAccuracyUnavailable": "Akurasi {side} tidak tersedia",

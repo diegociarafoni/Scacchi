@@ -287,6 +287,8 @@
   "reviewNavPrevious": "Previous move",
   "reviewNavNext": "Next move",
   "reviewNavEnd": "End",
+  "reviewNavPlay": "Play to the next comment",
+  "reviewNavPause": "Pause",
   "reviewSideWhite": "White",
   "reviewSideBlack": "Black",
   "reviewAccuracyUnavailable": "{side} accuracy not available",

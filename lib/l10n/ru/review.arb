@@ -287,6 +287,8 @@
   "reviewNavPrevious": "Предыдущий ход",
   "reviewNavNext": "Следующий ход",
   "reviewNavEnd": "В конец",
+  "reviewNavPlay": "Воспроизвести до следующего комментария",
+  "reviewNavPause": "Пауза",
   "reviewSideWhite": "Белые",
   "reviewSideBlack": "Чёрные",
   "reviewAccuracyUnavailable": "Точность ({side}) недоступна",

@@ -287,6 +287,8 @@
   "reviewNavPrevious": "Coup précédent",
   "reviewNavNext": "Coup suivant",
   "reviewNavEnd": "Fin",
+  "reviewNavPlay": "Lire jusqu'au prochain commentaire",
+  "reviewNavPause": "Pause",
   "reviewSideWhite": "Blancs",
   "reviewSideBlack": "Noirs",
   "reviewAccuracyUnavailable": "{side} : précision indisponible",

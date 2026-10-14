@@ -287,6 +287,8 @@
   "reviewNavPrevious": "Önceki hamle",
   "reviewNavNext": "Sonraki hamle",
   "reviewNavEnd": "Sona",
+  "reviewNavPlay": "Sonraki yoruma kadar oynat",
+  "reviewNavPause": "Duraklat",
   "reviewSideWhite": "Beyaz",
   "reviewSideBlack": "Siyah",
   "reviewAccuracyUnavailable": "{side} doğruluğu mevcut değil",

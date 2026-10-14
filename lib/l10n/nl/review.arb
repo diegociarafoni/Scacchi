@@ -287,6 +287,8 @@
   "reviewNavPrevious": "Vorige zet",
   "reviewNavNext": "Volgende zet",
   "reviewNavEnd": "Einde",
+  "reviewNavPlay": "Afspelen tot de volgende opmerking",
+  "reviewNavPause": "Pauze",
   "reviewSideWhite": "Wit",
   "reviewSideBlack": "Zwart",
   "reviewAccuracyUnavailable": "Nauwkeurigheid van {side} niet beschikbaar",

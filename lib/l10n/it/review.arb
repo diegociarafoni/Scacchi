@@ -293,6 +293,8 @@
   "reviewNavPrevious": "Mossa precedente",
   "reviewNavNext": "Mossa successiva",
   "reviewNavEnd": "Fine",
+  "reviewNavPlay": "Riproduci fino al prossimo commento",
+  "reviewNavPause": "Pausa",
   "reviewSideWhite": "Bianco",
   "reviewSideBlack": "Nero",
   "reviewAccuracyUnavailable": "Precisione del {side} non disponibile",
