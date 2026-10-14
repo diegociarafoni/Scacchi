@@ -66,7 +66,7 @@ Rokko è open source e gratuito. Questi vincoli valgono per ogni voce.
 | A-18 / RNF-03 | **Motore per tutte le architetture** (Android armv7 e x86_64 oltre ad arm64) | rinviata da Diego | P0 | piccola | 0.15.0, da decidere | `docs/rilascio-android.md:71-74` |
 | A-19 / RNF-02 | **iOS e F-Droid**: build iOS in CI, Fastlane per TestFlight, metadati e ricetta per F-Droid | rinviata da Diego | P0 | grande | 0.15.0, da decidere | `docs/store.md`: iOS «non ancora configurato»; nessun file F-Droid |
 | A-20 / RNF-04 | **Dimensione sotto i 60 MB**, con valutazione di una rete NNUE più piccola e misura dell'impatto sulla forza | fatta | P0 | media | 0.14.0 | `apkMaxMegabytes` a 60 in `tool/policy.json`, controllato da `tool/check_size.dart`; `ROKKO_NATIVE_ABIS=arm64-v8a` nel rilascio e `third_party/chessground` ridotta; misura e valutazione della rete NNUE (già la piccola, circa 1 MB) in `docs/qualita.md` |
-| A-21 / RNF-06 | **Layout adattivo** con schermo diviso e pieghevoli, e test sulle due colonne | fatta | P0 | media | 0.14.0 | Home con colonna laterale da 840 dp e larghezza massima (#301); partita a due colonne in orizzontale (`game_page.dart`); test/layout/wide_screens_test.dart (nella PR di A-21) prova Home, Impostazioni e partita (a due colonne da tablet) su tablet, desktop, schermo diviso e pieghevole |
+| A-21 / RNF-06 | **Layout adattivo** con schermo diviso e pieghevoli, e test sulle due colonne | fatta | P0 | media | 0.14.0 | Home con colonna laterale da 840 dp e larghezza massima (#301); partita a due colonne in orizzontale (`game_page.dart`); `test/layout/wide_screens_test.dart` prova Home, Impostazioni e partita (a due colonne da tablet) su tablet, desktop, schermo diviso e pieghevole |
 | A-22 / RNF-07 | **Ridurre le animazioni** anche dall'impostazione di sistema, con test | fatta | P0 | piccola | 0.14.0 | `AppSettings.reduceMotion` e l'impostazione di sistema azzerano pezzi, pagine (su iOS resta il gesto di ritorno), dialoghi e fogli (`lib/theme/motion.dart`) e la barra di valutazione; `test/theme/motion_test.dart` |
 | A-23 / RNF-08 | **Persistenza**: oggi file JSON versionati (`lib/storage/json_file.dart`). Decidere per iscritto se restare su JSON e aggiungere la catena di migrazioni (piccola), o passare a un database locale (grande). Proposta: restare su JSON | fatta (#288) | P0 | piccola | 0.14.0 | `JsonFile` rifiuta tutto ciò che non è tra 1 e la versione corrente |
 
@@ -75,7 +75,7 @@ Rokko è open source e gratuito. Questi vincoli valgono per ogni voce.
 | ID | Funzione | Stato | Pri | Dim | Versione | Evidenza |
 |---|---|---|---|---|---|---|
 | A-25 / RG-09 | **Tornei con partite vere** tra i bot e gironi da 4 a 8 giocatori | fatto | P2 | grande | 0.15.0 | partite vere tra i bot (#275); la simulazione Elo resta come ripiego (`docs/tornei.md`) |
-| A-26 / RMP | **Orologio nelle partite a distanza**: chi crea sceglie tra lampo con orologio dal vivo e partita lenta con 1, 3 o 7 giorni per mossa, con reclamo della vittoria a scadenza. Resta manuale la prova su telefoni veri con un `integration_test` | fatta (orologio); prova su telefoni veri manuale | P1 | media | 0.15.0 | `docs/multigiocatore.md` (Orologio) |
+| A-26 / RMP | **Orologio nelle partite a distanza**: chi crea sceglie tra lampo con orologio dal vivo e partita lenta con 1, 3 o 7 giorni per mossa, con reclamo della vittoria a scadenza. Resta manuale la prova su telefoni veri con un `integration_test` | fatta (orologio); prova su telefoni veri manuale | P1 | media | 0.13.0 | `docs/multigiocatore.md` (Orologio) |
 | A-27 | **Percorso «dai miei errori»**: capitoli personali generati dai temi tattici sbagliati più spesso | da fare | P2 | media | 0.14.0 | esistono i puzzle personali (`lib/review/personal_puzzles.dart`) e la coda di ripasso, non agganciati al percorso |
 
 ### A.5 Da valutare dopo
@@ -97,7 +97,7 @@ Il dettaglio di U1-U11 è in `consegne/analisi-ux-ui.md`; il comportamento attua
 |---|---|---|---|---|---|
 | S1 | **Un antagonista per capitolo**: carattere, stile di gioco, aperture e due battute prima e dopo la partita | fatto (#277) | Claude | media | 0.15.0 |
 | S2 | **Racconto tra un passo e l'altro**: una riga tra lezione e puzzle che richiama ciò che si è imparato | fatta | da assegnare | piccola | 0.15.0 |
-| S3 | **Mappa del viaggio** con i sei luoghi, i progressi e «riprendi da dove eri» | da fare | da assegnare | media | 0.14.0 |
+| S3 | **Mappa del viaggio** con i nove luoghi, i progressi e «riprendi da dove eri» | fatta | da assegnare | media | 0.14.0 | `lib/story/journey_map.dart`: nove luoghi su un sentiero a serpentina; vedi `docs/storia.md` |
 | S4 | **Un bivio per capitolo** (tattica o finali) con puzzle diversi | fatto (#281) | Claude | media | 0.15.0 |
 | S5 | **Ricompense legate alla storia**: scacchiere e pezzi sbloccabili con nome a tema | fatta | Claude | piccola | 0.14.0 |
 | S6 | **Aiuto quando ci si blocca**: dopo due errori sullo stesso puzzle, un indizio o un puzzle più facile | fatta | da assegnare | piccola | 0.15.0 |
@@ -107,7 +107,7 @@ Il dettaglio di U1-U11 è in `consegne/analisi-ux-ui.md`; il comportamento attua
 | U4 | **Testi tutti localizzati** nei file `.arb` | parziale | P1 | grande | 0.14.0 |
 | U7 | **Barra del titolo della partita più semplice**: editor e tastiera nel menu ⋮; tastiera visibile con un lettore di schermo | fatta | da assegnare | piccola | 0.12.0 |
 | U8 | **Golden fedeli all'app reale**: tema predefinito e font veri; aggiungere Puzzle, Percorso, Storia, Multigiocatore, Tu e profilo bambino | fatta (golden del Percorso aggiunti) | da assegnare | media | 0.14.0 |
-| U12 | **Icone più curate** dopo le traduzioni (richiesta di Diego, 13 ottobre 2026) — `RokkoIcons` in `lib/theme/rokko_icons.dart`: stesso set a contorno per barra, pannello e barra del titolo della partita; le altre schermate restano da uniformare | parziale | dopo la 0.11.0 | media | 0.14.0 |
+| U12 | **Icone più curate** dopo le traduzioni (richiesta di Diego, 13 ottobre 2026) — `RokkoIcons` in `lib/theme/rokko_icons.dart`: stesso set a contorno per barra, pannello e barra del titolo della partita; nelle altre schermate i comandi usano le varianti a contorno e restano piene solo le icone di stato (stella, spunta, lucchetto, corona), l'arte dei badge e l'icona selezionata della barra di navigazione; un test lo verifica | fatta | dopo la 0.11.0 | media | 0.14.0 |
 
 Gli «interventi rapidi» (marchio nel titolo, arancione d'azione, gruppi nella scheda Tu, icone nel menu, anteprima comprimibile, font reale nei golden, test sui testi fissi) si possono fare prima delle voci grandi; sono elencati in `consegne/analisi-ux-ui.md`.
 
