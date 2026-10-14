@@ -5,8 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/engine/computer_player.dart';
 import 'package:scacchi/engine/variant_engine.dart';
 import 'package:scacchi/game/game_page.dart';
-import 'package:scacchi/theme/rokko_icons.dart';
 import 'package:scacchi/settings/settings.dart';
+import 'package:scacchi/theme/rokko_icons.dart';
 
 import '../computer_fakes.dart';
 import '../game_actions.dart';
