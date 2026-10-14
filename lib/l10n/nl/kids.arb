@@ -97,5 +97,8 @@
   "kidUnlockByPlaying": "Ontgrendelt terwijl je speelt",
   "kidCoachMaterialLoss": "Pas op: met deze zet verlies je stukken.",
   "kidCoachAllowedMate": "Na {move} kan je tegenstander schaakmat zetten met {reply}.",
-  "kidCoachMissedMate": "Je kon schaakmat zetten met {move}!"
+  "kidCoachMissedMate": "Je kon schaakmat zetten met {move}!",
+  "kidGameUndoOfferSide": "{side, select, white{Wit, zullen we de zet overdoen?} other{Zwart, zullen we de zet overdoen?}}",
+  "kidGameUndoOfferName": "{name}, zullen we de zet overdoen?",
+  "kidGameUndoYes": "Ja, opnieuw"
 }

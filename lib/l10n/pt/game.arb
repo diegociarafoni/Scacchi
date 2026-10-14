@@ -182,5 +182,8 @@
   "gameClockDelaySimple": "Simples",
   "gameClockDelayBronstein": "Bronstein",
   "gameClockStart": "Iniciar",
-  "gameClockRange": "De {min} a {max}"
+  "gameClockRange": "De {min} a {max}",
+  "gameUndoOfferSide": "{side, select, white{As Brancas aceitam} other{As Pretas aceitam}} desfazer o lance?",
+  "gameUndoOfferNamed": "{name} ({side, select, white{Brancas} other{Pretas}}) aceita desfazer o lance?",
+  "gameUndoRefused": "O pedido de desfazer foi recusado."
 }
