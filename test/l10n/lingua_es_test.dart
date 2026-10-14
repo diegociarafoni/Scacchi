@@ -3,14 +3,14 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/game/game_page.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/path/path_controller.dart';
-import 'package:scacchi/path/path_page.dart';
-import 'package:scacchi/settings/app_language.dart';
-import 'package:scacchi/settings/settings.dart';
-import 'package:scacchi/settings/settings_page.dart';
-import 'package:scacchi/storage/key_value_store.dart';
+import 'package:rokko/game/game_page.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/path/path_controller.dart';
+import 'package:rokko/path/path_page.dart';
+import 'package:rokko/settings/app_language.dart';
+import 'package:rokko/settings/settings.dart';
+import 'package:rokko/settings/settings_page.dart';
+import 'package:rokko/storage/key_value_store.dart';
 
 import '../../tool/src/l10n_merge.dart';
 import '../localized_app.dart';

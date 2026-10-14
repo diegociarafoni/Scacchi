@@ -3,10 +3,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/backup/backup_page.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/main.dart';
-import 'package:scacchi/minigames/minigames_page.dart';
+import 'package:rokko/backup/backup_page.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/main.dart';
+import 'package:rokko/minigames/minigames_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../tool/src/l10n_merge.dart';
@@ -35,7 +35,7 @@ void main() {
     tester,
   ) async {
     SharedPreferences.setMockInitialValues({});
-    await tester.pumpWidget(const ScacchiApp());
+    await tester.pumpWidget(const RokkoApp());
     await tester.pumpAndSettle();
     final context = tester.element(find.byType(Scaffold).first);
     expect(Localizations.localeOf(context).languageCode, 'it');

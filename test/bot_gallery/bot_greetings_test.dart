@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/bot_gallery/bot_greetings.dart';
-import 'package:scacchi/engine/bots.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
+import 'package:rokko/bot_gallery/bot_greetings.dart';
+import 'package:rokko/engine/bots.dart';
+import 'package:rokko/l10n/app_localizations.dart';
 
 void main() {
   group('RG-18 saluti e battute dei bot', () {

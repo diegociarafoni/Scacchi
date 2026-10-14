@@ -10,9 +10,9 @@ import 'dart:math' as math;
 
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/engine/computer_player.dart';
-import 'package:scacchi/engine/levels.dart';
-import 'package:scacchi/engine/process_transport.dart';
+import 'package:rokko/engine/computer_player.dart';
+import 'package:rokko/engine/levels.dart';
+import 'package:rokko/engine/process_transport.dart';
 
 /// `u1600` è Stockfish col solo limitatore a 1600 Elo, usato come ancora.
 EngineLevel parse(String spec) {

@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/l10n/content.dart';
-import 'package:scacchi/main.dart';
+import 'package:rokko/l10n/content.dart';
+import 'package:rokko/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'content_support.dart';
@@ -13,7 +13,7 @@ void main() {
     SharedPreferences.setMockInitialValues({'language': 'french'});
     addTearDown(useContent);
     Content.reset();
-    await tester.pumpWidget(const ScacchiApp());
+    await tester.pumpWidget(const RokkoApp());
     await tester.runAsync(() async {
       for (var i = 0; i < 100 && Content.language != 'fr'; i++) {
         await Future<void>.delayed(const Duration(milliseconds: 100));
@@ -31,7 +31,7 @@ void main() {
     addTearDown(tester.platformDispatcher.clearLocalesTestValue);
     final loaded = <String>[];
     await tester.pumpWidget(
-      ScacchiApp(contentLoader: (code) async => loaded.add(code)),
+      RokkoApp(contentLoader: (code) async => loaded.add(code)),
     );
     await tester.pumpAndSettle();
     expect(loaded, ['it']);
@@ -49,7 +49,7 @@ void main() {
     final gates = <String, Completer<void>>{};
     var current = '';
     await tester.pumpWidget(
-      ScacchiApp(
+      RokkoApp(
         contentLoader: (code) async {
           if (code != 'it') await (gates[code] ??= Completer()).future;
           current = code;

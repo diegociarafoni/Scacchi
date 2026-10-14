@@ -4,12 +4,12 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart' show Side;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/endgames/drill.dart';
-import 'package:scacchi/endgames/drill_page.dart';
-import 'package:scacchi/endgames/drills.dart';
-import 'package:scacchi/endgames/endgame_controller.dart';
-import 'package:scacchi/endgames/endgames_page.dart';
-import 'package:scacchi/engine/computer_player.dart';
+import 'package:rokko/endgames/drill.dart';
+import 'package:rokko/endgames/drill_page.dart';
+import 'package:rokko/endgames/drills.dart';
+import 'package:rokko/endgames/endgame_controller.dart';
+import 'package:rokko/endgames/endgames_page.dart';
+import 'package:rokko/engine/computer_player.dart';
 
 import '../computer_fakes.dart';
 import '../content_support.dart';

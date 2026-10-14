@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
+import 'package:rokko/l10n/app_localizations.dart';
 
 /// `MaterialApp` con le stesse localizzazioni dell'app, in italiano salvo
 /// diversa indicazione.

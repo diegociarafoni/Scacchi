@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/progress/activity.dart';
-import 'package:scacchi/progress/progress_controller.dart';
-import 'package:scacchi/progress/progress_state.dart';
-import 'package:scacchi/progress/progress_store.dart';
-import 'package:scacchi/summary/week_log.dart';
+import 'package:rokko/progress/activity.dart';
+import 'package:rokko/progress/progress_controller.dart';
+import 'package:rokko/progress/progress_state.dart';
+import 'package:rokko/progress/progress_store.dart';
+import 'package:rokko/summary/week_log.dart';
 
 void main() {
   final now = DateTime(2026, 10, 12, 9);

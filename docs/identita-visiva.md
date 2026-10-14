@@ -1,6 +1,6 @@
 # Identità visiva
 
-L'app si chiama **Rokko**, da *arrocco* e da *rook* (la torre in inglese): breve, uguale in italiano e in inglese, facile da dire anche per i bambini. Il repository, il pacchetto Dart (`scacchi`) e l'identificativo dell'app (`io.github.diegociarafoni.scacchi`) restano invariati, così gli aggiornamenti si installano sopra le versioni già presenti.
+L'app si chiama **Rokko**, da *arrocco* e da *rook* (la torre in inglese): breve, uguale in italiano e in inglese, facile da dire anche per i bambini. Il nome è lo stesso ovunque: repository, pacchetto Dart (`rokko`), identificativo dell'app (`io.github.diegociarafoni.rokko`), bundle id e binari desktop. L'identificativo è cambiato prima della pubblicazione sugli store (PR di rinomina, dopo la 0.11.0): il primo APK successivo non si installa sopra quello con l'identificativo vecchio e va installato come app nuova, con un backup per portare i dati. Restano con il nome storico `scacchi`, perché non li vede nessuno e cambiarli romperebbe la compatibilità, l'alias e il sale del keystore di firma, i contesti crittografici del multigiocatore e il campo `app` dei backup già creati, che si leggono ancora. `tool/rinomina_rokko.sh` ripete la rinomina.
 
 ![Icona di Rokko](../assets/icon/icon.svg)
 
@@ -16,7 +16,7 @@ L'app si chiama **Rokko**, da *arrocco* e da *rook* (la torre in inglese): breve
 
 `test/branding_test.dart` controlla che i nomi nativi siano Rokko e che l'identificativo non cambi.
 
-Su macOS il pacchetto si chiama ancora `scacchi.app`: rinominarlo tocca il progetto Xcode in più punti e va verificato su un Mac. Il tag `Event` delle partite in PGN è «Rokko».
+Su macOS il pacchetto si chiama ancora `rokko.app`: rinominarlo tocca il progetto Xcode in più punti e va verificato su un Mac. Il tag `Event` delle partite in PGN è «Rokko».
 
 ## Icona
 

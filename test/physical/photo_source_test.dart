@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/physical/photo_source.dart';
+import 'package:rokko/physical/photo_source.dart';
 
 import 'board_render.dart';
 

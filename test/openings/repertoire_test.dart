@@ -1,7 +1,7 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/openings/repertoire.dart';
-import 'package:scacchi/storage/key_value_store.dart';
+import 'package:rokko/openings/repertoire.dart';
+import 'package:rokko/storage/key_value_store.dart';
 
 List<Move> uci(String moves) =>
     moves.split(' ').map((m) => Move.parse(m)!).toList();

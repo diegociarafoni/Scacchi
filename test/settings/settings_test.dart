@@ -1,6 +1,6 @@
 import 'package:chessground/chessground.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/settings/settings.dart';
+import 'package:rokko/settings/settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {

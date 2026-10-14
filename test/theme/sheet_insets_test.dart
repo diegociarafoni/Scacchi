@@ -2,9 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/about/about_page.dart';
-import 'package:scacchi/puzzles/guide_view.dart';
-import 'package:scacchi/puzzles/mode_guide.dart';
+import 'package:rokko/about/about_page.dart';
+import 'package:rokko/puzzles/guide_view.dart';
+import 'package:rokko/puzzles/mode_guide.dart';
 
 import '../localized_app.dart';
 import '../support/devices.dart';

@@ -1,8 +1,8 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/archive/saved_game.dart';
-import 'package:scacchi/stats/local_rating.dart';
-import 'package:scacchi/stats/stats.dart';
+import 'package:rokko/archive/saved_game.dart';
+import 'package:rokko/stats/local_rating.dart';
+import 'package:rokko/stats/stats.dart';
 
 var _n = 0;
 

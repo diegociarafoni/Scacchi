@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/multiplayer/multiplayer_controller.dart';
-import 'package:scacchi/multiplayer/saved_game.dart';
+import 'package:rokko/multiplayer/multiplayer_controller.dart';
+import 'package:rokko/multiplayer/saved_game.dart';
 
 /// Attende in tempo reale che [ok] sia vera. Disco e rete hanno tempi che su un
 /// runner carico superano qualsiasi attesa fissa; se la condizione non arriva

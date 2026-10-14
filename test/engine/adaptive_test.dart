@@ -1,9 +1,9 @@
 import 'dart:math' as math;
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/engine/adaptive.dart';
-import 'package:scacchi/engine/levels.dart';
-import 'package:scacchi/storage/key_value_store.dart';
+import 'package:rokko/engine/adaptive.dart';
+import 'package:rokko/engine/levels.dart';
+import 'package:rokko/storage/key_value_store.dart';
 
 double _expected(int a, int b) => 1 / (1 + math.pow(10, (b - a) / 400));
 

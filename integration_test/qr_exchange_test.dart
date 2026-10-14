@@ -4,17 +4,17 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_zxing/flutter_zxing.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:scacchi/exchange/qr_code_view.dart';
-import 'package:scacchi/exchange/qr_send_page.dart';
-import 'package:scacchi/exchange/qr_transfer.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/main.dart';
-import 'package:scacchi/puzzles/friend_challenge.dart';
-import 'package:scacchi/puzzles/friend_challenge_page.dart';
-import 'package:scacchi/puzzles/puzzle.dart';
-import 'package:scacchi/puzzles/puzzle_library.dart';
-import 'package:scacchi/puzzles/puzzle_trainer.dart';
-import 'package:scacchi/storage/key_value_store.dart';
+import 'package:rokko/exchange/qr_code_view.dart';
+import 'package:rokko/exchange/qr_send_page.dart';
+import 'package:rokko/exchange/qr_transfer.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/main.dart';
+import 'package:rokko/puzzles/friend_challenge.dart';
+import 'package:rokko/puzzles/friend_challenge_page.dart';
+import 'package:rokko/puzzles/puzzle.dart';
+import 'package:rokko/puzzles/puzzle_library.dart';
+import 'package:rokko/puzzles/puzzle_trainer.dart';
+import 'package:rokko/storage/key_value_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../test/game_actions.dart';
@@ -74,7 +74,7 @@ void main() {
     tester.view.physicalSize = const Size(1170, 2532);
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
-    await tester.pumpWidget(const ScacchiApp());
+    await tester.pumpWidget(const RokkoApp());
     await tester.pumpAndSettle();
     await openBoard(tester);
 

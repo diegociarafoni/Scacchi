@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/progress/activity.dart';
-import 'package:scacchi/progress/xp.dart';
+import 'package:rokko/progress/activity.dart';
+import 'package:rokko/progress/xp.dart';
 
 void main() {
   group('RG-01 punti esperienza', () {

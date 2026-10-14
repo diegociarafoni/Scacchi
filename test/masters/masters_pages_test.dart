@@ -4,11 +4,11 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart' show Side;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/masters/guess_page.dart';
-import 'package:scacchi/masters/master_game_page.dart';
-import 'package:scacchi/masters/master_games.dart';
-import 'package:scacchi/masters/masters_controller.dart';
-import 'package:scacchi/masters/masters_page.dart';
+import 'package:rokko/masters/guess_page.dart';
+import 'package:rokko/masters/master_game_page.dart';
+import 'package:rokko/masters/master_games.dart';
+import 'package:rokko/masters/masters_controller.dart';
+import 'package:rokko/masters/masters_page.dart';
 
 import '../content_support.dart';
 import '../localized_app.dart';

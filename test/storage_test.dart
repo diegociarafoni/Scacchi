@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/storage/key_value_store.dart';
+import 'package:rokko/storage/key_value_store.dart';
 
 void main() {
   late Directory dir;

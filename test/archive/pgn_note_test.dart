@@ -1,8 +1,8 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/archive/pgn.dart';
-import 'package:scacchi/game/chess_game.dart';
-import 'package:scacchi/game/move_note.dart';
+import 'package:rokko/archive/pgn.dart';
+import 'package:rokko/game/chess_game.dart';
+import 'package:rokko/game/move_note.dart';
 
 ChessGame game(List<String> uci) {
   final g = ChessGame();

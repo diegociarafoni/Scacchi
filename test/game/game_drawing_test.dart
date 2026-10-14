@@ -1,9 +1,9 @@
 import 'package:chessground/chessground.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/game/board_drawing.dart';
-import 'package:scacchi/game/game_page.dart';
-import 'package:scacchi/settings/settings.dart';
+import 'package:rokko/game/board_drawing.dart';
+import 'package:rokko/game/game_page.dart';
+import 'package:rokko/settings/settings.dart';
 
 import '../computer_fakes.dart';
 import '../computer_game_test.dart' show square;

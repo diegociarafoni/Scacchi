@@ -1,7 +1,7 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/game/clock.dart';
-import 'package:scacchi/review/move_time.dart';
+import 'package:rokko/game/clock.dart';
+import 'package:rokko/review/move_time.dart';
 
 Duration s(int n) => Duration(seconds: n);
 

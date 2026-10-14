@@ -2,9 +2,9 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart' show Square;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/settings/board_marks.dart';
-import 'package:scacchi/settings/color_blind.dart';
-import 'package:scacchi/settings/settings.dart';
+import 'package:rokko/settings/board_marks.dart';
+import 'package:rokko/settings/color_blind.dart';
+import 'package:rokko/settings/settings.dart';
 
 /// Tinta in gradi, per riconoscere la famiglia di colore.
 double _hue(Color c) => HSVColor.fromColor(c).hue;

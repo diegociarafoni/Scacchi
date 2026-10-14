@@ -11,7 +11,7 @@ void main() {
     expect(manifest, contains('android:label="Rokko"'));
     expect(
       File('android/app/build.gradle.kts').readAsStringSync(),
-      contains('applicationId = "io.github.diegociarafoni.scacchi"'),
+      contains('applicationId = "io.github.diegociarafoni.rokko"'),
     );
   });
 
