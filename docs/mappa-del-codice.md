@@ -7,6 +7,7 @@ Ogni cartella di `lib/` ha qui il documento che descrive le sue funzioni. La tab
 | Cartella | Documenti | Funzioni |
 |---|---|---|
 | `lib/analysis/` | [analisi.md](analisi.md) | Analisi libera della posizione con le linee del motore e l'albero delle varianti |
+| `lib/about/` | [licenza.md](licenza.md), [interfaccia.md](interfaccia.md) | Schermata «Informazioni»: licenza, sorgenti, privacy e crediti |
 | `lib/archive/` | [archivio.md](archivio.md) | Archivio delle partite, import ed export PGN |
 | `lib/badges/` | [badge.md](badge.md) | Badge (RG-17) e libri delle aperture: catalogo, regole di sblocco, medaglie, galleria, testi |
 | `lib/bot_gallery/` | [bot.md](bot.md) | Galleria dei bot (RG-18): fasce per Elo, saluti localizzati, scelta di colore e avversario |
@@ -39,7 +40,7 @@ Ogni cartella di `lib/` ha qui il documento che descrive le sue funzioni. La tab
 | `lib/tablebase/` | [finali-perfetti.md](finali-perfetti.md) | Finali perfetti: tabelle del matto esatto fino a quattro pezzi, generate sul telefono, scheda con risultato e mossa perfetta |
 | `lib/style/` | [stile.md](stile.md) | Schermata Stile: anteprima dal vivo e schede Scacchiera, Pezzi, Sfondo (con foto propria) e Suoni |
 | `lib/summary/` | [riepilogo-settimanale.md](riepilogo-settimanale.md) | Riepilogo settimanale: progressi, errore ricorrente, un consiglio |
-| `lib/tournament/` | [tornei.md](tornei.md) | Tornei offline contro bot |
+| `lib/tournament/` | [tornei.md](tornei.md) | Tornei offline contro bot, con partite tra bot giocate dal motore |
 | `lib/training/` | [puzzle.md](puzzle.md) | Scacchiera per esercizi condivisa |
 
 ## Controllo automatico

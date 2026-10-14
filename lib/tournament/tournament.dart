@@ -157,6 +157,27 @@ class Standing {
   final int wins;
 }
 
+/// Partita tra due bot da giocare: [white] e [black] sono indici dei giocatori.
+/// Nello spareggio Armageddon i colori sono invertiti rispetto all'abbinamento.
+class BotGame {
+  const BotGame({
+    required this.board,
+    required this.white,
+    required this.black,
+    required this.tiebreak,
+    required this.seed,
+  });
+
+  /// Scacchiera dell'abbinamento nel turno corrente.
+  final int board;
+  final int white;
+  final int black;
+  final bool tiebreak;
+
+  /// Seme della formula Elo, se la partita si simula.
+  final int seed;
+}
+
 /// Punti del bianco in una partita simulata tra bot, ripetibile dato il seme.
 /// La patta è più probabile tra giocatori vicini.
 double simulateGame(int whiteElo, int blackElo, {required int seed}) {
@@ -188,6 +209,7 @@ class Tournament {
     required List<Player> bots,
     required int seed,
     required DateTime createdAt,
+    bool simulateBots = true,
   }) {
     final players = [user, ...bots];
     if (format == TournamentFormat.knockout &&
@@ -210,7 +232,8 @@ class Tournament {
     final rounds = format == TournamentFormat.roundRobin
         ? _bergerRounds(players.length)
         : [t._firstKnockoutRound()];
-    return t._with(rounds)._advance();
+    final created = t._with(rounds);
+    return simulateBots ? created._advance() : created;
   }
 
   final TournamentFormat format;
@@ -264,9 +287,10 @@ class Tournament {
     return null;
   }
 
-  /// Registra la partita dell'utente con i suoi [points]; poi si simulano le
-  /// partite tra bot e, se serve, il turno successivo.
-  Tournament recordUserGame(double points) {
+  /// Registra la partita dell'utente con i suoi [points]. Con [simulateBots]
+  /// simula subito le partite tra bot e, se serve, il turno successivo;
+  /// altrimenti restano in [pendingBotGames].
+  Tournament recordUserGame(double points, {bool simulateBots = true}) {
     final game = userGame;
     if (game == null) throw StateError('Nessuna partita da giocare'); // l10n-ok
     final round = currentRound;
@@ -279,8 +303,58 @@ class Tournament {
         else
           p.copyWith(result: p.white == 0 ? points : 1 - points),
     ];
-    return _with([...rounds]..[round] = updated)._advance();
+    final t = _closeRound(round, updated);
+    return simulateBots ? t._advance() : t;
   }
+
+  /// Partite tra bot del turno corrente, da giocare dopo quella dell'utente.
+  List<BotGame> get pendingBotGames {
+    if (finished || userGame != null) return const [];
+    final r = currentRound;
+    return [
+      for (final (board, p) in rounds[r].indexed)
+        if (!p.isBye && !p.includes(0) && !p.decided(format))
+          _botGame(p, r, board),
+    ];
+  }
+
+  BotGame _botGame(Pairing p, int round, int board) {
+    final base = mix32(seed ^ mix32(round * 16 + board));
+    final tiebreak = p.result != null;
+    return BotGame(
+      board: board,
+      white: tiebreak ? p.black! : p.white,
+      black: tiebreak ? p.white : p.black!,
+      tiebreak: tiebreak,
+      seed: tiebreak ? base + 1 : base,
+    );
+  }
+
+  /// Registra i [whitePoints] di una partita tra bot giocata davvero.
+  Tournament withBotGame(BotGame game, double whitePoints) {
+    final r = currentRound;
+    final p = rounds[r][game.board];
+    final updated = [...rounds[r]]
+      ..[game.board] = game.tiebreak
+          ? p.copyWith(tiebreak: 1 - whitePoints)
+          : p.copyWith(result: whitePoints);
+    return _closeRound(r, updated);
+  }
+
+  /// Decide [game] con la formula Elo, ad esempio dove manca il motore.
+  Tournament simulateBotGame(BotGame game) {
+    final r = currentRound;
+    final p = rounds[r][game.board];
+    final w = players[game.white].elo;
+    final b = players[game.black].elo;
+    final points = simulateGame(w, b, seed: game.seed);
+    if (game.tiebreak) return withBotGame(game, points);
+    final updated = [...rounds[r]]..[game.board] = _simulate(p, r, game.board);
+    return _closeRound(r, updated);
+  }
+
+  /// Simula tutte le partite tra bot rimaste fino alla prossima dell'utente.
+  Tournament settle() => _advance();
 
   /// Simula le partite tra bot finché l'utente non ha una partita da giocare.
   Tournament _advance() {
@@ -297,6 +371,12 @@ class Tournament {
       for (final (board, p) in rounds[r].indexed)
         p.decided(format) || p.includes(0) ? p : _simulate(p, r, board),
     ];
+    return _closeRound(r, round);
+  }
+
+  /// Sostituisce il turno [r] e, nell'eliminazione diretta, abbina il turno
+  /// successivo quando questo è concluso.
+  Tournament _closeRound(int r, List<Pairing> round) {
     var next = [...rounds]..[r] = round;
     final done = round.every((p) => p.decided(format));
     if (format == TournamentFormat.knockout &&

@@ -42,7 +42,7 @@ Per ciascun giocatore una riga mostra le icone dei pezzi avversari catturati, da
 |---|---|
 | Altro | Apre il pannello «Partita» con Allenatore e Minaccia (e «Gira» sugli schermi stretti); non c'è dove il pannello sarebbe vuoto |
 | Nuova | Apre il foglio «Nuova partita» descritto sopra: avvio rapido, amico, galleria dei bot, istruttore, tornei e, in «Altre modalità», la partita personalizzata (avversario, variante Classica, Chess960, Re della collina o Tre scacchi, handicap, nomi e cadenza; toccando la cadenza inizia la partita) |
-| Annulla | Annulla l'ultima mossa; disattivato se non ci sono mosse |
+| Annulla | Annulla l'ultima mossa (tra due persone sullo stesso telefono serve il consenso di chi non l'ha giocata); disattivato se non ci sono mosse |
 | Gira | Capovolge la scacchiera |
 | Patta | Chiede all'avversario se accetta la patta; a partita conclusa cede il posto a Rivincita |
 | Abbandona | Chiede conferma e fa abbandonare il lato al tratto; a partita conclusa cede il posto a Rivedi |
@@ -109,7 +109,7 @@ Dopo ogni mossa il lettore di schermo annuncia una frase in italiano, per esempi
 
 ## Impostazioni
 
-La pagina principale è un menu di sezioni: ogni voce ha icona, nome e una riga che dice cosa contiene, ed è alta almeno 48 dp; i lettori di schermo la annunciano come pulsante. Ogni sezione si apre in una pagina propria, con le sue impostazioni; sotto ogni interruttore una riga spiega cosa cambia. Le voci, nell'ordine:
+La pagina principale è un menu di sezioni: ogni voce ha icona, nome e una riga che dice cosa contiene, ed è alta almeno 48 dp; i lettori di schermo la annunciano come pulsante. In cima c'è il campo **Cerca nelle impostazioni** (`lib/settings/settings_search.dart`): digitando, il menu lascia il posto alle singole voci che contengono tutte le parole scritte, cercate nel titolo e nella descrizione senza badare a maiuscole e accenti; ogni risultato dice in quale sezione sta e, toccato, apre quella sezione. Senza risultati compare un messaggio, e la croce svuota il campo e riporta il menu. Senza i progressi non si trovano le voci del profilo che li riguardano. L'indice (`settingsHits`) elenca le voci a mano: chi aggiunge un'impostazione a una sezione la aggiunge anche lì. Ogni sezione si apre in una pagina propria, con le sue impostazioni; sotto ogni interruttore una riga spiega cosa cambia. Le voci, nell'ordine:
 
 | Sezione | Contenuto |
 |---|---|
@@ -119,8 +119,9 @@ La pagina principale è un menu di sezioni: ogni voce ha icona, nome e una riga 
 | Partita | Promuovi sempre a donna, ruota a ogni turno, modalità tavolo, «Spiegami perché» |
 | Accessibilità | Aspetto dell'app (sistema, chiaro, scuro), colori per daltonici, modalità zen, conferma della mossa |
 | Profilo bambino | In fondo, sotto un separatore; per uscirne serve la domanda per adulti |
+| Informazioni | Ultima voce: licenza GPL-3.0 o successiva, indirizzo dei sorgenti (si copia, non si apre: l'app non usa la rete), dichiarazione di privacy, licenze di tutte le librerie (`showLicensePage`) e crediti di motore, pezzi e caratteri (`lib/about/`) |
 
-Poche sezioni, nessuna con meno di due voci (lo controlla un test): una sezione per ogni cosa che l'utente cerca, non una per ogni funzione.
+Poche sezioni, nessuna con meno di due voci (lo controlla un test; Stile, Profilo bambino e Informazioni sono le eccezioni): una sezione per ogni cosa che l'utente cerca, non una per ogni funzione.
 
 Le pagine che cambiano l'aspetto della scacchiera (Scacchiera e Accessibilità; Stile ha la sua) hanno in cima, fissa mentre si scorre, un'anteprima: mostra una posizione di prova con tema, pezzi, coordinate, mosse legali, ultima mossa, colori per daltonici e velocità delle animazioni correnti, e si aggiorna a ogni scelta. Toccandola si gioca la mossa di prova (l'alfiere prende in c6), con l'animazione scelta; un secondo tocco la ripristina. Il pulsante a destra del titolo (48 dp) la comprime a una riga con tema e pezzi, per lasciare spazio alle impostazioni sui telefoni piccoli. L'anteprima ha un'etichetta per i lettori di schermo.
 
@@ -142,11 +143,14 @@ Si aprono dall'icona a forma di ingranaggio nella Home e nella barra del titolo 
 | Coordinate | Lettere e numeri sui bordi della scacchiera | Attiva |
 | Evidenzia l'ultima mossa | Colora la casa di partenza e quella di arrivo dell'ultima mossa, su tutte le scacchiere; spenta, il colore del tema diventa trasparente | Attiva |
 | Coordinate fuori dalla scacchiera | Sposta le coordinate su una cornice attorno alla scacchiera, così non coprono i pezzi; si sceglie solo con le coordinate attive (vedi [pezzi-e-scacchiere.md](pezzi-e-scacchiere.md)) | Disattiva |
+| Come muovere i pezzi | Automatico (due tocchi sul telefono, tocchi e trascinamento sugli schermi con lato corto da 600 dp), Tocchi e trascinamento, Due tocchi o Trascinamento (requisito RM-02). Nei due tocchi, un secondo tocco sul bordo di una casa (il 20% esterno) che non è una destinazione gioca la mossa verso la casa vicina, se è l'unica possibile; le promozioni restano al selettore | Automatico |
 | Promuovi sempre a donna | Salta il selettore di promozione | Disattiva |
 | Frecce e cerchi | Disegno di frecce e cerchi: su touch si tiene premuto un dito fermo su una casa libera (o con un pezzo avversario) e si trascina, oppure si tiene un dito su una casa vuota e si disegna con un secondo; col mouse, tasto destro. Rilasciando sulla stessa casa è un cerchio; ripetere la stessa forma la toglie, un tocco le toglie tutte, e spariscono a ogni mossa (requisito RF-05) | Attiva |
 | Colore di frecce e cerchi | Verde, rosso, blu o giallo per le forme disegnate; col mouse Maiusc dà il rosso, Ctrl il blu, Alt il giallo | Verde |
 | Conferma la mossa | Dopo ogni mossa mostra la posizione risultante con i pulsanti Conferma e Scarta al posto della riga di stato; la mossa conta solo dopo Conferma, e l'orologio continua a scorrere. Durante l'attesa "Annulla" equivale a Scarta, mentre Patta e Abbandona sono disattivati | Disattiva |
 | Premossa | Contro il computer, mentre pensa si può già muovere: la mossa scelta viene giocata appena risponde, se è ancora legale (altrimenti è scartata, anche se nel frattempo si sfogliano le mosse); toccando una casa vuota si annulla. Un pedone che arriva in fondo promuove a donna. Non c'è con «Conferma la mossa» né nel profilo bambino (requisito RF-08) | Attiva |
+| Barra di valutazione | Accanto alla scacchiera, la barra del vantaggio (la parte chiara è del Bianco) con la valutazione del motore dopo ogni mossa; nel profilo bambino senza cifre. Non c'è nelle sfide senza aiuti, nelle varianti e senza motore; capovolgendo la scacchiera il Bianco resta in basso nella barra (requisito RF-22) | Spenta |
+| Schermo sempre acceso | Durante la partita il telefono non spegne lo schermo; torna normale a partita finita, uscendo dalla schermata e con l'opzione spenta (requisito RM-06, plugin `wakelock_plus`) | Attiva |
 | Ruota a ogni turno | Orienta la scacchiera dal lato di chi deve muovere | Disattiva |
 | Modalità zen | In partita restano solo scacchiera, mosse ed eventuale orologio (sezione sotto); si accende anche dall'icona nella barra della partita | Disattiva |
 | Modalità tavolo | Capovolge i pezzi del giocatore in alto, per giocare uno di fronte all'altro con il telefono sul tavolo | Disattiva |

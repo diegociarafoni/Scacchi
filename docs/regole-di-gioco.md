@@ -38,6 +38,7 @@ Si usa il contatore di semimosse della posizione (`halfmoves`), che si azzera a 
 
 - "Annulla" toglie l'ultima mossa, anche a partita conclusa, e riporta la partita in corso. Se la partita è finita per abbandono o patta concordata, revoca solo l'abbandono o la patta, senza togliere mosse; funziona anche prima della prima mossa.
 - "Patta" chiede all'avversario del lato al tratto se accetta; se accetta, la partita finisce patta.
+- Tra due persone sullo stesso telefono "Annulla" chiede il consenso di chi non ha giocato l'ultima mossa (requisito RF-32); se rifiuta non cambia nulla; revocare un abbandono o una patta concordata, che non toglie mosse, non lo chiede. Contro il computer, nelle sfide e per le azioni locali (uscire dalla revisione, scartare una mossa da confermare) basta il tocco.
 - Con l'orologio, "Annulla" ripristina anche i tempi di entrambi i giocatori a prima della mossa annullata, incremento compreso; dopo un tempo scaduto annulla l'ultima mossa e restituisce il tempo di quella mossa.
 - "Abbandona" chiede conferma e assegna la vittoria al lato che non è al tratto.
 

@@ -20,8 +20,8 @@ Rokko è open source e gratuito. Questi vincoli valgono per ogni voce.
 |---|---|---|---|
 | RV-01 | Nessun livello a pagamento, abbonamento o acquisto: revisioni, puzzle e lezioni sono libere e senza limiti giornalieri | fatta | |
 | RV-02 | Nessuna pubblicità, nessun tracciamento, nessun account obbligatorio; nessun dato lascia il dispositivo senza un'azione esplicita | fatta | |
-| RV-03 | Codice sotto GPL-3.0 (o successiva); licenza e sorgenti visibili nella schermata «Informazioni» | parziale | manca la schermata (vedi A-15) |
-| RV-04 | Asset con licenza compatibile con la GPL, elencati con attribuzione in `CREDITS.md` e in «Informazioni» | parziale | `CREDITS.md` c'è, manca la schermata |
+| RV-03 | Codice sotto GPL-3.0 (o successiva); licenza e sorgenti visibili nella schermata «Informazioni» | fatta | `lib/about/about_page.dart` |
+| RV-04 | Asset con licenza compatibile con la GPL, elencati con attribuzione in `CREDITS.md` e in «Informazioni» | fatta | `CREDITS.md` e `lib/about/credits.dart` |
 | RV-05 | Il permesso per gli store vale solo per il codice del progetto; verifica scritta della compatibilità con la GPL del motore prima della pubblicazione su iOS | parziale | `docs/licenza.md` e `NOTICE.md` dichiarano il permesso, manca l'esito scritto |
 
 ## Piano di rilascio
@@ -43,34 +43,29 @@ Rokko è open source e gratuito. Questi vincoli valgono per ogni voce.
 |---|---|---|---|---|---|---|
 | A-1 / RF-08 | **Premossa**: muovere durante il turno dell'avversario, annullabile toccando una casa vuota, con opzione nelle impostazioni | fatta | P0 | media | 0.12.0 | `_playerSide` e `_playPremove` in `lib/game/game_page.dart`; test in `test/game/premove_test.dart` |
 | A-2 / RF-05 | **Frecce e cerchi** con almeno tre colori, pressione prolungata e trascinamento su touch, rimossi al tocco successivo | fatta | P0 | piccola | 0.12.0 | `lib/game/board_drawing.dart`, scelta del colore in Impostazioni > Scacchiera; test in `test/game/board_drawing_test.dart` |
-| A-3 / RF-22 | **Allenamento e Sfida**: scelta esplicita della modalità e barra di valutazione durante la partita (oggi solo in analisi e revisione) | parziale | P0 | media | 0.12.0 | `EvalBar` usata in `lib/review/` e `lib/analysis/`; `docs/avversario-computer.md` dichiara «in parte» |
-| A-4 / RF-32 | **Annullamento con consenso** dell'altro giocatore nella partita a due | parziale | P0 | piccola | 0.12.0 | la patta chiede consenso (`game_page.dart:2158`), «Annulla» no |
+| A-3 / RF-22 | **Allenamento e Sfida**: scelta esplicita della modalità e barra di valutazione durante la partita (oggi solo in analisi e revisione) | parziale | P0 | media | 0.12.0 | fatta la barra di valutazione in partita (`evalBar`, `_refreshEval` in `lib/game/game_page.dart`); manca la scelta esplicita tra Allenamento e Sfida |
+| A-4 / RF-32 | **Annullamento con consenso** dell'altro giocatore nella partita a due | fatta | P0 | piccola | 0.12.0 | `_requestUndo` in `lib/game/game_page.dart`; test in `test/game/undo_consent_test.dart` |
 | A-5 / RF-40 | **Cadenza personalizzata** con minuti e incremento liberi, e **ritardo** (semplice e Bronstein); in seguito cadenze a più fasi (per esempio 40 mosse in 90 minuti più 30) anche per la scacchiera fisica | parziale | P0 | media | 0.12.0 | fatti minuti e incremento liberi e ritardo semplice e di Bronstein (`lib/game/clock.dart`, `custom_clock_dialog.dart`); restano le cadenze a più fasi e la scacchiera fisica |
-| A-6 / RM-02 | **Tocco**: correzione quando il dito cade sul bordo di una casa; due tocchi come modo predefinito su telefono | parziale | P0 | piccola | 0.12.0 | `lib/game/board_swipe.dart` evita solo le mosse durante lo scorrimento |
-| A-7 / RM-06 | **Schermo sempre acceso** durante la partita | da fare | P0 | piccola | 0.12.0 | nessun wakelock in `lib/`, `pubspec.yaml`, `android/`, `ios/` |
+| A-6 / RM-02 | **Tocco**: correzione quando il dito cade sul bordo di una casa; due tocchi come modo predefinito su telefono | fatta | P0 | piccola | 0.12.0 | `lib/game/tap_assist.dart`, `MoveMethod` in `lib/settings/settings.dart`; test in `test/game/tap_assist_test.dart` e `move_method_test.dart` |
+| A-7 / RM-06 | **Schermo sempre acceso** durante la partita | fatta | P0 | piccola | 0.12.0 | `_syncAwake` in `lib/game/game_page.dart` con `wakelock_plus`; test in `test/game/keep_awake_test.dart` |
 | A-8 / RM-07 | **Avvio rapido**: pronta a giocare in meno di 2 secondi su un telefono di fascia media, con misura e budget in CI | parziale | P0 | piccola | 0.14.0 | `integration_test/fluidita_perf.dart` misura la fluidità, non l'avvio |
-| A-9 / RF-31 | **Modalità tavolo**: ruotare di 180° tutti i pezzi del lato superiore, non solo quelli del giocatore in alto | parziale | P0 | piccola | 0.12.0 | `tableMode` in `lib/settings/settings.dart`; da confermare se la differenza conta |
+| A-9 / RF-31 | **Modalità tavolo**: ruotare di 180° tutti i pezzi del lato superiore, non solo quelli del giocatore in alto | fatta | P0 | piccola | 0.12.0 | `tableMode` in `lib/settings/settings.dart`: `opponentUpsideDown` di chessground capovolge tutti i pezzi del lato superiore |
 
 ### A.2 Analisi, revisione, archivio
 
 | ID | Funzione | Stato | Pri | Dim | Versione | Evidenza |
 |---|---|---|---|---|---|---|
-| A-10 / RF-52 | **Varianti ad albero salvate**: salvataggio dell'analisi, esportazione e import in PGN con le varianti tra parentesi | parziale | P1 | media | 0.13.0 | `lib/analysis/variation_tree.dart` vive solo con la pagina (`docs/analisi.md`, «Limiti attuali»); `lib/archive/pgn.dart` tiene la sola linea principale |
-| A-11 / RF-55 | **Annotazioni** (commento e simbolo) modificabili anche nell'analisi, sulle varianti e dall'archivio | parziale | P1 | media | 0.13.0 | `lib/game/move_note.dart` e la revisione sì; `analysis_page.dart` e `archive_page.dart` non usano `MoveNote` |
-| A-12 / RF-91 | **Mosse «Libro»** nella revisione e nell'allenatore | parziale | P1 | piccola | 0.13.0 | `OpeningBook.bookPlies` (`lib/openings/opening_book.dart:131`) e `reviewGame(isBook:)` non sono collegati (`docs/revisione-partita.md:43`) |
-| A-13 / RF-66 | **Cache della revisione** nel database locale, con versione del motore e profondità nella chiave | parziale | P1 | media | 0.13.0 | `ReviewCache` (`lib/review/review_page.dart:28`) è una mappa in memoria di 20 voci |
-| A-14 / RF-68 | **Precisione per fase** nelle statistiche, con la media nel tempo | parziale | P1 | piccola | 0.13.0 | `GameReview.accuracyByPhase` c'è; `lib/stats/` non ha riferimenti alle fasi |
 
 ### A.3 Piattaforma, rilascio, qualità
 
 | ID | Funzione | Stato | Pri | Dim | Versione | Evidenza |
 |---|---|---|---|---|---|---|
-| A-15 / RV-03, RV-04 | **Schermata «Informazioni»** con licenza GPL, link ai sorgenti e crediti degli asset | da fare | P0 | piccola | 0.14.0 | nessuna schermata né `showLicensePage` in `lib/` |
+| A-15 / RV-03, RV-04 | **Schermata «Informazioni»** con licenza GPL, link ai sorgenti e crediti degli asset | fatta | P0 | piccola | 0.14.0 | `lib/about/about_page.dart`, aperta da Impostazioni → Informazioni |
 | A-16 / RV-05 | **Verifica scritta** della compatibilità dell'App Store con la GPL del motore | parziale | P0 | piccola | 0.14.0 | `docs/licenza.md`, `NOTICE.md` |
 | A-17 / RNF-10 | **Dichiarazioni «nessun dato raccolto»**: `PrivacyInfo.xcprivacy`, testi per le schede di sicurezza dei dati degli store, `ITSAppUsesNonExemptEncryption` | parziale | P0 | piccola | 0.14.0 | `docs/sicurezza.md`, «Da fare» |
 | A-18 / RNF-03 | **Motore per tutte le architetture** (Android armv7 e x86_64 oltre ad arm64) | parziale | P0 | piccola | 0.14.0 | `docs/rilascio-android.md:71-74` |
 | A-19 / RNF-02 | **iOS e F-Droid**: build iOS in CI, Fastlane per TestFlight, metadati e ricetta per F-Droid | parziale | P0 | grande | 0.14.0 | `docs/store.md`: iOS «non ancora configurato»; nessun file F-Droid |
-| A-20 / RNF-04 | **Dimensione sotto i 60 MB**, con valutazione di una rete NNUE più piccola e misura dell'impatto sulla forza | parziale | P0 | media | 0.14.0 | circa 63 MiB e tetto a 80 MB in `tool/policy.json` (`docs/qualita.md:30-32`) |
+| A-20 / RNF-04 | **Dimensione sotto i 60 MB**, con valutazione di una rete NNUE più piccola e misura dell'impatto sulla forza | fatta | P0 | media | 0.14.0 | `tool/policy.json` a 60 MB; filtro delle architetture nel rilascio e `third_party/chessground`; misura in `docs/qualita.md` |
 | A-21 / RNF-06 | **Layout adattivo** con schermo diviso e pieghevoli, e test sulle due colonne | parziale | P0 | media | 0.14.0 | due colonne in `game_page.dart:2586` e poche altre schermate |
 | A-22 / RNF-07 | **Ridurre le animazioni** anche dall'impostazione di sistema, con test | parziale | P0 | piccola | 0.14.0 | solo `lib/story/story_page.dart:833` rispetta `MediaQuery.disableAnimationsOf` |
 | A-23 / RNF-08 | **Persistenza**: oggi file JSON versionati (`lib/storage/json_file.dart`). Decidere per iscritto se restare su JSON e aggiungere la catena di migrazioni (piccola), o passare a un database locale (grande). Proposta: restare su JSON | da fare | P0 | piccola | 0.14.0 | `JsonFile` rifiuta tutto ciò che non è tra 1 e la versione corrente |
@@ -80,7 +75,7 @@ Rokko è open source e gratuito. Questi vincoli valgono per ogni voce.
 | ID | Funzione | Stato | Pri | Dim | Versione | Evidenza |
 |---|---|---|---|---|---|---|
 | A-24 / RG-17 (estensione) | **Badge** del multigiocatore e del ripasso del repertorio | da fare | P1 | media | 0.15.0 | `docs/badge.md`, «Non ancora attivi»; nessun aggancio ai progressi in `lib/multiplayer/` |
-| A-25 / RG-09 | **Tornei con partite vere** tra i bot e gironi da 4 a 8 giocatori | parziale | P2 | grande | 0.15.0 | le partite tra bot sono simulate con una formula Elo (`docs/tornei.md`); in alternativa dichiarare la scelta (piccola) |
+| A-25 / RG-09 | **Tornei con partite vere** tra i bot e gironi da 4 a 8 giocatori | fatta | P2 | grande | 0.15.0 | le partite tra bot le gioca il motore (`lib/tournament/bot_game.dart`), con ripiego sulla formula Elo dove manca (`docs/tornei.md`) |
 | A-26 / RMP | **Orologio nelle partite a distanza** e prova su telefoni veri con un `integration_test` | parziale | P1 | media | 0.15.0 | `docs/multigiocatore.md` (limiti noti) |
 | A-27 | **Percorso «dai miei errori»**: capitoli personali generati dai temi tattici sbagliati più spesso | da fare | P2 | media | 0.15.0 | esistono i puzzle personali (`lib/review/personal_puzzles.dart`) e la coda di ripasso, non agganciati al percorso |
 
@@ -107,14 +102,12 @@ Il dettaglio di U1-U11 è in `consegne/analisi-ux-ui.md`; il comportamento attua
 | S3 | **Mappa del viaggio** con i sei luoghi, i progressi e «riprendi da dove eri» | da fare | da assegnare | media | 0.15.0 |
 | S4 | **Un bivio per capitolo** (tattica o finali) con puzzle diversi | da fare | da assegnare | media | 0.15.0 |
 | S5 | **Ricompense legate alla storia**: scacchiere e pezzi sbloccabili con nome a tema | da fare | da assegnare | piccola | 0.15.0 |
-| S6 | **Aiuto quando ci si blocca**: dopo due errori sullo stesso puzzle, un indizio o un puzzle più facile | da fare | da assegnare | piccola | 0.15.0 |
-| U1 | **Comandi di partita meno affollati**: 4 azioni in barra, Patta, Abbandona e Nuova in un pannello «Partita»; Allenatore e Minaccia come interruttori | da fare | da assegnare | media | 0.12.0 |
+| S6 | **Aiuto quando ci si blocca**: dopo due errori sullo stesso puzzle, un indizio o un puzzle più facile | fatta | da assegnare | piccola | 0.15.0 |
+| U1 | **Comandi di partita meno affollati**: 4 azioni in barra, Patta, Abbandona e Nuova in un pannello «Partita»; Allenatore e Minaccia come interruttori | parziale | da assegnare | media | 0.12.0 | fatto nel profilo bambino (pannello «Partita»); per gli adulti Nuova, Patta e Abbandona restano in barra (scelta di #225) |
 | U2 | **Identità visiva di Rokko**: tema proprio, carattere con personalità, torre-mascotte negli stati vuoti e a fine partita | parziale | da assegnare | media | 0.14.0 |
-| U3 | **Layout della partita senza spazio morto** su schermate alte | da fare | da assegnare | media | 0.12.0 |
+| U3 | **Layout della partita senza spazio morto** su schermate alte | parziale | da assegnare | media | 0.12.0 | in verticale lo spazio sopra la scacchiera è della lista mosse e dei suggerimenti; da verificare su schermate molto alte |
 | U4 | **Testi tutti localizzati** nei file `.arb` | parziale | P1 | grande | 0.11.0 |
-| U5 | **Scheda Tu raggruppata** (Impara, Gioca, I miei dati) con «Continua da dove eri» in testa | da fare | da assegnare | media | 0.13.0 |
-| U6 | **Impostazioni in sezioni** comprimibili, con ricerca e galleria dei temi | parziale | da assegnare | media | 0.13.0 |
-| U7 | **Barra del titolo della partita più semplice**: editor e tastiera nel menu ⋮; tastiera visibile con un lettore di schermo | da fare | da assegnare | piccola | 0.12.0 |
+| U7 | **Barra del titolo della partita più semplice**: editor e tastiera nel menu ⋮; tastiera visibile con un lettore di schermo | fatta | da assegnare | piccola | 0.12.0 |
 | U8 | **Golden fedeli all'app reale**: tema predefinito e font veri; aggiungere Puzzle, Percorso, Storia, Multigiocatore, Tu e profilo bambino | da fare | da assegnare | media | 0.14.0 |
 | U9 | **Profilo bambino coerente** in tutte le schermate, con un test che cerca le cifre nei testi | da fare | da assegnare | media | 0.15.0 |
 | U10 | **Funzioni scopribili**: suggerimenti al primo uso e invito a rivedere la prima partita conclusa | da fare | da assegnare | media | 0.13.0 |
@@ -188,10 +181,10 @@ Testo di ogni requisito, formulato come funzione di Rokko. La colonna Stato dice
 |---|---|---|
 | RF-50 | Schermata di analisi apribile da qualsiasi partita o posizione, con barra di valutazione verticale e valore numerico (centipedoni o matto in N). | fatta |
 | RF-51 | Linee principali del motore (MultiPV da 1 a 3), profondità visibile, analisi infinita interrompibile. | fatta |
-| RF-52 | Esplorazione libera con creazione di varianti ad albero; promozione di una variante a linea principale; eliminazione. | vedi A-10 |
+| RF-52 | Esplorazione libera con creazione di varianti ad albero; promozione di una variante a linea principale; eliminazione; salvataggio nell'archivio e PGN con le varianti. | fatta |
 | RF-53 | Editor di posizione: posizionamento libero dei pezzi, diritti di arrocco, tratto, import/export FEN, validazione della legalità. | fatta |
 | RF-54 | Frecce automatiche della mossa migliore (attivabili). | fatta |
-| RF-55 (P1) | Annotazioni personali: commento testuale e simbolo (`!!`, `!`, `!?`, `?!`, `?`, `??`) su ogni mossa e variante, modificabili nell'analisi e nell'archivio, conservati in import ed export PGN (commenti `{}` e NAG). | vedi A-11 |
+| RF-55 (P1) | Annotazioni personali: commento testuale e simbolo (`!!`, `!`, `!?`, `?!`, `?`, `??`) su ogni mossa e variante, modificabili nell'analisi e nell'archivio, conservati in import ed export PGN (commenti `{}` e NAG). | fatta |
 | RF-56 (P1) | Minaccia dell'avversario: un comando mostra con una freccia la mossa migliore che l'avversario giocherebbe se fosse il suo turno (analisi a mossa nulla), nell'analisi e nella partita con l'allenatore. Non disponibile quando il proprio re è sotto scacco. | fatta |
 
 #### 3.6 Revisione della partita (P1)
@@ -204,9 +197,9 @@ Testo di ogni requisito, formulato come funzione di Rokko. La colonna Stato dice
 | RF-63 | Precisione percentuale per giocatore e conteggio per categoria, con stima indicativa della forza della prestazione. | fatta |
 | RF-64 | Grafico dell'andamento della valutazione cliccabile, con i momenti chiave in evidenza. | fatta |
 | RF-65 | "Riprova" su ogni errore: l'utente cerca la mossa migliore dalla posizione critica. | fatta |
-| RF-66 | Cache dei risultati per partita nel database locale, così la revisione si apre all'istante le volte successive. | vedi A-13 |
+| RF-66 | Cache dei risultati per partita nel database locale, così la revisione si apre all'istante le volte successive. | fatta |
 | RF-67 (P1) | Tempo per mossa: nelle partite con orologio il tempo residuo è registrato a ogni mossa (`[%clk]` nel PGN, conservato in import ed export); la revisione mostra il grafico del tempo speso per mossa e segnala gli errori commessi giocando molto più in fretta della propria media. | fatta |
-| RF-68 (P1) | Precisione per fase: la revisione mostra la precisione separata per apertura, mediogioco e finale, con la stessa regola di fase dei puzzle personali; le statistiche (RF-111) ne mostrano la media nel tempo. | vedi A-14 |
+| RF-68 (P1) | Precisione per fase: la revisione mostra la precisione separata per apertura, mediogioco e finale, con la stessa regola di fase dei puzzle personali; le statistiche (RF-111) ne mostrano la media nel tempo. | fatta |
 
 #### 3.7 Coach e spiegazioni (P2)
 
@@ -243,7 +236,7 @@ Testo di ogni requisito, formulato come funzione di Rokko. La colonna Stato dice
 | ID | Specifica | Stato |
 |---|---|---|
 | RF-90 | Riconoscimento e visualizzazione del nome dell'apertura durante la partita (codice ECO e nome), usando un dataset aperto di aperture (CC0, vedi `CREDITS.md`), qualche centinaio di KB. | fatta |
-| RF-91 | Le mosse di libro sono marcate "Libro" nella revisione. | vedi A-12 |
+| RF-91 | Le mosse di libro sono marcate "Libro" nella revisione. | fatta |
 | RF-93 (P2) | Allenatore di repertorio: l'utente definisce le proprie linee (da PGN o dalla scacchiera) e l'app gliele fa ripetere con ripetizione dilazionata. | fatta |
 | RF-94 (P1) | Gioca un'apertura: dall'explorer o da una linea del repertorio si avvia una partita contro il computer o un bot che parte dopo le mosse scelte; se il bot esce dalla linea del repertorio l'app lo segnala. | fatta |
 | RF-92 (P2) | Explorer ridotto con le continuazioni principali e le percentuali da un piccolo libro precalcolato; le statistiche di un database globale sono escluse. | fatta |

@@ -1,0 +1,15 @@
+{
+  "aboutTitle": "Informacje",
+  "aboutEntrySubtitle": "Licencja, kod źródłowy, prywatność i podziękowania",
+  "aboutTagline": "Wolne szachy, także bez połączenia",
+  "aboutPrivacy": "Prywatność",
+  "aboutPrivacyDescription": "Brak zbierania danych, brak reklam, brak śledzenia. W partiach zdalnych ruchy są przesyłane szyfrowane i tylko przez serwery wybrane do danej partii",
+  "aboutLicense": "Licencja",
+  "aboutLicenseDescription": "Wolne oprogramowanie, GPL-3.0 lub nowsza, z dodatkowym zezwoleniem na dystrybucję w sklepach z aplikacjami",
+  "aboutSource": "Kod źródłowy",
+  "aboutSourceCopied": "Adres skopiowany",
+  "aboutLicenses": "Licencje bibliotek",
+  "aboutLicensesDescription": "Pełne teksty licencji użytych komponentów",
+  "aboutCopy": "Kopiuj",
+  "aboutCredits": "Podziękowania"
+}

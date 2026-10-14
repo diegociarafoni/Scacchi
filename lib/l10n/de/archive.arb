@@ -39,5 +39,7 @@
   "archiveModeLocal": "lokal",
   "archiveModeComputer": "Computer",
   "archiveModeImported": "importiert",
-  "archiveModePhysical": "echtes Brett"
+  "archiveModePhysical": "echtes Brett",
+  "archiveModeAnalysis": "Analyse",
+  "archiveOpenAnalysis": "In der Analyse öffnen"
 }

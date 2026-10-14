@@ -217,5 +217,30 @@
         "type": "int"
       }
     }
+  },
+  "gameUndoOfferSide": "{side, select, white{Белые согласны} other{Чёрные согласны}} отменить ход?",
+  "@gameUndoOfferSide": {
+    "description": "Richiesta di annullare l'ultima mossa tra due persone, senza nomi scelti",
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "gameUndoOfferNamed": "{name} ({side, select, white{белые} other{чёрные}}) согласен отменить ход?",
+  "@gameUndoOfferNamed": {
+    "description": "Richiesta di annullare l'ultima mossa tra due persone, con il nome del giocatore",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "gameUndoRefused": "Отмена хода отклонена.",
+  "@gameUndoRefused": {
+    "description": "Messaggio quando l'altro giocatore non accetta di annullare la mossa"
   }
 }

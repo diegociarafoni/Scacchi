@@ -124,5 +124,42 @@
   "settingsMarkColorYellow": "Gelb",
   "@settingsMarkColorYellow": {
     "description": "Impostazioni: colore giallo"
-  }
+  },
+  "settingsMoveMethod": "Wie Figuren bewegt werden",
+  "@settingsMoveMethod": {
+    "description": "Impostazioni: scelta del modo di muovere"
+  },
+  "settingsMoveMethodDescription": "Zwei Tipps sind auf dem Handy genauer; ein Tipp am Rand eines Feldes wird korrigiert, wenn nur das Nachbarfeld möglich ist",
+  "@settingsMoveMethodDescription": {
+    "description": "Impostazioni: descrizione del modo di muovere"
+  },
+  "settingsMoveMethodAuto": "Automatisch",
+  "@settingsMoveMethodAuto": {
+    "description": "Impostazioni: due tocchi sul telefono, entrambi sugli schermi grandi"
+  },
+  "settingsMoveMethodBoth": "Tippen und Ziehen",
+  "@settingsMoveMethodBoth": {
+    "description": "Impostazioni: entrambi i modi"
+  },
+  "settingsMoveMethodTwoTaps": "Zwei Tipps",
+  "@settingsMoveMethodTwoTaps": {
+    "description": "Impostazioni: solo due tocchi"
+  },
+  "settingsMoveMethodDrag": "Ziehen",
+  "@settingsMoveMethodDrag": {
+    "description": "Impostazioni: solo trascinamento"
+  },
+  "settingsKeepAwake": "Bildschirm eingeschaltet lassen",
+  "@settingsKeepAwake": {
+    "description": "Impostazioni: schermo acceso durante la partita"
+  },
+  "settingsKeepAwakeDescription": "Das Handy schaltet den Bildschirm während einer Partie nicht aus",
+  "@settingsKeepAwakeDescription": {
+    "description": "Impostazioni: descrizione dello schermo sempre acceso"
+  },
+  "settingsEvalBar": "Bewertungsleiste",
+  "settingsEvalBarDescription": "Zeigt neben dem Brett, wer besser steht; in Herausforderungen ohne Hilfen ausgeblendet",
+  "settingsSearchHint": "Einstellungen durchsuchen",
+  "settingsSearchEmpty": "Keine Einstellung gefunden",
+  "settingsSearchClear": "Suche löschen"
 }

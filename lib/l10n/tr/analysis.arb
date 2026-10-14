@@ -22,5 +22,21 @@
   "analysisBack": "Geri",
   "analysisForward": "İleri",
   "analysisResume": "Analizi sürdür",
-  "analysisPause": "Analizi duraklat"
+  "analysisPause": "Analizi duraklat",
+  "analysisMore": "Diğer işlemler",
+  "analysisSave": "Arşive kaydet",
+  "analysisSharePgn": "PGN'yi paylaş",
+  "analysisSaveTitle": "Analiz adı",
+  "analysisDefaultName": "{date} tarihli analiz",
+  "@analysisDefaultName": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "analysisSaved": "Analiz arşive kaydedildi",
+  "analysisSaveFailed": "Kaydedilemedi",
+  "analysisSaveConfirm": "Kaydet",
+  "analysisCancel": "İptal"
 }

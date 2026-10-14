@@ -6,6 +6,7 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../analysis/analysis_page.dart';
 import '../archive/pgn.dart';
@@ -21,6 +22,7 @@ import '../engine/bot_collection.dart';
 import '../engine/bots.dart';
 import '../engine/computer_player.dart';
 import '../engine/levels.dart';
+import '../engine/uci.dart';
 import '../engine/uci_transport.dart';
 import '../engine/variant_engine.dart';
 import '../exchange/qr_l10n.dart';
@@ -44,11 +46,13 @@ import '../progress/progress_feedback.dart';
 import '../puzzles/activity_recorder.dart';
 import '../review/board_utils.dart';
 import '../review/engine_evaluator.dart';
+import '../review/eval_bar.dart';
 import '../review/game_review.dart';
 import '../review/move_classification.dart';
 import '../review/personal_puzzles.dart';
 import '../review/review_activity.dart';
 import '../review/review_page.dart';
+import '../review/win_probability.dart';
 import '../settings/board_frame.dart';
 import '../settings/notation.dart';
 import '../settings/settings.dart';
@@ -73,6 +77,7 @@ import 'move_speech.dart';
 import 'opponent_picker.dart';
 import 'sounds.dart';
 import 'speech_bubble.dart';
+import 'tap_assist.dart';
 import 'variant.dart';
 
 /// Semimosse minime perché una partita valga XP: abbandonare subito non deve
@@ -104,6 +109,7 @@ class GamePage extends StatefulWidget {
     this.onFinished,
     this.store,
     this.qrScanner = zxingScanner,
+    this.keepAwake,
     this.onSavePuzzles,
     this.openSetup = false,
     this.initialSetup,
@@ -179,6 +185,9 @@ class GamePage extends StatefulWidget {
   /// Lettore QR per continuare una partita passata da un altro telefono.
   final QrScannerBuilder qrScanner;
 
+  /// Tiene lo schermo acceso; di default il blocco dello schermo del sistema.
+  final Future<void> Function(bool awake)? keepAwake;
+
   @override
   State<GamePage> createState() => _GamePageState();
 }
@@ -202,6 +211,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   /// Ultimo stato salvato nell'archivio (partita, esito, mosse).
   String? _archivedKey;
+
+  /// Ultima revisione, legata alla partita e al numero di semimosse: i
+  /// salvataggi successivi della stessa partita non perdono la precisione.
+  ({String id, int plies, GameReview review})? _reviewed;
   late DateTime _startedAt = _clockNow();
   late String _gameId = 'game-${_startedAt.microsecondsSinceEpoch}';
   var _fromEditor = false;
@@ -885,11 +898,30 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _tick.dispose();
     _sounds.dispose();
     _board.dispose();
+    _syncAwake(disposing: true);
     _drawing.dispose();
     super.dispose();
   }
 
+  bool _awake = false;
+
+  /// Schermo acceso finché la partita è in corso e l'impostazione è attiva;
+  /// si controlla a ogni costruzione, così vale per qualunque modo in cui la
+  /// partita cambia o finisce.
+  void _syncAwake({bool disposing = false}) {
+    final want = !disposing && _settings.keepAwake && !_game.isOver;
+    if (want == _awake) return;
+    _awake = want;
+    final set = widget.keepAwake ?? _systemKeepAwake;
+    // Non è essenziale: senza il servizio lo schermo si spegne come di solito.
+    unawaited(set(want).catchError((_) {}));
+  }
+
+  static Future<void> _systemKeepAwake(bool on) =>
+      WakelockPlus.toggle(enable: on);
+
   void _onSettingsChanged() {
+    _syncAwake();
     setState(() {
       final turnedOn = _settings.autoFlip && !_autoFlip;
       _autoFlip = _settings.autoFlip;
@@ -915,6 +947,72 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       Side.white => PlayerSide.black,
       Side.black => PlayerSide.white,
     };
+  }
+
+  /// Valutazione della posizione per la barra, dal punto di vista del Bianco.
+  EngineScore? _evalScore;
+  double? _evalWhiteWin;
+  String? _evalFen;
+  String? _evalGameId;
+  bool _evalBusy = false;
+
+  bool get _showEvalBar =>
+      _settings.evalBar &&
+      _helpAllowed &&
+      _engineGame &&
+      widget.computerAvailable;
+
+  void _scheduleEval() {
+    if (!_showEvalBar) return;
+    if (_evalGameId != _gameId) {
+      _evalGameId = _gameId;
+      _evalFen = _evalScore = _evalWhiteWin = null;
+    }
+    if (_evalBusy || _evalFen == _game.position.fen) return;
+    _evalBusy = true;
+    unawaited(_refreshEval());
+  }
+
+  Future<void> _refreshEval() async {
+    final position = _game.position;
+    EngineScore? score;
+    double? win;
+    if (_game.isOver) {
+      final outcome = _game.outcome;
+      win = switch (outcome) {
+        Outcome(winner: Side.white) => 100.0,
+        Outcome(winner: Side.black) => 0.0,
+        _ => 50.0,
+      };
+      score = position.isCheckmate
+          ? const EngineScore.mate(0)
+          : const EngineScore.cp(0);
+    } else {
+      try {
+        final lines = await _computerPlayer.analyse(position.fen, depth: 10);
+        final raw = lines.firstOrNull?.score;
+        if (raw != null) {
+          score = position.turn == Side.white ? raw : raw.negated;
+          win = position.turn == Side.white
+              ? winPercent(raw)
+              : 100 - winPercent(raw);
+        }
+      } on Object {
+        // Senza valutazione la barra resta com'era.
+      }
+    }
+    _evalBusy = false;
+    if (!mounted) return;
+    // Il risultato di una posizione ormai lasciata non va sulla barra.
+    if (score == null || !identical(position, _game.position)) {
+      if (score != null) setState(_scheduleEval);
+      return;
+    }
+    setState(() {
+      _evalFen = position.fen;
+      _evalScore = score;
+      _evalWhiteWin = win;
+    });
   }
 
   bool get _humanToMove => _playerSide != PlayerSide.none && !_computerToMove;
@@ -1067,9 +1165,12 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// Salvataggio e progressi vanno avanti da soli: uno lento o fallito non
   /// ferma l'altro.
   void _archive(ChessGame game, Side? side, DateTime now, int? elo) {
+    _persist(_savedGame(game, side, now, elo));
+  }
+
+  void _persist(SavedGame saved) {
     final save = widget.onSave;
     if (save == null) return;
-    final saved = _savedGame(game, side, now, elo);
     unawaited(
       save(saved).onError(
         (Object e, _) => debugPrint('Partita non salvata: $e'), // l10n-ok
@@ -1081,7 +1182,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     String name(Side s) => side == null
         ? (_settings.nameOf(s) ?? (s == Side.white ? 'Bianco' : 'Nero'))
         : (s == side ? 'Tu' : (_bot?.name ?? 'Computer'));
-    return SavedGame.fromGame(
+    final reviewed = _reviewed;
+    final saved = SavedGame.fromGame(
       game,
       id: _gameId,
       white: name(Side.white),
@@ -1094,6 +1196,11 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       opponentElo: elo,
       headers: {'Handicap': ?_handicap?.pgnValue(_handicapHuman)},
     );
+    return reviewed != null &&
+            reviewed.id == _gameId &&
+            reviewed.plies == game.moves.length
+        ? saved.withReview(reviewed.review)
+        : saved;
   }
 
   /// Colore dell'utente ed Elo dell'avversario; `null` tra due persone.
@@ -1634,6 +1741,21 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     return position.board.sideAt(square) == position.turn;
   }
 
+  /// Case dove può andare il pezzo su [from], senza le promozioni, che hanno
+  /// bisogno del selettore.
+  Set<Square> _tapTargets(Square from) {
+    final position = _game.position;
+    final moves = makeLegalMoves(position)[from];
+    if (moves == null || position.board.sideAt(from) != position.turn) {
+      return const {};
+    }
+    final pawn = position.board.roleAt(from) == Role.pawn;
+    return {
+      for (final to in moves)
+        if (!(pawn && (to.rank == Rank.first || to.rank == Rank.eighth))) to,
+    };
+  }
+
   /// Scorrimento sulla scacchiera: a sinistra avanti, a destra indietro.
   void _swipe(int direction) =>
       _showPly((_viewPly ?? _game.moves.length - 1) + direction);
@@ -2012,6 +2134,55 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _onMove(move);
   }
 
+  /// Tra due persone annullare una mossa chiede il consenso di chi non l'ha
+  /// giocata (RF-32). Contro il computer, nelle sfide, per le azioni locali
+  /// (uscire dalla revisione, scartare una mossa da confermare) e per
+  /// revocare un abbandono o una patta, che non toglie mosse, basta il tocco.
+  Future<void> _requestUndo() async {
+    final needsConsent =
+        _computerSide == null &&
+        !_isChallenge &&
+        _viewPly == null &&
+        _pendingMove == null &&
+        !_endedByChoice &&
+        _game.moves.isNotEmpty;
+    if (!needsConsent) return _undo();
+    final game = _game;
+    final plies = game.moves.length;
+    final consenting = game.position.turn;
+    final accepted = await _suspendedDialog<bool>((context) {
+      final l10n = _l10n(context);
+      if (_kid) {
+        return _yesNoDialog(
+          context,
+          title: switch (_nameOf(consenting)) {
+            null => l10n.kidGameUndoOfferSide(consenting.name),
+            final name => l10n.kidGameUndoOfferName(name),
+          },
+          no: l10n.kidGameDrawNo,
+          yes: l10n.kidGameUndoYes,
+        );
+      }
+      return _yesNoDialog(
+        context,
+        title: switch (_nameOf(consenting)) {
+          null => l10n.gameUndoOfferSide(consenting.name),
+          final name => l10n.gameUndoOfferNamed(name, consenting.name),
+        },
+        no: l10n.gameDrawDecline,
+        yes: l10n.gameDrawAccept,
+      );
+    }, restart: (accepted) => accepted != true);
+    if (!mounted || !identical(game, _game) || game.moves.length != plies) {
+      return;
+    }
+    if (accepted == true) {
+      _undo();
+    } else {
+      _showMessage(_l10n(context).gameUndoRefused);
+    }
+  }
+
   void _undo() {
     if (_viewPly != null) {
       _showPly(null);
@@ -2276,6 +2447,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           onCancel: player.stopAnalysis,
           analyseLive: _liveAnalysis(player),
           onReviewed: (review) => _recordReview(review, players, moves),
+          onResult: _saveAccuracy,
           onSavePuzzles: widget.onSavePuzzles,
           puzzlePlayers: players,
           clocks: [for (final m in _game.moves) m.clock],
@@ -2284,6 +2456,23 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         ),
       ),
     );
+  }
+
+  /// La precisione della revisione entra nella partita archiviata, così la
+  /// scheda delle fasi la trova senza riaprire la partita dall'archivio.
+  void _saveAccuracy(GameReview review) {
+    final (side, elo) = _playerAndElo;
+    final plies = _game.moves.length;
+    final known = _reviewed;
+    if (side == null || plies == 0) return;
+    if (known != null &&
+        known.id == _gameId &&
+        known.plies == plies &&
+        known.review.accuracy(side) == review.accuracy(side)) {
+      return;
+    }
+    _reviewed = (id: _gameId, plies: plies, review: review);
+    _archive(_game, side, _clockNow(), elo);
   }
 
   /// Una revisione nuova vale XP; con due giocatori la precisione non è di
@@ -2385,6 +2574,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    _syncAwake();
     final inProgress = _isChallenge && !_game.isOver && _game.moves.isNotEmpty;
     return PopScope(
       canPop: !inProgress,
@@ -2427,7 +2617,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           !evaluating &&
               (!_isChallenge || widget.challenge!.allowUndo) &&
               (_canUndo || _pendingMove != null || _viewPly != null)
-          ? _undo
+          ? _requestUndo
           : null,
       onFlip: () => setState(() => _orientation = _orientation.opposite),
       onDraw:
@@ -2632,12 +2822,25 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                   _statusHeight +
                   _actionsHeight +
                   (showMaterial ? 2 * _materialHeight : 0);
+              final showEval = _showEvalBar;
+              if (showEval && !_evalBusy && _evalFen != _game.position.fen) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (mounted) _scheduleEval();
+                });
+              }
+              final barSpace = showEval ? evalBarWidth + 8 : 0.0;
               final boardSize = landscape
-                  ? math.min(constraints.maxHeight, constraints.maxWidth * 0.6)
+                  ? math.max(
+                      0.0,
+                      math.min(
+                        constraints.maxHeight,
+                        constraints.maxWidth * 0.6 - barSpace,
+                      ),
+                    )
                   : math.max(
                       0.0,
                       math.min(
-                        constraints.maxWidth,
+                        constraints.maxWidth - barSpace,
                         constraints.maxHeight - chromeHeight,
                       ),
                     );
@@ -2654,7 +2857,11 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                         constraints.maxHeight - 2 * _moveStripHeight,
                       ),
                     );
-              final boardSettings = _settings.board;
+              final boardSettings = _settings.boardFor(
+                phone:
+                    MediaQuery.sizeOf(context).shortestSide <
+                    MoveMethod.phoneWidth,
+              );
               final board = BoardFrame.of(
                 _settings,
                 size: boardSize,
@@ -2670,25 +2877,53 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                   shapeOf: (color, orig, dest) => dest == null
                       ? _settings.marks.circle(color, orig)
                       : _settings.marks.arrow(color, orig, dest),
-                  builder: (marks) => BoardSwipe(
-                    enabled: _pendingMove == null && _game.moves.isNotEmpty,
+                  builder: (marks) => TapAssist(
                     size: size,
                     orientation: _orientation,
-                    canStartAt: _canDragFrom,
-                    blocked: _drawing,
-                    onSwipe: _swipe,
-                    child: Chessboard(
+                    enabled:
+                        boardSettings.pieceShiftMethod !=
+                            PieceShiftMethod.drag &&
+                        _humanToMove &&
+                        _viewPly == null &&
+                        _pendingMove == null,
+                    resetKey: _game.position.fen,
+                    destinations: _tapTargets,
+                    onMove: (from, to) =>
+                        _onMove(NormalMove(from: from, to: to)),
+                    child: BoardSwipe(
+                      enabled: _pendingMove == null && _game.moves.isNotEmpty,
                       size: size,
-                      controller: _board,
                       orientation: _orientation,
-                      onMove: _onMove,
-                      settings: boardSettings,
-                      annotations: _badgeAnnotations(),
-                      shapes: {..._visibleHint(), ...marks},
+                      canStartAt: _canDragFrom,
+                      blocked: _drawing,
+                      onSwipe: _swipe,
+                      child: Chessboard(
+                        size: size,
+                        controller: _board,
+                        orientation: _orientation,
+                        onMove: _onMove,
+                        settings: boardSettings,
+                        annotations: _badgeAnnotations(),
+                        shapes: {..._visibleHint(), ...marks},
+                      ),
                     ),
                   ),
                 ),
               );
+              final Widget boardArea = !showEval
+                  ? board
+                  : Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        EvalBar(
+                          height: boardSize,
+                          score: _evalScore,
+                          whiteWin: _evalWhiteWin,
+                        ),
+                        const SizedBox(width: 8),
+                        board,
+                      ],
+                    );
               final Widget status = !showStatus
                   ? const SizedBox(height: _statusHeight)
                   : viewPly != null
@@ -2751,7 +2986,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                 return Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    board,
+                    boardArea,
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -2819,7 +3054,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                   ),
                   status,
                   topMaterial,
-                  board,
+                  boardArea,
                   bottomMaterial,
                   actions,
                 ],

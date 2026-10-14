@@ -139,19 +139,19 @@ I golden si rigenerano con `--update-goldens` dopo una modifica voluta dell'aspe
 | RF-25 matto, stallo, materiale insufficiente, ripetizione, 50 mosse, abbandono | ✓ | matto, abbandono |
 | RF-25 patta accettata dal computer in base alla valutazione | ✓ | ✓ |
 | RF-51 analisi a forza piena con più varianti, analisi continua interrompibile | ✓ | |
-| RF-52 esplorazione lineare con avanti e indietro | ✓ | |
+| RF-52 esplorazione con avanti e indietro, varianti ad albero, salvataggio dell'analisi e PGN con varianti | ✓ | |
 | RF-60 revisione completa con avanzamento e interruzione | ✓ | |
 | RF-61, RF-62 classificazione delle mosse, Brillante e Ottima | ✓ | |
-| RF-55 annotazioni (simbolo e commento) sulle mosse, conservate in import ed export PGN (modifica dalla revisione di una partita dell'archivio; nella partita in corso e nell'analisi: da fare) | ✓ | ✓ |
+| RF-55 annotazioni (simbolo e commento) sulle mosse, conservate in import ed export PGN (modifica dalla revisione e dall'analisi, anche sulle varianti e su una partita dell'archivio; nella partita in corso: da fare) | ✓ | ✓ |
 | RF-56 minaccia dell'avversario nell'analisi e nella partita con l'allenatore | ✓ | ✓ |
 | RF-63 precisione, conteggi e stima della forza | ✓ | |
 | RF-67 tempo residuo a ogni mossa nel PGN (`[%clk]`, import ed export), registrato in partita, tempo per mossa ed errori in fretta nella revisione | ✓ | |
-| RF-68 precisione per fase (apertura, mediogioco, finale) nella revisione | ✓ | ✓ |
+| RF-68 precisione per fase (apertura, mediogioco, finale) nella revisione e nelle statistiche | ✓ | ✓ |
 | RF-50 barra di valutazione con valore numerico | ✓ | |
 | RF-54 freccia della mossa migliore | ✓ | |
 | RF-64 grafico della valutazione cliccabile con momenti chiave | ✓ | |
 | RF-65 Riprova sugli errori | ✓ | |
-| RF-66 cache della revisione (in memoria) | ✓ | |
+| RF-66 cache della revisione (in memoria e su disco, con motore e profondità nella chiave) | ✓ | |
 | RF-70 spiegazioni: matto concesso o mancato, pezzo in presa, forchetta, inchiodatura, re scoperto, perdita di materiale | ✓ | |
 | RF-72 giudizio con simbolo sulla casa della mossa (con l'allenatore acceso) | ✓ | ✓ |
 | RF-122 spiegami perché: frasi per cattura, scacco, arrocco, promozione, minacce, sviluppo; interruttore in Impostazioni | ✓ | |

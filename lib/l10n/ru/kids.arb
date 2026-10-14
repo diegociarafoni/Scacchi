@@ -97,5 +97,8 @@
   "kidUnlockByPlaying": "Откроется по ходу игры",
   "kidCoachMaterialLoss": "Осторожно: этим ходом ты потеряешь фигуры.",
   "kidCoachAllowedMate": "После {move} соперник может поставить мат ходом {reply}.",
-  "kidCoachMissedMate": "Ты мог поставить мат ходом {move}!"
+  "kidCoachMissedMate": "Ты мог поставить мат ходом {move}!",
+  "kidGameUndoOfferSide": "{side, select, white{Белые, переходим ход?} other{Чёрные, переходим ход?}}",
+  "kidGameUndoOfferName": "{name}, сделаем ход заново?",
+  "kidGameUndoYes": "Да, давай заново"
 }

@@ -39,5 +39,7 @@
   "archiveModeLocal": "yerel",
   "archiveModeComputer": "bilgisayar",
   "archiveModeImported": "içe aktarılmış",
-  "archiveModePhysical": "fiziksel tahta"
+  "archiveModePhysical": "fiziksel tahta",
+  "archiveModeAnalysis": "analiz",
+  "archiveOpenAnalysis": "Analizde aç"
 }

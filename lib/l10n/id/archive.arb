@@ -39,5 +39,7 @@
   "archiveModeLocal": "lokal",
   "archiveModeComputer": "komputer",
   "archiveModeImported": "diimpor",
-  "archiveModePhysical": "papan fisik"
+  "archiveModePhysical": "papan fisik",
+  "archiveModeAnalysis": "analisis",
+  "archiveOpenAnalysis": "Buka di analisis"
 }

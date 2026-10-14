@@ -97,5 +97,8 @@
   "kidUnlockByPlaying": "Odblokuje się w trakcie gry",
   "kidCoachMaterialLoss": "Uwaga: ten ruch traci bierki.",
   "kidCoachAllowedMate": "Po {move} przeciwnik może dać mata ruchem {reply}.",
-  "kidCoachMissedMate": "Mogłeś dać mata ruchem {move}!"
+  "kidCoachMissedMate": "Mogłeś dać mata ruchem {move}!",
+  "kidGameUndoOfferSide": "{side, select, white{Białe, zagramy ten ruch jeszcze raz?} other{Czarne, zagramy ten ruch jeszcze raz?}}",
+  "kidGameUndoOfferName": "{name}, zagramy ten ruch jeszcze raz?",
+  "kidGameUndoYes": "Tak, jeszcze raz"
 }

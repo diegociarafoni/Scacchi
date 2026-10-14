@@ -4,6 +4,7 @@ import 'package:dartchess/dartchess.dart' show Side;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../analysis/analysis_page.dart';
 import '../archive/archive_page.dart';
 import '../archive/game_archive.dart';
 import '../archive/pgn.dart';
@@ -53,6 +54,7 @@ import '../review/engine_evaluator.dart';
 import '../review/personal_puzzles.dart';
 import '../review/review_activity.dart';
 import '../review/review_page.dart';
+import '../review/review_store.dart';
 import '../settings/settings.dart';
 import '../settings/settings_page.dart';
 import '../stats/local_rating.dart';
@@ -66,6 +68,7 @@ import '../story/story_l10n.dart';
 import '../story/story_page.dart';
 import '../summary/weekly_summary_page.dart';
 import '../tablebase/shared_tablebase.dart';
+import '../tournament/bot_game.dart';
 import '../tournament/tournament.dart';
 import '../tournament/tournament_controller.dart';
 import '../tournament/tournament_page.dart';
@@ -185,6 +188,10 @@ class _HomeShellState extends State<HomeShell> {
     widget.settings.addListener(_onSettings);
     // Caricamento anticipato in background, per il nome dell'apertura in partita.
     openingBook().ignore();
+    // Revisioni su disco (RF-66); se la cartella dati non c'è, solo memoria.
+    ReviewStore.openDefault()
+        .then((store) => ReviewCache.store ??= store)
+        .ignore();
     _scheduler =
         (widget.reminderScheduler ??
         () => LocalNotificationScheduler.supported
@@ -205,6 +212,8 @@ class _HomeShellState extends State<HomeShell> {
     );
     _reminders?.dispose();
     _homeRefresh.dispose();
+    _botEngineIdle?.cancel();
+    _closeBotEngine();
     super.dispose();
   }
 
@@ -320,7 +329,10 @@ class _HomeShellState extends State<HomeShell> {
   /// Un solo torneo in memoria, salvato a ogni partita.
   Future<TournamentController> _tournamentController() => _tournaments ??=
       (widget.tournaments ??
-              () => TournamentController.open(recordActivity: _record))()
+              () => TournamentController.open(
+                recordActivity: _record,
+                playBotGame: _playBotGame,
+              ))()
           .catchError((Object e, StackTrace st) {
             _tournaments = null;
             Error.throwWithStackTrace(e, st);
@@ -419,6 +431,7 @@ class _HomeShellState extends State<HomeShell> {
       goal: remaining,
       maxRating: chapter.puzzleRating,
       onOutcome: (solved) => _guardianSnack(context, chapter, solved),
+      onHelp: () => _helpSnack(context),
     );
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
@@ -434,6 +447,23 @@ class _HomeShellState extends State<HomeShell> {
     // L'avviso dell'ultimo puzzle non resta sopra la Storia.
     if (context.mounted) ScaffoldMessenger.of(context).hideCurrentSnackBar();
     return feed.solved;
+  }
+
+  /// Dopo due errori di fila: si passa a puzzle più facili (S6).
+  void _helpSnack(BuildContext context) {
+    if (!context.mounted) return;
+    // Dopo l'avviso del custode, che parte nello stesso istante.
+    Future<void>.delayed(const Duration(milliseconds: 200), () {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            behavior: SnackBarBehavior.floating,
+            content: Text(AppLocalizations.of(context).storyHelpEasier),
+          ),
+        );
+    });
   }
 
   /// Il custode commenta il puzzle appena concluso, senza bloccare.
@@ -468,6 +498,16 @@ class _HomeShellState extends State<HomeShell> {
 
   Future<Widget> _tournamentPage() async {
     final controller = await _tournamentController();
+    // Riprende le partite tra bot rimaste a metà alla chiusura dell'app.
+    unawaited(
+      controller.resumeBots().catchError((Object e) {
+        if (kDebugMode) {
+          debugPrint(
+            'Ripresa delle partite tra bot non riuscita: $e', // l10n-ok
+          );
+        }
+      }),
+    );
     final games = await (await _archive()).list();
     return TournamentPage(
       controller: controller,
@@ -476,6 +516,44 @@ class _HomeShellState extends State<HomeShell> {
       play: _playTournamentGame,
     );
   }
+
+  ComputerPlayer? _botGamePlayer;
+  Timer? _botEngineIdle;
+
+  /// Fa giocare al motore una partita tra due bot del torneo; `null` dove il
+  /// motore non c'è o non risponde: la partita si simula. Il motore si chiude
+  /// dopo qualche secondo senza partite, per non restare in memoria.
+  Future<double?> _playBotGame(Player white, Player black, int seed) async {
+    if (!_computerAvailable) return null;
+    _botEngineIdle?.cancel();
+    try {
+      final engine = _botGamePlayer ??=
+          widget.createComputer?.call() ?? ComputerPlayer();
+      await engine.newGame();
+      return await playBotGame(
+        white: _botLevel(white),
+        black: _botLevel(black),
+        move: (fen, moves, level) async =>
+            (await engine.bestMove(fen, moves, level))?.move,
+      );
+    } on Object catch (e) {
+      if (kDebugMode) {
+        debugPrint('Partita tra bot non riuscita: $e'); // l10n-ok
+      }
+      return null;
+    } finally {
+      _botEngineIdle = Timer(const Duration(seconds: 20), _closeBotEngine);
+    }
+  }
+
+  void _closeBotEngine() {
+    _botGamePlayer?.dispose().ignore();
+    _botGamePlayer = null;
+  }
+
+  EngineLevel _botLevel(Player bot) => bot.levelId != null
+      ? engineLevel(bot.levelId!)
+      : engineLevelForElo(bot.elo);
 
   /// Gioca la partita del torneo e restituisce i punti, o `null` se non si è
   /// conclusa. L'uscita dalla partita vale una sconfitta.
@@ -567,8 +645,46 @@ class _HomeShellState extends State<HomeShell> {
         ),
       );
 
+  /// Apre nell'analisi una partita o un'analisi dell'archivio, con le sue
+  /// varianti (RF-52). Salvando da una partita nasce una nuova analisi.
+  Future<void> _openSavedAnalysis(BuildContext context, SavedGame saved) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
+    final l10n = AppLocalizations.of(context);
+    final tree = saved.toTree();
+    if (tree == null) {
+      messenger.showSnackBar(SnackBar(content: Text(l10n.homeGameCannotOpen)));
+      return;
+    }
+    if (!_computerAvailable) {
+      messenger.showSnackBar(SnackBar(content: Text(l10n.homeReviewNoEngine)));
+      return;
+    }
+    final player = widget.createComputer?.call() ?? ComputerPlayer();
+    try {
+      await navigator.push(
+        MaterialPageRoute<void>(
+          builder: (_) => AnalysisPage(
+            initial: tree.root.position,
+            tree: tree,
+            saved: saved.mode == SavedGame.analysis ? saved : null,
+            analyse: (fen, multiPv) =>
+                player.analyseLive(fen, multiPv: multiPv),
+            onSave: _saveGame,
+            tablebase: sharedTablebase(),
+          ),
+        ),
+      );
+    } finally {
+      player.dispose().ignore();
+    }
+  }
+
   /// Apre nella revisione una partita dell'archivio.
   Future<void> _openSavedGame(BuildContext context, SavedGame saved) async {
+    if (saved.mode == SavedGame.analysis) {
+      return _openSavedAnalysis(context, saved);
+    }
     final messenger = ScaffoldMessenger.of(context);
     final navigator = Navigator.of(context);
     final l10n = AppLocalizations.of(context);
@@ -627,12 +743,26 @@ class _HomeShellState extends State<HomeShell> {
     final player = widget.createComputer?.call() ?? ComputerPlayer();
     final side = saved.playerSide;
     final players = side == null ? {Side.white, Side.black} : {side};
+    // Le note e la precisione si salvano sulla voce più recente, non su quella
+    // letta all'apertura.
+    var current = saved;
     try {
       await navigator.push(
         MaterialPageRoute<void>(
           builder: (_) => ReviewPage(
             initial: game.initial,
             moves: [for (final m in game.moves) m.move],
+            onResult: (review) {
+              if (side == null) return;
+              final next = current.withReview(review);
+              // Una revisione già salvata (cache) non riscrive l'archivio.
+              if (next.accuracy == current.accuracy &&
+                  mapEquals(next.phaseAccuracy, current.phaseAccuracy)) {
+                return;
+              }
+              current = next;
+              unawaited(_saveGame(current).catchError((Object _) {}));
+            },
             evaluate: engineEvaluator(player),
             onCancel: player.stopAnalysis,
             analyseLive: (fen, multiPv) =>
@@ -650,12 +780,9 @@ class _HomeShellState extends State<HomeShell> {
             clocks: [for (final m in game.moves) m.clock],
             notes: [for (final m in game.moves) m.note],
             onNoteChanged: (ply, note) {
-              game.annotate(ply, note);
-              return _saveGame(
-                saved.copyWith(
-                  pgn: exportPgn(game, headers: imported.first.headers),
-                ),
-              );
+              imported.first.annotate(ply, note);
+              current = current.copyWith(pgn: imported.first.toPgn());
+              return _saveGame(current);
             },
             timeControl: TimeControl.parse(saved.timeControl ?? ''),
             startTimes: Handicap.startTimesFromPgn(
@@ -856,6 +983,9 @@ class _HomeShellState extends State<HomeShell> {
           ArchivePage(
             archive: await _archive(),
             onOpen: (g) => unawaited(_openSavedGame(context, g)),
+            onAnalyse: _computerAvailable
+                ? (g) => unawaited(_openSavedAnalysis(context, g))
+                : null,
           ),
         ),
       },
@@ -933,6 +1063,7 @@ class _HomeShellState extends State<HomeShell> {
               playGuardian: _computerAvailable ? _playGuardian : null,
               storyPage: _storyPage,
               openGame: _openSavedGame,
+              openAnalysis: _computerAvailable ? _openSavedAnalysis : null,
               puzzlesPage: _puzzlesPage,
             )
           else

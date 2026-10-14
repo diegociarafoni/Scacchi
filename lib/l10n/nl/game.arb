@@ -217,5 +217,30 @@
         "type": "int"
       }
     }
+  },
+  "gameUndoOfferSide": "{side, select, white{Wit gaat} other{Zwart gaat}} akkoord met het terugnemen van de zet?",
+  "@gameUndoOfferSide": {
+    "description": "Richiesta di annullare l'ultima mossa tra due persone, senza nomi scelti",
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "gameUndoOfferNamed": "Gaat {name} ({side, select, white{wit} other{zwart}}) akkoord met het terugnemen van de zet?",
+  "@gameUndoOfferNamed": {
+    "description": "Richiesta di annullare l'ultima mossa tra due persone, con il nome del giocatore",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "gameUndoRefused": "Het terugnemen is geweigerd.",
+  "@gameUndoRefused": {
+    "description": "Messaggio quando l'altro giocatore non accetta di annullare la mossa"
   }
 }

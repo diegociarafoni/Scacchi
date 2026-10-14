@@ -26,6 +26,7 @@ void main() {
     expect(settings.value.tableMode, isFalse);
     expect(settings.value.confirmMove, isFalse);
     expect(settings.value.premove, isTrue);
+    expect(settings.value.evalBar, isFalse);
     expect(settings.value.colorBlind, isFalse);
     expect(settings.value.explainWhy, isFalse);
     expect(settings.value.kidMode, isFalse);
@@ -59,6 +60,7 @@ void main() {
         showLegalMoves: false,
         showCoordinates: false,
         autoQueen: true,
+        moveMethod: MoveMethod.drag,
         drawShapes: false,
         markColor: MarkColor.blue,
         autoFlip: true,
@@ -72,6 +74,7 @@ void main() {
         confirmMove: true,
         colorBlind: true,
         explainWhy: true,
+        evalBar: true,
         kidMode: true,
         themeMode: ThemeMode.dark,
       ),
@@ -81,7 +84,9 @@ void main() {
     expect(reloaded.value.themeMode, ThemeMode.dark);
     expect(reloaded.value.boardTheme, BoardTheme.blue);
     expect(reloaded.value.animation, AnimationSpeed.none);
+    expect(reloaded.value.moveMethod, MoveMethod.drag);
     expect(reloaded.value.markColor, MarkColor.blue);
+    expect(reloaded.value.evalBar, isTrue);
   });
 
   test(

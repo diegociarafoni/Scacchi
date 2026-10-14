@@ -97,5 +97,8 @@
   "kidUnlockByPlaying": "Se débloque en jouant",
   "kidCoachMaterialLoss": "Attention : ce coup fait perdre des pièces.",
   "kidCoachAllowedMate": "Après {move}, ton adversaire peut te mater avec {reply}.",
-  "kidCoachMissedMate": "Tu pouvais mater avec {move} !"
+  "kidCoachMissedMate": "Tu pouvais mater avec {move} !",
+  "kidGameUndoOfferSide": "{side, select, white{Blancs, on refait le coup ?} other{Noirs, on refait le coup ?}}",
+  "kidGameUndoOfferName": "{name}, on refait le coup ?",
+  "kidGameUndoYes": "Oui, on le refait"
 }

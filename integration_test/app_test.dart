@@ -111,8 +111,10 @@ Future<void> _back(WidgetTester tester) async {
   await _pop(tester);
 }
 
-Future<void> _start(WidgetTester tester) async {
-  SharedPreferences.setMockInitialValues({});
+/// [dragging] attiva anche il trascinamento: sul telefono il modo
+/// predefinito usa solo i due tocchi.
+Future<void> _start(WidgetTester tester, {bool dragging = false}) async {
+  SharedPreferences.setMockInitialValues({if (dragging) 'moveMethod': 'both'});
   tester.view.physicalSize = const Size(1170, 2532);
   tester.view.devicePixelRatio = 3;
   addTearDown(tester.view.reset);
@@ -128,7 +130,7 @@ void main() {
   useItalianDevice();
 
   testWidgets('RF-01 muove con due tocchi e con trascinamento', (tester) async {
-    await _start(tester);
+    await _start(tester, dragging: true);
     expect(find.text('Muove il Bianco.'), findsOneWidget);
     await _tapMove(tester, 'e2e4');
     expect(find.text('Muove il Nero.'), findsOneWidget);
@@ -449,7 +451,7 @@ void main() {
   });
 
   testWidgets('RF-10 scorrimento orizzontale sulla scacchiera', (tester) async {
-    await _start(tester);
+    await _start(tester, dragging: true);
     await _tapMove(tester, 'e2e4');
     await _tapMove(tester, 'e7e5');
     await _tapMove(tester, 'g1f3');

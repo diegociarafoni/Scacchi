@@ -217,5 +217,30 @@
         "type": "int"
       }
     }
+  },
+  "gameUndoOfferSide": "Czy {side, select, white{białe zgadzają się} other{czarne zgadzają się}} cofnąć ruch?",
+  "@gameUndoOfferSide": {
+    "description": "Richiesta di annullare l'ultima mossa tra due persone, senza nomi scelti",
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "gameUndoOfferNamed": "Czy {name} ({side, select, white{białe} other{czarne}}) zgadza się cofnąć ruch?",
+  "@gameUndoOfferNamed": {
+    "description": "Richiesta di annullare l'ultima mossa tra due persone, con il nome del giocatore",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "gameUndoRefused": "Cofnięcie ruchu zostało odrzucone.",
+  "@gameUndoRefused": {
+    "description": "Messaggio quando l'altro giocatore non accetta di annullare la mossa"
   }
 }

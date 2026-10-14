@@ -130,5 +130,42 @@
   "settingsMarkColorYellow": "Geel",
   "@settingsMarkColorYellow": {
     "description": "Impostazioni: colore giallo"
-  }
+  },
+  "settingsMoveMethod": "Hoe stukken verplaatsen",
+  "@settingsMoveMethod": {
+    "description": "Impostazioni: scelta del modo di muovere"
+  },
+  "settingsMoveMethodDescription": "Twee tikken zijn nauwkeuriger op een telefoon; een tik op de rand van een veld wordt gecorrigeerd als alleen het naastgelegen veld mogelijk is",
+  "@settingsMoveMethodDescription": {
+    "description": "Impostazioni: descrizione del modo di muovere"
+  },
+  "settingsMoveMethodAuto": "Automatisch",
+  "@settingsMoveMethodAuto": {
+    "description": "Impostazioni: due tocchi sul telefono, entrambi sugli schermi grandi"
+  },
+  "settingsMoveMethodBoth": "Tikken en slepen",
+  "@settingsMoveMethodBoth": {
+    "description": "Impostazioni: entrambi i modi"
+  },
+  "settingsMoveMethodTwoTaps": "Twee tikken",
+  "@settingsMoveMethodTwoTaps": {
+    "description": "Impostazioni: solo due tocchi"
+  },
+  "settingsMoveMethodDrag": "Slepen",
+  "@settingsMoveMethodDrag": {
+    "description": "Impostazioni: solo trascinamento"
+  },
+  "settingsKeepAwake": "Scherm aanhouden",
+  "@settingsKeepAwake": {
+    "description": "Impostazioni: schermo acceso durante la partita"
+  },
+  "settingsKeepAwakeDescription": "De telefoon zet het scherm niet uit tijdens een partij",
+  "@settingsKeepAwakeDescription": {
+    "description": "Impostazioni: descrizione dello schermo sempre acceso"
+  },
+  "settingsEvalBar": "Evaluatiebalk",
+  "settingsEvalBarDescription": "Toont naast het bord wie er beter staat; uit in uitdagingen zonder hulp",
+  "settingsSearchHint": "Zoeken in instellingen",
+  "settingsSearchEmpty": "Geen instellingen gevonden",
+  "settingsSearchClear": "Zoekopdracht wissen"
 }

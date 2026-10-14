@@ -182,5 +182,8 @@
   "gameClockDelaySimple": "Simple",
   "gameClockDelayBronstein": "Bronstein",
   "gameClockStart": "Start",
-  "gameClockRange": "From {min} to {max}"
+  "gameClockRange": "From {min} to {max}",
+  "gameUndoOfferSide": "Does {side, select, white{White} other{Black}} agree to take the move back?",
+  "gameUndoOfferNamed": "Does {name} ({side, select, white{White} other{Black}}) agree to take the move back?",
+  "gameUndoRefused": "The takeback was declined."
 }
