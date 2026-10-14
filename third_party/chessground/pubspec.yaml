@@ -1,0 +1,30 @@
+name: chessground
+description: Chess board UI developed for lichess.org. It has no chess logic inside so it can be used for chess variants.
+version: 10.3.0
+funding:
+  - https://lichess.org/patron
+
+environment:
+  sdk: '>=3.7.0 <4.0.0'
+  flutter: ">=3.29.0"
+
+dependencies:
+  dartchess: ^0.14.0
+  flutter:
+    sdk: flutter
+  meta: ^1.18.0
+  
+flutter:
+  assets:
+    - assets/piece_sets/cburnett/
+    - assets/piece_sets/celtic/
+    - assets/piece_sets/chessnut/
+    - assets/piece_sets/fantasy/
+    - assets/piece_sets/firi/
+    - assets/piece_sets/kiwen-suwi/
+    - assets/piece_sets/merida/
+    - assets/piece_sets/mpchess/
+    - assets/piece_sets/rhosgfx/
+    - assets/piece_sets/shapes/
+    - assets/piece_sets/spatial/
+    - assets/piece_sets/totoy/
