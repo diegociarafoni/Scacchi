@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/multiplayer/nostr_event.dart';
+import 'package:rokko/multiplayer/nostr_event.dart';
 
 void main() {
   final secret = Uint8List.fromList(List.generate(32, (i) => i));

@@ -1,9 +1,9 @@
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/multiplayer/game_message.dart';
-import 'package:scacchi/multiplayer/message_codec.dart';
-import 'package:scacchi/multiplayer/player_identity.dart';
+import 'package:rokko/multiplayer/game_message.dart';
+import 'package:rokko/multiplayer/message_codec.dart';
+import 'package:rokko/multiplayer/player_identity.dart';
 
 const gameId = '0f8e2c1a-3b4d-4e5f-8a9b-1c2d3e4f5a6b';
 final secret = Uint8List.fromList(List.generate(32, (i) => i));

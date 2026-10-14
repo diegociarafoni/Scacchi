@@ -5,6 +5,7 @@ import '../l10n/app_localizations.dart';
 import '../progress/progress_controller.dart';
 import '../style/style_page.dart';
 import '../theme/rokko_theme.dart';
+import '../theme/sheets.dart';
 import 'section_pages.dart';
 import 'settings.dart';
 import 'settings_search.dart';
@@ -145,7 +146,9 @@ class _SettingsPageState extends State<SettingsPage> {
           final query = _search.text;
           final hits = settingsHits(l10n, query, hasProgress: progress != null);
           return ListView(
-            padding: const EdgeInsets.only(bottom: 24),
+            padding: context.withSystemBottom(
+              const EdgeInsets.only(bottom: 24),
+            ),
             children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),

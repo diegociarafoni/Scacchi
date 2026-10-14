@@ -2,20 +2,20 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/archive/game_archive.dart';
-import 'package:scacchi/home/home_shell.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/masters/masters_controller.dart';
-import 'package:scacchi/masters/masters_page.dart';
-import 'package:scacchi/minigames/minigames_page.dart';
-import 'package:scacchi/path/path_controller.dart';
-import 'package:scacchi/progress/achievements.dart';
-import 'package:scacchi/progress/achievements_l10n.dart';
-import 'package:scacchi/progress/profile_page.dart';
-import 'package:scacchi/progress/progress_controller.dart';
-import 'package:scacchi/progress/progress_store.dart';
-import 'package:scacchi/story/story_controller.dart';
-import 'package:scacchi/summary/weekly_summary_page.dart';
+import 'package:rokko/archive/game_archive.dart';
+import 'package:rokko/home/home_shell.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/masters/masters_controller.dart';
+import 'package:rokko/masters/masters_page.dart';
+import 'package:rokko/minigames/minigames_page.dart';
+import 'package:rokko/path/path_controller.dart';
+import 'package:rokko/progress/achievements.dart';
+import 'package:rokko/progress/achievements_l10n.dart';
+import 'package:rokko/progress/profile_page.dart';
+import 'package:rokko/progress/progress_controller.dart';
+import 'package:rokko/progress/progress_store.dart';
+import 'package:rokko/story/story_controller.dart';
+import 'package:rokko/summary/weekly_summary_page.dart';
 
 import 'no_numbers_test.dart' show digitTexts, kidApp, kidSettings, setPhone;
 

@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/progress/daily_goal.dart';
-import 'package:scacchi/progress/streak_info.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/progress/daily_goal.dart';
+import 'package:rokko/progress/streak_info.dart';
 
 StreakInfo info({
   int streak = 0,

@@ -5,10 +5,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/settings/settings.dart';
-import 'package:scacchi/style/style_page.dart';
-import 'package:scacchi/theme/rokko_theme.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/settings/settings.dart';
+import 'package:rokko/style/style_page.dart';
+import 'package:rokko/theme/rokko_theme.dart';
 
 import '../support/devices.dart';
 

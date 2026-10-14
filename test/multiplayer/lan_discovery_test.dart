@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/multiplayer/game_invite.dart';
-import 'package:scacchi/multiplayer/lan_discovery.dart';
+import 'package:rokko/multiplayer/game_invite.dart';
+import 'package:rokko/multiplayer/lan_discovery.dart';
 
 void main() {
   test(

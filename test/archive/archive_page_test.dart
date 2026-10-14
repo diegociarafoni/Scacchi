@@ -4,15 +4,15 @@ import 'package:dartchess/dartchess.dart' hide File;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/analysis/variation_tree.dart';
-import 'package:scacchi/archive/archive_page.dart';
-import 'package:scacchi/archive/game_archive.dart';
-import 'package:scacchi/archive/pgn.dart';
-import 'package:scacchi/archive/saved_game.dart';
-import 'package:scacchi/exchange/qr_send_page.dart';
-import 'package:scacchi/exchange/qr_transfer.dart';
-import 'package:scacchi/game/chess_game.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
+import 'package:rokko/analysis/variation_tree.dart';
+import 'package:rokko/archive/archive_page.dart';
+import 'package:rokko/archive/game_archive.dart';
+import 'package:rokko/archive/pgn.dart';
+import 'package:rokko/archive/saved_game.dart';
+import 'package:rokko/exchange/qr_send_page.dart';
+import 'package:rokko/exchange/qr_transfer.dart';
+import 'package:rokko/game/chess_game.dart';
+import 'package:rokko/l10n/app_localizations.dart';
 
 ChessGame play(List<String> uci) {
   final game = ChessGame();

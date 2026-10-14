@@ -1,16 +1,16 @@
 import 'package:chessground/chessground.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/progress/activity.dart';
-import 'package:scacchi/progress/progress_state.dart';
-import 'package:scacchi/progress/progress_tracker.dart';
-import 'package:scacchi/puzzles/puzzle.dart';
-import 'package:scacchi/puzzles/puzzle_hub_page.dart';
-import 'package:scacchi/puzzles/puzzle_library.dart';
-import 'package:scacchi/puzzles/puzzle_run.dart';
-import 'package:scacchi/puzzles/puzzle_run_page.dart';
-import 'package:scacchi/puzzles/puzzle_trainer.dart';
-import 'package:scacchi/storage/key_value_store.dart';
+import 'package:rokko/progress/activity.dart';
+import 'package:rokko/progress/progress_state.dart';
+import 'package:rokko/progress/progress_tracker.dart';
+import 'package:rokko/puzzles/puzzle.dart';
+import 'package:rokko/puzzles/puzzle_hub_page.dart';
+import 'package:rokko/puzzles/puzzle_library.dart';
+import 'package:rokko/puzzles/puzzle_run.dart';
+import 'package:rokko/puzzles/puzzle_run_page.dart';
+import 'package:rokko/puzzles/puzzle_trainer.dart';
+import 'package:rokko/storage/key_value_store.dart';
 
 import '../localized_app.dart';
 

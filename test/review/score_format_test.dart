@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart' show Locale;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/engine/uci.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/review/score_format.dart';
+import 'package:rokko/engine/uci.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/review/score_format.dart';
 
 final _it = lookupAppLocalizations(const Locale('it'));
 

@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/puzzles/puzzle.dart';
-import 'package:scacchi/puzzles/puzzle_library.dart';
-import 'package:scacchi/puzzles/puzzle_trainer.dart';
-import 'package:scacchi/storage/key_value_store.dart';
-import 'package:scacchi/story/story_feed.dart';
+import 'package:rokko/puzzles/puzzle.dart';
+import 'package:rokko/puzzles/puzzle_library.dart';
+import 'package:rokko/puzzles/puzzle_trainer.dart';
+import 'package:rokko/storage/key_value_store.dart';
+import 'package:rokko/story/story_feed.dart';
 
 import '../puzzles/fixtures.dart';
 

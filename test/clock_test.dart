@@ -1,10 +1,10 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/widgets.dart' show Locale;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/game/chess_game.dart';
-import 'package:scacchi/game/clock.dart';
-import 'package:scacchi/game/clock_l10n.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
+import 'package:rokko/game/chess_game.dart';
+import 'package:rokko/game/clock.dart';
+import 'package:rokko/game/clock_l10n.dart';
+import 'package:rokko/l10n/app_localizations.dart';
 
 class FakeTime {
   DateTime now = DateTime(2026);

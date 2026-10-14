@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:scacchi/main.dart';
+import 'package:rokko/main.dart';
 
 import '../test/support/italian_device.dart';
 
@@ -9,7 +9,7 @@ Future<void> _start(WidgetTester tester) async {
   tester.view.physicalSize = const Size(1170, 2532);
   tester.view.devicePixelRatio = 3;
   addTearDown(tester.view.reset);
-  await tester.pumpWidget(const ScacchiApp());
+  await tester.pumpWidget(const RokkoApp());
   await tester.pumpAndSettle();
 }
 

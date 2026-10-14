@@ -1,8 +1,8 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/widgets.dart' show Locale;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/coach/hint_text.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
+import 'package:rokko/coach/hint_text.dart';
+import 'package:rokko/l10n/app_localizations.dart';
 
 final _it = lookupAppLocalizations(const Locale('it'));
 

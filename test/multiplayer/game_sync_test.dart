@@ -2,8 +2,8 @@ import 'dart:typed_data';
 
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/multiplayer/game_message.dart';
-import 'package:scacchi/multiplayer/game_sync.dart';
+import 'package:rokko/multiplayer/game_message.dart';
+import 'package:rokko/multiplayer/game_sync.dart';
 
 final hostKey = Uint8List.fromList(List.filled(32, 1));
 final guestKey = Uint8List.fromList(List.filled(32, 2));

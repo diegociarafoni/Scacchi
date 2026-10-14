@@ -2,7 +2,7 @@ import 'package:chessground/chessground.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:scacchi/main.dart';
+import 'package:rokko/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../test/support/italian_device.dart';
@@ -26,7 +26,7 @@ void main() {
       tester.view.physicalSize = const Size(1170, 2532);
       tester.view.devicePixelRatio = 3;
       addTearDown(tester.view.reset);
-      await tester.pumpWidget(const ScacchiApp());
+      await tester.pumpWidget(const RokkoApp());
       await tester.pumpAndSettle();
 
       // Dalla Home: la scheda Tu non ha più le funzioni di studio.

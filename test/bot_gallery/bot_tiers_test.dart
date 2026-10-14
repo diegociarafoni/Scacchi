@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/bot_gallery/bot_tiers.dart';
-import 'package:scacchi/engine/bots.dart';
+import 'package:rokko/bot_gallery/bot_tiers.dart';
+import 'package:rokko/engine/bots.dart';
 
 void main() {
   group('RG-18 fasce dei bot', () {

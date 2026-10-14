@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/l10n/content.dart';
-import 'package:scacchi/openings/opening_names.dart';
+import 'package:rokko/l10n/content.dart';
+import 'package:rokko/openings/opening_names.dart';
 
 import '../content_support.dart';
 

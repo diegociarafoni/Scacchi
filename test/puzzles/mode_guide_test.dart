@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/puzzles/mode_guide.dart';
-import 'package:scacchi/puzzles/puzzle_run.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/puzzles/mode_guide.dart';
+import 'package:rokko/puzzles/puzzle_run.dart';
 
 final it = lookupAppLocalizations(const Locale('it'));
 
