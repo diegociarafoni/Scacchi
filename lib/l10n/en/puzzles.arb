@@ -158,6 +158,7 @@
   },
   "puzzleMistakeChapterNew": "Not started",
   "puzzleMistakeChapterInProgress": "In progress",
+  "puzzleMistakeChapterRested": "Done for today",
   "puzzleMistakeChapterDone": "Learned",
   "puzzleSectionTimed": "Timed modes",
   "@puzzleSectionTimed": {

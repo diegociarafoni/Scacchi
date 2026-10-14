@@ -297,6 +297,10 @@
   "@puzzleMistakeChapterInProgress": {
     "description": "Capitolo iniziato"
   },
+  "puzzleMistakeChapterRested": "Fatto per oggi",
+  "@puzzleMistakeChapterRested": {
+    "description": "Capitolo senza puzzle da fare oggi: aspettano la loro scadenza"
+  },
   "puzzleMistakeChapterDone": "Imparato",
   "@puzzleMistakeChapterDone": {
     "description": "Capitolo con tutti i puzzle imparati"

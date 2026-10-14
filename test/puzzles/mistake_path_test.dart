@@ -21,17 +21,22 @@ Puzzle mine(String id, String themes) => Puzzle.parseCsv(
 
 final day = DateTime(2026, 10, 14, 9);
 
+/// L'ora del test, spostabile per far scadere i ripassi.
+var today = day;
+
 Future<PuzzleTrainer> trainerWith(List<Puzzle> personal) async {
   final t = await PuzzleTrainer.load(
     PuzzleLibrary([backRank]),
     MemoryStore(),
-    now: () => day,
+    now: () => today,
   );
   await t.addPersonal(personal);
   return t;
 }
 
 void main() {
+  setUp(() => today = day);
+
   group('capitoli', () {
     test('un capitolo per tema tattico, dal più sbagliato', () async {
       final t = await trainerWith([
@@ -113,6 +118,24 @@ void main() {
     });
   });
 
+  group('da fare adesso', () {
+    test('i nuovi e quelli in scadenza, non gli altri', () async {
+      final t = await trainerWith([
+        mine('a', 'fork'),
+        mine('b', 'fork'),
+        mine('c', 'fork'),
+      ]);
+      expect(mistakeChapters(t).single.available, 3);
+      await t.reviews.reviewed('mio-a', solved: true, now: day);
+      expect(mistakeChapters(t).single.available, 2);
+      await t.reviews.reviewed('mio-b', solved: false, now: day);
+      await t.reviews.reviewed('mio-c', solved: true, now: day);
+      expect(mistakeChapters(t).single.available, 0);
+      today = day.add(const Duration(days: 1));
+      expect(mistakeChapters(t).single.available, 3);
+    });
+  });
+
   group('puzzle del capitolo', () {
     test('si propongono i nuovi prima, una volta sola', () async {
       final t = await trainerWith([
@@ -121,16 +144,49 @@ void main() {
         mine('c', 'fork'),
         mine('x', 'pin'),
       ]);
-      await t.reviews.reviewed('mio-a', solved: true, now: day);
       final feed = MistakeChapterFeed(t, 'fork');
       final served = <String>[];
       while (feed.hasNext) {
         served.add(feed.next()!.id);
       }
-      expect(served.take(2).toSet(), {'mio-b', 'mio-c'});
-      expect(served.last, 'mio-a');
+      expect(served.toSet(), {'mio-a', 'mio-b', 'mio-c'});
       expect(served, hasLength(3));
       expect(feed.next(), isNull);
+    });
+
+    test('i puzzle già fatti aspettano il loro giorno', () async {
+      final t = await trainerWith([
+        mine('a', 'fork'),
+        mine('b', 'fork'),
+        mine('c', 'fork'),
+      ]);
+      await t.reviews.reviewed('mio-a', solved: true, now: day);
+      var feed = MistakeChapterFeed(t, 'fork');
+      final first = <String>[];
+      while (feed.hasNext) {
+        first.add(feed.next()!.id);
+      }
+      expect(first.toSet(), {'mio-b', 'mio-c'});
+      // Il giorno dopo il ripasso di «a» è in scadenza.
+      today = day.add(const Duration(days: 1));
+      feed = MistakeChapterFeed(t, 'fork');
+      expect(feed.next()!.id, anyOf('mio-b', 'mio-c'));
+      expect(feed.next()!.id, anyOf('mio-b', 'mio-c'));
+      expect(feed.next()!.id, 'mio-a');
+    });
+
+    test('tra i ripassi viene prima il più in ritardo', () async {
+      final t = await trainerWith([mine('a', 'fork'), mine('b', 'fork')]);
+      await t.reviews.reviewed('mio-b', solved: true, now: day);
+      await t.reviews.reviewed(
+        'mio-a',
+        solved: true,
+        now: day.add(const Duration(days: 1)),
+      );
+      today = day.add(const Duration(days: 5));
+      final feed = MistakeChapterFeed(t, 'fork');
+      expect(feed.next()!.id, 'mio-b');
+      expect(feed.next()!.id, 'mio-a');
     });
 
     test('i già imparati non tornano', () async {
@@ -180,6 +236,19 @@ void main() {
       expect(find.text('Capitolo 2'), findsOneWidget);
       expect(find.text('In corso'), findsOneWidget);
       expect(find.text('Da iniziare'), findsOneWidget);
+    });
+
+    testWidgets('un capitolo fatto per oggi non si apre', (tester) async {
+      setPhone(tester);
+      final t = await trainerWith([mine('a', 'fork'), mine('b', 'fork')]);
+      await t.reviews.reviewed('mio-a', solved: true, now: day);
+      await t.reviews.reviewed('mio-b', solved: true, now: day);
+      await tester.pumpWidget(localizedApp(home: MistakePathPage(trainer: t)));
+      await tester.pumpAndSettle();
+      expect(find.text('Fatto per oggi'), findsOneWidget);
+      await tester.tap(find.text('Forchetta'));
+      await tester.pumpAndSettle();
+      expect(find.byType(PuzzlePage), findsNothing);
     });
 
     testWidgets('senza capitoli spiega come nascono', (tester) async {

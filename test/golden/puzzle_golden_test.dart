@@ -199,6 +199,8 @@ void main() {
     ]);
     await trainer.reviews.reviewed('mio-a', solved: true, now: trainer.now());
     await trainer.reviews.remove(['mio-f', 'mio-g']);
+    await trainer.reviews.reviewed('mio-d', solved: true, now: trainer.now());
+    await trainer.reviews.reviewed('mio-e', solved: true, now: trainer.now());
     await _pump(tester, Device.phoneMedium, MistakePathPage(trainer: trainer));
     await expectLater(
       find.byType(MaterialApp),

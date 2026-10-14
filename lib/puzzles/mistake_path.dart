@@ -22,6 +22,7 @@ class MistakeChapter {
     required this.puzzles,
     required this.practiced,
     required this.learned,
+    required this.available,
   });
 
   /// Identificativo del tema (vedi [puzzleThemeIds]).
@@ -33,6 +34,11 @@ class MistakeChapter {
 
   /// Puzzle usciti dal ripasso perché imparati.
   final int learned;
+
+  /// Puzzle da fare adesso: i nuovi e quelli la cui scadenza è arrivata. Gli
+  /// altri aspettano il loro giorno: rifarli subito farebbe salire di livello
+  /// il ripasso senza che sia passato tempo.
+  final int available;
 
   int get total => puzzles.length;
   bool get done => learned == total;
@@ -50,10 +56,17 @@ List<MistakeChapter> mistakeChapters(PuzzleTrainer trainer) {
       byTheme.putIfAbsent(theme, () => []).add(puzzle);
     }
   }
-  final themes = [
-    for (final id in puzzleThemeIds)
-      if ((byTheme[id]?.length ?? 0) >= mistakeChapterMinPuzzles) id,
-  ]..sort((a, b) => byTheme[b]!.length.compareTo(byTheme[a]!.length));
+  final themes =
+      [
+        for (final id in puzzleThemeIds)
+          if ((byTheme[id]?.length ?? 0) >= mistakeChapterMinPuzzles) id,
+      ]..sort((a, b) {
+        final bySize = byTheme[b]!.length.compareTo(byTheme[a]!.length);
+        // `sort` non è stabile: il pari merito si decide sull'ordine dei temi.
+        return bySize != 0
+            ? bySize
+            : puzzleThemeIds.indexOf(a).compareTo(puzzleThemeIds.indexOf(b));
+      });
   return [
     for (final theme in themes.take(mistakeChaptersMax))
       _chapter(trainer, theme, byTheme[theme]!),
@@ -62,9 +75,12 @@ List<MistakeChapter> mistakeChapters(PuzzleTrainer trainer) {
 
 MistakeChapter _chapter(PuzzleTrainer trainer, String theme, List<Puzzle> ps) {
   final reviews = trainer.reviews;
+  final due = reviews.due(trainer.now()).toSet();
+  var available = 0;
   var learned = 0;
   var practiced = 0;
   for (final p in ps) {
+    if (due.contains(p.id)) available++;
     if (!reviews.contains(p.id)) {
       learned++;
       practiced++;
@@ -77,11 +93,12 @@ MistakeChapter _chapter(PuzzleTrainer trainer, String theme, List<Puzzle> ps) {
     puzzles: ps,
     practiced: practiced,
     learned: learned,
+    available: available,
   );
 }
 
-/// Puzzle di un capitolo ancora da imparare: prima i nuovi, poi gli altri dal
-/// più in ritardo, ognuno una volta sola per sessione. L'esito va nel ripasso
+/// Puzzle di un capitolo da fare adesso: prima i nuovi, poi quelli in scadenza
+/// dal più in ritardo, ognuno una volta sola per sessione. L'esito va nel ripasso
 /// come negli altri puzzle dei propri errori e non sposta il punteggio.
 class MistakeChapterFeed implements PuzzleFeed {
   MistakeChapterFeed(this.trainer, this.theme);
@@ -92,24 +109,18 @@ class MistakeChapterFeed implements PuzzleFeed {
 
   Puzzle? _peek() {
     final reviews = trainer.reviews;
-    final open = [
-      for (final p in trainer.personal.all)
-        if (p.themes.contains(theme) &&
-            reviews.contains(p.id) &&
-            !_served.contains(p.id))
-          p,
+    // `due` è già in ordine di scadenza; i nuovi passano avanti.
+    final due = [
+      for (final id in reviews.due(trainer.now()))
+        if (!_served.contains(id) && _inChapter(id)) id,
     ];
-    if (open.isEmpty) return null;
-    final order = reviews.ids.toList();
-    open.sort((a, b) {
-      final fresh =
-          (reviews.isNew(b.id) ? 1 : 0) - (reviews.isNew(a.id) ? 1 : 0);
-      return fresh != 0
-          ? fresh
-          : order.indexOf(a.id).compareTo(order.indexOf(b.id));
-    });
-    return open.first;
+    if (due.isEmpty) return null;
+    final first = due.firstWhere(reviews.isNew, orElse: () => due.first);
+    return trainer.personal.byId(first);
   }
+
+  bool _inChapter(String id) =>
+      trainer.personal.byId(id)?.themes.contains(theme) ?? false;
 
   @override
   Puzzle? next() {

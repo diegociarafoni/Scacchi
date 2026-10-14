@@ -158,6 +158,7 @@
   },
   "puzzleMistakeChapterNew": "Nog niet begonnen",
   "puzzleMistakeChapterInProgress": "Bezig",
+  "puzzleMistakeChapterRested": "Klaar voor vandaag",
   "puzzleMistakeChapterDone": "Geleerd",
   "puzzleSectionTimed": "Spellen op tijd",
   "@puzzleSectionTimed": {

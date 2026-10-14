@@ -158,6 +158,7 @@
   },
   "puzzleMistakeChapterNew": "Belum dimulai",
   "puzzleMistakeChapterInProgress": "Sedang berjalan",
+  "puzzleMistakeChapterRested": "Selesai untuk hari ini",
   "puzzleMistakeChapterDone": "Sudah dikuasai",
   "puzzleSectionTimed": "Mode berwaktu",
   "@puzzleSectionTimed": {

@@ -158,6 +158,7 @@
   },
   "puzzleMistakeChapterNew": "Не начата",
   "puzzleMistakeChapterInProgress": "В процессе",
+  "puzzleMistakeChapterRested": "На сегодня всё",
   "puzzleMistakeChapterDone": "Выучена",
   "puzzleSectionTimed": "Режимы на время",
   "@puzzleSectionTimed": {

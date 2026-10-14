@@ -158,6 +158,7 @@
   },
   "puzzleMistakeChapterNew": "Başlanmadı",
   "puzzleMistakeChapterInProgress": "Devam ediyor",
+  "puzzleMistakeChapterRested": "Bugünlük bitti",
   "puzzleMistakeChapterDone": "Öğrenildi",
   "puzzleSectionTimed": "Süreli modlar",
   "@puzzleSectionTimed": {

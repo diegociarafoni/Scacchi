@@ -158,6 +158,7 @@
   },
   "puzzleMistakeChapterNew": "Do rozpoczęcia",
   "puzzleMistakeChapterInProgress": "W toku",
+  "puzzleMistakeChapterRested": "Na dziś gotowe",
   "puzzleMistakeChapterDone": "Opanowany",
   "puzzleSectionTimed": "Tryby na czas",
   "@puzzleSectionTimed": {

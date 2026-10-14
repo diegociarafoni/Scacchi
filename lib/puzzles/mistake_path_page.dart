@@ -59,13 +59,16 @@ class _MistakePathPageState extends State<MistakePathPage> {
             ),
           ),
           for (var i = 0; i < chapters.length; i++)
-            _ChapterCard(
-              number: i + 1,
-              chapter: chapters[i],
-              title: puzzleThemeLabel(l, chapters[i].theme)!,
-              onTap: () =>
-                  _open(chapters[i], puzzleThemeLabel(l, chapters[i].theme)!),
-            ),
+            if (puzzleThemeLabel(l, chapters[i].theme) case final title?)
+              _ChapterCard(
+                number: i + 1,
+                chapter: chapters[i],
+                title: title,
+                // Nulla da fare adesso: i puzzle aspettano il loro giorno.
+                onTap: chapters[i].available == 0
+                    ? null
+                    : () => _open(chapters[i], title),
+              ),
         ],
       ),
     );
@@ -83,7 +86,7 @@ class _ChapterCard extends StatelessWidget {
   final int number;
   final MistakeChapter chapter;
   final String title;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -92,6 +95,8 @@ class _ChapterCard extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
     final status = chapter.done
         ? l.puzzleMistakeChapterDone
+        : chapter.available == 0
+        ? l.puzzleMistakeChapterRested
         : chapter.practiced == 0
         ? l.puzzleMistakeChapterNew
         : l.puzzleMistakeChapterInProgress;
