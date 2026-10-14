@@ -10,6 +10,8 @@ pre-commit:
     - name: analisi statica
       glob: "*.{dart,yaml,arb}"
       run: dart tool/l10n.dart && flutter analyze --fatal-infos --fatal-warnings
+    - name: autore del commit
+      run: dart tool/check_autore.dart
     - name: segreti
       run: gitleaks git --pre-commit --staged --redact --no-banner
 

@@ -85,5 +85,48 @@ void main() {
     test('fixup di un messaggio non valido resta non valido', () {
       expect(validateCommitMessage('fixup! aggiunge cose'), isNotEmpty);
     });
+
+    group('niente attribuzione a Claude', () {
+      for (final ko in [
+        'feat: aggiunge x\n\nCo-Authored-By: Claude <noreply@anthropic.com>',
+        'feat: aggiunge x\n\nCo-authored-by: Claude Sonnet 5.5 <noreply@anthropic.com>',
+        'feat: aggiunge x\n\nClaude-Session: https://claude.ai/code/session_01abc',
+        'feat: aggiunge x\n\nhttps://claude.ai/code/session_01abc',
+        'feat: aggiunge x\n\nGenerated with Claude Code',
+        'feat: aggiunge x\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)',
+      ]) {
+        for (final source in MessageSource.values) {
+          test('rifiuta "${ko.split('\n').last}" ($source)', () {
+            expect(validateCommitMessage(ko, source: source), isNotEmpty);
+          });
+        }
+      }
+
+      test('i co-autori umani restano ammessi', () {
+        expect(
+          validateCommitMessage(
+            'fix: corregge x\n\nCo-authored-by: Mario <mario@example.com>',
+          ),
+          isEmpty,
+        );
+      });
+
+      test('riconosce l\'identità di Claude come autore', () {
+        expect(isClaudeIdentity('Claude', 'noreply@anthropic.com'), isTrue);
+        expect(isClaudeIdentity('x', 'bot@anthropic.com'), isTrue);
+        expect(isClaudeIdentity('Claude', 'a@example.com'), isTrue);
+        expect(isClaudeIdentity('Claude Dupont', 'c@example.com'), isFalse);
+        expect(isClaudeIdentity('Anna', 'claude.monet@example.com'), isFalse);
+        expect(
+          hasClaudeAttribution('Testo\n  Co-Authored-By: Claude <x>'),
+          isTrue,
+        );
+        expect(hasClaudeAttribution('Nessun riferimento'), isFalse);
+        expect(
+          isClaudeIdentity('diegociarafoni', '1+d@users.noreply.github.com'),
+          isFalse,
+        );
+      });
+    });
   });
 }
