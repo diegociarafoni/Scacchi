@@ -477,5 +477,29 @@
         "type": "String"
       }
     }
+  },
+  "badgeOnlineFirstName": "İki kişilik oyun",
+  "badgeOnlineFirstDesc": "Başka bir telefondaki arkadaşınla bir oyun oyna.",
+  "badgeOnline10Name": "Hep arkadaşla",
+  "badgeOnline10Desc": "Bir arkadaşınla {count} oyun oyna.",
+  "@badgeOnline10Desc": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeOnlineWinName": "Dostlar arasında zafer",
+  "badgeOnlineWinDesc": "Başka bir telefondaki arkadaşına karşı bir oyun kazan.",
+  "badgeRepertoireFirstName": "Hafıza antrenmanda",
+  "badgeRepertoireFirstDesc": "Repertuvarını ilk kez tekrar et.",
+  "badgeRepertoire10Name": "Ezbere repertuvar",
+  "badgeRepertoire10Desc": "Repertuvarını {count} seansta tekrar et.",
+  "@badgeRepertoire10Desc": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }
