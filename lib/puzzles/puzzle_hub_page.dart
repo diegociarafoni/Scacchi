@@ -5,6 +5,7 @@ import '../kids/kid_display.dart';
 import '../l10n/app_localizations.dart';
 import '../settings/settings.dart';
 import '../theme/rokko_theme.dart';
+import '../theme/sheets.dart';
 import 'activity_recorder.dart';
 import 'friend_challenge_page.dart';
 import 'mode_guide.dart';
@@ -63,7 +64,9 @@ class _PuzzleHubPageState extends State<PuzzleHubPage> {
           final kid = AppSettings.of(context).kidMode;
           final text = Theme.of(context).textTheme;
           return ListView(
-            padding: const EdgeInsets.only(bottom: 24),
+            padding: context.withSystemBottom(
+              const EdgeInsets.only(bottom: 24),
+            ),
             children: [
               if (kid)
                 _KidHeader(solved: trainer.solvedCount)

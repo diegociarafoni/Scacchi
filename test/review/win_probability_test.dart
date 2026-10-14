@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/engine/uci.dart';
-import 'package:scacchi/review/win_probability.dart';
+import 'package:rokko/engine/uci.dart';
+import 'package:rokko/review/win_probability.dart';
 
 void main() {
   group('RF-61 probabilità di vittoria', () {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/game/clock.dart';
-import 'package:scacchi/game/custom_clock_dialog.dart';
+import 'package:rokko/game/clock.dart';
+import 'package:rokko/game/custom_clock_dialog.dart';
 
 import '../localized_app.dart';
 

@@ -167,7 +167,7 @@ Si aprono dall'icona a forma di ingranaggio nella Home e nella barra del titolo 
 | Notazione | Figurativa (♞f3), Italiana (Cf3) o Inglese (Nf3) per le mosse mostrate (vedi [notazione.md](notazione.md)) | Figurativa |
 | «Spiegami perché» | Spiegazione dell'errore con l'allenatore (vedi [allenatore.md](allenatore.md)) | Disattiva |
 
-Se il telefono chiede di ridurre le animazioni (Android «Rimuovi animazioni», iOS «Riduci movimento»), l'app lo segue da sola: i pezzi si muovono senza animazione, qualunque sia la velocità scelta, e le pagine si aprono senza transizione (su iOS e macOS resta quella di sistema, che porta il gesto per tornare indietro). Restano animati dialoghi, fogli e la barra di valutazione della revisione. Il valore non si salva (`AppSettings.reduceMotion`, letto da `ScacchiApp` e aggiornato quando cambia) e vale subito. Le animazioni delle singole schermate (per esempio il foglio di passaggio della Storia) lo leggono già da `MediaQuery.disableAnimationsOf`.
+Se il telefono chiede di ridurre le animazioni (Android «Rimuovi animazioni», iOS «Riduci movimento»), l'app lo segue da sola: i pezzi si muovono senza animazione, qualunque sia la velocità scelta, e le pagine si aprono senza transizione (su iOS e macOS resta quella di sistema, che porta il gesto per tornare indietro). Restano animati dialoghi, fogli e la barra di valutazione della revisione. Il valore non si salva (`AppSettings.reduceMotion`, letto da `RokkoApp` e aggiornato quando cambia) e vale subito. Le animazioni delle singole schermate (per esempio il foglio di passaggio della Storia) lo leggono già da `MediaQuery.disableAnimationsOf`.
 
 Tema, pezzi, coordinate, mosse legali, frecce e animazioni valgono anche per le scacchiere dei problemi, delle aperture e del repertorio, che si aggiornano subito quando cambiano. La modalità tavolo vale solo per la partita, perché negli esercizi si gioca sempre da un solo lato; anche la promozione automatica a donna vale solo per la partita, perché alcuni puzzle si risolvono promuovendo a un altro pezzo.
 
@@ -194,6 +194,12 @@ A ogni mossa suona un solo effetto, scelto in quest'ordine di priorità: fine pa
 La scheda Puzzle ha il punteggio in alto, il puzzle del giorno come scheda grande e colorata, poi due gruppi: «Allenati» (allenamento, per tema, ripasso) e «Modalità a tempo» (serie e sfida a un amico). Nel profilo bambino restano le stelle e le voci semplici, senza cifre né modalità a tempo.
 
 Nel puzzle l'obiettivo sta in una scheda sopra la scacchiera, con il colore che muove. Sotto, una fascia dice l'esito con icona, testo e colore insieme (da risolvere, giusto, errore, risolto, soluzione mostrata); è una regione viva per i lettori di schermo. I pulsanti hanno almeno 48 dp (56 nel profilo bambino). Nelle serie l'esito dell'ultimo puzzle ha icona e testo. Tutti i testi dell'interfaccia sono in `lib/l10n/<lingua>/puzzles.arb`; anche le regole delle modalità (`mode_guide.dart`) e i nomi dei temi (`themes.dart`) si leggono da lì. Golden con tema reale in `test/golden/puzzle_golden_test.dart`.
+
+## Tasti di sistema e punti guadagnati
+
+Su Android con la barra a tre tasti l'app disegna sotto la navigazione di sistema: il contenuto deve restare sopra. Le schede dal basso si aprono solo con `showRokkoSheet` (`lib/theme/sheets.dart`, un test vieta `showModalBottomSheet` diretto), mentre le liste con riempimento esplicito sommano l'ingombro con `context.withSystemBottom`. I golden dei puzzle includono la barra a tre tasti (`Device.apply(navBar: …)`).
+
+Nei puzzle i punti guadagnati («+25 XP · Sfida completata…») stanno in linea sopra la scacchiera (`ProgressNote`) e non in una barra a comparsa, che coprirebbe i pulsanti; lo stesso vale per il pannello finale delle serie.
 
 ## Tema
 

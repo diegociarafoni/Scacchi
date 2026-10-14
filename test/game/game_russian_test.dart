@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/game/game_page.dart';
-import 'package:scacchi/minigames/minigames_page.dart';
-import 'package:scacchi/settings/settings.dart';
-import 'package:scacchi/storage/key_value_store.dart';
+import 'package:rokko/game/game_page.dart';
+import 'package:rokko/minigames/minigames_page.dart';
+import 'package:rokko/settings/settings.dart';
+import 'package:rokko/storage/key_value_store.dart';
 
 import '../localized_app.dart';
 

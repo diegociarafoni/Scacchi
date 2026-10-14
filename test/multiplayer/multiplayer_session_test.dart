@@ -2,10 +2,10 @@ import 'dart:typed_data';
 
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/multiplayer/game_invite.dart';
-import 'package:scacchi/multiplayer/multiplayer_session.dart';
-import 'package:scacchi/multiplayer/player_identity.dart';
-import 'package:scacchi/multiplayer/transport.dart';
+import 'package:rokko/multiplayer/game_invite.dart';
+import 'package:rokko/multiplayer/multiplayer_session.dart';
+import 'package:rokko/multiplayer/player_identity.dart';
+import 'package:rokko/multiplayer/transport.dart';
 
 void main() {
   late PlayerIdentity hostId;

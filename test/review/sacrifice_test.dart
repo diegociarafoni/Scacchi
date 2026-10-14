@@ -1,6 +1,6 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/review/sacrifice.dart';
+import 'package:rokko/review/sacrifice.dart';
 
 Position fen(String f) => Chess.fromSetup(Setup.parseFen(f));
 

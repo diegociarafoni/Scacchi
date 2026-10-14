@@ -1,11 +1,11 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/coach/coach_session.dart';
-import 'package:scacchi/engine/uci.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/review/coach.dart';
-import 'package:scacchi/review/move_classification.dart';
+import 'package:rokko/coach/coach_session.dart';
+import 'package:rokko/engine/uci.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/review/coach.dart';
+import 'package:rokko/review/move_classification.dart';
 
 import '../review/fake_engine.dart';
 

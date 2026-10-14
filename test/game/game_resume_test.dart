@@ -2,12 +2,12 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart' show Move, Side;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/archive/saved_game.dart';
-import 'package:scacchi/engine/computer_player.dart';
-import 'package:scacchi/game/chess_game.dart';
-import 'package:scacchi/game/game_page.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/settings/settings.dart';
+import 'package:rokko/archive/saved_game.dart';
+import 'package:rokko/engine/computer_player.dart';
+import 'package:rokko/game/chess_game.dart';
+import 'package:rokko/game/game_page.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/settings/settings.dart';
 
 import '../computer_fakes.dart';
 import '../game_actions.dart';

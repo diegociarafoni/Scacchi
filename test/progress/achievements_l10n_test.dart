@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/progress/achievements.dart';
-import 'package:scacchi/progress/achievements_l10n.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/progress/achievements.dart';
+import 'package:rokko/progress/achievements_l10n.dart';
 
 void main() {
   for (final lang in ['it', 'en']) {

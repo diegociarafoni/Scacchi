@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/review/personal_puzzles.dart';
+import 'package:rokko/review/personal_puzzles.dart';
 
 void main() {
   test('gameIdOf è stabile e distingue le partite', () {

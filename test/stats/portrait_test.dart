@@ -1,7 +1,7 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/archive/saved_game.dart';
-import 'package:scacchi/stats/portrait.dart';
+import 'package:rokko/archive/saved_game.dart';
+import 'package:rokko/stats/portrait.dart';
 
 // Matto del barbiere: 1. e4 e5 2. Qh5 Nc6 3. Bc4 Nf6 4. Qxf7#
 const _scholars = '1. e4 e5 2. Qh5 Nc6 3. Bc4 Nf6 4. Qxf7# 1-0';

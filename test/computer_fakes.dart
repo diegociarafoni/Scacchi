@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/engine/uci_transport.dart';
+import 'package:rokko/engine/uci_transport.dart';
 
 import 'game_actions.dart';
 

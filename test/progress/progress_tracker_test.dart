@@ -1,14 +1,14 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/progress/achievements.dart';
-import 'package:scacchi/progress/achievements_l10n.dart';
-import 'package:scacchi/progress/activity.dart';
-import 'package:scacchi/progress/daily_goal.dart';
-import 'package:scacchi/progress/progress_state.dart';
-import 'package:scacchi/progress/progress_tracker.dart';
-import 'package:scacchi/progress/xp.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/progress/achievements.dart';
+import 'package:rokko/progress/achievements_l10n.dart';
+import 'package:rokko/progress/activity.dart';
+import 'package:rokko/progress/daily_goal.dart';
+import 'package:rokko/progress/progress_state.dart';
+import 'package:rokko/progress/progress_tracker.dart';
+import 'package:rokko/progress/xp.dart';
 
 // 2026-10-05 è un lunedì.
 DateTime day(int d, [int hour = 12]) => DateTime(2026, 10, d, hour);

@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:dartchess/dartchess.dart';
-import 'package:scacchi/physical/board_photo.dart';
+import 'package:rokko/physical/board_photo.dart';
 
 /// Scacchiera sintetica per i test: quadrati chiari e scuri, pezzi come
 /// dischi chiari o scuri.

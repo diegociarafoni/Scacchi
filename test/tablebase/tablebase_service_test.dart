@@ -3,8 +3,8 @@ import 'dart:typed_data';
 
 import 'package:dartchess/dartchess.dart' hide File;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/tablebase/tablebase.dart';
-import 'package:scacchi/tablebase/tablebase_service.dart';
+import 'package:rokko/tablebase/tablebase.dart';
+import 'package:rokko/tablebase/tablebase_service.dart';
 
 Position _pos(String fen) => Chess.fromSetup(Setup.parseFen(fen));
 

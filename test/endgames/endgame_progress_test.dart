@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/endgames/drills.dart';
-import 'package:scacchi/endgames/endgame_controller.dart';
-import 'package:scacchi/endgames/endgame_progress.dart';
-import 'package:scacchi/progress/activity.dart';
+import 'package:rokko/endgames/drills.dart';
+import 'package:rokko/endgames/endgame_controller.dart';
+import 'package:rokko/endgames/endgame_progress.dart';
+import 'package:rokko/progress/activity.dart';
 
 void main() {
   final first = endgameDrills.first;

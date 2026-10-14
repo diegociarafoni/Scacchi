@@ -3,8 +3,8 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/multiplayer/ble_transport.dart';
-import 'package:scacchi/multiplayer/transport.dart';
+import 'package:rokko/multiplayer/ble_transport.dart';
+import 'package:rokko/multiplayer/transport.dart';
 
 /// Due estremi di un collegamento Bluetooth in memoria.
 class FakeBleLink implements BleLink {

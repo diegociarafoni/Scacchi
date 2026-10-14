@@ -3,7 +3,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/exchange/qr_transfer.dart';
+import 'package:rokko/exchange/qr_transfer.dart';
 
 const shortPgn =
     '[Event "Amichevole"]\n[White "Città"]\n[Black "Più"]\n'

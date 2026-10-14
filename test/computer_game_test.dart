@@ -4,10 +4,10 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/engine/computer_player.dart';
-import 'package:scacchi/engine/uci_transport.dart';
-import 'package:scacchi/game/game_page.dart';
-import 'package:scacchi/settings/settings.dart';
+import 'package:rokko/engine/computer_player.dart';
+import 'package:rokko/engine/uci_transport.dart';
+import 'package:rokko/game/game_page.dart';
+import 'package:rokko/settings/settings.dart';
 
 import 'computer_fakes.dart';
 import 'game_actions.dart';

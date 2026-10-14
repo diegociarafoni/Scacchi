@@ -1,7 +1,7 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/game/tap_assist.dart';
+import 'package:rokko/game/tap_assist.dart';
 
 void main() {
   const size = 400.0;

@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/engine/bots.dart';
-import 'package:scacchi/path/path_controller.dart';
-import 'package:scacchi/story/story.dart';
-import 'package:scacchi/story/story_controller.dart';
-import 'package:scacchi/story/story_page.dart';
+import 'package:rokko/engine/bots.dart';
+import 'package:rokko/path/path_controller.dart';
+import 'package:rokko/story/story.dart';
+import 'package:rokko/story/story_controller.dart';
+import 'package:rokko/story/story_page.dart';
 
 import '../localized_app.dart';
 

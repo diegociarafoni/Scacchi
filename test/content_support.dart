@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:scacchi/l10n/content.dart';
+import 'package:rokko/l10n/content.dart';
 
 /// Contenuti di `assets/content/` letti dal disco, nella lingua [language].
 Map<String, ContentText> contentFromDisk([String language = 'it']) {

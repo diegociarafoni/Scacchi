@@ -5,10 +5,10 @@ import 'dart:typed_data';
 import 'package:dartchess/dartchess.dart' show Chess, Position;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/archive/game_archive.dart';
-import 'package:scacchi/archive/saved_game.dart';
-import 'package:scacchi/physical/photo_source.dart';
-import 'package:scacchi/physical/physical_game_page.dart';
+import 'package:rokko/archive/game_archive.dart';
+import 'package:rokko/archive/saved_game.dart';
+import 'package:rokko/physical/photo_source.dart';
+import 'package:rokko/physical/physical_game_page.dart';
 
 import '../game_actions.dart';
 import '../localized_app.dart';

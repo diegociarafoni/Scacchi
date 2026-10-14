@@ -3,8 +3,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/settings/app_language.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/settings/app_language.dart';
 
 import '../../tool/src/l10n_merge.dart';
 

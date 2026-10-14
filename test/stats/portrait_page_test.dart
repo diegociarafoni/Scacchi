@@ -3,9 +3,9 @@ import 'dart:typed_data';
 
 import 'package:dartchess/dartchess.dart' hide File;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/archive/game_archive.dart';
-import 'package:scacchi/archive/saved_game.dart';
-import 'package:scacchi/stats/portrait_page.dart';
+import 'package:rokko/archive/game_archive.dart';
+import 'package:rokko/archive/saved_game.dart';
+import 'package:rokko/stats/portrait_page.dart';
 
 import '../localized_app.dart';
 

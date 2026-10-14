@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/l10n/content.dart';
-import 'package:scacchi/path/curriculum.dart';
+import 'package:rokko/l10n/content.dart';
+import 'package:rokko/path/curriculum.dart';
 
 import '../content_support.dart';
 

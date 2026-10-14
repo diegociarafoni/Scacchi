@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/engine/computer_player.dart';
-import 'package:scacchi/engine/process_transport.dart';
-import 'package:scacchi/engine/uci_transport.dart';
-import 'package:scacchi/review/engine_evaluator.dart';
-import 'package:scacchi/review/game_review.dart';
-import 'package:scacchi/review/move_classification.dart';
+import 'package:rokko/engine/computer_player.dart';
+import 'package:rokko/engine/process_transport.dart';
+import 'package:rokko/engine/uci_transport.dart';
+import 'package:rokko/review/engine_evaluator.dart';
+import 'package:rokko/review/game_review.dart';
+import 'package:rokko/review/move_classification.dart';
 
 class _Engine implements UciTransport {
   _Engine(this.onGo);
