@@ -9,6 +9,7 @@ import '../archive/saved_game.dart';
 import '../game/chess_game.dart';
 import '../game/clock.dart';
 import '../l10n/app_localizations.dart';
+import '../theme/motion.dart';
 import '../theme/sheets.dart';
 import 'board_align_page.dart';
 import 'board_photo.dart';
@@ -300,6 +301,7 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
     final l10n = physicalL10n(context);
     final ok = await showDialog<bool>(
       context: context,
+      animationStyle: motionStyle(context),
       builder: (_) => AlertDialog(
         title: Text(l10n.physicalDrawQuestion),
         actions: [
@@ -322,6 +324,7 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
   Future<void> _resign() async {
     final side = await showDialog<Side>(
       context: context,
+      animationStyle: motionStyle(context),
       builder: (_) => SimpleDialog(
         title: Text(physicalL10n(context).physicalWhoResigns),
         children: [

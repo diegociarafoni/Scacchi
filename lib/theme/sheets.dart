@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'motion.dart';
+
 /// Scheda a comparsa dal basso che resta sopra i tasti di sistema: con la
 /// barra a tre tasti il contenuto non va sotto la navigazione di Android.
 Future<T?> showRokkoSheet<T>({
@@ -9,6 +11,7 @@ Future<T?> showRokkoSheet<T>({
 }) => showModalBottomSheet<T>(
   context: context,
   isScrollControlled: true,
+  sheetAnimationStyle: motionStyle(context),
   showDragHandle: showDragHandle,
   builder: (context) => SafeArea(top: false, child: builder(context)),
 );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
+import '../theme/motion.dart';
 import 'move_note.dart';
 
 /// Chiede simbolo e commento della mossa [san]; restituisce la nota (anche
@@ -11,6 +12,7 @@ Future<MoveNote?> showMoveNoteDialog(
   required MoveNote? note,
 }) => showDialog<MoveNote>(
   context: context,
+  animationStyle: motionStyle(context),
   builder: (_) => MoveNoteDialog(san: san, note: note),
 );
 

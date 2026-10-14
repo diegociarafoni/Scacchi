@@ -11,6 +11,7 @@ import '../exchange/qr_receive_page.dart';
 import '../exchange/qr_send_page.dart';
 import '../exchange/qr_transfer.dart';
 import '../l10n/app_localizations.dart';
+import '../theme/motion.dart';
 import '../theme/rokko_mascot.dart';
 import 'game_archive.dart';
 import 'pgn.dart';
@@ -113,6 +114,7 @@ class _ArchivePageState extends State<ArchivePage> {
   Future<void> _import() async {
     final text = await showDialog<String>(
       context: context,
+      animationStyle: motionStyle(context),
       builder: (context) => const _ImportDialog(),
     );
     if (text == null || !mounted) return;
@@ -164,6 +166,7 @@ class _ArchivePageState extends State<ArchivePage> {
   Future<void> _delete(SavedGame game) async {
     final confirmed = await showDialog<bool>(
       context: context,
+      animationStyle: motionStyle(context),
       builder: (context) => AlertDialog(
         title: Text(AppLocalizations.of(context).archiveDeleteTitle),
         content: Text(game.titleIn(AppLocalizations.of(context))),

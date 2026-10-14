@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
+import '../theme/motion.dart';
 
 /// Domanda per adulti prima di uscire dal profilo bambino (RP-06): una
 /// moltiplicazione che un bambino piccolo non risolve al volo. Restituisce
@@ -13,6 +14,7 @@ Future<bool> askAdult(BuildContext context, {math.Random? random}) async {
   final b = 6 + r.nextInt(4);
   final ok = await showDialog<bool>(
     context: context,
+    animationStyle: motionStyle(context),
     builder: (_) => _AdultGate(a: a, b: b),
   );
   return ok ?? false;
