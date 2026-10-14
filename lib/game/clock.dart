@@ -19,8 +19,7 @@ class TimeControl {
     this.phaseMinutes = 0,
   }) : assert(
          (phaseMoves == 0) == (phaseMinutes == 0),
-         'una fase aggiunta ha sia le mosse sia i minuti',
-       );
+       ); // mosse e minuti insieme
 
   /// Minuti iniziali per giocatore.
   final int minutes;
