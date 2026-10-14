@@ -1,8 +1,9 @@
 name: iOS
 
 # Compila l'app per iOS senza firma, per accorgersi subito se un cambiamento
-# rompe la build (plugin, motore nativo). Non produce un
-# IPA installabile: la firma e TestFlight sono in ios/fastlane (docs/store.md).
+# rompe la build (plugin, motore nativo). Non produce un IPA installabile: la
+# firma e la pubblicazione sugli store non sono ancora configurate per iOS
+# (vedi docs/store.md).
 # I minuti dei runner macOS sono gratuiti sui repository pubblici.
 on:
   push:
