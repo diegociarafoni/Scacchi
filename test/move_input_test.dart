@@ -1,6 +1,6 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/game/move_input.dart';
+import 'package:rokko/game/move_input.dart';
 
 Position _fen(String fen) => Chess.fromSetup(Setup.parseFen(fen));
 
@@ -35,6 +35,16 @@ void main() {
     expect(uci(pos, 'O-O'), 'e1h1');
     expect(uci(pos, '0-0-0'), 'e1a1');
     expect(uci(pos, 'o-o'), 'e1h1');
+  });
+
+  test('arrocco in UCI: e1g1 e e1h1 danno la stessa mossa', () {
+    final pos = _fen('r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1');
+    expect(uci(pos, 'e1g1'), 'e1h1');
+    expect(uci(pos, 'e1c1'), 'e1a1');
+    expect(uci(pos, 'e1h1'), 'e1h1');
+    expect(uci(pos, 'e1a1'), 'e1a1');
+    // Un re che fa un solo passo non è un arrocco.
+    expect(uci(_fen('4k3/8/8/8/8/8/8/4K3 w - - 0 1'), 'e1f1'), 'e1f1');
   });
 
   test('promozione con e senza segno di uguale, anche in italiano', () {

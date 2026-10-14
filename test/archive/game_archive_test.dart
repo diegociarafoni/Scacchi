@@ -1,10 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dartchess/dartchess.dart' hide File;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/archive/game_archive.dart';
-import 'package:scacchi/archive/saved_game.dart';
-import 'package:scacchi/game/chess_game.dart';
+import 'package:rokko/archive/game_archive.dart';
+import 'package:rokko/archive/saved_game.dart';
+import 'package:rokko/game/chess_game.dart';
 
 ChessGame play(List<String> uci) {
   final game = ChessGame();
@@ -162,10 +163,27 @@ void main() {
     expect(await GameArchive(file).list(), hasLength(2));
   });
 
-  test('una voce non valida mette da parte il file', () async {
-    file.writeAsStringSync('{"version":1,"games":[{"id":"a"}]}');
-    expect(await GameArchive(file).list(), isEmpty);
-    expect(dir.listSync().where((f) => f.path.contains('.bad')), hasLength(1));
+  test('una voce non valida si scarta e le altre restano', () async {
+    await GameArchive(file).save(saved('buona', ['e2e4']));
+    final json = jsonDecode(file.readAsStringSync()) as Map<String, Object?>;
+    (json['games']! as List)
+      ..insert(0, {'id': 'a'})
+      ..add(5);
+    file.writeAsStringSync(jsonEncode(json));
+    final games = await GameArchive(file).list();
+    expect(games.map((g) => g.id), ['buona']);
+    expect(dir.listSync().where((f) => f.path.contains('.bad')), isEmpty);
+  });
+
+  test('un elenco di partite che non è un elenco mette da parte il file', () {
+    file.writeAsStringSync('{"version":1,"games":{}}');
+    return GameArchive(file).list().then((games) {
+      expect(games, isEmpty);
+      expect(
+        dir.listSync().where((f) => f.path.contains('.bad')),
+        hasLength(1),
+      );
+    });
   });
 
   test('un file illeggibile viene conservato a parte', () async {

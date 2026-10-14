@@ -1,6 +1,6 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/review/board_utils.dart';
+import 'package:rokko/review/board_utils.dart';
 
 void main() {
   group('RF-56 posizione a mossa nulla', () {

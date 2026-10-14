@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:dartchess/dartchess.dart';
 
 import '../game/clock.dart';
+import 'local_address.dart';
 
 /// Schema dei link d'invito; `scacchi` (schema storico) si accetta in lettura,
 /// così i QR già emessi restano validi.
@@ -20,7 +22,6 @@ const maxInviteLength = 1024;
 final _uuidPattern = RegExp(
   r'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$',
 );
-final _hostPattern = RegExp(r'^[0-9A-Za-z.\-]{1,253}$|^\[[0-9A-Fa-f:.]+\]$');
 
 /// Limiti della cadenza accettata da un invito non fidato.
 const maxInviteMinutes = 180;
@@ -127,7 +128,8 @@ class GameInvite {
     if (tcText != null &&
         (control == null ||
             control.minutes > maxInviteMinutes ||
-            control.increment > maxInviteIncrement)) {
+            control.increment > maxInviteIncrement ||
+            control.delay > 0)) {
       return null;
     }
     final remote = q['r'];
@@ -151,10 +153,11 @@ bool _validAddress(String text) {
   final i = text.lastIndexOf(':');
   if (i <= 0) return false;
   final port = int.tryParse(text.substring(i + 1));
-  return port != null &&
-      port > 0 &&
-      port < 65536 &&
-      _hostPattern.hasMatch(text.substring(0, i));
+  if (port == null || port <= 0 || port >= 65536) return false;
+  // Un invito non fidato non deve far collegare l'app a un indirizzo pubblico:
+  // in rete locale servono solo indirizzi IPv4 privati.
+  final host = InternetAddress.tryParse(text.substring(0, i));
+  return host != null && isPrivateIpv4(host);
 }
 
 String _b64(List<int> bytes) => base64Url.encode(bytes).replaceAll('=', '');

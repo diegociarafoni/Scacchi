@@ -1,0 +1,46 @@
+{
+  "archiveShareSubject": "Permainan PGN",
+  "archiveTitle": "Permainan",
+  "archiveImportResult": "{count, plural, one{{count} permainan diimpor} other{{count} permainan diimpor}}{skipped, plural, =0{} other{, {skipped} tidak valid}}",
+  "@archiveImportResult": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "skipped": {
+        "type": "int"
+      }
+    }
+  },
+  "archiveDeleteTitle": "Hapus permainan ini?",
+  "archiveCancel": "Batal",
+  "archiveDelete": "Hapus",
+  "archivePgnCopied": "PGN disalin",
+  "archiveImportPgn": "Impor PGN",
+  "archiveExportAll": "Ekspor semua sebagai PGN",
+  "archiveUnreadable": "Arsip tidak dapat dibaca.",
+  "archiveSearchHint": "Cari berdasarkan pemain atau jenis",
+  "archiveEmpty": "Belum ada permainan tersimpan.",
+  "archiveNoMatch": "Tidak ada permainan ditemukan.",
+  "archiveInProgress": "Sedang berlangsung",
+  "archiveActionsFor": "Tindakan untuk {title}",
+  "@archiveActionsFor": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "archiveSharePgn": "Bagikan PGN",
+  "archiveCopyPgn": "Salin PGN",
+  "archiveImportHint": "Tempel satu atau beberapa permainan PGN di sini",
+  "archivePaste": "Tempel",
+  "archiveImport": "Impor",
+  "archiveModeLocal": "lokal",
+  "archiveModeComputer": "komputer",
+  "archivePlayerComputer": "Komputer",
+  "archiveModeImported": "diimpor",
+  "archiveModePhysical": "papan fisik",
+  "archiveModeAnalysis": "analisis",
+  "archiveOpenAnalysis": "Buka di analisis"
+}

@@ -8,6 +8,7 @@ import '../path/curriculum.dart';
 import '../path/path_controller.dart';
 import '../story/story.dart';
 import '../story/story_controller.dart';
+import '../theme/sheets.dart';
 import 'home_page.dart';
 import 'home_widgets.dart';
 
@@ -72,8 +73,11 @@ class _LearnPageState extends State<LearnPage> {
   }
 
   Future<void> _run(HomeAction action) async {
-    await action();
-    if (mounted) _load();
+    try {
+      await action();
+    } finally {
+      if (mounted) _load();
+    }
   }
 
   @override
@@ -116,7 +120,9 @@ class _LearnPageState extends State<LearnPage> {
           final stage = path == null ? null : nextStoryStage(path.progress);
           final onContinue = widget.onContinueStory;
           return ListView(
-            padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+            padding: context.withSystemBottom(
+              const EdgeInsets.fromLTRB(16, 4, 16, 24),
+            ),
             children: [
               if (path != null && stage != null && onContinue != null)
                 Padding(

@@ -1,10 +1,10 @@
 import 'dart:ui';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/main.dart';
-import 'package:scacchi/settings/app_language.dart';
-import 'package:scacchi/settings/settings.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/main.dart';
+import 'package:rokko/settings/app_language.dart';
+import 'package:rokko/settings/settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -17,6 +17,10 @@ void main() {
         const Locale('en'),
       );
       expect(
+        resolveAppLocale(const [Locale('fr', 'BE')], supported),
+        const Locale('fr'),
+      );
+      expect(
         resolveAppLocale(const [Locale('it', 'CH')], supported),
         const Locale('it'),
       );
@@ -24,7 +28,7 @@ void main() {
 
     test('salta le lingue non supportate e ripiega sull\'italiano', () {
       expect(
-        resolveAppLocale(const [Locale('fr'), Locale('en')], supported),
+        resolveAppLocale(const [Locale('ja'), Locale('en')], supported),
         const Locale('en'),
       );
       expect(
@@ -42,6 +46,7 @@ void main() {
       expect(AppLanguage.system.locale, isNull);
       expect(AppLanguage.italian.locale, const Locale('it'));
       expect(AppLanguage.english.locale, const Locale('en'));
+      expect(AppLanguage.french.locale, const Locale('fr'));
     });
 
     test('si salva e si ritrova', () async {
@@ -65,7 +70,7 @@ void main() {
       SharedPreferences.setMockInitialValues({});
       tester.platformDispatcher.localesTestValue = const [Locale('en', 'US')];
       addTearDown(tester.platformDispatcher.clearLocalesTestValue);
-      await tester.pumpWidget(const ScacchiApp());
+      await tester.pumpWidget(RokkoApp(contentLoader: (_) async {}));
       await tester.pumpAndSettle();
       expect(find.text('Learn'), findsWidgets);
       expect(find.text('Impara'), findsNothing);
@@ -77,7 +82,7 @@ void main() {
       SharedPreferences.setMockInitialValues({});
       tester.platformDispatcher.localesTestValue = const [Locale('ja', 'JP')];
       addTearDown(tester.platformDispatcher.clearLocalesTestValue);
-      await tester.pumpWidget(const ScacchiApp());
+      await tester.pumpWidget(RokkoApp(contentLoader: (_) async {}));
       await tester.pumpAndSettle();
       expect(find.text('Impara'), findsWidgets);
     });
@@ -88,7 +93,7 @@ void main() {
       SharedPreferences.setMockInitialValues({'language': 'english'});
       tester.platformDispatcher.localesTestValue = const [Locale('it', 'IT')];
       addTearDown(tester.platformDispatcher.clearLocalesTestValue);
-      await tester.pumpWidget(const ScacchiApp());
+      await tester.pumpWidget(RokkoApp(contentLoader: (_) async {}));
       await tester.pumpAndSettle();
       expect(find.text('Impara'), findsNothing);
       expect(find.text('Learn'), findsWidgets);

@@ -173,5 +173,17 @@
   "opponentAdaptiveInfo": "Level {level}, about {elo} Elo: it adapts to your results so you win about half of your games.",
   "opponentBeatenOn": "Beaten on {date}",
   "opponentBeaten": "Beaten",
-  "opponentLocked": "Locked: beat a bot from the step below"
+  "opponentLocked": "Locked: beat a bot from the step below",
+  "gameClockCustom": "Custom",
+  "gameClockCustomTitle": "Custom time control",
+  "gameClockMinutes": "Minutes per player",
+  "gameClockIncrement": "Increment (seconds per move)",
+  "gameClockDelay": "Delay (seconds per move)",
+  "gameClockDelaySimple": "Simple",
+  "gameClockDelayBronstein": "Bronstein",
+  "gameClockStart": "Start",
+  "gameClockRange": "From {min} to {max}",
+  "gameUndoOfferSide": "Does {side, select, white{White} other{Black}} agree to take the move back?",
+  "gameUndoOfferNamed": "Does {name} ({side, select, white{White} other{Black}}) agree to take the move back?",
+  "gameUndoRefused": "The takeback was declined."
 }

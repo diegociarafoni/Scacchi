@@ -40,7 +40,9 @@ lib/
     move_input.dart       Lettura di una mossa scritta (SAN inglese o italiana, UCI)
     move_speech.dart      Frase da annunciare al lettore di schermo per ogni mossa
     board_swipe.dart      Scorrimento orizzontale sulla scacchiera per rivedere le mosse
+    tap_assist.dart       Correzione del tocco caduto sul bordo di una casa
     board_drawing.dart    Frecce e cerchi disegnati con pressione prolungata o tasto destro
+    custom_clock_dialog.dart  Scelta di una cadenza libera con incremento e ritardo
     game_page.dart        Schermata di gioco
     challenge.dart        Partita già impostata da un'altra schermata (guardiani, tornei)
     opponent_picker.dart  Scelta di avversario, colore e livello
@@ -128,7 +130,7 @@ Calcola da una partita i pezzi catturati da ciascun lato, ripercorrendo le mosse
 
 ### Orologio (`lib/game/clock.dart`)
 
-`TimeControl` descrive una cadenza (minuti e incremento). `ChessClock` tiene il tempo residuo dei due lati e fa scorrere solo quello del lato attivo; l'ora corrente è iniettabile per i test. Offre istantanee e ripristino, usate da `GamePage` per annullare le mosse. `GamePage` aggiorna la visualizzazione ogni 100 ms ridisegnando solo gli orologi, registra il tempo scaduto con `ChessGame.flag` e ferma l'orologio a fine partita.
+`TimeControl` descrive una cadenza (minuti, incremento e ritardo, semplice o di Bronstein; l'etichetta è `10+5`, con il ritardo `10+0/d5` o `10+0/b5`). Con il ritardo semplice il tempo parte dopo i secondi di ritardo e un'interruzione non lo rinnova; con Bronstein, a fine mossa, si restituisce il tempo usato fino al ritardo. `showCustomClockDialog` (`custom_clock_dialog.dart`) chiede una cadenza libera: 1–180 minuti, 0–120 secondi di incremento, 0–60 di ritardo. Gli inviti di gioco accettano solo cadenze senza ritardo e il PGN non riporta `TimeControl` per quelle con ritardo. `ChessClock` tiene il tempo residuo dei due lati e fa scorrere solo quello del lato attivo; l'ora corrente è iniettabile per i test. Offre istantanee e ripristino, usate da `GamePage` per annullare le mosse. `GamePage` aggiorna la visualizzazione ogni 100 ms ridisegnando solo gli orologi, registra il tempo scaduto con `ChessGame.flag` e ferma l'orologio a fine partita.
 
 ### Suoni (`lib/game/sounds.dart`)
 

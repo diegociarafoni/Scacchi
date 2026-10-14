@@ -6,9 +6,13 @@ Offline non esiste una copia online dei dati: il backup (RF-103) li raccoglie in
 
 - Partite dell'archivio, progressi, percorso, storia, tornei e allenamento (`games.json`, `progress.json`, `path.json`, `story.json`, `tornei.json`, `training.json`).
 - Diario della settimana (`week.json`, [riepilogo-settimanale.md](riepilogo-settimanale.md)), progressi dei grandi maestri (`masters.json`) e dell'allenatore dei finali (`endgames.json`).
-- Partita a due telefoni in corso (`multiplayer.json`, vedi [multigiocatore.md](multigiocatore.md)). Contiene la chiave privata della partita: chi riceve il backup potrebbe giocarla al posto tuo, quindi conserva il file solo dove ti fidi.
+- Non comprende la partita a due telefoni in corso (`multiplayer.json`, vedi [multigiocatore.md](multigiocatore.md)): contiene la chiave privata della partita e non deve viaggiare in un file condivisibile. I backup vecchi che la contengono si ripristinano senza toccarla.
 - Foto del profilo (`avatar_photo.jpg`), nel campo `binaries` in base64. Resta solo sul telefono e non va online: entra soltanto nel file di backup che crei tu.
 - Impostazioni e preferenze (`SharedPreferences`): bool, numeri, testo ed elenchi di testo.
+
+## Backup automatico di Android
+
+È disattivato (`android:allowBackup="false"` nel manifest): disinstallando Rokko i progressi spariscono e una nuova installazione parte da zero, senza ripristinare dati dal cloud o da un altro telefono. L'unica copia è il file di backup creato dall'utente. Se un giorno lo si riattiva, vanno prima escluse `multiplayer.json` (contiene la chiave privata della partita) e `stile/` con le regole `fullBackupContent` e `dataExtractionRules`.
 
 ## Compatibilità
 
@@ -18,10 +22,10 @@ Il formato è alla versione 2 (la 1 non aveva settimana, maestri, finali, partit
 
 **Impostazioni → Profilo → Backup e ripristino**
 
-- **Condividi il backup** crea `rokko-backup-AAAA-MM-GG.json` e apre il menu di condivisione del sistema.
+- **Condividi il backup** crea `rokko-backup-AAAA-MM-GG.json` e apre il menu di condivisione del sistema. Il file temporaneo resta fino alla prossima esportazione o al prossimo avvio, quando viene ripulito.
 - **Ripristina da testo** chiede di incollare il contenuto del file e rifiuta i backup non validi. Il backup valido resta in attesa (`ripristino-in-attesa.json`) e viene applicato al prossimo avvio, prima che qualunque archivio sia caricato, così nessun dato in memoria lo sovrascrive. Chiudi e riapri l'app.
 
-All'avvio i file locali sostituiti, o assenti dal backup, restano accanto con suffisso `.prima-del-ripristino-<ora>`; le preferenze vengono sostituite per intero.
+All'avvio i file locali sostituiti, o assenti dal backup, restano accanto con suffisso `.prima-del-ripristino-<ora>` fino al ripristino riuscito successivo, che toglie le copie dei precedenti; le preferenze vengono sostituite per intero.
 
 ## Regole di sicurezza
 

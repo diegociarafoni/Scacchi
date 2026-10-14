@@ -73,6 +73,10 @@ class _PuzzlePageState extends State<PuzzlePage> {
   late PuzzleSession _session;
   bool _empty = false;
   _Feedback _feedback = _Feedback.find;
+
+  /// Punti guadagnati, in linea sopra la scacchiera: una barra a comparsa
+  /// coprirebbe i pulsanti.
+  String? _progressNote;
   double? _delta;
   Square? _hint;
 
@@ -126,6 +130,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
   void _start(Puzzle puzzle) {
     _session = PuzzleSession(puzzle);
     _feedback = _Feedback.find;
+    _progressNote = null;
     _delta = null;
     _hint = null;
     _wrongMove = null;
@@ -210,7 +215,9 @@ class _PuzzlePageState extends State<PuzzlePage> {
         duration: _stopwatch.elapsed,
       ),
     );
-    if (mounted && update != null) showProgressFeedback(context, update);
+    if (!mounted || update == null) return;
+    final note = progressText(context, update);
+    if (note != null) setState(() => _progressNote = note);
   }
 
   void _showHint() => setState(() => _hint = _session.hint());
@@ -354,7 +361,10 @@ class _PuzzlePageState extends State<PuzzlePage> {
                   // salgono a due righe sugli schermi stretti.
                   final size = math.max(
                     0.0,
-                    math.min(c.maxWidth, c.maxHeight - 190),
+                    math.min(
+                      c.maxWidth,
+                      c.maxHeight - 190 - (_progressNote == null ? 0 : 56),
+                    ),
                   );
                   // Scorrevole come ultima difesa su schermi molto bassi.
                   return Center(
@@ -367,6 +377,11 @@ class _PuzzlePageState extends State<PuzzlePage> {
                             message: _message(l),
                             side: puzzle.playerSide,
                           ),
+                          if (_progressNote != null)
+                            ProgressNote(
+                              key: const Key('puzzle-progress-note'),
+                              message: _progressNote!,
+                            ),
                           // Con una sola mossa «0 di 1» non dice nulla.
                           if (_session.playerMoves > 1)
                             _Progress(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
+import '../theme/sheets.dart';
 import 'mode_guide.dart';
 
 /// Obiettivo e regole di una modalità, con un pulsante per proseguire.
@@ -85,9 +86,8 @@ class GuideBody extends StatelessWidget {
 
 /// Apre la spiegazione di [guide] in un pannello dal basso.
 Future<void> showPuzzleGuide(BuildContext context, PuzzleGuide guide) {
-  return showModalBottomSheet<void>(
+  return showRokkoSheet<void>(
     context: context,
-    isScrollControlled: true,
     showDragHandle: true,
     builder: (sheet) => GuideBody(
       guide: guide,

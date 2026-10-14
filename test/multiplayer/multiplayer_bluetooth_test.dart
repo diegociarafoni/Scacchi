@@ -3,12 +3,12 @@ import 'dart:typed_data';
 
 import 'package:dartchess/dartchess.dart' hide File;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/multiplayer/ble_link.dart';
-import 'package:scacchi/multiplayer/channel_registry.dart';
-import 'package:scacchi/multiplayer/game_invite.dart';
-import 'package:scacchi/multiplayer/multiplayer_controller.dart';
-import 'package:scacchi/multiplayer/saved_game.dart';
-import 'package:scacchi/multiplayer/transport.dart';
+import 'package:rokko/multiplayer/ble_link.dart';
+import 'package:rokko/multiplayer/channel_registry.dart';
+import 'package:rokko/multiplayer/game_invite.dart';
+import 'package:rokko/multiplayer/multiplayer_controller.dart';
+import 'package:rokko/multiplayer/saved_game.dart';
+import 'package:rokko/multiplayer/transport.dart';
 
 import '../support/wait.dart';
 
@@ -161,6 +161,8 @@ void main() {
     await host.play(Move.parse('e2e4')!);
     await settle();
     final gameId = GameInvite.parse(host.inviteLink)!.gameId;
+    await untilSaved(hostStore, 1);
+    await untilSaved(guestStore, 1);
     await host.close();
     await guest.close();
 

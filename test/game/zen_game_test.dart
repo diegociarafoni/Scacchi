@@ -1,12 +1,13 @@
 import 'package:chessground/chessground.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/engine/bots.dart';
-import 'package:scacchi/engine/computer_player.dart';
-import 'package:scacchi/game/game_page.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/settings/settings.dart';
-import 'package:scacchi/storage/key_value_store.dart';
+import 'package:rokko/engine/bots.dart';
+import 'package:rokko/engine/computer_player.dart';
+import 'package:rokko/game/game_page.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/settings/settings.dart';
+import 'package:rokko/storage/key_value_store.dart';
+import 'package:rokko/theme/rokko_icons.dart';
 
 import '../computer_fakes.dart';
 import '../game_actions.dart';
@@ -23,7 +24,7 @@ void main() {
     tester.view.physicalSize = const Size(1170, 2532);
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
-    settings = SettingsController.defaults();
+    settings = trainingSettings();
     if (zen) await settings.update(settings.value.copyWith(zenMode: true));
     await tester.pumpWidget(
       MaterialApp(
@@ -127,7 +128,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.textContaining('Elo'), findsNothing);
     expect(await coachSwitches(), 0);
-    expect(find.byIcon(Icons.warning_amber), findsNothing);
+    expect(find.byIcon(RokkoIcons.threat), findsNothing);
   });
 
   testWidgets('RP-07 in zen i commenti del bot non compaiono', (tester) async {

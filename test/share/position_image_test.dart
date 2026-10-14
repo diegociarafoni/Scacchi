@@ -1,6 +1,6 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/share/position_image.dart';
+import 'package:rokko/share/position_image.dart';
 
 void main() {
   group('cleanCaption', () {

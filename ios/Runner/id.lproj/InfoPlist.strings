@@ -1,0 +1,4 @@
+"NSBluetoothAlwaysUsageDescription" = "Bluetooth hanya dipakai untuk bermain dengan teman di dekatmu, tanpa Wi-Fi. Langkah dikirim terenkripsi dan hanya antara kedua ponsel.";
+"NSCameraUsageDescription" = "Kamera membaca kode QR permainan dari ponsel lain dan mengambil foto profilmu, yang tetap tersimpan hanya di ponsel ini.";
+"NSLocalNetworkUsageDescription" = "Jaringan lokal hanya dipakai untuk bermain dengan teman di ponsel lain, di Wi-Fi atau hotspot yang sama. Langkah dikirim terenkripsi dan hanya antara kedua ponsel.";
+"NSPhotoLibraryUsageDescription" = "Dipakai untuk membaca kode QR permainan dari gambar yang kamu pilih dan untuk memilih foto profilmu, yang tetap tersimpan hanya di ponsel ini.";

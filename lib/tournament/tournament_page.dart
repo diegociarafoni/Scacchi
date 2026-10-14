@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../l10n/app_localizations.dart';
+import '../theme/sheets.dart';
 
 import 'tournament.dart';
 import 'tournament_controller.dart';
@@ -136,7 +137,7 @@ class _SetupState extends State<_Setup> {
     );
     final trophies = page.controller.trophies;
     return ListView(
-      padding: const EdgeInsets.all(16),
+      padding: context.withSystemBottom(const EdgeInsets.all(16)),
       children: [
         Text(l10n.tournamentNew, style: text.titleLarge),
         Text(l10n.tournamentIntro),
@@ -272,14 +273,28 @@ class _RunningState extends State<_Running> {
         ? t.totalRounds
         : null;
     return ListView(
-      padding: const EdgeInsets.all(16),
+      padding: context.withSystemBottom(const EdgeInsets.all(16)),
       children: [
         Text(
           l10n.tournamentHeader(_formatLabel(l10n, t.format), t.players.length),
           style: text.titleLarge,
         ),
         const SizedBox(height: 12),
-        if (t.finished)
+        if (page.controller.playingBots)
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(l10n.tournamentBotsPlaying),
+                  const SizedBox(height: 12),
+                  const LinearProgressIndicator(),
+                ],
+              ),
+            ),
+          )
+        else if (t.finished)
           Card(
             child: Padding(
               padding: const EdgeInsets.all(16),
@@ -321,7 +336,9 @@ class _RunningState extends State<_Running> {
               ),
               subtitle: Text(_gameSubtitle(l10n, game)),
               trailing: FilledButton(
-                onPressed: _playing ? null : () => _play(context, game),
+                onPressed: _playing || page.controller.playingBots
+                    ? null
+                    : () => _play(context, game),
                 child: Text(l10n.tournamentPlay),
               ),
             ),
@@ -355,6 +372,7 @@ class _StandingsTable extends StatelessWidget {
   Widget build(BuildContext context) {
     final rows = tournament.standings();
     final l10n = AppLocalizations.of(context);
+    final locale = Localizations.localeOf(context).toString();
     final text = Theme.of(context).textTheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -373,8 +391,8 @@ class _StandingsTable extends StatelessWidget {
             ),
             trailing: Text(
               l10n.tournamentStandingsPoints(
-                _points(s.points),
-                _points(s.sonnebornBerger),
+                standingsPoints(s.points, locale),
+                standingsPoints(s.sonnebornBerger, locale),
               ),
             ),
           ),
@@ -383,8 +401,14 @@ class _StandingsTable extends StatelessWidget {
   }
 }
 
-String _points(double p) =>
-    p == p.truncateToDouble() ? p.toInt().toString() : p.toStringAsFixed(1);
+/// Punti con al più un decimale e il separatore della lingua ("2,5" in
+/// italiano).
+@visibleForTesting
+String standingsPoints(double p, String locale) =>
+    (NumberFormat.decimalPattern(locale)
+          ..minimumFractionDigits = 0
+          ..maximumFractionDigits = 1)
+        .format(p);
 
 class _Bracket extends StatelessWidget {
   const _Bracket({required this.tournament});

@@ -8,7 +8,9 @@ import '../path/path_widgets.dart';
 import '../path/stage_page.dart';
 import '../progress/avatar.dart';
 import '../progress/guardian_avatar.dart';
+import '../puzzles/themes.dart';
 import '../theme/rokko_theme.dart';
+import '../theme/sheets.dart';
 import 'guardian_says.dart';
 import 'story.dart';
 import 'story_controller.dart';
@@ -41,6 +43,7 @@ class StoryPage extends StatefulWidget {
     required this.story,
     this.playGuardian,
     this.playBoss,
+    this.onChaptersDone,
     this.playPuzzles,
     this.playLesson,
   });
@@ -49,6 +52,10 @@ class StoryPage extends StatefulWidget {
   final StoryController story;
   final PlayGuardian? playGuardian;
   final PlayStoryBoss? playBoss;
+
+  /// Chiamata con il totale dei capitoli conclusi, all'apertura e quando
+  /// battere il bot ne conclude uno.
+  final void Function(int chapters)? onChaptersDone;
   final PlayStoryPuzzles? playPuzzles;
   final PlayStoryLesson? playLesson;
 
@@ -63,6 +70,22 @@ class _StoryPageState extends State<StoryPage> {
   StoryProgress get _progress =>
       StoryProgress(widget.path.progress, widget.story.state);
 
+  @override
+  void initState() {
+    super.initState();
+    // Chi aveva già dei capitoli conclusi li vede riconosciuti subito.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _reportChapters();
+    });
+  }
+
+  /// Dice quanti capitoli sono conclusi, se almeno uno.
+  void _reportChapters() {
+    final progress = _progress;
+    final done = storyChapters.where(progress.isChapterDone).length;
+    if (done > 0) widget.onChaptersDone?.call(done);
+  }
+
   Future<T?> _run<T>(Future<T> Function() action) async {
     if (_busy) return null;
     _busy = true;
@@ -73,8 +96,13 @@ class _StoryPageState extends State<StoryPage> {
     }
   }
 
-  void _say(String text) =>
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
+  void _say(String text, {Duration? duration}) => ScaffoldMessenger.of(context)
+      .showSnackBar(
+        SnackBar(
+          content: Text(text),
+          duration: duration ?? const Duration(seconds: 4),
+        ),
+      );
 
   Future<void> _open(
     StoryChapter chapter,
@@ -138,6 +166,7 @@ class _StoryPageState extends State<StoryPage> {
       if (kind == StoryStepKind.boss) {
         subtitle = l10n.storyBossWon(chapter.bot.name);
         expression = AvatarExpression.surprised;
+        line = l10n.guardianLine(chapter, GuardianMoment.bossWon);
       }
       body = nextChapter == null
           ? l10n.chapterOutro(chapter)
@@ -173,9 +202,8 @@ class _StoryPageState extends State<StoryPage> {
         line = l10n.guardianLine(chapter, GuardianMoment.lessonDone);
       }
     }
-    final go = await showModalBottomSheet<bool>(
+    final go = await showRokkoSheet<bool>(
       context: context,
-      isScrollControlled: true,
       showDragHandle: true,
       builder: (_) => _PassageSheet(
         icon: icon,
@@ -248,9 +276,8 @@ class _StoryPageState extends State<StoryPage> {
   /// passaggio l'ha già annunciata.
   Future<bool> _challengeAccepted(StoryChapter chapter) async {
     final l10n = storyL10n(context);
-    final go = await showModalBottomSheet<bool>(
+    final go = await showRokkoSheet<bool>(
       context: context,
-      isScrollControlled: true,
       showDragHandle: true,
       builder: (_) => _PassageSheet(
         icon: Icons.sports_esports_outlined,
@@ -281,8 +308,15 @@ class _StoryPageState extends State<StoryPage> {
     if (!mounted) return;
     if (won) {
       await widget.story.bossBeaten(chapter);
+      if (mounted) _reportChapters();
     } else {
-      _say(storyL10n(context).storyBossLost(chapter.bot.name));
+      final l10n = storyL10n(context);
+      final line = l10n.guardianLine(chapter, GuardianMoment.bossLost);
+      _say(
+        '${l10n.storyBossLost(chapter.bot.name)}\n'
+        '${l10n.storyGuardianSays(chapter.bot.name, line)}',
+        duration: const Duration(seconds: 8),
+      );
     }
   }
 
@@ -319,7 +353,12 @@ class _StoryPageState extends State<StoryPage> {
                   ),
                 ),
           body: ListView(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+            // Con la barra «Continua» l'ingombro è già assorbito da lei.
+            padding: next == null
+                ? context.withSystemBottom(
+                    const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                  )
+                : const EdgeInsets.fromLTRB(16, 8, 16, 16),
             children: [
               _Summary(progress: progress),
               const SizedBox(height: 12),
@@ -331,6 +370,7 @@ class _StoryPageState extends State<StoryPage> {
                   current: next?.$1.id == chapter.id,
                   last: i == storyChapters.length - 1,
                   onOpen: (kind) => _open(chapter, kind),
+                  onFork: (theme) => widget.story.chooseFork(chapter, theme),
                 ),
               if (next == null)
                 Padding(
@@ -432,6 +472,7 @@ class _ChapterCard extends StatelessWidget {
     required this.current,
     required this.last,
     required this.onOpen,
+    required this.onFork,
   });
 
   final int index;
@@ -440,6 +481,7 @@ class _ChapterCard extends StatelessWidget {
   final bool current;
   final bool last;
   final void Function(StoryStepKind kind) onOpen;
+  final void Function(String theme) onFork;
 
   static const _badge = 48.0;
 
@@ -568,7 +610,7 @@ class _ChapterCard extends StatelessWidget {
                               expression: AvatarExpression.greeting,
                             ),
                             const SizedBox(height: 8),
-                            for (final step in steps)
+                            for (final step in steps) ...[
                               _StepTile(
                                 chapter: chapter,
                                 step: step,
@@ -578,6 +620,16 @@ class _ChapterCard extends StatelessWidget {
                                 ),
                                 onTap: () => onOpen(step.kind),
                               ),
+                              if (step.kind == StoryStepKind.puzzles &&
+                                  !step.done &&
+                                  step.value == 0 &&
+                                  progress.isStepUnlocked(chapter, step.kind))
+                                _ForkChoice(
+                                  chapter: chapter,
+                                  selected: progress.state.themeFor(chapter),
+                                  onChoose: onFork,
+                                ),
+                            ],
                             if (done)
                               Padding(
                                 padding: const EdgeInsets.only(top: 8),
@@ -670,6 +722,51 @@ class _Badge extends StatelessWidget {
               ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// Bivio del capitolo: due temi per i puzzle, da scegliere prima del primo.
+class _ForkChoice extends StatelessWidget {
+  const _ForkChoice({
+    required this.chapter,
+    required this.selected,
+    required this.onChoose,
+  });
+
+  final StoryChapter chapter;
+  final String selected;
+  final void Function(String theme) onChoose;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = storyL10n(context);
+    return Padding(
+      padding: const EdgeInsets.only(left: 40, bottom: 8),
+      key: ValueKey('story-fork-${chapter.id}'),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            l10n.storyForkTitle,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+          const SizedBox(height: 4),
+          Wrap(
+            spacing: 8,
+            runSpacing: 4,
+            children: [
+              for (final id in [chapter.puzzleTheme, chapter.forkTheme])
+                ChoiceChip(
+                  key: ValueKey('story-fork-${chapter.id}-$id'),
+                  label: Text(puzzleThemeLabel(l10n, id) ?? id),
+                  selected: selected == id,
+                  onSelected: (_) => onChoose(id),
+                ),
+            ],
+          ),
+        ],
       ),
     );
   }

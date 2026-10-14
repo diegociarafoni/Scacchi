@@ -1,0 +1,13 @@
+{
+  "progressRequirementStory": "Opowieść: ukończone rozdziały: {chapters}",
+  "@progressRequirementStory": {
+    "placeholders": {
+      "chapters": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsThemeVillaggio": "Wioska",
+  "settingsThemeTorre": "Wieża",
+  "settingsThemeCorona": "Korona"
+}

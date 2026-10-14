@@ -1,0 +1,505 @@
+{
+  "badgesTitle": "Lencana",
+  "badgesEntrySubtitle": "Apa yang sudah kamu pelajari dan mainkan, dalam satu koleksi",
+  "badgesSummary": "{earned} dari {total} tercapai",
+  "@badgesSummary": {
+    "description": "Totale dei badge ottenuti",
+    "placeholders": {
+      "earned": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "badgesFamilyLearn": "Belajar",
+  "badgesFamilyPuzzles": "Teka-teki",
+  "badgesFamilyGames": "Permainan",
+  "badgesFamilyStory": "Kisah",
+  "badgesFamilyHabit": "Konsistensi",
+  "badgesTierBronze": "Perunggu",
+  "badgesTierSilver": "Perak",
+  "badgesTierGold": "Emas",
+  "badgesUnlocked": "Lencana baru: {name}",
+  "@badgesUnlocked": {
+    "description": "Avviso quando si ottiene un badge",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "badgesSeeAction": "Lihat",
+  "badgesEarnedOn": "Diraih pada {date}",
+  "@badgesEarnedOn": {
+    "description": "Data in cui il badge è stato ottenuto",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "badgesNotYet": "Belum diraih",
+  "badgesProgress": "{value} / {target}",
+  "@badgesProgress": {
+    "description": "Avanzamento verso un badge",
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "badgesSemanticsEarned": "{name}, diraih",
+  "@badgesSemanticsEarned": {
+    "description": "Lettura del badge ottenuto",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "badgesSemanticsLocked": "{name}, belum diraih",
+  "@badgesSemanticsLocked": {
+    "description": "Lettura del badge da ottenere",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "badgesSemanticsLockedProgress": "{name}, belum diraih, {value} dari {target}",
+  "@badgesSemanticsLockedProgress": {
+    "description": "Lettura del badge da ottenere con avanzamento",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "value": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "badgesClose": "Tutup",
+  "badgeChapterMovesName": "Berbaris maju",
+  "badgeChapterMovesDesc": "Selesaikan pelajaran tentang cara bidak bergerak.",
+  "badgeChapterPiecesName": "Bidak aman",
+  "badgeChapterPiecesDesc": "Selesaikan pelajaran tentang penangkapan dan pertahanan.",
+  "badgeChapterRulesName": "Aturan emas",
+  "badgeChapterRulesDesc": "Selesaikan pelajaran tentang aturan permainan.",
+  "badgeChapterMatesName": "Pemburu raja",
+  "badgeChapterMatesDesc": "Selesaikan pelajaran tentang skakmat dasar.",
+  "badgeChapterTacticsName": "Pikiran taktis",
+  "badgeChapterTacticsDesc": "Selesaikan pelajaran taktik.",
+  "badgeChapterEndgamesName": "Bagian akhir sang juara",
+  "badgeChapterEndgamesDesc": "Selesaikan pelajaran bagian akhir.",
+  "badgeChapterOpeningsName": "Pembukaan yang terbuka lebar",
+  "badgeChapterOpeningsDesc": "Selesaikan pelajaran pembukaan.",
+  "badgeGuardians3Name": "Penjinak penjaga",
+  "badgeGuardians3Desc": "Kalahkan {count} penjaga dalam Kisah.",
+  "@badgeGuardians3Desc": {
+    "description": "Come si ottiene il badge «Domatore di guardiani»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStoryPuzzlesAllName": "Ahli teka-teki",
+  "badgeStoryPuzzlesAllDesc": "Selesaikan semua {count} teka-teki di bab-bab Kisah.",
+  "@badgeStoryPuzzlesAllDesc": {
+    "description": "Come si ottiene il badge «Enigmista»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeEndgamesAllName": "Raja bagian akhir",
+  "badgeEndgamesAllDesc": "Selesaikan setiap posisi di pelatih bagian akhir.",
+  "badgeMastersAllName": "Mata sang master",
+  "badgeMastersAllDesc": "Mainkan setiap permainan “Tebak langkahnya” sampai selesai.",
+  "badgeReviews25Name": "Putar ulang",
+  "badgeReviews25Desc": "Tinjau {count} permainan.",
+  "@badgeReviews25Desc": {
+    "description": "Come si ottiene il badge «Analista»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgePuzzles500Name": "Pemburu solusi",
+  "badgePuzzles500Desc": "Selesaikan {count} teka-teki.",
+  "@badgePuzzles500Desc": {
+    "description": "Come si ottiene il badge «Collezionista di soluzioni»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeThemes10Name": "Penjelajah tema",
+  "badgeThemes10Desc": "Selesaikan minimal satu teka-teki di {count} tema berbeda.",
+  "@badgeThemes10Desc": {
+    "description": "Come si ottiene il badge «Esploratore di temi»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgePin10Name": "Si pemin",
+  "badgePin10Desc": "Selesaikan {count} teka-teki pin.",
+  "@badgePin10Desc": {
+    "description": "Come si ottiene il badge «Inchiodatore»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeSkewer5Name": "Tertusuk",
+  "badgeSkewer5Desc": "Selesaikan {count} teka-teki tusukan.",
+  "@badgeSkewer5Desc": {
+    "description": "Come si ottiene il badge «Spiedino»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeDiscovered5Name": "Plot twist",
+  "badgeDiscovered5Desc": "Selesaikan {count} teka-teki serangan terbuka.",
+  "@badgeDiscovered5Desc": {
+    "description": "Come si ottiene il badge «Colpo di scena»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeSacrifice10Name": "Hati singa",
+  "badgeSacrifice10Desc": "Selesaikan {count} teka-teki pengorbanan.",
+  "@badgeSacrifice10Desc": {
+    "description": "Come si ottiene il badge «Cuor di leone»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeSmothered1Name": "Tercekik!",
+  "badgeSmothered1Desc": "Selesaikan satu teka-teki skakmat tercekik.",
+  "badgeRating1800Name": "Jagoan",
+  "badgeRating1800Desc": "Capai peringkat teka-teki {count}.",
+  "@badgeRating1800Desc": {
+    "description": "Come si ottiene il badge «Fuoriclasse»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStreakRun10Name": "Lari emas",
+  "badgeStreakRun10Desc": "Raih {count} poin dalam mode rentetan.",
+  "@badgeStreakRun10Desc": {
+    "description": "Come si ottiene il badge «Serie d'oro»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeScholarsMateName": "Skakmat si pelajar",
+  "badgeScholarsMateDesc": "Menang dengan skakmat ratu dalam empat langkah atau kurang.",
+  "badgeFoolsMateName": "Skakmat si bodoh",
+  "badgeFoolsMateDesc": "Terjebak skakmat dua langkah yang terkenal. Semua orang pernah: ini medali untukmu.",
+  "badgeAllPiecesMateName": "Bidak demi bidak",
+  "badgeAllPiecesMateDesc": "Skakmat dengan ratu, benteng, gajah, kuda, dan pion.",
+  "badgeEnPassantName": "Au Passage",
+  "badgeEnPassantDesc": "Tangkap dengan en passant.",
+  "badgeUnderpromotionName": "Kuda kecil naik pangkat",
+  "badgeUnderpromotionDesc": "Promosikan pion menjadi selain ratu.",
+  "badgeStalemateName": "Raja terjebak",
+  "badgeStalemateDesc": "Akhiri permainan dengan remis karena pat.",
+  "badgeMarathonName": "Pelari maraton",
+  "badgeMarathonDesc": "Mainkan satu permainan dengan minimal {count} langkahmu sendiri.",
+  "@badgeMarathonDesc": {
+    "description": "Come si ottiene il badge «Maratoneta»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeWins100Name": "Centurion",
+  "badgeWins100Desc": "Menangkan {count} permainan.",
+  "@badgeWins100Desc": {
+    "description": "Come si ottiene il badge «Centurione»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgePodiumName": "Di podium",
+  "badgePodiumDesc": "Selesaikan turnamen di tiga besar (dengan minimal empat pemain).",
+  "badgeTournaments5Name": "Langganan turnamen",
+  "badgeTournaments5Desc": "Selesaikan {count} turnamen.",
+  "@badgeTournaments5Desc": {
+    "description": "Come si ottiene il badge «Habitué dei tornei»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStoryPrologueName": "Langkah pertama",
+  "badgeStoryPrologueDesc": "Kalahkan Tino di “Bab 0”.",
+  "badgeStoryVillageName": "Pahlawan desa",
+  "badgeStoryVillageDesc": "Kalahkan Pino di bab “Desa para bidak”.",
+  "badgeStoryGatesName": "Melewati gerbang",
+  "badgeStoryGatesDesc": "Kalahkan Chiara di bab “Gerbang kota”.",
+  "badgeStoryTowerName": "Penguasa menara",
+  "badgeStoryTowerDesc": "Kalahkan Rocco di bab “Menara raja”.",
+  "badgeStoryForestName": "Raja hutan",
+  "badgeStoryForestDesc": "Kalahkan Marta di bab “Hutan jebakan”.",
+  "badgeStoryCastleName": "Pengepungan dimenangkan",
+  "badgeStoryCastleDesc": "Kalahkan Duilio di bab “Kastil bagian akhir”.",
+  "badgeStoryCrownName": "Mahkota milikmu",
+  "badgeStoryCrownDesc": "Kalahkan Elena di bab “Mahkota”.",
+  "badgeStoryAllName": "Legenda",
+  "badgeStoryAllDesc": "Selesaikan setiap bab Kisah.",
+  "badgeStreak14Name": "Dua minggu penuh",
+  "badgeStreak14Desc": "Capai targetmu {count} hari berturut-turut.",
+  "@badgeStreak14Desc": {
+    "description": "Come si ottiene il badge «Due settimane»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStreak60Name": "Dua bulan membara",
+  "badgeStreak60Desc": "Capai targetmu {count} hari berturut-turut.",
+  "@badgeStreak60Desc": {
+    "description": "Come si ottiene il badge «Due mesi»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStreak100Name": "Seratus dan terus berlanjut",
+  "badgeStreak100Desc": "Capai targetmu {count} hari berturut-turut.",
+  "@badgeStreak100Desc": {
+    "description": "Come si ottiene il badge «Cento giorni»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStreak365Name": "Sekali mengelilingi matahari",
+  "badgeStreak365Desc": "Capai targetmu {count} hari berturut-turut.",
+  "@badgeStreak365Desc": {
+    "description": "Come si ottiene il badge «Un anno intero»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeDays30Name": "Makhluk kebiasaan",
+  "badgeDays30Desc": "Bermain atau berlatih di {count} hari berbeda, tidak harus berturut-turut.",
+  "@badgeDays30Desc": {
+    "description": "Come si ottiene il badge «Abitudinario»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeDays100Name": "Seperti di rumah",
+  "badgeDays100Desc": "Bermain atau berlatih di {count} hari berbeda, tidak harus berturut-turut.",
+  "@badgeDays100Desc": {
+    "description": "Come si ottiene il badge «Di casa»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeComebackName": "Selamat datang kembali!",
+  "badgeComebackDesc": "Kembali setelah pergi minimal {count} hari.",
+  "@badgeComebackDesc": {
+    "description": "Come si ottiene il badge «Bentornato!»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgePerfect7Name": "Tujuh hari sempurna",
+  "badgePerfect7Desc": "Selesaikan ketiga tantangan harian di {count} hari berbeda.",
+  "@badgePerfect7Desc": {
+    "description": "Come si ottiene il badge «Sette giornate perfette»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeMinigames25Name": "Senam otak",
+  "badgeMinigames25Desc": "Selesaikan {count} sesi permainan mini dengan skor minimal satu poin.",
+  "@badgeMinigames25Desc": {
+    "description": "Come si ottiene il badge «Allenatore instancabile»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgesUnlockedMany": "{count} lencana baru",
+  "@badgesUnlockedMany": {
+    "description": "Avviso quando si ottengono molti badge insieme",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeChapterStrategyName": "Pikiran strategis",
+  "badgeChapterStrategyDesc": "Selesaikan pelajaran strategi.",
+  "badgeChapterCapablancaName": "Murid sang master",
+  "badgeChapterCapablancaDesc": "Selesaikan pelajaran sekolah Capablanca.",
+  "badgeStoryPlainName": "Rencana yang tepat",
+  "badgeStoryPlainDesc": "Kalahkan Massimo di bab “Dataran rencana”.",
+  "badgeStoryAcademyName": "Juara akademi",
+  "badgeStoryAcademyDesc": "Kalahkan Stella di bab “Akademi sang master”.",
+  "badgeStoryStartName": "Ayo mulai!",
+  "badgeStoryStartDesc": "Selesaikan pelajaran pertama Kisah.",
+  "badgeStoryHalfName": "Separuh jalan",
+  "badgeStoryHalfDesc": "Selesaikan separuh pelajaran dalam Kisah.",
+  "badgeStoryChapters3Name": "Hattrick bab",
+  "badgeStoryChapters3Desc": "Kalahkan bot dari {count} bab Kisah.",
+  "@badgeStoryChapters3Desc": {
+    "description": "Come si ottiene il badge «Tre capitoli alle spalle»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeLv3Name": "Murid magang",
+  "badgeLv3Desc": "Capai level {count}.",
+  "@badgeLv3Desc": {
+    "description": "Come si ottiene il badge «Apprendista»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeLv8Name": "Pemain catur",
+  "badgeLv8Desc": "Capai level {count}.",
+  "@badgeLv8Desc": {
+    "description": "Come si ottiene il badge «Scacchista»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeLv15Name": "Veteran",
+  "badgeLv15Desc": "Capai level {count}.",
+  "@badgeLv15Desc": {
+    "description": "Come si ottiene il badge «Veterano»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeLv20Name": "Master Rokko",
+  "badgeLv20Desc": "Capai level {count}.",
+  "@badgeLv20Desc": {
+    "description": "Come si ottiene il badge «Maestro della Rocca»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgesTabBadges": "Lencana",
+  "badgesTabBooks": "Buku",
+  "booksHint": "Setiap pembukaan yang kamu mainkan dalam permainan menjadi sebuah buku, dengan posisinya di sampul. Berapa banyak yang bisa kamu temukan?",
+  "booksSemanticsUnlocked": "{name}, buku terbuka",
+  "@booksSemanticsUnlocked": {
+    "description": "Libro delle aperture sbloccato",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "booksSemanticsLocked": "{name}, buku masih terkunci",
+  "@booksSemanticsLocked": {
+    "description": "Libro delle aperture ancora bloccato",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "booksPlayed": "{count, plural, one{Kamu sudah memainkannya {count} kali: bukunya milikmu.} other{Kamu sudah memainkannya {count} kali: bukunya milikmu.}}",
+  "@booksPlayed": {
+    "description": "Partite giocate in quell'apertura",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "booksHowTo": "Mainkan permainan dengan pembukaan ini untuk membuka bukunya.",
+  "badgesRecentSemantics": "Lencana terbaru: {names}",
+  "@badgesRecentSemantics": {
+    "description": "Badge recenti, per i lettori di schermo",
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "badgeOnlineFirstName": "Main berdua",
+  "badgeOnlineFirstDesc": "Mainkan satu partai melawan teman di ponsel lain.",
+  "badgeOnline10Name": "Selalu ada teman",
+  "badgeOnline10Desc": "Mainkan {count} partai melawan teman.",
+  "@badgeOnline10Desc": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeOnlineWinName": "Menang di antara teman",
+  "badgeOnlineWinDesc": "Menangkan satu partai melawan teman di ponsel lain.",
+  "badgeRepertoireFirstName": "Ingatan sedang dilatih",
+  "badgeRepertoireFirstDesc": "Ulangi repertoarmu untuk pertama kali.",
+  "badgeRepertoire10Name": "Repertoar di luar kepala",
+  "badgeRepertoire10Desc": "Ulangi repertoarmu dalam {count} sesi.",
+  "@badgeRepertoire10Desc": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
+}

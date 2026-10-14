@@ -1,0 +1,22 @@
+{
+  "qrSendTitle": "Przekaż przez QR",
+  "qrSendHint": "Na drugim telefonie otwórz Ty › Archiwum › Odbierz przez QR i skieruj aparat na kod.",
+  "qrPart": "Część {current} z {total}",
+  "qrPause": "Wstrzymaj",
+  "qrResume": "Wznów",
+  "qrNext": "Następna część",
+  "qrPrevious": "Poprzednia część",
+  "qrCodeLabel": "Kod QR partii",
+  "qrReceiveTitle": "Odbierz przez QR",
+  "qrReceiveHint": "Skieruj aparat na kod QR widoczny na drugim telefonie.",
+  "qrReceived": "Odczytano {received} z {total} części",
+  "qrForeign": "Ten kod QR nie zawiera partii.",
+  "qrCorrupted": "Kod QR jest uszkodzony: zacznij odczyt od nowa.",
+  "qrTooLarge": "Partia jest zbyt duża, aby ją odebrać.",
+  "qrRestarted": "Wykryto nową partię: odczyt zaczyna się od nowa.",
+  "qrCameraError": "Aparat jest niedostępny. Zezwól Rokko na używanie aparatu w ustawieniach telefonu i spróbuj ponownie.",
+  "qrRetry": "Spróbuj ponownie",
+  "qrInvalidGame": "Kod QR nie zawiera prawidłowej partii.",
+  "qrFinishedGame": "Partia jest już zakończona: odbierz ją w Ty › Archiwum › Odbierz przez QR.",
+  "qrMalformed": "Nieprawidłowy kod QR: pominięto."
+}

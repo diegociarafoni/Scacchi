@@ -1,0 +1,13 @@
+{
+  "progressRequirementStory": "История: пройдено глав: {chapters}",
+  "@progressRequirementStory": {
+    "placeholders": {
+      "chapters": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsThemeVillaggio": "Деревня",
+  "settingsThemeTorre": "Башня",
+  "settingsThemeCorona": "Корона"
+}

@@ -1,6 +1,6 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/engine/style.dart';
+import 'package:rokko/engine/style.dart';
 
 Position pos(String fen) => Chess.fromSetup(Setup.parseFen(fen));
 Move mv(String uci) => NormalMove.fromUci(uci);

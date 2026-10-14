@@ -43,7 +43,8 @@ class Backup {
     this.version = _version,
   });
 
-  static const _app = 'scacchi';
+  static const _app = 'rokko';
+  static const _appVecchio = 'scacchi';
 
   /// 2: comprende anche settimana, grandi maestri, finali, partita a due
   /// telefoni e file binari (foto del profilo).
@@ -60,8 +61,11 @@ class Backup {
     'week.json',
     'masters.json',
     'endgames.json',
-    'multiplayer.json',
   };
+
+  /// Nei backup di prima non si esporta più: contiene il seme privato della
+  /// partita a due telefoni, quindi si ignora e il file locale resta com'è.
+  static const _ignoredFiles = {'multiplayer.json'};
 
   /// Unici file binari ripristinabili (nel backup in base64).
   static const binaryFiles = {'avatar_photo.jpg'};
@@ -72,7 +76,6 @@ class Backup {
     'week.json',
     'masters.json',
     'endgames.json',
-    'multiplayer.json',
     'avatar_photo.jpg',
   };
 
@@ -131,7 +134,7 @@ class Backup {
   static Backup decode(String text) {
     try {
       final json = jsonDecode(text) as Map<String, Object?>;
-      if (json['app'] != _app) {
+      if (json['app'] != _app && json['app'] != _appVecchio) {
         throw BackupException(BackupProblem.notApp);
       }
       final version = json['version'];
@@ -142,6 +145,7 @@ class Backup {
       for (final e
           in ((json['files'] ?? <String, Object?>{}) as Map<String, Object?>)
               .entries) {
+        if (_ignoredFiles.contains(e.key)) continue;
         if (!dataFiles.contains(e.key)) {
           throw BackupException(BackupProblem.unexpectedFile, e.key);
         }
@@ -244,6 +248,23 @@ class Backup {
       await tmp.rename(file.path);
     }
     await applyPreferences(backup.preferences);
+    await _removeOlderCopies(dir, stamp);
     return true;
+  }
+
+  /// Dopo un ripristino riuscito toglie le copie dei ripristini precedenti,
+  /// che altrimenti si accumulerebbero; restano solo quelle di [stamp].
+  static Future<void> _removeOlderCopies(Directory dir, int stamp) async {
+    try {
+      await for (final e in dir.list()) {
+        if (e is! File) continue;
+        final name = e.uri.pathSegments.last;
+        final at = name.lastIndexOf('$previousSuffix-');
+        if (at <= 0 || name.endsWith('-$stamp')) continue;
+        await e.delete();
+      }
+    } on FileSystemException {
+      // Pulizia facoltativa: un errore non deve invalidare il ripristino.
+    }
   }
 }

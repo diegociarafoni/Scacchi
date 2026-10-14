@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../exchange/qr_l10n.dart';
@@ -10,6 +11,7 @@ import '../exchange/qr_receive_page.dart';
 import '../exchange/qr_send_page.dart';
 import '../exchange/qr_transfer.dart';
 import '../l10n/app_localizations.dart';
+import '../theme/rokko_mascot.dart';
 import 'game_archive.dart';
 import 'pgn.dart';
 import 'saved_game.dart';
@@ -22,6 +24,7 @@ class ArchivePage extends StatefulWidget {
     super.key,
     required this.archive,
     this.onOpen,
+    this.onAnalyse,
     this.share,
     this.scanner = zxingScanner,
   });
@@ -30,6 +33,10 @@ class ArchivePage extends StatefulWidget {
 
   /// Chiamata quando si tocca una partita per aprirla.
   final ValueChanged<SavedGame>? onOpen;
+
+  /// Chiamata quando si sceglie «Apri nell'analisi» (RF-52); senza, la voce
+  /// non compare.
+  final ValueChanged<SavedGame>? onAnalyse;
 
   /// Condivisione del testo; senza, si usa il foglio di condivisione del
   /// sistema.
@@ -68,6 +75,7 @@ class _ArchivePageState extends State<ArchivePage> {
     return (_games ?? const []).where(
       (g) =>
           q.isEmpty ||
+          g.titleIn(l).toLowerCase().contains(q) ||
           g.white.toLowerCase().contains(q) ||
           g.black.toLowerCase().contains(q) ||
           _modeLabel(l, g.mode).toLowerCase().contains(q),
@@ -85,7 +93,22 @@ class _ArchivePageState extends State<ArchivePage> {
     );
   }
 
-  Future<void> _exportAll() async => _share(await widget.archive.exportPgn());
+  /// Esegue [action] avvisando se il disco non risponde (pieno, non scrivibile).
+  Future<void> _guard(Future<void> Function() action) async {
+    try {
+      await action();
+    } on FileSystemException {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context).youLoadError)),
+      );
+    }
+  }
+
+  Future<void> _exportAll() => _guard(() async {
+    final text = await widget.archive.exportPgn();
+    if (mounted) await _share(text);
+  });
 
   Future<void> _import() async {
     final text = await showDialog<String>(
@@ -93,7 +116,7 @@ class _ArchivePageState extends State<ArchivePage> {
       builder: (context) => const _ImportDialog(),
     );
     if (text == null || !mounted) return;
-    await _showImport(widget.archive.importPgn(text));
+    await _guard(() => _showImport(widget.archive.importPgn(text)));
   }
 
   Future<void> _showImport(Future<PgnImport> import) async {
@@ -121,14 +144,19 @@ class _ArchivePageState extends State<ArchivePage> {
           .showSnackBar(SnackBar(content: Text(qrL10n(context).qrInvalidGame)));
       return;
     }
-    await _showImport(widget.archive.importRecords(PgnImport(games, 0)));
+    await _guard(
+      () => _showImport(widget.archive.importRecords(PgnImport(games, 0))),
+    );
   }
 
   Future<void> _sendQr(SavedGame game) {
     final frames = encodeTransfer(game.pgn);
     return Navigator.of(context).push<void>(
       MaterialPageRoute(
-        builder: (_) => QrSendPage(title: game.title, frames: frames),
+        builder: (_) => QrSendPage(
+          title: game.titleIn(AppLocalizations.of(context)),
+          frames: frames,
+        ),
       ),
     );
   }
@@ -138,7 +166,7 @@ class _ArchivePageState extends State<ArchivePage> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(AppLocalizations.of(context).archiveDeleteTitle),
-        content: Text(game.title),
+        content: Text(game.titleIn(AppLocalizations.of(context))),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -152,12 +180,16 @@ class _ArchivePageState extends State<ArchivePage> {
       ),
     );
     if (confirmed != true) return;
-    await widget.archive.delete(game.id);
-    await _reload();
+    await _guard(() async {
+      await widget.archive.delete(game.id);
+      await _reload();
+    });
   }
 
   Future<void> _onAction(SavedGame game, _Action action) async {
     switch (action) {
+      case _Action.analyse:
+        widget.onAnalyse?.call(game);
       case _Action.share:
         await _share(game.pgn);
       case _Action.copy:
@@ -221,10 +253,8 @@ class _ArchivePageState extends State<ArchivePage> {
                 ),
                 Expanded(
                   child: visible.isEmpty
-                      ? Center(
-                          child: Text(
-                            games.isEmpty ? l.archiveEmpty : l.archiveNoMatch,
-                          ),
+                      ? EmptyState(
+                          games.isEmpty ? l.archiveEmpty : l.archiveNoMatch,
                         )
                       : ListView.builder(
                           itemCount: visible.length,
@@ -233,6 +263,7 @@ class _ArchivePageState extends State<ArchivePage> {
                             onTap: widget.onOpen == null
                                 ? null
                                 : () => widget.onOpen!(visible[i]),
+                            canAnalyse: widget.onAnalyse != null,
                             onAction: (a) => _onAction(visible[i], a),
                           ),
                         ),
@@ -243,7 +274,7 @@ class _ArchivePageState extends State<ArchivePage> {
   }
 }
 
-enum _Action { share, copy, qr, delete }
+enum _Action { analyse, share, copy, qr, delete }
 
 /// Tipo di partita in parole; un tipo sconosciuto si mostra com'è.
 String _modeLabel(AppLocalizations l, String mode) => switch (mode) {
@@ -251,22 +282,24 @@ String _modeLabel(AppLocalizations l, String mode) => switch (mode) {
   SavedGame.computer => l.archiveModeComputer,
   SavedGame.imported => l.archiveModeImported,
   SavedGame.physical => l.archiveModePhysical,
+  SavedGame.analysis => l.archiveModeAnalysis,
   _ => mode,
 };
 
-String _date(DateTime d) =>
-    '${d.day.toString().padLeft(2, '0')}/'
-    '${d.month.toString().padLeft(2, '0')}/${d.year}';
+String _date(BuildContext context, DateTime d) =>
+    DateFormat.yMd(Localizations.localeOf(context).toString()).format(d);
 
 class _GameTile extends StatelessWidget {
   const _GameTile({
     required this.game,
     required this.onTap,
+    required this.canAnalyse,
     required this.onAction,
   });
 
   final SavedGame game;
   final VoidCallback? onTap;
+  final bool canAnalyse;
   final ValueChanged<_Action> onAction;
 
   @override
@@ -274,15 +307,20 @@ class _GameTile extends StatelessWidget {
     final l = AppLocalizations.of(context);
     final result = game.finished ? game.result : l.archiveInProgress;
     return ListTile(
-      title: Text(game.title),
+      title: Text(game.titleIn(l)),
       subtitle: Text(
-        '${_date(game.updatedAt)} · ${_modeLabel(l, game.mode)} · $result',
+        '${_date(context, game.updatedAt)} · ${_modeLabel(l, game.mode)} · $result',
       ),
       onTap: onTap,
       trailing: PopupMenuButton<_Action>(
-        tooltip: l.archiveActionsFor(game.title),
+        tooltip: l.archiveActionsFor(game.titleIn(l)),
         onSelected: onAction,
         itemBuilder: (context) => [
+          if (canAnalyse)
+            PopupMenuItem(
+              value: _Action.analyse,
+              child: Text(l.archiveOpenAnalysis),
+            ),
           PopupMenuItem(value: _Action.share, child: Text(l.archiveSharePgn)),
           PopupMenuItem(value: _Action.copy, child: Text(l.archiveCopyPgn)),
           PopupMenuItem(

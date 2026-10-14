@@ -1,14 +1,14 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/progress/activity.dart';
-import 'package:scacchi/progress/avatar.dart';
-import 'package:scacchi/progress/progress_feedback.dart';
-import 'package:scacchi/progress/progress_state.dart';
-import 'package:scacchi/progress/progress_tracker.dart';
-import 'package:scacchi/progress/rewards.dart';
-import 'package:scacchi/progress/xp.dart';
-import 'package:scacchi/settings/settings.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/progress/activity.dart';
+import 'package:rokko/progress/avatar.dart';
+import 'package:rokko/progress/progress_feedback.dart';
+import 'package:rokko/progress/progress_state.dart';
+import 'package:rokko/progress/progress_tracker.dart';
+import 'package:rokko/progress/rewards.dart';
+import 'package:rokko/progress/xp.dart';
+import 'package:rokko/settings/settings.dart';
 
 void main() {
   const settings = ProgressSettings();
@@ -65,6 +65,61 @@ void main() {
       expect(
         req.isMet(const ProgressState(unlocked: ['tournament_won'])),
         isTrue,
+      );
+    });
+
+    test('i capitoli conclusi della Storia sbloccano le scacchiere a tema', () {
+      const req = StoryRequirement(2);
+      expect(
+        req.label(lookupAppLocalizations(const Locale('it'))),
+        'Storia: 2 capitoli conclusi',
+      );
+      expect(req.isMet(ProgressState.initial), isFalse);
+      expect(req.isMet(const ProgressState(tally: {'story': 1})), isFalse);
+      expect(req.isMet(const ProgressState(tally: {'story': 2})), isTrue);
+      expect(requirementOf(BoardTheme.villaggio), const StoryRequirement(2));
+      expect(requirementOf(BoardTheme.torre), const StoryRequirement(5));
+      expect(requirementOf(BoardTheme.corona), const StoryRequirement(9));
+    });
+
+    test('concludere un capitolo registra l\'attività e vale XP', () {
+      final update = ProgressTracker().record(
+        ProgressState.initial,
+        const StoryChapterDone(),
+        DateTime(2026, 10, 5, 12),
+        settings,
+      );
+      expect(update.state.tally['story'], 1);
+      expect(update.xpGained, xpFor(const StoryChapterDone()));
+      expect(xpFor(const StoryChapterDone()), greaterThan(0));
+    });
+
+    test('il conteggio dei capitoli non scende e non somma le ripetizioni', () {
+      final tracker = ProgressTracker();
+      var state = ProgressState.initial;
+      for (final n in [3, 3, 2]) {
+        state = tracker
+            .record(
+              state,
+              StoryChapterDone(chapters: n),
+              DateTime(2026, 10, 5, 12),
+              settings,
+            )
+            .state;
+      }
+      expect(state.tally['story'], 3);
+    });
+
+    test('il secondo capitolo concluso annuncia la scacchiera Villaggio', () {
+      const before = ProgressState(tally: {'story': 1});
+      const after = ProgressState(tally: {'story': 2});
+      expect(newRewards(before, after), [BoardTheme.villaggio]);
+      expect(
+        rewardName(
+          lookupAppLocalizations(const Locale('it')),
+          BoardTheme.villaggio,
+        ),
+        'tema Villaggio',
       );
     });
 

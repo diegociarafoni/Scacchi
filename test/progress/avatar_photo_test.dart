@@ -3,11 +3,11 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/progress/avatar.dart';
-import 'package:scacchi/progress/avatar_photo.dart';
-import 'package:scacchi/progress/profile_page.dart';
-import 'package:scacchi/progress/progress_controller.dart';
-import 'package:scacchi/progress/progress_store.dart';
+import 'package:rokko/progress/avatar.dart';
+import 'package:rokko/progress/avatar_photo.dart';
+import 'package:rokko/progress/profile_page.dart';
+import 'package:rokko/progress/progress_controller.dart';
+import 'package:rokko/progress/progress_store.dart';
 
 import '../kids/no_numbers_test.dart' show kidApp, setPhone;
 

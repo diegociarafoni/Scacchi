@@ -1,0 +1,65 @@
+{
+  "physicalTitle": "Échiquier physique",
+  "physicalEntrySubtitle": "Pendule et feuille de partie pour une partie en vrai",
+  "physicalIntro": "Joue sur un vrai échiquier : l'app sert de pendule et enregistre la partie. Après chaque coup, saisis-le ou touche-le parmi les coups légaux.",
+  "physicalWhite": "Blancs",
+  "physicalBlack": "Noirs",
+  "physicalUntimed": "Sans pendule",
+  "physicalStart": "Commencer la partie",
+  "physicalInputWhite": "Coup des Blancs (ex. e4, Cf3)",
+  "physicalInputBlack": "Coup des Noirs (ex. e5, Cc6)",
+  "physicalInvalidMove": "Coup invalide : « {text} »",
+  "@physicalInvalidMove": {
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "physicalNoMoves": "Aucun coup",
+  "physicalPause": "Pause",
+  "physicalResume": "Reprendre",
+  "physicalUndo": "Annuler",
+  "physicalDraw": "Nulle",
+  "physicalResign": "Abandonner",
+  "physicalDrawQuestion": "Nulle par accord ?",
+  "physicalYes": "Oui",
+  "physicalNo": "Non",
+  "physicalWhoResigns": "Qui abandonne ?",
+  "physicalSaved": "Partie enregistrée dans les archives",
+  "physicalNothingToSave": "Aucun coup à enregistrer",
+  "physicalSaveFailed": "Impossible d'enregistrer la partie",
+  "physicalNewGame": "Nouvelle partie",
+  "physicalEndCheckmate": "Échec et mat",
+  "physicalEndResignation": "Abandon",
+  "physicalEndTimeout": "Temps écoulé",
+  "physicalEndAgreement": "Nulle par accord",
+  "physicalEndStalemate": "Pat",
+  "physicalEndInsufficient": "Matériel insuffisant",
+  "physicalEndRepetition": "Triple répétition",
+  "physicalEndFiftyMoves": "Règle des cinquante coups",
+  "physicalEndOther": "Partie terminée",
+  "physicalResultLine": "{reason} · {result}",
+  "@physicalResultLine": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      },
+      "result": {
+        "type": "String"
+      }
+    }
+  },
+  "physicalPhoto": "Coup depuis la photo",
+  "physicalRealign": "Réaligner",
+  "physicalCameraUnavailable": "Appareil photo indisponible",
+  "physicalImageUnreadable": "Image illisible",
+  "physicalReferenceSaved": "Photo de référence enregistrée. Après le prochain coup, prends une autre photo.",
+  "physicalNoMoveRecognized": "Aucun coup reconnu : l'échiquier semble identique.",
+  "physicalGuessNote": "Coups les plus probables d'après la photo : confirme le bon.",
+  "physicalAlignTitle": "Aligne l'échiquier",
+  "physicalAlignHelp": "Fais glisser les quatre cercles sur les coins de l'échiquier. Garde le même cadrage pour les photos suivantes.",
+  "physicalAlignWhiteBottom": "Blancs en bas",
+  "physicalAlignBlackBottom": "Noirs en bas",
+  "physicalAlignDone": "Terminé"
+}

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/bot_gallery/bot_gallery_page.dart';
-import 'package:scacchi/bot_gallery/game_options.dart';
-import 'package:scacchi/engine/bot_collection.dart';
-import 'package:scacchi/game/clock.dart';
-import 'package:scacchi/game/handicap.dart';
-import 'package:scacchi/game/opponent_picker.dart';
-import 'package:scacchi/game/variant.dart';
-import 'package:scacchi/story/story.dart';
-import 'package:scacchi/theme/rokko_theme.dart';
+import 'package:rokko/bot_gallery/bot_gallery_page.dart';
+import 'package:rokko/bot_gallery/game_options.dart';
+import 'package:rokko/engine/bot_collection.dart';
+import 'package:rokko/game/clock.dart';
+import 'package:rokko/game/handicap.dart';
+import 'package:rokko/game/opponent_picker.dart';
+import 'package:rokko/game/variant.dart';
+import 'package:rokko/story/story.dart';
+import 'package:rokko/theme/rokko_theme.dart';
 
 import '../localized_app.dart';
 import '../support/devices.dart';
@@ -399,6 +399,7 @@ void main() {
                   matching: find.byType(Scrollable),
                 ),
               );
+              await _tapOption(tester, const Key('option-training'));
               await _tapOption(tester, const Key('option-coach'));
               await tester.tap(find.byKey(const Key('options-done')));
               await tester.pumpAndSettle();
@@ -412,6 +413,38 @@ void main() {
           expect(result.options.coach, isTrue);
         },
       );
+
+      testWidgets('il tempo di handicap vale solo con un orologio', (
+        tester,
+      ) async {
+        final result = await _open(
+          tester,
+          initialBotId: 'pino',
+          act: () async {
+            await tester.tap(find.byKey(const Key('gallery-options')));
+            await tester.pumpAndSettle();
+            await tester.ensureVisible(
+              find.byKey(const Key('option-handicap-time-2')),
+            );
+            await tester.pumpAndSettle();
+            final chip = find.byKey(const Key('option-handicap-time-2'));
+            expect(tester.widget<ChoiceChip>(chip).onSelected, isNull);
+            await _tapOption(tester, const Key('option-time-5+0'));
+            await _tapOption(tester, const Key('option-handicap-time-2'));
+            await tester.pumpAndSettle();
+            expect(tester.widget<ChoiceChip>(chip).selected, isTrue);
+            // Tolto l'orologio, il tempo scelto si azzera.
+            await _tapOption(tester, const Key('option-time-none'));
+            await tester.pumpAndSettle();
+            expect(tester.widget<ChoiceChip>(chip).selected, isFalse);
+            expect(tester.widget<ChoiceChip>(chip).onSelected, isNull);
+            await tester.tap(find.byKey(const Key('options-done')));
+            await tester.pumpAndSettle();
+            await tester.tap(find.byKey(const Key('gallery-play')));
+          },
+        );
+        expect(result!.options.handicap, isNull);
+      });
 
       testWidgets(
         'una variante diversa dalla classica toglie il pezzo in meno',
@@ -457,6 +490,53 @@ void main() {
         );
         expect(chip.selected, isTrue);
       });
+
+      testWidgets(
+        'RF-22 Sfida di default; l\'interruttore sceglie Allenamento',
+        (tester) async {
+          final result = await _open(
+            tester,
+            initialBotId: 'pino',
+            act: () async {
+              await tester.tap(find.byKey(const Key('gallery-options')));
+              await tester.pumpAndSettle();
+              Future<void> reveal() => tester.scrollUntilVisible(
+                find.byKey(const Key('option-training')),
+                200,
+                scrollable: find.descendant(
+                  of: find.byType(BottomSheet),
+                  matching: find.byType(Scrollable),
+                ),
+              );
+              await reveal();
+              expect(
+                tester
+                    .widget<SwitchListTile>(
+                      find.byKey(const Key('option-training')),
+                    )
+                    .value,
+                isFalse,
+              );
+              // Nella Sfida l'allenatore è un aiuto: non si accende.
+              expect(
+                tester
+                    .widget<SwitchListTile>(
+                      find.byKey(const Key('option-coach')),
+                    )
+                    .onChanged,
+                isNull,
+              );
+              await _tapOption(tester, const Key('option-training'));
+              await _tapOption(tester, const Key('option-coach'));
+              await tester.tap(find.byKey(const Key('options-done')));
+              await tester.pumpAndSettle();
+              await tester.tap(find.byKey(const Key('gallery-play')));
+            },
+          );
+          expect(result!.options.training, isTrue);
+          expect(result.options.coach, isTrue);
+        },
+      );
 
       testWidgets('profilo bambino: solo senza tempo o cadenza lenta', (
         tester,

@@ -8,6 +8,9 @@ import 'package:flutter/material.dart';
 import '../archive/game_archive.dart';
 import '../archive/saved_game.dart';
 import '../l10n/app_localizations.dart';
+import '../review/game_phase.dart';
+import '../review/review_l10n.dart';
+import '../theme/sheets.dart';
 import 'local_rating.dart';
 import 'stats.dart';
 
@@ -64,7 +67,7 @@ class _StatsPageState extends State<StatsPage> {
                 stats.localGames == 0
           ? _Message(l10n.statsEmpty)
           : ListView(
-              padding: const EdgeInsets.all(16),
+              padding: context.withSystemBottom(const EdgeInsets.all(16)),
               children: [
                 _RatingCard(rating: rating),
                 const SizedBox(height: 16),
@@ -88,7 +91,10 @@ class _StatsPageState extends State<StatsPage> {
                 if (stats.byTimeControl.isNotEmpty)
                   _Section(l10n.statsByTimeControl, [
                     for (final e in stats.byTimeControl.entries)
-                      _ScoreRow(e.key, e.value),
+                      _ScoreRow(
+                        e.key == noClock ? l10n.gameNoClock : e.key,
+                        e.value,
+                      ),
                   ]),
                 if (stats.openings.isNotEmpty)
                   _Section(l10n.statsTopOpenings, [
@@ -110,6 +116,24 @@ class _StatsPageState extends State<StatsPage> {
                       values: [for (final p in stats.accuracyTrend) p.$2],
                       label: l10n.statsAccuracyTrend,
                     ),
+                  ]),
+                if (GamePhase.values.any((p) => stats.phaseAverage(p) != null))
+                  _Section(l10n.reviewAccuracyByPhase, [
+                    for (final phase in GamePhase.values)
+                      if (stats.phaseAverage(phase) case final avg?) ...[
+                        ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          title: Text(phaseLabel(l10n, phase)),
+                          trailing: Text('${avg.toStringAsFixed(1)}%'),
+                        ),
+                        if (stats.phaseTrend(phase).length > 1)
+                          _Sparkline(
+                            values: [
+                              for (final p in stats.phaseTrend(phase)) p.$2,
+                            ],
+                            label: phaseLabel(l10n, phase),
+                          ),
+                      ],
                   ]),
               ],
             ),

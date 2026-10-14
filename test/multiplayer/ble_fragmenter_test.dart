@@ -2,7 +2,7 @@ import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/multiplayer/ble_fragmenter.dart';
+import 'package:rokko/multiplayer/ble_fragmenter.dart';
 
 Uint8List bytes(int n, [int seed = 1]) {
   final r = Random(seed);

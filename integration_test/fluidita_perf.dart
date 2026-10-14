@@ -5,7 +5,7 @@ import 'package:chessground/chessground.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:scacchi/main.dart';
+import 'package:rokko/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../test/game_actions.dart';
@@ -21,7 +21,7 @@ Offset _square(WidgetTester tester, String name) {
 
 const _moves = ['e2e4', 'e7e5', 'g1f3', 'b8c6', 'f1c4', 'g8f6', 'd2d3', 'f8c5'];
 
-/// Misura i tempi di costruzione dei fotogrammi in una partita e tra le schede;
+/// Misura l'avvio e i tempi di costruzione dei fotogrammi in una partita e tra le schede;
 /// il rapporto va in build/performance.json per `tool/check_performance.dart`.
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -32,7 +32,13 @@ void main() {
     tester.view.physicalSize = const Size(1170, 2532);
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
-    await tester.pumpWidget(const ScacchiApp());
+    // Avvio: dal lancio alla Home con la barra di navigazione, pronta a giocare.
+    final startup = Stopwatch()..start();
+    await tester.pumpWidget(const RokkoApp());
+    while (find.byType(NavigationBar).evaluate().isEmpty) {
+      await tester.pump(const Duration(milliseconds: 16));
+    }
+    startup.stop();
     await tester.pumpAndSettle();
     await openBoard(tester);
 
@@ -78,6 +84,8 @@ void main() {
     final report = binding.reportData!['performance'] as Map<String, dynamic>;
     out
       ..createSync(recursive: true)
-      ..writeAsStringSync(jsonEncode(report));
+      ..writeAsStringSync(
+        jsonEncode({...report, 'startup_ms': startup.elapsedMilliseconds}),
+      );
   });
 }

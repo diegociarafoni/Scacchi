@@ -1,0 +1,83 @@
+{
+  "statsTitle": "Estadísticas",
+  "statsLoadFailed": "No se pudo leer el archivo de partidas: inténtalo de nuevo más tarde.",
+  "statsEmpty": "Juega unas partidas contra el ordenador para ver tus estadísticas.",
+  "statsRecord": "Resultados",
+  "statsAllGames": "Todas",
+  "statsWithWhite": "Con Blancas",
+  "statsWithBlack": "Con Negras",
+  "statsLocalGames": "Partidas de dos jugadores",
+  "statsByTimeControl": "Por ritmo de juego",
+  "statsTopOpenings": "Aperturas más jugadas",
+  "statsGames": "{count, plural, one{{count} partida} other{{count} partidas}}",
+  "statsAccuracy": "Precisión",
+  "statsAverage": "Media",
+  "statsAccuracyTrend": "Evolución de la precisión",
+  "statsRating": "Puntuación estimada {rating}",
+  "statsRatingProvisional": "provisional: hacen falta {count} partidas contra el ordenador",
+  "statsRatingGames": "{count, plural, one{a partir de {count} partida contra el ordenador} other{a partir de {count} partidas contra el ordenador}}",
+  "statsRatingTrend": "Evolución de la puntuación",
+  "statsNoGames": "sin partidas",
+  "statsScoreDetail": "{wins, plural, one{{wins} victoria} other{{wins} victorias}}, {draws, plural, one{{draws} tablas} other{{draws} tablas}}, {losses, plural, one{{losses} derrota} other{{losses} derrotas}}",
+  "statsTrend": "{label}: de {first} a {last}, mínimo {min}, máximo {max}",
+  "portraitShareSubject": "Mi semana",
+  "portraitTitle": "Tu semana",
+  "portraitUnreadable": "No se pudo leer el archivo.",
+  "portraitEmpty": "No hay partidas en los últimos siete días. Juega contra el ordenador y tu resumen aparecerá aquí.",
+  "portraitShare": "Compartir como imagen",
+  "portraitShareFailed": "No se pudo compartir",
+  "portraitCardTitle": "Mi semana de ajedrez",
+  "portraitGames": "{count, plural, one{1 partida} other{{count} partidas}}",
+  "@portraitGames": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "portraitScore": "Ganadas {wins} · Tablas {draws} · Perdidas {losses}",
+  "@portraitScore": {
+    "placeholders": {
+      "wins": {
+        "type": "int"
+      },
+      "draws": {
+        "type": "int"
+      },
+      "losses": {
+        "type": "int"
+      }
+    }
+  },
+  "portraitOpenings": "Aperturas favoritas",
+  "portraitAccuracy": "Precisión media",
+  "portraitMate": "Jaque mate favorito",
+  "portraitMateValue": "{role, select, king{con el rey} queen{con la dama} rook{con la torre} bishop{con el alfil} knight{con el caballo} other{con un peón}}, {count, plural, one{1 vez} other{{count} veces}}",
+  "@portraitMateValue": {
+    "placeholders": {
+      "role": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "portraitStrongest": "Rival más fuerte vencido",
+  "portraitStrongestValue": "Elo {elo}",
+  "@portraitStrongestValue": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "portraitBusiestDay": "Día con más actividad",
+  "portraitWeekdayMonday": "Lunes",
+  "portraitWeekdayTuesday": "Martes",
+  "portraitWeekdayWednesday": "Miércoles",
+  "portraitWeekdayThursday": "Jueves",
+  "portraitWeekdayFriday": "Viernes",
+  "portraitWeekdaySaturday": "Sábado",
+  "portraitWeekdaySunday": "Domingo"
+}

@@ -1,0 +1,369 @@
+{
+  "storyTitle": "Opowieść",
+  "storyEntrySubtitle": "Podróż w rozdziałach: lekcje, zadania i wyzwania",
+  "storyChapterNumber": "Rozdział {n}",
+  "@storyChapterNumber": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "storyProgress": "{done, plural, one{{done} rozdział z {total}} few{{done} rozdziały z {total}} many{{done} rozdziałów z {total}} other{{done} rozdziału z {total}}}",
+  "@storyProgress": {
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyChapterLocked": "Otworzy się po ukończeniu poprzedniego rozdziału",
+  "storyChapterDone": "Rozdział ukończony",
+  "storyContinue": "Dalej",
+  "storyFinished": "Opowieść dobiegła końca. Lekcje, zadania i partie nadal czekają w pozostałych częściach aplikacji.",
+  "storyStepLessons": "Lekcje: {value} z {total}",
+  "@storyStepLessons": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyStepPuzzles": "Zadania rozdziału: {value} z {total}",
+  "@storyStepPuzzles": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyStepGuardian": "Strażnik rozdziału",
+  "storyStepBoss": "Wyzwanie: {name}",
+  "@storyStepBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyStepDone": "zrobione",
+  "storyStepTodo": "do zrobienia",
+  "storyStepLocked": "zablokowane",
+  "storyStepLockedHint": "Najpierw ukończ poprzedni krok.",
+  "storyEngineMissing": "Wyzwania rozgrywa się tam, gdzie działa przeciwnik komputerowy: na Androidzie i iOS albo w systemach Windows i Linux z zainstalowanym Stockfishem.",
+  "storyBossWon": "Pokonano: {name}!",
+  "@storyBossWon": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyBossLost": "{name} jeszcze się broni: spróbuj ponownie, kiedy chcesz.",
+  "@storyBossLost": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPuzzlesNone": "Nie udało się wczytać zadań: spróbuj ponownie.",
+  "storyPrologueTitle": "Ścieżka pierwszych kroków",
+  "storyPrologueIntro": "Przed wioską jest ścieżka, a na niej ciekawski kurczak. Razem z nim poznasz ruchy wszystkich bierek: wieży, gońca, hetmana, króla, skoczka i pionka.",
+  "storyPrologueBoss": "{name}, kurczak ze ścieżki, chce zagrać partię, by wypróbować nowe bierki.",
+  "@storyPrologueBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPrologueOutro": "Bierki nie mają już przed Tobą tajemnic. Wioska u stóp twierdzy jest o kilka kroków stąd.",
+  "storyVillageTitle": "Wioska bierek",
+  "storyVillageIntro": "Docierasz do wioski u stóp twierdzy Rokko. Mieszkańcy grają całymi dniami, ale zostawiają bierki bez obrony: naucz się bić i bronić, a potem pokaż, że zauważysz niebronioną figurę.",
+  "storyVillageBoss": "{name}, strażnik wioski, rzuca Ci wyzwanie, by sprawdzić, czy naprawdę się nauczyłeś.",
+  "@storyVillageBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyVillageOutro": "Wioska urządza przyjęcie na Twoją cześć. Droga do bram miasta stoi otworem.",
+  "storyGatesTitle": "Bramy miasta",
+  "storyGatesIntro": "Strażnicy zatrzymują Cię przy bramach: aby wejść, musisz znać zasady, od szacha po roszadę. Promocja zauważona na czas otwiera nawet najwyższą bramę.",
+  "storyGatesBoss": "{name}, dowódca straży, chce Cię sprawdzić, zanim Cię przepuści.",
+  "@storyGatesBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyGatesOutro": "Bramy otwierają się szeroko. Przed Tobą wznosi się wieża króla.",
+  "storyTowerTitle": "Wieża króla",
+  "storyTowerIntro": "Na szczycie wieży mieszka król i potrafi się bronić. Poznaj maty, które go osaczają, nawet gdy jego własne bierki tworzą mur.",
+  "storyTowerBoss": "{name}, rycerz, który kocha gambity, czeka na szczycie schodów.",
+  "@storyTowerBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyTowerOutro": "Król z wieży dostał mata. Zostaje jeszcze las i jego pułapki.",
+  "storyForestTitle": "Las pułapek",
+  "storyForestIntro": "W lesie każda bierka kryje pułapkę: widełki, związania, rentgeny. Naucz się dostrzegać je przed wszystkimi.",
+  "storyForestBoss": "{name}, przewodnik po lesie, zna każdą ścieżkę i każdą sidła.",
+  "@storyForestBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyForestOutro": "Przeszedłeś las, nie wpadając w żadną pułapkę. Zamek czeka.",
+  "storyCastleTitle": "Zamek końcówek",
+  "storyCastleIntro": "W zamku na szachownicy zostało tylko kilka bierek i liczy się każdy ruch. Tu okaże się, kto potrafi zakończyć partię.",
+  "storyCastleBoss": "{name}, kasztelan, strzeże wejścia do sali korony.",
+  "@storyCastleBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyCastleOutro": "Wielkie drzwi się otwierają: korona jest blisko.",
+  "storyCrownTitle": "Korona",
+  "storyCrownIntro": "Sala korony. Dobry początek to połowa zwycięstwa: centrum, rozwój, roszada.",
+  "storyCrownBoss": "{name}, strażnik korony, gra debiuty jak nikt inny.",
+  "@storyCrownBoss": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyCrownOutro": "Korona jest Twoja. Ale za murami wciąż czeka równina do odkrycia.",
+  "storyChapterCurrent": "W toku",
+  "@storyChapterCurrent": {
+    "description": "Etichetta del capitolo corrente nella storia"
+  },
+  "storyChapterSteps": "{done, plural, one{{done} krok z {total}} few{{done} kroki z {total}} many{{done} kroków z {total}} other{{done} kroku z {total}}}",
+  "@storyChapterSteps": {
+    "description": "Passi conclusi di un capitolo, per la barra di avanzamento",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "storyPassageLessonsTitle": "Lekcje ukończone!",
+  "@storyPassageLessonsTitle": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassagePuzzlesTitle": "Zadania rozwiązane!",
+  "@storyPassagePuzzlesTitle": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageGuardianTitle": "Strażnik pokonany!",
+  "@storyPassageGuardianTitle": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageNextPuzzles": "Wiesz już, co trzeba. Teraz sprawdź się w zadaniach rozdziału.",
+  "@storyPassageNextPuzzles": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageNextGuardian": "Teraz zmierz się ze strażnikiem rozdziału.",
+  "@storyPassageNextGuardian": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageNextBoss": "Jesteś gotowy: {name} czeka na ostatnie wyzwanie rozdziału.",
+  "@storyPassageNextBoss": {
+    "description": "Foglio di passaggio della storia",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPassageGoPuzzles": "Do zadań",
+  "@storyPassageGoPuzzles": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageGoGuardian": "Wyzwij strażnika",
+  "@storyPassageGoGuardian": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyChallengeTitle": "Wyzwanie: {name}",
+  "@storyChallengeTitle": {
+    "description": "Foglio della sfida al custode",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPassageGoBoss": "Wyzwij: {name}",
+  "@storyPassageGoBoss": {
+    "description": "Foglio di passaggio della storia",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPassageLater": "Później",
+  "@storyPassageLater": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageChapterTitle": "Rozdział {n} ukończony!",
+  "@storyPassageChapterTitle": {
+    "description": "Foglio di passaggio della storia",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "storyPassageChapterNext": "Otwiera się rozdział {n}: {title}.",
+  "@storyPassageChapterNext": {
+    "description": "Foglio di passaggio della storia",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPassageGoChapter": "Do następnego rozdziału",
+  "@storyPassageGoChapter": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageStoryDone": "Opowieść ukończona!",
+  "@storyPassageStoryDone": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPassageClose": "Zamknij",
+  "@storyPassageClose": {
+    "description": "Foglio di passaggio della storia"
+  },
+  "storyPlainTitle": "Równina planów",
+  "@storyPlainTitle": {
+    "description": "storyPlainTitle"
+  },
+  "storyPlainIntro": "Za koroną leży cicha równina, na której bitwy wygrywa się, zanim się zaczną: potrzebny jest plan, aktywne bierki i odrobina cierpliwości.",
+  "@storyPlainIntro": {
+    "description": "storyPlainIntro"
+  },
+  "storyPlainBoss": "{name}, wilk z równiny, przygotowuje każdy atak gambitem i dokładnym planem.",
+  "@storyPlainBoss": {
+    "description": "storyPlainBoss",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyPlainOutro": "Równina jest Twoja. Wiesz już, że każda bierka ma swoje zadanie, a każdy ruch swój powód.",
+  "@storyPlainOutro": {
+    "description": "storyPlainOutro"
+  },
+  "storyAcademyTitle": "Akademia mistrza",
+  "@storyAcademyTitle": {
+    "description": "storyAcademyTitle"
+  },
+  "storyAcademyIntro": "Na szczycie wzgórza mieszka stary mistrz, który uczy kilku zasad: licz ruchy, znajdź opozycję, nigdy nie zapominaj o zasadach debiutu.",
+  "@storyAcademyIntro": {
+    "description": "storyAcademyIntro"
+  },
+  "storyAcademyBoss": "{name}, gwiazda akademii, atakuje bez wytchnienia i nie wybacza błędów.",
+  "@storyAcademyBoss": {
+    "description": "storyAcademyBoss",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "storyAcademyOutro": "Akademia przyjmuje Cię jak swojego. Opowieść się kończy, ale gra trwa dalej.",
+  "@storyAcademyOutro": {
+    "description": "storyAcademyOutro"
+  },
+  "@storyCrownIntro": {
+    "description": "storyCrownIntro"
+  },
+  "@storyCrownOutro": {
+    "description": "storyCrownOutro"
+  },
+  "storyGuardianPrologueWelcome": "Cześć, jestem Tino! Pokażę Ci, jak ruszają się wszystkie bierki.",
+  "storyGuardianProloguePuzzleOk": "Udało się! Już wiesz, jak ruszają się bierki.",
+  "storyGuardianProloguePuzzleRetry": "Prawie! Zobacz, dokąd może pójść każda bierka, i spróbuj jeszcze raz.",
+  "storyGuardianPrologueBoss": "Zagramy partię? Zacznę łagodnie, obiecuję.",
+  "storyGuardianPrologueLessonDone": "Znasz już bierki. Zobaczmy, jak ich używasz.",
+  "storyGuardianVillageWelcome": "Witaj w wiosce! Nauczę Cię, by nie zostawiać bierek bez obrony.",
+  "storyGuardianVillagePuzzleOk": "Brawo, zauważone od razu!",
+  "storyGuardianVillagePuzzleRetry": "Już blisko: poszukaj niebronionej bierki.",
+  "storyGuardianVillageBoss": "Teraz ty i ja. Uwielbiam partię włoską, uważaj!",
+  "storyGuardianVillageLessonDone": "Brawo, żadnych luźnych bierek. Czas je sprawdzić.",
+  "storyGuardianGatesWelcome": "Przez bramy przejdzie tylko ten, kto zna zasady. Przejdźmy je po kolei.",
+  "storyGuardianGatesPuzzleOk": "Właśnie tak: promocja w odpowiednim momencie.",
+  "storyGuardianGatesPuzzleRetry": "Jeszcze nie: sprawdź zasady i spróbuj raz jeszcze.",
+  "storyGuardianGatesBoss": "Partia na sprawdzian: zagram gambit hetmański.",
+  "storyGuardianGatesLessonDone": "Znasz już zasady. Zadania czekają.",
+  "storyGuardianTowerWelcome": "Na tę wieżę wchodzi się matami. Zaczynajmy.",
+  "storyGuardianTowerPuzzleOk": "Mat! Prosto do celu.",
+  "storyGuardianTowerPuzzleRetry": "Nie, spójrz na króla: którędy nie może uciec?",
+  "storyGuardianTowerBoss": "Dość teorii: zagrajmy. Atakuję gambitem królewskim.",
+  "storyGuardianTowerLessonDone": "Widzisz, jak dać mata. Teraz znajdź te ukryte.",
+  "storyGuardianForestWelcome": "W lesie każda gałąź kryje pułapkę. Oczy szeroko otwarte!",
+  "storyGuardianForestPuzzleOk": "Ha, nie wpadłeś w pułapkę. Brawo!",
+  "storyGuardianForestPuzzleRetry": "Ojej, pułapka zadziałała. Spróbuj jeszcze raz!",
+  "storyGuardianForestBoss": "Zobaczymy, czy potrafisz zastawić własne. Gram partię angielską.",
+  "storyGuardianForestLessonDone": "Pułapki już Cię nie oszukają. Poćwicz ich zastawianie.",
+  "storyGuardianCastleWelcome": "W końcówkach liczy się każdy ruch. Spokojnie, krok po kroku.",
+  "storyGuardianCastlePuzzleOk": "Cierpliwie i dokładnie: tak wygrywa się końcówkę.",
+  "storyGuardianCastlePuzzleRetry": "Bez pośpiechu: policz ruchy i spróbuj ponownie.",
+  "storyGuardianCastleBoss": "Czeka nas powolna partia. Gram obronę sycylijską.",
+  "storyGuardianCastleLessonDone": "Mało bierek, liczy się każdy ruch. Teraz zadania.",
+  "storyGuardianCrownWelcome": "Koronę zdobywa się od początku: elegancki debiut to połowa partii.",
+  "storyGuardianCrownPuzzleOk": "Elegancko: to właściwy ruch.",
+  "storyGuardianCrownPuzzleRetry": "Blisko: pomyśl o rozwoju bierek i spróbuj ponownie.",
+  "storyGuardianCrownBoss": "Zagramy partię? Wybieram partię hiszpańską.",
+  "storyGuardianCrownLessonDone": "Centrum, rozwój, roszada: wszystko Twoje. Teraz zadania.",
+  "storyGuardianPlainWelcome": "Na równinie wygrywa się planem. Pokażę Ci, jak.",
+  "storyGuardianPlainPuzzleOk": "Właśnie tak. Jasny plan pokonuje pośpiech.",
+  "storyGuardianPlainPuzzleRetry": "Blisko. Zastanów się, czego chce Twoja bierka.",
+  "storyGuardianPlainBoss": "Zagramy? Uprzedzam: uwielbiam gambit Evansa.",
+  "storyGuardianPlainLessonDone": "Masz plan i aktywne bierki. Teraz zadania.",
+  "storyGuardianAcademyWelcome": "W akademii uczysz się od mistrzów. No dalej, pokaż, co umiesz!",
+  "storyGuardianAcademyPuzzleOk": "Świetnie! Tak grają mistrzowie.",
+  "storyGuardianAcademyPuzzleRetry": "Nie poddawaj się: weź oddech i spróbuj ponownie.",
+  "storyGuardianAcademyBoss": "Ostatnie wyzwanie: gram obronę królewsko-indyjską. Bez taryfy ulgowej!",
+  "storyGuardianAcademyLessonDone": "Lekcje skończone, uczniu. Teraz sprawdzian w boju.",
+  "storyGuardianSays": "{name} mówi: {text}",
+  "@storyGuardianSays": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "text": {
+        "type": "String"
+      }
+    }
+  }
+}

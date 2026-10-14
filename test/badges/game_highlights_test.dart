@@ -1,8 +1,8 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/game/chess_game.dart';
-import 'package:scacchi/progress/activity.dart';
-import 'package:scacchi/progress/game_activity.dart';
+import 'package:rokko/game/chess_game.dart';
+import 'package:rokko/progress/activity.dart';
+import 'package:rokko/progress/game_activity.dart';
 
 ChessGame play(List<String> uci, {Position? initial}) {
   final game = ChessGame(initial: initial);

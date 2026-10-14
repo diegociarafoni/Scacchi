@@ -109,9 +109,11 @@ jobs:
       - run: dart tool/l10n.dart --solo-unione
       # Su desktop un file alla volta: con più file l'avvio del secondo fallisce.
       - run: |
+          failed=0
           for f in integration_test/*_test.dart; do
-            xvfb-run -a flutter test "$f" -d linux
+            xvfb-run -a flutter test "$f" -d linux || { echo "::error file=$f::test di integrazione fallito"; failed=1; }
           done
+          exit $failed
 
   android:
     runs-on: ubuntu-latest
@@ -127,7 +129,7 @@ jobs:
       CCACHE_MAXSIZE: 400M
       CCACHE_COMPILERCHECK: content
       # Solo arm64, come l'APK di rilascio, anche per le librerie dei plugin.
-      SCACCHI_NATIVE_ABIS: arm64-v8a
+      ROKKO_NATIVE_ABIS: arm64-v8a
     steps:
       # Spazio per NDK e compilazione nativa di Stockfish: si rimuovono toolchain non usate.
       - run: sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/.ghcup /usr/share/swift /usr/local/share/boost /opt/hostedtoolcache/CodeQL && df -h /
@@ -167,6 +169,6 @@ jobs:
         run: ccache -s
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: scacchi-debug-apk
+          name: rokko-debug-apk
           path: build/app/outputs/flutter-apk/app-debug.apk
           retention-days: 7

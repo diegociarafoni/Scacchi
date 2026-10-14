@@ -1,7 +1,7 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/path/curriculum.dart';
-import 'package:scacchi/path/exercise.dart';
+import 'package:rokko/path/curriculum.dart';
+import 'package:rokko/path/exercise.dart';
 
 /// Gioca ogni combinazione di alternative previste e verifica che
 /// l'esercizio resti completabile fino alla fine.

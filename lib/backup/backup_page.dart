@@ -6,6 +6,8 @@ import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../l10n/app_localizations.dart';
+import '../share/share_temp.dart';
+import '../theme/sheets.dart';
 import 'backup.dart';
 
 typedef ShareBackup = Future<void> Function(String text, String fileName);
@@ -15,17 +17,14 @@ Future<void> _shareWithSystem(
   String fileName,
   String subject,
 ) async {
-  final tmp = await getTemporaryDirectory();
-  final file = File('${tmp.path}/$fileName');
+  // Non si elimina subito: il sistema può leggerlo dopo il ritorno di
+  // `share()`; lo ripulisce `clearShareTemp` alla prossima esportazione o
+  // all'avvio.
+  final file = await newShareTempFile(fileName);
   await file.writeAsString(text, flush: true);
-  try {
-    await SharePlus.instance.share(
-      ShareParams(files: [XFile(file.path)], subject: subject),
-    );
-  } finally {
-    // Copia completa dei dati: non lasciarla nella cartella temporanea.
-    if (file.existsSync()) await file.delete();
-  }
+  await SharePlus.instance.share(
+    ShareParams(files: [XFile(file.path)], subject: subject),
+  );
 }
 
 /// Esporta e ripristina tutti i dati locali in un unico file (RF-103).
@@ -138,7 +137,7 @@ class _BackupPageState extends State<BackupPage> {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.backupTitle)),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: context.withSystemBottom(const EdgeInsets.all(16)),
         children: [
           Text(l10n.backupIntro),
           const SizedBox(height: 16),

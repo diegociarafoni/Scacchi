@@ -1,11 +1,11 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/progress/activity.dart';
-import 'package:scacchi/progress/challenges.dart';
-import 'package:scacchi/progress/progress_state.dart';
-import 'package:scacchi/progress/progress_tracker.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/progress/activity.dart';
+import 'package:rokko/progress/challenges.dart';
+import 'package:rokko/progress/progress_state.dart';
+import 'package:rokko/progress/progress_tracker.dart';
 
 DateTime day(int d, [int hour = 12]) => DateTime(2026, 10, d, hour);
 

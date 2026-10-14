@@ -173,5 +173,17 @@
   "opponentAdaptiveInfo": "Nível {level}, cerca de {elo} Elo: ele se adapta aos seus resultados para você vencer cerca de metade das partidas.",
   "opponentBeatenOn": "Vencido em {date}",
   "opponentBeaten": "Vencido",
-  "opponentLocked": "Bloqueado: vença um bot do degrau abaixo"
+  "opponentLocked": "Bloqueado: vença um bot do degrau abaixo",
+  "gameClockCustom": "Personalizado",
+  "gameClockCustomTitle": "Ritmo personalizado",
+  "gameClockMinutes": "Minutos por jogador",
+  "gameClockIncrement": "Incremento (segundos por lance)",
+  "gameClockDelay": "Atraso (segundos por lance)",
+  "gameClockDelaySimple": "Simples",
+  "gameClockDelayBronstein": "Bronstein",
+  "gameClockStart": "Iniciar",
+  "gameClockRange": "De {min} a {max}",
+  "gameUndoOfferSide": "{side, select, white{As Brancas aceitam} other{As Pretas aceitam}} desfazer o lance?",
+  "gameUndoOfferNamed": "{name} ({side, select, white{Brancas} other{Pretas}}) aceita desfazer o lance?",
+  "gameUndoRefused": "O pedido de desfazer foi recusado."
 }

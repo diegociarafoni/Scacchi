@@ -1,0 +1,133 @@
+{
+  "pathTitle": "Jalur",
+  "@pathTitle": {
+    "description": "Titolo della schermata del percorso"
+  },
+  "pathContinue": "Lanjutkan",
+  "@pathContinue": {
+    "description": "Pulsante che apre la prossima tappa del percorso"
+  },
+  "pathStars": "{done, plural, one{{done} bintang dari {total}} other{{done} bintang dari {total}}}",
+  "@pathStars": {
+    "description": "Etichetta per i lettori di schermo delle stelle totali o di capitolo",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pathSummaryTitle": "Perjalananmu",
+  "@pathSummaryTitle": {
+    "description": "Titolo della scheda di riepilogo in cima al percorso"
+  },
+  "pathNext": "Perhentian berikutnya: {title}",
+  "@pathNext": {
+    "description": "Tappa proposta da Continua, nella scheda di riepilogo",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "pathAllDone": "Kamu sudah menempuh seluruh jalur. Setiap perhentian bisa dimainkan ulang.",
+  "@pathAllDone": {
+    "description": "Riepilogo quando ogni tappa è completata"
+  },
+  "pathChapterNumber": "Bab {n}",
+  "@pathChapterNumber": {
+    "description": "Numero del capitolo del percorso",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "pathChapterDone": "bab selesai",
+  "@pathChapterDone": {
+    "description": "Stato di un capitolo con tutte le tappe completate"
+  },
+  "pathStageDone": "{stars, plural, one{{stars} bintang dari 3} other{{stars} bintang dari 3}}",
+  "@pathStageDone": {
+    "description": "Stato di una tappa completata",
+    "placeholders": {
+      "stars": {
+        "type": "int"
+      }
+    }
+  },
+  "pathStageTodo": "belum dikerjakan",
+  "@pathStageTodo": {
+    "description": "Stato di una tappa aperta non ancora completata"
+  },
+  "pathStageLocked": "terkunci",
+  "@pathStageLocked": {
+    "description": "Stato di una tappa non ancora aperta"
+  },
+  "pathStageLockedHint": "Selesaikan pelajaran sebelumnya untuk membukanya",
+  "@pathStageLockedHint": {
+    "description": "Suggerimento di una tappa bloccata per i lettori di schermo"
+  },
+  "pathStageHere": "Kamu di sini",
+  "@pathStageHere": {
+    "description": "Etichetta della tappa corrente"
+  },
+  "pathGuardian": "penjaga",
+  "@pathGuardian": {
+    "description": "Tipo di tappa: sfida contro un bot"
+  },
+  "pathGuardianUnavailable": "Penjaga ditantang di tempat komputer bermain: Android dan iOS, atau Windows dan Linux dengan Stockfish terpasang.",
+  "@pathGuardianUnavailable": {
+    "description": "Avviso se il motore non è disponibile"
+  },
+  "pathStageWrong": "Itu bukan langkah yang tepat, coba lagi.",
+  "@pathStageWrong": {
+    "description": "Avviso dopo una mossa sbagliata in un esercizio"
+  },
+  "pathStageGood": "Bagus, lanjutkan.",
+  "@pathStageGood": {
+    "description": "Conferma dopo una mossa giusta, con altre mosse da trovare"
+  },
+  "pathStageSolved": "Tepat!",
+  "@pathStageSolved": {
+    "description": "Conferma a esercizio risolto"
+  },
+  "pathStageRestartTooltip": "Mulai ulang",
+  "@pathStageRestartTooltip": {
+    "description": "Tooltip del pulsante che rifà l'esercizio in corso"
+  },
+  "pathStageExerciseOf": "Latihan {n} dari {total}",
+  "@pathStageExerciseOf": {
+    "description": "Etichetta per i lettori di schermo dell'avanzamento nella tappa",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pathStageStart": "Mulai",
+  "@pathStageStart": {
+    "description": "Pulsante che avvia gli esercizi dopo la spiegazione"
+  },
+  "pathStageNext": "Lanjut",
+  "@pathStageNext": {
+    "description": "Pulsante che passa all'esercizio successivo"
+  },
+  "pathStageRestartExercise": "Ulangi latihan",
+  "@pathStageRestartExercise": {
+    "description": "Pulsante che rifà l'esercizio senza vie d'uscita"
+  },
+  "pathStageComplete": "Tahap selesai",
+  "@pathStageComplete": {
+    "description": "Titolo del risultato a fine tappa"
+  },
+  "pathStageFinish": "Selesai",
+  "@pathStageFinish": {
+    "description": "Pulsante che chiude il risultato di una tappa"
+  }
+}

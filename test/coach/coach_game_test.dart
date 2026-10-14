@@ -2,9 +2,8 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/engine/computer_player.dart';
-import 'package:scacchi/game/game_page.dart';
-import 'package:scacchi/settings/settings.dart';
+import 'package:rokko/engine/computer_player.dart';
+import 'package:rokko/game/game_page.dart';
 
 import '../board_marks_helpers.dart';
 import '../computer_fakes.dart';
@@ -17,7 +16,7 @@ int _blunderScore(String fen) =>
 
 Widget app() => MaterialApp(
   home: GamePage(
-    settings: SettingsController.defaults(),
+    settings: trainingSettings(),
     computerAvailable: true,
     now: () => TestWidgetsFlutterBinding.instance.clock.now(),
     createComputer: () => ComputerPlayer(

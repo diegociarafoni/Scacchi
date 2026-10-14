@@ -1,0 +1,42 @@
+{
+  "analysisTitle": "Analyse",
+  "analysisBestMoveArrow": "Pfeil für besten Zug",
+  "analysisThreatArrow": "Drohung des Gegners",
+  "analysisOneLine": "1 Variante",
+  "analysisTwoLines": "2 Varianten",
+  "analysisThreeLines": "3 Varianten",
+  "analysisEngineUnavailable": "Engine nicht verfügbar",
+  "analysisPaused": "Analyse pausiert",
+  "analysisGameOver": "Partie beendet",
+  "analysisThinking": "Analysiere …",
+  "analysisDepth": "Tiefe {depth}",
+  "@analysisDepth": {
+    "placeholders": {
+      "depth": {
+        "type": "int"
+      }
+    }
+  },
+  "analysisPromote": "Zur Hauptvariante machen",
+  "analysisDelete": "Diesen und alle folgenden Züge löschen",
+  "analysisBack": "Zurück",
+  "analysisForward": "Vor",
+  "analysisResume": "Analyse fortsetzen",
+  "analysisPause": "Analyse pausieren",
+  "analysisMore": "Weitere Aktionen",
+  "analysisSave": "Im Archiv speichern",
+  "analysisSharePgn": "PGN teilen",
+  "analysisSaveTitle": "Name der Analyse",
+  "analysisDefaultName": "Analyse vom {date}",
+  "@analysisDefaultName": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "analysisSaved": "Analyse im Archiv gespeichert",
+  "analysisSaveFailed": "Speichern nicht möglich",
+  "analysisSaveConfirm": "Speichern",
+  "analysisCancel": "Abbrechen"
+}

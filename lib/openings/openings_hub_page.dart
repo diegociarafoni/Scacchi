@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../archive/game_archive.dart';
 import '../l10n/app_localizations.dart';
+import '../progress/activity.dart';
 import 'explorer_page.dart';
 import 'opening_assets.dart';
 import 'opening_game.dart';
@@ -18,7 +19,10 @@ class OpeningsHubPage extends StatefulWidget {
     required this.repertoire,
     this.onPlay,
     this.archive,
+    this.onActivity,
   });
+
+  final RecordActivity? onActivity;
 
   final Future<RepertoireTrainer> repertoire;
 
@@ -136,6 +140,7 @@ class _OpeningsHubPageState extends State<OpeningsHubPage> {
                       trainer: trainer!,
                       side: side,
                       onPlay: widget.onPlay,
+                      onActivity: widget.onActivity,
                     ),
                   ),
                 ),

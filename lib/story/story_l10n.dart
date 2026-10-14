@@ -10,7 +10,15 @@ AppLocalizations storyL10n(BuildContext context) =>
     lookupAppLocalizations(const Locale('it'));
 
 /// Momenti in cui il custode del capitolo parla.
-enum GuardianMoment { welcome, puzzleOk, puzzleRetry, lessonDone, boss }
+enum GuardianMoment {
+  welcome,
+  puzzleOk,
+  puzzleRetry,
+  lessonDone,
+  boss,
+  bossWon,
+  bossLost,
+}
 
 /// Racconto di un capitolo: titolo, introduzione, presentazione del bot ed
 /// epilogo.
@@ -120,6 +128,28 @@ extension StoryTexts on AppLocalizations {
           'crown' => storyGuardianCrownBoss,
           'plain' => storyGuardianPlainBoss,
           _ => storyGuardianAcademyBoss,
+        },
+        GuardianMoment.bossWon => switch (c.id) {
+          'prologue' => storyGuardianPrologueBossWon,
+          'village' => storyGuardianVillageBossWon,
+          'gates' => storyGuardianGatesBossWon,
+          'tower' => storyGuardianTowerBossWon,
+          'forest' => storyGuardianForestBossWon,
+          'castle' => storyGuardianCastleBossWon,
+          'crown' => storyGuardianCrownBossWon,
+          'plain' => storyGuardianPlainBossWon,
+          _ => storyGuardianAcademyBossWon,
+        },
+        GuardianMoment.bossLost => switch (c.id) {
+          'prologue' => storyGuardianPrologueBossLost,
+          'village' => storyGuardianVillageBossLost,
+          'gates' => storyGuardianGatesBossLost,
+          'tower' => storyGuardianTowerBossLost,
+          'forest' => storyGuardianForestBossLost,
+          'castle' => storyGuardianCastleBossLost,
+          'crown' => storyGuardianCrownBossLost,
+          'plain' => storyGuardianPlainBossLost,
+          _ => storyGuardianAcademyBossLost,
         },
       };
 }

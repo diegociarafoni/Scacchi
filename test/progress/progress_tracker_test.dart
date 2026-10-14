@@ -1,14 +1,14 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/progress/achievements.dart';
-import 'package:scacchi/progress/achievements_l10n.dart';
-import 'package:scacchi/progress/activity.dart';
-import 'package:scacchi/progress/daily_goal.dart';
-import 'package:scacchi/progress/progress_state.dart';
-import 'package:scacchi/progress/progress_tracker.dart';
-import 'package:scacchi/progress/xp.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/progress/achievements.dart';
+import 'package:rokko/progress/achievements_l10n.dart';
+import 'package:rokko/progress/activity.dart';
+import 'package:rokko/progress/daily_goal.dart';
+import 'package:rokko/progress/progress_state.dart';
+import 'package:rokko/progress/progress_tracker.dart';
+import 'package:rokko/progress/xp.dart';
 
 // 2026-10-05 è un lunedì.
 DateTime day(int d, [int hour = 12]) => DateTime(2026, 10, d, hour);
@@ -280,6 +280,59 @@ void main() {
       expect(u.xpGained, 0);
       expect(u.unlocked, isEmpty);
       expect(u.goalReached, isFalse);
+    });
+  });
+
+  group('revisione della stessa partita', () {
+    const review = ReviewCompleted(gameId: 'abc', brilliantMoves: 1);
+
+    test('si premia una sola volta, anche dopo il riavvio', () {
+      final first = tracker.record(
+        ProgressState.initial,
+        review,
+        day(5),
+        settings,
+      );
+      expect(first.xpGained, greaterThan(0));
+      final reloaded = ProgressState.fromJson(first.state.toJson());
+      final again = tracker.record(reloaded, review, day(5), settings);
+      expect(again.xpGained, 0);
+      expect(again.state.reviewsCompleted, 1);
+      expect(again.state.brilliantFound, 1);
+      expect(again.state.xp, first.state.xp);
+    });
+
+    test('un file senza l\'elenco si legge come vuoto', () {
+      final json = ProgressState.initial.toJson()..remove('reviewedGames');
+      expect(ProgressState.fromJson(json).reviewedGames, isEmpty);
+    });
+
+    test('l\'elenco è limitato e dimentica le più vecchie', () {
+      var state = ProgressState.initial;
+      for (var i = 0; i < ProgressState.maxReviewedGames + 5; i++) {
+        state = tracker
+            .record(state, ReviewCompleted(gameId: 'g$i'), day(5), settings)
+            .state;
+      }
+      expect(state.reviewedGames, hasLength(ProgressState.maxReviewedGames));
+      expect(
+        state.reviewedGames.last,
+        'g${ProgressState.maxReviewedGames + 4}',
+      );
+      expect(state.reviewedGames, isNot(contains('g0')));
+    });
+
+    test('partite diverse o senza id premiano sempre', () {
+      var state = ProgressState.initial;
+      for (final a in const [
+        ReviewCompleted(gameId: 'a'),
+        ReviewCompleted(gameId: 'b'),
+        ReviewCompleted(),
+        ReviewCompleted(),
+      ]) {
+        state = tracker.record(state, a, day(5), settings).state;
+      }
+      expect(state.reviewsCompleted, 4);
     });
   });
 }

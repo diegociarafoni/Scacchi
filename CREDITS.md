@@ -3,7 +3,7 @@
 | Componente | Uso | Licenza |
 |---|---|---|
 | [dartchess](https://github.com/lichess-org/dartchess) (Lichess) | Regole degli scacchi | GPL-3.0 |
-| [chessground](https://github.com/lichess-org/flutter-chessground) (Lichess) | Scacchiera interattiva | GPL-3.0 |
+| [chessground](https://github.com/lichess-org/flutter-chessground) (Lichess), in copia ridotta in `third_party/chessground` (solo i set di pezzi usati, nessuna immagine di scacchiera) | Scacchiera interattiva | GPL-3.0 |
 | Set di pezzi "cburnett" di Colin M.L. Burnett, incluso in chessground | Pezzi "Classico" | GPL-2.0+ / CC BY-SA 3.0 |
 | Set di pezzi "merida" di Armando Hernández Marroquín, incluso in chessground | Pezzi "Merida" | GPL-2.0+ |
 | Set di pezzi "chessnut" di Alexis Luengas, incluso in chessground | Pezzi "Chessnut" | Apache-2.0 |

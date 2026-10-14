@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/main.dart';
-import 'package:scacchi/settings/settings_page.dart';
+import 'package:rokko/main.dart';
+import 'package:rokko/settings/settings_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../game_actions.dart';
@@ -17,7 +17,7 @@ Future<void> _pumpApp(WidgetTester tester, Device device) async {
     ..textScaleFactorTestValue = 1.3;
   addTearDown(tester.platformDispatcher.clearAllTestValues);
   SharedPreferences.setMockInitialValues({'sound': false});
-  await tester.pumpWidget(const ScacchiApp());
+  await tester.pumpWidget(const RokkoApp());
   await tester.pumpAndSettle();
 }
 

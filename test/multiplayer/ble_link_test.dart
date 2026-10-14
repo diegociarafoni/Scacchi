@@ -4,9 +4,9 @@ import 'dart:typed_data';
 
 import 'package:bluetooth_low_energy/bluetooth_low_energy.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/multiplayer/ble_link.dart';
-import 'package:scacchi/multiplayer/ble_transport.dart';
-import 'package:scacchi/multiplayer/transport.dart';
+import 'package:rokko/multiplayer/ble_link.dart';
+import 'package:rokko/multiplayer/ble_transport.dart';
+import 'package:rokko/multiplayer/transport.dart';
 
 import '../support/wait.dart';
 
@@ -456,6 +456,8 @@ void main() {
         host.write(stranger, Uint8List.fromList([0, 1, 0, 1, 9]));
         await settle();
         expect(got, isEmpty);
+        // Ma la richiesta riceve comunque risposta, altrimenti resta appesa.
+        expect(host.responses, hasLength(1));
         host.subscribe(stranger);
         await settle();
         host.write(stranger, Uint8List.fromList([0, 1, 0, 1, 7]), index: 1);
@@ -466,7 +468,7 @@ void main() {
         expect(got, [
           Uint8List.fromList([7]),
         ]);
-        expect(host.responses, hasLength(2));
+        expect(host.responses, hasLength(3));
         await t.close();
       },
     );

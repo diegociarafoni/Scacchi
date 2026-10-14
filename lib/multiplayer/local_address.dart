@@ -27,7 +27,11 @@ String? pickLanAddress(Iterable<(String, InternetAddress)> addresses) {
   return fallback;
 }
 
+/// Indirizzo IPv4 delle reti private (10/8, 172.16/12, 192.168/16).
+bool isPrivateIpv4(InternetAddress a) => _isPrivate(a);
+
 bool _isPrivate(InternetAddress a) {
+  if (a.type != InternetAddressType.IPv4) return false;
   final b = a.rawAddress;
   return b[0] == 10 ||
       (b[0] == 172 && b[1] >= 16 && b[1] <= 31) ||

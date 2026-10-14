@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/game/sounds.dart';
-import 'package:scacchi/settings/settings.dart';
-import 'package:scacchi/style/backdrop_photo.dart';
+import 'package:rokko/game/sounds.dart';
+import 'package:rokko/settings/settings.dart';
+import 'package:rokko/style/backdrop_photo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -45,16 +45,39 @@ void main() {
       final dir = Directory.systemTemp.createTempSync('sfondo');
       addTearDown(() => dir.deleteSync(recursive: true));
       final photo = File('${dir.path}/sfondo.jpg')..writeAsBytesSync([1]);
-      final c = await SettingsController.load();
+      Future<Directory> where() async => dir;
+      final c = await SettingsController.load(photoDirectory: where);
       await c.update(
         c.value.copyWith(
           backdrop: BoardBackdrop.photo,
           backdropPhoto: photo.path,
         ),
       );
-      final again = await SettingsController.load();
+      // Nelle preferenze c'è solo il nome: il percorso cambia tra le installazioni.
+      expect(
+        (await SharedPreferences.getInstance()).getString('backdropPhoto'),
+        'sfondo.jpg',
+      );
+      final again = await SettingsController.load(photoDirectory: where);
       expect(again.value.backdrop, BoardBackdrop.photo);
       expect(again.value.backdropPhoto, photo.path);
+    });
+
+    test('un percorso assoluto salvato da versioni vecchie si migra', () async {
+      final dir = Directory.systemTemp.createTempSync('sfondo');
+      addTearDown(() => dir.deleteSync(recursive: true));
+      File('${dir.path}/sfondo-7.jpg').writeAsBytesSync([1]);
+      SharedPreferences.setMockInitialValues({
+        'backdrop': 'photo',
+        'backdropPhoto': '/vecchio/contenitore/stile/sfondo-7.jpg',
+      });
+      final c = await SettingsController.load(photoDirectory: () async => dir);
+      expect(c.value.backdrop, BoardBackdrop.photo);
+      expect(c.value.backdropPhoto, '${dir.path}/sfondo-7.jpg');
+      expect(
+        (await SharedPreferences.getInstance()).getString('backdropPhoto'),
+        'sfondo-7.jpg',
+      );
     });
 
     test('una foto sparita riporta lo sfondo a standard', () async {

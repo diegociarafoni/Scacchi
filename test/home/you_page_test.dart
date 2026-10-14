@@ -1,16 +1,19 @@
 import 'dart:io';
 
+import 'package:dartchess/dartchess.dart' show Side;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/archive/game_archive.dart';
-import 'package:scacchi/home/home_shell.dart';
-import 'package:scacchi/home/you_page.dart';
-import 'package:scacchi/path/path_controller.dart';
-import 'package:scacchi/progress/progress_controller.dart';
-import 'package:scacchi/progress/progress_store.dart';
-import 'package:scacchi/reminders/reminder.dart';
-import 'package:scacchi/settings/settings.dart';
-import 'package:scacchi/story/story_controller.dart';
+import 'package:rokko/archive/game_archive.dart';
+import 'package:rokko/archive/saved_game.dart';
+import 'package:rokko/home/home_shell.dart';
+import 'package:rokko/home/you_page.dart';
+import 'package:rokko/path/path_controller.dart';
+import 'package:rokko/progress/progress_controller.dart';
+import 'package:rokko/progress/progress_store.dart';
+import 'package:rokko/reminders/reminder.dart';
+import 'package:rokko/settings/settings.dart';
+import 'package:rokko/story/story_controller.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../localized_app.dart';
 
@@ -28,6 +31,7 @@ class _Scheduler implements ReminderScheduler {
 }
 
 void main() {
+  setUp(() => SharedPreferences.setMockInitialValues({}));
   late Directory dir;
   late ProgressController progress;
 
@@ -274,6 +278,63 @@ void main() {
       );
       expect(find.text('Your data'), findsOneWidget);
       expect(find.text('Level 1'), findsOneWidget);
+    });
+  });
+
+  group('U10 invito a rivedere la prima partita', () {
+    Future<void> finishedGame() =>
+        GameArchive(File('${dir.path}/games.json')).save(
+          SavedGame(
+            id: 'g1',
+            createdAt: DateTime(2026, 10, 3),
+            updatedAt: DateTime(2026, 10, 3),
+            white: 'Tu',
+            black: 'Bot',
+            mode: SavedGame.computer,
+            result: '1-0',
+            pgn: '1. e4 e5 1-0',
+            playerSide: Side.white,
+          ),
+        );
+
+    // La lettura dell'archivio è I/O vero: va lasciata finire fuori dal tempo finto.
+    Future<void> showWithGame(
+      WidgetTester tester, {
+      SettingsController? settings,
+    }) async {
+      await tester.runAsync(finishedGame);
+      await show(tester, settings: settings);
+      for (var i = 0; i < 5; i++) {
+        await tester.runAsync(
+          () => Future<void>.delayed(const Duration(milliseconds: 100)),
+        );
+        await tester.pump();
+      }
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('compare con una partita conclusa mai rivista', (tester) async {
+      await showWithGame(tester);
+      expect(find.text('Rivedi la tua prima partita'), findsOneWidget);
+    });
+
+    testWidgets('senza partite concluse non compare', (tester) async {
+      await show(tester);
+      expect(find.text('Rivedi la tua prima partita'), findsNothing);
+    });
+
+    testWidgets('«Non ora» la toglie e non torna', (tester) async {
+      await showWithGame(tester);
+      await tester.tap(find.text('Non ora'));
+      await tester.pumpAndSettle();
+      expect(find.text('Rivedi la tua prima partita'), findsNothing);
+    });
+
+    testWidgets('nel profilo bambino non compare', (tester) async {
+      final settings = SettingsController.defaults();
+      await settings.update(settings.value.copyWith(kidMode: true));
+      await showWithGame(tester, settings: settings);
+      expect(find.text('Rivedi la tua prima partita'), findsNothing);
     });
   });
 }

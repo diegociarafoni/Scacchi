@@ -2,14 +2,15 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/progress/profile_page.dart';
-import 'package:scacchi/progress/progress_controller.dart';
-import 'package:scacchi/progress/progress_store.dart';
-import 'package:scacchi/settings/settings.dart';
-import 'package:scacchi/settings/settings_page.dart';
-import 'package:scacchi/settings/settings_widgets.dart';
-import 'package:scacchi/theme/rokko_theme.dart';
+import 'package:rokko/backup/backup_page.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/progress/profile_page.dart';
+import 'package:rokko/progress/progress_controller.dart';
+import 'package:rokko/progress/progress_store.dart';
+import 'package:rokko/settings/settings.dart';
+import 'package:rokko/settings/settings_page.dart';
+import 'package:rokko/settings/settings_widgets.dart';
+import 'package:rokko/theme/rokko_theme.dart';
 
 import 'settings_nav.dart';
 
@@ -89,6 +90,11 @@ void main() {
       'Profilo bambino',
       'Interfaccia e testi più semplici, bot amichevoli, niente numeri',
     ),
+    (
+      SettingsSection.about,
+      'Informazioni',
+      'Licenza, sorgenti, privacy e crediti',
+    ),
   ];
 
   testWidgets('la pagina principale è un menu di sezioni con icona, nome e '
@@ -122,19 +128,22 @@ void main() {
     expect(find.byKey(const Key('board-preview')), findsNothing);
   });
 
-  testWidgets('il profilo bambino è l\'ultima voce, sotto un separatore', (
-    tester,
-  ) async {
-    await show(tester, logical: const Size(390, 1200));
-    final kid = tester.getTopLeft(section(SettingsSection.kid)).dy;
-    for (final s in SettingsSection.values.where(
-      (s) => s != SettingsSection.kid,
-    )) {
-      if (section(s).evaluate().isEmpty) continue;
-      expect(tester.getTopLeft(section(s)).dy, lessThan(kid), reason: s.name);
-    }
-    expect(find.byType(Divider), findsOneWidget);
-  });
+  testWidgets(
+    'profilo bambino e Informazioni stanno in fondo, sotto un separatore',
+    (tester) async {
+      await show(tester, logical: const Size(390, 1200));
+      final kid = tester.getTopLeft(section(SettingsSection.kid)).dy;
+      final about = tester.getTopLeft(section(SettingsSection.about)).dy;
+      expect(about, greaterThan(kid));
+      for (final s in SettingsSection.values.where(
+        (s) => s != SettingsSection.kid && s != SettingsSection.about,
+      )) {
+        if (section(s).evaluate().isEmpty) continue;
+        expect(tester.getTopLeft(section(s)).dy, lessThan(kid), reason: s.name);
+      }
+      expect(find.byType(Divider), findsOneWidget);
+    },
+  );
 
   testWidgets('senza progressi il Profilo ha solo il backup', (tester) async {
     await show(tester, withProgress: false);
@@ -145,11 +154,14 @@ void main() {
   });
 
   testWidgets('poche sezioni, ciascuna con almeno due voci', (tester) async {
-    expect(SettingsSection.values.length, lessThanOrEqualTo(6));
+    expect(SettingsSection.values.length, lessThanOrEqualTo(7));
     await show(tester, logical: const Size(390, 3000));
-    // Il profilo bambino è una sola scelta in fondo; Stile ha schede proprie.
+    // Profilo bambino e Informazioni sono una sola scelta in fondo; Stile ha schede proprie.
     for (final (id, _, _) in order.where(
-      (e) => e.$1 != SettingsSection.kid && e.$1 != SettingsSection.style,
+      (e) =>
+          e.$1 != SettingsSection.kid &&
+          e.$1 != SettingsSection.about &&
+          e.$1 != SettingsSection.style,
     )) {
       await openSection(tester, id);
       final count =
@@ -227,7 +239,9 @@ void main() {
       SettingsSection.game: [
         'autoQueen',
         'autoFlip',
+        'keepAwake',
         'premove',
+        'evalBar',
         'tableMode',
         'explainWhy',
       ],
@@ -319,6 +333,29 @@ void main() {
     expect(find.byKey(const Key('openProfile')), findsOneWidget);
     expect(find.byKey(const Key('progressEnabled')), findsNothing);
   });
+
+  testWidgets(
+    'nel profilo bambino sblocca tutto e il backup chiedono un adulto',
+    (tester) async {
+      await settings.update(settings.value.copyWith(kidMode: true));
+      await show(tester);
+      await openSection(tester, SettingsSection.profile);
+      final unlocked = progress.settings.unlockAll;
+      await tester.tap(find.byKey(const Key('unlockAll')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('adultGate')), findsOneWidget);
+      await tester.tap(find.text('Annulla'));
+      await tester.pumpAndSettle();
+      expect(progress.settings.unlockAll, unlocked);
+
+      await tester.tap(find.byKey(const Key('backup')));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('adultGate')), findsOneWidget);
+      await tester.tap(find.text('Annulla'));
+      await tester.pumpAndSettle();
+      expect(find.byType(BackupPage), findsNothing);
+    },
+  );
 
   testWidgets('il menu e le pagine hanno tocchi da 48 dp', (tester) async {
     await show(tester, logical: const Size(390, 1200));

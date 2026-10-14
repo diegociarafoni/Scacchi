@@ -4,13 +4,16 @@ import 'package:dartchess/dartchess.dart' hide File;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/archive/archive_page.dart';
-import 'package:scacchi/archive/game_archive.dart';
-import 'package:scacchi/archive/saved_game.dart';
-import 'package:scacchi/exchange/qr_send_page.dart';
-import 'package:scacchi/exchange/qr_transfer.dart';
-import 'package:scacchi/game/chess_game.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
+import 'package:rokko/analysis/variation_tree.dart';
+import 'package:rokko/archive/archive_page.dart';
+import 'package:rokko/archive/game_archive.dart';
+import 'package:rokko/archive/pgn.dart';
+import 'package:rokko/archive/saved_game.dart';
+import 'package:rokko/exchange/qr_send_page.dart';
+import 'package:rokko/exchange/qr_transfer.dart';
+import 'package:rokko/game/chess_game.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/theme/rokko_mascot.dart';
 
 ChessGame play(List<String> uci) {
   final game = ChessGame();
@@ -35,6 +38,7 @@ void main() {
   late GameArchive archive;
   final shared = <String>[];
   final opened = <String>[];
+  final analysed = <String>[];
   ValueChanged<String>? scan;
 
   setUp(() async {
@@ -42,6 +46,7 @@ void main() {
     archive = GameArchive(File('${dir.path}/games.json'));
     shared.clear();
     opened.clear();
+    analysed.clear();
     final t = DateTime(2026, 10, 10, 9);
     await archive.save(
       SavedGame.fromGame(
@@ -68,19 +73,24 @@ void main() {
   });
   tearDown(() => dir.deleteSync(recursive: true));
 
-  Future<void> show(WidgetTester tester) async {
+  Future<void> show(
+    WidgetTester tester, {
+    GameArchive? using,
+    String locale = 'it',
+  }) async {
     tester.view.physicalSize = const Size(1170, 2532);
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
     await tester.pumpWidget(
       MaterialApp(
-        locale: const Locale('it'),
+        locale: Locale(locale),
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: ArchivePage(
-          archive: archive,
+          archive: using ?? archive,
           share: (text) async => shared.add(text),
           onOpen: (g) => opened.add(g.id),
+          onAnalyse: (g) => analysed.add(g.id),
           scanner: (context, {required onCode, required onError}) {
             scan = onCode;
             return const SizedBox.expand();
@@ -91,12 +101,50 @@ void main() {
     await settle(tester);
   }
 
+  testWidgets('archivio vuoto: la torre e il testo', (tester) async {
+    await show(tester, using: GameArchive(File('${dir.path}/vuoto.json')));
+    expect(find.byType(RokkoMascot), findsOneWidget);
+    expect(find.text('Nessuna partita salvata.'), findsOneWidget);
+  });
+
   testWidgets('RF-101 storico con giocatori e risultato', (tester) async {
     await show(tester);
     expect(find.text('Carla – Dario'), findsOneWidget);
     expect(find.text('Anna – Bruno'), findsOneWidget);
     expect(find.textContaining('0-1'), findsOneWidget);
     expect(find.textContaining('In corso'), findsOneWidget);
+  });
+
+  testWidgets('la data segue la lingua dell\'app', (tester) async {
+    await show(tester, locale: 'de');
+    expect(find.textContaining('10.10.2026'), findsWidgets);
+  });
+
+  testWidgets('disco pieno su importazione ed eliminazione: avviso', (
+    tester,
+  ) async {
+    final full = _FullDisk(File('${dir.path}/games.json'));
+    // Lettura anticipata: l'I/O reale non avanza dentro pumpAndSettle.
+    await tester.runAsync(full.list);
+    await show(tester, using: full);
+    await tester.tap(find.byTooltip('Importa PGN'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byKey(const Key('pgnInput')), '1. d4 d5 *');
+    await tester.tap(find.text('Importa'));
+    await settle(tester);
+    expect(find.textContaining('non si possono leggere'), findsOneWidget);
+
+    ScaffoldMessenger.of(tester.element(find.byType(Scaffold)))
+        .clearSnackBars();
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Azioni per Anna – Bruno'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Elimina'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilledButton, 'Elimina'));
+    await settle(tester);
+    expect(find.textContaining('non si possono leggere'), findsOneWidget);
+    expect(find.text('Anna – Bruno'), findsOneWidget);
   });
 
   testWidgets('RF-101 ricerca per nome', (tester) async {
@@ -111,6 +159,38 @@ void main() {
     await show(tester);
     await tester.tap(find.text('Anna – Bruno'));
     expect(opened, ['matto']);
+  });
+
+  testWidgets('RF-52 apre una partita nell\'analisi', (tester) async {
+    await show(tester);
+    await tester.tap(find.byTooltip('Azioni per Anna – Bruno'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Apri nell\'analisi'));
+    await tester.pumpAndSettle();
+    expect(analysed, ['matto']);
+  });
+
+  group('RF-52 analisi salvata', () {
+    setUp(() async {
+      final t = DateTime(2026, 10, 13, 9);
+      await archive.save(
+        SavedGame.fromTree(
+          VariationTree(Chess.initial)..play(Move.parse('d2d4')!),
+          id: 'an',
+          name: 'Gambetto',
+          createdAt: t,
+          updatedAt: t.add(const Duration(days: 1)),
+        ),
+      );
+    });
+
+    testWidgets('si riconosce dal tipo e si apre con un tocco', (tester) async {
+      await show(tester);
+      expect(find.text('Gambetto'), findsOneWidget);
+      expect(find.textContaining('analisi'), findsOneWidget);
+      await tester.tap(find.text('Gambetto'));
+      expect(opened, ['an']);
+    });
   });
 
   testWidgets('RF-102 condivide il PGN di una partita', (tester) async {
@@ -208,4 +288,17 @@ void main() {
     expect(find.text('Il QR non contiene una partita valida.'), findsOneWidget);
     expect(await tester.runAsync(archive.list), hasLength(2));
   });
+}
+
+/// Archivio il cui disco rifiuta ogni scrittura.
+class _FullDisk extends GameArchive {
+  _FullDisk(super.file);
+
+  @override
+  Future<PgnImport> importPgn(String text, {DateTime? now}) =>
+      throw const FileSystemException('No space left on device');
+
+  @override
+  Future<void> delete(String id) =>
+      throw const FileSystemException('No space left on device');
 }

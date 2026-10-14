@@ -1,12 +1,13 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
 import 'package:dartchess/dartchess.dart' hide File;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/tournament/tournament.dart';
-import 'package:scacchi/tournament/tournament_controller.dart';
-import 'package:scacchi/tournament/tournament_page.dart';
+import 'package:rokko/tournament/tournament.dart';
+import 'package:rokko/tournament/tournament_controller.dart';
+import 'package:rokko/tournament/tournament_page.dart';
 
 import '../localized_app.dart';
 import 'tournament_test.dart' show bots;
@@ -21,6 +22,14 @@ Future<void> settle(WidgetTester tester) async {
 }
 
 void main() {
+  test('punteggi del girone col separatore della lingua', () {
+    expect(standingsPoints(2.5, 'it'), '2,5');
+    expect(standingsPoints(2.5, 'en'), '2.5');
+    expect(standingsPoints(3, 'it'), '3');
+    expect(standingsPoints(0.5, 'de'), '0,5');
+    expect(standingsPoints(12.25, 'ru'), '12,3');
+  });
+
   late Directory dir;
   late TournamentController controller;
 
@@ -155,5 +164,45 @@ void main() {
     final game = controller.current!.userGame!;
     expect(game.armageddon, isTrue);
     expect(Side.values, contains(game.color));
+  });
+
+  testWidgets('mentre il motore gioca tra i bot compare l\'avviso', (
+    tester,
+  ) async {
+    final gate = Completer<double?>();
+    controller = TournamentController(
+      File('${dir.path}/altri.json'),
+      clock: () => DateTime(2026, 10, 11, 18),
+      random: Random(1),
+      playBotGame: (w, b, seed) => gate.future,
+    );
+    await tester.runAsync(controller.load);
+    await show(tester, play: (context, game) async => 1);
+    await tester.tap(find.text('4 giocatori'));
+    await tester.pump();
+    await tester.tap(find.text('Inizia il torneo'));
+    await settle(tester);
+    expect(find.text('Si giocano le partite tra i bot…'), findsNothing);
+    await tester.tap(find.text('Gioca'));
+    // La barra di avanzamento è animata: niente pumpAndSettle.
+    for (var i = 0; i < 100 && !controller.playingBots; i++) {
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 20)),
+      );
+      await tester.pump(const Duration(milliseconds: 50));
+    }
+    await tester.pump(const Duration(milliseconds: 50));
+    expect(controller.playingBots, isTrue);
+    expect(find.text('Si giocano le partite tra i bot…'), findsOneWidget);
+    gate.complete(1);
+    for (var i = 0; i < 100 && controller.playingBots; i++) {
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 20)),
+      );
+      await tester.pump(const Duration(milliseconds: 50));
+    }
+    await settle(tester);
+    expect(find.text('Si giocano le partite tra i bot…'), findsNothing);
+    expect(controller.current!.currentRound, greaterThan(0));
   });
 }

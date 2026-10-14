@@ -1,0 +1,530 @@
+{
+  "family.Sicilian Defense": "Сицилианская защита",
+  "family.Ruy Lopez": "Испанская партия",
+  "family.French Defense": "Французская защита",
+  "family.Queen's Gambit": "Ферзевый гамбит",
+  "family.Italian Game": "Итальянская партия",
+  "family.English Opening": "Английское начало",
+  "family.King's Gambit": "Королевский гамбит",
+  "family.King's Indian Defense": "Староиндийская защита",
+  "family.Caro-Kann Defense": "Защита Каро-Канн",
+  "family.Nimzo-Indian Defense": "Нимцо-индийская защита",
+  "family.Queen's Pawn Game": "Партия ферзевой пешки",
+  "family.Semi-Slav Defense": "Полуславянская защита",
+  "family.Dutch Defense": "Голландская защита",
+  "family.Benoni Defense": "Защита Бенони",
+  "family.Grünfeld Defense": "Защита Грюнфельда",
+  "family.Queen's Indian Defense": "Ферзево-индийская защита",
+  "family.Alekhine Defense": "Защита Алёхина",
+  "family.Indian Defense": "Индийская защита",
+  "family.Scotch Game": "Шотландская партия",
+  "family.Slav Defense": "Славянская защита",
+  "family.Petrov's Defense": "Русская партия",
+  "family.Four Knights Game": "Партия четырёх коней",
+  "family.Zukertort Opening": "Дебют Цукерторта",
+  "family.Scandinavian Defense": "Скандинавская защита",
+  "family.Philidor Defense": "Защита Филидора",
+  "family.Réti Opening": "Дебют Рети",
+  "family.Nimzowitsch Defense": "Защита Нимцовича",
+  "family.Bishop's Opening": "Дебют слона",
+  "family.Vienna Game": "Венская партия",
+  "family.Modern Defense": "Современная защита",
+  "family.King's Pawn Game": "Партия королевской пешки",
+  "family.Van Geet Opening": "Дебют Ван Гита",
+  "family.Pterodactyl Defense": "Защита Птеродактиль",
+  "family.Catalan Opening": "Каталонское начало",
+  "family.Bird Opening": "Дебют Берда",
+  "family.Pirc Defense": "Защита Пирца",
+  "family.Tarrasch Defense": "Защита Тарраша",
+  "family.Polish Opening": "Польский дебют",
+  "family.Neo-Grünfeld Defense": "Защита Нео-Грюнфельда",
+  "family.Blackmar-Diemer Gambit": "Гамбит Блэкмара — Димера",
+  "family.Bogo-Indian Defense": "Богоиндийская защита",
+  "family.Grob Opening": "Дебют Гроба",
+  "family.Hungarian Opening": "Венгерское начало",
+  "family.King's Indian Attack": "Староиндийская атака",
+  "family.Nimzo-Larsen Attack": "Атака Нимцовича — Ларсена",
+  "family.Center Game": "Центральная партия",
+  "family.Latvian Gambit": "Латышский гамбит",
+  "family.Ponziani Opening": "Дебют Понциани",
+  "family.Vienna Gambit": "Венский гамбит",
+  "family.Old Indian Defense": "Старая индийская защита",
+  "family.Rat Defense": "Защита Рат",
+  "family.Trompowsky Attack": "Атака Тромповского",
+  "family.Benko Gambit": "Гамбит Бенко",
+  "family.Kádas Opening": "Дебют Кадаша",
+  "family.Englund Gambit": "Гамбит Энглунда",
+  "family.Owen Defense": "Защита Оуэна",
+  "family.Richter-Veresov Attack": "Атака Рихтера — Вересова",
+  "family.Ware Opening": "Дебют Уэра",
+  "family.English Defense": "Английская защита",
+  "family.Barnes Opening": "Дебют Барнса",
+  "family.Torre Attack": "Атака Торре",
+  "family.Lion Defense": "Защита «Лев»",
+  "family.Danish Gambit": "Датский гамбит",
+  "family.Three Knights Opening": "Дебют трёх коней",
+  "family.Rubinstein Opening": "Дебют Рубинштейна",
+  "family.Van't Kruijs Opening": "Дебют Ван т'Кройса",
+  "family.Borg Defense": "Защита Борга",
+  "family.Mieses Opening": "Дебют Мизеса",
+  "family.Sodium Attack": "Атака «Натрий»",
+  "family.Mikenas Defense": "Защита Микенаса",
+  "family.London System": "Лондонская система",
+  "family.St. George Defense": "Защита Святого Георгия",
+  "family.Elephant Gambit": "Гамбит «Слон»",
+  "family.Amar Opening": "Дебют Амара",
+  "family.Colle System": "Система Колле",
+  "family.King's Pawn Opening": "Дебют королевской пешки",
+  "family.Portuguese Opening": "Португальский дебют",
+  "family.King's Knight Opening": "Дебют королевского коня",
+  "family.Rapport-Jobava System": "Система Раппорта — Джобавы",
+  "family.Blumenfeld Countergambit": "Контргамбит Блюменфельда",
+  "family.Anderssen's Opening": "Дебют Андерсена",
+  "family.Clemenz Opening": "Дебют Клеменца",
+  "family.Formation": "Расстановка",
+  "family.Zukertort Defense": "Защита Цукерторта",
+  "family.English Orangutan": "Английский орангутан",
+  "family.Horwitz Defense": "Защита Горвица",
+  "family.Kangaroo Defense": "Защита «Кенгуру»",
+  "family.Polish Defense": "Польская защита",
+  "family.Slav Indian": "Славяно-индийская защита",
+  "family.Amazon Attack": "Атака «Амазонка»",
+  "family.Marienbad System": "Мариенбадская система",
+  "family.Pseudo Queen's Indian Defense": "Псевдоферзево-индийская защита",
+  "family.Mexican Defense": "Мексиканская защита",
+  "family.Carr Defense": "Защита Карра",
+  "family.Goldsmith Defense": "Защита Голдсмита",
+  "family.Hippopotamus Defense": "Защита «Бегемот»",
+  "family.Ware Defense": "Защита Уэра",
+  "family.Amsterdam Attack": "Амстердамская атака",
+  "family.Creepy Crawly Formation": "Расстановка Creepy Crawly",
+  "family.Global Opening": "Дебют Global",
+  "family.Lasker Simul Special": "Сеанс Ласкера",
+  "family.Saragossa Opening": "Дебют Сарагоса",
+  "family.Valencia Opening": "Дебют Валенсия",
+  "family.Australian Defense": "Австралийская защита",
+  "family.Montevideo Defense": "Защита Монтевидео",
+  "family.Zaire Defense": "Защита Заир",
+  "family.Robatsch Defense": "Защита Робача",
+  "family.Wade Defense": "Защита Уэйда",
+  "family.Basque Opening": "Баскский дебют",
+  "family.Canard Opening": "Дебют «Утка»",
+  "family.Paleface Attack": "Атака «Бледнолицый»",
+  "family.Döry Defense": "Защита Дёри",
+  "family.Yusupov-Rubinstein System": "Система Юсупова — Рубинштейна",
+  "family.East Indian Defense": "Восточно-индийская защита",
+  "family.Queen's Indian Accelerated": "Ускоренная ферзево-индийская защита",
+  "family.Vulture Defense": "Защита «Стервятник»",
+  "family.Barnes Defense": "Защита Барнса",
+  "family.Fried Fox Defense": "Защита Fried Fox",
+  "family.Lemming Defense": "Защита «Лемминг»",
+  "family.Czech Defense": "Чешская защита",
+  "family.Bongcloud Attack": "Атака Bongcloud",
+  "family.Gunderam Defense": "Защита Гундерама",
+  "family.Dresden Opening": "Дебют Дрезден",
+  "family.Irish Gambit": "Ирландский гамбит",
+  "family.Duras Gambit": "Гамбит Дураса",
+  "family.Queen's Pawn": "Ферзевая пешка",
+  "phrase.Two Knights": "двух коней",
+  "phrase.Three Knights": "трёх коней",
+  "phrase.Four Knights": "четырёх коней",
+  "phrase.Two Pawns": "двух пешек",
+  "phrase.Three Pawns": "трёх пешек",
+  "phrase.Four Pawns": "четырёх пешек",
+  "phrase.King's": "королевского",
+  "phrase.Queen's": "ферзевого",
+  "phrase.Bishop's": "слона",
+  "phrase.Knight's": "коня",
+  "phrase.Queen's Knight": "ферзевого коня",
+  "phrase.King's Knight": "королевского коня",
+  "phrase.Early Deviations": "ранние отклонения",
+  "phrase.Move Order": "порядок ходов",
+  "phrase.Kingside Move Order": "порядок ходов на королевском фланге",
+  "phrase.Queenside Move Order": "порядок ходов на ферзевом фланге",
+  "phrase.Pawn Push": "продвижение пешки",
+  "phrase.Double-Dutch": "двойной голландский",
+  "phrase.King's English": "королевский английский",
+  "noun.Variation": [
+    "вариант",
+    "m"
+  ],
+  "noun.Variations": [
+    "варианты",
+    "m"
+  ],
+  "noun.Attack": [
+    "атака",
+    "f"
+  ],
+  "noun.Gambit": [
+    "гамбит",
+    "m"
+  ],
+  "noun.Countergambit": [
+    "контргамбит",
+    "m"
+  ],
+  "noun.Defense": [
+    "защита",
+    "f"
+  ],
+  "noun.System": [
+    "система",
+    "f"
+  ],
+  "noun.Line": [
+    "линия",
+    "f"
+  ],
+  "noun.Opening": [
+    "дебют",
+    "m"
+  ],
+  "noun.Game": [
+    "партия",
+    "f"
+  ],
+  "noun.Formation": [
+    "расстановка",
+    "f"
+  ],
+  "noun.Trap": [
+    "ловушка",
+    "f"
+  ],
+  "noun.Sacrifice": [
+    "жертва",
+    "f"
+  ],
+  "noun.Endgame": [
+    "эндшпиль",
+    "m"
+  ],
+  "noun.Counterattack": [
+    "контратака",
+    "f"
+  ],
+  "noun.Retreat": [
+    "отход",
+    "m"
+  ],
+  "adjective.Classical": [
+    "классический",
+    "классическая"
+  ],
+  "adjective.Modern": [
+    "современный",
+    "современная"
+  ],
+  "adjective.Closed": [
+    "закрытый",
+    "закрытая"
+  ],
+  "adjective.Open": [
+    "открытый",
+    "открытая"
+  ],
+  "adjective.Main": [
+    "главный",
+    "главная"
+  ],
+  "adjective.Normal": [
+    "нормальный",
+    "нормальная"
+  ],
+  "adjective.Orthodox": [
+    "ортодоксальный",
+    "ортодоксальная"
+  ],
+  "adjective.Accepted": [
+    "принятый",
+    "принятая"
+  ],
+  "adjective.Declined": [
+    "отказанный",
+    "отказанная"
+  ],
+  "adjective.Advance": [
+    "продвижения",
+    "продвижения"
+  ],
+  "adjective.Exchange": [
+    "разменный",
+    "разменная"
+  ],
+  "adjective.Symmetrical": [
+    "симметричный",
+    "симметричная"
+  ],
+  "adjective.Symmetric": [
+    "симметричный",
+    "симметричная"
+  ],
+  "adjective.Reversed": [
+    "обращенный",
+    "обращенная"
+  ],
+  "adjective.Accelerated": [
+    "ускоренный",
+    "ускоренная"
+  ],
+  "adjective.Hyperaccelerated": [
+    "сверхускоренный",
+    "сверхускоренная"
+  ],
+  "adjective.Delayed": [
+    "отложенный",
+    "отложенная"
+  ],
+  "adjective.Deferred": [
+    "отложенный",
+    "отложенная"
+  ],
+  "adjective.Quiet": [
+    "тихий",
+    "тихая"
+  ],
+  "adjective.Traditional": [
+    "традиционный",
+    "традиционная"
+  ],
+  "adjective.Positional": [
+    "позиционный",
+    "позиционная"
+  ],
+  "adjective.Double": [
+    "двойной",
+    "двойная"
+  ],
+  "adjective.Central": [
+    "центральный",
+    "центральная"
+  ],
+  "adjective.Old": [
+    "старый",
+    "старая"
+  ],
+  "adjective.Early": [
+    "ранний",
+    "ранняя"
+  ],
+  "adjective.Long": [
+    "длинный",
+    "длинная"
+  ],
+  "adjective.Short": [
+    "короткий",
+    "короткая"
+  ],
+  "adjective.Improved": [
+    "улучшенный",
+    "улучшенная"
+  ],
+  "adjective.Original": [
+    "оригинальный",
+    "оригинальная"
+  ],
+  "adjective.Hybrid": [
+    "гибридный",
+    "гибридная"
+  ],
+  "adjective.Poisoned": [
+    "отравленный",
+    "отравленная"
+  ],
+  "adjective.Austrian": [
+    "австрийский",
+    "австрийская"
+  ],
+  "adjective.Russian": [
+    "русский",
+    "русская"
+  ],
+  "adjective.Italian": [
+    "итальянский",
+    "итальянская"
+  ],
+  "adjective.Spanish": [
+    "испанский",
+    "испанская"
+  ],
+  "adjective.English": [
+    "английский",
+    "английская"
+  ],
+  "adjective.Dutch": [
+    "голландский",
+    "голландская"
+  ],
+  "adjective.French": [
+    "французский",
+    "французская"
+  ],
+  "adjective.Polish": [
+    "польский",
+    "польская"
+  ],
+  "adjective.Hungarian": [
+    "венгерский",
+    "венгерская"
+  ],
+  "adjective.Czech": [
+    "чешский",
+    "чешская"
+  ],
+  "adjective.Portuguese": [
+    "португальский",
+    "португальская"
+  ],
+  "adjective.Norwegian": [
+    "норвежский",
+    "норвежская"
+  ],
+  "adjective.Swiss": [
+    "швейцарский",
+    "швейцарская"
+  ],
+  "adjective.Swedish": [
+    "шведский",
+    "шведская"
+  ],
+  "adjective.Siberian": [
+    "сибирский",
+    "сибирская"
+  ],
+  "adjective.Eastern": [
+    "восточный",
+    "восточная"
+  ],
+  "adjective.Western": [
+    "западный",
+    "западная"
+  ],
+  "adjective.Chinese": [
+    "китайский",
+    "китайская"
+  ],
+  "adjective.Yugoslav": [
+    "югославский",
+    "югославская"
+  ],
+  "adjective.Scandinavian": [
+    "скандинавский",
+    "скандинавская"
+  ],
+  "adjective.German": [
+    "немецкий",
+    "немецкая"
+  ],
+  "adjective.Ukrainian": [
+    "украинский",
+    "украинская"
+  ],
+  "adjective.Mexican": [
+    "мексиканский",
+    "мексиканская"
+  ],
+  "adjective.American": [
+    "американский",
+    "американская"
+  ],
+  "adjective.Argentine": [
+    "аргентинский",
+    "аргентинская"
+  ],
+  "adjective.Baltic": [
+    "балтийский",
+    "балтийская"
+  ],
+  "adjective.Sicilian": [
+    "сицилианский",
+    "сицилианская"
+  ],
+  "adjective.Slav": [
+    "славянский",
+    "славянская"
+  ],
+  "adjective.Indian": [
+    "индийский",
+    "индийская"
+  ],
+  "adjective.Wing": [
+    "фланговый",
+    "фланговая"
+  ],
+  "adjective.Center": [
+    "центральный",
+    "центральная"
+  ],
+  "adjective.Kingside": [
+    "королевского фланга",
+    "королевского фланга"
+  ],
+  "adjective.Queenside": [
+    "ферзевого фланга",
+    "ферзевого фланга"
+  ],
+  "adjective.Black": [
+    "чёрных",
+    "чёрных"
+  ],
+  "adjective.White": [
+    "белых",
+    "белых"
+  ],
+  "adjective.Check": [
+    "шаха",
+    "шаха"
+  ],
+  "adjective.Knight": [
+    "коня",
+    "коня"
+  ],
+  "adjective.Bishop": [
+    "слона",
+    "слона"
+  ],
+  "prefix.Neo": "нео",
+  "prefix.Anti": "анти",
+  "prefix.Semi": "полу",
+  "prefix.Pseudo": "псевдо",
+  "grammar.with": "с",
+  "grammar.feminine": [
+    "Защита",
+    "Партия",
+    "Атака",
+    "Расстановка",
+    "Система",
+    "Псевдо",
+    "Индийская",
+    "Славянская",
+    "Староиндийская",
+    "Старая",
+    "Ускоренная",
+    "Сицилианская",
+    "Французская",
+    "Итальянская",
+    "Шотландская",
+    "Венская",
+    "Русская",
+    "Голландская",
+    "Английская",
+    "Скандинавская",
+    "Польская",
+    "Чешская",
+    "Мексиканская",
+    "Австралийская",
+    "Лондонская",
+    "Нимцо-индийская",
+    "Богоиндийская",
+    "Ферзево-индийская",
+    "Славяно-индийская",
+    "Полуславянская",
+    "Восточно-индийская",
+    "Современная",
+    "Мариенбадская",
+    "Амстердамская",
+    "Центральная",
+    "Ферзевая"
+  ]
+}

@@ -17,6 +17,7 @@ import '../progress/avatar.dart';
 import '../progress/guardian_avatar.dart';
 import '../story/story.dart';
 import '../theme/rokko_theme.dart';
+import '../theme/sheets.dart';
 import 'bot_greetings.dart';
 import 'bot_tiers.dart';
 import 'game_options.dart';
@@ -118,6 +119,7 @@ class _BotGalleryPageState extends State<BotGalleryPage> {
   late HandicapGiver _handicapGiver =
       widget.initialOptions.handicap?.giver ?? HandicapGiver.player;
   late bool _coach = widget.initialOptions.coach;
+  late bool _training = widget.initialOptions.training;
 
   @override
   void initState() {
@@ -189,7 +191,8 @@ class _BotGalleryPageState extends State<BotGalleryPage> {
           control: _control,
           variant: _variant,
           handicap: _handicap,
-          coach: _coach,
+          coach: _coach && _training,
+          training: _training,
         );
 
   void _play() => Navigator.pop(
@@ -202,9 +205,8 @@ class _BotGalleryPageState extends State<BotGalleryPage> {
     ),
   );
 
-  void _openOptions() => showModalBottomSheet<void>(
+  void _openOptions() => showRokkoSheet<void>(
     context: context,
-    isScrollControlled: true,
     builder: (_) => _OptionsSheet(page: this),
   );
 
@@ -911,7 +913,11 @@ class _OptionsSheetState extends State<_OptionsSheet> {
       key: key,
       label: Text(label),
       selected: _page._control == control,
-      onSelected: (_) => _change(() => _page._control = control),
+      onSelected: (_) => _change(() {
+        _page._control = control;
+        // Il tempo di handicap vale solo con un orologio.
+        if (control == null) _page._handicapMinutes = null;
+      }),
     );
     final standard = _page._variant == Variant.standard;
     final pieces = {
@@ -1011,8 +1017,10 @@ class _OptionsSheetState extends State<_OptionsSheet> {
                             key: Key('option-handicap-time-$m'),
                             label: Text(l10n.handicapTimeMinutes(m)),
                             selected: _page._handicapMinutes == m,
-                            onSelected: (_) =>
-                                _change(() => _page._handicapMinutes = m),
+                            onSelected: _page._control == null
+                                ? null
+                                : (_) =>
+                                      _change(() => _page._handicapMinutes = m),
                           ),
                       ]),
                       Text(
@@ -1038,12 +1046,22 @@ class _OptionsSheetState extends State<_OptionsSheet> {
                       ],
                       title(l10n.botOptionsHelp),
                       SwitchListTile(
+                        key: const Key('option-training'),
+                        contentPadding: EdgeInsets.zero,
+                        title: Text(l10n.botOptionsTraining),
+                        subtitle: Text(l10n.botOptionsTrainingHint),
+                        value: _page._training,
+                        onChanged: (v) => _change(() => _page._training = v),
+                      ),
+                      SwitchListTile(
                         key: const Key('option-coach'),
                         contentPadding: EdgeInsets.zero,
                         title: Text(l10n.botOptionsCoach),
                         subtitle: Text(l10n.botOptionsCoachHint),
-                        value: _page._coach,
-                        onChanged: (v) => _change(() => _page._coach = v),
+                        value: _page._coach && _page._training,
+                        onChanged: _page._training
+                            ? (v) => _change(() => _page._coach = v)
+                            : null,
                       ),
                     ],
                   ],

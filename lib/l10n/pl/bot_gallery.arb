@@ -1,0 +1,163 @@
+{
+  "botGalleryTitle": "Wybierz bota",
+  "botTierNovice": "Nowicjusz",
+  "botTierBeginner": "Początkujący",
+  "botTierIntermediate": "Średnio zaawansowany",
+  "botTierAdvanced": "Zaawansowany",
+  "botTierMaster": "Mistrz",
+  "botTierFriends": "Twoi znajomi",
+  "botTierAdaptive": "Adaptacyjny",
+  "botTierHeading": "{tier} · {count}",
+  "@botTierHeading": {
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "botGalleryElo": "{elo} Elo",
+  "@botGalleryElo": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "botGalleryStateLocked": "zablokowany",
+  "botGalleryStateBeaten": "pokonany",
+  "botGalleryStateOpen": "dostępny",
+  "botGalleryCellLabel": "{name}, {elo} Elo, {state}",
+  "@botGalleryCellLabel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "elo": {
+        "type": "int"
+      },
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "botGalleryCellLabelKid": "{name}, {state}",
+  "@botGalleryCellLabelKid": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "botGalleryLockedTease": "Do zobaczenia, gdy będziesz gotowy!",
+  "botStyleAggressive": "agresywny",
+  "botStyleGambitist": "gambitowy",
+  "botStylePositional": "pozycyjny",
+  "botGalleryStyle": "Styl: {style}",
+  "@botGalleryStyle": {
+    "placeholders": {
+      "style": {
+        "type": "String"
+      }
+    }
+  },
+  "botAdaptiveName": "Adaptacyjny",
+  "botAdaptiveGreeting": "Dostosowuję się do ciebie: wygrywasz, to gram lepiej; przegrywasz, to odpuszczam.",
+  "botAdaptiveRematch": "Dobry trening. Jeszcze jedna?",
+  "botAdaptiveHint": "Teraz gram na poziomie ok. {elo} Elo",
+  "@botAdaptiveHint": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "botGuardiansTitle": "Strażnicy Opowieści",
+  "botGuardiansProgress": "Poznani strażnicy: {met} z {total}",
+  "@botGuardiansProgress": {
+    "placeholders": {
+      "met": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "botGuardiansHint": "Poznajesz ich, kończąc rozdziały Opowieści.",
+  "botGuardianUnmet": "strażnik jeszcze nie poznany",
+  "botSideWhite": "Graj białymi",
+  "botSideRandom": "Losowy kolor",
+  "botSideBlack": "Graj czarnymi",
+  "botGalleryPlay": "Graj",
+  "botGalleryLockedPlay": "Zablokowany",
+  "botGalleryBeatenBadge": "pokonany",
+  "botGreetingLia": "Cześć, jestem Lia! Popchnę piona i zobaczymy, co będzie.",
+  "botRematchLia": "Pokonałeś mnie! Zagramy jeszcze jedną?",
+  "botGreetingPino": "Ćwir, ćwir! Jestem Pino, zagramy? Atakuję od razu!",
+  "botRematchPino": "Pokonałeś mnie! Następnym razem zaatakuję mocniej.",
+  "botGreetingNico": "Spokojnie i powoli, bez pośpiechu. Masz ochotę na partię?",
+  "botRematchNico": "Wygrałeś spokojnie, brawo. Jeszcze jedna?",
+  "botGreetingChiara": "Cześć, jestem Chiara. Cicha partyjka, jak w ogrodzie?",
+  "botRematchChiara": "Twoja gra rozkwitła! Zagramy jeszcze raz?",
+  "botGreetingViola": "Cóż za piękny dzień na symfonię ruchów! Zaczynamy?",
+  "botRematchViola": "Zepsułeś mi melodię! Bis?",
+  "botGreetingRocco": "Pion dla ciebie, partia dla mnie. Umowa?",
+  "botRematchRocco": "Rozgryzłeś mnie! Ale mam jeszcze więcej sztuczek.",
+  "botGreetingEttore": "Najpierw ryczę, potem gram. Szykuj się!",
+  "botRematchEttore": "Ryk na cześć twojego zwycięstwa. Rewanż?",
+  "botGreetingMarta": "Myślałam o tej partii całą noc. Siadaj.",
+  "botRematchMarta": "Dobrze zagrane. Mam wiele do przemyślenia.",
+  "botGreetingBruna": "Dopiero się obudziłam, ale szachownica budzi mnie od razu.",
+  "botRematchBruna": "Pokonałeś mnie! Wracam do snu zimowego… na minutę.",
+  "botGreetingDuilio": "Iskry i płomienie: uwielbiam atakować. Gotowy?",
+  "botRematchDuilio": "Zgasiłeś moje płomienie! Rozpalmy je na nowo.",
+  "botGreetingCarlo": "Daj mi bierkę, a dam ci widowisko. Zagramy?",
+  "botRematchCarlo": "Odebrałeś wszystko z powrotem, brawo!",
+  "botGreetingElena": "Patrzę na szachownicę z góry. Zobaczymy, czy umiesz latać.",
+  "botRematchElena": "Wzbiłeś się wysoko. Podoba mi się to.",
+  "botGreetingAda": "Obliczam każdą trajektorię. Jak ci idzie z gwiazdami?",
+  "botRematchAda": "Twój plan pokonał mój. Przeliczymy jeszcze raz?",
+  "botGreetingMassimo": "Wataha pozdrawia. Zaczniemy od gambitu?",
+  "botRematchMassimo": "Poskromiłeś wilka. Szacunek.",
+  "botGreetingStella": "Jestem najjaśniejszą gwiazdą Akademii. Potrafisz na mnie spojrzeć?",
+  "botRematchStella": "Zgasiłeś moje światło… na razie.",
+  "botGreetingTino": "Cześć, jestem Tino! Pokażę ci, jak chodzą bierki.",
+  "botRematchTino": "Brawo! Teraz ruszasz bierkami lepiej niż ja.",
+  "botUnlockStory": "Odblokuje się po ukończeniu rozdziału Opowieści z tym strażnikiem",
+  "botGalleryOpen": "Otwórz galerię botów",
+  "botOptions": "Opcje",
+  "botOptionsTime": "Tempo gry",
+  "botOptionsNoClock": "Bez zegara",
+  "botOptionsVariant": "Wariant",
+  "botVariantStandard": "Standardowy",
+  "botVariantChess960": "Chess960",
+  "botVariantKingOfTheHill": "Król wzgórza",
+  "botVariantThreeCheck": "Trzy szachy",
+  "botOptionsHelp": "Pomoc",
+  "botOptionsCoach": "Trener",
+  "botOptionsCoachHint": "Ostrzega cię, gdy popełnisz błąd.",
+  "botOptionsTraining": "Trening",
+  "botOptionsTrainingHint": "Cofanie, podpowiedzi i zagrożenia. Nie liczy się do Elo ani zwycięstw; wyłączony to Wyzwanie, bez pomocy.",
+  "botOptionsSummary": "{time} · {variant}",
+  "@botOptionsSummary": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "variant": {
+        "type": "String"
+      }
+    }
+  },
+  "botOptionsKidSlow": "Z zegarem, bez pośpiechu",
+  "botGreetingLuna": "Nocą widzę całą szachownicę, nawet ukryte ruchy. Zagramy?",
+  "botRematchLuna": "Pokonałeś mnie w świetle gwiazd! Jeszcze jedna?",
+  "botGreetingCosmo": "Start za trzy, dwa, jeden… gramy! Zaatakujemy?",
+  "botRematchCosmo": "Awaryjne lądowanie: pokonałeś mnie. Rewanż?"
+}

@@ -7,7 +7,7 @@
   "@pathContinue": {
     "description": "Pulsante che apre la prossima tappa del percorso"
   },
-  "pathStars": "{done} estrelas de {total}",
+  "pathStars": "{done, plural, =0{{done} estrelas de {total}} =1{{done} estrela de {total}} other{{done} estrelas de {total}}}",
   "@pathStars": {
     "description": "Etichetta per i lettori di schermo delle stelle totali o di capitolo",
     "placeholders": {
@@ -49,7 +49,7 @@
   "@pathChapterDone": {
     "description": "Stato di un capitolo con tutte le tappe completate"
   },
-  "pathStageDone": "{stars} estrelas de 3",
+  "pathStageDone": "{stars, plural, =0{{stars} estrelas de 3} =1{{stars} estrela de 3} other{{stars} estrelas de 3}}",
   "@pathStageDone": {
     "description": "Stato di una tappa completata",
     "placeholders": {
@@ -81,5 +81,15 @@
   "pathGuardianUnavailable": "O guardião é desafiado onde o computador joga: Android e iOS, ou Windows e Linux com o Stockfish instalado.",
   "@pathGuardianUnavailable": {
     "description": "Avviso se il motore non è disponibile"
-  }
+  },
+  "pathStageWrong": "Esse não é o lance certo, tente de novo.",
+  "pathStageGood": "Muito bem, continue.",
+  "pathStageSolved": "Isso mesmo!",
+  "pathStageRestartTooltip": "Recomeçar",
+  "pathStageExerciseOf": "Exercício {n} de {total}",
+  "pathStageStart": "Começar",
+  "pathStageNext": "Próximo",
+  "pathStageRestartExercise": "Recomeçar o exercício",
+  "pathStageComplete": "Etapa concluída",
+  "pathStageFinish": "Concluir"
 }

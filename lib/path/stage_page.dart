@@ -4,6 +4,7 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../settings/settings.dart';
 import '../theme/rokko_theme.dart';
 import 'curriculum.dart';
@@ -110,12 +111,9 @@ class _StagePageState extends State<StagePage> {
     }
   }
 
-  Map<Square, Annotation> get _annotations => switch (_run) {
-    final StarsRun run => {
-      for (final s in run.remaining)
-        s: const Annotation(symbol: '★', color: Color(0xFFF2B01E)),
-    },
-    LineRun() => const {},
+  List<Square> get _remainingStars => switch (_run) {
+    final StarsRun run => run.remaining,
+    LineRun() => const [],
   };
 
   void _onMove(Move move, {bool? viaDragAndDrop}) {
@@ -131,14 +129,20 @@ class _StagePageState extends State<StagePage> {
         switch (verdict) {
           case MoveVerdict.wrong:
             _board.updatePosition(_gameData(), animate: false);
-            setState(() => _feedback = 'Non è la mossa giusta, riprova.');
+            setState(
+              () => _feedback = AppLocalizations.of(context).pathStageWrong,
+            );
           case MoveVerdict.correct:
             _board.updatePosition(_gameData(lastMove: run.lastReply));
-            setState(() => _feedback = 'Bene, continua.');
+            setState(
+              () => _feedback = AppLocalizations.of(context).pathStageGood,
+            );
           case MoveVerdict.solved:
             _board.updatePosition(_gameData(lastMove: move), animate: animate);
             _solved(run.stars);
-            setState(() => _feedback = 'Esatto!');
+            setState(
+              () => _feedback = AppLocalizations.of(context).pathStageSolved,
+            );
         }
     }
   }
@@ -183,6 +187,7 @@ class _StagePageState extends State<StagePage> {
   Widget build(BuildContext context) {
     final solved = _stars.length > _index;
     final text = Theme.of(context).textTheme;
+    final l10n = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.stage.title),
@@ -190,7 +195,7 @@ class _StagePageState extends State<StagePage> {
           if (_started && !_finished)
             IconButton(
               icon: const Icon(Icons.restart_alt),
-              tooltip: 'Ricomincia',
+              tooltip: l10n.pathStageRestartTooltip,
               onPressed: _restart,
             ),
         ],
@@ -198,8 +203,10 @@ class _StagePageState extends State<StagePage> {
           preferredSize: const Size.fromHeight(4),
           child: LinearProgressIndicator(
             value: _stars.length / widget.stage.exercises.length,
-            semanticsLabel:
-                'Esercizio ${_index + 1} di ${widget.stage.exercises.length}',
+            semanticsLabel: l10n.pathStageExerciseOf(
+              _index + 1,
+              widget.stage.exercises.length,
+            ),
           ),
         ),
       ),
@@ -216,14 +223,45 @@ class _StagePageState extends State<StagePage> {
                       constraints.maxHeight - _portraitReserve,
                     ),
             );
-            final board = Chessboard(
-              size: size,
-              controller: _board,
-              orientation: Side.white,
-              onMove: _onMove,
-              annotations: _annotations,
-              settings: AppSettings.of(context).exerciseBoard
-                  .copyWith(autoQueenPromotion: true),
+            final cell = size / 8;
+            // Le stelle stanno al centro della casa: i segnalini d'angolo di
+            // chessground sembravano indicare la casa accanto.
+            final board = SizedBox.square(
+              dimension: size,
+              child: Stack(
+                children: [
+                  Chessboard(
+                    size: size,
+                    controller: _board,
+                    orientation: Side.white,
+                    onMove: _onMove,
+                    settings: AppSettings.of(context).exerciseBoard
+                        .copyWith(autoQueenPromotion: true),
+                  ),
+                  for (final s in _remainingStars)
+                    Positioned(
+                      key: ValueKey('star-${s.name}'),
+                      left: s.file.value * cell,
+                      top: (7 - s.rank.value) * cell,
+                      width: cell,
+                      height: cell,
+                      child: IgnorePointer(
+                        child: Center(
+                          child: Text(
+                            '★',
+                            style: TextStyle(
+                              fontSize: cell * 0.7,
+                              color: const Color(0xFFF2B01E),
+                              shadows: const [
+                                Shadow(blurRadius: 3, color: Color(0xCC000000)),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
             );
             final panel = SingleChildScrollView(
               padding: const EdgeInsets.all(16),
@@ -235,11 +273,14 @@ class _StagePageState extends State<StagePage> {
                         const SizedBox(height: 24),
                         FilledButton(
                           onPressed: _start,
-                          child: const Text('Inizia'),
+                          child: Text(l10n.pathStageStart),
                         ),
                       ]
                     : [
-                        Text(_exercise.instructions, style: text.titleMedium),
+                        Text(
+                          widget.stage.instructions(_index),
+                          style: text.titleMedium,
+                        ),
                         const SizedBox(height: 12),
                         if (_feedback != null)
                           Text(
@@ -253,12 +294,12 @@ class _StagePageState extends State<StagePage> {
                         else
                           FilledButton(
                             onPressed: solved ? _next : null,
-                            child: const Text('Avanti'),
+                            child: Text(l10n.pathStageNext),
                           ),
                         if (!_finished && !solved)
                           TextButton(
                             onPressed: _restart,
-                            child: const Text('Ricomincia l\'esercizio'),
+                            child: Text(l10n.pathStageRestartExercise),
                           ),
                       ],
               ),
@@ -295,19 +336,23 @@ class _Result extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text('Tappa completata', style: Theme.of(context).textTheme.titleLarge),
+        Text(
+          l10n.pathStageComplete,
+          style: Theme.of(context).textTheme.titleLarge,
+        ),
         Text(
           '${'★' * stars}${'☆' * (3 - stars)}',
-          semanticsLabel: '$stars stelle su 3',
+          semanticsLabel: l10n.pathStageDone(stars),
           style: TextStyle(fontSize: 32, color: RokkoTokens.of(context).star),
         ),
         const SizedBox(height: 8),
         FilledButton(
           onPressed: () => Navigator.pop(context, stars),
-          child: const Text('Fine'),
+          child: Text(l10n.pathStageFinish),
         ),
       ],
     );

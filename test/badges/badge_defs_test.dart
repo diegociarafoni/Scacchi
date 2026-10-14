@@ -2,20 +2,20 @@ import 'dart:ui' show Locale;
 
 import 'package:flutter/material.dart' show Icons;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/badges/badge_def.dart';
-import 'package:scacchi/badges/badge_sources.dart';
-import 'package:scacchi/badges/badges_l10n.dart';
-import 'package:scacchi/endgames/drills.dart';
-import 'package:scacchi/endgames/endgame_progress.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/masters/master_games.dart';
-import 'package:scacchi/masters/masters_progress.dart';
-import 'package:scacchi/path/curriculum.dart';
-import 'package:scacchi/path/path_progress.dart';
-import 'package:scacchi/progress/progress_state.dart';
-import 'package:scacchi/progress/records.dart';
-import 'package:scacchi/progress/xp.dart';
-import 'package:scacchi/story/story.dart';
+import 'package:rokko/badges/badge_def.dart';
+import 'package:rokko/badges/badge_sources.dart';
+import 'package:rokko/badges/badges_l10n.dart';
+import 'package:rokko/endgames/drills.dart';
+import 'package:rokko/endgames/endgame_progress.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/masters/master_games.dart';
+import 'package:rokko/masters/masters_progress.dart';
+import 'package:rokko/path/curriculum.dart';
+import 'package:rokko/path/path_progress.dart';
+import 'package:rokko/progress/progress_state.dart';
+import 'package:rokko/progress/records.dart';
+import 'package:rokko/progress/xp.dart';
+import 'package:rokko/story/story.dart';
 
 BadgeDef badge(String id) => badgeById(id)!;
 
@@ -26,8 +26,8 @@ ProgressState withTally(Map<String, int> t) => ProgressState(tally: t);
 
 void main() {
   group('RG-17 catalogo', () {
-    test('59 badge con identificativi unici in cinque famiglie', () {
-      expect(badges, hasLength(59));
+    test('64 badge con identificativi unici in cinque famiglie', () {
+      expect(badges, hasLength(64));
       expect(badges.map((b) => b.id).toSet(), hasLength(badges.length));
       for (final f in BadgeFamily.values) {
         expect(badges.where((b) => b.family == f), isNotEmpty, reason: '$f');
@@ -365,6 +365,22 @@ void main() {
       expect(met('podium', withTally({'podium': 1})), isTrue);
       expect(met('tournaments_5', withTally({'tournaments': 5})), isTrue);
       expect(met('tournaments_5', withTally({'tournaments': 4})), isFalse);
+    });
+  });
+
+  group('RG-17 rete e ripasso', () {
+    test('partite in rete', () {
+      expect(met('online_first', withTally({'online': 1})), isTrue);
+      expect(met('online_first', withTally({})), isFalse);
+      expect(met('online_10', withTally({'online': 10})), isTrue);
+      expect(met('online_10', withTally({'online': 9})), isFalse);
+      expect(met('online_win', withTally({'online:win': 1})), isTrue);
+    });
+
+    test('ripasso del repertorio', () {
+      expect(met('repertoire_first', withTally({'repertoire': 1})), isTrue);
+      expect(met('repertoire_10', withTally({'repertoire': 10})), isTrue);
+      expect(met('repertoire_10', withTally({'repertoire': 9})), isFalse);
     });
   });
 

@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/masters/masters_controller.dart';
-import 'package:scacchi/masters/masters_progress.dart';
-import 'package:scacchi/progress/activity.dart';
+import 'package:rokko/masters/masters_controller.dart';
+import 'package:rokko/masters/masters_progress.dart';
+import 'package:rokko/progress/activity.dart';
 
 void main() {
   test('RF-88 si tiene il risultato migliore', () {

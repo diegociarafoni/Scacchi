@@ -1,0 +1,20 @@
+{
+  "storyGuardianPrologueBossWon": "Co za piękna partia! Grasz naprawdę dobrze, to była lekcja i dla mnie.",
+  "storyGuardianVillageBossWon": "Gratulacje! Wygrana bez ani jednej figury bez obrony.",
+  "storyGuardianGatesBossWon": "Znasz dobrze zasady. Bramy są twoje, wchodź.",
+  "storyGuardianTowerBossWon": "Ładny mat. Wieża jest teraz twoja.",
+  "storyGuardianForestBossWon": "Twoja pułapka zadziałała. Gratulacje!",
+  "storyGuardianCastleBossWon": "Końcówka rozegrana cierpliwie. Podaję ci rękę.",
+  "storyGuardianCrownBossWon": "Elegancki debiut i zasłużone zwycięstwo. Do korony!",
+  "storyGuardianPlainBossWon": "Twój plan się udał. Nawet gambit Evansa nie wystarczył.",
+  "storyGuardianAcademyBossWon": "Wygrana jest twoja. Teraz czekają na ciebie mistrzowie!",
+  "storyGuardianPrologueBossLost": "Nie martw się, mnie też zdarzają się błędy. Spróbujmy razem jeszcze raz!",
+  "storyGuardianVillageBossLost": "Niewiele zabrakło! Uważaj na niebronione figury i spróbuj jeszcze raz.",
+  "storyGuardianGatesBossLost": "Powtórz zasady i wróć: czekam przy bramach.",
+  "storyGuardianTowerBossLost": "Król uciekł. Pomyśl o macie i spróbuj jeszcze raz.",
+  "storyGuardianForestBossLost": "Widzisz pułapkę? Następnym razem ją ominiesz.",
+  "storyGuardianCastleBossLost": "W końcówkach potrzeba cierpliwości. Jeszcze raz, spokojnie.",
+  "storyGuardianCrownBossLost": "Zadbaj o debiut, reszta przyjdzie sama. Spróbuj jeszcze raz!",
+  "storyGuardianPlainBossLost": "Zabrakło planu. Przemyśl to i spróbuj jeszcze raz.",
+  "storyGuardianAcademyBossLost": "Nie daję zniżek, wiesz o tym. Ale się nauczysz: wróć wkrótce!"
+}

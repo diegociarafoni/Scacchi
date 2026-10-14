@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/exchange/qr_transfer.dart';
-import 'package:scacchi/puzzles/friend_challenge.dart';
-import 'package:scacchi/puzzles/puzzle.dart';
-import 'package:scacchi/puzzles/puzzle_library.dart';
-import 'package:scacchi/puzzles/puzzle_run.dart';
+import 'package:rokko/exchange/qr_transfer.dart';
+import 'package:rokko/puzzles/friend_challenge.dart';
+import 'package:rokko/puzzles/puzzle.dart';
+import 'package:rokko/puzzles/puzzle_library.dart';
+import 'package:rokko/puzzles/puzzle_run.dart';
 
 Puzzle _p(String id, int rating) => Puzzle.parseCsv(
   '$id,7k/6pp/8/8/1n6/8/8/RR4K1 b - - 0 1,b4c2 a1a8,$rating,mateIn1',

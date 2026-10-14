@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -21,6 +23,8 @@ import '../stats/stats_page.dart';
 import '../story/story.dart';
 import '../summary/weekly_summary_page.dart';
 import '../theme/rokko_theme.dart';
+import '../theme/sheets.dart';
+import 'review_invite.dart';
 
 /// Scheda "Tu": solo i dati del giocatore; le funzioni stanno nella Home.
 class YouPage extends StatefulWidget {
@@ -35,6 +39,7 @@ class YouPage extends StatefulWidget {
     this.storyPage,
     this.puzzlesPage,
     this.openGame,
+    this.openAnalysis,
   });
 
   /// Fonti dei dati: chiamate a ogni apertura, così un errore si riprova.
@@ -63,6 +68,9 @@ class YouPage extends StatefulWidget {
   /// Apre una partita dell'archivio; senza, le righe non sono toccabili.
   final void Function(BuildContext context, SavedGame game)? openGame;
 
+  /// Apre una partita o un'analisi dell'archivio nell'analisi (RF-52).
+  final void Function(BuildContext context, SavedGame game)? openAnalysis;
+
   @override
   State<YouPage> createState() => _YouPageState();
 }
@@ -71,6 +79,27 @@ class _YouPageState extends State<YouPage> {
   // Un'unica lettura per apertura della scheda: la voce «Continua» non
   // ricarica il percorso a ogni ricostruzione.
   late final Future<PathController> _pathFuture = widget.path();
+
+  // Invito a rivedere la prima partita (U10): solo se si può aprire una
+  // partita e fuori dal profilo bambino.
+  late Future<SavedGame?> _invite = _loadInvite();
+
+  @override
+  void didUpdateWidget(YouPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // La scheda resta viva tra un cambio di scheda e l'altro: l'invito si
+    // rilegge ogni volta che la Home si ricostruisce.
+    _invite = _loadInvite();
+  }
+
+  Future<SavedGame?> _loadInvite() async {
+    if (widget.simple || widget.openGame == null) return null;
+    try {
+      return await reviewInviteGame(await widget.archive());
+    } on Object {
+      return null;
+    }
+  }
 
   YouPage get _w => widget;
 
@@ -208,12 +237,17 @@ class _YouPageState extends State<YouPage> {
                     onOpen: w.openGame == null
                         ? null
                         : (g) => w.openGame!(context, g),
+                    onAnalyse: w.openAnalysis == null
+                        ? null
+                        : (g) => w.openAnalysis!(context, g),
                   ),
                 ),
               ),
           ];
           return ListView(
-            padding: const EdgeInsets.only(bottom: 24),
+            padding: context.withSystemBottom(
+              const EdgeInsets.only(bottom: 24),
+            ),
             children: [
               if (controller != null)
                 ListenableBuilder(
@@ -223,6 +257,32 @@ class _YouPageState extends State<YouPage> {
                       : const SizedBox.shrink(),
                 ),
               _ContinueCard(path: _pathFuture, onOpen: _continue),
+              FutureBuilder<SavedGame?>(
+                future: _invite,
+                builder: (context, snapshot) {
+                  final game = snapshot.data;
+                  if (game == null || w.simple || w.openGame == null) {
+                    return const SizedBox.shrink();
+                  }
+                  return ReviewInviteCard(
+                    game: game,
+                    onReview: (g) {
+                      // Aperta la revisione l'invito ha fatto il suo.
+                      unawaited(dismissReviewInvite());
+                      setState(() {
+                        _invite = Future<SavedGame?>.value();
+                      });
+                      w.openGame?.call(context, g);
+                    },
+                    onDismiss: () {
+                      unawaited(dismissReviewInvite());
+                      setState(() {
+                        _invite = Future<SavedGame?>.value();
+                      });
+                    },
+                  );
+                },
+              ),
               _Group(title: l10n.youGroupData, children: data),
             ],
           );

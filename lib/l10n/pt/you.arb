@@ -23,5 +23,9 @@
   "youStatsSubtitle": "Resultados, aberturas, ritmos de jogo e pontuação local",
   "youArchive": "Arquivo",
   "youArchiveSubtitle": "Partidas salvas, importação e exportação de PGN",
-  "youLoadError": "Não foi possível ler os dados salvos: tente de novo."
+  "youLoadError": "Não foi possível ler os dados salvos: tente de novo.",
+  "reviewInviteTitle": "Reveja a sua primeira partida",
+  "reviewInviteBody": "A partida “{game}” terminou: o computador mostra os seus erros e os melhores lances.",
+  "reviewInviteAction": "Rever",
+  "reviewInviteDismiss": "Agora não"
 }

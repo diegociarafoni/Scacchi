@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/backup/backup.dart';
+import 'package:rokko/backup/backup.dart';
 
 void main() {
   late Directory dir;
@@ -48,12 +48,7 @@ void main() {
   });
 
   group('dati aggiunti dopo la prima versione', () {
-    const extra = [
-      'week.json',
-      'masters.json',
-      'endgames.json',
-      'multiplayer.json',
-    ];
+    const extra = ['week.json', 'masters.json', 'endgames.json'];
 
     test('settimana, maestri, finali e partita a due telefoni', () async {
       for (final n in extra) {
@@ -115,6 +110,28 @@ void main() {
       expect(File('${dir.path}/avatar_photo.jpg').existsSync(), isFalse);
     });
 
+    test('il backup si chiama rokko e legge anche il vecchio nome', () async {
+      final backup = await Backup.collect(dir, {});
+      final json = jsonDecode(backup.encode()) as Map<String, Object?>;
+      expect(json['app'], 'rokko');
+      for (final app in ['rokko', 'scacchi']) {
+        final text = jsonEncode({
+          'app': app,
+          'version': 1,
+          'files': <String, Object?>{},
+          'preferences': <String, Object?>{},
+        });
+        expect(() => Backup.decode(text), returnsNormally);
+      }
+      final estraneo = jsonEncode({
+        'app': 'altro',
+        'version': 1,
+        'files': <String, Object?>{},
+        'preferences': <String, Object?>{},
+      });
+      expect(() => Backup.decode(estraneo), throwsA(isA<BackupException>()));
+    });
+
     test('rifiuta un binario fuori elenco o non base64', () {
       Map<String, Object?> json(Object blobs) => {
         'app': 'scacchi',
@@ -168,10 +185,33 @@ void main() {
       expect(File('${dir.path}/${Backup.pendingName}').existsSync(), isFalse);
     });
 
-    test('due ripristini conservano entrambe le copie', () async {
+    test(
+      'multiplayer.json non entra nel backup ne viene ripristinato',
+      () async {
+        data('multiplayer.json', '{"version":1,"seed":"segreto"}');
+        data('games.json', '{"version":1,"games":[1]}');
+        final backup = await Backup.collect(dir, {});
+        expect(backup.files.keys, isNot(contains('multiplayer.json')));
+        expect(backup.encode(), isNot(contains('segreto')));
+
+        final old = jsonEncode({
+          'app': 'scacchi',
+          'version': 2,
+          'files': {'multiplayer.json': '{"version":1,"seed":"altrui"}'},
+          'preferences': <String, Object?>{},
+        });
+        final decoded = Backup.decode(old);
+        expect(decoded.files, isEmpty);
+        await decoded.stage(dir);
+        await Backup.applyPending(dir, (_) async {});
+        expect(file('multiplayer.json'), '{"version":1,"seed":"segreto"}');
+      },
+    );
+
+    test('un ripristino riuscito toglie le copie dei precedenti', () async {
       data('games.json', '{"version":1,"games":[1]}');
       final backup = await Backup.collect(dir, {});
-      for (var i = 0; i < 2; i++) {
+      for (var i = 0; i < 3; i++) {
         await backup.stage(dir);
         await Backup.applyPending(dir, (_) async {});
         await Future<void>.delayed(const Duration(milliseconds: 2));
@@ -179,7 +219,8 @@ void main() {
       final copies = dir.listSync().where(
         (e) => e.path.contains(Backup.previousSuffix),
       );
-      expect(copies, hasLength(2));
+      // Solo le copie dell'ultimo ripristino (games.json sostituito).
+      expect(copies, hasLength(1));
     });
 
     test('senza backup in attesa non fa nulla', () async {

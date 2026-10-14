@@ -1,0 +1,19 @@
+{
+  "endgamesTitle": "Eindspelen",
+  "endgamesGoalMate": "Zet schaakmat",
+  "endgamesGoalPromote": "Promoveer de pion",
+  "endgamesGoalHoldBlack": "Houd stand met zwart",
+  "endgamesGoalHoldWhite": "Houd stand met wit",
+  "endgamesToRepeat": "Te herhalen",
+  "endgamesStars": "{stars, plural, one{{stars} ster van 3} other{{stars} sterren van 3}}",
+  "endgamesMovesHold": "Zetten: {moves} van {par}",
+  "endgamesMovesTarget": "Zetten: {moves} · drie sterren binnen {par}",
+  "endgamesStart": "Start",
+  "endgamesThinking": "De engine denkt na…",
+  "endgamesEngineFailed": "De engine reageert niet: probeer het opnieuw.",
+  "endgamesSuccess": "Doel bereikt",
+  "endgamesFailure": "Het is niet gelukt",
+  "endgamesFailureHint": "De stelling blijft bij de stellingen die je moet herhalen.",
+  "endgamesRetry": "Probeer het opnieuw",
+  "endgamesDone": "Klaar"
+}

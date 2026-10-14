@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:scacchi/main.dart';
-import 'package:scacchi/settings/settings.dart';
+import 'package:rokko/main.dart';
+import 'package:rokko/settings/settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../test/computer_fakes.dart' show openCustomSheet;
@@ -111,12 +111,14 @@ Future<void> _back(WidgetTester tester) async {
   await _pop(tester);
 }
 
-Future<void> _start(WidgetTester tester) async {
-  SharedPreferences.setMockInitialValues({});
+/// [dragging] attiva anche il trascinamento: sul telefono il modo
+/// predefinito usa solo i due tocchi.
+Future<void> _start(WidgetTester tester, {bool dragging = false}) async {
+  SharedPreferences.setMockInitialValues({if (dragging) 'moveMethod': 'both'});
   tester.view.physicalSize = const Size(1170, 2532);
   tester.view.devicePixelRatio = 3;
   addTearDown(tester.view.reset);
-  await tester.pumpWidget(const ScacchiApp());
+  await tester.pumpWidget(const RokkoApp());
   await tester.pumpAndSettle();
   await openBoard(tester);
 }
@@ -128,7 +130,7 @@ void main() {
   useItalianDevice();
 
   testWidgets('RF-01 muove con due tocchi e con trascinamento', (tester) async {
-    await _start(tester);
+    await _start(tester, dragging: true);
     expect(find.text('Muove il Bianco.'), findsOneWidget);
     await _tapMove(tester, 'e2e4');
     expect(find.text('Muove il Nero.'), findsOneWidget);
@@ -153,7 +155,10 @@ void main() {
     expect(find.text('Scacco matto. Vince il Bianco.'), findsOneWidget);
     expect(find.text('4. ♛xf7#'), findsOneWidget);
 
+    // Tra due persone chi ha il turno deve acconsentire.
     await tester.tap(find.text('Annulla'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Accetta'));
     await tester.pumpAndSettle();
     expect(find.text('Muove il Bianco.'), findsOneWidget);
     expect(find.text('4. ♛xf7#'), findsNothing);
@@ -201,7 +206,9 @@ void main() {
     expect(board().orientation.name, 'black');
   });
 
-  testWidgets('Annulla chiude il selettore di promozione', (tester) async {
+  testWidgets('un tocco fuori chiude il selettore di promozione', (
+    tester,
+  ) async {
     await _start(tester);
     for (final m in [
       'b2b4',
@@ -220,7 +227,8 @@ void main() {
     );
     await _tapMove(tester, 'b7a8');
     expect(selector, findsOneWidget);
-    await tester.tap(find.text('Annulla'));
+    // Il selettore si chiude toccando fuori dai pezzi proposti.
+    await tester.tapAt(_square(tester, 'h1'));
     await tester.pumpAndSettle();
     expect(selector, findsNothing);
   });
@@ -449,7 +457,7 @@ void main() {
   });
 
   testWidgets('RF-10 scorrimento orizzontale sulla scacchiera', (tester) async {
-    await _start(tester);
+    await _start(tester, dragging: true);
     await _tapMove(tester, 'e2e4');
     await _tapMove(tester, 'e7e5');
     await _tapMove(tester, 'g1f3');

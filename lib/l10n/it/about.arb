@@ -1,0 +1,54 @@
+{
+  "aboutTitle": "Informazioni",
+  "@aboutTitle": {
+    "description": "Informazioni: titolo della schermata e della voce nelle Impostazioni"
+  },
+  "aboutEntrySubtitle": "Licenza, sorgenti, privacy e crediti",
+  "@aboutEntrySubtitle": {
+    "description": "Impostazioni: riga sotto la voce Informazioni"
+  },
+  "aboutTagline": "Scacchi liberi e gratuiti, anche senza connessione",
+  "@aboutTagline": {
+    "description": "Informazioni: frase sotto il nome dell'app"
+  },
+  "aboutPrivacy": "Privacy",
+  "@aboutPrivacy": {
+    "description": "Informazioni: titolo della riga sulla privacy"
+  },
+  "aboutPrivacyDescription": "Nessun dato raccolto, nessuna pubblicità, nessun tracciamento. Giocando a distanza le mosse passano, cifrate, solo dai server scelti per la partita",
+  "@aboutPrivacyDescription": {
+    "description": "Informazioni: dichiarazione di privacy"
+  },
+  "aboutLicense": "Licenza",
+  "@aboutLicense": {
+    "description": "Informazioni: titolo della riga sulla licenza"
+  },
+  "aboutLicenseDescription": "Software libero, licenza GPL-3.0 o successiva, con permesso aggiuntivo per la distribuzione negli store",
+  "@aboutLicenseDescription": {
+    "description": "Informazioni: licenza del programma"
+  },
+  "aboutSource": "Codice sorgente",
+  "@aboutSource": {
+    "description": "Informazioni: titolo della riga con l'indirizzo dei sorgenti"
+  },
+  "aboutSourceCopied": "Indirizzo copiato",
+  "@aboutSourceCopied": {
+    "description": "Informazioni: conferma dopo aver copiato l'indirizzo dei sorgenti"
+  },
+  "aboutLicenses": "Licenze delle librerie",
+  "@aboutLicenses": {
+    "description": "Informazioni: voce che apre le licenze dei componenti"
+  },
+  "aboutLicensesDescription": "Testi completi delle licenze dei componenti usati",
+  "@aboutLicensesDescription": {
+    "description": "Informazioni: descrizione della voce delle licenze"
+  },
+  "aboutCopy": "Copia",
+  "@aboutCopy": {
+    "description": "Informazioni: etichetta dell'icona che copia l'indirizzo dei sorgenti"
+  },
+  "aboutCredits": "Crediti",
+  "@aboutCredits": {
+    "description": "Informazioni: titolo dell'elenco dei crediti di motore, pezzi e caratteri"
+  }
+}

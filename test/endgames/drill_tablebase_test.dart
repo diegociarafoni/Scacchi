@@ -3,19 +3,17 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/endgames/drill.dart';
-import 'package:scacchi/endgames/drill_page.dart';
-import 'package:scacchi/endgames/endgame_controller.dart';
-import 'package:scacchi/engine/computer_player.dart';
-import 'package:scacchi/tablebase/tablebase_service.dart';
+import 'package:rokko/endgames/drill.dart';
+import 'package:rokko/endgames/drill_page.dart';
+import 'package:rokko/endgames/endgame_controller.dart';
+import 'package:rokko/engine/computer_player.dart';
+import 'package:rokko/tablebase/tablebase_service.dart';
 
 import '../computer_fakes.dart';
 import '../localized_app.dart';
 
 const _mate = EndgameDrill(
   id: 'queen-mate',
-  title: 'Donna e re contro re',
-  intro: 'Obiettivo: dai scacco matto.',
   fen: '7k/8/5K2/8/8/1Q6/8/8 w - - 0 1',
   goal: DrillGoal.mate,
   par: 2,

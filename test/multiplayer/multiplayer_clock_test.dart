@@ -4,16 +4,17 @@ import 'dart:typed_data';
 import 'package:dartchess/dartchess.dart' hide File;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/exchange/qr_code_view.dart';
-import 'package:scacchi/game/clock.dart';
-import 'package:scacchi/multiplayer/game_invite.dart';
-import 'package:scacchi/multiplayer/game_message.dart';
-import 'package:scacchi/multiplayer/game_sync.dart';
-import 'package:scacchi/multiplayer/match_clock.dart';
-import 'package:scacchi/multiplayer/multiplayer_controller.dart';
-import 'package:scacchi/multiplayer/multiplayer_page.dart';
-import 'package:scacchi/multiplayer/saved_game.dart';
-import 'package:scacchi/multiplayer/transport.dart';
+import 'package:rokko/exchange/qr_code_view.dart';
+import 'package:rokko/game/clock.dart';
+import 'package:rokko/multiplayer/game_invite.dart';
+import 'package:rokko/multiplayer/game_message.dart';
+import 'package:rokko/multiplayer/game_sync.dart';
+import 'package:rokko/multiplayer/match_clock.dart';
+import 'package:rokko/multiplayer/multiplayer_controller.dart';
+import 'package:rokko/multiplayer/multiplayer_page.dart';
+import 'package:rokko/multiplayer/saved_game.dart';
+import 'package:rokko/multiplayer/transport.dart';
+import 'package:rokko/progress/activity.dart';
 
 import '../localized_app.dart';
 import '../support/wait.dart';
@@ -406,6 +407,8 @@ void main() {
         await play(host, 'e2e4');
         now.advance(const Duration(seconds: 5));
         await play(guest, 'e7e5');
+        // Il salvataggio è in coda su disco: si attende, non si indovina.
+        await untilSaved(store, 2);
         await guest.close();
         await host.close();
 
@@ -522,5 +525,35 @@ void main() {
         await tester.runAsync(host.close);
       },
     );
+
+    testWidgets('A-24 la partita finita a tempo si registra una volta sola', (
+      tester,
+    ) async {
+      final now = FakeNow();
+      final (host, guest) = (await tester.runAsync(() => pair(now)))!;
+      final recorded = <Activity>[];
+      await tester.pumpWidget(
+        localizedApp(
+          home: MultiplayerGamePage(
+            controller: guest,
+            onActivity: (a) async => recorded.add(a),
+          ),
+        ),
+      );
+      await tester.runAsync(() => play(host, 'e2e4'));
+      await tester.pump();
+      expect(recorded, isEmpty);
+
+      now.advance(const Duration(minutes: 3, seconds: 1));
+      guest.tick();
+      await tester.runAsync(settleLoopback);
+      await tester.pump();
+      guest.tick();
+      await tester.pump();
+      // Il Bianco ha vinto sul tempo: per chi gioca il Nero è una sconfitta.
+      expect(recorded, hasLength(1));
+      expect((recorded.single as OnlineGameFinished).result, GameResult.loss);
+      await tester.runAsync(host.close);
+    });
   });
 }

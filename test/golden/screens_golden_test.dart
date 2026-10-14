@@ -5,17 +5,18 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/archive/game_archive.dart';
-import 'package:scacchi/home/home_shell.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/path/path_controller.dart';
-import 'package:scacchi/progress/progress_controller.dart';
-import 'package:scacchi/progress/progress_store.dart';
-import 'package:scacchi/settings/settings.dart';
-import 'package:scacchi/story/story.dart';
-import 'package:scacchi/story/story_controller.dart';
-import 'package:scacchi/story/story_page.dart';
-import 'package:scacchi/theme/rokko_theme.dart';
+import 'package:rokko/archive/game_archive.dart';
+import 'package:rokko/home/home_shell.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/path/path_controller.dart';
+import 'package:rokko/path/path_page.dart';
+import 'package:rokko/progress/progress_controller.dart';
+import 'package:rokko/progress/progress_store.dart';
+import 'package:rokko/settings/settings.dart';
+import 'package:rokko/story/story.dart';
+import 'package:rokko/story/story_controller.dart';
+import 'package:rokko/story/story_page.dart';
+import 'package:rokko/theme/rokko_theme.dart';
 
 import '../support/devices.dart';
 
@@ -192,4 +193,77 @@ void main() {
     expect(passage, findsOneWidget);
     await _golden(tester, 'storia-passaggio-scuro-telefono-medio');
   });
+
+  testWidgets('Percorso', skip: _skip != null, (tester) async {
+    await _pump(tester, Device.phoneMedium, PathPage(controller: path));
+    await _golden(tester, 'percorso-telefono-medio');
+  });
+
+  testWidgets('Percorso in tema scuro', skip: _skip != null, (tester) async {
+    await _pump(
+      tester,
+      Device.phoneMedium,
+      PathPage(controller: path),
+      brightness: Brightness.dark,
+    );
+    await _golden(tester, 'percorso-scuro-telefono-medio');
+  });
+
+  testWidgets('Percorso col testo al 130%', skip: _skip != null, (
+    tester,
+  ) async {
+    await _pump(
+      tester,
+      Device.phoneSmall,
+      PathPage(controller: path),
+      textScale: 1.3,
+    );
+    await _golden(tester, 'percorso-testo-130-telefono-piccolo');
+  });
+
+  testWidgets('Percorso, profilo bambino', skip: _skip != null, (tester) async {
+    await _pump(
+      tester,
+      Device.phoneMedium,
+      PathPage(controller: path),
+      kid: true,
+    );
+    await _golden(tester, 'percorso-bambino-telefono-medio');
+  });
+
+  testWidgets(
+    'Home su tablet in orizzontale: colonna laterale',
+    skip: _skip != null,
+    (tester) async {
+      tester.view
+        ..physicalSize = const Size(1180, 820) * 2
+        ..devicePixelRatio = 2;
+      addTearDown(tester.view.reset);
+      final progress = ProgressController(
+        ProgressStore(File('${dir.path}/p.json')),
+        clock: () => DateTime(2026, 10, 5, 12),
+      );
+      await tester.runAsync(progress.load);
+      await tester.pumpWidget(
+        SettingsScope(
+          controller: SettingsController.defaults(),
+          child: MaterialApp(
+            theme: RokkoTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            locale: const Locale('it'),
+            home: HomeShell(
+              settings: SettingsController.defaults(),
+              computerAvailable: true,
+              progress: () async => progress,
+              path: () async => path,
+              archive: () async => GameArchive(File('${dir.path}/games.json')),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await _golden(tester, 'home-tablet-orizzontale');
+    },
+  );
 }

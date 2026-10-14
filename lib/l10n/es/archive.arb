@@ -1,0 +1,46 @@
+{
+  "archiveShareSubject": "Partidas en PGN",
+  "archiveTitle": "Partidas",
+  "archiveImportResult": "{count, plural, one{1 partida importada} other{{count} partidas importadas}}{skipped, plural, =0{} other{, {skipped} no válidas}}",
+  "@archiveImportResult": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "skipped": {
+        "type": "int"
+      }
+    }
+  },
+  "archiveDeleteTitle": "¿Eliminar esta partida?",
+  "archiveCancel": "Cancelar",
+  "archiveDelete": "Eliminar",
+  "archivePgnCopied": "PGN copiado",
+  "archiveImportPgn": "Importar PGN",
+  "archiveExportAll": "Exportar todo como PGN",
+  "archiveUnreadable": "No se pudo leer el archivo.",
+  "archiveSearchHint": "Busca por jugador o tipo",
+  "archiveEmpty": "No hay partidas guardadas.",
+  "archiveNoMatch": "No se encontró ninguna partida.",
+  "archiveInProgress": "En curso",
+  "archiveActionsFor": "Acciones para {title}",
+  "@archiveActionsFor": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "archiveSharePgn": "Compartir PGN",
+  "archiveCopyPgn": "Copiar PGN",
+  "archiveImportHint": "Pega aquí una o más partidas en PGN",
+  "archivePaste": "Pegar",
+  "archiveImport": "Importar",
+  "archiveModeLocal": "local",
+  "archiveModeComputer": "máquina",
+  "archivePlayerComputer": "Ordenador",
+  "archiveModeImported": "importada",
+  "archiveModePhysical": "tablero físico",
+  "archiveModeAnalysis": "análisis",
+  "archiveOpenAnalysis": "Abrir en el análisis"
+}

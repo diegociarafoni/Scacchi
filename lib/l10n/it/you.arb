@@ -118,5 +118,26 @@
   "youLoadError": "I dati salvati non si possono leggere: riprova.",
   "@youLoadError": {
     "description": "Messaggio quando un file non si legge"
+  },
+  "reviewInviteTitle": "Rivedi la tua prima partita",
+  "@reviewInviteTitle": {
+    "description": "Invito: titolo della scheda per rivedere la prima partita"
+  },
+  "reviewInviteBody": "La partita «{game}» è finita: il computer ti mostra gli errori e le mosse migliori.",
+  "@reviewInviteBody": {
+    "description": "Invito: spiega la revisione della partita conclusa",
+    "placeholders": {
+      "game": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewInviteAction": "Rivedi",
+  "@reviewInviteAction": {
+    "description": "Invito: pulsante che apre la revisione"
+  },
+  "reviewInviteDismiss": "Non ora",
+  "@reviewInviteDismiss": {
+    "description": "Invito: chiude per sempre l'invito"
   }
 }

@@ -1,9 +1,9 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/badges/badge_sources.dart';
-import 'package:scacchi/progress/activity.dart';
-import 'package:scacchi/progress/progress_state.dart';
-import 'package:scacchi/progress/progress_tracker.dart';
+import 'package:rokko/badges/badge_sources.dart';
+import 'package:rokko/progress/activity.dart';
+import 'package:rokko/progress/progress_state.dart';
+import 'package:rokko/progress/progress_tracker.dart';
 
 DateTime day(int d, [int hour = 12]) => DateTime(2026, 10, d, hour);
 
@@ -150,6 +150,29 @@ void main() {
       expect(s.tally['podium'], 1);
       s = record(s, const TournamentFinished(rank: 4, players: 8), day(5));
       expect(s.tally['podium'], 1);
+    });
+
+    test('partite in rete: tutte contano, le vittorie anche a parte', () {
+      var s = record(
+        ProgressState.initial,
+        const OnlineGameFinished(result: GameResult.loss),
+        day(5),
+      );
+      expect(s.tally['online'], 1);
+      expect(s.tally.containsKey('online:win'), isFalse);
+      expect(s.gamesPlayed, 0);
+      s = record(s, const OnlineGameFinished(result: GameResult.win), day(5));
+      expect(s.tally['online'], 2);
+      expect(s.tally['online:win'], 1);
+    });
+
+    test('ripasso del repertorio: una sessione, un conteggio', () {
+      final s = record(
+        ProgressState.initial,
+        const RepertoireReviewed(),
+        day(5),
+      );
+      expect(s.tally['repertoire'], 1);
     });
 
     test('minigiochi: contano le sessioni con almeno un punto', () {

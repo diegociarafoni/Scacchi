@@ -1,0 +1,46 @@
+{
+  "archiveShareSubject": "Parties PGN",
+  "archiveTitle": "Parties",
+  "archiveImportResult": "{count, plural, one{{count} partie importée} other{{count} parties importées}}{skipped, plural, =0{} other{, {skipped} non valides}}",
+  "@archiveImportResult": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "skipped": {
+        "type": "int"
+      }
+    }
+  },
+  "archiveDeleteTitle": "Supprimer cette partie ?",
+  "archiveCancel": "Annuler",
+  "archiveDelete": "Supprimer",
+  "archivePgnCopied": "PGN copié",
+  "archiveImportPgn": "Importer un PGN",
+  "archiveExportAll": "Tout exporter en PGN",
+  "archiveUnreadable": "Impossible de lire les archives.",
+  "archiveSearchHint": "Chercher par joueur ou type",
+  "archiveEmpty": "Aucune partie enregistrée.",
+  "archiveNoMatch": "Aucune partie trouvée.",
+  "archiveInProgress": "En cours",
+  "archiveActionsFor": "Actions pour {title}",
+  "@archiveActionsFor": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "archiveSharePgn": "Partager le PGN",
+  "archiveCopyPgn": "Copier le PGN",
+  "archiveImportHint": "Colle ici une ou plusieurs parties PGN",
+  "archivePaste": "Coller",
+  "archiveImport": "Importer",
+  "archiveModeLocal": "local",
+  "archiveModeComputer": "ordinateur",
+  "archivePlayerComputer": "Ordinateur",
+  "archiveModeImported": "importée",
+  "archiveModePhysical": "échiquier physique",
+  "archiveModeAnalysis": "analyse",
+  "archiveOpenAnalysis": "Ouvrir dans l'analyse"
+}

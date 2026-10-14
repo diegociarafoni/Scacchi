@@ -2,8 +2,8 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart' show Color, ThemeMode;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/settings/notation.dart';
-import 'package:scacchi/settings/settings.dart';
+import 'package:rokko/settings/notation.dart';
+import 'package:rokko/settings/settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -26,6 +26,8 @@ void main() {
     expect(settings.value.tableMode, isFalse);
     expect(settings.value.confirmMove, isFalse);
     expect(settings.value.premove, isTrue);
+    expect(settings.value.evalBar, isFalse);
+    expect(settings.value.trainingMode, isFalse);
     expect(settings.value.colorBlind, isFalse);
     expect(settings.value.explainWhy, isFalse);
     expect(settings.value.kidMode, isFalse);
@@ -59,6 +61,7 @@ void main() {
         showLegalMoves: false,
         showCoordinates: false,
         autoQueen: true,
+        moveMethod: MoveMethod.drag,
         drawShapes: false,
         markColor: MarkColor.blue,
         autoFlip: true,
@@ -72,6 +75,8 @@ void main() {
         confirmMove: true,
         colorBlind: true,
         explainWhy: true,
+        evalBar: true,
+        trainingMode: true,
         kidMode: true,
         themeMode: ThemeMode.dark,
       ),
@@ -81,7 +86,10 @@ void main() {
     expect(reloaded.value.themeMode, ThemeMode.dark);
     expect(reloaded.value.boardTheme, BoardTheme.blue);
     expect(reloaded.value.animation, AnimationSpeed.none);
+    expect(reloaded.value.moveMethod, MoveMethod.drag);
     expect(reloaded.value.markColor, MarkColor.blue);
+    expect(reloaded.value.evalBar, isTrue);
+    expect(reloaded.value.trainingMode, isTrue);
   });
 
   test(
@@ -187,6 +195,13 @@ void main() {
     expect(AppSettings(whiteName: '  ').nameOf(Side.white), isNull);
     expect(AppSettings(blackName: ' Bruno ').blackName, 'Bruno');
     expect(AppSettings(whiteName: 'x' * 40).whiteName.length, 24);
+  });
+
+  test('il nome lungo non spezza una coppia surrogata', () {
+    final name = AppSettings(whiteName: '${'x' * 23}😀😀').whiteName;
+    expect(name, '${'x' * 23}😀');
+    // Una stringa tagliata male non sarebbe UTF-16 valido.
+    expect(name.codeUnits.last, isNot(inInclusiveRange(0xd800, 0xdbff)));
   });
 
   test('la mossa sbagliata è rossa, arancione con i colori per daltonici', () {

@@ -2,8 +2,8 @@ import 'dart:typed_data';
 
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/multiplayer/game_message.dart';
-import 'package:scacchi/multiplayer/game_sync.dart';
+import 'package:rokko/multiplayer/game_message.dart';
+import 'package:rokko/multiplayer/game_sync.dart';
 
 final hostKey = Uint8List.fromList(List.filled(32, 1));
 final guestKey = Uint8List.fromList(List.filled(32, 2));
@@ -212,5 +212,22 @@ void main() {
     expect(a, matches(RegExp(r'^[0-9a-f]{32}$')));
     final after = Chess.initial.play(Move.parse('e2e4')!);
     expect(positionHash(after), isNot(a));
+  });
+
+  test('la triplice ripetizione chiude la partita in patta su entrambi', () {
+    final h = host()..receive(const JoinMessage(), guestKey);
+    final g = guest();
+    const cycle = ['g1f3', 'g8f6', 'f3g1', 'f6g8'];
+    for (var i = 0; i < 8; i++) {
+      expect(h.isGameOver, isFalse);
+      expect(
+        relay(i.isEven ? h : g, i.isEven ? g : h, cycle[i % 4]),
+        isA<MoveAccepted>(),
+      );
+    }
+    expect(h.isGameOver, isTrue);
+    expect(g.isGameOver, isTrue);
+    expect(h.outcome, Outcome.draw);
+    expect(g.outcome, Outcome.draw);
   });
 }

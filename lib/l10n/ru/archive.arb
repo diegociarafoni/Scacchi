@@ -1,0 +1,46 @@
+{
+  "archiveShareSubject": "Партии в PGN",
+  "archiveTitle": "Партии",
+  "archiveImportResult": "{count, plural, one{Импортирована {count} партия} few{Импортировано {count} партии} many{Импортировано {count} партий} other{Импортировано {count} партии}}{skipped, plural, =0{} other{, неверных: {skipped}}}",
+  "@archiveImportResult": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "skipped": {
+        "type": "int"
+      }
+    }
+  },
+  "archiveDeleteTitle": "Удалить эту партию?",
+  "archiveCancel": "Отмена",
+  "archiveDelete": "Удалить",
+  "archivePgnCopied": "PGN скопирован",
+  "archiveImportPgn": "Импорт PGN",
+  "archiveExportAll": "Экспортировать всё в PGN",
+  "archiveUnreadable": "Не удалось прочитать архив.",
+  "archiveSearchHint": "Поиск по игроку или типу",
+  "archiveEmpty": "Нет сохранённых партий.",
+  "archiveNoMatch": "Партии не найдены.",
+  "archiveInProgress": "Идёт игра",
+  "archiveActionsFor": "Действия: {title}",
+  "@archiveActionsFor": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "archiveSharePgn": "Поделиться PGN",
+  "archiveCopyPgn": "Копировать PGN",
+  "archiveImportHint": "Вставь сюда одну или несколько партий в PGN",
+  "archivePaste": "Вставить",
+  "archiveImport": "Импортировать",
+  "archiveModeLocal": "на одном устройстве",
+  "archiveModeComputer": "с компьютером",
+  "archivePlayerComputer": "Компьютер",
+  "archiveModeImported": "импортирована",
+  "archiveModePhysical": "реальная доска",
+  "archiveModeAnalysis": "анализ",
+  "archiveOpenAnalysis": "Открыть в анализе"
+}

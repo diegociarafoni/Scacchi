@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
 import '../settings/settings.dart';
+import '../theme/rokko_theme.dart';
 import 'achievements_l10n.dart';
 import 'progress_tracker.dart';
 import 'rewards.dart';
@@ -18,8 +19,7 @@ String? progressMessage(ProgressUpdate update, AppLocalizations l) {
     for (final c in update.challengesCompleted)
       l.progressFeedbackChallenge(c.title(l)),
     if (update.weeklyCompleted) l.progressFeedbackWeekly,
-    for (final r in update.newRecords)
-      l.progressFeedbackRecord(r.label(l).toLowerCase()),
+    for (final r in update.newRecords) l.progressFeedbackRecord(r.label(l)),
     for (final a in update.unlocked)
       l.progressFeedbackAchievement(achievementTitle(l, a)),
     for (final r in update.rewards) l.progressFeedbackReward(rewardName(l, r)),
@@ -44,12 +44,54 @@ String? kidProgressMessage(ProgressUpdate update, AppLocalizations l) {
   ].join(' · ');
 }
 
-/// Notifica in-app non invasiva dei progressi.
-void showProgressFeedback(BuildContext context, ProgressUpdate update) {
+/// Testo dei progressi nella lingua e nel profilo in uso, o `null`.
+String? progressText(BuildContext context, ProgressUpdate update) {
   final l = AppLocalizations.of(context);
-  final message = AppSettings.of(context).kidMode
+  return AppSettings.of(context).kidMode
       ? kidProgressMessage(update, l)
       : progressMessage(update, l);
+}
+
+/// Notifica in-app non invasiva dei progressi. Nelle schermate con pulsanti
+/// in basso si usa [ProgressNote] in linea: la barra copre i comandi.
+void showProgressFeedback(BuildContext context, ProgressUpdate update) {
+  final message = progressText(context, update);
   if (message == null) return;
   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+}
+
+/// Riga dei progressi guadagnati, da mettere negli spazi liberi sopra i
+/// comandi invece di una barra a comparsa.
+class ProgressNote extends StatelessWidget {
+  const ProgressNote({super.key, required this.message});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: scheme.primaryContainer,
+          borderRadius: BorderRadius.circular(
+            RokkoTokens.of(context).radiusSmall,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          child: Semantics(
+            liveRegion: true,
+            child: Text(
+              message,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.titleSmall
+                  ?.copyWith(color: scheme.onPrimaryContainer),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }

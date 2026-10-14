@@ -3,9 +3,9 @@ import 'dart:typed_data';
 
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/multiplayer/nostr_event.dart';
-import 'package:scacchi/multiplayer/nostr_transport.dart';
-import 'package:scacchi/multiplayer/transport.dart';
+import 'package:rokko/multiplayer/nostr_event.dart';
+import 'package:rokko/multiplayer/nostr_transport.dart';
+import 'package:rokko/multiplayer/transport.dart';
 
 import 'fake_relay.dart';
 
@@ -298,6 +298,18 @@ void main() {
       final got = black.incoming.first;
       await white.send(bytes('via live'));
       expect(await got.timeout(const Duration(seconds: 2)), bytes('via live'));
+    },
+  );
+
+  test(
+    'RMP-31 il ritardo dei tentativi non riparte se il relay rifiuta',
+    () async {
+      final relay = FakeRelay()..refusingSubscriptions = true;
+      await player(Side.white, [relay]);
+      await Future<void>.delayed(const Duration(milliseconds: 400));
+      // Con il ritardo che raddoppia fino a 80 ms bastano circa sette
+      // tentativi; ripartendo da 20 ms a ogni collegamento sarebbero più di 15.
+      expect(relay.connections, lessThan(12));
     },
   );
 

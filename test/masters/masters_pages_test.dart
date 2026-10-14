@@ -4,11 +4,14 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart' show Side;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/masters/guess_page.dart';
-import 'package:scacchi/masters/master_game_page.dart';
-import 'package:scacchi/masters/master_games.dart';
-import 'package:scacchi/masters/masters_controller.dart';
-import 'package:scacchi/masters/masters_page.dart';
+import 'package:rokko/masters/guess_page.dart';
+import 'package:rokko/masters/master_game_page.dart';
+import 'package:rokko/masters/master_games.dart';
+import 'package:rokko/masters/masters_controller.dart';
+import 'package:rokko/masters/masters_page.dart';
+
+import '../content_support.dart';
+import '../localized_app.dart';
 
 Offset _square(WidgetTester tester, String name) {
   final rect = tester.getRect(find.byType(Chessboard));
@@ -51,7 +54,7 @@ void main() {
   ) async {
     phone(tester);
     await tester.pumpWidget(
-      MaterialApp(home: MastersPage(controller: controller)),
+      localizedApp(home: MastersPage(controller: controller)),
     );
     expect(find.text('Grandi maestri'), findsOneWidget);
     expect(find.textContaining('Légal'), findsWidgets);
@@ -63,7 +66,7 @@ void main() {
   ) async {
     phone(tester);
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: MasterGamePage(game: legal, controller: controller),
       ),
     );
@@ -78,7 +81,7 @@ void main() {
     await tester.tap(find.byKey(const Key('master-last')));
     await tester.pumpAndSettle();
     expect(find.textContaining('7. Nd5#'), findsWidgets);
-    expect(find.text(legal.notes[legal.moves.length]!), findsOneWidget);
+    expect(find.text(legal.noteAt(legal.moves.length)!), findsOneWidget);
 
     await tester.tap(find.byKey(const Key('master-first')));
     await tester.pumpAndSettle();
@@ -90,7 +93,7 @@ void main() {
   ) async {
     phone(tester);
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: GuessPage(game: legal, side: Side.white, controller: controller),
       ),
     );
@@ -114,7 +117,7 @@ void main() {
   ) async {
     phone(tester);
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: GuessPage(game: legal, side: Side.white, controller: controller),
       ),
     );
@@ -124,12 +127,39 @@ void main() {
     expect(find.textContaining('Risposta: 1… e5'), findsOneWidget);
   });
 
+  testWidgets('RF-87 le partite dei maestri si leggono in inglese', (
+    tester,
+  ) async {
+    phone(tester);
+    useContent('en');
+    addTearDown(useContent);
+    await tester.pumpWidget(
+      localizedApp(
+        locale: const Locale('en'),
+        home: MastersPage(controller: controller),
+      ),
+    );
+    expect(find.text('Grandmasters'), findsOneWidget);
+    expect(find.textContaining('Légal\'s mate'), findsOneWidget);
+    await tester.tap(find.text('Légal – Saint-Brie'));
+    await tester.pumpAndSettle();
+    expect(find.text('Starting position'), findsOneWidget);
+    expect(find.textContaining('One of the oldest traps'), findsOneWidget);
+    await tester.tap(find.byKey(const Key('master-last')));
+    await tester.pumpAndSettle();
+    expect(
+      find.textContaining('Checkmate: the king is boxed in'),
+      findsOneWidget,
+    );
+    expect(find.text('Guess the move as White'), findsOneWidget);
+  });
+
   testWidgets('RF-88 nel profilo bambino non compaiono percentuali', (
     tester,
   ) async {
     phone(tester);
     await tester.pumpWidget(
-      MaterialApp(
+      localizedApp(
         home: GuessPage(
           game: legal,
           side: Side.white,

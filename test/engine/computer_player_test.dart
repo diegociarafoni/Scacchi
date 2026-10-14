@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/engine/computer_player.dart';
-import 'package:scacchi/engine/levels.dart';
-import 'package:scacchi/engine/process_transport.dart';
-import 'package:scacchi/engine/style.dart';
-import 'package:scacchi/engine/uci.dart';
-import 'package:scacchi/engine/uci_transport.dart';
-import 'package:scacchi/game/chess_game.dart';
+import 'package:rokko/engine/computer_player.dart';
+import 'package:rokko/engine/levels.dart';
+import 'package:rokko/engine/process_transport.dart';
+import 'package:rokko/engine/style.dart';
+import 'package:rokko/engine/uci.dart';
+import 'package:rokko/engine/uci_transport.dart';
+import 'package:rokko/game/chess_game.dart';
 
 // Il Bianco dà matto in una con Dxf7#.
 const mateInOne =

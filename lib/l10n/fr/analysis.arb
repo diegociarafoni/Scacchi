@@ -1,0 +1,42 @@
+{
+  "analysisTitle": "Analyse",
+  "analysisBestMoveArrow": "Flèche du meilleur coup",
+  "analysisThreatArrow": "Menace de l'adversaire",
+  "analysisOneLine": "1 ligne",
+  "analysisTwoLines": "2 lignes",
+  "analysisThreeLines": "3 lignes",
+  "analysisEngineUnavailable": "Moteur indisponible",
+  "analysisPaused": "Analyse en pause",
+  "analysisGameOver": "Partie terminée",
+  "analysisThinking": "Analyse en cours…",
+  "analysisDepth": "Profondeur {depth}",
+  "@analysisDepth": {
+    "placeholders": {
+      "depth": {
+        "type": "int"
+      }
+    }
+  },
+  "analysisPromote": "Promouvoir en ligne principale",
+  "analysisDelete": "Supprimer ce coup et les suivants",
+  "analysisBack": "Reculer",
+  "analysisForward": "Avancer",
+  "analysisResume": "Reprendre l'analyse",
+  "analysisPause": "Mettre l'analyse en pause",
+  "analysisMore": "Autres actions",
+  "analysisSave": "Enregistrer dans les archives",
+  "analysisSharePgn": "Partager le PGN",
+  "analysisSaveTitle": "Nom de l'analyse",
+  "analysisDefaultName": "Analyse du {date}",
+  "@analysisDefaultName": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "analysisSaved": "Analyse enregistrée dans les archives",
+  "analysisSaveFailed": "Enregistrement impossible",
+  "analysisSaveConfirm": "Enregistrer",
+  "analysisCancel": "Annuler"
+}

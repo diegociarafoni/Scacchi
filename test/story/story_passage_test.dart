@@ -2,12 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/path/path_controller.dart';
-import 'package:scacchi/story/story.dart';
-import 'package:scacchi/story/story_controller.dart';
-import 'package:scacchi/story/story_page.dart';
-import 'package:scacchi/theme/rokko_theme.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/path/path_controller.dart';
+import 'package:rokko/story/story.dart';
+import 'package:rokko/story/story_controller.dart';
+import 'package:rokko/story/story_page.dart';
+import 'package:rokko/theme/rokko_theme.dart';
 
 void main() {
   late Directory dir;
@@ -30,6 +30,7 @@ void main() {
     PlayStoryBoss? boss,
     PlayStoryPuzzles? puzzles,
     PlayStoryLesson? lesson,
+    void Function(int chapters)? onChaptersDone,
     Locale locale = const Locale('it'),
     double textScale = 1,
   }) async {
@@ -50,6 +51,7 @@ void main() {
             playBoss: boss,
             playPuzzles: puzzles,
             playLesson: lesson,
+            onChaptersDone: onChaptersDone,
           ),
         ),
       ),
@@ -197,9 +199,54 @@ void main() {
       until: () => shown(find.text('Hai battuto Tino!')),
     );
     expect(find.text('Hai battuto Tino!'), findsOneWidget);
+    expect(
+      find.byKey(const ValueKey('story-passage-guardian')),
+      findsOneWidget,
+    );
+    expect(find.textContaining('Tino dice: Che bella partita'), findsOneWidget);
     expect(find.text('Capitolo 0 concluso!'), findsOneWidget);
     expect(find.textContaining('Si apre il capitolo 1'), findsOneWidget);
     expect(find.text('Al prossimo capitolo'), findsOneWidget);
+  });
+
+  testWidgets(
+    'RG-13 battuto il bot il capitolo concluso si registra una volta',
+    (tester) async {
+      await tester.runAsync(() async {
+        await doneLessons();
+        for (final g in first.pathChapter.stages.where((s) => s.isGuardian)) {
+          await path.complete(g, 3, Duration.zero);
+        }
+        await story.puzzlesSolved(first, first.puzzleCount);
+      });
+      final done = <int>[];
+      await show(
+        tester,
+        boss: (c, bot) async => true,
+        onChaptersDone: done.add,
+      );
+      expect(done, isEmpty);
+      await save(
+        tester,
+        find.textContaining('Sfida a Tino'),
+        until: () => shown(find.text('Sfida Tino')),
+      );
+      await save(
+        tester,
+        find.text('Sfida Tino'),
+        until: () => shown(find.text('Hai battuto Tino!')),
+      );
+      expect(done, [1]);
+    },
+  );
+
+  testWidgets('RG-13 chi ha già capitoli conclusi li ritrova all\'apertura', (
+    tester,
+  ) async {
+    await tester.runAsync(() => story.bossBeaten(first));
+    final done = <int>[];
+    await show(tester, onChaptersDone: done.add);
+    expect(done, [1]);
   });
 
   testWidgets('RG-13 dalla mappa la sfida si presenta prima di partire', (
@@ -252,12 +299,15 @@ void main() {
     await save(
       tester,
       find.text('Sfida Tino'),
-      until: () =>
-          shown(find.text('Tino resiste ancora: riprova quando vuoi.')),
+      until: () => shown(find.textContaining('Tino resiste ancora')),
     );
     expect(find.byKey(const ValueKey('story-passage')), findsNothing);
     expect(
-      find.text('Tino resiste ancora: riprova quando vuoi.'),
+      find.textContaining('Tino resiste ancora: riprova quando vuoi.'),
+      findsOneWidget,
+    );
+    expect(
+      find.textContaining('Tino dice: Non ti preoccupare'),
       findsOneWidget,
     );
   });

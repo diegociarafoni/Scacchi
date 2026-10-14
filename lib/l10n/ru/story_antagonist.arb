@@ -1,0 +1,20 @@
+{
+  "storyGuardianPrologueBossWon": "Какая красивая партия! Ты отлично играешь, это был урок и для меня.",
+  "storyGuardianVillageBossWon": "Поздравляю! Победа без единой фигуры под боем.",
+  "storyGuardianGatesBossWon": "Ты хорошо знаешь правила. Ворота твои, проходи.",
+  "storyGuardianTowerBossWon": "Красивый мат. Теперь башня твоя.",
+  "storyGuardianForestBossWon": "Твоя ловушка сработала. Поздравляю!",
+  "storyGuardianCastleBossWon": "Эндшпиль сыгран терпеливо. Жму тебе руку.",
+  "storyGuardianCrownBossWon": "Изящный дебют и заслуженная победа. К короне!",
+  "storyGuardianPlainBossWon": "Твой план сработал. Даже гамбит Эванса не помог.",
+  "storyGuardianAcademyBossWon": "Победа за тобой. Теперь тебя ждут мастера!",
+  "storyGuardianPrologueBossLost": "Не переживай, я тоже ошибаюсь. Давай попробуем вместе ещё раз!",
+  "storyGuardianVillageBossLost": "Совсем чуть-чуть! Следи за фигурами под боем и попробуй ещё раз.",
+  "storyGuardianGatesBossLost": "Повтори правила и возвращайся: я жду у ворот.",
+  "storyGuardianTowerBossLost": "Король ускользнул. Подумай о мате и попробуй ещё раз.",
+  "storyGuardianForestBossLost": "Видишь ловушку? В следующий раз ты её обойдёшь.",
+  "storyGuardianCastleBossLost": "В эндшпиле нужно терпение. Ещё раз, не спеша.",
+  "storyGuardianCrownBossLost": "Займись дебютом, остальное придёт само. Попробуй ещё раз!",
+  "storyGuardianPlainBossLost": "Не хватило плана. Подумай и попробуй ещё раз.",
+  "storyGuardianAcademyBossLost": "Скидок не будет, ты знаешь. Но ты научишься: возвращайся скорее!"
+}

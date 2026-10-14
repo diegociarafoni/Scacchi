@@ -1,0 +1,163 @@
+{
+  "botGalleryTitle": "Выбери бота",
+  "botTierNovice": "Новички",
+  "botTierBeginner": "Начинающие",
+  "botTierIntermediate": "Средний уровень",
+  "botTierAdvanced": "Продвинутые",
+  "botTierMaster": "Мастера",
+  "botTierFriends": "Твои друзья",
+  "botTierAdaptive": "Адаптивный",
+  "botTierHeading": "{tier} · {count}",
+  "@botTierHeading": {
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "botGalleryElo": "{elo} Эло",
+  "@botGalleryElo": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "botGalleryStateLocked": "закрыт",
+  "botGalleryStateBeaten": "побеждён",
+  "botGalleryStateOpen": "доступен",
+  "botGalleryCellLabel": "{name}, {elo} Эло, {state}",
+  "@botGalleryCellLabel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "elo": {
+        "type": "int"
+      },
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "botGalleryCellLabelKid": "{name}, {state}",
+  "@botGalleryCellLabelKid": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "botGalleryLockedTease": "До встречи, когда будешь готов!",
+  "botStyleAggressive": "агрессивный",
+  "botStyleGambitist": "любитель гамбитов",
+  "botStylePositional": "позиционный",
+  "botGalleryStyle": "Стиль: {style}",
+  "@botGalleryStyle": {
+    "placeholders": {
+      "style": {
+        "type": "String"
+      }
+    }
+  },
+  "botAdaptiveName": "Адаптивный",
+  "botAdaptiveGreeting": "Я подстраиваюсь под тебя: выигрываешь — играю сильнее, проигрываешь — уступаю.",
+  "botAdaptiveRematch": "Хорошая тренировка. Ещё одну?",
+  "botAdaptiveHint": "Сейчас играет примерно на {elo} Эло",
+  "@botAdaptiveHint": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "botGuardiansTitle": "Хранители Истории",
+  "botGuardiansProgress": "Знакомых хранителей: {met} из {total}",
+  "@botGuardiansProgress": {
+    "placeholders": {
+      "met": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "botGuardiansHint": "Ты знакомишься с ними, проходя главы Истории.",
+  "botGuardianUnmet": "хранитель ещё не встречен",
+  "botSideWhite": "Играть белыми",
+  "botSideRandom": "Случайный цвет",
+  "botSideBlack": "Играть чёрными",
+  "botGalleryPlay": "Играть",
+  "botGalleryLockedPlay": "Закрыт",
+  "botGalleryBeatenBadge": "побеждён",
+  "botGreetingLia": "Привет, я Lia! Двину пешку, и посмотрим, что получится.",
+  "botRematchLia": "Я проиграла! Сыграем ещё?",
+  "botGreetingPino": "Пи-пи! Я Pino, сыграем? Я сразу в атаку!",
+  "botRematchPino": "Победа за тобой! В следующий раз я атакую сильнее.",
+  "botGreetingNico": "Не спеша, без суеты. Сыграем партию?",
+  "botRematchNico": "Победа спокойная, молодец. Ещё одну?",
+  "botGreetingChiara": "Привет, я Chiara. Тихую партию, как в саду?",
+  "botRematchChiara": "Твоя игра расцвела! Сыграем ещё?",
+  "botGreetingViola": "Какой чудесный день для симфонии ходов! Начнём?",
+  "botRematchViola": "Моя мелодия сбилась! Бис?",
+  "botGreetingRocco": "Тебе пешка, мне партия. Договорились?",
+  "botRematchRocco": "Меня раскусили! Но у меня есть ещё трюки.",
+  "botGreetingEttore": "Сначала я рычу, потом играю. Готовься!",
+  "botRematchEttore": "Рычу в честь твоей победы. Реванш?",
+  "botGreetingMarta": "Я всю ночь думала об этой партии. Садись.",
+  "botRematchMarta": "Хорошо сыграно. Мне есть над чем подумать.",
+  "botGreetingBruna": "Я только проснулась, но доска бодрит меня сразу.",
+  "botRematchBruna": "Я проиграла! Возвращаюсь в спячку… на минутку.",
+  "botGreetingDuilio": "Искры и пламя: обожаю атаковать. Готов?",
+  "botRematchDuilio": "Моё пламя потушено! Давай разожжём его снова.",
+  "botGreetingCarlo": "Дай мне фигуру, и я устрою тебе представление. Сыграем?",
+  "botRematchCarlo": "Всё возвращено на место, молодец!",
+  "botGreetingElena": "Я смотрю на доску сверху. Посмотрим, сможешь ли ты взлететь.",
+  "botRematchElena": "Взлёт получился высоким. Мне нравится.",
+  "botGreetingAda": "Я рассчитываю каждую траекторию. Как у тебя со звёздами?",
+  "botRematchAda": "Твой план оказался лучше моего. Пересчитаем?",
+  "botGreetingMassimo": "Стая передаёт привет. Начнём с гамбита?",
+  "botRematchMassimo": "Волк приручён. Уважаю.",
+  "botGreetingStella": "Я самая яркая звезда Академии. Сможешь на меня посмотреть?",
+  "botRematchStella": "Мой свет погас… пока.",
+  "botGreetingTino": "Привет, я Tino! Покажу, как ходят фигуры.",
+  "botRematchTino": "Молодец! Теперь ты двигаешь фигуры лучше меня.",
+  "botUnlockStory": "Открывается после главы Истории с этим хранителем",
+  "botGalleryOpen": "Открыть галерею ботов",
+  "botOptions": "Настройки",
+  "botOptionsTime": "Контроль времени",
+  "botOptionsNoClock": "Без часов",
+  "botOptionsVariant": "Вариант",
+  "botVariantStandard": "Стандартные",
+  "botVariantChess960": "Chess960",
+  "botVariantKingOfTheHill": "Король горы",
+  "botVariantThreeCheck": "Три шаха",
+  "botOptionsHelp": "Помощь",
+  "botOptionsCoach": "Тренер",
+  "botOptionsCoachHint": "Предупреждает, когда ты делаешь ошибку.",
+  "botOptionsTraining": "Тренировка",
+  "botOptionsTrainingHint": "Отмена хода, подсказки и угрозы. Не засчитывается в Эло и победы; выключено — это Вызов, без помощи.",
+  "botOptionsSummary": "{time} · {variant}",
+  "@botOptionsSummary": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "variant": {
+        "type": "String"
+      }
+    }
+  },
+  "botOptionsKidSlow": "С часами, но без спешки",
+  "botGreetingLuna": "Ночью я вижу всю доску, даже скрытые ходы. Сыграем?",
+  "botRematchLuna": "Победа при свете звёзд! Ещё одну?",
+  "botGreetingCosmo": "Старт через три, два, один… играем! Атакуем?",
+  "botRematchCosmo": "Аварийная посадка: победа за тобой. Реванш?"
+}

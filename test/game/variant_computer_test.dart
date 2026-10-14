@@ -2,10 +2,11 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/engine/computer_player.dart';
-import 'package:scacchi/engine/variant_engine.dart';
-import 'package:scacchi/game/game_page.dart';
-import 'package:scacchi/settings/settings.dart';
+import 'package:rokko/engine/computer_player.dart';
+import 'package:rokko/engine/variant_engine.dart';
+import 'package:rokko/game/game_page.dart';
+import 'package:rokko/settings/settings.dart';
+import 'package:rokko/theme/rokko_icons.dart';
 
 import '../computer_fakes.dart';
 import '../game_actions.dart';
@@ -67,8 +68,8 @@ void main() {
     tester,
   ) async {
     await start(tester, 'Re della collina');
-    expect(find.byIcon(Icons.lightbulb_outline), findsNothing);
-    expect(find.byIcon(Icons.school_outlined), findsNothing);
+    expect(find.byIcon(RokkoIcons.hint), findsNothing);
+    expect(find.byIcon(RokkoIcons.coach), findsNothing);
   });
 
   testWidgets('RF-123 la patta si chiede al motore delle varianti', (

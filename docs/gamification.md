@@ -25,7 +25,7 @@ Requisiti RG-01, RG-02, RG-05, RG-06, RG-07, RG-08, RG-11 e RG-12. Il codice è 
 | Sfida giornaliera completata | +20 |
 | Sfida settimanale completata | +50 |
 
-Le attività formative (lezioni, revisioni) valgono più della sola vittoria, come chiede il requisito.
+Le attività formative (lezioni, revisioni) valgono più della sola vittoria, come chiede il requisito. La stessa partita rivista più volte si premia una sola volta: `ProgressState.reviewedGames` ricorda gli identificativi delle ultime 300 revisioni.
 
 ### Livelli
 
@@ -61,11 +61,11 @@ Serie più lunga, bot più forte battuto (Elo), matto con meno mosse (solo vitto
 
 37 traguardi in quattro categorie (gioco, tattica, costanza, curiosità), sbloccabili una sola volta e annunciati con una notifica in-app (`showProgressFeedback`). Alcuni esempi: prima vittoria, vittoria con il nero, miniatura (matto in meno di 20 mosse), bot da 1500 e 1850 Elo battuti, matto con il cavallo o con un pedone, vittoria con arrocco lungo, brillante trovata, 10 puzzle di forchetta o di matto, 20 punti in una modalità a tempo, giornata perfetta (tre sfide), 3, 7 e 30 giorni di fila, precisione del 90%, livello 5 e 10, 20 coordinate in una sessione, tutti i minigiochi provati, primo torneo concluso e primo torneo vinto. L'elenco completo è in `lib/progress/achievements.dart`.
 
-I traguardi sono distinti dai [badge](badge.md) (RG-17), una collezione tematica di 59 riconoscimenti che non sblocca ricompense; accanto ai badge c'è la collezione dei libri delle aperture, uno per ogni apertura giocata.
+I traguardi sono distinti dai [badge](badge.md) (RG-17), una collezione tematica di 64 riconoscimenti che non sblocca ricompense; accanto ai badge c'è la collezione dei libri delle aperture, uno per ogni apertura giocata.
 
 ## Ricompense estetiche (RG-06)
 
-Livelli e traguardi sbloccano temi della scacchiera, set di pezzi, avatar e cornici. Tutto ciò che non è nella tabella è disponibile da subito: venti scacchiere (le altre sono Sabbia, Oceano, Corallo, Notte e Oro), tredici set di pezzi (Classico, Merida, Chessnut, Fantasy, Spatial, Rokko, Pixel, Arcano, Staunton, Morbido, Stampa, Papercut e Noto, vedi [pezzi-e-scacchiere.md](pezzi-e-scacchiere.md)) e gli avatar Pedone, Cavallo, Pino e Rocco: le ricompense aggiungono, non tolgono.
+Livelli e traguardi sbloccano temi della scacchiera, set di pezzi, avatar e cornici. Tutto ciò che non è nella tabella è disponibile da subito: venti scacchiere (le altre sono Sabbia, Oceano, Corallo, Notte, Oro, Villaggio, Torre e Corona), tredici set di pezzi (Classico, Merida, Chessnut, Fantasy, Spatial, Rokko, Pixel, Arcano, Staunton, Morbido, Stampa, Papercut e Noto, vedi [pezzi-e-scacchiere.md](pezzi-e-scacchiere.md)) e gli avatar Pedone, Cavallo, Pino e Rocco: le ricompense aggiungono, non tolgono.
 
 | Ricompensa | Si sblocca con |
 |---|---|
@@ -87,6 +87,11 @@ Livelli e traguardi sbloccano temi della scacchiera, set di pezzi, avatar e corn
 | Pezzi Kiwen-suwi | Tutti i minigiochi provati |
 | Pezzi Totoy | 10 vittorie |
 | Tema Oro | Primo torneo vinto |
+| Tema Villaggio | 2 capitoli della Storia conclusi |
+| Tema Torre | 5 capitoli della Storia conclusi |
+| Tema Corona | 9 capitoli della Storia conclusi |
+
+I capitoli della Storia (RG-13) contano da `StoryChapterDone`, registrata quando battere il bot conclude un capitolo e all'apertura della Storia (`StoryPage.onChaptersDone`, solo se il totale cresce): vale 30 XP e porta il contatore `story` al totale dei capitoli conclusi; all'apertura della Storia il totale si ricalcola, così chi era già avanti sblocca subito le scacchiere. Le scacchiere Villaggio, Torre e Corona sono tinte unite senza texture; per i pezzi non ci sono ancora set a tema Storia, perché mancano le immagini.
 
 La tabella completa è in `lib/progress/rewards.dart`. Una ricompensa appena meritata compare nella notifica dei progressi ("Sbloccato: tema Sabbia"). Nelle impostazioni i temi e i pezzi bloccati hanno un lucchetto e, toccati, dicono come si sbloccano; avatar e cornice si scelgono toccando l'avatar nel Profilo.
 
@@ -169,6 +174,8 @@ Le altre schermate registrano:
 | Puzzle | `PuzzleSolved(themes: {...}, rating: r)` a ogni puzzle risolto; `PuzzleRunFinished(mode: 'rush5', score: n)` a fine sessione a tempo |
 | Revisione | `ReviewCompleted(accuracy: 87.5, brilliantMoves: 1)` a fine analisi |
 | Lezioni e percorso | `LessonCompleted()` |
+| Partita a due telefoni | `OnlineGameFinished(result: GameResult.win)` alla fine (una volta sola) |
+| Ripasso del repertorio | `RepertoireReviewed()` all'uscita, se si è risposto ad almeno una mossa |
 | Minigiochi | `MinigameFinished(game: 'coordinate', score: n)` a fine sessione (vedi [minigiochi.md](minigiochi.md)) |
 | Tornei | `TournamentFinished(rank: 1, players: 8)` a fine torneo (vedi [tornei.md](tornei.md)) |
 

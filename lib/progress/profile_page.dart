@@ -8,6 +8,7 @@ import '../l10n/app_localizations.dart';
 import '../minigames/minigame.dart';
 import '../reminders/reminder_controller.dart';
 import '../settings/settings.dart';
+import '../theme/sheets.dart';
 import 'achievements.dart';
 import 'achievements_l10n.dart';
 import 'avatar.dart';
@@ -17,6 +18,7 @@ import 'avatar_photo.dart';
 import 'challenges.dart';
 import 'daily_goal.dart';
 import 'progress_controller.dart';
+import 'progress_feedback.dart';
 import 'progress_state.dart';
 import 'records.dart';
 import 'rewards.dart';
@@ -145,10 +147,9 @@ class _LevelCard extends StatelessWidget {
                   child: InkWell(
                     key: const Key('avatar'),
                     customBorder: const CircleBorder(),
-                    onTap: () => showModalBottomSheet<void>(
+                    onTap: () => showRokkoSheet<void>(
                       context: context,
                       showDragHandle: true,
-                      isScrollControlled: true,
                       builder: (_) => _AvatarPicker(
                         controller: controller,
                         photoPicker: photoPicker,
@@ -566,9 +567,10 @@ class _Achievements extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final l = AppLocalizations.of(context);
+    final kid = AppSettings.of(context).kidMode;
     return Column(
       children: [
-        for (final a in achievements)
+        for (final a in achievementsFor(kid: kid))
           Builder(
             builder: (context) {
               final done = unlocked.contains(a.id);
@@ -629,6 +631,16 @@ class _Settings extends StatelessWidget {
     await reminders.disable();
   }
 
+  /// Abbassare l'obiettivo può far scattare il bonus di oggi: va annunciato.
+  Future<void> _changeGoal(
+    BuildContext context,
+    ProgressSettings s,
+    DailyGoal goal,
+  ) async {
+    final update = await controller.updateSettings(s.copyWith(goal: goal));
+    if (context.mounted) showProgressFeedback(context, update);
+  }
+
   @override
   Widget build(BuildContext context) {
     final s = controller.settings;
@@ -665,9 +677,7 @@ class _Settings extends StatelessWidget {
                   DropdownMenuItem(value: g, child: Text(goalLabel(l, g))),
               ],
               onChanged: (g) {
-                if (g != null) {
-                  unawaited(controller.updateSettings(s.copyWith(goal: g)));
-                }
+                if (g != null) unawaited(_changeGoal(context, s, g));
               },
             ),
           ),

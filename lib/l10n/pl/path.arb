@@ -1,0 +1,133 @@
+{
+  "pathTitle": "Ścieżka",
+  "@pathTitle": {
+    "description": "Titolo della schermata del percorso"
+  },
+  "pathContinue": "Kontynuuj",
+  "@pathContinue": {
+    "description": "Pulsante che apre la prossima tappa del percorso"
+  },
+  "pathStars": "{done, plural, one{{done} gwiazdka z {total}} few{{done} gwiazdki z {total}} many{{done} gwiazdek z {total}} other{{done} gwiazdki z {total}}}",
+  "@pathStars": {
+    "description": "Etichetta per i lettori di schermo delle stelle totali o di capitolo",
+    "placeholders": {
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pathSummaryTitle": "Twoja wędrówka",
+  "@pathSummaryTitle": {
+    "description": "Titolo della scheda di riepilogo in cima al percorso"
+  },
+  "pathNext": "Następny przystanek: {title}",
+  "@pathNext": {
+    "description": "Tappa proposta da Continua, nella scheda di riepilogo",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "pathAllDone": "Przeszedłeś całą ścieżkę. Każdy przystanek możesz odtworzyć.",
+  "@pathAllDone": {
+    "description": "Riepilogo quando ogni tappa è completata"
+  },
+  "pathChapterNumber": "Rozdział {n}",
+  "@pathChapterNumber": {
+    "description": "Numero del capitolo del percorso",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "pathChapterDone": "rozdział ukończony",
+  "@pathChapterDone": {
+    "description": "Stato di un capitolo con tutte le tappe completate"
+  },
+  "pathStageDone": "{stars, plural, one{{stars} gwiazdka z 3} few{{stars} gwiazdki z 3} many{{stars} gwiazdek z 3} other{{stars} gwiazdki z 3}}",
+  "@pathStageDone": {
+    "description": "Stato di una tappa completata",
+    "placeholders": {
+      "stars": {
+        "type": "int"
+      }
+    }
+  },
+  "pathStageTodo": "do zrobienia",
+  "@pathStageTodo": {
+    "description": "Stato di una tappa aperta non ancora completata"
+  },
+  "pathStageLocked": "zablokowane",
+  "@pathStageLocked": {
+    "description": "Stato di una tappa non ancora aperta"
+  },
+  "pathStageLockedHint": "Ukończ poprzednią lekcję, aby ją odblokować",
+  "@pathStageLockedHint": {
+    "description": "Suggerimento di una tappa bloccata per i lettori di schermo"
+  },
+  "pathStageHere": "Jesteś tutaj",
+  "@pathStageHere": {
+    "description": "Etichetta della tappa corrente"
+  },
+  "pathGuardian": "strażnik",
+  "@pathGuardian": {
+    "description": "Tipo di tappa: sfida contro un bot"
+  },
+  "pathGuardianUnavailable": "Strażnika wyzwiesz tam, gdzie gra komputer: na Androidzie i iOS albo w Windows i Linuksie z zainstalowanym Stockfishem.",
+  "@pathGuardianUnavailable": {
+    "description": "Avviso se il motore non è disponibile"
+  },
+  "pathStageWrong": "To nie ten ruch, spróbuj jeszcze raz.",
+  "@pathStageWrong": {
+    "description": "Avviso dopo una mossa sbagliata in un esercizio"
+  },
+  "pathStageGood": "Dobrze, tak trzymaj.",
+  "@pathStageGood": {
+    "description": "Conferma dopo una mossa giusta, con altre mosse da trovare"
+  },
+  "pathStageSolved": "Zgadza się!",
+  "@pathStageSolved": {
+    "description": "Conferma a esercizio risolto"
+  },
+  "pathStageRestartTooltip": "Zacznij od nowa",
+  "@pathStageRestartTooltip": {
+    "description": "Tooltip del pulsante che rifà l'esercizio in corso"
+  },
+  "pathStageExerciseOf": "Ćwiczenie {n} z {total}",
+  "@pathStageExerciseOf": {
+    "description": "Etichetta per i lettori di schermo dell'avanzamento nella tappa",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pathStageStart": "Zaczynamy",
+  "@pathStageStart": {
+    "description": "Pulsante che avvia gli esercizi dopo la spiegazione"
+  },
+  "pathStageNext": "Dalej",
+  "@pathStageNext": {
+    "description": "Pulsante che passa all'esercizio successivo"
+  },
+  "pathStageRestartExercise": "Zacznij ćwiczenie od nowa",
+  "@pathStageRestartExercise": {
+    "description": "Pulsante che rifà l'esercizio senza vie d'uscita"
+  },
+  "pathStageComplete": "Etap ukończony",
+  "@pathStageComplete": {
+    "description": "Titolo del risultato a fine tappa"
+  },
+  "pathStageFinish": "Gotowe",
+  "@pathStageFinish": {
+    "description": "Pulsante che chiude il risultato di una tappa"
+  }
+}

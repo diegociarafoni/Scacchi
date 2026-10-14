@@ -7,6 +7,8 @@ import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../game/sounds.dart' show GameSound, SoundPlayer;
+import '../style/backdrop_photo.dart'
+    show backdropPhotoDirectory, backdropPhotoName;
 import 'app_language.dart';
 import 'board_marks.dart';
 import 'color_blind.dart';
@@ -20,6 +22,28 @@ enum AnimationSpeed {
 
   const AnimationSpeed(this.duration);
   final Duration duration;
+}
+
+/// Come si muovono i pezzi (RM-02): con due tocchi, trascinando o in entrambi i
+/// modi. `auto` sceglie i due tocchi sui telefoni e entrambi sugli schermi
+/// grandi.
+enum MoveMethod {
+  auto,
+  both,
+  twoTaps,
+  drag;
+
+  /// Metodo effettivo su un telefono o su uno schermo grande.
+  PieceShiftMethod resolve({required bool phone}) => switch (this) {
+    MoveMethod.auto =>
+      phone ? PieceShiftMethod.tapTwoSquares : PieceShiftMethod.either,
+    MoveMethod.both => PieceShiftMethod.either,
+    MoveMethod.twoTaps => PieceShiftMethod.tapTwoSquares,
+    MoveMethod.drag => PieceShiftMethod.drag,
+  };
+
+  /// Lato corto, in punti logici, sotto cui lo schermo conta come telefono.
+  static const phoneWidth = 600.0;
 }
 
 /// Colore delle frecce e dei cerchi disegnati sulla scacchiera (RF-05).
@@ -77,7 +101,10 @@ enum BoardTheme {
   vetro(light: Color(0xffd6ecf0), dark: Color(0xff5da0b0), textured: true),
   menta(light: Color(0xffe6f4ec), dark: Color(0xff5fa88a)),
   cipria(light: Color(0xfff7e6e8), dark: Color(0xffb8707e)),
-  ardesia(light: Color(0xffc9d1d9), dark: Color(0xff6b7a8b));
+  ardesia(light: Color(0xffc9d1d9), dark: Color(0xff6b7a8b)),
+  villaggio(light: Color(0xfff0dcc8), dark: Color(0xffb5805a)),
+  torre(light: Color(0xffd9dbe8), dark: Color(0xff5d6396)),
+  corona(light: Color(0xffe9dcf3), dark: Color(0xff7b4fa0));
 
   const BoardTheme({
     this.scheme,
@@ -393,10 +420,12 @@ class AppSettings {
     this.coordinatesOutside = false,
     this.showLastMove = true,
     this.autoQueen = false,
+    this.moveMethod = MoveMethod.auto,
     this.drawShapes = true,
     this.markColor = MarkColor.green,
     this.autoFlip = false,
     this.animation = AnimationSpeed.normal,
+    this.reduceMotion = false,
     this.boardTheme = BoardTheme.spazio,
     this.pieceSet = PieceStyle.cburnett,
     this.backdrop = BoardBackdrop.standard,
@@ -407,7 +436,10 @@ class AppSettings {
     this.haptics = true,
     this.tableMode = false,
     this.confirmMove = false,
+    this.keepAwake = true,
     this.premove = true,
+    this.evalBar = false,
+    this.trainingMode = false,
     this.colorBlind = false,
     this.explainWhy = false,
     this.zenMode = false,
@@ -429,10 +461,8 @@ class AppSettings {
       SettingsScope.maybeOf(context) ?? _defaults;
 
   static String _cleanName(String name) {
-    final trimmed = name.trim();
-    return trimmed.length > maxNameLength
-        ? trimmed.substring(0, maxNameLength).trim()
-        : trimmed;
+    // Si taglia per caratteri interi: un emoji (coppia surrogata) non si spezza.
+    return name.trim().characters.take(maxNameLength).toString().trim();
   }
 
   final bool showLegalMoves;
@@ -444,12 +474,17 @@ class AppSettings {
   /// Colora la casa di partenza e di arrivo dell'ultima mossa.
   final bool showLastMove;
   final bool autoQueen;
+  final MoveMethod moveMethod;
   final bool drawShapes;
 
   /// Colore di base di frecce e cerchi; gli altri si scelgono coi tasti.
   final MarkColor markColor;
   final bool autoFlip;
   final AnimationSpeed animation;
+
+  /// Il sistema chiede di ridurre le animazioni (RNF-07): vince su [animation].
+  /// Non si salva: lo decide il telefono.
+  final bool reduceMotion;
   final BoardTheme boardTheme;
   final PieceStyle pieceSet;
 
@@ -465,8 +500,19 @@ class AppSettings {
   final bool tableMode;
   final bool confirmMove;
 
+  /// Schermo sempre acceso durante la partita (RM-06).
+  final bool keepAwake;
+
   /// Premossa (RF-08): si muove mentre pensa il computer.
   final bool premove;
+
+  /// Barra di valutazione accanto alla scacchiera, dove gli aiuti sono ammessi.
+  final bool evalBar;
+
+  /// Allenamento contro i bot (RF-22): annullamento, suggerimenti, barra e
+  /// minacce, ma senza Elo né vittorie nei progressi. Spento è la Sfida; il
+  /// profilo bambino gioca sempre in allenamento.
+  final bool trainingMode;
   final bool colorBlind;
 
   /// «Spiegami perché» (RF-122): dopo ogni mossa del computer una riga su cosa
@@ -534,10 +580,12 @@ class AppSettings {
     bool? coordinatesOutside,
     bool? showLastMove,
     bool? autoQueen,
+    MoveMethod? moveMethod,
     bool? drawShapes,
     MarkColor? markColor,
     bool? autoFlip,
     AnimationSpeed? animation,
+    bool? reduceMotion,
     BoardTheme? boardTheme,
     PieceStyle? pieceSet,
     BoardBackdrop? backdrop,
@@ -548,7 +596,10 @@ class AppSettings {
     bool? haptics,
     bool? tableMode,
     bool? confirmMove,
+    bool? keepAwake,
     bool? premove,
+    bool? evalBar,
+    bool? trainingMode,
     bool? colorBlind,
     bool? explainWhy,
     bool? zenMode,
@@ -564,10 +615,12 @@ class AppSettings {
     coordinatesOutside: coordinatesOutside ?? this.coordinatesOutside,
     showLastMove: showLastMove ?? this.showLastMove,
     autoQueen: autoQueen ?? this.autoQueen,
+    moveMethod: moveMethod ?? this.moveMethod,
     drawShapes: drawShapes ?? this.drawShapes,
     markColor: markColor ?? this.markColor,
     autoFlip: autoFlip ?? this.autoFlip,
     animation: animation ?? this.animation,
+    reduceMotion: reduceMotion ?? this.reduceMotion,
     boardTheme: boardTheme ?? this.boardTheme,
     pieceSet: pieceSet ?? this.pieceSet,
     backdrop: backdrop ?? this.backdrop,
@@ -578,7 +631,10 @@ class AppSettings {
     haptics: haptics ?? this.haptics,
     tableMode: tableMode ?? this.tableMode,
     confirmMove: confirmMove ?? this.confirmMove,
+    keepAwake: keepAwake ?? this.keepAwake,
     premove: premove ?? this.premove,
+    evalBar: evalBar ?? this.evalBar,
+    trainingMode: trainingMode ?? this.trainingMode,
     colorBlind: colorBlind ?? this.colorBlind,
     explainWhy: explainWhy ?? this.explainWhy,
     zenMode: zenMode ?? this.zenMode,
@@ -607,7 +663,7 @@ class AppSettings {
     pieceAssets: pieceSet.assetsOn(boardTheme),
     enableCoordinates: showCoordinates && !coordinatesOutside,
     showValidMoves: showLegalMoves,
-    animationDuration: animation.duration,
+    animationDuration: reduceMotion ? Duration.zero : animation.duration,
     autoQueenPromotion: autoQueen,
     drawShape: DrawShapeOptions(
       enable: drawShapes,
@@ -618,6 +674,10 @@ class AppSettings {
         ? PieceOrientationBehavior.opponentUpsideDown
         : PieceOrientationBehavior.facingUser,
   );
+
+  /// La scacchiera con il modo di muovere adatto allo schermo.
+  ChessboardSettings boardFor({required bool phone}) =>
+      board.copyWith(pieceShiftMethod: moveMethod.resolve(phone: phone));
 
   /// Scacchiera degli esercizi a un solo lato: tema, pezzi e coordinate del
   /// giocatore, ma pezzi sempre rivolti verso di lui anche in modalità
@@ -635,10 +695,12 @@ class AppSettings {
       other.coordinatesOutside == coordinatesOutside &&
       other.showLastMove == showLastMove &&
       other.autoQueen == autoQueen &&
+      other.moveMethod == moveMethod &&
       other.drawShapes == drawShapes &&
       other.markColor == markColor &&
       other.autoFlip == autoFlip &&
       other.animation == animation &&
+      other.reduceMotion == reduceMotion &&
       other.boardTheme == boardTheme &&
       other.pieceSet == pieceSet &&
       other.backdrop == backdrop &&
@@ -649,7 +711,10 @@ class AppSettings {
       other.haptics == haptics &&
       other.tableMode == tableMode &&
       other.confirmMove == confirmMove &&
+      other.keepAwake == keepAwake &&
       other.premove == premove &&
+      other.evalBar == evalBar &&
+      other.trainingMode == trainingMode &&
       other.colorBlind == colorBlind &&
       other.explainWhy == explainWhy &&
       other.zenMode == zenMode &&
@@ -667,10 +732,12 @@ class AppSettings {
     coordinatesOutside,
     showLastMove,
     autoQueen,
+    moveMethod,
     drawShapes,
     markColor,
     autoFlip,
     animation,
+    reduceMotion,
     boardTheme,
     pieceSet,
     backdrop,
@@ -681,7 +748,10 @@ class AppSettings {
     haptics,
     tableMode,
     confirmMove,
+    keepAwake,
     premove,
+    evalBar,
+    trainingMode,
     colorBlind,
     explainWhy,
     zenMode,
@@ -713,8 +783,19 @@ class SettingsController extends ValueNotifier<AppSettings> {
     super.value = v;
   }
 
-  static Future<SettingsController> load() async {
+  /// Segue la richiesta del sistema di ridurre le animazioni (RNF-07).
+  void setReduceMotion(bool reduce) {
+    if (value.reduceMotion == reduce) return;
+    value = value.copyWith(reduceMotion: reduce);
+  }
+
+  /// [photoDirectory] è la cartella delle foto di sfondo: si cambia solo nei
+  /// test.
+  static Future<SettingsController> load({
+    Future<Directory> Function() photoDirectory = backdropPhotoDirectory,
+  }) async {
     final prefs = await SharedPreferences.getInstance();
+    final photo = await _storedPhoto(prefs, photoDirectory);
     final d = AppSettings();
     T read<T>(String key, T fallback) {
       final v = prefs.get(key);
@@ -731,6 +812,7 @@ class SettingsController extends ValueNotifier<AppSettings> {
         coordinatesOutside: read('coordinatesOutside', d.coordinatesOutside),
         showLastMove: read('showLastMove', d.showLastMove),
         autoQueen: read('autoQueen', d.autoQueen),
+        moveMethod: byName(MoveMethod.values, 'moveMethod', d.moveMethod),
         drawShapes: read('drawShapes', d.drawShapes),
         markColor: byName(MarkColor.values, 'markColor', d.markColor),
         autoFlip: read('autoFlip', d.autoFlip),
@@ -739,16 +821,19 @@ class SettingsController extends ValueNotifier<AppSettings> {
         pieceSet: byName(PieceStyle.values, 'pieceSet', d.pieceSet),
         backdrop: _backdropAtLoad(
           byName(BoardBackdrop.values, 'backdrop', d.backdrop),
-          read('backdropPhoto', d.backdropPhoto),
+          photo,
         ),
-        backdropPhoto: read('backdropPhoto', d.backdropPhoto),
+        backdropPhoto: photo,
         soundSet: byName(SoundSet.values, 'soundSet', d.soundSet),
         sound: read('sound', d.sound),
         volume: read<double>('volume', d.volume).clamp(0.0, 1.0),
         haptics: read('haptics', d.haptics),
         tableMode: read('tableMode', d.tableMode),
         confirmMove: read('confirmMove', d.confirmMove),
+        keepAwake: read('keepAwake', d.keepAwake),
         premove: read('premove', d.premove),
+        evalBar: read('evalBar', d.evalBar),
+        trainingMode: read('trainingMode', d.trainingMode),
         colorBlind: read('colorBlind', d.colorBlind),
         explainWhy: read('explainWhy', d.explainWhy),
         zenMode: read('zenMode', d.zenMode),
@@ -760,6 +845,30 @@ class SettingsController extends ValueNotifier<AppSettings> {
         blackName: read('blackName', d.blackName),
       ),
     );
+  }
+
+  /// Foto di sfondo salvata come solo nome file: il percorso assoluto cambia
+  /// quando il sistema sposta la cartella dati (aggiornamenti, ripristini). Le
+  /// preferenze vecchie, con il percorso intero, si riscrivono col nome.
+  static Future<String> _storedPhoto(
+    SharedPreferences prefs,
+    Future<Directory> Function() photoDirectory,
+  ) async {
+    final stored = prefs.get('backdropPhoto');
+    if (stored is! String || stored.isEmpty) return '';
+    final name = backdropPhotoName(stored);
+    if (name != stored) {
+      try {
+        await prefs.setString('backdropPhoto', name);
+      } on Object {
+        // Resta il valore vecchio: si migra al prossimo avvio.
+      }
+    }
+    try {
+      return '${(await photoDirectory()).path}/$name';
+    } on Object {
+      return '';
+    }
   }
 
   /// Una foto sparita (dati cancellati, app ripristinata altrove) non lascia lo
@@ -786,6 +895,8 @@ class SettingsController extends ValueNotifier<AppSettings> {
         prefs.setBool('showLastMove', settings.showLastMove),
       if (old.autoQueen != settings.autoQueen)
         prefs.setBool('autoQueen', settings.autoQueen),
+      if (old.moveMethod != settings.moveMethod)
+        prefs.setString('moveMethod', settings.moveMethod.name),
       if (old.drawShapes != settings.drawShapes)
         prefs.setBool('drawShapes', settings.drawShapes),
       if (old.markColor != settings.markColor)
@@ -801,7 +912,10 @@ class SettingsController extends ValueNotifier<AppSettings> {
       if (old.backdrop != settings.backdrop)
         prefs.setString('backdrop', settings.backdrop.name),
       if (old.backdropPhoto != settings.backdropPhoto)
-        prefs.setString('backdropPhoto', settings.backdropPhoto),
+        prefs.setString(
+          'backdropPhoto',
+          backdropPhotoName(settings.backdropPhoto),
+        ),
       if (old.soundSet != settings.soundSet)
         prefs.setString('soundSet', settings.soundSet.name),
       if (old.sound != settings.sound) prefs.setBool('sound', settings.sound),
@@ -813,8 +927,14 @@ class SettingsController extends ValueNotifier<AppSettings> {
         prefs.setBool('tableMode', settings.tableMode),
       if (old.confirmMove != settings.confirmMove)
         prefs.setBool('confirmMove', settings.confirmMove),
+      if (old.keepAwake != settings.keepAwake)
+        prefs.setBool('keepAwake', settings.keepAwake),
       if (old.premove != settings.premove)
         prefs.setBool('premove', settings.premove),
+      if (old.evalBar != settings.evalBar)
+        prefs.setBool('evalBar', settings.evalBar),
+      if (old.trainingMode != settings.trainingMode)
+        prefs.setBool('trainingMode', settings.trainingMode),
       if (old.colorBlind != settings.colorBlind)
         prefs.setBool('colorBlind', settings.colorBlind),
       if (old.explainWhy != settings.explainWhy)

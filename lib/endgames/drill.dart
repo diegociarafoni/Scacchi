@@ -1,5 +1,7 @@
 import 'package:dartchess/dartchess.dart';
 
+import '../l10n/content.dart';
+
 /// Cosa serve per completare una posizione dell'allenatore dei finali.
 enum DrillGoal {
   /// Dare scacco matto.
@@ -18,18 +20,17 @@ enum DrillGoal {
 class EndgameDrill {
   const EndgameDrill({
     required this.id,
-    required this.title,
-    required this.intro,
     required this.fen,
     required this.goal,
     required this.par,
   });
 
   final String id;
-  final String title;
+
+  String get title => Content.of('endgames').text('$id.title');
 
   /// Spiegazione breve mostrata prima di iniziare, con l'obiettivo dichiarato.
-  final String intro;
+  String get intro => Content.of('endgames').text('$id.intro', {'par': par});
 
   /// Posizione iniziale; l'utente gioca il colore che ha la mossa.
   final String fen;
@@ -97,8 +98,7 @@ class DrillRun {
     if (_ended()) return true;
     switch (drill.goal) {
       case DrillGoal.hold:
-        if (_material(side.opposite, Role.queen) &&
-                !_material(side, Role.queen) ||
+        if (_opponentQueened() ||
             _bareKing(side) && !_bareKing(side.opposite)) {
           _state = DrillState.failure;
         }
@@ -133,7 +133,9 @@ class DrillRun {
       case DrillGoal.hold:
         if (_bareKing(side) && !_bareKing(side.opposite)) {
           _state = DrillState.failure;
-        } else if (_moves >= drill.par) {
+        } else if (_moves >= drill.par && !_opponentQueened()) {
+          // Una donna appena promossa non vale la patta: l'utente deve
+          // ancora poterla catturare.
           _state = DrillState.success;
         }
       case DrillGoal.promote:
@@ -172,6 +174,10 @@ class DrillRun {
 
   bool _material(Side owner, Role role) =>
       _position.board.piecesOf(owner, role).isNotEmpty;
+
+  /// L'avversario ha una donna e l'utente no.
+  bool _opponentQueened() =>
+      _material(side.opposite, Role.queen) && !_material(side, Role.queen);
 
   bool _bareKing(Side owner) => _position.board.bySide(owner).size == 1;
 

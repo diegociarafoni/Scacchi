@@ -1,13 +1,15 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/openings/explorer_page.dart';
-import 'package:scacchi/openings/opening_book.dart';
-import 'package:scacchi/openings/opening_game.dart';
-import 'package:scacchi/openings/openings_hub_page.dart';
-import 'package:scacchi/openings/repertoire.dart';
-import 'package:scacchi/openings/repertoire_page.dart';
-import 'package:scacchi/storage/key_value_store.dart';
+import 'package:rokko/openings/explorer_page.dart';
+import 'package:rokko/openings/opening_book.dart';
+import 'package:rokko/openings/opening_game.dart';
+import 'package:rokko/openings/openings_hub_page.dart';
+import 'package:rokko/openings/repertoire.dart';
+import 'package:rokko/openings/repertoire_drill_page.dart';
+import 'package:rokko/openings/repertoire_page.dart';
+import 'package:rokko/progress/activity.dart';
+import 'package:rokko/storage/key_value_store.dart';
 
 import '../localized_app.dart';
 import '../puzzles/puzzle_page_test.dart' show tapMove;
@@ -59,6 +61,65 @@ void main() {
     await tester.pumpAndSettle();
     await tester.pumpAndSettle();
     expect(find.text('Nessuna mossa da ripassare'), findsOneWidget);
+  });
+
+  testWidgets('A-24 uscendo dal ripasso si registra una sessione', (
+    tester,
+  ) async {
+    final t = await trainer();
+    await t.addLine(Side.white, 'Italiana', uci('e2e4 e7e5 g1f3'));
+    final recorded = <Activity>[];
+    await phone(
+      tester,
+      RepertoirePage(
+        trainer: t,
+        side: Side.white,
+        onActivity: (a) async => recorded.add(a),
+      ),
+    );
+    await tester.tap(find.text('Ripassa 2 mosse'));
+    await tester.pumpAndSettle();
+    await tapMove(tester, 'e2e4');
+    expect(recorded, isEmpty);
+    await tester.tap(find.byTooltip('Indietro'));
+    await tester.pumpAndSettle();
+    expect(recorded.single, isA<RepertoireReviewed>());
+  });
+
+  testWidgets('A-24 un ripasso senza risposte non conta', (tester) async {
+    final t = await trainer();
+    await t.addLine(Side.white, 'Italiana', uci('e2e4 e7e5 g1f3'));
+    final recorded = <Activity>[];
+    await phone(
+      tester,
+      RepertoirePage(
+        trainer: t,
+        side: Side.white,
+        onActivity: (a) async => recorded.add(a),
+      ),
+    );
+    await tester.tap(find.text('Ripassa 2 mosse'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Indietro'));
+    await tester.pumpAndSettle();
+    expect(recorded, isEmpty);
+  });
+
+  testWidgets('il ripasso non va in errore con poco spazio in altezza', (
+    tester,
+  ) async {
+    final t = await trainer();
+    await t.addLine(Side.white, 'Italiana', uci('e2e4 e7e5 g1f3'));
+    tester.view.physicalSize = const Size(900, 300);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      localizedApp(
+        home: RepertoireDrillPage(trainer: t, side: Side.white),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('RF-93 importa le varianti di un PGN come linee', (tester) async {
@@ -114,7 +175,7 @@ void main() {
     await phone(tester, OpeningsHubPage(repertoire: Future.value(t)));
     expect(find.text('Esplora aperture'), findsOneWidget);
     expect(find.text('Explorer'), findsNothing);
-    expect(find.text('1 linee · 1 mosse da ripassare'), findsOneWidget);
+    expect(find.text('1 linea · 1 mossa da ripassare'), findsOneWidget);
     expect(find.text('0 linee · 0 mosse da ripassare'), findsOneWidget);
   });
 

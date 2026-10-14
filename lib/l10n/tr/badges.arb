@@ -1,0 +1,505 @@
+{
+  "badgesTitle": "Rozetler",
+  "badgesEntrySubtitle": "Öğrendiklerin ve oynadıkların, tek bir koleksiyonda",
+  "badgesSummary": "{earned} / {total} kazanıldı",
+  "@badgesSummary": {
+    "description": "Totale dei badge ottenuti",
+    "placeholders": {
+      "earned": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "badgesFamilyLearn": "Öğren",
+  "badgesFamilyPuzzles": "Bulmacalar",
+  "badgesFamilyGames": "Oyunlar",
+  "badgesFamilyStory": "Hikâye",
+  "badgesFamilyHabit": "Düzenlilik",
+  "badgesTierBronze": "Bronz",
+  "badgesTierSilver": "Gümüş",
+  "badgesTierGold": "Altın",
+  "badgesUnlocked": "Yeni rozet: {name}",
+  "@badgesUnlocked": {
+    "description": "Avviso quando si ottiene un badge",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "badgesSeeAction": "Gör",
+  "badgesEarnedOn": "Kazanıldığı tarih: {date}",
+  "@badgesEarnedOn": {
+    "description": "Data in cui il badge è stato ottenuto",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "badgesNotYet": "Henüz kazanılmadı",
+  "badgesProgress": "{value} / {target}",
+  "@badgesProgress": {
+    "description": "Avanzamento verso un badge",
+    "placeholders": {
+      "value": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "badgesSemanticsEarned": "{name}, kazanıldı",
+  "@badgesSemanticsEarned": {
+    "description": "Lettura del badge ottenuto",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "badgesSemanticsLocked": "{name}, henüz kazanılmadı",
+  "@badgesSemanticsLocked": {
+    "description": "Lettura del badge da ottenere",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "badgesSemanticsLockedProgress": "{name}, henüz kazanılmadı, {value} / {target}",
+  "@badgesSemanticsLockedProgress": {
+    "description": "Lettura del badge da ottenere con avanzamento",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "value": {
+        "type": "int"
+      },
+      "target": {
+        "type": "int"
+      }
+    }
+  },
+  "badgesClose": "Kapat",
+  "badgeChapterMovesName": "Yola çıktık",
+  "badgeChapterMovesDesc": "Taşların nasıl hareket ettiğini anlatan dersleri bitir.",
+  "badgeChapterPiecesName": "Taşlar güvende",
+  "badgeChapterPiecesDesc": "Taş alma ve savunma derslerini bitir.",
+  "badgeChapterRulesName": "Altın kurallar",
+  "badgeChapterRulesDesc": "Oyunun kurallarını anlatan dersleri bitir.",
+  "badgeChapterMatesName": "Şah avcısı",
+  "badgeChapterMatesDesc": "Temel şah mat derslerini bitir.",
+  "badgeChapterTacticsName": "Taktik zihin",
+  "badgeChapterTacticsDesc": "Taktik derslerini bitir.",
+  "badgeChapterEndgamesName": "Şampiyonun oyun sonu",
+  "badgeChapterEndgamesDesc": "Oyun sonu derslerini bitir.",
+  "badgeChapterOpeningsName": "Açılışlar ardına kadar açık",
+  "badgeChapterOpeningsDesc": "Açılış derslerini bitir.",
+  "badgeGuardians3Name": "Bekçi terbiyecisi",
+  "badgeGuardians3Desc": "Hikâyedeki {count} bekçiyi yen.",
+  "@badgeGuardians3Desc": {
+    "description": "Come si ottiene il badge «Domatore di guardiani»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStoryPuzzlesAllName": "Bilmece ustası",
+  "badgeStoryPuzzlesAllDesc": "Hikâye bölümlerindeki {count} bulmacanın hepsini çöz.",
+  "@badgeStoryPuzzlesAllDesc": {
+    "description": "Come si ottiene il badge «Enigmista»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeEndgamesAllName": "Oyun sonu kralı",
+  "badgeEndgamesAllDesc": "Oyun sonu koçundaki tüm konumları tamamla.",
+  "badgeMastersAllName": "Ustanın gözü",
+  "badgeMastersAllDesc": "“Hamleyi tahmin et” oyunlarının hepsini sonuna kadar oyna.",
+  "badgeReviews25Name": "Anında tekrar",
+  "badgeReviews25Desc": "{count} oyunu gözden geçir.",
+  "@badgeReviews25Desc": {
+    "description": "Come si ottiene il badge «Analista»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgePuzzles500Name": "Çözüm avcısı",
+  "badgePuzzles500Desc": "{count} bulmaca çöz.",
+  "@badgePuzzles500Desc": {
+    "description": "Come si ottiene il badge «Collezionista di soluzioni»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeThemes10Name": "Tema gezgini",
+  "badgeThemes10Desc": "{count} farklı temada en az birer bulmaca çöz.",
+  "@badgeThemes10Desc": {
+    "description": "Come si ottiene il badge «Esploratore di temi»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgePin10Name": "Bağlama ustası",
+  "badgePin10Desc": "{count} bağlama bulmacası çöz.",
+  "@badgePin10Desc": {
+    "description": "Come si ottiene il badge «Inchiodatore»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeSkewer5Name": "Şişe geçti",
+  "badgeSkewer5Desc": "{count} şiş bulmacası çöz.",
+  "@badgeSkewer5Desc": {
+    "description": "Come si ottiene il badge «Spiedino»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeDiscovered5Name": "Sürpriz son",
+  "badgeDiscovered5Desc": "{count} açılan saldırı bulmacası çöz.",
+  "@badgeDiscovered5Desc": {
+    "description": "Come si ottiene il badge «Colpo di scena»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeSacrifice10Name": "Aslan yürekli",
+  "badgeSacrifice10Desc": "{count} fedakârlık bulmacası çöz.",
+  "@badgeSacrifice10Desc": {
+    "description": "Come si ottiene il badge «Cuor di leone»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeSmothered1Name": "Boğuldu!",
+  "badgeSmothered1Desc": "Bir boğulma matı bulmacası çöz.",
+  "badgeRating1800Name": "Yıldız",
+  "badgeRating1800Desc": "{count} bulmaca puanına ulaş.",
+  "@badgeRating1800Desc": {
+    "description": "Come si ottiene il badge «Fuoriclasse»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStreakRun10Name": "Altın seri",
+  "badgeStreakRun10Desc": "Seri modunda {count} puan yap.",
+  "@badgeStreakRun10Desc": {
+    "description": "Come si ottiene il badge «Serie d'oro»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeScholarsMateName": "Öğrenci matı",
+  "badgeScholarsMateDesc": "Dört hamlede veya daha kısa sürede vezirle şah mat yaparak kazan.",
+  "badgeFoolsMateName": "Budala matı",
+  "badgeFoolsMateDesc": "Meşhur iki hamlelik şah mata yakalan. Herkesin başına gelir: al sana bir madalya.",
+  "badgeAllPiecesMateName": "Taş taş",
+  "badgeAllPiecesMateDesc": "Vezir, kale, fil, at ve piyonla şah mat yap.",
+  "badgeEnPassantName": "Anpasan",
+  "badgeEnPassantDesc": "Anpasan ile taş al.",
+  "badgeUnderpromotionName": "Küçük at terfi etti",
+  "badgeUnderpromotionDesc": "Bir piyonu vezir dışında bir taşa terfi ettir.",
+  "badgeStalemateName": "Sıkışan şah",
+  "badgeStalemateDesc": "Bir oyunu pat ile beraberlikle bitir.",
+  "badgeMarathonName": "Maraton koşucusu",
+  "badgeMarathonDesc": "En az {count} kendi hamlenden oluşan bir oyun oyna.",
+  "@badgeMarathonDesc": {
+    "description": "Come si ottiene il badge «Maratoneta»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeWins100Name": "Yüzbaşı",
+  "badgeWins100Desc": "{count} oyun kazan.",
+  "@badgeWins100Desc": {
+    "description": "Come si ottiene il badge «Centurione»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgePodiumName": "Podyumda",
+  "badgePodiumDesc": "Bir turnuvayı ilk üçte bitir (en az dört oyuncuyla).",
+  "badgeTournaments5Name": "Turnuva müdavimi",
+  "badgeTournaments5Desc": "{count} turnuvayı bitir.",
+  "@badgeTournaments5Desc": {
+    "description": "Come si ottiene il badge «Habitué dei tornei»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStoryPrologueName": "İlk adımlar",
+  "badgeStoryPrologueDesc": "“Bölüm 0”da Tino’yu yen.",
+  "badgeStoryVillageName": "Köyün kahramanı",
+  "badgeStoryVillageDesc": "“Taşların köyü” bölümünde Pino’yu yen.",
+  "badgeStoryGatesName": "Kapılardan geçtin",
+  "badgeStoryGatesDesc": "“Şehir kapıları” bölümünde Chiara’yı yen.",
+  "badgeStoryTowerName": "Kulenin efendisi",
+  "badgeStoryTowerDesc": "“Şahın kulesi” bölümünde Rocco’yu yen.",
+  "badgeStoryForestName": "Ormanın kralı",
+  "badgeStoryForestDesc": "“Tuzaklar ormanı” bölümünde Marta’yı yen.",
+  "badgeStoryCastleName": "Kuşatma kazanıldı",
+  "badgeStoryCastleDesc": "“Oyun sonları kalesi” bölümünde Duilio’yu yen.",
+  "badgeStoryCrownName": "Taç senin",
+  "badgeStoryCrownDesc": "“Taç” bölümünde Elena’yı yen.",
+  "badgeStoryAllName": "Efsane",
+  "badgeStoryAllDesc": "Hikâyenin tüm bölümlerini bitir.",
+  "badgeStreak14Name": "Tam iki hafta",
+  "badgeStreak14Desc": "Art arda {count} gün hedefine ulaş.",
+  "@badgeStreak14Desc": {
+    "description": "Come si ottiene il badge «Due settimane»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStreak60Name": "İki ay ateş gibi",
+  "badgeStreak60Desc": "Art arda {count} gün hedefine ulaş.",
+  "@badgeStreak60Desc": {
+    "description": "Come si ottiene il badge «Due mesi»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStreak100Name": "Yüz ve devam",
+  "badgeStreak100Desc": "Art arda {count} gün hedefine ulaş.",
+  "@badgeStreak100Desc": {
+    "description": "Come si ottiene il badge «Cento giorni»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeStreak365Name": "Güneşin etrafında bir tur",
+  "badgeStreak365Desc": "Art arda {count} gün hedefine ulaş.",
+  "@badgeStreak365Desc": {
+    "description": "Come si ottiene il badge «Un anno intero»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeDays30Name": "Alışkanlık sahibi",
+  "badgeDays30Desc": "Art arda olması şart değil, {count} farklı günde oyna veya çalış.",
+  "@badgeDays30Desc": {
+    "description": "Come si ottiene il badge «Abitudinario»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeDays100Name": "Evin bir parçası",
+  "badgeDays100Desc": "Art arda olması şart değil, {count} farklı günde oyna veya çalış.",
+  "@badgeDays100Desc": {
+    "description": "Come si ottiene il badge «Di casa»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeComebackName": "Hoş geldin!",
+  "badgeComebackDesc": "En az {count} gün ara verdikten sonra geri dön.",
+  "@badgeComebackDesc": {
+    "description": "Come si ottiene il badge «Bentornato!»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgePerfect7Name": "Yedi kusursuz gün",
+  "badgePerfect7Desc": "{count} farklı günde üç günlük görevin hepsini tamamla.",
+  "@badgePerfect7Desc": {
+    "description": "Come si ottiene il badge «Sette giornate perfette»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeMinigames25Name": "Zihin cimnastikçisi",
+  "badgeMinigames25Desc": "En az bir puan alarak {count} mini oyun oturumunu bitir.",
+  "@badgeMinigames25Desc": {
+    "description": "Come si ottiene il badge «Allenatore instancabile»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgesUnlockedMany": "{count} yeni rozet",
+  "@badgesUnlockedMany": {
+    "description": "Avviso quando si ottengono molti badge insieme",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeChapterStrategyName": "Stratejistin zihni",
+  "badgeChapterStrategyDesc": "Strateji derslerini bitir.",
+  "badgeChapterCapablancaName": "Ustanın öğrencisi",
+  "badgeChapterCapablancaDesc": "Capablanca okulunun derslerini bitir.",
+  "badgeStoryPlainName": "Doğru plan",
+  "badgeStoryPlainDesc": "“Planlar ovası” bölümünde Massimo’yu yen.",
+  "badgeStoryAcademyName": "Akademinin zirvesi",
+  "badgeStoryAcademyDesc": "“Ustanın akademisi” bölümünde Stella’yı yen.",
+  "badgeStoryStartName": "Başlıyoruz!",
+  "badgeStoryStartDesc": "Hikâyenin ilk dersini bitir.",
+  "badgeStoryHalfName": "Yolun yarısı",
+  "badgeStoryHalfDesc": "Hikâyedeki derslerin yarısını bitir.",
+  "badgeStoryChapters3Name": "Üç bölüm geride",
+  "badgeStoryChapters3Desc": "Hikâyenin {count} bölümündeki botları yen.",
+  "@badgeStoryChapters3Desc": {
+    "description": "Come si ottiene il badge «Tre capitoli alle spalle»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeLv3Name": "Çırak",
+  "badgeLv3Desc": "{count}. seviyeye ulaş.",
+  "@badgeLv3Desc": {
+    "description": "Come si ottiene il badge «Apprendista»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeLv8Name": "Satranççı",
+  "badgeLv8Desc": "{count}. seviyeye ulaş.",
+  "@badgeLv8Desc": {
+    "description": "Come si ottiene il badge «Scacchista»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeLv15Name": "Kıdemli",
+  "badgeLv15Desc": "{count}. seviyeye ulaş.",
+  "@badgeLv15Desc": {
+    "description": "Come si ottiene il badge «Veterano»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeLv20Name": "Rokko ustası",
+  "badgeLv20Desc": "{count}. seviyeye ulaş.",
+  "@badgeLv20Desc": {
+    "description": "Come si ottiene il badge «Maestro della Rocca»",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgesTabBadges": "Rozetler",
+  "badgesTabBooks": "Kitaplar",
+  "booksHint": "Bir oyunda oynadığın her açılış kapağında konumuyla bir kitap olur. Kaç tanesini bulabilirsin?",
+  "booksSemanticsUnlocked": "{name}, kitap açıldı",
+  "@booksSemanticsUnlocked": {
+    "description": "Libro delle aperture sbloccato",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "booksSemanticsLocked": "{name}, kitap hâlâ kilitli",
+  "@booksSemanticsLocked": {
+    "description": "Libro delle aperture ancora bloccato",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "booksPlayed": "{count, plural, one{Bunu bir kez oynadın: kitap senin.} other{Bunu {count} kez oynadın: kitap senin.}}",
+  "@booksPlayed": {
+    "description": "Partite giocate in quell'apertura",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "booksHowTo": "Kitabı açmak için bu açılışı izleyen bir oyun oyna.",
+  "badgesRecentSemantics": "Son rozetler: {names}",
+  "@badgesRecentSemantics": {
+    "description": "Badge recenti, per i lettori di schermo",
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "badgeOnlineFirstName": "İki kişilik oyun",
+  "badgeOnlineFirstDesc": "Başka bir telefondaki arkadaşınla bir oyun oyna.",
+  "badgeOnline10Name": "Hep arkadaşla",
+  "badgeOnline10Desc": "Bir arkadaşınla {count} oyun oyna.",
+  "@badgeOnline10Desc": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeOnlineWinName": "Dostlar arasında zafer",
+  "badgeOnlineWinDesc": "Başka bir telefondaki arkadaşına karşı bir oyun kazan.",
+  "badgeRepertoireFirstName": "Hafıza antrenmanda",
+  "badgeRepertoireFirstDesc": "Repertuvarını ilk kez tekrar et.",
+  "badgeRepertoire10Name": "Ezbere repertuvar",
+  "badgeRepertoire10Desc": "Repertuvarını {count} seansta tekrar et.",
+  "@badgeRepertoire10Desc": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
+}

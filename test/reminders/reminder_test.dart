@@ -2,14 +2,14 @@ import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/progress/activity.dart';
-import 'package:scacchi/progress/daily_goal.dart';
-import 'package:scacchi/progress/progress_controller.dart';
-import 'package:scacchi/progress/progress_state.dart';
-import 'package:scacchi/progress/progress_store.dart';
-import 'package:scacchi/reminders/reminder.dart';
-import 'package:scacchi/reminders/reminder_controller.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/progress/activity.dart';
+import 'package:rokko/progress/daily_goal.dart';
+import 'package:rokko/progress/progress_controller.dart';
+import 'package:rokko/progress/progress_state.dart';
+import 'package:rokko/progress/progress_store.dart';
+import 'package:rokko/reminders/reminder.dart';
+import 'package:rokko/reminders/reminder_controller.dart';
 
 class FakeScheduler implements ReminderScheduler {
   final scheduled = <Reminder>[];
@@ -167,6 +167,28 @@ void main() {
       expect(progress.settings.reminder, seven);
       expect(scheduler.scheduled.last.at, DateTime(2026, 10, 5, 19));
     });
+
+    test(
+      'al cambio lingua il promemoria si riprogramma col nuovo testo',
+      () async {
+        controller.dispose();
+        var locale = const Locale('it');
+        await progress.updateSettings(
+          progress.settings.copyWith(reminder: () => seven),
+        );
+        controller = ReminderController(
+          progress,
+          scheduler,
+          () => lookupAppLocalizations(locale),
+          clock: () => now,
+        );
+        await controller.sync();
+        final before = scheduler.scheduled.last;
+        locale = const Locale('en');
+        await ReminderController.languageChanged();
+        expect(scheduler.scheduled.last.body, isNot(before.body));
+      },
+    );
 
     test('senza permesso resta spento', () async {
       scheduler.permission = false;

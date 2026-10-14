@@ -1,0 +1,163 @@
+{
+  "botGalleryTitle": "Kies een bot",
+  "botTierNovice": "Nieuwkomer",
+  "botTierBeginner": "Beginner",
+  "botTierIntermediate": "Gemiddeld",
+  "botTierAdvanced": "Gevorderd",
+  "botTierMaster": "Meester",
+  "botTierFriends": "Je vrienden",
+  "botTierAdaptive": "Adaptief",
+  "botTierHeading": "{tier} · {count}",
+  "@botTierHeading": {
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "botGalleryElo": "{elo} Elo",
+  "@botGalleryElo": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "botGalleryStateLocked": "vergrendeld",
+  "botGalleryStateBeaten": "verslagen",
+  "botGalleryStateOpen": "beschikbaar",
+  "botGalleryCellLabel": "{name}, {elo} Elo, {state}",
+  "@botGalleryCellLabel": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "elo": {
+        "type": "int"
+      },
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "botGalleryCellLabelKid": "{name}, {state}",
+  "@botGalleryCellLabelKid": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "state": {
+        "type": "String"
+      }
+    }
+  },
+  "botGalleryLockedTease": "Tot later, als je er klaar voor bent!",
+  "botStyleAggressive": "agressief",
+  "botStyleGambitist": "gambietspeler",
+  "botStylePositional": "positioneel",
+  "botGalleryStyle": "Stijl: {style}",
+  "@botGalleryStyle": {
+    "placeholders": {
+      "style": {
+        "type": "String"
+      }
+    }
+  },
+  "botAdaptiveName": "Adaptief",
+  "botAdaptiveGreeting": "Ik pas me aan jou aan: win je, dan speel ik beter; verlies je, dan speel ik rustiger.",
+  "botAdaptiveRematch": "Goede oefening. Nog een keer?",
+  "botAdaptiveHint": "Speelt nu op ongeveer {elo} Elo",
+  "@botAdaptiveHint": {
+    "placeholders": {
+      "elo": {
+        "type": "int"
+      }
+    }
+  },
+  "botGuardiansTitle": "De wachters van het Verhaal",
+  "botGuardiansProgress": "{met} van {total} wachters ontmoet",
+  "@botGuardiansProgress": {
+    "placeholders": {
+      "met": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "botGuardiansHint": "Je ontmoet ze door hoofdstukken van het Verhaal af te ronden.",
+  "botGuardianUnmet": "wachter nog niet ontmoet",
+  "botSideWhite": "Speel als wit",
+  "botSideRandom": "Willekeurige kleur",
+  "botSideBlack": "Speel als zwart",
+  "botGalleryPlay": "Spelen",
+  "botGalleryLockedPlay": "Vergrendeld",
+  "botGalleryBeatenBadge": "verslagen",
+  "botGreetingLia": "Hoi, ik ben Lia! Ik zet een pion vooruit en dan zien we wel wat er gebeurt.",
+  "botRematchLia": "Je hebt me verslagen! Spelen we er nog een?",
+  "botGreetingPino": "Piep piep! Ik ben Pino, spelen we? Ik val meteen aan!",
+  "botRematchPino": "Je hebt me verslagen! De volgende keer val ik harder aan.",
+  "botGreetingNico": "Rustig aan, geen haast. Zin in een partij?",
+  "botRematchNico": "Je won kalm, goed gedaan. Nog een keer?",
+  "botGreetingChiara": "Hoi, ik ben Chiara. Een rustige partij, zoals in een tuin?",
+  "botRematchChiara": "Je spel is tot bloei gekomen! Nog een keer?",
+  "botGreetingViola": "Wat een heerlijke dag voor een symfonie van zetten! Zullen we beginnen?",
+  "botRematchViola": "Je hebt mijn melodie ontstemd! Bis?",
+  "botGreetingRocco": "Een pion voor jou, de partij voor mij. Afgesproken?",
+  "botRematchRocco": "Je hebt me door! Maar ik heb nog meer trucs.",
+  "botGreetingEttore": "Ik brul voordat ik speel. Maak je klaar!",
+  "botRematchEttore": "Een brul voor je overwinning. Revanche?",
+  "botGreetingMarta": "Ik heb de hele nacht over deze partij nagedacht. Ga zitten.",
+  "botRematchMarta": "Goed gespeeld. Ik moet veel opnieuw bedenken.",
+  "botGreetingBruna": "Ik ben net wakker, maar het bord maakt me meteen klaarwakker.",
+  "botRematchBruna": "Je hebt me verslagen! Terug naar de winterslaap… voor een minuutje.",
+  "botGreetingDuilio": "Vonken en vlammen: ik houd van aanvallen. Klaar?",
+  "botRematchDuilio": "Je hebt mijn vlammen gedoofd! Laten we ze weer aansteken.",
+  "botGreetingCarlo": "Geef mij een stuk en ik geef jou een show. Zullen we spelen?",
+  "botRematchCarlo": "Je hebt alles teruggepakt, goed gedaan!",
+  "botGreetingElena": "Ik kijk van bovenaf naar het bord. Eens zien of jij kunt vliegen.",
+  "botRematchElena": "Je vloog hoog. Dat vind ik mooi.",
+  "botGreetingAda": "Ik bereken elke baan. Hoe ben jij met de sterren?",
+  "botRematchAda": "Jouw plan versloeg het mijne. Zullen we de som opnieuw maken?",
+  "botGreetingMassimo": "De roedel zegt hallo. Beginnen we met een gambiet?",
+  "botRematchMassimo": "Je hebt de wolf getemd. Respect.",
+  "botGreetingStella": "Ik ben de helderste ster van de Academie. Durf je naar me te kijken?",
+  "botRematchStella": "Je hebt mijn licht gedoofd… voorlopig.",
+  "botGreetingTino": "Hoi, ik ben Tino! Ik laat je zien hoe de stukken bewegen.",
+  "botRematchTino": "Goed gedaan! Jij beweegt de stukken nu beter dan ik.",
+  "botUnlockStory": "Ontgrendelt door het hoofdstuk van het Verhaal met deze wachter af te ronden",
+  "botGalleryOpen": "Open de botgalerij",
+  "botOptions": "Opties",
+  "botOptionsTime": "Tempo",
+  "botOptionsNoClock": "Geen klok",
+  "botOptionsVariant": "Variant",
+  "botVariantStandard": "Standaard",
+  "botVariantChess960": "Chess960",
+  "botVariantKingOfTheHill": "Koning van de heuvel",
+  "botVariantThreeCheck": "Driemaal schaak",
+  "botOptionsHelp": "Hulp",
+  "botOptionsCoach": "Coach",
+  "botOptionsCoachHint": "Waarschuwt je als je een fout maakt.",
+  "botOptionsTraining": "Training",
+  "botOptionsTrainingHint": "Zet terugnemen, hints en dreigingen. Telt niet voor Elo en overwinningen; uit is Uitdaging, zonder hulp.",
+  "botOptionsSummary": "{time} · {variant}",
+  "@botOptionsSummary": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "variant": {
+        "type": "String"
+      }
+    }
+  },
+  "botOptionsKidSlow": "Met klok, rustig aan",
+  "botGreetingLuna": "’s Nachts zie ik het hele bord, zelfs de verborgen zetten. Zullen we spelen?",
+  "botRematchLuna": "Je hebt me verslagen bij sterrenlicht! Nog een keer?",
+  "botGreetingCosmo": "Lancering over drie, twee, één… laten we spelen! Zullen we aanvallen?",
+  "botRematchCosmo": "Noodlanding: je hebt me verslagen. Revanche?"
+}

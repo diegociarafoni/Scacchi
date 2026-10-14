@@ -35,6 +35,30 @@ Un passo già fatto non si riapre (lezioni, puzzle e partite restano raggiungibi
 
 In cima una scheda mostra i capitoli conclusi con una barra. I capitoli sono lungo un binario verticale: ogni capitolo ha un badge con un anello di avanzamento (passi fatti su passi totali), il numero, la spunta a capitolo concluso o il lucchetto se è chiuso. Il capitolo corrente ha il bordo nel colore d'azione e la scritta «In corso»; quelli chiusi hanno il contorno tratteggiato e il testo che dice come aprirli. Lezioni e puzzle mostrano una barra con il conteggio, i passi fatti hanno la spunta e quelli bloccati il lucchetto, oltre al testo letto dai lettori di schermo. I testi sono in `story.arb` (italiano e inglese).
 
+## Il bivio
+
+Prima del primo puzzle di un capitolo il passo dei puzzle offre due vie (`StoryChapter.puzzleTheme` e `forkTheme`): due chip con il nome dei temi, per esempio «Forchetta» o «Pin». Il conteggio non cambia, cambiano i puzzle proposti. La scelta si salva in `story.json` (`fork`, `StoryState.themeFor`) e si può cambiare finché non si è risolto un puzzle; dopo, la via resta quella (`StoryController.chooseFork` lo rifiuta). Senza scelta vale il tema di base. Alla lettura si ignorano capitoli e temi che non sono quelli del capitolo.
+
+| Capitolo | Via di base | Via alternativa |
+|---|---|---|
+| Il sentiero dei primi passi | Matto in 1 | Finali |
+| Il villaggio dei pezzi | Pezzi in presa | Forchetta |
+| Le porte della città | Promozione | Finali di pedoni |
+| La torre del re | Matto di corridoio | Matto in 2 |
+| Il bosco delle trappole | Forchetta | Inchiodatura |
+| Il castello dei finali | Finali di pedoni | Finali di torri |
+| La corona | Aperture | Mediogioco |
+| La pianura dei piani | Pedone avanzato | Mossa tranquilla |
+| L'accademia del maestro | Finali di torri | Finali di alfiere |
+
+## Ricompense
+
+Concludere un capitolo (battuto il suo bot) vale 30 XP e sblocca, al secondo, al quinto e al nono capitolo, le scacchiere Villaggio, Torre e Corona (`StoryRequirement`, vedi [gamification.md](gamification.md#ricompense-estetiche-rg-06)). Chi non vuole giocare per sbloccare usa «Sblocca tutto».
+
+## Aiuto quando ci si blocca
+
+Dopo due puzzle sbagliati di fila (`StoryPuzzleFeed.helping`) un avviso dice che si passa a un puzzle più facile e ricorda il pulsante **Indizio**; i puzzle successivi hanno un punteggio di 300 punti sotto il livello del capitolo (mai sotto 400) finché non se ne risolve uno, poi si torna alla difficoltà normale. L'avviso compare una sola volta per serie di errori (`onHelp`, testo `storyHelpEasier`).
+
 ## Foglio di passaggio
 
 Quando un passo si conclude (lezioni, puzzle, guardiano o sfida), la schermata mostra un foglio dal basso che celebra il risultato e dice cosa viene dopo: dalle lezioni ai puzzle, dai puzzle alla sfida con il custode del capitolo (o al guardiano, dove c'è), e a capitolo concluso l'epilogo con l'apertura del capitolo successivo (o la fine della storia). L'icona compare con un breve rimbalzo, fermo se le animazioni sono disattivate. Il pulsante principale apre subito il passo successivo, «Più tardi» chiude il foglio. Una sfida persa resta un avviso, perché non c'è nulla da celebrare. Il foglio legge lo stato dopo il passo e lo confronta con quello di prima. I testi sono `storyPassage*` in `story.arb`; in test `StoryPage.playLesson` sostituisce la schermata della lezione.
@@ -49,19 +73,23 @@ I testi (racconto, passi, avvisi) sono nei file `.arb` in italiano e in inglese;
 
 ## I custodi
 
-Ogni capitolo ha il suo custode, il bot del capitolo, che accompagna il giocatore con battute brevi nel suo stile (`GuardianMoment`, chiavi `storyGuardian<Capitolo><Momento>` nei file `.arb`, in italiano e in inglese, senza cifre per il profilo bambino). Compaiono in cinque punti:
+Ogni capitolo ha il suo custode, il bot del capitolo, che accompagna il giocatore con battute brevi nel suo stile (`GuardianMoment`, chiavi `storyGuardian<Capitolo><Momento>` nei file `.arb`, in italiano e in inglese, senza cifre per il profilo bambino). Compaiono in sette punti:
 
 - **Benvenuto**: nella scheda del capitolo aperto, con l'avatar «saluto» (`GuardianSays`).
 - **Puzzle**: a ogni puzzle concluso un avviso breve non bloccante con l'avatar «contento» o «incoraggiante» e la battuta di esito (`StoryPuzzleFeed.onOutcome`, mostrato da `HomeShell`).
 - **Lezioni concluse**: nel foglio di passaggio dopo le lezioni, con l'avatar «contento» e la battuta `LessonDone`.
 - **Apertura della sfida**: aprendo la sfida dalla mappa (senza passare dal foglio di passaggio) compare un foglio dedicato con l'avatar «sfida», la presentazione del bot e la sua battuta; «Sfida {nome}» avvia la partita, «Più tardi» la rimanda. Non compare dopo il foglio di passaggio, che l'ha già annunciata (`announced`), né quando la sfida è già vinta.
-- **Prima della sfida**: nel foglio di passaggio dopo i puzzle l'avatar «sfida» prende il posto dell'icona e dice la sua battuta; a capitolo concluso con la sfida vinta l'avatar è «stupito».
+- **Prima della sfida**: nel foglio di passaggio dopo i puzzle l'avatar «sfida» prende il posto dell'icona e dice la sua battuta.
+- **Sfida vinta**: nel foglio di chiusura del capitolo l'avatar «stupito» dice la battuta di resa (`GuardianMoment.bossWon`).
+- **Sfida persa**: l'avviso sotto «resiste ancora» riporta la battuta di incoraggiamento (`GuardianMoment.bossLost`).
+
+Il custode è anche l'antagonista del capitolo: il carattere, lo stile di gioco e l'apertura preferita sono quelli del bot (vedi [bot.md](bot.md)) e le sue battute prima e dopo la partita sono `Boss`, `BossWon` e `BossLost`. Le battute di esito sono in `story_antagonist.arb`; come le altre, senza cifre e di genere neutro verso il giocatore.
 
 L'avatar è decorativo (`GuardianAvatar`, escluso dalla lettura) e la battuta è letta come «{nome} dice: …». I bot senza personaggio disegnato mostrano la loro emoji. Il custode non salva nulla: dipende solo dal capitolo e dal momento.
 
 ## Come aggiungere un capitolo
 
-I puzzle di un capitolo possono avere un tetto di difficoltà (`StoryChapter.puzzleRating`): il Capitolo 0 pesca puzzle fino a 500 punti anche se il punteggio dell'utente è più alto. Aggiungere un `StoryChapter` in `storyChapters` (capitolo del percorso, bot, tema e numero di puzzle) e le quattro stringhe `story<Id>Title`, `Intro`, `Boss` (con `{name}`), `Outro` e le cinque battute del custode (`storyGuardian<Id>Welcome`, `PuzzleOk`, `PuzzleRetry`, `LessonDone`, `Boss`) nei due `.arb`, poi i casi in `story_l10n.dart`. I test controllano che il capitolo punti a un capitolo del percorso e a un bot esistenti, che i bot siano in ordine di forza, che il tema abbia puzzle a sufficienza e che ogni testo esista nelle due lingue.
+I puzzle di un capitolo possono avere un tetto di difficoltà (`StoryChapter.puzzleRating`): il Capitolo 0 pesca puzzle fino a 500 punti anche se il punteggio dell'utente è più alto. Aggiungere un `StoryChapter` in `storyChapters` (capitolo del percorso, bot, tema, tema alternativo del bivio (`forkTheme`) e numero di puzzle) e le quattro stringhe `story<Id>Title`, `Intro`, `Boss` (con `{name}`), `Outro` e le sette battute del custode (`storyGuardian<Id>Welcome`, `PuzzleOk`, `PuzzleRetry`, `LessonDone`, `Boss`, `BossWon`, `BossLost`) nei file `.arb`, poi i casi in `story_l10n.dart`. I test controllano che il capitolo punti a un capitolo del percorso e a un bot esistenti, che i bot siano in ordine di forza, che il tema e il tema del bivio abbiano puzzle a sufficienza e che ogni testo esista nelle due lingue.
 
 ## Componenti
 

@@ -4,8 +4,13 @@ import 'dart:math' as math;
 import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
+import '../archive/game_archive.dart';
+import '../archive/saved_game.dart';
+import '../archive/tree_pgn.dart';
 import '../engine/uci.dart';
+import '../game/move_note_dialog.dart';
 import '../l10n/app_localizations.dart';
 import '../review/board_utils.dart';
 import '../review/eval_bar.dart';
@@ -33,6 +38,10 @@ class AnalysisPage extends StatefulWidget {
     required this.analyse,
     this.orientation = Side.white,
     this.tablebase,
+    this.tree,
+    this.saved,
+    this.onSave = saveToSharedArchive,
+    this.share,
   });
 
   final Position initial;
@@ -45,13 +54,34 @@ class AnalysisPage extends StatefulWidget {
   /// Lato del giocatore, in basso sulla scacchiera.
   final Side orientation;
 
+  /// Albero da riprendere, per esempio da un'analisi salvata; senza, si
+  /// parte da [initial].
+  final VariationTree? tree;
+
+  /// Analisi dell'archivio da cui si è partiti: salvando si aggiorna questa.
+  final SavedGame? saved;
+
+  /// Salvataggio nell'archivio (RF-52); di norma quello condiviso dell'app.
+  final Future<void> Function(SavedGame game) onSave;
+
+  /// Condivisione del PGN; senza, si usa il foglio di condivisione del
+  /// sistema.
+  final Future<void> Function(String pgn)? share;
+
   @override
   State<AnalysisPage> createState() => _AnalysisPageState();
 }
 
+/// Salva [game] nell'archivio condiviso dell'app.
+Future<void> saveToSharedArchive(SavedGame game) async =>
+    (await GameArchive.open()).save(game);
+
+enum _Menu { save, share }
+
 class _AnalysisPageState extends State<AnalysisPage>
     with WidgetsBindingObserver {
-  late final VariationTree _tree = VariationTree(widget.initial);
+  late final VariationTree _tree = widget.tree ?? VariationTree(widget.initial);
+  late SavedGame? _saved = widget.saved;
   bool _failed = false;
   int _multiPv = 1;
   bool _paused = false;
@@ -214,6 +244,80 @@ class _AnalysisPageState extends State<AnalysisPage>
     _moved();
   }
 
+  /// PGN dell'albero com'è ora, con le varianti e le note.
+  String _pgn() =>
+      _saved?.withTree(_tree).pgn ??
+      exportTreePgn(_tree, headers: {'Site': 'Offline'});
+
+  Future<void> _sharePgn() {
+    final share = widget.share;
+    if (share != null) return share(_pgn());
+    return SharePlus.instance.share(ShareParams(text: _pgn()));
+  }
+
+  Future<String?> _askName() {
+    final now = DateTime.now();
+    final date =
+        '${now.day.toString().padLeft(2, '0')}/'
+        '${now.month.toString().padLeft(2, '0')}/${now.year}';
+    return showDialog<String>(
+      context: context,
+      builder: (context) => _NameDialog(
+        initial: AppLocalizations.of(context).analysisDefaultName(date),
+      ),
+    );
+  }
+
+  bool _saving = false;
+
+  Future<void> _save() async {
+    if (_saving) return;
+    _saving = true;
+    try {
+      await _saveNow();
+    } finally {
+      _saving = false;
+    }
+  }
+
+  Future<void> _saveNow() async {
+    final previous = _saved;
+    final name = previous == null ? await _askName() : null;
+    if (!mounted) return;
+    if (previous == null && (name == null || name.isEmpty)) return;
+    final messenger = ScaffoldMessenger.of(context);
+    final l = AppLocalizations.of(context);
+    final now = DateTime.now();
+    final game = previous == null
+        ? SavedGame.fromTree(
+            _tree,
+            id: 'analisi-${now.microsecondsSinceEpoch}',
+            name: name!,
+            createdAt: now,
+            updatedAt: now,
+          )
+        : previous.withTree(_tree, updatedAt: now);
+    try {
+      await widget.onSave(game);
+      _saved = game;
+      messenger.showSnackBar(SnackBar(content: Text(l.analysisSaved)));
+    } on Object {
+      messenger.showSnackBar(SnackBar(content: Text(l.analysisSaveFailed)));
+    }
+  }
+
+  Future<void> _editNote() async {
+    final node = _tree.current;
+    if (node.isRoot) return;
+    final note = await showMoveNoteDialog(
+      context,
+      san: formatSan(node.san, AppSettings.of(context).notation),
+      note: node.note,
+    );
+    if (note == null || !mounted) return;
+    setState(() => node.note = note.isEmpty ? null : note);
+  }
+
   void _toggleThreat() {
     setState(() => _threat = !_threat);
     _start();
@@ -285,6 +389,20 @@ class _AnalysisPageState extends State<AnalysisPage>
             // Sotto scacco o a partita finita la mossa nulla non esiste.
             onPressed: threatFen(_pos) == null ? null : _toggleThreat,
             icon: const Icon(Icons.warning_amber),
+          ),
+          PopupMenuButton<_Menu>(
+            tooltip: l.analysisMore,
+            onSelected: (item) => switch (item) {
+              _Menu.save => unawaited(_save()),
+              _Menu.share => unawaited(_sharePgn()),
+            },
+            itemBuilder: (context) => [
+              PopupMenuItem(value: _Menu.save, child: Text(l.analysisSave)),
+              PopupMenuItem(
+                value: _Menu.share,
+                child: Text(l.analysisSharePgn),
+              ),
+            ],
           ),
         ],
       ),
@@ -368,6 +486,17 @@ class _AnalysisPageState extends State<AnalysisPage>
                         for (final line in _lines) _lineTile(line),
                         if (_tree.root.children.isNotEmpty) ...[
                           _treeActions(),
+                          if (_tree.current.note?.comment case final c?)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                              ),
+                              child: Text(
+                                c,
+                                maxLines: 4,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
                           Padding(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 16,
@@ -448,6 +577,13 @@ class _AnalysisPageState extends State<AnalysisPage>
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         IconButton(
+          tooltip: node.note == null ? l.reviewAddNote : l.reviewEditNote,
+          onPressed: node.isRoot ? null : _editNote,
+          icon: Icon(
+            node.note == null ? Icons.edit_note : Icons.edit_note_outlined,
+          ),
+        ),
+        IconButton(
           tooltip: l.analysisPromote,
           onPressed: node.isRoot || _tree.isMainLine(node) ? null : _promote,
           icon: const Icon(Icons.upgrade),
@@ -509,9 +645,10 @@ class _AnalysisPageState extends State<AnalysisPage>
     final notation = AppSettings.of(context).notation;
     final before = node.parent!.position;
     final san = formatSan(node.san, notation);
+    final symbol = node.note?.symbol?.text ?? '';
     final label = before.turn == Side.white || withNumber
-        ? '${moveNumber(before)} $san'
-        : san;
+        ? '${moveNumber(before)} $san$symbol'
+        : '$san$symbol';
     final selected = node == _tree.current;
     final scheme = Theme.of(context).colorScheme;
     return Semantics(
@@ -560,6 +697,50 @@ class _AnalysisPageState extends State<AnalysisPage>
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Richiesta del nome con cui salvare l'analisi.
+class _NameDialog extends StatefulWidget {
+  const _NameDialog({required this.initial});
+
+  final String initial;
+
+  @override
+  State<_NameDialog> createState() => _NameDialogState();
+}
+
+class _NameDialogState extends State<_NameDialog> {
+  late final TextEditingController _text = TextEditingController(
+    text: widget.initial,
+  );
+
+  @override
+  void dispose() {
+    _text.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return AlertDialog(
+      title: Text(l.analysisSaveTitle),
+      content: TextField(controller: _text, autofocus: true),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: Text(l.analysisCancel),
+        ),
+        FilledButton(
+          onPressed: () {
+            final name = _text.text.trim();
+            Navigator.pop(context, name.isEmpty ? widget.initial : name);
+          },
+          child: Text(l.analysisSaveConfirm),
+        ),
+      ],
     );
   }
 }

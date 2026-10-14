@@ -1,0 +1,13 @@
+{
+  "progressRequirementStory": "Hikâye: {chapters} bölüm tamamlandı",
+  "@progressRequirementStory": {
+    "placeholders": {
+      "chapters": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsThemeVillaggio": "Köy",
+  "settingsThemeTorre": "Kule",
+  "settingsThemeCorona": "Taç"
+}

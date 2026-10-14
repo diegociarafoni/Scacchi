@@ -1,8 +1,8 @@
 import 'dart:math' as math;
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/engine/choose.dart';
-import 'package:scacchi/engine/uci.dart';
+import 'package:rokko/engine/choose.dart';
+import 'package:rokko/engine/uci.dart';
 
 InfoLine cand(String move, int cp, int multipv) =>
     InfoLine(multipv: multipv, pv: [move], score: EngineScore.cp(cp));

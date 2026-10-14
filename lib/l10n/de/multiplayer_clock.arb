@@ -1,0 +1,12 @@
+{
+  "multiplayerClockTitle": "Bedenkzeit",
+  "multiplayerClockNone": "Ohne Uhr",
+  "multiplayerClockHint": "Wer die Partie erstellt, entscheidet: Das andere Handy erhält die Einstellung mit der Einladung.",
+  "multiplayerClockRemoteHint": "Aus der Ferne gibt es keine Uhr: Wähle WLAN oder Bluetooth, um eine zu nutzen.",
+  "multiplayerClockYou": "Du",
+  "multiplayerClockPeer": "Gegner",
+  "multiplayerClockSemantics": "Uhr ({who}): {minutes, plural, one{{minutes} Minute} other{{minutes} Minuten}} und {seconds, plural, one{{seconds} Sekunde} other{{seconds} Sekunden}}",
+  "multiplayerWhiteWinsOnTime": "Zeit abgelaufen: Weiß gewinnt",
+  "multiplayerBlackWinsOnTime": "Zeit abgelaufen: Schwarz gewinnt",
+  "multiplayerDrawOnTime": "Zeit abgelaufen, aber kein Mattmaterial: Remis"
+}

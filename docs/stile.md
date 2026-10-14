@@ -21,7 +21,7 @@ Gli sfondi sono dieci, più la foto:
 
 - Grafite, Feltro, Perla e Cuoio sono tinte unite; Ardesia, Notte, Tramonto, Oceano e Foresta sono sfumature. Sono disegnati in codice e non pesano nell'app.
 - Spazio usa la texture `assets/boards/spazio.webp`, già presente per il tema omonimo.
-- «La tua foto» si sceglie dalla galleria con «Scegli una foto»: l'immagine viene ridotta a 1600 punti per lato, copiata in `<dati dell'app>/stile/` e usata da lì. Resta solo sul telefono: non viene caricata, non entra nel backup di Rokko e Android la esclude dai backup automatici e dai trasferimenti (`backup_rules.xml`, `data_extraction_rules.xml`); si cancella con i dati dell'app. Scegliere un'altra foto elimina la precedente, ma solo dopo aver salvato la scelta. Se il file manca all'avvio (dati cancellati, app ripristinata altrove) lo sfondo torna Standard; se non si legge, ripiega su un grigio scuro e la schermata resta usabile.
+- «La tua foto» si sceglie dalla galleria con «Scegli una foto»: l'immagine viene ridotta a 1600 punti per lato, copiata in `<dati dell'app>/stile/` e usata da lì. Resta solo sul telefono: non viene caricata, non entra nel backup di Rokko e Android non fa backup automatici dell'app (`allowBackup="false"`); si cancella con i dati dell'app. Scegliere un'altra foto elimina la precedente, ma solo dopo aver salvato la scelta. Se il file manca all'avvio (dati cancellati, app ripristinata altrove) lo sfondo torna Standard; se non si legge, ripiega su un grigio scuro e la schermata resta usabile.
 
 Il percorso della foto è in `AppSettings.backdropPhoto`; la scelta dello sfondo in `AppSettings.backdrop`.
 

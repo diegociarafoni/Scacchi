@@ -1,8 +1,8 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/archive/saved_game.dart';
-import 'package:scacchi/stats/local_rating.dart';
-import 'package:scacchi/stats/stats.dart';
+import 'package:rokko/archive/saved_game.dart';
+import 'package:rokko/stats/local_rating.dart';
+import 'package:rokko/stats/stats.dart';
 
 var _n = 0;
 
@@ -53,6 +53,12 @@ void main() {
     test('per cadenza, "senza tempo" se non indicata', () {
       expect(stats.byTimeControl['5+0'], const Score(wins: 1, losses: 1));
       expect(stats.byTimeControl['10+0'], const Score(wins: 1, draws: 1));
+    });
+
+    test('senza orologio: chiave neutra, in fondo a pari partite', () {
+      final s = GameStats.from([game('1-0'), game('1-0', tc: '3+2')]);
+      expect(s.byTimeControl.keys, ['3+2', noClock]);
+      expect(noClock, isNot(contains('Senza')));
     });
 
     test('partite locali contate a parte, importate escluse', () {

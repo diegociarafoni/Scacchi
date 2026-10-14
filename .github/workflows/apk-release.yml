@@ -116,6 +116,9 @@ jobs:
           cache: true
       - run: dart tool/l10n.dart --solo-unione
       - run: flutter pub get
+      # Come nella CI: i test con il motore vero girano solo se Stockfish c'è.
+      - if: steps.ci.outputs.passed != 'true'
+        run: sudo apt-get update && sudo apt-get install -y stockfish
       - if: steps.ci.outputs.passed != 'true'
         run: flutter analyze && flutter test
 
@@ -139,6 +142,9 @@ jobs:
           KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          # Come in ci.yml: senza filtro i plugin compilano e impacchettano le librerie
+          # native anche per armeabi-v7a e x86_64, inutili in un APK arm64 (circa 15 MB).
+          ROKKO_NATIVE_ABIS: arm64-v8a
         run: |
           keystore="$RUNNER_TEMP/release.p12"
           trap 'rm -f "$keystore"' EXIT

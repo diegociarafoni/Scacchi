@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/engine/bots.dart';
-import 'package:scacchi/path/path_controller.dart';
-import 'package:scacchi/story/story.dart';
-import 'package:scacchi/story/story_controller.dart';
-import 'package:scacchi/story/story_page.dart';
+import 'package:rokko/engine/bots.dart';
+import 'package:rokko/path/path_controller.dart';
+import 'package:rokko/story/story.dart';
+import 'package:rokko/story/story_controller.dart';
+import 'package:rokko/story/story_page.dart';
 
 import '../localized_app.dart';
 
@@ -268,5 +268,34 @@ void main() {
     await tester.tap(find.textContaining('Puzzle del capitolo'));
     await tester.pumpAndSettle();
     expect(called, isFalse);
+  });
+
+  testWidgets('RG-13 al bivio si sceglie la via dei puzzle e si ricorda', (
+    tester,
+  ) async {
+    await finishLessons(tester);
+    await show(tester, puzzles: (c, ch, r) async => 0);
+    expect(find.byKey(ValueKey('story-fork-${first.id}')), findsOneWidget);
+    final other = find.byKey(
+      ValueKey('story-fork-${first.id}-${first.forkTheme}'),
+    );
+    await tapAndSave(tester, other);
+    expect(story.state.themeFor(first), first.forkTheme);
+  });
+
+  testWidgets('RG-13 iniziati i puzzle il bivio non si cambia più', (
+    tester,
+  ) async {
+    await finishLessons(tester);
+    await tester.runAsync(() => story.puzzlesSolved(first, 1));
+    await show(tester, puzzles: (c, ch, r) async => 0);
+    expect(find.byKey(ValueKey('story-fork-${first.id}')), findsNothing);
+  });
+
+  testWidgets('RG-13 il bivio non c\'è finché i puzzle sono chiusi', (
+    tester,
+  ) async {
+    await show(tester, puzzles: (c, ch, r) async => 0);
+    expect(find.byKey(ValueKey('story-fork-${first.id}')), findsNothing);
   });
 }

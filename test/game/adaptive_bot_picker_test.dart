@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/engine/bot_collection.dart';
-import 'package:scacchi/game/opponent_picker.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
+import 'package:rokko/engine/bot_collection.dart';
+import 'package:rokko/game/opponent_picker.dart';
+import 'package:rokko/l10n/app_localizations.dart';
 
 void main() {
   Widget picker(

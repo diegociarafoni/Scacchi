@@ -4,16 +4,16 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart' show Side;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/archive/saved_game.dart';
-import 'package:scacchi/engine/computer_player.dart';
-import 'package:scacchi/game/game_page.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/progress/activity.dart';
-import 'package:scacchi/progress/progress_controller.dart';
-import 'package:scacchi/progress/progress_state.dart';
-import 'package:scacchi/progress/progress_store.dart';
-import 'package:scacchi/progress/progress_tracker.dart';
-import 'package:scacchi/settings/settings.dart';
+import 'package:rokko/archive/saved_game.dart';
+import 'package:rokko/engine/computer_player.dart';
+import 'package:rokko/game/game_page.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/progress/activity.dart';
+import 'package:rokko/progress/progress_controller.dart';
+import 'package:rokko/progress/progress_state.dart';
+import 'package:rokko/progress/progress_store.dart';
+import 'package:rokko/progress/progress_tracker.dart';
+import 'package:rokko/settings/settings.dart';
 
 import '../computer_fakes.dart';
 import '../game_actions.dart';
@@ -89,7 +89,7 @@ void main() {
     expect(saved.map((g) => g.id).toSet(), hasLength(1));
     expect(saved.last.mode, SavedGame.local);
     expect(saved.last.result, '0-1');
-    expect(saved.last.white, 'Bianco');
+    expect(saved.last.white, SavedGame.nameWhite);
     expect(saved.last.pgn, contains('Qh4#'));
     expect(find.textContaining('+10 XP'), findsOneWidget);
   });
@@ -219,10 +219,32 @@ void main() {
     expect(activity.playerSide, Side.white);
     expect(activity.opponentElo, isNotNull);
     expect(saved.last.mode, SavedGame.computer);
-    expect(saved.last.white, 'Tu');
-    expect(saved.last.black, 'Computer');
+    expect(saved.last.white, SavedGame.nameYou);
+    expect(saved.last.black, SavedGame.nameComputer);
     expect(saved.last.opponentElo, activity.opponentElo);
   });
+
+  testWidgets(
+    'la revisione dopo una partita col computer salva la precisione',
+    (tester) async {
+      await open(tester, computer: true);
+      await startComputerGame(tester, side: 'Bianco');
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+      await tapMove(tester, 'e2e4');
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+      await tapMove(tester, 'd2d4');
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+      await tapGameAction(tester, 'Abbandona');
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Abbandona').last);
+      await tester.pumpAndSettle();
+      expect(saved.last.accuracy, isNull);
+      await tapGameAction(tester, 'Rivedi');
+      await tester.pumpAndSettle(const Duration(seconds: 5));
+      expect(saved.last.accuracy, isNotNull);
+      expect(saved.last.phaseAccuracy, isNotNull);
+    },
+  );
 
   testWidgets('le impostazioni mostrano i progressi quando sono disponibili', (
     tester,

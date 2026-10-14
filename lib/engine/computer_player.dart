@@ -33,7 +33,6 @@ class EngineMove {
 /// Livello usato per valutare una posizione a piena forza.
 const analysisLevel = EngineLevel(
   id: 0,
-  name: 'Analisi',
   approxElo: 2700,
   skill: 20,
   movetime: Duration(milliseconds: 300),
@@ -91,7 +90,13 @@ class ComputerPlayer {
         }
       },
       onError: _failPending,
-      onDone: () => _failPending(StateError('Il motore si è chiuso')),
+      onDone: () {
+        // Un motore morto a riposo va riavviato alla ricerca successiva.
+        _failPending(
+          StateError('Il motore si è chiuso'), // l10n-ok
+        );
+        if (_transport == transport) unawaited(_shutdown());
+      },
     );
     await _command('uci', (l) => l == 'uciok', const Duration(seconds: 30));
     await _sync();
@@ -267,6 +272,7 @@ class ComputerPlayer {
     final infos = <int, InfoLine>{};
     final byDepth = <int, Map<int, InfoLine>>{};
     void onInfo(String line) {
+      if (line.contains(' lowerbound') || line.contains(' upperbound')) return;
       final info = parseInfo(line);
       if (info == null) return;
       infos[info.multipv] = info;
@@ -450,7 +456,7 @@ class ComputerPlayer {
         .timeout(
           timeout,
           onTimeout: () => throw TimeoutException(
-            'Il motore non ha risposto a "${command.split(' ').first}"',
+            'Il motore non ha risposto a "${command.split(' ').first}"', // l10n-ok
             timeout,
           ),
         )

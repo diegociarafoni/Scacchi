@@ -3,12 +3,13 @@ import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/engine/bots.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/path/curriculum.dart';
-import 'package:scacchi/path/path_progress.dart';
-import 'package:scacchi/story/story.dart';
-import 'package:scacchi/story/story_l10n.dart';
+import 'package:rokko/engine/bots.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/path/curriculum.dart';
+import 'package:rokko/path/path_progress.dart';
+import 'package:rokko/puzzles/themes.dart';
+import 'package:rokko/story/story.dart';
+import 'package:rokko/story/story_l10n.dart';
 
 PathProgress _doneChapter(String pathChapterId, [PathProgress? from]) {
   var p = from ?? const PathProgress();
@@ -72,6 +73,14 @@ void main() {
       }
       for (final c in storyChapters) {
         expect(counts[c.puzzleTheme] ?? 0, greaterThan(c.puzzleCount * 5));
+        expect(counts[c.forkTheme] ?? 0, greaterThan(c.puzzleCount * 5));
+      }
+    });
+
+    test('il bivio offre un tema diverso e conosciuto in ogni capitolo', () {
+      for (final c in storyChapters) {
+        expect(c.forkTheme, isNot(c.puzzleTheme), reason: c.id);
+        expect(puzzleThemeIds, contains(c.forkTheme), reason: c.id);
       }
     });
   });
@@ -107,7 +116,12 @@ void main() {
           expect(line.length, lessThanOrEqualTo(90), reason: reason);
           expect(line, isNot(matches(RegExp(r'\d'))), reason: reason);
         }
-        for (final m in [GuardianMoment.welcome, GuardianMoment.lessonDone]) {
+        for (final m in [
+          GuardianMoment.welcome,
+          GuardianMoment.lessonDone,
+          GuardianMoment.bossWon,
+          GuardianMoment.bossLost,
+        ]) {
           expect({
             for (final o in storyChapters) l10n.guardianLine(o, m),
           }, hasLength(storyChapters.length));
@@ -116,6 +130,20 @@ void main() {
           l10n.storyGuardianSays(c.bot.name, 'ciao'),
           contains(c.bot.name),
         );
+      }
+    }
+  });
+
+  test('RG-13 le battute di esito esistono, senza cifre, in ogni lingua', () {
+    for (final locale in AppLocalizations.supportedLocales) {
+      final l10n = lookupAppLocalizations(locale);
+      for (final c in storyChapters) {
+        for (final m in [GuardianMoment.bossWon, GuardianMoment.bossLost]) {
+          final line = l10n.guardianLine(c, m);
+          final reason = '${locale.languageCode} ${c.id} ${m.name}';
+          expect(line, isNotEmpty, reason: reason);
+          expect(line, isNot(matches(RegExp(r'\d'))), reason: reason);
+        }
       }
     }
   });
@@ -259,6 +287,35 @@ void main() {
         state = state.withPuzzleSolved(first.id, first.puzzleCount);
       }
       expect(state.puzzlesSolved(first.id), first.puzzleCount);
+    });
+  });
+
+  group('RG-13 bivio', () {
+    test('senza scelta si usa il tema del capitolo', () {
+      expect(const StoryState().themeFor(first), first.puzzleTheme);
+    });
+
+    test('la scelta del bivio vale per il capitolo e sopravvive a JSON', () {
+      final state = const StoryState().withFork(first, first.forkTheme);
+      expect(state.themeFor(first), first.forkTheme);
+      expect(state.themeFor(storyChapters[1]), storyChapters[1].puzzleTheme);
+      final back = StoryState.fromJson(
+        jsonDecode(jsonEncode(state.toJson())) as Map<String, Object?>,
+      );
+      expect(back.themeFor(first), first.forkTheme);
+    });
+
+    test('un tema che non è del capitolo non si può scegliere', () {
+      final state = const StoryState().withFork(first, 'zugzwang');
+      expect(state.themeFor(first), first.puzzleTheme);
+    });
+
+    test('alla lettura si ignorano capitoli e temi sconosciuti', () {
+      final junk = StoryState.fromJson({
+        'fork': {'nessuno': 'fork', first.id: 'zugzwang'},
+      });
+      expect(junk.themeFor(first), first.puzzleTheme);
+      expect(junk.fork, isEmpty);
     });
   });
 

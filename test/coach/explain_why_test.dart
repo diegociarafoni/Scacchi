@@ -1,8 +1,8 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/coach/explain_why.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
+import 'package:rokko/coach/explain_why.dart';
+import 'package:rokko/l10n/app_localizations.dart';
 
 final it = lookupAppLocalizations(const Locale('it'));
 final en = lookupAppLocalizations(const Locale('en'));

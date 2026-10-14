@@ -99,7 +99,7 @@ Su desktop i file e2e vanno eseguiti uno alla volta: avviandone più di uno nell
 
 I test e2e simulano uno schermo da telefono in verticale (1170×2532 pixel fisici, rapporto 3) e muovono i pezzi calcolando la posizione delle case sulla scacchiera.
 
-`ScacchiApp` si apre sulla Home a dashboard, non sulla scacchiera. Per questo i test e2e partono dalla Home e seguono gli stessi percorsi dell'utente con gli aiuti condivisi di `test/`:
+`RokkoApp` si apre sulla Home a dashboard, non sulla scacchiera. Per questo i test e2e partono dalla Home e seguono gli stessi percorsi dell'utente con gli aiuti condivisi di `test/`:
 
 - `openBoard` (`test/game_actions.dart`) tocca «Nuova partita» (chiave `home-play`), apre da «Altre modalità» la scelta completa e avvia una partita in due senza tempo;
 - `openCustomSheet` (`test/computer_fakes.dart`) apre dal foglio «Nuova partita» la scelta completa, per nomi, varianti e handicap, `chooseAdaptiveComputer` sceglie il bot Adattivo e `startComputerGame` avvia la partita contro di lui;
@@ -139,19 +139,19 @@ I golden si rigenerano con `--update-goldens` dopo una modifica voluta dell'aspe
 | RF-25 matto, stallo, materiale insufficiente, ripetizione, 50 mosse, abbandono | ✓ | matto, abbandono |
 | RF-25 patta accettata dal computer in base alla valutazione | ✓ | ✓ |
 | RF-51 analisi a forza piena con più varianti, analisi continua interrompibile | ✓ | |
-| RF-52 esplorazione lineare con avanti e indietro | ✓ | |
+| RF-52 esplorazione con avanti e indietro, varianti ad albero, salvataggio dell'analisi e PGN con varianti | ✓ | |
 | RF-60 revisione completa con avanzamento e interruzione | ✓ | |
 | RF-61, RF-62 classificazione delle mosse, Brillante e Ottima | ✓ | |
-| RF-55 annotazioni (simbolo e commento) sulle mosse, conservate in import ed export PGN (modifica dalla revisione di una partita dell'archivio; nella partita in corso e nell'analisi: da fare) | ✓ | ✓ |
+| RF-55 annotazioni (simbolo e commento) sulle mosse, conservate in import ed export PGN (modifica dalla revisione e dall'analisi, anche sulle varianti e su una partita dell'archivio; nella partita in corso: da fare) | ✓ | ✓ |
 | RF-56 minaccia dell'avversario nell'analisi e nella partita con l'allenatore | ✓ | ✓ |
 | RF-63 precisione, conteggi e stima della forza | ✓ | |
 | RF-67 tempo residuo a ogni mossa nel PGN (`[%clk]`, import ed export), registrato in partita, tempo per mossa ed errori in fretta nella revisione | ✓ | |
-| RF-68 precisione per fase (apertura, mediogioco, finale) nella revisione | ✓ | ✓ |
+| RF-68 precisione per fase (apertura, mediogioco, finale) nella revisione e nelle statistiche | ✓ | ✓ |
 | RF-50 barra di valutazione con valore numerico | ✓ | |
 | RF-54 freccia della mossa migliore | ✓ | |
 | RF-64 grafico della valutazione cliccabile con momenti chiave | ✓ | |
 | RF-65 Riprova sugli errori | ✓ | |
-| RF-66 cache della revisione (in memoria) | ✓ | |
+| RF-66 cache della revisione (in memoria e su disco, con motore e profondità nella chiave) | ✓ | |
 | RF-70 spiegazioni: matto concesso o mancato, pezzo in presa, forchetta, inchiodatura, re scoperto, perdita di materiale | ✓ | |
 | RF-72 giudizio con simbolo sulla casa della mossa (con l'allenatore acceso) | ✓ | ✓ |
 | RF-122 spiegami perché: frasi per cattura, scacco, arrocco, promozione, minacce, sviluppo; interruttore in Impostazioni | ✓ | |
@@ -205,7 +205,7 @@ Il workflow `.github/workflows/ci.yml` (chiamabile anche da altri workflow) gira
 
 1. **test**, sempre: installa Stockfish (per i test d'integrazione del motore), unisce i testi tradotti e ne controlla le lingue (`tool/l10n.dart --solo-unione`, `tool/stringhe_fisse.dart`, `tool/l10n_stato.dart`), formattazione, `flutter analyze --fatal-infos --fatal-warnings`, `flutter test` con copertura (almeno 80% sulla logica di gioco, vedi [qualita.md](qualita.md)), licenze delle dipendenze. È il controllo bloccante di ogni PR.
 2. **e2e**, se i test passano: installa Stockfish ed esegue i file `integration_test/*_test.dart` sull'app Linux desktop con uno schermo virtuale (`xvfb`), un file alla volta perché avvii ravvicinati dell'app Linux nello stesso comando falliscono.
-3. **android**, se i test passano: libera spazio sul runner (la compilazione nativa di Stockfish con l'NDK lo esaurisce), compila un APK di debug solo arm64 (con `ccache` per la parte nativa), ne controlla il manifest con `tool/check_apk.dart --debug` (permessi ed esportazioni, vedi [sicurezza.md](sicurezza.md)) e lo pubblica come artefatto `scacchi-debug-apk` per 7 giorni.
+3. **android**, se i test passano: libera spazio sul runner (la compilazione nativa di Stockfish con l'NDK lo esaurisce), compila un APK di debug solo arm64 (con `ccache` per la parte nativa), ne controlla il manifest con `tool/check_apk.dart --debug` (permessi ed esportazioni, vedi [sicurezza.md](sicurezza.md)) e lo pubblica come artefatto `rokko-debug-apk` per 7 giorni.
 
 e2e e android girano sempre su `main`; su una PR (e nella coda di merge, sui file del gruppo) solo se tocca i file che li riguardano (`integration_test/` o `linux/` per e2e; `android/` e `tool/check_apk.dart`, `tool/policy.json`, `tool/src/` per android; `pubspec.*`, `ci.yml` e `ci-completa.yml` per entrambi) oppure se ha l'etichetta **`ci-completa`**: aggiungerla avvia subito tutta la CI con il workflow `ci-completa.yml`, senza bisogno di un nuovo push, e da lì in poi ogni push sulla PR la esegue per intero. L'etichetta si crea una volta in **Issues → Labels → New label**. I job avviati dall'etichetta compaiono come `ci / test`, `ci / e2e` e `ci / android` e devono essere verdi prima del merge. Conviene metterla sulle PR che cambiano molto l'interfaccia: senza, e2e gira solo dopo il merge su `main`.
 

@@ -92,4 +92,21 @@ void main() {
       throwsFormatException,
     );
   });
+
+  group('avvio', () {
+    test('accetta un avvio entro il limite, anche esattamente al limite', () {
+      expect(startupViolations({'startup_ms': 1200}, maxMs: 2000), isEmpty);
+      expect(startupViolations({'startup_ms': 2000}, maxMs: 2000), isEmpty);
+    });
+
+    test('segnala un avvio troppo lento', () {
+      final v = startupViolations({'startup_ms': 2001}, maxMs: 2000);
+      expect(v.single, contains('2001 ms'));
+      expect(v.single, contains('2000 ms'));
+    });
+
+    test('un rapporto senza il tempo di avvio non è valido', () {
+      expect(startupViolations({}, maxMs: 2000), isNotEmpty);
+    });
+  });
 }

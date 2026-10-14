@@ -2,7 +2,7 @@ import 'package:dartchess/dartchess.dart';
 
 import '../archive/saved_game.dart';
 import '../game/chess_game.dart';
-import '../openings/opening_names_it.dart';
+import '../openings/opening_names.dart';
 import 'stats.dart';
 
 /// Riepilogo degli ultimi sette giorni dell'utente, calcolato dall'archivio
@@ -45,7 +45,7 @@ class PlayerPortrait {
       final points = g.playerScore!;
       score = score.add(points);
       if (g.opening case final o?) {
-        final name = openingNameIt(o);
+        final name = localOpeningName(o);
         openings[name] = (openings[name] ?? 0) + 1;
       }
       if (g.accuracy case final a?) accuracies.add(a);
@@ -129,7 +129,10 @@ Role? _matingRole(SavedGame g) {
   if (game.endReason != GameEndReason.checkmate || game.moves.isEmpty) {
     return null;
   }
-  return switch (game.moves.last.san[0]) {
+  final san = game.moves.last.san;
+  // Con la promozione dà matto il pezzo scelto, non il pedone.
+  final promoted = san.indexOf('=');
+  return switch (promoted < 0 ? san[0] : san[promoted + 1]) {
     'K' => Role.king,
     // L'arrocco dà matto con la torre.
     'O' => Role.rook,

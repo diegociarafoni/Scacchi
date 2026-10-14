@@ -1,5 +1,5 @@
-name: scacchi
-description: "Scacchi offline, open source e gratuito"
+name: rokko
+description: "Rokko offline, open source e gratuito"
 publish_to: 'none'
 
 version: 1.0.0+1
@@ -15,7 +15,8 @@ dependencies:
 
   cupertino_icons: ^1.0.8
   dartchess: ^0.14.0
-  chessground: ^10.3.0
+  chessground:
+    path: third_party/chessground
   multistockfish: ^0.6.1
   path_provider: ^2.1.6
   share_plus: ^13.3.1
@@ -33,6 +34,7 @@ dependencies:
   workmanager: ^0.10.10
   bluetooth_low_energy: ^6.0.0
   bonsoir: ^7.1.5
+  wakelock_plus: ^1.8.0
 
 dev_dependencies:
   flutter_test:
@@ -54,6 +56,17 @@ flutter:
     - assets/sounds/cristallo/
     - assets/puzzles/
     - assets/openings/
+    - assets/content/it/
+    - assets/content/en/
+    - assets/content/fr/
+    - assets/content/es/
+    - assets/content/pt/
+    - assets/content/pl/
+    - assets/content/ru/
+    - assets/content/nl/
+    - assets/content/tr/
+    - assets/content/de/
+    - assets/content/id/
     - assets/boards/
     - assets/pieces/arcano/
     - assets/pieces/staunton/

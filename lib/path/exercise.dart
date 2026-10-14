@@ -4,15 +4,12 @@ import 'package:dartchess/dartchess.dart';
 
 /// Esercizio di una tappa del percorso.
 sealed class Exercise {
-  const Exercise({required this.instructions});
-
-  final String instructions;
+  const Exercise();
 }
 
 /// Un pezzo bianco da solo raccoglie le stelle sulla scacchiera.
 class StarsExercise extends Exercise {
   const StarsExercise({
-    required super.instructions,
     required this.role,
     required this.start,
     required this.stars,
@@ -138,7 +135,6 @@ enum LineGoal {
 /// risposte automatiche dell'avversario.
 class LineExercise extends Exercise {
   const LineExercise({
-    required super.instructions,
     required this.fen,
     required this.steps,
     required this.goal,

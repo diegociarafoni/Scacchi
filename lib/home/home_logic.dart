@@ -5,20 +5,19 @@ import 'package:dartchess/dartchess.dart' show Side;
 import '../archive/saved_game.dart';
 import '../engine/bot_collection.dart';
 import '../engine/bots.dart';
+import '../l10n/app_localizations.dart';
 import '../path/curriculum.dart';
 
 /// Quanti Elo sopra il proprio livello può stare il bot consigliato: una
 /// sfida alla portata, non una scalata.
 const recommendedBotMargin = 100;
 
-/// Partita non conclusa più recente, quella da riprendere. Le importate e
+/// Partita non conclusa più recente, quella da riprendere. Le importate, le analisi e
 /// quelle su scacchiera fisica non si riprendono nell'app.
 SavedGame? unfinishedGame(Iterable<SavedGame> games) {
   SavedGame? best;
   for (final g in games) {
-    if (g.finished ||
-        g.mode == SavedGame.imported ||
-        g.mode == SavedGame.physical) {
+    if (g.finished || !g.isPlayed || g.mode == SavedGame.physical) {
       continue;
     }
     if (best == null || g.updatedAt.isAfter(best.updatedAt)) best = g;
@@ -107,22 +106,52 @@ List<HomeFeature> searchFeatures(List<HomeFeature> all, String query) {
   ];
 }
 
+/// Lettere con accento o segno proprio, ridotte alla base. Dart non ha la
+/// normalizzazione Unicode: le precomposte si mappano a mano.
+const _base = {
+  'àáâãäåāăą': 'a',
+  'æ': 'ae',
+  'çćĉčċ': 'c',
+  'ďđ': 'd',
+  'èéêëēĕėęě': 'e',
+  'ğĝġģ': 'g',
+  'ìíîïĩīĭįı': 'i',
+  'ķ': 'k',
+  'ĺļľł': 'l',
+  'ñńņň': 'n',
+  'òóôõöøōŏő': 'o',
+  'œ': 'oe',
+  'ŕŗř': 'r',
+  'śŝşšș': 's',
+  'ß': 'ss',
+  'ţťț': 't',
+  'ùúûüũūŭůűų': 'u',
+  'ýÿ': 'y',
+  'źżž': 'z',
+  'ё': 'е',
+  'й': 'и',
+};
+
+final _baseOf = {
+  for (final e in _base.entries)
+    for (final c in e.key.split('')) c: e.value,
+};
+
+/// Minuscole e senza accenti. Gli accenti staccati dalla lettera, compreso il
+/// punto che il minuscolo di "İ" lascia, si tolgono come gli altri.
 String _fold(String text) {
-  const from = 'àáâèéêìíîòóôùúû';
-  const to = 'aaaeeeiiiooouuu';
-  final lower = text.toLowerCase();
+  final plain = text.toLowerCase().replaceAll(RegExp('[\u0300-\u036f]'), '');
   final out = StringBuffer();
-  for (final r in lower.runes) {
-    final c = String.fromCharCode(r);
-    final i = from.indexOf(c);
-    out.write(i < 0 ? c : to[i]);
+  for (final c in plain.split('')) {
+    out.write(_baseOf[c] ?? c);
   }
   return out.toString();
 }
 
 /// Nome dell'avversario di una partita, per le righe dell'elenco.
-String opponentOf(SavedGame game) => switch (game.playerSide) {
-  Side.white => game.black,
-  Side.black => game.white,
-  null => game.title,
-};
+String opponentOf(SavedGame game, [AppLocalizations? l]) =>
+    switch (game.playerSide) {
+      Side.white => l == null ? game.black : game.playerNameIn(l, game.black),
+      Side.black => l == null ? game.white : game.playerNameIn(l, game.white),
+      null => l == null ? game.title : game.titleIn(l),
+    };

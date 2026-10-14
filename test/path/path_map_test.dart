@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/path/curriculum.dart';
-import 'package:scacchi/path/path_controller.dart';
-import 'package:scacchi/path/path_page.dart';
-import 'package:scacchi/path/path_progress.dart';
-import 'package:scacchi/theme/rokko_theme.dart';
+import 'package:rokko/path/curriculum.dart';
+import 'package:rokko/path/path_controller.dart';
+import 'package:rokko/path/path_page.dart';
+import 'package:rokko/path/path_progress.dart';
+import 'package:rokko/theme/rokko_theme.dart';
 
 import '../localized_app.dart';
 

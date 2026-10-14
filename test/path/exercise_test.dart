@@ -1,11 +1,10 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/path/exercise.dart';
+import 'package:rokko/path/exercise.dart';
 
 void main() {
   group('esercizi a stelle', () {
     const rook = StarsExercise(
-      instructions: 'Raccogli le stelle con la torre.',
       role: Role.rook,
       start: Square.a1,
       stars: [Square.a8, Square.h8, Square.h1],
@@ -54,7 +53,6 @@ void main() {
 
     test('il pedone avanza di uno o di due dalla seconda e promuove', () {
       const pawn = StarsExercise(
-        instructions: 'Porta il pedone a promozione.',
         role: Role.pawn,
         start: Square.e2,
         stars: [Square.e8],
@@ -76,7 +74,6 @@ void main() {
 
   group('esercizi a linea', () {
     const backRank = LineExercise(
-      instructions: 'Matto in una.',
       fen: '6k1/5ppp/8/8/8/8/8/R5K1 w - - 0 1',
       steps: ['a1a8'],
       goal: LineGoal.mate,
@@ -100,7 +97,6 @@ void main() {
 
     test('con l\'obiettivo matto vale anche un altro matto', () {
       const two = LineExercise(
-        instructions: 'Matto in una.',
         fen: '6k1/5ppp/8/8/8/8/8/RQ4K1 w - - 0 1',
         steps: ['a1a8'],
         goal: LineGoal.mate,
@@ -111,7 +107,6 @@ void main() {
 
     test('risposta automatica dell\'avversario e mosse alternative', () {
       const develop = LineExercise(
-        instructions: 'Sviluppa un pezzo.',
         fen: 'rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2',
         steps: ['g1f3|b1c3', 'b8c6', 'f1c4'],
         goal: LineGoal.line,
@@ -125,7 +120,6 @@ void main() {
 
     test('l\'arrocco si riconosce in entrambe le forme', () {
       const castle = LineExercise(
-        instructions: 'Arrocca.',
         fen: 'r1bqk1nr/pppp1ppp/2n5/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4',
         steps: ['e1g1'],
         goal: LineGoal.line,
@@ -136,7 +130,6 @@ void main() {
 
     test('con l\'obiettivo scacco vale ogni scacco dello stesso pezzo', () {
       const check = LineExercise(
-        instructions: 'Dai scacco.',
         fen: '4k3/p7/8/8/8/3B4/7P/1R2K3 w - - 0 1',
         steps: ['d3b5'],
         goal: LineGoal.check,

@@ -36,18 +36,33 @@ List<List<Move>> linesFromPgn(String text) {
   } on Object {
     return const [];
   }
+  // Il repertorio parte dalla posizione iniziale: una partita da un'altra
+  // posizione non è una linea e non va letta come se lo fosse.
+  final fen = game.headers['FEN'];
+  if (fen != null) {
+    try {
+      if (Chess.fromSetup(Setup.parseFen(fen)).fen != Chess.initial.fen) {
+        return const [];
+      }
+    } on Object {
+      return const [];
+    }
+  }
   final lines = <List<Move>>[];
   void walk(PgnNode<PgnNodeData> node, Position pos, List<Move> path) {
     if (node.children.isEmpty) {
       if (path.isNotEmpty) lines.add(path);
       return;
     }
+    var anyLegal = false;
     for (final child in node.children) {
       final move = pos.parseSan(child.data.san);
-      // Un ramo illegale si scarta dal punto dell'errore.
       if (move == null) continue;
+      anyLegal = true;
       walk(child, pos.play(move), [...path, move]);
     }
+    // Una mossa illegale chiude il ramo, ma la parte legale prima resta.
+    if (!anyLegal && path.isNotEmpty) lines.add(path);
   }
 
   walk(game.moves, Chess.initial, const []);
@@ -71,6 +86,10 @@ class RepertoireDrill {
   bool _missed = false;
   bool _done = false;
 
+  /// Una mossa è in corso di registrazione: un secondo tocco non conta di
+  /// nuovo la stessa carta.
+  bool _busy = false;
+
   Position get position => _position;
   Move? get lastMove => _lastMove;
   bool get isFinished => _done;
@@ -84,6 +103,16 @@ class RepertoireDrill {
   String get _card => _trainer._cardId(side, _position);
 
   Future<DrillResult> tryMove(Move move) async {
+    if (_busy) return DrillResult.illegal;
+    _busy = true;
+    try {
+      return await _tryMove(move);
+    } finally {
+      _busy = false;
+    }
+  }
+
+  Future<DrillResult> _tryMove(Move move) async {
     final want = expected;
     if (want == null || !_position.isLegal(move)) return DrillResult.illegal;
     if (_position.normalizeMove(move as NormalMove) !=
@@ -166,23 +195,40 @@ class RepertoireTrainer {
     t._queue = await ReviewQueue.load(store, key: queueKey, retire: false);
     final raw = await store.read(storageKey);
     if (raw != null) {
+      Map<String, dynamic>? json;
       try {
-        final json = jsonDecode(raw) as Map<String, dynamic>;
-        final loaded = {
-          for (final side in Side.values)
-            side: [
-              for (final l in (json[side.name] as List? ?? const []))
-                RepertoireLine((l as Map<String, dynamic>)['n'] as String, [
-                  for (final m in (l['m'] as String).split(' ')) Move.parse(m)!,
-                ]),
-            ],
-        };
-        t._lines.addAll(loaded);
+        json = jsonDecode(raw) as Map<String, dynamic>;
       } on Object {
         // Repertorio illeggibile: si riparte vuoti.
       }
+      if (json != null) {
+        for (final side in Side.values) {
+          final saved = json[side.name];
+          if (saved is! List) continue;
+          // Una linea rovinata si scarta da sola, le altre restano.
+          t._lines[side]!.addAll([for (final l in saved) ?_decodeLine(l)]);
+        }
+      }
     }
     return t;
+  }
+
+  static RepertoireLine? _decodeLine(Object? raw) {
+    try {
+      final l = raw! as Map<String, dynamic>;
+      final name = l['n']! as String;
+      final moves = [
+        for (final m in (l['m']! as String).split(' ')) Move.parse(m)!,
+      ];
+      // Mosse illegali in una linea la rendono inutilizzabile.
+      if (moves.isEmpty ||
+          OpeningBook.replay(moves).length != moves.length + 1) {
+        return null;
+      }
+      return RepertoireLine(name, moves);
+    } on Object {
+      return null;
+    }
   }
 
   List<RepertoireLine> lines(Side side) => List.unmodifiable(_lines[side]!);
@@ -235,8 +281,11 @@ class RepertoireTrainer {
     }
     for (final MapEntry(key: id, value: move) in cards.entries) {
       final other = known[id];
-      if (other != null && other != move) {
-        final pos = replayed.firstWhere((p) => _cardId(side, p) == id);
+      if (other == null) continue;
+      final pos = replayed.firstWhere((p) => _cardId(side, p) == id);
+      // L'arrocco ha due forme (re sulla torre o re in g1/c1): stessa mossa.
+      if (pos.normalizeMove(other as NormalMove) !=
+          pos.normalizeMove(move as NormalMove)) {
         return LineProblem(
           LineProblemKind.conflict,
           move: formatSan(pos.makeSan(other).$2, notation),
@@ -249,7 +298,11 @@ class RepertoireTrainer {
     return null;
   }
 
-  Future<void> removeLine(Side side, int index) async {
+  /// Toglie [line] per riferimento: un indice potrebbe ormai indicare un'altra
+  /// linea se l'elenco è cambiato nel frattempo.
+  Future<void> removeLine(Side side, RepertoireLine line) async {
+    final index = _lines[side]!.indexWhere((l) => identical(l, line));
+    if (index < 0) return;
     final removed = _lines[side]!.removeAt(index);
     final still = _allCards(side);
     await _queue.remove(

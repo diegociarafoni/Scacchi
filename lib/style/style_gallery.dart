@@ -4,6 +4,7 @@ import '../kids/kid_display.dart';
 import '../l10n/app_localizations.dart';
 import '../progress/rewards.dart';
 import '../theme/rokko_theme.dart';
+import '../theme/sheets.dart';
 
 /// Una scelta della griglia: dopo [visual] il nome, il lucchetto se ancora da
 /// sbloccare e la spunta sulla scelta attiva.
@@ -60,7 +61,9 @@ class StyleGallery<T extends Enum> extends StatelessWidget {
         final columns = ((box.maxWidth - 16) / 88).floor().clamp(3, 8);
         final width = (box.maxWidth - 16 - gap * (columns - 1)) / columns;
         return ListView(
-          padding: const EdgeInsets.fromLTRB(8, 12, 8, 24),
+          padding: context.withSystemBottom(
+            const EdgeInsets.fromLTRB(8, 12, 8, 24),
+          ),
           children: [
             Semantics(
               header: true,
