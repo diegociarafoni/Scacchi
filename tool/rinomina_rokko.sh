@@ -2,7 +2,9 @@
 # Rinomina l'identificativo tecnico «scacchi» in «rokko» (pacchetto Dart,
 # applicationId e bundle id, binari desktop, variabili di CI). Ripetibile:
 # su un albero già rinominato non cambia nulla. Non tocca la parola comune
-# «scacchi» né l'alias e il sale del keystore, che restano stabili.
+# «scacchi», né l'alias, il sale e il nome del certificato del keystore, né le
+# stringhe dei protocolli multigiocatore (schema scacchi://, contesti HKDF,
+# firme e UUID BLE): cambiarli romperebbe la compatibilità.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -28,7 +30,6 @@ echo "$files" | xargs perl -pi -e '
   s/\/scacchi"; *$/\/rokko";/;
   s/"InternalName", "scacchi"/"InternalName", "rokko"/;
   s/"OriginalFilename", "scacchi\.exe"/"OriginalFilename", "rokko.exe"/;
-  s/COMMON_NAME, "Scacchi"/COMMON_NAME, "Rokko"/;
 '
 
 vecchia=android/app/src/main/kotlin/io/github/diegociarafoni/scacchi

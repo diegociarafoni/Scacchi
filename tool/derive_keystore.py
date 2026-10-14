@@ -118,7 +118,7 @@ def derive_key(master: bytes) -> rsa.RSAPrivateKey:
 
 
 def certificate(key: rsa.RSAPrivateKey) -> x509.Certificate:
-    name = x509.Name([x509.NameAttribute(NameOID.COMMON_NAME, "Rokko")])
+    name = x509.Name([x509.NameAttribute(NameOID.COMMON_NAME, "Scacchi")])
     utc = datetime.timezone.utc
     # Campi fissi e firma PKCS#1 v1.5 (deterministica): certificato identico a ogni build.
     return (

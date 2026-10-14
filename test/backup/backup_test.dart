@@ -123,6 +123,13 @@ void main() {
         });
         expect(() => Backup.decode(text), returnsNormally);
       }
+      final estraneo = jsonEncode({
+        'app': 'altro',
+        'version': 1,
+        'files': <String, Object?>{},
+        'preferences': <String, Object?>{},
+      });
+      expect(() => Backup.decode(estraneo), throwsA(isA<BackupException>()));
     });
 
     test('rifiuta un binario fuori elenco o non base64', () {
