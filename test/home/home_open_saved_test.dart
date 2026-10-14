@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/archive/game_archive.dart';
 import 'package:scacchi/archive/saved_game.dart';
+import 'package:scacchi/engine/computer_player.dart';
 import 'package:scacchi/game/chess_game.dart';
 import 'package:scacchi/game/variant.dart';
 import 'package:scacchi/home/home_shell.dart';
@@ -15,6 +16,7 @@ import 'package:scacchi/review/review_page.dart';
 import 'package:scacchi/settings/settings.dart';
 import 'package:scacchi/story/story_controller.dart';
 
+import '../computer_fakes.dart';
 import '../localized_app.dart';
 
 void main() {
@@ -55,6 +57,8 @@ void main() {
           archive: () async => archive,
           reminderScheduler: () => null,
           computerAvailable: true,
+          createComputer: () =>
+              ComputerPlayer(connect: () async => FirstLegalMoveEngine()),
         ),
       ),
     );
