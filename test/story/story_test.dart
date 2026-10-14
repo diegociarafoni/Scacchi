@@ -107,7 +107,12 @@ void main() {
           expect(line.length, lessThanOrEqualTo(90), reason: reason);
           expect(line, isNot(matches(RegExp(r'\d'))), reason: reason);
         }
-        for (final m in [GuardianMoment.welcome, GuardianMoment.lessonDone]) {
+        for (final m in [
+          GuardianMoment.welcome,
+          GuardianMoment.lessonDone,
+          GuardianMoment.bossWon,
+          GuardianMoment.bossLost,
+        ]) {
           expect({
             for (final o in storyChapters) l10n.guardianLine(o, m),
           }, hasLength(storyChapters.length));

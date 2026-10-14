@@ -1,0 +1,20 @@
+{
+  "storyGuardianPrologueBossWon": "Quelle belle partie ! Tu joues vraiment bien, j'ai appris quelque chose.",
+  "storyGuardianVillageBossWon": "Bravo ! Tu as gagné sans laisser une seule pièce en prise.",
+  "storyGuardianGatesBossWon": "Tu connais bien les règles. Les portes sont à toi, passe.",
+  "storyGuardianTowerBossWon": "Beau mat. La tour est à toi maintenant.",
+  "storyGuardianForestBossWon": "Ton piège a fonctionné. Félicitations !",
+  "storyGuardianCastleBossWon": "Une finale jouée avec patience. Je te serre la main.",
+  "storyGuardianCrownBossWon": "Une ouverture élégante et une victoire méritée. Vers la couronne !",
+  "storyGuardianPlainBossWon": "Ton plan a marché. Même le Gambit Evans n'a pas suffi.",
+  "storyGuardianAcademyBossWon": "Tu as gagné. Les maîtres t'attendent !",
+  "storyGuardianPrologueBossLost": "Ne t'inquiète pas, je me trompe aussi. On réessaie ensemble !",
+  "storyGuardianVillageBossLost": "De peu ! Attention aux pièces en prise, et réessaie.",
+  "storyGuardianGatesBossLost": "Revois les règles et reviens : je t'attends aux portes.",
+  "storyGuardianTowerBossLost": "Le roi s'est échappé. Pense au mat et réessaie.",
+  "storyGuardianForestBossLost": "Tu as vu le piège ? La prochaine fois, tu l'esquives.",
+  "storyGuardianCastleBossLost": "Aux finales, il faut de la patience. On recommence, calmement.",
+  "storyGuardianCrownBossLost": "Soigne l'ouverture, le reste suivra. Réessaie !",
+  "storyGuardianPlainBossLost": "Il manquait un plan. Réfléchis-y et réessaie.",
+  "storyGuardianAcademyBossLost": "Je ne fais pas de cadeau, tu le savais. Mais tu vas apprendre : reviens vite !"
+}

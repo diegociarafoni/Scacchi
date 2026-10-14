@@ -1,0 +1,74 @@
+{
+  "storyGuardianPrologueBossWon": "Che bella partita! Giochi proprio bene, io ho imparato qualcosa.",
+  "@storyGuardianPrologueBossWon": {
+    "description": "storyGuardianPrologueBossWon"
+  },
+  "storyGuardianVillageBossWon": "Complimenti! Mi hai battuto senza lasciare un solo pezzo in presa.",
+  "@storyGuardianVillageBossWon": {
+    "description": "storyGuardianVillageBossWon"
+  },
+  "storyGuardianGatesBossWon": "Le regole le conosci bene. Le porte sono tue, passa pure.",
+  "@storyGuardianGatesBossWon": {
+    "description": "storyGuardianGatesBossWon"
+  },
+  "storyGuardianTowerBossWon": "Bel matto, mi hai preso. Ora la torre è tua.",
+  "@storyGuardianTowerBossWon": {
+    "description": "storyGuardianTowerBossWon"
+  },
+  "storyGuardianForestBossWon": "La tua trappola ha funzionato. Complimenti!",
+  "@storyGuardianForestBossWon": {
+    "description": "storyGuardianForestBossWon"
+  },
+  "storyGuardianCastleBossWon": "Un finale giocato con pazienza. Ti stringo la mano.",
+  "@storyGuardianCastleBossWon": {
+    "description": "storyGuardianCastleBossWon"
+  },
+  "storyGuardianCrownBossWon": "Un'apertura elegante e una vittoria meritata. Alla corona!",
+  "@storyGuardianCrownBossWon": {
+    "description": "storyGuardianCrownBossWon"
+  },
+  "storyGuardianPlainBossWon": "Il tuo piano ha funzionato: nemmeno il Gambetto Evans è bastato.",
+  "@storyGuardianPlainBossWon": {
+    "description": "storyGuardianPlainBossWon"
+  },
+  "storyGuardianAcademyBossWon": "Hai vinto. Ora i maestri ti aspettano!",
+  "@storyGuardianAcademyBossWon": {
+    "description": "storyGuardianAcademyBossWon"
+  },
+  "storyGuardianPrologueBossLost": "Non ti preoccupare, sbaglio anch'io. Riproviamo insieme!",
+  "@storyGuardianPrologueBossLost": {
+    "description": "storyGuardianPrologueBossLost"
+  },
+  "storyGuardianVillageBossLost": "Per un pelo! Attenzione ai pezzi in presa, e riprova.",
+  "@storyGuardianVillageBossLost": {
+    "description": "storyGuardianVillageBossLost"
+  },
+  "storyGuardianGatesBossLost": "Ripassa le regole e torna: ti aspetto alle porte.",
+  "@storyGuardianGatesBossLost": {
+    "description": "storyGuardianGatesBossLost"
+  },
+  "storyGuardianTowerBossLost": "Il re è scappato. Pensa al matto e riprova.",
+  "@storyGuardianTowerBossLost": {
+    "description": "storyGuardianTowerBossLost"
+  },
+  "storyGuardianForestBossLost": "Hai visto la trappola? La prossima volta la schivi.",
+  "@storyGuardianForestBossLost": {
+    "description": "storyGuardianForestBossLost"
+  },
+  "storyGuardianCastleBossLost": "Nei finali serve pazienza. Rifacciamo, con calma.",
+  "@storyGuardianCastleBossLost": {
+    "description": "storyGuardianCastleBossLost"
+  },
+  "storyGuardianCrownBossLost": "Cura l'apertura e il resto verrà da sé. Riprova!",
+  "@storyGuardianCrownBossLost": {
+    "description": "storyGuardianCrownBossLost"
+  },
+  "storyGuardianPlainBossLost": "Mancava un piano. Pensaci su e riprova.",
+  "@storyGuardianPlainBossLost": {
+    "description": "storyGuardianPlainBossLost"
+  },
+  "storyGuardianAcademyBossLost": "Sconti non ne faccio, lo sapevi. Ma imparerai: torna presto!",
+  "@storyGuardianAcademyBossLost": {
+    "description": "storyGuardianAcademyBossLost"
+  }
+}

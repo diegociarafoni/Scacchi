@@ -1,0 +1,20 @@
+{
+  "storyGuardianPrologueBossWon": "Was für eine schöne Partie! Du spielst richtig gut, ich habe etwas gelernt.",
+  "storyGuardianVillageBossWon": "Glückwunsch! Du hast gewonnen, ohne eine Figur einzustellen.",
+  "storyGuardianGatesBossWon": "Du kennst die Regeln gut. Die Tore gehören dir, geh nur durch.",
+  "storyGuardianTowerBossWon": "Schönes Matt. Der Turm gehört jetzt dir.",
+  "storyGuardianForestBossWon": "Deine Falle hat funktioniert. Glückwunsch!",
+  "storyGuardianCastleBossWon": "Ein Endspiel mit Geduld gespielt. Ich reiche dir die Hand.",
+  "storyGuardianCrownBossWon": "Eine elegante Eröffnung und ein verdienter Sieg. Auf zur Krone!",
+  "storyGuardianPlainBossWon": "Dein Plan ging auf. Nicht einmal das Evans-Gambit hat gereicht.",
+  "storyGuardianAcademyBossWon": "Du hast gewonnen. Jetzt warten die Meister auf dich!",
+  "storyGuardianPrologueBossLost": "Keine Sorge, ich mache auch Fehler. Versuchen wir es zusammen noch mal!",
+  "storyGuardianVillageBossLost": "Knapp! Achte auf ungedeckte Figuren und versuche es noch mal.",
+  "storyGuardianGatesBossLost": "Wiederhole die Regeln und komm zurück: Ich warte an den Toren.",
+  "storyGuardianTowerBossLost": "Der König ist entkommen. Denk ans Matt und versuche es noch mal.",
+  "storyGuardianForestBossLost": "Hast du die Falle gesehen? Beim nächsten Mal weichst du aus.",
+  "storyGuardianCastleBossLost": "Im Endspiel braucht man Geduld. Noch einmal, in Ruhe.",
+  "storyGuardianCrownBossLost": "Pflege die Eröffnung, der Rest folgt. Versuch es noch mal!",
+  "storyGuardianPlainBossLost": "Es fehlte ein Plan. Denk darüber nach und versuche es noch mal.",
+  "storyGuardianAcademyBossLost": "Ich schenke dir nichts, das wusstest du. Aber du lernst: Komm bald wieder!"
+}

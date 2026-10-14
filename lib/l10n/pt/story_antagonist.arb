@@ -1,0 +1,20 @@
+{
+  "storyGuardianPrologueBossWon": "Que partida bonita! Você joga muito bem e eu aprendi algo.",
+  "storyGuardianVillageBossWon": "Parabéns! Você venceu sem deixar nenhuma peça em risco.",
+  "storyGuardianGatesBossWon": "Você conhece bem as regras. As portas são suas, pode passar.",
+  "storyGuardianTowerBossWon": "Belo xeque-mate. A torre agora é sua.",
+  "storyGuardianForestBossWon": "Sua armadilha funcionou. Parabéns!",
+  "storyGuardianCastleBossWon": "Um final jogado com paciência. Aperto sua mão.",
+  "storyGuardianCrownBossWon": "Uma abertura elegante e uma vitória merecida. À coroa!",
+  "storyGuardianPlainBossWon": "Seu plano funcionou. Nem o Gambito Evans bastou.",
+  "storyGuardianAcademyBossWon": "Você venceu. Agora os mestres esperam por você!",
+  "storyGuardianPrologueBossLost": "Não se preocupe, eu também erro. Vamos tentar juntos de novo!",
+  "storyGuardianVillageBossLost": "Por pouco! Cuidado com as peças em risco e tente de novo.",
+  "storyGuardianGatesBossLost": "Revise as regras e volte: espero você nas portas.",
+  "storyGuardianTowerBossLost": "O rei escapou. Pense no mate e tente de novo.",
+  "storyGuardianForestBossLost": "Viu a armadilha? Da próxima vez você a evita.",
+  "storyGuardianCastleBossLost": "Nos finais é preciso paciência. Vamos de novo, com calma.",
+  "storyGuardianCrownBossLost": "Cuide da abertura e o resto vem. Tente de novo!",
+  "storyGuardianPlainBossLost": "Faltou um plano. Pense nisso e tente outra vez.",
+  "storyGuardianAcademyBossLost": "Não dou descontos, você sabia. Mas vai aprender: volte logo!"
+}
