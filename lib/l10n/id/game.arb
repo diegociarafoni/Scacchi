@@ -194,6 +194,14 @@
   "@gameClockDelay": {
     "description": "Cadenza libera: campo del ritardo"
   },
+  "gameClockPhaseMoves": "Langkah sebelum tambahan waktu (0 = tanpa)",
+  "@gameClockPhaseMoves": {
+    "description": "Cadenza libera: dopo quante mosse di ciascun lato si aggiunge il tempo della seconda fase"
+  },
+  "gameClockPhaseMinutes": "Menit tambahan",
+  "@gameClockPhaseMinutes": {
+    "description": "Cadenza libera: minuti aggiunti all'orologio di chi completa le mosse della prima fase"
+  },
   "gameClockDelaySimple": "Sederhana",
   "@gameClockDelaySimple": {
     "description": "Cadenza libera: ritardo semplice, il tempo parte dopo il ritardo"

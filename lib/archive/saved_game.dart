@@ -308,9 +308,13 @@ String _pgnDate(DateTime d) => '${d.year}.${_two(d.month)}.${_two(d.day)}';
 
 String _two(int n) => n.toString().padLeft(2, '0');
 
-/// Cadenza PGN in secondi: `5+3` diventa `300+3`, `0.5+0` diventa `30+0`.
+/// Cadenza PGN in secondi: `5+3` diventa `300+3`, `0.5+0` diventa `30+0`; con
+/// una fase aggiunta `90+30@40:30` diventa `40/5400+30:1800+30`.
 String? _pgnTimeControl(String? tc) {
-  final m = RegExp(r'^(\d+(?:\.\d+)?)\+(\d+)$').firstMatch(tc ?? '');
+  final m = RegExp(r'^(\d+(?:\.\d+)?)\+(\d+)(?:@(\d+):(\d+))?$')
+      .firstMatch(tc ?? '');
   if (m == null) return null;
-  return '${(double.parse(m[1]!) * 60).round()}+${m[2]}';
+  final first = '${(double.parse(m[1]!) * 60).round()}';
+  if (m[3] == null) return '$first+${m[2]}';
+  return '${m[3]}/$first+${m[2]}:${int.parse(m[4]!) * 60}+${m[2]}';
 }

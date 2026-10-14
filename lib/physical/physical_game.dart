@@ -92,7 +92,7 @@ class PhysicalGame {
       if (_game.isOver) {
         c.pause();
       } else {
-        c.switchAfterMove();
+        c.switchAfterMove(moves: (moves.length + 1) ~/ 2);
       }
     }
     return PhysicalInput.played;
@@ -158,7 +158,11 @@ class PhysicalGame {
   String? _timeControl() {
     final c = control;
     if (c == null) return null;
-    return '${c.minutes * 60}${c.increment > 0 ? '+${c.increment}' : ''}';
+    final plus = c.increment > 0 ? '+${c.increment}' : '';
+    final first = '${c.minutes * 60}$plus';
+    if (!c.hasPhase) return first;
+    // Con la seconda fase: `40/5400+30:1800+30`.
+    return '${c.phaseMoves}/$first:${c.phaseMinutes * 60}$plus';
   }
 
   static String _date(DateTime d) =>

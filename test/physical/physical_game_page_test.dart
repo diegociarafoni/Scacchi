@@ -173,6 +173,32 @@ void main() {
     expect(find.text('Draw agreed?'), findsOneWidget);
   });
 
+  testWidgets('A-5 una cadenza libera a due fasi parte con il suo orologio', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      localizedApp(home: PhysicalGamePage(archive: () async => archive)),
+    );
+    await tester.tap(find.byKey(const Key('physical-clock-custom')));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byKey(const ValueKey('clock-minutes')), '90');
+    await tester.enterText(
+      find.byKey(const ValueKey('clock-phase-moves')),
+      '40',
+    );
+    await tester.enterText(
+      find.byKey(const ValueKey('clock-phase-minutes')),
+      '30',
+    );
+    await tester.pump();
+    await tester.tap(find.byKey(const ValueKey('clock-start')));
+    await tester.pumpAndSettle();
+    expect(find.text('90+0@40:30'), findsOneWidget);
+    await tester.tap(find.text('Inizia la partita'));
+    await tester.pump();
+    expect(find.text('90:00'), findsWidgets);
+  });
+
   testWidgets('in inglese anche abbandono, foto e allineamento', (
     tester,
   ) async {
