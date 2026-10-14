@@ -116,6 +116,9 @@ jobs:
           cache: true
       - run: dart tool/l10n.dart --solo-unione
       - run: flutter pub get
+      # Come nella CI: i test con il motore vero girano solo se Stockfish c'è.
+      - if: steps.ci.outputs.passed != 'true'
+        run: sudo apt-get update && sudo apt-get install -y stockfish
       - if: steps.ci.outputs.passed != 'true'
         run: flutter analyze && flutter test
 

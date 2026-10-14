@@ -4,7 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:rokko/engine/adaptive.dart';
 import 'package:rokko/engine/computer_player.dart';
 import 'package:rokko/game/game_page.dart';
-import 'package:rokko/settings/settings.dart';
 import 'package:rokko/storage/key_value_store.dart';
 
 import 'computer_fakes.dart';
@@ -13,7 +12,7 @@ import 'game_actions.dart';
 void main() {
   Widget app(MemoryStore store) => MaterialApp(
     home: GamePage(
-      settings: SettingsController.defaults(),
+      settings: trainingSettings(),
       computerAvailable: true,
       store: store,
       now: () => TestWidgetsFlutterBinding.instance.clock.now(),

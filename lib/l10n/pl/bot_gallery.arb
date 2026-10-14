@@ -142,6 +142,8 @@
   "botOptionsHelp": "Pomoc",
   "botOptionsCoach": "Trener",
   "botOptionsCoachHint": "Ostrzega cię, gdy popełnisz błąd.",
+  "botOptionsTraining": "Trening",
+  "botOptionsTrainingHint": "Cofanie, podpowiedzi i zagrożenia. Nie liczy się do Elo ani zwycięstw; wyłączony to Wyzwanie, bez pomocy.",
   "botOptionsSummary": "{time} · {variant}",
   "@botOptionsSummary": {
     "placeholders": {

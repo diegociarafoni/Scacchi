@@ -5,7 +5,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:rokko/engine/computer_player.dart';
 import 'package:rokko/game/game_page.dart';
 import 'package:rokko/l10n/app_localizations.dart';
-import 'package:rokko/settings/settings.dart';
 import 'package:rokko/storage/key_value_store.dart';
 import 'package:rokko/theme/rokko_theme.dart';
 
@@ -25,7 +24,7 @@ Future<void> pump(
   tester.view.physicalSize = size * 3;
   tester.view.devicePixelRatio = 3;
   addTearDown(tester.view.reset);
-  final settings = SettingsController.defaults();
+  final settings = trainingSettings();
   if (kid) await settings.update(settings.value.copyWith(kidMode: true));
   await tester.pumpWidget(
     MaterialApp(

@@ -119,6 +119,7 @@ class _BotGalleryPageState extends State<BotGalleryPage> {
   late HandicapGiver _handicapGiver =
       widget.initialOptions.handicap?.giver ?? HandicapGiver.player;
   late bool _coach = widget.initialOptions.coach;
+  late bool _training = widget.initialOptions.training;
 
   @override
   void initState() {
@@ -190,7 +191,8 @@ class _BotGalleryPageState extends State<BotGalleryPage> {
           control: _control,
           variant: _variant,
           handicap: _handicap,
-          coach: _coach,
+          coach: _coach && _training,
+          training: _training,
         );
 
   void _play() => Navigator.pop(
@@ -1044,12 +1046,22 @@ class _OptionsSheetState extends State<_OptionsSheet> {
                       ],
                       title(l10n.botOptionsHelp),
                       SwitchListTile(
+                        key: const Key('option-training'),
+                        contentPadding: EdgeInsets.zero,
+                        title: Text(l10n.botOptionsTraining),
+                        subtitle: Text(l10n.botOptionsTrainingHint),
+                        value: _page._training,
+                        onChanged: (v) => _change(() => _page._training = v),
+                      ),
+                      SwitchListTile(
                         key: const Key('option-coach'),
                         contentPadding: EdgeInsets.zero,
                         title: Text(l10n.botOptionsCoach),
                         subtitle: Text(l10n.botOptionsCoachHint),
-                        value: _page._coach,
-                        onChanged: (v) => _change(() => _page._coach = v),
+                        value: _page._coach && _page._training,
+                        onChanged: _page._training
+                            ? (v) => _change(() => _page._coach = v)
+                            : null,
                       ),
                     ],
                   ],
