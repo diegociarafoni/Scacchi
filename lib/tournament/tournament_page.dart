@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../l10n/app_localizations.dart';
+import '../theme/sheets.dart';
 
 import 'tournament.dart';
 import 'tournament_controller.dart';
@@ -136,7 +137,7 @@ class _SetupState extends State<_Setup> {
     );
     final trophies = page.controller.trophies;
     return ListView(
-      padding: const EdgeInsets.all(16),
+      padding: context.withSystemBottom(const EdgeInsets.all(16)),
       children: [
         Text(l10n.tournamentNew, style: text.titleLarge),
         Text(l10n.tournamentIntro),
@@ -272,7 +273,7 @@ class _RunningState extends State<_Running> {
         ? t.totalRounds
         : null;
     return ListView(
-      padding: const EdgeInsets.all(16),
+      padding: context.withSystemBottom(const EdgeInsets.all(16)),
       children: [
         Text(
           l10n.tournamentHeader(_formatLabel(l10n, t.format), t.players.length),

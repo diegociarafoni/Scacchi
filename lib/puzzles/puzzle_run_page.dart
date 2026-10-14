@@ -63,6 +63,10 @@ class _PuzzleRunPageState extends State<PuzzleRunPage> {
   bool _newRecord = false;
   bool? _right;
 
+  /// Punti della serie, nel pannello finale: la barra a comparsa coprirebbe
+  /// i pulsanti.
+  String? _progressNote;
+
   @override
   void initState() {
     super.initState();
@@ -98,6 +102,7 @@ class _PuzzleRunPageState extends State<PuzzleRunPage> {
   }
 
   void _restart() {
+    _progressNote = null;
     _prepare();
     _startClock();
   }
@@ -172,7 +177,8 @@ class _PuzzleRunPageState extends State<PuzzleRunPage> {
       if (update != null) updates.add(update);
     }
     if (!mounted || updates.isEmpty) return;
-    showProgressFeedback(context, mergeUpdates(updates));
+    final note = progressText(context, mergeUpdates(updates));
+    if (note != null) setState(() => _progressNote = note);
   }
 
   String _format(Duration d) {
@@ -214,6 +220,7 @@ class _PuzzleRunPageState extends State<PuzzleRunPage> {
                 bestCombo: _run.bestCombo,
                 newRecord: _newRecord,
                 reason: _endText(l),
+                progressNote: _progressNote,
                 // Con la stessa sfida rigiocare darebbe gli stessi puzzle.
                 onAgain: widget.challenge == null
                     ? () => setState(_restart)
@@ -426,6 +433,7 @@ class _Result extends StatelessWidget {
     required this.bestCombo,
     required this.newRecord,
     required this.reason,
+    required this.progressNote,
     required this.onAgain,
     this.extra,
   });
@@ -435,6 +443,7 @@ class _Result extends StatelessWidget {
   final int bestCombo;
   final bool newRecord;
   final String? reason;
+  final String? progressNote;
   final VoidCallback? onAgain;
   final Widget? extra;
 
@@ -455,6 +464,10 @@ class _Result extends StatelessWidget {
             if (reason != null) ...[
               const SizedBox(height: 8),
               Text(reason!, style: text.bodyLarge),
+            ],
+            if (progressNote != null) ...[
+              const SizedBox(height: 8),
+              ProgressNote(message: progressNote!),
             ],
             const SizedBox(height: 16),
             Text(

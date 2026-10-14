@@ -10,6 +10,7 @@ import '../progress/avatar.dart';
 import '../progress/guardian_avatar.dart';
 import '../puzzles/themes.dart';
 import '../theme/rokko_theme.dart';
+import '../theme/sheets.dart';
 import 'guardian_says.dart';
 import 'story.dart';
 import 'story_controller.dart';
@@ -201,9 +202,8 @@ class _StoryPageState extends State<StoryPage> {
         line = l10n.guardianLine(chapter, GuardianMoment.lessonDone);
       }
     }
-    final go = await showModalBottomSheet<bool>(
+    final go = await showRokkoSheet<bool>(
       context: context,
-      isScrollControlled: true,
       showDragHandle: true,
       builder: (_) => _PassageSheet(
         icon: icon,
@@ -276,9 +276,8 @@ class _StoryPageState extends State<StoryPage> {
   /// passaggio l'ha già annunciata.
   Future<bool> _challengeAccepted(StoryChapter chapter) async {
     final l10n = storyL10n(context);
-    final go = await showModalBottomSheet<bool>(
+    final go = await showRokkoSheet<bool>(
       context: context,
-      isScrollControlled: true,
       showDragHandle: true,
       builder: (_) => _PassageSheet(
         icon: Icons.sports_esports_outlined,
@@ -354,7 +353,9 @@ class _StoryPageState extends State<StoryPage> {
                   ),
                 ),
           body: ListView(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+            padding: context.withSystemBottom(
+              const EdgeInsets.fromLTRB(16, 8, 16, 16),
+            ),
             children: [
               _Summary(progress: progress),
               const SizedBox(height: 12),

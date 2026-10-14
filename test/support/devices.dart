@@ -18,10 +18,18 @@ enum Device {
 
   static const phones = [phoneSmall, phoneMedium, phoneLarge];
 
-  void apply(WidgetTester tester) {
+  /// Altezza logica della barra a tre tasti di Android.
+  static const double threeButtonBar = 48;
+
+  /// Con [navBar] la parte bassa dello schermo è occupata dalla barra di
+  /// navigazione di sistema, come con i tre tasti.
+  void apply(WidgetTester tester, {double navBar = 0}) {
+    final inset = FakeViewPadding(bottom: navBar * pixelRatio);
     tester.view
       ..physicalSize = logicalSize * pixelRatio
-      ..devicePixelRatio = pixelRatio;
+      ..devicePixelRatio = pixelRatio
+      ..padding = inset
+      ..viewPadding = inset;
     addTearDown(tester.view.reset);
   }
 }

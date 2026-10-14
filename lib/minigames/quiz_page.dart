@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
 import '../settings/settings.dart';
+import '../theme/sheets.dart';
 import 'minigame.dart';
 import 'quiz.dart';
 
@@ -108,7 +109,7 @@ class _QuizPageState extends State<QuizPage> {
               )
             : LayoutBuilder(
                 builder: (context, constraints) => ListView(
-                  padding: const EdgeInsets.all(16),
+                  padding: context.withSystemBottom(const EdgeInsets.all(16)),
                   children: [
                     Text(
                       l10n.minigamesQuizQuestion(

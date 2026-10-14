@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import '../l10n/app_localizations.dart';
 import '../settings/board_frame.dart';
 import '../settings/settings.dart';
+import '../theme/sheets.dart';
 import 'image_sharing.dart';
 import 'position_image.dart';
 
@@ -141,7 +142,7 @@ class _PositionImagePageState extends State<PositionImagePage> {
               _maxPreviewWidth,
             );
             return ListView(
-              padding: const EdgeInsets.all(16),
+              padding: context.withSystemBottom(const EdgeInsets.all(16)),
               children: [
                 Center(
                   child: Semantics(

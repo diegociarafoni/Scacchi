@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:qr/qr.dart';
 
+import '../theme/sheets.dart';
 import 'qr_code_view.dart';
 import 'qr_l10n.dart';
 import 'qr_transfer.dart';
@@ -90,7 +91,7 @@ class _QrSendPageState extends State<QrSendPage> {
       appBar: AppBar(title: Text(l10n.qrSendTitle)),
       body: SafeArea(
         child: ListView(
-          padding: const EdgeInsets.all(16),
+          padding: context.withSystemBottom(const EdgeInsets.all(16)),
           children: [
             Text(
               widget.title,

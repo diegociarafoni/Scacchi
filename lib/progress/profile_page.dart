@@ -8,6 +8,7 @@ import '../l10n/app_localizations.dart';
 import '../minigames/minigame.dart';
 import '../reminders/reminder_controller.dart';
 import '../settings/settings.dart';
+import '../theme/sheets.dart';
 import 'achievements.dart';
 import 'achievements_l10n.dart';
 import 'avatar.dart';
@@ -146,10 +147,9 @@ class _LevelCard extends StatelessWidget {
                   child: InkWell(
                     key: const Key('avatar'),
                     customBorder: const CircleBorder(),
-                    onTap: () => showModalBottomSheet<void>(
+                    onTap: () => showRokkoSheet<void>(
                       context: context,
                       showDragHandle: true,
-                      isScrollControlled: true,
                       builder: (_) => _AvatarPicker(
                         controller: controller,
                         photoPicker: photoPicker,

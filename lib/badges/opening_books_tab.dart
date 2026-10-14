@@ -5,6 +5,7 @@ import 'package:dartchess/dartchess.dart' show Side;
 import 'package:flutter/material.dart';
 
 import '../progress/progress_state.dart';
+import '../theme/sheets.dart';
 import 'badges_l10n.dart';
 import 'badges_page.dart';
 import 'opening_volumes.dart';
@@ -38,7 +39,7 @@ class OpeningBooksTab extends StatelessWidget {
     final l = badgesL10n(context);
     final unlocked = unlockedVolumes(state).map((v) => v.id).toSet();
     return ListView(
-      padding: const EdgeInsets.all(16),
+      padding: context.withSystemBottom(const EdgeInsets.all(16)),
       children: [
         GalleryCounter(
           earned: unlocked.length,
@@ -101,10 +102,9 @@ class BookCard extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: () => unawaited(
-            showModalBottomSheet<void>(
+            showRokkoSheet<void>(
               context: context,
               showDragHandle: true,
-              isScrollControlled: true,
               builder: (_) => BookDetail(volume: volume, plays: plays),
             ),
           ),
