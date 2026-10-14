@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../l10n/app_localizations.dart';
+import '../theme/motion.dart';
 import 'clock.dart';
 
 const _maxMinutes = 180;
@@ -13,6 +14,7 @@ const _maxDelay = 60;
 Future<TimeControl?> showCustomClockDialog(BuildContext context) =>
     showDialog<TimeControl>(
       context: context,
+      animationStyle: motionStyle(context),
       builder: (_) => const _CustomClockDialog(),
     );
 

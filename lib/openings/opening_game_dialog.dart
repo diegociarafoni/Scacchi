@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../engine/levels.dart';
 import '../l10n/app_localizations.dart';
+import '../theme/motion.dart';
 
 /// Colore e livello scelti per giocare un'apertura.
 class OpeningGameChoice {
@@ -23,6 +24,7 @@ Future<OpeningGameChoice?> askOpeningGame(
   var level = defaultEngineLevel;
   return showDialog<OpeningGameChoice>(
     context: context,
+    animationStyle: motionStyle(context),
     builder: (context) => StatefulBuilder(
       builder: (context, setDialog) {
         final l10n = AppLocalizations.of(context);

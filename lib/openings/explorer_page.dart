@@ -9,6 +9,7 @@ import '../game/chess_game.dart';
 import '../l10n/app_localizations.dart';
 import '../settings/notation.dart';
 import '../settings/settings.dart';
+import '../theme/motion.dart';
 import '../training/training_board.dart';
 import 'opening_assets.dart';
 import 'opening_book.dart';
@@ -322,6 +323,7 @@ class _ExplorerPageState extends State<ExplorerPage> {
     var side = _moves.length.isOdd ? Side.white : Side.black;
     final confirmed = await showDialog<bool>(
       context: context,
+      animationStyle: motionStyle(context),
       builder: (context) => StatefulBuilder(
         builder: (context, setDialog) {
           final l10n = AppLocalizations.of(context);

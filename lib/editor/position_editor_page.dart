@@ -10,6 +10,7 @@ import '../minigames/blind.dart' show pieceLabel;
 import '../minigames/board_layout.dart';
 import '../share/position_image.dart';
 import '../share/position_image_page.dart';
+import '../theme/motion.dart';
 import 'position_draft.dart';
 
 /// Editor di posizione: pezzi liberi, tratto, arrocco, FEN. Restituisce la
@@ -79,6 +80,7 @@ class _PositionEditorPageState extends State<PositionEditorPage> {
   Future<void> _paste() async {
     final text = await showDialog<String>(
       context: context,
+      animationStyle: motionStyle(context),
       builder: (context) => const _FenDialog(),
     );
     if (!mounted || text == null) return;
@@ -253,6 +255,7 @@ class _PositionEditorPageState extends State<PositionEditorPage> {
                   tooltip: AppLocalizations.of(context).editorFenHelpTooltip,
                   onPressed: () => showDialog<void>(
                     context: context,
+                    animationStyle: motionStyle(context),
                     builder: (context) {
                       final l10n = AppLocalizations.of(context);
                       return AlertDialog(

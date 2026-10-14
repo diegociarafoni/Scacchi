@@ -70,6 +70,7 @@ import '../story/story_page.dart';
 import '../summary/weekly_summary_page.dart';
 import '../tablebase/shared_tablebase.dart';
 import '../theme/adaptive.dart';
+import '../theme/motion.dart';
 import '../tournament/bot_game.dart';
 import '../tournament/tournament.dart';
 import '../tournament/tournament_controller.dart';
@@ -714,6 +715,7 @@ class _HomeShellState extends State<HomeShell> {
         saved.mode != SavedGame.physical) {
       final choice = await showDialog<String>(
         context: context,
+        animationStyle: motionStyle(context),
         builder: (context) => SimpleDialog(
           title: Text(l10n.homeGameInProgress),
           children: [
