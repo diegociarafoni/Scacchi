@@ -11,9 +11,9 @@
   "@multiplayerClockHint": {
     "description": "Spiegazione della scelta della cadenza"
   },
-  "multiplayerClockRemoteHint": "A distanza non c'è l'orologio: scegli Wi-Fi o Bluetooth per usarlo.",
+  "multiplayerClockRemoteHint": "Scegli un orologio dal vivo, per chi gioca con l'app aperta, oppure un tempo per mossa in giorni.",
   "@multiplayerClockRemoteHint": {
-    "description": "Spiega perché la cadenza è disattivata con la partita a distanza"
+    "description": "Spiega le due scelte di orologio per la partita a distanza"
   },
   "multiplayerClockYou": "Tu",
   "@multiplayerClockYou": {
@@ -49,5 +49,43 @@
   "multiplayerDrawOnTime": "Tempo scaduto, ma senza materiale per il matto: patta",
   "@multiplayerDrawOnTime": {
     "description": "Esito per tempo scaduto contro chi non può dare matto"
+  },
+  "multiplayerMoveDaysTitle": "Tempo per mossa",
+  "@multiplayerMoveDaysTitle": {
+    "description": "Titolo della scelta del tempo per mossa"
+  },
+  "multiplayerMoveDaysNone": "Nessun limite",
+  "@multiplayerMoveDaysNone": {
+    "description": "Scelta di non avere un tempo per mossa"
+  },
+  "multiplayerMoveDaysOption": "{days, plural, one{{days} giorno} other{{days} giorni}}",
+  "@multiplayerMoveDaysOption": {
+    "description": "Giorni per mossa di una partita lenta",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "multiplayerMoveDaysHint": "Per le partite lente: chi non muove entro il tempo può perdere. Non si usa insieme all'orologio dal vivo.",
+  "@multiplayerMoveDaysHint": {
+    "description": "Spiegazione del tempo per mossa"
+  },
+  "multiplayerMoveDeadline": "Mossa entro il {when}",
+  "@multiplayerMoveDeadline": {
+    "description": "Scadenza della mossa di chi è di turno",
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "multiplayerClaimTimeout": "Reclama la vittoria",
+  "@multiplayerClaimTimeout": {
+    "description": "Pulsante per reclamare la vittoria quando l'avversario non muove"
+  },
+  "multiplayerClaimHint": "L'avversario non ha mosso in tempo.",
+  "@multiplayerClaimHint": {
+    "description": "Spiegazione del reclamo"
   }
 }

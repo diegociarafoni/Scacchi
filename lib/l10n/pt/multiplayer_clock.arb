@@ -2,11 +2,32 @@
   "multiplayerClockTitle": "Ritmo de jogo",
   "multiplayerClockNone": "Sem relógio",
   "multiplayerClockHint": "Quem cria a partida decide: o outro celular a recebe junto com o convite.",
-  "multiplayerClockRemoteHint": "À distância não há relógio: escolha Wi-Fi ou Bluetooth para usar um.",
+  "multiplayerClockRemoteHint": "Escolha um relógio ao vivo, para quem joga com o app aberto, ou um tempo por jogada em dias.",
   "multiplayerClockYou": "Você",
   "multiplayerClockPeer": "Adversário",
   "multiplayerClockSemantics": "Relógio de {who}: {minutes, plural, =0{{minutes} minutos} =1{{minutes} minuto} other{{minutes} minutos}} e {seconds, plural, =0{{seconds} segundos} =1{{seconds} segundo} other{{seconds} segundos}}",
   "multiplayerWhiteWinsOnTime": "Tempo esgotado: as Brancas vencem",
   "multiplayerBlackWinsOnTime": "Tempo esgotado: as Pretas vencem",
-  "multiplayerDrawOnTime": "Tempo esgotado, mas sem material para o xeque-mate: empate"
+  "multiplayerDrawOnTime": "Tempo esgotado, mas sem material para o xeque-mate: empate",
+  "multiplayerMoveDaysTitle": "Tempo por jogada",
+  "multiplayerMoveDaysNone": "Sem limite",
+  "multiplayerMoveDaysOption": "{days, plural, =1{{days} dia} other{{days} dias}}",
+  "@multiplayerMoveDaysOption": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "multiplayerMoveDaysHint": "Para partidas lentas: quem não jogar a tempo pode perder. Não se combina com o relógio ao vivo.",
+  "multiplayerMoveDeadline": "Jogada até {when}",
+  "@multiplayerMoveDeadline": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "multiplayerClaimTimeout": "Reivindicar a vitória",
+  "multiplayerClaimHint": "O adversário não jogou a tempo."
 }

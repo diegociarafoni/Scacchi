@@ -60,6 +60,15 @@ class Flagged extends SyncResult {
   final Side side;
 }
 
+/// L'avversario reclama la vittoria per il tempo per mossa scaduto; la
+/// partita non cambia finché chi la gioca non verifica la scadenza e chiama
+/// [GameSync.acceptClaim].
+class ClaimRequested extends SyncResult {
+  const ClaimRequested(this.plies);
+
+  final int plies;
+}
+
 class Rejected extends SyncResult {
   const Rejected(this.reason);
 
@@ -110,6 +119,11 @@ class GameSync {
   late final _keys = <String>[_repetitionKey(Chess.initial)];
   final _times = <int?>[];
   Side? _flagged;
+
+  // Il reclamo è provvisorio finché l'avversario non risponde con una mossa:
+  // se per lui il tempo non era scaduto lo ignora, e la sua mossa riapre la
+  // partita anche qui.
+  bool _claimPending = false;
 
   Uint8List? get peerKey => _peerKey;
   List<String> get moves => List.unmodifiable(_moves);
@@ -197,6 +211,25 @@ class GameSync {
     return true;
   }
 
+  /// Reclama la vittoria: l'avversario, di turno, ha superato il tempo per
+  /// mossa. Restituisce il messaggio per lui.
+  ClaimMessage claimPeer() {
+    if (isGameOver) throw StateError('partita finita'); // l10n-ok
+    if (turn == mySide) throw StateError('è il tuo turno'); // l10n-ok
+    if (_moves.isEmpty) throw StateError('nessuna mossa'); // l10n-ok
+    _flagged = turn;
+    _claimPending = true;
+    return ClaimMessage(plies: _moves.length);
+  }
+
+  /// Accetta il reclamo dell'avversario: il tempo per mossa di questo
+  /// telefono è scaduto. `false` se non era il suo turno.
+  bool acceptClaim() {
+    if (isGameOver || turn != mySide) return false;
+    _flagged = mySide;
+    return true;
+  }
+
   SyncResult receive(GameMessage message, List<int> author) {
     switch (message) {
       case JoinMessage():
@@ -208,6 +241,8 @@ class GameSync {
         return _receiveMove(message, author);
       case FlagMessage():
         return _receiveFlag(message, author);
+      case ClaimMessage():
+        return _receiveClaim(message, author);
     }
   }
 
@@ -224,6 +259,18 @@ class GameSync {
     }
     _flagged = mySide.opposite;
     return Flagged(_flagged!);
+  }
+
+  SyncResult _receiveClaim(ClaimMessage m, List<int> author) {
+    if (!_fromPeer(author)) return const Rejected('autore sconosciuto');
+    if (_flagged == mySide && m.plies == _moves.length) {
+      return const Duplicate();
+    }
+    if (m.plies > _moves.length) return Gap(_moves.length + 1);
+    if (isGameOver || m.plies < _moves.length || _position.turn != mySide) {
+      return const Rejected('reclamo non valido'); // l10n-ok
+    }
+    return ClaimRequested(m.plies);
   }
 
   SyncResult _join(List<int> author) {
@@ -246,6 +293,10 @@ class GameSync {
       _peerKey = Uint8List.fromList(author);
     }
     final known = _moves.length;
+    if (_claimPending && m.seq == known + 1 && !mine) {
+      _flagged = null;
+      _claimPending = false;
+    }
     if (m.seq <= known) {
       return _moves[m.seq - 1] == m.uci && _hashes[m.seq - 1] == m.positionHash
           ? const Duplicate()

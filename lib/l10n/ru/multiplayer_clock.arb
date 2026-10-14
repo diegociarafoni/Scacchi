@@ -2,11 +2,32 @@
   "multiplayerClockTitle": "Контроль времени",
   "multiplayerClockNone": "Без часов",
   "multiplayerClockHint": "Решает тот, кто создаёт партию: другой телефон получит настройку вместе с приглашением.",
-  "multiplayerClockRemoteHint": "На расстоянии часов нет: выбери Wi-Fi или Bluetooth, чтобы играть с часами.",
+  "multiplayerClockRemoteHint": "Выбери часы в реальном времени, для тех, кто играет с открытым приложением, или время на ход в днях.",
   "multiplayerClockYou": "Ты",
   "multiplayerClockPeer": "Соперник",
   "multiplayerClockSemantics": "Часы, {who}: {minutes} мин {seconds} с",
   "multiplayerWhiteWinsOnTime": "Время вышло: выиграли белые",
   "multiplayerBlackWinsOnTime": "Время вышло: выиграли чёрные",
-  "multiplayerDrawOnTime": "Время вышло, но у соперника недостаточно материала для мата: ничья"
+  "multiplayerDrawOnTime": "Время вышло, но у соперника недостаточно материала для мата: ничья",
+  "multiplayerMoveDaysTitle": "Время на ход",
+  "multiplayerMoveDaysNone": "Без ограничения",
+  "multiplayerMoveDaysOption": "{days, plural, one{{days} день} few{{days} дня} many{{days} дней} other{{days} дня}}",
+  "@multiplayerMoveDaysOption": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "multiplayerMoveDaysHint": "Для медленных партий: кто не сходил вовремя, может проиграть. Нельзя сочетать с часами в реальном времени.",
+  "multiplayerMoveDeadline": "Ход до {when}",
+  "@multiplayerMoveDeadline": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "multiplayerClaimTimeout": "Потребовать победу",
+  "multiplayerClaimHint": "Соперник не сделал ход вовремя."
 }

@@ -157,7 +157,7 @@ void main() {
     },
   );
 
-  testWidgets('la cadenza c\'è in presenza e sparisce a distanza', (
+  testWidgets('la cadenza resta a distanza e si aggiunge il tempo per mossa', (
     tester,
   ) async {
     await _openSheet(tester);
@@ -171,11 +171,8 @@ void main() {
     expect(tester.widget<ChoiceChip>(chip).selected, isTrue);
     await tester.tap(find.text('A distanza'));
     await tester.pumpAndSettle();
-    expect(chip, findsNothing);
-    expect(
-      find.textContaining('A distanza non c\'è l\'orologio'),
-      findsOneWidget,
-    );
+    expect(chip, findsOneWidget);
+    expect(find.text('Tempo per mossa'), findsOneWidget);
     await tester.tap(find.text('Wi-Fi'));
     await tester.pumpAndSettle();
     expect(find.text('Cadenza'), findsOneWidget);

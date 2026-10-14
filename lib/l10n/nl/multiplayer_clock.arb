@@ -2,11 +2,32 @@
   "multiplayerClockTitle": "Tempo",
   "multiplayerClockNone": "Geen klok",
   "multiplayerClockHint": "Wie de partij maakt, bepaalt het: de andere telefoon krijgt het mee met de uitnodiging.",
-  "multiplayerClockRemoteHint": "Op afstand is er geen klok: kies wifi of Bluetooth om er een te gebruiken.",
+  "multiplayerClockRemoteHint": "Kies een live klok, voor wie met de app open speelt, of een tijd per zet in dagen.",
   "multiplayerClockYou": "Jij",
   "multiplayerClockPeer": "Tegenstander",
   "multiplayerClockSemantics": "Klok van {who}: {minutes, plural, one{{minutes} minuut} other{{minutes} minuten}} en {seconds, plural, one{{seconds} seconde} other{{seconds} seconden}}",
   "multiplayerWhiteWinsOnTime": "Tijd verstreken: wit wint",
   "multiplayerBlackWinsOnTime": "Tijd verstreken: zwart wint",
-  "multiplayerDrawOnTime": "Tijd verstreken, maar onvoldoende materiaal om mat te zetten: remise"
+  "multiplayerDrawOnTime": "Tijd verstreken, maar onvoldoende materiaal om mat te zetten: remise",
+  "multiplayerMoveDaysTitle": "Tijd per zet",
+  "multiplayerMoveDaysNone": "Geen limiet",
+  "multiplayerMoveDaysOption": "{days, plural, one{{days} dag} other{{days} dagen}}",
+  "@multiplayerMoveDaysOption": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "multiplayerMoveDaysHint": "Voor langzame partijen: wie niet op tijd zet, kan verliezen. Niet te combineren met de live klok.",
+  "multiplayerMoveDeadline": "Zet vóór {when}",
+  "@multiplayerMoveDeadline": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "multiplayerClaimTimeout": "Zege opeisen",
+  "multiplayerClaimHint": "De tegenstander zette niet op tijd."
 }

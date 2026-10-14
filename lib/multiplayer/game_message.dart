@@ -29,6 +29,9 @@ sealed class GameMessage {
         _move(seq, uci, hash, json['c']),
       {'t': 'flag', 'n': final int plies} when plies > 0 && plies <= maxPlies =>
         FlagMessage(plies: plies),
+      {'t': 'claim', 'n': final int plies}
+          when plies > 0 && plies <= maxPlies =>
+        ClaimMessage(plies: plies),
       {'t': 'sync', 'n': final int from} when from > 0 && from <= maxPlies =>
         SyncRequest(fromSeq: from),
       _ => null,
@@ -134,4 +137,23 @@ class FlagMessage extends GameMessage {
 
   @override
   int get hashCode => Object.hash('flag', plies);
+}
+
+/// Chi non è di turno reclama la vittoria perché l'avversario ha superato il
+/// tempo per mossa di una partita lenta, dopo [plies] semimosse. Chi lo riceve
+/// controlla la scadenza sul proprio orologio prima di accettarlo.
+class ClaimMessage extends GameMessage {
+  const ClaimMessage({required this.plies});
+
+  final int plies;
+
+  @override
+  Map<String, Object> toJson() => {'t': 'claim', 'n': plies};
+
+  @override
+  bool operator ==(Object other) =>
+      other is ClaimMessage && other.plies == plies;
+
+  @override
+  int get hashCode => Object.hash('claim', plies);
 }

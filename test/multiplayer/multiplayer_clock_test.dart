@@ -75,13 +75,6 @@ void main() {
       expect(GameInvite.parse(link)!.timeControl, blitz);
     });
 
-    test('RMP-50 un invito a distanza con cadenza non è valido', () {
-      expect(
-        GameInvite.parse('${invite(control: blitz).toLink()}&r=1'),
-        isNull,
-      );
-    });
-
     test('RMP-50 senza cadenza la partita resta senza orologio', () {
       final back = GameInvite.parse(invite().toLink())!;
       expect(back.timeControl, isNull);
