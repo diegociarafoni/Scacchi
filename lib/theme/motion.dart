@@ -6,8 +6,11 @@ import '../settings/settings.dart';
 /// altrimenti quello di sistema.
 AnimationStyle? motionStyle(BuildContext context) {
   if (!context.mounted) return null;
-  final still =
-      AppSettings.of(context).reduceMotion ||
-      MediaQuery.disableAnimationsOf(context);
-  return still ? AnimationStyle.noAnimation : null;
+  return reduceMotionOf(context) ? AnimationStyle.noAnimation : null;
 }
+
+/// Vero se l'utente chiede meno movimento, dall'impostazione dell'app o da
+/// quella del telefono.
+bool reduceMotionOf(BuildContext context) =>
+    AppSettings.of(context).reduceMotion ||
+    MediaQuery.disableAnimationsOf(context);
