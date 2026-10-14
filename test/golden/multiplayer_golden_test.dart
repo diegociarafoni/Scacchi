@@ -36,6 +36,15 @@ Future<void> _settle(WidgetTester tester) async {
     await ChessgroundImages.instance.loadAll(
       const ChessboardSettings().pieceAssets,
     );
+    // I pezzi della scacchiera in pagina possono essere di un altro set rispetto
+    // al predefinito: senza questo, sotto carico a volte restano non disegnati.
+    final boards = [
+      for (final e in find.byType(Chessboard).evaluate())
+        (e.widget as Chessboard).settings.pieceAssets,
+    ];
+    for (final assets in boards) {
+      await ChessgroundImages.instance.loadAll(assets);
+    }
     // Anche le immagini normali (sfondo della scacchiera) vanno decodificate.
     for (final element in find.byType(Image).evaluate()) {
       await precacheImage((element.widget as Image).image, element);
