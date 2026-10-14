@@ -5,6 +5,7 @@ import '../l10n/app_localizations.dart';
 import '../path/curriculum.dart';
 import '../puzzles/themes.dart';
 import '../settings/settings.dart';
+import '../theme/sheets.dart';
 import 'week_log.dart';
 import 'weekly_summary.dart';
 
@@ -54,7 +55,7 @@ class WeeklySummaryPage extends StatelessWidget {
               ),
             )
           : ListView(
-              padding: const EdgeInsets.all(16),
+              padding: context.withSystemBottom(const EdgeInsets.all(16)),
               children: [
                 _Heading(l.weeklyProgressHeading),
                 if (kid) _KidProgress(summary) else _Progress(summary),
