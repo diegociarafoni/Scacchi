@@ -142,6 +142,7 @@ void main() {
   ) async {
     await pump(tester);
     expect(find.byIcon(Icons.edit_note), findsNothing);
+    expect(find.byIcon(Icons.edit_note_outlined), findsNothing);
     expect(find.byIcon(Icons.keyboard_outlined), findsNothing);
   });
 
