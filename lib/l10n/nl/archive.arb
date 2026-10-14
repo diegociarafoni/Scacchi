@@ -38,6 +38,7 @@
   "archiveImport": "Importeren",
   "archiveModeLocal": "lokaal",
   "archiveModeComputer": "computer",
+  "archivePlayerComputer": "Computer",
   "archiveModeImported": "geïmporteerd",
   "archiveModePhysical": "fysiek bord",
   "archiveModeAnalysis": "analyse",

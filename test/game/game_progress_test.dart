@@ -89,7 +89,7 @@ void main() {
     expect(saved.map((g) => g.id).toSet(), hasLength(1));
     expect(saved.last.mode, SavedGame.local);
     expect(saved.last.result, '0-1');
-    expect(saved.last.white, 'Bianco');
+    expect(saved.last.white, SavedGame.nameWhite);
     expect(saved.last.pgn, contains('Qh4#'));
     expect(find.textContaining('+10 XP'), findsOneWidget);
   });
@@ -219,8 +219,8 @@ void main() {
     expect(activity.playerSide, Side.white);
     expect(activity.opponentElo, isNotNull);
     expect(saved.last.mode, SavedGame.computer);
-    expect(saved.last.white, 'Tu');
-    expect(saved.last.black, 'Computer');
+    expect(saved.last.white, SavedGame.nameYou);
+    expect(saved.last.black, SavedGame.nameComputer);
     expect(saved.last.opponentElo, activity.opponentElo);
   });
 

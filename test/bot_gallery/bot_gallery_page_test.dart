@@ -413,6 +413,38 @@ void main() {
         },
       );
 
+      testWidgets('il tempo di handicap vale solo con un orologio', (
+        tester,
+      ) async {
+        final result = await _open(
+          tester,
+          initialBotId: 'pino',
+          act: () async {
+            await tester.tap(find.byKey(const Key('gallery-options')));
+            await tester.pumpAndSettle();
+            await tester.ensureVisible(
+              find.byKey(const Key('option-handicap-time-2')),
+            );
+            await tester.pumpAndSettle();
+            final chip = find.byKey(const Key('option-handicap-time-2'));
+            expect(tester.widget<ChoiceChip>(chip).onSelected, isNull);
+            await _tapOption(tester, const Key('option-time-5+0'));
+            await _tapOption(tester, const Key('option-handicap-time-2'));
+            await tester.pumpAndSettle();
+            expect(tester.widget<ChoiceChip>(chip).selected, isTrue);
+            // Tolto l'orologio, il tempo scelto si azzera.
+            await _tapOption(tester, const Key('option-time-none'));
+            await tester.pumpAndSettle();
+            expect(tester.widget<ChoiceChip>(chip).selected, isFalse);
+            expect(tester.widget<ChoiceChip>(chip).onSelected, isNull);
+            await tester.tap(find.byKey(const Key('options-done')));
+            await tester.pumpAndSettle();
+            await tester.tap(find.byKey(const Key('gallery-play')));
+          },
+        );
+        expect(result!.options.handicap, isNull);
+      });
+
       testWidgets(
         'una variante diversa dalla classica toglie il pezzo in meno',
         (tester) async {

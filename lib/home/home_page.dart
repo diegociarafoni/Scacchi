@@ -434,7 +434,7 @@ class _HomePageState extends State<HomePage> {
             key: const Key('home-hero-resume'),
             label: l.homeNextLabel,
             title: l.homeResumeTitle,
-            subtitle: l.homeResumeSubtitle(opponentOf(game)),
+            subtitle: l.homeResumeSubtitle(opponentOf(game, l)),
             action: l.homeResumeAction,
             onTap: () => _run(() => widget.onResume!(game)),
             art: const ArtDisc(
@@ -859,7 +859,7 @@ class _RecentRow extends StatelessWidget {
       ),
       _ => (Icons.circle_outlined, Theme.of(context).colorScheme.outline, ''),
     };
-    final opponent = opponentOf(game);
+    final opponent = opponentOf(game, l);
     final label = accuracy == null
         ? l.homeRecentSemanticsNoAccuracy(result, opponent)
         : l.homeRecentSemantics(result, opponent, accuracy!);

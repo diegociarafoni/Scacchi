@@ -3,7 +3,7 @@
   "@mastersTitle": {
     "description": "Titolo dell'elenco delle partite celebri"
   },
-  "mastersStars": "3 yıldızdan {stars} yıldız",
+  "mastersStars": "{stars, plural, one{3 yıldızdan {stars} yıldız} other{3 yıldızdan {stars} yıldız}}",
   "@mastersStars": {
     "description": "Etichetta per i lettori di schermo delle stelle di una partita",
     "placeholders": {

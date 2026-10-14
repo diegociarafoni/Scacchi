@@ -55,7 +55,57 @@ class FakeDiscovery implements LanDiscovery {
   }
 }
 
+/// Canale il cui invio resta sospeso finché non lo si sblocca.
+class _GatedTransport implements MessageTransport {
+  _GatedTransport(this.inner);
+
+  final LoopbackTransport inner;
+  final gate = Completer<void>();
+
+  @override
+  String get name => inner.name;
+  @override
+  Stream<Uint8List> get incoming => inner.incoming;
+  @override
+  Future<void> send(Uint8List data) async {
+    await gate.future;
+    return inner.send(data);
+  }
+
+  @override
+  Future<void> close() => inner.close();
+}
+
 void main() {
+  test(
+    'la mossa aggiorna lo stato prima che l\'invio in rete finisca',
+    () async {
+      final (a, b) = LoopbackTransport.pair();
+      final gated = _GatedTransport(a);
+      final host = await MultiplayerController.host(
+        side: Side.white,
+        openHost: () async => (transport: gated, lanAddress: '10.0.0.2:4000'),
+      );
+      final guest = await MultiplayerController.join(
+        GameInvite.parse(host.inviteLink)!,
+        openGuest: (h, p) => b,
+      );
+      await guest.session.announce();
+      await settleLoopback();
+      var notified = 0;
+      host.addListener(() => notified++);
+      final playing = host.play(Move.parse('e2e4')!);
+      await pumpEventQueue();
+      expect(notified, greaterThan(0));
+      expect(host.lastMove, Move.parse('e2e4'));
+      expect(host.status, MultiplayerStatus.peerTurn);
+      gated.gate.complete();
+      expect(await playing, isTrue);
+      await host.close();
+      await guest.close();
+    },
+  );
+
   group('indirizzo in rete locale', () {
     (String, InternetAddress) ip(String name, String s) =>
         (name, InternetAddress(s));

@@ -301,6 +301,18 @@ void main() {
     },
   );
 
+  test(
+    'RMP-31 il ritardo dei tentativi non riparte se il relay rifiuta',
+    () async {
+      final relay = FakeRelay()..refusingSubscriptions = true;
+      await player(Side.white, [relay]);
+      await Future<void>.delayed(const Duration(milliseconds: 400));
+      // Con il ritardo che raddoppia fino a 80 ms bastano circa sette
+      // tentativi; ripartendo da 20 ms a ogni collegamento sarebbero più di 15.
+      expect(relay.connections, lessThan(12));
+    },
+  );
+
   test('RMP-31 un collegamento che si rompe subito si riprova', () async {
     final relay = FakeRelay()..breakingSends = true;
     final white = await player(Side.white, [relay]);

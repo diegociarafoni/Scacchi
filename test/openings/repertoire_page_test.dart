@@ -6,6 +6,7 @@ import 'package:scacchi/openings/opening_book.dart';
 import 'package:scacchi/openings/opening_game.dart';
 import 'package:scacchi/openings/openings_hub_page.dart';
 import 'package:scacchi/openings/repertoire.dart';
+import 'package:scacchi/openings/repertoire_drill_page.dart';
 import 'package:scacchi/openings/repertoire_page.dart';
 import 'package:scacchi/progress/activity.dart';
 import 'package:scacchi/storage/key_value_store.dart';
@@ -102,6 +103,23 @@ void main() {
     await tester.tap(find.byTooltip('Indietro'));
     await tester.pumpAndSettle();
     expect(recorded, isEmpty);
+  });
+
+  testWidgets('il ripasso non va in errore con poco spazio in altezza', (
+    tester,
+  ) async {
+    final t = await trainer();
+    await t.addLine(Side.white, 'Italiana', uci('e2e4 e7e5 g1f3'));
+    tester.view.physicalSize = const Size(900, 300);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      localizedApp(
+        home: RepertoireDrillPage(trainer: t, side: Side.white),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('RF-93 importa le varianti di un PGN come linee', (tester) async {

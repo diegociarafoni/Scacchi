@@ -30,9 +30,7 @@ void _run() {
   ], runInShell: true);
   if (deps.exitCode != 0) _fail('flutter pub deps: ${deps.stderr}');
   final stdoutText = deps.stdout as String;
-  final graph = jsonDecode(
-    stdoutText.substring(stdoutText.indexOf('{')),
-  ) as Map<String, dynamic>;
+  final graph = jsonDecode(jsonFromOutput(stdoutText)) as Map<String, dynamic>;
   final byName = {
     for (final p in (graph['packages'] as List).cast<Map<String, dynamic>>())
       p['name'] as String: p,

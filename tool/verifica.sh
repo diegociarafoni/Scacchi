@@ -20,6 +20,12 @@ done
 
 git fetch -q origin main || echo "avviso: origin/main non aggiornato, si usa la copia locale" >&2
 
+if ! git rev-parse --verify -q origin/main >/dev/null; then
+  echo "✗ manca origin/main (clone senza il ramo principale o remoto non configurato)." >&2
+  echo "  Aggiungere il remoto o scaricarlo con: git fetch origin main" >&2
+  exit 1
+fi
+
 dart tool/check_branch_name.dart "$(git rev-parse --abbrev-ref HEAD)"
 base="$(git merge-base origin/main HEAD)"
 dart tool/check_commit_msg.dart --range "$base..HEAD"

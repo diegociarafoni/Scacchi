@@ -107,33 +107,37 @@ class _RepertoireDrillPageState extends State<RepertoireDrillPage> {
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, c) {
-            final size = math.min(c.maxWidth, c.maxHeight - 120);
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Semantics(
-                    liveRegion: true,
-                    child: Text(
-                      _messageText(l10n),
-                      key: const Key('drill-message'),
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.titleMedium,
+            final size = math.max(0.0, math.min(c.maxWidth, c.maxHeight - 120));
+            return Center(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Semantics(
+                        liveRegion: true,
+                        child: Text(
+                          _messageText(l10n),
+                          key: const Key('drill-message'),
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                      ),
                     ),
-                  ),
+                    if (drill != null)
+                      TrainingBoard(
+                        size: size,
+                        position: drill.position,
+                        lastMove: drill.lastMove,
+                        player: widget.side,
+                        revision: _revision,
+                        shapes: arrow,
+                        onMove: _onMove,
+                      ),
+                  ],
                 ),
-                if (drill != null)
-                  TrainingBoard(
-                    size: size,
-                    position: drill.position,
-                    lastMove: drill.lastMove,
-                    player: widget.side,
-                    revision: _revision,
-                    shapes: arrow,
-                    onMove: _onMove,
-                  ),
-              ],
+              ),
             );
           },
         ),

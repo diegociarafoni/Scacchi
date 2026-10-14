@@ -396,7 +396,7 @@
   "progressFeedbackWeekly": "Sfida della settimana completata",
   "progressFeedbackRecord": "Nuovo record: {record}",
   "@progressFeedbackRecord": {
-    "description": "{record} è il nome del record in minuscolo",
+    "description": "{record} è il nome del record, come nell'elenco dei record",
     "placeholders": {
       "record": {
         "type": "String"

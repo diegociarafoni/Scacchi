@@ -7,6 +7,8 @@ import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../game/sounds.dart' show GameSound, SoundPlayer;
+import '../style/backdrop_photo.dart'
+    show backdropPhotoDirectory, backdropPhotoName;
 import 'app_language.dart';
 import 'board_marks.dart';
 import 'color_blind.dart';
@@ -423,6 +425,7 @@ class AppSettings {
     this.markColor = MarkColor.green,
     this.autoFlip = false,
     this.animation = AnimationSpeed.normal,
+    this.reduceMotion = false,
     this.boardTheme = BoardTheme.spazio,
     this.pieceSet = PieceStyle.cburnett,
     this.backdrop = BoardBackdrop.standard,
@@ -457,10 +460,8 @@ class AppSettings {
       SettingsScope.maybeOf(context) ?? _defaults;
 
   static String _cleanName(String name) {
-    final trimmed = name.trim();
-    return trimmed.length > maxNameLength
-        ? trimmed.substring(0, maxNameLength).trim()
-        : trimmed;
+    // Si taglia per caratteri interi: un emoji (coppia surrogata) non si spezza.
+    return name.trim().characters.take(maxNameLength).toString().trim();
   }
 
   final bool showLegalMoves;
@@ -479,6 +480,10 @@ class AppSettings {
   final MarkColor markColor;
   final bool autoFlip;
   final AnimationSpeed animation;
+
+  /// Il sistema chiede di ridurre le animazioni (RNF-07): vince su [animation].
+  /// Non si salva: lo decide il telefono.
+  final bool reduceMotion;
   final BoardTheme boardTheme;
   final PieceStyle pieceSet;
 
@@ -574,6 +579,7 @@ class AppSettings {
     MarkColor? markColor,
     bool? autoFlip,
     AnimationSpeed? animation,
+    bool? reduceMotion,
     BoardTheme? boardTheme,
     PieceStyle? pieceSet,
     BoardBackdrop? backdrop,
@@ -607,6 +613,7 @@ class AppSettings {
     markColor: markColor ?? this.markColor,
     autoFlip: autoFlip ?? this.autoFlip,
     animation: animation ?? this.animation,
+    reduceMotion: reduceMotion ?? this.reduceMotion,
     boardTheme: boardTheme ?? this.boardTheme,
     pieceSet: pieceSet ?? this.pieceSet,
     backdrop: backdrop ?? this.backdrop,
@@ -648,7 +655,7 @@ class AppSettings {
     pieceAssets: pieceSet.assetsOn(boardTheme),
     enableCoordinates: showCoordinates && !coordinatesOutside,
     showValidMoves: showLegalMoves,
-    animationDuration: animation.duration,
+    animationDuration: reduceMotion ? Duration.zero : animation.duration,
     autoQueenPromotion: autoQueen,
     drawShape: DrawShapeOptions(
       enable: drawShapes,
@@ -685,6 +692,7 @@ class AppSettings {
       other.markColor == markColor &&
       other.autoFlip == autoFlip &&
       other.animation == animation &&
+      other.reduceMotion == reduceMotion &&
       other.boardTheme == boardTheme &&
       other.pieceSet == pieceSet &&
       other.backdrop == backdrop &&
@@ -720,6 +728,7 @@ class AppSettings {
     markColor,
     autoFlip,
     animation,
+    reduceMotion,
     boardTheme,
     pieceSet,
     backdrop,
@@ -764,8 +773,19 @@ class SettingsController extends ValueNotifier<AppSettings> {
     super.value = v;
   }
 
-  static Future<SettingsController> load() async {
+  /// Segue la richiesta del sistema di ridurre le animazioni (RNF-07).
+  void setReduceMotion(bool reduce) {
+    if (value.reduceMotion == reduce) return;
+    value = value.copyWith(reduceMotion: reduce);
+  }
+
+  /// [photoDirectory] è la cartella delle foto di sfondo: si cambia solo nei
+  /// test.
+  static Future<SettingsController> load({
+    Future<Directory> Function() photoDirectory = backdropPhotoDirectory,
+  }) async {
     final prefs = await SharedPreferences.getInstance();
+    final photo = await _storedPhoto(prefs, photoDirectory);
     final d = AppSettings();
     T read<T>(String key, T fallback) {
       final v = prefs.get(key);
@@ -791,9 +811,9 @@ class SettingsController extends ValueNotifier<AppSettings> {
         pieceSet: byName(PieceStyle.values, 'pieceSet', d.pieceSet),
         backdrop: _backdropAtLoad(
           byName(BoardBackdrop.values, 'backdrop', d.backdrop),
-          read('backdropPhoto', d.backdropPhoto),
+          photo,
         ),
-        backdropPhoto: read('backdropPhoto', d.backdropPhoto),
+        backdropPhoto: photo,
         soundSet: byName(SoundSet.values, 'soundSet', d.soundSet),
         sound: read('sound', d.sound),
         volume: read<double>('volume', d.volume).clamp(0.0, 1.0),
@@ -814,6 +834,30 @@ class SettingsController extends ValueNotifier<AppSettings> {
         blackName: read('blackName', d.blackName),
       ),
     );
+  }
+
+  /// Foto di sfondo salvata come solo nome file: il percorso assoluto cambia
+  /// quando il sistema sposta la cartella dati (aggiornamenti, ripristini). Le
+  /// preferenze vecchie, con il percorso intero, si riscrivono col nome.
+  static Future<String> _storedPhoto(
+    SharedPreferences prefs,
+    Future<Directory> Function() photoDirectory,
+  ) async {
+    final stored = prefs.get('backdropPhoto');
+    if (stored is! String || stored.isEmpty) return '';
+    final name = backdropPhotoName(stored);
+    if (name != stored) {
+      try {
+        await prefs.setString('backdropPhoto', name);
+      } on Object {
+        // Resta il valore vecchio: si migra al prossimo avvio.
+      }
+    }
+    try {
+      return '${(await photoDirectory()).path}/$name';
+    } on Object {
+      return '';
+    }
   }
 
   /// Una foto sparita (dati cancellati, app ripristinata altrove) non lascia lo
@@ -857,7 +901,10 @@ class SettingsController extends ValueNotifier<AppSettings> {
       if (old.backdrop != settings.backdrop)
         prefs.setString('backdrop', settings.backdrop.name),
       if (old.backdropPhoto != settings.backdropPhoto)
-        prefs.setString('backdropPhoto', settings.backdropPhoto),
+        prefs.setString(
+          'backdropPhoto',
+          backdropPhotoName(settings.backdropPhoto),
+        ),
       if (old.soundSet != settings.soundSet)
         prefs.setString('soundSet', settings.soundSet.name),
       if (old.sound != settings.sound) prefs.setBool('sound', settings.sound),

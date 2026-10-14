@@ -327,8 +327,11 @@ class ProfileSettingsPage extends _SectionPage {
             title: Text(l10n.settingsUnlockAll),
             subtitle: Text(l10n.settingsUnlockAllDescription),
             value: p.settings.unlockAll,
-            onChanged: (v) =>
-                p.updateSettings(p.settings.copyWith(unlockAll: v)),
+            onChanged: (v) async {
+              // Sbloccare tutto toglie il percorso al bambino: serve un adulto.
+              if (_s.kidMode && !await askAdult(context)) return;
+              await p.updateSettings(p.settings.copyWith(unlockAll: v));
+            },
           ),
         ListTile(
           key: const Key('backup'),
@@ -337,6 +340,9 @@ class ProfileSettingsPage extends _SectionPage {
           subtitle: Text(l10n.settingsBackupDescription),
           trailing: const Icon(Icons.chevron_right),
           onTap: () async {
+            // Ripristinare una copia può sostituire i progressi.
+            if (_s.kidMode && !await askAdult(context)) return;
+            if (!context.mounted) return;
             final page = await BackupPage.system();
             if (context.mounted) {
               await Navigator.push(

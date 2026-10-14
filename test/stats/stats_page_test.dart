@@ -28,11 +28,19 @@ void main() {
   });
   tearDown(() => dir.deleteSync(recursive: true));
 
-  Future<void> show(WidgetTester tester) async {
+  Future<void> show(
+    WidgetTester tester, {
+    Locale locale = const Locale('it'),
+  }) async {
     tester.view.physicalSize = const Size(1170, 2532);
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
-    await tester.pumpWidget(localizedApp(home: StatsPage(archive: archive)));
+    await tester.pumpWidget(
+      localizedApp(
+        home: StatsPage(archive: archive),
+        locale: locale,
+      ),
+    );
     await settle(tester);
   }
 
@@ -77,6 +85,28 @@ void main() {
     expect(find.text('Partita italiana: gambetto Evans'), findsOneWidget);
     await tester.scrollUntilVisible(find.textContaining('71.0%'), 200);
     expect(find.textContaining('71.0%'), findsOneWidget);
+  });
+
+  testWidgets('la cadenza senza orologio segue la lingua', (tester) async {
+    await tester.runAsync(
+      () => archive.save(
+        SavedGame(
+          id: 'n',
+          createdAt: DateTime(2026, 10),
+          updatedAt: DateTime(2026, 10),
+          white: 'Io',
+          black: 'Bot',
+          mode: 'computer',
+          result: '1-0',
+          pgn: '',
+          playerSide: Side.white,
+        ),
+      ),
+    );
+    await show(tester, locale: const Locale('en'));
+    await tester.scrollUntilVisible(find.text('No clock'), 200);
+    expect(find.text('No clock'), findsOneWidget);
+    expect(find.text('Senza tempo'), findsNothing);
   });
 
   testWidgets('solo partite tra due persone: mostra il conteggio', (

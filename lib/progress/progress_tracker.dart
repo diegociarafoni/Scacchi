@@ -72,6 +72,11 @@ class ProgressTracker {
     BadgeSources sources = BadgeSources.empty,
   ]) {
     if (!settings.enabled) return ProgressUpdate(state: state);
+    // Rivedere di nuovo la stessa partita non premia una seconda volta.
+    if (activity case ReviewCompleted(:final gameId?)
+        when state.reviewedGames.contains(gameId)) {
+      return ProgressUpdate(state: state);
+    }
     final s = _count(_startDay(state, now, settings), activity);
     return _finish(
       _markActive(s, state.lastActiveDay),
@@ -363,9 +368,15 @@ class ProgressTracker {
       StoryChapterDone(:final chapters) => s.copyWith(
         tally: {...s.tally, 'story': math.max(s.tally['story'] ?? 0, chapters)},
       ),
-      ReviewCompleted(:final brilliantMoves) => s.copyWith(
+      ReviewCompleted(:final brilliantMoves, :final gameId) => s.copyWith(
         reviewsCompleted: s.reviewsCompleted + 1,
         brilliantFound: s.brilliantFound + brilliantMoves,
+        reviewedGames: gameId == null
+            ? null
+            : [
+                ...s.reviewedGames,
+                gameId,
+              ].takeLast(ProgressState.maxReviewedGames),
       ),
     };
   }
@@ -375,3 +386,7 @@ Map<String, int> _bump(Map<String, int> tally, Iterable<String> keys) => {
   ...tally,
   for (final k in keys) k: (tally[k] ?? 0) + 1,
 };
+
+extension on List<String> {
+  List<String> takeLast(int n) => length <= n ? this : sublist(length - n);
+}

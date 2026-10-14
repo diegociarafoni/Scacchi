@@ -140,7 +140,11 @@ class ProgressState {
     this.badges = const {},
     this.tally = const {},
     this.lastActiveDay,
+    this.reviewedGames = const [],
   });
+
+  /// Quante partite riviste si ricordano; le più vecchie si dimenticano.
+  static const maxReviewedGames = 300;
 
   static const initial = ProgressState();
 
@@ -203,6 +207,10 @@ class ProgressState {
   /// Ultimo giorno con un'attività registrata.
   final int? lastActiveDay;
 
+  /// Identificativi delle ultime partite riviste e già premiate, perché la
+  /// stessa revisione non conti due volte.
+  final List<String> reviewedGames;
+
   ProgressState copyWith({
     int? xp,
     int? gamesPlayed,
@@ -232,6 +240,7 @@ class ProgressState {
     Map<String, int>? badges,
     Map<String, int>? tally,
     int? lastActiveDay,
+    List<String>? reviewedGames,
   }) => ProgressState(
     xp: xp ?? this.xp,
     gamesPlayed: gamesPlayed ?? this.gamesPlayed,
@@ -263,6 +272,7 @@ class ProgressState {
     badges: badges ?? this.badges,
     tally: tally ?? this.tally,
     lastActiveDay: lastActiveDay ?? this.lastActiveDay,
+    reviewedGames: reviewedGames ?? this.reviewedGames,
   );
 
   Map<String, Object?> toJson() => {
@@ -294,6 +304,7 @@ class ProgressState {
     'badges': badges,
     'tally': tally,
     'lastActiveDay': lastActiveDay,
+    'reviewedGames': reviewedGames,
   };
 
   static ProgressState fromJson(Map<String, Object?> json) {
@@ -331,6 +342,10 @@ class ProgressState {
       badges: _counters(json['badges']),
       tally: _counters(json['tally']),
       lastActiveDay: json['lastActiveDay'] as int?,
+      reviewedGames: [
+        if (json['reviewedGames'] case final List<Object?> l)
+          ...l.whereType<String>(),
+      ],
     );
   }
 
@@ -364,6 +379,7 @@ class ProgressState {
       other.records == records &&
       mapEquals(other.badges, badges) &&
       mapEquals(other.tally, tally) &&
+      listEquals(other.reviewedGames, reviewedGames) &&
       other.lastActiveDay == lastActiveDay;
 
   @override
@@ -396,6 +412,7 @@ class ProgressState {
     Object.hashAllUnordered(badges.entries.map((e) => (e.key, e.value))),
     Object.hashAllUnordered(tally.entries.map((e) => (e.key, e.value))),
     lastActiveDay,
+    Object.hashAll(reviewedGames),
   ]);
 }
 

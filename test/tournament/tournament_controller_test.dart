@@ -95,14 +95,30 @@ void main() {
     expect(recorded, isEmpty);
   });
 
-  test('un contenuto non valido va in quarantena e non blocca', () async {
+  test(
+    'un torneo o un trofeo non valido si scarta, gli altri restano',
+    () async {
+      final file = File('${dir.path}/tornei.json');
+      await file.writeAsString(
+        '{"version":1,"current":{"format":"sconosciuto"},"trophies":['
+        '{"date":"2026-10-01T10:00:00.000","format":"knockout","players":4,'
+        '"rank":1,"champion":"Anna"},{"rank":"x"},7]}',
+      );
+      final c = controller();
+      await c.load();
+      expect(c.current, isNull);
+      expect(c.trophies.map((t) => t.champion), ['Anna']);
+      expect(dir.listSync().where((f) => f.path.contains('.bad')), isEmpty);
+    },
+  );
+
+  test('un file che non è un oggetto va in quarantena e non blocca', () async {
     final file = File('${dir.path}/tornei.json');
-    await file.writeAsString(
-      '{"version":1,"current":{"format":"sconosciuto"},"trophies":[]}',
-    );
+    await file.writeAsString('{"version":1,"trophies":{}}');
     final c = controller();
     await c.load();
     expect(c.current, isNull);
+    expect(c.trophies, isEmpty);
     expect(dir.listSync().where((f) => f.path.contains('.bad')), hasLength(1));
   });
 

@@ -49,6 +49,7 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
   Timer? _ticker;
   DateTime? _startedAt;
   bool _saved = false;
+  bool _stored = false;
   // Testi di avviso risolti in `build`, così seguono la lingua corrente.
   String Function(AppLocalizations)? _message;
   String Function(AppLocalizations)? _note;
@@ -98,6 +99,7 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
       _game = game;
       _startedAt = _now;
       _saved = false;
+      _stored = false;
       _message = null;
       _note = null;
       _baseline = null;
@@ -118,12 +120,13 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
   }
 
   void _afterChange() {
-    final game = _game!;
     setState(() {
       _guesses = const [];
       _note = null;
     });
-    if (game.isOver) unawaited(_save());
+    // Si salva a ogni mossa (anche a partita aperta) e dopo un annulla: uscendo
+    // a metà non si perde nulla e l'archivio non tiene un risultato revocato.
+    unawaited(_save());
     _focus.requestFocus();
   }
 
@@ -254,8 +257,22 @@ class _PhysicalGamePageState extends State<PhysicalGamePage> {
 
   Future<void> _save() async {
     final game = _game;
-    if (game == null || game.moves.isEmpty) return;
+    if (game == null) return;
     final started = _startedAt ?? _now;
+    if (game.moves.isEmpty) {
+      // Annullata ogni mossa: via anche il record già scritto.
+      if (!_stored) return;
+      _stored = false;
+      try {
+        await (await widget.archive()).delete(
+          'fisica-${started.microsecondsSinceEpoch}',
+        );
+      } on Object catch (e) {
+        if (kDebugMode) debugPrint('Eliminazione non riuscita: $e'); // l10n-ok
+      }
+      return;
+    }
+    _stored = true;
     final white = _white.text.trim();
     final black = _black.text.trim();
     final saved = SavedGame(

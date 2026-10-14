@@ -98,8 +98,7 @@ class DrillRun {
     if (_ended()) return true;
     switch (drill.goal) {
       case DrillGoal.hold:
-        if (_material(side.opposite, Role.queen) &&
-                !_material(side, Role.queen) ||
+        if (_opponentQueened() ||
             _bareKing(side) && !_bareKing(side.opposite)) {
           _state = DrillState.failure;
         }
@@ -134,7 +133,9 @@ class DrillRun {
       case DrillGoal.hold:
         if (_bareKing(side) && !_bareKing(side.opposite)) {
           _state = DrillState.failure;
-        } else if (_moves >= drill.par) {
+        } else if (_moves >= drill.par && !_opponentQueened()) {
+          // Una donna appena promossa non vale la patta: l'utente deve
+          // ancora poterla catturare.
           _state = DrillState.success;
         }
       case DrillGoal.promote:
@@ -173,6 +174,10 @@ class DrillRun {
 
   bool _material(Side owner, Role role) =>
       _position.board.piecesOf(owner, role).isNotEmpty;
+
+  /// L'avversario ha una donna e l'utente no.
+  bool _opponentQueened() =>
+      _material(side.opposite, Role.queen) && !_material(side, Role.queen);
 
   bool _bareKing(Side owner) => _position.board.bySide(owner).size == 1;
 

@@ -3,7 +3,7 @@
   "@mastersTitle": {
     "description": "Titolo dell'elenco delle partite celebri"
   },
-  "mastersStars": "Étoiles : {stars} sur 3",
+  "mastersStars": "{stars, plural, one{{stars} étoile sur 3} other{{stars} étoiles sur 3}}",
   "@mastersStars": {
     "description": "Etichetta per i lettori di schermo delle stelle di una partita",
     "placeholders": {

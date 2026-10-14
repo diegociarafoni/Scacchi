@@ -25,7 +25,7 @@ Requisiti RG-01, RG-02, RG-05, RG-06, RG-07, RG-08, RG-11 e RG-12. Il codice è 
 | Sfida giornaliera completata | +20 |
 | Sfida settimanale completata | +50 |
 
-Le attività formative (lezioni, revisioni) valgono più della sola vittoria, come chiede il requisito.
+Le attività formative (lezioni, revisioni) valgono più della sola vittoria, come chiede il requisito. La stessa partita rivista più volte si premia una sola volta: `ProgressState.reviewedGames` ricorda gli identificativi delle ultime 300 revisioni.
 
 ### Livelli
 
