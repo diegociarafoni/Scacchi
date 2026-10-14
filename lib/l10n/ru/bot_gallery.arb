@@ -142,6 +142,8 @@
   "botOptionsHelp": "Помощь",
   "botOptionsCoach": "Тренер",
   "botOptionsCoachHint": "Предупреждает, когда ты делаешь ошибку.",
+  "botOptionsTraining": "Тренировка",
+  "botOptionsTrainingHint": "Отмена хода, подсказки и угрозы. Не засчитывается в Эло и победы; выключено — это Вызов, без помощи.",
   "botOptionsSummary": "{time} · {variant}",
   "@botOptionsSummary": {
     "placeholders": {

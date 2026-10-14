@@ -395,6 +395,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     _autoFlip = _settings.autoFlip;
+    _training = _trainingDefault;
     widget.settings.addListener(_onSettingsChanged);
     WidgetsBinding.instance.addObserver(this);
     unawaited(_loadProfile());
@@ -425,6 +426,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final game = importPgn(saved.pgn).games.firstOrNull?.game;
     if (game == null || game.isOver) return;
     final side = saved.playerSide;
+    // L'archivio non ricorda la modalità: si riprende con l'ultima scelta.
+    _training = _trainingDefault;
     final setup = _applySetup(
       side == null
           ? const GameSetup()
@@ -444,8 +447,25 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   /// Partita con l'istruttore: aiuti accesi e commento sull'apertura.
   bool get _instructor => widget.challenge?.instructor ?? false;
 
-  /// Nelle sfide niente aiuti, tranne che con l'istruttore.
-  bool get _helpAllowed => !_isChallenge || _instructor;
+  /// Allenamento (RF-22) contro i bot: aiuti e annullamento, ma niente Elo né
+  /// vittorie. Fuori dall'Allenamento è Sfida. Il profilo bambino si allena
+  /// sempre.
+  bool _training = false;
+
+  bool get _trainingDefault => _settings.kidMode || _settings.trainingMode;
+
+  /// Le sfide del percorso non hanno modalità: contano sempre.
+  bool get _inTraining => !_isChallenge && (_training || _kid);
+
+  /// Niente aiuti nelle sfide (tranne con l'istruttore) né nella Sfida.
+  bool get _helpAllowed =>
+      _instructor || (!_isChallenge && (_inTraining || _computerSide == null));
+
+  /// L'annullamento contro il computer è dell'Allenamento; tra due persone o
+  /// nelle sfide che lo concedono resta com'era.
+  bool get _undoAllowed => _isChallenge
+      ? widget.challenge!.allowUndo
+      : _inTraining || _computerSide == null || !_engineGame;
 
   OpeningBook? _instructorBook;
   OpeningStats? _instructorStats;
@@ -1139,7 +1159,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       _record(
         gameActivity(
           game,
-          player: side,
+          // L'Allenamento vale come partita giocata, non come vittoria o Elo.
+          player: _inTraining ? null : side,
           opponentElo: elo,
           book: loadedOpeningBook,
           duration: elapsed.isNegative
@@ -1214,7 +1235,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     // Un handicap falsa il confronto: senza Elo non entra nel rating locale.
     return (
       side,
-      side == null || _handicap != null || !_engineGame
+      side == null || _handicap != null || !_engineGame || _inTraining
           ? null
           : (_bot?.elo ?? engineLevel(_gameLevel).approxElo),
     );
@@ -1901,6 +1922,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           collection: _collection,
           computerAvailable: widget.computerAvailable,
           kidMode: _settings.kidMode,
+          training: _trainingDefault,
           tournamentPage: widget.tournamentPage,
           physicalPage: widget.physicalPage,
           openingGame: widget.openingGame,
@@ -1920,6 +1942,17 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
     final setup = _applySetup(choice.setup);
     final vsComputer = setup.opponent != Opponent.human;
+    final chosenTraining = choice.training;
+    if (chosenTraining != null &&
+        !_kid &&
+        chosenTraining != _settings.trainingMode) {
+      unawaited(
+        widget.settings.update(
+          _settings.copyWith(trainingMode: chosenTraining),
+        ),
+      );
+    }
+    _training = _kid || (chosenTraining ?? _settings.trainingMode);
     // Il profilo bambino gioca solo la classica: la variante scelta prima
     // resta per quando il profilo si spegne.
     if (!_kid) _chosenVariant = choice.variant;
@@ -2622,8 +2655,10 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       onNewGame: evaluating || _isChallenge ? null : _newGame,
       onUndo:
           !evaluating &&
-              (!_isChallenge || widget.challenge!.allowUndo) &&
-              (_canUndo || _pendingMove != null || _viewPly != null)
+              (_isChallenge ? widget.challenge!.allowUndo : true) &&
+              ((_undoAllowed && _canUndo) ||
+                  _pendingMove != null ||
+                  _viewPly != null)
           ? _requestUndo
           : null,
       onFlip: () => setState(() => _orientation = _orientation.opposite),
@@ -3880,6 +3915,7 @@ class _TimeChoice {
     this.setup,
     this.handicap, {
     this.coach = false,
+    this.training,
   });
 
   final TimeControl? control;
@@ -3891,6 +3927,9 @@ class _TimeChoice {
 
   /// Allenatore acceso dall'inizio, scelto nella galleria dei bot.
   final bool coach;
+
+  /// Allenamento scelto nella galleria dei bot; `null` tiene l'ultima scelta.
+  final bool? training;
 }
 
 /// Testi della schermata; in italiano se la pagina è montata senza i
@@ -3979,6 +4018,7 @@ class _TimeControlSheet extends StatefulWidget {
     required this.collection,
     required this.computerAvailable,
     required this.kidMode,
+    required this.training,
     this.tournamentPage,
     this.physicalPage,
     this.openingGame,
@@ -3998,6 +4038,9 @@ class _TimeControlSheet extends StatefulWidget {
   final BotCollection collection;
   final bool computerAvailable;
   final bool kidMode;
+
+  /// Ultima scelta tra Allenamento e Sfida, proposta nella galleria dei bot.
+  final bool training;
 
   /// Pagine dei tornei e della scacchiera fisica, se la home le offre.
   final Future<Widget> Function()? tournamentPage;
@@ -4122,7 +4165,11 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
         computerAvailable: widget.computerAvailable,
         kidMode: widget.kidMode,
         onChanged: (setup) => setState(() => _setup = setup),
-        galleryOptions: GameOptions(variant: _variant, handicap: _handicap),
+        galleryOptions: GameOptions(
+          variant: _variant,
+          handicap: _handicap,
+          training: widget.training,
+        ),
         onGalleryPlay: (result) => Navigator.pop(
           context,
           _TimeChoice(
@@ -4133,6 +4180,7 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
             result.applyTo(widget.kidMode ? _setup.forKids() : _setup),
             result.options.handicap,
             coach: result.options.coach,
+            training: result.options.training,
           ),
         ),
       ),
@@ -4353,7 +4401,10 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
               setup: _setup,
               adaptiveLevel: widget.adaptiveLevel,
               kidMode: false,
-              options: GameOptions(control: _quickControl),
+              options: GameOptions(
+                control: _quickControl,
+                training: widget.training,
+              ),
             );
             if (result == null || !context.mounted) return;
             Navigator.pop(
@@ -4366,6 +4417,7 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
                 result.applyTo(_setup),
                 result.options.handicap,
                 coach: result.options.coach,
+                training: result.options.training,
               ),
             );
           },

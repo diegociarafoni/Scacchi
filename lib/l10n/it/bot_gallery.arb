@@ -365,6 +365,14 @@
   "@botOptionsCoachHint": {
     "description": "botOptionsCoachHint"
   },
+  "botOptionsTraining": "Allenamento",
+  "@botOptionsTraining": {
+    "description": "Interruttore Allenamento/Sfida nelle opzioni della partita contro un bot"
+  },
+  "botOptionsTrainingHint": "Annullamento, suggerimenti e minacce. Non conta per Elo e vittorie; spento è la Sfida, senza aiuti.",
+  "@botOptionsTrainingHint": {
+    "description": "Cosa cambia tra Allenamento e Sfida"
+  },
   "botOptionsSummary": "{time} · {variant}",
   "@botOptionsSummary": {
     "description": "Riassunto delle opzioni scelte",

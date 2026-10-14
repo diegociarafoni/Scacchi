@@ -208,7 +208,7 @@ Nuove funzioni del computer si sviluppano partendo dai test, con nel nome il req
 | RF-21 motore in isolate separato, ritardo artificiale ai livelli bassi | ✓ |
 | RF-25 patta accettata dal bot in base alla valutazione | ✓ |
 | RNF-03 Stockfish nativo via FFI in isolate, 1 thread | ✓ (Android, iOS) |
-| RF-22 modalità Allenamento (suggerimento, barra di valutazione) | In parte: suggerimento con il pulsante **Suggerisci** (vedi [allenatore.md](allenatore.md)); barra di valutazione in partita (impostazione **Barra di valutazione**, spenta di default), in analisi e in revisione; manca la scelta esplicita tra Allenamento e Sfida |
+| RF-22 modalità Allenamento (suggerimento, barra di valutazione) | Fatto: vedi «Allenamento e Sfida» sotto |
 | RF-23 bot con personalità | ✓ (vedi [bot.md](bot.md)) |
 | RF-24 partenza da una posizione personalizzata | ✓ dall'editor (vedi [editor-posizione.md](editor-posizione.md)) |
 | RF-26 avversario adattivo | ✓ |
@@ -217,3 +217,17 @@ Nuove funzioni del computer si sviluppano partendo dai test, con nel nome il req
 
 Stockfish è GPL-3.0, come l'app. Il permesso aggiuntivo per la pubblicazione sugli store è
 descritto in [NOTICE.md](../NOTICE.md).
+
+## Allenamento e Sfida
+
+Contro un bot o il computer si gioca in due modalità, scelte con l'interruttore **Allenamento** nelle opzioni della partita (galleria dei bot, «Opzioni» → Aiuti) e ricordate (`AppSettings.trainingMode`, spento di default):
+
+| | Allenamento | Sfida |
+| --- | --- | --- |
+| Annullamento | sì | no |
+| Suggerimento, minacce, allenatore | sì | no |
+| Barra di valutazione | sì, se accesa nelle impostazioni | no |
+| Elo | non conta | conta |
+| Vittorie nei progressi e nei badge | non contano: la partita vale come giocata (XP di partecipazione) | contano |
+
+Il profilo bambino gioca sempre in Allenamento e non mostra l'interruttore. La modalità vale per la partita in corso (`_training` in `GamePage`); riprendendo una partita salvata vale l'ultima scelta fatta. Tra due persone e nelle sfide del percorso non cambia nulla.

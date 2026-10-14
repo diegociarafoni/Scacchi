@@ -7,10 +7,13 @@ import 'package:rokko/engine/process_transport.dart';
 import 'package:rokko/game/game_page.dart';
 import 'package:rokko/l10n/app_localizations.dart';
 import 'package:rokko/l10n/content.dart';
-import 'package:rokko/settings/settings.dart';
 
 import '../test/computer_fakes.dart'
-    show chooseAdaptiveComputer, scrollSheetTo, startComputerGame;
+    show
+        chooseAdaptiveComputer,
+        scrollSheetTo,
+        startComputerGame,
+        trainingSettings;
 import '../test/game_actions.dart';
 import '../test/support/italian_device.dart';
 
@@ -60,7 +63,7 @@ Future<void> _startComputerGame(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: GamePage(
-        settings: SettingsController.defaults(),
+        settings: trainingSettings(),
         computerAvailable: true,
         createComputer: () => ComputerPlayer(connect: ProcessTransport.start),
       ),
@@ -154,7 +157,7 @@ void main() {
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: GamePage(
-              settings: SettingsController.defaults(),
+              settings: trainingSettings(),
               computerAvailable: true,
               createComputer: () =>
                   ComputerPlayer(connect: ProcessTransport.start),

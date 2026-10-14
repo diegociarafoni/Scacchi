@@ -142,6 +142,8 @@
   "botOptionsHelp": "Yardım",
   "botOptionsCoach": "Koç",
   "botOptionsCoachHint": "Hata yaptığında seni uyarır.",
+  "botOptionsTraining": "Antrenman",
+  "botOptionsTrainingHint": "Geri alma, ipuçları ve tehditler. Elo'ya ve zaferlere sayılmaz; kapalıyken Meydan Okuma, yardımsız.",
   "botOptionsSummary": "{time} · {variant}",
   "@botOptionsSummary": {
     "placeholders": {
