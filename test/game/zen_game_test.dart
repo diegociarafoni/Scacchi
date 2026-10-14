@@ -24,7 +24,7 @@ void main() {
     tester.view.physicalSize = const Size(1170, 2532);
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
-    settings = SettingsController.defaults();
+    settings = trainingSettings();
     if (zen) await settings.update(settings.value.copyWith(zenMode: true));
     await tester.pumpWidget(
       MaterialApp(

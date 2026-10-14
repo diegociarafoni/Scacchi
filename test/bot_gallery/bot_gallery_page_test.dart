@@ -399,6 +399,7 @@ void main() {
                   matching: find.byType(Scrollable),
                 ),
               );
+              await _tapOption(tester, const Key('option-training'));
               await _tapOption(tester, const Key('option-coach'));
               await tester.tap(find.byKey(const Key('options-done')));
               await tester.pumpAndSettle();
@@ -489,6 +490,53 @@ void main() {
         );
         expect(chip.selected, isTrue);
       });
+
+      testWidgets(
+        'RF-22 Sfida di default; l\'interruttore sceglie Allenamento',
+        (tester) async {
+          final result = await _open(
+            tester,
+            initialBotId: 'pino',
+            act: () async {
+              await tester.tap(find.byKey(const Key('gallery-options')));
+              await tester.pumpAndSettle();
+              Future<void> reveal() => tester.scrollUntilVisible(
+                find.byKey(const Key('option-training')),
+                200,
+                scrollable: find.descendant(
+                  of: find.byType(BottomSheet),
+                  matching: find.byType(Scrollable),
+                ),
+              );
+              await reveal();
+              expect(
+                tester
+                    .widget<SwitchListTile>(
+                      find.byKey(const Key('option-training')),
+                    )
+                    .value,
+                isFalse,
+              );
+              // Nella Sfida l'allenatore è un aiuto: non si accende.
+              expect(
+                tester
+                    .widget<SwitchListTile>(
+                      find.byKey(const Key('option-coach')),
+                    )
+                    .onChanged,
+                isNull,
+              );
+              await _tapOption(tester, const Key('option-training'));
+              await _tapOption(tester, const Key('option-coach'));
+              await tester.tap(find.byKey(const Key('options-done')));
+              await tester.pumpAndSettle();
+              await tester.tap(find.byKey(const Key('gallery-play')));
+            },
+          );
+          expect(result!.options.training, isTrue);
+          expect(result.options.coach, isTrue);
+        },
+      );
 
       testWidgets('profilo bambino: solo senza tempo o cadenza lenta', (
         tester,

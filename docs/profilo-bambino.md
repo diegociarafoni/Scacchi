@@ -62,3 +62,5 @@ Anche l'allenatore durante la partita usa le frasi senza numeri: `GamePage` pass
 - I testi del profilo sono nei file `.arb` con prefisso `kid`; quelli della partita con prefisso `kidGame`, letti in `GamePage` solo con il profilo attivo; le descrizioni dei bot hanno prefisso `kidBot`.
 - Bot amichevoli: `friendlyBots`, `friendlyBotDescriptions` e `Bot.phrases(evento, friendly: true)` in `lib/engine/bots.dart`, `GameSetup.forKids()` e `OpponentPicker(kidMode: ...)` in `lib/game/opponent_picker.dart`; `GamePage` passa `kidMode` ai pannelli e alle frasi.
 - Test: `test/engine/kid_bots_test.dart`, `test/game/kid_opponent_picker_test.dart`, `test/kid_bot_game_test.dart`.
+
+Contro i bot il profilo bambino gioca sempre in Allenamento (annullamento e aiuti, nessun Elo): vedi [avversario-computer.md](avversario-computer.md#allenamento-e-sfida).

@@ -5,7 +5,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/engine/computer_player.dart';
 import 'package:scacchi/game/game_page.dart';
 import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/settings/settings.dart';
 import 'package:scacchi/storage/key_value_store.dart';
 import 'package:scacchi/theme/rokko_theme.dart';
 
@@ -25,7 +24,7 @@ Future<void> pump(
   tester.view.physicalSize = size * 3;
   tester.view.devicePixelRatio = 3;
   addTearDown(tester.view.reset);
-  final settings = SettingsController.defaults();
+  final settings = trainingSettings();
   if (kid) await settings.update(settings.value.copyWith(kidMode: true));
   await tester.pumpWidget(
     MaterialApp(

@@ -10,7 +10,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/engine/computer_player.dart';
 import 'package:scacchi/game/game_page.dart';
 import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/settings/settings.dart';
 import 'package:scacchi/storage/key_value_store.dart';
 import 'package:scacchi/theme/rokko_theme.dart';
 
@@ -35,7 +34,7 @@ void main() {
             localizationsDelegates: AppLocalizations.localizationsDelegates,
             supportedLocales: AppLocalizations.supportedLocales,
             home: GamePage(
-              settings: SettingsController.defaults(),
+              settings: trainingSettings(),
               computerAvailable: true,
               store: MemoryStore(),
               now: () => DateTime(2026, 10, 12, 12),

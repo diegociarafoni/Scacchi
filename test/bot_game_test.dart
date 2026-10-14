@@ -6,7 +6,6 @@ import 'package:scacchi/engine/bot_collection.dart';
 import 'package:scacchi/engine/bots.dart';
 import 'package:scacchi/engine/computer_player.dart';
 import 'package:scacchi/game/game_page.dart';
-import 'package:scacchi/settings/settings.dart';
 import 'package:scacchi/storage/key_value_store.dart';
 
 import 'computer_fakes.dart';
@@ -18,7 +17,7 @@ final _chiara = botById('chiara')!;
 void main() {
   Widget app(MemoryStore store, {List<String>? script}) => MaterialApp(
     home: GamePage(
-      settings: SettingsController.defaults(),
+      settings: trainingSettings(),
       computerAvailable: true,
       store: store,
       now: () => TestWidgetsFlutterBinding.instance.clock.now(),

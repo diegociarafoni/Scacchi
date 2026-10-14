@@ -14,9 +14,15 @@ import '../computer_game_test.dart' show square;
 /// Il motore vede sempre il Bianco avanti di due pedoni.
 int _whiteAhead(String fen) => fen.contains(' w ') ? 200 : -200;
 
-Future<void> _open(WidgetTester tester, {required bool evalBar}) async {
+Future<void> _open(
+  WidgetTester tester, {
+  required bool evalBar,
+  bool training = true,
+}) async {
   final settings = SettingsController.defaults();
-  await settings.update(settings.value.copyWith(evalBar: evalBar));
+  await settings.update(
+    settings.value.copyWith(evalBar: evalBar, trainingMode: training),
+  );
   await tester.pumpWidget(
     MaterialApp(
       locale: const Locale('it'),
@@ -62,6 +68,13 @@ void main() {
       tester.widget<EvalBar>(find.byType(EvalBar)).score,
       const EngineScore.cp(200),
     );
+  });
+
+  testWidgets('RF-22 nella Sfida la barra non c\'è, anche se accesa', (
+    tester,
+  ) async {
+    await _open(tester, evalBar: true, training: false);
+    expect(find.byType(EvalBar), findsNothing);
   });
 
   testWidgets('RF-22 la barra si adatta senza andare in overflow', (

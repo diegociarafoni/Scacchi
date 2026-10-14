@@ -8,7 +8,6 @@ import 'package:scacchi/game/speech_bubble.dart';
 import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/progress/avatar_art.dart';
 import 'package:scacchi/progress/guardian_avatar.dart';
-import 'package:scacchi/settings/settings.dart';
 import 'package:scacchi/storage/key_value_store.dart';
 import 'package:scacchi/theme/rokko_theme.dart';
 
@@ -31,7 +30,7 @@ Future<void> pump(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: GamePage(
-        settings: SettingsController.defaults(),
+        settings: trainingSettings(),
         computerAvailable: true,
         store: MemoryStore(),
         now: () => DateTime(2026, 10, 12, 12),

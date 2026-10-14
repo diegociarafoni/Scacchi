@@ -4,6 +4,7 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/engine/uci_transport.dart';
+import 'package:scacchi/settings/settings.dart';
 
 import 'game_actions.dart';
 
@@ -179,3 +180,8 @@ Future<void> chooseTime(WidgetTester tester, String time) async {
   await tester.pump(const Duration(milliseconds: 500));
   await tester.tap(find.text(time));
 }
+
+/// Impostazioni con l'Allenamento acceso: annullamento e aiuti contro il
+/// computer, che nella Sfida (il predefinito) non ci sono.
+SettingsController trainingSettings() =>
+    SettingsController.defaults()..value = AppSettings(trainingMode: true);
