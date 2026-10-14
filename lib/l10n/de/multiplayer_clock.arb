@@ -2,11 +2,32 @@
   "multiplayerClockTitle": "Bedenkzeit",
   "multiplayerClockNone": "Ohne Uhr",
   "multiplayerClockHint": "Wer die Partie erstellt, entscheidet: Das andere Handy erhält die Einstellung mit der Einladung.",
-  "multiplayerClockRemoteHint": "Aus der Ferne gibt es keine Uhr: Wähle WLAN oder Bluetooth, um eine zu nutzen.",
+  "multiplayerClockRemoteHint": "Wähle eine Live-Uhr für Spielende mit geöffneter App oder eine Bedenkzeit pro Zug in Tagen.",
   "multiplayerClockYou": "Du",
   "multiplayerClockPeer": "Gegner",
   "multiplayerClockSemantics": "Uhr ({who}): {minutes, plural, one{{minutes} Minute} other{{minutes} Minuten}} und {seconds, plural, one{{seconds} Sekunde} other{{seconds} Sekunden}}",
   "multiplayerWhiteWinsOnTime": "Zeit abgelaufen: Weiß gewinnt",
   "multiplayerBlackWinsOnTime": "Zeit abgelaufen: Schwarz gewinnt",
-  "multiplayerDrawOnTime": "Zeit abgelaufen, aber kein Mattmaterial: Remis"
+  "multiplayerDrawOnTime": "Zeit abgelaufen, aber kein Mattmaterial: Remis",
+  "multiplayerMoveDaysTitle": "Zeit pro Zug",
+  "multiplayerMoveDaysNone": "Kein Limit",
+  "multiplayerMoveDaysOption": "{days, plural, one{{days} Tag} other{{days} Tage}}",
+  "@multiplayerMoveDaysOption": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "multiplayerMoveDaysHint": "Für langsame Partien: Wer nicht rechtzeitig zieht, kann verlieren. Nicht mit der Live-Uhr kombinierbar.",
+  "multiplayerMoveDeadline": "Zug bis {when}",
+  "@multiplayerMoveDeadline": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "multiplayerClaimTimeout": "Sieg beanspruchen",
+  "multiplayerClaimHint": "Der Gegner hat nicht rechtzeitig gezogen."
 }

@@ -2,11 +2,32 @@
   "multiplayerClockTitle": "Süre ayarı",
   "multiplayerClockNone": "Saat yok",
   "multiplayerClockHint": "Oyunu kuran karar verir: diğer telefon bunu davetle alır.",
-  "multiplayerClockRemoteHint": "Uzaktan oyunda saat yoktur: saat kullanmak için Wi-Fi veya Bluetooth seç.",
+  "multiplayerClockRemoteHint": "Uygulaması açık oynayanlar için canlı bir saat ya da gün cinsinden hamle başına süre seç.",
   "multiplayerClockYou": "Sen",
   "multiplayerClockPeer": "Rakip",
   "multiplayerClockSemantics": "Saat, {who}: {minutes, plural, one{{minutes} dakika} other{{minutes} dakika}} {seconds, plural, one{{seconds} saniye} other{{seconds} saniye}}",
   "multiplayerWhiteWinsOnTime": "Süre doldu: Beyaz kazandı",
   "multiplayerBlackWinsOnTime": "Süre doldu: Siyah kazandı",
-  "multiplayerDrawOnTime": "Süre doldu ama mat yapacak materyal yok: beraberlik"
+  "multiplayerDrawOnTime": "Süre doldu ama mat yapacak materyal yok: beraberlik",
+  "multiplayerMoveDaysTitle": "Hamle başına süre",
+  "multiplayerMoveDaysNone": "Sınır yok",
+  "multiplayerMoveDaysOption": "{days, plural, other{{days} gün}}",
+  "@multiplayerMoveDaysOption": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "multiplayerMoveDaysHint": "Yavaş oyunlar için: zamanında oynamayan kaybedebilir. Canlı saatle birlikte kullanılmaz.",
+  "multiplayerMoveDeadline": "Hamle en geç {when}",
+  "@multiplayerMoveDeadline": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "multiplayerClaimTimeout": "Zaferi talep et",
+  "multiplayerClaimHint": "Rakip zamanında oynamadı."
 }

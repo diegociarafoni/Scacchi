@@ -2,11 +2,32 @@
   "multiplayerClockTitle": "Tempo gry",
   "multiplayerClockNone": "Bez zegara",
   "multiplayerClockHint": "Decyduje osoba tworząca partię: drugi telefon dostaje ustawienie wraz z zaproszeniem.",
-  "multiplayerClockRemoteHint": "Z daleka nie ma zegara: wybierz Wi-Fi lub Bluetooth, aby z niego korzystać.",
+  "multiplayerClockRemoteHint": "Wybierz zegar na żywo, dla grających z otwartą aplikacją, albo czas na ruch w dniach.",
   "multiplayerClockYou": "Ty",
   "multiplayerClockPeer": "Przeciwnik",
   "multiplayerClockSemantics": "Zegar ({who}): {minutes} min {seconds} s",
   "multiplayerWhiteWinsOnTime": "Koniec czasu: wygrywają białe",
   "multiplayerBlackWinsOnTime": "Koniec czasu: wygrywają czarne",
-  "multiplayerDrawOnTime": "Koniec czasu, ale brak materiału do mata: remis"
+  "multiplayerDrawOnTime": "Koniec czasu, ale brak materiału do mata: remis",
+  "multiplayerMoveDaysTitle": "Czas na ruch",
+  "multiplayerMoveDaysNone": "Bez limitu",
+  "multiplayerMoveDaysOption": "{days, plural, one{{days} dzień} few{{days} dni} many{{days} dni} other{{days} dnia}}",
+  "@multiplayerMoveDaysOption": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "multiplayerMoveDaysHint": "Dla wolnych partii: kto nie wykona ruchu na czas, może przegrać. Nie łączy się z zegarem na żywo.",
+  "multiplayerMoveDeadline": "Ruch do {when}",
+  "@multiplayerMoveDeadline": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "multiplayerClaimTimeout": "Zażądaj zwycięstwa",
+  "multiplayerClaimHint": "Przeciwnik nie wykonał ruchu na czas."
 }

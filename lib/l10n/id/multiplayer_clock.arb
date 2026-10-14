@@ -2,11 +2,32 @@
   "multiplayerClockTitle": "Pengaturan waktu",
   "multiplayerClockNone": "Tanpa jam",
   "multiplayerClockHint": "Yang membuat permainan yang menentukan: ponsel lain menerimanya bersama undangan.",
-  "multiplayerClockRemoteHint": "Tidak ada jam untuk permainan jarak jauh: pilih Wi-Fi atau Bluetooth untuk memakainya.",
+  "multiplayerClockRemoteHint": "Pilih jam langsung, untuk pemain dengan aplikasi terbuka, atau waktu per langkah dalam hari.",
   "multiplayerClockYou": "Kamu",
   "multiplayerClockPeer": "Lawan",
   "multiplayerClockSemantics": "Jam {who}: {minutes, plural, one{{minutes} menit} other{{minutes} menit}} {seconds, plural, one{{seconds} detik} other{{seconds} detik}}",
   "multiplayerWhiteWinsOnTime": "Waktu habis: Putih menang",
   "multiplayerBlackWinsOnTime": "Waktu habis: Hitam menang",
-  "multiplayerDrawOnTime": "Waktu habis, tetapi materi tidak cukup untuk skakmat: remis"
+  "multiplayerDrawOnTime": "Waktu habis, tetapi materi tidak cukup untuk skakmat: remis",
+  "multiplayerMoveDaysTitle": "Waktu per langkah",
+  "multiplayerMoveDaysNone": "Tanpa batas",
+  "multiplayerMoveDaysOption": "{days, plural, other{{days} hari}}",
+  "@multiplayerMoveDaysOption": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "multiplayerMoveDaysHint": "Untuk partai lambat: yang tidak melangkah tepat waktu bisa kalah. Tidak bisa digabung dengan jam langsung.",
+  "multiplayerMoveDeadline": "Langkah sebelum {when}",
+  "@multiplayerMoveDeadline": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "multiplayerClaimTimeout": "Klaim kemenangan",
+  "multiplayerClaimHint": "Lawan tidak melangkah tepat waktu."
 }

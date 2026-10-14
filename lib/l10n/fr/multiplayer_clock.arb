@@ -2,11 +2,32 @@
   "multiplayerClockTitle": "Cadence",
   "multiplayerClockNone": "Sans pendule",
   "multiplayerClockHint": "Celui qui crée la partie choisit : l'autre téléphone la reçoit avec l'invitation.",
-  "multiplayerClockRemoteHint": "Pas de pendule à distance : choisis Wi-Fi ou Bluetooth pour en utiliser une.",
+  "multiplayerClockRemoteHint": "Choisis une pendule en direct, pour ceux qui jouent avec l'appli ouverte, ou un temps par coup en jours.",
   "multiplayerClockYou": "Toi",
   "multiplayerClockPeer": "Adversaire",
   "multiplayerClockSemantics": "Pendule ({who}) : {minutes, plural, one{{minutes} minute} other{{minutes} minutes}} et {seconds, plural, one{{seconds} seconde} other{{seconds} secondes}}",
   "multiplayerWhiteWinsOnTime": "Temps écoulé : les Blancs gagnent",
   "multiplayerBlackWinsOnTime": "Temps écoulé : les Noirs gagnent",
-  "multiplayerDrawOnTime": "Temps écoulé, mais pas de matériel pour mater : nulle"
+  "multiplayerDrawOnTime": "Temps écoulé, mais pas de matériel pour mater : nulle",
+  "multiplayerMoveDaysTitle": "Temps par coup",
+  "multiplayerMoveDaysNone": "Sans limite",
+  "multiplayerMoveDaysOption": "{days, plural, one{{days} jour} other{{days} jours}}",
+  "@multiplayerMoveDaysOption": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "multiplayerMoveDaysHint": "Pour les parties lentes : qui ne joue pas à temps peut perdre. Incompatible avec la pendule en direct.",
+  "multiplayerMoveDeadline": "Coup avant le {when}",
+  "@multiplayerMoveDeadline": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "multiplayerClaimTimeout": "Réclamer la victoire",
+  "multiplayerClaimHint": "L'adversaire n'a pas joué à temps."
 }

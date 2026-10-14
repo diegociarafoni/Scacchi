@@ -455,7 +455,7 @@ void main() {
     expect(tester.getSize(hint).height, greaterThan(16));
   });
 
-  testWidgets('RMP-11 a distanza il tempo non c\'è e il testo lo spiega', (
+  testWidgets('A-26 a distanza si sceglie tra orologio dal vivo e giorni', (
     tester,
   ) async {
     tester.view
@@ -464,10 +464,21 @@ void main() {
     addTearDown(tester.view.reset);
     await tester.pumpWidget(localizedApp(home: const MultiplayerPage()));
     await tester.pumpAndSettle();
-    expect(find.textContaining('Lo decide chi crea'), findsOneWidget);
+    expect(find.text('Tempo per mossa'), findsNothing);
     await tester.tap(find.text('A distanza'));
     await tester.pumpAndSettle();
-    expect(find.textContaining('Lo decide chi crea'), findsNothing);
-    expect(find.textContaining('A distanza non c'), findsOneWidget);
+    expect(find.textContaining('Lo decide chi crea'), findsOneWidget);
+    expect(find.text('Tempo per mossa'), findsOneWidget);
+    expect(find.textContaining('orologio dal vivo'), findsWidgets);
+    // Scegliere i giorni toglie l'orologio, e viceversa.
+    final days = find.byType(DropdownButtonFormField<int?>);
+    await tester.ensureVisible(days);
+    await tester.pump();
+    await tester.tap(days);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('3 giorni').last);
+    await tester.pumpAndSettle();
+    expect(find.text('3 giorni'), findsOneWidget);
+    expect(find.text('Senza orologio'), findsOneWidget);
   });
 }

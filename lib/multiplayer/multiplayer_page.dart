@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../exchange/qr_receive_page.dart';
@@ -111,6 +112,7 @@ class FriendGamePanel extends StatefulWidget {
 class _FriendGamePanelState extends State<FriendGamePanel> {
   Side _side = Side.white;
   TimeControl? _control;
+  int? _moveDays;
   late _Channel _channel = widget.remoteByDefault
       ? _Channel.remote
       : _Channel.wifi;
@@ -327,19 +329,25 @@ class _FriendGamePanelState extends State<FriendGamePanel> {
           _Channel.remote => l10n.multiplayerRemoteSwitchHint,
         }),
         const SizedBox(height: 16),
-        // A distanza le mosse arrivano anche ore dopo: niente orologio.
-        if (_remote)
+        // A distanza si sceglie tra un orologio dal vivo (lampo) e un tempo
+        // per mossa in giorni (lenta): i due modi si escludono.
+        if (_remote) ...[
           Text(
             l10n.multiplayerClockRemoteHint,
             style: theme.textTheme.bodySmall,
-          )
-        else
-          (widget.clockBuilder ?? _clockMenu)(
-            context,
-            enabled: !_busy,
-            control: _control,
-            onChanged: (v) => setState(() => _control = v),
           ),
+          const SizedBox(height: 8),
+        ],
+        (widget.clockBuilder ?? _clockMenu)(
+          context,
+          enabled: !_busy,
+          control: _control,
+          onChanged: (v) => setState(() {
+            _control = v;
+            if (v != null) _moveDays = null;
+          }),
+        ),
+        if (_remote) ...[const SizedBox(height: 12), _moveDaysMenu(context)],
       ],
     );
     return Column(
@@ -408,7 +416,8 @@ class _FriendGamePanelState extends State<FriendGamePanel> {
                   if (bluetooth) await widget.bluetoothCheck(isHost: true);
                   return MultiplayerController.host(
                     side: _side,
-                    timeControl: _remote ? null : _control,
+                    timeControl: _control,
+                    moveDays: _remote ? _moveDays : null,
                     bluetooth: bluetooth,
                     openHost: widget.openHost,
                     remote: _remote,
@@ -429,6 +438,34 @@ class _FriendGamePanelState extends State<FriendGamePanel> {
           onPressed: _busy ? null : () => _join(byLink: true),
         ),
       ],
+    );
+  }
+
+  Widget _moveDaysMenu(BuildContext context) {
+    final l10n = multiplayerL10n(context);
+    return DropdownButtonFormField<int?>(
+      key: ValueKey('move-days-$_moveDays'),
+      initialValue: _moveDays,
+      isExpanded: true,
+      decoration: InputDecoration(
+        labelText: l10n.multiplayerMoveDaysTitle,
+        helperText: l10n.multiplayerMoveDaysHint,
+        helperMaxLines: 3,
+      ),
+      items: [
+        DropdownMenuItem(child: Text(l10n.multiplayerMoveDaysNone)),
+        for (final d in moveDaysChoices)
+          DropdownMenuItem(
+            value: d,
+            child: Text(l10n.multiplayerMoveDaysOption(d)),
+          ),
+      ],
+      onChanged: _busy
+          ? null
+          : (v) => setState(() {
+              _moveDays = v;
+              if (v != null) _control = null;
+            }),
     );
   }
 
@@ -824,6 +861,33 @@ class _MultiplayerGamePageState extends State<MultiplayerGamePage> {
     return leave ?? false;
   }
 
+  /// Scadenza della mossa di una partita lenta e, passata, il reclamo.
+  List<Widget> _deadline(AppLocalizations l10n) {
+    final when = DateFormat.yMMMd(Localizations.localeOf(context).toString())
+        .add_Hm()
+        .format(_c.moveDeadline!.toLocal());
+    return [
+      Text(
+        l10n.multiplayerMoveDeadline(when),
+        textAlign: TextAlign.center,
+        style: Theme.of(context).textTheme.bodyMedium,
+      ),
+      if (_c.canClaimTimeout) ...[
+        const SizedBox(height: 4),
+        Text(l10n.multiplayerClaimHint, textAlign: TextAlign.center),
+        const SizedBox(height: 8),
+        Center(
+          child: FilledButton.icon(
+            icon: const Icon(Icons.emoji_events_outlined),
+            label: Text(l10n.multiplayerClaimTimeout),
+            onPressed: _c.claimTimeout,
+          ),
+        ),
+      ],
+      const SizedBox(height: 8),
+    ];
+  }
+
   String _statusText(AppLocalizations l10n) => switch (_c.status) {
     MultiplayerStatus.waitingPeer => l10n.multiplayerWaiting,
     MultiplayerStatus.connecting => l10n.multiplayerConnecting,
@@ -937,6 +1001,7 @@ class _MultiplayerGamePageState extends State<MultiplayerGamePage> {
                       ),
                     ],
                   ] else ...[
+                    if (_c.moveDeadline != null) ..._deadline(l10n),
                     if (_c.clock != null)
                       _clockRow(_c.mySide.opposite, l10n.multiplayerClockPeer),
                     if (_c.clock != null) const SizedBox(height: 8),

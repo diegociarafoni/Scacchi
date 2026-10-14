@@ -27,6 +27,9 @@ final _uuidPattern = RegExp(
 const maxInviteMinutes = 180;
 const maxInviteIncrement = 60;
 
+/// Giorni per mossa che chi crea una partita lenta a distanza può scegliere.
+const moveDaysChoices = [1, 3, 7];
+
 final _random = Random.secure();
 
 Uint8List _randomBytes(int n) =>
@@ -56,6 +59,7 @@ class GameInvite {
     required this.hostSide,
     this.lanAddress,
     this.timeControl,
+    this.moveDays,
     this.remote = false,
     this.ble = false,
   });
@@ -72,6 +76,11 @@ class GameInvite {
 
   /// Cadenza scelta da chi crea la partita; `null` senza orologio.
   final TimeControl? timeControl;
+
+  /// Partita lenta a distanza: giorni concessi per ogni mossa, scaduti i quali
+  /// l'avversario può reclamare la vittoria. `null` se non c'è limite; esclude
+  /// [timeControl].
+  final int? moveDays;
 
   /// La partita può giocarsi anche a distanza, su relay internet: chi
   /// riceve l'invito apre quel canale oltre a quello locale, se c'è.
@@ -91,6 +100,7 @@ class GameInvite {
       'c': hostSide == Side.white ? 'w' : 'b',
       'lan': ?lanAddress,
       'tc': ?timeControl?.label,
+      'dm': ?moveDays?.toString(),
       if (remote) 'r': '1',
       if (ble) 'ble': '1',
     },
@@ -134,8 +144,16 @@ class GameInvite {
     }
     final remote = q['r'];
     if (remote != null && remote != '1') return null;
-    // A distanza le mosse arrivano anche dopo ore: niente orologio.
-    if (remote != null && q['tc'] != null) return null;
+    // I giorni per mossa sono solo delle partite lente a distanza e non
+    // convivono con un orologio dal vivo.
+    final dmText = q['dm'];
+    final moveDays = dmText == null ? null : int.tryParse(dmText);
+    if (dmText != null &&
+        (!moveDaysChoices.contains(moveDays) ||
+            remote == null ||
+            tcText != null)) {
+      return null;
+    }
     return GameInvite(
       gameId: gameId,
       secret: secret,
@@ -143,6 +161,7 @@ class GameInvite {
       hostSide: side,
       lanAddress: lan,
       timeControl: control,
+      moveDays: moveDays,
       remote: remote != null,
       ble: q['ble'] == '1',
     );
