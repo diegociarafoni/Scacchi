@@ -13,6 +13,7 @@ import 'package:rokko/exchange/qr_send_page.dart';
 import 'package:rokko/exchange/qr_transfer.dart';
 import 'package:rokko/game/chess_game.dart';
 import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/theme/rokko_mascot.dart';
 
 ChessGame play(List<String> uci) {
   final game = ChessGame();
@@ -99,6 +100,12 @@ void main() {
     );
     await settle(tester);
   }
+
+  testWidgets('archivio vuoto: la torre e il testo', (tester) async {
+    await show(tester, using: GameArchive(File('${dir.path}/vuoto.json')));
+    expect(find.byType(RokkoMascot), findsOneWidget);
+    expect(find.text('Nessuna partita salvata.'), findsOneWidget);
+  });
 
   testWidgets('RF-101 storico con giocatori e risultato', (tester) async {
     await show(tester);
