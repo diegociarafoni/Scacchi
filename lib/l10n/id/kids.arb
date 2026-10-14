@@ -97,5 +97,8 @@
   "kidUnlockByPlaying": "Terbuka saat kamu bermain",
   "kidCoachMaterialLoss": "Hati-hati: langkah ini kehilangan bidak.",
   "kidCoachAllowedMate": "Setelah {move}, lawanmu bisa skakmat dengan {reply}.",
-  "kidCoachMissedMate": "Kamu bisa skakmat dengan {move}!"
+  "kidCoachMissedMate": "Kamu bisa skakmat dengan {move}!",
+  "kidGameUndoOfferSide": "{side, select, white{Putih, ulangi langkahnya?} other{Hitam, ulangi langkahnya?}}",
+  "kidGameUndoOfferName": "{name}, ulangi langkahnya?",
+  "kidGameUndoYes": "Ya, ulangi"
 }

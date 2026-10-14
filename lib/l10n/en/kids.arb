@@ -97,5 +97,8 @@
   "kidUnlockByPlaying": "Unlocks as you play",
   "kidCoachMaterialLoss": "Careful: this move loses pieces.",
   "kidCoachAllowedMate": "After {move} your opponent can checkmate with {reply}.",
-  "kidCoachMissedMate": "You could checkmate with {move}!"
+  "kidCoachMissedMate": "You could checkmate with {move}!",
+  "kidGameUndoOfferSide": "{side, select, white{White, shall we redo the move?} other{Black, shall we redo the move?}}",
+  "kidGameUndoOfferName": "{name}, shall we redo the move?",
+  "kidGameUndoYes": "Yes, redo it"
 }

@@ -544,5 +544,30 @@
         "type": "int"
       }
     }
+  },
+  "gameUndoOfferSide": "{side, select, white{Il Bianco} other{Il Nero}} accetta di annullare la mossa?",
+  "@gameUndoOfferSide": {
+    "description": "Richiesta di annullare l'ultima mossa tra due persone, senza nomi scelti",
+    "placeholders": {
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "gameUndoOfferNamed": "{name} ({side, select, white{Bianco} other{Nero}}) accetta di annullare la mossa?",
+  "@gameUndoOfferNamed": {
+    "description": "Richiesta di annullare l'ultima mossa tra due persone, con il nome del giocatore",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "side": {
+        "type": "String"
+      }
+    }
+  },
+  "gameUndoRefused": "L'annullamento è stato rifiutato.",
+  "@gameUndoRefused": {
+    "description": "Messaggio quando l'altro giocatore non accetta di annullare la mossa"
   }
 }
