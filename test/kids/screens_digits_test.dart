@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/archive/game_archive.dart';
 import 'package:scacchi/home/home_shell.dart';
