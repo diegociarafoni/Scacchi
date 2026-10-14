@@ -154,5 +154,8 @@
   "settingsMoveMethodDrag": "Arrastre",
   "@settingsMoveMethodDrag": {
     "description": "Impostazioni: solo trascinamento"
-  }
+  },
+  "settingsSearchHint": "Buscar en los ajustes",
+  "settingsSearchEmpty": "No se encontró ningún ajuste",
+  "settingsSearchClear": "Borrar la búsqueda"
 }

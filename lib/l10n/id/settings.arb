@@ -154,5 +154,8 @@
   "settingsMoveMethodDrag": "Seret",
   "@settingsMoveMethodDrag": {
     "description": "Impostazioni: solo trascinamento"
-  }
+  },
+  "settingsSearchHint": "Cari di pengaturan",
+  "settingsSearchEmpty": "Pengaturan tidak ditemukan",
+  "settingsSearchClear": "Hapus pencarian"
 }

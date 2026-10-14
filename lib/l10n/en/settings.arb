@@ -112,5 +112,8 @@
   "settingsMoveMethodAuto": "Automatic",
   "settingsMoveMethodBoth": "Taps and dragging",
   "settingsMoveMethodTwoTaps": "Two taps",
-  "settingsMoveMethodDrag": "Dragging"
+  "settingsMoveMethodDrag": "Dragging",
+  "settingsSearchHint": "Search settings",
+  "settingsSearchEmpty": "No settings found",
+  "settingsSearchClear": "Clear the search"
 }

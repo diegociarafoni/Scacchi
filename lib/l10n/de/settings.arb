@@ -148,5 +148,8 @@
   "settingsMoveMethodDrag": "Ziehen",
   "@settingsMoveMethodDrag": {
     "description": "Impostazioni: solo trascinamento"
-  }
+  },
+  "settingsSearchHint": "Einstellungen durchsuchen",
+  "settingsSearchEmpty": "Keine Einstellung gefunden",
+  "settingsSearchClear": "Suche löschen"
 }

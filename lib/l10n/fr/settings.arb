@@ -154,5 +154,8 @@
   "settingsMoveMethodDrag": "Glissement",
   "@settingsMoveMethodDrag": {
     "description": "Impostazioni: solo trascinamento"
-  }
+  },
+  "settingsSearchHint": "Rechercher dans les réglages",
+  "settingsSearchEmpty": "Aucun réglage trouvé",
+  "settingsSearchClear": "Effacer la recherche"
 }

@@ -112,5 +112,8 @@
   "settingsMoveMethodAuto": "Automático",
   "settingsMoveMethodBoth": "Toques e arrastar",
   "settingsMoveMethodTwoTaps": "Dois toques",
-  "settingsMoveMethodDrag": "Arrastar"
+  "settingsMoveMethodDrag": "Arrastar",
+  "settingsSearchHint": "Pesquisar nas configurações",
+  "settingsSearchEmpty": "Nenhuma configuração encontrada",
+  "settingsSearchClear": "Limpar a pesquisa"
 }

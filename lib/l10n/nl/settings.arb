@@ -154,5 +154,8 @@
   "settingsMoveMethodDrag": "Slepen",
   "@settingsMoveMethodDrag": {
     "description": "Impostazioni: solo trascinamento"
-  }
+  },
+  "settingsSearchHint": "Zoeken in instellingen",
+  "settingsSearchEmpty": "Geen instellingen gevonden",
+  "settingsSearchClear": "Zoekopdracht wissen"
 }

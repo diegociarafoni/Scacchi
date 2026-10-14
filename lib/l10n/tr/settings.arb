@@ -154,5 +154,8 @@
   "settingsMoveMethodDrag": "Sürükleme",
   "@settingsMoveMethodDrag": {
     "description": "Impostazioni: solo trascinamento"
-  }
+  },
+  "settingsSearchHint": "Ayarlarda ara",
+  "settingsSearchEmpty": "Ayar bulunamadı",
+  "settingsSearchClear": "Aramayı temizle"
 }

@@ -496,5 +496,17 @@
   "settingsMoveMethodDrag": "Trascinamento",
   "@settingsMoveMethodDrag": {
     "description": "Impostazioni: solo trascinamento"
+  },
+  "settingsSearchHint": "Cerca nelle impostazioni",
+  "@settingsSearchHint": {
+    "description": "Impostazioni: testo del campo di ricerca"
+  },
+  "settingsSearchEmpty": "Nessuna impostazione trovata",
+  "@settingsSearchEmpty": {
+    "description": "Impostazioni: ricerca senza risultati"
+  },
+  "settingsSearchClear": "Cancella la ricerca",
+  "@settingsSearchClear": {
+    "description": "Impostazioni: pulsante che svuota la ricerca"
   }
 }

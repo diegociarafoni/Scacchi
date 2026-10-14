@@ -154,5 +154,8 @@
   "settingsMoveMethodDrag": "Перетаскивание",
   "@settingsMoveMethodDrag": {
     "description": "Impostazioni: solo trascinamento"
-  }
+  },
+  "settingsSearchHint": "Поиск в настройках",
+  "settingsSearchEmpty": "Настройки не найдены",
+  "settingsSearchClear": "Очистить поиск"
 }
