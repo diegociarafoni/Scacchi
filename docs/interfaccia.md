@@ -22,6 +22,8 @@ Stato, righe del materiale e scacchiera stanno attaccati ai comandi; l'avanzo di
 
 ## Tablet e orizzontale
 
+La Home usa le classi di larghezza di Material (`WindowSize` in `lib/theme/adaptive.dart`): sotto 840 dp, compresi schermo diviso e pieghevoli chiusi, resta la barra in basso; da 840 dp la barra diventa una colonna laterale (`NavigationRail`) e il contenuto si ferma a 840 dp di larghezza, centrato in alto.
+
 Quando la larghezza supera di oltre il 20% l'altezza, la scacchiera sta a sinistra e un pannello a destra contiene, dall'alto: materiale del giocatore in alto, stato, lista delle mosse, materiale del giocatore in basso e comandi.
 
 ## Materiale catturato

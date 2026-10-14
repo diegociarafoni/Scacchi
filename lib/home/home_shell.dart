@@ -69,6 +69,7 @@ import '../story/story_l10n.dart';
 import '../story/story_page.dart';
 import '../summary/weekly_summary_page.dart';
 import '../tablebase/shared_tablebase.dart';
+import '../theme/adaptive.dart';
 import '../tournament/bot_game.dart';
 import '../tournament/tournament.dart';
 import '../tournament/tournament_controller.dart';
@@ -1036,86 +1037,122 @@ class _HomeShellState extends State<HomeShell> {
     if (_tab == 2) _learnVisited = true;
     if (_tab == 3) _youVisited = true;
     final features = _features();
-    return Scaffold(
-      body: IndexedStack(
-        index: _tab,
-        children: [
-          HomePage(
-            progress: _progressController,
+    final stack = IndexedStack(
+      index: _tab,
+      children: [
+        HomePage(
+          progress: _progressController,
+          path: _pathController,
+          story: _storyController,
+          games: () async => (await _archive()).list(),
+          features: features,
+          simple: _kidMode,
+          refresh: _homeRefresh,
+          onNewGame: _newGame,
+          onSettings: _openSettings,
+          onResume: _resumeGame,
+          onOpenGame: (g) => _openSavedGame(context, g),
+          onContinueStory: _continueStory,
+          onPlayBot: _computerAvailable
+              ? (bot) =>
+                    _newGame(GameSetup(opponent: Opponent.bot, botId: bot.id))
+              : null,
+        ),
+        if (_trainer != null)
+          PuzzleHubPage(trainer: _trainer!, onActivity: _record)
+        else
+          const SizedBox.shrink(),
+        if (_learnVisited)
+          LearnPage(
             path: _pathController,
             story: _storyController,
-            games: () async => (await _archive()).list(),
             features: features,
-            simple: _kidMode,
-            refresh: _homeRefresh,
-            onNewGame: _newGame,
-            onSettings: _openSettings,
-            onResume: _resumeGame,
-            onOpenGame: (g) => _openSavedGame(context, g),
             onContinueStory: _continueStory,
-            onPlayBot: _computerAvailable
-                ? (bot) =>
-                      _newGame(GameSetup(opponent: Opponent.bot, botId: bot.id))
-                : null,
-          ),
-          if (_trainer != null)
-            PuzzleHubPage(trainer: _trainer!, onActivity: _record)
-          else
-            const SizedBox.shrink(),
-          if (_learnVisited)
-            LearnPage(
-              path: _pathController,
-              story: _storyController,
-              features: features,
-              onContinueStory: _continueStory,
-            )
-          else
-            const SizedBox.shrink(),
-          if (_tab == 3 || _youVisited)
-            YouPage(
-              progress: _progressController,
-              path: _pathController,
-              archive: _archive,
-              reminders: () => _reminders,
-              simple: _kidMode,
-              playGuardian: _computerAvailable ? _playGuardian : null,
-              storyPage: _storyPage,
-              openGame: _openSavedGame,
-              openAnalysis: _computerAvailable ? _openSavedAnalysis : null,
-              puzzlesPage: _puzzlesPage,
-            )
-          else
-            const SizedBox.shrink(),
-        ],
+          )
+        else
+          const SizedBox.shrink(),
+        if (_tab == 3 || _youVisited)
+          YouPage(
+            progress: _progressController,
+            path: _pathController,
+            archive: _archive,
+            reminders: () => _reminders,
+            simple: _kidMode,
+            playGuardian: _computerAvailable ? _playGuardian : null,
+            storyPage: _storyPage,
+            openGame: _openSavedGame,
+            openAnalysis: _computerAvailable ? _openSavedAnalysis : null,
+            puzzlesPage: _puzzlesPage,
+          )
+        else
+          const SizedBox.shrink(),
+      ],
+    );
+    final destinations = [
+      NavigationDestination(
+        icon: const Icon(Icons.home_outlined),
+        selectedIcon: const Icon(Icons.home),
+        label: l.homeNavHome,
       ),
+      NavigationDestination(
+        icon: const Icon(Icons.extension_outlined),
+        selectedIcon: const Icon(Icons.extension),
+        label: l.homeNavPuzzles,
+      ),
+      NavigationDestination(
+        icon: const Icon(Icons.school_outlined),
+        selectedIcon: const Icon(Icons.school),
+        label: l.homeNavLearn,
+      ),
+      NavigationDestination(
+        icon: const Icon(Icons.person_outline),
+        selectedIcon: const Icon(Icons.person),
+        label: l.youTitle,
+      ),
+    ];
+    void select(int i) {
+      setState(() => _tab = i);
+      if (i == 0) _homeRefresh.value++;
+    }
+
+    // Su schermi larghi la barra passa a lato e il contenuto resta stretto.
+    if (WindowSize.of(context) == WindowSize.expanded) {
+      return Scaffold(
+        body: Row(
+          children: [
+            NavigationRail(
+              selectedIndex: _tab,
+              onDestinationSelected: select,
+              labelType: NavigationRailLabelType.all,
+              destinations: [
+                for (final d in destinations)
+                  NavigationRailDestination(
+                    icon: d.icon,
+                    selectedIcon: d.selectedIcon,
+                    label: Text(d.label),
+                  ),
+              ],
+            ),
+            const VerticalDivider(width: 1),
+            Expanded(
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: contentMaxWidth),
+                  child: stack,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+    return Scaffold(
+      body: stack,
       bottomNavigationBar: NavigationBar(
         selectedIndex: _tab,
-        onDestinationSelected: (i) {
-          setState(() => _tab = i);
-          if (i == 0) _homeRefresh.value++;
-        },
-        destinations: [
-          NavigationDestination(
-            icon: const Icon(Icons.home_outlined),
-            selectedIcon: const Icon(Icons.home),
-            label: l.homeNavHome,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.extension_outlined),
-            selectedIcon: const Icon(Icons.extension),
-            label: l.homeNavPuzzles,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.school_outlined),
-            selectedIcon: const Icon(Icons.school),
-            label: l.homeNavLearn,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.person_outline),
-            selectedIcon: const Icon(Icons.person),
-            label: l.youTitle,
-          ),
-        ],
+        onDestinationSelected: select,
+        destinations: destinations,
       ),
     );
   }
