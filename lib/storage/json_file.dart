@@ -13,10 +13,11 @@ class JsonFile {
     this.file, {
     required this.version,
     this.migrations = const {},
-    DateTime Function() clock = DateTime.now,
-  }) : _clock = clock;
+    this.clock = DateTime.now,
+  });
 
-  final DateTime Function() _clock;
+  /// Orologio dei nomi dei file messi da parte; si cambia nei test.
+  final DateTime Function() clock;
 
   final File file;
   final int version;
@@ -76,7 +77,7 @@ class JsonFile {
   /// stesso istante) si aggiunge un contatore, perché la rinomina
   /// sovrascriverebbe in silenzio la copia precedente.
   Future<T?> _setAside<T>() async {
-    final base = '${file.path}.bad-${_clock().millisecondsSinceEpoch}';
+    final base = '${file.path}.bad-${clock().millisecondsSinceEpoch}';
     var target = base;
     for (var n = 1; File(target).existsSync(); n++) {
       target = '$base-$n';

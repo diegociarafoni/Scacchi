@@ -29,7 +29,11 @@ void main() {
   test(
     'file rovinati in sequenza veloce non si sovrascrivono tra loro',
     () async {
-      final json = JsonFile(file, version: 1, migrations: const {});
+      final json = JsonFile(
+        file,
+        version: 1,
+        clock: () => DateTime.fromMillisecondsSinceEpoch(1000),
+      );
       for (var i = 0; i < 30; i++) {
         file.writeAsStringSync('non json $i');
         expect(await json.read((j) => j), isNull);
