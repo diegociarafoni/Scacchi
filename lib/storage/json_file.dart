@@ -9,7 +9,14 @@ typedef JsonMigration = Map<String, Object?> Function(
 /// File JSON locale con versione dello schema, migrazioni, scrittura atomica
 /// e salvataggi accodati.
 class JsonFile {
-  JsonFile(this.file, {required this.version, this.migrations = const {}});
+  JsonFile(
+    this.file, {
+    required this.version,
+    this.migrations = const {},
+    DateTime Function() clock = DateTime.now,
+  }) : _clock = clock;
+
+  final DateTime Function() _clock;
 
   final File file;
   final int version;
@@ -33,10 +40,7 @@ class JsonFile {
     } on PathNotFoundException {
       return null;
     } on FormatException {
-      await file.rename(
-        '${file.path}.bad-${DateTime.now().millisecondsSinceEpoch}',
-      );
-      return null;
+      return _setAside();
     }
     final Map<String, Object?> json;
     final int found;
@@ -68,10 +72,16 @@ class JsonFile {
     }
   }
 
+  /// Il nome porta i millisecondi; se esiste già (due file rovinati nello
+  /// stesso istante) si aggiunge un contatore, perché la rinomina
+  /// sovrascriverebbe in silenzio la copia precedente.
   Future<T?> _setAside<T>() async {
-    await file.rename(
-      '${file.path}.bad-${DateTime.now().millisecondsSinceEpoch}',
-    );
+    final base = '${file.path}.bad-${_clock().millisecondsSinceEpoch}';
+    var target = base;
+    for (var n = 1; File(target).existsSync(); n++) {
+      target = '$base-$n';
+    }
+    await file.rename(target);
     return null;
   }
 
