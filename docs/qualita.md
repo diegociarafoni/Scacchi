@@ -87,4 +87,4 @@ e inoltre che i comandi della barra della partita siano annunciati come pulsanti
 
 `touch_targets_130_test.dart`: con il testo al 130%, su telefono piccolo e medio, schede della barra, impostazioni (menu e ogni sezione), Storia, partita e menu ⋮ non hanno overflow, hanno bersagli di tocco da 48 dp e comandi con etichetta.
 
-Altre prove per il requisito RNF-07: mossa da tastiera (`test/move_input_test.dart`), annuncio delle mosse (`test/move_speech_test.dart`), colori per daltonici (`test/settings/color_blind_test.dart`). Le animazioni ridotte dal sistema sono in `test/settings/reduce_motion_test.dart`. Resta da coprire l'annuncio delle case sulla scacchiera.
+Altre prove per il requisito RNF-07: mossa da tastiera (`test/move_input_test.dart`), annuncio delle mosse (`test/move_speech_test.dart`), colori per daltonici (`test/settings/color_blind_test.dart`). Le animazioni ridotte dal sistema sono in `test/settings/reduce_motion_test.dart` (pezzi e pagine), `test/theme/motion_test.dart` (dialoghi e fogli) e `test/review/eval_bar_motion_test.dart` (barra di valutazione). Resta da coprire l'annuncio delle case sulla scacchiera.

@@ -706,7 +706,7 @@ class _ReviewPageState extends State<ReviewPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 8,
             children: [
-              const Icon(Icons.edit_note, size: 20),
+              const Icon(Icons.edit_note_outlined, size: 20),
               Expanded(
                 child: Text(
                   l.reviewYourNote(

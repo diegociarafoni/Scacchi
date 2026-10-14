@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../engine/uci.dart';
 import '../l10n/app_localizations.dart';
 import '../settings/settings.dart';
+import '../theme/motion.dart';
 import 'score_format.dart';
 
 const double evalBarWidth = 20;
@@ -49,7 +50,9 @@ class EvalBar extends StatelessWidget {
             Align(
               alignment: Alignment.bottomCenter,
               child: AnimatedContainer(
-                duration: const Duration(milliseconds: 250),
+                duration: reduceMotionOf(context)
+                    ? Duration.zero
+                    : const Duration(milliseconds: 250),
                 height: height * win / 100,
                 color: const Color(0xFFF2F2F2),
               ),
