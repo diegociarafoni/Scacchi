@@ -11,7 +11,7 @@
   "multiplayerDrawOnTime": "Tempo esgotado, mas sem material para o xeque-mate: empate",
   "multiplayerMoveDaysTitle": "Tempo por jogada",
   "multiplayerMoveDaysNone": "Sem limite",
-  "multiplayerMoveDaysOption": "{days, plural, one{{days} dia} other{{days} dias}}",
+  "multiplayerMoveDaysOption": "{days, plural, =1{{days} dia} other{{days} dias}}",
   "@multiplayerMoveDaysOption": {
     "placeholders": {
       "days": {

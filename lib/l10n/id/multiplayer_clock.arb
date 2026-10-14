@@ -11,7 +11,7 @@
   "multiplayerDrawOnTime": "Waktu habis, tetapi materi tidak cukup untuk skakmat: remis",
   "multiplayerMoveDaysTitle": "Waktu per langkah",
   "multiplayerMoveDaysNone": "Tanpa batas",
-  "multiplayerMoveDaysOption": "{days, plural, other{{days} hari}}",
+  "multiplayerMoveDaysOption": "{days, plural, one{{days} hari} other{{days} hari}}",
   "@multiplayerMoveDaysOption": {
     "placeholders": {
       "days": {
