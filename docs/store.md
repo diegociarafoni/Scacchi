@@ -22,7 +22,7 @@ In https://github.com/diegociarafoni/rokko/settings/secrets/actions (**New repos
 
 Su Google Play serve inoltre un account sviluppatore e l'app creata in Play Console; la prima versione va caricata a mano. Se si attiva «Play App Signing», la chiave caricata resta quella del progetto e Google firma per la distribuzione.
 
-L'App Store di iOS non è ancora configurato: quando servirà si aggiungeranno una cartella Fastlane per iOS e i segreti per certificati e chiave API di App Store Connect, che saranno elencati qui.
+L'App Store di iOS è sospeso (decisione del 14 ottobre 2026, vedi [licenza.md](licenza.md#app-store-e-ios-rv-05)); se la questione si riaprirà si aggiungeranno una cartella Fastlane per iOS e i segreti per certificati e chiave API di App Store Connect, che saranno elencati qui.
 
 ## Uso
 
