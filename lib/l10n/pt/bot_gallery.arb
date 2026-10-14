@@ -142,6 +142,8 @@
   "botOptionsHelp": "Ajuda",
   "botOptionsCoach": "Treinador",
   "botOptionsCoachHint": "Avisa quando você comete um erro.",
+  "botOptionsTraining": "Treino",
+  "botOptionsTrainingHint": "Desfazer, dicas e ameaças. Não conta para Elo nem vitórias; desligado é o Desafio, sem ajudas.",
   "botOptionsSummary": "{time} · {variant}",
   "@botOptionsSummary": {
     "placeholders": {

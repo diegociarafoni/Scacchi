@@ -27,6 +27,7 @@ void main() {
     expect(settings.value.confirmMove, isFalse);
     expect(settings.value.premove, isTrue);
     expect(settings.value.evalBar, isFalse);
+    expect(settings.value.trainingMode, isFalse);
     expect(settings.value.colorBlind, isFalse);
     expect(settings.value.explainWhy, isFalse);
     expect(settings.value.kidMode, isFalse);
@@ -75,6 +76,7 @@ void main() {
         colorBlind: true,
         explainWhy: true,
         evalBar: true,
+        trainingMode: true,
         kidMode: true,
         themeMode: ThemeMode.dark,
       ),
@@ -87,6 +89,7 @@ void main() {
     expect(reloaded.value.moveMethod, MoveMethod.drag);
     expect(reloaded.value.markColor, MarkColor.blue);
     expect(reloaded.value.evalBar, isTrue);
+    expect(reloaded.value.trainingMode, isTrue);
   });
 
   test(

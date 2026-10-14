@@ -142,6 +142,8 @@
   "botOptionsHelp": "Aide",
   "botOptionsCoach": "Entraîneur",
   "botOptionsCoachHint": "Te prévient quand tu fais une erreur.",
+  "botOptionsTraining": "Entraînement",
+  "botOptionsTrainingHint": "Annulation, indices et menaces. Ne compte ni pour l'Elo ni pour les victoires ; désactivé, c'est le Défi, sans aide.",
   "botOptionsSummary": "{time} · {variant}",
   "@botOptionsSummary": {
     "placeholders": {

@@ -11,6 +11,7 @@ import '../exchange/qr_receive_page.dart';
 import '../exchange/qr_send_page.dart';
 import '../exchange/qr_transfer.dart';
 import '../l10n/app_localizations.dart';
+import '../theme/rokko_mascot.dart';
 import 'game_archive.dart';
 import 'pgn.dart';
 import 'saved_game.dart';
@@ -252,10 +253,8 @@ class _ArchivePageState extends State<ArchivePage> {
                 ),
                 Expanded(
                   child: visible.isEmpty
-                      ? Center(
-                          child: Text(
-                            games.isEmpty ? l.archiveEmpty : l.archiveNoMatch,
-                          ),
+                      ? EmptyState(
+                          games.isEmpty ? l.archiveEmpty : l.archiveNoMatch,
                         )
                       : ListView.builder(
                           itemCount: visible.length,
