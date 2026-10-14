@@ -148,5 +148,13 @@
   "settingsMoveMethodDrag": "Ziehen",
   "@settingsMoveMethodDrag": {
     "description": "Impostazioni: solo trascinamento"
+  },
+  "settingsKeepAwake": "Bildschirm eingeschaltet lassen",
+  "@settingsKeepAwake": {
+    "description": "Impostazioni: schermo acceso durante la partita"
+  },
+  "settingsKeepAwakeDescription": "Das Handy schaltet den Bildschirm während einer Partie nicht aus",
+  "@settingsKeepAwakeDescription": {
+    "description": "Impostazioni: descrizione dello schermo sempre acceso"
   }
 }

@@ -112,5 +112,7 @@
   "settingsMoveMethodAuto": "Automático",
   "settingsMoveMethodBoth": "Toques e arrastar",
   "settingsMoveMethodTwoTaps": "Dois toques",
-  "settingsMoveMethodDrag": "Arrastar"
+  "settingsMoveMethodDrag": "Arrastar",
+  "settingsKeepAwake": "Manter a tela ligada",
+  "settingsKeepAwakeDescription": "O celular não desliga a tela durante a partida"
 }

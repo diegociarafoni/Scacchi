@@ -154,5 +154,13 @@
   "settingsMoveMethodDrag": "Przeciąganie",
   "@settingsMoveMethodDrag": {
     "description": "Impostazioni: solo trascinamento"
+  },
+  "settingsKeepAwake": "Nie wygaszaj ekranu",
+  "@settingsKeepAwake": {
+    "description": "Impostazioni: schermo acceso durante la partita"
+  },
+  "settingsKeepAwakeDescription": "Telefon nie wyłącza ekranu podczas partii",
+  "@settingsKeepAwakeDescription": {
+    "description": "Impostazioni: descrizione dello schermo sempre acceso"
   }
 }

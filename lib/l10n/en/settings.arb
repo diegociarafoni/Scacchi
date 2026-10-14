@@ -112,5 +112,7 @@
   "settingsMoveMethodAuto": "Automatic",
   "settingsMoveMethodBoth": "Taps and dragging",
   "settingsMoveMethodTwoTaps": "Two taps",
-  "settingsMoveMethodDrag": "Dragging"
+  "settingsMoveMethodDrag": "Dragging",
+  "settingsKeepAwake": "Keep the screen on",
+  "settingsKeepAwakeDescription": "The phone does not turn the screen off during a game"
 }

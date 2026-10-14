@@ -154,5 +154,13 @@
   "settingsMoveMethodDrag": "Sürükleme",
   "@settingsMoveMethodDrag": {
     "description": "Impostazioni: solo trascinamento"
+  },
+  "settingsKeepAwake": "Ekranı açık tut",
+  "@settingsKeepAwake": {
+    "description": "Impostazioni: schermo acceso durante la partita"
+  },
+  "settingsKeepAwakeDescription": "Telefon, oyun sırasında ekranı kapatmaz",
+  "@settingsKeepAwakeDescription": {
+    "description": "Impostazioni: descrizione dello schermo sempre acceso"
   }
 }
