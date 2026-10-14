@@ -194,6 +194,14 @@
   "@gameClockDelay": {
     "description": "Cadenza libera: campo del ritardo"
   },
+  "gameClockPhaseMoves": "Züge bis zur Zeitgutschrift (0 = keine)",
+  "@gameClockPhaseMoves": {
+    "description": "Cadenza libera: dopo quante mosse di ciascun lato si aggiunge il tempo della seconda fase"
+  },
+  "gameClockPhaseMinutes": "Gutgeschriebene Minuten",
+  "@gameClockPhaseMinutes": {
+    "description": "Cadenza libera: minuti aggiunti all'orologio di chi completa le mosse della prima fase"
+  },
   "gameClockDelaySimple": "Einfach",
   "@gameClockDelaySimple": {
     "description": "Cadenza libera: ritardo semplice, il tempo parte dopo il ritardo"

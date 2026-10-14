@@ -82,6 +82,28 @@ void main() {
       expect(requirementOf(BoardTheme.corona), const StoryRequirement(9));
     });
 
+    test('i capitoli della Storia sbloccano anche due set di pezzi', () {
+      expect(requirementOf(PieceStyle.pirouetti), const StoryRequirement(4));
+      expect(requirementOf(PieceStyle.letter), const StoryRequirement(7));
+      const before = ProgressState(tally: {'story': 3});
+      const after = ProgressState(tally: {'story': 4});
+      expect(newRewards(before, after), [PieceStyle.pirouetti]);
+      expect(
+        rewardName(
+          lookupAppLocalizations(const Locale('it')),
+          PieceStyle.pirouetti,
+        ),
+        'pezzi Pirouetti',
+      );
+      expect(
+        newRewards(
+          const ProgressState(tally: {'story': 6}),
+          const ProgressState(tally: {'story': 7}),
+        ),
+        [PieceStyle.letter],
+      );
+    });
+
     test('concludere un capitolo registra l\'attività e vale XP', () {
       final update = ProgressTracker().record(
         ProgressState.initial,

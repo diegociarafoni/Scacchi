@@ -5,8 +5,9 @@ import '../game/clock.dart';
 /// Tempo speso su ogni mossa (RF-67), ricavato dai tempi residui [clocks]
 /// registrati dopo ciascuna mossa: il residuo precedente dello stesso lato,
 /// più l'incremento, meno il residuo attuale. La prima mossa di ogni lato parte
-/// dal tempo iniziale della [control] e non prende incremento; senza cadenza
-/// resta ignota. [startTimes] dà un tempo iniziale diverso per lato, nelle
+/// dal tempo iniziale della [control] e non prende incremento; la mossa che
+/// completa la fase aggiunta riceve anche i suoi minuti; senza cadenza resta
+/// ignota. [startTimes] dà un tempo iniziale diverso per lato, nelle
 /// partite a handicap (RF-27). `null` dove manca un tempo.
 List<Duration?> timeSpent(
   List<Duration?> clocks, {
@@ -20,7 +21,7 @@ List<Duration?> timeSpent(
     for (final side in Side.values)
       side: control == null ? null : startTimes?[side] ?? initial,
   };
-  final moved = <Side>{};
+  final made = <Side, int>{for (final side in Side.values) side: 0};
   final spent = <Duration?>[];
   for (var i = 0; i < clocks.length; i++) {
     final side = i.isEven ? first : first.opposite;
@@ -29,12 +30,15 @@ List<Duration?> timeSpent(
     if (before == null || after == null) {
       spent.add(null);
     } else {
-      final bonus = moved.contains(side) ? increment : Duration.zero;
+      // Il tempo della fase aggiunta arriva con la mossa che la completa.
+      final bonus =
+          (made[side]! > 0 ? increment : Duration.zero) +
+          (control?.phaseBonus(made[side]! + 1) ?? Duration.zero);
       final d = before + bonus - after;
       spent.add(d.isNegative ? Duration.zero : d);
     }
     previous[side] = after;
-    moved.add(side);
+    made[side] = made[side]! + 1;
   }
   return spent;
 }

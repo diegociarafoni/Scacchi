@@ -6,6 +6,7 @@ import 'package:rokko/settings/settings.dart';
 
 import '../computer_fakes.dart';
 import '../game_actions.dart';
+import 'game_qr_test.dart' show tapMove;
 
 void main() {
   testWidgets('RF-40 una cadenza libera avvia la partita con quel tempo', (
@@ -37,5 +38,58 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('clock-start')));
     await tester.pumpAndSettle();
     expect(find.text('7:00'), findsWidgets);
+  });
+
+  testWidgets('A-5 la quinta mossa aggiunge i minuti della seconda fase', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(1170, 2532);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      MaterialApp(
+        locale: const Locale('it'),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: GamePage(
+          settings: SettingsController.defaults(),
+          computerAvailable: false,
+          now: () => DateTime(2026, 10, 11, 12),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tapGameAction(tester, 'Nuova');
+    await tester.pumpAndSettle();
+    await chooseTime(tester, 'Personalizzata');
+    await tester.pumpAndSettle();
+    await tester.enterText(
+      find.byKey(const ValueKey('clock-phase-moves')),
+      '5',
+    );
+    await tester.enterText(
+      find.byKey(const ValueKey('clock-phase-minutes')),
+      '20',
+    );
+    await tester.pump();
+    await tester.tap(find.byKey(const ValueKey('clock-start')));
+    await tester.pumpAndSettle();
+    const moves = [
+      'e2e4', 'e7e5', 'g1f3', 'b8c6', 'f1c4', 'f8c5', 'e1g1', 'g8f6', //
+    ];
+    for (final move in moves) {
+      await tapMove(tester, move);
+    }
+    expect(find.text('10:00'), findsNWidgets(2));
+    // La nona semimossa è la quinta del Bianco.
+    await tapMove(tester, 'd2d3');
+    expect(find.text('30:00'), findsOneWidget);
+    // Annullandola il tempo aggiunto torna indietro con la mossa.
+    await tapGameAction(tester, 'Annulla');
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Accetta'));
+    await tester.pumpAndSettle();
+    expect(find.text('30:00'), findsNothing);
+    expect(find.text('10:00'), findsNWidgets(2));
   });
 }

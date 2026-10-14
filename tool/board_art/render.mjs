@@ -89,7 +89,9 @@ async function piece(set, kind, src, glyph) {
 const GLYPH = { K: ["♔", "♚"], Q: ["♕", "♛"], R: ["♖", "♜"], B: ["♗", "♝"], N: ["♘", "♞"], P: ["♙", "♟"] };
 // SETS=staunton,morbido rigenera solo quei set di pezzi (e i loro aloni).
 const onlySets = process.env.SETS?.split(",");
-for (const name of onlySets ?? []) if (!(name in PIECE_SETS)) throw new Error(`SETS: set sconosciuto «${name}»`);
+// Set di terzi con sorgente SVG in tool/board_art/<nome>/: un nuovo set va aggiunto qui.
+const EXTERNAL_SETS = ["papercut", "pirouetti", "letter"];
+for (const name of onlySets ?? []) if (!(name in PIECE_SETS) && !EXTERNAL_SETS.includes(name)) throw new Error(`SETS: set sconosciuto «${name}»`);
 for (const [set, draw] of Object.entries(PIECE_SETS).filter(([k]) => onlySets ? onlySets.includes(k) : !only)) {
   for (const kind of kinds) {
     if (set === "noto") {
@@ -101,9 +103,12 @@ for (const [set, draw] of Object.entries(PIECE_SETS).filter(([k]) => onlySets ? 
     }
   }
 }
-for (const kind of only || onlySets ? [] : kinds) {
-  const svg = fs.readFileSync(path.join(root, "tool/board_art/papercut", `${kind}.svg`));
-  await piece("papercut", kind, "data:image/svg+xml;base64," + svg.toString("base64"));
+// Set di terzi in SVG, con il sorgente e la licenza in tool/board_art/<nome>/.
+for (const set of EXTERNAL_SETS.filter((k) => onlySets ? onlySets.includes(k) : !only)) {
+  for (const kind of kinds) {
+    const svg = fs.readFileSync(path.join(root, "tool/board_art", set, `${kind}.svg`));
+    await piece(set, kind, "data:image/svg+xml;base64," + svg.toString("base64"));
+  }
 }
 
 const cg = chessgroundDir();
