@@ -35,6 +35,10 @@ Un passo già fatto non si riapre (lezioni, puzzle e partite restano raggiungibi
 
 In cima una scheda mostra i capitoli conclusi con una barra. I capitoli sono lungo un binario verticale: ogni capitolo ha un badge con un anello di avanzamento (passi fatti su passi totali), il numero, la spunta a capitolo concluso o il lucchetto se è chiuso. Il capitolo corrente ha il bordo nel colore d'azione e la scritta «In corso»; quelli chiusi hanno il contorno tratteggiato e il testo che dice come aprirli. Lezioni e puzzle mostrano una barra con il conteggio, i passi fatti hanno la spunta e quelli bloccati il lucchetto, oltre al testo letto dai lettori di schermo. I testi sono in `story.arb` (italiano e inglese).
 
+## Ricompense
+
+Concludere un capitolo (battuto il suo bot) vale 30 XP e sblocca, al secondo, al quinto e al nono capitolo, le scacchiere Villaggio, Torre e Corona (`StoryRequirement`, vedi [gamification.md](gamification.md#ricompense-estetiche-rg-06)). Chi non vuole giocare per sbloccare usa «Sblocca tutto».
+
 ## Aiuto quando ci si blocca
 
 Dopo due puzzle sbagliati di fila (`StoryPuzzleFeed.helping`) un avviso dice che si passa a un puzzle più facile e ricorda il pulsante **Indizio**; i puzzle successivi hanno un punteggio di 300 punti sotto il livello del capitolo (mai sotto 400) finché non se ne risolve uno, poi si torna alla difficoltà normale. L'avviso compare una sola volta per serie di errori (`onHelp`, testo `storyHelpEasier`).

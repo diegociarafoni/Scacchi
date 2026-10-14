@@ -30,6 +30,7 @@ void main() {
     PlayStoryBoss? boss,
     PlayStoryPuzzles? puzzles,
     PlayStoryLesson? lesson,
+    void Function(StoryChapter chapter)? onChapterDone,
     Locale locale = const Locale('it'),
     double textScale = 1,
   }) async {
@@ -50,6 +51,7 @@ void main() {
             playBoss: boss,
             playPuzzles: puzzles,
             playLesson: lesson,
+            onChapterDone: onChapterDone,
           ),
         ),
       ),
@@ -206,6 +208,36 @@ void main() {
     expect(find.textContaining('Si apre il capitolo 1'), findsOneWidget);
     expect(find.text('Al prossimo capitolo'), findsOneWidget);
   });
+
+  testWidgets(
+    'RG-13 battuto il bot il capitolo concluso si registra una volta',
+    (tester) async {
+      await tester.runAsync(() async {
+        await doneLessons();
+        for (final g in first.pathChapter.stages.where((s) => s.isGuardian)) {
+          await path.complete(g, 3, Duration.zero);
+        }
+        await story.puzzlesSolved(first, first.puzzleCount);
+      });
+      final done = <String>[];
+      await show(
+        tester,
+        boss: (c, bot) async => true,
+        onChapterDone: (c) => done.add(c.id),
+      );
+      await save(
+        tester,
+        find.textContaining('Sfida a Tino'),
+        until: () => shown(find.text('Sfida Tino')),
+      );
+      await save(
+        tester,
+        find.text('Sfida Tino'),
+        until: () => shown(find.text('Hai battuto Tino!')),
+      );
+      expect(done, [first.id]);
+    },
+  );
 
   testWidgets('RG-13 dalla mappa la sfida si presenta prima di partire', (
     tester,

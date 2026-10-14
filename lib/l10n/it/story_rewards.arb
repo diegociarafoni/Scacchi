@@ -1,0 +1,23 @@
+{
+  "progressRequirementStory": "Storia: {chapters} capitoli conclusi",
+  "@progressRequirementStory": {
+    "description": "Ricompensa: capitoli della Storia da concludere",
+    "placeholders": {
+      "chapters": {
+        "type": "int"
+      }
+    }
+  },
+  "storyThemeVillaggio": "Villaggio",
+  "@storyThemeVillaggio": {
+    "description": "Scacchiera a tema Storia: Villaggio"
+  },
+  "storyThemeTorre": "Torre",
+  "@storyThemeTorre": {
+    "description": "Scacchiera a tema Storia: Torre"
+  },
+  "storyThemeCorona": "Corona",
+  "@storyThemeCorona": {
+    "description": "Scacchiera a tema Storia: Corona"
+  }
+}

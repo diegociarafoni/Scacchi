@@ -1,0 +1,13 @@
+{
+  "progressRequirementStory": "Verhaal: {chapters} hoofdstukken voltooid",
+  "@progressRequirementStory": {
+    "placeholders": {
+      "chapters": {
+        "type": "int"
+      }
+    }
+  },
+  "storyThemeVillaggio": "Dorp",
+  "storyThemeTorre": "Toren",
+  "storyThemeCorona": "Kroon"
+}

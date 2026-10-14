@@ -130,6 +130,11 @@ class LessonCompleted extends Activity {
   const LessonCompleted({super.duration});
 }
 
+/// Un capitolo della Storia concluso, battuto il suo bot (RG-13).
+class StoryChapterDone extends Activity {
+  const StoryChapterDone({super.duration});
+}
+
 class ReviewCompleted extends Activity {
   const ReviewCompleted({
     this.accuracy,

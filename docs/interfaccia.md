@@ -160,7 +160,7 @@ Si aprono dall'icona a forma di ingranaggio nella Home e nella barra del titolo 
 | Sfondo | Colore, sfumatura, spazio o una propria foto dietro la scacchiera, dalla scheda Sfondo di Stile | Standard |
 | Volume | Volume dei suoni, da 0 a 100% | 100% |
 | Vibrazione | Vibrazione breve a ogni mossa, più marcata per catture e fine partita | Attiva |
-| Tema della scacchiera | Verde, Legno, Blu, Grigio, Arancia, Crepuscolo, Pergamena, Castello, Bosco elfico, Noce, Spazio, Retrò, Giardino, Terracotta, Marmo, Metallo, Vetro, Menta, Cipria, Ardesia; sbloccabili Sabbia, Oceano, Corallo, Notte, Oro | Spazio |
+| Tema della scacchiera | Verde, Legno, Blu, Grigio, Arancia, Crepuscolo, Pergamena, Castello, Bosco elfico, Noce, Spazio, Retrò, Giardino, Terracotta, Marmo, Metallo, Vetro, Menta, Cipria, Ardesia; sbloccabili Sabbia, Oceano, Corallo, Notte, Oro e, con la Storia, Villaggio, Torre, Corona | Spazio |
 | Pezzi | Classico, Merida, Chessnut, Fantasy, Spatial, Rokko, Pixel, Arcano, Staunton, Morbido, Stampa, Papercut, Noto; sbloccabili Celtic, Shapes, Firi, Mpchess, Kiwen-suwi, Totoy, RhosGFX | Classico |
 | Sblocca tutto | Rende disponibili le ricompense estetiche senza sbloccarle (vedi [gamification.md](gamification.md)) | Disattiva |
 | Animazioni | Nessuna, Veloce, Normale, Lenta | Normale |

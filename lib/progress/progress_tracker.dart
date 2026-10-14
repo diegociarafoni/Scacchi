@@ -351,6 +351,7 @@ class ProgressTracker {
         ]),
       ),
       LessonCompleted() => s.copyWith(lessonsCompleted: s.lessonsCompleted + 1),
+      StoryChapterDone() => s.copyWith(tally: _bump(s.tally, ['story'])),
       ReviewCompleted(:final brilliantMoves) => s.copyWith(
         reviewsCompleted: s.reviewsCompleted + 1,
         brilliantFound: s.brilliantFound + brilliantMoves,

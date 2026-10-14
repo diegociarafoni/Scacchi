@@ -1,0 +1,13 @@
+{
+  "progressRequirementStory": "História: {chapters} capítulos concluídos",
+  "@progressRequirementStory": {
+    "placeholders": {
+      "chapters": {
+        "type": "int"
+      }
+    }
+  },
+  "storyThemeVillaggio": "Vila",
+  "storyThemeTorre": "Torre",
+  "storyThemeCorona": "Coroa"
+}

@@ -41,6 +41,7 @@ class StoryPage extends StatefulWidget {
     required this.story,
     this.playGuardian,
     this.playBoss,
+    this.onChapterDone,
     this.playPuzzles,
     this.playLesson,
   });
@@ -49,6 +50,9 @@ class StoryPage extends StatefulWidget {
   final StoryController story;
   final PlayGuardian? playGuardian;
   final PlayStoryBoss? playBoss;
+
+  /// Chiamata quando battere il bot conclude il capitolo.
+  final void Function(StoryChapter chapter)? onChapterDone;
   final PlayStoryPuzzles? playPuzzles;
   final PlayStoryLesson? playLesson;
 
@@ -287,6 +291,7 @@ class _StoryPageState extends State<StoryPage> {
     if (!mounted) return;
     if (won) {
       await widget.story.bossBeaten(chapter);
+      if (_progress.isChapterDone(chapter)) widget.onChapterDone?.call(chapter);
     } else {
       final l10n = storyL10n(context);
       final line = l10n.guardianLine(chapter, GuardianMoment.bossLost);

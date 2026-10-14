@@ -382,6 +382,7 @@ class _HomeShellState extends State<HomeShell> {
     playGuardian: _computerAvailable ? _playGuardian : null,
     playBoss: _computerAvailable ? _playStoryBoss : null,
     playPuzzles: _playStoryPuzzles,
+    onChapterDone: (_) => _record(const StoryChapterDone()),
   );
 
   /// Sfida del capitolo contro [bot]: vale come allenamento, con Annulla.
