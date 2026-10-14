@@ -269,4 +269,33 @@ void main() {
     await tester.pumpAndSettle();
     expect(called, isFalse);
   });
+
+  testWidgets('RG-13 al bivio si sceglie la via dei puzzle e si ricorda', (
+    tester,
+  ) async {
+    await finishLessons(tester);
+    await show(tester, puzzles: (c, ch, r) async => 0);
+    expect(find.byKey(ValueKey('story-fork-${first.id}')), findsOneWidget);
+    final other = find.byKey(
+      ValueKey('story-fork-${first.id}-${first.forkTheme}'),
+    );
+    await tapAndSave(tester, other);
+    expect(story.state.themeFor(first), first.forkTheme);
+  });
+
+  testWidgets('RG-13 iniziati i puzzle il bivio non si cambia più', (
+    tester,
+  ) async {
+    await finishLessons(tester);
+    await tester.runAsync(() => story.puzzlesSolved(first, 1));
+    await show(tester, puzzles: (c, ch, r) async => 0);
+    expect(find.byKey(ValueKey('story-fork-${first.id}')), findsNothing);
+  });
+
+  testWidgets('RG-13 il bivio non c\'è finché i puzzle sono chiusi', (
+    tester,
+  ) async {
+    await show(tester, puzzles: (c, ch, r) async => 0);
+    expect(find.byKey(ValueKey('story-fork-${first.id}')), findsNothing);
+  });
 }
