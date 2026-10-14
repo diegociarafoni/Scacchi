@@ -63,6 +63,7 @@ import '../storage/key_value_store.dart';
 import '../tablebase/shared_tablebase.dart';
 import '../theme/motion.dart';
 import '../theme/rokko_icons.dart';
+import '../theme/rokko_mascot.dart';
 import '../theme/rokko_theme.dart';
 import '../theme/sheets.dart';
 import 'board_drawing.dart';
@@ -2572,7 +2573,14 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
         celebrate: false,
       ),
     };
-    return _StatusLine(text: text, celebrate: celebrate && !_zen);
+    return _StatusLine(
+      text: text,
+      celebrate: celebrate && !_zen,
+      mascot:
+          _task == _ComputerTask.none &&
+          !_zen &&
+          showsEndMascot(_game.outcome, _game.endReason, _computerSide),
+    );
   }
 
   Widget? _clockView(Side side) {
@@ -3141,6 +3149,14 @@ String _player(
       : l10n.gamePlayerNamed(name, side.name);
 }
 
+/// La torre sorridente accompagna la fine di una partita, tranne quando il
+/// giocatore perde contro il computer.
+bool showsEndMascot(Outcome? outcome, GameEndReason? reason, Side? computer) =>
+    reason != null &&
+    (outcome?.winner == null ||
+        computer == null ||
+        outcome?.winner != computer);
+
 /// Stato della partita; [nameOf] affianca al colore il nome scelto.
 String statusText(
   AppLocalizations l10n,
@@ -3186,12 +3202,19 @@ String statusText(
 }
 
 class _StatusLine extends StatelessWidget {
-  const _StatusLine({required this.text, this.celebrate = false});
+  const _StatusLine({
+    required this.text,
+    this.celebrate = false,
+    this.mascot = false,
+  });
 
   final String text;
 
   /// Aggiunge una festa visiva che il lettore di schermo non legge.
   final bool celebrate;
+
+  /// La torre accanto all'esito, a partita finita.
+  final bool mascot;
 
   @override
   Widget build(BuildContext context) {
@@ -3207,13 +3230,23 @@ class _StatusLine extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Align(
           alignment: Alignment.centerLeft,
-          child: celebrate
-              ? Semantics(
-                  label: text,
-                  excludeSemantics: true,
-                  child: line('$text 🎉'),
-                )
-              : line(text),
+          child: Row(
+            children: [
+              if (mascot) ...[
+                const RokkoMascot(size: _statusHeight - 12),
+                const SizedBox(width: 8),
+              ],
+              Expanded(
+                child: celebrate
+                    ? Semantics(
+                        label: text,
+                        excludeSemantics: true,
+                        child: line('$text 🎉'),
+                      )
+                    : line(text),
+              ),
+            ],
+          ),
         ),
       ),
     );
