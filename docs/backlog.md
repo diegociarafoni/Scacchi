@@ -20,7 +20,7 @@ Rokko è open source e gratuito. Questi vincoli valgono per ogni voce.
 |---|---|---|---|
 | RV-01 | Nessun livello a pagamento, abbonamento o acquisto: revisioni, puzzle e lezioni sono libere e senza limiti giornalieri | fatta | |
 | RV-02 | Nessuna pubblicità, nessun tracciamento, nessun account obbligatorio; nessun dato lascia il dispositivo senza un'azione esplicita | fatta | |
-| RV-03 | Codice sotto GPL-3.0 (o successiva); licenza e sorgenti visibili nella schermata «Informazioni» | fatta | `lib/about/about_page.dart` |
+| RV-03 | Codice sotto GPL-3.0 (o successiva); licenza e sorgenti visibili nella schermata «Informazioni» | fatta | schermata «Informazioni» presente (A-15) |
 | RV-04 | Asset con licenza compatibile con la GPL, elencati con attribuzione in `CREDITS.md` e in «Informazioni» | fatta | `CREDITS.md` e `lib/about/credits.dart` |
 | RV-05 | Il permesso per gli store vale solo per il codice del progetto; verifica scritta della compatibilità con la GPL del motore prima della pubblicazione su iOS | parziale | `docs/licenza.md` e `NOTICE.md` dichiarano il permesso, manca l'esito scritto |
 
@@ -28,12 +28,12 @@ Rokko è open source e gratuito. Questi vincoli valgono per ogni voce.
 
 | Versione | Tema | Contenuto |
 |---|---|---|
-| 0.11.0 | Multilingue | Solo la traduzione dei testi (U4), già in corso |
-| 0.12.0 | Giocare meglio | Premossa, frecce e cerchi, schermo acceso, tocco, cadenze libere e ritardo, annullamento con consenso, barra di valutazione in partita, comandi di partita (U1, U3, U7), icone più curate (U12) |
+| 0.11.0 | Multilingue | Solo la traduzione dei testi, consegnata in parte: il completamento (U4) passa alla 0.14.0 |
+| 0.12.0 | Giocare meglio | Premossa, frecce e cerchi, schermo acceso, tocco, cadenze libere e ritardo, annullamento con consenso, barra di valutazione in partita, barra del titolo più semplice (U7); cadenze a più fasi (A-5), comandi di partita (U1), layout (U3) e icone (U12) passano alla 0.14.0 |
 | 0.13.0 | Studiare meglio | Varianti salvate in PGN, note ovunque, mosse «Libro» nella revisione, cache persistente, precisione per fase nelle statistiche, scheda Tu e impostazioni in sezioni (U5, U6) e funzioni scopribili (U10), già consegnate; anticipati dalla 0.15.0 l'orologio nelle partite a distanza (A-26) e il profilo bambino coerente (U9) |
-| 0.14.0 | Pronta per gli store | Schermata «Informazioni», dichiarazioni sulla privacy, architetture del motore, iOS e F-Droid, dimensione, riduzione animazioni, schermo diviso e pieghevoli, persistenza e migrazioni, avvio rapido, identità visiva e golden (U2, U8) |
-| 0.15.0 | Storia, tornei e progressi | Evolutive della storia (S1-S6), percorso «dai miei errori», tornei con partite reali |
-| Dopo | Da valutare | Bot «ombra», lettura della posizione da fotocamera, altre varianti, modalità alla cieca in partita, widget della Home, scacchiere Bluetooth e le idee in fondo al documento |
+| 0.14.0 | Pronta per gli store | Schermata «Informazioni», dichiarazioni sulla privacy, architetture del motore, iOS e F-Droid (questi quattro: da decidere, vedi A-16…A-19), dimensione, riduzione animazioni, schermo diviso e pieghevoli, persistenza e migrazioni, avvio rapido, identità visiva e golden (U2, U8); in più testi tutti localizzati (U4), cadenze a più fasi (A-5), comandi di partita meno affollati (U1), layout senza spazio morto (U3), icone più curate (U12), percorso «dai miei errori» (A-27), mappa del viaggio (S3) e pezzi sbloccabili (S5) |
+| 0.15.0 | Storia, tornei e progressi | Evolutive della storia (S1, S2, S4, S6) e tornei con partite reali |
+| 0.15.0 o dopo | Da decidere con Diego | Bot «ombra», lettura della posizione da fotocamera, altre varianti, widget della Home, scacchiere Bluetooth e le idee in fondo al documento |
 
 ## A. Da fare o parziali
 
@@ -43,12 +43,12 @@ Rokko è open source e gratuito. Questi vincoli valgono per ogni voce.
 |---|---|---|---|---|---|---|
 | A-1 / RF-08 | **Premossa**: muovere durante il turno dell'avversario, annullabile toccando una casa vuota, con opzione nelle impostazioni | fatta | P0 | media | 0.12.0 | `_playerSide` e `_playPremove` in `lib/game/game_page.dart`; test in `test/game/premove_test.dart` |
 | A-2 / RF-05 | **Frecce e cerchi** con almeno tre colori, pressione prolungata e trascinamento su touch, rimossi al tocco successivo | fatta | P0 | piccola | 0.12.0 | `lib/game/board_drawing.dart`, scelta del colore in Impostazioni > Scacchiera; test in `test/game/board_drawing_test.dart` |
-| A-3 / RF-22 | **Allenamento e Sfida**: scelta esplicita della modalità e barra di valutazione durante la partita (oggi solo in analisi e revisione) | fatta | P0 | media | 0.12.0 | interruttore «Allenamento» nelle opzioni della galleria dei bot, ricordato in `AppSettings.trainingMode` (`lib/bot_gallery/bot_gallery_page.dart`, `lib/game/game_page.dart`); Sfida senza aiuti né annullamento e con Elo e vittorie, Allenamento con aiuti e senza Elo né vittorie; profilo bambino sempre in Allenamento; test in `test/game/training_mode_test.dart` e `test/game/eval_bar_test.dart` |
+| A-3 / RF-22 | **Allenamento e Sfida**: scelta esplicita della modalità e barra di valutazione durante la partita (oggi solo in analisi e revisione) | fatta | P0 | media | 0.12.0 | interruttore «Allenamento» nelle opzioni della galleria dei bot, ricordato in `AppSettings.trainingMode`; Sfida senza aiuti né annullamento e con Elo e vittorie, Allenamento con aiuti e senza Elo né vittorie; profilo bambino sempre in Allenamento; test in `test/game/training_mode_test.dart` (PR 296) |
 | A-4 / RF-32 | **Annullamento con consenso** dell'altro giocatore nella partita a due | fatta | P0 | piccola | 0.12.0 | `_requestUndo` in `lib/game/game_page.dart`; test in `test/game/undo_consent_test.dart` |
-| A-5 / RF-40 | **Cadenza personalizzata** con minuti e incremento liberi, e **ritardo** (semplice e Bronstein); in seguito cadenze a più fasi (per esempio 40 mosse in 90 minuti più 30) anche per la scacchiera fisica | parziale | P0 | media | 0.12.0 | fatti minuti e incremento liberi e ritardo semplice e di Bronstein (`lib/game/clock.dart`, `custom_clock_dialog.dart`; test in `test/game/custom_clock_test.dart`). Restano le cadenze a più fasi e la scacchiera fisica: cambiano il modello dell'orologio (fasi con mosse e tempo aggiunto) e la sessione fisica, e vanno in una voce a parte |
+| A-5 / RF-40 | **Cadenza personalizzata** con minuti e incremento liberi, e **ritardo** (semplice e Bronstein); in seguito cadenze a più fasi (per esempio 40 mosse in 90 minuti più 30) anche per la scacchiera fisica | parziale | P0 | media | 0.14.0 | fatti minuti e incremento liberi e ritardo semplice e di Bronstein (`lib/game/clock.dart`, `custom_clock_dialog.dart`; test in `test/game/custom_clock_test.dart`). Restano le cadenze a più fasi e la scacchiera fisica: cambiano il modello dell'orologio (fasi con mosse e tempo aggiunto) e la sessione fisica, e vanno in una voce a parte |
 | A-6 / RM-02 | **Tocco**: correzione quando il dito cade sul bordo di una casa; due tocchi come modo predefinito su telefono | fatta | P0 | piccola | 0.12.0 | `lib/game/tap_assist.dart`, `MoveMethod` in `lib/settings/settings.dart`; test in `test/game/tap_assist_test.dart` e `move_method_test.dart` |
 | A-7 / RM-06 | **Schermo sempre acceso** durante la partita | fatta | P0 | piccola | 0.12.0 | `_syncAwake` in `lib/game/game_page.dart` con `wakelock_plus`; test in `test/game/keep_awake_test.dart` |
-| A-8 / RM-07 | **Avvio rapido**: pronta a giocare in meno di 2 secondi su un telefono di fascia media, con misura e budget in CI | fatta | P0 | piccola | 0.14.0 | `integration_test/fluidita_perf.dart` misura anche l'avvio, con budget in `tool/policy.json` (il tempo su telefono reale resta da verificare a mano) |
+| A-8 / RM-07 | **Avvio rapido**: pronta a giocare in meno di 2 secondi su un telefono di fascia media, con misura e budget in CI | fatta (#289) | P0 | piccola | 0.14.0 | `integration_test/fluidita_perf.dart` misura l'avvio, con budget `startupMaxMs` in `tool/policy.json` controllato da `tool/check_performance.dart` (`test/tool/budget_test.dart`); il tempo su telefono reale resta da verificare a mano |
 | A-9 / RF-31 | **Modalità tavolo**: ruotare di 180° tutti i pezzi del lato superiore, non solo quelli del giocatore in alto | fatta | P0 | piccola | 0.12.0 | `tableMode` in `lib/settings/settings.dart`: `opponentUpsideDown` di chessground capovolge tutti i pezzi del lato superiore |
 
 ### A.2 Analisi, revisione, archivio
@@ -60,35 +60,34 @@ Rokko è open source e gratuito. Questi vincoli valgono per ogni voce.
 
 | ID | Funzione | Stato | Pri | Dim | Versione | Evidenza |
 |---|---|---|---|---|---|---|
-| A-15 / RV-03, RV-04 | **Schermata «Informazioni»** con licenza GPL, link ai sorgenti e crediti degli asset | fatta | P0 | piccola | 0.14.0 | `lib/about/about_page.dart`, aperta da Impostazioni → Informazioni |
-| A-16 / RV-05 | **Verifica scritta** della compatibilità dell'App Store con la GPL del motore | parziale | P0 | piccola | 0.14.0 | `docs/licenza.md`, `NOTICE.md` |
-| A-17 / RNF-10 | **Dichiarazioni «nessun dato raccolto»**: `PrivacyInfo.xcprivacy`, testi per le schede di sicurezza dei dati degli store, `ITSAppUsesNonExemptEncryption` | parziale | P0 | piccola | 0.14.0 | `docs/sicurezza.md`, «Da fare» |
-| A-18 / RNF-03 | **Motore per tutte le architetture** (Android armv7 e x86_64 oltre ad arm64) | parziale | P0 | piccola | 0.14.0 | `docs/rilascio-android.md:71-74` |
-| A-19 / RNF-02 | **iOS e F-Droid**: build iOS in CI, Fastlane per TestFlight, metadati e ricetta per F-Droid | parziale | P0 | grande | 0.14.0 | `docs/store.md`: iOS «non ancora configurato»; nessun file F-Droid |
-| A-20 / RNF-04 | **Dimensione sotto i 60 MB**, con valutazione di una rete NNUE più piccola e misura dell'impatto sulla forza | fatta | P0 | media | 0.14.0 | `tool/policy.json` a 60 MB; filtro delle architetture nel rilascio e `third_party/chessground`; misura in `docs/qualita.md` |
-| A-21 / RNF-06 | **Layout adattivo** con schermo diviso e pieghevoli, e test sulle due colonne | parziale | P0 | media | 0.14.0 | Home con colonna laterale e larghezza massima da 840 dp; partita a due colonne in `game_page.dart:2586`; altre schermate da verificare |
-| A-22 / RNF-07 | **Ridurre le animazioni** anche dall'impostazione di sistema, con test | parziale | P0 | piccola | 0.14.0 | `AppSettings.reduceMotion` azzera i pezzi e le transizioni (su iOS resta il gesto di ritorno); resta la barra di valutazione della revisione (area da non toccare) |
-| A-23 / RNF-08 | **Persistenza**: oggi file JSON versionati (`lib/storage/json_file.dart`). Decidere per iscritto se restare su JSON e aggiungere la catena di migrazioni (piccola), o passare a un database locale (grande). Proposta: restare su JSON | fatta | P0 | piccola | 0.14.0 | decisione in `docs/persistenza.md`; `JsonFile` ha la catena di migrazioni con copia `.v<n>.bak` |
+| A-15 / RV-03, RV-04 | **Schermata «Informazioni»** con licenza GPL, link ai sorgenti e crediti degli asset | fatta | P0 | piccola | 0.14.0 | `lib/about/about_page.dart` e `credits.dart`, aperta dall'ultima sezione delle Impostazioni (`settings_page.dart`) |
+| A-16 / RV-05 | **Verifica scritta** della compatibilità dell'App Store con la GPL del motore | rinviata da Diego | P0 | piccola | 0.15.0, da decidere | `docs/licenza.md`, `NOTICE.md` |
+| A-17 / RNF-10 | **Dichiarazioni «nessun dato raccolto»**: `PrivacyInfo.xcprivacy`, testi per le schede di sicurezza dei dati degli store, `ITSAppUsesNonExemptEncryption` | rinviata da Diego | P0 | piccola | 0.15.0, da decidere | `docs/sicurezza.md`, «Da fare» |
+| A-18 / RNF-03 | **Motore per tutte le architetture** (Android armv7 e x86_64 oltre ad arm64) | rinviata da Diego | P0 | piccola | 0.15.0, da decidere | `docs/rilascio-android.md:71-74` |
+| A-19 / RNF-02 | **iOS e F-Droid**: build iOS in CI, Fastlane per TestFlight, metadati e ricetta per F-Droid | rinviata da Diego | P0 | grande | 0.15.0, da decidere | `docs/store.md`: iOS «non ancora configurato»; nessun file F-Droid |
+| A-20 / RNF-04 | **Dimensione sotto i 60 MB**, con valutazione di una rete NNUE più piccola e misura dell'impatto sulla forza | fatta | P0 | media | 0.14.0 | `apkMaxMegabytes` a 60 in `tool/policy.json`, controllato da `tool/check_size.dart`; `ROKKO_NATIVE_ABIS=arm64-v8a` nel rilascio e `third_party/chessground` ridotta; misura e valutazione della rete NNUE (già la piccola, circa 1 MB) in `docs/qualita.md` |
+| A-21 / RNF-06 | **Layout adattivo** con schermo diviso e pieghevoli, e test sulle due colonne | fatta | P0 | media | 0.14.0 | Home con colonna laterale da 840 dp e larghezza massima (#301); partita a due colonne in orizzontale (`game_page.dart`); `test/layout/wide_screens_test.dart` prova Home, Impostazioni e partita (a due colonne da tablet) su tablet, desktop, schermo diviso e pieghevole |
+| A-22 / RNF-07 | **Ridurre le animazioni** anche dall'impostazione di sistema, con test | fatta | P0 | piccola | 0.14.0 | `AppSettings.reduceMotion` e l'impostazione di sistema azzerano pezzi, pagine (su iOS resta il gesto di ritorno), dialoghi e fogli (`lib/theme/motion.dart`) e la barra di valutazione; `test/theme/motion_test.dart` |
+| A-23 / RNF-08 | **Persistenza**: oggi file JSON versionati (`lib/storage/json_file.dart`). Decidere per iscritto se restare su JSON e aggiungere la catena di migrazioni (piccola), o passare a un database locale (grande). Proposta: restare su JSON | fatta (#288) | P0 | piccola | 0.14.0 | `JsonFile` rifiuta tutto ciò che non è tra 1 e la versione corrente |
 
 ### A.4 Progressi, tornei, multigiocatore
 
 | ID | Funzione | Stato | Pri | Dim | Versione | Evidenza |
 |---|---|---|---|---|---|---|
-| A-25 / RG-09 | **Tornei con partite vere** tra i bot e gironi da 4 a 8 giocatori | fatta | P2 | grande | 0.15.0 | le partite tra bot le gioca il motore (`lib/tournament/bot_game.dart`), con ripiego sulla formula Elo dove manca (`docs/tornei.md`) |
-| A-26 / RMP | **Orologio nelle partite a distanza**: chi crea sceglie tra lampo con orologio dal vivo e partita lenta con 1, 3 o 7 giorni per mossa, con reclamo della vittoria a scadenza. Resta manuale la prova su telefoni veri con un `integration_test` | fatta (orologio); prova su telefoni veri manuale | P1 | media | 0.15.0 | `docs/multigiocatore.md` (Orologio) |
-| A-27 | **Percorso «dai miei errori»**: capitoli personali generati dai temi tattici sbagliati più spesso | da fare | P2 | media | 0.15.0 | esistono i puzzle personali (`lib/review/personal_puzzles.dart`) e la coda di ripasso, non agganciati al percorso |
+| A-25 / RG-09 | **Tornei con partite vere** tra i bot e gironi da 4 a 8 giocatori | fatto | P2 | grande | 0.15.0 | partite vere tra i bot (#275); la simulazione Elo resta come ripiego (`docs/tornei.md`) |
+| A-26 / RMP | **Orologio nelle partite a distanza**: chi crea sceglie tra lampo con orologio dal vivo e partita lenta con 1, 3 o 7 giorni per mossa, con reclamo della vittoria a scadenza. Resta manuale la prova su telefoni veri con un `integration_test` | fatta (orologio); prova su telefoni veri manuale | P1 | media | 0.13.0 | `docs/multigiocatore.md` (Orologio) |
+| A-27 | **Percorso «dai miei errori»**: capitoli personali generati dai temi tattici sbagliati più spesso | da fare | P2 | media | 0.14.0 | esistono i puzzle personali (`lib/review/personal_puzzles.dart`) e la coda di ripasso, non agganciati al percorso |
 
 ### A.5 Da valutare dopo
 
 | ID | Funzione | Stato | Pri | Dim | Note |
 |---|---|---|---|---|---|
-| A-28 | **Bot «ombra»** che imita lo stile personale (aperture e tempi di riflessione dall'archivio) | da fare | P2 | grande | ingredienti in `lib/openings/personal_tree.dart` e `lib/engine/style.dart` |
-| A-29 | **Lettura della posizione con la fotocamera** (diagramma o scacchiera reale) | da fare | P2 | grande | richiede un modello locale; «Mossa dalla foto» è spenta nelle release dal flag `ROKKO_PHOTO_MOVE` |
-| A-30 | **Altre varianti** (Crazyhouse, Atomica, Antichess, Orda, Corsa dei re) | da fare | P2 | media | le regole sono supportate da `dartchess`; per giocarle contro il computer serve il motore in Dart di RF-123 |
-| A-31 | **Modalità alla cieca in partita**: pezzi nascosti, mosse a voce o da tastiera, comandi per chiedere dove sono i propri pezzi | da fare | P2 | media | oggi esiste solo il minigioco di visualizzazione (RG-10) |
-| A-32 | **Widget della schermata home** con il puzzle del giorno e la serie | da fare | P2 | media | |
-| A-33 | **Scacchiere elettroniche Bluetooth** | da fare | P2 | grande | permessi e protocolli diversi per marca |
-| A-34 | **Test più solidi** per le funzioni già fatte: rendering di mosse legali, ultima mossa e coordinate (RF-02, RF-03, RF-07), selettore di promozione (RF-04), conferma della mossa (RF-09), velocità animazioni (RF-12), suono e grafica sotto i 10 secondi (RF-41), vibrazione (RM-03), sospensione del motore in background (RNF-05), promemoria locali (RG-11), tetto di dimensione a 60 MB (RNF-04); ID nei test di RF-68, RF-91, RF-100, RF-103, RF-112 | parziale | P1 | media | verificato per elenco dei test, non eseguendoli |
+| A-28 | **Bot «ombra»** che imita lo stile personale (aperture e tempi di riflessione dall'archivio) | da fare | P2 | grande | ingredienti in `lib/openings/personal_tree.dart` e `lib/engine/style.dart`. Da decidere con Diego se farla, e se nella 0.15.0. |
+| A-29 | **Lettura della posizione con la fotocamera** (diagramma o scacchiera reale) | da fare | P2 | grande | richiede un modello locale; «Mossa dalla foto» è spenta nelle release dal flag `ROKKO_PHOTO_MOVE`. Da decidere con Diego se farla, e se nella 0.15.0. |
+| A-30 | **Altre varianti** (Crazyhouse, Atomica, Antichess, Orda, Corsa dei re) | da fare | P2 | media | le regole sono supportate da `dartchess`; per giocarle contro il computer serve il motore in Dart di RF-123. Da decidere con Diego se farla, e se nella 0.15.0. |
+| A-32 | **Widget della schermata home** con il puzzle del giorno e la serie | da fare | P2 | media | Da decidere con Diego se farla, e se nella 0.15.0. |
+| A-33 | **Scacchiere elettroniche Bluetooth** | da fare | P2 | grande | permessi e protocolli diversi per marca. Da decidere con Diego se farla, e se nella 0.15.0. |
+| A-34 | **Test più solidi** per le funzioni già fatte: rendering di mosse legali, ultima mossa e coordinate (RF-02, RF-03, RF-07), selettore di promozione (RF-04), conferma della mossa (RF-09), velocità animazioni (RF-12), suono e grafica sotto i 10 secondi (RF-41), vibrazione (RM-03), sospensione del motore in background (RNF-05), promemoria locali (RG-11), tetto di dimensione a 60 MB (RNF-04); ID nei test di RF-68, RF-91, RF-100, RF-103, RF-112 | parziale | P1 | media | verificato per elenco dei test, non eseguendoli. Da decidere con Diego se farla, e se nella 0.15.0. |
 
 ### A.6 Storia (S) e interfaccia (U)
 
@@ -96,28 +95,28 @@ Il dettaglio di U1-U11 è in `consegne/analisi-ux-ui.md`; il comportamento attua
 
 | ID | Funzione | Stato | Pri | Dim | Versione |
 |---|---|---|---|---|---|
-| S1 | **Un antagonista per capitolo**: carattere, stile di gioco, aperture e due battute prima e dopo la partita | fatto | Claude | media | 0.15.0 |
-| S2 | **Racconto tra un passo e l'altro**: una riga tra lezione e puzzle che richiama ciò che si è imparato | da fare | da assegnare | piccola | 0.15.0 |
-| S3 | **Mappa del viaggio** con i sei luoghi, i progressi e «riprendi da dove eri» | da fare | da assegnare | media | 0.15.0 |
-| S4 | **Un bivio per capitolo** (tattica o finali) con puzzle diversi | fatto | Claude | media | 0.15.0 |
-| S5 | **Ricompense legate alla storia**: scacchiere e pezzi sbloccabili con nome a tema | parziale | Claude | piccola | 0.15.0 | scacchiere a tema sbloccate dai capitoli (Villaggio, Torre, Corona); per i pezzi servono immagini nuove, rinviati |
+| S1 | **Un antagonista per capitolo**: carattere, stile di gioco, aperture e due battute prima e dopo la partita | fatto (#277) | Claude | media | 0.15.0 |
+| S2 | **Racconto tra un passo e l'altro**: una riga tra lezione e puzzle che richiama ciò che si è imparato | fatta | da assegnare | piccola | 0.15.0 |
+| S3 | **Mappa del viaggio** con i nove luoghi, i progressi e «riprendi da dove eri» | fatta | da assegnare | media | 0.14.0 | `lib/story/journey_map.dart`: nove luoghi su un sentiero a serpentina; vedi `docs/storia.md` |
+| S4 | **Un bivio per capitolo** (tattica o finali) con puzzle diversi | fatto (#281) | Claude | media | 0.15.0 |
+| S5 | **Ricompense legate alla storia**: scacchiere e pezzi sbloccabili con nome a tema | fatta | Claude | piccola | 0.14.0 |
 | S6 | **Aiuto quando ci si blocca**: dopo due errori sullo stesso puzzle, un indizio o un puzzle più facile | fatta | da assegnare | piccola | 0.15.0 |
-| U1 | **Comandi di partita meno affollati**: 4 azioni in barra, Patta, Abbandona e Nuova in un pannello «Partita»; Allenatore e Minaccia come interruttori — fatto nel profilo bambino (pannello «Partita»); per gli adulti Nuova, Patta e Abbandona restano in barra (scelta di #225) | parziale | da assegnare | media | 0.12.0 |
+| U1 | **Comandi di partita meno affollati**: 4 azioni in barra, Patta, Abbandona e Nuova in un pannello «Partita»; Allenatore e Minaccia come interruttori — fatto nel profilo bambino (pannello «Partita»); per gli adulti Nuova, Patta e Abbandona restano in barra (scelta di #225) | parziale | da assegnare | media | 0.14.0 |
 | U2 | **Identità visiva di Rokko**: tema proprio, carattere con personalità, torre-mascotte negli stati vuoti e a fine partita | fatta: torre negli stati vuoti dell'archivio e delle aperture personali e a fine partita | da assegnare | media | 0.14.0 |
-| U3 | **Layout della partita senza spazio morto** su schermate alte — in verticale la scacchiera sta contro la barra dei comandi e lo spazio sopra è della lista mosse e dei suggerimenti; verificato su schermi molto alti (280x1100, 360x1000, 412x1180, 820x1400) senza overflow anche con il testo al 130%, con test in `test/game/tall_screen_layout_test.dart` | fatta | da assegnare | media | 0.12.0 |
-| U4 | **Testi tutti localizzati** nei file `.arb` | parziale | P1 | grande | 0.11.0 |
+| U3 | **Layout della partita senza spazio morto** su schermate alte — in verticale la scacchiera sta contro la barra dei comandi e lo spazio sopra è della lista mosse e dei suggerimenti; verificato su schermi molto alti (280x1100, 360x1000, 412x1180, 820x1400) senza overflow anche con il testo al 130%, con test in `test/game/tall_screen_layout_test.dart` | fatta | da assegnare | media | 0.14.0 |
+| U4 | **Testi tutti localizzati** nei file `.arb` | parziale | P1 | grande | 0.14.0 |
 | U7 | **Barra del titolo della partita più semplice**: editor e tastiera nel menu ⋮; tastiera visibile con un lettore di schermo | fatta | da assegnare | piccola | 0.12.0 |
 | U8 | **Golden fedeli all'app reale**: tema predefinito e font veri; aggiungere Puzzle, Percorso, Storia, Multigiocatore, Tu e profilo bambino | fatta (golden del Percorso aggiunti) | da assegnare | media | 0.14.0 |
-| U12 | **Icone più curate** dopo le traduzioni (richiesta di Diego, 13 ottobre 2026) — `RokkoIcons` in `lib/theme/rokko_icons.dart`: stesso set a contorno per barra, pannello e barra del titolo della partita; le altre schermate restano da uniformare | parziale | dopo la 0.11.0 | media | 0.12.0 |
+| U12 | **Icone più curate** dopo le traduzioni (richiesta di Diego, 13 ottobre 2026) — `RokkoIcons` in `lib/theme/rokko_icons.dart`: stesso set a contorno per barra, pannello e barra del titolo della partita; nelle altre schermate i comandi usano le varianti a contorno e restano piene solo le icone di stato (stella, spunta, lucchetto, corona), l'arte dei badge e l'icona selezionata della barra di navigazione; un test lo verifica | fatta | dopo la 0.11.0 | media | 0.14.0 |
 
 Gli «interventi rapidi» (marchio nel titolo, arancione d'azione, gruppi nella scheda Tu, icone nel menu, anteprima comprimibile, font reale nei golden, test sui testi fissi) si possono fare prima delle voci grandi; sono elencati in `consegne/analisi-ux-ui.md`.
 
 ### A.7 Idee oltre i requisiti, da valutare
 
-- **Ripasso a cicli** dello stesso insieme di puzzle, sempre più veloci. Piccola, riusa i puzzle esistenti.
-- **Revisione vocale a mani libere** con la sintesi vocale del sistema, per rigiocare sulla scacchiera fisica. Media.
-- **Simultanea contro i bot**: 3-5 partite contemporanee con passaggio rapido tra le scacchiere. Grande.
-- **Esporta GIF** della partita, oltre all'immagine della posizione (RF-104). Media.
+- **Ripasso a cicli** dello stesso insieme di puzzle, sempre più veloci. Piccola, riusa i puzzle esistenti. Da decidere con Diego se farla, e se nella 0.15.0.
+- **Revisione vocale a mani libere** con la sintesi vocale del sistema, per rigiocare sulla scacchiera fisica. Media. Da decidere con Diego se farla, e se nella 0.15.0.
+- **Simultanea contro i bot**: 3-5 partite contemporanee con passaggio rapido tra le scacchiere. Grande. Da decidere con Diego se farla, e se nella 0.15.0.
+- **Esporta GIF** della partita, oltre all'immagine della posizione (RF-104). Media. Da decidere con Diego se farla, e se nella 0.15.0.
 
 ## B. Specifiche complete
 

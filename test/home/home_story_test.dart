@@ -49,7 +49,13 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Storia'));
     await tester.pumpAndSettle();
-    expect(find.text('Il sentiero dei primi passi'), findsOneWidget);
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey('story-chapter-prologue')),
+        matching: find.text('Il sentiero dei primi passi'),
+      ),
+      findsOneWidget,
+    );
     expect(find.text('Continua'), findsOneWidget);
   });
 }
