@@ -25,10 +25,15 @@ void main(List<String> args) {
     'p99 ${report['99th_percentile_frame_build_time_millis']} ms, '
     'peggiore ${report['worst_frame_build_time_millis']} ms',
   );
-  final violations = frameViolations(report, budget);
+  final startupMax = budgetValue(policy, ['startupMaxMs']);
+  stdout.writeln('Avvio: ${report['startup_ms']} ms');
+  final violations = [
+    ...frameViolations(report, budget),
+    ...startupViolations(report, maxMs: startupMax),
+  ];
   for (final v in violations) {
     stderr.writeln('✗ $v');
   }
   if (violations.isNotEmpty) exit(1);
-  stdout.writeln('✓ fluidità entro il budget');
+  stdout.writeln('✓ fluidità e avvio entro il budget');
 }
