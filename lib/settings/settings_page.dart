@@ -115,10 +115,15 @@ class _SettingsPageState extends State<SettingsPage> {
     final l10n = AppLocalizations.of(context);
     final tokens = RokkoTokens.of(context);
     const sections = SettingsSection.values;
-    void open(SettingsSection section) => Navigator.push(
-      context,
-      MaterialPageRoute<void>(builder: (_) => _page(section)),
-    );
+    void open(SettingsSection section) {
+      // Senza, la tastiera della ricerca riappare al ritorno.
+      FocusScope.of(context).unfocus();
+      Navigator.push(
+        context,
+        MaterialPageRoute<void>(builder: (_) => _page(section)),
+      );
+    }
+
     Widget tile(SettingsSection section) {
       final (icon, title, hint) = _entry(l10n, section);
       return ListTile(
@@ -181,11 +186,12 @@ class _SettingsPageState extends State<SettingsPage> {
                 for (final h in hits)
                   ListTile(
                     title: Text(h.title),
-                    subtitle: Text(
-                      h.sectionTitle == h.title
-                          ? (h.description ?? '')
-                          : h.sectionTitle,
-                    ),
+                    subtitle: switch (h.sectionTitle == h.title
+                        ? h.description
+                        : h.sectionTitle) {
+                      final String text when text.isNotEmpty => Text(text),
+                      _ => null,
+                    },
                     trailing: const Icon(Icons.chevron_right),
                     minTileHeight: tokens.minTouch,
                     onTap: () => open(h.section),

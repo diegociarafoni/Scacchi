@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scacchi/l10n/app_localizations.dart';
@@ -11,8 +13,18 @@ import 'settings_nav.dart';
 void main() {
   final it = lookupAppLocalizations(const Locale('it'));
 
-  List<SettingsHit> hits(String query, {bool progress = true}) =>
-      settingsHits(it, query, hasProgress: progress);
+  List<SettingsHit> hits(
+    String query, {
+    bool progress = true,
+    bool enabled = true,
+    bool kid = false,
+  }) => settingsHits(
+    it,
+    query,
+    hasProgress: progress,
+    progressEnabled: enabled,
+    kidMode: kid,
+  );
 
   group('U6 ricerca nelle impostazioni, indice', () {
     test('trova una voce per titolo e la manda alla sua sezione', () {
@@ -71,6 +83,40 @@ void main() {
         hits('sblocca').map((h) => h.title),
         contains(it.settingsUnlockAll),
       );
+    });
+
+    test('serie e sblocco seguono lo stato mostrato dalla pagina', () {
+      expect(
+        hits('progressi', kid: true).map((h) => h.title),
+        isNot(contains(it.settingsProgressEnabled)),
+      );
+      expect(
+        hits('sblocca', enabled: false).map((h) => h.title),
+        isNot(contains(it.settingsUnlockAll)),
+      );
+    });
+
+    test('le lettere con l\'accento staccato si trovano uguale', () {
+      expect(hits('modalita\u0300 zen'), isNotEmpty);
+    });
+
+    test('ogni impostazione delle sezioni è nell\'indice', () {
+      final pages = File('lib/settings/section_pages.dart').readAsStringSync();
+      final index = File('lib/settings/settings_search.dart')
+          .readAsStringSync();
+      final keys = RegExp(r'l10n\.(settings\w+)')
+          .allMatches(pages)
+          .map((m) => m.group(1)!)
+          .where(
+            (k) =>
+                !k.endsWith('Description') &&
+                !k.startsWith('settingsSection') &&
+                !k.startsWith('settingsVolumeValue'),
+          )
+          .toSet();
+      for (final k in keys) {
+        expect(index, contains('l10n.$k'), reason: '$k manca nell\'indice');
+      }
     });
 
     test('ogni voce ha un titolo e una sezione che la contiene', () {

@@ -19,17 +19,25 @@ class SettingsHit {
 
 /// Voci delle Impostazioni che contengono tutte le parole di [query], senza
 /// badare a maiuscole e accenti, cercate nel titolo e nella descrizione.
-/// [hasProgress] dice se ci sono i progressi: senza, le voci del profilo che li
-/// riguardano non esistono.
+/// [hasProgress] dice se ci sono i progressi, [progressEnabled] se sono accesi
+/// e [kidMode] se c'è il profilo bambino: le voci del profilo che dipendono da
+/// questi stati compaiono solo quando la pagina le mostra.
 List<SettingsHit> settingsHits(
   AppLocalizations l10n,
   String query, {
   required bool hasProgress,
+  bool progressEnabled = true,
+  bool kidMode = false,
 }) {
   final words = _fold(query).split(' ').where((w) => w.isNotEmpty).toList();
   if (words.isEmpty) return const [];
   return [
-    for (final h in _index(l10n, hasProgress: hasProgress))
+    for (final h in _index(
+      l10n,
+      hasProgress: hasProgress,
+      progressEnabled: progressEnabled,
+      kidMode: kidMode,
+    ))
       if (_matches(h, words)) h,
   ];
 }
@@ -56,17 +64,24 @@ const _base = {
   'ё': 'е',
 };
 
-/// Minuscole e senza accenti, con spazi singoli.
+/// Minuscole e senza accenti, con spazi singoli; gli accenti staccati dalla
+/// lettera (tastiere che li scrivono a parte) si tolgono come gli altri.
 String _fold(String s) {
   final out = StringBuffer();
-  for (final c in s.toLowerCase().split('')) {
+  final plain = s.toLowerCase().replaceAll(RegExp('[\u0300-\u036f]'), '');
+  for (final c in plain.split('')) {
     final base = _base.entries.where((e) => e.key.contains(c));
     out.write(base.isEmpty ? c : base.first.value);
   }
   return out.toString().trim().replaceAll(RegExp(r'\s+'), ' ');
 }
 
-List<SettingsHit> _index(AppLocalizations l10n, {required bool hasProgress}) {
+List<SettingsHit> _index(
+  AppLocalizations l10n, {
+  required bool hasProgress,
+  required bool progressEnabled,
+  required bool kidMode,
+}) {
   SettingsHit hit(
     SettingsSection section,
     String sectionTitle,
@@ -94,18 +109,20 @@ List<SettingsHit> _index(AppLocalizations l10n, {required bool hasProgress}) {
         l10n.settingsOpenProfile,
         l10n.settingsOpenProfileDescription,
       ),
-      hit(
-        p,
-        profile,
-        l10n.settingsProgressEnabled,
-        l10n.settingsProgressEnabledDescription,
-      ),
-      hit(
-        p,
-        profile,
-        l10n.settingsUnlockAll,
-        l10n.settingsUnlockAllDescription,
-      ),
+      if (!kidMode)
+        hit(
+          p,
+          profile,
+          l10n.settingsProgressEnabled,
+          l10n.settingsProgressEnabledDescription,
+        ),
+      if (progressEnabled)
+        hit(
+          p,
+          profile,
+          l10n.settingsUnlockAll,
+          l10n.settingsUnlockAllDescription,
+        ),
     ],
     hit(p, profile, l10n.settingsBackup, l10n.settingsBackupDescription),
     for (final tab in [
