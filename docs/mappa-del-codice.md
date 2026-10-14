@@ -40,7 +40,7 @@ Ogni cartella di `lib/` ha qui il documento che descrive le sue funzioni. La tab
 | `lib/tablebase/` | [finali-perfetti.md](finali-perfetti.md) | Finali perfetti: tabelle del matto esatto fino a quattro pezzi, generate sul telefono, scheda con risultato e mossa perfetta |
 | `lib/style/` | [stile.md](stile.md) | Schermata Stile: anteprima dal vivo e schede Scacchiera, Pezzi, Sfondo (con foto propria) e Suoni |
 | `lib/summary/` | [riepilogo-settimanale.md](riepilogo-settimanale.md) | Riepilogo settimanale: progressi, errore ricorrente, un consiglio |
-| `lib/tournament/` | [tornei.md](tornei.md) | Tornei offline contro bot |
+| `lib/tournament/` | [tornei.md](tornei.md) | Tornei offline contro bot, con partite tra bot giocate dal motore |
 | `lib/training/` | [puzzle.md](puzzle.md) | Scacchiera per esercizi condivisa |
 
 ## Controllo automatico

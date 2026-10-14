@@ -43,13 +43,13 @@ Rokko è open source e gratuito. Questi vincoli valgono per ogni voce.
 |---|---|---|---|---|---|---|
 | A-1 / RF-08 | **Premossa**: muovere durante il turno dell'avversario, annullabile toccando una casa vuota, con opzione nelle impostazioni | fatta | P0 | media | 0.12.0 | `_playerSide` e `_playPremove` in `lib/game/game_page.dart`; test in `test/game/premove_test.dart` |
 | A-2 / RF-05 | **Frecce e cerchi** con almeno tre colori, pressione prolungata e trascinamento su touch, rimossi al tocco successivo | fatta | P0 | piccola | 0.12.0 | `lib/game/board_drawing.dart`, scelta del colore in Impostazioni > Scacchiera; test in `test/game/board_drawing_test.dart` |
-| A-3 / RF-22 | **Allenamento e Sfida**: scelta esplicita della modalità e barra di valutazione durante la partita (oggi solo in analisi e revisione) | parziale | P0 | media | 0.12.0 | `EvalBar` usata in `lib/review/` e `lib/analysis/`; `docs/avversario-computer.md` dichiara «in parte» |
+| A-3 / RF-22 | **Allenamento e Sfida**: scelta esplicita della modalità e barra di valutazione durante la partita (oggi solo in analisi e revisione) | parziale | P0 | media | 0.12.0 | fatta la barra di valutazione in partita (`evalBar`, `_refreshEval` in `lib/game/game_page.dart`); manca la scelta esplicita tra Allenamento e Sfida |
 | A-4 / RF-32 | **Annullamento con consenso** dell'altro giocatore nella partita a due | fatta | P0 | piccola | 0.12.0 | `_requestUndo` in `lib/game/game_page.dart`; test in `test/game/undo_consent_test.dart` |
 | A-5 / RF-40 | **Cadenza personalizzata** con minuti e incremento liberi, e **ritardo** (semplice e Bronstein); in seguito cadenze a più fasi (per esempio 40 mosse in 90 minuti più 30) anche per la scacchiera fisica | parziale | P0 | media | 0.12.0 | fatti minuti e incremento liberi e ritardo semplice e di Bronstein (`lib/game/clock.dart`, `custom_clock_dialog.dart`); restano le cadenze a più fasi e la scacchiera fisica |
 | A-6 / RM-02 | **Tocco**: correzione quando il dito cade sul bordo di una casa; due tocchi come modo predefinito su telefono | fatta | P0 | piccola | 0.12.0 | `lib/game/tap_assist.dart`, `MoveMethod` in `lib/settings/settings.dart`; test in `test/game/tap_assist_test.dart` e `move_method_test.dart` |
 | A-7 / RM-06 | **Schermo sempre acceso** durante la partita | fatta | P0 | piccola | 0.12.0 | `_syncAwake` in `lib/game/game_page.dart` con `wakelock_plus`; test in `test/game/keep_awake_test.dart` |
 | A-8 / RM-07 | **Avvio rapido**: pronta a giocare in meno di 2 secondi su un telefono di fascia media, con misura e budget in CI | parziale | P0 | piccola | 0.14.0 | `integration_test/fluidita_perf.dart` misura la fluidità, non l'avvio |
-| A-9 / RF-31 | **Modalità tavolo**: ruotare di 180° tutti i pezzi del lato superiore, non solo quelli del giocatore in alto | parziale | P0 | piccola | 0.12.0 | `tableMode` in `lib/settings/settings.dart`; da confermare se la differenza conta |
+| A-9 / RF-31 | **Modalità tavolo**: ruotare di 180° tutti i pezzi del lato superiore, non solo quelli del giocatore in alto | fatta | P0 | piccola | 0.12.0 | `tableMode` in `lib/settings/settings.dart`: `opponentUpsideDown` di chessground capovolge tutti i pezzi del lato superiore |
 
 ### A.2 Analisi, revisione, archivio
 
@@ -75,7 +75,7 @@ Rokko è open source e gratuito. Questi vincoli valgono per ogni voce.
 | ID | Funzione | Stato | Pri | Dim | Versione | Evidenza |
 |---|---|---|---|---|---|---|
 | A-24 / RG-17 (estensione) | **Badge** del multigiocatore e del ripasso del repertorio | da fare | P1 | media | 0.15.0 | `docs/badge.md`, «Non ancora attivi»; nessun aggancio ai progressi in `lib/multiplayer/` |
-| A-25 / RG-09 | **Tornei con partite vere** tra i bot e gironi da 4 a 8 giocatori | parziale | P2 | grande | 0.15.0 | le partite tra bot sono simulate con una formula Elo (`docs/tornei.md`); in alternativa dichiarare la scelta (piccola) |
+| A-25 / RG-09 | **Tornei con partite vere** tra i bot e gironi da 4 a 8 giocatori | fatta | P2 | grande | 0.15.0 | le partite tra bot le gioca il motore (`lib/tournament/bot_game.dart`), con ripiego sulla formula Elo dove manca (`docs/tornei.md`) |
 | A-26 / RMP | **Orologio nelle partite a distanza** e prova su telefoni veri con un `integration_test` | parziale | P1 | media | 0.15.0 | `docs/multigiocatore.md` (limiti noti) |
 | A-27 | **Percorso «dai miei errori»**: capitoli personali generati dai temi tattici sbagliati più spesso | da fare | P2 | media | 0.15.0 | esistono i puzzle personali (`lib/review/personal_puzzles.dart`) e la coda di ripasso, non agganciati al percorso |
 
@@ -103,11 +103,11 @@ Il dettaglio di U1-U11 è in `consegne/analisi-ux-ui.md`; il comportamento attua
 | S4 | **Un bivio per capitolo** (tattica o finali) con puzzle diversi | da fare | da assegnare | media | 0.15.0 |
 | S5 | **Ricompense legate alla storia**: scacchiere e pezzi sbloccabili con nome a tema | da fare | da assegnare | piccola | 0.15.0 |
 | S6 | **Aiuto quando ci si blocca**: dopo due errori sullo stesso puzzle, un indizio o un puzzle più facile | fatta | da assegnare | piccola | 0.15.0 |
-| U1 | **Comandi di partita meno affollati**: 4 azioni in barra, Patta, Abbandona e Nuova in un pannello «Partita»; Allenatore e Minaccia come interruttori | da fare | da assegnare | media | 0.12.0 |
+| U1 | **Comandi di partita meno affollati**: 4 azioni in barra, Patta, Abbandona e Nuova in un pannello «Partita»; Allenatore e Minaccia come interruttori | parziale | da assegnare | media | 0.12.0 | fatto nel profilo bambino (pannello «Partita»); per gli adulti Nuova, Patta e Abbandona restano in barra (scelta di #225) |
 | U2 | **Identità visiva di Rokko**: tema proprio, carattere con personalità, torre-mascotte negli stati vuoti e a fine partita | parziale | da assegnare | media | 0.14.0 |
-| U3 | **Layout della partita senza spazio morto** su schermate alte | da fare | da assegnare | media | 0.12.0 |
+| U3 | **Layout della partita senza spazio morto** su schermate alte | parziale | da assegnare | media | 0.12.0 | in verticale lo spazio sopra la scacchiera è della lista mosse e dei suggerimenti; da verificare su schermate molto alte |
 | U4 | **Testi tutti localizzati** nei file `.arb` | parziale | P1 | grande | 0.11.0 |
-| U7 | **Barra del titolo della partita più semplice**: editor e tastiera nel menu ⋮; tastiera visibile con un lettore di schermo | da fare | da assegnare | piccola | 0.12.0 |
+| U7 | **Barra del titolo della partita più semplice**: editor e tastiera nel menu ⋮; tastiera visibile con un lettore di schermo | fatta | da assegnare | piccola | 0.12.0 |
 | U8 | **Golden fedeli all'app reale**: tema predefinito e font veri; aggiungere Puzzle, Percorso, Storia, Multigiocatore, Tu e profilo bambino | da fare | da assegnare | media | 0.14.0 |
 | U9 | **Profilo bambino coerente** in tutte le schermate, con un test che cerca le cifre nei testi | da fare | da assegnare | media | 0.15.0 |
 | U10 | **Funzioni scopribili**: suggerimenti al primo uso e invito a rivedere la prima partita conclusa | da fare | da assegnare | media | 0.13.0 |

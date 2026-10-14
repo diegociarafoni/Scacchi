@@ -163,6 +163,8 @@
   "@settingsKeepAwakeDescription": {
     "description": "Impostazioni: descrizione dello schermo sempre acceso"
   },
+  "settingsEvalBar": "Değerlendirme çubuğu",
+  "settingsEvalBarDescription": "Tahtanın yanında kimin daha iyi olduğunu gösterir; yardımsız meydan okumalarda kapalıdır",
   "settingsSearchHint": "Ayarlarda ara",
   "settingsSearchEmpty": "Ayar bulunamadı",
   "settingsSearchClear": "Aramayı temizle"

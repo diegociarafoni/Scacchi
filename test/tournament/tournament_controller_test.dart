@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
@@ -7,15 +8,25 @@ import 'package:scacchi/tournament/tournament_controller.dart';
 
 import 'tournament_test.dart' show bots;
 
+/// Attende [condition] con tempi reali: il salvataggio usa file veri.
+Future<void> until(bool Function() condition) async {
+  for (var i = 0; i < 300 && !condition(); i++) {
+    await Future<void>.delayed(const Duration(milliseconds: 10));
+  }
+  expect(condition(), isTrue);
+}
+
 void main() {
   late Directory dir;
   final recorded = <Activity>[];
 
-  TournamentController controller() => TournamentController(
-    File('${dir.path}/tornei.json'),
-    recordActivity: (a) async => recorded.add(a),
-    clock: () => DateTime(2026, 10, 11, 18),
-  );
+  TournamentController controller({BotGameRunner? runner}) =>
+      TournamentController(
+        File('${dir.path}/tornei.json'),
+        recordActivity: (a) async => recorded.add(a),
+        clock: () => DateTime(2026, 10, 11, 18),
+        playBotGame: runner,
+      );
 
   setUp(() {
     dir = Directory.systemTemp.createTempSync('tornei');
@@ -101,5 +112,148 @@ void main() {
     await c.recordUserGame(1);
     expect(c.current, isNull);
     expect(recorded, isEmpty);
+  });
+
+  group('partite tra bot giocate davvero', () {
+    test('dopo la partita dell\'utente il motore gioca le altre', () async {
+      final played = <(String, String)>[];
+      final c = controller(
+        runner: (white, black, seed) async {
+          played.add((white.name, black.name));
+          return 1;
+        },
+      );
+      await c.load();
+      await c.start(
+        format: TournamentFormat.roundRobin,
+        size: 4,
+        userName: 'Tu',
+        userElo: 1000,
+        bots: bots,
+      );
+      expect(played, isEmpty, reason: 'prima gioca l\'utente');
+      await c.recordUserGame(0.5);
+      expect(played, hasLength(1));
+      expect(c.current!.currentRound, 1);
+      expect(c.playingBots, isFalse);
+    });
+
+    test('un torneo intero si chiude solo con risultati del motore', () async {
+      var calls = 0;
+      final c = controller(
+        runner: (w, b, seed) async {
+          calls++;
+          return 0.5;
+        },
+      );
+      await c.load();
+      await c.start(
+        format: TournamentFormat.knockout,
+        size: 8,
+        userName: 'Tu',
+        userElo: 1000,
+        bots: bots,
+      );
+      while (c.current?.userGame != null) {
+        await c.recordUserGame(1);
+      }
+      expect(c.current!.finished, isTrue);
+      // 3 partite tra bot al primo turno, più gli spareggi per le patte.
+      expect(calls, greaterThanOrEqualTo(3));
+      expect(c.trophies, hasLength(1));
+      expect(recorded.whereType<TournamentFinished>(), hasLength(1));
+    });
+
+    test('senza motore (risultato nullo) si simula la partita', () async {
+      final c = controller(runner: (w, b, seed) async => null);
+      await c.load();
+      await c.start(
+        format: TournamentFormat.roundRobin,
+        size: 4,
+        userName: 'Tu',
+        userElo: 1000,
+        bots: bots,
+      );
+      while (c.current?.userGame != null) {
+        await c.recordUserGame(1);
+      }
+      expect(c.current!.finished, isTrue);
+    });
+
+    test('un errore del motore ripiega sulla simulazione', () async {
+      final c = controller(runner: (w, b, seed) => throw StateError('no'));
+      await c.load();
+      await c.start(
+        format: TournamentFormat.roundRobin,
+        size: 4,
+        userName: 'Tu',
+        userElo: 1000,
+        bots: bots,
+      );
+      while (c.current?.userGame != null) {
+        await c.recordUserGame(1);
+      }
+      expect(c.current!.finished, isTrue);
+    });
+
+    test('ogni partita giocata si salva: si riprende da dove era', () async {
+      final gate = Completer<double?>();
+      var calls = 0;
+      final c = controller(
+        runner: (w, b, seed) {
+          calls++;
+          return calls == 1 ? Future.value(1) : gate.future;
+        },
+      );
+      await c.load();
+      await c.start(
+        format: TournamentFormat.roundRobin,
+        size: 6,
+        userName: 'Tu',
+        userElo: 1000,
+        bots: bots,
+      );
+      final running = c.recordUserGame(1);
+      await until(() => calls == 2);
+      expect(c.playingBots, isTrue);
+      final again = controller();
+      await again.load();
+      expect(again.current!.pendingBotGames, isNotEmpty);
+      // Riapertura: la partita rimasta si riprende con un motore.
+      final resumed = controller(runner: (w, b, seed) async => 0);
+      await resumed.load();
+      await resumed.resumeBots();
+      expect(
+        resumed.current!.userGame != null || resumed.current!.finished,
+        isTrue,
+      );
+      expect(resumed.current!.pendingBotGames, isEmpty);
+      gate.complete(null);
+      await running;
+    });
+
+    test(
+      'abbandonare mentre giocano i bot ignora i risultati in arrivo',
+      () async {
+        final gate = Completer<double?>();
+        final c = controller(runner: (w, b, seed) => gate.future);
+        await c.load();
+        await c.start(
+          format: TournamentFormat.roundRobin,
+          size: 4,
+          userName: 'Tu',
+          userElo: 1000,
+          bots: bots,
+        );
+        final running = c.recordUserGame(1);
+        await Future<void>.delayed(Duration.zero);
+        await c.dismiss();
+        gate.complete(1);
+        await running;
+        expect(c.current, isNull);
+        expect(c.trophies, isEmpty);
+        expect(c.playingBots, isFalse);
+      },
+    );
   });
 }

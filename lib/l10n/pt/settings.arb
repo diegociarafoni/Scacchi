@@ -115,6 +115,8 @@
   "settingsMoveMethodDrag": "Arrastar",
   "settingsKeepAwake": "Manter a tela ligada",
   "settingsKeepAwakeDescription": "O celular não desliga a tela durante a partida",
+  "settingsEvalBar": "Barra de avaliação",
+  "settingsEvalBarDescription": "Mostra quem está melhor ao lado do tabuleiro; desligada nos desafios sem ajudas",
   "settingsSearchHint": "Pesquisar nas configurações",
   "settingsSearchEmpty": "Nenhuma configuração encontrada",
   "settingsSearchClear": "Limpar a pesquisa"

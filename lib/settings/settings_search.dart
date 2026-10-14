@@ -159,6 +159,7 @@ List<SettingsHit> _index(
     hit(g, game, l10n.settingsTableMode, l10n.settingsTableModeDescription),
     hit(g, game, l10n.settingsExplainWhy, l10n.settingsExplainWhyDescription),
     hit(g, game, l10n.settingsPremove, l10n.settingsPremoveDescription),
+    hit(g, game, l10n.settingsEvalBar, l10n.settingsEvalBarDescription),
     hit(g, game, l10n.settingsMoveMethod, l10n.settingsMoveMethodDescription),
     hit(a, access, l10n.settingsAppTheme, l10n.settingsAppThemeDescription),
     hit(a, access, l10n.settingsColorBlind, l10n.settingsColorBlindDescription),

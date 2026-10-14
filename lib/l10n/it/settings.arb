@@ -505,6 +505,14 @@
   "@settingsKeepAwakeDescription": {
     "description": "Impostazioni: descrizione dello schermo sempre acceso"
   },
+  "settingsEvalBar": "Barra di valutazione",
+  "@settingsEvalBar": {
+    "description": "Impostazioni: interruttore della barra di valutazione in partita"
+  },
+  "settingsEvalBarDescription": "Mostra chi è in vantaggio accanto alla scacchiera; spenta nelle sfide senza aiuti",
+  "@settingsEvalBarDescription": {
+    "description": "Impostazioni: descrizione della barra di valutazione in partita"
+  },
   "settingsSearchHint": "Cerca nelle impostazioni",
   "@settingsSearchHint": {
     "description": "Impostazioni: testo del campo di ricerca"

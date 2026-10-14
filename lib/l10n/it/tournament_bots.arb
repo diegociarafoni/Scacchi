@@ -1,0 +1,6 @@
+{
+  "tournamentBotsPlaying": "Si giocano le partite tra i bot…",
+  "@tournamentBotsPlaying": {
+    "description": "Tornei: avviso mentre il motore gioca le partite tra i bot"
+  }
+}

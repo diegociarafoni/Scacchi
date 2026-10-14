@@ -163,6 +163,8 @@
   "@settingsKeepAwakeDescription": {
     "description": "Impostazioni: descrizione dello schermo sempre acceso"
   },
+  "settingsEvalBar": "Evaluatiebalk",
+  "settingsEvalBarDescription": "Toont naast het bord wie er beter staat; uit in uitdagingen zonder hulp",
   "settingsSearchHint": "Zoeken in instellingen",
   "settingsSearchEmpty": "Geen instellingen gevonden",
   "settingsSearchClear": "Zoekopdracht wissen"
