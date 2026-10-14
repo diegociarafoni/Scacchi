@@ -4,10 +4,10 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/settings/board_frame.dart';
-import 'package:scacchi/share/image_sharing.dart';
-import 'package:scacchi/share/position_image.dart';
-import 'package:scacchi/share/position_image_page.dart';
+import 'package:rokko/settings/board_frame.dart';
+import 'package:rokko/share/image_sharing.dart';
+import 'package:rokko/share/position_image.dart';
+import 'package:rokko/share/position_image_page.dart';
 
 import '../localized_app.dart';
 

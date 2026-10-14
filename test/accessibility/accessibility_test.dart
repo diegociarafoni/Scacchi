@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/main.dart';
+import 'package:rokko/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../game_actions.dart';
@@ -22,7 +22,7 @@ Future<void> _pumpApp(
     ..platformBrightnessTestValue = brightness;
   addTearDown(tester.platformDispatcher.clearAllTestValues);
   SharedPreferences.setMockInitialValues({});
-  await tester.pumpWidget(const ScacchiApp());
+  await tester.pumpWidget(const RokkoApp());
   await tester.pumpAndSettle();
 }
 

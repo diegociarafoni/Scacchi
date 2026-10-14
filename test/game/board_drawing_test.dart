@@ -4,7 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/game/board_drawing.dart';
+import 'package:rokko/game/board_drawing.dart';
 
 void main() {
   const size = 400.0;

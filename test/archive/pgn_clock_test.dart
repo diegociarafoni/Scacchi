@@ -1,7 +1,7 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/archive/pgn.dart';
-import 'package:scacchi/game/chess_game.dart';
+import 'package:rokko/archive/pgn.dart';
+import 'package:rokko/game/chess_game.dart';
 
 ChessGame game() {
   final g = ChessGame();

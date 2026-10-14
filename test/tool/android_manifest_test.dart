@@ -8,18 +8,18 @@ const _dump =
     '''
 N: android=$_android (line=2)
   E: manifest (line=2)
-    A: package="io.github.diegociarafoni.scacchi" (Raw: "io.github.diegociarafoni.scacchi")
+    A: package="io.github.diegociarafoni.rokko" (Raw: "io.github.diegociarafoni.rokko")
     E: uses-permission (line=10)
       A: $_android:name(0x01010003)="android.permission.INTERNET" (Raw: "android.permission.INTERNET")
     E: uses-permission (line=11)
-      A: $_android:name(0x01010003)="io.github.diegociarafoni.scacchi.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" (Raw: "io.github.diegociarafoni.scacchi.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION")
+      A: $_android:name(0x01010003)="io.github.diegociarafoni.rokko.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" (Raw: "io.github.diegociarafoni.rokko.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION")
     E: uses-permission-sdk-23 (line=12)
       A: $_android:name(0x01010003)="android.permission.ACCESS_FINE_LOCATION" (Raw: "android.permission.ACCESS_FINE_LOCATION")
     E: application (line=20)
       A: $_android:debuggable(0x0101000f)=true
       A: $_android:allowBackup(0x01010280)=false
       E: activity (line=21)
-        A: $_android:name(0x01010003)="io.github.diegociarafoni.scacchi.MainActivity" (Raw: "io.github.diegociarafoni.scacchi.MainActivity")
+        A: $_android:name(0x01010003)="io.github.diegociarafoni.rokko.MainActivity" (Raw: "io.github.diegociarafoni.rokko.MainActivity")
         A: $_android:exported(0x01010010)=true
         E: intent-filter (line=30)
           E: action (line=31)
@@ -37,10 +37,10 @@ void main() {
   final manifest = AndroidManifest.parseXmlTree(_dump);
 
   test('legge pacchetto e permessi', () {
-    expect(manifest.packageName, 'io.github.diegociarafoni.scacchi');
+    expect(manifest.packageName, 'io.github.diegociarafoni.rokko');
     expect(manifest.permissions, [
       'android.permission.INTERNET',
-      'io.github.diegociarafoni.scacchi.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION',
+      'io.github.diegociarafoni.rokko.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION',
       'android.permission.ACCESS_FINE_LOCATION',
     ]);
   });
@@ -52,7 +52,7 @@ void main() {
 
   test('individua i componenti esportati senza permesso', () {
     expect(manifest.unprotectedExportedComponents, [
-      'io.github.diegociarafoni.scacchi.MainActivity',
+      'io.github.diegociarafoni.rokko.MainActivity',
       'com.example.LeakyProvider',
     ]);
   });

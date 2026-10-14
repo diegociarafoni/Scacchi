@@ -4,9 +4,9 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart' show PieceKind, Side;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/settings/board_frame.dart';
-import 'package:scacchi/settings/color_blind.dart';
-import 'package:scacchi/settings/settings.dart';
+import 'package:rokko/settings/board_frame.dart';
+import 'package:rokko/settings/color_blind.dart';
+import 'package:rokko/settings/settings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Un asset dell'app esiste su disco, con la variante ad alta densità.

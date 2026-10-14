@@ -2,8 +2,8 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/settings/settings.dart';
-import 'package:scacchi/training/training_board.dart';
+import 'package:rokko/settings/settings.dart';
+import 'package:rokko/training/training_board.dart';
 
 Widget board({SettingsController? settings}) {
   final child = MaterialApp(

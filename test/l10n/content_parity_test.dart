@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/l10n/content.dart';
+import 'package:rokko/l10n/content.dart';
 
 import '../../tool/src/content_parity.dart';
 

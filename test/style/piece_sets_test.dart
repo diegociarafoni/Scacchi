@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:dartchess/dartchess.dart' show PieceKind;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/settings/settings.dart';
+import 'package:rokko/settings/settings.dart';
 
 void main() {
   final byName = PieceStyle.values.asNameMap();

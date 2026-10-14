@@ -1,6 +1,6 @@
 import 'package:chessground/chessground.dart';
 import 'package:flutter/painting.dart';
-import 'package:scacchi/settings/board_marks.dart';
+import 'package:rokko/settings/board_marks.dart';
 
 /// Il contorno dei segni è nero o bianco; il colore del segno non lo è mai.
 bool _outline(Color c) => c.r == c.g && c.g == c.b && (c.r == 0 || c.r == 1);

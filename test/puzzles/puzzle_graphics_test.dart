@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/puzzles/puzzle_hub_page.dart';
-import 'package:scacchi/puzzles/puzzle_library.dart';
-import 'package:scacchi/puzzles/puzzle_page.dart';
-import 'package:scacchi/puzzles/puzzle_run.dart';
-import 'package:scacchi/puzzles/puzzle_run_page.dart';
-import 'package:scacchi/puzzles/puzzle_trainer.dart';
-import 'package:scacchi/settings/settings.dart';
-import 'package:scacchi/storage/key_value_store.dart';
-import 'package:scacchi/theme/rokko_theme.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/puzzles/puzzle_hub_page.dart';
+import 'package:rokko/puzzles/puzzle_library.dart';
+import 'package:rokko/puzzles/puzzle_page.dart';
+import 'package:rokko/puzzles/puzzle_run.dart';
+import 'package:rokko/puzzles/puzzle_run_page.dart';
+import 'package:rokko/puzzles/puzzle_trainer.dart';
+import 'package:rokko/settings/settings.dart';
+import 'package:rokko/storage/key_value_store.dart';
+import 'package:rokko/theme/rokko_theme.dart';
 
 import 'fixtures.dart';
 import 'puzzle_page_test.dart' show TwoPuzzles, tapMove;

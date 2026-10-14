@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:dartchess/dartchess.dart' hide File;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/archive/game_archive.dart';
-import 'package:scacchi/archive/saved_game.dart';
-import 'package:scacchi/review/game_phase.dart';
-import 'package:scacchi/review/game_review.dart';
-import 'package:scacchi/stats/stats.dart';
-import 'package:scacchi/stats/stats_page.dart';
+import 'package:rokko/archive/game_archive.dart';
+import 'package:rokko/archive/saved_game.dart';
+import 'package:rokko/review/game_phase.dart';
+import 'package:rokko/review/game_review.dart';
+import 'package:rokko/stats/stats.dart';
+import 'package:rokko/stats/stats_page.dart';
 
 import '../localized_app.dart';
 import '../review/fake_engine.dart';

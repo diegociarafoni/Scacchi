@@ -3,12 +3,12 @@ import 'dart:math';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/minigames/blind.dart';
-import 'package:scacchi/minigames/capture_all.dart';
-import 'package:scacchi/minigames/coordinates.dart';
-import 'package:scacchi/minigames/material_quiz.dart';
-import 'package:scacchi/minigames/minigame.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/minigames/blind.dart';
+import 'package:rokko/minigames/capture_all.dart';
+import 'package:rokko/minigames/coordinates.dart';
+import 'package:rokko/minigames/material_quiz.dart';
+import 'package:rokko/minigames/minigame.dart';
 
 final it = lookupAppLocalizations(const Locale('it'));
 

@@ -1,7 +1,7 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/game/clock.dart';
-import 'package:scacchi/game/handicap.dart';
+import 'package:rokko/game/clock.dart';
+import 'package:rokko/game/handicap.dart';
 
 void main() {
   String fen(Handicap h, [Side human = Side.white]) =>

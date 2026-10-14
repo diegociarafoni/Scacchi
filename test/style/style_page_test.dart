@@ -1,10 +1,10 @@
 import 'package:chessground/chessground.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/game/sounds.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/settings/settings.dart';
-import 'package:scacchi/style/style_page.dart';
+import 'package:rokko/game/sounds.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/settings/settings.dart';
+import 'package:rokko/style/style_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../support/devices.dart';

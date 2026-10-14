@@ -3,11 +3,11 @@ import 'dart:io';
 import 'package:chessground/chessground.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/path/curriculum.dart';
-import 'package:scacchi/path/path_controller.dart';
-import 'package:scacchi/path/path_page.dart';
-import 'package:scacchi/path/stage_page.dart';
-import 'package:scacchi/progress/activity.dart';
+import 'package:rokko/path/curriculum.dart';
+import 'package:rokko/path/path_controller.dart';
+import 'package:rokko/path/path_page.dart';
+import 'package:rokko/path/stage_page.dart';
+import 'package:rokko/progress/activity.dart';
 
 import '../content_support.dart';
 import '../localized_app.dart';

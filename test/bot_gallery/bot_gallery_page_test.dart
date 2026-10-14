@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/bot_gallery/bot_gallery_page.dart';
-import 'package:scacchi/bot_gallery/game_options.dart';
-import 'package:scacchi/engine/bot_collection.dart';
-import 'package:scacchi/game/clock.dart';
-import 'package:scacchi/game/handicap.dart';
-import 'package:scacchi/game/opponent_picker.dart';
-import 'package:scacchi/game/variant.dart';
-import 'package:scacchi/story/story.dart';
-import 'package:scacchi/theme/rokko_theme.dart';
+import 'package:rokko/bot_gallery/bot_gallery_page.dart';
+import 'package:rokko/bot_gallery/game_options.dart';
+import 'package:rokko/engine/bot_collection.dart';
+import 'package:rokko/game/clock.dart';
+import 'package:rokko/game/handicap.dart';
+import 'package:rokko/game/opponent_picker.dart';
+import 'package:rokko/game/variant.dart';
+import 'package:rokko/story/story.dart';
+import 'package:rokko/theme/rokko_theme.dart';
 
 import '../localized_app.dart';
 import '../support/devices.dart';
