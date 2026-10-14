@@ -995,7 +995,7 @@ class _MultiplayerGamePageState extends State<MultiplayerGamePage> {
                       const SizedBox(height: 12),
                       Center(
                         child: OutlinedButton.icon(
-                          icon: const Icon(Icons.share),
+                          icon: const Icon(Icons.share_outlined),
                           label: Text(l10n.multiplayerRemoteShare),
                           onPressed: () => widget.shareInvite(
                             l10n.multiplayerRemoteShareSubject,
