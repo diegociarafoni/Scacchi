@@ -193,7 +193,7 @@ jobs:
           SIGNED: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' || secrets.ANDROID_SIGNING_SEED != '' }}
         run: |
           if [ "$SIGNED" = "true" ]; then
-            signing="Firmato con la chiave stabile del progetto: si installa sopra le versioni precedenti firmate con la stessa chiave."
+            signing="Firmato con la chiave stabile del progetto: le versioni successive di Rokko con la stessa chiave si installano sopra questa. Con il nuovo identificativo dell'app, la prima installazione non sostituisce le versioni uscite prima della 0.12.0: resta accanto a quelle, che si possono disinstallare."
           else
             signing="Firmato con una chiave di debug generata dalla build: per installare una versione successiva bisogna prima disinstallare questa."
           fi
