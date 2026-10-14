@@ -50,4 +50,16 @@ dart tool/l10n.dart --solo-unione
 flutter --suppress-analytics pub get
 dart tool/l10n.dart
 
+# Il progetto non attribuisce i commit a Claude: se l'identità è la sua,
+# si usa quella di chi ha scritto gli ultimi commit su main.
+if [ "$(git config user.name)" = "Claude" ] || git config user.email | grep -qi '@anthropic\.com$'; then
+  git fetch -q origin main || true
+  nome="$(git log -1 --format=%an origin/main 2>/dev/null || true)"
+  email="$(git log -1 --format=%ae origin/main 2>/dev/null || true)"
+  if [ -n "$nome" ] && [ -n "$email" ] && [ "$nome" != "Claude" ] && ! echo "$email" | grep -qi '@anthropic\.com$'; then
+    git config user.name "$nome"
+    git config user.email "$email"
+  fi
+fi
+
 lefthook install

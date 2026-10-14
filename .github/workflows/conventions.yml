@@ -37,6 +37,10 @@ jobs:
         env:
           TITLE: ${{ github.event.pull_request.title }}
         run: dart tool/check_commit_msg.dart --text "$TITLE"
+      - name: Descrizione della PR senza attribuzione
+        env:
+          BODY: ${{ github.event.pull_request.body }}
+        run: dart tool/check_commit_msg.dart --attribuzione "$BODY"
       - name: Messaggi dei commit
         # Dal punto in cui il ramo si stacca da main: i commit arrivati
         # unendo main non sono di questa PR.

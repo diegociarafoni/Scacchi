@@ -59,7 +59,7 @@ Il controllo è in `tool/check_commit_msg.dart` e gira in locale (hook `commit-m
 
 | Hook | Controlli |
 |---|---|
-| `pre-commit` | formattazione dei file Dart in commit, `dart tool/l10n.dart` e `flutter analyze --fatal-infos --fatal-warnings`, Gitleaks sui file in commit |
+| `pre-commit` | identità dell'autore (mai quella di Claude), formattazione dei file Dart in commit, `dart tool/l10n.dart` e `flutter analyze --fatal-infos --fatal-warnings`, Gitleaks sui file in commit |
 | `commit-msg` | messaggio secondo la convenzione Angular |
 | `pre-push` | nome dei rami di destinazione, che blocca anche `git push origin main` da qualsiasi ramo; messaggi di tutti i commit del ramo (gli stessi della CI); documentazione (`tool/check_docs.dart`); commenti (`tool/check_comments.dart`); nessun sottomodulo nell'indice; test dei soli file modificati (`tool/test_veloci.sh`: i test toccati dal ramo, quelli che hanno lo stesso percorso dei sorgenti toccati, con `_test` prima di `.dart`, e sempre `test/security`). La suite completa e i golden girano in CI su Linux; in locale si lancia con `tool/verifica.sh --test` |
 
@@ -72,9 +72,13 @@ brew install lefthook gitleaks        # macOS
 lefthook install
 ```
 
+### Nessuna attribuzione a Claude
+
+Commit, messaggi di squash e descrizioni delle PR non portano alcuna attribuzione a Claude. `tool/check_commit_msg.dart` rifiuta `Co-authored-by` con Claude o Anthropic, `Claude-Session`, i link `claude.ai/code/session_` e le righe «Generated with … Claude»; nei commit di un ramo rifiuta anche un autore o committer con l'identità di Claude (indirizzo @anthropic.com o nome «Claude») (GitHub la trasformerebbe in un `Co-authored-by` nel commit di squash). In locale `pre-commit` esegue `tool/check_autore.dart` sull'identità di `git`, `commit-msg` sul testo; in CI il controllo dei commit, del titolo e della descrizione della PR copre entrambi. Se scatta, si imposta la propria identità con `git config user.name` e `git config user.email`.
+
 ### Sessioni di Claude Code nel cloud
 
-Gli hook git non vengono installati da soli in un container nuovo. L'hook di avvio `.claude/hooks/session-start.sh`, registrato in `.claude/settings.json`, installa Flutter alla versione della CI, lefthook e Gitleaks, prepara le dipendenze ed esegue `lefthook install`, così `pre-commit`, `commit-msg` e `pre-push` sono attivi fin dal primo commit. Gira solo nelle sessioni cloud (`CLAUDE_CODE_REMOTE=true`) ed è idempotente.
+Gli hook git non vengono installati da soli in un container nuovo. L'hook di avvio `.claude/hooks/session-start.sh`, registrato in `.claude/settings.json`, installa Flutter alla versione della CI, lefthook e Gitleaks, prepara le dipendenze, imposta l'identità di `git` su quella degli ultimi commit di `main` al posto di quella di Claude ed esegue `lefthook install`, così `pre-commit`, `commit-msg` e `pre-push` sono attivi fin dal primo commit. Gira solo nelle sessioni cloud (`CLAUDE_CODE_REMOTE=true`) ed è idempotente.
 
 ### Senza hook: `tool/verifica.sh`
 
