@@ -72,9 +72,13 @@ brew install lefthook gitleaks        # macOS
 lefthook install
 ```
 
+### Sessioni di Claude Code nel cloud
+
+Gli hook git non vengono installati da soli in un container nuovo. L'hook di avvio `.claude/hooks/session-start.sh`, registrato in `.claude/settings.json`, installa Flutter alla versione della CI, lefthook e Gitleaks, prepara le dipendenze ed esegue `lefthook install`, così `pre-commit`, `commit-msg` e `pre-push` sono attivi fin dal primo commit. Gira solo nelle sessioni cloud (`CLAUDE_CODE_REMOTE=true`) ed è idempotente.
+
 ### Senza hook: `tool/verifica.sh`
 
-Dove gli hook non sono installati (per esempio le sessioni di Claude Code) si lancia a mano, prima del push, lo script con gli stessi controlli veloci della CI:
+Dove gli hook non sono installati si lancia a mano, prima del push, lo script con gli stessi controlli veloci della CI:
 
 ```sh
 tool/verifica.sh --titolo "feat(game): titolo della PR" --test
