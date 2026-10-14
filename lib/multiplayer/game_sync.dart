@@ -120,6 +120,11 @@ class GameSync {
   final _times = <int?>[];
   Side? _flagged;
 
+  // Il reclamo è provvisorio finché l'avversario non risponde con una mossa:
+  // se per lui il tempo non era scaduto lo ignora, e la sua mossa riapre la
+  // partita anche qui.
+  bool _claimPending = false;
+
   Uint8List? get peerKey => _peerKey;
   List<String> get moves => List.unmodifiable(_moves);
 
@@ -211,7 +216,9 @@ class GameSync {
   ClaimMessage claimPeer() {
     if (isGameOver) throw StateError('partita finita'); // l10n-ok
     if (turn == mySide) throw StateError('è il tuo turno'); // l10n-ok
+    if (_moves.isEmpty) throw StateError('nessuna mossa'); // l10n-ok
     _flagged = turn;
+    _claimPending = true;
     return ClaimMessage(plies: _moves.length);
   }
 
@@ -286,6 +293,10 @@ class GameSync {
       _peerKey = Uint8List.fromList(author);
     }
     final known = _moves.length;
+    if (_claimPending && m.seq == known + 1 && !mine) {
+      _flagged = null;
+      _claimPending = false;
+    }
     if (m.seq <= known) {
       return _moves[m.seq - 1] == m.uci && _hashes[m.seq - 1] == m.positionHash
           ? const Duplicate()

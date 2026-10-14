@@ -183,6 +183,16 @@ void main() {
       await guest.close();
     });
 
+    test('senza mosse non c\'è niente da reclamare', () async {
+      final now = _Now();
+      final (host, guest) = await _pair(now, moveDays: 1);
+      now.advance(const Duration(days: 5));
+      expect(host.canClaimTimeout, isFalse);
+      expect(await host.claimTimeout(), isFalse);
+      await host.close();
+      await guest.close();
+    });
+
     test('un reclamo prima del tempo non si può fare', () async {
       final now = _Now();
       final (host, guest) = await _pair(now, moveDays: 3);
@@ -211,6 +221,12 @@ void main() {
       expect(await host.claimTimeout(), isTrue);
       await settleLoopback();
       expect(guest.status, MultiplayerStatus.myTurn);
+      // Il reclamo è provvisorio: la mossa dell'invitato riapre la partita
+      // anche per chi aveva reclamato.
+      expect(host.status, MultiplayerStatus.finished);
+      await _play(guest, 'e7e5');
+      expect(host.status, MultiplayerStatus.myTurn);
+      expect(host.endedOnTime, isFalse);
       await host.close();
       await guest.close();
     });

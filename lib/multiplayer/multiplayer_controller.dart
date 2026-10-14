@@ -431,8 +431,12 @@ class MultiplayerController extends ChangeNotifier {
   void _startDeadlineWatch() {
     _deadlineTimer ??= Timer.periodic(const Duration(minutes: 1), (_) {
       if (_disposed) return;
-      final claimable = canClaimTimeout;
-      if (claimable != _wasClaimable) _changed();
+      if (_sync.isGameOver) {
+        _deadlineTimer?.cancel();
+        _deadlineTimer = null;
+        return;
+      }
+      if (canClaimTimeout != _wasClaimable) _changed();
     });
   }
 
