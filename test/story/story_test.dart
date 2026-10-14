@@ -7,6 +7,7 @@ import 'package:scacchi/engine/bots.dart';
 import 'package:scacchi/l10n/app_localizations.dart';
 import 'package:scacchi/path/curriculum.dart';
 import 'package:scacchi/path/path_progress.dart';
+import 'package:scacchi/puzzles/themes.dart';
 import 'package:scacchi/story/story.dart';
 import 'package:scacchi/story/story_l10n.dart';
 
@@ -72,6 +73,14 @@ void main() {
       }
       for (final c in storyChapters) {
         expect(counts[c.puzzleTheme] ?? 0, greaterThan(c.puzzleCount * 5));
+        expect(counts[c.forkTheme] ?? 0, greaterThan(c.puzzleCount * 5));
+      }
+    });
+
+    test('il bivio offre un tema diverso e conosciuto in ogni capitolo', () {
+      for (final c in storyChapters) {
+        expect(c.forkTheme, isNot(c.puzzleTheme), reason: c.id);
+        expect(puzzleThemeIds, contains(c.forkTheme), reason: c.id);
       }
     });
   });
@@ -278,6 +287,35 @@ void main() {
         state = state.withPuzzleSolved(first.id, first.puzzleCount);
       }
       expect(state.puzzlesSolved(first.id), first.puzzleCount);
+    });
+  });
+
+  group('RG-13 bivio', () {
+    test('senza scelta si usa il tema del capitolo', () {
+      expect(const StoryState().themeFor(first), first.puzzleTheme);
+    });
+
+    test('la scelta del bivio vale per il capitolo e sopravvive a JSON', () {
+      final state = const StoryState().withFork(first, first.forkTheme);
+      expect(state.themeFor(first), first.forkTheme);
+      expect(state.themeFor(storyChapters[1]), storyChapters[1].puzzleTheme);
+      final back = StoryState.fromJson(
+        jsonDecode(jsonEncode(state.toJson())) as Map<String, Object?>,
+      );
+      expect(back.themeFor(first), first.forkTheme);
+    });
+
+    test('un tema che non è del capitolo non si può scegliere', () {
+      final state = const StoryState().withFork(first, 'zugzwang');
+      expect(state.themeFor(first), first.puzzleTheme);
+    });
+
+    test('alla lettura si ignorano capitoli e temi sconosciuti', () {
+      final junk = StoryState.fromJson({
+        'fork': {'nessuno': 'fork', first.id: 'zugzwang'},
+      });
+      expect(junk.themeFor(first), first.puzzleTheme);
+      expect(junk.fork, isEmpty);
     });
   });
 

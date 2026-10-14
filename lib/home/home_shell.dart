@@ -425,9 +425,11 @@ class _HomeShellState extends State<HomeShell> {
       return null;
     }
     if (!context.mounted) return 0;
+    final theme = (await _storyController()).state.themeFor(chapter);
+    if (!context.mounted) return 0;
     final feed = StoryPuzzleFeed(
       trainer,
-      theme: chapter.puzzleTheme,
+      theme: theme,
       goal: remaining,
       maxRating: chapter.puzzleRating,
       onOutcome: (solved) => _guardianSnack(context, chapter, solved),
@@ -437,7 +439,7 @@ class _HomeShellState extends State<HomeShell> {
       MaterialPageRoute<void>(
         builder: (_) => PuzzlePage(
           trainer: trainer,
-          theme: chapter.puzzleTheme,
+          theme: theme,
           feed: feed,
           title: storyL10n(context).chapterTitle(chapter),
           onActivity: _record,
