@@ -9,6 +9,7 @@ import '../path/stage_page.dart';
 import '../progress/avatar.dart';
 import '../progress/guardian_avatar.dart';
 import '../puzzles/themes.dart';
+import '../settings/settings.dart';
 import '../theme/rokko_theme.dart';
 import '../theme/sheets.dart';
 import 'guardian_says.dart';
@@ -397,6 +398,7 @@ class _Summary extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = storyL10n(context);
+    final kid = AppSettings.of(context).kidMode;
     final done = progress.completedChapters;
     return Card(
       key: const ValueKey('story-summary'),
@@ -407,17 +409,24 @@ class _Summary extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              l10n.storyProgress(done, storyChapters.length),
+              // Il profilo bambino non conta i capitoli: resta la barra.
+              kid
+                  ? l10n.storyKidProgress
+                  : l10n.storyProgress(done, storyChapters.length),
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 12),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(
-                RokkoTokens.of(context).radiusSmall,
-              ),
-              child: LinearProgressIndicator(
-                value: done / storyChapters.length,
-                minHeight: 10,
+            // La barra legge la percentuale: ai bambini non si dice.
+            ExcludeSemantics(
+              excluding: kid,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(
+                  RokkoTokens.of(context).radiusSmall,
+                ),
+                child: LinearProgressIndicator(
+                  value: done / storyChapters.length,
+                  minHeight: 10,
+                ),
               ),
             ),
           ],
@@ -495,6 +504,7 @@ class _ChapterCard extends StatelessWidget {
     final done = progress.isChapterDone(chapter);
     final title = l10n.chapterTitle(chapter);
     final steps = progress.steps(chapter);
+    final kid = AppSettings.of(context).kidMode;
     final stepsDone = steps.where((s) => s.done).length;
     final cardShape = RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(tokens.radiusLarge),
@@ -579,7 +589,7 @@ class _ChapterCard extends StatelessWidget {
                                           ?.copyWith(color: scheme.primary),
                                     ),
                                   ),
-                                if (unlocked)
+                                if (unlocked && !kid)
                                   Padding(
                                     padding: const EdgeInsets.only(top: 8),
                                     child: Text(
@@ -788,9 +798,16 @@ class _StepTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = storyL10n(context);
+    final kid = AppSettings.of(context).kidMode;
     final title = switch (step.kind) {
-      StoryStepKind.lessons => l10n.storyStepLessons(step.value, step.total),
-      StoryStepKind.puzzles => l10n.storyStepPuzzles(step.value, step.total),
+      StoryStepKind.lessons =>
+        kid
+            ? l10n.storyKidStepLessons
+            : l10n.storyStepLessons(step.value, step.total),
+      StoryStepKind.puzzles =>
+        kid
+            ? l10n.storyKidStepPuzzles
+            : l10n.storyStepPuzzles(step.value, step.total),
       StoryStepKind.guardian => l10n.storyStepGuardian,
       StoryStepKind.boss => l10n.storyStepBoss(chapter.bot.name),
     };

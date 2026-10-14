@@ -365,5 +365,8 @@
         "type": "String"
       }
     }
-  }
+  },
+  "storyKidProgress": "Jouw reis",
+  "storyKidStepLessons": "Lessen",
+  "storyKidStepPuzzles": "Hoofdstukpuzzels"
 }
