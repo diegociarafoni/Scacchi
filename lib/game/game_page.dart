@@ -949,6 +949,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   EngineScore? _evalScore;
   double? _evalWhiteWin;
   String? _evalFen;
+  String? _evalGameId;
   bool _evalBusy = false;
 
   bool get _showEvalBar =>
@@ -958,7 +959,12 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
       widget.computerAvailable;
 
   void _scheduleEval() {
-    if (!_showEvalBar || _evalBusy || _evalFen == _game.position.fen) return;
+    if (!_showEvalBar) return;
+    if (_evalGameId != _gameId) {
+      _evalGameId = _gameId;
+      _evalFen = _evalScore = _evalWhiteWin = null;
+    }
+    if (_evalBusy || _evalFen == _game.position.fen) return;
     _evalBusy = true;
     unawaited(_refreshEval());
   }
@@ -993,10 +999,15 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     }
     _evalBusy = false;
     if (!mounted) return;
+    // Il risultato di una posizione ormai lasciata non va sulla barra.
+    if (score == null || !identical(position, _game.position)) {
+      if (score != null) setState(_scheduleEval);
+      return;
+    }
     setState(() {
       _evalFen = position.fen;
-      _evalScore = score ?? _evalScore;
-      _evalWhiteWin = win ?? _evalWhiteWin;
+      _evalScore = score;
+      _evalWhiteWin = win;
     });
   }
 
@@ -2781,16 +2792,19 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                   _actionsHeight +
                   (showMaterial ? 2 * _materialHeight : 0);
               final showEval = _showEvalBar;
-              if (showEval && _evalFen != _game.position.fen) {
+              if (showEval && !_evalBusy && _evalFen != _game.position.fen) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   if (mounted) _scheduleEval();
                 });
               }
               final barSpace = showEval ? evalBarWidth + 8 : 0.0;
               final boardSize = landscape
-                  ? math.min(
-                      constraints.maxHeight,
-                      constraints.maxWidth * 0.6 - barSpace,
+                  ? math.max(
+                      0.0,
+                      math.min(
+                        constraints.maxHeight,
+                        constraints.maxWidth * 0.6 - barSpace,
+                      ),
                     )
                   : math.max(
                       0.0,
