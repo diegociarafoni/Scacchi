@@ -55,7 +55,6 @@ Rokko è open source e gratuito. Questi vincoli valgono per ogni voce.
 
 | ID | Funzione | Stato | Pri | Dim | Versione | Evidenza |
 |---|---|---|---|---|---|---|
-| A-14 / RF-68 | **Precisione per fase** nelle statistiche, con la media nel tempo | parziale | P1 | piccola | 0.13.0 | `GameReview.accuracyByPhase` c'è; `lib/stats/` non ha riferimenti alle fasi |
 
 ### A.3 Piattaforma, rilascio, qualità
 
@@ -202,7 +201,7 @@ Testo di ogni requisito, formulato come funzione di Rokko. La colonna Stato dice
 | RF-65 | "Riprova" su ogni errore: l'utente cerca la mossa migliore dalla posizione critica. | fatta |
 | RF-66 | Cache dei risultati per partita nel database locale, così la revisione si apre all'istante le volte successive. | fatta |
 | RF-67 (P1) | Tempo per mossa: nelle partite con orologio il tempo residuo è registrato a ogni mossa (`[%clk]` nel PGN, conservato in import ed export); la revisione mostra il grafico del tempo speso per mossa e segnala gli errori commessi giocando molto più in fretta della propria media. | fatta |
-| RF-68 (P1) | Precisione per fase: la revisione mostra la precisione separata per apertura, mediogioco e finale, con la stessa regola di fase dei puzzle personali; le statistiche (RF-111) ne mostrano la media nel tempo. | vedi A-14 |
+| RF-68 (P1) | Precisione per fase: la revisione mostra la precisione separata per apertura, mediogioco e finale, con la stessa regola di fase dei puzzle personali; le statistiche (RF-111) ne mostrano la media nel tempo. | fatta |
 
 #### 3.7 Coach e spiegazioni (P2)
 
