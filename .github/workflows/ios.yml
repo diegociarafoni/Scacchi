@@ -1,0 +1,44 @@
+name: iOS
+
+# Compila l'app per iOS senza firma, per accorgersi subito se un cambiamento
+# rompe la build (plugin, motore nativo). Non produce un IPA installabile: la
+# firma e la pubblicazione sugli store non sono ancora configurate per iOS
+# (vedi docs/store.md).
+# I minuti dei runner macOS sono gratuiti sui repository pubblici.
+on:
+  push:
+    branches: [main]
+    paths-ignore: ['docs/**', '**/*.md', 'LICENSE']
+  pull_request:
+    paths:
+      - '.github/workflows/ios.yml'
+      - 'ios/**'
+      - 'pubspec.*'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    runs-on: macos-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with:
+          channel: stable
+          flutter-version: 3.47.7
+          cache: true
+      - run: dart tool/l10n.dart --solo-unione
+      - run: flutter pub get
+      - name: Build iOS senza firma
+        run: flutter build ios --release --no-codesign
+      - name: Dimensione dell'app
+        run: du -sh build/ios/iphoneos/Runner.app | tee -a "$GITHUB_STEP_SUMMARY"
