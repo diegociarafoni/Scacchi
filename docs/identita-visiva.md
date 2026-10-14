@@ -34,6 +34,10 @@ Varianti generate:
 - **Android**: icona adattiva con primo piano e sfondo separati, versione monocromatica per le icone a tema di Android 13 e successivi, icona classica per le versioni precedenti.
 - **iOS**: icona chiara, scura (sfondo trasparente, lo aggiunge il sistema) e colorata dal sistema, come previsto da iOS 18.
 
+## Torre-mascotte
+
+`RokkoMascot` (`lib/theme/rokko_mascot.dart`) ridisegna la torre dell'icona con un `CustomPainter`, sulle stesse coordinate di `tool/generate_icons.py`: arancione con occhi e sorriso marroni, uguale nei temi chiaro e scuro. È solo decorativa e non ha testo per i lettori di schermo. `EmptyState` la mette sopra una frase breve negli stati vuoti: oggi nell'archivio senza partite e nell'albero delle aperture personali senza partite. La torre a fine partita resta da fare, perché tocca la schermata di gioco.
+
 ## Schermata di avvio
 
 Torre al centro su sfondo arancione col tema chiaro, torre arancione su sfondo scuro col tema scuro. Su Android 12 e successivi usa la schermata di sistema con la stessa immagine, senza cerchio di sfondo. La schermata segue il tema del telefono, perché compare prima che l'app legga le impostazioni: chi sceglie nell'app un tema diverso da quello del telefono vede per un istante l'altra versione.
