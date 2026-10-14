@@ -240,6 +240,30 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
+  testWidgets('RG-03 le stelle stanno al centro della casa e si raccolgono', (
+    tester,
+  ) async {
+    phone(tester);
+    final stage = curriculum.first.stages.first;
+    await tester.pumpWidget(localizedApp(home: StagePage(stage: stage)));
+    await tester.pumpAndSettle();
+    await _start(tester);
+    for (final name in ['d2', 'e3', 'f4']) {
+      expect(
+        tester.getCenter(find.byKey(ValueKey('star-$name'))),
+        _square(tester, name),
+      );
+    }
+    for (final (from, to) in [('d1', 'd2'), ('d2', 'e3'), ('e3', 'f4')]) {
+      await _tapMove(tester, from, to);
+    }
+    expect(find.byKey(const ValueKey('star-f4')), findsNothing);
+    expect(
+      tester.widget<FilledButton>(find.byType(FilledButton)).onPressed,
+      isNotNull,
+    );
+  });
+
   testWidgets('il guardiano senza motore mostra un avviso', (tester) async {
     phone(tester);
     var p = controller.progress;

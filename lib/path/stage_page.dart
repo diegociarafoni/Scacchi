@@ -111,12 +111,9 @@ class _StagePageState extends State<StagePage> {
     }
   }
 
-  Map<Square, Annotation> get _annotations => switch (_run) {
-    final StarsRun run => {
-      for (final s in run.remaining)
-        s: const Annotation(symbol: '★', color: Color(0xFFF2B01E)),
-    },
-    LineRun() => const {},
+  List<Square> get _remainingStars => switch (_run) {
+    final StarsRun run => run.remaining,
+    LineRun() => const [],
   };
 
   void _onMove(Move move, {bool? viaDragAndDrop}) {
@@ -226,14 +223,45 @@ class _StagePageState extends State<StagePage> {
                       constraints.maxHeight - _portraitReserve,
                     ),
             );
-            final board = Chessboard(
-              size: size,
-              controller: _board,
-              orientation: Side.white,
-              onMove: _onMove,
-              annotations: _annotations,
-              settings: AppSettings.of(context).exerciseBoard
-                  .copyWith(autoQueenPromotion: true),
+            final cell = size / 8;
+            // Le stelle stanno al centro della casa: i segnalini d'angolo di
+            // chessground sembravano indicare la casa accanto.
+            final board = SizedBox.square(
+              dimension: size,
+              child: Stack(
+                children: [
+                  Chessboard(
+                    size: size,
+                    controller: _board,
+                    orientation: Side.white,
+                    onMove: _onMove,
+                    settings: AppSettings.of(context).exerciseBoard
+                        .copyWith(autoQueenPromotion: true),
+                  ),
+                  for (final s in _remainingStars)
+                    Positioned(
+                      key: ValueKey('star-${s.name}'),
+                      left: s.file.value * cell,
+                      top: (7 - s.rank.value) * cell,
+                      width: cell,
+                      height: cell,
+                      child: IgnorePointer(
+                        child: Center(
+                          child: Text(
+                            '★',
+                            style: TextStyle(
+                              fontSize: cell * 0.7,
+                              color: const Color(0xFFF2B01E),
+                              shadows: const [
+                                Shadow(blurRadius: 3, color: Color(0xCC000000)),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
             );
             final panel = SingleChildScrollView(
               padding: const EdgeInsets.all(16),
