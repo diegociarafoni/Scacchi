@@ -1,6 +1,6 @@
 # Rilascio Android (APK)
 
-Il workflow `.github/workflows/apk-release.yml` compila un APK release per telefoni a 64 bit (arm64, cioè tutti i telefoni Android degli ultimi anni) e lo pubblica come allegato di una GitHub Release, scaricabile direttamente dal telefono. L'app installata si chiama **Rokko**; il file è `rokko.apk`. L'identificativo del pacchetto (`io.github.diegociarafoni.scacchi`) non cambia, altrimenti l'aggiornamento sopra le versioni già installate non sarebbe possibile.
+Il workflow `.github/workflows/apk-release.yml` compila un APK release per telefoni a 64 bit (arm64, cioè tutti i telefoni Android degli ultimi anni) e lo pubblica come allegato di una GitHub Release, scaricabile direttamente dal telefono. L'app installata si chiama **Rokko**; il file è `rokko.apk`. L'identificativo del pacchetto (`io.github.diegociarafoni.rokko`) non cambia, altrimenti l'aggiornamento sopra le versioni già installate non sarebbe possibile.
 
 ## Versioni pubblicate
 

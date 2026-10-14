@@ -1,7 +1,7 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/game/chess_game.dart';
-import 'package:scacchi/game/variant.dart';
+import 'package:rokko/game/chess_game.dart';
+import 'package:rokko/game/variant.dart';
 
 void main() {
   group('RF-120 Chess960', () {

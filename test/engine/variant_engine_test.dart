@@ -2,10 +2,10 @@ import 'dart:math' as math;
 
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/engine/levels.dart';
-import 'package:scacchi/engine/variant_engine.dart';
-import 'package:scacchi/game/chess_game.dart';
-import 'package:scacchi/game/variant.dart';
+import 'package:rokko/engine/levels.dart';
+import 'package:rokko/engine/variant_engine.dart';
+import 'package:rokko/game/chess_game.dart';
+import 'package:rokko/game/variant.dart';
 
 Position fromFen(Rule rule, String fen) =>
     Position.setupPosition(rule, Setup.parseFen(fen));

@@ -3,9 +3,9 @@ import 'dart:io';
 
 import 'package:dartchess/dartchess.dart' hide File;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/archive/game_archive.dart';
-import 'package:scacchi/archive/saved_game.dart';
-import 'package:scacchi/game/chess_game.dart';
+import 'package:rokko/archive/game_archive.dart';
+import 'package:rokko/archive/saved_game.dart';
+import 'package:rokko/game/chess_game.dart';
 
 ChessGame play(List<String> uci) {
   final game = ChessGame();

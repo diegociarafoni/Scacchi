@@ -1,7 +1,7 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/progress/activity.dart';
-import 'package:scacchi/tournament/tournament.dart';
+import 'package:rokko/progress/activity.dart';
+import 'package:rokko/tournament/tournament.dart';
 
 const bots = [
   Player(name: 'Principiante', elo: 600, levelId: 1),

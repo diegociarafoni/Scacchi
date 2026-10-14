@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/progress/activity.dart';
-import 'package:scacchi/tournament/tournament.dart';
-import 'package:scacchi/tournament/tournament_controller.dart';
+import 'package:rokko/progress/activity.dart';
+import 'package:rokko/tournament/tournament.dart';
+import 'package:rokko/tournament/tournament_controller.dart';
 
 import 'tournament_test.dart' show bots;
 

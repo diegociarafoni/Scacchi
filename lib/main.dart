@@ -28,20 +28,20 @@ Future<void> main() async {
     debugPrint('Backup restore failed: $e');
   }
   unawaited(clearShareTemp());
-  runApp(const ScacchiApp());
+  runApp(const RokkoApp());
 }
 
-class ScacchiApp extends StatefulWidget {
-  const ScacchiApp({super.key, @visibleForTesting this.contentLoader});
+class RokkoApp extends StatefulWidget {
+  const RokkoApp({super.key, @visibleForTesting this.contentLoader});
 
   /// Carica i contenuti nella lingua data; di norma [Content.ensureLoaded].
   final Future<void> Function(String languageCode)? contentLoader;
 
   @override
-  State<ScacchiApp> createState() => _ScacchiAppState();
+  State<RokkoApp> createState() => _RokkoAppState();
 }
 
-class _ScacchiAppState extends State<ScacchiApp> with WidgetsBindingObserver {
+class _RokkoAppState extends State<RokkoApp> with WidgetsBindingObserver {
   SettingsController? _settings;
 
   @override

@@ -1,9 +1,9 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/widgets.dart' show Locale;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/archive/saved_game.dart';
-import 'package:scacchi/game/chess_game.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
+import 'package:rokko/archive/saved_game.dart';
+import 'package:rokko/game/chess_game.dart';
+import 'package:rokko/l10n/app_localizations.dart';
 
 void main() {
   final t = DateTime(2026, 10, 10, 9);

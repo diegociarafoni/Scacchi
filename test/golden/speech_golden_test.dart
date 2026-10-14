@@ -7,12 +7,12 @@ import 'dart:math' as math;
 import 'package:chessground/chessground.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/engine/computer_player.dart';
-import 'package:scacchi/game/game_page.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/settings/settings.dart';
-import 'package:scacchi/storage/key_value_store.dart';
-import 'package:scacchi/theme/rokko_theme.dart';
+import 'package:rokko/engine/computer_player.dart';
+import 'package:rokko/game/game_page.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/settings/settings.dart';
+import 'package:rokko/storage/key_value_store.dart';
+import 'package:rokko/theme/rokko_theme.dart';
 
 import '../computer_fakes.dart';
 import '../game_actions.dart';

@@ -5,9 +5,9 @@ import 'dart:math';
 import 'package:dartchess/dartchess.dart' hide File;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/tournament/tournament.dart';
-import 'package:scacchi/tournament/tournament_controller.dart';
-import 'package:scacchi/tournament/tournament_page.dart';
+import 'package:rokko/tournament/tournament.dart';
+import 'package:rokko/tournament/tournament_controller.dart';
+import 'package:rokko/tournament/tournament_page.dart';
 
 import '../localized_app.dart';
 import 'tournament_test.dart' show bots;

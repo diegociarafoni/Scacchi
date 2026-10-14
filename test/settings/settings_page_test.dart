@@ -2,15 +2,15 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/main.dart';
-import 'package:scacchi/progress/progress_controller.dart';
-import 'package:scacchi/progress/progress_state.dart';
-import 'package:scacchi/progress/progress_store.dart';
-import 'package:scacchi/settings/app_language.dart';
-import 'package:scacchi/settings/notation.dart';
-import 'package:scacchi/settings/settings.dart';
-import 'package:scacchi/settings/settings_page.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/main.dart';
+import 'package:rokko/progress/progress_controller.dart';
+import 'package:rokko/progress/progress_state.dart';
+import 'package:rokko/progress/progress_store.dart';
+import 'package:rokko/settings/app_language.dart';
+import 'package:rokko/settings/notation.dart';
+import 'package:rokko/settings/settings.dart';
+import 'package:rokko/settings/settings_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'settings_nav.dart';
@@ -206,7 +206,7 @@ void main() {
     tester.view.physicalSize = const Size(1170, 2532);
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
-    await tester.pumpWidget(const ScacchiApp());
+    await tester.pumpWidget(const RokkoApp());
     await tester.pumpAndSettle();
     ThemeMode? mode() =>
         tester.widget<MaterialApp>(find.byType(MaterialApp)).themeMode;

@@ -3,9 +3,9 @@ import 'dart:typed_data';
 
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/multiplayer/nostr_event.dart';
-import 'package:scacchi/multiplayer/nostr_transport.dart';
-import 'package:scacchi/multiplayer/transport.dart';
+import 'package:rokko/multiplayer/nostr_event.dart';
+import 'package:rokko/multiplayer/nostr_transport.dart';
+import 'package:rokko/multiplayer/transport.dart';
 
 import 'fake_relay.dart';
 

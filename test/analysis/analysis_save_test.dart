@@ -2,9 +2,9 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/analysis/analysis_page.dart';
-import 'package:scacchi/analysis/variation_tree.dart';
-import 'package:scacchi/archive/saved_game.dart';
+import 'package:rokko/analysis/analysis_page.dart';
+import 'package:rokko/analysis/variation_tree.dart';
+import 'package:rokko/archive/saved_game.dart';
 
 import '../localized_app.dart';
 import 'analysis_page_test.dart' show FakeLive;

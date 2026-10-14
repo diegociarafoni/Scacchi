@@ -141,7 +141,7 @@ jobs:
           KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
           # Come in ci.yml: senza filtro i plugin compilano e impacchettano le librerie
           # native anche per armeabi-v7a e x86_64, inutili in un APK arm64 (circa 15 MB).
-          SCACCHI_NATIVE_ABIS: arm64-v8a
+          ROKKO_NATIVE_ABIS: arm64-v8a
         run: |
           keystore="$RUNNER_TEMP/release.p12"
           trap 'rm -f "$keystore"' EXIT

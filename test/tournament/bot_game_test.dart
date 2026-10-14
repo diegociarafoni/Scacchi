@@ -1,7 +1,7 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/engine/levels.dart';
-import 'package:scacchi/tournament/bot_game.dart';
+import 'package:rokko/engine/levels.dart';
+import 'package:rokko/tournament/bot_game.dart';
 
 /// Gioca le mosse indicate in UCI, poi la prima mossa legale.
 BotMover scripted(List<String> script, {List<EngineLevel>? seen}) {

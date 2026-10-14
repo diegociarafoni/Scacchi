@@ -1,8 +1,8 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/l10n/content.dart';
-import 'package:scacchi/masters/master_game.dart';
-import 'package:scacchi/masters/master_games.dart';
+import 'package:rokko/l10n/content.dart';
+import 'package:rokko/masters/master_game.dart';
+import 'package:rokko/masters/master_games.dart';
 
 void main() {
   test('RF-87 la raccolta ha partite con identificativi unici', () {

@@ -2,8 +2,8 @@ import 'dart:ui';
 
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/game/move_speech.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
+import 'package:rokko/game/move_speech.dart';
+import 'package:rokko/l10n/app_localizations.dart';
 
 void main() {
   test('descrive le mosse in italiano per i lettori di schermo', () {

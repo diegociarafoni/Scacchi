@@ -2,10 +2,10 @@ import 'dart:math';
 
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/tablebase/tablebase.dart';
-import 'package:scacchi/tablebase/tb_material.dart';
-import 'package:scacchi/tablebase/tb_set.dart';
-import 'package:scacchi/tablebase/tb_table.dart';
+import 'package:rokko/tablebase/tablebase.dart';
+import 'package:rokko/tablebase/tb_material.dart';
+import 'package:rokko/tablebase/tb_set.dart';
+import 'package:rokko/tablebase/tb_table.dart';
 
 Position _pos(String fen) => Chess.fromSetup(Setup.parseFen(fen));
 

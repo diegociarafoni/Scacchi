@@ -1,10 +1,10 @@
 import 'dart:ui' show Locale;
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/multiplayer/remote_turn_check.dart';
-import 'package:scacchi/multiplayer/remote_watch.dart';
-import 'package:scacchi/multiplayer/remote_watch_task.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/multiplayer/remote_turn_check.dart';
+import 'package:rokko/multiplayer/remote_watch.dart';
+import 'package:rokko/multiplayer/remote_watch_task.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {

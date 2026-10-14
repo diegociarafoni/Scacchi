@@ -1,6 +1,6 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/analysis/variation_tree.dart';
+import 'package:rokko/analysis/variation_tree.dart';
 
 Move m(String uci) => Move.parse(uci)!;
 

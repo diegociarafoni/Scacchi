@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/backup/backup.dart';
+import 'package:rokko/backup/backup.dart';
 
 void main() {
   late Directory dir;
@@ -108,6 +108,20 @@ void main() {
       await backup.stage(dir);
       await Backup.applyPending(dir, (_) async {});
       expect(File('${dir.path}/avatar_photo.jpg').existsSync(), isFalse);
+    });
+
+    test('il backup si chiama rokko e legge anche il vecchio nome', () async {
+      final backup = await Backup.collect(dir, {});
+      expect(jsonDecode(backup.encode())['app'], 'rokko');
+      for (final app in ['rokko', 'scacchi']) {
+        final json = jsonEncode({
+          'app': app,
+          'version': 1,
+          'files': <String, Object?>{},
+          'preferences': <String, Object?>{},
+        });
+        expect(() => Backup.decode(json), returnsNormally);
+      }
     });
 
     test('rifiuta un binario fuori elenco o non base64', () {

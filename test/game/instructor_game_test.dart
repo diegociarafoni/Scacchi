@@ -2,14 +2,14 @@ import 'package:chessground/chessground.dart';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/engine/computer_player.dart';
-import 'package:scacchi/game/challenge.dart';
-import 'package:scacchi/game/game_page.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/openings/explorer_page.dart';
-import 'package:scacchi/openings/opening_book.dart';
-import 'package:scacchi/openings/opening_stats.dart';
-import 'package:scacchi/settings/settings.dart';
+import 'package:rokko/engine/computer_player.dart';
+import 'package:rokko/game/challenge.dart';
+import 'package:rokko/game/game_page.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/openings/explorer_page.dart';
+import 'package:rokko/openings/opening_book.dart';
+import 'package:rokko/openings/opening_stats.dart';
+import 'package:rokko/settings/settings.dart';
 
 import '../computer_fakes.dart';
 

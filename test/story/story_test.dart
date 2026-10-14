@@ -3,13 +3,13 @@ import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/engine/bots.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/path/curriculum.dart';
-import 'package:scacchi/path/path_progress.dart';
-import 'package:scacchi/puzzles/themes.dart';
-import 'package:scacchi/story/story.dart';
-import 'package:scacchi/story/story_l10n.dart';
+import 'package:rokko/engine/bots.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/path/curriculum.dart';
+import 'package:rokko/path/path_progress.dart';
+import 'package:rokko/puzzles/themes.dart';
+import 'package:rokko/story/story.dart';
+import 'package:rokko/story/story_l10n.dart';
 
 PathProgress _doneChapter(String pathChapterId, [PathProgress? from]) {
   var p = from ?? const PathProgress();

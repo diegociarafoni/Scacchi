@@ -1,8 +1,8 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/archive/saved_game.dart';
-import 'package:scacchi/openings/opening_book.dart';
-import 'package:scacchi/openings/personal_tree.dart';
+import 'package:rokko/archive/saved_game.dart';
+import 'package:rokko/openings/opening_book.dart';
+import 'package:rokko/openings/personal_tree.dart';
 
 final _t = DateTime(2026, 10, 10);
 

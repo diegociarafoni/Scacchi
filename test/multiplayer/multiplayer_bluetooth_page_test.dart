@@ -3,12 +3,12 @@ import 'dart:typed_data';
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/exchange/qr_code_view.dart';
-import 'package:scacchi/multiplayer/ble_link.dart';
-import 'package:scacchi/multiplayer/channel_registry.dart';
-import 'package:scacchi/multiplayer/game_invite.dart';
-import 'package:scacchi/multiplayer/multiplayer_page.dart';
-import 'package:scacchi/multiplayer/transport.dart';
+import 'package:rokko/exchange/qr_code_view.dart';
+import 'package:rokko/multiplayer/ble_link.dart';
+import 'package:rokko/multiplayer/channel_registry.dart';
+import 'package:rokko/multiplayer/game_invite.dart';
+import 'package:rokko/multiplayer/multiplayer_page.dart';
+import 'package:rokko/multiplayer/transport.dart';
 
 import '../localized_app.dart';
 import '../support/wait.dart';
