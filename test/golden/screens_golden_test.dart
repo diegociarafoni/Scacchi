@@ -9,6 +9,7 @@ import 'package:rokko/archive/game_archive.dart';
 import 'package:rokko/home/home_shell.dart';
 import 'package:rokko/l10n/app_localizations.dart';
 import 'package:rokko/path/path_controller.dart';
+import 'package:rokko/path/path_page.dart';
 import 'package:rokko/progress/progress_controller.dart';
 import 'package:rokko/progress/progress_store.dart';
 import 'package:rokko/settings/settings.dart';
@@ -191,5 +192,42 @@ void main() {
     }
     expect(passage, findsOneWidget);
     await _golden(tester, 'storia-passaggio-scuro-telefono-medio');
+  });
+
+  testWidgets('Percorso', skip: _skip != null, (tester) async {
+    await _pump(tester, Device.phoneMedium, PathPage(controller: path));
+    await _golden(tester, 'percorso-telefono-medio');
+  });
+
+  testWidgets('Percorso in tema scuro', skip: _skip != null, (tester) async {
+    await _pump(
+      tester,
+      Device.phoneMedium,
+      PathPage(controller: path),
+      brightness: Brightness.dark,
+    );
+    await _golden(tester, 'percorso-scuro-telefono-medio');
+  });
+
+  testWidgets('Percorso col testo al 130%', skip: _skip != null, (
+    tester,
+  ) async {
+    await _pump(
+      tester,
+      Device.phoneSmall,
+      PathPage(controller: path),
+      textScale: 1.3,
+    );
+    await _golden(tester, 'percorso-testo-130-telefono-piccolo');
+  });
+
+  testWidgets('Percorso, profilo bambino', skip: _skip != null, (tester) async {
+    await _pump(
+      tester,
+      Device.phoneMedium,
+      PathPage(controller: path),
+      kid: true,
+    );
+    await _golden(tester, 'percorso-bambino-telefono-medio');
   });
 }
