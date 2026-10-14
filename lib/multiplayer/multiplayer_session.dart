@@ -171,6 +171,14 @@ class MultiplayerSession {
     await _sendSealed(data);
   }
 
+  /// Reclama la vittoria per il tempo per mossa scaduto dell'avversario; se
+  /// nessun canale è disponibile il messaggio riparte con [resendLast].
+  Future<void> claimPeer() async {
+    final message = sync.claimPeer();
+    final data = _flagSealed = await _codec.seal(message, identity);
+    await _sendSealed(data);
+  }
+
   Future<Uint8List> _seal(MoveMessage move) async =>
       _sealed[move.seq] = await _codec.seal(move, identity);
 

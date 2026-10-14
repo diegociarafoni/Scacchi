@@ -2,11 +2,32 @@
   "multiplayerClockTitle": "Time control",
   "multiplayerClockNone": "No clock",
   "multiplayerClockHint": "Whoever creates the game decides: the other phone receives it with the invite.",
-  "multiplayerClockRemoteHint": "There is no clock from afar: choose Wi-Fi or Bluetooth to use one.",
+  "multiplayerClockRemoteHint": "Pick a live clock, for players with the app open, or a time per move in days.",
   "multiplayerClockYou": "You",
   "multiplayerClockPeer": "Opponent",
   "multiplayerClockSemantics": "{who}'s clock: {minutes, plural, one{{minutes} minute} other{{minutes} minutes}} and {seconds, plural, one{{seconds} second} other{{seconds} seconds}}",
   "multiplayerWhiteWinsOnTime": "Time out: White wins",
   "multiplayerBlackWinsOnTime": "Time out: Black wins",
-  "multiplayerDrawOnTime": "Time out, but no mating material: draw"
+  "multiplayerDrawOnTime": "Time out, but no mating material: draw",
+  "multiplayerMoveDaysTitle": "Time per move",
+  "multiplayerMoveDaysNone": "No limit",
+  "multiplayerMoveDaysOption": "{days, plural, one{{days} day} other{{days} days}}",
+  "@multiplayerMoveDaysOption": {
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "multiplayerMoveDaysHint": "For slow games: whoever does not move in time may lose. It cannot be combined with the live clock.",
+  "multiplayerMoveDeadline": "Move by {when}",
+  "@multiplayerMoveDeadline": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "multiplayerClaimTimeout": "Claim the win",
+  "multiplayerClaimHint": "Your opponent did not move in time."
 }

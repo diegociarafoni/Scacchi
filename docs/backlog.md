@@ -75,7 +75,7 @@ Rokko è open source e gratuito. Questi vincoli valgono per ogni voce.
 | ID | Funzione | Stato | Pri | Dim | Versione | Evidenza |
 |---|---|---|---|---|---|---|
 | A-25 / RG-09 | **Tornei con partite vere** tra i bot e gironi da 4 a 8 giocatori | fatta | P2 | grande | 0.15.0 | le partite tra bot le gioca il motore (`lib/tournament/bot_game.dart`), con ripiego sulla formula Elo dove manca (`docs/tornei.md`) |
-| A-26 / RMP | **Orologio nelle partite a distanza** e prova su telefoni veri con un `integration_test` | parziale | P1 | media | 0.15.0 | `docs/multigiocatore.md` (limiti noti) |
+| A-26 / RMP | **Orologio nelle partite a distanza**: chi crea sceglie tra lampo con orologio dal vivo e partita lenta con 1, 3 o 7 giorni per mossa, con reclamo della vittoria a scadenza. Resta manuale la prova su telefoni veri con un `integration_test` | fatta (orologio); prova su telefoni veri manuale | P1 | media | 0.15.0 | `docs/multigiocatore.md` (Orologio) |
 | A-27 | **Percorso «dai miei errori»**: capitoli personali generati dai temi tattici sbagliati più spesso | da fare | P2 | media | 0.15.0 | esistono i puzzle personali (`lib/review/personal_puzzles.dart`) e la coda di ripasso, non agganciati al percorso |
 
 ### A.5 Da valutare dopo
@@ -333,7 +333,7 @@ Principi: motivare senza punire, funzionare offline, nessun elemento acquistabil
 
 | ID | Specifica | Stato |
 |---|---|---|
-| RMP-01 – RMP-07 | Partita tra due telefoni, modulo opzionale (invito, firma e cifratura, registro delle mosse, canali Wi-Fi, Bluetooth e relay); dettaglio in `docs/multigiocatore.md` | fatta; restano le prove su telefoni veri e l'orologio (A-26) |
+| RMP-01 – RMP-07 | Partita tra due telefoni, modulo opzionale (invito, firma e cifratura, registro delle mosse, canali Wi-Fi, Bluetooth e relay); dettaglio in `docs/multigiocatore.md` | fatta, orologio a distanza compreso (A-26); restano le prove su telefoni veri |
 | Cap. 7 | Allenamento dagli errori, scacchiera fisica, scambio di partite con il QR, ritratto del giocatore, sfida a tempo tra amici | fatta |
 | Cap. 7 | Percorso «dai miei errori», bot «ombra», lettura della posizione con la fotocamera | vedi A-27, A-28, A-29 |
 

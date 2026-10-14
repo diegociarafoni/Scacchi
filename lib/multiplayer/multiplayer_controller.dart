@@ -60,6 +60,13 @@ MessageTransport openLanGuest(String host, int port) =>
 /// copre il ritardo con cui il suo telefono si accorge della scadenza.
 const peerFlagGrace = Duration(seconds: 15);
 
+/// Lo stesso margine a distanza, dove i relay possono ritardare le mosse.
+const remotePeerFlagGrace = Duration(seconds: 60);
+
+/// Scarto accettato tra l'orologio di chi reclama e quello di chi riceve il
+/// reclamo nelle partite lente: la mossa può essere arrivata in ritardo.
+const claimTolerance = Duration(hours: 2);
+
 enum MultiplayerStatus { waitingPeer, connecting, myTurn, peerTurn, finished }
 
 /// Stato della partita a due per l'interfaccia: chi muove, l'ultima mossa,
@@ -75,7 +82,13 @@ class MultiplayerController extends ChangeNotifier {
     int? turnStartedAt,
   }) : _now = now ?? DateTime.now {
     final control = session.invite.timeControl;
-    if (control != null) {
+    if (session.invite.moveDays != null) {
+      _turnStartedAt = turnStartedAt == null
+          ? _now().millisecondsSinceEpoch
+          : _notAfterNow(turnStartedAt).millisecondsSinceEpoch;
+      clock = null;
+      _startDeadlineWatch();
+    } else if (control != null) {
       final started = turnStartedAt == null
           ? null
           : _notAfterNow(turnStartedAt);
@@ -113,6 +126,7 @@ class MultiplayerController extends ChangeNotifier {
     bool bluetooth = false,
     OpenHost openHost = openLanHost,
     bool remote = false,
+    int? moveDays,
     SavedGameStore? store,
     DateTime Function()? now,
     LanDiscovery discovery = const BonsoirLanDiscovery(),
@@ -142,8 +156,10 @@ class MultiplayerController extends ChangeNotifier {
         lanAddress: lan?.lanAddress,
         remote: remote,
         ble: bluetooth,
-        // A distanza le mosse possono arrivare ore dopo: niente orologio.
-        timeControl: remote ? null : timeControl,
+        // A distanza si sceglie tra orologio dal vivo (lampo) e giorni per
+        // mossa (lenta); i giorni escludono l'orologio.
+        timeControl: remote && moveDays != null ? null : timeControl,
+        moveDays: remote ? moveDays : null,
       );
       final session = MultiplayerSession.host(
         invite,
@@ -226,6 +242,7 @@ class MultiplayerController extends ChangeNotifier {
         remote: invite.remote,
         ble: invite.ble,
         timeControl: invite.timeControl,
+        moveDays: invite.moveDays,
       );
       final session = MultiplayerSession.host(
         current,
@@ -370,6 +387,59 @@ class MultiplayerController extends ChangeNotifier {
 
   TimeControl? get timeControl => session.invite.timeControl;
 
+  /// Giorni per mossa di una partita lenta a distanza; `null` negli altri casi.
+  int? get moveDays => session.invite.moveDays;
+
+  /// Fino a quando chi è di turno può muovere in una partita lenta: il tempo
+  /// parte con la prima mossa e riparte a ogni mossa. `null` negli altri casi.
+  DateTime? get moveDeadline {
+    final days = moveDays;
+    if (days == null || _sync.moves.isEmpty || _sync.isGameOver) return null;
+    return DateTime.fromMillisecondsSinceEpoch(
+      _turnStartedAt,
+      isUtc: _now().isUtc,
+    ).add(Duration(days: days));
+  }
+
+  /// L'avversario ha superato il tempo per mossa: si può reclamare la vittoria.
+  bool get canClaimTimeout {
+    final deadline = moveDeadline;
+    return deadline != null &&
+        position.turn != mySide &&
+        !_now().isBefore(deadline);
+  }
+
+  /// Reclama la vittoria per il tempo per mossa scaduto; `false` se non è
+  /// ancora scaduto o non è il turno dell'avversario.
+  Future<bool> claimTimeout() async {
+    if (!canClaimTimeout) return false;
+    final sending = session.claimPeer();
+    _changed();
+    try {
+      await sending;
+    } finally {
+      _changed();
+    }
+    return true;
+  }
+
+  Timer? _deadlineTimer;
+  bool _wasClaimable = false;
+
+  // Ogni minuto si controlla se l'avversario è appena scaduto, per mostrare il
+  // comando di reclamo senza una mossa nuova.
+  void _startDeadlineWatch() {
+    _deadlineTimer ??= Timer.periodic(const Duration(minutes: 1), (_) {
+      if (_disposed) return;
+      if (_sync.isGameOver) {
+        _deadlineTimer?.cancel();
+        _deadlineTimer = null;
+        return;
+      }
+      if (canClaimTimeout != _wasClaimable) _changed();
+    });
+  }
+
   /// La partita è finita perché a qualcuno è scaduto il tempo.
   bool get endedOnTime => _sync.flagged != null;
 
@@ -434,6 +504,15 @@ class MultiplayerController extends ChangeNotifier {
       _turnStartedAt = _now().millisecondsSinceEpoch;
       _peerZeroSince = null;
     }
+    if (result case ClaimRequested()) {
+      // Il reclamo vale solo se per questo telefono il tempo è scaduto, con
+      // lo scarto che la consegna può aver causato.
+      final deadline = moveDeadline;
+      if (deadline != null &&
+          !_now().isBefore(deadline.subtract(claimTolerance))) {
+        _sync.acceptClaim();
+      }
+    }
     _changed();
   }
 
@@ -454,13 +533,16 @@ class MultiplayerController extends ChangeNotifier {
         unawaited(_flagSelf());
       } else {
         final since = _peerZeroSince ??= _now();
-        if (_now().difference(since) >= peerFlagGrace && _sync.flagPeer()) {
+        if (_now().difference(since) >= _peerGrace && _sync.flagPeer()) {
           _changed();
         }
       }
     }
     ticks.value++;
   }
+
+  Duration get _peerGrace =>
+      session.invite.remote ? remotePeerFlagGrace : peerFlagGrace;
 
   Future<void> _flagSelf() async {
     if (_flagging) return;
@@ -485,6 +567,7 @@ class MultiplayerController extends ChangeNotifier {
   void _changed() {
     if (_sync.isGameOver) clock?.stop();
     if (clock?.active != null) _startTicker();
+    _wasClaimable = canClaimTimeout;
     if (!_reached && !isHost && _sync.moves.isNotEmpty) {
       _reached = true;
     }
@@ -566,7 +649,7 @@ class MultiplayerController extends ChangeNotifier {
       peerKey: isHost ? _sync.peerKey : null,
       sealed: session.sealedMessages,
       times: _sync.times,
-      turnStartedAt: clock == null ? null : _turnStartedAt,
+      turnStartedAt: clock == null && moveDays == null ? null : _turnStartedAt,
     );
     if (finished) _finished = true;
     return _writes = _writes.then((_) async {
@@ -586,6 +669,8 @@ class MultiplayerController extends ChangeNotifier {
     _disposed = true;
     _ticker?.cancel();
     _ticker = null;
+    _deadlineTimer?.cancel();
+    _deadlineTimer = null;
     await _sub.cancel();
     await _connSub.cancel();
     await _deliverySub.cancel();
