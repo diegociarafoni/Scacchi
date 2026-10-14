@@ -85,7 +85,7 @@ L'avatar è decorativo (`GuardianAvatar`, escluso dalla lettura) e la battuta è
 
 ## Come aggiungere un capitolo
 
-I puzzle di un capitolo possono avere un tetto di difficoltà (`StoryChapter.puzzleRating`): il Capitolo 0 pesca puzzle fino a 500 punti anche se il punteggio dell'utente è più alto. Aggiungere un `StoryChapter` in `storyChapters` (capitolo del percorso, bot, tema e numero di puzzle) il tema alternativo del bivio (`forkTheme`) e le quattro stringhe `story<Id>Title`, `Intro`, `Boss` (con `{name}`), `Outro` e le sette battute del custode (`storyGuardian<Id>Welcome`, `PuzzleOk`, `PuzzleRetry`, `LessonDone`, `Boss`, `BossWon`, `BossLost`) nei file `.arb`, poi i casi in `story_l10n.dart`. I test controllano che il capitolo punti a un capitolo del percorso e a un bot esistenti, che i bot siano in ordine di forza, che il tema e il tema del bivio abbiano puzzle a sufficienza e che ogni testo esista nelle due lingue.
+I puzzle di un capitolo possono avere un tetto di difficoltà (`StoryChapter.puzzleRating`): il Capitolo 0 pesca puzzle fino a 500 punti anche se il punteggio dell'utente è più alto. Aggiungere un `StoryChapter` in `storyChapters` (capitolo del percorso, bot, tema, tema alternativo del bivio (`forkTheme`) e numero di puzzle) e le quattro stringhe `story<Id>Title`, `Intro`, `Boss` (con `{name}`), `Outro` e le sette battute del custode (`storyGuardian<Id>Welcome`, `PuzzleOk`, `PuzzleRetry`, `LessonDone`, `Boss`, `BossWon`, `BossLost`) nei file `.arb`, poi i casi in `story_l10n.dart`. I test controllano che il capitolo punti a un capitolo del percorso e a un bot esistenti, che i bot siano in ordine di forza, che il tema e il tema del bivio abbiano puzzle a sufficienza e che ogni testo esista nelle due lingue.
 
 ## Componenti
 
