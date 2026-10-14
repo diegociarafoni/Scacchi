@@ -155,7 +155,10 @@ void main() {
     expect(find.text('Scacco matto. Vince il Bianco.'), findsOneWidget);
     expect(find.text('4. ♛xf7#'), findsOneWidget);
 
+    // Tra due persone chi ha il turno deve acconsentire.
     await tester.tap(find.text('Annulla'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Accetta'));
     await tester.pumpAndSettle();
     expect(find.text('Muove il Bianco.'), findsOneWidget);
     expect(find.text('4. ♛xf7#'), findsNothing);
@@ -203,7 +206,9 @@ void main() {
     expect(board().orientation.name, 'black');
   });
 
-  testWidgets('Annulla chiude il selettore di promozione', (tester) async {
+  testWidgets('un tocco fuori chiude il selettore di promozione', (
+    tester,
+  ) async {
     await _start(tester);
     for (final m in [
       'b2b4',
@@ -222,7 +227,8 @@ void main() {
     );
     await _tapMove(tester, 'b7a8');
     expect(selector, findsOneWidget);
-    await tester.tap(find.text('Annulla'));
+    // Il selettore si chiude toccando fuori dai pezzi proposti.
+    await tester.tapAt(_square(tester, 'h1'));
     await tester.pumpAndSettle();
     expect(selector, findsNothing);
   });
