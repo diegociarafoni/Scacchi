@@ -208,6 +208,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   /// Ultimo stato salvato nell'archivio (partita, esito, mosse).
   String? _archivedKey;
+  double? _reviewedAccuracy;
   late DateTime _startedAt = _clockNow();
   late String _gameId = 'game-${_startedAt.microsecondsSinceEpoch}';
   var _fromEditor = false;
@@ -2302,6 +2303,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
   void _openReview() {
     final moves = _moveHistory;
     final computer = _computerSide;
+    final (side, elo) = _playerAndElo;
+    final saved = _savedGame(_game, side, _clockNow(), elo);
     // Contro il computer contano gli errori di chi ha giocato, non quelli
     // del motore.
     final players = computer == null
@@ -2316,12 +2319,28 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           onCancel: player.stopAnalysis,
           analyseLive: _liveAnalysis(player),
           onReviewed: (review) => _recordReview(review, players, moves),
+          onResult: (review) => _saveAccuracy(review, saved),
           onSavePuzzles: widget.onSavePuzzles,
           puzzlePlayers: players,
           clocks: [for (final m in _game.moves) m.clock],
           timeControl: _clock?.control,
           startTimes: _clock?.startTimes,
         ),
+      ),
+    );
+  }
+
+  /// La precisione della revisione entra nella partita archiviata, così la
+  /// scheda delle fasi la trova senza riaprire la partita dall'archivio.
+  void _saveAccuracy(GameReview review, SavedGame game) {
+    final next = game.withReview(review);
+    if (identical(next, game) || next.accuracy == _reviewedAccuracy) return;
+    _reviewedAccuracy = next.accuracy;
+    final save = widget.onSave;
+    if (save == null) return;
+    unawaited(
+      save(next).onError(
+        (Object e, _) => debugPrint('Partita non salvata: $e'), // l10n-ok
       ),
     );
   }
