@@ -2784,7 +2784,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
             tooltip: qrL10n(context).settingsZenMode,
             isSelected: _zen,
             icon: const Icon(RokkoIcons.zen),
-            selectedIcon: const Icon(Icons.self_improvement),
+            selectedIcon: const Icon(RokkoIcons.zenOn),
             onPressed: () {
               // Entrando in zen sparisce anche il commento già a schermo.
               if (!_zen) ScaffoldMessenger.of(context).hideCurrentSnackBar();

@@ -17,5 +17,8 @@ abstract final class RokkoIcons {
   static const IconData keyboard = Icons.keyboard_outlined;
   static const IconData explorer = Icons.account_tree_outlined;
   static const IconData zen = Icons.self_improvement_outlined;
+
+  /// Pieno solo a modalità zen accesa: è il segno dello stato.
+  static const IconData zenOn = Icons.self_improvement;
   static const IconData settings = Icons.settings_outlined;
 }

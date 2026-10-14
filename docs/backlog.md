@@ -103,9 +103,9 @@ Il dettaglio di U1-U11 è in `consegne/analisi-ux-ui.md`; il comportamento attua
 | S4 | **Un bivio per capitolo** (tattica o finali) con puzzle diversi | da fare | da assegnare | media | 0.15.0 |
 | S5 | **Ricompense legate alla storia**: scacchiere e pezzi sbloccabili con nome a tema | da fare | da assegnare | piccola | 0.15.0 |
 | S6 | **Aiuto quando ci si blocca**: dopo due errori sullo stesso puzzle, un indizio o un puzzle più facile | fatta | da assegnare | piccola | 0.15.0 |
-| U1 | **Comandi di partita meno affollati**: 4 azioni in barra, Patta, Abbandona e Nuova in un pannello «Partita»; Allenatore e Minaccia come interruttori | parziale | da assegnare | media | 0.12.0 | fatto nel profilo bambino (pannello «Partita»); per gli adulti Nuova, Patta e Abbandona restano in barra (scelta di #225) |
+| U1 | **Comandi di partita meno affollati**: 4 azioni in barra, Patta, Abbandona e Nuova in un pannello «Partita»; Allenatore e Minaccia come interruttori — fatto nel profilo bambino (pannello «Partita»); per gli adulti Nuova, Patta e Abbandona restano in barra (scelta di #225) | parziale | da assegnare | media | 0.12.0 |
 | U2 | **Identità visiva di Rokko**: tema proprio, carattere con personalità, torre-mascotte negli stati vuoti e a fine partita | parziale | da assegnare | media | 0.14.0 |
-| U3 | **Layout della partita senza spazio morto** su schermate alte | parziale | da assegnare | media | 0.12.0 | in verticale lo spazio sopra la scacchiera è della lista mosse e dei suggerimenti; da verificare su schermate molto alte |
+| U3 | **Layout della partita senza spazio morto** su schermate alte — in verticale lo spazio sopra la scacchiera è della lista mosse e dei suggerimenti; da verificare su schermate molto alte | parziale | da assegnare | media | 0.12.0 |
 | U4 | **Testi tutti localizzati** nei file `.arb` | parziale | P1 | grande | 0.11.0 |
 | U5 | **Scheda Tu raggruppata** (Impara, Gioca, I miei dati) con «Continua da dove eri» in testa | da fare | da assegnare | media | 0.13.0 |
 | U6 | **Impostazioni in sezioni** comprimibili, con ricerca e galleria dei temi | parziale | da assegnare | media | 0.13.0 |
@@ -114,7 +114,7 @@ Il dettaglio di U1-U11 è in `consegne/analisi-ux-ui.md`; il comportamento attua
 | U9 | **Profilo bambino coerente** in tutte le schermate, con un test che cerca le cifre nei testi | da fare | da assegnare | media | 0.15.0 |
 | U10 | **Funzioni scopribili**: suggerimenti al primo uso e invito a rivedere la prima partita conclusa | da fare | da assegnare | media | 0.13.0 |
 | U11 | **Multigiocatore e Percorso più leggibili**: indicatore di connessione, QR con margine e contrasto fissi, tappe bloccate non solo in colore | da fare | da assegnare | piccola | 0.15.0 |
-| U12 | **Icone più curate** dopo le traduzioni (richiesta di Diego, 13 ottobre 2026) | parziale | dopo la 0.11.0 | media | 0.12.0 | `RokkoIcons` in `lib/theme/rokko_icons.dart`: stesso set a contorno per barra, pannello e barra del titolo della partita; le altre schermate restano da uniformare |
+| U12 | **Icone più curate** dopo le traduzioni (richiesta di Diego, 13 ottobre 2026) — `RokkoIcons` in `lib/theme/rokko_icons.dart`: stesso set a contorno per barra, pannello e barra del titolo della partita; le altre schermate restano da uniformare | parziale | dopo la 0.11.0 | media | 0.12.0 |
 
 Gli «interventi rapidi» (marchio nel titolo, arancione d'azione, gruppi nella scheda Tu, icone nel menu, anteprima comprimibile, font reale nei golden, test sui testi fissi) si possono fare prima delle voci grandi; sono elencati in `consegne/analisi-ux-ui.md`.
 

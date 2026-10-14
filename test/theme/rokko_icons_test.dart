@@ -57,6 +57,7 @@ void main() {
           ),
         ),
       );
+      expect(find.byKey(const ValueKey('gameAction-flip')), findsNothing);
       await tapGameAction(tester, 'Altro');
       await tester.pumpAndSettle();
       expect(find.byIcon(RokkoIcons.flip), findsOneWidget);
