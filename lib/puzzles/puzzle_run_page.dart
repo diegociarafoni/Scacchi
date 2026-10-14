@@ -176,7 +176,8 @@ class _PuzzleRunPageState extends State<PuzzleRunPage> {
       final update = await record(a);
       if (update != null) updates.add(update);
     }
-    if (!mounted || updates.isEmpty) return;
+    // Dopo «Gioca ancora» la nota della serie precedente non serve più.
+    if (!mounted || !_ended || updates.isEmpty) return;
     final note = progressText(context, mergeUpdates(updates));
     if (note != null) setState(() => _progressNote = note);
   }

@@ -71,7 +71,6 @@ class ProgressNote extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     return Padding(
-      key: const Key('puzzle-progress-note'),
       padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
       child: DecoratedBox(
         decoration: BoxDecoration(

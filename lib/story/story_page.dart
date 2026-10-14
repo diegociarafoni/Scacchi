@@ -353,9 +353,12 @@ class _StoryPageState extends State<StoryPage> {
                   ),
                 ),
           body: ListView(
-            padding: context.withSystemBottom(
-              const EdgeInsets.fromLTRB(16, 8, 16, 16),
-            ),
+            // Con la barra «Continua» l'ingombro è già assorbito da lei.
+            padding: next == null
+                ? context.withSystemBottom(
+                    const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                  )
+                : const EdgeInsets.fromLTRB(16, 8, 16, 16),
             children: [
               _Summary(progress: progress),
               const SizedBox(height: 12),

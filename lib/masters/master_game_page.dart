@@ -4,7 +4,6 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
-import '../theme/sheets.dart';
 import '../training/training_board.dart';
 import 'guess_page.dart';
 import 'master_game.dart';
@@ -93,7 +92,7 @@ class _MasterGamePageState extends State<MasterGamePage> {
               onMove: (_) {},
             );
             final panel = SingleChildScrollView(
-              padding: context.withSystemBottom(const EdgeInsets.all(16)),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [

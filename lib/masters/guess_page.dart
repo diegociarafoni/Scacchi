@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
-import '../theme/sheets.dart';
 import '../training/training_board.dart';
 import 'guess_run.dart';
 import 'master_game.dart';
@@ -149,7 +148,7 @@ class _GuessPageState extends State<GuessPage> {
               onMove: _onMove,
             );
             final panel = SingleChildScrollView(
-              padding: context.withSystemBottom(const EdgeInsets.all(16)),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [

@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import '../l10n/app_localizations.dart';
 import '../settings/settings.dart';
 import '../theme/rokko_theme.dart';
-import '../theme/sheets.dart';
 import 'curriculum.dart';
 import 'exercise.dart';
 import 'path_controller.dart';
@@ -237,7 +236,7 @@ class _StagePageState extends State<StagePage> {
                   .copyWith(autoQueenPromotion: true),
             );
             final panel = SingleChildScrollView(
-              padding: context.withSystemBottom(const EdgeInsets.all(16)),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: !_started

@@ -361,7 +361,10 @@ class _PuzzlePageState extends State<PuzzlePage> {
                   // salgono a due righe sugli schermi stretti.
                   final size = math.max(
                     0.0,
-                    math.min(c.maxWidth, c.maxHeight - 190),
+                    math.min(
+                      c.maxWidth,
+                      c.maxHeight - 190 - (_progressNote == null ? 0 : 56),
+                    ),
                   );
                   // Scorrevole come ultima difesa su schermi molto bassi.
                   return Center(
@@ -375,7 +378,10 @@ class _PuzzlePageState extends State<PuzzlePage> {
                             side: puzzle.playerSide,
                           ),
                           if (_progressNote != null)
-                            ProgressNote(message: _progressNote!),
+                            ProgressNote(
+                              key: const Key('puzzle-progress-note'),
+                              message: _progressNote!,
+                            ),
                           // Con una sola mossa «0 di 1» non dice nulla.
                           if (_session.playerMoves > 1)
                             _Progress(

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import '../exchange/qr_l10n.dart';
 import '../exchange/qr_receive_page.dart';
 import '../exchange/qr_send_page.dart';
-import '../theme/sheets.dart';
 import 'activity_recorder.dart';
 import 'friend_challenge.dart';
 import 'puzzle_run.dart';
@@ -108,7 +107,7 @@ class _FriendChallengePageState extends State<FriendChallengePage> {
       appBar: AppBar(title: Text(l10n.challengeTitle)),
       body: SafeArea(
         child: ListView(
-          padding: context.withSystemBottom(const EdgeInsets.all(16)),
+          padding: const EdgeInsets.all(16),
           children: [
             Text(l10n.challengeIntro, style: text.bodyLarge),
             const SizedBox(height: 16),

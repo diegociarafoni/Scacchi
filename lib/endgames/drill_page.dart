@@ -10,7 +10,6 @@ import '../settings/board_marks.dart';
 import '../settings/settings.dart';
 import '../tablebase/perfect_endgame_card.dart';
 import '../tablebase/tablebase_service.dart';
-import '../theme/sheets.dart';
 import 'drill.dart';
 import 'endgame_controller.dart';
 
@@ -197,7 +196,7 @@ class _DrillPageState extends State<DrillPage> {
                   .copyWith(autoQueenPromotion: true),
             );
             final panel = SingleChildScrollView(
-              padding: context.withSystemBottom(const EdgeInsets.all(16)),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
