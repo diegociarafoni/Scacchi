@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/settings/settings_page.dart';
+import 'package:rokko/settings/settings_page.dart';
 
 /// Apre la pagina di [section] dal menu delle Impostazioni.
 Future<void> openSection(WidgetTester tester, SettingsSection section) async {

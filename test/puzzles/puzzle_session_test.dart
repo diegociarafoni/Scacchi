@@ -1,6 +1,6 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/puzzles/puzzle_session.dart';
+import 'package:rokko/puzzles/puzzle_session.dart';
 
 import 'fixtures.dart';
 

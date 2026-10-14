@@ -1,11 +1,11 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/engine/uci.dart';
-import 'package:scacchi/review/error_themes.dart';
-import 'package:scacchi/review/game_review.dart';
-import 'package:scacchi/review/personal_puzzles.dart';
-import 'package:scacchi/review/review_activity.dart';
-import 'package:scacchi/review/review_page.dart';
+import 'package:rokko/engine/uci.dart';
+import 'package:rokko/review/error_themes.dart';
+import 'package:rokko/review/game_review.dart';
+import 'package:rokko/review/personal_puzzles.dart';
+import 'package:rokko/review/review_activity.dart';
+import 'package:rokko/review/review_page.dart';
 
 InfoLine _line(List<String> pv, EngineScore score) =>
     InfoLine(multipv: 1, depth: 12, pv: pv, score: score);

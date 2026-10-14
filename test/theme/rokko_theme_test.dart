@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/theme/rokko_theme.dart';
+import 'package:rokko/theme/rokko_theme.dart';
 
 double _contrast(Color a, Color b) {
   final la = a.computeLuminance() + 0.05;

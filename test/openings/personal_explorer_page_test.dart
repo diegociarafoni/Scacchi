@@ -3,11 +3,11 @@ import 'dart:io';
 import 'package:dartchess/dartchess.dart' hide File;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/archive/game_archive.dart';
-import 'package:scacchi/archive/saved_game.dart';
-import 'package:scacchi/openings/explorer_page.dart';
-import 'package:scacchi/openings/opening_book.dart';
-import 'package:scacchi/openings/personal_explorer_page.dart';
+import 'package:rokko/archive/game_archive.dart';
+import 'package:rokko/archive/saved_game.dart';
+import 'package:rokko/openings/explorer_page.dart';
+import 'package:rokko/openings/opening_book.dart';
+import 'package:rokko/openings/personal_explorer_page.dart';
 
 import '../localized_app.dart';
 

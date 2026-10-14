@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:scacchi/multiplayer/nostr_event.dart';
-import 'package:scacchi/multiplayer/nostr_transport.dart';
+import 'package:rokko/multiplayer/nostr_event.dart';
+import 'package:rokko/multiplayer/nostr_transport.dart';
 
 /// Relay Nostr in memoria con il minimo di NIP-01: eventi sostituibili per
 /// (autore, tipo, tag d), sottoscrizioni con filtri, OK ed EOSE.

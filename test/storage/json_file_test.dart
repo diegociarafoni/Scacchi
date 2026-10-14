@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/storage/json_file.dart';
+import 'package:rokko/storage/json_file.dart';
 
 void main() {
   late Directory dir;

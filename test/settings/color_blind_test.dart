@@ -1,8 +1,8 @@
 import 'package:chessground/chessground.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/settings/color_blind.dart';
-import 'package:scacchi/settings/settings.dart';
+import 'package:rokko/settings/color_blind.dart';
+import 'package:rokko/settings/settings.dart';
 
 void main() {
   double over(Color highlight, ChessboardColorScheme s) =>

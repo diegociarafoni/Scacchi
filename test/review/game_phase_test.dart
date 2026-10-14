@@ -1,8 +1,8 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/review/game_phase.dart';
-import 'package:scacchi/review/game_review.dart';
-import 'package:scacchi/review/move_classification.dart';
+import 'package:rokko/review/game_phase.dart';
+import 'package:rokko/review/game_review.dart';
+import 'package:rokko/review/move_classification.dart';
 
 MoveReview move(int ply, String fen, double accuracy) => MoveReview(
   ply: ply,

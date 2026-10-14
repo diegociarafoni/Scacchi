@@ -13,7 +13,7 @@ rootProject.layout.buildDirectory.value(newBuildDir)
 
 // Solo in CI: compila le librerie native dei plugin per le sole ABI indicate,
 // invece delle tre che dichiarano (arm64-v8a, armeabi-v7a, x86_64).
-System.getenv("SCACCHI_NATIVE_ABIS")?.takeIf { it.isNotBlank() }?.let { abis ->
+System.getenv("ROKKO_NATIVE_ABIS")?.takeIf { it.isNotBlank() }?.let { abis ->
     subprojects {
         afterEvaluate {
             extensions

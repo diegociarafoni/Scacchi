@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:chessground/chessground.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/main.dart';
+import 'package:rokko/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../game_actions.dart';
@@ -26,7 +26,7 @@ Future<void> _pumpApp(
   await _precacheImages(tester);
   // Senza audio: nei test non c'è il plugin nativo.
   SharedPreferences.setMockInitialValues({'sound': false});
-  await tester.pumpWidget(const ScacchiApp());
+  await tester.pumpWidget(const RokkoApp());
   await tester.pumpAndSettle();
   await openBoard(tester);
   await _precacheImages(tester);
@@ -63,7 +63,7 @@ void main() {
     ) async {
       await _pumpApp(tester, device);
       await expectLater(
-        find.byType(ScacchiApp),
+        find.byType(RokkoApp),
         matchesGoldenFile('goldens/iniziale-${device.name}.png'),
       );
     });
@@ -84,7 +84,7 @@ void main() {
         'h5f7',
       ]);
       await expectLater(
-        find.byType(ScacchiApp),
+        find.byType(RokkoApp),
         matchesGoldenFile('goldens/scacco-matto-scuro-telefono-medio.png'),
       );
     },
@@ -104,7 +104,7 @@ void main() {
         await tester.tap(find.text('Nuova'));
         await tester.pumpAndSettle();
         await expectLater(
-          find.byType(ScacchiApp),
+          find.byType(RokkoApp),
           matchesGoldenFile(
             'goldens/nuova-partita-menu-${brightness.name}-${device.name}.png',
           ),
@@ -124,7 +124,7 @@ void main() {
     await tester.tap(find.text('Ognuno sul suo telefono'));
     await tester.pumpAndSettle();
     await expectLater(
-      find.byType(ScacchiApp),
+      find.byType(RokkoApp),
       matchesGoldenFile('goldens/nuova-partita-amico-scuro-telefono-medio.png'),
     );
   });

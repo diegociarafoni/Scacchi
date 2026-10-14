@@ -2,18 +2,18 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/archive/game_archive.dart';
-import 'package:scacchi/badges/badges_page.dart';
-import 'package:scacchi/endgames/endgame_controller.dart';
-import 'package:scacchi/home/home_shell.dart';
-import 'package:scacchi/masters/masters_controller.dart';
-import 'package:scacchi/path/curriculum.dart';
-import 'package:scacchi/path/path_controller.dart';
-import 'package:scacchi/progress/activity.dart';
-import 'package:scacchi/progress/progress_controller.dart';
-import 'package:scacchi/progress/progress_store.dart';
-import 'package:scacchi/settings/settings.dart';
-import 'package:scacchi/story/story_controller.dart';
+import 'package:rokko/archive/game_archive.dart';
+import 'package:rokko/badges/badges_page.dart';
+import 'package:rokko/endgames/endgame_controller.dart';
+import 'package:rokko/home/home_shell.dart';
+import 'package:rokko/masters/masters_controller.dart';
+import 'package:rokko/path/curriculum.dart';
+import 'package:rokko/path/path_controller.dart';
+import 'package:rokko/progress/activity.dart';
+import 'package:rokko/progress/progress_controller.dart';
+import 'package:rokko/progress/progress_store.dart';
+import 'package:rokko/settings/settings.dart';
+import 'package:rokko/story/story_controller.dart';
 
 import '../localized_app.dart';
 

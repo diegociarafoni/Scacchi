@@ -1,6 +1,6 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/game/clock.dart';
+import 'package:rokko/game/clock.dart';
 
 import 'clock_test.dart' show FakeTime;
 

@@ -1,4 +1,4 @@
-package io.github.diegociarafoni.scacchi
+package io.github.diegociarafoni.rokko
 
 import io.flutter.embedding.android.FlutterActivity
 

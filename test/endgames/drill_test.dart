@@ -1,8 +1,8 @@
 import 'package:dartchess/dartchess.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/endgames/drill.dart';
-import 'package:scacchi/endgames/drills.dart';
-import 'package:scacchi/l10n/content.dart';
+import 'package:rokko/endgames/drill.dart';
+import 'package:rokko/endgames/drills.dart';
+import 'package:rokko/l10n/content.dart';
 
 Move _m(String uci) => Move.parse(uci)!;
 

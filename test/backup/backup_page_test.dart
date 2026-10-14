@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/backup/backup.dart';
-import 'package:scacchi/backup/backup_page.dart';
+import 'package:rokko/backup/backup.dart';
+import 'package:rokko/backup/backup_page.dart';
 
 import '../localized_app.dart';
 

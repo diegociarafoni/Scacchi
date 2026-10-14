@@ -4,11 +4,11 @@ import 'dart:io';
 import 'package:dartchess/dartchess.dart' hide File;
 import 'package:flutter/material.dart' show LinearProgressIndicator, Size;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/engine/uci.dart';
-import 'package:scacchi/review/engine_evaluator.dart';
-import 'package:scacchi/review/game_review.dart';
-import 'package:scacchi/review/review_page.dart';
-import 'package:scacchi/review/review_store.dart';
+import 'package:rokko/engine/uci.dart';
+import 'package:rokko/review/engine_evaluator.dart';
+import 'package:rokko/review/game_review.dart';
+import 'package:rokko/review/review_page.dart';
+import 'package:rokko/review/review_store.dart';
 
 import '../localized_app.dart';
 import 'fake_engine.dart';

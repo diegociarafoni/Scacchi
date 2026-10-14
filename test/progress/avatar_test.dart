@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/l10n/app_localizations.dart';
-import 'package:scacchi/progress/avatar.dart';
-import 'package:scacchi/progress/avatar_l10n.dart';
-import 'package:scacchi/progress/profile_page.dart';
-import 'package:scacchi/progress/progress_state.dart';
-import 'package:scacchi/progress/rewards.dart';
+import 'package:rokko/l10n/app_localizations.dart';
+import 'package:rokko/progress/avatar.dart';
+import 'package:rokko/progress/avatar_l10n.dart';
+import 'package:rokko/progress/profile_page.dart';
+import 'package:rokko/progress/progress_state.dart';
+import 'package:rokko/progress/rewards.dart';
 
 void main() {
   group('RP-08 avatar simpatici', () {

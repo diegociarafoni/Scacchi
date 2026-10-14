@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scacchi/badges/opening_volumes.dart';
-import 'package:scacchi/openings/opening_book.dart';
-import 'package:scacchi/progress/activity.dart';
-import 'package:scacchi/progress/progress_state.dart';
-import 'package:scacchi/progress/progress_tracker.dart';
+import 'package:rokko/badges/opening_volumes.dart';
+import 'package:rokko/openings/opening_book.dart';
+import 'package:rokko/progress/activity.dart';
+import 'package:rokko/progress/progress_state.dart';
+import 'package:rokko/progress/progress_tracker.dart';
 
 void main() {
   group('libri delle aperture', () {
