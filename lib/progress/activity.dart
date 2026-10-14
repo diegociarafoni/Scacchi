@@ -126,6 +126,19 @@ class TournamentFinished extends Activity {
   final int players;
 }
 
+/// Fine di una partita a due su un altro telefono (RMP-08). Non vale per le
+/// partite contro il computer: ha il suo contatore.
+class OnlineGameFinished extends Activity {
+  const OnlineGameFinished({required this.result, super.duration});
+
+  final GameResult result;
+}
+
+/// Una sessione di ripasso del repertorio con almeno una mossa risposta.
+class RepertoireReviewed extends Activity {
+  const RepertoireReviewed({super.duration});
+}
+
 class LessonCompleted extends Activity {
   const LessonCompleted({super.duration});
 }

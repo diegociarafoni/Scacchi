@@ -353,6 +353,24 @@ final List<BadgeDef> badges = [
     5,
   ),
 
+  _tally('online_first', BadgeFamily.games, Icons.people, 'online', 1),
+  _tally('online_10', BadgeFamily.games, Icons.groups, 'online', 10),
+  _event('online_win', BadgeFamily.games, Icons.handshake, 'online:win'),
+  _tally(
+    'repertoire_first',
+    BadgeFamily.learn,
+    Icons.menu_book,
+    'repertoire',
+    1,
+  ),
+  _tally(
+    'repertoire_10',
+    BadgeFamily.learn,
+    Icons.auto_stories,
+    'repertoire',
+    10,
+  ),
+
   _story('prologue', Icons.directions_walk),
   _story('village', Icons.cottage),
   _story('gates', Icons.fence),

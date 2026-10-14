@@ -477,5 +477,29 @@
         "type": "String"
       }
     }
+  },
+  "badgeOnlineFirstName": "Main berdua",
+  "badgeOnlineFirstDesc": "Mainkan satu partai melawan teman di ponsel lain.",
+  "badgeOnline10Name": "Selalu ada teman",
+  "badgeOnline10Desc": "Mainkan {count} partai melawan teman.",
+  "@badgeOnline10Desc": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeOnlineWinName": "Menang di antara teman",
+  "badgeOnlineWinDesc": "Menangkan satu partai melawan teman di ponsel lain.",
+  "badgeRepertoireFirstName": "Ingatan sedang dilatih",
+  "badgeRepertoireFirstDesc": "Ulangi repertoarmu untuk pertama kali.",
+  "badgeRepertoire10Name": "Repertoar di luar kepala",
+  "badgeRepertoire10Desc": "Ulangi repertoarmu dalam {count} sesi.",
+  "@badgeRepertoire10Desc": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

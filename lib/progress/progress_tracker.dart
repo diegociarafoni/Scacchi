@@ -352,6 +352,13 @@ class ProgressTracker {
           if (rank <= 3 && players >= podiumMinPlayers) 'podium',
         ]),
       ),
+      OnlineGameFinished(:final result) => s.copyWith(
+        tally: _bump(s.tally, [
+          'online',
+          if (result == GameResult.win) 'online:win',
+        ]),
+      ),
+      RepertoireReviewed() => s.copyWith(tally: _bump(s.tally, ['repertoire'])),
       LessonCompleted() => s.copyWith(lessonsCompleted: s.lessonsCompleted + 1),
       StoryChapterDone(:final chapters) => s.copyWith(
         tally: {...s.tally, 'story': math.max(s.tally['story'] ?? 0, chapters)},

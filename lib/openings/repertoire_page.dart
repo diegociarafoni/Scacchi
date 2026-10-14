@@ -2,6 +2,7 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
+import '../progress/activity.dart';
 import '../settings/notation.dart';
 import '../settings/settings.dart';
 import 'opening_game.dart';
@@ -16,8 +17,10 @@ class RepertoirePage extends StatefulWidget {
     required this.trainer,
     required this.side,
     this.onPlay,
+    this.onActivity,
   });
 
+  final RecordActivity? onActivity;
   final RepertoireTrainer trainer;
   final Side side;
 
@@ -108,7 +111,11 @@ class _RepertoirePageState extends State<RepertoirePage> {
   Future<void> _drill() async {
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => RepertoireDrillPage(trainer: _t, side: widget.side),
+        builder: (_) => RepertoireDrillPage(
+          trainer: _t,
+          side: widget.side,
+          onActivity: widget.onActivity,
+        ),
       ),
     );
     if (mounted) setState(() {});

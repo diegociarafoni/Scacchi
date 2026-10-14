@@ -915,6 +915,7 @@ class _HomeShellState extends State<HomeShell> {
         repertoire: repertoire,
         onPlay: _computerAvailable ? _playOpening : null,
         archive: _archive,
+        onActivity: _record,
       ),
     );
   }
@@ -971,7 +972,7 @@ class _HomeShellState extends State<HomeShell> {
     return {
       if (adult && _computerAvailable)
         'bots': () => _newGame(const GameSetup(opponent: Opponent.bot)),
-      if (adult) 'friend': () => _push(const MultiplayerPage()),
+      if (adult) 'friend': () => _push(MultiplayerPage(onActivity: _record)),
       if (adult && _computerAvailable)
         'tournaments': () => _openPage(_tournamentPage),
       if (adult) 'physical': () => _push(PhysicalGamePage(archive: _archive)),

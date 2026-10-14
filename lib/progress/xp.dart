@@ -18,6 +18,10 @@ int xpFor(Activity activity) => switch (activity) {
   MinigameFinished(:final score) => score > 0 ? 5 : 0,
   LessonCompleted() => 20,
   TournamentFinished() => 30,
+  OnlineGameFinished(result: GameResult.win) => 15,
+  OnlineGameFinished(result: GameResult.draw) => 12,
+  OnlineGameFinished() => 10,
+  RepertoireReviewed() => 10,
   StoryChapterDone() => 30,
   ReviewCompleted() => 20,
 };

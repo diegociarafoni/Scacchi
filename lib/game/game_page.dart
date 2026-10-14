@@ -1898,6 +1898,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
           tournamentPage: widget.tournamentPage,
           physicalPage: widget.physicalPage,
           openingGame: widget.openingGame,
+          onActivity: widget.onActivity,
         ),
       );
       // Tornei e scacchiera fisica prendono il posto della partita, che
@@ -3977,7 +3978,11 @@ class _TimeControlSheet extends StatefulWidget {
     this.tournamentPage,
     this.physicalPage,
     this.openingGame,
+    this.onActivity,
   });
+
+  /// Registra nei progressi le partite a due telefoni.
+  final ActivityRecorder? onActivity;
 
   /// Profilo bambino: solo classica, senza tempo o con una cadenza lenta.
   final bool kid;
@@ -4485,6 +4490,7 @@ class _TimeControlSheetState extends State<_TimeControlSheet> {
     FriendGamePanel(
       inCard: false,
       clockBuilder: _friendClock,
+      onActivity: widget.onActivity,
       // La partita a due telefoni prende il posto del foglio.
       onGameClosed: () {
         if (ModalRoute.of(context)?.isCurrent ?? false) Navigator.pop(context);

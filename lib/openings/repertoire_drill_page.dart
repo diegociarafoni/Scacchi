@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:chessground/chessground.dart';
@@ -5,6 +6,7 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 
 import '../l10n/app_localizations.dart';
+import '../progress/activity.dart';
 import '../settings/settings.dart';
 import '../training/training_board.dart';
 import 'repertoire.dart';
@@ -15,8 +17,11 @@ class RepertoireDrillPage extends StatefulWidget {
     super.key,
     required this.trainer,
     required this.side,
+    this.onActivity,
   });
 
+  /// Registra la sessione di ripasso nei progressi.
+  final RecordActivity? onActivity;
   final RepertoireTrainer trainer;
   final Side side;
 
@@ -38,6 +43,15 @@ class _RepertoireDrillPageState extends State<RepertoireDrillPage> {
   void initState() {
     super.initState();
     _nextLine();
+  }
+
+  @override
+  void dispose() {
+    // Una sessione conta se si è risposto ad almeno una mossa.
+    if (_reviewed > 0) {
+      unawaited(widget.onActivity?.call(const RepertoireReviewed()));
+    }
+    super.dispose();
   }
 
   void _nextLine() {

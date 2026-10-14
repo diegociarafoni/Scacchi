@@ -10,7 +10,7 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | [regole-di-gioco.md](regole-di-gioco.md) | Regole implementate e condizioni di fine partita |
 | [interfaccia.md](interfaccia.md) | Schermata di gioco, layout su telefono e tablet, comandi |
 | [home.md](home.md) | Home a schede e scheda Impara: prossimo passo, ricerca, funzioni a un tocco |
-| [badge.md](badge.md) | Badge: collezione di 59 badge per ciò che si impara e si gioca, sblocco, scheda e testi |
+| [badge.md](badge.md) | Badge: collezione di 64 badge per ciò che si impara e si gioca, sblocco, scheda e testi |
 | [gamification.md](gamification.md) | XP, livelli, obiettivo giornaliero, serie, traguardi, ricompense estetiche, promemoria |
 | [esporta-immagine.md](esporta-immagine.md) | Esportare la posizione come immagine PNG da partita, analisi, puzzle ed editor |
 | [editor-posizione.md](editor-posizione.md) | Editor di posizione, FEN e validazione |
