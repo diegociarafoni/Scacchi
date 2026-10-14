@@ -80,7 +80,7 @@ class BookCard extends StatelessWidget {
     final l = badgesL10n(context);
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
-    final name = _name(context, volume);
+    final name = volume.localName;
     return Semantics(
       button: true,
       label: _unlocked
@@ -149,9 +149,6 @@ class BookCard extends StatelessWidget {
     );
   }
 }
-
-String _name(BuildContext context, OpeningVolume v) =>
-    Localizations.localeOf(context).languageCode == 'it' ? v.localName : v.name;
 
 /// La posizione in copertina; spenta e col lucchetto se il libro è bloccato.
 class BookCoverBoard extends StatelessWidget {
@@ -226,7 +223,7 @@ class BookDetail extends StatelessWidget {
             BookCoverBoard(volume: volume, unlocked: unlocked, size: 200),
             const SizedBox(height: 16),
             Text(
-              _name(context, volume),
+              volume.localName,
               style: theme.textTheme.headlineSmall,
               textAlign: TextAlign.center,
             ),
