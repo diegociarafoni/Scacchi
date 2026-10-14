@@ -163,7 +163,7 @@ Si aprono dall'icona a forma di ingranaggio nella Home e nella barra del titolo 
 | Volume | Volume dei suoni, da 0 a 100% | 100% |
 | Vibrazione | Vibrazione breve a ogni mossa, più marcata per catture e fine partita | Attiva |
 | Tema della scacchiera | Verde, Legno, Blu, Grigio, Arancia, Crepuscolo, Pergamena, Castello, Bosco elfico, Noce, Spazio, Retrò, Giardino, Terracotta, Marmo, Metallo, Vetro, Menta, Cipria, Ardesia; sbloccabili Sabbia, Oceano, Corallo, Notte, Oro e, con la Storia, Villaggio, Torre, Corona | Spazio |
-| Pezzi | Classico, Merida, Chessnut, Fantasy, Spatial, Rokko, Pixel, Arcano, Staunton, Morbido, Stampa, Papercut, Noto; sbloccabili Celtic, Shapes, Firi, Mpchess, Kiwen-suwi, Totoy, RhosGFX | Classico |
+| Pezzi | Classico, Merida, Chessnut, Fantasy, Spatial, Rokko, Pixel, Arcano, Staunton, Morbido, Stampa, Papercut, Noto; sbloccabili Celtic, Shapes, Firi, Mpchess, Kiwen-suwi, Totoy, RhosGFX e, con la Storia, Pirouetti e Letter | Classico |
 | Sblocca tutto | Rende disponibili le ricompense estetiche senza sbloccarle (vedi [gamification.md](gamification.md)) | Disattiva |
 | Animazioni | Nessuna, Veloce, Normale, Lenta | Normale |
 | Notazione | Figurativa (♞f3), Italiana (Cf3) o Inglese (Nf3) per le mosse mostrate (vedi [notazione.md](notazione.md)) | Figurativa |

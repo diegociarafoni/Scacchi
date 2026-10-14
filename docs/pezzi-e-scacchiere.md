@@ -1,6 +1,6 @@
 # Pezzi e scacchiere
 
-Oltre ai set del pacchetto chessground, Rokko ha otto set di pezzi e tredici scacchiere con texture propri. Si scelgono nella schermata Stile (vedi [stile.md](stile.md)), da Impostazioni → Stile.
+Oltre ai set del pacchetto chessground, Rokko ha dieci set di pezzi (sei del progetto, quattro di terzi) e tredici scacchiere con texture. Si scelgono nella schermata Stile (vedi [stile.md](stile.md)), da Impostazioni → Stile.
 
 ## Set di pezzi
 
@@ -13,6 +13,8 @@ Oltre ai set del pacchetto chessground, Rokko ha otto set di pezzi e tredici sca
 | Morbido | Stessa sagoma con sfumature piatte, contorno sottile e ombra delicata | Progetto, GPL-3.0+ |
 | Stampa | Stessa sagoma in bianco e nero netto, con tratti interni come in un'incisione | Progetto, GPL-3.0+ |
 | Papercut | Carta ritagliata con ombre morbide | Nikolay Anzarov, CC BY 4.0 |
+| Pirouetti | Sagome piene e morbide con ombra laterale, sbloccato dal quarto capitolo della Storia | pirouetti, AGPL-3.0+ |
+| Letter | Lettere K, Q, R, B, N al posto dei pezzi e un cerchio al posto del pedone, sbloccato dal settimo capitolo | usolando, AGPL-3.0+ |
 | Noto | Simboli Unicode del carattere Noto Sans Symbols 2 | Google, OFL-1.1 |
 
 I set del progetto non richiamano personaggi, nomi o simboli di opere esistenti, che gli store non accetterebbero. I file sono in `assets/pieces/<set>/`, in WebP da 128 px con la variante `3.0x/` da 384 px per gli schermi densi.
@@ -59,6 +61,6 @@ node tool/board_art/render.mjs
 BOARDS=marmo,metallo,vetro node tool/board_art/render.mjs   # solo alcune scacchiere
 ```
 
-Staunton, Morbido e Stampa condividono la sagoma di `tool/board_art/staunton.mjs`; per rigenerare solo quelli: `SETS=staunton,morbido,stampa node tool/board_art/render.mjs`. Altri set molto diffusi (Alpha, Staunty, Cooke, Horsey e simili) non si possono usare: sono «freeware», per uso personale o CC BY-NC-SA, incompatibili con la distribuzione negli store. Il sorgente di Papercut è in `tool/board_art/papercut/`. Il carattere Noto si scarica da Google Fonts durante la generazione, quindi serve la rete. Gli aloni dei set di chessground partono dalle sue immagini da 512 px, lette dalla cache dei pacchetti dopo `flutter pub get`. Una nuova cartella di immagini va aggiunta anche alla sezione `assets` di `pubspec.yaml`.
+Staunton, Morbido e Stampa condividono la sagoma di `tool/board_art/staunton.mjs`; per rigenerare solo quelli: `SETS=staunton,morbido,stampa node tool/board_art/render.mjs`. Altri set molto diffusi (Alpha, Staunty, Cooke, Horsey e simili) non si possono usare: sono «freeware», per uso personale o CC BY-NC-SA, incompatibili con la distribuzione negli store. I sorgenti SVG di Papercut, Pirouetti e Letter sono in `tool/board_art/<set>/`, con la loro licenza; l'AGPL-3.0+ è compatibile con la GPL-3.0 del progetto (art. 13 della GPLv3). `SETS=pirouetti,letter` li rigenera da soli. Il carattere Noto si scarica da Google Fonts durante la generazione, quindi serve la rete. Gli aloni dei set di chessground partono dalle sue immagini da 512 px, lette dalla cache dei pacchetti dopo `flutter pub get`. Una nuova cartella di immagini va aggiunta anche alla sezione `assets` di `pubspec.yaml`.
 
 I test in `test/settings/board_art_test.dart` controllano che ogni set abbia i dodici pezzi e gli aloni, entrambe le risoluzioni, e che le texture siano solo nostre.

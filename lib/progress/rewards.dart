@@ -95,6 +95,8 @@ const Map<Enum, Requirement> _requirements = {
   BoardTheme.villaggio: StoryRequirement(2),
   BoardTheme.torre: StoryRequirement(5),
   BoardTheme.corona: StoryRequirement(9),
+  PieceStyle.pirouetti: StoryRequirement(4),
+  PieceStyle.letter: StoryRequirement(7),
   PieceStyle.celtic: LevelRequirement(3),
   PieceStyle.shapes: AchievementRequirement('puzzles_10'),
   PieceStyle.firi: LevelRequirement(5),
