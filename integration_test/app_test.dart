@@ -155,7 +155,10 @@ void main() {
     expect(find.text('Scacco matto. Vince il Bianco.'), findsOneWidget);
     expect(find.text('4. ♛xf7#'), findsOneWidget);
 
+    // Tra due persone chi ha il turno deve acconsentire.
     await tester.tap(find.text('Annulla'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Accetta'));
     await tester.pumpAndSettle();
     expect(find.text('Muove il Bianco.'), findsOneWidget);
     expect(find.text('4. ♛xf7#'), findsNothing);
@@ -222,7 +225,10 @@ void main() {
     );
     await _tapMove(tester, 'b7a8');
     expect(selector, findsOneWidget);
-    await tester.tap(find.text('Annulla'));
+    // «Annulla» è anche il nome del comando di annullamento: si cerca nel selettore.
+    await tester.tap(
+      find.descendant(of: selector, matching: find.text('Annulla')),
+    );
     await tester.pumpAndSettle();
     expect(selector, findsNothing);
   });
