@@ -7,7 +7,6 @@ import 'package:rokko/path/path_controller.dart';
 import 'package:rokko/story/story.dart';
 import 'package:rokko/story/story_controller.dart';
 import 'package:rokko/story/story_page.dart';
-import 'package:rokko/story/story_passage.dart';
 import 'package:rokko/theme/rokko_theme.dart';
 
 void main() {
@@ -32,7 +31,6 @@ void main() {
     PlayStoryPuzzles? puzzles,
     PlayStoryLesson? lesson,
     void Function(int chapters)? onChaptersDone,
-    ValueNotifier<PassageChoice>? challengeRequest,
     Locale locale = const Locale('it'),
     double textScale = 1,
   }) async {
@@ -53,7 +51,6 @@ void main() {
             playBoss: boss,
             playPuzzles: puzzles,
             playLesson: lesson,
-            challengeRequest: challengeRequest,
             onChaptersDone: onChaptersDone,
           ),
         ),
@@ -156,91 +153,6 @@ void main() {
     );
     await save(tester, find.text('Sfida Tino'), until: () => boss == 1);
     expect(boss, 1);
-  });
-
-  testWidgets('il pulsante di fine puzzle apre subito la sfida, senza foglio', (
-    tester,
-  ) async {
-    await tester.runAsync(doneLessons);
-    final request = ValueNotifier(PassageChoice.none);
-    var boss = 0;
-    await show(
-      tester,
-      challengeRequest: request,
-      puzzles: (c, ch, r) async {
-        request.value = PassageChoice.go;
-        return r;
-      },
-      boss: (c, bot) async {
-        boss++;
-        return false;
-      },
-    );
-    await save(
-      tester,
-      find.textContaining('Puzzle del capitolo'),
-      until: () => boss == 1,
-    );
-    expect(boss, 1);
-    expect(request.value, PassageChoice.none);
-    expect(find.text('Puzzle risolti!'), findsNothing);
-  });
-
-  testWidgets('«Più tardi» dal riquadro dei puzzle non apre né mostra il '
-      'foglio', (tester) async {
-    await tester.runAsync(doneLessons);
-    final request = ValueNotifier(PassageChoice.none);
-    var boss = 0;
-    await show(
-      tester,
-      challengeRequest: request,
-      puzzles: (c, ch, r) async {
-        request.value = PassageChoice.later;
-        return r;
-      },
-      boss: (c, bot) async {
-        boss++;
-        return false;
-      },
-    );
-    await save(
-      tester,
-      find.textContaining('Puzzle del capitolo'),
-      until: () => request.value == PassageChoice.none,
-    );
-    expect(boss, 0);
-    expect(find.byKey(const ValueKey('story-passage')), findsNothing);
-  });
-
-  testWidgets('storyPassage con assumeDone descrive la sfida prima del '
-      'salvataggio dei puzzle', (tester) async {
-    await tester.runAsync(doneLessons);
-    late BuildContext ctx;
-    await tester.pumpWidget(
-      MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        locale: const Locale('it'),
-        home: Builder(
-          builder: (c) {
-            ctx = c;
-            return const SizedBox();
-          },
-        ),
-      ),
-    );
-    final progress = StoryProgress(path.progress, story.state);
-    expect(storyPassage(ctx, progress, first, StoryStepKind.puzzles), isNull);
-    final passage = storyPassage(
-      ctx,
-      progress,
-      first,
-      StoryStepKind.puzzles,
-      assumeDone: true,
-    )!;
-    expect(passage.title, 'Puzzle risolti!');
-    expect(passage.action, 'Sfida Tino');
-    expect(passage.target, (first, StoryStepKind.boss));
   });
 
   testWidgets('«Più tardi» chiude il foglio senza aprire altro', (

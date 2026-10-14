@@ -18,7 +18,6 @@ import 'journey_map.dart';
 import 'story.dart';
 import 'story_controller.dart';
 import 'story_l10n.dart';
-import 'story_passage.dart';
 
 /// Gioca la sfida contro [bot] e dice se è stata vinta.
 typedef PlayStoryBoss = Future<bool> Function(BuildContext context, Bot bot);
@@ -49,7 +48,6 @@ class StoryPage extends StatefulWidget {
     this.playBoss,
     this.onChaptersDone,
     this.playPuzzles,
-    this.challengeRequest,
     this.playLesson,
   });
 
@@ -62,10 +60,6 @@ class StoryPage extends StatefulWidget {
   /// battere il bot ne conclude uno.
   final void Function(int chapters)? onChaptersDone;
   final PlayStoryPuzzles? playPuzzles;
-
-  /// Scelta fatta nel riquadro mostrato a fine puzzle: vale al posto del
-  /// foglio di passaggio.
-  final ValueNotifier<PassageChoice>? challengeRequest;
   final PlayStoryLesson? playLesson;
 
   @override
@@ -139,10 +133,6 @@ class _StoryPageState extends State<StoryPage> {
       if (!mounted || wasDone) return null;
       return _passage(chapter, kind);
     });
-    // Una scelta non consumata dal passaggio non resta in sospeso.
-    if (kind == StoryStepKind.puzzles) {
-      widget.challengeRequest?.value = PassageChoice.none;
-    }
     // Il passo successivo si apre fuori dal blocco, che altrimenti lo rifiuta.
     if (follow != null && mounted) {
       await _open(
@@ -159,24 +149,88 @@ class _StoryPageState extends State<StoryPage> {
     StoryChapter chapter,
     StoryStepKind kind,
   ) async {
-    final passage = storyPassage(context, _progress, chapter, kind);
-    if (passage == null) return null;
-    final target = passage.target;
-    final request = widget.challengeRequest;
-    if (kind == StoryStepKind.puzzles && request != null) {
-      final choice = request.value;
-      request.value = PassageChoice.none;
-      if (choice == PassageChoice.go &&
-          target != null &&
-          passage.action != null) {
-        return target;
+    final progress = _progress;
+    final step = progress.steps(chapter).firstWhere((s) => s.kind == kind);
+    if (!step.done) return null;
+    final l10n = storyL10n(context);
+    final index = storyChapters.indexOf(chapter);
+    (StoryChapter, StoryStepKind)? target;
+    final String title;
+    String? subtitle;
+    final String body;
+    String? action;
+    var icon = Icons.check;
+    AvatarExpression? expression;
+    String? line;
+    if (progress.isChapterDone(chapter)) {
+      final hasNext = index + 1 < storyChapters.length;
+      final nextChapter = hasNext ? storyChapters[index + 1] : null;
+      icon = Icons.emoji_events_outlined;
+      title = hasNext
+          ? l10n.storyPassageChapterTitle(index)
+          : l10n.storyPassageStoryDone;
+      if (kind == StoryStepKind.boss) {
+        subtitle = l10n.storyBossWon(chapter.bot.name);
+        expression = AvatarExpression.surprised;
+        line = l10n.guardianLine(chapter, GuardianMoment.bossWon);
       }
-      if (choice == PassageChoice.later) return null;
+      body = nextChapter == null
+          ? l10n.chapterOutro(chapter)
+          : '${l10n.chapterOutro(chapter)}\n\n'
+                '${l10n.storyPassageChapterNext(index + 1, l10n.chapterTitle(nextChapter))}';
+      if (nextChapter != null) {
+        action = l10n.storyPassageGoChapter;
+        target = (nextChapter, StoryStepKind.lessons);
+      }
+    } else {
+      final next = progress.steps(chapter).firstWhere((s) => !s.done).kind;
+      target = (chapter, next);
+      title = switch (kind) {
+        StoryStepKind.lessons => l10n.storyPassageLessonsTitle,
+        StoryStepKind.puzzles => l10n.storyPassagePuzzlesTitle,
+        _ => l10n.storyPassageGuardianTitle,
+      };
+      body = switch (next) {
+        StoryStepKind.puzzles => l10n.storyPassageNextPuzzles,
+        StoryStepKind.guardian => l10n.storyPassageNextGuardian,
+        _ => l10n.storyPassageNextBoss(chapter.bot.name),
+      };
+      action = switch (next) {
+        StoryStepKind.puzzles => l10n.storyPassageGoPuzzles,
+        StoryStepKind.guardian => l10n.storyPassageGoGuardian,
+        _ => l10n.storyPassageGoBoss(chapter.bot.name),
+      };
+      if (next == StoryStepKind.boss) {
+        expression = AvatarExpression.challenge;
+        line = l10n.guardianLine(chapter, GuardianMoment.boss);
+      } else if (kind == StoryStepKind.lessons) {
+        expression = AvatarExpression.happy;
+        line = l10n.guardianLine(chapter, GuardianMoment.lessonDone);
+      }
     }
     final go = await showRokkoSheet<bool>(
       context: context,
       showDragHandle: true,
-      builder: (_) => passage.sheet(),
+      builder: (_) => _PassageSheet(
+        icon: icon,
+        guardian: expression == null
+            ? null
+            : GuardianAvatar(
+                bot: chapter.bot,
+                expression: expression,
+                size: 88,
+              ),
+        guardianLine: line == null
+            ? null
+            : l10n.storyGuardianSays(chapter.bot.name, line),
+        title: title,
+        subtitle: subtitle,
+        body: body,
+        action: action,
+        dismiss: action == null
+            ? l10n.storyPassageClose
+            : l10n.storyPassageLater,
+      ),
     );
     return go == true ? target : null;
   }
@@ -231,7 +285,7 @@ class _StoryPageState extends State<StoryPage> {
     final go = await showRokkoSheet<bool>(
       context: context,
       showDragHandle: true,
-      builder: (_) => StoryPassageSheet(
+      builder: (_) => _PassageSheet(
         icon: Icons.sports_esports_outlined,
         guardian: GuardianAvatar(
           bot: chapter.bot,
@@ -904,6 +958,136 @@ class _StepTile extends StatelessWidget {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Foglio di passaggio fra un passo e l'altro: icona che compare con un
+/// piccolo rimbalzo (ferma se l'utente ha disattivato le animazioni), cosa è
+/// stato fatto e cosa viene dopo.
+class _PassageSheet extends StatelessWidget {
+  const _PassageSheet({
+    required this.icon,
+    required this.title,
+    required this.body,
+    required this.dismiss,
+    this.guardian,
+    this.guardianLine,
+    this.subtitle,
+    this.action,
+  });
+
+  /// Avatar del custode al posto dell'icona e la sua battuta, già
+  /// nella forma «{nome} dice: …».
+  final Widget? guardian;
+  final String? guardianLine;
+  final IconData icon;
+  final String title;
+  final String? subtitle;
+  final String body;
+  final String? action;
+  final String dismiss;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final tokens = RokkoTokens.of(context);
+    final still = MediaQuery.disableAnimationsOf(context);
+    return SafeArea(
+      child: SingleChildScrollView(
+        key: const ValueKey('story-passage'),
+        padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ExcludeSemantics(
+              child: TweenAnimationBuilder<double>(
+                tween: Tween(begin: still ? 1 : 0, end: 1),
+                duration: still
+                    ? Duration.zero
+                    : const Duration(milliseconds: 700),
+                curve: Curves.elasticOut,
+                builder: (context, t, _) => Transform.scale(
+                  scale: t,
+                  child: Column(
+                    children: [
+                      guardian ??
+                          Container(
+                            width: 72,
+                            height: 72,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: tokens.action,
+                            ),
+                            child: Icon(icon, size: 40, color: tokens.onAction),
+                          ),
+                      const SizedBox(height: 8),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          for (final size in const [18.0, 26.0, 18.0])
+                            Icon(Icons.star, size: size, color: tokens.star),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Semantics(
+              header: true,
+              liveRegion: true,
+              child: Text(
+                title,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.headlineSmall,
+              ),
+            ),
+            if (subtitle != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Text(
+                  subtitle!,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.titleMedium,
+                ),
+              ),
+            const SizedBox(height: 12),
+            Text(
+              body,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodyLarge,
+            ),
+            if (guardianLine != null) ...[
+              const SizedBox(height: 12),
+              Text(
+                guardianLine!,
+                key: const ValueKey('story-passage-guardian'),
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ],
+            const SizedBox(height: 24),
+            if (action != null)
+              FilledButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: Text(action!),
+              ),
+            const SizedBox(height: 8),
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              style: TextButton.styleFrom(
+                minimumSize: Size.fromHeight(tokens.minTouch),
+              ),
+              child: Text(dismiss),
+            ),
+          ],
         ),
       ),
     );

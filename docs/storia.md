@@ -102,6 +102,6 @@ I puzzle di un capitolo possono avere un tetto di difficoltà (`StoryChapter.puz
 | `guardian_says.dart` | `GuardianSays`: il custode (avatar e battuta) |
 | `story_page.dart` | Schermata della storia: riepilogo, binario dei capitoli, passi |
 
-## Puzzle del capitolo: esito e sfida
+## Puzzle del capitolo: esito e uscita
 
-A puzzle concluso il commento del custode («Bravo, l'hai visto subito!») non è più un avviso flottante, che copriva i pulsanti: entra nella scheda dell'esito, sotto punteggio e XP (`PuzzlePage.companionBuilder`). Quando i puzzle del capitolo sono finiti, al posto del testo «Non ci sono altri puzzle per ora» la pagina mostra lo stesso riquadro del foglio di passaggio (`PuzzlePage.endBuilder`, contenuto di `storyPassage` con `assumeDone`, componente `StoryPassageSheet`): custode, stelle, «Puzzle risolti!» e i pulsanti «Sfida il guardiano» o «Sfida {nome}» e «Più tardi». La scelta torna alla Storia tramite `StoryPage.challengeRequest` (`PassageChoice`): «Sfida» apre subito il passo successivo, «Più tardi» chiude senza mostrare di nuovo il foglio. Senza motore di gioco manca il pulsante di sfida. Verificato su telefono piccolo, medio e grande, con testo al 130% e in tema scuro.
+A puzzle concluso il commento del custode («Bravo, l'hai visto subito!») non è più un avviso flottante, che copriva i pulsanti: entra nella scheda dell'esito, sotto punteggio e XP (`PuzzlePage.companionBuilder`). Quando i puzzle del capitolo sono finiti la pagina si chiude da sola dopo un paio di secondi, il tempo di leggere l'esito (`PuzzlePage.leaveWhenFinished`): la Storia mostra subito il foglio «Puzzle risolti!» con «Sfida {nome}» e «Più tardi», come per le lezioni. Verificato su telefono piccolo, medio e grande, con testo al 130% e in tema scuro.

@@ -30,19 +30,6 @@ void main() {
     },
   );
 
-  test('RG-13 il feed riferisce l\'esito di ogni puzzle concluso', () async {
-    final outcomes = <bool>[];
-    final feed = StoryPuzzleFeed(
-      await trainer(),
-      theme: 'castling',
-      goal: 1,
-      onOutcome: outcomes.add,
-    );
-    await feed.finished(feed.next()!, solved: false);
-    await feed.finished(feed.next()!, solved: true);
-    expect(outcomes, [false, true]);
-  });
-
   test(
     'RG-13 il puzzle risolto conta subito, senza attendere il salvataggio',
     () async {

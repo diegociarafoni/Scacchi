@@ -39,7 +39,8 @@ class PuzzlePage extends StatefulWidget {
     this.guide,
     this.onActivity,
     this.companionBuilder,
-    this.endBuilder,
+    this.leaveWhenFinished = false,
+    this.leaveDelay = const Duration(milliseconds: 2200),
     this.replyDelay = const Duration(milliseconds: 400),
   });
 
@@ -66,9 +67,10 @@ class PuzzlePage extends StatefulWidget {
   final Widget Function(BuildContext context, {required bool solved})?
   companionBuilder;
 
-  /// Se presente, a puzzle finiti questo riquadro prende il posto del testo
-  /// «non ci sono altri puzzle» (per esempio il passaggio alla sfida).
-  final WidgetBuilder? endBuilder;
+  /// Chiude la pagina da sola, dopo [leaveDelay], quando la sequenza è finita
+  /// (per esempio i puzzle di un capitolo): chi ha chiamato prosegue da lì.
+  final bool leaveWhenFinished;
+  final Duration leaveDelay;
   final Duration replyDelay;
 
   @override
@@ -103,6 +105,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
   /// Cambia a ogni puzzle: un esito in ritardo non tocca il puzzle successivo.
   int _epoch = 0;
   Timer? _replyTimer;
+  Timer? _leaveTimer;
   final _stopwatch = Stopwatch();
 
   @override
@@ -138,12 +141,14 @@ class _PuzzlePageState extends State<PuzzlePage> {
   @override
   void dispose() {
     _replyTimer?.cancel();
+    _leaveTimer?.cancel();
     super.dispose();
   }
 
   void _start(Puzzle puzzle) {
     _session = PuzzleSession(puzzle);
     _feedback = _Feedback.find;
+    _leaveTimer?.cancel();
     _progressNote = null;
     _delta = null;
     _companionSolved = null;
@@ -195,12 +200,21 @@ class _PuzzlePageState extends State<PuzzlePage> {
     _recorded = true;
     _companionSolved = _session.firstTry;
     _stopwatch.stop();
+    final epoch = _epoch;
     unawaited(
       _record(
         _session.puzzle,
         solved: _session.firstTry,
         awardXp: !_session.revealed,
-      ),
+        // Si esce quando punti e XP sono già in vista.
+      ).then((_) {
+        if (widget.leaveWhenFinished &&
+            mounted &&
+            epoch == _epoch &&
+            !_feed.hasNext) {
+          _scheduleLeave();
+        }
+      }),
     );
   }
 
@@ -234,6 +248,17 @@ class _PuzzlePageState extends State<PuzzlePage> {
     if (!mounted || update == null) return;
     final note = progressText(context, update);
     if (note != null) setState(() => _progressNote = note);
+  }
+
+  void _scheduleLeave() {
+    _leaveTimer?.cancel();
+    _leaveTimer = Timer(widget.leaveDelay, () {
+      // Solo se questa pagina è ancora in cima: non chiude un foglio aperto
+      // nel frattempo.
+      if (mounted && (ModalRoute.of(context)?.isCurrent ?? false)) {
+        unawaited(Navigator.of(context).maybePop());
+      }
+    });
   }
 
   void _showHint() => setState(() => _hint = _session.hint());
@@ -290,20 +315,13 @@ class _PuzzlePageState extends State<PuzzlePage> {
     if (next != null) setState(() => _start(next));
   }
 
-  bool get _endCardShown =>
-      widget.endBuilder != null &&
-      _session.state == PuzzleState.solved &&
-      !_feed.hasNext;
-
   /// Altezza in più della scheda dell'esito oltre al solo messaggio: punti in
   /// linea o, con il commento del personaggio, punti e commento nella scheda.
   double _resultExtra(BuildContext context, bool companion) {
     final scale = math.max(1.0, MediaQuery.textScalerOf(context).scale(1));
     final note = _progressNote != null;
-    // Il riquadro di fine puzzle è alto: la scacchiera cede spazio.
-    final end = _endCardShown ? 250 * scale : 0.0;
-    if (!companion) return (note ? 56 : 0) + end;
-    return (note ? 92 : 60) * scale + end;
+    if (!companion) return note ? 56 : 0;
+    return (note ? 92 : 60) * scale;
   }
 
   String _sideName(AppLocalizations l) => l.puzzleSide(
@@ -397,7 +415,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
                   // Il lato segue lo spazio rimasto sopra i pulsanti, che
                   // salgono a due righe sugli schermi stretti.
                   final size = math.max(
-                    _endCardShown ? 160.0 : 0.0,
+                    0.0,
                     math.min(
                       c.maxWidth,
                       c.maxHeight -
@@ -452,9 +470,7 @@ class _PuzzlePageState extends State<PuzzlePage> {
                           ),
                           // Difficoltà e temi si rivelano a puzzle finito: prima
                           // sarebbero un indizio.
-                          if (last && widget.endBuilder != null)
-                            widget.endBuilder!(context)
-                          else if (last || done)
+                          if (last || done)
                             Padding(
                               padding: const EdgeInsets.all(8),
                               child: Text(

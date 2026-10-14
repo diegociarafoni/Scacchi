@@ -21,8 +21,7 @@ Future<void> _pump(
   double textScale = 1,
   Brightness brightness = Brightness.light,
   bool single = false,
-  String? endLabel,
-  VoidCallback? onEnd,
+  bool leave = false,
 }) async {
   device.apply(tester);
   final trainer = await PuzzleTrainer.load(
@@ -42,30 +41,22 @@ Future<void> _pump(
             .copyWith(textScaler: TextScaler.linear(textScale)),
         child: child!,
       ),
-      home: PuzzlePage(
-        trainer: trainer,
-        puzzle: single ? backRank : null,
-        feed: single ? null : TwoPuzzles(trainer, backRank, castle),
-        endBuilder: endLabel == null
-            ? null
-            : (_) => Column(
-                children: [
-                  Text(endLabel, key: const Key('test-end')),
-                  FilledButton(
-                    onPressed: onEnd,
-                    child: const Text('Sfida Pino'),
-                  ),
-                ],
-              ),
-        companionBuilder: (context, {required solved}) => Text(
-          solved ? 'Bravo, l\'hai visto subito!' : 'Riproviamo',
-          key: _line,
-        ),
-        onActivity: (_) async =>
-            const ProgressUpdate(state: ProgressState.initial, xpGained: 5),
-      ),
+      home: const SizedBox(),
     ),
   );
+  final page = PuzzlePage(
+    trainer: trainer,
+    puzzle: single ? backRank : null,
+    feed: single ? null : TwoPuzzles(trainer, backRank, castle),
+    leaveWhenFinished: leave,
+    companionBuilder: (context, {required solved}) =>
+        Text(solved ? 'Bravo, l\'hai visto subito!' : 'Riproviamo', key: _line),
+    onActivity: (_) async =>
+        const ProgressUpdate(state: ProgressState.initial, xpGained: 5),
+  );
+  tester
+      .state<NavigatorState>(find.byType(Navigator))
+      .push(MaterialPageRoute<void>(builder: (_) => page));
   await tester.pumpAndSettle();
 }
 
@@ -93,46 +84,34 @@ void main() {
     );
   });
 
-  group('fine dei puzzle', () {
-    testWidgets('il riquadro compare solo all\'ultimo puzzle, al posto del '
-        'testo', (tester) async {
-      var taps = 0;
-      await _pump(
-        tester,
-        Device.phoneMedium,
-        endLabel: 'Puzzle risolti!',
-        onEnd: () => taps++,
-      );
+  group('uscita a fine sequenza', () {
+    testWidgets('la pagina si chiude da sola dopo l\'ultimo puzzle', (
+      tester,
+    ) async {
+      await _pump(tester, Device.phoneMedium, single: true, leave: true);
+      expect(find.byType(PuzzlePage), findsOneWidget);
       await tapMove(tester, 'a1a8');
-      expect(find.byKey(const Key('test-end')), findsNothing);
-      await tester.tap(find.text('Prossimo'));
-      await tester.pumpAndSettle();
-      await tapMove(tester, 'e1g1');
-      expect(find.byKey(const Key('test-end')), findsOneWidget);
-      expect(find.text('Non ci sono altri puzzle per ora.'), findsNothing);
-      expect(find.text('Prossimo'), findsNothing);
-      await tester.ensureVisible(find.text('Sfida Pino'));
-      await tester.tap(find.text('Sfida Pino'));
-      expect(taps, 1);
+      // Resta il tempo di leggere l'esito e il commento.
+      await tester.pump(const Duration(seconds: 1));
+      expect(find.byType(PuzzlePage), findsOneWidget);
+      await tester.pumpAndSettle(const Duration(seconds: 3));
+      expect(find.byType(PuzzlePage), findsNothing);
     });
 
-    for (final scale in [1.0, 1.3]) {
-      testWidgets('riquadro raggiungibile sul telefono piccolo, testo $scale', (
-        tester,
-      ) async {
-        await _pump(
-          tester,
-          Device.phoneSmall,
-          single: true,
-          textScale: scale,
-          endLabel: 'Puzzle risolti!',
-        );
-        await tapMove(tester, 'a1a8');
-        expect(tester.takeException(), isNull);
-        await tester.ensureVisible(find.text('Sfida Pino'));
-        expect(find.text('Sfida Pino').hitTestable(), findsOneWidget);
-      });
-    }
+    testWidgets('con altri puzzle da fare resta aperta', (tester) async {
+      await _pump(tester, Device.phoneMedium, leave: true);
+      await tapMove(tester, 'a1a8');
+      await tester.pump(const Duration(seconds: 5));
+      expect(find.byType(PuzzlePage), findsOneWidget);
+      expect(find.text('Prossimo'), findsOneWidget);
+    });
+
+    testWidgets('senza l\'opzione non si chiude', (tester) async {
+      await _pump(tester, Device.phoneMedium, single: true);
+      await tapMove(tester, 'a1a8');
+      await tester.pump(const Duration(seconds: 5));
+      expect(find.byType(PuzzlePage), findsOneWidget);
+    });
   });
 
   for (final device in Device.phones) {
