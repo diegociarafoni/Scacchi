@@ -95,6 +95,56 @@ void main() {
       expect(g.clock!.remaining(Side.black), const Duration(seconds: 175));
     });
 
+    test(
+      'la seconda fase aggiunge i minuti alla quinta mossa e si annulla',
+      () {
+        final g = game(
+          control: const TimeControl(
+            minutes: 10,
+            phaseMoves: 5,
+            phaseMinutes: 20,
+          ),
+        )..start();
+        for (final m in [
+          'e4',
+          'e5',
+          'Nf3',
+          'Nc6',
+          'Bc4',
+          'Bc5',
+          'O-O',
+          'Nf6',
+        ]) {
+          expect(g.playText(m), PhysicalInput.played, reason: m);
+        }
+        expect(g.clock!.remaining(Side.white), const Duration(minutes: 10));
+        expect(g.playText('d3'), PhysicalInput.played);
+        expect(g.clock!.remaining(Side.white), const Duration(minutes: 30));
+        g.undo();
+        expect(g.clock!.remaining(Side.white), const Duration(minutes: 10));
+      },
+    );
+
+    test('il PGN riporta anche la seconda fase', () {
+      String tc(TimeControl c) => RegExp(r'\[TimeControl "([^"]*)"\]')
+          .firstMatch(
+            game(control: c)
+                .pgnText(white: 'A', black: 'B', date: DateTime(2026)),
+          )![1]!;
+      expect(tc(const TimeControl(minutes: 5, increment: 3)), '300+3');
+      expect(
+        tc(
+          const TimeControl(
+            minutes: 90,
+            increment: 30,
+            phaseMoves: 40,
+            phaseMinutes: 30,
+          ),
+        ),
+        '40/5400+30:1800+30',
+      );
+    });
+
     test('il tempo esaurito chiude la partita con la vittoria dell\'altro', () {
       final g = game(control: const TimeControl(minutes: 1))..start();
       now = now.add(const Duration(seconds: 61));

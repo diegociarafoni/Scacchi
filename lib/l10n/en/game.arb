@@ -179,6 +179,8 @@
   "gameClockMinutes": "Minutes per player",
   "gameClockIncrement": "Increment (seconds per move)",
   "gameClockDelay": "Delay (seconds per move)",
+  "gameClockPhaseMoves": "Moves before extra time (0 = none)",
+  "gameClockPhaseMinutes": "Extra minutes added",
   "gameClockDelaySimple": "Simple",
   "gameClockDelayBronstein": "Bronstein",
   "gameClockStart": "Start",

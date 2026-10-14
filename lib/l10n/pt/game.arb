@@ -179,6 +179,8 @@
   "gameClockMinutes": "Minutos por jogador",
   "gameClockIncrement": "Incremento (segundos por lance)",
   "gameClockDelay": "Atraso (segundos por lance)",
+  "gameClockPhaseMoves": "Lances antes do tempo extra (0 = nenhum)",
+  "gameClockPhaseMinutes": "Minutos extras",
   "gameClockDelaySimple": "Simples",
   "gameClockDelayBronstein": "Bronstein",
   "gameClockStart": "Iniciar",
