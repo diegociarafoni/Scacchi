@@ -425,8 +425,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     final game = importPgn(saved.pgn).games.firstOrNull?.game;
     if (game == null || game.isOver) return;
     final side = saved.playerSide;
-    // Senza Elo registrato la partita contro il computer era un Allenamento.
-    _training = side != null && saved.opponentElo == null;
+    // L'archivio non ricorda la modalità: si riprende con l'ultima scelta.
+    _training = _trainingDefault;
     final setup = _applySetup(
       side == null
           ? const GameSetup()
@@ -453,7 +453,8 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   bool get _trainingDefault => _settings.kidMode || _settings.trainingMode;
 
-  bool get _inTraining => _training || _kid;
+  /// Le sfide del percorso non hanno modalità: contano sempre.
+  bool get _inTraining => !_isChallenge && (_training || _kid);
 
   /// Niente aiuti nelle sfide (tranne con l'istruttore) né nella Sfida.
   bool get _helpAllowed =>
