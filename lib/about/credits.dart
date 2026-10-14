@@ -27,6 +27,8 @@ const credits = <Credit>[
   Credit('totoy, Kosal Sen', 'CC BY 4.0'),
   Credit('rhosgfx, RhosGFX', 'CC0'),
   Credit('papercut, Nikolay Anzarov (Lichess)', 'CC BY 4.0'),
+  Credit('pirouetti, pirouetti (Lichess)', 'AGPL-3.0+'),
+  Credit('letter, usolando (Lichess)', 'AGPL-3.0+'),
   Credit('Noto Sans Symbols 2, Google', 'OFL-1.1'),
   Credit('Flutter', 'BSD-3-Clause'),
 ];

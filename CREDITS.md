@@ -15,6 +15,7 @@
 | Set di pezzi "totoy" di Kosal Sen, incluso in chessground | Pezzi "Totoy" | CC BY 4.0 |
 | Set di pezzi "rhosgfx" di RhosGFX, incluso in chessground | Pezzi "RhosGFX" | CC0 |
 | Set di pezzi "papercut" di Nikolay Anzarov, dall'elenco di [Lichess](https://github.com/lichess-org/lila/blob/master/COPYING.md); sorgente in `tool/board_art/papercut/` | Pezzi "Papercut" | CC BY 4.0 |
+| Set di pezzi "pirouetti" di pirouetti e "letter" di usolando, dall'elenco di [Lichess](https://github.com/lichess-org/lila/blob/master/COPYING.md); sorgenti in `tool/board_art/pirouetti/` e `tool/board_art/letter/`; AGPL-3.0+ è compatibile con la GPL-3.0 (art. 13) | Pezzi "Pirouetti" e "Letter" | AGPL-3.0+ |
 | Simboli degli scacchi del carattere [Noto Sans Symbols 2](https://fonts.google.com/noto/specimen/Noto+Sans+Symbols+2) (Google), resi come immagini | Pezzi "Noto" | OFL-1.1 |
 | Pezzi "Rokko", "Pixel", "Arcano", "Staunton", "Morbido" e "Stampa", scacchiere con texture in `assets/boards/` e aloni dei pezzi in `assets/pieces/halo/`, generati da `tool/board_art/` | Pezzi e temi della scacchiera | Opera originale del progetto, GPL-3.0; gli aloni dei set di terzi seguono la licenza del set |
 | [shared_preferences](https://pub.dev/packages/shared_preferences) | Salvataggio delle impostazioni | BSD-3-Clause |
