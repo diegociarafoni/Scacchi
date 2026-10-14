@@ -569,32 +569,31 @@ class _Achievements extends StatelessWidget {
     final kid = AppSettings.of(context).kidMode;
     return Column(
       children: [
-        for (final a in achievements)
-          if (!kid || !kidHiddenAchievements.contains(a.id))
-            Builder(
-              builder: (context) {
-                final done = unlocked.contains(a.id);
-                final title = achievementTitle(l, a);
-                final description = achievementDescription(l, a);
-                return MergeSemantics(
-                  child: Semantics(
-                    label: (done
-                        ? l.progressAchievementEarned
-                        : l.progressAchievementLocked)(title, description),
-                    excludeSemantics: true,
-                    child: ListTile(
-                      leading: Icon(
-                        done ? Icons.emoji_events : Icons.lock_outline,
-                        color: done ? scheme.primary : scheme.outline,
-                      ),
-                      title: Text(title),
-                      subtitle: Text(description),
-                      enabled: done,
+        for (final a in achievementsFor(kid: kid))
+          Builder(
+            builder: (context) {
+              final done = unlocked.contains(a.id);
+              final title = achievementTitle(l, a);
+              final description = achievementDescription(l, a);
+              return MergeSemantics(
+                child: Semantics(
+                  label: (done
+                      ? l.progressAchievementEarned
+                      : l.progressAchievementLocked)(title, description),
+                  excludeSemantics: true,
+                  child: ListTile(
+                    leading: Icon(
+                      done ? Icons.emoji_events : Icons.lock_outline,
+                      color: done ? scheme.primary : scheme.outline,
                     ),
+                    title: Text(title),
+                    subtitle: Text(description),
+                    enabled: done,
                   ),
-                );
-              },
-            ),
+                ),
+              );
+            },
+          ),
       ],
     );
   }

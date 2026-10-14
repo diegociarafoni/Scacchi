@@ -45,6 +45,13 @@ const kidHiddenAchievements = {
   'streak_30',
 };
 
+/// Traguardi da elencare: tutti, o senza quelli che misurano il giocatore nel
+/// profilo bambino.
+List<Achievement> achievementsFor({required bool kid}) => [
+  for (final a in achievements)
+    if (!kid || !kidHiddenAchievements.contains(a.id)) a,
+];
+
 final List<Achievement> _base = [
   Achievement(
     id: 'first_game',
