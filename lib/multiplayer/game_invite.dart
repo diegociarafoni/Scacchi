@@ -139,7 +139,8 @@ class GameInvite {
         (control == null ||
             control.minutes > maxInviteMinutes ||
             control.increment > maxInviteIncrement ||
-            control.delay > 0)) {
+            control.delay > 0 ||
+            control.hasPhase)) {
       return null;
     }
     final remote = q['r'];
