@@ -106,5 +106,13 @@
   "settingsMarkColorBlue": "Blue",
   "settingsMarkColorYellow": "Yellow",
   "settingsPremove": "Premove",
-  "settingsPremoveDescription": "Move while the computer is thinking; tap an empty square to cancel"
+  "settingsPremoveDescription": "Move while the computer is thinking; tap an empty square to cancel",
+  "settingsMoveMethod": "How to move pieces",
+  "settingsMoveMethodDescription": "Two taps are more precise on a phone; a tap on the edge of a square is corrected when only the neighbouring square is possible",
+  "settingsMoveMethodAuto": "Automatic",
+  "settingsMoveMethodBoth": "Taps and dragging",
+  "settingsMoveMethodTwoTaps": "Two taps",
+  "settingsMoveMethodDrag": "Dragging",
+  "settingsKeepAwake": "Keep the screen on",
+  "settingsKeepAwakeDescription": "The phone does not turn the screen off during a game"
 }

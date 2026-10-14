@@ -12,6 +12,13 @@ String themeModeLabel(AppLocalizations l, ThemeMode m) => switch (m) {
   ThemeMode.dark => l.settingsModeDark,
 };
 
+String moveMethodLabel(AppLocalizations l, MoveMethod m) => switch (m) {
+  MoveMethod.auto => l.settingsMoveMethodAuto,
+  MoveMethod.both => l.settingsMoveMethodBoth,
+  MoveMethod.twoTaps => l.settingsMoveMethodTwoTaps,
+  MoveMethod.drag => l.settingsMoveMethodDrag,
+};
+
 String markColorLabel(AppLocalizations l, MarkColor c) => switch (c) {
   MarkColor.green => l.settingsMarkColorGreen,
   MarkColor.red => l.settingsMarkColorRed,

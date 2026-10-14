@@ -1,0 +1,15 @@
+{
+  "aboutTitle": "Tentang",
+  "aboutEntrySubtitle": "Lisensi, kode sumber, privasi, dan kredit",
+  "aboutTagline": "Catur bebas, juga tanpa koneksi",
+  "aboutPrivacy": "Privasi",
+  "aboutPrivacyDescription": "Tidak ada data yang dikumpulkan, tanpa iklan, tanpa pelacakan. Pada permainan jarak jauh, langkah dikirim terenkripsi dan hanya melalui server yang dipilih untuk permainan itu",
+  "aboutLicense": "Lisensi",
+  "aboutLicenseDescription": "Perangkat lunak bebas, GPL-3.0 atau lebih baru, dengan izin tambahan untuk distribusi di toko aplikasi",
+  "aboutSource": "Kode sumber",
+  "aboutSourceCopied": "Alamat disalin",
+  "aboutLicenses": "Lisensi pustaka",
+  "aboutLicensesDescription": "Teks lengkap lisensi komponen yang digunakan",
+  "aboutCopy": "Salin",
+  "aboutCredits": "Kredit"
+}

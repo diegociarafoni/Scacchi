@@ -41,6 +41,7 @@ class MultiTransport implements MessageTransport {
   final _connectedSubs = <StreamSubscription<void>>[];
   final _incoming = StreamController<Uint8List>.broadcast();
   final _connected = StreamController<void>.broadcast();
+  var _closing = false;
 
   /// Un canale si è appena collegato.
   Stream<void> get connected => _connected.stream;
@@ -53,7 +54,7 @@ class MultiTransport implements MessageTransport {
 
   /// Aggiunge un canale appena diventa disponibile, anche a partita in corso.
   void add(MessageTransport channel) {
-    if (_incoming.isClosed) {
+    if (_closing || _incoming.isClosed) {
       unawaited(channel.close());
       return;
     }
@@ -77,13 +78,14 @@ class MultiTransport implements MessageTransport {
 
   @override
   Future<void> close() async {
-    for (final s in _subs) {
+    _closing = true;
+    for (final s in List.of(_subs)) {
       await s.cancel();
     }
-    for (final s in _connectedSubs) {
+    for (final s in List.of(_connectedSubs)) {
       await s.cancel();
     }
-    for (final c in _channels) {
+    for (final c in List.of(_channels)) {
       await c.close();
     }
     await _incoming.close();

@@ -1,0 +1,15 @@
+{
+  "aboutTitle": "Info",
+  "aboutEntrySubtitle": "Licentie, broncode, privacy en dankwoord",
+  "aboutTagline": "Vrij schaken, ook zonder verbinding",
+  "aboutPrivacy": "Privacy",
+  "aboutPrivacyDescription": "Geen gegevens verzameld, geen advertenties, geen tracking. Bij partijen op afstand reizen de zetten versleuteld en alleen via de voor die partij gekozen servers",
+  "aboutLicense": "Licentie",
+  "aboutLicenseDescription": "Vrije software, GPL-3.0 of nieuwer, met een extra toestemming voor verspreiding in appwinkels",
+  "aboutSource": "Broncode",
+  "aboutSourceCopied": "Adres gekopieerd",
+  "aboutLicenses": "Licenties van bibliotheken",
+  "aboutLicensesDescription": "Volledige licentieteksten van de gebruikte onderdelen",
+  "aboutCopy": "Kopiëren",
+  "aboutCredits": "Dankwoord"
+}

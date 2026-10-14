@@ -39,5 +39,7 @@
   "archiveModeLocal": "local",
   "archiveModeComputer": "computador",
   "archiveModeImported": "importada",
-  "archiveModePhysical": "tabuleiro físico"
+  "archiveModePhysical": "tabuleiro físico",
+  "archiveModeAnalysis": "análise",
+  "archiveOpenAnalysis": "Abrir na análise"
 }

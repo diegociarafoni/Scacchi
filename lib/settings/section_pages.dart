@@ -157,12 +157,27 @@ class GameSettingsPage extends _SectionPage {
       builder: (context) {
         final s = _s;
         return [
+          SettingsChoiceTile<MoveMethod>(
+            title: l10n.settingsMoveMethod,
+            description: l10n.settingsMoveMethodDescription,
+            values: MoveMethod.values,
+            selected: s.moveMethod,
+            label: (m) => moveMethodLabel(l10n, m),
+            onSelected: (m) => _set((s) => s.copyWith(moveMethod: m)),
+          ),
           SwitchListTile(
             key: const Key('autoQueen'),
             title: Text(l10n.settingsAutoQueen),
             subtitle: Text(l10n.settingsAutoQueenDescription),
             value: s.autoQueen,
             onChanged: (v) => _set((c) => c.copyWith(autoQueen: v)),
+          ),
+          SwitchListTile(
+            key: const Key('keepAwake'),
+            title: Text(l10n.settingsKeepAwake),
+            subtitle: Text(l10n.settingsKeepAwakeDescription),
+            value: s.keepAwake,
+            onChanged: (v) => _set((c) => c.copyWith(keepAwake: v)),
           ),
           SwitchListTile(
             key: const Key('autoFlip'),

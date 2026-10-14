@@ -6,6 +6,7 @@ import 'package:dartchess/dartchess.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter/services.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../analysis/analysis_page.dart';
 import '../archive/pgn.dart';
@@ -73,6 +74,7 @@ import 'move_speech.dart';
 import 'opponent_picker.dart';
 import 'sounds.dart';
 import 'speech_bubble.dart';
+import 'tap_assist.dart';
 import 'variant.dart';
 
 /// Semimosse minime perché una partita valga XP: abbandonare subito non deve
@@ -104,6 +106,7 @@ class GamePage extends StatefulWidget {
     this.onFinished,
     this.store,
     this.qrScanner = zxingScanner,
+    this.keepAwake,
     this.onSavePuzzles,
     this.openSetup = false,
     this.initialSetup,
@@ -178,6 +181,9 @@ class GamePage extends StatefulWidget {
 
   /// Lettore QR per continuare una partita passata da un altro telefono.
   final QrScannerBuilder qrScanner;
+
+  /// Tiene lo schermo acceso; di default il blocco dello schermo del sistema.
+  final Future<void> Function(bool awake)? keepAwake;
 
   @override
   State<GamePage> createState() => _GamePageState();
@@ -421,9 +427,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
               level: engineLevelForElo(saved.opponentElo ?? 1200).id,
             ),
     );
-    _beginGame(game, setup, null);
-    _gameId = saved.id;
-    _startedAt = saved.createdAt;
+    _beginGame(game, setup, null, resumeOf: saved);
   }
 
   bool get _isChallenge => widget.challenge != null;
@@ -887,11 +891,30 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _tick.dispose();
     _sounds.dispose();
     _board.dispose();
+    _syncAwake(disposing: true);
     _drawing.dispose();
     super.dispose();
   }
 
+  bool _awake = false;
+
+  /// Schermo acceso finché la partita è in corso e l'impostazione è attiva;
+  /// si controlla a ogni costruzione, così vale per qualunque modo in cui la
+  /// partita cambia o finisce.
+  void _syncAwake({bool disposing = false}) {
+    final want = !disposing && _settings.keepAwake && !_game.isOver;
+    if (want == _awake) return;
+    _awake = want;
+    final set = widget.keepAwake ?? _systemKeepAwake;
+    // Non è essenziale: senza il servizio lo schermo si spegne come di solito.
+    unawaited(set(want).catchError((_) {}));
+  }
+
+  static Future<void> _systemKeepAwake(bool on) =>
+      WakelockPlus.toggle(enable: on);
+
   void _onSettingsChanged() {
+    _syncAwake();
     setState(() {
       final turnedOn = _settings.autoFlip && !_autoFlip;
       _autoFlip = _settings.autoFlip;
@@ -992,9 +1015,9 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   /// Inizia una nuova partita per progressi e archivio. Una posizione
   /// preparata con l'editor si archivia ma non vale XP.
-  void _startRecording({bool fromEditor = false}) {
-    _startedAt = _clockNow();
-    _gameId = 'game-${_startedAt.microsecondsSinceEpoch}';
+  void _startRecording({bool fromEditor = false, SavedGame? resumeOf}) {
+    _startedAt = resumeOf?.createdAt ?? _clockNow();
+    _gameId = resumeOf?.id ?? 'game-${_startedAt.microsecondsSinceEpoch}';
     _fromEditor = fromEditor;
   }
 
@@ -1636,6 +1659,21 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     return position.board.sideAt(square) == position.turn;
   }
 
+  /// Case dove può andare il pezzo su [from], senza le promozioni, che hanno
+  /// bisogno del selettore.
+  Set<Square> _tapTargets(Square from) {
+    final position = _game.position;
+    final moves = makeLegalMoves(position)[from];
+    if (moves == null || position.board.sideAt(from) != position.turn) {
+      return const {};
+    }
+    final pawn = position.board.roleAt(from) == Role.pawn;
+    return {
+      for (final to in moves)
+        if (!(pawn && (to.rank == Rank.first || to.rank == Rank.eighth))) to,
+    };
+  }
+
   /// Scorrimento sulla scacchiera: a sinistra avanti, a destra indietro.
   void _swipe(int direction) =>
       _showPly((_viewPly ?? _game.moves.length - 1) + direction);
@@ -1891,6 +1929,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     bool fromEditor = false,
     Handicap? handicap,
     Side? humanSide,
+    SavedGame? resumeOf,
   }) {
     assert(
       handicap == null || humanSide != null,
@@ -1912,7 +1951,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     _clockHistory.clear();
     _lowTime.reset();
     _clearBoardInteraction();
-    _startRecording(fromEditor: fromEditor);
+    _startRecording(fromEditor: fromEditor, resumeOf: resumeOf);
     if (setup.opponent != Opponent.human) {
       final human = humanSide ?? setup.resolveHumanSide(_random);
       _handicapHuman = human;
@@ -2435,6 +2474,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    _syncAwake();
     final inProgress = _isChallenge && !_game.isOver && _game.moves.isNotEmpty;
     return PopScope(
       canPop: !inProgress,
@@ -2704,7 +2744,11 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                         constraints.maxHeight - 2 * _moveStripHeight,
                       ),
                     );
-              final boardSettings = _settings.board;
+              final boardSettings = _settings.boardFor(
+                phone:
+                    MediaQuery.sizeOf(context).shortestSide <
+                    MoveMethod.phoneWidth,
+              );
               final board = BoardFrame.of(
                 _settings,
                 size: boardSize,
@@ -2720,21 +2764,35 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                   shapeOf: (color, orig, dest) => dest == null
                       ? _settings.marks.circle(color, orig)
                       : _settings.marks.arrow(color, orig, dest),
-                  builder: (marks) => BoardSwipe(
-                    enabled: _pendingMove == null && _game.moves.isNotEmpty,
+                  builder: (marks) => TapAssist(
                     size: size,
                     orientation: _orientation,
-                    canStartAt: _canDragFrom,
-                    blocked: _drawing,
-                    onSwipe: _swipe,
-                    child: Chessboard(
+                    enabled:
+                        boardSettings.pieceShiftMethod !=
+                            PieceShiftMethod.drag &&
+                        _humanToMove &&
+                        _viewPly == null &&
+                        _pendingMove == null,
+                    resetKey: _game.position.fen,
+                    destinations: _tapTargets,
+                    onMove: (from, to) =>
+                        _onMove(NormalMove(from: from, to: to)),
+                    child: BoardSwipe(
+                      enabled: _pendingMove == null && _game.moves.isNotEmpty,
                       size: size,
-                      controller: _board,
                       orientation: _orientation,
-                      onMove: _onMove,
-                      settings: boardSettings,
-                      annotations: _badgeAnnotations(),
-                      shapes: {..._visibleHint(), ...marks},
+                      canStartAt: _canDragFrom,
+                      blocked: _drawing,
+                      onSwipe: _swipe,
+                      child: Chessboard(
+                        size: size,
+                        controller: _board,
+                        orientation: _orientation,
+                        onMove: _onMove,
+                        settings: boardSettings,
+                        annotations: _badgeAnnotations(),
+                        shapes: {..._visibleHint(), ...marks},
+                      ),
                     ),
                   ),
                 ),
@@ -2777,6 +2835,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
                     : ChessGame.replay(
                             _game.initial,
                             _game.moves.take(viewPly + 1).map((m) => m.move),
+                            variant: _game.variant,
                           ) ??
                           _game,
               );
@@ -3550,7 +3609,7 @@ class _MaterialRow extends StatelessWidget {
           : l10n.gameMaterialWho(name!, side.name),
       captured.isEmpty ? 'none' : 'some',
       captured.map((r) => l10n.gamePieceName(r.name)).join(', '),
-      advantage,
+      math.max(0, advantage),
     );
     final material = Semantics(
       label: description,
