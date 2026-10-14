@@ -109,9 +109,11 @@ jobs:
       - run: dart tool/l10n.dart --solo-unione
       # Su desktop un file alla volta: con più file l'avvio del secondo fallisce.
       - run: |
+          failed=0
           for f in integration_test/*_test.dart; do
-            xvfb-run -a flutter test "$f" -d linux
+            xvfb-run -a flutter test "$f" -d linux || { echo "::error file=$f::test di integrazione fallito"; failed=1; }
           done
+          exit $failed
 
   android:
     runs-on: ubuntu-latest
