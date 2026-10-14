@@ -69,6 +69,7 @@ import '../story/story_l10n.dart';
 import '../story/story_page.dart';
 import '../summary/weekly_summary_page.dart';
 import '../tablebase/shared_tablebase.dart';
+import '../theme/adaptive.dart';
 import '../tournament/bot_game.dart';
 import '../tournament/tournament.dart';
 import '../tournament/tournament_controller.dart';
@@ -160,6 +161,8 @@ class _HomeShellState extends State<HomeShell> {
 
   /// Avvisa la Home quando torna in vista, per rileggere partite e progressi.
   final _homeRefresh = ValueNotifier<int>(0);
+  // Conserva lo stato delle schede quando la barra diventa colonna e viceversa.
+  final _stackKey = GlobalKey();
   var _youVisited = false;
 
   late bool _kidMode = widget.settings.value.kidMode;
@@ -1036,8 +1039,9 @@ class _HomeShellState extends State<HomeShell> {
     if (_tab == 2) _learnVisited = true;
     if (_tab == 3) _youVisited = true;
     final features = _features();
-    return Scaffold(
-      body: IndexedStack(
+    final stack = KeyedSubtree(
+      key: _stackKey,
+      child: IndexedStack(
         index: _tab,
         children: [
           HomePage(
@@ -1088,34 +1092,76 @@ class _HomeShellState extends State<HomeShell> {
             const SizedBox.shrink(),
         ],
       ),
+    );
+    final destinations = [
+      NavigationDestination(
+        icon: const Icon(Icons.home_outlined),
+        selectedIcon: const Icon(Icons.home),
+        label: l.homeNavHome,
+      ),
+      NavigationDestination(
+        icon: const Icon(Icons.extension_outlined),
+        selectedIcon: const Icon(Icons.extension),
+        label: l.homeNavPuzzles,
+      ),
+      NavigationDestination(
+        icon: const Icon(Icons.school_outlined),
+        selectedIcon: const Icon(Icons.school),
+        label: l.homeNavLearn,
+      ),
+      NavigationDestination(
+        icon: const Icon(Icons.person_outline),
+        selectedIcon: const Icon(Icons.person),
+        label: l.youTitle,
+      ),
+    ];
+    void select(int i) {
+      setState(() => _tab = i);
+      if (i == 0) _homeRefresh.value++;
+    }
+
+    // Su schermi larghi la barra passa a lato e il contenuto resta stretto.
+    if (WindowSize.of(context) == WindowSize.expanded &&
+        MediaQuery.sizeOf(context).height >= 480) {
+      return Scaffold(
+        body: Row(
+          children: [
+            SafeArea(
+              right: false,
+              child: NavigationRail(
+                selectedIndex: _tab,
+                onDestinationSelected: select,
+                labelType: NavigationRailLabelType.all,
+                destinations: [
+                  for (final d in destinations)
+                    NavigationRailDestination(
+                      icon: d.icon,
+                      selectedIcon: d.selectedIcon,
+                      label: Text(d.label),
+                    ),
+                ],
+              ),
+            ),
+            const VerticalDivider(width: 1),
+            Expanded(
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: contentMaxWidth),
+                  child: stack,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+    return Scaffold(
+      body: stack,
       bottomNavigationBar: NavigationBar(
         selectedIndex: _tab,
-        onDestinationSelected: (i) {
-          setState(() => _tab = i);
-          if (i == 0) _homeRefresh.value++;
-        },
-        destinations: [
-          NavigationDestination(
-            icon: const Icon(Icons.home_outlined),
-            selectedIcon: const Icon(Icons.home),
-            label: l.homeNavHome,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.extension_outlined),
-            selectedIcon: const Icon(Icons.extension),
-            label: l.homeNavPuzzles,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.school_outlined),
-            selectedIcon: const Icon(Icons.school),
-            label: l.homeNavLearn,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.person_outline),
-            selectedIcon: const Icon(Icons.person),
-            label: l.youTitle,
-          ),
-        ],
+        onDestinationSelected: select,
+        destinations: destinations,
       ),
     );
   }
