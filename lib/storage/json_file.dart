@@ -38,31 +38,51 @@ class JsonFile {
       );
       return null;
     }
+    final Map<String, Object?> json;
+    final int found;
     try {
-      var json = jsonDecode(text) as Map<String, Object?>;
-      final found = json['version'] as int? ?? 0;
+      json = jsonDecode(text) as Map<String, Object?>;
+      found = json['version'] as int? ?? 0;
       if (found < 1 || found > version) {
         throw FormatException('versione dello schema $found');
       }
-      if (found < version) await _keepCopy(found, text);
       for (var v = found; v < version; v++) {
-        final step = migrations[v];
-        if (step == null) throw FormatException('manca la migrazione da $v');
-        json = {...step(json), 'version': v + 1};
+        if (migrations[v] == null) {
+          throw FormatException('manca la migrazione da $v');
+        }
       }
-      return decode(json);
     } on Object {
-      await file.rename(
-        '${file.path}.bad-${DateTime.now().millisecondsSinceEpoch}',
-      );
-      return null;
+      return _setAside();
+    }
+    // Fuori dal controllo del contenuto: un errore del disco si propaga e il
+    // file buono resta dov'è.
+    if (found < version) await _keepCopy(found, text);
+    try {
+      var migrated = json;
+      for (var v = found; v < version; v++) {
+        migrated = {...migrations[v]!(migrated), 'version': v + 1};
+      }
+      return decode(migrated);
+    } on Object {
+      return _setAside();
     }
   }
 
-  /// Copia del file com'era prima di migrare, una sola volta per versione.
+  Future<T?> _setAside<T>() async {
+    await file.rename(
+      '${file.path}.bad-${DateTime.now().millisecondsSinceEpoch}',
+    );
+    return null;
+  }
+
+  /// Copia del file com'era prima di migrare, una sola volta per versione e
+  /// con rinomina atomica, così un'interruzione non lascia una copia a metà.
   Future<void> _keepCopy(int found, String text) async {
     final copy = File('${file.path}.v$found.bak');
-    if (!copy.existsSync()) await copy.writeAsString(text, flush: true);
+    if (copy.existsSync()) return;
+    final tmp = File('${copy.path}.tmp');
+    await tmp.writeAsString(text, flush: true);
+    await tmp.rename(copy.path);
   }
 
   /// Salva [data] con la versione; vince sempre l'ultimo salvataggio.

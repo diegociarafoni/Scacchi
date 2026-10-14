@@ -92,7 +92,25 @@ void main() {
       expect(await json.read((j) => j), isNull);
       expect(aside(), hasLength(1));
       expect(file.existsSync(), isFalse);
+      // Senza catena completa non si fa nemmeno la copia.
+      expect(File('${file.path}.v1.bak').existsSync(), isFalse);
     });
+
+    test(
+      'se la copia non si può scrivere l\'errore sale e il file resta',
+      () async {
+        put(1, {'name': 'Ada'});
+        // Una cartella al posto della copia: la scrittura fallisce.
+        Directory('${file.path}.v1.bak').createSync();
+        final json = JsonFile(file, version: 2, migrations: {1: v2});
+        await expectLater(
+          json.read((j) => j),
+          throwsA(isA<FileSystemException>()),
+        );
+        expect(file.existsSync(), isTrue);
+        expect(aside(), isEmpty);
+      },
+    );
 
     test('se una migrazione fallisce il file si mette da parte', () async {
       put(1, {'name': 'Ada'});

@@ -18,14 +18,14 @@ Rokko **resta sui file JSON versionati** (`JsonFile`) e aggiunge la catena di mi
 1. Un file mancante dà `null`.
 2. Una versione assente, minore di 1 o **maggiore** di quella dell'app (file scritto da un'app più nuova) mette il file da parte come `.bad-<ms>` e dà `null`: non si sovrascrive mai ciò che non si capisce.
 3. Un file **più vecchio** passa dalle migrazioni: `migrations[n]` porta il contenuto dalla versione `n` alla `n + 1`, in ordine, fino alla versione corrente. Prima si tiene una copia dell'originale in `<file>.v<n>.bak`, una sola per versione, così un passo sbagliato non perde i dati.
-4. Se manca un passo o una migrazione lancia un errore, il file si mette da parte come per un file illeggibile e la copia `.v<n>.bak` resta.
+4. Se manca un passo, il file si mette da parte come per un file illeggibile, senza copia. Se una migrazione lancia un errore, il file si mette da parte e la copia `.v<n>.bak` resta: i dati non si perdono, ma l'app riparte da zero per quell'area. Se la copia non si può scrivere (disco pieno, permessi), l'errore sale come per ogni errore di disco e il file resta dov'è.
 
 La lettura non riscrive il file: lo aggiorna il primo salvataggio, che scrive la versione nuova.
 
 ## Come aggiungere una versione dello schema
 
 1. Alza `version` dove si crea il `JsonFile` (per i progressi, `ProgressStore.schemaVersion`).
-2. Aggiungi `migrations: {n: _daNaN1}` con una funzione pura da `Map<String, Object?>` a `Map<String, Object?>`; non serve scrivere `version`.
+2. Aggiungi `migrations: {n: _daNaN1}` con una funzione pura e deterministica (senza orologio né casualità: ogni lettura la rifà finché un salvataggio non scrive la versione nuova) da `Map<String, Object?>` a `Map<String, Object?>`; non serve scrivere `version`.
 3. Scrivi un test come quelli di `test/storage/json_file_test.dart`: un file della versione `n` con dati veri, letto dal controller dell'area.
 4. Aggiorna la riga dell'area in questa pagina o nel suo documento.
 
