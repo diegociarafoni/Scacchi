@@ -2067,7 +2067,7 @@ class _GamePageState extends State<GamePage> with WidgetsBindingObserver {
     if (!needsConsent) return _undo();
     final game = _game;
     final plies = game.moves.length;
-    final consenting = plies.isOdd ? Side.black : Side.white;
+    final consenting = game.position.turn;
     final accepted = await _suspendedDialog<bool>((context) {
       final l10n = _l10n(context);
       if (_kid) {
