@@ -21,7 +21,7 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | [scacchiera-fisica.md](scacchiera-fisica.md) | Orologio e registro di una partita su scacchiera reale |
 | [scambio-qr.md](scambio-qr.md) | Passare una partita, anche in corso, a un altro telefono con il QR, senza rete |
 | [multigiocatore.md](multigiocatore.md) | Partita tra due telefoni: protocollo, canali locali e a distanza, sicurezza |
-| [backup.md](backup.md) | Backup e ripristino di tutti i dati locali in un file, comprese partite, progressi, impostazioni e foto del profilo |
+| [backup.md](backup.md) | Backup e ripristino dei dati locali in un file, comprese partite, progressi, impostazioni e foto del profilo; esclusa la partita a due telefoni in corso |
 | [puzzle.md](puzzle.md) | Puzzle: dati, punteggio, modalità, puzzle del giorno |
 | [aperture.md](aperture.md) | Nomi delle aperture, mosse di libro, Esplora aperture, repertorio, le tue aperture |
 | [percorso.md](percorso.md) | Percorso a tappe con stelle e bot guardiani |
@@ -37,7 +37,7 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | [pezzi-e-scacchiere.md](pezzi-e-scacchiere.md) | Set di pezzi e scacchiere di Rokko, alone sui temi scuri, coordinate esterne, rigenerazione delle immagini |
 | [identita-visiva.md](identita-visiva.md) | Nome, icona, schermata di avvio e come rigenerarli |
 | [localizzazione.md](localizzazione.md) | Lingua predefinita e come aggiungere testi e lingue |
-| [glossario-scacchistico.md](glossario-scacchistico.md) | Termini scacchistici e regole di stile in italiano, inglese, spagnolo e francese |
+| [glossario-scacchistico.md](glossario-scacchistico.md) | Termini scacchistici e regole di stile in italiano, inglese, spagnolo e francese, con le sezioni per turco, indonesiano e russo |
 | [glossario-portoghese.md](glossario-portoghese.md) | Termini scacchistici e regole di stile in portoghese del Brasile |
 | [glossario-tedesco.md](glossario-tedesco.md) | Termini scacchistici e regole di stile in tedesco |
 | [glossario-nl.md](glossario-nl.md) | Termini scacchistici e regole di stile in olandese |
@@ -79,7 +79,7 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | Scacchiera fisica: orologio e registro della partita dal vivo | Disponibile dalla Home |
 | Scambio di partite tra telefoni con il QR, senza rete | Disponibile dal menu della partita e dall'archivio; lettura con la fotocamera su Android e iOS |
 | Multigiocatore tra due telefoni (Wi-Fi, Bluetooth, a distanza) | Disponibile dalla Home › Gioca con un amico: stessa Wi-Fi o hotspot, Bluetooth LE vicini, a distanza con relay Nostr (avvisi in background solo su Android); abbinamento con QR o link |
-| Backup e ripristino di tutti i dati locali in un file (vedi [backup.md](backup.md)) | Disponibile dalle Impostazioni |
+| Backup e ripristino dei dati locali in un file, tranne la partita a due telefoni in corso (vedi [backup.md](backup.md)) | Disponibile dalle Impostazioni |
 | Archivio partite, import ed export PGN | Disponibile dalla scheda Tu; le partite si salvano da sole a ogni mossa e quelle interrotte si possono riprendere |
 | Percorso a tappe con stelle e spiegazione di ogni tappa: pezzi, regole, matti elementari e famosi, tattiche, finali (di pedoni, di torre, alfiere sbagliato), strategia, aperture | Si segue dalla Storia (Home), con i guardiani dove c'è il motore |
 | Partite dei grandi maestri: sfoglia con commento e «indovina la mossa» | Disponibile dalla Home, anche senza motore |
@@ -88,12 +88,13 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | Varianti: Chess960, Re della collina, Tre scacchi | Disponibile nella partita a due e contro il computer |
 | Minigiochi | Disponibile dalla Home, con record e XP |
 | Tornei contro bot | Formule, classifica, tabellone e bacheca; si giocano dalla Home contro il motore (Android e iOS; Windows e Linux con Stockfish installato) |
-| Orologio con cadenze e incremento | Disponibile |
+| Orologio con cadenze e incremento; cadenza personalizzata con ritardo e seconda fase | Disponibile |
 | Suoni, vibrazione, modalità tavolo | Disponibile |
 | Modalità zen: in partita solo scacchiera, mosse e orologio | Disponibile |
 | Revisione della partita: classificazione, precisione anche per fase, grafico, Riprova | Disponibile dove c'è il motore (Android e iOS; Windows e Linux con Stockfish installato), anche dall'archivio |
 | Analisi libera della posizione con linee del motore e freccia della minaccia | Disponibile dove c'è il motore (Android e iOS; Windows e Linux con Stockfish installato) |
 | Bot con personalità, collezione e avversario adattivo | Disponibile dove c'è il motore |
+| Modalità Allenamento e Sfida contro bot e computer | Disponibile dove c'è il motore |
 | Partita con l'allenatore: avvisi, ripresa della mossa, suggerimenti in parole con cerchio e freccia | Disponibile dove c'è il motore |
 | Profilo bambino: schede semplificate, bot amichevoli, niente numeri | Disponibile dalle Impostazioni |
 | Tema dell'app chiaro, scuro o di sistema, colori per daltonici | Disponibile dalle Impostazioni |
@@ -108,6 +109,7 @@ Rokko è un'applicazione di scacchi offline, open source e gratuita, pensata pri
 | Aprire un'apertura contro il computer | Disponibile |
 | Note personali sulle mosse | Disponibile |
 | Avatar con foto propria | Disponibile |
+| Schermata Informazioni: licenza, sorgenti, privacy e crediti | Disponibile dalle Impostazioni |
 | Nome Rokko, icona e schermata di avvio chiara e scura | Disponibile (vedi [identita-visiva.md](identita-visiva.md)) |
 
 Le funzioni ancora da fare, con stato, priorità, dimensione e versione prevista, sono nel [backlog](backlog.md).
