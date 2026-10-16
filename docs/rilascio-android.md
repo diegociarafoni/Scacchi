@@ -1,6 +1,6 @@
 # Rilascio Android (APK)
 
-Il workflow `.github/workflows/apk-release.yml` compila un APK release per telefoni a 64 bit (arm64, cioè tutti i telefoni Android degli ultimi anni) e lo pubblica come allegato di una GitHub Release, scaricabile direttamente dal telefono. L'app installata si chiama **Rokko**; il file è `rokko.apk`. L'identificativo del pacchetto è `io.github.diegociarafoni.rokko` (prima era `io.github.diegociarafoni.rokko`): essendo cambiato, il primo APK con il nome nuovo non si installa sopra quello vecchio e va installato come app nuova, portando i dati con un backup; da lì in poi gli aggiornamenti si installano uno sopra l'altro.
+Il workflow `.github/workflows/apk-release.yml` compila un APK release per telefoni a 64 bit (arm64, cioè tutti i telefoni Android degli ultimi anni) e lo pubblica come allegato di una GitHub Release, scaricabile direttamente dal telefono. L'app installata si chiama **Rokko**; il file è `rokko.apk`. L'identificativo del pacchetto è `io.github.diegociarafoni.rokko` (prima era `io.github.diegociarafoni.scacchi`): essendo cambiato, il primo APK con il nome nuovo non si installa sopra quello vecchio e va installato come app nuova, portando i dati con un backup; da lì in poi gli aggiornamenti si installano uno sopra l'altro.
 
 ## Versioni pubblicate
 
@@ -59,7 +59,7 @@ Il rilascio è pensato per consumare pochi minuti:
 - build della sola architettura arm64, che dimezza circa il tempo di compilazione e riduce molto l'APK;
 - `timeout-minutes: 30` contro le esecuzioni bloccate.
 
-Per un telefono a 32 bit si può compilare a mano un APK universale togliendo `--target-platform android-arm64` dal workflow.
+Per un telefono a 32 bit si può compilare a mano un APK universale togliendo dal workflow `--target-platform android-arm64` e la variabile `ROKKO_NATIVE_ABIS`, che limita ad arm64 le librerie native dei plugin (`android/build.gradle.kts`).
 
 ## Frequenza dei rilasci
 

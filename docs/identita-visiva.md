@@ -16,7 +16,7 @@ L'app si chiama **Rokko**, da *arrocco* e da *rook* (la torre in inglese): breve
 
 `test/branding_test.dart` controlla che i nomi nativi siano Rokko e che l'identificativo non cambi.
 
-Su macOS il pacchetto si chiama ancora `rokko.app`: rinominarlo tocca il progetto Xcode in più punti e va verificato su un Mac. Il tag `Event` delle partite in PGN è «Rokko».
+Su macOS il pacchetto è `rokko.app` (`PRODUCT_NAME` in `macos/Runner/Configs/AppInfo.xcconfig`). Il tag `Event` delle partite in PGN è «Rokko».
 
 ## Icona
 

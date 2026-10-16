@@ -204,7 +204,7 @@ I golden si rigenerano con `--update-goldens` dopo una modifica voluta dell'aspe
 Il workflow `.github/workflows/ci.yml` (chiamabile anche da altri workflow) gira su ogni pull request, nella coda di merge e su ogni push su `main`, tranne quando cambiano solo `docs/`, file Markdown o `LICENSE`:
 
 1. **test**, sempre: installa Stockfish (per i test d'integrazione del motore), unisce i testi tradotti e ne controlla le lingue (`tool/l10n.dart --solo-unione`, `tool/stringhe_fisse.dart`, `tool/l10n_stato.dart`), formattazione, `flutter analyze --fatal-infos --fatal-warnings`, `flutter test` con copertura (almeno 80% sulla logica di gioco, vedi [qualita.md](qualita.md)), licenze delle dipendenze. È il controllo bloccante di ogni PR.
-2. **e2e**, se i test passano: installa Stockfish ed esegue i file `integration_test/*_test.dart` sull'app Linux desktop con uno schermo virtuale (`xvfb`), un file alla volta perché avvii ravvicinati dell'app Linux nello stesso comando falliscono.
+2. **e2e**, se i test passano: installa Stockfish ed esegue i file `integration_test/*_test.dart` sull'app Linux desktop con uno schermo virtuale (`xvfb`), un file alla volta perché avvii ravvicinati dell'app Linux nello stesso comando falliscono; li esegue tutti e fallisce se ne fallisce anche uno solo.
 3. **android**, se i test passano: libera spazio sul runner (la compilazione nativa di Stockfish con l'NDK lo esaurisce), compila un APK di debug solo arm64 (con `ccache` per la parte nativa), ne controlla il manifest con `tool/check_apk.dart --debug` (permessi ed esportazioni, vedi [sicurezza.md](sicurezza.md)) e lo pubblica come artefatto `rokko-debug-apk` per 7 giorni.
 
 e2e e android girano sempre su `main`; su una PR (e nella coda di merge, sui file del gruppo) solo se tocca i file che li riguardano (`integration_test/` o `linux/` per e2e; `android/` e `tool/check_apk.dart`, `tool/policy.json`, `tool/src/` per android; `pubspec.*`, `ci.yml` e `ci-completa.yml` per entrambi) oppure se ha l'etichetta **`ci-completa`**: aggiungerla avvia subito tutta la CI con il workflow `ci-completa.yml`, senza bisogno di un nuovo push, e da lì in poi ogni push sulla PR la esegue per intero. L'etichetta si crea una volta in **Issues → Labels → New label**. I job avviati dall'etichetta compaiono come `ci / test`, `ci / e2e` e `ci / android` e devono essere verdi prima del merge. Conviene metterla sulle PR che cambiano molto l'interfaccia: senza, e2e gira solo dopo il merge su `main`.
@@ -220,7 +220,7 @@ Il repository è pubblico (vedi [sicurezza.md](sicurezza.md)): i runner standard
 - le modifiche alla sola documentazione non avviano la CI: resta il controllo della documentazione nel workflow `Convenzioni`;
 - cache di Flutter e pub (`subosito/flutter-action`), di Gradle (`setup-java`) e di `ccache` per la compilazione nativa;
 - APK di debug solo per arm64, come quello di rilascio;
-- solo runner Linux, che costano un decimo di quelli macOS;
+- runner Linux, che costano un decimo di quelli macOS; macOS solo per la build iOS (`ios.yml`), che gira su `main` e sulle PR che toccano `ios/`, `pubspec.*` o il workflow;
 - ogni job ha un `timeout-minutes`, così un job bloccato non consuma le 6 ore predefinite.
 
 Con le regole di protezione di `main` attive (vedi [convenzioni-git.md](convenzioni-git.md)) un job saltato conta come superato, ma una PR di sola documentazione non avvia la CI e resterebbe in attesa dei controlli obbligatori: in quel caso va tolto `paths-ignore` dall'evento `pull_request`.
@@ -234,7 +234,8 @@ Altri workflow:
 - **Scorecard** (`scorecard.yml`): valutazione OpenSSF Scorecard, vedi [sicurezza.md](sicurezza.md).
 - **MobSF** (`mobsf.yml`): analisi statica dell'APK con MobSF, vedi [sicurezza.md](sicurezza.md).
 - **E2E Android** (`e2e-android.yml`): test end-to-end su emulatore, vedi [qualita.md](qualita.md).
-- **Prestazioni** (`prestazioni.yml`): budget dei tempi di costruzione dei fotogrammi, vedi [qualita.md](qualita.md).
+- **Prestazioni** (`prestazioni.yml`): budget dei tempi di costruzione dei fotogrammi e dell'avvio, vedi [qualita.md](qualita.md).
+- **iOS** (`ios.yml`): build iOS di rilascio senza firma (`flutter build ios --release --no-codesign`) su macOS, per accorgersi se un cambiamento rompe la build; non produce un IPA installabile.
 - **Rilascio APK** (`apk-release.yml`): APK firmato per le versioni numerate e il nightly, vedi [rilascio-android.md](rilascio-android.md).
 - **Store** (`store.yml`, solo a mano): configurazione Fastlane per Google Play, vedi [store.md](store.md).
 - **Dataset** (`datasets.yml`, a mano o sulle PR che cambiano `tool/datasets/`): rigenera puzzle, aperture e statistiche delle aperture dai dataset pubblici e fa il commit sul ramo della PR, vedi [puzzle.md](puzzle.md).
@@ -243,7 +244,7 @@ Altri workflow:
 
 - Nel codice solo commenti funzionali e brevi: cosa fa un elemento, non la sua storia o le motivazioni di progetto.
 - La documentazione completa sta in `docs/`, da aggiornare insieme al codice che descrive.
-- Testi dell'interfaccia in italiano e inglese, nei file `.arb` per funzione di `lib/l10n/<lingua>/` (vedi [localizzazione.md](localizzazione.md)), non nel codice.
+- Testi dell'interfaccia nei file `.arb` per funzione di `lib/l10n/<lingua>/`, con la stessa chiave in ogni lingua (vedi [localizzazione.md](localizzazione.md)), non nel codice.
 - Logica di gioco separata dall'interfaccia (`ChessGame` non importa Flutter), così da poterla testare in isolamento.
 - Analisi statica rigorosa (`analysis_options.yaml`): tipi stretti, `Future` sempre attesi o marcati con `unawaited`, nessun avviso ammesso.
 - Prima del push: `tool/verifica.sh --test` (rami, commit, documentazione, traduzioni, formattazione, analisi, test), vedi [convenzioni-git.md](convenzioni-git.md#senza-hook-toolverificash).

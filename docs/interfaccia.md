@@ -66,7 +66,7 @@ Nel profilo bambino riga di stato, comandi e dialoghi usano frasi brevi, e manca
 
 ## Orologio
 
-"Nuova" apre un pannello in cui si sceglie l'avversario (vedi [avversario-computer.md](avversario-computer.md)) e, toccandola, la cadenza: "Senza tempo" oppure le cadenze predefinite, cioè Bullet (1+0, 1+1, 2+1), Blitz (3+0, 3+2, 5+0) e Rapid (10+0, 15+10, 30+0), dove il primo numero sono i minuti per giocatore e il secondo i secondi aggiunti dopo ogni mossa.
+"Nuova" apre un pannello in cui si sceglie l'avversario (vedi [avversario-computer.md](avversario-computer.md)) e, toccandola, la cadenza: "Senza tempo" oppure le cadenze predefinite, cioè Bullet (1+0, 1+1, 2+1), Blitz (3+0, 3+2, 5+0) e Rapid (10+0, 15+10, 30+0), dove il primo numero sono i minuti per giocatore e il secondo i secondi aggiunti dopo ogni mossa. **Personalizzata** apre una finestra per una cadenza libera: minuti, incremento, ritardo (semplice o Bronstein) e, se si vuole, minuti aggiunti dopo un certo numero di mosse (`showCustomClockDialog` in `lib/game/custom_clock_dialog.dart`, vedi [architettura.md](architettura.md)). Nel profilo bambino non c'è.
 
 - Ogni orologio sta a destra della riga del materiale del rispettivo giocatore.
 - Il tempo inizia a scorrere dopo la prima mossa del Bianco, per il Nero.

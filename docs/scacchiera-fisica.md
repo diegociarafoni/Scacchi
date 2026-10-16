@@ -4,7 +4,7 @@ Per giocare su una scacchiera vera l'app fa da orologio e da registro della part
 
 ## Uso
 
-1. Si scrivono i nomi dei giocatori e si sceglie la cadenza (le stesse della partita normale) oppure **Senza tempo**.
+1. Si scrivono i nomi dei giocatori e si sceglie la cadenza (le stesse della partita normale, compresa la **Personalizzata**) oppure **Senza tempo**.
 2. L'orologio del Bianco parte con **Inizia la partita**.
 3. Dopo ogni mossa fatta sulla scacchiera si scrive nel campo (SAN inglese o italiana, per esempio `e4`, `Cf3`, `O-O`, o UCI `g1f3`) e si conferma, oppure si tocca una delle mosse legali proposte: l'elenco si restringe man mano che si digita. L'orologio passa all'avversario con l'incremento.
 4. La mossa illegale o ambigua viene rifiutata con un avviso e non cambia nulla.
